@@ -104,6 +104,19 @@ public class TasksUiUtil {
 		return connectorKind.equals(task.getAttribute(ITasksCoreConstants.ATTRIBUTE_OUTGOING_NEW_CONNECTOR_KIND));
 	}
 
+	/**
+	 * @since 3.1
+	 */
+	public static TaskRepository getOutgoingNewTaskRepository(ITask task) {
+		Assert.isNotNull(task);
+		String connectorKind = task.getAttribute(ITasksCoreConstants.ATTRIBUTE_OUTGOING_NEW_CONNECTOR_KIND);
+		String repositoryUrl = task.getAttribute(ITasksCoreConstants.ATTRIBUTE_OUTGOING_NEW_REPOSITORY_URL);
+		if (connectorKind != null && repositoryUrl != null) {
+			return TasksUi.getRepositoryManager().getRepository(connectorKind, repositoryUrl);
+		}
+		return null;
+	}
+
 	public static TaskRepository getSelectedRepository() {
 		return getSelectedRepository(null);
 	}

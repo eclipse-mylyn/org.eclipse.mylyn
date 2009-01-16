@@ -526,8 +526,11 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		toolBarManager.removeAll();
 		toolBarManager.update(true);
 
-		final TaskRepository taskRepository = taskEditorInput.getTaskRepository();
-		if (!LocalRepositoryConnector.CONNECTOR_KIND.equals(taskRepository.getConnectorKind())) {
+		TaskRepository outgoingNewRepository = TasksUiUtil.getOutgoingNewTaskRepository(task);
+		if (!LocalRepositoryConnector.CONNECTOR_KIND.equals(taskEditorInput.getTaskRepository().getConnectorKind())
+				|| outgoingNewRepository != null) {
+			final TaskRepository taskRepository = (outgoingNewRepository != null) ? outgoingNewRepository
+					: taskEditorInput.getTaskRepository();
 			ControlContribution repositoryLabelControl = new ControlContribution(Messages.AbstractTaskEditorPage_Title) {
 				@Override
 				protected Control createControl(Composite parent) {
