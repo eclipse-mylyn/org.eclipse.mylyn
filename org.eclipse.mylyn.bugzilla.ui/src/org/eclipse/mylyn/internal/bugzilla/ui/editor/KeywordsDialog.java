@@ -75,19 +75,17 @@ public class KeywordsDialog extends Dialog {
 			keyWordsList.setContentProvider(new ITreeContentProvider() {
 
 				public Object[] getChildren(Object parentElement) {
-					if (parentElement instanceof Collection) {
+					if (parentElement instanceof Collection<?>) {
 						return ((Collection<?>) parentElement).toArray();
 					}
 					return null;
 				}
 
 				public Object getParent(Object element) {
-					// TODO Auto-generated method stub
 					return null;
 				}
 
 				public boolean hasChildren(Object element) {
-					// TODO Auto-generated method stub
 					return false;
 				}
 
@@ -96,13 +94,9 @@ public class KeywordsDialog extends Dialog {
 				}
 
 				public void dispose() {
-					// TODO Auto-generated method stub
-
 				}
 
 				public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-					// TODO Auto-generated method stub
-
 				}
 
 			});
