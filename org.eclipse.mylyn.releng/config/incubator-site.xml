@@ -15,9 +15,6 @@
    <feature url="features/org.eclipse.mylyn.web.tasks_feature_@core@.jar" id="org.eclipse.mylyn.web.tasks_feature" version="@core@">
       <category name="Incubator"/>
    </feature>
-   <feature url="features/org.eclipse.mylyn.wikitext_feature_@wikitext@.jar" id="org.eclipse.mylyn.wikitext_feature" version="@wikitext@">
-      <category name="Incubator"/>
-   </feature>
    <feature url="features/org.eclipse.mylyn.experimental_sdk_feature_@core@.jar" id="org.eclipse.mylyn.experimental_sdk_feature" version="@core@">
       <category name="SDK"/>
    </feature>

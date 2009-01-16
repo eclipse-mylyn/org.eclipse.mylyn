@@ -24,6 +24,9 @@
    <feature url="features/org.eclipse.mylyn.bugzilla_feature_@core@.jar" id="org.eclipse.mylyn.bugzilla_feature" version="@core@">
       <category name="Integration"/>
    </feature>
+   <feature url="features/org.eclipse.mylyn.wikitext_feature_@wikitext@.jar" id="org.eclipse.mylyn.wikitext_feature" version="@wikitext@">
+      <category name="Integration"/>
+   </feature>
    <category-def name="Features" label="Mylyn Features"/>
    <category-def name="Integration" label="Mylyn Integration"/>
 </site>

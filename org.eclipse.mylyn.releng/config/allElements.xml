@@ -111,10 +111,6 @@
 			<property name="type" value="feature" />
 			<property name="id" value="org.eclipse.mylyn.xplanner_feature" />
 		</ant>
-		<ant antfile="${genericTargets}" target="${target}">
-			<property name="type" value="feature" />
-			<property name="id" value="org.eclipse.mylyn.wikitext_feature" />
-		</ant>
 		<antcall target="incubatorElementDelegatorSdk" />
 	</target>
 	<target name="incubatorElementDelegatorSdk" unless="skipSDK">
@@ -170,6 +166,10 @@
 		<ant antfile="${genericTargets}" target="${target}">
 			<property name="type" value="feature" />
 			<property name="id" value="org.eclipse.mylyn.pde_feature" />
+		</ant>
+		<ant antfile="${genericTargets}" target="${target}">
+			<property name="type" value="feature" />
+			<property name="id" value="org.eclipse.mylyn.wikitext_feature" />
 		</ant>
 		<antcall target="standardElementDelegatorSdk" />
 	</target>
