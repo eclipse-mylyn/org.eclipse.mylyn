@@ -1075,6 +1075,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 		this.lastSelection = defaultSelection;
 		IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
 		this.textSupport = new CommonTextSupport(handlerService);
+		this.textSupport.setSelectionChangedListener(this);
 
 		initModel(taskEditorInput);
 
