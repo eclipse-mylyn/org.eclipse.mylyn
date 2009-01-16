@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.commons.core;
 
-
 /**
  * @since 3.0
  * @author Steffen Pingel
