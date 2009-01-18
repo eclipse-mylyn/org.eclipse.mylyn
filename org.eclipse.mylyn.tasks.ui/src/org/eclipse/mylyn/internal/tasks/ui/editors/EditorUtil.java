@@ -54,6 +54,8 @@ public class EditorUtil {
 
 	static final String KEY_MARKER = "marker"; //$NON-NLS-1$
 
+	static final String KEY_DISABLED = "org.eclipse.mylyn.tasks.ui.disabled"; //$NON-NLS-1$
+
 	static final String KEY_TEXT_VIEWER = "textViewer"; //$NON-NLS-1$
 
 	public static final int MAXIMUM_HEIGHT = 140;
@@ -253,12 +255,50 @@ public class EditorUtil {
 	}
 
 	public static void setEnabledState(Composite composite, boolean enabled) {
+		if (enabled) {
+			enable(composite);
+		} else {
+			disable(composite);
+		}
+	}
+
+	private static void disable(Composite composite) {
 		if (!composite.isDisposed()) {
-			composite.setEnabled(enabled);
+			if (!composite.isEnabled()) {
+				composite.setData(KEY_DISABLED, Boolean.TRUE);
+			} else {
+				composite.setEnabled(false);
+			}
 			for (Control control : composite.getChildren()) {
-				control.setEnabled(enabled);
 				if (control instanceof Composite) {
-					setEnabledState(((Composite) control), enabled);
+					disable((Composite) control);
+				} else {
+					if (!control.isEnabled()) {
+						control.setData(KEY_DISABLED, Boolean.TRUE);
+					} else {
+						control.setEnabled(false);
+					}
+				}
+			}
+		}
+	}
+
+	private static void enable(Composite composite) {
+		if (!composite.isDisposed()) {
+			if (composite.getData(KEY_DISABLED) == null) {
+				composite.setEnabled(true);
+			} else {
+				composite.setData(KEY_DISABLED, null);
+			}
+			for (Control control : composite.getChildren()) {
+				if (control instanceof Composite) {
+					enable((Composite) control);
+				} else {
+					if (control.getData(KEY_DISABLED) == null) {
+						control.setEnabled(true);
+					} else {
+						control.setData(KEY_DISABLED, null);
+					}
 				}
 			}
 		}
