@@ -128,7 +128,7 @@ public interface ITasksCoreConstants {
 
 	}
 
-	public static final String PROPERTY_ACTIVATE_TASK = "org.eclipse.mylyn.activateTask"; //$NON-NLS-1$
+	public static final String COMMAND_LINE_NO_ACTIVATE_TASK = "-no-activate-task"; //$NON-NLS-1$
 
 	public static final String PROPERTY_LINK_PROVIDER_TIMEOUT = "org.eclipse.mylyn.linkProviderTimeout"; //$NON-NLS-1$
 

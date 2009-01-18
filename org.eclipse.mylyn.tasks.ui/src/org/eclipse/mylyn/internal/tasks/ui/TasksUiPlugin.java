@@ -12,8 +12,10 @@
 package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Comparator;
@@ -371,6 +373,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			setSystem(true);
 		}
 
+		@SuppressWarnings("restriction")
 		@Override
 		public IStatus runInUIThread(IProgressMonitor monitor) {
 			// NOTE: failure in one part of the initialization should
@@ -385,8 +388,21 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 					// XXX: recovery from task list load failure  (Rendered in task list)
 				}
 
-				boolean activateTask = Boolean.parseBoolean(System.getProperty(
-						ITasksCoreConstants.PROPERTY_ACTIVATE_TASK, Boolean.TRUE.toString()));
+				List<String> commandLineArgs = Arrays.asList(Platform.getCommandLineArgs());
+				boolean activateTask = !commandLineArgs.contains(ITasksCoreConstants.COMMAND_LINE_NO_ACTIVATE_TASK);
+				if (activateTask) {
+					try {
+						Field field = org.eclipse.core.internal.resources.Workspace.class.getDeclaredField("crashed"); //$NON-NLS-1$
+						field.setAccessible(true);
+						Object value = field.get(ResourcesPlugin.getWorkspace());
+						if (value instanceof Boolean) {
+							activateTask = !(Boolean) value;
+						}
+					} catch (Throwable t) {
+						t.printStackTrace();
+						// ignore
+					}
+				}
 				// Needs to happen asynchronously to avoid bug 159706
 				for (AbstractTask task : taskList.getAllTasks()) {
 					if (task.isActive()) {
