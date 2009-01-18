@@ -422,7 +422,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 	private TaskTableLabelProvider taskListTableLabelProvider;
 
-	private TaskListTableSorter tableSorter;
+	private TaskListSorter tableSorter;
 
 	private Color categoryGradientStart;
 
@@ -755,7 +755,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 	public void saveState(IMemento memento) {
 		IMemento sorter = memento.createChild(MEMENTO_SORT_INDEX);
 		IMemento m = sorter.createChild(MEMENTO_KEY_SORTER);
-		switch (tableSorter.getSortByIndex()) {
+		switch (tableSorter.getComparator().getSortByIndex()) {
 		case SUMMARY:
 			m.putInteger(MEMENTO_KEY_SORT_INDEX, 1);
 			break;
@@ -769,9 +769,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 			m.putInteger(MEMENTO_KEY_SORT_INDEX, 0);
 		}
 
-		m.putInteger(MEMENTO_KEY_SORT_DIRECTION, tableSorter.getSortDirection());
+		m.putInteger(MEMENTO_KEY_SORT_DIRECTION, tableSorter.getComparator().getSortDirection());
 		IMemento m2 = sorter.createChild(MEMENTO_KEY_SORTER2);
-		switch (tableSorter.getSortByIndex2()) {
+		switch (tableSorter.getComparator().getSortByIndex2()) {
 		case SUMMARY:
 			m2.putInteger(MEMENTO_KEY_SORT_INDEX, 1);
 			break;
@@ -785,20 +785,18 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 			m2.putInteger(MEMENTO_KEY_SORT_INDEX, 0);
 		}
 
-		m2.putInteger(MEMENTO_KEY_SORT_DIRECTION, tableSorter.getSortDirection2());
+		m2.putInteger(MEMENTO_KEY_SORT_DIRECTION, tableSorter.getComparator().getSortDirection2());
 		memento.putString(MEMENTO_LINK_WITH_EDITOR, Boolean.toString(linkWithEditor));
 		memento.putString(MEMENTO_PRESENTATION, currentPresentation.getId());
 		memento.putInteger(MEMENTO_KEY_ROOT_SORT_DIRECTION, tableSorter.getSortDirectionRootElement());
 	}
 
 	private void restoreState() {
-		tableSorter = null;
 		if (taskListMemento != null) {
 			IMemento sorterMemento = taskListMemento.getChild(MEMENTO_SORT_INDEX);
 			int restoredSortIndex = 0;
 			if (sorterMemento != null) {
 				int sortDirection = -1;
-				tableSorter = new TaskListTableSorter(this);
 				IMemento m = sorterMemento.getChild(MEMENTO_KEY_SORTER);
 				if (m != null) {
 					Integer sortIndexInt = m.getInteger(MEMENTO_KEY_SORT_INDEX);
@@ -808,19 +806,19 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 					Integer sortDirInt = m.getInteger(MEMENTO_KEY_SORT_DIRECTION);
 					if (sortDirInt != null) {
 						sortDirection = sortDirInt.intValue();
-						tableSorter.setSortDirection(sortDirection);
+						tableSorter.getComparator().setSortDirection(sortDirection);
 						switch (restoredSortIndex) {
 						case 1:
-							tableSorter.setSortByIndex(TaskComparator.SortByIndex.SUMMARY);
+							tableSorter.getComparator().setSortByIndex(TaskComparator.SortByIndex.SUMMARY);
 							break;
 						case 2:
-							tableSorter.setSortByIndex(TaskComparator.SortByIndex.DATE_CREATED);
+							tableSorter.getComparator().setSortByIndex(TaskComparator.SortByIndex.DATE_CREATED);
 							break;
 						case 3:
-							tableSorter.setSortByIndex(TaskComparator.SortByIndex.TASK_ID);
+							tableSorter.getComparator().setSortByIndex(TaskComparator.SortByIndex.TASK_ID);
 							break;
 						default:
-							tableSorter.setSortByIndex(TaskComparator.SortByIndex.PRIORITY);
+							tableSorter.getComparator().setSortByIndex(TaskComparator.SortByIndex.PRIORITY);
 						}
 					}
 				}
@@ -834,19 +832,19 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 					Integer sortDirInt = m2.getInteger(MEMENTO_KEY_SORT_DIRECTION);
 					if (sortDirInt != null) {
 						sortDirection = sortDirInt.intValue();
-						tableSorter.setSortDirection2(sortDirection);
+						tableSorter.getComparator().setSortDirection2(sortDirection);
 						switch (restoredSortIndex) {
 						case 1:
-							tableSorter.setSortByIndex2(TaskComparator.SortByIndex.SUMMARY);
+							tableSorter.getComparator().setSortByIndex2(TaskComparator.SortByIndex.SUMMARY);
 							break;
 						case 2:
-							tableSorter.setSortByIndex2(TaskComparator.SortByIndex.DATE_CREATED);
+							tableSorter.getComparator().setSortByIndex2(TaskComparator.SortByIndex.DATE_CREATED);
 							break;
 						case 3:
-							tableSorter.setSortByIndex2(TaskComparator.SortByIndex.TASK_ID);
+							tableSorter.getComparator().setSortByIndex2(TaskComparator.SortByIndex.TASK_ID);
 							break;
 						default:
-							tableSorter.setSortByIndex2(TaskComparator.SortByIndex.PRIORITY);
+							tableSorter.getComparator().setSortByIndex2(TaskComparator.SortByIndex.PRIORITY);
 						}
 					}
 				}
@@ -856,12 +854,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 			if (sortOrder != null) {
 				tableSorter.setSortDirectionRootElement(sortOrder);
 			} else {
-				tableSorter.setSortDirectionRootElement(TaskListTableSorter.DEFAULT_SORT_DIRECTION);
+				tableSorter.setSortDirectionRootElement(TaskListSorter.DEFAULT_SORT_DIRECTION);
 			}
-		}
-
-		if (tableSorter == null) {
-			tableSorter = new TaskListTableSorter(this);
 		}
 
 		filterWorkingSet = new TaskWorkingSetFilter();
@@ -883,7 +877,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		}
 		setLinkWithEditor(linkValue);
 
-		getViewer().setSorter(tableSorter);
 		getViewer().refresh();
 	}
 
@@ -927,7 +920,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		getViewer().setCellEditors(editors);
 		getViewer().setCellModifier(taskListCellModifier);
 
-		tableSorter = new TaskListTableSorter(this);
+		tableSorter = new TaskListSorter();
 		getViewer().setSorter(tableSorter);
 
 		applyPresentation(CategorizedPresentation.ID);
@@ -1134,7 +1127,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					tableSorter.setSortDirection(tableSorter.getSortDirection() * -1);
+					tableSorter.getComparator().setSortDirection(tableSorter.getComparator().getSortDirection() * -1);
 					getViewer().refresh(false);
 				}
 			});
@@ -1894,7 +1887,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		}
 	}
 
-	public TaskListTableSorter getSorter() {
+	public TaskListSorter getSorter() {
 		return tableSorter;
 	}
 

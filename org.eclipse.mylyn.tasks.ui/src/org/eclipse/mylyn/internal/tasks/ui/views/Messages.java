@@ -29,16 +29,6 @@ public class Messages extends NLS {
 
 	public static String PriorityDropDownAction_Filter_Priority_Lower_Than;
 
-	public static String SortyByDropDownAction_Date_Created;
-
-	public static String SortyByDropDownAction_Descending;
-
-	public static String SortyByDropDownAction_Priority;
-
-	public static String SortyByDropDownAction_Sort_by;
-
-	public static String SortyByDropDownAction_Summary;
-
 	public static String TaskInputDialog_Clear;
 
 	public static String TaskInputDialog_Description;
@@ -68,10 +58,6 @@ public class Messages extends NLS {
 	public static String TaskListFilteredTree_Select_Working_Set;
 
 	public static String TaskListFilteredTree_Workweek_Progress;
-
-	public static String TaskListTableSorter_Manual_sorting_is_disabled_in_focused_mode;
-
-	public static String TaskListTableSorter_Task_Sorting;
 
 	public static String TaskListToolTip_Automatic_container_for_all_local_tasks;
 

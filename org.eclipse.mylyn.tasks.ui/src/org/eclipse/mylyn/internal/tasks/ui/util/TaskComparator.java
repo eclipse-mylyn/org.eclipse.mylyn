@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.tasks.ui.util;
 
 import java.util.Comparator;
 
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
@@ -28,6 +29,25 @@ public class TaskComparator implements Comparator<ITask> {
 
 	public static final int DEFAULT_SORT_DIRECTION = 1;
 
+	/**
+	 * Return a array of values to pass to taskKeyComparator.compare() for sorting
+	 * 
+	 * @param element
+	 *            the element to sort
+	 * @return String array[component, taskId, summary]
+	 */
+	public static String[] getSortableFromElement(IRepositoryElement element) {
+		final String a[] = new String[] { "", null, element.getSummary() }; //$NON-NLS-1$
+
+		if (element instanceof ITask) {
+			ITask task1 = (ITask) element;
+			if (task1.getTaskKey() != null) {
+				a[1] = task1.getTaskKey();
+			}
+		}
+		return a;
+	}
+
 	private int sortDirection = DEFAULT_SORT_DIRECTION;
 
 	private SortByIndex sortByIndex = SortByIndex.PRIORITY;
@@ -35,6 +55,9 @@ public class TaskComparator implements Comparator<ITask> {
 	private int sortDirection2 = DEFAULT_SORT_DIRECTION;
 
 	private SortByIndex sortByIndex2 = SortByIndex.DATE_CREATED;
+
+	public TaskComparator() {
+	}
 
 	public int compare(ITask element1, ITask element2) {
 		if (SortByIndex.PRIORITY.equals(sortByIndex)) {

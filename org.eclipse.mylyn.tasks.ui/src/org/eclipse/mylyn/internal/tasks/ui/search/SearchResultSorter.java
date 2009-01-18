@@ -14,8 +14,8 @@ package org.eclipse.mylyn.internal.tasks.ui.search;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.ui.util.TaskComparator;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskKeyComparator;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskListTableSorter;
 import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
@@ -23,7 +23,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
  * 
  * @author Rob Elves
  */
-public class SearchResultSorterDescription extends ViewerSorter {
+public class SearchResultSorter extends ViewerSorter {
 
 	private final TaskKeyComparator taskKeyComparator = new TaskKeyComparator();
 
@@ -43,8 +43,8 @@ public class SearchResultSorterDescription extends ViewerSorter {
 			AbstractTask entry2 = (AbstractTask) e2;
 			// NOTE we just comparing ids here, once summary and taskId separated
 			// they should have their own column/sorter.
-			return taskKeyComparator.compare(TaskListTableSorter.getSortableFromElement(entry1),
-					TaskListTableSorter.getSortableFromElement(entry2));
+			return taskKeyComparator.compare(TaskComparator.getSortableFromElement(entry1),
+					TaskComparator.getSortableFromElement(entry2));
 			// return taskKeyComparator.compare(entry1.getDescription(),
 			// entry2.getDescription());
 		} catch (Exception ignored) {

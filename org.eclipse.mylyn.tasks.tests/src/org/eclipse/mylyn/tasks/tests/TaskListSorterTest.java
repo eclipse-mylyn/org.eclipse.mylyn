@@ -34,8 +34,7 @@ import org.eclipse.mylyn.internal.tasks.core.WeekDateRange;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskComparator;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListInterestSorter;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskListTableSorter;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListSorter;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.swt.widgets.Control;
@@ -45,11 +44,11 @@ import org.eclipse.swt.widgets.Control;
  * @author George Lindholm
  * @author Frank Becker
  */
-public class TableSorterTest extends TestCase {
+public class TaskListSorterTest extends TestCase {
 
 	public void testRootTaskSorting() {
-		TaskListTableSorter sorter = new TaskListTableSorter(TaskListView.getFromActivePerspective(),
-				TaskComparator.SortByIndex.SUMMARY);
+		TaskListSorter sorter = new TaskListSorter();
+		sorter.getComparator().setSortByIndex(TaskComparator.SortByIndex.SUMMARY);
 
 		AbstractTask task = new LocalTask("1", "");
 		UncategorizedTaskContainer uncategorizedTaskContainer = new UncategorizedTaskContainer();
@@ -88,7 +87,7 @@ public class TableSorterTest extends TestCase {
 		checkToRootElements(sorter, task, unmatchedTaskContainer);
 	}
 
-	private void checkToRootElements(TaskListTableSorter sorter, AbstractTaskContainer e1, AbstractTaskContainer e2) {
+	private void checkToRootElements(TaskListSorter sorter, AbstractTaskContainer e1, AbstractTaskContainer e2) {
 		assertEquals(-1, sorter.compare(null, e1, e2));
 		assertEquals(1, sorter.compare(null, e2, e1));
 	}
@@ -164,9 +163,9 @@ public class TableSorterTest extends TestCase {
 		tasks[1].setCreationDate(new Date(start.getTime() - 4));
 		tasks[0].setCreationDate(new Date(start.getTime() - 5));
 
-		TaskListTableSorter sorter = new TaskListTableSorter(TaskListView.getFromActivePerspective());
-		sorter.setSortByIndex(TaskComparator.SortByIndex.SUMMARY);
-		sorter.setSortByIndex2(TaskComparator.SortByIndex.DATE_CREATED);
+		TaskListSorter sorter = new TaskListSorter();
+		sorter.getComparator().setSortByIndex(TaskComparator.SortByIndex.SUMMARY);
+		sorter.getComparator().setSortByIndex2(TaskComparator.SortByIndex.DATE_CREATED);
 		sorter.sort(new EmptyViewer(), tasks);
 
 		assertEquals("11", tasks[0].getTaskKey());
@@ -193,9 +192,9 @@ public class TableSorterTest extends TestCase {
 		tasks[1].setCreationDate(new Date(start.getTime() - 3));
 		tasks[0].setCreationDate(new Date(start.getTime() - 4));
 
-		TaskListTableSorter sorter = new TaskListTableSorter(TaskListView.getFromActivePerspective());
-		sorter.setSortByIndex(TaskComparator.SortByIndex.SUMMARY);
-		sorter.setSortByIndex2(TaskComparator.SortByIndex.DATE_CREATED);
+		TaskListSorter sorter = new TaskListSorter();
+		sorter.getComparator().setSortByIndex(TaskComparator.SortByIndex.SUMMARY);
+		sorter.getComparator().setSortByIndex2(TaskComparator.SortByIndex.DATE_CREATED);
 		sorter.sort(new EmptyViewer(), tasks);
 
 		assertEquals("MYLN:11", tasks[0].getTaskKey());
@@ -208,7 +207,7 @@ public class TableSorterTest extends TestCase {
 	}
 
 	public void testLocalTaskSort() {
-		final TaskListTableSorter sorter = new TaskListTableSorter(TaskListView.getFromActivePerspective());
+		final TaskListSorter sorter = new TaskListSorter();
 		ITask task1 = new LocalTask("1", "task1");
 		ITask task2 = new LocalTask("2", "task2");
 		ITask task3 = new LocalTask("3", "task3");

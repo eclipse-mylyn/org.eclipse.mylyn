@@ -332,7 +332,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 			viewer.setSorter(new SearchResultSorterId());
 			break;
 		case ORDER_DESCRIPTION:
-			viewer.setSorter(new SearchResultSorterDescription());
+			viewer.setSorter(new SearchResultSorter());
 			break;
 		case ORDER_PRIORITY:
 			viewer.setSorter(new SearchResultSorterPriority());

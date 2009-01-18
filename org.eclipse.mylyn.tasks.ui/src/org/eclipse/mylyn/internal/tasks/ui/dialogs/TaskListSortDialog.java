@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Label;
 public class TaskListSortDialog extends TaskCompareDialog {
 
 	public TaskListSortDialog(IShellProvider parentShell, TaskListView taskListView) {
-		super(parentShell, taskListView.getSorter().getTaskComparator());
+		super(parentShell, taskListView.getSorter().getComparator());
 		setTitle(TaskListView.LABEL_VIEW + Messages.TaskListSortDialog_Sorting);
 	}
 
@@ -38,4 +38,5 @@ public class TaskListSortDialog extends TaskCompareDialog {
 		sortByLabel.setLayoutData(data);
 		Dialog.applyDialogFont(parent);
 	}
+
 }

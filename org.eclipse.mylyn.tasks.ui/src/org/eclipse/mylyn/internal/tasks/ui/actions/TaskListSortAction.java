@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.tasks.ui.dialogs.TaskListSortDialog;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.ui.IWorkbenchPartSite;
@@ -23,15 +24,20 @@ public class TaskListSortAction extends Action {
 
 	private final TaskListSortDialog dialog;
 
+	private final TaskListView taskListView;
+
 	public TaskListSortAction(IWorkbenchPartSite site, TaskListView taskListView) {
 		super(Messages.TaskListSortAction_Sort_);
+		this.taskListView = taskListView;
 		setEnabled(true);
 		dialog = new TaskListSortDialog(site, taskListView);
 	}
 
 	@Override
 	public void run() {
-		dialog.open();
+		if (dialog.open() == Window.OK) {
+			taskListView.getViewer().refresh();
+		}
 	}
 
 }
