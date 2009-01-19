@@ -2,6 +2,29 @@
 <?eclipse version="3.2"?>
 <plugin>
    <extension
+         point="org.eclipse.mylyn.context.core.bridges">
+      <structureBridge
+            class="org.eclipse.mylyn.internal.wikitext.tasks.ui.WikiTextContextStructureBridge"
+            name="%structureBridge.name.0"
+            parentContentType="resource">
+      </structureBridge>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.context.ui.bridges">
+      <uiBridge
+            class="org.eclipse.mylyn.internal.wikitext.tasks.ui.WikiTextContextUiBridge"
+            contentType="org.eclipse.mylyn.wikitext"
+            name="%uiBridge.name.0">
+      </uiBridge>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.context.ui.startup">
+      <startup
+            class="org.eclipse.mylyn.internal.wikitext.tasks.ui.WikiTextContextUiStartup">
+      </startup>
+   </extension>
+   
+   <extension
          point="org.eclipse.mylyn.tasks.ui.taskEditorExtensions">
       <taskEditorExtension
             class="org.eclipse.mylyn.internal.wikitext.tasks.ui.editor.TextileMarkupTaskEditorExtension"
@@ -71,5 +94,81 @@
             taskEditorExtension="org.eclipse.mylyn.wikitext.tasks.ui.editor.confluenceTaskEditorExtension">
       </repositoryAssociation>
    </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            name="%commands.category.name"
+            description="%commands.category.description"
+            id="org.eclipse.mylyn.wikitext.tasks.ui.commands">
+      </category>
+      <command
+            categoryId="org.eclipse.mylyn.wikitext.tasks.ui.commands"
+            description="%command.description.0"
+            id="org.eclipse.mylyn.wikitext.tasks.ui.editor.folding.auto"
+            name="%command.name.0">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editorActions">
+      <editorContribution
+            id="org.eclipse.mylyn.wikitext.tasks.ui.editorContribution1"
+            targetID="org.eclipse.mylyn.wikitext.ui.editor.markupEditor">
+         <action
+               class="org.eclipse.mylyn.internal.wikitext.tasks.ui.actions.ToggleActiveFoldingEditorActionDelegate"
+               definitionId="org.eclipse.mylyn.wikitext.tasks.ui.editor.folding.auto"
+               icon="icons/elcl16/interest-folding.gif"
+               id="org.eclipse.mylyn.wikitext.tasks.ui.editor.folding.auto"
+               label="%action.label.0"
+               state="true"
+               style="toggle"
+               tooltip="%action.tooltip.0"
+               toolbarPath="org.eclipse.ui.edit.text.actionSet.presentation/Presentation">
+         </action>
+      </editorContribution>
+   </extension>
+     <extension point="org.eclipse.ui.popupMenus"> 
+     <objectContribution
+     	   adaptable="false"
+           id="org.eclipse.mylyn.wikitext.tasks.ui.interest.increase.contribution"
+           objectClass="org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem">
+	    <action
+           class="org.eclipse.mylyn.internal.context.ui.actions.InterestIncrementAction"
+           definitionId="org.eclipse.mylyn.context.ui.commands.interest.increment"
+           enablesFor="*"
+           icon="icons/elcl16/interest-increase.gif"
+           id="org.eclipse.mylyn.wikitext.tasks.ui.interest.increase.element"
+           label="%InterestIncrementAction.label"
+           menubarPath="group.reorganize"
+           tooltip="%InterestIncrementAction.tooltip">
+     </action>
+     <visibility>
+     	<systemProperty
+               name="org.eclipse.mylyn.context.core.context.active"
+	           value="true">
+	    </systemProperty>
+     </visibility>
+	 </objectContribution>
+     <objectContribution
+           adaptable="false"
+           id="org.eclipse.mylyn.java.ui.interest.remove.contribution.elements"
+           objectClass="org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem">
+     	<action
+            class="org.eclipse.mylyn.internal.context.ui.actions.InterestDecrementAction"
+            definitionId="org.eclipse.mylyn.context.ui.commands.interest.decrement"
+            enablesFor="*"
+            icon="icons/elcl16/interest-decrease.gif"
+            id="org.eclipse.mylyn.wikitext.tasks.ui.interest.remove.element"
+            label="%InterestDecrementAction.label"
+            menubarPath="group.reorganize"
+            tooltip="%InterestDecrementAction.tooltip">
+      </action>
+      <visibility>
+  			<systemProperty
+               name="org.eclipse.mylyn.context.core.context.active"
+	           value="true">
+  			</systemProperty>
+      </visibility>
+     </objectContribution>
+  </extension>   
    
 </plugin>
