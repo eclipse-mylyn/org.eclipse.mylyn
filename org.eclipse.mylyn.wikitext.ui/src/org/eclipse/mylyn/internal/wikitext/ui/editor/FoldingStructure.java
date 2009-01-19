@@ -20,10 +20,12 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.jface.text.ITextOperationTarget;
+import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotationModel;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
+import org.eclipse.swt.graphics.Point;
 
 /**
  * 
@@ -164,6 +166,9 @@ class FoldingStructure implements IFoldingStructure {
 		if (!isFoldingEnabled()) {
 			return;
 		}
+		Point selectedRange = viewer.getSelectedRange();
+		Position selectedPosition = selectedRange == null ? null : new Position(selectedRange.x, selectedRange.y);
+		boolean updateSelectedRange = false;
 		ProjectionAnnotationModel annotationModel = viewer.getProjectionAnnotationModel();
 		List<Annotation> modifications = null;
 		Iterator<Annotation> iterator = annotationModel.getAnnotationIterator();
@@ -176,10 +181,35 @@ class FoldingStructure implements IFoldingStructure {
 						modifications = new ArrayList<Annotation>();
 					}
 					modifications.add(projectionAnnotation);
+					Position position = annotationModel.getPosition(projectionAnnotation);
+					if (selectedPosition != null && position != null && projectionAnnotation.isCollapsed()
+							&& selectedPosition.overlapsWith(position.offset, position.length)) {
+						updateSelectedRange = true;
+					}
 				}
 			}
 		}
 		if (modifications != null) {
+			if (updateSelectedRange) {
+				// a collapsed region overlaps with the selection.  Attempt to relocate the selection to a region that is not collapsed,
+				// or if we can't find one move it to 0.
+				int offset = 0;
+				iterator = annotationModel.getAnnotationIterator();
+				while (iterator.hasNext()) {
+					Annotation annotation = iterator.next();
+					if (annotation instanceof HeadingProjectionAnnotation) {
+						HeadingProjectionAnnotation projectionAnnotation = (HeadingProjectionAnnotation) annotation;
+						if (!projectionAnnotation.isCollapsed()) {
+							Position position = annotationModel.getPosition(projectionAnnotation);
+							if (position != null) {
+								offset = position.offset;
+								break;
+							}
+						}
+					}
+				}
+				viewer.setSelectedRange(offset, 0);
+			}
 			annotationModel.modifyAnnotations(null, null, modifications.toArray(new Annotation[modifications.size()]));
 		}
 	}
