@@ -56,14 +56,12 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Scale;
 import org.eclipse.ui.IWorkbenchActionConstants;
@@ -89,9 +87,13 @@ public class ContextEditorFormPage extends FormPage {
 
 	private ScrolledForm form;
 
+	private Composite sectionClient;
+
 	private FormToolkit toolkit;
 
 	private CommonViewer commonViewer;
+
+	private Hyperlink activateTaskHyperlink;
 
 	private final ScalableInterestFilter interestFilter = new ScalableInterestFilter();
 
@@ -146,11 +148,13 @@ public class ContextEditorFormPage extends FormPage {
 
 		@Override
 		public void contextActivated(IInteractionContext context) {
+			updateContentArea();
 			refresh();
 		}
 
 		@Override
 		public void contextDeactivated(IInteractionContext context) {
+			updateContentArea();
 			refresh();
 		}
 
@@ -200,7 +204,7 @@ public class ContextEditorFormPage extends FormPage {
 		form.getBody().setLayout(new GridLayout(2, false));
 
 		createActionsSection(form.getBody());
-		createDisplaySection(form.getBody());
+		createContentSection(form.getBody());
 
 		form.reflow(true);
 	}
@@ -214,7 +218,7 @@ public class ContextEditorFormPage extends FormPage {
 	}
 
 	private void createActionsSection(Composite composite) {
-		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE);
+		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED);
 		section.setText(Messages.ContextEditorFormPage_Actions);
 
 		section.setLayout(new GridLayout());
@@ -241,7 +245,7 @@ public class ContextEditorFormPage extends FormPage {
 		doiScale.setMaximum(SCALE_STEPS);
 		doiScale.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
-				setFilterThreshold();
+				updateFilterThreshold();
 			}
 
 			public void widgetDefaultSelected(SelectionEvent e) {
@@ -249,7 +253,7 @@ public class ContextEditorFormPage extends FormPage {
 			}
 		});
 
-		if (!task.equals(TasksUi.getTaskActivityManager().getActiveTask())) {
+		if (!isActiveTask()) {
 			doiScale.setEnabled(false);
 		}
 
@@ -392,7 +396,7 @@ public class ContextEditorFormPage extends FormPage {
 	/**
 	 * Scales logarithmically to a reasonable interest threshold range (e.g. -10000..10000).
 	 */
-	protected void setFilterThreshold() {
+	protected void updateFilterThreshold() {
 		double setting = doiScale.getSelection() - (SCALE_STEPS / 2);
 		double threshold = Math.signum(setting) * Math.pow(Math.exp(Math.abs(setting)), 1.5);
 
@@ -424,60 +428,83 @@ public class ContextEditorFormPage extends FormPage {
 		}
 	}
 
-	private void createDisplaySection(Composite composite) {
-		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE);
+	private void createContentSection(Composite composite) {
+		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED);
 		section.setText(Messages.ContextEditorFormPage_Elements);
 		section.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		Composite sectionClient = toolkit.createComposite(section);
+		sectionClient = toolkit.createComposite(section);
+		sectionClient.setLayout(new FillLayout());
 		section.setClient(sectionClient);
 
-		if (task.equals(TasksUi.getTaskActivityManager().getActiveTask())) {
-			sectionClient.setLayout(new Layout() {
-
-				@Override
-				protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache) {
-					return new Point(0, 0);
-				}
-
-				@Override
-				protected void layout(Composite composite, boolean flushCache) {
-					Rectangle clientArea = composite.getClientArea();
-					commonViewer.getControl()
-							.setBounds(clientArea.x, clientArea.y, clientArea.width, clientArea.height);
-				}
-
-			});
-			createViewer(sectionClient);
-		} else {
-			sectionClient.setLayout(new GridLayout());
-			Hyperlink retrieveHyperlink = toolkit.createHyperlink(sectionClient,
-					Messages.ContextEditorFormPage_Activate_task_to_edit_context, SWT.NONE);
-			retrieveHyperlink.addMouseListener(new MouseListener() {
-
-				public void mouseUp(MouseEvent e) {
-					new TaskActivateAction().run(task);
-				}
-
-				public void mouseDoubleClick(MouseEvent e) {
-					// ignore
-				}
-
-				public void mouseDown(MouseEvent e) {
-					// ignore
-				}
-			});
-		}
-
-		section.setExpanded(true);
+		updateContentArea();
 	}
 
-	private void createViewer(Composite aParent) {
-		commonViewer = createCommonViewer(aParent);
+	private void createActivateTaskHyperlink(Composite parent) {
+		activateTaskHyperlink = toolkit.createHyperlink(parent,
+				Messages.ContextEditorFormPage_Activate_task_to_edit_context, SWT.NONE);
+		activateTaskHyperlink.addMouseListener(new MouseListener() {
+
+			public void mouseUp(MouseEvent e) {
+				new TaskActivateAction().run(task);
+			}
+
+			public void mouseDoubleClick(MouseEvent e) {
+				// ignore
+			}
+
+			public void mouseDown(MouseEvent e) {
+				// ignore
+			}
+		});
+	}
+
+	/**
+	 * Disposes the viewer when the current task is not active or creates it if task is activated.
+	 */
+	private void updateContentArea() {
+		if (isActiveTask()) {
+			doiScale.setEnabled(true);
+			doiScale.setSelection(SCALE_STEPS / 2);
+			if (activateTaskHyperlink != null) {
+				activateTaskHyperlink.dispose();
+				activateTaskHyperlink = null;
+			}
+			if (commonViewer == null) {
+				createViewer(sectionClient);
+			}
+			updateFilterThreshold();
+		} else {
+			doiScale.setEnabled(false);
+			doiScale.setSelection(SCALE_STEPS / 2);
+			if (commonViewer != null) {
+				commonViewer.getControl().dispose();
+				commonViewer = null;
+				disposeRefreshJob();
+			}
+			if (activateTaskHyperlink == null) {
+				createActivateTaskHyperlink(sectionClient);
+			}
+		}
+		sectionClient.layout();
+	}
+
+	private synchronized void disposeRefreshJob() {
+		if (refreshJob != null) {
+			refreshJob.cancel();
+			refreshJob = null;
+		}
+	}
+
+	private boolean isActiveTask() {
+		return task.equals(TasksUi.getTaskActivityManager().getActiveTask());
+	}
+
+	private void createViewer(Composite parent) {
+		commonViewer = new CommonViewer(ID_VIEWER, parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+		commonViewer.setUseHashlookup(true);
 		commonViewer.addFilter(interestFilter);
-
 		commonViewer.addOpenListener(new ContextNodeOpenListener(commonViewer));
-
 		try {
 			commonViewer.getControl().setRedraw(false);
 
@@ -512,12 +539,6 @@ public class ContextEditorFormPage extends FormPage {
 						"Could not set flat layout on Java content provider", e)); //$NON-NLS-1$
 			}
 		}
-	}
-
-	protected CommonViewer createCommonViewer(Composite parent) {
-		CommonViewer viewer = new CommonViewer(ID_VIEWER, parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
-		viewer.setUseHashlookup(true);
-		return viewer;
 	}
 
 	private void hookContextMenu() {
