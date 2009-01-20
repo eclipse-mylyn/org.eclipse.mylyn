@@ -32,7 +32,7 @@ public class OutlineItem {
 
 	private final int offset;
 
-	private final int length;
+	private int length;
 
 	private final String id;
 
@@ -64,8 +64,33 @@ public class OutlineItem {
 		}
 	}
 
+	/**
+	 * get the length of the outline item, which corresponds to the length of the heading text. The length does not
+	 * include content following the heading text itself.
+	 * 
+	 * @see #getSectionLength()
+	 */
 	public int getLength() {
 		return length;
+	}
+
+	/**
+	 * get the length of the section, which is the length of the heading text plus the length of any following content
+	 * up to the next peer-leveled heading or the parent's following sibling.
+	 * 
+	 * @see #getLength()
+	 */
+	public int getSectionLength() {
+		if (parent == null) {
+			return length;
+		}
+		List<OutlineItem> siblings = getParent().getChildren();
+		int index = siblings.indexOf(this);
+		if (index < (siblings.size() - 1)) {
+			return siblings.get(index + 1).getOffset() - getOffset();
+		}
+		int parentRelativeOffset = getOffset() - parent.getOffset();
+		return parent.getSectionLength() - parentRelativeOffset;
 	}
 
 	public String getKind() {
@@ -76,19 +101,34 @@ public class OutlineItem {
 		this.kind = kind;
 	}
 
+	/**
+	 * the text of the heading which could be truncated
+	 */
 	public String getLabel() {
 		return label;
 	}
 
+	/**
+	 * the id of the heading, which is typically (though not guaranteed to be) unique within a document. Heading ids may
+	 * be used as the target of document-relative anchors
+	 */
 	public String getId() {
 		return id;
 	}
 
+	/**
+	 * the level of the document which is positive and usually <= 6 except for the root item where the value is
+	 * undefined.
+	 */
 	public int getLevel() {
 		if (parent == null) {
 			return 0;
 		}
 		return level;
+	}
+
+	void setLength(int length) {
+		this.length = length;
 	}
 
 	public void setLabel(String label) {
@@ -97,6 +137,13 @@ public class OutlineItem {
 
 	public OutlineItem getParent() {
 		return parent;
+	}
+
+	/**
+	 * indicate if this is the root item (that is, the item representing the whole document)
+	 */
+	public boolean isRootItem() {
+		return parent == null;
 	}
 
 	/**
@@ -297,6 +344,26 @@ public class OutlineItem {
 			}
 		}
 		itemsById = null;
+		setLength(otherParent.getLength());
 	}
 
+	/**
+	 * Indicate if this outline item contains the given outline item. The computation uses outline item offsets (the
+	 * {@link #getOffset() offset} and {@link #getSectionLength() section length}.
+	 * 
+	 * @return true if and only if the offsets of the provided item lie within the offsets of this outline item.
+	 */
+	public boolean contains(OutlineItem item) {
+		if (item == this || isRootItem()) {
+			return true;
+		}
+		if (getOffset() <= item.getOffset()) {
+			int end = getOffset() + getSectionLength();
+			int itemEnd = item.getOffset() + item.getSectionLength();
+			if (end >= itemEnd) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

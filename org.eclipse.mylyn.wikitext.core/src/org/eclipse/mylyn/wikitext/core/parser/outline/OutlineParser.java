@@ -62,13 +62,15 @@ public class OutlineParser {
 	}
 
 	public OutlineItem createRootItem() {
-		return createOutlineItem(null, 0, "<root>", -1, 0, "<root>"); //$NON-NLS-1$ //$NON-NLS-2$
+		return createOutlineItem(null, 0, "<root>", 0, 0, "<root>"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public OutlineItem parse(OutlineItem root, String markup) {
 		if (markup == null || markup.length() == 0 || markupLanguage == null) {
+			root.setLength(markup == null ? 0 : markup.length());
 			return root;
 		}
+		root.setLength(markup.length());
 
 		markupLanguage.setFilterGenerativeContents(true);
 		markupLanguage.setBlocksOnly(isBlocksOnly());
