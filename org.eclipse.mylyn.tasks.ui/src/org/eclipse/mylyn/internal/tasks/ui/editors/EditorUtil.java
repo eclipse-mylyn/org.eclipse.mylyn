@@ -264,7 +264,7 @@ public class EditorUtil {
 
 	private static void disable(Composite composite) {
 		if (!composite.isDisposed()) {
-			if (!composite.isEnabled()) {
+			if (!composite.getEnabled()) {
 				composite.setData(KEY_DISABLED, Boolean.TRUE);
 			} else {
 				composite.setEnabled(false);
@@ -273,7 +273,7 @@ public class EditorUtil {
 				if (control instanceof Composite) {
 					disable((Composite) control);
 				} else {
-					if (!control.isEnabled()) {
+					if (!control.getEnabled()) {
 						control.setData(KEY_DISABLED, Boolean.TRUE);
 					} else {
 						control.setEnabled(false);

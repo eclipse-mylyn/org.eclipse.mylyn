@@ -30,16 +30,16 @@ public class EditorUtilTest extends TestCase {
 		Label label = new Label(composite, SWT.NONE);
 
 		EditorUtil.setEnabledState(composite, false);
-		assertFalse(composite.isEnabled());
-		assertFalse(label.isEnabled());
+		assertFalse(composite.getEnabled());
+		assertFalse(label.getEnabled());
 
 		EditorUtil.setEnabledState(composite, true);
-		assertTrue(composite.isEnabled());
-		assertTrue(label.isEnabled());
+		assertTrue(composite.getEnabled());
+		assertTrue(label.getEnabled());
 
 		EditorUtil.setEnabledState(composite, true);
-		assertTrue(composite.isEnabled());
-		assertTrue(label.isEnabled());
+		assertTrue(composite.getEnabled());
+		assertTrue(label.getEnabled());
 	}
 
 	public void testSetEnabledStateDisabledChild() {
@@ -49,12 +49,27 @@ public class EditorUtilTest extends TestCase {
 		label.setEnabled(false);
 
 		EditorUtil.setEnabledState(composite, false);
-		assertFalse(composite.isEnabled());
-		assertFalse(label.isEnabled());
+		assertFalse(composite.getEnabled());
+		assertFalse(label.getEnabled());
 
 		EditorUtil.setEnabledState(composite, true);
-		assertTrue(composite.isEnabled());
-		assertFalse(label.isEnabled());
+		assertTrue(composite.getEnabled());
+		assertFalse(label.getEnabled());
+	}
+
+	public void testSetEnabledStateDisabledParent() {
+		Shell shell = new Shell();
+		Composite composite = new Composite(shell, SWT.NONE);
+		composite.setEnabled(false);
+		Label label = new Label(composite, SWT.NONE);
+
+		EditorUtil.setEnabledState(composite, false);
+		assertFalse(composite.getEnabled());
+		assertFalse(label.getEnabled());
+
+		EditorUtil.setEnabledState(composite, true);
+		assertFalse(composite.getEnabled());
+		assertTrue(label.getEnabled());
 	}
 
 	public void testSetEnabledStateDisabledChildAndComposite() {
@@ -65,12 +80,12 @@ public class EditorUtilTest extends TestCase {
 		label.setEnabled(false);
 
 		EditorUtil.setEnabledState(composite, false);
-		assertFalse(composite.isEnabled());
-		assertFalse(label.isEnabled());
+		assertFalse(composite.getEnabled());
+		assertFalse(label.getEnabled());
 
 		EditorUtil.setEnabledState(composite, true);
-		assertFalse(composite.isEnabled());
-		assertFalse(label.isEnabled());
+		assertFalse(composite.getEnabled());
+		assertFalse(label.getEnabled());
 	}
 
 	public void testSetEnabledStateDisableStateRemoved() {
@@ -83,8 +98,8 @@ public class EditorUtilTest extends TestCase {
 		EditorUtil.setEnabledState(composite, true);
 		// the second time all state information should have been removed and all controls enabled
 		EditorUtil.setEnabledState(composite, true);
-		assertTrue(composite.isEnabled());
-		assertTrue(label.isEnabled());
+		assertTrue(composite.getEnabled());
+		assertTrue(label.getEnabled());
 	}
 
 }
