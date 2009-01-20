@@ -94,11 +94,11 @@
 	<target name="update-versions">
 		<replace dir="..">
 			<replacefilter 
-			    token="3.0.2.qualifier"
-				value="3.0.3.qualifier"/>
+			    token="3.0.3.qualifier"
+				value="3.0.4.qualifier"/>
 			<replacefilter 
-			    token="3.0.2.mylynQualifier"
-				value="3.0.3.mylynQualifier"/>
+			    token="3.0.3.mylynQualifier"
+				value="3.0.4.mylynQualifier"/>
 			<include name="org.eclipse.mylyn*/**/MANIFEST.MF"/>
 			<include name="org.eclipse.mylyn*/**/feature.xml"/>
 		</replace>
