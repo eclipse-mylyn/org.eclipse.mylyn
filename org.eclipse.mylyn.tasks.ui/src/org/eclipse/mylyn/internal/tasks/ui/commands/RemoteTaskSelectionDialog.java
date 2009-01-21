@@ -1,12 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Willian Mitsuda and others. 
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Tasktop Technologies - initial API and implementation
+ *     Willian Mitsuda - initial API and implementation
+ *     Tasktop Technologies - improvements
+ *     Tomasz Zarna, IBM Corporation - improvements for bug 261648   
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.commands;
@@ -184,7 +186,11 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 		repositoriesViewer = new ComboViewer(repositoriesComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
 		repositoriesViewer.setLabelProvider(new TaskRepositoryLabelProvider());
 		repositoriesViewer.setContentProvider(new ArrayContentProvider());
-		repositoriesViewer.setInput(getTaskRepositories());
+		List<TaskRepository> taskRepositories = getTaskRepositories();
+		repositoriesViewer.setInput(taskRepositories);
+		if (taskRepositories.size() == 1) {
+			repositoriesViewer.setSelection(new StructuredSelection(taskRepositories.get(0)));
+		}
 		TaskRepository currentRepository = TasksUiUtil.getSelectedRepository(null);
 		if (currentRepository != null) {
 			repositoriesViewer.setSelection(new StructuredSelection(currentRepository), true);
