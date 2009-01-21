@@ -23,6 +23,7 @@ import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.ToolTip;
+import org.eclipse.mylyn.internal.wikitext.ui.editor.dnd.DndConfigurationStrategy;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
@@ -42,7 +43,6 @@ import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 
 /**
  * 
- * 
  * @author David Green
  */
 public class MarkupEditorOutline extends ContentOutlinePage implements IShowInSource, IShowInTarget {
@@ -50,6 +50,8 @@ public class MarkupEditorOutline extends ContentOutlinePage implements IShowInSo
 	private final MarkupEditor editor;
 
 	private boolean disableReveal;
+
+	private DndConfigurationStrategy dndConfigurationStrategy;
 
 	public MarkupEditorOutline(MarkupEditor editor) {
 		this.editor = editor;
@@ -139,10 +141,27 @@ public class MarkupEditorOutline extends ContentOutlinePage implements IShowInSo
 
 		getSite().registerContextMenu(MarkupEditor.ID + ".outlineContextMenu", manager, viewer); //$NON-NLS-1$
 
+		configureDnd();
+
+	}
+
+	@Override
+	public void dispose() {
+		if (dndConfigurationStrategy != null) {
+			dndConfigurationStrategy.dispose();
+			dndConfigurationStrategy = null;
+		}
+		super.dispose();
+	}
+
+	private void configureDnd() {
+		dndConfigurationStrategy = new DndConfigurationStrategy();
+		dndConfigurationStrategy.configure(editor, getControl(), getTreeViewer());
 	}
 
 	protected void contextMenuAboutToShow(IMenuManager menuManager) {
 		menuManager.add(new Separator(IWorkbenchActionConstants.GROUP_SHOW_IN));
+		menuManager.add(new Separator(IWorkbenchActionConstants.GROUP_REORGANIZE));
 		menuManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 

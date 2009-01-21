@@ -44,6 +44,7 @@ import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.IDocumentPartitioningListener;
 import org.eclipse.jface.text.ITextSelection;
+import org.eclipse.jface.text.ITextViewerExtension6;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.URLHyperlink;
@@ -64,6 +65,8 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.actions.SetMarkupLanguageAction;
+import org.eclipse.mylyn.internal.wikitext.ui.editor.operations.AbstractDocumentCommand;
+import org.eclipse.mylyn.internal.wikitext.ui.editor.operations.CommandManager;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.preferences.Preferences;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.reconciler.MarkupMonoReconciler;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.FastMarkupPartitioner;
@@ -117,7 +120,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  * 
  * @author David Green
  */
-public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSource {
+public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSource, CommandManager {
 	private static final String RULER_CONTEXT_MENU_ID = "org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor.ruler"; //$NON-NLS-1$
 
 	/**
@@ -1093,4 +1096,13 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		}
 	}
 
+	public void perform(AbstractDocumentCommand command) throws CoreException {
+		disableReveal = true;
+		try {
+			command.execute(((ITextViewerExtension6) getViewer()).getUndoManager(), getViewer().getDocument());
+		} finally {
+			disableReveal = false;
+		}
+		updateOutlineSelection();
+	}
 }
