@@ -60,6 +60,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
@@ -148,14 +149,20 @@ public class ContextEditorFormPage extends FormPage {
 
 		@Override
 		public void contextActivated(IInteractionContext context) {
-			updateContentArea();
-			refresh();
+			Control partControl = getPartControl();
+			if (partControl != null && !partControl.isDisposed()) {
+				updateContentArea();
+				refresh();
+			}
 		}
 
 		@Override
 		public void contextDeactivated(IInteractionContext context) {
-			updateContentArea();
-			refresh();
+			Control partControl = getPartControl();
+			if (partControl != null && !partControl.isDisposed()) {
+				updateContentArea();
+				refresh();
+			}
 		}
 
 		@Override
