@@ -241,7 +241,7 @@ public class OutlineItem {
 		}
 
 		public boolean visit(OutlineItem item) {
-			if (item.getOffset() == -1) {
+			if (item.isRootItem()) {
 				return true;
 			}
 			if (nearest == null) {
