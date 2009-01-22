@@ -52,6 +52,26 @@ Clicking on an item in the outline will show the corresponding header in the sou
 
 Note that clicking on an item in the outline has no effect if the editor preview is showing.
 
+Items in the outline view can be moved within the document by using the mouse to drag and drop the item to the desired location.  
+
+h3. Folding
+
+The WikiText editor supports folding regions of text.  Regions can be folded or expanded by clicking the folding indicators in the gutter.
+
+!images/editor-folding.png!
+
+Folding is enabled using the context menu in the editor gutter.
+
+!images/editor-folding-menu.png!
+
+h4. Active Folding
+
+Folded regions can be managed by your Mylyn task context.  With active folding enabled regions of the document that are not in the task context are folded and regions that are in the task context are expanded.  As the task context changes Mylyn will fold and expand regions as needed.   
+
+To enable active folding first activate a Mylyn task then toggle the active folding button in the toolbar.
+
+!images/editor-toggle-active-folding.png!
+
 h2. Switching Markup Languages
 
 The WikiText editor supports multiple markup languages.  The editor makes a best-guess at the markup language from the file extension.  To switch markup languages in the editor invoke the context menu *Markup Languages* and select the language:
