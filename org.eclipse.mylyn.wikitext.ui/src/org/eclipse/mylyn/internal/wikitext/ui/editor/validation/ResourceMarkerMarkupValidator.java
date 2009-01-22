@@ -10,7 +10,11 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.ui.editor.validation;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -39,28 +43,75 @@ public class ResourceMarkerMarkupValidator extends DocumentRegionValidator {
 
 	@Override
 	protected void clearProblems(IProgressMonitor monitor, IDocument document, IRegion region) throws CoreException {
-		// find and remove any existing validation errors in the given region.
-		IMarker[] findMarkers = resource.findMarkers("org.eclipse.mylyn.wikitext.core.validation.problem", true, //$NON-NLS-1$
-				IResource.DEPTH_ZERO);
-		monitor.beginTask(Messages.getString("ResourceMarkerMarkupValidator.1"), findMarkers.length == 0 ? 1 : findMarkers.length); //$NON-NLS-1$
-		for (IMarker marker : findMarkers) {
-			int offset = marker.getAttribute(IMarker.CHAR_START, 0);
-			int end = marker.getAttribute(IMarker.CHAR_END, offset);
-			if (overlaps(region, offset, end - offset) || offset >= document.getLength()) {
-				marker.delete();
-			}
-			monitor.worked(1);
-		}
+		monitor.beginTask(Messages.getString("ResourceMarkerMarkupValidator.1"), 1); //$NON-NLS-1$
+		// nothing to do: we do all of this in the createProblems method
 		monitor.done();
 	}
 
 	@Override
 	protected void createProblems(IProgressMonitor monitor, IDocument document, IRegion region,
 			List<ValidationProblem> problems) throws CoreException {
+		final int findMarkersWorkSize = 100;
+		final int zeroProblemsStep = 10;
+		monitor.beginTask(
+				Messages.getString("ResourceMarkerMarkupValidator.2"), problems.size() + findMarkersWorkSize + zeroProblemsStep); //$NON-NLS-1$
+
+		// find and remove any existing validation errors in the given region.
+		List<IMarker> markersInRegion = new ArrayList<IMarker>(5);
+		// we also track markers by offset, however we don't track multiple markers at the same offset
+		Map<Integer, IMarker> markerByOffset = new HashMap<Integer, IMarker>();
+		{
+			IMarker[] findMarkers = resource.findMarkers("org.eclipse.mylyn.wikitext.core.validation.problem", true, //$NON-NLS-1$
+					IResource.DEPTH_ZERO);
+			for (IMarker marker : findMarkers) {
+				int offset = marker.getAttribute(IMarker.CHAR_START, 0);
+				int end = marker.getAttribute(IMarker.CHAR_END, offset);
+				if (overlaps(region, offset, end - offset) || offset >= document.getLength()) {
+					markersInRegion.add(marker);
+					markerByOffset.put(offset, marker);
+				}
+			}
+			monitor.worked(findMarkersWorkSize);
+		}
+
 		if (problems.isEmpty()) {
+			for (IMarker marker : markersInRegion) {
+				marker.delete();
+			}
+			monitor.worked(zeroProblemsStep);
+			monitor.done();
 			return;
 		}
-		monitor.beginTask(Messages.getString("ResourceMarkerMarkupValidator.2"), problems.size()); //$NON-NLS-1$
+		monitor.worked(zeroProblemsStep);
+
+		// bug 261747: compute a delta so that we can avoid flicker
+		if (!markersInRegion.isEmpty()) {
+			// find all problems for which there is a marker that matches, and remove the problem from our
+			// collection of problems to create
+			Iterator<ValidationProblem> problemIt = problems.iterator();
+			while (problemIt.hasNext()) {
+				ValidationProblem problem = problemIt.next();
+				IMarker marker = markerByOffset.get(problem.getOffset());
+				if (marker != null) {
+					int charEnd = marker.getAttribute(IMarker.CHAR_END, -1);
+					if ((problem.getOffset() + problem.getLength()) == charEnd) {
+						if (toMarkerSeverity(problem.getSeverity()) == marker.getAttribute(IMarker.SEVERITY, -1)) {
+							if (problem.getMessage().equals(marker.getAttribute(IMarker.MESSAGE, ""))) { //$NON-NLS-1$
+								problemIt.remove();
+								markerByOffset.remove(problem.getOffset());
+								markersInRegion.remove(marker);
+								monitor.worked(1);
+							}
+						}
+					}
+				}
+			}
+			// remove all markers that had no matching problem
+			for (IMarker marker : markersInRegion) {
+				marker.delete();
+			}
+		}
+
 		for (ValidationProblem problem : problems) {
 			IMarker marker = resource.createMarker(problem.getMarkerId());
 
