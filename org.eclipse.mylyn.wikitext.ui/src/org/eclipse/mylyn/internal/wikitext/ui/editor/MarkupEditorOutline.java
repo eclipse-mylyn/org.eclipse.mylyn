@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.ui.editor;
 
+import org.eclipse.jface.action.GroupMarker;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -39,6 +41,8 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.part.IShowInSource;
 import org.eclipse.ui.part.IShowInTarget;
 import org.eclipse.ui.part.ShowInContext;
+import org.eclipse.ui.texteditor.ITextEditorActionConstants;
+import org.eclipse.ui.texteditor.IUpdate;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 
 /**
@@ -142,7 +146,7 @@ public class MarkupEditorOutline extends ContentOutlinePage implements IShowInSo
 		getSite().registerContextMenu(MarkupEditor.ID + ".outlineContextMenu", manager, viewer); //$NON-NLS-1$
 
 		configureDnd();
-
+		configureActions();
 	}
 
 	@Override
@@ -159,10 +163,59 @@ public class MarkupEditorOutline extends ContentOutlinePage implements IShowInSo
 		dndConfigurationStrategy.configure(editor, getControl(), getTreeViewer());
 	}
 
+	private void configureActions() {
+		registerAction(ITextEditorActionConstants.UNDO);
+		registerAction(ITextEditorActionConstants.REDO);
+		registerAction(ITextEditorActionConstants.REVERT);
+		registerAction(ITextEditorActionConstants.SAVE);
+		registerAction(ITextEditorActionConstants.FIND);
+		registerAction(ITextEditorActionConstants.PRINT);
+	}
+
+	private void registerAction(String actionId) {
+		IAction action = editor.getAction(actionId);
+		if (action != null) {
+			getSite().getActionBars().setGlobalActionHandler(actionId, action);
+		}
+	}
+
 	protected void contextMenuAboutToShow(IMenuManager menuManager) {
+
+		menuManager.add(new Separator(ITextEditorActionConstants.GROUP_UNDO));
+		menuManager.add(new GroupMarker(ITextEditorActionConstants.GROUP_SAVE));
+		menuManager.add(new Separator(ITextEditorActionConstants.GROUP_COPY));
+		menuManager.add(new Separator(ITextEditorActionConstants.GROUP_PRINT));
+		menuManager.add(new Separator(ITextEditorActionConstants.GROUP_EDIT));
+		menuManager.add(new Separator(ITextEditorActionConstants.GROUP_FIND));
+		menuManager.add(new Separator(IWorkbenchActionConstants.GROUP_ADD));
 		menuManager.add(new Separator(IWorkbenchActionConstants.GROUP_SHOW_IN));
 		menuManager.add(new Separator(IWorkbenchActionConstants.GROUP_REORGANIZE));
+		menuManager.add(new Separator(ITextEditorActionConstants.GROUP_REST));
 		menuManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+
+		addAction(menuManager, ITextEditorActionConstants.GROUP_UNDO, ITextEditorActionConstants.UNDO);
+		addAction(menuManager, ITextEditorActionConstants.GROUP_UNDO, ITextEditorActionConstants.REDO);
+		addAction(menuManager, ITextEditorActionConstants.GROUP_UNDO, ITextEditorActionConstants.REVERT);
+		addAction(menuManager, ITextEditorActionConstants.GROUP_SAVE, ITextEditorActionConstants.SAVE);
+		addAction(menuManager, ITextEditorActionConstants.GROUP_FIND, ITextEditorActionConstants.FIND);
+		addAction(menuManager, ITextEditorActionConstants.GROUP_PRINT, ITextEditorActionConstants.PRINT);
+
+	}
+
+	protected final void addAction(IMenuManager menu, String group, String actionId) {
+		IAction action = editor.getAction(actionId);
+		if (action != null) {
+			if (action instanceof IUpdate) {
+				((IUpdate) action).update();
+			}
+
+			IMenuManager subMenu = menu.findMenuUsingPath(group);
+			if (subMenu != null) {
+				subMenu.add(action);
+			} else {
+				menu.appendToGroup(group, action);
+			}
+		}
 	}
 
 	@Override
