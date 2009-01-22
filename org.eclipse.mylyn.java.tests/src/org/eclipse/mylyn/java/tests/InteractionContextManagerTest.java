@@ -173,6 +173,7 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 
 	public void testDelete() {
 		contextStore.getFileForContext("1").delete();
+		manager.deleteContext("1");
 		assertFalse(contextStore.getFileForContext("1").exists());
 		assertFalse(manager.hasContext("1"));
 		manager.internalActivateContext(contextStore.loadContext("1"));
@@ -207,6 +208,12 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 	private boolean containsHandle(InteractionContext context, String mockHandle) {
 		for (IInteractionElement element : context.getAllElements()) {
 			if (element.getHandleIdentifier().equals(mockHandle)) {
+				return true;
+			}
+		}
+
+		for (InteractionEvent element : context.getInteractionHistory()) {
+			if (element.getStructureHandle().equals(mockHandle)) {
 				return true;
 			}
 		}
