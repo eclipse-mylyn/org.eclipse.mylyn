@@ -269,7 +269,23 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		viewer.getTextWidget().addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				updateOutlineSelection();
+				if (isRelevantKeyCode(e.keyCode)) {
+					updateOutlineSelection();
+				}
+			}
+
+			private boolean isRelevantKeyCode(int keyCode) {
+				// for some reason not all key presses result in a selection change
+				switch (keyCode) {
+				case SWT.ARROW_DOWN:
+				case SWT.ARROW_LEFT:
+				case SWT.ARROW_RIGHT:
+				case SWT.ARROW_UP:
+				case SWT.PAGE_DOWN:
+				case SWT.PAGE_UP:
+					return true;
+				}
+				return false;
 			}
 		});
 		viewer.getTextWidget().addMouseListener(new MouseAdapter() {
