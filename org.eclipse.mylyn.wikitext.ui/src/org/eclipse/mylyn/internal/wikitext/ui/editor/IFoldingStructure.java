@@ -30,14 +30,18 @@ public interface IFoldingStructure {
 	 * 
 	 * @param items
 	 *            the items to collapse
+	 * @param collapseRegionContainingCaret
+	 *            indicate if the region containing the caret should be collapsed
 	 */
-	public void collapseElements(Collection<OutlineItem> items);
+	public void collapseElements(Collection<OutlineItem> items, boolean collapseRegionContainingCaret);
 
 	/**
 	 * expand the given items. Does nothing if folding is not {@link #isFoldingEnabled() enabled}.
 	 * 
 	 * @param items
 	 *            the items to expand
+	 * @param collapseRegionContainingCaret
+	 *            indicate if the region containing the caret should be collapsed
 	 */
 	public void expandElements(Collection<OutlineItem> items);
 
@@ -47,13 +51,18 @@ public interface IFoldingStructure {
 	 * 
 	 * @param items
 	 *            the items to expand
+	 * @param collapseRegionContainingCaret
+	 *            indicate if the region containing the caret should be collapsed
 	 */
-	public void expandElementsExclusive(Collection<OutlineItem> items);
+	public void expandElementsExclusive(Collection<OutlineItem> items, boolean collapseRegionContainingCaret);
 
 	/**
 	 * collapse all items. Does nothing if folding is not {@link #isFoldingEnabled() enabled}.
+	 * 
+	 * @param collapseRegionContainingCaret
+	 *            indicate if the region containing the caret should be collapsed
 	 */
-	public void collapseAll();
+	public void collapseAll(boolean collapseRegionContainingCaret);
 
 	/**
 	 * expand all items. Does nothing if folding is not {@link #isFoldingEnabled() enabled}.

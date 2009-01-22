@@ -80,14 +80,18 @@ class FoldingStructure implements IFoldingStructure {
 		textOperationTarget = (ITextOperationTarget) editor.getAdapter(ITextOperationTarget.class);
 	}
 
-	public void collapseAll() {
+	public void collapseAll(boolean collapseRegionContainingCaret) {
 		if (!isFoldingEnabled()) {
 			return;
 		}
-		textOperationTarget.doOperation(ProjectionViewer.COLLAPSE_ALL);
+		if (collapseRegionContainingCaret) {
+			textOperationTarget.doOperation(ProjectionViewer.COLLAPSE_ALL);
+		} else {
+			expandElementsExclusive(new ArrayList<OutlineItem>(), collapseRegionContainingCaret);
+		}
 	}
 
-	public void collapseElements(Collection<OutlineItem> items) {
+	public void collapseElements(Collection<OutlineItem> items, final boolean collapseRegionContainingCaret) {
 		if (!isFoldingEnabled()) {
 			return;
 		}
@@ -103,7 +107,7 @@ class FoldingStructure implements IFoldingStructure {
 				}
 				return false;
 			}
-		});
+		}, collapseRegionContainingCaret);
 	}
 
 	public void expandAll() {
@@ -129,15 +133,15 @@ class FoldingStructure implements IFoldingStructure {
 				}
 				return false;
 			}
-		});
+		}, true);
 	}
 
-	public void expandElementsExclusive(Collection<OutlineItem> items) {
+	public void expandElementsExclusive(Collection<OutlineItem> items, boolean collapseRegionContainingCaret) {
 		if (!isFoldingEnabled()) {
 			return;
 		}
 		if (items == null || items.isEmpty()) {
-			collapseAll();
+			collapseAll(collapseRegionContainingCaret);
 			return;
 		}
 		operateOnAnnotations(new AbstractItemsAnnotationOperation(items) {
@@ -158,11 +162,11 @@ class FoldingStructure implements IFoldingStructure {
 				}
 				return false;
 			}
-		});
+		}, collapseRegionContainingCaret);
 	}
 
 	@SuppressWarnings("unchecked")
-	public void operateOnAnnotations(AnnotationOperation operation) {
+	public void operateOnAnnotations(AnnotationOperation operation, boolean collapseRegionIncludingCaret) {
 		if (!isFoldingEnabled()) {
 			return;
 		}
@@ -182,6 +186,12 @@ class FoldingStructure implements IFoldingStructure {
 					}
 					modifications.add(projectionAnnotation);
 					Position position = annotationModel.getPosition(projectionAnnotation);
+
+					if (!collapseRegionIncludingCaret && projectionAnnotation.isCollapsed() && selectedPosition != null
+							&& selectedPosition.overlapsWith(position.getOffset(), position.getLength())) {
+						projectionAnnotation.markExpanded();
+					}
+
 					if (selectedPosition != null && position != null && projectionAnnotation.isCollapsed()
 							&& selectedPosition.overlapsWith(position.offset, position.length)) {
 						updateSelectedRange = true;
@@ -217,4 +227,5 @@ class FoldingStructure implements IFoldingStructure {
 	public final boolean isFoldingEnabled() {
 		return viewer.getProjectionAnnotationModel() != null;
 	}
+
 }

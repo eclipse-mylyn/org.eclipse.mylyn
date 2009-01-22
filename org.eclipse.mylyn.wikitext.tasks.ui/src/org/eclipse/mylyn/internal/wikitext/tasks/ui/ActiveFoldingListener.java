@@ -14,9 +14,9 @@ package org.eclipse.mylyn.internal.wikitext.tasks.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.Preferences;
-import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
-import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
@@ -39,11 +39,12 @@ class ActiveFoldingListener extends AbstractContextListener {
 
 	private final IFoldingStructure foldingStructure;
 
-	private IPropertyChangeListener preferenceListener = new IPropertyChangeListener() {
+	private org.eclipse.jface.util.IPropertyChangeListener preferenceListener = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
 			if (WikiTextTasksUiPlugin.PREF_ACTIVE_FOLDING_ENABLED.equals(event.getProperty())) {
 				Object newValue = event.getNewValue();
-				updateFolding(Boolean.TRUE.toString().equals(newValue.toString()));
+				foldingEnabled = Boolean.TRUE.toString().equals(newValue.toString());
+				updateFolding(false);
 			}
 		}
 	};
@@ -52,22 +53,20 @@ class ActiveFoldingListener extends AbstractContextListener {
 
 	private final AbstractContextStructureBridge bridge;
 
+	private final IPreferenceStore preferences;
+
 	public ActiveFoldingListener(IEditorPart part, IFoldingStructure foldingStructure) {
 		this.part = part;
 		this.foldingStructure = foldingStructure;
 		bridge = ContextCore.getStructureBridge(WikiTextContextStructureBridge.CONTENT_TYPE);
 		ContextCore.getContextManager().addListener(this);
-		Preferences pluginPreferences = WikiTextTasksUiPlugin.getDefault().getPluginPreferences();
-		pluginPreferences.addPropertyChangeListener(preferenceListener);
-		updateFolding(pluginPreferences.getBoolean(WikiTextTasksUiPlugin.PREF_ACTIVE_FOLDING_ENABLED));
+		preferences = WikiTextTasksUiPlugin.getDefault().getPreferenceStore();
+		preferences.addPropertyChangeListener(preferenceListener);
+		foldingEnabled = preferences.getBoolean(WikiTextTasksUiPlugin.PREF_ACTIVE_FOLDING_ENABLED);
+		updateFolding(false);
 	}
 
-	private void updateFolding(boolean foldingEnabled) {
-		this.foldingEnabled = foldingEnabled;
-		updateFolding();
-	}
-
-	private void updateFolding() {
+	private void updateFolding(boolean elementsDeleted) {
 		if (!foldingStructure.isFoldingEnabled()) {
 			return;
 		}
@@ -88,9 +87,9 @@ class ActiveFoldingListener extends AbstractContextListener {
 					}
 				});
 				if (toExpand.isEmpty()) {
-					foldingStructure.collapseAll();
+					foldingStructure.collapseAll(elementsDeleted);
 				} else {
-					foldingStructure.expandElementsExclusive(toExpand);
+					foldingStructure.expandElementsExclusive(toExpand, elementsDeleted);
 				}
 			}
 		}
@@ -99,7 +98,7 @@ class ActiveFoldingListener extends AbstractContextListener {
 	@Override
 	public void contextActivated(IInteractionContext context) {
 		if (foldingStructure.isFoldingEnabled()) {
-			updateFolding();
+			updateFolding(false);
 		}
 	}
 
@@ -109,7 +108,7 @@ class ActiveFoldingListener extends AbstractContextListener {
 			if (!foldingEnabled || !ContextCore.getContextManager().isContextActive()) {
 				foldingStructure.expandAll();
 			} else {
-				foldingStructure.collapseAll();
+				foldingStructure.collapseAll(true);
 			}
 		}
 	}
@@ -124,20 +123,20 @@ class ActiveFoldingListener extends AbstractContextListener {
 	@Override
 	public void interestChanged(List<IInteractionElement> elements) {
 		if (foldingStructure.isFoldingEnabled()) {
-			updateFolding();
+			updateFolding(false);
 		}
 	}
 
 	@Override
 	public void elementsDeleted(List<IInteractionElement> elements) {
 		if (foldingStructure.isFoldingEnabled()) {
-			updateFolding();
+			updateFolding(true);
 		}
 	}
 
 	public void dispose() {
 		if (preferenceListener != null) {
-			WikiTextTasksUiPlugin.getDefault().getPluginPreferences().removePropertyChangeListener(preferenceListener);
+			preferences.removePropertyChangeListener(preferenceListener);
 			preferenceListener = null;
 		}
 		ContextCore.getContextManager().removeListener(this);
