@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 David Green and others.
+ * Copyright (c) 2007, 2009 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,7 +14,8 @@ import java.util.Iterator;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.internal.wikitext.ui.viewer.CssStyleManager.CssRule;
+import org.eclipse.mylyn.internal.wikitext.ui.util.css.CssParser;
+import org.eclipse.mylyn.internal.wikitext.ui.util.css.CssRule;
 import org.eclipse.mylyn.wikitext.tests.HeadRequired;
 import org.eclipse.swt.graphics.RGB;
 
@@ -50,11 +51,18 @@ public class CssStyleManagerTest extends TestCase {
 		assertEquals(white, white4);
 	}
 
+	public void processCssStyles(FontState state, FontState parentState, String cssStyles) {
+		Iterator<CssRule> ruleIterator = new CssParser().createRuleIterator(cssStyles);
+		while (ruleIterator.hasNext()) {
+			cssStyleManager.processCssStyles(state, parentState, ruleIterator.next());
+		}
+	}
+
 	public void testProcessCssStyles() {
 		FontState defaultState = new FontState();
 		defaultState.size = 12;
 		FontState state = new FontState();
-		cssStyleManager.processCssStyles(state, defaultState,
+		processCssStyles(state, defaultState,
 				"font-size: 14px;color: rgb(3,3,3);font-style: italic bold;text-decoration: underline; background-color: blue;");
 
 		assertEquals(14.0f, state.size);
@@ -83,7 +91,7 @@ public class CssStyleManagerTest extends TestCase {
 
 		assertEquals(new FontState(), state);
 
-		cssStyleManager.processCssStyles(state, defaultState, "");
+		processCssStyles(state, defaultState, "");
 
 		assertEquals(0.0f, state.size);
 		assertEquals(null, state.background);
@@ -99,18 +107,4 @@ public class CssStyleManagerTest extends TestCase {
 		assertEquals(new FontState(), state);
 	}
 
-	public void testDetectStyles() {
-		String css = "a: b and more; c: d ; e: fg; h i: j";
-		String[] expectedRuleNames = new String[] { "a", "c", "e", "i" };
-		String[] expectedRuleValues = new String[] { "b and more", "d", "fg", "j" };
-		Iterator<CssRule> ruleIterator = cssStyleManager.createRuleIterator(css);
-		int count = 0;
-		while (ruleIterator.hasNext()) {
-			CssRule rule = ruleIterator.next();
-			++count;
-			assertEquals(expectedRuleNames[count - 1], rule.name);
-			assertEquals(expectedRuleValues[count - 1], rule.value);
-		}
-		assertEquals(expectedRuleNames.length, count);
-	}
 }

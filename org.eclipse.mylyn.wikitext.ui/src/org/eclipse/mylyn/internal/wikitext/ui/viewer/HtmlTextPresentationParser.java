@@ -11,8 +11,11 @@
 package org.eclipse.mylyn.internal.wikitext.ui.viewer;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
@@ -31,6 +34,10 @@ import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.AnnotationModel;
 import org.eclipse.mylyn.internal.wikitext.ui.util.ImageCache;
+import org.eclipse.mylyn.internal.wikitext.ui.util.css.CssParser;
+import org.eclipse.mylyn.internal.wikitext.ui.util.css.CssRule;
+import org.eclipse.mylyn.internal.wikitext.ui.util.css.ElementInfo;
+import org.eclipse.mylyn.internal.wikitext.ui.util.css.Stylesheet;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.BulletAnnotation;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.HorizontalRuleAnnotation;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.ImageAnnotation;
@@ -77,6 +84,8 @@ public class HtmlTextPresentationParser {
 	 * element names for elements that cause adjacent whitespace to be collapsed
 	 */
 	private static Set<String> whitespaceCollapsingElements = new HashSet<String>();
+
+	private static Stylesheet defaultStylesheet;
 
 	static {
 		spanElements.add("a"); //$NON-NLS-1$
@@ -136,7 +145,7 @@ public class HtmlTextPresentationParser {
 		whitespaceCollapsingElements.add("hr"); //$NON-NLS-1$
 	}
 
-	private static class ElementState {
+	private static class ElementState implements ElementInfo {
 		String elementName;
 
 		int childCount = 0;
@@ -176,7 +185,12 @@ public class HtmlTextPresentationParser {
 
 		final ElementState parent;
 
-		public ElementState(ElementState parent, String elementName, ElementState elementState, int offset) {
+		private String id;
+
+		private String[] cssClasses;
+
+		public ElementState(ElementState parent, String elementName, ElementState elementState, int offset,
+				Attributes atts) {
 			this.parent = parent;
 			this.elementName = elementName;
 			this.fontState = new FontState(elementState.fontState);
@@ -185,6 +199,24 @@ public class HtmlTextPresentationParser {
 			this.skipWhitespace = elementState.skipWhitespace;
 			this.indentLevel = elementState.indentLevel;
 			initState();
+			String cssClass = null;
+			for (int x = 0; x < atts.getLength(); ++x) {
+				String localName = atts.getLocalName(x);
+				if ("id".equals(localName)) { //$NON-NLS-1$
+					this.id = atts.getValue(x);
+				} else if ("class".equals(localName)) { //$NON-NLS-1$
+					cssClass = atts.getValue(x);
+				}
+				if (id != null && cssClass != null) {
+					break;
+				}
+			}
+			if (cssClass != null) {
+				cssClasses = cssClass.split("\\s+"); //$NON-NLS-1$
+				if (cssClasses.length > 1) {
+					Arrays.sort(cssClasses);
+				}
+			}
 		}
 
 		public ElementState(ElementState parent, String elementName, FontState fontState, int offset) {
@@ -217,6 +249,22 @@ public class HtmlTextPresentationParser {
 			}
 			prefixAnnotations.add(annotation);
 		}
+
+		public String getLocalName() {
+			return elementName;
+		}
+
+		public ElementInfo getParent() {
+			return parent;
+		}
+
+		public boolean hasCssClass(String cssClass) {
+			return cssClasses != null && Arrays.binarySearch(cssClasses, cssClass) >= 0;
+		}
+
+		public boolean hasId(String id) {
+			return id != null && id.equals(this.id);
+		}
 	}
 
 	private AnnotationModel annotationModel;
@@ -242,7 +290,30 @@ public class HtmlTextPresentationParser {
 
 	private ImageCache imageCache = new ImageCache();
 
+	private Stylesheet stylesheet = getDefaultStylesheet();
+
+	private final CssParser cssParser = new CssParser();
+
 	public HtmlTextPresentationParser() {
+	}
+
+	private static Stylesheet getDefaultStylesheet() {
+		synchronized (HtmlTextPresentationParser.class) {
+			if (defaultStylesheet == null) {
+				try {
+					Reader reader = new InputStreamReader(
+							HtmlTextPresentationParser.class.getResourceAsStream("default.css"), "utf-8"); //$NON-NLS-1$ //$NON-NLS-2$
+					try {
+						defaultStylesheet = new CssParser().parse(reader);
+					} finally {
+						reader.close();
+					}
+				} catch (IOException e) {
+					throw new IllegalStateException(e);
+				}
+			}
+			return defaultStylesheet;
+		}
 	}
 
 	public TextPresentation getPresentation() {
@@ -290,6 +361,14 @@ public class HtmlTextPresentationParser {
 
 	public void setDefaultBackground(Color defaultBackground) {
 		this.defaultBackground = defaultBackground;
+	}
+
+	public Stylesheet getStylesheet() {
+		return stylesheet;
+	}
+
+	public void setStylesheet(Stylesheet stylesheet) {
+		this.stylesheet = stylesheet;
 	}
 
 	/**
@@ -636,7 +715,7 @@ public class HtmlTextPresentationParser {
 		}
 
 		public void startElement(String uri, String localName, String name, Attributes atts) throws SAXException {
-			ElementState parentElementState = state.peek();
+			final ElementState parentElementState = state.peek();
 
 			emitText(parentElementState, false);
 
@@ -644,35 +723,33 @@ public class HtmlTextPresentationParser {
 
 			++parentElementState.childCount;
 
-			ElementState elementState = state.push(new ElementState(parentElementState, localName, state.peek(),
-					getOffset()));
+			final ElementState elementState = state.push(new ElementState(parentElementState, localName, state.peek(),
+					getOffset(), atts));
 			if ("pre".equals(localName)) { //$NON-NLS-1$
 				elementState.skipWhitespace = false;
 			} else if ("ul".equals(localName) || "ol".equals(localName) || "blockquote".equals(localName) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					|| "dd".equals(localName)) { //$NON-NLS-1$
 				++elementState.indentLevel;
 			}
-			// process default styles based on simple name-based CSS selector
-			String defaultCssStyle = elementToCssStyle.get(localName);
-			if (defaultCssStyle != null) {
-				cssStyleManager.processCssStyles(elementState.fontState, parentElementState.fontState, defaultCssStyle);
-			}
-			// process default styles based on simple 2-level name-based CSS selector
-			if (parentElementState.elementName != null) {
-				String twoLevelCssSelector = parentElementState.elementName + " " + localName; //$NON-NLS-1$
-				defaultCssStyle = elementToCssStyle.get(twoLevelCssSelector);
-				if (defaultCssStyle != null) {
-					cssStyleManager.processCssStyles(elementState.fontState, parentElementState.fontState,
-							defaultCssStyle);
+			// process stylesheet
+			stylesheet.applyTo(elementState, new Stylesheet.Receiver() {
+				public void apply(CssRule rule) {
+					cssStyleManager.processCssStyles(elementState.fontState, parentElementState.fontState, rule);
 				}
-			}
+			});
 
 			int numAtts = atts.getLength();
 			for (int x = 0; x < numAtts; ++x) {
 				String attName = atts.getLocalName(x);
 				if ("style".equals(attName)) { //$NON-NLS-1$
 					String styleValue = atts.getValue(x);
-					cssStyleManager.processCssStyles(elementState.fontState, parentElementState.fontState, styleValue);
+					if (styleValue != null) {
+						Iterator<CssRule> ruleIterator = cssParser.createRuleIterator(styleValue);
+						while (ruleIterator.hasNext()) {
+							cssStyleManager.processCssStyles(elementState.fontState, parentElementState.fontState,
+									ruleIterator.next());
+						}
+					}
 				} else if ("id".equals(attName)) { //$NON-NLS-1$
 					elementState.addAnnotation(new IdAnnotation(atts.getValue(x)));
 				} else if ("href".equals(attName)) { //$NON-NLS-1$
@@ -883,34 +960,6 @@ public class HtmlTextPresentationParser {
 		elementToCharacters.put("td", " \t".toCharArray()); //$NON-NLS-1$ //$NON-NLS-2$
 		elementToCharacters.put("dt", "\n".toCharArray()); //$NON-NLS-1$ //$NON-NLS-2$
 		elementToCharacters.put("dd", "\n".toCharArray()); //$NON-NLS-1$ //$NON-NLS-2$
-	}
-
-	private static Map<String, String> elementToCssStyle = new HashMap<String, String>();
-	static {
-		// these are the default styles that would normally be applied by a browser
-		elementToCssStyle.put("h1", "font-size: 150%; font-weight: bold;"); //$NON-NLS-1$ //$NON-NLS-2$
-		elementToCssStyle.put("h2", "font-size: 125%; font-weight: bold;"); //$NON-NLS-1$ //$NON-NLS-2$
-		elementToCssStyle.put("h3", "font-size: 110%; font-weight: bold;"); //$NON-NLS-1$ //$NON-NLS-2$
-		elementToCssStyle.put("h4", "font-weight: bold;"); //$NON-NLS-1$ //$NON-NLS-2$
-		elementToCssStyle.put("h5", "font-size: 83%; font-weight: bold;"); //$NON-NLS-1$ //$NON-NLS-2$
-		elementToCssStyle.put("h6", "font-size: 67%; font-weight: bold;"); //$NON-NLS-1$ //$NON-NLS-2$
-		elementToCssStyle.put("b", "font-weight: bold;"); //$NON-NLS-1$ //$NON-NLS-2$
-		elementToCssStyle.put("strong", "font-weight: bold;"); //$NON-NLS-1$ //$NON-NLS-2$
-		elementToCssStyle.put("i", "font-style: italic;"); //$NON-NLS-1$ //$NON-NLS-2$
-		elementToCssStyle.put("cite", "font-style: italic;"); //$NON-NLS-1$ //$NON-NLS-2$
-		elementToCssStyle.put("em", "font-style: italic;"); //$NON-NLS-1$ //$NON-NLS-2$
-		elementToCssStyle.put("var", "font-style: italic;"); //$NON-NLS-1$ //$NON-NLS-2$
-		elementToCssStyle.put("dfn", "font-style: italic;"); //$NON-NLS-1$ //$NON-NLS-2$
-		elementToCssStyle.put("code", "font-family: monospace;"); //$NON-NLS-1$ //$NON-NLS-2$
-		elementToCssStyle.put("pre", "font-family: monospace;"); //$NON-NLS-1$ //$NON-NLS-2$
-		elementToCssStyle.put("ins", "text-decoration: underline;"); //$NON-NLS-1$ //$NON-NLS-2$
-		elementToCssStyle.put("del", "text-decoration: line-through;"); //$NON-NLS-1$ //$NON-NLS-2$
-		elementToCssStyle.put("sup", "font-size: smaller; vertical-align: super;"); //$NON-NLS-1$ //$NON-NLS-2$
-		elementToCssStyle.put("sup a", "text-decoration: none;"); // a hack for footnotes //$NON-NLS-1$ //$NON-NLS-2$
-		elementToCssStyle.put("a", "text-decoration: underline; color: blue;"); //$NON-NLS-1$ //$NON-NLS-2$
-		elementToCssStyle.put("sub", "font-size: smaller; vertical-align: sub;"); //$NON-NLS-1$ //$NON-NLS-2$
-		elementToCssStyle.put("dt", "font-weight: bold;"); //$NON-NLS-1$ //$NON-NLS-2$
-		elementToCssStyle.put("blockquote", "color: rgb(38,86,145);"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private GC gc;

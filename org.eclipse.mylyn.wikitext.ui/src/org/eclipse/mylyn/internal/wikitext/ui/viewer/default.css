@@ -1,0 +1,102 @@
+/* these are the default styles that would normally be applied by a browser */
+h1 {
+	font-size: 150%;
+	font-weight: bold;
+}
+
+h2 {
+	font-size: 125%;
+	font-weight: bold;
+}
+
+h3 {
+	font-size: 110%;
+	font-weight: bold;
+}
+
+h4 {
+	font-weight: bold;
+}
+
+h5 {
+	font-size: 83%;
+	font-weight: bold;
+}
+
+h6 {
+	font-size: 67%;
+	font-weight: bold;
+}
+
+b {
+	font-weight: bold;
+}
+
+strong {
+	font-weight: bold;
+}
+
+i {
+	font-style: italic;
+}
+
+cite {
+	font-style: italic;
+}
+
+em {
+	font-style: italic;
+}
+
+var {
+	font-style: italic;
+}
+
+dfn {
+	font-style: italic;
+}
+
+code {
+	font-family: monospace;
+	color:#4444CC;
+}
+
+pre {
+	font-family: monospace;
+	color:#4444CC;
+}
+
+ins {
+	text-decoration: underline;
+}
+
+del {
+	text-decoration: line-through;
+}
+
+sup {
+	font-size: smaller;
+	vertical-align: super;
+}
+
+a {
+	text-decoration: underline;
+	color: blue;
+}
+
+sup a {
+	text-decoration: none;
+}
+
+sub {
+	font-size: smaller;
+	vertical-align: sub;
+}
+
+dt {
+	font-weight: bold;
+}
+
+blockquote {
+	color: rgb(38, 86, 145);
+}

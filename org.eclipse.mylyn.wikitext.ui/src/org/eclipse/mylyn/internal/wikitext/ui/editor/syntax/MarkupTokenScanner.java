@@ -24,6 +24,8 @@ import org.eclipse.jface.text.rules.ITokenScanner;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.preferences.Preferences;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.FastMarkupPartitioner.MarkupPartition;
+import org.eclipse.mylyn.internal.wikitext.ui.util.css.CssParser;
+import org.eclipse.mylyn.internal.wikitext.ui.util.css.CssRule;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.CssStyleManager;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.FontState;
 import org.eclipse.swt.custom.StyleRange;
@@ -45,6 +47,8 @@ public class MarkupTokenScanner implements ITokenScanner {
 	private final FontState defaultState;
 
 	private final Preferences preferences;
+
+	private final CssParser cssParser = new CssParser();
 
 	public MarkupTokenScanner(Font defaultFont) {
 		styleManager = new CssStyleManager(defaultFont);
@@ -305,10 +309,10 @@ public class MarkupTokenScanner implements ITokenScanner {
 		}
 		FontState fontState = new FontState(parentState);
 		if (cssStyles != null) {
-			styleManager.processCssStyles(fontState, parentState, cssStyles);
+			processCssStyles(fontState, parentState, cssStyles);
 		}
 		if (span.getAttributes().getCssStyle() != null) {
-			styleManager.processCssStyles(fontState, parentState, span.getAttributes().getCssStyle());
+			processCssStyles(fontState, parentState, span.getAttributes().getCssStyle());
 		}
 		StyleRange styleRange = styleManager.createStyleRange(fontState, 0, 1);
 
@@ -325,7 +329,7 @@ public class MarkupTokenScanner implements ITokenScanner {
 		boolean hasStyles = processStyles(partition.getBlock(), partition, fontState);
 
 		if (partition.getBlock().getAttributes().getCssStyle() != null) {
-			styleManager.processCssStyles(fontState, defaultState, partition.getBlock().getAttributes().getCssStyle());
+			processCssStyles(fontState, defaultState, partition.getBlock().getAttributes().getCssStyle());
 		} else {
 			if (!hasStyles) {
 				return null;
@@ -346,7 +350,7 @@ public class MarkupTokenScanner implements ITokenScanner {
 		String cssStyles = computeCssStyles(block, partition);
 		if (cssStyles != null) {
 			hasStyles = true;
-			styleManager.processCssStyles(fontState, defaultState, cssStyles);
+			processCssStyles(fontState, defaultState, cssStyles);
 		}
 		return hasStyles;
 	}
@@ -372,6 +376,13 @@ public class MarkupTokenScanner implements ITokenScanner {
 			cssStyles = preferences.getCssByBlockModifierType().get(key);
 		}
 		return cssStyles;
+	}
+
+	private void processCssStyles(FontState fontState, FontState parentState, String cssStyles) {
+		Iterator<CssRule> ruleIterator = cssParser.createRuleIterator(cssStyles);
+		while (ruleIterator.hasNext()) {
+			styleManager.processCssStyles(fontState, parentState, ruleIterator.next());
+		}
 	}
 
 	private static class Token extends org.eclipse.jface.text.rules.Token {

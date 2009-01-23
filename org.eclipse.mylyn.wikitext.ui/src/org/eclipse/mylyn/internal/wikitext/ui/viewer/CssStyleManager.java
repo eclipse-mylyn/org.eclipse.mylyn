@@ -11,15 +11,14 @@
 package org.eclipse.mylyn.internal.wikitext.ui.viewer;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.mylyn.internal.wikitext.ui.util.css.CssRule;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
@@ -53,54 +52,6 @@ public class CssStyleManager {
 	private static final int MIN_FONT_SIZE = 9;
 
 	private static final int MAX_FONT_SIZE = 50;
-
-	public static class CssRule {
-		/**
-		 * the name of the rule
-		 */
-		public final String name;
-
-		/**
-		 * the value of the rule
-		 */
-		public final String value;
-
-		/**
-		 * the offset at which the rule was declared
-		 */
-		public final int offset;
-
-		/**
-		 * the length of the rule declaration
-		 */
-		public final int length;
-
-		/**
-		 * the offset of the name of the rule
-		 */
-		public final int nameOffset;
-
-		/**
-		 * the offset of the value of the rule
-		 */
-		public final int valueOffset;
-
-		/**
-		 * true if the rule name is known to the CssStyleManager
-		 */
-		public final boolean knownRule;
-
-		private CssRule(String name, boolean knownRule, String value, int offset, int length, int nameOffset,
-				int valueOffset) {
-			this.name = name;
-			this.knownRule = knownRule;
-			this.value = value;
-			this.offset = offset;
-			this.length = length;
-			this.nameOffset = nameOffset;
-			this.valueOffset = valueOffset;
-		}
-	}
 
 	private static final Map<String, Integer> colorToRgb = new HashMap<String, Integer>();
 	static {
@@ -253,9 +204,6 @@ public class CssStyleManager {
 		colorToRgb.put("YellowGreen".toLowerCase(), 0x9ACD32); //$NON-NLS-1$
 	}
 
-	static final Pattern cssRulePattern = Pattern.compile("(?:^|\\s?)([\\w-]+)\\s*:\\s*([^;]+)(;|$)", Pattern.MULTILINE //$NON-NLS-1$
-			| Pattern.DOTALL);
-
 	static final Pattern rgbPattern = Pattern.compile("rgb\\(\\s*(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)\\s*\\)"); //$NON-NLS-1$
 
 	private final Font defaultFont;
@@ -385,46 +333,12 @@ public class CssStyleManager {
 		return color;
 	}
 
-	public Iterator<CssRule> createRuleIterator(String cssStyles) {
-		return new CssRuleIterator(cssStyles);
-	}
-
 	public SortedSet<String> getRecognizedRuleNames() {
 		return new TreeSet<String>(ruleNameToHandler.keySet());
 	}
 
-	private class CssRuleIterator implements Iterator<CssRule> {
-		private final Matcher matcher;
-
-		private boolean hasNext;
-
-		public CssRuleIterator(String cssStyles) {
-			matcher = cssRulePattern.matcher(cssStyles);
-			hasNext = matcher.find();
-		}
-
-		public boolean hasNext() {
-			return hasNext;
-		}
-
-		public CssRule next() {
-			if (!hasNext) {
-				throw new NoSuchElementException();
-			}
-			int offset = matcher.start();
-			int length = matcher.end() - offset;
-			String ruleName = matcher.group(1);
-			int nameOffset = matcher.start(1);
-			String ruleValue = matcher.group(2).trim();
-			int valueOffset = matcher.start(2);
-			hasNext = matcher.find();
-			return new CssRule(ruleName, ruleNameToHandler.containsKey(ruleName), ruleValue, offset, length,
-					nameOffset, valueOffset);
-		}
-
-		public void remove() {
-			throw new UnsupportedOperationException();
-		}
+	public boolean isKnownRule(CssRule rule) {
+		return ruleNameToHandler.containsKey(rule.name);
 	}
 
 	private interface RuleHandler {
@@ -604,20 +518,6 @@ public class CssStyleManager {
 		}
 	}
 
-	public void processCssStyles(FontState fontState, FontState parentFontState, String styleValue) {
-		if (styleValue == null) {
-			return;
-		}
-		Iterator<CssRule> ruleIterator = createRuleIterator(styleValue);
-		while (ruleIterator.hasNext()) {
-			CssRule rule = ruleIterator.next();
-			RuleHandler ruleHandler = ruleNameToHandler.get(rule.name);
-			if (ruleHandler != null) {
-				ruleHandler.process(rule, fontState, parentFontState);
-			}
-		}
-	}
-
 	private static RGB toRGB(int rgb) {
 		return new RGB((rgb & 0xFF0000) >> 16, (rgb & 0x00FF00) >> 8, (rgb & 0x0000FF));
 	}
@@ -666,4 +566,12 @@ public class CssStyleManager {
 		fontState.size = defaultFont.getFontData()[0].getHeight();
 		return fontState;
 	}
+
+	public void processCssStyles(FontState fontState, FontState parentFontState, CssRule rule) {
+		RuleHandler ruleHandler = ruleNameToHandler.get(rule.name);
+		if (ruleHandler != null) {
+			ruleHandler.process(rule, fontState, parentFontState);
+		}
+	}
+
 }

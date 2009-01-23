@@ -15,8 +15,9 @@ import java.text.MessageFormat;
 import java.util.Iterator;
 
 import org.eclipse.jface.preference.StringFieldEditor;
+import org.eclipse.mylyn.internal.wikitext.ui.util.css.CssParser;
+import org.eclipse.mylyn.internal.wikitext.ui.util.css.CssRule;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.CssStyleManager;
-import org.eclipse.mylyn.internal.wikitext.ui.viewer.CssStyleManager.CssRule;
 import org.eclipse.swt.widgets.Composite;
 
 /**
@@ -43,7 +44,7 @@ public class CssStyleFieldEditor extends StringFieldEditor {
 			// here we validate that the value looks like it is composed of valid CSS rules
 
 			int offset = 0;
-			Iterator<CssRule> ruleIterator = cssStyleManager.createRuleIterator(value);
+			Iterator<CssRule> ruleIterator = new CssParser().createRuleIterator(value);
 			while (ruleIterator.hasNext()) {
 				CssRule rule = ruleIterator.next();
 
@@ -58,7 +59,7 @@ public class CssStyleFieldEditor extends StringFieldEditor {
 				}
 				offset = rule.offset + rule.length;
 				// unknown rules should create an error
-				if (!rule.knownRule) {
+				if (!cssStyleManager.isKnownRule(rule)) {
 					StringBuilder recognizedNames = new StringBuilder();
 					for (String recognizedName : cssStyleManager.getRecognizedRuleNames()) {
 						if (recognizedNames.length() > 0) {
