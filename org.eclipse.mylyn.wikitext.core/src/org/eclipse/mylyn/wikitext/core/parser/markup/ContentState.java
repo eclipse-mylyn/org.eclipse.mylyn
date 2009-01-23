@@ -12,7 +12,6 @@ package org.eclipse.mylyn.wikitext.core.parser.markup;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import org.eclipse.mylyn.wikitext.core.parser.IdGenerator;
 import org.eclipse.mylyn.wikitext.core.parser.Locator;
@@ -59,7 +58,12 @@ public class ContentState implements Locator {
 	public String getFootnoteId(String footnote) {
 		String id = footnoteIdToHtmlId.get(footnote);
 		if (id == null) {
-			id = "fn" + UUID.randomUUID().toString().replace("-", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			// Create a stable id.  This has a greater chance of collisions, however 
+			// it's an acceptable risk to gain stable ids.  Unfortunately there's no way to
+			// know if the id is already in use without doing a two-pass parse, which we don't
+			// want to do.  Instead, we choose a prefix of '___' since the '_' is not used by
+			// the default id generator and it's unlikely to be found in a document.
+			id = "___fn" + footnote; //$NON-NLS-1$
 			footnoteIdToHtmlId.put(footnote, id);
 		}
 		return id;

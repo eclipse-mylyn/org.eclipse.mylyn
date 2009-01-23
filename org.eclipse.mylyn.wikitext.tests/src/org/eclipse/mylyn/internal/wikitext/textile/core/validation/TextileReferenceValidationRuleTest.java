@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 David Green and others.
+ * Copyright (c) 2007, 2009 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -49,5 +49,23 @@ public class TextileReferenceValidationRuleTest extends TestCase {
 		assertEquals(1, problems.size());
 		assertEquals(21, problems.get(0).getOffset());
 		assertEquals(18, problems.get(0).getLength());
+	}
+
+	public void testFootnoteReference() {
+		String markup = "some text with a footnote reference[1]\n\nfn1. a footnote";
+		List<ValidationProblem> problems = rule.findProblems(markup, 0, markup.length());
+		System.out.println(problems);
+		assertNotNull(problems);
+		assertEquals(0, problems.size());
+	}
+
+	public void testFootnoteReferenceWithErrors() {
+		String markup = "some text with a footnote reference[1]\n\nfn2. a footnote";
+		List<ValidationProblem> problems = rule.findProblems(markup, 0, markup.length());
+		System.out.println(problems);
+		assertNotNull(problems);
+		assertEquals(1, problems.size());
+		assertEquals(35, problems.get(0).getOffset());
+		assertEquals(3, problems.get(0).getLength());
 	}
 }

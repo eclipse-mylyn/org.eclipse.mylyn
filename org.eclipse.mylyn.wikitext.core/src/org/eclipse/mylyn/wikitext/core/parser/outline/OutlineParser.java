@@ -142,6 +142,7 @@ public class OutlineParser {
 
 		@Override
 		public void beginBlock(BlockType type, Attributes attributes) {
+			registerId(attributes.getId());
 		}
 
 		@Override
@@ -161,6 +162,7 @@ public class OutlineParser {
 
 		@Override
 		public void beginSpan(SpanType type, Attributes attributes) {
+			registerId(attributes.getId());
 		}
 
 		@Override
@@ -218,6 +220,8 @@ public class OutlineParser {
 				currentItem = createOutlineItem(currentItem, level, id, offset, length, label);
 				currentItem.setTooltip(fullLabelText);
 				currentItem.setKind(kind);
+			} else {
+				registerId(attributes.getId());
 			}
 			buf = null;
 			offset = 0;
@@ -235,10 +239,13 @@ public class OutlineParser {
 
 		@Override
 		public void image(Attributes attributes, String url) {
+			registerId(attributes.getId());
 		}
 
 		@Override
-		public void imageLink(Attributes linkAttributes, Attributes ImageAttributes, String href, String imageUrl) {
+		public void imageLink(Attributes linkAttributes, Attributes imageAttributes, String href, String imageUrl) {
+			registerId(linkAttributes.getId());
+			registerId(imageAttributes.getId());
 		}
 
 		@Override
@@ -247,9 +254,14 @@ public class OutlineParser {
 
 		@Override
 		public void link(Attributes attributes, String hrefOrHashName, String text) {
+			registerId(attributes.getId());
 			if (buf != null) {
 				buf.append(text);
 			}
+		}
+
+		private void registerId(String id) {
+			idGenerator.reserveId(id);
 		}
 
 	}
