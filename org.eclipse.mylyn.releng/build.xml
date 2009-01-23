@@ -246,6 +246,8 @@
 	</target>
 
 	<target name="promote-main" depends="init">
+		<fail message="Required property 'todir' not set" unless="todir"/>
+
 		<property name="dist.dir" value="${dist.home}/update-archive/${version}/${qualifier}" />
 		<property name="target.dir" value="${dist.home}/update/${todir}" />
 
