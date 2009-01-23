@@ -90,7 +90,7 @@ public class TextileToDocbookTest extends TestCase {
 
 		System.out.println("Book: " + book);
 
-		Matcher matcher = Pattern.compile("<link\\s*linkend=\"(fn.*?)\">", Pattern.MULTILINE).matcher(book);
+		Matcher matcher = Pattern.compile("<link\\s*linkend=\"(___fn.*?)\">", Pattern.MULTILINE).matcher(book);
 		assertTrue(matcher.find());
 
 		String linkend = matcher.group(1);

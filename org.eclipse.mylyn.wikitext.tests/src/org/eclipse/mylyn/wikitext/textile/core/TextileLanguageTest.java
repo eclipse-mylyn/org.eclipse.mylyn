@@ -323,9 +323,11 @@ public class TextileLanguageTest extends TestCase {
 
 		System.out.println("HTML: \n" + html);
 		// assert on footnote target
-		assertTrue(Pattern.compile("<p id=\"fn[^\"]+\" class=\"footnote\"><sup>1</sup> Foo.</p>").matcher(html).find());
+		assertTrue(Pattern.compile("<p id=\"___fn[^\"]+\" class=\"footnote\"><sup>1</sup> Foo.</p>")
+				.matcher(html)
+				.find());
 		// assert on footnote reference
-		assertTrue(Pattern.compile("<sup class=\"footnote\"><a href=\"#fn[^\"]+\">1</a></sup>").matcher(html).find());
+		assertTrue(Pattern.compile("<sup class=\"footnote\"><a href=\"#___fn[^\"]+\">1</a></sup>").matcher(html).find());
 	}
 
 	public void testListUnordered() throws IOException {
