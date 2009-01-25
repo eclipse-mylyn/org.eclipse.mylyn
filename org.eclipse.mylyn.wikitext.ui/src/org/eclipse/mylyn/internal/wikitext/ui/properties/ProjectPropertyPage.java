@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.wikitext.ui.properties;
 
 import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -70,8 +71,8 @@ public class ProjectPropertyPage extends PropertyPage implements IWorkbenchPrope
 			buf.append(Messages.getString("ProjectPropertyPage.7")); //$NON-NLS-1$
 			buf.append(extension);
 		}
-		buf.insert(0, Messages.getString("ProjectPropertyPage.6")); //$NON-NLS-1$
-		wikiTextNatureButton.setToolTipText(buf.toString());
+		wikiTextNatureButton.setToolTipText(MessageFormat.format(
+				Messages.getString("ProjectPropertyPage.6"), buf.toString())); //$NON-NLS-1$
 
 		project = (IProject) getElement().getAdapter(IProject.class);
 
