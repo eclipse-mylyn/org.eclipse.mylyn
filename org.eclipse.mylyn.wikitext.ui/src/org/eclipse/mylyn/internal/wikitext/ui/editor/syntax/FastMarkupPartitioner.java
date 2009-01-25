@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.ui.editor.syntax;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -136,7 +137,8 @@ public class FastMarkupPartitioner extends FastPartitioner {
 					continue;
 				}
 				if (previous != null && region.getOffset() < (previous.getOffset() + previous.getLength())) {
-					throw new IllegalStateException();
+					throw new IllegalStateException(MessageFormat.format(
+							Messages.getString("FastMarkupPartitioner.0"), region, previous, markupLanguage.getName())); //$NON-NLS-1$
 				}
 				previous = region;
 				if (region.getOffset() >= startOffset && region.getOffset() < endOffset) {
