@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 David Green and others.
+ * Copyright (c) 2007, 2009 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -64,19 +64,19 @@ import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
  * @author David Green
  * @since 1.0
  */
-public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
+public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage> extends AbstractTaskEditorExtension {
 
 	private static final String ID_CONTEXT_EDITOR_TASK = "org.eclipse.mylyn.tasks.ui.TaskEditor"; //$NON-NLS-1$
 
 	private static final String ID_CONTEXT_EDITOR_TEXT = "org.eclipse.ui.DefaultTextEditor"; //$NON-NLS-1$
 
-	private MarkupLanguage markupLanguage;
+	private MarkupLanguageType markupLanguage;
 
-	public MarkupLanguage getMarkupLanguage() {
+	public MarkupLanguageType getMarkupLanguage() {
 		return markupLanguage;
 	}
 
-	public void setMarkupLanguage(MarkupLanguage markupLanguage) {
+	public void setMarkupLanguage(MarkupLanguageType markupLanguage) {
 		this.markupLanguage = markupLanguage;
 	}
 
@@ -85,13 +85,14 @@ public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
 		return MarkupEditor.CONTEXT;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public SourceViewer createViewer(TaskRepository taskRepository, Composite parent, int style) {
 		if (markupLanguage == null) {
 			throw new IllegalStateException();
 		}
 		MarkupViewer markupViewer = new MarkupViewer(parent, null, style | SWT.FLAT | SWT.WRAP);
-		MarkupLanguage markupLanguageCopy = markupLanguage.clone();
+		MarkupLanguageType markupLanguageCopy = (MarkupLanguageType) markupLanguage.clone();
 		configureMarkupLanguage(taskRepository, markupLanguageCopy);
 
 		markupViewer.setMarkupLanguage(markupLanguageCopy);
@@ -113,7 +114,7 @@ public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
 	@SuppressWarnings("unchecked")
 	@Override
 	public SourceViewer createEditor(TaskRepository taskRepository, Composite parent, int style) {
-		final MarkupLanguage markupLanguageCopy = markupLanguage.clone();
+		final MarkupLanguageType markupLanguageCopy = (MarkupLanguageType) markupLanguage.clone();
 		configureMarkupLanguage(taskRepository, markupLanguageCopy);
 
 		SourceViewer viewer = new SourceViewer(parent, null, style | SWT.WRAP) {
@@ -192,7 +193,7 @@ public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
 	 * 
 	 * @see #configureDefaultInternalLinkPattern(TaskRepository, MarkupLanguage)
 	 */
-	protected void configureMarkupLanguage(TaskRepository taskRepository, MarkupLanguage markupLanguage) {
+	protected void configureMarkupLanguage(TaskRepository taskRepository, MarkupLanguageType markupLanguage) {
 		String internalLinkPattern = taskRepository.getProperty(AbstractTaskEditorExtension.INTERNAL_WIKI_LINK_PATTERN);
 		if (internalLinkPattern != null && internalLinkPattern.trim().length() > 0) {
 			markupLanguage.setInternalLinkPattern(internalLinkPattern.trim());
@@ -211,7 +212,7 @@ public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
 	 * @param markupLanguage
 	 *            the markup language to configure
 	 */
-	protected void configureDefaultInternalLinkPattern(TaskRepository taskRepository, MarkupLanguage markupLanguage) {
+	protected void configureDefaultInternalLinkPattern(TaskRepository taskRepository, MarkupLanguageType markupLanguage) {
 		// nothing to do
 	}
 
