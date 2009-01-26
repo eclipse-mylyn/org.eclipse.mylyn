@@ -23,8 +23,15 @@ import org.eclipse.mylyn.internal.wikitext.tracwiki.core.block.TableBlock;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.phrase.EscapePhraseModifier;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.phrase.SimplePhraseModifier;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.token.BangEscapeToken;
+import org.eclipse.mylyn.internal.wikitext.tracwiki.core.token.ChangesetLinkReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.token.HyperlinkReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.token.LineBreakToken;
+import org.eclipse.mylyn.internal.wikitext.tracwiki.core.token.MilestoneLinkReplacementToken;
+import org.eclipse.mylyn.internal.wikitext.tracwiki.core.token.ReportLinkReplacementToken;
+import org.eclipse.mylyn.internal.wikitext.tracwiki.core.token.RevisionLogReplacementToken;
+import org.eclipse.mylyn.internal.wikitext.tracwiki.core.token.SourceLinkReplacementToken;
+import org.eclipse.mylyn.internal.wikitext.tracwiki.core.token.TicketAttachmentLinkReplacementToken;
+import org.eclipse.mylyn.internal.wikitext.tracwiki.core.token.TicketLinkReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.token.WikiWordReplacementToken;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
@@ -43,6 +50,8 @@ public class TracWikiLanguage extends MarkupLanguage {
 	private final List<Block> paragraphNestableBlocks = new ArrayList<Block>();
 
 	private boolean autoLinking = true;
+
+	private String serverUrl;
 
 	private static PatternBasedSyntax tokenSyntax = new PatternBasedSyntax();
 
@@ -72,6 +81,7 @@ public class TracWikiLanguage extends MarkupLanguage {
 		blocks.add(new ParagraphBlock()); // ORDER DEPENDENCY: this one must be last!!
 	}
 	static {
+		// IMPORTANT NOTE: Most items below have order dependencies.  DO NOT REORDER ITEMS BELOW!!
 		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.\\\"'?!;:\\)\\(\\{\\}\\[\\]])|^)(?:", 0); // always starts at the start of a line or after a non-word character excluding '!' //$NON-NLS-1$
 		phraseModifierSyntax.add(new EscapePhraseModifier());
 		phraseModifierSyntax.add(new SimplePhraseModifier("'''''", new SpanType[] { SpanType.BOLD, SpanType.ITALIC }, //$NON-NLS-1$
@@ -86,8 +96,15 @@ public class TracWikiLanguage extends MarkupLanguage {
 
 		tokenSyntax.add(new BangEscapeToken());
 		tokenSyntax.add(new LineBreakToken());
+		tokenSyntax.add(new RevisionLogReplacementToken());
+		tokenSyntax.add(new ChangesetLinkReplacementToken());
 		tokenSyntax.add(new HyperlinkReplacementToken());
 		tokenSyntax.add(new ImpliedHyperlinkReplacementToken());
+		tokenSyntax.add(new TicketAttachmentLinkReplacementToken());
+		tokenSyntax.add(new TicketLinkReplacementToken());
+		tokenSyntax.add(new ReportLinkReplacementToken());
+		tokenSyntax.add(new MilestoneLinkReplacementToken());
+		tokenSyntax.add(new SourceLinkReplacementToken());
 		tokenSyntax.add(new WikiWordReplacementToken());
 	}
 
@@ -130,7 +147,118 @@ public class TracWikiLanguage extends MarkupLanguage {
 			// internal anchor
 			return pageId;
 		}
-		return MessageFormat.format(super.internalLinkPattern, pageId);
+		return MessageFormat.format(internalLinkPattern, pageId);
+	}
+
+	/**
+	 * convert a ticket id to a hyperlink based on the {@link #getServerUrl() server url}
+	 * 
+	 * @param ticketId
+	 *            the id of the ticket
+	 * @param commentNumber
+	 *            the comment number or null if the url should not reference a specific comment
+	 */
+	public String toTicketHref(String ticketId, String commentNumber) {
+		String url = serverUrl + "ticket/" + ticketId; //$NON-NLS-1$
+		if (commentNumber != null) {
+			url += "#comment:" + commentNumber; //$NON-NLS-1$
+		}
+		return url;
+	}
+
+	/**
+	 * convert a changeset id to a hyperlink based on the {@link #getServerUrl() server url}
+	 * 
+	 * @param changesetId
+	 *            the changeset id
+	 * @param restriction
+	 *            the restriction, or null if there is no restriction. eg: "trunk"
+	 */
+	public String toChangesetHref(String changesetId, String restriction) {
+		String url = serverUrl + "changeset/" + changesetId; //$NON-NLS-1$
+		if (restriction != null) {
+			url += "/" + restriction; //$NON-NLS-1$
+		}
+		return url;
+	}
+
+	/**
+	 * convert a revisions to a revision log hyperlink based on the {@link #getServerUrl() server url}
+	 * 
+	 * @param revision1
+	 *            the first revision
+	 * @param revision2
+	 *            the second revision
+	 * @param restriction
+	 *            the restriction, or null if there is no restriction. eg: "trunk"
+	 */
+	public String toRevisionLogHref(String revision1, String revision2, String restriction) {
+		String url = serverUrl + "log/"; //$NON-NLS-1$
+		if (restriction != null) {
+			url += restriction;
+		}
+		url += "?revs=" + revision1 + "-" + revision2; //$NON-NLS-1$ //$NON-NLS-2$
+		return url;
+	}
+
+	/**
+	 * convert a report id to a hyperlink based on the {@link #getServerUrl() server url}
+	 * 
+	 * @param reportId
+	 *            the id of the report
+	 */
+	public String toReportHref(String reportId) {
+		String url = serverUrl + "report/" + reportId; //$NON-NLS-1$
+		return url;
+	}
+
+	/**
+	 * convert a milestone id to a hyperlink based on the {@link #getServerUrl() server url}
+	 * 
+	 * @param milestoneId
+	 *            the id of the milesonte
+	 */
+	public String toMilestoneHref(String milestoneId) {
+		String url = serverUrl + "milestone/" + milestoneId; //$NON-NLS-1$
+		return url;
+	}
+
+	/**
+	 * create an URL to an attachment ticket based on the {@link #getServerUrl() server url}
+	 * 
+	 * @param ticketId
+	 *            the id of the ticket
+	 * @param attachment
+	 *            the name of the attachment
+	 */
+	public String toTicketAttachmentHref(String ticketId, String attachment) {
+		String url = serverUrl + "ticket/" + ticketId + "/" + attachment; //$NON-NLS-1$ //$NON-NLS-2$
+		return url;
+	}
+
+	/**
+	 * create an URL to the source browser
+	 * 
+	 * @param source
+	 *            the source to be viewed
+	 * @param revision
+	 *            the revision, or null if there is no revision
+	 * @param line
+	 *            the line, or null if there is no line
+	 */
+	public String toSourceBrowserHref(String source, String revision, String line) {
+		String url = serverUrl + "browser"; //$NON-NLS-1$
+		if (source.charAt(0) != '/') {
+			url += '/';
+		}
+		url += source;
+		if (revision != null) {
+			url += "?rev=" + revision; //$NON-NLS-1$
+		}
+		if (line != null) {
+			url += "#L" + line; //$NON-NLS-1$
+		}
+		return url;
 	}
 
 	/**
@@ -155,4 +283,29 @@ public class TracWikiLanguage extends MarkupLanguage {
 	public void setAutoLinking(boolean autoLinking) {
 		this.autoLinking = autoLinking;
 	}
+
+	/**
+	 * set the server URL, for example <code>http://trac.edgewall.org/</code> from which links may be derrived, such as
+	 * <code>http://trac.edgewall.org/wiki/WikiPage</code> or <code>http://trac.edgewall.org/tickets/1</code>
+	 * 
+	 * @param url
+	 *            the url, or null if it is unknown.
+	 */
+	public void setServerUrl(String url) {
+		if (url != null && !url.endsWith("/")) { //$NON-NLS-1$
+			url = url + "/"; //$NON-NLS-1$
+		}
+		serverUrl = url;
+	}
+
+	/**
+	 * the server URL, for example <code>http://trac.edgewall.org/</code> from which links may be derrived, such as
+	 * <code>http://trac.edgewall.org/wiki/WikiPage</code> or <code>http://trac.edgewall.org/tickets/1</code>
+	 * 
+	 * @see #setServerUrl(String)
+	 */
+	public String getServerUrl() {
+		return serverUrl;
+	}
+
 }

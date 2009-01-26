@@ -295,4 +295,59 @@ public class TracWikiLanguageTest extends TestCase {
 		assertTrue(html.contains("<body><p>A WikiWord points somewhere</p></body>"));
 	}
 
+	public void testTicketLink() {
+		markupLanaguage.setServerUrl("http://trac.edgewall.org");
+		String html = parser.parseToHtml("A ticket #1 or ticket:1 to somewhere");
+		System.out.println(html);
+		assertTrue(html.contains("<body><p>A ticket <a href=\"http://trac.edgewall.org/ticket/1\">#1</a> or <a href=\"http://trac.edgewall.org/ticket/1\">ticket:1</a> to somewhere</p></body>"));
+	}
+
+	public void testTicketLinkWithComment() {
+		markupLanaguage.setServerUrl("http://trac.edgewall.org");
+		String html = parser.parseToHtml("A ticket comment:1:ticket:2 to somewhere");
+		System.out.println(html);
+		assertTrue(html.contains("<body><p>A ticket <a href=\"http://trac.edgewall.org/ticket/2#comment:1\">comment:1:ticket:2</a> to somewhere</p></body>"));
+	}
+
+	public void testReportLink() {
+		markupLanaguage.setServerUrl("http://trac.edgewall.org");
+		String html = parser.parseToHtml("A report:1 about something");
+		System.out.println(html);
+		assertTrue(html.contains("<body><p>A <a href=\"http://trac.edgewall.org/report/1\">report:1</a> about something</p></body>"));
+	}
+
+	public void testChangesetLink() {
+		markupLanaguage.setServerUrl("http://trac.edgewall.org");
+		String html = parser.parseToHtml("A changeset r1 or [1] or [1/trunk] or changeset:1 or changeset:1/trunk more text");
+		System.out.println(html);
+		assertTrue(html.contains("<body><p>A changeset <a href=\"http://trac.edgewall.org/changeset/1\">r1</a> or <a href=\"http://trac.edgewall.org/changeset/1\">[1]</a> or <a href=\"http://trac.edgewall.org/changeset/1/trunk\">[1/trunk]</a> or <a href=\"http://trac.edgewall.org/changeset/1\">changeset:1</a> or <a href=\"http://trac.edgewall.org/changeset/1/trunk\">changeset:1/trunk</a> more text</p></body>"));
+	}
+
+	public void testRevisionLogLink() {
+		markupLanaguage.setServerUrl("http://trac.edgewall.org");
+		String html = parser.parseToHtml("A revision log r1:3, [1:3] or log:@1:3, log:trunk@1:3, [2:5/trunk] more text");
+		System.out.println(html);
+		assertTrue(html.contains("<body><p>A revision log <a href=\"http://trac.edgewall.org/log/?revs=1-3\">r1:3</a>, <a href=\"http://trac.edgewall.org/log/?revs=1-3\">[1:3]</a> or <a href=\"http://trac.edgewall.org/log/?revs=1-3\">log:@1:3</a>, <a href=\"http://trac.edgewall.org/log/trunk?revs=1-3\">log:trunk@1:3</a>, <a href=\"http://trac.edgewall.org/log/trunk?revs=2-5\">[2:5/trunk]</a> more text</p></body>"));
+	}
+
+	public void testMilestoneLink() {
+		markupLanaguage.setServerUrl("http://trac.edgewall.org");
+		String html = parser.parseToHtml("A milestone:1.0 more text");
+		System.out.println(html);
+		assertTrue(html.contains("<body><p>A <a href=\"http://trac.edgewall.org/milestone/1.0\">milestone:1.0</a> more text</p></body>"));
+	}
+
+	public void testTicketAttachmentLink() {
+		markupLanaguage.setServerUrl("http://trac.edgewall.org");
+		String html = parser.parseToHtml("A attachment:foobar.txt:ticket:12345 more text");
+		System.out.println(html);
+		assertTrue(html.contains("<body><p>A <a href=\"http://trac.edgewall.org/ticket/12345/foobar.txt\">attachment:foobar.txt:ticket:12345</a> more text</p></body>"));
+	}
+
+	public void testSourceLink() {
+		markupLanaguage.setServerUrl("http://trac.edgewall.org");
+		String html = parser.parseToHtml("A source:/trunk/COPYING or source:/trunk/COPYING@200 or source:/trunk/COPYING@200#L26 more text");
+		System.out.println(html);
+		assertTrue(html.contains("<body><p>A <a href=\"http://trac.edgewall.org/browser/trunk/COPYING\">source:/trunk/COPYING</a> or <a href=\"http://trac.edgewall.org/browser/trunk/COPYING?rev=200\">source:/trunk/COPYING@200</a> or <a href=\"http://trac.edgewall.org/browser/trunk/COPYING?rev=200#L26\">source:/trunk/COPYING@200#L26</a> more text</p></body>"));
+	}
 }
