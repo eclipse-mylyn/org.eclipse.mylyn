@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.ui.editor.syntax;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +37,12 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
  * @author David Green
  */
 public class FastMarkupPartitioner extends FastPartitioner {
+
 	public static final String CONTENT_TYPE_MARKUP = "__markup_block"; //$NON-NLS-1$
 
 	public static final String[] ALL_CONTENT_TYPES = new String[] { CONTENT_TYPE_MARKUP };
+
+	static boolean debug = Boolean.getBoolean(FastMarkupPartitioner.class.getName());
 
 	private MarkupLanguage markupLanguage;
 
@@ -122,11 +129,14 @@ public class FastMarkupPartitioner extends FastPartitioner {
 			PartitionBuilder partitionBuilder = new PartitionBuilder(startOffset, markupLanguage.isBlocksOnly());
 			markupParser.setBuilder(partitionBuilder);
 
+			String markupContent;
 			try {
-				markupParser.parse(document.get(startOffset, endOffset - startOffset));
+				markupContent = document.get(startOffset, endOffset - startOffset);
 			} catch (BadLocationException e) {
-				markupParser.parse(document.get());
+				markupContent = document.get();
 			}
+			markupParser.parse(markupContent);
+
 			ITypedRegion[] latestPartitions = partitionBuilder.partitions.toArray(new ITypedRegion[partitionBuilder.partitions.size()]);
 			List<ITypedRegion> partitioning = new ArrayList<ITypedRegion>(latestPartitions.length);
 
@@ -137,8 +147,14 @@ public class FastMarkupPartitioner extends FastPartitioner {
 					continue;
 				}
 				if (previous != null && region.getOffset() < (previous.getOffset() + previous.getLength())) {
-					throw new IllegalStateException(MessageFormat.format(
-							Messages.getString("FastMarkupPartitioner.0"), region, previous, markupLanguage.getName())); //$NON-NLS-1$
+					String message = MessageFormat.format(
+							Messages.getString("FastMarkupPartitioner.0"), region, previous, markupLanguage.getName()); //$NON-NLS-1$
+					if (FastMarkupPartitioner.debug) {
+						String markupSavePath = saveToTempFile(markupLanguage, markupContent);
+						message = MessageFormat.format(
+								Messages.getString("FastMarkupPartitioner.1"), message, markupSavePath); //$NON-NLS-1$
+					}
+					throw new IllegalStateException(message);
 				}
 				previous = region;
 				if (region.getOffset() >= startOffset && region.getOffset() < endOffset) {
@@ -472,4 +488,25 @@ public class FastMarkupPartitioner extends FastPartitioner {
 
 	}
 
+	/**
+	 * save markup content to a temporary file to facilitate analysis of the problem
+	 * 
+	 * @return the absolute path to the saved file, or null if the file was not saved
+	 */
+	private static String saveToTempFile(MarkupLanguage markupLanguage, String markupContent) {
+		String markupSavePath = null;
+		try {
+			File file = File.createTempFile("markup-content-", "." //$NON-NLS-1$ //$NON-NLS-2$
+					+ markupLanguage.getName().toLowerCase().replaceAll("[^a-z]", "")); //$NON-NLS-1$ //$NON-NLS-2$
+			Writer writer = new FileWriter(file);
+			try {
+				writer.write(markupContent);
+			} finally {
+				writer.close();
+			}
+			markupSavePath = file.getAbsolutePath();
+		} catch (IOException e) {
+		}
+		return markupSavePath;
+	}
 }
