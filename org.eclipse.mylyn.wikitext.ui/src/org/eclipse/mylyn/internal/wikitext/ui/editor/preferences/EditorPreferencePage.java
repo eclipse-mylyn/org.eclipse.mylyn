@@ -50,6 +50,12 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
 	public void createFieldEditors() {
 		Preferences prefs = new Preferences();
 
+		Layout fieldEditorParentLayout = getFieldEditorParent().getLayout();
+		if (fieldEditorParentLayout instanceof GridLayout) {
+			GridLayout layout = (GridLayout) fieldEditorParentLayout;
+			layout.marginRight = 5;
+		}
+
 		Group group = new Group(getFieldEditorParent(), SWT.NULL);
 		group.setText(Messages.getString("EditorPreferencePage.1")); //$NON-NLS-1$
 		group.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
