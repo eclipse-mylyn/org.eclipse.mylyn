@@ -42,7 +42,7 @@ public class FastMarkupPartitioner extends FastPartitioner {
 
 	public static final String[] ALL_CONTENT_TYPES = new String[] { CONTENT_TYPE_MARKUP };
 
-	static boolean debug = Boolean.getBoolean(FastMarkupPartitioner.class.getName());
+	static boolean debug = Boolean.getBoolean(FastMarkupPartitioner.class.getName() + ".debug"); //$NON-NLS-1$
 
 	private MarkupLanguage markupLanguage;
 
