@@ -25,6 +25,7 @@ import org.eclipse.mylyn.wikitext.core.parser.Locator;
 import org.eclipse.mylyn.wikitext.core.parser.TableAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.TableCellAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder.Stylesheet;
 
 /**
  * @author David Green
@@ -71,12 +72,8 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 		out.acronym(text, definition);
 	}
 
-	public void addCssStylesheet(File file) {
-		out.addCssStylesheet(file);
-	}
-
-	public void addCssStylesheet(String url) {
-		out.addCssStylesheet(url);
+	public void addCssStylesheet(Stylesheet stylesheet) {
+		out.addCssStylesheet(stylesheet);
 	}
 
 	@Override

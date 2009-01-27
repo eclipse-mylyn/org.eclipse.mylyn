@@ -22,8 +22,10 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.tools.ant.BuildException;
@@ -197,10 +199,19 @@ public class MarkupToHtmlTask extends MarkupTask {
 			try {
 				HtmlDocumentBuilder builder = new HtmlDocumentBuilder(writer, formatOutput);
 				for (Stylesheet stylesheet : stylesheets) {
+					HtmlDocumentBuilder.Stylesheet builderStylesheet;
+
 					if (stylesheet.url != null) {
-						builder.addCssStylesheet(stylesheet.url);
+						builderStylesheet = new HtmlDocumentBuilder.Stylesheet(stylesheet.url);
 					} else {
-						builder.addCssStylesheet(stylesheet.file);
+						builderStylesheet = new HtmlDocumentBuilder.Stylesheet(stylesheet.file);
+					}
+					builder.addCssStylesheet(builderStylesheet);
+
+					if (!stylesheet.attributes.isEmpty()) {
+						for (Map.Entry<String, String> attr : stylesheet.attributes.entrySet()) {
+							builderStylesheet.getAttributes().put(attr.getKey(), attr.getValue());
+						}
 					}
 				}
 
@@ -399,10 +410,34 @@ public class MarkupToHtmlTask extends MarkupTask {
 		this.suppressBuiltInCssStyles = suppressBuiltInCssStyles;
 	}
 
+	public static class Attribute {
+		private String name;
+
+		private String value;
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public String getValue() {
+			return value;
+		}
+
+		public void setValue(String value) {
+			this.value = value;
+		}
+	}
+
 	public static class Stylesheet {
 		private File file;
 
 		private String url;
+
+		private final Map<String, String> attributes = new HashMap<String, String>();
 
 		public File getFile() {
 			return file;
@@ -418,6 +453,10 @@ public class MarkupToHtmlTask extends MarkupTask {
 
 		public void setUrl(String url) {
 			this.url = url;
+		}
+
+		public void addConfiguredAttribute(Attribute attribute) {
+			attributes.put(attribute.getName(), attribute.getValue());
 		}
 	}
 

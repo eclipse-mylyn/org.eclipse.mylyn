@@ -205,6 +205,12 @@ The @markupLanguage@ attribute accepts any of the following values (depending on
 | @overwrite@ | Indicate if output files should be overwritten.  The default is false.  When false output files are only overwritten if the output file timestamp is older than the markup source file. |
 | @helpPrefix@ | the prefix to URLs in the toc.xml, typically the relative path from the plugin to the help files (wikitext-to-eclipse-help only). For example, if the help file is in 'help/index.html' then the help prefix would be 'help' |
 
+*stylesheet*
+
+Nested @<stylesheet>@ elements cause HTML to contain links to CSS stylesheets or CSS stylesheet content.  When used with the @url@ attribute the stylesheet element is linked.  When used with the @file@ attribute the stylesheet content is copied into the HTML document.
+
+Stylesheets may have nested @<attribute>@ elements with @name@ and @value@.  These attributes are copied verbatim to the HTML @<link>@ element.  Attributes named @type@, @rel@ and @href@ are ignored.
+
 h3. DocBook
 
 WikiText can convert markup to "DocBook":http://www.docbook.org

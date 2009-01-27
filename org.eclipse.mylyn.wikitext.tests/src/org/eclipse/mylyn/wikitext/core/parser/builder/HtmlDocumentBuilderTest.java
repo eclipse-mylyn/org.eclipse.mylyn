@@ -29,6 +29,7 @@ import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder.Stylesheet;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 /**
@@ -123,7 +124,7 @@ public class HtmlDocumentBuilderTest extends TestCase {
 	}
 
 	public void testCssStylesheetAsLink() {
-		builder.addCssStylesheet("styles/test.css");
+		builder.addCssStylesheet(new Stylesheet("styles/test.css"));
 		builder.beginDocument();
 		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
 		builder.characters("some para text");
@@ -144,7 +145,7 @@ public class HtmlDocumentBuilderTest extends TestCase {
 
 		System.out.println("loading css: " + cssFile);
 
-		builder.addCssStylesheet(cssFile);
+		builder.addCssStylesheet(new Stylesheet(cssFile));
 		builder.beginDocument();
 		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
 		builder.characters("some para text");
@@ -333,4 +334,31 @@ public class HtmlDocumentBuilderTest extends TestCase {
 		assertTrue(html.contains("<a href=\"http://www.foo.bar\">Foo Bar</a>"));
 	}
 
+	public void testStylesheetWithAttributes() {
+		Stylesheet stylesheet = new Stylesheet("a/test.css");
+		stylesheet.getAttributes().put("foo", "bar");
+		builder.addCssStylesheet(stylesheet);
+
+		builder.beginDocument();
+		builder.endDocument();
+
+		String html = out.toString();
+
+		System.out.println(html);
+
+		assertTrue(html.contains("<link type=\"text/css\" rel=\"stylesheet\" href=\"a/test.css\" foo=\"bar\"/>"));
+	}
+
+	public void testStylesheetWithNoAttributes() {
+		builder.addCssStylesheet(new Stylesheet("a/test.css"));
+
+		builder.beginDocument();
+		builder.endDocument();
+
+		String html = out.toString();
+
+		System.out.println(html);
+
+		assertTrue(html.contains("<link type=\"text/css\" rel=\"stylesheet\" href=\"a/test.css\"/>"));
+	}
 }

@@ -42,6 +42,7 @@ import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
  * A builder that produces XHTML output. The nature of the output is affected by various settings on the builder.
  * 
  * @author David Green
+ * @author Matthias Kempka extensibility improvements, see bug 259089
  * @since 1.0
  */
 public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
@@ -152,6 +153,14 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		super(writer);
 	}
 
+	/**
+	 * Copy the configuration of this builder to the provided one. After calling this method the configuration of the
+	 * other builder should be the same as this one, including stylesheets. Subclasses that have configurable settings
+	 * should override this method to ensure that those settings are properly copied.
+	 * 
+	 * @param other
+	 *            the builder to which settings are copied.
+	 */
 	public void copyConfiguration(HtmlDocumentBuilder other) {
 		other.setBase(getBase());
 		other.setBaseInHead(isBaseInHead());
@@ -168,9 +177,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		other.setPrependImagePrefix(prependImagePrefix);
 		if (stylesheets != null) {
 			other.stylesheets = new ArrayList<Stylesheet>();
-			for (Stylesheet stylesheet : stylesheets) {
-				other.stylesheets.add(stylesheet);
-			}
+			other.stylesheets.addAll(stylesheets);
 		}
 	}
 
@@ -340,17 +347,15 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 * @param url
 	 *            the CSS url to use, which may be relative or absolute
 	 * 
+	 * @return the stylesheet, whose attributes may be modified
+	 * 
 	 * @see #addCssStylesheet(File)
+	 * 
+	 * @deprecated use {@link #addCssStylesheet(Stylesheet)} instead
 	 */
+	@Deprecated
 	public void addCssStylesheet(String url) {
-		addStylesheet(new Stylesheet(url));
-	}
-
-	private void addStylesheet(Stylesheet stylesheet) {
-		if (stylesheets == null) {
-			stylesheets = new ArrayList<Stylesheet>();
-		}
-		stylesheets.add(stylesheet);
+		addCssStylesheet(new Stylesheet(url));
 	}
 
 	/**
@@ -367,17 +372,33 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 * &lt;/code&gt;
 	 * </pre>
 	 * 
-	 * 
 	 * @param file
+	 *            the CSS file whose contents must be available
+	 * 
+	 * @return the stylesheet, whose attributes may be modified
 	 * 
 	 * @see #addCssStylesheet(String)
+	 * 
+	 * @deprecated use {@link #addCssStylesheet(Stylesheet)} instead
 	 */
+	@Deprecated
 	public void addCssStylesheet(File file) {
-		if (file == null) {
-			throw new IllegalArgumentException();
+		addCssStylesheet(new Stylesheet(file));
+	}
+
+	/**
+	 * Add a CSS stylesheet to the output document. Calling this method after {@link #beginDocument() starting the
+	 * document} has no effect.
+	 */
+	public void addCssStylesheet(Stylesheet stylesheet) {
+		if (stylesheet.file != null) {
+			checkFileReadable(stylesheet.file);
 		}
-		checkFileReadable(file);
-		addStylesheet(new Stylesheet(file));
+
+		if (stylesheets == null) {
+			stylesheets = new ArrayList<Stylesheet>();
+		}
+		stylesheets.add(stylesheet);
 	}
 
 	protected void checkFileReadable(File file) {
@@ -489,75 +510,9 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 			writer.writeDefaultNamespace(htmlNsUri);
 
 			writer.writeStartElement(htmlNsUri, "head"); //$NON-NLS-1$
-
-			if (encoding != null && encoding.length() > 0) {
-				// bug 259786: add the charset as a HTML meta http-equiv
-				// see http://www.w3.org/International/tutorials/tutorial-char-enc/
-				//
-				// <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/> 
-				writer.writeEmptyElement(htmlNsUri, "meta"); //$NON-NLS-1$
-				writer.writeAttribute("http-equiv", "Content-Type"); //$NON-NLS-1$ //$NON-NLS-2$
-				writer.writeAttribute("content", String.format("text/html; charset=%s", encoding)); //$NON-NLS-1$//$NON-NLS-2$
-			}
-			if (base != null && baseInHead) {
-				writer.writeEmptyElement(htmlNsUri, "base"); //$NON-NLS-1$
-				writer.writeAttribute("href", base.toString()); //$NON-NLS-1$
-			}
-			if (title != null) {
-				writer.writeStartElement(htmlNsUri, "title"); //$NON-NLS-1$
-				writer.writeCharacters(title);
-				writer.writeEndElement(); // title
-			}
-			if (!useInlineStyles && !suppressBuiltInStyles) {
-				writer.writeStartElement(htmlNsUri, "style"); //$NON-NLS-1$
-				writer.writeAttribute("type", "text/css"); //$NON-NLS-1$ //$NON-NLS-2$
-				writer.writeCharacters("\n"); //$NON-NLS-1$
-				for (Entry<BlockType, ElementInfo> ent : blockTypeToElementInfo.entrySet()) {
-					ElementInfo elementInfo = ent.getValue();
-					if (elementInfo.cssStyles != null && elementInfo.cssClass != null) {
-						String[] classes = elementInfo.cssClass.split("\\s+"); //$NON-NLS-1$
-						for (String cssClass : classes) {
-							writer.writeCharacters("."); //$NON-NLS-1$
-							writer.writeCharacters(cssClass);
-							writer.writeCharacters(" "); //$NON-NLS-1$
-						}
-						writer.writeCharacters("{"); //$NON-NLS-1$
-						writer.writeCharacters(elementInfo.cssStyles);
-						writer.writeCharacters("}\n"); //$NON-NLS-1$
-					}
-				}
-				writer.writeEndElement();
-			}
-			if (stylesheets != null) {
-				for (Stylesheet stylesheet : stylesheets) {
-					if (stylesheet.url != null) {
-						// <link type="text/css" rel="stylesheet" href="url"/>
-						writer.writeEmptyElement(htmlNsUri, "link"); //$NON-NLS-1$
-						writer.writeAttribute("type", "text/css"); //$NON-NLS-1$ //$NON-NLS-2$
-						writer.writeAttribute("rel", "stylesheet"); //$NON-NLS-1$ //$NON-NLS-2$
-						writer.writeAttribute("href", makeUrlAbsolute(stylesheet.url)); //$NON-NLS-1$
-					} else {
-						//						 <style type="text/css">
-						//						   ... contents of the file ...
-						//						 </style>
-						writer.writeStartElement(htmlNsUri, "style"); //$NON-NLS-1$
-						writer.writeAttribute("type", "text/css"); //$NON-NLS-1$ //$NON-NLS-2$
-						String css;
-						try {
-							css = readFully(stylesheet.file);
-						} catch (IOException e) {
-							throw new IllegalStateException(MessageFormat.format(
-									Messages.getString("HtmlDocumentBuilder.4"), //$NON-NLS-1$
-									stylesheet.file), e);
-						}
-						writer.writeCharacters(css);
-						writer.writeEndElement();
-					}
-				}
-			}
+			emitHeadContents();
 			writer.writeEndElement(); // head
-
-			writer.writeStartElement(htmlNsUri, "body"); //$NON-NLS-1$
+			beginBody();
 		} else {
 			// sanity check
 			if (stylesheets != null && !stylesheets.isEmpty()) {
@@ -566,15 +521,122 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		}
 	}
 
+	/**
+	 * emit the contents of the HTML head, excluding the head tag itself. Subclasses may override to change the contents
+	 * of the head. Subclasses should consider calling <code>super.emitHeadContents()</code> in order to preserve
+	 * features such as emitting the base, title and stylesheets.
+	 */
+	protected void emitHeadContents() {
+		if (encoding != null && encoding.length() > 0) {
+			// bug 259786: add the charset as a HTML meta http-equiv
+			// see http://www.w3.org/International/tutorials/tutorial-char-enc/
+			//
+			// <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/> 
+			writer.writeEmptyElement(htmlNsUri, "meta"); //$NON-NLS-1$
+			writer.writeAttribute("http-equiv", "Content-Type"); //$NON-NLS-1$ //$NON-NLS-2$
+			writer.writeAttribute("content", String.format("text/html; charset=%s", encoding)); //$NON-NLS-1$//$NON-NLS-2$
+		}
+		if (base != null && baseInHead) {
+			writer.writeEmptyElement(htmlNsUri, "base"); //$NON-NLS-1$
+			writer.writeAttribute("href", base.toString()); //$NON-NLS-1$
+		}
+		if (title != null) {
+			writer.writeStartElement(htmlNsUri, "title"); //$NON-NLS-1$
+			writer.writeCharacters(title);
+			writer.writeEndElement(); // title
+		}
+		if (!useInlineStyles && !suppressBuiltInStyles) {
+			writer.writeStartElement(htmlNsUri, "style"); //$NON-NLS-1$
+			writer.writeAttribute("type", "text/css"); //$NON-NLS-1$ //$NON-NLS-2$
+			writer.writeCharacters("\n"); //$NON-NLS-1$
+			for (Entry<BlockType, ElementInfo> ent : blockTypeToElementInfo.entrySet()) {
+				ElementInfo elementInfo = ent.getValue();
+				if (elementInfo.cssStyles != null && elementInfo.cssClass != null) {
+					String[] classes = elementInfo.cssClass.split("\\s+"); //$NON-NLS-1$
+					for (String cssClass : classes) {
+						writer.writeCharacters("."); //$NON-NLS-1$
+						writer.writeCharacters(cssClass);
+						writer.writeCharacters(" "); //$NON-NLS-1$
+					}
+					writer.writeCharacters("{"); //$NON-NLS-1$
+					writer.writeCharacters(elementInfo.cssStyles);
+					writer.writeCharacters("}\n"); //$NON-NLS-1$
+				}
+			}
+			writer.writeEndElement();
+		}
+		if (stylesheets != null) {
+			for (Stylesheet stylesheet : stylesheets) {
+				emitStylesheet(stylesheet);
+			}
+		}
+	}
+
+	private void emitStylesheet(Stylesheet stylesheet) {
+		if (stylesheet.url != null) {
+			// <link type="text/css" rel="stylesheet" href="url"/>
+			writer.writeEmptyElement(htmlNsUri, "link"); //$NON-NLS-1$
+			writer.writeAttribute("type", "text/css"); //$NON-NLS-1$ //$NON-NLS-2$
+			writer.writeAttribute("rel", "stylesheet"); //$NON-NLS-1$ //$NON-NLS-2$
+			writer.writeAttribute("href", makeUrlAbsolute(stylesheet.url)); //$NON-NLS-1$
+			for (Entry<String, String> attr : stylesheet.attributes.entrySet()) {
+				String attrName = attr.getKey();
+				if (!"type".equals(attrName) && !"rel".equals(attrName) && !"href".equals(attrName)) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					writer.writeAttribute(attrName, attr.getValue());
+				}
+			}
+		} else {
+			//	<style type="text/css">
+			//	... contents of the file ...
+			//	</style>
+			writer.writeStartElement(htmlNsUri, "style"); //$NON-NLS-1$
+			writer.writeAttribute("type", "text/css"); //$NON-NLS-1$ //$NON-NLS-2$
+			for (Entry<String, String> attr : stylesheet.attributes.entrySet()) {
+				String attrName = attr.getKey();
+				if (!"type".equals(attrName)) { //$NON-NLS-1$ 
+					writer.writeAttribute(attrName, attr.getValue());
+				}
+			}
+
+			String css;
+			try {
+				css = readFully(stylesheet.file);
+			} catch (IOException e) {
+				throw new IllegalStateException(MessageFormat.format(Messages.getString("HtmlDocumentBuilder.4"), //$NON-NLS-1$
+						stylesheet.file), e);
+			}
+			writer.writeCharacters(css);
+			writer.writeEndElement();
+		}
+	}
+
 	@Override
 	public void endDocument() {
 		if (emitAsDocument) {
-			writer.writeEndElement(); // body
+			endBody();
 			writer.writeEndElement(); // html
 			writer.writeEndDocument();
 		}
 
 		writer.close();
+	}
+
+	/**
+	 * begin the body by emitting the body element. Overriding methods should call <code>super.beginBody()</code>.
+	 * 
+	 * @see #endBody()
+	 */
+	protected void beginBody() {
+		writer.writeStartElement(htmlNsUri, "body"); //$NON-NLS-1$
+	}
+
+	/**
+	 * end the body by emitting the body end element tag. Overriding methods should call <code>super.endBody()</code>.
+	 * 
+	 * @see #beginBody()
+	 */
+	protected void endBody() {
+		writer.writeEndElement(); // body
 	}
 
 	@Override
@@ -969,17 +1031,83 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		}
 	}
 
-	private static class Stylesheet {
-		String url;
+	/**
+	 * A CSS stylesheet definition, created via one of {@link HtmlDocumentBuilder#addCssStylesheet(File)} or
+	 * {@link HtmlDocumentBuilder#addCssStylesheet(String)}.
+	 * 
+	 */
+	public static class Stylesheet {
+		private final String url;
 
-		File file;
+		private final File file;
 
+		private final Map<String, String> attributes = new HashMap<String, String>();
+
+		/**
+		 * Create a CSS stylesheet where the contents of the CSS stylesheet are embedded in the HTML. Generates code
+		 * similar to the following:
+		 * 
+		 * <pre>
+		 * &lt;code&gt;
+		 *   &lt;style type=&quot;text/css&quot;&gt;
+		 *   ... contents of the file ...
+		 *   &lt;/style&gt;
+		 * &lt;/code&gt;
+		 * </pre>
+		 * 
+		 * @param file
+		 *            the CSS file whose contents must be available
+		 */
 		public Stylesheet(File file) {
+			if (file == null) {
+				throw new IllegalArgumentException();
+			}
 			this.file = file;
+			url = null;
 		}
 
+		/**
+		 * Create a CSS stylesheet to the output document as an URL where the CSS stylesheet is referenced as an HTML
+		 * link. Calling this method after {@link #beginDocument() starting the document} has no effect.
+		 * 
+		 * Generates code similar to the following:
+		 * 
+		 * <pre>
+		 *   &lt;link type=&quot;text/css&quot; rel=&quot;stylesheet&quot; href=&quot;url&quot;/&gt;
+		 * </pre>
+		 * 
+		 * @param url
+		 *            the CSS url to use, which may be relative or absolute
+		 * 
+		 */
 		public Stylesheet(String url) {
+			if (url == null || url.length() == 0) {
+				throw new IllegalArgumentException();
+			}
 			this.url = url;
+			file = null;
+		}
+
+		/**
+		 * the attributes of the stylesheet, which may be modified prior to adding to the document. Attributes
+		 * <code>href</code>, <code>type</code> and <code>rel</code> are all ignored.
+		 */
+		public Map<String, String> getAttributes() {
+			return attributes;
+		}
+
+		/**
+		 * the file of the stylesheet, or null if it's not defined
+		 */
+		public File getFile() {
+			return file;
+		}
+
+		/**
+		 * the url of the stylesheet, or null if it's not defined
+		 */
+		public String getUrl() {
+			return url;
 		}
 	}
 
