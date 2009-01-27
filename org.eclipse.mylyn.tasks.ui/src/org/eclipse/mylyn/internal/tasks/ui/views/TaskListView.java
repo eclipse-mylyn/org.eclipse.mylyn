@@ -1793,8 +1793,11 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 				if (filterWorkingSet.updateWorkingSet(getSite().getPage().getAggregateWorkingSet())) {
 					try {
 						getViewer().getControl().setRedraw(false);
-						// XXX why is this needed?
-						//getViewer().collapseAll();
+
+						if (drilledIntoCategory != null) {
+							goUpToRoot();
+						}
+
 						getViewer().refresh();
 						if (isFocusedMode()) {
 							getViewer().expandAll();
