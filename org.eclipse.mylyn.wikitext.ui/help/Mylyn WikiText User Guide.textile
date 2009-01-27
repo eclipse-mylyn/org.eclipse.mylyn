@@ -322,7 +322,7 @@ bc.
 
 h2. Examples
 
-This document was written in Textile markup.  The original source code for this document "is available here":http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.mylyn/sandbox/org.eclipse.mylyn.wikitext.ui/help/Mylyn%20WikiText%20User%20Guide.textile?root=Tools_Project&view=markup
+This document was written in Textile markup.  The original source code for this document "is available here":http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.mylyn/org.eclipse.mylyn.wikitext.ui/help/Mylyn%20WikiText%20User%20Guide.textile?root=Tools_Project&view=markup
 
 h1. Tips and Tricks
 
