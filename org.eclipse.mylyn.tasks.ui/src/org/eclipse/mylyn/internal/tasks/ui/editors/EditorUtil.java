@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.util.Date;
@@ -32,6 +33,7 @@ import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -395,6 +397,16 @@ public class EditorUtil {
 					setMenu((Composite) child, menu);
 				}
 			}
+		}
+	}
+
+	// TODO e3.4 replace reflection by assignment to RowLayout.center
+	public static void center(RowLayout rowLayout) {
+		try {
+			Field field = RowLayout.class.getDeclaredField("center"); //$NON-NLS-1$
+			field.set(rowLayout, Boolean.TRUE);
+		} catch (Throwable e) {
+			// ignore
 		}
 	}
 

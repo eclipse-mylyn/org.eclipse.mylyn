@@ -80,8 +80,7 @@ public class TasksUiMenus {
 
 				File file = new File(filePath);
 				if (file.exists()) {
-					if (!MessageDialog.openConfirm(TasksUiInternal.getShell(),
-							Messages.TasksUiMenus_File_exists_,
+					if (!MessageDialog.openConfirm(TasksUiInternal.getShell(), Messages.TasksUiMenus_File_exists_,
 							Messages.TasksUiMenus_Overwrite_existing_file_ + file.getName())) {
 						return;
 					}

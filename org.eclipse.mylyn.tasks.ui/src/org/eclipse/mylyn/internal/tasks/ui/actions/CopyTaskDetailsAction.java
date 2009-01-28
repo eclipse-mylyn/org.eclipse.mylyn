@@ -11,20 +11,14 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.ui.util.ClipboardCopier;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.swt.dnd.Clipboard;
-import org.eclipse.swt.dnd.TextTransfer;
-import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
 /**
@@ -34,36 +28,28 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.copy"; //$NON-NLS-1$
 
-	private final Clipboard clipboard;
-
-	private static String lineSeparator = System.getProperty("line.separator", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
+	private final ClipboardCopier copier;
 
 	public CopyTaskDetailsAction() {
 		super(Messages.CopyTaskDetailsAction_Copy_Details);
 		setToolTipText(Messages.CopyTaskDetailsAction_Copy_Details);
 		setId(ID);
 		setImageDescriptor(CommonImages.COPY);
-		// FIXME the clipboard is not disposed
-		Display display = PlatformUI.getWorkbench().getDisplay();
-		clipboard = new Clipboard(display);
+		this.copier = new ClipboardCopier() {
+			@Override
+			protected String getTextForElement(Object element) {
+				return getTextForTask(element);
+			}
+		};
 	}
 
 	@Override
 	public void run() {
-		ISelection selection = getStructuredSelection();
-		StringBuilder sb = new StringBuilder();
-		Object[] seletedElements = ((IStructuredSelection) selection).toArray();
-		for (int i = 0; i < seletedElements.length; i++) {
-			if (i > 0) {
-				sb.append(lineSeparator);
-				sb.append(lineSeparator);
-			}
-			sb.append(getTextForTask(seletedElements[i]));
-		}
-		if (sb.length() > 0) {
-			TextTransfer textTransfer = TextTransfer.getInstance();
-			clipboard.setContents(new Object[] { sb.toString() }, new Transfer[] { textTransfer });
-		}
+		copier.copy(getStructuredSelection());
+	}
+
+	public void dispose() {
+		copier.dispose();
 	}
 
 	// TODO move to TasksUiUtil / into core
@@ -78,14 +64,14 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 
 			sb.append(task.getSummary());
 			if (TasksUiInternal.isValidUrl(task.getUrl())) {
-				sb.append(lineSeparator);
+				sb.append(ClipboardCopier.LINE_SEPARATOR);
 				sb.append(task.getUrl());
 			}
 		} else if (object instanceof IRepositoryQuery) {
 			RepositoryQuery query = (RepositoryQuery) object;
 			sb.append(query.getSummary());
 			if (TasksUiInternal.isValidUrl(query.getUrl())) {
-				sb.append(lineSeparator);
+				sb.append(ClipboardCopier.LINE_SEPARATOR);
 				sb.append(query.getUrl());
 			}
 		} else if (object instanceof IRepositoryElement) {

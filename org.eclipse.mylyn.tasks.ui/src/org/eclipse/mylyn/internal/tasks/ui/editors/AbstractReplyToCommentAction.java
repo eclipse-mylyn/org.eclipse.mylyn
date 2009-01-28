@@ -32,6 +32,7 @@ public abstract class AbstractReplyToCommentAction extends Action {
 		this.editor = editor;
 		this.taskComment = taskComment;
 		setImageDescriptor(TasksUiImages.COMMENT_REPLY);
+		setText(Messages.AbstractReplyToCommentAction_Reply);
 		setToolTipText(Messages.AbstractReplyToCommentAction_Reply);
 	}
 
