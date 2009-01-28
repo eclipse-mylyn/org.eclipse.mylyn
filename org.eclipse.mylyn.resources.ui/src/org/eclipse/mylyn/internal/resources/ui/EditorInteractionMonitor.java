@@ -24,7 +24,6 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.ContextUi;
-import org.eclipse.mylyn.context.ui.IContextAwareEditor;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.ui.AbstractEditorTracker;
@@ -99,28 +98,7 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 		if (PlatformUI.getWorkbench().isClosing()) {
 			return;
 		} else if (ContextUi.isEditorAutoCloseEnabled() && !otherEditorsOpenForResource(editorPart)
-				&& !(editorPart instanceof CompareEditor) && !(editorPart instanceof IContextAwareEditor)) {
-
-			if (ContextCore.getContextManager().isContextActive()
-					&& org.eclipse.mylyn.internal.context.ui.ContextUiPlugin.getDefault()
-							.getPreferenceStore()
-							.getBoolean(
-									org.eclipse.mylyn.internal.context.ui.IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING)) {
-				try {
-					if (!CoreUtil.TEST_MODE) {
-						MessageDialog.openInformation(
-								PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-								"Mylyn", //$NON-NLS-1$
-								Messages.EditorInteractionMonitor_Closing_a_file_automatically_removes_it_from_the_Task_Context);
-					}
-				} finally {
-					org.eclipse.mylyn.internal.context.ui.ContextUiPlugin.getDefault()
-							.getPreferenceStore()
-							.setValue(
-									org.eclipse.mylyn.internal.context.ui.IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING,
-									false);
-				}
-			}
+				&& !(editorPart instanceof CompareEditor)) {
 
 			IInteractionElement element = null;
 			AbstractContextUiBridge uiBridge = ContextUi.getUiBridgeForEditor(editorPart);
@@ -139,8 +117,32 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 				}
 			}
 			if (element != null) {
+				showEditorCloseWarning();
 				ContextCorePlugin.getContextManager().manipulateInterestForElement(element, false, false, false,
 						SOURCE_ID);
+			}
+		}
+	}
+
+	private void showEditorCloseWarning() {
+		if (ContextCore.getContextManager().isContextActive()
+				&& org.eclipse.mylyn.internal.context.ui.ContextUiPlugin.getDefault()
+						.getPreferenceStore()
+						.getBoolean(
+								org.eclipse.mylyn.internal.context.ui.IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING)) {
+			try {
+				if (!CoreUtil.TEST_MODE) {
+					MessageDialog.openInformation(
+							PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+							"Mylyn", //$NON-NLS-1$
+							Messages.EditorInteractionMonitor_Closing_a_file_automatically_removes_it_from_the_Task_Context);
+				}
+			} finally {
+				org.eclipse.mylyn.internal.context.ui.ContextUiPlugin.getDefault()
+						.getPreferenceStore()
+						.setValue(
+								org.eclipse.mylyn.internal.context.ui.IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING,
+								false);
 			}
 		}
 	}
