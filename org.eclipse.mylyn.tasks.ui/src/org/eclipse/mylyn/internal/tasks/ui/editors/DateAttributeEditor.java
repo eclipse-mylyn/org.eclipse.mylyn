@@ -88,9 +88,14 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 						if (!showTime) {
 							TaskActivityUtil.snapStartOfDay(cal);
 						}
-						setValue(cal.getTime());
+						Date value = cal.getTime();
+						if (!value.equals(getValue())) {
+							setValue(value);
+						}
 					} else {
-						setValue(null);
+						if (getValue() != null) {
+							setValue(null);
+						}
 						datePicker.setDate(null);
 					}
 				}
@@ -106,7 +111,9 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 			clearDeadlineDate.addHyperlinkListener(new HyperlinkAdapter() {
 				@Override
 				public void linkActivated(HyperlinkEvent e) {
-					setValue(null);
+					if (getValue() != null) {
+						setValue(null);
+					}
 					datePicker.setDate(null);
 				}
 
