@@ -165,9 +165,10 @@ public abstract class AbstractBugzillaTest extends TestCase {
 		return response;
 	}
 
-	protected void synchAndAssertState(Set<AbstractTask> tasks, SynchronizationState state) {
-		for (AbstractTask task : tasks) {
+	protected void synchAndAssertState(Set<ITask> tasks, SynchronizationState state) {
+		for (ITask task : tasks) {
 			TasksUiInternal.synchronizeTask(connector, task, true, null);
+			TasksUiPlugin.getTaskDataManager().setTaskRead(task, true);
 			assertEquals(task.getSynchronizationState(), state);
 		}
 	}

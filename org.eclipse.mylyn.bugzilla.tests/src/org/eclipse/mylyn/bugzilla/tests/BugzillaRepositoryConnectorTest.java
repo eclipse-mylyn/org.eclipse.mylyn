@@ -14,6 +14,7 @@ package org.eclipse.mylyn.bugzilla.tests;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -36,6 +37,7 @@ import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskAttachment;
 import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
+import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizationSession;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.search.RepositorySearchResult;
 import org.eclipse.mylyn.internal.tasks.ui.search.SearchHitCollector;
@@ -912,188 +914,206 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		return (taskAttachment.isPatch() == isPatch) && (taskAttachment.isDeprecated() == isObsolete);
 	}
 
-// TODO: to be ported
-//
-//		public void testTimeTracker222() throws Exception {
-//			init222();
-//			timeTracker(15, true);
-//		}
-//	
-//		public void testTimeTracker218() throws Exception {
-//			init218();
-//			timeTracker(20, false);
-//		}
-//		/**
-//		 * @param enableDeadline
-//		 *            bugzilla 218 doesn't support deadlines
-//		 */
-//		protected void timeTracker(int taskid, boolean enableDeadline) throws Exception {
-//			BugzillaTask bugtask = generateLocalTaskAndDownload("" + taskid);
-//			RepositoryTaskData bugtaskdata = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(
-//					bugtask.getRepositoryUrl(), bugtask.getTaskId());
-//			assertNotNull(bugtaskdata);
-//			assertEquals(taskid + "", bugtaskdata.getTaskId());
-//			assertEquals(SynchronizationState.SYNCHRONIZED, bugtask.getSynchronizationState());
-	//
-//			Set<AbstractTask> tasks = new HashSet<AbstractTask>();
-//			tasks.add(bugtask);
-	//
-//			// synchAndAssertState(tasks, SynchronizationState.SYNCHRONIZED);
-	//
-//			TasksUiPlugin.getRepositoryManager().setSynchronizationTime(repository, bugtask.getLastReadTimeStamp(),
-//					TasksUiPlugin.getDefault().getRepositoriesFilePath());
-//			// connector.synchronizeChanged(repository);
-	//
-//			// Set<AbstractTask> changedTasks =
-//			// connector.getOfflineTaskHandler().getChangedSinceLastSync(repository,
-//			// tasks);
-//			// assertEquals(1, changedTasks.size());
-	//
-//			assertNotNull(repository.getUserName());
-//			assertNotNull(repository.getPassword());
-	//
-//			float estimatedTime, remainingTime, actualTime, addTime;
-//			String deadline = null;
-	//
-//			estimatedTime = Float.parseFloat(bugtaskdata.getAttributeValue(BugzillaReportElement.ESTIMATED_TIME.getKeyString()));
-//			remainingTime = Float.parseFloat(bugtaskdata.getAttributeValue(BugzillaReportElement.REMAINING_TIME.getKeyString()));
-//			actualTime = Float.parseFloat(bugtaskdata.getAttributeValue(BugzillaReportElement.ACTUAL_TIME.getKeyString()));
-//			if (enableDeadline) {
-//				deadline = bugtaskdata.getAttributeValue(BugzillaReportElement.DEADLINE.getKeyString());
-//			}
-	//
-//			estimatedTime += 2;
-//			remainingTime += 1.5;
-//			addTime = 0.75f;
-//			if (enableDeadline) {
-//				deadline = generateNewDay();
-//			}
-	//
-//			bugtaskdata.setAttributeValue(BugzillaReportElement.ESTIMATED_TIME.getKeyString(), "" + estimatedTime);
-//			bugtaskdata.setAttributeValue(BugzillaReportElement.REMAINING_TIME.getKeyString(), "" + remainingTime);
-//			bugtaskdata.setAttributeValue(BugzillaReportElement.WORK_TIME.getKeyString(), "" + addTime);
-//			if (enableDeadline) {
-//				bugtaskdata.setAttributeValue(BugzillaReportElement.DEADLINE.getKeyString(), deadline);
-//			}
-	//
-////			for (AbstractTask task : tasks) {
-////				RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(
-////						task.getHandleIdentifier());
-//			bugtaskdata.setAttributeValue(BugzillaReportElement.ADD_COMMENT.getKeyString(), "New Estimate: "
-//					+ estimatedTime + "\nNew Remaining: " + remainingTime + "\nAdd: " + addTime);
-//			submit(bugtask, bugtaskdata);
-////			}
-	//
-//			synchAndAssertState(tasks, SynchronizationState.SYNCHRONIZED);
-	//
-//			bugtaskdata = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(bugtask.getRepositoryUrl(),
-//					bugtask.getTaskId());
-	//
-//			assertEquals(estimatedTime,
-//					Float.parseFloat(bugtaskdata.getAttributeValue(BugzillaReportElement.ESTIMATED_TIME.getKeyString())));
-//			assertEquals(remainingTime,
-//					Float.parseFloat(bugtaskdata.getAttributeValue(BugzillaReportElement.REMAINING_TIME.getKeyString())));
-//			assertEquals(actualTime + addTime,
-//					Float.parseFloat(bugtaskdata.getAttributeValue(BugzillaReportElement.ACTUAL_TIME.getKeyString())));
-//			if (enableDeadline) {
-//				assertEquals(deadline, bugtaskdata.getAttributeValue(BugzillaReportElement.DEADLINE.getKeyString()));
-//			}
-	//
-//		}
+	public void testTimeTracker222() throws Exception {
+		init222();
+		timeTracker(15, true);
+	}
 
-//	private String generateNewDay() {
-//		int year = 2006;
-//		int month = (int) (Math.random() * 12 + 1);
-//		int day = (int) (Math.random() * 28 + 1);
-//		return "" + year + "-" + ((month <= 9) ? "0" : "") + month + "-" + ((day <= 9) ? "0" : "") + day;
-//	}
+	public void testTimeTracker218() throws Exception {
+		init218();
+		timeTracker(20, false);
+	}
 
-	// TODO: to be ported
-//	public void testSynchChangedReports() throws Exception {
-//	
-//			init222();
-//			String taskID = "4";
-//			ITask task4 = generateLocalTaskAndDownload(taskID);
-//			TaskData taskData4 = TasksUiPlugin.getTaskDataManager().getTaskData(repository, task4.getTaskId());
-//			assertNotNull(task4);
-//			assertNotNull(taskData4);
-//			assertEquals(SynchronizationState.SYNCHRONIZED, task4.getSynchronizationState());
-//			assertEquals(taskID, taskData4.getTaskId());
-//	
-//			ITask task5 = generateLocalTaskAndDownload("5");
-//			TaskData taskData5 = TasksUiPlugin.getTaskDataManager().getTaskData(repository, task5.getTaskId());
-//			assertNotNull(task5);
-//			assertNotNull(taskData5);
-//			assertEquals(SynchronizationState.SYNCHRONIZED, task5.getSynchronizationState());
-//			assertEquals("5", taskData5.getTaskId());
-//	
-//			Set<ITask> tasks = new HashSet<ITask>();
-//			tasks.add(task4);
-//			tasks.add(task5);
-//	
-//			// Precondition for test passing is that task5's modification data is
-//			// AFTER
-//			// task4's
-//	
-//			String mostRecentTimeStamp = task5.getAttribute(BugzillaAttribute.DELTA_TS.getKey());
-//			repository.setSynchronizationTimeStamp(mostRecentTimeStamp);
-//	
-//			SynchronizationContext event = new SynchronizationContext();
-//			event.setTasks(tasks);
-//			event.setNeedsPerformQueries(true);
-//			event.setTaskRepository(repository);
-//			event.setFullSynchronization(true);
-//			connector.preSynchronization(event, null);
-//			assertTrue(event.needsPerformQueries());
-//			// Always last known changed returned
-//			assertFalse(task4.isStale());
-//			assertTrue(task5.isStale());
-//	
-//			String priority4 = null;
-//			if (task4.getPriority().equals("P1")) {
-//				priority4 = "P2";
-//				taskData4.setAttributeValue(BugzillaReportElement.PRIORITY.getKeyString(), priority4);
-//			} else {
-//				priority4 = "P1";
-//				taskData4.setAttributeValue(BugzillaReportElement.PRIORITY.getKeyString(), priority4);
-//			}
-//	
-//			String priority5 = null;
-//			if (task5.getPriority().equals("P1")) {
-//				priority5 = "P2";
-//				taskData5.setAttributeValue(BugzillaReportElement.PRIORITY.getKeyString(), priority5);
-//			} else {
-//				priority5 = "P1";
-//				taskData5.setAttributeValue(BugzillaReportElement.PRIORITY.getKeyString(), priority5);
-//			}
-//	
-//			assertNotNull(repository.getUserName());
-//			assertNotNull(repository.getPassword());
-//	
-//			submit(task4, taskData4);
-//			submit(task5, taskData5);
-//	
-//			event = new SynchronizationContext();
-//			event.setTasks(tasks);
-//			event.setNeedsPerformQueries(true);
-//			event.setTaskRepository(repository);
-//			event.setFullSynchronization(true);
-//			connector.preSynchronization(event, null);
-//	
-//			assertTrue(task4.isStale());
-//			assertTrue(task5.isStale());
-//	
-//			TasksUiInternal.synchronizeTasks(connector, tasks, true, null);
-//	
-//			for (ITask task : tasks) {
-//				if (task.getTaskId() == "4") {
-//					assertEquals(priority4, task4.getPriority());
-//				}
-//				if (task.getTaskId() == "5") {
-//					assertEquals(priority5, task5.getPriority());
-//				}
-//			}
-//		}
+	/**
+	 * @param enableDeadline
+	 *            bugzilla 218 doesn't support deadlines
+	 */
+	protected void timeTracker(int taskid, boolean enableDeadline) throws Exception {
+		ITask task = generateLocalTaskAndDownload("" + taskid);
+		assertNotNull(task);
+		TaskDataModel model = createModel(task);
+		TaskData taskData = model.getTaskData();
+		assertNotNull(taskData);
+		assertEquals(taskid + "", taskData.getTaskId());
+		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
+
+		Set<ITask> tasks = new HashSet<ITask>();
+		tasks.add(task);
+
+		synchAndAssertState(tasks, SynchronizationState.SYNCHRONIZED);
+
+		float estimatedTime, remainingTime, actualTime, addTime;
+		String deadline = null;
+
+		estimatedTime = Float.parseFloat(taskData.getRoot()
+				.getAttribute(BugzillaAttribute.ESTIMATED_TIME.getKey())
+				.getValue());
+		remainingTime = Float.parseFloat(taskData.getRoot()
+				.getAttribute(BugzillaAttribute.REMAINING_TIME.getKey())
+				.getValue());
+		actualTime = Float.parseFloat(taskData.getRoot()
+				.getAttribute(BugzillaAttribute.ACTUAL_TIME.getKey())
+				.getValue());
+
+		if (enableDeadline) {
+			deadline = taskData.getRoot().getAttribute(BugzillaAttribute.DEADLINE.getKey()).getValue();
+		}
+
+		estimatedTime += 2;
+		remainingTime += 1.5;
+		addTime = 0.75f;
+		if (enableDeadline) {
+			deadline = generateNewDay();
+		}
+
+		taskData.getRoot().getAttribute(BugzillaAttribute.ESTIMATED_TIME.getKey()).setValue("" + estimatedTime);
+		taskData.getRoot().getAttribute(BugzillaAttribute.REMAINING_TIME.getKey()).setValue("" + remainingTime);
+		TaskAttribute workTime = taskData.getRoot().getAttribute(BugzillaAttribute.WORK_TIME.getKey());
+		if (workTime == null) {
+			BugzillaTaskDataHandler.createAttribute(taskData.getRoot(), BugzillaAttribute.WORK_TIME);
+			workTime = taskData.getRoot().getAttribute(BugzillaAttribute.WORK_TIME.getKey());
+		}
+		workTime.setValue("" + addTime);
+		if (enableDeadline) {
+			taskData.getRoot().getAttribute(BugzillaAttribute.DEADLINE.getKey()).setValue("" + deadline);
+		}
+
+		taskData.getRoot().getAttribute(BugzillaAttribute.NEW_COMMENT.getKey()).setValue(
+				"New Estimate: " + estimatedTime + "\nNew Remaining: " + remainingTime + "\nAdd: " + addTime);
+		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		changed.add(taskData.getRoot().getAttribute(BugzillaAttribute.ESTIMATED_TIME.getKey()));
+		changed.add(taskData.getRoot().getAttribute(BugzillaAttribute.REMAINING_TIME.getKey()));
+		changed.add(taskData.getRoot().getAttribute(BugzillaAttribute.WORK_TIME.getKey()));
+		if (enableDeadline) {
+			changed.add(taskData.getRoot().getAttribute(BugzillaAttribute.DEADLINE.getKey()));
+		}
+		changed.add(taskData.getRoot().getAttribute(BugzillaAttribute.NEW_COMMENT.getKey()));
+
+		submit(task, taskData, changed);
+
+		synchAndAssertState(tasks, SynchronizationState.SYNCHRONIZED);
+		model = createModel(task);
+		taskData = model.getTaskData();
+
+		assertEquals(estimatedTime, Float.parseFloat(taskData.getRoot().getAttribute(
+				BugzillaAttribute.ESTIMATED_TIME.getKey()).getValue()));
+		assertEquals(remainingTime, Float.parseFloat(taskData.getRoot().getAttribute(
+				BugzillaAttribute.REMAINING_TIME.getKey()).getValue()));
+		assertEquals(actualTime + addTime, Float.parseFloat(taskData.getRoot().getAttribute(
+				BugzillaAttribute.ACTUAL_TIME.getKey()).getValue()));
+		if (enableDeadline) {
+			assertEquals(deadline, taskData.getRoot().getAttribute(BugzillaAttribute.DEADLINE.getKey()).getValue());
+		}
+
+	}
+
+	private String generateNewDay() {
+		int year = 2006;
+		int month = (int) (Math.random() * 12 + 1);
+		int day = (int) (Math.random() * 28 + 1);
+		return "" + year + "-" + ((month <= 9) ? "0" : "") + month + "-" + ((day <= 9) ? "0" : "") + day;
+	}
+
+	public void testSynchChangedReports() throws Exception {
+
+		init222();
+		String taskID4 = "4";
+		ITask task4 = generateLocalTaskAndDownload(taskID4);
+		assertNotNull(task4);
+		TaskDataModel model4 = createModel(task4);
+		TaskData taskData4 = model4.getTaskData();
+		assertNotNull(taskData4);
+		assertEquals(taskID4, taskData4.getTaskId());
+		assertEquals(SynchronizationState.SYNCHRONIZED, task4.getSynchronizationState());
+
+		String taskID5 = "5";
+		ITask task5 = generateLocalTaskAndDownload(taskID5);
+		assertNotNull(task5);
+		TaskDataModel model5 = createModel(task5);
+		TaskData taskData5 = model5.getTaskData();
+		assertNotNull(taskData5);
+		assertEquals(taskID5, taskData5.getTaskId());
+		assertEquals(SynchronizationState.SYNCHRONIZED, task5.getSynchronizationState());
+
+		Set<ITask> tasks = new HashSet<ITask>();
+		tasks.add(task4);
+		tasks.add(task5);
+
+		// Precondition for test passing is that task5's modification data is
+		// AFTER
+		// task4's
+		DateFormat timeDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date lastModTime4 = null;
+		Date lastModTime5 = null;
+		String mostRecentTimeStamp4 = taskData4.getRoot().getAttribute(BugzillaAttribute.DELTA_TS.getKey()).getValue();
+		String mostRecentTimeStamp = taskData5.getRoot().getAttribute(BugzillaAttribute.DELTA_TS.getKey()).getValue();
+		lastModTime4 = timeDateFormat.parse(mostRecentTimeStamp4);
+		lastModTime5 = timeDateFormat.parse(mostRecentTimeStamp);
+		assertTrue("Precondition not mached", lastModTime5.after(lastModTime4));
+
+		repository.setSynchronizationTimeStamp(mostRecentTimeStamp);
+
+		SynchronizationSession event = new SynchronizationSession();
+		event.setTasks(tasks);
+		event.setNeedsPerformQueries(true);
+		event.setTaskRepository(repository);
+		event.setFullSynchronization(true);
+		connector.preSynchronization(event, null);
+		assertTrue(event.needsPerformQueries());
+		// Always last known changed returned
+		assertFalse(event.getStaleTasks().contains(task4));
+		assertTrue(event.getStaleTasks().contains(task5));
+
+		String priority4 = null;
+		if (task4.getPriority().equals("P1")) {
+			priority4 = "P2";
+			taskData4.getRoot().getAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue(priority4);
+		} else {
+			priority4 = "P1";
+			taskData4.getRoot().getAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue(priority4);
+		}
+
+		String priority5 = null;
+		if (task5.getPriority().equals("P1")) {
+			priority5 = "P2";
+			taskData5.getRoot().getAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue(priority5);
+		} else {
+			priority5 = "P1";
+			taskData5.getRoot().getAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue(priority5);
+		}
+		Set<TaskAttribute> changed4 = new HashSet<TaskAttribute>();
+		Set<TaskAttribute> changed5 = new HashSet<TaskAttribute>();
+
+		changed4.add(taskData4.getRoot().getAttribute(BugzillaAttribute.PRIORITY.getKey()));
+		changed5.add(taskData5.getRoot().getAttribute(BugzillaAttribute.PRIORITY.getKey()));
+
+		submit(task4, taskData4, changed4);
+		submit(task5, taskData5, changed5);
+
+		event = new SynchronizationSession();
+		event.setTasks(tasks);
+		event.setNeedsPerformQueries(true);
+		event.setTaskRepository(repository);
+		event.setFullSynchronization(true);
+		connector.preSynchronization(event, null);
+		assertTrue(event.getStaleTasks().contains(task4));
+		assertTrue(event.getStaleTasks().contains(task5));
+
+		TasksUiInternal.synchronizeTasks(connector, tasks, true, null);
+
+		for (ITask task : tasks) {
+			if (task.getTaskId() == "4") {
+				assertEquals(priority4, taskData4.getRoot()
+						.getAttribute(BugzillaAttribute.PRIORITY.getKey())
+						.getValue());
+			}
+			if (task.getTaskId() == "5") {
+				assertEquals(priority5, taskData5.getRoot()
+						.getAttribute(BugzillaAttribute.PRIORITY.getKey())
+						.getValue());
+			}
+		}
+	}
 
 	public void testContextAttachFailure() throws Exception {
 		init218();
