@@ -63,27 +63,21 @@ public class Messages extends NLS {
 
 	public static String TaskListToolTip_Automatic_container_for_repository_tasks;
 
-	public static String TaskListToolTip__Complete_;
+	public static String TaskListToolTip_Due;
 
-	public static String TaskListToolTip_Due_;
+	public static String TaskListToolTip_Elapsed;
 
-	public static String TaskListToolTip_Elapsed_;
-
-	public static String TaskListToolTip_Estimate_;
-
-	public static String TaskListToolTip_hours;
-
-	public static String TaskListToolTip_Incomplete;
+	public static String TaskListToolTip_Estimate;
 
 	public static String TaskListToolTip_Please_synchronize_manually_for_full_error_message;
 
-	public static String TaskListToolTip_Scheduled_;
+	public static String TaskListToolTip_Scheduled;
 
 	public static String TaskListToolTip_Some_incoming_elements_may_be_filtered;
 
 	public static String TaskListToolTip_Synchronized;
 
-	public static String TaskListToolTip_Total_;
+	public static String TaskListToolTip_Total_Complete_Incomplete;
 
 	public static String TaskListView_Mylyn_context_capture_paused;
 

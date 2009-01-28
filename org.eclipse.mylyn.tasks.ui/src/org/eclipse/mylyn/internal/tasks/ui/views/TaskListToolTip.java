@@ -53,6 +53,7 @@ import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TaskElementLabelProvider;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
@@ -148,17 +149,17 @@ public class TaskListToolTip extends ToolTip {
 			StringBuilder sb = new StringBuilder();
 			sb.append(element.getSummary());
 			Calendar start = ((ScheduledTaskContainer) element).getDateRange().getStartDate();
-			sb.append("  [");
+			sb.append("  ["); //$NON-NLS-1$
 			sb.append(DateFormat.getDateInstance(DateFormat.LONG).format(start.getTime()));
-			sb.append("]");
+			sb.append("]"); //$NON-NLS-1$
 			return sb.toString();
 		} else if (element instanceof IRepositoryQuery) {
 			IRepositoryQuery query = (IRepositoryQuery) element;
 			StringBuilder sb = new StringBuilder();
 			sb.append(element.getSummary());
-			sb.append("  [");
+			sb.append("  ["); //$NON-NLS-1$
 			sb.append(getRepositoryLabel(query.getConnectorKind(), query.getRepositoryUrl()));
-			sb.append("]");
+			sb.append("]"); //$NON-NLS-1$
 			return sb.toString();
 		} else {
 			return new TaskElementLabelProvider(false).getText(element);
@@ -178,13 +179,10 @@ public class TaskListToolTip extends ToolTip {
 				}
 			}
 			StringBuilder sb = new StringBuilder();
-			sb.append(Messages.TaskListToolTip_Estimate_);
-			sb.append(estimateTotal);
-			sb.append(Messages.TaskListToolTip_hours);
-			sb.append("\n");
-			sb.append(Messages.TaskListToolTip_Elapsed_);
-			sb.append(DateUtil.getFormattedDurationShort(elapsedTotal));
-			sb.append("\n");
+			sb.append(NLS.bind(Messages.TaskListToolTip_Estimate, estimateTotal));
+			sb.append("\n"); //$NON-NLS-1$
+			sb.append(NLS.bind(Messages.TaskListToolTip_Elapsed, DateUtil.getFormattedDurationShort(elapsedTotal)));
+			sb.append("\n"); //$NON-NLS-1$
 			return sb.toString();
 		} else if (element instanceof ITask) {
 			ITask task = (ITask) element;
@@ -197,21 +195,21 @@ public class TaskListToolTip extends ToolTip {
 			}
 			String key = task.getTaskKey();
 			if (key != null) {
-				sb.append(" ");
+				sb.append(" "); //$NON-NLS-1$
 				sb.append(key);
 			}
 			String taskKind = task.getTaskKind();
 			if (taskKind != null && taskKind.length() > 0 && !taskKind.equals(kindLabel)) {
-				sb.append(" (");
+				sb.append(" ("); //$NON-NLS-1$
 				sb.append(taskKind);
-				sb.append(") ");
+				sb.append(") "); //$NON-NLS-1$
 			}
-			sb.append(", ");
+			sb.append(", "); //$NON-NLS-1$
 			sb.append(task.getPriority());
-			sb.append("  [");
+			sb.append("  ["); //$NON-NLS-1$
 			sb.append(getRepositoryLabel(task.getConnectorKind(), task.getRepositoryUrl()));
 			sb.append("]"); //$NON-NLS-1$
-			sb.append("\n");
+			sb.append("\n"); //$NON-NLS-1$
 			return sb.toString();
 		} else {
 			return null;
@@ -223,11 +221,11 @@ public class TaskListToolTip extends ToolTip {
 		if (repository != null) {
 			String label = repository.getRepositoryLabel();
 			if (label.indexOf("//") != -1) { //$NON-NLS-1$
-				return label.substring((repository.getRepositoryUrl().indexOf("//") + 2));
+				return label.substring((repository.getRepositoryUrl().indexOf("//") + 2)); //$NON-NLS-1$
 			}
-			return label + "";
+			return label;
 		}
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	private String getActivityText(IRepositoryElement element) {
@@ -260,27 +258,22 @@ public class TaskListToolTip extends ToolTip {
 
 			Date dueDate = task.getDueDate();
 			if (dueDate != null) {
-				sb.append(Messages.TaskListToolTip_Due_);
-				sb.append(new SimpleDateFormat("E").format(dueDate)).append(", ");
-				sb.append(DateFormat.getDateInstance(DateFormat.LONG).format(dueDate));
-				sb.append(" (").append(DateFormat.getTimeInstance(DateFormat.SHORT).format(dueDate)).append(')');
-				sb.append('\n');
+				sb.append(NLS.bind(Messages.TaskListToolTip_Due, new Object[] {
+						new SimpleDateFormat("E").format(dueDate), //$NON-NLS-1$
+						DateFormat.getDateInstance(DateFormat.LONG).format(dueDate),
+						DateFormat.getTimeInstance(DateFormat.SHORT).format(dueDate) }));
+				sb.append("\n"); //$NON-NLS-1$
 			}
 
 			DateRange scheduledDate = task.getScheduledForDate();
 			if (scheduledDate != null) {
-				sb.append(Messages.TaskListToolTip_Scheduled_);
-				sb.append(scheduledDate.toString());
-//				sb.append(new SimpleDateFormat("E").format(scheduledDate)).append(", ");
-//				sb.append(DateFormat.getDateInstance(DateFormat.LONG).format(scheduledDate));
-				sb.append('\n');
+				sb.append(NLS.bind(Messages.TaskListToolTip_Scheduled, scheduledDate.toString()));
+				sb.append("\n"); //$NON-NLS-1$
 			}
 
 			long elapsed = TasksUiPlugin.getTaskActivityManager().getElapsedTime(task);
-			String elapsedTimeString = DateUtil.getFormattedDurationShort(elapsed);
-			sb.append(Messages.TaskListToolTip_Elapsed_);
-			sb.append(elapsedTimeString);
-			sb.append("\n");
+			sb.append(NLS.bind(Messages.TaskListToolTip_Elapsed, DateUtil.getFormattedDurationShort(elapsed)));
+			sb.append("\n"); //$NON-NLS-1$
 
 			return sb.toString();
 		}
@@ -354,8 +347,8 @@ public class TaskListToolTip extends ToolTip {
 						completed++;
 					}
 				}
-				String text = Messages.TaskListToolTip_Total_ + total + Messages.TaskListToolTip__Complete_ + completed
-						+ Messages.TaskListToolTip_Incomplete + (total - completed) + ")"; //$NON-NLS-1$
+				String text = NLS.bind(Messages.TaskListToolTip_Total_Complete_Incomplete, new Object[] { //
+						total, completed, (total - completed) });
 				return new ProgressData(completed, total, text);
 			}
 		}
@@ -577,14 +570,14 @@ public class TaskListToolTip extends ToolTip {
 		if (element instanceof IRepositoryQuery) {
 			String syncStamp = ((RepositoryQuery) element).getLastSynchronizedTimeStamp();
 			if (syncStamp != null) {
-				return Messages.TaskListToolTip_Synchronized + syncStamp;
+				return NLS.bind(Messages.TaskListToolTip_Synchronized, syncStamp);
 			}
 		}
 		return null;
 	}
 
 	private String removeTrailingNewline(String text) {
-		if (text.endsWith("\n")) {
+		if (text.endsWith("\n")) { //$NON-NLS-1$
 			return text.substring(0, text.length() - 1);
 		}
 		return text;
