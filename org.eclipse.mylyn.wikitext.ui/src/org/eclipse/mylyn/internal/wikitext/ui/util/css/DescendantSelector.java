@@ -15,7 +15,7 @@ package org.eclipse.mylyn.internal.wikitext.ui.util.css;
  * 
  * @author David Green
  */
-class DescendantSelector extends Selector {
+public class DescendantSelector extends Selector {
 
 	private final Selector ancestorSelector;
 

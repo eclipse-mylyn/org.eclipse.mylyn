@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.wikitext.ui.util.css;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -22,8 +23,8 @@ import java.util.List;
 public class Stylesheet {
 	private final List<Block> blocks = new ArrayList<Block>();
 
-	List<Block> getBlocks() {
-		return blocks;
+	public List<Block> getBlocks() {
+		return Collections.unmodifiableList(blocks);
 	}
 
 	public interface Receiver {
@@ -40,5 +41,9 @@ public class Stylesheet {
 				}
 			}
 		}
+	}
+
+	void add(Block block) {
+		blocks.add(block);
 	}
 }

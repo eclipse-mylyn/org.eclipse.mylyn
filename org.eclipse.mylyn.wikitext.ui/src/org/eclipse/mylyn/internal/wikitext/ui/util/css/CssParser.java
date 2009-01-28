@@ -140,7 +140,7 @@ public class CssParser {
 				if (selector != null) {
 					List<CssRule> rules = parseBlock(blockContent, matcher.start(2));
 					Block block = new Block(selector, rules);
-					stylesheet.getBlocks().add(block);
+					stylesheet.add(block);
 				}
 			}
 		}
@@ -160,7 +160,10 @@ public class CssParser {
 		return new CssRuleIterator(content, blockOffset);
 	}
 
-	Selector parseSelector(String selectorText) {
+	/**
+	 * <em>NOT API</em> public for testing purposes only
+	 */
+	public Selector parseSelector(String selectorText) {
 		String[] cssSelectorParts = selectorText.split(","); //$NON-NLS-1$
 
 		List<Selector> parts = new ArrayList<Selector>();

@@ -18,7 +18,7 @@ package org.eclipse.mylyn.internal.wikitext.ui.util.css;
  * 
  * @see ElementInfo#hasCssClass(String)
  */
-class CssClassSelector extends Selector {
+public class CssClassSelector extends Selector {
 	private final String cssClass;
 
 	public CssClassSelector(String cssClass) {

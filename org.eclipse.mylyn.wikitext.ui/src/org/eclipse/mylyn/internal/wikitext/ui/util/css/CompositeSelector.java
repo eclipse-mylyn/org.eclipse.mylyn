@@ -18,7 +18,7 @@ import java.util.List;
  * 
  * @author David Green
  */
-class CompositeSelector extends Selector {
+public class CompositeSelector extends Selector {
 
 	private final boolean and;
 

@@ -16,7 +16,7 @@ package org.eclipse.mylyn.internal.wikitext.ui.util.css;
  * 
  * @author David Green
  */
-class NameSelector extends Selector {
+public class NameSelector extends Selector {
 	private final String name;
 
 	public NameSelector(String name) {
