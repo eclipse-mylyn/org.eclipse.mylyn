@@ -1775,6 +1775,10 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	}
 
 	private void saveBounds(Rectangle bounds) {
+		if (inSearchContainer()) {
+			return;
+		}
+
 		IDialogSettings settings = getDialogSettings();
 		IDialogSettings dialogBounds = settings.getSection(DIALOG_BOUNDS_KEY);
 		if (dialogBounds == null) {
@@ -1788,6 +1792,10 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	}
 
 	private void restoreBounds() {
+		if (inSearchContainer()) {
+			return;
+		}
+
 		IDialogSettings settings = getDialogSettings();
 		IDialogSettings dialogBounds = settings.getSection(DIALOG_BOUNDS_KEY);
 		Shell shell = getShell();
