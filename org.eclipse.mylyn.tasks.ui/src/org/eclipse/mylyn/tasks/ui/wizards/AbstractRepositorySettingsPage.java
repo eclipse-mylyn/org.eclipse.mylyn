@@ -1089,7 +1089,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	/**
 	 * @since 2.0
 	 */
-	protected abstract boolean isValidUrl(String name);
+	protected abstract boolean isValidUrl(String url);
 
 	private void updateHyperlinks() {
 		if (getRepositoryUrl() != null && getRepositoryUrl().length() > 0) {

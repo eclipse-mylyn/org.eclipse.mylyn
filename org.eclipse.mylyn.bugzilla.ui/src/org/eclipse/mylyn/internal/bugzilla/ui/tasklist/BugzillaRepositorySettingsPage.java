@@ -14,7 +14,6 @@ package org.eclipse.mylyn.internal.bugzilla.ui.tasklist;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.MessageFormat;
 import java.util.List;
 
@@ -279,15 +278,8 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 	}
 
 	@Override
-	protected boolean isValidUrl(String name) {
-		if (name.startsWith(URL_PREFIX_HTTPS) || name.startsWith(URL_PREFIX_HTTP)) {
-			try {
-				new URL(name);
-				return true;
-			} catch (MalformedURLException e) {
-			}
-		}
-		return false;
+	protected boolean isValidUrl(String url) {
+		return BugzillaClient.isValidUrl(url);
 	}
 
 	@Override

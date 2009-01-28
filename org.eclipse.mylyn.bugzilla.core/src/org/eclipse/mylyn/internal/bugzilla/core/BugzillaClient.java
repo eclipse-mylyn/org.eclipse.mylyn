@@ -44,6 +44,7 @@ import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.httpclient.URI;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.HeadMethod;
 import org.apache.commons.httpclient.methods.multipart.FilePart;
@@ -1815,6 +1816,18 @@ public class BugzillaClient {
 			}
 			return newText;
 		}
+	}
+
+	public static boolean isValidUrl(String url) {
+		if (url.startsWith("https://") || url.startsWith("http://")) { //$NON-NLS-1$//$NON-NLS-2$
+			try {
+				new URI(url, true, "UTF-8"); //$NON-NLS-1$
+				return true;
+			} catch (Exception e) {
+				return false;
+			}
+		}
+		return false;
 	}
 
 }
