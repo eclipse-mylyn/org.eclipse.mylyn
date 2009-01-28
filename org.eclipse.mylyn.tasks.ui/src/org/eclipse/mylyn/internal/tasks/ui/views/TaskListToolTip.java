@@ -84,7 +84,7 @@ public class TaskListToolTip extends ToolTip {
 
 	private final static int MAX_WIDTH = 600;
 
-	private final static int X_SHIFT= PlatformUtil.getToolTipXShift();
+	private final static int X_SHIFT = PlatformUtil.getToolTipXShift();
 
 	private final static int Y_SHIFT = 1;
 
@@ -148,17 +148,17 @@ public class TaskListToolTip extends ToolTip {
 			StringBuilder sb = new StringBuilder();
 			sb.append(element.getSummary());
 			Calendar start = ((ScheduledTaskContainer) element).getDateRange().getStartDate();
-			sb.append("  ["); 
+			sb.append("  [");
 			sb.append(DateFormat.getDateInstance(DateFormat.LONG).format(start.getTime()));
-			sb.append("]"); 
+			sb.append("]");
 			return sb.toString();
 		} else if (element instanceof IRepositoryQuery) {
 			IRepositoryQuery query = (IRepositoryQuery) element;
 			StringBuilder sb = new StringBuilder();
 			sb.append(element.getSummary());
-			sb.append("  ["); 
+			sb.append("  [");
 			sb.append(getRepositoryLabel(query.getConnectorKind(), query.getRepositoryUrl()));
-			sb.append("]"); 
+			sb.append("]");
 			return sb.toString();
 		} else {
 			return new TaskElementLabelProvider(false).getText(element);
@@ -181,10 +181,10 @@ public class TaskListToolTip extends ToolTip {
 			sb.append(Messages.TaskListToolTip_Estimate_);
 			sb.append(estimateTotal);
 			sb.append(Messages.TaskListToolTip_hours);
-			sb.append("\n"); 
+			sb.append("\n");
 			sb.append(Messages.TaskListToolTip_Elapsed_);
 			sb.append(DateUtil.getFormattedDurationShort(elapsedTotal));
-			sb.append("\n"); 
+			sb.append("\n");
 			return sb.toString();
 		} else if (element instanceof ITask) {
 			ITask task = (ITask) element;
@@ -197,21 +197,21 @@ public class TaskListToolTip extends ToolTip {
 			}
 			String key = task.getTaskKey();
 			if (key != null) {
-				sb.append(" "); 
+				sb.append(" ");
 				sb.append(key);
 			}
 			String taskKind = task.getTaskKind();
 			if (taskKind != null && taskKind.length() > 0 && !taskKind.equals(kindLabel)) {
-				sb.append(" ("); 
+				sb.append(" (");
 				sb.append(taskKind);
-				sb.append(") "); 
+				sb.append(") ");
 			}
-			sb.append(", "); 
+			sb.append(", ");
 			sb.append(task.getPriority());
-			sb.append("  ["); 
+			sb.append("  [");
 			sb.append(getRepositoryLabel(task.getConnectorKind(), task.getRepositoryUrl()));
 			sb.append("]"); //$NON-NLS-1$
-			sb.append("\n"); 
+			sb.append("\n");
 			return sb.toString();
 		} else {
 			return null;
@@ -223,11 +223,11 @@ public class TaskListToolTip extends ToolTip {
 		if (repository != null) {
 			String label = repository.getRepositoryLabel();
 			if (label.indexOf("//") != -1) { //$NON-NLS-1$
-				return label.substring((repository.getRepositoryUrl().indexOf("//") + 2)); 
+				return label.substring((repository.getRepositoryUrl().indexOf("//") + 2));
 			}
-			return label + ""; 
+			return label + "";
 		}
-		return ""; 
+		return "";
 	}
 
 	private String getActivityText(IRepositoryElement element) {
@@ -261,9 +261,9 @@ public class TaskListToolTip extends ToolTip {
 			Date dueDate = task.getDueDate();
 			if (dueDate != null) {
 				sb.append(Messages.TaskListToolTip_Due_);
-				sb.append(new SimpleDateFormat("E").format(dueDate)).append(", "); 
+				sb.append(new SimpleDateFormat("E").format(dueDate)).append(", ");
 				sb.append(DateFormat.getDateInstance(DateFormat.LONG).format(dueDate));
-				sb.append(" (").append(DateFormat.getTimeInstance(DateFormat.SHORT).format(dueDate)).append(')'); 
+				sb.append(" (").append(DateFormat.getTimeInstance(DateFormat.SHORT).format(dueDate)).append(')');
 				sb.append('\n');
 			}
 
@@ -280,7 +280,7 @@ public class TaskListToolTip extends ToolTip {
 			String elapsedTimeString = DateUtil.getFormattedDurationShort(elapsed);
 			sb.append(Messages.TaskListToolTip_Elapsed_);
 			sb.append(elapsedTimeString);
-			sb.append("\n"); 
+			sb.append("\n");
 
 			return sb.toString();
 		}
@@ -347,19 +347,19 @@ public class TaskListToolTip extends ToolTip {
 			children = ((ITaskContainer) element).getChildren().toArray();
 
 			int total = children.length;
-			int completed = 0;
-			for (ITask task : ((ITaskContainer) element).getChildren()) {
-				if (task.isCompleted()) {
-					completed++;
+			if (total > 0) {
+				int completed = 0;
+				for (ITask task : ((ITaskContainer) element).getChildren()) {
+					if (task.isCompleted()) {
+						completed++;
+					}
 				}
+				String text = Messages.TaskListToolTip_Total_ + total + Messages.TaskListToolTip__Complete_ + completed
+						+ Messages.TaskListToolTip_Incomplete + (total - completed) + ")"; //$NON-NLS-1$
+				return new ProgressData(completed, total, text);
 			}
-
-			String text = Messages.TaskListToolTip_Total_ + total + Messages.TaskListToolTip__Complete_ + completed
-					+ Messages.TaskListToolTip_Incomplete + (total - completed) + ")"; //$NON-NLS-1$
-			return new ProgressData(completed, total, text);
-		} else {
-			return null;
 		}
+		return null;
 	}
 
 	private Image getImage(IRepositoryElement element) {
@@ -584,7 +584,7 @@ public class TaskListToolTip extends ToolTip {
 	}
 
 	private String removeTrailingNewline(String text) {
-		if (text.endsWith("\n")) { 
+		if (text.endsWith("\n")) {
 			return text.substring(0, text.length() - 1);
 		}
 		return text;
