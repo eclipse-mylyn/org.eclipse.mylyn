@@ -72,7 +72,6 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -191,6 +190,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 	/**
 	 * Override for customizing the tool bar.
 	 */
+	@Override
 	public void fillToolBar(IToolBarManager toolBarManager) {
 		TaskEditorInput taskEditorInput = (TaskEditorInput) getEditorInput();
 		if (taskEditorInput.getTask() instanceof LocalTask) {
@@ -650,13 +650,10 @@ public class TaskPlanningEditor extends TaskFormPage {
 		toolkit.paintBordersFor(nameValueComp);
 
 		scheduleDatePicker.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-		scheduleDatePicker.addPickerSelectionListener(new SelectionListener() {
+		scheduleDatePicker.addPickerSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				TaskPlanningEditor.this.markDirty(true);
-			}
-
-			public void widgetDefaultSelected(SelectionEvent arg0) {
-				// ignore
 			}
 		});
 
@@ -664,7 +661,6 @@ public class TaskPlanningEditor extends TaskFormPage {
 		clearScheduledDate.setImage(CommonImages.getImage(CommonImages.REMOVE));
 		clearScheduledDate.setToolTipText(Messages.TaskPlanningEditor_Clear);
 		clearScheduledDate.addHyperlinkListener(new HyperlinkAdapter() {
-
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				scheduleDatePicker.setScheduledDate(null);
@@ -690,8 +686,10 @@ public class TaskPlanningEditor extends TaskFormPage {
 		dueDatePicker.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		dueDatePicker.addPickerSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				TaskPlanningEditor.this.markDirty(true);
+			public void widgetSelected(SelectionEvent event) {
+				if (!areEqual(dueDatePicker.getDate(), task.getDueDate())) {
+					TaskPlanningEditor.this.markDirty(true);
+				}
 			}
 		});
 
@@ -703,11 +701,12 @@ public class TaskPlanningEditor extends TaskFormPage {
 		clearDueDate.setImage(CommonImages.getImage(CommonImages.REMOVE));
 		clearDueDate.setToolTipText(Messages.TaskPlanningEditor_Clear);
 		clearDueDate.addHyperlinkListener(new HyperlinkAdapter() {
-
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				dueDatePicker.setDate(null);
-				TaskPlanningEditor.this.markDirty(true);
+				if (!areEqual(dueDatePicker.getDate(), task.getDueDate())) {
+					TaskPlanningEditor.this.markDirty(true);
+				}
 			}
 		});
 
@@ -939,6 +938,10 @@ public class TaskPlanningEditor extends TaskFormPage {
 	/** for testing */
 	public String getDescription() {
 		return this.summaryEditor.getTextWidget().getText();
+	}
+
+	private boolean areEqual(Object oldValue, Object newValue) {
+		return (oldValue != null) ? oldValue.equals(newValue) : oldValue == newValue;
 	}
 
 }
