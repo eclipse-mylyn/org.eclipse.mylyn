@@ -33,6 +33,11 @@ public class BugzillaVersionTest extends TestCase {
 		assertEquals("3.2", version.toString());
 	}
 
+	public void testMissingVersion() throws Exception {
+		BugzillaVersion version = new BugzillaVersion("3..1.X.");
+		assertEquals("3.0.1", version.toString());
+	}
+
 	public void testCompareAll() throws Exception {
 		assertEquals(0, BUGZILLA_2_18_1.compareTo(BUGZILLA_2_18_1));
 		assertEquals(-1, BUGZILLA_2_18_1.compareTo(BUGZILLA_2_18_2));
