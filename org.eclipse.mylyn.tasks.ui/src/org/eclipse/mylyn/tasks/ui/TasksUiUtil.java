@@ -14,7 +14,6 @@ package org.eclipse.mylyn.tasks.ui;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.resources.IResource;
@@ -351,7 +350,7 @@ public class TasksUiUtil {
 	 * @since 3.0
 	 */
 	public static void openTask(String url) {
-		AbstractTask task = TasksUiUtil.getTaskByUrl(url);
+		AbstractTask task = TasksUiInternal.getTaskByUrl(url);
 		if (task != null && !(task instanceof LocalTask)) {
 			openTask(task);
 		} else {
@@ -385,16 +384,7 @@ public class TasksUiUtil {
 	 * @since 3.0
 	 */
 	public static boolean openTask(String repositoryUrl, String taskId, String fullUrl) {
-		AbstractTask task = null;
-		if (repositoryUrl != null && taskId != null) {
-			task = (AbstractTask) TasksUiInternal.getTaskList().getTask(repositoryUrl, taskId);
-		}
-		if (task == null && fullUrl != null) {
-			task = TasksUiUtil.getTaskByUrl(fullUrl);
-		}
-		if (task == null && repositoryUrl != null && taskId != null) {
-			task = TasksUiPlugin.getTaskList().getTaskByKey(repositoryUrl, taskId);
-		}
+		AbstractTask task = TasksUiInternal.getTask(repositoryUrl, taskId, fullUrl);
 
 		if (task != null) {
 			return TasksUiUtil.openTask(task);
@@ -405,14 +395,13 @@ public class TasksUiUtil {
 		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getConnectorForRepositoryTaskUrl(
 				fullUrl);
 		if (connector != null) {
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(connector.getConnectorKind());
 			if (repositoryUrl != null && taskId != null) {
-				opened = TasksUiInternal.openRepositoryTask(connectorUi.getConnectorKind(), repositoryUrl, taskId);
+				opened = TasksUiInternal.openRepositoryTask(connector.getConnectorKind(), repositoryUrl, taskId);
 			} else {
 				repositoryUrl = connector.getRepositoryUrlFromTaskUrl(fullUrl);
 				taskId = connector.getTaskIdFromTaskUrl(fullUrl);
 				if (repositoryUrl != null && taskId != null) {
-					opened = TasksUiInternal.openRepositoryTask(connectorUi.getConnectorKind(), repositoryUrl, taskId);
+					opened = TasksUiInternal.openRepositoryTask(connector.getConnectorKind(), repositoryUrl, taskId);
 				}
 			}
 		}
@@ -422,23 +411,6 @@ public class TasksUiUtil {
 		}
 
 		return true;
-	}
-
-	/**
-	 * Searches for a task whose URL matches
-	 * 
-	 * @return first task with a matching URL.
-	 * @since 2.0
-	 */
-	private static AbstractTask getTaskByUrl(String taskUrl) {
-		Collection<AbstractTask> tasks = TasksUiPlugin.getTaskList().getAllTasks();
-		for (AbstractTask task : tasks) {
-			String currUrl = task.getUrl();
-			if (currUrl != null && !currUrl.equals("") && currUrl.equals(taskUrl)) { //$NON-NLS-1$
-				return task;
-			}
-		}
-		return null;
 	}
 
 	/**

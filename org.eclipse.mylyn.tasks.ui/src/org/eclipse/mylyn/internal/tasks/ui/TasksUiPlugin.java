@@ -1241,6 +1241,10 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		return taskListImporter;
 	}
 
+	public TaskListExternalizer createTaskListExternalizer() {
+		return new TaskListExternalizer(repositoryModel, repositoryManager);
+	}
+
 	public static TaskListExternalizationParticipant getTaskListExternalizationParticipant() {
 		return taskListExternalizationParticipant;
 	}

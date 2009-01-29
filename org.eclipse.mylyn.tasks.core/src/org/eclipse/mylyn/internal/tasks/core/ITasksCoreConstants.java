@@ -33,6 +33,8 @@ public interface ITasksCoreConstants {
 
 	public static final String DEFAULT_BACKUP_FOLDER_NAME = "backup"; //$NON-NLS-1$
 
+	public static final String EXPORT_FILE_NAME = "mylyn-tasks"; //$NON-NLS-1$
+
 	public static final String FILE_EXTENSION = ".xml.zip"; //$NON-NLS-1$
 
 	public static final String OLD_FILENAME_TIMESTAMP_FORMAT = "yyyy-MM-dd"; //$NON-NLS-1$

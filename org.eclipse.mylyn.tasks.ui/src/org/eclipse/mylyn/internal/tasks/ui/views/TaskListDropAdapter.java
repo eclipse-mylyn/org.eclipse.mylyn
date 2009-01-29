@@ -12,44 +12,37 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.util.LocalSelectionTransfer;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
-import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
-import org.eclipse.mylyn.internal.tasks.ui.TaskTransfer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.actions.QueryImportAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.AbstractRetrieveTitleFromUrlJob;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskScheduleContentProvider.Unscheduled;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.TransferData;
+import org.eclipse.swt.dnd.URLTransfer;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -57,12 +50,11 @@ import org.eclipse.ui.PlatformUI;
  * @author Rob Elves (added URL based task creation support)
  * @author Jevgeni Holodkov
  */
-// TODO 3.1 rename to TaskListDropTargetListener
 public class TaskListDropAdapter extends ViewerDropAdapter {
 
-	private AbstractTask newTask = null;
+	private boolean fileTransfer;
 
-	private TransferData currentTransfer;
+	private boolean localTransfer;
 
 	public TaskListDropAdapter(Viewer viewer) {
 		super(viewer);
@@ -80,91 +72,38 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 
 	@Override
 	public boolean performDrop(final Object data) {
-		if (data == null) {
-			return false;
-		}
-
-		Object currentTarget = getCurrentTarget();
 		List<ITask> tasksToMove = new ArrayList<ITask>();
-		if (isUrl(data) && createTaskFromUrl(data)) {
-			tasksToMove.add(newTask);
-		} else if (TaskTransfer.getInstance().isSupportedType(currentTransfer) && data instanceof ITask[]) {
-			ITask[] tasks = (ITask[]) data;
-			for (ITask task : tasks) {
-				if (task != null) {
-					tasksToMove.add(task);
-				}
-			}
-		} else if (data instanceof String && createTaskFromString((String) data)) {
-			tasksToMove.add(newTask);
-		} else if (FileTransfer.getInstance().isSupportedType(currentTransfer)) {
-			// transfer the context if the target is a Task
-//					if (getCurrentTarget() instanceof ITask) {
-//						final AbstractTask targetTask = (AbstractTask) getCurrentTarget();
-//						final String[] names = (String[]) data;
-//						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-//
-//							public void run() {
-//								boolean confirmed = MessageDialog.openConfirm(getViewer().getControl().getShell(),
-//										"Task Import", "Overwrite the context of the target task with the source's?");
-//								if (confirmed) {
-//									String path = names[0];
-//									File file = new File(path);
-//									boolean succeeded = ContextCore.getContextStore().copyContext(file,
-//											targetTask.getHandleIdentifier());
-//									if (succeeded) {
-//										new TaskActivateAction().run(targetTask);
-//									}
-//								}
-//							}
-//						});
-//					} else {
-			// otherwise it is queries or tasks
-			final String[] names = (String[]) data;
-			for (String path : names) {
-				final File file = new File(path);
-				final List<RepositoryQuery> queries = new ArrayList<RepositoryQuery>();
-				final Set<TaskRepository> repositories = new HashSet<TaskRepository>();
-				final List<AbstractTask> readTasks = TasksUiPlugin.getTaskListWriter().readTasks(file);
-				if (file.isFile()) {
-					List<RepositoryQuery> readQueries;
-					try {
-						readQueries = TasksUiPlugin.getTaskListWriter().readQueries(file);
-						if (readQueries.size() > 0) {
-							queries.addAll(readQueries);
-							repositories.addAll(TasksUiPlugin.getTaskListWriter().readRepositories(file));
-						} else {
-							repositories.addAll(TasksUiPlugin.getTaskListWriter().readRepositories(file));
-						}
-					} catch (IOException e) {
-						StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "The specified file \"" //$NON-NLS-1$
-								+ file.getName()
-								+ "\" is not an exported query. Please, check that you have provided the correct file.")); //$NON-NLS-1$
-//						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-//							public void run() {
-//								MessageDialog.openError(null, "Query Import Error",
-//										"The specified file is not an exported query. Please, check that you have provided the correct file.");
-//							}
-//						});
+
+		if (localTransfer) {
+			ISelection selection = LocalSelectionTransfer.getTransfer().getSelection();
+			if (selection instanceof IStructuredSelection) {
+				for (Iterator<?> it = ((IStructuredSelection) selection).iterator(); it.hasNext();) {
+					Object item = it.next();
+					if (item instanceof ITask) {
+						tasksToMove.add((ITask) item);
 					}
 				}
-
-				// FIXME: remove async exec
+			}
+		} else if (fileTransfer) {
+			// TODO implement dropping of files
+		} else if (data instanceof String) {
+			String text = (String) data;
+			AbstractTask task = createTaskFromUrl(text);
+			if (task == null) {
+				task = TasksUiInternal.createNewLocalTask(text);
+			}
+			if (task != null) {
+				tasksToMove.add(task);
+				final ITask newTask = task;
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						// TODO: we should consider batching this up
-						if (queries.size() > 0) {
-							new QueryImportAction().importQueries(queries, repositories, getViewer().getControl()
-									.getShell());
-						} else {
-							TasksUiInternal.importTasks(readTasks, repositories, file, getViewer().getControl()
-									.getShell());
-						}
+						TasksUiUtil.openTask(newTask);
 					}
 				});
 			}
 		}
 
+		Object currentTarget = getCurrentTarget();
 		if (currentTarget instanceof LocalTask && areAllLocalTasks(tasksToMove) && getCurrentLocation() == LOCATION_ON) {
 			for (ITask task : tasksToMove) {
 				if (!((AbstractTask) task).contains(((LocalTask) currentTarget).getHandleIdentifier())) {
@@ -205,20 +144,15 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 								container.getDateRange());
 					}
 				} else if (currentTarget == null) {
-					TasksUiInternal.getTaskList().addTask(newTask, TasksUiPlugin.getTaskList().getDefaultCategory());
+					TasksUiInternal.getTaskList().addTask(task, TasksUiPlugin.getTaskList().getDefaultCategory());
 				}
 			}
 		}
 
-		// Make new task the current selection in the view
-		if (newTask != null) {
-			StructuredSelection ss = new StructuredSelection(newTask);
-			getViewer().setSelection(ss);
-			//getViewer().refresh();
+		if (tasksToMove.size() == 1) {
+			getViewer().setSelection(new StructuredSelection(tasksToMove.get(0)));
 		}
-
 		return true;
-
 	}
 
 	private boolean areAllLocalTasks(List<ITask> tasksToMove) {
@@ -231,108 +165,64 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 	}
 
 	/**
-	 * @return true if string is a http(s) url
-	 */
-	public boolean isUrl(Object data) {
-		String uri = ""; //$NON-NLS-1$
-		if (data instanceof String) {
-			uri = (String) data;
-			if ((uri.startsWith("http://") || uri.startsWith("https://"))) { //$NON-NLS-1$ //$NON-NLS-2$
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
 	 * @param data
 	 *            string containing url and title separated by <quote>\n</quote>
-	 * @return true if task succesfully created, false otherwise
 	 */
-	public boolean createTaskFromUrl(Object data) {
-		if (!(data instanceof String)) {
-			return false;
+	private AbstractTask createTaskFromUrl(String data) {
+		if (!data.startsWith("http://") && !data.startsWith("https://")) { //$NON-NLS-1$ //$NON-NLS-2$
+			return null;
 		}
 
-		String[] urlTransfer = ((String) data).split("\n"); //$NON-NLS-1$
-
-		String url = ""; //$NON-NLS-1$
-		String urlTitle = Messages.TaskListDropAdapter__retrieving_from_URL_;
-
+		String[] urlTransfer = data.split("\n"); //$NON-NLS-1$
 		if (urlTransfer.length > 0) {
-			url = urlTransfer[0];
-		} else {
-			return false;
-		}
-
-		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getConnectorForRepositoryTaskUrl(
-				url);
-		if (connector != null) {
-			String repositoryUrl = connector.getRepositoryUrlFromTaskUrl(url);
-			String id = connector.getTaskIdFromTaskUrl(url);
-			if (repositoryUrl == null || id == null) {
-				return false;
-			}
-			for (TaskRepository repository : TasksUi.getRepositoryManager().getRepositories(
-					connector.getConnectorKind())) {
-				if (repository.getRepositoryUrl().equals(repositoryUrl)) {
-					// FIXME 3.1 reimplement
-//					try {
-//						newTask = (AbstractTask) TasksUiInternal.createTask(repository, id, new NullProgressMonitor());
-//						TasksUiInternal.refreshAndOpenTaskListElement(newTask);
-//						return true;
-//					} catch (CoreException e) {
-//						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not create task", e));
-//						return false;
-//					}
+			String url = urlTransfer[0];
+			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
+					.getConnectorForRepositoryTaskUrl(url);
+			if (connector != null) {
+				// attempt to find task in task list
+				String repositoryUrl = connector.getRepositoryUrlFromTaskUrl(url);
+				String taskId = connector.getTaskIdFromTaskUrl(url);
+				AbstractTask task = TasksUiInternal.getTask(repositoryUrl, taskId, url);
+				if (task != null) {
+					return task;
 				}
+				if (repositoryUrl != null && taskId != null) {
+					// attempt to open task in background
+					// TODO: consider attaching a listener to OpenRepsitoryTaskJob to move task to drop target
+					TasksUiInternal.openRepositoryTask(connector.getConnectorKind(), repositoryUrl, taskId);
+				}
+			} else {
+				// create local task, using title of web page as a summary
+				final String summary = Messages.TaskListDropAdapter__retrieving_from_URL_;
+				final LocalTask newTask = TasksUiInternal.createNewLocalTask(summary);
+				newTask.setUrl(url);
+				AbstractRetrieveTitleFromUrlJob job = new AbstractRetrieveTitleFromUrlJob(url) {
+					@Override
+					protected void titleRetrieved(final String pageTitle) {
+						// make sure summary was not changed in the mean time 
+						if (newTask.getSummary().equals(summary)) {
+							newTask.setSummary(pageTitle);
+							TasksUiInternal.getTaskList().notifyElementChanged(newTask);
+						}
+					}
+				};
+				job.schedule();
+				return newTask;
 			}
-			return false;
-		} else {
-			// Removed in order to default to retrieving title from url rather
-			// than
-			// accepting what was sent by the brower's DnD code. (see bug
-			// 114401)
-			// If a Title is provided, use it.
-			// if (urlTransfer.length > 1) {
-			// urlTitle = urlTransfer[1];
-			// }
-			// if (urlTransfer.length < 2) { // no title provided
-			// retrieveTaskDescription(url);
-			// }
-			retrieveTaskDescription(url);
-
-			newTask = TasksUiInternal.createNewLocalTask(urlTitle);
-			if (newTask == null) {
-				return false;
-			}
-			newTask.setUrl(url);
-			TasksUiUtil.openTask(newTask);
-			return true;
 		}
-	}
-
-	public boolean createTaskFromString(String title) {
-		//newTask = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), title);
-		newTask = TasksUiInternal.createNewLocalTask(title);
-
-		if (newTask == null) {
-			return false;
-		} else {
-			//newTask.setPriority(Task.PriorityLevel.P3.toString());
-			TasksUiUtil.openTask(newTask);
-			return true;
-		}
+		return null;
 	}
 
 	@Override
 	public boolean validateDrop(Object targetObject, int operation, TransferData transferType) {
-		currentTransfer = transferType;
-
-		if (FileTransfer.getInstance().isSupportedType(currentTransfer)) {
-			// handle all files
-			return true;
-		} else if (TaskTransfer.getInstance().isSupportedType(currentTransfer)) {
+		fileTransfer = false;
+		localTransfer = false;
+		if (FileTransfer.getInstance().isSupportedType(transferType)) {
+			fileTransfer = true;
+			// TODO handle all files
+			return false;
+		} else if (LocalSelectionTransfer.getTransfer().isSupportedType(transferType)) {
+			localTransfer = true;
 			if (getCurrentTarget() instanceof UncategorizedTaskContainer || getCurrentTarget() instanceof TaskCategory
 					|| getCurrentTarget() instanceof UnmatchedTaskContainer
 					|| getCurrentTarget() instanceof ScheduledTaskContainer) {
@@ -345,27 +235,11 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			} else {
 				return false;
 			}
+		} else if (URLTransfer.getInstance().isSupportedType(transferType)) {
+			return true;
 		}
 
 		return TextTransfer.getInstance().isSupportedType(transferType);
 	}
 
-	/**
-	 * Attempts to set the task pageTitle to the title from the specified url
-	 */
-	protected void retrieveTaskDescription(final String url) {
-		try {
-			AbstractRetrieveTitleFromUrlJob job = new AbstractRetrieveTitleFromUrlJob(url) {
-				@Override
-				protected void titleRetrieved(final String pageTitle) {
-					newTask.setSummary(pageTitle);
-					TasksUiInternal.getTaskList().notifyElementChanged(newTask);
-				}
-			};
-			job.schedule();
-		} catch (RuntimeException e) {
-			// FIXME what exception is caught here?
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not open task web page", e)); //$NON-NLS-1$
-		}
-	}
 }

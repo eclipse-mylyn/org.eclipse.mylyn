@@ -22,7 +22,7 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.internal.tasks.core.ITaskList;
+import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
@@ -186,7 +186,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		categoryChooser.setLayoutData(GridDataFactory.swtDefaults().hint(150, SWT.DEFAULT).create());
 		toolkit.adapt(categoryChooser, false, false);
 		categoryChooser.setFont(TEXT_FONT);
-		ITaskList taskList = TasksUiInternal.getTaskList();
+		TaskList taskList = TasksUiInternal.getTaskList();
 		final List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(taskList.getCategories());
 		Collections.sort(categories, new Comparator<AbstractTaskContainer>() {
 			public int compare(AbstractTaskContainer c1, AbstractTaskContainer c2) {

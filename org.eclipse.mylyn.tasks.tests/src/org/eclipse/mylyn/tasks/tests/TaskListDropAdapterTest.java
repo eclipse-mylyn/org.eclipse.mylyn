@@ -47,15 +47,6 @@ public class TaskListDropAdapterTest extends TestCase {
 		TaskTestUtil.resetTaskList();
 	}
 
-	public void testisUrl() {
-		String url = "http://eclipse.org";
-		String title = "Title";
-		String urlData = url + "\n" + title;
-		assertFalse(dropAdapter.isUrl(title));
-		assertTrue(dropAdapter.isUrl(url));
-		assertTrue(dropAdapter.isUrl(urlData));
-	}
-
 	public void testUrlDrop() {
 		assertEquals(0, taskList.getDefaultCategory().getChildren().size());
 		String url = "http://eclipse.org/mylyn";
@@ -71,4 +62,5 @@ public class TaskListDropAdapterTest extends TestCase {
 		// TODO: Failing due to asynchronous retrieval of title from url
 		// assertEquals(title, tasks.get(0).getDescription(false));
 	}
+
 }

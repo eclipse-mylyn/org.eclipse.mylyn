@@ -565,7 +565,7 @@ public class TasksUiInternal {
 		}
 	}
 
-	public static ITaskList getTaskList() {
+	public static TaskList getTaskList() {
 		return TasksUiPlugin.getTaskList();
 	}
 
@@ -745,7 +745,7 @@ public class TasksUiInternal {
 		if (summary != null && summary.length() > 0) {
 			task.setSummary(summary);
 		}
-		UnsubmittedTaskContainer unsubmitted = ((TaskList) getTaskList()).getUnsubmittedContainer(taskData.getRepositoryUrl());
+		UnsubmittedTaskContainer unsubmitted = (getTaskList()).getUnsubmittedContainer(taskData.getRepositoryUrl());
 		if (unsubmitted != null) {
 			TasksUiInternal.getTaskList().addTask(task, unsubmitted);
 		}
@@ -912,6 +912,36 @@ public class TasksUiInternal {
 			}
 		}
 		return formatted;
+	}
+
+	public static AbstractTask getTask(String repositoryUrl, String taskId, String fullUrl) {
+		AbstractTask task = null;
+		if (repositoryUrl != null && taskId != null) {
+			task = (AbstractTask) TasksUiInternal.getTaskList().getTask(repositoryUrl, taskId);
+		}
+		if (task == null && fullUrl != null) {
+			task = TasksUiInternal.getTaskByUrl(fullUrl);
+		}
+		if (task == null && repositoryUrl != null && taskId != null) {
+			task = TasksUiPlugin.getTaskList().getTaskByKey(repositoryUrl, taskId);
+		}
+		return task;
+	}
+
+	/**
+	 * Searches for a task whose URL matches
+	 * 
+	 * @return first task with a matching URL.
+	 */
+	public static AbstractTask getTaskByUrl(String taskUrl) {
+		Collection<AbstractTask> tasks = TasksUiPlugin.getTaskList().getAllTasks();
+		for (AbstractTask task : tasks) {
+			String currUrl = task.getUrl();
+			if (currUrl != null && !currUrl.equals("") && currUrl.equals(taskUrl)) { //$NON-NLS-1$
+				return task;
+			}
+		}
+		return null;
 	}
 
 }

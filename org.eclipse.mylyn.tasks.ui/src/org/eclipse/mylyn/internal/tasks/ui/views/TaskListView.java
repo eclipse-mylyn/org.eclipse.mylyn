@@ -37,6 +37,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.CellEditor;
@@ -77,7 +78,6 @@ import org.eclipse.mylyn.internal.tasks.ui.ScheduledPresentation;
 import org.eclipse.mylyn.internal.tasks.ui.TaskArchiveFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskCompletionFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskPriorityFilter;
-import org.eclipse.mylyn.internal.tasks.ui.TaskTransfer;
 import org.eclipse.mylyn.internal.tasks.ui.TaskWorkingSetFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CollapseAllAction;
@@ -129,6 +129,7 @@ import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.RTFTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.dnd.URLTransfer;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.FocusAdapter;
@@ -1188,10 +1189,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 	};
 
 	private void initDragAndDrop(Composite parent) {
-		Transfer[] dragTypes = new Transfer[] { TaskTransfer.getInstance(), FileTransfer.getInstance() };
-
-		Transfer[] dropTypes = new Transfer[] { TaskTransfer.getInstance(), FileTransfer.getInstance(),
-				TextTransfer.getInstance(), RTFTransfer.getInstance() };
+		Transfer[] dragTypes = new Transfer[] { LocalSelectionTransfer.getTransfer(), FileTransfer.getInstance() };
+		Transfer[] dropTypes = new Transfer[] { LocalSelectionTransfer.getTransfer(), FileTransfer.getInstance(),
+				TextTransfer.getInstance(), RTFTransfer.getInstance(), URLTransfer.getInstance() };
 
 		getViewer().addDragSupport(DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK, dragTypes,
 				new TaskDragSourceListener(getViewer()));

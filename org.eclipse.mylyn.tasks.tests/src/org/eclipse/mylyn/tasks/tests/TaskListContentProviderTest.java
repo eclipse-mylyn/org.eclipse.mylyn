@@ -16,8 +16,8 @@ import java.util.Date;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.internal.tasks.core.ITaskList;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
+import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListContentProvider;
@@ -33,7 +33,7 @@ public class TaskListContentProviderTest extends TestCase {
 
 	private TaskListView view;
 
-	private ITaskList taskList;
+	private TaskList taskList;
 
 	@Override
 	protected void setUp() throws Exception {

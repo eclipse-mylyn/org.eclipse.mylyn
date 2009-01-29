@@ -44,10 +44,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
+import org.eclipse.mylyn.internal.tasks.core.ITaskList;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryModel;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
-import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListMigrator;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.w3c.dom.Document;
@@ -95,7 +95,7 @@ public class TaskListExternalizer {
 		this.delegatingExternalizer.initialize(migrators);
 	}
 
-	public void writeTaskList(TaskList taskList, File outFile) throws CoreException {
+	public void writeTaskList(ITaskList taskList, File outFile) throws CoreException {
 		try {
 			FileOutputStream outStream = new FileOutputStream(outFile);
 			try {
@@ -121,7 +121,7 @@ public class TaskListExternalizer {
 		}
 	}
 
-	private Document createTaskListDocument(TaskList taskList) throws CoreException {
+	private Document createTaskListDocument(ITaskList taskList) throws CoreException {
 		Document doc = createDocument();
 
 		delegatingExternalizer.clearErrorStatus();
@@ -185,7 +185,7 @@ public class TaskListExternalizer {
 		}
 	}
 
-	public void readTaskList(TaskList taskList, File inFile) throws CoreException {
+	public void readTaskList(ITaskList taskList, File inFile) throws CoreException {
 		if (!inFile.exists()) {
 			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
 					"Task list file not found \"" + inFile.getAbsolutePath() + "\"")); //$NON-NLS-1$ //$NON-NLS-2$
