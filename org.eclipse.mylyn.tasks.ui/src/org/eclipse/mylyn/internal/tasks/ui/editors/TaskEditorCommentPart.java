@@ -107,6 +107,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 //			}
 
 			groupSection = toolkit.createSection(parent, style);
+			groupSection.clientVerticalSpacing = 0;
 			if (commentGroup.hasIncoming()) {
 				groupSection.setBackground(getTaskEditorPage().getAttributeEditorToolkit().getColorIncoming());
 			}
@@ -283,6 +284,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 				style |= ExpandableComposite.EXPANDED;
 			}
 			commentComposite = toolkit.createExpandableComposite(composite, style);
+			commentComposite.clientVerticalSpacing = 0;
 			commentComposite.setLayout(new GridLayout());
 			commentComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			commentComposite.setTitleBarForeground(toolkit.getColors().getColor(IFormColors.TITLE));
