@@ -103,6 +103,14 @@ public class Messages extends NLS {
 
 	public static String ExpandAllAction_Expand_All;
 
+	public static String ExportAction_Dialog_Title;
+
+	public static String ExportAction_Nothing_selected;
+
+	public static String ExportAction_Problems_encountered;
+
+	public static String ExportAction_X_exists_Do_you_wish_to_overwrite;
+
 	public static String FilterCompletedTasksAction_Filter_Completed_Tasks;
 
 	public static String GoIntoAction_Go_Into;
@@ -110,6 +118,10 @@ public class Messages extends NLS {
 	public static String GoUpAction_Go_Up_To_Root;
 
 	public static String GroupSubTasksAction_Group_Subtasks;
+
+	public static String ImportAction_Dialog_Title;
+
+	public static String ImportAction_Problems_encountered;
 
 	public static String LinkWithEditorAction_Link_with_Editor;
 
@@ -177,28 +189,6 @@ public class Messages extends NLS {
 
 	public static String QueryCloneAction_Query_cloning_did_not_succeeded;
 
-	public static String QueryExportAction_Confirm_File_Replace;
-
-	public static String QueryExportAction_Could_not_export_query_because_specified_location_is_a_folder;
-
-	public static String QueryExportAction_The_file_X_already_exists;
-
-	public static String QueryExportAction_Query_Export_Error;
-
-	public static String QueryImportAction_The_following_queries_were_imported_successfully;
-
-	public static String QueryImportAction_Import_Mylyn_Query;
-
-	public static String QueryImportAction_Mylyn_Queries;
-
-	public static String QueryImportAction_These_queries_were_not_imported;
-
-	public static String QueryImportAction_Query_Import_Completed;
-
-	public static String QueryImportAction_Query_Import_Error;
-
-	public static String QueryImportAction_The_specified_file_is_not_an_exported_query;
-
 	public static String RefreshRepositoryTasksAction_Refresh_All_Tasks;
 
 	public static String RemoveFromCategoryAction_Remove_From_Category;
@@ -216,24 +206,6 @@ public class Messages extends NLS {
 	public static String TaskActivateAction_Activate;
 
 	public static String TaskDeactivateAction_Deactivate;
-
-	public static String TaskExportAction_already_exists;
-
-	public static String TaskExportAction_Confirm_File_Replace;
-
-	public static String TaskExportAction_Could_not_export_task_because_specified_location_is_a_folder;
-
-	public static String TaskExportAction_FILE;
-
-	public static String TaskExportAction_Task_Export_Error;
-
-	public static String TaskImportAction_Import_Mylyn_Tasks;
-
-	public static String TaskImportAction_Mylyn_Tasks;
-
-	public static String TaskImportAction_The_specified_file_is_not_an_exported_task;
-
-	public static String TaskImportAction_Task_Import_Error;
 
 	public static String TaskListSortAction_Sort_;
 

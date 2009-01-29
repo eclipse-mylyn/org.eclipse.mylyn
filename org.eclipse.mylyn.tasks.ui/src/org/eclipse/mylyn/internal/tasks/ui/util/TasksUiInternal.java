@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.util;
 
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.MessageFormat;
@@ -46,7 +45,6 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
@@ -610,37 +608,6 @@ public class TasksUiInternal {
 		if (editor != null) {
 			page.closeEditor(editor, save);
 		}
-	}
-
-	public static void importTasks(Collection<AbstractTask> tasks, Set<TaskRepository> repositories, File zipFile,
-			Shell shell) {
-		TasksUiPlugin.getRepositoryManager().insertRepositories(repositories,
-				TasksUiPlugin.getDefault().getRepositoriesFilePath());
-
-		for (AbstractTask loadedTask : tasks) {
-			// need to deactivate since activation is managed centrally
-			loadedTask.setActive(false);
-
-			TaskList taskList = TasksUiPlugin.getTaskList();
-
-			try {
-				if (taskList.getTask(loadedTask.getHandleIdentifier()) != null) {
-					boolean confirmed = MessageDialog.openConfirm(shell, Messages.TasksUiInternal_INPORT_TASK,
-							Messages.TasksUiInternal_Task + loadedTask.getSummary()
-									+ Messages.TasksUiInternal_already_exists);
-					if (confirmed) {
-						ContextCore.getContextStore().importContext(loadedTask.getHandleIdentifier(), zipFile);
-					}
-				} else {
-					ContextCore.getContextStore().importContext(loadedTask.getHandleIdentifier(), zipFile);
-					getTaskList().addTask(loadedTask);
-				}
-			} catch (CoreException e) {
-				StatusHandler.log(new Status(IStatus.INFO, TasksUiPlugin.ID_PLUGIN,
-						"Task context not found for import", e)); //$NON-NLS-1$
-			}
-		}
-
 	}
 
 	public static boolean hasLocalCompletionState(ITask task) {

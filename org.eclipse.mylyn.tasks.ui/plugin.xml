@@ -402,44 +402,26 @@
     	</action>
          
          <action
-               class="org.eclipse.mylyn.internal.tasks.ui.actions.QueryExportAction"
-               enablesFor="org.eclipse.mylyn.internal.tasks.core.RepositoryQuery"
+               class="org.eclipse.mylyn.internal.tasks.ui.actions.ExportAction"
+               enablesFor="+"
                icon="icons/etool16/export.gif"
-               id="org.eclipse.mylyn.tasks.ui.actions.export.query"
-               label="%QueryExportAction.label"
+               id="org.eclipse.mylyn.tasks.ui.actions.export"
+               label="%ExportAction.label"
                menubarPath="org.eclipse.mylyn.tasks.ui.menu.operations/importexport"
-               tooltip="%QueryExportAction.tooltip">
+               tooltip="%ExportAction.tooltip">
          </action>
   		
 		  <action
-               class="org.eclipse.mylyn.internal.tasks.ui.actions.QueryImportAction"
+               class="org.eclipse.mylyn.internal.tasks.ui.actions.ImportAction"
                enablesFor="*"
                icon="icons/etool16/import.gif"
-               id="org.eclipse.mylyn.tasks.ui.actions.import.query"
-               label="%QueryImportAction.label"
+               id="org.eclipse.mylyn.tasks.ui.actions.import"
+               label="%ImportAction.label"
                menubarPath="org.eclipse.mylyn.tasks.ui.menu.operations/importexport"
-               tooltip="%QueryImportAction.tooltip">
+               tooltip="%ImportAction.tooltip">
          </action>
 
-         <action
-               class="org.eclipse.mylyn.internal.tasks.ui.actions.TaskExportAction"
-               enablesFor="org.eclipse.mylyn.internal.tasks.core.AbstractTask"
-               icon="icons/etool16/export.gif"
-               id="org.eclipse.mylyn.tasks.ui.actions.export.task"
-               label="%TaskExportAction.label"
-               menubarPath="org.eclipse.mylyn.tasks.ui.menu.operations/importexport"
-               tooltip="%TaskExportAction.tooltip">
-         </action>
 
-		  <action
-               class="org.eclipse.mylyn.internal.tasks.ui.actions.TaskImportAction"
-               enablesFor="*"
-               icon="icons/etool16/import.gif"
-               id="org.eclipse.mylyn.tasks.ui.actions.import.task"
-               label="%TaskImportAction.label"
-               menubarPath="org.eclipse.mylyn.tasks.ui.menu.operations/importexport"
-               tooltip="%TaskImportAction.tooltip">
-         </action>
 
   		<action
 	        class="org.eclipse.mylyn.internal.tasks.ui.actions.NewTaskAction:local"
