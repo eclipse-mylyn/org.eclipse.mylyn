@@ -13,13 +13,51 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.util;
 
+import java.lang.reflect.Method;
+
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.ByteArrayTransfer;
 
 /**
  * @author Steffen Pingel
  */
 public class PlatformUtil {
+
+	private static ByteArrayTransfer urlTransfer;
+	static {
+		// TODO e3.4 use URLTransfer directly and not through reflection
+		// URLTransfer is package protected in Eclipse 3.3 (bug 100095)
+		// use reflection to access instance for now
+		try {
+			Class<?> clazz = Class.forName("org.eclipse.swt.dnd.URLTransfer"); //$NON-NLS-1$
+			Method method = clazz.getMethod("getInstance"); //$NON-NLS-1$
+			if (method != null) {
+				urlTransfer = (ByteArrayTransfer) method.invoke(null);
+			}
+		} catch (Throwable e) {
+			// ignore
+		}
+		if (urlTransfer == null) {
+			urlTransfer = new ByteArrayTransfer() {
+
+				private static final String TYPE = "dummy"; //$NON-NLS-1$
+
+				private final int TYPE_ID = registerType(TYPE);
+
+				@Override
+				protected int[] getTypeIds() {
+					return new int[] { TYPE_ID };
+				}
+
+				@Override
+				protected String[] getTypeNames() {
+					return new String[] { TYPE };
+				}
+
+			};
+		}
+	}
 
 	/**
 	 * bug 247182: file import dialog doesn't work on Mac OS X if the file extension has more than one dot.
@@ -62,6 +100,10 @@ public class PlatformUtil {
 
 	public static boolean isPaintItemClippingRequired() {
 		return "gtk".equals(SWT.getPlatform()); //$NON-NLS-1$
+	}
+
+	public static ByteArrayTransfer getUrlTransfer() {
+		return urlTransfer;
 	}
 
 }

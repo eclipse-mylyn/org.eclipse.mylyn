@@ -129,7 +129,6 @@ import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.RTFTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.dnd.URLTransfer;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.FocusAdapter;
@@ -1191,7 +1190,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 	private void initDragAndDrop(Composite parent) {
 		Transfer[] dragTypes = new Transfer[] { LocalSelectionTransfer.getTransfer(), FileTransfer.getInstance() };
 		Transfer[] dropTypes = new Transfer[] { LocalSelectionTransfer.getTransfer(), FileTransfer.getInstance(),
-				TextTransfer.getInstance(), RTFTransfer.getInstance(), URLTransfer.getInstance() };
+				TextTransfer.getInstance(), RTFTransfer.getInstance(), PlatformUtil.getUrlTransfer() };
 
 		getViewer().addDragSupport(DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK, dragTypes,
 				new TaskDragSourceListener(getViewer()));
