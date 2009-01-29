@@ -50,6 +50,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
+import org.eclipse.mylyn.tasks.ui.wizards.TaskRepositoryWizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
@@ -217,7 +218,7 @@ public class TasksUiUtil {
 			EditRepositoryWizard wizard = new EditRepositoryWizard(repository);
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			if (shell != null && !shell.isDisposed()) {
-				WizardDialog dialog = new WizardDialog(shell, wizard);
+				WizardDialog dialog = new TaskRepositoryWizardDialog(shell, wizard);
 				dialog.create();
 				dialog.setBlockOnOpen(true);
 				if (dialog.open() == Window.CANCEL) {

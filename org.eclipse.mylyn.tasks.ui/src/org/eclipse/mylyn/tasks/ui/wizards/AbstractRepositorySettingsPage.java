@@ -32,7 +32,6 @@ import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
@@ -42,7 +41,6 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
@@ -127,8 +125,6 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 	// FIXME shadows declaration in super
 	protected TaskRepository repository;
-
-	private Button validateServerButton;
 
 	private Combo otherEncodingCombo;
 
@@ -656,20 +652,6 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		managementLayout.horizontalSpacing = 10;
 		managementComposite.setLayout(managementLayout);
 		managementComposite.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 2, 1));
-
-		if (needsValidation()) {
-			validateServerButton = new Button(managementComposite, SWT.PUSH);
-			GridDataFactory.swtDefaults().span(2, SWT.DEFAULT).grab(false, false).applyTo(validateServerButton);
-			validateServerButton.setText(Messages.AbstractRepositorySettingsPage_Validate_Settings);
-			validateServerButton.setImage(CommonImages.getImage(TasksUiImages.REPOSITORY_SYNCHRONIZE_SMALL));
-			validateServerButton.addSelectionListener(new SelectionAdapter() {
-
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					validateSettings();
-				}
-			});
-		}
 
 		createAccountHyperlink = toolkit.createHyperlink(managementComposite,
 				Messages.AbstractRepositorySettingsPage_Create_new_account, SWT.NONE);
