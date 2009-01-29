@@ -27,6 +27,7 @@ import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.mylyn.internal.wikitext.ui.util.ImageCache;
 import org.eclipse.mylyn.internal.wikitext.ui.util.WikiTextUiResources;
+import org.eclipse.mylyn.internal.wikitext.ui.util.css.Stylesheet;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.HtmlTextPresentationParser;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.ImageManager;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.BulletAnnotation;
@@ -61,6 +62,8 @@ public class HtmlViewer extends SourceViewer {
 	private final ImageCache imageCache = new ImageCache();
 
 	private boolean displayImages = true;
+
+	private Stylesheet stylesheet;
 
 	public HtmlViewer(Composite parent, IVerticalRuler ruler, int styles) {
 		super(parent, ruler, styles);
@@ -135,6 +138,9 @@ public class HtmlViewer extends SourceViewer {
 		result.textPresentation = new TextPresentation();
 
 		HtmlTextPresentationParser parser = new HtmlTextPresentationParser();
+		if (stylesheet != null) {
+			parser.setStylesheet(stylesheet);
+		}
 		if (displayImages) {
 			parser.setImageCache(imageCache);
 			parser.setEnableImages(displayImages);
@@ -247,4 +253,17 @@ public class HtmlViewer extends SourceViewer {
 		this.displayImages = displayImages;
 	}
 
+	/**
+	 * <em>not API</em>
+	 */
+	public Stylesheet getStylesheet() {
+		return stylesheet;
+	}
+
+	/**
+	 * <em>not API</em>
+	 */
+	public void setStylesheet(Stylesheet stylesheet) {
+		this.stylesheet = stylesheet;
+	}
 }

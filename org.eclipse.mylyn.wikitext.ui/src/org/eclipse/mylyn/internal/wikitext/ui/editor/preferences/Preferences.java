@@ -10,18 +10,28 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.ui.editor.preferences;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
+import org.eclipse.mylyn.internal.wikitext.ui.util.css.CssParser;
+import org.eclipse.mylyn.internal.wikitext.ui.util.css.Stylesheet;
+import org.eclipse.mylyn.internal.wikitext.ui.viewer.HtmlTextPresentationParser;
 
 /**
  * 
  * 
  * @author David Green
  */
-public class Preferences {
+public class Preferences implements Cloneable {
+
+	private static final String KEY_MARKUP_VIEWER_CSS = "preview.css"; //$NON-NLS-1$
 
 	private static final String KEY_EDITOR_FOLDING = "editorFolding"; //$NON-NLS-1$
 
@@ -77,7 +87,7 @@ public class Preferences {
 	public static final String[] HEADING_PREFERENCES = new String[] { null, BLOCK_H1, BLOCK_H2, BLOCK_H3, BLOCK_H4,
 			BLOCK_H5, BLOCK_H6 };
 
-	private final Map<String, String> cssByBlockModifierType = new LinkedHashMap<String, String>();
+	private Map<String, String> cssByBlockModifierType = new LinkedHashMap<String, String>();
 	{
 		cssByBlockModifierType.put(BLOCK_H1, "font-size: 130%; font-weight: bold;"); //$NON-NLS-1$
 		cssByBlockModifierType.put(BLOCK_H2, "font-size: 125%; font-weight: bold;"); //$NON-NLS-1$
@@ -90,7 +100,7 @@ public class Preferences {
 		cssByBlockModifierType.put(BLOCK_QUOTE, "font-family: monospace; color: rgb(38,86,145);"); //$NON-NLS-1$
 	}
 
-	private final Map<String, String> cssByPhraseModifierType = new LinkedHashMap<String, String>();
+	private Map<String, String> cssByPhraseModifierType = new LinkedHashMap<String, String>();
 	{
 
 		cssByPhraseModifierType.put(PHRASE_EMPHASIS, "font-style: italic;"); //$NON-NLS-1$
@@ -109,6 +119,12 @@ public class Preferences {
 	}
 
 	private boolean editorFolding = true;
+
+	private String markupViewerCss;
+
+	private Stylesheet stylesheet;
+
+	private boolean mutable = true;
 
 	public Map<String, String> getCssByBlockModifierType() {
 		return cssByBlockModifierType;
@@ -129,7 +145,55 @@ public class Preferences {
 	 * indicate if editor folding is enabled
 	 */
 	public void setEditorFolding(boolean editorFolding) {
+		if (!mutable) {
+			throw new UnsupportedOperationException();
+		}
 		this.editorFolding = editorFolding;
+	}
+
+	/**
+	 * get the CSS content used to render the markup viewer
+	 */
+	public String getMarkupViewerCss() {
+		return markupViewerCss;
+	}
+
+	/**
+	 * set the CSS content used to render the markup viewer
+	 */
+	public void setMarkupViewerCss(String markupViewerCss) {
+		if (!mutable) {
+			throw new UnsupportedOperationException();
+		}
+		this.markupViewerCss = markupViewerCss;
+		stylesheet = null;
+	}
+
+	public Stylesheet getStylesheet() {
+		if (stylesheet == null) {
+			stylesheet = new CssParser().parse(getMarkupViewerCss());
+		}
+		return stylesheet;
+	}
+
+	/**
+	 * indicate if this preferences is mutable
+	 * 
+	 * @see #makeImmutable()
+	 */
+	public boolean isMutable() {
+		return mutable;
+	}
+
+	/**
+	 * @see #isMutable()
+	 */
+	public void makeImmutable() {
+		if (mutable) {
+			mutable = false;
+			cssByBlockModifierType = Collections.unmodifiableMap(cssByBlockModifierType);
+			cssByPhraseModifierType = Collections.unmodifiableMap(cssByPhraseModifierType);
+		}
 	}
 
 	/**
@@ -159,8 +223,10 @@ public class Preferences {
 		}
 		if (asDefault) {
 			store.setDefault(KEY_EDITOR_FOLDING, editorFolding);
+			store.setDefault(KEY_MARKUP_VIEWER_CSS, getDefaultMarkupViewerCss());
 		} else {
 			store.setValue(KEY_EDITOR_FOLDING, editorFolding);
+			store.setValue(KEY_MARKUP_VIEWER_CSS, markupViewerCss);
 		}
 	}
 
@@ -170,6 +236,9 @@ public class Preferences {
 	}
 
 	public void load(IPreferenceStore store) {
+		if (!mutable) {
+			throw new UnsupportedOperationException();
+		}
 		for (Map.Entry<String, String> ent : cssByBlockModifierType.entrySet()) {
 			String propKey = toPreferenceKey(ent.getKey(), true);
 
@@ -186,5 +255,60 @@ public class Preferences {
 			}
 		}
 		editorFolding = store.getBoolean(KEY_EDITOR_FOLDING);
+		markupViewerCss = store.getString(KEY_MARKUP_VIEWER_CSS);
+		if (isEmpty(markupViewerCss)) {
+			markupViewerCss = getDefaultMarkupViewerCss();
+		}
+		stylesheet = null;
+	}
+
+	private String getDefaultMarkupViewerCss() {
+		try {
+			return readFully(HtmlTextPresentationParser.getDefaultStylesheetContent());
+		} catch (IOException e) {
+			WikiTextUiPlugin.getDefault().log(e);
+			return ""; //$NON-NLS-1$
+		}
+	}
+
+	private String readFully(Reader reader) throws IOException {
+		try {
+			StringWriter writer = new StringWriter();
+			int c;
+			while ((c = reader.read()) != -1) {
+				writer.write(c);
+			}
+			return writer.toString();
+		} finally {
+			reader.close();
+		}
+	}
+
+	private boolean isEmpty(String text) {
+		if (text == null || text.length() == 0) {
+			return true;
+		}
+		final int length = text.length();
+		for (int x = 0; x < length; ++x) {
+			char c = text.charAt(x);
+			if (!Character.isWhitespace(c)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * clone the preferences, returning a mutable copy.
+	 */
+	@Override
+	public Preferences clone() {
+		try {
+			Preferences copy = (Preferences) super.clone();
+			copy.mutable = true;
+			return copy;
+		} catch (CloneNotSupportedException e) {
+			throw new IllegalStateException();
+		}
 	}
 }

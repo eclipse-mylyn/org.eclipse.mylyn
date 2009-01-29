@@ -301,8 +301,7 @@ public class HtmlTextPresentationParser {
 		synchronized (HtmlTextPresentationParser.class) {
 			if (defaultStylesheet == null) {
 				try {
-					Reader reader = new InputStreamReader(
-							HtmlTextPresentationParser.class.getResourceAsStream("default.css"), "utf-8"); //$NON-NLS-1$ //$NON-NLS-2$
+					Reader reader = getDefaultStylesheetContent();
 					try {
 						defaultStylesheet = new CssParser().parse(reader);
 					} finally {
@@ -314,6 +313,10 @@ public class HtmlTextPresentationParser {
 			}
 			return defaultStylesheet;
 		}
+	}
+
+	public static Reader getDefaultStylesheetContent() throws IOException {
+		return new InputStreamReader(HtmlTextPresentationParser.class.getResourceAsStream("default.css"), "utf-8"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public TextPresentation getPresentation() {

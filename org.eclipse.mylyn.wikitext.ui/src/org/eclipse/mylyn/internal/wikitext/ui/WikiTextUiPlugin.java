@@ -26,6 +26,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.text.templates.Template;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.assist.MarkupTemplateCompletionProcessor;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.assist.Templates;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.help.CheatSheetContent;
@@ -59,6 +61,10 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 
 	private Map<String, Templates> templates;
 
+	private Preferences preferences;
+
+	private IPropertyChangeListener preferencesListener;
+
 	public WikiTextUiPlugin() {
 		plugin = this;
 	}
@@ -66,11 +72,21 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		preferencesListener = new IPropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent event) {
+				preferences = null;
+			}
+		};
+		getPreferenceStore().addPropertyChangeListener(preferencesListener);
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
+		if (preferencesListener != null) {
+			getPreferenceStore().removePropertyChangeListener(preferencesListener);
+			preferencesListener = null;
+		}
 		super.stop(context);
 	}
 
@@ -123,9 +139,13 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 	}
 
 	public Preferences getPreferences() {
-		Preferences prefs = new Preferences();
-		prefs.load(getPreferenceStore());
-		return prefs;
+		if (preferences == null) {
+			Preferences prefs = new Preferences();
+			prefs.load(getPreferenceStore());
+			prefs.makeImmutable();
+			preferences = prefs;
+		}
+		return preferences;
 	}
 
 	public SortedMap<String, HelpContent> getCheatSheets() {

@@ -373,7 +373,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 
 	public void saveProjectionPreferences() {
 		if (isFoldingEnabled() != WikiTextUiPlugin.getDefault().getPreferences().isEditorFolding()) {
-			Preferences preferences = WikiTextUiPlugin.getDefault().getPreferences();
+			Preferences preferences = WikiTextUiPlugin.getDefault().getPreferences().clone();
 			preferences.setEditorFolding(isFoldingEnabled());
 			preferences.save(WikiTextUiPlugin.getDefault().getPreferenceStore(), false);
 		}
