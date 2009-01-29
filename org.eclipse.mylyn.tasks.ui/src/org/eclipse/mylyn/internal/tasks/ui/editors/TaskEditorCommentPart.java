@@ -22,6 +22,8 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.TaskComment;
@@ -32,6 +34,7 @@ import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.ITaskComment;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
+import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.SWT;
@@ -346,6 +349,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 			ToolBarManager toolBarManager = new ToolBarManager(SWT.FLAT);
 			ReplyToCommentAction replyAction = new ReplyToCommentAction(taskComment);
+			replyAction.setImageDescriptor(TasksUiImages.COMMENT_REPLY_SMALL);
 			toolBarManager.add(replyAction);
 			toolBarManager.createControl(buttonComposite);
 
@@ -535,6 +539,23 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		menuManager.setRemoveAllWhenShown(true);
 		menuManager.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {
+				// get comment and add reply action as first item in the menu
+				ISelection selection = selectionProvider.getSelection();
+				if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
+					Object element = ((IStructuredSelection) selection).getFirstElement();
+					if (element instanceof ITaskComment) {
+						final ITaskComment comment = (ITaskComment) element;
+						AbstractReplyToCommentAction replyAction = new AbstractReplyToCommentAction(
+								getTaskEditorPage(), comment) {
+							@Override
+							protected String getReplyText() {
+								return comment.getText();
+							}
+						};
+						manager.add(replyAction);
+					}
+				}
+
 				actionGroup.setContext(new ActionContext(selectionProvider.getSelection()));
 				actionGroup.fillContextMenu(manager);
 			}

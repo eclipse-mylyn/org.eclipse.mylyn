@@ -25,8 +25,8 @@ public class CopyCommentDetailsAction extends BaseSelectionListenerAction {
 	private final ClipboardCopier copier;
 
 	public CopyCommentDetailsAction() {
-		super("Copy Details");
-		setToolTipText("Copy User ID To Clipboard");
+		super(Messages.CopyCommentDetailsAction_Copy_User_ID);
+		setToolTipText(Messages.CopyCommentDetailsAction_Copy_User_ID_Tooltip);
 		setImageDescriptor(CommonImages.COPY);
 		copier = new ClipboardCopier() {
 			@Override
@@ -35,7 +35,7 @@ public class CopyCommentDetailsAction extends BaseSelectionListenerAction {
 					ITaskComment comment = (ITaskComment) element;
 					IRepositoryPerson author = comment.getAuthor();
 					if (author != null) {
-						return author.toString();
+						return author.getPersonId();
 					}
 				}
 				return null;

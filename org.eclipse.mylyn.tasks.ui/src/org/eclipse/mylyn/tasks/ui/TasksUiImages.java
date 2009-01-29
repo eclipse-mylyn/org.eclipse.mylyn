@@ -35,6 +35,8 @@ public class TasksUiImages {
 
 	private static final String TOOL = "etool16"; //$NON-NLS-1$
 
+	private static final String TOOL_SMALL = "etool12"; //$NON-NLS-1$
+
 	private static final String OBJ = "obj16"; //$NON-NLS-1$
 
 	private static final String WIZBAN = "wizban"; //$NON-NLS-1$
@@ -88,7 +90,8 @@ public class TasksUiImages {
 	public static final ImageDescriptor REPOSITORY_OFFLINE = ImageDescriptor.createWithFlags(TasksUiImages.REPOSITORY,
 			SWT.IMAGE_GRAY);
 
-	public static final ImageDescriptor REPOSITORY_SYNCHRONIZE_SMALL = create(TOOL, "repository-synchronize-small.png"); //$NON-NLS-1$
+	public static final ImageDescriptor REPOSITORY_SYNCHRONIZE_SMALL = create(TOOL_SMALL,
+			"repository-synchronize-small.png"); //$NON-NLS-1$
 
 	public static final ImageDescriptor REPOSITORY_SYNCHRONIZE = create(TOOL, "repository-synchronize.gif"); //$NON-NLS-1$
 
@@ -147,6 +150,11 @@ public class TasksUiImages {
 	public static final ImageDescriptor COMMENT_SORT_UP_GRAY = create(TOOL, "sort-up-gray.gif"); //$NON-NLS-1$
 
 	public static final ImageDescriptor COMMENT_REPLY = create(TOOL, "reply.gif"); //$NON-NLS-1$
+
+	/**
+	 * @since 3.1
+	 */
+	public static final ImageDescriptor COMMENT_REPLY_SMALL = create(TOOL_SMALL, "reply.gif"); //$NON-NLS-1$
 
 	// Wizard banners
 

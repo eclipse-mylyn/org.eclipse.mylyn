@@ -29,6 +29,7 @@ import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractDuplicateDetector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.swt.SWT;
@@ -97,7 +98,8 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 			duplicateDetectorChooser.setData(allCollectors);
 
 			if (allCollectors.size() > 0) {
-				Button searchForDuplicates = toolkit.createButton(relatedBugsComposite, Messages.TaskEditorDescriptionPart_Search, SWT.NONE);
+				Button searchForDuplicates = toolkit.createButton(relatedBugsComposite,
+						Messages.TaskEditorDescriptionPart_Search, SWT.NONE);
 				GridData searchDuplicatesButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 				searchForDuplicates.setLayoutData(searchDuplicatesButtonData);
 				searchForDuplicates.addListener(SWT.Selection, new Listener() {
@@ -131,6 +133,7 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 					return getEditor().getValue();
 				}
 			};
+			replyAction.setImageDescriptor(TasksUiImages.COMMENT_REPLY_SMALL);
 			toolBar.add(replyAction);
 		}
 		super.fillToolBar(toolBar);
@@ -176,8 +179,9 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 						getTaskEditorPage().getTaskRepository(), duplicatesQuery);
 				NewSearchUI.runQueryInBackground(collector);
 			} else {
-				TasksUiInternal.displayStatus(Messages.TaskEditorDescriptionPart_Duplicate_Detection_Failed, new Status(IStatus.ERROR,
-						TasksUiPlugin.ID_PLUGIN, Messages.TaskEditorDescriptionPart_The_duplicate_detector_did_not_return_a_valid_query));
+				TasksUiInternal.displayStatus(Messages.TaskEditorDescriptionPart_Duplicate_Detection_Failed,
+						new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+								Messages.TaskEditorDescriptionPart_The_duplicate_detector_did_not_return_a_valid_query));
 			}
 		} catch (CoreException e) {
 			TasksUiInternal.displayStatus(Messages.TaskEditorDescriptionPart_Duplicate_Detection_Failed, e.getStatus());

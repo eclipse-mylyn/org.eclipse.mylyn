@@ -63,6 +63,10 @@ public class Messages extends NLS {
 
 	public static String CompareAttachmentsAction_Failed_to_find_attachment;
 
+	public static String CopyCommentDetailsAction_Copy_User_ID;
+
+	public static String CopyCommentDetailsAction_Copy_User_ID_Tooltip;
+
 	public static String CopyTaskDetailsAction_Copy_Details;
 
 	public static String DeleteAction_Confirm_Delete;
