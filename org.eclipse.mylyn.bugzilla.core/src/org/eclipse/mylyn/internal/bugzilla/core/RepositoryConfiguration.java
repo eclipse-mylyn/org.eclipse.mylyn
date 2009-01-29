@@ -215,11 +215,7 @@ public class RepositoryConfiguration implements Serializable {
 	}
 
 	public void setInstallVersion(String version) {
-		try {
-			this.version = new BugzillaVersion(version);
-		} catch (NumberFormatException e) {
-			this.version = BugzillaVersion.MIN_VERSION;
-		}
+		this.version = new BugzillaVersion(version);
 	}
 
 	public BugzillaVersion getInstallVersion() {

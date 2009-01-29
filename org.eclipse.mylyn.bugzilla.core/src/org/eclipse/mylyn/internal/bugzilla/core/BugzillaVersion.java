@@ -39,8 +39,12 @@ public class BugzillaVersion implements Comparable<BugzillaVersion> {
 		micro = segments.length > 2 ? parse(segments[2]) : 0;
 	}
 
-	private int parse(String segment) throws NumberFormatException {
-		return segment.length() == 0 ? 0 : Integer.parseInt(getVersion(segment));
+	private int parse(String segment) {
+		try {
+			return segment.length() == 0 ? 0 : Integer.parseInt(getVersion(segment));
+		} catch (NumberFormatException ex) {
+			return 0;
+		}
 	}
 
 	private String getVersion(String segment) {

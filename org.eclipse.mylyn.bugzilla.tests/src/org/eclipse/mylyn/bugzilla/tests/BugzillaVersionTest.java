@@ -29,13 +29,8 @@ public class BugzillaVersionTest extends TestCase {
 	public final static BugzillaVersion BUGZILLA_3_0_4 = new BugzillaVersion("3.0.4");
 
 	public void testwrongVersion() throws Exception {
-		try {
-			new BugzillaVersion("3.2.X");
-			fail("NumberFormatException expected!");
-		} catch (Exception e) {
-			assertTrue(e instanceof NumberFormatException);
-			assertEquals("For input string: \"X\"", e.getMessage());
-		}
+		BugzillaVersion version = new BugzillaVersion("3.2.X");
+		assertEquals("3.2", version.toString());
 	}
 
 	public void testCompareAll() throws Exception {
