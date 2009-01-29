@@ -504,10 +504,21 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 				otherEncoding = new Button(encodingContainer, SWT.RADIO);
 				otherEncoding.setText(Messages.AbstractRepositorySettingsPage_Other);
 				otherEncodingCombo = new Combo(encodingContainer, SWT.READ_ONLY);
-				for (String encoding : Charset.availableCharsets().keySet()) {
-					if (!encoding.equals(TaskRepository.DEFAULT_CHARACTER_ENCODING)) {
-						otherEncodingCombo.add(encoding);
+				try {
+					for (String encoding : Charset.availableCharsets().keySet()) {
+						if (!encoding.equals(TaskRepository.DEFAULT_CHARACTER_ENCODING)) {
+							otherEncodingCombo.add(encoding);
+						}
 					}
+				} catch (LinkageError e) {
+					StatusHandler.log(new Status(
+							IStatus.ERROR,
+							TasksUiPlugin.ID_PLUGIN,
+							Messages.AbstractRepositorySettingsPage_Problems_encountered_determining_available_charsets,
+							e));
+					// bug 237972: 3rd party encodings can cause availableCharsets() to fail 
+					otherEncoding.setEnabled(false);
+					otherEncodingCombo.setEnabled(false);
 				}
 
 				setDefaultEncoding();

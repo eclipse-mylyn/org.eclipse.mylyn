@@ -237,6 +237,8 @@ public class Messages extends NLS {
 
 	public static String AbstractRepositorySettingsPage_Password_;
 
+	public static String AbstractRepositorySettingsPage_Problems_encountered_determining_available_charsets;
+
 	public static String AbstractRepositorySettingsPage_Proxy_host_address_;
 
 	public static String AbstractRepositorySettingsPage_Proxy_host_port_;
