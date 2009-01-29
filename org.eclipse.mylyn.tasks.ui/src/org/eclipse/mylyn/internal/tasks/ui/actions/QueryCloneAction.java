@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Jevgeni Holodkov and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,15 +7,15 @@
  *
  * Contributors:
  *     Jevgeni Holodkov - initial API and implementation
+ *     Tasktop Technologies - improvements
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -25,11 +25,13 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
-import org.w3c.dom.Document;
 
 /**
  * Allow to clone a selected query.
@@ -81,21 +83,25 @@ public class QueryCloneAction extends Action implements IViewActionDelegate {
 
 		List<RepositoryQuery> queries = new ArrayList<RepositoryQuery>();
 		queries.add(selectedQuery);
-		Document queryDoc = TasksUiPlugin.getTaskListWriter().createQueryDocument(queries);
-		List<RepositoryQuery> clonedQueries = TasksUiPlugin.getTaskListWriter().readQueryDocument(queryDoc);
 
-		if (clonedQueries.size() > 0) {
-			for (RepositoryQuery query : clonedQueries) {
-				query.setHandleIdentifier(TasksUiPlugin.getTaskList().getUniqueHandleIdentifier());
-				TasksUiPlugin.getTaskList().addQuery(query);
-				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(query.getConnectorKind());
-				TasksUiInternal.openEditQueryDialog(connectorUi, query);
+		List<RepositoryQuery> clonedQueries = new ArrayList<RepositoryQuery>(queries.size());
+		for (RepositoryQuery query : queries) {
+			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(query.getConnectorKind(),
+					query.getRepositoryUrl());
+			RepositoryQuery clonedQuery = (RepositoryQuery) TasksUi.getRepositoryModel().createRepositoryQuery(
+					repository);
+			clonedQuery.setSummary(NLS.bind(Messages.QueryCloneAction_Copy_of_X, query.getSummary()));
+			clonedQuery.setUrl(query.getUrl());
+			Map<String, String> attributes = query.getAttributes();
+			for (Map.Entry<String, String> entry : attributes.entrySet()) {
+				clonedQuery.setAttribute(entry.getKey(), entry.getValue());
 			}
-		} else {
-			// cannot happen
-			TasksUiInternal.displayStatus(Messages.QueryCloneAction_Clone_Query_Failes, new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					Messages.QueryCloneAction_Query_cloning_did_not_succeeded));
+			clonedQueries.add(clonedQuery);
+		}
+		for (RepositoryQuery query : clonedQueries) {
+			TasksUiPlugin.getTaskList().addQuery(query);
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(query.getConnectorKind());
+			TasksUiInternal.openEditQueryDialog(connectorUi, query);
 		}
 	}
-
 }

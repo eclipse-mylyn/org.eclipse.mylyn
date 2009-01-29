@@ -183,11 +183,9 @@ public class Messages extends NLS {
 
 	public static String QueryCloneAction_Clone_Query;
 
-	public static String QueryCloneAction_Clone_Query_Failes;
+	public static String QueryCloneAction_Copy_of_X;
 
 	public static String QueryCloneAction_No_query_selected;
-
-	public static String QueryCloneAction_Query_cloning_did_not_succeeded;
 
 	public static String RefreshRepositoryTasksAction_Refresh_All_Tasks;
 

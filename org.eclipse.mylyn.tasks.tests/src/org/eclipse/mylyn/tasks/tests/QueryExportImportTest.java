@@ -19,6 +19,9 @@ import junit.framework.TestCase;
 // FIXME fix test
 public class QueryExportImportTest extends TestCase {
 
+	public void testRewriteTestCases() {
+	}
+
 //	private File dest;
 //
 //	private TaskListElementImporter taskListWriter;

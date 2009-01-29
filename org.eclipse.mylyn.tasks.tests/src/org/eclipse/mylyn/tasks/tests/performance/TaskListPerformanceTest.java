@@ -14,8 +14,9 @@ package org.eclipse.mylyn.tasks.tests.performance;
 import java.io.File;
 
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
+import org.eclipse.mylyn.internal.tasks.core.TransferList;
+import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.util.TaskListElementImporter;
 import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 import org.eclipse.test.performance.PerformanceTestCase;
 
@@ -40,13 +41,13 @@ public class TaskListPerformanceTest extends PerformanceTestCase {
 		taskList.reset();
 	}
 
-	public void testReadTasksWith4000Tasks() {
+	public void testReadTasksWith4000Tasks() throws Exception {
 		final File file = TaskTestUtil.getLocalFile(TASK_LIST_4000);
-		final TaskListElementImporter taskListWriter = TasksUiPlugin.getTaskListWriter();
+		final TaskListExternalizer taskListWriter = TasksUiPlugin.getDefault().createTaskListExternalizer();
 
 		for (int i = 0; i < 10; i++) {
 			startMeasuring();
-			taskListWriter.readTasks(file);
+			taskListWriter.readTaskList(new TransferList(), file);
 			stopMeasuring();
 			taskList.reset();
 		}
@@ -55,13 +56,13 @@ public class TaskListPerformanceTest extends PerformanceTestCase {
 		assertPerformance();
 	}
 
-	public void testReadTaskListWith4000Tasks() {
+	public void testReadTaskListWith4000Tasks() throws Exception {
 		final File file = TaskTestUtil.getLocalFile(TASK_LIST_4000);
-		final TaskListElementImporter taskListWriter = TasksUiPlugin.getTaskListWriter();
+		final TaskListExternalizer taskListWriter = TasksUiPlugin.getDefault().createTaskListExternalizer();
 
 		for (int i = 0; i < 10; i++) {
 			startMeasuring();
-			taskListWriter.readTaskList(taskList, file);
+			taskListWriter.readTaskList(new TransferList(), file);
 			stopMeasuring();
 			taskList.reset();
 		}

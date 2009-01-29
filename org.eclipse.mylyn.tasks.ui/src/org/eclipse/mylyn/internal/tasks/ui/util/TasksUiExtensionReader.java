@@ -129,9 +129,7 @@ public class TasksUiExtensionReader {
 
 	private static boolean coreExtensionsRead = false;
 
-	@SuppressWarnings("deprecation")
-	public static void initStartupExtensions(TaskListExternalizer taskListExternalizer,
-			TaskListElementImporter taskListImporter) {
+	public static void initStartupExtensions(TaskListExternalizer taskListExternalizer) {
 		if (!coreExtensionsRead) {
 			IExtensionRegistry registry = Platform.getExtensionRegistry();
 
@@ -150,7 +148,6 @@ public class TasksUiExtensionReader {
 				}
 			}
 			taskListExternalizer.initialize(migrators);
-			taskListImporter.setDelegateExternalizers(migrators);
 
 			IExtensionPoint templatesExtensionPoint = registry.getExtensionPoint(EXTENSION_TEMPLATES);
 			IExtension[] templateExtensions = templatesExtensionPoint.getExtensions();

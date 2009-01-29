@@ -74,7 +74,6 @@ import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternaliza
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizer;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotificationReminder;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotifier;
-import org.eclipse.mylyn.internal.tasks.ui.util.TaskListElementImporter;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiExtensionReader;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylyn.tasks.core.AbstractDuplicateDetector;
@@ -355,8 +354,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private final Set<IRepositoryModelListener> listeners = new HashSet<IRepositoryModelListener>();
 
-	private static TaskListElementImporter taskListImporter;
-
 	private static TaskList taskList;
 
 	private static RepositoryModel repositoryModel;
@@ -526,7 +523,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			taskList = new TaskList();
 			repositoryModel = new RepositoryModel(taskList, repositoryManager);
 			taskListExternalizer = new TaskListExternalizer(repositoryModel, repositoryManager);
-			taskListImporter = new TaskListElementImporter(repositoryManager, repositoryModel);
 
 			taskListExternalizationParticipant = new TaskListExternalizationParticipant(repositoryModel, taskList,
 					taskListExternalizer, externalizationManager, repositoryManager);
@@ -562,7 +558,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 			// NOTE: initializing extensions in start(..) has caused race
 			// conditions previously
-			TasksUiExtensionReader.initStartupExtensions(taskListExternalizer, taskListImporter);
+			TasksUiExtensionReader.initStartupExtensions(taskListExternalizer);
 
 			// instantiate taskDataManager
 			TaskDataStore taskDataStore = new TaskDataStore(repositoryManager);
@@ -1235,10 +1231,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	public void removeRepositoryLinkProvider(AbstractTaskRepositoryLinkProvider provider) {
 		repositoryLinkProviders.remove(provider);
-	}
-
-	public static TaskListElementImporter getTaskListWriter() {
-		return taskListImporter;
 	}
 
 	public TaskListExternalizer createTaskListExternalizer() {
