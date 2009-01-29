@@ -71,7 +71,7 @@ public class BugzillaConfigurationTest extends TestCase {
 		BugzillaClient client = createClient(IBugzillaConstants.TEST_BUGZILLA_222_URL, "", "", "", "", "UTF-8");
 		RepositoryConfiguration config = client.getRepositoryConfiguration();
 		assertNotNull(config);
-		assertEquals("2.22.1", config.getInstallVersion());
+		assertEquals("2.22.1", config.getInstallVersion().toString());
 		assertEquals(7, config.getStatusValues().size());
 		assertEquals(8, config.getResolutions().size());
 		assertEquals(4, config.getPlatforms().size());
@@ -89,7 +89,7 @@ public class BugzillaConfigurationTest extends TestCase {
 		BugzillaClient client = createClient(IBugzillaConstants.TEST_BUGZILLA_2201_URL, "", "", "", "", "UTF-8");
 		RepositoryConfiguration config = client.getRepositoryConfiguration();
 		assertNotNull(config);
-		assertEquals("2.20.1", config.getInstallVersion());
+		assertEquals("2.20.1", config.getInstallVersion().toString().toString());
 		assertEquals(7, config.getStatusValues().size());
 		assertEquals(8, config.getResolutions().size());
 		assertEquals(4, config.getPlatforms().size());
@@ -107,7 +107,7 @@ public class BugzillaConfigurationTest extends TestCase {
 		BugzillaClient client = createClient(IBugzillaConstants.TEST_BUGZILLA_220_URL, "", "", "", "", "UTF-8");
 		RepositoryConfiguration config = client.getRepositoryConfiguration();
 		assertNotNull(config);
-		assertEquals("2.20.3", config.getInstallVersion());
+		assertEquals("2.20.3", config.getInstallVersion().toString());
 		assertEquals(7, config.getStatusValues().size());
 		assertEquals(8, config.getResolutions().size());
 		assertEquals(4, config.getPlatforms().size());
@@ -125,7 +125,7 @@ public class BugzillaConfigurationTest extends TestCase {
 		BugzillaClient client = createClient(IBugzillaConstants.TEST_BUGZILLA_218_URL, "", "", "", "", "UTF-8");
 		RepositoryConfiguration config = client.getRepositoryConfiguration();
 		assertNotNull(config);
-		assertEquals("2.18.6", config.getInstallVersion());
+		assertEquals("2.18.6", config.getInstallVersion().toString());
 		assertEquals(7, config.getStatusValues().size());
 		assertEquals(8, config.getResolutions().size());
 		assertEquals(8, config.getPlatforms().size());
@@ -143,7 +143,7 @@ public class BugzillaConfigurationTest extends TestCase {
 		BugzillaClient client = createClient(IBugzillaConstants.ECLIPSE_BUGZILLA_URL, "", "", "", "", "UTF-8");
 		RepositoryConfiguration config = client.getRepositoryConfiguration();
 		assertNotNull(config);
-		assertEquals("3.0.4", config.getInstallVersion());
+		assertEquals("3.0.4", config.getInstallVersion().toString());
 		assertEquals(7, config.getStatusValues().size());
 		assertEquals(9, config.getResolutions().size());
 		assertEquals(6, config.getPlatforms().size());

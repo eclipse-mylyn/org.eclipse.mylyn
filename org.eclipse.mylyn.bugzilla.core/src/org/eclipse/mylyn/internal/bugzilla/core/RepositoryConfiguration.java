@@ -32,10 +32,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskOperation;
  */
 public class RepositoryConfiguration implements Serializable {
 
-// old	private static final long serialVersionUID = 575019225495659016L;
 	private static final long serialVersionUID = -782630475741754124L;
-
-	private static final String VERSION_UNKNOWN = "unknown"; //$NON-NLS-1$
 
 	private String repositoryUrl = "<unknown>"; //$NON-NLS-1$
 
@@ -69,7 +66,7 @@ public class RepositoryConfiguration implements Serializable {
 
 	private final List<BugzillaFlag> flags = new ArrayList<BugzillaFlag>();
 
-	private String version = VERSION_UNKNOWN;
+	private BugzillaVersion version;
 
 	public RepositoryConfiguration() {
 		super();
@@ -218,10 +215,14 @@ public class RepositoryConfiguration implements Serializable {
 	}
 
 	public void setInstallVersion(String version) {
-		this.version = version;
+		try {
+			this.version = new BugzillaVersion(version);
+		} catch (NumberFormatException e) {
+			this.version = BugzillaVersion.MIN_VERSION;
+		}
 	}
 
-	public String getInstallVersion() {
+	public BugzillaVersion getInstallVersion() {
 		return version;
 	}
 
@@ -582,13 +583,13 @@ public class RepositoryConfiguration implements Serializable {
 			addOperation(bugReport, BugzillaOperation.reopen);
 			addOperation(bugReport, BugzillaOperation.close);
 		}
-		String bugzillaVersion = getInstallVersion();
+		BugzillaVersion bugzillaVersion = getInstallVersion();
 		if (bugzillaVersion == null) {
-			bugzillaVersion = "2.18"; //$NON-NLS-1$
+			bugzillaVersion = BugzillaVersion.MIN_VERSION;
 		}
 		if (status == BUGZILLA_REPORT_STATUS.NEW || status == BUGZILLA_REPORT_STATUS.ASSIGNED
 				|| status == BUGZILLA_REPORT_STATUS.REOPENED || status == BUGZILLA_REPORT_STATUS.UNCONFIRMED) {
-			if (bugzillaVersion.compareTo("3.1") < 0) { //$NON-NLS-1$
+			if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_0) <= 0) {
 				// old bugzilla workflow is used
 				addOperation(bugReport, BugzillaOperation.reassign);
 				addOperation(bugReport, BugzillaOperation.reassignbycomponent);

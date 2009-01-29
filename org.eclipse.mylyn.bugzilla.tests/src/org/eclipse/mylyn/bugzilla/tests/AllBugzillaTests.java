@@ -42,6 +42,7 @@ public class AllBugzillaTests {
 		suite.addTestSuite(BugzillaSearchDialogTest.class);
 		suite.addTestSuite(BugzillaTaskHistoryTest.class);
 		suite.addTestSuite(BugzillaRepository32Test.class);
+		suite.addTestSuite(BugzillaVersionTest.class);
 		return suite;
 	}
 

@@ -92,17 +92,17 @@ public class BugzillaFlagMapper {
 		TaskAttributeMetaData meta = taskAttribute.getMetaData().defaults();
 		meta.setType(IBugzillaConstants.EDITOR_TYPE_FLAG);
 		meta.setLabel(description);
-		String bugzillaVersion = null;
+		BugzillaVersion bugzillaVersion = null;
 		RepositoryConfiguration repositoryConfiguration;
 		try {
 			repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(mapper.getTaskRepository(), false,
 					new NullProgressMonitor());
 			bugzillaVersion = repositoryConfiguration.getInstallVersion();
 		} catch (CoreException e) {
-			bugzillaVersion = "2.18"; //$NON-NLS-1$
+			bugzillaVersion = BugzillaVersion.MIN_VERSION;
 		}
 
-		if (bugzillaVersion.compareTo("3.2") >= 0) { //$NON-NLS-1$
+		if (bugzillaVersion.compareTo(BugzillaVersion.BUGZILLA_3_2) >= 0) {
 			meta.setKind(TaskAttribute.KIND_DEFAULT);
 		}
 		meta.setReadOnly(false);
