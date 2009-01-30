@@ -50,26 +50,36 @@ public class ZipFileUtil {
 	 *            Destination path
 	 * @return Files that were unzipped
 	 */
-	public static List<File> unzipFiles(File zippedfile, String destPath) throws FileNotFoundException, IOException {
+	public static List<File> unzipFiles(File zippedfile, String destPath, IProgressMonitor monitor)
+			throws FileNotFoundException, IOException {
 		ZipFile zipFile = new ZipFile(zippedfile);
 
 		Enumeration<? extends ZipEntry> entries = zipFile.entries();
 		List<File> outputFiles = new ArrayList<File>();
-
+		File destinationFile = new File(destPath);
+		if (!destinationFile.exists()) {
+			destinationFile.mkdirs();
+		}
 		while (entries.hasMoreElements()) {
 			ZipEntry entry = entries.nextElement();
-			if (entry.isDirectory()) {
-				// Assume directories are stored parents first then children.		          
-				(new File(entry.getName())).mkdir();
+			File outputFile = new File(destinationFile, entry.getName());
+			if (entry.isDirectory() && !outputFile.exists()) {
+				outputFile.mkdirs();
 				continue;
 			}
 
+			if (!outputFile.getParentFile().exists()) {
+				outputFile.getParentFile().mkdirs();
+			}
+
 			InputStream inputStream = zipFile.getInputStream(entry);
-			File outputFile = new File(destPath + File.separator + entry.getName());
 			FileOutputStream outStream = new FileOutputStream(outputFile);
 			copyByteStream(inputStream, outStream);
 
 			outputFiles.add(outputFile);
+			if (monitor != null) {
+				monitor.worked(1);
+			}
 		}
 		return outputFiles;
 	}
@@ -177,32 +187,38 @@ public class ZipFileUtil {
 	private static void addZipEntry(ZipOutputStream zipOut, String rootPath, File file) throws FileNotFoundException,
 			IOException {
 
-		// Create a buffer for reading the files
-		byte[] buf = new byte[1024];
-
-		// Compress the files
-		FileInputStream in = new FileInputStream(file);
-
-		// Add ZIP entry to output stream.m
-		String path = ""; //$NON-NLS-1$
-		if (!rootPath.equals("")) { //$NON-NLS-1$
-			rootPath = rootPath.replaceAll("\\\\", "/"); //$NON-NLS-1$ //$NON-NLS-2$
-			path = file.getAbsolutePath().replaceAll("\\\\", "/"); //$NON-NLS-1$ //$NON-NLS-2$
-			path = path.substring(rootPath.length());
+		if (file.isDirectory()) {
+			for (File child : file.listFiles()) {
+				addZipEntry(zipOut, rootPath, child);
+			}
 		} else {
-			path = file.getName();
-		}
-		zipOut.putNextEntry(new ZipEntry(path));
+			// Add ZIP entry to output stream.m
+			String path = ""; //$NON-NLS-1$
+			if (!rootPath.equals("")) { //$NON-NLS-1$
+				rootPath = rootPath.replaceAll("\\\\", "/"); //$NON-NLS-1$ //$NON-NLS-2$
+				path = file.getAbsolutePath().replaceAll("\\\\", "/"); //$NON-NLS-1$ //$NON-NLS-2$
+				path = path.substring(rootPath.length());
+			} else {
+				path = file.getName();
+			}
 
-		// Transfer bytes from the file to the ZIP file
-		int len;
-		while ((len = in.read(buf)) > 0) {
-			zipOut.write(buf, 0, len);
-		}
+			zipOut.putNextEntry(new ZipEntry(path));
 
-		// Complete the entry
-		zipOut.closeEntry();
-		in.close();
+			// Create a buffer for reading the files
+			byte[] buf = new byte[1024];
+
+			// Transfer bytes from the file to the ZIP file
+			// and compress the files
+			FileInputStream in = new FileInputStream(file);
+			int len;
+			while ((len = in.read(buf)) > 0) {
+				zipOut.write(buf, 0, len);
+			}
+
+			// Complete the entry
+			zipOut.closeEntry();
+			in.close();
+		}
 	}
 
 }
