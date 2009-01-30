@@ -25,7 +25,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
  * 
  * @author Steffen
  */
-public class TransferList implements ITaskList {
+public class TransferList implements ITransferList {
 
 	private final Set<RepositoryQuery> queries;
 

@@ -42,7 +42,7 @@ import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
  * @author Rob Elves
  * @since 3.0
  */
-public class TaskList implements ITaskList {
+public class TaskList implements ITaskList, ITransferList {
 
 	private static String DEFAULT_HANDLE_PREFIX = "handle-"; //$NON-NLS-1$
 

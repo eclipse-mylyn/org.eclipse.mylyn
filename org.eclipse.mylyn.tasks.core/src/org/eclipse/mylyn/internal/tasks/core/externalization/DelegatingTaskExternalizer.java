@@ -35,8 +35,8 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.DayDateRange;
-import org.eclipse.mylyn.internal.tasks.core.ITaskList;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
+import org.eclipse.mylyn.internal.tasks.core.ITransferList;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryModel;
@@ -322,7 +322,7 @@ public final class DelegatingTaskExternalizer {
 	/**
 	 * create tasks from the nodes provided and places them within the given container
 	 */
-	public void readTaskReferences(AbstractTaskContainer task, NodeList nodes, ITaskList tasklist) {
+	public void readTaskReferences(AbstractTaskContainer task, NodeList nodes, ITransferList tasklist) {
 		for (int j = 0; j < nodes.getLength(); j++) {
 			Node child = nodes.item(j);
 			Element element = (Element) child;
@@ -365,7 +365,7 @@ public final class DelegatingTaskExternalizer {
 		return format.format(date.getTime());
 	}
 
-	public void readCategory(Node node, ITaskList taskList) {
+	public void readCategory(Node node, ITransferList taskList) {
 		Element element = (Element) node;
 		AbstractTaskCategory category = null;
 		if (element.hasAttribute(KEY_NAME)) {

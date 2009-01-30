@@ -563,7 +563,7 @@ public class TasksUiInternal {
 		}
 	}
 
-	public static TaskList getTaskList() {
+	public static ITaskList getTaskList() {
 		return TasksUiPlugin.getTaskList();
 	}
 
@@ -712,9 +712,10 @@ public class TasksUiInternal {
 		if (summary != null && summary.length() > 0) {
 			task.setSummary(summary);
 		}
-		UnsubmittedTaskContainer unsubmitted = (getTaskList()).getUnsubmittedContainer(taskData.getRepositoryUrl());
+		UnsubmittedTaskContainer unsubmitted = TasksUiPlugin.getTaskList().getUnsubmittedContainer(
+				taskData.getRepositoryUrl());
 		if (unsubmitted != null) {
-			TasksUiInternal.getTaskList().addTask(task, unsubmitted);
+			TasksUiPlugin.getTaskList().addTask(task, unsubmitted);
 		}
 		ITaskDataWorkingCopy workingCopy = TasksUi.getTaskDataManager().createWorkingCopy(task, taskData);
 		workingCopy.save(null, null);
