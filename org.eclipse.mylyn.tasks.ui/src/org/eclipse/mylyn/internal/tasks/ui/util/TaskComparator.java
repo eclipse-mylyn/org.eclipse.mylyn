@@ -141,6 +141,11 @@ public class TaskComparator implements Comparator<ITask> {
 	}
 
 	private int sortByDate(ITask element1, ITask element2, int sortDirection) {
+		if (element1.getCreationDate() == null) {
+			return (element2.getCreationDate() != null) ? sortDirection : 0;
+		} else if (element2.getCreationDate() == null) {
+			return -sortDirection;
+		}
 		return sortDirection * (element1.getCreationDate().compareTo(element2.getCreationDate()));
 	}
 
