@@ -35,7 +35,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -51,17 +50,9 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  */
 public class TaskDataImportWizardPage extends WizardPage {
 
-	private Button taskListCheckBox = null;
-
-	private Button taskActivationHistoryCheckBox = null;
-
-	private Button taskContextsCheckBox = null;
-
 	private Button browseButtonZip = null;
 
 	private Text sourceZipText = null;
-
-	private Button overwriteCheckBox = null;
 
 	private Button importViaBackupButton;
 
@@ -72,15 +63,7 @@ public class TaskDataImportWizardPage extends WizardPage {
 	// Key values for the dialog settings object
 	private final static String SETTINGS_SAVED = Messages.TaskDataImportWizardPage_Import_Settings_saved;
 
-	private final static String TASKLIST_SETTING = Messages.TaskDataImportWizardPage_Import_TaskList_setting;
-
-	private final static String ACTIVATION_HISTORY_SETTING = Messages.TaskDataImportWizardPage_Import_Activation_history_setting;
-
-	private final static String CONTEXTS_SETTING = Messages.TaskDataImportWizardPage_Import_Contexts_setting;
-
 	private final static String SOURCE_ZIP_SETTING = Messages.TaskDataImportWizardPage_Import_Source_zip_file_setting;
-
-	private final static String OVERWRITE_SETTING = Messages.TaskDataImportWizardPage_Import_Overwrite_setting;
 
 	private final static String IMPORT_ZIPMETHOD_SETTING = Messages.TaskDataImportWizardPage_Import_method_zip;
 
@@ -103,7 +86,6 @@ public class TaskDataImportWizardPage extends WizardPage {
 			GridLayout layout = new GridLayout(3, false);
 			layout.verticalSpacing = 15;
 			container.setLayout(layout);
-			createContentSelectionControl(container);
 			createImportFromZipControl(container);
 			createImportFromBackupControl(container);
 			addRadioListeners();
@@ -133,26 +115,8 @@ public class TaskDataImportWizardPage extends WizardPage {
 			}
 		};
 
-		// importViaFolderButton.addSelectionListener(radioListener);
 		importViaZipButton.addSelectionListener(radioListener);
 		importViaBackupButton.addSelectionListener(radioListener);
-	}
-
-	/**
-	 * Create widgets for selecting the content to import
-	 */
-	private void createContentSelectionControl(Composite parent) {
-		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
-		GridLayout gl = new GridLayout(2, true);
-		group.setLayout(gl);
-		GridDataFactory.fillDefaults().grab(true, false).span(3, SWT.DEFAULT).applyTo(group);
-		group.setText(Messages.TaskDataImportWizardPage_Select_data_to_import);
-
-		taskListCheckBox = createCheckBox(group, Messages.TaskDataImportWizardPage_Task_List_and_Repositories);
-		taskActivationHistoryCheckBox = createCheckBox(group, Messages.TaskDataImportWizardPage_Task_Activity_History);
-		taskContextsCheckBox = createCheckBox(group, Messages.TaskDataImportWizardPage_Task_Contexts);
-		overwriteCheckBox = createCheckBox(group,
-				Messages.TaskDataImportWizardPage_Overwrite_existing_files_without_warning);
 	}
 
 	/**
@@ -179,7 +143,6 @@ public class TaskDataImportWizardPage extends WizardPage {
 			public void widgetSelected(SelectionEvent e) {
 				FileDialog dialog = new FileDialog(getShell());
 				dialog.setText(Messages.TaskDataImportWizardPage_Zip_File_Selection);
-				// dialog.setText("Specify the source zip file for task data");
 				String dir = sourceZipText.getText();
 				dialog.setFilterPath(dir);
 				dir = dialog.open();
@@ -208,37 +171,12 @@ public class TaskDataImportWizardPage extends WizardPage {
 
 		SortedMap<Long, File> backupFilesMap = TasksUiPlugin.getBackupManager().getBackupFiles();
 
-//		String destination = TasksUiPlugin.getDefault().getBackupFolderPath();
-//
-//		File backupFolder = new File(destination);
-//		ArrayList<File> backupFiles = new ArrayList<File>();
-//		if (backupFolder.exists()) {
-//			File[] files = backupFolder.listFiles();
-//			if (files != null) {
-//				for (File file : files) {
-//					if (file.getName().startsWith(TaskListBackupManager.BACKUP_FILE_PREFIX)) {
-//						backupFiles.add(file);
-//					}
-//				}
-//			}
-//		}
-//
-//		File[] backupFileArray = backupFiles.toArray(new File[backupFiles.size()]);
-//
-//		if (backupFileArray != null && backupFileArray.length > 0) {
-//			Arrays.sort(backupFileArray, new Comparator<File>() {
-//				public int compare(File file1, File file2) {
-//					return (new Long((file1).lastModified()).compareTo(new Long((file2).lastModified()))) * -1;
-//				}
-//
-//			});
 		for (Long time : backupFilesMap.keySet()) {
 			File file = backupFilesMap.get(time);
 			TableItem item = new TableItem(backupFilesTable, SWT.NONE);
 			item.setData(file.getAbsolutePath());
 			item.setText(DateFormat.getDateTimeInstance().format(time));
 		}
-//		}
 
 		backupFilesTable.addSelectionListener(new SelectionAdapter() {
 
@@ -256,20 +194,12 @@ public class TaskDataImportWizardPage extends WizardPage {
 		IDialogSettings settings = getDialogSettings();
 
 		if (settings.get(SETTINGS_SAVED) == null) {
-			// Set default values
-			taskListCheckBox.setSelection(true);
-			taskActivationHistoryCheckBox.setSelection(true);
-			taskContextsCheckBox.setSelection(true);
-			overwriteCheckBox.setSelection(true);
 			importViaZipButton.setSelection(true);
 			sourceZipText.setEnabled(true);
 			backupFilesTable.setEnabled(false);
 
 		} else {
 			// Retrieve previous values from the dialog settings
-			taskListCheckBox.setSelection(settings.getBoolean(TASKLIST_SETTING));
-			taskActivationHistoryCheckBox.setSelection(settings.getBoolean(ACTIVATION_HISTORY_SETTING));
-			taskContextsCheckBox.setSelection(settings.getBoolean(CONTEXTS_SETTING));
 			importViaZipButton.setSelection(settings.getBoolean(IMPORT_ZIPMETHOD_SETTING));
 			importViaBackupButton.setSelection(settings.getBoolean(IMPORT_BACKUPMETHOD_SETTING));
 			browseButtonZip.setEnabled(importViaZipButton.getSelection());
@@ -280,7 +210,6 @@ public class TaskDataImportWizardPage extends WizardPage {
 			if (zipFile != null) {
 				sourceZipText.setText(settings.get(SOURCE_ZIP_SETTING));
 			}
-			overwriteCheckBox.setSelection(settings.getBoolean(OVERWRITE_SETTING));
 		}
 	}
 
@@ -290,11 +219,6 @@ public class TaskDataImportWizardPage extends WizardPage {
 	public void saveSettings() {
 		IDialogSettings settings = getDialogSettings();
 
-		settings.put(TASKLIST_SETTING, taskListCheckBox.getSelection());
-		settings.put(ACTIVATION_HISTORY_SETTING, taskActivationHistoryCheckBox.getSelection());
-		settings.put(CONTEXTS_SETTING, taskContextsCheckBox.getSelection());
-		settings.put(SOURCE_ZIP_SETTING, sourceZipText.getText());
-		settings.put(OVERWRITE_SETTING, overwriteCheckBox.getSelection());
 		settings.put(IMPORT_ZIPMETHOD_SETTING, importViaZipButton.getSelection());
 		settings.put(IMPORT_BACKUPMETHOD_SETTING, importViaBackupButton.getSelection());
 		settings.put(SETTINGS_SAVED, SETTINGS_SAVED);
@@ -326,12 +250,6 @@ public class TaskDataImportWizardPage extends WizardPage {
 
 	/** Returns true if the information entered by the user is valid */
 	protected boolean validate() {
-
-		// Check that at least one type of data has been selected
-		if (!taskListCheckBox.getSelection() && !taskActivationHistoryCheckBox.getSelection()
-				&& !taskContextsCheckBox.getSelection()) {
-			return false;
-		}
 		if (importViaZipButton.getSelection() && sourceZipText.getText().equals("")) { //$NON-NLS-1$
 			return false;
 		}
@@ -352,39 +270,8 @@ public class TaskDataImportWizardPage extends WizardPage {
 		return Messages.TaskDataImportWizardPage__unspecified_;
 	}
 
-	/** True if the user wants to import the task list */
-	public boolean importTaskList() {
-		return taskListCheckBox.getSelection();
-	}
-
-	/** True if the user wants to import task activation history */
-	public boolean importActivationHistory() {
-		return taskActivationHistoryCheckBox.getSelection();
-	}
-
-	/** True if the user wants to import task context files */
-	public boolean importTaskContexts() {
-		return taskContextsCheckBox.getSelection();
-	}
-
-	/** True if the user wants to overwrite files by default */
-	public boolean overwrite() {
-		return overwriteCheckBox.getSelection();
-	}
-
-	/** True if the user wants to import from a zip file */
-	public boolean zip() {
-		//importViaZipButton.getSelection() || importViaBackupButton.getSelection();
-		return true;
-	}
-
 	/** For testing only. Sets controls to the specified values */
-	public void setParameters(boolean overwrite, boolean importTaskList, boolean importActivationHistory,
-			boolean importTaskContexts, boolean zip, String sourceDir, String sourceZip) {
-		overwriteCheckBox.setSelection(overwrite);
-		taskListCheckBox.setSelection(importTaskList);
-		taskActivationHistoryCheckBox.setSelection(importActivationHistory);
-		taskContextsCheckBox.setSelection(importTaskContexts);
+	public void setSource(boolean zip, String sourceZip) {
 		sourceZipText.setText(sourceZip);
 		importViaZipButton.setSelection(zip);
 	}

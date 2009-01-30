@@ -15,10 +15,8 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.List;
 import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -34,9 +32,9 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.commons.core.ZipFileUtil;
-import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.externalization.AbstractExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -50,6 +48,7 @@ import org.eclipse.ui.progress.IProgressService;
 /**
  * @author Rob Elves
  */
+@SuppressWarnings("restriction")
 public class TaskDataImportWizard extends Wizard implements IImportWizard {
 
 	private TaskDataImportWizardPage importPage = null;
@@ -65,9 +64,9 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 	 * Finds or creates a dialog settings section that is used to make the dialog control settings persistent
 	 */
 	public IDialogSettings getSettingsSection(IDialogSettings master) {
-		IDialogSettings settings = master.getSection("org.eclipse.mylyn.tasklist.ui.importWizard");
+		IDialogSettings settings = master.getSection("org.eclipse.mylyn.tasklist.ui.importWizard"); //$NON-NLS-1$
 		if (settings == null) {
-			settings = master.addNewSection("org.eclipse.mylyn.tasklist.ui.importWizard");
+			settings = master.addNewSection("org.eclipse.mylyn.tasklist.ui.importWizard"); //$NON-NLS-1$
 		}
 		return settings;
 	}
@@ -93,101 +92,52 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 
 		TasksUi.getTaskActivityManager().deactivateTask(TasksUi.getTaskActivityManager().getActiveTask());
 
-		File sourceDirFile = null;
-		File sourceZipFile = null;
-		File sourceTaskListFile = null;
-		File sourceRepositoriesFile = null;
-		File sourceActivationHistoryFile = null;
-		List<File> contextFiles = new ArrayList<File>();
-		List<ZipEntry> zipFilesToExtract = new ArrayList<ZipEntry>();
-		boolean overwrite = importPage.overwrite();
-		// zip = true post 1.0.1, see history for folder import
-		// boolean zip = importPage.zip();
-
 		String sourceZip = importPage.getSourceZipFile();
-		sourceZipFile = new File(sourceZip);
+		File sourceZipFile = new File(sourceZip);
 
 		if (!sourceZipFile.exists()) {
 			MessageDialog.openError(getShell(), Messages.TaskDataImportWizard_File_not_found, sourceZipFile.toString()
 					+ Messages.TaskDataImportWizard_could_not_be_found);
+			return false;
+		} else if (!CoreUtil.TEST_MODE
+				&& !MessageDialog.openConfirm(getShell(), Messages.TaskDataImportWizard_confirm_overwrite,
+						Messages.TaskDataImportWizard_existing_task_data_about_to_be_erased_proceed)) {
 			return false;
 		}
 
 		Enumeration<? extends ZipEntry> entries;
 		ZipFile zipFile;
 		boolean restoreM2Tasklist = false;
+		int numEntries = 0;
 
 		try {
 			zipFile = new ZipFile(sourceZipFile, ZipFile.OPEN_READ);
 			entries = zipFile.entries();
 			while (entries.hasMoreElements()) {
 				ZipEntry entry = entries.nextElement();
-
-				if (entry.isDirectory()) {
-					// ignore directories (shouldn't be any)
-					continue;
-				}
-				if (!importPage.importTaskList() && entry.getName().startsWith(ITasksCoreConstants.OLD_TASK_LIST_FILE)) {
-					continue;
-				}
-
-				if (importPage.importTaskList() && entry.getName().startsWith(ITasksCoreConstants.OLD_TASK_LIST_FILE)) {
+				if (entry.getName().startsWith(ITasksCoreConstants.OLD_TASK_LIST_FILE)) {
 					restoreM2Tasklist = true;
 				}
-
-				if (!importPage.importTaskList()
-						&& entry.getName().startsWith(ITasksCoreConstants.DEFAULT_TASK_LIST_FILE)) {
-					continue;
-				}
-
-				if (!importPage.importActivationHistory()
-						&& entry.getName().endsWith(
-								InteractionContextManager.CONTEXT_HISTORY_FILE_NAME
-										+ InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD)) {
-					continue;
-				}
-				if (!importPage.importTaskContexts()
-						&& entry.getName().matches(
-								".*-\\d*" + InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD + "$")) { //$NON-NLS-1$ //$NON-NLS-2$
-					continue;
-				}
-
-				File destContextFile = new File(TasksUiPlugin.getDefault().getDataDirectory() + File.separator
-						+ entry.getName());
-
-				if (!overwrite && destContextFile.exists()) {
-					if (MessageDialog.openConfirm(getShell(), Messages.TaskDataImportWizard_File_exists_,
-							Messages.TaskDataImportWizard_Overwrite_existing_file_ + destContextFile.getName())) {
-						zipFilesToExtract.add(entry);
-					} else {
-						// no overwrite
-					}
-				} else {
-					zipFilesToExtract.add(entry);
-				}
-
+				numEntries++;
 			}
-
 		} catch (IOException e) {
 			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not import files", e)); //$NON-NLS-1$
+			return false;
 		}
 
-		FileCopyJob job = new FileCopyJob(sourceDirFile, sourceZipFile, sourceTaskListFile, sourceRepositoriesFile,
-				sourceActivationHistoryFile, contextFiles, zipFilesToExtract);
+		FileCopyJob job = new FileCopyJob(sourceZipFile, numEntries);
 		job.setRestoreM2Tasklist(restoreM2Tasklist);
 		try {
 			if (getContainer() != null) {
 				getContainer().run(true, true, job);
 			} else {
-//			IProgressService service = PlatformUI.getWorkbench().getProgressService();
-//			service.busyCursorWhile(updateRunnable);
 				IProgressService service = PlatformUI.getWorkbench().getProgressService();
 				service.run(true, true, job);
 			}
 		} catch (InvocationTargetException e) {
 			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not import files", e)); //$NON-NLS-1$
 		} catch (InterruptedException e) {
-			// User cancelled
+			// User canceled
 		}
 
 		importPage.saveSettings();
@@ -203,21 +153,20 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 
 		private File sourceZipFile = null;
 
-		private final List<ZipEntry> zipEntriesToExtract;
+		private int numEntries = 0;
 
 		private boolean restoreM2Tasklist = false;
 
-		public FileCopyJob(File sourceFolder, File sourceZipFile, File sourceTaskListFile, File sourceRepositoriesFile,
-				File sourceActivationHistoryFile, List<File> contextFiles, List<ZipEntry> zipEntries) {
+		public FileCopyJob(File sourceZipFile, int numEntries) {
 			this.sourceZipFile = sourceZipFile;
-			this.zipEntriesToExtract = zipEntries;
+			this.numEntries = numEntries;
 		}
 
 		public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 
 			// always a zip source since post 1.0.1
 			try {
-				monitor.beginTask(JOB_LABEL, zipEntriesToExtract.size() + 2);
+				monitor.beginTask(JOB_LABEL, numEntries);
 				Job.getJobManager().beginRule(ITasksCoreConstants.ROOT_SCHEDULING_RULE, monitor);
 
 				if (!sourceZipFile.exists()) {
@@ -228,8 +177,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 					throw new OperationCanceledException();
 				}
 
-				ZipFileUtil.extactEntries(sourceZipFile, zipEntriesToExtract, TasksUiPlugin.getDefault()
-						.getDataDirectory());
+				ZipFileUtil.unzipFiles(sourceZipFile, TasksUiPlugin.getDefault().getDataDirectory(), monitor);
 
 				if (restoreM2Tasklist) {
 

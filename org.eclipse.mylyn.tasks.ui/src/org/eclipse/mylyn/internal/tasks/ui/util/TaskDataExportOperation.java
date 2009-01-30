@@ -20,13 +20,16 @@ import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.commons.core.StatusHandler;
@@ -50,9 +53,10 @@ import org.eclipse.mylyn.tasks.core.ITask;
  * 
  *         TODO: Move into internal.tasks.core
  */
+@SuppressWarnings("restriction")
 public class TaskDataExportOperation implements IRunnableWithProgress {
 
-	private static final String JOB_LABEL = "Exporting Mylyn Task Data"; //$NON-NLS-1$
+	private static final String EXPORT_JOB_LABEL = Messages.TaskDataExportOperation_exporting_task_data;
 
 	private final boolean zip;
 
@@ -70,9 +74,26 @@ public class TaskDataExportOperation implements IRunnableWithProgress {
 
 	private final Collection<AbstractTask> tasks;
 
+	private boolean exportAll = false;
+
+	private int totalWork = 0;
+
+	// List of files to add to the zip archive
+	private final List<File> filesToZip = new ArrayList<File>();
+
+	// Map of file paths used to avoid duplicates
+	private final Map<String, String> filesToZipMap = new HashMap<String, String>();
+
 	/** export all data */
 	public TaskDataExportOperation(String destinationDirectory, boolean zipIt, String zipFileName) {
-		this(destinationDirectory, true, true, true, zipIt, zipFileName, TasksUiPlugin.getTaskList().getAllTasks());
+		this.zipFileName = zipFileName;
+		this.zip = zipIt;
+		this.destinationDirectory = destinationDirectory;
+		this.tasks = Collections.emptySet();
+		this.exportActivationHistory = true;
+		this.exportTaskContexts = true;
+		this.exportTaskList = true;
+		this.exportAll = true;
 	}
 
 	/** export specified data */
@@ -89,149 +110,22 @@ public class TaskDataExportOperation implements IRunnableWithProgress {
 	}
 
 	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-		int jobSize = 1; // 1 for repositories.xml
-		if (exportTaskList) {
-			jobSize++;
-		}
-		if (exportActivationHistory) {
-			jobSize++;
-		}
-		if (exportTaskContexts) {
-			jobSize += tasks.size();
-		}
-
-		// List of files to add to the zip archive
-		List<File> filesToZip = new ArrayList<File>();
-
-		// Map of file paths used to avoid duplicates
-		Map<String, String> filesToZipMap = new HashMap<String, String>();
 
 		try {
-			monitor.beginTask(JOB_LABEL, jobSize);
-			Job.getJobManager().beginRule(ITasksCoreConstants.ROOT_SCHEDULING_RULE, monitor);
-			// Create folders in zip file before contained files
-			String sourceContextsPath = TasksUiPlugin.getDefault().getDataDirectory() + File.separator
-					+ ITasksCoreConstants.CONTEXTS_DIRECTORY;
-			File contextsDirectory = new File(sourceContextsPath);
-			// if(contextsDirectory.exists()) {
-			// filesToZip.add(contextsDirectory);
-			// }
-			if (true) {
-				// Repositories always exported
-//				TasksUiPlugin.getRepositoryManager().saveRepositories(
-//						TasksUiPlugin.getDefault().getRepositoriesFilePath());
-
-				String sourceRepositoriesPath = TasksUiPlugin.getDefault().getDataDirectory() + File.separator
-						+ TaskRepositoryManager.DEFAULT_REPOSITORIES_FILE;
-				File sourceRepositoriesFile = new File(sourceRepositoriesPath);
-				if (sourceRepositoriesFile.exists()) {
-					File destRepositoriesFile = new File(destinationDirectory + File.separator
-							+ TaskRepositoryManager.DEFAULT_REPOSITORIES_FILE);
-
-					if (zip) {
-						filesToZip.add(sourceRepositoriesFile);
-					} else if (!destRepositoriesFile.equals(sourceRepositoriesFile)) {
-						if (destRepositoriesFile.exists()) {
-							destRepositoriesFile.delete();
-						}
-						if (!copy(sourceRepositoriesFile, destRepositoriesFile)) {
-							StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-									"Could not export repositories file", new Exception())); //$NON-NLS-1$
-						}
-						monitor.worked(1);
-					}
-				}
-
+			if (monitor == null) {
+				monitor = new NullProgressMonitor();
 			}
 
-			if (exportTaskList) {
-				String sourceTaskListPath = TasksUiPlugin.getDefault().getDataDirectory() + File.separator
-						+ ITasksCoreConstants.DEFAULT_TASK_LIST_FILE;
-				File sourceTaskListFile = new File(sourceTaskListPath);
-				if (sourceTaskListFile.exists()) {
-					File destTaskListFile = new File(destinationDirectory + File.separator
-							+ ITasksCoreConstants.DEFAULT_TASK_LIST_FILE);
-
-					if (zip) {
-						filesToZip.add(sourceTaskListFile);
-					} else if (!destTaskListFile.equals(sourceTaskListFile)) {
-						if (destTaskListFile.exists()) {
-							destTaskListFile.delete();
-						}
-						if (!copy(sourceTaskListFile, destTaskListFile)) {
-							StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-									"Could not export task list file", new Exception())); //$NON-NLS-1$
-						}
-						monitor.worked(1);
-					}
-				}
-
+			if (totalWork == 0) {
+				totalWork = filesToZip.size();
 			}
+			monitor.beginTask(EXPORT_JOB_LABEL, totalWork + 1);
 
-			if (exportActivationHistory) {
-				try {
-					File sourceActivationHistoryFile = new File(contextsDirectory,
-							InteractionContextManager.CONTEXT_HISTORY_FILE_NAME
-									+ InteractionContextManager.CONTEXT_FILE_EXTENSION);
-
-					if (sourceActivationHistoryFile.exists()) {
-
-						File destActivationHistoryFile = new File(destinationDirectory + File.separator
-								+ InteractionContextManager.CONTEXT_HISTORY_FILE_NAME
-								+ InteractionContextManager.CONTEXT_FILE_EXTENSION);
-
-						if (zip) {
-							filesToZip.add(sourceActivationHistoryFile);
-						} else if (!destActivationHistoryFile.equals(sourceActivationHistoryFile)) {
-							if (destActivationHistoryFile.exists()) {
-								destActivationHistoryFile.delete();
-							}
-							copy(sourceActivationHistoryFile, destActivationHistoryFile);
-							monitor.worked(1);
-						}
-					}
-				} catch (RuntimeException e) {
-					// FIXME what is caught here?
-					StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-							"Could not export activity history context file", e)); //$NON-NLS-1$
-				}
-			}
-
-			if (exportTaskContexts) {
-				// Prevent many repeated error messages
-				boolean errorDisplayed = false;
-				for (ITask task : tasks) {
-
-					if (!ContextCore.getContextManager().hasContext(task.getHandleIdentifier())) {
-						continue; // Tasks without a context have no file to
-						// copy
-					}
-
-					File sourceTaskContextFile = ContextCorePlugin.getContextStore().getFileForContext(
-							task.getHandleIdentifier());
-
-					File destTaskFile = new File(destinationDirectory + File.separator
-							+ sourceTaskContextFile.getName());
-
-					if (zip) {
-						if (!filesToZipMap.containsKey(task.getHandleIdentifier())) {
-							filesToZip.add(sourceTaskContextFile);
-							filesToZipMap.put(task.getHandleIdentifier(), null);
-						}
-					} else if (!sourceTaskContextFile.equals(destTaskFile)) {
-						if (destTaskFile.exists()) {
-							destTaskFile.delete();
-						}
-						if (!copy(sourceTaskContextFile, destTaskFile) && !errorDisplayed) {
-							Exception e = new Exception("Export Exception: " + sourceTaskContextFile.getPath() + " -> " //$NON-NLS-1$ //$NON-NLS-2$
-									+ destTaskFile.getPath());
-							StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-									"Could not export one or more task context files", e)); //$NON-NLS-1$
-							errorDisplayed = true;
-						}
-						monitor.worked(1);
-					}
-				}
+			Job.getJobManager().beginRule(ITasksCoreConstants.ROOT_SCHEDULING_RULE, new SubProgressMonitor(monitor, 1));
+			if (exportAll) {
+				exportAll();
+			} else {
+				exportChosen();
 			}
 
 			if (zip && filesToZip.size() > 0) {
@@ -253,6 +147,139 @@ public class TaskDataExportOperation implements IRunnableWithProgress {
 		}
 	}
 
+	private void exportAll() {
+		String dataRoot = TasksUiPlugin.getDefault().getDataDirectory();
+		File dataFolder = new File(dataRoot);
+		// add all files in dataRoot
+		for (File file : dataFolder.listFiles()) {
+			filesToZip.add(file);
+		}
+	}
+
+	private void exportChosen() {
+		int jobSize = 1; // 1 for repositories.xml
+		if (exportTaskList) {
+			jobSize++;
+		}
+		if (exportActivationHistory) {
+			jobSize++;
+		}
+		if (exportTaskContexts) {
+			jobSize += tasks.size();
+		}
+
+		String sourceContextsPath = TasksUiPlugin.getDefault().getDataDirectory() + File.separator
+				+ ITasksCoreConstants.CONTEXTS_DIRECTORY;
+		File contextsDirectory = new File(sourceContextsPath);
+
+		// Task Repositories data file
+		String sourceRepositoriesPath = TasksUiPlugin.getDefault().getDataDirectory() + File.separator
+				+ TaskRepositoryManager.DEFAULT_REPOSITORIES_FILE;
+		File sourceRepositoriesFile = new File(sourceRepositoriesPath);
+		if (sourceRepositoriesFile.exists()) {
+			File destRepositoriesFile = new File(destinationDirectory + File.separator
+					+ TaskRepositoryManager.DEFAULT_REPOSITORIES_FILE);
+
+			if (zip) {
+				filesToZip.add(sourceRepositoriesFile);
+			} else if (!destRepositoriesFile.equals(sourceRepositoriesFile)) {
+				if (destRepositoriesFile.exists()) {
+					destRepositoriesFile.delete();
+				}
+				if (!copy(sourceRepositoriesFile, destRepositoriesFile)) {
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+							"Could not export repositories file", new Exception())); //$NON-NLS-1$
+				}
+			}
+		}
+
+		if (exportTaskList) {
+			String sourceTaskListPath = TasksUiPlugin.getDefault().getDataDirectory() + File.separator
+					+ ITasksCoreConstants.DEFAULT_TASK_LIST_FILE;
+			File sourceTaskListFile = new File(sourceTaskListPath);
+			if (sourceTaskListFile.exists()) {
+				File destTaskListFile = new File(destinationDirectory + File.separator
+						+ ITasksCoreConstants.DEFAULT_TASK_LIST_FILE);
+
+				if (zip) {
+					filesToZip.add(sourceTaskListFile);
+				} else if (!destTaskListFile.equals(sourceTaskListFile)) {
+					if (destTaskListFile.exists()) {
+						destTaskListFile.delete();
+					}
+					if (!copy(sourceTaskListFile, destTaskListFile)) {
+						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+								"Could not export task list file", new Exception())); //$NON-NLS-1$
+					}
+				}
+			}
+
+		}
+
+		if (exportActivationHistory) {
+			try {
+				File sourceActivationHistoryFile = new File(contextsDirectory,
+						InteractionContextManager.CONTEXT_HISTORY_FILE_NAME
+								+ InteractionContextManager.CONTEXT_FILE_EXTENSION);
+
+				if (sourceActivationHistoryFile.exists()) {
+
+					File destActivationHistoryFile = new File(destinationDirectory + File.separator
+							+ InteractionContextManager.CONTEXT_HISTORY_FILE_NAME
+							+ InteractionContextManager.CONTEXT_FILE_EXTENSION);
+
+					if (zip) {
+						filesToZip.add(sourceActivationHistoryFile);
+					} else if (!destActivationHistoryFile.equals(sourceActivationHistoryFile)) {
+						if (destActivationHistoryFile.exists()) {
+							destActivationHistoryFile.delete();
+						}
+						copy(sourceActivationHistoryFile, destActivationHistoryFile);
+					}
+				}
+			} catch (RuntimeException e) {
+				// FIXME what is caught here?
+				StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						"Could not export activity history context file", e)); //$NON-NLS-1$
+			}
+		}
+
+		if (exportTaskContexts) {
+			// Prevent many repeated error messages
+			boolean errorDisplayed = false;
+			for (ITask task : tasks) {
+
+				if (!ContextCore.getContextManager().hasContext(task.getHandleIdentifier())) {
+					continue; // Tasks without a context have no file to
+					// copy
+				}
+
+				File sourceTaskContextFile = ContextCorePlugin.getContextStore().getFileForContext(
+						task.getHandleIdentifier());
+
+				File destTaskFile = new File(destinationDirectory + File.separator + sourceTaskContextFile.getName());
+
+				if (zip) {
+					if (!filesToZipMap.containsKey(task.getHandleIdentifier())) {
+						filesToZip.add(sourceTaskContextFile);
+						filesToZipMap.put(task.getHandleIdentifier(), null);
+					}
+				} else if (!sourceTaskContextFile.equals(destTaskFile)) {
+					if (destTaskFile.exists()) {
+						destTaskFile.delete();
+					}
+					if (!copy(sourceTaskContextFile, destTaskFile) && !errorDisplayed) {
+						Exception e = new Exception("Export Exception: " + sourceTaskContextFile.getPath() + " -> " //$NON-NLS-1$ //$NON-NLS-2$
+								+ destTaskFile.getPath());
+						StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+								"Could not export one or more task context files", e)); //$NON-NLS-1$
+						errorDisplayed = true;
+					}
+				}
+			}
+		}
+	}
+
 	private boolean copy(File src, File dst) {
 		try {
 			InputStream in = new FileInputStream(src);
@@ -270,6 +297,10 @@ public class TaskDataExportOperation implements IRunnableWithProgress {
 		} catch (IOException ioe) {
 			return false;
 		}
+	}
+
+	public void setTotalWork(int totalWork) {
+		this.totalWork = totalWork;
 	}
 
 }

@@ -135,7 +135,11 @@ public class Messages extends NLS {
 
 	public static String TaskDataExportWizardPage_Task_List;
 
+	public static String TaskDataImportWizard_confirm_overwrite;
+
 	public static String TaskDataImportWizard_could_not_be_found;
+
+	public static String TaskDataImportWizard_existing_task_data_about_to_be_erased_proceed;
 
 	public static String TaskDataImportWizard_File_exists_;
 

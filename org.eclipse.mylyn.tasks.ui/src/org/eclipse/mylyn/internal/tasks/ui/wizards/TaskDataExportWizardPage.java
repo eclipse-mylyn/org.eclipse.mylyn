@@ -30,7 +30,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DirectoryDialog;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -43,38 +42,19 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  */
 public class TaskDataExportWizardPage extends WizardPage {
 
-	private Button taskListCheckBox = null;
-
-	private Button taskActivationHistoryCheckBox = null;
-
-	private Button taskContextsCheckBox = null;
-
-	// private Button zipCheckBox = null;
-
 	private Button browseButton = null;
 
 	private Text destDirText = null;
 
-	private Button overwriteCheckBox = null;
-
 	// Key values for the dialog settings object
 	private final static String SETTINGS_SAVED = "Settings saved"; //$NON-NLS-1$
 
-	private final static String TASKLIST_SETTING = "TaskList setting"; //$NON-NLS-1$
-
-	private final static String ACTIVATION_HISTORY_SETTING = "Activation history setting"; //$NON-NLS-1$
-
-	private final static String CONTEXTS_SETTING = "Contexts setting"; //$NON-NLS-1$
-
 	private final static String DEST_DIR_SETTING = "Destination directory setting"; //$NON-NLS-1$
 
-	private final static String OVERWRITE_SETTING = "Overwrite setting"; //$NON-NLS-1$
-
-	// private final static String ZIP_SETTING = "Zip Setting";
-
 	public TaskDataExportWizardPage() {
-		super("org.eclipse.mylyn.tasklist.exportPage", Messages.TaskDataExportWizardPage_Export_Mylyn_Task_Data, AbstractUIPlugin.imageDescriptorFromPlugin( //$NON-NLS-1$
-				TasksUiPlugin.ID_PLUGIN, "icons/wizban/banner-export.gif")); //$NON-NLS-1$
+		super(
+				"org.eclipse.mylyn.tasklist.exportPage", Messages.TaskDataExportWizardPage_Export_Mylyn_Task_Data, AbstractUIPlugin.imageDescriptorFromPlugin( //$NON-NLS-1$
+						TasksUiPlugin.ID_PLUGIN, "icons/wizban/banner-export.gif")); //$NON-NLS-1$
 		setPageComplete(false);
 	}
 
@@ -91,18 +71,12 @@ public class TaskDataExportWizardPage extends WizardPage {
 			Composite container = new Composite(parent, SWT.NONE);
 			GridLayout layout = new GridLayout(1, false);
 			container.setLayout(layout);
-			createFileSelectionControl(container);
 			createExportDirectoryControl(container);
-
-			// zipCheckBox = createCheckBox(container, "Export to zip file: " +
-			// TaskDataExportWizard.getZipFileName());
-			overwriteCheckBox = createCheckBox(container, Messages.TaskDataExportWizardPage_Overwrite_existing_files_without_warning);
 
 			initSettings();
 
 			Dialog.applyDialogFont(container);
 			setControl(container);
-
 			setPageComplete(validate());
 		} catch (RuntimeException e) {
 			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
@@ -111,38 +85,20 @@ public class TaskDataExportWizardPage extends WizardPage {
 	}
 
 	/**
-	 * Create widgets for selecting the data files to export
-	 */
-	private void createFileSelectionControl(Composite parent) {
-		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
-		GridLayout gl = new GridLayout(1, false);
-		group.setLayout(gl);
-		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
-		group.setLayoutData(gridData);
-		group.setText(Messages.TaskDataExportWizardPage_Select_data_to_export);
-
-		taskListCheckBox = createCheckBox(group, Messages.TaskDataExportWizardPage_Task_List);
-		taskActivationHistoryCheckBox = createCheckBox(group, Messages.TaskDataExportWizardPage_Task_Activity_History);
-		taskContextsCheckBox = createCheckBox(group, Messages.TaskDataExportWizardPage_Task_Contexts);
-	}
-
-	/**
 	 * Create widgets for specifying the destination directory
 	 */
 	private void createExportDirectoryControl(Composite parent) {
-		Group destDirGroup = new Group(parent, SWT.SHADOW_ETCHED_IN);
-		destDirGroup.setText(Messages.TaskDataExportWizardPage_Export_destination);
-		destDirGroup.setLayout(new GridLayout(3, false));
-		destDirGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		new Label(destDirGroup, SWT.NONE).setText(Messages.TaskDataExportWizardPage_File);
-		Label l = new Label(destDirGroup, SWT.NONE);
+		parent.setLayout(new GridLayout(3, false));
+		parent.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		new Label(parent, SWT.NONE).setText(Messages.TaskDataExportWizardPage_File);
+		Label l = new Label(parent, SWT.NONE);
 		l.setText(TaskListBackupManager.getBackupFileName());
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 2;
 		l.setLayoutData(gd);
-		new Label(destDirGroup, SWT.NONE).setText(Messages.TaskDataExportWizardPage_Folder);
+		new Label(parent, SWT.NONE).setText(Messages.TaskDataExportWizardPage_Folder);
 
-		destDirText = new Text(destDirGroup, SWT.BORDER);
+		destDirText = new Text(parent, SWT.BORDER);
 		destDirText.setEditable(false);
 		destDirText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		destDirText.addModifyListener(new ModifyListener() {
@@ -151,7 +107,7 @@ public class TaskDataExportWizardPage extends WizardPage {
 			}
 		});
 
-		browseButton = new Button(destDirGroup, SWT.PUSH);
+		browseButton = new Button(parent, SWT.PUSH);
 		browseButton.setText(Messages.TaskDataExportWizardPage_Browse_);
 		browseButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -178,25 +134,12 @@ public class TaskDataExportWizardPage extends WizardPage {
 		IDialogSettings settings = getDialogSettings();
 
 		if (settings.get(SETTINGS_SAVED) == null) {
-			// Set default values
-			taskListCheckBox.setSelection(true);
-			taskActivationHistoryCheckBox.setSelection(true);
-			taskContextsCheckBox.setSelection(true);
 			destDirText.setText(""); //$NON-NLS-1$
-			overwriteCheckBox.setSelection(true);
-			// zipCheckBox.setSelection(false);
 		} else {
-			// Retrieve previous values from the dialog settings
-			taskListCheckBox.setSelection(true); // force it
-			// taskListCheckBox.setSelection(settings.getBoolean(TASKLIST_SETTING));
-			taskActivationHistoryCheckBox.setSelection(settings.getBoolean(ACTIVATION_HISTORY_SETTING));
-			taskContextsCheckBox.setSelection(settings.getBoolean(CONTEXTS_SETTING));
 			String directory = settings.get(DEST_DIR_SETTING);
 			if (directory != null) {
 				destDirText.setText(settings.get(DEST_DIR_SETTING));
 			}
-			overwriteCheckBox.setSelection(settings.getBoolean(OVERWRITE_SETTING));
-			// zipCheckBox.setSelection(settings.getBoolean(ZIP_SETTING));
 		}
 	}
 
@@ -205,14 +148,7 @@ public class TaskDataExportWizardPage extends WizardPage {
 	 */
 	public void saveSettings() {
 		IDialogSettings settings = getDialogSettings();
-
-		settings.put(TASKLIST_SETTING, taskListCheckBox.getSelection());
-		settings.put(ACTIVATION_HISTORY_SETTING, taskActivationHistoryCheckBox.getSelection());
-		settings.put(CONTEXTS_SETTING, taskContextsCheckBox.getSelection());
 		settings.put(DEST_DIR_SETTING, destDirText.getText());
-		settings.put(OVERWRITE_SETTING, overwriteCheckBox.getSelection());
-		// settings.put(ZIP_SETTING, zipCheckBox.getSelection());
-
 		settings.put(SETTINGS_SAVED, SETTINGS_SAVED);
 	}
 
@@ -244,13 +180,6 @@ public class TaskDataExportWizardPage extends WizardPage {
 	protected boolean validate() {
 		setMessage(null);
 
-		// Check that at least one type of data has been selected
-		if (!taskListCheckBox.getSelection() && !taskActivationHistoryCheckBox.getSelection()
-				&& !taskContextsCheckBox.getSelection()) {
-			setMessage(Messages.TaskDataExportWizardPage_Please_select_which_task_data_to_export, IStatus.WARNING);
-			return false;
-		}
-
 		// Check that a destination dir has been specified
 		if (destDirText.getText().equals("")) { //$NON-NLS-1$
 			setMessage(Messages.TaskDataExportWizardPage_Please_choose_an_export_destination, IStatus.WARNING);
@@ -265,40 +194,8 @@ public class TaskDataExportWizardPage extends WizardPage {
 		return destDirText.getText();
 	}
 
-	/** True if the user wants to export the task list */
-	public boolean exportTaskList() {
-		return taskListCheckBox.getSelection();
-	}
-
-	/** True if the user wants to export task activation history */
-	public boolean exportActivationHistory() {
-		return taskActivationHistoryCheckBox.getSelection();
-	}
-
-	/** True if the user wants to export task context files */
-	public boolean exportTaskContexts() {
-		return taskContextsCheckBox.getSelection();
-	}
-
-	/** True if the user wants to overwrite files by default */
-	public boolean overwrite() {
-		return overwriteCheckBox.getSelection();
-	}
-
-	/** True if the user wants to write to a zip file */
-	public boolean zip() {
-		// return zipCheckBox.getSelection();
-		return true;
-	}
-
 	/** For testing only. Sets controls to the specified values */
-	public void setParameters(boolean overwrite, boolean exportTaskList, boolean exportActivationHistory,
-			boolean exportTaskContexts, boolean zip, String destinationDir) {
-		overwriteCheckBox.setSelection(overwrite);
-		taskListCheckBox.setSelection(exportTaskList);
-		taskActivationHistoryCheckBox.setSelection(exportActivationHistory);
-		taskContextsCheckBox.setSelection(exportTaskContexts);
+	public void setDestinationDirectory(String destinationDir) {
 		destDirText.setText(destinationDir);
-		// zipCheckBox.setSelection(zip);
 	}
 }

@@ -14,22 +14,15 @@ package org.eclipse.mylyn.tasks.tests;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.eclipse.mylyn.commons.tests.support.CommonsTestUtil;
-import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.tests.AbstractContextTest;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.context.core.InteractionContext;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.Messages;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataExportWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataExportWizardPage;
-import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -46,10 +39,6 @@ public class TaskDataExportTest extends AbstractContextTest {
 
 	private File destinationDir;
 
-	private AbstractTask task1;
-
-	private InteractionContext mockContext;
-
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -62,31 +51,29 @@ public class TaskDataExportTest extends AbstractContextTest {
 		assertNotNull(wizardPage);
 
 		// Create test export destination directory
-		destinationDir = new File(TasksUiPlugin.getDefault().getDataDirectory(), "TestDir");
+		File mylynFolder = new File(TasksUiPlugin.getDefault().getDataDirectory());
+		destinationDir = new File(mylynFolder.getParent(), "TestDir");
 		CommonsTestUtil.deleteFolder(destinationDir);
 		destinationDir.mkdir();
-		assertTrue(destinationDir.exists());
 
-		// Create a task and context with an interaction event to be saved
-		task1 = TasksUiInternal.createNewLocalTask("Export Test Task");
-		TasksUiPlugin.getTaskList().addTask(task1);
+		// Create folder/file structure
+		File tasklist = new File(mylynFolder, "tasklist.xml.zip");
+		assertTrue(tasklist.createNewFile());
+		File hidden = new File(mylynFolder, ".hidden");
+		hidden.createNewFile();
+		assertTrue(hidden.exists());
+		File tasks = new File(mylynFolder, "tasksandstuff");
+		assertTrue(tasks.mkdir());
+		File tasksFile = new File(tasks, "file1.xml.zip");
+		assertTrue(tasksFile.createNewFile());
+		File tasksSubDir = new File(tasks, "sub");
+		assertTrue(tasksSubDir.mkdir());
+		assertTrue(new File(tasksSubDir, "file2.xml.zip").createNewFile());
 
-		// Save the context file and check that it exists
-		mockContext = (InteractionContext) ContextCorePlugin.getContextStore().loadContext(task1.getHandleIdentifier());
-		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.EDIT, "structureKind", "handle", "originId");
-		mockContext.parseEvent(event);
-		ContextCorePlugin.getContextStore().saveContext(mockContext);
-		File taskFile = ContextCorePlugin.getContextStore().getFileForContext(task1.getHandleIdentifier());
-		assertTrue(ContextCore.getContextManager().hasContext(task1.getHandleIdentifier()));
-		assertTrue(taskFile.exists());
-
-		// do this last to make sure tearDown() runs
-		ContextCorePlugin.getContextManager().internalActivateContext(mockContext);
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
-		ContextCore.getContextManager().deactivateContext(mockContext.getHandleIdentifier());
 		CommonsTestUtil.deleteFolder(destinationDir);
 		super.tearDown();
 	}
@@ -96,7 +83,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 	 */
 	public void testExportAllToZip() throws Exception {
 		// set parameters in the wizard to simulate a user setting them and clicking "Finish"
-		wizardPage.setParameters(true, true, true, true, true, destinationDir.getPath());
+		wizardPage.setDestinationDirectory(destinationDir.getPath());
 		wizard.performFinish();
 
 		// check that the task list file was exported
@@ -110,11 +97,10 @@ public class TaskDataExportTest extends AbstractContextTest {
 				entries.add(entry.getName());
 				entry = zipInputStream.getNextEntry();
 			}
-			assertEquals(3, entries.size());
-			Collections.sort(entries);
-			assertEquals("contexts/local-1.xml.zip", entries.get(0));
-			assertEquals("repositories.xml.zip", entries.get(1));
-			assertEquals("tasks.xml.zip", entries.get(2));
+			assertTrue(entries.contains(".hidden"));
+			assertTrue(entries.contains("tasklist.xml.zip"));
+			assertTrue(entries.contains("tasksandstuff/file1.xml.zip"));
+			assertTrue(entries.contains("tasksandstuff/sub/file2.xml.zip"));
 		} finally {
 			zipInputStream.close();
 		}

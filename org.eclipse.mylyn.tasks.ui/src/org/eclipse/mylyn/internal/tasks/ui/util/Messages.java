@@ -41,6 +41,8 @@ public class Messages extends NLS {
 
 	public static String ImportExportUtil_Tasks_and_queries_Filter0;
 
+	public static String TaskDataExportOperation_exporting_task_data;
+
 	public static String TaskListElementImporter_Could_not_read_task_list;
 
 	public static String TaskListElementImporter__failed_;
