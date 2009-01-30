@@ -76,8 +76,6 @@ public class TaskDataExportOperation implements IRunnableWithProgress {
 
 	private boolean exportAll = false;
 
-	private int totalWork = 0;
-
 	// List of files to add to the zip archive
 	private final List<File> filesToZip = new ArrayList<File>();
 
@@ -116,8 +114,9 @@ public class TaskDataExportOperation implements IRunnableWithProgress {
 				monitor = new NullProgressMonitor();
 			}
 
+			int totalWork = filesToZip.size();
 			if (totalWork == 0) {
-				totalWork = filesToZip.size();
+				totalWork = IProgressMonitor.UNKNOWN;
 			}
 			monitor.beginTask(EXPORT_JOB_LABEL, totalWork + 1);
 
@@ -297,10 +296,6 @@ public class TaskDataExportOperation implements IRunnableWithProgress {
 		} catch (IOException ioe) {
 			return false;
 		}
-	}
-
-	public void setTotalWork(int totalWork) {
-		this.totalWork = totalWork;
 	}
 
 }
