@@ -11,10 +11,14 @@
 
 package org.eclipse.mylyn.internal.bugzilla.core;
 
+import java.io.Serializable;
+
 /**
  * @author Frank Becker
  */
-public class BugzillaVersion implements Comparable<BugzillaVersion> {
+public class BugzillaVersion implements Comparable<BugzillaVersion>, Serializable {
+
+	private static final long serialVersionUID = 2027987556171301044L;
 
 	public final static BugzillaVersion MIN_VERSION = new BugzillaVersion("2.18"); //$NON-NLS-1$
 
