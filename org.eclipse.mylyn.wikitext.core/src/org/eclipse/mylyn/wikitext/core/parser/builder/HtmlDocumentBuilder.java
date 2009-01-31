@@ -599,11 +599,19 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 			}
 
 			String css;
-			try {
-				css = readFully(stylesheet.file);
-			} catch (IOException e) {
-				throw new IllegalStateException(MessageFormat.format(Messages.getString("HtmlDocumentBuilder.4"), //$NON-NLS-1$
-						stylesheet.file), e);
+			if (stylesheet.file != null) {
+				try {
+					css = readFully(stylesheet.file);
+				} catch (IOException e) {
+					throw new IllegalStateException(MessageFormat.format(Messages.getString("HtmlDocumentBuilder.4"), //$NON-NLS-1$
+							stylesheet.file), e);
+				}
+			} else {
+				try {
+					css = readFully(stylesheet.reader, 1024);
+				} catch (IOException e) {
+					throw new IllegalStateException(Messages.getString("HtmlDocumentBuilder.5"), e); //$NON-NLS-1$
+				}
 			}
 			writer.writeCharacters(css);
 			writer.writeEndElement();
@@ -1041,6 +1049,8 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 		private final File file;
 
+		private final Reader reader;
+
 		private final Map<String, String> attributes = new HashMap<String, String>();
 
 		/**
@@ -1064,6 +1074,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 			}
 			this.file = file;
 			url = null;
+			reader = null;
 		}
 
 		/**
@@ -1086,6 +1097,33 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 			}
 			this.url = url;
 			file = null;
+			reader = null;
+		}
+
+		/**
+		 * Create a CSS stylesheet where the contents of the CSS stylesheet are embedded in the HTML. Generates code
+		 * similar to the following:
+		 * 
+		 * <pre>
+		 * &lt;code&gt;
+		 *   &lt;style type=&quot;text/css&quot;&gt;
+		 *   ... contents of the file ...
+		 *   &lt;/style&gt;
+		 * &lt;/code&gt;
+		 * </pre>
+		 * 
+		 * The caller is responsible for closing the reader.
+		 * 
+		 * @param reader
+		 *            the reader from which content is provided.
+		 */
+		public Stylesheet(Reader reader) {
+			if (reader == null) {
+				throw new IllegalArgumentException();
+			}
+			this.reader = reader;
+			file = null;
+			url = null;
 		}
 
 		/**
@@ -1109,6 +1147,13 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		public String getUrl() {
 			return url;
 		}
+
+		/**
+		 * the content reader, or null if it's not defined.
+		 */
+		public Reader getReader() {
+			return reader;
+		}
 	}
 
 	private String readFully(File inputFile) throws IOException {
@@ -1116,15 +1161,19 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		if (length <= 0) {
 			length = 2048;
 		}
-		StringBuilder buf = new StringBuilder(length);
-		Reader reader = new BufferedReader(getReader(inputFile));
+		return readFully(getReader(inputFile), length);
+	}
+
+	private String readFully(Reader input, int bufferSize) throws IOException {
+		StringBuilder buf = new StringBuilder(bufferSize);
 		try {
+			Reader reader = new BufferedReader(input);
 			int c;
 			while ((c = reader.read()) != -1) {
 				buf.append((char) c);
 			}
 		} finally {
-			reader.close();
+			input.close();
 		}
 		return buf.toString();
 	}
