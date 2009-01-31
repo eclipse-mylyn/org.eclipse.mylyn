@@ -169,6 +169,15 @@
   			</systemProperty>
       </visibility>
      </objectContribution>
-  </extension>   
+  </extension>
+     <extension
+           point="org.eclipse.ui.preferencePages">
+        <page
+              category="org.eclipse.mylyn.wikitext.ui.editor.preferences.EditorPreferencePage"
+              class="org.eclipse.mylyn.internal.wikitext.tasks.ui.preferences.MarkupViewerPreferencePage"
+              id="org.eclipse.mylyn.internal.wikitext.tasks.ui.preferences.MarkupViewerPreferencePage"
+              name="%page.name.0">
+        </page>
+     </extension>   
    
 </plugin>

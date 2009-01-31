@@ -37,6 +37,7 @@ Bundle-Localization: plugin
 Export-Package: org.eclipse.mylyn.internal.wikitext.tasks.ui;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.tasks.ui.actions;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.tasks.ui.editor;x-internal:=true,
+ org.eclipse.mylyn.internal.wikitext.tasks.ui.preferences;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.tasks.ui.util;x-internal:=true,
  org.eclipse.mylyn.wikitext.tasks.ui.editor
 Bundle-Activator: org.eclipse.mylyn.internal.wikitext.tasks.ui.WikiTextTasksUiPlugin

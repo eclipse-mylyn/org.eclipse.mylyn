@@ -28,6 +28,7 @@ import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.mylyn.internal.wikitext.tasks.ui.util.PlatformUrlHyperlink;
+import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupSourceViewerConfiguration;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.FastMarkupPartitioner;
@@ -102,6 +103,8 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 
 		markupViewer.setEditable(false);
 		markupViewer.getTextWidget().setCaret(null);
+
+		markupViewer.setStylesheet(WikiTextUiPlugin.getDefault().getPreferences().getStylesheet());
 
 		return markupViewer;
 	}

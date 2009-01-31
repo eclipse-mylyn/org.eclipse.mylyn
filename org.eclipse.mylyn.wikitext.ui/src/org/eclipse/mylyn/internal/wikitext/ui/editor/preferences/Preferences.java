@@ -25,7 +25,7 @@ import org.eclipse.mylyn.internal.wikitext.ui.util.css.Stylesheet;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.HtmlTextPresentationParser;
 
 /**
- * 
+ * @see WikiTextUiPlugin#getPreferences()
  * 
  * @author David Green
  */
@@ -155,6 +155,9 @@ public class Preferences implements Cloneable {
 	 * get the CSS content used to render the markup viewer
 	 */
 	public String getMarkupViewerCss() {
+		if (markupViewerCss == null) {
+			markupViewerCss = getDefaultMarkupViewerCss();
+		}
 		return markupViewerCss;
 	}
 

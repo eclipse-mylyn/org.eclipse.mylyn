@@ -31,6 +31,7 @@ Export-Package: org.eclipse.mylyn.internal.wikitext.ui;x-friends:="org.eclipse.m
  org.eclipse.mylyn.internal.wikitext.ui.properties;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.ui.util;x-friends:="org.eclipse.mylyn.wikitext.tests,org.eclipse.mylyn.wikitext.tasks.ui",
  org.eclipse.mylyn.internal.wikitext.ui.util.css;x-friends:="org.eclipse.mylyn.wikitext.tasks.ui",
+ org.eclipse.mylyn.internal.wikitext.ui.util.css.editor;x-friends:="org.eclipse.mylyn.wikitext.tasks.ui",
  org.eclipse.mylyn.internal.wikitext.ui.util.resources;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.ui.validation;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.ui.viewer;x-friends:="org.eclipse.mylyn.wikitext.tests,org.eclipse.mylyn.wikitext.tasks.ui",
