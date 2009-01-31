@@ -100,3 +100,7 @@ dt {
 blockquote {
 	color: rgb(38, 86, 145);
 }
+
+tt {
+	font-family: monospace;	
+}
