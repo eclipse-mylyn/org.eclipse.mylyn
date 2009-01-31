@@ -11,6 +11,7 @@
 package org.eclipse.mylyn.internal.wikitext.ui.editor;
 
 import java.io.PrintWriter;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
 import java.text.MessageFormat;
@@ -466,6 +467,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	}
 
 	private void updatePreview() {
+		// FIXME apply stylesheet preferences to the preview
 		if (previewDirty && browser != null) {
 			String xhtml = null;
 			if (document == null) {
@@ -487,6 +489,11 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 					if (location != null) {
 						builder.setBaseInHead(true);
 						builder.setBase(location.removeLastSegments(1).toFile().toURI());
+					}
+
+					String css = WikiTextUiPlugin.getDefault().getPreferences().getMarkupViewerCss();
+					if (css != null && css.length() > 0) {
+						builder.addCssStylesheet(new HtmlDocumentBuilder.Stylesheet(new StringReader(css)));
 					}
 
 					markupParser.setBuilder(builder);
