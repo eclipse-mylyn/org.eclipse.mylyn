@@ -73,6 +73,12 @@ public class Messages extends NLS {
 
 	public static String TasksUiInternal__seconds;
 
+	public static String TasksUiInternal_Failed_to_open_task;
+
+	public static String TasksUiInternal_No_repository_found;
+
+	public static String TasksUiInternal_See_error_log_for_details;
+
 	public static String TasksUiMenus_Copy_Contents;
 
 	public static String TasksUiMenus_Copy_URL;

@@ -216,10 +216,8 @@ public class TasksUiInternal {
 				TaskRepository repository = TasksUi.getRepositoryManager().getRepository(repositoryKind,
 						task.getRepositoryUrl());
 				if (repository == null) {
-					StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-							"No repository found for task. Please create repository in " //$NON-NLS-1$
-									+ org.eclipse.mylyn.internal.tasks.ui.Messages.TasksUiPlugin_Task_Repositories
-									+ ".")); //$NON-NLS-1$
+					displayStatus(Messages.TasksUiInternal_Failed_to_open_task, new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+							Messages.TasksUiInternal_No_repository_found));
 					return;
 				}
 
@@ -420,7 +418,7 @@ public class TasksUiInternal {
 		return new MessageDialog(shell, title, null, message, type, new String[] { IDialogConstants.OK_LABEL }, 0);
 	}
 
-	public static void displayStatus(Shell shell, final String title, final IStatus status) {
+	private static void displayStatus(Shell shell, final String title, final IStatus status, boolean showLinkToErrorLog) {
 		// avoid blocking ui when in test mode
 		if (CoreUtil.TEST_MODE) {
 			StatusHandler.log(status);
@@ -434,17 +432,21 @@ public class TasksUiInternal {
 				WebBrowserDialog.openAcceptAgreement(shell, title, status.getMessage(),
 						((RepositoryStatus) status).getHtmlMessage());
 			} else {
+				String message = status.getMessage();
+				if (showLinkToErrorLog) {
+					message += "\n\n" + Messages.TasksUiInternal_See_error_log_for_details; //$NON-NLS-1$
+				}
 				switch (status.getSeverity()) {
 				case IStatus.CANCEL:
 				case IStatus.INFO:
-					createDialog(shell, title, status.getMessage(), MessageDialog.INFORMATION).open();
+					createDialog(shell, title, message, MessageDialog.INFORMATION).open();
 					break;
 				case IStatus.WARNING:
-					createDialog(shell, title, status.getMessage(), MessageDialog.WARNING).open();
+					createDialog(shell, title, message, MessageDialog.WARNING).open();
 					break;
 				case IStatus.ERROR:
 				default:
-					createDialog(shell, title, status.getMessage(), MessageDialog.ERROR).open();
+					createDialog(shell, title, message, MessageDialog.ERROR).open();
 					break;
 				}
 			}
@@ -464,10 +466,18 @@ public class TasksUiInternal {
 		}
 	}
 
+	public static void logAndDisplayStatus(final String title, final IStatus status) {
+		StatusHandler.log(status);
+		IWorkbench workbench = PlatformUI.getWorkbench();
+		if (workbench != null && !workbench.getDisplay().isDisposed()) {
+			displayStatus(getShell(), title, status, true);
+		}
+	}
+
 	public static void displayStatus(final String title, final IStatus status) {
 		IWorkbench workbench = PlatformUI.getWorkbench();
 		if (workbench != null && !workbench.getDisplay().isDisposed()) {
-			displayStatus(getShell(), title, status);
+			displayStatus(getShell(), title, status, false);
 		} else {
 			StatusHandler.log(status);
 		}
