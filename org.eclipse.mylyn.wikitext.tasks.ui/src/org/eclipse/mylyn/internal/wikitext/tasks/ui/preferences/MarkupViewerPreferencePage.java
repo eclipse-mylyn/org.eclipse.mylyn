@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.internal.wikitext.tasks.ui.preferences;
 
+import java.io.IOException;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -21,6 +23,7 @@ import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocumentListener;
+import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.text.source.VerticalRuler;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
@@ -28,9 +31,11 @@ import org.eclipse.mylyn.internal.wikitext.ui.editor.preferences.Preferences;
 import org.eclipse.mylyn.internal.wikitext.ui.util.css.CssParser;
 import org.eclipse.mylyn.internal.wikitext.ui.util.css.editor.CssConfiguration;
 import org.eclipse.mylyn.internal.wikitext.ui.util.css.editor.CssPartitioner;
+import org.eclipse.mylyn.internal.wikitext.ui.viewer.HtmlTextPresentationParser;
 import org.eclipse.mylyn.wikitext.ui.viewer.HtmlViewer;
 import org.eclipse.mylyn.wikitext.ui.viewer.HtmlViewerConfiguration;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -39,6 +44,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.progress.UIJob;
+import org.xml.sax.SAXException;
 
 public class MarkupViewerPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
@@ -51,6 +57,8 @@ public class MarkupViewerPreferencePage extends PreferencePage implements IWorkb
 	private HtmlViewer previewViewer;
 
 	private UIJob previewUpdateJob;
+
+	private HtmlViewerConfiguration htmlViewerConfiguration;
 
 	public MarkupViewerPreferencePage() {
 		super(Messages.getString("MarkupViewerPreferencePage.0")); //$NON-NLS-1$
@@ -99,8 +107,8 @@ public class MarkupViewerPreferencePage extends PreferencePage implements IWorkb
 			previewViewer.getTextWidget().setBackground(colorRegistry.get(WHITE));
 			GridDataFactory.fillDefaults().grab(true, true).applyTo(previewViewer.getControl());
 
-			HtmlViewerConfiguration configuration = new HtmlViewerConfiguration(previewViewer);
-			previewViewer.configure(configuration);
+			htmlViewerConfiguration = new HtmlViewerConfiguration(previewViewer);
+			previewViewer.configure(htmlViewerConfiguration);
 			previewViewer.getTextWidget().setEditable(false);
 			previewViewer.setStylesheet(preferences.getStylesheet());
 			previewViewer.setHtml(createPreviewHtml());
@@ -122,8 +130,27 @@ public class MarkupViewerPreferencePage extends PreferencePage implements IWorkb
 	}
 
 	private void updatePreview() {
-		previewViewer.setStylesheet(new CssParser().parse(sourceViewer.getDocument().get()));
-		previewViewer.setHtml(createPreviewHtml());
+		TextPresentation textPresentation = new TextPresentation();
+		HtmlTextPresentationParser parser = new HtmlTextPresentationParser();
+		parser.setDefaultFont(previewViewer.getTextWidget().getFont());
+		parser.setAnnotationModel(previewViewer.getAnnotationModel());
+		parser.setPresentation(textPresentation);
+		parser.setStylesheet(new CssParser().parse(sourceViewer.getDocument().get()));
+
+		GC gc = new GC(previewViewer.getTextWidget());
+		try {
+			parser.setGC(gc);
+
+			parser.parse(createPreviewHtml());
+		} catch (SAXException e) {
+			throw new IllegalStateException(e);
+		} catch (IOException e) {
+			throw new IllegalStateException(e);
+		} finally {
+			gc.dispose();
+		}
+		htmlViewerConfiguration.setTextPresentation(textPresentation);
+		previewViewer.changeTextPresentation(textPresentation, true);
 	}
 
 	@Override
