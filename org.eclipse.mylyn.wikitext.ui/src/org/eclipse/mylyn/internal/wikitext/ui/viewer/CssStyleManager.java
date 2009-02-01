@@ -260,7 +260,9 @@ public class CssStyleManager {
 		}
 		if (fontState.isFixedWidth()) {
 			String symbolicName = getClass().getSimpleName() + "-monospace-" + fontState.size; //$NON-NLS-1$
-			Font monospaceFont = JFaceResources.getFontRegistry().get(symbolicName);
+			Font monospaceFont = JFaceResources.getFontRegistry().hasValueFor(symbolicName) ? JFaceResources.getFontRegistry()
+					.get(symbolicName)
+					: null;
 			if (monospaceFont == null) {
 				Font defaultFont = JFaceResources.getFontRegistry().defaultFont();
 				FontData[] fontData = defaultFont.getDevice().getFontList("Courier New", true); //$NON-NLS-1$
@@ -274,6 +276,8 @@ public class CssStyleManager {
 					JFaceResources.getFontRegistry().put(symbolicName, fontData);
 					monospaceFont = JFaceResources.getFontRegistry().get(symbolicName);
 				}
+			} else {
+
 			}
 			if (monospaceFont != null) {
 				styleRange.font = monospaceFont;
