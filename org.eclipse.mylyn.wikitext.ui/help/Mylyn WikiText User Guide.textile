@@ -110,6 +110,10 @@ In the *Editor* section select the markup language of choice.  Note that you may
 
 Press the *Finish* button when you've finished to make the changes permanent.  Note that changes to these settings will only be visible for newly opened task editors.  Task editors that were open prior to making the changes will need to be closed and reopened for the settings to take effect.
 
+h2. Editor Markup Appearance
+
+Rendered markup appearance can be altered in the Eclipse preferences.  Open ==<b>Preferences->General->Editors->Text Editors->WikiText->Task Editor Appearance</b>== and alter the appearance using CSS styles.
+
 h1. Markup Conversion
 
 Lightweight markup is designed to be readily converted to HTML.  WikiText provides a means to convert markup to:
