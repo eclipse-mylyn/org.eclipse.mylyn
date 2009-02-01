@@ -32,7 +32,7 @@ import javax.xml.parsers.SAXParserFactory;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.jface.text.source.Annotation;
-import org.eclipse.jface.text.source.AnnotationModel;
+import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.mylyn.internal.wikitext.ui.util.ImageCache;
 import org.eclipse.mylyn.internal.wikitext.ui.util.css.CssParser;
 import org.eclipse.mylyn.internal.wikitext.ui.util.css.CssRule;
@@ -267,7 +267,7 @@ public class HtmlTextPresentationParser {
 		}
 	}
 
-	private AnnotationModel annotationModel;
+	private IAnnotationModel annotationModel;
 
 	private TextPresentation presentation;
 
@@ -379,7 +379,7 @@ public class HtmlTextPresentationParser {
 	 * 
 	 * @return the annotation model, or null if there is none.
 	 */
-	public AnnotationModel getAnnotationModel() {
+	public IAnnotationModel getAnnotationModel() {
 		return annotationModel;
 	}
 
@@ -390,7 +390,7 @@ public class HtmlTextPresentationParser {
 	 * @param annotationModel
 	 *            the annotation model, or null if annotations should not be collected.
 	 */
-	public void setAnnotationModel(AnnotationModel annotationModel) {
+	public void setAnnotationModel(IAnnotationModel annotationModel) {
 		this.annotationModel = annotationModel;
 	}
 

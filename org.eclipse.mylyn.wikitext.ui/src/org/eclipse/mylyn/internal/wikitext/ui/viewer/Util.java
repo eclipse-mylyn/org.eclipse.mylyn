@@ -15,12 +15,12 @@ import java.util.Iterator;
 
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
-import org.eclipse.jface.text.source.AnnotationModel;
+import org.eclipse.jface.text.source.IAnnotationModel;
 
 class Util {
 
 	@SuppressWarnings("unchecked")
-	static boolean annotationsIncludeOffset(AnnotationModel annotationModel, int offset) {
+	static boolean annotationsIncludeOffset(IAnnotationModel annotationModel, int offset) {
 		if (annotationModel == null) {
 			return false;
 		}
