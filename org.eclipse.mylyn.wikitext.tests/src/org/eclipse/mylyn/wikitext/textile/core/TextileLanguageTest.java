@@ -594,6 +594,12 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("</a> to something"));
 	}
 
+	public void testImageFalsePositiveOnMultipleExclamationMarks() throws IOException {
+		String html = parser.parseToHtml("Here comes a non-image!!! more text !!! and more");
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><p>Here comes a non-image!!! more text !!! and more</p></body>"));
+	}
+
 	public void testHtmlLiteral() throws IOException {
 		String htmlFragment = "<a href=\"foo-bar\"><img src=\"some-image.jpg\"/></a>";
 		String html = parser.parseToHtml("a paragraph " + htmlFragment + " with HTML literal");
