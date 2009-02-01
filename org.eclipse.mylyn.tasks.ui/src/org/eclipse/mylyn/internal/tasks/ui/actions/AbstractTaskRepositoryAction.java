@@ -24,6 +24,8 @@ import org.eclipse.ui.actions.BaseSelectionListenerAction;
  */
 public abstract class AbstractTaskRepositoryAction extends BaseSelectionListenerAction {
 
+	private boolean singleSelect;
+
 	public AbstractTaskRepositoryAction(String text) {
 		super(text);
 	}
@@ -31,6 +33,12 @@ public abstract class AbstractTaskRepositoryAction extends BaseSelectionListener
 	@Override
 	protected boolean updateSelection(IStructuredSelection selection) {
 		if (selection != null && !selection.isEmpty()) {
+			if (singleSelect) {
+				Object[] array = selection.toArray();
+				if (array.length != 1) {
+					return false;
+				}
+			}
 			return getTaskRepository(selection.getFirstElement()) != null;
 		}
 		return false;
@@ -63,6 +71,14 @@ public abstract class AbstractTaskRepositoryAction extends BaseSelectionListener
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 				taskRepository.getConnectorKind());
 		return connector != null && connector.isUserManaged();
+	}
+
+	protected boolean isSingleSelect() {
+		return singleSelect;
+	}
+
+	protected void setSingleSelect(boolean singleSelect) {
+		this.singleSelect = singleSelect;
 	}
 
 }
