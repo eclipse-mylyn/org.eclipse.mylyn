@@ -30,8 +30,6 @@ import org.eclipse.mylyn.internal.wikitext.twiki.core.token.WikiWordReplacementT
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
-import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
-import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration;
 import org.eclipse.mylyn.wikitext.core.parser.markup.phrase.HtmlEndTagPhraseModifier;
 import org.eclipse.mylyn.wikitext.core.parser.markup.phrase.HtmlStartTagPhraseModifier;
 import org.eclipse.mylyn.wikitext.core.parser.markup.token.EntityReferenceReplacementToken;
@@ -53,9 +51,9 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.token.ImpliedHyperlinkRepla
  */
 public class TWikiLanguage extends AbstractMarkupLanguage {
 
-	private PatternBasedSyntax literalTokenSyntax = new PatternBasedSyntax();
+	private final PatternBasedSyntax literalTokenSyntax = new PatternBasedSyntax();
 
-	private PatternBasedSyntax literalPhraseModifierSyntax = new PatternBasedSyntax();
+	private final PatternBasedSyntax literalPhraseModifierSyntax = new PatternBasedSyntax();
 
 	private boolean literalMode;
 
@@ -162,8 +160,7 @@ public class TWikiLanguage extends AbstractMarkupLanguage {
 	}
 
 	@Override
-	protected void addStandardBlocks(MarkupLanguageConfiguration configuration, List<Block> blocks,
-			List<Block> paragraphBreakingBlocks) {
+	protected void addStandardBlocks(List<Block> blocks, List<Block> paragraphBreakingBlocks) {
 		// IMPORTANT NOTE: Most items below have order dependencies.  DO NOT REORDER ITEMS BELOW!!
 
 		blocks.add(paragraphBreakingBlock(new VerbatimBlock()));
@@ -176,8 +173,7 @@ public class TWikiLanguage extends AbstractMarkupLanguage {
 	}
 
 	@Override
-	protected void addStandardPhraseModifiers(MarkupLanguageConfiguration configuration,
-			PatternBasedSyntax phraseModifierSyntax) {
+	protected void addStandardPhraseModifiers(PatternBasedSyntax phraseModifierSyntax) {
 		// IMPORTANT NOTE: Most items below have order dependencies.  DO NOT REORDER ITEMS BELOW!!
 
 		boolean escapingHtml = configuration == null ? false : configuration.isEscapingHtmlAndXml();
@@ -201,7 +197,7 @@ public class TWikiLanguage extends AbstractMarkupLanguage {
 	}
 
 	@Override
-	protected void addStandardTokens(MarkupLanguageConfiguration configuration, PatternBasedSyntax tokenSyntax) {
+	protected void addStandardTokens(PatternBasedSyntax tokenSyntax) {
 		// IMPORTANT NOTE: Most items below have order dependencies.  DO NOT REORDER ITEMS BELOW!!
 
 		tokenSyntax.add(new EntityReferenceReplacementToken("(tm)", "#8482")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -220,15 +216,8 @@ public class TWikiLanguage extends AbstractMarkupLanguage {
 	}
 
 	@Override
-	protected Block createParagraphBlock(MarkupLanguageConfiguration configuration) {
+	protected Block createParagraphBlock() {
 		return new ParagraphBlock();
 	}
 
-	@Override
-	protected void doDeepClone(MarkupLanguage c) {
-		TWikiLanguage copy = (TWikiLanguage) c;
-		super.doDeepClone(c);
-		copy.literalTokenSyntax = literalTokenSyntax.clone();
-		copy.literalPhraseModifierSyntax = literalPhraseModifierSyntax.clone();
-	}
 }

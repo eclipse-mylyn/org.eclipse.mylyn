@@ -32,7 +32,6 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 import org.eclipse.mylyn.wikitext.core.parser.markup.ContentState;
-import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration;
 import org.eclipse.mylyn.wikitext.core.parser.markup.phrase.HtmlEndTagPhraseModifier;
 import org.eclipse.mylyn.wikitext.core.parser.markup.phrase.HtmlStartTagPhraseModifier;
 import org.eclipse.mylyn.wikitext.core.parser.markup.token.AcronymReplacementToken;
@@ -68,11 +67,10 @@ public class TextileLanguage extends AbstractMarkupLanguage {
 	 *            the list of blocks that end a paragraph
 	 */
 	@Override
-	protected void addBlockExtensions(MarkupLanguageConfiguration configuration, List<Block> blocks,
-			List<Block> paragraphBreakingBlocks) {
+	protected void addBlockExtensions(List<Block> blocks, List<Block> paragraphBreakingBlocks) {
 		blocks.add(new TextileGlossaryBlock());
 		blocks.add(new TableOfContentsBlock());
-		super.addBlockExtensions(configuration, blocks, paragraphBreakingBlocks);
+		super.addBlockExtensions(blocks, paragraphBreakingBlocks);
 	}
 
 	@Override
@@ -81,8 +79,7 @@ public class TextileLanguage extends AbstractMarkupLanguage {
 	}
 
 	@Override
-	protected void addStandardBlocks(MarkupLanguageConfiguration configuration, List<Block> blocks,
-			List<Block> paragraphBreakingBlocks) {
+	protected void addStandardBlocks(List<Block> blocks, List<Block> paragraphBreakingBlocks) {
 		// IMPORTANT NOTE: Most items below have order dependencies.  DO NOT REORDER ITEMS BELOW!!
 
 		blocks.add(new HeadingBlock());
@@ -99,8 +96,7 @@ public class TextileLanguage extends AbstractMarkupLanguage {
 	}
 
 	@Override
-	protected void addStandardPhraseModifiers(MarkupLanguageConfiguration configuration,
-			PatternBasedSyntax phraseModifierSyntax) {
+	protected void addStandardPhraseModifiers(PatternBasedSyntax phraseModifierSyntax) {
 		boolean escapingHtml = configuration == null ? false : configuration.isEscapingHtmlAndXml();
 
 		phraseModifierSyntax.add(new HtmlEndTagPhraseModifier(escapingHtml));
@@ -123,7 +119,7 @@ public class TextileLanguage extends AbstractMarkupLanguage {
 	}
 
 	@Override
-	protected void addStandardTokens(MarkupLanguageConfiguration configuration, PatternBasedSyntax tokenSyntax) {
+	protected void addStandardTokens(PatternBasedSyntax tokenSyntax) {
 		tokenSyntax.add(new EntityReferenceReplacementToken("(tm)", "#8482")); //$NON-NLS-1$ //$NON-NLS-2$
 		tokenSyntax.add(new EntityReferenceReplacementToken("(TM)", "#8482")); //$NON-NLS-1$ //$NON-NLS-2$
 		tokenSyntax.add(new EntityReferenceReplacementToken("(c)", "#169")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -142,7 +138,7 @@ public class TextileLanguage extends AbstractMarkupLanguage {
 	}
 
 	@Override
-	protected Block createParagraphBlock(MarkupLanguageConfiguration configuration) {
+	protected Block createParagraphBlock() {
 		ParagraphBlock paragraphBlock = new ParagraphBlock();
 		if (configuration != null && !configuration.isEnableUnwrappedParagraphs()) {
 			paragraphBlock.setEnableUnwrapped(false);

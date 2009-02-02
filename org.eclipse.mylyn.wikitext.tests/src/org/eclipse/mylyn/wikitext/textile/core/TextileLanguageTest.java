@@ -23,7 +23,6 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.builder.RecordingDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.builder.RecordingDocumentBuilder.Event;
-import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 
 /**
  * NOTE: most textile test cases can be found in {@link MarkupParserTest}
@@ -1128,16 +1127,5 @@ public class TextileLanguageTest extends TestCase {
 			}
 		}
 		assertEquals(3, found);
-	}
-
-	public void testClone() {
-		parser.parseToHtml("Test");
-		MarkupLanguage markupLanguage = parser.getMarkupLanguage();
-		MarkupLanguage copy = markupLanguage.clone();
-		assertEquals(markupLanguage.getBlocks().size(), copy.getBlocks().size());
-		assertEquals(markupLanguage.getBlocks().get(0).getClass(), copy.getBlocks().get(0).getClass());
-		assertSame(copy, copy.getBlocks().get(0).getMarkupLanguage());
-		assertNull(copy.getBlocks().get(0).getParser());
-		assertNull(copy.getBlocks().get(0).getState());
 	}
 }

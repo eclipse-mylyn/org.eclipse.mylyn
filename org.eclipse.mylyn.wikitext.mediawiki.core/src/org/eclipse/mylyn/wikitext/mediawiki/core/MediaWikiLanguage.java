@@ -33,7 +33,6 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 import org.eclipse.mylyn.wikitext.core.parser.markup.IdGenerationStrategy;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
-import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration;
 import org.eclipse.mylyn.wikitext.core.parser.markup.phrase.HtmlCommentPhraseModifier;
 import org.eclipse.mylyn.wikitext.core.parser.markup.phrase.LimitedHtmlEndTagPhraseModifier;
 import org.eclipse.mylyn.wikitext.core.parser.markup.phrase.LimitedHtmlStartTagPhraseModifier;
@@ -96,14 +95,13 @@ public class MediaWikiLanguage extends AbstractMarkupLanguage {
 	}
 
 	@Override
-	protected void addStandardBlocks(MarkupLanguageConfiguration configuration, List<Block> blocks,
-			List<Block> paragraphBreakingBlocks) {
+	protected void addStandardBlocks(List<Block> blocks, List<Block> paragraphBreakingBlocks) {
 		// IMPORTANT NOTE: Most items below have order dependencies.  DO NOT REORDER ITEMS BELOW!!
 
 		blocks.add(new HeadingBlock());
 		blocks.add(new ListBlock());
 
-		if (hasPreformattedBlock(configuration)) {
+		if (hasPreformattedBlock()) {
 			// preformatted blocks are lines that start with a single space, and thus are non-optimal for
 			// repository usage.
 			blocks.add(new PreformattedBlock());
@@ -120,13 +118,12 @@ public class MediaWikiLanguage extends AbstractMarkupLanguage {
 
 	}
 
-	private boolean hasPreformattedBlock(MarkupLanguageConfiguration configuration) {
+	private boolean hasPreformattedBlock() {
 		return configuration == null ? true : !configuration.isOptimizeForRepositoryUsage();
 	}
 
 	@Override
-	protected void addStandardPhraseModifiers(MarkupLanguageConfiguration configuration,
-			PatternBasedSyntax phraseModifierSyntax) {
+	protected void addStandardPhraseModifiers(PatternBasedSyntax phraseModifierSyntax) {
 		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.,\\\"'?!;:\\)\\(\\{\\}\\[\\]])|^)(?:", 0); //$NON-NLS-1$
 		phraseModifierSyntax.add(new EscapePhraseModifier());
 		phraseModifierSyntax.add(new SimplePhraseModifier("'''''", new SpanType[] { SpanType.BOLD, SpanType.ITALIC }, //$NON-NLS-1$
@@ -151,7 +148,7 @@ public class MediaWikiLanguage extends AbstractMarkupLanguage {
 	}
 
 	@Override
-	protected void addStandardTokens(MarkupLanguageConfiguration configuration, PatternBasedSyntax tokenSyntax) {
+	protected void addStandardTokens(PatternBasedSyntax tokenSyntax) {
 		tokenSyntax.add(new LineBreakToken());
 		tokenSyntax.add(new EntityReferenceReplacementToken("(tm)", "#8482")); //$NON-NLS-1$ //$NON-NLS-2$
 		tokenSyntax.add(new EntityReferenceReplacementToken("(TM)", "#8482")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -169,8 +166,8 @@ public class MediaWikiLanguage extends AbstractMarkupLanguage {
 	}
 
 	@Override
-	protected Block createParagraphBlock(MarkupLanguageConfiguration configuration) {
-		ParagraphBlock paragraphBlock = new ParagraphBlock(hasPreformattedBlock(configuration));
+	protected Block createParagraphBlock() {
+		ParagraphBlock paragraphBlock = new ParagraphBlock(hasPreformattedBlock());
 		if (configuration != null && configuration.isNewlinesMustCauseLineBreak()) {
 			paragraphBlock.setNewlinesCauseLineBreak(true);
 		}

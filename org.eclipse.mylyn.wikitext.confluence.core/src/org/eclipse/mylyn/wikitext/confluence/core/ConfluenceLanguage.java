@@ -32,8 +32,6 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
-import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
-import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration;
 import org.eclipse.mylyn.wikitext.core.parser.markup.token.EntityReferenceReplacementToken;
 import org.eclipse.mylyn.wikitext.core.parser.markup.token.ImpliedHyperlinkReplacementToken;
 import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternEntityReferenceReplacementToken;
@@ -52,7 +50,7 @@ public class ConfluenceLanguage extends AbstractMarkupLanguage {
 	 * 
 	 * @see ExtendedQuoteBlock
 	 */
-	private List<Block> nestedBlocks = new ArrayList<Block>();
+	private final List<Block> nestedBlocks = new ArrayList<Block>();
 
 	public ConfluenceLanguage() {
 		setName("Confluence"); //$NON-NLS-1$
@@ -69,8 +67,7 @@ public class ConfluenceLanguage extends AbstractMarkupLanguage {
 	}
 
 	@Override
-	protected void addStandardBlocks(MarkupLanguageConfiguration configuration, List<Block> blocks,
-			List<Block> paragraphBreakingBlocks) {
+	protected void addStandardBlocks(List<Block> blocks, List<Block> paragraphBreakingBlocks) {
 		// IMPORTANT NOTE: Most items below have order dependencies.  DO NOT REORDER ITEMS BELOW!!
 
 		HeadingBlock headingBlock = new HeadingBlock();
@@ -105,8 +102,7 @@ public class ConfluenceLanguage extends AbstractMarkupLanguage {
 	}
 
 	@Override
-	protected void addStandardPhraseModifiers(MarkupLanguageConfiguration configuration,
-			PatternBasedSyntax phraseModifierSyntax) {
+	protected void addStandardPhraseModifiers(PatternBasedSyntax phraseModifierSyntax) {
 		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.,\\\"'?!;:\\)\\(\\[\\]])|^)(?:", 0); //$NON-NLS-1$
 		phraseModifierSyntax.add(new SimplePhraseModifier("*", SpanType.STRONG, true)); //$NON-NLS-1$
 		phraseModifierSyntax.add(new SimplePhraseModifier("_", SpanType.EMPHASIS, true)); //$NON-NLS-1$
@@ -121,7 +117,7 @@ public class ConfluenceLanguage extends AbstractMarkupLanguage {
 	}
 
 	@Override
-	protected void addStandardTokens(MarkupLanguageConfiguration configuration, PatternBasedSyntax tokenSyntax) {
+	protected void addStandardTokens(PatternBasedSyntax tokenSyntax) {
 		tokenSyntax.add(new EntityReferenceReplacementToken("(tm)", "#8482")); //$NON-NLS-1$ //$NON-NLS-2$
 		tokenSyntax.add(new EntityReferenceReplacementToken("(TM)", "#8482")); //$NON-NLS-1$ //$NON-NLS-2$
 		tokenSyntax.add(new EntityReferenceReplacementToken("(c)", "#169")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -138,23 +134,8 @@ public class ConfluenceLanguage extends AbstractMarkupLanguage {
 	}
 
 	@Override
-	protected Block createParagraphBlock(MarkupLanguageConfiguration configuration) {
+	protected Block createParagraphBlock() {
 		return new ParagraphBlock();
 	}
 
-	@Override
-	protected void doDeepClone(MarkupLanguage c) {
-		ConfluenceLanguage confluenceLanguage = (ConfluenceLanguage) c;
-		confluenceLanguage.nestedBlocks = new ArrayList<Block>();
-		super.doDeepClone(c);
-	}
-
-	@Override
-	protected void doDeepCloneBlock(AbstractMarkupLanguage c, Block block, Block blockCopy) {
-		ConfluenceLanguage copy = (ConfluenceLanguage) c;
-		super.doDeepCloneBlock(copy, block, blockCopy);
-		if (nestedBlocks.contains(block)) {
-			copy.nestedBlocks.add(blockCopy);
-		}
-	}
 }

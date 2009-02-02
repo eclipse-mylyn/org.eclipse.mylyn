@@ -37,7 +37,6 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
-import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration;
 import org.eclipse.mylyn.wikitext.core.parser.markup.token.ImpliedHyperlinkReplacementToken;
 
 /**
@@ -243,6 +242,7 @@ public class TracWikiLanguage extends AbstractMarkupLanguage {
 	 * @param paragraphBreakingBlocks
 	 *            the list of blocks that end a paragraph
 	 */
+	@Override
 	protected void addBlockExtensions(List<Block> blocks, List<Block> paragraphBreakingBlocks) {
 		// no block extensions
 	}
@@ -254,6 +254,7 @@ public class TracWikiLanguage extends AbstractMarkupLanguage {
 	 * @param tokenSyntax
 	 *            the token syntax
 	 */
+	@Override
 	protected void addTokenExtensions(PatternBasedSyntax tokenSyntax) {
 		// no token extensions
 	}
@@ -266,13 +267,13 @@ public class TracWikiLanguage extends AbstractMarkupLanguage {
 	 * @param phraseModifierSyntax
 	 *            the phrase modifier syntax
 	 */
+	@Override
 	protected void addPhraseModifierExtensions(PatternBasedSyntax phraseModifierSyntax) {
 		// no phrase extensions
 	}
 
 	@Override
-	protected void addStandardBlocks(MarkupLanguageConfiguration configuration, List<Block> blocks,
-			List<Block> paragraphBreakingBlocks) {
+	protected void addStandardBlocks(List<Block> blocks, List<Block> paragraphBreakingBlocks) {
 		// IMPORTANT NOTE: Most items below have order dependencies.  DO NOT REORDER ITEMS BELOW!!
 
 		// TODO: images, macros, processors
@@ -296,8 +297,7 @@ public class TracWikiLanguage extends AbstractMarkupLanguage {
 	}
 
 	@Override
-	protected void addStandardPhraseModifiers(MarkupLanguageConfiguration configuration,
-			PatternBasedSyntax phraseModifierSyntax) {
+	protected void addStandardPhraseModifiers(PatternBasedSyntax phraseModifierSyntax) {
 		// IMPORTANT NOTE: Most items below have order dependencies.  DO NOT REORDER ITEMS BELOW!!
 		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.\\\"'?!;:\\)\\(\\{\\}\\[\\]-])|^)(?:", 0); // always starts at the start of a line or after a non-word character excluding '!' and '-' //$NON-NLS-1$
 		phraseModifierSyntax.add(new EscapePhraseModifier());
@@ -313,7 +313,7 @@ public class TracWikiLanguage extends AbstractMarkupLanguage {
 	}
 
 	@Override
-	protected void addStandardTokens(MarkupLanguageConfiguration configuration, PatternBasedSyntax tokenSyntax) {
+	protected void addStandardTokens(PatternBasedSyntax tokenSyntax) {
 		// IMPORTANT NOTE: Most items below have order dependencies.  DO NOT REORDER ITEMS BELOW!!
 		tokenSyntax.add(new BangEscapeToken());
 		tokenSyntax.add(new LineBreakToken());
@@ -330,7 +330,7 @@ public class TracWikiLanguage extends AbstractMarkupLanguage {
 	}
 
 	@Override
-	protected Block createParagraphBlock(MarkupLanguageConfiguration configuration) {
+	protected Block createParagraphBlock() {
 		return new ParagraphBlock();
 	}
 
