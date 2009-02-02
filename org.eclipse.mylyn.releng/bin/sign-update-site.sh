@@ -40,7 +40,8 @@ unzip() {
 
 rezip() {
  cd $TMP/$1
- /usr/bin/zip $TMP/mylyn-$MAJOR_VERSION.$QUALIFIER-$1.zip -r .
+ echo Rezipping archive for $1, output is logged to $DST/sign.log
+ /usr/bin/zip $TMP/mylyn-$MAJOR_VERSION.$QUALIFIER-$1.zip -r . >> $DST/sign.log
 }
 
 pack() {
