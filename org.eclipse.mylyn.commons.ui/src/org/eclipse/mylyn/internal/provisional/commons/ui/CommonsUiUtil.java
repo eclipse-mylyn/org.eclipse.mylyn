@@ -38,11 +38,12 @@ public class CommonsUiUtil {
 						runnable.run(monitor);
 					} catch (CoreException e) {
 						throw new InvocationTargetException(e);
+					} catch (OperationCanceledException e) {
+						throw new InterruptedException();
 					} finally {
 						monitor.done();
 					}
 				}
-
 			};
 			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(runner);
 		} catch (InvocationTargetException e) {
@@ -65,11 +66,12 @@ public class CommonsUiUtil {
 						runnable.run(monitor);
 					} catch (CoreException e) {
 						throw new InvocationTargetException(e);
+					} catch (OperationCanceledException e) {
+						throw new InterruptedException();
 					} finally {
 						monitor.done();
 					}
 				}
-
 			};
 			context.run(true, true, runner);
 		} catch (InvocationTargetException e) {
