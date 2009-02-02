@@ -13,7 +13,6 @@ package org.eclipse.mylyn.tasks.ui.wizards;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.Messages;
@@ -70,26 +69,35 @@ public class TaskRepositoryWizardDialog extends WizardDialog {
 		if (isHelpAvailable()) {
 			createHelpControl(composite);
 		}
-		// if any pages require validation, create validate button
-		for (IWizardPage page : getWizard().getPages()) {
-			if (page instanceof AbstractRepositorySettingsPage
-					&& ((AbstractRepositorySettingsPage) page).needsValidation()) {
-				validateServerButton = createButton(composite, VALIDATE_BUTTON_ID,
-						Messages.AbstractRepositorySettingsPage_Validate_Settings, false);
-				validateServerButton.setImage(CommonImages.getImage(TasksUiImages.REPOSITORY_SYNCHRONIZE_SMALL));
-				setButtonLayoutData(validateServerButton);
-				Label filler = new Label(composite, SWT.NONE);
-				filler.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
-				((GridLayout) composite.getLayout()).numColumns++;
 
-				// found a page that requires validate button, so get out of loop here
-				break;
-			}
-		}
+		validateServerButton = createButton(composite, VALIDATE_BUTTON_ID,
+				Messages.AbstractRepositorySettingsPage_Validate_Settings, false);
+		validateServerButton.setImage(CommonImages.getImage(TasksUiImages.REPOSITORY_SYNCHRONIZE_SMALL));
+		validateServerButton.setVisible(false);
+		setButtonLayoutData(validateServerButton);
+		Label filler = new Label(composite, SWT.NONE);
+		filler.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
+		((GridLayout) composite.getLayout()).numColumns++;
 
 		super.createButtonsForButtonBar(composite);
 
 		return composite;
+	}
+
+	@Override
+	public void updateButtons() {
+		if (getCurrentPage() instanceof AbstractRepositorySettingsPage
+				&& ((AbstractRepositorySettingsPage) getCurrentPage()).needsValidation()) {
+
+			if (!validateServerButton.isVisible()) {
+				validateServerButton.setVisible(true);
+			}
+		} else {
+			if (validateServerButton != null && validateServerButton.isVisible()) {
+				validateServerButton.setVisible(false);
+			}
+		}
+		super.updateButtons();
 	}
 
 	/**
@@ -102,14 +110,12 @@ public class TaskRepositoryWizardDialog extends WizardDialog {
 	@Override
 	protected void buttonPressed(int buttonId) {
 		if (buttonId == VALIDATE_BUTTON_ID) {
-			for (IWizardPage page : getWizard().getPages()) {
-				if (page instanceof AbstractRepositorySettingsPage) {
-					((AbstractRepositorySettingsPage) page).validateSettings();
-				}
+			if (getCurrentPage() instanceof AbstractRepositorySettingsPage) {
+				((AbstractRepositorySettingsPage) getCurrentPage()).validateSettings();
 			}
 		} else {
 			super.buttonPressed(buttonId);
 		}
 	}
-	
+
 }
