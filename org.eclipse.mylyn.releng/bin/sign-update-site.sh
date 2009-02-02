@@ -81,9 +81,10 @@ then
  unzip extras
  unzip incubator
 
+ echo Creating archive for singing, output is logged to $DST/sign.log
  /bin/rm $DST/mylyn.zip || true
  cd $TMP
- /usr/bin/find -name "org.eclipse.mylyn*.jar" | zip $DST/mylyn.zip -@
+ /usr/bin/find -name "org.eclipse.mylyn*.jar" | zip $DST/mylyn.zip -@ > $DST/sign.log
 
  # sign
 
@@ -93,7 +94,7 @@ then
 fi
 
 I=0
-while [ $I -lt 20 ] && [ ! -e $OUT/mylyn.zip ]; do
+while [ $I -lt 30 ] && [ ! -e $OUT/mylyn.zip ]; do
   echo Waiting for $OUT/mylyn.zip
   sleep 30
   let I=I+1
@@ -108,7 +109,8 @@ fi
 
 # repack site
 
-/usr/bin/unzip -o -d $TMP $OUT/mylyn.zip
+echo Unzipping signed files, output is logged to $DST/sign.log
+/usr/bin/unzip -o -d $TMP $OUT/mylyn.zip >> $DST/sign.log
 rezip e3.3
 rezip e3.4
 rezip extras
