@@ -31,14 +31,9 @@
             id="org.eclipse.mylyn.wikitext.tasks.ui.editor.textileTaskEditorExtension"
             name="%taskEditorExtension.name.1">
       </taskEditorExtension>
-      <taskEditorExtension
-            class="org.eclipse.mylyn.internal.wikitext.tasks.ui.editor.BugzillaTextileMarkupTaskEditorExtension"
-            id="org.eclipse.mylyn.wikitext.tasks.ui.editor.bugzillaTextileTaskEditorExtension"
-            name="%taskEditorExtension.name.2">
-      </taskEditorExtension>
       <repositoryAssociation
             connectorKind="bugzilla"
-            taskEditorExtension="org.eclipse.mylyn.wikitext.tasks.ui.editor.bugzillaTextileTaskEditorExtension">
+            taskEditorExtension="org.eclipse.mylyn.wikitext.tasks.ui.editor.textileTaskEditorExtension">
       </repositoryAssociation>
       <repositoryAssociation
             connectorKind="local"

@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.textile.core;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.mylyn.internal.wikitext.textile.core.TextileContentState;
@@ -30,9 +29,10 @@ import org.eclipse.mylyn.internal.wikitext.textile.core.phrase.SimpleTextilePhra
 import org.eclipse.mylyn.internal.wikitext.textile.core.token.FootnoteReferenceReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.textile.core.token.HyperlinkReplacementToken;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 import org.eclipse.mylyn.wikitext.core.parser.markup.ContentState;
-import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration;
 import org.eclipse.mylyn.wikitext.core.parser.markup.phrase.HtmlEndTagPhraseModifier;
 import org.eclipse.mylyn.wikitext.core.parser.markup.phrase.HtmlStartTagPhraseModifier;
 import org.eclipse.mylyn.wikitext.core.parser.markup.token.AcronymReplacementToken;
@@ -51,61 +51,60 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternEntityReferenc
  * @author David Green
  * @since 1.0
  */
-public class TextileLanguage extends MarkupLanguage {
-
-	// we use the template pattern for creating new blocks
-	private final List<Block> blocks = new ArrayList<Block>();
-
-	private final List<Block> paragraphBreakingBlocks = new ArrayList<Block>();
-
-	private final PatternBasedSyntax tokenSyntax = new PatternBasedSyntax();
-
-	private final PatternBasedSyntax phraseModifierSyntax = new PatternBasedSyntax();
-
-	@Override
-	protected PatternBasedSyntax getPhraseModifierSyntax() {
-		return phraseModifierSyntax;
-	}
-
-	@Override
-	protected PatternBasedSyntax getReplacementTokenSyntax() {
-		return tokenSyntax;
-	}
+public class TextileLanguage extends AbstractMarkupLanguage {
 
 	public TextileLanguage() {
 		setName("Textile"); //$NON-NLS-1$
-		initializeSyntax();
 	}
 
-	protected void initializeSyntax() {
-		initializeBlocks();
-		initializePhraseModifiers();
-		initializeTokens();
+	/**
+	 * subclasses may override this method to add blocks to the Textile language. Overriding classes should call
+	 * <code>super.addBlockExtensions(blocks,paragraphBreakingBlocks)</code> if the default language extensions are
+	 * desired (glossary and table of contents).
+	 * 
+	 * @param blocks
+	 *            the list of blocks to which extensions may be added
+	 * @param paragraphBreakingBlocks
+	 *            the list of blocks that end a paragraph
+	 */
+	@Override
+	protected void addBlockExtensions(MarkupLanguageConfiguration configuration, List<Block> blocks,
+			List<Block> paragraphBreakingBlocks) {
+		blocks.add(new TextileGlossaryBlock());
+		blocks.add(new TableOfContentsBlock());
+		super.addBlockExtensions(configuration, blocks, paragraphBreakingBlocks);
 	}
 
-	protected void initializeTokens() {
-		tokenSyntax.add(new EntityReferenceReplacementToken("(tm)", "#8482")); //$NON-NLS-1$ //$NON-NLS-2$
-		tokenSyntax.add(new EntityReferenceReplacementToken("(TM)", "#8482")); //$NON-NLS-1$ //$NON-NLS-2$
-		tokenSyntax.add(new EntityReferenceReplacementToken("(c)", "#169")); //$NON-NLS-1$ //$NON-NLS-2$
-		tokenSyntax.add(new EntityReferenceReplacementToken("(C)", "#169")); //$NON-NLS-1$ //$NON-NLS-2$
-		tokenSyntax.add(new EntityReferenceReplacementToken("(r)", "#174")); //$NON-NLS-1$ //$NON-NLS-2$
-		tokenSyntax.add(new EntityReferenceReplacementToken("(R)", "#174")); //$NON-NLS-1$ //$NON-NLS-2$
-		tokenSyntax.add(new HyperlinkReplacementToken());
-		tokenSyntax.add(new FootnoteReferenceReplacementToken());
-		tokenSyntax.add(new EntityWrappingReplacementToken("\"", "#8220", "#8221")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		tokenSyntax.add(new EntityWrappingReplacementToken("'", "#8216", "#8217")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\w)(')(?=\\w))", "#8217")); // apostrophe //$NON-NLS-1$ //$NON-NLS-2$
-		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\w\\s)(--)(?=\\s\\w))", "#8212")); // emdash //$NON-NLS-1$ //$NON-NLS-2$
-		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\w\\s)(-)(?=\\s\\w))", "#8211")); // endash //$NON-NLS-1$ //$NON-NLS-2$
-		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\d\\s)(x)(?=\\s\\d))", "#215")); // mul //$NON-NLS-1$ //$NON-NLS-2$
-		tokenSyntax.add(new AcronymReplacementToken());
-
-		addTokenExtensions(tokenSyntax);
+	@Override
+	protected ContentState createState() {
+		return new TextileContentState();
 	}
 
-	protected void initializePhraseModifiers() {
-		phraseModifierSyntax.add(new HtmlEndTagPhraseModifier(isEscapingHtml()));
-		phraseModifierSyntax.add(new HtmlStartTagPhraseModifier(isEscapingHtml()));
+	@Override
+	protected void addStandardBlocks(MarkupLanguageConfiguration configuration, List<Block> blocks,
+			List<Block> paragraphBreakingBlocks) {
+		// IMPORTANT NOTE: Most items below have order dependencies.  DO NOT REORDER ITEMS BELOW!!
+
+		blocks.add(new HeadingBlock());
+		ListBlock listBlock = new ListBlock();
+		blocks.add(listBlock);
+		paragraphBreakingBlocks.add(listBlock);
+		blocks.add(new PreformattedBlock());
+		blocks.add(new QuoteBlock());
+		blocks.add(new CodeBlock());
+		blocks.add(new FootnoteBlock());
+		TableBlock tableBlock = new TableBlock();
+		blocks.add(tableBlock);
+		paragraphBreakingBlocks.add(tableBlock);
+	}
+
+	@Override
+	protected void addStandardPhraseModifiers(MarkupLanguageConfiguration configuration,
+			PatternBasedSyntax phraseModifierSyntax) {
+		boolean escapingHtml = configuration == null ? false : configuration.isEscapingHtmlAndXml();
+
+		phraseModifierSyntax.add(new HtmlEndTagPhraseModifier(escapingHtml));
+		phraseModifierSyntax.add(new HtmlStartTagPhraseModifier(escapingHtml));
 		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.,\\\"'?!;:\\)\\(\\{\\}\\[\\]])|^)(?:", 0); //$NON-NLS-1$
 		phraseModifierSyntax.add(new EscapeTextilePhraseModifier());
 		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("**", SpanType.BOLD, true)); //$NON-NLS-1$
@@ -121,88 +120,33 @@ public class TextileLanguage extends MarkupLanguage {
 		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("-", SpanType.DELETED, true)); //$NON-NLS-1$
 		phraseModifierSyntax.add(new ImageTextilePhraseModifier());
 		phraseModifierSyntax.endGroup(")(?=\\W|$)", 0); //$NON-NLS-1$
-
-		addPhraseModifierExtensions(phraseModifierSyntax);
-	}
-
-	/**
-	 * Indicate if this language should escape HTML tags. The default is false.
-	 */
-	protected boolean isEscapingHtml() {
-		return false;
-	}
-
-	protected void initializeBlocks() {
-		// IMPORTANT NOTE: Most items below have order dependencies.  DO NOT REORDER ITEMS BELOW!!
-
-		blocks.add(new HeadingBlock());
-		ListBlock listBlock = new ListBlock();
-		blocks.add(listBlock);
-		paragraphBreakingBlocks.add(listBlock);
-		blocks.add(new PreformattedBlock());
-		blocks.add(new QuoteBlock());
-		blocks.add(new CodeBlock());
-		blocks.add(new FootnoteBlock());
-		TableBlock tableBlock = new TableBlock();
-		blocks.add(tableBlock);
-		paragraphBreakingBlocks.add(tableBlock);
-
-		// extensions
-		addBlockExtensions(blocks, paragraphBreakingBlocks);
-		// ~extensions
-
-		blocks.add(new ParagraphBlock()); // ORDER DEPENDENCY: this must come last
-	}
-
-	/**
-	 * subclasses may override this method to add blocks to the Textile language. Overriding classes should call
-	 * <code>super.addBlockExtensions(blocks,paragraphBreakingBlocks)</code> if the default language extensions are
-	 * desired (glossary and table of contents).
-	 * 
-	 * @param blocks
-	 *            the list of blocks to which extensions may be added
-	 * @param paragraphBreakingBlocks
-	 *            the list of blocks that end a paragraph
-	 */
-	protected void addBlockExtensions(List<Block> blocks, List<Block> paragraphBreakingBlocks) {
-		blocks.add(new TextileGlossaryBlock());
-		blocks.add(new TableOfContentsBlock());
-	}
-
-	/**
-	 * subclasses may override this method to add tokens to the Textile language. Overriding classes should call
-	 * <code>super.addTokenExtensions(tokenSyntax)</code> if the default language extensions are desired.
-	 * 
-	 * @param tokenSyntax
-	 *            the token syntax
-	 */
-	protected void addTokenExtensions(PatternBasedSyntax tokenSyntax) {
-		// no token extensions
-	}
-
-	/**
-	 * subclasses may override this method to add phrases to the Textile language. Overriding classes should call
-	 * <code>super.addPhraseModifierExtensions(phraseModifierSyntax)</code> if the default language extensions are
-	 * desired.
-	 * 
-	 * @param phraseModifierSyntax
-	 *            the phrase modifier syntax
-	 */
-	protected void addPhraseModifierExtensions(PatternBasedSyntax phraseModifierSyntax) {
-		// no phrase extensions
-	}
-
-	public List<Block> getParagraphBreakingBlocks() {
-		return paragraphBreakingBlocks;
 	}
 
 	@Override
-	public List<Block> getBlocks() {
-		return blocks;
+	protected void addStandardTokens(MarkupLanguageConfiguration configuration, PatternBasedSyntax tokenSyntax) {
+		tokenSyntax.add(new EntityReferenceReplacementToken("(tm)", "#8482")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(TM)", "#8482")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(c)", "#169")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(C)", "#169")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(r)", "#174")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(R)", "#174")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new HyperlinkReplacementToken());
+		tokenSyntax.add(new FootnoteReferenceReplacementToken());
+		tokenSyntax.add(new EntityWrappingReplacementToken("\"", "#8220", "#8221")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		tokenSyntax.add(new EntityWrappingReplacementToken("'", "#8216", "#8217")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\w)(')(?=\\w))", "#8217")); // apostrophe //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\w\\s)(--)(?=\\s\\w))", "#8212")); // emdash //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\w\\s)(-)(?=\\s\\w))", "#8211")); // endash //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\d\\s)(x)(?=\\s\\d))", "#215")); // mul //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new AcronymReplacementToken());
 	}
 
 	@Override
-	protected ContentState createState() {
-		return new TextileContentState();
+	protected Block createParagraphBlock(MarkupLanguageConfiguration configuration) {
+		ParagraphBlock paragraphBlock = new ParagraphBlock();
+		if (configuration != null && !configuration.isEnableUnwrappedParagraphs()) {
+			paragraphBlock.setEnableUnwrapped(false);
+		}
+		return paragraphBlock;
 	}
 }

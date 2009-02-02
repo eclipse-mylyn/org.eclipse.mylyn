@@ -19,6 +19,7 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.DocBookDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.builder.RecordingDocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 
 /**
  * 
@@ -499,5 +500,16 @@ public class MediaWikiLanguageTest extends TestCase {
 		String html = parser.parseToHtml(markup);
 		System.out.println(html);
 		assertTrue(html.contains("<body><p>a normal para</p><h1 id=\"h1\">h1</h1><p>normal</p></body>"));
+	}
+
+	public void testClone() {
+		parser.parseToHtml("Test");
+		MarkupLanguage markupLanguage = parser.getMarkupLanguage();
+		MarkupLanguage copy = markupLanguage.clone();
+		assertEquals(markupLanguage.getBlocks().size(), copy.getBlocks().size());
+		assertEquals(markupLanguage.getBlocks().get(0).getClass(), copy.getBlocks().get(0).getClass());
+		assertSame(copy, copy.getBlocks().get(0).getMarkupLanguage());
+		assertNull(copy.getBlocks().get(0).getParser());
+		assertNull(copy.getBlocks().get(0).getState());
 	}
 }

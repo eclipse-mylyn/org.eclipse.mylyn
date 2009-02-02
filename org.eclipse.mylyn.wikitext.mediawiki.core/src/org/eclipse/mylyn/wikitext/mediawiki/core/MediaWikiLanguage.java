@@ -11,7 +11,6 @@
 package org.eclipse.mylyn.wikitext.mediawiki.core;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,9 +29,11 @@ import org.eclipse.mylyn.internal.wikitext.mediawiki.core.token.ImageReplacement
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.token.LineBreakToken;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.token.TemplateReplacementToken;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 import org.eclipse.mylyn.wikitext.core.parser.markup.IdGenerationStrategy;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration;
 import org.eclipse.mylyn.wikitext.core.parser.markup.phrase.HtmlCommentPhraseModifier;
 import org.eclipse.mylyn.wikitext.core.parser.markup.phrase.LimitedHtmlEndTagPhraseModifier;
 import org.eclipse.mylyn.wikitext.core.parser.markup.phrase.LimitedHtmlStartTagPhraseModifier;
@@ -48,151 +49,16 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternLiteralReplace
  * @author David Green
  * @since 1.0
  */
-public class MediaWikiLanguage extends MarkupLanguage {
+public class MediaWikiLanguage extends AbstractMarkupLanguage {
 	private static final String CATEGORY_PREFIX = ":"; //$NON-NLS-1$
 
 	private static final Pattern STANDARD_EXTERNAL_LINK_FORMAT = Pattern.compile(".*?/([^/]+)/(\\{\\d+\\})"); //$NON-NLS-1$
 
 	private static final Pattern QUALIFIED_INTERNAL_LINK = Pattern.compile("([^/]+)/(.+)"); //$NON-NLS-1$
 
-	private final List<Block> blocks = new ArrayList<Block>();
-
-	private final List<Block> paragraphBreakingBlocks = new ArrayList<Block>();
-
-	private final PatternBasedSyntax tokenSyntax = new PatternBasedSyntax();
-
-	private final PatternBasedSyntax phraseModifierSyntax = new PatternBasedSyntax();
-
 	public MediaWikiLanguage() {
 		setName("MediaWiki"); //$NON-NLS-1$
 		setInternalLinkPattern("/wiki/{0}"); //$NON-NLS-1$
-		initializeSyntax();
-	}
-
-	protected void initializeSyntax() {
-		initializeBlocks();
-		initializePhraseModifiers();
-		initializeTokens();
-	}
-
-	protected void initializeTokens() {
-		tokenSyntax.add(new LineBreakToken());
-		tokenSyntax.add(new EntityReferenceReplacementToken("(tm)", "#8482")); //$NON-NLS-1$ //$NON-NLS-2$
-		tokenSyntax.add(new EntityReferenceReplacementToken("(TM)", "#8482")); //$NON-NLS-1$ //$NON-NLS-2$
-		tokenSyntax.add(new EntityReferenceReplacementToken("(c)", "#169")); //$NON-NLS-1$ //$NON-NLS-2$
-		tokenSyntax.add(new EntityReferenceReplacementToken("(C)", "#169")); //$NON-NLS-1$ //$NON-NLS-2$
-		tokenSyntax.add(new EntityReferenceReplacementToken("(r)", "#174")); //$NON-NLS-1$ //$NON-NLS-2$
-		tokenSyntax.add(new EntityReferenceReplacementToken("(R)", "#174")); //$NON-NLS-1$ //$NON-NLS-2$
-		tokenSyntax.add(new ImageReplacementToken());
-		tokenSyntax.add(new HyperlinkInternalReplacementToken());
-		tokenSyntax.add(new HyperlinkExternalReplacementToken());
-		tokenSyntax.add(new ImpliedHyperlinkReplacementToken());
-		tokenSyntax.add(new PatternLiteralReplacementToken("(?:(?<=\\w\\s)(----)(?=\\s\\w))", "<hr/>")); // horizontal rule //$NON-NLS-1$ //$NON-NLS-2$
-		tokenSyntax.add(new TemplateReplacementToken());
-		tokenSyntax.add(new org.eclipse.mylyn.internal.wikitext.mediawiki.core.token.EntityReferenceReplacementToken());
-
-		addTokenExtensions(tokenSyntax);
-	}
-
-	protected void initializePhraseModifiers() {
-		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.,\\\"'?!;:\\)\\(\\{\\}\\[\\]])|^)(?:", 0); //$NON-NLS-1$
-		phraseModifierSyntax.add(new EscapePhraseModifier());
-		phraseModifierSyntax.add(new SimplePhraseModifier("'''''", new SpanType[] { SpanType.BOLD, SpanType.ITALIC }, //$NON-NLS-1$
-				true));
-		phraseModifierSyntax.add(new SimplePhraseModifier("'''", SpanType.BOLD, true)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimplePhraseModifier("''", SpanType.ITALIC, true)); //$NON-NLS-1$
-		phraseModifierSyntax.endGroup(")(?=\\W|$)", 0); //$NON-NLS-1$
-
-		String[] allowedHtmlTags = new String[] { // HANDLED BY LineBreakToken "<br>",
-				// HANDLED BY LineBreakToken "<br/>",
-				"b", "big", "blockquote", "caption", "center", "cite", "code", "dd", "del", "div", "dl", "dt", "em", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$ //$NON-NLS-13$
-				"font", "h1", "h2", "h3", "h4", "h5", "h6", "hr", "i", "ins", "li", "ol", "p", "pre", "rb", "rp", "rt", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$ //$NON-NLS-13$ //$NON-NLS-14$ //$NON-NLS-15$ //$NON-NLS-16$ //$NON-NLS-17$
-				"ruby", "s", "small", "span", "strike", "strong", "sub", "sup", "table", "td", "th", "tr", "tt", "u", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$ //$NON-NLS-13$ //$NON-NLS-14$
-				"ul", "var" }; //$NON-NLS-1$ //$NON-NLS-2$
-		phraseModifierSyntax.add(new LimitedHtmlEndTagPhraseModifier(allowedHtmlTags));
-		phraseModifierSyntax.add(new LimitedHtmlStartTagPhraseModifier(allowedHtmlTags));
-		phraseModifierSyntax.add(new HtmlCommentPhraseModifier());
-
-		addPhraseModifierExtensions(phraseModifierSyntax);
-	}
-
-	protected void initializeBlocks() {
-		// IMPORTANT NOTE: Most items below have order dependencies.  DO NOT REORDER ITEMS BELOW!!
-
-		blocks.add(new HeadingBlock());
-		blocks.add(new ListBlock());
-		blocks.add(new PreformattedBlock());
-		blocks.add(new TableBlock());
-		final ParagraphBlock paragraphBlock = new ParagraphBlock();
-		blocks.add(paragraphBlock); // ORDER DEPENDENCY: this one must be last!!
-
-		// extensions
-		addBlockExtensions(blocks, paragraphBreakingBlocks);
-		// ~extensions
-
-		for (Block block : blocks) {
-			if (block == paragraphBlock) {
-				continue;
-			}
-			paragraphBreakingBlocks.add(block);
-		}
-
-	}
-
-	/**
-	 * subclasses may override this method to add tokens to the MediaWiki language. Overriding classes should call
-	 * <code>super.addTokenExtensions(tokenSyntax)</code> if the default language extensions are desired.
-	 * 
-	 * @param tokenSyntax
-	 *            the token syntax
-	 */
-	protected void addTokenExtensions(PatternBasedSyntax tokenSyntax) {
-		// no token extensions
-	}
-
-	/**
-	 * subclasses may override this method to add phrases to the MediaWiki language. Overriding classes should call
-	 * <code>super.addPhraseModifierExtensions(phraseModifierSyntax)</code> if the default language extensions are
-	 * desired.
-	 * 
-	 * @param phraseModifierSyntax
-	 *            the phrase modifier syntax
-	 */
-	protected void addPhraseModifierExtensions(PatternBasedSyntax phraseModifierSyntax) {
-		// no phrase extensions
-	}
-
-	/**
-	 * subclasses may override this method to add blocks to the MediaWiki language. Overriding classes should call
-	 * <code>super.addBlockExtensions(blocks,paragraphBreakingBlocks)</code> if the default language extensions are
-	 * desired.
-	 * 
-	 * @param blocks
-	 *            the list of blocks to which extensions may be added
-	 * @param paragraphBreakingBlocks
-	 *            the list of blocks that end a paragraph
-	 */
-	protected void addBlockExtensions(List<Block> blocks2, List<Block> paragraphBreakingBlocks) {
-		// no block extensions
-	}
-
-	@Override
-	protected PatternBasedSyntax getPhraseModifierSyntax() {
-		return phraseModifierSyntax;
-	}
-
-	@Override
-	protected PatternBasedSyntax getReplacementTokenSyntax() {
-		return tokenSyntax;
-	}
-
-	@Override
-	public List<Block> getBlocks() {
-		return blocks;
-	}
-
-	public List<Block> getParagraphBreakingBlocks() {
-		return paragraphBreakingBlocks;
 	}
 
 	/**
@@ -228,4 +94,87 @@ public class MediaWikiLanguage extends MarkupLanguage {
 	public IdGenerationStrategy getIdGenerationStrategy() {
 		return new MediaWikiIdGenerationStrategy();
 	}
+
+	@Override
+	protected void addStandardBlocks(MarkupLanguageConfiguration configuration, List<Block> blocks,
+			List<Block> paragraphBreakingBlocks) {
+		// IMPORTANT NOTE: Most items below have order dependencies.  DO NOT REORDER ITEMS BELOW!!
+
+		blocks.add(new HeadingBlock());
+		blocks.add(new ListBlock());
+
+		if (hasPreformattedBlock(configuration)) {
+			// preformatted blocks are lines that start with a single space, and thus are non-optimal for
+			// repository usage.
+			blocks.add(new PreformattedBlock());
+		}
+
+		blocks.add(new TableBlock());
+
+		for (Block block : blocks) {
+			if (block instanceof ParagraphBlock) {
+				continue;
+			}
+			paragraphBreakingBlocks.add(block);
+		}
+
+	}
+
+	private boolean hasPreformattedBlock(MarkupLanguageConfiguration configuration) {
+		return configuration == null ? true : !configuration.isOptimizeForRepositoryUsage();
+	}
+
+	@Override
+	protected void addStandardPhraseModifiers(MarkupLanguageConfiguration configuration,
+			PatternBasedSyntax phraseModifierSyntax) {
+		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.,\\\"'?!;:\\)\\(\\{\\}\\[\\]])|^)(?:", 0); //$NON-NLS-1$
+		phraseModifierSyntax.add(new EscapePhraseModifier());
+		phraseModifierSyntax.add(new SimplePhraseModifier("'''''", new SpanType[] { SpanType.BOLD, SpanType.ITALIC }, //$NON-NLS-1$
+				true));
+		phraseModifierSyntax.add(new SimplePhraseModifier("'''", SpanType.BOLD, true)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("''", SpanType.ITALIC, true)); //$NON-NLS-1$
+		phraseModifierSyntax.endGroup(")(?=\\W|$)", 0); //$NON-NLS-1$
+
+		boolean escapingHtml = configuration == null ? false : configuration.isEscapingHtmlAndXml();
+
+		if (!escapingHtml) {
+			String[] allowedHtmlTags = new String[] { // HANDLED BY LineBreakToken "<br>",
+					// HANDLED BY LineBreakToken "<br/>",
+					"b", "big", "blockquote", "caption", "center", "cite", "code", "dd", "del", "div", "dl", "dt", "em", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$ //$NON-NLS-13$
+					"font", "h1", "h2", "h3", "h4", "h5", "h6", "hr", "i", "ins", "li", "ol", "p", "pre", "rb", "rp", "rt", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$ //$NON-NLS-13$ //$NON-NLS-14$ //$NON-NLS-15$ //$NON-NLS-16$ //$NON-NLS-17$
+					"ruby", "s", "small", "span", "strike", "strong", "sub", "sup", "table", "td", "th", "tr", "tt", "u", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$ //$NON-NLS-13$ //$NON-NLS-14$
+					"ul", "var" }; //$NON-NLS-1$ //$NON-NLS-2$
+			phraseModifierSyntax.add(new LimitedHtmlEndTagPhraseModifier(allowedHtmlTags));
+			phraseModifierSyntax.add(new LimitedHtmlStartTagPhraseModifier(allowedHtmlTags));
+			phraseModifierSyntax.add(new HtmlCommentPhraseModifier());
+		}
+	}
+
+	@Override
+	protected void addStandardTokens(MarkupLanguageConfiguration configuration, PatternBasedSyntax tokenSyntax) {
+		tokenSyntax.add(new LineBreakToken());
+		tokenSyntax.add(new EntityReferenceReplacementToken("(tm)", "#8482")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(TM)", "#8482")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(c)", "#169")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(C)", "#169")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(r)", "#174")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(R)", "#174")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new ImageReplacementToken());
+		tokenSyntax.add(new HyperlinkInternalReplacementToken());
+		tokenSyntax.add(new HyperlinkExternalReplacementToken());
+		tokenSyntax.add(new ImpliedHyperlinkReplacementToken());
+		tokenSyntax.add(new PatternLiteralReplacementToken("(?:(?<=\\w\\s)(----)(?=\\s\\w))", "<hr/>")); // horizontal rule //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new TemplateReplacementToken());
+		tokenSyntax.add(new org.eclipse.mylyn.internal.wikitext.mediawiki.core.token.EntityReferenceReplacementToken());
+	}
+
+	@Override
+	protected Block createParagraphBlock(MarkupLanguageConfiguration configuration) {
+		ParagraphBlock paragraphBlock = new ParagraphBlock(hasPreformattedBlock(configuration));
+		if (configuration != null && configuration.isNewlinesMustCauseLineBreak()) {
+			paragraphBlock.setNewlinesCauseLineBreak(true);
+		}
+		return paragraphBlock;
+	}
+
 }

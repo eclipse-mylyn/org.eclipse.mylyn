@@ -26,7 +26,20 @@ public class ParagraphBlock extends Block {
 
 	private Block nestedBlock = null;
 
-	public ParagraphBlock() {
+	private boolean newlinesCauseLineBreak = false;
+
+	private final boolean testPreformattedBlocks;
+
+	public ParagraphBlock(boolean testPreformattedBlocks) {
+		this.testPreformattedBlocks = testPreformattedBlocks;
+	}
+
+	public boolean isNewlinesCauseLineBreak() {
+		return newlinesCauseLineBreak;
+	}
+
+	public void setNewlinesCauseLineBreak(boolean newlinesCauseLineBreak) {
+		this.newlinesCauseLineBreak = newlinesCauseLineBreak;
 	}
 
 	@Override
@@ -77,14 +90,18 @@ public class ParagraphBlock extends Block {
 			}
 			nestedBlock.processLine(line, offset);
 		} else {
-			if (offset == 0 && line.length() > 0 && line.charAt(0) == ' ') {
+			if (testPreformattedBlocks && offset == 0 && line.length() > 0 && line.charAt(0) == ' ') {
 				// a preformatted block.
 				setClosed(true);
 				return 0;
 			}
 			if (blockLineCount != 1) {
-				// note: newlines don't automatically convert to line breaks
-				builder.characters("\n"); //$NON-NLS-1$
+				// note: normally newlines don't automatically convert to line breaks
+				if (newlinesCauseLineBreak) {
+					builder.lineBreak();
+				} else {
+					builder.characters("\n"); //$NON-NLS-1$
+				}
 			}
 			dialect.emitMarkupLine(getParser(), state, line, offset);
 		}

@@ -95,11 +95,7 @@ public abstract class Block extends Processor implements Cloneable {
 	 */
 	@Override
 	public Block clone() {
-		try {
-			return (Block) super.clone();
-		} catch (CloneNotSupportedException e) {
-			throw new IllegalStateException();
-		}
+		return (Block) super.clone();
 	}
 
 }

@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.wikitext.twiki.tests;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.twiki.core.TWikiLanguage;
 
 public class TWikiLanguageTest extends TestCase {
@@ -234,5 +235,15 @@ public class TWikiLanguageTest extends TestCase {
 			assertTrue(html.contains("<body><p>a <img border=\"0\" src=\"TWikiDocGraphics/" + iconType
 					+ ".gif\"/> text</p></body>"));
 		}
+	}
+
+	public void testClone() {
+		parser.parseToHtml("Test");
+		MarkupLanguage copy = language.clone();
+		assertEquals(language.getBlocks().size(), copy.getBlocks().size());
+		assertEquals(language.getBlocks().get(0).getClass(), copy.getBlocks().get(0).getClass());
+		assertSame(copy, copy.getBlocks().get(0).getMarkupLanguage());
+		assertNull(copy.getBlocks().get(0).getParser());
+		assertNull(copy.getBlocks().get(0).getState());
 	}
 }

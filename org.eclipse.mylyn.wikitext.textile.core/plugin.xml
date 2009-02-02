@@ -16,10 +16,6 @@
 		<language class="org.eclipse.mylyn.wikitext.textile.core.TextileLanguage"
 			name="Textile" fileExtensions="textile">
 		</language>
-		<language class="org.eclipse.mylyn.wikitext.textile.core.BugzillaTextileLanguage"
-			name="Textile Bugzilla Dialect"
-			extends="Textile">
-		</language>
 	</extension>
 	
    <extension

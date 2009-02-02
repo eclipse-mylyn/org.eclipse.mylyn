@@ -28,11 +28,12 @@ import org.eclipse.mylyn.internal.wikitext.confluence.core.phrase.SimplePhraseMo
 import org.eclipse.mylyn.internal.wikitext.confluence.core.phrase.SimpleWrappedPhraseModifier;
 import org.eclipse.mylyn.internal.wikitext.confluence.core.token.AnchorReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.confluence.core.token.HyperlinkReplacementToken;
-import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration;
 import org.eclipse.mylyn.wikitext.core.parser.markup.token.EntityReferenceReplacementToken;
 import org.eclipse.mylyn.wikitext.core.parser.markup.token.ImpliedHyperlinkReplacementToken;
 import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternEntityReferenceReplacementToken;
@@ -45,81 +46,31 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternLiteralReplace
  * @author David Green
  * @since 1.0
  */
-public class ConfluenceLanguage extends MarkupLanguage {
-
-	private final List<Block> blocks = new ArrayList<Block>();
-
-	private final List<Block> paragraphBreakingBlocks = new ArrayList<Block>();
-
+public class ConfluenceLanguage extends AbstractMarkupLanguage {
 	/**
 	 * blocks that may be nested in side a quote block
 	 * 
 	 * @see ExtendedQuoteBlock
 	 */
-	private final List<Block> nestedBlocks = new ArrayList<Block>();
-
-	private PatternBasedSyntax tokenSyntax;
-
-	private PatternBasedSyntax phraseModifierSyntax;
-
-	private boolean syntaxInitialized;
+	private List<Block> nestedBlocks = new ArrayList<Block>();
 
 	public ConfluenceLanguage() {
 		setName("Confluence"); //$NON-NLS-1$
 	}
 
 	@Override
-	public void processContent(MarkupParser parser, String markupContent, boolean asDocument) {
-		if (!syntaxInitialized) {
-			syntaxInitialized = true;
-			initializeSyntax();
-		}
-		super.processContent(parser, markupContent, asDocument);
+	protected void clearLanguageSyntax() {
+		super.clearLanguageSyntax();
+		nestedBlocks.clear();
 	}
 
-	protected void initializeSyntax() {
-		resetSyntax();
-
-		initializeBlocks();
-		initializePhraseModifiers();
-		initializeTokens();
+	public List<Block> getNestedBlocks() {
+		return nestedBlocks;
 	}
 
-	protected void initializeTokens() {
-		tokenSyntax.add(new EntityReferenceReplacementToken("(tm)", "#8482")); //$NON-NLS-1$ //$NON-NLS-2$
-		tokenSyntax.add(new EntityReferenceReplacementToken("(TM)", "#8482")); //$NON-NLS-1$ //$NON-NLS-2$
-		tokenSyntax.add(new EntityReferenceReplacementToken("(c)", "#169")); //$NON-NLS-1$ //$NON-NLS-2$
-		tokenSyntax.add(new EntityReferenceReplacementToken("(C)", "#169")); //$NON-NLS-1$ //$NON-NLS-2$
-		tokenSyntax.add(new EntityReferenceReplacementToken("(r)", "#174")); //$NON-NLS-1$ //$NON-NLS-2$
-		tokenSyntax.add(new EntityReferenceReplacementToken("(R)", "#174")); //$NON-NLS-1$ //$NON-NLS-2$
-		tokenSyntax.add(new HyperlinkReplacementToken());
-		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\w\\s)(---)(?=\\s\\w))", "#8212")); // emdash //$NON-NLS-1$ //$NON-NLS-2$
-		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\w\\s)(--)(?=\\s\\w))", "#8211")); // endash //$NON-NLS-1$ //$NON-NLS-2$
-		tokenSyntax.add(new PatternLiteralReplacementToken("(?:(?<=\\w\\s)(----)(?=\\s\\w))", "<hr/>")); // horizontal rule //$NON-NLS-1$ //$NON-NLS-2$
-		tokenSyntax.add(new PatternLineBreakReplacementToken("(\\\\\\\\)")); // line break //$NON-NLS-1$
-		tokenSyntax.add(new ImpliedHyperlinkReplacementToken());
-		tokenSyntax.add(new AnchorReplacementToken());
-
-		addTokenExtensions(tokenSyntax);
-	}
-
-	protected void initializePhraseModifiers() {
-		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.,\\\"'?!;:\\)\\(\\[\\]])|^)(?:", 0); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimplePhraseModifier("*", SpanType.STRONG, true)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimplePhraseModifier("_", SpanType.EMPHASIS, true)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimplePhraseModifier("??", SpanType.CITATION, true)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimplePhraseModifier("-", SpanType.DELETED, true)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimplePhraseModifier("+", SpanType.UNDERLINED, true)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimplePhraseModifier("^", SpanType.SUPERSCRIPT, false)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimplePhraseModifier("~", SpanType.SUBSCRIPT, false)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimpleWrappedPhraseModifier("{{", "}}", SpanType.MONOSPACE, false)); //$NON-NLS-1$ //$NON-NLS-2$
-		phraseModifierSyntax.add(new ImagePhraseModifier());
-		phraseModifierSyntax.endGroup(")(?=\\W|$)", 0); //$NON-NLS-1$
-
-		addPhraseModifierExtensions(phraseModifierSyntax);
-	}
-
-	protected void initializeBlocks() {
+	@Override
+	protected void addStandardBlocks(MarkupLanguageConfiguration configuration, List<Block> blocks,
+			List<Block> paragraphBreakingBlocks) {
 		// IMPORTANT NOTE: Most items below have order dependencies.  DO NOT REORDER ITEMS BELOW!!
 
 		HeadingBlock headingBlock = new HeadingBlock();
@@ -151,78 +102,59 @@ public class ConfluenceLanguage extends MarkupLanguage {
 		blocks.add(codeBlock);
 		paragraphBreakingBlocks.add(codeBlock);
 		blocks.add(new TableOfContentsBlock());
-
-		// extensions
-		addBlockExtensions(blocks, paragraphBreakingBlocks);
-		// ~extensions
-
-		blocks.add(new ParagraphBlock()); // ORDER DEPENDENCY: this must come last
-	}
-
-	private void resetSyntax() {
-		blocks.clear();
-		paragraphBreakingBlocks.clear();
-		tokenSyntax = new PatternBasedSyntax();
-		phraseModifierSyntax = new PatternBasedSyntax();
-	}
-
-	/**
-	 * subclasses may override this method to add blocks to the Textile language. Overriding classes should call
-	 * <code>super.addBlockExtensions(blocks,paragraphBreakingBlocks)</code> if the default language extensions are
-	 * desired.
-	 * 
-	 * @param blocks
-	 *            the list of blocks to which extensions may be added
-	 * @param paragraphBreakingBlocks
-	 *            the list of blocks that end a paragraph
-	 */
-	protected void addBlockExtensions(List<Block> blocks, List<Block> paragraphBreakingBlocks) {
-		// add block extensions
-	}
-
-	/**
-	 * subclasses may override this method to add tokens to the Textile language. Overriding classes should call
-	 * <code>super.addTokenExtensions(tokenSyntax)</code> if the default language extensions are desired.
-	 * 
-	 * @param tokenSyntax
-	 *            the token syntax
-	 */
-	protected void addTokenExtensions(PatternBasedSyntax tokenSyntax) {
-		// no token extensions
-	}
-
-	/**
-	 * subclasses may override this method to add phrases to the Textile language. Overriding classes should call
-	 * <code>super.addPhraseModifierExtensions(phraseModifierSyntax)</code> if the default language extensions are
-	 * desired.
-	 * 
-	 * @param phraseModifierSyntax
-	 *            the phrase modifier syntax
-	 */
-	protected void addPhraseModifierExtensions(PatternBasedSyntax phraseModifierSyntax) {
-		// no phrase extensions
 	}
 
 	@Override
-	protected PatternBasedSyntax getPhraseModifierSyntax() {
-		return phraseModifierSyntax;
+	protected void addStandardPhraseModifiers(MarkupLanguageConfiguration configuration,
+			PatternBasedSyntax phraseModifierSyntax) {
+		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.,\\\"'?!;:\\)\\(\\[\\]])|^)(?:", 0); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("*", SpanType.STRONG, true)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("_", SpanType.EMPHASIS, true)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("??", SpanType.CITATION, true)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("-", SpanType.DELETED, true)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("+", SpanType.UNDERLINED, true)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("^", SpanType.SUPERSCRIPT, false)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("~", SpanType.SUBSCRIPT, false)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimpleWrappedPhraseModifier("{{", "}}", SpanType.MONOSPACE, false)); //$NON-NLS-1$ //$NON-NLS-2$
+		phraseModifierSyntax.add(new ImagePhraseModifier());
+		phraseModifierSyntax.endGroup(")(?=\\W|$)", 0); //$NON-NLS-1$
 	}
 
 	@Override
-	protected PatternBasedSyntax getReplacementTokenSyntax() {
-		return tokenSyntax;
+	protected void addStandardTokens(MarkupLanguageConfiguration configuration, PatternBasedSyntax tokenSyntax) {
+		tokenSyntax.add(new EntityReferenceReplacementToken("(tm)", "#8482")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(TM)", "#8482")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(c)", "#169")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(C)", "#169")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(r)", "#174")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(R)", "#174")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new HyperlinkReplacementToken());
+		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\w\\s)(---)(?=\\s\\w))", "#8212")); // emdash //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\w\\s)(--)(?=\\s\\w))", "#8211")); // endash //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new PatternLiteralReplacementToken("(?:(?<=\\w\\s)(----)(?=\\s\\w))", "<hr/>")); // horizontal rule //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new PatternLineBreakReplacementToken("(\\\\\\\\)")); // line break //$NON-NLS-1$
+		tokenSyntax.add(new ImpliedHyperlinkReplacementToken());
+		tokenSyntax.add(new AnchorReplacementToken());
 	}
 
 	@Override
-	public List<Block> getBlocks() {
-		return blocks;
+	protected Block createParagraphBlock(MarkupLanguageConfiguration configuration) {
+		return new ParagraphBlock();
 	}
 
-	public List<Block> getParagraphBreakingBlocks() {
-		return paragraphBreakingBlocks;
+	@Override
+	protected void doDeepClone(MarkupLanguage c) {
+		ConfluenceLanguage confluenceLanguage = (ConfluenceLanguage) c;
+		confluenceLanguage.nestedBlocks = new ArrayList<Block>();
+		super.doDeepClone(c);
 	}
 
-	public List<Block> getNestedBlocks() {
-		return nestedBlocks;
+	@Override
+	protected void doDeepCloneBlock(AbstractMarkupLanguage c, Block block, Block blockCopy) {
+		ConfluenceLanguage copy = (ConfluenceLanguage) c;
+		super.doDeepCloneBlock(copy, block, blockCopy);
+		if (nestedBlocks.contains(block)) {
+			copy.nestedBlocks.add(blockCopy);
+		}
 	}
 }

@@ -14,7 +14,9 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.internal.wikitext.tasks.ui.util.Util;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration;
 
 /**
  * @author David Green
@@ -31,15 +33,10 @@ public class BugzillaTextileLanguageTest extends TestCase {
 
 	private void initParser() throws IOException {
 		parser = new MarkupParser();
-		parser.setMarkupLanaguage(new BugzillaTextileLanguage());
-	}
-
-	public void testName() {
-		BugzillaTextileLanguage bugzillaTextileLanguage = new BugzillaTextileLanguage();
-		assertNotNull(bugzillaTextileLanguage.getName());
-		assertNotNull(bugzillaTextileLanguage.getExtendsLanguage());
-		assertFalse(bugzillaTextileLanguage.getName().equals(bugzillaTextileLanguage.getExtendsLanguage()));
-		assertEquals(new TextileLanguage().getName(), bugzillaTextileLanguage.getExtendsLanguage());
+		TextileLanguage markupLanaguage = new TextileLanguage();
+		MarkupLanguageConfiguration configuration = Util.create("bugzilla");
+		markupLanaguage.configure(configuration);
+		parser.setMarkupLanaguage(markupLanaguage);
 	}
 
 	public void testQuotedBlock() {

@@ -11,7 +11,6 @@
 package org.eclipse.mylyn.wikitext.tracwiki.core;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.block.HeadingBlock;
@@ -35,8 +34,10 @@ import org.eclipse.mylyn.internal.wikitext.tracwiki.core.token.TicketAttachmentL
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.token.TicketLinkReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.token.WikiWordReplacementToken;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration;
 import org.eclipse.mylyn.wikitext.core.parser.markup.token.ImpliedHyperlinkReplacementToken;
 
 /**
@@ -45,110 +46,14 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.token.ImpliedHyperlinkRepla
  * @author David Green
  * @since 1.0
  */
-public class TracWikiLanguage extends MarkupLanguage {
-	private final List<Block> blocks = new ArrayList<Block>();
-
-	private final List<Block> paragraphNestableBlocks = new ArrayList<Block>();
+public class TracWikiLanguage extends AbstractMarkupLanguage {
 
 	private boolean autoLinking = true;
 
 	private String serverUrl;
 
-	private final PatternBasedSyntax tokenSyntax = new PatternBasedSyntax();
-
-	private final PatternBasedSyntax phraseModifierSyntax = new PatternBasedSyntax();
-
 	public TracWikiLanguage() {
 		setName("TracWiki"); //$NON-NLS-1$
-		initializeSyntax();
-	}
-
-	protected void initializeSyntax() {
-		initializeBlocks();
-		initializePhraseModifiers();
-		initializeTokens();
-	}
-
-	protected void initializeTokens() {
-		// IMPORTANT NOTE: Most items below have order dependencies.  DO NOT REORDER ITEMS BELOW!!
-		tokenSyntax.add(new BangEscapeToken());
-		tokenSyntax.add(new LineBreakToken());
-		tokenSyntax.add(new RevisionLogReplacementToken());
-		tokenSyntax.add(new ChangesetLinkReplacementToken());
-		tokenSyntax.add(new HyperlinkReplacementToken());
-		tokenSyntax.add(new ImpliedHyperlinkReplacementToken());
-		tokenSyntax.add(new TicketAttachmentLinkReplacementToken());
-		tokenSyntax.add(new TicketLinkReplacementToken());
-		tokenSyntax.add(new ReportLinkReplacementToken());
-		tokenSyntax.add(new MilestoneLinkReplacementToken());
-		tokenSyntax.add(new SourceLinkReplacementToken());
-		tokenSyntax.add(new WikiWordReplacementToken());
-
-		addTokenExtensions(tokenSyntax);
-	}
-
-	protected void initializePhraseModifiers() {
-		// IMPORTANT NOTE: Most items below have order dependencies.  DO NOT REORDER ITEMS BELOW!!
-		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.\\\"'?!;:\\)\\(\\{\\}\\[\\]-])|^)(?:", 0); // always starts at the start of a line or after a non-word character excluding '!' and '-' //$NON-NLS-1$
-		phraseModifierSyntax.add(new EscapePhraseModifier());
-		phraseModifierSyntax.add(new SimplePhraseModifier("'''''", new SpanType[] { SpanType.BOLD, SpanType.ITALIC }, //$NON-NLS-1$
-				true));
-		phraseModifierSyntax.add(new SimplePhraseModifier("'''", SpanType.BOLD, true)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimplePhraseModifier("''", SpanType.ITALIC, true)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimplePhraseModifier("__", SpanType.UNDERLINED, true)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new DeletedPhraseModifier());
-		phraseModifierSyntax.add(new SimplePhraseModifier("^", SpanType.SUPERSCRIPT, true)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimplePhraseModifier(",,", SpanType.SUBSCRIPT, true)); //$NON-NLS-1$
-		phraseModifierSyntax.endGroup(")(?=\\W|$)", 0); //$NON-NLS-1$
-
-		addPhraseModifierExtensions(phraseModifierSyntax);
-	}
-
-	protected void initializeBlocks() {
-		// IMPORTANT NOTE: Most items below have order dependencies.  DO NOT REORDER ITEMS BELOW!!
-
-		// TODO: images, macros, processors
-
-		ListBlock listBlock = new ListBlock();
-		blocks.add(listBlock);
-		paragraphNestableBlocks.add(listBlock);
-		HeadingBlock headingBlock = new HeadingBlock();
-		blocks.add(headingBlock);
-		paragraphNestableBlocks.add(listBlock);
-		PreformattedBlock preformattedBlock = new PreformattedBlock();
-		blocks.add(preformattedBlock);
-		paragraphNestableBlocks.add(preformattedBlock);
-		QuoteBlock quoteBlock = new QuoteBlock();
-		blocks.add(quoteBlock);
-		paragraphNestableBlocks.add(quoteBlock);
-		TableBlock tableBlock = new TableBlock();
-		blocks.add(tableBlock);
-		paragraphNestableBlocks.add(tableBlock);
-
-		// extensions
-		addBlockExtensions(blocks, paragraphNestableBlocks);
-		// ~extensions
-
-		blocks.add(new ParagraphBlock()); // ORDER DEPENDENCY: this one must be last!!
-	}
-
-	@Override
-	public List<Block> getBlocks() {
-		return blocks;
-	}
-
-	public List<Block> getParagraphNestableBlocks() {
-		return paragraphNestableBlocks;
-	}
-
-	@Override
-	protected PatternBasedSyntax getPhraseModifierSyntax() {
-		return phraseModifierSyntax;
-	}
-
-	@Override
-	protected PatternBasedSyntax getReplacementTokenSyntax() {
-		return tokenSyntax;
 	}
 
 	/**
@@ -363,6 +268,70 @@ public class TracWikiLanguage extends MarkupLanguage {
 	 */
 	protected void addPhraseModifierExtensions(PatternBasedSyntax phraseModifierSyntax) {
 		// no phrase extensions
+	}
+
+	@Override
+	protected void addStandardBlocks(MarkupLanguageConfiguration configuration, List<Block> blocks,
+			List<Block> paragraphBreakingBlocks) {
+		// IMPORTANT NOTE: Most items below have order dependencies.  DO NOT REORDER ITEMS BELOW!!
+
+		// TODO: images, macros, processors
+
+		ListBlock listBlock = new ListBlock();
+		blocks.add(listBlock);
+		paragraphBreakingBlocks.add(listBlock);
+		HeadingBlock headingBlock = new HeadingBlock();
+		blocks.add(headingBlock);
+		paragraphBreakingBlocks.add(listBlock);
+		PreformattedBlock preformattedBlock = new PreformattedBlock();
+		blocks.add(preformattedBlock);
+		paragraphBreakingBlocks.add(preformattedBlock);
+		QuoteBlock quoteBlock = new QuoteBlock();
+		blocks.add(quoteBlock);
+		paragraphBreakingBlocks.add(quoteBlock);
+		TableBlock tableBlock = new TableBlock();
+		blocks.add(tableBlock);
+		paragraphBreakingBlocks.add(tableBlock);
+
+	}
+
+	@Override
+	protected void addStandardPhraseModifiers(MarkupLanguageConfiguration configuration,
+			PatternBasedSyntax phraseModifierSyntax) {
+		// IMPORTANT NOTE: Most items below have order dependencies.  DO NOT REORDER ITEMS BELOW!!
+		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.\\\"'?!;:\\)\\(\\{\\}\\[\\]-])|^)(?:", 0); // always starts at the start of a line or after a non-word character excluding '!' and '-' //$NON-NLS-1$
+		phraseModifierSyntax.add(new EscapePhraseModifier());
+		phraseModifierSyntax.add(new SimplePhraseModifier("'''''", new SpanType[] { SpanType.BOLD, SpanType.ITALIC }, //$NON-NLS-1$
+				true));
+		phraseModifierSyntax.add(new SimplePhraseModifier("'''", SpanType.BOLD, true)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("''", SpanType.ITALIC, true)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("__", SpanType.UNDERLINED, true)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new DeletedPhraseModifier());
+		phraseModifierSyntax.add(new SimplePhraseModifier("^", SpanType.SUPERSCRIPT, true)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier(",,", SpanType.SUBSCRIPT, true)); //$NON-NLS-1$
+		phraseModifierSyntax.endGroup(")(?=\\W|$)", 0); //$NON-NLS-1$
+	}
+
+	@Override
+	protected void addStandardTokens(MarkupLanguageConfiguration configuration, PatternBasedSyntax tokenSyntax) {
+		// IMPORTANT NOTE: Most items below have order dependencies.  DO NOT REORDER ITEMS BELOW!!
+		tokenSyntax.add(new BangEscapeToken());
+		tokenSyntax.add(new LineBreakToken());
+		tokenSyntax.add(new RevisionLogReplacementToken());
+		tokenSyntax.add(new ChangesetLinkReplacementToken());
+		tokenSyntax.add(new HyperlinkReplacementToken());
+		tokenSyntax.add(new ImpliedHyperlinkReplacementToken());
+		tokenSyntax.add(new TicketAttachmentLinkReplacementToken());
+		tokenSyntax.add(new TicketLinkReplacementToken());
+		tokenSyntax.add(new ReportLinkReplacementToken());
+		tokenSyntax.add(new MilestoneLinkReplacementToken());
+		tokenSyntax.add(new SourceLinkReplacementToken());
+		tokenSyntax.add(new WikiWordReplacementToken());
+	}
+
+	@Override
+	protected Block createParagraphBlock(MarkupLanguageConfiguration configuration) {
+		return new ParagraphBlock();
 	}
 
 }

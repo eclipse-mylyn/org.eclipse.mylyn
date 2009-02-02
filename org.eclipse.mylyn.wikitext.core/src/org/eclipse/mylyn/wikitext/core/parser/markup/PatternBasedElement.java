@@ -20,7 +20,7 @@ package org.eclipse.mylyn.wikitext.core.parser.markup;
  * 
  * @param <P>
  */
-public abstract class PatternBasedElement {
+public abstract class PatternBasedElement implements Cloneable {
 
 	/**
 	 * Get the regular expression pattern that matches this element. Generally the pattern may be assembled into a

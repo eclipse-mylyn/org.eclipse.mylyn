@@ -19,7 +19,7 @@ import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
  * @author David Green
  * @since 1.0
  */
-public class Processor {
+public class Processor implements Cloneable {
 	protected MarkupLanguage markupLanguage;
 
 	protected DocumentBuilder builder;
@@ -75,4 +75,17 @@ public class Processor {
 		this.state = state;
 	}
 
+	@Override
+	public Processor clone() {
+		try {
+			Processor copy = (Processor) super.clone();
+			copy.parser = null;
+			copy.state = null;
+			copy.builder = null;
+			copy.markupLanguage = null;
+			return copy;
+		} catch (CloneNotSupportedException e) {
+			throw new IllegalStateException(e);
+		}
+	}
 }

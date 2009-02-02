@@ -42,7 +42,7 @@ import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
  * 
  * @author David Green
  */
-public abstract class MarkupLanguage {
+public abstract class MarkupLanguage implements Cloneable {
 
 	private static final DefaultIdGenerationStrategy DEFAULT_ID_GENERATION_STRATEGY = new DefaultIdGenerationStrategy();
 
@@ -55,6 +55,8 @@ public abstract class MarkupLanguage {
 	private boolean blocksOnly;
 
 	protected String internalLinkPattern = "{0}"; //$NON-NLS-1$
+
+	private boolean syntaxInitialized = false;
 
 	/**
 	 * Create new state for tracking a document and its contents during a parse session. Subclasses may override this
@@ -76,6 +78,7 @@ public abstract class MarkupLanguage {
 	}
 
 	public void processContent(MarkupParser parser, String markupContent, boolean asDocument) {
+		initializeSyntax(null, false);
 		initProcessors();
 		ContentState state = createState();
 		state.setMarkupContent(markupContent);
@@ -107,6 +110,7 @@ public abstract class MarkupLanguage {
 							if (currentBlock == null) {
 								break;
 							}
+							currentBlock.setMarkupLanguage(this);
 							currentBlock.setState(state);
 							currentBlock.setParser(parser);
 						}
@@ -170,6 +174,30 @@ public abstract class MarkupLanguage {
 	public abstract List<Block> getBlocks();
 
 	/**
+	 * configure the markup language with a configuration that may alter the language syntax and capabilities.
+	 * 
+	 * @param configuration
+	 *            the configuration to use
+	 * @throws UnsupportedOperationException
+	 *             markup languages that do not support configuration must throw this exception.
+	 */
+	public void configure(MarkupLanguageConfiguration configuration) throws UnsupportedOperationException {
+		initializeSyntax(configuration, true);
+	}
+
+	private void initializeSyntax(MarkupLanguageConfiguration configuration, boolean force) {
+		if (force || !syntaxInitialized) {
+			syntaxInitialized = true;
+			initializeSyntax(configuration);
+		}
+	}
+
+	/**
+	 * initialize the syntax of the markup language.
+	 */
+	protected abstract void initializeSyntax(MarkupLanguageConfiguration configuration);
+
+	/**
 	 * Emit a markup line that may contain phrase modifiers and replacement tokens, but no block modifiers.
 	 * 
 	 * @param parser
@@ -182,6 +210,9 @@ public abstract class MarkupLanguage {
 	 *            the offset in the <code>text</code> at which processing should begin
 	 */
 	public void emitMarkupLine(MarkupParser parser, ContentState state, int textLineOffset, String line, int offset) {
+		if (offset == line.length()) {
+			return;
+		}
 		if (blocksOnly) {
 			emitMarkupText(parser, state, line.substring(offset));
 			return;
@@ -199,6 +230,7 @@ public abstract class MarkupLanguage {
 					String text = line.substring(offset, newOffset);
 					emitMarkupText(parser, state, text);
 				}
+				phraseModifier.setMarkupLanguage(this);
 				phraseModifier.setParser(parser);
 				phraseModifier.setState(state);
 				state.setLineCharacterOffset(state.getShift() + phraseModifier.getLineStartOffset());
@@ -252,6 +284,7 @@ public abstract class MarkupLanguage {
 					String text2 = text.substring(offset, newOffset);
 					emitMarkupText(parser, state, text2);
 				}
+				tokenReplacement.setMarkupLanguage(this);
 				tokenReplacement.setParser(parser);
 				tokenReplacement.setState(state);
 
@@ -270,22 +303,35 @@ public abstract class MarkupLanguage {
 		}
 	}
 
-	private static class Group {
+	private static class Group implements Cloneable {
+
 		int count;
+
+		public Group(int count) {
+			this.count = count;
+		}
+
+		public Group() {
+		}
+
+		@Override
+		protected Group clone() {
+			return new Group(count);
+		}
 	}
 
-	public static class PatternBasedSyntax {
+	public static final class PatternBasedSyntax implements Cloneable {
 		protected List<PatternBasedElement> elements = new ArrayList<PatternBasedElement>();
 
 		protected Pattern elementPattern;
 
 		protected List<Integer> elementGroup = new ArrayList<Integer>();
 
-		private final StringBuilder patternBuffer = new StringBuilder();
+		private StringBuilder patternBuffer = new StringBuilder();
 
 		private int patternGroup = 0;
 
-		private final Stack<Group> groups = new Stack<Group>();
+		private Stack<Group> groups = new Stack<Group>();
 		{
 			groups.push(new Group());
 		}
@@ -373,6 +419,33 @@ public abstract class MarkupLanguage {
 			return elementPattern;
 		}
 
+		public void clear() {
+			elements.clear();
+			elementPattern = null;
+			elementGroup.clear();
+			patternBuffer.delete(0, patternBuffer.length());
+			patternGroup = 0;
+			groups.clear();
+			groups.push(new Group());
+		}
+
+		@Override
+		public PatternBasedSyntax clone() {
+			try {
+				PatternBasedSyntax syntax = (PatternBasedSyntax) super.clone();
+				syntax.elementGroup = new ArrayList<Integer>(elementGroup);
+				syntax.elements = new ArrayList<PatternBasedElement>(elements);
+				syntax.groups = new Stack<Group>();
+				for (Group group : groups) {
+					syntax.groups.add(group.clone());
+				}
+				syntax.patternBuffer = new StringBuilder(patternBuffer);
+				return syntax;
+			} catch (CloneNotSupportedException e) {
+				throw new IllegalStateException(e);
+			}
+		}
+
 	}
 
 	protected abstract PatternBasedSyntax getPhraseModifierSyntax();
@@ -421,15 +494,17 @@ public abstract class MarkupLanguage {
 
 	@Override
 	public MarkupLanguage clone() {
-		MarkupLanguage markupLanguage;
 		try {
-			markupLanguage = getClass().newInstance();
-		} catch (Exception e) {
+			MarkupLanguage copy = (MarkupLanguage) super.clone();
+			doDeepClone(copy);
+			copy.initProcessors();
+			return copy;
+		} catch (CloneNotSupportedException e) {
 			throw new IllegalStateException(e);
 		}
-		markupLanguage.setName(name);
-		return markupLanguage;
 	}
+
+	protected abstract void doDeepClone(MarkupLanguage copy);
 
 	/**
 	 * Indicate if generative contents should be filtered. This option is used with the {@link OutlineParser}.

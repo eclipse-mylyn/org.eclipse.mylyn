@@ -40,10 +40,10 @@ public class ParagraphBlock extends Block {
 		}
 		++blockLineCount;
 
-		TracWikiLanguage dialect = (TracWikiLanguage) getMarkupLanguage();
+		TracWikiLanguage markupLanguage = (TracWikiLanguage) getMarkupLanguage();
 
 		// paragraphs can have nested lists and other things
-		for (Block block : dialect.getParagraphNestableBlocks()) {
+		for (Block block : markupLanguage.getParagraphBreakingBlocks()) {
 			if (block.canStart(line, offset)) {
 				setClosed(true);
 				return 0;
@@ -54,7 +54,7 @@ public class ParagraphBlock extends Block {
 			// note: newlines don't automatically convert to line breaks
 			builder.characters("\n"); //$NON-NLS-1$
 		}
-		dialect.emitMarkupLine(getParser(), state, line, offset);
+		markupLanguage.emitMarkupLine(getParser(), state, line, offset);
 
 		return -1;
 	}

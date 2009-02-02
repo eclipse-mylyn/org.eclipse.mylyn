@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 
 /**
  * 
@@ -380,5 +381,15 @@ public class TracWikiLanguageTest extends TestCase {
 		String html = parser.parseToHtml("A source:/trunk/COPYING or source:/trunk/COPYING@200 or source:/trunk/COPYING@200#L26 more text");
 		System.out.println(html);
 		assertTrue(html.contains("<body><p>A <a href=\"http://trac.edgewall.org/browser/trunk/COPYING\">source:/trunk/COPYING</a> or <a href=\"http://trac.edgewall.org/browser/trunk/COPYING?rev=200\">source:/trunk/COPYING@200</a> or <a href=\"http://trac.edgewall.org/browser/trunk/COPYING?rev=200#L26\">source:/trunk/COPYING@200#L26</a> more text</p></body>"));
+	}
+
+	public void testClone() {
+		parser.parseToHtml("Test");
+		MarkupLanguage copy = markupLanaguage.clone();
+		assertEquals(markupLanaguage.getBlocks().size(), copy.getBlocks().size());
+		assertEquals(markupLanaguage.getBlocks().get(0).getClass(), copy.getBlocks().get(0).getClass());
+		assertSame(copy, copy.getBlocks().get(0).getMarkupLanguage());
+		assertNull(copy.getBlocks().get(0).getParser());
+		assertNull(copy.getBlocks().get(0).getState());
 	}
 }

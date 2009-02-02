@@ -28,6 +28,7 @@ import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.mylyn.internal.wikitext.tasks.ui.util.PlatformUrlHyperlink;
+import org.eclipse.mylyn.internal.wikitext.tasks.ui.util.Util;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupSourceViewerConfiguration;
@@ -39,6 +40,7 @@ import org.eclipse.mylyn.tasks.ui.TaskHyperlinkPresenter;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorExtension;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration;
 import org.eclipse.mylyn.wikitext.ui.viewer.MarkupViewer;
 import org.eclipse.mylyn.wikitext.ui.viewer.MarkupViewerConfiguration;
 import org.eclipse.swt.SWT;
@@ -86,14 +88,13 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 		return MarkupEditor.CONTEXT;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public SourceViewer createViewer(TaskRepository taskRepository, Composite parent, int style) {
 		if (markupLanguage == null) {
 			throw new IllegalStateException();
 		}
 		MarkupViewer markupViewer = new MarkupViewer(parent, null, style | SWT.FLAT | SWT.WRAP);
-		MarkupLanguageType markupLanguageCopy = (MarkupLanguageType) markupLanguage.clone();
+		MarkupLanguageType markupLanguageCopy = createRepositoryMarkupLanguage(taskRepository);
 		configureMarkupLanguage(taskRepository, markupLanguageCopy);
 
 		markupViewer.setMarkupLanguage(markupLanguageCopy);
@@ -109,6 +110,14 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 		return markupViewer;
 	}
 
+	@SuppressWarnings("unchecked")
+	private MarkupLanguageType createRepositoryMarkupLanguage(TaskRepository taskRepository) {
+		MarkupLanguageType copy = (MarkupLanguageType) markupLanguage.clone();
+		MarkupLanguageConfiguration configuration = Util.create(taskRepository.getConnectorKind());
+		copy.configure(configuration);
+		return copy;
+	}
+
 	protected MarkupViewerConfiguration createViewerConfiguration(TaskRepository taskRepository,
 			MarkupViewer markupViewer) {
 		return new TaskMarkupViewerConfiguration(markupViewer, taskRepository);
@@ -117,7 +126,7 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 	@SuppressWarnings("unchecked")
 	@Override
 	public SourceViewer createEditor(TaskRepository taskRepository, Composite parent, int style) {
-		final MarkupLanguageType markupLanguageCopy = (MarkupLanguageType) markupLanguage.clone();
+		final MarkupLanguageType markupLanguageCopy = createRepositoryMarkupLanguage(taskRepository);
 		configureMarkupLanguage(taskRepository, markupLanguageCopy);
 
 		SourceViewer viewer = new SourceViewer(parent, null, style | SWT.WRAP) {

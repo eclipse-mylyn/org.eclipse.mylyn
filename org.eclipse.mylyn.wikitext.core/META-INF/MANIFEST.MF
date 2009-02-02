@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.mylyn.wikitext.core;singleton:=true
-Bundle-Version: 0.9.3.qualifier
+Bundle-Version: 0.9.4.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
 Export-Package: org.eclipse.mylyn.internal.wikitext.core;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.core.parser.builder;x-internal:=true,

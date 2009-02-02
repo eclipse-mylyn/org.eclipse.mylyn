@@ -19,6 +19,7 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.DocBookDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 
 /**
  * 
@@ -495,5 +496,16 @@ public class ConfluenceLanguageTest extends TestCase {
 		String html = parser.parseToHtml("*_bold and italic_ not just bold*");
 		System.out.println(html);
 		assertTrue(html.contains("<strong><em>bold and italic</em> not just bold</strong>"));
+	}
+
+	public void testClone() {
+		parser.parseToHtml("Test");
+		MarkupLanguage markupLanguage = parser.getMarkupLanguage();
+		MarkupLanguage copy = markupLanguage.clone();
+		assertEquals(markupLanguage.getBlocks().size(), copy.getBlocks().size());
+		assertEquals(markupLanguage.getBlocks().get(0).getClass(), copy.getBlocks().get(0).getClass());
+		assertSame(copy, copy.getBlocks().get(0).getMarkupLanguage());
+		assertNull(copy.getBlocks().get(0).getParser());
+		assertNull(copy.getBlocks().get(0).getState());
 	}
 }

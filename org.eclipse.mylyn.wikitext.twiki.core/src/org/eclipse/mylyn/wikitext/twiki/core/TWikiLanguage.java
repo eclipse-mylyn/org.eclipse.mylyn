@@ -11,7 +11,6 @@
 package org.eclipse.mylyn.wikitext.twiki.core;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.mylyn.internal.wikitext.twiki.core.block.DefinitionListBlock;
@@ -29,13 +28,14 @@ import org.eclipse.mylyn.internal.wikitext.twiki.core.token.ImpliedEmailLinkRepl
 import org.eclipse.mylyn.internal.wikitext.twiki.core.token.LinkReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.twiki.core.token.WikiWordReplacementToken;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration;
 import org.eclipse.mylyn.wikitext.core.parser.markup.phrase.HtmlEndTagPhraseModifier;
 import org.eclipse.mylyn.wikitext.core.parser.markup.phrase.HtmlStartTagPhraseModifier;
 import org.eclipse.mylyn.wikitext.core.parser.markup.token.EntityReferenceReplacementToken;
 import org.eclipse.mylyn.wikitext.core.parser.markup.token.ImpliedHyperlinkReplacementToken;
-
 
 // TODO: table
 // TODO: empty line to empty para
@@ -45,120 +45,51 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.token.ImpliedHyperlinkRepla
 // TODO: named anchors eg: #Target  from the docs: To define an anchor write #AnchorName at the beginning of a line. The anchor name must be a WikiWord of no more than 32 characters.
 
 /**
- * a markup language implementing TWiki syntax.
- * See <a href="http://wikix.ilog.fr/wiki/bin/view/TWiki/TextFormattingRules">TWiki Formatting Rules</a> for details.
+ * a markup language implementing TWiki syntax. See <a
+ * href="http://wikix.ilog.fr/wiki/bin/view/TWiki/TextFormattingRules">TWiki Formatting Rules</a> for details.
  * 
  * @author David Green
  * @since 1.0
  */
-public class TWikiLanguage extends MarkupLanguage {
-	private final List<Block> blocks = new ArrayList<Block>();
-
-	private final List<Block> paragraphBreakingBlocks = new ArrayList<Block>();
-
-	private final PatternBasedSyntax tokenSyntax = new PatternBasedSyntax();
+public class TWikiLanguage extends AbstractMarkupLanguage {
 
 	private PatternBasedSyntax literalTokenSyntax = new PatternBasedSyntax();
-	
-	private final PatternBasedSyntax phraseModifierSyntax = new PatternBasedSyntax();
 
 	private PatternBasedSyntax literalPhraseModifierSyntax = new PatternBasedSyntax();
 
 	private boolean literalMode;
-	
+
 	private boolean isAutoLinking = true;
 
 	private String iconPattern = "TWikiDocGraphics/{0}.gif"; // FIXME find out if this is correct //$NON-NLS-1$
 
-
 	public TWikiLanguage() {
 		setName("TWiki"); //$NON-NLS-1$
 		setInternalLinkPattern("/cgi-bin/view/{0}/{1}"); //$NON-NLS-1$
-		initializeSyntax();
 	}
 
 	@Override
 	protected PatternBasedSyntax getPhraseModifierSyntax() {
-		return literalMode?literalPhraseModifierSyntax:phraseModifierSyntax;
+		return literalMode ? literalPhraseModifierSyntax : phraseModifierSyntax;
 	}
 
 	@Override
 	protected PatternBasedSyntax getReplacementTokenSyntax() {
-		return literalMode?literalTokenSyntax:tokenSyntax;
+		return literalMode ? literalTokenSyntax : tokenSyntax;
 	}
 
-	protected void initializeSyntax() {
-		initializeBlocks();
-		initializePhraseModifiers();
-		initializeTokens();
+	@Override
+	protected void clearLanguageSyntax() {
+		super.clearLanguageSyntax();
+		literalTokenSyntax.clear();
+		literalPhraseModifierSyntax.clear();
 	}
-	
-	private void initializeBlocks() {
-		// IMPORTANT NOTE: Most items below have order dependencies.  DO NOT REORDER ITEMS BELOW!!
-
-		blocks.add(paragraphBreakingBlock(new VerbatimBlock()));
-		blocks.add(paragraphBreakingBlock(new LiteralBlock()));
-		blocks.add(paragraphBreakingBlock(new HorizontalRuleBlock()));
-		blocks.add(paragraphBreakingBlock(new HeadingBlock()));
-		blocks.add(paragraphBreakingBlock(new DefinitionListBlock()));
-		blocks.add(paragraphBreakingBlock(new TableOfContentsBlock()));
-		blocks.add(paragraphBreakingBlock(new ListBlock()));
-		
-		blocks.add(new ParagraphBlock()); // ORDER DEPENDENCY: this must come last
-	}
-
 
 	private Block paragraphBreakingBlock(Block block) {
 		paragraphBreakingBlocks.add(block);
 		return block;
 	}
 
-	private void initializeTokens() {
-		// IMPORTANT NOTE: Most items below have order dependencies.  DO NOT REORDER ITEMS BELOW!!
-		
-		tokenSyntax.add(new EntityReferenceReplacementToken("(tm)", "#8482")); //$NON-NLS-1$ //$NON-NLS-2$
-		tokenSyntax.add(new EntityReferenceReplacementToken("(TM)", "#8482")); //$NON-NLS-1$ //$NON-NLS-2$
-		tokenSyntax.add(new EntityReferenceReplacementToken("(c)", "#169")); //$NON-NLS-1$ //$NON-NLS-2$
-		tokenSyntax.add(new EntityReferenceReplacementToken("(C)", "#169")); //$NON-NLS-1$ //$NON-NLS-2$
-		tokenSyntax.add(new EntityReferenceReplacementToken("(r)", "#174")); //$NON-NLS-1$ //$NON-NLS-2$
-		tokenSyntax.add(new EntityReferenceReplacementToken("(R)", "#174")); //$NON-NLS-1$ //$NON-NLS-2$
-		tokenSyntax.add(new LinkReplacementToken());
-		tokenSyntax.add(new ImpliedHyperlinkReplacementToken());
-		tokenSyntax.add(new ImpliedEmailLinkReplacementToken());
-		tokenSyntax.add(new WikiWordReplacementToken());
-		tokenSyntax.add(new IconReplacementToken());
-		
-		literalTokenSyntax.add(new ImpliedHyperlinkReplacementToken());
-	}
-
-	private void initializePhraseModifiers() {
-		// IMPORTANT NOTE: Most items below have order dependencies.  DO NOT REORDER ITEMS BELOW!!
-
-		phraseModifierSyntax.add(new AutoLinkSwitchPhraseModifier());
-		phraseModifierSyntax.add(new HtmlStartTagPhraseModifier());
-		phraseModifierSyntax.add(new HtmlEndTagPhraseModifier());
-		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.,\\\"'?!;:\\)\\(\\{\\}\\[\\]])|^)(?:", 0); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimplePhraseModifier("*", SpanType.BOLD)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimplePhraseModifier("__", new SpanType[] { SpanType.BOLD, SpanType.ITALIC })); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimplePhraseModifier("_", SpanType.ITALIC)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimplePhraseModifier("==",new SpanType[] { SpanType.BOLD, SpanType.MONOSPACE })); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimplePhraseModifier("=", SpanType.MONOSPACE)); //$NON-NLS-1$
-		phraseModifierSyntax.endGroup(")(?=\\W|$)", 0); //$NON-NLS-1$
-
-		literalPhraseModifierSyntax.add(new HtmlStartTagPhraseModifier());
-		literalPhraseModifierSyntax.add(new HtmlEndTagPhraseModifier());
-	}
-
-	
-	@Override
-	public List<Block> getBlocks() {
-		return blocks;
-	}
-	
-	public List<Block> getParagraphBreakingBlocks() {
-		return paragraphBreakingBlocks;
-	}
-	
 	/**
 	 * for the purpose of converting wiki words into links, determine if the wiki word exists.
 	 * 
@@ -167,7 +98,7 @@ public class TWikiLanguage extends MarkupLanguage {
 	public boolean computeInternalLinkExists(String link) {
 		return true;
 	}
-	
+
 	/**
 	 * Convert a page name to an href to the page.
 	 * 
@@ -181,15 +112,15 @@ public class TWikiLanguage extends MarkupLanguage {
 	public String toInternalHref(String pageName) {
 		String[] parts = pageName.split("\\."); //$NON-NLS-1$
 		if (parts.length == 1) {
-			parts = new String[] { "Main",parts[0] }; //$NON-NLS-1$
+			parts = new String[] { "Main", parts[0] }; //$NON-NLS-1$
 		}
-		return MessageFormat.format(super.internalLinkPattern,(Object[]) parts);
+		return MessageFormat.format(super.internalLinkPattern, (Object[]) parts);
 	}
 
 	public String toIconUrl(String iconType) {
-		return MessageFormat.format(getIconPattern(),iconType);
+		return MessageFormat.format(getIconPattern(), iconType);
 	}
-	
+
 	/**
 	 * indicate if we're currently processing a literal block
 	 * 
@@ -229,5 +160,75 @@ public class TWikiLanguage extends MarkupLanguage {
 	public void setAutoLinking(boolean isAutoLinking) {
 		this.isAutoLinking = isAutoLinking;
 	}
-	
+
+	@Override
+	protected void addStandardBlocks(MarkupLanguageConfiguration configuration, List<Block> blocks,
+			List<Block> paragraphBreakingBlocks) {
+		// IMPORTANT NOTE: Most items below have order dependencies.  DO NOT REORDER ITEMS BELOW!!
+
+		blocks.add(paragraphBreakingBlock(new VerbatimBlock()));
+		blocks.add(paragraphBreakingBlock(new LiteralBlock()));
+		blocks.add(paragraphBreakingBlock(new HorizontalRuleBlock()));
+		blocks.add(paragraphBreakingBlock(new HeadingBlock()));
+		blocks.add(paragraphBreakingBlock(new DefinitionListBlock()));
+		blocks.add(paragraphBreakingBlock(new TableOfContentsBlock()));
+		blocks.add(paragraphBreakingBlock(new ListBlock()));
+	}
+
+	@Override
+	protected void addStandardPhraseModifiers(MarkupLanguageConfiguration configuration,
+			PatternBasedSyntax phraseModifierSyntax) {
+		// IMPORTANT NOTE: Most items below have order dependencies.  DO NOT REORDER ITEMS BELOW!!
+
+		boolean escapingHtml = configuration == null ? false : configuration.isEscapingHtmlAndXml();
+
+		phraseModifierSyntax.add(new AutoLinkSwitchPhraseModifier());
+
+		if (!escapingHtml) {
+			phraseModifierSyntax.add(new HtmlStartTagPhraseModifier());
+			phraseModifierSyntax.add(new HtmlEndTagPhraseModifier());
+		}
+		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.,\\\"'?!;:\\)\\(\\{\\}\\[\\]])|^)(?:", 0); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("*", SpanType.BOLD)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("__", new SpanType[] { SpanType.BOLD, SpanType.ITALIC })); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("_", SpanType.ITALIC)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("==", new SpanType[] { SpanType.BOLD, SpanType.MONOSPACE })); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("=", SpanType.MONOSPACE)); //$NON-NLS-1$
+		phraseModifierSyntax.endGroup(")(?=\\W|$)", 0); //$NON-NLS-1$
+
+		literalPhraseModifierSyntax.add(new HtmlStartTagPhraseModifier());
+		literalPhraseModifierSyntax.add(new HtmlEndTagPhraseModifier());
+	}
+
+	@Override
+	protected void addStandardTokens(MarkupLanguageConfiguration configuration, PatternBasedSyntax tokenSyntax) {
+		// IMPORTANT NOTE: Most items below have order dependencies.  DO NOT REORDER ITEMS BELOW!!
+
+		tokenSyntax.add(new EntityReferenceReplacementToken("(tm)", "#8482")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(TM)", "#8482")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(c)", "#169")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(C)", "#169")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(r)", "#174")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(R)", "#174")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new LinkReplacementToken());
+		tokenSyntax.add(new ImpliedHyperlinkReplacementToken());
+		tokenSyntax.add(new ImpliedEmailLinkReplacementToken());
+		tokenSyntax.add(new WikiWordReplacementToken());
+		tokenSyntax.add(new IconReplacementToken());
+
+		literalTokenSyntax.add(new ImpliedHyperlinkReplacementToken());
+	}
+
+	@Override
+	protected Block createParagraphBlock(MarkupLanguageConfiguration configuration) {
+		return new ParagraphBlock();
+	}
+
+	@Override
+	protected void doDeepClone(MarkupLanguage c) {
+		TWikiLanguage copy = (TWikiLanguage) c;
+		super.doDeepClone(c);
+		copy.literalTokenSyntax = literalTokenSyntax.clone();
+		copy.literalPhraseModifierSyntax = literalPhraseModifierSyntax.clone();
+	}
 }
