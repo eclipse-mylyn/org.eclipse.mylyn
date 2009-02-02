@@ -20,6 +20,7 @@ import org.eclipse.mylyn.internal.wikitext.tracwiki.core.block.ParagraphBlock;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.block.PreformattedBlock;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.block.QuoteBlock;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.block.TableBlock;
+import org.eclipse.mylyn.internal.wikitext.tracwiki.core.phrase.DeletedPhraseModifier;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.phrase.EscapePhraseModifier;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.phrase.SimplePhraseModifier;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.token.BangEscapeToken;
@@ -53,15 +54,60 @@ public class TracWikiLanguage extends MarkupLanguage {
 
 	private String serverUrl;
 
-	private static PatternBasedSyntax tokenSyntax = new PatternBasedSyntax();
+	private final PatternBasedSyntax tokenSyntax = new PatternBasedSyntax();
 
-	private static PatternBasedSyntax phraseModifierSyntax = new PatternBasedSyntax();
+	private final PatternBasedSyntax phraseModifierSyntax = new PatternBasedSyntax();
 
-	{
+	public TracWikiLanguage() {
+		setName("TracWiki"); //$NON-NLS-1$
+		initializeSyntax();
+	}
 
+	protected void initializeSyntax() {
+		initializeBlocks();
+		initializePhraseModifiers();
+		initializeTokens();
+	}
+
+	protected void initializeTokens() {
+		// IMPORTANT NOTE: Most items below have order dependencies.  DO NOT REORDER ITEMS BELOW!!
+		tokenSyntax.add(new BangEscapeToken());
+		tokenSyntax.add(new LineBreakToken());
+		tokenSyntax.add(new RevisionLogReplacementToken());
+		tokenSyntax.add(new ChangesetLinkReplacementToken());
+		tokenSyntax.add(new HyperlinkReplacementToken());
+		tokenSyntax.add(new ImpliedHyperlinkReplacementToken());
+		tokenSyntax.add(new TicketAttachmentLinkReplacementToken());
+		tokenSyntax.add(new TicketLinkReplacementToken());
+		tokenSyntax.add(new ReportLinkReplacementToken());
+		tokenSyntax.add(new MilestoneLinkReplacementToken());
+		tokenSyntax.add(new SourceLinkReplacementToken());
+		tokenSyntax.add(new WikiWordReplacementToken());
+
+		addTokenExtensions(tokenSyntax);
+	}
+
+	protected void initializePhraseModifiers() {
+		// IMPORTANT NOTE: Most items below have order dependencies.  DO NOT REORDER ITEMS BELOW!!
+		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.\\\"'?!;:\\)\\(\\{\\}\\[\\]-])|^)(?:", 0); // always starts at the start of a line or after a non-word character excluding '!' and '-' //$NON-NLS-1$
+		phraseModifierSyntax.add(new EscapePhraseModifier());
+		phraseModifierSyntax.add(new SimplePhraseModifier("'''''", new SpanType[] { SpanType.BOLD, SpanType.ITALIC }, //$NON-NLS-1$
+				true));
+		phraseModifierSyntax.add(new SimplePhraseModifier("'''", SpanType.BOLD, true)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("''", SpanType.ITALIC, true)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("__", SpanType.UNDERLINED, true)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new DeletedPhraseModifier());
+		phraseModifierSyntax.add(new SimplePhraseModifier("^", SpanType.SUPERSCRIPT, true)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier(",,", SpanType.SUBSCRIPT, true)); //$NON-NLS-1$
+		phraseModifierSyntax.endGroup(")(?=\\W|$)", 0); //$NON-NLS-1$
+
+		addPhraseModifierExtensions(phraseModifierSyntax);
+	}
+
+	protected void initializeBlocks() {
 		// IMPORTANT NOTE: Most items below have order dependencies.  DO NOT REORDER ITEMS BELOW!!
 
-		// TODO: traclinks, images, macros, processors
+		// TODO: images, macros, processors
 
 		ListBlock listBlock = new ListBlock();
 		blocks.add(listBlock);
@@ -78,38 +124,12 @@ public class TracWikiLanguage extends MarkupLanguage {
 		TableBlock tableBlock = new TableBlock();
 		blocks.add(tableBlock);
 		paragraphNestableBlocks.add(tableBlock);
+
+		// extensions
+		addBlockExtensions(blocks, paragraphNestableBlocks);
+		// ~extensions
+
 		blocks.add(new ParagraphBlock()); // ORDER DEPENDENCY: this one must be last!!
-	}
-	static {
-		// IMPORTANT NOTE: Most items below have order dependencies.  DO NOT REORDER ITEMS BELOW!!
-		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.\\\"'?!;:\\)\\(\\{\\}\\[\\]])|^)(?:", 0); // always starts at the start of a line or after a non-word character excluding '!' //$NON-NLS-1$
-		phraseModifierSyntax.add(new EscapePhraseModifier());
-		phraseModifierSyntax.add(new SimplePhraseModifier("'''''", new SpanType[] { SpanType.BOLD, SpanType.ITALIC }, //$NON-NLS-1$
-				true));
-		phraseModifierSyntax.add(new SimplePhraseModifier("'''", SpanType.BOLD, true)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimplePhraseModifier("''", SpanType.ITALIC, true)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimplePhraseModifier("__", SpanType.UNDERLINED, true)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimplePhraseModifier("--", SpanType.DELETED, true)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimplePhraseModifier("^", SpanType.SUPERSCRIPT, true)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimplePhraseModifier(",,", SpanType.SUBSCRIPT, true)); //$NON-NLS-1$
-		phraseModifierSyntax.endGroup(")(?=\\W|$)", 0); //$NON-NLS-1$
-
-		tokenSyntax.add(new BangEscapeToken());
-		tokenSyntax.add(new LineBreakToken());
-		tokenSyntax.add(new RevisionLogReplacementToken());
-		tokenSyntax.add(new ChangesetLinkReplacementToken());
-		tokenSyntax.add(new HyperlinkReplacementToken());
-		tokenSyntax.add(new ImpliedHyperlinkReplacementToken());
-		tokenSyntax.add(new TicketAttachmentLinkReplacementToken());
-		tokenSyntax.add(new TicketLinkReplacementToken());
-		tokenSyntax.add(new ReportLinkReplacementToken());
-		tokenSyntax.add(new MilestoneLinkReplacementToken());
-		tokenSyntax.add(new SourceLinkReplacementToken());
-		tokenSyntax.add(new WikiWordReplacementToken());
-	}
-
-	public TracWikiLanguage() {
-		setName("TracWiki"); //$NON-NLS-1$
 	}
 
 	@Override
@@ -306,6 +326,43 @@ public class TracWikiLanguage extends MarkupLanguage {
 	 */
 	public String getServerUrl() {
 		return serverUrl;
+	}
+
+	/**
+	 * subclasses may override this method to add blocks to the TracWiki language. Overriding classes should call
+	 * <code>super.addBlockExtensions(blocks,paragraphBreakingBlocks)</code> if the default language extensions are
+	 * desired.
+	 * 
+	 * @param blocks
+	 *            the list of blocks to which extensions may be added
+	 * @param paragraphBreakingBlocks
+	 *            the list of blocks that end a paragraph
+	 */
+	protected void addBlockExtensions(List<Block> blocks, List<Block> paragraphBreakingBlocks) {
+		// no block extensions
+	}
+
+	/**
+	 * subclasses may override this method to add tokens to the TracWiki language. Overriding classes should call
+	 * <code>super.addTokenExtensions(tokenSyntax)</code> if the default language extensions are desired.
+	 * 
+	 * @param tokenSyntax
+	 *            the token syntax
+	 */
+	protected void addTokenExtensions(PatternBasedSyntax tokenSyntax) {
+		// no token extensions
+	}
+
+	/**
+	 * subclasses may override this method to add phrases to the TracWiki language. Overriding classes should call
+	 * <code>super.addPhraseModifierExtensions(phraseModifierSyntax)</code> if the default language extensions are
+	 * desired.
+	 * 
+	 * @param phraseModifierSyntax
+	 *            the phrase modifier syntax
+	 */
+	protected void addPhraseModifierExtensions(PatternBasedSyntax phraseModifierSyntax) {
+		// no phrase extensions
 	}
 
 }

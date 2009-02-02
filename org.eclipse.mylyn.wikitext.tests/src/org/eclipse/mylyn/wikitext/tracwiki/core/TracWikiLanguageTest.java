@@ -68,10 +68,41 @@ public class TracWikiLanguageTest extends TestCase {
 		assertTrue(Pattern.compile("<body><p>normal <i>italic text</i> normal</p></body>").matcher(html).find());
 	}
 
+	// test for bug 263015
+	public void testItalic2() {
+		String html = parser.parseToHtml("normal ''italic''-''italic'' normal");
+		System.out.println(html);
+		assertTrue(html.contains("<body><p>normal <i>italic</i>-<i>italic</i> normal</p></body>"));
+	}
+
 	public void testDeleted() {
 		String html = parser.parseToHtml("normal --test text-- normal");
 		System.out.println(html);
 		assertTrue(Pattern.compile("<body><p>normal <del>test text</del> normal</p></body>").matcher(html).find());
+	}
+
+	public void testDeleted2() {
+		String html = parser.parseToHtml("normal ---test text-- normal");
+		System.out.println(html);
+		assertTrue(Pattern.compile("<body><p>normal ---test text-- normal</p></body>").matcher(html).find());
+	}
+
+	public void testDeleted3() {
+		String html = parser.parseToHtml("normal --test text--- normal");
+		System.out.println(html);
+		assertTrue(Pattern.compile("<body><p>normal --test text--- normal</p></body>").matcher(html).find());
+	}
+
+	public void testDeleted_AtStartOfLine() {
+		String html = parser.parseToHtml("--test text-- normal");
+		System.out.println(html);
+		assertTrue(html.contains("<body><p><del>test text</del> normal</p></body>"));
+	}
+
+	public void testDeleted_AtEndOfLine() {
+		String html = parser.parseToHtml("normal --test text--");
+		System.out.println(html);
+		assertTrue(html.contains("<body><p>normal <del>test text</del></p></body>"));
 	}
 
 	public void testUnderlined() {
