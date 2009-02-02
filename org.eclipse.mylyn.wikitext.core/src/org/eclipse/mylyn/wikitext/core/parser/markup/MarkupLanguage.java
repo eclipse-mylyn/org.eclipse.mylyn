@@ -230,7 +230,6 @@ public abstract class MarkupLanguage implements Cloneable {
 					String text = line.substring(offset, newOffset);
 					emitMarkupText(parser, state, text);
 				}
-				phraseModifier.setMarkupLanguage(this);
 				phraseModifier.setParser(parser);
 				phraseModifier.setState(state);
 				state.setLineCharacterOffset(state.getShift() + phraseModifier.getLineStartOffset());
@@ -284,7 +283,6 @@ public abstract class MarkupLanguage implements Cloneable {
 					String text2 = text.substring(offset, newOffset);
 					emitMarkupText(parser, state, text2);
 				}
-				tokenReplacement.setMarkupLanguage(this);
 				tokenReplacement.setParser(parser);
 				tokenReplacement.setState(state);
 
