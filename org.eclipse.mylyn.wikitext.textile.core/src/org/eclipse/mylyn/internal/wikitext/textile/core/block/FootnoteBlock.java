@@ -14,6 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.internal.wikitext.textile.core.Textile;
+import org.eclipse.mylyn.internal.wikitext.textile.core.TextileContentState;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
@@ -48,6 +49,7 @@ public class FootnoteBlock extends Block {
 
 			// 0-offset matches may start with the "fnnn. " prefix.
 			footnote = matcher.group(1);
+			((TextileContentState) state).footnoteBlockDetected(footnote);
 			attributes.setId(state.getFootnoteId(footnote));
 
 			Textile.configureAttributes(attributes, matcher, 2, true);

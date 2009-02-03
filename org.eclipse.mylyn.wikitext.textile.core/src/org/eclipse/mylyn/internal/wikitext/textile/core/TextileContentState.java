@@ -11,10 +11,13 @@
 package org.eclipse.mylyn.internal.wikitext.textile.core;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.mylyn.internal.wikitext.textile.core.block.FootnoteBlock;
 import org.eclipse.mylyn.wikitext.core.parser.markup.ContentState;
 
 /**
@@ -27,6 +30,8 @@ public class TextileContentState extends ContentState {
 			Pattern.MULTILINE);
 
 	private final Map<String, String> nameToUrl = new HashMap<String, String>();
+
+	private Set<String> footnoteNumbers;
 
 	@Override
 	protected void setMarkupContent(String markupContent) {
@@ -46,5 +51,35 @@ public class TextileContentState extends ContentState {
 
 	public String getNamedLinkUrl(String name) {
 		return nameToUrl.get(name);
+	}
+
+	/**
+	 * the known footnote numbers, or null if there are none
+	 */
+	public Set<String> getFootnoteNumbers() {
+		return footnoteNumbers;
+	}
+
+	/**
+	 * the known footnote numbers, or null if there are none
+	 */
+	public void setFootnoteNumbers(Set<String> footnoteNumbers) {
+		this.footnoteNumbers = footnoteNumbers;
+	}
+
+	/**
+	 * @param footnoteNumber
+	 *            the number of the footnote, eg: <code>1</code>, or <code>12</code>
+	 * @see FootnoteBlock
+	 */
+	public void footnoteBlockDetected(String footnoteNumber) {
+		if (footnoteNumbers == null) {
+			footnoteNumbers = new HashSet<String>();
+		}
+		footnoteNumbers.add(footnoteNumber);
+	}
+
+	public boolean hasFootnoteNumber(String footnoteNumber) {
+		return footnoteNumbers != null && footnoteNumbers.contains(footnoteNumber);
 	}
 }

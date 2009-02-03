@@ -28,10 +28,14 @@ import org.eclipse.mylyn.internal.wikitext.textile.core.phrase.ImageTextilePhras
 import org.eclipse.mylyn.internal.wikitext.textile.core.phrase.SimpleTextilePhraseModifier;
 import org.eclipse.mylyn.internal.wikitext.textile.core.token.FootnoteReferenceReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.textile.core.token.HyperlinkReplacementToken;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.core.parser.builder.NoOpDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 import org.eclipse.mylyn.wikitext.core.parser.markup.ContentState;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration;
 import org.eclipse.mylyn.wikitext.core.parser.markup.phrase.HtmlEndTagPhraseModifier;
 import org.eclipse.mylyn.wikitext.core.parser.markup.phrase.HtmlStartTagPhraseModifier;
 import org.eclipse.mylyn.wikitext.core.parser.markup.token.AcronymReplacementToken;
@@ -51,6 +55,10 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternEntityReferenc
  * @since 1.0
  */
 public class TextileLanguage extends AbstractMarkupLanguage {
+
+	private boolean preprocessFootnotes = false;
+
+	private TextileContentState currentState;
 
 	public TextileLanguage() {
 		setName("Textile"); //$NON-NLS-1$
@@ -75,6 +83,11 @@ public class TextileLanguage extends AbstractMarkupLanguage {
 
 	@Override
 	protected ContentState createState() {
+		if (currentState != null) {
+			TextileContentState temp = currentState;
+			currentState = null;
+			return temp;
+		}
 		return new TextileContentState();
 	}
 
@@ -144,5 +157,65 @@ public class TextileLanguage extends AbstractMarkupLanguage {
 			paragraphBlock.setEnableUnwrapped(false);
 		}
 		return paragraphBlock;
+	}
+
+	/**
+	 * indicate if footnotes should be preprocessed to avoid false-positives when footnote references are used
+	 * inadvertently. The default is false.
+	 */
+	public boolean isPreprocessFootnotes() {
+		return preprocessFootnotes;
+	}
+
+	/**
+	 * indicate if footnotes should be preprocessed to avoid false-positives when footnote references are used
+	 * inadvertently. The default is false.
+	 */
+	public void setPreprocessFootnotes(boolean preprocessFootnotes) {
+		this.preprocessFootnotes = preprocessFootnotes;
+	}
+
+	@Override
+	public void configure(MarkupLanguageConfiguration configuration) throws UnsupportedOperationException {
+		if (configuration.isOptimizeForRepositoryUsage()) {
+			setPreprocessFootnotes(true);
+		}
+		super.configure(configuration);
+	}
+
+	@Override
+	public TextileLanguage clone() {
+		TextileLanguage copy = (TextileLanguage) super.clone();
+		copy.preprocessFootnotes = preprocessFootnotes;
+		return copy;
+	}
+
+	@Override
+	public void processContent(MarkupParser parser, String markupContent, boolean asDocument) {
+		if (preprocessFootnotes) {
+			boolean previousBlocksOnly = isBlocksOnly();
+			boolean previousFilterGenerativeContents = isFilterGenerativeContents();
+			setBlocksOnly(true);
+			setFilterGenerativeContents(true);
+
+			DocumentBuilder builder = parser.getBuilder();
+			parser.setBuilder(new NoOpDocumentBuilder());
+			currentState = new TextileContentState();
+			TextileContentState preprocessingState = currentState;
+			super.processContent(parser, markupContent, asDocument);
+
+			setBlocksOnly(previousBlocksOnly);
+			setFilterGenerativeContents(previousFilterGenerativeContents);
+
+			currentState = new TextileContentState();
+			currentState.setFootnoteNumbers(preprocessingState.getFootnoteNumbers());
+			parser.setBuilder(builder);
+			super.processContent(parser, markupContent, asDocument);
+
+			currentState = null;
+		} else {
+			currentState = null;
+			super.processContent(parser, markupContent, asDocument);
+		}
 	}
 }

@@ -10,10 +10,12 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.textile.core.token;
 
+import org.eclipse.mylyn.internal.wikitext.textile.core.TextileContentState;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
+import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 /**
  * 
@@ -41,18 +43,24 @@ public class FootnoteReferenceReplacementToken extends PatternBasedElement {
 		@Override
 		public void emit() {
 			String footnote = group(1);
-			String htmlId = state.getFootnoteId(footnote);
 
-			int originalSegmentEndOffset = state.getLineSegmentEndOffset();
-			state.setLineCharacterOffset(start(1) - 1);
-			state.setLineSegmentEndOffset(end(1) + 1);
+			if (((TextileLanguage) getMarkupLanguage()).isPreprocessFootnotes()
+					&& !((TextileContentState) getState()).hasFootnoteNumber(footnote)) {
+				builder.characters(group(0));
+			} else {
+				String htmlId = state.getFootnoteId(footnote);
 
-			builder.beginSpan(SpanType.SUPERSCRIPT, new Attributes(null, "footnote", null, null)); //$NON-NLS-1$
-			builder.link("#" + htmlId, footnote); //$NON-NLS-1$
-			builder.endSpan();
+				int originalSegmentEndOffset = state.getLineSegmentEndOffset();
+				state.setLineCharacterOffset(start(1) - 1);
+				state.setLineSegmentEndOffset(end(1) + 1);
 
-			state.setLineCharacterOffset(originalSegmentEndOffset);
-			state.setLineSegmentEndOffset(originalSegmentEndOffset);
+				builder.beginSpan(SpanType.SUPERSCRIPT, new Attributes(null, "footnote", null, null)); //$NON-NLS-1$
+				builder.link("#" + htmlId, footnote); //$NON-NLS-1$
+				builder.endSpan();
+
+				state.setLineCharacterOffset(originalSegmentEndOffset);
+				state.setLineSegmentEndOffset(originalSegmentEndOffset);
+			}
 		}
 	}
 

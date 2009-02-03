@@ -36,6 +36,8 @@ public class TextileLanguageTest extends TestCase {
 
 	private MarkupParser parser;
 
+	private TextileLanguage markupLanaguage;
+
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
@@ -44,7 +46,8 @@ public class TextileLanguageTest extends TestCase {
 
 	private void initParser() throws IOException {
 		parser = new MarkupParser();
-		parser.setMarkupLanaguage(new TextileLanguage());
+		markupLanaguage = new TextileLanguage();
+		parser.setMarkupLanaguage(markupLanaguage);
 	}
 
 	public void testSimpleHeaders() {
@@ -328,6 +331,14 @@ public class TextileLanguageTest extends TestCase {
 				.find());
 		// assert on footnote reference
 		assertTrue(Pattern.compile("<sup class=\"footnote\"><a href=\"#___fn[^\"]+\">1</a></sup>").matcher(html).find());
+	}
+
+	public void testFootnoteRefNoFootnote() throws IOException {
+		markupLanaguage.setPreprocessFootnotes(true);
+		String html = parser.parseToHtml("See foo[1].\n\nNo such footnote!");
+
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><p>See foo[1].</p><p>No such footnote!</p></body>"));
 	}
 
 	public void testListUnordered() throws IOException {

@@ -397,6 +397,7 @@ public abstract class MarkupLanguage implements Cloneable {
 						PatternBasedElementProcessor processor = element.newProcessor();
 						processor.setLineStartOffset(matcher.start());
 						processor.setLineEndOffset(matcher.end());
+						processor.setGroup(0, matcher.group(0), matcher.start(0), matcher.end(0));
 						for (int y = 0; y < element.getPatternGroupCount(); ++y) {
 							final int groupIndex = group + y + 1;
 							processor.setGroup(y + 1, matcher.group(groupIndex), matcher.start(groupIndex),
