@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2009 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     David Green - fix for bug 263418
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui;
@@ -14,11 +15,13 @@ package org.eclipse.mylyn.internal.tasks.ui;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryCompletionProcessor;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.ITasksUiFactory;
 
 /**
  * @author Steffen Pingel
+ * @author David Green
  */
 public class TasksUiFactory implements ITasksUiFactory {
 
@@ -31,8 +34,7 @@ public class TasksUiFactory implements ITasksUiFactory {
 	}
 
 	public IContentAssistProcessor createTaskContentAssistProcessor(TaskRepository repository) {
-		// ignore
-		return null;
+		return new RepositoryCompletionProcessor(repository);
 	}
 
 }
