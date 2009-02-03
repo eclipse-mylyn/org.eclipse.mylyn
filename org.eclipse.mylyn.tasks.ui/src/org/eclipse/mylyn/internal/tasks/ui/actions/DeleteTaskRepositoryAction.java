@@ -16,27 +16,34 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonsUiUtil;
+import org.eclipse.mylyn.internal.provisional.commons.ui.ICoreRunnable;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.ITaskListRunnable;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.UnsubmittedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.TaskRepositoryUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.WorkbenchImages;
 import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 
 /**
  * @author Mik Kersten
+ * @author David Shepherd
+ * @author Steffen Pingel
  */
 public class DeleteTaskRepositoryAction extends AbstractTaskRepositoryAction {
 
@@ -48,6 +55,7 @@ public class DeleteTaskRepositoryAction extends AbstractTaskRepositoryAction {
 		setId(ID);
 		setEnabled(false);
 		setActionDefinitionId(IWorkbenchActionDefinitionIds.DELETE);
+		setSingleSelect(true);
 	}
 
 	public void init(IViewPart view) {
@@ -56,71 +64,93 @@ public class DeleteTaskRepositoryAction extends AbstractTaskRepositoryAction {
 
 	@Override
 	public void run() {
-		try {
+		final TaskRepository repositoryToDelete = getTaskRepository(getStructuredSelection());
+		if (repositoryToDelete == null) {
+			return;
+		}
+		final List<IRepositoryQuery> queriesToDelete = new ArrayList<IRepositoryQuery>();
+		final List<AbstractTask> tasksToDelete = new ArrayList<AbstractTask>();
 
-			boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench()
-					.getActiveWorkbenchWindow()
-					.getShell(), Messages.DeleteTaskRepositoryAction_Confirm_Delete, Messages.DeleteTaskRepositoryAction_Delete_the_selected_task_repositories);
-			if (deleteConfirmed) {
-				IStructuredSelection selection = getStructuredSelection();
+		// check for queries over this repository			
+		Set<RepositoryQuery> queries = TasksUiInternal.getTaskList().getQueries();
+		for (IRepositoryQuery query : queries) {
+			if (repositoryToDelete.getRepositoryUrl().equals(query.getRepositoryUrl())
+					&& repositoryToDelete.getConnectorKind().equals(query.getConnectorKind())) {
+				queriesToDelete.add(query);
+			}
+		}
 
-				// check for queries over this repository
-				Set<RepositoryQuery> queries = TasksUiInternal.getTaskList().getQueries();
-				List<TaskRepository> repositoriesInUse = new ArrayList<TaskRepository>();
-				List<TaskRepository> repositoriesToDelete = new ArrayList<TaskRepository>();
-				for (Object selectedObject : selection.toList()) {
-					if (selectedObject instanceof TaskRepository) {
-						TaskRepository taskRepository = (TaskRepository) selectedObject;
-						if (queries != null && queries.size() > 0) {
-							for (IRepositoryQuery query : queries) {
-								if (query.getRepositoryUrl().equals(taskRepository.getRepositoryUrl())) {
-									repositoriesInUse.add(taskRepository);
-									break;
-								}
-							}
-						}
-						if (!repositoriesInUse.contains(taskRepository)) {
-							repositoriesToDelete.add(taskRepository);
-						}
-					}
-				}
+		// check for tasks from this repository
+		final Set<ITask> tasks = TasksUiPlugin.getTaskList().getTasks(repositoryToDelete.getRepositoryUrl());
+		for (ITask task : tasks) {
+			if (repositoryToDelete.getRepositoryUrl().equals(task.getRepositoryUrl())
+					&& repositoryToDelete.getConnectorKind().equals(task.getConnectorKind())) {
+				tasksToDelete.add((AbstractTask) task);
+			}
+		}
 
-				// check for tasks from this repository
-				// bug 243975
-				Collection<AbstractTask> tasks = TasksUiPlugin.getTaskList().getAllTasks();
-				for (Object selectedObject : selection.toList()) {
-					if (selectedObject instanceof TaskRepository) {
-						TaskRepository taskRepository = (TaskRepository) selectedObject;
-						if (tasks != null && tasks.size() > 0) {
-							for (ITask task : tasks) {
-								if (task.getRepositoryUrl() != null
-										&& task.getRepositoryUrl().equals(taskRepository.getRepositoryUrl())) {
-									repositoriesInUse.add(taskRepository);
-									break;
-								}
-							}
-						}
-						if (repositoriesInUse.contains(taskRepository)) {
-							repositoriesToDelete.remove(taskRepository);
-						}
-					}
-				}
-
-				for (TaskRepository taskRepository : repositoriesToDelete) {
-					TasksUiPlugin.getRepositoryManager().removeRepository(taskRepository,
-							TasksUiPlugin.getDefault().getRepositoriesFilePath());
-					// if repository is contributed via template, ensure it isn't added again
-					TaskRepositoryUtil.disableAddAutomatically(taskRepository.getRepositoryUrl());
-				}
-
-				if (repositoriesInUse.size() > 0) {
-					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-							Messages.DeleteTaskRepositoryAction_Repository_In_Use,
-							Messages.DeleteTaskRepositoryAction_Repository_In_Use_MESSAGE);
+		// add unsubmitted tasks
+		UnsubmittedTaskContainer unsubmitted = TasksUiPlugin.getTaskList().getUnsubmittedContainer(
+				repositoryToDelete.getRepositoryUrl());
+		if (unsubmitted != null) {
+			Collection<ITask> children = unsubmitted.getChildren();
+			if (children != null) {
+				for (ITask task : children) {
+					tasksToDelete.add((AbstractTask) task);
 				}
 			}
-		} catch (Exception e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, e.getMessage(), e));
+		}
+
+		// confirm that the user wants to delete all tasks and queries that are associated
+		boolean deleteConfirmed;
+		if (queriesToDelete.size() > 0 || tasksToDelete.size() > 0) {
+			deleteConfirmed = MessageDialog.openQuestion(TasksUiInternal.getShell(),
+					Messages.DeleteTaskRepositoryAction_Confirm_Delete, NLS.bind(
+							Messages.DeleteTaskRepositoryAction_Delete_the_selected_task_repositories, new Integer[] {
+									tasksToDelete.size(), queriesToDelete.size() }));
+		} else {
+			deleteConfirmed = MessageDialog.openQuestion(TasksUiInternal.getShell(),
+					Messages.DeleteTaskRepositoryAction_Confirm_Delete, NLS.bind(
+							Messages.DeleteTaskRepositoryAction_Delete_Specific_Task_Repository,
+							new String[] { repositoryToDelete.getRepositoryLabel() }));
+
+		}
+		if (deleteConfirmed) {
+			ICoreRunnable op = new ICoreRunnable() {
+				public void run(IProgressMonitor monitor) throws CoreException {
+					try {
+						monitor.beginTask(Messages.DeleteTaskRepositoryAction_Delete_Repository_In_Progress,
+								IProgressMonitor.UNKNOWN);
+						DeleteAction.prepareDeletion(tasksToDelete);
+						DeleteAction.prepareDeletion(queriesToDelete);
+						TasksUiPlugin.getTaskList().run(new ITaskListRunnable() {
+							public void execute(IProgressMonitor monitor) throws CoreException {
+								// delete tasks
+								DeleteAction.performDeletion(tasksToDelete);
+								// delete queries
+								DeleteAction.performDeletion(queriesToDelete);
+								// delete repository
+								TasksUiPlugin.getRepositoryManager().removeRepository(repositoryToDelete,
+										TasksUiPlugin.getDefault().getRepositoriesFilePath());
+								// if repository is contributed via template, ensure it isn't added again
+								TaskRepositoryUtil.disableAddAutomatically(repositoryToDelete.getRepositoryUrl());
+							}
+						}, monitor);
+					} finally {
+						monitor.done();
+					}
+				}
+			};
+			try {
+				CommonsUiUtil.runInUi(op, null);
+			} catch (CoreException e) {
+				Status status = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
+						"Problems encountered deleting task repository: {0}", e.getMessage()), e); //$NON-NLS-1$
+				TasksUiInternal.logAndDisplayStatus(Messages.DeleteTaskRepositoryAction_Delete_Task_Repository_Failed,
+						status);
+			} catch (OperationCanceledException e) {
+				// canceled
+			}
 		}
 	}
 }

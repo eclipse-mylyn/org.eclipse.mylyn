@@ -656,7 +656,6 @@ public class TaskList implements ITaskList, ITransferList {
 		} finally {
 			unlock();
 		}
-
 	}
 
 	private void lock() {

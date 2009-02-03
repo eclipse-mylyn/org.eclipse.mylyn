@@ -15,7 +15,9 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -23,8 +25,11 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonsUiUtil;
+import org.eclipse.mylyn.internal.provisional.commons.ui.ICoreRunnable;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AutomaticRepositoryTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.ITaskListRunnable;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
@@ -36,6 +41,7 @@ import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.WorkbenchImages;
@@ -61,7 +67,7 @@ public class DeleteAction extends Action {
 		doDelete(((IStructuredSelection) selection).toList());
 	}
 
-	protected void doDelete(List<?> toDelete) {
+	protected void doDelete(final List<?> toDelete) {
 		String elements = ""; //$NON-NLS-1$
 		int i = 0;
 		for (Object object : toDelete) {
@@ -108,22 +114,64 @@ public class DeleteAction extends Action {
 
 		message += "\n\n" + elements; //$NON-NLS-1$
 
-		boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow()
-				.getShell(), Messages.DeleteAction_Confirm_Delete, message);
-		if (!deleteConfirmed) {
-			return;
+		if (toDelete.isEmpty()) {
+			MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+					Messages.DeleteAction_Delete_failed, Messages.DeleteAction_Nothing_selected);
+		} else {
+			boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench()
+					.getActiveWorkbenchWindow()
+					.getShell(), Messages.DeleteAction_Confirm_Delete, message);
+			if (deleteConfirmed) {
+				ICoreRunnable op = new ICoreRunnable() {
+					public void run(IProgressMonitor monitor) throws CoreException {
+						try {
+							monitor.beginTask(Messages.DeleteAction_Delete_in_progress, IProgressMonitor.UNKNOWN);
+							prepareDeletion(toDelete);
+							TasksUiPlugin.getTaskList().run(new ITaskListRunnable() {
+								public void execute(IProgressMonitor monitor) throws CoreException {
+									performDeletion(toDelete);
+								}
+							}, monitor);
+						} finally {
+							monitor.done();
+						}
+					}
+				};
+				try {
+					CommonsUiUtil.runInUi(op, null);
+				} catch (CoreException e) {
+					Status status = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
+							"Problems encountered deleting task list elements: {0}", e.getMessage()), e); //$NON-NLS-1$
+					TasksUiInternal.logAndDisplayStatus(
+							Messages.DeleteTaskRepositoryAction_Delete_Task_Repository_Failed, status);
+				} catch (OperationCanceledException e) {
+					// canceled
+				}
+			}
 		}
-
-		performDeletion(toDelete);
 	}
 
-	protected void performDeletion(Collection<?> toDelete) {
+	public static void prepareDeletion(Collection<?> toDelete) {
 		for (Object selectedObject : toDelete) {
-			if (selectedObject instanceof ITask) {
-				AbstractTask task = null;
-				task = (AbstractTask) selectedObject;
+			if (selectedObject instanceof AbstractTask) {
+				AbstractTask task = (AbstractTask) selectedObject;
 				TasksUi.getTaskActivityManager().deactivateTask(task);
+				TasksUiInternal.closeTaskEditorInAllPages(task, false);
+			} else if (selectedObject instanceof AutomaticRepositoryTaskContainer) {
+				// support both the unmatched and the unsubmitted
+				if (toDelete.size() == 1) {
+					while (((AutomaticRepositoryTaskContainer) selectedObject).getChildren().size() != 0) {
+						prepareDeletion(((AutomaticRepositoryTaskContainer) selectedObject).getChildren());
+					}
+				}
+			}
+		}
+	}
+
+	public static void performDeletion(Collection<?> toDelete) {
+		for (Object selectedObject : toDelete) {
+			if (selectedObject instanceof AbstractTask) {
+				AbstractTask task = (AbstractTask) selectedObject;
 				TasksUiInternal.getTaskList().deleteTask(task);
 				try {
 					TasksUiPlugin.getTaskDataManager().deleteTaskData(task);
@@ -132,43 +180,18 @@ public class DeleteAction extends Action {
 							e));
 				}
 				ContextCore.getContextManager().deleteContext(task.getHandleIdentifier());
-				TasksUiInternal.closeEditorInActivePage(task, false);
 			} else if (selectedObject instanceof IRepositoryQuery) {
-				// boolean deleteConfirmed =
-				// MessageDialog.openQuestion(PlatformUI.getWorkbench()
-				// .getActiveWorkbenchWindow().getShell(), "Confirm delete",
-				// "Delete the selected query? Task data will not be deleted.");
-				// if (deleteConfirmed) {
 				TasksUiInternal.getTaskList().deleteQuery((RepositoryQuery) selectedObject);
-				// }
 			} else if (selectedObject instanceof TaskCategory) {
-				// boolean deleteConfirmed =
-				// MessageDialog.openQuestion(PlatformUI.getWorkbench()
-				// .getActiveWorkbenchWindow().getShell(), "Confirm Delete",
-				// "Delete the selected category? Contained tasks will be moved
-				// to the root.");
-				// if (!deleteConfirmed)
-				// return;
-				TaskCategory cat = (TaskCategory) selectedObject;
-				for (ITask task : cat.getChildren()) {
-					ContextCore.getContextManager().deleteContext(task.getHandleIdentifier());
-					TasksUiInternal.closeEditorInActivePage(task, false);
-				}
-				TasksUiInternal.getTaskList().deleteCategory(cat);
+				TasksUiInternal.getTaskList().deleteCategory((TaskCategory) selectedObject);
 			} else if (selectedObject instanceof AutomaticRepositoryTaskContainer) {
 				// support both the unmatched and the unsubmitted
-
 				if (toDelete.size() == 1) {
-
 					// loop to ensure that all subtasks are deleted as well
 					while (((AutomaticRepositoryTaskContainer) selectedObject).getChildren().size() != 0) {
 						performDeletion(((AutomaticRepositoryTaskContainer) selectedObject).getChildren());
 					}
 				}
-			} else {
-				MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-						Messages.DeleteAction_Delete_failed, Messages.DeleteAction_Nothing_selected);
-				return;
 			}
 		}
 	}

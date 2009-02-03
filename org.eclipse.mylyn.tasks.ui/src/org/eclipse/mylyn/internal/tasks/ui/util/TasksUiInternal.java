@@ -216,8 +216,8 @@ public class TasksUiInternal {
 				TaskRepository repository = TasksUi.getRepositoryManager().getRepository(repositoryKind,
 						task.getRepositoryUrl());
 				if (repository == null) {
-					displayStatus(Messages.TasksUiInternal_Failed_to_open_task, new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-							Messages.TasksUiInternal_No_repository_found));
+					displayStatus(Messages.TasksUiInternal_Failed_to_open_task, new Status(IStatus.ERROR,
+							TasksUiPlugin.ID_PLUGIN, Messages.TasksUiInternal_No_repository_found));
 					return;
 				}
 
@@ -599,8 +599,9 @@ public class TasksUiInternal {
 	}
 
 	/**
-	 * @since 3.0
+	 * @deprecated use {@link #closeEditorInActivePage(ITask, boolean)}
 	 */
+	@Deprecated
 	public static void closeEditorInActivePage(ITask task, boolean save) {
 		Assert.isNotNull(task);
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
@@ -617,6 +618,23 @@ public class TasksUiInternal {
 		IEditorPart editor = page.findEditor(input);
 		if (editor != null) {
 			page.closeEditor(editor, save);
+		}
+	}
+
+	public static void closeTaskEditorInAllPages(ITask task, boolean save) {
+		Assert.isNotNull(task);
+		IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
+		for (IWorkbenchWindow window : windows) {
+			IWorkbenchPage[] pages = window.getPages();
+			for (IWorkbenchPage page : pages) {
+				TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
+						task.getRepositoryUrl());
+				IEditorInput input = new TaskEditorInput(taskRepository, task);
+				IEditorPart editor = page.findEditor(input);
+				if (editor != null) {
+					page.closeEditor(editor, save);
+				}
+			}
 		}
 	}
 

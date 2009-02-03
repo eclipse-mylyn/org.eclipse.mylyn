@@ -79,6 +79,8 @@ public class Messages extends NLS {
 
 	public static String DeleteAction_Delete_failed;
 
+	public static String DeleteAction_Delete_in_progress;
+
 	public static String DeleteAction_Delete_the_planning_information_and_context_for_the_repository_task;
 
 	public static String DeleteAction_Delete_the_planning_information_and_context_of_all_unmatched_tasks;
@@ -95,6 +97,8 @@ public class Messages extends NLS {
 
 	public static String DeleteTaskRepositoryAction_Confirm_Delete;
 
+	public static String DeleteTaskRepositoryAction_Delete_Specific_Task_Repository;
+
 	public static String DeleteTaskRepositoryAction_Delete_Repository;
 
 	public static String DeleteTaskRepositoryAction_Delete_the_selected_task_repositories;
@@ -102,6 +106,10 @@ public class Messages extends NLS {
 	public static String DeleteTaskRepositoryAction_Repository_In_Use;
 
 	public static String DeleteTaskRepositoryAction_Repository_In_Use_MESSAGE;
+
+	public static String DeleteTaskRepositoryAction_Delete_Repository_In_Progress;
+
+	public static String DeleteTaskRepositoryAction_Delete_Task_Repository_Failed;
 
 	public static String EditRepositoryPropertiesAction_Properties;
 
