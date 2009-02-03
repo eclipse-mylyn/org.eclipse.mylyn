@@ -32,12 +32,15 @@ import org.xml.sax.helpers.DefaultHandler;
  * Parser for xml bugzilla reports.
  * 
  * @author Rob Elves
+ * @author Hiroyuki Inaba (internationalization)
  */
 public class SaxMultiBugReportContentHandler extends DefaultHandler {
 
 	private static final String ATTRIBUTE_NAME = "name"; //$NON-NLS-1$
 
-	private static final String COMMENT_ATTACHMENT_STRING = Messages.SaxMultiBugReportContentHandler_CREATED_AN_ATTACHEMENT_ID;
+	private static final String ID_STRING_BEGIN = " (id="; //$NON-NLS-1$
+
+	private static final String ID_STRING_END = ")"; //$NON-NLS-1$
 
 	private StringBuffer characters;
 
@@ -574,15 +577,30 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 
 	/** determines attachment id from comment */
 	private void parseAttachment(TaskCommentMapper comment) {
-
 		String attachmentID = ""; //$NON-NLS-1$
 		String commentText = comment.getText();
-		if (commentText.startsWith(COMMENT_ATTACHMENT_STRING)) {
-			int endIndex = commentText.indexOf(")"); //$NON-NLS-1$
-			if (endIndex > 0 && endIndex < commentText.length()) {
-				attachmentID = commentText.substring(COMMENT_ATTACHMENT_STRING.length(), endIndex);
-				if (!attachmentID.equals("")) { //$NON-NLS-1$
-					attachIdToComment.put(attachmentID, comment);
+		int firstDelimiter = commentText.indexOf("\n"); //$NON-NLS-1$
+		if (firstDelimiter < 0) {
+			firstDelimiter = commentText.length();
+		}
+		int startIndex = commentText.indexOf(ID_STRING_BEGIN);
+		if (startIndex > 0 && startIndex < firstDelimiter) {
+			int endIndex = commentText.indexOf(ID_STRING_END, startIndex);
+			if (endIndex > 0 && endIndex < firstDelimiter) {
+				startIndex += ID_STRING_BEGIN.length();
+				int p = startIndex;
+				while (p < endIndex) {
+					char c = commentText.charAt(p);
+					if (c < '0' || c > '9') {
+						break;
+					}
+					p++;
+				}
+				if (p == endIndex) {
+					attachmentID = commentText.substring(startIndex, endIndex);
+					if (!attachmentID.equals("")) { //$NON-NLS-1$
+						attachIdToComment.put(attachmentID, comment);
+					}
 				}
 			}
 		}

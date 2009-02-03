@@ -235,8 +235,6 @@ public class Messages extends NLS {
 
 	public static String SaxMultiBugReportContentHandler_Bug_id_from_server_did_not_match_requested_id;
 
-	public static String SaxMultiBugReportContentHandler_CREATED_AN_ATTACHEMENT_ID;
-
 	public static String SaxMultiBugReportContentHandler_id_not_found;
 
 	public static String BugzillaStatus_repositoryLoginFailure;
