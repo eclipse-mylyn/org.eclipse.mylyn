@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<toc topic="userguide/Mylyn Reference.html" label="Mylyn Reference">
+	<topic href="userguide/Mylyn Reference.html" label="Introduction">
+		<topic href="userguide/Mylyn Reference.html#Shortcuts" label="Shortcuts"></topic>
+	</topic>
+	<topic href="userguide/Installation.html" label="Installation">
+		<topic href="userguide/Installation.html#Install_Method_1_-_Eclispe_3.4" label="Install Method 1 - Eclispe 3.4"></topic>
+		<topic href="userguide/Installation.html#Install_Method_2_-_Eclipse_3.3_and_older" label="Install Method 2 - Eclipse 3.3 and older"></topic>
+	</topic>
+	<topic href="userguide/Task-List.html" label="Task List">
+		<topic href="userguide/Task-List.html#Task_List_Presentation" label="Task List Presentation"></topic>
+		<topic href="userguide/Task-List.html#Icon_Legend_and_Color_Coding" label="Icon Legend and Color Coding"></topic>
+		<topic href="userguide/Task-List.html#Scheduling" label="Scheduling"></topic>
+		<topic href="userguide/Task-List.html#Synchronization" label="Synchronization"></topic>
+		<topic href="userguide/Task-List.html#Incoming_Changes" label="Incoming Changes"></topic>
+		<topic href="userguide/Task-List.html#Keyboard_Shortcuts" label="Keyboard Shortcuts"></topic>
+		<topic href="userguide/Task-List.html#Reviewing_Tasks" label="Reviewing Tasks"></topic>
+		<topic href="userguide/Task-List.html#Task_Progress_Indicators" label="Task Progress Indicators"></topic>
+		<topic href="userguide/Task-List.html#Task_List_Settings_and_Operations" label="Task List Settings and Operations"></topic>
+	</topic>
+	<topic href="userguide/Configuring-Task-Repositories.html" label="Configuring Task Repositories"></topic>
+	<topic href="userguide/Creating-new-Queries.html" label="Creating new Queries"></topic>
+	<topic href="userguide/Creating-new-Tasks.html" label="Creating new Tasks">
+		<topic href="userguide/Creating-new-Tasks.html#Local_Tasks" label="Local Tasks"></topic>
+		<topic href="userguide/Creating-new-Tasks.html#Repository_Tasks" label="Repository Tasks"></topic>
+	</topic>
+	<topic href="userguide/Task-Editor.html" label="Task Editor">
+		<topic href="userguide/Task-Editor.html#Repository_Task_Details" label="Repository Task Details"></topic>
+		<topic href="userguide/Task-Editor.html#Context" label="Context"></topic>
+		<topic href="userguide/Task-Editor.html#Planning" label="Planning"></topic>
+	</topic>
+	<topic href="userguide/Task-Focused-Interface.html" label="Task-Focused Interface">
+		<topic href="userguide/Task-Focused-Interface.html#Focusing_Navigator_Views" label="Focusing Navigator Views"></topic>
+		<topic href="userguide/Task-Focused-Interface.html#Alt.2BClick_Navigation" label="Alt+Click Navigation"></topic>
+		<topic href="userguide/Task-Focused-Interface.html#Focusing_Editors" label="Focusing Editors"></topic>
+		<topic href="userguide/Task-Focused-Interface.html#Task-focused_Ordering" label="Task-focused Ordering"></topic>
+		<topic href="userguide/Task-Focused-Interface.html#Working_Set_Integration" label="Working Set Integration"></topic>
+		<topic href="userguide/Task-Focused-Interface.html#Open_Task_dialog" label="Open Task dialog"></topic>
+		<topic href="userguide/Task-Focused-Interface.html#Task_Hyperlinking" label="Task Hyperlinking"></topic>
+		<topic href="userguide/Task-Focused-Interface.html#Reporting_Bugs_from_the_Error_Log" label="Reporting Bugs from the Error Log"></topic>
+	</topic>
+	<topic href="userguide/Team-Support.html" label="Team Support">
+		<topic href="userguide/Team-Support.html#Task-focused_Change_Sets" label="Task-focused Change Sets"></topic>
+		<topic href="userguide/Team-Support.html#Automatic_Commit_Messages" label="Automatic Commit Messages"></topic>
+		<topic href="userguide/Team-Support.html#Working_with_Patches" label="Working with Patches"></topic>
+	</topic>
+	<topic href="userguide/Preferences.html" label="Preferences">
+		<topic href="userguide/Preferences.html#Tasks" label="Tasks"></topic>
+		<topic href="userguide/Preferences.html#Context_2" label="Context"></topic>
+		<topic href="userguide/Preferences.html#Resources" label="Resources"></topic>
+		<topic href="userguide/Preferences.html#Team" label="Team"></topic>
+	</topic>
+	<topic href="userguide/Task-Repository-Connectors.html" label="Task Repository Connectors">
+		<topic href="userguide/Task-Repository-Connectors.html#Bugzilla_Connector" label="Bugzilla Connector"></topic>
+		<topic href="userguide/Task-Repository-Connectors.html#Trac_Connector" label="Trac Connector"></topic>
+		<topic href="userguide/Task-Repository-Connectors.html#JIRA_Connector" label="JIRA Connector"></topic>
+		<topic href="userguide/Task-Repository-Connectors.html#Generic_Web_Templates_Connector" label="Generic Web Templates Connector"></topic>
+		<topic href="userguide/Task-Repository-Connectors.html#XPlanner_Connector" label="XPlanner Connector"></topic>
+	</topic>
+	<topic href="userguide/Integration-with-other-tools.html" label="Integration with other tools">
+		<topic href="userguide/Integration-with-other-tools.html#Using_Mylyn_with_WTP" label="Using Mylyn with WTP"></topic>
+		<topic href="userguide/Integration-with-other-tools.html#External_builders" label="External builders"></topic>
+	</topic>
+	<topic href="userguide/Updating-This-Document.html" label="Updating This Document"></topic>
+</toc>

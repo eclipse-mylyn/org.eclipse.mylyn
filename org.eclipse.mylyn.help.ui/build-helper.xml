@@ -31,7 +31,7 @@
 
     <target name="all" depends="init" description="Generate Eclipse help content for the Mylyn user guide">
         <eclipse-wiki-to-help
-        	help.doc.filenamenoextension="Mylyn User Guide"
+        	help.doc.filenamenoextension="Mylyn Reference"
         	help.doc.url.base="${mylyn.help.doc.url.base}"
         	help.doc.url.html="${mylyn.help.doc.url.base}/Mylyn/User_Guide"
         	help.doc.url.xml="${mylyn.help.doc.url.base}/Special:Export/Mylyn/User_Guide"
