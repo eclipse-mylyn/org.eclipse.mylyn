@@ -23,13 +23,13 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage.PatternBased
  * 
  * @author David Green
  */
-public class MarkupLanguageConfiguration {
+public class MarkupLanguageConfiguration implements Cloneable {
 
-	private final List<Block> blocks = new ArrayList<Block>();
+	private List<Block> blocks = new ArrayList<Block>();
 
-	private final List<PatternBasedElement> phraseModifiers = new ArrayList<PatternBasedElement>();
+	private List<PatternBasedElement> phraseModifiers = new ArrayList<PatternBasedElement>();
 
-	private final List<PatternBasedElement> tokens = new ArrayList<PatternBasedElement>();
+	private List<PatternBasedElement> tokens = new ArrayList<PatternBasedElement>();
 
 	private boolean escapingHtmlAndXml = false;
 
@@ -154,4 +154,25 @@ public class MarkupLanguageConfiguration {
 		}
 	}
 
+	@Override
+	public MarkupLanguageConfiguration clone() {
+		try {
+			MarkupLanguageConfiguration copy = (MarkupLanguageConfiguration) super.clone();
+			copy.blocks = new ArrayList<Block>(blocks.size());
+			for (Block block : blocks) {
+				copy.blocks.add(block.clone());
+			}
+			copy.phraseModifiers = new ArrayList<PatternBasedElement>(phraseModifiers.size());
+			for (PatternBasedElement element : phraseModifiers) {
+				copy.phraseModifiers.add(element.clone());
+			}
+			copy.tokens = new ArrayList<PatternBasedElement>(tokens.size());
+			for (PatternBasedElement element : tokens) {
+				copy.tokens.add(element.clone());
+			}
+			return copy;
+		} catch (CloneNotSupportedException e) {
+			throw new IllegalStateException(e);
+		}
+	}
 }

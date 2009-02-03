@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 David Green and others.
+ * Copyright (c) 2007, 2009 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,8 +17,6 @@ package org.eclipse.mylyn.wikitext.core.parser.markup;
  * Implementations of this class must be thread-safe (generally stateless).
  * 
  * @author David Green
- * 
- * @param <P>
  */
 public abstract class PatternBasedElement implements Cloneable {
 
@@ -43,4 +41,13 @@ public abstract class PatternBasedElement implements Cloneable {
 	 * create a new processor for processing the type of element detected by this class.
 	 */
 	protected abstract PatternBasedElementProcessor newProcessor();
+
+	@Override
+	public PatternBasedElement clone() {
+		try {
+			return (PatternBasedElement) super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new IllegalStateException();
+		}
+	}
 }

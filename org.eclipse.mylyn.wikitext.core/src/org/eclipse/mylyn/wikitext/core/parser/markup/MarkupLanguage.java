@@ -69,7 +69,7 @@ public abstract class MarkupLanguage implements Cloneable {
 			throw new IllegalStateException(e);
 		}
 		markupLanguage.setName(name);
-		markupLanguage.configuration = configuration;
+		markupLanguage.configuration = configuration == null ? null : configuration.clone();
 		return markupLanguage;
 	}
 
