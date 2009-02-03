@@ -12,13 +12,18 @@ package org.eclipse.mylyn.wikitext.tests;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.xml.parsers.FactoryConfigurationError;
 
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocumentListener;
+import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.TextViewer;
+import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
@@ -193,6 +198,28 @@ public abstract class AbstractTestApplication {
 		viewer.getTextWidget().setEditable(false);
 		viewer.setMarkup(markup);
 		viewerItem.setControl(viewer.getControl());
+
+		// output to the console info about annotations near the caret
+		viewer.getTextWidget().addSelectionListener(new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+
+			@SuppressWarnings("unchecked")
+			public void widgetSelected(SelectionEvent e) {
+				int offset = e.x;
+				List<String> annotations = new ArrayList<String>();
+				Iterator<Annotation> it = viewer.getAnnotationModel().getAnnotationIterator();
+				while (it.hasNext()) {
+					Annotation annotation = it.next();
+					Position position = viewer.getAnnotationModel().getPosition(annotation);
+					if (Math.abs(position.getOffset() - offset) < 5) {
+						annotations.add(String.format("[%s,%s] %s %s", position.getOffset(), position.getLength(),
+								position.getOffset() - offset, annotation.getType()));
+					}
+				}
+				System.out.println("offset: " + offset + " annotations: " + annotations);
+			}
+		});
 	}
 
 	protected void updateViewers() {

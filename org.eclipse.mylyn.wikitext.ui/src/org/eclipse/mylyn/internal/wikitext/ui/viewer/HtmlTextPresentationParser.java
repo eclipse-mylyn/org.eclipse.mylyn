@@ -189,6 +189,8 @@ public class HtmlTextPresentationParser {
 
 		private String[] cssClasses;
 
+		public int textOffset;
+
 		public ElementState(ElementState parent, String elementName, ElementState elementState, int offset,
 				Attributes atts) {
 			this.parent = parent;
@@ -499,10 +501,10 @@ public class HtmlTextPresentationParser {
 		}
 
 		public void emitText(ElementState elementState, boolean elementClosing) {
+			elementState.textOffset = elementState.offset;
 			if (state.isEmpty() || elementText.length() == 0) {
 				return;
 			}
-
 			String text = elementText.toString();
 			if (elementState.skipWhitespace) {
 				if (elementClosing) {
@@ -583,6 +585,7 @@ public class HtmlTextPresentationParser {
 							}
 						}
 					}
+					elementState.textOffset = getOffset();
 				}
 				out.append(c);
 
@@ -621,8 +624,8 @@ public class HtmlTextPresentationParser {
 
 			if (elementState.annotations != null) {
 				for (Annotation annotation : elementState.annotations) {
-					annotationToPosition.put(annotation, new Position(elementState.originalOffset, getOffset()
-							- elementState.originalOffset));
+					annotationToPosition.put(annotation, new Position(elementState.textOffset, getOffset()
+							- elementState.textOffset));
 				}
 			}
 
@@ -930,10 +933,26 @@ public class HtmlTextPresentationParser {
 				// no different than the default state
 				return;
 			}
-
 			int length = getOffset() - offset;
+			boolean underline = elementState.fontState.isUnderline();
+			boolean strikethrough = elementState.fontState.isStrikethrough();
+			boolean split = offset != elementState.textOffset && (underline || strikethrough);
+			if (split) {
+				length = elementState.textOffset - offset;
+				elementState.fontState.setStrikethrough(false);
+				elementState.fontState.setUnderline(false);
+			}
 			StyleRange styleRange = cssStyleManager.createStyleRange(elementState.fontState, offset, length);
 			styleRanges.add(styleRange);
+			if (split) {
+				offset = elementState.textOffset;
+				length = getOffset() - elementState.textOffset;
+				elementState.fontState.setStrikethrough(strikethrough);
+				elementState.fontState.setUnderline(underline);
+
+				styleRange = cssStyleManager.createStyleRange(elementState.fontState, offset, length);
+				styleRanges.add(styleRange);
+			}
 		}
 
 		private int getOffset() {
