@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.dialogs.DialogPage;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.operation.IRunnableContext;
@@ -74,6 +75,39 @@ public class CommonsUiUtil {
 				}
 			};
 			context.run(true, true, runner);
+		} catch (InvocationTargetException e) {
+			if (e.getCause() instanceof CoreException) {
+				throw (CoreException) e.getCause();
+			} else {
+				CommonsUiPlugin.getDefault().getLog().log(
+						new Status(IStatus.ERROR, CommonsUiPlugin.ID_PLUGIN, "Unexpected exception", e)); //$NON-NLS-1$
+			}
+		} catch (InterruptedException e) {
+			throw new OperationCanceledException();
+		}
+	}
+
+	public static void runInUi(ICoreRunnable runnable, ISchedulingRule rule) throws CoreException {
+		runInUi(PlatformUI.getWorkbench().getProgressService(), runnable, rule);
+	}
+
+	public static void runInUi(IRunnableContext context, final ICoreRunnable runnable, ISchedulingRule rule)
+			throws CoreException {
+		try {
+			IRunnableWithProgress runner = new IRunnableWithProgress() {
+				public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+					try {
+						runnable.run(monitor);
+					} catch (CoreException e) {
+						throw new InvocationTargetException(e);
+					} catch (OperationCanceledException e) {
+						throw new InterruptedException();
+					} finally {
+						monitor.done();
+					}
+				}
+			};
+			PlatformUI.getWorkbench().getProgressService().runInUI(context, runner, rule);
 		} catch (InvocationTargetException e) {
 			if (e.getCause() instanceof CoreException) {
 				throw (CoreException) e.getCause();
