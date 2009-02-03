@@ -193,7 +193,7 @@ public class TextileLanguageTest extends TestCase {
 	public void testListItemWithDeletedText() {
 		String html = parser.parseToHtml("- this is a list item with -deleted text-");
 		System.out.println("HTML: \n" + html);
-		assertTrue(html.contains("<ul><li>this is a list item with <del>deleted text</del></li></ul>"));
+		assertTrue(html.contains("<p>- this is a list item with <del>deleted text</del></p>"));
 	}
 
 	public void testHtmlEntityEncoding() {
@@ -399,6 +399,14 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<ol style=\"color: blue\">"));
 		assertTrue(html.contains("<li>a list with style</li>"));
 		assertTrue(html.contains("</ol>"));
+	}
+
+	public void testListNotAList() throws IOException {
+		// test for bug 263074
+		String html = parser.parseToHtml("- first\n- second");
+
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><p>- first<br/>- second</p></body>"));
 	}
 
 	public void testTable() throws IOException {
