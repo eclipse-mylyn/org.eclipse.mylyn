@@ -599,7 +599,7 @@ public class TasksUiInternal {
 	}
 
 	/**
-	 * @deprecated use {@link #closeEditorInActivePage(ITask, boolean)}
+	 * @deprecated use {@link #closeTaskEditorInAllPages(ITask, boolean)}
 	 */
 	@Deprecated
 	public static void closeEditorInActivePage(ITask task, boolean save) {
