@@ -97,7 +97,7 @@ public class Preferences implements Cloneable {
 		cssByBlockModifierType.put(BLOCK_H6, "font-size: 75%; font-weight: bold;"); //$NON-NLS-1$
 		cssByBlockModifierType.put(BLOCK_BC, "font-family: monospace; color: Blue;"); //$NON-NLS-1$
 		cssByBlockModifierType.put(BLOCK_PRE, "font-family: monospace; color: Blue;"); //$NON-NLS-1$
-		cssByBlockModifierType.put(BLOCK_QUOTE, "font-family: monospace; color: rgb(38,86,145);"); //$NON-NLS-1$
+		cssByBlockModifierType.put(BLOCK_QUOTE, "color: rgb(38,86,145);"); //$NON-NLS-1$
 	}
 
 	private Map<String, String> cssByPhraseModifierType = new LinkedHashMap<String, String>();
