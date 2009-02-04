@@ -265,9 +265,17 @@ public class CssStyleManager {
 					: null;
 			if (monospaceFont == null) {
 				Font defaultFont = JFaceResources.getFontRegistry().defaultFont();
-				FontData[] fontData = defaultFont.getDevice().getFontList("Courier New", true); //$NON-NLS-1$
+				// look for a monospace font.  First look for non-scalable fonts (bug 263074 comment 3 to comment 6)
+				// then scalable fonts.  This addresses platform-specific issues.
+				FontData[] fontData = defaultFont.getDevice().getFontList("Courier New", false); //$NON-NLS-1$
 				if (fontData == null || fontData.length == 0) {
-					fontData = defaultFont.getDevice().getFontList("Courier", true); //$NON-NLS-1$
+					fontData = defaultFont.getDevice().getFontList("Courier", false); //$NON-NLS-1$
+					if (fontData == null || fontData.length == 0) {
+						fontData = defaultFont.getDevice().getFontList("Courier New", true); //$NON-NLS-1$
+						if (fontData == null || fontData.length == 0) {
+							fontData = defaultFont.getDevice().getFontList("Courier", true); //$NON-NLS-1$
+						}
+					}
 				}
 				if (fontData != null && fontData.length > 0) {
 					for (FontData fd : fontData) {
@@ -276,8 +284,6 @@ public class CssStyleManager {
 					JFaceResources.getFontRegistry().put(symbolicName, fontData);
 					monospaceFont = JFaceResources.getFontRegistry().get(symbolicName);
 				}
-			} else {
-
 			}
 			if (monospaceFont != null) {
 				styleRange.font = monospaceFont;
