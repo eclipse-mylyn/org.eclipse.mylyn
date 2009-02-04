@@ -48,6 +48,16 @@ public class BulletDrawingStrategy implements IDrawingStrategy {
 			gc.setLineWidth(0); // NOTE: 0 means width is 1 but with optimized performance
 			gc.setLineStyle(SWT.LINE_SOLID);
 
+			// bug 262999: determine if we're painting in a selection
+			Point selection = textWidget.getSelection();
+			// non-zero length selection, so see if where we're about to draw is within it
+			if (offset >= selection.x && offset < selection.y && selection.x < selection.y) {
+				gc.setBackground(textWidget.getSelectionBackground());
+				gc.setForeground(textWidget.getSelectionForeground());
+			} else {
+				gc.setBackground(textWidget.getBackground());
+			}
+
 			// erase whatever character was there
 			gc.fillRectangle(left.x, left.y, right.x - left.x, lineHeight);
 
