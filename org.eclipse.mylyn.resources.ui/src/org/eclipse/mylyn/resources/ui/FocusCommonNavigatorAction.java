@@ -11,10 +11,14 @@
 
 package org.eclipse.mylyn.resources.ui;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.text.ITextSelection;
@@ -22,14 +26,15 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.ui.AbstractAutoFocusViewAction;
 import org.eclipse.mylyn.context.ui.InterestFilter;
+import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.internal.navigator.NavigatorContentService;
 import org.eclipse.ui.internal.navigator.actions.LinkEditorAction;
-import org.eclipse.ui.internal.navigator.extensions.LinkHelperService;
 import org.eclipse.ui.internal.navigator.filters.SelectFiltersAction;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.ILinkHelper;
@@ -40,7 +45,11 @@ import org.eclipse.ui.navigator.ILinkHelper;
  */
 public abstract class FocusCommonNavigatorAction extends AbstractAutoFocusViewAction {
 
-	private LinkHelperService linkService;
+	private Object linkService;
+
+	private Method linkServiceMethod;
+
+	private boolean resolveFailed;
 
 	private CommonNavigator commonNavigator;
 
@@ -52,16 +61,43 @@ public abstract class FocusCommonNavigatorAction extends AbstractAutoFocusViewAc
 	@Override
 	protected ISelection resolveSelection(IEditorPart editor, ITextSelection changedSelection, StructuredViewer viewer)
 			throws CoreException {
+		if (resolveFailed) {
+			return null;
+		}
 		if (commonNavigator == null) {
 			commonNavigator = (CommonNavigator) super.getPartForAction();
 		}
-		if (linkService == null) {
-			linkService = new LinkHelperService((NavigatorContentService) commonNavigator.getCommonViewer()
-					.getNavigatorContentService());
+		if (linkServiceMethod == null) {
+			// TODO e3.5 replace with call to CommonNavigator.getLinkHelperService()
+			try {
+				try {
+					// e3.5: get helper from common navigator
+					Method method = CommonNavigator.class.getDeclaredMethod("getLinkHelperService"); //$NON-NLS-1$
+					method.setAccessible(true);
+					linkService = method.invoke(commonNavigator);
+				} catch (NoSuchMethodException e) {
+					// e3.3, e3.4: instantiate helper
+					Class<?> clazz = Class.forName("org.eclipse.ui.internal.navigator.extensions.LinkHelperService"); //$NON-NLS-1$
+					Constructor<?> constructor = clazz.getConstructor(NavigatorContentService.class);
+					linkService = constructor.newInstance((NavigatorContentService) commonNavigator.getCommonViewer()
+							.getNavigatorContentService());
+				}
+				linkServiceMethod = linkService.getClass().getDeclaredMethod("getLinkHelpersFor", IEditorInput.class); //$NON-NLS-1$
+			} catch (Throwable e) {
+				resolveFailed = true;
+				StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.ID_PLUGIN,
+						"Initialization of LinkHelperService failed", e)); //$NON-NLS-1$
+			}
 		}
 
 		IEditorInput input = editor.getEditorInput();
-		ILinkHelper[] helpers = linkService.getLinkHelpersFor(editor.getEditorInput());
+		// TODO e3.5 replace with call to linkService.getLinkHelpersFor(editor.getEditorInput());
+		ILinkHelper[] helpers;
+		try {
+			helpers = (ILinkHelper[]) linkServiceMethod.invoke(linkService, editor.getEditorInput());
+		} catch (Exception e) {
+			return null;
+		}
 
 		IStructuredSelection selection = StructuredSelection.EMPTY;
 		IStructuredSelection newSelection = StructuredSelection.EMPTY;
