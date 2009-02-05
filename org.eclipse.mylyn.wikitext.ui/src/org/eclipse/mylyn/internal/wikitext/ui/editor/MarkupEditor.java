@@ -240,6 +240,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 						// workaround for browser problem (bug 262043)
 						int idxOfSlashHash = event.location.indexOf("/#"); //$NON-NLS-1$
 						if (idxOfSlashHash != -1) {
+							// TODO: scroll to visible?
 							return;
 						}
 						// workaround end
