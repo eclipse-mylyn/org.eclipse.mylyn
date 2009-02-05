@@ -234,17 +234,20 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 
 				public void changing(LocationEvent event) {
 					// if it looks like an absolute URL
-					if (event.location.matches("[a-zA-Z]{3,8}://?.*")) { //$NON-NLS-1$
-						event.doit = false;
+					if (event.location.matches("([a-zA-Z]{3,8})://?.*")) { //$NON-NLS-1$
 
 						// workaround for browser problem (bug 262043)
 						int idxOfSlashHash = event.location.indexOf("/#"); //$NON-NLS-1$
 						if (idxOfSlashHash != -1) {
-							// TODO: scroll to visible?
+							// allow javascript-based scrolling to work
+							if (!event.location.startsWith("file:///#")) { //$NON-NLS-1$
+								event.doit = false;
+							}
 							return;
 						}
 						// workaround end
 
+						event.doit = false;
 						try {
 							PlatformUI.getWorkbench().getBrowserSupport().createBrowser("org.eclipse.ui.browser") //$NON-NLS-1$
 									.openURL(new URL(event.location));
@@ -491,7 +494,15 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 						title = title.substring(0, title.lastIndexOf('.'));
 					}
 					StringWriter writer = new StringWriter();
-					HtmlDocumentBuilder builder = new HtmlDocumentBuilder(writer);
+					HtmlDocumentBuilder builder = new HtmlDocumentBuilder(writer) {
+						@Override
+						protected String makeUrlAbsolute(String url) {
+							if (url.startsWith("#")) { //$NON-NLS-1$
+								return String.format("javascript: window.location.hash = '%s'; return false;", url); //$NON-NLS-1$
+							}
+							return super.makeUrlAbsolute(url);
+						}
+					};
 					builder.setTitle(title);
 
 					IPath location = file.getLocation();
@@ -536,7 +547,6 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 					xhtml = writer.toString();
 				}
 			}
-			System.out.println(xhtml);
 			browser.setText(xhtml);
 			previewDirty = false;
 		}
