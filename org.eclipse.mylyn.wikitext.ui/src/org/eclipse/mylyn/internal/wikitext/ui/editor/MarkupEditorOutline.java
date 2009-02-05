@@ -232,7 +232,7 @@ public class MarkupEditorOutline extends ContentOutlinePage implements IShowInSo
 			Object firstElement = structuredSelection.getFirstElement();
 			if (firstElement instanceof OutlineItem) {
 				OutlineItem item = (OutlineItem) firstElement;
-				editor.selectAndReveal(item.getOffset(), item.getLength());
+				editor.selectAndReveal(item);
 			}
 		}
 	}

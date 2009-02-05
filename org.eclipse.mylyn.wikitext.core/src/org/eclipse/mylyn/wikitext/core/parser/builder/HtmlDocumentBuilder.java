@@ -663,7 +663,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	@Override
 	public void link(Attributes attributes, String hrefOrHashName, String text) {
 		writer.writeStartElement(htmlNsUri, "a"); //$NON-NLS-1$
-		writer.writeAttribute("href", makeUrlAbsolute(hrefOrHashName)); //$NON-NLS-1$
+		emitAnchorHref(hrefOrHashName);
 		applyLinkAttributes(attributes, hrefOrHashName);
 		characters(text);
 		writer.writeEndElement(); // a
@@ -987,13 +987,26 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	@Override
 	public void imageLink(Attributes linkAttributes, Attributes imageAttributes, String href, String imageUrl) {
 		writer.writeStartElement(htmlNsUri, "a"); //$NON-NLS-1$
-		writer.writeAttribute("href", makeUrlAbsolute(href)); //$NON-NLS-1$
+		emitAnchorHref(href);
 		applyLinkAttributes(linkAttributes, href);
 		writer.writeEmptyElement(htmlNsUri, "img"); //$NON-NLS-1$
 		applyImageAttributes(imageAttributes);
 		imageUrl = prependImageUrl(imageUrl);
 		writer.writeAttribute("src", makeUrlAbsolute(imageUrl)); //$NON-NLS-1$
 		writer.writeEndElement(); // a
+	}
+
+	/**
+	 * emit the href attribute of an anchor. Subclasses may override to alter the default href or to add other
+	 * attributes such as <code>onclick</code>.
+	 * 
+	 * Overriding classes should pass the href to {@link #makeUrlAbsolute(String)} prior to writing it to the writer.
+	 * 
+	 * @param href
+	 *            the url for the href attribute
+	 */
+	protected void emitAnchorHref(String href) {
+		writer.writeAttribute("href", makeUrlAbsolute(href)); //$NON-NLS-1$
 	}
 
 	private String prependImageUrl(String imageUrl) {

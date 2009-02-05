@@ -197,6 +197,10 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 
 	private IFoldingStructure foldingStructure;
 
+	private CTabFolder tabFolder;
+
+	private CTabItem previewTab;
+
 	public MarkupEditor() {
 		setDocumentProvider(new MarkupDocumentProvider());
 		sourceViewerConfiguration = new MarkupSourceViewerConfiguration(getPreferenceStore());
@@ -207,25 +211,25 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	@Override
 	protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler ruler, int styles) {
 
-		CTabFolder folder = new CTabFolder(parent, SWT.BOTTOM);
+		tabFolder = new CTabFolder(parent, SWT.BOTTOM);
 
 		{
-			sourceTab = new CTabItem(folder, SWT.NONE);
+			sourceTab = new CTabItem(tabFolder, SWT.NONE);
 			updateSourceTabLabel();
 
-			viewer = new MarkupSourceViewer(folder, ruler, getOverviewRuler(), isOverviewRulerVisible(), styles
+			viewer = new MarkupSourceViewer(tabFolder, ruler, getOverviewRuler(), isOverviewRulerVisible(), styles
 					| SWT.WRAP);
 
 			sourceTab.setControl(viewer instanceof Viewer ? ((Viewer) viewer).getControl() : viewer.getTextWidget());
-			folder.setSelection(sourceTab);
+			tabFolder.setSelection(sourceTab);
 		}
 
 		{
-			CTabItem previewTab = new CTabItem(folder, SWT.NONE);
+			previewTab = new CTabItem(tabFolder, SWT.NONE);
 			previewTab.setText(Messages.getString("MarkupEditor.PreviewView_label")); //$NON-NLS-1$
 			previewTab.setToolTipText(Messages.getString("MarkupEditor.PreviewView_tooltip")); //$NON-NLS-1$
 
-			browser = new Browser(folder, SWT.NONE);
+			browser = new Browser(tabFolder, SWT.NONE);
 			// bug 260479: open hyperlinks in a browser
 			browser.addLocationListener(new LocationListener() {
 				public void changed(LocationEvent event) {
@@ -260,15 +264,27 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 			previewTab.setControl(browser);
 		}
 
-		folder.addSelectionListener(new SelectionListener() {
+		tabFolder.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent selectionevent) {
 				widgetSelected(selectionevent);
 			}
 
 			public void widgetSelected(SelectionEvent selectionevent) {
-				updatePreview();
+				if (tabFolder.getSelection() == previewTab) {
+					updatePreview();
+					Display.getCurrent().asyncExec(new Runnable() {
+						public void run() {
+							if (browser.isDisposed()) {
+								return;
+							}
+							OutlineItem item = getNearestMatchingOutlineItem();
+							if (item != null) {
+								revealInBrowser(item);
+							}
+						}
+					});
+				}
 			}
-
 		});
 		viewer.getTextWidget().addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {
@@ -496,11 +512,14 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 					StringWriter writer = new StringWriter();
 					HtmlDocumentBuilder builder = new HtmlDocumentBuilder(writer) {
 						@Override
-						protected String makeUrlAbsolute(String url) {
-							if (url.startsWith("#")) { //$NON-NLS-1$
-								return String.format("javascript: window.location.hash = '%s'; return false;", url); //$NON-NLS-1$
+						protected void emitAnchorHref(String href) {
+							if (href.startsWith("#")) { //$NON-NLS-1$
+								writer.writeAttribute(
+										"onclick", String.format("javascript: window.location.hash = '%s'; return false;", href)); //$NON-NLS-1$ //$NON-NLS-2$
+								writer.writeAttribute("href", "#"); //$NON-NLS-1$//$NON-NLS-2$
+							} else {
+								super.emitAnchorHref(href);
 							}
-							return super.makeUrlAbsolute(url);
 						}
 					};
 					builder.setTitle(title);
@@ -1098,7 +1117,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 			for (Object element : ((IStructuredSelection) selection).toArray()) {
 				if (element instanceof OutlineItem) {
 					OutlineItem item = (OutlineItem) element;
-					selectAndReveal(item.getOffset(), item.getLength());
+					selectAndReveal(item);
 					return true;
 				}
 			}
@@ -1108,6 +1127,18 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 			return true;
 		}
 		return false;
+	}
+
+	public void selectAndReveal(OutlineItem item) {
+		selectAndReveal(item.getOffset(), item.getLength());
+		if (tabFolder.getSelection() == previewTab) {
+			// scroll preview to the selected item.
+			revealInBrowser(item);
+		}
+	}
+
+	private void revealInBrowser(OutlineItem item) {
+		browser.execute(String.format("window.location.hash = '%s';", item.getId())); //$NON-NLS-1$
 	}
 
 	public ShowInContext getShowInContext() {
@@ -1147,4 +1178,5 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		}
 		updateOutlineSelection();
 	}
+
 }
