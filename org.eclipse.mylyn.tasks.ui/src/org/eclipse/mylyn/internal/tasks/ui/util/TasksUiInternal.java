@@ -623,13 +623,13 @@ public class TasksUiInternal {
 
 	public static void closeTaskEditorInAllPages(ITask task, boolean save) {
 		Assert.isNotNull(task);
+		TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
+				task.getRepositoryUrl());
+		IEditorInput input = new TaskEditorInput(taskRepository, task);
 		IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
 		for (IWorkbenchWindow window : windows) {
 			IWorkbenchPage[] pages = window.getPages();
 			for (IWorkbenchPage page : pages) {
-				TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
-						task.getRepositoryUrl());
-				IEditorInput input = new TaskEditorInput(taskRepository, task);
 				IEditorPart editor = page.findEditor(input);
 				if (editor != null) {
 					page.closeEditor(editor, save);

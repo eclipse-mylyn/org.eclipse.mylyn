@@ -160,9 +160,7 @@ public class DeleteAction extends Action {
 			} else if (selectedObject instanceof AutomaticRepositoryTaskContainer) {
 				// support both the unmatched and the unsubmitted
 				if (toDelete.size() == 1) {
-					while (((AutomaticRepositoryTaskContainer) selectedObject).getChildren().size() != 0) {
-						prepareDeletion(((AutomaticRepositoryTaskContainer) selectedObject).getChildren());
-					}
+					prepareDeletion(((AutomaticRepositoryTaskContainer) selectedObject).getChildren());
 				}
 			}
 		}
@@ -188,11 +186,10 @@ public class DeleteAction extends Action {
 				// support both the unmatched and the unsubmitted
 				if (toDelete.size() == 1) {
 					// loop to ensure that all subtasks are deleted as well
-					while (((AutomaticRepositoryTaskContainer) selectedObject).getChildren().size() != 0) {
-						performDeletion(((AutomaticRepositoryTaskContainer) selectedObject).getChildren());
-					}
+					performDeletion(((AutomaticRepositoryTaskContainer) selectedObject).getChildren());
 				}
 			}
 		}
 	}
+
 }
