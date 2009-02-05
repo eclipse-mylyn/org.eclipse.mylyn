@@ -236,11 +236,14 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 					// if it looks like an absolute URL
 					if (event.location.matches("[a-zA-Z]{3,8}://?.*")) { //$NON-NLS-1$
 						event.doit = false;
-						if (event.location.matches(".*?/#.*")) { //$NON-NLS-1$
-							// workaround for bug 262063
-							// TODO: scroll to visible?
+
+						// workaround for browser problem (bug 262043)
+						int idxOfSlashHash = event.location.indexOf("/#"); //$NON-NLS-1$
+						if (idxOfSlashHash != -1) {
 							return;
 						}
+						// workaround end
+
 						try {
 							PlatformUI.getWorkbench().getBrowserSupport().createBrowser("org.eclipse.ui.browser") //$NON-NLS-1$
 									.openURL(new URL(event.location));
