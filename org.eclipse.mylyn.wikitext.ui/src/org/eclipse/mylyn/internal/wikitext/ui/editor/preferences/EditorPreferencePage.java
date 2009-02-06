@@ -13,11 +13,16 @@ package org.eclipse.mylyn.internal.wikitext.ui.editor.preferences;
 import java.util.Map;
 
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.CssStyleManager;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.ui.IWorkbench;
@@ -40,6 +45,28 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
 		super(GRID);
 		setPreferenceStore(WikiTextUiPlugin.getDefault().getPreferenceStore());
 		setDescription(Messages.getString("EditorPreferencePage.0")); //$NON-NLS-1$
+	}
+
+	@Override
+	public Control createContents(Composite parent) {
+		ScrolledComposite scrolledComposite = new ScrolledComposite(parent, SWT.H_SCROLL | SWT.V_SCROLL) {
+			@Override
+			public Point computeSize(int hint, int hint2, boolean changed) {
+				return new Point(64, 64);
+			}
+		};
+		scrolledComposite.setExpandHorizontal(true);
+		scrolledComposite.setExpandVertical(true);
+
+		Composite body = new Composite(scrolledComposite, SWT.NONE);
+		scrolledComposite.setContent(body);
+		GridLayoutFactory.fillDefaults().margins(0, 0).numColumns(1).applyTo(body);
+
+		Control contents = super.createContents(body);
+		GridDataFactory.fillDefaults().grab(true, true).applyTo(contents);
+
+		scrolledComposite.setMinSize(body.computeSize(SWT.DEFAULT, SWT.DEFAULT, true));
+		return scrolledComposite;
 	}
 
 	/**
