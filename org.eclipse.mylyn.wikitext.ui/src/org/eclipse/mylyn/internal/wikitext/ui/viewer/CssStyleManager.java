@@ -484,6 +484,9 @@ public class CssStyleManager {
 		public void process(CssRule rule, FontState fontState, FontState parentFontState) {
 			String[] parts = rule.value.split("((\\s+)|(\\s*,\\s*))"); //$NON-NLS-1$
 			for (String part : parts) {
+				if (part.length() > 1 && part.startsWith("'") && part.endsWith("'")) { //$NON-NLS-1$ //$NON-NLS-2$
+					part = part.substring(1, part.length() - 1);
+				}
 				if ("monospace".equals(part) || "courier".equalsIgnoreCase(part) //$NON-NLS-1$ //$NON-NLS-2$ 
 						|| "courier new".equalsIgnoreCase(part)) { //$NON-NLS-1$
 					fontState.setFixedWidth(true);
