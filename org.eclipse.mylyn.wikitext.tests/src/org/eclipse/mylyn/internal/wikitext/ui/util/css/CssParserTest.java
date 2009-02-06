@@ -17,6 +17,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.util.Iterator;
+import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -199,5 +200,17 @@ public class CssParserTest extends TestCase {
 		assertTrue(compositeSelector.isAnd());
 		assertEquals(2, compositeSelector.getComponents().size());
 
+	}
+
+	public void testComments() {
+		Stylesheet stylesheet = parser.parse("tr { /* font-size: 115%; */ font-size: 100%; } /* foo { sdf: sdf; } */");
+		List<Block> blocks = stylesheet.getBlocks();
+		assertEquals(1, blocks.size());
+		Block block = blocks.get(0);
+		List<CssRule> rules = block.getRules();
+		assertEquals(1, rules.size());
+		CssRule rule = rules.get(0);
+		assertEquals("font-size", rule.name);
+		assertEquals("100%", rule.value);
 	}
 }

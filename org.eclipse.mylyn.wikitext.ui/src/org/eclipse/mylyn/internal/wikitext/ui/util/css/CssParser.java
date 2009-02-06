@@ -33,11 +33,15 @@ import java.util.regex.Pattern;
  */
 public class CssParser {
 
-	private static Pattern cssBlockPattern = Pattern.compile(
-			"$([^{]+)\\{([^\\}]*)\\}", Pattern.MULTILINE | Pattern.DOTALL); //$NON-NLS-1$
+	private static final Pattern CSS_COMMENT_PATTERN = Pattern.compile(
+			"/\\*.*?(\\*/|\\z)", Pattern.MULTILINE | Pattern.DOTALL); //$NON-NLS-1$
 
-	static final Pattern cssRulePattern = Pattern.compile("(?:^|\\s?)([\\w-]+)\\s*:\\s*([^;]+)(;|$)", Pattern.MULTILINE //$NON-NLS-1$
-			| Pattern.DOTALL);
+	private static Pattern CSS_BLOCK_PATTERN = Pattern.compile(
+			"(?:$|^)([^{]+)\\{([^\\}]*)\\}", Pattern.MULTILINE | Pattern.DOTALL); //$NON-NLS-1$
+
+	static final Pattern CSS_RULE_PATTERN = Pattern.compile(
+			"(?:^|\\s?)([\\w-]+)\\s*:\\s*([^;]+)(;|$)", Pattern.MULTILINE //$NON-NLS-1$
+					| Pattern.DOTALL);
 
 	private static final String elemNamePatternPart = "(\\*|[a-zA-Z][a-zA-Z0-9]*)"; // capture 1 '*' or name //$NON-NLS-1$
 
@@ -47,7 +51,7 @@ public class CssParser {
 
 	private static final String fullElementPatternPart = "(?:(?:" + elemNamePatternPart + "|" + elemQualifierPatternPart + "|" + elemPseudoClassPatternPart + "){1,3})"; // 4 capturing groups //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-	private static Pattern selectorPattern = Pattern.compile(fullElementPatternPart + // first element name selector
+	private static Pattern CSS_SELECTOR_PATTERN = Pattern.compile(fullElementPatternPart + // first element name selector
 			"(?:\\s*?" + // optional join part //$NON-NLS-1$
 			"(\\s|\\>|\\+)" + // join clause //$NON-NLS-1$
 			"\\s*" + //$NON-NLS-1$
@@ -64,7 +68,7 @@ public class CssParser {
 
 		public CssRuleIterator(String cssStyles, int blockOffset) {
 			this.blockOffset = blockOffset;
-			matcher = cssRulePattern.matcher(cssStyles);
+			matcher = CSS_RULE_PATTERN.matcher(cssStyles);
 			hasNext = matcher.find();
 		}
 
@@ -131,14 +135,17 @@ public class CssParser {
 	public Stylesheet parse(String cssContent) {
 		Stylesheet stylesheet = new Stylesheet();
 
-		Matcher matcher = cssBlockPattern.matcher(cssContent);
+		SparseCharSequence charSequence = new SparseCharSequence(cssContent, CSS_COMMENT_PATTERN);
+		Matcher matcher = CSS_BLOCK_PATTERN.matcher(charSequence);
 		while (matcher.find()) {
 			String selectorText = matcher.group(1);
 			String blockContent = matcher.group(2);
 			if (selectorText != null && blockContent != null) {
 				Selector selector = parseSelector(selectorText);
 				if (selector != null) {
-					List<CssRule> rules = parseBlock(blockContent, matcher.start(2));
+					int offset = matcher.start(2);
+					offset = charSequence.originalOffsetOf(offset);
+					List<CssRule> rules = parseBlock(blockContent, offset);
 					Block block = new Block(selector, rules);
 					stylesheet.add(block);
 				}
@@ -186,7 +193,7 @@ public class CssParser {
 	private Selector parseSelectorPart(String part) {
 		List<Selector> parts = new ArrayList<Selector>();
 
-		Matcher matcher = selectorPattern.matcher(part);
+		Matcher matcher = CSS_SELECTOR_PATTERN.matcher(part);
 		while (matcher.find()) {
 			String elemSelector = matcher.group(1);
 			String elemSelectorQualifierType = matcher.group(2);
