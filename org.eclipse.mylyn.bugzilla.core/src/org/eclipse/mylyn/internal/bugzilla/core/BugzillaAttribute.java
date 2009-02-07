@@ -164,6 +164,8 @@ public enum BugzillaAttribute {
 
 	NEW_COMMENT(Messages.BugzillaAttribute_new_comment, "new_comment", TaskAttribute.TYPE_LONG_RICH_TEXT, true, false), //$NON-NLS-1$
 
+	TOKEN("token", "token", null, true, true), //$NON-NLS-1$ //$NON-NLS-2$
+
 	// Used by search engine
 	LI(Messages.BugzillaAttribute_used_by_search_engine_li, "li", null, true, false), //$NON-NLS-1$
 

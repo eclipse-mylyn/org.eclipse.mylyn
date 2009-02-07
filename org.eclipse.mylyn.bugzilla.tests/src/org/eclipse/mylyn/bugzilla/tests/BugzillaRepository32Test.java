@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.bugzilla.tests;
 
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,17 +21,153 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.sync.SubmitTaskJob;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
+import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
+import org.eclipse.mylyn.tasks.core.sync.SubmitJob;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 public class BugzillaRepository32Test extends AbstractBugzillaTest {
+
+	public void testBugUpdate() throws Exception {
+		init323();
+		String taskNumber = "1";
+		ITask task = generateLocalTaskAndDownload(taskNumber);
+		assertNotNull(task);
+		String tokenValue = task.getAttribute("token");
+		assertNotNull(tokenValue);
+		TaskData taskData = TasksUiPlugin.getTaskDataManager().getTaskData(task);
+		assertNotNull(taskData);
+		assertEquals(tokenValue, taskData.getRoot().getAttribute("token").getValue());
+
+		//remove the token (i.e. unpatched Bugzilla 3.2.2)
+		taskData.getRoot().removeAttribute("token");
+
+		TaskAttribute attrPriority = taskData.getRoot().getAttribute("priority");
+		boolean p1 = false;
+		if (attrPriority.getValue().equals("P1")) {
+			p1 = true;
+			attrPriority.setValue("P2");
+		} else {
+			attrPriority.setValue("P1");
+		}
+
+		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		changed.add(attrPriority);
+		submit(task, taskData, changed);
+
+		task = generateLocalTaskAndDownload(taskNumber);
+		assertNotNull(task);
+		assertEquals(!p1, task.getPriority().equals("P1"));
+
+	}
+
+	public void testSecondSubmit() throws Exception {
+		init322();
+		String taskNumber = "1";
+		assertTrue(CoreUtil.TEST_MODE);
+		RepositoryQuery query = new RepositoryQuery("bugzilla", "blah");
+		query.setRepositoryUrl(IBugzillaConstants.TEST_BUGZILLA_322_URL);
+		query.setUrl("?short_desc_type=allwordssubstr&short_desc=&product=TestProduct&long_desc_type=allwordssubstr&long_desc=&order=Importance&ctype=rdf");
+		TasksUiInternal.getTaskList().addQuery(query);
+		TasksUiInternal.synchronizeQuery(connector, query, null, true);
+
+		ITask task = TasksUiInternal.getTask(IBugzillaConstants.TEST_BUGZILLA_322_URL, taskNumber, "");
+		assertNotNull(task);
+		ITaskDataWorkingCopy taskDataState = TasksUi.getTaskDataManager().getWorkingCopy(task);//TasksUiPlugin.getTaskDataManager().getTaskData(task);
+		assertNotNull(taskDataState);
+		TaskDataModel model = new TaskDataModel(repository, task, taskDataState);
+
+		TaskData taskData = model.getTaskData();
+		//remove the token (i.e. unpatched Bugzilla 3.2.2)
+		//taskData.getRoot().removeAttribute("token");
+
+		TaskAttribute attrPriority = taskData.getRoot().getAttribute("priority");
+		boolean p1 = false;
+		if (attrPriority.getValue().equals("P1")) {
+			p1 = true;
+			attrPriority.setValue("P2");
+		} else {
+			attrPriority.setValue("P1");
+		}
+
+		model.attributeChanged(attrPriority);
+		model.save(new NullProgressMonitor());
+		submit(task, model);
+
+		TasksUiInternal.synchronizeRepository(repository, false);
+
+		task = TasksUiPlugin.getTaskList().getTask(IBugzillaConstants.TEST_BUGZILLA_322_URL, taskNumber);
+		assertNotNull(task);
+		assertEquals(!p1, task.getPriority().equals("P1"));
+
+		// Attempt 2
+
+		taskDataState = TasksUi.getTaskDataManager().getWorkingCopy(task);//TasksUiPlugin.getTaskDataManager().getTaskData(task);
+		assertNotNull(taskDataState);
+		model = new TaskDataModel(repository, task, taskDataState);
+
+		taskData = model.getTaskData();
+		//remove the token (i.e. unpatched Bugzilla 3.2.2)
+		//taskData.getRoot().removeAttribute("token");
+
+		attrPriority = taskData.getRoot().getAttribute("priority");
+		p1 = false;
+		if (attrPriority.getValue().equals("P1")) {
+			p1 = true;
+			attrPriority.setValue("P2");
+		} else {
+			attrPriority.setValue("P1");
+		}
+
+		model.attributeChanged(attrPriority);
+		model.save(new NullProgressMonitor());
+		connector.getClientManager().repositoryRemoved(repository);
+		submit(task, model);
+
+		TasksUiInternal.synchronizeRepository(repository, false);
+
+		task = TasksUiPlugin.getTaskList().getTask(IBugzillaConstants.TEST_BUGZILLA_322_URL, taskNumber);
+		assertNotNull(task);
+		assertEquals(!p1, task.getPriority().equals("P1"));
+
+	}
+
+	@Override
+	protected RepositoryResponse submit(ITask task, TaskData taskData, Set<TaskAttribute> changedAttributes)
+			throws CoreException {
+
+		RepositoryResponse response = connector.getTaskDataHandler().postTaskData(repository, taskData,
+				changedAttributes, new NullProgressMonitor());
+		((AbstractTask) task).setSubmitting(true);
+		return response;
+	}
+
+	protected void submit(ITask task, TaskDataModel model) throws Exception {
+
+		SubmitJob submitJob = TasksUiInternal.getJobFactory().createSubmitTaskJob(connector, model.getTaskRepository(),
+				task, model.getTaskData(), model.getChangedOldAttributes());
+		Method runMethod = SubmitTaskJob.class.getDeclaredMethod("run", IProgressMonitor.class);
+		runMethod.setAccessible(true);
+		runMethod.invoke(submitJob, new NullProgressMonitor());
+
+	}
 
 	@SuppressWarnings("null")
 	public void testFlags() throws Exception {

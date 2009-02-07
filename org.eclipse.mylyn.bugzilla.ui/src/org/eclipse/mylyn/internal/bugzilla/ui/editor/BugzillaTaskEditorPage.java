@@ -183,6 +183,13 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 			return;
 		}
 
+		// Force the most recent known good token onto the outgoing task data to ensure submit
+		// bug#263318
+		TaskAttribute attrToken = getModel().getTaskData().getRoot().getAttribute(BugzillaAttribute.TOKEN.getKey());
+		if (attrToken != null) {
+			attrToken.setValue(getModel().getTask().getAttribute(BugzillaAttribute.TOKEN.getKey()));
+		}
+
 		super.doSubmit();
 	}
 

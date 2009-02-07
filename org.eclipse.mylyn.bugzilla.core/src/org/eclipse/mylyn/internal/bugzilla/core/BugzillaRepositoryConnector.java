@@ -260,7 +260,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				}
 			}
 
-			return;
 		} catch (UnsupportedEncodingException e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 					"Repository configured with unsupported encoding: " + repository.getCharacterEncoding() //$NON-NLS-1$
@@ -502,6 +501,14 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		if (taskData.isPartial() && task.getCreationDate() != null) {
 			return false;
 		}
+
+		// Security token
+		// Updated on the task upon each open (synch) to keep the most current token available for submission - bug#263318
+		TaskAttribute attrSecurityToken = taskData.getRoot().getMappedAttribute(BugzillaAttribute.TOKEN.getKey());
+		if (attrSecurityToken != null && !attrSecurityToken.getValue().equals("")) { //$NON-NLS-1$
+			task.setAttribute(BugzillaAttribute.TOKEN.getKey(), attrSecurityToken.getValue());
+		}
+
 		String lastKnownMod = task.getAttribute(BugzillaAttribute.DELTA_TS.getKey());
 		if (lastKnownMod != null) {
 			TaskAttribute attrModification = taskData.getRoot().getMappedAttribute(TaskAttribute.DATE_MODIFICATION);

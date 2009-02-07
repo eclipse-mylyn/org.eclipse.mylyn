@@ -176,6 +176,10 @@ public interface IBugzillaConstants {
 
 	static final String TEST_BUGZILLA_32_URL = "http://mylyn.eclipse.org/bugs32"; //$NON-NLS-1$
 
+	static final String TEST_BUGZILLA_322_URL = "http://mylyn.eclipse.org/bugs322"; //$NON-NLS-1$
+
+	static final String TEST_BUGZILLA_323_URL = "http://mylyn.eclipse.org/bugs323"; //$NON-NLS-1$
+
 	// Default values for keys
 
 	static final String[] DEFAULT_STATUS_VALUES = { "Unconfirmed", "New", "Assigned", "Reopened", "Resolved", //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$//$NON-NLS-5$
