@@ -17,9 +17,15 @@
 				<include name="**/*.html"/>
 			</fileset>
 		</delete>
+		<delete>
+			<fileset dir="docs/new">
+				<include name="**/*.html"/>
+				<exclude name="**/*"/>
+			</fileset>
+		</delete>
 	</target>
 	
-	<target name="all" depends="plugin-docs">
+	<target name="all" depends="plugin-docs, new-and-noteworthy">
 	</target>
 	
 	<target name="plugin-docs" description="generate plugin help documentation">
@@ -76,4 +82,7 @@ or inadvertently starting a line with a space character (in MediaWiki this start
 		<delete dir="__tmp"/>
 	</target>
 	
+	<target name="new-and-noteworthy">
+		<xslt style="docs/new/new.xsl" destdir="docs/new" basedir="docs/new" includes="new*.xml"/>
+	</target>
 </project>

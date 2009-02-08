@@ -13,7 +13,19 @@
 				<head>
 					<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
 					<title>New And Noteworthy</title>
-			    	<link type="text/css" rel="stylesheet" href="new.css"/>
+			    	<style type="text/css">
+img {
+	margin: 5px;
+}
+
+table.category0 th {
+	background-color:  #FAF7FB;
+}
+
+table.category1 th {
+	background-color:  #E0D0E6;
+}
+			    	</style>
 				</head>
 				<body>
 					<div class="mainContent">
