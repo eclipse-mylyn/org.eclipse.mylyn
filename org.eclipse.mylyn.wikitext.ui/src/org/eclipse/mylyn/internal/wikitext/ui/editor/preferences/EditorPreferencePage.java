@@ -38,6 +38,7 @@ import org.eclipse.ui.PlatformUI;
  * plug-in class. That way, preferences can be accessed directly via the preference store.
  * 
  * @author David Green
+ * @author Hiroyuki Inaba fix for bug 265079: Dialog font not apply WikiText preference pages
  */
 public class EditorPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
@@ -83,35 +84,39 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
 			layout.marginRight = 5;
 		}
 
-		Group group = new Group(getFieldEditorParent(), SWT.NULL);
-		group.setText(Messages.getString("EditorPreferencePage.1")); //$NON-NLS-1$
-		group.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
+		Group blockGroup = new Group(getFieldEditorParent(), SWT.NULL);
+		blockGroup.setText(Messages.getString("EditorPreferencePage.1")); //$NON-NLS-1$
+		blockGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
 
 		CssStyleManager cssStyleManager = new CssStyleManager(getFont());
 
 		for (Map.Entry<String, String> ent : prefs.getCssByBlockModifierType().entrySet()) {
 			String preferenceKey = Preferences.toPreferenceKey(ent.getKey(), true);
-			addField(new CssStyleFieldEditor(cssStyleManager, preferenceKey, ent.getKey(), group));
+			addField(new CssStyleFieldEditor(cssStyleManager, preferenceKey, ent.getKey(), blockGroup));
 		}
 		// bug 260427
-		Layout layout = group.getLayout();
+		Layout layout = blockGroup.getLayout();
 		if (layout instanceof GridLayout) {
 			((GridLayout) layout).marginWidth = 5;
 		}
 
-		group = new Group(getFieldEditorParent(), SWT.NULL);
-		group.setText(Messages.getString("EditorPreferencePage.2")); //$NON-NLS-1$
-		group.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
+		Group phraseModifierGroup = new Group(getFieldEditorParent(), SWT.NULL);
+		phraseModifierGroup.setText(Messages.getString("EditorPreferencePage.2")); //$NON-NLS-1$
+		phraseModifierGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
 
 		for (Map.Entry<String, String> ent : prefs.getCssByPhraseModifierType().entrySet()) {
 			String preferenceKey = Preferences.toPreferenceKey(ent.getKey(), false);
-			addField(new CssStyleFieldEditor(cssStyleManager, preferenceKey, ent.getKey(), group));
+			addField(new CssStyleFieldEditor(cssStyleManager, preferenceKey, ent.getKey(), phraseModifierGroup));
 		}
 		// bug 260427
-		layout = group.getLayout();
+		layout = phraseModifierGroup.getLayout();
 		if (layout instanceof GridLayout) {
 			((GridLayout) layout).marginWidth = 5;
 		}
+
+		applyDialogFont(getFieldEditorParent());
+		blockGroup.setFont(getFieldEditorParent().getFont());
+		phraseModifierGroup.setFont(getFieldEditorParent().getFont());
 
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(),
 				WikiTextUiPlugin.getDefault().getPluginId() + ".preferences"); //$NON-NLS-1$

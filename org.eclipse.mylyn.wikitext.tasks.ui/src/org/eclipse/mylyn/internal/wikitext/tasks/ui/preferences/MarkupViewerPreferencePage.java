@@ -46,6 +46,12 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.progress.UIJob;
 import org.xml.sax.SAXException;
 
+/**
+ * A preference page that allows for changing the {@link Preferences#getMarkupViewerCss()}
+ * 
+ * @author David Green
+ * @author Hiroyuki Inaba fix for bug 265079: Dialog font not apply WikiText preference pages
+ */
 public class MarkupViewerPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
 	private static final String WHITE = "white"; //$NON-NLS-1$
@@ -98,6 +104,8 @@ public class MarkupViewerPreferencePage extends PreferencePage implements IWorkb
 		label = new Label(composite, SWT.WRAP);
 		label.setText(Messages.getString("MarkupViewerPreferencePage.2")); //$NON-NLS-1$
 		GridDataFactory.fillDefaults().applyTo(label);
+
+		applyDialogFont(composite);
 
 		Composite previewViewerContainer = new Composite(composite, SWT.BORDER);
 		GridLayoutFactory.fillDefaults().margins(0, 0).numColumns(1).applyTo(previewViewerContainer);
