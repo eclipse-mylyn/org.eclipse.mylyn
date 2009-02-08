@@ -25,10 +25,23 @@ table.category0 th {
 table.category1 th {
 	background-color:  #E0D0E6;
 }
+
+newCaption {
+	background-color: rgb(224, 208, 230);
+	font-weight: bold;
+}
 			    	</style>
 				</head>
 				<body>
 					<div class="mainContent">
+					<p>
+						<span class="newCaption"><xsl:value-of select="@caption"/></span>
+					</p>
+					<ul>
+						<xsl:for-each select="category">
+							<li><a href="#{title}"><xsl:value-of select="title"/> (<xsl:value-of select="count(item)"/>)</a></li>
+						</xsl:for-each>	
+					</ul>
 					<xsl:for-each select="category">
 						<h2><a name="{title}"></a><xsl:value-of select="title"/></h2>
 						<xsl:call-template name="CategoryContent"/>
