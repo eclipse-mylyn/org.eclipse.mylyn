@@ -13,7 +13,6 @@ package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
@@ -29,21 +28,21 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.commons.core.CoreUtil;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.commons.core.ZipFileUtil;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonsUiUtil;
+import org.eclipse.mylyn.internal.provisional.commons.ui.ICoreRunnable;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.externalization.AbstractExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.progress.IProgressService;
 
 /**
  * @author Rob Elves
@@ -63,7 +62,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 	/**
 	 * Finds or creates a dialog settings section that is used to make the dialog control settings persistent
 	 */
-	public IDialogSettings getSettingsSection(IDialogSettings master) {
+	private IDialogSettings getSettingsSection(IDialogSettings master) {
 		IDialogSettings settings = master.getSection("org.eclipse.mylyn.tasklist.ui.importWizard"); //$NON-NLS-1$
 		if (settings == null) {
 			settings = master.addNewSection("org.eclipse.mylyn.tasklist.ui.importWizard"); //$NON-NLS-1$
@@ -93,7 +92,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 		TasksUi.getTaskActivityManager().deactivateTask(TasksUi.getTaskActivityManager().getActiveTask());
 
 		String sourceZip = importPage.getSourceZipFile();
-		File sourceZipFile = new File(sourceZip);
+		final File sourceZipFile = new File(sourceZip);
 
 		if (!sourceZipFile.exists()) {
 			MessageDialog.openError(getShell(), Messages.TaskDataImportWizard_File_not_found, sourceZipFile.toString()
@@ -105,51 +104,31 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 			return false;
 		}
 
-		Enumeration<? extends ZipEntry> entries;
-		ZipFile zipFile;
-		boolean restoreM2Tasklist = false;
-		int numEntries = 0;
-
-		try {
-			zipFile = new ZipFile(sourceZipFile, ZipFile.OPEN_READ);
-			entries = zipFile.entries();
-			while (entries.hasMoreElements()) {
-				ZipEntry entry = entries.nextElement();
-				if (entry.getName().startsWith(ITasksCoreConstants.OLD_TASK_LIST_FILE)) {
-					restoreM2Tasklist = true;
-				}
-				numEntries++;
-			}
-		} catch (IOException e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not import files", e)); //$NON-NLS-1$
-			return false;
-		}
-
-		FileCopyJob job = new FileCopyJob(sourceZipFile, numEntries);
-		job.setRestoreM2Tasklist(restoreM2Tasklist);
 		try {
 			if (getContainer() != null) {
-				getContainer().run(true, true, job);
+				CommonsUiUtil.run(getContainer(), new FileCopyJob(sourceZipFile));
 			} else {
-				IProgressService service = PlatformUI.getWorkbench().getProgressService();
-				service.run(true, true, job);
+				CommonsUiUtil.busyCursorWhile(new FileCopyJob(sourceZipFile));
 			}
-		} catch (InvocationTargetException e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not import files", e)); //$NON-NLS-1$
-		} catch (InterruptedException e) {
-			// User canceled
+
+			importPage.saveSettings();
+		} catch (CoreException e) {
+			Status status = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
+					"Problems encountered importing task data: {0}", e.getMessage()), e); //$NON-NLS-1$
+			TasksUiInternal.logAndDisplayStatus(Messages.TaskDataImportWizard_task_data_import_failed, status);
+		} catch (OperationCanceledException e) {
+			// canceled
 		}
 
-		importPage.saveSettings();
 		return true;
 	}
 
 	/** Job that performs the file copying and zipping */
-	class FileCopyJob implements IRunnableWithProgress {
+	class FileCopyJob implements ICoreRunnable {
 
 		private static final String PREFIX_BACKUP = ".backup-"; //$NON-NLS-1$
 
-		private/*static*/final String JOB_LABEL = Messages.TaskDataImportWizard_Importing_Data;
+		private final String JOB_LABEL = Messages.TaskDataImportWizard_Importing_Data;
 
 		private File sourceZipFile = null;
 
@@ -157,63 +136,75 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 
 		private boolean restoreM2Tasklist = false;
 
-		public FileCopyJob(File sourceZipFile, int numEntries) {
+		public FileCopyJob(File sourceZipFile) {
 			this.sourceZipFile = sourceZipFile;
-			this.numEntries = numEntries;
 		}
 
-		public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+		public void run(final IProgressMonitor monitor) throws CoreException {
 
-			// always a zip source since post 1.0.1
 			try {
-				monitor.beginTask(JOB_LABEL, numEntries);
-				Job.getJobManager().beginRule(ITasksCoreConstants.ROOT_SCHEDULING_RULE, monitor);
 
-				if (!sourceZipFile.exists()) {
-					throw new InvocationTargetException(new IOException("Source file does not exist.")); //$NON-NLS-1$
-				}
+				checkZipFile();
 
-				if (monitor.isCanceled()) {
-					throw new OperationCanceledException();
-				}
+				if (numEntries > 0) {
 
-				ZipFileUtil.unzipFiles(sourceZipFile, TasksUiPlugin.getDefault().getDataDirectory(), monitor);
+					monitor.beginTask(JOB_LABEL, numEntries);
+					Job.getJobManager().beginRule(ITasksCoreConstants.ROOT_SCHEDULING_RULE, monitor);
 
-				if (restoreM2Tasklist) {
-
-					SimpleDateFormat format = new SimpleDateFormat(ITasksCoreConstants.FILENAME_TIMESTAMP_FORMAT,
-							Locale.ENGLISH);
-					String date = format.format(new Date());
-
-					File taskListFile = new File(TasksUiPlugin.getDefault().getDataDirectory(),
-							ITasksCoreConstants.DEFAULT_TASK_LIST_FILE);
-					if (taskListFile.exists()) {
-						taskListFile.renameTo(new File(taskListFile.getParentFile(), taskListFile.getName()
-								+ PREFIX_BACKUP + date));
+					if (monitor.isCanceled()) {
+						return;
 					}
 
-					File taskListFileSnapshot = new File(TasksUiPlugin.getDefault().getDataDirectory(),
-							AbstractExternalizationParticipant.SNAPSHOT_PREFIX
-									+ ITasksCoreConstants.DEFAULT_TASK_LIST_FILE);
-					if (taskListFileSnapshot.exists()) {
-						taskListFileSnapshot.renameTo(new File(taskListFile.getParentFile(),
-								taskListFileSnapshot.getName() + PREFIX_BACKUP + date));
-					}
+					ZipFileUtil.unzipFiles(sourceZipFile, TasksUiPlugin.getDefault().getDataDirectory(), monitor);
 
+					if (restoreM2Tasklist) {
+
+						SimpleDateFormat format = new SimpleDateFormat(ITasksCoreConstants.FILENAME_TIMESTAMP_FORMAT,
+								Locale.ENGLISH);
+						String date = format.format(new Date());
+
+						File taskListFile = new File(TasksUiPlugin.getDefault().getDataDirectory(),
+								ITasksCoreConstants.DEFAULT_TASK_LIST_FILE);
+						if (taskListFile.exists()) {
+							taskListFile.renameTo(new File(taskListFile.getParentFile(), taskListFile.getName()
+									+ PREFIX_BACKUP + date));
+						}
+
+						File taskListFileSnapshot = new File(TasksUiPlugin.getDefault().getDataDirectory(),
+								AbstractExternalizationParticipant.SNAPSHOT_PREFIX
+										+ ITasksCoreConstants.DEFAULT_TASK_LIST_FILE);
+						if (taskListFileSnapshot.exists()) {
+							taskListFileSnapshot.renameTo(new File(taskListFile.getParentFile(),
+									taskListFileSnapshot.getName() + PREFIX_BACKUP + date));
+						}
+
+					}
+					readTaskListData();
 				}
-				readTaskListData();
 			} catch (IOException e) {
-				throw new InvocationTargetException(e);
+				Status status = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, e.getMessage(), e);
+				throw new CoreException(status);
 			} finally {
 				Job.getJobManager().endRule(ITasksCoreConstants.ROOT_SCHEDULING_RULE);
 				monitor.done();
 			}
-			return;
-
 		}
 
-		public void setRestoreM2Tasklist(boolean restoreM2Tasklist) {
-			this.restoreM2Tasklist = restoreM2Tasklist;
+		private void checkZipFile() throws IOException {
+			Enumeration<? extends ZipEntry> entries;
+			ZipFile zipFile = new ZipFile(sourceZipFile, ZipFile.OPEN_READ);
+			try {
+				entries = zipFile.entries();
+				while (entries.hasMoreElements()) {
+					ZipEntry entry = entries.nextElement();
+					if (entry.getName().startsWith(ITasksCoreConstants.OLD_TASK_LIST_FILE)) {
+						restoreM2Tasklist = true;
+					}
+					numEntries++;
+				}
+			} finally {
+				zipFile.close();
+			}
 		}
 
 	}

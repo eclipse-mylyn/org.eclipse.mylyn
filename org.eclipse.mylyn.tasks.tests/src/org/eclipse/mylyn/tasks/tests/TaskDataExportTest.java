@@ -17,10 +17,12 @@ import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.commons.tests.support.CommonsTestUtil;
 import org.eclipse.mylyn.context.tests.AbstractContextTest;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.wizards.Messages;
+import org.eclipse.mylyn.internal.tasks.ui.util.TaskDataExportOperation;
+import org.eclipse.mylyn.internal.tasks.ui.util.TaskDataSnapshotOperation;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataExportWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataExportWizardPage;
 import org.eclipse.swt.widgets.Shell;
@@ -47,7 +49,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 		wizard = new TaskDataExportWizard();
 		wizard.addPages();
 		wizard.createPageControls(new Shell());
-		wizardPage = (TaskDataExportWizardPage) wizard.getPage(Messages.TaskDataExportWizardPage_Export_Mylyn_Task_Data);
+		wizardPage = (TaskDataExportWizardPage) wizard.getPage("org.eclipse.mylyn.tasklist.exportPage");
 		assertNotNull(wizardPage);
 
 		// Create test export destination directory
@@ -57,13 +59,17 @@ public class TaskDataExportTest extends AbstractContextTest {
 		destinationDir.mkdir();
 
 		// Create folder/file structure
-		File tasklist = new File(mylynFolder, "tasklist.xml.zip");
+		File tasklist = new File(mylynFolder, "tasks.xml.zip");
 		assertTrue(tasklist.createNewFile());
 		File hidden = new File(mylynFolder, ".hidden");
 		hidden.createNewFile();
 		assertTrue(hidden.exists());
 		File tasks = new File(mylynFolder, "tasksandstuff");
 		assertTrue(tasks.mkdir());
+		File backup = new File(mylynFolder, "backup");
+		if (!backup.exists()) {
+			assertTrue(backup.mkdir());
+		}
 		File tasksFile = new File(tasks, "file1.xml.zip");
 		assertTrue(tasksFile.createNewFile());
 		File tasksSubDir = new File(tasks, "sub");
@@ -74,7 +80,21 @@ public class TaskDataExportTest extends AbstractContextTest {
 
 	@Override
 	protected void tearDown() throws Exception {
+		wizard.dispose();
+		wizardPage.dispose();
 		CommonsTestUtil.deleteFolder(destinationDir);
+		File mylynFolder = new File(TasksUiPlugin.getDefault().getDataDirectory());
+		// Create folder/file structure
+		File tasklist = new File(mylynFolder, "tasks.xml.zip");
+		tasklist.delete();
+		File hidden = new File(mylynFolder, ".hidden");
+		hidden.delete();
+		File tasks = new File(mylynFolder, "tasksandstuff");
+		File tasksSubDir = new File(tasks, "sub");
+		File backup = new File(mylynFolder, "backup");
+		CommonsTestUtil.deleteFolder(backup);
+		CommonsTestUtil.deleteFolder(tasksSubDir);
+		CommonsTestUtil.deleteFolder(tasks);
 		super.tearDown();
 	}
 
@@ -97,10 +117,37 @@ public class TaskDataExportTest extends AbstractContextTest {
 				entries.add(entry.getName());
 				entry = zipInputStream.getNextEntry();
 			}
-			assertTrue(entries.contains(".hidden"));
-			assertTrue(entries.contains("tasklist.xml.zip"));
+			assertFalse(entries.contains(".hidden"));
+			assertTrue(entries.contains("tasks.xml.zip"));
 			assertTrue(entries.contains("tasksandstuff/file1.xml.zip"));
 			assertTrue(entries.contains("tasksandstuff/sub/file2.xml.zip"));
+			assertFalse(entries.contains("backup"));
+		} finally {
+			zipInputStream.close();
+		}
+	}
+
+	public void testSnapshot() throws Exception {
+		final TaskDataExportOperation backupJob = new TaskDataSnapshotOperation(destinationDir.getPath(),
+				"testBackup.zip");
+		backupJob.run(new NullProgressMonitor());
+		// check that the task list file was exported
+		File[] files = destinationDir.listFiles();
+		assertEquals(1, files.length);
+		ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(files[0]));
+		try {
+			ArrayList<String> entries = new ArrayList<String>();
+			ZipEntry entry = zipInputStream.getNextEntry();
+			while (entry != null) {
+				entries.add(entry.getName());
+				entry = zipInputStream.getNextEntry();
+			}
+			assertFalse(entries.contains(".hidden"));
+			assertTrue(entries.contains("tasks.xml.zip"));
+			assertTrue(entries.contains("repositories.xml.zip"));
+			assertTrue(entries.contains("contexts/activity.xml.zip"));
+			assertFalse(entries.contains("tasks"));
+			assertEquals(3, entries.size());
 		} finally {
 			zipInputStream.close();
 		}

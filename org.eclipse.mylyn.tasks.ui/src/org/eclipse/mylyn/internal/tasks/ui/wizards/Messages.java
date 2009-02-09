@@ -99,6 +99,8 @@ public class Messages extends NLS {
 
 	public static String TaskDataExportWizard_Export;
 
+	public static String TaskDataExportWizard_export_failed;
+
 	public static String TaskDataExportWizard_Task_context_files_already_exist_in_X;
 
 	public static String TaskDataExportWizard_The_task_activation_history_file_X_already_exists;
@@ -152,6 +154,8 @@ public class Messages extends NLS {
 	public static String TaskDataImportWizard_Importing_Data;
 
 	public static String TaskDataImportWizard_Overwrite_existing_file_;
+
+	public static String TaskDataImportWizard_task_data_import_failed;
 
 	public static String TaskDataImportWizardPage_Restore_tasks_from_history;
 

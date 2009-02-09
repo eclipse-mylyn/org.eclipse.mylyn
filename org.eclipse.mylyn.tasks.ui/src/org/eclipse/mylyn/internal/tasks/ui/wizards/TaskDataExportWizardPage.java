@@ -12,11 +12,9 @@
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListBackupManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
@@ -24,7 +22,6 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -39,8 +36,11 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  * 
  * @author Wesley Coelho
  * @author Mik Kersten
+ * @author Rob Elves
  */
 public class TaskDataExportWizardPage extends WizardPage {
+
+	private static final String PAGE_ID = "org.eclipse.mylyn.tasklist.exportPage"; //$NON-NLS-1$
 
 	private Button browseButton = null;
 
@@ -52,36 +52,27 @@ public class TaskDataExportWizardPage extends WizardPage {
 	private final static String DEST_DIR_SETTING = "Destination directory setting"; //$NON-NLS-1$
 
 	public TaskDataExportWizardPage() {
-		super(
-				"org.eclipse.mylyn.tasklist.exportPage", Messages.TaskDataExportWizardPage_Export_Mylyn_Task_Data, AbstractUIPlugin.imageDescriptorFromPlugin( //$NON-NLS-1$
-						TasksUiPlugin.ID_PLUGIN, "icons/wizban/banner-export.gif")); //$NON-NLS-1$
+		super(PAGE_ID);
 		setPageComplete(false);
-	}
-
-	@Override
-	public String getName() {
-		return Messages.TaskDataExportWizardPage_Export_Mylyn_Task_Data;
+		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(TasksUiPlugin.ID_PLUGIN,
+				"icons/wizban/banner-export.gif")); //$NON-NLS-1$
+		setTitle(Messages.TaskDataExportWizardPage_Export_Mylyn_Task_Data);
 	}
 
 	/**
 	 * Create the widgets on the page
 	 */
 	public void createControl(Composite parent) {
-		try {
-			Composite container = new Composite(parent, SWT.NONE);
-			GridLayout layout = new GridLayout(1, false);
-			container.setLayout(layout);
-			createExportDirectoryControl(container);
+		Composite container = new Composite(parent, SWT.NONE);
+		GridLayout layout = new GridLayout(1, false);
+		container.setLayout(layout);
+		createExportDirectoryControl(container);
 
-			initSettings();
+		initSettings();
 
-			Dialog.applyDialogFont(container);
-			setControl(container);
-			setPageComplete(validate());
-		} catch (RuntimeException e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Could not create export wizard page", e)); //$NON-NLS-1$
-		}
+		Dialog.applyDialogFont(container);
+		setControl(container);
+		setPageComplete(validate());
 	}
 
 	/**
@@ -118,11 +109,11 @@ public class TaskDataExportWizardPage extends WizardPage {
 				String dir = destDirText.getText();
 				dialog.setFilterPath(dir);
 				dir = dialog.open();
-				controlChanged();
 				if (dir == null || dir.equals("")) { //$NON-NLS-1$
 					return;
 				}
 				destDirText.setText(dir);
+				controlChanged();
 			}
 		});
 	}
@@ -150,25 +141,6 @@ public class TaskDataExportWizardPage extends WizardPage {
 		IDialogSettings settings = getDialogSettings();
 		settings.put(DEST_DIR_SETTING, destDirText.getText());
 		settings.put(SETTINGS_SAVED, SETTINGS_SAVED);
-	}
-
-	/** Convenience method for creating a new checkbox */
-	protected Button createCheckBox(Composite parent, String text) {
-		Button newButton = new Button(parent, SWT.CHECK);
-		newButton.setText(text);
-
-		newButton.addSelectionListener(new SelectionListener() {
-
-			public void widgetSelected(SelectionEvent e) {
-				controlChanged();
-			}
-
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// No action required
-			}
-		});
-
-		return newButton;
 	}
 
 	/** Called to indicate that a control's value has changed */

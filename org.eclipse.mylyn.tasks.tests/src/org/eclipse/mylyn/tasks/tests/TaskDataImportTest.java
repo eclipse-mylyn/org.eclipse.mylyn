@@ -61,6 +61,8 @@ public class TaskDataImportTest extends AbstractContextTest {
 
 	@Override
 	protected void tearDown() throws Exception {
+		wizard.dispose();
+		wizardPage.dispose();
 		ContextCorePlugin.getContextManager().resetActivityMetaContext();
 		TasksUiPlugin.getRepositoryManager().clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		TaskTestUtil.resetTaskList();

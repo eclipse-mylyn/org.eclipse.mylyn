@@ -17,7 +17,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Locale;
 import java.util.SortedMap;
 import java.util.Timer;
@@ -36,10 +35,10 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDataExportOperation;
+import org.eclipse.mylyn.internal.tasks.ui.util.TaskDataSnapshotOperation;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
@@ -112,8 +111,8 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 
 		} else {
 
-			final TaskDataExportOperation backupJob = new TaskDataExportOperation(backupFolderPath, true, true, false,
-					true, getBackupFileName(), new HashSet<AbstractTask>());
+			final TaskDataExportOperation backupJob = new TaskDataSnapshotOperation(backupFolderPath,
+					getBackupFileName());
 
 			IProgressService service = PlatformUI.getWorkbench().getProgressService();
 			try {
@@ -252,8 +251,8 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 		public ExportJob(String destination, String filename) {
 			super(Messages.TaskListBackupManager_Scheduled_task_data_backup);
 
-			backupJob = new TaskDataExportOperation(destination, true, true, false, true, filename,
-					new HashSet<AbstractTask>());
+			backupJob = new TaskDataSnapshotOperation(destination, filename);
+
 		}
 
 		@Override

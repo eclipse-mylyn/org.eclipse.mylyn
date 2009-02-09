@@ -15,14 +15,11 @@ import java.io.File;
 import java.text.DateFormat;
 import java.util.SortedMap;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
@@ -39,7 +36,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
  * Wizard Page for the Task Data Import Wizard
@@ -70,9 +66,7 @@ public class TaskDataImportWizardPage extends WizardPage {
 	private final static String IMPORT_BACKUPMETHOD_SETTING = Messages.TaskDataImportWizardPage_Import_method_backup;
 
 	public TaskDataImportWizardPage() {
-		super(
-				"org.eclipse.mylyn.tasklist.importPage", Messages.TaskDataImportWizardPage_Import_Task_Data, AbstractUIPlugin.imageDescriptorFromPlugin( //$NON-NLS-1$
-						TasksUiPlugin.ID_PLUGIN, "icons/wizban/banner-import.gif")); //$NON-NLS-1$
+		super("org.eclipse.mylyn.tasklist.importPage"); //$NON-NLS-1$
 		setPageComplete(false);
 		setMessage(Messages.TaskDataImportWizardPage_Importing_overwrites_current_tasks_and_repositories,
 				IMessageProvider.WARNING);
@@ -81,22 +75,17 @@ public class TaskDataImportWizardPage extends WizardPage {
 	}
 
 	public void createControl(Composite parent) {
-		try {
-			Composite container = new Composite(parent, SWT.NONE);
-			GridLayout layout = new GridLayout(3, false);
-			layout.verticalSpacing = 15;
-			container.setLayout(layout);
-			createImportFromZipControl(container);
-			createImportFromBackupControl(container);
-			addRadioListeners();
-			initSettings();
-			Dialog.applyDialogFont(container);
-			setControl(container);
-			setPageComplete(validate());
-		} catch (RuntimeException e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					Messages.TaskDataImportWizardPage_Could_not_create_import_wizard_page, e));
-		}
+		Composite container = new Composite(parent, SWT.NONE);
+		GridLayout layout = new GridLayout(3, false);
+		layout.verticalSpacing = 15;
+		container.setLayout(layout);
+		createImportFromZipControl(container);
+		createImportFromBackupControl(container);
+		addRadioListeners();
+		initSettings();
+		Dialog.applyDialogFont(container);
+		setControl(container);
+		setPageComplete(validate());
 	}
 
 	private void addRadioListeners() {
@@ -222,25 +211,6 @@ public class TaskDataImportWizardPage extends WizardPage {
 		settings.put(IMPORT_ZIPMETHOD_SETTING, importViaZipButton.getSelection());
 		settings.put(IMPORT_BACKUPMETHOD_SETTING, importViaBackupButton.getSelection());
 		settings.put(SETTINGS_SAVED, SETTINGS_SAVED);
-	}
-
-	/** Convenience method for creating a new checkbox */
-	protected Button createCheckBox(Composite parent, String text) {
-		Button newButton = new Button(parent, SWT.CHECK);
-		newButton.setText(text);
-
-		newButton.addSelectionListener(new SelectionListener() {
-
-			public void widgetSelected(SelectionEvent e) {
-				controlChanged();
-			}
-
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// No action required
-			}
-		});
-
-		return newButton;
 	}
 
 	/** Called to indicate that a control's value has changed */

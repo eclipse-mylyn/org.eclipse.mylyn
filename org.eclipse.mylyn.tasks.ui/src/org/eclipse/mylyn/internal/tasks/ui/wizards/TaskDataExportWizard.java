@@ -19,10 +19,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListBackupManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDataExportOperation;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.ui.IExportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
@@ -53,7 +53,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 	/**
 	 * Finds or creates a dialog settings section that is used to make the dialog control settings persistent
 	 */
-	public IDialogSettings getSettingsSection(IDialogSettings master) {
+	private IDialogSettings getSettingsSection(IDialogSettings master) {
 		IDialogSettings settings = master.getSection(SETTINGS_SECTION);
 		if (settings == null) {
 			settings = master.addNewSection(SETTINGS_SECTION);
@@ -64,17 +64,11 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 	@Override
 	public void addPages() {
 		exportPage = new TaskDataExportWizardPage();
-		exportPage.setWizard(this);
 		addPage(exportPage);
 	}
 
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		// no initialization needed
-	}
-
-	@Override
-	public boolean canFinish() {
-		return exportPage.isPageComplete();
 	}
 
 	/**
@@ -88,7 +82,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 
 		final File destZipFile = new File(destDir + File.separator + TaskListBackupManager.getBackupFileName());
 
-		TaskDataExportOperation job = new TaskDataExportOperation(exportPage.getDestinationDirectory(), true,
+		TaskDataExportOperation job = new TaskDataExportOperation(exportPage.getDestinationDirectory(),
 				destZipFile.getName());
 
 		try {
@@ -99,9 +93,10 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 				service.run(true, true, job);
 			}
 		} catch (InvocationTargetException e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not export files", e)); //$NON-NLS-1$
+			Status status = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, e.getMessage(), e);
+			TasksUiInternal.logAndDisplayStatus(Messages.TaskDataExportWizard_export_failed, status);
 		} catch (InterruptedException e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not export files", e)); //$NON-NLS-1$
+			// user canceled
 		}
 
 		exportPage.saveSettings();
