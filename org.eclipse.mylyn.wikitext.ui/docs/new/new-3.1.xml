@@ -51,13 +51,14 @@
 				Using markup is easy with WikiText in part due to content assist in the editor.  Suggestions are provided in the editor when CTRL+Space is pressed,
 				making it easy to insert bold, italics, bulleted lists, headings and other markup.  
 				</p>
+				<img src="images/wikitext-content-assist.png"/>
 			</description>
 		</item>
 		<item>
 			<title>Cheat Sheet</title>
 			<description>
 				<p>
-				If you forget the markup syntax and content assist isn't quite enough, pressing F1 in the editor will bring up a cheat sheet with tips for the markup
+				If you forget markup syntax, pressing F1 in the editor will bring up a cheat sheet with tips for the markup
 				being used.
 				</p>
 				<img src="images/wikitext-cheatsheet.png"/>
