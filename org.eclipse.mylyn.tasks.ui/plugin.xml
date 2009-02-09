@@ -1792,7 +1792,7 @@
             categoryId="org.eclipse.mylyn.tasks.ui.commands"
             defaultHandler="org.eclipse.mylyn.internal.tasks.ui.commands.ViewSourceHandler"
             id="org.eclipse.mylyn.sandbox.ui.viewSource.command"
-            name="%commands.ViewSourceHandler">
+            name="%commands.ViewSourceHandler.name">
       </command>
    </extension>
    <extension
