@@ -13,18 +13,21 @@ package org.eclipse.mylyn.internal.wikitext.tracwiki.core.block;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.mylyn.internal.wikitext.tracwiki.core.phrase.MonospacePhraseModifier;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
- * 
+ * A preformatted block is delimited by tripple-curlies {{{ }}}
  * 
  * @author David Green
+ * 
+ * @see MonospacePhraseModifier
  */
 public class PreformattedBlock extends Block {
 
-	private static final Pattern startPattern = Pattern.compile("\\{\\{\\{(.*)"); //$NON-NLS-1$
+	private static final Pattern startPattern = Pattern.compile("\\{\\{\\{(\\s*)"); //$NON-NLS-1$
 
 	private static final Pattern endPattern = Pattern.compile("\\}\\}\\}(.*)"); //$NON-NLS-1$
 

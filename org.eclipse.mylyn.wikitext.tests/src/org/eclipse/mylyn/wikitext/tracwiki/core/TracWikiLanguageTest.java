@@ -227,6 +227,24 @@ public class TracWikiLanguageTest extends TestCase {
 				.find());
 	}
 
+	public void testPreformattedInline() throws IOException {
+		String html = parser.parseToHtml("first para {{{ preformatted text }}} more text");
+		System.out.println(html);
+		assertTrue(html.contains("<body><p>first para <tt> preformatted text </tt> more text</p></body>"));
+	}
+
+	public void testPreformattedInline2() throws IOException {
+		String html = parser.parseToHtml("first para {{{ preformatted text }}} and {{{ more code }}} more text");
+		System.out.println(html);
+		assertTrue(html.contains("<body><p>first para <tt> preformatted text </tt> and <tt> more code </tt> more text</p></body>"));
+	}
+
+	public void testPreformattedInline3() throws IOException {
+		String html = parser.parseToHtml("{{{ preformatted text }}}");
+		System.out.println(html);
+		assertTrue(html.contains("<body><p><tt> preformatted text </tt></p></body>"));
+	}
+
 	public void testQuoteBlock() throws IOException {
 		String html = parser.parseToHtml("" + ">> second level\n" + ">> second level line 2\n" + "> first level\n"
 				+ "new para\n" + "");

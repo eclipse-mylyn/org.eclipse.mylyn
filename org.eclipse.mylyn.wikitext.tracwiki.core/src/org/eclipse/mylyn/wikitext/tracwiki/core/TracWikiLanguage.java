@@ -21,6 +21,7 @@ import org.eclipse.mylyn.internal.wikitext.tracwiki.core.block.QuoteBlock;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.block.TableBlock;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.phrase.DeletedPhraseModifier;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.phrase.EscapePhraseModifier;
+import org.eclipse.mylyn.internal.wikitext.tracwiki.core.phrase.MonospacePhraseModifier;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.phrase.SimplePhraseModifier;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.token.BangEscapeToken;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.token.ChangesetLinkReplacementToken;
@@ -299,6 +300,7 @@ public class TracWikiLanguage extends AbstractMarkupLanguage {
 	@Override
 	protected void addStandardPhraseModifiers(PatternBasedSyntax phraseModifierSyntax) {
 		// IMPORTANT NOTE: Most items below have order dependencies.  DO NOT REORDER ITEMS BELOW!!
+		phraseModifierSyntax.add(new MonospacePhraseModifier());
 		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.\\\"'?!;:\\)\\(\\{\\}\\[\\]-])|^)(?:", 0); // always starts at the start of a line or after a non-word character excluding '!' and '-' //$NON-NLS-1$
 		phraseModifierSyntax.add(new EscapePhraseModifier());
 		phraseModifierSyntax.add(new SimplePhraseModifier("'''''", new SpanType[] { SpanType.BOLD, SpanType.ITALIC }, //$NON-NLS-1$
