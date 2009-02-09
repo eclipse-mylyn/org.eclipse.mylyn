@@ -165,20 +165,23 @@ public class ZipFileUtil {
 
 		ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(zipFile));
 
-		for (File file : files) {
-			try {
-				addZipEntry(zipOut, rootPath, file);
-				if (monitor != null) {
-					monitor.worked(1);
-				}
-			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ICommonsCoreConstants.ID_PLUGIN, "Could not add " //$NON-NLS-1$
-						+ file.getName() + " to zip", e)); //$NON-NLS-1$
-			}
-		}
+		try {
 
-		// Complete the ZIP file
-		zipOut.close();
+			for (File file : files) {
+				try {
+					addZipEntry(zipOut, rootPath, file);
+					if (monitor != null) {
+						monitor.worked(1);
+					}
+				} catch (Exception e) {
+					StatusHandler.log(new Status(IStatus.ERROR, ICommonsCoreConstants.ID_PLUGIN, "Could not add " //$NON-NLS-1$
+							+ file.getName() + " to zip", e)); //$NON-NLS-1$
+				}
+			}
+
+		} finally {
+			zipOut.close();
+		}
 	}
 
 	/**
