@@ -207,6 +207,12 @@ public class TracWikiLanguageTest extends TestCase {
 		assertTrue(html.contains("<ol><li>a list<ul><li>nested</li><li>nested2</li></ul></li><li>level1</li></ol>"));
 	}
 
+	public void testListNumericWithBulleted() {
+		String html = parser.parseToHtml("   1. one\n   * two");
+		System.out.println(html);
+		assertTrue(html.contains("<body><ol><li>one</li></ol><ul><li>two</li></ul></body>"));
+	}
+
 	public void testPreformatted() throws IOException {
 		String html = parser.parseToHtml("first para\n\n{{{\n\tpreformatted text\n\nspanning multilple lines\n}}}\nsecond para");
 		System.out.println(html);

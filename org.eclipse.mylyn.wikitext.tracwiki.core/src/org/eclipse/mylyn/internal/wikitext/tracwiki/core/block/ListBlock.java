@@ -85,7 +85,7 @@ public class ListBlock extends Block {
 			offset = matcher.start(LINE_REMAINDER_GROUP_OFFSET);
 
 			for (ListState listState = this.listState.peek(); listState.level != level || listState.type != type; listState = this.listState.peek()) {
-				if (listState.level > level || (listState.type != type && listState.level > 1)) {
+				if (listState.level > level || (listState.level == level && listState.type != type)) {
 					closeOne();
 					if (this.listState.isEmpty()) {
 						this.listState.push(new ListState(1, spaces.length(), type));
