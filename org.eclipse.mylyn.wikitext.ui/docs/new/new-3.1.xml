@@ -58,8 +58,7 @@
 			<title>Cheat Sheet</title>
 			<description>
 				<p>
-				If you forget markup syntax, pressing F1 in the editor will bring up a cheat sheet with tips for the markup
-				being used.
+				If you forget markup syntax, pressing F1 in the editor will bring up a cheat sheet with markup language tips and syntax hints.
 				</p>
 				<img src="images/wikitext-cheatsheet.png"/>
 			</description>
@@ -69,7 +68,7 @@
 			<description>
 				<p>
 				The appearance of the source editor and preview can be altered easily with workspace preferences.  CSS is used to specify exactly how you would like
-				for the markup to appear.  This gives you ultimate control over the appearance of the editor, preview and the Mylyn task editor.
+				the markup to appear.  This gives you ultimate control over the appearance of the editor, editor preview and the Mylyn task editor.
 				</p>
 				<img src="images/wikitext-preferences.png"/>
 			</description>
