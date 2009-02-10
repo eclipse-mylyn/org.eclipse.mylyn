@@ -1273,8 +1273,8 @@ public class BugzillaClient {
 				}
 			}
 		} else {
-			// A token is required for bugzilla 3.2
-			tokenRequired = true;
+			// A token is required for bugzilla 3.2.1 and newer
+			tokenRequired = bugzillaVersion.compareTo(BugzillaVersion.BUGZILLA_3_2) > 0;
 			String fieldName = BugzillaAttribute.BUG_STATUS.getKey();
 			TaskAttribute attributeStatus = model.getRoot().getMappedAttribute(TaskAttribute.STATUS);
 			TaskAttribute attributeOperation = model.getRoot().getMappedAttribute(TaskAttribute.OPERATION);
@@ -1369,7 +1369,7 @@ public class BugzillaClient {
 			}
 		}
 
-		// check for security token (required for successful submit on Bugzilla 3.2 and greater but not in xml until Bugzilla 3.2.3  bug#263318)
+		// check for security token (required for successful submit on Bugzilla 3.2.1 and greater but not in xml until Bugzilla 3.2.3  bug#263318)
 
 		if (groupSecurityEnabled || (!tokenFound && tokenRequired)) {
 			// get security and token if exists from html and include in post
