@@ -131,6 +131,13 @@ public class HtmlViewerConfiguration extends TextSourceViewerConfiguration {
 
 	private boolean disableHyperlinkModifiers = true;
 
+	/**
+	 * indicate if markup hyperlinks should be detected before other types of hyperlinks. This can affect the order in
+	 * which the hyperlinks are presented to the user in the case where multiple hyperlinks are detected in the same
+	 * region of text. The default is true.
+	 */
+	protected boolean markupHyperlinksFirst = true;
+
 	public HtmlViewerConfiguration(HtmlViewer viewer) {
 		super(getDefaultPreferenceStore());
 		this.viewer = viewer;
@@ -191,7 +198,9 @@ public class HtmlViewerConfiguration extends TextSourceViewerConfiguration {
 		Map<String, IAdaptable> targets = getHyperlinkDetectorTargets(sourceViewer);
 
 		List<IHyperlinkDetector> detectors = new ArrayList<IHyperlinkDetector>(8);
-		detectors.add(annotationHyperlinkDetector);
+		if (markupHyperlinksFirst) {
+			detectors.add(annotationHyperlinkDetector);
+		}
 
 		for (Map.Entry<String, IAdaptable> target : targets.entrySet()) {
 			String targetId = target.getKey();
@@ -209,6 +218,9 @@ public class HtmlViewerConfiguration extends TextSourceViewerConfiguration {
 					detectors.add(delegate);
 				}
 			}
+		}
+		if (!markupHyperlinksFirst) {
+			detectors.add(annotationHyperlinkDetector);
 		}
 		return detectors.toArray(new IHyperlinkDetector[detectors.size()]);
 	}

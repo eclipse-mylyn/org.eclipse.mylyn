@@ -269,7 +269,6 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 				return null;
 			}
 		}
-
 	}
 
 	protected static class TaskMarkupViewerConfiguration extends MarkupViewerConfiguration {
@@ -279,6 +278,7 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 		public TaskMarkupViewerConfiguration(MarkupViewer viewer, TaskRepository taskRepository) {
 			super(viewer);
 			this.taskRepository = taskRepository;
+			markupHyperlinksFirst = false;
 		}
 
 		@SuppressWarnings("unchecked")
@@ -291,12 +291,7 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 
 		@Override
 		protected AnnotationHyperlinkDetector createAnnotationHyperlinkDetector() {
-			return new AnnotationHyperlinkDetector() {
-				@Override
-				protected IHyperlink createUrlHyperlink(IRegion region, String href) {
-					return new PlatformUrlHyperlink(region, href);
-				}
-			};
+			return new PlatformUrlAnnotationHyperlinkDetector();
 		}
 
 		@Override
@@ -306,7 +301,13 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 			}
 			return new TaskHyperlinkPresenter(fPreferenceStore);
 		}
+	}
 
+	private static class PlatformUrlAnnotationHyperlinkDetector extends AnnotationHyperlinkDetector {
+		@Override
+		protected IHyperlink createUrlHyperlink(IRegion region, String href) {
+			return new PlatformUrlHyperlink(region, href);
+		}
 	}
 
 	@SuppressWarnings("unchecked")
