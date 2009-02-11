@@ -62,6 +62,12 @@
            style="toggle"
            toolbarPath="mylyn"
            tooltip="%FocusProblemsListAction.tooltip">
+             <enablement>
+                <systemProperty
+                      name="org.eclipse.mylyn.context.core.context.active"
+                      value="true">
+                </systemProperty>
+             </enablement>
   		</action>  
       </viewContribution> 
 
@@ -79,6 +85,12 @@
            style="toggle"
            toolbarPath="mylyn"
            tooltip="%FocusAllMarkersViewAction.tooltip">
+        <enablement>
+           <systemProperty
+                 name="org.eclipse.mylyn.context.core.context.active"
+                 value="true">
+           </systemProperty>
+        </enablement>
   		</action>  
       </viewContribution>
       
@@ -96,6 +108,12 @@
            style="toggle"
            toolbarPath="mylyn"
            tooltip="%FocusTaskMarkersViewAction.tooltip">
+        <enablement>
+           <systemProperty
+                 name="org.eclipse.mylyn.context.core.context.active"
+                 value="true">
+           </systemProperty>
+        </enablement>
   		</action>  
       </viewContribution>
    <viewContribution
@@ -112,6 +130,12 @@
             style="toggle"
             toolbarPath="mylyn"
             tooltip="%FocusBookmarkMarkersViewAction.tooltip">
+         <enablement>
+            <systemProperty
+                  name="org.eclipse.mylyn.context.core.context.active"
+                  value="true">
+            </systemProperty>
+         </enablement>
       </action>
    </viewContribution> 
     </extension>
