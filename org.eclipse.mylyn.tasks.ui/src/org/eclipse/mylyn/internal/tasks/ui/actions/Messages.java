@@ -103,10 +103,6 @@ public class Messages extends NLS {
 
 	public static String DeleteTaskRepositoryAction_Delete_the_selected_task_repositories;
 
-	public static String DeleteTaskRepositoryAction_Repository_In_Use;
-
-	public static String DeleteTaskRepositoryAction_Repository_In_Use_MESSAGE;
-
 	public static String DeleteTaskRepositoryAction_Delete_Repository_In_Progress;
 
 	public static String DeleteTaskRepositoryAction_Delete_Task_Repository_Failed;

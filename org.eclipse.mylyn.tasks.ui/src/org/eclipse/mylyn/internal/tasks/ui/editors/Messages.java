@@ -87,8 +87,6 @@ public class Messages extends NLS {
 
 	public static String TaskEditorActionContributor_Add_to_X;
 
-	public static String TaskEditorActionContributor_Find;
-
 	public static String TaskEditorActionPart_Actions;
 
 	public static String TaskEditorActionPart_Add_to_Category;
@@ -188,8 +186,6 @@ public class Messages extends NLS {
 	public static String TaskEditorRichTextPart_Preview;
 
 	public static String TaskEditorSummaryPart_Summary;
-
-	public static String TaskFormPage_Errors;
 
 	public static String TaskPlanningEditor_0_seconds;
 

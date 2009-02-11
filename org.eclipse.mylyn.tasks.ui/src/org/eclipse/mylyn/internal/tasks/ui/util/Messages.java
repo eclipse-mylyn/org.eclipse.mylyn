@@ -43,14 +43,6 @@ public class Messages extends NLS {
 
 	public static String TaskDataExportOperation_exporting_task_data;
 
-	public static String TaskListElementImporter_Could_not_read_task_list;
-
-	public static String TaskListElementImporter__failed_;
-
-	public static String TaskListElementImporter_Mylyn_task_list_corrupt;
-
-	public static String TaskListElementImporter_Unable_to_read_the_Mylyn_task_list;
-
 	public static String TasksUiInternal_Configuration_Refresh_Failed;
 
 	public static String TasksUiInternal_Create_Task;

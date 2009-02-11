@@ -95,23 +95,11 @@ public class Messages extends NLS {
 
 	public static String TaskAttachmentWizard_Screenshot;
 
-	public static String TaskDataExportWizard_Confirm_File_Replace;
-
 	public static String TaskDataExportWizard_Export;
 
 	public static String TaskDataExportWizard_export_failed;
 
-	public static String TaskDataExportWizard_Task_context_files_already_exist_in_X;
-
-	public static String TaskDataExportWizard_The_task_activation_history_file_X_already_exists;
-
-	public static String TaskDataExportWizard_The_task_list_file_X_already_exists;
-
-	public static String TaskDataExportWizard_The_zip_file_X_already_exists;
-
 	public static String TaskDataExportWizardPage_Browse_;
-
-	public static String TaskDataExportWizardPage_Export_destination;
 
 	public static String TaskDataExportWizardPage_Export_Mylyn_Task_Data;
 
@@ -121,29 +109,15 @@ public class Messages extends NLS {
 
 	public static String TaskDataExportWizardPage_Folder_Selection;
 
-	public static String TaskDataExportWizardPage_Overwrite_existing_files_without_warning;
-
 	public static String TaskDataExportWizardPage_Please_choose_an_export_destination;
 
-	public static String TaskDataExportWizardPage_Please_select_which_task_data_to_export;
-
-	public static String TaskDataExportWizardPage_Select_data_to_export;
-
 	public static String TaskDataExportWizardPage_Specify_the_destination_folder_for_task_data;
-
-	public static String TaskDataExportWizardPage_Task_Activity_History;
-
-	public static String TaskDataExportWizardPage_Task_Contexts;
-
-	public static String TaskDataExportWizardPage_Task_List;
 
 	public static String TaskDataImportWizard_confirm_overwrite;
 
 	public static String TaskDataImportWizard_could_not_be_found;
 
 	public static String TaskDataImportWizard_existing_task_data_about_to_be_erased_proceed;
-
-	public static String TaskDataImportWizard_File_exists_;
 
 	public static String TaskDataImportWizard_File_not_found;
 
@@ -152,8 +126,6 @@ public class Messages extends NLS {
 	public static String TaskDataImportWizard_Import_Error;
 
 	public static String TaskDataImportWizard_Importing_Data;
-
-	public static String TaskDataImportWizard_Overwrite_existing_file_;
 
 	public static String TaskDataImportWizard_task_data_import_failed;
 
@@ -165,37 +137,15 @@ public class Messages extends NLS {
 
 	public static String TaskDataImportWizardPage_From_zip_file;
 
-	public static String TaskDataImportWizardPage_Import_Activation_history_setting;
-
-	public static String TaskDataImportWizardPage_Import_Contexts_setting;
-
 	public static String TaskDataImportWizardPage_Import_method_backup;
 
 	public static String TaskDataImportWizardPage_Import_method_zip;
-
-	public static String TaskDataImportWizardPage_Import_Overwrite_setting;
 
 	public static String TaskDataImportWizardPage_Import_Settings_saved;
 
 	public static String TaskDataImportWizardPage_Import_Source_zip_file_setting;
 
-	public static String TaskDataImportWizardPage_Import_Task_Data;
-
-	public static String TaskDataImportWizardPage_Import_TaskList_setting;
-
 	public static String TaskDataImportWizardPage_Importing_overwrites_current_tasks_and_repositories;
-
-	public static String TaskDataImportWizardPage_Overwrite_existing_files_without_warning;
-
-	public static String TaskDataImportWizardPage_Could_not_create_import_wizard_page;
-
-	public static String TaskDataImportWizardPage_Select_data_to_import;
-
-	public static String TaskDataImportWizardPage_Task_Activity_History;
-
-	public static String TaskDataImportWizardPage_Task_Contexts;
-
-	public static String TaskDataImportWizardPage_Task_List_and_Repositories;
 
 	public static String TaskDataImportWizardPage__unspecified_;
 
