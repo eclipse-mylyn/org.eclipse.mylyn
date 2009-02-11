@@ -29,6 +29,7 @@ import org.eclipse.mylyn.wikitext.core.parser.builder.RecordingDocumentBuilder.E
  * 
  * @author David Green
  * 
+ * @see TextileLanguageTasksTest
  */
 public class TextileLanguageTest extends TestCase {
 

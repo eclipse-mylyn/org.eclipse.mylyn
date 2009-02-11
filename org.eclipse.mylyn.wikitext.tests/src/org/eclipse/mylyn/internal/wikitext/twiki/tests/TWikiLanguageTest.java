@@ -173,6 +173,12 @@ public class TWikiLanguageTest extends TestCase {
 		assertTrue(html.contains("<body><ol style=\"list-style: upper-roman;\"><li>one</li><li>two<ol style=\"list-style: upper-roman;\"><li>two.one</li><li>two.two</li></ol></li><li>three</li></ol></body>"));
 	}
 
+	public void testListNumericWithBulleted() {
+		String html = parser.parseToHtml("   1. one\n   * two");
+		System.out.println(html);
+		assertTrue(html.contains("<body><ol><li>one</li></ol><ul><li>two</li></ul></body>"));
+	}
+
 	public void testLink() {
 		String html = parser.parseToHtml("a [[http://link]] to somewhere");
 		System.out.println(html);
