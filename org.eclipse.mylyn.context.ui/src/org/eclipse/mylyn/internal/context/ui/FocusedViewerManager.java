@@ -150,6 +150,19 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 			listenerMap.put(viewer, listener);
 			viewer.getControl().addMouseListener(listener);
 			viewer.getControl().addKeyListener(listener);
+
+			try {
+				// NOTE: this needs to be done because some views (e.g. Project Explorer) are not
+				// correctly initialized on startup and do not have the dummy selection event
+				// sent to them.  See PartPluginAction and bug 213545.
+				// TODO consider a mechanism to identify only views that provide focus
+				UiUtil.initializeViewerSelection(viewPart);
+				Set<IInteractionElement> emptySet = Collections.emptySet();
+				refreshViewer(emptySet, true, viewer);
+			} catch (Exception e) {
+				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
+						"Could not initialize focused viewer", e)); //$NON-NLS-1$
+			}
 		}
 	}
 
@@ -210,18 +223,19 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 	}
 
 	protected void refreshViewers(final List<IInteractionElement> nodesToRefresh, final boolean updateLabels) {
+		// TODO replace by Assert.isNotNull(nodesToRefresh);
 		if (nodesToRefresh == null) {
 			return;
+		}
+
+		if (syncRefreshMode) {
+			internalRefresh(new HashSet<IInteractionElement>(nodesToRefresh), updateLabels);
 		} else {
-			if (syncRefreshMode) {
-				internalRefresh(new HashSet<IInteractionElement>(nodesToRefresh), updateLabels);
-			} else {
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						internalRefresh(new HashSet<IInteractionElement>(nodesToRefresh), updateLabels);
-					}
-				});
-			}
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					internalRefresh(new HashSet<IInteractionElement>(nodesToRefresh), updateLabels);
+				}
+			});
 		}
 	}
 
@@ -235,18 +249,18 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 		}
 	}
 
-	public void refreshViewer(final Set<IInteractionElement> nodesToRefresh, final boolean minor,
+	public void refreshViewer(final Set<IInteractionElement> nodesToRefresh, final boolean updateLabels,
 			StructuredViewer viewer) {
 
 		Map<StructuredViewer, FocusedViewerDelayedRefreshJob> refreshJobs = null;
-		if (minor) {
+		if (updateLabels) {
 			refreshJobs = minorRefreshJobs;
 		} else {
 			refreshJobs = fullRefreshJobs;
 		}
 		FocusedViewerDelayedRefreshJob job = refreshJobs.get(viewer);
 		if (job == null) {
-			job = new FocusedViewerDelayedRefreshJob(viewer, "refresh viewer", minor); //$NON-NLS-1$
+			job = new FocusedViewerDelayedRefreshJob(viewer, "refresh viewer", updateLabels); //$NON-NLS-1$
 			refreshJobs.put(viewer, job);
 		}
 		job.refreshElements(nodesToRefresh.toArray());
@@ -308,7 +322,7 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 
 	}
 
-	public void forceReferesh() {
+	public void forceRefresh() {
 		refreshViewers();
 	}
 

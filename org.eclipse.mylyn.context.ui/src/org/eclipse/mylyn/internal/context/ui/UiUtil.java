@@ -16,7 +16,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPart;
 
 /**
  * @author Mik Kersten
@@ -24,8 +24,8 @@ import org.eclipse.ui.IViewPart;
 // TODO 3.1: remove
 public class UiUtil {
 
-	public static void initializeViewerSelection(IViewPart viewPart) {
-		ISelectionProvider selectionProvider = viewPart.getSite().getSelectionProvider();
+	public static void initializeViewerSelection(IWorkbenchPart part) {
+		ISelectionProvider selectionProvider = part.getSite().getSelectionProvider();
 		if (selectionProvider != null) {
 			ISelection selection = selectionProvider.getSelection();
 			try {
@@ -41,7 +41,7 @@ public class UiUtil {
 	}
 
 	public static void displayInterestManipulationFailure() {
-		MessageDialog.openInformation(Display.getCurrent().getActiveShell(), Messages.UiUtil_Mylyn_Interest_Manipulation,
-				Messages.UiUtil_Not_a_valid_landmark);
+		MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
+				Messages.UiUtil_Mylyn_Interest_Manipulation, Messages.UiUtil_Not_a_valid_landmark);
 	}
 }
