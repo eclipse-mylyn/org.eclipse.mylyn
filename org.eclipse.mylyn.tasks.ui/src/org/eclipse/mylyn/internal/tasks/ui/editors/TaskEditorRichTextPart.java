@@ -291,7 +291,7 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 			togglePreviewAction.setChecked(false);
 			manager.add(togglePreviewAction);
 		}
-		if (getEditor().hasBrowser()) {
+		if (togglePreviewAction == null && getEditor().hasBrowser()) {
 			toggleBrowserAction = new Action("", SWT.TOGGLE) { //$NON-NLS-1$
 				@Override
 				public void run() {
