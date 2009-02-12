@@ -114,6 +114,14 @@ h2. Task Editor Appearance
 
 The appearance of rendered markup in the task editor can be altered in the Eclipse preferences.  Open ==<b>Preferences->General->Editors->Text Editors->WikiText->Appearance</b>== and alter the appearance using CSS styles. See "Preferences":#Preferences for more details.
 
+h3. Task Editor Fonts
+
+Default fonts for the task editor when using WikiText can be altered in the Eclipse preferences.  Open ==<b>Preferences->General->Appearance->Colors and Fonts</b>==.  Under ==<b>Tasks->WikiText</b>== default fonts may be selected.
+
+!images/task-editor-font-preferences.png!
+
+These fonts are used as the baseline before CSS styles are applied.  See "Preferences":#Preferences for more details. 
+
 h2. Markup for Task Repositories
 
 Many task repositories have direct support for markup built in, such as Trac and JIRA.  Others do not, however this does not prevent you from using markup with them.
