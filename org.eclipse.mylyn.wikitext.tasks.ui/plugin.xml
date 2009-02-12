@@ -200,6 +200,9 @@
            <description>
               %fontDefinition.monospace.description
            </description>
+           <fontValue
+           		os="linux"
+                value="Monospace-regular-13"/>
         </fontDefinition>
      </extension>   
    
