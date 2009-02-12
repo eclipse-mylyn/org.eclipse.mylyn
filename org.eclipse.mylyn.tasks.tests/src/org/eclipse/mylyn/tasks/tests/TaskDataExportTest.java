@@ -60,21 +60,35 @@ public class TaskDataExportTest extends AbstractContextTest {
 
 		// Create folder/file structure
 		File tasklist = new File(mylynFolder, "tasks.xml.zip");
-		assertTrue(tasklist.createNewFile());
+		if (!tasklist.exists()) {
+			assertTrue(tasklist.createNewFile());
+		}
 		File hidden = new File(mylynFolder, ".hidden");
-		hidden.createNewFile();
-		assertTrue(hidden.exists());
-		File tasks = new File(mylynFolder, "tasksandstuff");
-		assertTrue(tasks.mkdir());
+		if (!hidden.exists()) {
+			assertTrue(hidden.createNewFile());
+		}
+		File tasksandstuff = new File(mylynFolder, "tasksandstuff");
+		if (!tasksandstuff.exists()) {
+			assertTrue(tasksandstuff.mkdir());
+		}
 		File backup = new File(mylynFolder, "backup");
 		if (!backup.exists()) {
 			assertTrue(backup.mkdir());
 		}
-		File tasksFile = new File(tasks, "file1.xml.zip");
-		assertTrue(tasksFile.createNewFile());
-		File tasksSubDir = new File(tasks, "sub");
-		assertTrue(tasksSubDir.mkdir());
-		assertTrue(new File(tasksSubDir, "file2.xml.zip").createNewFile());
+		File tasksFile = new File(tasksandstuff, "file1.xml.zip");
+		if (!tasksFile.exists()) {
+			assertTrue(tasksFile.createNewFile());
+		}
+
+		File tasksSubDir = new File(tasksandstuff, "sub");
+		if (!tasksSubDir.exists()) {
+			assertTrue(tasksSubDir.mkdir());
+		}
+
+		File tasksSubDirFile = new File(tasksSubDir, "file2.xml.zip");
+		if (!tasksSubDirFile.exists()) {
+			assertTrue(tasksSubDirFile.createNewFile());
+		}
 
 	}
 
