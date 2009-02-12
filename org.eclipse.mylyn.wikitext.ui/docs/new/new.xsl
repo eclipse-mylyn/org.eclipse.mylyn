@@ -26,7 +26,7 @@ table.category1 th {
 	background-color:  #E0D0E6;
 }
 
-newCaption {
+.newCaption {
 	background-color: rgb(224, 208, 230);
 	font-weight: bold;
 }
