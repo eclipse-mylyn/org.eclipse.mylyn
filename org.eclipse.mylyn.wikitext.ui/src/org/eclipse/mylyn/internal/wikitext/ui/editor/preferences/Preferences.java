@@ -95,8 +95,8 @@ public class Preferences implements Cloneable {
 		cssByBlockModifierType.put(BLOCK_H4, "font-weight: bold;"); //$NON-NLS-1$
 		cssByBlockModifierType.put(BLOCK_H5, "font-size: 83%; font-weight: bold;"); //$NON-NLS-1$
 		cssByBlockModifierType.put(BLOCK_H6, "font-size: 75%; font-weight: bold;"); //$NON-NLS-1$
-		cssByBlockModifierType.put(BLOCK_BC, "font-family: monospace; color: Blue;"); //$NON-NLS-1$
-		cssByBlockModifierType.put(BLOCK_PRE, "font-family: monospace; color: Blue;"); //$NON-NLS-1$
+		cssByBlockModifierType.put(BLOCK_BC, "font-family: monospace; color: #4444CC;"); //$NON-NLS-1$
+		cssByBlockModifierType.put(BLOCK_PRE, "font-family: monospace; color: #4444CC;"); //$NON-NLS-1$
 		cssByBlockModifierType.put(BLOCK_QUOTE, "color: rgb(38,86,145);"); //$NON-NLS-1$
 	}
 
@@ -113,7 +113,7 @@ public class Preferences implements Cloneable {
 		cssByPhraseModifierType.put(PHRASE_SUPERSCRIPT, "font-size: smaller; vertical-align: super;"); //$NON-NLS-1$
 		cssByPhraseModifierType.put(PHRASE_SUBSCRIPT, "font-size: smaller; vertical-align: sub;"); //$NON-NLS-1$
 		cssByPhraseModifierType.put(PHRASE_SPAN, ""); //$NON-NLS-1$
-		cssByPhraseModifierType.put(PHRASE_CODE, "font-family: monospace; color: Blue;"); //$NON-NLS-1$
+		cssByPhraseModifierType.put(PHRASE_CODE, "font-family: monospace; color: #4444CC;"); //$NON-NLS-1$
 		cssByPhraseModifierType.put(PHRASE_MONOSPACE, "font-family: monospace;"); //$NON-NLS-1$
 		cssByPhraseModifierType.put(PHRASE_UNDERLINED, "text-decoration: underline;"); //$NON-NLS-1$
 	}
