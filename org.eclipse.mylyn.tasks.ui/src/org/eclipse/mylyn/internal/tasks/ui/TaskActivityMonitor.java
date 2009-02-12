@@ -47,9 +47,10 @@ public class TaskActivityMonitor {
 		@Override
 		public void interestChanged(List<IInteractionElement> elements) {
 			List<InteractionEvent> events = contextManager.getActivityMetaContext().getInteractionHistory();
-			InteractionEvent event = events.get(events.size() - 1);
-			parseInteractionEvent(event, false);
-
+			if (events.size() > 0) {
+				InteractionEvent event = events.get(events.size() - 1);
+				parseInteractionEvent(event, false);
+			}
 		}
 	};
 
