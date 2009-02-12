@@ -29,7 +29,7 @@ public class WikiWordReplacementToken extends PatternBasedElement {
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		return "(!)?([A-Z]\\w+(?:[A-Z]\\w*)+)"; //$NON-NLS-1$
+		return "(?<![a-z])(!)?([A-Z]\\w+(?:[A-Z]\\w*)+)"; //$NON-NLS-1$
 	}
 
 	@Override
