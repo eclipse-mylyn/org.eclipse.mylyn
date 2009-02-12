@@ -38,6 +38,7 @@ import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.MarkupDamagerRepaire
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.MarkupTokenScanner;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 import org.eclipse.ui.texteditor.HippieProposalProcessor;
 
@@ -64,13 +65,18 @@ public class MarkupSourceViewerConfiguration extends TextSourceViewerConfigurati
 
 	private OutlineItem outline;
 
+	private Font defaultFont;
+
+	private Font defaultMonospaceFont;
+
 	public MarkupSourceViewerConfiguration(IPreferenceStore preferenceStore) {
 		super(preferenceStore);
+		defaultFont = JFaceResources.getDefaultFont();
 	}
 
 	protected ITokenScanner getMarkupScanner() {
 		if (scanner == null) {
-			scanner = new MarkupTokenScanner(JFaceResources.getDefaultFont());
+			scanner = new MarkupTokenScanner(defaultFont, defaultMonospaceFont);
 		}
 		return scanner;
 	}
@@ -205,5 +211,21 @@ public class MarkupSourceViewerConfiguration extends TextSourceViewerConfigurati
 		if (anchorCompletionProcessor != null) {
 			anchorCompletionProcessor.setOutline(outline);
 		}
+	}
+
+	public Font getDefaultFont() {
+		return defaultFont;
+	}
+
+	public void setDefaultFont(Font defaultFont) {
+		this.defaultFont = defaultFont;
+	}
+
+	public Font getDefaultMonospaceFont() {
+		return defaultMonospaceFont;
+	}
+
+	public void setDefaultMonospaceFont(Font defaultMonospaceFont) {
+		this.defaultMonospaceFont = defaultMonospaceFont;
 	}
 }

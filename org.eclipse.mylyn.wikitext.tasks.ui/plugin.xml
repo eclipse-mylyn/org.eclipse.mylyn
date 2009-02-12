@@ -173,6 +173,34 @@
               id="org.eclipse.mylyn.internal.wikitext.tasks.ui.preferences.MarkupViewerPreferencePage"
               name="%page.name.0">
         </page>
+     </extension>
+     <extension
+           point="org.eclipse.ui.themes">
+        <themeElementCategory
+              id="org.eclipse.mylyn.wikitext.tasks.ui.presentation"
+              label="%themeElementCategory.label.0"
+              parentId="org.eclipse.mylyn.tasks.ui.presentation">
+        </themeElementCategory>
+        <fontDefinition
+              categoryId="org.eclipse.mylyn.wikitext.tasks.ui.presentation"
+              value="org.eclipse.jface.defaultfont"
+              id="org.eclipse.mylyn.wikitext.tasks.ui.defaultFont"
+              isEditable="true"
+              label="%fontDefinition.default.label">
+           <description>
+              %fontDefinition.default.description
+           </description>
+        </fontDefinition>
+        <fontDefinition
+              categoryId="org.eclipse.mylyn.wikitext.tasks.ui.presentation"
+              id="org.eclipse.mylyn.wikitext.tasks.ui.monospaceFont"
+              isEditable="true"
+              label="%fontDefinition.monospace.label"
+              value="Courier New-regular-13">
+           <description>
+              %fontDefinition.monospace.description
+           </description>
+        </fontDefinition>
      </extension>   
    
 </plugin>

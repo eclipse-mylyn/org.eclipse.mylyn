@@ -20,12 +20,14 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.resource.ColorRegistry;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.text.source.VerticalRuler;
+import org.eclipse.mylyn.internal.wikitext.tasks.ui.WikiTextTasksUiPlugin;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.preferences.Preferences;
 import org.eclipse.mylyn.internal.wikitext.ui.util.css.CssParser;
@@ -119,6 +121,16 @@ public class MarkupViewerPreferencePage extends PreferencePage implements IWorkb
 			previewViewer.configure(htmlViewerConfiguration);
 			previewViewer.getTextWidget().setEditable(false);
 			previewViewer.setStylesheet(preferences.getStylesheet());
+
+			if (JFaceResources.getFontRegistry().hasValueFor(WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_DEFAULT_FONT)) {
+				previewViewer.getTextWidget().setFont(
+						JFaceResources.getFontRegistry().get(WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_DEFAULT_FONT));
+			}
+			if (JFaceResources.getFontRegistry().hasValueFor(WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_MONOSPACE_FONT)) {
+				previewViewer.setDefaultMonospaceFont(JFaceResources.getFontRegistry().get(
+						WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_MONOSPACE_FONT));
+			}
+
 			previewViewer.setHtml(createPreviewHtml());
 
 			sourceViewer.getDocument().addDocumentListener(new IDocumentListener() {

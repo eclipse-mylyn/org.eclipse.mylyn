@@ -277,6 +277,8 @@ public class HtmlTextPresentationParser {
 
 	private Font defaultFont;
 
+	private Font defaultMonospaceFont;
+
 	private Color defaultForeground;
 
 	private Color defaultBackground;
@@ -352,6 +354,14 @@ public class HtmlTextPresentationParser {
 		this.defaultFont = defaultFont;
 	}
 
+	public Font getDefaultMonospaceFont() {
+		return defaultMonospaceFont;
+	}
+
+	public void setDefaultMonospaceFont(Font defaultMonospaceFont) {
+		this.defaultMonospaceFont = defaultMonospaceFont;
+	}
+
 	public Color getDefaultForeground() {
 		return defaultForeground;
 	}
@@ -422,7 +432,7 @@ public class HtmlTextPresentationParser {
 			throw new IllegalStateException(Messages.getString("HtmlTextPresentationParser.0")); //$NON-NLS-1$
 		}
 
-		cssStyleManager = new CssStyleManager(defaultFont);
+		cssStyleManager = new CssStyleManager(defaultFont, defaultMonospaceFont);
 
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 

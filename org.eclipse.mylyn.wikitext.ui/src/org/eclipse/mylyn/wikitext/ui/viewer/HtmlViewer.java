@@ -38,6 +38,7 @@ import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.ImageAnnotation;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.ImageDrawingStrategy;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Composite;
 import org.xml.sax.SAXException;
@@ -64,6 +65,8 @@ public class HtmlViewer extends SourceViewer {
 	private boolean displayImages = true;
 
 	private Stylesheet stylesheet;
+
+	private Font defaultMonospaceFont;
 
 	public HtmlViewer(Composite parent, IVerticalRuler ruler, int styles) {
 		super(parent, ruler, styles);
@@ -147,6 +150,7 @@ public class HtmlViewer extends SourceViewer {
 		}
 		parser.setPresentation(result.textPresentation);
 		parser.setDefaultFont(getTextWidget().getFont());
+		parser.setDefaultMonospaceFont(defaultMonospaceFont);
 		result.annotationModel = new AnnotationModel();
 		parser.setAnnotationModel(result.annotationModel);
 
@@ -265,5 +269,13 @@ public class HtmlViewer extends SourceViewer {
 	 */
 	public void setStylesheet(Stylesheet stylesheet) {
 		this.stylesheet = stylesheet;
+	}
+
+	public Font getDefaultMonospaceFont() {
+		return defaultMonospaceFont;
+	}
+
+	public void setDefaultMonospaceFont(Font defaultMonospaceFont) {
+		this.defaultMonospaceFont = defaultMonospaceFont;
 	}
 }

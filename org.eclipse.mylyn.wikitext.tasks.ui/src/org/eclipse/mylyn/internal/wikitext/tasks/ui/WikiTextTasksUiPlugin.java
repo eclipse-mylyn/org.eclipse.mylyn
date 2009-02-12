@@ -25,6 +25,11 @@ import org.osgi.framework.BundleContext;
  * @author David Green
  */
 public class WikiTextTasksUiPlugin extends AbstractUIPlugin {
+
+	public static final String FONT_REGISTRY_KEY_DEFAULT_FONT = "org.eclipse.mylyn.wikitext.tasks.ui.defaultFont"; //$NON-NLS-1$
+
+	public static final String FONT_REGISTRY_KEY_MONOSPACE_FONT = "org.eclipse.mylyn.wikitext.tasks.ui.monospaceFont"; //$NON-NLS-1$
+
 	/**
 	 * the preference key for active folding
 	 */

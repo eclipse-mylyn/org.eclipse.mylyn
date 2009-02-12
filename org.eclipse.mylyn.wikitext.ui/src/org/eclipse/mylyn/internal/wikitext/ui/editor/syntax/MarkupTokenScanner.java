@@ -50,8 +50,8 @@ public class MarkupTokenScanner implements ITokenScanner {
 
 	private final CssParser cssParser = new CssParser();
 
-	public MarkupTokenScanner(Font defaultFont) {
-		styleManager = new CssStyleManager(defaultFont);
+	public MarkupTokenScanner(Font defaultFont, Font defaultMonospaceFont) {
+		styleManager = new CssStyleManager(defaultFont, defaultMonospaceFont);
 		defaultState = styleManager.createDefaultFontState();
 
 		preferences = WikiTextUiPlugin.getDefault().getPreferences();

@@ -17,6 +17,7 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.mylyn.internal.wikitext.ui.util.css.CssRule;
 import org.eclipse.swt.SWT;
@@ -208,6 +209,8 @@ public class CssStyleManager {
 
 	private final Font defaultFont;
 
+	private final Font defaultMonospaceFont;
+
 	private final Map<String, RuleHandler> ruleNameToHandler = new HashMap<String, RuleHandler>();
 	{
 		register(new ColorRuleHandler());
@@ -221,17 +224,30 @@ public class CssStyleManager {
 	}
 
 	public CssStyleManager(Font defaultFont) {
+		this(defaultFont, null);
+	}
+
+	/**
+	 * 
+	 * @param defaultFont
+	 *            the default font to use
+	 * @param defaultMonospaceFont
+	 *            the default font to use where a monospace font is required
+	 */
+	public CssStyleManager(Font defaultFont, Font defaultMonospaceFont) {
 		if (defaultFont == null) {
 			throw new IllegalArgumentException();
 		}
 		this.defaultFont = defaultFont;
+		this.defaultMonospaceFont = defaultMonospaceFont;
 	}
 
 	/**
-	 * For testing purposes only
+	 * NOT API For testing purposes only
 	 */
 	public CssStyleManager() {
 		defaultFont = null;
+		defaultMonospaceFont = null;
 	}
 
 	private void register(RuleHandler handler) {
@@ -259,28 +275,40 @@ public class CssStyleManager {
 			styleRange.rise = 4;
 		}
 		if (fontState.isFixedWidth()) {
-			String symbolicName = getClass().getSimpleName() + "-monospace-" + fontState.size; //$NON-NLS-1$
+			String symbolicName = computeSymbolicName(fontState, "monospace", defaultMonospaceFont); //$NON-NLS-1$
 			Font monospaceFont = JFaceResources.getFontRegistry().hasValueFor(symbolicName) ? JFaceResources.getFontRegistry()
 					.get(symbolicName)
 					: null;
 			if (monospaceFont == null) {
-				Font defaultFont = JFaceResources.getFontRegistry().defaultFont();
-				// look for a monospace font.  First look for non-scalable fonts (bug 263074 comment 3 to comment 6)
-				// then scalable fonts.  This addresses platform-specific issues.
-				FontData[] fontData = defaultFont.getDevice().getFontList("Courier New", false); //$NON-NLS-1$
-				if (fontData == null || fontData.length == 0) {
-					fontData = defaultFont.getDevice().getFontList("Courier", false); //$NON-NLS-1$
-					if (fontData == null || fontData.length == 0) {
-						fontData = defaultFont.getDevice().getFontList("Courier New", true); //$NON-NLS-1$
+				FontData[] fontData = null;
+				if (defaultMonospaceFont != null) {
+					fontData = defaultMonospaceFont.getFontData();
+				} else {
+					Font defaultFont = JFaceResources.getFontRegistry().defaultFont();
+					// look for a monospace font.  First look for non-scalable fonts (bug 263074 comment 3 to comment 6)
+					// then scalable fonts.  This addresses platform-specific issues.
+					String os = Platform.getOS();
+					if (Platform.OS_LINUX.equals(os)) {
+						fontData = defaultFont.getDevice().getFontList("monospace", false); //$NON-NLS-1$
+						if (fontData == null) {
+							fontData = defaultFont.getDevice().getFontList("monospace", true); //$NON-NLS-1$	
+						}
+					}
+					if (fontData == null) {
+						fontData = defaultFont.getDevice().getFontList("Courier New", false); //$NON-NLS-1$
 						if (fontData == null || fontData.length == 0) {
-							fontData = defaultFont.getDevice().getFontList("Courier", true); //$NON-NLS-1$
+							fontData = defaultFont.getDevice().getFontList("Courier", false); //$NON-NLS-1$
+							if (fontData == null || fontData.length == 0) {
+								fontData = defaultFont.getDevice().getFontList("Courier New", true); //$NON-NLS-1$
+								if (fontData == null || fontData.length == 0) {
+									fontData = defaultFont.getDevice().getFontList("Courier", true); //$NON-NLS-1$
+								}
+							}
 						}
 					}
 				}
 				if (fontData != null && fontData.length > 0) {
-					for (FontData fd : fontData) {
-						fd.setHeight((int) fontState.size);
-					}
+					fontData = applyFontState(fontState, fontData);
 					JFaceResources.getFontRegistry().put(symbolicName, fontData);
 					monospaceFont = JFaceResources.getFontRegistry().get(symbolicName);
 				}
@@ -289,45 +317,64 @@ public class CssStyleManager {
 				styleRange.font = monospaceFont;
 			}
 		} else {
-			float defaultSize = defaultFont.getFontData()[0].getHeight();
-			String defaultName = defaultFont.getFontData()[0].getName();
-			if (fontState.size != defaultSize) {
-				String symbolicName = defaultName + "-default-" + fontState.size; //$NON-NLS-1$
-				if (fontState.isBold()) {
-					symbolicName = symbolicName + "-bold"; //$NON-NLS-1$
-				}
-				if (fontState.isItalic()) {
-					symbolicName = symbolicName + "-italic"; //$NON-NLS-1$
-				}
-				Font font = JFaceResources.getFontRegistry().hasValueFor(symbolicName) ? JFaceResources.getFontRegistry()
-						.get(symbolicName)
-						: null;
-				if (font == null) {
-					FontData[] fontData = new FontData[defaultFont.getFontData().length];
-					int index = -1;
-					for (FontData fd : defaultFont.getFontData()) {
-						FontData newData = new FontData(fd.getName(), fd.getHeight(), fd.getStyle());
-						newData.setHeight((int) fontState.size);
-						int style = newData.getStyle();
-						if (fontState.isBold()) {
-							style |= SWT.BOLD;
-						}
-						if (fontState.isItalic()) {
-							style |= SWT.ITALIC;
-						}
-						newData.setStyle(style);
-						fontData[++index] = newData;
-
-					}
-					JFaceResources.getFontRegistry().put(symbolicName, fontData);
-					font = JFaceResources.getFontRegistry().get(symbolicName);
-				}
-				if (font != null) {
-					styleRange.font = font;
-				}
+			String symbolicName = computeSymbolicName(fontState, "default", defaultFont); //$NON-NLS-1$
+			Font font = JFaceResources.getFontRegistry().hasValueFor(symbolicName) ? JFaceResources.getFontRegistry()
+					.get(symbolicName) : null;
+			if (font == null) {
+				FontData[] fontData = createFontData(fontState, defaultFont);
+				JFaceResources.getFontRegistry().put(symbolicName, fontData);
+				font = JFaceResources.getFontRegistry().get(symbolicName);
 			}
+			if (font != null) {
+				styleRange.font = font;
+			}
+
 		}
 		return styleRange;
+	}
+
+	private FontData[] applyFontState(FontState fontState, FontData[] fontData) {
+		final int fontSize = (int) fontState.size;
+		boolean bold = fontState.isBold();
+		boolean italics = fontState.isItalic();
+
+		for (FontData data : fontData) {
+			data.setHeight(fontSize);
+			int style = data.getStyle();
+			if (bold) {
+				style |= SWT.BOLD;
+			}
+			if (italics) {
+				style |= SWT.ITALIC;
+			}
+			data.setStyle(style);
+		}
+		return fontData;
+	}
+
+	private FontData[] createFontData(FontState fontState, Font baseFont) {
+		FontData[] fontData = new FontData[baseFont.getFontData().length];
+		int index = -1;
+		for (FontData fd : baseFont.getFontData()) {
+			fontData[++index] = new FontData(fd.getName(), fd.getHeight(), fd.getStyle());
+		}
+		return applyFontState(fontState, fontData);
+	}
+
+	private String computeSymbolicName(FontState fontState, String key, Font defaultFont) {
+		String symbolicName = getClass().getSimpleName() + '-' + key + '-' + fontState.size;
+		if (fontState.isBold()) {
+			symbolicName += "-bold"; //$NON-NLS-1$
+		}
+		if (fontState.isItalic()) {
+			symbolicName += "-italic"; //$NON-NLS-1$
+		}
+		// if the default has changed we must change the key so that changes can actually take effect
+		if (defaultFont != null) {
+			FontData fontData = defaultFont.getFontData()[0];
+			symbolicName += '-' + fontData.getName() + '-' + fontData.getStyle();
+		}
+		return symbolicName;
 	}
 
 	public Color getColorFromRgb(RGB rgb) {

@@ -15,6 +15,7 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
@@ -27,6 +28,7 @@ import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
+import org.eclipse.mylyn.internal.wikitext.tasks.ui.WikiTextTasksUiPlugin;
 import org.eclipse.mylyn.internal.wikitext.tasks.ui.util.PlatformUrlHyperlink;
 import org.eclipse.mylyn.internal.wikitext.tasks.ui.util.Util;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
@@ -105,6 +107,15 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 		markupViewer.setEditable(false);
 		markupViewer.getTextWidget().setCaret(null);
 
+		if (JFaceResources.getFontRegistry().hasValueFor(WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_DEFAULT_FONT)) {
+			markupViewer.getTextWidget().setFont(
+					JFaceResources.getFontRegistry().get(WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_DEFAULT_FONT));
+		}
+		if (JFaceResources.getFontRegistry().hasValueFor(WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_MONOSPACE_FONT)) {
+			markupViewer.setDefaultMonospaceFont(JFaceResources.getFontRegistry().get(
+					WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_MONOSPACE_FONT));
+		}
+
 		markupViewer.setStylesheet(WikiTextUiPlugin.getDefault().getPreferences().getStylesheet());
 
 		return markupViewer;
@@ -150,6 +161,15 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 		IPreferenceStore preferenceStore = EditorsUI.getPreferenceStore();
 		MarkupSourceViewerConfiguration configuration = new TaskMarkupSourceViewerConfiguration(preferenceStore,
 				taskRepository);
+
+		if (JFaceResources.getFontRegistry().hasValueFor(WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_DEFAULT_FONT)) {
+			configuration.setDefaultFont(JFaceResources.getFontRegistry().get(
+					WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_DEFAULT_FONT));
+		}
+		if (JFaceResources.getFontRegistry().hasValueFor(WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_MONOSPACE_FONT)) {
+			configuration.setDefaultMonospaceFont(JFaceResources.getFontRegistry().get(
+					WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_MONOSPACE_FONT));
+		}
 
 		configuration.setMarkupLanguage(markupLanguageCopy);
 		viewer.configure(configuration);
