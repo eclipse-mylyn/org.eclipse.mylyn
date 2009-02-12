@@ -116,15 +116,7 @@ public class TracHyperlinkUtil {
 			int textOffset) {
 		List<IHyperlink> links = new ArrayList<IHyperlink>();
 
-		Matcher m = ticketPattern.matcher(text);
-		while (m.find()) {
-			if (isInRegion(offsetInText, m)) {
-				String id = m.group(2);
-				links.add(new TaskHyperlink(determineRegion(textOffset, m), repository, id));
-			}
-		}
-
-		m = commentPattern.matcher(text);
+		Matcher m = commentPattern.matcher(text);
 		while (m.find()) {
 			if (isInRegion(offsetInText, m)) {
 				String id = m.group(1);

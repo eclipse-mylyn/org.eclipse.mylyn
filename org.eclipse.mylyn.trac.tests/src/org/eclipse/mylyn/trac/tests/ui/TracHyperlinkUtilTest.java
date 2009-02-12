@@ -65,6 +65,22 @@ public class TracHyperlinkUtilTest extends TestCase {
 		assertEquals("123", ((TaskHyperlink) links[0]).getTaskId());
 	}
 
+	public void testFindHyperlinksNoTicket() {
+		IHyperlink[] links = findTracHyperlinks(repository, "#11", 0, 0);
+		assertNull(links);
+
+		links = findTracHyperlinks(repository, "#11, #234", 6, 0);
+		assertNull(links);
+
+		links = findTracHyperlinks(repository, "  ticket:123  ", 2, 0);
+		assertNull(links);
+
+		links = findTracHyperlinks(repository, "#123 report:123", -1, 0);
+		assertNotNull(links);
+		assertEquals(1, links.length);
+		assertEquals("http://localhost/report/123", ((WebHyperlink) links[0]).getURLString());
+	}
+
 	public void testFindHyperlinksReport() {
 		IHyperlink[] links = findTracHyperlinks(repository, "report:123", 0, 0);
 		assertEquals(1, links.length);
