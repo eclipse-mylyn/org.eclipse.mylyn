@@ -52,6 +52,7 @@ Export-Package:
  org.eclipse.mylyn.wikitext.mediawiki.core;x-internal:=true,
  org.eclipse.mylyn.wikitext.tests;x-internal:=true,
  org.eclipse.mylyn.wikitext.textile.core;x-internal:=true,
+ org.eclipse.mylyn.wikitext.textile.core.resources;x-internal:=true,
  org.eclipse.mylyn.wikitext.tracwiki.core;x-internal:=true,
  org.eclipse.mylyn.wikitext.ui;x-internal:=true,
  org.eclipse.mylyn.wikitext.ui.annotation;x-internal:=true
