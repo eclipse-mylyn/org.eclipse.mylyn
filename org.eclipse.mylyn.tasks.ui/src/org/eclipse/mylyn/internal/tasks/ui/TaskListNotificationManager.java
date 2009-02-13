@@ -108,6 +108,9 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 
 	};
 
+	public TaskListNotificationManager() {
+	}
+
 	public void showPopup() {
 		if (popup != null) {
 			popup.close();

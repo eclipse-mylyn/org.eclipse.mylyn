@@ -420,7 +420,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			monitor.worked(1);
 
 			try {
-				taskListNotificationManager = new TaskListNotificationManager();
 				taskListNotificationManager.addNotificationProvider(REMINDER_NOTIFICATION_PROVIDER);
 //				taskListNotificationManager.addNotificationProvider(INCOMING_NOTIFICATION_PROVIDER);
 				taskListNotificationManager.addNotificationProvider(new TaskListNotifier(getRepositoryModel(),
@@ -598,6 +597,9 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 			// initialize managers
 			initializeDataSources();
+
+			// make this available early for clients that are not initialized through tasks ui but need access 
+			taskListNotificationManager = new TaskListNotificationManager();
 
 			// trigger lazy initialization
 			new TasksUiInitializationJob().schedule();
