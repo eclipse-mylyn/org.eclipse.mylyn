@@ -48,6 +48,10 @@ public class OutlineItem {
 
 	private String resourcePath;
 
+	private int hash = -1;
+
+	private String positionKey;
+
 	public OutlineItem(OutlineItem parent, int level, String id, int offset, int length, String label) {
 		super();
 		this.parent = parent;
@@ -174,7 +178,10 @@ public class OutlineItem {
 
 	@Override
 	public int hashCode() {
-		return calculatePositionKey().hashCode();
+		if (hash == -1) {
+			hash = calculatePositionKey().hashCode();
+		}
+		return hash;
 	}
 
 	@Override
@@ -189,7 +196,7 @@ public class OutlineItem {
 			return false;
 		}
 		final OutlineItem other = (OutlineItem) obj;
-		return other.calculatePositionKey().equals(calculatePositionKey());
+		return other.hashCode() == hashCode() && other.calculatePositionKey().equals(calculatePositionKey());
 	}
 
 	public void clear() {
@@ -197,10 +204,14 @@ public class OutlineItem {
 	}
 
 	private String calculatePositionKey() {
-		if (parent == null) {
-			return ""; //$NON-NLS-1$
+		if (positionKey == null) {
+			if (parent == null) {
+				positionKey = ""; //$NON-NLS-1$
+			} else {
+				positionKey = getParent().calculatePositionKey() + "/" + kind + childOffset; //$NON-NLS-1$
+			}
 		}
-		return getParent().calculatePositionKey() + "/" + kind + childOffset; //$NON-NLS-1$
+		return positionKey;
 	}
 
 	private void addChild(OutlineItem outlineItem) {
@@ -342,6 +353,18 @@ public class OutlineItem {
 				}
 				otherParent.children.clear();
 			}
+			Visitor visitor = new Visitor() {
+				public boolean visit(OutlineItem item) {
+					item.hash = -1;
+					item.positionKey = null;
+					return true;
+				}
+			};
+			for (OutlineItem child : children) {
+				child.accept(visitor);
+			}
+		} else {
+			children.clear();
 		}
 		itemsById = null;
 		setLength(otherParent.getLength());
