@@ -344,6 +344,13 @@ public class TracWikiLanguageTest extends TestCase {
 		assertTrue(html.contains("<body><p>A noWikiWord points somewhere</p></body>"));
 	}
 
+	public void testWikiWordNegativeMatch2() {
+		markupLanaguage.setInternalLinkPattern("https://foo.bar/wiki/{0}");
+		String html = parser.parseToHtml("A noAWikiWord points somewhere");
+		System.out.println(html);
+		assertTrue(html.contains("<body><p>A noAWikiWord points somewhere</p></body>"));
+	}
+
 	public void testWikiWordAtLineStart() {
 		markupLanaguage.setInternalLinkPattern("https://foo.bar/wiki/{0}");
 		String html = parser.parseToHtml("WikiWord points somewhere");
