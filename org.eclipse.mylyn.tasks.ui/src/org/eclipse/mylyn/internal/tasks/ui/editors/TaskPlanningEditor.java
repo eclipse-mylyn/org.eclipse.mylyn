@@ -33,6 +33,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DatePicker;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.DayDateRange;
@@ -72,6 +73,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -95,6 +97,7 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.ui.themes.IThemeManager;
 
 /**
  * @author Mik Kersten
@@ -566,6 +569,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		viewer.configure(new RepositoryTextViewerConfiguration(repository, spellCheck));
 		textSupport.configure(viewer, new Document(text), spellCheck);
 		viewer.getControl().setMenu(getEditor().getMenu());
+		viewer.getTextWidget().setFont(getCommentFont());
 		return viewer;
 	}
 
@@ -878,7 +882,6 @@ public class TaskPlanningEditor extends TaskFormPage {
 				noteEditor.getControl());
 		noteEditor.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		noteEditor.setEditable(true);
-
 		noteEditor.addTextListener(new ITextListener() {
 			public void textChanged(TextEvent event) {
 				if (!task.getNotes().equals(noteEditor.getTextWidget().getText())) {
@@ -888,6 +891,12 @@ public class TaskPlanningEditor extends TaskFormPage {
 		});
 
 		toolkit.paintBordersFor(container);
+	}
+
+	private Font getCommentFont() {
+		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
+		Font font = themeManager.getCurrentTheme().getFontRegistry().get(CommonThemes.FONT_EDITOR_COMMENT);
+		return font;
 	}
 
 	private String getTaskDateString(ITask task) {
