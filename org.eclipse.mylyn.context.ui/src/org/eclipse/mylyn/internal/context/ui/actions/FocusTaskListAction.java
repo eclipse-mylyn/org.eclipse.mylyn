@@ -28,6 +28,7 @@ import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListInterestFilter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListInterestSorter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IViewPart;
 
 /**
@@ -148,8 +149,12 @@ public class FocusTaskListAction extends AbstractFocusViewAction implements IFil
 							for (AbstractTaskListFilter filter : previousFilters) {
 								TaskListView.getFromActivePerspective().addFilter(filter);
 							}
-							taskListView.getViewer().collapseAll();
-
+							Text textControl = taskListView.getFilteredTree().getFilterControl();
+							if (textControl != null && textControl.getText().length() > 0) {
+								taskListView.getViewer().expandAll();
+							} else {
+								taskListView.getViewer().collapseAll();
+							}
 							taskListView.getViewer().setSorter(previousSorter);
 							showProgressBar(taskListView, false);
 						} finally {
