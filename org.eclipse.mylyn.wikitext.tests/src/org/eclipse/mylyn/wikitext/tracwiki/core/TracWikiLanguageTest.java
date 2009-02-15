@@ -153,6 +153,14 @@ public class TracWikiLanguageTest extends TestCase {
 					"<body><h" + x + " id=\"with-id-" + x + "\">heading text</h" + x
 							+ "><p>first para\\s*first para line2</p><p>second para</p><p>third para</p></body>",
 					Pattern.MULTILINE).matcher(html).find());
+
+			html = parser.parseToHtml(delimiter + "heading text" + delimiter + "    \n"
+					+ "first para\nfirst para line2\n\nsecond para\n\nthird para");
+			System.out.println(html);
+			assertTrue(Pattern.compile(
+					"<body><h" + x + " id=\"headingtext\">heading text</h" + x
+							+ "><p>first para\\s*first para line2</p><p>second para</p><p>third para</p></body>",
+					Pattern.MULTILINE).matcher(html).find());
 		}
 	}
 
