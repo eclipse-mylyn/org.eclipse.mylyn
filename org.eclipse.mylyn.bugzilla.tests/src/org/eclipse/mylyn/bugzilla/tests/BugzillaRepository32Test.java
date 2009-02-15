@@ -26,7 +26,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
-import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.sync.SubmitTaskJob;
@@ -83,12 +82,12 @@ public class BugzillaRepository32Test extends AbstractBugzillaTest {
 		String taskNumber = "1";
 		assertTrue(CoreUtil.TEST_MODE);
 		RepositoryQuery query = new RepositoryQuery("bugzilla", "blah");
-		query.setRepositoryUrl(IBugzillaConstants.TEST_BUGZILLA_322_URL);
+		query.setRepositoryUrl(IBugzillaTestConstants.TEST_BUGZILLA_322_URL);
 		query.setUrl("?short_desc_type=allwordssubstr&short_desc=&product=TestProduct&long_desc_type=allwordssubstr&long_desc=&order=Importance&ctype=rdf");
 		TasksUiInternal.getTaskList().addQuery(query);
 		TasksUiInternal.synchronizeQuery(connector, query, null, true);
 
-		ITask task = TasksUiInternal.getTask(IBugzillaConstants.TEST_BUGZILLA_322_URL, taskNumber, "");
+		ITask task = TasksUiInternal.getTask(IBugzillaTestConstants.TEST_BUGZILLA_322_URL, taskNumber, "");
 		assertNotNull(task);
 		ITaskDataWorkingCopy taskDataState = TasksUi.getTaskDataManager().getWorkingCopy(task);//TasksUiPlugin.getTaskDataManager().getTaskData(task);
 		assertNotNull(taskDataState);
@@ -113,7 +112,7 @@ public class BugzillaRepository32Test extends AbstractBugzillaTest {
 
 		TasksUiInternal.synchronizeRepository(repository, false);
 
-		task = TasksUiPlugin.getTaskList().getTask(IBugzillaConstants.TEST_BUGZILLA_322_URL, taskNumber);
+		task = TasksUiPlugin.getTaskList().getTask(IBugzillaTestConstants.TEST_BUGZILLA_322_URL, taskNumber);
 		assertNotNull(task);
 		assertEquals(!p1, task.getPriority().equals("P1"));
 
@@ -143,7 +142,7 @@ public class BugzillaRepository32Test extends AbstractBugzillaTest {
 
 		TasksUiInternal.synchronizeRepository(repository, false);
 
-		task = TasksUiPlugin.getTaskList().getTask(IBugzillaConstants.TEST_BUGZILLA_322_URL, taskNumber);
+		task = TasksUiPlugin.getTaskList().getTask(IBugzillaTestConstants.TEST_BUGZILLA_322_URL, taskNumber);
 		assertNotNull(task);
 		assertEquals(!p1, task.getPriority().equals("P1"));
 

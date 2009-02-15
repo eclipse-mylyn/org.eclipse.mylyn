@@ -20,12 +20,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import org.eclipse.mylyn.bugzilla.tests.AbstractBugzillaTest;
+import org.eclipse.mylyn.bugzilla.tests.IBugzillaTestConstants;
 import org.eclipse.mylyn.context.tests.support.TestUtil;
 import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
-import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.history.AssignmentEvent;
 import org.eclipse.mylyn.internal.bugzilla.core.history.ResolutionEvent;
 import org.eclipse.mylyn.internal.bugzilla.core.history.StatusEvent;
@@ -46,7 +46,7 @@ public class BugzillaTaskHistoryTest extends AbstractBugzillaTest {
 	public void setUp() throws Exception {
 		super.setUp();
 		connector = new BugzillaRepositoryConnector();
-		repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, IBugzillaConstants.TEST_BUGZILLA_222_URL);
+		repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, IBugzillaTestConstants.TEST_BUGZILLA_222_URL);
 
 		Credentials credentials = TestUtil.readCredentials();
 		repository.setAuthenticationCredentials(credentials.username, credentials.password);

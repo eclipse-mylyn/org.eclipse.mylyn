@@ -22,7 +22,6 @@ import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
-import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -126,7 +125,7 @@ public class BugzillaTaskDataHandlerTest extends TestCase {
 
 	public void testCloneTaskData() throws Exception {
 		String bugid = "9";
-		setRepository(BugzillaCorePlugin.CONNECTOR_KIND, IBugzillaConstants.TEST_BUGZILLA_30_URL);
+		setRepository(BugzillaCorePlugin.CONNECTOR_KIND, IBugzillaTestConstants.TEST_BUGZILLA_30_URL);
 		TaskData report1 = init(bugid);
 
 		assertNotNull(report1);
@@ -134,7 +133,7 @@ public class BugzillaTaskDataHandlerTest extends TestCase {
 		testAttributesFromCloneBug(report1, true);
 
 		bugid = "10";
-		setRepository(BugzillaCorePlugin.CONNECTOR_KIND, IBugzillaConstants.TEST_BUGZILLA_30_URL);
+		setRepository(BugzillaCorePlugin.CONNECTOR_KIND, IBugzillaTestConstants.TEST_BUGZILLA_30_URL);
 		TaskData report2 = init(bugid);
 
 		assertNotNull(report2);
@@ -173,9 +172,11 @@ public class BugzillaTaskDataHandlerTest extends TestCase {
 
 	public void testCharacterEscaping() throws CoreException {
 		String bugid = "17";
-		setRepository(BugzillaCorePlugin.CONNECTOR_KIND, IBugzillaConstants.TEST_BUGZILLA_30_URL);
+		setRepository(BugzillaCorePlugin.CONNECTOR_KIND, IBugzillaTestConstants.TEST_BUGZILLA_30_URL);
 		TaskData report1 = init(bugid);
-		assertEquals("Testing! \"&@ $\" &amp;", report1.getRoot().getAttribute(BugzillaAttribute.SHORT_DESC.getKey()).getValue());
+		assertEquals("Testing! \"&@ $\" &amp;", report1.getRoot()
+				.getAttribute(BugzillaAttribute.SHORT_DESC.getKey())
+				.getValue());
 	}
 
 }

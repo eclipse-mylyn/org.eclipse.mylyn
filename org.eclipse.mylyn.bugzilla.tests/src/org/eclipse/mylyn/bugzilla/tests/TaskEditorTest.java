@@ -14,7 +14,6 @@ package org.eclipse.mylyn.bugzilla.tests;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
-import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -73,7 +72,7 @@ public class TaskEditorTest extends TestCase {
 		};
 
 		TaskRepository taskRepository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND,
-				IBugzillaConstants.TEST_BUGZILLA_222_URL);
+				IBugzillaTestConstants.TEST_BUGZILLA_222_URL);
 		TasksUiPlugin.getRepositoryManager().addRepository(taskRepository);
 		final TaskData[] taskData = new TaskData[1];
 
@@ -104,7 +103,7 @@ public class TaskEditorTest extends TestCase {
 		};
 
 		TaskRepository taskRepository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND,
-				IBugzillaConstants.TEST_BUGZILLA_222_URL);
+				IBugzillaTestConstants.TEST_BUGZILLA_222_URL);
 		TasksUiPlugin.getRepositoryManager().addRepository(taskRepository);
 
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(

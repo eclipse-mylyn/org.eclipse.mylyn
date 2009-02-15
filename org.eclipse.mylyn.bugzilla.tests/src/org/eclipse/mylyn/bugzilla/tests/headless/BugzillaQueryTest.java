@@ -13,6 +13,7 @@ package org.eclipse.mylyn.bugzilla.tests.headless;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.bugzilla.tests.IBugzillaTestConstants;
 import org.eclipse.mylyn.context.tests.support.TestUtil;
 import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
@@ -55,7 +56,7 @@ public class BugzillaQueryTest extends TestCase {
 		connector = new BugzillaRepositoryConnector();
 		BugzillaRepositoryConnector.addLanguageSetting(language);
 		handler = connector.getTaskDataHandler();
-		repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, IBugzillaConstants.TEST_BUGZILLA_222_URL);
+		repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, IBugzillaTestConstants.TEST_BUGZILLA_222_URL);
 		Credentials credentials = TestUtil.readCredentials();
 		repository.setAuthenticationCredentials(credentials.username, credentials.password);
 	}
@@ -174,12 +175,12 @@ public class BugzillaQueryTest extends TestCase {
 // BugzillaException, KeyManagementException,
 // GeneralSecurityException {
 // String poundSignUTF8 =
-// BugzillaClient.addCredentials(IBugzillaConstants.TEST_BUGZILLA_222_URL,
+// BugzillaClient.addCredentials(IBugzillaTestConstants.TEST_BUGZILLA_222_URL,
 // "UTF-8",
 // "testUser", "\u00A3");
 // assertTrue(poundSignUTF8.endsWith("password=%C2%A3"));
 // String poundSignISO =
-// BugzillaClient.addCredentials(IBugzillaConstants.TEST_BUGZILLA_222_URL,
+// BugzillaClient.addCredentials(IBugzillaTestConstants.TEST_BUGZILLA_222_URL,
 // "ISO-8859-1", "testUser", "\u00A3");
 // assertFalse(poundSignISO.contains("%C2%A3"));
 // assertTrue(poundSignISO.endsWith("password=%A3"));

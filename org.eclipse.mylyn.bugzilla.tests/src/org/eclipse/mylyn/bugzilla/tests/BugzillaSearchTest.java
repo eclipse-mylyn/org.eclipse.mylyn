@@ -58,34 +58,37 @@ public class BugzillaSearchTest extends TestCase {
 
 	public void testSearching218() throws Exception {
 		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND,
-				IBugzillaConstants.TEST_BUGZILLA_218_URL);
+				IBugzillaTestConstants.TEST_BUGZILLA_218_URL);
 		repository.setVersion(IBugzillaConstants.BugzillaServerVersion.SERVER_218.toString());
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);
-		assertEquals(NUM_EXPECTED_HITS, runQuery(IBugzillaConstants.TEST_BUGZILLA_218_URL, SEARCH_DESCRIPTION).size());
+		assertEquals(NUM_EXPECTED_HITS,
+				runQuery(IBugzillaTestConstants.TEST_BUGZILLA_218_URL, SEARCH_DESCRIPTION).size());
 	}
 
 	public void testSearching220() throws Exception {
 		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND,
-				IBugzillaConstants.TEST_BUGZILLA_220_URL);
+				IBugzillaTestConstants.TEST_BUGZILLA_220_URL);
 		repository.setVersion(IBugzillaConstants.BugzillaServerVersion.SERVER_220.toString());
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);
-		assertEquals(NUM_EXPECTED_HITS, runQuery(IBugzillaConstants.TEST_BUGZILLA_220_URL, SEARCH_DESCRIPTION).size());
+		assertEquals(NUM_EXPECTED_HITS,
+				runQuery(IBugzillaTestConstants.TEST_BUGZILLA_220_URL, SEARCH_DESCRIPTION).size());
 	}
 
 	public void testSearching2201() throws Exception {
 		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND,
-				IBugzillaConstants.TEST_BUGZILLA_2201_URL);
+				IBugzillaTestConstants.TEST_BUGZILLA_2201_URL);
 		repository.setVersion(IBugzillaConstants.BugzillaServerVersion.SERVER_220.toString());
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);
-		assertEquals(NUM_EXPECTED_HITS, runQuery(IBugzillaConstants.TEST_BUGZILLA_2201_URL, SEARCH_DESCRIPTION).size());
+		assertEquals(NUM_EXPECTED_HITS,
+				runQuery(IBugzillaTestConstants.TEST_BUGZILLA_2201_URL, SEARCH_DESCRIPTION).size());
 	}
 
 	public void testSearching222() throws Exception {
 		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND,
-				IBugzillaConstants.TEST_BUGZILLA_222_URL);
+				IBugzillaTestConstants.TEST_BUGZILLA_222_URL);
 		repository.setVersion(IBugzillaConstants.BugzillaServerVersion.SERVER_222.toString());
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);
-		Set<TaskData> hits = runQuery(IBugzillaConstants.TEST_BUGZILLA_222_URL, SEARCH_DESCRIPTION);
+		Set<TaskData> hits = runQuery(IBugzillaTestConstants.TEST_BUGZILLA_222_URL, SEARCH_DESCRIPTION);
 		assertEquals(NUM_EXPECTED_HITS, hits.size());
 	}
 

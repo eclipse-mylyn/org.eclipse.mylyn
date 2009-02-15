@@ -23,7 +23,6 @@ import org.eclipse.mylyn.context.tests.support.TestUtil;
 import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
-import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
@@ -81,39 +80,39 @@ public abstract class AbstractBugzillaTest extends TestCase {
 	}
 
 	protected void init323() {
-		init(IBugzillaConstants.TEST_BUGZILLA_323_URL);
+		init(IBugzillaTestConstants.TEST_BUGZILLA_323_URL);
 	}
 
 	protected void init322() {
-		init(IBugzillaConstants.TEST_BUGZILLA_322_URL);
+		init(IBugzillaTestConstants.TEST_BUGZILLA_322_URL);
 	}
 
 	protected void init32() {
-		init(IBugzillaConstants.TEST_BUGZILLA_32_URL);
+		init(IBugzillaTestConstants.TEST_BUGZILLA_32_URL);
 	}
 
 	protected void init31() {
-		init(IBugzillaConstants.TEST_BUGZILLA_31_URL);
+		init(IBugzillaTestConstants.TEST_BUGZILLA_31_URL);
 	}
 
 	protected void init30() {
-		init(IBugzillaConstants.TEST_BUGZILLA_30_URL);
+		init(IBugzillaTestConstants.TEST_BUGZILLA_30_URL);
 	}
 
 	protected void init222() {
-		init(IBugzillaConstants.TEST_BUGZILLA_222_URL);
+		init(IBugzillaTestConstants.TEST_BUGZILLA_222_URL);
 	}
 
 	protected void init2201() {
-		init(IBugzillaConstants.TEST_BUGZILLA_2201_URL);
+		init(IBugzillaTestConstants.TEST_BUGZILLA_2201_URL);
 	}
 
 	protected void init220() {
-		init(IBugzillaConstants.TEST_BUGZILLA_220_URL);
+		init(IBugzillaTestConstants.TEST_BUGZILLA_220_URL);
 	}
 
 	protected void init218() {
-		init(IBugzillaConstants.TEST_BUGZILLA_218_URL);
+		init(IBugzillaTestConstants.TEST_BUGZILLA_218_URL);
 	}
 
 	@SuppressWarnings("deprecation")

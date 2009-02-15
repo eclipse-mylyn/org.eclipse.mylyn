@@ -598,7 +598,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 	}
 
 	public void testDataRetrieval() throws CoreException, ParseException {
-		init(IBugzillaConstants.TEST_BUGZILLA_30_URL);
+		init(IBugzillaTestConstants.TEST_BUGZILLA_30_URL);
 		TaskData data = connector.getTaskData(repository, "2", new NullProgressMonitor());
 		assertNotNull(data);
 		TaskMapper mapper = new TaskMapper(data);
@@ -800,7 +800,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 	}
 
 	public void testCustomFields() throws Exception {
-		init(IBugzillaConstants.TEST_BUGZILLA_303_URL);
+		init(IBugzillaTestConstants.TEST_BUGZILLA_303_URL);
 
 		String taskNumber = "1";
 

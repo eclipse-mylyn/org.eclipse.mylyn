@@ -19,7 +19,6 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.context.tests.support.TestUtil;
 import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
-import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
@@ -54,7 +53,7 @@ public class BugzillaProductParserTest extends TestCase {
 	}
 
 	public void test222Products() throws Exception {
-		setRepository(IBugzillaConstants.TEST_BUGZILLA_222_URL);
+		setRepository(IBugzillaTestConstants.TEST_BUGZILLA_222_URL);
 		List<String> productList = BugzillaCorePlugin.getRepositoryConfiguration(repository, false, null).getProducts();
 		Iterator<String> itr = productList.iterator();
 		assertTrue(itr.hasNext());
@@ -62,7 +61,7 @@ public class BugzillaProductParserTest extends TestCase {
 	}
 
 	public void test2201Products() throws Exception {
-		setRepository(IBugzillaConstants.TEST_BUGZILLA_2201_URL);
+		setRepository(IBugzillaTestConstants.TEST_BUGZILLA_2201_URL);
 		List<String> productList = BugzillaCorePlugin.getRepositoryConfiguration(repository, false, null).getProducts();
 		Iterator<String> itr = productList.iterator();
 		assertTrue(itr.hasNext());
@@ -71,7 +70,7 @@ public class BugzillaProductParserTest extends TestCase {
 	}
 
 	public void test220Products() throws Exception {
-		setRepository(IBugzillaConstants.TEST_BUGZILLA_220_URL);
+		setRepository(IBugzillaTestConstants.TEST_BUGZILLA_220_URL);
 		List<String> productList = BugzillaCorePlugin.getRepositoryConfiguration(repository, false, null).getProducts();
 		assertEquals(2, productList.size());
 		assertTrue(productList.contains("TestProduct"));
@@ -80,7 +79,7 @@ public class BugzillaProductParserTest extends TestCase {
 	}
 
 	public void test218Products() throws Exception {
-		setRepository(IBugzillaConstants.TEST_BUGZILLA_218_URL);
+		setRepository(IBugzillaTestConstants.TEST_BUGZILLA_218_URL);
 		List<String> productList = BugzillaCorePlugin.getRepositoryConfiguration(repository, false, null).getProducts();
 		assertEquals(1, productList.size());
 		assertTrue(productList.contains("TestProduct"));

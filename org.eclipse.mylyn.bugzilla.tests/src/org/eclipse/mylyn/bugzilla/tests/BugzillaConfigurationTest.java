@@ -68,7 +68,7 @@ public class BugzillaConfigurationTest extends TestCase {
 
 	public void test222RDFProductConfig() throws Exception {
 
-		BugzillaClient client = createClient(IBugzillaConstants.TEST_BUGZILLA_222_URL, "", "", "", "", "UTF-8");
+		BugzillaClient client = createClient(IBugzillaTestConstants.TEST_BUGZILLA_222_URL, "", "", "", "", "UTF-8");
 		RepositoryConfiguration config = client.getRepositoryConfiguration();
 		assertNotNull(config);
 		assertEquals("2.22.1", config.getInstallVersion().toString());
@@ -86,7 +86,7 @@ public class BugzillaConfigurationTest extends TestCase {
 	}
 
 	public void test2201RDFProductConfig() throws Exception {
-		BugzillaClient client = createClient(IBugzillaConstants.TEST_BUGZILLA_2201_URL, "", "", "", "", "UTF-8");
+		BugzillaClient client = createClient(IBugzillaTestConstants.TEST_BUGZILLA_2201_URL, "", "", "", "", "UTF-8");
 		RepositoryConfiguration config = client.getRepositoryConfiguration();
 		assertNotNull(config);
 		assertEquals("2.20.1", config.getInstallVersion().toString().toString());
@@ -104,7 +104,7 @@ public class BugzillaConfigurationTest extends TestCase {
 	}
 
 	public void test220RDFProductConfig() throws Exception {
-		BugzillaClient client = createClient(IBugzillaConstants.TEST_BUGZILLA_220_URL, "", "", "", "", "UTF-8");
+		BugzillaClient client = createClient(IBugzillaTestConstants.TEST_BUGZILLA_220_URL, "", "", "", "", "UTF-8");
 		RepositoryConfiguration config = client.getRepositoryConfiguration();
 		assertNotNull(config);
 		assertEquals("2.20.3", config.getInstallVersion().toString());
@@ -122,7 +122,7 @@ public class BugzillaConfigurationTest extends TestCase {
 	}
 
 	public void test218RDFProductConfig() throws Exception {
-		BugzillaClient client = createClient(IBugzillaConstants.TEST_BUGZILLA_218_URL, "", "", "", "", "UTF-8");
+		BugzillaClient client = createClient(IBugzillaTestConstants.TEST_BUGZILLA_218_URL, "", "", "", "", "UTF-8");
 		RepositoryConfiguration config = client.getRepositoryConfiguration();
 		assertNotNull(config);
 		assertEquals("2.18.6", config.getInstallVersion().toString());
