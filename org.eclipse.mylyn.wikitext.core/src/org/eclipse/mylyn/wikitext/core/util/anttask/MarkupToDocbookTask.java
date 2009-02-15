@@ -153,7 +153,7 @@ public class MarkupToDocbookTask extends MarkupTask {
 					}
 				};
 				MarkupParser parser = new MarkupParser();
-				parser.setMarkupLanaguage(markupLanguage);
+				parser.setMarkupLanguage(markupLanguage);
 				parser.setBuilder(builder);
 				builder.setBookTitle(bookTitle == null ? name : bookTitle);
 				if (doctype != null) {

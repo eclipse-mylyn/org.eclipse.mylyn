@@ -182,7 +182,7 @@ public class MarkupToDitaTask extends MarkupTask {
 					builder.setRootTopicTitle(bookTitle);
 
 					MarkupParser parser = new MarkupParser();
-					parser.setMarkupLanaguage(markupLanguage);
+					parser.setMarkupLanguage(markupLanguage);
 					parser.setBuilder(builder);
 					if (topicDoctype != null) {
 						builder.setDoctype(topicDoctype);
@@ -195,7 +195,7 @@ public class MarkupToDitaTask extends MarkupTask {
 					DitaBookMapDocumentBuilder builder = new DitaBookMapDocumentBuilder(writer);
 					try {
 						MarkupParser parser = new MarkupParser();
-						parser.setMarkupLanaguage(markupLanguage);
+						parser.setMarkupLanguage(markupLanguage);
 						parser.setBuilder(builder);
 
 						builder.setBookTitle(bookTitle == null ? name : bookTitle);

@@ -57,7 +57,7 @@ public class MarkupToDocbook {
 		MarkupParser markupParser = new MarkupParser();
 
 		markupParser.setBuilder(builder);
-		markupParser.setMarkupLanaguage(markupLanguage);
+		markupParser.setMarkupLanguage(markupLanguage);
 
 		markupParser.parse(markupContent);
 

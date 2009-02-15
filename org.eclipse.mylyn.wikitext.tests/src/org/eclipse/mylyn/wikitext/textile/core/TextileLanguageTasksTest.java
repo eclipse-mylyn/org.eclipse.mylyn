@@ -49,7 +49,7 @@ public class TextileLanguageTasksTest extends TestCase {
 		MarkupLanguageConfiguration configuration = Util.create("bugzilla");
 		markupLanaguage.configure(configuration);
 
-		parser.setMarkupLanaguage(markupLanaguage);
+		parser.setMarkupLanguage(markupLanaguage);
 	}
 
 	public void testSubversiveBugReport() throws IOException {

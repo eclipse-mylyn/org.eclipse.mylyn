@@ -152,7 +152,7 @@ public abstract class AbstractTestApplication {
 	private void updateDependentViewers() {
 		{
 			MarkupParser parser = new MarkupParser();
-			parser.setMarkupLanaguage(createMarkupLanguage());
+			parser.setMarkupLanguage(createMarkupLanguage());
 			StringWriter html = new StringWriter();
 			try {
 				HtmlDocumentBuilder builder = new HtmlDocumentBuilder(html);
@@ -178,7 +178,7 @@ public abstract class AbstractTestApplication {
 		}
 		{
 			MarkupParser parser = new MarkupParser();
-			parser.setMarkupLanaguage(createMarkupLanguage());
+			parser.setMarkupLanguage(createMarkupLanguage());
 			String html = parser.parseToHtml(markup);
 			browser.setText(html);
 		}

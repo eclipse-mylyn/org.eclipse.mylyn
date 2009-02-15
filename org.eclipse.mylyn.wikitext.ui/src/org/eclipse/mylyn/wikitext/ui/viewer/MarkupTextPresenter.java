@@ -51,7 +51,7 @@ public class MarkupTextPresenter extends HtmlTextPresenter {
 			return hoverInfo;
 		}
 		MarkupParser parser = new MarkupParser();
-		parser.setMarkupLanaguage(markupLanguage);
+		parser.setMarkupLanguage(markupLanguage);
 		String html = parser.parseToHtml(hoverInfo);
 
 		return super.updatePresentation(drawable, html, presentation, maxWidth, maxHeight);

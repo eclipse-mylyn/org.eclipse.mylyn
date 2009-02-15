@@ -36,7 +36,7 @@ public class BugzillaTextileLanguageTest extends TestCase {
 		TextileLanguage markupLanaguage = new TextileLanguage();
 		MarkupLanguageConfiguration configuration = Util.create("bugzilla");
 		markupLanaguage.configure(configuration);
-		parser.setMarkupLanaguage(markupLanaguage);
+		parser.setMarkupLanguage(markupLanaguage);
 	}
 
 	public void testQuotedBlock() {

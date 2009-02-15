@@ -22,7 +22,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
  * 
  * @author David Green
  * 
- * @since 1.0 
+ * @since 1.0
  */
 public class MarkupParser {
 
@@ -52,7 +52,7 @@ public class MarkupParser {
 	/**
 	 * set the markup language of the markup to process
 	 */
-	public void setMarkupLanaguage(MarkupLanguage markupLanaguage) {
+	public void setMarkupLanguage(MarkupLanguage markupLanaguage) {
 		this.markupLanguage = markupLanaguage;
 	}
 

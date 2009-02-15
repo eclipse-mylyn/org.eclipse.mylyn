@@ -37,7 +37,7 @@ public class ConfluenceLanguageTest extends TestCase {
 
 	private void initParser() {
 		parser = new MarkupParser();
-		parser.setMarkupLanaguage(new ConfluenceLanguage());
+		parser.setMarkupLanguage(new ConfluenceLanguage());
 	}
 
 	public void testParagraph() throws Exception {

@@ -76,7 +76,7 @@ public class MarkupViewer extends HtmlViewer {
 	}
 
 	public void setMarkupLanguage(MarkupLanguage markupLanguage) {
-		parser.setMarkupLanaguage(markupLanguage);
+		parser.setMarkupLanguage(markupLanguage);
 	}
 
 	@Override

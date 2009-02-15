@@ -536,7 +536,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 					}
 
 					markupParser.setBuilder(builder);
-					markupParser.setMarkupLanaguage(getMarkupLanguage());
+					markupParser.setMarkupLanguage(getMarkupLanguage());
 					if (markupParser.getMarkupLanguage() == null) {
 						builder.beginDocument();
 						builder.beginBlock(BlockType.PREFORMATTED, new Attributes());

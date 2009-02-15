@@ -237,7 +237,7 @@ public class MarkupToHtmlTask extends MarkupTask {
 				splittingBuilder.setFormatting(formatOutput);
 
 				MarkupParser parser = new MarkupParser();
-				parser.setMarkupLanaguage(markupLanguage);
+				parser.setMarkupLanguage(markupLanguage);
 				parser.setBuilder(splittingBuilder);
 
 				parser.parse(markupContent);

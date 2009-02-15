@@ -36,7 +36,7 @@ public class HtmlDocumentBuilderTest extends TestCase {
 	@Override
 	public void setUp() {
 		parser = new MarkupParser();
-		parser.setMarkupLanaguage(new TextileLanguage());
+		parser.setMarkupLanguage(new TextileLanguage());
 		out = new StringWriter();
 		builder = new HtmlDocumentBuilder(out);
 		parser.setBuilder(builder);

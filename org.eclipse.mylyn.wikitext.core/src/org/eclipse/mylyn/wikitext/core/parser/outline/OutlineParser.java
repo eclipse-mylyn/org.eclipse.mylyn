@@ -79,7 +79,7 @@ public class OutlineParser {
 			outlineBuilder.idGenerator.setGenerationStrategy(markupLanguage.getIdGenerationStrategy());
 			MarkupParser markupParser = new MarkupParser();
 			markupParser.setBuilder(outlineBuilder);
-			markupParser.setMarkupLanaguage(markupLanguage);
+			markupParser.setMarkupLanguage(markupLanguage);
 			markupParser.parse(markup);
 		} finally {
 			markupLanguage.setFilterGenerativeContents(false);

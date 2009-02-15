@@ -57,7 +57,7 @@ public class ConvertMarkupToHtml extends AbstractMarkupResourceHandler {
 			}
 		};
 		MarkupParser parser = new MarkupParser();
-		parser.setMarkupLanaguage(markupLanguage);
+		parser.setMarkupLanguage(markupLanguage);
 		parser.setBuilder(builder);
 		builder.setEmitDtd(true);
 

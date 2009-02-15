@@ -48,7 +48,7 @@ public class TextileLanguageTest extends TestCase {
 	private void initParser() throws IOException {
 		parser = new MarkupParser();
 		markupLanaguage = new TextileLanguage();
-		parser.setMarkupLanaguage(markupLanaguage);
+		parser.setMarkupLanguage(markupLanaguage);
 	}
 
 	public void testSimpleHeaders() {
