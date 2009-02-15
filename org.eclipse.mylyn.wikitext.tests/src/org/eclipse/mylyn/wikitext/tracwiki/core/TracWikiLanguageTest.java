@@ -164,6 +164,12 @@ public class TracWikiLanguageTest extends TestCase {
 		}
 	}
 
+	public void testHeadingBreakingPara() {
+		String html = parser.parseToHtml("=\n== heading ==\npara");
+		System.out.print(html);
+		assertTrue(html.contains("<body><p>=</p><h2 id=\"heading\">heading</h2><p>para</p></body>"));
+	}
+
 	private String repeat(int i, String string) {
 		StringBuilder buf = new StringBuilder(string.length() * i);
 		for (int x = 0; x < i; ++x) {

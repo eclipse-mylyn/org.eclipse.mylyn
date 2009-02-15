@@ -284,7 +284,7 @@ public class TracWikiLanguage extends AbstractMarkupLanguage {
 		paragraphBreakingBlocks.add(listBlock);
 		HeadingBlock headingBlock = new HeadingBlock();
 		blocks.add(headingBlock);
-		paragraphBreakingBlocks.add(listBlock);
+		paragraphBreakingBlocks.add(headingBlock);
 		PreformattedBlock preformattedBlock = new PreformattedBlock();
 		blocks.add(preformattedBlock);
 		paragraphBreakingBlocks.add(preformattedBlock);
