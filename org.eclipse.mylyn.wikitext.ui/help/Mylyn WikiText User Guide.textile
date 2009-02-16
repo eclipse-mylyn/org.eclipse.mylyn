@@ -49,10 +49,12 @@ The editor outline provides a structured view of the markup source.  Headings in
 !images/editor-outline.png!
 
 Clicking on an item in the outline will show the corresponding header in the source, and navigating in the source will cause the most relevant item in the outline to be selected.
-
-Note that clicking on an item in the outline has no effect if the editor preview is showing.
+Clicking on an item in the outline when the preview is showing causes the corresponding item to be revealed.
 
 Items in the outline view can be moved within the document by using the mouse to drag and drop the item to the desired location.  
+
+The Outline view can be displayed by selecting ==<b>Window-&gt;Show View-&gt;Outline</b>== from the main menu.
+Also see "Quick Outline":#QuickOutline.
 
 h3. Folding
 
@@ -448,6 +450,16 @@ The following shows the same text after selecting a proposal:
 !images/editor-assist-selection-proposal-completed.png!
 
 The selected text in this case is wrapped in '*' characters for the 'strong' Textile markup.
+
+h2. Quick Outline
+
+A quick outline can be accessed by pressing *CTRL+O* in the editor (*Command+O* on a mac).  The quick outline provides a structured view of the markup source much the same as the "Outline view":#Outline except that it's displayed right in the editor.  A quick outline is useful when the Outline view is not visible and may also be used within the "task editor":#TaskEditorIntegration.  
+
+!images/editor-quick-outline.png!
+
+Clicking on an item in the outline will show the corresponding header in the source.
+
+Also see "Outline":#Outline.
 
 h1. Preferences
 
