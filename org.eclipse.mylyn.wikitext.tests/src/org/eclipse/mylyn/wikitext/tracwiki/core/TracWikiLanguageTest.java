@@ -204,6 +204,20 @@ public class TracWikiLanguageTest extends TestCase {
 		assertTrue(html.contains("</ol>"));
 	}
 
+	public void testListOrderedStartAt2() throws IOException {
+		String html = parser.parseToHtml(" 2. with two lines\n 3. three");
+
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><ol start=\"2\"><li>with two lines</li><li>three</li></ol></body>"));
+	}
+
+	public void testListOrderedBug265015() throws IOException {
+		String html = parser.parseToHtml(" 1. first\n\n 2. second");
+
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><ol><li>first</li></ol><ol start=\"2\"><li>second</li></ol></body>"));
+	}
+
 	public void testListNested() throws IOException {
 		String html = parser.parseToHtml(" 1. a list\n  1. nested\n  1. nested2\n 1. level1\n\npara");
 

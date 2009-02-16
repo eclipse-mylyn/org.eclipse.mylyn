@@ -780,6 +780,15 @@ public class HtmlTextPresentationParser {
 					elementState.addAnnotation(new ClassAnnotation(atts.getValue(x)));
 				} else if ("title".equals(attName)) { //$NON-NLS-1$
 					elementState.addAnnotation(new TitleAnnotation(atts.getValue(x), localName));
+				} else if ("start".equals(attName)) { //$NON-NLS-1$
+					if ("ol".equals(localName)) { //$NON-NLS-1$
+						// bug 265015 honor the start attribute
+						try {
+							elementState.orderedListIndex = Integer.parseInt(atts.getValue(x), 10) - 1;
+						} catch (NumberFormatException e) {
+							// ignore
+						}
+					}
 				}
 			}
 			if ("li".equals(localName)) { //$NON-NLS-1$
