@@ -147,7 +147,7 @@ public class FocusTaskListAction extends AbstractFocusViewAction implements IFil
 							taskListView.setFocusedMode(false);
 							taskListView.removeFilter(taskListInterestFilter);
 							for (AbstractTaskListFilter filter : previousFilters) {
-								TaskListView.getFromActivePerspective().addFilter(filter);
+								taskListView.addFilter(filter);
 							}
 							Text textControl = taskListView.getFilteredTree().getFilterControl();
 							if (textControl != null && textControl.getText().length() > 0) {
