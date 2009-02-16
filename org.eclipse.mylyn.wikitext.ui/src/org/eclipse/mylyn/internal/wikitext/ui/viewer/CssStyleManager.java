@@ -285,25 +285,17 @@ public class CssStyleManager {
 					fontData = defaultMonospaceFont.getFontData();
 				} else {
 					Font defaultFont = JFaceResources.getFontRegistry().defaultFont();
+
 					// look for a monospace font.  First look for non-scalable fonts (bug 263074 comment 3 to comment 6)
 					// then scalable fonts.  This addresses platform-specific issues.
-					String os = Platform.getOS();
-					if (Platform.OS_LINUX.equals(os)) {
-						fontData = defaultFont.getDevice().getFontList("monospace", false); //$NON-NLS-1$
-						if (fontData == null) {
-							fontData = defaultFont.getDevice().getFontList("monospace", true); //$NON-NLS-1$	
-						}
-					}
-					if (fontData == null) {
-						fontData = defaultFont.getDevice().getFontList("Courier New", false); //$NON-NLS-1$
+					String[] fontNames = computeMonospaceFontNames();
+					for (String fontName : fontNames) {
+						fontData = defaultFont.getDevice().getFontList(fontName, false);
 						if (fontData == null || fontData.length == 0) {
-							fontData = defaultFont.getDevice().getFontList("Courier", false); //$NON-NLS-1$
-							if (fontData == null || fontData.length == 0) {
-								fontData = defaultFont.getDevice().getFontList("Courier New", true); //$NON-NLS-1$
-								if (fontData == null || fontData.length == 0) {
-									fontData = defaultFont.getDevice().getFontList("Courier", true); //$NON-NLS-1$
-								}
-							}
+							fontData = defaultFont.getDevice().getFontList(fontName, true);
+						}
+						if (fontData != null && fontData.length > 0) {
+							break;
 						}
 					}
 				}
@@ -331,6 +323,22 @@ public class CssStyleManager {
 
 		}
 		return styleRange;
+	}
+
+	private String[] computeMonospaceFontNames() {
+		String os = Platform.getOS();
+		boolean linux = Platform.OS_LINUX.equals(os);
+		if (linux) {
+			return new String[] { "monospace", "Courier New", "Courier" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+			};
+		}
+		boolean macosx = Platform.OS_MACOSX.equals(os);
+		if (macosx) {
+			return new String[] { "Courier", "Courier New" //$NON-NLS-1$//$NON-NLS-2$
+			};
+		}
+		return new String[] { "Courier New", "Courier" //$NON-NLS-1$//$NON-NLS-2$
+		};
 	}
 
 	private FontData[] applyFontState(FontState fontState, FontData[] fontData) {
