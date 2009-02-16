@@ -368,9 +368,30 @@ The conversion will then result in the following:
 bc. 
 <inlinemediaobject><imageobject><imagedata fileref=\"images/foo.png\"/></imageobject></inlinemediaobject> 
 
+h3. Extended Blocks
+
+Textile extended blocks (starting with @bc..@, @pre..@ and @bq..@) are useful for blocks that may have multiple whitespace lines.  Extended blocks must be terminated by an explicit Textile block (such as @p.@).   For example:
+
+bc.. 
+ bc.. 
+ a block code section has started
+ 
+ and continues
+ 
+ p. a paragraph starts
+
 h2. Examples
 
 This document was written in Textile markup.  The original source code for this document "is available here":http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.mylyn/org.eclipse.mylyn.wikitext.ui/help/Mylyn%20WikiText%20User%20Guide.textile?root=Tools_Project&view=markup
+
+h2. Textile Reference
+
+Textile syntax and references can be found here:
+
+* "Textile (markup language)":http://en.wikipedia.org/wiki/Textile_%28markup_language%29 (wikipedia.org)
+* "The Textile Reference Manual":http://thresholdstate.com/articles/4312/the-textile-reference-manual (thresholdstate.com)
+* "Textile":http://textile.thresholdstate.com/ an online form for trying out Textile syntax (thresholdstate.com)
+* "Textile Reference":http://hobix.com/textile/ an example-based Textile reference (hobix.com)
 
 h1. Tips and Tricks
 
