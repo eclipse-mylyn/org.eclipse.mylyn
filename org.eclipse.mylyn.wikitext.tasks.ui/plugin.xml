@@ -214,6 +214,9 @@
            <fontValue
            		os="linux"
                 value="Monospace-regular-13"/>
+           <fontValue
+           		os="macosx"
+                value="Courier-regular-13"/>
         </fontDefinition>
      </extension>   
    
