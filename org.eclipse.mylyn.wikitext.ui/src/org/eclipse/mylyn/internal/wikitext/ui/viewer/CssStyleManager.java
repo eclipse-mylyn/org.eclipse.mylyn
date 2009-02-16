@@ -332,11 +332,11 @@ public class CssStyleManager {
 			return new String[] { "monospace", "Courier New", "Courier" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 			};
 		}
-		boolean macosx = Platform.OS_MACOSX.equals(os);
-		if (macosx) {
-			return new String[] { "Courier", "Courier New" //$NON-NLS-1$//$NON-NLS-2$
-			};
-		}
+//		boolean macosx = Platform.OS_MACOSX.equals(os);
+//		if (macosx) {
+//			return new String[] { "Courier", "Courier New" //$NON-NLS-1$//$NON-NLS-2$
+//			};
+//		}
 		return new String[] { "Courier New", "Courier" //$NON-NLS-1$//$NON-NLS-2$
 		};
 	}
