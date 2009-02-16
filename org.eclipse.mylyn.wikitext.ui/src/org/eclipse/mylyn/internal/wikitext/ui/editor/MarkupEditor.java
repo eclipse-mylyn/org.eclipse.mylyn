@@ -51,7 +51,6 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.URLHyperlink;
 import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.source.Annotation;
-import org.eclipse.jface.text.source.IOverviewRuler;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.text.source.projection.IProjectionListener;
@@ -205,6 +204,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		setDocumentProvider(new MarkupDocumentProvider());
 		sourceViewerConfiguration = new MarkupSourceViewerConfiguration(getPreferenceStore());
 		sourceViewerConfiguration.setOutline(outlineModel);
+		sourceViewerConfiguration.setShowInTarget(this);
 		setSourceViewerConfiguration(sourceViewerConfiguration);
 	}
 
@@ -217,7 +217,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 			sourceTab = new CTabItem(tabFolder, SWT.NONE);
 			updateSourceTabLabel();
 
-			viewer = new MarkupSourceViewer(tabFolder, ruler, getOverviewRuler(), isOverviewRulerVisible(), styles
+			viewer = new MarkupProjectionViewer(tabFolder, ruler, getOverviewRuler(), isOverviewRulerVisible(), styles
 					| SWT.WRAP);
 
 			sourceTab.setControl(viewer instanceof Viewer ? ((Viewer) viewer).getControl() : viewer.getTextWidget());
@@ -963,8 +963,8 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		}
 		if (persistSetting) {
 			ISourceViewer sourceViewer = getSourceViewer();
-			if (sourceViewer instanceof MarkupSourceViewer) {
-				IReconciler reconciler = ((MarkupSourceViewer) sourceViewer).getReconciler();
+			if (sourceViewer instanceof MarkupProjectionViewer) {
+				IReconciler reconciler = ((MarkupProjectionViewer) sourceViewer).getReconciler();
 				if (reconciler instanceof MarkupMonoReconciler) {
 					((MarkupMonoReconciler) reconciler).forceReconciling();
 				}
@@ -1118,6 +1118,10 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 				if (element instanceof OutlineItem) {
 					OutlineItem item = (OutlineItem) element;
 					selectAndReveal(item);
+					if (outlinePage != null && outlinePage.getControl() != null
+							&& !outlinePage.getControl().isDisposed()) {
+						outlinePage.setSelection(selection);
+					}
 					return true;
 				}
 			}
@@ -1152,21 +1156,6 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		super.rulerContextMenuAboutToShow(menu);
 		// prevent line number toggle action from appearing
 		menu.remove(ITextEditorActionConstants.LINENUMBERS_TOGGLE);
-	}
-
-	/**
-	 * extend the viewer to provide access to the reconciler
-	 */
-	private static class MarkupSourceViewer extends ProjectionViewer {
-
-		public MarkupSourceViewer(Composite parent, IVerticalRuler verticalRuler, IOverviewRuler overviewRuler,
-				boolean showAnnotationsOverview, int styles) {
-			super(parent, verticalRuler, overviewRuler, showAnnotationsOverview, styles);
-		}
-
-		public IReconciler getReconciler() {
-			return fReconciler;
-		}
 	}
 
 	public void perform(AbstractDocumentCommand command) throws CoreException {

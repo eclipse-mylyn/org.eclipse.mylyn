@@ -79,11 +79,25 @@
 			id="org.eclipse.mylyn.wikitext.ui.convertToEclipseHelpCommand" name="%command.name.2" />
 		<command id="org.eclipse.mylyn.wikitext.ui.editor.showCheatSheetCommand"
 			name="%command.name.3" />
+				
+	      <command
+	            categoryId="org.eclipse.ui.category.navigate"
+	            description="Open a popup dialog with a quick outline of the current document"
+	            id="org.eclipse.mylyn.wikitext.ui.quickOutlineCommand"
+	            name="Quick Outline"/>
 	</extension>
 	
 	<extension point="org.eclipse.ui.handlers">
 		<handler commandId="org.eclipse.mylyn.wikitext.ui.editor.showCheatSheetCommand"
 			class="org.eclipse.mylyn.internal.wikitext.ui.editor.commands.ShowCheatSheetCommand">
+			<activeWhen>
+				<with variable="activeFocusControlId">
+					<equals value="org.eclipse.mylyn.wikitext.ui.editor.sourceViewer"/>
+				</with>
+			</activeWhen>
+		</handler>
+		<handler commandId="org.eclipse.mylyn.wikitext.ui.quickOutlineCommand"
+			class="org.eclipse.mylyn.internal.wikitext.ui.editor.commands.ShowQuickOutlineCommand">
 			<activeWhen>
 				<with variable="activeFocusControlId">
 					<equals value="org.eclipse.mylyn.wikitext.ui.editor.sourceViewer"/>
@@ -116,6 +130,12 @@
 			commandId="org.eclipse.mylyn.wikitext.ui.editor.showCheatSheetCommand"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>
+		<key
+            sequence="M1+O"
+            contextId="org.eclipse.mylyn.wikitext.ui.editor.markupSourceContext"
+            commandId="org.eclipse.mylyn.wikitext.ui.quickOutlineCommand"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      	</key>
 	</extension>
 	
 	<extension point="org.eclipse.ui.commands">
