@@ -82,9 +82,9 @@
 				
 	      <command
 	            categoryId="org.eclipse.ui.category.navigate"
-	            description="Open a popup dialog with a quick outline of the current document"
+	            description="%command.description.5"
 	            id="org.eclipse.mylyn.wikitext.ui.quickOutlineCommand"
-	            name="Quick Outline"/>
+	            name="%command.name.5"/>
 	</extension>
 	
 	<extension point="org.eclipse.ui.handlers">

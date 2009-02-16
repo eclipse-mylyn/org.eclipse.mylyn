@@ -53,6 +53,7 @@ import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.MarkupDamagerRepaire
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.MarkupTokenScanner;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
+import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
@@ -308,6 +309,19 @@ public class MarkupSourceViewerConfiguration extends TextSourceViewerConfigurati
 		}
 
 		public Object getInformation2(ITextViewer textViewer, IRegion subject) {
+			if (outline == null) {
+				// If the outline was not set then parse it.  This can happen in a task editor
+				if (markupLanguage != null) {
+					IDocument document = textViewer.getDocument();
+					if (document != null && document.getLength() > 0) {
+						MarkupLanguage language = markupLanguage.clone();
+						OutlineParser outlineParser = new OutlineParser();
+						outlineParser.setMarkupLanguage(language.clone());
+						String markup = document.get();
+						return outlineParser.parse(markup);
+					}
+				}
+			}
 			return outline;
 		}
 
