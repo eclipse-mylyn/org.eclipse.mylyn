@@ -16,7 +16,6 @@ import java.util.Map;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
@@ -25,16 +24,15 @@ import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.DefaultAnnotationHover;
 import org.eclipse.jface.text.source.IAnnotationHover;
-import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.mylyn.internal.wikitext.tasks.ui.WikiTextTasksUiPlugin;
 import org.eclipse.mylyn.internal.wikitext.tasks.ui.util.PlatformUrlHyperlink;
+import org.eclipse.mylyn.internal.wikitext.tasks.ui.util.ShowInTargetBridge;
 import org.eclipse.mylyn.internal.wikitext.tasks.ui.util.Util;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupSourceViewerConfiguration;
-import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.FastMarkupPartitioner;
 import org.eclipse.mylyn.internal.wikitext.ui.util.PreferenceStoreFacade;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.AnnotationHyperlinkDetector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -140,23 +138,7 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 		final MarkupLanguageType markupLanguageCopy = createRepositoryMarkupLanguage(taskRepository);
 		configureMarkupLanguage(taskRepository, markupLanguageCopy);
 
-		SourceViewer viewer = new SourceViewer(parent, null, style | SWT.WRAP) {
-			@Override
-			public void setDocument(IDocument document, IAnnotationModel annotationModel, int modelRangeOffset,
-					int modelRangeLength) {
-				if (document != null) {
-					configurePartitioning(document);
-				}
-				super.setDocument(document, annotationModel, modelRangeOffset, modelRangeLength);
-			}
-
-			private void configurePartitioning(IDocument document) {
-				FastMarkupPartitioner partitioner = new FastMarkupPartitioner();
-				partitioner.setMarkupLanguage(markupLanguageCopy.clone());
-				partitioner.connect(document);
-				document.setDocumentPartitioner(partitioner);
-			}
-		};
+		SourceViewer viewer = new MarkupSourceViewer(parent, null, style | SWT.WRAP, markupLanguageCopy);
 		// configure the viewer
 		IPreferenceStore preferenceStore = EditorsUI.getPreferenceStore();
 		MarkupSourceViewerConfiguration configuration = new TaskMarkupSourceViewerConfiguration(preferenceStore,
@@ -172,6 +154,7 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 		}
 
 		configuration.setMarkupLanguage(markupLanguageCopy);
+		configuration.setShowInTarget(new ShowInTargetBridge(viewer));
 		viewer.configure(configuration);
 
 		// we want the viewer to show annotations
