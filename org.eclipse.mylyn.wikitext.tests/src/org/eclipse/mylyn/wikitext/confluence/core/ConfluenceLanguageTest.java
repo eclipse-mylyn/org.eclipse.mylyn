@@ -363,6 +363,13 @@ public class ConfluenceLanguageTest extends TestCase {
 		assertTrue(html.contains("</code></pre><p>more text</p></body>"));
 	}
 
+	public void testBlockCodeJava() {
+		String html = parser.parseToHtml("{code:Java}some code{code}more text");
+		System.out.println("HTML:" + html);
+		assertTrue(html.contains("<body><pre><code class=\"java code-java\">some code"));
+		assertTrue(html.contains("</code></pre><p>more text</p></body>"));
+	}
+
 	public void testNote() {
 		String html = parser.parseToHtml("h1. a header\n" + "\n" + "Some text\n" + "{note:title=A Title}\n"
 				+ "the body of the note\n" + "which may span multiple lines\n" + "\n"

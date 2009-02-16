@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 David Green and others.
+ * Copyright (c) 2007, 2009 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,9 +30,32 @@ public abstract class ParameterizedBlock extends Block {
 				String key = keyValue[0].trim();
 				String value = keyValue[1].trim();
 				setOption(key, value);
+			} else if (keyValue.length == 1) {
+				setOption(optionPair);
 			}
 		}
 	}
 
+	/**
+	 * Set an option that is specified without a value. The default implementation does nothing.
+	 * 
+	 * @param option
+	 *            the option to set
+	 * 
+	 * @see #setOption(String, String)
+	 */
+	protected void setOption(String option) {
+	}
+
+	/**
+	 * Set an option with key and value pair
+	 * 
+	 * @param key
+	 *            the key of the option
+	 * @param value
+	 *            the value of the option
+	 * 
+	 * @see #setOption(String)
+	 */
 	protected abstract void setOption(String key, String value);
 }

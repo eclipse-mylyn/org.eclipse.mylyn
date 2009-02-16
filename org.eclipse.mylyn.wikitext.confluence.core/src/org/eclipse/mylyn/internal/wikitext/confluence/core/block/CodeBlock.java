@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 David Green and others.
+ * Copyright (c) 2007, 2009 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,8 @@ public class CodeBlock extends AbstractConfluenceDelimitedBlock {
 
 	private String title;
 
+	private String language;
+
 	public CodeBlock() {
 		super("code"); //$NON-NLS-1$
 	}
@@ -32,8 +34,12 @@ public class CodeBlock extends AbstractConfluenceDelimitedBlock {
 			builder.beginBlock(BlockType.PANEL, attributes);
 		}
 		Attributes attributes = new Attributes();
-
-		builder.beginBlock(BlockType.PREFORMATTED, new Attributes());
+		Attributes preAttributes = new Attributes();
+		if (language != null) {
+			// chili-style class and atlassian-style class
+			attributes.setCssClass(language + " code-" + language); //$NON-NLS-1$
+		}
+		builder.beginBlock(BlockType.PREFORMATTED, preAttributes);
 		builder.beginBlock(BlockType.CODE, attributes);
 	}
 
@@ -63,5 +69,10 @@ public class CodeBlock extends AbstractConfluenceDelimitedBlock {
 		if (key.equals("title")) { //$NON-NLS-1$
 			title = value;
 		}
+	}
+
+	@Override
+	protected void setOption(String option) {
+		language = option.toLowerCase();
 	}
 }
