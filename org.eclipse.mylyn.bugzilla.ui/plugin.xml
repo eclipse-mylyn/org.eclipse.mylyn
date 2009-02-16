@@ -61,6 +61,7 @@
             <languageAttribute command="bug" 						response="Issue"/>
 			<languageAttribute command="submitted" 					response="Submitted"/>
 			<languageAttribute command="submitted" 					response="posted"/>
+	     	<languageAttribute command="suspicious_action"			response="Suspicious action"/> 
        </language> 
    </extension>    
   

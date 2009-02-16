@@ -47,6 +47,8 @@ public class RepositoryStatus extends Status {
 
 	public final static int REPOSITORY_LOGGED_OUT = 10;
 
+	public static final int REPOSITORY_SUSPICIOUS_ACTION = 11;
+
 	public final static int ERROR_INTERNAL = 7;
 
 	private String htmlMessage;

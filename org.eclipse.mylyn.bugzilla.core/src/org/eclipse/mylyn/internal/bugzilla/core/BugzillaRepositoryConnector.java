@@ -410,6 +410,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			enSetting.addLanguageAttribute("bug", "Issue"); //$NON-NLS-1$ //$NON-NLS-2$
 			enSetting.addLanguageAttribute("submitted", "Submitted"); //$NON-NLS-1$ //$NON-NLS-2$
 			enSetting.addLanguageAttribute("submitted", "posted"); //$NON-NLS-1$ //$NON-NLS-2$
+			enSetting.addLanguageAttribute("suspicious_action", "Suspicious action"); //$NON-NLS-1$ //$NON-NLS-2$
 			languages.add(enSetting);
 
 		}

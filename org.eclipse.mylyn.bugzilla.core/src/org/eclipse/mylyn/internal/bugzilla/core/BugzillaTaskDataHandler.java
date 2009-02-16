@@ -369,6 +369,9 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 				// TODO: Move retry handling into client
 				if (e.getStatus().getCode() == RepositoryStatus.ERROR_REPOSITORY_LOGIN) {
 					return client.postTaskData(taskData, monitor);
+				} else if (e.getStatus().getCode() == RepositoryStatus.REPOSITORY_SUSPICIOUS_ACTION) {
+					taskData.getRoot().removeAttribute(BugzillaAttribute.TOKEN.getKey());
+					return client.postTaskData(taskData, monitor);
 				} else {
 					throw e;
 				}

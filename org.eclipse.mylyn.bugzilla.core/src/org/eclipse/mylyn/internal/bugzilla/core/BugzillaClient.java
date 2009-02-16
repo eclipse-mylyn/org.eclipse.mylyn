@@ -1538,6 +1538,17 @@ public class BugzillaClient {
 						}
 						found = false;
 						for (Iterator<String> iterator = bugzillaLanguageSettings.getResponseForCommand(
+								BugzillaLanguageSettings.COMMAND_SUSPICIOUS_ACTION).iterator(); iterator.hasNext()
+								&& !found;) {
+							String value = iterator.next().toLowerCase(Locale.ENGLISH);
+							found = found || title.indexOf(value) != -1;
+						}
+						if (found) {
+							throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+									RepositoryStatus.REPOSITORY_SUSPICIOUS_ACTION));
+						}
+						found = false;
+						for (Iterator<String> iterator = bugzillaLanguageSettings.getResponseForCommand(
 								BugzillaLanguageSettings.COMMAND_ERROR_LOGGED_OUT).iterator(); iterator.hasNext()
 								&& !found;) {
 							String value = iterator.next().toLowerCase(Locale.ENGLISH);
