@@ -34,7 +34,7 @@ public class TaskListToolTipHandler extends AbstractTaskListViewHandler {
 			Tree tree = taskListView.getViewer().getTree();
 			TreeItem[] selection = tree.getSelection();
 			if (selection.length > 0) {
-				toolTip.show(new Point(selection[0].getBounds().x, selection[0].getBounds().y));
+				toolTip.show(new Point(selection[0].getBounds().x + 1, selection[0].getBounds().y + 1));
 			}
 		}
 	}

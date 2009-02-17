@@ -1846,7 +1846,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 			TreeItem[] selection = getViewer().getTree().getSelection();
 			if (selection != null && selection.length > 0) {
 				Rectangle bounds = selection[0].getBounds();
-				taskListToolTip.show(new Point(bounds.x, bounds.y));
+				taskListToolTip.show(new Point(bounds.x + 1, bounds.y + 1));
 			}
 		}
 	}
