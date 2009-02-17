@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others. 
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     Frank Becker - improvements
+ *     Helen Bershadskaya - improvements for bug 242445
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.ui.wizards;
@@ -50,7 +51,6 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -60,12 +60,11 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.dialogs.PreferencesUtil;
-import org.eclipse.ui.forms.events.ExpansionAdapter;
-import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 
 /**
@@ -77,6 +76,7 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
  * @author Steffen Pingel
  * @author Frank Becker
  * @author David Green
+ * @author Helen Bershadskaya
  * @since 2.0
  */
 public abstract class AbstractRepositorySettingsPage extends AbstractTaskRepositoryPage implements ITaskRepositoryPage {
@@ -162,12 +162,6 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 	private Composite proxyAuthComp;
 
-	private ExpandableComposite advancedExpComposite;
-
-	private ExpandableComposite httpAuthExpComposite;
-
-	private ExpandableComposite proxyExpComposite;
-
 	private Set<String> repositoryUrls;
 
 	private String originalUrl;
@@ -230,12 +224,29 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		super.dispose();
 	}
 
-	/**
-	 * @since 2.0
-	 */
+//	/**
+//	 * @since 2.0
+//	 */
+//	@Override
+//	protected Control createContents(Composite parent) {
+//		compositeContainer = new Composite(parent, SWT.NONE);
+//		GridLayout layout = new GridLayout(3, false);
+//		compositeContainer.setLayout(layout);
+//
+//		createSettingControls(parent);
+//	}
+
 	@Override
-	protected void createContents(Composite parent) {
-		createSettingControls(parent);
+	public void createControl(Composite parent) {
+		toolkit = new FormToolkit(TasksUiPlugin.getDefault().getFormColors(parent.getDisplay()));
+
+		Composite compositeContainer = new Composite(parent, SWT.NONE);
+		GridLayout layout = new GridLayout(3, false);
+		compositeContainer.setLayout(layout);
+
+		createSettingControls(compositeContainer);
+
+		setControl(compositeContainer);
 	}
 
 	/**
@@ -243,56 +254,12 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	 */
 	@Override
 	protected void createSettingControls(Composite parent) {
-		if (repository != null) {
-			originalUrl = repository.getRepositoryUrl();
-			AuthenticationCredentials oldCredentials = repository.getCredentials(AuthenticationType.REPOSITORY);
-			if (oldCredentials != null) {
-				oldUsername = oldCredentials.getUserName();
-				oldPassword = oldCredentials.getPassword();
-			} else {
-				oldUsername = ""; //$NON-NLS-1$
-				oldPassword = ""; //$NON-NLS-1$
-			}
+		compositeContainer = parent;
 
-			AuthenticationCredentials oldHttpCredentials = repository.getCredentials(AuthenticationType.HTTP);
-			if (oldHttpCredentials != null) {
-				oldHttpAuthUserId = oldHttpCredentials.getUserName();
-				oldHttpAuthPassword = oldHttpCredentials.getPassword();
-			} else {
-				oldHttpAuthPassword = null;
-				oldHttpAuthUserId = null;
-			}
+		initializeOldValues();
 
-			oldProxyHostname = repository.getProperty(TaskRepository.PROXY_HOSTNAME);
-			oldProxyPort = repository.getProperty(TaskRepository.PROXY_PORT);
-			if (oldProxyHostname == null) {
-				oldProxyHostname = ""; //$NON-NLS-1$
-			}
-			if (oldProxyPort == null) {
-				oldProxyPort = ""; //$NON-NLS-1$
-			}
-
-			AuthenticationCredentials oldProxyCredentials = repository.getCredentials(AuthenticationType.PROXY);
-			if (oldProxyCredentials != null) {
-				oldProxyUsername = oldProxyCredentials.getUserName();
-				oldProxyPassword = oldProxyCredentials.getPassword();
-			} else {
-				oldProxyUsername = null;
-				oldProxyPassword = null;
-			}
-
-		} else {
-			oldUsername = ""; //$NON-NLS-1$
-			oldPassword = ""; //$NON-NLS-1$
-			oldHttpAuthPassword = null;
-			oldHttpAuthUserId = null;
-		}
-
-		compositeContainer = new Composite(parent, SWT.NULL);
-		FillLayout layout = new FillLayout();
-		compositeContainer.setLayout(layout);
-
-		new Label(compositeContainer, SWT.NONE).setText(LABEL_SERVER);
+		Label serverLabel = new Label(compositeContainer, SWT.NONE);
+		serverLabel.setText(LABEL_SERVER);
 		serverUrlCombo = new Combo(compositeContainer, SWT.DROP_DOWN);
 		serverUrlCombo.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
@@ -317,7 +284,8 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			}
 		});
 
-		GridDataFactory.fillDefaults().hint(300, SWT.DEFAULT).grab(true, false).applyTo(serverUrlCombo);
+		GridDataFactory.fillDefaults().hint(300, SWT.DEFAULT).grab(true, false).span(2, SWT.DEFAULT).applyTo(
+				serverUrlCombo);
 
 		repositoryLabelEditor = new StringFieldEditor("", LABEL_REPOSITORY_LABEL, StringFieldEditor.UNLIMITED, //$NON-NLS-1$
 				compositeContainer) {
@@ -335,22 +303,15 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 					getWizard().getContainer().updateButtons();
 				}
 			}
+
+			@Override
+			public int getNumberOfControls() {
+				return 2;
+			}
 		};
-		// repositoryLabelEditor.setErrorMessage("error");
-
-		if (needsAnonymousLogin()) {
-			anonymousButton = new Button(compositeContainer, SWT.CHECK);
-			GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(anonymousButton);
-
-			anonymousButton.setText(Messages.AbstractRepositorySettingsPage_Anonymous_Access);
-			anonymousButton.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					setAnonymous(anonymousButton.getSelection());
-					isPageComplete();
-				}
-			});
-		}
+		disconnectedButton = new Button(compositeContainer, SWT.CHECK);
+		disconnectedButton.setText(Messages.AbstractRepositorySettingsPage_Disconnected);
+		disconnectedButton.setSelection(repository != null ? repository.isOffline() : false);
 
 		repositoryUserNameEditor = new StringFieldEditor("", LABEL_USER, StringFieldEditor.UNLIMITED, //$NON-NLS-1$
 				compositeContainer) {
@@ -368,7 +329,27 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 					getWizard().getContainer().updateButtons();
 				}
 			}
+
+			@Override
+			public int getNumberOfControls() {
+				// if will have anonymous checkbox on same line, make this control only span 2 columns
+				return needsAnonymousLogin() ? 2 : 3;
+			}
 		};
+		if (needsAnonymousLogin()) {
+			// need to increase column number here, because above string editor will use them if declared beforehand
+			//((GridLayout) (compositeContainer.getLayout())).numColumns++;
+			anonymousButton = new Button(compositeContainer, SWT.CHECK);
+
+			anonymousButton.setText(Messages.AbstractRepositorySettingsPage_Anonymous_Access);
+			anonymousButton.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					setAnonymous(anonymousButton.getSelection());
+					isPageComplete();
+				}
+			});
+		}
 
 		repositoryPasswordEditor = new RepositoryStringFieldEditor("", LABEL_PASSWORD, StringFieldEditor.UNLIMITED, //$NON-NLS-1$
 				compositeContainer) {
@@ -386,10 +367,16 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 					getWizard().getContainer().updateButtons();
 				}
 			}
+
+			@Override
+			public int getNumberOfControls() {
+				return 2;
+			}
 		};
 
+		// need to increase column number here, because above string editor will use them if declared beforehand
+		//((GridLayout) (compositeContainer.getLayout())).numColumns++;
 		savePasswordButton = new Button(compositeContainer, SWT.CHECK);
-		GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(savePasswordButton);
 		savePasswordButton.setText(Messages.AbstractRepositorySettingsPage_Save_Password);
 
 		if (repository != null) {
@@ -451,199 +438,18 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		// }
 
 		if (needsAdvanced() || needsEncoding()) {
-
-			advancedExpComposite = toolkit.createExpandableComposite(compositeContainer, ExpandableComposite.COMPACT
-					| ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR);
-			advancedExpComposite.clientVerticalSpacing = 0;
-			GridData gridData_2 = new GridData(SWT.FILL, SWT.FILL, true, false);
-			gridData_2.horizontalIndent = -5;
-			advancedExpComposite.setLayoutData(gridData_2);
-			advancedExpComposite.setFont(compositeContainer.getFont());
-			advancedExpComposite.setBackground(compositeContainer.getBackground());
-			advancedExpComposite.setText(Messages.AbstractRepositorySettingsPage_Additional_Settings);
-			advancedExpComposite.addExpansionListener(new ExpansionAdapter() {
-				@Override
-				public void expansionStateChanged(ExpansionEvent e) {
-					getControl().getShell().pack();
-				}
-			});
-
-			GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(advancedExpComposite);
-
-			advancedComp = toolkit.createComposite(advancedExpComposite, SWT.NONE);
-			GridLayout gridLayout2 = new GridLayout();
-			gridLayout2.numColumns = 2;
-			gridLayout2.verticalSpacing = 5;
-			advancedComp.setLayout(gridLayout2);
-			advancedComp.setBackground(compositeContainer.getBackground());
-			advancedExpComposite.setClient(advancedComp);
-
-			createAdditionalControls(advancedComp);
-
-			if (needsEncoding()) {
-				Label encodingLabel = new Label(advancedComp, SWT.HORIZONTAL);
-				encodingLabel.setText(Messages.AbstractRepositorySettingsPage_Character_encoding);
-				GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.TOP).applyTo(encodingLabel);
-
-				Composite encodingContainer = new Composite(advancedComp, SWT.NONE);
-				GridLayout gridLayout = new GridLayout(2, false);
-				gridLayout.marginWidth = 0;
-				gridLayout.marginHeight = 0;
-				encodingContainer.setLayout(gridLayout);
-
-				defaultEncoding = new Button(encodingContainer, SWT.RADIO);
-				defaultEncoding.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
-				defaultEncoding.setText(Messages.AbstractRepositorySettingsPage_Default__
-						+ TaskRepository.DEFAULT_CHARACTER_ENCODING + ")"); //$NON-NLS-1$
-				defaultEncoding.setSelection(true);
-
-				otherEncoding = new Button(encodingContainer, SWT.RADIO);
-				otherEncoding.setText(Messages.AbstractRepositorySettingsPage_Other);
-				otherEncodingCombo = new Combo(encodingContainer, SWT.READ_ONLY);
-				try {
-					for (String encoding : Charset.availableCharsets().keySet()) {
-						if (!encoding.equals(TaskRepository.DEFAULT_CHARACTER_ENCODING)) {
-							otherEncodingCombo.add(encoding);
-						}
-					}
-				} catch (LinkageError e) {
-					StatusHandler.log(new Status(
-							IStatus.ERROR,
-							TasksUiPlugin.ID_PLUGIN,
-							Messages.AbstractRepositorySettingsPage_Problems_encountered_determining_available_charsets,
-							e));
-					// bug 237972: 3rd party encodings can cause availableCharsets() to fail 
-					otherEncoding.setEnabled(false);
-					otherEncodingCombo.setEnabled(false);
-				}
-
-				setDefaultEncoding();
-
-				otherEncoding.addSelectionListener(new SelectionAdapter() {
-
-					@Override
-					public void widgetSelected(SelectionEvent e) {
-						if (otherEncoding.getSelection()) {
-							defaultEncoding.setSelection(false);
-							otherEncodingCombo.setEnabled(true);
-						} else {
-							defaultEncoding.setSelection(true);
-							otherEncodingCombo.setEnabled(false);
-						}
-					}
-				});
-
-				if (repository != null) {
-					try {
-						String repositoryEncoding = repository.getCharacterEncoding();
-						if (repositoryEncoding != null) {// &&
-							// !repositoryEncoding.equals(defaultEncoding))
-							// {
-							if (otherEncodingCombo.getItemCount() > 0
-									&& otherEncodingCombo.indexOf(repositoryEncoding) > -1) {
-								otherEncodingCombo.setEnabled(true);
-								otherEncoding.setSelection(true);
-								defaultEncoding.setSelection(false);
-								otherEncodingCombo.select(otherEncodingCombo.indexOf(repositoryEncoding));
-							} else {
-								setDefaultEncoding();
-							}
-						}
-					} catch (Throwable t) {
-						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-								"Could not set field value", t)); //$NON-NLS-1$
-					}
-				}
-			}
+			createAdvancedSection();
 		}
 
 		if (needsHttpAuth()) {
-			httpAuthExpComposite = toolkit.createExpandableComposite(compositeContainer, ExpandableComposite.COMPACT
-					| ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR);
-			httpAuthExpComposite.clientVerticalSpacing = 0;
-			GridData gridData_2 = new GridData(SWT.FILL, SWT.FILL, true, false);
-			gridData_2.horizontalIndent = -5;
-			httpAuthExpComposite.setLayoutData(gridData_2);
-			httpAuthExpComposite.setFont(compositeContainer.getFont());
-			httpAuthExpComposite.setBackground(compositeContainer.getBackground());
-			httpAuthExpComposite.setText(Messages.AbstractRepositorySettingsPage_Http_Authentication);
-			httpAuthExpComposite.addExpansionListener(new ExpansionAdapter() {
-				@Override
-				public void expansionStateChanged(ExpansionEvent e) {
-					getControl().getShell().pack();
-				}
-			});
-
-			GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(httpAuthExpComposite);
-
-			httpAuthComp = toolkit.createComposite(httpAuthExpComposite, SWT.NONE);
-			GridLayout gridLayout2 = new GridLayout();
-			gridLayout2.numColumns = 2;
-			gridLayout2.verticalSpacing = 0;
-			httpAuthComp.setLayout(gridLayout2);
-			httpAuthComp.setBackground(compositeContainer.getBackground());
-			httpAuthExpComposite.setClient(httpAuthComp);
-
-			httpAuthButton = new Button(httpAuthComp, SWT.CHECK);
-			GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).span(2, SWT.DEFAULT).applyTo(httpAuthButton);
-
-			httpAuthButton.setText(Messages.AbstractRepositorySettingsPage_Enabled);
-
-			httpAuthButton.addSelectionListener(new SelectionListener() {
-				public void widgetSelected(SelectionEvent e) {
-					setHttpAuth(httpAuthButton.getSelection());
-				}
-
-				public void widgetDefaultSelected(SelectionEvent e) {
-					// ignore
-				}
-			});
-
-			httpAuthUserNameEditor = new StringFieldEditor(
-					"", Messages.AbstractRepositorySettingsPage_User_ID_, StringFieldEditor.UNLIMITED, httpAuthComp) { //$NON-NLS-1$
-
-				@Override
-				protected boolean doCheckState() {
-					return true;
-				}
-
-				@Override
-				protected void valueChanged() {
-					super.valueChanged();
-					if (getWizard() != null) {
-						getWizard().getContainer().updateButtons();
-					}
-				}
-			};
-			httpAuthPasswordEditor = new RepositoryStringFieldEditor(
-					"", Messages.AbstractRepositorySettingsPage_Password_, StringFieldEditor.UNLIMITED, //$NON-NLS-1$
-					httpAuthComp);
-			((RepositoryStringFieldEditor) httpAuthPasswordEditor).getTextControl().setEchoChar('*');
-
-			saveHttpPasswordButton = new Button(httpAuthComp, SWT.CHECK);
-			GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(saveHttpPasswordButton);
-			saveHttpPasswordButton.setText(Messages.AbstractRepositorySettingsPage_Save_Http_Password);
-
-			httpAuthUserNameEditor.setEnabled(httpAuthButton.getSelection(), httpAuthComp);
-			httpAuthPasswordEditor.setEnabled(httpAuthButton.getSelection(), httpAuthComp);
-			saveHttpPasswordButton.setEnabled(httpAuthButton.getSelection());
-
-			if (repository != null) {
-				saveHttpPasswordButton.setSelection(repository.getSavePassword(AuthenticationType.HTTP));
-			} else {
-				saveHttpPasswordButton.setSelection(false);
-			}
-			setHttpAuth(oldHttpAuthPassword != null || oldHttpAuthUserId != null);
-			httpAuthExpComposite.setExpanded(httpAuthButton.getSelection());
+			createHttpAuthSection();
 		}
 
 		if (needsProxy()) {
-			addProxySection();
+			createProxySection();
 		}
 
-		addStatusSection();
-
-		addContributionSection();
+		createContributionControls(parent);
 
 		Composite managementComposite = new Composite(compositeContainer, SWT.NULL);
 		GridLayout managementLayout = new GridLayout(4, false);
@@ -706,48 +512,259 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 		updateHyperlinks();
 
+		GridLayout layout = new GridLayout(3, false);
+		compositeContainer.setLayout(layout);
+
 		Dialog.applyDialogFont(compositeContainer);
 	}
 
-	private void addProxySection() {
+	private void createAdvancedSection() {
+		ExpandableComposite section = createSection(compositeContainer,
+				Messages.AbstractRepositorySettingsPage_Additional_Settings);
 
-		proxyExpComposite = toolkit.createExpandableComposite(compositeContainer, ExpandableComposite.COMPACT
-				| ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR);
-		proxyExpComposite.clientVerticalSpacing = 0;
-		GridData gridData_2 = new GridData(SWT.FILL, SWT.FILL, true, false);
-		gridData_2.horizontalIndent = -5;
-		proxyExpComposite.setLayoutData(gridData_2);
-		proxyExpComposite.setFont(compositeContainer.getFont());
-		proxyExpComposite.setBackground(compositeContainer.getBackground());
-		proxyExpComposite.setText(Messages.AbstractRepositorySettingsPage_Proxy_Server_Configuration);
-		proxyExpComposite.addExpansionListener(new ExpansionAdapter() {
-			@Override
-			public void expansionStateChanged(ExpansionEvent e) {
-				getControl().getShell().pack();
+		advancedComp = toolkit.createComposite(section, SWT.NONE);
+		GridLayout gridLayout2 = new GridLayout();
+		gridLayout2.numColumns = 2;
+		gridLayout2.verticalSpacing = 5;
+		gridLayout2.marginWidth = 0;
+		advancedComp.setLayout(gridLayout2);
+		advancedComp.setBackground(compositeContainer.getBackground());
+		section.setClient(advancedComp);
+
+		createAdditionalControls(advancedComp);
+
+		if (needsEncoding()) {
+			Label encodingLabel = new Label(advancedComp, SWT.HORIZONTAL);
+			encodingLabel.setText(Messages.AbstractRepositorySettingsPage_Character_encoding);
+			GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.TOP).applyTo(encodingLabel);
+
+			Composite encodingContainer = new Composite(advancedComp, SWT.NONE);
+			GridLayout gridLayout = new GridLayout(2, false);
+			gridLayout.marginWidth = 0;
+			gridLayout.marginHeight = 0;
+			encodingContainer.setLayout(gridLayout);
+
+			defaultEncoding = new Button(encodingContainer, SWT.RADIO);
+			defaultEncoding.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
+			defaultEncoding.setText(Messages.AbstractRepositorySettingsPage_Default__
+					+ TaskRepository.DEFAULT_CHARACTER_ENCODING + ")"); //$NON-NLS-1$
+			defaultEncoding.setSelection(true);
+
+			otherEncoding = new Button(encodingContainer, SWT.RADIO);
+			otherEncoding.setText(Messages.AbstractRepositorySettingsPage_Other);
+			otherEncodingCombo = new Combo(encodingContainer, SWT.READ_ONLY);
+			try {
+				for (String encoding : Charset.availableCharsets().keySet()) {
+					if (!encoding.equals(TaskRepository.DEFAULT_CHARACTER_ENCODING)) {
+						otherEncodingCombo.add(encoding);
+					}
+				}
+			} catch (LinkageError e) {
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						Messages.AbstractRepositorySettingsPage_Problems_encountered_determining_available_charsets, e));
+				// bug 237972: 3rd party encodings can cause availableCharsets() to fail 
+				otherEncoding.setEnabled(false);
+				otherEncodingCombo.setEnabled(false);
+			}
+
+			setDefaultEncoding();
+
+			otherEncoding.addSelectionListener(new SelectionAdapter() {
+
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					if (otherEncoding.getSelection()) {
+						defaultEncoding.setSelection(false);
+						otherEncodingCombo.setEnabled(true);
+					} else {
+						defaultEncoding.setSelection(true);
+						otherEncodingCombo.setEnabled(false);
+					}
+				}
+			});
+
+			if (repository != null) {
+				try {
+					String repositoryEncoding = repository.getCharacterEncoding();
+					if (repositoryEncoding != null) {// &&
+						// !repositoryEncoding.equals(defaultEncoding))
+						// {
+						if (otherEncodingCombo.getItemCount() > 0
+								&& otherEncodingCombo.indexOf(repositoryEncoding) > -1) {
+							otherEncodingCombo.setEnabled(true);
+							otherEncoding.setSelection(true);
+							defaultEncoding.setSelection(false);
+							otherEncodingCombo.select(otherEncodingCombo.indexOf(repositoryEncoding));
+						} else {
+							setDefaultEncoding();
+						}
+					}
+				} catch (Throwable t) {
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not set field value", t)); //$NON-NLS-1$
+				}
+			}
+		}
+	}
+
+	private void createHttpAuthSection() {
+		ExpandableComposite section = createSection(compositeContainer,
+				Messages.AbstractRepositorySettingsPage_Http_Authentication);
+
+		httpAuthComp = toolkit.createComposite(section, SWT.NONE);
+		httpAuthComp.setBackground(compositeContainer.getBackground());
+		section.setClient(httpAuthComp);
+
+		httpAuthButton = new Button(httpAuthComp, SWT.CHECK);
+		GridDataFactory.fillDefaults().indent(0, 5).align(SWT.LEFT, SWT.TOP).span(3, SWT.DEFAULT).applyTo(
+				httpAuthButton);
+
+		httpAuthButton.setText(Messages.AbstractRepositorySettingsPage_Enable_http_authentication);
+
+		httpAuthButton.addSelectionListener(new SelectionListener() {
+			public void widgetSelected(SelectionEvent e) {
+				setHttpAuth(httpAuthButton.getSelection());
+			}
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// ignore
 			}
 		});
 
-		GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(proxyExpComposite);
+		httpAuthUserNameEditor = new StringFieldEditor(
+				"", Messages.AbstractRepositorySettingsPage_User_ID_, StringFieldEditor.UNLIMITED, httpAuthComp) { //$NON-NLS-1$
 
-		proxyAuthComp = toolkit.createComposite(proxyExpComposite, SWT.NONE);
+			@Override
+			protected boolean doCheckState() {
+				return true;
+			}
+
+			@Override
+			protected void valueChanged() {
+				super.valueChanged();
+				if (getWizard() != null) {
+					getWizard().getContainer().updateButtons();
+				}
+			}
+
+			@Override
+			public int getNumberOfControls() {
+				return 3;
+			}
+		};
+
+		httpAuthPasswordEditor = new RepositoryStringFieldEditor(
+				"", Messages.AbstractRepositorySettingsPage_Password_, StringFieldEditor.UNLIMITED, //$NON-NLS-1$
+				httpAuthComp) {
+			@Override
+			public int getNumberOfControls() {
+				return 2;
+			}
+		};
+		((RepositoryStringFieldEditor) httpAuthPasswordEditor).getTextControl().setEchoChar('*');
+
+		saveHttpPasswordButton = new Button(httpAuthComp, SWT.CHECK);
+		saveHttpPasswordButton.setText(Messages.AbstractRepositorySettingsPage_Save_Password);
+
+		httpAuthUserNameEditor.setEnabled(httpAuthButton.getSelection(), httpAuthComp);
+		httpAuthPasswordEditor.setEnabled(httpAuthButton.getSelection(), httpAuthComp);
+		saveHttpPasswordButton.setEnabled(httpAuthButton.getSelection());
+
+		if (repository != null) {
+			saveHttpPasswordButton.setSelection(repository.getSavePassword(AuthenticationType.HTTP));
+		} else {
+			saveHttpPasswordButton.setSelection(false);
+		}
+		setHttpAuth(oldHttpAuthPassword != null || oldHttpAuthUserId != null);
+		section.setExpanded(httpAuthButton.getSelection());
+
 		GridLayout gridLayout2 = new GridLayout();
-		gridLayout2.numColumns = 2;
+		gridLayout2.numColumns = 3;
+		gridLayout2.marginWidth = 0;
+		httpAuthComp.setLayout(gridLayout2);
+	}
+
+	private void initializeOldValues() {
+		if (repository != null) {
+			originalUrl = repository.getRepositoryUrl();
+			AuthenticationCredentials oldCredentials = repository.getCredentials(AuthenticationType.REPOSITORY);
+			if (oldCredentials != null) {
+				oldUsername = oldCredentials.getUserName();
+				oldPassword = oldCredentials.getPassword();
+			} else {
+				oldUsername = ""; //$NON-NLS-1$
+				oldPassword = ""; //$NON-NLS-1$
+			}
+
+			AuthenticationCredentials oldHttpCredentials = repository.getCredentials(AuthenticationType.HTTP);
+			if (oldHttpCredentials != null) {
+				oldHttpAuthUserId = oldHttpCredentials.getUserName();
+				oldHttpAuthPassword = oldHttpCredentials.getPassword();
+			} else {
+				oldHttpAuthPassword = null;
+				oldHttpAuthUserId = null;
+			}
+
+			oldProxyHostname = repository.getProperty(TaskRepository.PROXY_HOSTNAME);
+			oldProxyPort = repository.getProperty(TaskRepository.PROXY_PORT);
+			if (oldProxyHostname == null) {
+				oldProxyHostname = ""; //$NON-NLS-1$
+			}
+			if (oldProxyPort == null) {
+				oldProxyPort = ""; //$NON-NLS-1$
+			}
+
+			AuthenticationCredentials oldProxyCredentials = repository.getCredentials(AuthenticationType.PROXY);
+			if (oldProxyCredentials != null) {
+				oldProxyUsername = oldProxyCredentials.getUserName();
+				oldProxyPassword = oldProxyCredentials.getPassword();
+			} else {
+				oldProxyUsername = null;
+				oldProxyPassword = null;
+			}
+
+		} else {
+			oldUsername = ""; //$NON-NLS-1$
+			oldPassword = ""; //$NON-NLS-1$
+			oldHttpAuthPassword = null;
+			oldHttpAuthUserId = null;
+		}
+	}
+
+	private void createProxySection() {
+		ExpandableComposite section = createSection(compositeContainer,
+				Messages.AbstractRepositorySettingsPage_Proxy_Server_Configuration);
+
+		proxyAuthComp = toolkit.createComposite(section, SWT.NONE);
+		GridLayout gridLayout2 = new GridLayout();
 		gridLayout2.verticalSpacing = 0;
+		gridLayout2.numColumns = 3;
 		proxyAuthComp.setLayout(gridLayout2);
 		proxyAuthComp.setBackground(compositeContainer.getBackground());
-		proxyExpComposite.setClient(proxyAuthComp);
+		section.setClient(proxyAuthComp);
 
-		Composite settingsComposite = new Composite(proxyAuthComp, SWT.NULL);
+		Composite systemSettingsComposite = new Composite(proxyAuthComp, SWT.NULL);
 		GridLayout gridLayout3 = new GridLayout();
-		gridLayout3.numColumns = 2;
 		gridLayout3.verticalSpacing = 0;
-		settingsComposite.setLayout(gridLayout3);
+		gridLayout3.numColumns = 2;
+		gridLayout3.marginWidth = 0;
+		systemSettingsComposite.setLayout(gridLayout3);
 
-		systemProxyButton = new Button(settingsComposite, SWT.CHECK);
-		GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).span(2, SWT.DEFAULT).applyTo(settingsComposite);
+		systemProxyButton = new Button(systemSettingsComposite, SWT.CHECK);
+		GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).span(3, SWT.DEFAULT).applyTo(systemSettingsComposite);
 
 		systemProxyButton.setText(Messages.AbstractRepositorySettingsPage_Use_global_Network_Connections_preferences);
-		Hyperlink changeProxySettingsLink = toolkit.createHyperlink(settingsComposite,
+
+		systemProxyButton.addSelectionListener(new SelectionListener() {
+			public void widgetSelected(SelectionEvent e) {
+				setUseDefaultProxy(systemProxyButton.getSelection());
+			}
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// ignore
+			}
+		});
+
+		Hyperlink changeProxySettingsLink = toolkit.createHyperlink(systemSettingsComposite,
 				Messages.AbstractRepositorySettingsPage_Change_Settings, SWT.NULL);
 		changeProxySettingsLink.setBackground(compositeContainer.getBackground());
 		changeProxySettingsLink.addHyperlinkListener(new IHyperlinkListener() {
@@ -763,16 +780,6 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			}
 
 			public void linkExited(HyperlinkEvent e) {
-				// ignore
-			}
-		});
-
-		systemProxyButton.addSelectionListener(new SelectionListener() {
-			public void widgetSelected(SelectionEvent e) {
-				setUseDefaultProxy(systemProxyButton.getSelection());
-			}
-
-			public void widgetDefaultSelected(SelectionEvent e) {
 				// ignore
 			}
 		});
@@ -793,12 +800,23 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 					getWizard().getContainer().updateButtons();
 				}
 			}
+
+			@Override
+			public int getNumberOfControls() {
+				return 3;
+			}
 		};
 		proxyHostnameEditor.setStringValue(oldProxyHostname);
 
 		proxyPortEditor = new RepositoryStringFieldEditor(
 				"", Messages.AbstractRepositorySettingsPage_Proxy_host_port_, StringFieldEditor.UNLIMITED, //$NON-NLS-1$
-				proxyAuthComp);
+				proxyAuthComp) {
+
+			@Override
+			public int getNumberOfControls() {
+				return 3;
+			}
+		};
 
 		proxyPortEditor.setStringValue(oldProxyPort);
 
@@ -808,8 +826,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		// ************* PROXY AUTHENTICATION **************
 
 		proxyAuthButton = new Button(proxyAuthComp, SWT.CHECK);
-		GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).span(2, SWT.DEFAULT).applyTo(proxyAuthButton);
-
+		GridDataFactory.fillDefaults().span(3, SWT.DEFAULT).applyTo(proxyAuthButton);
 		proxyAuthButton.setText(Messages.AbstractRepositorySettingsPage_Enable_proxy_authentication);
 		proxyAuthButton.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
@@ -836,10 +853,21 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 					getWizard().getContainer().updateButtons();
 				}
 			}
+
+			@Override
+			public int getNumberOfControls() {
+				return 3;
+			}
 		};
+
 		proxyPasswordEditor = new RepositoryStringFieldEditor(
 				"", Messages.AbstractRepositorySettingsPage_Password_, StringFieldEditor.UNLIMITED, //$NON-NLS-1$
-				proxyAuthComp);
+				proxyAuthComp) {
+			@Override
+			public int getNumberOfControls() {
+				return 2;
+			}
+		};
 		((RepositoryStringFieldEditor) proxyPasswordEditor).getTextControl().setEchoChar('*');
 
 		// proxyPasswordEditor.setEnabled(httpAuthButton.getSelection(),
@@ -848,9 +876,10 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		// httpAuthPasswordEditor).setEnabled(httpAuthButton.getSelection(),
 		// advancedComp);
 
+		// need to increase column number here, because above string editor will use them if declared beforehand
+		((GridLayout) (proxyAuthComp.getLayout())).numColumns++;
 		saveProxyPasswordButton = new Button(proxyAuthComp, SWT.CHECK);
-		GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(saveProxyPasswordButton);
-		saveProxyPasswordButton.setText(Messages.AbstractRepositorySettingsPage_Save_Proxy_Password);
+		saveProxyPasswordButton.setText(Messages.AbstractRepositorySettingsPage_Save_Password);
 		saveProxyPasswordButton.setEnabled(proxyAuthButton.getSelection());
 
 		if (repository != null) {
@@ -862,55 +891,22 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		setProxyAuth(oldProxyUsername != null || oldProxyPassword != null);
 
 		setUseDefaultProxy(repository != null ? repository.isDefaultProxyEnabled() : true);
-		proxyExpComposite.setExpanded(!systemProxyButton.getSelection());
+		section.setExpanded(!systemProxyButton.getSelection());
 	}
 
-	private void addContributionSection() {
-		Composite composite = toolkit.createComposite(compositeContainer);
-		GridDataFactory.fillDefaults().grab(true, false).span(2, SWT.DEFAULT).applyTo(composite);
-
-		GridLayout layout = new GridLayout(1, false);
-		layout.marginWidth = 0;
-		layout.marginTop = -5;
-		composite.setLayout(layout);
-
-		composite.setBackground(compositeContainer.getBackground());
-
-		createContributionControls(composite);
-	}
-
-	private void addStatusSection() {
-		ExpandableComposite statusComposite = toolkit.createExpandableComposite(compositeContainer,
-				ExpandableComposite.COMPACT | ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR);
-		statusComposite.clientVerticalSpacing = 0;
-		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false);
-		gd.horizontalIndent = -5;
-		statusComposite.setLayoutData(gd);
-		statusComposite.setFont(compositeContainer.getFont());
-		statusComposite.setBackground(compositeContainer.getBackground());
-		statusComposite.setText(Messages.AbstractRepositorySettingsPage_Status);
-		statusComposite.addExpansionListener(new ExpansionAdapter() {
-			@Override
-			public void expansionStateChanged(ExpansionEvent e) {
-				getControl().getShell().pack();
-			}
-		});
-		GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(statusComposite);
-
-		Composite composite = toolkit.createComposite(statusComposite, SWT.NONE);
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 2;
-		layout.verticalSpacing = 0;
-		composite.setLayout(layout);
-		composite.setBackground(compositeContainer.getBackground());
-		statusComposite.setClient(composite);
-
-		disconnectedButton = new Button(composite, SWT.CHECK);
-		disconnectedButton.setText(Messages.AbstractRepositorySettingsPage_Disconnected);
-		GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).span(2, SWT.DEFAULT).applyTo(disconnectedButton);
-		disconnectedButton.setSelection(repository != null ? repository.isOffline() : false);
-		statusComposite.setExpanded(disconnectedButton.getSelection());
-	}
+//	private void addContributionSection() {
+//		Composite composite = toolkit.createComposite(compositeContainer);
+//		GridDataFactory.fillDefaults().grab(true, false).span(3, SWT.DEFAULT).applyTo(composite);
+//
+//		GridLayout layout = new GridLayout(1, false);
+//		layout.marginWidth = 0;
+//		layout.marginTop = -5;
+//		composite.setLayout(layout);
+//
+//		composite.setBackground(compositeContainer.getBackground());
+//
+//		createContributionControls(composite);
+//	}
 
 	protected void setEncoding(String encoding) {
 		if (encoding.equals(TaskRepository.DEFAULT_CHARACTER_ENCODING)) {

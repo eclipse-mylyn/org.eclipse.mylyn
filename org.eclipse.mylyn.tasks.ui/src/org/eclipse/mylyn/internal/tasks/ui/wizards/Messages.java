@@ -179,9 +179,9 @@ public class Messages extends NLS {
 
 	public static String AbstractRepositorySettingsPage_Disconnected;
 
-	public static String AbstractRepositorySettingsPage_Enable_proxy_authentication;
+	public static String AbstractRepositorySettingsPage_Enable_http_authentication;
 
-	public static String AbstractRepositorySettingsPage_Enabled;
+	public static String AbstractRepositorySettingsPage_Enable_proxy_authentication;
 
 	public static String AbstractRepositorySettingsPage_Enter_a_valid_server_url;
 
@@ -211,15 +211,9 @@ public class Messages extends NLS {
 
 	public static String AbstractRepositorySettingsPage_Repository_user_name_and_password_must_not_be_blank;
 
-	public static String AbstractRepositorySettingsPage_Save_Http_Password;
-
 	public static String AbstractRepositorySettingsPage_Save_Password;
 
-	public static String AbstractRepositorySettingsPage_Save_Proxy_Password;
-
 	public static String AbstractRepositorySettingsPage_Server_;
-
-	public static String AbstractRepositorySettingsPage_Status;
 
 	public static String AbstractRepositorySettingsPage_Unable_to_authenticate_with_repository;
 

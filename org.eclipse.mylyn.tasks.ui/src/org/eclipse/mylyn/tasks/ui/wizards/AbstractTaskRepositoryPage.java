@@ -7,7 +7,8 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
- *     Tasktop Technologies - improvement
+ *     Tasktop Technologies - improvements
+ *     Helen Bershadskaya - improvements for bug 242445
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.ui.wizards;
@@ -28,16 +29,18 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.Messages;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Layout;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
@@ -57,15 +60,15 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  */
 public abstract class AbstractTaskRepositoryPage extends WizardPage implements ITaskRepositoryPage {
 
-	private static final String CLASS = "class";
+	private static final String CLASS = "class"; //$NON-NLS-1$
 
-	private static final String ID = "id";
+	private static final String ID = "id"; //$NON-NLS-1$
 
-	private static final String KIND = "connectorKind";
+	private static final String KIND = "connectorKind"; //$NON-NLS-1$
 
-	private static final String TASK_REPOSITORY_PAGE_CONTRIBUTION = "taskRepositoryPageContribution";
+	private static final String TASK_REPOSITORY_PAGE_CONTRIBUTION = "taskRepositoryPageContribution"; //$NON-NLS-1$
 
-	private static final String TASK_REPOSITORY_PAGE_CONTRIBUTION_EXTENSION = "org.eclipse.mylyn.tasks.ui.taskRepositoryPageContribution";
+	private static final String TASK_REPOSITORY_PAGE_CONTRIBUTION_EXTENSION = "org.eclipse.mylyn.tasks.ui.taskRepositoryPageContribution"; //$NON-NLS-1$
 
 	private static final Comparator<AbstractTaskRepositoryPageContribution> CONTRIBUTION_COMPARATOR = new ContributionComparator();
 
@@ -74,8 +77,6 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 	private final List<AbstractTaskRepositoryPageContribution> contributions;
 
 	FormToolkit toolkit;
-
-	private Composite compositeContainer;
 
 	private final AbstractTaskRepositoryPageContribution.Listener contributionListener = new AbstractTaskRepositoryPageContribution.Listener() {
 		public void validationRequired(AbstractTaskRepositoryPageContribution contribution) {
@@ -115,27 +116,28 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 		super.dispose();
 	}
 
-	public void createControl(Composite parent) {
-		toolkit = new FormToolkit(TasksUiPlugin.getDefault().getFormColors(parent.getDisplay()));
-
-		compositeContainer = new Composite(parent, SWT.NULL);
-		Layout layout = new FillLayout();
-		compositeContainer.setLayout(layout);
-
-		createContents(compositeContainer);
-
-		setControl(compositeContainer);
-	}
-
 	/**
 	 * Creates the contents of the page. Subclasses may override this method to change where the contributions are
 	 * added.
 	 * 
-	 * @since 3.1
+	 * @since 2.0
 	 */
-	protected void createContents(Composite parent) {
-		createSettingControls(parent);
-		createContributionControls(parent);
+	public void createControl(Composite parent) {
+		toolkit = new FormToolkit(TasksUiPlugin.getDefault().getFormColors(parent.getDisplay()));
+
+		Composite compositeContainer = new Composite(parent, SWT.NONE);
+		GridLayout layout = new GridLayout(3, false);
+		compositeContainer.setLayout(layout);
+
+//		Composite compositeContainer = new Composite(parent, SWT.NULL);
+//		Layout layout = new FillLayout();
+//		compositeContainer.setLayout(layout);
+
+		createSettingControls(compositeContainer);
+		createContributionControls(compositeContainer);
+
+		setControl(compositeContainer);
+		//getControl().getShell().pack();
 	}
 
 	/**
@@ -196,8 +198,8 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 					@Override
 					public void handleException(Throwable e) {
 						badContributions.add(contribution);
-						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-								"Problems occured when initializing contribution \"" + contribution.getId() + "\"", e));
+						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
+								"Problems occured when initializing contribution \"{0}\"", contribution.getId()), e)); //$NON-NLS-1$
 					}
 				});
 			}
@@ -206,40 +208,45 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 			Collections.sort(contributions, CONTRIBUTION_COMPARATOR);
 
 			for (final AbstractTaskRepositoryPageContribution contribution : contributions) {
-				final ExpandableComposite section = toolkit.createExpandableComposite(parentControl,
-						ExpandableComposite.COMPACT | ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR);
-				section.clientVerticalSpacing = 0;
-				section.setBackground(parentControl.getBackground());
-				section.setFont(parentControl.getFont());
-				section.addExpansionListener(new ExpansionAdapter() {
-					@Override
-					public void expansionStateChanged(ExpansionEvent e) {
-						getControl().getShell().pack();
-					}
-				});
-				section.setText(contribution.getTitle());
+				final ExpandableComposite section = createSection(parentControl, contribution.getTitle());
 				section.setToolTipText(contribution.getDescription());
-
-				GridDataFactory.fillDefaults().grab(true, false).applyTo(section);
 
 				SafeRunnable.run(new SafeRunnable() {
 					public void run() throws Exception {
-						Composite sectionContentsContainer = toolkit.createComposite(section);
-						sectionContentsContainer.setBackground(parentControl.getBackground());
-						contribution.createControl(sectionContentsContainer);
-						section.setClient(sectionContentsContainer);
+						Control control = contribution.createControl(section);
+						section.setClient(control);
 					}
 
 					@Override
 					public void handleException(Throwable e) {
 						section.dispose();
-						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-								"Problems occured when creating control for contribution \"" + contribution.getId()
-										+ "\"", e));
+						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
+								"Problems occured when creating control for contribution \"{0}\"", //$NON-NLS-1$
+								contribution.getId()), e));
 					}
 				});
 			}
 		}
+	}
+
+	/**
+	 * @since 3.1
+	 */
+	protected ExpandableComposite createSection(Composite parentControl, String title) {
+		final ExpandableComposite section = toolkit.createExpandableComposite(parentControl,
+				ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT | ExpandableComposite.COMPACT);
+		section.clientVerticalSpacing = 0;
+		section.setBackground(parentControl.getBackground());
+		section.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DIALOG_FONT));
+		section.addExpansionListener(new ExpansionAdapter() {
+			@Override
+			public void expansionStateChanged(ExpansionEvent e) {
+				getControl().getShell().pack();
+			}
+		});
+		section.setText(title);
+		GridDataFactory.fillDefaults().indent(0, 5).grab(true, false).span(3, SWT.DEFAULT).applyTo(section);
+		return section;
 	}
 
 	/**
@@ -292,8 +299,8 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 
 				@Override
 				public void handleException(Throwable e) {
-					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-							"Problems occured when validating contribution \"" + contribution.getId() + "\"", e));
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
+							"Problems occured when validating contribution \"{0}\"", contribution.getId()), e)); //$NON-NLS-1$
 				}
 			});
 		}
@@ -364,8 +371,8 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 						String id = element.getAttribute(ID);
 						try {
 							if (id == null || id.length() == 0) {
-								throw new IllegalStateException(TASK_REPOSITORY_PAGE_CONTRIBUTION + "/@" + ID
-										+ " is required");
+								throw new IllegalStateException(TASK_REPOSITORY_PAGE_CONTRIBUTION + "/@" + ID //$NON-NLS-1$
+										+ " is required"); //$NON-NLS-1$
 							}
 							Object contributor = element.createExecutableExtension(CLASS);
 							AbstractTaskRepositoryPageContribution pageContributor = (AbstractTaskRepositoryPageContribution) contributor;
@@ -374,8 +381,8 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 								contributors.add(pageContributor);
 							}
 						} catch (Exception e) {
-							StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load "
-									+ TASK_REPOSITORY_PAGE_CONTRIBUTION + " '" + id + "' from plug-in "
+							StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load " //$NON-NLS-1$
+									+ TASK_REPOSITORY_PAGE_CONTRIBUTION + " '" + id + "' from plug-in " //$NON-NLS-1$//$NON-NLS-2$
 									+ element.getContributor().getName(), e));
 						}
 					}

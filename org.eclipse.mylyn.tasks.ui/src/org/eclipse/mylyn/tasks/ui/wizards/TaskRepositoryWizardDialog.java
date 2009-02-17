@@ -72,7 +72,7 @@ public class TaskRepositoryWizardDialog extends WizardDialog {
 
 		validateServerButton = createButton(composite, VALIDATE_BUTTON_ID,
 				Messages.AbstractRepositorySettingsPage_Validate_Settings, false);
-		validateServerButton.setImage(CommonImages.getImage(TasksUiImages.REPOSITORY_SYNCHRONIZE_SMALL));
+		validateServerButton.setImage(CommonImages.getImage(TasksUiImages.REPOSITORY_VALIDATE));
 		validateServerButton.setVisible(false);
 		setButtonLayoutData(validateServerButton);
 		Label filler = new Label(composite, SWT.NONE);

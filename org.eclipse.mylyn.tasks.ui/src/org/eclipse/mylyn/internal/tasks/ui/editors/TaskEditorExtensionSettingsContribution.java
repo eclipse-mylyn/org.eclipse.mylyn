@@ -72,8 +72,11 @@ public class TaskEditorExtensionSettingsContribution extends AbstractTaskReposit
 	}
 
 	@Override
-	public Control createControl(Composite parent) {
-		parent.setLayout(new GridLayout(1, true));
+	public Control createControl(Composite parentControl) {
+		Composite parent = new Composite(parentControl, SWT.NONE);
+		GridLayout layout = new GridLayout(1, true);
+		layout.marginWidth = 0;
+		parent.setLayout(layout);
 
 		String defaultExtensionId = TaskEditorExtensions.getDefaultTaskEditorExtensionId(getConnectorKind());
 		selectedExtensionId = getRepository() == null ? defaultExtensionId

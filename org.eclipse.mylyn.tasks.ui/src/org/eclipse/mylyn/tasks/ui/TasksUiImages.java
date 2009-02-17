@@ -101,6 +101,11 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor REPOSITORY_NEW = create("etool16", "repository-new.gif"); //$NON-NLS-1$ //$NON-NLS-2$
 
+	/**
+	 * @since 3.1
+	 */
+	public static final ImageDescriptor REPOSITORY_VALIDATE = create("obj16", "resource_obj.gif"); //$NON-NLS-1$ //$NON-NLS-2$
+
 	public static final ImageDescriptor REPOSITORIES_VIEW = create("eview16", "repositories.gif"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	// Context and activation
