@@ -190,7 +190,10 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 	private Hyperlink manageAccountHyperlink;
 
-	private Button savePasswordButton;
+	/**
+	 * @since 3.1
+	 */
+	protected Button savePasswordButton;
 
 	private Button saveHttpPasswordButton;
 
@@ -238,6 +241,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 	@Override
 	public void createControl(Composite parent) {
+		initializeDialogUnits(parent);
 		toolkit = new FormToolkit(TasksUiPlugin.getDefault().getFormColors(parent.getDisplay()));
 
 		Composite compositeContainer = new Composite(parent, SWT.NONE);
@@ -374,8 +378,6 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			}
 		};
 
-		// need to increase column number here, because above string editor will use them if declared beforehand
-		//((GridLayout) (compositeContainer.getLayout())).numColumns++;
 		savePasswordButton = new Button(compositeContainer, SWT.CHECK);
 		savePasswordButton.setText(Messages.AbstractRepositorySettingsPage_Save_Password);
 

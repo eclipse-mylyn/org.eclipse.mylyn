@@ -123,6 +123,7 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 	 * @since 2.0
 	 */
 	public void createControl(Composite parent) {
+		initializeDialogUnits(parent);
 		toolkit = new FormToolkit(TasksUiPlugin.getDefault().getFormColors(parent.getDisplay()));
 
 		Composite compositeContainer = new Composite(parent, SWT.NONE);
