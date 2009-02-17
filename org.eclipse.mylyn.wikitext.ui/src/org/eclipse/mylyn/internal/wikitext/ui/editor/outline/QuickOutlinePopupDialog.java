@@ -58,8 +58,9 @@ public class QuickOutlinePopupDialog extends PopupDialog implements IInformation
 
 	private PatternFilter patternFilter;
 
+	@SuppressWarnings("deprecation")
 	public QuickOutlinePopupDialog(Shell parent, IShowInTarget showInTarget) {
-		super(parent, SWT.RESIZE, true, true, true, false, false, null, null);
+		super(parent, SWT.RESIZE, true, true, false, false, null, null);
 		this.showInTarget = showInTarget;
 		setInfoText(Messages.getString("QuickOutlinePopupDialog.infoText")); //$NON-NLS-1$
 		create();
