@@ -137,8 +137,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private static Map<String, AbstractRepositoryConnectorUi> repositoryConnectorUiMap = new HashMap<String, AbstractRepositoryConnectorUi>();
 
-	//private TaskListSaveManager taskListSaveManager;
-
 	private TaskListNotificationManager taskListNotificationManager;
 
 	private TaskListBackupManager taskListBackupManager;
@@ -866,6 +864,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		store.setDefault(ITasksUiPreferenceConstants.WEEK_START_DAY, Calendar.getInstance().getFirstDayOfWeek());
 		//store.setDefault(TasksUiPreferenceConstants.PLANNING_STARTHOUR, 9);
 		store.setDefault(ITasksUiPreferenceConstants.PLANNING_ENDHOUR, 18);
+
+		store.setDefault(ITasksUiPreferenceConstants.AUTO_EXPAND_TASK_LIST, true);
 	}
 
 	public static TaskActivityManager getTaskActivityManager() {

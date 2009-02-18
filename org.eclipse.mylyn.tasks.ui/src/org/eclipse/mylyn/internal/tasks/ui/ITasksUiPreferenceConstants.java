@@ -68,6 +68,8 @@ public interface ITasksUiPreferenceConstants {
 
 	public static final String TEMPLATES_DELETED_DELIM = "|"; //$NON-NLS-1$
 
+	public static final String AUTO_EXPAND_TASK_LIST = "org.eclipse.mylyn.tasks.ui.auto.expand"; //$NON-NLS-1$
+
 	/**
 	 * Local subtasks are now enabled by default.
 	 * 

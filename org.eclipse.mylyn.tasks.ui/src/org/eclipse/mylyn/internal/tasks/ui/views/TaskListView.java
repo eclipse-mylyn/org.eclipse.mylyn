@@ -284,7 +284,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		}
 
 		protected void updateExpansionState(Object item) {
-			if (TaskListView.this.isFocusedMode()) {
+			if (TaskListView.this.isFocusedMode() && isAutoExpandMode()) {
 				TaskListView.this.getViewer().expandToLevel(item, 3);
 			}
 		}
@@ -1252,7 +1252,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 			}
 		});
 
-//		manager.add(new Separator());
 		manager.add(linkWithEditorAction);
 		manager.add(new Separator());
 		manager.add(openPreferencesAction);
@@ -1260,9 +1259,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 	private void fillLocalToolBar(IToolBarManager manager) {
 		manager.add(new Separator(ID_SEPARATOR_NEW));
-//		manager.add(new Separator(ID_SEPARATOR_NAVIGATION));
 		manager.add(presentationDropDownSelectionAction);
-//		manager.add(previousTaskAction);
 		manager.add(new Separator());
 		manager.add(collapseAll);
 		manager.add(new GroupMarker(ID_SEPARATOR_CONTEXT));
@@ -1527,7 +1524,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 	}
 
 	public void refresh(boolean expandIfFocused) {
-		if (expandIfFocused && isFocusedMode()) {
+		if (expandIfFocused && isFocusedMode() && isAutoExpandMode()) {
 			try {
 				getViewer().getControl().setRedraw(false);
 				refreshJob.refreshNow();
@@ -1542,12 +1539,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 	public void refresh() {
 		refreshJob.refreshNow();
-//		if (expand) {
-//			getViewer().expandAll();
-//		}
-//		getViewer().refresh();
-//		refresh(null);
-//		selectedAndFocusTask(TasksUiPlugin.getTaskList().getActiveTask());
 	}
 
 	public TaskListToolTip getToolTip() {
@@ -1759,15 +1750,21 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		return focusedMode;
 	}
 
+	private boolean isAutoExpandMode() {
+		return TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
+				ITasksUiPreferenceConstants.AUTO_EXPAND_TASK_LIST);
+	}
+
 	public void setFocusedMode(boolean focusedMode) {
 		if (this.focusedMode == focusedMode) {
 			return;
 		}
 		this.focusedMode = focusedMode;
 		IToolBarManager manager = getViewSite().getActionBars().getToolBarManager();
-		if (focusedMode) {
+
+		if (focusedMode && isAutoExpandMode()) {
 			manager.remove(CollapseAllAction.ID);
-		} else {
+		} else if (manager.find(CollapseAllAction.ID) == null) {
 			manager.prependToGroup(ID_SEPARATOR_CONTEXT, collapseAll);
 		}
 		manager.update(false);
@@ -1798,7 +1795,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 						}
 
 						getViewer().refresh();
-						if (isFocusedMode()) {
+						if (isFocusedMode() && isAutoExpandMode()) {
 							getViewer().expandAll();
 						}
 					} finally {
