@@ -233,46 +233,6 @@ public class TracWikiLanguage extends AbstractMarkupLanguage {
 		return serverUrl;
 	}
 
-	/**
-	 * subclasses may override this method to add blocks to the TracWiki language. Overriding classes should call
-	 * <code>super.addBlockExtensions(blocks,paragraphBreakingBlocks)</code> if the default language extensions are
-	 * desired.
-	 * 
-	 * @param blocks
-	 *            the list of blocks to which extensions may be added
-	 * @param paragraphBreakingBlocks
-	 *            the list of blocks that end a paragraph
-	 */
-	@Override
-	protected void addBlockExtensions(List<Block> blocks, List<Block> paragraphBreakingBlocks) {
-		// no block extensions
-	}
-
-	/**
-	 * subclasses may override this method to add tokens to the TracWiki language. Overriding classes should call
-	 * <code>super.addTokenExtensions(tokenSyntax)</code> if the default language extensions are desired.
-	 * 
-	 * @param tokenSyntax
-	 *            the token syntax
-	 */
-	@Override
-	protected void addTokenExtensions(PatternBasedSyntax tokenSyntax) {
-		// no token extensions
-	}
-
-	/**
-	 * subclasses may override this method to add phrases to the TracWiki language. Overriding classes should call
-	 * <code>super.addPhraseModifierExtensions(phraseModifierSyntax)</code> if the default language extensions are
-	 * desired.
-	 * 
-	 * @param phraseModifierSyntax
-	 *            the phrase modifier syntax
-	 */
-	@Override
-	protected void addPhraseModifierExtensions(PatternBasedSyntax phraseModifierSyntax) {
-		// no phrase extensions
-	}
-
 	@Override
 	protected void addStandardBlocks(List<Block> blocks, List<Block> paragraphBreakingBlocks) {
 		// IMPORTANT NOTE: Most items below have order dependencies.  DO NOT REORDER ITEMS BELOW!!
@@ -319,6 +279,7 @@ public class TracWikiLanguage extends AbstractMarkupLanguage {
 		// IMPORTANT NOTE: Most items below have order dependencies.  DO NOT REORDER ITEMS BELOW!!
 		tokenSyntax.add(new BangEscapeToken());
 		tokenSyntax.add(new LineBreakToken());
+		tokenSyntax.beginGroup("(?:(?<=[\\s\\.\\\"'?!;:\\)\\(\\{\\}\\[\\]-])|^)(?:", 0); // always starts at the start of a line or after a non-word character excluding '!' and '-' //$NON-NLS-1$
 		tokenSyntax.add(new RevisionLogReplacementToken());
 		tokenSyntax.add(new ChangesetLinkReplacementToken());
 		tokenSyntax.add(new HyperlinkReplacementToken());
@@ -329,6 +290,7 @@ public class TracWikiLanguage extends AbstractMarkupLanguage {
 		tokenSyntax.add(new MilestoneLinkReplacementToken());
 		tokenSyntax.add(new SourceLinkReplacementToken());
 		tokenSyntax.add(new WikiWordReplacementToken());
+		tokenSyntax.endGroup(")(?=\\W|$)", 0); //$NON-NLS-1$
 	}
 
 	@Override
