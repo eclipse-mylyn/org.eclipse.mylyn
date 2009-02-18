@@ -28,7 +28,7 @@ public class ListBlock extends Block {
 
 	private static final int LINE_REMAINDER_GROUP_OFFSET = 4;
 
-	static final Pattern startPattern = Pattern.compile("(?:(\\s+)(?:(\\*)|(?:(\\d+)\\.)))\\s+(.*+)"); //$NON-NLS-1$
+	static final Pattern startPattern = Pattern.compile("(?:(\\s+)(?:(\\*|-)|(?:(\\d+)\\.)))\\s+(.*+)"); //$NON-NLS-1$
 
 	private int blockLineCount = 0;
 
@@ -54,10 +54,6 @@ public class ListBlock extends Block {
 			int level = calculateLevel(spaces);
 
 			BlockType type = listSpec == null ? BlockType.NUMERIC_LIST : BlockType.BULLETED_LIST;
-
-			if (type == BlockType.BULLETED_LIST && "-".equals(listSpec)) { //$NON-NLS-1$
-				attributes.setCssStyle("list-style: square"); //$NON-NLS-1$
-			}
 
 			offset = matcher.start(LINE_REMAINDER_GROUP_OFFSET);
 
