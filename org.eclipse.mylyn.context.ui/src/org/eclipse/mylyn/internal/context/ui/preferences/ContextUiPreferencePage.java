@@ -14,6 +14,8 @@ package org.eclipse.mylyn.internal.context.ui.preferences;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.IContextUiPreferenceContstants;
+import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -89,9 +91,6 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 		getPreferenceStore().setValue(IContextUiPreferenceContstants.AUTO_FOCUS_NAVIGATORS,
 				autoFocusNavigatorsButton.getSelection());
 
-//		getPreferenceStore().setValue(ContextUiPrefContstants.INTEREST_FILTER_EXCLUSION,
-//				exclusionFieldEditor.getStringValue());
-
 		getPreferenceStore().setValue(IContextUiPreferenceContstants.AUTO_MANAGE_EDITORS,
 				manageEditorsButton.getSelection());
 		getPreferenceStore().setValue(IContextUiPreferenceContstants.AUTO_MANAGE_PERSPECTIVES,
@@ -100,6 +99,9 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 				manageExpansionButton.getSelection());
 		getPreferenceStore().setValue(IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE,
 				mapCloseToRemoveButton.getSelection());
+
+		TasksUiPlugin.getDefault().getPreferenceStore().setValue(ITasksUiPreferenceConstants.AUTO_EXPAND_TASK_LIST,
+				manageExpansionButton.getSelection());
 
 		return true;
 	}
@@ -131,25 +133,6 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 		mapCloseToRemoveButton.setSelection(false);
 		return;
 	}
-
-//	private void createExclusionFilterControl(Composite parent) {
-//		Group exclusionControl = new Group(parent, SWT.SHADOW_ETCHED_IN);
-//		exclusionControl.setLayout(new GridLayout(1, false));
-//		exclusionControl.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-//		
-//		Composite composite = new Composite(exclusionControl, SWT.NULL);
-//		composite.setLayout(new GridLayout(1, false));
-//		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-//		exclusionControl.setText("Interest Filter");
-//
-//		Label label = new Label(composite, SWT.LEFT);
-//		label.setText("Exclusion pattern, matches will always be shown (e.g. build*.xml):");
-//		exclusionFieldEditor = new StringFieldEditor("", "", StringFieldEditor.UNLIMITED, composite	);
-//		String text = getPreferenceStore().getString(ContextUiPrefContstants.INTEREST_FILTER_EXCLUSION);
-//		if (text != null)
-//			exclusionFieldEditor.setStringValue(text);
-//		return;
-//	}
 
 	private void createUiManagementSection(Composite parent) {
 		Group groupViews = new Group(parent, SWT.SHADOW_ETCHED_IN);
