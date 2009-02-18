@@ -100,6 +100,8 @@ public interface IBugzillaConstants {
 
 	public static final String ENCODING_UTF_8 = "UTF-8"; //$NON-NLS-1$
 
+	public static final int REPOSITORY_STATUS_SUSPICIOUS_ACTION = 99;
+
 	/** Supported bugzilla repository versions */
 	static public enum BugzillaServerVersion {
 		SERVER_218, SERVER_220, SERVER_222, SERVER_30;

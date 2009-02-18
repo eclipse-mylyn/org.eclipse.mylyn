@@ -1545,7 +1545,7 @@ public class BugzillaClient {
 						}
 						if (found) {
 							throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-									RepositoryStatus.REPOSITORY_SUSPICIOUS_ACTION));
+									IBugzillaConstants.REPOSITORY_STATUS_SUSPICIOUS_ACTION));
 						}
 						found = false;
 						for (Iterator<String> iterator = bugzillaLanguageSettings.getResponseForCommand(
