@@ -64,6 +64,8 @@ public enum BugzillaAttribute {
 
 	COMPONENT(Messages.BugzillaAttribute_Component, "component", TaskAttribute.TYPE_SINGLE_SELECT, false, false), //$NON-NLS-1$
 
+	CONFIRM_PRODUCT_CHANGE("confirm_product_change", "confirm_product_change", TaskAttribute.TYPE_BOOLEAN, true, false), //$NON-NLS-1$ //$NON-NLS-2$
+
 	CREATION_TS(Messages.BugzillaAttribute_Opened, "creation_ts", TaskAttribute.TYPE_DATE, true, false), //$NON-NLS-1$
 
 	CTYPE(Messages.BugzillaAttribute_Content_Type, "ctype", TaskAttribute.TYPE_SHORT_TEXT, false, false), //$NON-NLS-1$
@@ -109,7 +111,7 @@ public enum BugzillaAttribute {
 
 	PRIORITY(Messages.BugzillaAttribute_Priority, "priority", TaskAttribute.TYPE_SINGLE_SELECT, false, false), //$NON-NLS-1$
 
-	PRODUCT(Messages.BugzillaAttribute_Product, "product", TaskAttribute.TYPE_SHORT_TEXT, false, true), //$NON-NLS-1$
+	PRODUCT(Messages.BugzillaAttribute_Product, "product", TaskAttribute.TYPE_SINGLE_SELECT, false, false), //$NON-NLS-1$
 
 	REP_PLATFORM(Messages.BugzillaAttribute_Platform, "rep_platform", TaskAttribute.TYPE_SINGLE_SELECT, false, false), //$NON-NLS-1$
 

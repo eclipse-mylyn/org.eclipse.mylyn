@@ -11,17 +11,32 @@
 
 package org.eclipse.mylyn.internal.bugzilla.ui.editor;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCustomField;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskDataHandler;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
+import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
+import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModelEvent;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModelListener;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
@@ -29,6 +44,7 @@ import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.mylyn.tasks.ui.editors.AttributeEditorFactory;
 import org.eclipse.mylyn.tasks.ui.editors.LayoutHint;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorPartDescriptor;
 
 /**
@@ -41,8 +57,12 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 
 	public static final String ID_PART_BUGZILLA_FLAGS = "org.eclipse.mylyn.bugzilla.ui.editors.part.flags"; //$NON-NLS-1$
 
+	private final Map<TaskAttribute, AbstractAttributeEditor> attributeEditorMap;
+
+	private TaskDataModelListener productListener;
+
 	public BugzillaTaskEditorPage(TaskEditor editor) {
-		super(editor, BugzillaCorePlugin.CONNECTOR_KIND);
+		this(editor, BugzillaCorePlugin.CONNECTOR_KIND);
 	}
 
 	/**
@@ -53,6 +73,7 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 	 */
 	public BugzillaTaskEditorPage(TaskEditor editor, String connectorKind) {
 		super(editor, connectorKind);
+		this.attributeEditorMap = new HashMap<TaskAttribute, AbstractAttributeEditor>();
 	}
 
 	@Override
@@ -138,7 +159,7 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 						}
 					});
 				}
-
+				BugzillaTaskEditorPage.this.addToAttributeEditorMap(taskAttribute, editor);
 				return editor;
 			}
 		};
@@ -191,6 +212,151 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 		}
 
 		super.doSubmit();
+	}
+
+	@Override
+	protected void createParts() {
+		attributeEditorMap.clear();
+		super.createParts();
+	}
+
+	@Override
+	protected TaskDataModel createModel(TaskEditorInput input) throws CoreException {
+		TaskDataModel model = super.createModel(input);
+		BugzillaVersion bugzillaVersion = null;
+		RepositoryConfiguration repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(
+				input.getTaskRepository(), false, new NullProgressMonitor());
+		if (repositoryConfiguration != null) {
+			bugzillaVersion = repositoryConfiguration.getInstallVersion();
+		} else {
+			bugzillaVersion = BugzillaVersion.MIN_VERSION;
+		}
+		if (bugzillaVersion.compareTo(BugzillaVersion.BUGZILLA_3_0) >= 0) {
+			productListener = new ProductSelectionListener();
+			model.addModelListener(productListener);
+		}
+		return model;
+	}
+
+	/**
+	 * @since 3.1
+	 */
+	private void addToAttributeEditorMap(TaskAttribute attribute, AbstractAttributeEditor editor) {
+		if (attributeEditorMap.containsKey(attribute)) {
+			attributeEditorMap.remove(attribute);
+		}
+		attributeEditorMap.put(attribute, editor);
+	}
+
+	/**
+	 * @since 3.1
+	 */
+	private AbstractAttributeEditor getEditorForAttribute(TaskAttribute attribute) {
+		return attributeEditorMap.get(attribute);
+	}
+
+	public void refresh(TaskAttribute attributeComponent) {
+		AbstractAttributeEditor editor = getEditorForAttribute(attributeComponent);
+		if (editor != null) {
+			try {
+				editor.refresh();
+			} catch (UnsupportedOperationException e) {
+				// ignore
+			}
+		}
+	}
+
+	private class ProductSelectionListener extends TaskDataModelListener {
+		@Override
+		public void attributeChanged(TaskDataModelEvent event) {
+			TaskAttribute taskAttribute = event.getTaskAttribute();
+			if (taskAttribute != null) {
+				if (taskAttribute.getId().equals(BugzillaAttribute.PRODUCT.getKey())) {
+					RepositoryConfiguration repositoryConfiguration = null;
+					try {
+						repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(
+								getModel().getTaskRepository(), false, new NullProgressMonitor());
+					} catch (CoreException e) {
+						StatusHandler.log(new RepositoryStatus(getTaskRepository(), IStatus.ERROR,
+								BugzillaUiPlugin.ID_PLUGIN, 0, "Failed to obtain repository configuration", e)); //$NON-NLS-1$
+						getTaskEditor().setMessage("Problem occured when updating attributes", IMessageProvider.ERROR); //$NON-NLS-1$
+						return;
+					}
+
+					TaskAttribute attributeComponent = taskAttribute.getTaskData().getRoot().getMappedAttribute(
+							BugzillaAttribute.COMPONENT.getKey());
+					if (attributeComponent != null) {
+						List<String> optionValues = repositoryConfiguration.getComponents(taskAttribute.getValue());
+						Collections.sort(optionValues);
+						attributeComponent.clearOptions();
+						for (String option : optionValues) {
+							attributeComponent.putOption(option, option);
+						}
+						if (optionValues.size() == 1) {
+							attributeComponent.setValue(optionValues.get(0));
+						} else {
+							attributeComponent.setValue(""); //$NON-NLS-1$
+						}
+						refresh(attributeComponent);
+					}
+
+					TaskAttribute attributeTargetMilestone = taskAttribute.getTaskData().getRoot().getMappedAttribute(
+							BugzillaAttribute.TARGET_MILESTONE.getKey());
+					if (attributeTargetMilestone != null) {
+						List<String> optionValues = repositoryConfiguration.getTargetMilestones(taskAttribute.getValue());
+						Collections.sort(optionValues);
+						attributeTargetMilestone.clearOptions();
+						for (String option : optionValues) {
+							attributeTargetMilestone.putOption(option, option);
+						}
+						if (optionValues.size() == 1) {
+							attributeTargetMilestone.setValue(optionValues.get(0));
+						} else {
+							attributeTargetMilestone.setValue("---"); //$NON-NLS-1$
+						}
+						refresh(attributeTargetMilestone);
+					}
+
+					TaskAttribute attributeVersion = taskAttribute.getTaskData().getRoot().getMappedAttribute(
+							BugzillaAttribute.VERSION.getKey());
+					if (attributeVersion != null) {
+						List<String> optionValues = repositoryConfiguration.getVersions(taskAttribute.getValue());
+						Collections.sort(optionValues);
+						attributeVersion.clearOptions();
+						for (String option : optionValues) {
+							attributeVersion.putOption(option, option);
+						}
+						if (optionValues.size() == 1) {
+							attributeVersion.setValue(optionValues.get(0));
+						} else {
+							attributeVersion.setValue("unspecified"); //$NON-NLS-1$
+						}
+						refresh(attributeVersion);
+					}
+
+					TaskAttribute attributeDefaultAssignee = taskAttribute.getTaskData().getRoot().getMappedAttribute(
+							BugzillaAttribute.SET_DEFAULT_ASSIGNEE.getKey());
+					if (attributeDefaultAssignee != null) {
+						attributeDefaultAssignee.setValue("1"); //$NON-NLS-1$
+						refresh(attributeDefaultAssignee);
+					}
+
+/*
+ * 					add confirm_product_change to avoid verification page on submit
+ */
+					TaskAttribute attributeConfirmeProductChange = taskAttribute.getTaskData()
+							.getRoot()
+							.getMappedAttribute(BugzillaAttribute.CONFIRM_PRODUCT_CHANGE.getKey());
+					if (attributeConfirmeProductChange == null) {
+						attributeConfirmeProductChange = BugzillaTaskDataHandler.createAttribute(
+								taskAttribute.getTaskData().getRoot(), BugzillaAttribute.CONFIRM_PRODUCT_CHANGE);
+					}
+					if (attributeConfirmeProductChange != null) {
+						attributeConfirmeProductChange.setValue("1"); //$NON-NLS-1$
+					}
+				}
+			}
+		}
 	}
 
 }

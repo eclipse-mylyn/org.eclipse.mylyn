@@ -26,21 +26,27 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  */
 public class BooleanAttributeEditor extends AbstractAttributeEditor {
 
+	private Button button;
+
+	private boolean ignoreNotification;
+
 	public BooleanAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
 	}
 
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
-		final Button button = toolkit.createButton(parent, super.getLabel(), SWT.CHECK);
+		button = toolkit.createButton(parent, super.getLabel(), SWT.CHECK);
 		button.setEnabled(!isReadOnly());
-		button.setSelection(getValue());
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				setValue(button.getSelection());
+				if (!ignoreNotification) {
+					setValue(button.getSelection());
+				}
 			}
 		});
+		refresh();
 		setControl(button);
 	}
 
@@ -58,4 +64,13 @@ public class BooleanAttributeEditor extends AbstractAttributeEditor {
 		attributeChanged();
 	}
 
+	@Override
+	public void refresh() {
+		try {
+			ignoreNotification = true;
+			button.setSelection(getValue());
+		} finally {
+			ignoreNotification = false;
+		}
+	}
 }

@@ -34,6 +34,10 @@ public class SingleSelectionAttributeEditor extends AbstractAttributeEditor {
 
 	private CCombo combo;
 
+	private boolean ignoreNotification;
+
+	private Text text;
+
 	public SingleSelectionAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
 	}
@@ -41,17 +45,11 @@ public class SingleSelectionAttributeEditor extends AbstractAttributeEditor {
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
 		if (isReadOnly()) {
-			Text text = new Text(parent, SWT.FLAT | SWT.READ_ONLY);
+			text = new Text(parent, SWT.FLAT | SWT.READ_ONLY);
 			text.setFont(EditorUtil.TEXT_FONT);
 			toolkit.adapt(text, false, false);
 			text.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
-			String label = getValueLabel();
-			if ("".equals(label)) { //$NON-NLS-1$
-				// if set to the empty string the label will use 64px on GTK 
-				text.setText(" "); //$NON-NLS-1$
-			} else {
-				text.setText(label);
-			}
+			refresh();
 			setControl(text);
 		} else {
 			combo = new CCombo(parent, SWT.FLAT | SWT.READ_ONLY);
@@ -59,25 +57,19 @@ public class SingleSelectionAttributeEditor extends AbstractAttributeEditor {
 			combo.setFont(EditorUtil.TEXT_FONT);
 			combo.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 
-			Map<String, String> labelByValue = getAttributeMapper().getOptions(getTaskAttribute());
-			if (labelByValue != null) {
-				values = labelByValue.keySet().toArray(new String[0]);
-				for (String value : values) {
-					combo.add(labelByValue.get(value));
-				}
-			}
-
-			select(getValue(), getValueLabel());
+			refresh();
 
 			if (values != null) {
 				combo.addSelectionListener(new SelectionAdapter() {
 					@Override
 					public void widgetSelected(SelectionEvent event) {
-						int index = combo.getSelectionIndex();
-						if (index > -1) {
-							Assert.isNotNull(values);
-							Assert.isLegal(index >= 0 && index <= values.length - 1);
-							setValue(values[index]);
+						if (!ignoreNotification) {
+							int index = combo.getSelectionIndex();
+							if (index > -1) {
+								Assert.isNotNull(values);
+								Assert.isLegal(index >= 0 && index <= values.length - 1);
+								setValue(values[index]);
+							}
 						}
 					}
 				});
@@ -109,8 +101,11 @@ public class SingleSelectionAttributeEditor extends AbstractAttributeEditor {
 	}
 
 	public void setValue(String value) {
-		getAttributeMapper().setValue(getTaskAttribute(), value);
-		attributeChanged();
+		String oldValue = getAttributeMapper().getValue(getTaskAttribute());
+		if (!oldValue.equals(value)) {
+			getAttributeMapper().setValue(getTaskAttribute(), value);
+			attributeChanged();
+		}
 	}
 
 	void selectDefaultValue() {
@@ -120,4 +115,32 @@ public class SingleSelectionAttributeEditor extends AbstractAttributeEditor {
 		}
 	}
 
+	@Override
+	public void refresh() {
+		try {
+			ignoreNotification = true;
+			if (text != null) {
+				String label = getValueLabel();
+				if ("".equals(label)) { //$NON-NLS-1$
+					// if set to the empty string the label will use 64px on GTK 
+					text.setText(" "); //$NON-NLS-1$
+				} else {
+					text.setText(label);
+				}
+			} else {
+				combo.removeAll();
+				Map<String, String> labelByValue = getAttributeMapper().getOptions(getTaskAttribute());
+				if (labelByValue != null) {
+					values = labelByValue.keySet().toArray(new String[0]);
+					for (String value : values) {
+						combo.add(labelByValue.get(value));
+					}
+				}
+				select(getValue(), getValueLabel());
+				combo.redraw();
+			}
+		} finally {
+			ignoreNotification = false;
+		}
+	}
 }

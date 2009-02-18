@@ -582,6 +582,13 @@ public class RepositoryConfiguration implements Serializable {
 		if (bugzillaVersion == null) {
 			bugzillaVersion = BugzillaVersion.MIN_VERSION;
 		}
+
+		if (bugzillaVersion.compareTo(BugzillaVersion.BUGZILLA_3_0) < 0) {
+			// Product change is only supported for Versions >= 3.0 without verify html page
+			TaskAttribute productAttribute = bugReport.getRoot().getMappedAttribute(BugzillaAttribute.PRODUCT.getKey());
+			productAttribute.getMetaData().setReadOnly(true);
+		}
+
 		if (status == BUGZILLA_REPORT_STATUS.NEW || status == BUGZILLA_REPORT_STATUS.ASSIGNED
 				|| status == BUGZILLA_REPORT_STATUS.REOPENED || status == BUGZILLA_REPORT_STATUS.UNCONFIRMED) {
 			if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_0) <= 0) {

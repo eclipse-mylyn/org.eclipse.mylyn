@@ -213,4 +213,19 @@ public abstract class AbstractAttributeEditor {
 		this.readOnly = readOnly;
 	}
 
+	/**
+	 * Refreshes the state of the widget from the data model. The default implementation throws
+	 * <code>UnsupportedOperationException</code>.
+	 * 
+	 * <p>
+	 * Subclasses should overwrite this method.
+	 * 
+	 * @since 3.1
+	 * @throws UnsupportedOperationException
+	 *             if this method is not supported by the editor
+	 */
+	public void refresh() {
+		throw new UnsupportedOperationException();
+	}
+
 }
