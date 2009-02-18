@@ -15,22 +15,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextHover;
-import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TextPresentation;
-import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
-import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
-import org.eclipse.jface.text.hyperlink.IHyperlinkDetectorExtension;
-import org.eclipse.jface.text.hyperlink.IHyperlinkDetectorExtension2;
 import org.eclipse.jface.text.presentation.IPresentationDamager;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.IPresentationRepairer;
@@ -40,6 +34,7 @@ import org.eclipse.jface.text.source.DefaultAnnotationHover;
 import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
+import org.eclipse.mylyn.internal.wikitext.ui.util.HyperlinkDetectorDelegate;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.AnnotationHyperlinkDetector;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.TextHover;
 import org.eclipse.mylyn.wikitext.ui.annotation.TitleAnnotation;
@@ -57,73 +52,6 @@ import org.eclipse.ui.texteditor.HyperlinkDetectorRegistry;
  * @since 1.0
  */
 public class HtmlViewerConfiguration extends TextSourceViewerConfiguration {
-
-	private class HyperlinkDetectorDelegate implements IHyperlinkDetector, IHyperlinkDetectorExtension,
-			IHyperlinkDetectorExtension2 {
-
-		private HyperlinkDetectorDescriptor descriptor;
-
-		private AbstractHyperlinkDetector delegate;
-
-		private boolean createFailed;
-
-		private IAdaptable context;
-
-		private int stateMask;
-
-		private boolean enabled;
-
-		private HyperlinkDetectorDelegate(HyperlinkDetectorDescriptor descriptor) {
-			this.descriptor = descriptor;
-			if (fPreferenceStore != null) {
-				stateMask = fPreferenceStore.getInt(descriptor.getId() + HyperlinkDetectorDescriptor.STATE_MASK_POSTFIX);
-				enabled = !fPreferenceStore.getBoolean(descriptor.getId());
-			}
-		}
-
-		public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
-			if (!isEnabled()) {
-				return null;
-			}
-
-			if (!createFailed && delegate == null) {
-				try {
-					delegate = descriptor.createHyperlinkDetector();
-				} catch (CoreException ex) {
-					createFailed = true;
-				}
-				if (delegate != null && context != null) {
-					delegate.setContext(context);
-				}
-			}
-			if (delegate != null) {
-				return delegate.detectHyperlinks(textViewer, region, canShowMultipleHyperlinks);
-			}
-
-			return null;
-		}
-
-		private boolean isEnabled() {
-			return enabled;
-		}
-
-		private void setContext(IAdaptable context) {
-			this.context = context;
-		}
-
-		public void dispose() {
-			if (delegate != null) {
-				delegate.dispose();
-				delegate = null;
-			}
-			descriptor = null;
-			context = null;
-		}
-
-		public int getStateMask() {
-			return stateMask;
-		}
-	}
 
 	private final HtmlViewer viewer;
 
@@ -208,12 +136,10 @@ public class HtmlViewerConfiguration extends TextSourceViewerConfiguration {
 
 			for (HyperlinkDetectorDescriptor descriptor : descriptors) {
 				if (targetId.equals(descriptor.getTargetId())) {
-					String id = descriptor.getId();
-					if ("org.eclipse.ui.internal.editors.text.URLHyperlinkDetector".equals(id)) { //$NON-NLS-1$
-						// filter out the platform URL hyperlink detector since Mylyn contributes one as well.
+					if (filterHyperlinkDescriptor(descriptor)) {
 						continue;
 					}
-					HyperlinkDetectorDelegate delegate = new HyperlinkDetectorDelegate(descriptor);
+					HyperlinkDetectorDelegate delegate = new HyperlinkDetectorDelegate(descriptor, fPreferenceStore);
 					delegate.setContext(context);
 					detectors.add(delegate);
 				}
@@ -223,6 +149,22 @@ public class HtmlViewerConfiguration extends TextSourceViewerConfiguration {
 			detectors.add(annotationHyperlinkDetector);
 		}
 		return detectors.toArray(new IHyperlinkDetector[detectors.size()]);
+	}
+
+	/**
+	 * Indicate if the given hyperlink detector descriptor should be filtered. Filtered descriptors are not included.
+	 * The default implementation filters the platform URL hyperlink detector since the URL hyperlink detection strategy
+	 * is defined by the HTML markup. Overriding methods should call super.
+	 * 
+	 * @see #getHyperlinkDetectors(ISourceViewer)
+	 */
+	protected boolean filterHyperlinkDescriptor(HyperlinkDetectorDescriptor descriptor) {
+		String id = descriptor.getId();
+		if ("org.eclipse.ui.internal.editors.text.URLHyperlinkDetector".equals(id)) { //$NON-NLS-1$
+			// filter out the platform URL hyperlink detector since Mylyn contributes one as well.
+			return true;
+		}
+		return false;
 	}
 
 	protected AnnotationHyperlinkDetector createAnnotationHyperlinkDetector() {
