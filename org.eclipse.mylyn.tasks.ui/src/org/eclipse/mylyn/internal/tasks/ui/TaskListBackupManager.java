@@ -19,8 +19,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.SortedMap;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,16 +27,15 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDataExportOperation;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDataSnapshotOperation;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
@@ -63,24 +60,53 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 
 	private static final long MINUTE = 60 * SECOND;
 
-	private Timer timer;
+	private static final long STANDARD_DELAY = 30 * MINUTE;
 
 	private String backupFolderPath;
 
-	private ExportJob export;
+	private Job runBackup;
 
 	public TaskListBackupManager(String backupFolderPath) {
 		this.backupFolderPath = backupFolderPath;
-		start(30 * MINUTE);
+		start(STANDARD_DELAY);
 	}
 
 	public void start(long delay) {
-		timer = new Timer();
-		timer.schedule(new CheckBackupRequired(), delay, 30 * MINUTE);
+
+		if (runBackup != null) {
+			stop();
+		}
+
+		runBackup = new Job("Task Data Snapshot") { //$NON-NLS-1$
+
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				try {
+					if (TasksUiPlugin.getTaskList().getAllTasks().size() > 0) {
+						backupNow(false, monitor);
+					}
+					return Status.OK_STATUS;
+				} finally {
+					schedule(STANDARD_DELAY);
+				}
+			}
+		};
+		runBackup.setPriority(Job.BUILD);
+		runBackup.setSystem(true);
+		runBackup.schedule(delay);
 	}
 
 	public void stop() {
-		timer.cancel();
+		if (runBackup != null) {
+			if (!runBackup.cancel()) {
+				try {
+					runBackup.join();
+				} catch (InterruptedException e) {
+					// ignore
+				}
+			}
+			runBackup = null;
+		}
 	}
 
 	public static String getBackupFileName() {
@@ -91,40 +117,33 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 	}
 
 	public void backupNow(boolean synchronous) {
+		backupNow(synchronous, null);
+	}
+
+	public void backupNow(boolean synchronous, IProgressMonitor monitor) {
+
+		monitor = Policy.monitorFor(monitor);
 
 		File backupFolder = new File(backupFolderPath);
 		if (!backupFolder.exists()) {
 			backupFolder.mkdir();
 		}
 
-		if (!synchronous && Platform.isRunning()) {
-			export = new ExportJob(backupFolderPath, getBackupFileName());
-			export.addJobChangeListener(new JobChangeAdapter() {
-
-				@Override
-				public void done(IJobChangeEvent event) {
-					// TODO: Run this in separate job after snapshot has taken place
-					removeOldBackups();
-				}
-			});
-			export.schedule();
-
-		} else {
-
-			final TaskDataExportOperation backupJob = new TaskDataSnapshotOperation(backupFolderPath,
-					getBackupFileName());
-
-			IProgressService service = PlatformUI.getWorkbench().getProgressService();
-			try {
+		final TaskDataExportOperation backupJob = new TaskDataSnapshotOperation(backupFolderPath, getBackupFileName());
+		try {
+			if (!synchronous && Platform.isRunning()) {
+				backupJob.run(monitor);
+				removeOldBackups();
+			} else {
+				IProgressService service = PlatformUI.getWorkbench().getProgressService();
 				service.run(false, true, backupJob);
-
-			} catch (InterruptedException e) {
-				// ignore
-			} catch (InvocationTargetException e) {
-				MessageDialog.openError(null, Messages.TaskListBackupManager_Tasklist_Backup,
-						Messages.TaskListBackupManager_Could_not_backup_task_data);
 			}
-
+		} catch (InvocationTargetException e) {
+			Status status = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					Messages.TaskListBackupManager_Error_occured_during_scheduled_tasklist_backup, e);
+			TasksUiInternal.logAndDisplayStatus(Messages.TaskListBackupManager_Scheduled_task_data_backup, status);
+		} catch (InterruptedException e) {
+			return;
 		}
 	}
 
@@ -234,50 +253,8 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 		}
 	}
 
-	class CheckBackupRequired extends TimerTask {
-
-		@Override
-		public void run() {
-			if (TasksUiPlugin.getTaskList().getAllTasks().size() > 0) {
-				backupNow(false);
-			}
-		}
-	}
-
-	static class ExportJob extends Job {
-
-		final TaskDataExportOperation backupJob;
-
-		public ExportJob(String destination, String filename) {
-			super(Messages.TaskListBackupManager_Scheduled_task_data_backup);
-
-			backupJob = new TaskDataSnapshotOperation(destination, filename);
-
-		}
-
-		@Override
-		protected IStatus run(IProgressMonitor monitor) {
-			try {
-				if (Platform.isRunning()) {
-					backupJob.run(monitor);
-				}
-			} catch (InvocationTargetException e) {
-				MessageDialog.openError(null, Messages.TaskListBackupManager_Scheduled_task_data_backup,
-						Messages.TaskListBackupManager_Error_occured_during_scheduled_tasklist_backup);
-			} catch (InterruptedException e) {
-				return Status.CANCEL_STATUS;
-			}
-			return Status.OK_STATUS;
-		}
-
-	}
-
 	public void propertyChange(PropertyChangeEvent event) {
 		if (event.getProperty().equals(ITasksUiPreferenceConstants.PREF_DATA_DIR)) {
-			if (export != null) {
-				export.cancel();
-				export = null;
-			}
 			backupFolderPath = TasksUiPlugin.getDefault().getBackupFolderPath();
 		}
 	}

@@ -53,12 +53,12 @@ public class TaskListBackupManagerTest extends TestCase {
 	public void testAutoBackupEnabled() throws Exception {
 		task1 = new LocalTask("handle", "label");
 		TasksUiPlugin.getTaskList().addTask(task1);
-		backupManager.backupNow(true);
+		backupManager.backupNow(true, null);
 		assertEquals(1, backupManager.getBackupFiles().size());
 
 		// make sure a new date stamp is generated
 		Thread.sleep(1000);
-		backupManager.backupNow(true);
+		backupManager.backupNow(true, null);
 		assertEquals(2, backupManager.getBackupFiles().size());
 
 		// test removal of old backups
