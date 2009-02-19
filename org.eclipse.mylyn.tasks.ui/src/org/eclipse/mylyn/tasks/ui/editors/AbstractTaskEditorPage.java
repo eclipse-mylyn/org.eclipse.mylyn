@@ -448,13 +448,19 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 	private CommonTextSupport textSupport;
 
-	// TODO 3.1 define constructor for setting id and label
-	public AbstractTaskEditorPage(TaskEditor editor, String connectorKind) {
-		super(editor, "id", "label"); //$NON-NLS-1$ //$NON-NLS-2$
+	/**
+	 * @since 3.1
+	 */
+	public AbstractTaskEditorPage(TaskEditor editor, String id, String label, String connectorKind) {
+		super(editor, id, label);
 		Assert.isNotNull(connectorKind);
 		this.connectorKind = connectorKind;
 		this.reflow = true;
 		this.selectionChangedListeners = new ListenerList();
+	}
+
+	public AbstractTaskEditorPage(TaskEditor editor, String connectorKind) {
+		this(editor, connectorKind, connectorKind + "-id", "label"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -953,6 +959,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 							} else {
 								EditorUtil.reveal(form, node.getLabel());
 							}
+							getEditor().setActivePage(getId());
 						}
 					}
 				}
