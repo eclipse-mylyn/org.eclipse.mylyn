@@ -86,7 +86,7 @@
 	<extension
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
 		id="javaTypeProposalCategory"
-		name="%javaCompletionProposalComputer.javaNoTypeProposalCategory.name">
+		name="%javaCompletionProposalComputer.javaTypeProposalCategory.name">
 		<proposalCategory
 			icon="icons/elcl16/proposals-type.gif"/>
 	</extension>
