@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
@@ -64,7 +65,7 @@ public class TaskDataExportOperation implements IRunnableWithProgress {
 
 		selectFiles(filesToExport);
 
-		if (filesToExport.size() > 0) {
+		if (filesToExport.size() > 0 && Platform.isRunning()) {
 			try {
 				monitor.beginTask(EXPORT_JOB_LABEL, filesToExport.size() + 1);
 

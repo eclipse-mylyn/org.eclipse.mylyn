@@ -25,7 +25,6 @@ import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -36,6 +35,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDataExportOperation;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDataSnapshotOperation;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
@@ -65,6 +65,8 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 	private String backupFolderPath;
 
 	private Job runBackup;
+
+	private static boolean errorDisplayed = false;
 
 	public TaskListBackupManager(String backupFolderPath) {
 		this.backupFolderPath = backupFolderPath;
@@ -120,7 +122,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 		backupNow(synchronous, null);
 	}
 
-	public void backupNow(boolean synchronous, IProgressMonitor monitor) {
+	public synchronized void backupNow(boolean synchronous, IProgressMonitor monitor) {
 
 		monitor = Policy.monitorFor(monitor);
 
@@ -131,7 +133,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 
 		final TaskDataExportOperation backupJob = new TaskDataSnapshotOperation(backupFolderPath, getBackupFileName());
 		try {
-			if (!synchronous && Platform.isRunning()) {
+			if (!synchronous) {
 				backupJob.run(monitor);
 				removeOldBackups();
 			} else {
@@ -139,9 +141,23 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 				service.run(false, true, backupJob);
 			}
 		} catch (InvocationTargetException e) {
-			Status status = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					Messages.TaskListBackupManager_Error_occured_during_scheduled_tasklist_backup, e);
-			TasksUiInternal.logAndDisplayStatus(Messages.TaskListBackupManager_Scheduled_task_data_backup, status);
+			if (!errorDisplayed) {
+				final Status status = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						Messages.TaskListBackupManager_Error_occured_during_scheduled_tasklist_backup, e);
+				errorDisplayed = true;
+				if (Display.getCurrent() != null) {
+					TasksUiInternal.logAndDisplayStatus(Messages.TaskListBackupManager_Scheduled_task_data_backup,
+							status);
+				} else {
+					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+						public void run() {
+							TasksUiInternal.logAndDisplayStatus(
+									Messages.TaskListBackupManager_Scheduled_task_data_backup, status);
+
+						}
+					});
+				}
+			}
 		} catch (InterruptedException e) {
 			return;
 		}
