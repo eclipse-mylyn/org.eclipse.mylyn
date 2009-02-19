@@ -30,10 +30,11 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 
 /**
+ * TODO: fix class loading problems caused by serialization and make API
+ * 
  * @author Steffen Pingel
- * @since 3.1
  */
-public abstract class RepositoryClientManager<T, C extends Serializable> implements IRepositoryListener {
+abstract class RepositoryClientManager<T, C extends Serializable> implements IRepositoryListener {
 
 	private final Map<String, T> clientByUrl = new HashMap<String, T>();
 
