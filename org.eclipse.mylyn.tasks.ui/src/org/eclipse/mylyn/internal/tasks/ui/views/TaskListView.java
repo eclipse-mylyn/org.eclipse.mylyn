@@ -90,6 +90,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.GoIntoAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.GoUpAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.GroupSubTasksAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.LinkWithEditorAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.NewTaskAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenTaskListElementAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenTasksUiPreferencesAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenWithBrowserAction;
@@ -397,6 +398,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 	private TaskListSortAction sortDialogAction;
 
 	private PresentationDropDownSelectionAction presentationDropDownSelectionAction;
+
+	private NewTaskAction newTaskAction;
 
 	private LinkWithEditorAction linkWithEditorAction;
 
@@ -1258,7 +1261,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 	}
 
 	private void fillLocalToolBar(IToolBarManager manager) {
-		manager.add(new Separator(ID_SEPARATOR_NEW));
+		manager.add(newTaskAction);
 		manager.add(presentationDropDownSelectionAction);
 		manager.add(new Separator());
 		manager.add(collapseAll);
@@ -1490,7 +1493,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		filterOnPriorityAction = new PriorityDropDownAction(this);
 		linkWithEditorAction = new LinkWithEditorAction(this);
 		presentationDropDownSelectionAction = new PresentationDropDownSelectionAction(this);
-
+		newTaskAction = new NewTaskAction();
+		filteredTree.getViewer().addSelectionChangedListener(newTaskAction);
 		filteredTree.getViewer().addSelectionChangedListener(openWithBrowser);
 		filteredTree.getViewer().addSelectionChangedListener(copyDetailsAction);
 	}

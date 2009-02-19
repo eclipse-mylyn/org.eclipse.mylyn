@@ -26,7 +26,6 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCustomField;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskDataHandler;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
@@ -223,18 +222,8 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 	@Override
 	protected TaskDataModel createModel(TaskEditorInput input) throws CoreException {
 		TaskDataModel model = super.createModel(input);
-		BugzillaVersion bugzillaVersion = null;
-		RepositoryConfiguration repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(
-				input.getTaskRepository(), false, new NullProgressMonitor());
-		if (repositoryConfiguration != null) {
-			bugzillaVersion = repositoryConfiguration.getInstallVersion();
-		} else {
-			bugzillaVersion = BugzillaVersion.MIN_VERSION;
-		}
-		if (bugzillaVersion.compareTo(BugzillaVersion.BUGZILLA_3_0) >= 0) {
-			productListener = new ProductSelectionListener();
-			model.addModelListener(productListener);
-		}
+		productListener = new ProductSelectionListener();
+		model.addModelListener(productListener);
 		return model;
 	}
 
@@ -255,7 +244,7 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 		return attributeEditorMap.get(attribute);
 	}
 
-	public void refresh(TaskAttribute attributeComponent) {
+	private void refresh(TaskAttribute attributeComponent) {
 		AbstractAttributeEditor editor = getEditorForAttribute(attributeComponent);
 		if (editor != null) {
 			try {

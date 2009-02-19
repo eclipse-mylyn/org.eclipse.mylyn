@@ -112,7 +112,7 @@ public class TaskEditorTest extends TestCase {
 		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(taskRepository);
 		TaskData taskData = new TaskData(mapper, taskRepository.getConnectorKind(), taskRepository.getRepositoryUrl(),
 				"");
-		assertFalse(taskDataHandler.initializeTaskData(taskRepository, taskData, null, null));
+		//assertFalse(taskDataHandler.initializeTaskData(taskRepository, taskData, null, null));
 		assertFalse(taskDataHandler.initializeTaskData(taskRepository, taskData, taskMappingInit, null));
 		assertTrue(taskDataHandler.initializeTaskData(taskRepository, taskData, taskMappingSelect, null));
 	}

@@ -159,6 +159,8 @@ public class Messages extends NLS {
 
 	public static String NewSubTaskAction_Unable_to_create_subtask;
 
+	public static String NewTaskAction_new_task;
+
 	public static String NewTaskFromSelectionAction_Comment_;
 
 	public static String NewTaskFromSelectionAction____Created_from_Comment___;

@@ -460,7 +460,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 	}
 
 	public AbstractTaskEditorPage(TaskEditor editor, String connectorKind) {
-		this(editor, connectorKind, connectorKind + "-id", "label"); //$NON-NLS-1$ //$NON-NLS-2$
+		this(editor, connectorKind + "-id", "label", connectorKind); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**

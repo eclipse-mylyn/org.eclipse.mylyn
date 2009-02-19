@@ -139,6 +139,10 @@ public class Messages extends NLS {
 
 	public static String TasksUiUtil_Could_not_open_URL_;
 
+	public static String TasksUiUtil_create_task;
+
+	public static String TasksUiUtil_failed_to_create_new_task;
+
 	public static String TasksUiUtil_No_URL_to_open;
 
 	public static String AbstractRetrieveTitleFromUrlJob_Retrieving_summary_from_URL;

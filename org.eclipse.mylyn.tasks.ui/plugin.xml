@@ -285,7 +285,7 @@
           menubarPath="tasks">
     </action>
            		
-  		<action
+  	<!--	<action
                class="org.eclipse.mylyn.internal.tasks.ui.actions.NewTaskAction"
                enablesFor="*"
                icon="icons/etool16/task-new.gif"
@@ -294,7 +294,7 @@
                style="push"
                toolbarPath="new"
                tooltip="%NewTaskAction.tooltip"> 
-  		</action>
+  		</action>-->
          <action
                class="org.eclipse.mylyn.internal.tasks.ui.actions.ShowTasksUiLegendAction"
                icon="icons/etool16/icons-legend.gif"
