@@ -26,7 +26,7 @@ import org.osgi.framework.BundleContext;
  */
 public class WikiTextTasksUiPlugin extends AbstractUIPlugin {
 
-	public static final String FONT_REGISTRY_KEY_DEFAULT_FONT = "org.eclipse.mylyn.wikitext.tasks.ui.defaultFont"; //$NON-NLS-1$
+	public static final String FONT_REGISTRY_KEY_DEFAULT_FONT = "org.eclipse.mylyn.tasks.ui.fonts.task.editor.comment"; //$NON-NLS-1$
 
 	public static final String FONT_REGISTRY_KEY_MONOSPACE_FONT = "org.eclipse.mylyn.wikitext.tasks.ui.monospaceFont"; //$NON-NLS-1$
 
