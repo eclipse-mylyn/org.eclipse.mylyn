@@ -16,7 +16,10 @@ import java.io.IOException;
 import java.io.Writer;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -74,51 +77,79 @@ public class FastMarkupPartitioner extends FastPartitioner {
 	}
 
 	static class PartitionTokenScanner implements IPartitionTokenScanner {
-
-		private ITypedRegion[] regions = null;
+		private final Map<Integer, PartitioningResult> cachedPartitioning = new HashMap<Integer, PartitioningResult>();
 
 		private MarkupLanguage markupLanguage;
 
 		private int index = -1;
 
-		private int offsetOfPartitions;
+		private PartitioningResult lastComputed;
 
-		private int lengthOfPartitions;
-
-		private static class OLP {
+		private static class PartitioningResult {
 			int offset;
 
 			int length;
 
 			ITypedRegion[] partitions;
 
-			public OLP(int offset, int length, ITypedRegion[] partitions) {
+			public PartitioningResult(int offset, int length, ITypedRegion[] partitions) {
 				super();
 				this.offset = offset;
 				this.length = length;
 				this.partitions = partitions;
 			}
+
+			public boolean overlapsWith(PartitioningResult other) {
+				int end = other.offset + other.length;
+				int thisEnd = this.offset + this.length;
+
+				if (end > thisEnd) {
+					return other.offset < thisEnd;
+				} else if (thisEnd > end) {
+					return offset < end;
+				} else {
+					return true;
+				}
+			}
 		}
 
 		public ITypedRegion[] computePartitions(IDocument document, int offset, int length) {
-			if (offsetOfPartitions <= offset && (offsetOfPartitions + lengthOfPartitions) >= (offset + length)) {
-				return regions;
+			if (lastComputed != null && lastComputed.offset <= offset
+					&& (lastComputed.offset + lastComputed.length) >= (offset + length)) {
+				return lastComputed.partitions;
 			} else {
-				return computeOlp(document, offset, length, -1).partitions;
+				PartitioningResult result = cachedPartitioning.get(offset);
+				if (result == null || result.length != length) {
+					result = computeOlp(document, offset, length, -1);
+					updateCache(result, document.getLength());
+				}
+				return result.partitions;
 			}
 		}
 
 		public void setPartialRange(IDocument document, int offset, int length, String contentType, int partitionOffset) {
-			OLP olp = computeOlp(document, offset, length, partitionOffset);
-			regions = olp.partitions;
-			offsetOfPartitions = olp.offset;
-			lengthOfPartitions = olp.length;
+			lastComputed = computeOlp(document, offset, length, partitionOffset);
 			index = -1;
+			updateCache(lastComputed, document.getLength());
 		}
 
-		private OLP computeOlp(IDocument document, int offset, int length, int partitionOffset) {
+		private void updateCache(PartitioningResult updated, int maxLength) {
+			Iterator<PartitioningResult> it = cachedPartitioning.values().iterator();
+			while (it.hasNext()) {
+				PartitioningResult result = it.next();
+
+				if (result.offset >= maxLength || (updated != null && result.overlapsWith(updated))) {
+					it.remove();
+				}
+			}
+			if (updated != null) {
+				cachedPartitioning.put(updated.offset, updated);
+			}
+		}
+
+		private PartitioningResult computeOlp(IDocument document, int offset, int length, int partitionOffset) {
 			if (markupLanguage == null) {
-				return new OLP(offset, length, null);
+				return new PartitioningResult(offset, length, null);
 			}
 			int startOffset = partitionOffset == -1 ? offset : Math.min(offset, partitionOffset);
 			int endOffset = offset + length;
@@ -163,7 +194,7 @@ public class FastMarkupPartitioner extends FastPartitioner {
 					break;
 				}
 			}
-			return new OLP(offset, length, partitioning.toArray(new ITypedRegion[partitioning.size()]));
+			return new PartitioningResult(offset, length, partitioning.toArray(new ITypedRegion[partitioning.size()]));
 		}
 
 		public void setMarkupLanguage(MarkupLanguage markupLanguage) {
@@ -171,18 +202,18 @@ public class FastMarkupPartitioner extends FastPartitioner {
 		}
 
 		public int getTokenLength() {
-			return regions[index].getLength();
+			return lastComputed.partitions[index].getLength();
 		}
 
 		public int getTokenOffset() {
-			return regions[index].getOffset();
+			return lastComputed.partitions[index].getOffset();
 		}
 
 		public IToken nextToken() {
-			if (regions == null || ++index >= regions.length) {
+			if (lastComputed == null || lastComputed.partitions == null || ++index >= lastComputed.partitions.length) {
 				return Token.EOF;
 			}
-			return new Token(regions[index].getType());
+			return new Token(lastComputed.partitions[index].getType());
 		}
 
 		public void setRange(IDocument document, int offset, int length) {
