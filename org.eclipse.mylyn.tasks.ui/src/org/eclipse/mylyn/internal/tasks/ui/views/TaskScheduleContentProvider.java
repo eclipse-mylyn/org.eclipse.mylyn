@@ -13,12 +13,15 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.DateRange;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
@@ -40,11 +43,11 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 
 	private final TaskActivityManager taskActivityManager;
 
-	private Timer timer;
-
 	private final Unscheduled unscheduled;
 
 	private final Calendar END_OF_TIME;
+
+	private Job rolloverJob;
 
 	public TaskScheduleContentProvider(TaskListView taskListView) {
 		super(taskListView);
@@ -54,7 +57,6 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 		END_OF_TIME.add(Calendar.YEAR, 5000);
 		END_OF_TIME.getTime();
 		unscheduled = new Unscheduled(taskActivityManager, new DateRange(END_OF_TIME));
-		timer = new Timer();
 	}
 
 	@Override
@@ -67,9 +69,18 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 			WeekDateRange week = TaskActivityUtil.getCurrentWeek();
 			WeekDateRange nextWeek = TaskActivityUtil.getNextWeek();
 
-			timer.cancel();
-			timer = new Timer();
-			timer.schedule(new RolloverCheck(), week.getToday().getEndDate().getTime());
+			synchronized (this) {
+				if (rolloverJob != null) {
+					rolloverJob.cancel();
+					rolloverJob = null;
+				}
+
+				long delay = week.getToday().getEndDate().getTime().getTime() - new Date().getTime();
+				rolloverJob = new RolloverCheck();
+				rolloverJob.setSystem(true);
+				rolloverJob.setPriority(Job.SHORT);
+				rolloverJob.schedule(delay);
+			}
 
 			for (DateRange day : week.getRemainingDays()) {
 				containers.add(new ScheduledTaskContainer(TasksUiPlugin.getTaskActivityManager(), day));
@@ -95,7 +106,8 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 			endDate.add(Calendar.YEAR, 4999);
 			DateRange future = new DateRange(startDate, endDate);
 
-			ScheduledTaskContainer futureContainer = new ScheduledTaskContainer(taskActivityManager, future, Messages.TaskScheduleContentProvider_Future);
+			ScheduledTaskContainer futureContainer = new ScheduledTaskContainer(taskActivityManager, future,
+					Messages.TaskScheduleContentProvider_Future);
 			containers.add(futureContainer);
 
 			return applyFilter(containers).toArray();
@@ -153,16 +165,13 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 
 	@Override
 	public void dispose() {
+		synchronized (this) {
+			if (rolloverJob != null) {
+				rolloverJob.cancel();
+			}
+		}
 		taskActivityManager.removeActivityListener(this);
 		super.dispose();
-	}
-
-	private class RolloverCheck extends TimerTask {
-
-		@Override
-		public void run() {
-			refresh();
-		}
 	}
 
 	public void activityReset() {
@@ -170,22 +179,6 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 	}
 
 	public void elapsedTimeUpdated(ITask task, long newElapsedTime) {
-		// ignore
-	}
-
-	public void preTaskActivated(ITask task) {
-		// ignore
-	}
-
-	public void preTaskDeactivated(ITask task) {
-		// ignore
-	}
-
-	public void taskActivated(ITask task) {
-		// ignore
-	}
-
-	public void taskDeactivated(ITask task) {
 		// ignore
 	}
 
@@ -207,6 +200,19 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 				}
 			}
 			return all;
+		}
+	}
+
+	private class RolloverCheck extends Job {
+
+		public RolloverCheck() {
+			super("Calendar Rollover Job"); //$NON-NLS-1$
+		}
+
+		@Override
+		protected IStatus run(IProgressMonitor monitor) {
+			refresh();
+			return Status.OK_STATUS;
 		}
 	}
 
