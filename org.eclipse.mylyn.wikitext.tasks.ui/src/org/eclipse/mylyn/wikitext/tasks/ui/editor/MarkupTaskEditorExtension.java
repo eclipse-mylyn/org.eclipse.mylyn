@@ -127,9 +127,15 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 		return copy;
 	}
 
-	protected MarkupViewerConfiguration createViewerConfiguration(TaskRepository taskRepository,
+	protected TaskMarkupViewerConfiguration createViewerConfiguration(TaskRepository taskRepository,
 			MarkupViewer markupViewer) {
 		return new TaskMarkupViewerConfiguration(markupViewer, taskRepository);
+	}
+
+	protected TaskMarkupSourceViewerConfiguration createSourceViewerConfiguration(TaskRepository taskRepository,
+			SourceViewer viewer) {
+		IPreferenceStore preferenceStore = EditorsUI.getPreferenceStore();
+		return new TaskMarkupSourceViewerConfiguration(preferenceStore, taskRepository);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -140,9 +146,7 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 
 		SourceViewer viewer = new MarkupSourceViewer(parent, null, style | SWT.WRAP, markupLanguageCopy);
 		// configure the viewer
-		IPreferenceStore preferenceStore = EditorsUI.getPreferenceStore();
-		MarkupSourceViewerConfiguration configuration = new TaskMarkupSourceViewerConfiguration(preferenceStore,
-				taskRepository);
+		MarkupSourceViewerConfiguration configuration = createSourceViewerConfiguration(taskRepository, viewer);
 
 		if (JFaceResources.getFontRegistry().hasValueFor(WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_DEFAULT_FONT)) {
 			configuration.setDefaultFont(JFaceResources.getFontRegistry().get(
@@ -179,7 +183,7 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 				AbstractDecoratedTextEditorPreferenceConstants.EDITOR_PRINT_MARGIN_COLOR,
 				AbstractDecoratedTextEditorPreferenceConstants.EDITOR_PRINT_MARGIN_COLUMN);
 
-		support.install(new EditorExtensionPreferenceStore(preferenceStore, viewer.getControl()));
+		support.install(new EditorExtensionPreferenceStore(EditorsUI.getPreferenceStore(), viewer.getControl()));
 		viewer.getControl().addDisposeListener(new DisposeListener() {
 			public void widgetDisposed(DisposeEvent e) {
 				support.dispose();

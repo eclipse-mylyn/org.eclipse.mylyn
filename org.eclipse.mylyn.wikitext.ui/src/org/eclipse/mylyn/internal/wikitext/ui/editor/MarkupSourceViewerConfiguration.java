@@ -54,9 +54,9 @@ import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.MarkupTokenScanner;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
+import org.eclipse.mylyn.wikitext.ui.viewer.AbstractTextSourceViewerConfiguration;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 import org.eclipse.ui.part.IShowInTarget;
 import org.eclipse.ui.texteditor.HippieProposalProcessor;
 
@@ -65,7 +65,7 @@ import org.eclipse.ui.texteditor.HippieProposalProcessor;
  * 
  * @author David Green
  */
-public class MarkupSourceViewerConfiguration extends TextSourceViewerConfiguration {
+public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerConfiguration {
 
 	private ITokenScanner scanner;
 
@@ -333,4 +333,5 @@ public class MarkupSourceViewerConfiguration extends TextSourceViewerConfigurati
 			return controlCreator;
 		}
 	}
+
 }

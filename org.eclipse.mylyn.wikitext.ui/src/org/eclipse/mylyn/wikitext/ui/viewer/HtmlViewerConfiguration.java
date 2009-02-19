@@ -13,9 +13,7 @@ package org.eclipse.mylyn.wikitext.ui.viewer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
-import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
@@ -34,16 +32,13 @@ import org.eclipse.jface.text.source.DefaultAnnotationHover;
 import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
-import org.eclipse.mylyn.internal.wikitext.ui.util.HyperlinkDetectorDelegate;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.AnnotationHyperlinkDetector;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.TextHover;
 import org.eclipse.mylyn.wikitext.ui.annotation.TitleAnnotation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.ui.editors.text.EditorsUI;
-import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 import org.eclipse.ui.texteditor.HyperlinkDetectorDescriptor;
-import org.eclipse.ui.texteditor.HyperlinkDetectorRegistry;
 
 /**
  * A configuration for use with a {@link HtmlViewer}.
@@ -51,7 +46,7 @@ import org.eclipse.ui.texteditor.HyperlinkDetectorRegistry;
  * @author David Green
  * @since 1.0
  */
-public class HtmlViewerConfiguration extends TextSourceViewerConfiguration {
+public class HtmlViewerConfiguration extends AbstractTextSourceViewerConfiguration {
 
 	private final HtmlViewer viewer;
 
@@ -59,16 +54,21 @@ public class HtmlViewerConfiguration extends TextSourceViewerConfiguration {
 
 	private boolean disableHyperlinkModifiers = true;
 
-	/**
-	 * indicate if markup hyperlinks should be detected before other types of hyperlinks. This can affect the order in
-	 * which the hyperlinks are presented to the user in the case where multiple hyperlinks are detected in the same
-	 * region of text. The default is true.
-	 */
-	protected boolean markupHyperlinksFirst = true;
-
 	public HtmlViewerConfiguration(HtmlViewer viewer) {
 		super(getDefaultPreferenceStore());
 		this.viewer = viewer;
+//		  filters the platform URL hyperlink detector since the URL hyperlink detection
+//		  strategy is defined by the HTML markup. 
+		addHyperlinkDetectorDescriptorFilter(new HyperlinkDetectorDescriptorFilter() {
+			public boolean filter(HyperlinkDetectorDescriptor descriptor) {
+				String id = descriptor.getId();
+				if ("org.eclipse.ui.internal.editors.text.URLHyperlinkDetector".equals(id)) { //$NON-NLS-1$
+					// filter out the platform URL hyperlink detector since Mylyn contributes one as well.
+					return true;
+				}
+				return false;
+			}
+		});
 	}
 
 	private static IPreferenceStore getDefaultPreferenceStore() {
@@ -112,59 +112,13 @@ public class HtmlViewerConfiguration extends TextSourceViewerConfiguration {
 		return new TextHover(sourceViewer);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
+	protected List<IHyperlinkDetector> createCustomHyperlinkDetectors(ISourceViewer sourceViewer) {
+		List<IHyperlinkDetector> detectors = new ArrayList<IHyperlinkDetector>(1);
 		AnnotationHyperlinkDetector annotationHyperlinkDetector = createAnnotationHyperlinkDetector();
 		sourceViewer.getTextWidget().setData(AnnotationHyperlinkDetector.class.getName(), annotationHyperlinkDetector);
-
-		if (sourceViewer == null || fPreferenceStore == null) {
-			return new IHyperlinkDetector[] { annotationHyperlinkDetector };
-		}
-		HyperlinkDetectorRegistry registry = EditorsUI.getHyperlinkDetectorRegistry();
-		HyperlinkDetectorDescriptor[] descriptors = registry.getHyperlinkDetectorDescriptors();
-		Map<String, IAdaptable> targets = getHyperlinkDetectorTargets(sourceViewer);
-
-		List<IHyperlinkDetector> detectors = new ArrayList<IHyperlinkDetector>(8);
-		if (markupHyperlinksFirst) {
-			detectors.add(annotationHyperlinkDetector);
-		}
-
-		for (Map.Entry<String, IAdaptable> target : targets.entrySet()) {
-			String targetId = target.getKey();
-			IAdaptable context = target.getValue();
-
-			for (HyperlinkDetectorDescriptor descriptor : descriptors) {
-				if (targetId.equals(descriptor.getTargetId())) {
-					if (filterHyperlinkDescriptor(descriptor)) {
-						continue;
-					}
-					HyperlinkDetectorDelegate delegate = new HyperlinkDetectorDelegate(descriptor, fPreferenceStore);
-					delegate.setContext(context);
-					detectors.add(delegate);
-				}
-			}
-		}
-		if (!markupHyperlinksFirst) {
-			detectors.add(annotationHyperlinkDetector);
-		}
-		return detectors.toArray(new IHyperlinkDetector[detectors.size()]);
-	}
-
-	/**
-	 * Indicate if the given hyperlink detector descriptor should be filtered. Filtered descriptors are not included.
-	 * The default implementation filters the platform URL hyperlink detector since the URL hyperlink detection strategy
-	 * is defined by the HTML markup. Overriding methods should call super.
-	 * 
-	 * @see #getHyperlinkDetectors(ISourceViewer)
-	 */
-	protected boolean filterHyperlinkDescriptor(HyperlinkDetectorDescriptor descriptor) {
-		String id = descriptor.getId();
-		if ("org.eclipse.ui.internal.editors.text.URLHyperlinkDetector".equals(id)) { //$NON-NLS-1$
-			// filter out the platform URL hyperlink detector since Mylyn contributes one as well.
-			return true;
-		}
-		return false;
+		detectors.add(annotationHyperlinkDetector);
+		return detectors;
 	}
 
 	protected AnnotationHyperlinkDetector createAnnotationHyperlinkDetector() {
