@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -411,7 +412,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 						tree.addListener(SWT.Paint, drawer);
 					}
 				}
-				
+
 				installInterestFilter(viewer);
 				ContextUiPlugin.getViewerManager().addFilteredViewer(viewer);
 			} else {
@@ -457,6 +458,10 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 			return false;
 		} else if (viewer.getControl().isDisposed() && manageViewer) {
 			// TODO: do this with part listener, not lazily?
+			return false;
+		} else if (previousFilters.containsKey(viewer)) {
+			// install has already run, this can happen if AbstractAutoFocusViewAction.init() executes
+			// initialization asynchronously
 			return false;
 		}
 
@@ -508,21 +513,20 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 		try {
 			viewer.getControl().setRedraw(false);
 
-			if (viewPart != null && manageFilters) {
-				if (previousFilters.containsKey(viewer)) {
-					Set<ViewerFilter> filters = new HashSet<ViewerFilter>(previousFilters.get(viewer));
-					previousFilters.remove(viewer);
-					for (ViewerFilter filter : viewer.getFilters()) {
-						if (!(filter instanceof InterestFilter)) {
-							filters.add(filter);
-						}
+			List<ViewerFilter> restoreFilters = previousFilters.remove(viewer);
+			if (restoreFilters != null && viewPart != null && manageFilters) {
+				// install all previous filters and all current filters
+				Set<ViewerFilter> filters = new HashSet<ViewerFilter>(restoreFilters);
+				filters.addAll(Arrays.asList(viewer.getFilters()));
+				// ensure that all interest filters are removed
+				for (Iterator<ViewerFilter> it = filters.iterator(); it.hasNext();) {
+					if (it.next() instanceof InterestFilter) {
+						it.remove();
 					}
-					viewer.setFilters(filters.toArray(new ViewerFilter[filters.size()]));
 				}
+				viewer.setFilters(filters.toArray(new ViewerFilter[filters.size()]));
 			}
-			if (Arrays.asList(viewer.getFilters()).contains(interestFilter)) {
-				viewer.removeFilter(interestFilter);
-			}
+			viewer.removeFilter(interestFilter);
 		} catch (Throwable t) {
 			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
 					"Could not uninstall interest viewer filter on: " + globalPrefId, t)); //$NON-NLS-1$
