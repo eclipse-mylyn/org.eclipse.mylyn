@@ -26,7 +26,9 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -105,7 +107,7 @@ public class TaskRepositoryManager implements IRepositoryManager {
 		return false;
 	}
 
-	public void addRepository(TaskRepository repository) {
+	public void addRepository(final TaskRepository repository) {
 		Set<TaskRepository> repositories;
 		if (!repositoryMap.containsKey(repository.getConnectorKind())) {
 			repositories = new HashSet<TaskRepository>();
@@ -115,12 +117,21 @@ public class TaskRepositoryManager implements IRepositoryManager {
 		}
 		repositories.add(repository);
 		repository.addChangeListener(PROPERTY_CHANGE_LISTENER);
-		for (IRepositoryListener listener : listeners) {
-			listener.repositoryAdded(repository);
+		for (final IRepositoryListener listener : listeners) {
+			SafeRunner.run(new ISafeRunnable() {
+				public void handleException(Throwable e) {
+					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Listener failed: " //$NON-NLS-1$
+							+ listener.getClass(), e));
+				}
+
+				public void run() throws Exception {
+					listener.repositoryAdded(repository);
+				}
+			});
 		}
 	}
 
-	public void removeRepository(TaskRepository repository, String repositoryFilePath) {
+	public void removeRepository(final TaskRepository repository, String repositoryFilePath) {
 		Set<TaskRepository> repositories = repositoryMap.get(repository.getConnectorKind());
 		if (repositories != null) {
 			repository.flushAuthenticationCredentials();
@@ -128,8 +139,17 @@ public class TaskRepositoryManager implements IRepositoryManager {
 		}
 		repository.removeChangeListener(PROPERTY_CHANGE_LISTENER);
 		saveRepositories(repositoryFilePath);
-		for (IRepositoryListener listener : listeners) {
-			listener.repositoryRemoved(repository);
+		for (final IRepositoryListener listener : listeners) {
+			SafeRunner.run(new ISafeRunnable() {
+				public void handleException(Throwable e) {
+					StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "Listener failed: " //$NON-NLS-1$
+							+ listener.getClass(), e));
+				}
+
+				public void run() throws Exception {
+					listener.repositoryRemoved(repository);
+				}
+			});
 		}
 	}
 
@@ -332,9 +352,18 @@ public class TaskRepositoryManager implements IRepositoryManager {
 		saveRepositories(repositoriesFilePath);
 	}
 
-	public void notifyRepositorySettingsChanged(TaskRepository repository) {
-		for (IRepositoryListener listener : listeners) {
-			listener.repositorySettingsChanged(repository);
+	public void notifyRepositorySettingsChanged(final TaskRepository repository) {
+		for (final IRepositoryListener listener : listeners) {
+			SafeRunner.run(new ISafeRunnable() {
+				public void handleException(Throwable e) {
+					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Listener failed: " //$NON-NLS-1$
+							+ listener.getClass(), e));
+				}
+
+				public void run() throws Exception {
+					listener.repositorySettingsChanged(repository);
+				}
+			});
 		}
 	}
 
@@ -366,9 +395,18 @@ public class TaskRepositoryManager implements IRepositoryManager {
 	 * @param oldUrl
 	 *            previous url for this repository
 	 */
-	public void notifyRepositoryUrlChanged(TaskRepository repository, String oldUrl) {
-		for (IRepositoryListener listener : listeners) {
-			listener.repositoryUrlChanged(repository, oldUrl);
+	public void notifyRepositoryUrlChanged(final TaskRepository repository, final String oldUrl) {
+		for (final IRepositoryListener listener : listeners) {
+			SafeRunner.run(new ISafeRunnable() {
+				public void handleException(Throwable e) {
+					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Listener failed: " //$NON-NLS-1$
+							+ listener.getClass(), e));
+				}
+
+				public void run() throws Exception {
+					listener.repositoryUrlChanged(repository, oldUrl);
+				}
+			});
 		}
 	}
 
