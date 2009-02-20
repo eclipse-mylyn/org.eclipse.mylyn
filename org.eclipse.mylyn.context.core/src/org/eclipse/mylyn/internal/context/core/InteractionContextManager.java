@@ -29,7 +29,9 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ILock;
 import org.eclipse.core.runtime.jobs.Job;
@@ -51,6 +53,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent.Kind;
  * @author Jevgeni Holodkov
  * @author Shawn Minto
  */
+// FIXME 3.2 review all FIXME comments
 public class InteractionContextManager implements IInteractionContextManager {
 
 	public static final String SOURCE_ID_DECAY = "org.eclipse.mylyn.core.model.interest.decay"; //$NON-NLS-1$
@@ -149,15 +152,27 @@ public class InteractionContextManager implements IInteractionContextManager {
 
 	public void activateContext(String handleIdentifier) {
 		try {
-			IInteractionContext context = activeContext.getContextMap().get(handleIdentifier);
-			if (context == null) {
+			IInteractionContext loadedContext = activeContext.getContextMap().get(handleIdentifier);
+			final IInteractionContext context;
+			if (loadedContext == null) {
 				context = contextStore.loadContext(handleIdentifier);
+			} else {
+				context = loadedContext;
 			}
-			for (AbstractContextListener listener : contextListeners) {
-				if (listener instanceof AbstractContextListener) {
-					(listener).contextPreActivated(context);
-				}
+			// FIXME should not fire event when context == null
+			for (final AbstractContextListener listener : contextListeners) {
+				SafeRunner.run(new ISafeRunnable() {
+					public void handleException(Throwable e) {
+						StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, "Listener failed: " //$NON-NLS-1$
+								+ listener.getClass(), e));
+					}
+
+					public void run() throws Exception {
+						listener.contextPreActivated(context);
+					}
+				});
 			}
+
 			if (context != null) {
 				suppressListenerNotification = true;
 				internalActivateContext(context);
@@ -243,20 +258,40 @@ public class InteractionContextManager implements IInteractionContextManager {
 		}
 	}
 
-	protected void checkForLandmarkDeltaAndNotify(float previousInterest, IInteractionElement node) {
+	protected void checkForLandmarkDeltaAndNotify(float previousInterest, final IInteractionElement node) {
 		// TODO: don't call interestChanged if it's a landmark?
 		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault()
 				.getStructureBridge(node.getContentType());
 		if (bridge.canBeLandmark(node.getHandleIdentifier())) {
 			if (previousInterest >= ContextCore.getCommonContextScaling().getLandmark()
 					&& !node.getInterest().isLandmark()) {
-				for (AbstractContextListener listener : contextListeners) {
-					listener.landmarkRemoved(node);
+				for (final AbstractContextListener listener : contextListeners) {
+					SafeRunner.run(new ISafeRunnable() {
+						public void handleException(Throwable e) {
+							StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN,
+									"Listener failed: " //$NON-NLS-1$
+											+ listener.getClass(), e));
+						}
+
+						public void run() throws Exception {
+							listener.landmarkRemoved(node);
+						}
+					});
 				}
 			} else if (previousInterest < ContextCore.getCommonContextScaling().getLandmark()
 					&& node.getInterest().isLandmark()) {
-				for (AbstractContextListener listener : contextListeners) {
-					listener.landmarkAdded(node);
+				for (final AbstractContextListener listener : contextListeners) {
+					SafeRunner.run(new ISafeRunnable() {
+						public void handleException(Throwable e) {
+							StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN,
+									"Listener failed: " //$NON-NLS-1$
+											+ listener.getClass(), e));
+						}
+
+						public void run() throws Exception {
+							listener.landmarkAdded(node);
+						}
+					});
 				}
 			}
 		}
@@ -369,19 +404,24 @@ public class InteractionContextManager implements IInteractionContextManager {
 		try {
 			System.setProperty(InteractionContextManager.PROPERTY_CONTEXT_ACTIVE, Boolean.FALSE.toString());
 
-			IInteractionContext context = activeContext.getContextMap().get(handleIdentifier);
+			final IInteractionContext context = activeContext.getContextMap().get(handleIdentifier);
 			if (context != null) {
 				contextStore.saveContext(context);
 				activeContext.getContextMap().remove(handleIdentifier);
 
 				setContextCapturePaused(true);
-				for (AbstractContextListener listener : contextListeners) {
-					try {
-						listener.contextDeactivated(context);
-					} catch (Exception e) {
-						StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN,
-								"Context listener failed: " + listener.getClass().getCanonicalName(), e)); //$NON-NLS-1$
-					}
+				for (final AbstractContextListener listener : contextListeners) {
+					SafeRunner.run(new ISafeRunnable() {
+						public void handleException(Throwable e) {
+							StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN,
+									"Listener failed: " //$NON-NLS-1$
+											+ listener.getClass(), e));
+						}
+
+						public void run() throws Exception {
+							listener.contextDeactivated(context);
+						}
+					});
 				}
 				setContextCapturePaused(false);
 			}
@@ -410,14 +450,23 @@ public class InteractionContextManager implements IInteractionContextManager {
 	}
 
 	public void deleteContext(String handleIdentifier) {
-		IInteractionContext context = activeContext.getContextMap().get(handleIdentifier);
+		final IInteractionContext context = activeContext.getContextMap().get(handleIdentifier);
 
 		setContextCapturePaused(true);
 		eraseContext(handleIdentifier);
 
 		contextStore.deleteContext(handleIdentifier);
-		for (AbstractContextListener listener : contextListeners) {
-			listener.contextCleared(context);
+		for (final AbstractContextListener listener : contextListeners) {
+			SafeRunner.run(new ISafeRunnable() {
+				public void handleException(Throwable e) {
+					StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, "Listener failed: " //$NON-NLS-1$
+							+ listener.getClass(), e));
+				}
+
+				public void run() throws Exception {
+					listener.contextCleared(context);
+				}
+			});
 		}
 		setContextCapturePaused(false);
 	}
@@ -573,7 +622,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 	/**
 	 * Public for testing, activate via handle
 	 */
-	public void internalActivateContext(IInteractionContext context) {
+	public void internalActivateContext(final IInteractionContext context) {
 		Assert.isTrue(context instanceof InteractionContext, "Must provide a concrete InteractionContext"); //$NON-NLS-1$
 
 		System.setProperty(InteractionContextManager.PROPERTY_CONTEXT_ACTIVE, Boolean.TRUE.toString());
@@ -588,13 +637,17 @@ public class InteractionContextManager implements IInteractionContextManager {
 					InteractionContextManager.ACTIVITY_DELTA_ACTIVATED, 1f));
 		}
 
-		for (AbstractContextListener listener : contextListeners) {
-			try {
-				listener.contextActivated(context);
-			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Context listener failed: " //$NON-NLS-1$
-						+ listener.getClass().getCanonicalName(), e));
-			}
+		for (final AbstractContextListener listener : contextListeners) {
+			SafeRunner.run(new ISafeRunnable() {
+				public void handleException(Throwable e) {
+					StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, "Listener failed: " //$NON-NLS-1$
+							+ listener.getClass(), e));
+				}
+
+				public void run() throws Exception {
+					listener.contextActivated(context);
+				}
+			});
 		}
 	}
 
@@ -674,11 +727,19 @@ public class InteractionContextManager implements IInteractionContextManager {
 
 	public void loadActivityMetaContext() {
 		if (contextStore != null) {
-			for (AbstractContextListener listener : activityMetaContextListeners) {
-				if (listener instanceof AbstractContextListener) {
-					(listener).contextPreActivated(activityMetaContext);
-				}
+			for (final AbstractContextListener listener : activityMetaContextListeners) {
+				SafeRunner.run(new ISafeRunnable() {
+					public void handleException(Throwable e) {
+						StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, "Listener failed: " //$NON-NLS-1$
+								+ listener.getClass(), e));
+					}
+
+					public void run() throws Exception {
+						listener.contextPreActivated(activityMetaContext);
+					}
+				});
 			}
+
 			try {
 				metaContextLock.acquire();
 
@@ -703,8 +764,17 @@ public class InteractionContextManager implements IInteractionContextManager {
 				metaContextLock.release();
 			}
 
-			for (AbstractContextListener listener : activityMetaContextListeners) {
-				listener.contextActivated(activityMetaContext);
+			for (final AbstractContextListener listener : activityMetaContextListeners) {
+				SafeRunner.run(new ISafeRunnable() {
+					public void handleException(Throwable e) {
+						StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, "Listener failed: " //$NON-NLS-1$
+								+ listener.getClass(), e));
+					}
+
+					public void run() throws Exception {
+						listener.contextActivated(activityMetaContext);
+					}
+				});
 			}
 		} else {
 			resetActivityMetaContext();
@@ -872,18 +942,36 @@ public class InteractionContextManager implements IInteractionContextManager {
 		return newMetaContext;
 	}
 
-	private void notifyElementsDeleted(List<IInteractionElement> interestDelta) {
+	private void notifyElementsDeleted(final List<IInteractionElement> interestDelta) {
 		if (!interestDelta.isEmpty()) {
-			for (AbstractContextListener listener : contextListeners) {
-				listener.elementsDeleted(interestDelta);
+			for (final AbstractContextListener listener : contextListeners) {
+				SafeRunner.run(new ISafeRunnable() {
+					public void handleException(Throwable e) {
+						StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, "Listener failed: " //$NON-NLS-1$
+								+ listener.getClass(), e));
+					}
+
+					public void run() throws Exception {
+						listener.elementsDeleted(interestDelta);
+					}
+				});
 			}
 		}
 	}
 
-	public void notifyInterestDelta(List<IInteractionElement> interestDelta) {
+	public void notifyInterestDelta(final List<IInteractionElement> interestDelta) {
 		if (!interestDelta.isEmpty()) {
-			for (AbstractContextListener listener : contextListeners) {
-				listener.interestChanged(interestDelta);
+			for (final AbstractContextListener listener : contextListeners) {
+				SafeRunner.run(new ISafeRunnable() {
+					public void handleException(Throwable e) {
+						StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, "Listener failed: " //$NON-NLS-1$
+								+ listener.getClass(), e));
+					}
+
+					public void run() throws Exception {
+						listener.interestChanged(interestDelta);
+					}
+				});
 			}
 		}
 	}
@@ -893,28 +981,42 @@ public class InteractionContextManager implements IInteractionContextManager {
 	 * 
 	 * @param element
 	 */
-	public void notifyRelationshipsChanged(IInteractionElement element) {
+	public void notifyRelationshipsChanged(final IInteractionElement element) {
 		if (suppressListenerNotification) {
 			return;
 		}
-		for (AbstractContextListener listener : contextListeners) {
+		for (final AbstractContextListener listener : contextListeners) {
 			if (listener instanceof IRelationsListener) {
-				((IRelationsListener) listener).relationsChanged(element);
+				SafeRunner.run(new ISafeRunnable() {
+					public void handleException(Throwable e) {
+						StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, "Listener failed: " //$NON-NLS-1$
+								+ listener.getClass(), e));
+					}
+
+					public void run() throws Exception {
+						((IRelationsListener) listener).relationsChanged(element);
+					}
+				});
+
 			}
 		}
 	}
 
 	public void processActivityMetaContextEvent(InteractionEvent event) {
 		IInteractionElement element = getActivityMetaContext().parseEvent(event);
-		for (AbstractContextListener listener : activityMetaContextListeners) {
-			try {
-				List<IInteractionElement> changed = new ArrayList<IInteractionElement>();
-				changed.add(element);
-				listener.interestChanged(changed);
-			} catch (Throwable t) {
-				StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Context listener failed: " //$NON-NLS-1$
-						+ listener.getClass().getCanonicalName(), t));
-			}
+
+		final List<IInteractionElement> changed = Collections.singletonList(element);
+		for (final AbstractContextListener listener : activityMetaContextListeners) {
+			SafeRunner.run(new ISafeRunnable() {
+				public void handleException(Throwable e) {
+					StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, "Listener failed: " //$NON-NLS-1$
+							+ listener.getClass(), e));
+				}
+
+				public void run() throws Exception {
+					listener.interestChanged(changed);
+				}
+			});
 		}
 	}
 
@@ -1082,7 +1184,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 		if (handle == null) {
 			return;
 		}
-		IInteractionElement element = activeContext.get(handle);
+		final IInteractionElement element = activeContext.get(handle);
 		if (element != null && element.getInterest().isInteresting() && errorElementHandles.contains(handle)) {
 			InteractionEvent errorEvent = new InteractionEvent(InteractionEvent.Kind.MANIPULATION, kind, handle,
 					SOURCE_ID_MODEL_ERROR,
@@ -1092,10 +1194,21 @@ public class InteractionContextManager implements IInteractionContextManager {
 			errorElementHandles.remove(handle);
 			// TODO: this results in double-notification
 			if (notify) {
-				for (AbstractContextListener listener : contextListeners) {
-					List<IInteractionElement> changed = new ArrayList<IInteractionElement>();
-					changed.add(element);
-					listener.interestChanged(changed);
+				for (final AbstractContextListener listener : contextListeners) {
+					SafeRunner.run(new ISafeRunnable() {
+						public void handleException(Throwable e) {
+							StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN,
+									"Listener failed: " //$NON-NLS-1$
+											+ listener.getClass(), e));
+						}
+
+						public void run() throws Exception {
+							// FIXME use singleton list instead that is constructed outside of loop
+							List<IInteractionElement> changed = new ArrayList<IInteractionElement>();
+							changed.add(element);
+							listener.interestChanged(changed);
+						}
+					});
 				}
 			}
 		}
@@ -1129,9 +1242,18 @@ public class InteractionContextManager implements IInteractionContextManager {
 				}
 			}
 		}
-		for (AbstractContextListener listener : contextListeners) {
+		for (final AbstractContextListener listener : contextListeners) {
 			if (listener instanceof IRelationsListener) {
-				((IRelationsListener) listener).relationsChanged(null);
+				SafeRunner.run(new ISafeRunnable() {
+					public void handleException(Throwable e) {
+						StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, "Listener failed: " //$NON-NLS-1$
+								+ listener.getClass(), e));
+					}
+
+					public void run() throws Exception {
+						((IRelationsListener) listener).relationsChanged(null);
+					}
+				});
 			}
 		}
 	}
@@ -1155,19 +1277,38 @@ public class InteractionContextManager implements IInteractionContextManager {
 		}
 	}
 
-	public void updateHandle(IInteractionElement element, String newHandle) {
+	public void updateHandle(final IInteractionElement element, String newHandle) {
 		if (element == null) {
 			return;
 		}
 		getActiveContext().updateElementHandle(element, newHandle);
-		for (AbstractContextListener listener : contextListeners) {
-			List<IInteractionElement> changed = new ArrayList<IInteractionElement>();
-			changed.add(element);
-			listener.interestChanged(changed);
+		for (final AbstractContextListener listener : contextListeners) {
+			SafeRunner.run(new ISafeRunnable() {
+				public void handleException(Throwable e) {
+					StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, "Listener failed: " //$NON-NLS-1$
+							+ listener.getClass(), e));
+				}
+
+				public void run() throws Exception {
+					// FIXME use singleton list instead that is constructed outside of loop
+					List<IInteractionElement> changed = new ArrayList<IInteractionElement>();
+					changed.add(element);
+					listener.interestChanged(changed);
+				}
+			});
 		}
 		if (element.getInterest().isLandmark()) {
-			for (AbstractContextListener listener : contextListeners) {
-				listener.landmarkAdded(element);
+			for (final AbstractContextListener listener : contextListeners) {
+				SafeRunner.run(new ISafeRunnable() {
+					public void handleException(Throwable e) {
+						StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, "Listener failed: " //$NON-NLS-1$
+								+ listener.getClass(), e));
+					}
+
+					public void run() throws Exception {
+						listener.landmarkAdded(element);
+					}
+				});
 			}
 		}
 	}
