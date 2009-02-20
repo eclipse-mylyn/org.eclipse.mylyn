@@ -206,12 +206,6 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 		return range;
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public Object getAdapter(Class adapter) {
-		return null;
-	}
-
 	public Calendar getEnd() {
 		return range.getEndDate();
 	}
