@@ -187,8 +187,8 @@ public class NewTaskAction extends BaseSelectionListenerAction implements IMenuC
 			}
 		}
 		new Separator().fill(dropDownMenu, -1);
-		new ActionContributionItem(new NewCategoryAction()).fill(dropDownMenu, -1);
 		new ActionContributionItem(new NewQueryAction()).fill(dropDownMenu, -1);
+		new ActionContributionItem(new NewCategoryAction()).fill(dropDownMenu, -1);
 		new Separator().fill(dropDownMenu, -1);
 		new ActionContributionItem(new AddRepositoryAction()).fill(dropDownMenu, -1);
 		new Separator(IWorkbenchActionConstants.MB_ADDITIONS);
