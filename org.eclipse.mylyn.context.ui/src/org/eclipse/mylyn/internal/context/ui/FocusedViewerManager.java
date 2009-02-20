@@ -203,7 +203,9 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 
 	@Override
 	public void contextCleared(IInteractionContext context) {
-		contextDeactivated(context);
+		if (context != null) {
+			contextDeactivated(context);
+		}
 	}
 
 	protected void refreshViewers() {
