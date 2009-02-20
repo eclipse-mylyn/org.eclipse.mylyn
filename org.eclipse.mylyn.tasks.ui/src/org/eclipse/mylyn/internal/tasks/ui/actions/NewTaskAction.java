@@ -23,10 +23,9 @@ import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.resource.CompositeImageDescriptor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylyn.internal.commons.ui.CompositeElementImageDescriptor;
+import org.eclipse.mylyn.internal.commons.ui.TaskListImageDescriptor;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -202,8 +201,8 @@ public class NewTaskAction extends BaseSelectionListenerAction implements IMenuC
 		ActionContributionItem item = new ActionContributionItem(action);
 		action.setText(repository.getRepositoryLabel());
 		ImageDescriptor overlay = TasksUiPlugin.getDefault().getOverlayIcon(repository.getConnectorKind());
-		CompositeImageDescriptor compositeDescriptor = new CompositeElementImageDescriptor(TasksUiImages.REPOSITORY,
-				overlay, true);
+		ImageDescriptor compositeDescriptor = new TaskListImageDescriptor(TasksUiImages.REPOSITORY, overlay, false,
+				false);
 		action.setImageDescriptor(compositeDescriptor);
 		item.fill(dropDownMenu, -1);
 		return action;
