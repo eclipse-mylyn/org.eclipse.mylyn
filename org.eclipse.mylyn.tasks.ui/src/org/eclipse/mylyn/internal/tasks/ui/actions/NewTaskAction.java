@@ -8,6 +8,9 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -129,7 +132,7 @@ public class NewTaskAction extends BaseSelectionListenerAction implements IMenuC
 	}
 
 	private void addActionsToMenu() {
-
+		Set<TaskRepository> includedRepositories = new HashSet<TaskRepository>();
 		TaskRepository localRepository = TasksUi.getRepositoryManager().getRepository(
 				LocalRepositoryConnector.CONNECTOR_KIND, LocalRepositoryConnector.REPOSITORY_URL);
 
@@ -152,8 +155,9 @@ public class NewTaskAction extends BaseSelectionListenerAction implements IMenuC
 					String connectorKind = ((RepositoryQuery) iterable_element).getConnectorKind();
 					TaskRepository repository = TasksUi.getRepositoryManager().getRepository(connectorKind,
 							repositoryUrl);
-					if (repository != null && !repository.isOffline()) {
+					if (repository != null && !repository.isOffline() && !includedRepositories.contains(repository)) {
 						addRepositoryAction(repository);
+						includedRepositories.add(repository);
 					}
 
 				}
