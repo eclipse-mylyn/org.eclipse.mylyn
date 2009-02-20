@@ -33,6 +33,7 @@ import org.eclipse.mylyn.internal.tasks.ui.wizards.NewQueryWizard;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
@@ -45,9 +46,25 @@ import org.eclipse.ui.PlatformUI;
  */
 public class NewQueryAction extends Action implements IViewActionDelegate, IExecutableExtension {
 
+	private final String ID = "org.eclipse.mylyn.tasks.ui.new.query"; //$NON-NLS-1$
+
+	private final String LABEL_NEW_QUERY = Messages.NewQueryAction_new_query_;
+
 	private boolean skipRepositoryPage;
 
+	public NewQueryAction() {
+		setText(LABEL_NEW_QUERY);
+		setToolTipText(LABEL_NEW_QUERY);
+		setId(ID);
+		setImageDescriptor(TasksUiImages.QUERY_NEW);
+	}
+
 	public void run(IAction action) {
+		run();
+	}
+
+	@Override
+	public void run() {
 		IWizard wizard = null;
 		List<TaskRepository> repositories = TasksUi.getRepositoryManager().getAllRepositories();
 		if (repositories.size() == 2) {
@@ -91,17 +108,17 @@ public class NewQueryAction extends Action implements IViewActionDelegate, IExec
 		}
 	}
 
-	public void init(IViewPart view) {
-	}
-
-	public void selectionChanged(IAction action, ISelection selection) {
-	}
-
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data)
 			throws CoreException {
 		if ("skipFirstPage".equals(data)) { //$NON-NLS-1$
 			this.skipRepositoryPage = true;
 		}
+	}
+
+	public void init(IViewPart view) {
+	}
+
+	public void selectionChanged(IAction action, ISelection selection) {
 	}
 
 }

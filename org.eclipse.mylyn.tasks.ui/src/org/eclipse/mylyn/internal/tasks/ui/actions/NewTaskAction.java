@@ -8,6 +8,9 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,6 +30,7 @@ import org.eclipse.mylyn.internal.commons.ui.CompositeElementImageDescriptor;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesSorter;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
@@ -36,6 +40,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
@@ -136,13 +141,8 @@ public class NewTaskAction extends BaseSelectionListenerAction implements IMenuC
 		TaskRepository localRepository = TasksUi.getRepositoryManager().getRepository(
 				LocalRepositoryConnector.CONNECTOR_KIND, LocalRepositoryConnector.REPOSITORY_URL);
 
-		if (localRepository != null) {
-			RepositorySelectionAction action = addRepositoryAction(localRepository);
-			if (action != null) {
-				action.setChecked(true);
-				new Separator(LocalRepositoryConnector.CONNECTOR_KIND).fill(dropDownMenu, -1);
-			}
-		}
+		addRepositoryAction(localRepository);
+
 		IWorkingSet workingSet = PlatformUI.getWorkbench()
 				.getActiveWorkbenchWindow()
 				.getActivePage()
@@ -155,8 +155,8 @@ public class NewTaskAction extends BaseSelectionListenerAction implements IMenuC
 					String connectorKind = ((RepositoryQuery) iterable_element).getConnectorKind();
 					TaskRepository repository = TasksUi.getRepositoryManager().getRepository(connectorKind,
 							repositoryUrl);
-					if (repository != null && !repository.isOffline() && !includedRepositories.contains(repository)) {
-						addRepositoryAction(repository);
+					if (repository != null && !repository.isOffline()
+							&& !repository.getConnectorKind().equals(LocalRepositoryConnector.CONNECTOR_KIND)) {
 						includedRepositories.add(repository);
 					}
 
@@ -167,10 +167,31 @@ public class NewTaskAction extends BaseSelectionListenerAction implements IMenuC
 			for (TaskRepository repository : TasksUi.getRepositoryManager().getAllRepositories()) {
 				if (repository != null && !repository.isOffline()
 						&& !repository.getConnectorKind().equals(LocalRepositoryConnector.CONNECTOR_KIND)) {
-					addRepositoryAction(repository);
+					includedRepositories.add(repository);
 				}
 			}
 		}
+
+		if (!includedRepositories.isEmpty()) {
+			new Separator().fill(dropDownMenu, -1);
+			ArrayList<TaskRepository> listOfRepositories = new ArrayList<TaskRepository>(includedRepositories);
+			final TaskRepositoriesSorter comparator = new TaskRepositoriesSorter();
+			Collections.sort(listOfRepositories, new Comparator<TaskRepository>() {
+
+				public int compare(TaskRepository arg0, TaskRepository arg1) {
+					return comparator.compare(null, arg0, arg1);
+				}
+			});
+			for (TaskRepository taskRepository : listOfRepositories) {
+				addRepositoryAction(taskRepository);
+			}
+		}
+		new Separator().fill(dropDownMenu, -1);
+		new ActionContributionItem(new NewCategoryAction()).fill(dropDownMenu, -1);
+		new ActionContributionItem(new NewQueryAction()).fill(dropDownMenu, -1);
+		new Separator().fill(dropDownMenu, -1);
+		new ActionContributionItem(new AddRepositoryAction()).fill(dropDownMenu, -1);
+		new Separator(IWorkbenchActionConstants.MB_ADDITIONS);
 	}
 
 	private RepositorySelectionAction addRepositoryAction(TaskRepository repository) {

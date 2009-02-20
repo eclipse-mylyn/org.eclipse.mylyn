@@ -145,6 +145,8 @@ public class Messages extends NLS {
 
 	public static String NewCategoryAction_A_query_with_this_name_already_exists;
 
+	public static String NewQueryAction_new_query_;
+
 	public static String NewSubTaskAction_The_connector_does_not_support_creating_subtasks_for_this_task;
 
 	public static String NewSubTaskAction_Could_not_initialize_sub_task_data_for_task_;
