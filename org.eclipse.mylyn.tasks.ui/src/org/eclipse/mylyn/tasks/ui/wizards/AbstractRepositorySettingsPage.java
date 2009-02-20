@@ -336,8 +336,8 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 			@Override
 			public int getNumberOfControls() {
-				// if will have anonymous checkbox on same line, make this control only span 2 columns
-				return needsAnonymousLogin() ? 2 : 3;
+				 // always 2 columns -- if no anonymous checkbox, just leave 3rd column empty
+				return 2;
 			}
 		};
 		if (needsAnonymousLogin()) {
@@ -353,6 +353,9 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 					isPageComplete();
 				}
 			});
+		} else {
+			Label dummyLabel = new Label(compositeContainer, SWT.NONE); // dummy control to fill 3rd column when no anonymous login
+			GridDataFactory.fillDefaults().applyTo(dummyLabel); // not really necessary, but to be on the safe side
 		}
 
 		repositoryPasswordEditor = new RepositoryStringFieldEditor("", LABEL_PASSWORD, StringFieldEditor.UNLIMITED, //$NON-NLS-1$
