@@ -161,8 +161,9 @@ public class NewTaskAction extends BaseSelectionListenerAction implements IMenuC
 
 				}
 			}
-		} else {
-			// add all repositories
+		}
+
+		if (includedRepositories.isEmpty()) {
 			for (TaskRepository repository : TasksUi.getRepositoryManager().getAllRepositories()) {
 				if (repository != null && !repository.isOffline()
 						&& !repository.getConnectorKind().equals(LocalRepositoryConnector.CONNECTOR_KIND)) {
