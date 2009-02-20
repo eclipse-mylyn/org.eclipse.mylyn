@@ -32,6 +32,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Extend for customizing how new tasks editors are created.
@@ -107,7 +108,11 @@ public class NewTaskWizard extends Wizard implements INewWizard {
 					}
 				}
 			};
-			getContainer().run(true, true, runnable);
+			if (getContainer().getShell().isVisible()) {
+				getContainer().run(true, true, runnable);
+			} else {
+				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(runnable);
+			}
 		} catch (InvocationTargetException e) {
 			if (e.getCause() instanceof CoreException) {
 				TasksUiInternal.displayStatus(Messages.NewTaskWizard_Error_creating_new_task,
