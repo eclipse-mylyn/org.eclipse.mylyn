@@ -132,6 +132,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.forms.IFormPart;
@@ -238,6 +240,17 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 					if (active) {
 						TasksUi.getTaskActivityManager().deactivateTask(oldTask);
 					}
+
+					boolean editorIsActive = false;
+					IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+					if (window != null) {
+						IWorkbenchPage activePage = window.getActivePage();
+						if (activePage != null) {
+							if (activePage.getActiveEditor() == getTaskEditor()) {
+								editorIsActive = true;
+							}
+						}
+					}
 					close();
 
 					// delete old task details
@@ -253,7 +266,12 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 					if (active) {
 						TasksUi.getTaskActivityManager().activateTask(newTask);
 					}
-					TasksUiInternal.openTaskInBackground(newTask, false);
+
+					if (editorIsActive) {
+						TasksUiUtil.openTask(newTask);
+					} else {
+						TasksUiInternal.openTaskInBackground(newTask, false);
+					}
 				}
 
 				public void run() {
@@ -506,18 +524,23 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 	}
 
 	public void close() {
-		Display activeDisplay = getSite().getShell().getDisplay();
-		activeDisplay.asyncExec(new Runnable() {
-			public void run() {
-				if (getSite() != null && getSite().getPage() != null && !getManagedForm().getForm().isDisposed()) {
-					if (getTaskEditor() != null) {
-						getSite().getPage().closeEditor(getTaskEditor(), false);
-					} else {
-						getSite().getPage().closeEditor(AbstractTaskEditorPage.this, false);
+		if (Display.getCurrent() != null) {
+			getSite().getPage().closeEditor(getTaskEditor(), false);
+		} else {
+			// TODO consider removing asyncExec()
+			Display activeDisplay = getSite().getShell().getDisplay();
+			activeDisplay.asyncExec(new Runnable() {
+				public void run() {
+					if (getSite() != null && getSite().getPage() != null && !getManagedForm().getForm().isDisposed()) {
+						if (getTaskEditor() != null) {
+							getSite().getPage().closeEditor(getTaskEditor(), false);
+						} else {
+							getSite().getPage().closeEditor(AbstractTaskEditorPage.this, false);
+						}
 					}
 				}
-			}
-		});
+			});
+		}
 	}
 
 	protected AttributeEditorFactory createAttributeEditorFactory() {
