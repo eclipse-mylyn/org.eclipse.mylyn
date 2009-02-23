@@ -91,6 +91,16 @@ public class TracHyperlinkUtilTest extends TestCase {
 		assertEquals(1, links.length);
 		assertEquals(new Region(0, 5), links[0].getHyperlinkRegion());
 		assertEquals("http://localhost/report/123", ((WebHyperlink) links[0]).getURLString());
+
+		links = findTracHyperlinks(repository, "{{123}}", -1, 0);
+		assertEquals(1, links.length);
+		assertEquals(new Region(1, 5), links[0].getHyperlinkRegion());
+
+		links = findTracHyperlinks(repository, "{abc}", -1, 0);
+		assertNull(links);
+
+		links = findTracHyperlinks(repository, "{{abc}}", -1, 0);
+		assertNull(links);
 	}
 
 	public void testFindHyperlinksChangeset() {
@@ -98,6 +108,9 @@ public class TracHyperlinkUtilTest extends TestCase {
 		assertEquals(1, links.length);
 		assertEquals(new Region(0, 4), links[0].getHyperlinkRegion());
 		assertEquals("http://localhost/changeset/123", ((WebHyperlink) links[0]).getURLString());
+
+		links = findTracHyperlinks(repository, "alr123", 0, 0);
+		assertNull(links);
 
 		links = findTracHyperlinks(repository, "[123]", 0, 0);
 		assertEquals(1, links.length);
