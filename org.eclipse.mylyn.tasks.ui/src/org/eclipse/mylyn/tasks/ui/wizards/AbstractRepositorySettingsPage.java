@@ -336,7 +336,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 			@Override
 			public int getNumberOfControls() {
-				 // always 2 columns -- if no anonymous checkbox, just leave 3rd column empty
+				// always 2 columns -- if no anonymous checkbox, just leave 3rd column empty
 				return 2;
 			}
 		};
@@ -1406,7 +1406,9 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			}
 		}
 
-		repository.setOffline(disconnectedButton.getSelection());
+		if (disconnectedButton != null) {
+			repository.setOffline(disconnectedButton.getSelection());
+		}
 
 		super.applyTo(repository);
 	}
