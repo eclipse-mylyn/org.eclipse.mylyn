@@ -190,7 +190,7 @@
 			<param name="SiteName" value="all" />
 		</antcall>
 		<ant antfile="${builder}/../wikitext-standalone.xml">
-			<property name="wikitext.standalone.archive" value="${buildDirectory}/standardUpdateSite/../mylyn-wikitext-standalone-${majorVersion}.${mylynQualifier}_incubation.zip"/>
+			<property name="wikitext.standalone.archive" value="${buildDirectory}/standardUpdateSite/../mylyn-wikitext-standalone-${majorVersion}.${mylynQualifier}.zip"/>
 			<property name="wikitext.standalone.dir" value="mylyn-wikitext-standalone-${majorVersion}.${mylynQualifier}"/>
 			<property name="wikitext.plugin.jars.location" value="${buildDirectory}/standardUpdateSite/plugins"/>
 			<property name="buildDirectory" value="${buildDirectory}"/>
