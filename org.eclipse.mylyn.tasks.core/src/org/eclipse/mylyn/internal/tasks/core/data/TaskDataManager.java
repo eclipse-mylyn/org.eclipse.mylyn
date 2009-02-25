@@ -524,7 +524,8 @@ public class TaskDataManager implements ITaskDataManager {
 		}
 	}
 
-	public void refactorRepositoryUrl(final ITask itask, final String newRepositoryUrl) throws CoreException {
+	public void refactorRepositoryUrl(final ITask itask, final String newStorageRepositoryUrl,
+			final String newRepositoryUrl) throws CoreException {
 		Assert.isTrue(itask instanceof AbstractTask);
 		final AbstractTask task = (AbstractTask) itask;
 		final String kind = task.getConnectorKind();
@@ -534,7 +535,7 @@ public class TaskDataManager implements ITaskDataManager {
 				if (file.exists()) {
 					TaskDataState oldState = taskDataStore.getTaskDataState(file);
 					if (oldState != null) {
-						File newFile = getFile(newRepositoryUrl, task, kind);
+						File newFile = getFile(newStorageRepositoryUrl, task, kind);
 						TaskDataState newState = new TaskDataState(oldState.getConnectorKind(), newRepositoryUrl,
 								oldState.getTaskId());
 						newState.merge(oldState);

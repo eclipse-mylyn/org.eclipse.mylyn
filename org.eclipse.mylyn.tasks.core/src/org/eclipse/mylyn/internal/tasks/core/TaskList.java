@@ -519,6 +519,9 @@ public class TaskList implements ITaskList, ITransferList {
 						task.setUrl(newRepositoryUrl + taskUrl.substring(oldRepositoryUrl.length()));
 					}
 				}
+				if (oldRepositoryUrl.equals(task.getAttribute(ITasksCoreConstants.ATTRIBUTE_OUTGOING_NEW_REPOSITORY_URL))) {
+					task.setAttribute(ITasksCoreConstants.ATTRIBUTE_OUTGOING_NEW_REPOSITORY_URL, newRepositoryUrl);
+				}
 			}
 
 			for (RepositoryQuery query : queries.values()) {

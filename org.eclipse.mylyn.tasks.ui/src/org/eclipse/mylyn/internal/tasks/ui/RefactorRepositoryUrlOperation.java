@@ -15,6 +15,7 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URLDecoder;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -40,6 +41,9 @@ public class RefactorRepositoryUrlOperation extends TaskListModifyOperation {
 
 	public RefactorRepositoryUrlOperation(String oldUrl, String newUrl) {
 		super(ITasksCoreConstants.ROOT_SCHEDULING_RULE);
+		Assert.isNotNull(oldUrl);
+		Assert.isNotNull(newUrl);
+		Assert.isTrue(!oldUrl.equals(newUrl));
 		this.oldUrl = oldUrl;
 		this.newUrl = newUrl;
 	}
@@ -47,9 +51,6 @@ public class RefactorRepositoryUrlOperation extends TaskListModifyOperation {
 	@Override
 	protected void operations(IProgressMonitor monitor) throws CoreException, InvocationTargetException,
 			InterruptedException {
-		if (oldUrl == null || newUrl == null || oldUrl.equals(newUrl)) {
-			return;
-		}
 		try {
 			//TasksUiPlugin.getTaskListManager().deactivateAllTasks();
 			monitor.beginTask(Messages.RefactorRepositoryUrlOperation_Repository_URL_update, IProgressMonitor.UNKNOWN);
@@ -100,8 +101,11 @@ public class RefactorRepositoryUrlOperation extends TaskListModifyOperation {
 	private void refactorOfflineHandles(String oldRepositoryUrl, String newRepositoryUrl) throws CoreException {
 		TaskDataManager taskDataManager = TasksUiPlugin.getTaskDataManager();
 		for (ITask task : getTaskList().getAllTasks()) {
+			if (oldRepositoryUrl.equals(task.getAttribute(ITasksCoreConstants.ATTRIBUTE_OUTGOING_NEW_REPOSITORY_URL))) {
+				taskDataManager.refactorRepositoryUrl(task, task.getRepositoryUrl(), newRepositoryUrl);
+			}
 			if (task.getRepositoryUrl().equals(oldRepositoryUrl)) {
-				taskDataManager.refactorRepositoryUrl(task, newRepositoryUrl);
+				taskDataManager.refactorRepositoryUrl(task, newRepositoryUrl, newRepositoryUrl);
 //					RepositoryTaskData newTaskData = taskDataManager.getNewTaskData(repositoryTask.getRepositoryUrl(),
 //							repositoryTask.getTaskId());
 //					RepositoryTaskData oldTaskData = taskDataManager.getOldTaskData(repositoryTask.getRepositoryUrl(),

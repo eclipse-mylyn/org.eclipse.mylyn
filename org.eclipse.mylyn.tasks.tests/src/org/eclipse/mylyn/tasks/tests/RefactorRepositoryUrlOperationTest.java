@@ -21,19 +21,23 @@ import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.RefactorRepositoryUrlOperation;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 
 /**
  * @author Robert Elves
@@ -50,16 +54,12 @@ public class RefactorRepositoryUrlOperationTest extends TestCase {
 		TaskTestUtil.resetTaskList();
 	}
 
-	private void runRepositoryUrlOperation(String oldUrl, String newUrl) throws Exception {
-		new RefactorRepositoryUrlOperation(oldUrl, newUrl).run(new NullProgressMonitor());
-	}
-
 	public void testMigrateTaskContextFiles() throws Exception {
 		File fileA = ContextCorePlugin.getContextStore().getFileForContext("http://a-1");
 		fileA.createNewFile();
 		fileA.deleteOnExit();
 		assertTrue(fileA.exists());
-		runRepositoryUrlOperation("http://a", "http://b");
+		new RefactorRepositoryUrlOperation("http://a", "http://b").run(new NullProgressMonitor());
 		File fileB = ContextCorePlugin.getContextStore().getFileForContext("http://b-1");
 		assertTrue(fileB.exists());
 		assertFalse(fileA.exists());
@@ -71,7 +71,7 @@ public class RefactorRepositoryUrlOperationTest extends TestCase {
 		query.setUrl("http://foo.bar/b");
 		taskList.addQuery(query);
 		assertTrue(taskList.getRepositoryQueries("http://foo.bar").size() > 0);
-		runRepositoryUrlOperation("http://foo.bar", "http://bar.baz");
+		new RefactorRepositoryUrlOperation("http://foo.bar", "http://bar.baz").run(new NullProgressMonitor());
 		assertTrue(taskList.getRepositoryQueries("http://foo.bar").size() == 0);
 		assertTrue(taskList.getRepositoryQueries("http://bar.baz").size() > 0);
 		IRepositoryQuery changedQuery = taskList.getRepositoryQueries("http://bar.baz").iterator().next();
@@ -82,7 +82,7 @@ public class RefactorRepositoryUrlOperationTest extends TestCase {
 		RepositoryQuery query = new MockRepositoryQuery("mquery");
 		query.setRepositoryUrl("http://a");
 		taskList.addQuery(query);
-		runRepositoryUrlOperation("http://a", "http://b");
+		new RefactorRepositoryUrlOperation("http://a", "http://b").run(new NullProgressMonitor());
 		assertFalse(taskList.getRepositoryQueries("http://b").isEmpty());
 		assertTrue(taskList.getRepositoryQueries("http://a").isEmpty());
 	}
@@ -108,7 +108,7 @@ public class RefactorRepositoryUrlOperationTest extends TestCase {
 			taskData2.getRoot().createAttribute("comment").setValue("TEST");
 			TasksUiPlugin.getTaskDataManager().putUpdatedTaskData(task2, taskData2, true);
 
-			runRepositoryUrlOperation("http://a", "http://b");
+			new RefactorRepositoryUrlOperation("http://a", "http://b").run(new NullProgressMonitor());
 			repository.setRepositoryUrl("http://b");
 			assertNull(taskList.getTask("http://a-123"));
 			assertNotNull(taskList.getTask("http://b-123"));
@@ -126,7 +126,7 @@ public class RefactorRepositoryUrlOperationTest extends TestCase {
 		AbstractTask task = new MockTask("http://aa", "123");
 		task.setUrl("http://aa/task/123");
 		taskList.addTask(task);
-		runRepositoryUrlOperation("http://aa", "http://bb");
+		new RefactorRepositoryUrlOperation("http://aa", "http://bb").run(new NullProgressMonitor());
 		assertNull(taskList.getTask("http://aa-123"));
 		assertNotNull(taskList.getTask("http://bb-123"));
 		assertEquals("http://bb/task/123", task.getUrl());
@@ -167,13 +167,40 @@ public class RefactorRepositoryUrlOperationTest extends TestCase {
 		assertEquals(2, metaContext.getInteractionHistory().size());
 		assertEquals(60 * 1000 * 5, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1));
 		assertEquals(2 * 60 * 1000 * 5, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task2));
-		runRepositoryUrlOperation(firstUrl, secondUrl);
+		new RefactorRepositoryUrlOperation(firstUrl, secondUrl).run(new NullProgressMonitor());
 		metaContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
 		assertEquals(2, metaContext.getInteractionHistory().size());
 		assertEquals(60 * 1000 * 5, TasksUiPlugin.getTaskActivityManager().getElapsedTime(new MockTask(secondUrl, "1")));
 		assertEquals(2 * 60 * 1000 * 5, TasksUiPlugin.getTaskActivityManager().getElapsedTime(
 				new MockTask(secondUrl, "2")));
 		assertEquals(secondUrl + "-1", metaContext.getInteractionHistory().get(0).getStructureHandle());
+	}
+
+	public void testMigrateTaskHandlesUnsubmittedTask() throws Exception {
+		ITask task = TasksUiUtil.createOutgoingNewTask(MockRepositoryConnector.REPOSITORY_KIND, "http://a");
+		String handleIdentifier = task.getHandleIdentifier();
+		taskList.addTask(task);
+		assertEquals("http://a", task.getAttribute(ITasksCoreConstants.ATTRIBUTE_OUTGOING_NEW_REPOSITORY_URL));
+
+		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND, "http://a");
+		TasksUi.getRepositoryManager().addRepository(repository);
+
+		try {
+			TaskData taskData = new TaskData(new TaskAttributeMapper(repository), repository.getConnectorKind(),
+					repository.getRepositoryUrl(), "");
+			ITaskDataWorkingCopy workingCopy = TasksUi.getTaskDataManager().createWorkingCopy(task, taskData);
+			workingCopy.save(null, null);
+
+			new RefactorRepositoryUrlOperation("http://a", "http://b").run(new NullProgressMonitor());
+			repository.setRepositoryUrl("http://b");
+			assertEquals(task, taskList.getTask(handleIdentifier));
+			assertEquals("http://b", task.getAttribute(ITasksCoreConstants.ATTRIBUTE_OUTGOING_NEW_REPOSITORY_URL));
+			taskData = TasksUi.getTaskDataManager().getTaskData(task);
+			assertNotNull(taskData);
+			assertEquals("http://b", taskData.getRepositoryUrl());
+		} finally {
+			TasksUiPlugin.getTaskDataManager().deleteTaskData(task);
+		}
 	}
 
 }
