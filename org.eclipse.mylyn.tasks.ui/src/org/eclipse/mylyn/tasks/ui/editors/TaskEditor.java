@@ -460,6 +460,19 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	}
 
 	/**
+	 * @since 3.1
+	 */
+	public String getMessage() {
+		if (getHeaderForm() != null && getHeaderForm().getForm() != null) {
+			if (!getHeaderForm().getForm().isDisposed()) {
+				Form form = getHeaderForm().getForm().getForm();
+				return form.getMessage();
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * @since 3.0
 	 */
 	public void setStatus(String message, final String title, final IStatus status) {

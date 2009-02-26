@@ -1415,6 +1415,21 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 						}
 					});
 		}
+		if (getTaskEditor().getMessage() == null
+				&& TasksUiPlugin.getTaskList().getTask(task.getRepositoryUrl(), task.getTaskId()) == null) {
+			getTaskEditor().setMessage(Messages.AbstractTaskEditorPage_Add_task_to_tasklist,
+					IMessageProvider.INFORMATION, new HyperlinkAdapter() {
+						@Override
+						public void linkActivated(HyperlinkEvent e) {
+							if (TasksUiPlugin.getTaskList().getTask(task.getRepositoryUrl(), task.getTaskId()) == null) {
+								TasksUiPlugin.getTaskList().addTask(task,
+										TasksUiPlugin.getTaskList().getDefaultCategory());
+								getTaskEditor().setMessage(null, IMessageProvider.NONE, null);
+//								updateHeaderMessage();
+							}
+						}
+					});
+		}
 	}
 
 }

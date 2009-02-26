@@ -257,6 +257,8 @@ public class Messages extends NLS {
 
 	public static String AbstractTaskEditorPage_Synchronize_to_update_editor_contents;
 
+	public static String AbstractTaskEditorPage_Add_task_to_tasklist;
+
 	public static String AbstractTaskEditorPage_Task_has_incoming_changes;
 
 	public static String AbstractTaskEditorPage_Title;
