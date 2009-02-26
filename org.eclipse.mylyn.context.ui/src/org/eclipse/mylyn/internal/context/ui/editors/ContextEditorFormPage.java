@@ -47,6 +47,7 @@ import org.eclipse.mylyn.internal.context.ui.views.ContextNodeOpenListener;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DelayedRefreshJob;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
@@ -351,6 +352,13 @@ public class ContextEditorFormPage extends FormPage {
 		removeInvisibleLink.addMouseListener(new MouseListener() {
 
 			public void mouseUp(MouseEvent e) {
+				if (commonViewer == null) {
+					MessageDialog.openWarning(TasksUiInternal.getShell(),
+							Messages.ContextEditorFormPage_Remove_Invisible,
+							"Activate task to remove invisible elements.");
+					return;
+				}
+
 				boolean confirmed = MessageDialog.openConfirm(Display.getCurrent().getActiveShell(),
 						Messages.ContextEditorFormPage_Remove_Invisible,
 						Messages.ContextEditorFormPage_Remove_every_element_not_visible);
