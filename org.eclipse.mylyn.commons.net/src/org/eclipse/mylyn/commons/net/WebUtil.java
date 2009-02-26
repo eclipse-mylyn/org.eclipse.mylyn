@@ -679,17 +679,14 @@ public class WebUtil {
 	/**
 	 * @since 3.1
 	 */
+	@SuppressWarnings("deprecation")
 	public static Proxy getProxy(String host, String proxyType) {
-		return getProxy(host, getJavaProxyType(proxyType));
-	}
-
-	/**
-	 * @since 3.1
-	 */
-	public static Proxy getProxy(String host, Proxy.Type proxyType) {
+		Assert.isNotNull(host);
+		Assert.isNotNull(proxyType);
 		IProxyService service = CommonsNetPlugin.getProxyService();
 		if (service != null && service.isProxiesEnabled()) {
-			IProxyData data = service.getProxyDataForHost(host, getPlatformProxyType(proxyType));
+			// TODO e3.5 move to new proxy API
+			IProxyData data = service.getProxyDataForHost(host, proxyType);
 			if (data != null && data.getHost() != null) {
 				String proxyHost = data.getHost();
 				int proxyPort = data.getPort();
@@ -708,9 +705,18 @@ public class WebUtil {
 		return null;
 	}
 
-	private static Type getJavaProxyType(String type) {
-		return (IProxyData.SOCKS_PROXY_TYPE.equals(type)) ? Proxy.Type.SOCKS : Proxy.Type.HTTP;
+	/**
+	 * @since 3.1
+	 */
+	public static Proxy getProxy(String host, Proxy.Type proxyType) {
+		Assert.isNotNull(host);
+		Assert.isNotNull(proxyType);
+		return getProxy(host, getPlatformProxyType(proxyType));
 	}
+
+//	private static Type getJavaProxyType(String type) {
+//		return (IProxyData.SOCKS_PROXY_TYPE.equals(type)) ? Proxy.Type.SOCKS : Proxy.Type.HTTP;
+//	}
 
 	private static String getPlatformProxyType(Type type) {
 		return type == Type.SOCKS ? IProxyData.SOCKS_PROXY_TYPE : IProxyData.HTTP_PROXY_TYPE;
