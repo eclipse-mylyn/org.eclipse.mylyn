@@ -24,6 +24,7 @@ import org.eclipse.mylyn.tasks.tests.ui.TaskHyperlinkDetectorTest;
 import org.eclipse.mylyn.tasks.tests.ui.TaskRelationHyperlinkDetectorTest;
 import org.eclipse.mylyn.tasks.tests.ui.editor.EditorUtilTest;
 import org.eclipse.mylyn.tasks.tests.ui.editor.TaskEditorPartDescriptorTest;
+import org.eclipse.mylyn.tasks.tests.ui.editor.TaskUrlHyperlinkDetectorTest;
 
 /**
  * @author Mik Kersten
@@ -80,6 +81,7 @@ public class AllTasksTests {
 		suite.addTestSuite(RepositoryTemplateManagerTest.class);
 		suite.addTestSuite(TaskHyperlinkDetectorTest.class);
 		suite.addTestSuite(TaskRelationHyperlinkDetectorTest.class);
+		suite.addTestSuite(TaskUrlHyperlinkDetectorTest.class);
 		suite.addTestSuite(TaskEditorPartDescriptorTest.class);
 		suite.addTestSuite(TaskAttachmentPropertyTesterTest.class);
 		suite.addTestSuite(CommentGroupStrategyTest.class);

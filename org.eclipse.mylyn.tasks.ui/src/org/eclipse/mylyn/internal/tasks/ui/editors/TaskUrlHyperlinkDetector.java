@@ -145,6 +145,12 @@ public class TaskUrlHyperlinkDetector extends AbstractHyperlinkDetector {
 			if (lastChar == ',' || lastChar == '.') {
 				urlLength--;
 			}
+			if (urlLength > 0) {
+				lastChar = line.charAt(urlOffsetInLine + urlLength - 1);
+				if (lastChar == ')') {
+					urlLength--;
+				}
+			}
 			urlString = line.substring(urlOffsetInLine, urlOffsetInLine + urlLength);
 			new URL(urlString);
 		} catch (MalformedURLException ex) {
