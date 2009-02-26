@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.internal.ide.ui;
 
+import java.lang.reflect.Method;
+
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.Viewer;
@@ -22,20 +24,36 @@ import org.eclipse.ui.views.markers.MarkerItem;
  */
 public class MarkerInterestFilter extends AbstractMarkerInterestFilter {
 
+	private Method markerCategoryMethod = null;
+
 	@Override
 	public boolean select(Viewer viewer, Object parent, Object element) {
 
 		if (element instanceof MarkerItem) {
 			if (element.getClass().getSimpleName().equals("MarkerCategory")) { //$NON-NLS-1$
-//				Class<?> clazz;
-//				try {
-//					clazz = Class.forName("org.eclipse.ui.internal.views.markers.MarkerCategory");
-//					Method method = clazz.getDeclaredMethod("getChildren", new Class[] {});
-//					method.setAccessible(true);
-//					Object result = method.invoke(element, new Object[] {});
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
+				try {
+					if (markerCategoryMethod == null) {
+						Class<?> markerCategoryClass = Class.forName("org.eclipse.ui.internal.views.markers.MarkerCategory"); //$NON-NLS-1$ 
+						markerCategoryMethod = markerCategoryClass.getDeclaredMethod("getChildren", new Class[] {}); //$NON-NLS-1$ 
+						markerCategoryMethod.setAccessible(true);
+					}
+
+					Object[] entries = (Object[]) markerCategoryMethod.invoke(element, new Object[] {});
+					if (entries != null && entries.length == 0) {
+						return false;
+					} else if (entries != null && entries.length != 0) {
+						// PERFORMANCE: need to look down children, so O(n^2) complexity
+						for (Object markerEntry : entries) {
+							if (markerEntry.getClass().getSimpleName().equals("MarkerEntry") //$NON-NLS-1$ 
+									&& isInteresting(((MarkerItem) markerEntry).getMarker(), viewer, parent)) {
+								return true;
+							}
+						}
+						return false;
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 
 				return true;
 			} else if (element.getClass().getSimpleName().equals("MarkerEntry")) { //$NON-NLS-1$
