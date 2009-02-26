@@ -124,7 +124,7 @@ public abstract class AbstractNotificationPopup extends Window {
 	private boolean fadingEnabled;
 
 	public AbstractNotificationPopup(Display display) {
-		this(display, SWT.NO_TRIM | SWT.ON_TOP | SWT.NO_FOCUS);
+		this(display, SWT.NO_TRIM | SWT.ON_TOP | SWT.NO_FOCUS | SWT.TOOL);
 	}
 
 	public AbstractNotificationPopup(Display display, int style) {
@@ -451,21 +451,20 @@ public abstract class AbstractNotificationPopup extends Window {
 		middleContentCircle.setBackground(color.getBorder());
 
 		/* Inner composite containing the content controls */
-		Composite innerContentCircle = new Composite(middleContentCircle, SWT.NO_FOCUS);
-		innerContentCircle.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		Composite innerContent = new Composite(middleContentCircle, SWT.NO_FOCUS);
+		innerContent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		layout = new GridLayout(1, false);
 		layout.marginWidth = 0;
 		layout.marginHeight = 5;
+		layout.marginLeft = 5;
+		layout.marginRight = 5;
+		innerContent.setLayout(layout);
 
-		innerContentCircle.setLayout(layout);
-
-		((GridLayout) innerContentCircle.getLayout()).marginLeft = 5;
-		((GridLayout) innerContentCircle.getLayout()).marginRight = 2;
-		innerContentCircle.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_WHITE));
+		innerContent.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_WHITE));
 
 		/* Content Area */
-		createContentArea(innerContentCircle);
+		createContentArea(innerContent);
 
 		return outerCircle;
 	}

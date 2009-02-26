@@ -53,8 +53,8 @@ public class NotificationPopupColors {
 	private void createColors() {
 		createBorderColor();
 		createGradientColors();
-
-		titleText = getColor(resourceManager, getSystemColor(SWT.COLOR_TITLE_INACTIVE_FOREGROUND));
+		// previously used SWT.COLOR_TITLE_INACTIVE_FOREGROUND, but too light on Windows XP
+		titleText = getColor(resourceManager, getSystemColor(SWT.COLOR_WIDGET_DARK_SHADOW));
 	}
 
 	public Color getGradientBegin() {
