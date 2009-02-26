@@ -44,6 +44,7 @@ import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.actions.TaskEditorScheduleAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ToggleTaskActivationAction;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorBusyIndicator;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
@@ -593,6 +594,9 @@ public class TaskEditor extends SharedHeaderFormEditor {
 				}
 			};
 		}
+		toolBarManager.add(new Separator("planning"));
+		toolBarManager.add(new TaskEditorScheduleAction(task));
+
 		toolBarManager.add(new Separator("activation")); //$NON-NLS-1$
 		toolBarManager.add(activateAction);
 
