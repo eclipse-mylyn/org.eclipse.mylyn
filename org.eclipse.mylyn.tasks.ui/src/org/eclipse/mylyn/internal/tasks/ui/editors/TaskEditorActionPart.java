@@ -15,15 +15,13 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ITaskList;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TaskContainerComparator;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
@@ -188,17 +186,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		categoryChooser.setFont(TEXT_FONT);
 		ITaskList taskList = TasksUiInternal.getTaskList();
 		final List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(taskList.getCategories());
-		Collections.sort(categories, new Comparator<AbstractTaskContainer>() {
-			public int compare(AbstractTaskContainer c1, AbstractTaskContainer c2) {
-				if (c1.equals(TasksUiPlugin.getTaskList().getDefaultCategory())) {
-					return -1;
-				} else if (c2.equals(TasksUiPlugin.getTaskList().getDefaultCategory())) {
-					return 1;
-				} else {
-					return c1.getSummary().compareToIgnoreCase(c2.getSummary());
-				}
-			}
-		});
+		Collections.sort(categories, new TaskContainerComparator());
 		AbstractTaskCategory selectedCategory = TasksUiInternal.getSelectedCategory(TaskListView.getFromActivePerspective());
 		int i = 0;
 		int selectedIndex = 0;

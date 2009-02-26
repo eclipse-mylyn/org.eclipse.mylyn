@@ -25,6 +25,7 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewCategoryAction;
+import org.eclipse.mylyn.internal.tasks.ui.util.TaskContainerComparator;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -49,7 +50,7 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 
 		List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(TasksUiInternal.getTaskList()
 				.getCategories());
-		Collections.sort(categories);
+		Collections.sort(categories, new TaskContainerComparator());
 		for (final AbstractTaskCategory category : categories) {
 			if (!(category instanceof UnmatchedTaskContainer)) {
 				String text = handleAcceleratorKeys(category.getSummary());
