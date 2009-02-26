@@ -67,6 +67,49 @@ import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
  * @author Frank Becker
  */
 public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
+
+	public void testBugWithoutDescription218() throws Exception {
+		init218();
+		doBugWithoutDescription("57");
+	}
+
+	public void testBugWithoutDescription222() throws Exception {
+		init222();
+		doBugWithoutDescription("391");
+	}
+
+	public void testBugWithoutDescription32() throws Exception {
+		init32();
+		doBugWithoutDescription("293");
+	}
+
+	private void doBugWithoutDescription(String taskNumber) throws CoreException {
+		ITask task = generateLocalTaskAndDownload(taskNumber);
+		assertNotNull(task);
+		TaskDataModel model = createModel(task);
+		TaskData taskData = model.getTaskData();
+		assertNotNull(taskData);
+		int numComment = taskData.getAttributeMapper().getAttributesByType(taskData, TaskAttribute.TYPE_COMMENT).size();
+
+		String newCommentText = "new Comment for Bug Without an Description " + (new Date()).toString();
+		TaskAttribute comment = taskData.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW);
+		comment.setValue(newCommentText);
+		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		changed.add(comment);
+
+		// Submit changes
+		submit(task, taskData, changed);
+		task = generateLocalTaskAndDownload(taskNumber);
+		assertNotNull(task);
+		model = createModel(task);
+		taskData = model.getTaskData();
+		assertNotNull(taskData);
+		int numCommentNew = taskData.getAttributeMapper()
+				.getAttributesByType(taskData, TaskAttribute.TYPE_COMMENT)
+				.size();
+		assertEquals(numComment + 1, numCommentNew);
+	}
+
 //testReassign Bugs
 //Version	BugNum	assigned				reporter
 //2.22		92		user@mylar.eclipse.org	tests@mylar.eclipse.org

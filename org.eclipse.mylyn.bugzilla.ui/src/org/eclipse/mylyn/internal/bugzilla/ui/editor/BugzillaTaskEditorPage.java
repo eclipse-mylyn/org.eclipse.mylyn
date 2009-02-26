@@ -193,7 +193,8 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 
 		TaskAttribute descriptionAttribute = getModel().getTaskData().getRoot().getMappedAttribute(
 				TaskAttribute.DESCRIPTION);
-		if (descriptionAttribute != null && descriptionAttribute.getValue().length() == 0) {
+		if (descriptionAttribute != null && descriptionAttribute.getValue().length() == 0
+				&& getModel().getTaskData().isNew()) {
 			getTaskEditor().setMessage(Messages.BugzillaTaskEditorPage_Please_enter_a_description_before_submitting,
 					IMessageProvider.ERROR);
 			AbstractTaskEditorPart descriptionPart = getPart(ID_PART_DESCRIPTION);
