@@ -70,9 +70,12 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.navigator.CommonViewer;
@@ -239,8 +242,25 @@ public class ContextEditorFormPage extends FormPage {
 		sectionClient.setLayout(new GridLayout(2, false));
 		sectionClient.setLayoutData(new GridData());
 
-		Label label = toolkit.createLabel(sectionClient, ""); //$NON-NLS-1$
-		label.setImage(CommonImages.getImage(CommonImages.FILTER));
+		ImageHyperlink filterImage = toolkit.createImageHyperlink(sectionClient, SWT.NONE);
+		filterImage.setImage(CommonImages.getImage(CommonImages.FILTER));
+		filterImage.setToolTipText(Messages.ContextEditorFormPage_Show_All_Elements);
+		filterImage.addHyperlinkListener(new IHyperlinkListener() {
+
+			public void linkActivated(HyperlinkEvent e) {
+				doiScale.setSelection(0);
+				interestFilter.setThreshold(Integer.MIN_VALUE);
+				refresh();
+			}
+
+			public void linkEntered(HyperlinkEvent e) {
+				// ignore	
+			}
+
+			public void linkExited(HyperlinkEvent e) {
+				// ignore
+			}
+		});
 
 		doiScale = new Scale(sectionClient, SWT.FLAT);
 		GridData scaleGridData = new GridData(GridData.FILL_HORIZONTAL);
@@ -412,11 +432,15 @@ public class ContextEditorFormPage extends FormPage {
 	 * Scales logarithmically to a reasonable interest threshold range (e.g. -10000..10000).
 	 */
 	protected void updateFilterThreshold() {
-		double setting = doiScale.getSelection() - (SCALE_STEPS / 2);
-		double threshold = Math.signum(setting) * Math.pow(Math.exp(Math.abs(setting)), 1.5);
-
-		interestFilter.setThreshold(threshold);
-
+		if (doiScale.getSelection() == 0) {
+			interestFilter.setThreshold(Integer.MIN_VALUE);
+		} else if (doiScale.getSelection() == SCALE_STEPS) {
+			interestFilter.setThreshold(Integer.MAX_VALUE);
+		} else {
+			double setting = doiScale.getSelection() - (SCALE_STEPS / 2);
+			double threshold = Math.signum(setting) * Math.pow(Math.exp(Math.abs(setting)), 1.5);
+			interestFilter.setThreshold(threshold);
+		}
 		refresh();
 	}
 

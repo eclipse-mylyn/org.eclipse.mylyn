@@ -49,5 +49,7 @@ public class Messages extends NLS {
 
 	public static String ContextEditorFormPage_Retrieve_Context_;
 
+	public static String ContextEditorFormPage_Show_All_Elements;
+
 	public static String ContextPageFactory_Context;
 }
