@@ -15,7 +15,10 @@ import java.lang.reflect.Method;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.ide.ui.AbstractMarkerInterestFilter;
 import org.eclipse.ui.views.markers.MarkerItem;
 
@@ -52,6 +55,8 @@ public class MarkerInterestFilter extends AbstractMarkerInterestFilter {
 						return false;
 					}
 				} catch (Exception e) {
+					StatusHandler.log(new Status(IStatus.ERROR, IdeUiBridgePlugin.ID_PLUGIN,
+							"Could not access marker view elements.")); //$NON-NLS-1$ 
 					e.printStackTrace();
 				}
 
