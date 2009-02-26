@@ -161,7 +161,7 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 				IContextUiPreferenceContstants.AUTO_MANAGE_EDITORS));
 
 		if (getContainer() instanceof IWorkbenchPreferenceContainer) {
-			String message = "<a>''{0}''</a> \"" + Messages.ContextUiPreferencePage_will_be_toggled_with_activation; //$NON-NLS-1$
+			String message = "<a>''{0}''</a> " + Messages.ContextUiPreferencePage_will_be_toggled_with_activation; //$NON-NLS-1$
 			new PreferenceLinkArea(groupEditors, SWT.NONE, "org.eclipse.ui.preferencePages.Editors", message, //$NON-NLS-1$
 					(IWorkbenchPreferenceContainer) getContainer(), null);
 		}
