@@ -355,7 +355,7 @@ public class ContextEditorFormPage extends FormPage {
 				if (commonViewer == null) {
 					MessageDialog.openWarning(TasksUiInternal.getShell(),
 							Messages.ContextEditorFormPage_Remove_Invisible,
-							"Activate task to remove invisible elements.");
+							Messages.ContextEditorFormPage_Activate_task_to_remove_invisible0);
 					return;
 				}
 
