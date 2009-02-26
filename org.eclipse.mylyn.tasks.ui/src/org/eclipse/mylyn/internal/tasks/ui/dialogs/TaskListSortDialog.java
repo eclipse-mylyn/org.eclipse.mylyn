@@ -26,7 +26,7 @@ public class TaskListSortDialog extends TaskCompareDialog {
 
 	public TaskListSortDialog(IShellProvider parentShell, TaskListView taskListView) {
 		super(parentShell, taskListView.getSorter().getComparator());
-		setTitle(TaskListView.LABEL_VIEW + Messages.TaskListSortDialog_Sorting);
+		setTitle(Messages.TaskListSortDialog_Title);
 	}
 
 	@Override

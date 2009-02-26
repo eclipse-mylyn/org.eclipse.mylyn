@@ -18,7 +18,7 @@ import java.util.Comparator;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskComparator;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.internal.tasks.ui.util.TaskComparator.SortByIndex;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -50,13 +50,13 @@ public class TaskCompareDialog extends SelectionDialog {
 
 	public TaskCompareDialog(IShellProvider parentShell, TaskComparator taskComparator) {
 		super(parentShell.getShell());
-		propertyText = new String[4];
-		propertyText[0] = Messages.TaskCompareDialog_Priority;
-		propertyText[1] = Messages.TaskCompareDialog_Summary;
-		propertyText[2] = Messages.TaskCompareDialog_DateCreated;
-		propertyText[3] = Messages.TaskCompareDialog_TaskID;
+		SortByIndex[] values = SortByIndex.values();
+		propertyText = new String[values.length];
+		for (int i = 0; i < values.length; i++) {
+			propertyText[i] = values[i].getLabel();
+		}
 		this.taskComparator = taskComparator;
-		setTitle(TaskListView.LABEL_VIEW + Messages.TaskCompareDialog_Sorting);
+		setTitle(Messages.TaskCompareDialog_Sorting);
 	}
 
 	protected void createDialogStartArea(Composite parent) {
@@ -175,35 +175,8 @@ public class TaskCompareDialog extends SelectionDialog {
 		}
 		int a[] = new int[2];
 		int b[] = new int[2];
-		switch (taskComparator.getSortByIndex()) {
-		case PRIORITY:
-			a[0] = 0;
-			break;
-		case SUMMARY:
-			a[0] = 1;
-			break;
-		case DATE_CREATED:
-			a[0] = 2;
-			break;
-		case TASK_ID:
-			a[0] = 3;
-			break;
-		}
-
-		switch (taskComparator.getSortByIndex2()) {
-		case PRIORITY:
-			a[1] = 0;
-			break;
-		case SUMMARY:
-			a[1] = 1;
-			break;
-		case DATE_CREATED:
-			a[1] = 2;
-			break;
-		case TASK_ID:
-			a[1] = 3;
-			break;
-		}
+		a[0] = taskComparator.getSortByIndex().ordinal();
+		a[1] = taskComparator.getSortByIndex2().ordinal();
 		b[0] = taskComparator.getSortDirection();
 		b[1] = taskComparator.getSortDirection2();
 		updateUI(a, b);
@@ -214,10 +187,8 @@ public class TaskCompareDialog extends SelectionDialog {
 	@Override
 	protected void okPressed() {
 		if (isDirty()) {
-			taskComparator.setSortByIndex(TaskComparator.SortByIndex.valueOf(priorityCombos[0].getItem(
-					priorityCombos[0].getSelectionIndex()).replace(' ', '_').toUpperCase()));
-			taskComparator.setSortByIndex2(TaskComparator.SortByIndex.valueOf(priorityCombos[1].getItem(
-					priorityCombos[1].getSelectionIndex()).replace(' ', '_').toUpperCase()));
+			taskComparator.setSortByIndex(SortByIndex.valueOfLabel(priorityCombos[0].getText()));
+			taskComparator.setSortByIndex2(SortByIndex.valueOfLabel(priorityCombos[1].getText()));
 			if (descendingButtons[0].getSelection()) {
 				taskComparator.setSortDirection(-1);
 			} else {
@@ -228,22 +199,18 @@ public class TaskCompareDialog extends SelectionDialog {
 			} else {
 				taskComparator.setSortDirection2(1);
 			}
-
 		}
 		super.okPressed();
 	}
 
-	/**
-	 * @return boolean
-	 */
-	public boolean isDirty() {
+	protected boolean isDirty() {
 		return dirty;
 	}
 
 	/**
 	 * Sets the dirty flag to true.
 	 */
-	public void markDirty() {
+	protected void markDirty() {
 		dirty = true;
 	}
 

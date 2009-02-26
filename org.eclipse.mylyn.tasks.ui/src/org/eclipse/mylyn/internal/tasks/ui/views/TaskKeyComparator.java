@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Eugene Kuleshov - initial API and implementation
+ *     Eugene Kuleshov - initial API and implementation for bug 129511
  *     Tasktop Technologies - improvements
  *******************************************************************************/
 
@@ -17,7 +17,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @author Eugene Kuleshov (https://bugs.eclipse.org/bugs/show_bug.cgi?taskId=129511)
+ * @author Eugene Kuleshov
  */
 public class TaskKeyComparator implements Comparator<String[]> {
 

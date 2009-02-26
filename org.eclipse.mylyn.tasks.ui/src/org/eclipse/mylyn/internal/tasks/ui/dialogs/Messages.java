@@ -43,7 +43,7 @@ public class Messages extends NLS {
 
 	public static String TaskListSortDialog_Sort_order;
 
-	public static String TaskListSortDialog_Sorting;
+	public static String TaskListSortDialog_Title;
 
 	public static String TaskRepositoryCredentialsDialog_Enter_Credentials;
 

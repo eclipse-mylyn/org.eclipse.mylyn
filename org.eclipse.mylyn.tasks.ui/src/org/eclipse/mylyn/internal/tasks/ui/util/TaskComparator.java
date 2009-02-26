@@ -14,6 +14,9 @@ package org.eclipse.mylyn.internal.tasks.ui.util;
 
 import java.util.Comparator;
 
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.mylyn.internal.tasks.ui.dialogs.Messages;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskKeyComparator;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
 
@@ -23,8 +26,35 @@ import org.eclipse.mylyn.tasks.core.ITask;
  */
 public class TaskComparator implements Comparator<ITask> {
 
+	private final TaskKeyComparator taskKeyComparator = new TaskKeyComparator();
+
 	public enum SortByIndex {
 		PRIORITY, SUMMARY, DATE_CREATED, TASK_ID;
+
+		public String getLabel() {
+			switch (this) {
+			case PRIORITY:
+				return Messages.TaskCompareDialog_Priority;
+			case SUMMARY:
+				return Messages.TaskCompareDialog_Summary;
+			case DATE_CREATED:
+				return Messages.TaskCompareDialog_DateCreated;
+			case TASK_ID:
+				return Messages.TaskCompareDialog_TaskID;
+			default:
+				return null;
+			}
+		}
+
+		public static SortByIndex valueOfLabel(String label) {
+			for (SortByIndex value : values()) {
+				if (value.getLabel().equals(label)) {
+					return value;
+				}
+			}
+			return null;
+		}
+
 	}
 
 	public static final int DEFAULT_SORT_DIRECTION = 1;
@@ -129,15 +159,15 @@ public class TaskComparator implements Comparator<ITask> {
 	}
 
 	private int sortBySummary(ITask element1, ITask element2, int sortDirection) {
-		return sortDirection * (element1.getSummary().compareTo(element2.getSummary()));
+		return sortDirection * (element1.getSummary().compareToIgnoreCase(element2.getSummary()));
 	}
 
 	private int sortByID(ITask element1, ITask element2, int sortDirection) {
-		return sortDirection * (element1.getTaskId().compareTo(element2.getTaskId()));
+		return sortDirection * (taskKeyComparator.compare2(element1.getTaskKey(), element2.getTaskKey()));
 	}
 
 	private int sortByPriority(ITask element1, ITask element2, int sortDirection) {
-		return sortDirection * (element1.getPriority().compareTo(element2.getPriority()));
+		return sortDirection * (element1.getPriority().compareToIgnoreCase(element2.getPriority()));
 	}
 
 	private int sortByDate(ITask element1, ITask element2, int sortDirection) {
@@ -154,6 +184,7 @@ public class TaskComparator implements Comparator<ITask> {
 	}
 
 	public void setSortByIndex(SortByIndex sortByIndex) {
+		Assert.isNotNull(sortByIndex);
 		this.sortByIndex = sortByIndex;
 	}
 
@@ -170,6 +201,7 @@ public class TaskComparator implements Comparator<ITask> {
 	}
 
 	public void setSortByIndex2(SortByIndex sortByIndex) {
+		Assert.isNotNull(sortByIndex);
 		this.sortByIndex2 = sortByIndex;
 	}
 
