@@ -67,7 +67,9 @@ public class TaskListNotificationPopup extends AbstractNotificationPopup {
 		int count = 0;
 		for (final AbstractNotification notification : notifications) {
 			Composite notificationComposite = new Composite(parent, SWT.NO_FOCUS);
-			notificationComposite.setLayout(new GridLayout(2, false));
+			GridLayout gridLayout = new GridLayout(2, false);
+			GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.TOP).applyTo(notificationComposite);
+			notificationComposite.setLayout(gridLayout);
 			notificationComposite.setBackground(parent.getBackground());
 
 			if (count < NUM_NOTIFICATIONS_TO_DISPLAY) {
@@ -89,8 +91,9 @@ public class TaskListNotificationPopup extends AbstractNotificationPopup {
 					}
 				}
 
-				final TaskHyperlink itemLink = new TaskHyperlink(notificationComposite, SWT.BEGINNING | SWT.WRAP
-						| SWT.NO_FOCUS);
+				final TaskHyperlink itemLink = new TaskHyperlink(notificationComposite, SWT.BEGINNING | SWT.NO_FOCUS);
+				GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.TOP).applyTo(itemLink);
+
 				itemLink.setText(notification.getLabel());
 				itemLink.setImage(notification.getNotificationImage());
 				itemLink.setBackground(parent.getBackground());
@@ -121,7 +124,11 @@ public class TaskListNotificationPopup extends AbstractNotificationPopup {
 					Label descriptionLabel = new Label(notificationComposite, SWT.NO_FOCUS);
 					descriptionLabel.setText(descriptionText);
 					descriptionLabel.setBackground(parent.getBackground());
-					GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(descriptionLabel);
+					GridDataFactory.fillDefaults()
+							.span(2, SWT.DEFAULT)
+							.grab(true, false)
+							.align(SWT.FILL, SWT.TOP)
+							.applyTo(descriptionLabel);
 				}
 			} else {
 				int numNotificationsRemain = notifications.size() - count;
