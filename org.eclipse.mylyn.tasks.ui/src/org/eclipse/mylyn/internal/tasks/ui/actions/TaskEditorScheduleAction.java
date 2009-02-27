@@ -33,14 +33,13 @@ public class TaskEditorScheduleAction extends Action implements IMenuCreator {
 
 	private final ITask task;
 
-	private MenuManager menuManager = null;
+	private MenuManager menuManager;
 
 	private final ScheduleTaskMenuContributor scheduleMenuContributor = new ScheduleTaskMenuContributor();
 
 	public TaskEditorScheduleAction(ITask task) {
 		this.task = task;
 		this.setImageDescriptor(CommonImages.SCHEDULE_DAY);
-
 		setMenuCreator(this);
 	}
 
@@ -61,14 +60,15 @@ public class TaskEditorScheduleAction extends Action implements IMenuCreator {
 
 	public Menu getMenu(Menu parent) {
 		if (menuManager != null) {
-			menuManager.dispose();
+			return menuManager.getMenu();
 		}
-		menuManager = scheduleMenuContributor.getSubMenuManager(Collections.singletonList((IRepositoryElement) task));
-		return menuManager.getMenu();
+		return null;
 	}
 
 	public void dispose() {
-		menuManager.dispose();
+		if (menuManager != null) {
+			menuManager.dispose();
+		}
 	}
 
 }
