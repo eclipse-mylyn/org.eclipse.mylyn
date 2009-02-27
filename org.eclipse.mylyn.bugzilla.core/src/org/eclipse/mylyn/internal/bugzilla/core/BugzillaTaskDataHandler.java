@@ -401,7 +401,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
 		if (taskData.isNew()) {
 			String product = null;
-			if (initializationData == null) {
+			if (initializationData == null || initializationData.getProduct() == null) {
 				if (repositoryConfiguration.getProducts().size() > 0) {
 					product = repositoryConfiguration.getProducts().get(0);
 				}
