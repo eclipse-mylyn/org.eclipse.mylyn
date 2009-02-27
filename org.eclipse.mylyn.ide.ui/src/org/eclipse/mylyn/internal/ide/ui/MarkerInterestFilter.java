@@ -56,8 +56,7 @@ public class MarkerInterestFilter extends AbstractMarkerInterestFilter {
 					}
 				} catch (Exception e) {
 					StatusHandler.log(new Status(IStatus.ERROR, IdeUiBridgePlugin.ID_PLUGIN,
-							"Could not access marker view elements.")); //$NON-NLS-1$ 
-					e.printStackTrace();
+							"Could not access marker view elements.")); //$NON-NLS-1$
 				}
 
 				return true;
