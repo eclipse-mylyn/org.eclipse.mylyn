@@ -12,10 +12,13 @@
 package org.eclipse.mylyn.resources.ui;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
+import org.eclipse.core.expressions.Expression;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -26,15 +29,20 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.ui.AbstractAutoFocusViewAction;
 import org.eclipse.mylyn.context.ui.InterestFilter;
+import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.internal.navigator.NavigatorContentService;
 import org.eclipse.ui.internal.navigator.actions.LinkEditorAction;
+import org.eclipse.ui.internal.navigator.filters.CommonFilterDescriptor;
+import org.eclipse.ui.internal.navigator.filters.CommonFilterDescriptorManager;
+import org.eclipse.ui.internal.navigator.filters.CoreExpressionFilter;
 import org.eclipse.ui.internal.navigator.filters.SelectFiltersAction;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.ILinkHelper;
@@ -53,9 +61,41 @@ public abstract class FocusCommonNavigatorAction extends AbstractAutoFocusViewAc
 
 	private CommonNavigator commonNavigator;
 
+	private CommonFilterDescriptor[] filterDescriptors;
+
+	private Field filterExpressionField1;
+
+	private Field filterExpressionField2;
+
 	public FocusCommonNavigatorAction(InterestFilter interestFilter, boolean manageViewer, boolean manageFilters,
 			boolean manageLinking) {
 		super(interestFilter, manageViewer, manageFilters, manageLinking);
+	}
+
+	@Override
+	protected boolean installInterestFilter(StructuredViewer viewer) {
+		if (commonNavigator == null) {
+			commonNavigator = (CommonNavigator) super.getPartForAction();
+		}
+
+		try {
+			// XXX: reflection
+			Class<?> clazz2 = CoreExpressionFilter.class;
+			filterExpressionField1 = clazz2.getDeclaredField("filterExpression");
+			filterExpressionField1.setAccessible(true);
+
+			Class<?> clazz1 = CommonFilterDescriptor.class;
+			filterExpressionField2 = clazz1.getDeclaredField("filterExpression");
+			filterExpressionField2.setAccessible(true);
+		} catch (Exception e) {
+			StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.ID_PLUGIN,
+					"Could not determine filter", e)); //$NON-NLS-1$
+		}
+
+		filterDescriptors = CommonFilterDescriptorManager.getInstance().findVisibleFilters(
+				commonNavigator.getNavigatorContentService());
+
+		return super.installInterestFilter(viewer);
 	}
 
 	@Override
@@ -63,9 +103,6 @@ public abstract class FocusCommonNavigatorAction extends AbstractAutoFocusViewAc
 			throws CoreException {
 		if (resolveFailed) {
 			return null;
-		}
-		if (commonNavigator == null) {
-			commonNavigator = (CommonNavigator) super.getPartForAction();
 		}
 		if (linkServiceMethod == null) {
 			// TODO e3.5 replace with call to CommonNavigator.getLinkHelperService()
@@ -167,6 +204,37 @@ public abstract class FocusCommonNavigatorAction extends AbstractAutoFocusViewAc
 		IViewPart part = super.getPartForAction();
 		if (part instanceof CommonNavigator) {
 			return ((CommonNavigator) part).isLinkingEnabled();
+		}
+		return false;
+	}
+
+	@Override
+	protected boolean isPreservedFilter(ViewerFilter filter) {
+		if (filter instanceof CoreExpressionFilter) {
+			CoreExpressionFilter expressionFilter = (CoreExpressionFilter) filter;
+
+			Set<String> preservedIds = ContextUiPlugin.getDefault().getPreservedFilterIds(viewPart.getSite().getId());
+			if (!preservedIds.isEmpty()) {
+
+				try {
+					Expression expression2 = (Expression) filterExpressionField1.get(expressionFilter);
+
+					for (CommonFilterDescriptor commonFilterDescriptor : filterDescriptors) {
+						if (preservedIds.contains(commonFilterDescriptor.getId())) {
+							Expression expression1 = (Expression) filterExpressionField2.get(commonFilterDescriptor);
+							if (expression1 != null && expression1.equals(expression2)) {
+								return true;
+							}
+						}
+					}
+				} catch (IllegalArgumentException e) {
+					StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.ID_PLUGIN,
+							"Could not determine filter", e)); //$NON-NLS-1$
+				} catch (IllegalAccessException e) {
+					StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.ID_PLUGIN,
+							"Could not determine filter", e)); //$NON-NLS-1$
+				}
+			}
 		}
 		return false;
 	}

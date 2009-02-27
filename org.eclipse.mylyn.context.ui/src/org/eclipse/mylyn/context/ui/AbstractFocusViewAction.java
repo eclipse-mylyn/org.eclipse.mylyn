@@ -471,9 +471,10 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 
 			if (viewPart != null && manageFilters) {
 				Set<ViewerFilter> toAdd = new HashSet<ViewerFilter>();
-				Set<Class<?>> excludedFilters = getPreservedFilterClasses();
+				Set<Class<?>> preservedFilterClasses = getPreservedFilterClasses();
+
 				for (ViewerFilter filter : previousFilters.get(viewer)) {
-					if (excludedFilters.contains(filter.getClass())) {
+					if (preservedFilterClasses.contains(filter.getClass()) || isPreservedFilter(filter)) {
 						toAdd.add(filter);
 					}
 				}
@@ -495,6 +496,15 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 			viewer.getControl().setRedraw(true);
 			internalSuppressExpandAll = false;
 		}
+		return false;
+	}
+
+	/**
+	 * Subclasses can provide additional viewer filters that should not be removed when focusing.
+	 * 
+	 * @since 3.1
+	 */
+	protected boolean isPreservedFilter(ViewerFilter filter) {
 		return false;
 	}
 
