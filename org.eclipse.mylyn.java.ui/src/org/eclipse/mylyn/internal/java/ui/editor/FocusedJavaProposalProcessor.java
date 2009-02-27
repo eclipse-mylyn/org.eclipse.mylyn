@@ -33,11 +33,25 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
  */
 public class FocusedJavaProposalProcessor {
 
-	static final int THRESHOLD_INTEREST = 10000;
+	/**
+	 * Range above which elements are part of the context.
+	 */
+	private static final int THRESHOLD_INTEREST = 10000;
 
+	/**
+	 * Range for implicitly interesting element, such as method parameters.
+	 */
 	private static final int THRESHOLD_IMPLICIT_INTEREST = THRESHOLD_INTEREST * 2;
 
-	private static final int RELEVANCE_IMPLICIT_INTEREST = 300;
+	/**
+	 * Threshold for determining which JDT proposals should be implicitly interesting.
+	 */
+	private static final int RELEVANCE_IMPLICIT_INTEREST_JAVA = 600;
+
+	/**
+	 * Threshold for implicit interest of IJavaElement proposals.
+	 */
+	private static final int RELEVANCE_IMPLICIT_INTEREST_MISC = 300;
 
 	private static final String IDENTIFIER_THIS = "this"; //$NON-NLS-1$
 
@@ -124,6 +138,8 @@ public class FocusedJavaProposalProcessor {
 				// TODO: losing precision here, only going to one decimal place
 				proposal.setRelevance(THRESHOLD_INTEREST + (int) (interest * 10));
 				hasInteresting = true;
+			} else if (proposal.getRelevance() > RELEVANCE_IMPLICIT_INTEREST_JAVA) {
+				proposal.setRelevance(THRESHOLD_IMPLICIT_INTEREST + proposal.getRelevance());
 			}
 		} else if (isImplicitlyInteresting(proposal)) {
 			proposal.setRelevance(THRESHOLD_IMPLICIT_INTEREST + proposal.getRelevance());
@@ -133,7 +149,7 @@ public class FocusedJavaProposalProcessor {
 	}
 
 	public boolean isImplicitlyInteresting(AbstractJavaCompletionProposal proposal) {
-		return proposal.getRelevance() > RELEVANCE_IMPLICIT_INTEREST
+		return proposal.getRelevance() > RELEVANCE_IMPLICIT_INTEREST_MISC
 				&& !IDENTIFIER_THIS.equals(proposal.getDisplayString());
 	}
 
