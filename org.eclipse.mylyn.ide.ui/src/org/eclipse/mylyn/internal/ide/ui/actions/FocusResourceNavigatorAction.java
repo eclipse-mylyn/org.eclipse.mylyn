@@ -35,7 +35,6 @@ import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.views.navigator.FilterSelectionAction;
 import org.eclipse.ui.views.navigator.IResourceNavigator;
 import org.eclipse.ui.views.navigator.ResourceNavigator;
@@ -122,9 +121,9 @@ public class FocusResourceNavigatorAction extends AbstractAutoFocusViewAction {
 	}
 
 	private Set<String> getPreservedFilterPatterns() {
-		IExtensionPoint extension = Platform.getExtensionRegistry().getExtensionPoint(
-				IDEWorkbenchPlugin.IDE_WORKBENCH + '.' + "resourceFilters");
 		Set<String> preservedIds = ContextUiPlugin.getDefault().getPreservedFilterIds(viewPart.getSite().getId());
+		IExtensionPoint extension = Platform.getExtensionRegistry().getExtensionPoint(
+				"org.eclipse.ui.ide.resourceFilters"); //$NON-NLS-1$
 		Set<String> filters = new HashSet<String>();
 		if (extension != null) {
 			IExtension[] extensions = extension.getExtensions();
@@ -135,10 +134,6 @@ public class FocusResourceNavigatorAction extends AbstractAutoFocusViewAction {
 						String pattern = configElement.getAttribute("pattern");//$NON-NLS-1$
 						if (pattern != null) {
 							filters.add(pattern);
-						}
-						String selected = configElement.getAttribute("selected");//$NON-NLS-1$
-						if (selected != null && selected.equalsIgnoreCase("true")) { //$NON-NLS-1$
-							//defaultFilters.add(pattern);
 						}
 					}
 				}

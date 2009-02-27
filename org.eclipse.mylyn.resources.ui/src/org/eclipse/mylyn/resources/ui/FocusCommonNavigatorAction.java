@@ -81,11 +81,11 @@ public abstract class FocusCommonNavigatorAction extends AbstractAutoFocusViewAc
 		try {
 			// XXX: reflection
 			Class<?> clazz2 = CoreExpressionFilter.class;
-			filterExpressionField1 = clazz2.getDeclaredField("filterExpression");
+			filterExpressionField1 = clazz2.getDeclaredField("filterExpression"); //$NON-NLS-1$
 			filterExpressionField1.setAccessible(true);
 
 			Class<?> clazz1 = CommonFilterDescriptor.class;
-			filterExpressionField2 = clazz1.getDeclaredField("filterExpression");
+			filterExpressionField2 = clazz1.getDeclaredField("filterExpression"); //$NON-NLS-1$
 			filterExpressionField2.setAccessible(true);
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.ID_PLUGIN,
@@ -215,7 +215,6 @@ public abstract class FocusCommonNavigatorAction extends AbstractAutoFocusViewAc
 
 			Set<String> preservedIds = ContextUiPlugin.getDefault().getPreservedFilterIds(viewPart.getSite().getId());
 			if (!preservedIds.isEmpty()) {
-
 				try {
 					Expression expression2 = (Expression) filterExpressionField1.get(expressionFilter);
 
