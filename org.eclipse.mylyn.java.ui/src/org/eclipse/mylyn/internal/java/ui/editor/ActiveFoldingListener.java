@@ -118,6 +118,7 @@ public class ActiveFoldingListener extends AbstractContextListener {
 					}
 				}
 				if (updater != null) {
+					updater.collapseComments();
 					updater.collapseMembers();
 					updater.expandElements(toExpand.toArray(new IJavaElement[toExpand.size()]));
 				}
