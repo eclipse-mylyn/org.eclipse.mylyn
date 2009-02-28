@@ -66,7 +66,7 @@ public class RepositoryConfiguration implements Serializable {
 
 	private final List<BugzillaFlag> flags = new ArrayList<BugzillaFlag>();
 
-	private BugzillaVersion version;
+	private BugzillaVersion version = BugzillaVersion.MIN_VERSION;
 
 	public RepositoryConfiguration() {
 		super();

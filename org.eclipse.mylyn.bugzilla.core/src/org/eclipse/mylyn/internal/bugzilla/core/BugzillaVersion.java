@@ -34,13 +34,25 @@ public class BugzillaVersion implements Comparable<BugzillaVersion>, Serializabl
 
 	private final int minor;
 
-	private final int micro;
+	private int micro;
+
+	private final boolean rc;
 
 	public BugzillaVersion(String version) {
-		String[] segments = version == null ? new String[0] : version.split("\\."); //$NON-NLS-1$
+		String[] segments;
+		if (version == null) {
+			segments = new String[0];
+			rc = false;
+		} else {
+			rc = version.contains("RC"); //$NON-NLS-1$
+			segments = rc ? version.split("(\\.|([R][C]))") : version.split("\\."); //$NON-NLS-1$
+		}
 		major = segments.length > 0 ? parse(segments[0]) : 0;
 		minor = segments.length > 1 ? parse(segments[1]) : 0;
 		micro = segments.length > 2 ? parse(segments[2]) : 0;
+		if (rc) {
+			micro -= 100;
+		}
 	}
 
 	private int parse(String segment) {
@@ -104,6 +116,8 @@ public class BugzillaVersion implements Comparable<BugzillaVersion>, Serializabl
 		sb.append(".").append(Integer.toString(minor)); //$NON-NLS-1$
 		if (micro > 0) {
 			sb.append(".").append(Integer.toString(micro)); //$NON-NLS-1$
+		} else if (micro < 0) {
+			sb.append("RC").append(Integer.toString(micro + 100)); //$NON-NLS-1$
 		}
 		return sb.toString();
 	}
