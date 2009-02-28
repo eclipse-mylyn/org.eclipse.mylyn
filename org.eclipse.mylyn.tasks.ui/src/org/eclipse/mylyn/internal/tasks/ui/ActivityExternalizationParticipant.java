@@ -28,6 +28,7 @@ import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 /**
  * @author Rob Elves
  */
+@SuppressWarnings("restriction")
 public class ActivityExternalizationParticipant extends AbstractExternalizationParticipant implements
 		ITaskActivityListener {
 
@@ -41,15 +42,14 @@ public class ActivityExternalizationParticipant extends AbstractExternalizationP
 		this.manager = manager;
 	}
 
-	@SuppressWarnings("restriction")
 	@Override
 	public void execute(IExternalizationContext context, IProgressMonitor monitor) throws CoreException {
 		Assert.isNotNull(context);
 		switch (context.getKind()) {
 		case SAVE:
 			if (ContextCorePlugin.getDefault() != null && ContextCorePlugin.getContextManager() != null) {
-				ContextCorePlugin.getContextManager().saveActivityMetaContext();
 				setDirty(false);
+				ContextCorePlugin.getContextManager().saveActivityMetaContext();
 			}
 			break;
 		case LOAD:

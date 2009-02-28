@@ -123,10 +123,10 @@ public class TaskListExternalizationParticipant extends AbstractExternalizationP
 	public void save(final File targetFile, IProgressMonitor monitor) throws CoreException {
 		ITaskListRunnable saveRunnable = new ITaskListRunnable() {
 			public void execute(IProgressMonitor monitor) throws CoreException {
-				taskListWriter.writeTaskList(taskList, targetFile);
 				synchronized (TaskListExternalizationParticipant.this) {
 					dirty = false;
 				}
+				taskListWriter.writeTaskList(taskList, targetFile);
 			}
 		};
 

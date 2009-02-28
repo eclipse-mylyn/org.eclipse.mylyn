@@ -71,10 +71,10 @@ public class RepositoryExternalizationParticipant extends AbstractExternalizatio
 
 	@Override
 	public void save(File targetFile, IProgressMonitor monitor) throws CoreException {
-		repositoryManager.saveRepositories(targetFile.getAbsolutePath());
 		synchronized (RepositoryExternalizationParticipant.this) {
 			dirty = false;
 		}
+		repositoryManager.saveRepositories(targetFile.getAbsolutePath());
 	}
 
 	@Override
