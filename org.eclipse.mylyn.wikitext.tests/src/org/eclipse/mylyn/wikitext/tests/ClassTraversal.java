@@ -17,6 +17,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Enumeration;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.internal.wikitext.core.WikiTextPlugin;
 import org.osgi.framework.Bundle;
@@ -27,6 +29,8 @@ import org.osgi.framework.Bundle;
  * @author David Green
  */
 public class ClassTraversal {
+	private static final Pattern BUNDLE_RESOURCE_35 = Pattern.compile("(\\d+)\\..*");;
+
 	public void visitClasses(Visitor visitor) {
 		visitClasses(ClassTraversal.class, visitor);
 	}
@@ -53,7 +57,13 @@ public class ClassTraversal {
 				visitClasses(loader, new File(file), new File(file), visitor);
 
 			} else if (protocol.equals("bundleresource")) {
-				long bundleId = Long.parseLong(url.getHost());
+				String host = url.getHost();
+				// bug 266767 see http://dev.eclipse.org/mhonarc/lists/equinox-dev/msg05209.html
+				Matcher bundle35Matcher = BUNDLE_RESOURCE_35.matcher(host);
+				if (bundle35Matcher.matches()) {
+					host = bundle35Matcher.group(1);
+				}
+				long bundleId = Long.parseLong(host);
 				Bundle bundle = WikiTextPlugin.getDefault().getBundle().getBundleContext().getBundle(bundleId);
 				if (bundle == null) {
 					throw new IllegalStateException("Cannot get bundle " + bundleId);
