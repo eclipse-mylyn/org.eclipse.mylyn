@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others. 
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     David Green - fix for bug 266693
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
@@ -55,10 +56,10 @@ public class TaskUrlHyperlinkDetector extends AbstractHyperlinkDetector {
 
 		int offsetInLine = offset - lineInfo.getOffset();
 
-		return findHyperlinks(line, offsetInLine, lineInfo.getOffset());
+		return findHyperlinks(line, offsetInLine, lineInfo.getOffset(), region.getLength());
 	}
 
-	public IHyperlink[] findHyperlinks(String line, int offsetInLine, int offset) {
+	private IHyperlink[] findHyperlinks(String line, int offsetInLine, int offset, int regionLength) {
 		char doubleChar = ' ';
 
 		String urlString = null;
@@ -112,7 +113,11 @@ public class TaskUrlHyperlinkDetector extends AbstractHyperlinkDetector {
 			}
 
 			urlLength = tokenizer.nextToken().length() + 3 + urlSeparatorOffset - urlOffsetInLine;
-			if (offsetInLine >= urlOffsetInLine && offsetInLine <= urlOffsetInLine + urlLength) {
+			if ((regionLength == 0 && offsetInLine >= urlOffsetInLine && offsetInLine <= urlOffsetInLine + urlLength)
+					|| ((regionLength > 0 && offsetInLine <= urlOffsetInLine && (offsetInLine + regionLength) > urlOffsetInLine))) {
+				// region length of 0 and offset hits within the hyperlink url
+				// OR
+				// region spans the start of the hyperlink url.
 				break;
 			}
 

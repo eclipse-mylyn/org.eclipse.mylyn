@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     David Green - fix for bug 266693
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests.ui.editor;
@@ -24,6 +25,7 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.TaskUrlHyperlinkDetector;
 
 /**
  * @author Steffen Pingel
+ * @author David Green
  */
 public class TaskUrlHyperlinkDetectorTest extends TestCase {
 
@@ -70,6 +72,18 @@ public class TaskUrlHyperlinkDetectorTest extends TestCase {
 		assertNotNull(links);
 		assertEquals(1, links.length);
 		assertEquals("http://foo", ((TaskUrlHyperlink) links[0]).getURLString());
+	}
+
+	public void testDetectionUsingExtent() {
+		IHyperlink[] hyperlinks = detect("aa http://www.eclipse.org test", 0, 30);
+		assertNotNull(hyperlinks);
+		assertEquals(1, hyperlinks.length);
+	}
+
+	public void testDetection() {
+		IHyperlink[] hyperlinks = detect("aa http://www.eclipse.org test", 20, 0);
+		assertNotNull(hyperlinks);
+		assertEquals(1, hyperlinks.length);
 	}
 
 }
