@@ -276,6 +276,11 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 				return null;
 			}
 		}
+
+		@Override
+		public int getHyperlinkStateMask(ISourceViewer sourceViewer) {
+			return SWT.NONE;
+		}
 	}
 
 	protected static class TaskMarkupViewerConfiguration extends MarkupViewerConfiguration {
