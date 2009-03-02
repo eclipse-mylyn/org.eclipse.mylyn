@@ -163,7 +163,14 @@ public class TaskComparator implements Comparator<ITask> {
 	}
 
 	private int sortByID(ITask element1, ITask element2, int sortDirection) {
-		return sortDirection * (taskKeyComparator.compare2(element1.getTaskKey(), element2.getTaskKey()));
+		String key1 = element1.getTaskKey();
+		String key2 = element2.getTaskKey();
+		if (key1 == null) {
+			return (key2 != null) ? sortDirection : 0;
+		} else if (key2 == null) {
+			return -sortDirection;
+		}
+		return sortDirection * taskKeyComparator.compare2(key1, key2);
 	}
 
 	private int sortByPriority(ITask element1, ITask element2, int sortDirection) {
