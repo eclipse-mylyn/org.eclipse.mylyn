@@ -137,20 +137,6 @@
             label="%keywords.label"
             id="org.eclipse.mylyn.team.ui.keywords"/>
    </extension>
-      
-   	<extension point="org.eclipse.ui.navigator.viewer">
-	   <viewerActionBinding
-	      viewerId="org.eclipse.team.cvs.ui.workspaceSynchronization">
-	        <includes>
-	           <actionExtension
-			       pattern="org.eclipse.mylyn.ide.ui.actions.TaskResourceMappingActionProvider"/>
-	        </includes>
-	   </viewerActionBinding>
-    <dragAssistant
-          class="org.eclipse.ui.navigator.resources.ResourceDragAdapterAssistant"
-          viewerId="org.eclipse.mylyn.team.ui.cvs.ui.dragAssistant">
-    </dragAssistant>
-	</extension>
 	
     <extension
           point="org.eclipse.mylyn.team.ui.commitTemplates">
