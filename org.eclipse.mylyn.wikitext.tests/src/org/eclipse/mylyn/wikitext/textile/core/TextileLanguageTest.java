@@ -487,6 +487,18 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<table><tr><td>This</td><td>is</td><td>a</td><td>row</td></tr><tr style=\"background:#ddd\"><td>This</td><td>is</td><td>grey</td><td>row</td></tr></table>"));
 	}
 
+	public void testTableWithStyles() {
+		String html = parser.parseToHtml("table{border: 1px solid black}.\n|a|table|row|");
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><table style=\"border: 1px solid black\"><tr><td>a</td><td>table</td><td>row</td></tr></table></body>"));
+	}
+
+	public void testTableWithStylesAndTrailingWhitespace() {
+		String html = parser.parseToHtml("table{border: 1px solid black}. \n|a|table|row|");
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><table style=\"border: 1px solid black\"><tr><td>a</td><td>table</td><td>row</td></tr></table></body>"));
+	}
+
 	public void testPhraseModifierBold() throws IOException {
 		String html = parser.parseToHtml("a paragraph with **bold content**");
 
@@ -1148,4 +1160,5 @@ public class TextileLanguageTest extends TestCase {
 		}
 		assertEquals(3, found);
 	}
+
 }

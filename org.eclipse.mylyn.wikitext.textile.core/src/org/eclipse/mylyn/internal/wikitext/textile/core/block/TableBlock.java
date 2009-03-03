@@ -14,7 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.internal.wikitext.textile.core.Textile;
-import org.eclipse.mylyn.wikitext.core.parser.Attributes;
+import org.eclipse.mylyn.wikitext.core.parser.TableAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.TableCellAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.TableRowAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
@@ -29,7 +29,7 @@ public class TableBlock extends Block {
 
 	// NOTE: no need for whitespace after the dot on 'table.'
 	static final Pattern startPattern = Pattern.compile("(table" + Textile.REGEX_BLOCK_ATTRIBUTES //$NON-NLS-1$
-			+ "\\.)|(\\|(.*)?(\\|\\s*$))"); //$NON-NLS-1$
+			+ "\\.\\s*)|(\\|(.*)?(\\|\\s*$))"); //$NON-NLS-1$
 
 	static final Pattern rowAttributesPattern = Pattern.compile(Textile.REGEX_BLOCK_ATTRIBUTES + "\\.\\s*.*"); //$NON-NLS-1$
 
@@ -46,7 +46,7 @@ public class TableBlock extends Block {
 	@Override
 	public int processLineContent(String line, int offset) {
 		if (blockLineCount == 0) {
-			Attributes attributes = new Attributes();
+			TableAttributes attributes = new TableAttributes();
 			if (matcher.group(1) != null) {
 				// 0-offset matches may start with the "table. " prefix.
 				Textile.configureAttributes(attributes, matcher, 2, true);
