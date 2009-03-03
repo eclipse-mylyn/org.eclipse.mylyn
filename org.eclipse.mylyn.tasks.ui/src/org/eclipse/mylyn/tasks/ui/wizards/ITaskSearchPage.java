@@ -14,6 +14,8 @@ package org.eclipse.mylyn.tasks.ui.wizards;
 import org.eclipse.jface.dialogs.IDialogPage;
 
 /**
+ * @noextend This interface is not intended to be extended by clients.
+ * @noimplement This interface is not intended to be implemented by clients.
  * @author Steffen Pingel
  * @since 3.0
  */
