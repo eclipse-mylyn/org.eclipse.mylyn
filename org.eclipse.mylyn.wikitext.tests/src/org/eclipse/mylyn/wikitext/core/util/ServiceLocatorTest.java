@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 David Green and others.
+ * Copyright (c) 2007, 2009 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,9 +30,15 @@ public class ServiceLocatorTest extends TestCase {
 	}
 
 	public void testKnownLanguage() {
-		// if this test fails it may be because it's run stand-alone and the Textile
-		// language is loaded from a folder instead of a jar file.
-		MarkupLanguage markupLanguage = locator.getMarkupLanguage("Textile");
+		MarkupLanguage markupLanguage;
+		try {
+			markupLanguage = locator.getMarkupLanguage("Textile");
+		} catch (IllegalArgumentException e) {
+			// if this test fails it may be because it's run stand-alone and the Textile
+			// language is loaded from a folder instead of a jar file.
+			fail(e.getMessage());
+			return;
+		}
 		assertNotNull(markupLanguage);
 	}
 

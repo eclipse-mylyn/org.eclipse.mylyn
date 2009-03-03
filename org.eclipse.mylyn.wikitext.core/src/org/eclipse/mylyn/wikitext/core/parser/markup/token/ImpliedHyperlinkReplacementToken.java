@@ -17,6 +17,8 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcesso
  * A token that detects hyperlinks in the markup and emits them as a link. hyperlinks must use the HTTP or HTTPS
  * protocols to be detected.
  * 
+ * Url detection is based on RFC 3986.
+ * 
  * @author David Green
  * @since 1.0
  */
@@ -24,7 +26,9 @@ public class ImpliedHyperlinkReplacementToken extends PatternBasedElement {
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		return "(https?://\\S+[^\\s\\.,;\\):])"; //$NON-NLS-1$
+		// based on RFC 3986
+		// even though it's valid we don't want to detect URLs that end with '.', ',', ';', ':' or ')'
+		return "(https?://[a-zA-Z0-9%._~!$&?#'()*+,;:@/=-]*[a-zA-Z0-9_~!$&?#'(*+@/=-])"; //$NON-NLS-1$
 	}
 
 	@Override
