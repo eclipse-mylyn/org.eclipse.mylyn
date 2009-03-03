@@ -4,11 +4,11 @@
 <toc label="Tasks" topic="doc/overview.html">
 	<topic href="doc/overview.html" label="Overview">
  </topic>
- <anchor id="preReference" />
+ <anchor id="before-reference" />
  <topic href="userguide/Mylyn Reference.html" label="Feature Reference">
     <link toc="userguide/Mylyn Reference-toc.xml"/>
  </topic>
-  	<anchor id="postReference" />
+  	<anchor id="after-reference" />
   	<anchor id="additions" />
  	<topic href="doc/notices.html" label="Legal" />
 </toc>
