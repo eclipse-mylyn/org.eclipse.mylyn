@@ -23,6 +23,8 @@ import org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin;
 import org.eclipse.mylyn.internal.team.ui.preferences.FocusedTeamPreferencePage;
 import org.eclipse.mylyn.internal.team.ui.templates.TemplateHandlerContentProposalProvider;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
@@ -51,7 +53,9 @@ public class ProjectTeamPage extends PropertyPage {
 
 	private IProject project;
 
-	private boolean modified = false;
+	private boolean modified;
+
+	private boolean ignoreModifyEvents;
 
 	private Button useProjectSettings;
 
@@ -99,7 +103,9 @@ public class ProjectTeamPage extends PropertyPage {
 		useProjectSettings.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				modified = true;
+				if (!ignoreModifyEvents) {
+					modified = true;
+				}
 				setPropertiesEnabled(useProjectSettings.getSelection());
 			}
 		});
@@ -160,8 +166,15 @@ public class ProjectTeamPage extends PropertyPage {
 
 	private Text addTemplateField(final Composite parent, final String text, IContentProposalProvider provider) {
 		IControlContentAdapter adapter = new TextContentAdapter();
-		Text control = new Text(parent, SWT.BORDER | SWT.MULTI);
+		Text control = new Text(parent, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
 		control.setText(text);
+		control.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				if (!ignoreModifyEvents) {
+					modified = true;
+				}
+			}
+		});
 
 		new ContentAssistCommandAdapter(control, adapter, provider, null, new char[] { '$' }, true);
 
@@ -178,18 +191,22 @@ public class ProjectTeamPage extends PropertyPage {
 
 	private void initialize() {
 		project = (IProject) getElement().getAdapter(IResource.class);
-
-		TeamPropertiesLinkProvider provider = new TeamPropertiesLinkProvider();
-		String template = provider.getCommitCommentTemplate(project);
-		if (template == null) {
-			useProjectSettings.setSelection(false);
-			setPropertiesEnabled(false);
-			commitTemplateText.setText(FocusedTeamUiPlugin.getDefault().getPreferenceStore().getString(
-					FocusedTeamUiPlugin.COMMIT_TEMPLATE));
-		} else {
-			useProjectSettings.setSelection(true);
-			setPropertiesEnabled(true);
-			commitTemplateText.setText(template);
+		try {
+			ignoreModifyEvents = true;
+			TeamPropertiesLinkProvider provider = new TeamPropertiesLinkProvider();
+			String template = provider.getCommitCommentTemplate(project);
+			if (template == null) {
+				useProjectSettings.setSelection(false);
+				setPropertiesEnabled(false);
+				commitTemplateText.setText(FocusedTeamUiPlugin.getDefault().getPreferenceStore().getString(
+						FocusedTeamUiPlugin.COMMIT_TEMPLATE));
+			} else {
+				useProjectSettings.setSelection(true);
+				setPropertiesEnabled(true);
+				commitTemplateText.setText(template);
+			}
+		} finally {
+			ignoreModifyEvents = false;
 		}
 	}
 
