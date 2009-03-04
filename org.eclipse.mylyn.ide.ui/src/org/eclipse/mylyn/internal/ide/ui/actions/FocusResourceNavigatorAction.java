@@ -12,33 +12,24 @@
 package org.eclipse.mylyn.internal.ide.ui.actions;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtension;
-import org.eclipse.core.runtime.IExtensionPoint;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylyn.context.ui.AbstractAutoFocusViewAction;
 import org.eclipse.mylyn.context.ui.InterestFilter;
-import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.views.navigator.FilterSelectionAction;
 import org.eclipse.ui.views.navigator.IResourceNavigator;
 import org.eclipse.ui.views.navigator.ResourceNavigator;
-import org.eclipse.ui.views.navigator.ResourcePatternFilter;
 import org.eclipse.ui.views.navigator.ToggleLinkingAction;
 
 /**
@@ -120,41 +111,41 @@ public class FocusResourceNavigatorAction extends AbstractAutoFocusViewAction {
 		return false;
 	}
 
-	private Set<String> getPreservedFilterPatterns() {
-		Set<String> preservedIds = ContextUiPlugin.getDefault().getPreservedFilterIds(viewPart.getSite().getId());
-		IExtensionPoint extension = Platform.getExtensionRegistry().getExtensionPoint(
-				"org.eclipse.ui.ide.resourceFilters"); //$NON-NLS-1$
-		Set<String> filters = new HashSet<String>();
-		if (extension != null) {
-			IExtension[] extensions = extension.getExtensions();
-			for (IExtension extension2 : extensions) {
-				IConfigurationElement[] configElements = extension2.getConfigurationElements();
-				if (extension2.getUniqueIdentifier() != null && preservedIds.contains(extension2.getUniqueIdentifier())) {
-					for (IConfigurationElement configElement : configElements) {
-						String pattern = configElement.getAttribute("pattern");//$NON-NLS-1$
-						if (pattern != null) {
-							filters.add(pattern);
-						}
-					}
-				}
+//	private Set<String> getPreservedFilterPatterns() {
+//		Set<String> preservedIds = ContextUiPlugin.getDefault().getPreservedFilterIds(viewPart.getSite().getId());
+//		IExtensionPoint extension = Platform.getExtensionRegistry().getExtensionPoint(
+//				"org.eclipse.ui.ide.resourceFilters"); //$NON-NLS-1$
+//		Set<String> filters = new HashSet<String>();
+//		if (extension != null) {
+//			IExtension[] extensions = extension.getExtensions();
+//			for (IExtension extension2 : extensions) {
+//				IConfigurationElement[] configElements = extension2.getConfigurationElements();
+//				if (extension2.getUniqueIdentifier() != null && preservedIds.contains(extension2.getUniqueIdentifier())) {
+//					for (IConfigurationElement configElement : configElements) {
+//						String pattern = configElement.getAttribute("pattern");//$NON-NLS-1$
+//						if (pattern != null) {
+//							filters.add(pattern);
+//						}
+//					}
+//				}
+//
+//			}
+//		}
+//		return filters;
+//	}
 
-			}
-		}
-		return filters;
-	}
-
-	@Override
-	protected boolean isPreservedFilter(ViewerFilter filter) {
-		if (filter instanceof ResourcePatternFilter) {
-			Set<String> preservedFilterPatterns = getPreservedFilterPatterns();
-			//NOTE: since the resource filters are all contained in one filter, if one is preserved, then we preserve all filters
-			for (String pattern : ((ResourcePatternFilter) filter).getPatterns()) {
-				if (preservedFilterPatterns.contains(pattern)) {
-					return true;
-				}
-			}
-		}
-		return super.isPreservedFilter(filter);
-	}
+//	@Override
+//	protected boolean isPreservedFilter(ViewerFilter filter) {
+//		if (filter instanceof ResourcePatternFilter) {
+//			Set<String> preservedFilterPatterns = getPreservedFilterPatterns();
+//			//NOTE: since the resource filters are all contained in one filter, if one is preserved, then we preserve all filters
+//			for (String pattern : ((ResourcePatternFilter) filter).getPatterns()) {
+//				if (preservedFilterPatterns.contains(pattern)) {
+//					return true;
+//				}
+//			}
+//		}
+//		return super.isPreservedFilter(filter);
+//	}
 
 }
