@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2009 Tasktop Technologies and others. 
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     Christian Dupuis - bug 193003
+ *     David Green - fix for bug 261446
  *******************************************************************************/
 
 package org.eclipse.mylyn.context.ui;
@@ -50,7 +51,8 @@ public class InterestFilter extends ViewerFilter {
 			}
 			if (isTemporarilyUnfiltered(parent)) {
 				return true;
-			} else if (temporarilyUnfiltered instanceof Tree && isRootElement(object)) {
+			} else if (temporarilyUnfiltered instanceof Tree
+					&& (isRootElement(object) || isRootElement(viewer, parent, object))) {
 				return true;
 			}
 
@@ -90,6 +92,13 @@ public class InterestFilter extends ViewerFilter {
 		} catch (Throwable t) {
 			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Interest filter failed on viewer: " //$NON-NLS-1$
 					+ viewer.getClass(), t));
+		}
+		return false;
+	}
+
+	private boolean isRootElement(Viewer viewer, Object parent, Object object) {
+		if (viewer.getInput() == parent) {
+			return true;
 		}
 		return false;
 	}
