@@ -124,6 +124,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTError;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.FileTransfer;
@@ -1676,7 +1677,14 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		saveSelection();
 
 		IStructuredSelection selection = restoreSelection(task);
-		getViewer().setSelection(selection, true);
+		try {
+			getViewer().setSelection(selection, true);
+		} catch (SWTError e) {
+			// It's probably not worth displaying this to the user since the item
+			// is not there in this case, so consider removing.
+			StatusHandler.log(new Status(IStatus.INFO, TasksUiPlugin.ID_PLUGIN, "Could not link Task List with editor", //$NON-NLS-1$
+					e));
+		}
 	}
 
 	private void saveSelection() {
