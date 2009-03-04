@@ -324,6 +324,7 @@
 	</extension>
 
   <extension point="org.eclipse.ui.popupMenus">
+  
       <viewerContribution
             id="org.eclipse.mylyn.tasklist.ui.viewerContribution"
             targetID="org.eclipse.mylyn.tasks.ui.views.tasks">
@@ -1541,6 +1542,19 @@
    </extension>
    <extension
          point="org.eclipse.ui.menus">
+       <menuContribution
+			locationURI="popup:org.eclipse.mylyn.tasks.ui.editors.task?after=additions">
+	   		<command
+	         commandId="org.eclipse.mylyn.tasks.ui.viewSource.command"
+	         id="org.eclipse.mylyn.sandbox.ui.viewSource"
+	         label="View Unformatted Text"
+	         style="toggle">
+	      	<visibleWhen
+	        	    checkEnabled="true">
+	      	</visibleWhen>
+	   	</command>
+	   </menuContribution>
+         
       <menuContribution
             locationURI="popup:org.eclipse.mylyn.tasks.ui.views.tasks?after=properties">
          <command
@@ -1791,7 +1805,7 @@
       <command
             categoryId="org.eclipse.mylyn.tasks.ui.commands"
             defaultHandler="org.eclipse.mylyn.internal.tasks.ui.commands.ViewSourceHandler"
-            id="org.eclipse.mylyn.sandbox.ui.viewSource.command"
+            id="org.eclipse.mylyn.tasks.ui.viewSource.command"
             name="%commands.ViewSourceHandler.name">
       </command>
    </extension>
