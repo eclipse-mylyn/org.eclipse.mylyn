@@ -17,6 +17,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
+import org.eclipse.jdt.ui.PreferenceConstants;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
@@ -55,7 +57,11 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 
 	private InterestUpdateDeltaListener javaElementChangeListener;
 
-	private static final String MYLYN_FIRST_RUN = "org.eclipse.mylyn.ui.first.run.0_4_9"; //$NON-NLS-1$
+	private static final String MYLYN_PREVIOUS_RUN = "org.eclipse.mylyn.ui.first.run.0_4_9"; //$NON-NLS-1$
+
+	private static final String MYLYN_RUN_COUNT = "org.eclipse.mylyn.java.ui.run.count.3_1_0"; //$NON-NLS-1$
+
+	private static final String NUM_COMPUTERS_PREF_KEY = "content_assist_number_of_computers"; //$NON-NLS-1$
 
 	public JavaUiBridgePlugin() {
 	}
@@ -68,21 +74,37 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 		super.start(context);
 		INSTANCE = this;
 
-		initDefaultPrefs();
-
+		IPreferenceStore javaPrefs = JavaPlugin.getDefault().getPreferenceStore();
 		// NOTE: moved out of wizard and first task activation to avoid bug 194766
-		if (getPreferenceStore().getBoolean(MYLYN_FIRST_RUN)) {
-			getPreferenceStore().setValue(MYLYN_FIRST_RUN, false);
+		int count = getPreferenceStore().getInt(MYLYN_RUN_COUNT);
+		if (count < 1) {
+			getPreferenceStore().setValue(MYLYN_RUN_COUNT, count + 1);
 
+			// Mylyn 3.1 removes 2 computers, migrate JDT setting on first run to avoid prevent JDT from displaying a warning dialog 
+			if (count == 0 && getPreferenceStore().contains(MYLYN_PREVIOUS_RUN)) {
+				if (javaPrefs.contains(NUM_COMPUTERS_PREF_KEY)) {
+					int lastNumberOfComputers = javaPrefs.getInt(NUM_COMPUTERS_PREF_KEY);
+					if (lastNumberOfComputers > 0) {
+						javaPrefs.putValue(NUM_COMPUTERS_PREF_KEY, Integer.toString(lastNumberOfComputers - 2));
+					}
+				}
+			}
+
+			// try installing Task-Focused content assist twice
 			new UIJob("Initialize Content Assist") { //$NON-NLS-1$
-
 				@Override
 				public IStatus runInUIThread(IProgressMonitor monitor) {
-					JavaUiUtil.installContentAssist(JavaPlugin.getDefault().getPreferenceStore(), true);
+					IPreferenceStore store = JavaPlugin.getDefault().getPreferenceStore();
+					JavaUiUtil.installContentAssist(store, true);
 					return Status.OK_STATUS;
 				}
 			}.schedule();
 		}
+
+		// the Task-Focused category should be disabled if the user reverts to the default 
+		String defaultValue = javaPrefs.getDefaultString(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES);
+		javaPrefs.setDefault(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES, defaultValue
+				+ JavaUiUtil.ASSIST_MYLYN_ALL + JavaUiUtil.SEPARATOR_CODEASSIST);
 	}
 
 	private void lazyStart() {
@@ -104,10 +126,6 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
 					"Could not install type history manager: incompatible Eclipse version", t)); //$NON-NLS-1$
 		}
-	}
-
-	private void initDefaultPrefs() {
-		getPreferenceStore().setDefault(MYLYN_FIRST_RUN, true);
 	}
 
 	private void lazyStop() {

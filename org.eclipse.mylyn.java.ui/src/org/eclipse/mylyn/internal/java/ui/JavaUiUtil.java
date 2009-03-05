@@ -12,10 +12,12 @@
 package org.eclipse.mylyn.internal.java.ui;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.eclipse.jdt.internal.ui.JavaPlugin;
+import org.eclipse.jdt.internal.ui.text.java.CompletionProposalCategory;
 import org.eclipse.jdt.internal.ui.text.java.CompletionProposalComputerRegistry;
 import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -25,27 +27,40 @@ import org.eclipse.jface.preference.IPreferenceStore;
  */
 public class JavaUiUtil {
 
-	private static final String SEPARATOR_CODEASSIST = "\0"; //$NON-NLS-1$
+	static final String SEPARATOR_CODEASSIST = "\0"; //$NON-NLS-1$
 
-	public static final String ASSIST_MYLYN_TYPE = "org.eclipse.mylyn.java.javaTypeProposalCategory"; //$NON-NLS-1$
+	public static final String ASSIST_MYLYN_ALL = "org.eclipse.mylyn.java.ui.javaAllProposalCategory"; //$NON-NLS-1$
 
-	public static final String ASSIST_MYLYN_NOTYPE = "org.eclipse.mylyn.java.javaNoTypeProposalCategory"; //$NON-NLS-1$
+//	public static final String ASSIST_MYLYN_TYPE = "org.eclipse.mylyn.java.javaTypeProposalCategory"; //$NON-NLS-1$
 
-	public static final String ASSIST_JDT_ALL = "eclipse.jdt.ui.javaAllProposalCategory"; //$NON-NLS-1$
+//	public static final String ASSIST_MYLYN_NOTYPE = "org.eclipse.mylyn.java.javaNoTypeProposalCategory"; //$NON-NLS-1$
 
-	@Deprecated
+	public static final String ASSIST_JDT_ALL = "org.eclipse.jdt.ui.javaAllProposalCategory"; //$NON-NLS-1$
+
 	public static final String ASSIST_JDT_TYPE = "org.eclipse.jdt.ui.javaTypeProposalCategory"; //$NON-NLS-1$
 
-	@Deprecated
 	public static final String ASSIST_JDT_NOTYPE = "org.eclipse.jdt.ui.javaNoTypeProposalCategory"; //$NON-NLS-1$
 
-	public static final String ASSIST_JDT_TEMPLATE = "org.eclipse.jdt.ui.templateProposalCategory"; //$NON-NLS-1$
-
-	public static final String ASSIST_MYLYN_TEMPLATE = "org.eclipse.mylyn.java.templateProposalCategory"; //$NON-NLS-1$
+	private static final String ASSIST_JDT_TEMPLATE = "org.eclipse.jdt.ui.templateProposalCategory"; //$NON-NLS-1$
 
 	public static boolean isDefaultAssistActive(String computerId) {
+		if (JavaUiUtil.ASSIST_JDT_ALL.equals(computerId)) {
+			CompletionProposalCategory category = getProposalCategory(computerId);
+			return (category != null) ? category.isEnabled() && category.isIncluded() : false;
+		}
 		Set<String> disabledIds = getDisabledIds(JavaPlugin.getDefault().getPreferenceStore());
 		return !disabledIds.contains(computerId);
+	}
+
+	public static CompletionProposalCategory getProposalCategory(String computerId) {
+		List<?> computers = CompletionProposalComputerRegistry.getDefault().getProposalCategories();
+		for (Object object : computers) {
+			CompletionProposalCategory proposalCategory = (CompletionProposalCategory) object;
+			if (computerId.equals((proposalCategory).getId())) {
+				return proposalCategory;
+			}
+		}
+		return null;
 	}
 
 	public static void installContentAssist(IPreferenceStore javaPrefs, boolean mylynContentAssist) {
@@ -54,29 +69,32 @@ public class JavaUiUtil {
 			disabledIds.remove(ASSIST_JDT_ALL);
 			disabledIds.remove(ASSIST_JDT_TYPE);
 			disabledIds.remove(ASSIST_JDT_NOTYPE);
-			disabledIds.remove(ASSIST_JDT_TEMPLATE);
-			disabledIds.add(ASSIST_MYLYN_NOTYPE);
-			disabledIds.add(ASSIST_MYLYN_TYPE);
-			disabledIds.add(ASSIST_MYLYN_TEMPLATE);
+			//disabledIds.remove(ASSIST_JDT_TEMPLATE);
+			disabledIds.add(ASSIST_MYLYN_ALL);
+			//disabledIds.add(ASSIST_MYLYN_TYPE);
+			//disabledIds.add(ASSIST_MYLYN_TEMPLATE);
 		} else {
-			disabledIds.remove(ASSIST_JDT_ALL);
+			disabledIds.add(ASSIST_JDT_ALL);
 			disabledIds.add(ASSIST_JDT_TYPE);
 			disabledIds.add(ASSIST_JDT_NOTYPE);
-			disabledIds.add(ASSIST_JDT_TEMPLATE);
-			disabledIds.remove(ASSIST_MYLYN_NOTYPE);
-			disabledIds.remove(ASSIST_MYLYN_TYPE);
-			disabledIds.remove(ASSIST_MYLYN_TEMPLATE);
+			// re-enable, Mylyn versions <3.1 had a focused template computer that has been removed  
+			disabledIds.remove(ASSIST_JDT_TEMPLATE);
+			disabledIds.remove(ASSIST_MYLYN_ALL);
+			//disabledIds.remove(ASSIST_MYLYN_NOTYPE);
+			//disabledIds.remove(ASSIST_MYLYN_TYPE);
+			//disabledIds.remove(ASSIST_MYLYN_TEMPLATE);
 		}
-		String newValue = ""; //$NON-NLS-1$
+		StringBuilder sb = new StringBuilder();
 		for (String id : disabledIds) {
-			newValue += id + SEPARATOR_CODEASSIST;
+			sb.append(id);
+			sb.append(SEPARATOR_CODEASSIST);
 		}
-		javaPrefs.setValue(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES, newValue);
+		javaPrefs.setValue(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES, sb.toString());
 
 		CompletionProposalComputerRegistry.getDefault().reload();
 	}
 
-	private static Set<String> getDisabledIds(IPreferenceStore javaPrefs) {
+	public static Set<String> getDisabledIds(IPreferenceStore javaPrefs) {
 		String oldValue = javaPrefs.getString(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES);
 		StringTokenizer tokenizer = new StringTokenizer(oldValue, SEPARATOR_CODEASSIST);
 		Set<String> disabledIds = new HashSet<String>();

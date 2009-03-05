@@ -76,6 +76,15 @@
 
   	<!-- ==================== Content Assist ==================== -->
 
+ 	<extension
+ 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
+		id="javaAllProposalCategory"
+		name="%javaCompletionProposalComputer.javaAllProposalCategory.name">
+ 		<proposalCategory
+			icon="icons/elcl16/proposals-other.gif"/>
+	</extension>
+	<!-- e3.4 and earlier -->
+	<!--
 	<extension
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
 		id="javaNoTypeProposalCategory"
@@ -97,6 +106,22 @@
 		<proposalCategory
 			icon="/icons/elcl16/templateprop_co.gif"/>
 	</extension>
+	-->
+	
+	<!-- java completions -->
+	<extension
+		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
+		id="javaAllCompletionProposalComputer">
+		<javaCompletionProposalComputer
+          activate="true"
+          categoryId="org.eclipse.mylyn.java.ui.javaAllProposalCategory"
+          class="org.eclipse.mylyn.internal.java.ui.editor.FocusedJavaAllProposalComputer">
+			<partition type="__dftl_partition_content_type"/>
+			<partition type="__java_string"/>
+		</javaCompletionProposalComputer>
+	</extension>
+	<!-- e3.4 and earlier -->
+	<!--
 	<extension
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
 		id="javaTypeCompletionProposalComputer">
@@ -119,19 +144,52 @@
 			<partition type="__java_string"/>
 		</javaCompletionProposalComputer>
 	</extension>
+	-->
+	<!-- templates -->
+	<!--
 	<extension
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
-		id="TemplateProposalComputer">
+		id="templateProposalComputer">
 		<javaCompletionProposalComputer
         activate="true"
         categoryId="org.eclipse.mylyn.java.ui.templateProposalCategory"
         class="org.eclipse.jdt.internal.ui.text.java.TemplateCompletionProposalComputer">
 			<partition type="__dftl_partition_content_type"/>
-			<partition type="__java_singleline_comment"/> <!-- to get NLS templates -->
+			<partition type="__java_singleline_comment"/>
 			<partition type="__java_javadoc"/>
 		</javaCompletionProposalComputer>
 	</extension>
-		<!-- javadoc completions -->   
+	-->
+	<!-- javadoc completions -->
+	<extension
+		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
+		id="LegacyJavadocCompletionProposalComputer_all">
+		<javaCompletionProposalComputer 
+			class="org.eclipse.jdt.internal.ui.text.javadoc.LegacyJavadocCompletionProposalComputer"
+			categoryId="org.eclipse.mylyn.java.ui.javaAllProposalCategory">
+			<partition type="__java_javadoc"/>
+		</javaCompletionProposalComputer>
+	</extension>
+	<extension
+		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
+		id="JavadocCompletionProposalComputer_all">
+		<javaCompletionProposalComputer 
+			class="org.eclipse.jdt.internal.ui.text.javadoc.JavadocCompletionProposalComputer"
+			categoryId="org.eclipse.mylyn.java.ui.javaAllProposalCategory">
+			<partition type="__java_javadoc"/>
+		</javaCompletionProposalComputer>
+	</extension>
+	<extension
+		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
+		id="JavadocHTMLCompletionProposalComputer_all">
+		<javaCompletionProposalComputer 
+			class="org.eclipse.jdt.internal.ui.text.javadoc.HTMLTagCompletionProposalComputer"
+			categoryId="org.eclipse.mylyn.java.ui.javaAllProposalCategory">
+			<partition type="__java_javadoc"/>
+		</javaCompletionProposalComputer>
+	</extension>
+	<!-- e3.4 and earlier -->
+	<!--
 	<extension
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
 		id="org.eclipse.mylyn.java.editor.LegacyJavadocCompletionProposalComputer">
@@ -162,6 +220,8 @@
 			<partition type="__java_javadoc"/>
 		</javaCompletionProposalComputer>
 	</extension>
+	-->
+  	<!-- ==================== Launch Configurations ==================== -->
 
 	<extension
          point="org.eclipse.debug.core.launchConfigurationTypes">
@@ -451,22 +511,7 @@
             class="org.eclipse.mylyn.internal.java.ui.JavaDeclarationsFilter"
             id="org.eclipse.mylyn.java.ui.MembersFilter">
    		</filter>
-  </extension>
-  
-  	<!--
-	<extension point="org.eclipse.ui.newWizards">
-      <wizard
-            canFinishEarly="false"
-            category="org.eclipse.mylyn.ui.wizards.new"
-            class="org.eclipse.mylyn.internal.java.ui.wizards.RecommendedPreferencesWizard"
-            hasPages="true"
-            icon="icons/etool16/wizard-prefs.gif"
-            id="org.eclipse.mylyn.java.ui.wizards.preferences"
-            name="Recommended Preferences"
-            project="false">
-      </wizard>
    </extension>
-	-->
 
    <extension point="org.eclipse.ui.commands">
       <category
@@ -481,16 +526,5 @@
          name="%command.folding.auto.name">
       </command>
     </extension>
-    <!--
-   <extension
-         point="org.eclipse.debug.ui.launchShortcuts">
-      <shortcut
-            class="org.eclipse.mylyn.java.ui.LaunchShortcut1"
-            id="org.eclipse.mylyn.java.ui.shortcut1"
-            label="label"
-            modes="org.eclipse.mylyn.java.ui.shortcut1">
-      </shortcut>
-   </extension>
-   -->
    
 </plugin>

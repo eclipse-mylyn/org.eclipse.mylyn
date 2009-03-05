@@ -30,8 +30,8 @@
          point="org.eclipse.jdt.ui.javaCompletionProposalComputer">
       <javaCompletionProposalComputer
             activate="true"
-            categoryId="org.eclipse.mylyn.java.ui.javaNoTypeProposalCategory"
-            class="org.eclipse.pde.api.tools.ui.internal.completion.APIToolsJavadocCompletionProposalComputer">
+            categoryId="org.eclipse.mylyn.java.ui.javaAllProposalCategory"
+            class="org.eclipse.mylyn.internal.pde.ui.FocusedApiToolsJavadocCompletionProposalComputer">
          <partition
                type="__java_javadoc">
          </partition>
