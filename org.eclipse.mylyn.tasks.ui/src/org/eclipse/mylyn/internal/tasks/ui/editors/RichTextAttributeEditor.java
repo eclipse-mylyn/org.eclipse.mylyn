@@ -99,6 +99,7 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 		public ViewSourceAction() {
 			super(Messages.RichTextAttributeEditor_Viewer_Source, SWT.TOGGLE);
 			setChecked(false);
+			setEnabled(false);
 		}
 
 		@Override
@@ -108,6 +109,10 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 			} else {
 				showEditor();
 			}
+			if (editorLayout != null) {
+				EditorUtil.reflow(editorLayout.topControl);
+			}
+			ViewSourceHandler.setChecked(isChecked());
 		}
 
 	}
@@ -325,10 +330,14 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 				configure(defaultViewer, isReadOnly());
 				show(defaultViewer);
 			}
+
+			viewSourceAction.setEnabled(true);
 		} else {
 			defaultViewer = createDefaultEditor(parent, style);
 			configure(defaultViewer, isReadOnly());
 			setControl(defaultViewer.getControl());
+
+			viewSourceAction.setEnabled(false);
 		}
 	}
 
@@ -515,6 +524,10 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 		if (viewer != null) {
 			show(viewer.getControl());
 		}
+	}
+
+	public IAction getViewSourceAction() {
+		return viewSourceAction;
 	}
 
 }

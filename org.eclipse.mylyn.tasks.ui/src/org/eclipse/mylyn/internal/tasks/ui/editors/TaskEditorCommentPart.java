@@ -20,6 +20,7 @@ import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ISelection;
@@ -273,6 +274,8 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 		private final TaskComment taskComment;
 
+		private AbstractAttributeEditor editor;
+
 		public CommentViewer(TaskAttribute commentAttribute) {
 			this.commentAttribute = commentAttribute;
 			this.taskComment = new TaskComment(getModel().getTaskRepository(), getModel().getTask(), commentAttribute);
@@ -348,7 +351,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			buttonComposite.setVisible(commentComposite.isExpanded());
 
 			ToolBarManager toolBarManager = new ToolBarManager(SWT.FLAT);
-			ReplyToCommentAction replyAction = new ReplyToCommentAction(taskComment);
+			ReplyToCommentAction replyAction = new ReplyToCommentAction(this, taskComment);
 			replyAction.setImageDescriptor(TasksUiImages.COMMENT_REPLY_SMALL);
 			toolBarManager.add(replyAction);
 			toolBarManager.createControl(buttonComposite);
@@ -397,7 +400,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 				// create viewer
 				TaskAttribute textAttribute = getTaskData().getAttributeMapper().getAssoctiatedAttribute(
 						taskComment.getTaskAttribute());
-				AbstractAttributeEditor editor = createAttributeEditor(textAttribute);
+				editor = createAttributeEditor(textAttribute);
 				if (editor != null) {
 					editor.setDecorationEnabled(false);
 					editor.createControl(composite, toolkit);
@@ -433,14 +436,26 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			}
 		}
 
+		/**
+		 * Returns the comment viewer.
+		 * 
+		 * @return null, if the viewer has not been constructed
+		 */
+		public AbstractAttributeEditor getEditor() {
+			return editor;
+		}
+
 	}
 
 	private class ReplyToCommentAction extends AbstractReplyToCommentAction implements IMenuCreator {
 
 		private final ITaskComment taskComment;
 
-		public ReplyToCommentAction(ITaskComment taskComment) {
+		private final CommentViewer commentViewer;
+
+		public ReplyToCommentAction(CommentViewer commentViewer, ITaskComment taskComment) {
 			super(TaskEditorCommentPart.this.getTaskEditorPage(), taskComment);
+			this.commentViewer = commentViewer;
 			this.taskComment = taskComment;
 			setMenuCreator(this);
 		}
@@ -451,6 +466,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		}
 
 		public Menu getMenu(Control parent) {
+			currentViewer = commentViewer;
 			selectionProvider.setSelection(new StructuredSelection(taskComment));
 			return commentMenu;
 		}
@@ -483,6 +499,9 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 	protected Section section;
 
 	private SelectionProviderAdapter selectionProvider;
+
+	// XXX: stores a reference to the viewer for which the commentMenu was displayed last
+	private CommentViewer currentViewer;
 
 	private Menu commentMenu;
 
@@ -555,9 +574,16 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 						manager.add(replyAction);
 					}
 				}
-
-				actionGroup.setContext(new ActionContext(selectionProvider.getSelection()));
 				actionGroup.fillContextMenu(manager);
+				actionGroup.setContext(new ActionContext(selectionProvider.getSelection()));
+
+				if (currentViewer != null && currentViewer.getEditor() instanceof RichTextAttributeEditor) {
+					RichTextAttributeEditor editor = (RichTextAttributeEditor) currentViewer.getEditor();
+					if (editor.getViewSourceAction().isEnabled()) {
+						manager.add(new Separator("planning")); //$NON-NLS-1$
+						manager.add(editor.getViewSourceAction());
+					}
+				}
 			}
 		});
 		getTaskEditorPage().getEditorSite().registerContextMenu(ID_POPUP_MENU, menuManager, selectionProvider, false);

@@ -607,7 +607,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 				}
 			};
 		}
-		toolBarManager.add(new Separator("planning"));
+		toolBarManager.add(new Separator("planning")); //$NON-NLS-1$
 		toolBarManager.add(new TaskEditorScheduleAction(task));
 
 		toolBarManager.add(new Separator("activation")); //$NON-NLS-1$
