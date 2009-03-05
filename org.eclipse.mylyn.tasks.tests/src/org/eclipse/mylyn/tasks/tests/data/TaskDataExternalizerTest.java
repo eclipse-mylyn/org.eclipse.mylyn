@@ -62,7 +62,6 @@ public class TaskDataExternalizerTest extends TestCase {
 		}
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		externalizer.writeState(out, state);
-		System.err.println(new String(out.toByteArray()));
 		TaskDataState state2 = externalizer.readState(new ByteArrayInputStream(out.toByteArray()));
 		assertEquals(state.getConnectorKind(), state2.getConnectorKind());
 		assertEquals(state.getRepositoryUrl(), state2.getRepositoryUrl());

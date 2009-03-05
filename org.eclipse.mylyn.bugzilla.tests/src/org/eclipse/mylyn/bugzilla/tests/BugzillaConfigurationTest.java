@@ -199,7 +199,6 @@ public class BugzillaConfigurationTest extends TestCase {
 //        incoming.append("</RDF>");
 //
 //        StringBuffer result = XmlCleaner.clean(new StringReader(incoming.toString()));
-//        System.err.println(result);
 //	}
 
 	/**

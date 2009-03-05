@@ -128,36 +128,19 @@ public class BugzillaTaskHistoryTest extends AbstractBugzillaTest {
 		assertTrue(storedHistoryFile.delete());
 	}
 
-	private void storeHistory(TaskHistory history) {
+	private void storeHistory(TaskHistory history) throws FileNotFoundException, IOException {
 		File saveFile = new File(HISTORY_FILE_NAME);
 		saveFile.deleteOnExit();
-		try {
-			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(saveFile));
-			out.writeObject(history);
-			out.close();
-		} catch (FileNotFoundException e) {
-			System.err.println("Can't write to: " + saveFile);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(saveFile));
+		out.writeObject(history);
+		out.close();
 	}
 
-	private TaskHistory getStoredHistory() {
+	private TaskHistory getStoredHistory() throws FileNotFoundException, IOException, ClassNotFoundException {
 		File file = new File(HISTORY_FILE_NAME);
-		try {
-			ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));
-			TaskHistory history = (TaskHistory) in.readObject();
-			in.close();
-			return history;
-		} catch (FileNotFoundException e) {
-			System.err.println("Can't find: " + file);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-
-		// Should never happen
-		return null;
+		ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));
+		TaskHistory history = (TaskHistory) in.readObject();
+		in.close();
+		return history;
 	}
 }

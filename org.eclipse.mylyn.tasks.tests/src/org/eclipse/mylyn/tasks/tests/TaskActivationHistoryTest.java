@@ -182,7 +182,6 @@ public class TaskActivationHistoryTest extends TestCase {
 
 		previousTaskAction.run();
 		// order (1) 2 3
-		System.err.println(taskActivityManager.getTaskActivationHistory().getPreviousTasks());
 		assertEquals(task1, taskActivityManager.getActiveTask());
 		assertTrue(task1.isActive());
 
