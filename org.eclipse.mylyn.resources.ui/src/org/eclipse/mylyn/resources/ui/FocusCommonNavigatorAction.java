@@ -157,6 +157,7 @@ public abstract class FocusCommonNavigatorAction extends AbstractAutoFocusViewAc
 			commonNavigator = (CommonNavigator) super.getPartForAction();
 		}
 		if (commonNavigator != null) {
+			System.err.println(">>>>>> " + toSelect);
 			commonNavigator.selectReveal(toSelect);
 		}
 	}
