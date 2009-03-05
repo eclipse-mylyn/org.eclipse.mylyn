@@ -244,12 +244,10 @@ public class DatePicker extends Composite {
 	// pickerShell.addFocusListener(new FocusListener() {
 	//
 	// public void focusGained(FocusEvent e) {
-	// System.err.println(" shell - Focus Gained!");
 	//				
 	// }
 	//
 	// public void focusLost(FocusEvent e) {
-	// System.err.println("shell - Focus Lost!");
 	//				
 	// }});
 	//		
