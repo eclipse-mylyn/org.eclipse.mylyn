@@ -66,6 +66,10 @@ public class BooleanAttributeEditor extends AbstractAttributeEditor {
 
 	@Override
 	public void refresh() {
+		if (button == null) {
+			return;
+		}
+
 		try {
 			ignoreNotification = true;
 			button.setSelection(getValue());

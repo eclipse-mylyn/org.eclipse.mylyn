@@ -128,7 +128,7 @@ public class SingleSelectionAttributeEditor extends AbstractAttributeEditor {
 				} else {
 					text.setText(label);
 				}
-			} else {
+			} else if (combo != null) {
 				combo.removeAll();
 				Map<String, String> labelByValue = getAttributeMapper().getOptions(getTaskAttribute());
 				if (labelByValue != null) {
