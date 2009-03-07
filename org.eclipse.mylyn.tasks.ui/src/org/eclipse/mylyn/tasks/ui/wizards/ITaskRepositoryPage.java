@@ -15,8 +15,8 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
- * @noextend This interface is not intended to be extended by clients.
  * @noimplement This interface is not intended to be implemented by clients.
+ * @noextend This interface is not intended to be extended by clients.
  * @author Steffen Pingel
  * @since 3.0
  */

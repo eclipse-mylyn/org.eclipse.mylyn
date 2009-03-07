@@ -21,6 +21,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  * 
  * @author Steffen Pingel
  * @noimplement This interface is not intended to be implemented by clients.
+ * @noextend This interface is not intended to be extended by clients.
  * @since 3.1
  */
 public interface ITasksUiFactory {
