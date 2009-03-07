@@ -136,6 +136,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 				TaskAttribute.TYPE_ATTACHMENT).get(0);
 		assertNotNull(attachment);
 		TaskAttribute obsolete = attachment.getMappedAttribute(TaskAttribute.ATTACHMENT_IS_DEPRECATED);
+		assertNotNull(obsolete);
 		boolean oldObsoleteOn = obsolete.getValue().equals("1");
 		if (oldObsoleteOn) {
 			obsolete.setValue("0"); //$NON-NLS-1$
@@ -153,6 +154,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		attachment = taskData.getAttributeMapper().getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT).get(0);
 		assertNotNull(attachment);
 		obsolete = attachment.getMappedAttribute(TaskAttribute.ATTACHMENT_IS_DEPRECATED);
+		assertNotNull(obsolete);
 		boolean newObsoleteOn = obsolete.getValue().equals("1");
 		assertEquals(true, oldObsoleteOn != newObsoleteOn);
 	}

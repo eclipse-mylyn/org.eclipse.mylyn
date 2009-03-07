@@ -78,25 +78,27 @@ public class UpdateAttachmentJob extends Job {
 			for (ITaskAttachment taskAttachment : attachment) {
 				TaskAttribute taskAttribute = taskAttachment.getTaskAttribute();
 				TaskAttribute deprecated = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_IS_DEPRECATED);
-				if (deprecated.getValue().equals("1") && !obsolete) { //$NON-NLS-1$
-					try {
-						deprecated.setValue("0"); //$NON-NLS-1$
-						((BugzillaTaskDataHandler) connector.getTaskDataHandler()).postUpdateAttachment(
-								taskAttachment.getTaskRepository(), taskAttribute, "update", monitor); //$NON-NLS-1$
-					} catch (CoreException e) {
-						error = e.getStatus();
-						deprecated.setValue("1"); //$NON-NLS-1$
-						return Status.OK_STATUS;
-					}
-				} else if (deprecated.getValue().equals("0") && obsolete) { //$NON-NLS-1$
-					try {
-						deprecated.setValue("1"); //$NON-NLS-1$
-						((BugzillaTaskDataHandler) connector.getTaskDataHandler()).postUpdateAttachment(
-								taskAttachment.getTaskRepository(), taskAttribute, "update", monitor); //$NON-NLS-1$
-					} catch (CoreException e) {
-						error = e.getStatus();
-						deprecated.setValue("0"); //$NON-NLS-1$
-						return Status.OK_STATUS;
+				if (deprecated != null) {
+					if (deprecated.getValue().equals("1") && !obsolete) { //$NON-NLS-1$
+						try {
+							deprecated.setValue("0"); //$NON-NLS-1$
+							((BugzillaTaskDataHandler) connector.getTaskDataHandler()).postUpdateAttachment(
+									taskAttachment.getTaskRepository(), taskAttribute, "update", monitor); //$NON-NLS-1$
+						} catch (CoreException e) {
+							error = e.getStatus();
+							deprecated.setValue("1"); //$NON-NLS-1$
+							return Status.OK_STATUS;
+						}
+					} else if (deprecated.getValue().equals("0") && obsolete) { //$NON-NLS-1$
+						try {
+							deprecated.setValue("1"); //$NON-NLS-1$
+							((BugzillaTaskDataHandler) connector.getTaskDataHandler()).postUpdateAttachment(
+									taskAttachment.getTaskRepository(), taskAttribute, "update", monitor); //$NON-NLS-1$
+						} catch (CoreException e) {
+							error = e.getStatus();
+							deprecated.setValue("0"); //$NON-NLS-1$
+							return Status.OK_STATUS;
+						}
 					}
 				}
 				monitor.worked(10);

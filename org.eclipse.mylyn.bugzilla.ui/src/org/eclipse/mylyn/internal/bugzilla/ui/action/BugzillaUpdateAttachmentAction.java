@@ -106,8 +106,7 @@ public class BugzillaUpdateAttachmentAction extends BaseSelectionListenerAction 
 		for (ITaskAttachment taskAttachment : attachmentList) {
 			TaskAttribute taskAttribute = taskAttachment.getTaskAttribute();
 			TaskAttribute deprecated = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_IS_DEPRECATED);
-
-			if (deprecated.getValue().equals("1") != obsolete) { //$NON-NLS-1$
+			if (deprecated != null && deprecated.getValue().equals("1") != obsolete) { //$NON-NLS-1$
 				action.setEnabled(true);
 				break;
 			}
