@@ -87,7 +87,21 @@ class FoldingStructure implements IFoldingStructure {
 		if (collapseRegionContainingCaret) {
 			textOperationTarget.doOperation(ProjectionViewer.COLLAPSE_ALL);
 		} else {
-			expandElementsExclusive(new ArrayList<OutlineItem>(), collapseRegionContainingCaret);
+			operateOnAnnotations(new AbstractItemsAnnotationOperation(new ArrayList<OutlineItem>()) {
+				@Override
+				public boolean operateOnSelected(HeadingProjectionAnnotation annotation) {
+					return operateOnUnselected(annotation);
+				}
+
+				@Override
+				public boolean operateOnUnselected(HeadingProjectionAnnotation annotation) {
+					if (!annotation.isCollapsed()) {
+						annotation.markCollapsed();
+						return true;
+					}
+					return false;
+				}
+			}, collapseRegionContainingCaret);
 		}
 	}
 
