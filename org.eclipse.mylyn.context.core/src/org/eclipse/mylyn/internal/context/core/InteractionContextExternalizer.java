@@ -178,7 +178,7 @@ public class InteractionContextExternalizer {
 			}
 		} catch (Exception e) {
 			// TODO: propagate exception instead?
-			StatusHandler.fail(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Could not read: " //$NON-NLS-1$
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Could not read: " //$NON-NLS-1$
 					+ fromFile.getAbsolutePath(), e));
 		}
 		return null;
