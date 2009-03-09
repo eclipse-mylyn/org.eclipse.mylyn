@@ -1590,6 +1590,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 	private DelayedRefreshJob refreshJob;
 
+	private boolean itemNotFoundExceptionLogged;
+
 	public void setInRenameAction(boolean b) {
 		isInRenameAction = b;
 	}
@@ -1680,10 +1682,14 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		try {
 			getViewer().setSelection(selection, true);
 		} catch (SWTError e) {
-			// It's probably not worth displaying this to the user since the item
-			// is not there in this case, so consider removing.
-			StatusHandler.log(new Status(IStatus.INFO, TasksUiPlugin.ID_PLUGIN, "Could not link Task List with editor", //$NON-NLS-1$
-					e));
+			if (!itemNotFoundExceptionLogged) {
+				itemNotFoundExceptionLogged = true;
+				// It's probably not worth displaying this to the user since the item
+				// is not there in this case, so consider removing.
+				StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
+						"Could not link Task List with editor", //$NON-NLS-1$
+						e));
+			}
 		}
 	}
 
