@@ -118,7 +118,10 @@ The appearance of rendered markup in the task editor can be altered in the Eclip
 
 h3. Task Editor Fonts
 
-Default fonts for the task editor when using WikiText can be altered in the Eclipse preferences.  Open ==<b>Preferences->General->Appearance->Colors and Fonts</b>==.  Under ==<b>Tasks->WikiText</b>== default fonts may be selected.
+Default fonts for the task editor when using WikiText can be altered in the Eclipse preferences.  Open ==<b>Preferences->General->Appearance->Colors and Fonts</b>==.  Under ==<b>Tasks</b>== default fonts may be selected:
+
+* Task Editor - Monospace font
+* Task Editor - Notes and Comments
 
 !images/task-editor-font-preferences.png!
 
