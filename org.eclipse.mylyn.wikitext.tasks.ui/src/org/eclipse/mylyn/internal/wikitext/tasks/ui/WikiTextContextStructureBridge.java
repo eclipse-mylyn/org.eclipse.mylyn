@@ -88,11 +88,7 @@ public class WikiTextContextStructureBridge extends AbstractContextStructureBrid
 
 	@Override
 	public boolean canBeLandmark(String handle) {
-		if (handle == null) {
-			return false;
-		} else {
-			return handle.indexOf(HANDLE_FILE_SEPARATOR) != -1;
-		}
+		return handle != null;
 	}
 
 	@Override
