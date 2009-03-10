@@ -233,7 +233,7 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 	/**
 	 * @since 3.1
 	 */
-	protected ExpandableComposite createSection(Composite parentControl, String title) {
+	protected ExpandableComposite createSection(final Composite parentControl, String title) {
 		final ExpandableComposite section = toolkit.createExpandableComposite(parentControl,
 				ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT | ExpandableComposite.COMPACT);
 		section.clientVerticalSpacing = 0;
@@ -242,6 +242,7 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 		section.addExpansionListener(new ExpansionAdapter() {
 			@Override
 			public void expansionStateChanged(ExpansionEvent e) {
+				parentControl.layout(true);
 				getControl().getShell().pack();
 			}
 		});
