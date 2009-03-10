@@ -26,10 +26,12 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylyn.internal.commons.ui.TaskListImageDescriptor;
+import org.eclipse.mylyn.internal.tasks.core.ITaskRepositoryFilter;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesSorter;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
@@ -154,21 +156,16 @@ public class NewTaskAction extends BaseSelectionListenerAction implements IMenuC
 					String connectorKind = ((RepositoryQuery) iterable_element).getConnectorKind();
 					TaskRepository repository = TasksUi.getRepositoryManager().getRepository(connectorKind,
 							repositoryUrl);
-					if (repository != null && !repository.isOffline()
-							&& !repository.getConnectorKind().equals(LocalRepositoryConnector.CONNECTOR_KIND)) {
-						includedRepositories.add(repository);
-					}
+					markForInclusion(includedRepositories, repository);
 
 				}
 			}
 		}
 
 		if (includedRepositories.isEmpty()) {
+			// No repositories were added from working sets so show all
 			for (TaskRepository repository : TasksUi.getRepositoryManager().getAllRepositories()) {
-				if (repository != null && !repository.isOffline()
-						&& !repository.getConnectorKind().equals(LocalRepositoryConnector.CONNECTOR_KIND)) {
-					includedRepositories.add(repository);
-				}
+				markForInclusion(includedRepositories, repository);
 			}
 		}
 
@@ -192,6 +189,17 @@ public class NewTaskAction extends BaseSelectionListenerAction implements IMenuC
 		new Separator().fill(dropDownMenu, -1);
 		new ActionContributionItem(new AddRepositoryAction()).fill(dropDownMenu, -1);
 		new Separator(IWorkbenchActionConstants.MB_ADDITIONS);
+	}
+
+	private void markForInclusion(Set<TaskRepository> includedRepositories, TaskRepository repository) {
+		if (repository != null && !repository.getConnectorKind().equals(LocalRepositoryConnector.CONNECTOR_KIND)) {
+			AbstractRepositoryConnector connector = TasksUi.getRepositoryConnector(repository.getConnectorKind());
+			if (connector != null) {
+				if (ITaskRepositoryFilter.CAN_CREATE_NEW_TASK.accept(repository, connector)) {
+					includedRepositories.add(repository);
+				}
+			}
+		}
 	}
 
 	private RepositorySelectionAction addRepositoryAction(TaskRepository repository) {

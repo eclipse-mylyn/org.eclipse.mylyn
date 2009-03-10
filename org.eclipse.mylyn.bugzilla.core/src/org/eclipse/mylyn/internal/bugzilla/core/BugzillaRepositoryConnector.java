@@ -445,15 +445,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		return false;
 	}
 
-	public static int getBugId(String taskId) throws CoreException {
-		try {
-			return Integer.parseInt(taskId);
-		} catch (NumberFormatException e) {
-			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, 0, "Invalid bug id: " //$NON-NLS-1$
-					+ taskId, e));
-		}
-	}
-
 	public static void addLanguageSetting(BugzillaLanguageSettings language) {
 		if (!languages.contains(language)) {
 			BugzillaRepositoryConnector.languages.add(language);
