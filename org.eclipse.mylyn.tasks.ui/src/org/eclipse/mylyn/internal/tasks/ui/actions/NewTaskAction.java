@@ -210,8 +210,7 @@ public class NewTaskAction extends BaseSelectionListenerAction implements IMenuC
 		ActionContributionItem item = new ActionContributionItem(action);
 		action.setText(repository.getRepositoryLabel());
 		ImageDescriptor overlay = TasksUiPlugin.getDefault().getOverlayIcon(repository.getConnectorKind());
-		ImageDescriptor compositeDescriptor = new TaskListImageDescriptor(TasksUiImages.REPOSITORY, overlay, false,
-				false);
+		ImageDescriptor compositeDescriptor = new TaskListImageDescriptor(TasksUiImages.TASK_NEW, overlay, false, false);
 		action.setImageDescriptor(compositeDescriptor);
 		item.fill(dropDownMenu, -1);
 		return action;
