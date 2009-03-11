@@ -25,14 +25,14 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcesso
 public class ImpliedHyperlinkReplacementToken extends PatternBasedElement {
 
 	@Override
-	protected String getPattern(int groupOffset) {
+	public String getPattern(int groupOffset) {
 		// based on RFC 3986
 		// even though it's valid we don't want to detect URLs that end with '.', ',', ';', ':' or ')'
 		return "(https?://[a-zA-Z0-9%._~!$&?#'()*+,;:@/=-]*[a-zA-Z0-9_~!$&?#'(*+@/=-])"; //$NON-NLS-1$
 	}
 
 	@Override
-	protected int getPatternGroupCount() {
+	public int getPatternGroupCount() {
 		return 1;
 	}
 
