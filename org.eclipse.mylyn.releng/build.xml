@@ -165,7 +165,10 @@
 		</java>
 	</target>
 	
-	<target name="dist" depends="init,pack,generate-metadata">
+	<target name="dist" depends="init,pack,generate-metadata,copy-to-archive">
+	</target>
+		
+	<target name="copy-to-archive">
 		<property name="dist.dir" value="${dist.home}/update-archive/${version}/${qualifier}" />
 		<copy todir="${dist.dir}/e3.3">
 			<fileset dir="${build.home}/3.3/standardUpdateSite"/>
@@ -209,7 +212,7 @@
 		</exec>
 	</target>
 	
-	<target name="galileo" depends="weekly,sign">
+	<target name="galileo" depends="clean,build,copy-to-archive,sign">
 		<!-- re-promote signed build -->
 		<antcall target="promote">
 			<param name="todir" value="weekly"/>
