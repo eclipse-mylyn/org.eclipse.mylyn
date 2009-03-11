@@ -377,7 +377,7 @@
 	</target>
 
 	<target name="tests-helper" depends="install-tests-helper">
-    	<property name="timeout" value="7200000" />
+    	<property name="timeout" value="10000000" />
 		<property name="application" value="org.eclipse.ant.core.antRunner" />
     	<property name="eclipse.home" value="${eclipse.base}/test-${eclipse.sdk.version}/eclipse" />
 		<property name="vmargs" value=" -Xms40m -Xmx256m"/>    	
