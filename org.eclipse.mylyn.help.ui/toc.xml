@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?NLS TYPE="org.eclipse.help.toc"?>
 
-<toc label="Tasks" topic="doc/overview.html">
-	<topic href="doc/overview.html" label="Overview">
- </topic>
+<toc label="Tasks">
  <anchor id="before-reference" />
  <topic href="userguide/Mylyn Reference.html" label="Feature Reference">
     <link toc="userguide/Mylyn Reference-toc.xml"/>
