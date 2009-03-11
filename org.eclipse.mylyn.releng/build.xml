@@ -210,6 +210,10 @@
 	</target>
 	
 	<target name="galileo" depends="weekly,sign">
+		<!-- re-promote signed build -->
+		<antcall target="promote">
+			<param name="todir" value="weekly"/>
+		</antcall>
 		<antcall target="promote-main">
 			<param name="todir" value="galileo"/>
 		</antcall>

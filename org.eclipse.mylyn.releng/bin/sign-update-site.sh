@@ -125,6 +125,9 @@ pack incubator "Mylyn Incubator"
 # republish
 
 /bin/mv $SRC $SRC-DELETE
+# recover wikitext-standalone zip and other archives
+/bin/cp -av $SRC-DELETE/*.zip $SRC
+# other zip files are overridden here with signed versions
 /bin/cp -av $TMP $SRC
 /bin/chgrp -R mylynadmin $SRC
 /bin/chmod g+w -R $SRC
