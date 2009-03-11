@@ -331,6 +331,9 @@ public class TaskActivityManager implements ITaskActivityManager {
 			} else if (!(range instanceof WeekDateRange)) {
 				return getScheduledTasks(range.getStartDate(), range.getEndDate());
 			}
+			if (range instanceof WeekDateRange && TaskActivityUtil.getNextWeek().next().compareTo(range) == 0) {
+				resultingTasks.addAll(getScheduledTasks(range.getStartDate(), range.getEndDate()));
+			}
 		}
 		return resultingTasks;
 	}
@@ -339,10 +342,16 @@ public class TaskActivityManager implements ITaskActivityManager {
 		Set<ITask> resultingTasks = new HashSet<ITask>();
 		synchronized (scheduledTasks) {
 			DateRange startRange = new DateRange(start);
-			DateRange endRange = new DateRange(end);
+			Calendar endExclusive = TaskActivityUtil.getCalendar();
+			endExclusive.setTimeInMillis(end.getTimeInMillis() + 1);
+			DateRange endRange = new DateRange(endExclusive);
+
 			SortedMap<DateRange, Set<ITask>> result = scheduledTasks.subMap(startRange, endRange);
-			for (Set<ITask> set : result.values()) {
-				resultingTasks.addAll(set);
+			for (DateRange range : result.keySet()) {
+				if (start.compareTo(range.getStartDate()) > 0 || end.compareTo(range.getEndDate()) < 0) {
+					continue;
+				}
+				resultingTasks.addAll(result.get(range));
 			}
 		}
 		return resultingTasks;

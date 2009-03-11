@@ -19,6 +19,7 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.DateRange;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
@@ -97,6 +98,32 @@ public class TaskActivityManagerTest extends TestCase {
 
 		repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND, MockRepositoryConnector.REPOSITORY_URL);
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);
+	}
+
+	public void testWeekEnd() {
+		AbstractTask task = new LocalTask("12", "task-12");
+		assertFalse(taskActivityManager.isScheduledForToday(task));
+
+		// test end of next week
+		Calendar end = TaskActivityUtil.getNextWeek().getEndDate();
+		Calendar start = TaskActivityUtil.getCalendar();
+		start.setTimeInMillis(end.getTimeInMillis());
+		TaskActivityUtil.snapStartOfDay(start);
+		taskActivityManager.setScheduledFor(task, new DateRange(start, end));
+		assertTrue(taskActivityManager.isScheduledForNextWeek(task));
+		taskActivityManager.setScheduledFor(task, TaskActivityUtil.getNextWeek());
+		assertTrue(taskActivityManager.isScheduledForNextWeek(task));
+		assertEquals(0, taskActivityManager.getScheduledTasks(new DateRange(start, end)).size());
+
+		// test end of two weeks
+		end = TaskActivityUtil.getNextWeek().next().getEndDate();
+		start = TaskActivityUtil.getCalendar();
+		start.setTimeInMillis(end.getTimeInMillis());
+		TaskActivityUtil.snapStartOfDay(start);
+		taskActivityManager.setScheduledFor(task, new DateRange(start, end));
+		assertEquals(1, taskActivityManager.getScheduledTasks(new DateRange(start, end)).size());
+		assertEquals(1, taskActivityManager.getScheduledTasks(TaskActivityUtil.getNextWeek().next()).size());
+
 	}
 
 	public void testTaskActivation() {
