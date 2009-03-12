@@ -20,6 +20,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
+import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
@@ -66,8 +67,15 @@ public class NewBugzillaTaskWizard extends NewTaskWizard implements INewWizard {
 				}
 			}
 		}
-		if (selection == null) {
-			return null;
+		if (selection == null || selection.isEmpty()) {
+			final String lastSelection = getTaskRepository().getProperty(IBugzillaConstants.LAST_PRODUCT_SELECTION);
+			return new TaskMapping() {
+				@Override
+				public String getProduct() {
+					return lastSelection;
+				}
+			};
+
 		}
 
 		final ArrayList<String> products = new ArrayList<String>();

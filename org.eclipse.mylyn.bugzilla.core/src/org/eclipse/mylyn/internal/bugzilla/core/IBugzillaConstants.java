@@ -266,4 +266,6 @@ public interface IBugzillaConstants {
 	public static final String TAG_BUGZILLA_CUSTOM_QUERY = "BugzillaCustomQuery"; //$NON-NLS-1$
 
 	public static final String CONTENT_ENCODING_GZIP = "gzip"; //$NON-NLS-1$
+
+	public static final String LAST_PRODUCT_SELECTION = "last.selection.product"; //$NON-NLS-1$
 }

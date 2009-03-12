@@ -167,7 +167,6 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 
 	@Override
 	public void doSubmit() {
-
 		TaskAttribute summaryAttribute = getModel().getTaskData().getRoot().getMappedAttribute(TaskAttribute.SUMMARY);
 		if (summaryAttribute != null && summaryAttribute.getValue().length() == 0) {
 			getTaskEditor().setMessage(Messages.BugzillaTaskEditorPage_Please_enter_a_short_summary_before_submitting,
@@ -202,6 +201,15 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 				descriptionPart.setFocus();
 			}
 			return;
+		}
+
+		if (getModel().getTaskData().isNew()) {
+			TaskAttribute productAttribute = getModel().getTaskData().getRoot().getMappedAttribute(
+					TaskAttribute.PRODUCT);
+			if (productAttribute != null && productAttribute.getValue().length() > 0) {
+				getModel().getTaskRepository().setProperty(IBugzillaConstants.LAST_PRODUCT_SELECTION,
+						productAttribute.getValue());
+			}
 		}
 
 		// Force the most recent known good token onto the outgoing task data to ensure submit
