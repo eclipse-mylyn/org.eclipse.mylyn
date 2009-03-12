@@ -60,6 +60,10 @@ public class TreeWalker {
 	private TreePath getTreePath(TreeItem item) {
 		List<Object> path = new ArrayList<Object>();
 		do {
+			// the tree is probably not fully refreshed at this point
+			if (item.getData() == null) {
+				return null;
+			}
 			path.add(0, item.getData());
 			item = item.getParentItem();
 		} while (item != null);
@@ -160,11 +164,14 @@ public class TreeWalker {
 		TreePath path;
 		TreeItem parent = item.getParentItem();
 		if (parent != null) {
-			siblings = parent.getItems();
 			path = getTreePath(parent);
+			if (path == null) {
+				return null;
+			}
+			siblings = parent.getItems();
 		} else {
-			siblings = viewer.getTree().getItems();
 			path = TreePath.EMPTY;
+			siblings = viewer.getTree().getItems();
 		}
 		return visitItems(viewer, path, siblings, item, visitor);
 	}
@@ -173,7 +180,10 @@ public class TreeWalker {
 		TreePath path = null;
 		if (startItem != null) {
 			if (direction == Direction.DOWN) {
-				path = visitChildren(treeViewer, getTreePath(startItem), startItem, visitor);
+				path = getTreePath(startItem);
+				if (path != null) {
+					path = visitChildren(treeViewer, path, startItem, visitor);
+				}
 			}
 			if (path == null) {
 				path = visitSiblings(treeViewer, startItem, visitor);
