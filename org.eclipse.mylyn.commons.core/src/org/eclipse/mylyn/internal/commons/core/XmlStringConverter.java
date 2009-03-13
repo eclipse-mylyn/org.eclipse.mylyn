@@ -114,7 +114,6 @@ public class XmlStringConverter {
 	 *            string to clean
 	 * @return string with all non valid characters removed, if text is null return null
 	 */
-	@Deprecated
 	public static String cleanXmlString(String text) {
 		if (text == null) {
 			return null;
@@ -134,7 +133,6 @@ public class XmlStringConverter {
 	 * 
 	 * @see http://www.w3.org/TR/REC-xml/
 	 */
-	@Deprecated
 	public static boolean isValid(char ch) {
 		return (0x0A == ch || 0x0D == ch || 0x09 == ch) || (ch >= 0x20 && ch <= 0xD7FF)
 				|| (ch >= 0xE000 && ch <= 0xFFFD) || (ch >= 0x10000 && ch <= 0x10FFFF);
