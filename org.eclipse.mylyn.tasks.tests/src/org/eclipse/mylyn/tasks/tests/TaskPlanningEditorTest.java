@@ -98,15 +98,15 @@ public class TaskPlanningEditorTest extends TestCase {
 		assertTrue(page.getActiveEditor() instanceof TaskEditor);
 		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		assertTrue(taskEditor.getActivePageInstance() instanceof TaskPlanningEditor);
+
 		TaskPlanningEditor editor = (TaskPlanningEditor) taskEditor.getActivePageInstance();
 		assertFalse(editor.isDirty());
 		editor.setDescription(NEW_DESCRIPTION);
 		assertTrue(editor.isDirty());
+
 		task.setSummary(NEW_DESCRIPTION + "2");
 		editor.updateTaskData(task);
-		//assertEquals(NEW_DESCRIPTION+"2", editor.getFormTitle());
-		assertEquals(NEW_DESCRIPTION + "2", editor.getDescription());
+		assertEquals(NEW_DESCRIPTION, editor.getDescription());
 		assertTrue(editor.isDirty());
 	}
-
 }
