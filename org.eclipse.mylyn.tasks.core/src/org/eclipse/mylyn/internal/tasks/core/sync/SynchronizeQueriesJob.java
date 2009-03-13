@@ -49,7 +49,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.data.TaskRelation;
 import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
-import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Mik Kersten
@@ -267,8 +266,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 	private boolean preSynchronization(ISynchronizationSession event, IProgressMonitor monitor) {
 		try {
 			Policy.checkCanceled(monitor);
-			String repositoryLabel = event.getTaskRepository().getRepositoryLabel();
-			monitor.subTask(NLS.bind(Messages.SynchronizeQueriesJob_Querying_repository, repositoryLabel));
+			monitor.subTask(Messages.SynchronizeQueriesJob_Querying_repository);
 			if (!isUser()) {
 				monitor = Policy.backgroundMonitorFor(monitor);
 			}
