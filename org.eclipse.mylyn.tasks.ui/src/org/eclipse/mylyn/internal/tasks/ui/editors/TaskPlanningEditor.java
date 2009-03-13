@@ -157,6 +157,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 								}
 							});
 						}
+						break;
 					}
 				}
 			}
@@ -171,6 +172,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 	private boolean isDirty;
 
 	private CommonTextSupport textSupport;
+
+	private boolean summaryChanged;
 
 	public TaskPlanningEditor(TaskEditor editor) {
 		super(editor, ITasksUiConstants.ID_PAGE_PLANNING, Messages.TaskPlanningEditor_Planning);
@@ -223,10 +226,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 		}
 
 		if (!summaryEditor.getTextWidget().isDisposed()) {
-			if (!summaryEditor.getTextWidget().getText().equals(updateTask.getSummary())) {
-				boolean wasDirty = TaskPlanningEditor.this.isDirty;
+			if (!summaryChanged) {
 				summaryEditor.getTextWidget().setText(updateTask.getSummary());
-				TaskPlanningEditor.this.markDirty(wasDirty);
 			}
 			if (parentEditor != null) {
 				parentEditor.updateHeaderToolBar();
@@ -400,6 +401,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 			summaryEditor.addTextListener(new ITextListener() {
 				public void textChanged(TextEvent event) {
 					if (!task.getSummary().equals(summaryEditor.getTextWidget().getText())) {
+						summaryChanged = true;
 						markDirty(true);
 					}
 				}
@@ -574,6 +576,9 @@ public class TaskPlanningEditor extends TaskFormPage {
 	}
 
 	private void markDirty(boolean dirty) {
+		if (!dirty) {
+			summaryChanged = false;
+		}
 		isDirty = dirty;
 		getManagedForm().dirtyStateChanged();
 	}
