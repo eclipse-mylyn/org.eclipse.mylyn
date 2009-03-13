@@ -70,6 +70,7 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 
 		@Override
 		protected void doRefresh(Object[] items) {
+
 			if (viewer == null) {
 				return;
 			} else if (viewer.getControl().isDisposed()) {
@@ -93,23 +94,21 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 						try {
 							viewer.getControl().setRedraw(false);
 							viewer.refresh(minor);
-							// prior to Mylyn 3.1 used: FocusedViewerManager.this.updateExpansionState(viewer, null);
-							for (Object item : items) {
-								Object objectToRefresh = getObjectToRefresh(item);
-								if (objectToRefresh != null) {
-									FocusedViewerManager.this.updateExpansionState(viewer, objectToRefresh);
-								}
-							}
-
+							FocusedViewerManager.this.updateExpansionState(viewer, null);
 						} finally {
 							viewer.getControl().setRedraw(true);
 						}
 					} else { // don't need to worry about content changes
 						try {
 							viewer.getControl().setRedraw(false);
-
 							for (Object item : items) {
-								Object objectToRefresh = getObjectToRefresh(item);
+								Object objectToRefresh = item;
+								if (item instanceof IInteractionElement) {
+									IInteractionElement node = (IInteractionElement) item;
+									AbstractContextStructureBridge structureBridge = ContextCorePlugin.getDefault()
+											.getStructureBridge(node.getContentType());
+									objectToRefresh = structureBridge.getObjectForHandle(node.getHandleIdentifier());
+								}
 								if (objectToRefresh != null) {
 									viewer.update(objectToRefresh, null);
 									FocusedViewerManager.this.updateExpansionState(viewer, objectToRefresh);
@@ -122,17 +121,6 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 				}
 			}
 
-		}
-
-		private Object getObjectToRefresh(Object item) {
-			Object objectToRefresh = item;
-			if (item instanceof IInteractionElement) {
-				IInteractionElement node = (IInteractionElement) item;
-				AbstractContextStructureBridge structureBridge = ContextCorePlugin.getDefault().getStructureBridge(
-						node.getContentType());
-				objectToRefresh = structureBridge.getObjectForHandle(node.getHandleIdentifier());
-			}
-			return objectToRefresh;
 		}
 	}
 
