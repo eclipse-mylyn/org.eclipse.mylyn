@@ -58,13 +58,13 @@
 	    	<mediawiki-fetch-images src="tmp/help.doc.html" dest="tmp" base="@{help.doc.url.base}"/>
 	    	
 	    	<xslt style="extract-markup.xsl" in="tmp/help.doc.xml" out="tmp/@{help.doc.filenameNoExtension}.mediawiki"/>
-			<echo append="true" file="tmp/@{help.doc.filenameNoExtension}.mediawiki">
+			<!--<echo append="true" file="tmp/@{help.doc.filenameNoExtension}.mediawiki">
 
 = Updating This Document =
 
 This document is maintained in a collaborative wiki.  If you wish to update or modify this document please visit 
 @{help.doc.url.html}
-			</echo>
+			</echo>-->
 			
 			<wikitext-to-eclipse-help markupLanguage="org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage" 
 				multipleOutputFiles="true"

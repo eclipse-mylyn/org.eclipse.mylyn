@@ -3,7 +3,7 @@
 
 <toc label="Tasks">
  <anchor id="before-reference" />
- <topic href="userguide/Mylyn Reference.html" label="Feature Reference">
+ <topic label="Feature Reference">
   	<anchor id="before-reference-content"/>
     <link toc="userguide/Mylyn Reference-toc.xml"/>
     <anchor id="after-reference-content"/>
