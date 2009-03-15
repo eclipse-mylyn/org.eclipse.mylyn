@@ -40,10 +40,6 @@
 			       pattern="org.eclipse.mylyn.ide.ui.actions.TaskResourceMappingActionProvider"/>
 	        </includes>
 	   </viewerActionBinding>
-	   <dragAssistant
-	          class="org.eclipse.ui.navigator.resources.ResourceDragAdapterAssistant"
-	          viewerId="org.eclipse.mylyn.team.ui.cvs.ui.dragAssistant">
-	   </dragAssistant>
 	</extension>
  
     <!-- ================= NAVIGATOR CONTENT =================== 
