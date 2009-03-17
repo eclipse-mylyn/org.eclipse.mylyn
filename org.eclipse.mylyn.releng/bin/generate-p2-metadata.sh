@@ -13,7 +13,16 @@ ECLIPSE_HOME=/shared/tools/mylyn/eclipse
 pack() {
 DIR=$ROOT/$1
 echo Processing $DIR
-rm -f $DIR/artifacts.jar $DIR/content.jar
+rm -f $DIR/artifacts.jar $DIR/content.jar $DIR/digest.zip
+
+$JAVA_HOME/bin/java \
+ -Xmx512m \
+ -jar $ECLIPSE_HOME/plugins/org.eclipse.equinox.launcher_*.jar \
+ -application org.eclipse.update.core.siteOptimizer \
+ -jarProcessor -verbose -processAll -repack -pack \
+ -digestBuilder -digestOutputDir=$DIR -siteXML=$DIR/site.xml \
+ -outputDir $DIR $DIR
+
 $JAVA_HOME/bin/java \
  -Xmx512m \
  -jar $ECLIPSE_HOME/plugins/org.eclipse.equinox.launcher_*.jar \
