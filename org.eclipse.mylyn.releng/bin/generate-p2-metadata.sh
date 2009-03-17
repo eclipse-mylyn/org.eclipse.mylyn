@@ -19,10 +19,9 @@ $JAVA_HOME/bin/java \
  -Xmx512m \
  -jar $ECLIPSE_HOME/plugins/org.eclipse.equinox.launcher_*.jar \
  -application org.eclipse.update.core.siteOptimizer \
- -jarProcessor -verbose -processAll -repack -pack \
- -digestBuilder -digestOutputDir=$DIR -siteXML=$DIR/site.xml \
- -outputDir $DIR $DIR
-
+ -verbose -processAll \
+ -digestBuilder -digestOutputDir=$DIR -siteXML=$DIR/site.xml
+ 
 $JAVA_HOME/bin/java \
  -Xmx512m \
  -jar $ECLIPSE_HOME/plugins/org.eclipse.equinox.launcher_*.jar \
