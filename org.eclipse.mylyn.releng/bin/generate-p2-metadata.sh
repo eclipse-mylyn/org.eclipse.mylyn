@@ -35,7 +35,8 @@ $JAVA_HOME/bin/java \
  -compress \
  -reusePack200Files \
  -noDefaultIUs
-chmod 664 $DIR/artifacts.jar $DIR/content.jar
+
+chmod 664 $DIR/artifacts.jar $DIR/content.jar $DIR/digest.zip
 }
 
 pack e3.3 "Mylyn for Eclipse 3.3"
