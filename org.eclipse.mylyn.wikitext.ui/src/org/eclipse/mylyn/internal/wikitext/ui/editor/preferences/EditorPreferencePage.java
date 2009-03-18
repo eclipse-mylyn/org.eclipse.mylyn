@@ -97,7 +97,9 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
 		// bug 260427
 		Layout layout = blockGroup.getLayout();
 		if (layout instanceof GridLayout) {
-			((GridLayout) layout).marginWidth = 5;
+			GridLayout gridLayout = (GridLayout) layout;
+			gridLayout.marginWidth = 5;
+			gridLayout.marginHeight = 5;
 		}
 
 		Group phraseModifierGroup = new Group(getFieldEditorParent(), SWT.NULL);
@@ -111,7 +113,9 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
 		// bug 260427
 		layout = phraseModifierGroup.getLayout();
 		if (layout instanceof GridLayout) {
-			((GridLayout) layout).marginWidth = 5;
+			GridLayout gridLayout = (GridLayout) layout;
+			gridLayout.marginWidth = 5;
+			gridLayout.marginHeight = 5;
 		}
 
 		applyDialogFont(getFieldEditorParent());
