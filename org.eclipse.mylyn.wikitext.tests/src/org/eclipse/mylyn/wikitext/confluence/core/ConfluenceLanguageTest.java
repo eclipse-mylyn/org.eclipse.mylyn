@@ -285,8 +285,56 @@ public class ConfluenceLanguageTest extends TestCase {
 		assertTrue(html.contains("<body><p>an <img border=\"0\" src=\"http://www.foo.com/bin/image.png\"/> image</p></body>"));
 	}
 
-	public void testImageWithAttributes() {
+	public void testImageWithAttributesAlignRight() {
 		String html = parser.parseToHtml("an !image.png|align=right! image");
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><p>an <img align=\"right\" border=\"0\" src=\"image.png\"/> image</p></body>"));
+	}
+
+	public void testImageWithAttributesAlignLeft() {
+		String html = parser.parseToHtml("an !image.png|align=left! image");
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><p>an <img align=\"left\" border=\"0\" src=\"image.png\"/> image</p></body>"));
+	}
+
+	public void testImageWithAttributesAlignMiddle() {
+		String html = parser.parseToHtml("an !image.png|align=middle! image");
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><p>an <img align=\"middle\" border=\"0\" src=\"image.png\"/> image</p></body>"));
+	}
+
+	public void testImageWithAttributesAlignCenter() {
+		String html = parser.parseToHtml("an !image.png|align=center! image");
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><p>an <img align=\"center\" border=\"0\" src=\"image.png\"/> image</p></body>"));
+	}
+
+	public void testImageWithAttributesAlt() {
+		String html = parser.parseToHtml("an !image.png|alt= some alt text! image");
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><p>an <img alt=\"some alt text\" border=\"0\" src=\"image.png\"/> image</p></body>"));
+	}
+
+	public void testImageWithAttributesBorder() {
+		String html = parser.parseToHtml("an !image.png|border=5! image");
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><p>an <img border=\"5\" src=\"image.png\"/> image</p></body>"));
+	}
+
+	public void testImageWithAttributesWidth() {
+		String html = parser.parseToHtml("an !image.png|width=5! image");
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><p>an <img width=\"5\" border=\"0\" src=\"image.png\"/> image</p></body>"));
+	}
+
+	public void testImageWithAttributesHeight() {
+		String html = parser.parseToHtml("an !image.png|height=5! image");
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><p>an <img height=\"5\" border=\"0\" src=\"image.png\"/> image</p></body>"));
+	}
+
+	public void testImageWithAttributesHeightBadValue() {
+		String html = parser.parseToHtml("an !image.png|height=5a! image");
 		System.out.println("HTML: \n" + html);
 		assertTrue(html.contains("<body><p>an <img border=\"0\" src=\"image.png\"/> image</p></body>"));
 	}

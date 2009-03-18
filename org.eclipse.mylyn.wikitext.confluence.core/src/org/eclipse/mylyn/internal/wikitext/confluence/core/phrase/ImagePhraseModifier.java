@@ -10,7 +10,10 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.confluence.core.phrase;
 
-import org.eclipse.mylyn.wikitext.core.parser.Attributes;
+import org.eclipse.mylyn.internal.wikitext.confluence.core.util.Options;
+import org.eclipse.mylyn.internal.wikitext.confluence.core.util.Options.Handler;
+import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes;
+import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes.Align;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 
@@ -22,6 +25,8 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcesso
 public class ImagePhraseModifier extends PatternBasedElement {
 
 	protected static final int CONTENT_GROUP = 1;
+
+	private static final int OPTIONS_GROUP = 2;
 
 	@Override
 	protected String getPattern(int groupOffset) {
@@ -40,11 +45,48 @@ public class ImagePhraseModifier extends PatternBasedElement {
 	}
 
 	private static class ImagePhraseModifierProcessor extends PatternBasedElementProcessor {
+
 		@Override
 		public void emit() {
 			String imageUrl = group(CONTENT_GROUP);
+			String imageOptions = group(OPTIONS_GROUP);
 
-			Attributes attributes = new Attributes();
+			final ImageAttributes attributes = new ImageAttributes();
+			if (imageOptions != null) {
+				Options.parseOptions(imageOptions, new Handler() {
+					public void setOption(String key, String value) {
+						if ("alt".equalsIgnoreCase(key)) { //$NON-NLS-1$
+							attributes.setAlt(value);
+						} else if ("align".equalsIgnoreCase(key)) { //$NON-NLS-1$
+							if ("middle".equalsIgnoreCase(value)) { //$NON-NLS-1$
+								attributes.setAlign(Align.Middle);
+							} else if ("left".equalsIgnoreCase(value)) { //$NON-NLS-1$
+								attributes.setAlign(Align.Left);
+							} else if ("right".equalsIgnoreCase(value)) { //$NON-NLS-1$
+								attributes.setAlign(Align.Right);
+							} else if ("center".equalsIgnoreCase(value)) { //$NON-NLS-1$
+								attributes.setAlign(Align.Center);
+							}
+						} else {
+							try {
+								if ("border".equalsIgnoreCase(key)) { //$NON-NLS-1$
+									attributes.setBorder(Integer.parseInt(value));
+								} else if ("height".equalsIgnoreCase(key)) { //$NON-NLS-1$
+									attributes.setHeight(Integer.parseInt(value));
+								} else if ("width".equalsIgnoreCase(key)) { //$NON-NLS-1$
+									attributes.setWidth(Integer.parseInt(value));
+								}
+							} catch (NumberFormatException e) {
+								// ignore
+							}
+						}
+					}
+
+					public void setOption(String option) {
+						// ignore
+					}
+				});
+			}
 			builder.image(attributes, imageUrl);
 		}
 	}
