@@ -955,6 +955,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		if (getSourceViewer() != null) {
 			getSourceViewer().invalidateTextPresentation();
 		}
+		outlineDirty = true;
 		scheduleOutlineUpdate();
 		updateSourceTabLabel();
 
