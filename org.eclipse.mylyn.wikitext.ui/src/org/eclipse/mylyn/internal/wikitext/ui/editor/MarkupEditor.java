@@ -83,6 +83,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.LocationEvent;
 import org.eclipse.swt.browser.LocationListener;
+import org.eclipse.swt.browser.ProgressAdapter;
+import org.eclipse.swt.browser.ProgressEvent;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.KeyAdapter;
@@ -271,18 +273,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 
 			public void widgetSelected(SelectionEvent selectionevent) {
 				if (tabFolder.getSelection() == previewTab) {
-					updatePreview();
-					Display.getCurrent().asyncExec(new Runnable() {
-						public void run() {
-							if (browser.isDisposed()) {
-								return;
-							}
-							OutlineItem item = getNearestMatchingOutlineItem();
-							if (item != null) {
-								revealInBrowser(item);
-							}
-						}
-					});
+					updatePreview(getNearestMatchingOutlineItem());
 				}
 			}
 		});
@@ -494,8 +485,8 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		}
 	}
 
-	private void updatePreview() {
-		// FIXME apply stylesheet preferences to the preview
+	private void updatePreview(final OutlineItem item) {
+		boolean revealItem = item != null;
 		if (previewDirty && browser != null) {
 			String xhtml = null;
 			if (document == null) {
@@ -566,8 +557,21 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 					xhtml = writer.toString();
 				}
 			}
+			if (revealItem) {
+				revealItem = false;
+				browser.addProgressListener(new ProgressAdapter() {
+					@Override
+					public void completed(ProgressEvent event) {
+						browser.removeProgressListener(this);
+						revealInBrowser(item);
+					}
+				});
+			}
 			browser.setText(xhtml);
 			previewDirty = false;
+		}
+		if (revealItem) {
+			revealInBrowser(item);
 		}
 	}
 
