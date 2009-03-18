@@ -172,6 +172,8 @@ public class HtmlTextPresentationParser {
 
 		int indentLevel = 0;
 
+		int bulletLevel = 0;
+
 		List<Annotation> annotations;
 
 		char[] prefix;
@@ -200,6 +202,7 @@ public class HtmlTextPresentationParser {
 			this.originalOffset = offset;
 			this.skipWhitespace = elementState.skipWhitespace;
 			this.indentLevel = elementState.indentLevel;
+			this.bulletLevel = elementState.bulletLevel;
 			initState();
 			String cssClass = null;
 			for (int x = 0; x < atts.getLength(); ++x) {
@@ -743,8 +746,10 @@ public class HtmlTextPresentationParser {
 					getOffset(), atts));
 			if ("pre".equals(localName)) { //$NON-NLS-1$
 				elementState.skipWhitespace = false;
-			} else if ("ul".equals(localName) || "ol".equals(localName) || "blockquote".equals(localName) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-					|| "dd".equals(localName)) { //$NON-NLS-1$
+			} else if ("ul".equals(localName) || "ol".equals(localName)) { //$NON-NLS-1$ //$NON-NLS-2$
+				++elementState.indentLevel;
+				++elementState.bulletLevel;
+			} else if ("blockquote".equals(localName) || "dd".equals(localName)) { //$NON-NLS-1$ //$NON-NLS-2$
 				++elementState.indentLevel;
 			}
 			// process stylesheet
@@ -803,7 +808,7 @@ public class HtmlTextPresentationParser {
 					elementState.prefix = (Integer.toString(index) + ". ").toCharArray(); //$NON-NLS-1$
 				} else {
 					elementState.prefix = new char[] { calculateBulletChar(elementState.indentLevel), ' ', ' ' };
-					elementState.addPrefixAnnotation(new BulletAnnotation(elementState.indentLevel));
+					elementState.addPrefixAnnotation(new BulletAnnotation(elementState.bulletLevel));
 				}
 			} else if ("p".equals(localName)) { //$NON-NLS-1$
 				// account for the case of a paragraph following an unescaped block (eg: Textile with first char being a space).
