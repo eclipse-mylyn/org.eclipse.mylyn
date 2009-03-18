@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.AnnotationPainter.IDrawingStrategy;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
@@ -48,14 +49,20 @@ public class BulletDrawingStrategy implements IDrawingStrategy {
 			gc.setLineWidth(0); // NOTE: 0 means width is 1 but with optimized performance
 			gc.setLineStyle(SWT.LINE_SOLID);
 
+			StyleRange styleRange = textWidget.getStyleRangeAtOffset(offset);
+			if (styleRange != null && styleRange.foreground != null) {
+				color = styleRange.foreground;
+			}
+
 			// bug 262999: determine if we're painting in a selection
 			Point selection = textWidget.getSelection();
 			// non-zero length selection, so see if where we're about to draw is within it
 			if (offset >= selection.x && offset < selection.y && selection.x < selection.y) {
 				gc.setBackground(textWidget.getSelectionBackground());
-				gc.setForeground(textWidget.getSelectionForeground());
+				gc.setForeground(color);
 			} else {
 				gc.setBackground(textWidget.getBackground());
+
 			}
 
 			// erase whatever character was there
