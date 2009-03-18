@@ -22,6 +22,8 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage.PatternBased
  * features.
  * 
  * @author David Green
+ * 
+ * @since 1.0
  */
 public class MarkupLanguageConfiguration implements Cloneable {
 
@@ -38,6 +40,8 @@ public class MarkupLanguageConfiguration implements Cloneable {
 	private boolean newlinesMustCauseLineBreak = false;
 
 	private boolean optimizeForRepositoryUsage = false;
+
+	private Boolean wikiWordLinking = true;
 
 	public List<PatternBasedElement> getTokens() {
 		return tokens;
@@ -135,6 +139,26 @@ public class MarkupLanguageConfiguration implements Cloneable {
 		this.optimizeForRepositoryUsage = optimizeForRepositoryUsage;
 	}
 
+	/**
+	 * indicate if WikiWord linking should be enabled if the markup language supports it. If null then the default
+	 * markup language behaviour should be observed.
+	 * 
+	 * @since 1.1
+	 */
+	public Boolean isWikiWordLinking() {
+		return wikiWordLinking;
+	}
+
+	/**
+	 * indicate if WikiWord linking should be enabled if the markup language supports it. If null then the default
+	 * markup language behaviour should be observed.
+	 * 
+	 * @since 1.1
+	 */
+	public void setWikiWordLinking(Boolean wikiWordLinking) {
+		this.wikiWordLinking = wikiWordLinking;
+	}
+
 	public void addBlockExtensions(List<Block> blocks, List<Block> paragraphBreakingBlocks) {
 		for (Block block : getBlocks()) {
 			blocks.add(computeInsertPosition(block), block);
@@ -175,4 +199,5 @@ public class MarkupLanguageConfiguration implements Cloneable {
 			throw new IllegalStateException(e);
 		}
 	}
+
 }

@@ -289,7 +289,9 @@ public class TracWikiLanguage extends AbstractMarkupLanguage {
 		tokenSyntax.add(new ReportLinkReplacementToken());
 		tokenSyntax.add(new MilestoneLinkReplacementToken());
 		tokenSyntax.add(new SourceLinkReplacementToken());
-		tokenSyntax.add(new WikiWordReplacementToken());
+		if (configuration == null || configuration.isWikiWordLinking() == null || configuration.isWikiWordLinking()) {
+			tokenSyntax.add(new WikiWordReplacementToken());
+		}
 		tokenSyntax.endGroup(")(?=\\W|$)", 0); //$NON-NLS-1$
 	}
 

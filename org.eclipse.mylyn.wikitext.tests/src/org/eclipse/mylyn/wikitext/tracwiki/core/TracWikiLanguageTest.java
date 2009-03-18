@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration;
 
 /**
  * 
@@ -367,6 +368,16 @@ public class TracWikiLanguageTest extends TestCase {
 		String html = parser.parseToHtml("A WikiWord points somewhere");
 		System.out.println(html);
 		assertTrue(html.contains("<body><p>A <a href=\"https://foo.bar/wiki/WikiWord\">WikiWord</a> points somewhere</p></body>"));
+	}
+
+	public void testWikiWordDisabled() {
+		MarkupLanguageConfiguration configuration = new MarkupLanguageConfiguration();
+		configuration.setWikiWordLinking(false);
+		markupLanaguage.configure(configuration);
+		markupLanaguage.setInternalLinkPattern("https://foo.bar/wiki/{0}");
+		String html = parser.parseToHtml("A WikiWord points somewhere");
+		System.out.println(html);
+		assertTrue(html.contains("<body><p>A WikiWord points somewhere</p></body>"));
 	}
 
 	public void testWikiWordNegativeMatch() {
