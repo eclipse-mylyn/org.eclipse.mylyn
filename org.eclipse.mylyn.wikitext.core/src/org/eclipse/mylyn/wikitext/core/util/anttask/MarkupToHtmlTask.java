@@ -75,6 +75,8 @@ public class MarkupToHtmlTask extends MarkupTask {
 
 	private boolean suppressBuiltInCssStyles = false;
 
+	private String defaultAbsoluteLinkTarget;
+
 	@Override
 	public void execute() throws BuildException {
 		if (file == null && filesets.isEmpty()) {
@@ -220,6 +222,7 @@ public class MarkupToHtmlTask extends MarkupTask {
 				builder.setUseInlineStyles(useInlineCssStyles);
 				builder.setSuppressBuiltInStyles(suppressBuiltInCssStyles);
 				builder.setLinkRel(linkRel);
+				builder.setDefaultAbsoluteLinkTarget(defaultAbsoluteLinkTarget);
 				builder.setPrependImagePrefix(prependImagePrefix);
 
 				SplittingStrategy splittingStrategy = multipleOutputFiles ? new DefaultSplittingStrategy()
@@ -504,6 +507,28 @@ public class MarkupToHtmlTask extends MarkupTask {
 	 */
 	public void setOverwrite(boolean overwrite) {
 		this.overwrite = overwrite;
+	}
+
+	/**
+	 * A default target attribute for links that have absolute (not relative) urls. By default this value is null.
+	 * Setting this value will cause all HTML anchors to have their target attribute set if it's not explicitly
+	 * specified.
+	 * 
+	 * @since 1.1
+	 */
+	public String getDefaultAbsoluteLinkTarget() {
+		return defaultAbsoluteLinkTarget;
+	}
+
+	/**
+	 * A default target attribute for links that have absolute (not relative) urls. By default this value is null.
+	 * Setting this value will cause all HTML anchors to have their target attribute set if it's not explicitly
+	 * specified.
+	 * 
+	 * @since 1.1
+	 */
+	public void setDefaultAbsoluteLinkTarget(String defaultAbsoluteLinkTarget) {
+		this.defaultAbsoluteLinkTarget = defaultAbsoluteLinkTarget;
 	}
 
 }
