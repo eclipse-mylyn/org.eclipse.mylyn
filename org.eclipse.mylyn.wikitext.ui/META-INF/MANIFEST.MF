@@ -39,6 +39,7 @@ Export-Package: org.eclipse.mylyn.internal.wikitext.ui;x-friends:="org.eclipse.m
  org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation;x-internal:=true,
  org.eclipse.mylyn.wikitext.ui.annotation,
  org.eclipse.mylyn.wikitext.ui.commands,
+ org.eclipse.mylyn.wikitext.ui.editor,
  org.eclipse.mylyn.wikitext.ui.viewer
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin

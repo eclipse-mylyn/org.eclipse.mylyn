@@ -8,7 +8,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.internal.wikitext.ui.editor;
+package org.eclipse.mylyn.wikitext.ui.editor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -64,6 +64,8 @@ import org.eclipse.ui.texteditor.HippieProposalProcessor;
  * A source viewer configuration suitable for installing on a markup editor
  * 
  * @author David Green
+ * 
+ * @since 1.1
  */
 public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerConfiguration {
 
@@ -166,6 +168,14 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 		return null;
 	}
 
+	/**
+	 * Set the markup language of the configuration. Causes the completion processor, validating reconciling strategy
+	 * and other configuration elements to be aware of the markup language in use. This may be called more than once
+	 * during the lifecycle of the editor.
+	 * 
+	 * @param markupLanguage
+	 *            the markup language
+	 */
 	public void setMarkupLanguage(MarkupLanguage markupLanguage) {
 		this.markupLanguage = markupLanguage;
 		if (completionProcessor != null) {
@@ -213,6 +223,13 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 		}
 	}
 
+	/**
+	 * Set the file being edited. If a file is being edited this allows for validation to create markers on the file.
+	 * Some editors are not file-based and thus need not invoke this method.
+	 * 
+	 * @param file
+	 *            the file, which may be null.
+	 */
 	public void setFile(IFile file) {
 		this.file = file;
 		if (markupValidationReconcilingStrategy != null) {
@@ -228,6 +245,26 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 		return textHover;
 	}
 
+	/**
+	 * provide access to an information presenter that can be used to pop-up a quick outline.
+	 * 
+	 * Source viewers should configure as follows:
+	 * 
+	 * <pre>
+	 * public void configure(SourceViewerConfiguration configuration) {
+	 * 	super.configure(configuration);
+	 * 	if (configuration instanceof MarkupSourceViewerConfiguration) {
+	 * 		outlinePresenter = ((MarkupSourceViewerConfiguration) configuration).getOutlineInformationPresenter(this);
+	 * 		outlinePresenter.install(this);
+	 * 	}
+	 * }
+	 * </pre>
+	 * 
+	 * @param sourceViewer
+	 *            the source viewer for which the presenter should be created
+	 * 
+	 * @return the presenter
+	 */
 	public IInformationPresenter getOutlineInformationPresenter(ISourceViewer sourceViewer) {
 		if (informationPresenter == null) {
 			IInformationControlCreator controlCreator = getOutlineInformationControlCreator();
@@ -263,6 +300,14 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 		};
 	}
 
+	/**
+	 * Set the outline on this configuration. Outlines are used for document-internal references as well as for quick
+	 * outline. Editors that call this method must keep the outline up to date as the source document changes. Editors
+	 * that do not maintain an outline need not call this method, since the outline will be computed as needed for the
+	 * quick outline.
+	 * 
+	 * @param outlineModel
+	 */
 	public void setOutline(OutlineItem outlineModel) {
 		this.outline = outlineModel;
 		if (anchorCompletionProcessor != null) {
@@ -270,26 +315,44 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 		}
 	}
 
+	/**
+	 * the default font, as used by the {@link #getMarkupScanner() scanner}.
+	 */
 	public Font getDefaultFont() {
 		return defaultFont;
 	}
 
+	/**
+	 * the default font, as used by the {@link #getMarkupScanner() scanner}.
+	 */
 	public void setDefaultFont(Font defaultFont) {
 		this.defaultFont = defaultFont;
 	}
 
+	/**
+	 * the default font for monospace text, as used by the {@link #getMarkupScanner() scanner}.
+	 */
 	public Font getDefaultMonospaceFont() {
 		return defaultMonospaceFont;
 	}
 
+	/**
+	 * the default font for monospace text, as used by the {@link #getMarkupScanner() scanner}.
+	 */
 	public void setDefaultMonospaceFont(Font defaultMonospaceFont) {
 		this.defaultMonospaceFont = defaultMonospaceFont;
 	}
 
+	/**
+	 * provide a {@link IShowInTarget show in target} to connect the quick-outline popup with the editor.
+	 */
 	public IShowInTarget getShowInTarget() {
 		return showInTarget;
 	}
 
+	/**
+	 * provide a {@link IShowInTarget show in target} to connect the quick-outline popup with the editor.
+	 */
 	public void setShowInTarget(IShowInTarget showInTarget) {
 		this.showInTarget = showInTarget;
 	}

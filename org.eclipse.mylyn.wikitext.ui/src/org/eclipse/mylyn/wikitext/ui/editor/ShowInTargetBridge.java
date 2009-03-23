@@ -9,7 +9,7 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.wikitext.tasks.ui.util;
+package org.eclipse.mylyn.wikitext.ui.editor;
 
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.TextSelection;
@@ -21,8 +21,11 @@ import org.eclipse.ui.part.IShowInTarget;
 import org.eclipse.ui.part.ShowInContext;
 
 /**
+ * A means of briding a {@link SourceViewer} with {@link IShowInTarget}.
  * 
  * @author David Green
+ * 
+ * @since 1.1
  */
 public class ShowInTargetBridge implements IShowInTarget {
 

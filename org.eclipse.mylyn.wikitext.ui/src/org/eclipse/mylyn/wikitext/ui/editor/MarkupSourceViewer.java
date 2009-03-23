@@ -9,7 +9,7 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.wikitext.tasks.ui.editor;
+package org.eclipse.mylyn.wikitext.ui.editor;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.information.IInformationPresenter;
@@ -17,17 +17,32 @@ import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
-import org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupSourceViewerConfiguration;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.commands.ShowQuickOutlineCommand;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.FastMarkupPartitioner;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.swt.widgets.Composite;
 
 /**
+ * A source viewer for editors using lightweight markup. Typically configured as follows:
+ * 
+ * <pre>
+ * SourceViewer viewer = new MarkupSourceViewer(parent, null, style | SWT.WRAP, markupLanguage);
+ * // configure the viewer
+ * MarkupSourceViewerConfiguration configuration = createSourceViewerConfiguration(taskRepository, viewer);
+ * 
+ * configuration.setMarkupLanguage(markupLanguage);
+ * configuration.setShowInTarget(new ShowInTargetBridge(viewer));
+ * viewer.configure(configuration);
+ * 
+ * // we want the viewer to show annotations
+ * viewer.showAnnotations(true);
+ * </pre>
  * 
  * @author David Green
+ * 
+ * @since 1.1
  */
-class MarkupSourceViewer extends SourceViewer {
+public class MarkupSourceViewer extends SourceViewer {
 	private final MarkupLanguage markupLanguage;
 
 	/**
