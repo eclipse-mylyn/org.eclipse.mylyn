@@ -49,7 +49,7 @@
 		<attribute name="help.imageFolder"/>
 		<attribute name="targetFolder"/>
 		<sequential>
-			<get dest="tmp/help.doc.xml" src="@{help.doc.url.xml}"/>
+			<!--get dest="tmp/help.doc.xml" src="@{help.doc.url.xml}"/>
 	    	<get dest="tmp/help.doc.html" src="@{help.doc.url.html}"/>
 	    	
 	    	<copy todir="tmp">
@@ -64,7 +64,7 @@
 
 This document is maintained in a collaborative wiki.  If you wish to update or modify this document please visit 
 @{help.doc.url.html}
-			</echo>
+			</echo -->
 			
 			<wikitext-to-eclipse-help markupLanguage="org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage" 
 				multipleOutputFiles="true"
@@ -74,7 +74,8 @@ This document is maintained in a collaborative wiki.  If you wish to update or m
 				validate="true"
 				failonvalidationerror="true"
 				prependImagePrefix="${imageFolder}"
-				formatoutput="true">
+				formatoutput="true"
+				defaultAbsoluteLinkTarget="mylyn_external">
 				<fileset dir="tmp" includes="**/*.mediawiki"/>
 				<stylesheet url="book.css"/>
 			</wikitext-to-eclipse-help>
