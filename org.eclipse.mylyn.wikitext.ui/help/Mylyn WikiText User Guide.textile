@@ -250,7 +250,8 @@ The @markupLanguage@ attribute accepts any of the following values (depending on
 | @navigationImages@ | Indicate if navigation links should be images (true/false).  Only applicable for multi-file output.  Default is false. |
 | @prependImagePrefix@ | If specified, the prefix is prepended to relative image urls.  |
 | @overwrite@ | Indicate if output files should be overwritten.  The default is false.  When false output files are only overwritten if the output file timestamp is older than the markup source file. |
-| @helpPrefix@ | the prefix to URLs in the toc.xml, typically the relative path from the plugin to the help files (wikitext-to-eclipse-help only). For example, if the help file is in 'help/index.html' then the help prefix would be 'help' |
+| @helpPrefix@ | The prefix to URLs in the toc.xml, typically the relative path from the plugin to the help files (wikitext-to-eclipse-help only). For example, if the help file is in 'help/index.html' then the help prefix would be 'help' |
+| @defaultAbsoluteLinkTarget@ | Specify that hyperlinks to external resources (@<a href@) should use a @target@ attribute to cause them to be opened in a seperate window or tab.  The value specified becomes the value of the @target@ attribute on anchors where the href is an absolute URL. |
 
 *stylesheet*
 
