@@ -73,6 +73,36 @@ public abstract class Block extends Processor implements Cloneable {
 	public abstract boolean canStart(String line, int lineOffset);
 
 	/**
+	 * indicate if block nesting should begin. Called after {@link #processLineContent(String, int)}.
+	 * 
+	 * @return true if nesting should start, otherwise false.
+	 * 
+	 * @see #findCloseOffset(String, int)
+	 * @since 1.1
+	 */
+	public boolean beginNesting() {
+		return false;
+	}
+
+	/**
+	 * Indicate if the block can close on the given line at the given offset. blocks that implement a nesting protocol
+	 * must implement this method.
+	 * 
+	 * @param line
+	 *            the line of content
+	 * @param lineOffset
+	 *            the 0-based offset into the line
+	 * 
+	 * @return the 0-based offset where the close will occur, or -1 if the block should not close on this line.
+	 * 
+	 * @see #beginNesting()
+	 * @since 1.1
+	 */
+	public int findCloseOffset(String line, int lineOffset) {
+		return -1;
+	}
+
+	/**
 	 * Indicate if the current block is closed
 	 */
 	public boolean isClosed() {

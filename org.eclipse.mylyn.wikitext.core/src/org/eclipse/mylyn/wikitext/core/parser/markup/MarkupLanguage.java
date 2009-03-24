@@ -92,14 +92,23 @@ public abstract class MarkupLanguage implements Cloneable {
 		return DEFAULT_ID_GENERATION_STRATEGY;
 	}
 
+	private static class LineState {
+		int lineOffset;
+
+		String line;
+
+		public LineState(String line, int offset) {
+			this.line = line;
+			lineOffset = offset;
+		}
+	}
+
 	public void processContent(MarkupParser parser, String markupContent, boolean asDocument) {
 		initializeSyntax(false);
 		initProcessors();
 		ContentState state = createState();
 		state.setMarkupContent(markupContent);
 		LocationTrackingReader reader = new LocationTrackingReader(new StringReader(markupContent));
-		String line;
-		Block currentBlock = null;
 
 		DocumentBuilder builder = parser.getBuilder();
 
@@ -108,9 +117,14 @@ public abstract class MarkupLanguage implements Cloneable {
 			if (asDocument) {
 				builder.beginDocument();
 			}
-
+			Stack<Block> nestedBlocks = null;
+			Stack<LineState> lineStates = null;
+			String line;
+			Block currentBlock = null;
 			try {
-				while ((line = reader.readLine()) != null) {
+				line = reader.readLine();
+				int lineOffset = 0;
+				while (line != null) {
 
 					state.setLineNumber(reader.getLineNumber() + 1);
 					state.setLineOffset(reader.getLineOffset());
@@ -118,8 +132,28 @@ public abstract class MarkupLanguage implements Cloneable {
 					state.setLineSegmentEndOffset(0);
 					state.setLineLength(line.length());
 
-					int lineOffset = 0;
 					for (;;) {
+						if (nestedBlocks != null && !nestedBlocks.isEmpty()) {
+							Block nestedParent = nestedBlocks.peek();
+							int closeOffset = nestedParent.findCloseOffset(line, lineOffset);
+							if (closeOffset != -1) {
+								if (closeOffset > lineOffset) {
+									String truncatedLine = line.substring(0, closeOffset);
+									if (lineStates == null) {
+										lineStates = new Stack<LineState>();
+									}
+									lineStates.push(new LineState(line, closeOffset));
+									line = truncatedLine;
+								} else {
+									if (currentBlock != null) {
+										currentBlock.setClosed(true);
+										currentBlock = null;
+									}
+									currentBlock = nestedBlocks.pop();
+									lineOffset = closeOffset;
+								}
+							}
+						}
 						if (currentBlock == null) {
 							currentBlock = startBlock(line, lineOffset);
 							if (currentBlock == null) {
@@ -132,6 +166,12 @@ public abstract class MarkupLanguage implements Cloneable {
 						lineOffset = currentBlock.processLineContent(line, lineOffset);
 						if (currentBlock.isClosed()) {
 							currentBlock = null;
+						} else if (currentBlock.beginNesting()) {
+							if (nestedBlocks == null) {
+								nestedBlocks = new Stack<Block>();
+							}
+							nestedBlocks.push(currentBlock);
+							currentBlock = null;
 						}
 						if (lineOffset < line.length() && lineOffset >= 0) {
 							if (currentBlock != null) {
@@ -141,6 +181,14 @@ public abstract class MarkupLanguage implements Cloneable {
 						} else {
 							break;
 						}
+					}
+					if (lineStates != null && !lineStates.isEmpty()) {
+						LineState lineState = lineStates.pop();
+						line = lineState.line;
+						lineOffset = lineState.lineOffset;
+					} else {
+						lineOffset = 0;
+						line = reader.readLine();
 					}
 				}
 				state.setLineNumber(reader.getLineNumber() + 1);
@@ -154,6 +202,15 @@ public abstract class MarkupLanguage implements Cloneable {
 
 			if (currentBlock != null && !currentBlock.isClosed()) {
 				currentBlock.setClosed(true);
+			}
+			if (nestedBlocks != null) {
+				while (!nestedBlocks.isEmpty()) {
+					Block block = nestedBlocks.pop();
+					if (!block.isClosed()) {
+						block.setClosed(true);
+					}
+				}
+				nestedBlocks = null;
 			}
 
 			if (asDocument) {

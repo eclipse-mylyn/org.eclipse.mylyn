@@ -35,7 +35,7 @@ public class TextBoxBlock extends ParameterizedBlock {
 
 	private String title;
 
-	private StringBuilder markupContent;
+	private boolean nesting = false;
 
 	public TextBoxBlock(BlockType blockType, String name) {
 		this.blockType = blockType;
@@ -45,6 +45,7 @@ public class TextBoxBlock extends ParameterizedBlock {
 
 	@Override
 	public int processLineContent(String line, int offset) {
+		int end = line.length();
 		if (blockLineCount == 0) {
 			setOptions(matcher.group(1));
 
@@ -54,43 +55,56 @@ public class TextBoxBlock extends ParameterizedBlock {
 			offset = matcher.start(2);
 
 			builder.beginBlock(blockType, attributes);
-			markupContent = new StringBuilder();
-		}
 
-		int end = line.length();
-		int segmentEnd = end;
-		boolean terminating = false;
+			nesting = true;
+			end = offset;
+		} else {
 
-		Matcher endMatcher = endPattern.matcher(line);
-		if (offset < end) {
-			if (blockLineCount == 0) {
-				endMatcher.region(offset, end);
+			boolean terminating = false;
+
+			Matcher endMatcher = endPattern.matcher(line);
+			if (offset < end) {
+				if (offset > 0) {
+					endMatcher.region(offset, end);
+				}
+				if (endMatcher.find()) {
+					terminating = true;
+					end = endMatcher.start(2);
+				} else {
+					end = offset;
+				}
 			}
-			if (endMatcher.find()) {
-				terminating = true;
-				end = endMatcher.start(2);
-				segmentEnd = endMatcher.start(1);
+			if (terminating) {
+				setClosed(true);
 			}
 		}
 		++blockLineCount;
 
-		if (end < line.length()) {
-			state.setLineSegmentEndOffset(end);
-		}
-		markupContent.append(line.substring(offset, segmentEnd));
-		markupContent.append("\n"); //$NON-NLS-1$
-
-		if (terminating) {
-			setClosed(true);
-		}
 		return end == line.length() ? -1 : end;
+	}
+
+	@Override
+	public boolean beginNesting() {
+		return nesting;
+	}
+
+	@Override
+	public int findCloseOffset(String line, int lineOffset) {
+		Matcher endMatcher = endPattern.matcher(line);
+		if (lineOffset != 0) {
+			endMatcher.region(lineOffset, line.length());
+		}
+		if (endMatcher.find()) {
+			return endMatcher.start();
+		}
+		return -1;
 	}
 
 	@Override
 	public boolean canStart(String line, int lineOffset) {
 		blockLineCount = 0;
 		title = null;
-		markupContent = null;
+		nesting = false;
 		matcher = startPattern.matcher(line);
 		if (lineOffset > 0) {
 			matcher.region(lineOffset, line.length());
@@ -101,12 +115,7 @@ public class TextBoxBlock extends ParameterizedBlock {
 	@Override
 	public void setClosed(boolean closed) {
 		if (closed && !isClosed()) {
-			if (markupContent != null) {
-
-				getParser().parse(markupContent.toString(), false);
-				markupContent = null;
-				builder.endBlock(); // the block	
-			}
+			builder.endBlock(); // the block	
 		}
 		super.setClosed(closed);
 	}
