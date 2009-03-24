@@ -163,9 +163,9 @@ Markup languages are the core concept that WikiText uses to define a parser for 
 
 h2. Extending an Existing Markup Language
 
-You may wish to augment an existing markup language syntax with your own extensions.  With WikiText this is possible by subclassing an existing markup language.  Currently only @TextileLanguage@ and @MediaWikiLanguage@ are designed to be subclassed.
+You may wish to augment an existing markup language syntax with your own extensions.  With WikiText this is possible by subclassing an existing markup language.
 
-If you plan on subclassing a markup language implementation, start by taking a look at @org.eclipse.mylyn.wikitext.textile.core.BugzillaTextileLanguage@.  You should also be familiar with "Markup Language Concepts":#MarkupLanguageConcepts.
+MarkupLanguages that extend others may declare this hierarchy in the @org.eclipse.mylyn.wikitext.core.markupLanguage@ extension point by using the @extends@ attribute.  Declaring the hierarchy is optional, and allows for the markup language to inherit code completion, validation and help content from the markup language being extended.
 
 h2. New Markup Languages
 

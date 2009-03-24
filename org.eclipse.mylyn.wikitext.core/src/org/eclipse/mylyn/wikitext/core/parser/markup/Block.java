@@ -73,7 +73,7 @@ public abstract class Block extends Processor implements Cloneable {
 	public abstract boolean canStart(String line, int lineOffset);
 
 	/**
-	 * indicate if block nesting should begin. Called after {@link #processLineContent(String, int)}.
+	 * Indicate if block nesting should begin. Called after {@link #processLineContent(String, int)}.
 	 * 
 	 * @return true if nesting should start, otherwise false.
 	 * 
