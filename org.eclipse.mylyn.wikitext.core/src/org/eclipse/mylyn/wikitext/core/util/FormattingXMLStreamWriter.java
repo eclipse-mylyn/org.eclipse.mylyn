@@ -95,7 +95,7 @@ public class FormattingXMLStreamWriter extends XmlStreamWriter {
 		int lineStart = start;
 		int length = 0;
 		for (int x = 0; x < len; ++x) {
-			int charOffset = lineStart + x;
+			final int charOffset = start + x;
 			++length;
 			if (lineOffset == 0 && text[charOffset] != '\n') {
 				maybeIndent(false, true);
@@ -105,7 +105,7 @@ public class FormattingXMLStreamWriter extends XmlStreamWriter {
 				delegate.writeCharacters(text, lineStart, length);
 				length = 0;
 				lineOffset = 0;
-				lineStart = start + x;
+				lineStart = charOffset;
 			}
 		}
 		if (length > 0) {
@@ -119,7 +119,8 @@ public class FormattingXMLStreamWriter extends XmlStreamWriter {
 		if (text == null) {
 			return;
 		}
-		writeCharacters(text.toCharArray(), 0, text.length());
+		char[] chars = text.toCharArray();
+		writeCharacters(chars, 0, chars.length);
 	}
 
 	@Override
