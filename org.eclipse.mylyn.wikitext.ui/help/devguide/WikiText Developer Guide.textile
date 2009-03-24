@@ -208,7 +208,7 @@ A block is a multi-line region of text.  Blocks are a way of 'chunking' a docume
 The example is composed of two blocks:
 !images/markup-blocks.png!
 
-Though blocks may start and end anywhere on a line, they usually start at the beginning of one line and end with a line delimiter.  Blocks may not overlap with other blocks, and may not be nested within one another.
+Though blocks may start and end anywhere on a line, they usually start at the beginning of one line and end with a line delimiter.  Blocks must not overlap with other blocks and in most cases do not nest within one another.  
 
 *Phrase*
 
