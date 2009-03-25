@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.mylyn.ide_feature"
       label="%featureName"
-      version="3.1.0.qualifier"
+      version="3.2.0.qualifier"
       provider-name="%providerName"
       plugin="org.eclipse.mylyn">
 
@@ -42,8 +42,8 @@
       <import plugin="org.eclipse.mylyn.context.ui" version="3.0.0" match="compatible"/>
       <import plugin="org.eclipse.mylyn.commons.core" version="3.0.0" match="compatible"/>
       <import plugin="org.eclipse.mylyn.commons.ui" version="3.0.0" match="compatible"/>
-      <import feature="org.eclipse.mylyn.context_feature" version="3.1.0.qualifier" match="perfect"/>
-      <import feature="org.eclipse.mylyn.team_feature" version="3.1.0.qualifier" match="perfect"/>
+      <import feature="org.eclipse.mylyn.context_feature" version="3.2.0.qualifier" match="perfect"/>
+      <import feature="org.eclipse.mylyn.team_feature" version="3.2.0.qualifier" match="perfect"/>
       <import plugin="org.eclipse.team.ui"/>
       <import plugin="org.eclipse.mylyn.monitor.core" version="3.0.0" match="compatible"/>
       <import feature="org.eclipse.cvs" version="1.1.0" match="compatible"/>

@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.mylyn.context_feature"
       label="%featureName"
-      version="3.1.0.qualifier"
+      version="3.2.0.qualifier"
       provider-name="%providerName"
       plugin="org.eclipse.mylyn">
 
@@ -39,7 +39,7 @@
       <import plugin="org.eclipse.mylyn.tasks.ui" version="3.0.0" match="compatible"/>
       <import plugin="org.eclipse.ui.ide"/>
       <import plugin="org.eclipse.compare"/>
-      <import feature="org.eclipse.mylyn_feature" version="3.1.0.qualifier" match="perfect"/>
+      <import feature="org.eclipse.mylyn_feature" version="3.2.0.qualifier" match="perfect"/>
       <import plugin="org.eclipse.mylyn.context.ui" version="3.0.0" match="compatible"/>
    </requires>
 
