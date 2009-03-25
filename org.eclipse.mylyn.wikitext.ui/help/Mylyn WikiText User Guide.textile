@@ -13,11 +13,11 @@ h1. Getting Started
 
 The WikiText plug-in provides a lightweight markup editor for Eclipse.  The editor is registered against all files with the following file extensions: @*.textile@, @*.tracwiki@, @*.mediawiki@, @*.twiki@, @*.confluence@
 
-It's also possible to register the editor with other file extensions by setting the Eclipse preferences under ==<b>General-&gt;Other-&gt;File Associations</b>==.
+It's also possible to register the editor with other file extensions by setting the Eclipse preferences under *General -> Other -> File Associations*.
 
 h2. Creating A New File
 
-Using the new file wizard, choose ==<b>New-&gt;File</b>==, or ==<b>New-&gt;Other...-&gt;General-&gt;File</b>==.  In the
+Using the new file wizard, choose *New -> File*, or *New -> Other... -> General -> File*.  In the
 filename field, enter the name of the file with a @.textile@ or other registered extension.  
 
 When the new file is created it should open in the WikiText editor.  Start typing!!
@@ -53,7 +53,7 @@ Clicking on an item in the outline when the preview is showing causes the corres
 
 Items in the outline view can be moved within the document by using the mouse to drag and drop the item to the desired location.  
 
-The Outline view can be displayed by selecting ==<b>Window-&gt;Show View-&gt;Outline</b>== from the main menu.
+The Outline view can be displayed by selecting *Window -> Show View -> Outline* from the main menu.
 Also see "Quick Outline":#QuickOutline.
 
 h3. Folding
@@ -96,7 +96,7 @@ WikiText project settings may be configured from the project properties dialog.
 
 !images/project-settings.png!
 
-Selecting *Enable validation* causes WikiText to validate wiki markup files in your project.  This is done as part of the project build process, so it helps to have automatic building enabled (==<b>Preferences-&gt;Workspace-&gt;Build Automatically</b>==).  Validation is performed on all resources that match a wiki markup file extension.  In addition validation includes any files for which the "markup language setting":#SwitchingMarkupLanguages was set even if the file doesn't have a registered wiki markup file extension.
+Selecting *Enable validation* causes WikiText to validate wiki markup files in your project.  This is done as part of the project build process, so it helps to have automatic building enabled (*Preferences->Workspace->Build Automatically*).  Validation is performed on all resources that match a wiki markup file extension.  In addition validation includes any files for which the "markup language setting":#SwitchingMarkupLanguages was set even if the file doesn't have a registered wiki markup file extension.
 
 h1. Task Editor Integration
 
@@ -104,7 +104,7 @@ WikiText extends Mylyn to provide a markup-aware task editor.  With WikiText ins
 
 h2. Repository Configuration
 
-To use the WikiText extension to the Mylyn task editor you may need to configure your Mylyn task repository.  To do so, open the Mylyn *Task Repositories* view (==<b>Window-&gt;Show View-&gt;Other...-&gt;Mylyn-&gt;Task Repositories</b>==).  Select the repository that you wish to configure and then select *Properties* from the context menu.
+To use the WikiText extension to the Mylyn task editor you may need to configure your Mylyn task repository.  To do so, open the Mylyn *Task Repositories* view (*Window -> Show View -> Other... -> Mylyn -> Task Repositories*).  Select the repository that you wish to configure and then select *Properties* from the context menu.
 
 !images/repository-settings-task-editor-extension.png!
 
@@ -114,11 +114,11 @@ Press the *Finish* button when you've finished to make the changes permanent.  N
 
 h2. Task Editor Appearance
 
-The appearance of rendered markup in the task editor can be altered in the Eclipse preferences.  Open ==<b>Preferences->General->Editors->Text Editors->WikiText->Appearance</b>== and alter the appearance using CSS styles. See "Preferences":#Preferences for more details.
+The appearance of rendered markup in the task editor can be altered in the Eclipse preferences.  Open *Preferences -> General -> Editors -> Text Editors -> WikiText -> Appearance* and alter the appearance using CSS styles. See "Preferences":#Preferences for more details.
 
 h3. Task Editor Fonts
 
-Default fonts for the task editor when using WikiText can be altered in the Eclipse preferences.  Open ==<b>Preferences->General->Appearance->Colors and Fonts</b>==.  Under ==<b>Tasks</b>== default fonts may be selected:
+Default fonts for the task editor when using WikiText can be altered in the Eclipse preferences.  Open *Preferences -> General -> Appearance -> Colors and Fonts*.  Under *Tasks* default fonts may be selected:
 
 * Task Editor - Monospace font
 * Task Editor - Notes and Comments
