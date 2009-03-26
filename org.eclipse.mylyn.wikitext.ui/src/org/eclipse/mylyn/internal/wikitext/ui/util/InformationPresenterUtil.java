@@ -121,7 +121,9 @@ public class InformationPresenterUtil {
 		Control control = viewer.getTextWidget();
 		InformationPresenter presenter = (InformationPresenter) control.getData(DATA_INFORMATION_PRESENTER);
 
-		int offset = 0;
+		// bug 270059: ensure that the size/positioning math works by specifying the offet of the
+		// current selection.
+		int offset = viewer.getSelectedRange().x;
 
 		IInformationControlCreator informationControlCreator;
 		if (presenter == null) {
