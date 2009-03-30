@@ -93,7 +93,7 @@ public class BugzillaClient {
 
 	protected static final String USER_AGENT = "BugzillaConnector"; //$NON-NLS-1$
 
-	private static final int MAX_RETRIEVED_PER_QUERY = 100;
+	private static final int MAX_RETRIEVED_PER_QUERY = 50;
 
 	private static final String QUERY_DELIMITER = "?"; //$NON-NLS-1$
 
@@ -1680,6 +1680,7 @@ public class BugzillaClient {
 								}
 								factory.populateReport(taskDataMap, collector, mapper, customFields);
 								taskIds.removeAll(idsToRetrieve);
+								taskDataMap.clear();
 								parseable = true;
 								break;
 							} finally {
