@@ -352,6 +352,11 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	public void createPartControl(Composite parent) {
 		super.createPartControl(parent);
 		ProjectionViewer viewer = (ProjectionViewer) getSourceViewer();
+		// fix bug 267553: font problems can occur if the default font of the text widget doesn't match the
+		//                 default font returned by the token scanner
+		if (sourceViewerConfiguration.getDefaultFont() != null) {
+			viewer.getTextWidget().setFont(sourceViewerConfiguration.getDefaultFont());
+		}
 
 		projectionSupport = new ProjectionSupport(viewer, getAnnotationAccess(), getSharedColors());
 		projectionSupport.install();
