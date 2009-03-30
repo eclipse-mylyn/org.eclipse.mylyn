@@ -22,7 +22,7 @@ public class DefaultIdGenerationStrategy extends IdGenerationStrategy {
 
 	@Override
 	public String generateId(String headingText) {
-		String anchor = headingText.replaceAll("[^a-zA-Z0-9]", ""); //$NON-NLS-1$ //$NON-NLS-2$
+		String anchor = headingText.replaceAll("[^a-zA-Z0-9.]", ""); //$NON-NLS-1$ //$NON-NLS-2$
 		if (anchor.length() > 0 && Character.isDigit(anchor.charAt(0))) {
 			anchor = 'a' + anchor;
 		}

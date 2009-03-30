@@ -110,7 +110,7 @@ public class TWikiLanguageTest extends TestCase {
 	public void testTableOfContents() {
 		String html = parser.parseToHtml("---+ outline\n%TOC%\n---+ f1\n---++ f1.1\n---++ f1.2\n---+ f2\n---+ f3\n---++ f3.1");
 		System.out.println(html);
-		assertTrue(html.contains("<body><h1 id=\"outline\">outline</h1><ol><li><a href=\"#outline\">outline</a></li><li><a href=\"#f1\">f1</a><ol><li><a href=\"#f11\">f1.1</a></li><li><a href=\"#f12\">f1.2</a></li></ol></li><li><a href=\"#f2\">f2</a></li><li><a href=\"#f3\">f3</a><ol><li><a href=\"#f31\">f3.1</a></li></ol></li></ol><h1 id=\"f1\">f1</h1><h2 id=\"f11\">f1.1</h2><h2 id=\"f12\">f1.2</h2><h1 id=\"f2\">f2</h1><h1 id=\"f3\">f3</h1><h2 id=\"f31\">f3.1</h2></body>"));
+		assertTrue(html.contains("<body><h1 id=\"outline\">outline</h1><ol><li><a href=\"#outline\">outline</a></li><li><a href=\"#f1\">f1</a><ol><li><a href=\"#f1.1\">f1.1</a></li><li><a href=\"#f1.2\">f1.2</a></li></ol></li><li><a href=\"#f2\">f2</a></li><li><a href=\"#f3\">f3</a><ol><li><a href=\"#f3.1\">f3.1</a></li></ol></li></ol><h1 id=\"f1\">f1</h1><h2 id=\"f1.1\">f1.1</h2><h2 id=\"f1.2\">f1.2</h2><h1 id=\"f2\">f2</h1><h1 id=\"f3\">f3</h1><h2 id=\"f3.1\">f3.1</h2></body>"));
 	}
 
 	public void testWikiWord() {

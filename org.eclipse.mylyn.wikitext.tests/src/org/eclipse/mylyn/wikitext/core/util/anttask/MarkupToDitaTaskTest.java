@@ -71,6 +71,23 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 		return markupFile;
 	}
 
+	private File createSimpleTextileMarkupWithFQNHeadings() throws IOException {
+		File markupFile = new File(tempFolder, "markup.textile");
+		PrintWriter writer = new PrintWriter(new FileWriter(markupFile));
+		try {
+			writer.println("h1. " + MarkupToDitaTaskTest.class.getName());
+			writer.println();
+			writer.println("some content");
+			writer.println();
+			writer.println("h1. Second Heading");
+			writer.println();
+			writer.println("some more content");
+		} finally {
+			writer.close();
+		}
+		return markupFile;
+	}
+
 	public void testCreatesMapbook() throws IOException {
 		File markupFile = createSimpleTextileMarkup();
 		ditaTask.setBookTitle("Sample Title");
@@ -235,6 +252,44 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 		assertTrue(firstTopicContent.contains("<topic id=\"Id2\">"));
 		assertTrue(firstTopicContent.contains("<title>Second Heading</title>"));
 		assertTrue(firstTopicContent.contains("<xref href=\"#Id1\">ref to 1</xref>"));
+	}
+
+	/**
+	 * test for bug 269147
+	 */
+	public void testFileNaming() throws IOException {
+		File markupFile = createSimpleTextileMarkupWithFQNHeadings();
+		ditaTask.setBookTitle("Sample Title");
+		ditaTask.setFile(markupFile);
+
+		ditaTask.execute();
+
+		listFiles();
+
+		File ditamapFile = new File(tempFolder, "markup.ditamap");
+		assertTrue(ditamapFile.exists());
+		File firstHeadingFile = new File(topicsFolder, MarkupToDitaTaskTest.class.getName() + ".dita");
+		assertTrue(firstHeadingFile.exists());
+		File secondHeadingFile = new File(topicsFolder, "SecondHeading.dita");
+		assertTrue(secondHeadingFile.exists());
+
+		String ditamapContent = getContent(ditamapFile);
+		assertTrue(ditamapContent.contains("<bookmap>"));
+		assertTrue(ditamapContent.contains("<chapter href=\"topics/" + MarkupToDitaTaskTest.class.getName()
+				+ ".dita\" navtitle=\"" + MarkupToDitaTaskTest.class.getName() + "\"/>"));
+		assertTrue(ditamapContent.contains("<chapter href=\"topics/SecondHeading.dita\" navtitle=\"Second Heading\"/>"));
+
+		String firstTopicContent = getContent(firstHeadingFile);
+//		<?xml version='1.0' ?><!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA 1.1 Topic//EN" "http://docs.oasis-open.org/dita/v1.1/OS/dtd/topic.dtd">
+//		<topic id="FirstHeading">
+//			<title>First Heading</title>
+//			<body>
+//				<p>some content</p>
+//			</body>
+//		</topic>
+		assertTrue(firstTopicContent.contains("<topic id=\"" + MarkupToDitaTaskTest.class.getName() + "\">"));
+		assertTrue(firstTopicContent.contains("<title>" + MarkupToDitaTaskTest.class.getName() + "</title>"));
+		assertTrue(firstTopicContent.contains("<p>some content</p>"));
 	}
 
 }

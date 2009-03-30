@@ -582,7 +582,7 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	public static String computeName(String headingId, String topicFilenameSuffix) {
-		String name = headingId == null ? __TOPIC : headingId.replaceAll("[^a-zA-Z0-9_-]", "-"); //$NON-NLS-1$ //$NON-NLS-2$
+		String name = headingId == null ? __TOPIC : headingId.replaceAll("[^a-zA-Z0-9_.-]", "-"); //$NON-NLS-1$ //$NON-NLS-2$
 		name = name + topicFilenameSuffix;
 		return name;
 	}

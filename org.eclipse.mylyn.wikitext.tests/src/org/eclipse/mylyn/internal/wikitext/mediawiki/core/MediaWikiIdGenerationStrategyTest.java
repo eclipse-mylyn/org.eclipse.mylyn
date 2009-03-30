@@ -29,4 +29,8 @@ public class MediaWikiIdGenerationStrategyTest extends TestCase {
 		assertEquals("Keyboard_mappings_on_Linux", generationStrategy.generateId("Keyboard mappings on Linux"));
 		assertEquals("Alt.2BClick_navigation", generationStrategy.generateId("Alt+Click navigation"));
 	}
+
+	public void testWithDots() {
+		assertEquals("com.foo.Bar", generationStrategy.generateId("com.foo.Bar"));
+	}
 }
