@@ -50,35 +50,7 @@
    </requires>
 
    <plugin
-         id="org.eclipse.mylyn.wikitext.confluence.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.mylyn.wikitext.confluence.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.mylyn.wikitext.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.mylyn.wikitext.mediawiki.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.mylyn.wikitext.mediawiki.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -92,7 +64,14 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.wikitext.textile.ui"
+         id="org.eclipse.mylyn.wikitext.mediawiki.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.wikitext.confluence.core"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -106,13 +85,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.wikitext.tracwiki.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.mylyn.wikitext.twiki.core"
          download-size="0"
          install-size="0"
@@ -120,14 +92,42 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.wikitext.twiki.ui"
+         id="org.eclipse.mylyn.wikitext.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.wikitext.ui"
+         id="org.eclipse.mylyn.wikitext.textile.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.wikitext.mediawiki.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.wikitext.confluence.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.wikitext.tracwiki.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.wikitext.twiki.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"
