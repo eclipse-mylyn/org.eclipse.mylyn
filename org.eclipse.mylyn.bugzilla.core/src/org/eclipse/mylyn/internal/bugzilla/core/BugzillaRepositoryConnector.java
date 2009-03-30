@@ -94,7 +94,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public void updateTaskFromTaskData(TaskRepository repository, ITask task, TaskData taskData) {
-		TaskMapper scheme = new TaskMapper(taskData);
+		TaskMapper scheme = getTaskMapping(taskData);
 		scheme.applyTo(task);
 
 		task.setUrl(BugzillaClient.getBugUrlWithoutLogin(repository.getRepositoryUrl(), taskData.getTaskId()));
@@ -540,6 +540,30 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public boolean hasRepositoryDueDate(TaskRepository taskRepository, ITask task, TaskData taskData) {
 		return taskData.getRoot().getAttribute(BugzillaAttribute.ESTIMATED_TIME.getKey()) != null;
+	}
+
+	@Override
+	public TaskMapper getTaskMapping(final TaskData taskData) {
+		return new TaskMapper(taskData) {
+			@Override
+			public String getTaskKey() {
+				TaskAttribute attribute = getTaskData().getRoot().getAttribute(BugzillaAttribute.BUG_ID.getKey());
+				if (attribute != null) {
+					return attribute.getValue();
+				}
+				return super.getTaskKey();
+			}
+
+			@Override
+			public String getTaskKind() {
+				return taskData.getConnectorKind();
+			}
+
+			@Override
+			public String getTaskUrl() {
+				return taskData.getRepositoryUrl();
+			}
+		};
 	}
 
 }

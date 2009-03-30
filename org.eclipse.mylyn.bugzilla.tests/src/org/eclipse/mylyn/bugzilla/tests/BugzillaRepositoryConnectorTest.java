@@ -45,6 +45,7 @@ import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.TaskMapping;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
@@ -643,10 +644,10 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 	}
 
 	public void testDataRetrieval() throws CoreException, ParseException {
-		init(IBugzillaTestConstants.TEST_BUGZILLA_30_URL);
+		init30();
 		TaskData data = connector.getTaskData(repository, "2", new NullProgressMonitor());
 		assertNotNull(data);
-		TaskMapper mapper = new TaskMapper(data);
+		ITaskMapping mapper = connector.getTaskMapping(data);
 		assertEquals("2", data.getTaskId());
 		assertEquals("New bug submit", mapper.getSummary());
 		assertEquals("Test new bug submission", mapper.getDescription());
@@ -669,9 +670,9 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		assertEquals(format1.parse("2007-03-20 16:37"), mapper.getCreationDate());
 		assertEquals(format2.parse("2008-09-24 13:33:02"), mapper.getModificationDate());
 
-		//assertEquals("", mapper.getTaskUrl());
-		//assertEquals("bugzilla", mapper.getTaskKind());
-		//assertEquals("", mapper.getTaskKey());
+		assertEquals(IBugzillaTestConstants.TEST_BUGZILLA_30_URL, mapper.getTaskUrl());
+		assertEquals(BugzillaCorePlugin.CONNECTOR_KIND, mapper.getTaskKind());
+		assertEquals("2", mapper.getTaskKey());
 
 		// test comments
 		List<TaskAttribute> comments = data.getAttributeMapper().getAttributesByType(data, TaskAttribute.TYPE_COMMENT);
