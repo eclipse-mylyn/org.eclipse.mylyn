@@ -57,6 +57,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		spanTypeToElementName.put(SpanType.STRONG, "strong"); //$NON-NLS-1$
 		spanTypeToElementName.put(SpanType.DELETED, "del"); //$NON-NLS-1$
 		spanTypeToElementName.put(SpanType.INSERTED, "ins"); //$NON-NLS-1$
+		spanTypeToElementName.put(SpanType.QUOTE, "q"); //$NON-NLS-1$
 		spanTypeToElementName.put(SpanType.UNDERLINED, "u"); //$NON-NLS-1$
 		spanTypeToElementName.put(SpanType.SUPERSCRIPT, "sup"); //$NON-NLS-1$
 		spanTypeToElementName.put(SpanType.SUBSCRIPT, "sub"); //$NON-NLS-1$

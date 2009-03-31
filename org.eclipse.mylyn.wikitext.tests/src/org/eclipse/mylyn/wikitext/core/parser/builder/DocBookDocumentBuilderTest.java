@@ -14,6 +14,7 @@ import java.io.StringWriter;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.wikitext.confluence.core.ConfluenceLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
@@ -47,6 +48,14 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		String docbook = out.toString();
 		System.out.println("DocBook: \n" + docbook);
 		assertTrue(docbook.contains("<inlinemediaobject><imageobject><imagedata fileref=\"images/foo.png\"/></imageobject></inlinemediaobject>"));
+	}
+
+	public void testInlineQuote() {
+		parser.setMarkupLanguage(new ConfluenceLanguage());
+		parser.parse("some text {quote}quoted text{quote} some text");
+		String docbook = out.toString();
+		System.out.println("DocBook: \n" + docbook);
+		assertTrue(docbook.contains("<para>some text <quote>quoted text</quote> some text</para>"));
 	}
 
 	public void testImage() {

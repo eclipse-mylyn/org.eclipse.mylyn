@@ -104,3 +104,7 @@ blockquote {
 tt {
 	font-family: monospace;	
 }
+
+q {
+	color: rgb(38, 86, 145);
+}

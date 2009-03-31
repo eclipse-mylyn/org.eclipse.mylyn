@@ -552,4 +552,33 @@ public class ConfluenceLanguageTest extends TestCase {
 		assertTrue(html.contains("<strong><em>bold and italic</em> not just bold</strong>"));
 	}
 
+	public void testInlineQuote() {
+		String html = parser.parseToHtml("a paragraph {quote}with inline{quote} quote");
+		System.out.println(html);
+		assertTrue(html.contains("<body><p>a paragraph <q>with inline</q> quote</p></body>"));
+	}
+
+	public void testInlineQuoteWithBullets() {
+		String html = parser.parseToHtml("* a bullet {quote}with inline{quote} quote");
+		System.out.println(html);
+		assertTrue(html.contains("<body><ul><li>a bullet <q>with inline</q> quote</li></ul></body>"));
+	}
+
+	public void testInlineQuoteWithBullets2() {
+		String html = parser.parseToHtml("* {quote}a bullet with inline{quote} quote");
+		System.out.println(html);
+		assertTrue(html.contains("<body><ul><li><q>a bullet with inline</q> quote</li></ul></body>"));
+	}
+
+	public void testInlineQuoteNegativeMatch() {
+		String html = parser.parseToHtml("a paragraph {quote}with inline quote");
+		System.out.println(html);
+		assertTrue(html.contains("<body><p>a paragraph {quote}with inline quote</p></body>"));
+	}
+
+	public void testInlineQuoteNegativeMatch2() {
+		String html = parser.parseToHtml("{quote}a paragraph with {quote}inline quote{quote}");
+		System.out.println(html);
+		assertTrue(html.contains("<body><blockquote><p>a paragraph with </p></blockquote><p>inline quote{quote}</p></body>"));
+	}
 }

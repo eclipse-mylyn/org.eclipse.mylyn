@@ -358,6 +358,9 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 			writer.writeStartElement("emphasis"); //$NON-NLS-1$
 			writer.writeAttribute("role", "italic"); //$NON-NLS-1$ //$NON-NLS-2$
 			break;
+		case QUOTE:
+			writer.writeStartElement("quote"); //$NON-NLS-1$
+			break;
 		case SPAN:
 			writer.writeStartElement("phrase"); //$NON-NLS-1$
 			break;

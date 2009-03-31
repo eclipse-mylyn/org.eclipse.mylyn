@@ -380,6 +380,9 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 		case MONOSPACE:
 			writer.writeStartElement("tt"); //$NON-NLS-1$
 			break;
+		case QUOTE:
+			writer.writeStartElement("q"); //$NON-NLS-1$
+			break;
 		default:
 			Logger.getLogger(DocBookDocumentBuilder.class.getName()).warning("No DITA topic mapping for " + type); //$NON-NLS-1$
 			writer.writeStartElement("ph"); //$NON-NLS-1$

@@ -52,7 +52,13 @@ public abstract class DocumentBuilder {
 	}
 
 	public enum SpanType {
-		EMPHASIS, STRONG, ITALIC, BOLD, CITATION, DELETED, INSERTED, SUPERSCRIPT, SUBSCRIPT, SPAN, CODE, MONOSPACE, UNDERLINED
+		EMPHASIS, STRONG, ITALIC, BOLD, CITATION, DELETED, INSERTED, SUPERSCRIPT, SUBSCRIPT, SPAN, CODE, MONOSPACE, UNDERLINED,
+		/**
+		 * a short inline quotation
+		 * 
+		 * @since 1.1
+		 */
+		QUOTE
 	}
 
 	/**

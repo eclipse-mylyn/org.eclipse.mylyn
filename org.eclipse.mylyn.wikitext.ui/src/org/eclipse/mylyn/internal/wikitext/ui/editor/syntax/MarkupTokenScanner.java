@@ -287,6 +287,9 @@ public class MarkupTokenScanner implements ITokenScanner {
 		case MONOSPACE:
 			key = Preferences.PHRASE_MONOSPACE;
 			break;
+		case QUOTE:
+			key = Preferences.PHRASE_QUOTE;
+			break;
 		case SPAN:
 			key = Preferences.PHRASE_SPAN;
 			break;
