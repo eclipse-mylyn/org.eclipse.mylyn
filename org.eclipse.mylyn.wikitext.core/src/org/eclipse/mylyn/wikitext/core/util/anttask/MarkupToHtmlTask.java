@@ -19,8 +19,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
-import java.io.StringWriter;
 import java.io.Writer;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -87,11 +87,11 @@ public class MarkupToHtmlTask extends MarkupTask {
 		}
 		if (file != null) {
 			if (!file.exists()) {
-				throw new BuildException(String.format(Messages.getString("MarkupToHtmlTask.3"), file)); //$NON-NLS-1$
+				throw new BuildException(MessageFormat.format(Messages.getString("MarkupToHtmlTask.3"), file)); //$NON-NLS-1$
 			} else if (!file.isFile()) {
-				throw new BuildException(String.format(Messages.getString("MarkupToHtmlTask.4"), file)); //$NON-NLS-1$
+				throw new BuildException(MessageFormat.format(Messages.getString("MarkupToHtmlTask.4"), file)); //$NON-NLS-1$
 			} else if (!file.canRead()) {
-				throw new BuildException(String.format(Messages.getString("MarkupToHtmlTask.5"), file)); //$NON-NLS-1$
+				throw new BuildException(MessageFormat.format(Messages.getString("MarkupToHtmlTask.5"), file)); //$NON-NLS-1$
 			}
 		}
 
@@ -135,7 +135,8 @@ public class MarkupToHtmlTask extends MarkupTask {
 					} catch (BuildException e) {
 						throw e;
 					} catch (Exception e) {
-						throw new BuildException(String.format(Messages.getString("MarkupToHtmlTask.11"), inputFile, //$NON-NLS-1$
+						throw new BuildException(MessageFormat.format(
+								Messages.getString("MarkupToHtmlTask.11"), inputFile, //$NON-NLS-1$
 								e.getMessage()), e);
 					}
 				}
@@ -148,15 +149,18 @@ public class MarkupToHtmlTask extends MarkupTask {
 			} catch (BuildException e) {
 				throw e;
 			} catch (Exception e) {
-				throw new BuildException(
-						String.format(Messages.getString("MarkupToHtmlTask.12"), file, e.getMessage()), e); //$NON-NLS-1$
+				throw new BuildException(MessageFormat.format(
+						Messages.getString("MarkupToHtmlTask.12"), file, e.getMessage()), e); //$NON-NLS-1$
 			}
 		}
 	}
 
 	private void testForOutputFolderConflict(Set<File> outputFolders, File inputFile) {
-		if (multipleOutputFiles && !outputFolders.add(inputFile.getAbsoluteFile().getParentFile())) {
-			log(String.format(Messages.getString("MarkupToHtmlTask.13")), Project.MSG_WARN); //$NON-NLS-1$
+		if (multipleOutputFiles) {
+			File outputFolder = inputFile.getAbsoluteFile().getParentFile();
+			if (!outputFolders.add(outputFolder)) {
+				log(MessageFormat.format(Messages.getString("MarkupToHtmlTask.13"), outputFolder), Project.MSG_WARN); //$NON-NLS-1$
+			}
 		}
 	}
 
@@ -173,7 +177,7 @@ public class MarkupToHtmlTask extends MarkupTask {
 	protected String processFile(MarkupLanguage markupLanguage, final File baseDir, final File source)
 			throws BuildException {
 
-		log(String.format(Messages.getString("MarkupToHtmlTask.14"), source), Project.MSG_VERBOSE); //$NON-NLS-1$
+		log(MessageFormat.format(Messages.getString("MarkupToHtmlTask.14"), source), Project.MSG_VERBOSE); //$NON-NLS-1$
 
 		String markupContent = null;
 
@@ -195,7 +199,7 @@ public class MarkupToHtmlTask extends MarkupTask {
 			try {
 				writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(htmlOutputFile)), "utf-8"); //$NON-NLS-1$
 			} catch (Exception e) {
-				throw new BuildException(String.format(
+				throw new BuildException(MessageFormat.format(
 						Messages.getString("MarkupToHtmlTask.16"), htmlOutputFile, e.getMessage()), e); //$NON-NLS-1$
 			}
 			try {
@@ -250,7 +254,8 @@ public class MarkupToHtmlTask extends MarkupTask {
 				try {
 					writer.close();
 				} catch (Exception e) {
-					throw new BuildException(String.format(Messages.getString("MarkupToHtmlTask.17"), htmlOutputFile, //$NON-NLS-1$
+					throw new BuildException(MessageFormat.format(
+							Messages.getString("MarkupToHtmlTask.17"), htmlOutputFile, //$NON-NLS-1$
 							e.getMessage()), e);
 				}
 			}
@@ -266,20 +271,20 @@ public class MarkupToHtmlTask extends MarkupTask {
 	}
 
 	protected String readFully(File inputFile) {
-		StringWriter w = new StringWriter();
+		StringBuilder w = new StringBuilder((int) inputFile.length());
 		try {
 			Reader r = new InputStreamReader(new BufferedInputStream(new FileInputStream(inputFile)));
 			try {
 				int i;
 				while ((i = r.read()) != -1) {
-					w.write((char) i);
+					w.append((char) i);
 				}
 			} finally {
 				r.close();
 			}
 		} catch (IOException e) {
-			throw new BuildException(
-					String.format(Messages.getString("MarkupToHtmlTask.19"), inputFile, e.getMessage()), e); //$NON-NLS-1$
+			throw new BuildException(MessageFormat.format(
+					Messages.getString("MarkupToHtmlTask.19"), inputFile, e.getMessage()), e); //$NON-NLS-1$
 		}
 		return w.toString();
 	}
