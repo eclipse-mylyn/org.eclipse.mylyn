@@ -10,11 +10,14 @@
         David Green - initial API and implementation
  -->
 <project name="org.eclipse.mylyn.wikitext.ui">
+
+	<property name="wikitext.ui.textile.bin" value="../org.eclipse.mylyn.wikitext.textile.core/.tmp.bin"/>
 	
 	<target name="clean">
 		<delete>
 			<fileset dir="help">
 				<include name="**/*.html"/>
+				<include name="**/*-toc.xml"/>
 			</fileset>
 		</delete>
 		<delete>
@@ -23,18 +26,18 @@
 				<exclude name="**/*"/>
 			</fileset>
 		</delete>
+		<delete dir="${wikitext.ui.textile.bin}" failonerror="false"/>
 	</target>
 	
 	<target name="all" depends="plugin-docs, new-and-noteworthy">
 	</target>
 	
-	<target name="plugin-docs" description="generate plugin help documentation">
+	<target name="plugin-docs" depends="compile-tasks" description="generate plugin help documentation">
 		<taskdef resource="org/eclipse/mylyn/wikitext/core/util/anttask/tasks.properties">
 			<classpath>
 				<pathelement location="../org.eclipse.mylyn.wikitext.core/@dot"/>
-				<pathelement location="../org.eclipse.mylyn.wikitext.textile.core/@dot"/>
 				<pathelement location="../org.eclipse.mylyn.wikitext.core/bin"/>
-				<pathelement location="../org.eclipse.mylyn.wikitext.textile.core/bin"/>
+				<pathelement location="${wikitext.ui.textile.bin}"/>
 			</classpath>
 		</taskdef>
 		<wikitext-to-eclipse-help markupLanguage="org.eclipse.mylyn.wikitext.textile.core.TextileLanguage" 
@@ -49,6 +52,18 @@
 		<antcall target="test"/>
 	</target>
 
+	<target name="compile-tasks">
+		<!--
+		bug 269970 we can't rely on Textile being built first, so we compile here instead.
+		-->
+		<mkdir dir="${wikitext.ui.textile.bin}"/>
+		<javac destdir="${wikitext.ui.textile.bin}" srcdir="../org.eclipse.mylyn.wikitext.textile.core/src">
+			<classpath>
+				<pathelement location="../org.eclipse.mylyn.wikitext.core/@dot"/>
+				<pathelement location="../org.eclipse.mylyn.wikitext.core/bin"/>
+			</classpath>
+		</javac>
+	</target>
 	
 
 	<target name="test" description="verify that all of the HTML files are well-formed XML">
