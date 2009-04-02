@@ -34,7 +34,6 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScheme;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.auth.BasicScheme;
@@ -265,7 +264,7 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
 		config.setServerURL(getXmlRpcUrl(credentials));
 		if (credentialsValid(credentials)) {
-			Credentials creds = new UsernamePasswordCredentials(credentials.getUserName(), credentials.getPassword());
+			Credentials creds = WebUtil.getHttpClientCredentials(credentials, WebUtil.getHost(location.getUrl()));
 			httpClient.getState().setCredentials(authScope, creds);
 		} else {
 			httpClient.getState().clearCredentials();
