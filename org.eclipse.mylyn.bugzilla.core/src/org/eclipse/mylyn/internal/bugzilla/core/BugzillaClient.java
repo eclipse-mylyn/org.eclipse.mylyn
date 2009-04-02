@@ -1825,7 +1825,7 @@ public class BugzillaClient {
 
 			while (!origText.equals("")) { //$NON-NLS-1$
 				int newLine = origText.indexOf('\n');
-				if (newLine == -1) {
+				if (newLine == -1 || newLine > WRAP_LENGTH) {
 					if (origText.length() > WRAP_LENGTH) {
 						int spaceIndex = origText.lastIndexOf(" ", WRAP_LENGTH); //$NON-NLS-1$
 						if (spaceIndex == -1) {
