@@ -206,6 +206,7 @@ Take for example the following Textile markup:
 A block is a multi-line region of text.  Blocks are a way of 'chunking' a document, and loosely correspond to HTML concepts such as div, paragraph, list item, table cell, etc.
 
 The example is composed of two blocks:
+
 !images/markup-blocks.png!
 
 Though blocks may start and end anywhere on a line, they usually start at the beginning of one line and end with a line delimiter.  Blocks must not overlap with other blocks and in most cases do not nest within one another.  
@@ -215,6 +216,7 @@ Though blocks may start and end anywhere on a line, they usually start at the be
 A phrase is a single-line region of text.  Phrases are often used to apply styles such as underline or bold to a region of text.  Phrases are analogous to an HTML span.
 
 The example shows phrases:
+
 !images/markup-phrases.png!
 
 Phrases may not overlap but may be nested.  Phrases must start and end on the same line.  Phrases cannot span a block boundary.
