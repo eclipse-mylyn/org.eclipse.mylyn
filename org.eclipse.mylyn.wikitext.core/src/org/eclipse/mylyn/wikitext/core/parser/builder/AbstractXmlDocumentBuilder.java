@@ -91,7 +91,7 @@ public abstract class AbstractXmlDocumentBuilder extends DocumentBuilder {
 
 	/**
 	 * Set the base URI of the HTML document. Causes all relative URLs to be prefixed with the base URI. The base URI is
-	 * assumed to refer to a foler-like resource.
+	 * assumed to refer to a folder-like resource.
 	 * 
 	 * @param uri
 	 *            the URI, or null
@@ -102,7 +102,7 @@ public abstract class AbstractXmlDocumentBuilder extends DocumentBuilder {
 
 	/**
 	 * Get the base URI of the HTML document. A not-null value causes all relative URLs to be prefixed with the base
-	 * URI. The base URI is assumed to refer to a foler-like resource.
+	 * URI. The base URI is assumed to refer to a folder-like resource.
 	 */
 	public URI getBase() {
 		return base;

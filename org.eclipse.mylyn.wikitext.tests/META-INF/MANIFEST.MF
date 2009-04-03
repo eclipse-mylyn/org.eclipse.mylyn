@@ -28,6 +28,7 @@ Require-Bundle: org.junit;bundle-version="3.8.2",
  org.eclipse.help,
  org.apache.ant
 Export-Package: 
+ org.eclipse.mylyn.internal.wikitext.core.util.css;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.core.validation;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.mediawiki.core;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.mediawiki.core.validation;x-internal:=true,
@@ -38,7 +39,6 @@ Export-Package:
  org.eclipse.mylyn.internal.wikitext.ui.editor.syntax;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.resources;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.ui.util;x-internal:=true,
- org.eclipse.mylyn.internal.wikitext.ui.util.css;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.ui.viewer;x-internal:=true,
  org.eclipse.mylyn.wikitext.confluence.core;x-internal:=true,
  org.eclipse.mylyn.wikitext.core.parser;x-internal:=true,

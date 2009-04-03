@@ -15,8 +15,8 @@ import java.text.MessageFormat;
 import java.util.Iterator;
 
 import org.eclipse.jface.preference.StringFieldEditor;
-import org.eclipse.mylyn.internal.wikitext.ui.util.css.CssParser;
-import org.eclipse.mylyn.internal.wikitext.ui.util.css.CssRule;
+import org.eclipse.mylyn.internal.wikitext.core.util.css.CssParser;
+import org.eclipse.mylyn.internal.wikitext.core.util.css.CssRule;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.CssStyleManager;
 import org.eclipse.swt.widgets.Composite;
 

@@ -9,33 +9,14 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.wikitext.ui.util.css;
+package org.eclipse.mylyn.internal.wikitext.core.util.css;
 
 /**
- * An interface to XML element information
+ * An abstraction for a CSS selector.
  * 
  * @author David Green
  */
-public interface ElementInfo {
-	/**
-	 * get the local name of the element
-	 */
-	public String getLocalName();
+public abstract class Selector {
 
-	/**
-	 * get the parent of this element
-	 * 
-	 * @return the parent or null if this is the root element
-	 */
-	public ElementInfo getParent();
-
-	/**
-	 * indicate if the elemet has the given CSS class
-	 */
-	public boolean hasCssClass(String cssClass);
-
-	/**
-	 * indicate if the element has the given id
-	 */
-	public boolean hasId(String id);
+	public abstract boolean select(ElementInfo info);
 }

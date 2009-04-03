@@ -9,18 +9,33 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.wikitext.ui.util.css;
+package org.eclipse.mylyn.internal.wikitext.core.util.css;
 
 /**
- * A CSS selector that selects any element
+ * An interface to XML element information
  * 
  * @author David Green
  */
-public class AnySelector extends Selector {
+public interface ElementInfo {
+	/**
+	 * get the local name of the element
+	 */
+	public String getLocalName();
 
-	@Override
-	public boolean select(ElementInfo info) {
-		return true;
-	}
+	/**
+	 * get the parent of this element
+	 * 
+	 * @return the parent or null if this is the root element
+	 */
+	public ElementInfo getParent();
 
+	/**
+	 * indicate if the elemet has the given CSS class
+	 */
+	public boolean hasCssClass(String cssClass);
+
+	/**
+	 * indicate if the element has the given id
+	 */
+	public boolean hasId(String id);
 }

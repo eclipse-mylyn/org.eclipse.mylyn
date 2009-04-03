@@ -9,28 +9,18 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.wikitext.ui.util.css;
+package org.eclipse.mylyn.internal.wikitext.core.util.css;
 
 /**
- * A selector that selects elements having an id equal to a specific value.
+ * A CSS selector that selects any element
  * 
  * @author David Green
  */
-public class IdSelector extends Selector {
-
-	private final String id;
-
-	public IdSelector(String id) {
-		this.id = id;
-	}
+public class AnySelector extends Selector {
 
 	@Override
 	public boolean select(ElementInfo info) {
-		return info.hasId(id);
-	}
-
-	public String getId() {
-		return id;
+		return true;
 	}
 
 }

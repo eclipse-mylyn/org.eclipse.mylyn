@@ -9,7 +9,7 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.wikitext.ui.util.css;
+package org.eclipse.mylyn.internal.wikitext.core.util.css;
 
 /**
  * A rule (name and value) as defined by CSS

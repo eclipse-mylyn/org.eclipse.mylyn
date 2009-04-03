@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.mylyn.internal.wikitext.ui.util.css.CssRule;
+import org.eclipse.mylyn.internal.wikitext.core.util.css.CssRule;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;

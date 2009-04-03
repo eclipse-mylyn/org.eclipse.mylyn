@@ -9,7 +9,7 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.wikitext.ui.util.css;
+package org.eclipse.mylyn.internal.wikitext.core.util.css;
 
 import java.util.ArrayList;
 import java.util.Collections;

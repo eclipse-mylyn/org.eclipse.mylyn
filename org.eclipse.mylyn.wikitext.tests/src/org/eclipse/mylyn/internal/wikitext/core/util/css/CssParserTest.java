@@ -9,7 +9,7 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.wikitext.ui.util.css;
+package org.eclipse.mylyn.internal.wikitext.core.util.css;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,6 +18,17 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.util.Iterator;
 import java.util.List;
+
+import org.eclipse.mylyn.internal.wikitext.core.util.css.Block;
+import org.eclipse.mylyn.internal.wikitext.core.util.css.CompositeSelector;
+import org.eclipse.mylyn.internal.wikitext.core.util.css.CssClassSelector;
+import org.eclipse.mylyn.internal.wikitext.core.util.css.CssParser;
+import org.eclipse.mylyn.internal.wikitext.core.util.css.CssRule;
+import org.eclipse.mylyn.internal.wikitext.core.util.css.DescendantSelector;
+import org.eclipse.mylyn.internal.wikitext.core.util.css.IdSelector;
+import org.eclipse.mylyn.internal.wikitext.core.util.css.NameSelector;
+import org.eclipse.mylyn.internal.wikitext.core.util.css.Selector;
+import org.eclipse.mylyn.internal.wikitext.core.util.css.Stylesheet;
 
 import junit.framework.TestCase;
 

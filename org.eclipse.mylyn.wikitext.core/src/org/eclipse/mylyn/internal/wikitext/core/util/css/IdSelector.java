@@ -9,14 +9,28 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.wikitext.ui.util.css;
+package org.eclipse.mylyn.internal.wikitext.core.util.css;
 
 /**
- * An abstraction for a CSS selector.
+ * A selector that selects elements having an id equal to a specific value.
  * 
  * @author David Green
  */
-public abstract class Selector {
+public class IdSelector extends Selector {
 
-	public abstract boolean select(ElementInfo info);
+	private final String id;
+
+	public IdSelector(String id) {
+		this.id = id;
+	}
+
+	@Override
+	public boolean select(ElementInfo info) {
+		return info.hasId(id);
+	}
+
+	public String getId() {
+		return id;
+	}
+
 }
