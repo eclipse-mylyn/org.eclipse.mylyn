@@ -259,6 +259,37 @@ Nested @<stylesheet>@ elements cause HTML to contain links to CSS stylesheets or
 
 Stylesheets may have nested @<attribute>@ elements with @name@ and @value@.  These attributes are copied verbatim to the HTML @<link>@ element.  Attributes named @type@, @rel@ and @href@ are ignored.
 
+h3. PDF and XSLFO
+
+WikiText can convert wiki markup to "XSL-FO":http://en.wikipedia.org/wiki/XSL_Formatting_Objects.  PDF is readily obtained from XSL-FO by using an FO processor such as the excellent "Apache FOP":http://xmlgraphics.apache.org/fop project.
+
+bc. 
+	<wikitext-to-xslfo markupLanguage="Textile">
+		<fileset dir="help" includes="**/*.textile"/>
+	</wikitext-to-xslfo>
+	
+WikiText conversion to XSL-FO is performed using the @wikitext-to-xslfo@ task.  In addition to common options listed above, the following options are available:
+
+*wikitext-to-xslfo task options* 
+
+|_. Option |_. Usage |
+| @title@ | Specify a specific book title.  If unspecified, the book title is the filename of the source file (without extension). |
+| @subTitle@ | Specify a sub-title to appear under the book title. |
+| @targetdir@ | Specify a folder in which output files should be created. |
+
+h4. PDF from XSL-FO Quick-Start
+
+To convert the XSL-FO output files to PDF using the "Apache FOP":http://xmlgraphics.apache.org/fop project, add the following to your Ant script:
+
+bc. 
+	<property name="fop.home" value="/full/system/path/to/fop-0.95"/>
+	<exec command="${fop.home}/fop">
+		<arg value="${basedir}/help/MyFile.fo"/>
+		<arg value="${basedir}/help/MyFile.pdf"/>
+	</exec>
+
+Refer to the Apache FOP documentation for more details.
+
 h3. DocBook
 
 WikiText can convert markup to "DocBook":http://www.docbook.org
