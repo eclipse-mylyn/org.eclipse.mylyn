@@ -173,6 +173,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private static class ElementInfo {
 		int size = 1;
+
 	}
 
 	private static class SpanInfo extends ElementInfo {
@@ -189,6 +190,8 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 		int listItemCount;
 
+		BlockInfo previousChild;
+
 		public BlockInfo(BlockType type) {
 			this.type = type;
 		}
@@ -198,6 +201,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 	@Override
 	public void beginBlock(BlockType type, Attributes attributes) {
 		BlockInfo thisInfo = new BlockInfo(type);
+		BlockInfo parentBlock = findCurrentBlock();
 
 		String cssStyles = blockTypeToCssStyles.get(type);
 		Map<String, String> attrs = cssStyles == null ? null : attributesFromCssStyles(cssStyles);
@@ -211,6 +215,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		}
 
 		switch (type) {
+		case DEFINITION_LIST:
 		case BULLETED_LIST:
 		case NUMERIC_LIST:
 			writer.writeStartElement(foNamespaceUri, "list-block"); //$NON-NLS-1$
@@ -218,6 +223,53 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 			writer.writeAttribute("provisional-distance-between-starts", "1.2em"); //$NON-NLS-1$ //$NON-NLS-2$
 			if (findBlockInfo(BlockType.LIST_ITEM) == null) {
 				addSpaceBefore();
+			}
+			break;
+		case DEFINITION_ITEM:
+			if (parentBlock == null || parentBlock.type != BlockType.DEFINITION_LIST) {
+				throw new IllegalStateException();
+			}
+			boolean firstItem = false;
+			if (parentBlock.previousChild != null && parentBlock.previousChild.type == BlockType.DEFINITION_TERM) {
+				firstItem = true;
+				writer.writeEndElement(); // list-item-label
+				--parentBlock.size;
+
+				writer.writeStartElement(foNamespaceUri, "list-item-body"); //$NON-NLS-1$
+				++parentBlock.size;
+				writer.writeAttribute("start-indent", "body-start()"); //$NON-NLS-1$ //$NON-NLS-2$
+				writer.writeEmptyElement(foNamespaceUri, "block"); //$NON-NLS-1$
+			}
+			writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
+			if (attrs == null || !attrs.containsKey("font-size")) { //$NON-NLS-1$
+				configureFontSize(0);
+			}
+			writer.writeAttribute("space-before", firstItem ? "1.2em" : "0.2em"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			break;
+		case DEFINITION_TERM:
+			if (parentBlock == null || parentBlock.type != BlockType.DEFINITION_LIST) {
+				throw new IllegalStateException();
+			}
+			if (parentBlock.previousChild != null && parentBlock.previousChild.type == BlockType.DEFINITION_ITEM) {
+				writer.writeEndElement(); // list-item-body
+				--parentBlock.size;
+				writer.writeEndElement(); // list-item
+				--parentBlock.size;
+			}
+			if (parentBlock.previousChild == null || parentBlock.previousChild.type != BlockType.DEFINITION_TERM) {
+				writer.writeStartElement(foNamespaceUri, "list-item"); //$NON-NLS-1$
+				writer.writeAttribute("space-before", "0.2em"); //$NON-NLS-1$ //$NON-NLS-2$ 
+				++parentBlock.size;
+				writer.writeStartElement(foNamespaceUri, "list-item-label"); //$NON-NLS-1$
+				writer.writeAttribute("end-indent", "label-end()"); //$NON-NLS-1$ //$NON-NLS-2$
+				++parentBlock.size;
+			}
+			writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
+			if (attrs == null || !attrs.containsKey("font-size")) { //$NON-NLS-1$
+				configureFontSize(0);
+			}
+			if (attrs == null || !attrs.containsKey("font-weight")) { //$NON-NLS-1$
+				writer.writeAttribute("font-weight", "bold"); //$NON-NLS-1$//$NON-NLS-2$
 			}
 			break;
 		case LIST_ITEM:
@@ -258,6 +310,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 			++thisInfo.size;
 
 			break;
+		case FOOTNOTE:
 		case PARAGRAPH:
 			writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
 			if (attrs == null || !attrs.containsKey("font-size")) { //$NON-NLS-1$
@@ -355,15 +408,6 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		case TABLE_ROW:
 			writer.writeStartElement(foNamespaceUri, "table-row"); //$NON-NLS-1$
 			break;
-		// FIXME: implement all block types
-		// case FOOTNOTE:
-		// break;
-		// case DEFINITION_LIST:
-		// break;
-		// case DEFINITION_ITEM:
-		// break;
-		// case DEFINITION_TERM:
-		// break;
 		default:
 			throw new IllegalStateException(type.name());
 		}
@@ -375,6 +419,9 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 			}
 		}
 
+		if (parentBlock != null) {
+			parentBlock.previousChild = thisInfo;
+		}
 		elementInfos.push(thisInfo);
 	}
 
@@ -476,6 +523,16 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 				if (info.type == type) {
 					return info;
 				}
+			}
+		}
+		return null;
+	}
+
+	private BlockInfo findCurrentBlock() {
+		for (int x = elementInfos.size() - 1; x >= 0; --x) {
+			ElementInfo elementInfo = elementInfos.get(x);
+			if (elementInfo instanceof BlockInfo) {
+				return (BlockInfo) elementInfo;
 			}
 		}
 		return null;
