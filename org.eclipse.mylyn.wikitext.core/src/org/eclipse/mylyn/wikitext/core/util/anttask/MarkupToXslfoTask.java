@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2009 David Green and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     David Green - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.mylyn.wikitext.core.util.anttask;
 
 import java.io.BufferedInputStream;
@@ -22,6 +32,12 @@ import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.XslfoDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 
+/**
+ * 
+ * @author David Green
+ * 
+ * @since 1.1
+ */
 public class MarkupToXslfoTask extends MarkupTask {
 
 	private final List<FileSet> filesets = new ArrayList<FileSet>();
