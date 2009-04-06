@@ -14,6 +14,7 @@ package org.eclipse.mylyn.tasks.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.mylyn.tasks.tests.core.FileTaskAttachmentSourceTest;
 import org.eclipse.mylyn.tasks.tests.core.ITasksCoreConstantsTest;
 import org.eclipse.mylyn.tasks.tests.core.TaskListUnmatchedContainerTest;
 import org.eclipse.mylyn.tasks.tests.core.TaskRepositoryLocationTest;
@@ -89,6 +90,7 @@ public class AllTasksTests {
 		suite.addTestSuite(ITasksCoreConstantsTest.class);
 		suite.addTestSuite(RetrieveTitleFromUrlTest.class);
 		suite.addTestSuite(EditorUtilTest.class);
+		suite.addTestSuite(FileTaskAttachmentSourceTest.class);
 
 		// XXX long running tests, put back?
 		//suite.addTestSuite(TaskDataImportTest.class);
