@@ -15,6 +15,25 @@
             id="org.eclipse.mylyn.tasks.tests.repositories.ui"
             name="Mock Repository Connector UI">
       </connectorUi>
+   </extension>
+   
+   <extension
+         point="org.eclipse.core.runtime.contentTypes">
+         <!-- content types used in tests -->
+      <content-type
+            base-type="org.eclipse.core.runtime.text"
+            file-extensions="mylyn-test-text"
+            id="org.eclipse.mylyn.tasks.tests.content-txt"
+            name="Test text content type"
+            priority="normal">
+      </content-type>
+      <content-type
+            base-type="org.eclipse.core.runtime.xml"
+            file-extensions="mylyn-test-xml"
+            id="org.eclipse.mylyn.tasks.tests.content-xml"
+            name="Test XML content type"
+            priority="normal">
+      </content-type>
    </extension>  
    
 </plugin>
