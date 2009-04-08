@@ -401,6 +401,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
 		if (taskData.isNew()) {
 			String product = null;
+			String component = null;
 			if (initializationData == null || initializationData.getProduct() == null) {
 				if (repositoryConfiguration.getProducts().size() > 0) {
 					product = repositoryConfiguration.getProducts().get(0);
@@ -412,7 +413,20 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			if (product == null) {
 				return false;
 			}
-			return initializeNewTaskDataAttributes(repositoryConfiguration, taskData, product, monitor);
+
+			if (initializationData != null && initializationData.getComponent() != null
+					&& initializationData.getComponent().length() > 0) {
+				component = initializationData.getComponent();
+			}
+
+			if (component == null && repositoryConfiguration.getComponents(product).size() > 0) {
+				component = repositoryConfiguration.getComponents(product).get(0);
+			}
+
+			initializeNewTaskDataAttributes(repositoryConfiguration, taskData, product, component, monitor);
+			BugzillaCorePlugin.getDefault().setPlatformDefaultsOrGuess(repository, taskData);
+			return true;
+
 		} else {
 			repositoryConfiguration.configureTaskData(taskData);
 		}
@@ -421,9 +435,11 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
 	/**
 	 * Only new, unsubmitted task data or freshly received task data from the repository can be passed in here.
+	 * 
+	 * @param component
 	 */
 	private boolean initializeNewTaskDataAttributes(RepositoryConfiguration repositoryConfiguration, TaskData taskData,
-			String product, IProgressMonitor monitor) {
+			String product, String component, IProgressMonitor monitor) {
 
 		TaskAttribute productAttribute = createAttribute(taskData, BugzillaAttribute.PRODUCT);
 		productAttribute.setValue(product);
@@ -462,6 +478,9 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		}
 		if (optionValues.size() == 1) {
 			attributeComponent.setValue(optionValues.get(0));
+		}
+		if (component != null && optionValues.contains(component)) {
+			attributeComponent.setValue(component);
 		}
 
 		optionValues = repositoryConfiguration.getTargetMilestones(productAttribute.getValue());

@@ -210,6 +210,12 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 				getModel().getTaskRepository().setProperty(IBugzillaConstants.LAST_PRODUCT_SELECTION,
 						productAttribute.getValue());
 			}
+			TaskAttribute componentSelectedAttribute = getModel().getTaskData().getRoot().getMappedAttribute(
+					TaskAttribute.COMPONENT);
+			if (componentSelectedAttribute != null && componentSelectedAttribute.getValue().length() > 0) {
+				getModel().getTaskRepository().setProperty(IBugzillaConstants.LAST_COMPONENT_SELECTION,
+						componentSelectedAttribute.getValue());
+			}
 		}
 
 		// Force the most recent known good token onto the outgoing task data to ensure submit

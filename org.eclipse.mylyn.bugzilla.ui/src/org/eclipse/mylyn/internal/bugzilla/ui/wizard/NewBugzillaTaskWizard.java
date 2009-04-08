@@ -68,11 +68,19 @@ public class NewBugzillaTaskWizard extends NewTaskWizard implements INewWizard {
 			}
 		}
 		if (selection == null || selection.isEmpty()) {
-			final String lastSelection = getTaskRepository().getProperty(IBugzillaConstants.LAST_PRODUCT_SELECTION);
+			final String lastProductSelection = getTaskRepository().getProperty(
+					IBugzillaConstants.LAST_PRODUCT_SELECTION);
+			final String lastComponentSelection = getTaskRepository().getProperty(
+					IBugzillaConstants.LAST_COMPONENT_SELECTION);
 			return new TaskMapping() {
 				@Override
 				public String getProduct() {
-					return lastSelection;
+					return lastProductSelection;
+				}
+
+				@Override
+				public String getComponent() {
+					return lastComponentSelection;
 				}
 			};
 
