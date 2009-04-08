@@ -135,9 +135,13 @@ public class TaskAttachmentPage extends WizardPage {
 		contentTypeList.setLayoutData(new GridData(SWT.DEFAULT, SWT.DEFAULT, false, false, 2, 1));
 		Iterator<String> iter = contentTypes.iterator();
 		int i = 0;
+		int selection = 0;
 		while (iter.hasNext()) {
 			String next = iter.next();
 			contentTypeList.add(next);
+			if (next.equalsIgnoreCase(model.getContentType())) {
+				selection = i;
+			}
 			i++;
 		}
 
@@ -152,8 +156,8 @@ public class TaskAttachmentPage extends WizardPage {
 				validate();
 			}
 		});
-		contentTypeList.select(0);
-		taskAttachment.setContentType(contentTypeList.getItem(0));
+		contentTypeList.select(selection);
+		taskAttachment.setContentType(contentTypeList.getItem(selection));
 
 		// TODO: is there a better way to pad?
 		new Label(composite, SWT.NONE);
@@ -184,8 +188,6 @@ public class TaskAttachmentPage extends WizardPage {
 				validate();
 			}
 		});
-
-		fileNameText.setText(taskAttachment.getFileName() == null ? "" : taskAttachment.getFileName()); //$NON-NLS-1$
 
 		/* Listener for isPatch */
 		isPatchButton.addSelectionListener(new SelectionAdapter() {
@@ -292,6 +294,7 @@ public class TaskAttachmentPage extends WizardPage {
 	@Override
 	public void setVisible(boolean visible) {
 		if (visible) {
+			fileNameText.setText(taskAttachment.getFileName() == null ? "" : taskAttachment.getFileName()); //$NON-NLS-1$
 			if (fileNameText.getText().length() == 0) {
 				setFilePath(getModel().getSource().getName());
 				setContentType(getModel().getSource().getContentType());

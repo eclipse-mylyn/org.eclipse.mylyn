@@ -77,7 +77,7 @@ public class TaskAttachmentModel {
 	}
 
 	public String getContentType() {
-		if (contentType == null) {
+		if (contentType == null && getSource() != null) {
 			return getSource().getContentType();
 		}
 		return contentType;

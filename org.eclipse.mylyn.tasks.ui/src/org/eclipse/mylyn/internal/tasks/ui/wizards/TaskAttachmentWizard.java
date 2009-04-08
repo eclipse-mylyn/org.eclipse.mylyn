@@ -288,19 +288,23 @@ public class TaskAttachmentWizard extends Wizard {
 		if (model.getSource() == null) {
 			if (mode == Mode.SCREENSHOT) {
 				ScreenshotCreationPage page = new ScreenshotCreationPage();
-				model.setSource(new ImageSource(page));
+				ImageSource source = new ImageSource(page);
+				model.setSource(source);
+				model.setContentType(source.getContentType());
 				addPage(page);
 			} else {
 				addPage(new AttachmentSourcePage(model));
 			}
 		}
+
+		previewPage = new AttachmentPreviewPage(model);
+		addPage(previewPage);
+
 		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(model.getTaskRepository()
 				.getConnectorKind());
 		editPage = connectorUi.getTaskAttachmentPage(model);
 		addPage(editPage);
 
-		previewPage = new AttachmentPreviewPage(model);
-		addPage(previewPage);
 	}
 
 	public Mode getMode() {
