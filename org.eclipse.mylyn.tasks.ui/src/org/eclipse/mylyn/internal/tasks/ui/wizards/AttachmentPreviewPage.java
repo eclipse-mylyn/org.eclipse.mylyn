@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -63,6 +64,10 @@ import org.eclipse.swt.widgets.Text;
  * @author Steffen Pingel
  */
 public class AttachmentPreviewPage extends WizardPage {
+
+	private static final String DIALOG_SETTING_RUN_IN_BACKGROUND = "run-in-background"; //$NON-NLS-1$
+
+	private static final String DIALOG_SETTINGS_SECTION_ATTACHMENTS_WIZARD = "attachments-wizard"; //$NON-NLS-1$
 
 	protected static final int MAX_TEXT_SIZE = 50000;
 
@@ -126,7 +131,24 @@ public class AttachmentPreviewPage extends WizardPage {
 		runInBackgroundButton = new Button(composite, SWT.CHECK);
 		runInBackgroundButton.setText(Messages.AttachmentPreviewPage_Run_in_background);
 
+		IDialogSettings settings = TasksUiPlugin.getDefault().getDialogSettings();
+		IDialogSettings attachmentsSettings = settings.getSection(DIALOG_SETTINGS_SECTION_ATTACHMENTS_WIZARD);
+		if (attachmentsSettings != null) {
+			runInBackgroundButton.setSelection(attachmentsSettings.getBoolean(DIALOG_SETTING_RUN_IN_BACKGROUND));
+		}
+
 		Dialog.applyDialogFont(composite);
+	}
+
+	@Override
+	public void dispose() {
+		IDialogSettings settings = TasksUiPlugin.getDefault().getDialogSettings();
+		IDialogSettings attachmentsSettings = settings.getSection(DIALOG_SETTINGS_SECTION_ATTACHMENTS_WIZARD);
+		if (attachmentsSettings == null) {
+			attachmentsSettings = settings.addNewSection(DIALOG_SETTINGS_SECTION_ATTACHMENTS_WIZARD);
+		}
+		attachmentsSettings.put(DIALOG_SETTING_RUN_IN_BACKGROUND, runInBackgroundButton.getSelection());
+		super.dispose();
 	}
 
 	@Override
