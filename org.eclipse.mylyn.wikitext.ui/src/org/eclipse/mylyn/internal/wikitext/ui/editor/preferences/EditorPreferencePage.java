@@ -123,7 +123,7 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
 		phraseModifierGroup.setFont(getFieldEditorParent().getFont());
 
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(),
-				WikiTextUiPlugin.getDefault().getPluginId() + ".preferences"); //$NON-NLS-1$
+				"org.eclipse.mylyn.wikitext.help.ui.preferences"); //$NON-NLS-1$
 	}
 
 	/*

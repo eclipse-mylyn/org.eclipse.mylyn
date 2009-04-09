@@ -99,7 +99,7 @@ public class ProjectPropertyPage extends PropertyPage implements IWorkbenchPrope
 	protected void setControl(Control newControl) {
 		super.setControl(newControl);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(newControl,
-				WikiTextUiPlugin.getDefault().getPluginId() + ".projectSettings"); //$NON-NLS-1$
+				"org.eclipse.mylyn.wikitext.help.ui.projectSettings"); //$NON-NLS-1$
 	}
 
 	@Override

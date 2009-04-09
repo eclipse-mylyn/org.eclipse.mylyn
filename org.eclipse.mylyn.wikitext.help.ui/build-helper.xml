@@ -14,13 +14,13 @@
 	<property name="wikitext.ui.textile.bin" value="../org.eclipse.mylyn.wikitext.textile.core/.tmp.bin"/>
 	
 	<target name="clean">
-		<delete>
+		<delete failonerror="false">
 			<fileset dir="help">
 				<include name="**/*.html"/>
 				<include name="**/*-toc.xml"/>
 			</fileset>
 		</delete>
-		<delete>
+		<delete failonerror="false">
 			<fileset dir="docs/new">
 				<include name="**/*.html"/>
 				<exclude name="**/*"/>

@@ -24,7 +24,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  */
 public class ContextHelpAction extends Action {
 
-	private static final String DEFAULT_WIKITEXT_HELP_ID = "org.eclipse.mylyn.wikitext.ui.markupSourceContext"; //$NON-NLS-1$
+	private static final String DEFAULT_WIKITEXT_HELP_ID = "org.eclipse.mylyn.wikitext.help.ui.markupSourceContext"; //$NON-NLS-1$
 
 	private final String contextId;
 

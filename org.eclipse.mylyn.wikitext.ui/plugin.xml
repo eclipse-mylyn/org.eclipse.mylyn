@@ -42,13 +42,13 @@
 		<menuContribution locationURI="popup:org.eclipse.ui.popup.any?after=additions">
 			<menu label="%menu.label.0" tooltip="%menu.tooltip.0">
 				<command commandId="org.eclipse.mylyn.wikitext.ui.convertToDocbookCommand"
-					label="%command.label.0" tooltip="%command.tooltip.0" helpContextId="org.eclipse.mylyn.wikitext.ui.markupConversion">
+					label="%command.label.0" tooltip="%command.tooltip.0" helpContextId="org.eclipse.mylyn.wikitext.help.ui.markupConversion">
 				</command>
 				<command commandId="org.eclipse.mylyn.wikitext.ui.convertToHtmlCommand"
-					label="%command.label.1" tooltip="%command.tooltip.1" helpContextId="org.eclipse.mylyn.wikitext.ui.markupConversion">
+					label="%command.label.1" tooltip="%command.tooltip.1" helpContextId="org.eclipse.mylyn.wikitext.help.ui.markupConversion">
 				</command>
 				<command commandId="org.eclipse.mylyn.wikitext.ui.convertToEclipseHelpCommand"
-					label="%command.label.2" tooltip="%command.tooltip.2" helpContextId="org.eclipse.mylyn.wikitext.ui.markupConversion">
+					label="%command.label.2" tooltip="%command.tooltip.2" helpContextId="org.eclipse.mylyn.wikitext.help.ui.markupConversion">
 				</command>
 				<visibleWhen>
 					<with variable="activeMenuSelection">
@@ -200,19 +200,6 @@
 			super="org.eclipse.ui.workbench.texteditor.warning" />
 	</extension>
 	
-	<extension point="org.eclipse.help.toc">
-		<toc file="help/Mylyn WikiText User Guide-toc.xml" primary="false"/>
-		<toc file="help/devguide/WikiText Developer Guide-toc.xml" primary="false"/>
-		  <toc
-		        file="toc.xml"
-		        primary="false"/>
-	</extension>
- <extension
-       point="org.eclipse.help.contexts">
-    <contexts
-          file="contextHelp.xml">
-    </contexts>
- </extension>
  <extension
        point="org.eclipse.ui.menus">
     <menuContribution
