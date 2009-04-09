@@ -695,7 +695,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 				return new TaskEditorAttributePart();
 			}
 		}.setPath(PATH_ATTRIBUTES));
-		if (!taskData.isNew()) {
+		if (!taskData.isNew() && connector.getTaskAttachmentHandler() != null) {
 			descriptors.add(new TaskEditorPartDescriptor(ID_PART_ATTACHMENTS) {
 				@Override
 				public AbstractTaskEditorPart createPart() {
