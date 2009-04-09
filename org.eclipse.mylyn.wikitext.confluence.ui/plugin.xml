@@ -38,6 +38,9 @@
          <template name="h6. " description="%template.description.15" content="\nh6. ${text}\n\n" block="true"/>
          <template name="code" description="%template.description.17" content="\n{code}\n${text}\n{code}\n\n" block="true"/>
          <template name="quote" description="%template.description.19" content="\n{quote}\n${text}\n{quote}\n\n" block="true"/>
+         <template name="note" description="%template.description.19" content="\n{note}\n${text}\n{note}\n\n" block="true"/>
+         <template name="tip" description="%template.description.19" content="\n{tip}\n${text}\n{tip}\n\n" block="true"/>
+         <template name="info" description="%template.description.19" content="\n{info}\n${text}\n{info}\n\n" block="true"/>
          <template name="noformat" description="%template.description.23" content="\n{noformat}\n${text}\n{noformat}\n\n" block="true"/>
          <template name="# " description="%template.description.24" content="\n# ${text}\n# ${text2}\n\n" block="true"/>
          <template name="## " description="%template.description.25" content="\n## ${text}\n## ${text2}\n\n" block="true"/>
