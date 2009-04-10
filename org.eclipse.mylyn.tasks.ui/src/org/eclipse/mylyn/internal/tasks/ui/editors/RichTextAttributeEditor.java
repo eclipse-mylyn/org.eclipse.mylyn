@@ -331,6 +331,10 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 				show(defaultViewer);
 			}
 
+			if (!isReadOnly() && (style & TasksUiInternal.SWT_NO_SCROLL) == 0) {
+				editorComposite.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+			}
+
 			viewSourceAction.setEnabled(true);
 		} else {
 			defaultViewer = createDefaultEditor(parent, style);
