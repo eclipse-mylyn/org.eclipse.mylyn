@@ -124,14 +124,17 @@ class CustomTaskListDecorationDrawer implements Listener {
 		if (data instanceof ITaskContainer) {
 			switch (event.type) {
 			case SWT.EraseItem: {
-				if (activationImage != null) {
-					drawActivationImage(activationImageOffset, event, activationImage);
-				}
-				if (!this.taskListView.synchronizationOverlaid) {
-					if (data instanceof ITaskContainer) {
-						drawSyncronizationImage((ITaskContainer) data, event);
-					}
-				}
+//				if ("gtk".equals(SWT.getPlatform())) { //$NON-NLS-1$
+//					// GTK requires drawing on erase event so that images don't disappear when selected.
+//					if (activationImage != null) {
+//						drawActivationImage(activationImageOffset, event, activationImage);
+//					}
+//					if (!this.taskListView.synchronizationOverlaid) {
+//						if (data instanceof ITaskContainer) {
+//							drawSyncronizationImage((ITaskContainer) data, event);
+//						}
+//					}
+//				}
 
 				// TODO: would be nice not to do this on each item's painting
 //				String text = tree.getFilterControl().getText();
@@ -150,6 +153,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 			case SWT.PaintItem: {
 				Rectangle clipping = null;
 				if (tweakClipping) {
+					// GTK requires setting the clipping from the erase event so that images can be drawn to the left of the content area
 					clipping = event.gc.getClipping();
 					event.gc.setClipping(lastClippingArea);
 				}
@@ -170,7 +174,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 
 	private void drawSyncronizationImage(ITaskContainer element, Event event) {
 		Image image = null;
-		int offsetX = 6;
+		int offsetX = PlatformUtil.getIncomingImageOffset();
 		int offsetY = (event.height / 2) - 5;
 		if (taskListView.synchronizationOverlaid) {
 			offsetX = event.x + 18 - platformSpecificSquish;

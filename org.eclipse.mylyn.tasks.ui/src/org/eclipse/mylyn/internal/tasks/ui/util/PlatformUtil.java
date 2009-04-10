@@ -85,7 +85,23 @@ public class PlatformUtil {
 	}
 
 	public static int getTreeImageOffset() {
-		return "cocoa".equals(SWT.getPlatform()) ? 15 : 20; //$NON-NLS-1$
+		if ("carbon".equals(SWT.getPlatform())) { //$NON-NLS-1$
+			return 16;
+		} else if ("cocoa".equals(SWT.getPlatform())) { //$NON-NLS-1$
+			return 13;
+		} else {
+			return 20;
+		}
+	}
+
+	public static int getIncomingImageOffset() {
+		if ("carbon".equals(SWT.getPlatform())) { //$NON-NLS-1$
+			return 5;
+		} else if ("cocoa".equals(SWT.getPlatform())) { //$NON-NLS-1$
+			return 2;
+		} else {
+			return 6;
+		}
 	}
 
 	public static int getTreeItemSquish() {
