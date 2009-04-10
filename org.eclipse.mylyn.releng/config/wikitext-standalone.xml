@@ -18,7 +18,7 @@
         		<include name="org.eclipse.mylyn.wikitext.*core*.jar"/>
         		<exclude name="org.eclipse.mylyn.wikitext.*source*.jar"/>
         	</zipfileset>
-        	<zipfileset prefix="${wikitext.standalone.dir}/docs" dir="${buildDirectory}/plugins/org.eclipse.mylyn.wikitext.ui/help">
+        	<zipfileset prefix="${wikitext.standalone.dir}/docs" dir="${buildDirectory}/plugins/org.eclipse.mylyn.wikitext.help.ui/help">
         		<include name="**/*"/>
         	</zipfileset>
         	<zipfileset prefix="${wikitext.standalone.dir}" dir="${buildDirectory}/features/org.eclipse.mylyn.wikitext_feature">
