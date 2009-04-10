@@ -11,19 +11,29 @@
 
 package org.eclipse.mylyn.bugzilla.tests.headless;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.bugzilla.tests.IBugzillaTestConstants;
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.context.tests.support.TestUtil;
 import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaLanguageSettings;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 
 /**
  * Example use of headless API (no ui dependencies)
@@ -58,7 +68,8 @@ public class BugzillaQueryTest extends TestCase {
 		handler = connector.getTaskDataHandler();
 		repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, IBugzillaTestConstants.TEST_BUGZILLA_222_URL);
 		Credentials credentials = TestUtil.readCredentials();
-		repository.setAuthenticationCredentials(credentials.username, credentials.password);
+		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials(credentials.username,
+				credentials.password), false);
 	}
 
 	@Override
@@ -70,12 +81,9 @@ public class BugzillaQueryTest extends TestCase {
 	 * This is the first test so that the repository credentials are correctly set for the other tests
 	 */
 	public void testAddCredentials() {
-		if (!repository.hasCredentials()) {
-			Credentials credentials = TestUtil.readCredentials();
-			repository.setAuthenticationCredentials(credentials.username, credentials.password);
-
-			assertTrue(repository.hasCredentials());
-		}
+		AuthenticationCredentials auth = repository.getCredentials(AuthenticationType.REPOSITORY);
+		assertTrue(auth != null && auth.getPassword() != null && !auth.getPassword().equals("")
+				&& auth.getUserName() != null && !auth.getUserName().equals(""));
 	}
 
 	// XXX: refactor 3.0
@@ -132,25 +140,31 @@ public class BugzillaQueryTest extends TestCase {
 	// taskData.getAttributeValue(BugzillaReportElement.PRIORITY.getKeyString()));
 	// }
 
-	// XXX: refactpr
-//	@SuppressWarnings("deprecation")
-//	public void testQueryViaConnector() throws Exception {
-//		String queryUrlString = repository.getRepositoryUrl()
-//				+ "/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=search-match-test&product=TestProduct&long_desc_type=substring&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&deadlinefrom=&deadlineto=&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&emailassigned_to1=1&emailtype1=substring&email1=&emailassigned_to2=1&emailreporter2=1&emailcc2=1&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
-//
-//		// holds onto actual hit objects
-//		ITaskList taskList = new TaskList();
-//		QueryHitCollector collector = new QueryHitCollector(new TaskFactory(repository));
-//		BugzillaRepositoryConnector connector = new BugzillaRepositoryConnector();
-//		connector.init(taskList);
-//		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(repository.getRepositoryUrl(), queryUrlString,
-//				"summary");
-//		connector.performQuery(repository, query, collector, null, new NullProgressMonitor());
-//		assertEquals(2, collector.getTasks().size());
-//		for (ITask hit : collector.getTasks()) {
-//			assertTrue(hit.getSummary().contains("search-match-test"));
-//		}
-//	}
+	public void testQueryViaConnector() throws Exception {
+		String queryUrlString = repository.getRepositoryUrl()
+				+ "/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=search-match-test&product=TestProduct&long_desc_type=substring&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&deadlinefrom=&deadlineto=&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&emailassigned_to1=1&emailtype1=substring&email1=&emailassigned_to2=1&emailreporter2=1&emailcc2=1&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
+
+		// holds onto actual hit objects
+		BugzillaRepositoryConnector connector = new BugzillaRepositoryConnector();
+		RepositoryQuery query = new RepositoryQuery(repository.getConnectorKind(), "handle-testQueryViaConnector");
+		query.setUrl(queryUrlString);
+
+		final Set<TaskData> changedTaskData = new HashSet<TaskData>();
+		TaskDataCollector collector = new TaskDataCollector() {
+
+			@Override
+			public void accept(TaskData taskData) {
+				changedTaskData.add(taskData);
+			}
+		};
+
+		connector.performQuery(repository, query, collector, null, new NullProgressMonitor());
+		assertEquals(2, changedTaskData.size());
+		for (TaskData taskData : changedTaskData) {
+			assertTrue(taskData.getRoot().getAttribute(BugzillaAttribute.SHORT_DESC.getKey()).getValue().contains(
+					"search-match-test"));
+		}
+	}
 }
 
 // public void testValidateCredentials() throws IOException,
