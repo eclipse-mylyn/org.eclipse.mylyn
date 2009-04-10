@@ -35,6 +35,14 @@ public interface IRepositoryModel {
 	public abstract ITask getTask(TaskRepository taskRepository, String taskId);
 
 	/**
+	 * Gets a task by its {@link ITask#getTaskKey() key}.
+	 * 
+	 * @return the task or null if no such task was found
+	 * @since 3.2
+	 */
+	public abstract ITask getTaskByKey(TaskRepository repository, String taskKey);
+
+	/**
 	 * @since 3.0
 	 */
 	public abstract ITask getTask(String handle);

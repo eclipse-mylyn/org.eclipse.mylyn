@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     David Green - fixes for bug 265682
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.core;
@@ -110,6 +111,10 @@ public class RepositoryModel implements IRepositoryModel {
 
 	public synchronized ITask getTask(TaskRepository taskRepository, String taskId) {
 		return getTask(getTaskHandle(taskRepository, taskId));
+	}
+
+	public synchronized ITask getTaskByKey(TaskRepository repository, String taskKey) {
+		return taskList.getTaskByKey(repository.getUrl(), taskKey);
 	}
 
 	private String getTaskHandle(TaskRepository taskRepository, String taskId) {
