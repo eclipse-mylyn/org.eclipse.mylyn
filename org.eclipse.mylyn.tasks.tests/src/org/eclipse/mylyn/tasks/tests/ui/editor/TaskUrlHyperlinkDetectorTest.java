@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2009 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -80,10 +80,37 @@ public class TaskUrlHyperlinkDetectorTest extends TestCase {
 		assertEquals(1, hyperlinks.length);
 	}
 
+	public void testDetectionMultipleLinks() {
+		String text = "aa http://www.eclipse.org test http://www.foo.bar/baz?one=two&three=four+five#six";
+		IHyperlink[] hyperlinks = detect(text, 0, text.length());
+		assertNotNull(hyperlinks);
+		assertEquals(2, hyperlinks.length);
+		assertEquals(new Region(3, 22), hyperlinks[0].getHyperlinkRegion());
+		assertEquals(new Region(31, 50), hyperlinks[1].getHyperlinkRegion());
+	}
+
+	public void testDetectionNegativeMatchOnTrailingPunctuation() {
+		String text = "aa http://www.eclipse.org) http://www.eclipse.org. http://www.eclipse.org,";
+		IHyperlink[] hyperlinks = detect(text, 0, text.length());
+		assertNotNull(hyperlinks);
+		assertEquals(3, hyperlinks.length);
+		assertEquals(new Region(3, 22), hyperlinks[0].getHyperlinkRegion());
+		assertEquals(new Region(27, 22), hyperlinks[1].getHyperlinkRegion());
+		assertEquals(new Region(51, 22), hyperlinks[2].getHyperlinkRegion());
+	}
+
 	public void testDetection() {
 		IHyperlink[] hyperlinks = detect("aa http://www.eclipse.org test", 20, 0);
 		assertNotNull(hyperlinks);
 		assertEquals(1, hyperlinks.length);
+	}
+
+	public void testDetection2() {
+		String text = "http://www.eclipse.org";
+		IHyperlink[] hyperlinks = detect(text, 0, text.length());
+		assertNotNull(hyperlinks);
+		assertEquals(1, hyperlinks.length);
+		assertEquals(new Region(0, 22), hyperlinks[0].getHyperlinkRegion());
 	}
 
 }

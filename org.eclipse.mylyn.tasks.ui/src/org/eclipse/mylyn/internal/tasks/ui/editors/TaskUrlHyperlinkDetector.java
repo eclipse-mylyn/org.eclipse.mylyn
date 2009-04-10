@@ -14,7 +14,10 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.StringTokenizer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -23,15 +26,18 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
-import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 
 /**
- * Source from {@link org.eclipse.jface.text.hyperlink.URLHyperlinkDetector}. Returns hyperlinks that use
- * {@link TasksUiUtil} to open urls.
+ * Detects URLs based on a regular expression.
  * 
- * @author Rob Elves
+ * @author David Green
  */
 public class TaskUrlHyperlinkDetector extends AbstractHyperlinkDetector {
+
+	// based on RFC 3986
+	// even though it's valid, the platform hyperlink detector doesn't detect hyperlinks that end with '.', ',' or ')'
+	// so we do the same here
+	private static final Pattern URL_PATTERN = Pattern.compile("([a-zA-Z][a-zA-Z+.-]{0,10}://[a-zA-Z0-9%._~!$&?#'()*+,;:@/=-]*[a-zA-Z0-9%_~!$&?#'(*+;:@/=-])"); //$NON-NLS-1$
 
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
 		if (region == null || textViewer == null) {
@@ -54,117 +60,39 @@ public class TaskUrlHyperlinkDetector extends AbstractHyperlinkDetector {
 			return null;
 		}
 
-		int offsetInLine = offset - lineInfo.getOffset();
+		// offset of the region in the line
+		final int offsetInLine = offset - lineInfo.getOffset();
+		final int regionLength = region.getLength();
 
-		return findHyperlinks(line, offsetInLine, lineInfo.getOffset(), region.getLength());
-	}
-
-	private IHyperlink[] findHyperlinks(String line, int offsetInLine, int offset, int regionLength) {
-		char doubleChar = ' ';
-
-		String urlString = null;
-		boolean startDoubleQuote = false;
-		int urlOffsetInLine = 0;
-		int urlLength = 0;
-
-		int urlSeparatorOffset = line.indexOf("://"); //$NON-NLS-1$
-		while (urlSeparatorOffset >= 0) {
-
-			// URL protocol (left to "://")
-			urlOffsetInLine = urlSeparatorOffset;
-			char ch;
-			do {
-				urlOffsetInLine--;
-				ch = ' ';
-				if (urlOffsetInLine > -1) {
-					ch = line.charAt(urlOffsetInLine);
-				}
-			} while (Character.isUnicodeIdentifierStart(ch));
-			urlOffsetInLine++;
-
-			switch (ch) {
-			case '"':
-				doubleChar = '"';
-				break;
-			case '\'':
-				doubleChar = '\'';
-				break;
-			case '[':
-				doubleChar = ']';
-				break;
-			case '(':
-				doubleChar = ')';
-				break;
-			case '{':
-				doubleChar = '}';
-				break;
-
-			default:
-				doubleChar = ' ';
-				break;
-			}
-			startDoubleQuote = doubleChar != ' ';
-
-			// Right to "://"
-			StringTokenizer tokenizer = new StringTokenizer(line.substring(urlSeparatorOffset + 3),
-					" \t\n\r\f<>", false); //$NON-NLS-1$
-			if (!tokenizer.hasMoreTokens()) {
-				return null;
-			}
-
-			urlLength = tokenizer.nextToken().length() + 3 + urlSeparatorOffset - urlOffsetInLine;
-			if ((regionLength == 0 && offsetInLine >= urlOffsetInLine && offsetInLine <= urlOffsetInLine + urlLength)
+		List<IHyperlink> hyperlinks = null;
+		Matcher matcher = URL_PATTERN.matcher(line);
+		while (matcher.find()) {
+			int urlOffsetInLine = matcher.start(1);
+			int endUrlOffsetInLine = matcher.end(1);
+			if ((regionLength == 0 && offsetInLine >= urlOffsetInLine && offsetInLine <= endUrlOffsetInLine)
 					|| ((regionLength > 0 && offsetInLine <= urlOffsetInLine && (offsetInLine + regionLength) > urlOffsetInLine))) {
 				// region length of 0 and offset hits within the hyperlink url
 				// OR
 				// region spans the start of the hyperlink url.
-				break;
-			}
 
-			urlSeparatorOffset = line.indexOf("://", urlSeparatorOffset + 1); //$NON-NLS-1$
-		}
+				// verify that the URL is valid
+				try {
+					String urlString = matcher.group(1);
+					new URL(urlString);
 
-		if (urlSeparatorOffset < 0) {
-			return null;
-		}
-
-		if (startDoubleQuote) {
-			int endOffset = -1;
-			int nextDoubleQuote = line.indexOf(doubleChar, urlOffsetInLine);
-			int nextWhitespace = line.indexOf(' ', urlOffsetInLine);
-			if (nextDoubleQuote != -1 && nextWhitespace != -1) {
-				endOffset = Math.min(nextDoubleQuote, nextWhitespace);
-			} else if (nextDoubleQuote != -1) {
-				endOffset = nextDoubleQuote;
-			} else if (nextWhitespace != -1) {
-				endOffset = nextWhitespace;
-			}
-			if (endOffset != -1) {
-				urlLength = endOffset - urlOffsetInLine;
-			}
-		}
-
-		// Set and validate URL string
-		try {
-			char lastChar = line.charAt(urlOffsetInLine + urlLength - 1);
-			if (lastChar == ',' || lastChar == '.') {
-				urlLength--;
-			}
-			if (urlLength > 0) {
-				lastChar = line.charAt(urlOffsetInLine + urlLength - 1);
-				if (lastChar == ')') {
-					urlLength--;
+					// URL looks okay, so add a hyperlink
+					if (hyperlinks == null) {
+						hyperlinks = new ArrayList<IHyperlink>(5);
+					}
+					IRegion urlRegion = new Region(lineInfo.getOffset() + urlOffsetInLine, endUrlOffsetInLine
+							- urlOffsetInLine);
+					hyperlinks.add(new TaskUrlHyperlink(urlRegion, urlString));
+				} catch (MalformedURLException e) {
+					// ignore
 				}
 			}
-			urlString = line.substring(urlOffsetInLine, urlOffsetInLine + urlLength);
-			new URL(urlString);
-		} catch (MalformedURLException ex) {
-			urlString = null;
-			return null;
 		}
-
-		IRegion urlRegion = new Region(offset + urlOffsetInLine, urlLength);
-		return new IHyperlink[] { new TaskUrlHyperlink(urlRegion, urlString) };
+		return hyperlinks == null ? null : hyperlinks.toArray(new IHyperlink[hyperlinks.size()]);
 	}
 
 }
