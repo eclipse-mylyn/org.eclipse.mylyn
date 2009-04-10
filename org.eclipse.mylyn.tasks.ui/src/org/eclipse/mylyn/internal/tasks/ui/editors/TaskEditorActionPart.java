@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2009 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
- *     David Green - fix for bug 254806
+ *     David Green - fix for bug 254806, bug 267135
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
@@ -266,8 +267,11 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 			gd.horizontalSpan = 3;
 			Control editorControl = editor.getControl();
 			if (editorControl instanceof CCombo) {
-				// XXX combo boxes are too tall by default and wider than other controls
-				gd.heightHint = 20;
+				if (!Platform.OS_MACOSX.equals(Platform.getOS())) {
+					// XXX on some platforms combo boxes are too tall by default and wider than other controls
+					// bug 267135 only do this for non-mac platforms, since the default CCombo height on Carbon and Cocoa is perfect
+					gd.heightHint = 20;
+				}
 				gd.widthHint = RADIO_OPTION_WIDTH;
 			} else {
 				gd.widthHint = RADIO_OPTION_WIDTH - 5;
