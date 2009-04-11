@@ -6,24 +6,24 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Meghan Allen - initial API and implementation
+ *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.mylyn.monitor.tests.usage.tests;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import junit.framework.TestCase;
+
+import org.eclipse.mylyn.internal.monitor.usage.MonitorPreferenceConstants;
+import org.eclipse.mylyn.internal.monitor.usage.UiUsageMonitorPlugin;
 
 /**
- * @author Meghan Allen
+ * @author Mik Kersten
  */
-public class AllMonitorUsageTests {
+public class DefaultPreferenceConfigTest extends TestCase {
 
-	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.monitor.ui.usage.tests");
-		suite.addTestSuite(FileDisplayDialogTest.class);
-		suite.addTestSuite(DefaultPreferenceConfigTest.class);
-		return suite;
+	public void testMonitorPreferences() {
+		assertNotNull(UiUsageMonitorPlugin.getDefault());
+		assertTrue(UiUsageMonitorPlugin.getPrefs().getBoolean(MonitorPreferenceConstants.PREF_MONITORING_OBFUSCATE));
 	}
 
 }
