@@ -21,15 +21,7 @@ public class AllMiscTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.tests");
-		// $JUnit-BEGIN$
-		// suite.addTestSuite(SharedTaskFolderTest.class);
-		// suite.addTestSuite(BugzillaSearchPluginTest.class);
-		suite.addTestSuite(UrlExclusionTest.class);
 		suite.addTestSuite(AssertionsEnabledTest.class);
-		suite.addTestSuite(HypertextStructureBridgeTest.class);
-		suite.addTestSuite(GetFaviconForUrlTest.class);
-		//suite.addTestSuite(BugzillaStackTraceTest.class);
-		// $JUnit-END$
 		return suite;
 	}
 

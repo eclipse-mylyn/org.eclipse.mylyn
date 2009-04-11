@@ -21,14 +21,9 @@ public class AllIntegrationTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.tests.integration");
-
-		// $JUnit-BEGIN$
-		// XXX: Put Back
-		//suite.addTestSuite(TaskListFilterTest.class);
-		suite.addTestSuite(DefaultPreferenceConfigTest.class);
 		suite.addTestSuite(ChangeDataDirTest.class);
 		suite.addTest(RepositoryConnectorsTest.suite());
-		// $JUnit-END$
 		return suite;
 	}
+
 }
