@@ -19,10 +19,12 @@ import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
  * @author David Green
  */
 public class FileTaskAttachmentSourceTest extends TestCase {
-	public void getContentTypeFromFilename() {
+
+	public void testGetContentTypeFromFilename() {
 		assertEquals("text/plain", FileTaskAttachmentSource.getContentTypeFromFilename("a.txt"));
 		assertEquals("text/plain", FileTaskAttachmentSource.getContentTypeFromFilename("foo.mylyn-test-text"));
 		assertEquals("application/xml", FileTaskAttachmentSource.getContentTypeFromFilename("a.xml"));
 		assertEquals("application/xml", FileTaskAttachmentSource.getContentTypeFromFilename("foo.mylyn-test-xml"));
 	}
+
 }

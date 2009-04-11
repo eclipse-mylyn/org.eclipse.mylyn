@@ -75,14 +75,17 @@ public class FileTaskAttachmentSource extends AbstractTaskAttachmentSource {
 			}
 			// bug 267960 attempt to detect the mime type from the content type
 			IContentTypeManager contentTypeManager = Platform.getContentTypeManager();
-			IContentType contentType = contentTypeManager.findContentTypeFor(fileName);
-			while (contentType != null) {
-				if (IContentTypeManager.CT_TEXT.equals(contentType.getId())) {
-					return TEXT_PLAIN;
-				} else if ("org.eclipse.core.runtime.xml".equals(contentType.getId())) { //$NON-NLS-1$
-					return APPLICATION_XML;
+			// platform may not be available when running standalone
+			if (contentTypeManager != null) {
+				IContentType contentType = contentTypeManager.findContentTypeFor(fileName);
+				while (contentType != null) {
+					if (IContentTypeManager.CT_TEXT.equals(contentType.getId())) {
+						return TEXT_PLAIN;
+					} else if ("org.eclipse.core.runtime.xml".equals(contentType.getId())) { //$NON-NLS-1$
+						return APPLICATION_XML;
+					}
+					contentType = contentType.getBaseType();
 				}
-				contentType = contentType.getBaseType();
 			}
 		}
 
