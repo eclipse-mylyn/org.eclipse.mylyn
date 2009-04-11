@@ -20,6 +20,7 @@ import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -99,7 +100,8 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 		summaryEditor = createAttributeEditor(getTaskData().getRoot().getMappedAttribute(TaskAttribute.SUMMARY));
 		if (summaryEditor != null) {
 			summaryEditor.createControl(composite, toolkit);
-			GridDataFactory.fillDefaults().grab(true, false).applyTo(summaryEditor.getControl());
+			GridDataFactory.fillDefaults().hint(EditorUtil.MAXIMUM_WIDTH, SWT.DEFAULT).grab(true, false).applyTo(
+					summaryEditor.getControl());
 			getTaskEditorPage().getAttributeEditorToolkit().adapt(summaryEditor);
 		}
 	}
