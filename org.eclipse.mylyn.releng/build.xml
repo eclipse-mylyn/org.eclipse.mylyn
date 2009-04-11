@@ -271,18 +271,61 @@
 	</target>
 
 	<target name="update-versions">
-		<fail message="Use -DoldVersion=x.y.z to set old version." unless="oldVersion"/>
+		<loadfile property="version.mylyn" srcFile="../org.eclipse.mylyn/META-INF/MANIFEST.MF">
+			<filterchain>
+				<linecontains>
+					<contains value="Bundle-Version: "/>
+				</linecontains>
+				<striplinebreaks/>
+				<tokenfilter>
+				      <filetokenizer/>
+				      <replaceregex pattern="Bundle-Version: ([0-9.]*).qualifier"
+				                    flags="s"
+				                    replace="\1"/>
+				</tokenfilter>
+			</filterchain>
+		</loadfile>
+		<loadfile property="version.wikitext" srcFile="../org.eclipse.mylyn.wikitext.core/META-INF/MANIFEST.MF">
+			<filterchain>
+				<linecontains>
+					<contains value="Bundle-Version: "/>
+				</linecontains>
+				<striplinebreaks/>
+				<tokenfilter>
+				      <filetokenizer/>
+				      <replaceregex pattern="Bundle-Version: ([0-9.]*).qualifier"
+				                    flags="s"
+				                    replace="\1"/>
+				</tokenfilter>
+			</filterchain>
+		</loadfile>
+
+		<echo message="Current Mylyn version: ${version.mylyn}"></echo>
+		<echo message="Current WikiText version: ${version.wikitext}"></echo>
 		
+		<fail message="Use -DnewVersion=x.y.z to set new version." unless="newVersion"/>
+		<fail message="Use -DnewWikiTextVersion=x.y.z to set new WikiText version." unless="newWikiTextVersion"/>		
+
+		<echo message="New Mylyn version: ${newVersion}"></echo>
+		<echo message="New WikiText version: ${newWikiTextVersion}"></echo>
+
 		<replace dir="..">
 			<replacefilter 
-			    token="${oldVersion}.qualifier"
-				value="${version}.qualifier"/>
+			    token="${version.mylyn}.qualifier"
+				value="${newVersion}.qualifier"/>
 			<replacefilter 
-			    token="${oldVersion}.mylynQualifier"
-				value="${version}.mylynQualifier"/>
+			    token="${version.mylyn}.mylynQualifier"
+				value="${newVersion}.mylynQualifier"/>
 			<include name="org.eclipse.mylyn*/**/MANIFEST.MF"/>
 			<include name="org.eclipse.mylyn*/**/feature.xml"/>
 		</replace>
+		<replace dir="..">
+			<replacefilter 
+			    token="${version.wikitext}.qualifier"
+				value="${newWikiTextVersion}.qualifier"/>
+			<include name="org.eclipse.mylyn.wikitext*/**/MANIFEST.MF"/>
+			<include name="org.eclipse.mylyn.wikitext*/**/feature.xml"/>
+		</replace>
 	</target>
-	
+
 </project>
