@@ -187,6 +187,12 @@ public class ConfluenceLanguageTest extends TestCase {
 		assertTrue(html.contains("<body><p>a <a href=\"#example\">Example</a> hyperlink</p></body>"));
 	}
 
+	public void testHyperlinkHash2() {
+		String html = parser.parseToHtml("a [#example] hyperlink");
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><p>a <a href=\"#example\">example</a> hyperlink</p></body>"));
+	}
+
 	public void testHyperlinkWithTip() {
 		String html = parser.parseToHtml("a [example | http://example.com | title is here] hyperlink");
 		System.out.println("HTML: \n" + html);

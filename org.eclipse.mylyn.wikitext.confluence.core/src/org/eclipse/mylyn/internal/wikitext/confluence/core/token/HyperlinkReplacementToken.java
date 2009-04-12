@@ -56,6 +56,9 @@ public class HyperlinkReplacementToken extends PatternBasedElement {
 			}
 			if (text == null || text.length() == 0) {
 				text = href;
+				if (text.length() > 0 && text.charAt(0) == '#') {
+					text = text.substring(1);
+				}
 			}
 			Attributes attributes = new LinkAttributes();
 			attributes.setTitle(tip);
