@@ -17,7 +17,6 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
-import java.text.MessageFormat;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -26,6 +25,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.wikitext.core.parser.util.MarkupToDocbook;
 import org.eclipse.ui.PlatformUI;
+
+import com.ibm.icu.text.MessageFormat;
 
 /**
  * 
@@ -41,7 +42,7 @@ public class ConvertMarkupToDocbook extends AbstractMarkupResourceHandler {
 		if (newFile.exists()) {
 			if (!MessageDialog.openQuestion(
 					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					Messages.getString("ConvertMarkupToDocbook.1"), MessageFormat.format(Messages.getString("ConvertMarkupToDocbook.2"), newFile.getFullPath()))) { //$NON-NLS-1$ //$NON-NLS-2$
+					Messages.getString("ConvertMarkupToDocbook.1"), MessageFormat.format(Messages.getString("ConvertMarkupToDocbook.2"), new Object[] { newFile.getFullPath() }))) { //$NON-NLS-1$ //$NON-NLS-2$
 				return;
 			}
 		}

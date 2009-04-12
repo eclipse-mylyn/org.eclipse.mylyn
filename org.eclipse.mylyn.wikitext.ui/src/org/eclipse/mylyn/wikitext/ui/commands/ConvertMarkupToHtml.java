@@ -18,7 +18,6 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
-import java.text.MessageFormat;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -29,6 +28,8 @@ import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
 import org.eclipse.ui.PlatformUI;
+
+import com.ibm.icu.text.MessageFormat;
 
 /**
  * 
@@ -44,7 +45,7 @@ public class ConvertMarkupToHtml extends AbstractMarkupResourceHandler {
 		if (newFile.exists()) {
 			if (!MessageDialog.openQuestion(
 					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					Messages.getString("ConvertMarkupToHtml.1"), MessageFormat.format(Messages.getString("ConvertMarkupToHtml.2"), newFile.getFullPath()))) { //$NON-NLS-1$ //$NON-NLS-2$
+					Messages.getString("ConvertMarkupToHtml.1"), MessageFormat.format(Messages.getString("ConvertMarkupToHtml.2"), new Object[] { newFile.getFullPath() }))) { //$NON-NLS-1$ //$NON-NLS-2$
 				return;
 			}
 		}

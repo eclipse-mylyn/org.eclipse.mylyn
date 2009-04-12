@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.internal.wikitext.ui.editor.dnd;
 
-import java.text.MessageFormat;
 import java.util.List;
 
 import org.eclipse.core.runtime.ISafeRunnable;
@@ -35,6 +34,8 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
+
+import com.ibm.icu.text.MessageFormat;
 
 /**
  * 
@@ -97,7 +98,7 @@ public class OutlineDropTargetListener implements TransferDropTargetListener {
 							WikiTextUiPlugin.getDefault().log(exception);
 							MessageDialog.openError(
 									PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-									Messages.getString("OutlineDropTargetListener.2"), MessageFormat.format(Messages.getString("OutlineDropTargetListener.3"), exception.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$
+									Messages.getString("OutlineDropTargetListener.2"), MessageFormat.format(Messages.getString("OutlineDropTargetListener.3"), new Object[] { exception.getMessage() })); //$NON-NLS-1$ //$NON-NLS-2$
 						}
 
 						public void run() throws Exception {
@@ -108,7 +109,7 @@ public class OutlineDropTargetListener implements TransferDropTargetListener {
 					MessageDialog.openInformation(
 							PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 							Messages.getString("OutlineDropTargetListener.0"), MessageFormat.format(Messages.getString("OutlineDropTargetListener.1"), //$NON-NLS-1$ //$NON-NLS-2$
-									command.getProblemText()));
+									new Object[] { command.getProblemText() }));
 				}
 			}
 		}

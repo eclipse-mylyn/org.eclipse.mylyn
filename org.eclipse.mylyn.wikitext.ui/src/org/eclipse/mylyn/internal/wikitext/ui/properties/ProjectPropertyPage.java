@@ -12,7 +12,6 @@
 package org.eclipse.mylyn.internal.wikitext.ui.properties;
 
 import java.lang.reflect.InvocationTargetException;
-import java.text.MessageFormat;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -36,6 +35,8 @@ import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.PropertyPage;
+
+import com.ibm.icu.text.MessageFormat;
 
 /**
  * A properties page for IProject that allow for configuration of WikiText settings such as the presence of a
@@ -72,7 +73,7 @@ public class ProjectPropertyPage extends PropertyPage implements IWorkbenchPrope
 			buf.append(extension);
 		}
 		wikiTextNatureButton.setToolTipText(MessageFormat.format(
-				Messages.getString("ProjectPropertyPage.6"), buf.toString())); //$NON-NLS-1$
+				Messages.getString("ProjectPropertyPage.6"), new Object[] { buf.toString() })); //$NON-NLS-1$
 
 		project = (IProject) getElement().getAdapter(IProject.class);
 

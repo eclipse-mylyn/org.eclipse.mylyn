@@ -15,7 +15,6 @@ import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -63,6 +62,8 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
+
+import com.ibm.icu.text.MessageFormat;
 
 /**
  * Manages all aspects of image download/display in an {@link HtmlViewer}.
@@ -357,8 +358,7 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 								for (int x = position.offset; x < document.getLength(); ++x) {
 									if (document.getChar(x) == '\n') {
 										if (x != position.offset
-												&& Util.annotationsIncludeOffset(
-														(AnnotationModel) viewer.getAnnotationModel(), x)) {
+												&& Util.annotationsIncludeOffset(viewer.getAnnotationModel(), x)) {
 											break;
 										}
 										--numNewlines;
@@ -464,8 +464,11 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 								}
 							} catch (Exception e) {
 								if (WikiTextUiPlugin.getDefault() != null) {
-									WikiTextUiPlugin.getDefault().log(IStatus.ERROR,
-											MessageFormat.format(Messages.getString("ImageManager.4"), location), e); //$NON-NLS-1$
+									WikiTextUiPlugin.getDefault()
+											.log(
+													IStatus.ERROR,
+													MessageFormat.format(
+															Messages.getString("ImageManager.4"), new Object[] { location }), e); //$NON-NLS-1$
 								}
 								urlToImageData.put(imgSrc, null);
 							}

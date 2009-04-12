@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -24,6 +23,8 @@ import org.eclipse.mylyn.wikitext.core.WikiText;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.osgi.framework.Bundle;
+
+import com.ibm.icu.text.MessageFormat;
 
 /**
  * A handle to help content. HelpContent is retrieved from a resource path from a bundle. Help content is retrieved in a
@@ -113,14 +114,15 @@ public class HelpContent {
 			}
 			MarkupLanguage markupLanguage = WikiText.getMarkupLanguage(resourceContentLanguage);
 			if (markupLanguage == null) {
-				throw new IOException(
-						MessageFormat.format(Messages.getString("HelpContent.0"), resourceContentLanguage)); //$NON-NLS-1$
+				throw new IOException(MessageFormat.format(
+						Messages.getString("HelpContent.0"), new Object[] { resourceContentLanguage })); //$NON-NLS-1$
 			}
 			MarkupParser markupParser = new MarkupParser(markupLanguage);
 			return markupParser.parseToHtml(content);
 		} catch (final Exception e) {
-			throw new IOException(MessageFormat.format(Messages.getString("HelpContent.1"), provider.getSymbolicName(), //$NON-NLS-1$
-					resourcePath, e.getMessage())) {
+			throw new IOException(MessageFormat.format(
+					Messages.getString("HelpContent.1"), new Object[] { provider.getSymbolicName(), //$NON-NLS-1$
+							resourcePath, e.getMessage() })) {
 				@Override
 				public Throwable getCause() {
 					return e;
@@ -161,7 +163,7 @@ public class HelpContent {
 				return resource;
 			}
 		}
-		throw new Exception(MessageFormat.format(Messages.getString("HelpContent.11"), resourcePath, //$NON-NLS-1$
-				provider.getSymbolicName()));
+		throw new Exception(MessageFormat.format(Messages.getString("HelpContent.11"), new Object[] { resourcePath, //$NON-NLS-1$
+				provider.getSymbolicName() }));
 	}
 }

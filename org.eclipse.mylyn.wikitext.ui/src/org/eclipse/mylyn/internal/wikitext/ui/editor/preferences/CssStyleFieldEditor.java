@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.internal.wikitext.ui.editor.preferences;
 
-import java.text.MessageFormat;
 import java.util.Iterator;
 
 import org.eclipse.jface.preference.StringFieldEditor;
@@ -19,6 +18,8 @@ import org.eclipse.mylyn.internal.wikitext.core.util.css.CssParser;
 import org.eclipse.mylyn.internal.wikitext.core.util.css.CssRule;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.CssStyleManager;
 import org.eclipse.swt.widgets.Composite;
+
+import com.ibm.icu.text.MessageFormat;
 
 /**
  * A field editor for CSS styles. Adds validation to CSS rule input.
@@ -53,7 +54,7 @@ public class CssStyleFieldEditor extends StringFieldEditor {
 					String gap = value.substring(offset, rule.offset);
 					if (gap.trim().length() != 0) {
 						setErrorMessage(MessageFormat.format(
-								Messages.getString("CssStyleFieldEditor.1"), gap.trim(), offset)); //$NON-NLS-1$
+								Messages.getString("CssStyleFieldEditor.1"), new Object[] { gap.trim(), offset })); //$NON-NLS-1$
 						return false;
 					}
 				}
@@ -68,14 +69,15 @@ public class CssStyleFieldEditor extends StringFieldEditor {
 						recognizedNames.append(recognizedName);
 					}
 					setErrorMessage(MessageFormat.format(
-							Messages.getString("CssStyleFieldEditor.0"), rule.name, recognizedNames)); //$NON-NLS-1$
+							Messages.getString("CssStyleFieldEditor.0"), new Object[] { rule.name, recognizedNames })); //$NON-NLS-1$
 					return false;
 				}
 				if (CssStyleManager.RULE_COLOR.equals(rule.name)
 						|| CssStyleManager.RULE_BACKGROUND_COLOR.equals(rule.name)) {
 					Integer rgb = CssStyleManager.cssColorRgb(rule.value);
 					if (rgb == null) {
-						setErrorMessage(MessageFormat.format(Messages.getString("CssStyleFieldEditor.3"), rule.value)); //$NON-NLS-1$
+						setErrorMessage(MessageFormat.format(
+								Messages.getString("CssStyleFieldEditor.3"), new Object[] { rule.value })); //$NON-NLS-1$
 						return false;
 					}
 				}
@@ -85,7 +87,7 @@ public class CssStyleFieldEditor extends StringFieldEditor {
 				String gap = value.substring(offset, value.length());
 				if (gap.trim().length() != 0) {
 					setErrorMessage(MessageFormat.format(
-							Messages.getString("CssStyleFieldEditor.1"), gap.trim(), offset)); //$NON-NLS-1$
+							Messages.getString("CssStyleFieldEditor.1"), new Object[] { gap.trim(), offset })); //$NON-NLS-1$
 					return false;
 				}
 			}

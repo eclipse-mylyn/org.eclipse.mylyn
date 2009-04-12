@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.ui.editor.syntax;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -30,6 +29,8 @@ import org.eclipse.mylyn.internal.wikitext.ui.viewer.CssStyleManager;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.FontState;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Font;
+
+import com.ibm.icu.text.MessageFormat;
 
 /**
  * 
@@ -240,11 +241,11 @@ public class MarkupTokenScanner implements ITokenScanner {
 	private void checkAddToken(List<Token> tokens, Token newToken) {
 		if (newToken.getLength() <= 0) {
 			throw new IllegalStateException(MessageFormat.format(
-					Messages.getString("MarkupTokenScanner.0"), newToken.getLength())); //$NON-NLS-1$
+					Messages.getString("MarkupTokenScanner.0"), new Object[] { newToken.getLength() })); //$NON-NLS-1$
 		}
 		if (newToken.getOffset() < 0) {
 			throw new IllegalStateException(MessageFormat.format(
-					Messages.getString("MarkupTokenScanner.1"), newToken.getOffset())); //$NON-NLS-1$
+					Messages.getString("MarkupTokenScanner.1"), new Object[] { newToken.getOffset() })); //$NON-NLS-1$
 		}
 		if (!tokens.isEmpty()) {
 			Token previous = tokens.get(tokens.size() - 1);

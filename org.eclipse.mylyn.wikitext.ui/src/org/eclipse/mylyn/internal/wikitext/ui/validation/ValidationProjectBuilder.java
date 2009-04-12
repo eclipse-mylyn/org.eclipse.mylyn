@@ -17,7 +17,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +42,8 @@ import org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.validation.ResourceMarkerMarkupValidator;
 import org.eclipse.mylyn.wikitext.core.WikiText;
 import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem;
+
+import com.ibm.icu.text.MessageFormat;
 
 /**
  * A project builder that invokes validation on wikitext files
@@ -226,8 +227,8 @@ public class ValidationProjectBuilder extends IncrementalProjectBuilder {
 	 */
 	private void validate(ValidationInfo file, IProgressMonitor monitor) throws CoreException {
 		int totalWork = 1000;
-		monitor.beginTask(
-				MessageFormat.format(Messages.getString("ValidationProjectBuilder.1"), file.file.getName()), totalWork); //$NON-NLS-1$
+		monitor.beginTask(MessageFormat.format(
+				Messages.getString("ValidationProjectBuilder.1"), new Object[] { file.file.getName() }), totalWork); //$NON-NLS-1$
 		ResourceMarkerMarkupValidator validator = new ResourceMarkerMarkupValidator();
 		validator.setMarkupLanguage(WikiText.getMarkupLanguage(file.languageName));
 		validator.setResource(file.file);

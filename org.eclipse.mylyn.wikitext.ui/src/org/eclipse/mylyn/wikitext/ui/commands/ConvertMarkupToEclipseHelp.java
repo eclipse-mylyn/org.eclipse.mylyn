@@ -17,7 +17,6 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
-import java.text.MessageFormat;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
@@ -27,6 +26,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.wikitext.core.parser.util.MarkupToEclipseToc;
 import org.eclipse.ui.PlatformUI;
+
+import com.ibm.icu.text.MessageFormat;
 
 /**
  * 
@@ -43,7 +44,7 @@ public class ConvertMarkupToEclipseHelp extends ConvertMarkupToHtml {
 		if (newFile.exists()) {
 			if (!MessageDialog.openQuestion(
 					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					Messages.getString("ConvertMarkupToEclipseHelp.1"), MessageFormat.format(Messages.getString("ConvertMarkupToEclipseHelp.2"), newFile.getFullPath()))) { //$NON-NLS-1$ //$NON-NLS-2$
+					Messages.getString("ConvertMarkupToEclipseHelp.1"), MessageFormat.format(Messages.getString("ConvertMarkupToEclipseHelp.2"), new Object[] { newFile.getFullPath() }))) { //$NON-NLS-1$ //$NON-NLS-2$
 				return;
 			}
 		}

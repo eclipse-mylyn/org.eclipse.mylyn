@@ -14,7 +14,6 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -118,6 +117,8 @@ import org.eclipse.ui.texteditor.ContentAssistAction;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
+
+import com.ibm.icu.text.MessageFormat;
 
 /**
  * 
@@ -1065,7 +1066,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 						MARKUP_LANGUAGE), preference);
 			} catch (CoreException e) {
 				WikiTextUiPlugin.getDefault().log(IStatus.ERROR,
-						MessageFormat.format(Messages.getString("MarkupEditor.1"), preference), e); //$NON-NLS-1$
+						MessageFormat.format(Messages.getString("MarkupEditor.1"), new Object[] { preference }), e); //$NON-NLS-1$
 			}
 		}
 	}

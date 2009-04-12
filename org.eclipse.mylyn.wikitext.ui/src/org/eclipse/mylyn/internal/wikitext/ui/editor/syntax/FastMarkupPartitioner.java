@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -33,6 +32,8 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.Locator;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+
+import com.ibm.icu.text.MessageFormat;
 
 /**
  * 
@@ -179,11 +180,11 @@ public class FastMarkupPartitioner extends FastPartitioner {
 				}
 				if (previous != null && region.getOffset() < (previous.getOffset() + previous.getLength())) {
 					String message = MessageFormat.format(
-							Messages.getString("FastMarkupPartitioner.0"), region, previous, markupLanguage.getName()); //$NON-NLS-1$
+							Messages.getString("FastMarkupPartitioner.0"), new Object[] { region, previous, markupLanguage.getName() }); //$NON-NLS-1$
 					if (FastMarkupPartitioner.debug) {
 						String markupSavePath = saveToTempFile(markupLanguage, markupContent);
 						message = MessageFormat.format(
-								Messages.getString("FastMarkupPartitioner.1"), message, markupSavePath); //$NON-NLS-1$
+								Messages.getString("FastMarkupPartitioner.1"), new Object[] { message, markupSavePath }); //$NON-NLS-1$
 					}
 					throw new IllegalStateException(message);
 				}

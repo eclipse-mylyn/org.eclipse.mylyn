@@ -46,7 +46,10 @@
       <import plugin="org.eclipse.core.expressions"/>
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.help"/>
+      <import plugin="org.eclipse.mylyn.tasks.ui" version="3.0.2" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.tasks.core" version="3.0.2" match="compatible"/>
       <import feature="org.eclipse.mylyn_feature" version="3.0.2.I20080816" match="compatible"/>
+      <import plugin="com.ibm.icu"/>
    </requires>
 
    <plugin
@@ -104,7 +107,7 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-         
+
    <plugin
          id="org.eclipse.mylyn.wikitext.textile.ui"
          download-size="0"
@@ -146,4 +149,5 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+
 </feature>

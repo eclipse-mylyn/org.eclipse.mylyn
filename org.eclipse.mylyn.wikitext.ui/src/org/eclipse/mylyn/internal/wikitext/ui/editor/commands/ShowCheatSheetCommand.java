@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.ui.editor.commands;
 
-import java.text.MessageFormat;
-
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -28,6 +26,8 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.handlers.HandlerUtil;
+
+import com.ibm.icu.text.MessageFormat;
 
 /**
  * A command that can show a cheat-sheet (help content) for a specific markup language.
@@ -102,7 +102,8 @@ public class ShowCheatSheetCommand extends AbstractHandler {
 				WikiTextUiPlugin.getDefault().log(e);
 			}
 		}
-		return MessageFormat.format(Messages.getString("MarkupEditor.noCheatSheetContent"), //$NON-NLS-1$
-				markupLanguage == null ? Messages.getString("MarkupEditor.noDialect") : markupLanguage.getName()); //$NON-NLS-1$
+		return MessageFormat.format(
+				Messages.getString("MarkupEditor.noCheatSheetContent"), //$NON-NLS-1$
+				new Object[] { markupLanguage == null ? Messages.getString("MarkupEditor.noDialect") : markupLanguage.getName() }); //$NON-NLS-1$
 	}
 }
