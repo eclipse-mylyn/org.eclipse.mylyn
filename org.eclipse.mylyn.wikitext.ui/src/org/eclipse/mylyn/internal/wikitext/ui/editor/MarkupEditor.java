@@ -1162,7 +1162,12 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	}
 
 	private void revealInBrowser(OutlineItem item) {
-		browser.execute(String.format("window.location.hash = '%s';", item.getId())); //$NON-NLS-1$
+		if (Platform.OS_WIN32.equals(Platform.getOS())) {
+			// Do nothing.  It appears that IE has problems with setting window.location.hash  
+			// see bug 270923 for details
+		} else {
+			browser.execute(String.format("window.location.hash = '%s';", item.getId())); //$NON-NLS-1$
+		}
 	}
 
 	public ShowInContext getShowInContext() {
