@@ -69,7 +69,7 @@ import org.eclipse.ui.progress.UIJob;
  * @author Mik Kersten
  * @author Willian Mitsuda
  */
-public class ScreenshotCreationPage extends WizardPage implements IImageCreator {
+public class ScreenshotCreationPage extends WizardPage {
 
 	private IAction captureAction;
 
