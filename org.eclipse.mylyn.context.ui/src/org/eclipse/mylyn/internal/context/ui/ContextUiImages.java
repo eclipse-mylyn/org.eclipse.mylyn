@@ -31,7 +31,7 @@ public class ContextUiImages {
 
 	private static final URL baseURL = ContextUiPlugin.getDefault().getBundle().getEntry("/icons/"); //$NON-NLS-1$
 
-	// TODO 3.1 move images below to sandbox
+	// TODO 3.2 move images below to sandbox
 
 	@Deprecated
 	public static final ImageDescriptor COLOR_PALETTE = create(T_ELCL, "color-palette.gif"); //$NON-NLS-1$

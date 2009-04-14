@@ -84,7 +84,7 @@ public class SaxContextWriter implements IInteractionContextWriter {
 		}
 	}
 
-	private static class SaxWriter implements XMLReader {
+	private class SaxWriter implements XMLReader {
 
 		private ContentHandler handler;
 
@@ -176,9 +176,8 @@ public class SaxContextWriter implements IInteractionContextWriter {
 		}
 	}
 
-	// TODO 3.1 make this method non-static and private?
 	@SuppressWarnings( { "deprecation", "restriction" })
-	public static Attributes createEventAttributes(InteractionEvent ie) {
+	private Attributes createEventAttributes(InteractionEvent ie) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat(InteractionContextExternalizer.DATE_FORMAT_STRING,
 				Locale.ENGLISH);
 

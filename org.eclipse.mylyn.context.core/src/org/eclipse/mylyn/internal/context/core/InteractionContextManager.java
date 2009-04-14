@@ -839,9 +839,8 @@ public class InteractionContextManager implements IInteractionContextManager {
 
 	/**
 	 * Manipulates interest for the active context.
-	 * 
-	 * TODO 3.1: revise or remove this and it's helper
 	 */
+	// TODO 3.2 revise or remove this and it's helper
 	public boolean manipulateInterestForElement(IInteractionElement element, boolean increment, boolean forceLandmark,
 			boolean preserveUninteresting, String sourceId) {
 		if (!isContextActive()) {

@@ -21,7 +21,7 @@ import org.eclipse.ui.IWorkbenchPart;
 /**
  * @author Mik Kersten
  */
-// TODO 3.1: remove
+// TODO 3.2 move methods to other class
 public class UiUtil {
 
 	public static void initializeViewerSelection(IWorkbenchPart part) {
