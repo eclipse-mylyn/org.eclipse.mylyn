@@ -536,6 +536,9 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		TaskAttribute attributeAssignedTo = createAttribute(taskData, BugzillaAttribute.ASSIGNED_TO);
 		attributeAssignedTo.setValue(""); //$NON-NLS-1$
 
+		TaskAttribute attributeQAContact = createAttribute(taskData, BugzillaAttribute.QA_CONTACT);
+		attributeQAContact.setValue(""); //$NON-NLS-1$
+
 		TaskAttribute attributeBugFileLoc = createAttribute(taskData, BugzillaAttribute.BUG_FILE_LOC);
 		attributeBugFileLoc.setValue("http://"); //$NON-NLS-1$
 
@@ -543,6 +546,11 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		createAttribute(taskData, BugzillaAttribute.BLOCKED);
 		createAttribute(taskData, BugzillaAttribute.NEWCC);
 		createAttribute(taskData, BugzillaAttribute.LONG_DESC);
+
+		List<String> keywords = repositoryConfiguration.getKeywords();
+		if (keywords.size() > 0) {
+			createAttribute(taskData, BugzillaAttribute.KEYWORDS);
+		}
 
 		TaskAttribute attrDescription = taskData.getRoot().getMappedAttribute(TaskAttribute.DESCRIPTION);
 		if (attrDescription != null) {
