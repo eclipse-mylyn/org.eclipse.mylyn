@@ -1,62 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <component id="org.eclipse.mylyn.tasks.ui" version="2">
-    <resource path="src/org/eclipse/mylyn/internal/tasks/ui/dialogs/AbstractWorkingSetDialogCOPY.java" type="org.eclipse.mylyn.internal.tasks.ui.dialogs.AbstractWorkingSetDialogCOPY">
-        <filter id="574619656">
-            <message_arguments>
-                <message_argument value="IWorkingSetSelectionDialog"/>
-                <message_argument value="AbstractWorkingSetDialogCOPY"/>
-            </message_arguments>
-        </filter>
-    </resource>
-    <resource path="src/org/eclipse/mylyn/tasks/ui/wizards/AbstractRepositorySettingsPage.java" type="org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage">
-        <filter id="389242988">
-            <message_arguments>
-                <message_argument value="org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage"/>
-                <message_argument value="LABEL_REPOSITORY_LABEL"/>
-                <message_argument value="Label: "/>
-            </message_arguments>
-        </filter>
-        <filter id="389242988">
-            <message_arguments>
-                <message_argument value="org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage"/>
-                <message_argument value="LABEL_PASSWORD"/>
-                <message_argument value="Password: "/>
-            </message_arguments>
-        </filter>
-        <filter id="389242988">
-            <message_arguments>
-                <message_argument value="org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage"/>
-                <message_argument value="LABEL_SERVER"/>
-                <message_argument value="Server: "/>
-            </message_arguments>
-        </filter>
-        <filter id="389242988">
-            <message_arguments>
-                <message_argument value="org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage"/>
-                <message_argument value="INVALID_LOGIN"/>
-                <message_argument value="Unable to authenticate with repository. Login credentials invalid."/>
-            </message_arguments>
-        </filter>
-        <filter id="389242988">
-            <message_arguments>
-                <message_argument value="org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage"/>
-                <message_argument value="LABEL_USER"/>
-                <message_argument value="User ID: "/>
-            </message_arguments>
-        </filter>
-        <filter id="389242988">
-            <message_arguments>
-                <message_argument value="org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage"/>
-                <message_argument value="INVALID_REPOSITORY_URL"/>
-                <message_argument value="Repository url is invalid."/>
-            </message_arguments>
-        </filter>
-    </resource>
     <resource path="src/org/eclipse/mylyn/internal/tasks/ui/TaskJobFactory.java" type="org.eclipse.mylyn.internal.tasks.ui.TaskJobFactory">
         <filter id="571519004">
             <message_arguments>
                 <message_argument value="org.eclipse.mylyn.internal.tasks.ui.TaskJobFactory.createUpdateRepositoryConfigurationJob(AbstractRepositoryConnector, TaskRepository)"/>
                 <message_argument value="TaskJob"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/mylyn/internal/tasks/ui/dialogs/AbstractWorkingSetDialogCOPY.java" type="org.eclipse.mylyn.internal.tasks.ui.dialogs.AbstractWorkingSetDialogCOPY">
+        <filter id="574619656">
+            <message_arguments>
+                <message_argument value="IWorkingSetSelectionDialog"/>
+                <message_argument value="AbstractWorkingSetDialogCOPY"/>
             </message_arguments>
         </filter>
     </resource>
