@@ -111,7 +111,8 @@ public class BrowserPreviewViewer {
 			protected IStatus run(IProgressMonitor monitor) {
 				if (renderingEngine == null) {
 					jobStatus = new RepositoryStatus(taskRepository, IStatus.INFO, TasksUiPlugin.ID_PLUGIN,
-							RepositoryStatus.ERROR_INTERNAL, Messages.BrowserPreviewViewer_The_repository_does_not_support_HTML_preview);
+							RepositoryStatus.ERROR_INTERNAL,
+							Messages.BrowserPreviewViewer_The_repository_does_not_support_HTML_preview);
 					return Status.OK_STATUS;
 				}
 
@@ -137,7 +138,7 @@ public class BrowserPreviewViewer {
 						browser.getDisplay().asyncExec(new Runnable() {
 							public void run() {
 								setText(browser, job.getHtmlText());
-								// TODO 3.1 error handling
+								// TODO 3.2 error handling
 								//getAttributeEditorManager().setMessage(null, IMessageProvider.NONE);
 							}
 						});
@@ -145,7 +146,7 @@ public class BrowserPreviewViewer {
 						browser.getDisplay().asyncExec(new Runnable() {
 							public void run() {
 								TasksUiInternal.displayStatus(Messages.BrowserPreviewViewer_Error, job.getStatus());
-								// TODO 3.1 error handling
+								// TODO 3.2 error handling
 								//getAttributeEditorManager().setMessage(job.getStatus().getMessage(), IMessageProvider.ERROR);
 							}
 						});

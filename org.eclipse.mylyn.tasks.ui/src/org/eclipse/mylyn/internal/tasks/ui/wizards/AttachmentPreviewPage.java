@@ -183,7 +183,7 @@ public class AttachmentPreviewPage extends WizardPage {
 	private void createGenericPreview(Composite composite) {
 		Label label = new Label(composite, SWT.NONE);
 		label.setLayoutData(new GridData(GridData.FILL_BOTH));
-		// TODO 3.1 put filename on model
+		// TODO 3.2 put filename on model
 		String name = model.getSource().getName();
 		TaskAttachmentMapper taskAttachment = TaskAttachmentMapper.createFrom(model.getAttribute());
 		if (taskAttachment.getFileName() != null) {

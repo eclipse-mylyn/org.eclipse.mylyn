@@ -30,7 +30,7 @@ import org.eclipse.mylyn.tasks.tests.connector.MockTask;
  */
 public class NewTaskFromSelectionActionTest extends TestCase {
 
-	// FIXME 3.1 causes display of modal dialog
+	// FIXME causes display of modal dialog
 //	public void testNoSelection() throws Exception {
 //		NewTaskFromSelectionAction action = new NewTaskFromSelectionAction();
 //		assertNull(action.getTaskSelection());

@@ -95,7 +95,7 @@ public class TaskDataModel {
 	}
 
 	public Set<TaskAttribute> getChangedAttributes() {
-		// TODO 3.1 include unsaved attributes
+		// TODO 3.2 include unsaved attributes
 		return new HashSet<TaskAttribute>(workingCopy.getEditsData().getRoot().getAttributes().values());
 	}
 

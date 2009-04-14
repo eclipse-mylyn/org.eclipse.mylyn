@@ -21,11 +21,12 @@ import org.eclipse.ui.INewWizard;
  * @author Eugene Kuleshov
  * @author Steffen Pingel
  */
-// TODO 3.1 rename this class, the name conflicts with org.eclipse.mylyn.tasks.ui.wizards.NewTaskWizard
+// TODO 3.2 rename this class, the name conflicts with org.eclipse.mylyn.tasks.ui.wizards.NewTaskWizard
 public class NewTaskWizard extends MultiRepositoryAwareWizard implements INewWizard {
 
 	public NewTaskWizard(ITaskMapping taskSelection) {
-		super(new NewTaskPage(ITaskRepositoryFilter.CAN_CREATE_NEW_TASK, taskSelection), Messages.NewTaskWizard_New_Task);
+		super(new NewTaskPage(ITaskRepositoryFilter.CAN_CREATE_NEW_TASK, taskSelection),
+				Messages.NewTaskWizard_New_Task);
 		setNeedsProgressMonitor(true);
 	}
 

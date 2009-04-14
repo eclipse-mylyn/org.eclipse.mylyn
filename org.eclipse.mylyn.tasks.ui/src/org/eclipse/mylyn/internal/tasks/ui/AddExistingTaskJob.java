@@ -31,7 +31,7 @@ import org.eclipse.ui.PlatformUI;
  * 
  * @author Willian Mitsuda
  */
-// TODO 3.1 merge with OpenRepositoryTaskJob
+// TODO merge with OpenRepositoryTaskJob
 public class AddExistingTaskJob extends Job {
 
 	/**

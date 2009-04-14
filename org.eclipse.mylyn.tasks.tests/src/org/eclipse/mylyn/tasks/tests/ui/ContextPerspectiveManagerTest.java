@@ -71,7 +71,7 @@ public class ContextPerspectiveManagerTest extends TestCase {
 		assertEquals(ID_PLANNING_PERSPECTIVE, getActivePerspective());
 	}
 
-	// FIXME 3.1 re-enable test
+	// FIXME 3.2 re-enable test
 //	public void testRecreateTask() throws Exception {
 //		PlatformUI.getWorkbench().showPerspective(ID_RESOURCE_PERSPECTIVE, MonitorUi.getLaunchingWorkbenchWindow());
 //		TaskTask task = TaskTestUtil.createMockTask("1");

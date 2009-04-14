@@ -33,7 +33,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
  */
 public class MockRepositoryConnector extends AbstractRepositoryConnector {
 
-	// TODO 3.1 rename to CONNECTOR_KIND
+	// TODO 3.2 rename to CONNECTOR_KIND
 	public static final String REPOSITORY_KIND = "mock";
 
 	public static final String REPOSITORY_URL = "http://mockrepository.test";

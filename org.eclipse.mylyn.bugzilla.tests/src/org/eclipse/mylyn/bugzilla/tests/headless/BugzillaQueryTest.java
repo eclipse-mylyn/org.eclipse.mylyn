@@ -86,7 +86,6 @@ public class BugzillaQueryTest extends TestCase {
 				&& auth.getUserName() != null && !auth.getUserName().equals(""));
 	}
 
-	// XXX: refactor 3.0
 //	public void testGetBug() throws Exception {
 //		TaskData taskData = handler.getTaskData(repository, "1", new NullProgressMonitor());
 //		assertNotNull(taskData);
