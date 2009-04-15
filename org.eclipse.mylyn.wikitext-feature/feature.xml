@@ -29,7 +29,7 @@
    </license>
 
    <url>
-      <update label="%updateSiteName" url="http://download.eclipse.org/tools/mylyn/update/incubator"/>
+      <update label="%updateSiteName" url="http://download.eclipse.org/tools/mylyn/update/e3.4"/>
    </url>
 
    <requires>
