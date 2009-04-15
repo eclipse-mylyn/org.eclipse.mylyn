@@ -33,6 +33,7 @@ import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
  * Utility class for detecting Trac hyperlinks.
  * 
  * @author Steffen Pingel
+ * @author David Green partial fix hyperlink detection on {{{ see bug 265682
  */
 public class TracHyperlinkUtil {
 
@@ -42,7 +43,7 @@ public class TracHyperlinkUtil {
 
 	static Pattern reportPattern1 = createPattern("report:(\\d+)"); //$NON-NLS-1$
 
-	static Pattern reportPattern2 = createPattern("\\{(\\d+)\\}"); //$NON-NLS-1$
+	static Pattern reportPattern2 = Pattern.compile("(?<!!|\\{\\{)\\{(\\d+)\\}"); //$NON-NLS-1$
 
 	static Pattern changesetPattern1 = createPattern("(r|changeset:)(\\d+)(/\\w+)?"); //$NON-NLS-1$
 

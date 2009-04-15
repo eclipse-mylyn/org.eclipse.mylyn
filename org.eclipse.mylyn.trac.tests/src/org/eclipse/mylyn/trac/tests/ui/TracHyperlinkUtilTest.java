@@ -101,6 +101,9 @@ public class TracHyperlinkUtilTest extends TestCase {
 
 		links = findTracHyperlinks(repository, "{{abc}}", -1, 0);
 		assertNull(links);
+
+		links = findTracHyperlinks(repository, "{{{123}}}", -1, 0);
+		assertNull(links);
 	}
 
 	public void testFindHyperlinksChangeset() {
