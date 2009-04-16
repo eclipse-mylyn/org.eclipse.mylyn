@@ -549,6 +549,10 @@ public class RepositoryConfiguration implements Serializable {
 				status = BUGZILLA_REPORT_STATUS.NEW;
 			}
 		}
+		BugzillaVersion bugzillaVersion = getInstallVersion();
+		if (bugzillaVersion == null) {
+			bugzillaVersion = BugzillaVersion.MIN_VERSION;
+		}
 		switch (status) {
 		case UNCONFIRMED:
 		case REOPENED:
@@ -568,19 +572,24 @@ public class RepositoryConfiguration implements Serializable {
 			addOperation(bugReport, BugzillaOperation.reopen);
 			addOperation(bugReport, BugzillaOperation.verify);
 			addOperation(bugReport, BugzillaOperation.close);
+			if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_0) >= 0) {
+				addOperation(bugReport, BugzillaOperation.duplicate);
+			}
 			break;
 		case CLOSED:
 			addOperation(bugReport, BugzillaOperation.none);
 			addOperation(bugReport, BugzillaOperation.reopen);
+			if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_0) >= 0) {
+				addOperation(bugReport, BugzillaOperation.duplicate);
+			}
 			break;
 		case VERIFIED:
 			addOperation(bugReport, BugzillaOperation.none);
 			addOperation(bugReport, BugzillaOperation.reopen);
 			addOperation(bugReport, BugzillaOperation.close);
-		}
-		BugzillaVersion bugzillaVersion = getInstallVersion();
-		if (bugzillaVersion == null) {
-			bugzillaVersion = BugzillaVersion.MIN_VERSION;
+			if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_0) >= 0) {
+				addOperation(bugReport, BugzillaOperation.duplicate);
+			}
 		}
 
 		if (bugzillaVersion.compareTo(BugzillaVersion.BUGZILLA_3_0) < 0) {
