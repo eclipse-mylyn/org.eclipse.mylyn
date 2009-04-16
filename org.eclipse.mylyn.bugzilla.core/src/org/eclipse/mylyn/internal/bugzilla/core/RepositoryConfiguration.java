@@ -574,6 +574,7 @@ public class RepositoryConfiguration implements Serializable {
 			addOperation(bugReport, BugzillaOperation.close);
 			if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_0) >= 0) {
 				addOperation(bugReport, BugzillaOperation.duplicate);
+				addOperation(bugReport, BugzillaOperation.resolve);
 			}
 			break;
 		case CLOSED:
@@ -581,6 +582,7 @@ public class RepositoryConfiguration implements Serializable {
 			addOperation(bugReport, BugzillaOperation.reopen);
 			if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_0) >= 0) {
 				addOperation(bugReport, BugzillaOperation.duplicate);
+				addOperation(bugReport, BugzillaOperation.resolve);
 			}
 			break;
 		case VERIFIED:
@@ -589,6 +591,7 @@ public class RepositoryConfiguration implements Serializable {
 			addOperation(bugReport, BugzillaOperation.close);
 			if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_0) >= 0) {
 				addOperation(bugReport, BugzillaOperation.duplicate);
+				addOperation(bugReport, BugzillaOperation.resolve);
 			}
 		}
 
