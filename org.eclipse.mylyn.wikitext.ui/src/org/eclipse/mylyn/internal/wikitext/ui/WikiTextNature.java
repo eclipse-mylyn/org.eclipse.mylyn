@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 David Green and others.
+ * Copyright (c) 2007, 2009 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -51,8 +51,8 @@ public class WikiTextNature implements IProjectNature {
 			description.setNatureIds(newNatures);
 			project.setDescription(description, monitor);
 		} else {
-			throw new CoreException(WikiTextUiPlugin.getDefault().createStatus(Messages.WikiTextNature_cannotValidateNatureSet, 
-					IStatus.ERROR, null));
+			throw new CoreException(WikiTextUiPlugin.getDefault().createStatus(
+					Messages.WikiTextNature_cannotValidateNatureSet, IStatus.ERROR, null));
 		}
 	}
 
@@ -75,8 +75,7 @@ public class WikiTextNature implements IProjectNature {
 				project.setDescription(description, monitor);
 			} else {
 				throw new CoreException(WikiTextUiPlugin.getDefault().createStatus(
-						Messages.WikiTextNature_cannotValidateNatureSet, 
-						IStatus.ERROR, null));
+						Messages.WikiTextNature_cannotValidateNatureSet, IStatus.ERROR, null));
 			}
 
 		}
