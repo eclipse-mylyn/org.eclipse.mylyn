@@ -55,5 +55,13 @@
          
       </templates>
    </extension>
+   <extension
+         point="org.eclipse.mylyn.wikitext.ui.cheatSheet">
+      <content
+            markupLanguage="Confluence"
+            resource="help/cheatSheet/Confluence.confluence">
+      </content>
+   </extension>
+
 
 </plugin>
