@@ -165,26 +165,26 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 					String resource = element.getAttribute("resource"); //$NON-NLS-1$
 					try {
 						if (markupLanguage == null) {
-							throw new Exception(Messages.getString("WikiTextUiPlugin.9")); //$NON-NLS-1$
+							throw new Exception(Messages.WikiTextUiPlugin_markupLanguageRequired); 
 						} else if (!WikiText.getMarkupLanguageNames().contains(markupLanguage)) {
 							throw new Exception(MessageFormat.format(
-									Messages.getString("WikiTextUiPlugin.10"), new Object[] { markupLanguage })); //$NON-NLS-1$
+									Messages.WikiTextUiPlugin_invalidMarkupLanguage, new Object[] { markupLanguage })); 
 						}
 						if (resource == null || resource.length() == 0) {
-							throw new Exception(Messages.getString("WikiTextUiPlugin.11")); //$NON-NLS-1$
+							throw new Exception(Messages.WikiTextUiPlugin_resourceRequired); 
 						}
 						HelpContent cheatSheet = new CheatSheetContent(bundle, resource, contentLanguage,
 								markupLanguage);
 						HelpContent previous = cheatSheets.put(cheatSheet.getMarkupLanguageName(), cheatSheet);
 						if (previous != null) {
 							cheatSheets.put(previous.getMarkupLanguageName(), previous);
-							throw new Exception(MessageFormat.format(Messages.getString("WikiTextUiPlugin.12"), //$NON-NLS-1$
+							throw new Exception(MessageFormat.format(Messages.WikiTextUiPlugin_markupLanguageContentAlreadyDeclared, 
 									new Object[] { previous.getMarkupLanguageName(),
 											previous.getProvider().getSymbolicName() }));
 						}
 					} catch (Exception e) {
 						log(IStatus.ERROR, MessageFormat.format(
-								Messages.getString("WikiTextUiPlugin.13"), new Object[] { declaringPluginId, //$NON-NLS-1$
+								Messages.WikiTextUiPlugin_invalidExtension, new Object[] { declaringPluginId, 
 										EXTENSION_POINT_CHEAT_SHEET, e.getMessage() }), e);
 					}
 				}
@@ -215,10 +215,10 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 						try {
 							String markupLanguage = element.getAttribute("markupLanguage"); //$NON-NLS-1$
 							if (markupLanguage == null) {
-								throw new Exception(Messages.getString("WikiTextUiPlugin.15")); //$NON-NLS-1$
+								throw new Exception(Messages.WikiTextUiPlugin_markupLanguageRequired); 
 							} else if (!WikiText.getMarkupLanguageNames().contains(markupLanguage)) {
 								throw new Exception(MessageFormat.format(
-										Messages.getString("WikiTextUiPlugin.16"), new Object[] { markupLanguage })); //$NON-NLS-1$
+										Messages.WikiTextUiPlugin_invalidMarkupLanguage, new Object[] { markupLanguage })); 
 							}
 							Templates markupLanguageTemplates = new Templates();
 							markupLanguageTemplates.setMarkupLanguageName(markupLanguage);
@@ -235,17 +235,17 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 
 										if (name == null || name.length() == 0) {
 											throw new Exception(MessageFormat.format(
-													Messages.getString("WikiTextUiPlugin.22"), //$NON-NLS-1$
+													Messages.WikiTextUiPlugin_nameRequired, 
 													new Object[] { EXTENSION_POINT_TEMPLATE }));
 										}
 										if (description == null || description.length() == 0) {
 											throw new Exception(MessageFormat.format(
-													Messages.getString("WikiTextUiPlugin.23"), //$NON-NLS-1$
+													Messages.WikiTextUiPlugin_descriptionRequired, 
 													new Object[] { EXTENSION_POINT_TEMPLATE }));
 										}
 										if (content == null || content.length() == 0) {
 											throw new Exception(MessageFormat.format(
-													Messages.getString("WikiTextUiPlugin.24"), //$NON-NLS-1$
+													Messages.WikiTextUiPlugin_contentRequired, 
 													new Object[] { EXTENSION_POINT_TEMPLATE }));
 										}
 										content = content.replace("\\r\\n", Text.DELIMITER).replace("\\r", //$NON-NLS-1$ //$NON-NLS-2$
@@ -262,7 +262,7 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 												block != null && "true".equalsIgnoreCase(block)); //$NON-NLS-1$
 									} catch (Exception e) {
 										log(IStatus.ERROR, MessageFormat.format(
-												Messages.getString("WikiTextUiPlugin.37"), //$NON-NLS-1$
+												Messages.WikiTextUiPlugin_invalidExtension, 
 												new Object[] { declaringPluginId, EXTENSION_POINT_CONTENT_ASSIST,
 														e.getMessage() }), e);
 									}
@@ -270,7 +270,7 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 									log(
 											IStatus.ERROR,
 											MessageFormat.format(
-													Messages.getString("WikiTextUiPlugin.38"), new Object[] { declaringPluginId, //$NON-NLS-1$
+													Messages.WikiTextUiPlugin_unexpectedExtensionElement, new Object[] { declaringPluginId, 
 															EXTENSION_POINT_CONTENT_ASSIST, templatesChild.getName() }),
 											null);
 								}
@@ -281,11 +281,11 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 								markupLanguageTemplates.addAll(previous);
 							}
 						} catch (Exception e) {
-							log(IStatus.ERROR, MessageFormat.format(Messages.getString("WikiTextUiPlugin.39"), //$NON-NLS-1$
+							log(IStatus.ERROR, MessageFormat.format(Messages.WikiTextUiPlugin_invalidExtension, 
 									new Object[] { declaringPluginId, EXTENSION_POINT_TEMPLATES, e.getMessage() }), e);
 						}
 					} else {
-						log(IStatus.ERROR, MessageFormat.format(Messages.getString("WikiTextUiPlugin.40"), //$NON-NLS-1$
+						log(IStatus.ERROR, MessageFormat.format(Messages.WikiTextUiPlugin_unexpectedExtensionElement, 
 								new Object[] { declaringPluginId, EXTENSION_POINT_CONTENT_ASSIST, element.getName() }),
 								null);
 					}

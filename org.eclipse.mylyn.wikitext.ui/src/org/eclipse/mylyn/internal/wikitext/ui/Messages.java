@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 David Green and others.
+ * Copyright (c) 2009 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,22 +11,39 @@
 
 package org.eclipse.mylyn.internal.wikitext.ui;
 
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import org.eclipse.osgi.util.NLS;
 
-class Messages {
+/**
+ * 
+ * @author David Green
+ */
+class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.wikitext.ui.messages"; //$NON-NLS-1$
 
-	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
+	public static String WikiTextNature_cannotValidateNatureSet;
 
-	private Messages() {
+	public static String WikiTextUiPlugin_contentRequired;
+
+	public static String WikiTextUiPlugin_descriptionRequired;
+
+	public static String WikiTextUiPlugin_invalidExtension;
+
+	public static String WikiTextUiPlugin_invalidMarkupLanguage;
+
+	public static String WikiTextUiPlugin_markupLanguageContentAlreadyDeclared;
+
+	public static String WikiTextUiPlugin_markupLanguageRequired;
+
+	public static String WikiTextUiPlugin_nameRequired;
+
+	public static String WikiTextUiPlugin_resourceRequired;
+
+	public static String WikiTextUiPlugin_unexpectedExtensionElement;
+	static {
+		// initialize resource bundle
+		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
 
-	public static String getString(String key) {
-		try {
-			return RESOURCE_BUNDLE.getString(key);
-		} catch (MissingResourceException e) {
-			return '!' + key + '!';
-		}
+	private Messages() {
 	}
 }

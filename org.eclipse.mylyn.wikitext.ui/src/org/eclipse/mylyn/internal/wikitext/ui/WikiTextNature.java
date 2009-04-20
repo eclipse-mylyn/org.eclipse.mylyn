@@ -51,7 +51,7 @@ public class WikiTextNature implements IProjectNature {
 			description.setNatureIds(newNatures);
 			project.setDescription(description, monitor);
 		} else {
-			throw new CoreException(WikiTextUiPlugin.getDefault().createStatus(Messages.getString("WikiTextNature.1"), //$NON-NLS-1$
+			throw new CoreException(WikiTextUiPlugin.getDefault().createStatus(Messages.WikiTextNature_cannotValidateNatureSet, 
 					IStatus.ERROR, null));
 		}
 	}
@@ -75,7 +75,7 @@ public class WikiTextNature implements IProjectNature {
 				project.setDescription(description, monitor);
 			} else {
 				throw new CoreException(WikiTextUiPlugin.getDefault().createStatus(
-						Messages.getString("WikiTextNature.1"), //$NON-NLS-1$
+						Messages.WikiTextNature_cannotValidateNatureSet, 
 						IStatus.ERROR, null));
 			}
 
