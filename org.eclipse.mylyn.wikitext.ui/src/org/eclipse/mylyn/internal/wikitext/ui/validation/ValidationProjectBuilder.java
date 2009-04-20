@@ -209,7 +209,7 @@ public class ValidationProjectBuilder extends IncrementalProjectBuilder {
 			return;
 		}
 		final int factor = 1000;
-		monitor.beginTask(Messages.getString("ValidationProjectBuilder.0"), files.size() * factor); //$NON-NLS-1$
+		monitor.beginTask(Messages.ValidationProjectBuilder_validationTask, files.size() * factor); 
 		for (ValidationInfo file : files) {
 			if (monitor.isCanceled()) {
 				throw new OperationCanceledException();
@@ -228,7 +228,7 @@ public class ValidationProjectBuilder extends IncrementalProjectBuilder {
 	private void validate(ValidationInfo file, IProgressMonitor monitor) throws CoreException {
 		int totalWork = 1000;
 		monitor.beginTask(MessageFormat.format(
-				Messages.getString("ValidationProjectBuilder.1"), new Object[] { file.file.getName() }), totalWork); //$NON-NLS-1$
+				Messages.ValidationProjectBuilder_validatingFileTask, new Object[] { file.file.getName() }), totalWork); 
 		ResourceMarkerMarkupValidator validator = new ResourceMarkerMarkupValidator();
 		validator.setMarkupLanguage(WikiText.getMarkupLanguage(file.languageName));
 		validator.setResource(file.file);

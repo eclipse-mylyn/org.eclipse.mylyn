@@ -44,7 +44,7 @@ public class ConvertMarkupToEclipseHelp extends ConvertMarkupToHtml {
 		if (newFile.exists()) {
 			if (!MessageDialog.openQuestion(
 					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					Messages.getString("ConvertMarkupToEclipseHelp.1"), MessageFormat.format(Messages.getString("ConvertMarkupToEclipseHelp.2"), new Object[] { newFile.getFullPath() }))) { //$NON-NLS-1$ //$NON-NLS-2$
+					Messages.ConvertMarkupToEclipseHelp_overwrite, MessageFormat.format(Messages.ConvertMarkupToEclipseHelp_fileExistsOverwrite, new Object[] { newFile.getFullPath() }))) {  
 				return;
 			}
 		}
@@ -105,13 +105,13 @@ public class ConvertMarkupToEclipseHelp extends ConvertMarkupToHtml {
 		} catch (Throwable e) {
 			StringWriter message = new StringWriter();
 			PrintWriter out = new PrintWriter(message);
-			out.println(Messages.getString("ConvertMarkupToEclipseHelp.9") + e.getMessage()); //$NON-NLS-1$
-			out.println(Messages.getString("ConvertMarkupToEclipseHelp.10")); //$NON-NLS-1$
+			out.println(Messages.ConvertMarkupToEclipseHelp_cannotConvert + e.getMessage()); 
+			out.println(Messages.ConvertMarkupToEclipseHelp_detailsFollow); 
 			e.printStackTrace(out);
 			out.close();
 
 			MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					Messages.getString("ConvertMarkupToEclipseHelp.11"), message.toString()); //$NON-NLS-1$
+					Messages.ConvertMarkupToEclipseHelp_cannotCompleteOperation, message.toString()); 
 		}
 	}
 

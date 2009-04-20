@@ -103,7 +103,7 @@ public class ShowCheatSheetCommand extends AbstractHandler {
 			}
 		}
 		return MessageFormat.format(
-				Messages.getString("MarkupEditor.noCheatSheetContent"), //$NON-NLS-1$
-				new Object[] { markupLanguage == null ? Messages.getString("MarkupEditor.noDialect") : markupLanguage.getName() }); //$NON-NLS-1$
+				Messages.ShowCheatSheetCommand_noCheatSheetContent,
+				new Object[] { markupLanguage == null ? Messages.ShowCheatSheetCommand_unknownLanguage : markupLanguage.getName() });
 	}
 }

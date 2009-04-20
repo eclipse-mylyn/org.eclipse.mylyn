@@ -59,7 +59,7 @@ public abstract class DocumentRegionValidator {
 			return;
 		}
 		final int totalWork = region.getLength() * 2;
-		monitor.beginTask(Messages.getString("DocumentRegionValidator.0"), totalWork); //$NON-NLS-1$
+		monitor.beginTask(Messages.DocumentRegionValidator_validation, totalWork); 
 		try {
 			clearProblems(new SubProgressMonitor(monitor, totalWork / 2), document, region);
 			computeProblems(new SubProgressMonitor(monitor, totalWork / 2), document, region);
@@ -73,7 +73,7 @@ public abstract class DocumentRegionValidator {
 			return;
 		}
 		final int totalWork = Integer.MAX_VALUE / 2;
-		monitor.beginTask(Messages.getString("DocumentRegionValidator.1"), totalWork); //$NON-NLS-1$
+		monitor.beginTask(Messages.DocumentRegionValidator_validating, totalWork); 
 		try {
 			List<ValidationProblem> problems = delegate.validate(new SubProgressMonitor(monitor, totalWork / 2),
 					document.get(), region.getOffset(), region.getLength());

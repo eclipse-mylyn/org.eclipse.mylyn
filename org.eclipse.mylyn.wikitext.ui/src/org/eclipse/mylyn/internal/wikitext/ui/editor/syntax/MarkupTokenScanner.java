@@ -241,18 +241,18 @@ public class MarkupTokenScanner implements ITokenScanner {
 	private void checkAddToken(List<Token> tokens, Token newToken) {
 		if (newToken.getLength() <= 0) {
 			throw new IllegalStateException(MessageFormat.format(
-					Messages.getString("MarkupTokenScanner.0"), new Object[] { newToken.getLength() })); //$NON-NLS-1$
+					Messages.MarkupTokenScanner_badTokenLength, new Object[] { newToken.getLength() })); 
 		}
 		if (newToken.getOffset() < 0) {
 			throw new IllegalStateException(MessageFormat.format(
-					Messages.getString("MarkupTokenScanner.1"), new Object[] { newToken.getOffset() })); //$NON-NLS-1$
+					Messages.MarkupTokenScanner_badTokenOffset, new Object[] { newToken.getOffset() })); 
 		}
 		if (!tokens.isEmpty()) {
 			Token previous = tokens.get(tokens.size() - 1);
 			if (previous.getOffset() >= newToken.getOffset()) {
-				throw new IllegalStateException(Messages.getString("MarkupTokenScanner.2")); //$NON-NLS-1$
+				throw new IllegalStateException(Messages.MarkupTokenScanner_2); 
 			} else if (previous.getOffset() + previous.getLength() > newToken.getOffset()) {
-				throw new IllegalStateException(Messages.getString("MarkupTokenScanner.3")); //$NON-NLS-1$
+				throw new IllegalStateException(Messages.MarkupTokenScanner_3); 
 			}
 		}
 	}

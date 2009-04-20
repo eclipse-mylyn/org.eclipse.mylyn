@@ -45,7 +45,7 @@ public class ConvertMarkupToHtml extends AbstractMarkupResourceHandler {
 		if (newFile.exists()) {
 			if (!MessageDialog.openQuestion(
 					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					Messages.getString("ConvertMarkupToHtml.1"), MessageFormat.format(Messages.getString("ConvertMarkupToHtml.2"), new Object[] { newFile.getFullPath() }))) { //$NON-NLS-1$ //$NON-NLS-2$
+					Messages.ConvertMarkupToHtml_overwrite, MessageFormat.format(Messages.ConvertMarkupToHtml_fileExistsOverwrite, new Object[] { newFile.getFullPath() }))) {  
 				return;
 			}
 		}
@@ -102,13 +102,13 @@ public class ConvertMarkupToHtml extends AbstractMarkupResourceHandler {
 		} catch (Throwable e) {
 			StringWriter message = new StringWriter();
 			PrintWriter out = new PrintWriter(message);
-			out.println(Messages.getString("ConvertMarkupToHtml.6") + e.getMessage()); //$NON-NLS-1$
-			out.println(Messages.getString("ConvertMarkupToHtml.7")); //$NON-NLS-1$
+			out.println(Messages.ConvertMarkupToHtml_cannotConvert + e.getMessage()); 
+			out.println(Messages.ConvertMarkupToHtml_detailsFollow); 
 			e.printStackTrace(out);
 			out.close();
 
 			MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					Messages.getString("ConvertMarkupToHtml.8"), message.toString()); //$NON-NLS-1$
+					Messages.ConvertMarkupToHtml_cannotCompleteOperation, message.toString()); 
 		}
 	}
 

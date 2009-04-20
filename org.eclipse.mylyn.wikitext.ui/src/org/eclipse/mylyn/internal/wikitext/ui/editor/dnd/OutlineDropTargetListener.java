@@ -98,7 +98,7 @@ public class OutlineDropTargetListener implements TransferDropTargetListener {
 							WikiTextUiPlugin.getDefault().log(exception);
 							MessageDialog.openError(
 									PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-									Messages.getString("OutlineDropTargetListener.2"), MessageFormat.format(Messages.getString("OutlineDropTargetListener.3"), new Object[] { exception.getMessage() })); //$NON-NLS-1$ //$NON-NLS-2$
+									Messages.OutlineDropTargetListener_0, MessageFormat.format(Messages.OutlineDropTargetListener_1, new Object[] { exception.getMessage() }));  
 						}
 
 						public void run() throws Exception {
@@ -108,7 +108,7 @@ public class OutlineDropTargetListener implements TransferDropTargetListener {
 				} else {
 					MessageDialog.openInformation(
 							PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-							Messages.getString("OutlineDropTargetListener.0"), MessageFormat.format(Messages.getString("OutlineDropTargetListener.1"), //$NON-NLS-1$ //$NON-NLS-2$
+							Messages.OutlineDropTargetListener_2, MessageFormat.format(Messages.OutlineDropTargetListener_3,  
 									new Object[] { command.getProblemText() }));
 				}
 			}

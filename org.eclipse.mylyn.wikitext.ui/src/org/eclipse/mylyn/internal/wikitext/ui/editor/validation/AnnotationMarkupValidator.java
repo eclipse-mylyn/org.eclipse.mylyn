@@ -35,7 +35,7 @@ public class AnnotationMarkupValidator extends DocumentRegionValidator {
 
 	@Override
 	protected void clearProblems(IProgressMonitor monitor, IDocument document, IRegion region) throws CoreException {
-		monitor.beginTask(Messages.getString("AnnotationMarkupValidator.0"), 100); //$NON-NLS-1$
+		monitor.beginTask(Messages.AnnotationMarkupValidator_clearingProblems, 100); 
 		// nothing to do: we do this all in the createProblems method.
 		monitor.done();
 	}

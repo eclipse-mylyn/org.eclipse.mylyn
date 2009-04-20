@@ -180,11 +180,11 @@ public class FastMarkupPartitioner extends FastPartitioner {
 				}
 				if (previous != null && region.getOffset() < (previous.getOffset() + previous.getLength())) {
 					String message = MessageFormat.format(
-							Messages.getString("FastMarkupPartitioner.0"), new Object[] { region, previous, markupLanguage.getName() }); //$NON-NLS-1$
+							Messages.FastMarkupPartitioner_0, new Object[] { region, previous, markupLanguage.getName() }); 
 					if (FastMarkupPartitioner.debug) {
 						String markupSavePath = saveToTempFile(markupLanguage, markupContent);
 						message = MessageFormat.format(
-								Messages.getString("FastMarkupPartitioner.1"), new Object[] { message, markupSavePath }); //$NON-NLS-1$
+								Messages.FastMarkupPartitioner_1, new Object[] { message, markupSavePath }); 
 					}
 					throw new IllegalStateException(message);
 				}

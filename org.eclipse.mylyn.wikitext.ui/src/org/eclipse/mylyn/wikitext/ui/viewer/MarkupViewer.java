@@ -56,7 +56,7 @@ public class MarkupViewer extends HtmlViewer {
 			}
 			setDocumentNoMarkup(new Document(source), new AnnotationModel());
 			if (WikiTextUiPlugin.getDefault() != null) {
-				WikiTextUiPlugin.getDefault().log(IStatus.ERROR, Messages.getString("MarkupViewer.0"), t); //$NON-NLS-1$
+				WikiTextUiPlugin.getDefault().log(IStatus.ERROR, Messages.MarkupViewer_parseFailure, t); 
 			} else {
 				t.printStackTrace();
 			}

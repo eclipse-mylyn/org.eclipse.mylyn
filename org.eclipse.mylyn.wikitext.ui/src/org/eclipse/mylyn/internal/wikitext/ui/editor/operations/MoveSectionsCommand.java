@@ -65,7 +65,7 @@ public class MoveSectionsCommand extends AbstractDocumentCommand {
 		for (int x = 0; x < items.size(); ++x) {
 			OutlineItem item = items.get(x);
 			if (item.contains(target)) {
-				setProblemText(Messages.getString("MoveSectionsCommand.0")); //$NON-NLS-1$
+				setProblemText(Messages.MoveSectionsCommand_invalidTargetLocation_self); 
 			}
 		}
 	}

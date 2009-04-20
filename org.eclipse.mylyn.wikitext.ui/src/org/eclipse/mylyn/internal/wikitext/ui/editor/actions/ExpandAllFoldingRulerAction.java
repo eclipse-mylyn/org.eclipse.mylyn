@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.wikitext.ui.editor.actions;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.source.IVerticalRulerInfo;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
+import org.eclipse.mylyn.internal.wikitext.ui.util.NlsResourceBundle;
 import org.eclipse.ui.editors.text.IFoldingCommandIds;
 import org.eclipse.ui.texteditor.AbstractRulerActionDelegate;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -26,8 +27,8 @@ public class ExpandAllFoldingRulerAction extends AbstractRulerActionDelegate {
 
 	@Override
 	protected IAction createAction(ITextEditor editor, IVerticalRulerInfo rulerInfo) {
-		TextOperationAction action = new TextOperationAction(Messages.getBundle(),
-				"ExpandAllFoldingRulerAction.", editor, ProjectionViewer.EXPAND_ALL, true); //$NON-NLS-1$
+		TextOperationAction action = new TextOperationAction(new NlsResourceBundle(Messages.class),
+				"ExpandAllFoldingRulerAction_", editor, ProjectionViewer.EXPAND_ALL, true); //$NON-NLS-1$
 		action.setActionDefinitionId(IFoldingCommandIds.FOLDING_EXPAND_ALL);
 		return action;
 	}

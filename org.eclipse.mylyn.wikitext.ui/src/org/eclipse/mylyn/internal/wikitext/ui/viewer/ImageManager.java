@@ -468,7 +468,7 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 											.log(
 													IStatus.ERROR,
 													MessageFormat.format(
-															Messages.getString("ImageManager.4"), new Object[] { location }), e); //$NON-NLS-1$
+															Messages.ImageManager_accessFailed, new Object[] { location }), e); 
 								}
 								urlToImageData.put(imgSrc, null);
 							}

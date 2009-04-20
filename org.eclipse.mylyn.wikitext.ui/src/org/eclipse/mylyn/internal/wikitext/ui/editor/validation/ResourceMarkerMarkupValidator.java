@@ -43,7 +43,7 @@ public class ResourceMarkerMarkupValidator extends DocumentRegionValidator {
 
 	@Override
 	protected void clearProblems(IProgressMonitor monitor, IDocument document, IRegion region) throws CoreException {
-		monitor.beginTask(Messages.getString("ResourceMarkerMarkupValidator.1"), 1); //$NON-NLS-1$
+		monitor.beginTask(Messages.ResourceMarkerMarkupValidator_clearingMarkers, 1); 
 		// nothing to do: we do all of this in the createProblems method
 		monitor.done();
 	}
@@ -54,7 +54,7 @@ public class ResourceMarkerMarkupValidator extends DocumentRegionValidator {
 		final int findMarkersWorkSize = 100;
 		final int zeroProblemsStep = 10;
 		monitor.beginTask(
-				Messages.getString("ResourceMarkerMarkupValidator.2"), problems.size() + findMarkersWorkSize + zeroProblemsStep); //$NON-NLS-1$
+				Messages.ResourceMarkerMarkupValidator_creatingMarkers, problems.size() + findMarkersWorkSize + zeroProblemsStep); 
 
 		// find and remove any existing validation errors in the given region.
 		List<IMarker> markersInRegion = new ArrayList<IMarker>(5);

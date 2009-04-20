@@ -15,6 +15,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.text.source.IVerticalRulerInfo;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor;
+import org.eclipse.mylyn.internal.wikitext.ui.util.NlsResourceBundle;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.editors.text.IFoldingCommandIds;
 import org.eclipse.ui.texteditor.AbstractRulerActionDelegate;
@@ -36,7 +37,7 @@ public class ToggleFoldingRulerAction extends AbstractRulerActionDelegate {
 	@Override
 	protected IAction createAction(ITextEditor editor, IVerticalRulerInfo rulerInfo) {
 		this.editor = editor;
-		action = new TextOperationAction(Messages.getBundle(), "ToggleFoldingRulerAction.", //$NON-NLS-1$
+		action = new TextOperationAction(new NlsResourceBundle(Messages.class), "ToggleFoldingRulerAction_", //$NON-NLS-1$
 				editor, ProjectionViewer.TOGGLE, true);
 		action.setActionDefinitionId(IFoldingCommandIds.FOLDING_TOGGLE);
 		return action;

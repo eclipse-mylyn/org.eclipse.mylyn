@@ -54,7 +54,7 @@ public class CssStyleFieldEditor extends StringFieldEditor {
 					String gap = value.substring(offset, rule.offset);
 					if (gap.trim().length() != 0) {
 						setErrorMessage(MessageFormat.format(
-								Messages.getString("CssStyleFieldEditor.1"), new Object[] { gap.trim(), offset })); //$NON-NLS-1$
+								Messages.CssStyleFieldEditor_unexpectedToken, new Object[] { gap.trim(), offset })); 
 						return false;
 					}
 				}
@@ -64,12 +64,12 @@ public class CssStyleFieldEditor extends StringFieldEditor {
 					StringBuilder recognizedNames = new StringBuilder();
 					for (String recognizedName : cssStyleManager.getRecognizedRuleNames()) {
 						if (recognizedNames.length() > 0) {
-							recognizedNames.append(Messages.getString("CssStyleFieldEditor.2")); //$NON-NLS-1$
+							recognizedNames.append(Messages.CssStyleFieldEditor_1); 
 						}
 						recognizedNames.append(recognizedName);
 					}
 					setErrorMessage(MessageFormat.format(
-							Messages.getString("CssStyleFieldEditor.0"), new Object[] { rule.name, recognizedNames })); //$NON-NLS-1$
+							Messages.CssStyleFieldEditor_unsupportedRule, new Object[] { rule.name, recognizedNames })); 
 					return false;
 				}
 				if (CssStyleManager.RULE_COLOR.equals(rule.name)
@@ -77,7 +77,7 @@ public class CssStyleFieldEditor extends StringFieldEditor {
 					Integer rgb = CssStyleManager.cssColorRgb(rule.value);
 					if (rgb == null) {
 						setErrorMessage(MessageFormat.format(
-								Messages.getString("CssStyleFieldEditor.3"), new Object[] { rule.value })); //$NON-NLS-1$
+								Messages.CssStyleFieldEditor_invalidColor, new Object[] { rule.value })); 
 						return false;
 					}
 				}
@@ -87,7 +87,7 @@ public class CssStyleFieldEditor extends StringFieldEditor {
 				String gap = value.substring(offset, value.length());
 				if (gap.trim().length() != 0) {
 					setErrorMessage(MessageFormat.format(
-							Messages.getString("CssStyleFieldEditor.1"), new Object[] { gap.trim(), offset })); //$NON-NLS-1$
+							Messages.CssStyleFieldEditor_unexpectedToken, new Object[] { gap.trim(), offset })); 
 					return false;
 				}
 			}

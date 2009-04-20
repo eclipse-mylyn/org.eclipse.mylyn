@@ -51,8 +51,8 @@ public class ProjectPropertyPage extends PropertyPage implements IWorkbenchPrope
 	private Button wikiTextNatureButton;
 
 	public ProjectPropertyPage() {
-		setTitle(Messages.getString("ProjectPropertyPage.0")); //$NON-NLS-1$
-		setDescription(Messages.getString("ProjectPropertyPage.1")); //$NON-NLS-1$
+		setTitle(Messages.ProjectPropertyPage_wikiText);  
+		setDescription(Messages.ProjectPropertyPage_configureInfo);  
 	}
 
 	@Override
@@ -61,19 +61,19 @@ public class ProjectPropertyPage extends PropertyPage implements IWorkbenchPrope
 		container.setLayout(new GridLayout(1, false));
 
 		wikiTextNatureButton = new Button(container, SWT.CHECK);
-		wikiTextNatureButton.setText(Messages.getString("ProjectPropertyPage.2")); //$NON-NLS-1$
+		wikiTextNatureButton.setText(Messages.ProjectPropertyPage_enableValidation);  
 
 		StringBuilder buf = new StringBuilder();
 		SortedSet<String> extensions = new TreeSet<String>(WikiText.getMarkupFileExtensions());
 		for (String extension : extensions) {
 			if (buf.length() > 0) {
-				buf.append(Messages.getString("ProjectPropertyPage.5")); //$NON-NLS-1$
+				buf.append(Messages.ProjectPropertyPage_3);  
 			}
-			buf.append(Messages.getString("ProjectPropertyPage.7")); //$NON-NLS-1$
+			buf.append(Messages.ProjectPropertyPage_4);  
 			buf.append(extension);
 		}
 		wikiTextNatureButton.setToolTipText(MessageFormat.format(
-				Messages.getString("ProjectPropertyPage.6"), new Object[] { buf.toString() })); //$NON-NLS-1$
+				Messages.ProjectPropertyPage_validation_tooltip, new Object[] { buf.toString() }));  
 
 		project = (IProject) getElement().getAdapter(IProject.class);
 
@@ -125,8 +125,8 @@ public class ProjectPropertyPage extends PropertyPage implements IWorkbenchPrope
 		try {
 			new ProgressMonitorDialog(getShell()).run(true, true, operation);
 		} catch (InvocationTargetException e) {
-			String message = Messages.getString("ProjectPropertyPage.3"); //$NON-NLS-1$
-			String title = Messages.getString("ProjectPropertyPage.4"); //$NON-NLS-1$
+			String message = Messages.ProjectPropertyPage_operationError;  
+			String title = Messages.ProjectPropertyPage_unexpectedError;  
 			ErrorDialog.openError(getShell(), title, message, WikiTextUiPlugin.getDefault().createStatus(IStatus.ERROR,
 					e.getCause()));
 		} catch (InterruptedException e) {

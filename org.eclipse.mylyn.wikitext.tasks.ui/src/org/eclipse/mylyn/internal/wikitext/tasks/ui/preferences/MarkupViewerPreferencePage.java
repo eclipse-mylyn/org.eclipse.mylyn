@@ -69,7 +69,7 @@ public class MarkupViewerPreferencePage extends PreferencePage implements IWorkb
 	private HtmlViewerConfiguration htmlViewerConfiguration;
 
 	public MarkupViewerPreferencePage() {
-		super(Messages.getString("MarkupViewerPreferencePage.0")); //$NON-NLS-1$
+		super(Messages.MarkupViewerPreferencePage_appearance); 
 	}
 
 	@Override
@@ -81,7 +81,7 @@ public class MarkupViewerPreferencePage extends PreferencePage implements IWorkb
 		GridLayoutFactory.fillDefaults().margins(5, 5).numColumns(1).applyTo(composite);
 
 		Label label = new Label(composite, SWT.WRAP);
-		label.setText(Messages.getString("MarkupViewerPreferencePage.1")); //$NON-NLS-1$
+		label.setText(Messages.MarkupViewerPreferencePage_appearanceInfo); 
 		GridDataFactory.fillDefaults().applyTo(label);
 
 		Preferences preferences = WikiTextUiPlugin.getDefault().getPreferences();
@@ -104,7 +104,7 @@ public class MarkupViewerPreferencePage extends PreferencePage implements IWorkb
 		}
 
 		label = new Label(composite, SWT.WRAP);
-		label.setText(Messages.getString("MarkupViewerPreferencePage.2")); //$NON-NLS-1$
+		label.setText(Messages.MarkupViewerPreferencePage_preview); 
 		GridDataFactory.fillDefaults().applyTo(label);
 
 		applyDialogFont(composite);
@@ -146,7 +146,7 @@ public class MarkupViewerPreferencePage extends PreferencePage implements IWorkb
 	}
 
 	private String createPreviewHtml() {
-		return Messages.getString("MarkupViewerPreferencePage.PreviewSampleHtml"); //$NON-NLS-1$
+		return Messages.MarkupViewerPreferencePage_previewHtml; 
 	}
 
 	private void updatePreview() {
@@ -204,7 +204,7 @@ public class MarkupViewerPreferencePage extends PreferencePage implements IWorkb
 		if (previewUpdateJob != null) {
 			previewUpdateJob.cancel();
 		}
-		previewUpdateJob = new UIJob(Display.getCurrent(), Messages.getString("MarkupViewerPreferencePage.4")) { //$NON-NLS-1$
+		previewUpdateJob = new UIJob(Display.getCurrent(), Messages.MarkupViewerPreferencePage_updatePreview) { 
 			@Override
 			public IStatus runInUIThread(IProgressMonitor monitor) {
 				previewUpdateJob = null;

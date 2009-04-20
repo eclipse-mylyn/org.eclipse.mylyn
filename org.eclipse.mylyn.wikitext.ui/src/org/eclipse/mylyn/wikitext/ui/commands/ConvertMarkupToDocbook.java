@@ -42,7 +42,7 @@ public class ConvertMarkupToDocbook extends AbstractMarkupResourceHandler {
 		if (newFile.exists()) {
 			if (!MessageDialog.openQuestion(
 					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					Messages.getString("ConvertMarkupToDocbook.1"), MessageFormat.format(Messages.getString("ConvertMarkupToDocbook.2"), new Object[] { newFile.getFullPath() }))) { //$NON-NLS-1$ //$NON-NLS-2$
+					Messages.ConvertMarkupToDocbook_overwrite, MessageFormat.format(Messages.ConvertMarkupToDocbook_fileExistsOverwrite, new Object[] { newFile.getFullPath() }))) {  
 				return;
 			}
 		}
@@ -90,13 +90,13 @@ public class ConvertMarkupToDocbook extends AbstractMarkupResourceHandler {
 		} catch (Throwable e) {
 			StringWriter message = new StringWriter();
 			PrintWriter out = new PrintWriter(message);
-			out.println(Messages.getString("ConvertMarkupToDocbook.6") + e.getMessage()); //$NON-NLS-1$
-			out.println(Messages.getString("ConvertMarkupToDocbook.7")); //$NON-NLS-1$
+			out.println(Messages.ConvertMarkupToDocbook_cannotConvert + e.getMessage()); 
+			out.println(Messages.ConvertMarkupToDocbook_detailsFollow); 
 			e.printStackTrace(out);
 			out.close();
 
 			MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					Messages.getString("ConvertMarkupToDocbook.8"), message.toString()); //$NON-NLS-1$
+					Messages.ConvertMarkupToDocbook_cannotCompleteOperation, message.toString()); 
 		}
 	}
 

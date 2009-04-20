@@ -115,13 +115,13 @@ public class HelpContent {
 			MarkupLanguage markupLanguage = WikiText.getMarkupLanguage(resourceContentLanguage);
 			if (markupLanguage == null) {
 				throw new IOException(MessageFormat.format(
-						Messages.getString("HelpContent.0"), new Object[] { resourceContentLanguage })); //$NON-NLS-1$
+						Messages.HelpContent_noSuchMarkupLanguage, new Object[] { resourceContentLanguage })); 
 			}
 			MarkupParser markupParser = new MarkupParser(markupLanguage);
 			return markupParser.parseToHtml(content);
 		} catch (final Exception e) {
 			throw new IOException(MessageFormat.format(
-					Messages.getString("HelpContent.1"), new Object[] { provider.getSymbolicName(), //$NON-NLS-1$
+					Messages.HelpContent_cannotAccessContent, new Object[] { provider.getSymbolicName(), 
 							resourcePath, e.getMessage() })) {
 				@Override
 				public Throwable getCause() {
@@ -163,7 +163,7 @@ public class HelpContent {
 				return resource;
 			}
 		}
-		throw new Exception(MessageFormat.format(Messages.getString("HelpContent.11"), new Object[] { resourcePath, //$NON-NLS-1$
+		throw new Exception(MessageFormat.format(Messages.HelpContent_cannotFindResource, new Object[] { resourcePath, 
 				provider.getSymbolicName() }));
 	}
 }

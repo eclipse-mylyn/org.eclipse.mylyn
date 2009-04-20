@@ -429,10 +429,10 @@ public class HtmlTextPresentationParser {
 
 	public void parse(InputSource xhtmlInput) throws SAXException, IOException {
 		if (presentation == null) {
-			throw new IllegalStateException(Messages.getString("HtmlTextPresentationParser.1")); //$NON-NLS-1$
+			throw new IllegalStateException(Messages.HtmlTextPresentationParser_presentationRequired); 
 		}
 		if (defaultFont == null) {
-			throw new IllegalStateException(Messages.getString("HtmlTextPresentationParser.0")); //$NON-NLS-1$
+			throw new IllegalStateException(Messages.HtmlTextPresentationParser_defaultFontRequired); 
 		}
 
 		cssStyleManager = new CssStyleManager(defaultFont, defaultMonospaceFont);

@@ -74,7 +74,7 @@ public abstract class AbstractMarkupResourceHandler extends AbstractHandler {
 							if (markupLanguage == null) {
 								MessageDialog.openError(
 										PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-										Messages.getString("AbstractMarkupResourceHandler.0"), MessageFormat.format(Messages.getString("AbstractMarkupResourceHandler.1"), //$NON-NLS-1$ //$NON-NLS-2$
+										Messages.AbstractMarkupResourceHandler_unexpectedError, MessageFormat.format(Messages.AbstractMarkupResourceHandler_markupLanguageMappingFailed,  
 												new Object[] { file.getName() }));
 								return null;
 							}

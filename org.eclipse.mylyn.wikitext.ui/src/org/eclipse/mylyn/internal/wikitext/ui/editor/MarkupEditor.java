@@ -71,6 +71,7 @@ import org.eclipse.mylyn.internal.wikitext.ui.editor.preferences.Preferences;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.reconciler.MarkupMonoReconciler;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.FastMarkupPartitioner;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.MarkupDocumentProvider;
+import org.eclipse.mylyn.internal.wikitext.ui.util.NlsResourceBundle;
 import org.eclipse.mylyn.wikitext.core.WikiText;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
@@ -231,8 +232,8 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 
 		{
 			previewTab = new CTabItem(tabFolder, SWT.NONE);
-			previewTab.setText(Messages.getString("MarkupEditor.PreviewView_label")); //$NON-NLS-1$
-			previewTab.setToolTipText(Messages.getString("MarkupEditor.PreviewView_tooltip")); //$NON-NLS-1$
+			previewTab.setText(Messages.MarkupEditor_preview);
+			previewTab.setToolTipText(Messages.MarkupEditor_preview_tooltip);
 
 			browser = new Browser(tabFolder, SWT.NONE);
 			// bug 260479: open hyperlinks in a browser
@@ -637,7 +638,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 				return;
 			}
 		}
-		updateOutlineJob = new UIJob(Messages.getString("MarkupEditor.2")) { //$NON-NLS-1$
+		updateOutlineJob = new UIJob(Messages.MarkupEditor_updateOutline) {
 			@Override
 			public IStatus runInUIThread(IProgressMonitor monitor) {
 				synchronized (MarkupEditor.this) {
@@ -992,15 +993,16 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 
 			MarkupLanguage markupLanguage = getMarkupLanguage();
 			if (markupLanguage == null) {
-				sourceTab.setText(Messages.getString("MarkupEditor.SourceView_label")); //$NON-NLS-1$
+				sourceTab.setText(Messages.MarkupEditor_markupSource);
 				if (!isCarbon) {
-					sourceTab.setToolTipText(Messages.getString("MarkupEditor.SourceView_tooltip")); //$NON-NLS-1$
+					sourceTab.setToolTipText(Messages.MarkupEditor_markupSource_tooltip);
 				}
 			} else {
-				sourceTab.setText(Messages.getMessage("MarkupEditor.SourceView_label2", markupLanguage.getName())); //$NON-NLS-1$
+				sourceTab.setText(MessageFormat.format(Messages.MarkupEditor_markupSource_named,
+						new Object[] { markupLanguage.getName() }));
 				if (!isCarbon) {
-					sourceTab.setToolTipText(Messages.getMessage(
-							"MarkupEditor.SourceView_tooltip2", markupLanguage.getName())); //$NON-NLS-1$
+					sourceTab.setToolTipText(MessageFormat.format(Messages.MarkupEditor_markupSource_tooltip_named,
+							new Object[] { markupLanguage.getName() }));
 				}
 			}
 		}
@@ -1044,7 +1046,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 			languageName = file.getPersistentProperty(new QualifiedName(WikiTextUiPlugin.getDefault().getPluginId(),
 					MarkupEditor.MARKUP_LANGUAGE));
 		} catch (CoreException e) {
-			WikiTextUiPlugin.getDefault().log(IStatus.ERROR, Messages.getString("MarkupEditor.0"), e); //$NON-NLS-1$
+			WikiTextUiPlugin.getDefault().log(IStatus.ERROR, Messages.MarkupEditor_markupPreferenceError, e);
 			return null;
 		}
 		return languageName;
@@ -1065,8 +1067,11 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 				file.setPersistentProperty(new QualifiedName(WikiTextUiPlugin.getDefault().getPluginId(),
 						MARKUP_LANGUAGE), preference);
 			} catch (CoreException e) {
-				WikiTextUiPlugin.getDefault().log(IStatus.ERROR,
-						MessageFormat.format(Messages.getString("MarkupEditor.1"), new Object[] { preference }), e); //$NON-NLS-1$
+				WikiTextUiPlugin.getDefault()
+						.log(
+								IStatus.ERROR,
+								MessageFormat.format(Messages.MarkupEditor_markupPreferenceError2,
+										new Object[] { preference }), e);
 			}
 		}
 	}
@@ -1090,7 +1095,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 //		action = new ShowCheatSheetAction(this);
 //		setAction(action.getId(),action);
 
-		action = new ContentAssistAction(Messages.getBundle(), "ContentAssistProposal.", this); //$NON-NLS-1$
+		action = new ContentAssistAction(new NlsResourceBundle(Messages.class), "ContentAssistProposal_", this); //$NON-NLS-1$
 		action.setActionDefinitionId(ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
 		setAction("ContentAssistProposal", action); //$NON-NLS-1$
 		markAsStateDependentAction("ContentAssistProposal", true); //$NON-NLS-1$
@@ -1110,7 +1115,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		super.editorContextMenuAboutToShow(menu);
 
 		final MarkupLanguage markupLanguage = getMarkupLanguage();
-		MenuManager markupLanguageMenu = new MenuManager(Messages.getString("MarkupEditor.MarkupLanguage")); //$NON-NLS-1$
+		MenuManager markupLanguageMenu = new MenuManager(Messages.MarkupEditor_markupLanguage);
 		for (String markupLanguageName : new TreeSet<String>(WikiText.getMarkupLanguageNames())) {
 			markupLanguageMenu.add(new SetMarkupLanguageAction(this, markupLanguageName, markupLanguage != null
 					&& markupLanguageName.equals(markupLanguage.getName())));

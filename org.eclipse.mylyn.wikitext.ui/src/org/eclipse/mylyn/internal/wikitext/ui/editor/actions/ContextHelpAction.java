@@ -31,7 +31,7 @@ public class ContextHelpAction extends Action {
 	public ContextHelpAction(String contextId) {
 		super("", AS_PUSH_BUTTON); //$NON-NLS-1$
 		this.contextId = contextId;
-		setToolTipText(Messages.getString("ContextHelpAction.2")); //$NON-NLS-1$
+		setToolTipText(Messages.ContextHelpAction_tooltip); 
 		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(WikiTextUiPlugin.getDefault().getPluginId(),
 				"icons/help.gif")); //$NON-NLS-1$
 	}
