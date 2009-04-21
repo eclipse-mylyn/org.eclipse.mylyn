@@ -769,6 +769,9 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		outlineModel.clear();
 		outlineModel.moveChildren(rootItem);
 
+		IFile file = getFile();
+		outlineModel.setResourcePath(file == null ? null : file.getFullPath().toString());
+
 		if (outlinePage != null && outlinePage.getControl() != null && !outlinePage.getControl().isDisposed()) {
 			outlinePage.refresh();
 

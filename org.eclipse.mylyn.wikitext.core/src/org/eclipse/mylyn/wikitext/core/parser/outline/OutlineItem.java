@@ -195,8 +195,30 @@ public class OutlineItem {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		final OutlineItem other = (OutlineItem) obj;
-		return other.hashCode() == hashCode() && other.calculatePositionKey().equals(calculatePositionKey());
+		OutlineItem other = (OutlineItem) obj;
+		// we want items in the same position to be equal even if their ids are not equal, *except* in the case
+		// where they're from different files.  By having position-based equality we can maintain state in the UI even
+		// as the user types in the heading area.
+		boolean isEqual = other.hashCode() == hashCode() && other.calculatePositionKey().equals(calculatePositionKey());
+		if (isEqual) {
+			// bug 272721 in some rare cases the content outline would not update properly due to false equality here
+			OutlineItem thisRoot = computeRoot(this);
+			OutlineItem otherRoot = computeRoot(other);
+			if (thisRoot != otherRoot && thisRoot.getResourcePath() != otherRoot.getResourcePath()) {
+				if (thisRoot.getResourcePath() != null
+						&& !thisRoot.getResourcePath().equals(otherRoot.getResourcePath())) {
+					isEqual = false;
+				}
+			}
+		}
+		return isEqual;
+	}
+
+	private OutlineItem computeRoot(OutlineItem item) {
+		while (!item.isRootItem()) {
+			item = item.getParent();
+		}
+		return item;
 	}
 
 	public void clear() {
@@ -388,5 +410,13 @@ public class OutlineItem {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * @since 1.1
+	 */
+	@Override
+	public String toString() {
+		return "OutlineItem(" + calculatePositionKey() + "/" + getId() + "/" + System.identityHashCode(this) + ")"; //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$ //$NON-NLS-4$
 	}
 }

@@ -381,7 +381,11 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 						OutlineParser outlineParser = new OutlineParser();
 						outlineParser.setMarkupLanguage(language.clone());
 						String markup = document.get();
-						return outlineParser.parse(markup);
+						final OutlineItem outline = outlineParser.parse(markup);
+						if (MarkupSourceViewerConfiguration.this.file != null) {
+							outline.setResourcePath(MarkupSourceViewerConfiguration.this.file.getFullPath().toString());
+						}
+						return outline;
 					}
 				}
 			}
