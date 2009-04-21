@@ -1419,7 +1419,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		}
 	}
 
-	// FIXME move the enablement to the action classes
+	// TODO move the enablement to the action classes
 	private void updateActionEnablement(Action action, ITaskContainer element) {
 		if (element instanceof ITask) {
 			if (action instanceof OpenWithBrowserAction) {
