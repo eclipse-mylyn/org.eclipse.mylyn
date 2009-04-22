@@ -21,6 +21,7 @@ import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
  * 
  * 
  * @author David Green
+ * @author Peter Friese bug 273355 Support image scaling for Textile -> DocBook
  */
 public class TextileToDocbookTest extends TestCase {
 
@@ -99,5 +100,36 @@ public class TextileToDocbookTest extends TestCase {
 		assertTrue(Pattern.compile("<para\\s*id=\"" + Pattern.quote(linkend) + "\">", Pattern.MULTILINE)
 				.matcher(book)
 				.find());
+	}
+
+	public void testImageScaling() throws Exception {
+		textileToDocbook.setBookTitle("Test");
+		String book = textileToDocbook.parse("Here comes an !{width:80%}imageUrl! with more text");
+
+		System.out.println("Book: " + book);
+
+		Matcher matcher = Pattern.compile("<imagedata .* scale=\"80\"/>", Pattern.MULTILINE).matcher(book);
+		assertTrue(matcher.find());
+	}
+
+	public void testImageWidth() throws Exception {
+		textileToDocbook.setBookTitle("Test");
+		String book = textileToDocbook.parse("Here comes an !{width:80px}imageUrl! with more text");
+
+		System.out.println("Book: " + book);
+
+		Matcher matcher = Pattern.compile("<imagedata .* width=\"80px\"/>", Pattern.MULTILINE).matcher(book);
+		assertTrue(matcher.find());
+	}
+
+	public void testImageWidthDepth() throws Exception {
+		textileToDocbook.setBookTitle("Test");
+		String book = textileToDocbook.parse("Here comes an !{width:80px;height:90px;}imageUrl! with more text");
+
+		System.out.println("Book: " + book);
+
+		Matcher matcher = Pattern.compile("<imagedata .* width=\"80px\"\\s.*?depth=\"90px\"/>", Pattern.MULTILINE)
+				.matcher(book);
+		assertTrue(matcher.find());
 	}
 }

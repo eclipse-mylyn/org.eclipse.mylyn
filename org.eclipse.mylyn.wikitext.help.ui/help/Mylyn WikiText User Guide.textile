@@ -385,6 +385,10 @@ here is <a href="#">a working example</a>
 
 h3. Images and DocBook
 
+DocBook is quite flexible about how images are handled.  This section discusses how DocBook rendering can be altered with the use of specific markup.
+
+h4. Inline Images v.s. Block Images
+
 When handling images in a conversion of Textile markup to DocBook markup, there are several choices for the resulting DocBook markup.  By default images are converted as follows:
 
 bc. 
@@ -393,7 +397,7 @@ bc.
 results in:
 
 bc. 
-<mediaobject><imageobject><imagedata fileref=\"images/foo.png\"/></imageobject></mediaobject>
+<mediaobject><imageobject><imagedata fileref="images/foo.png"/></imageobject></mediaobject>
 
 @<mediaobject/>@ is useful for some cases, however there are times when @<inlinemediaobject/>@ should be used instead.  To achieve this result, add the @inline@ class to your image as follows:
 
@@ -403,7 +407,33 @@ bc.
 The conversion will then result in the following:
 
 bc. 
-<inlinemediaobject><imageobject><imagedata fileref=\"images/foo.png\"/></imageobject></inlinemediaobject> 
+<inlinemediaobject><imageobject><imagedata fileref="images/foo.png"/></imageobject></inlinemediaobject> 
+
+h4. Image Scaling
+
+DocBook supports image scaling with the @scale@ attribute.  For example:
+
+bc. 
+<imagedata fileref="images/foo.png" scale=80"/>
+
+To achieve this effect with Textile markup use syntax as follows:
+
+bc. 
+!{width=80%}images/foo.png!
+
+More information about image scaling in DocBook is available at  "imagedata: Scaling":http://www.docbook.org/tdg/en/html/imagedata-x.html.
+
+h4. Image Size
+
+Image size can be specified in DocBook using @width@ and @depth@ attributes for width and height, respectively:
+
+bc. 
+<imagedata fileref="images/foo.png" width="32px" height="64px"/>
+
+This is achieved with Textile markup as follows:
+
+bc. 
+!{width=32px;height=64px}images/foo.png!
 
 h3. Extended Blocks
 

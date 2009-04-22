@@ -13,13 +13,17 @@ package org.eclipse.mylyn.wikitext.core.parser.builder;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 import java.util.TreeMap;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.mylyn.internal.wikitext.core.util.css.CssParser;
+import org.eclipse.mylyn.internal.wikitext.core.util.css.CssRule;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.util.MarkupToDocbook;
 import org.eclipse.mylyn.wikitext.core.util.FormattingXMLStreamWriter;
@@ -30,6 +34,7 @@ import org.eclipse.mylyn.wikitext.core.util.anttask.MarkupToDocbookTask;
  * A builder that can emit <a href="http://www.docbook.org/">Docbook</a>
  * 
  * @author David Green
+ * @author Peter Friese bug 273355 Support image scaling for Textile -> DocBook
  * 
  * @see MarkupToDocbook
  * @see MarkupToDocbookTask
@@ -37,6 +42,8 @@ import org.eclipse.mylyn.wikitext.core.util.anttask.MarkupToDocbookTask;
  * @since 1.0
  */
 public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
+
+	private static final Pattern PERCENTAGE = Pattern.compile("(\\d+)%"); //$NON-NLS-1$
 
 	private static final Pattern CSS_CLASS_INLINE = Pattern.compile("(^|\\s+)inline(\\s+|$)"); //$NON-NLS-1$
 
@@ -508,12 +515,38 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	private void emitImage(Attributes attributes, String url, boolean inline) {
+		// see http://www.docbook.org/tdg/en/html/imagedata-x.html
 		ensureBlockElementsOpen();
 		writer.writeStartElement(inline ? "inlinemediaobject" : "mediaobject"); //$NON-NLS-1$ //$NON-NLS-2$
 		applyAttributes(attributes);
 		writer.writeStartElement("imageobject"); //$NON-NLS-1$
 		writer.writeEmptyElement("imagedata"); //$NON-NLS-1$
 		writer.writeAttribute("fileref", makeUrlAbsolute(url)); //$NON-NLS-1$
+		String cssStyle = attributes.getCssStyle();
+		if (cssStyle != null) {
+			String width = null;
+			String depth = null;
+			Iterator<CssRule> ruleIterator = new CssParser().createRuleIterator(cssStyle);
+			while (ruleIterator.hasNext()) {
+				CssRule rule = ruleIterator.next();
+				if ("width".equals(rule.name)) { //$NON-NLS-1$
+					width = rule.value;
+				} else if ("height".equals(rule.name)) { //$NON-NLS-1$
+					depth = rule.value;
+				}
+			}
+			if (width != null) {
+				Matcher matcher = PERCENTAGE.matcher(width);
+				if (matcher.matches()) {
+					writer.writeAttribute("scale", matcher.group(1)); //$NON-NLS-1$
+				} else {
+					writer.writeAttribute("width", width); //$NON-NLS-1$
+					if (depth != null) {
+						writer.writeAttribute("depth", depth); //$NON-NLS-1$
+					}
+				}
+			}
+		}
 		writer.writeEndElement(); // imageobject
 		writer.writeEndElement(); // inlinemediaobject or mediaobject
 	}
