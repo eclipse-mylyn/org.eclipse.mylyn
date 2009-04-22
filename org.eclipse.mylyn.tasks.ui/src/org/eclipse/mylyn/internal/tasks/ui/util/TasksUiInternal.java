@@ -45,6 +45,7 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
@@ -90,7 +91,6 @@ import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
@@ -470,14 +470,14 @@ public class TasksUiInternal {
 		StatusHandler.log(status);
 		IWorkbench workbench = PlatformUI.getWorkbench();
 		if (workbench != null && !workbench.getDisplay().isDisposed()) {
-			displayStatus(getShell(), title, status, true);
+			displayStatus(WorkbenchUtil.getShell(), title, status, true);
 		}
 	}
 
 	public static void displayStatus(final String title, final IStatus status) {
 		IWorkbench workbench = PlatformUI.getWorkbench();
 		if (workbench != null && !workbench.getDisplay().isDisposed()) {
-			displayStatus(getShell(), title, status, false);
+			displayStatus(WorkbenchUtil.getShell(), title, status, false);
 		} else {
 			StatusHandler.log(status);
 		}
@@ -647,35 +647,6 @@ public class TasksUiInternal {
 	}
 
 	/**
-	 * Return the modal shell that is currently open. If there isn't one then return null.
-	 * <p>
-	 * <b>Note: Applied from patch on bug 99472.</b>
-	 * 
-	 * @param shell
-	 *            A shell to exclude from the search. May be <code>null</code>.
-	 * 
-	 * @return Shell or <code>null</code>.
-	 */
-	private static Shell getModalShellExcluding(Shell shell) {
-		IWorkbench workbench = PlatformUI.getWorkbench();
-		Shell[] shells = workbench.getDisplay().getShells();
-		int modal = SWT.APPLICATION_MODAL | SWT.SYSTEM_MODAL | SWT.PRIMARY_MODAL;
-		for (Shell shell2 : shells) {
-			if (shell2.equals(shell)) {
-				break;
-			}
-			// Do not worry about shells that will not block the user.
-			if (shell2.isVisible()) {
-				int style = shell2.getStyle();
-				if ((style & modal) != 0) {
-					return shell2;
-				}
-			}
-		}
-		return null;
-	}
-
-	/**
 	 * Utility method to get the best parenting possible for a dialog. If there is a modal shell create it so as to
 	 * avoid two modal dialogs. If not then return the shell of the active workbench window. If neither can be found
 	 * return null.
@@ -683,37 +654,11 @@ public class TasksUiInternal {
 	 * <b>Note: Applied from patch on bug 99472.</b>
 	 * 
 	 * @return Shell or <code>null</code>
+	 * @deprecated Use {@link WorkbenchUtil#getShell()} instead
 	 */
+	@Deprecated
 	public static Shell getShell() {
-		if (!PlatformUI.isWorkbenchRunning() || PlatformUI.getWorkbench().isClosing()) {
-			return null;
-		}
-		Shell modal = getModalShellExcluding(null);
-		if (modal != null) {
-			return modal;
-		}
-		return getNonModalShell();
-	}
-
-	/**
-	 * Get the active non modal shell. If there isn't one return null.
-	 * <p>
-	 * <b>Note: Applied from patch on bug 99472.</b>
-	 * 
-	 * @return Shell
-	 */
-	private static Shell getNonModalShell() {
-		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		if (window == null) {
-			IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
-			if (windows.length > 0) {
-				return windows[0].getShell();
-			}
-		} else {
-			return window.getShell();
-		}
-
-		return null;
+		return WorkbenchUtil.getShell();
 	}
 
 	public static TaskData createTaskData(TaskRepository taskRepository, ITaskMapping initializationData,

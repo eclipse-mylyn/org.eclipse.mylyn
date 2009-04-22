@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.commons.core.AbstractErrorReporter;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.bugs.wizards.ReportErrorWizard;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -85,7 +86,7 @@ public class TaskErrorReporter {
 
 	public void handle(final IStatus status) {
 		ReportErrorWizard wizard = new ReportErrorWizard(TaskErrorReporter.this, status);
-		WizardDialog dialog = new WizardDialog(TasksUiInternal.getShell(), wizard);
+		WizardDialog dialog = new WizardDialog(WorkbenchUtil.getShell(), wizard);
 		dialog.setBlockOnOpen(false);
 		dialog.setPageSize(500, 200);
 		dialog.open();

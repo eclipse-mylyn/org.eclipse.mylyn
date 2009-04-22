@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.mylyn.internal.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonsUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.ICoreRunnable;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
@@ -104,12 +105,12 @@ public class DeleteTaskRepositoryAction extends AbstractTaskRepositoryAction {
 		// confirm that the user wants to delete all tasks and queries that are associated
 		boolean deleteConfirmed;
 		if (queriesToDelete.size() > 0 || tasksToDelete.size() > 0) {
-			deleteConfirmed = MessageDialog.openQuestion(TasksUiInternal.getShell(),
+			deleteConfirmed = MessageDialog.openQuestion(WorkbenchUtil.getShell(),
 					Messages.DeleteTaskRepositoryAction_Confirm_Delete, NLS.bind(
 							Messages.DeleteTaskRepositoryAction_Delete_the_selected_task_repositories, new Integer[] {
 									tasksToDelete.size(), queriesToDelete.size() }));
 		} else {
-			deleteConfirmed = MessageDialog.openQuestion(TasksUiInternal.getShell(),
+			deleteConfirmed = MessageDialog.openQuestion(WorkbenchUtil.getShell(),
 					Messages.DeleteTaskRepositoryAction_Confirm_Delete, NLS.bind(
 							Messages.DeleteTaskRepositoryAction_Delete_Specific_Task_Repository,
 							new String[] { repositoryToDelete.getRepositoryLabel() }));

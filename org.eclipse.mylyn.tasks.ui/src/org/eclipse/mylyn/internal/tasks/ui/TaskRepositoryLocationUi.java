@@ -19,9 +19,9 @@ import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.commons.net.UnsupportedRequestException;
+import org.eclipse.mylyn.internal.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryLocation;
 import org.eclipse.mylyn.internal.tasks.ui.dialogs.TaskRepositoryCredentialsDialog;
-import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -104,7 +104,7 @@ public class TaskRepositoryLocationUi extends TaskRepositoryLocation {
 
 		public void run() {
 			//Shell shell = Display.getCurrent().getActiveShell();
-			Shell shell = TasksUiInternal.getShell();
+			Shell shell = WorkbenchUtil.getShell();
 			if (shell != null && !shell.isDisposed()) {
 				TaskRepositoryCredentialsDialog dialog = TaskRepositoryCredentialsDialog.createDialog(shell);
 				initializeDialog(dialog);

@@ -19,6 +19,7 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.mylyn.internal.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
@@ -54,7 +55,7 @@ public class TasksUiMenus {
 				}
 
 				/* Launch Browser */
-				FileDialog fileChooser = new FileDialog(TasksUiInternal.getShell(), SWT.SAVE);
+				FileDialog fileChooser = new FileDialog(WorkbenchUtil.getShell(), SWT.SAVE);
 				String fname = attachment.getFileName();
 				// default name if none is found
 				if (fname.equals("")) { //$NON-NLS-1$
@@ -80,7 +81,7 @@ public class TasksUiMenus {
 
 				File file = new File(filePath);
 				if (file.exists()) {
-					if (!MessageDialog.openConfirm(TasksUiInternal.getShell(), Messages.TasksUiMenus_File_exists_,
+					if (!MessageDialog.openConfirm(WorkbenchUtil.getShell(), Messages.TasksUiMenus_File_exists_,
 							Messages.TasksUiMenus_Overwrite_existing_file_ + file.getName())) {
 						return;
 					}

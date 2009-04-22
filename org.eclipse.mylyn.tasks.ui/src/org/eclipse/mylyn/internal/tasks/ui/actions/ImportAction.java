@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
@@ -51,7 +52,7 @@ public class ImportAction implements IViewActionDelegate {
 	}
 
 	public void run(IAction action) {
-		FileDialog dialog = new FileDialog(TasksUiInternal.getShell());
+		FileDialog dialog = new FileDialog(WorkbenchUtil.getShell());
 		dialog.setText(Messages.ImportAction_Dialog_Title);
 		ImportExportUtil.configureFilter(dialog);
 		String path = dialog.open();
