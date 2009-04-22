@@ -59,7 +59,8 @@
          point="org.eclipse.mylyn.wikitext.ui.cheatSheet">
       <content
             markupLanguage="Confluence"
-            resource="help/cheatSheet/Confluence.confluence">
+            resource="help/cheatSheet/Confluence.confluence"
+            contentLanguage="Confluence">
       </content>
    </extension>
 

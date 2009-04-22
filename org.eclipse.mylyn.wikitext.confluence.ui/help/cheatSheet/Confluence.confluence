@@ -12,10 +12,15 @@ h4. Phrase Modifiers
 
 h4. Block Modifiers
 
-| {{hn.}} | Heading |
-| {{{quote}}} | Block quote |
+| {{hn.}} | Heading (where n is some digit, for example h1) |
+| {{bq.}} | Block quote (single paragraph) |
+| {{{quote}}} | Block quote (multiple paragraphs) |
 | {{{code}}} | Block code |
-| {{{noformat}}} | Pre-formatted |
+| {{{note:title=Note}}} | A simple note |
+| {{{warning:title=Caution}}} | A warning note |
+| {{{info:title=Useful Information}}} | Informational note |
+| {{{tip:title=Tip}}} | A help tip |
+| {{{noformat}}} | Pre-formatted block |
 | {{#}} | Numeric list |
 | {{*}} | Bulleted list |
 
@@ -25,3 +30,10 @@ h4. Links
 [Title|http://www.example.com]
 [Title|http://www.example.com|tip]
 {noformat}
+
+h4. Text Breaks
+
+| (empty line) | produces a new paragraph |
+| {{----}} | horizontal rule |
+| {{---}} | --- symbol (emdash) |
+| {{--}} | -- symbol (endash) | 
