@@ -14,6 +14,7 @@ import java.io.IOException;
 
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.mylyn.wikitext.confluence.core.ConfluenceLanguage;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 /**
@@ -60,6 +61,20 @@ public class FastMarkupPartitionerTest extends AbstractDocumentTest {
 		partitioner.setMarkupLanguage(new TextileLanguage());
 
 		document.set("a _sample *bold*_");
+
+		partitioner.connect(document);
+		document.setDocumentPartitioner(partitioner);
+	}
+
+	/**
+	 * test for bug 273100
+	 */
+	public void testConfluenceTipException_bug273100() {
+		IDocument document = new Document();
+		FastMarkupPartitioner partitioner = new FastMarkupPartitioner();
+		partitioner.setMarkupLanguage(new ConfluenceLanguage());
+
+		document.set("{tip}\ntext1\n\ntext2\n\ntext3\n{tip}\ntext4\n");
 
 		partitioner.connect(document);
 		document.setDocumentPartitioner(partitioner);

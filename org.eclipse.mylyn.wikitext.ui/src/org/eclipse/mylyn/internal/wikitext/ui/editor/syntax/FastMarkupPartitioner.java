@@ -179,12 +179,12 @@ public class FastMarkupPartitioner extends FastPartitioner {
 					continue;
 				}
 				if (previous != null && region.getOffset() < (previous.getOffset() + previous.getLength())) {
-					String message = MessageFormat.format(
-							Messages.FastMarkupPartitioner_0, new Object[] { region, previous, markupLanguage.getName() }); 
+					String message = MessageFormat.format(Messages.FastMarkupPartitioner_0, new Object[] { region,
+							previous, markupLanguage.getName() });
 					if (FastMarkupPartitioner.debug) {
 						String markupSavePath = saveToTempFile(markupLanguage, markupContent);
-						message = MessageFormat.format(
-								Messages.FastMarkupPartitioner_1, new Object[] { message, markupSavePath }); 
+						message = MessageFormat.format(Messages.FastMarkupPartitioner_1, new Object[] { message,
+								markupSavePath });
 					}
 					throw new IllegalStateException(message);
 				}
@@ -396,8 +396,9 @@ public class FastMarkupPartitioner extends FastPartitioner {
 								partitions.add(partition);
 							} else {
 								// start on same offset, but new partition is smaller
-								// so move parent after new partition
+								// so move parent after new partition and shrink it by the corresponding amount
 								parent.offset = partition.offset + partition.length;
+								parent.length -= partition.length;
 								partitions.add(partitions.size() - 1, partition);
 							}
 						} else {
