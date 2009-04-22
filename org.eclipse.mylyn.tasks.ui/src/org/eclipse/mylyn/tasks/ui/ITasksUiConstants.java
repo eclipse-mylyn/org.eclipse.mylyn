@@ -19,14 +19,39 @@ package org.eclipse.mylyn.tasks.ui;
  */
 public interface ITasksUiConstants {
 
+	/**
+	 * @since 3.0
+	 */
 	public static final String ID_COMMAND_MARK_TASK_UNREAD = "org.eclipse.mylyn.tasks.ui.command.markTaskUnread"; //$NON-NLS-1$
 
+	/**
+	 * @since 3.0
+	 */
 	public static final String ID_COMMAND_MARK_TASK_READ = "org.eclipse.mylyn.tasks.ui.command.markTaskRead"; //$NON-NLS-1$
 
+	/**
+	 * @since 3.0
+	 */
 	public static final String ID_PAGE_PLANNING = "org.eclipse.mylyn.tasks.ui.pageFactory.Planning"; //$NON-NLS-1$
 
+	/**
+	 * @since 3.0
+	 */
 	public static final String ID_PERSPECTIVE_PLANNING = "org.eclipse.mylyn.tasks.ui.perspectives.planning"; //$NON-NLS-1$
 
+	/**
+	 * @since 3.0
+	 */
 	public static final String ID_PREFERENCES_COLORS_AND_FONTS = "org.eclipse.ui.preferencePages.ColorsAndFonts"; //$NON-NLS-1$
+
+	/**
+	 * @since 3.2
+	 */
+	public static final String ID_VIEW_TASK_LIST = "org.eclipse.mylyn.tasks.ui.views.tasks"; //$NON-NLS-1$
+
+	/**
+	 * @since 3.2
+	 */
+	public static final String ID_VIEW_TASK_REPOSITORIES = "org.eclipse.mylyn.tasks.ui.views.repositories"; //$NON-NLS-1$
 
 }

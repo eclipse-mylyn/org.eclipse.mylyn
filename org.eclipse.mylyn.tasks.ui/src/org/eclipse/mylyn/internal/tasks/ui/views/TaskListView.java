@@ -119,6 +119,7 @@ import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.core.TaskActivationAdapter;
 import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
+import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.ui.TaskElementLabelProvider;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
@@ -295,7 +296,10 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 	// TODO e3.4 replace with SWT.NO_SCROLL constant
 	public static final int SWT_NO_SCROLL = 1 << 4;
 
-	public static final String ID = "org.eclipse.mylyn.tasks.ui.views.tasks"; //$NON-NLS-1$
+	/**
+	 * @deprecated Use {@link ITasksUiConstants#ID_VIEW_TASK_LIST} instead
+	 */
+	public static final String ID = ITasksUiConstants.ID_VIEW_TASK_LIST; //$NON-NLS-1$
 
 	public static final String LABEL_VIEW = Messages.TaskListView_Task_List;
 
@@ -682,7 +686,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		if (PlatformUI.isWorkbenchRunning()) {
 			IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			if (activePage != null) {
-				IViewPart view = activePage.findView(ID);
+				IViewPart view = activePage.findView(ITasksUiConstants.ID_VIEW_TASK_LIST);
 				if (view instanceof TaskListView) {
 					return (TaskListView) view;
 				}
@@ -726,7 +730,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 			return;
 		}
 
-		IViewReference reference = getSite().getPage().findViewReference(ID);
+		IViewReference reference = getSite().getPage().findViewReference(ITasksUiConstants.ID_VIEW_TASK_LIST);
 		boolean shouldSetDescription = false;
 		if (reference != null && reference.isFastView() && !getSite().getPage().isPartVisible(this)) {
 			shouldSetDescription = true;
@@ -1055,7 +1059,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 		IContextService contextSupport = (IContextService) getSite().getService(IContextService.class);
 		if (contextSupport != null) {
-			contextSupport.activateContext(TaskListView.ID);
+			contextSupport.activateContext(ITasksUiConstants.ID_VIEW_TASK_LIST);
 		}
 
 		getSite().setSelectionProvider(getViewer());
@@ -1179,7 +1183,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 		public void partDeactivated(IWorkbenchPart part) {
 			if (part == TaskListView.this) {
-				IViewReference reference = getSite().getPage().findViewReference(ID);
+				IViewReference reference = getSite().getPage().findViewReference(ITasksUiConstants.ID_VIEW_TASK_LIST);
 				if (reference != null && reference.isFastView()) {
 					updateDescription();
 				}

@@ -47,6 +47,7 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.search.ui.IContextMenuConstants;
@@ -157,7 +158,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 
 	private final Action refineSearchAction;
 
-	private static final String[] SHOW_IN_TARGETS = new String[] { TaskListView.ID };
+	private static final String[] SHOW_IN_TARGETS = new String[] { ITasksUiConstants.ID_VIEW_TASK_LIST };
 
 	private TaskListToolTip toolTip;
 

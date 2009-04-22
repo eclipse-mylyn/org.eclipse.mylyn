@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.util.ArrayList;
 
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
@@ -32,7 +32,7 @@ public class PlanningPerspectiveFactory implements IPerspectiveFactory {
 	public void defineActions(IPageLayout layout) {
 		layout.addShowViewShortcut(IPageLayout.ID_RES_NAV);
 		layout.addShowViewShortcut(IPageLayout.ID_PROP_SHEET);
-		layout.addShowViewShortcut(TaskListView.ID);
+		layout.addShowViewShortcut(ITasksUiConstants.ID_VIEW_TASK_LIST);
 		// layout.addShowViewShortcut(TaskActivityView.ID);
 
 		layout.addActionSet(IPageLayout.ID_NAVIGATE_ACTION_SET);
@@ -43,7 +43,7 @@ public class PlanningPerspectiveFactory implements IPerspectiveFactory {
 		String editorArea = layout.getEditorArea();
 
 		IFolderLayout topRight = layout.createFolder("topRight", IPageLayout.RIGHT, (float) 0.6, editorArea);//$NON-NLS-1$
-		topRight.addView(TaskListView.ID);
+		topRight.addView(ITasksUiConstants.ID_VIEW_TASK_LIST);
 
 		// IFolderLayout bottomLeft = layout.createFolder(
 		// "bottomLeft", IPageLayout.BOTTOM, (float) 0.50,//$NON-NLS-1$

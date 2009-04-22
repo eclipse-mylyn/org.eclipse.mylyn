@@ -28,6 +28,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
+import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
@@ -119,7 +120,7 @@ public class TaskTestUtil {
 		TaskListView taskListView = (TaskListView) PlatformUI.getWorkbench()
 				.getActiveWorkbenchWindow()
 				.getActivePage()
-				.showView(TaskListView.ID);
+				.showView(ITasksUiConstants.ID_VIEW_TASK_LIST);
 		Assert.assertSame("Failed to make task list view active", PlatformUI.getWorkbench()
 				.getActiveWorkbenchWindow()
 				.getActivePage()

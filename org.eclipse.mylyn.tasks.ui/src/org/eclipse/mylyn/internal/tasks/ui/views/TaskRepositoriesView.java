@@ -34,6 +34,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.DeleteTaskRepositoryAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.DisconnectRepositoryAction;
 import org.eclipse.mylyn.tasks.core.IRepositoryListener;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -55,7 +56,10 @@ import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
  */
 public class TaskRepositoriesView extends ViewPart {
 
-	public static final String ID = "org.eclipse.mylyn.tasks.ui.views.repositories"; //$NON-NLS-1$
+	/**
+	 * @deprecated Use {@link ITasksUiConstants#ID_VIEW_TASK_REPOSITORIES} instead
+	 */
+	public static final String ID = ITasksUiConstants.ID_VIEW_TASK_REPOSITORIES; //$NON-NLS-1$
 
 	private TableViewer viewer;
 
@@ -146,7 +150,7 @@ public class TaskRepositoriesView extends ViewPart {
 			if (activePage == null) {
 				return null;
 			}
-			IViewPart view = activePage.findView(ID);
+			IViewPart view = activePage.findView(ITasksUiConstants.ID_VIEW_TASK_REPOSITORIES);
 			if (view instanceof TaskRepositoriesView) {
 				return (TaskRepositoriesView) view;
 			}
@@ -159,7 +163,7 @@ public class TaskRepositoriesView extends ViewPart {
 			return (TaskRepositoriesView) PlatformUI.getWorkbench()
 					.getActiveWorkbenchWindow()
 					.getActivePage()
-					.showView(ID);
+					.showView(ITasksUiConstants.ID_VIEW_TASK_REPOSITORIES);
 		} catch (Exception e) {
 			return null;
 		}
