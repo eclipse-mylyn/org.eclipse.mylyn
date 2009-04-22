@@ -25,7 +25,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
  */
 public class ParagraphBlock extends Block {
 
-	private static final Pattern confluenceBlockStart = Pattern.compile("\\{(code|info|tip|warning|panel|note|toc)(?:(:[^\\}]*))?\\}"); //$NON-NLS-1$
+	private static final Pattern confluenceBlockStart = Pattern.compile("\\{(code|info|tip|warning|panel|note|toc|color|noformat)(?:(:[^\\}]*))?\\}"); //$NON-NLS-1$
 
 	private int blockLineCount = 0;
 

@@ -219,53 +219,62 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 			allowTitle = true;
 			phraseTitle = true;
 			break;
+		case DIV:
+			elementName = null;
+			break;
 		default:
 			throw new IllegalStateException(type.name());
 		}
-		if (previousBlock != null && previousBlock.closeElementsOnBlockStart) {
-			endBlockEntry(previousBlock);
-		}
 
-		int blockSize = 1;
-		writer.writeStartElement(elementName);
-		switch (type) {
-		case INFORMATION:
-			writer.writeAttribute("type", "important"); //$NON-NLS-1$ //$NON-NLS-2$
-			break;
-		case NOTE:
-			writer.writeAttribute("type", "note"); //$NON-NLS-1$ //$NON-NLS-2$
-			break;
-		case WARNING:
-			writer.writeAttribute("type", "caution"); //$NON-NLS-1$ //$NON-NLS-2$
-			break;
-		case TIP:
-			writer.writeAttribute("type", "tip"); //$NON-NLS-1$ //$NON-NLS-2$
-			break;
-		case PANEL:
-			writer.writeAttribute("type", "other"); //$NON-NLS-1$ //$NON-NLS-2$
-			break;
-		}
-		applyAttributes(attributes);
+		int blockSize;
+		if (elementName != null) {
+			blockSize = 1;
 
-		if (elementNames != null) {
-			for (String name : elementNames) {
-				writer.writeStartElement(name);
+			if (previousBlock != null && previousBlock.closeElementsOnBlockStart) {
+				endBlockEntry(previousBlock);
 			}
-		}
-
-		if (allowTitle && attributes.getTitle() != null) {
-			if (phraseTitle) {
-				writer.writeStartElement("ph"); //$NON-NLS-1$
-				writer.writeAttribute("outputclass", "title"); //$NON-NLS-1$ //$NON-NLS-2$
-				writer.writeCharacters(attributes.getTitle());
-				writer.writeEndElement();
-			} else {
-				writer.writeStartElement("title"); //$NON-NLS-1$
-				writer.writeCharacters(attributes.getTitle());
-				writer.writeEndElement();
+			writer.writeStartElement(elementName);
+			switch (type) {
+			case INFORMATION:
+				writer.writeAttribute("type", "important"); //$NON-NLS-1$ //$NON-NLS-2$
+				break;
+			case NOTE:
+				writer.writeAttribute("type", "note"); //$NON-NLS-1$ //$NON-NLS-2$
+				break;
+			case WARNING:
+				writer.writeAttribute("type", "caution"); //$NON-NLS-1$ //$NON-NLS-2$
+				break;
+			case TIP:
+				writer.writeAttribute("type", "tip"); //$NON-NLS-1$ //$NON-NLS-2$
+				break;
+			case PANEL:
+				writer.writeAttribute("type", "other"); //$NON-NLS-1$ //$NON-NLS-2$
+				break;
 			}
-		}
+			applyAttributes(attributes);
 
+			if (elementNames != null) {
+				for (String name : elementNames) {
+					writer.writeStartElement(name);
+				}
+			}
+
+			if (allowTitle && attributes.getTitle() != null) {
+				if (phraseTitle) {
+					writer.writeStartElement("ph"); //$NON-NLS-1$
+					writer.writeAttribute("outputclass", "title"); //$NON-NLS-1$ //$NON-NLS-2$
+					writer.writeCharacters(attributes.getTitle());
+					writer.writeEndElement();
+				} else {
+					writer.writeStartElement("title"); //$NON-NLS-1$
+					writer.writeCharacters(attributes.getTitle());
+					writer.writeEndElement();
+				}
+			}
+
+		} else {
+			blockSize = 0;
+		}
 		blockDescriptions.push(new BlockDescription(type, blockSize, elementNames, closeElementsOnBlockStart));
 	}
 

@@ -341,6 +341,13 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 			indentLeftAndRight(attrs, "2em"); //$NON-NLS-1$
 			addSpaceBefore();
 			break;
+		case DIV:
+			writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
+			if (attrs == null || !attrs.containsKey("font-size")) { //$NON-NLS-1$
+				configureFontSize(0);
+			}
+			// no space before
+			break;
 		case INFORMATION:
 		case NOTE:
 		case TIP:

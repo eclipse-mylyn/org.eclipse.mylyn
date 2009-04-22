@@ -79,4 +79,18 @@ public class FastMarkupPartitionerTest extends AbstractDocumentTest {
 		partitioner.connect(document);
 		document.setDocumentPartitioner(partitioner);
 	}
+
+	/**
+	 * test color
+	 */
+	public void testConfluenceColor() {
+		IDocument document = new Document();
+		FastMarkupPartitioner partitioner = new FastMarkupPartitioner();
+		partitioner.setMarkupLanguage(new ConfluenceLanguage());
+
+		document.set("{color:red}\ntext1\n\ntext2{color}\ntext3\n");
+
+		partitioner.connect(document);
+		document.setDocumentPartitioner(partitioner);
+	}
 }

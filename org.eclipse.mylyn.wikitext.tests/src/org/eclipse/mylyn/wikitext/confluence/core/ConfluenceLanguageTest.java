@@ -587,4 +587,22 @@ public class ConfluenceLanguageTest extends TestCase {
 		System.out.println(html);
 		assertTrue(html.contains("<body><blockquote><p>a paragraph with </p></blockquote><p>inline quote{quote}</p></body>"));
 	}
+
+	public void testColor() {
+		String html = parser.parseToHtml("{color:red}\na paragraph\n\nanother paragraph\n{color}\ntext");
+		System.out.println(html);
+		assertTrue(html.contains("<body><div style=\"color: red;\"><p>a paragraph</p><p>another paragraph</p></div><p>text</p></body>"));
+	}
+
+	public void testColor2() {
+		String html = parser.parseToHtml("{color:red}a paragraph\n\nanother paragraph{color}text");
+		System.out.println(html);
+		assertTrue(html.contains("<body><div style=\"color: red;\"><p>a paragraph</p><p>another paragraph</p></div><p>text</p></body>"));
+	}
+
+	public void testColor3() {
+		String html = parser.parseToHtml("text {color:red}more text{color} text");
+		System.out.println(html);
+		assertTrue(html.contains("<body><p>text </p><div style=\"color: red;\"><p>more text</p></div><p> text</p></body>"));
+	}
 }

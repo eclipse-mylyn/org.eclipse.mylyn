@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.mylyn.internal.wikitext.confluence.core.block.CodeBlock;
+import org.eclipse.mylyn.internal.wikitext.confluence.core.block.ColorBlock;
 import org.eclipse.mylyn.internal.wikitext.confluence.core.block.ExtendedPreformattedBlock;
 import org.eclipse.mylyn.internal.wikitext.confluence.core.block.ExtendedQuoteBlock;
 import org.eclipse.mylyn.internal.wikitext.confluence.core.block.HeadingBlock;
@@ -100,6 +101,9 @@ public class ConfluenceLanguage extends AbstractMarkupLanguage {
 		blocks.add(codeBlock);
 		paragraphBreakingBlocks.add(codeBlock);
 		blocks.add(new TableOfContentsBlock());
+		ColorBlock colorBlock = new ColorBlock();
+		blocks.add(colorBlock);
+		paragraphBreakingBlocks.add(colorBlock);
 	}
 
 	@Override

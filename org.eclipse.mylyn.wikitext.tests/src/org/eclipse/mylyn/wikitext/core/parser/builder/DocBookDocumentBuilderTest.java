@@ -155,4 +155,25 @@ public class DocBookDocumentBuilderTest extends TestCase {
 
 		assertTrue(docbook.contains("<itemizedlist><listitem><para>foo</para><itemizedlist><listitem><para>bar</para></listitem></itemizedlist><para>foo2</para></listitem><listitem><para>baz</para></listitem></itemizedlist>"));
 	}
+
+	public void testDiv() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.DIV, new Attributes());
+
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("foo");
+		builder.endBlock(); // PARAGRAPH
+
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("bar");
+		builder.endBlock(); // PARAGRAPH
+
+		builder.endBlock(); // DIV
+		builder.endDocument();
+
+		String docbook = out.toString();
+		System.out.println("DocBook: \n" + docbook);
+
+		assertTrue(docbook.contains("<book><title></title><chapter><title></title><para>foo</para><para>bar</para></chapter></book>"));
+	}
 }

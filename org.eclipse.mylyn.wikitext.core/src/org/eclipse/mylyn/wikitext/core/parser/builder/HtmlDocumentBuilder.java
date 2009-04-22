@@ -70,6 +70,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	static {
 		blockTypeToElementInfo.put(BlockType.BULLETED_LIST, new ElementInfo("ul")); //$NON-NLS-1$
 		blockTypeToElementInfo.put(BlockType.CODE, new ElementInfo("code")); //$NON-NLS-1$
+		blockTypeToElementInfo.put(BlockType.DIV, new ElementInfo("div")); //$NON-NLS-1$
 		blockTypeToElementInfo.put(BlockType.FOOTNOTE, new ElementInfo("footnote")); //$NON-NLS-1$
 		blockTypeToElementInfo.put(BlockType.LIST_ITEM, new ElementInfo("li")); //$NON-NLS-1$
 		blockTypeToElementInfo.put(BlockType.NUMERIC_LIST, new ElementInfo("ol")); //$NON-NLS-1$

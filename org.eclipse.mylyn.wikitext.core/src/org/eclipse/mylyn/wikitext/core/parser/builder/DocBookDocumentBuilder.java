@@ -238,29 +238,38 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 			elementName = "note"; // docbook has nothing better for 'note' //$NON-NLS-1$
 			allowTitle = true;
 			break;
+		case DIV:
+			elementName = null;
+			break;
 		default:
 			throw new IllegalStateException(type.name());
 		}
-		if (previousBlock != null && previousBlock.closeElementsOnBlockStart) {
-			endBlockEntry(previousBlock);
-		}
 
-		int blockSize = 1;
-		writer.writeStartElement(elementName);
-		applyAttributes(attributes);
+		int blockSize;
+		if (elementName != null) {
+			blockSize = 1;
 
-		if (elementNames != null) {
-			for (String name : elementNames) {
-				writer.writeStartElement(name);
+			if (previousBlock != null && previousBlock.closeElementsOnBlockStart) {
+				endBlockEntry(previousBlock);
 			}
-		}
 
-		if (allowTitle && attributes.getTitle() != null) {
-			writer.writeStartElement("title"); //$NON-NLS-1$
-			writer.writeCharacters(attributes.getTitle());
-			writer.writeEndElement();
-		}
+			writer.writeStartElement(elementName);
+			applyAttributes(attributes);
 
+			if (elementNames != null) {
+				for (String name : elementNames) {
+					writer.writeStartElement(name);
+				}
+			}
+
+			if (allowTitle && attributes.getTitle() != null) {
+				writer.writeStartElement("title"); //$NON-NLS-1$
+				writer.writeCharacters(attributes.getTitle());
+				writer.writeEndElement();
+			}
+		} else {
+			blockSize = 0;
+		}
 		blockDescriptions.push(new BlockDescription(type, blockSize, elementNames, closeElementsOnBlockStart));
 	}
 
