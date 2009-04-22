@@ -15,7 +15,9 @@ import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Shawn Minto
+ * @deprecated use {@link org.eclipse.mylyn.internal.provisional.commons.ui.editor.IBusyEditor} instead
  */
+@Deprecated
 public interface IBusyEditor {
 
 	public void setTitleImage(Image image);

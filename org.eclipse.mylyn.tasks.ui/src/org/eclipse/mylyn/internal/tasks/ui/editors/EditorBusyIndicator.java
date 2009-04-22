@@ -18,9 +18,13 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 
 /**
+ * Provides a spinner animation for the tab title of an editor.
+ * 
  * @author Shawn Minto
  * @author Steffen Pingel
+ * @deprecated use {@link org.eclipse.mylyn.internal.provisional.commons.ui.editor.EditorBusyIndicator} instead
  */
+@Deprecated
 public class EditorBusyIndicator {
 
 	private class Animator implements Runnable {
@@ -72,7 +76,9 @@ public class EditorBusyIndicator {
 	}
 
 	/**
-	 * Start the busy indication.
+	 * Starts the busy indication.
+	 * 
+	 * @see #stop()
 	 */
 	public void start() {
 		if (animator != null) {
@@ -100,7 +106,9 @@ public class EditorBusyIndicator {
 	}
 
 	/**
-	 * Stop showing the busy cursor.
+	 * Stops the animation.
+	 * 
+	 * @see #start()
 	 */
 	public void stop() {
 		if (animator != null) {
