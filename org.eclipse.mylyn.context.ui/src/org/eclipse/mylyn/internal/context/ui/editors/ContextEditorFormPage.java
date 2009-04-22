@@ -37,6 +37,7 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.commons.ui.SwtUtil;
+import org.eclipse.mylyn.internal.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.actions.ContextAttachAction;
@@ -47,7 +48,6 @@ import org.eclipse.mylyn.internal.context.ui.views.ContextNodeOpenListener;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DelayedRefreshJob;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
-import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
@@ -373,7 +373,7 @@ public class ContextEditorFormPage extends FormPage {
 
 			public void mouseUp(MouseEvent e) {
 				if (commonViewer == null) {
-					MessageDialog.openWarning(TasksUiInternal.getShell(),
+					MessageDialog.openWarning(WorkbenchUtil.getShell(),
 							Messages.ContextEditorFormPage_Remove_Invisible,
 							Messages.ContextEditorFormPage_Activate_task_to_remove_invisible0);
 					return;

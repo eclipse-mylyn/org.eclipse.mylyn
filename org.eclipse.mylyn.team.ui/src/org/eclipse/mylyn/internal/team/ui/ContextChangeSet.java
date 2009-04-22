@@ -25,10 +25,10 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.internal.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.team.ui.properties.TeamPropertiesLinkProvider;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.resources.ui.ResourcesUi;
@@ -133,7 +133,7 @@ public class ContextChangeSet extends ActiveChangeSet/*CVSActiveChangeSet*/imple
 			}
 
 			if (unmatchedRepositoryFound) {
-				proceed = MessageDialog.openQuestion(TasksUiInternal.getShell(),
+				proceed = MessageDialog.openQuestion(WorkbenchUtil.getShell(),
 						Messages.ContextChangeSet_Mylyn_Change_Set_Management,
 						Messages.ContextChangeSet_ATTEMPTING_TO_COMMIT_RESOURCE);
 			}
