@@ -21,7 +21,9 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 
 /**
  * @author Steffen Pingel
+ * @deprecated use {@link org.eclipse.mylyn.internal.provisional.commons.ui.SelectionProviderAdapter} instead
  */
+@Deprecated
 public class SelectionProviderAdapter extends EventManager implements ISelectionProvider {
 
 	private ISelection selection;
