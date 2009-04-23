@@ -88,7 +88,7 @@ public class TaskEditorNotesPart extends AbstractTaskEditorPart {
 		layout.numColumns = 1;
 		composite.setLayout(layout);
 
-		noteEditor = new SourceViewer(parent, null, SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		noteEditor = new SourceViewer(composite, null, SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 		noteEditor.configure(new RepositoryTextViewerConfiguration(getModel().getTaskRepository(), true));
 		CommonTextSupport textSupport = (CommonTextSupport) getTaskEditorPage().getAdapter(CommonTextSupport.class);
 		if (textSupport != null) {
