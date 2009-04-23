@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <introContent>
 	<extensionContent id="org.eclipse.mylyn" name="Mylyn"
-		style="css/overview.css" path="overview/@">
+		style="css/overview.css" alt-style="css/overview.properties" path="overview/@">
 		<group id="content-group" style-id="content-group">
 			<!--
 			<link label="Mylyn"
