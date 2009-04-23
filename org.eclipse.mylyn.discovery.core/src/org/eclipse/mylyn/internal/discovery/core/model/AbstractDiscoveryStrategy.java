@@ -16,25 +16,23 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
- * An abstraction of a strategy for discovering connectors and categories.
- * Strategy design pattern.
+ * An abstraction of a strategy for discovering connectors and categories. Strategy design pattern.
  * 
  * @author David Green
  */
 public abstract class AbstractDiscoveryStrategy {
 
 	protected List<DiscoveryCategory> categories;
+
 	protected List<DiscoveryConnector> connectors;
 
 	/**
-	 * Perform discovery and add discovered items to {@link #getCategories()
-	 * categories} and {@link #getConnectors()}.
+	 * Perform discovery and add discovered items to {@link #getCategories() categories} and {@link #getConnectors()}.
 	 * 
 	 * @param monitor
 	 *            the monitor
 	 */
-	public abstract void performDiscovery(IProgressMonitor monitor)
-			throws CoreException;
+	public abstract void performDiscovery(IProgressMonitor monitor) throws CoreException;
 
 	public List<DiscoveryCategory> getCategories() {
 		return categories;

@@ -49,8 +49,7 @@ public class DiscoveryRegistryStrategy extends RegistryStrategy {
 
 	private final Object token;
 
-	public DiscoveryRegistryStrategy(File[] storageDirs,
-			boolean[] cacheReadOnly, Object token) {
+	public DiscoveryRegistryStrategy(File[] storageDirs, boolean[] cacheReadOnly, Object token) {
 		super(storageDirs, cacheReadOnly);
 		this.token = token;
 	}
@@ -69,14 +68,12 @@ public class DiscoveryRegistryStrategy extends RegistryStrategy {
 		// extension point itself
 		try {
 			Bundle bundle = Platform.getBundle(DiscoveryCore.BUNDLE_ID);
-			IContributor contributor = new RegistryContributor(bundle
-					.getSymbolicName(), bundle.getSymbolicName(), null, null);
+			IContributor contributor = new RegistryContributor(bundle.getSymbolicName(), bundle.getSymbolicName(),
+					null, null);
 
-			InputStream inputStream = bundle
-					.getEntry("plugin.xml").openStream(); //$NON-NLS-1$
+			InputStream inputStream = bundle.getEntry("plugin.xml").openStream(); //$NON-NLS-1$
 			try {
-				registry.addContribution(inputStream, contributor, false,
-						bundle.getSymbolicName(), null, token);
+				registry.addContribution(inputStream, contributor, false, bundle.getSymbolicName(), null, token);
 			} finally {
 				inputStream.close();
 			}
@@ -101,16 +98,13 @@ public class DiscoveryRegistryStrategy extends RegistryStrategy {
 			try {
 				processBundle(registry, bundleFile);
 			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.ERROR,
-						DiscoveryCore.BUNDLE_ID, MessageFormat.format(
-								"Cannot load bundle {0}: {1}", bundleFile
-										.getName(), e.getMessage()), e));
+				StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID, MessageFormat.format(
+						"Cannot load bundle {0}: {1}", bundleFile.getName(), e.getMessage()), e));
 			}
 		}
 	}
 
-	private void processBundle(IExtensionRegistry registry, File bundleFile)
-			throws IOException {
+	private void processBundle(IExtensionRegistry registry, File bundleFile) throws IOException {
 		JarFile jarFile = new JarFile(bundleFile);
 		jars.add(jarFile);
 
@@ -118,8 +112,7 @@ public class DiscoveryRegistryStrategy extends RegistryStrategy {
 		if (pluginXmlEntry == null) {
 			throw new IOException("no plugin.xml in bundle");
 		}
-		IContributor contributor = new RegistryContributor(
-				bundleFile.getName(), bundleFile.getName(), null, null);
+		IContributor contributor = new RegistryContributor(bundleFile.getName(), bundleFile.getName(), null, null);
 		if (((IDynamicExtensionRegistry) registry).hasContributor(contributor)) {
 			jarFile.close();
 			return;
@@ -128,8 +121,7 @@ public class DiscoveryRegistryStrategy extends RegistryStrategy {
 
 		InputStream inputStream = jarFile.getInputStream(pluginXmlEntry);
 		try {
-			registry.addContribution(inputStream, contributor, false,
-					bundleFile.getPath(), null, token);
+			registry.addContribution(inputStream, contributor, false, bundleFile.getPath(), null, token);
 		} finally {
 			inputStream.close();
 		}

@@ -23,17 +23,18 @@ public class ConnectorDiscoveryExtensionReader {
 	public static final String EXTENSION_POINT_ID = "org.eclipse.mylyn.discovery.core.connectorDiscovery"; //$NON-NLS-1$
 
 	public static final String CONNECTOR_DESCRIPTOR = "connectorDescriptor"; //$NON-NLS-1$
+
 	public static final String CONNECTOR_CATEGORY = "connectorCategory"; //$NON-NLS-1$
+
 	public static final String ICON = "icon"; //$NON-NLS-1$
+
 	public static final String OVERVIEW = "overview"; //$NON-NLS-1$
 
-	public ConnectorDescriptor readConnectorDescriptor(
-			IConfigurationElement element) throws ValidationException {
+	public ConnectorDescriptor readConnectorDescriptor(IConfigurationElement element) throws ValidationException {
 		return readConnectorDescriptor(element, ConnectorDescriptor.class);
 	}
 
-	public <T extends ConnectorDescriptor> T readConnectorDescriptor(
-			IConfigurationElement element, Class<T> clazz)
+	public <T extends ConnectorDescriptor> T readConnectorDescriptor(IConfigurationElement element, Class<T> clazz)
 			throws ValidationException {
 		T connectorDescriptor;
 		try {
@@ -43,8 +44,7 @@ public class ConnectorDiscoveryExtensionReader {
 		}
 
 		try {
-			connectorDescriptor.setKind(ConnectorDescriptorKind
-					.fromValue(element.getAttribute("kind"))); //$NON-NLS-1$
+			connectorDescriptor.setKind(ConnectorDescriptorKind.fromValue(element.getAttribute("kind"))); //$NON-NLS-1$
 		} catch (IllegalArgumentException e) {
 			throw new ValidationException("Unexpected value for kind");
 		}
@@ -55,8 +55,7 @@ public class ConnectorDiscoveryExtensionReader {
 		connectorDescriptor.setSiteUrl(element.getAttribute("siteUrl")); //$NON-NLS-1$
 		connectorDescriptor.setId(element.getAttribute("id")); //$NON-NLS-1$
 		connectorDescriptor.setCategoryId(element.getAttribute("categoryId")); //$NON-NLS-1$
-		connectorDescriptor.setPlatformFilter(element
-				.getAttribute("platformFilter")); //$NON-NLS-1$
+		connectorDescriptor.setPlatformFilter(element.getAttribute("platformFilter")); //$NON-NLS-1$
 
 		for (IConfigurationElement child : element.getChildren("icon")) { //$NON-NLS-1$
 			Icon iconItem = readIcon(child);
@@ -80,13 +79,11 @@ public class ConnectorDiscoveryExtensionReader {
 		return connectorDescriptor;
 	}
 
-	public ConnectorCategory readConnectorCategory(IConfigurationElement element)
-			throws ValidationException {
+	public ConnectorCategory readConnectorCategory(IConfigurationElement element) throws ValidationException {
 		return readConnectorCategory(element, ConnectorCategory.class);
 	}
 
-	public <T extends ConnectorCategory> T readConnectorCategory(
-			IConfigurationElement element, Class<T> clazz)
+	public <T extends ConnectorCategory> T readConnectorCategory(IConfigurationElement element, Class<T> clazz)
 			throws ValidationException {
 		T connectorCategory;
 		try {
@@ -113,8 +110,7 @@ public class ConnectorDiscoveryExtensionReader {
 		return connectorCategory;
 	}
 
-	public Icon readIcon(IConfigurationElement element)
-			throws ValidationException {
+	public Icon readIcon(IConfigurationElement element) throws ValidationException {
 		Icon icon = new Icon();
 
 		icon.setImage16(element.getAttribute("image16")); //$NON-NLS-1$
@@ -128,8 +124,7 @@ public class ConnectorDiscoveryExtensionReader {
 		return icon;
 	}
 
-	public Overview readOverview(IConfigurationElement element)
-			throws ValidationException {
+	public Overview readOverview(IConfigurationElement element) throws ValidationException {
 		Overview overview = new Overview();
 
 		overview.setSummary(element.getAttribute("summary")); //$NON-NLS-1$

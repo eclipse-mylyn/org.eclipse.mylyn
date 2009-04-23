@@ -22,14 +22,14 @@ import org.eclipse.ui.PlatformUI;
  * @author David Green
  */
 @SuppressWarnings("restriction")
-public class ShowDiscoveryConnectorWizardCommandHandler extends AbstractHandler  {
+public class ShowDiscoveryConnectorWizardCommandHandler extends AbstractHandler {
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		
+
 		ConnectorDiscoveryWizard wizard = new ConnectorDiscoveryWizard();
-		WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),wizard);
+		WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), wizard);
 		dialog.open();
-		
+
 		return null;
 	}
 

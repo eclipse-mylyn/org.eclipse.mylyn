@@ -35,8 +35,7 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.ICoreRunnable;
 import org.osgi.framework.Version;
 
 /**
- * A job that downloads and installs one or more {@link ConnectorDescriptor
- * connectors}.
+ * A job that downloads and installs one or more {@link ConnectorDescriptor connectors}.
  * 
  * @author David Green
  */
@@ -53,12 +52,12 @@ public class InstallConnectorsJob implements ICoreRunnable {
 
 	public void run(IProgressMonitor monitor) throws CoreException {
 		try {
-			final int totalWork = installableConnectors.size()*4;
+			final int totalWork = installableConnectors.size() * 4;
 			monitor.beginTask("Configuring installation selection", totalWork);
-			
+
 			// Tell p2 that it's okay to use these repositories
 			Set<URL> updateSiteURLs = new HashSet<URL>();
-			for (ConnectorDescriptor descriptor: installableConnectors) {
+			for (ConnectorDescriptor descriptor : installableConnectors) {
 				URL url = new URL(descriptor.getSiteUrl());
 				if (updateSiteURLs.add(url)) {
 					if (monitor.isCanceled()) {
@@ -77,20 +76,21 @@ public class InstallConnectorsJob implements ICoreRunnable {
 			// Fetch p2's metadata for these repositories
 			List<IMetadataRepository> repositories = new ArrayList<IMetadataRepository>();
 			{
-				int unit = installableConnectors.size()/updateSiteURLs.size();
-				for (URL updateSiteUrl: updateSiteURLs) {
+				int unit = installableConnectors.size() / updateSiteURLs.size();
+				for (URL updateSiteUrl : updateSiteURLs) {
 					if (monitor.isCanceled()) {
 						return;
 					}
-					repositories.add(ProvisioningUtil.loadMetadataRepository(updateSiteUrl, new SubProgressMonitor(monitor,unit)));
+					repositories.add(ProvisioningUtil.loadMetadataRepository(updateSiteUrl, new SubProgressMonitor(
+							monitor, unit)));
 				}
 			}
 			// Perform a query to get the installable units
 			List<InstallableUnit> installableUnits = new ArrayList<InstallableUnit>();
 			{
-				int unit = installableConnectors.size()/repositories.size();
-				
-				for (IMetadataRepository repository: repositories) {
+				int unit = installableConnectors.size() / repositories.size();
+
+				for (IMetadataRepository repository : repositories) {
 					Collector collector = new Collector();
 					Query query = new Query() {
 						@Override
@@ -98,22 +98,22 @@ public class InstallConnectorsJob implements ICoreRunnable {
 							// TODO Auto-generated method stub
 							return false;
 						}
-					};	
-					repository.query(query, collector, new SubProgressMonitor(monitor,unit));
+					};
+					repository.query(query, collector, new SubProgressMonitor(monitor, unit));
 				}
 			}
-			
+
 			// TODO: filter those installable units that have a duplicate in the list with a higher version number
 			{
-				Map<String,Version> symbolicNameToVersion = new HashMap<String, Version>();
-				for (InstallableUnit unit: new ArrayList<InstallableUnit>(installableUnits)) {
+				Map<String, Version> symbolicNameToVersion = new HashMap<String, Version>();
+				for (InstallableUnit unit : new ArrayList<InstallableUnit>(installableUnits)) {
 					Version version = symbolicNameToVersion.get(unit.getId());
 					if (version == null || version.compareTo(unit.getVersion()) == -1) {
 						symbolicNameToVersion.put(unit.getId(), unit.getVersion());
 					}
 				}
 			}
-			
+
 			// TODO: do the install
 //			Display.getDefault().asyncExec(new Runnable() {
 //
@@ -124,11 +124,12 @@ public class InstallConnectorsJob implements ICoreRunnable {
 //					installAction.run();
 //				}
 //			});
-			
+
 			monitor.done();
 		} catch (MalformedURLException e) {
 			// should never happen, since we already validated URLs.
-			throw new CoreException(new Status(IStatus.ERROR,DiscoveryUi.BUNDLE_ID,"Unexpected error handling repository URL",e));
+			throw new CoreException(new Status(IStatus.ERROR, DiscoveryUi.BUNDLE_ID,
+					"Unexpected error handling repository URL", e));
 		}
 	}
 

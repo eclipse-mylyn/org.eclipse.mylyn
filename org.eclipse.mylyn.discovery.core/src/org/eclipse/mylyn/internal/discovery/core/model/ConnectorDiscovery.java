@@ -37,9 +37,10 @@ import org.osgi.framework.InvalidSyntaxException;
 public class ConnectorDiscovery {
 
 	private List<DiscoveryConnector> connectors = Collections.emptyList();
+
 	private List<DiscoveryCategory> categories = Collections.emptyList();
 
-	private List<AbstractDiscoveryStrategy> discoveryStrategies = new ArrayList<AbstractDiscoveryStrategy>();
+	private final List<AbstractDiscoveryStrategy> discoveryStrategies = new ArrayList<AbstractDiscoveryStrategy>();
 
 	private Dictionary<Object, Object> environment = System.getProperties();
 
@@ -54,9 +55,8 @@ public class ConnectorDiscovery {
 	}
 
 	/**
-	 * Initialize this by performing discovery. Discovery may take a long time
-	 * as it involves network access. PRECONDITION: must add at least one
-	 * {@link #getDiscoveryStrategies() discovery strategy} prior to calling.
+	 * Initialize this by performing discovery. Discovery may take a long time as it involves network access.
+	 * PRECONDITION: must add at least one {@link #getDiscoveryStrategies() discovery strategy} prior to calling.
 	 * 
 	 */
 	public void performDiscovery(IProgressMonitor monitor) throws CoreException {
@@ -73,8 +73,7 @@ public class ConnectorDiscovery {
 		for (AbstractDiscoveryStrategy discoveryStrategy : discoveryStrategies) {
 			discoveryStrategy.setCategories(categories);
 			discoveryStrategy.setConnectors(connectors);
-			discoveryStrategy.performDiscovery(new SubProgressMonitor(monitor,
-					totalTicks / discoveryStrategies.size()));
+			discoveryStrategy.performDiscovery(new SubProgressMonitor(monitor, totalTicks / discoveryStrategies.size()));
 		}
 
 		filterDescriptors();
@@ -102,18 +101,16 @@ public class ConnectorDiscovery {
 	}
 
 	/**
-	 * The environment used to resolve
-	 * {@link ConnectorDescriptor#getPlatformFilter() platform filters}.
-	 * Defaults to the current environment.
+	 * The environment used to resolve {@link ConnectorDescriptor#getPlatformFilter() platform filters}. Defaults to the
+	 * current environment.
 	 */
 	public Dictionary<Object, Object> getEnvironment() {
 		return environment;
 	}
 
 	/**
-	 * The environment used to resolve
-	 * {@link ConnectorDescriptor#getPlatformFilter() platform filters}.
-	 * Defaults to the current environment.
+	 * The environment used to resolve {@link ConnectorDescriptor#getPlatformFilter() platform filters}. Defaults to the
+	 * current environment.
 	 */
 	public void setEnvironment(Dictionary<Object, Object> environment) {
 		if (environment == null) {
@@ -125,63 +122,41 @@ public class ConnectorDiscovery {
 	private void connectCategoriesToDescriptors() {
 		Map<String, DiscoveryCategory> idToCategory = new HashMap<String, DiscoveryCategory>();
 		for (DiscoveryCategory category : categories) {
-			DiscoveryCategory previous = idToCategory.put(category.getId(),
-					category);
+			DiscoveryCategory previous = idToCategory.put(category.getId(), category);
 			if (previous != null) {
-				StatusHandler.log(new Status(
-								IStatus.ERROR,
-								DiscoveryCore.BUNDLE_ID,
-								MessageFormat.format(
-												"Duplicate category id ''{0}'': declaring sources: {1}, {2}",
-												category.getId(), category.getSource().getId(),
-												previous.getSource().getId())));
+				StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID, MessageFormat.format(
+						"Duplicate category id ''{0}'': declaring sources: {1}, {2}", category.getId(),
+						category.getSource().getId(), previous.getSource().getId())));
 			}
 		}
 
 		for (DiscoveryConnector connector : connectors) {
-			DiscoveryCategory category = idToCategory.get(connector
-					.getCategoryId());
+			DiscoveryCategory category = idToCategory.get(connector.getCategoryId());
 			if (category != null) {
 				category.getConnectors().add(connector);
 				connector.setCategory(category);
 			} else {
-				StatusHandler
-						.log(new Status(
-								IStatus.ERROR,
-								DiscoveryCore.BUNDLE_ID,
-								MessageFormat.format(
-												"Unknown category ''{0}'' referenced by connector ''{1}'' declared in {2}",
-												connector.getCategoryId(),
-												connector.getId(), connector.getSource().getId())));
+				StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID, MessageFormat.format(
+						"Unknown category ''{0}'' referenced by connector ''{1}'' declared in {2}",
+						connector.getCategoryId(), connector.getId(), connector.getSource().getId())));
 			}
 		}
 	}
 
 	/**
-	 * eliminate any connectors whose
-	 * {@link ConnectorDescriptor#getPlatformFilter() platform filters} don't
-	 * match
+	 * eliminate any connectors whose {@link ConnectorDescriptor#getPlatformFilter() platform filters} don't match
 	 */
 	private void filterDescriptors() {
-		for (DiscoveryConnector connector : new ArrayList<DiscoveryConnector>(
-				connectors)) {
-			if (connector.getPlatformFilter() != null
-					&& connector.getPlatformFilter().trim().length() > 0) {
+		for (DiscoveryConnector connector : new ArrayList<DiscoveryConnector>(connectors)) {
+			if (connector.getPlatformFilter() != null && connector.getPlatformFilter().trim().length() > 0) {
 				boolean match = false;
 				try {
-					Filter filter = FrameworkUtil.createFilter(connector
-							.getPlatformFilter());
+					Filter filter = FrameworkUtil.createFilter(connector.getPlatformFilter());
 					match = filter.match(environment);
 				} catch (InvalidSyntaxException e) {
-					StatusHandler
-							.log(new Status(
-									IStatus.ERROR,
-									DiscoveryCore.BUNDLE_ID,
-									MessageFormat.format(
-													"Illegal filter syntax ''{0}'' in connector ''{1}'' declared in {2}",
-													connector.getPlatformFilter(),
-													connector.getId(),
-													connector.getSource().getId())));
+					StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID, MessageFormat.format(
+							"Illegal filter syntax ''{0}'' in connector ''{1}'' declared in {2}",
+							connector.getPlatformFilter(), connector.getId(), connector.getSource().getId())));
 				}
 				if (!match) {
 					connectors.remove(connector);

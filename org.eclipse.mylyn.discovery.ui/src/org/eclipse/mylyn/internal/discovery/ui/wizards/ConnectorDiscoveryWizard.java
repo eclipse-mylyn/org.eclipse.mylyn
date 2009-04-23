@@ -22,9 +22,8 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonsUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.ICoreRunnable;
 
 /**
- * A wizard for performing discovery of connectors and selecting connectors to
- * install. When finish is pressed, selected connectors are downloaded and
- * installed.
+ * A wizard for performing discovery of connectors and selecting connectors to install. When finish is pressed, selected
+ * connectors are downloaded and installed.
  * 
  * @see InstallConnectorsJob
  * @see ConnectorDiscoveryWizardMainPage
@@ -48,8 +47,7 @@ public class ConnectorDiscoveryWizard extends Wizard {
 	@Override
 	public boolean performFinish() {
 		try {
-			ICoreRunnable job = new InstallConnectorsJob(mainPage
-					.getInstallableConnectors());
+			ICoreRunnable job = new InstallConnectorsJob(mainPage.getInstallableConnectors());
 			if (getContainer() != null) {
 				CommonsUiUtil.run(getContainer(), job);
 			} else {
@@ -57,14 +55,9 @@ public class ConnectorDiscoveryWizard extends Wizard {
 			}
 
 		} catch (CoreException e) {
-			IStatus status = new Status(
-					IStatus.ERROR,
-					DiscoveryUi.BUNDLE_ID,
-					MessageFormat
-							.format(
-									"Problems occurred while performing installation: {0}", e.getMessage()), e); //$NON-NLS-1$
-			DiscoveryUi.logAndDisplayStatus("Cannot complete installation",
-					status);
+			IStatus status = new Status(IStatus.ERROR, DiscoveryUi.BUNDLE_ID, MessageFormat.format(
+					"Problems occurred while performing installation: {0}", e.getMessage()), e); //$NON-NLS-1$
+			DiscoveryUi.logAndDisplayStatus("Cannot complete installation", status);
 		} catch (OperationCanceledException e) {
 			// canceled
 		}

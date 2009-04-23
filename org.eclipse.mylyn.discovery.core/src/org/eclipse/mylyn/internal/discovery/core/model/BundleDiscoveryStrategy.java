@@ -40,62 +40,47 @@ public class BundleDiscoveryStrategy extends AbstractDiscoveryStrategy {
 		if (connectors == null || categories == null) {
 			throw new IllegalStateException();
 		}
-		IExtensionPoint extensionPoint = getExtensionRegistry()
-				.getExtensionPoint(
-						ConnectorDiscoveryExtensionReader.EXTENSION_POINT_ID);
+		IExtensionPoint extensionPoint = getExtensionRegistry().getExtensionPoint(
+				ConnectorDiscoveryExtensionReader.EXTENSION_POINT_ID);
 		IExtension[] extensions = extensionPoint.getExtensions();
 		if (extensions.length > 0) {
-			monitor.beginTask("Loading local extensions",
-					extensions.length == 0 ? 1 : extensions.length);
+			monitor.beginTask("Loading local extensions", extensions.length == 0 ? 1 : extensions.length);
 
-			processExtensions(
-					new SubProgressMonitor(monitor, extensions.length),
-					extensions);
+			processExtensions(new SubProgressMonitor(monitor, extensions.length), extensions);
 		}
 		monitor.done();
 	}
 
-	protected void processExtensions(IProgressMonitor monitor,
-			IExtension[] extensions) {
-		monitor.beginTask("Processing extensions", extensions.length == 0 ? 1
-				: extensions.length);
+	protected void processExtensions(IProgressMonitor monitor, IExtension[] extensions) {
+		monitor.beginTask("Processing extensions", extensions.length == 0 ? 1 : extensions.length);
 
 		ConnectorDiscoveryExtensionReader extensionReader = new ConnectorDiscoveryExtensionReader();
 
 		for (IExtension extension : extensions) {
-			AbstractDiscoverySource discoverySource = computeDiscoverySource(extension
-					.getContributor());
-			IConfigurationElement[] elements = extension
-					.getConfigurationElements();
+			AbstractDiscoverySource discoverySource = computeDiscoverySource(extension.getContributor());
+			IConfigurationElement[] elements = extension.getConfigurationElements();
 			for (IConfigurationElement element : elements) {
 				if (monitor.isCanceled()) {
 					return;
 				}
 				try {
-					if (ConnectorDiscoveryExtensionReader.CONNECTOR_DESCRIPTOR
-							.equals(element.getName())) {
-						DiscoveryConnector descriptor = extensionReader
-								.readConnectorDescriptor(element,
-										DiscoveryConnector.class);
+					if (ConnectorDiscoveryExtensionReader.CONNECTOR_DESCRIPTOR.equals(element.getName())) {
+						DiscoveryConnector descriptor = extensionReader.readConnectorDescriptor(element,
+								DiscoveryConnector.class);
 						descriptor.setSource(discoverySource);
 						connectors.add(descriptor);
-					} else if (ConnectorDiscoveryExtensionReader.CONNECTOR_CATEGORY
-							.equals(element.getName())) {
-						DiscoveryCategory category = extensionReader
-								.readConnectorCategory(element,
-										DiscoveryCategory.class);
+					} else if (ConnectorDiscoveryExtensionReader.CONNECTOR_CATEGORY.equals(element.getName())) {
+						DiscoveryCategory category = extensionReader.readConnectorCategory(element,
+								DiscoveryCategory.class);
 						category.setSource(discoverySource);
 						categories.add(category);
 					} else {
-						throw new ValidationException(MessageFormat
-								.format("unexpected element ''{0}''", element
-										.getName()));
+						throw new ValidationException(MessageFormat.format("unexpected element ''{0}''",
+								element.getName()));
 					}
 				} catch (ValidationException e) {
-					StatusHandler.log(new Status(IStatus.ERROR,
-							DiscoveryCore.BUNDLE_ID, MessageFormat.format(
-									"{0}: {1}", element.getContributor()
-											.getName(), e.getMessage()), e));
+					StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID, MessageFormat.format(
+							"{0}: {1}", element.getContributor().getName(), e.getMessage()), e));
 				}
 			}
 			monitor.worked(1);
@@ -104,10 +89,8 @@ public class BundleDiscoveryStrategy extends AbstractDiscoveryStrategy {
 		monitor.done();
 	}
 
-	protected AbstractDiscoverySource computeDiscoverySource(
-			IContributor contributor) {
-		return new BundleDiscoverySource(Platform.getBundle(contributor
-				.getName()));
+	protected AbstractDiscoverySource computeDiscoverySource(IContributor contributor) {
+		return new BundleDiscoverySource(Platform.getBundle(contributor.getName()));
 	}
 
 	protected IExtensionRegistry getExtensionRegistry() {

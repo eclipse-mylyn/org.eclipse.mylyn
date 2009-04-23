@@ -35,14 +35,15 @@ import org.eclipse.mylyn.internal.discovery.core.util.WebUtil;
 import org.eclipse.mylyn.internal.discovery.core.util.WebUtil.TextContentProcessor;
 
 /**
- * A discovery strategy that downloads a simple directory of remote jars. The
- * directory is first downloaded, then each remote jar is downloaded.
+ * A discovery strategy that downloads a simple directory of remote jars. The directory is first downloaded, then each
+ * remote jar is downloaded.
  * 
  * @author David Green
  */
 public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 
 	private String directoryUrl;
+
 	private DiscoveryRegistryStrategy registryStrategy;
 
 	@Override
@@ -58,12 +59,11 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 		final int ticksTenPercent = totalTicks / 10;
 		monitor.beginTask("remote discovery", totalTicks);
 
+		// FIXME: tempFolder should be cleaned up when we're done
 		File tempFolder;
 		File registryCacheFolder;
 		try {
-			tempFolder = File
-					.createTempFile(RemoteBundleDiscoveryStrategy.class
-							.getSimpleName(), ".tmp"); //$NON-NLS-1$
+			tempFolder = File.createTempFile(RemoteBundleDiscoveryStrategy.class.getSimpleName(), ".tmp"); //$NON-NLS-1$
 			tempFolder.delete();
 			if (!tempFolder.mkdirs()) {
 				throw new IOException();
@@ -73,8 +73,7 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 				throw new IOException();
 			}
 		} catch (IOException e) {
-			throw new CoreException(new Status(IStatus.ERROR,
-					DiscoveryCore.BUNDLE_ID,
+			throw new CoreException(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID,
 					"IO failure: cannot create temporary storage area", e));
 		}
 		if (monitor.isCanceled()) {
@@ -99,16 +98,14 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 				}
 			}, new SubProgressMonitor(monitor, ticksTenPercent));
 		} catch (IOException e) {
-			throw new CoreException(new Status(IStatus.ERROR,
-					DiscoveryCore.BUNDLE_ID,
+			throw new CoreException(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID,
 					"IO failure: cannot load discovery directory", e));
 		}
 		if (monitor.isCanceled()) {
 			return;
 		}
 		if (bundleUrls.isEmpty()) {
-			throw new CoreException(new Status(IStatus.ERROR,
-					DiscoveryCore.BUNDLE_ID, "Discovery directory is empty"));
+			throw new CoreException(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID, "Discovery directory is empty"));
 		}
 
 		Set<File> bundles = new HashSet<File>();
@@ -117,49 +114,39 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 		for (String bundleUrl : bundleUrls) {
 			try {
 				if (!bundleUrl.startsWith("http://") && !bundleUrl.startsWith("https://")) { //$NON-NLS-1$ //$NON-NLS-2$
-					StatusHandler.log(new Status(IStatus.WARNING,
-							DiscoveryCore.BUNDLE_ID, MessageFormat.format(
-									"Unrecognized discovery bundle URL: {0}",
-									bundleUrl)));
+					StatusHandler.log(new Status(IStatus.WARNING, DiscoveryCore.BUNDLE_ID, MessageFormat.format(
+							"Unrecognized discovery bundle URL: {0}", bundleUrl)));
 				}
 				String lastPathElement = bundleUrl.lastIndexOf('/') == -1 ? bundleUrl
 						: bundleUrl.substring(bundleUrl.lastIndexOf('/'));
-				File target = File.createTempFile(lastPathElement.replaceAll(
-						"^[a-zA-Z0-9_.]", "_") + "_", ".jar", tempFolder); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$
+				File target = File.createTempFile(
+						lastPathElement.replaceAll("^[a-zA-Z0-9_.]", "_") + "_", ".jar", tempFolder); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$
 
 				if (monitor.isCanceled()) {
 					return;
 				}
 
 				// FIXME: Eclipse network/proxy settings
-				WebUtil.downloadResource(target, new WebLocation(bundleUrl),
-						monitor);
+				WebUtil.downloadResource(target, new WebLocation(bundleUrl), monitor);
 				bundles.add(target);
 			} catch (IOException e) {
-				StatusHandler.log(new Status(IStatus.ERROR,
-						DiscoveryCore.BUNDLE_ID, MessageFormat.format(
-								"Cannot download bundle at {0}: {1}",
-								bundleUrl, e.getMessage()), e));
+				StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID, MessageFormat.format(
+						"Cannot download bundle at {0}: {1}", bundleUrl, e.getMessage()), e));
 			}
 		}
 		try {
-			registryStrategy = new DiscoveryRegistryStrategy(
-					new File[] { registryCacheFolder },
+			registryStrategy = new DiscoveryRegistryStrategy(new File[] { registryCacheFolder },
 					new boolean[] { false }, this);
 			registryStrategy.setBundleFiles(bundles);
-			IExtensionRegistry extensionRegistry = new ExtensionRegistry(
-					registryStrategy, this, this);
+			IExtensionRegistry extensionRegistry = new ExtensionRegistry(registryStrategy, this, this);
 			try {
-				IExtensionPoint extensionPoint = extensionRegistry
-						.getExtensionPoint(ConnectorDiscoveryExtensionReader.EXTENSION_POINT_ID);
+				IExtensionPoint extensionPoint = extensionRegistry.getExtensionPoint(ConnectorDiscoveryExtensionReader.EXTENSION_POINT_ID);
 				if (extensionPoint != null) {
 					IExtension[] extensions = extensionPoint.getExtensions();
 					if (extensions.length > 0) {
-						monitor.beginTask("Loading remote extensions",
-								extensions.length == 0 ? 1 : extensions.length);
+						monitor.beginTask("Loading remote extensions", extensions.length == 0 ? 1 : extensions.length);
 
-						processExtensions(new SubProgressMonitor(monitor,
-								ticksTenPercent * 3), extensions);
+						processExtensions(new SubProgressMonitor(monitor, ticksTenPercent * 3), extensions);
 					}
 				}
 			} finally {
@@ -180,9 +167,7 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 	}
 
 	@Override
-	protected AbstractDiscoverySource computeDiscoverySource(
-			IContributor contributor) {
-		return new JarDiscoverySource(contributor.getName(), registryStrategy
-				.getJarFile(contributor));
+	protected AbstractDiscoverySource computeDiscoverySource(IContributor contributor) {
+		return new JarDiscoverySource(contributor.getName(), registryStrategy.getJarFile(contributor));
 	}
 }

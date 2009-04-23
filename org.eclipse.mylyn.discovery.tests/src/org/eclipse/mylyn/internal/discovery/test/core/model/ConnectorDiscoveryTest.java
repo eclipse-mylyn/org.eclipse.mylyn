@@ -30,6 +30,7 @@ import org.eclipse.mylyn.internal.discovery.test.core.model.mock.MockDiscoverySt
 public class ConnectorDiscoveryTest extends TestCase {
 
 	private ConnectorDiscovery connectorDiscovery;
+
 	private MockDiscoveryStrategy mockDiscoveryStrategy;
 
 	@Override
@@ -39,12 +40,12 @@ public class ConnectorDiscoveryTest extends TestCase {
 		mockDiscoveryStrategy = new MockDiscoveryStrategy();
 		connectorDiscovery.getDiscoveryStrategies().add(mockDiscoveryStrategy);
 	}
-	
+
 	public void testPlatformFilter_None() throws CoreException {
 		connectorDiscovery.performDiscovery(new NullProgressMonitor());
-		assertEquals(mockDiscoveryStrategy.getConnectorCount(),connectorDiscovery.getConnectors().size());
+		assertEquals(mockDiscoveryStrategy.getConnectorCount(), connectorDiscovery.getConnectors().size());
 	}
-	
+
 	public void testPlatformFilter_NegativeMatch() throws CoreException {
 		mockDiscoveryStrategy.setConnectorMockFactory(new DiscoveryConnectorMockFactory() {
 			@Override
@@ -59,7 +60,7 @@ public class ConnectorDiscoveryTest extends TestCase {
 		environment.put("osgi.ws", "windows");
 		connectorDiscovery.setEnvironment(environment);
 		connectorDiscovery.performDiscovery(new NullProgressMonitor());
-		
+
 		assertTrue(connectorDiscovery.getConnectors().isEmpty());
 	}
 
@@ -72,38 +73,40 @@ public class ConnectorDiscoveryTest extends TestCase {
 			}
 		});
 		Dictionary<Object, Object> environment = new Properties();
-		
+
 		// test to ensure that all matching platform filters are discovered
 		environment.put("osgi.os", "macosx");
 		environment.put("osgi.ws", "carbon");
 		connectorDiscovery.setEnvironment(environment);
 		connectorDiscovery.performDiscovery(new NullProgressMonitor());
-		
+
 		assertFalse(connectorDiscovery.getConnectors().isEmpty());
-		assertEquals(mockDiscoveryStrategy.getConnectorCount(),connectorDiscovery.getConnectors().size());
+		assertEquals(mockDiscoveryStrategy.getConnectorCount(), connectorDiscovery.getConnectors().size());
 	}
-	
+
 	public void testCategorization() throws CoreException {
 		connectorDiscovery.performDiscovery(new NullProgressMonitor());
 		assertTrue(!connectorDiscovery.getConnectors().isEmpty());
 		assertTrue(!connectorDiscovery.getCategories().isEmpty());
-		
-		for (DiscoveryConnector connector: connectorDiscovery.getConnectors()) {
+
+		for (DiscoveryConnector connector : connectorDiscovery.getConnectors()) {
 			assertNotNull(connector.getCategory());
-			assertEquals(connector.getCategoryId(),connector.getCategory().getId());
+			assertEquals(connector.getCategoryId(), connector.getCategory().getId());
 			assertTrue(connector.getCategory().getConnectors().contains(connector));
 		}
 	}
-	
+
 	public void testMultipleStrategies() throws CoreException {
 		MockDiscoveryStrategy strategy = new MockDiscoveryStrategy();
 		strategy.setConnectorMockFactory(mockDiscoveryStrategy.getConnectorMockFactory());
 		strategy.setCategoryMockFactory(mockDiscoveryStrategy.getCategoryMockFactory());
 		connectorDiscovery.getDiscoveryStrategies().add(strategy);
-		
+
 		connectorDiscovery.performDiscovery(new NullProgressMonitor());
-		
-		assertEquals(mockDiscoveryStrategy.getConnectorMockFactory().getCreatedCount(),connectorDiscovery.getConnectors().size());
-		assertEquals(mockDiscoveryStrategy.getCategoryMockFactory().getCreatedCount(),connectorDiscovery.getCategories().size());
+
+		assertEquals(mockDiscoveryStrategy.getConnectorMockFactory().getCreatedCount(),
+				connectorDiscovery.getConnectors().size());
+		assertEquals(mockDiscoveryStrategy.getCategoryMockFactory().getCreatedCount(),
+				connectorDiscovery.getCategories().size());
 	}
 }

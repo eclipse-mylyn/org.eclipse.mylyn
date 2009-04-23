@@ -39,33 +39,35 @@ public class RemoteBundleDiscoveryStrategyTest extends TestCase {
 		discoveryStrategy.setCategories(new ArrayList<DiscoveryCategory>());
 		discoveryStrategy.setConnectors(new ArrayList<DiscoveryConnector>());
 	}
-	
+
 	public void testPerformDiscovery() throws CoreException, IOException {
 		discoveryStrategy.performDiscovery(new NullProgressMonitor());
 		assertFalse(discoveryStrategy.getCategories().isEmpty());
-		for (DiscoveryCategory category: discoveryStrategy.getCategories()) {
-			System.out.println(String.format("%s: %s: %s",category.getId(),category.getName(),category.getDescription()));
+		for (DiscoveryCategory category : discoveryStrategy.getCategories()) {
+			System.out.println(String.format("%s: %s: %s", category.getId(), category.getName(),
+					category.getDescription()));
 			assertNotNull(category.getId());
 			assertNotNull(category.getName());
 			assertNotNull(category.getDescription());
 		}
 		assertFalse(discoveryStrategy.getConnectors().isEmpty());
-		for (DiscoveryConnector connector: discoveryStrategy.getConnectors()) {
-			System.out.println(String.format("%s: %s: %s",connector.getId(),connector.getName(),connector.getDescription()));
+		for (DiscoveryConnector connector : discoveryStrategy.getConnectors()) {
+			System.out.println(String.format("%s: %s: %s", connector.getId(), connector.getName(),
+					connector.getDescription()));
 			assertNotNull(connector.getId());
 			assertNotNull(connector.getKind());
 			assertNotNull(connector.getName());
 			assertNotNull(connector.getDescription());
-			
+
 			// we _know_ that the bundle must have a plugin.xml... so verify that the source is working correctly
 			assertNotNull(connector.getSource());
 			URL pluginXmlUrl = connector.getSource().getResource("plugin.xml");
-			System.out.println("URL: "+pluginXmlUrl);
+			System.out.println("URL: " + pluginXmlUrl);
 			InputStream in = pluginXmlUrl.openStream();
 			assertNotNull(in);
 			in.close();
 		}
-		
+
 	}
 
 }

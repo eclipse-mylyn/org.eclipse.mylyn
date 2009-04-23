@@ -39,18 +39,22 @@ public class WebUtil {
 	public interface TextContentProcessor {
 		public void process(Reader reader) throws IOException;
 	}
-	
+
 	/**
 	 * Download an HTTP-based resource
 	 * 
-	 * @param target the target file to which the content is saved
-	 * @param location the web location of the content
-	 * @param monitor the monitor
+	 * @param target
+	 *            the target file to which the content is saved
+	 * @param location
+	 *            the web location of the content
+	 * @param monitor
+	 *            the monitor
 	 * 
 	 * @throws IOException
 	 *             if a network or IO problem occurs
 	 */
-	public static void downloadResource(File target,AbstractWebLocation location, IProgressMonitor monitor) throws IOException {
+	public static void downloadResource(File target, AbstractWebLocation location, IProgressMonitor monitor)
+			throws IOException {
 		monitor = Policy.monitorFor(monitor);
 		try {
 			monitor.beginTask("Retrieving " + location.getUrl(), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
@@ -60,7 +64,8 @@ public class WebUtil {
 
 			GetMethod method = new GetMethod(location.getUrl());
 			try {
-				HostConfiguration hostConfiguration = org.eclipse.mylyn.commons.net.WebUtil.createHostConfiguration(client, location, monitor);
+				HostConfiguration hostConfiguration = org.eclipse.mylyn.commons.net.WebUtil.createHostConfiguration(
+						client, location, monitor);
 				int result = org.eclipse.mylyn.commons.net.WebUtil.execute(client, hostConfiguration, method, monitor);
 				if (result == HttpStatus.SC_OK) {
 					InputStream in = org.eclipse.mylyn.commons.net.WebUtil.getResponseBodyAsStream(method, monitor);
@@ -84,7 +89,8 @@ public class WebUtil {
 						in.close();
 					}
 				} else {
-					throw new IOException(MessageFormat.format("Cannot download {0}: HTTP response {1}",location.getUrl(),result));
+					throw new IOException(MessageFormat.format("Cannot download {0}: HTTP response {1}",
+							location.getUrl(), result));
 				}
 			} finally {
 				method.releaseConnection();
@@ -93,8 +99,9 @@ public class WebUtil {
 			monitor.done();
 		}
 	}
-	
-	public static void readResource(AbstractWebLocation location, TextContentProcessor processor, IProgressMonitor monitor) throws IOException {
+
+	public static void readResource(AbstractWebLocation location, TextContentProcessor processor,
+			IProgressMonitor monitor) throws IOException {
 		monitor = Policy.monitorFor(monitor);
 		try {
 			monitor.beginTask("Retrieving " + location.getUrl(), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
@@ -104,7 +111,8 @@ public class WebUtil {
 
 			GetMethod method = new GetMethod(location.getUrl());
 			try {
-				HostConfiguration hostConfiguration = org.eclipse.mylyn.commons.net.WebUtil.createHostConfiguration(client, location, monitor);
+				HostConfiguration hostConfiguration = org.eclipse.mylyn.commons.net.WebUtil.createHostConfiguration(
+						client, location, monitor);
 				int result = org.eclipse.mylyn.commons.net.WebUtil.execute(client, hostConfiguration, method, monitor);
 				if (result == HttpStatus.SC_OK) {
 					InputStream in = org.eclipse.mylyn.commons.net.WebUtil.getResponseBodyAsStream(method, monitor);

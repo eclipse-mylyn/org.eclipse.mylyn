@@ -16,7 +16,9 @@ package org.eclipse.mylyn.internal.discovery.core.model;
  */
 public class DiscoveryConnector extends ConnectorDescriptor {
 	private AbstractDiscoverySource source;
+
 	private DiscoveryCategory category;
+
 	private boolean selected;
 
 	public DiscoveryCategory getCategory() {
@@ -47,7 +49,8 @@ public class DiscoveryConnector extends ConnectorDescriptor {
 	/**
 	 * support selection
 	 * 
-	 * @param selected true if the item is selected, otherwise false
+	 * @param selected
+	 *            true if the item is selected, otherwise false
 	 */
 	public void setSelected(boolean selected) {
 		this.selected = selected;

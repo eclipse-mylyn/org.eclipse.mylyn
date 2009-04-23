@@ -22,8 +22,9 @@ import java.net.URLEncoder;
  */
 public class JarDiscoverySource extends AbstractDiscoverySource {
 
-	private String id;
-	private File jarFile;
+	private final String id;
+
+	private final File jarFile;
 
 	public JarDiscoverySource(String id, File jarFile) {
 		this.id = id;
@@ -40,8 +41,7 @@ public class JarDiscoverySource extends AbstractDiscoverySource {
 		try {
 			String prefix = jarFile.toURI().toURL().toExternalForm();
 
-			return new URL(
-					"jar:"	+ prefix + "!/" + URLEncoder.encode(resourceName, "utf-8")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			return new URL("jar:" + prefix + "!/" + URLEncoder.encode(resourceName, "utf-8")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		} catch (MalformedURLException e) {
 			throw new IllegalStateException(e);
 		} catch (UnsupportedEncodingException e) {

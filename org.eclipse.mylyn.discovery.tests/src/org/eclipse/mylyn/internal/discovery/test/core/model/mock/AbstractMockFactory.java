@@ -17,9 +17,11 @@ package org.eclipse.mylyn.internal.discovery.test.core.model.mock;
 public abstract class AbstractMockFactory<MockType> {
 
 	protected int seed = 0;
+
 	private MockType mockObject;
+
 	protected MockDiscoverySource source = new MockDiscoverySource();
-	
+
 	public final MockType get() {
 		MockType object = getMockObject();
 		mockObject = null;
@@ -38,7 +40,6 @@ public abstract class AbstractMockFactory<MockType> {
 	protected abstract void populateMockData();
 
 	protected abstract MockType createMockObject();
-	
 
 	/**
 	 * get the number of objects created by this factory

@@ -18,8 +18,7 @@ import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryCategory;
  * 
  * @author David Green
  */
-public class DiscoveryCategoryComparator implements
-		Comparator<DiscoveryCategory> {
+public class DiscoveryCategoryComparator implements Comparator<DiscoveryCategory> {
 
 	public int compare(DiscoveryCategory o1, DiscoveryCategory o2) {
 		if (o1 == o2) {

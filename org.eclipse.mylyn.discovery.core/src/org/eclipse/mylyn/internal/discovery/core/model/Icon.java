@@ -10,79 +10,84 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.discovery.core.model;
 
-
 /**
  * @author David Green
  */
 public class Icon {
-	
+
 	protected String image16;
+
 	protected String image32;
+
 	protected String image48;
+
 	protected String image64;
+
 	protected String image128;
+
 	protected ConnectorDescriptor connectorDescriptor;
+
 	protected ConnectorCategory connectorCategory;
-	
+
 	public Icon() {
 	}
-	
+
 	public String getImage16() {
 		return image16;
 	}
-	
+
 	public void setImage16(String image16) {
 		this.image16 = image16;
 	}
-	
+
 	public String getImage32() {
 		return image32;
 	}
-	
+
 	public void setImage32(String image32) {
 		this.image32 = image32;
 	}
-	
+
 	public String getImage48() {
 		return image48;
 	}
-	
+
 	public void setImage48(String image48) {
 		this.image48 = image48;
 	}
-	
+
 	public String getImage64() {
 		return image64;
 	}
-	
+
 	public void setImage64(String image64) {
 		this.image64 = image64;
 	}
-	
+
 	public String getImage128() {
 		return image128;
 	}
-	
+
 	public void setImage128(String image128) {
 		this.image128 = image128;
 	}
-	
+
 	public ConnectorDescriptor getConnectorDescriptor() {
 		return connectorDescriptor;
 	}
-	
+
 	public void setConnectorDescriptor(ConnectorDescriptor connectorDescriptor) {
 		this.connectorDescriptor = connectorDescriptor;
 	}
-	
+
 	public ConnectorCategory getConnectorCategory() {
 		return connectorCategory;
 	}
-	
+
 	public void setConnectorCategory(ConnectorCategory connectorCategory) {
 		this.connectorCategory = connectorCategory;
 	}
-	
+
 	public void validate() throws ValidationException {
 	}
 }

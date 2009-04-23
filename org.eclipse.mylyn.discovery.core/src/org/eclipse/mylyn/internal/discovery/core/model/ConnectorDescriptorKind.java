@@ -10,45 +10,46 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.discovery.core.model;
 
-
 /**
  * @author David Green
  */
 public enum ConnectorDescriptorKind {
-	
+
 	DOCUMENT("document"), //$NON-NLS-1$
 	TASK("task"), //$NON-NLS-1$
 	VCS("vcs"); //$NON-NLS-1$
-	
+
 	private final String value;
-	
+
 	private ConnectorDescriptorKind(String value) {
 		this.value = value;
 	}
-	
+
 	public String getValue() {
 		return value;
 	}
-	
+
 	/**
 	 * return the enum constant whose {@link #getValue() value} is the same as the given value.
-	 *
-	 * @param value the string value, or null
-	 *
+	 * 
+	 * @param value
+	 *            the string value, or null
+	 * 
 	 * @return the corresponding enum constant or null if the given value was null
-	 *
-	 * @throws IllegalArgumentException if the given value does not correspond to any enum constant
+	 * 
+	 * @throws IllegalArgumentException
+	 *             if the given value does not correspond to any enum constant
 	 */
 	public static ConnectorDescriptorKind fromValue(String value) throws IllegalArgumentException {
 		if (value == null) {
 			return null;
 		}
-		for (ConnectorDescriptorKind e: values()) {
+		for (ConnectorDescriptorKind e : values()) {
 			if (e.getValue().equals(value)) {
 				return e;
 			}
 		}
 		throw new IllegalArgumentException(value);
 	}
-	
+
 }

@@ -13,23 +13,32 @@ package org.eclipse.mylyn.internal.discovery.core.model;
 import java.net.MalformedURLException;
 
 /**
- * A description of a connector, including kind, description, licensing and
- * brand.
+ * A description of a connector, including kind, description, licensing and brand.
  * 
  * @author David Green
  */
 public class ConnectorDescriptor {
 
 	protected ConnectorDescriptorKind kind;
+
 	protected String name;
+
 	protected String provider;
+
 	protected String license;
+
 	protected String description;
+
 	protected String siteUrl;
+
 	protected String id;
+
 	protected String categoryId;
+
 	protected String platformFilter;
+
 	protected Icon icon;
+
 	protected Overview overview;
 
 	public ConnectorDescriptor() {
@@ -47,8 +56,8 @@ public class ConnectorDescriptor {
 	}
 
 	/**
-	 * the name of the connector including the name of the organization that
-	 * produces the repository if appropriate, for example 'Mozilla Bugzilla'.
+	 * the name of the connector including the name of the organization that produces the repository if appropriate, for
+	 * example 'Mozilla Bugzilla'.
 	 */
 	public String getName() {
 		return name;
@@ -70,8 +79,7 @@ public class ConnectorDescriptor {
 	}
 
 	/**
-	 * The short name of the license, for example 'EPL 1.0', 'GPL 2.0', or
-	 * 'Commercial'.
+	 * The short name of the license, for example 'EPL 1.0', 'GPL 2.0', or 'Commercial'.
 	 */
 	public String getLicense() {
 		return license;
@@ -82,8 +90,9 @@ public class ConnectorDescriptor {
 	}
 
 	/**
-	 * A description of the connector. Plug-ins should provide a description,
-	 * especially if the description is not self-evident from the @name and
+	 * A description of the connector. Plug-ins should provide a description, especially if the description is not
+	 * self-evident from the @name and
+	 * 
 	 * @organization.
 	 */
 	public String getDescription() {
@@ -156,38 +165,30 @@ public class ConnectorDescriptor {
 
 	public void validate() throws ValidationException {
 		if (kind == null) {
-			throw new ValidationException(
-					"Must specify connectorDescriptor/@kind");
+			throw new ValidationException("Must specify connectorDescriptor/@kind");
 		}
 		if (name == null || name.length() == 0) {
-			throw new ValidationException(
-					"Must specify connectorDescriptor/@name");
+			throw new ValidationException("Must specify connectorDescriptor/@name");
 		}
 		if (provider == null || provider.length() == 0) {
-			throw new ValidationException(
-					"Must specify connectorDescriptor/@provider");
+			throw new ValidationException("Must specify connectorDescriptor/@provider");
 		}
 		if (license == null || license.length() == 0) {
-			throw new ValidationException(
-					"Must specify connectorDescriptor/@license");
+			throw new ValidationException("Must specify connectorDescriptor/@license");
 		}
 		if (siteUrl == null || siteUrl.length() == 0) {
-			throw new ValidationException(
-					"Must specify connectorDescriptor/@siteUrl");
+			throw new ValidationException("Must specify connectorDescriptor/@siteUrl");
 		}
 		try {
 			new java.net.URL(siteUrl);
 		} catch (MalformedURLException e) {
-			throw new ValidationException(
-			"Invalid connectorDescriptor/@siteUrl");
+			throw new ValidationException("Invalid connectorDescriptor/@siteUrl");
 		}
 		if (id == null || id.length() == 0) {
-			throw new ValidationException(
-					"Must specify connectorDescriptor/@id");
+			throw new ValidationException("Must specify connectorDescriptor/@id");
 		}
 		if (categoryId == null || categoryId.length() == 0) {
-			throw new ValidationException(
-					"Must specify connectorDescriptor/@categoryId");
+			throw new ValidationException("Must specify connectorDescriptor/@categoryId");
 		}
 		if (icon != null) {
 			icon.validate();

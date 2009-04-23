@@ -18,8 +18,7 @@ import java.net.URL;
  */
 public abstract class AbstractDiscoverySource {
 	/**
-	 * an identifier that can be used to determine the origin of the source,
-	 * typically for logging purposes.
+	 * an identifier that can be used to determine the origin of the source, typically for logging purposes.
 	 */
 	public abstract Object getId();
 
@@ -28,7 +27,7 @@ public abstract class AbstractDiscoverySource {
 	 * 
 	 * @param relativeUrl
 	 *            the relative resource name
-	 * @return an URL to the resource, or null if the resource does not exist.
+	 * @return an URL to the resource, or null if it is known that the resource does not exist.
 	 */
 	public abstract URL getResource(String resourceName);
 }

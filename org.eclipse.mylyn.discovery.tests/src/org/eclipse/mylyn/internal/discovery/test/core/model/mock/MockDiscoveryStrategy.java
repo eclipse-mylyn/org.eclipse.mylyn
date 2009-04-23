@@ -24,17 +24,20 @@ import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryConnector;
 public class MockDiscoveryStrategy extends AbstractDiscoveryStrategy {
 
 	private int connectorCount = 15;
+
 	private int categoryCount = 5;
+
 	protected DiscoveryConnectorMockFactory connectorMockFactory = new DiscoveryConnectorMockFactory();
+
 	protected DiscoveryCategoryMockFactory categoryMockFactory = new DiscoveryCategoryMockFactory();
-	
+
 	@Override
 	public void performDiscovery(IProgressMonitor monitor) throws CoreException {
-		for (int x = 0;x<categoryCount;++x) {
+		for (int x = 0; x < categoryCount; ++x) {
 			DiscoveryCategory mockCategory = createDiscoveryCategory();
 			getCategories().add(mockCategory);
 		}
-		for (int x = 0;x<connectorCount;++x) {
+		for (int x = 0; x < connectorCount; ++x) {
 			DiscoveryConnector mockConnector = createDiscoveryConnector();
 			// put the connector in a category
 			if (!getCategories().isEmpty()) {
@@ -52,13 +55,12 @@ public class MockDiscoveryStrategy extends AbstractDiscoveryStrategy {
 	protected DiscoveryConnector createDiscoveryConnector() {
 		return connectorMockFactory.get();
 	}
-	
+
 	public DiscoveryCategoryMockFactory getCategoryMockFactory() {
 		return categoryMockFactory;
 	}
 
-	public void setCategoryMockFactory(
-			DiscoveryCategoryMockFactory categoryMockFactory) {
+	public void setCategoryMockFactory(DiscoveryCategoryMockFactory categoryMockFactory) {
 		this.categoryMockFactory = categoryMockFactory;
 	}
 
@@ -66,8 +68,7 @@ public class MockDiscoveryStrategy extends AbstractDiscoveryStrategy {
 		return connectorMockFactory;
 	}
 
-	public void setConnectorMockFactory(
-			DiscoveryConnectorMockFactory connectorMockFactory) {
+	public void setConnectorMockFactory(DiscoveryConnectorMockFactory connectorMockFactory) {
 		this.connectorMockFactory = connectorMockFactory;
 	}
 
