@@ -177,7 +177,11 @@ public class AttachmentSourcePage extends WizardPage {
 
 	@Override
 	public IWizardPage getNextPage() {
-		model.setSource(getSource());
+		AbstractTaskAttachmentSource source = getSource();
+		model.setSource(source);
+		if (source != null) {
+			model.setContentType(source.getContentType());
+		}
 		saveDialogSettings();
 		return super.getNextPage();
 	}
