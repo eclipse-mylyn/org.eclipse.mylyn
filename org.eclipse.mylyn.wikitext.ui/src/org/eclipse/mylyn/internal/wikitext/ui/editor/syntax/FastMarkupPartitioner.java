@@ -369,6 +369,7 @@ public class FastMarkupPartitioner extends FastPartitioner {
 
 			partitions = new ArrayList<MarkupPartition>();
 
+			// here we flatten our hierarchy of blocks into partitions
 			for (Segment<?> child : outerBlock.getChildren().asList()) {
 				createRegions(null, child);
 			}
@@ -387,35 +388,36 @@ public class FastMarkupPartitioner extends FastPartitioner {
 						partitions.add(partition);
 					} else {
 						// parent needs adjusting to prevent overlap
+						int parentIndex = partitions.indexOf(parent);
 
 						// start on the same offset
 						if (partition.offset == parent.offset) {
 							if (partition.length == parent.length) {
 								// same length, so remove parent all together
-								partitions.remove(parent);
-								partitions.add(partition);
+								partitions.remove(parentIndex);
+								partitions.add(parentIndex, partition);
 							} else {
 								// start on same offset, but new partition is smaller
 								// so move parent after new partition and shrink it by the corresponding amount
 								parent.offset = partition.offset + partition.length;
 								parent.length -= partition.length;
-								partitions.add(partitions.size() - 1, partition);
+								partitions.add(parentIndex, partition);
 							}
 						} else {
 							if (partition.length + partition.offset == parent.length + parent.offset) {
 								// end on the same offset, so shrink the parent
 								parent.length = partition.offset - parent.offset;
-								partitions.add(partition);
+								partitions.add(parentIndex + 1, partition);
 							} else {
 								// split the parent
 								int parentLength = parent.length;
 								parent.length = partition.offset - parent.offset;
 								final int splitOffset = partition.offset + partition.length;
-								MarkupPartition split = new MarkupPartition(parent.block, splitOffset, parent.offset
+								MarkupPartition trailer = new MarkupPartition(parent.block, splitOffset, parent.offset
 										+ parentLength - splitOffset);
-								partitions.add(partition);
-								partitions.add(split);
-								parent = split;
+								partitions.add(parentIndex + 1, partition);
+								partitions.add(parentIndex + 2, trailer);
+								parent = trailer;
 							}
 						}
 					}
