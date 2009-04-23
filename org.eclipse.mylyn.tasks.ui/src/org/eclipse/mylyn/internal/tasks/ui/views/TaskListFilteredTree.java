@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -22,6 +23,8 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.layout.TreeColumnLayout;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -37,6 +40,7 @@ import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.TaskHistoryDropDown;
 import org.eclipse.mylyn.internal.tasks.ui.TaskHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.TaskSearchPage;
+import org.eclipse.mylyn.internal.tasks.ui.TaskWorkingSetFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskDialogAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
@@ -62,6 +66,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IWorkingSet;
+import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
@@ -103,6 +108,14 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 	private ITaskListChangeListener changeListener;
 
+	private TaskListChangeAdapter taskProgressBarChangeListener;
+
+	private TaskActivityAdapter taskProgressBarActivityListener;
+
+	private IPropertyChangeListener taskProgressBarWorkingSetListener;
+
+	private TaskWorkingSetFilter workingSetFilter;
+
 	public TaskListFilteredTree(Composite parent, int treeStyle, PatternFilter filter) {
 		super(parent, treeStyle, filter);
 		hookContextMenu();
@@ -113,6 +126,17 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		if (changeListener != null) {
 			TasksUiInternal.getTaskList().removeChangeListener(changeListener);
 		}
+		if (taskProgressBarChangeListener != null) {
+			TasksUiInternal.getTaskList().removeChangeListener(taskProgressBarChangeListener);
+		}
+		if (taskProgressBarActivityListener != null) {
+			TasksUi.getTaskActivityManager().removeActivityListener(taskProgressBarActivityListener);
+		}
+		if (taskProgressBarWorkingSetListener != null) {
+			PlatformUI.getWorkbench().getWorkingSetManager().addPropertyChangeListener(
+					taskProgressBarWorkingSetListener);
+		}
+
 		super.dispose();
 		taskListToolTip.dispose();
 	}
@@ -156,7 +180,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		taskProgressBar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		updateTaskProgressBar();
 
-		TasksUiInternal.getTaskList().addChangeListener(new TaskListChangeAdapter() {
+		taskProgressBarChangeListener = new TaskListChangeAdapter() {
 
 			@Override
 			public void containersChanged(Set<TaskContainerDelta> containers) {
@@ -167,16 +191,29 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 					}
 				}
 			}
-		});
+		};
+		TasksUiInternal.getTaskList().addChangeListener(taskProgressBarChangeListener);
 
-		TasksUiPlugin.getTaskActivityManager().addActivityListener(new TaskActivityAdapter() {
+		taskProgressBarActivityListener = new TaskActivityAdapter() {
 
 			@Override
 			public void activityReset() {
 				updateTaskProgressBar();
 			}
 
-		});
+		};
+		TasksUiPlugin.getTaskActivityManager().addActivityListener(taskProgressBarActivityListener);
+
+		taskProgressBarWorkingSetListener = new IPropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent event) {
+				String property = event.getProperty();
+				if (IWorkingSetManager.CHANGE_WORKING_SET_CONTENT_CHANGE.equals(property)
+						|| IWorkingSetManager.CHANGE_WORKING_SET_REMOVE.equals(property)) {
+					updateTaskProgressBar();
+				}
+			}
+		};
+		PlatformUI.getWorkbench().getWorkingSetManager().addPropertyChangeListener(taskProgressBarWorkingSetListener);
 
 		return progressComposite;
 	}
@@ -220,6 +257,14 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		}
 
 		Set<ITask> tasksThisWeek = TasksUiPlugin.getTaskActivityManager().getScheduledForADayThisWeek();
+		if (workingSetFilter != null) {
+			for (Iterator<ITask> it = tasksThisWeek.iterator(); it.hasNext();) {
+				ITask task = it.next();
+				if (!workingSetFilter.select(task)) {
+					it.remove();
+				}
+			}
+		}
 
 		totalTasks = tasksThisWeek.size();
 		completeTime = 0;
@@ -558,6 +603,14 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 	protected String getFilterString() {
 		String text = super.getFilterString();
 		return (text != null) ? text.trim() : null;
+	}
+
+	public TaskWorkingSetFilter getWorkingSetFilter() {
+		return workingSetFilter;
+	}
+
+	public void setWorkingSetFilter(TaskWorkingSetFilter workingSetFilter) {
+		this.workingSetFilter = workingSetFilter;
 	}
 
 }

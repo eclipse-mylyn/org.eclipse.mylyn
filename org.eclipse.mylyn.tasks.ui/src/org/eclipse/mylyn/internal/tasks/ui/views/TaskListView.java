@@ -299,7 +299,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 	/**
 	 * @deprecated Use {@link ITasksUiConstants#ID_VIEW_TASK_LIST} instead
 	 */
-	public static final String ID = ITasksUiConstants.ID_VIEW_TASK_LIST; //$NON-NLS-1$
+	@Deprecated
+	public static final String ID = ITasksUiConstants.ID_VIEW_TASK_LIST;
 
 	public static final String LABEL_VIEW = Messages.TaskListView_Task_List;
 
@@ -868,6 +869,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 		filterWorkingSet = new TaskWorkingSetFilter();
 		filterWorkingSet.updateWorkingSet(getSite().getPage().getAggregateWorkingSet());
+		filteredTree.setWorkingSetFilter(filterWorkingSet);
 		addFilter(filterWorkingSet);
 		addFilter(filterPriority);
 		if (TasksUiPlugin.getDefault().getPreferenceStore().contains(ITasksUiPreferenceConstants.FILTER_COMPLETE_MODE)) {

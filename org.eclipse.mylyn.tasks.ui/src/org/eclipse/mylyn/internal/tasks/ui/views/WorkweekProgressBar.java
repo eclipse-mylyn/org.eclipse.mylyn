@@ -28,7 +28,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.themes.IThemeManager;
 
 /**
- * Derived from JUnitProgressBar
+ * Derived from JUnitProgressBar.
  * 
  * @author Mik Kersten
  */

@@ -68,6 +68,15 @@ public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 		return true;
 	}
 
+	public boolean select(ITask task) {
+		for (IRepositoryElement query : ((AbstractTask) task).getParentContainers()) {
+			if (isContainedInWorkingSet(query)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	@Override
 	public boolean applyToFilteredText() {
 		return true;
