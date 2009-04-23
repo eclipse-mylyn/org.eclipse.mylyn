@@ -13,4 +13,19 @@
             primary="false">
       </toc>
    </extension>
+   <extension point="org.eclipse.pde.core.javadoc">
+      <javadoc path="reference/api">
+         <plugin id="org.eclipse.mylyn.commons.core" />
+         <plugin id="org.eclipse.mylyn.commons.net" />
+         <plugin id="org.eclipse.mylyn.context.core" />
+         <plugin id="org.eclipse.mylyn.context.ui" />
+         <plugin id="org.eclipse.mylyn.ide.ui" />
+         <plugin id="org.eclipse.mylyn.monitor.core" />
+         <plugin id="org.eclipse.mylyn.monitor.ui" />
+         <plugin id="org.eclipse.mylyn.resources.ui" />
+         <plugin id="org.eclipse.mylyn.tasks.core" />
+         <plugin id="org.eclipse.mylyn.tasks.ui" />
+         <plugin id="org.eclipse.mylyn.team.ui" /> 
+      </javadoc>
+   </extension>
 </plugin>
