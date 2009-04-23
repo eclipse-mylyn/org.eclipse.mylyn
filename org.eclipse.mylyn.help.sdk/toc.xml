@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<toc label="Tasks Developer Guide">
+   <topic label="Online Docs">
+      <topic href="http://wiki.eclipse.org/Mylyn/Architecture" label="Architecture Overview">
+      </topic>
+      <topic href="http://wiki.eclipse.org/Mylyn/Contributor_Reference" label="Contributor Reference">
+      </topic>
+      <topic href="http://wiki.eclipse.org/Mylyn/Integrator_Reference" label="Integrator Reference">
+      </topic>
+      <topic href="http://wiki.eclipse.org/Mylyn/Porting_Guide" label="Porting Guide">
+      </topic>
+   </topic>
+   <anchor id="additions"/>
+   <topic label="References">
+      <link toc="toc-reference.xml"/>
+   </topic>
+   <topic href="doc/notices.html" label="Legal" />
+</toc>

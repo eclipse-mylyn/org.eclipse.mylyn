@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="org.eclipse.mylyn.help.sdk" default="all">
+    <description>
+            Generate Eclipse help content for the Mylyn developer guide
+    </description>
+
+	<property environment="env" />
+	<property name="install" value="${basedir}/../../" />
+
+	<target name="all">
+	        <antcall target="generateJavadoc" />
+	        <antcall target="convertSchemaToHtml" />
+	</target>
+
+	<target name="convertSchemaToHtml" if="eclipse.running">
+	        <property name="dest" value="reference/extension-points" />
+	        <record name="${basedir}/doc.cnv.txt" action="start" />
+	        <pde.convertSchemaToHTML manifest="../org.eclipse.mylyn.bugzilla.core/plugin.xml" destination="${dest}" />
+	        <pde.convertSchemaToHTML manifest="../org.eclipse.mylyn.commons.core/plugin.xml" destination="${dest}" />
+	        <pde.convertSchemaToHTML manifest="../org.eclipse.mylyn.context.core/plugin.xml" destination="${dest}" />
+	        <pde.convertSchemaToHTML manifest="../org.eclipse.mylyn.context.ui/plugin.xml" destination="${dest}" />
+	        <pde.convertSchemaToHTML manifest="../org.eclipse.mylyn.java.ui/plugin.xml" destination="${dest}" />
+	        <pde.convertSchemaToHTML manifest="../org.eclipse.mylyn.monitor.ui/plugin.xml" destination="${dest}" />
+	        <pde.convertSchemaToHTML manifest="../org.eclipse.mylyn.resources.ui/plugin.xml" destination="${dest}" />
+	        <pde.convertSchemaToHTML manifest="../org.eclipse.mylyn.tasks.bugs/plugin.xml" destination="${dest}" />
+	        <pde.convertSchemaToHTML manifest="../org.eclipse.mylyn.tasks.core/plugin.xml" destination="${dest}" />
+	        <pde.convertSchemaToHTML manifest="../org.eclipse.mylyn.tasks.ui/plugin.xml" destination="${dest}" />
+	        <pde.convertSchemaToHTML manifest="../org.eclipse.mylyn.team.ui/plugin.xml" destination="${dest}" />
+	        <record name="${basedir}/doc.cnv.txt" action="stop" />
+	</target>
+
+	<target name="generateJavadoc">
+		<delete dir="reference/api"/>
+		<mkdir dir="reference/api"/>
+
+		<javadoc destdir="reference/api"
+	           author="true"
+	           version="true"
+	           use="true"
+	           windowtitle="Mylyn API Reference">
+		    <fileset dir=".." defaultexcludes="yes">
+		    	<include name="org.eclipse.mylyn*/src/org/eclipse/mylyn/**/*.java"/>
+				<exclude name="org.eclipse.mylyn*.tests/**"/>
+				<exclude name="org.eclipse.mylyn*examples*/**"/>
+				<exclude name="org.eclipse.mylyn.monitor.usage/**"/>
+				<exclude name="org.eclipse.mylyn*wikitext*/**"/>
+				<exclude name="**/internal/**"/>
+		    </fileset>
+		</javadoc>
+	</target>
+
+</project>

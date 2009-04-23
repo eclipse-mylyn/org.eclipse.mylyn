@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<toc label="Reference">
+	<topic label="API Reference" href="reference/api/overview-summary.html">
+		<topic href="reference/api/org/eclipse/mylyn/commons/core/package-summary.html" label="org.eclipse.mylyn.commons.core" />
+		<topic href="reference/api/org/eclipse/mylyn/commons/net/package-summary.html" label="org.eclipse.mylyn.commons.net" />
+		<topic href="reference/api/org/eclipse/mylyn/context/core/package-summary.html" label="org.eclipse.mylyn.context.core" />
+		<topic href="reference/api/org/eclipse/mylyn/context/ui/package-summary.html" label="org.eclipse.mylyn.context.ui" />
+		<topic href="reference/api/org/eclipse/mylyn/ide/ui/package-summary.html" label="org.eclipse.mylyn.ide.ui" />
+		<topic href="reference/api/org/eclipse/mylyn/monitor/core/package-summary.html" label="org.eclipse.mylyn.monitor.core" />
+		<topic href="reference/api/org/eclipse/mylyn/monitor/ui/package-summary.html" label="org.eclipse.mylyn.monitor.ui" />
+		<topic href="reference/api/org/eclipse/mylyn/resources/ui/package-summary.html" label="org.eclipse.mylyn.resources.ui" />
+		<topic href="reference/api/org/eclipse/mylyn/tasks/core/package-summary.html" label="org.eclipse.mylyn.tasks.core" />
+		<topic href="reference/api/org/eclipse/mylyn/tasks/core/data/package-summary.html" label="org.eclipse.mylyn.tasks.core.data" />
+		<topic href="reference/api/org/eclipse/mylyn/tasks/core/sync/package-summary.html" label="org.eclipse.mylyn.tasks.core.sync" />
+		<topic href="reference/api/org/eclipse/mylyn/tasks/ui/package-summary.html" label="org.eclipse.mylyn.tasks.ui" />
+		<topic href="reference/api/org/eclipse/mylyn/tasks/ui/editors/package-summary.html" label="org.eclipse.mylyn.tasks.ui.editors" />
+		<topic href="reference/api/org/eclipse/mylyn/tasks/ui/wizards/package-summary.html" label="org.eclipse.mylyn.tasks.ui.wizards" />
+		<topic href="reference/api/org/eclipse/mylyn/team/ui/package-summary.html" label="org.eclipse.mylyn.team.ui" />
+	</topic>
+	<topic label="Extension Points Reference">
+		<topic href="reference/extension-points/org_eclipse_mylyn_bugzilla_core_languages.html" label="org.eclipse.mylyn.bugzilla.core.languages" />
+		<topic href="reference/extension-points/org_eclipse_mylyn_commons_core_errorReporters.html" label="org.eclipse.mylyn.commons.core.errorReporters" />
+		<topic href="reference/extension-points/org_eclipse_mylyn_context_core_bridges.html" label="org.eclipse.mylyn.context.core.bridges" />
+		<topic href="reference/extension-points/org_eclipse_mylyn_context_core_internalBridges.html" label="org.eclipse.mylyn.context.core.internalBridges" />
+		<topic href="reference/extension-points/org_eclipse_mylyn_context_core_relationProviders.html" label="org.eclipse.mylyn.context.core.relationProviders" />
+		<topic href="reference/extension-points/org_eclipse_mylyn_context_ui_bridges.html" label="org.eclipse.mylyn.context.ui.bridges" />
+		<topic href="reference/extension-points/org_eclipse_mylyn_context_ui_startup.html" label="org.eclipse.mylyn.context.ui.startup" />
+		<topic href="reference/extension-points/org_eclipse_mylyn_java_ui_javaEditorContributor.html" label="org.eclipse.mylyn.java.ui.javaEditorContributor" />
+		<topic href="reference/extension-points/org_eclipse_mylyn_monitor_ui_user.html" label="org.eclipse.mylyn.monitor.ui.user" />
+		<topic href="reference/extension-points/org_eclipse_mylyn_resources_ui_changeMonitoring.html" label="org.eclipse.mylyn.resources.ui.changeMonitoring" />
+		<topic href="reference/extension-points/org_eclipse_mylyn_tasks_bugs_pluginRepositoryMappings.html" label="org.eclipse.mylyn.tasks.bugs.pluginRepositoryMappings" />
+		<topic href="reference/extension-points/org_eclipse_mylyn_tasks_bugs_taskContributors.html" label="org.eclipse.mylyn.tasks.bugs.taskContributors" />
+		<topic href="reference/extension-points/org_eclipse_mylyn_tasks_core_templates.html" label="org.eclipse.mylyn.tasks.core.templates" />
+		<topic href="reference/extension-points/org_eclipse_mylyn_tasks_ui_actions.html" label="org.eclipse.mylyn.tasks.ui.actions" />
+		<topic href="reference/extension-points/org_eclipse_mylyn_tasks_ui_duplicateDetectors.html" label="org.eclipse.mylyn.tasks.ui.duplicateDetectors" />
+		<topic href="reference/extension-points/org_eclipse_mylyn_tasks_ui_editors.html" label="org.eclipse.mylyn.tasks.ui.editors" />
+		<topic href="reference/extension-points/org_eclipse_mylyn_tasks_ui_presentations.html" label="org.eclipse.mylyn.tasks.ui.presentations" />
+		<topic href="reference/extension-points/org_eclipse_mylyn_tasks_ui_projectLinkProviders.html" label="org.eclipse.mylyn.tasks.ui.projectLinkProviders" />
+		<topic href="reference/extension-points/org_eclipse_mylyn_tasks_ui_repositories.html" label="org.eclipse.mylyn.tasks.ui.repositories" />
+		<topic href="reference/extension-points/org_eclipse_mylyn_tasks_ui_taskEditorExtensions.html" label="org.eclipse.mylyn.tasks.ui.taskEditorExtensions" />
+		<topic href="reference/extension-points/org_eclipse_mylyn_tasks_ui_taskRepositoryPageContribution.html" label="org.eclipse.mylyn.tasks.ui.taskRepositoryPageContribution" />
+		<topic href="reference/extension-points/org_eclipse_mylyn_team_ui_changeSets.html" label="org.eclipse.mylyn.team.ui.changeSets" />
+		<topic href="reference/extension-points/org_eclipse_mylyn_team_ui_commitTemplates.html" label="org.eclipse.mylyn.team.ui.commitTemplates" />
+	</topic>
+</toc>
