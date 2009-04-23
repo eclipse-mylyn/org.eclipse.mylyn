@@ -104,50 +104,7 @@ public class ContextChangeSet extends ActiveChangeSet/*CVSActiveChangeSet*/imple
 	}
 
 	public String getComment(boolean checkTaskRepository) {
-		String template = null;
-		Set<IProject> projects = new HashSet<IProject>();
-		IResource[] resources = getChangedResources();
-		for (IResource resource : resources) {
-			IProject project = resource.getProject();
-			if (project != null && project.isAccessible() && !projects.contains(project)) {
-				TeamPropertiesLinkProvider provider = new TeamPropertiesLinkProvider();
-				template = provider.getCommitCommentTemplate(project);
-				if (template != null) {
-					break;
-				}
-				projects.add(project);
-			}
-		}
-
-		boolean proceed = true;
-
-		if (checkTaskRepository) {
-			boolean unmatchedRepositoryFound = false;
-			for (IProject project : projects) {
-				TaskRepository repository = TasksUiPlugin.getDefault().getRepositoryForResource(project);
-				if (repository != null) {
-					if (!repository.getRepositoryUrl().equals(task.getRepositoryUrl())) {
-						unmatchedRepositoryFound = true;
-					}
-				}
-			}
-
-			if (unmatchedRepositoryFound) {
-				proceed = MessageDialog.openQuestion(WorkbenchUtil.getShell(),
-						Messages.ContextChangeSet_Mylyn_Change_Set_Management,
-						Messages.ContextChangeSet_ATTEMPTING_TO_COMMIT_RESOURCE);
-			}
-		}
-
-		if (proceed) {
-			if (template == null) {
-				template = FocusedTeamUiPlugin.getDefault().getPreferenceStore().getString(
-						FocusedTeamUiPlugin.COMMIT_TEMPLATE);
-			}
-			return FocusedTeamUiPlugin.getDefault().getCommitTemplateManager().generateComment(task, template);
-		} else {
-			return ""; //$NON-NLS-1$
-		}
+		return ContextChangeSet.getComment(checkTaskRepository, task, getChangedResources());
 	}
 
 	@Override
@@ -272,5 +229,51 @@ public class ContextChangeSet extends ActiveChangeSet/*CVSActiveChangeSet*/imple
 			return new LinkedTaskInfo(getTask(), this);
 		}
 		return Platform.getAdapterManager().getAdapter(this, adapter);
+	}
+
+	public static String getComment(boolean checkTaskRepository, ITask task, IResource[] resources) {
+		String template = null;
+		Set<IProject> projects = new HashSet<IProject>();
+		for (IResource resource : resources) {
+			IProject project = resource.getProject();
+			if (project != null && project.isAccessible() && !projects.contains(project)) {
+				TeamPropertiesLinkProvider provider = new TeamPropertiesLinkProvider();
+				template = provider.getCommitCommentTemplate(project);
+				if (template != null) {
+					break;
+				}
+				projects.add(project);
+			}
+		}
+
+		boolean proceed = true;
+
+		if (checkTaskRepository) {
+			boolean unmatchedRepositoryFound = false;
+			for (IProject project : projects) {
+				TaskRepository repository = TasksUiPlugin.getDefault().getRepositoryForResource(project);
+				if (repository != null) {
+					if (!repository.getRepositoryUrl().equals(task.getRepositoryUrl())) {
+						unmatchedRepositoryFound = true;
+					}
+				}
+			}
+
+			if (unmatchedRepositoryFound) {
+				proceed = MessageDialog.openQuestion(WorkbenchUtil.getShell(),
+						Messages.ContextChangeSet_Mylyn_Change_Set_Management,
+						Messages.ContextChangeSet_ATTEMPTING_TO_COMMIT_RESOURCE);
+			}
+		}
+
+		if (proceed) {
+			if (template == null) {
+				template = FocusedTeamUiPlugin.getDefault().getPreferenceStore().getString(
+						FocusedTeamUiPlugin.COMMIT_TEMPLATE);
+			}
+			return FocusedTeamUiPlugin.getDefault().getCommitTemplateManager().generateComment(task, template);
+		} else {
+			return ""; //$NON-NLS-1$
+		}
 	}
 }

@@ -14,25 +14,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.team.ui.ContextChangeSet;
-import org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin;
 import org.eclipse.mylyn.internal.team.ui.LinkedTaskInfo;
-import org.eclipse.mylyn.internal.team.ui.properties.TeamPropertiesLinkProvider;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.resources.ui.ResourcesUi;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.team.ui.AbstractTaskReference;
 import org.eclipse.mylyn.team.ui.IContextChangeSet;
 import org.eclipse.team.core.TeamException;
@@ -41,7 +35,6 @@ import org.eclipse.team.core.diff.provider.ThreeWayDiff;
 import org.eclipse.team.core.mapping.provider.ResourceDiff;
 import org.eclipse.team.internal.ccvs.core.mapping.CVSActiveChangeSet;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
-import org.eclipse.ui.PlatformUI;
 import org.osgi.service.prefs.Preferences;
 
 /**
@@ -106,51 +99,7 @@ public class CvsContextChangeSet extends CVSActiveChangeSet implements IAdaptabl
 	}
 
 	public String getComment(boolean checkTaskRepository) {
-		String template = null;
-		Set<IProject> projects = new HashSet<IProject>();
-		IResource[] resources = getChangedResources();
-		for (IResource resource : resources) {
-			IProject project = resource.getProject();
-			if (project != null && project.isAccessible() && !projects.contains(project)) {
-				TeamPropertiesLinkProvider provider = new TeamPropertiesLinkProvider();
-				template = provider.getCommitCommentTemplate(project);
-				if (template != null) {
-					break;
-				}
-				projects.add(project);
-			}
-		}
-
-		boolean proceed = true;
-
-		if (checkTaskRepository) {
-			boolean unmatchedRepositoryFound = false;
-			for (IProject project : projects) {
-				TaskRepository repository = TasksUiPlugin.getDefault().getRepositoryForResource(project);
-				if (repository != null) {
-					if (!repository.getRepositoryUrl().equals(task.getRepositoryUrl())) {
-						unmatchedRepositoryFound = true;
-					}
-				}
-			}
-
-			if (unmatchedRepositoryFound) {
-				proceed = MessageDialog.openQuestion(
-						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-						Messages.CvsContextChangeSet_Mylyn_Change_Set_Management,
-						Messages.CvsContextChangeSet_Attempting_to_commit_resource);
-			}
-		}
-
-		if (proceed) {
-			if (template == null) {
-				template = FocusedTeamUiPlugin.getDefault().getPreferenceStore().getString(
-						FocusedTeamUiPlugin.COMMIT_TEMPLATE);
-			}
-			return FocusedTeamUiPlugin.getDefault().getCommitTemplateManager().generateComment(task, template);
-		} else {
-			return ""; //$NON-NLS-1$
-		}
+		return ContextChangeSet.getComment(checkTaskRepository, task, getChangedResources());
 	}
 
 	@Override
