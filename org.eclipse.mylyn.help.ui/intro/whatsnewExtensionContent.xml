@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <introContent>
 	<extensionContent id="org.eclipse.mylyn" name="Mylyn"
-		style="css/whatsnew.css" path="whatsnew/@">
+		style="css/whatsnew.css" alt-style="css/whatsnew.properties" path="whatsnew/@">
 		<group id="content-group" style-id="content-group">
 			<link label="Mylyn"
 				url="http://www.eclipse.org/mylyn/new/"

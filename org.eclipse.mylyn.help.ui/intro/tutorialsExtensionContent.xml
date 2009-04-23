@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <introContent>
 	<extensionContent id="org.eclipse.mylyn" name="Mylyn"
-		style="css/tutorials.css" path="tutorials/@">
+		style="css/tutorials.css" alt-style="css/tutorials.properties" path="tutorials/@">
 		<group label="Task-focused programming" id="mylyn" style-id="content-group">
 			<link 
 				url="http://org.eclipse.ui.intro/showStandby?partId=org.eclipse.platform.cheatsheet&amp;input=org.eclipse.mylyn.cheatsheet.query" 
