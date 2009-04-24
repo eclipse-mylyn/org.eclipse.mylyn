@@ -21,6 +21,13 @@
 
 			<mkdir dir="${dest}"/>
 		
+		<!-- taskdef name="pde.convertSchemaToHTML" classname="org.eclipse.pde.internal.core.ant.ConvertSchemaToHTML">
+			<classpath>
+				<fileset dir="styles" includes="**/*.jar">
+				</fileset>
+			</classpath>
+		</taskdef -->
+		
 	        <record name="${basedir}/doc.cnv.txt" action="start" />
 	        <pde.convertSchemaToHTML manifest="../org.eclipse.mylyn.wikitext.core/plugin.xml" destination="${dest}" />
 	        <pde.convertSchemaToHTML manifest="../org.eclipse.mylyn.wikitext.ui/plugin.xml" destination="${dest}" />
