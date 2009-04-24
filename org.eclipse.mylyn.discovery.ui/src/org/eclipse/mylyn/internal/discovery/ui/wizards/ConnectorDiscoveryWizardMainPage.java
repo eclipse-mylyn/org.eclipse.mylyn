@@ -231,7 +231,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 				categoryContainer.setLayout(new GridLayout(1, false));
 
 				Composite border = new Composite(categoryContainer, SWT.NULL);
-				GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 1).applyTo(border);
+				GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 3).applyTo(border);
 				border.addPaintListener(new ConnectorBorderPaintListener());
 				for (final DiscoveryConnector connector : category.getConnectors()) {
 
