@@ -13,6 +13,7 @@
 	<target name="clean">
 		<delete failonerror="false" dir="reference/extension-points"/>
 		<delete failonerror="false" dir="reference/api"/>
+		<delete failonerror="false" file="toc-reference.xml"/>
 	</target>
 
 	<target name="convertSchemaToHtml" if="eclipse.running">
@@ -47,6 +48,8 @@
 				<a href="http://www.eclipse.org/legal/epl-v10.html">http://www.eclipse.org/legal/epl-v10.html</a></i>]]></bottom>
 		    <link href="http://java.sun.com/javase/6/docs/api/"/>
 		</javadoc>
+		<echo level="info">javadoc generation complete</echo>
+		<echo level="info">creating package list toc</echo>
 		<!-- convert the package list to xml -->
 		<loadfile property="wikitext.api.packages" srcfile="reference/api/package-list"/>
 		<echo file="reference/api/package-list.xml"><![CDATA[<?xml version="1.0"?>
@@ -62,6 +65,7 @@
 		</replaceregexp>
 		<!-- convert the package list xml to a toc -->
 		<xslt style="styles/package-list-to-toc.xsl" in="reference/api/package-list.xml" out="toc-reference.xml"/>
+		<echo level="info">package list toc generation complete</echo>
 	</target>
 
 </project>
