@@ -165,6 +165,7 @@ Lightweight markup is designed to be readily converted to HTML.  WikiText provid
 * "DocBook":http://www.docbook.org
 * "OASIS DITA":http://dita.xml.org
 * Eclipse help format (HTML and @toc.xml@)
+* "XSL-FO":http://en.wikipedia.org/wiki/XSL_Formatting_Objects
 
 h2. Conversion In Eclipse
 
