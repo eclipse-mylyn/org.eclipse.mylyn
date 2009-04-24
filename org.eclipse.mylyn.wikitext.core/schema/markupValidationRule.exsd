@@ -7,6 +7,7 @@
       </appInfo>
       <documentation>
          Register a validation rule for a specific markup language.  Validation rules can produce errors or warnings about markup content, informing the user of potential problems with markup.
+
       </documentation>
    </annotation>
 
@@ -74,7 +75,7 @@
          <meta.section type="since"/>
       </appInfo>
       <documentation>
-         2.2
+         1.0
       </documentation>
    </annotation>
 
@@ -83,27 +84,28 @@
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         [Enter extension point usage example here.]
+         &lt;extension point=&quot;org.eclipse.mylyn.wikitext.core.markupValidationRule&quot;&gt;
+    &lt;rule markupLanguage=&quot;Textile&quot;
+        class=&quot;org.eclipse.mylyn.internal.wikitext.textile.core.validation.BlockWhitespaceRule&quot; /&gt;
+    &lt;rule markupLanguage=&quot;Textile&quot;
+        class=&quot;org.eclipse.mylyn.internal.wikitext.textile.core.validation.TextileReferenceValidationRule&quot; /&gt;
+&lt;/extension&gt;
       </documentation>
    </annotation>
+
+
 
    <annotation>
       <appInfo>
-         <meta.section type="apiInfo"/>
+         <meta.section type="copyright"/>
       </appInfo>
       <documentation>
-         [Enter API information here.]
+         Copyright (c) 2007, 2009 David Green and others.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
       </documentation>
    </annotation>
-
-   <annotation>
-      <appInfo>
-         <meta.section type="implementation"/>
-      </appInfo>
-      <documentation>
-         [Enter information about supplied implementation of this extension point.]
-      </documentation>
-   </annotation>
-
 
 </schema>

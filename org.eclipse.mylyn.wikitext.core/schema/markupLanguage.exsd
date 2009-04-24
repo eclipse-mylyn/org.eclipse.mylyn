@@ -52,6 +52,9 @@
          <appInfo>
             <meta.element labelAttribute="name"/>
          </appInfo>
+         <documentation>
+            A language declaration, indicating a MarkupLanguage class and identifiable name.
+         </documentation>
       </annotation>
       <complexType>
          <attribute name="class" type="string" use="required">
@@ -67,7 +70,7 @@
          <attribute name="name" type="string" use="required">
             <annotation>
                <documentation>
-                  The name of the markup language.  This name should be recognizable to the user.
+                  The name of the markup language.  This name should be recognizable to the user.  The name is not translatable as it is a proper name.  For example, &apos;Textile&apos; or &apos;Markdown&apos;.
                </documentation>
             </annotation>
          </attribute>
@@ -96,7 +99,7 @@ Plugins should also use the org.eclipse.core.contenttype.contentTypes extension 
          <meta.section type="since"/>
       </appInfo>
       <documentation>
-         2.2
+         1.0
       </documentation>
    </annotation>
 
@@ -105,31 +108,48 @@ Plugins should also use the org.eclipse.core.contenttype.contentTypes extension 
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         &lt;extension point=&quot;org.eclipse.mylyn.wikitext.core.markupLanguage&quot;&gt;
- &lt;language class=&quot;org.eclipse.mylyn.wikitext.textile.core.TextileLanguage&quot;
-  name=&quot;Textile&quot; fileExtensions=&quot;textile&quot;&gt;
- &lt;/language&gt;
+&lt;extension point=&quot;org.eclipse.mylyn.wikitext.core.markupLanguage&quot;&gt;
+    &lt;language class=&quot;org.eclipse.mylyn.wikitext.textile.core.TextileLanguage&quot;
+        name=&quot;Textile&quot; fileExtensions=&quot;textile&quot;&gt;
+    &lt;/language&gt;
 &lt;/extension&gt;
+
+Generally markup language declarations are also followed by the following:
+
+   &lt;extension
+         point=&quot;org.eclipse.core.contenttype.contentTypes&quot;&gt;
+      &lt;content-type
+            base-type=&quot;org.eclipse.mylyn.wikitext&quot;
+            file-extensions=&quot;textile&quot;
+            id=&quot;org.eclipse.mylyn.wikitext.textile&quot;
+            name=&quot;Textile markup&quot;
+            priority=&quot;normal&quot;&gt;
+      &lt;/content-type&gt;
+   &lt;/extension&gt;
+   
+	&lt;extension
+	   point=&quot;org.eclipse.team.core.fileTypes&quot;&gt;
+		&lt;fileTypes
+		      extension=&quot;textile&quot;
+		      type=&quot;text&quot;&gt;
+		&lt;/fileTypes&gt;
+	&lt;/extension&gt;
       </documentation>
    </annotation>
+
+
 
    <annotation>
       <appInfo>
-         <meta.section type="apiInfo"/>
+         <meta.section type="copyright"/>
       </appInfo>
       <documentation>
-         [Enter API information here.]
+         Copyright (c) 2007, 2009 David Green and others.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
       </documentation>
    </annotation>
-
-   <annotation>
-      <appInfo>
-         <meta.section type="implementation"/>
-      </appInfo>
-      <documentation>
-         [Enter information about supplied implementation of this extension point.]
-      </documentation>
-   </annotation>
-
 
 </schema>

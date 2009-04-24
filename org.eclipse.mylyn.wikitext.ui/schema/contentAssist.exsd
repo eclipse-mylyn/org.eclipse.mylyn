@@ -6,11 +6,16 @@
          <meta.schema plugin="org.eclipse.mylyn.wikitext.ui" id="contentAssist" name="Markup Language Content Assist"/>
       </appInfo>
       <documentation>
-         Add markup-language-specific content assistance (templates) to the editor
+         Add markup-language-specific content assistance (templates) to the editor.  The WikiText markup editor provides a declarative means of associating content assist with a specific markup language.
       </documentation>
    </annotation>
 
    <element name="extension">
+      <annotation>
+         <appInfo>
+            <meta.element />
+         </appInfo>
+      </annotation>
       <complexType>
          <sequence>
             <element ref="templates" minOccurs="1" maxOccurs="unbounded"/>
@@ -105,7 +110,7 @@
          <meta.section type="since"/>
       </appInfo>
       <documentation>
-         2.2
+         1.0
       </documentation>
    </annotation>
 
@@ -114,7 +119,30 @@
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         [Enter extension point usage example here.]
+            &lt;extension
+         point=&quot;org.eclipse.mylyn.wikitext.ui.contentAssist&quot;&gt;
+      
+      &lt;templates
+            markupLanguage=&quot;Textile&quot;&gt;
+         &lt;!-- phrase modifiers --&gt;
+         &lt;template name=&quot;_&quot; description=&quot;%template.description.emphasis&quot; content=&quot;_${text}_ $&quot;/&gt;
+         &lt;template name=&quot;*&quot; description=&quot;%template.description.bold&quot; content=&quot;*${text}* $&quot;/&gt;
+         &lt;template name=&quot;@&quot; description=&quot;%template.description.code&quot; content=&quot;@${text}@ $&quot;/&gt;
+         
+         &lt;!-- block templates --&gt;
+         
+         &lt;template name=&quot;h1. &quot; description=&quot;%template.description.heading1&quot; content=&quot;\nh1. ${text}\n\n&quot; block=&quot;true&quot;/&gt;
+         &lt;template name=&quot;h2. &quot; description=&quot;%template.description.heading2&quot; content=&quot;\nh2. ${text}\n\n&quot; block=&quot;true&quot;/&gt;
+         &lt;template name=&quot;h3. &quot; description=&quot;%template.description.heading3&quot; content=&quot;\nh3. ${text}\n\n&quot; block=&quot;true&quot;/&gt;
+         &lt;template name=&quot;bc. &quot; description=&quot;%template.description.blockCode&quot; content=&quot;\nbc. ${text}\n\n&quot; block=&quot;true&quot;/&gt;
+         &lt;template name=&quot;bq. &quot; description=&quot;%template.description.blockQuote&quot; content=&quot;\nbq. ${text}\n\n&quot; block=&quot;true&quot;/&gt;
+         &lt;template name=&quot;# &quot; description=&quot;%template.description.numericList&quot; content=&quot;\n# ${text}\n# ${text2}\n\n&quot; block=&quot;true&quot;/&gt;
+         &lt;template name=&quot;* &quot; description=&quot;%template.description.bulletedList&quot; content=&quot;\n* ${text}\n* ${text2}\n\n&quot; block=&quot;true&quot;/&gt;
+		 &lt;template name=&quot;!&quot; description=&quot;%template.description.image&quot; content=&quot;!${text}! $&quot;/&gt;
+		 &lt;template name=&quot;&amp;quot;&quot; description=&quot;%template.description.hyperlink&quot; content=&quot;&amp;quot;${text}&amp;quot;:${url} $&quot;/&gt;         
+         
+      &lt;/templates&gt;
+   &lt;/extension&gt;
       </documentation>
    </annotation>
 
@@ -136,5 +164,17 @@
       </documentation>
    </annotation>
 
+   <annotation>
+      <appInfo>
+         <meta.section type="copyright"/>
+      </appInfo>
+      <documentation>
+         Copyright (c) 2007, 2009 David Green and others.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+      </documentation>
+   </annotation>
 
 </schema>
