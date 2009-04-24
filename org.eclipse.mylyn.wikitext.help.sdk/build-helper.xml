@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="org.eclipse.mylyn.help.sdk" default="all">
+    <description>
+            Generate Eclipse help content for the Mylyn developer guide
+    </description>
+
+	<property environment="env" />
+	<property name="install" value="${basedir}/../../" />
+
+	<target name="all" depends="clean, generateJavadoc, convertSchemaToHtml">
+	</target>
+	
+	<target name="clean">
+		<delete failonerror="false" dir="reference/extension-points"/>
+		<delete failonerror="false" dir="reference/api"/>
+	</target>
+
+	<target name="convertSchemaToHtml" if="eclipse.running">
+	        <property name="dest" value="reference/extension-points" />
+
+			<mkdir dir="${dest}"/>
+		
+	        <record name="${basedir}/doc.cnv.txt" action="start" />
+	        <pde.convertSchemaToHTML manifest="../org.eclipse.mylyn.wikitext.core/plugin.xml" destination="${dest}" />
+	        <pde.convertSchemaToHTML manifest="../org.eclipse.mylyn.wikitext.ui/plugin.xml" destination="${dest}" />
+	        <record name="${basedir}/doc.cnv.txt" action="stop" />
+	</target>
+
+	<target name="generateJavadoc">
+		<mkdir dir="reference/api"/>
+		<javadoc destdir="reference/api"
+	           author="true"
+	           version="true"
+	           use="true"
+	           windowtitle="Mylyn WikiText API Reference">
+		    <fileset dir=".." defaultexcludes="yes">
+		    	<include name="org.eclipse.mylyn.wikitext*/src/org/eclipse/mylyn/**/*.java"/>
+				<exclude name="org.eclipse.mylyn.wikitext*.tests/**"/>
+				<exclude name="**/internal/**"/>
+		    </fileset>
+			<doctitle><![CDATA[Mylyn WikiText]]></doctitle>
+			<header><![CDATA[Mylyn WikiText]]></header>
+			<bottom><![CDATA[<i>Copyright &#169; 2007, 2009 David Green and others.<br/>
+				All rights reserved. This program and the accompanying materials<br/>
+				are made available under the terms of the Eclipse Public License v1.0<br/>
+				which accompanies this distribution, and is available at<br/>
+				<a href="http://www.eclipse.org/legal/epl-v10.html">http://www.eclipse.org/legal/epl-v10.html</a></i>]]></bottom>
+		    <link href="http://java.sun.com/javase/6/docs/api/"/>
+		</javadoc>
+		<!-- convert the package list to xml -->
+		<loadfile property="wikitext.api.packages" srcfile="reference/api/package-list"/>
+		<echo file="reference/api/package-list.xml"><![CDATA[<?xml version="1.0"?>
+<packages>]]>
+		</echo>
+		<echo append="true" file="reference/api/package-list.xml" message="${wikitext.api.packages}"/>
+		<echo file="reference/api/package-list.xml" append="true"><![CDATA[
+</packages>]]>
+		</echo>
+		<replaceregexp file="reference/api/package-list.xml" match="(org\.eclipse\.mylyn\.wikitext\S+)"
+			flags="gs"
+			replace="&lt;package&gt;\1&lt;/package&gt;">
+		</replaceregexp>
+		<!-- convert the package list xml to a toc -->
+		<xslt style="styles/package-list-to-toc.xsl" in="reference/api/package-list.xml" out="toc-reference.xml"/>
+	</target>
+
+</project>
