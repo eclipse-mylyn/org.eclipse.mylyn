@@ -119,7 +119,8 @@
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-            &lt;extension
+         &lt;pre&gt;
+&lt;extension
          point=&quot;org.eclipse.mylyn.wikitext.ui.contentAssist&quot;&gt;
       
       &lt;templates
@@ -138,11 +139,12 @@
          &lt;template name=&quot;bq. &quot; description=&quot;%template.description.blockQuote&quot; content=&quot;\nbq. ${text}\n\n&quot; block=&quot;true&quot;/&gt;
          &lt;template name=&quot;# &quot; description=&quot;%template.description.numericList&quot; content=&quot;\n# ${text}\n# ${text2}\n\n&quot; block=&quot;true&quot;/&gt;
          &lt;template name=&quot;* &quot; description=&quot;%template.description.bulletedList&quot; content=&quot;\n* ${text}\n* ${text2}\n\n&quot; block=&quot;true&quot;/&gt;
-		 &lt;template name=&quot;!&quot; description=&quot;%template.description.image&quot; content=&quot;!${text}! $&quot;/&gt;
-		 &lt;template name=&quot;&amp;quot;&quot; description=&quot;%template.description.hyperlink&quot; content=&quot;&amp;quot;${text}&amp;quot;:${url} $&quot;/&gt;         
+         &lt;template name=&quot;!&quot; description=&quot;%template.description.image&quot; content=&quot;!${text}! $&quot;/&gt;
+         &lt;template name=&quot;&amp;quot;&quot; description=&quot;%template.description.hyperlink&quot; content=&quot;&amp;quot;${text}&amp;quot;:${url} $&quot;/&gt;         
          
       &lt;/templates&gt;
    &lt;/extension&gt;
+&lt;/pre&gt;
       </documentation>
    </annotation>
 

@@ -7,7 +7,6 @@
       </appInfo>
       <documentation>
          Register a validation rule for a specific markup language.  Validation rules can produce errors or warnings about markup content, informing the user of potential problems with markup.
-
       </documentation>
    </annotation>
 
@@ -84,12 +83,14 @@
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         &lt;extension point=&quot;org.eclipse.mylyn.wikitext.core.markupValidationRule&quot;&gt;
+         &lt;pre&gt;
+&lt;extension point=&quot;org.eclipse.mylyn.wikitext.core.markupValidationRule&quot;&gt;
     &lt;rule markupLanguage=&quot;Textile&quot;
         class=&quot;org.eclipse.mylyn.internal.wikitext.textile.core.validation.BlockWhitespaceRule&quot; /&gt;
     &lt;rule markupLanguage=&quot;Textile&quot;
         class=&quot;org.eclipse.mylyn.internal.wikitext.textile.core.validation.TextileReferenceValidationRule&quot; /&gt;
 &lt;/extension&gt;
+&lt;/pre&gt;
       </documentation>
    </annotation>
 

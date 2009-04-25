@@ -108,14 +108,15 @@ Plugins should also use the org.eclipse.core.contenttype.contentTypes extension 
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
+         &lt;pre&gt;
 &lt;extension point=&quot;org.eclipse.mylyn.wikitext.core.markupLanguage&quot;&gt;
     &lt;language class=&quot;org.eclipse.mylyn.wikitext.textile.core.TextileLanguage&quot;
         name=&quot;Textile&quot; fileExtensions=&quot;textile&quot;&gt;
     &lt;/language&gt;
 &lt;/extension&gt;
-
+&lt;/pre&gt;
 Generally markup language declarations are also followed by the following:
-
+&lt;pre&gt;
    &lt;extension
          point=&quot;org.eclipse.core.contenttype.contentTypes&quot;&gt;
       &lt;content-type
@@ -127,13 +128,14 @@ Generally markup language declarations are also followed by the following:
       &lt;/content-type&gt;
    &lt;/extension&gt;
    
-	&lt;extension
-	   point=&quot;org.eclipse.team.core.fileTypes&quot;&gt;
-		&lt;fileTypes
-		      extension=&quot;textile&quot;
-		      type=&quot;text&quot;&gt;
-		&lt;/fileTypes&gt;
-	&lt;/extension&gt;
+ &lt;extension
+    point=&quot;org.eclipse.team.core.fileTypes&quot;&gt;
+  &lt;fileTypes
+        extension=&quot;textile&quot;
+        type=&quot;text&quot;&gt;
+  &lt;/fileTypes&gt;
+ &lt;/extension&gt;
+&lt;/pre&gt;
       </documentation>
    </annotation>
 

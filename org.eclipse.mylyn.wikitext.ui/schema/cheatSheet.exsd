@@ -107,14 +107,16 @@ in this way the user is presented with the most locale-specific help resource.
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-            &lt;extension
+         &lt;pre&gt;
+&lt;extension
          point=&quot;org.eclipse.mylyn.wikitext.ui.cheatSheet&quot;&gt;
       &lt;content
             contentLanguage=&quot;Textile&quot;
             markupLanguage=&quot;Textile&quot;
             resource=&quot;help/cheatSheet/Textile.textile&quot;&gt;
       &lt;/content&gt;
-   &lt;/extension&gt;
+&lt;/extension&gt;
+&lt;/pre&gt;
       </documentation>
    </annotation>
 
