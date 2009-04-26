@@ -56,7 +56,7 @@
 			</classpath>
 			<doctitle><![CDATA[Mylyn WikiText]]></doctitle>
 			<header><![CDATA[Mylyn WikiText version ${wikitext.version}]]></header>
-			<bottom><![CDATA[<i>Copyright &#169; 2007, 2008 David Green and others.<br/>
+			<bottom><![CDATA[<i>Copyright &#169; 2007, 2009 David Green and others.<br/>
 				All rights reserved. This program and the accompanying materials<br/>
 				are made available under the terms of the Eclipse Public License v1.0<br/>
 				which accompanies this distribution, and is available at<br/>
