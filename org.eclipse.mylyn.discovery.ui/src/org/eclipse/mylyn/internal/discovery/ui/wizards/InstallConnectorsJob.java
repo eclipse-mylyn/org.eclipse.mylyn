@@ -29,6 +29,7 @@ import org.eclipse.equinox.internal.p2.metadata.InstallableUnit;
 import org.eclipse.equinox.internal.provisional.p2.core.Version;
 import org.eclipse.equinox.internal.provisional.p2.engine.IProfile;
 import org.eclipse.equinox.internal.provisional.p2.engine.IProfileRegistry;
+import org.eclipse.equinox.internal.provisional.p2.metadata.IArtifactKey;
 import org.eclipse.equinox.internal.provisional.p2.metadata.IInstallableUnit;
 import org.eclipse.equinox.internal.provisional.p2.metadata.repository.IMetadataRepository;
 import org.eclipse.equinox.internal.provisional.p2.query.Collector;
@@ -44,8 +45,6 @@ import org.eclipse.mylyn.internal.discovery.ui.DiscoveryUi;
 import org.eclipse.mylyn.internal.discovery.ui.util.SimpleSelectionProvider;
 import org.eclipse.mylyn.internal.provisional.commons.ui.ICoreRunnable;
 import org.eclipse.swt.widgets.Display;
-
-import com.ibm.icu.text.MessageFormat;
 
 /**
  * A job that downloads and installs one or more {@link ConnectorDescriptor connectors}. The bulk of the installation
@@ -136,7 +135,19 @@ public class InstallConnectorsJob implements ICoreRunnable {
 								return false;
 							}
 							IInstallableUnit candidate = (IInstallableUnit) object;
-							return installableUnitIdsThisRepository.contains(candidate.getId());
+//							if ("true".equals(candidate.getProperty("org.eclipse.equinox.p2.type.group"))) {
+//								if (candidate.getId().endsWith(".feature.group")) {
+//									String featureId = candidate.getId().substring(0,
+//											candidate.getId().length() - ".feature.group".length());
+//									return installableUnitIdsThisRepository.contains(featureId);
+//								}
+//							}
+							IArtifactKey[] artifacts = candidate.getArtifacts();
+							if (artifacts != null && artifacts.length == 1) {
+								return "org.eclipse.update.feature".equals(artifacts[0].getClassifier()) && //$NON-NLS-1$
+										installableUnitIdsThisRepository.contains(artifacts[0].getId());
+							}
+							return false;
 						}
 					};
 					repository.query(query, collector, new SubProgressMonitor(monitor, unit));
@@ -166,34 +177,34 @@ public class InstallConnectorsJob implements ICoreRunnable {
 				}
 			}
 
-			// Verify that we found what we were looking for: it's possible that we have connector descriptors
-			// that are no longer available on their respective site.  In that case we must inform the user.
-			// (Unfortunately this is the earliest point at which we can know) 
-			if (installableUnits.size() < installableConnectors.size()) {
-				// at least one selected connector could not be found in a repository
-				Set<String> foundIds = new HashSet<String>();
-				for (InstallableUnit unit : installableUnits) {
-					foundIds.add(unit.getId());
-				}
-
-				String notFound = ""; //$NON-NLS-1$
-				for (ConnectorDescriptor descriptor : installableConnectors) {
-					if (!foundIds.contains(descriptor.getId())) {
-						if (notFound.length() > 0) {
-							notFound += ", ";
-						}
-						notFound += descriptor.getName();
-					}
-				}
-				//if (!installableUnits.isEmpty()) {
-				// TODO: instead of aborting here, we could ask the user if they wish to proceed anyways
-				//}
-				throw new CoreException(new Status(IStatus.ERROR, DiscoveryUi.BUNDLE_ID, MessageFormat.format(
-						"The following connectors are not available: {0}", new Object[] { notFound }), null));
-			} else if (installableUnits.size() > installableConnectors.size()) {
-				// should never ever happen
-				throw new IllegalStateException();
-			}
+//			// Verify that we found what we were looking for: it's possible that we have connector descriptors
+//			// that are no longer available on their respective site.  In that case we must inform the user.
+//			// (Unfortunately this is the earliest point at which we can know) 
+//			if (installableUnits.size() < installableConnectors.size()) {
+//				// at least one selected connector could not be found in a repository
+//				Set<String> foundIds = new HashSet<String>();
+//				for (InstallableUnit unit : installableUnits) {
+//					foundIds.add(unit.getId());
+//				}
+//
+//				String notFound = ""; //$NON-NLS-1$
+//				for (ConnectorDescriptor descriptor : installableConnectors) {
+//					if (!foundIds.contains(descriptor.getId())) {
+//						if (notFound.length() > 0) {
+//							notFound += ", ";
+//						}
+//						notFound += descriptor.getName();
+//					}
+//				}
+//				//if (!installableUnits.isEmpty()) {
+//				// TODO: instead of aborting here, we could ask the user if they wish to proceed anyways
+//				//}
+//				throw new CoreException(new Status(IStatus.ERROR, DiscoveryUi.BUNDLE_ID, MessageFormat.format(
+//						"The following connectors are not available: {0}", new Object[] { notFound }), null));
+//			} else if (installableUnits.size() > installableConnectors.size()) {
+//				// should never ever happen
+//				throw new IllegalStateException();
+//			}
 
 			// now that we've got what we want, do the install
 			Display.getDefault().asyncExec(new Runnable() {
