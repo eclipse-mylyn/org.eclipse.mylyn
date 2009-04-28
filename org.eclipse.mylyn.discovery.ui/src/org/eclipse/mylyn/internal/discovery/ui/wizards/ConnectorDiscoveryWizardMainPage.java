@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -31,6 +32,7 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.discovery.core.model.AbstractDiscoverySource;
 import org.eclipse.mylyn.internal.discovery.core.model.BundleDiscoveryStrategy;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDescriptor;
+import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDescriptorKind;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDiscovery;
 import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryCategory;
 import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryConnector;
@@ -97,14 +99,38 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		Composite container = new Composite(parent, SWT.NULL);
 		container.setLayout(new GridLayout(1, false));
 		//		
-		// { // header
-		// Composite header = new Composite(container,SWT.NULL);
-		// header.setLayout(new GridLayout(1,false));
-		// GridDataFactory.fillDefaults().grab(true, false).applyTo(header);
-		//			
-		// // TODO: header needed? instructions, refresh button, filter
-		// checkboxes?
-		// }
+		{ // header
+			Composite header = new Composite(container, SWT.NULL);
+			GridLayoutFactory.fillDefaults().applyTo(header);
+			GridDataFactory.fillDefaults().grab(true, false).applyTo(header);
+
+			// TODO: header needed? instructions, refresh button
+
+			if (getWizard().isShowConnectorDescriptorKindFilter()) { // filter buttons
+				Composite checkboxContainer = new Composite(header, SWT.NULL);
+				GridDataFactory.fillDefaults().grab(true, false).applyTo(checkboxContainer);
+				GridLayoutFactory.fillDefaults().numColumns(ConnectorDescriptorKind.values().length + 1).applyTo(
+						checkboxContainer);
+				Label label = new Label(checkboxContainer, SWT.NULL);
+				label.setText("Show Connectors For:");
+				for (final ConnectorDescriptorKind kind : ConnectorDescriptorKind.values()) {
+					final Button checkbox = new Button(checkboxContainer, SWT.CHECK);
+					checkbox.setSelection(getWizard().isVisible(kind));
+					checkbox.setText(getFilterLabel(kind));
+					checkbox.addSelectionListener(new SelectionListener() {
+						public void widgetSelected(SelectionEvent e) {
+							boolean selection = checkbox.getSelection();
+							getWizard().setVisibility(kind, selection);
+							connectorDescriptorKindVisibilityUpdated();
+						}
+
+						public void widgetDefaultSelected(SelectionEvent e) {
+							widgetSelected(e);
+						}
+					});
+				}
+			}
+		}
 		{ // container
 			body = new Composite(container, SWT.NULL);
 			GridDataFactory.fillDefaults().grab(true, true).applyTo(body);
@@ -114,11 +140,42 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 	}
 
 	@Override
+	public ConnectorDiscoveryWizard getWizard() {
+		return (ConnectorDiscoveryWizard) super.getWizard();
+	}
+
+	private String getFilterLabel(ConnectorDescriptorKind kind) {
+		switch (kind) {
+		case DOCUMENT:
+			return "Documents (Email, Office)";
+		case TASK:
+			return "Tasks (Bugs, Issue tracking)";
+		case VCS:
+			return "Version Control (VCS)";
+		default:
+			throw new IllegalStateException(kind.name());
+		}
+	}
+
+	/**
+	 * cause the UI to respond to a change in visibility filters
+	 * 
+	 * @see #setVisibility(ConnectorDescriptorKind, boolean)
+	 */
+	public void connectorDescriptorKindVisibilityUpdated() {
+		createBodyContents();
+	}
+
+	@Override
 	public void dispose() {
 		super.dispose();
 		for (Resource resource : disposables) {
 			resource.dispose();
 		}
+		clearDisposables();
+	}
+
+	private void clearDisposables() {
 		disposables.clear();
 		h1Font = null;
 		h2Font = null;
@@ -129,6 +186,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		for (Control child : new ArrayList<Control>(Arrays.asList(body.getChildren()))) {
 			child.dispose();
 		}
+//		clearDisposables();
 		initializeFonts();
 		initializeColors();
 
@@ -193,12 +251,28 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		container.setLayout(new GridLayout(2, false));
 
 		final Color background = container.getBackground();
-		if (discovery != null) {
+
+		if (discovery == null || isEmpty(discovery)) {
+			boolean atLeastOneKindFiltered = false;
+			for (ConnectorDescriptorKind kind : ConnectorDescriptorKind.values()) {
+				if (!getWizard().isVisible(kind)) {
+					atLeastOneKindFiltered = true;
+					break;
+				}
+			}
+			Label helpText = new Label(container, SWT.WRAP);
+			GridDataFactory.fillDefaults().grab(true, false).hint(100, SWT.DEFAULT).applyTo(helpText);
+			if (atLeastOneKindFiltered) {
+				helpText.setText("There are no connectors of the selected type.  Please select another connector type or try again later.");
+			} else {
+				helpText.setText("Sorry, there are no available connectors.  Please try again later.");
+			}
+		} else {
 			List<DiscoveryCategory> categories = new ArrayList<DiscoveryCategory>(discovery.getCategories());
 			Collections.sort(categories, new DiscoveryCategoryComparator());
 
 			for (DiscoveryCategory category : categories) {
-				if (category.getConnectors().isEmpty()) {
+				if (isEmpty(category)) {
 					// don't add empty categories
 					continue;
 				}
@@ -246,6 +320,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 
 					final Button checkbox = new Button(connectorContainer, SWT.CHECK | SWT.FLAT);
 					checkbox.setBackground(background);
+					checkbox.setSelection(installableConnectors.contains(connector));
 
 					MouseAdapter selectMouseListener = new MouseAdapter() {
 						@Override
@@ -291,11 +366,51 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 					border = new Composite(categoryContainer, SWT.NULL);
 					GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 1).applyTo(border);
 					border.addPaintListener(new ConnectorBorderPaintListener());
+
+					if (hasTooltip(connector)) {
+						ConnectorDescriptorToolTip toolTip = new ConnectorDescriptorToolTip(categoryContainer,
+								connector);
+//						toolTip.setPopupDelay(popupDelay)
+					}
 				}
 			}
 		}
 		container.layout(true);
 		container.redraw();
+	}
+
+	private boolean hasTooltip(final DiscoveryConnector connector) {
+		return connector.getOverview() != null && connector.getOverview().getSummary() != null
+				&& connector.getOverview().getSummary().length() > 0;
+	}
+
+	/**
+	 * indicate if there is nothing to display in the UI, given the current state of
+	 * {@link ConnectorDiscoveryWizard#isVisible(ConnectorDescriptorKind) filters}.
+	 */
+	private boolean isEmpty(ConnectorDiscovery discovery) {
+		for (DiscoveryCategory category : discovery.getCategories()) {
+			if (!isEmpty(category)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * indicate if the category has nothing to display in the UI, given the current state of
+	 * {@link ConnectorDiscoveryWizard#isVisible(ConnectorDescriptorKind) filters}.
+	 */
+	private boolean isEmpty(DiscoveryCategory category) {
+		if (category.getConnectors().isEmpty()) {
+			return true;
+		}
+		for (ConnectorDescriptor descriptor : category.getConnectors()) {
+			if (getWizard().isVisible(descriptor.getKind())) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private Image computeIconImage(AbstractDiscoverySource discoverySource, Icon icon) {

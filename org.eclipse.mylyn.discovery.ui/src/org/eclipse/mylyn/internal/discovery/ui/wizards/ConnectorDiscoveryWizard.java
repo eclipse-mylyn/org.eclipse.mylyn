@@ -11,12 +11,15 @@
 package org.eclipse.mylyn.internal.discovery.ui.wizards;
 
 import java.text.MessageFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDescriptorKind;
 import org.eclipse.mylyn.internal.discovery.ui.DiscoveryUi;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonsUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.ICoreRunnable;
@@ -33,6 +36,15 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.ICoreRunnable;
 public class ConnectorDiscoveryWizard extends Wizard {
 
 	private ConnectorDiscoveryWizardMainPage mainPage;
+
+	private final Map<ConnectorDescriptorKind, Boolean> connectorDescriptorKindToVisibility = new HashMap<ConnectorDescriptorKind, Boolean>();
+	{
+		for (ConnectorDescriptorKind kind : ConnectorDescriptorKind.values()) {
+			connectorDescriptorKindToVisibility.put(kind, true);
+		}
+	}
+
+	private boolean showConnectorDescriptorKindFilter = true;
 
 	public ConnectorDiscoveryWizard() {
 		setWindowTitle("Connector Discovery");
@@ -62,6 +74,46 @@ public class ConnectorDiscoveryWizard extends Wizard {
 			// canceled
 		}
 		return true;
+	}
+
+	/**
+	 * configure the page to show or hide connector descriptors of the given kind
+	 * 
+	 * @see #connectorDescriptorKindVisibilityUpdated()
+	 */
+	public void setVisibility(ConnectorDescriptorKind kind, boolean visible) {
+		if (kind == null) {
+			throw new IllegalArgumentException();
+		}
+		connectorDescriptorKindToVisibility.put(kind, visible);
+	}
+
+	/**
+	 * indicate if the given kind of connector is currently visible in the wizard
+	 * 
+	 * @see #setVisibility(ConnectorDescriptorKind, boolean)
+	 */
+	public boolean isVisible(ConnectorDescriptorKind kind) {
+		if (kind == null) {
+			throw new IllegalArgumentException();
+		}
+		return connectorDescriptorKindToVisibility.get(kind);
+	}
+
+	/**
+	 * indicate if the connector descriptor filters should be shown in the UI. Changing this setting only has an effect
+	 * before the UI is presented.
+	 */
+	public boolean isShowConnectorDescriptorKindFilter() {
+		return showConnectorDescriptorKindFilter;
+	}
+
+	/**
+	 * indicate if the connector descriptor filters should be shown in the UI. Changing this setting only has an effect
+	 * before the UI is presented.
+	 */
+	public void setShowConnectorDescriptorKindFilter(boolean showConnectorDescriptorKindFilter) {
+		this.showConnectorDescriptorKindFilter = showConnectorDescriptorKindFilter;
 	}
 
 }
