@@ -186,7 +186,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		for (Control child : new ArrayList<Control>(Arrays.asList(body.getChildren()))) {
 			child.dispose();
 		}
-//		clearDisposables();
+		clearDisposables();
 		initializeFonts();
 		initializeColors();
 
