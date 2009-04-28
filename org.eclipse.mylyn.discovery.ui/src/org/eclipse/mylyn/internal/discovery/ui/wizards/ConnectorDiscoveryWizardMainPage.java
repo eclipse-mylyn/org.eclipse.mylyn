@@ -15,7 +15,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.Stack;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -58,11 +61,15 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Resource;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.widgets.Listener;
 
 /**
  * The main wizard page that allows users to select connectors that they wish to install.
@@ -215,11 +222,13 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 	}
 
 	private void initializeColors() {
-		ColorRegistry colorRegistry = JFaceResources.getColorRegistry();
-		if (!colorRegistry.hasValueFor(COLOR_WHITE)) {
-			colorRegistry.put(COLOR_WHITE, new RGB(255, 255, 255));
+		if (colorWhite == null) {
+			ColorRegistry colorRegistry = JFaceResources.getColorRegistry();
+			if (!colorRegistry.hasValueFor(COLOR_WHITE)) {
+				colorRegistry.put(COLOR_WHITE, new RGB(255, 255, 255));
+			}
+			colorWhite = colorRegistry.get(COLOR_WHITE);
 		}
-		colorWhite = colorRegistry.get(COLOR_WHITE);
 	}
 
 	private void initializeFonts() {
@@ -363,20 +372,120 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 					description.setText(connector.getDescription());
 					description.addMouseListener(selectMouseListener);
 
+					// hook the tooltip before the link, so that hovering over the link will not
+					// cause the tooltip to obscure the link itself.
+					if (hasTooltip(connector)) {
+						hookTooltip(connectorContainer, nameLabel, connector);
+					}
+
+					if (hasOverviewUrl(connector)) {
+						Link link = new Link(connectorContainer, SWT.NULL);
+						link.setBackground(background);
+						link.setText("<a>more details</a>");
+						GridDataFactory.fillDefaults()
+								.grab(false, false)
+								.span(2, 1)
+								.align(SWT.END, SWT.CENTER)
+								.applyTo(link);
+						link.addSelectionListener(new SelectionListener() {
+							public void widgetSelected(SelectionEvent e) {
+								Program.launch(connector.getOverview().getUrl());
+							}
+
+							public void widgetDefaultSelected(SelectionEvent e) {
+								widgetSelected(e);
+							}
+						});
+					}
+
 					border = new Composite(categoryContainer, SWT.NULL);
 					GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 1).applyTo(border);
 					border.addPaintListener(new ConnectorBorderPaintListener());
 
-					if (hasTooltip(connector)) {
-						ConnectorDescriptorToolTip toolTip = new ConnectorDescriptorToolTip(categoryContainer,
-								connector);
-//						toolTip.setPopupDelay(popupDelay)
-					}
 				}
 			}
 		}
 		container.layout(true);
 		container.redraw();
+	}
+
+	private boolean hasOverviewUrl(final DiscoveryConnector connector) {
+		return connector.getOverview() != null && connector.getOverview().getUrl() != null
+				&& connector.getOverview().getUrl().length() > 0;
+	}
+
+	private Set<Control> collectComponentHierarchy(Composite c) {
+		Set<Control> components = new HashSet<Control>();
+		Stack<Composite> work = new Stack<Composite>();
+		work.push(c);
+		while (!work.isEmpty()) {
+			c = work.pop();
+			components.add(c);
+			for (Control child : c.getChildren()) {
+				if (child instanceof Composite) {
+					work.push((Composite) child);
+				} else {
+					components.add(child);
+				}
+			}
+		}
+		return components;
+	}
+
+	private void hookTooltip(final Composite container, final Control titleControl, DiscoveryConnector connector) {
+		final ConnectorDescriptorToolTip toolTip = new ConnectorDescriptorToolTip(container, connector);
+		Listener listener = new Listener() {
+			public void handleEvent(Event event) {
+				switch (event.type) {
+				case SWT.Dispose:
+				case SWT.KeyDown:
+				case SWT.MouseDown:
+				case SWT.MouseWheel:
+					toolTip.hide();
+					break;
+				case SWT.MouseHover:
+					Point titleAbsLocation = titleControl.getParent().toDisplay(titleControl.getLocation());
+					Point containerAbsLocation = container.getParent().toDisplay(container.getLocation());
+					Rectangle bounds = titleControl.getBounds();
+					int relativeX = titleAbsLocation.x - containerAbsLocation.x;
+					int relativeY = titleAbsLocation.y - containerAbsLocation.y;
+
+					relativeY += bounds.height + 3;
+					toolTip.show(new Point(relativeX, relativeY));
+					break;
+				case SWT.MouseExit:
+					/*
+					 * Check if the mouse exit happened because we move over the
+					 * tooltip
+					 */
+					Rectangle containerBounds = container.getBounds();
+					Point displayLocation = container.getParent().toDisplay(containerBounds.x, containerBounds.y);
+					containerBounds.x = displayLocation.x;
+					containerBounds.y = displayLocation.y;
+					if (containerBounds.contains(Display.getCurrent().getCursorLocation())) {
+						break;
+					}
+					toolTip.hide();
+					break;
+				}
+
+			}
+		};
+		hookRecursively(container, listener);
+	}
+
+	private void hookRecursively(Control control, Listener listener) {
+		control.addListener(SWT.Dispose, listener);
+		control.addListener(SWT.MouseHover, listener);
+		control.addListener(SWT.MouseMove, listener);
+		control.addListener(SWT.MouseExit, listener);
+		control.addListener(SWT.MouseDown, listener);
+		control.addListener(SWT.MouseWheel, listener);
+		if (control instanceof Composite) {
+			for (Control child : ((Composite) control).getChildren()) {
+				hookRecursively(child, listener);
+			}
+		}
 	}
 
 	private boolean hasTooltip(final DiscoveryConnector connector) {
