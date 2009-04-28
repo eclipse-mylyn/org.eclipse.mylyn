@@ -37,15 +37,18 @@ public abstract class AbstractMarkupResourceHandler extends AbstractHandler {
 
 	protected MarkupLanguage markupLanguage;
 
+	private IStructuredSelection selection;
+
 	@SuppressWarnings("unchecked")
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 
-		ISelection currentSelection = null;
-
-		try {
-			currentSelection = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getSelection();
-		} catch (Exception e) {
-			// ignore
+		ISelection currentSelection = selection;
+		if (currentSelection == null) {
+			try {
+				currentSelection = computeSelection();
+			} catch (Exception e) {
+				// ignore
+			}
 		}
 
 		if (currentSelection instanceof IStructuredSelection) {
@@ -74,7 +77,8 @@ public abstract class AbstractMarkupResourceHandler extends AbstractHandler {
 							if (markupLanguage == null) {
 								MessageDialog.openError(
 										PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-										Messages.AbstractMarkupResourceHandler_unexpectedError, MessageFormat.format(Messages.AbstractMarkupResourceHandler_markupLanguageMappingFailed,  
+										Messages.AbstractMarkupResourceHandler_unexpectedError, MessageFormat.format(
+												Messages.AbstractMarkupResourceHandler_markupLanguageMappingFailed,
 												new Object[] { file.getName() }));
 								return null;
 							}
@@ -91,6 +95,13 @@ public abstract class AbstractMarkupResourceHandler extends AbstractHandler {
 		return null;
 	}
 
+	/**
+	 * @since 1.1
+	 */
+	protected ISelection computeSelection() {
+		return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getSelection();
+	}
+
 	protected abstract void handleFile(IFile file, String name);
 
 	public MarkupLanguage getMarkupLanguage() {
@@ -99,6 +110,20 @@ public abstract class AbstractMarkupResourceHandler extends AbstractHandler {
 
 	public void setMarkupLanguage(MarkupLanguage markupLanguage) {
 		this.markupLanguage = markupLanguage;
+	}
+
+	/**
+	 * @since 1.1
+	 */
+	public IStructuredSelection getSelection() {
+		return selection;
+	}
+
+	/**
+	 * @since 1.1
+	 */
+	public void setSelection(IStructuredSelection selection) {
+		this.selection = selection;
 	}
 
 }
