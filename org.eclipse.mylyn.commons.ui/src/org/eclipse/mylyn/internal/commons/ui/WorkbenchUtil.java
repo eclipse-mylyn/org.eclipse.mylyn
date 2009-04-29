@@ -7,18 +7,23 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     IBM Corporation - helper methods from 
+ *       org.eclipse.wst.common.frameworks.internal.ui.WTPActivityHelper 
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.commons.ui;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IPluginContribution;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.activities.IIdentifier;
+import org.eclipse.ui.activities.IWorkbenchActivitySupport;
 
 /**
  * @author Mik Kersten
@@ -112,7 +117,43 @@ public class WorkbenchUtil {
 		} else {
 			return window.getShell();
 		}
-	
+
 		return null;
 	}
+
+	/**
+	 * @return whether the UI is set up to filter contributions (has defined activity categories).
+	 */
+	public static final boolean isFiltering() {
+		return !PlatformUI.getWorkbench().getActivitySupport().getActivityManager().getDefinedActivityIds().isEmpty();
+	}
+
+	public static boolean allowUseOf(Object object) {
+		if (!isFiltering()) {
+			return true;
+		}
+		if (object instanceof IPluginContribution) {
+			IPluginContribution contribution = (IPluginContribution) object;
+			if (contribution.getPluginId() != null) {
+				IWorkbenchActivitySupport workbenchActivitySupport = PlatformUI.getWorkbench().getActivitySupport();
+				IIdentifier identifier = workbenchActivitySupport.getActivityManager().getIdentifier(
+						createUnifiedId(contribution));
+				return identifier.isEnabled();
+			}
+		}
+		if (object instanceof String) {
+			IWorkbenchActivitySupport workbenchActivitySupport = PlatformUI.getWorkbench().getActivitySupport();
+			IIdentifier identifier = workbenchActivitySupport.getActivityManager().getIdentifier((String) object);
+			return identifier.isEnabled();
+		}
+		return true;
+	}
+
+	private static final String createUnifiedId(IPluginContribution contribution) {
+		if (contribution.getPluginId() != null) {
+			return contribution.getPluginId() + '/' + contribution.getLocalId();
+		}
+		return contribution.getLocalId();
+	}
+
 }
