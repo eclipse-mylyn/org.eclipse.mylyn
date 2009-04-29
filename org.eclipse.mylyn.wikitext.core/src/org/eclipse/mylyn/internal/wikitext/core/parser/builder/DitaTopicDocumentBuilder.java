@@ -126,6 +126,7 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 		int entrySize; // the size of an entry, if it is open, otherwise 0
 
+		@SuppressWarnings("unused")
 		final String[] nestedElementNames;
 
 		final boolean closeElementsOnBlockStart;
