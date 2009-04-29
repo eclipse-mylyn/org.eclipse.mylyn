@@ -122,6 +122,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 			IWindowTrim trim = ((WorkbenchWindow) window).getTrimManager().getTrim(ID_CONTAINER);
 			if (trim != null) {
 				((WorkbenchWindow) window).getTrimManager().setTrimVisible(trim, visible);
+				((WorkbenchWindow) window).getTrimManager().forceLayout();
 			}
 		}
 	}
