@@ -26,7 +26,7 @@ import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
 public abstract class AbstractXmlDocumentBuilder extends DocumentBuilder {
 	private static final Pattern ABSOLUTE_URL_PATTERN = Pattern.compile("[a-zA-Z]{3,8}://?.*"); //$NON-NLS-1$
 
-	protected final XmlStreamWriter writer;
+	protected XmlStreamWriter writer;
 
 	protected URI base;
 
