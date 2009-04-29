@@ -274,9 +274,22 @@ WikiText conversion to XSL-FO is performed using the @wikitext-to-xslfo@ task.  
 *wikitext-to-xslfo task options* 
 
 |_. Option |_. Usage |
+| @targetdir@ | Specify a folder in which output files should be created. |
 | @title@ | Specify a specific book title.  If unspecified, the book title is the filename of the source file (without extension). |
 | @subTitle@ | Specify a sub-title to appear under the book title. |
-| @targetdir@ | Specify a folder in which output files should be created. |
+| @fontSize@ | Specify the default font size. The default is 10.0 |
+| @showExternalLinks@ | Indicate if external link URLs should be emitted in the text. The default is true. |
+| @underlineLinks@ | Indicate if links should be underlined. The default is false. |
+| @pageBreakOnHeading1@ | Indicate if h1 headings should start a new page. The default is true. |
+| @panelText@ | Indicate if the text 'Note: ', 'Tip: ', and 'Warning: ' should be added to blocks of type note, tip and warning respectively. |
+| @version@ | A document version to emit on the title page, for example: 'Version 1.0.23' |
+| @date@ | A date to emit on the title page. |
+| @author@ | An author to emit on the title page. |
+| @copyright@ | A copyright to emit in the document page footer. |
+| @pageNumbering@ | Indicate if pages should be numbered.  The default is true. |
+| @pageMargin@ |  The page margin in cm.  Defaults to 1.5. |
+| @pageHeight@ | The page height in cm. Defaults to A4 sizing (29.7) |
+| @pageWidth@ | The page width in cm. Defaults to A4 sizing (21.0) |
 
 h4. PDF from XSL-FO Quick-Start
 
