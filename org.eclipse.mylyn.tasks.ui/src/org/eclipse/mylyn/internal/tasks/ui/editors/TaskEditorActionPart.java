@@ -151,20 +151,22 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 	 * @param toolkit
 	 */
 	private void createActionButtons(Composite buttonComposite, FormToolkit toolkit) {
-		submitButton = toolkit.createButton(buttonComposite, Messages.TaskEditorActionPart_Submit, SWT.NONE);
-		GridData submitButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-		submitButtonData.widthHint = 100;
-		submitButton.setImage(CommonImages.getImage(TasksUiImages.REPOSITORY_SUBMIT));
-		submitButton.setLayoutData(submitButtonData);
-		submitButton.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event e) {
-				getTaskEditorPage().doSubmit();
-			}
-		});
+		if (!getTaskEditorPage().needsFooter()) {
+			submitButton = toolkit.createButton(buttonComposite, Messages.TaskEditorActionPart_Submit, SWT.NONE);
+			GridData submitButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+			submitButtonData.widthHint = 100;
+			submitButton.setImage(CommonImages.getImage(TasksUiImages.REPOSITORY_SUBMIT));
+			submitButton.setLayoutData(submitButtonData);
+			submitButton.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					getTaskEditorPage().doSubmit();
+				}
+			});
 
-		setSubmitEnabled(true);
+			setSubmitEnabled(true);
 
-		toolkit.createLabel(buttonComposite, "    "); //$NON-NLS-1$
+			toolkit.createLabel(buttonComposite, "    "); //$NON-NLS-1$
+		}
 
 		if (!getTaskData().isNew()) {
 			addAttachContextButton(buttonComposite, toolkit);

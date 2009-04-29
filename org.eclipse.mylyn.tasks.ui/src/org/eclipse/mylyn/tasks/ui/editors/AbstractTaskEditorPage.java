@@ -49,7 +49,9 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
+import org.eclipse.mylyn.internal.provisional.commons.ui.GradientCanvas;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.DateRange;
@@ -111,6 +113,7 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
@@ -136,6 +139,8 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.FilteredTree;
+import org.eclipse.ui.forms.FormColors;
+import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.IFormPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormPage;
@@ -466,6 +471,16 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 	private CommonTextSupport textSupport;
 
+	private Composite partControl;
+
+	private GradientCanvas footerComposite;
+
+	private boolean needsFooter;
+
+	private Button submitButton;
+
+	private boolean submitEnabled;
+
 	/**
 	 * @since 3.1
 	 */
@@ -475,6 +490,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 		this.connectorKind = connectorKind;
 		this.reflow = true;
 		this.selectionChangedListeners = new ListenerList();
+		this.submitEnabled = true;
 	}
 
 	public AbstractTaskEditorPage(TaskEditor editor, String connectorKind) {
@@ -554,7 +570,47 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 	@Override
 	public void createPartControl(Composite parent) {
 		parent.addListener(SWT.Resize, new ParentResizeHandler());
-		super.createPartControl(parent);
+
+		if (needsFooter()) {
+			partControl = getEditor().getToolkit().createComposite(parent);
+			GridLayout partControlLayout = new GridLayout(1, false);
+			partControlLayout.marginWidth = 0;
+			partControlLayout.marginHeight = 0;
+			partControlLayout.verticalSpacing = 0;
+			partControl.setLayout(partControlLayout);
+
+			super.createPartControl(partControl);
+			getManagedForm().getForm().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
+			footerComposite = new GradientCanvas(partControl, SWT.NONE);
+			footerComposite.setSeparatorVisible(true);
+			footerComposite.setSeparatorAlignment(SWT.TOP);
+			GridLayout headLayout = new GridLayout();
+			headLayout.marginHeight = 0;
+			headLayout.marginWidth = 0;
+			headLayout.horizontalSpacing = 0;
+			headLayout.verticalSpacing = 0;
+			headLayout.numColumns = 1;
+			footerComposite.setLayout(headLayout);
+			footerComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+
+			FormColors colors = getEditor().getToolkit().getColors();
+			Color top = colors.getColor(IFormColors.H_GRADIENT_END);
+			Color bottom = colors.getColor(IFormColors.H_GRADIENT_START);
+			footerComposite.setBackgroundGradient(new Color[] { bottom, top }, new int[] { 100 }, true);
+
+			footerComposite.putColor(IFormColors.H_BOTTOM_KEYLINE1, colors.getColor(IFormColors.H_BOTTOM_KEYLINE1));
+			footerComposite.putColor(IFormColors.H_BOTTOM_KEYLINE2, colors.getColor(IFormColors.H_BOTTOM_KEYLINE2));
+			footerComposite.putColor(IFormColors.H_HOVER_LIGHT, colors.getColor(IFormColors.H_HOVER_LIGHT));
+			footerComposite.putColor(IFormColors.H_HOVER_FULL, colors.getColor(IFormColors.H_HOVER_FULL));
+			footerComposite.putColor(IFormColors.TB_TOGGLE, colors.getColor(IFormColors.TB_TOGGLE));
+			footerComposite.putColor(IFormColors.TB_TOGGLE_HOVER, colors.getColor(IFormColors.TB_TOGGLE_HOVER));
+			footerComposite.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, true, false));
+
+			createFooterContent(footerComposite);
+		} else {
+			super.createPartControl(parent);
+		}
 	}
 
 	@Override
@@ -596,6 +652,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 			if (taskData != null) {
 				createFormContentInternal();
 			}
+
 			updateHeaderMessage();
 		} finally {
 			setReflow(true);
@@ -853,6 +910,10 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 	}
 
 	public void doSubmit() {
+		if (!submitEnabled) {
+			return;
+		}
+
 		showEditorBusy(true);
 
 		doSave(new NullProgressMonitor());
@@ -1358,6 +1419,10 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 		if (actionPart instanceof TaskEditorActionPart) {
 			((TaskEditorActionPart) actionPart).setSubmitEnabled(enabled);
 		}
+		if (submitButton != null) {
+			submitButton.setEnabled(enabled);
+		}
+		submitEnabled = enabled;
 	}
 
 	private void setTaskData(TaskData taskData) {
@@ -1430,6 +1495,41 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 						}
 					});
 		}
+	}
+
+	@Override
+	public Control getPartControl() {
+		return partControl != null ? partControl : super.getPartControl();
+	}
+
+	/**
+	 * @since 3.2
+	 */
+	public boolean needsFooter() {
+		return needsFooter;
+	}
+
+	/**
+	 * @since 3.2
+	 */
+	public void setNeedsFooter(boolean needsFooter) {
+		this.needsFooter = needsFooter;
+	}
+
+	private void createFooterContent(Composite parent) {
+		parent.setLayout(new GridLayout());
+
+		submitButton = toolkit.createButton(parent, Messages.TaskEditorActionPart_Submit, SWT.NONE);
+		GridData submitButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+		submitButtonData.widthHint = 100;
+		submitButton.setBackground(null);
+		submitButton.setImage(CommonImages.getImage(TasksUiImages.REPOSITORY_SUBMIT));
+		submitButton.setLayoutData(submitButtonData);
+		submitButton.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event e) {
+				doSubmit();
+			}
+		});
 	}
 
 }
