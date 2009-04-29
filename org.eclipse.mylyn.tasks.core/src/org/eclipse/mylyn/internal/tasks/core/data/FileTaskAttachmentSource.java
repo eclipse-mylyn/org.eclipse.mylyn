@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     David Green - fix for 267960
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.core.data;
@@ -31,7 +32,7 @@ import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
 
 /**
  * @author Steffen Pingel
- * @author David Green fix for 267960 guess the mime type of attachments
+ * @author David Green
  */
 public class FileTaskAttachmentSource extends AbstractTaskAttachmentSource {
 	/**
