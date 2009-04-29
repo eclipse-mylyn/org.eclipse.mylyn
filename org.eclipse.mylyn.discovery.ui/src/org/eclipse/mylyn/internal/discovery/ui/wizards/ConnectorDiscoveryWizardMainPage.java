@@ -61,14 +61,12 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Resource;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
 
 /**
@@ -378,25 +376,25 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 						hookTooltip(connectorContainer, nameLabel, connector);
 					}
 
-					if (hasOverviewUrl(connector)) {
-						Link link = new Link(connectorContainer, SWT.NULL);
-						link.setBackground(background);
-						link.setText("<a>more details</a>");
-						GridDataFactory.fillDefaults()
-								.grab(false, false)
-								.span(2, 1)
-								.align(SWT.END, SWT.CENTER)
-								.applyTo(link);
-						link.addSelectionListener(new SelectionListener() {
-							public void widgetSelected(SelectionEvent e) {
-								Program.launch(connector.getOverview().getUrl());
-							}
-
-							public void widgetDefaultSelected(SelectionEvent e) {
-								widgetSelected(e);
-							}
-						});
-					}
+//					if (hasOverviewUrl(connector)) {
+//						Link link = new Link(connectorContainer, SWT.NULL);
+//						link.setBackground(background);
+//						link.setText("<a>more details</a>");
+//						GridDataFactory.fillDefaults()
+//								.grab(false, false)
+//								.span(2, 1)
+//								.align(SWT.END, SWT.CENTER)
+//								.applyTo(link);
+//						link.addSelectionListener(new SelectionListener() {
+//							public void widgetSelected(SelectionEvent e) {
+//								Program.launch(connector.getOverview().getUrl());
+//							}
+//
+//							public void widgetDefaultSelected(SelectionEvent e) {
+//								widgetSelected(e);
+//							}
+//						});
+//					}
 
 					border = new Composite(categoryContainer, SWT.NULL);
 					GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 1).applyTo(border);

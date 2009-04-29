@@ -66,7 +66,6 @@ public class ConnectorDiscoveryWizard extends Wizard {
 			} else {
 				CommonsUiUtil.busyCursorWhile(job);
 			}
-
 		} catch (CoreException e) {
 			IStatus status = new Status(IStatus.ERROR, DiscoveryUi.BUNDLE_ID, MessageFormat.format(
 					"Problems occurred while performing installation: {0}", new Object[] { e.getMessage() }), e); //$NON-NLS-1$

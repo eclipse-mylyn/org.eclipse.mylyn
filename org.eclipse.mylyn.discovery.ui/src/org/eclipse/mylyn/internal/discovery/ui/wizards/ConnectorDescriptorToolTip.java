@@ -24,12 +24,16 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 
 /**
  * 
@@ -44,25 +48,27 @@ class ConnectorDescriptorToolTip extends ToolTip {
 	public ConnectorDescriptorToolTip(Control control, DiscoveryConnector descriptor) {
 		super(control, ToolTip.RECREATE, true);
 		this.descriptor = descriptor;
+		setHideOnMouseDown(false); // required for links to work
 		background = control.getBackground();
 	}
 
 	@Override
 	protected Composite createToolTipContentArea(Event event, Composite parent) {
 		parent.setBackground(background);
+		GridLayoutFactory.fillDefaults().applyTo(parent);
 
 		Composite container = new Composite(parent, SWT.NULL);
 		container.setBackground(background);
+		GridDataFactory.fillDefaults().grab(true, true).hint(347, SWT.DEFAULT).applyTo(container);
 
-		GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).spacing(0, 3).applyTo(container);
+		GridLayoutFactory.fillDefaults().margins(5, 5).spacing(0, 3).applyTo(container);
 
-		Overview overview = descriptor.getOverview();
+		final Overview overview = descriptor.getOverview();
 		if (overview != null) {
 			String summary = overview.getSummary();
 			if (summary != null) {
 				Label summaryLabel = new Label(container, SWT.WRAP);
-				GridDataFactory.fillDefaults().grab(false, false).hint(100, SWT.DEFAULT).span(2, 1).applyTo(
-						summaryLabel);
+				GridDataFactory.fillDefaults().grab(true, false).hint(100, SWT.DEFAULT).applyTo(summaryLabel);
 				summaryLabel.setText(summary);
 				summaryLabel.setBackground(background);
 			}
@@ -82,8 +88,11 @@ class ConnectorDescriptorToolTip extends ToolTip {
 					ScrolledComposite scrolledComposite = new ScrolledComposite(container, SWT.H_SCROLL | SWT.V_SCROLL
 							| SWT.BORDER);
 					scrolledComposite.setBackground(background);
-					GridDataFactory.fillDefaults().grab(false, false).align(SWT.CENTER, SWT.CENTER).span(2, 1).hint(
-							320, 240).applyTo(scrolledComposite);
+					GridDataFactory.fillDefaults()
+							.grab(false, false)
+							.align(SWT.CENTER, SWT.CENTER)
+							.hint(320, 240)
+							.applyTo(scrolledComposite);
 
 					Label imageLabel = new Label(scrolledComposite, SWT.NULL);
 					imageLabel.setBackground(background);
@@ -95,6 +104,21 @@ class ConnectorDescriptorToolTip extends ToolTip {
 
 					scrolledComposite.setContent(imageLabel);
 				}
+			}
+			if (overview.getUrl() != null && overview.getUrl().length() > 0) {
+				Link link = new Link(container, SWT.NULL);
+				link.setBackground(background);
+				GridDataFactory.fillDefaults().grab(false, false).align(SWT.END, SWT.CENTER).applyTo(link);
+				link.setText("<a>more details</a>");
+				link.addSelectionListener(new SelectionListener() {
+					public void widgetSelected(SelectionEvent e) {
+						Program.launch(overview.getUrl());
+					}
+
+					public void widgetDefaultSelected(SelectionEvent e) {
+						widgetSelected(e);
+					}
+				});
 			}
 		}
 
