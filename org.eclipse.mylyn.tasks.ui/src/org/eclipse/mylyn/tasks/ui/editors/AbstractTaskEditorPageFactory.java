@@ -12,13 +12,14 @@
 package org.eclipse.mylyn.tasks.ui.editors;
 
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.IPluginContribution;
 import org.eclipse.ui.forms.editor.IFormPage;
 
 /**
  * @since 3.0
  * @author Steffen Pingel
  */
-public abstract class AbstractTaskEditorPageFactory {
+public abstract class AbstractTaskEditorPageFactory implements IPluginContribution {
 
 	public static final int PRIORITY_ADDITIONS = 100;
 
@@ -29,6 +30,8 @@ public abstract class AbstractTaskEditorPageFactory {
 	public static final int PRIORITY_TASK = 30;
 
 	private String id;
+
+	private String pluginId;
 
 	public abstract boolean canCreatePageFor(TaskEditorInput input);
 
@@ -53,6 +56,33 @@ public abstract class AbstractTaskEditorPageFactory {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @since 3.2
+	 */
+	public final String getLocalId() {
+		return getId();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @since 3.2
+	 * @see #setPluginId(String)
+	 */
+	public final String getPluginId() {
+		return pluginId;
+	}
+
+	/**
+	 * @since 3.2
+	 * @see #getPluginId()
+	 */
+	public final void setPluginId(String pluginId) {
+		this.pluginId = pluginId;
 	}
 
 }

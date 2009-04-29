@@ -303,6 +303,7 @@ public class TasksUiExtensionReader {
 			if (item instanceof AbstractTaskEditorPageFactory) {
 				AbstractTaskEditorPageFactory editorPageFactory = (AbstractTaskEditorPageFactory) item;
 				editorPageFactory.setId(id);
+				editorPageFactory.setPluginId(element.getNamespaceIdentifier());
 				TasksUiPlugin.getDefault().addTaskEditorPageFactory(editorPageFactory);
 			} else {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,

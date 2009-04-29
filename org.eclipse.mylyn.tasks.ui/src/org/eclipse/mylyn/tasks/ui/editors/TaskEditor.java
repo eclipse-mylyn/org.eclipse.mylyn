@@ -39,6 +39,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.SelectionProviderAdapter;
 import org.eclipse.mylyn.internal.provisional.commons.ui.editor.EditorBusyIndicator;
@@ -138,7 +139,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		Set<String> conflictingIds = new HashSet<String>();
 		ArrayList<AbstractTaskEditorPageFactory> pageFactories = new ArrayList<AbstractTaskEditorPageFactory>();
 		for (AbstractTaskEditorPageFactory pageFactory : TasksUiPlugin.getDefault().getTaskEditorPageFactories()) {
-			if (pageFactory.canCreatePageFor(getTaskEditorInput())) {
+			if (pageFactory.canCreatePageFor(getTaskEditorInput()) && WorkbenchUtil.allowUseOf(pageFactory)) {
 				pageFactories.add(pageFactory);
 				String[] ids = pageFactory.getConflictingIds(getTaskEditorInput());
 				if (ids != null) {
