@@ -102,7 +102,7 @@ public abstract class AbstractMarkupResourceHandler extends AbstractHandler {
 		return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getSelection();
 	}
 
-	protected abstract void handleFile(IFile file, String name);
+	protected abstract void handleFile(IFile file, String name) throws ExecutionException;
 
 	public MarkupLanguage getMarkupLanguage() {
 		return markupLanguage;

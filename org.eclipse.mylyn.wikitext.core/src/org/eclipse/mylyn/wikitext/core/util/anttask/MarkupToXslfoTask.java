@@ -48,11 +48,9 @@ public class MarkupToXslfoTask extends MarkupTask {
 
 	protected File file;
 
-	protected String title;
-
-	protected String subTitle;
-
 	protected File targetdir;
+
+	private final XslfoDocumentBuilder.Configuration configuration = new XslfoDocumentBuilder.Configuration();
 
 	@Override
 	public void execute() throws BuildException {
@@ -152,8 +150,11 @@ public class MarkupToXslfoTask extends MarkupTask {
 			}
 			try {
 				XslfoDocumentBuilder builder = new XslfoDocumentBuilder(out);
-				builder.setTitle(title == null ? name : title);
-				builder.setSubTitle(subTitle);
+				XslfoDocumentBuilder.Configuration configuration = this.configuration.clone();
+				if (configuration.getTitle() == null) {
+					configuration.setTitle(name);
+				}
+				builder.setConfiguration(configuration);
 				builder.setBase(source.getParentFile().toURI());
 
 				MarkupParser parser = new MarkupParser();
@@ -213,20 +214,6 @@ public class MarkupToXslfoTask extends MarkupTask {
 	}
 
 	/**
-	 * The document title, as it appears in the head
-	 */
-	public String getTitle() {
-		return title;
-	}
-
-	/**
-	 * The document title, as it appears in the head
-	 */
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	/**
 	 * the file to process
 	 */
 	public File getFile() {
@@ -255,12 +242,131 @@ public class MarkupToXslfoTask extends MarkupTask {
 		this.targetdir = targetdir;
 	}
 
+	public String getAuthor() {
+		return configuration.getAuthor();
+	}
+
+	public String getCopyright() {
+		return configuration.getCopyright();
+	}
+
+	public String getDate() {
+		return configuration.getDate();
+	}
+
+	public float getFontSize() {
+		return configuration.getFontSize();
+	}
+
+	public float[] getFontSizeMultipliers() {
+		return configuration.getFontSizeMultipliers();
+	}
+
+	public float getPageHeight() {
+		return configuration.getPageHeight();
+	}
+
+	public float getPageMargin() {
+		return configuration.getPageMargin();
+	}
+
+	public float getPageWidth() {
+		return configuration.getPageWidth();
+	}
+
 	public String getSubTitle() {
-		return subTitle;
+		return configuration.getSubTitle();
+	}
+
+	public String getTitle() {
+		return configuration.getTitle();
+	}
+
+	public String getVersion() {
+		return configuration.getVersion();
+	}
+
+	public boolean isPageBreakOnHeading1() {
+		return configuration.isPageBreakOnHeading1();
+	}
+
+	public boolean isPageNumbering() {
+		return configuration.isPageNumbering();
+	}
+
+	public boolean isPanelText() {
+		return configuration.isPanelText();
+	}
+
+	public boolean isShowExternalLinks() {
+		return configuration.isShowExternalLinks();
+	}
+
+	public boolean isUnderlineLinks() {
+		return configuration.isUnderlineLinks();
+	}
+
+	public void setAuthor(String author) {
+		configuration.setAuthor(author);
+	}
+
+	public void setCopyright(String copyright) {
+		configuration.setCopyright(copyright);
+	}
+
+	public void setDate(String date) {
+		configuration.setDate(date);
+	}
+
+	public void setFontSize(float fontSize) {
+		configuration.setFontSize(fontSize);
+	}
+
+	public void setFontSizeMultipliers(float[] fontSizeMultipliers) {
+		configuration.setFontSizeMultipliers(fontSizeMultipliers);
+	}
+
+	public void setPageBreakOnHeading1(boolean pageBreakOnHeading1) {
+		configuration.setPageBreakOnHeading1(pageBreakOnHeading1);
+	}
+
+	public void setPageHeight(float pageHeight) {
+		configuration.setPageHeight(pageHeight);
+	}
+
+	public void setPageMargin(float pageMargin) {
+		configuration.setPageMargin(pageMargin);
+	}
+
+	public void setPageNumbering(boolean pageNumbering) {
+		configuration.setPageNumbering(pageNumbering);
+	}
+
+	public void setPageWidth(float pageWidth) {
+		configuration.setPageWidth(pageWidth);
+	}
+
+	public void setPanelText(boolean panelText) {
+		configuration.setPanelText(panelText);
+	}
+
+	public void setShowExternalLinks(boolean showExternalLinks) {
+		configuration.setShowExternalLinks(showExternalLinks);
 	}
 
 	public void setSubTitle(String subTitle) {
-		this.subTitle = subTitle;
+		configuration.setSubTitle(subTitle);
 	}
 
+	public void setTitle(String title) {
+		configuration.setTitle(title);
+	}
+
+	public void setUnderlineLinks(boolean underlineLinks) {
+		configuration.setUnderlineLinks(underlineLinks);
+	}
+
+	public void setVersion(String version) {
+		configuration.setVersion(version);
+	}
 }

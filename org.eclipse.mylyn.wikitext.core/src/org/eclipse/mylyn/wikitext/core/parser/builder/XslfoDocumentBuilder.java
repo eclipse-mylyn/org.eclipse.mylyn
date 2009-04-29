@@ -85,43 +85,13 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private final String foNamespaceUri = "http://www.w3.org/1999/XSL/Format"; //$NON-NLS-1$
 
-	private boolean pageBreakOnHeading1 = true;
-
 	private boolean pageOpen = false;
 
 	private int h1Count = 0;
 
-	private float[] fontSizes = new float[] { 12.0f, 18.0f, 15.0f, 13.2f, 12.0f, 10.4f, 8.0f };
-
-	private final float[] fontSizeMultipliers = new float[] { 1.0f, 1.5f, 1.25f, 1.1f, 1.0f, 0.83f, 0.67f };
-
 	private final Stack<ElementInfo> elementInfos = new Stack<ElementInfo>();
 
-	private boolean showExternalLinks = true;
-
-	private boolean underlineLinks = false;
-
-	private boolean panelText = true;
-
-	private String title;
-
-	private String subTitle;
-
-	private String version;
-
-	private String date;
-
-	private String author;
-
-	private String copyright;
-
-	private boolean pageNumbering = true;
-
-	private float pageMargin = 1.5f;
-
-	private float pageHeight = 29.7f;
-
-	private float pageWidth = 21.0f;
+	private Configuration configuration = new Configuration();
 
 	public XslfoDocumentBuilder(Writer out) {
 		super(out);
@@ -129,55 +99,6 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	public XslfoDocumentBuilder(XmlStreamWriter writer) {
 		super(writer);
-		setFontSize(10.0f);
-	}
-
-	/**
-	 * Set the base font size. The base font size is 10.0 by default
-	 */
-	public void setFontSize(float fontSize) {
-		fontSizes = new float[fontSizeMultipliers.length];
-		for (int x = 0; x < fontSizeMultipliers.length; ++x) {
-			fontSizes[x] = fontSizeMultipliers[x] * fontSize;
-		}
-	}
-
-	/**
-	 * Get the base font size. The base font size is 10.0 by default
-	 */
-	public float getFontSize() {
-		return fontSizes[0];
-	}
-
-	/**
-	 * Set the font size multipliers. Multipliers are used to determine the actual size of fonts by multiplying the
-	 * {@link #getFontSize() base font size} by the multiplier to determine the size of a font for a heading.
-	 * 
-	 * @param fontSizeMultipliers
-	 *            an array of size 7, where position 1-6 correspond to headings h1 to h6
-	 */
-	public void setFontSizeMultipliers(float[] fontSizeMultipliers) {
-		if (fontSizeMultipliers.length != 7) {
-			throw new IllegalArgumentException();
-		}
-		for (int x = 0; x < fontSizeMultipliers.length; ++x) {
-			if (fontSizeMultipliers[x] < 0.2) {
-				throw new IllegalArgumentException();
-			}
-		}
-		System.arraycopy(fontSizeMultipliers, 0, this.fontSizeMultipliers, 0, 7);
-	}
-
-	/**
-	 * The font size multipliers. Multipliers are used to determine the actual size of fonts by multiplying the
-	 * {@link #getFontSize() base font size} by the multiplier to determine the size of a font for a heading.
-	 * 
-	 * @return an array of size 7, where position 1-6 correspond to headings h1 to h6
-	 */
-	public float[] getFontSizeMultipliers() {
-		float[] values = new float[7];
-		System.arraycopy(this.fontSizeMultipliers, 0, values, 0, 7);
-		return values;
 	}
 
 	@Override
@@ -376,9 +297,9 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 			addSpaceBefore();
 
 			// create the titled panel effect if a title is specified
-			if (attributes.getTitle() != null || panelText) {
+			if (attributes.getTitle() != null || configuration.panelText) {
 				writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
-				if (panelText) {
+				if (configuration.panelText) {
 					String text = null;
 					switch (type) {
 					case NOTE:
@@ -457,7 +378,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	private void configureFontSize(int level) {
-		writer.writeAttribute("font-size", String.format("%spt", fontSizes[level])); //$NON-NLS-1$ //$NON-NLS-2$
+		writer.writeAttribute("font-size", String.format("%spt", configuration.fontSizes[level])); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private void addSpaceBefore() {
@@ -570,9 +491,9 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		writer.writeStartElement(foNamespaceUri, "layout-master-set"); //$NON-NLS-1$
 		writer.writeStartElement(foNamespaceUri, "simple-page-master"); //$NON-NLS-1$
 		writer.writeAttribute("master-name", "page-layout"); //$NON-NLS-1$ //$NON-NLS-2$
-		writer.writeAttribute("page-height", String.format("%scm", pageHeight)); //$NON-NLS-1$ //$NON-NLS-2$
-		writer.writeAttribute("page-width", String.format("%scm", pageWidth)); //$NON-NLS-1$ //$NON-NLS-2$
-		writer.writeAttribute("margin", String.format("%scm", pageMargin)); //$NON-NLS-1$ //$NON-NLS-2$
+		writer.writeAttribute("page-height", String.format("%scm", configuration.pageHeight)); //$NON-NLS-1$ //$NON-NLS-2$
+		writer.writeAttribute("page-width", String.format("%scm", configuration.pageWidth)); //$NON-NLS-1$ //$NON-NLS-2$
+		writer.writeAttribute("margin", String.format("%scm", configuration.pageMargin)); //$NON-NLS-1$ //$NON-NLS-2$
 		writer.writeEmptyElement(foNamespaceUri, "region-body"); //$NON-NLS-1$
 		if (hasPageFooter()) {
 			writer.writeAttribute("margin-bottom", "3cm"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -586,7 +507,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		writer.writeEndElement(); // simple-page-master
 		writer.writeEndElement(); // layout-master-set
 
-		if (title != null) {
+		if (configuration.title != null) {
 			emitTitlePage();
 		}
 
@@ -595,7 +516,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	private boolean hasPageFooter() {
-		return copyright != null || pageNumbering;
+		return configuration.copyright != null || configuration.pageNumbering;
 	}
 
 	private void emitTitlePage() {
@@ -603,43 +524,43 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		openFlow(true);
 		writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
 
-		if (title != null) {
+		if (configuration.title != null) {
 			writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
 			writer.writeAttribute("font-weight", "bold"); //$NON-NLS-1$//$NON-NLS-2$
 			writer.writeAttribute("font-size", "25pt"); //$NON-NLS-1$//$NON-NLS-2$
 			writer.writeAttribute("text-align", "center"); //$NON-NLS-1$//$NON-NLS-2$
 			writer.writeAttribute("space-before", "19pt"); //$NON-NLS-1$//$NON-NLS-2$
-			writer.writeCharacters(title);
+			writer.writeCharacters(configuration.title);
 			writer.writeEndElement(); // block
 		}
 
-		if (subTitle != null) {
+		if (configuration.subTitle != null) {
 			writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
 			writer.writeAttribute("font-weight", "bold"); //$NON-NLS-1$//$NON-NLS-2$
 			writer.writeAttribute("font-size", "18pt"); //$NON-NLS-1$//$NON-NLS-2$
 			writer.writeAttribute("text-align", "center"); //$NON-NLS-1$//$NON-NLS-2$
 			writer.writeAttribute("space-before", "15pt"); //$NON-NLS-1$//$NON-NLS-2$
-			writer.writeCharacters(subTitle);
+			writer.writeCharacters(configuration.subTitle);
 			writer.writeEndElement(); // block
 		}
 
-		if (version != null) {
+		if (configuration.version != null) {
 			writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
 			writer.writeAttribute("font-weight", "bold"); //$NON-NLS-1$//$NON-NLS-2$
 			writer.writeAttribute("font-size", "14pt"); //$NON-NLS-1$//$NON-NLS-2$
 			writer.writeAttribute("text-align", "center"); //$NON-NLS-1$//$NON-NLS-2$
 			writer.writeAttribute("space-before", "13pt"); //$NON-NLS-1$//$NON-NLS-2$
-			writer.writeCharacters(version);
+			writer.writeCharacters(configuration.version);
 			writer.writeEndElement(); // block
 		}
 
-		if (date != null) {
+		if (configuration.date != null) {
 			writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
 			writer.writeAttribute("font-weight", "bold"); //$NON-NLS-1$//$NON-NLS-2$
 			writer.writeAttribute("font-size", "14pt"); //$NON-NLS-1$//$NON-NLS-2$
 			writer.writeAttribute("text-align", "center"); //$NON-NLS-1$//$NON-NLS-2$
 			writer.writeAttribute("space-before", "13pt"); //$NON-NLS-1$//$NON-NLS-2$
-			writer.writeCharacters(date);
+			writer.writeCharacters(configuration.date);
 			writer.writeEndElement(); // block
 		}
 
@@ -656,17 +577,17 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 			writer.writeStartElement(foNamespaceUri, "static-content"); //$NON-NLS-1$
 			writer.writeAttribute("flow-name", "footer"); //$NON-NLS-1$//$NON-NLS-2$
 
-			if (copyright != null && copyright.trim().length() > 0) {
+			if (configuration.copyright != null && configuration.copyright.trim().length() > 0) {
 				writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
 				configureFontSize(0);
 				writer.writeAttribute("text-align", "center"); //$NON-NLS-1$//$NON-NLS-2$
 
-				writer.writeCharacters(copyright);
+				writer.writeCharacters(configuration.copyright);
 
 				writer.writeEndElement(); // block
 			}
 
-			if (pageNumbering && !titlePage) {
+			if (configuration.pageNumbering && !titlePage) {
 				writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
 				configureFontSize(0);
 				writer.writeAttribute("text-align", "outside"); //$NON-NLS-1$//$NON-NLS-2$
@@ -714,7 +635,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	@Override
 	public void beginHeading(int level, Attributes attributes) {
-		if (level == 1 && ++h1Count > 1 && pageBreakOnHeading1) {
+		if (level == 1 && ++h1Count > 1 && configuration.pageBreakOnHeading1) {
 			if (pageOpen) {
 				closeFlow();
 				closePage();
@@ -861,7 +782,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		writer.writeStartElement(foNamespaceUri, "basic-link"); //$NON-NLS-1$
 		String destinationUrl = makeUrlAbsolute(hrefOrHashName);
 		boolean internal = destinationUrl.startsWith("#"); //$NON-NLS-1$
-		if (underlineLinks) {
+		if (configuration.underlineLinks) {
 			writer.writeAttribute("text-decoration", "underline"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		if (internal) {
@@ -871,7 +792,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		}
 		characters(text);
 		writer.writeEndElement();// basic-link
-		if (showExternalLinks && !internal) {
+		if (configuration.showExternalLinks && !internal) {
 			characters(Messages.getString("XslfoDocumentBuilder.beforeLink")); //$NON-NLS-1$
 			writer.writeStartElement(foNamespaceUri, "basic-link"); //$NON-NLS-1$
 			writer.writeAttribute("external-destination", String.format("url(%s)", destinationUrl)); //$NON-NLS-1$//$NON-NLS-2$
@@ -881,201 +802,308 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		}
 	}
 
-	/**
-	 * indicate if external link URLs should be emitted in the text. The default is true.
-	 */
-	public boolean isShowExternalLinks() {
-		return showExternalLinks;
+	public Configuration getConfiguration() {
+		return configuration;
 	}
 
-	/**
-	 * indicate if external link URLs should be emitted in the text. The default is true.
-	 */
-	public void setShowExternalLinks(boolean showExternalLinks) {
-		this.showExternalLinks = showExternalLinks;
+	public void setConfiguration(Configuration configuration) {
+		if (configuration == null) {
+			throw new IllegalArgumentException();
+		}
+		this.configuration = configuration;
 	}
 
-	/**
-	 * Indicate if links should be underlined. The default is false.
-	 */
-	public boolean isUnderlineLinks() {
-		return underlineLinks;
-	}
+	public static class Configuration implements Cloneable {
 
-	/**
-	 * Indicate if links should be underlined. The default is false.
-	 */
-	public void setUnderlineLinks(boolean underlineLinks) {
-		this.underlineLinks = underlineLinks;
-	}
+		private float[] fontSizes = new float[] { 12.0f, 18.0f, 15.0f, 13.2f, 12.0f, 10.4f, 8.0f };
 
-	/**
-	 * Indicate if h1 headings should start a new page. The default is true.
-	 */
-	public boolean isPageBreakOnHeading1() {
-		return pageBreakOnHeading1;
-	}
+		private final float[] fontSizeMultipliers = new float[] { 1.0f, 1.5f, 1.25f, 1.1f, 1.0f, 0.83f, 0.67f };
 
-	/**
-	 * Indicate if h1 headings should start a new page. The default is true.
-	 */
-	public void setPageBreakOnHeading1(boolean pageBreakOnHeading1) {
-		this.pageBreakOnHeading1 = pageBreakOnHeading1;
-	}
+		private boolean pageBreakOnHeading1 = true;
 
-	/**
-	 * a title to be emitted on the title page
-	 */
-	public String getTitle() {
-		return title;
-	}
+		private boolean showExternalLinks = true;
 
-	/**
-	 * a title to be emitted on the title page
-	 */
-	public void setTitle(String title) {
-		this.title = title;
-	}
+		private boolean underlineLinks = false;
 
-	/**
-	 * a sub-title to be emitted on the title page
-	 */
-	public String getSubTitle() {
-		return subTitle;
-	}
+		private boolean panelText = true;
 
-	/**
-	 * a sub-title to be emitted on the title page
-	 */
-	public void setSubTitle(String subTitle) {
-		this.subTitle = subTitle;
-	}
+		private String title;
 
-	/**
-	 * indicate if the text 'Note: ', 'Tip: ', and 'Warning: ' should be added to blocks of type {@link BlockType#NOTE},
-	 * {@link BlockType#TIP}, and {@link BlockType#WARNING} respectively.
-	 */
-	public boolean isPanelText() {
-		return panelText;
-	}
+		private String subTitle;
 
-	/**
-	 * indicate if the text 'Note: ', 'Tip: ', and 'Warning: ' should be added to blocks of type {@link BlockType#NOTE},
-	 * {@link BlockType#TIP}, and {@link BlockType#WARNING} respectively.
-	 */
-	public void setPanelText(boolean panelText) {
-		this.panelText = panelText;
-	}
+		private String version;
 
-	/**
-	 * a document version number to emit on the title page
-	 */
-	public String getVersion() {
-		return version;
-	}
+		private String date;
 
-	/**
-	 * a document version number to emit on the title page
-	 */
-	public void setVersion(String version) {
-		this.version = version;
-	}
+		private String author;
 
-	/**
-	 * a date to emit on the title page
-	 */
-	public String getDate() {
-		return date;
-	}
+		private String copyright;
 
-	/**
-	 * a date to emit on the title page
-	 */
-	public void setDate(String date) {
-		this.date = date;
-	}
+		private boolean pageNumbering = true;
 
-	/**
-	 * an author to emit on the title page
-	 */
-	public String getAuthor() {
-		return author;
-	}
+		private float pageMargin = 1.5f;
 
-	/**
-	 * an author to emit on the title page
-	 */
-	public void setAuthor(String author) {
-		this.author = author;
-	}
+		private float pageHeight = 29.7f;
 
-	/**
-	 * a copyright to emit in the document page footer
-	 */
-	public String getCopyright() {
-		return copyright;
-	}
+		private float pageWidth = 21.0f;
 
-	/**
-	 * a copyright to emit in the document page footer
-	 */
-	public void setCopyright(String copyright) {
-		this.copyright = copyright;
-	}
+		public Configuration() {
+			setFontSize(10.0f);
+		}
 
-	/**
-	 * indicate if pages should be numbered
-	 */
-	public boolean isPageNumbering() {
-		return pageNumbering;
-	}
+		@Override
+		public Configuration clone() {
+			try {
+				return (Configuration) super.clone();
+			} catch (CloneNotSupportedException e) {
+				throw new IllegalStateException(e);
+			}
+		}
 
-	/**
-	 * indicate if pages should be numbered
-	 */
-	public void setPageNumbering(boolean pageNumbering) {
-		this.pageNumbering = pageNumbering;
-	}
+		/**
+		 * Set the base font size. The base font size is 10.0 by default
+		 */
+		public void setFontSize(float fontSize) {
+			fontSizes = new float[fontSizeMultipliers.length];
+			for (int x = 0; x < fontSizeMultipliers.length; ++x) {
+				fontSizes[x] = fontSizeMultipliers[x] * fontSize;
+			}
+		}
 
-	/**
-	 * The page margin in cm. Defaults to 1.5cm.
-	 */
-	public float getPageMargin() {
-		return pageMargin;
-	}
+		/**
+		 * Get the base font size. The base font size is 10.0 by default
+		 */
+		public float getFontSize() {
+			return fontSizes[0];
+		}
 
-	/**
-	 * The page margin in cm. Defaults to 1.5cm.
-	 */
-	public void setPageMargin(float pageMargin) {
-		this.pageMargin = pageMargin;
-	}
+		/**
+		 * Set the font size multipliers. Multipliers are used to determine the actual size of fonts by multiplying the
+		 * {@link #getFontSize() base font size} by the multiplier to determine the size of a font for a heading.
+		 * 
+		 * @param fontSizeMultipliers
+		 *            an array of size 7, where position 1-6 correspond to headings h1 to h6
+		 */
+		public void setFontSizeMultipliers(float[] fontSizeMultipliers) {
+			if (fontSizeMultipliers.length != 7) {
+				throw new IllegalArgumentException();
+			}
+			for (int x = 0; x < fontSizeMultipliers.length; ++x) {
+				if (fontSizeMultipliers[x] < 0.2) {
+					throw new IllegalArgumentException();
+				}
+			}
+			System.arraycopy(fontSizeMultipliers, 0, this.fontSizeMultipliers, 0, 7);
+		}
 
-	/**
-	 * The page height in cm. Defaults to A4 sizing (29.7cm)
-	 */
-	public float getPageHeight() {
-		return pageHeight;
-	}
+		/**
+		 * The font size multipliers. Multipliers are used to determine the actual size of fonts by multiplying the
+		 * {@link #getFontSize() base font size} by the multiplier to determine the size of a font for a heading.
+		 * 
+		 * @return an array of size 7, where position 1-6 correspond to headings h1 to h6
+		 */
+		public float[] getFontSizeMultipliers() {
+			float[] values = new float[7];
+			System.arraycopy(fontSizeMultipliers, 0, values, 0, 7);
+			return values;
+		}
 
-	/**
-	 * The page height in cm. Defaults to A4 sizing (29.7cm)
-	 */
-	public void setPageHeight(float pageHeight) {
-		this.pageHeight = pageHeight;
-	}
+		/**
+		 * indicate if external link URLs should be emitted in the text. The default is true.
+		 */
+		public boolean isShowExternalLinks() {
+			return showExternalLinks;
+		}
 
-	/**
-	 * The page width in cm. Defaults to A4 sizing (21.0cm)
-	 */
-	public float getPageWidth() {
-		return pageWidth;
-	}
+		/**
+		 * indicate if external link URLs should be emitted in the text. The default is true.
+		 */
+		public void setShowExternalLinks(boolean showExternalLinks) {
+			this.showExternalLinks = showExternalLinks;
+		}
 
-	/**
-	 * The page width in cm. Defaults to A4 sizing (21.0cm)
-	 */
-	public void setPageWidth(float pageWidth) {
-		this.pageWidth = pageWidth;
+		/**
+		 * Indicate if links should be underlined. The default is false.
+		 */
+		public boolean isUnderlineLinks() {
+			return underlineLinks;
+		}
+
+		/**
+		 * Indicate if links should be underlined. The default is false.
+		 */
+		public void setUnderlineLinks(boolean underlineLinks) {
+			this.underlineLinks = underlineLinks;
+		}
+
+		/**
+		 * Indicate if h1 headings should start a new page. The default is true.
+		 */
+		public boolean isPageBreakOnHeading1() {
+			return pageBreakOnHeading1;
+		}
+
+		/**
+		 * Indicate if h1 headings should start a new page. The default is true.
+		 */
+		public void setPageBreakOnHeading1(boolean pageBreakOnHeading1) {
+			this.pageBreakOnHeading1 = pageBreakOnHeading1;
+		}
+
+		/**
+		 * a title to be emitted on the title page
+		 */
+		public String getTitle() {
+			return title;
+		}
+
+		/**
+		 * a title to be emitted on the title page
+		 */
+		public void setTitle(String title) {
+			this.title = title;
+		}
+
+		/**
+		 * a sub-title to be emitted on the title page
+		 */
+		public String getSubTitle() {
+			return subTitle;
+		}
+
+		/**
+		 * a sub-title to be emitted on the title page
+		 */
+		public void setSubTitle(String subTitle) {
+			this.subTitle = subTitle;
+		}
+
+		/**
+		 * indicate if the text 'Note: ', 'Tip: ', and 'Warning: ' should be added to blocks of type
+		 * {@link BlockType#NOTE}, {@link BlockType#TIP}, and {@link BlockType#WARNING} respectively.
+		 */
+		public boolean isPanelText() {
+			return panelText;
+		}
+
+		/**
+		 * indicate if the text 'Note: ', 'Tip: ', and 'Warning: ' should be added to blocks of type
+		 * {@link BlockType#NOTE}, {@link BlockType#TIP}, and {@link BlockType#WARNING} respectively.
+		 */
+		public void setPanelText(boolean panelText) {
+			this.panelText = panelText;
+		}
+
+		/**
+		 * a document version number to emit on the title page
+		 */
+		public String getVersion() {
+			return version;
+		}
+
+		/**
+		 * a document version number to emit on the title page
+		 */
+		public void setVersion(String version) {
+			this.version = version;
+		}
+
+		/**
+		 * a date to emit on the title page
+		 */
+		public String getDate() {
+			return date;
+		}
+
+		/**
+		 * a date to emit on the title page
+		 */
+		public void setDate(String date) {
+			this.date = date;
+		}
+
+		/**
+		 * an author to emit on the title page
+		 */
+		public String getAuthor() {
+			return author;
+		}
+
+		/**
+		 * an author to emit on the title page
+		 */
+		public void setAuthor(String author) {
+			this.author = author;
+		}
+
+		/**
+		 * a copyright to emit in the document page footer
+		 */
+		public String getCopyright() {
+			return copyright;
+		}
+
+		/**
+		 * a copyright to emit in the document page footer
+		 */
+		public void setCopyright(String copyright) {
+			this.copyright = copyright;
+		}
+
+		/**
+		 * indicate if pages should be numbered
+		 */
+		public boolean isPageNumbering() {
+			return pageNumbering;
+		}
+
+		/**
+		 * indicate if pages should be numbered
+		 */
+		public void setPageNumbering(boolean pageNumbering) {
+			this.pageNumbering = pageNumbering;
+		}
+
+		/**
+		 * The page margin in cm. Defaults to 1.5cm.
+		 */
+		public float getPageMargin() {
+			return pageMargin;
+		}
+
+		/**
+		 * The page margin in cm. Defaults to 1.5cm.
+		 */
+		public void setPageMargin(float pageMargin) {
+			this.pageMargin = pageMargin;
+		}
+
+		/**
+		 * The page height in cm. Defaults to A4 sizing (29.7cm)
+		 */
+		public float getPageHeight() {
+			return pageHeight;
+		}
+
+		/**
+		 * The page height in cm. Defaults to A4 sizing (29.7cm)
+		 */
+		public void setPageHeight(float pageHeight) {
+			this.pageHeight = pageHeight;
+		}
+
+		/**
+		 * The page width in cm. Defaults to A4 sizing (21.0cm)
+		 */
+		public float getPageWidth() {
+			return pageWidth;
+		}
+
+		/**
+		 * The page width in cm. Defaults to A4 sizing (21.0cm)
+		 */
+		public void setPageWidth(float pageWidth) {
+			this.pageWidth = pageWidth;
+		}
 	}
 }
