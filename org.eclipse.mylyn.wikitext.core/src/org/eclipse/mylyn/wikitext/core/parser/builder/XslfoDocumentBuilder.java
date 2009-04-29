@@ -109,6 +109,20 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private String version;
 
+	private String date;
+
+	private String author;
+
+	private String copyright;
+
+	private boolean pageNumbering = true;
+
+	private float pageMargin = 1.5f;
+
+	private float pageHeight = 29.7f;
+
+	private float pageWidth = 21.0f;
+
 	public XslfoDocumentBuilder(Writer out) {
 		super(out);
 	}
@@ -177,6 +191,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	private static class SpanInfo extends ElementInfo {
+		@SuppressWarnings("unused")
 		final SpanType type;
 
 		public SpanInfo(SpanType type) {
@@ -555,10 +570,19 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		writer.writeStartElement(foNamespaceUri, "layout-master-set"); //$NON-NLS-1$
 		writer.writeStartElement(foNamespaceUri, "simple-page-master"); //$NON-NLS-1$
 		writer.writeAttribute("master-name", "page-layout"); //$NON-NLS-1$ //$NON-NLS-2$
-		writer.writeAttribute("page-height", "29.7cm"); //$NON-NLS-1$ //$NON-NLS-2$
-		writer.writeAttribute("page-width", "21.0cm"); //$NON-NLS-1$ //$NON-NLS-2$
-		writer.writeAttribute("margin", "2cm"); //$NON-NLS-1$ //$NON-NLS-2$
+		writer.writeAttribute("page-height", String.format("%scm", pageHeight)); //$NON-NLS-1$ //$NON-NLS-2$
+		writer.writeAttribute("page-width", String.format("%scm", pageWidth)); //$NON-NLS-1$ //$NON-NLS-2$
+		writer.writeAttribute("margin", String.format("%scm", pageMargin)); //$NON-NLS-1$ //$NON-NLS-2$
 		writer.writeEmptyElement(foNamespaceUri, "region-body"); //$NON-NLS-1$
+		if (hasPageFooter()) {
+			writer.writeAttribute("margin-bottom", "3cm"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		if (hasPageFooter()) {
+			writer.writeEmptyElement(foNamespaceUri, "region-after"); //$NON-NLS-1$
+			writer.writeAttribute("extent", "2cm"); //$NON-NLS-1$//$NON-NLS-2$
+			writer.writeAttribute("region-name", "footer"); //$NON-NLS-1$//$NON-NLS-2$
+		}
+
 		writer.writeEndElement(); // simple-page-master
 		writer.writeEndElement(); // layout-master-set
 
@@ -567,12 +591,16 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		}
 
 		openPage();
-		openFlow();
+		openFlow(false);
+	}
+
+	private boolean hasPageFooter() {
+		return copyright != null || pageNumbering;
 	}
 
 	private void emitTitlePage() {
 		openPage();
-		openFlow();
+		openFlow(true);
 		writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
 
 		if (title != null) {
@@ -605,6 +633,16 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 			writer.writeEndElement(); // block
 		}
 
+		if (date != null) {
+			writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
+			writer.writeAttribute("font-weight", "bold"); //$NON-NLS-1$//$NON-NLS-2$
+			writer.writeAttribute("font-size", "14pt"); //$NON-NLS-1$//$NON-NLS-2$
+			writer.writeAttribute("text-align", "center"); //$NON-NLS-1$//$NON-NLS-2$
+			writer.writeAttribute("space-before", "13pt"); //$NON-NLS-1$//$NON-NLS-2$
+			writer.writeCharacters(date);
+			writer.writeEndElement(); // block
+		}
+
 		writer.writeEmptyElement(foNamespaceUri, "block"); //$NON-NLS-1$
 		writer.writeAttribute("break-after", "page"); //$NON-NLS-1$//$NON-NLS-2$
 		writer.writeEndElement(); // block
@@ -613,7 +651,38 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		closePage();
 	}
 
-	private void openFlow() {
+	private void openFlow(boolean titlePage) {
+		if (hasPageFooter()) {
+			writer.writeStartElement(foNamespaceUri, "static-content"); //$NON-NLS-1$
+			writer.writeAttribute("flow-name", "footer"); //$NON-NLS-1$//$NON-NLS-2$
+
+			if (copyright != null && copyright.trim().length() > 0) {
+				writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
+				configureFontSize(0);
+				writer.writeAttribute("text-align", "center"); //$NON-NLS-1$//$NON-NLS-2$
+
+				writer.writeCharacters(copyright);
+
+				writer.writeEndElement(); // block
+			}
+
+			if (pageNumbering && !titlePage) {
+				writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
+				configureFontSize(0);
+				writer.writeAttribute("text-align", "outside"); //$NON-NLS-1$//$NON-NLS-2$
+//
+//				// output the section header into the footer using retrieve-marker
+//				writer.writeEmptyElement(foNamespaceUri, "retrieve-marker"); //$NON-NLS-1$
+//				writer.writeAttribute("retrieve-boundary", "page-sequence"); //$NON-NLS-1$//$NON-NLS-2$
+//				writer.writeAttribute("retrieve-position", "first-starting-within-page"); //$NON-NLS-1$//$NON-NLS-2$
+//				writer.writeAttribute("retrieve-class-name", "section-title"); //$NON-NLS-1$//$NON-NLS-2$
+
+				writer.writeEmptyElement(foNamespaceUri, "page-number"); //$NON-NLS-1$
+
+				writer.writeEndElement(); // block
+			}
+			writer.writeEndElement(); // static-content
+		}
 		writer.writeStartElement(foNamespaceUri, "flow"); //$NON-NLS-1$
 		writer.writeAttribute("flow-name", "xsl-region-body"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
@@ -651,8 +720,9 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 				closePage();
 			}
 			openPage();
-			openFlow();
+			openFlow(false);
 		}
+
 		writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
 		writer.writeAttribute("keep-with-next.within-column", "always"); //$NON-NLS-1$ //$NON-NLS-2$
 		writer.writeAttribute("font-weight", "bold"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -911,4 +981,101 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		this.version = version;
 	}
 
+	/**
+	 * a date to emit on the title page
+	 */
+	public String getDate() {
+		return date;
+	}
+
+	/**
+	 * a date to emit on the title page
+	 */
+	public void setDate(String date) {
+		this.date = date;
+	}
+
+	/**
+	 * an author to emit on the title page
+	 */
+	public String getAuthor() {
+		return author;
+	}
+
+	/**
+	 * an author to emit on the title page
+	 */
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+
+	/**
+	 * a copyright to emit in the document page footer
+	 */
+	public String getCopyright() {
+		return copyright;
+	}
+
+	/**
+	 * a copyright to emit in the document page footer
+	 */
+	public void setCopyright(String copyright) {
+		this.copyright = copyright;
+	}
+
+	/**
+	 * indicate if pages should be numbered
+	 */
+	public boolean isPageNumbering() {
+		return pageNumbering;
+	}
+
+	/**
+	 * indicate if pages should be numbered
+	 */
+	public void setPageNumbering(boolean pageNumbering) {
+		this.pageNumbering = pageNumbering;
+	}
+
+	/**
+	 * The page margin in cm. Defaults to 1.5cm.
+	 */
+	public float getPageMargin() {
+		return pageMargin;
+	}
+
+	/**
+	 * The page margin in cm. Defaults to 1.5cm.
+	 */
+	public void setPageMargin(float pageMargin) {
+		this.pageMargin = pageMargin;
+	}
+
+	/**
+	 * The page height in cm. Defaults to A4 sizing (29.7cm)
+	 */
+	public float getPageHeight() {
+		return pageHeight;
+	}
+
+	/**
+	 * The page height in cm. Defaults to A4 sizing (29.7cm)
+	 */
+	public void setPageHeight(float pageHeight) {
+		this.pageHeight = pageHeight;
+	}
+
+	/**
+	 * The page width in cm. Defaults to A4 sizing (21.0cm)
+	 */
+	public float getPageWidth() {
+		return pageWidth;
+	}
+
+	/**
+	 * The page width in cm. Defaults to A4 sizing (21.0cm)
+	 */
+	public void setPageWidth(float pageWidth) {
+		this.pageWidth = pageWidth;
+	}
 }
