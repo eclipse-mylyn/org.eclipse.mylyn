@@ -62,7 +62,7 @@ public class TaskEditorExtensionReader {
 			String id = element.getAttribute(ATTR_ID);
 			String name = element.getAttribute(ATTR_NAME);
 			AbstractTaskEditorExtension extension = (AbstractTaskEditorExtension) element.createExecutableExtension("class"); //$NON-NLS-1$
-			TaskEditorExtensions.addTaskEditorExtension(id, name, extension);
+			TaskEditorExtensions.addTaskEditorExtension(element.getNamespaceIdentifier(), id, name, extension);
 		} catch (CoreException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load taskEditorExtension", //$NON-NLS-1$
 					e));

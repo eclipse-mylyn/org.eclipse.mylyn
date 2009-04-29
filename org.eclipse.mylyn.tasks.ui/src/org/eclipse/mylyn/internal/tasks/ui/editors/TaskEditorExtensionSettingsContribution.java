@@ -14,8 +14,10 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 import java.util.SortedSet;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.mylyn.internal.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorExtensions.RegisteredTaskEditorExtension;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorExtension;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractTaskRepositoryPageContribution;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -97,21 +99,24 @@ public class TaskEditorExtensionSettingsContribution extends AbstractTaskReposit
 		// now add selection buttons for all registered extensions
 		SortedSet<RegisteredTaskEditorExtension> allEditorExtensions = TaskEditorExtensions.getTaskEditorExtensions();
 		for (RegisteredTaskEditorExtension editorExtension : allEditorExtensions) {
-			String name = editorExtension.getName();
-			isDefault = editorExtension.getId().equals(defaultExtensionId);
-			if (isDefault) {
-				name += LABEL_DEFAULT_SUFFIX;
-			}
-			Button button = new Button(parent, SWT.RADIO);
-			button.setText(name);
+			AbstractTaskEditorExtension extension = editorExtension.getExtension();
+			if (WorkbenchUtil.allowUseOf(extension)) {
+				String name = editorExtension.getName();
+				isDefault = editorExtension.getId().equals(defaultExtensionId);
+				if (isDefault) {
+					name += LABEL_DEFAULT_SUFFIX;
+				}
+				Button button = new Button(parent, SWT.RADIO);
+				button.setText(name);
 
-			if (editorExtension.getId().equals(selectedExtensionId)) {
-				foundSelection = true;
-				button.setSelection(true);
+				if (editorExtension.getId().equals(selectedExtensionId)) {
+					foundSelection = true;
+					button.setSelection(true);
+				}
+				button.setText(name);
+				button.setData(DATA_EDITOR_EXTENSION, editorExtension.getId());
+				button.addSelectionListener(listener);
 			}
-			button.setText(name);
-			button.setData(DATA_EDITOR_EXTENSION, editorExtension.getId());
-			button.addSelectionListener(listener);
 		}
 		if (!foundSelection) {
 			noneButton.setSelection(true);

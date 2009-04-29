@@ -15,12 +15,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.IPluginContribution;
 
 /**
  * @author Mik Kersten
  * @author Rob Elves
  */
-public abstract class AbstractTaskListPresentation {
+public abstract class AbstractTaskListPresentation implements IPluginContribution {
+
+	private String pluginId;
 
 	private final String id;
 
@@ -79,4 +82,17 @@ public abstract class AbstractTaskListPresentation {
 	public String getId() {
 		return id;
 	}
+
+	public final String getLocalId() {
+		return getId();
+	}
+
+	public final String getPluginId() {
+		return pluginId;
+	}
+
+	public final void setPluginId(String pluginId) {
+		this.pluginId = pluginId;
+	}
+
 }

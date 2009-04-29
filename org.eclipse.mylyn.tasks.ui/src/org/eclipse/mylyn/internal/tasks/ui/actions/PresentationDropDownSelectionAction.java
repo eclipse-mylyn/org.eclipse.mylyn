@@ -17,6 +17,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.mylyn.internal.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.AbstractTaskListPresentation;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
@@ -56,21 +57,24 @@ public class PresentationDropDownSelectionAction extends Action implements IMenu
 				item.fill(dropDownMenu, -1);
 			}
 		}
+
 		boolean separatorAdded = false;
 
 		for (AbstractTaskListPresentation presentation : TaskListView.getPresentations()) {
-			if (!presentation.isPrimary()) {
-				if (!separatorAdded) {
-					new Separator().fill(dropDownMenu, -1);
-					separatorAdded = true;
-				}
+			if (WorkbenchUtil.allowUseOf(presentation)) {
+				if (!presentation.isPrimary()) {
+					if (!separatorAdded) {
+						new Separator().fill(dropDownMenu, -1);
+						separatorAdded = true;
+					}
 
-				PresentationSelectionAction action = new PresentationSelectionAction(presentation);
-				ActionContributionItem item = new ActionContributionItem(action);
-				action.setText(presentation.getName());
-				action.setImageDescriptor(presentation.getImageDescriptor());
-				action.setChecked(view.getCurrentPresentation().getId().equals(presentation.getId()));
-				item.fill(dropDownMenu, -1);
+					PresentationSelectionAction action = new PresentationSelectionAction(presentation);
+					ActionContributionItem item = new ActionContributionItem(action);
+					action.setText(presentation.getName());
+					action.setImageDescriptor(presentation.getImageDescriptor());
+					action.setChecked(view.getCurrentPresentation().getId().equals(presentation.getId()));
+					item.fill(dropDownMenu, -1);
+				}
 			}
 		}
 	}

@@ -23,6 +23,8 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorExtension;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
+import org.eclipse.ui.IPluginContribution;
 
 /**
  * @author David Green
@@ -42,10 +44,24 @@ public class TaskEditorExtensions {
 		return new TreeSet<RegisteredTaskEditorExtension>(extensionsById.values());
 	}
 
-	public static void addTaskEditorExtension(String id, String name, AbstractTaskEditorExtension extension) {
+	/**
+	 * Contributes an extension to the {@link TaskEditor}.
+	 * 
+	 * @param pluginId
+	 *            the id of the contributing plug-in, may be <code>null</code>
+	 * @param id
+	 *            the id of the extension, may not be <code>null</code>
+	 * @param name
+	 *            the name of the extension that is displayed in the settings page
+	 * @param extension
+	 *            the extension implementation
+	 */
+	public static void addTaskEditorExtension(String pluginId, String id, String name,
+			AbstractTaskEditorExtension extension) {
 		Assert.isNotNull(id);
-		RegisteredTaskEditorExtension previous = extensionsById.put(id, new RegisteredTaskEditorExtension(extension,
-				id, name));
+		RegisteredTaskEditorExtension descriptor = new RegisteredTaskEditorExtension(extension, id, name);
+		descriptor.setPluginId(pluginId);
+		RegisteredTaskEditorExtension previous = extensionsById.put(id, descriptor);
 		if (previous != null) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Duplicate taskEditorExtension id=" //$NON-NLS-1$
 					+ id, null));
@@ -143,13 +159,16 @@ public class TaskEditorExtensions {
 		}
 	}
 
-	public static class RegisteredTaskEditorExtension implements Comparable<RegisteredTaskEditorExtension> {
+	public static class RegisteredTaskEditorExtension implements Comparable<RegisteredTaskEditorExtension>,
+			IPluginContribution {
 
 		private final String id;
 
 		private final String name;
 
 		private final AbstractTaskEditorExtension extension;
+
+		private String pluginId;
 
 		private RegisteredTaskEditorExtension(AbstractTaskEditorExtension extension, String id, String name) {
 			this.extension = extension;
@@ -179,6 +198,19 @@ public class TaskEditorExtensions {
 			}
 			return i;
 		}
+
+		public String getLocalId() {
+			return id;
+		}
+
+		public String getPluginId() {
+			return pluginId;
+		}
+
+		public void setPluginId(String pluginId) {
+			this.pluginId = pluginId;
+		}
+
 	}
 
 }
