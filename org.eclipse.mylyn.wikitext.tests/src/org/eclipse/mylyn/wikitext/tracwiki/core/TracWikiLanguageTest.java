@@ -35,6 +35,10 @@ public class TracWikiLanguageTest extends TestCase {
 		parser = new MarkupParser(markupLanaguage);
 	}
 
+	public void testIsDetectingRawHyperlinks() {
+		assertTrue(parser.getMarkupLanguage().isDetectingRawHyperlinks());
+	}
+
 	public void testParagraphs() throws IOException {
 		String html = parser.parseToHtml("first para\nnew line\n\nsecond para\n\n\n\n");
 		System.out.println(html);

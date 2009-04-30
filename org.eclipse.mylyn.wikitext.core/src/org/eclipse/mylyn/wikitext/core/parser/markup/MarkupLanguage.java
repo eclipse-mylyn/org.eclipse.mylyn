@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 import java.util.regex.Matcher;
@@ -21,6 +22,7 @@ import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.core.parser.markup.token.ImpliedHyperlinkReplacementToken;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
 import org.eclipse.mylyn.wikitext.core.util.LocationTrackingReader;
 import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
@@ -413,6 +415,13 @@ public abstract class MarkupLanguage implements Cloneable {
 			patternGroup += element.getPatternGroupCount();
 		}
 
+		/**
+		 * @since 1.1
+		 */
+		protected List<PatternBasedElement> getElements() {
+			return Collections.unmodifiableList(elements);
+		}
+
 		public void beginGroup(String regexFragment, int size) {
 			add(regexFragment, size, true);
 		}
@@ -609,4 +618,25 @@ public abstract class MarkupLanguage implements Cloneable {
 		this.internalLinkPattern = internalLinkPattern;
 	}
 
+	/**
+	 * Indicate if this markup language detects 'raw' hyperlinks; that is hyperlinks without any special markup. The
+	 * default implementation checks the markup syntax for use of {@link ImpliedHyperlinkReplacementToken} and returns
+	 * true if it is in the syntax.
+	 * 
+	 * @return true if raw hyperlinks are detected by this markup language, otherwise false.
+	 * 
+	 * @since 1.1
+	 */
+	public boolean isDetectingRawHyperlinks() {
+		initializeSyntax(false);
+		PatternBasedSyntax replacementTokenSyntax = getReplacementTokenSyntax();
+		if (replacementTokenSyntax != null) {
+			for (PatternBasedElement element : replacementTokenSyntax.getElements()) {
+				if (element instanceof ImpliedHyperlinkReplacementToken) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 }

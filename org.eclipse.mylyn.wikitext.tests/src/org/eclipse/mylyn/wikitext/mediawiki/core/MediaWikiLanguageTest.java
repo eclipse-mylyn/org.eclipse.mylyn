@@ -37,6 +37,10 @@ public class MediaWikiLanguageTest extends TestCase {
 		parser = new MarkupParser(markupLanaguage);
 	}
 
+	public void testIsDetectingRawHyperlinks() {
+		assertTrue(parser.getMarkupLanguage().isDetectingRawHyperlinks());
+	}
+
 	public void testParagraph() {
 		String html = parser.parseToHtml("first para<br/>\nfirst para line2\n\nsecond para\n\nthird para");
 		System.out.println(html);

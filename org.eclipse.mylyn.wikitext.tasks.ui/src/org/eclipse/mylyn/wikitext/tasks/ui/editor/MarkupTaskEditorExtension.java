@@ -42,6 +42,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration
 import org.eclipse.mylyn.wikitext.ui.editor.MarkupSourceViewer;
 import org.eclipse.mylyn.wikitext.ui.editor.MarkupSourceViewerConfiguration;
 import org.eclipse.mylyn.wikitext.ui.editor.ShowInTargetBridge;
+import org.eclipse.mylyn.wikitext.ui.viewer.DefaultHyperlinkDetectorDescriptorFilter;
 import org.eclipse.mylyn.wikitext.ui.viewer.MarkupViewer;
 import org.eclipse.mylyn.wikitext.ui.viewer.MarkupViewerConfiguration;
 import org.eclipse.swt.SWT;
@@ -58,7 +59,6 @@ import org.eclipse.ui.swt.IFocusService;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.AnnotationPreference;
 import org.eclipse.ui.texteditor.DefaultMarkerAnnotationAccess;
-import org.eclipse.ui.texteditor.HyperlinkDetectorDescriptor;
 import org.eclipse.ui.texteditor.MarkerAnnotationPreferences;
 import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 
@@ -102,6 +102,11 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 		markupViewer.setMarkupLanguage(markupLanguageCopy);
 		MarkupViewerConfiguration configuration = createViewerConfiguration(taskRepository, markupViewer);
 		configuration.setDisableHyperlinkModifiers(true);
+		if (markupLanguageCopy.isDetectingRawHyperlinks()) {
+			// bug 264612 don't detect hyperlinks twice
+			configuration.addHyperlinkDetectorDescriptorFilter(new DefaultHyperlinkDetectorDescriptorFilter(
+					"org.eclipse.mylyn.tasks.ui.hyperlinks.detectors.url")); //$NON-NLS-1$
+		}
 		markupViewer.configure(configuration);
 
 		markupViewer.setEditable(false);
@@ -244,16 +249,9 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 		public TaskMarkupSourceViewerConfiguration(IPreferenceStore preferenceStore, TaskRepository taskRepository) {
 			super(preferenceStore);
 			this.taskRepository = taskRepository;
-			addHyperlinkDetectorDescriptorFilter(new HyperlinkDetectorDescriptorFilter() {
-				public boolean filter(HyperlinkDetectorDescriptor descriptor) {
-					String id = descriptor.getId();
-					if ("org.eclipse.ui.internal.editors.text.URLHyperlinkDetector".equals(id)) { //$NON-NLS-1$
-						// filter out the platform URL hyperlink detector since Mylyn contributes one as well.
-						return true;
-					}
-					return false;
-				}
-			});
+			// filter out the platform URL hyperlink detector since Mylyn contributes one as well.
+			addHyperlinkDetectorDescriptorFilter(new DefaultHyperlinkDetectorDescriptorFilter(
+					"org.eclipse.ui.internal.editors.text.URLHyperlinkDetector")); //$NON-NLS-1$
 		}
 
 		@Override

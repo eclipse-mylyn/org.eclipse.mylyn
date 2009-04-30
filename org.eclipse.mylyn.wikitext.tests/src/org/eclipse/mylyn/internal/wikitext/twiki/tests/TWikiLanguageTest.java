@@ -28,6 +28,10 @@ public class TWikiLanguageTest extends TestCase {
 		parser = new MarkupParser(language);
 	}
 
+	public void testIsDetectingRawHyperlinks() {
+		assertTrue(parser.getMarkupLanguage().isDetectingRawHyperlinks());
+	}
+
 	public void testParagraphs() {
 		String html = parser.parseToHtml("first para first line\nfirst para second line\n\nsecond para\n\nthird para");
 		System.out.println(html);

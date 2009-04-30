@@ -51,6 +51,10 @@ public class TextileLanguageTest extends TestCase {
 		parser.setMarkupLanguage(markupLanaguage);
 	}
 
+	public void testIsDetectingRawHyperlinks() {
+		assertFalse(markupLanaguage.isDetectingRawHyperlinks());
+	}
+
 	public void testSimpleHeaders() {
 		String html = parser.parseToHtml("h1. a header\n\nh2. another header");
 		System.out.println("HTML: \n" + html);

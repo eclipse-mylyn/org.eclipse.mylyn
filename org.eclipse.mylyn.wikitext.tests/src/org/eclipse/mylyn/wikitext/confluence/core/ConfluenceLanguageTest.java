@@ -40,6 +40,10 @@ public class ConfluenceLanguageTest extends TestCase {
 		parser.setMarkupLanguage(new ConfluenceLanguage());
 	}
 
+	public void testIsDetectingRawHyperlinks() {
+		assertTrue(parser.getMarkupLanguage().isDetectingRawHyperlinks());
+	}
+
 	public void testParagraph() throws Exception {
 		String html = parser.parseToHtml("a paragraph\n\nanother paragraph\nwith\n2 lines");
 		System.out.println("HTML:" + html);

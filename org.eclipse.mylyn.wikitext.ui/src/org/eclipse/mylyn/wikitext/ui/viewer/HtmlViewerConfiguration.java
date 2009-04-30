@@ -38,7 +38,6 @@ import org.eclipse.mylyn.wikitext.ui.annotation.TitleAnnotation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.ui.editors.text.EditorsUI;
-import org.eclipse.ui.texteditor.HyperlinkDetectorDescriptor;
 
 /**
  * A configuration for use with a {@link HtmlViewer}.
@@ -59,16 +58,8 @@ public class HtmlViewerConfiguration extends AbstractTextSourceViewerConfigurati
 		this.viewer = viewer;
 //		  filters the platform URL hyperlink detector since the URL hyperlink detection
 //		  strategy is defined by the HTML markup. 
-		addHyperlinkDetectorDescriptorFilter(new HyperlinkDetectorDescriptorFilter() {
-			public boolean filter(HyperlinkDetectorDescriptor descriptor) {
-				String id = descriptor.getId();
-				if ("org.eclipse.ui.internal.editors.text.URLHyperlinkDetector".equals(id)) { //$NON-NLS-1$
-					// filter out the platform URL hyperlink detector since Mylyn contributes one as well.
-					return true;
-				}
-				return false;
-			}
-		});
+		addHyperlinkDetectorDescriptorFilter(new DefaultHyperlinkDetectorDescriptorFilter(
+				"org.eclipse.ui.internal.editors.text.URLHyperlinkDetector")); //$NON-NLS-1$
 	}
 
 	private static IPreferenceStore getDefaultPreferenceStore() {
