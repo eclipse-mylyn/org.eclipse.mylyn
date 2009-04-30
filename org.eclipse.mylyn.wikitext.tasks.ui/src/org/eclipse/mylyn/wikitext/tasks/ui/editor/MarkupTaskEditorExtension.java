@@ -58,6 +58,7 @@ import org.eclipse.ui.swt.IFocusService;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.AnnotationPreference;
 import org.eclipse.ui.texteditor.DefaultMarkerAnnotationAccess;
+import org.eclipse.ui.texteditor.HyperlinkDetectorDescriptor;
 import org.eclipse.ui.texteditor.MarkerAnnotationPreferences;
 import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 
@@ -243,6 +244,16 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 		public TaskMarkupSourceViewerConfiguration(IPreferenceStore preferenceStore, TaskRepository taskRepository) {
 			super(preferenceStore);
 			this.taskRepository = taskRepository;
+			addHyperlinkDetectorDescriptorFilter(new HyperlinkDetectorDescriptorFilter() {
+				public boolean filter(HyperlinkDetectorDescriptor descriptor) {
+					String id = descriptor.getId();
+					if ("org.eclipse.ui.internal.editors.text.URLHyperlinkDetector".equals(id)) { //$NON-NLS-1$
+						// filter out the platform URL hyperlink detector since Mylyn contributes one as well.
+						return true;
+					}
+					return false;
+				}
+			});
 		}
 
 		@Override
