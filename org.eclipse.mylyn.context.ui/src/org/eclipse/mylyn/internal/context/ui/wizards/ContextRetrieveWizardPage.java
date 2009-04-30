@@ -11,7 +11,7 @@
 
 package org.eclipse.mylyn.internal.context.ui.wizards;
 
-import java.text.DateFormat;
+import com.ibm.icu.text.DateFormat;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
