@@ -11,16 +11,13 @@
  *       org.eclipse.wst.common.frameworks.internal.ui.WTPActivityHelper 
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.commons.ui;
+package org.eclipse.mylyn.internal.provisional.commons.ui;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IPluginContribution;
-import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.activities.IIdentifier;
 import org.eclipse.ui.activities.IWorkbenchActivitySupport;
@@ -31,25 +28,25 @@ import org.eclipse.ui.activities.IWorkbenchActivitySupport;
  */
 public class WorkbenchUtil {
 
-	public static IViewPart getFromActivePerspective(String viewId) {
-		if (PlatformUI.isWorkbenchRunning()) {
-			IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-			if (activePage != null) {
-				return activePage.findView(viewId);
-			}
-		}
-		return null;
-	}
+//	public static IViewPart getFromActivePerspective(String viewId) {
+//		if (PlatformUI.isWorkbenchRunning()) {
+//			IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+//			if (activePage != null) {
+//				return activePage.findView(viewId);
+//			}
+//		}
+//		return null;
+//	}
 
-	public static IViewPart openInActivePerspective(String viewId) throws PartInitException {
-		if (PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
-			IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-			if (activePage != null) {
-				return activePage.showView(viewId);
-			}
-		}
-		return null;
-	}
+//	public static IViewPart openInActivePerspective(String viewId) throws PartInitException {
+//		if (PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
+//			IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+//			if (activePage != null) {
+//				return activePage.showView(viewId);
+//			}
+//		}
+//		return null;
+//	}
 
 	/**
 	 * Return the modal shell that is currently open. If there isn't one then return null.
@@ -61,7 +58,7 @@ public class WorkbenchUtil {
 	 * 
 	 * @return Shell or <code>null</code>.
 	 */
-	public static Shell getModalShellExcluding(Shell shell) {
+	private static Shell getModalShellExcluding(Shell shell) {
 		IWorkbench workbench = PlatformUI.getWorkbench();
 		Shell[] shells = workbench.getDisplay().getShells();
 		int modal = SWT.APPLICATION_MODAL | SWT.SYSTEM_MODAL | SWT.PRIMARY_MODAL;
@@ -107,7 +104,7 @@ public class WorkbenchUtil {
 	 * 
 	 * @return Shell
 	 */
-	public static Shell getNonModalShell() {
+	private static Shell getNonModalShell() {
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window == null) {
 			IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
