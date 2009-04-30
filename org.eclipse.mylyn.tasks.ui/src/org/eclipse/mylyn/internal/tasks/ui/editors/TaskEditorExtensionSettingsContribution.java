@@ -100,7 +100,7 @@ public class TaskEditorExtensionSettingsContribution extends AbstractTaskReposit
 		SortedSet<RegisteredTaskEditorExtension> allEditorExtensions = TaskEditorExtensions.getTaskEditorExtensions();
 		for (RegisteredTaskEditorExtension editorExtension : allEditorExtensions) {
 			AbstractTaskEditorExtension extension = editorExtension.getExtension();
-			if (WorkbenchUtil.allowUseOf(extension)) {
+			if (WorkbenchUtil.allowUseOf(editorExtension)) {
 				String name = editorExtension.getName();
 				isDefault = editorExtension.getId().equals(defaultExtensionId);
 				if (isDefault) {
