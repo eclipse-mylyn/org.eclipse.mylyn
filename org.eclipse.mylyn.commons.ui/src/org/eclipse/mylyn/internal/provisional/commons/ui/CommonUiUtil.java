@@ -24,14 +24,17 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.internal.commons.ui.CommonsUiPlugin;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Steffen Pingel
- * @deprecated use {@link CommonUiUtil} instead
  */
-@Deprecated
-public class CommonsUiUtil {
+public class CommonUiUtil {
+
+	private static final String KEY_DISABLED = "org.eclipse.mylyn.commons.ui.disabled"; //$NON-NLS-1$
 
 	public static void busyCursorWhile(final ICoreRunnable runnable) throws OperationCanceledException, CoreException {
 		try {
@@ -137,6 +140,71 @@ public class CommonsUiUtil {
 		default:
 			page.setMessage(message, IMessageProvider.ERROR);
 			break;
+		}
+	}
+
+	/**
+	 * Recursively sets the menu of all children of <code>composite</code>.
+	 */
+	public static void setMenu(Composite composite, Menu menu) {
+		if (!composite.isDisposed()) {
+			composite.setMenu(menu);
+			for (Control child : composite.getChildren()) {
+				child.setMenu(menu);
+				if (child instanceof Composite) {
+					setMenu((Composite) child, menu);
+				}
+			}
+		}
+	}
+
+	public static void setEnabled(Composite composite, boolean enabled) {
+		if (enabled) {
+			enable(composite);
+		} else {
+			disable(composite);
+		}
+	}
+
+	private static void disable(Composite composite) {
+		if (!composite.isDisposed()) {
+			if (!composite.getEnabled()) {
+				composite.setData(KEY_DISABLED, Boolean.TRUE);
+			} else {
+				composite.setEnabled(false);
+			}
+			for (Control control : composite.getChildren()) {
+				if (control instanceof Composite) {
+					disable((Composite) control);
+				} else {
+					if (!control.getEnabled()) {
+						control.setData(KEY_DISABLED, Boolean.TRUE);
+					} else {
+						control.setEnabled(false);
+					}
+				}
+			}
+		}
+	}
+
+	private static void enable(Composite composite) {
+		if (!composite.isDisposed()) {
+			if (composite.getData(KEY_DISABLED) == null) {
+				composite.setEnabled(true);
+			} else {
+				composite.setData(KEY_DISABLED, null);
+			}
+			for (Control control : composite.getChildren()) {
+				if (control instanceof Composite) {
+					enable((Composite) control);
+				} else {
+					if (control.getData(KEY_DISABLED) == null) {
+						control.setEnabled(true);
+					} else {
+						control.setData(KEY_DISABLED, null);
+					}
+				}
+			}
 		}
 	}
 
