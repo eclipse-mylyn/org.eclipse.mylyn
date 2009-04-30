@@ -517,7 +517,7 @@ public class TasksUiUtil {
 	 */
 	public static IViewPart openTasksViewInActivePerspective() {
 		try {
-			return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ITasksUiConstants.ID_VIEW_TASK_LIST);
+			return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ITasksUiConstants.ID_VIEW_TASKS);
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not show Task List view", e)); //$NON-NLS-1$
 			return null;

@@ -47,11 +47,11 @@ public interface ITasksUiConstants {
 	/**
 	 * @since 3.2
 	 */
-	public static final String ID_VIEW_TASK_LIST = "org.eclipse.mylyn.tasks.ui.views.tasks"; //$NON-NLS-1$
+	public static final String ID_VIEW_TASKS = "org.eclipse.mylyn.tasks.ui.views.tasks"; //$NON-NLS-1$
 
 	/**
 	 * @since 3.2
 	 */
-	public static final String ID_VIEW_TASK_REPOSITORIES = "org.eclipse.mylyn.tasks.ui.views.repositories"; //$NON-NLS-1$
+	public static final String ID_VIEW_REPOSITORIES = "org.eclipse.mylyn.tasks.ui.views.repositories"; //$NON-NLS-1$
 
 }

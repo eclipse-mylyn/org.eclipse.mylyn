@@ -297,10 +297,10 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 	public static final int SWT_NO_SCROLL = 1 << 4;
 
 	/**
-	 * @deprecated Use {@link ITasksUiConstants#ID_VIEW_TASK_LIST} instead
+	 * @deprecated Use {@link ITasksUiConstants#ID_VIEW_TASKS} instead
 	 */
 	@Deprecated
-	public static final String ID = ITasksUiConstants.ID_VIEW_TASK_LIST;
+	public static final String ID = ITasksUiConstants.ID_VIEW_TASKS;
 
 	public static final String LABEL_VIEW = Messages.TaskListView_Task_List;
 
@@ -687,7 +687,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		if (PlatformUI.isWorkbenchRunning()) {
 			IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			if (activePage != null) {
-				IViewPart view = activePage.findView(ITasksUiConstants.ID_VIEW_TASK_LIST);
+				IViewPart view = activePage.findView(ITasksUiConstants.ID_VIEW_TASKS);
 				if (view instanceof TaskListView) {
 					return (TaskListView) view;
 				}
@@ -731,7 +731,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 			return;
 		}
 
-		IViewReference reference = getSite().getPage().findViewReference(ITasksUiConstants.ID_VIEW_TASK_LIST);
+		IViewReference reference = getSite().getPage().findViewReference(ITasksUiConstants.ID_VIEW_TASKS);
 		boolean shouldSetDescription = false;
 		if (reference != null && reference.isFastView() && !getSite().getPage().isPartVisible(this)) {
 			shouldSetDescription = true;
@@ -1061,7 +1061,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 		IContextService contextSupport = (IContextService) getSite().getService(IContextService.class);
 		if (contextSupport != null) {
-			contextSupport.activateContext(ITasksUiConstants.ID_VIEW_TASK_LIST);
+			contextSupport.activateContext(ITasksUiConstants.ID_VIEW_TASKS);
 		}
 
 		getSite().setSelectionProvider(getViewer());
@@ -1185,7 +1185,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 		public void partDeactivated(IWorkbenchPart part) {
 			if (part == TaskListView.this) {
-				IViewReference reference = getSite().getPage().findViewReference(ITasksUiConstants.ID_VIEW_TASK_LIST);
+				IViewReference reference = getSite().getPage().findViewReference(ITasksUiConstants.ID_VIEW_TASKS);
 				if (reference != null && reference.isFastView()) {
 					updateDescription();
 				}

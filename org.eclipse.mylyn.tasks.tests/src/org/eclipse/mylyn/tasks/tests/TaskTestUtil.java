@@ -120,7 +120,7 @@ public class TaskTestUtil {
 		TaskListView taskListView = (TaskListView) PlatformUI.getWorkbench()
 				.getActiveWorkbenchWindow()
 				.getActivePage()
-				.showView(ITasksUiConstants.ID_VIEW_TASK_LIST);
+				.showView(ITasksUiConstants.ID_VIEW_TASKS);
 		Assert.assertSame("Failed to make task list view active", PlatformUI.getWorkbench()
 				.getActiveWorkbenchWindow()
 				.getActivePage()

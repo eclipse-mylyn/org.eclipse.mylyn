@@ -158,7 +158,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 
 	private final Action refineSearchAction;
 
-	private static final String[] SHOW_IN_TARGETS = new String[] { ITasksUiConstants.ID_VIEW_TASK_LIST };
+	private static final String[] SHOW_IN_TARGETS = new String[] { ITasksUiConstants.ID_VIEW_TASKS };
 
 	private TaskListToolTip toolTip;
 

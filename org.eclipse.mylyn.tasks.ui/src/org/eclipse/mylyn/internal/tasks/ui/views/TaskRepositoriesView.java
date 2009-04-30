@@ -57,9 +57,9 @@ import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 public class TaskRepositoriesView extends ViewPart {
 
 	/**
-	 * @deprecated Use {@link ITasksUiConstants#ID_VIEW_TASK_REPOSITORIES} instead
+	 * @deprecated Use {@link ITasksUiConstants#ID_VIEW_REPOSITORIES} instead
 	 */
-	public static final String ID = ITasksUiConstants.ID_VIEW_TASK_REPOSITORIES; //$NON-NLS-1$
+	public static final String ID = ITasksUiConstants.ID_VIEW_REPOSITORIES; //$NON-NLS-1$
 
 	private TableViewer viewer;
 
@@ -150,7 +150,7 @@ public class TaskRepositoriesView extends ViewPart {
 			if (activePage == null) {
 				return null;
 			}
-			IViewPart view = activePage.findView(ITasksUiConstants.ID_VIEW_TASK_REPOSITORIES);
+			IViewPart view = activePage.findView(ITasksUiConstants.ID_VIEW_REPOSITORIES);
 			if (view instanceof TaskRepositoriesView) {
 				return (TaskRepositoriesView) view;
 			}
@@ -163,7 +163,7 @@ public class TaskRepositoriesView extends ViewPart {
 			return (TaskRepositoriesView) PlatformUI.getWorkbench()
 					.getActiveWorkbenchWindow()
 					.getActivePage()
-					.showView(ITasksUiConstants.ID_VIEW_TASK_REPOSITORIES);
+					.showView(ITasksUiConstants.ID_VIEW_REPOSITORIES);
 		} catch (Exception e) {
 			return null;
 		}
