@@ -346,8 +346,8 @@
 			</fileset>
 		</delete>
 		
-		<exec executable="/usr/bin/Xvfb" spawn="true">
-			<arg value=":99"/>
+		<exec executable="${build.test.x.command}" spawn="true" failifexecutionfails="false" failonerror="false">
+			<arg value="${build.test.x.display}"/>
 		</exec>
 	</target>
 
