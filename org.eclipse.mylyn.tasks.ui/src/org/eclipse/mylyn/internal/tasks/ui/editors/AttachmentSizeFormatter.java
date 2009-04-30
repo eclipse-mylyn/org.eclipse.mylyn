@@ -12,8 +12,8 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
+import com.ibm.icu.text.DecimalFormat;
+import com.ibm.icu.text.NumberFormat;
 import java.util.Locale;
 
 /**

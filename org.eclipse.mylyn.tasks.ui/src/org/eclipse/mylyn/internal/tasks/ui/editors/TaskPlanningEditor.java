@@ -12,7 +12,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
-import java.text.DateFormat;
+import com.ibm.icu.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;

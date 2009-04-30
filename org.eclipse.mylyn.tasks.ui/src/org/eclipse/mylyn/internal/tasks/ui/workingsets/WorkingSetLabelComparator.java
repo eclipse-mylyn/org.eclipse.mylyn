@@ -11,10 +11,11 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.workingsets;
 
-import java.text.Collator;
 import java.util.Comparator;
 
 import org.eclipse.ui.IWorkingSet;
+
+import com.ibm.icu.text.Collator;
 
 /**
  * @author Willian Mitsuda

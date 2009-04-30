@@ -14,7 +14,7 @@ package org.eclipse.mylyn.internal.tasks.ui;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import com.ibm.icu.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;

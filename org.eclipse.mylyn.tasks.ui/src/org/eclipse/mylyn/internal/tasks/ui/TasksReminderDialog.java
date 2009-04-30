@@ -11,7 +11,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
-import java.text.DateFormat;
+import com.ibm.icu.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 

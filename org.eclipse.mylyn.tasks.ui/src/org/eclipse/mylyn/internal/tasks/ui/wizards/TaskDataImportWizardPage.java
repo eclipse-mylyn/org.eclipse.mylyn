@@ -12,7 +12,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import java.io.File;
-import java.text.DateFormat;
+import com.ibm.icu.text.DateFormat;
 import java.util.SortedMap;
 
 import org.eclipse.jface.dialogs.Dialog;
