@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFormUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -265,7 +266,7 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 			}
 
 			getTaskEditorPage().reflow();
-			EditorUtil.ensureVisible(getEditor().getControl());
+			CommonFormUtil.ensureVisible(getEditor().getControl());
 		}
 	}
 

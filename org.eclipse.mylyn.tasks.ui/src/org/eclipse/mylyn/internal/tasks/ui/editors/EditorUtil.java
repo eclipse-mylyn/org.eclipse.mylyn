@@ -12,7 +12,6 @@
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.util.Date;
 
@@ -20,7 +19,9 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.ITextOperationTarget;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.window.Window;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFormUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskAttachmentWizard.Mode;
@@ -29,7 +30,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.swt.custom.CTabFolder;
-import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Font;
@@ -46,7 +46,6 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.SharedScrolledComposite;
-import org.eclipse.ui.internal.forms.widgets.FormUtil;
 
 public class EditorUtil {
 
@@ -55,8 +54,6 @@ public class EditorUtil {
 //	public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm";
 
 	static final String KEY_MARKER = "marker"; //$NON-NLS-1$
-
-	static final String KEY_DISABLED = "org.eclipse.mylyn.tasks.ui.disabled"; //$NON-NLS-1$
 
 	static final String KEY_TEXT_VIEWER = "textViewer"; //$NON-NLS-1$
 
@@ -224,7 +221,7 @@ public class EditorUtil {
 			if (control instanceof ExpandableComposite) {
 				ExpandableComposite ex = (ExpandableComposite) control;
 				if (!ex.isExpanded()) {
-					toggleExpandableComposite(true, ex);
+					CommonFormUtil.setExpanded(ex, true);
 				}
 			}
 
@@ -238,7 +235,7 @@ public class EditorUtil {
 				} else if (comp instanceof ExpandableComposite) {
 					ExpandableComposite ex = (ExpandableComposite) comp;
 					if (!ex.isExpanded()) {
-						toggleExpandableComposite(true, ex);
+						CommonFormUtil.setExpanded(ex, true);
 					}
 
 					// HACK: This is necessary
@@ -256,54 +253,12 @@ public class EditorUtil {
 		return true;
 	}
 
+	/**
+	 * @deprecated Use {@link CommonUiUtil#setEnabled(Composite,boolean)} instead
+	 */
+	@Deprecated
 	public static void setEnabledState(Composite composite, boolean enabled) {
-		if (enabled) {
-			enable(composite);
-		} else {
-			disable(composite);
-		}
-	}
-
-	private static void disable(Composite composite) {
-		if (!composite.isDisposed()) {
-			if (!composite.getEnabled()) {
-				composite.setData(KEY_DISABLED, Boolean.TRUE);
-			} else {
-				composite.setEnabled(false);
-			}
-			for (Control control : composite.getChildren()) {
-				if (control instanceof Composite) {
-					disable((Composite) control);
-				} else {
-					if (!control.getEnabled()) {
-						control.setData(KEY_DISABLED, Boolean.TRUE);
-					} else {
-						control.setEnabled(false);
-					}
-				}
-			}
-		}
-	}
-
-	private static void enable(Composite composite) {
-		if (!composite.isDisposed()) {
-			if (composite.getData(KEY_DISABLED) == null) {
-				composite.setEnabled(true);
-			} else {
-				composite.setData(KEY_DISABLED, null);
-			}
-			for (Control control : composite.getChildren()) {
-				if (control instanceof Composite) {
-					enable((Composite) control);
-				} else {
-					if (control.getData(KEY_DISABLED) == null) {
-						control.setEnabled(true);
-					} else {
-						control.setData(KEY_DISABLED, null);
-					}
-				}
-			}
-		}
+		CommonUiUtil.setEnabled(composite, enabled);
 	}
 
 	public static void setMarker(Widget widget, String text) {
@@ -323,29 +278,27 @@ public class EditorUtil {
 	 * bug#70358)
 	 * 
 	 * @param comp
+	 * @deprecated Use {@link CommonFormUtil#setExpanded(ExpandableComposite,boolean)} instead
 	 */
+	@Deprecated
 	public static void toggleExpandableComposite(boolean expanded, ExpandableComposite comp) {
-		if (comp.isExpanded() != expanded) {
-			Method method = null;
-			try {
-				method = ExpandableComposite.class.getDeclaredMethod("programmaticToggleState"); //$NON-NLS-1$
-				method.setAccessible(true);
-				method.invoke(comp);
-			} catch (Exception e) {
-				// ignore
-			}
-		}
+		CommonFormUtil.setExpanded(comp, expanded);
 	}
 
+	/**
+	 * @deprecated Use {@link CommonFormUtil#disableScrollingOnFocus(ScrolledForm)} instead
+	 */
+	@Deprecated
 	public static void disableScrollingOnFocus(ScrolledForm form) {
-		form.setData(FormUtil.FOCUS_SCROLLING, Boolean.FALSE);
+		CommonFormUtil.disableScrollingOnFocus(form);
 	}
 
+	/**
+	 * @deprecated Use {@link CommonFormUtil#ensureVisible(Control)} instead
+	 */
+	@Deprecated
 	public static void ensureVisible(Control control) {
-		ScrolledComposite form = FormUtil.getScrolledComposite(control);
-		if (form != null) {
-			FormUtil.ensureVisible(form, control);
-		}
+		CommonFormUtil.ensureVisible(control);
 	}
 
 	// copied from Section.reflow()
@@ -387,17 +340,12 @@ public class EditorUtil {
 
 	/**
 	 * Recursively sets the menu of all children of <code>composite</code>.
+	 * 
+	 * @deprecated Use {@link CommonUiUtil#setMenu(Composite,Menu)} instead
 	 */
+	@Deprecated
 	public static void setMenu(Composite composite, Menu menu) {
-		if (!composite.isDisposed()) {
-			composite.setMenu(menu);
-			for (Control child : composite.getChildren()) {
-				child.setMenu(menu);
-				if (child instanceof Composite) {
-					setMenu((Composite) child, menu);
-				}
-			}
-		}
+		CommonUiUtil.setMenu(composite, menu);
 	}
 
 	// TODO e3.4 replace reflection by assignment to RowLayout.center

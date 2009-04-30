@@ -32,7 +32,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.internal.commons.core.ZipFileUtil;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonsUiUtil;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.ICoreRunnable;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.externalization.AbstractExternalizationParticipant;
@@ -106,9 +106,9 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 
 		try {
 			if (getContainer() != null) {
-				CommonsUiUtil.run(getContainer(), new FileCopyJob(sourceZipFile));
+				CommonUiUtil.run(getContainer(), new FileCopyJob(sourceZipFile));
 			} else {
-				CommonsUiUtil.busyCursorWhile(new FileCopyJob(sourceZipFile));
+				CommonUiUtil.busyCursorWhile(new FileCopyJob(sourceZipFile));
 			}
 
 			importPage.saveSettings();

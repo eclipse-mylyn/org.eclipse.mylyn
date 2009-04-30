@@ -24,7 +24,7 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskDataHandler;
 import org.eclipse.mylyn.internal.bugzilla.ui.editor.BugzillaTaskEditorPage;
-import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFormUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -122,7 +122,7 @@ public class UpdateAttachmentJob extends Job {
 														AbstractTaskEditorPage.ID_PART_ATTACHMENTS).getControl();
 												if (control instanceof Section) {
 													Section section = (Section) control;
-													EditorUtil.toggleExpandableComposite(true, section);
+													CommonFormUtil.setExpanded(section, true);
 												}
 											}
 

@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonsUiUtil;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.ICoreRunnable;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
@@ -143,7 +143,7 @@ public class DeleteTaskRepositoryAction extends AbstractTaskRepositoryAction {
 				}
 			};
 			try {
-				CommonsUiUtil.runInUi(op, null);
+				CommonUiUtil.runInUi(op, null);
 			} catch (CoreException e) {
 				Status status = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
 						"Problems encountered deleting task repository: {0}", e.getMessage()), e); //$NON-NLS-1$

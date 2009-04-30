@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFormUtil;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
@@ -54,7 +55,7 @@ public class TextAttributeEditor extends AbstractAttributeEditor {
 			text.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
 					setValue(text.getText());
-					EditorUtil.ensureVisible(text);
+					CommonFormUtil.ensureVisible(text);
 				}
 			});
 		}

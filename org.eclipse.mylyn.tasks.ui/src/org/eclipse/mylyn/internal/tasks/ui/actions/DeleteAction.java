@@ -25,7 +25,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonsUiUtil;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.ICoreRunnable;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AutomaticRepositoryTaskContainer;
@@ -138,7 +138,7 @@ public class DeleteAction extends Action {
 					}
 				};
 				try {
-					CommonsUiUtil.runInUi(op, null);
+					CommonUiUtil.runInUi(op, null);
 				} catch (CoreException e) {
 					Status status = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
 							"Problems encountered deleting task list elements: {0}", e.getMessage()), e); //$NON-NLS-1$

@@ -40,6 +40,7 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.SelectionProviderAdapter;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.editor.EditorBusyIndicator;
@@ -50,7 +51,6 @@ import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskEditorScheduleAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ToggleTaskActivationAction;
-import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.Messages;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionContributor;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDragSourceListener;
@@ -204,7 +204,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		getHeaderForm().getForm().setMenu(menu);
 		Composite head = getHeaderForm().getForm().getForm().getHead();
 		if (head != null) {
-			EditorUtil.setMenu(head, menu);
+			CommonUiUtil.setMenu(head, menu);
 		}
 	}
 
@@ -509,7 +509,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 					}
 				}
 
-				EditorUtil.setEnabledState(form.getBody(), !busy);
+				CommonUiUtil.setEnabled(form.getBody(), !busy);
 				for (IFormPage page : getPages()) {
 					if (page instanceof WorkbenchPart) {
 						WorkbenchPart part = (WorkbenchPart) page;

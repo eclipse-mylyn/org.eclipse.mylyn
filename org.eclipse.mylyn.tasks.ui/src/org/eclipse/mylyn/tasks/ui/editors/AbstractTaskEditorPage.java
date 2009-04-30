@@ -49,8 +49,10 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFormUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.GradientCanvas;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
@@ -619,7 +621,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 		toolkit = managedForm.getToolkit();
 		registerDefaultDropListener(form);
-		EditorUtil.disableScrollingOnFocus(form);
+		CommonFormUtil.disableScrollingOnFocus(form);
 
 		try {
 			setReflow(false);
@@ -1024,15 +1026,15 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 								if (TaskAttribute.TYPE_COMMENT.equals(attribute.getMetaData().getType())) {
 									AbstractTaskEditorPart actionPart = getPart(ID_PART_COMMENTS);
 									if (actionPart != null && actionPart.getControl() instanceof ExpandableComposite) {
-										EditorUtil.toggleExpandableComposite(true,
-												(ExpandableComposite) actionPart.getControl());
+										CommonFormUtil.setExpanded((ExpandableComposite) actionPart.getControl(),
+												true);
 										if (actionPart.getControl() instanceof Section) {
 											Control client = ((Section) actionPart.getControl()).getClient();
 											if (client instanceof Composite) {
 												for (Control control : ((Composite) client).getChildren()) {
 													// toggle subsections
 													if (control instanceof Section) {
-														EditorUtil.toggleExpandableComposite(true, (Section) control);
+														CommonFormUtil.setExpanded((Section) control, true);
 													}
 												}
 											}
@@ -1279,7 +1281,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 					setReflow(false);
 					// prevent menu from being disposed when disposing control on the form during refresh
 					Menu menu = editorComposite.getMenu();
-					EditorUtil.setMenu(editorComposite, null);
+					CommonUiUtil.setMenu(editorComposite, null);
 
 					// clear old controls and parts
 					for (Control control : editorComposite.getChildren()) {
@@ -1457,7 +1459,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 //				clearOutgoingAction.setEnabled(!busy);
 //			}
 
-			EditorUtil.setEnabledState(editorComposite, !busy);
+			CommonUiUtil.setEnabled(editorComposite, !busy);
 
 			formBusy = busy;
 		}

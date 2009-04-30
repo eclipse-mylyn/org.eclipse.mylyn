@@ -26,6 +26,7 @@ import org.eclipse.jface.text.TextEvent;
 import org.eclipse.jface.text.source.AnnotationModel;
 import org.eclipse.jface.text.source.IAnnotationAccess;
 import org.eclipse.jface.text.source.SourceViewer;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFormUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.tasks.ui.commands.ViewSourceHandler;
@@ -169,7 +170,7 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 				String value = viewer.getTextWidget().getText();
 				if (!getValue().equals(value)) {
 					setValue(value);
-					EditorUtil.ensureVisible(viewer.getTextWidget());
+					CommonFormUtil.ensureVisible(viewer.getTextWidget());
 				}
 			}
 		});

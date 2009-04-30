@@ -26,6 +26,7 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFormUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.SelectionProviderAdapter;
 import org.eclipse.mylyn.internal.tasks.core.TaskComment;
@@ -208,7 +209,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		 */
 		public void setExpanded(boolean expanded) {
 			if (groupSection != null && groupSection.isExpanded() != expanded) {
-				EditorUtil.toggleExpandableComposite(expanded, groupSection);
+				CommonFormUtil.setExpanded(groupSection, expanded);
 			}
 
 			if (commentViewers != null) {
@@ -337,7 +338,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			expandCommentHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 				@Override
 				public void linkActivated(HyperlinkEvent e) {
-					EditorUtil.toggleExpandableComposite(!commentComposite.isExpanded(), commentComposite);
+					CommonFormUtil.setExpanded(commentComposite, !commentComposite.isExpanded());
 				}
 			});
 
@@ -432,7 +433,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 		public void setExpanded(boolean expanded) {
 			if (commentComposite != null && commentComposite.isExpanded() != expanded) {
-				EditorUtil.toggleExpandableComposite(expanded, commentComposite);
+				CommonFormUtil.setExpanded(commentComposite, expanded);
 			}
 		}
 
@@ -532,7 +533,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			}
 
 			if (!collapsed && section != null) {
-				EditorUtil.toggleExpandableComposite(false, section);
+				CommonFormUtil.setExpanded(section, false);
 			}
 		} finally {
 			getTaskEditorPage().setReflow(true);
@@ -635,7 +636,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 				// expanded, no need to expand groups explicitly
 				boolean expandGroups = section.getClient() != null;
 
-				EditorUtil.toggleExpandableComposite(true, section);
+				CommonFormUtil.setExpanded(section, true);
 
 				if (expandGroups) {
 					List<CommentGroupViewer> viewers = getCommentGroupViewers();
