@@ -14,7 +14,7 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 import java.util.SortedSet;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.mylyn.internal.commons.ui.WorkbenchUtil;
+import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorExtensions.RegisteredTaskEditorExtension;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorExtension;

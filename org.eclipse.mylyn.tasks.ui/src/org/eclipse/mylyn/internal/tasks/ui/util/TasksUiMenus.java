@@ -19,7 +19,7 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylyn.internal.commons.ui.WorkbenchUtil;
+import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
