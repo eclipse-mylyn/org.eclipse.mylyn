@@ -13,10 +13,8 @@
 
 package org.eclipse.mylyn.tasks.ui.editors;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -47,20 +45,15 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFormUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.GradientCanvas;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.internal.tasks.core.DateRange;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListRunnable;
 import org.eclipse.mylyn.internal.tasks.core.data.ITaskDataManagerListener;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManagerEvent;
-import org.eclipse.mylyn.internal.tasks.ui.ChangeActivityHandleOperation;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ClearOutgoingAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.DeleteTaskEditorAction;
@@ -82,6 +75,7 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorPeoplePart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorPlanningPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorRichTextPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorSummaryPart;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskMigrator;
 import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -137,8 +131,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.forms.FormColors;
@@ -207,78 +199,13 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 			final SubmitJob job = event.getJob();
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 
-				private void openNewTask(ITask newTask) {
+				private void addTask(ITask newTask) {
 					AbstractTaskContainer parent = null;
 					AbstractTaskEditorPart actionPart = getPart(ID_PART_ACTIONS);
 					if (actionPart instanceof TaskEditorActionPart) {
 						parent = ((TaskEditorActionPart) actionPart).getCategory();
 					}
 					TasksUiInternal.getTaskList().addTask(newTask, parent);
-					ITask oldTask = getTask();
-
-					// migrate task details
-					if (oldTask instanceof AbstractTask && newTask instanceof AbstractTask) {
-						((AbstractTask) newTask).setNotes(((AbstractTask) oldTask).getNotes());
-						DateRange scheduledDate = ((AbstractTask) oldTask).getScheduledForDate();
-						TasksUiPlugin.getTaskActivityManager().setScheduledFor((AbstractTask) newTask, scheduledDate);
-						Date dueDate = ((AbstractTask) oldTask).getDueDate();
-						TasksUiPlugin.getTaskActivityManager().setDueDate(newTask, dueDate);
-						((AbstractTask) newTask).setEstimatedTimeHours(((AbstractTask) oldTask).getEstimatedTimeHours());
-					}
-
-					// migrate context
-					ContextCorePlugin.getContextStore().saveActiveContext();
-					ContextCore.getContextStore().cloneContext(oldTask.getHandleIdentifier(),
-							newTask.getHandleIdentifier());
-
-					// migrate task activity
-					ChangeActivityHandleOperation operation = new ChangeActivityHandleOperation(
-							oldTask.getHandleIdentifier(), newTask.getHandleIdentifier());
-					try {
-						operation.run(new NullProgressMonitor());
-					} catch (InvocationTargetException e) {
-						StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
-								"Failed to migrate activity to new task", e.getCause())); //$NON-NLS-1$
-					} catch (InterruptedException e) {
-						// ignore
-					}
-
-					boolean active = oldTask.isActive();
-					if (active) {
-						TasksUi.getTaskActivityManager().deactivateTask(oldTask);
-					}
-
-					boolean editorIsActive = false;
-					IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-					if (window != null) {
-						IWorkbenchPage activePage = window.getActivePage();
-						if (activePage != null) {
-							if (activePage.getActiveEditor() == getTaskEditor()) {
-								editorIsActive = true;
-							}
-						}
-					}
-					close();
-
-					// delete old task details
-					TasksUiInternal.getTaskList().deleteTask(oldTask);
-					ContextCore.getContextManager().deleteContext(oldTask.getHandleIdentifier());
-					try {
-						TasksUiPlugin.getTaskDataManager().deleteTaskData(oldTask);
-					} catch (CoreException e) {
-						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-								"Failed to delete task data", e)); //$NON-NLS-1$
-					}
-
-					if (active) {
-						TasksUi.getTaskActivityManager().activateTask(newTask);
-					}
-
-					if (editorIsActive) {
-						TasksUiUtil.openTask(newTask);
-					} else {
-						TasksUiInternal.openTaskInBackground(newTask, false);
-					}
 				}
 
 				public void run() {
@@ -288,7 +215,14 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 							if (job.getTask().equals(getTask())) {
 								refreshFormContent();
 							} else {
-								openNewTask(job.getTask());
+								ITask oldTask = getTask();
+								ITask newTask = job.getTask();
+								addTask(newTask);
+
+								TaskMigrator migrator = new TaskMigrator(oldTask);
+								migrator.setDelete(true);
+								migrator.setEditor(getTaskEditor());
+								migrator.copyPropertiesAndOpen(newTask);
 							}
 						} else {
 							handleSubmitError(job);
@@ -1026,8 +960,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 								if (TaskAttribute.TYPE_COMMENT.equals(attribute.getMetaData().getType())) {
 									AbstractTaskEditorPart actionPart = getPart(ID_PART_COMMENTS);
 									if (actionPart != null && actionPart.getControl() instanceof ExpandableComposite) {
-										CommonFormUtil.setExpanded((ExpandableComposite) actionPart.getControl(),
-												true);
+										CommonFormUtil.setExpanded((ExpandableComposite) actionPart.getControl(), true);
 										if (actionPart.getControl() instanceof Section) {
 											Control client = ((Section) actionPart.getControl()).getClient();
 											if (client instanceof Composite) {
