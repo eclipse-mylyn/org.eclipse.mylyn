@@ -115,6 +115,10 @@ public class SubmitTaskJob extends SubmitJob {
 		return task;
 	}
 
+	public RepositoryResponse getResponse() {
+		return response;
+	}
+
 	@Override
 	public IStatus getStatus() {
 		return errorStatus;

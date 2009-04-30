@@ -22,6 +22,7 @@ import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants.MutexScheduling
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
@@ -62,6 +63,11 @@ public class SubmitTaskAttachmentJob extends SubmitJob {
 		this.comment = comment;
 		this.attachmentAttribute = attachmentAttribute;
 		setRule(new MutexSchedulingRule());
+	}
+
+	@Override
+	public RepositoryResponse getResponse() {
+		return null;
 	}
 
 	@Override

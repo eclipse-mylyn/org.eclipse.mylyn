@@ -25,6 +25,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 
 /**
  * @author Steffen Pingel
@@ -114,5 +115,13 @@ public abstract class SubmitJob extends TaskJob {
 	 * @since 3.0
 	 */
 	public abstract ITask getTask();
+
+	/**
+	 * Returns the connector specific result of the submission.
+	 * 
+	 * @return the response from the repository, null if no response was received or the submission failed
+	 * @since 3.2
+	 */
+	public abstract RepositoryResponse getResponse();
 
 }
