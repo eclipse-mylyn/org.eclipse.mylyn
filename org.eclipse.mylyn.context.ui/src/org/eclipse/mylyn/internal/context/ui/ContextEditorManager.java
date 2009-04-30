@@ -34,6 +34,7 @@ import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.ContextUi;
 import org.eclipse.mylyn.context.ui.IContextAwareEditor;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskMigrator;
 import org.eclipse.mylyn.monitor.ui.MonitorUi;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
@@ -51,7 +52,6 @@ import org.eclipse.ui.internal.EditorManager;
 import org.eclipse.ui.internal.IPreferenceConstants;
 import org.eclipse.ui.internal.IWorkbenchConstants;
 import org.eclipse.ui.internal.Workbench;
-import org.eclipse.ui.internal.WorkbenchMessages;
 import org.eclipse.ui.internal.WorkbenchPage;
 import org.eclipse.ui.internal.WorkbenchWindow;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
@@ -89,7 +89,7 @@ public class ContextEditorManager extends AbstractContextListener {
 	public void contextActivated(IInteractionContext context) {
 		if (!Workbench.getInstance().isStarting()
 				&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
-						IContextUiPreferenceContstants.AUTO_MANAGE_EDITORS)) {
+						IContextUiPreferenceContstants.AUTO_MANAGE_EDITORS) && !TaskMigrator.isActive()) {
 			Workbench workbench = (Workbench) PlatformUI.getWorkbench();
 			previousCloseEditorsSetting = workbench.getPreferenceStore().getBoolean(
 					IPreferenceConstants.REUSE_EDITORS_BOOLEAN);
@@ -204,7 +204,7 @@ public class ContextEditorManager extends AbstractContextListener {
 	public void contextDeactivated(IInteractionContext context) {
 		if (!PlatformUI.getWorkbench().isClosing()
 				&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
-						IContextUiPreferenceContstants.AUTO_MANAGE_EDITORS)) {
+						IContextUiPreferenceContstants.AUTO_MANAGE_EDITORS) && !TaskMigrator.isActive()) {
 			closeAllButActiveTaskEditor(context.getHandleIdentifier());
 
 			XMLMemento rootMemento = XMLMemento.createWriteRoot(KEY_CONTEXT_EDITORS);
@@ -277,8 +277,7 @@ public class ContextEditorManager extends AbstractContextListener {
 		EditorManager editorManager = page.getEditorManager();
 		final ArrayList visibleEditors = new ArrayList(5);
 		final IEditorReference activeEditor[] = new IEditorReference[1];
-		final MultiStatus result = new MultiStatus(PlatformUI.PLUGIN_ID, IStatus.OK,
-				"", null); //$NON-NLS-1$
+		final MultiStatus result = new MultiStatus(PlatformUI.PLUGIN_ID, IStatus.OK, "", null); //$NON-NLS-1$
 
 		try {
 			IMemento[] editorMementos = memento.getChildren(IWorkbenchConstants.TAG_EDITOR);
