@@ -17,8 +17,8 @@ import java.util.List;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
+import org.eclipse.mylyn.context.core.ContextChangeEvent;
 import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.swt.widgets.Display;
@@ -40,39 +40,20 @@ public class ContextWorkingSetManager implements IWorkingSetUpdater {
 	private final AbstractContextListener CONTEXT_LISTENER = new AbstractContextListener() {
 
 		@Override
-		public void contextActivated(IInteractionContext context) {
-			updateWorkingSet();
+		public void contextChanged(ContextChangeEvent event) {
+			switch (event.getEventKind()) {
+			case ACTIVATED:
+			case DEACTIVATED:
+			case CLEARED:
+			case INTEREST_CHANGED:
+			case ELEMENTS_DELETED:
+			case LANDMARKS_ADDED:
+			case LANDMARKS_REMOVED:
+				updateWorkingSet();
+				break;
+			}
 		}
 
-		@Override
-		public void contextDeactivated(IInteractionContext context) {
-			updateWorkingSet();
-		}
-
-		@Override
-		public void contextCleared(IInteractionContext context) {
-			updateWorkingSet();
-		}
-
-		@Override
-		public void interestChanged(List<IInteractionElement> nodes) {
-			updateWorkingSet();
-		}
-
-		@Override
-		public void elementsDeleted(List<IInteractionElement> elements) {
-			updateWorkingSet();
-		}
-
-		@Override
-		public void landmarkAdded(IInteractionElement node) {
-			updateWorkingSet();
-		}
-
-		@Override
-		public void landmarkRemoved(IInteractionElement node) {
-			updateWorkingSet();
-		}
 	};
 
 	public void addWorkingSetManager(ContextWorkingSetManager updater) {

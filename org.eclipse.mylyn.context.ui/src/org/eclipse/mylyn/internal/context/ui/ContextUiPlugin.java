@@ -41,8 +41,8 @@ import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
+import org.eclipse.mylyn.context.core.ContextChangeEvent;
 import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
@@ -80,8 +80,12 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	private class ContextActivationListener extends AbstractContextListener {
 
 		@Override
-		public void contextPreActivated(IInteractionContext context) {
-			initLazyStart();
+		public void contextChanged(ContextChangeEvent event) {
+			switch (event.getEventKind()) {
+			case PRE_ACTIVATED:
+				initLazyStart();
+				break;
+			}
 		}
 	}
 

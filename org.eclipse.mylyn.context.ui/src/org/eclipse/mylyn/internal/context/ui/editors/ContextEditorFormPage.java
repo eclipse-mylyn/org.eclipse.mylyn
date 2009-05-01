@@ -13,7 +13,6 @@ package org.eclipse.mylyn.internal.context.ui.editors;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,6 +32,7 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
+import org.eclipse.mylyn.context.core.ContextChangeEvent;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
@@ -152,47 +152,35 @@ public class ContextEditorFormPage extends FormPage {
 	private final AbstractContextListener CONTEXT_LISTENER = new AbstractContextListener() {
 
 		@Override
-		public void contextActivated(IInteractionContext context) {
+		public void contextChanged(ContextChangeEvent event) {
 			Control partControl = getPartControl();
-			if (partControl != null && !partControl.isDisposed()) {
-				updateContentArea();
-				refresh();
+			switch (event.getEventKind()) {
+			case ACTIVATED:
+				if (partControl != null && !partControl.isDisposed()) {
+					updateContentArea();
+					refresh();
+				}
+				break;
+			case DEACTIVATED:
+				if (partControl != null && !partControl.isDisposed()) {
+					updateContentArea();
+					refresh();
+				}
+				break;
+			case CLEARED:
+				if (event.isActiveContext()) {
+					refresh();
+				}
+				break;
+			case ELEMENTS_DELETED:
+			case INTEREST_CHANGED:
+			case LANDMARKS_ADDED:
+			case LANDMARKS_REMOVED:
+				refresh(event.getElements());
+				break;
 			}
 		}
 
-		@Override
-		public void contextDeactivated(IInteractionContext context) {
-			Control partControl = getPartControl();
-			if (partControl != null && !partControl.isDisposed()) {
-				updateContentArea();
-				refresh();
-			}
-		}
-
-		@Override
-		public void contextCleared(IInteractionContext context) {
-			refresh();
-		}
-
-		@Override
-		public void elementsDeleted(List<IInteractionElement> element) {
-			refresh(element);
-		}
-
-		@Override
-		public void interestChanged(List<IInteractionElement> elements) {
-			refresh(elements);
-		}
-
-		@Override
-		public void landmarkAdded(IInteractionElement element) {
-			refresh(Arrays.asList(new IInteractionElement[] { element }));
-		}
-
-		@Override
-		public void landmarkRemoved(IInteractionElement element) {
-			refresh(Arrays.asList(new IInteractionElement[] { element }));
-		}
 	};
 
 	public ContextEditorFormPage(FormEditor editor, String id, String title) {

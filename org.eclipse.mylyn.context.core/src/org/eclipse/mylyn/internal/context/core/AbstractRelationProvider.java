@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.context.core;
 import java.util.List;
 
 import org.eclipse.mylyn.context.core.AbstractContextListener;
+import org.eclipse.mylyn.context.core.ContextChangeEvent;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
@@ -78,9 +79,15 @@ public abstract class AbstractRelationProvider extends AbstractContextListener {
 	}
 
 	@Override
-	public void landmarkAdded(IInteractionElement node) {
-		if (enabled) {
-			findRelated(node, degreeOfSeparation);
+	public void contextChanged(ContextChangeEvent event) {
+		switch (event.getEventKind()) {
+		case LANDMARKS_ADDED:
+			if (enabled) {
+				for (IInteractionElement node : event.getElements()) {
+					findRelated(node, degreeOfSeparation);
+				}
+			}
+			break;
 		}
 	}
 

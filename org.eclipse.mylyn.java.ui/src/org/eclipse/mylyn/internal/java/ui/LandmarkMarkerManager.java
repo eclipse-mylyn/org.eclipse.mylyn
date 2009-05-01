@@ -30,8 +30,8 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
+import org.eclipse.mylyn.context.core.ContextChangeEvent;
 import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 
 /**
@@ -48,28 +48,39 @@ public class LandmarkMarkerManager extends AbstractContextListener {
 	}
 
 	@Override
-	public void contextActivated(IInteractionContext taskscape) {
-		modelUpdated();
-	}
+	public void contextChanged(ContextChangeEvent event) {
+		switch (event.getEventKind()) {
+		case ACTIVATED:
+		case DEACTIVATED:
+			modelUpdated();
+			break;
+		case CLEARED:
+			if (event.isActiveContext()) {
+				modelUpdated();
+			}
+			break;
+		case LANDMARKS_ADDED:
+			for (IInteractionElement element : event.getElements()) {
+				addLandmarkMarker(element);
+			}
+			break;
+		case LANDMARKS_REMOVED:
+			for (IInteractionElement element : event.getElements()) {
+				removeLandmarkMarker(element);
+			}
+			break;
 
-	@Override
-	public void contextDeactivated(IInteractionContext taskscape) {
-		modelUpdated();
-	}
-
-	@Override
-	public void contextCleared(IInteractionContext context) {
-		modelUpdated();
+		}
 	}
 
 	private void modelUpdated() {
 		try {
 			for (IInteractionElement node : markerMap.keySet()) {
-				landmarkRemoved(node);
+				removeLandmarkMarker(node);
 			}
 			markerMap.clear();
 			for (IInteractionElement node : ContextCore.getContextManager().getActiveLandmarks()) {
-				landmarkAdded(node);
+				addLandmarkMarker(node);
 			}
 		} catch (Throwable t) {
 			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
@@ -77,8 +88,7 @@ public class LandmarkMarkerManager extends AbstractContextListener {
 		}
 	}
 
-	@Override
-	public void landmarkAdded(final IInteractionElement node) {
+	public void addLandmarkMarker(final IInteractionElement node) {
 		if (node == null || node.getContentType() == null) {
 			return;
 		}
@@ -117,8 +127,7 @@ public class LandmarkMarkerManager extends AbstractContextListener {
 		}
 	}
 
-	@Override
-	public void landmarkRemoved(final IInteractionElement node) {
+	public void removeLandmarkMarker(final IInteractionElement node) {
 		if (node == null) {
 			return;
 		}

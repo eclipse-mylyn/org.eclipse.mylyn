@@ -27,6 +27,7 @@ import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
+import org.eclipse.mylyn.context.core.ContextChangeEvent;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
@@ -71,13 +72,15 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 		public int numDeletions = 0;
 
 		@Override
-		public void landmarkAdded(IInteractionElement element) {
-			numAdditions++;
-		}
-
-		@Override
-		public void landmarkRemoved(IInteractionElement element) {
-			numDeletions++;
+		public void contextChanged(ContextChangeEvent event) {
+			switch (event.getEventKind()) {
+			case LANDMARKS_ADDED:
+				numAdditions += event.getElements().size();
+				break;
+			case LANDMARKS_REMOVED:
+				numDeletions += event.getElements().size();
+				break;
+			}
 		}
 	}
 

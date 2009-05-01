@@ -30,8 +30,8 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
+import org.eclipse.mylyn.context.core.ContextChangeEvent;
 import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DelayedRefreshJob;
@@ -202,24 +202,57 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 	}
 
 	@Override
-	public void contextActivated(IInteractionContext context) {
-		refreshViewers();
-	}
-
-	@Override
-	public void contextDeactivated(IInteractionContext context) {
-		refreshViewers();
-		for (StructuredViewer structuredViewer : managedViewers) {
-			if (structuredViewer instanceof TreeViewer) {
-				((TreeViewer) structuredViewer).collapseAll();
+	public void contextChanged(ContextChangeEvent event) {
+		switch (event.getEventKind()) {
+		case ACTIVATED:
+			refreshViewers();
+			break;
+		case DEACTIVATED:
+			refreshViewers();
+			for (StructuredViewer structuredViewer : managedViewers) {
+				if (structuredViewer instanceof TreeViewer) {
+					((TreeViewer) structuredViewer).collapseAll();
+				}
 			}
-		}
-	}
+			break;
+		case CLEARED:
+			if (event.isActiveContext()) {
+				// ensure we dont refresh the viewers if a context other than the active one is deleted or cleared
+				// bug #265688
+				refreshViewers();
+				for (StructuredViewer structuredViewer : managedViewers) {
+					if (structuredViewer instanceof TreeViewer) {
+						((TreeViewer) structuredViewer).collapseAll();
+					}
+				}
+			}
+			break;
+		case INTEREST_CHANGED:
+			refreshViewers(event.getElements(), false);
+			break;
+		case LANDMARKS_ADDED:
+			refreshViewers(event.getElements(), true);
+			break;
+		case LANDMARKS_REMOVED:
+			refreshViewers(event.getElements(), true);
+			break;
+		case ELEMENTS_DELETED:
+			/*
+			 * TODO: consider making this work per-element and parent
+			 * Should we collect all parents before calling refresh?
+			 */
+			ArrayList<IInteractionElement> toRefresh = new ArrayList<IInteractionElement>();
+			for (IInteractionElement interactionElement : event.getElements()) {
+				AbstractContextStructureBridge structureBridge = ContextCore.getStructureBridge(interactionElement.getContentType());
+				IInteractionElement parent = ContextCore.getContextManager().getElement(
+						structureBridge.getParentHandle(interactionElement.getHandleIdentifier()));
+				if (parent != null) {
+					toRefresh.add(parent);
+				}
+			}
+			refreshViewers(toRefresh, false);
 
-	@Override
-	public void contextCleared(IInteractionContext context) {
-		if (context != null) {
-			contextDeactivated(context);
+			break;
 		}
 	}
 
@@ -232,11 +265,6 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 		List<IInteractionElement> toRefresh = new ArrayList<IInteractionElement>();
 		toRefresh.add(node);
 		refreshViewers(toRefresh, updateLabels);
-	}
-
-	@Override
-	public void interestChanged(final List<IInteractionElement> nodes) {
-		refreshViewers(nodes, false);
 	}
 
 	protected void refreshViewers(final List<IInteractionElement> nodesToRefresh, final boolean updateLabels) {
@@ -321,44 +349,10 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 	}
 
 	/**
-	 * TODO: consider making this work per-element and parent
-	 */
-	@Override
-	public void elementsDeleted(List<IInteractionElement> elements) {
-		for (IInteractionElement interactionElement : elements) {
-			AbstractContextStructureBridge structureBridge = ContextCore.getStructureBridge(interactionElement.getContentType());
-			IInteractionElement parent = ContextCore.getContextManager().getElement(
-					structureBridge.getParentHandle(interactionElement.getHandleIdentifier()));
-
-			if (parent != null) {
-				ArrayList<IInteractionElement> toRefresh = new ArrayList<IInteractionElement>();
-				toRefresh.add(parent);
-				refreshViewers(toRefresh, false);
-			}
-		}
-	}
-
-	@Override
-	public void landmarkAdded(IInteractionElement node) {
-		refreshViewers(node, true);
-	}
-
-	@Override
-	public void landmarkRemoved(IInteractionElement node) {
-		refreshViewers(node, true);
-	}
-
-	/**
 	 * Set to true for testing
 	 */
 	public void setSyncRefreshMode(boolean syncRefreshMode) {
 		this.syncRefreshMode = syncRefreshMode;
-	}
-
-	@Override
-	public void contextPreActivated(IInteractionContext context) {
-		// ignore
-
 	}
 
 	public void forceRefresh() {

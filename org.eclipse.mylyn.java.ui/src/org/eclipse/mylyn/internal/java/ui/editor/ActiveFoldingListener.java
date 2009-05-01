@@ -29,8 +29,8 @@ import org.eclipse.jdt.ui.text.folding.IJavaFoldingStructureProvider;
 import org.eclipse.jdt.ui.text.folding.IJavaFoldingStructureProviderExtension;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
+import org.eclipse.mylyn.context.core.ContextChangeEvent;
 import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
 import org.eclipse.mylyn.internal.java.ui.JavaUiBridgePlugin;
@@ -143,8 +143,7 @@ public class ActiveFoldingListener extends AbstractContextListener {
 		return allChildren;
 	}
 
-	@Override
-	public void interestChanged(List<IInteractionElement> elements) {
+	public void updateFolding(List<IInteractionElement> elements) {
 		for (IInteractionElement element : elements) {
 			if (updater == null || !enabled) {
 				return;
@@ -178,23 +177,27 @@ public class ActiveFoldingListener extends AbstractContextListener {
 	}
 
 	@Override
-	public void contextActivated(IInteractionContext context) {
-		if (JavaUiBridgePlugin.getDefault().getPreferenceStore().getBoolean(JavaUiBridgePlugin.AUTO_FOLDING_ENABLED)) {
-			updateFolding();
-		}
-	}
-
-	@Override
-	public void contextDeactivated(IInteractionContext context) {
-		if (JavaUiBridgePlugin.getDefault().getPreferenceStore().getBoolean(JavaUiBridgePlugin.AUTO_FOLDING_ENABLED)) {
-			updateFolding();
-		}
-	}
-
-	@Override
-	public void contextCleared(IInteractionContext context) {
-		if (JavaUiBridgePlugin.getDefault().getPreferenceStore().getBoolean(JavaUiBridgePlugin.AUTO_FOLDING_ENABLED)) {
-			updateFolding();
+	public void contextChanged(ContextChangeEvent event) {
+		switch (event.getEventKind()) {
+		case ACTIVATED:
+		case DEACTIVATED:
+			if (JavaUiBridgePlugin.getDefault()
+					.getPreferenceStore()
+					.getBoolean(JavaUiBridgePlugin.AUTO_FOLDING_ENABLED)) {
+				updateFolding();
+			}
+			break;
+		case CLEARED:
+			if (event.isActiveContext()) {
+				if (JavaUiBridgePlugin.getDefault().getPreferenceStore().getBoolean(
+						JavaUiBridgePlugin.AUTO_FOLDING_ENABLED)) {
+					updateFolding();
+				}
+			}
+			break;
+		case INTEREST_CHANGED:
+			updateFolding(event.getElements());
+			break;
 		}
 	}
 }

@@ -11,13 +11,10 @@
 
 package org.eclipse.mylyn.context.tests;
 
-import java.util.List;
-
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.context.core.AbstractContextListener;
-import org.eclipse.mylyn.context.core.IInteractionContext;
-import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.context.core.ContextChangeEvent;
 import org.eclipse.mylyn.internal.context.core.CompositeInteractionContext;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
@@ -45,12 +42,17 @@ public class InteractionContextListeningTest extends TestCase {
 
 		final StubContextListener listener = new StubContextListener();
 		try {
-			contextManager.addListener(new ContextListenerAdapter() {
+			contextManager.addListener(new AbstractContextListener() {
 				@Override
-				public void contextActivated(IInteractionContext arg0) {
-					contextManager.addListener(listener);
-					contextManager.removeListener(listener);
+				public void contextChanged(ContextChangeEvent event) {
+					switch (event.getEventKind()) {
+					case ACTIVATED:
+						contextManager.addListener(listener);
+						contextManager.removeListener(listener);
+						break;
+					}
 				}
+
 			});
 			contextManager.activateContext("handle");
 
@@ -64,59 +66,19 @@ public class InteractionContextListeningTest extends TestCase {
 		}
 	}
 
-	private class StubContextListener extends ContextListenerAdapter {
+	private class StubContextListener extends AbstractContextListener {
 
 		private int activationEventCount;
 
 		@Override
-		public void contextActivated(IInteractionContext context) {
-			contextManager.removeListener(this);
-			activationEventCount++;
+		public void contextChanged(ContextChangeEvent event) {
+			switch (event.getEventKind()) {
+			case ACTIVATED:
+				contextManager.removeListener(this);
+				activationEventCount++;
+				break;
+			}
 		}
 
 	}
-
-	private class ContextListenerAdapter extends AbstractContextListener {
-
-		@Override
-		public void contextActivated(IInteractionContext context) {
-			// ignore
-		}
-
-		@Override
-		public void contextCleared(IInteractionContext context) {
-			// ignore
-		}
-
-		@Override
-		public void contextDeactivated(IInteractionContext context) {
-			// ignore
-		}
-
-		@Override
-		public void contextPreActivated(IInteractionContext context) {
-			// ignore	
-		}
-
-		@Override
-		public void elementsDeleted(List<IInteractionElement> elements) {
-			// ignore
-		}
-
-		@Override
-		public void interestChanged(List<IInteractionElement> elements) {
-			// ignore
-		}
-
-		@Override
-		public void landmarkAdded(IInteractionElement element) {
-			// ignore
-		}
-
-		@Override
-		public void landmarkRemoved(IInteractionElement element) {
-			// ignore
-		}
-	}
-
 }

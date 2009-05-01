@@ -28,6 +28,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
+import org.eclipse.mylyn.context.core.ContextChangeEvent;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
@@ -86,7 +87,34 @@ public class ContextEditorManager extends AbstractContextListener {
 	}
 
 	@Override
-	public void contextActivated(IInteractionContext context) {
+	public void contextChanged(ContextChangeEvent event) {
+		switch (event.getEventKind()) {
+		case ACTIVATED:
+			openEditorsFromMemento(event.getContext());
+			break;
+		case DEACTIVATED:
+			closeEditorsAndSaveMemento(event.getContext());
+			break;
+		case INTEREST_CHANGED:
+			for (IInteractionElement element : event.getElements()) {
+				closeEditor(element, false);
+			}
+			break;
+		case ELEMENTS_DELETED:
+			for (IInteractionElement element : event.getElements()) {
+				closeEditor(element, true);
+			}
+			break;
+		case CLEARED:
+			// use the handle since the context is null when it is cleared
+			// bug 255588
+			clearEditorMemento(event.getContextHandle(), event.isActiveContext());
+			break;
+
+		}
+	}
+
+	public void openEditorsFromMemento(IInteractionContext context) {
 		if (!Workbench.getInstance().isStarting()
 				&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
 						IContextUiPreferenceContstants.AUTO_MANAGE_EDITORS) && !TaskMigrator.isActive()) {
@@ -200,8 +228,7 @@ public class ContextEditorManager extends AbstractContextListener {
 		return preferenceStore.getString(PREFS_PREFIX + context.getHandleIdentifier());
 	}
 
-	@Override
-	public void contextDeactivated(IInteractionContext context) {
+	public void closeEditorsAndSaveMemento(IInteractionContext context) {
 		if (!PlatformUI.getWorkbench().isClosing()
 				&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
 						IContextUiPreferenceContstants.AUTO_MANAGE_EDITORS) && !TaskMigrator.isActive()) {
@@ -231,7 +258,7 @@ public class ContextEditorManager extends AbstractContextListener {
 			StringWriter writer = new StringWriter();
 			try {
 				rootMemento.save(writer);
-				writeEditorMemento(context, writer.getBuffer().toString());
+				writeEditorMemento(context.getHandleIdentifier(), writer.getBuffer().toString());
 			} catch (IOException e) {
 				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not store editor state", //$NON-NLS-1$
 						e));
@@ -243,30 +270,32 @@ public class ContextEditorManager extends AbstractContextListener {
 		}
 	}
 
-	public void writeEditorMemento(IInteractionContext context, String memento) {
-		preferenceStore.setValue(PREFS_PREFIX + context.getHandleIdentifier(), memento);
+	public void writeEditorMemento(String contextHandle, String memento) {
+		preferenceStore.setValue(PREFS_PREFIX + contextHandle, memento);
 	}
 
-	@Override
-	public void contextCleared(IInteractionContext context) {
-		if (context == null) {
-			return;
+	public void clearEditorMemento(String contextHandle, boolean closeEditors) {
+
+		if (closeEditors) {
+			closeAllButActiveTaskEditor(contextHandle);
 		}
-		closeAllButActiveTaskEditor(context.getHandleIdentifier());
+
 		XMLMemento memento = XMLMemento.createWriteRoot(KEY_CONTEXT_EDITORS);
 
 		// TODO: avoid storing with preferences due to bloat?
 		StringWriter writer = new StringWriter();
 		try {
 			memento.save(writer);
-			writeEditorMemento(context, writer.getBuffer().toString());
+			writeEditorMemento(contextHandle, writer.getBuffer().toString());
 		} catch (IOException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not store editor state", e)); //$NON-NLS-1$
 		}
 
 		Workbench.getInstance().getPreferenceStore().setValue(IPreferenceConstants.REUSE_EDITORS_BOOLEAN,
 				previousCloseEditorsSetting);
-		closeAllEditors();
+		if (closeEditors) {
+			closeAllEditors();
+		}
 	}
 
 	/**
@@ -377,20 +406,6 @@ public class ContextEditorManager extends AbstractContextListener {
 			return ((IContextAwareEditor) editor).canClose();
 		}
 		return true;
-	}
-
-	@Override
-	public void interestChanged(List<IInteractionElement> elements) {
-		for (IInteractionElement element : elements) {
-			closeEditor(element, false);
-		}
-	}
-
-	@Override
-	public void elementsDeleted(List<IInteractionElement> elements) {
-		for (IInteractionElement element : elements) {
-			closeEditor(element, true);
-		}
 	}
 
 	private void closeEditor(IInteractionElement element, boolean force) {

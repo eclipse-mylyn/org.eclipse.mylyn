@@ -33,8 +33,8 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
+import org.eclipse.mylyn.context.core.ContextChangeEvent;
 import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.Messages;
@@ -135,19 +135,21 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 	private final AbstractContextListener CONTEXT_LISTENER = new AbstractContextListener() {
 
 		@Override
-		public void contextActivated(IInteractionContext context) {
-			if (updateEnablementWithContextActivation()) {
-				updateEnablement(initAction);
+		public void contextChanged(ContextChangeEvent event) {
+			switch (event.getEventKind()) {
+			case ACTIVATED:
+				if (updateEnablementWithContextActivation()) {
+					updateEnablement(initAction);
+				}
+				break;
+			case DEACTIVATED:
+				if (updateEnablementWithContextActivation()) {
+					updateEnablement(initAction);
+					update(false);
+				}
+				break;
 			}
-		}
-
-		@Override
-		public void contextDeactivated(IInteractionContext context) {
-			if (updateEnablementWithContextActivation()) {
-				updateEnablement(initAction);
-				update(false);
-			}
-		}
+		};
 	};
 
 	private final IWorkbenchListener WORKBENCH_LISTENER = new IWorkbenchListener() {

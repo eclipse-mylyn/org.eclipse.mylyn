@@ -11,8 +11,6 @@
 
 package org.eclipse.mylyn.internal.java.ui;
 
-import java.util.List;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IJavaElement;
@@ -24,7 +22,7 @@ import org.eclipse.jdt.internal.core.search.JavaSearchTypeNameMatch;
 import org.eclipse.jdt.internal.corext.util.OpenTypeHistory;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
-import org.eclipse.mylyn.context.core.IInteractionContext;
+import org.eclipse.mylyn.context.core.ContextChangeEvent;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 
 /**
@@ -34,10 +32,32 @@ import org.eclipse.mylyn.context.core.IInteractionElement;
 public class TypeHistoryManager extends AbstractContextListener {
 
 	@Override
-	public void contextActivated(IInteractionContext context) {
-		clearTypeHistory();
-		for (IInteractionElement node : context.getInteresting()) {
-			updateTypeHistory(node, true);
+	public void contextChanged(ContextChangeEvent event) {
+		switch (event.getEventKind()) {
+		case ACTIVATED:
+			clearTypeHistory();
+			for (IInteractionElement node : event.getContext().getInteresting()) {
+				updateTypeHistory(node, true);
+			}
+			break;
+		case DEACTIVATED:
+			clearTypeHistory();
+			break;
+		case CLEARED:
+			if (event.isActiveContext()) {
+				clearTypeHistory();
+			}
+			break;
+		case INTEREST_CHANGED:
+			for (IInteractionElement node : event.getElements()) {
+				updateTypeHistory(node, true);
+			}
+			break;
+		case ELEMENTS_DELETED:
+			for (IInteractionElement element : event.getElements()) {
+				updateTypeHistory(element, false);
+			}
+			break;
 		}
 	}
 
@@ -78,16 +98,6 @@ public class TypeHistoryManager extends AbstractContextListener {
 		}
 	}
 
-	@Override
-	public void contextDeactivated(IInteractionContext context) {
-		clearTypeHistory();
-	}
-
-	@Override
-	public void contextCleared(IInteractionContext context) {
-		clearTypeHistory();
-	}
-
 	/**
 	 * Public for testing
 	 */
@@ -95,20 +105,6 @@ public class TypeHistoryManager extends AbstractContextListener {
 		TypeNameMatch[] typeInfos = OpenTypeHistory.getInstance().getTypeInfos();
 		for (TypeNameMatch typeInfo : typeInfos) {
 			OpenTypeHistory.getInstance().remove(typeInfo);
-		}
-	}
-
-	@Override
-	public void interestChanged(List<IInteractionElement> nodes) {
-		for (IInteractionElement node : nodes) {
-			updateTypeHistory(node, true);
-		}
-	}
-
-	@Override
-	public void elementsDeleted(List<IInteractionElement> elements) {
-		for (IInteractionElement element : elements) {
-			updateTypeHistory(element, false);
 		}
 	}
 }

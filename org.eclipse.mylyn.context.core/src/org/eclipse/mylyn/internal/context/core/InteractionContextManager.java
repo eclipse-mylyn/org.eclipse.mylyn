@@ -38,11 +38,13 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
+import org.eclipse.mylyn.context.core.ContextChangeEvent;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
+import org.eclipse.mylyn.context.core.ContextChangeEvent.ContextChangeKind;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.core.InteractionEvent.Kind;
 
@@ -168,7 +170,9 @@ public class InteractionContextManager implements IInteractionContextManager {
 					}
 
 					public void run() throws Exception {
-						listener.contextPreActivated(context);
+						ContextChangeEvent event = new ContextChangeEvent(ContextChangeKind.PRE_ACTIVATED,
+								context.getHandleIdentifier(), context, null);
+						listener.contextChanged(event);
 					}
 				});
 			}
@@ -258,7 +262,8 @@ public class InteractionContextManager implements IInteractionContextManager {
 		}
 	}
 
-	protected void checkForLandmarkDeltaAndNotify(float previousInterest, final IInteractionElement node) {
+	protected void checkForLandmarkDeltaAndNotify(float previousInterest, final IInteractionElement node,
+			final IInteractionContext context) {
 		// TODO: don't call interestChanged if it's a landmark?
 		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault()
 				.getStructureBridge(node.getContentType());
@@ -274,7 +279,11 @@ public class InteractionContextManager implements IInteractionContextManager {
 						}
 
 						public void run() throws Exception {
-							listener.landmarkRemoved(node);
+							List<IInteractionElement> changed = new ArrayList<IInteractionElement>(1);
+							changed.add(node);
+							ContextChangeEvent event = new ContextChangeEvent(ContextChangeKind.LANDMARKS_REMOVED,
+									context.getHandleIdentifier(), context, changed);
+							listener.contextChanged(event);
 						}
 					});
 				}
@@ -289,7 +298,11 @@ public class InteractionContextManager implements IInteractionContextManager {
 						}
 
 						public void run() throws Exception {
-							listener.landmarkAdded(node);
+							List<IInteractionElement> changed = new ArrayList<IInteractionElement>(1);
+							changed.add(node);
+							ContextChangeEvent event = new ContextChangeEvent(ContextChangeKind.LANDMARKS_ADDED,
+									context.getHandleIdentifier(), context, changed);
+							listener.contextChanged(event);
 						}
 					});
 				}
@@ -419,7 +432,9 @@ public class InteractionContextManager implements IInteractionContextManager {
 						}
 
 						public void run() throws Exception {
-							listener.contextDeactivated(context);
+							ContextChangeEvent event = new ContextChangeEvent(ContextChangeKind.DEACTIVATED,
+									context.getHandleIdentifier(), context, null);
+							listener.contextChanged(event);
 						}
 					});
 				}
@@ -439,7 +454,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 
 	public void deleteElement(IInteractionElement element) {
 		delete(element, getActiveContext());
-		notifyElementsDeleted(Arrays.asList(new IInteractionElement[] { element }));
+		notifyElementsDeleted(getActiveContext(), Arrays.asList(new IInteractionElement[] { element }));
 	}
 
 	private void delete(IInteractionElement element, IInteractionContext context) {
@@ -449,7 +464,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 		context.delete(element);
 	}
 
-	public void deleteContext(String handleIdentifier) {
+	public void deleteContext(final String handleIdentifier) {
 		final IInteractionContext context = activeContext.getContextMap().get(handleIdentifier);
 
 		setContextCapturePaused(true);
@@ -464,7 +479,9 @@ public class InteractionContextManager implements IInteractionContextManager {
 				}
 
 				public void run() throws Exception {
-					listener.contextCleared(context);
+					ContextChangeEvent event = new ContextChangeEvent(ContextChangeKind.CLEARED, handleIdentifier,
+							context, null);
+					listener.contextChanged(event);
 				}
 			});
 		}
@@ -645,7 +662,9 @@ public class InteractionContextManager implements IInteractionContextManager {
 				}
 
 				public void run() throws Exception {
-					listener.contextActivated(context);
+					ContextChangeEvent event = new ContextChangeEvent(ContextChangeKind.ACTIVATED,
+							context.getHandleIdentifier(), context, null);
+					listener.contextChanged(event);
 				}
 			});
 		}
@@ -686,7 +705,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 			interestDelta.add(element);
 		}
 
-		checkForLandmarkDeltaAndNotify(previousInterest, element);
+		checkForLandmarkDeltaAndNotify(previousInterest, element, interactionContext);
 		return interestDelta;
 	}
 
@@ -735,7 +754,9 @@ public class InteractionContextManager implements IInteractionContextManager {
 					}
 
 					public void run() throws Exception {
-						listener.contextPreActivated(activityMetaContext);
+						ContextChangeEvent event = new ContextChangeEvent(ContextChangeKind.PRE_ACTIVATED,
+								InteractionContextManager.CONTEXT_HISTORY_FILE_NAME, null, null);
+						listener.contextChanged(event);
 					}
 				});
 			}
@@ -772,7 +793,9 @@ public class InteractionContextManager implements IInteractionContextManager {
 					}
 
 					public void run() throws Exception {
-						listener.contextActivated(activityMetaContext);
+						ContextChangeEvent event = new ContextChangeEvent(ContextChangeKind.ACTIVATED,
+								activityMetaContext.getHandleIdentifier(), activityMetaContext, null);
+						listener.contextChanged(event);
 					}
 				});
 			}
@@ -863,7 +886,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 			if (preserveUninteresting || increment) {
 				notifyInterestDelta(new ArrayList<IInteractionElement>(changedElements));
 			} else {
-				notifyElementsDeleted(new ArrayList<IInteractionElement>(changedElements));
+				notifyElementsDeleted(context, new ArrayList<IInteractionElement>(changedElements));
 			}
 		}
 		return manipulated;
@@ -941,7 +964,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 		return newMetaContext;
 	}
 
-	private void notifyElementsDeleted(final List<IInteractionElement> interestDelta) {
+	private void notifyElementsDeleted(final IInteractionContext context, final List<IInteractionElement> interestDelta) {
 		if (!interestDelta.isEmpty()) {
 			for (final AbstractContextListener listener : contextListeners) {
 				SafeRunner.run(new ISafeRunnable() {
@@ -951,14 +974,21 @@ public class InteractionContextManager implements IInteractionContextManager {
 					}
 
 					public void run() throws Exception {
-						listener.elementsDeleted(interestDelta);
+						ContextChangeEvent event = new ContextChangeEvent(ContextChangeKind.ELEMENTS_DELETED,
+								context.getHandleIdentifier(), context, interestDelta);
+						listener.contextChanged(event);
 					}
 				});
 			}
 		}
 	}
 
+	@Deprecated
 	public void notifyInterestDelta(final List<IInteractionElement> interestDelta) {
+		notifyInterestDelta(getActiveContext(), interestDelta);
+	}
+
+	public void notifyInterestDelta(final IInteractionContext context, final List<IInteractionElement> interestDelta) {
 		if (!interestDelta.isEmpty()) {
 			for (final AbstractContextListener listener : contextListeners) {
 				SafeRunner.run(new ISafeRunnable() {
@@ -968,7 +998,9 @@ public class InteractionContextManager implements IInteractionContextManager {
 					}
 
 					public void run() throws Exception {
-						listener.interestChanged(interestDelta);
+						ContextChangeEvent event = new ContextChangeEvent(ContextChangeKind.INTEREST_CHANGED,
+								context.getHandleIdentifier(), context, interestDelta);
+						listener.contextChanged(event);
 					}
 				});
 			}
@@ -1013,7 +1045,9 @@ public class InteractionContextManager implements IInteractionContextManager {
 				}
 
 				public void run() throws Exception {
-					listener.interestChanged(changed);
+					ContextChangeEvent event = new ContextChangeEvent(ContextChangeKind.INTEREST_CHANGED,
+							getActivityMetaContext().getHandleIdentifier(), getActivityMetaContext(), changed);
+					listener.contextChanged(event);
 				}
 			});
 		}
@@ -1100,7 +1134,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 			return;
 		}
 
-		checkForLandmarkDeltaAndNotify(previousInterest, node);
+		checkForLandmarkDeltaAndNotify(previousInterest, node, interactionContext);
 		level++; // original is 1st level
 
 		// NOTE: original code summed parent interest
@@ -1280,7 +1314,8 @@ public class InteractionContextManager implements IInteractionContextManager {
 		if (element == null) {
 			return;
 		}
-		getActiveContext().updateElementHandle(element, newHandle);
+		final IInteractionContext context = getActiveContext();
+		context.updateElementHandle(element, newHandle);
 		for (final AbstractContextListener listener : contextListeners) {
 			SafeRunner.run(new ISafeRunnable() {
 				public void handleException(Throwable e) {
@@ -1292,7 +1327,9 @@ public class InteractionContextManager implements IInteractionContextManager {
 					// FIXME use singleton list instead that is constructed outside of loop
 					List<IInteractionElement> changed = new ArrayList<IInteractionElement>();
 					changed.add(element);
-					listener.interestChanged(changed);
+					ContextChangeEvent event = new ContextChangeEvent(ContextChangeKind.INTEREST_CHANGED,
+							context.getHandleIdentifier(), context, changed);
+					listener.contextChanged(event);
 				}
 			});
 		}
@@ -1305,7 +1342,11 @@ public class InteractionContextManager implements IInteractionContextManager {
 					}
 
 					public void run() throws Exception {
-						listener.landmarkAdded(element);
+						List<IInteractionElement> changed = new ArrayList<IInteractionElement>();
+						changed.add(element);
+						ContextChangeEvent event = new ContextChangeEvent(ContextChangeKind.LANDMARKS_ADDED,
+								context.getHandleIdentifier(), context, changed);
+						listener.contextChanged(event);
 					}
 				});
 			}
