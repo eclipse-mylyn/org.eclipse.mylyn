@@ -346,9 +346,11 @@
 			</fileset>
 		</delete>
 		
+		<!--
 		<exec executable="${build.test.x.command}" spawn="true" failifexecutionfails="false" failonerror="false">
 			<arg value="${build.test.x.display}"/>
 		</exec>
+		-->
 	</target>
 
 	<target name="post-report">
