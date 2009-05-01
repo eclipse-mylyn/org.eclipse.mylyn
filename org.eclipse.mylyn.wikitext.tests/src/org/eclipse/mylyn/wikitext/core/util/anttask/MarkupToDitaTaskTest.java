@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ResourceBundle;
 
 public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 
@@ -290,6 +291,11 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 		assertTrue(firstTopicContent.contains("<topic id=\"" + MarkupToDitaTaskTest.class.getName() + "\">"));
 		assertTrue(firstTopicContent.contains("<title>" + MarkupToDitaTaskTest.class.getName() + "</title>"));
 		assertTrue(firstTopicContent.contains("<p>some content</p>"));
+	}
+
+	public void testTaskdef() {
+		ResourceBundle bundle = ResourceBundle.getBundle(MarkupToDitaTask.class.getPackage().getName() + ".tasks");
+		assertEquals(MarkupToDitaTask.class.getName(), bundle.getString("wikitext-to-dita"));
 	}
 
 }

@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ResourceBundle;
 
 public class MarkupToXslfoTaskTest extends AbstractTestAntTask {
 
@@ -64,4 +65,8 @@ public class MarkupToXslfoTaskTest extends AbstractTestAntTask {
 		return markupFile;
 	}
 
+	public void testTaskdef() {
+		ResourceBundle bundle = ResourceBundle.getBundle(MarkupToXslfoTask.class.getPackage().getName() + ".tasks");
+		assertEquals(MarkupToXslfoTask.class.getName(), bundle.getString("wikitext-to-xslfo"));
+	}
 }

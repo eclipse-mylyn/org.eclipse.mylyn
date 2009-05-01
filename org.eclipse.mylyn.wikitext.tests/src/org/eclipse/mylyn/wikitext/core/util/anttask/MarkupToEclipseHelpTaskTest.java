@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ResourceBundle;
 
 public class MarkupToEclipseHelpTaskTest extends MarkupToHtmlTaskTest {
 
@@ -115,4 +116,9 @@ public class MarkupToEclipseHelpTaskTest extends MarkupToHtmlTaskTest {
 		return markupFile;
 	}
 
+	public void testTaskdef() {
+		ResourceBundle bundle = ResourceBundle.getBundle(MarkupToEclipseHelpTask.class.getPackage().getName()
+				+ ".tasks");
+		assertEquals(MarkupToEclipseHelpTask.class.getName(), bundle.getString("wikitext-to-eclipse-help"));
+	}
 }

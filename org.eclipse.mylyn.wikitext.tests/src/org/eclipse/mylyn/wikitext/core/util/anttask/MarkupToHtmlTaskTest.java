@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
 public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
@@ -128,4 +129,8 @@ public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 		return markupFile;
 	}
 
+	public void testTaskdef() {
+		ResourceBundle bundle = ResourceBundle.getBundle(MarkupToHtmlTask.class.getPackage().getName() + ".tasks");
+		assertEquals(MarkupToHtmlTask.class.getName(), bundle.getString("wikitext-to-html"));
+	}
 }
