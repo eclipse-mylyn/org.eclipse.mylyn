@@ -19,8 +19,8 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
+import org.eclipse.mylyn.context.core.ContextChangeEvent;
 import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.IFoldingStructure;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
@@ -32,6 +32,7 @@ import org.eclipse.ui.IEditorPart;
  * based on implementation of ActiveFoldingListener in org.eclipse.mylyn.java.ui
  * 
  * @author David Green
+ * @author Shawn Minto bug 274706 updated to use new 3.2 APIs.
  */
 class ActiveFoldingListener extends AbstractContextListener {
 
@@ -96,41 +97,40 @@ class ActiveFoldingListener extends AbstractContextListener {
 	}
 
 	@Override
-	public void contextActivated(IInteractionContext context) {
-		if (foldingStructure.isFoldingEnabled()) {
-			updateFolding(false);
-		}
-	}
-
-	@Override
-	public void contextCleared(IInteractionContext context) {
-		if (foldingStructure.isFoldingEnabled()) {
-			if (!foldingEnabled || !ContextCore.getContextManager().isContextActive()) {
-				foldingStructure.expandAll();
-			} else {
-				foldingStructure.collapseAll(true);
+	public void contextChanged(ContextChangeEvent event) {
+		switch (event.getEventKind()) {
+		case ACTIVATED:
+			if (foldingStructure.isFoldingEnabled()) {
+				updateFolding(false);
 			}
-		}
-	}
+			break;
+		case DEACTIVATED:
+			if (foldingStructure.isFoldingEnabled()) {
+				foldingStructure.expandAll();
+			}
+			break;
+		case CLEARED:
+			if (event.isActiveContext()) {
+				if (foldingStructure.isFoldingEnabled()) {
+					if (!foldingEnabled || !ContextCore.getContextManager().isContextActive()) {
+						foldingStructure.expandAll();
+					} else {
+						foldingStructure.collapseAll(true);
+					}
+				}
+			}
+			break;
 
-	@Override
-	public void contextDeactivated(IInteractionContext context) {
-		if (foldingStructure.isFoldingEnabled()) {
-			foldingStructure.expandAll();
-		}
-	}
-
-	@Override
-	public void interestChanged(List<IInteractionElement> elements) {
-		if (foldingStructure.isFoldingEnabled()) {
-			updateFolding(false);
-		}
-	}
-
-	@Override
-	public void elementsDeleted(List<IInteractionElement> elements) {
-		if (foldingStructure.isFoldingEnabled()) {
-			updateFolding(true);
+		case INTEREST_CHANGED:
+			if (foldingStructure.isFoldingEnabled()) {
+				updateFolding(false);
+			}
+			break;
+		case ELEMENTS_DELETED:
+			if (foldingStructure.isFoldingEnabled()) {
+				updateFolding(true);
+			}
+			break;
 		}
 	}
 
