@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
-import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.context.core.ContextChangeEvent;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
@@ -45,11 +45,15 @@ public class TaskActivityMonitor {
 	private final AbstractContextListener CONTEXT_LISTENER = new AbstractContextListener() {
 
 		@Override
-		public void interestChanged(List<IInteractionElement> elements) {
-			List<InteractionEvent> events = contextManager.getActivityMetaContext().getInteractionHistory();
-			if (events.size() > 0) {
-				InteractionEvent event = events.get(events.size() - 1);
-				parseInteractionEvent(event, false);
+		public void contextChanged(ContextChangeEvent event) {
+			switch (event.getEventKind()) {
+			case INTEREST_CHANGED:
+				List<InteractionEvent> events = contextManager.getActivityMetaContext().getInteractionHistory();
+				if (events.size() > 0) {
+					InteractionEvent interactionEvent = events.get(events.size() - 1);
+					parseInteractionEvent(interactionEvent, false);
+				}
+				break;
 			}
 		}
 	};
