@@ -287,6 +287,20 @@ public abstract class AbstractNotificationPopup extends Window {
 		region.subtract(s.x - 1, 3, 1, 1);
 		region.subtract(s.x - 1, 4, 1, 1);
 
+		/* Subtract Bottom-Left Corner */
+		region.subtract(0, s.y, 5, 1);
+		region.subtract(0, s.y - 1, 3, 1);
+		region.subtract(0, s.y - 2, 2, 1);
+		region.subtract(0, s.y - 3, 1, 1);
+		region.subtract(0, s.y - 4, 1, 1);
+
+		/* Subtract Bottom-Right Corner */
+		region.subtract(s.x - 5, s.y - 0, 5, 1);
+		region.subtract(s.x - 3, s.y - 1, 3, 1);
+		region.subtract(s.x - 2, s.y - 2, 2, 1);
+		region.subtract(s.x - 1, s.y - 3, 1, 1);
+		region.subtract(s.x - 1, s.y - 4, 1, 1);
+
 		/* Dispose old first */
 		if (shell.getRegion() != null) {
 			shell.getRegion().dispose();
@@ -355,32 +369,14 @@ public abstract class AbstractNotificationPopup extends Window {
 		/* Outer Composite holding the controls */
 		final Composite outerCircle = new Composite(parent, SWT.NO_FOCUS);
 		outerCircle.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		outerCircle.setBackgroundMode(SWT.INHERIT_FORCE);
 
-		GridLayout layout = new GridLayout(1, false);
-		layout.marginWidth = 0;
-		layout.marginHeight = 0;
-		layout.verticalSpacing = 0;
-
-		outerCircle.setLayout(layout);
-
-		/* Title area containing label and close button */
-		final Composite titleCircle = new Composite(outerCircle, SWT.NO_FOCUS);
-		titleCircle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		titleCircle.setBackgroundMode(SWT.INHERIT_FORCE);
-
-		layout = new GridLayout(4, false);
-		layout.marginWidth = 3;
-		layout.marginHeight = 0;
-		layout.verticalSpacing = 5;
-		layout.horizontalSpacing = 3;
-
-		titleCircle.setLayout(layout);
-		titleCircle.addControlListener(new ControlAdapter() {
+		outerCircle.addControlListener(new ControlAdapter() {
 
 			@Override
 			public void controlResized(ControlEvent e) {
-				Rectangle clArea = titleCircle.getClientArea();
-				lastUsedBgImage = new Image(titleCircle.getDisplay(), clArea.width, clArea.height);
+				Rectangle clArea = outerCircle.getClientArea();
+				lastUsedBgImage = new Image(outerCircle.getDisplay(), clArea.width, clArea.height);
 				GC gc = new GC(lastUsedBgImage);
 
 				/* Gradient */
@@ -391,8 +387,8 @@ public abstract class AbstractNotificationPopup extends Window {
 
 				gc.dispose();
 
-				Image oldBGImage = titleCircle.getBackgroundImage();
-				titleCircle.setBackgroundImage(lastUsedBgImage);
+				Image oldBGImage = outerCircle.getBackgroundImage();
+				outerCircle.setBackgroundImage(lastUsedBgImage);
 
 				if (oldBGImage != null) {
 					oldBGImage.dispose();
@@ -421,14 +417,49 @@ public abstract class AbstractNotificationPopup extends Window {
 				gc.drawPoint(clArea.width - 2, 1);
 				gc.drawPoint(clArea.width - 1, 2);
 				gc.drawPoint(clArea.width - 1, 3);
+
+				/* Fill Bottom Left */
+				gc.drawPoint(2, clArea.height - 0);
+				gc.drawPoint(3, clArea.height - 0);
+				gc.drawPoint(1, clArea.height - 1);
+				gc.drawPoint(0, clArea.height - 2);
+				gc.drawPoint(0, clArea.height - 3);
+
+				/* Fill Bottom Right */
+				gc.drawPoint(clArea.width - 4, clArea.height - 0);
+				gc.drawPoint(clArea.width - 3, clArea.height - 0);
+				gc.drawPoint(clArea.width - 2, clArea.height - 1);
+				gc.drawPoint(clArea.width - 1, clArea.height - 2);
+				gc.drawPoint(clArea.width - 1, clArea.height - 3);
 			}
 		});
+
+		GridLayout layout = new GridLayout(1, false);
+		layout.marginWidth = 0;
+		layout.marginHeight = 0;
+		layout.verticalSpacing = 0;
+
+		outerCircle.setLayout(layout);
+
+		/* Title area containing label and close button */
+		final Composite titleCircle = new Composite(outerCircle, SWT.NO_FOCUS);
+		titleCircle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		titleCircle.setBackgroundMode(SWT.INHERIT_FORCE);
+
+		layout = new GridLayout(4, false);
+		layout.marginWidth = 3;
+		layout.marginHeight = 0;
+		layout.verticalSpacing = 5;
+		layout.horizontalSpacing = 3;
+
+		titleCircle.setLayout(layout);
 
 		/* Create Title Area */
 		createTitleArea(titleCircle);
 
 		/* Outer composite to hold content controlls */
 		Composite outerContentCircle = new Composite(outerCircle, SWT.NONE);
+		outerContentCircle.setBackgroundMode(SWT.INHERIT_FORCE);
 
 		layout = new GridLayout(1, false);
 		layout.marginWidth = 0;
@@ -440,6 +471,7 @@ public abstract class AbstractNotificationPopup extends Window {
 
 		/* Middle composite to show a 1px black line around the content controls */
 		Composite middleContentCircle = new Composite(outerContentCircle, SWT.NO_FOCUS);
+		middleContentCircle.setBackgroundMode(SWT.INHERIT_FORCE);
 
 		layout = new GridLayout(1, false);
 		layout.marginWidth = 0;
@@ -453,6 +485,7 @@ public abstract class AbstractNotificationPopup extends Window {
 		/* Inner composite containing the content controls */
 		Composite innerContent = new Composite(middleContentCircle, SWT.NO_FOCUS);
 		innerContent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		innerContent.setBackgroundMode(SWT.INHERIT_FORCE);
 
 		layout = new GridLayout(1, false);
 		layout.marginWidth = 0;
@@ -466,7 +499,18 @@ public abstract class AbstractNotificationPopup extends Window {
 		/* Content Area */
 		createContentArea(innerContent);
 
+		setNullBackground(outerCircle);
+
 		return outerCircle;
+	}
+
+	private void setNullBackground(final Composite outerCircle) {
+		for (Control c : outerCircle.getChildren()) {
+			c.setBackground(null);
+			if (c instanceof Composite) {
+				setNullBackground((Composite) c);
+			}
+		}
 	}
 
 	@Override
