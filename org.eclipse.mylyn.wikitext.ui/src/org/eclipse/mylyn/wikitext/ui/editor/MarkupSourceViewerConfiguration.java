@@ -98,7 +98,10 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 		defaultFont = JFaceResources.getDefaultFont();
 	}
 
-	protected ITokenScanner getMarkupScanner() {
+	/**
+	 * @since 1.1
+	 */
+	public ITokenScanner getMarkupScanner() {
 		if (scanner == null) {
 			scanner = new MarkupTokenScanner(defaultFont, defaultMonospaceFont);
 		}

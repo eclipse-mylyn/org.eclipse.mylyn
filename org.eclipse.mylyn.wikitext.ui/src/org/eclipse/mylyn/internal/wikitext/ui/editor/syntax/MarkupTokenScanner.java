@@ -33,7 +33,7 @@ import org.eclipse.swt.graphics.Font;
 import com.ibm.icu.text.MessageFormat;
 
 /**
- * 
+ * A token scanner that uses the results of the {@link FastMarkupPartitioner} to identify tokens.
  * 
  * @author David Green
  */
@@ -47,14 +47,17 @@ public class MarkupTokenScanner implements ITokenScanner {
 
 	private final FontState defaultState;
 
-	private final Preferences preferences;
+	private Preferences preferences;
 
 	private final CssParser cssParser = new CssParser();
 
 	public MarkupTokenScanner(Font defaultFont, Font defaultMonospaceFont) {
 		styleManager = new CssStyleManager(defaultFont, defaultMonospaceFont);
 		defaultState = styleManager.createDefaultFontState();
+		reloadPreferences();
+	}
 
+	public void reloadPreferences() {
 		preferences = WikiTextUiPlugin.getDefault().getPreferences();
 	}
 
@@ -240,19 +243,19 @@ public class MarkupTokenScanner implements ITokenScanner {
 
 	private void checkAddToken(List<Token> tokens, Token newToken) {
 		if (newToken.getLength() <= 0) {
-			throw new IllegalStateException(MessageFormat.format(
-					Messages.MarkupTokenScanner_badTokenLength, new Object[] { newToken.getLength() })); 
+			throw new IllegalStateException(MessageFormat.format(Messages.MarkupTokenScanner_badTokenLength,
+					new Object[] { newToken.getLength() }));
 		}
 		if (newToken.getOffset() < 0) {
-			throw new IllegalStateException(MessageFormat.format(
-					Messages.MarkupTokenScanner_badTokenOffset, new Object[] { newToken.getOffset() })); 
+			throw new IllegalStateException(MessageFormat.format(Messages.MarkupTokenScanner_badTokenOffset,
+					new Object[] { newToken.getOffset() }));
 		}
 		if (!tokens.isEmpty()) {
 			Token previous = tokens.get(tokens.size() - 1);
 			if (previous.getOffset() >= newToken.getOffset()) {
-				throw new IllegalStateException(Messages.MarkupTokenScanner_2); 
+				throw new IllegalStateException(Messages.MarkupTokenScanner_2);
 			} else if (previous.getOffset() + previous.getLength() > newToken.getOffset()) {
-				throw new IllegalStateException(Messages.MarkupTokenScanner_3); 
+				throw new IllegalStateException(Messages.MarkupTokenScanner_3);
 			}
 		}
 	}
@@ -428,4 +431,5 @@ public class MarkupTokenScanner implements ITokenScanner {
 		}
 
 	}
+
 }

@@ -71,6 +71,7 @@ import org.eclipse.mylyn.internal.wikitext.ui.editor.preferences.Preferences;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.reconciler.MarkupMonoReconciler;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.FastMarkupPartitioner;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.MarkupDocumentProvider;
+import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.MarkupTokenScanner;
 import org.eclipse.mylyn.internal.wikitext.ui.util.NlsResourceBundle;
 import org.eclipse.mylyn.wikitext.core.WikiText;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
@@ -122,7 +123,8 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import com.ibm.icu.text.MessageFormat;
 
 /**
- * 
+ * A text editor for editing lightweight markup. Can be configured to accept any {@link MarkupLanguage}, with pluggable
+ * content assist, validation, and cheat-sheet help content.
  * 
  * @author David Green
  */
@@ -146,9 +148,11 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	 */
 	public static final String ID = "org.eclipse.mylyn.wikitext.ui.editor.markupEditor"; //$NON-NLS-1$
 
-	private static final String[] SHOW_IN_TARGETS = { IPageLayout.ID_RES_NAV,
-			"org.eclipse.jdt.ui.PackageExplorer", IPageLayout.ID_OUTLINE //$NON-NLS-1$
-	};
+	private static final String[] SHOW_IN_TARGETS = { // 
+	"org.eclipse.ui.views.ResourceNavigator", //$NON-NLS-1$
+			"org.eclipse.jdt.ui.PackageExplorer",//$NON-NLS-1$
+			"org.eclipse.ui.navigator.ProjectExplorer", // 3.5 //$NON-NLS-1$
+			IPageLayout.ID_OUTLINE };
 
 	private static IShowInTargetList SHOW_IN_TARGET_LIST = new IShowInTargetList() {
 		public String[] getShowInTargetIds() {
@@ -383,7 +387,9 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	}
 
 	private void reloadPreferences() {
+		previewDirty = true;
 		syncProjectionModeWithPreferences();
+		((MarkupTokenScanner) sourceViewerConfiguration.getMarkupScanner()).reloadPreferences();
 		viewer.invalidateTextPresentation();
 	}
 
