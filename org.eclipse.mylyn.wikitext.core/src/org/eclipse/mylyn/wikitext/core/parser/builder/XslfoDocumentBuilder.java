@@ -32,6 +32,8 @@ import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
  * A document builder that produces XSL-FO output. XSL-FO is suitable for conversion to other formats such as PDF.
  * 
  * 
+ * @see XslfoDocumentBuilder.Configuration Configuration for configurable settings
+ * 
  * @see <a href="http://www.w3.org/TR/2001/REC-xsl-20011015/">XSL-FO 1.0 specification</a>
  * @see <a href="http://en.wikipedia.org/wiki/XSL_Formatting_Objects">XSL-FO (WikiPedia)</a>
  * @see <a href="http://www.w3schools.com/xslfo/default.asp">XSL-FO Tutorial</a>
@@ -802,10 +804,21 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		}
 	}
 
+	/**
+	 * The current configuration of this builder. The returned value is mutable and changes to it affect this builder's
+	 * configuration.
+	 * 
+	 * @see Configuration Configuration class for configurable settings
+	 */
 	public Configuration getConfiguration() {
 		return configuration;
 	}
 
+	/**
+	 * The current configuration of this builder.
+	 * 
+	 * @see Configuration Configuration class for configurable settings
+	 */
 	public void setConfiguration(Configuration configuration) {
 		if (configuration == null) {
 			throw new IllegalArgumentException();
@@ -813,6 +826,12 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		this.configuration = configuration;
 	}
 
+	/**
+	 * A class that encapsulates all configurable settings of the {@link XslfoDocumentBuilder}. This class implements
+	 * the template design pattern via {@link Configuration#clone()}.
+	 * 
+	 * @author David Green
+	 */
 	public static class Configuration implements Cloneable {
 
 		private float[] fontSizes = new float[] { 12.0f, 18.0f, 15.0f, 13.2f, 12.0f, 10.4f, 8.0f };
