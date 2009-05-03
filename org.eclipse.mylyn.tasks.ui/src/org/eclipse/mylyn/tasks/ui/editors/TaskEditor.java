@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.ContributionManager;
 import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -75,6 +76,7 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.forms.IFormColors;
@@ -87,6 +89,7 @@ import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
+import org.eclipse.ui.menus.IMenuService;
 import org.eclipse.ui.part.WorkbenchPart;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
@@ -94,10 +97,21 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 /**
  * @author Mik Kersten
  * @author Rob Elves
+ * @author Steffen Pingel
+ * @author Thomas Ehrnhoefer
+ * @since 2.0
  */
 public class TaskEditor extends SharedHeaderFormEditor {
 
+	/**
+	 * @since 2.0
+	 */
 	public static final String ID_EDITOR = "org.eclipse.mylyn.tasks.ui.editors.task"; //$NON-NLS-1$
+
+	/**
+	 * @since 3.2
+	 */
+	public static final String ID_TOOLBAR_HEADER = "org.eclipse.mylyn.tasks.ui.editors.task.toolbar.header"; //$NON-NLS-1$
 
 	private ToggleTaskActivationAction activateAction;
 
@@ -117,6 +131,10 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	private TaskDragSourceListener titleDragSourceListener;
 
 	private Composite editorParent;
+
+	private IMenuService menuService;
+
+	private IToolBarManager toolBarManager;
 
 	public TaskEditor() {
 	}
@@ -254,6 +272,10 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		if (activateAction != null) {
 			activateAction.dispose();
 		}
+		if (menuService != null && toolBarManager instanceof ContributionManager) {
+			menuService.releaseContributions((ContributionManager) toolBarManager);
+		}
+
 		super.dispose();
 	}
 
@@ -536,7 +558,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	 */
 	public void updateHeaderToolBar() {
 		final Form form = getHeaderForm().getForm().getForm();
-		IToolBarManager toolBarManager = form.getToolBarManager();
+		toolBarManager = form.getToolBarManager();
 
 		toolBarManager.removeAll();
 		toolBarManager.update(true);
@@ -575,6 +597,9 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			toolBarManager.add(repositoryLabelControl);
 		}
 
+		toolBarManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+
+		toolBarManager.add(new Separator("page")); //$NON-NLS-1$
 		for (IFormPage page : getPages()) {
 			if (page instanceof TaskFormPage) {
 				TaskFormPage taskEditorPage = (TaskFormPage) page;
@@ -613,6 +638,15 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 		toolBarManager.add(new Separator("activation")); //$NON-NLS-1$
 		toolBarManager.add(activateAction);
+
+		// add external contributions
+		menuService = (IMenuService) getSite().getService(IMenuService.class);
+		if (menuService != null && toolBarManager instanceof ContributionManager) {
+			TaskRepository taskRepository = (outgoingNewRepository != null) ? outgoingNewRepository
+					: taskEditorInput.getTaskRepository();
+			menuService.populateContributionManager((ContributionManager) toolBarManager,
+					"toolbar:" + ID_TOOLBAR_HEADER + "." + taskRepository.getConnectorKind()); //$NON-NLS-1$ //$NON-NLS-2$
+		}
 
 		toolBarManager.update(true);
 
