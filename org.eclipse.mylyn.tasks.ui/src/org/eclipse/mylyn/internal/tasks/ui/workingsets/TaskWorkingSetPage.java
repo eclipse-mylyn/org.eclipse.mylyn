@@ -74,6 +74,7 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
  * 
  * @author Eugene Kuleshov
  * @author Mik Kersten
+ * @author David Green fix for bug 274390
  */
 public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 
@@ -337,7 +338,9 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 			workingSet = workingSetManager.createWorkingSet(getWorkingSetName(),
 					validElements.toArray(new IAdaptable[validElements.size()]));
 		} else {
-			workingSet.setName(getWorkingSetName());
+			if (!getWorkingSetName().equals(workingSet.getName())) {
+				workingSet.setName(getWorkingSetName());
+			}
 			workingSet.setElements(validElements.toArray(new IAdaptable[validElements.size()]));
 		}
 	}
