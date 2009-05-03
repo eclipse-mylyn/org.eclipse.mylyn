@@ -309,8 +309,8 @@
 
 	<target name="clean-tests-helper">
     	<property name="eclipse.home" value="${eclipse.base}/test-${eclipse.sdk.version}/eclipse" />
-		<delete dir="${eclipse.home}/configuration">
-			<include name="*.log"/>
+		<delete failonerror="false">
+			<fileset dir="${eclipse.home}/configuration" includes="*.log" />
 		</delete>
 		<delete dir="${eclipse.home}/results" />
 		<delete failonerror="false">
