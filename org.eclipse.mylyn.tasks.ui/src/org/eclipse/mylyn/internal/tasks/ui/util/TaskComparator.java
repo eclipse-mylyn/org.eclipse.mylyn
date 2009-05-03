@@ -159,7 +159,14 @@ public class TaskComparator implements Comparator<ITask> {
 	}
 
 	private int sortBySummary(ITask element1, ITask element2, int sortDirection) {
-		return sortDirection * (element1.getSummary().compareToIgnoreCase(element2.getSummary()));
+		String key1 = element1.getSummary();
+		String key2 = element2.getSummary();
+		if (key1 == null) {
+			return (key2 != null) ? sortDirection : 0;
+		} else if (key2 == null) {
+			return -sortDirection;
+		}
+		return sortDirection * key1.compareToIgnoreCase(key2);
 	}
 
 	private int sortByID(ITask element1, ITask element2, int sortDirection) {

@@ -46,6 +46,40 @@ import org.eclipse.swt.widgets.Control;
  */
 public class TaskListSorterTest extends TestCase {
 
+	public void testSortWithError() {
+		final TaskListSorter sorter = new TaskListSorter();
+		ITask task1 = new LocalTask("1", null);
+		ITask task2 = new MockTask("local", "", "1");
+		Object[] tasks = { task1, task2 };
+		Date start = new Date();
+		task2.setCreationDate(start);
+		task1.setCreationDate(new Date(start.getTime() - 1));
+		task1.setPriority("P5");
+		task2.setPriority("P1");
+
+		sorter.getComparator().setSortByIndex(TaskComparator.SortByIndex.TASK_ID);
+		sorter.sort(new EmptyViewer(), tasks);
+		assertEquals(task1, tasks[1]);
+		assertEquals(task2, tasks[0]);
+
+		sorter.getComparator().setSortByIndex(TaskComparator.SortByIndex.DATE_CREATED);
+		sorter.sort(new EmptyViewer(), tasks);
+		assertEquals(task1, tasks[0]);
+		assertEquals(task2, tasks[1]);
+
+		sorter.getComparator().setSortByIndex(TaskComparator.SortByIndex.PRIORITY);
+		sorter.sort(new EmptyViewer(), tasks);
+		assertEquals(task1, tasks[1]);
+		assertEquals(task2, tasks[0]);
+
+		sorter.getComparator().setSortByIndex(TaskComparator.SortByIndex.SUMMARY);
+		sorter.getComparator().setSortDirection(-1);
+		sorter.sort(new EmptyViewer(), tasks);
+		assertEquals(task1, tasks[0]);
+		assertEquals(task2, tasks[1]);
+
+	}
+
 	public void testRootTaskSorting() {
 		TaskListSorter sorter = new TaskListSorter();
 		sorter.getComparator().setSortByIndex(TaskComparator.SortByIndex.SUMMARY);
@@ -213,9 +247,12 @@ public class TaskListSorterTest extends TestCase {
 		ITask task3 = new LocalTask("3", "task3");
 		ITask[] tasks = { task1, task2, task3 };
 		Date start = new Date();
-		task3.setCreationDate(start);
+		task1.setCreationDate(start);
 		task2.setCreationDate(new Date(start.getTime() - 1));
-		task1.setCreationDate(new Date(start.getTime() - 2));
+		task3.setCreationDate(new Date(start.getTime() - 2));
+		sorter.getComparator().setSortByIndex(TaskComparator.SortByIndex.DATE_CREATED);
+		sorter.sort(new EmptyViewer(), tasks);
+		sorter.getComparator().setSortDirection(-1);
 		sorter.sort(new EmptyViewer(), tasks);
 	}
 
