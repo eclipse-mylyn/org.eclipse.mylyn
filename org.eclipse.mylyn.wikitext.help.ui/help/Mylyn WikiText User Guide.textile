@@ -147,6 +147,14 @@ It should be noted that some markup languages such as WikiMedia and Textile were
 * Support for HTML tags has been disabled to allow for pasting HTML source code into bug comments and descriptions.
 * Footnote references are preprocessed and only matched if a corresponding footnote exists in the content.
 
+*Other*
+
+The following language constructs are enabled for all markup languages:
+
+* Java stack trace detection
+* Eclipse-specific: content following a line starting with ==-- Error Details --==
+
+
 h3. Markup for Bugzilla
 
 WikiText adds markup language capabilities for common Bugzilla content when used with a Bugzilla repository:
