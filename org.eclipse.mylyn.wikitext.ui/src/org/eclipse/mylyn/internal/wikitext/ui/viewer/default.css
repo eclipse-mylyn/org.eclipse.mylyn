@@ -63,9 +63,20 @@ code {
 
 pre {
 	font-family: monospace;
-	color:#4444CC;
 }
 
+/* Java stack traces
+pre.javaStackTrace {
+	font-family: monospace;
+}
+*/
+
+/* sections beginning with -- Error Details --
+pre.eclipseErrorDetails {
+	font-family: monospace;
+}
+*/
+ 
 ins {
 	text-decoration: underline;
 }

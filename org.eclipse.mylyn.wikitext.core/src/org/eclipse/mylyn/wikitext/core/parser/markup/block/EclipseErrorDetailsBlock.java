@@ -9,21 +9,23 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.wikitext.tasks.ui.util.parser;
+package org.eclipse.mylyn.wikitext.core.parser.markup.block;
 
 import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 
 /**
  * A block that starts a preformatted section that begins with <tt>-- Error Details --</tt>, which is the prefix for
- * error information inserted into a bug description by Mylyn when creating bugs from the Eclipse Error Log view.
+ * error information inserted into a bug description by Mylyn when creating bugs from the Eclipse Error Log view. The
+ * block terminates with the first {@link MarkupLanguage#isEmptyLine(String) empty line}.
  * 
  * @author David Green
  */
-public class MylynErrorDetailsBlock extends Block {
+public class EclipseErrorDetailsBlock extends Block {
 
 	private static final Pattern START_PATTERN = Pattern.compile("\\s*-- Error Details --.*"); //$NON-NLS-1$
 

@@ -9,7 +9,7 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.wikitext.tasks.ui.util.parser;
+package org.eclipse.mylyn.wikitext.core.parser.markup.block;
 
 import java.util.regex.Pattern;
 
@@ -18,7 +18,8 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
- * A block for Java stack traces. Matches any text that looks like a stack trace.
+ * A block for Java stack traces. Matches any text that looks like a stack trace, even if it is only a portion (it's
+ * common for stack traces to be clipped to eliminate unrelated text).
  * 
  * @author David Green
  */
