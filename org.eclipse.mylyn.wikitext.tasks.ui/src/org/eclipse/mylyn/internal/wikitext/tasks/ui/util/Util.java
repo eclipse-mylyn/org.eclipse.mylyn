@@ -13,6 +13,8 @@ package org.eclipse.mylyn.internal.wikitext.tasks.ui.util;
 
 import org.eclipse.mylyn.internal.wikitext.tasks.ui.util.bugzilla.BugzillaGeneratedCommentBlock;
 import org.eclipse.mylyn.internal.wikitext.tasks.ui.util.bugzilla.BugzillaQuoteBlock;
+import org.eclipse.mylyn.internal.wikitext.tasks.ui.util.parser.JavaStackTraceBlock;
+import org.eclipse.mylyn.internal.wikitext.tasks.ui.util.parser.MylynErrorDetailsBlock;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration;
 
 /**
@@ -32,6 +34,8 @@ public class Util {
 			configuration.getBlocks().add(new BugzillaQuoteBlock());
 			configuration.getBlocks().add(new BugzillaGeneratedCommentBlock());
 		}
+		configuration.getBlocks().add(new MylynErrorDetailsBlock());
+		configuration.getBlocks().add(new JavaStackTraceBlock());
 		return configuration;
 	}
 
