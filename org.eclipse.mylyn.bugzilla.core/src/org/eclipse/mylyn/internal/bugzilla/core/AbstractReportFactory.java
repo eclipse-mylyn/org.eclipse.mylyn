@@ -60,7 +60,7 @@ public class AbstractReportFactory {
 		final BufferedInputStream is = new BufferedInputStream(inStream, 1024);
 
 		InputStream iis = new InputStream() {
-			@SuppressWarnings( { "deprecation", "restriction" })
+			@SuppressWarnings( { "restriction" })
 			@Override
 			public int read() throws IOException {
 				int c;

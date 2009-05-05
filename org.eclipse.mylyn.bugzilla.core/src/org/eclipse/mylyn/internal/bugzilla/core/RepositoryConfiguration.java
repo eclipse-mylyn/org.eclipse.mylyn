@@ -251,6 +251,7 @@ public class RepositoryConfiguration implements Serializable {
 
 		private static final long serialVersionUID = 4120139521246741120L;
 
+		@SuppressWarnings("unused")
 		String productName;
 
 		List<String> components = new ArrayList<String>();

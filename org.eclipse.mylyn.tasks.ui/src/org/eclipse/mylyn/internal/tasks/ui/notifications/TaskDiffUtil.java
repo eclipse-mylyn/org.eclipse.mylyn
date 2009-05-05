@@ -26,7 +26,8 @@ import org.eclipse.swt.widgets.Composite;
  */
 public class TaskDiffUtil {
 
-	private static final String ELLIPSIS = "..."; //$NON-NLS-1$ // could use the ellipsis glyph on some platforms "\u2026"
+	// could use the ellipsis glyph on some platforms "\u2026"
+	private static final String ELLIPSIS = "..."; //$NON-NLS-1$ 
 
 	private static int DRAW_FLAGS = SWT.DRAW_MNEMONIC | SWT.DRAW_TAB | SWT.DRAW_TRANSPARENT | SWT.DRAW_DELIMITER;
 

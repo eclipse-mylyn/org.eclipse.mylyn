@@ -339,7 +339,7 @@ public final class DelegatingTaskExternalizer {
 		}
 	}
 
-	@SuppressWarnings( { "deprecation", "restriction" })
+	@SuppressWarnings( { "restriction" })
 	private String stripControlCharacters(String text) {
 		if (text == null) {
 			return ""; //$NON-NLS-1$

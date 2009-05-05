@@ -59,7 +59,8 @@ public class TaskRepositoriesView extends ViewPart {
 	/**
 	 * @deprecated Use {@link ITasksUiConstants#ID_VIEW_REPOSITORIES} instead
 	 */
-	public static final String ID = ITasksUiConstants.ID_VIEW_REPOSITORIES; //$NON-NLS-1$
+	@Deprecated
+	public static final String ID = ITasksUiConstants.ID_VIEW_REPOSITORIES;
 
 	private TableViewer viewer;
 

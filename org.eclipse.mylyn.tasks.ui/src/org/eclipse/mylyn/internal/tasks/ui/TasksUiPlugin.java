@@ -486,7 +486,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		}
 	}
 
-	@SuppressWarnings( { "deprecation", "restriction" })
+	@SuppressWarnings( { "restriction" })
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);

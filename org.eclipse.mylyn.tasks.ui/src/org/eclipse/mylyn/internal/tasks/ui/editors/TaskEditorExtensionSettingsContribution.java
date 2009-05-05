@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorExtensions.RegisteredTaskEditorExtension;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorExtension;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractTaskRepositoryPageContribution;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -99,7 +98,6 @@ public class TaskEditorExtensionSettingsContribution extends AbstractTaskReposit
 		// now add selection buttons for all registered extensions
 		SortedSet<RegisteredTaskEditorExtension> allEditorExtensions = TaskEditorExtensions.getTaskEditorExtensions();
 		for (RegisteredTaskEditorExtension editorExtension : allEditorExtensions) {
-			AbstractTaskEditorExtension extension = editorExtension.getExtension();
 			if (WorkbenchUtil.allowUseOf(editorExtension)) {
 				String name = editorExtension.getName();
 				isDefault = editorExtension.getId().equals(defaultExtensionId);

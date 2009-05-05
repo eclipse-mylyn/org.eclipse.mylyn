@@ -384,7 +384,7 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 	}
 
 	private void checkForException(Object result) throws NumberFormatException, XmlRpcException {
-		if (result instanceof Map) {
+		if (result instanceof Map<?, ?>) {
 			Map<?, ?> exceptionData = (Map<?, ?>) result;
 			if (exceptionData.containsKey("faultCode") && exceptionData.containsKey("faultString")) { //$NON-NLS-1$ //$NON-NLS-2$
 				throw new XmlRpcException(Integer.parseInt(exceptionData.get("faultCode").toString()), //$NON-NLS-1$

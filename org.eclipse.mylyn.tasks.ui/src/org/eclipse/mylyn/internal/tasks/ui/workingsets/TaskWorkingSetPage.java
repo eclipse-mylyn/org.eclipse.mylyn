@@ -103,7 +103,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		private final Map<IProject, TaskRepositoryProjectMapping> projectMap = new HashMap<IProject, TaskRepositoryProjectMapping>();
 
 		public Object[] getChildren(Object parentElement) {
-			if (parentElement instanceof List) {
+			if (parentElement instanceof List<?>) {
 				List<IAdaptable> taskRepositoriesContainers = new ArrayList<IAdaptable>();
 				List<IAdaptable> resourcesRepositoriesContainers = new ArrayList<IAdaptable>();
 

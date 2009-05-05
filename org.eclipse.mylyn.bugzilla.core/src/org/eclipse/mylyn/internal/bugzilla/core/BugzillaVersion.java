@@ -45,7 +45,7 @@ public class BugzillaVersion implements Comparable<BugzillaVersion>, Serializabl
 			rc = false;
 		} else {
 			rc = version.contains("RC"); //$NON-NLS-1$
-			segments = rc ? version.split("(\\.|([R][C]))") : version.split("\\."); //$NON-NLS-1$
+			segments = rc ? version.split("(\\.|([R][C]))") : version.split("\\."); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		major = segments.length > 0 ? parse(segments[0]) : 0;
 		minor = segments.length > 1 ? parse(segments[1]) : 0;

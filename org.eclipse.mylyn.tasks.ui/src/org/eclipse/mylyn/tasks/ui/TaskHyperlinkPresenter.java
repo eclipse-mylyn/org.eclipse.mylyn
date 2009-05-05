@@ -73,7 +73,7 @@ public final class TaskHyperlinkPresenter extends DefaultHyperlinkPresenter {
 	@SuppressWarnings("unchecked")
 	private <T> void initMultipleHyperlinkSupport(Class<T> argClass, T arg) {
 		try {
-			Class<IHyperlinkPresenter> clazz = (Class<IHyperlinkPresenter>) Class.forName("org.eclipse.jface.text.hyperlink.MultipleHyperlinkPresenter");
+			Class<IHyperlinkPresenter> clazz = (Class<IHyperlinkPresenter>) Class.forName("org.eclipse.jface.text.hyperlink.MultipleHyperlinkPresenter"); //$NON-NLS-1$
 			Constructor<IHyperlinkPresenter> constructor = clazz.getDeclaredConstructor(argClass);
 			multiplePresenter = constructor.newInstance(arg);
 		} catch (Throwable t) {
@@ -142,7 +142,7 @@ public final class TaskHyperlinkPresenter extends DefaultHyperlinkPresenter {
 						if (task.getTaskKey() == null) {
 							textViewer.getTextWidget().setToolTipText(task.getSummary());
 						} else {
-							textViewer.getTextWidget().setToolTipText(task.getTaskKey() + ": " + task.getSummary());
+							textViewer.getTextWidget().setToolTipText(task.getTaskKey() + ": " + task.getSummary()); //$NON-NLS-1$
 						}
 					}
 				}
