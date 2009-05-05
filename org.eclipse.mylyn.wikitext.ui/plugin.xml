@@ -51,17 +51,27 @@
 					label="%command.label.2" tooltip="%command.tooltip.2" helpContextId="org.eclipse.mylyn.wikitext.help.ui.markupConversion">
 				</command>
 				<visibleWhen>
-					<with variable="activeMenuSelection">
-						<and>
-							<count value="+"/>
+					<or>
+						<with variable="activeMenuSelection">
+							<and>
+								<count value="+"/>
+								<iterate>
+									<adapt type="org.eclipse.core.resources.IFile">
+										<test property="org.eclipse.mylyn.wikitext.contentTypeClassification"
+											value="org.eclipse.mylyn.wikitext" />
+									</adapt>
+								</iterate>
+							</and>
+						</with>
+						<with variable="activeMenuEditorInput">
 							<iterate>
 								<adapt type="org.eclipse.core.resources.IFile">
 									<test property="org.eclipse.mylyn.wikitext.contentTypeClassification"
 										value="org.eclipse.mylyn.wikitext" />
 								</adapt>
 							</iterate>
-						</and>
-					</with>
+						</with>
+					</or>
 				</visibleWhen>
 			</menu>
 		</menuContribution>

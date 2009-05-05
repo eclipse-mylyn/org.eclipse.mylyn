@@ -24,6 +24,7 @@ import org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor;
 import org.eclipse.mylyn.wikitext.core.WikiText;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.HandlerUtil;
 
 import com.ibm.icu.text.MessageFormat;
 
@@ -45,7 +46,7 @@ public abstract class AbstractMarkupResourceHandler extends AbstractHandler {
 		ISelection currentSelection = selection;
 		if (currentSelection == null) {
 			try {
-				currentSelection = computeSelection();
+				currentSelection = computeSelection(event);
 			} catch (Exception e) {
 				// ignore
 			}
@@ -96,10 +97,21 @@ public abstract class AbstractMarkupResourceHandler extends AbstractHandler {
 	}
 
 	/**
+	 * @param event
 	 * @since 1.1
 	 */
-	protected ISelection computeSelection() {
-		return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getSelection();
+	protected ISelection computeSelection(ExecutionEvent event) {
+		ISelection selection = HandlerUtil.getActiveMenuSelection(event);
+		if (!(selection instanceof IStructuredSelection)) {
+			selection = HandlerUtil.getActiveMenuEditorInput(event);
+		}
+		if (!(selection instanceof IStructuredSelection)) {
+			selection = HandlerUtil.getCurrentSelection(event);
+		}
+		if (!(selection instanceof IStructuredSelection)) {
+			selection = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getSelection();
+		}
+		return selection;
 	}
 
 	protected abstract void handleFile(IFile file, String name) throws ExecutionException;
