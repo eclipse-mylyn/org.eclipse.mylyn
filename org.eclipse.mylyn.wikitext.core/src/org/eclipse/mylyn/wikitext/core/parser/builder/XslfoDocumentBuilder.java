@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 import org.eclipse.mylyn.internal.wikitext.core.util.css.CssParser;
 import org.eclipse.mylyn.internal.wikitext.core.util.css.CssRule;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
+import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.ListAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.TableAttributes;
 import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
@@ -754,10 +755,27 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	private void applyImageAttributes(Attributes attributes) {
-		writer.writeAttribute("width", "100%"); //$NON-NLS-1$ //$NON-NLS-2$
-		writer.writeAttribute("content-height", "100%"); //$NON-NLS-1$ //$NON-NLS-2$
-		writer.writeAttribute("content-width", "scale-to-fit"); //$NON-NLS-1$ //$NON-NLS-2$
-		writer.writeAttribute("scaling", "uniform"); //$NON-NLS-1$ //$NON-NLS-2$
+		boolean sizeSpecified = false;
+		boolean scaleToFit = true;
+		if (attributes instanceof ImageAttributes) {
+			ImageAttributes imageAttributes = (ImageAttributes) attributes;
+			if (imageAttributes.getWidth() > 0) {
+				sizeSpecified = true;
+				writer.writeAttribute("width", String.format("%spx", imageAttributes.getWidth())); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			if (imageAttributes.getHeight() > 0) {
+				sizeSpecified = true;
+				writer.writeAttribute("height", String.format("%spx", imageAttributes.getHeight())); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+		}
+		if (!sizeSpecified) {
+			writer.writeAttribute("width", "100%"); //$NON-NLS-1$ //$NON-NLS-2$
+			writer.writeAttribute("content-height", "100%"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		if (scaleToFit) {
+			writer.writeAttribute("content-width", "scale-to-fit"); //$NON-NLS-1$ //$NON-NLS-2$
+			writer.writeAttribute("scaling", "uniform"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
 	}
 
 	@Override
