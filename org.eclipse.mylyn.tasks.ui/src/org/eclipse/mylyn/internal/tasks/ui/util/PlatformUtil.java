@@ -114,6 +114,7 @@ public class PlatformUtil {
 		}
 	}
 
+	// TODO e3.5: remove, platform has been fixed, see bug 272046
 	public static boolean isPaintItemClippingRequired() {
 		return "gtk".equals(SWT.getPlatform()); //$NON-NLS-1$
 	}
