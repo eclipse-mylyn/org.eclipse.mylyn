@@ -16,22 +16,26 @@
 		<delete failonerror="false" file="toc-reference.xml"/>
 	</target>
 
-	<target name="convertSchemaToHtml" if="eclipse.running">
+	<target name="convertSchemaToHtml"> <!-- if="eclipse.running"> -->
 	        <property name="dest" value="reference/extension-points" />
 
 			<mkdir dir="${dest}"/>
 		
-		<!-- taskdef name="pde.convertSchemaToHTML" classname="org.eclipse.pde.internal.core.ant.ConvertSchemaToHTML">
+		<taskdef name="pde.convertSchemaToHTML" classname="org.eclipse.pde.internal.core.ant.ConvertSchemaToHTML">
 			<classpath>
 				<fileset dir="styles" includes="**/*.jar">
 				</fileset>
 			</classpath>
-		</taskdef -->
+		</taskdef>
 		
 	        <!-- record name="${basedir}/doc.cnv.txt" action="start" / -->
 	        <pde.convertSchemaToHTML manifest="../org.eclipse.mylyn.wikitext.core/plugin.xml" destination="${dest}" />
 	        <pde.convertSchemaToHTML manifest="../org.eclipse.mylyn.wikitext.ui/plugin.xml" destination="${dest}" />
 	        <!-- record name="${basedir}/doc.cnv.txt" action="stop" / -->
+		<replaceregexp match="(../)*([^.]+.css)" replace="../../styles/\2"
+			flags="gs">
+			<fileset dir="${dest}" includes="*.html"/>
+		</replaceregexp>
 	</target>
 
 	<target name="generateJavadoc">
