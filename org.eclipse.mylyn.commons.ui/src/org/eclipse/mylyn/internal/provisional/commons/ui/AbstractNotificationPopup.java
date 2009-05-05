@@ -586,7 +586,7 @@ public abstract class AbstractNotificationPopup extends Window {
 	}
 
 	private Point fixupDisplayBounds(Point tipSize, Point location) {
-		if (respectDisplayBounds || respectMonitorBounds) {
+		if (respectDisplayBounds) {
 			Rectangle bounds;
 			Point rightBounds = new Point(tipSize.x + location.x, tipSize.y + location.y);
 
