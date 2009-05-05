@@ -11,6 +11,10 @@
 
 package org.eclipse.mylyn.internal.wikitext.ui.editor.outline;
 
+import java.lang.reflect.Constructor;
+import java.util.Arrays;
+import java.util.List;
+
 import org.eclipse.jface.dialogs.PopupDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.text.IInformationControl;
@@ -62,7 +66,7 @@ public class QuickOutlinePopupDialog extends PopupDialog implements IInformation
 	public QuickOutlinePopupDialog(Shell parent, IShowInTarget showInTarget) {
 		super(parent, SWT.RESIZE, true, true, false, false, null, null);
 		this.showInTarget = showInTarget;
-		setInfoText(Messages.QuickOutlinePopupDialog_infoText); 
+		setInfoText(Messages.QuickOutlinePopupDialog_infoText);
 		create();
 	}
 
@@ -74,9 +78,33 @@ public class QuickOutlinePopupDialog extends PopupDialog implements IInformation
 	}
 
 	@Override
+	protected List getBackgroundColorExclusions() {
+		List exclusions = super.getBackgroundColorExclusions();
+		if (filteredTree != null) {
+			Text filterControl = filteredTree.getFilterControl();
+			exclusions.add(filterControl.getParent());
+			exclusions.addAll(Arrays.asList(filterControl.getParent().getChildren()));
+		}
+		return exclusions;
+	}
+
+	@Override
 	protected Control createDialogArea(Composite parent) {
 		patternFilter = new PatternFilter();
-		filteredTree = new FilteredTree(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER, patternFilter);
+		// Eclipse 3.5: use the new look constructor if available.
+		try {
+			Constructor<FilteredTree> constructor = FilteredTree.class.getConstructor(Composite.class, int.class,
+					PatternFilter.class, boolean.class);
+			filteredTree = constructor.newInstance(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER,
+					patternFilter, true);
+		} catch (SecurityException e1) {
+			throw new IllegalStateException(e1);
+		} catch (NoSuchMethodException e1) {
+			filteredTree = new FilteredTree(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER, patternFilter);
+		} catch (Exception e) {
+			throw new IllegalStateException(e);
+		}
+
 		int heightHint = (filteredTree.getViewer().getTree().getItemHeight() * 12)
 				+ Math.max(filteredTree.getFilterControl().getSize().y, 12);
 		GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, heightHint).applyTo(filteredTree);
