@@ -15,7 +15,6 @@ package org.eclipse.mylyn.internal.context.core;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -66,11 +65,11 @@ public class SaxContextReader implements IInteractionContextReader {
 						}
 						entry = zipInputStream.getNextEntry();
 					}
-	
+
 					if (entry == null) {
 						return null;
 					}
-	
+
 					SaxContextContentHandler contentHandler = new SaxContextContentHandler(handleIdentifier,
 							contextScaling);
 					XMLReader reader = XMLReaderFactory.createXMLReader();
@@ -84,9 +83,9 @@ public class SaxContextReader implements IInteractionContextReader {
 				fileInputStream.close();
 			}
 		} catch (Exception e) {
-			File saveFile = new File(file.getAbsolutePath() + "-save");
+			File saveFile = new File(file.getAbsolutePath() + "-save"); //$NON-NLS-1$
 			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN,
-					"Error loading context, backup saved to \"" + saveFile + "\"", e)); //$NON-NLS-1$
+					"Error loading context, backup saved to \"" + saveFile + "\"", e)); //$NON-NLS-1$ //$NON-NLS-2$
 			file.renameTo(saveFile);
 			return null;
 		}
