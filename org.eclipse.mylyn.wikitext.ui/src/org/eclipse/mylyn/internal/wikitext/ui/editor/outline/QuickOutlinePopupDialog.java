@@ -77,6 +77,7 @@ public class QuickOutlinePopupDialog extends PopupDialog implements IInformation
 		return fileterText;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected List getBackgroundColorExclusions() {
 		List exclusions = super.getBackgroundColorExclusions();
