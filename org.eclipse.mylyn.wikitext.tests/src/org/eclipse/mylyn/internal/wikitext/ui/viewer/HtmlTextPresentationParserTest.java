@@ -11,6 +11,7 @@
 package org.eclipse.mylyn.internal.wikitext.ui.viewer;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
 
@@ -135,5 +136,14 @@ public class HtmlTextPresentationParserTest extends TestCase {
 		String text = parser.getText();
 		System.out.println("text:\n" + text);
 		assertTrue(text.contains("in1 \t\nin2 \t\n\nafter"));
+	}
+
+	public void testWhitespaceAfterEmdash() throws Exception {
+		String html = "<html><body><p>Foo<br/>Bar &#8212; baz</p></body></html>";
+		parser.parse(html);
+		String text = parser.getText();
+		System.out.println("text:\n" + text);
+		assertTrue(Pattern.compile("Bar\\s\\S\\sbaz", Pattern.MULTILINE).matcher(text).find());
+
 	}
 }

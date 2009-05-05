@@ -429,10 +429,10 @@ public class HtmlTextPresentationParser {
 
 	public void parse(InputSource xhtmlInput) throws SAXException, IOException {
 		if (presentation == null) {
-			throw new IllegalStateException(Messages.HtmlTextPresentationParser_presentationRequired); 
+			throw new IllegalStateException(Messages.HtmlTextPresentationParser_presentationRequired);
 		}
 		if (defaultFont == null) {
-			throw new IllegalStateException(Messages.HtmlTextPresentationParser_defaultFontRequired); 
+			throw new IllegalStateException(Messages.HtmlTextPresentationParser_defaultFontRequired);
 		}
 
 		cssStyleManager = new CssStyleManager(defaultFont, defaultMonospaceFont);
@@ -483,6 +483,10 @@ public class HtmlTextPresentationParser {
 					start += skip;
 					length -= skip;
 				}
+
+				// bug 274882 receiving characters makes the last element child irrelevant
+				elementState.lastChild = null;
+
 				if (length != 0) {
 					++elementState.textChildCount;
 					append(elementState, ch, start, length);
