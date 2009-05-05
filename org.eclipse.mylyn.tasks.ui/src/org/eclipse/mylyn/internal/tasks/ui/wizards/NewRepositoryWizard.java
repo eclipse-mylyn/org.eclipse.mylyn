@@ -7,7 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
- *     Peter Stibrany - fix for NPE (bug 247077)     
+ *     Peter Stibrany - fix for bug 247077
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
@@ -56,7 +56,7 @@ public class NewRepositoryWizard extends Wizard implements INewWizard {
 	public NewRepositoryWizard(String connectorKind) {
 		this.connectorKind = connectorKind;
 		setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
-		setForcePreviousAndNextButtons(true);
+		setForcePreviousAndNextButtons(connectorKind == null);
 		setNeedsProgressMonitor(true);
 		setWindowTitle(AddRepositoryAction.TITLE);
 	}
