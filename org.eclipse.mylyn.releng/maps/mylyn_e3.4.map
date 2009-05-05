@@ -68,6 +68,7 @@ plugin@org.eclipse.mylyn.web.tasks=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsr
 plugin@org.eclipse.mylyn.wikitext.confluence.core=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.wikitext.confluence.core
 plugin@org.eclipse.mylyn.wikitext.confluence.ui=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.wikitext.confluence.ui
 plugin@org.eclipse.mylyn.wikitext.core=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.wikitext.core
+plugin@org.eclipse.mylyn.wikitext.help.sdk=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.wikitext.help.sdk
 plugin@org.eclipse.mylyn.wikitext.help.ui=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.wikitext.help.ui
 plugin@org.eclipse.mylyn.wikitext.mediawiki.core=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.wikitext.mediawiki.core
 plugin@org.eclipse.mylyn.wikitext.mediawiki.ui=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.wikitext.mediawiki.ui
