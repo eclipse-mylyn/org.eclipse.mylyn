@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.context.core;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
@@ -45,6 +46,11 @@ public interface IInteractionContext {
 	public abstract IInteractionElement getActiveNode();
 
 	public abstract void delete(IInteractionElement element);
+
+	/**
+	 * @since 3.2
+	 */
+	public abstract void delete(Collection<IInteractionElement> elements);
 
 	public abstract void updateElementHandle(IInteractionElement element, String newHandle);
 

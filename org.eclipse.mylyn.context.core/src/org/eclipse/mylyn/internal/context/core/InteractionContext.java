@@ -11,10 +11,13 @@
 package org.eclipse.mylyn.internal.context.core;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -176,6 +179,29 @@ public class InteractionContext implements IInteractionContext {
 
 	public IInteractionElement getActiveNode() {
 		return activeNode;
+	}
+
+	public void delete(Collection<IInteractionElement> nodes) {
+
+		List<InteractionEvent> eventsToRemove = new ArrayList<InteractionEvent>();
+		Set<String> handlesToRemove = new HashSet<String>();
+		for (IInteractionElement node : nodes) {
+			handlesToRemove.add(node.getHandleIdentifier());
+			landmarkMap.remove(node.getHandleIdentifier());
+			elementMap.remove(node.getHandleIdentifier());
+
+			if (activeNode != null && node.getHandleIdentifier().equals(activeNode.getHandleIdentifier())) {
+				activeNode = null;
+			}
+		}
+
+		for (InteractionEvent event : interactionHistory) {
+			if (handlesToRemove.contains(event.getStructureHandle())) {
+				eventsToRemove.add(event);
+			}
+		}
+		interactionHistory.removeAll(eventsToRemove);
+
 	}
 
 	public void delete(IInteractionElement node) {

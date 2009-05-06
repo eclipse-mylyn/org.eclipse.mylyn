@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.context.core;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -106,6 +107,12 @@ public class CompositeInteractionContext implements IInteractionContext {
 	public void delete(IInteractionElement node) {
 		for (InteractionContext taskscape : contexts.values()) {
 			taskscape.delete(node);
+		}
+	}
+
+	public void delete(Collection<IInteractionElement> nodes) {
+		for (InteractionContext context : contexts.values()) {
+			context.delete(nodes);
 		}
 	}
 

@@ -457,6 +457,22 @@ public class InteractionContextManager implements IInteractionContextManager {
 		notifyElementsDeleted(getActiveContext(), Arrays.asList(new IInteractionElement[] { element }));
 	}
 
+	public void deleteElements(Collection<IInteractionElement> elements) {
+		IInteractionContext context = getActiveContext();
+
+		if (elements == null) {
+			throw new IllegalArgumentException("Elements to delete from context should not be null."); //$NON-NLS-1$
+		}
+
+		if (elements.size() == 0 || context == null) {
+			return;
+		}
+
+		context.delete(elements);
+
+		notifyElementsDeleted(getActiveContext(), new ArrayList<IInteractionElement>(elements));
+	}
+
 	private void delete(IInteractionElement element, IInteractionContext context) {
 		if (element == null || context == null) {
 			return;

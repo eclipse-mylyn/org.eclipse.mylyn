@@ -392,9 +392,7 @@ public class ContextEditorFormPage extends FormPage {
 							}
 						}
 						allToRemove.removeAll(allVisibleElements);
-						for (IInteractionElement interactionElement : allToRemove) {
-							ContextCore.getContextManager().deleteElement(interactionElement);
-						}
+						ContextCore.getContextManager().deleteElements(allToRemove);
 					} else {
 						MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
 								Messages.ContextEditorFormPage_Remove_Invisible,
