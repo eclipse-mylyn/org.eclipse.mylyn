@@ -37,6 +37,7 @@ import org.eclipse.ui.internal.browser.WebBrowserEditor;
 /**
  * @author Mik Kersten
  */
+// TODO e3.2 move to web.ui or tests
 public class BrowserMonitor extends AbstractUserInteractionMonitor implements IPartListener, IWindowListener,
 		IPageListener {
 

@@ -60,9 +60,9 @@ public abstract class AbstractFilteredTree extends FilteredTree {
 	 */
 	public AbstractFilteredTree(Composite parent, int treeStyle, PatternFilter filter) {
 		super(parent, treeStyle, filter);
-		Field refreshField;
 		try {
-			refreshField = FilteredTree.class.getDeclaredField("refreshJob"); //$NON-NLS-1$
+			// TODO e3.4 override doCreateRefreshJob() instead
+			Field refreshField = FilteredTree.class.getDeclaredField("refreshJob"); //$NON-NLS-1$
 			refreshField.setAccessible(true);
 			refreshJob = (Job) refreshField.get(this);
 			refreshPolicy = new AdaptiveRefreshPolicy(refreshJob);
