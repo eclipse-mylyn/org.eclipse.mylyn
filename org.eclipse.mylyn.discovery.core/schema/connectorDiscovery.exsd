@@ -18,8 +18,8 @@
       </annotation>
       <complexType>
          <sequence>
-            <element ref="connectorCategory" minOccurs="1" maxOccurs="unbounded"/>
-            <element ref="connectorDescriptor" minOccurs="1" maxOccurs="unbounded"/>
+            <element ref="connectorCategory" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="connectorDescriptor" minOccurs="0" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -66,12 +66,15 @@
                </documentation>
             </annotation>
             <simpleType>
-	    		<restriction base="string">
-	    			<enumeration value="document"></enumeration>
-	    			<enumeration value="task"></enumeration>
-	    			<enumeration value="vcs"></enumeration>
-	    		</restriction>
-    		</simpleType>
+               <restriction base="string">
+                  <enumeration value="document">
+                  </enumeration>
+                  <enumeration value="task">
+                  </enumeration>
+                  <enumeration value="vcs">
+                  </enumeration>
+               </restriction>
+            </simpleType>
          </attribute>
          <attribute name="name" type="string" use="required">
             <annotation>
@@ -285,7 +288,7 @@
          <meta.section type="since"/>
       </appinfo>
       <documentation>
-         [Enter the first release in which this extension point appears.]
+         3.2
       </documentation>
    </annotation>
 
