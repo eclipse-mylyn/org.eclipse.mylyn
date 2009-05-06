@@ -350,6 +350,12 @@ public class MediaWikiLanguageTest extends TestCase {
 		assertTrue(html.contains("<body><table><tr><th>Fruit</th><th>Quantity</th><th>Price</th></tr><tr><td>Apple</td><td>lb</td><td>0.99</td></tr></table></body>"));
 	}
 
+	public void testTableHeadingsMixed() {
+		String html = parser.parseToHtml("{|\n! headerCell || normalCell\n|-\n| normalCell2 !! headerCell2\n|}");
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><table><tr><th>headerCell</th><td>normalCell</td></tr><tr><td>normalCell2</td><th>headerCell2</th></tr></table></body>"));
+	}
+
 	public void testTableLexicalOffsets() {
 		final RecordingDocumentBuilder builder = new RecordingDocumentBuilder();
 		parser.setBuilder(builder);

@@ -25,7 +25,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
  * href="http://www.mediawiki.org/wiki/Help:Tables">MediaWiki:Help:Tables</a> for details
  * 
  * @author David Green
- * 
+ * @author Daniel Migowski bug 274730 tables having mixed headers/normal cells
  */
 public class TableBlock extends Block {
 
@@ -165,6 +165,16 @@ public class TableBlock extends Block {
 				cell = ""; //$NON-NLS-1$
 			}
 			emitCell(lastEnd + contentsStart, type, cell);
+
+			// Depending on the cell splitter the next cell is either a
+			// header or normal cell.
+			String splitterSpec = matcher.group(1);
+			if ("!!".equals(splitterSpec)) { //$NON-NLS-1$
+				type = BlockType.TABLE_CELL_HEADER;
+			} else {
+				type = BlockType.TABLE_CELL_NORMAL;
+			}
+
 			lastEnd = matcher.end();
 		}
 		if (lastEnd < contents.length()) {
