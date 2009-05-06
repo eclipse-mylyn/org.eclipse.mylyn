@@ -838,6 +838,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		return storeFile;
 	}
 
+	@SuppressWarnings("deprecation")
 	private void initializePreferences(IPreferenceStore store) {
 		store.setDefault(ITasksUiPreferenceConstants.PREF_DATA_DIR, getDefaultDataDirectory());
 		store.setDefault(ITasksUiPreferenceConstants.GROUP_SUBTASKS, true);

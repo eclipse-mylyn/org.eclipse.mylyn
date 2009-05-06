@@ -22,13 +22,10 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
  */
 public class ReportBugAction implements IWorkbenchWindowActionDelegate {
 
-	private IWorkbenchWindow window;
-
 	public void dispose() {
 	}
 
 	public void init(IWorkbenchWindow window) {
-		this.window = window;
 	}
 
 	public void run(IAction action) {

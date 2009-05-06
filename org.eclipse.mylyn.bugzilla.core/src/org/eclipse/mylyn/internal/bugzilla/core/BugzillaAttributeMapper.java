@@ -144,6 +144,7 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public String mapToRepositoryKey(TaskAttribute parent, String key) {
 		/*if (key.equals(TaskAttribute.NEW_CC)) {

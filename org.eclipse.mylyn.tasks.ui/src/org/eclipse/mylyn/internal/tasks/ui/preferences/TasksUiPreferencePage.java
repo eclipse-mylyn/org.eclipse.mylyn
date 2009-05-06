@@ -751,7 +751,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 			taskDataDirectoryAction = dialogConfirm.open();
 
 			for (TaskEditor taskEditor : TasksUiInternal.getActiveRepositoryTaskEditors()) {
-				TasksUiInternal.closeEditorInActivePage(taskEditor.getTaskEditorInput().getTask(), true);
+				TasksUiInternal.closeTaskEditorInAllPages(taskEditor.getTaskEditorInput().getTask(), true);
 			}
 
 		} else {
