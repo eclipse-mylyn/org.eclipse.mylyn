@@ -34,6 +34,7 @@ public abstract class AbstractContextChangeSetManager extends AbstractContextLis
 
 	private boolean isInitialized = false;
 
+	@SuppressWarnings("deprecation")
 	public void enable() {
 		if (!isEnabled) {
 			isEnabled = true;
@@ -43,6 +44,7 @@ public abstract class AbstractContextChangeSetManager extends AbstractContextLis
 			}
 
 			if (ContextCore.getContextManager().isContextActive()) {
+				// TODO m4.0 remove call to deprecated method that is needed maintain backwards compatibility
 				contextActivated(ContextCore.getContextManager().getActiveContext());
 			}
 			ContextCore.getContextManager().addListener(this);

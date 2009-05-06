@@ -84,6 +84,7 @@ import org.eclipse.ui.navigator.INavigatorContentExtension;
 /**
  * @author Mik Kersten
  */
+@SuppressWarnings("deprecation")
 public class ContextEditorFormPage extends FormPage {
 
 	private static final int SCALE_STEPS = 14;

@@ -200,7 +200,8 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 		return null;
 	}
 
-	@SuppressWarnings("restriction")
+	// TODO m4.0 remove deprecated method that is needed maintain backwards compatibility
+	@SuppressWarnings( { "restriction", "deprecation" })
 	@Override
 	public void contextActivated(IInteractionContext context) {
 		try {
@@ -240,6 +241,8 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 		return provider.createChangeSet(task);
 	}
 
+	// TODO m4.0 remove deprecated method that is needed maintain backwards compatibility
+	@SuppressWarnings("deprecation")
 	@Override
 	public void contextDeactivated(IInteractionContext context) {
 		for (ActiveChangeSetManager collector : changeSetManagers) {
@@ -273,7 +276,8 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 		activeChangeSets.clear();
 	}
 
-	@SuppressWarnings("restriction")
+	// TODO m4.0 remove deprecated method that is needed maintain backwards compatibility
+	@SuppressWarnings( { "restriction", "deprecation" })
 	@Override
 	public void interestChanged(List<IInteractionElement> elements) {
 		for (IInteractionElement element : elements) {
