@@ -100,8 +100,20 @@ public class TaskDataModel {
 	}
 
 	public Set<TaskAttribute> getChangedOldAttributes() {
-		// FIXME implement
-		return null;
+		Set<TaskAttribute> oldAttributes = new HashSet<TaskAttribute>();
+		Set<TaskAttribute> newChangedAttributes = new HashSet<TaskAttribute>();
+		newChangedAttributes.addAll(workingCopy.getEditsData().getRoot().getAttributes().values());
+		newChangedAttributes.addAll(unsavedChangedAttributes);
+		TaskData repositoryReadData = workingCopy.getRepositoryData();
+		if (repositoryReadData != null) {
+			for (TaskAttribute taskAttribute : newChangedAttributes) {
+				TaskAttribute attOld = repositoryReadData.getRoot().getAttribute(taskAttribute.getId());
+				if (attOld != null) {
+					oldAttributes.add(attOld);
+				}
+			}
+		}
+		return oldAttributes;
 	}
 
 	public ITask getTask() {
