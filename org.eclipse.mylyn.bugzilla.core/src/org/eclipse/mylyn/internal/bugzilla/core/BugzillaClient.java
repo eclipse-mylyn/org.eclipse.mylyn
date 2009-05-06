@@ -1832,7 +1832,11 @@ public class BugzillaClient {
 							spaceIndex = WRAP_LENGTH;
 						}
 						newText = newText + origText.substring(0, spaceIndex) + "\n"; //$NON-NLS-1$
-						origText = origText.substring(spaceIndex + 1, origText.length());
+						if (origText.charAt(spaceIndex) == ' ') {
+							origText = origText.substring(spaceIndex + 1, origText.length());
+						} else {
+							origText = origText.substring(spaceIndex, origText.length());
+						}
 					} else {
 						newText = newText + origText;
 						origText = ""; //$NON-NLS-1$
