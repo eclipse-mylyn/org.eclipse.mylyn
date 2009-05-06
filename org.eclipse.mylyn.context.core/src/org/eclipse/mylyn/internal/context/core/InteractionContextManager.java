@@ -458,12 +458,8 @@ public class InteractionContextManager implements IInteractionContextManager {
 	}
 
 	public void deleteElements(Collection<IInteractionElement> elements) {
+		Assert.isNotNull(elements);
 		IInteractionContext context = getActiveContext();
-
-		if (elements == null) {
-			throw new IllegalArgumentException("Elements to delete from context should not be null."); //$NON-NLS-1$
-		}
-
 		if (elements.size() == 0 || context == null) {
 			return;
 		}
