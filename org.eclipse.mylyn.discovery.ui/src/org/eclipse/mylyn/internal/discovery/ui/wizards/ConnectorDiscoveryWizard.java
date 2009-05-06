@@ -47,6 +47,8 @@ public class ConnectorDiscoveryWizard extends Wizard {
 
 	private boolean showConnectorDescriptorKindFilter = true;
 
+	private boolean showConnectorDescriptorTextFilter = true;
+
 	public ConnectorDiscoveryWizard() {
 		setWindowTitle("Connector Discovery");
 		setNeedsProgressMonitor(true);
@@ -114,6 +116,20 @@ public class ConnectorDiscoveryWizard extends Wizard {
 	 */
 	public void setShowConnectorDescriptorKindFilter(boolean showConnectorDescriptorKindFilter) {
 		this.showConnectorDescriptorKindFilter = showConnectorDescriptorKindFilter;
+	}
+
+	/**
+	 * indicate if a text field should be provided to allow the user to filter connector descriptors
+	 */
+	public boolean isShowConnectorDescriptorTextFilter() {
+		return showConnectorDescriptorTextFilter;
+	}
+
+	/**
+	 * indicate if a text field should be provided to allow the user to filter connector descriptors
+	 */
+	public void setShowConnectorDescriptorTextFilter(boolean showConnectorDescriptorTextFilter) {
+		this.showConnectorDescriptorTextFilter = showConnectorDescriptorTextFilter;
 	}
 
 }

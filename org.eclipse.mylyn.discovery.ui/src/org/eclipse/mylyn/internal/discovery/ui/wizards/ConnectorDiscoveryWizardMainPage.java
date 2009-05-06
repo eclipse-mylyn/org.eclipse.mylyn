@@ -15,10 +15,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.Stack;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -44,11 +42,25 @@ import org.eclipse.mylyn.internal.discovery.core.model.RemoteBundleDiscoveryStra
 import org.eclipse.mylyn.internal.discovery.ui.DiscoveryUi;
 import org.eclipse.mylyn.internal.discovery.ui.util.DiscoveryCategoryComparator;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.accessibility.ACC;
+import org.eclipse.swt.accessibility.AccessibleAdapter;
+import org.eclipse.swt.accessibility.AccessibleControlAdapter;
+import org.eclipse.swt.accessibility.AccessibleControlEvent;
+import org.eclipse.swt.accessibility.AccessibleEvent;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseMoveListener;
+import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
@@ -60,6 +72,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Resource;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -67,7 +80,13 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.WorkbenchMessages;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.ui.progress.WorkbenchJob;
 
 /**
  * The main wizard page that allows users to select connectors that they wish to install.
@@ -76,7 +95,19 @@ import org.eclipse.swt.widgets.Listener;
  */
 public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 
+	/**
+	 * Image descriptor for enabled clear button.
+	 */
+	private static final String CLEAR_ICON = "org.eclipse.ui.internal.dialogs.CLEAR_ICON"; //$NON-NLS-1$
+
+	/**
+	 * Image descriptor for disabled clear button.
+	 */
+	private static final String DISABLED_CLEAR_ICON = "org.eclipse.ui.internal.dialogs.DCLEAR_ICON"; //$NON-NLS-1$
+
 	private static final String COLOR_WHITE = "white"; //$NON-NLS-1$
+
+	private static Boolean useNativeSearchField;
 
 	private final List<ConnectorDescriptor> installableConnectors = new ArrayList<ConnectorDescriptor>();
 
@@ -92,6 +123,18 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 
 	private Color colorWhite;
 
+	private Text filterText;
+
+	private WorkbenchJob refreshJob;
+
+	private final String initialText = "type filter text";
+
+	private String previousFilterText = ""; //$NON-NLS-1$
+
+	private Pattern filterPattern;
+
+	private Label clearFilterTextControl;
+
 	public ConnectorDiscoveryWizardMainPage() {
 		super(ConnectorDiscoveryWizardMainPage.class.getSimpleName());
 		setTitle("Connector Discovery");
@@ -101,7 +144,14 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 	}
 
 	public void createControl(Composite parent) {
+		createRefreshJob();
+
 		Composite container = new Composite(parent, SWT.NULL);
+		container.addDisposeListener(new DisposeListener() {
+			public void widgetDisposed(DisposeEvent e) {
+				refreshJob.cancel();
+			}
+		});
 		container.setLayout(new GridLayout(1, false));
 		//		
 		{ // header
@@ -109,7 +159,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 			GridLayoutFactory.fillDefaults().applyTo(header);
 			GridDataFactory.fillDefaults().grab(true, false).applyTo(header);
 
-			// TODO: header needed? instructions, refresh button
+//			 TODO: refresh button?
 
 			if (getWizard().isShowConnectorDescriptorKindFilter()) { // filter buttons
 				Composite checkboxContainer = new Composite(header, SWT.NULL);
@@ -135,6 +185,81 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 					});
 				}
 			}
+
+			if (getWizard().isShowConnectorDescriptorTextFilter()) {
+				Composite filterContainer;
+				boolean nativeSearch = useNativeSearchField(header);
+				if (nativeSearch) {
+					filterContainer = new Composite(header, SWT.NULL);
+				} else {
+					filterContainer = new Composite(header, SWT.BORDER);
+					filterContainer.setBackground(header.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+				}
+				GridDataFactory.fillDefaults().grab(true, false).applyTo(filterContainer);
+				GridLayoutFactory.fillDefaults().numColumns(2).applyTo(filterContainer);
+
+				if (nativeSearch) {
+					filterText = new Text(filterContainer, SWT.SINGLE | SWT.BORDER | SWT.SEARCH | SWT.ICON_CANCEL);
+				} else {
+					filterText = new Text(filterContainer, SWT.SINGLE);
+				}
+
+				filterText.setText(initialText);
+				filterText.addFocusListener(new FocusAdapter() {
+					@Override
+					public void focusGained(FocusEvent e) {
+						Display display = filterText.getDisplay();
+						display.asyncExec(new Runnable() {
+							public void run() {
+								if (!filterText.isDisposed()) {
+									if (initialText.equals(filterText.getText().trim())) {
+										filterText.selectAll();
+									}
+								}
+							}
+						});
+					}
+
+					@Override
+					public void focusLost(FocusEvent e) {
+						if (filterText.getText().trim().length() == 0) {
+							filterText.setText(initialText);
+						}
+					}
+				});
+				filterText.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseDown(MouseEvent e) {
+						if (filterText.getText().equals(initialText)) {
+							clearFilterText();
+						}
+					}
+				});
+				filterText.addModifyListener(new ModifyListener() {
+					public void modifyText(ModifyEvent e) {
+						filterTextChanged();
+					}
+				});
+				if (nativeSearch) {
+					filterText.addSelectionListener(new SelectionAdapter() {
+						@Override
+						public void widgetDefaultSelected(SelectionEvent e) {
+							if (e.detail == SWT.ICON_CANCEL) {
+								clearFilterText();
+							}
+						}
+					});
+					GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(filterText);
+				} else {
+					GridDataFactory.fillDefaults().grab(true, false).applyTo(filterText);
+					// native platform doesn't support a clear filter text button
+					// so we add one here instead.  Based on FilteredTree implementation
+					initSearchFieldImages();
+
+					clearFilterTextControl = createClearFilterTextControl(filterContainer, filterText);
+					clearFilterTextControl.setVisible(false);
+				}
+			}
 		}
 		{ // container
 			body = new Composite(container, SWT.NULL);
@@ -144,9 +269,166 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		setControl(container);
 	}
 
+	private static boolean useNativeSearchField(Composite composite) {
+		if (useNativeSearchField == null) {
+			useNativeSearchField = Boolean.FALSE;
+			Text testText = null;
+			try {
+				testText = new Text(composite, SWT.SEARCH | SWT.ICON_CANCEL);
+				useNativeSearchField = new Boolean((testText.getStyle() & SWT.ICON_CANCEL) != 0);
+			} finally {
+				if (testText != null) {
+					testText.dispose();
+				}
+			}
+
+		}
+		return useNativeSearchField;
+	}
+
+	private void createRefreshJob() {
+		refreshJob = new WorkbenchJob("filter") { //$NON-NLS-1$
+
+			@Override
+			public IStatus runInUIThread(IProgressMonitor monitor) {
+				if (filterText.isDisposed()) {
+					return Status.CANCEL_STATUS;
+				}
+				String text = filterText.getText();
+				text = text.trim();
+				if (initialText.equals(text)) {
+					text = ""; //$NON-NLS-1$
+				}
+				if (!previousFilterText.equals(text)) {
+					previousFilterText = text;
+					filterPattern = createPattern(previousFilterText);
+					clearFilterTextControl.setVisible(filterPattern != null);
+					createBodyContents();
+				}
+				return Status.OK_STATUS;
+			}
+		};
+		refreshJob.setSystem(true);
+	}
+
+	protected Pattern createPattern(String filterText) {
+		if (filterText == null || filterText.length() == 0) {
+			return null;
+		}
+		String regex = filterText;
+		regex.replace("\\", "\\\\").replace("?", ".").replace("*", ".*?"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+		return Pattern.compile(regex, Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+	}
+
+	private Label createClearFilterTextControl(Composite filterContainer, final Text filterText) {
+		final Image inactiveImage = JFaceResources.getImageRegistry().getDescriptor(DISABLED_CLEAR_ICON).createImage();
+		final Image activeImage = JFaceResources.getImageRegistry().getDescriptor(CLEAR_ICON).createImage();
+		final Image pressedImage = new Image(filterContainer.getDisplay(), activeImage, SWT.IMAGE_GRAY);
+
+		final Label clearButton = new Label(filterContainer, SWT.NONE);
+		clearButton.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
+		clearButton.setImage(inactiveImage);
+		clearButton.setToolTipText(WorkbenchMessages.FilteredTree_ClearToolTip);
+		clearButton.setBackground(filterContainer.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+		clearButton.addMouseListener(new MouseAdapter() {
+			private MouseMoveListener fMoveListener;
+
+			@Override
+			public void mouseDown(MouseEvent e) {
+				clearButton.setImage(pressedImage);
+				fMoveListener = new MouseMoveListener() {
+					private boolean fMouseInButton = true;
+
+					public void mouseMove(MouseEvent e) {
+						boolean mouseInButton = isMouseInButton(e);
+						if (mouseInButton != fMouseInButton) {
+							fMouseInButton = mouseInButton;
+							clearButton.setImage(mouseInButton ? pressedImage : inactiveImage);
+						}
+					}
+				};
+				clearButton.addMouseMoveListener(fMoveListener);
+			}
+
+			@Override
+			public void mouseUp(MouseEvent e) {
+				if (fMoveListener != null) {
+					clearButton.removeMouseMoveListener(fMoveListener);
+					fMoveListener = null;
+					boolean mouseInButton = isMouseInButton(e);
+					clearButton.setImage(mouseInButton ? activeImage : inactiveImage);
+					if (mouseInButton) {
+						clearFilterText();
+						filterText.setFocus();
+					}
+				}
+			}
+
+			private boolean isMouseInButton(MouseEvent e) {
+				Point buttonSize = clearButton.getSize();
+				return 0 <= e.x && e.x < buttonSize.x && 0 <= e.y && e.y < buttonSize.y;
+			}
+		});
+		clearButton.addMouseTrackListener(new MouseTrackListener() {
+			public void mouseEnter(MouseEvent e) {
+				clearButton.setImage(activeImage);
+			}
+
+			public void mouseExit(MouseEvent e) {
+				clearButton.setImage(inactiveImage);
+			}
+
+			public void mouseHover(MouseEvent e) {
+			}
+		});
+		clearButton.addDisposeListener(new DisposeListener() {
+			public void widgetDisposed(DisposeEvent e) {
+				inactiveImage.dispose();
+				activeImage.dispose();
+				pressedImage.dispose();
+			}
+		});
+		clearButton.getAccessible().addAccessibleListener(new AccessibleAdapter() {
+			@Override
+			public void getName(AccessibleEvent e) {
+				e.result = WorkbenchMessages.FilteredTree_AccessibleListenerClearButton;
+			}
+		});
+		clearButton.getAccessible().addAccessibleControlListener(new AccessibleControlAdapter() {
+			@Override
+			public void getRole(AccessibleControlEvent e) {
+				e.detail = ACC.ROLE_PUSHBUTTON;
+			}
+		});
+		return clearButton;
+	}
+
+	private void initSearchFieldImages() {
+		ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(PlatformUI.PLUGIN_ID,
+				"$nl$/icons/full/etool16/clear_co.gif"); //$NON-NLS-1$
+		if (descriptor != null) {
+			JFaceResources.getImageRegistry().put(CLEAR_ICON, descriptor);
+		}
+		descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(PlatformUI.PLUGIN_ID,
+				"$nl$/icons/full/dtool16/clear_co.gif"); //$NON-NLS-1$
+		if (descriptor != null) {
+			JFaceResources.getImageRegistry().put(DISABLED_CLEAR_ICON, descriptor);
+		}
+	}
+
 	@Override
 	public ConnectorDiscoveryWizard getWizard() {
 		return (ConnectorDiscoveryWizard) super.getWizard();
+	}
+
+	private void clearFilterText() {
+		filterText.setText(""); //$NON-NLS-1$
+		filterTextChanged();
+	}
+
+	private void filterTextChanged() {
+		refreshJob.cancel();
+		refreshJob.schedule(200L);
 	}
 
 	private String getFilterLabel(ConnectorDescriptorKind kind) {
@@ -195,7 +477,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		initializeFonts();
 		initializeColors();
 
-		body.setLayout(new GridLayout(1, true));
+		GridLayoutFactory.fillDefaults().applyTo(body);
 
 		// we put the contents in a scrolled composite since we don't know how
 		// big it will be
@@ -267,13 +549,29 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 					break;
 				}
 			}
-			Label helpText = new Label(container, SWT.WRAP);
-			GridDataFactory.fillDefaults().grab(true, false).hint(100, SWT.DEFAULT).applyTo(helpText);
-			if (atLeastOneKindFiltered) {
-				helpText.setText("There are no connectors of the selected type.  Please select another connector type or try again later.");
+			Control helpTextControl;
+			if (filterPattern != null) {
+				Link link = new Link(container, SWT.WRAP);
+				link.setFont(container.getFont());
+				link.setText("There are no matching connectors.  Please <a>clear the filter text</a> or try again later.");
+				link.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event event) {
+						clearFilterText();
+						filterText.setFocus();
+					}
+				});
+				helpTextControl = link;
 			} else {
-				helpText.setText("Sorry, there are no available connectors.  Please try again later.");
+				Label helpText = new Label(container, SWT.WRAP);
+				helpText.setFont(container.getFont());
+				if (atLeastOneKindFiltered) {
+					helpText.setText("There are no connectors of the selected type.  Please select another connector type or try again later.");
+				} else {
+					helpText.setText("Sorry, there are no available connectors.  Please try again later.");
+				}
+				helpTextControl = helpText;
 			}
+			GridDataFactory.fillDefaults().grab(true, false).hint(100, SWT.DEFAULT).applyTo(helpTextControl);
 		} else {
 			List<DiscoveryCategory> categories = new ArrayList<DiscoveryCategory>(discovery.getCategories());
 			Collections.sort(categories, new DiscoveryCategoryComparator());
@@ -315,7 +613,9 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 				GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 1).applyTo(border);
 				border.addPaintListener(new ConnectorBorderPaintListener());
 				for (final DiscoveryConnector connector : category.getConnectors()) {
-
+					if (isFiltered(connector)) {
+						continue;
+					}
 					Composite connectorContainer = new Composite(categoryContainer, SWT.NULL);
 					connectorContainer.setBackground(background);
 					GridDataFactory.fillDefaults().grab(true, false).applyTo(connectorContainer);
@@ -407,29 +707,6 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		container.redraw();
 	}
 
-	private boolean hasOverviewUrl(final DiscoveryConnector connector) {
-		return connector.getOverview() != null && connector.getOverview().getUrl() != null
-				&& connector.getOverview().getUrl().length() > 0;
-	}
-
-	private Set<Control> collectComponentHierarchy(Composite c) {
-		Set<Control> components = new HashSet<Control>();
-		Stack<Composite> work = new Stack<Composite>();
-		work.push(c);
-		while (!work.isEmpty()) {
-			c = work.pop();
-			components.add(c);
-			for (Control child : c.getChildren()) {
-				if (child instanceof Composite) {
-					work.push((Composite) child);
-				} else {
-					components.add(child);
-				}
-			}
-		}
-		return components;
-	}
-
 	private void hookTooltip(final Composite container, final Control titleControl, DiscoveryConnector connector) {
 		final ConnectorDescriptorToolTip toolTip = new ConnectorDescriptorToolTip(container, connector);
 		Listener listener = new Listener() {
@@ -513,11 +790,35 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 			return true;
 		}
 		for (ConnectorDescriptor descriptor : category.getConnectors()) {
-			if (getWizard().isVisible(descriptor.getKind())) {
+			if (!isFiltered(descriptor)) {
 				return false;
 			}
 		}
 		return true;
+	}
+
+	private boolean isFiltered(ConnectorDescriptor descriptor) {
+		boolean kindFiltered = !getWizard().isVisible(descriptor.getKind());
+		if (kindFiltered) {
+			return true;
+		}
+		if (filterPattern != null) {
+			if (filterMatches(descriptor.getName()) || filterMatches(descriptor.getDescription())
+					|| filterMatches(descriptor.getProvider())) {
+				return false;
+			}
+			if (descriptor.getOverview() != null) {
+				if (filterMatches(descriptor.getOverview().getSummary())) {
+					return false;
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+
+	private boolean filterMatches(String text) {
+		return text != null && filterPattern.matcher(text).find();
 	}
 
 	private Image computeIconImage(AbstractDiscoverySource discoverySource, Icon icon) {
