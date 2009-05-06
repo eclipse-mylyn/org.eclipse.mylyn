@@ -70,6 +70,7 @@ public final class TaskHyperlinkPresenter extends DefaultHyperlinkPresenter {
 		return multiplePresenter != null;
 	}
 
+	// TODO e3.4 remove reflection
 	@SuppressWarnings("unchecked")
 	private <T> void initMultipleHyperlinkSupport(Class<T> argClass, T arg) {
 		try {
