@@ -175,10 +175,7 @@ public class DegreeOfInterest implements IDegreeOfInterest {
 	}
 
 	public List<InteractionEvent> getCollapsedEvents() {
-		List<InteractionEvent> allCollapsed = new ArrayList<InteractionEvent>();
-		allCollapsed.addAll(collapsedEvents.values());
-
-		return allCollapsed;
+		return new ArrayList<InteractionEvent>(collapsedEvents.values());
 	}
 
 	// private void writeObject(ObjectOutputStream stream) throws IOException {

@@ -22,29 +22,56 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
  * 
  * @author Mik Kersten
  * @author Shawn Minto
- * @noimplement
+ * @noimplement This interface is not intended to be implemented by clients.
  * @since 2.0
  */
 public interface IInteractionContext {
 
 	/**
+	 * Returns the unique handle identifier of the context.
+	 * 
 	 * @return null if no unique handle, e.g. if a composite context
+	 * @since 2.0
 	 */
 	public abstract String getHandleIdentifier();
 
+	/**
+	 * Returns a list of all interesting interaction elements. Modifying the list will not affect the context.
+	 * 
+	 * @since 2.0
+	 */
 	public abstract List<InteractionEvent> getInteractionHistory();
 
+	/**
+	 * Returns a list of all interesting interaction elements. Modifying the list will not affect the context.
+	 * 
+	 * @since 2.0
+	 */
 	public List<IInteractionElement> getInteresting();
 
 	/**
+	 * Returns a list of all interaction elements that are landmarks. Modifying the list will not affect the context.
+	 * 
 	 * @since 2.2
 	 */
 	public List<IInteractionElement> getLandmarks();
 
+	/**
+	 * 
+	 * @since 2.0
+	 */
 	public abstract IInteractionElement get(String element);
 
+	/**
+	 * 
+	 * @since 2.0
+	 */
 	public abstract IInteractionElement getActiveNode();
 
+	/**
+	 * 
+	 * @since 2.0
+	 */
 	public abstract void delete(IInteractionElement element);
 
 	/**
@@ -52,8 +79,16 @@ public interface IInteractionContext {
 	 */
 	public abstract void delete(Collection<IInteractionElement> elements);
 
+	/**
+	 * @since 2.0
+	 */
 	public abstract void updateElementHandle(IInteractionElement element, String newHandle);
 
+	/**
+	 * Returns a list of all interaction elements. Modifying the list will not affect the context.
+	 * 
+	 * @since 2.0
+	 */
 	public abstract List<IInteractionElement> getAllElements();
 
 	/**

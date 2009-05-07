@@ -18,8 +18,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextScaling;
@@ -34,41 +32,48 @@ public class InteractionContext implements IInteractionContext {
 
 	private String handleIdentifier;
 
-	private final List<InteractionEvent> interactionHistory = new CopyOnWriteArrayList<InteractionEvent>();
+	private final List<InteractionEvent> interactionHistory;
 
-	protected ConcurrentHashMap<String, InteractionContextElement> elementMap;
+	private final Map<String, InteractionContextElement> elementMap;
 
-	protected Map<String, IInteractionElement> landmarkMap;
+	private final Map<String, IInteractionElement> landmarkMap;
 
-	protected InteractionContextElement activeNode = null;
+	/**
+	 * The last element that was added to this context.
+	 */
+	private InteractionContextElement activeNode;
 
-	private InteractionEvent lastEdgeEvent = null;
+	private InteractionEvent lastEdgeEvent;
 
-	private InteractionContextElement lastEdgeNode = null;
+	private InteractionContextElement lastEdgeNode;
 
-	public String contentLimitedTo = null;
+	private String contentLimitedTo;
 
-	private int numUserEvents = 0;
+	private int numUserEvents;
 
-	protected IInteractionContextScaling contextScaling;
-
-	void parseInteractionHistory() {
-		elementMap = new ConcurrentHashMap<String, InteractionContextElement>();
-		landmarkMap = new HashMap<String, IInteractionElement>();
-		for (InteractionEvent event : interactionHistory) {
-			parseInteractionEvent(event);
-		}
-		updateLandmarks();
-		activeNode = lastEdgeNode;
-	}
+	private final IInteractionContextScaling contextScaling;
 
 	public InteractionContext(String id, IInteractionContextScaling scaling) {
 		this.handleIdentifier = id;
 		this.contextScaling = scaling;
-		parseInteractionHistory();
+		this.interactionHistory = new ArrayList<InteractionEvent>();
+		this.elementMap = new HashMap<String, InteractionContextElement>();
+		this.landmarkMap = new HashMap<String, IInteractionElement>();
+
+		for (InteractionEvent event : interactionHistory) {
+			parseInteractionEvent(event);
+		}
+
+		for (InteractionContextElement node : elementMap.values()) {
+			if (node.getInterest().isLandmark()) {
+				landmarkMap.put(node.getHandleIdentifier(), node);
+			}
+		}
+
+		activeNode = lastEdgeNode;
 	}
 
-	public IInteractionElement parseEvent(InteractionEvent event) {
+	public synchronized IInteractionElement parseEvent(InteractionEvent event) {
 		interactionHistory.add(event);
 		return parseInteractionEvent(event);
 	}
@@ -134,16 +139,7 @@ public class InteractionContext implements IInteractionContext {
 		return node;
 	}
 
-	private void updateLandmarks() {
-		// landmarks = new HashMap<String, ITaskscapeNode>();
-		for (InteractionContextElement node : elementMap.values()) {
-			if (node.getInterest().isLandmark()) {
-				landmarkMap.put(node.getHandleIdentifier(), node);
-			}
-		}
-	}
-
-	public IInteractionElement get(String elementHandle) {
+	public synchronized IInteractionElement get(String elementHandle) {
 		if (elementHandle == null) {
 			return null;
 		} else {
@@ -151,25 +147,22 @@ public class InteractionContext implements IInteractionContext {
 		}
 	}
 
-	public List<IInteractionElement> getInteresting() {
+	public synchronized List<IInteractionElement> getInteresting() {
 		List<IInteractionElement> elements = new ArrayList<IInteractionElement>();
-		synchronized (elementMap) {
-//			Set<String> keys = Collections.synchronizedSet(elementMap.keySet());
-			for (String key : elementMap.keySet()) {
-				InteractionContextElement info = elementMap.get(key);
-				if (info != null && info.getInterest().isInteresting()) {
-					elements.add(info);
-				}
+		for (String key : elementMap.keySet()) {
+			InteractionContextElement info = elementMap.get(key);
+			if (info != null && info.getInterest().isInteresting()) {
+				elements.add(info);
 			}
 		}
 		return elements;
 	}
 
-	public List<IInteractionElement> getLandmarks() {
-		return Collections.unmodifiableList(new ArrayList<IInteractionElement>(landmarkMap.values()));
+	public synchronized List<IInteractionElement> getLandmarks() {
+		return new ArrayList<IInteractionElement>(landmarkMap.values());
 	}
 
-	public void updateElementHandle(IInteractionElement element, String newHandle) {
+	public synchronized void updateElementHandle(IInteractionElement element, String newHandle) {
 		InteractionContextElement currElement = elementMap.remove(element.getHandleIdentifier());
 		if (currElement != null) {
 			currElement.setHandleIdentifier(newHandle);
@@ -177,13 +170,12 @@ public class InteractionContext implements IInteractionContext {
 		}
 	}
 
-	public IInteractionElement getActiveNode() {
+	public synchronized IInteractionElement getActiveNode() {
 		return activeNode;
 	}
 
-	public void delete(Collection<IInteractionElement> nodes) {
-
-		List<InteractionEvent> eventsToRemove = new ArrayList<InteractionEvent>();
+	public synchronized void delete(Collection<IInteractionElement> nodes) {
+		// remove elements
 		Set<String> handlesToRemove = new HashSet<String>();
 		for (IInteractionElement node : nodes) {
 			handlesToRemove.add(node.getHandleIdentifier());
@@ -195,33 +187,21 @@ public class InteractionContext implements IInteractionContext {
 			}
 		}
 
+		// remove events
+		List<InteractionEvent> eventsToRemove = new ArrayList<InteractionEvent>();
 		for (InteractionEvent event : interactionHistory) {
 			if (handlesToRemove.contains(event.getStructureHandle())) {
 				eventsToRemove.add(event);
 			}
 		}
 		interactionHistory.removeAll(eventsToRemove);
-
 	}
 
-	public void delete(IInteractionElement node) {
-		landmarkMap.remove(node.getHandleIdentifier());
-		elementMap.remove(node.getHandleIdentifier());
-
-		List<InteractionEvent> toRemove = new ArrayList<InteractionEvent>();
-		for (InteractionEvent event : interactionHistory) {
-			if (node.getHandleIdentifier().equals(event.getStructureHandle())) {
-				toRemove.add(event);
-			}
-		}
-		interactionHistory.removeAll(toRemove);
-
-		if (activeNode != null && node.getHandleIdentifier().equals(activeNode.getHandleIdentifier())) {
-			activeNode = null;
-		}
+	public synchronized void delete(IInteractionElement node) {
+		delete(Collections.singleton(node));
 	}
 
-	public List<IInteractionElement> getAllElements() {
+	public synchronized List<IInteractionElement> getAllElements() {
 		return new ArrayList<IInteractionElement>(elementMap.values());
 	}
 
@@ -241,7 +221,7 @@ public class InteractionContext implements IInteractionContext {
 		return handleIdentifier;
 	}
 
-	public void reset() {
+	public synchronized void reset() {
 		elementMap.clear();
 		interactionHistory.clear();
 		landmarkMap.clear();
@@ -251,33 +231,31 @@ public class InteractionContext implements IInteractionContext {
 		lastEdgeNode = null;
 	}
 
-	public int getUserEventCount() {
+	public synchronized int getUserEventCount() {
 		return numUserEvents;
 	}
 
-	/**
-	 * TODO: make unmodifiable?
-	 */
-	public List<InteractionEvent> getInteractionHistory() {
-		return interactionHistory;
+	public synchronized List<InteractionEvent> getInteractionHistory() {
+		return new ArrayList<InteractionEvent>(interactionHistory);
 	}
 
-	public void collapse() {
+	public synchronized void collapse() {
 		List<InteractionEvent> collapsedHistory = new ArrayList<InteractionEvent>();
 		for (InteractionContextElement node : elementMap.values()) {
 			if (!node.equals(activeNode)) {
 				collapseNode(collapsedHistory, node);
 			}
 		}
-		collapseNode(collapsedHistory, activeNode);
+		if (activeNode != null) {
+			collapseNode(collapsedHistory, activeNode);
+		}
+
 		interactionHistory.clear();
 		interactionHistory.addAll(collapsedHistory);
 	}
 
 	private void collapseNode(List<InteractionEvent> collapsedHistory, InteractionContextElement node) {
-		if (node != null) {
-			collapsedHistory.addAll(((DegreeOfInterest) node.getInterest()).getCollapsedEvents());
-		}
+		collapsedHistory.addAll(((DegreeOfInterest) node.getInterest()).getCollapsedEvents());
 	}
 
 	@Override
