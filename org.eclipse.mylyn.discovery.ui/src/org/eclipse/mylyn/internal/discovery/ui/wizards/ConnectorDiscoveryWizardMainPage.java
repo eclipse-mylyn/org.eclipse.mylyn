@@ -855,7 +855,8 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 						connectorDiscovery.getDiscoveryStrategies().add(new BundleDiscoveryStrategy());
 						RemoteBundleDiscoveryStrategy remoteDiscoveryStrategy = new RemoteBundleDiscoveryStrategy();
 						// FIXME: the discovery directory URL
-						remoteDiscoveryStrategy.setDirectoryUrl("http://localhost/~dgreen/plugins/directory.txt");
+						remoteDiscoveryStrategy.setDirectoryUrl(System.getProperty("mylyn.discovery.directory",
+								"http://www.eclipse.org/mylyn/discovery/directory"));
 						connectorDiscovery.getDiscoveryStrategies().add(remoteDiscoveryStrategy);
 						try {
 							connectorDiscovery.performDiscovery(monitor);

@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.discovery.core.model;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
@@ -80,23 +79,22 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 			return;
 		}
 
-		final Set<String> bundleUrls = new HashSet<String>();
+		Directory directory;
 
 		// FIXME: Eclipse network/proxy settings
 		WebLocation webLocation = new WebLocation(directoryUrl);
 		try {
+			final Directory[] temp = new Directory[1];
 			WebUtil.readResource(webLocation, new TextContentProcessor() {
 				public void process(Reader reader) throws IOException {
-					BufferedReader lineReader = new BufferedReader(reader);
-					String line;
-					while ((line = lineReader.readLine()) != null) {
-						line = line.trim();
-						if (line.length() > 0 && line.charAt(0) != '#') {
-							bundleUrls.add(line);
-						}
-					}
+					DirectoryParser parser = new DirectoryParser();
+					temp[0] = parser.parse(reader);
 				}
 			}, new SubProgressMonitor(monitor, ticksTenPercent));
+			directory = temp[0];
+			if (directory == null) {
+				throw new IllegalStateException();
+			}
 		} catch (IOException e) {
 			throw new CoreException(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID,
 					"IO failure: cannot load discovery directory", e));
@@ -104,18 +102,20 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 		if (monitor.isCanceled()) {
 			return;
 		}
-		if (bundleUrls.isEmpty()) {
+		if (directory.getEntries().isEmpty()) {
 			throw new CoreException(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID, "Discovery directory is empty"));
 		}
 
 		Set<File> bundles = new HashSet<File>();
 
 		// TODO: multithreaded downloading
-		for (String bundleUrl : bundleUrls) {
+		for (Directory.Entry entry : directory.getEntries()) {
+			String bundleUrl = entry.getLocation();
 			try {
 				if (!bundleUrl.startsWith("http://") && !bundleUrl.startsWith("https://")) { //$NON-NLS-1$ //$NON-NLS-2$
 					StatusHandler.log(new Status(IStatus.WARNING, DiscoveryCore.BUNDLE_ID, MessageFormat.format(
 							"Unrecognized discovery bundle URL: {0}", bundleUrl)));
+					continue;
 				}
 				String lastPathElement = bundleUrl.lastIndexOf('/') == -1 ? bundleUrl
 						: bundleUrl.substring(bundleUrl.lastIndexOf('/'));

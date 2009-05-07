@@ -18,7 +18,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
@@ -43,9 +46,9 @@ public class DiscoveryRegistryStrategy extends RegistryStrategy {
 
 	private Set<File> bundleFiles = new HashSet<File>();
 
-	private List<JarFile> jars = new ArrayList<JarFile>();
+	private final List<JarFile> jars = new ArrayList<JarFile>();
 
-	private Map<IContributor, File> contributorToJarFile = new HashMap<IContributor, File>();
+	private final Map<IContributor, File> contributorToJarFile = new HashMap<IContributor, File>();
 
 	private final Object token;
 
@@ -119,12 +122,52 @@ public class DiscoveryRegistryStrategy extends RegistryStrategy {
 		}
 		contributorToJarFile.put(contributor, bundleFile);
 
+		ResourceBundle translationBundle = loadTranslationBundle(jarFile);
+
 		InputStream inputStream = jarFile.getInputStream(pluginXmlEntry);
 		try {
-			registry.addContribution(inputStream, contributor, false, bundleFile.getPath(), null, token);
+			registry.addContribution(inputStream, contributor, false, bundleFile.getPath(), translationBundle, token);
 		} finally {
 			inputStream.close();
 		}
+	}
+
+	private ResourceBundle loadTranslationBundle(JarFile jarFile) throws IOException {
+		List<String> bundleNames = computeBundleNames("plugin"); //$NON-NLS-1$
+		for (String bundleName : bundleNames) {
+			ZipEntry entry = jarFile.getEntry(bundleName);
+			if (entry != null) {
+				InputStream inputStream = jarFile.getInputStream(entry);
+				try {
+					PropertyResourceBundle resourceBundle = new PropertyResourceBundle(inputStream);
+					return resourceBundle;
+				} finally {
+					inputStream.close();
+				}
+			}
+		}
+		return null;
+	}
+
+	private List<String> computeBundleNames(String baseName) {
+		String suffix = ".properties"; //$NON-NLS-1$
+		String name = baseName;
+		List<String> bundleNames = new ArrayList<String>();
+		Locale locale = Locale.getDefault();
+		bundleNames.add(name + suffix);
+		if (locale.getLanguage() != null && locale.getLanguage().length() > 0) {
+			name = name + '_' + locale.getLanguage();
+			bundleNames.add(0, name + suffix);
+		}
+		if (locale.getCountry() != null && locale.getCountry().length() > 0) {
+			name = name + '_' + locale.getCountry();
+			bundleNames.add(0, name + suffix);
+		}
+		if (locale.getVariant() != null && locale.getVariant().length() > 0) {
+			name = name + '_' + locale.getVariant();
+			bundleNames.add(0, name + suffix);
+		}
+		return bundleNames;
 	}
 
 	@Override
@@ -155,4 +198,5 @@ public class DiscoveryRegistryStrategy extends RegistryStrategy {
 		}
 		return file;
 	}
+
 }
