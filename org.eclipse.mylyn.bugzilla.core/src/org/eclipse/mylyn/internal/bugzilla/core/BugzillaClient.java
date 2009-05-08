@@ -44,6 +44,7 @@ import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.httpclient.RedirectException;
 import org.apache.commons.httpclient.URI;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.HeadMethod;
@@ -178,6 +179,7 @@ public class BugzillaClient {
 		this.bugzillaLanguageSettings = languageSettings;
 		this.proxy = location.getProxyForHost(location.getUrl(), IProxyData.HTTP_PROXY_TYPE);
 		WebUtil.configureHttpClient(httpClient, USER_AGENT);
+
 	}
 
 	public void validate(IProgressMonitor monitor) throws IOException, CoreException {
@@ -426,7 +428,7 @@ public class BugzillaClient {
 
 	public boolean getSearchHits(IRepositoryQuery query, TaskDataCollector collector, TaskAttributeMapper mapper,
 			IProgressMonitor monitor) throws IOException, CoreException {
-		GzipPostMethod postMethod = null;
+		HttpMethodBase postMethod = null;
 
 		try {
 			authenticate(new SubProgressMonitor(monitor, 1));
@@ -456,9 +458,15 @@ public class BugzillaClient {
 				pairs.add(ctypePair);
 			}
 
-			postMethod = postFormData(IBugzillaConstants.URL_BUGLIST, pairs.toArray(new NameValuePair[pairs.size()]),
-					monitor);
-			if (postMethod.getResponseHeader("Content-Type") != null) { //$NON-NLS-1$
+			try {
+				postMethod = postFormData(IBugzillaConstants.URL_BUGLIST,
+						pairs.toArray(new NameValuePair[pairs.size()]), monitor);
+			} catch (RedirectException r) {
+				// Handle one redirect (Bugzilla 3.4 provides a redirect upon query submission via post)
+				postMethod = getConnectGzip(r.getMessage(), monitor);
+			}
+
+			if (postMethod != null && postMethod.getResponseHeader("Content-Type") != null) { //$NON-NLS-1$
 				Header responseTypeHeader = postMethod.getResponseHeader("Content-Type"); //$NON-NLS-1$
 				for (String type : VALID_CONFIG_CONTENT_TYPES) {
 					if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
@@ -542,13 +550,13 @@ public class BugzillaClient {
 				// provide a solution for bug 196056 by allowing a (cached) gzipped configuration to be sent
 				// modified to also accept "application/x-gzip" as results from a 302 redirect to a previously gzipped file.
 				if (method == null) {
-					throw new IOException("Could not retrieve configuratoin. HttpClient return null method."); //$NON-NLS-1$
+					throw new IOException("Could not retrieve configuratoin. HttpClient return null method.");
 				}
 
 				InputStream stream = getResponseStream(method, monitor);
 				try {
 					if (method.getResponseHeader("Content-Type") != null) { //$NON-NLS-1$
-						Header responseTypeHeader = method.getResponseHeader("Content-Type"); //$NON-NLS-1$
+						Header responseTypeHeader = method.getResponseHeader("Content-Type");
 						for (String type : VALID_CONFIG_CONTENT_TYPES) {
 							if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
 								RepositoryConfigurationFactory configFactory = new RepositoryConfigurationFactory(
@@ -568,7 +576,7 @@ public class BugzillaClient {
 										} else {
 											throw new CoreException(
 													new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN,
-															"Unable to retrieve repository configuration. Ensure credentials are valid.")); //$NON-NLS-1$
+															"Unable to retrieve repository configuration. Ensure credentials are valid."));
 										}
 									}
 								}
@@ -696,13 +704,13 @@ public class BugzillaClient {
 				Iterator<TaskAttribute> itr = attributes.iterator();
 				while (itr.hasNext()) {
 					TaskAttribute a = itr.next();
-					if (a.getId().startsWith("task.common.kind.flag_type")) { //$NON-NLS-1$
+					if (a.getId().startsWith("task.common.kind.flag_type")) {
 						List<BugzillaFlag> flags = repositoryConfiguration.getFlags();
 						TaskAttribute requestee = a.getAttribute("requestee"); //$NON-NLS-1$
-						a = a.getAttribute("state"); //$NON-NLS-1$
+						a = a.getAttribute("state");
 						String value = a.getValue();
 						String id = ""; //$NON-NLS-1$
-						if (value.equals(" ")) { //$NON-NLS-1$
+						if (value.equals(" ")) {
 							continue;
 						}
 						String flagname = a.getMetaData().getLabel();
@@ -715,28 +723,28 @@ public class BugzillaClient {
 						}
 						if (theFlag != null) {
 							int flagTypeNumber = theFlag.getFlagId();
-							id = "flag_type-" + flagTypeNumber; //$NON-NLS-1$
+							id = "flag_type-" + flagTypeNumber;
 							value = a.getValue();
 							if (value.equals("?") && requestee != null) { //$NON-NLS-1$
-								parts.add(new StringPart("requestee_type-" + flagTypeNumber, //$NON-NLS-1$
-										requestee.getValue() != null ? requestee.getValue() : "")); //$NON-NLS-1$
+								parts.add(new StringPart("requestee_type-" + flagTypeNumber,
+										requestee.getValue() != null ? requestee.getValue() : ""));
 							}
 						}
 						parts.add(new StringPart(id, value != null ? value : "")); //$NON-NLS-1$
-					} else if (a.getId().startsWith("task.common.kind.flag")) { //$NON-NLS-1$
-						TaskAttribute flagnumber = a.getAttribute("number"); //$NON-NLS-1$
+					} else if (a.getId().startsWith("task.common.kind.flag")) {
+						TaskAttribute flagnumber = a.getAttribute("number");
 						TaskAttribute requestee = a.getAttribute("requestee"); //$NON-NLS-1$
 						a = a.getAttribute("state"); //$NON-NLS-1$
-						String id = "flag-" + flagnumber.getValue(); //$NON-NLS-1$
+						String id = "flag-" + flagnumber.getValue();
 						String value = a.getValue();
 						if (value.equals(" ")) { //$NON-NLS-1$
-							value = "X"; //$NON-NLS-1$
+							value = "X";
 						}
 						if (value.equals("?") && requestee != null) { //$NON-NLS-1$
-							parts.add(new StringPart("requestee-" + flagnumber.getValue(), //$NON-NLS-1$
-									requestee.getValue() != null ? requestee.getValue() : "")); //$NON-NLS-1$
+							parts.add(new StringPart("requestee-" + flagnumber.getValue(),
+									requestee.getValue() != null ? requestee.getValue() : ""));
 						}
-						parts.add(new StringPart(id, value != null ? value : "")); //$NON-NLS-1$
+						parts.add(new StringPart(id, value != null ? value : ""));
 					}
 				}
 			}
@@ -785,22 +793,27 @@ public class BugzillaClient {
 
 		httpClient.getHttpConnectionManager().getParams().setSoTimeout(WebUtil.getConnectionTimeout());
 
-//		postMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new BugzillaRetryHandler());
 		postMethod.setRequestBody(formData);
 		postMethod.setDoAuthentication(true);
-		// httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(CONNECT_TIMEOUT);
+
 		int status = WebUtil.execute(httpClient, hostConfiguration, postMethod, monitor);
 		if (status == HttpStatus.SC_OK) {
 			return postMethod;
-		} else {
-			postMethod.getResponseBodyNoop();
-			postMethod.releaseConnection();
-			//StatusManager.log("Post failed: " + HttpStatus.getStatusText(status), this);
-			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-					RepositoryStatus.ERROR_IO, repositoryUrl.toString(), new IOException(
-							"Communication error occurred during upload. \n\n" + HttpStatus.getStatusText(status)))); //$NON-NLS-1$
-//			throw new IOException("Communication error occurred during upload. \n\n" + HttpStatus.getStatusText(status));
+		} else if (status == HttpStatus.SC_MOVED_TEMPORARILY) {
+			String redirectLocation;
+			Header locationHeader = postMethod.getResponseHeader("location"); //$NON-NLS-1$
+			if (locationHeader != null) {
+				redirectLocation = locationHeader.getValue();
+				throw new RedirectException(redirectLocation);
+			}
+
 		}
+
+		postMethod.getResponseBodyNoop();
+		postMethod.releaseConnection();
+		throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+				RepositoryStatus.ERROR_IO, repositoryUrl.toString(), new IOException(
+						"Communication error occurred during upload. \n\n" + HttpStatus.getStatusText(status)))); //$NON-NLS-1$
 
 	}
 
@@ -810,32 +823,32 @@ public class BugzillaClient {
 		boolean existingBugPosted = false;
 
 		formData.add(new NameValuePair("action", action)); //$NON-NLS-1$
-		formData.add(new NameValuePair("contenttypemethod", "manual")); //$NON-NLS-1$ //$NON-NLS-2$
+		formData.add(new NameValuePair("contenttypemethod", "manual"));
 
-		formData.add(new NameValuePair("id", taskAttribute.getValue())); //$NON-NLS-1$
+		formData.add(new NameValuePair("id", taskAttribute.getValue()));
 		Collection<TaskAttribute> attributes = taskAttribute.getAttributes().values();
 		Iterator<TaskAttribute> itr = attributes.iterator();
 		while (itr.hasNext()) {
 			TaskAttribute a = itr.next();
 			String id = a.getId();
 			String value = a.getValue();
-			if (id.equals(TaskAttribute.ATTACHMENT_AUTHOR) || id.equals("date") || id.equals("size") //$NON-NLS-1$ //$NON-NLS-2$
+			if (id.equals(TaskAttribute.ATTACHMENT_AUTHOR) || id.equals("date") || id.equals("size")
 					|| id.equals(TaskAttribute.ATTACHMENT_URL)) {
 				continue;
 			}
 
 			if (id.equals("desc")) { //$NON-NLS-1$
-				id = "description"; //$NON-NLS-1$
+				id = "description";
 			}
 			if (id.equals("ctype")) { //$NON-NLS-1$
-				id = "contenttypeentry"; //$NON-NLS-1$
+				id = "contenttypeentry";
 			}
 
 			if (id.equals(TaskAttribute.ATTACHMENT_IS_DEPRECATED)) {
-				id = "isobsolete"; //$NON-NLS-1$
+				id = "isobsolete";
 			}
 			if (id.equals(TaskAttribute.ATTACHMENT_IS_PATCH)) {
-				id = "ispatch"; //$NON-NLS-1$
+				id = "ispatch";
 			}
 			formData.add(new NameValuePair(id, value));
 		}
@@ -870,7 +883,7 @@ public class BugzillaClient {
 				if (isTitle) {
 					// get all of the data in the title tag
 					if (token.getType() != Token.TAG) {
-						title += ((StringBuffer) token.getValue()).toString().toLowerCase(Locale.ENGLISH) + " "; //$NON-NLS-1$
+						title += ((StringBuffer) token.getValue()).toString().toLowerCase(Locale.ENGLISH) + " ";
 						continue;
 					} else if (token.getType() == Token.TAG && ((HtmlTag) token.getValue()).getTagType() == Tag.TITLE
 							&& ((HtmlTag) token.getValue()).isEndTag()) {
@@ -900,7 +913,7 @@ public class BugzillaClient {
 		} catch (ParseException e) {
 			loggedIn = false;
 			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-					RepositoryStatus.ERROR_INTERNAL, "Unable to parse response from " + repositoryUrl.toString() + ".")); //$NON-NLS-1$ //$NON-NLS-2$
+					RepositoryStatus.ERROR_INTERNAL, "Unable to parse response from " + repositoryUrl.toString() + "."));
 		} finally {
 			if (input != null) {
 				input.close();
@@ -937,7 +950,7 @@ public class BugzillaClient {
 			}
 
 			if (method == null) {
-				throw new IOException("Could not post form, client returned null method."); //$NON-NLS-1$
+				throw new IOException("Could not post form, client returned null method.");
 			}
 
 			input = getResponseStream(method, monitor);
@@ -962,7 +975,7 @@ public class BugzillaClient {
 				if (isTitle) {
 					// get all of the data in the title tag
 					if (token.getType() != Token.TAG) {
-						title += ((StringBuffer) token.getValue()).toString().toLowerCase(Locale.ENGLISH) + " "; //$NON-NLS-1$
+						title += ((StringBuffer) token.getValue()).toString().toLowerCase(Locale.ENGLISH) + " ";
 						continue;
 					} else if (token.getType() == Token.TAG && ((HtmlTag) token.getValue()).getTagType() == Tag.TITLE
 							&& ((HtmlTag) token.getValue()).isEndTag()) {
@@ -1024,7 +1037,7 @@ public class BugzillaClient {
 		} catch (ParseException e) {
 			loggedIn = false;
 			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-					RepositoryStatus.ERROR_INTERNAL, "Unable to parse response from " + repositoryUrl.toString() + ".")); //$NON-NLS-1$ //$NON-NLS-2$
+					RepositoryStatus.ERROR_INTERNAL, "Unable to parse response from " + repositoryUrl.toString() + "."));
 		} finally {
 			if (input != null) {
 				input.close();
@@ -1045,7 +1058,7 @@ public class BugzillaClient {
 		Iterator<TaskAttribute> itr = attributes.iterator();
 		while (itr.hasNext()) {
 			TaskAttribute a = itr.next();
-			if (a != null && a.getId() != null && a.getId().compareTo("") != 0) { //$NON-NLS-1$
+			if (a != null && a.getId() != null && a.getId().compareTo("") != 0) {
 				String value = null;
 				value = a.getValue();
 				if (value == null) {
@@ -1071,7 +1084,7 @@ public class BugzillaClient {
 		}
 
 		TaskAttribute descAttribute = taskData.getRoot().getMappedAttribute(TaskAttribute.DESCRIPTION);
-		if (descAttribute != null && !descAttribute.getValue().equals("")) { //$NON-NLS-1$
+		if (descAttribute != null && !descAttribute.getValue().equals("")) {
 			BugzillaVersion bugzillaVersion = null;
 			if (repositoryConfiguration != null) {
 				bugzillaVersion = repositoryConfiguration.getInstallVersion();
@@ -1098,7 +1111,7 @@ public class BugzillaClient {
 	}
 
 	private void cleanIfShortLogin(TaskAttribute a) {
-		if ("true".equals(configParameters.get(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN))) { //$NON-NLS-1$
+		if ("true".equals(configParameters.get(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN))) {
 			if (a.getValue() != null && a.getValue().length() > 0) {
 				int atIndex = a.getValue().indexOf("@"); //$NON-NLS-1$
 				if (atIndex != -1) {
@@ -1155,19 +1168,19 @@ public class BugzillaClient {
 					List<String> values = a.getValues();
 					int i = 0;
 					for (String string : values) {
-						fields.put(id + i++, new NameValuePair(id, string != null ? string : "")); //$NON-NLS-1$
+						fields.put(id + i++, new NameValuePair(id, string != null ? string : ""));
 					}
-				} else if (id != null && id.compareTo("") != 0) {//$NON-NLS-1$
+				} else if (id != null && id.compareTo("") != 0) {
 					String value = a.getValue();
 					if (id.equals(BugzillaAttribute.DELTA_TS.getKey())) {
 						value = stripTimeZone(value);
 					}
-					if (id.startsWith("task.common.kind.flag_type")) { //$NON-NLS-1$
+					if (id.startsWith("task.common.kind.flag_type")) {
 						List<BugzillaFlag> flags = repositoryConfiguration.getFlags();
 						TaskAttribute requestee = a.getAttribute("requestee"); //$NON-NLS-1$
-						a = a.getAttribute("state"); //$NON-NLS-1$
+						a = a.getAttribute("state");
 						value = a.getValue();
-						if (value.equals(" ")) { //$NON-NLS-1$
+						if (value.equals(" ")) {
 							continue;
 						}
 						String flagname = a.getMetaData().getLabel();
@@ -1180,31 +1193,31 @@ public class BugzillaClient {
 						}
 						if (theFlag != null) {
 							int flagTypeNumber = theFlag.getFlagId();
-							id = "flag_type-" + flagTypeNumber; //$NON-NLS-1$
+							id = "flag_type-" + flagTypeNumber;
 							value = a.getValue();
 							if (value.equals("?") && requestee != null) { //$NON-NLS-1$
-								fields.put("requestee_type-" + flagTypeNumber, new NameValuePair("requestee_type-" //$NON-NLS-1$ //$NON-NLS-2$
-										+ flagTypeNumber, requestee.getValue() != null ? requestee.getValue() : "")); //$NON-NLS-1$
+								fields.put("requestee_type-" + flagTypeNumber, new NameValuePair("requestee_type-" //$NON-NLS-2$
+										+ flagTypeNumber, requestee.getValue() != null ? requestee.getValue() : ""));
 							}
 						}
 					} else if (id.startsWith("task.common.kind.flag")) { //$NON-NLS-1$
-						TaskAttribute flagnumber = a.getAttribute("number"); //$NON-NLS-1$
+						TaskAttribute flagnumber = a.getAttribute("number");
 						TaskAttribute requestee = a.getAttribute("requestee"); //$NON-NLS-1$
 						a = a.getAttribute("state"); //$NON-NLS-1$
-						id = "flag-" + flagnumber.getValue(); //$NON-NLS-1$
+						id = "flag-" + flagnumber.getValue();
 						value = a.getValue();
 						if (value.equals(" ")) { //$NON-NLS-1$
-							value = "X"; //$NON-NLS-1$
+							value = "X";
 						}
 						if (value.equals("?") && requestee != null) { //$NON-NLS-1$
-							fields.put("requestee-" + flagnumber.getValue(), new NameValuePair("requestee-" //$NON-NLS-1$ //$NON-NLS-2$
-									+ flagnumber.getValue(), requestee.getValue() != null ? requestee.getValue() : "")); //$NON-NLS-1$
+							fields.put("requestee-" + flagnumber.getValue(), new NameValuePair("requestee-" //$NON-NLS-2$
+									+ flagnumber.getValue(), requestee.getValue() != null ? requestee.getValue() : ""));
 						}
-					} else if (id.startsWith("task.common.")) { //$NON-NLS-1$
+					} else if (id.startsWith("task.common.")) {
 						// Don't post any remaining non-bugzilla specific attributes
 						continue;
 					}
-					fields.put(id, new NameValuePair(id, value != null ? value : "")); //$NON-NLS-1$
+					fields.put(id, new NameValuePair(id, value != null ? value : ""));
 				}
 			}
 		}
@@ -1236,7 +1249,7 @@ public class BugzillaClient {
 				} else {
 					String inputAttributeId = originalOperation.getMetaData().getValue(
 							TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID);
-					if (inputAttributeId == null || inputAttributeId.equals("")) { //$NON-NLS-1$
+					if (inputAttributeId == null || inputAttributeId.equals("")) {
 						String sel = attributeOperation.getValue();
 						fields.put(KEY_KNOB, new NameValuePair(KEY_KNOB, sel));
 					} else {
@@ -1269,7 +1282,7 @@ public class BugzillaClient {
 				} else if (attributeOperation != null
 						&& attributeOperation.getValue().equals(BugzillaOperation.duplicate.toString())) {
 					// fix for bug#198677
-					fields.put(KEY_COMMENT, new NameValuePair(KEY_COMMENT, "")); //$NON-NLS-1$
+					fields.put(KEY_COMMENT, new NameValuePair(KEY_COMMENT, ""));
 				}
 			}
 		} else {
@@ -1293,32 +1306,32 @@ public class BugzillaClient {
 						fields.put(fieldName, new NameValuePair(fieldName, attributeStatus.getValue()));
 					} else {
 						String selOp = attributeOperation.getValue().toUpperCase();
-						if (selOp.equals("NONE")) { //$NON-NLS-1$
+						if (selOp.equals("NONE")) {
 							selOp = attributeStatus.getValue();
 						}
 						if (selOp.equals("ACCEPT")) { //$NON-NLS-1$
-							selOp = "ASSIGNED"; //$NON-NLS-1$
+							selOp = "ASSIGNED";
 						}
 						if (selOp.equals("RESOLVE")) { //$NON-NLS-1$
-							selOp = "RESOLVED"; //$NON-NLS-1$
+							selOp = "RESOLVED";
 						}
 						if (selOp.equals("VERIFY")) { //$NON-NLS-1$
-							selOp = "VERIFIED"; //$NON-NLS-1$
+							selOp = "VERIFIED";
 						}
 						if (selOp.equals("CLOSE")) { //$NON-NLS-1$
-							selOp = "CLOSED"; //$NON-NLS-1$
+							selOp = "CLOSED";
 						}
 						if (selOp.equals("REOPEN")) { //$NON-NLS-1$
-							selOp = "REOPENED"; //$NON-NLS-1$
+							selOp = "REOPENED";
 						}
 						if (selOp.equals("DUPLICATE")) { //$NON-NLS-1$
-							selOp = "RESOLVED"; //$NON-NLS-1$
+							selOp = "RESOLVED";
 							String knob = BugzillaAttribute.RESOLUTION.getKey();
-							fields.put(knob, new NameValuePair(knob, "DUPLICATE")); //$NON-NLS-1$
+							fields.put(knob, new NameValuePair(knob, "DUPLICATE"));
 						}
 
 						fields.put(fieldName, new NameValuePair(fieldName, selOp));
-						if (inputAttributeId != null && !inputAttributeId.equals("")) { //$NON-NLS-1$
+						if (inputAttributeId != null && !inputAttributeId.equals("")) {
 							TaskAttribute inputAttribute = attributeOperation.getTaskData().getRoot().getAttribute(
 									inputAttributeId);
 							if (inputAttribute != null) {
@@ -1332,7 +1345,7 @@ public class BugzillaClient {
 								} else {
 									String sel = inputAttribute.getValue();
 									String knob = attributeOperation.getValue();
-									if (knob.equals("duplicate")) { //$NON-NLS-1$
+									if (knob.equals("duplicate")) {
 										knob = inputAttributeId;
 									}
 									if (knob.equals(BugzillaOperation.reassign.toString())) {
@@ -1401,8 +1414,8 @@ public class BugzillaClient {
 
 		String bugUrl = taskData.getRepositoryUrl() + IBugzillaConstants.URL_GET_SHOW_BUG + taskData.getTaskId();
 		GzipGetMethod getMethod = new GzipGetMethod(WebUtil.getRequestPath(bugUrl), false);
-		getMethod.setRequestHeader("Content-Type", "text/xml; charset=" + characterEncoding); //$NON-NLS-1$ //$NON-NLS-2$
-		httpClient.getParams().setParameter("http.protocol.single-cookie-header", true); //$NON-NLS-1$
+		getMethod.setRequestHeader("Content-Type", "text/xml; charset=" + characterEncoding); //$NON-NLS-1$ 
+		httpClient.getParams().setParameter("http.protocol.single-cookie-header", true);
 		getMethod.setDoAuthentication(true);
 
 		int code;
