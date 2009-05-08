@@ -22,7 +22,7 @@ import org.eclipse.ui.PlatformUI;
  * @author David Green
  */
 @SuppressWarnings("restriction")
-public class ShowDiscoveryConnectorWizardCommandHandler extends AbstractHandler {
+public class ShowConnectorDiscoveryWizardCommandHandler extends AbstractHandler {
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 
@@ -32,5 +32,7 @@ public class ShowDiscoveryConnectorWizardCommandHandler extends AbstractHandler 
 
 		return null;
 	}
+
+	// FIXME: enabled state
 
 }

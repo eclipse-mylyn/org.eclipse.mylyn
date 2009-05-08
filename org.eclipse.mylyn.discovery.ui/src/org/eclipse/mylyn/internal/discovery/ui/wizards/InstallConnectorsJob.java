@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.discovery.ui.wizards;
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -39,11 +40,11 @@ import org.eclipse.equinox.internal.provisional.p2.ui.actions.InstallAction;
 import org.eclipse.equinox.internal.provisional.p2.ui.operations.ProvisioningUtil;
 import org.eclipse.equinox.internal.provisional.p2.ui.policy.Policy;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDescriptor;
 import org.eclipse.mylyn.internal.discovery.ui.DiscoveryUi;
 import org.eclipse.mylyn.internal.discovery.ui.util.SimpleSelectionProvider;
-import org.eclipse.mylyn.internal.provisional.commons.ui.ICoreRunnable;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -54,7 +55,7 @@ import org.eclipse.swt.widgets.Display;
  * @author David Green
  */
 @SuppressWarnings("restriction")
-public class InstallConnectorsJob implements ICoreRunnable {
+public class InstallConnectorsJob implements IRunnableWithProgress {
 
 	private final List<ConnectorDescriptor> installableConnectors;
 
@@ -65,7 +66,18 @@ public class InstallConnectorsJob implements ICoreRunnable {
 		this.installableConnectors = new ArrayList<ConnectorDescriptor>(installableConnectors);
 	}
 
-	public void run(IProgressMonitor monitor) throws CoreException {
+	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+		try {
+			doRun(monitor);
+			if (monitor.isCanceled()) {
+				throw new InterruptedException();
+			}
+		} catch (Exception e) {
+			throw new InvocationTargetException(e);
+		}
+	}
+
+	public void doRun(IProgressMonitor monitor) throws CoreException {
 		try {
 			final int totalWork = installableConnectors.size() * 4;
 			monitor.beginTask("Configuring installation selection", totalWork);
@@ -115,6 +127,9 @@ public class InstallConnectorsJob implements ICoreRunnable {
 				int unit = installableConnectors.size() / repositories.size();
 
 				for (final IMetadataRepository repository : repositories) {
+					if (monitor.isCanceled()) {
+						return;
+					}
 					URL repositoryUrl = repositoryToURL.get(repository);
 					final Set<String> installableUnitIdsThisRepository = new HashSet<String>();
 					// determine all installable units for this repository

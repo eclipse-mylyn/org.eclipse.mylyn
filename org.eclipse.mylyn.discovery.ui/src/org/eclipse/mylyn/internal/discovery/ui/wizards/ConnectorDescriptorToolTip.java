@@ -59,7 +59,7 @@ class ConnectorDescriptorToolTip extends ToolTip {
 
 		Composite container = new Composite(parent, SWT.NULL);
 		container.setBackground(background);
-		GridDataFactory.fillDefaults().grab(true, true).hint(347, SWT.DEFAULT).applyTo(container);
+		GridDataFactory.fillDefaults().grab(true, true).hint(/*347*/640, SWT.DEFAULT).applyTo(container);
 
 		GridLayoutFactory.fillDefaults().margins(5, 5).spacing(0, 3).applyTo(container);
 

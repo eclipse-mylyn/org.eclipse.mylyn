@@ -302,7 +302,9 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 				if (!previousFilterText.equals(text)) {
 					previousFilterText = text;
 					filterPattern = createPattern(previousFilterText);
-					clearFilterTextControl.setVisible(filterPattern != null);
+					if (clearFilterTextControl != null) {
+						clearFilterTextControl.setVisible(filterPattern != null);
+					}
 					createBodyContents();
 				}
 				return Status.OK_STATUS;

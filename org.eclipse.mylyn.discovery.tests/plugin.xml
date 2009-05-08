@@ -19,7 +19,7 @@
               name="Mylyn Discovery Test Category">
         </category>
      <command
-           defaultHandler="org.eclipse.mylyn.discovery.test.internal.ui.commands.ShowDiscoveryConnectorWizardCommandHandler"
+           defaultHandler="org.eclipse.mylyn.discovery.test.internal.ui.commands.ShowConnectorDiscoveryWizardCommandHandler"
            id="org.eclipse.mylyn.discovery.test.showDiscoveryWizardCommand"
            name="Show Connector Discovery Wizard"
            categoryId="org.eclipse.mylyn.discovery.test.category1">

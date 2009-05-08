@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            description="shows the connector discovery wizard"
+            id="org.eclipse.mylyn.discovery.ui.discoveryWizardCommand"
+            name="Discovery Wizard">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="org.eclipse.mylyn.internal.discovery.ui.util.DiscoveryEnvironmentSatisifiedPropertyTester"
+            id="org.eclipse.mylyn.internal.discovery.ui.discoveryEnvironmentSatisfied"
+            namespace="org.eclipse.mylyn.internal.discovery.ui"
+            properties="discoveryEnvironmentSatisfied"
+            type="java.lang.Object">
+      </propertyTester>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.eclipse.mylyn.internal.discovery.ui.commands.ShowConnectorDiscoveryWizardCommandHandler"
+            commandId="org.eclipse.mylyn.discovery.ui.discoveryWizardCommand">
+         <enabledWhen>
+            <test
+               property="org.eclipse.mylyn.internal.discovery.ui.discoveryEnvironmentSatisfied" forcePluginActivation="true"/>
+         </enabledWhen>
+      </handler>
+   </extension>
+
+</plugin>

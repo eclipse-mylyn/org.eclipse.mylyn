@@ -10,18 +10,16 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.discovery.ui.wizards;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDescriptorKind;
 import org.eclipse.mylyn.internal.discovery.ui.DiscoveryUi;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonsUiUtil;
-import org.eclipse.mylyn.internal.provisional.commons.ui.ICoreRunnable;
 
 import com.ibm.icu.text.MessageFormat;
 
@@ -62,17 +60,13 @@ public class ConnectorDiscoveryWizard extends Wizard {
 	@Override
 	public boolean performFinish() {
 		try {
-			ICoreRunnable job = new InstallConnectorsJob(mainPage.getInstallableConnectors());
-			if (getContainer() != null) {
-				CommonsUiUtil.run(getContainer(), job);
-			} else {
-				CommonsUiUtil.busyCursorWhile(job);
-			}
-		} catch (CoreException e) {
+			IRunnableWithProgress job = new InstallConnectorsJob(mainPage.getInstallableConnectors());
+			getContainer().run(true, true, job);
+		} catch (InvocationTargetException e) {
 			IStatus status = new Status(IStatus.ERROR, DiscoveryUi.BUNDLE_ID, MessageFormat.format(
-					"Problems occurred while performing installation: {0}", new Object[] { e.getMessage() }), e); //$NON-NLS-1$
+					"Problems occurred while performing installation: {0}", new Object[] { e.getMessage() }), e);
 			DiscoveryUi.logAndDisplayStatus("Cannot complete installation", status);
-		} catch (OperationCanceledException e) {
+		} catch (InterruptedException e) {
 			// canceled
 		}
 		return true;
