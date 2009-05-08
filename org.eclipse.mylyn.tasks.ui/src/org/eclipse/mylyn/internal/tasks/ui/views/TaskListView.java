@@ -174,6 +174,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.PartInitException;
@@ -685,11 +686,14 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 	public static TaskListView getFromActivePerspective() {
 		if (PlatformUI.isWorkbenchRunning()) {
-			IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-			if (activePage != null) {
-				IViewPart view = activePage.findView(ITasksUiConstants.ID_VIEW_TASKS);
-				if (view instanceof TaskListView) {
-					return (TaskListView) view;
+			IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+			if (activeWorkbenchWindow != null) {
+				IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
+				if (activePage != null) {
+					IViewPart view = activePage.findView(ITasksUiConstants.ID_VIEW_TASKS);
+					if (view instanceof TaskListView) {
+						return (TaskListView) view;
+					}
 				}
 			}
 		}
