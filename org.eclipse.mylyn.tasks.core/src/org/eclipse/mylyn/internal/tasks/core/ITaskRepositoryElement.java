@@ -12,22 +12,12 @@
 package org.eclipse.mylyn.internal.tasks.core;
 
 /**
- * Holds orphaned or uncategorized tasks for a given repository
- * 
- * @author Rob Elves
- * @author Mik Kersten
+ * @author Steffen Pingel
  */
-public class UnmatchedTaskContainer extends AutomaticRepositoryTaskContainer {
+public interface ITaskRepositoryElement {
 
-	private static final String HANDLE = "orphans"; //$NON-NLS-1$
+	public String getConnectorKind();
 
-	public UnmatchedTaskContainer(String connectorKind, String repositoryUrl) {
-		super(HANDLE, connectorKind, repositoryUrl);
-	}
-
-	@Override
-	public String getSummary() {
-		return Messages.UnmatchedTaskContainer_Unmatched;
-	}
+	public String getRepositoryUrl();
 
 }

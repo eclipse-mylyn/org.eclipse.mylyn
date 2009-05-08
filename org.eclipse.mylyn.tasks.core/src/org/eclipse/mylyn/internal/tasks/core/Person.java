@@ -14,7 +14,7 @@ package org.eclipse.mylyn.internal.tasks.core;
 /**
  * @author Rob Elves
  */
-public class Person extends AbstractTaskContainer {
+public class Person extends AbstractTaskContainer implements ITaskRepositoryElement {
 
 	private final String connectorKind;
 

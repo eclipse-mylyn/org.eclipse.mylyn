@@ -24,7 +24,6 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.internal.tasks.core.AutomaticRepositoryTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.DayDateRange;
 import org.eclipse.mylyn.internal.tasks.core.Person;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
@@ -182,22 +181,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			} else {
 				return task.getSummary();
 			}
-		} else if (object instanceof TaskGroup) {
-			TaskGroup element = (TaskGroup) object;
-			return element.getSummary();// + " / " + element.getChildren().size();
-		} else if (object instanceof AutomaticRepositoryTaskContainer) {
-			AutomaticRepositoryTaskContainer container = (AutomaticRepositoryTaskContainer) object;
-
-			String result = container.getSummary();
-			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(container.getConnectorKind(),
-					container.getRepositoryUrl());
-			if (repository != null) {
-				result = container.getSummaryLabel() + " [" + repository.getRepositoryLabel() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
-			}
-
-			return result;
-
-		} else if (object instanceof ITaskContainer) {
+		} else if (object instanceof IRepositoryElement) {
 			IRepositoryElement element = (IRepositoryElement) object;
 			return element.getSummary();
 		} else {

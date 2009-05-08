@@ -30,7 +30,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
  * @author Rob Elves
  * @since 2.0
  */
-public abstract class AbstractTask extends AbstractTaskContainer implements ITask {
+public abstract class AbstractTask extends AbstractTaskContainer implements ITask, ITaskRepositoryElement {
 
 	public static final String DEFAULT_TASK_KIND = "task"; //$NON-NLS-1$
 

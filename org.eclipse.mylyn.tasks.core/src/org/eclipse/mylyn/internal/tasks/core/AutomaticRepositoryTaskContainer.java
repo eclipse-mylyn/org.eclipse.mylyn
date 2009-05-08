@@ -16,25 +16,19 @@ import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 /**
  * @author Mik Kersten
  */
-public abstract class AutomaticRepositoryTaskContainer extends AbstractTaskCategory {
+public abstract class AutomaticRepositoryTaskContainer extends AbstractTaskCategory implements ITaskRepositoryElement {
 
 	protected String repositoryUrl;
 
 	private final String connectorKind;
 
-	public AutomaticRepositoryTaskContainer(String handleAndDescription, String connectorKind, String repositoryUrl) {
-		super(handleAndDescription);
+	private final String handleSuffix;
+
+	public AutomaticRepositoryTaskContainer(String handleSuffix, String connectorKind, String repositoryUrl) {
+		super(repositoryUrl + "-" + handleSuffix); //$NON-NLS-1$
+		this.handleSuffix = handleSuffix;
 		this.connectorKind = connectorKind;
 		this.repositoryUrl = repositoryUrl;
-	}
-
-	public abstract String getSummaryLabel();
-
-	protected abstract String getHandleSuffix();
-
-	@Override
-	public String getSummary() {
-		return getSummaryLabel() + " [" + getRepositoryUrl() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override
@@ -60,7 +54,7 @@ public abstract class AutomaticRepositoryTaskContainer extends AbstractTaskCateg
 	 */
 	public void setRepositoryUrl(String repositoryUrl) {
 		this.repositoryUrl = repositoryUrl;
-		this.setHandleIdentifier(repositoryUrl + "-" + getHandleSuffix()); //$NON-NLS-1$
+		setHandleIdentifier(repositoryUrl + "-" + handleSuffix); //$NON-NLS-1$
 	}
 
 }

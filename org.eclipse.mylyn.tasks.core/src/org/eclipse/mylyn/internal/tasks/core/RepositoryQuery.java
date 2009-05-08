@@ -25,7 +25,7 @@ import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
  * @author Eugene Kuleshov
  * @author Rob Elves
  */
-public class RepositoryQuery extends AbstractTaskContainer implements IRepositoryQuery {
+public class RepositoryQuery extends AbstractTaskContainer implements IRepositoryQuery, ITaskRepositoryElement {
 
 	private final String connectorKind;
 

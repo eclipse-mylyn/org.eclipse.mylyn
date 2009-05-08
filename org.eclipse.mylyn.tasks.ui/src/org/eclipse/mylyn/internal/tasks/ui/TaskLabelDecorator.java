@@ -19,8 +19,8 @@ import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.tasks.core.ITaskRepositoryElement;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
@@ -38,11 +38,20 @@ public class TaskLabelDecorator implements ILightweightLabelDecorator {
 			decoration.addOverlay(priorityOverlay, IDecoration.BOTTOM_LEFT);
 		}
 
-		if (element instanceof IRepositoryQuery) {
-			IRepositoryQuery query = (IRepositoryQuery) element;
-			String repositoryUrl = query.getRepositoryUrl();
-			TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(query.getConnectorKind(),
-					repositoryUrl);
+		if (element instanceof ITask) {
+			ITask task = (ITask) element;
+			if (!task.isCompleted()
+					&& (TasksUiPlugin.getTaskActivityManager().isDueToday(task) || TasksUiPlugin.getTaskActivityManager()
+							.isOverdue(task))) {
+				decoration.addOverlay(CommonImages.OVERLAY_DATE_OVERDUE, IDecoration.TOP_RIGHT);
+			} else if (!task.isCompleted() && task.getDueDate() != null) {
+				decoration.addOverlay(CommonImages.OVERLAY_DATE_DUE, IDecoration.TOP_RIGHT);
+			}
+		} else if (element instanceof ITaskRepositoryElement) {
+			ITaskRepositoryElement repositoryElement = (ITaskRepositoryElement) element;
+			String repositoryUrl = repositoryElement.getRepositoryUrl();
+			TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(
+					repositoryElement.getConnectorKind(), repositoryUrl);
 			if (repositoryUrl != null && taskRepository != null) {
 				if (taskRepository.getRepositoryUrl().equals(taskRepository.getRepositoryLabel())) {
 					try {
@@ -54,15 +63,6 @@ public class TaskLabelDecorator implements ILightweightLabelDecorator {
 				} else {
 					decoration.addSuffix("   [" + taskRepository.getRepositoryLabel() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
-			}
-		} else if (element instanceof ITask) {
-			ITask task = (ITask) element;
-			if (!task.isCompleted()
-					&& (TasksUiPlugin.getTaskActivityManager().isDueToday(task) || TasksUiPlugin.getTaskActivityManager()
-							.isOverdue(task))) {
-				decoration.addOverlay(CommonImages.OVERLAY_DATE_OVERDUE, IDecoration.TOP_RIGHT);
-			} else if (!task.isCompleted() && task.getDueDate() != null) {
-				decoration.addOverlay(CommonImages.OVERLAY_DATE_DUE, IDecoration.TOP_RIGHT);
 			}
 		} else if (element instanceof TaskRepository) {
 			ImageDescriptor overlay = TasksUiPlugin.getDefault().getOverlayIcon(
