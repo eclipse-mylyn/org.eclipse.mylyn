@@ -86,41 +86,77 @@ public class BugzillaQueryTest extends TestCase {
 				&& auth.getUserName() != null && !auth.getUserName().equals(""));
 	}
 
-//	public void testGetBug() throws Exception {
-//		TaskData taskData = handler.getTaskData(repository, "1", new NullProgressMonitor());
-//		assertNotNull(taskData);
-//		assertEquals("user@mylar.eclipse.org", taskData.getAssignedTo());
-//		assertEquals("foo", taskData.getDescription());
-//
-//		// You can use the getAttributeValue to pull up the information on any
-//		// part of the bug
-//		assertEquals("P1", taskData.getAttributeValue(BugzillaReportElement.PRIORITY.getKey()));
-//	}
-//	
+	public void testGetBug() throws Exception {
+		Set<String> taskIds = new HashSet<String>();
+		taskIds.add("1");
+		final Set<TaskData> changedTaskData = new HashSet<TaskData>();
+		TaskDataCollector collector = new TaskDataCollector() {
 
-	// TODO: Uncomment when bug#176513 completed
-//	public void testGetBugs() throws Exception {
-//		HashSet<String> taskIds = new HashSet<String>();
-//		taskIds.add("1");
-//		taskIds.add("2");
-//		taskIds.add("4");
-//		Map<String, RepositoryTaskData> taskDataMap = handler.getTaskData(repository, taskIds);
-//		assertNotNull(taskDataMap);
-//		RepositoryTaskData taskData = taskDataMap.get("1");
-//		assertEquals("user@mylar.eclipse.org", taskData.getAssignedTo());
-//		assertEquals("foo", taskData.getDescription());
-//		// You can use the getAttributeValue to pull up the information on any
-//		// part of the bug
-//		assertEquals("P1", taskData.getAttributeValue(BugzillaReportElement.PRIORITY.getKeyString()));
-//
-//		taskData = taskDataMap.get("2");
-//		assertEquals("nhapke@cs.ubc.ca", taskData.getAssignedTo());
-//		assertEquals("search-match-test 1", taskData.getDescription());
-//
-//		taskData = taskDataMap.get("4");
-//		assertEquals("relves@cs.ubc.ca", taskData.getReporter());
-//		assertEquals("Test", taskData.getDescription());
-//	}
+			@Override
+			public void accept(TaskData taskData) {
+				changedTaskData.add(taskData);
+			}
+		};
+		connector.getTaskDataHandler().getMultiTaskData(repository, taskIds, collector, new NullProgressMonitor());
+		assertEquals(1, changedTaskData.size());
+		for (TaskData taskData : changedTaskData) {
+			String taskId = taskData.getTaskId();
+			if (taskId.equals("1")) {
+				assertEquals("user@mylar.eclipse.org", taskData.getRoot().getAttribute(
+						BugzillaAttribute.ASSIGNED_TO.getKey()).getValue());
+				assertEquals("foo", taskData.getRoot().getAttribute(BugzillaAttribute.LONG_DESC.getKey()).getValue());
+				// You can use the getAttributeValue to pull up the information on any
+				// part of the bug
+				assertEquals("P1", taskData.getRoot().getAttribute(BugzillaAttribute.PRIORITY.getKey()).getValue());
+
+			} else {
+				fail("Unexpected TaskData returned");
+			}
+		}
+	}
+
+	public void testGetBugs() throws Exception {
+		Set<String> taskIds = new HashSet<String>();
+		taskIds.add("1");
+		taskIds.add("2");
+		taskIds.add("4");
+		final Set<TaskData> changedTaskData = new HashSet<TaskData>();
+		TaskDataCollector collector = new TaskDataCollector() {
+
+			@Override
+			public void accept(TaskData taskData) {
+				changedTaskData.add(taskData);
+			}
+		};
+		connector.getTaskDataHandler().getMultiTaskData(repository, taskIds, collector, new NullProgressMonitor());
+		assertEquals(3, changedTaskData.size());
+		for (TaskData taskData : changedTaskData) {
+			String taskId = taskData.getTaskId();
+			if (taskId.equals("1")) {
+				assertEquals("user@mylar.eclipse.org", taskData.getRoot().getAttribute(
+						BugzillaAttribute.ASSIGNED_TO.getKey()).getValue());
+				assertEquals("foo", taskData.getRoot().getAttribute(BugzillaAttribute.LONG_DESC.getKey()).getValue());
+				// You can use the getAttributeValue to pull up the information on any
+				// part of the bug
+				assertEquals("P1", taskData.getRoot().getAttribute(BugzillaAttribute.PRIORITY.getKey()).getValue());
+
+			} else if (taskId.equals("2")) {
+				assertEquals("nhapke@cs.ubc.ca", taskData.getRoot()
+						.getAttribute(BugzillaAttribute.ASSIGNED_TO.getKey())
+						.getValue());
+				assertEquals("search-match-test 1", taskData.getRoot().getAttribute(
+						BugzillaAttribute.LONG_DESC.getKey()).getValue());
+			} else if (taskId.equals("4")) {
+				assertEquals("relves@cs.ubc.ca", taskData.getRoot()
+						.getAttribute(BugzillaAttribute.REPORTER.getKey())
+						.getValue());
+				assertEquals("Test", taskData.getRoot().getAttribute(BugzillaAttribute.LONG_DESC.getKey()).getValue());
+			} else {
+				fail("Unexpected TaskData returned");
+			}
+
+		}
+	}
 
 	// README
 	// public void testPostBug() throws Exception {
