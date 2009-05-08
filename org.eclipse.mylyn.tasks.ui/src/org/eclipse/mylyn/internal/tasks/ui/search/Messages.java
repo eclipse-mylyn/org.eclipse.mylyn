@@ -47,12 +47,6 @@ public class Messages extends NLS {
 
 	public static String RepositorySearchResultView_Refine_Search_;
 
-	public static String RepositorySearchResultView_Sort_by;
-
-	public static String RepositorySearchResultView_Task_Priority;
-
-	public static String RepositorySearchResultView_Task_Summary;
-
 	public static String SearchHitCollector_Max_allowed_number_of_hits_returned_exceeded;
 
 	public static String SearchHitCollector_Querying_Repository_;
@@ -72,4 +66,6 @@ public class Messages extends NLS {
 	public static String SearchResultTreeContentProvider_Incomplete;
 
 	public static String SearchResultTreeContentProvider__unknown_;
+
+	public static String SearchResultSortAction_Sort_Label;
 }

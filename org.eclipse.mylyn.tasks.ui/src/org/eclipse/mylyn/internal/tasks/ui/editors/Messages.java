@@ -71,16 +71,6 @@ public class Messages extends NLS {
 
 	public static String PlanningPageFactory_Planning;
 
-	public static String PreviewAttributeEditor_Edit;
-
-	public static String PreviewAttributeEditor_Error;
-
-	public static String PreviewAttributeEditor_Formatting_Wiki_Text;
-
-	public static String PreviewAttributeEditor_Loading_preview_;
-
-	public static String PreviewAttributeEditor_Preview;
-
 	public static String RichTextAttributeEditor_Viewer_Source;
 
 	public static String TaskAttachmentDropListener_Note_that_only_the_first_file_dragged_will_be_attached;

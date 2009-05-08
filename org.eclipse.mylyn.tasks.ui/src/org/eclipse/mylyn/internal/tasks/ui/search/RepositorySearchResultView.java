@@ -37,7 +37,6 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskGroup;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.AddExistingTaskJob;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenTaskSearchAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenWithBrowserAction;
 import org.eclipse.mylyn.internal.tasks.ui.search.SearchResultTreeContentProvider.GroupBy;
@@ -60,6 +59,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Layout;
+import org.eclipse.ui.IMemento;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.FilteredTree;
@@ -87,10 +87,6 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 			super(text, IAction.AS_CHECK_BOX);
 			this.groupBy = groupBy;
 			groupingActions.add(this);
-		}
-
-		public GroupBy getGroupBy() {
-			return groupBy;
 		}
 
 		@Override
@@ -130,27 +126,9 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		}
 	}
 
-	public static final int ORDER_PRIORITY = 1;
-
-	public static final int ORDER_DESCRIPTION = 2;
-
-	public static final int ORDER_SEVERITY = 3;
-
-	public static final int ORDER_STATUS = 4;
-
-	public static final int ORDER_ID = 5;
-
-	public static final int ORDER_DEFAULT = ORDER_PRIORITY;
-
-	private static final String KEY_SORTING = TasksUiPlugin.ID_PLUGIN + ".search.resultpage.sorting"; //$NON-NLS-1$
+	private static final String MEMENTO_KEY_SORT = "sort"; //$NON-NLS-1$
 
 	private SearchResultContentProvider searchResultProvider;
-
-	private int currentSortOrder;
-
-	private final SearchResultSortAction sortByPriorityAction;
-
-	private final SearchResultSortAction sortByDescriptionAction;
 
 	private final OpenSearchResultAction openInEditorAction;
 
@@ -168,6 +146,10 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 
 	private final OpenWithBrowserAction openSearchWithBrowserAction;
 
+	private final SearchResultSorter searchResultSorter;
+
+	private SearchResultSortAction sortByDialogAction;
+
 	private static final IShowInTargetList SHOW_IN_TARGET_LIST = new IShowInTargetList() {
 		public String[] getShowInTargetIds() {
 			return SHOW_IN_TARGETS;
@@ -177,12 +159,6 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 	public RepositorySearchResultView() {
 		// Only use the table layout.
 		super(FLAG_LAYOUT_TREE);
-
-		sortByPriorityAction = new SearchResultSortAction(Messages.RepositorySearchResultView_Task_Priority, this,
-				ORDER_PRIORITY);
-		sortByDescriptionAction = new SearchResultSortAction(Messages.RepositorySearchResultView_Task_Summary, this,
-				ORDER_DESCRIPTION);
-		currentSortOrder = ORDER_DEFAULT;
 
 		openInEditorAction = new OpenSearchResultAction(Messages.RepositorySearchResultView_Open_in_Editor, this);
 		createQueryAction = new CreateQueryFromSearchAction(
@@ -194,7 +170,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 
 		groupingActions = new ArrayList<GroupingAction>();
 		new GroupingAction(Messages.RepositorySearchResultView_Group_By_Owner, GroupBy.OWNER);
-		//new GroupingAction("Group By Complete", GroupBy.COMPLETION);
+//		new GroupingAction(Messages.RepositorySearchResultView_Group_By_Complete, GroupBy.COMPLETION);
 
 		filterActions = new ArrayList<FilteringAction>();
 		new FilteringAction(Messages.RepositorySearchResultView_Filter_Completed_Tasks, new ViewerFilter() {
@@ -209,6 +185,9 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 				return true;
 			}
 		});
+
+		// construct early since to be ready when restoreState() is invoked
+		searchResultSorter = new SearchResultSorter();
 	}
 
 	@Override
@@ -242,10 +221,8 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		DecoratingLabelProvider labelProvider = new DecoratingLabelProvider(new SearchResultsLabelProvider(
 				searchResultProvider, viewer), PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator());
 		viewer.setLabelProvider(labelProvider);
-
-		// Set the order when the search view is loading so that the items are
-		// sorted right away
-		setSortOrder(currentSortOrder);
+		viewer.setSorter(searchResultSorter);
+		sortByDialogAction = new SearchResultSortAction(this);
 
 		toolTip = new TaskListToolTip(viewer.getControl());
 	}
@@ -319,36 +296,6 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		super.dispose();
 	}
 
-	/**
-	 * Sets the new sorting category, and reorders all of the tasks.
-	 * 
-	 * @param sortOrder
-	 *            The new category to sort by
-	 */
-	public void setSortOrder(int sortOrder) {
-		StructuredViewer viewer = getViewer();
-
-		switch (sortOrder) {
-		case ORDER_ID:
-			viewer.setSorter(new SearchResultSorterId());
-			break;
-		case ORDER_DESCRIPTION:
-			viewer.setSorter(new SearchResultSorter());
-			break;
-		case ORDER_PRIORITY:
-			viewer.setSorter(new SearchResultSorterPriority());
-			break;
-		default:
-			// If the setting is not one of the four valid ones,
-			// use the default order setting.
-			sortOrder = ORDER_DEFAULT;
-			viewer.setSorter(new SearchResultSorterPriority());
-			break;
-		}
-		currentSortOrder = sortOrder;
-		getSettings().put(KEY_SORTING, currentSortOrder);
-	}
-
 	@SuppressWarnings("unchecked")
 	public Object getAdapter(Class adapter) {
 		return getAdapterDelegate(adapter);
@@ -373,7 +320,6 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		super.fillContextMenu(menuManager);
 
 		// open actions
-
 		menuManager.appendToGroup(IContextMenuConstants.GROUP_OPEN, openInEditorAction);
 
 		// Add to Task List menu
@@ -405,16 +351,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		menuManager.appendToGroup(IContextMenuConstants.GROUP_SEARCH, refineSearchAction);
 		menuManager.appendToGroup(IContextMenuConstants.GROUP_SEARCH, openSearchWithBrowserAction);
 
-		// sort actions
-
-		MenuManager sortMenuManager = new MenuManager(Messages.RepositorySearchResultView_Sort_by);
-		sortMenuManager.add(sortByPriorityAction);
-		sortMenuManager.add(sortByDescriptionAction);
-
-		sortByPriorityAction.setChecked(currentSortOrder == sortByPriorityAction.getSortOrder());
-		sortByDescriptionAction.setChecked(currentSortOrder == sortByDescriptionAction.getSortOrder());
-
-		menuManager.appendToGroup(IContextMenuConstants.GROUP_VIEWER_SETUP, sortMenuManager);
+		menuManager.appendToGroup(IContextMenuConstants.GROUP_VIEWER_SETUP, sortByDialogAction);
 		for (Action action : groupingActions) {
 			menuManager.appendToGroup(IContextMenuConstants.GROUP_VIEWER_SETUP, action);
 		}
@@ -466,6 +403,28 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 			openSearchWithBrowserAction.selectionChanged(new StructuredSelection(repositoryQuery));
 		} else {
 			openSearchWithBrowserAction.selectionChanged(StructuredSelection.EMPTY);
+		}
+	}
+
+	public SearchResultSorter getSorter() {
+		return searchResultSorter;
+	}
+
+	@Override
+	public void restoreState(IMemento memento) {
+		super.restoreState(memento);
+		IMemento child = memento.getChild(MEMENTO_KEY_SORT);
+		if (child != null && searchResultSorter != null) {
+			searchResultSorter.getTaskComparator().restoreState(child);
+		}
+	}
+
+	@Override
+	public void saveState(IMemento memento) {
+		super.saveState(memento);
+		IMemento child = memento.createChild(MEMENTO_KEY_SORT);
+		if (searchResultSorter != null) {
+			searchResultSorter.getTaskComparator().saveState(child);
 		}
 	}
 

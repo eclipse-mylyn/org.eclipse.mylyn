@@ -71,13 +71,9 @@ public class Messages extends NLS {
 
 	public static String TaskLabelDecorator____unknown_host___;
 
-	public static String TaskListBackupManager_Could_not_backup_task_data;
-
 	public static String TaskListBackupManager_Error_occured_during_scheduled_tasklist_backup;
 
 	public static String TaskListBackupManager_Scheduled_task_data_backup;
-
-	public static String TaskListBackupManager_Tasklist_Backup;
 
 	public static String TaskListNotificationManager_Open_Notification_Job;
 
@@ -138,10 +134,6 @@ public class Messages extends NLS {
 	public static String TasksUiUtil_Browser_init_error;
 
 	public static String TasksUiUtil_Could_not_open_URL_;
-
-	public static String TasksUiUtil_create_task;
-
-	public static String TasksUiUtil_failed_to_create_new_task;
 
 	public static String TasksUiUtil_No_URL_to_open;
 

@@ -12,48 +12,27 @@
 package org.eclipse.mylyn.internal.tasks.ui.search;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.window.Window;
+import org.eclipse.mylyn.internal.tasks.ui.dialogs.TaskCompareDialog;
 
 /**
- * This class sorts search results by a supplied category.
- * 
- * @author Rob Elves (moved to tasks.ui)
+ * @author Steffen Pingel
  */
 public class SearchResultSortAction extends Action {
 
-	/** The category that this class sorts Bugzilla search results by. */
-	private final int bugSortOrder;
+	private final RepositorySearchResultView view;
 
-	/** The view where the Bugzilla search results are displayed. */
-	private final RepositorySearchResultView bugPage;
-
-	/**
-	 * Constructor
-	 * 
-	 * @param label
-	 *            The string used as the text for the action, or null if there is no text
-	 * @param page
-	 *            The view where the Bugzilla search results are displayed.
-	 * @param sortOrder
-	 *            The category that this class sorts Bugzilla search results by
-	 */
-	public SearchResultSortAction(String label, RepositorySearchResultView page, int sortOrder) {
-		super(label);
-		bugPage = page;
-		bugSortOrder = sortOrder;
+	public SearchResultSortAction(RepositorySearchResultView view) {
+		super(Messages.SearchResultSortAction_Sort_Label);
+		this.view = view;
+		setEnabled(true);
 	}
 
-	/**
-	 * Reorder the Bugzilla search results.
-	 */
 	@Override
 	public void run() {
-		bugPage.setSortOrder(bugSortOrder);
-	}
-
-	/**
-	 * Returns the category that this class sorts Bugzilla search results by.
-	 */
-	public int getSortOrder() {
-		return bugSortOrder;
+		TaskCompareDialog dialog = new TaskCompareDialog(view.getSite(), view.getSorter().getTaskComparator());
+		if (dialog.open() == Window.OK) {
+			view.getViewer().refresh();
+		}
 	}
 }
