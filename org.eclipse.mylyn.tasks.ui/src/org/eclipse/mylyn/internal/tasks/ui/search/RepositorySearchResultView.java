@@ -413,18 +413,22 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 	@Override
 	public void restoreState(IMemento memento) {
 		super.restoreState(memento);
-		IMemento child = memento.getChild(MEMENTO_KEY_SORT);
-		if (child != null && searchResultSorter != null) {
-			searchResultSorter.getTaskComparator().restoreState(child);
+		if (memento != null) {
+			IMemento child = memento.getChild(MEMENTO_KEY_SORT);
+			if (child != null && searchResultSorter != null) {
+				searchResultSorter.getTaskComparator().restoreState(child);
+			}
 		}
 	}
 
 	@Override
 	public void saveState(IMemento memento) {
 		super.saveState(memento);
-		IMemento child = memento.createChild(MEMENTO_KEY_SORT);
-		if (searchResultSorter != null) {
-			searchResultSorter.getTaskComparator().saveState(child);
+		if (memento != null) {
+			IMemento child = memento.createChild(MEMENTO_KEY_SORT);
+			if (searchResultSorter != null) {
+				searchResultSorter.getTaskComparator().saveState(child);
+			}
 		}
 	}
 

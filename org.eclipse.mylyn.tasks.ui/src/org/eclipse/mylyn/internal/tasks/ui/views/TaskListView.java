@@ -97,6 +97,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.OpenWithBrowserAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.PresentationDropDownSelectionAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.RemoveFromCategoryAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.RenameAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.ShowInSearchViewAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeAutomaticallyAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
@@ -1201,6 +1202,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		}
 	};
 
+	private ShowInSearchViewAction showInSearchViewAction;
+
 	private void initDragAndDrop(Composite parent) {
 		Transfer[] dragTypes = new Transfer[] { LocalSelectionTransfer.getTransfer(), FileTransfer.getInstance() };
 		Transfer[] dropTypes = new Transfer[] { LocalSelectionTransfer.getTransfer(), FileTransfer.getInstance(),
@@ -1306,6 +1309,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 			addAction(openAction, manager, element);
 		}
 		addAction(openWithBrowser, manager, element);
+		if (showInSearchViewAction.isEnabled()) {
+			manager.add(showInSearchViewAction);
+		}
 		if (task != null) {
 			if (task.isActive()) {
 				manager.add(deactivateAction);
@@ -1495,6 +1501,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		expandAll = new ExpandAllAction(this);
 		openAction = new OpenTaskListElementAction(this.getViewer());
 		openWithBrowser = new OpenWithBrowserAction();
+		showInSearchViewAction = new ShowInSearchViewAction();
 		filterCompleteTask = new FilterCompletedTasksAction(this);
 		filterSubTasksAction = new GroupSubTasksAction(this);
 		synchronizeAutomatically = new SynchronizeAutomaticallyAction();
@@ -1507,6 +1514,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		newTaskAction = new NewTaskAction();
 		filteredTree.getViewer().addSelectionChangedListener(newTaskAction);
 		filteredTree.getViewer().addSelectionChangedListener(openWithBrowser);
+		filteredTree.getViewer().addSelectionChangedListener(showInSearchViewAction);
 		filteredTree.getViewer().addSelectionChangedListener(copyDetailsAction);
 	}
 
