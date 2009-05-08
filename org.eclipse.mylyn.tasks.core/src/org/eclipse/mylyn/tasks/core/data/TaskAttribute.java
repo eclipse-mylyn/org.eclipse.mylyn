@@ -527,10 +527,18 @@ public final class TaskAttribute {
 
 	private void toString(StringBuilder sb, String prefix) {
 		sb.append(prefix);
-		sb.append("TaskAttribute[id=" + attributeId + ",values=" + values + ",options=" + optionByKey + ",metaData=" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-				+ metaData + "]\n"); //$NON-NLS-1$
+		sb.append("TaskAttribute[id="); //$NON-NLS-1$
+		sb.append(attributeId);
+		sb.append(",values="); //$NON-NLS-1$
+		sb.append(values);
+		sb.append(",options="); //$NON-NLS-1$
+		sb.append(optionByKey);
+		sb.append(",metaData="); //$NON-NLS-1$
+		sb.append(metaData);
+		sb.append("]"); //$NON-NLS-1$
 		if (attributeById != null) {
 			for (TaskAttribute child : attributeById.values()) {
+				sb.append("\n"); //$NON-NLS-1$
 				child.toString(sb, prefix + " "); //$NON-NLS-1$
 			}
 		}
