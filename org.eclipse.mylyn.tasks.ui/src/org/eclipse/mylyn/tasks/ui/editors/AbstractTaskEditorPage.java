@@ -222,7 +222,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 								TaskMigrator migrator = new TaskMigrator(oldTask);
 								migrator.setDelete(true);
 								migrator.setEditor(getTaskEditor());
-								migrator.copyPropertiesAndOpen(newTask);
+								migrator.execute(newTask);
 							}
 						} else {
 							handleSubmitError(job);

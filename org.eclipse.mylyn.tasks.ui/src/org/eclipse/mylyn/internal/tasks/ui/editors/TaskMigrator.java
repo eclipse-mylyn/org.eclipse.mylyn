@@ -45,10 +45,21 @@ public class TaskMigrator {
 
 	private boolean delete;
 
+	private boolean openEditors;
+
 	private TaskEditor editor;
 
 	public TaskMigrator(ITask oldTask) {
 		this.oldTask = oldTask;
+		this.openEditors = true;
+	}
+
+	public boolean openEditors() {
+		return openEditors;
+	}
+
+	public void setOpenEditors(boolean openEditors) {
+		this.openEditors = openEditors;
 	}
 
 	public boolean delete() {
@@ -59,7 +70,19 @@ public class TaskMigrator {
 		this.delete = delete;
 	}
 
-	public void copyPropertiesAndOpen(ITask newTask) {
+	/**
+	 * Migrates local properties of <code>oldTask</code> to <code>newTask</code>:
+	 * <ul>
+	 * <li>Copy properties
+	 * <li>Delete old task
+	 * <li>Reactivate new task
+	 * <li>Open new task
+	 * </ul>
+	 * 
+	 * @param newTask
+	 *            the task to migrate properties to
+	 */
+	public void execute(ITask newTask) {
 		copyProperties(newTask);
 
 		try {
@@ -79,10 +102,12 @@ public class TaskMigrator {
 				TasksUi.getTaskActivityManager().activateTask(newTask);
 			}
 
-			if (editorIsActive) {
-				TasksUiUtil.openTask(newTask);
-			} else {
-				TasksUiInternal.openTaskInBackground(newTask, false);
+			if (openEditors()) {
+				if (editorIsActive) {
+					TasksUiUtil.openTask(newTask);
+				} else {
+					TasksUiInternal.openTaskInBackground(newTask, false);
+				}
 			}
 		} finally {
 			active = false;
