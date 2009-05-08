@@ -27,6 +27,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
 /**
  * @author Mik Kersten
  * @author Shawn Minto
+ * @author David Green bug 257977 isInteresting
  */
 public class InteractionContext implements IInteractionContext {
 
@@ -145,6 +146,14 @@ public class InteractionContext implements IInteractionContext {
 		} else {
 			return elementMap.get(elementHandle);
 		}
+	}
+
+	public synchronized boolean isInteresting(String elementHandle) {
+		InteractionContextElement element = elementMap.get(elementHandle);
+		if (element != null) {
+			return element.getInterest().isInteresting();
+		}
+		return false;
 	}
 
 	public synchronized List<IInteractionElement> getInteresting() {

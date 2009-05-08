@@ -22,6 +22,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
  * 
  * @author Mik Kersten
  * @author Shawn Minto
+ * @author David Green bug 257977 isInteresting
  * @noimplement This interface is not intended to be implemented by clients.
  * @since 2.0
  */
@@ -41,6 +42,17 @@ public interface IInteractionContext {
 	 * @since 2.0
 	 */
 	public abstract List<InteractionEvent> getInteractionHistory();
+
+	/**
+	 * indicate if the interaction element identified by the given handle is interesting
+	 * 
+	 * @param elementHandle
+	 *            the {@link IInteractionElement#getHandleIdentifier() handle identifier}
+	 * 
+	 * @return true if an {@link #getInteresting() interesting} interaction element exists with the given handle
+	 * @since 3.2
+	 */
+	public boolean isInteresting(String elementHandle);
 
 	/**
 	 * Returns a list of all interesting interaction elements. Modifying the list will not affect the context.

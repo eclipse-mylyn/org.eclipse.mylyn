@@ -56,4 +56,20 @@ public class InteractionContextTest extends AbstractContextTest {
 		InteractionContext context = new InteractionContext("test", scalingFactors);
 		assertEquals(0f, context.getScaling().getDecay());
 	}
+
+	public void testIsInteresting() {
+		InteractionContext context = new InteractionContext("test", new InteractionContextScaling());
+
+		assertFalse(context.isInteresting("1"));
+
+		context.parseEvent(mockSelection("1"));
+
+		assertTrue(context.isInteresting("1"));
+
+		context.parseEvent(mockInterestContribution("1", -10));
+
+		assertFalse(context.isInteresting("1"));
+		assertNotNull(context.get("1"));
+	}
+
 }

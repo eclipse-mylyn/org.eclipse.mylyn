@@ -31,6 +31,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
  * 
  * @author Mik Kersten
  * @author Shawn Minto
+ * @author David Green bug 257977 isInteresting
  */
 public class CompositeInteractionContext implements IInteractionContext {
 
@@ -94,6 +95,15 @@ public class CompositeInteractionContext implements IInteractionContext {
 			}
 		}
 		return new ArrayList<IInteractionElement>(landmarks);
+	}
+
+	public boolean isInteresting(String elementHandle) {
+		for (InteractionContext context : contexts.values()) {
+			if (context.isInteresting(elementHandle)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public void setActiveElement(IInteractionElement activeElement) {
