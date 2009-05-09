@@ -48,7 +48,7 @@ public class ConnectorDiscoveryWizard extends Wizard {
 	private boolean showConnectorDescriptorTextFilter = true;
 
 	public ConnectorDiscoveryWizard() {
-		setWindowTitle("Connector Discovery");
+		setWindowTitle(Messages.ConnectorDiscoveryWizard_connectorDiscovery);
 		setNeedsProgressMonitor(true);
 	}
 
@@ -64,8 +64,8 @@ public class ConnectorDiscoveryWizard extends Wizard {
 			getContainer().run(true, true, job);
 		} catch (InvocationTargetException e) {
 			IStatus status = new Status(IStatus.ERROR, DiscoveryUi.BUNDLE_ID, MessageFormat.format(
-					"Problems occurred while performing installation: {0}", new Object[] { e.getMessage() }), e);
-			DiscoveryUi.logAndDisplayStatus("Cannot complete installation", status);
+					Messages.ConnectorDiscoveryWizard_installProblems, new Object[] { e.getMessage() }), e);
+			DiscoveryUi.logAndDisplayStatus(Messages.ConnectorDiscoveryWizard_cannotInstall, status);
 		} catch (InterruptedException e) {
 			// canceled
 		}

@@ -10,23 +10,13 @@
       </command>
    </extension>
    <extension
-         point="org.eclipse.core.expressions.propertyTesters">
-      <propertyTester
-            class="org.eclipse.mylyn.internal.discovery.ui.util.DiscoveryEnvironmentSatisifiedPropertyTester"
-            id="org.eclipse.mylyn.internal.discovery.ui.discoveryEnvironmentSatisfied"
-            namespace="org.eclipse.mylyn.internal.discovery.ui"
-            properties="discoveryEnvironmentSatisfied"
-            type="java.lang.Object">
-      </propertyTester>
-   </extension>
-   <extension
          point="org.eclipse.ui.handlers">
       <handler
             class="org.eclipse.mylyn.internal.discovery.ui.commands.ShowConnectorDiscoveryWizardCommandHandler"
             commandId="org.eclipse.mylyn.discovery.ui.discoveryWizardCommand">
          <enabledWhen>
-            <test
-               property="org.eclipse.mylyn.internal.discovery.ui.discoveryEnvironmentSatisfied" forcePluginActivation="true"/>
+     		<test
+     			property="org.eclipse.core.runtime.isBundleInstalled" args="org.eclipse.equinox.p2.repository"/>
          </enabledWhen>
       </handler>
    </extension>

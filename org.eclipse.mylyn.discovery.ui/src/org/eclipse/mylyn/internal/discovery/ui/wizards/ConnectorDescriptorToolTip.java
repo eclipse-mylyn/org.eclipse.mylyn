@@ -109,7 +109,7 @@ class ConnectorDescriptorToolTip extends ToolTip {
 				Link link = new Link(container, SWT.NULL);
 				link.setBackground(background);
 				GridDataFactory.fillDefaults().grab(false, false).align(SWT.END, SWT.CENTER).applyTo(link);
-				link.setText("<a>more details</a>");
+				link.setText(Messages.ConnectorDescriptorToolTip_detailsLink);
 				link.addSelectionListener(new SelectionListener() {
 					public void widgetSelected(SelectionEvent e) {
 						Program.launch(overview.getUrl());

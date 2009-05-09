@@ -128,7 +128,7 @@ public abstract class DiscoveryUi {
 
 		String message = status.getMessage();
 		if (showLinkToErrorLog) {
-			message += "\n\nSee error log for details.";
+			message += Messages.DiscoveryUi_seeErrorLog;
 		}
 		switch (status.getSeverity()) {
 		case IStatus.CANCEL:

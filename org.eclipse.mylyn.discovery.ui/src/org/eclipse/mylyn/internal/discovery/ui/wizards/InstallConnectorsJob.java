@@ -40,12 +40,16 @@ import org.eclipse.equinox.internal.provisional.p2.ui.actions.InstallAction;
 import org.eclipse.equinox.internal.provisional.p2.ui.operations.ProvisioningUtil;
 import org.eclipse.equinox.internal.provisional.p2.ui.policy.Policy;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDescriptor;
 import org.eclipse.mylyn.internal.discovery.ui.DiscoveryUi;
 import org.eclipse.mylyn.internal.discovery.ui.util.SimpleSelectionProvider;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
+
+import com.ibm.icu.text.MessageFormat;
 
 /**
  * A job that downloads and installs one or more {@link ConnectorDescriptor connectors}. The bulk of the installation
@@ -80,7 +84,7 @@ public class InstallConnectorsJob implements IRunnableWithProgress {
 	public void doRun(IProgressMonitor monitor) throws CoreException {
 		try {
 			final int totalWork = installableConnectors.size() * 4;
-			monitor.beginTask("Configuring installation selection", totalWork);
+			monitor.beginTask(Messages.InstallConnectorsJob_task_configuring, totalWork);
 
 			final String profileId = computeProfileId();
 
@@ -150,13 +154,7 @@ public class InstallConnectorsJob implements IRunnableWithProgress {
 								return false;
 							}
 							IInstallableUnit candidate = (IInstallableUnit) object;
-//							if ("true".equals(candidate.getProperty("org.eclipse.equinox.p2.type.group"))) {
-//								if (candidate.getId().endsWith(".feature.group")) {
-//									String featureId = candidate.getId().substring(0,
-//											candidate.getId().length() - ".feature.group".length());
-//									return installableUnitIdsThisRepository.contains(featureId);
-//								}
-//							}
+
 							IArtifactKey[] artifacts = candidate.getArtifacts();
 							if (artifacts != null && artifacts.length == 1) {
 								return "org.eclipse.update.feature".equals(artifacts[0].getClassifier()) && //$NON-NLS-1$
@@ -192,34 +190,53 @@ public class InstallConnectorsJob implements IRunnableWithProgress {
 				}
 			}
 
-//			// Verify that we found what we were looking for: it's possible that we have connector descriptors
-//			// that are no longer available on their respective site.  In that case we must inform the user.
-//			// (Unfortunately this is the earliest point at which we can know) 
-//			if (installableUnits.size() < installableConnectors.size()) {
-//				// at least one selected connector could not be found in a repository
-//				Set<String> foundIds = new HashSet<String>();
-//				for (InstallableUnit unit : installableUnits) {
-//					foundIds.add(unit.getId());
-//				}
-//
-//				String notFound = ""; //$NON-NLS-1$
-//				for (ConnectorDescriptor descriptor : installableConnectors) {
-//					if (!foundIds.contains(descriptor.getId())) {
-//						if (notFound.length() > 0) {
-//							notFound += ", ";
-//						}
-//						notFound += descriptor.getName();
-//					}
-//				}
-//				//if (!installableUnits.isEmpty()) {
-//				// TODO: instead of aborting here, we could ask the user if they wish to proceed anyways
-//				//}
-//				throw new CoreException(new Status(IStatus.ERROR, DiscoveryUi.BUNDLE_ID, MessageFormat.format(
-//						"The following connectors are not available: {0}", new Object[] { notFound }), null));
-//			} else if (installableUnits.size() > installableConnectors.size()) {
-//				// should never ever happen
-//				throw new IllegalStateException();
-//			}
+			// Verify that we found what we were looking for: it's possible that we have connector descriptors
+			// that are no longer available on their respective sites.  In that case we must inform the user.
+			// (Unfortunately this is the earliest point at which we can know) 
+			if (installableUnits.size() < installableConnectors.size()) {
+				// at least one selected connector could not be found in a repository
+				Set<String> foundIds = new HashSet<String>();
+				for (InstallableUnit unit : installableUnits) {
+					foundIds.add(unit.getId());
+				}
+
+				final String notFound;
+				{
+					String temp = ""; //$NON-NLS-1$
+					for (ConnectorDescriptor descriptor : installableConnectors) {
+						if (!foundIds.contains(descriptor.getId())) {
+							if (temp.length() > 0) {
+								temp += Messages.InstallConnectorsJob_commaSeparator;
+							}
+							temp += descriptor.getName();
+						}
+					}
+					notFound = temp;
+				}
+				boolean proceed = false;
+				if (!installableUnits.isEmpty()) {
+					// instead of aborting here we ask the user if they wish to proceed anyways
+					final boolean[] okayToProceed = new boolean[1];
+					Display.getDefault().syncExec(new Runnable() {
+						public void run() {
+							okayToProceed[0] = MessageDialog.openQuestion(
+									PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+									Messages.InstallConnectorsJob_questionProceed,
+									MessageFormat.format(
+											Messages.InstallConnectorsJob_questionProceed_long,
+											new Object[] { notFound }));
+						}
+					});
+					proceed = okayToProceed[0];
+				}
+				if (!proceed) {
+					throw new CoreException(new Status(IStatus.ERROR, DiscoveryUi.BUNDLE_ID, MessageFormat.format(
+							Messages.InstallConnectorsJob_connectorsNotAvailable, new Object[] { notFound }), null));
+				}
+			} else if (installableUnits.size() > installableConnectors.size()) {
+				// should never ever happen
+				throw new IllegalStateException();
+			}
 
 			// now that we've got what we want, do the install
 			Display.getDefault().asyncExec(new Runnable() {
@@ -234,11 +251,11 @@ public class InstallConnectorsJob implements IRunnableWithProgress {
 		} catch (URISyntaxException e) {
 			// should never happen, since we already validated URLs.
 			throw new CoreException(new Status(IStatus.ERROR, DiscoveryUi.BUNDLE_ID,
-					"Unexpected error handling repository URL", e));
+					Messages.InstallConnectorsJob_unexpectedError_url, e));
 		} catch (MalformedURLException e) {
 			// should never happen, since we already validated URLs.
 			throw new CoreException(new Status(IStatus.ERROR, DiscoveryUi.BUNDLE_ID,
-					"Unexpected error handling repository URL", e));
+					Messages.InstallConnectorsJob_unexpectedError_url, e));
 		}
 	}
 
@@ -251,7 +268,7 @@ public class InstallConnectorsJob implements IRunnableWithProgress {
 		if (profiles.length > 0) {
 			return profiles[0].getProfileId();
 		}
-		throw new CoreException(new Status(IStatus.ERROR, DiscoveryUi.BUNDLE_ID, "Cannot determine p2 profile", null));
+		throw new CoreException(new Status(IStatus.ERROR, DiscoveryUi.BUNDLE_ID, Messages.InstallConnectorsJob_profileProblem, null));
 	}
 
 }

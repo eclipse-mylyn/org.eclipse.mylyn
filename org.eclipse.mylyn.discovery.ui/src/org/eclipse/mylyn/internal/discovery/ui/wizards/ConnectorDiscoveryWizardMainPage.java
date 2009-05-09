@@ -92,6 +92,7 @@ import org.eclipse.ui.progress.WorkbenchJob;
  * The main wizard page that allows users to select connectors that they wish to install.
  * 
  * @author David Green
+ * @author Shawn Minto bug 275513
  */
 public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 
@@ -127,7 +128,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 
 	private WorkbenchJob refreshJob;
 
-	private final String initialText = "type filter text";
+	private final String initialText = org.eclipse.mylyn.internal.discovery.ui.wizards.WorkbenchMessages.ConnectorDiscoveryWizardMainPage_typeFilterText;
 
 	private String previousFilterText = ""; //$NON-NLS-1$
 
@@ -137,9 +138,9 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 
 	public ConnectorDiscoveryWizardMainPage() {
 		super(ConnectorDiscoveryWizardMainPage.class.getSimpleName());
-		setTitle("Connector Discovery");
+		setTitle(org.eclipse.mylyn.internal.discovery.ui.wizards.WorkbenchMessages.ConnectorDiscoveryWizardMainPage_connectorDiscovery);
 		// setImageDescriptor(image);
-		setDescription("Select connectors to install");
+		setDescription(org.eclipse.mylyn.internal.discovery.ui.wizards.WorkbenchMessages.ConnectorDiscoveryWizardMainPage_pageDescription);
 		setPageComplete(false);
 	}
 
@@ -167,7 +168,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 				GridLayoutFactory.fillDefaults().numColumns(ConnectorDescriptorKind.values().length + 1).applyTo(
 						checkboxContainer);
 				Label label = new Label(checkboxContainer, SWT.NULL);
-				label.setText("Show Connectors For:");
+				label.setText(org.eclipse.mylyn.internal.discovery.ui.wizards.WorkbenchMessages.ConnectorDiscoveryWizardMainPage_filterLabel);
 				for (final ConnectorDescriptorKind kind : ConnectorDescriptorKind.values()) {
 					final Button checkbox = new Button(checkboxContainer, SWT.CHECK);
 					checkbox.setSelection(getWizard().isVisible(kind));
@@ -436,11 +437,11 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 	private String getFilterLabel(ConnectorDescriptorKind kind) {
 		switch (kind) {
 		case DOCUMENT:
-			return "Documents (Email, Office)";
+			return org.eclipse.mylyn.internal.discovery.ui.wizards.WorkbenchMessages.ConnectorDiscoveryWizardMainPage_filter_documents;
 		case TASK:
-			return "Tasks (Bugs, Issue tracking)";
+			return org.eclipse.mylyn.internal.discovery.ui.wizards.WorkbenchMessages.ConnectorDiscoveryWizardMainPage_filter_tasks;
 		case VCS:
-			return "Version Control (VCS)";
+			return org.eclipse.mylyn.internal.discovery.ui.wizards.WorkbenchMessages.ConnectorDiscoveryWizardMainPage_filter_vcs;
 		default:
 			throw new IllegalStateException(kind.name());
 		}
@@ -519,7 +520,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 			Font baseFont = JFaceResources.getDialogFont();
 			FontData[] fontData = baseFont.getFontData();
 			for (FontData data : fontData) {
-				data.style = data.style | SWT.BOLD;
+				data.setStyle(data.getStyle() | SWT.BOLD);
 				data.height = data.height * 1.25f;
 			}
 			h2Font = new Font(Display.getCurrent(), fontData);
@@ -530,7 +531,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 			Font baseFont = JFaceResources.getDialogFont();
 			FontData[] fontData = baseFont.getFontData();
 			for (FontData data : fontData) {
-				data.style = data.style | SWT.BOLD;
+				data.setStyle(data.getStyle() | SWT.BOLD);
 				data.height = data.height * 1.35f;
 			}
 			h1Font = new Font(Display.getCurrent(), fontData);
@@ -555,7 +556,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 			if (filterPattern != null) {
 				Link link = new Link(container, SWT.WRAP);
 				link.setFont(container.getFont());
-				link.setText("There are no matching connectors.  Please <a>clear the filter text</a> or try again later.");
+				link.setText(org.eclipse.mylyn.internal.discovery.ui.wizards.WorkbenchMessages.ConnectorDiscoveryWizardMainPage_noMatchingItems_withFilterText);
 				link.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event event) {
 						clearFilterText();
@@ -567,9 +568,9 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 				Label helpText = new Label(container, SWT.WRAP);
 				helpText.setFont(container.getFont());
 				if (atLeastOneKindFiltered) {
-					helpText.setText("There are no connectors of the selected type.  Please select another connector type or try again later.");
+					helpText.setText(org.eclipse.mylyn.internal.discovery.ui.wizards.WorkbenchMessages.ConnectorDiscoveryWizardMainPage_noMatchingItems_filteredType);
 				} else {
-					helpText.setText("Sorry, there are no available connectors.  Please try again later.");
+					helpText.setText(org.eclipse.mylyn.internal.discovery.ui.wizards.WorkbenchMessages.ConnectorDiscoveryWizardMainPage_noMatchingItems_noFilter);
 				}
 				helpTextControl = helpText;
 			}
@@ -857,8 +858,8 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 						connectorDiscovery.getDiscoveryStrategies().add(new BundleDiscoveryStrategy());
 						RemoteBundleDiscoveryStrategy remoteDiscoveryStrategy = new RemoteBundleDiscoveryStrategy();
 						// FIXME: the discovery directory URL
-						remoteDiscoveryStrategy.setDirectoryUrl(System.getProperty("mylyn.discovery.directory",
-								"http://www.eclipse.org/mylyn/discovery/directory"));
+						remoteDiscoveryStrategy.setDirectoryUrl(System.getProperty("mylyn.discovery.directory", //$NON-NLS-1$
+								"http://www.eclipse.org/mylyn/discovery/directory")); //$NON-NLS-1$
 						connectorDiscovery.getDiscoveryStrategies().add(remoteDiscoveryStrategy);
 						try {
 							connectorDiscovery.performDiscovery(monitor);
@@ -875,11 +876,17 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 				Throwable cause = e.getCause();
 				IStatus status;
 				if (!(cause instanceof CoreException)) {
-					status = new Status(IStatus.ERROR, DiscoveryUi.BUNDLE_ID, "Unexpected exception", cause);
+					status = new Status(
+							IStatus.ERROR,
+							DiscoveryUi.BUNDLE_ID,
+							org.eclipse.mylyn.internal.discovery.ui.wizards.WorkbenchMessages.ConnectorDiscoveryWizardMainPage_unexpectedException,
+							cause);
 				} else {
 					status = ((CoreException) cause).getStatus();
 				}
-				DiscoveryUi.logAndDisplayStatus("Connector Discovery Error", status);
+				DiscoveryUi.logAndDisplayStatus(
+						org.eclipse.mylyn.internal.discovery.ui.wizards.WorkbenchMessages.ConnectorDiscoveryWizardMainPage_errorTitle,
+						status);
 			} catch (InterruptedException e) {
 				// cancelled by user so nothing to do here.
 				wasCancelled = true;
@@ -911,8 +918,10 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 			}
 			if (categoryWithConnectorCount == 0) {
 				// nothing was discovered: notify the user
-				MessageDialog.openWarning(getShell(), "No Connectors Found",
-						"Connector discovery completed without finding any connectors.  Please check your Internet connection and try again.");
+				MessageDialog.openWarning(
+						getShell(),
+						org.eclipse.mylyn.internal.discovery.ui.wizards.WorkbenchMessages.ConnectorDiscoveryWizardMainPage_noConnectorsFound,
+						org.eclipse.mylyn.internal.discovery.ui.wizards.WorkbenchMessages.ConnectorDiscoveryWizardMainPage_noConnectorsFound_description);
 			}
 		}
 	}
