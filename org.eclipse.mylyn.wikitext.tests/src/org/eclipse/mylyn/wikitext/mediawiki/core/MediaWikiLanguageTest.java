@@ -325,7 +325,19 @@ public class MediaWikiLanguageTest extends TestCase {
 	public void testImageWithAltTextAndOptions() {
 		String html = parser.parseToHtml("a [[Image:foo.png|100px|center|Example]] image");
 		System.out.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><p>a <img height=\"100\" width=\"100\" align=\"middle\" title=\"Example\" alt=\"Example\" border=\"0\" src=\"foo.png\"/> image</p></body>"));
+		assertTrue(html.contains("<body><p>a <img width=\"100\" align=\"middle\" title=\"Example\" alt=\"Example\" border=\"0\" src=\"foo.png\"/> image</p></body>"));
+	}
+
+	public void testImageWithAltTextAndHeightWidth() {
+		String html = parser.parseToHtml("a [[Image:foo.png|100x220px]] image");
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><p>a <img height=\"220\" width=\"100\" border=\"0\" src=\"foo.png\"/> image</p></body>"));
+	}
+
+	public void testImageWithAltTextAndWidth() {
+		String html = parser.parseToHtml("a [[Image:foo.png|100px]] image");
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><p>a <img width=\"100\" border=\"0\" src=\"foo.png\"/> image</p></body>"));
 	}
 
 	public void testTable() {

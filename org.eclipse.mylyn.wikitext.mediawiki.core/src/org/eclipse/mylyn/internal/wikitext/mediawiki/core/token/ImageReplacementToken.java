@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.mediawiki.core.token;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes.Align;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
@@ -18,10 +21,14 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcesso
 /**
  * match [[Image:someImage.png]]
  * 
+ * @see <a href="http://en.wikipedia.org/wiki/Wikipedia:Extended_image_syntax">Extended image syntax</a>
+ * 
  * @author David Green
  * 
  */
 public class ImageReplacementToken extends PatternBasedElement {
+
+	private static Pattern widthHeightPart = Pattern.compile("(\\d+)(x(\\d+))?px"); //$NON-NLS-1$
 
 	@Override
 	protected String getPattern(int groupOffset) {
@@ -46,6 +53,7 @@ public class ImageReplacementToken extends PatternBasedElement {
 
 			ImageAttributes attributes = new ImageAttributes();
 			if (optionsString != null) {
+				Matcher matcher;
 				String[] options = optionsString.split("\\s*\\|\\s*"); //$NON-NLS-1$
 				for (String option : options) {
 					if ("center".equals(option)) { //$NON-NLS-1$
@@ -58,11 +66,16 @@ public class ImageReplacementToken extends PatternBasedElement {
 						attributes.setAlign(null);
 					} else if ("thumb".equals(option) || "thumbnail".equals(option)) { //$NON-NLS-1$ //$NON-NLS-2$
 						// ignore
-					} else if (option.matches("\\d+px")) { //$NON-NLS-1$
+					} else if ((matcher = widthHeightPart.matcher(option)).matches()) {
 						try {
-							int size = Integer.parseInt(option.substring(0, option.length() - 2));
+							String sizePart = matcher.group(1);
+							String heightPart = matcher.group(3);
+							int size = Integer.parseInt(sizePart);
 							attributes.setWidth(size);
-							attributes.setHeight(size);
+							if (heightPart != null) {
+								int height = Integer.parseInt(heightPart);
+								attributes.setHeight(height);
+							}
 						} catch (NumberFormatException e) {
 							// ignore
 						}
