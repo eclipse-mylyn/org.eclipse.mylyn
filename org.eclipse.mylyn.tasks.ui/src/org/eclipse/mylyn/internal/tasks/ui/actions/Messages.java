@@ -205,6 +205,8 @@ public class Messages extends NLS {
 
 	public static String RenameAction_Rename;
 
+	public static String ShowInSearchViewAction_Open_in_Search_Label;
+
 	public static String ShowInTaskListAction_Show_In_Task_List;
 
 	public static String SynchronizeAutomaticallyAction_Synchronize_Automatically;

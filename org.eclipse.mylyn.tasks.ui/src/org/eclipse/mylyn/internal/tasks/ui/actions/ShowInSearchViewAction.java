@@ -31,7 +31,7 @@ public class ShowInSearchViewAction extends BaseSelectionListenerAction {
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.open.browser"; //$NON-NLS-1$
 
 	public ShowInSearchViewAction() {
-		super("Show in Search");
+		super(Messages.ShowInSearchViewAction_Open_in_Search_Label);
 		setId(ID);
 	}
 
