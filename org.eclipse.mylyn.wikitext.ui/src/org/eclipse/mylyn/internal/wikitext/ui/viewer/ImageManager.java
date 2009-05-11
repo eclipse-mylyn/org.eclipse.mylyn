@@ -44,6 +44,7 @@ import org.eclipse.mylyn.internal.wikitext.ui.util.ImageCache;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.ImageAnnotation;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.ImageDrawingStrategy;
 import org.eclipse.mylyn.wikitext.ui.viewer.HtmlViewer;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.custom.StyleRange;
@@ -63,7 +64,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 
-import com.ibm.icu.text.MessageFormat;
+
 
 /**
  * Manages all aspects of image download/display in an {@link HtmlViewer}.
@@ -467,7 +468,7 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 									WikiTextUiPlugin.getDefault()
 											.log(
 													IStatus.ERROR,
-													MessageFormat.format(
+													NLS.bind(
 															Messages.ImageManager_accessFailed, new Object[] { location }), e); 
 								}
 								urlToImageData.put(imgSrc, null);

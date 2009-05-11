@@ -82,6 +82,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
 import org.eclipse.mylyn.wikitext.ui.editor.MarkupSourceViewerConfiguration;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.LocationEvent;
@@ -120,7 +121,7 @@ import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
-import com.ibm.icu.text.MessageFormat;
+
 
 /**
  * A text editor for editing lightweight markup. Can be configured to accept any {@link MarkupLanguage}, with pluggable
@@ -1007,10 +1008,10 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 					sourceTab.setToolTipText(Messages.MarkupEditor_markupSource_tooltip);
 				}
 			} else {
-				sourceTab.setText(MessageFormat.format(Messages.MarkupEditor_markupSource_named,
+				sourceTab.setText(NLS.bind(Messages.MarkupEditor_markupSource_named,
 						new Object[] { markupLanguage.getName() }));
 				if (!isCarbon) {
-					sourceTab.setToolTipText(MessageFormat.format(Messages.MarkupEditor_markupSource_tooltip_named,
+					sourceTab.setToolTipText(NLS.bind(Messages.MarkupEditor_markupSource_tooltip_named,
 							new Object[] { markupLanguage.getName() }));
 				}
 			}
@@ -1079,7 +1080,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 				WikiTextUiPlugin.getDefault()
 						.log(
 								IStatus.ERROR,
-								MessageFormat.format(Messages.MarkupEditor_markupPreferenceError2,
+								NLS.bind(Messages.MarkupEditor_markupPreferenceError2,
 										new Object[] { preference }), e);
 			}
 		}

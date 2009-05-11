@@ -22,9 +22,10 @@ import java.util.Locale;
 import org.eclipse.mylyn.wikitext.core.WikiText;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.osgi.util.NLS;
 import org.osgi.framework.Bundle;
 
-import com.ibm.icu.text.MessageFormat;
+
 
 /**
  * A handle to help content. HelpContent is retrieved from a resource path from a bundle. Help content is retrieved in a
@@ -114,13 +115,13 @@ public class HelpContent {
 			}
 			MarkupLanguage markupLanguage = WikiText.getMarkupLanguage(resourceContentLanguage);
 			if (markupLanguage == null) {
-				throw new IOException(MessageFormat.format(
+				throw new IOException(NLS.bind(
 						Messages.HelpContent_noSuchMarkupLanguage, new Object[] { resourceContentLanguage })); 
 			}
 			MarkupParser markupParser = new MarkupParser(markupLanguage);
 			return markupParser.parseToHtml(content);
 		} catch (final Exception e) {
-			throw new IOException(MessageFormat.format(
+			throw new IOException(NLS.bind(
 					Messages.HelpContent_cannotAccessContent, new Object[] { provider.getSymbolicName(), 
 							resourcePath, e.getMessage() })) {
 				@Override
@@ -163,7 +164,7 @@ public class HelpContent {
 				return resource;
 			}
 		}
-		throw new Exception(MessageFormat.format(Messages.HelpContent_cannotFindResource, new Object[] { resourcePath, 
+		throw new Exception(NLS.bind(Messages.HelpContent_cannotFindResource, new Object[] { resourcePath, 
 				provider.getSymbolicName() }));
 	}
 }

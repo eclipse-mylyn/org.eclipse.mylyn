@@ -26,6 +26,7 @@ import org.eclipse.mylyn.internal.wikitext.ui.editor.operations.CommandManager;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.operations.InsertLocation;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.operations.MoveSectionsCommand;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.Transfer;
@@ -35,7 +36,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
 
-import com.ibm.icu.text.MessageFormat;
+
 
 /**
  * 
@@ -98,7 +99,7 @@ public class OutlineDropTargetListener implements TransferDropTargetListener {
 							WikiTextUiPlugin.getDefault().log(exception);
 							MessageDialog.openError(
 									PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-									Messages.OutlineDropTargetListener_0, MessageFormat.format(Messages.OutlineDropTargetListener_1, new Object[] { exception.getMessage() }));  
+									Messages.OutlineDropTargetListener_0, NLS.bind(Messages.OutlineDropTargetListener_1, new Object[] { exception.getMessage() }));  
 						}
 
 						public void run() throws Exception {
@@ -108,7 +109,7 @@ public class OutlineDropTargetListener implements TransferDropTargetListener {
 				} else {
 					MessageDialog.openInformation(
 							PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-							Messages.OutlineDropTargetListener_2, MessageFormat.format(Messages.OutlineDropTargetListener_3,  
+							Messages.OutlineDropTargetListener_2, NLS.bind(Messages.OutlineDropTargetListener_3,  
 									new Object[] { command.getProblemText() }));
 				}
 			}

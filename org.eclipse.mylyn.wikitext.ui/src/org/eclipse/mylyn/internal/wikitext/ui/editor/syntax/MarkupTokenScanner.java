@@ -27,10 +27,11 @@ import org.eclipse.mylyn.internal.wikitext.ui.editor.preferences.Preferences;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.FastMarkupPartitioner.MarkupPartition;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.CssStyleManager;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.FontState;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Font;
 
-import com.ibm.icu.text.MessageFormat;
+
 
 /**
  * A token scanner that uses the results of the {@link FastMarkupPartitioner} to identify tokens.
@@ -243,11 +244,11 @@ public class MarkupTokenScanner implements ITokenScanner {
 
 	private void checkAddToken(List<Token> tokens, Token newToken) {
 		if (newToken.getLength() <= 0) {
-			throw new IllegalStateException(MessageFormat.format(Messages.MarkupTokenScanner_badTokenLength,
+			throw new IllegalStateException(NLS.bind(Messages.MarkupTokenScanner_badTokenLength,
 					new Object[] { newToken.getLength() }));
 		}
 		if (newToken.getOffset() < 0) {
-			throw new IllegalStateException(MessageFormat.format(Messages.MarkupTokenScanner_badTokenOffset,
+			throw new IllegalStateException(NLS.bind(Messages.MarkupTokenScanner_badTokenOffset,
 					new Object[] { newToken.getOffset() }));
 		}
 		if (!tokens.isEmpty()) {

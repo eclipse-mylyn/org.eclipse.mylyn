@@ -27,9 +27,10 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.PlatformUI;
 
-import com.ibm.icu.text.MessageFormat;
+
 
 /**
  * 
@@ -45,7 +46,7 @@ public class ConvertMarkupToHtml extends AbstractMarkupResourceHandler {
 		if (newFile.exists()) {
 			if (!MessageDialog.openQuestion(
 					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					Messages.ConvertMarkupToHtml_overwrite, MessageFormat.format(Messages.ConvertMarkupToHtml_fileExistsOverwrite, new Object[] { newFile.getFullPath() }))) {  
+					Messages.ConvertMarkupToHtml_overwrite, NLS.bind(Messages.ConvertMarkupToHtml_fileExistsOverwrite, new Object[] { newFile.getFullPath() }))) {  
 				return;
 			}
 		}

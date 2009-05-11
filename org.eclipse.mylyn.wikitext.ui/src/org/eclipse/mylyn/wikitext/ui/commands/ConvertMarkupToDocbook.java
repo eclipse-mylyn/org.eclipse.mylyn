@@ -24,9 +24,10 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.wikitext.core.parser.util.MarkupToDocbook;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.PlatformUI;
 
-import com.ibm.icu.text.MessageFormat;
+
 
 /**
  * 
@@ -42,7 +43,7 @@ public class ConvertMarkupToDocbook extends AbstractMarkupResourceHandler {
 		if (newFile.exists()) {
 			if (!MessageDialog.openQuestion(
 					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					Messages.ConvertMarkupToDocbook_overwrite, MessageFormat.format(Messages.ConvertMarkupToDocbook_fileExistsOverwrite, new Object[] { newFile.getFullPath() }))) {  
+					Messages.ConvertMarkupToDocbook_overwrite, NLS.bind(Messages.ConvertMarkupToDocbook_fileExistsOverwrite, new Object[] { newFile.getFullPath() }))) {  
 				return;
 			}
 		}

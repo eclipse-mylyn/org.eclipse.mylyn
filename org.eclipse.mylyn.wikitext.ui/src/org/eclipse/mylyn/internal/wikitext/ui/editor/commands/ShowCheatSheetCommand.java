@@ -23,11 +23,12 @@ import org.eclipse.mylyn.internal.wikitext.ui.editor.help.HelpContent;
 import org.eclipse.mylyn.internal.wikitext.ui.util.InformationPresenterUtil;
 import org.eclipse.mylyn.wikitext.core.WikiText;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import com.ibm.icu.text.MessageFormat;
+
 
 /**
  * A command that can show a cheat-sheet (help content) for a specific markup language.
@@ -102,7 +103,7 @@ public class ShowCheatSheetCommand extends AbstractHandler {
 				WikiTextUiPlugin.getDefault().log(e);
 			}
 		}
-		return MessageFormat.format(
+		return NLS.bind(
 				Messages.ShowCheatSheetCommand_noCheatSheetContent,
 				new Object[] { markupLanguage == null ? Messages.ShowCheatSheetCommand_unknownLanguage : markupLanguage.getName() });
 	}

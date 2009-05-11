@@ -23,10 +23,11 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor;
 import org.eclipse.mylyn.wikitext.core.WikiText;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import com.ibm.icu.text.MessageFormat;
+
 
 /**
  * An abstract base class for handlers that use the workbench selection to operate on resources
@@ -78,7 +79,7 @@ public abstract class AbstractMarkupResourceHandler extends AbstractHandler {
 							if (markupLanguage == null) {
 								MessageDialog.openError(
 										PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-										Messages.AbstractMarkupResourceHandler_unexpectedError, MessageFormat.format(
+										Messages.AbstractMarkupResourceHandler_unexpectedError, NLS.bind(
 												Messages.AbstractMarkupResourceHandler_markupLanguageMappingFailed,
 												new Object[] { file.getName() }));
 								return null;

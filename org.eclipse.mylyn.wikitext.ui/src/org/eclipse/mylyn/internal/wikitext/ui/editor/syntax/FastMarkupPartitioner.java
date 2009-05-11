@@ -32,8 +32,9 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.Locator;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.osgi.util.NLS;
 
-import com.ibm.icu.text.MessageFormat;
+
 
 /**
  * 
@@ -179,11 +180,11 @@ public class FastMarkupPartitioner extends FastPartitioner {
 					continue;
 				}
 				if (previous != null && region.getOffset() < (previous.getOffset() + previous.getLength())) {
-					String message = MessageFormat.format(Messages.FastMarkupPartitioner_0, new Object[] { region,
+					String message = NLS.bind(Messages.FastMarkupPartitioner_0, new Object[] { region,
 							previous, markupLanguage.getName() });
 					if (FastMarkupPartitioner.debug) {
 						String markupSavePath = saveToTempFile(markupLanguage, markupContent);
-						message = MessageFormat.format(Messages.FastMarkupPartitioner_1, new Object[] { message,
+						message = NLS.bind(Messages.FastMarkupPartitioner_1, new Object[] { message,
 								markupSavePath });
 					}
 					throw new IllegalStateException(message);

@@ -25,6 +25,7 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextNature;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.wikitext.core.WikiText;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -35,8 +36,6 @@ import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.PropertyPage;
-
-import com.ibm.icu.text.MessageFormat;
 
 /**
  * A properties page for IProject that allow for configuration of WikiText settings such as the presence of a
@@ -51,8 +50,8 @@ public class ProjectPropertyPage extends PropertyPage implements IWorkbenchPrope
 	private Button wikiTextNatureButton;
 
 	public ProjectPropertyPage() {
-		setTitle(Messages.ProjectPropertyPage_wikiText);  
-		setDescription(Messages.ProjectPropertyPage_configureInfo);  
+		setTitle(Messages.ProjectPropertyPage_wikiText);
+		setDescription(Messages.ProjectPropertyPage_configureInfo);
 	}
 
 	@Override
@@ -61,19 +60,19 @@ public class ProjectPropertyPage extends PropertyPage implements IWorkbenchPrope
 		container.setLayout(new GridLayout(1, false));
 
 		wikiTextNatureButton = new Button(container, SWT.CHECK);
-		wikiTextNatureButton.setText(Messages.ProjectPropertyPage_enableValidation);  
+		wikiTextNatureButton.setText(Messages.ProjectPropertyPage_enableValidation);
 
 		StringBuilder buf = new StringBuilder();
 		SortedSet<String> extensions = new TreeSet<String>(WikiText.getMarkupFileExtensions());
 		for (String extension : extensions) {
 			if (buf.length() > 0) {
-				buf.append(Messages.ProjectPropertyPage_3);  
+				buf.append(Messages.ProjectPropertyPage_3);
 			}
-			buf.append(Messages.ProjectPropertyPage_4);  
+			buf.append(Messages.ProjectPropertyPage_4);
 			buf.append(extension);
 		}
-		wikiTextNatureButton.setToolTipText(MessageFormat.format(
-				Messages.ProjectPropertyPage_validation_tooltip, new Object[] { buf.toString() }));  
+		wikiTextNatureButton.setToolTipText(NLS.bind(Messages.ProjectPropertyPage_validation_tooltip,
+				new Object[] { buf.toString() }));
 
 		project = (IProject) getElement().getAdapter(IProject.class);
 
@@ -125,8 +124,8 @@ public class ProjectPropertyPage extends PropertyPage implements IWorkbenchPrope
 		try {
 			new ProgressMonitorDialog(getShell()).run(true, true, operation);
 		} catch (InvocationTargetException e) {
-			String message = Messages.ProjectPropertyPage_operationError;  
-			String title = Messages.ProjectPropertyPage_unexpectedError;  
+			String message = Messages.ProjectPropertyPage_operationError;
+			String title = Messages.ProjectPropertyPage_unexpectedError;
 			ErrorDialog.openError(getShell(), title, message, WikiTextUiPlugin.getDefault().createStatus(IStatus.ERROR,
 					e.getCause()));
 		} catch (InterruptedException e) {
