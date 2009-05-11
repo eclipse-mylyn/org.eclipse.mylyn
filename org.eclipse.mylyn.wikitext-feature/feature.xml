@@ -49,7 +49,6 @@
       <import plugin="org.eclipse.mylyn.tasks.ui" version="3.0.2" match="compatible"/>
       <import plugin="org.eclipse.mylyn.tasks.core" version="3.0.2" match="compatible"/>
       <import feature="org.eclipse.mylyn_feature" version="3.0.2.I20080816" match="compatible"/>
-      <import plugin="com.ibm.icu"/>
    </requires>
 
    <plugin
