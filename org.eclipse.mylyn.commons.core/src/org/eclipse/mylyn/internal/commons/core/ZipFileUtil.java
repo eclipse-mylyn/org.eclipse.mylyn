@@ -189,38 +189,39 @@ public class ZipFileUtil {
 	 */
 	private static void addZipEntry(ZipOutputStream zipOut, String rootPath, File file) throws FileNotFoundException,
 			IOException {
-
-		if (file.isDirectory()) {
-			for (File child : file.listFiles()) {
-				addZipEntry(zipOut, rootPath, child);
-			}
-		} else {
-			// Add ZIP entry to output stream.m
-			String path = ""; //$NON-NLS-1$
-			if (!rootPath.equals("")) { //$NON-NLS-1$
-				rootPath = rootPath.replaceAll("\\\\", "/"); //$NON-NLS-1$ //$NON-NLS-2$
-				path = file.getAbsolutePath().replaceAll("\\\\", "/"); //$NON-NLS-1$ //$NON-NLS-2$
-				path = path.substring(rootPath.length());
+		if (file.exists()) {
+			if (file.isDirectory()) {
+				for (File child : file.listFiles()) {
+					addZipEntry(zipOut, rootPath, child);
+				}
 			} else {
-				path = file.getName();
+				// Add ZIP entry to output stream.m
+				String path = ""; //$NON-NLS-1$
+				if (!rootPath.equals("")) { //$NON-NLS-1$
+					rootPath = rootPath.replaceAll("\\\\", "/"); //$NON-NLS-1$ //$NON-NLS-2$
+					path = file.getAbsolutePath().replaceAll("\\\\", "/"); //$NON-NLS-1$ //$NON-NLS-2$
+					path = path.substring(rootPath.length());
+				} else {
+					path = file.getName();
+				}
+
+				zipOut.putNextEntry(new ZipEntry(path));
+
+				// Create a buffer for reading the files
+				byte[] buf = new byte[1024];
+
+				// Transfer bytes from the file to the ZIP file
+				// and compress the files
+				FileInputStream in = new FileInputStream(file);
+				int len;
+				while ((len = in.read(buf)) > 0) {
+					zipOut.write(buf, 0, len);
+				}
+
+				// Complete the entry
+				zipOut.closeEntry();
+				in.close();
 			}
-
-			zipOut.putNextEntry(new ZipEntry(path));
-
-			// Create a buffer for reading the files
-			byte[] buf = new byte[1024];
-
-			// Transfer bytes from the file to the ZIP file
-			// and compress the files
-			FileInputStream in = new FileInputStream(file);
-			int len;
-			while ((len = in.read(buf)) > 0) {
-				zipOut.write(buf, 0, len);
-			}
-
-			// Complete the entry
-			zipOut.closeEntry();
-			in.close();
 		}
 	}
 
