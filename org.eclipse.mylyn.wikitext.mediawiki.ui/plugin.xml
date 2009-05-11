@@ -42,6 +42,9 @@
          <template name="* " description="%template.description.11" content="\n* ${text}\n* ${text2}\n\n" block="true"/>
          <template name="** " description="%template.description.12" content="\n** ${text}\n** ${text2}\n\n" block="true"/>
          <template name=";: " description="%template.description.13" content="\n; ${text} : ${definition}\n; ${text2} : ${definition2}\n\n" block="true"/>
+         
+         <!-- phrase modifiers -->
+         <template name="[hyperlink]" description="[http://www.eclipse.org/mylyn]" content="[${text}] $"/>
       </templates>
    </extension>
 
