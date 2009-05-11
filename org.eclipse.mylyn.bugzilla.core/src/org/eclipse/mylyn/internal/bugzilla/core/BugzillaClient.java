@@ -1842,7 +1842,10 @@ public class BugzillaClient {
 					if (origText.length() > WRAP_LENGTH) {
 						int spaceIndex = origText.lastIndexOf(" ", WRAP_LENGTH); //$NON-NLS-1$
 						if (spaceIndex == -1) {
-							spaceIndex = newLine;
+							spaceIndex = origText.indexOf(" ", WRAP_LENGTH); //$NON-NLS-1$
+							if (spaceIndex == -1) {
+								spaceIndex = newLine;
+							}
 						}
 						newText = newText + origText.substring(0, spaceIndex) + "\n"; //$NON-NLS-1$
 						if (origText.charAt(spaceIndex) == ' ' || origText.charAt(spaceIndex) == '\n') {
