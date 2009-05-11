@@ -77,6 +77,12 @@ public class Messages extends NLS {
 
 	public static String AttachmentPreviewPage_Run_in_background;
 
+	public static String SelectRepositoryConnectorPage_discoveryProblemMessage;
+
+	public static String SelectRepositoryConnectorPage_discoveryProblemTitle;
+
+	public static String SelectRepositoryConnectorPage_downloadLink;
+
 	public static String SelectRepositoryConnectorPage_Select_a_task_repository_type;
 
 	public static String SelectRepositoryConnectorPage_You_can_connect_to_an_existing_account_using_one_of_the_installed_connectors;

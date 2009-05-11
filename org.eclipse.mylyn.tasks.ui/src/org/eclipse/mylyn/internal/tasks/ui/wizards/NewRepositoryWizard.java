@@ -12,8 +12,6 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
-import java.util.Collection;
-
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
@@ -63,13 +61,8 @@ public class NewRepositoryWizard extends Wizard implements INewWizard {
 
 	@Override
 	public void addPages() {
-		Collection<AbstractRepositoryConnector> connectors = TasksUi.getRepositoryManager().getRepositoryConnectors();
-		if (connectorKind != null || connectors.size() == 1) {
-			if (connectorKind != null) {
-				connector = TasksUi.getRepositoryManager().getRepositoryConnector(connectorKind);
-			} else {
-				connector = connectors.toArray(new AbstractRepositoryConnector[1])[0];
-			}
+		if (connectorKind != null) {
+			connector = TasksUi.getRepositoryManager().getRepositoryConnector(connectorKind);
 			updateSettingsPage();
 			addPage(settingsPage);
 		} else {
