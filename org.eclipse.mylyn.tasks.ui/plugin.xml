@@ -95,7 +95,7 @@
       </wizard>
 	  <wizard
             category="org.eclipse.mylyn.ui.wizards.new"
-            class="org.eclipse.mylyn.internal.tasks.ui.wizards.NewTaskWizard"
+            class="org.eclipse.mylyn.internal.tasks.ui.wizards.NewTaskWizardInternal"
             icon="icons/etool16/task-new.gif"
             id="org.eclipse.mylyn.tasks.ui.wizards.new.repository.task"
             name="%NewTaskWizard.name"/>

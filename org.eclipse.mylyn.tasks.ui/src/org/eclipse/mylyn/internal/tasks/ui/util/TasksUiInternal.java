@@ -66,7 +66,7 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.CategoryEditorInput;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.MultiRepositoryAwareWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
-import org.eclipse.mylyn.internal.tasks.ui.wizards.NewTaskWizard;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.NewTaskWizardInternal;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskAttachmentWizard;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
@@ -114,7 +114,7 @@ public class TasksUiInternal {
 	public static final int SWT_NO_SCROLL = 1 << 4;
 
 	public static MultiRepositoryAwareWizard createNewTaskWizard(ITaskMapping taskSelection) {
-		return new NewTaskWizard(taskSelection);
+		return new NewTaskWizardInternal(taskSelection);
 	}
 
 	public static ImageDescriptor getPriorityImage(ITask task) {

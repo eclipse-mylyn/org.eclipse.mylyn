@@ -12,8 +12,6 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
-import java.util.List;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
@@ -32,7 +30,6 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewQueryWizard;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.widgets.Shell;
@@ -66,6 +63,7 @@ public class NewQueryAction extends Action implements IViewActionDelegate, IExec
 	@Override
 	public void run() {
 		IWizard wizard = null;
+		/* Disabled for bug 275204 to make it more simple to discover ui for installing additional connectors
 		List<TaskRepository> repositories = TasksUi.getRepositoryManager().getAllRepositories();
 		if (repositories.size() == 2) {
 			// NOTE: this click-saving should be generalized
@@ -79,7 +77,8 @@ public class NewQueryAction extends Action implements IViewActionDelegate, IExec
 					((Wizard) wizard).setForcePreviousAndNextButtons(true);
 				}
 			}
-		} else if (skipRepositoryPage) {
+		} else */
+		if (skipRepositoryPage) {
 			TaskRepository taskRepository = TasksUiUtil.getSelectedRepository();
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskRepository.getConnectorKind());
 			wizard = connectorUi.getQueryWizard(taskRepository, null);
