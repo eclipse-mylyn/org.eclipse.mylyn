@@ -125,7 +125,7 @@ public class SelectRepositoryConnectorPage extends WizardPage {
 			final Command discoveryWizardCommand = service.getCommand("org.eclipse.mylyn.discovery.ui.discoveryWizardCommand"); //$NON-NLS-1$
 			if (discoveryWizardCommand != null) {
 				// update enabled state in case something has changed (ProxyHandler caches state)
-				discoveryWizardCommand.setEnabled(createEvaluationContext(handlerService));
+				// FIXME discoveryWizardCommand.setEnabled(createEvaluationContext(handlerService));
 
 				if (discoveryWizardCommand.isEnabled()) {
 					Link link = new Link(container, SWT.NULL);
