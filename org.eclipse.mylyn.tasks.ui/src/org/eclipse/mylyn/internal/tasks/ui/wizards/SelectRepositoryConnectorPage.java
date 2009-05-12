@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -33,6 +34,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesSorter;
@@ -125,7 +127,16 @@ public class SelectRepositoryConnectorPage extends WizardPage {
 			final Command discoveryWizardCommand = service.getCommand("org.eclipse.mylyn.discovery.ui.discoveryWizardCommand"); //$NON-NLS-1$
 			if (discoveryWizardCommand != null) {
 				// update enabled state in case something has changed (ProxyHandler caches state)
-				// FIXME discoveryWizardCommand.setEnabled(createEvaluationContext(handlerService));
+				// XXX remove reflection when we no longer support 3.3
+				try {
+					Command.class.getDeclaredMethod("setEnabled", Object.class).invoke(discoveryWizardCommand, //$NON-NLS-1$
+							createEvaluationContext(handlerService));
+				} catch (InvocationTargetException e1) {
+					Throwable cause = e1.getCause();
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "unexpected exception", cause)); //$NON-NLS-1$
+				} catch (Exception e1) {
+					// expected on Eclipse 3.3
+				}
 
 				if (discoveryWizardCommand.isEnabled()) {
 					Link link = new Link(container, SWT.NULL);
