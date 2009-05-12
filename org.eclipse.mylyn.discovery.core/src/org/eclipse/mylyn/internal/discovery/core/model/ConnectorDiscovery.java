@@ -20,7 +20,9 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
@@ -162,6 +164,22 @@ public class ConnectorDiscovery {
 					connectors.remove(connector);
 				}
 			}
+		}
+	}
+
+	public void dispose() {
+		for (final AbstractDiscoveryStrategy strategy : discoveryStrategies) {
+			SafeRunner.run(new ISafeRunnable() {
+
+				public void run() throws Exception {
+					strategy.dispose();
+				}
+
+				public void handleException(Throwable exception) {
+					StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID,
+							"exception disposing " + strategy.getClass().getName(), exception)); //$NON-NLS-1$
+				}
+			});
 		}
 	}
 }

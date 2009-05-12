@@ -463,6 +463,9 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 			resource.dispose();
 		}
 		clearDisposables();
+		if (discovery != null) {
+			discovery.dispose();
+		}
 	}
 
 	private void clearDisposables() {

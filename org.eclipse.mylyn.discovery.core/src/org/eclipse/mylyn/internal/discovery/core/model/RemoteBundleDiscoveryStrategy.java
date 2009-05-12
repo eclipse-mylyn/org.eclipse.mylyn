@@ -45,6 +45,8 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 
 	private DiscoveryRegistryStrategy registryStrategy;
 
+	private File temporaryStorage;
+
 	@Override
 	public void performDiscovery(IProgressMonitor monitor) throws CoreException {
 		if (connectors == null || categories == null || directoryUrl == null) {
@@ -54,20 +56,21 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 			throw new IllegalStateException();
 		}
 
-		final int totalTicks = 10000;
+		final int totalTicks = 100000;
 		final int ticksTenPercent = totalTicks / 10;
 		monitor.beginTask("remote discovery", totalTicks);
 
-		// FIXME: tempFolder should be cleaned up when we're done
-		File tempFolder;
 		File registryCacheFolder;
 		try {
-			tempFolder = File.createTempFile(RemoteBundleDiscoveryStrategy.class.getSimpleName(), ".tmp"); //$NON-NLS-1$
-			tempFolder.delete();
-			if (!tempFolder.mkdirs()) {
+			if (temporaryStorage != null && temporaryStorage.exists()) {
+				delete(temporaryStorage);
+			}
+			temporaryStorage = File.createTempFile(RemoteBundleDiscoveryStrategy.class.getSimpleName(), ".tmp"); //$NON-NLS-1$
+			temporaryStorage.delete();
+			if (!temporaryStorage.mkdirs()) {
 				throw new IOException();
 			}
-			registryCacheFolder = new File(tempFolder, ".registry-cache"); //$NON-NLS-1$
+			registryCacheFolder = new File(temporaryStorage, ".rcache"); //$NON-NLS-1$
 			if (!registryCacheFolder.mkdirs()) {
 				throw new IOException();
 			}
@@ -120,14 +123,15 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 				String lastPathElement = bundleUrl.lastIndexOf('/') == -1 ? bundleUrl
 						: bundleUrl.substring(bundleUrl.lastIndexOf('/'));
 				File target = File.createTempFile(
-						lastPathElement.replaceAll("^[a-zA-Z0-9_.]", "_") + "_", ".jar", tempFolder); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$
+						lastPathElement.replaceAll("^[a-zA-Z0-9_.]", "_") + "_", ".jar", temporaryStorage); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$
 
 				if (monitor.isCanceled()) {
 					return;
 				}
 
 				// FIXME: Eclipse network/proxy settings
-				WebUtil.downloadResource(target, new WebLocation(bundleUrl), monitor);
+				WebUtil.downloadResource(target, new WebLocation(bundleUrl), new SubProgressMonitor(monitor,
+						ticksTenPercent * 4 / directory.getEntries().size()));
 				bundles.add(target);
 			} catch (IOException e) {
 				StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID, MessageFormat.format(
@@ -156,6 +160,30 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 			registryStrategy = null;
 		}
 		monitor.done();
+	}
+
+	private void delete(File file) {
+		if (file.exists()) {
+			if (file.isDirectory()) {
+				File[] children = file.listFiles();
+				if (children != null) {
+					for (File child : children) {
+						delete(child);
+					}
+				}
+			}
+			if (!file.delete()) {
+				// fail quietly
+			}
+		}
+	}
+
+	@Override
+	public void dispose() {
+		super.dispose();
+		if (temporaryStorage != null) {
+			delete(temporaryStorage);
+		}
 	}
 
 	public String getDirectoryUrl() {
