@@ -86,7 +86,7 @@
 		</ant>
 		<ant antfile="${genericTargets}" target="${target}">
 			<property name="type" value="feature" />
-			<property name="id" value="org.eclipse.mylyn.wikitext.sdk_feature" />
+			<property name="id" value="org.eclipse.mylyn.wikitext.sdk" />
 		</ant>
 		<ant antfile="${genericTargets}" target="${target}">
 			<property name="type" value="feature" />
@@ -184,7 +184,7 @@
 		</ant>
 		<ant antfile="${genericTargets}" target="${target}">
 			<property name="type" value="feature" />
-			<property name="id" value="org.eclipse.mylyn.wikitext.sdk_feature" />
+			<property name="id" value="org.eclipse.mylyn.wikitext.sdk" />
 		</ant>
 	</target>
 
@@ -249,7 +249,7 @@
 	<target name="assemble.org.eclipse.mylyn.sdk_feature">
 		<ant antfile="${assembleScriptName}" dir="${buildDirectory}" />
 	</target>
-	<target name="assemble.org.eclipse.mylyn.wikitext.sdk_feature">
+	<target name="assemble.org.eclipse.mylyn.wikitext.sdk">
 		<ant antfile="${assembleScriptName}" dir="${buildDirectory}" />
 	</target>
 	<target name="assemble.org.eclipse.mylyn.extras_sdk_feature">

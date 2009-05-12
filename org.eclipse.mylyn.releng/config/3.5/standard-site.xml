@@ -30,7 +30,7 @@
    <feature url="features/org.eclipse.mylyn.sdk_feature_@core@.jar" id="org.eclipse.mylyn.sdk_feature" version="@core@">
       <category name="SDK"/>
    </feature>
-   <feature url="features/org.eclipse.mylyn.wikitext.sdk_feature_@wikitext@.jar" id="org.eclipse.mylyn.wikitext.sdk_feature" version="@wikitext@">
+   <feature url="features/org.eclipse.mylyn.wikitext.sdk_@wikitext@.jar" id="org.eclipse.mylyn.wikitext.sdk" version="@wikitext@">
       <category name="SDK"/>
    </feature>
    <category-def name="Features" label="Mylyn Features"/>
