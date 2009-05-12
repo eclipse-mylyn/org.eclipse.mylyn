@@ -79,7 +79,12 @@ public class TaskKeyComparator implements Comparator<String[]> {
 				if (key1.length() == key2.length() || key1.length() == 0 || key2.length() == 0) {
 					n = key1.compareTo(key2);
 				} else {
-					n = Integer.valueOf(key1).compareTo(Integer.valueOf(key2));
+					try {
+						n = Long.valueOf(key1).compareTo(Long.valueOf(key2));
+					} catch (NumberFormatException e) {
+						// The number was probably longer than an Long, so just compare them as text
+						n = key1.compareTo(key2);
+					}
 				}
 				if (n != 0) {
 					return n;
