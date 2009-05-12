@@ -405,6 +405,10 @@ public class ContextEditorManager extends AbstractContextListener {
 		if (editor instanceof IContextAwareEditor) {
 			return ((IContextAwareEditor) editor).canClose();
 		}
+		IContextAwareEditor contextAware = (IContextAwareEditor) editor.getAdapter(IContextAwareEditor.class);
+		if (contextAware != null) {
+			return contextAware.canClose();
+		}
 		return true;
 	}
 
