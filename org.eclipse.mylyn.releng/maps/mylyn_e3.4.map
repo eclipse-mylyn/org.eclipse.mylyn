@@ -8,7 +8,7 @@ feature@org.eclipse.mylyn.ide_feature=HEAD,:pserver:anonymous@dev.eclipse.org:/c
 feature@org.eclipse.mylyn.pde_feature=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.pde-feature
 feature@org.eclipse.mylyn.sdk_feature=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.sdk-feature
 feature@org.eclipse.mylyn.wikitext_feature=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.wikitext-feature
-feature@org.eclipse.mylyn.wikitext.sdk_feature=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.wikitext.sdk-feature
+feature@org.eclipse.mylyn.wikitext.sdk=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.wikitext.sdk-feature
 
 !******* EXTRAS ***********
 feature@org.eclipse.mylyn.trac_feature=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.trac-feature
