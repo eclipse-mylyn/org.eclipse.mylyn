@@ -157,18 +157,29 @@ public class InstallConnectorsJob implements IRunnableWithProgress {
 							IInstallableUnit candidate = (IInstallableUnit) object;
 
 							if ("true".equalsIgnoreCase(candidate.getProperty("org.eclipse.equinox.p2.type.group"))) { //$NON-NLS-1$ //$NON-NLS-2$
-								IProvidedCapability[] providedCapabilities = candidate.getProvidedCapabilities();
-								if (providedCapabilities != null && providedCapabilities.length == 1) {
-									if ("org.eclipse.equinox.p2.iu".equals(providedCapabilities[0].getNamespace())) { //$NON-NLS-1$
-										String name = providedCapabilities[0].getName();
-										if (name.endsWith(P2_FEATURE_GROUP_SUFFIX)) {
-											String featureId = name.substring(0, name.indexOf(P2_FEATURE_GROUP_SUFFIX));
-											return installableUnitIdsThisRepository.contains(featureId);
+								String id = candidate.getId();
+								if (isQualifyingFeature(installableUnitIdsThisRepository, id)) {
+									IProvidedCapability[] providedCapabilities = candidate.getProvidedCapabilities();
+									if (providedCapabilities != null && providedCapabilities.length > 0) {
+										for (IProvidedCapability capability : providedCapabilities) {
+											if ("org.eclipse.equinox.p2.iu".equals(capability.getNamespace())) { //$NON-NLS-1$
+												String name = capability.getName();
+												if (isQualifyingFeature(installableUnitIdsThisRepository, name)) {
+													return true;
+												}
+											}
 										}
 									}
 								}
 							}
 							return false;
+						}
+
+						private boolean isQualifyingFeature(final Set<String> installableUnitIdsThisRepository,
+								String id) {
+							return id.endsWith(P2_FEATURE_GROUP_SUFFIX)
+									&& installableUnitIdsThisRepository.contains(id.substring(0,
+											id.indexOf(P2_FEATURE_GROUP_SUFFIX)));
 						}
 					};
 					repository.query(query, collector, new SubProgressMonitor(monitor, unit));
