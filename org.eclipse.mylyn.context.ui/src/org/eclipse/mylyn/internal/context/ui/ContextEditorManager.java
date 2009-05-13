@@ -20,11 +20,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
@@ -400,14 +402,29 @@ public class ContextEditorManager extends AbstractContextListener {
 		}
 	}
 
-	private boolean canClose(IEditorReference editorReference) {
-		IEditorPart editor = editorReference.getEditor(false);
-		if (editor instanceof IContextAwareEditor) {
-			return ((IContextAwareEditor) editor).canClose();
-		}
-		IContextAwareEditor contextAware = (IContextAwareEditor) editor.getAdapter(IContextAwareEditor.class);
-		if (contextAware != null) {
-			return contextAware.canClose();
+	private boolean canClose(final IEditorReference editorReference) {
+		final IEditorPart editor = editorReference.getEditor(false);
+		if (editor != null) {
+			final boolean[] result = new boolean[1];
+			result[0] = true;
+			SafeRunnable.run(new ISafeRunnable() {
+				public void run() throws Exception {
+					if (editor instanceof IContextAwareEditor) {
+						result[0] = ((IContextAwareEditor) editor).canClose();
+					} else {
+						IContextAwareEditor contextAware = (IContextAwareEditor) editor.getAdapter(IContextAwareEditor.class);
+						if (contextAware != null) {
+							result[0] = contextAware.canClose();
+						}
+					}
+				}
+
+				public void handleException(Throwable e) {
+					StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
+							"Failed to verify editor status", e)); //$NON-NLS-1$
+				}
+			});
+			return result[0];
 		}
 		return true;
 	}
