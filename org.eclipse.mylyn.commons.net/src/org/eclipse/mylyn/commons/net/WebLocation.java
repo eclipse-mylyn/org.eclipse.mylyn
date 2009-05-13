@@ -21,6 +21,14 @@ import java.util.Map;
  */
 public class WebLocation extends AbstractWebLocation {
 
+	private static class PlatformProxyProvider implements IProxyProvider {
+
+		public Proxy getProxyForHost(String host, String proxyType) {
+			return WebUtil.getProxy(host, proxyType);
+		}
+
+	}
+
 	private final Map<AuthenticationType, AuthenticationCredentials> credentialsByType;
 
 	private final IProxyProvider proxyProvider;
@@ -37,11 +45,11 @@ public class WebLocation extends AbstractWebLocation {
 	}
 
 	public WebLocation(String url, String username, String password) {
-		this(url, username, password, null);
+		this(url, username, password, new PlatformProxyProvider());
 	}
 
 	public WebLocation(String url) {
-		this(url, null, null, null);
+		this(url, null, null, new PlatformProxyProvider());
 	}
 
 	@Override
