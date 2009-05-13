@@ -539,6 +539,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 				viewer.setFilters(filters.toArray(new ViewerFilter[filters.size()]));
 			}
 			viewer.removeFilter(interestFilter);
+			interestFilter.resetTemporarilyUnfiltered();
 		} catch (Throwable t) {
 			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
 					"Could not uninstall interest viewer filter on: " + globalPrefId, t)); //$NON-NLS-1$
