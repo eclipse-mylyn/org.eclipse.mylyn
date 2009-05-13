@@ -28,7 +28,7 @@
 	<!-- ===================================================================== -->
 	<target name="pre.build.jars">
 		<echoproperties/>
-		<ant antfile="build-helper.xml" target="plugin-docs"/>
+		<ant antfile="build-helper.xml" target="all"/>
 	</target>
 
 	<!-- ===================================================================== -->

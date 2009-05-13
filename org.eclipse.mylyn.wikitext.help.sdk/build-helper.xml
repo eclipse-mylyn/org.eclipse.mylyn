@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="org.eclipse.mylyn.help.sdk" default="all">
+<project name="org.eclipse.mylyn.wikitext.help.sdk" default="all">
     <description>
             Generate Eclipse help content for the Mylyn developer guide
     </description>
@@ -16,17 +16,17 @@
 		<delete failonerror="false" file="toc-reference.xml"/>
 	</target>
 
-	<target name="convertSchemaToHtml"> <!-- if="eclipse.running"> -->
+	<target name="convertSchemaToHtml" if="eclipse.running">
 	        <property name="dest" value="reference/extension-points" />
 
 			<mkdir dir="${dest}"/>
 		
-		<taskdef name="pde.convertSchemaToHTML" classname="org.eclipse.pde.internal.core.ant.ConvertSchemaToHTML">
+		<!-- taskdef name="pde.convertSchemaToHTML" classname="org.eclipse.pde.internal.core.ant.ConvertSchemaToHTML">
 			<classpath>
 				<fileset dir="styles" includes="**/*.jar">
 				</fileset>
 			</classpath>
-		</taskdef>
+		</taskdef -->
 		
 	        <!-- record name="${basedir}/doc.cnv.txt" action="start" / -->
 	        <pde.convertSchemaToHTML manifest="../org.eclipse.mylyn.wikitext.core/plugin.xml" destination="${dest}" />
