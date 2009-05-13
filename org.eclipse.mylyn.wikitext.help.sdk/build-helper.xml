@@ -34,7 +34,7 @@
 	        <pde.convertSchemaToHTML manifest="../org.eclipse.mylyn.wikitext.core/plugin.xml" destination="${dest}" />
 	        <pde.convertSchemaToHTML manifest="../org.eclipse.mylyn.wikitext.ui/plugin.xml" destination="${dest}" />
 	        <!-- record name="${basedir}/doc.cnv.txt" action="stop" / -->
-		<replaceregexp match="(../)*([^.]+.css)" replace="../../styles/\2"
+		<replaceregexp match="(../)*([^./]+\.css)" replace="../../styles/\2"
 			flags="gs">
 			<fileset dir="${dest}" includes="*.html"/>
 		</replaceregexp>
