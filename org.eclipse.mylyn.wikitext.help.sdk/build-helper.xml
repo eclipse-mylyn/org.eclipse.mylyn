@@ -7,6 +7,8 @@
 	<property environment="env" />
 	<property name="install" value="${basedir}/../../" />
 
+	<target name="plugin-docs" depends="all"/>
+	
 	<target name="all" depends="clean, generateJavadoc, convertSchemaToHtml">
 	</target>
 	
