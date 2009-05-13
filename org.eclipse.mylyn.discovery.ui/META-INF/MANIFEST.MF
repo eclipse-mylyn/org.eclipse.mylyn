@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Connector Discovery UI
 Bundle-SymbolicName: org.eclipse.mylyn.discovery.ui;singleton:=true
-Bundle-Version: 1.0.0
+Bundle-Version: 3.2.0.qualifier
 Bundle-Vendor: Eclipse.org
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.eclipse.mylyn.discovery.core;bundle-version="1.0.0",
