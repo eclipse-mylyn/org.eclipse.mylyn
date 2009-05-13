@@ -26,35 +26,4 @@
       </content-type>
    </extension>   
    
-   <extension point="org.eclipse.ant.core.antTasks">
-		<antTask
-			library="."
-			name="wikitext-to-dita"
-			class="org.eclipse.mylyn.wikitext.core.util.anttask.MarkupToDitaTask">
-		</antTask>
-		<antTask
-			library="."
-			name="wikitext-to-eclipse-help"
-			class="org.eclipse.mylyn.wikitext.core.util.anttask.MarkupToEclipseHelpTask">
-		</antTask>
-		<antTask
-			library="."
-			name="wikitext-to-html"
-			class="org.eclipse.mylyn.wikitext.core.util.anttask.MarkupToHtmlTask">
-		</antTask>
-		<antTask
-			library="."
-			name="wikitext-to-docbook"
-			class="org.eclipse.mylyn.wikitext.core.util.anttask.MarkupToDocbookTask">
-		</antTask>
-		<antTask
-			library="."
-			name="wikitext-to-xslfo"
-			class="org.eclipse.mylyn.wikitext.core.util.anttask.MarkupToXslfoTask">
-		</antTask>
-	</extension>
-
-	<extension point="org.eclipse.ant.core.extraClasspathEntries">
-		<extraClasspathEntry library="."/>
-	</extension>
 </plugin>
