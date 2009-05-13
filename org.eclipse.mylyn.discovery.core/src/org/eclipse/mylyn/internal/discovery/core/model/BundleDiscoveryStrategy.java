@@ -21,7 +21,6 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
@@ -44,7 +43,8 @@ public class BundleDiscoveryStrategy extends AbstractDiscoveryStrategy {
 				ConnectorDiscoveryExtensionReader.EXTENSION_POINT_ID);
 		IExtension[] extensions = extensionPoint.getExtensions();
 		if (extensions.length > 0) {
-			monitor.beginTask("Loading local extensions", extensions.length == 0 ? 1 : extensions.length);
+			monitor.beginTask(Messages.BundleDiscoveryStrategy_task_loading_local_extensions,
+					extensions.length == 0 ? 1 : extensions.length);
 
 			processExtensions(new SubProgressMonitor(monitor, extensions.length), extensions);
 		}
@@ -52,7 +52,8 @@ public class BundleDiscoveryStrategy extends AbstractDiscoveryStrategy {
 	}
 
 	protected void processExtensions(IProgressMonitor monitor, IExtension[] extensions) {
-		monitor.beginTask("Processing extensions", extensions.length == 0 ? 1 : extensions.length);
+		monitor.beginTask(Messages.BundleDiscoveryStrategy_task_processing_extensions, extensions.length == 0 ? 1
+				: extensions.length);
 
 		ConnectorDiscoveryExtensionReader extensionReader = new ConnectorDiscoveryExtensionReader();
 
@@ -75,12 +76,12 @@ public class BundleDiscoveryStrategy extends AbstractDiscoveryStrategy {
 						category.setSource(discoverySource);
 						categories.add(category);
 					} else {
-						throw new ValidationException(MessageFormat.format("unexpected element ''{0}''",
-								element.getName()));
+						throw new ValidationException(MessageFormat.format(
+								Messages.BundleDiscoveryStrategy_unexpected_element, element.getName()));
 					}
 				} catch (ValidationException e) {
 					StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID, MessageFormat.format(
-							"{0}: {1}", element.getContributor().getName(), e.getMessage()), e));
+							Messages.BundleDiscoveryStrategy_3, element.getContributor().getName(), e.getMessage()), e));
 				}
 			}
 			monitor.worked(1);

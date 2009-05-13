@@ -15,6 +15,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Dictionary;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -853,6 +854,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 
 	private void maybeUpdateDiscovery() {
 		if (!getControl().isDisposed() && isCurrentPage() && discovery == null) {
+			final Dictionary<Object, Object> environment = getWizard().getEnvironment();
 			boolean wasCancelled = false;
 			try {
 				getContainer().run(true, true, new IRunnableWithProgress() {
@@ -862,8 +864,9 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 						RemoteBundleDiscoveryStrategy remoteDiscoveryStrategy = new RemoteBundleDiscoveryStrategy();
 						// FIXME: the discovery directory URL
 						remoteDiscoveryStrategy.setDirectoryUrl(System.getProperty("mylyn.discovery.directory", //$NON-NLS-1$
-								"http://www.eclipse.org/mylyn/discovery/directory")); //$NON-NLS-1$
+								"http://www.eclipse.org/mylyn/discovery/directory.xml")); //$NON-NLS-1$
 						connectorDiscovery.getDiscoveryStrategies().add(remoteDiscoveryStrategy);
+						connectorDiscovery.setEnvironment(environment);
 						try {
 							connectorDiscovery.performDiscovery(monitor);
 						} catch (CoreException e) {

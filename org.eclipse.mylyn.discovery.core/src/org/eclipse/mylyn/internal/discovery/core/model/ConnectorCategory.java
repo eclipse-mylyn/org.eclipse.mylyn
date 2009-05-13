@@ -71,10 +71,10 @@ public class ConnectorCategory {
 
 	public void validate() throws ValidationException {
 		if (id == null || id.length() == 0) {
-			throw new ValidationException("Must specify connectorCategory/@id");
+			throw new ValidationException(Messages.ConnectorCategory_must_specify_connectorCategory_id);
 		}
 		if (name == null || name.length() == 0) {
-			throw new ValidationException("Must specify connectorCategory/@name");
+			throw new ValidationException(Messages.ConnectorCategory_must_specify_connectorCategory_name);
 		}
 		if (icon != null) {
 			icon.validate();

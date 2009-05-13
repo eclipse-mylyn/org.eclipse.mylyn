@@ -165,30 +165,30 @@ public class ConnectorDescriptor {
 
 	public void validate() throws ValidationException {
 		if (kind == null) {
-			throw new ValidationException("Must specify connectorDescriptor/@kind");
+			throw new ValidationException(Messages.ConnectorDescriptor_must_specify_connectorDescriptor_kind);
 		}
 		if (name == null || name.length() == 0) {
-			throw new ValidationException("Must specify connectorDescriptor/@name");
+			throw new ValidationException(Messages.ConnectorDescriptor_must_specify_connectorDescriptor_name);
 		}
 		if (provider == null || provider.length() == 0) {
-			throw new ValidationException("Must specify connectorDescriptor/@provider");
+			throw new ValidationException(Messages.ConnectorDescriptor_must_specify_connectorDescriptor_provider);
 		}
 		if (license == null || license.length() == 0) {
-			throw new ValidationException("Must specify connectorDescriptor/@license");
+			throw new ValidationException(Messages.ConnectorDescriptor_must_specify_connectorDescriptor_license);
 		}
 		if (siteUrl == null || siteUrl.length() == 0) {
-			throw new ValidationException("Must specify connectorDescriptor/@siteUrl");
+			throw new ValidationException(Messages.ConnectorDescriptor_must_specify_connectorDescriptor_siteUrl);
 		}
 		try {
 			new java.net.URL(siteUrl);
 		} catch (MalformedURLException e) {
-			throw new ValidationException("Invalid connectorDescriptor/@siteUrl");
+			throw new ValidationException(Messages.ConnectorDescriptor_invalid_connectorDescriptor_siteUrl);
 		}
 		if (id == null || id.length() == 0) {
-			throw new ValidationException("Must specify connectorDescriptor/@id");
+			throw new ValidationException(Messages.ConnectorDescriptor_must_specify_connectorDescriptor_id);
 		}
 		if (categoryId == null || categoryId.length() == 0) {
-			throw new ValidationException("Must specify connectorDescriptor/@categoryId");
+			throw new ValidationException(Messages.ConnectorDescriptor_must_specify_connectorDescriptor_categoryId);
 		}
 		if (icon != null) {
 			icon.validate();

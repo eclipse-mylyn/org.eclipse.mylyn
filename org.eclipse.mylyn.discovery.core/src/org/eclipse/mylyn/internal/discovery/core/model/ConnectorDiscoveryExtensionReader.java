@@ -46,7 +46,7 @@ public class ConnectorDiscoveryExtensionReader {
 		try {
 			connectorDescriptor.setKind(ConnectorDescriptorKind.fromValue(element.getAttribute("kind"))); //$NON-NLS-1$
 		} catch (IllegalArgumentException e) {
-			throw new ValidationException("Unexpected value for kind");
+			throw new ValidationException(Messages.ConnectorDiscoveryExtensionReader_unexpected_value_kind);
 		}
 		connectorDescriptor.setName(element.getAttribute("name")); //$NON-NLS-1$
 		connectorDescriptor.setProvider(element.getAttribute("provider")); //$NON-NLS-1$
@@ -61,7 +61,7 @@ public class ConnectorDiscoveryExtensionReader {
 			Icon iconItem = readIcon(child);
 			iconItem.setConnectorDescriptor(connectorDescriptor);
 			if (connectorDescriptor.getIcon() != null) {
-				throw new ValidationException("Unexpected element icon");
+				throw new ValidationException(Messages.ConnectorDiscoveryExtensionReader_unexpected_element_icon);
 			}
 			connectorDescriptor.setIcon(iconItem);
 		}
@@ -69,7 +69,7 @@ public class ConnectorDiscoveryExtensionReader {
 			Overview overviewItem = readOverview(child);
 			overviewItem.setConnectorDescriptor(connectorDescriptor);
 			if (connectorDescriptor.getOverview() != null) {
-				throw new ValidationException("Unexpected element overview");
+				throw new ValidationException(Messages.ConnectorDiscoveryExtensionReader_unexpected_element_overview);
 			}
 			connectorDescriptor.setOverview(overviewItem);
 		}
@@ -100,7 +100,7 @@ public class ConnectorDiscoveryExtensionReader {
 			Icon iconItem = readIcon(child);
 			iconItem.setConnectorCategory(connectorCategory);
 			if (connectorCategory.getIcon() != null) {
-				throw new ValidationException("Unexpected element icon");
+				throw new ValidationException(Messages.ConnectorDiscoveryExtensionReader_unexpected_element_icon);
 			}
 			connectorCategory.setIcon(iconItem);
 		}

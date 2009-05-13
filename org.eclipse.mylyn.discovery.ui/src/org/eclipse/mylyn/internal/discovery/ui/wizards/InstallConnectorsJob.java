@@ -26,12 +26,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.equinox.internal.p2.metadata.InstallableUnit;
 import org.eclipse.equinox.internal.provisional.p2.core.Version;
 import org.eclipse.equinox.internal.provisional.p2.engine.IProfile;
 import org.eclipse.equinox.internal.provisional.p2.engine.IProfileRegistry;
-import org.eclipse.equinox.internal.provisional.p2.metadata.IArtifactKey;
 import org.eclipse.equinox.internal.provisional.p2.metadata.IInstallableUnit;
+import org.eclipse.equinox.internal.provisional.p2.metadata.IProvidedCapability;
 import org.eclipse.equinox.internal.provisional.p2.metadata.repository.IMetadataRepository;
 import org.eclipse.equinox.internal.provisional.p2.query.Collector;
 import org.eclipse.equinox.internal.provisional.p2.query.MatchQuery;
@@ -60,6 +59,8 @@ import com.ibm.icu.text.MessageFormat;
  */
 @SuppressWarnings("restriction")
 public class InstallConnectorsJob implements IRunnableWithProgress {
+
+	private static final String P2_FEATURE_GROUP_SUFFIX = ".feature.group"; //$NON-NLS-1$
 
 	private final List<ConnectorDescriptor> installableConnectors;
 
@@ -126,7 +127,7 @@ public class InstallConnectorsJob implements IRunnableWithProgress {
 			// in each repository.  We select installable units by matching both the feature id and the repository; it
 			// is possible though unlikely that the same feature id is available from more than one of the selected
 			// repositories, and we must ensure that the user gets the one that they asked for.
-			final List<InstallableUnit> installableUnits = new ArrayList<InstallableUnit>();
+			final List<IInstallableUnit> installableUnits = new ArrayList<IInstallableUnit>();
 			{
 				int unit = installableConnectors.size() / repositories.size();
 
@@ -155,17 +156,24 @@ public class InstallConnectorsJob implements IRunnableWithProgress {
 							}
 							IInstallableUnit candidate = (IInstallableUnit) object;
 
-							IArtifactKey[] artifacts = candidate.getArtifacts();
-							if (artifacts != null && artifacts.length == 1) {
-								return "org.eclipse.update.feature".equals(artifacts[0].getClassifier()) && //$NON-NLS-1$
-										installableUnitIdsThisRepository.contains(artifacts[0].getId());
+							if ("true".equalsIgnoreCase(candidate.getProperty("org.eclipse.equinox.p2.type.group"))) { //$NON-NLS-1$ //$NON-NLS-2$
+								IProvidedCapability[] providedCapabilities = candidate.getProvidedCapabilities();
+								if (providedCapabilities != null && providedCapabilities.length == 1) {
+									if ("org.eclipse.equinox.p2.iu".equals(providedCapabilities[0].getNamespace())) { //$NON-NLS-1$
+										String name = providedCapabilities[0].getName();
+										if (name.endsWith(P2_FEATURE_GROUP_SUFFIX)) {
+											String featureId = name.substring(0, name.indexOf(P2_FEATURE_GROUP_SUFFIX));
+											return installableUnitIdsThisRepository.contains(featureId);
+										}
+									}
+								}
 							}
 							return false;
 						}
 					};
 					repository.query(query, collector, new SubProgressMonitor(monitor, unit));
 
-					installableUnits.addAll(collector.toCollection());
+					addAll(installableUnits, collector);
 				}
 			}
 
@@ -174,14 +182,14 @@ public class InstallConnectorsJob implements IRunnableWithProgress {
 			// that the user wants the highest version.
 			{
 				Map<String, Version> symbolicNameToVersion = new HashMap<String, Version>();
-				for (InstallableUnit unit : installableUnits) {
+				for (IInstallableUnit unit : installableUnits) {
 					Version version = symbolicNameToVersion.get(unit.getId());
 					if (version == null || version.compareTo(unit.getVersion()) == -1) {
 						symbolicNameToVersion.put(unit.getId(), unit.getVersion());
 					}
 				}
 				if (symbolicNameToVersion.size() != installableUnits.size()) {
-					for (InstallableUnit unit : new ArrayList<InstallableUnit>(installableUnits)) {
+					for (IInstallableUnit unit : new ArrayList<IInstallableUnit>(installableUnits)) {
 						Version version = symbolicNameToVersion.get(unit.getId());
 						if (!version.equals(unit.getVersion())) {
 							installableUnits.remove(unit);
@@ -196,8 +204,12 @@ public class InstallConnectorsJob implements IRunnableWithProgress {
 			if (installableUnits.size() < installableConnectors.size()) {
 				// at least one selected connector could not be found in a repository
 				Set<String> foundIds = new HashSet<String>();
-				for (InstallableUnit unit : installableUnits) {
-					foundIds.add(unit.getId());
+				for (IInstallableUnit unit : installableUnits) {
+					String id = unit.getId();
+					if (id.endsWith(P2_FEATURE_GROUP_SUFFIX)) {
+						id = id.substring(0, id.indexOf(P2_FEATURE_GROUP_SUFFIX));
+					}
+					foundIds.add(id);
 				}
 
 				final String notFound;
@@ -219,12 +231,10 @@ public class InstallConnectorsJob implements IRunnableWithProgress {
 					final boolean[] okayToProceed = new boolean[1];
 					Display.getDefault().syncExec(new Runnable() {
 						public void run() {
-							okayToProceed[0] = MessageDialog.openQuestion(
-									PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-									Messages.InstallConnectorsJob_questionProceed,
-									MessageFormat.format(
-											Messages.InstallConnectorsJob_questionProceed_long,
-											new Object[] { notFound }));
+							okayToProceed[0] = MessageDialog.openQuestion(PlatformUI.getWorkbench()
+									.getActiveWorkbenchWindow()
+									.getShell(), Messages.InstallConnectorsJob_questionProceed, MessageFormat.format(
+									Messages.InstallConnectorsJob_questionProceed_long, new Object[] { notFound }));
 						}
 					});
 					proceed = okayToProceed[0];
@@ -259,6 +269,11 @@ public class InstallConnectorsJob implements IRunnableWithProgress {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	private boolean addAll(final List<IInstallableUnit> installableUnits, Collector collector) {
+		return installableUnits.addAll(collector.toCollection());
+	}
+
 	private String computeProfileId() throws CoreException {
 		IProfile profile = ProvisioningUtil.getProfile(IProfileRegistry.SELF);
 		if (profile != null) {
@@ -268,7 +283,8 @@ public class InstallConnectorsJob implements IRunnableWithProgress {
 		if (profiles.length > 0) {
 			return profiles[0].getProfileId();
 		}
-		throw new CoreException(new Status(IStatus.ERROR, DiscoveryUi.BUNDLE_ID, Messages.InstallConnectorsJob_profileProblem, null));
+		throw new CoreException(new Status(IStatus.ERROR, DiscoveryUi.BUNDLE_ID,
+				Messages.InstallConnectorsJob_profileProblem, null));
 	}
 
 }

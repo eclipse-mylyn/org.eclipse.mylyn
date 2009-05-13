@@ -39,6 +39,7 @@ import org.eclipse.mylyn.internal.discovery.core.util.WebUtil.TextContentProcess
  * 
  * @author David Green
  */
+@SuppressWarnings("restriction")
 public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 
 	private String directoryUrl;
@@ -58,7 +59,7 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 
 		final int totalTicks = 100000;
 		final int ticksTenPercent = totalTicks / 10;
-		monitor.beginTask("remote discovery", totalTicks);
+		monitor.beginTask(Messages.RemoteBundleDiscoveryStrategy_task_remote_discovery, totalTicks);
 
 		File registryCacheFolder;
 		try {
@@ -76,7 +77,7 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 			}
 		} catch (IOException e) {
 			throw new CoreException(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID,
-					"IO failure: cannot create temporary storage area", e));
+					Messages.RemoteBundleDiscoveryStrategy_io_failure_temp_storage, e));
 		}
 		if (monitor.isCanceled()) {
 			return;
@@ -100,13 +101,14 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 			}
 		} catch (IOException e) {
 			throw new CoreException(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID,
-					"IO failure: cannot load discovery directory", e));
+					Messages.RemoteBundleDiscoveryStrategy_io_failure_discovery_directory, e));
 		}
 		if (monitor.isCanceled()) {
 			return;
 		}
 		if (directory.getEntries().isEmpty()) {
-			throw new CoreException(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID, "Discovery directory is empty"));
+			throw new CoreException(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID,
+					Messages.RemoteBundleDiscoveryStrategy_empty_directory));
 		}
 
 		Set<File> bundles = new HashSet<File>();
@@ -115,9 +117,9 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 		for (Directory.Entry entry : directory.getEntries()) {
 			String bundleUrl = entry.getLocation();
 			try {
-				if (!bundleUrl.startsWith("http://") && !bundleUrl.startsWith("https://")) { //$NON-NLS-1$ //$NON-NLS-2$
+				if (!bundleUrl.startsWith("http://") && !bundleUrl.startsWith("https://")) { //$NON-NLS-1$//$NON-NLS-2$
 					StatusHandler.log(new Status(IStatus.WARNING, DiscoveryCore.BUNDLE_ID, MessageFormat.format(
-							"Unrecognized discovery bundle URL: {0}", bundleUrl)));
+							Messages.RemoteBundleDiscoveryStrategy_unrecognized_discovery_url, bundleUrl)));
 					continue;
 				}
 				String lastPathElement = bundleUrl.lastIndexOf('/') == -1 ? bundleUrl
@@ -135,7 +137,7 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 				bundles.add(target);
 			} catch (IOException e) {
 				StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID, MessageFormat.format(
-						"Cannot download bundle at {0}: {1}", bundleUrl, e.getMessage()), e));
+						Messages.RemoteBundleDiscoveryStrategy_cannot_download_bundle, bundleUrl, e.getMessage()), e));
 			}
 		}
 		try {
@@ -148,7 +150,8 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 				if (extensionPoint != null) {
 					IExtension[] extensions = extensionPoint.getExtensions();
 					if (extensions.length > 0) {
-						monitor.beginTask("Loading remote extensions", extensions.length == 0 ? 1 : extensions.length);
+						monitor.beginTask(Messages.RemoteBundleDiscoveryStrategy_task_loading_remote_extensions,
+								extensions.length == 0 ? 1 : extensions.length);
 
 						processExtensions(new SubProgressMonitor(monitor, ticksTenPercent * 3), extensions);
 					}

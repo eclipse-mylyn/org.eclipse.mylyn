@@ -102,7 +102,7 @@ public class DiscoveryRegistryStrategy extends RegistryStrategy {
 				processBundle(registry, bundleFile);
 			} catch (Exception e) {
 				StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID, MessageFormat.format(
-						"Cannot load bundle {0}: {1}", bundleFile.getName(), e.getMessage()), e));
+						Messages.DiscoveryRegistryStrategy_cannot_load_bundle, bundleFile.getName(), e.getMessage()), e));
 			}
 		}
 	}
@@ -113,7 +113,7 @@ public class DiscoveryRegistryStrategy extends RegistryStrategy {
 
 		ZipEntry pluginXmlEntry = jarFile.getEntry("plugin.xml"); //$NON-NLS-1$
 		if (pluginXmlEntry == null) {
-			throw new IOException("no plugin.xml in bundle");
+			throw new IOException(Messages.DiscoveryRegistryStrategy_missing_pluginxml);
 		}
 		IContributor contributor = new RegistryContributor(bundleFile.getName(), bundleFile.getName(), null, null);
 		if (((IDynamicExtensionRegistry) registry).hasContributor(contributor)) {

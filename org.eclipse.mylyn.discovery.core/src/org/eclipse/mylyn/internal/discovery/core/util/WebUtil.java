@@ -89,7 +89,7 @@ public class WebUtil {
 						in.close();
 					}
 				} else {
-					throw new IOException(MessageFormat.format("Cannot download {0}: HTTP response {1}",
+					throw new IOException(MessageFormat.format(Messages.WebUtil_cannotDownload,
 							location.getUrl(), result));
 				}
 			} finally {

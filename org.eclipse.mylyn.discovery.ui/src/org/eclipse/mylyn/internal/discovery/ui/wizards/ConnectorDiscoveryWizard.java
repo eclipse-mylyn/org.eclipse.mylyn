@@ -11,15 +11,21 @@
 package org.eclipse.mylyn.internal.discovery.ui.wizards;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Dictionary;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDescriptorKind;
+import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDiscovery;
 import org.eclipse.mylyn.internal.discovery.ui.DiscoveryUi;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.Version;
 
 import com.ibm.icu.text.MessageFormat;
 
@@ -47,9 +53,24 @@ public class ConnectorDiscoveryWizard extends Wizard {
 
 	private boolean showConnectorDescriptorTextFilter = true;
 
+	private Dictionary<Object, Object> environment;
+
 	public ConnectorDiscoveryWizard() {
 		setWindowTitle(Messages.ConnectorDiscoveryWizard_connectorDiscovery);
 		setNeedsProgressMonitor(true);
+		createEnvironment();
+	}
+
+	private void createEnvironment() {
+		environment = new Hashtable<Object, Object>(System.getProperties());
+		// add the installed Mylyn version to the environment so that we can have
+		// connectors that are filtered based on version of Mylyn
+		Bundle bundle = Platform.getBundle("org.eclipse.mylyn.tasks.core"); //$NON-NLS-1$
+		Version version = bundle.getVersion();
+		environment.put("org.eclipse.mylyn.version", version.toString()); //$NON-NLS-1$
+		environment.put("org.eclipse.mylyn.version.major", version.getMajor()); //$NON-NLS-1$
+		environment.put("org.eclipse.mylyn.version.minor", version.getMinor()); //$NON-NLS-1$
+		environment.put("org.eclipse.mylyn.version.micro", version.getMicro()); //$NON-NLS-1$
 	}
 
 	@Override
@@ -124,6 +145,27 @@ public class ConnectorDiscoveryWizard extends Wizard {
 	 */
 	public void setShowConnectorDescriptorTextFilter(boolean showConnectorDescriptorTextFilter) {
 		this.showConnectorDescriptorTextFilter = showConnectorDescriptorTextFilter;
+	}
+
+	/**
+	 * the environment in which discovery should be performed.
+	 * 
+	 * @see ConnectorDiscovery#getEnvironment()
+	 */
+	public Dictionary<Object, Object> getEnvironment() {
+		return environment;
+	}
+
+	/**
+	 * the environment in which discovery should be performed.
+	 * 
+	 * @see ConnectorDiscovery#getEnvironment()
+	 */
+	public void setEnvironment(Dictionary<Object, Object> environment) {
+		if (environment == null) {
+			throw new IllegalArgumentException();
+		}
+		this.environment = environment;
 	}
 
 }

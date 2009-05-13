@@ -60,7 +60,7 @@ public class DirectoryParser {
 		}
 
 		if (contentHandler.directory == null) {
-			throw new IOException("Unexpected content: no directory available");
+			throw new IOException(Messages.DirectoryParser_no_directory);
 		}
 
 		return contentHandler.directory;
@@ -124,7 +124,7 @@ public class DirectoryParser {
 		}
 
 		private void unexpectedElement(String localName) throws SAXException {
-			throw new SAXException(MessageFormat.format("Unexpected element ''{0}''", localName));
+			throw new SAXException(MessageFormat.format(Messages.DirectoryParser_unexpected_element, localName));
 		}
 
 		public void startPrefixMapping(String prefix, String uri) throws SAXException {

@@ -69,7 +69,7 @@ public class ConnectorDiscovery {
 		categories = new ArrayList<DiscoveryCategory>();
 
 		final int totalTicks = 10000;
-		monitor.beginTask("Discovering connectors", totalTicks);
+		monitor.beginTask(Messages.ConnectorDiscovery_task_discovering_connectors, totalTicks);
 
 		// FIXME: policy for where categories can be declared
 		for (AbstractDiscoveryStrategy discoveryStrategy : discoveryStrategies) {
@@ -127,7 +127,7 @@ public class ConnectorDiscovery {
 			DiscoveryCategory previous = idToCategory.put(category.getId(), category);
 			if (previous != null) {
 				StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID, MessageFormat.format(
-						"Duplicate category id ''{0}'': declaring sources: {1}, {2}", category.getId(),
+						Messages.ConnectorDiscovery_duplicate_category_id, category.getId(),
 						category.getSource().getId(), previous.getSource().getId())));
 			}
 		}
@@ -139,7 +139,7 @@ public class ConnectorDiscovery {
 				connector.setCategory(category);
 			} else {
 				StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID, MessageFormat.format(
-						"Unknown category ''{0}'' referenced by connector ''{1}'' declared in {2}",
+						Messages.ConnectorDiscovery_bundle_references_unknown_category,
 						connector.getCategoryId(), connector.getId(), connector.getSource().getId())));
 			}
 		}
@@ -157,7 +157,7 @@ public class ConnectorDiscovery {
 					match = filter.match(environment);
 				} catch (InvalidSyntaxException e) {
 					StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID, MessageFormat.format(
-							"Illegal filter syntax ''{0}'' in connector ''{1}'' declared in {2}",
+							Messages.ConnectorDiscovery_illegal_filter_syntax,
 							connector.getPlatformFilter(), connector.getId(), connector.getSource().getId())));
 				}
 				if (!match) {
