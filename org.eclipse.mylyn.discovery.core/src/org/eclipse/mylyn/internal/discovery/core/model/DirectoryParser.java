@@ -13,11 +13,11 @@ package org.eclipse.mylyn.internal.discovery.core.model;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.text.MessageFormat;
 
 import org.eclipse.mylyn.internal.discovery.core.model.Directory.Entry;
 import org.eclipse.mylyn.internal.discovery.core.util.DefaultSaxErrorHandler;
 import org.eclipse.mylyn.internal.discovery.core.util.IOWithCauseException;
+import org.eclipse.osgi.util.NLS;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
@@ -124,7 +124,7 @@ public class DirectoryParser {
 		}
 
 		private void unexpectedElement(String localName) throws SAXException {
-			throw new SAXException(MessageFormat.format(Messages.DirectoryParser_unexpected_element, localName));
+			throw new SAXException(NLS.bind(Messages.DirectoryParser_unexpected_element, localName));
 		}
 
 		public void startPrefixMapping(String prefix, String uri) throws SAXException {

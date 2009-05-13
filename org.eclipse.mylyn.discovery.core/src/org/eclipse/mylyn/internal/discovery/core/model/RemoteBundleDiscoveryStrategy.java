@@ -13,7 +13,6 @@ package org.eclipse.mylyn.internal.discovery.core.model;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
-import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,6 +31,7 @@ import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.internal.discovery.core.DiscoveryCore;
 import org.eclipse.mylyn.internal.discovery.core.util.WebUtil;
 import org.eclipse.mylyn.internal.discovery.core.util.WebUtil.TextContentProcessor;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * A discovery strategy that downloads a simple directory of remote jars. The directory is first downloaded, then each
@@ -118,7 +118,7 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 			String bundleUrl = entry.getLocation();
 			try {
 				if (!bundleUrl.startsWith("http://") && !bundleUrl.startsWith("https://")) { //$NON-NLS-1$//$NON-NLS-2$
-					StatusHandler.log(new Status(IStatus.WARNING, DiscoveryCore.BUNDLE_ID, MessageFormat.format(
+					StatusHandler.log(new Status(IStatus.WARNING, DiscoveryCore.BUNDLE_ID, NLS.bind(
 							Messages.RemoteBundleDiscoveryStrategy_unrecognized_discovery_url, bundleUrl)));
 					continue;
 				}
@@ -136,7 +136,7 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 						ticksTenPercent * 4 / directory.getEntries().size()));
 				bundles.add(target);
 			} catch (IOException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID, MessageFormat.format(
+				StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID, NLS.bind(
 						Messages.RemoteBundleDiscoveryStrategy_cannot_download_bundle, bundleUrl, e.getMessage()), e));
 			}
 		}

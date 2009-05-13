@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.discovery.core.model;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Dictionary;
@@ -27,6 +26,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.discovery.core.DiscoveryCore;
+import org.eclipse.osgi.util.NLS;
 import org.osgi.framework.Filter;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.InvalidSyntaxException;
@@ -126,9 +126,9 @@ public class ConnectorDiscovery {
 		for (DiscoveryCategory category : categories) {
 			DiscoveryCategory previous = idToCategory.put(category.getId(), category);
 			if (previous != null) {
-				StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID, MessageFormat.format(
-						Messages.ConnectorDiscovery_duplicate_category_id, category.getId(),
-						category.getSource().getId(), previous.getSource().getId())));
+				StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID, NLS.bind(
+						Messages.ConnectorDiscovery_duplicate_category_id, new Object[] { category.getId(),
+								category.getSource().getId(), previous.getSource().getId() })));
 			}
 		}
 
@@ -138,9 +138,9 @@ public class ConnectorDiscovery {
 				category.getConnectors().add(connector);
 				connector.setCategory(category);
 			} else {
-				StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID, MessageFormat.format(
-						Messages.ConnectorDiscovery_bundle_references_unknown_category,
-						connector.getCategoryId(), connector.getId(), connector.getSource().getId())));
+				StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID, NLS.bind(
+						Messages.ConnectorDiscovery_bundle_references_unknown_category, new Object[] {
+								connector.getCategoryId(), connector.getId(), connector.getSource().getId() })));
 			}
 		}
 	}
@@ -156,9 +156,9 @@ public class ConnectorDiscovery {
 					Filter filter = FrameworkUtil.createFilter(connector.getPlatformFilter());
 					match = filter.match(environment);
 				} catch (InvalidSyntaxException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID, MessageFormat.format(
-							Messages.ConnectorDiscovery_illegal_filter_syntax,
-							connector.getPlatformFilter(), connector.getId(), connector.getSource().getId())));
+					StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID, NLS.bind(
+							Messages.ConnectorDiscovery_illegal_filter_syntax, new Object[] {
+									connector.getPlatformFilter(), connector.getId(), connector.getSource().getId() })));
 				}
 				if (!match) {
 					connectors.remove(connector);

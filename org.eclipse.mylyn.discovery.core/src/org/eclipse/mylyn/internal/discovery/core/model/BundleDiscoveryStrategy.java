@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.discovery.core.model;
 
-import java.text.MessageFormat;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IContributor;
@@ -25,6 +23,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.discovery.core.DiscoveryCore;
+import org.eclipse.osgi.util.NLS;
 import org.osgi.framework.Bundle;
 
 /**
@@ -76,11 +75,11 @@ public class BundleDiscoveryStrategy extends AbstractDiscoveryStrategy {
 						category.setSource(discoverySource);
 						categories.add(category);
 					} else {
-						throw new ValidationException(MessageFormat.format(
-								Messages.BundleDiscoveryStrategy_unexpected_element, element.getName()));
+						throw new ValidationException(NLS.bind(Messages.BundleDiscoveryStrategy_unexpected_element,
+								element.getName()));
 					}
 				} catch (ValidationException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID, MessageFormat.format(
+					StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID, NLS.bind(
 							Messages.BundleDiscoveryStrategy_3, element.getContributor().getName(), e.getMessage()), e));
 				}
 			}
