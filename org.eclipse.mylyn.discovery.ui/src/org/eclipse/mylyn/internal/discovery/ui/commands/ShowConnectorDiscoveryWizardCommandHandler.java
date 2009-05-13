@@ -14,8 +14,8 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.mylyn.internal.discovery.ui.util.DiscoveryUiUtil;
 import org.eclipse.mylyn.internal.discovery.ui.wizards.ConnectorDiscoveryWizard;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * A command that causes the {@link ConnectorDiscoveryWizard} to appear in a dialog.
@@ -27,7 +27,7 @@ public class ShowConnectorDiscoveryWizardCommandHandler extends AbstractHandler 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 
 		ConnectorDiscoveryWizard wizard = new ConnectorDiscoveryWizard();
-		WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), wizard);
+		WizardDialog dialog = new WizardDialog(DiscoveryUiUtil.getShell(), wizard);
 		dialog.open();
 
 		return null;

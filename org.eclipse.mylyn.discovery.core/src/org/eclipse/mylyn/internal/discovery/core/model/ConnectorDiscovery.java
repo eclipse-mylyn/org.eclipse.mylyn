@@ -70,18 +70,20 @@ public class ConnectorDiscovery {
 
 		final int totalTicks = 10000;
 		monitor.beginTask(Messages.ConnectorDiscovery_task_discovering_connectors, totalTicks);
+		try {
+			// FIXME: policy for where categories can be declared
+			for (AbstractDiscoveryStrategy discoveryStrategy : discoveryStrategies) {
+				discoveryStrategy.setCategories(categories);
+				discoveryStrategy.setConnectors(connectors);
+				discoveryStrategy.performDiscovery(new SubProgressMonitor(monitor, totalTicks
+						/ discoveryStrategies.size()));
+			}
 
-		// FIXME: policy for where categories can be declared
-		for (AbstractDiscoveryStrategy discoveryStrategy : discoveryStrategies) {
-			discoveryStrategy.setCategories(categories);
-			discoveryStrategy.setConnectors(connectors);
-			discoveryStrategy.performDiscovery(new SubProgressMonitor(monitor, totalTicks / discoveryStrategies.size()));
+			filterDescriptors();
+			connectCategoriesToDescriptors();
+		} finally {
+			monitor.done();
 		}
-
-		filterDescriptors();
-		connectCategoriesToDescriptors();
-
-		monitor.done();
 	}
 
 	/**
@@ -126,7 +128,7 @@ public class ConnectorDiscovery {
 		for (DiscoveryCategory category : categories) {
 			DiscoveryCategory previous = idToCategory.put(category.getId(), category);
 			if (previous != null) {
-				StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID, NLS.bind(
+				StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN, NLS.bind(
 						Messages.ConnectorDiscovery_duplicate_category_id, new Object[] { category.getId(),
 								category.getSource().getId(), previous.getSource().getId() })));
 			}
@@ -138,7 +140,7 @@ public class ConnectorDiscovery {
 				category.getConnectors().add(connector);
 				connector.setCategory(category);
 			} else {
-				StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID, NLS.bind(
+				StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN, NLS.bind(
 						Messages.ConnectorDiscovery_bundle_references_unknown_category, new Object[] {
 								connector.getCategoryId(), connector.getId(), connector.getSource().getId() })));
 			}
@@ -156,7 +158,7 @@ public class ConnectorDiscovery {
 					Filter filter = FrameworkUtil.createFilter(connector.getPlatformFilter());
 					match = filter.match(environment);
 				} catch (InvalidSyntaxException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID, NLS.bind(
+					StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN, NLS.bind(
 							Messages.ConnectorDiscovery_illegal_filter_syntax, new Object[] {
 									connector.getPlatformFilter(), connector.getId(), connector.getSource().getId() })));
 				}
@@ -176,7 +178,7 @@ public class ConnectorDiscovery {
 				}
 
 				public void handleException(Throwable exception) {
-					StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID,
+					StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN,
 							"exception disposing " + strategy.getClass().getName(), exception)); //$NON-NLS-1$
 				}
 			});

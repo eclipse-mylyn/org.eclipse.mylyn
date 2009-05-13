@@ -15,7 +15,7 @@ package org.eclipse.mylyn.internal.discovery.core;
  * @author David Green
  */
 public abstract class DiscoveryCore {
-	public static final String BUNDLE_ID = "org.eclipse.mylyn.discovery.core"; //$NON-NLS-1$
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.discovery.core"; //$NON-NLS-1$
 
 	private DiscoveryCore() {
 	}

@@ -60,109 +60,109 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 		final int totalTicks = 100000;
 		final int ticksTenPercent = totalTicks / 10;
 		monitor.beginTask(Messages.RemoteBundleDiscoveryStrategy_task_remote_discovery, totalTicks);
-
-		File registryCacheFolder;
 		try {
-			if (temporaryStorage != null && temporaryStorage.exists()) {
-				delete(temporaryStorage);
-			}
-			temporaryStorage = File.createTempFile(RemoteBundleDiscoveryStrategy.class.getSimpleName(), ".tmp"); //$NON-NLS-1$
-			temporaryStorage.delete();
-			if (!temporaryStorage.mkdirs()) {
-				throw new IOException();
-			}
-			registryCacheFolder = new File(temporaryStorage, ".rcache"); //$NON-NLS-1$
-			if (!registryCacheFolder.mkdirs()) {
-				throw new IOException();
-			}
-		} catch (IOException e) {
-			throw new CoreException(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID,
-					Messages.RemoteBundleDiscoveryStrategy_io_failure_temp_storage, e));
-		}
-		if (monitor.isCanceled()) {
-			return;
-		}
-
-		Directory directory;
-
-		// FIXME: Eclipse network/proxy settings
-		WebLocation webLocation = new WebLocation(directoryUrl);
-		try {
-			final Directory[] temp = new Directory[1];
-			WebUtil.readResource(webLocation, new TextContentProcessor() {
-				public void process(Reader reader) throws IOException {
-					DirectoryParser parser = new DirectoryParser();
-					temp[0] = parser.parse(reader);
-				}
-			}, new SubProgressMonitor(monitor, ticksTenPercent));
-			directory = temp[0];
-			if (directory == null) {
-				throw new IllegalStateException();
-			}
-		} catch (IOException e) {
-			throw new CoreException(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID,
-					Messages.RemoteBundleDiscoveryStrategy_io_failure_discovery_directory, e));
-		}
-		if (monitor.isCanceled()) {
-			return;
-		}
-		if (directory.getEntries().isEmpty()) {
-			throw new CoreException(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID,
-					Messages.RemoteBundleDiscoveryStrategy_empty_directory));
-		}
-
-		Set<File> bundles = new HashSet<File>();
-
-		// TODO: multithreaded downloading
-		for (Directory.Entry entry : directory.getEntries()) {
-			String bundleUrl = entry.getLocation();
+			File registryCacheFolder;
 			try {
-				if (!bundleUrl.startsWith("http://") && !bundleUrl.startsWith("https://")) { //$NON-NLS-1$//$NON-NLS-2$
-					StatusHandler.log(new Status(IStatus.WARNING, DiscoveryCore.BUNDLE_ID, NLS.bind(
-							Messages.RemoteBundleDiscoveryStrategy_unrecognized_discovery_url, bundleUrl)));
-					continue;
+				if (temporaryStorage != null && temporaryStorage.exists()) {
+					delete(temporaryStorage);
 				}
-				String lastPathElement = bundleUrl.lastIndexOf('/') == -1 ? bundleUrl
-						: bundleUrl.substring(bundleUrl.lastIndexOf('/'));
-				File target = File.createTempFile(
-						lastPathElement.replaceAll("^[a-zA-Z0-9_.]", "_") + "_", ".jar", temporaryStorage); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$
-
-				if (monitor.isCanceled()) {
-					return;
+				temporaryStorage = File.createTempFile(RemoteBundleDiscoveryStrategy.class.getSimpleName(), ".tmp"); //$NON-NLS-1$
+				temporaryStorage.delete();
+				if (!temporaryStorage.mkdirs()) {
+					throw new IOException();
 				}
-
-				// FIXME: Eclipse network/proxy settings
-				WebUtil.downloadResource(target, new WebLocation(bundleUrl), new SubProgressMonitor(monitor,
-						ticksTenPercent * 4 / directory.getEntries().size()));
-				bundles.add(target);
+				registryCacheFolder = new File(temporaryStorage, ".rcache"); //$NON-NLS-1$
+				if (!registryCacheFolder.mkdirs()) {
+					throw new IOException();
+				}
 			} catch (IOException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID, NLS.bind(
-						Messages.RemoteBundleDiscoveryStrategy_cannot_download_bundle, bundleUrl, e.getMessage()), e));
+				throw new CoreException(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN,
+						Messages.RemoteBundleDiscoveryStrategy_io_failure_temp_storage, e));
 			}
-		}
-		try {
-			registryStrategy = new DiscoveryRegistryStrategy(new File[] { registryCacheFolder },
-					new boolean[] { false }, this);
-			registryStrategy.setBundleFiles(bundles);
-			IExtensionRegistry extensionRegistry = new ExtensionRegistry(registryStrategy, this, this);
-			try {
-				IExtensionPoint extensionPoint = extensionRegistry.getExtensionPoint(ConnectorDiscoveryExtensionReader.EXTENSION_POINT_ID);
-				if (extensionPoint != null) {
-					IExtension[] extensions = extensionPoint.getExtensions();
-					if (extensions.length > 0) {
-						monitor.beginTask(Messages.RemoteBundleDiscoveryStrategy_task_loading_remote_extensions,
-								extensions.length == 0 ? 1 : extensions.length);
+			if (monitor.isCanceled()) {
+				return;
+			}
 
-						processExtensions(new SubProgressMonitor(monitor, ticksTenPercent * 3), extensions);
+			Directory directory;
+
+			// FIXME: Eclipse network/proxy settings
+			WebLocation webLocation = new WebLocation(directoryUrl);
+			try {
+				final Directory[] temp = new Directory[1];
+				WebUtil.readResource(webLocation, new TextContentProcessor() {
+					public void process(Reader reader) throws IOException {
+						DirectoryParser parser = new DirectoryParser();
+						temp[0] = parser.parse(reader);
 					}
+				}, new SubProgressMonitor(monitor, ticksTenPercent));
+				directory = temp[0];
+				if (directory == null) {
+					throw new IllegalStateException();
+				}
+			} catch (IOException e) {
+				throw new CoreException(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN,
+						Messages.RemoteBundleDiscoveryStrategy_io_failure_discovery_directory, e));
+			}
+			if (monitor.isCanceled()) {
+				return;
+			}
+			if (directory.getEntries().isEmpty()) {
+				throw new CoreException(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN,
+						Messages.RemoteBundleDiscoveryStrategy_empty_directory));
+			}
+
+			Set<File> bundles = new HashSet<File>();
+
+			// TODO: multithreaded downloading
+			for (Directory.Entry entry : directory.getEntries()) {
+				String bundleUrl = entry.getLocation();
+				try {
+					if (!bundleUrl.startsWith("http://") && !bundleUrl.startsWith("https://")) { //$NON-NLS-1$//$NON-NLS-2$
+						StatusHandler.log(new Status(IStatus.WARNING, DiscoveryCore.ID_PLUGIN, NLS.bind(
+								Messages.RemoteBundleDiscoveryStrategy_unrecognized_discovery_url, bundleUrl)));
+						continue;
+					}
+					String lastPathElement = bundleUrl.lastIndexOf('/') == -1 ? bundleUrl
+							: bundleUrl.substring(bundleUrl.lastIndexOf('/'));
+					File target = File.createTempFile(
+							lastPathElement.replaceAll("^[a-zA-Z0-9_.]", "_") + "_", ".jar", temporaryStorage); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$
+
+					if (monitor.isCanceled()) {
+						return;
+					}
+
+					// FIXME: Eclipse network/proxy settings
+					WebUtil.downloadResource(target, new WebLocation(bundleUrl), new SubProgressMonitor(monitor,
+							ticksTenPercent * 4 / directory.getEntries().size()));
+					bundles.add(target);
+				} catch (IOException e) {
+					StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN, NLS.bind(
+							Messages.RemoteBundleDiscoveryStrategy_cannot_download_bundle, bundleUrl, e.getMessage()),
+							e));
+				}
+			}
+			try {
+				registryStrategy = new DiscoveryRegistryStrategy(new File[] { registryCacheFolder },
+						new boolean[] { false }, this);
+				registryStrategy.setBundleFiles(bundles);
+				IExtensionRegistry extensionRegistry = new ExtensionRegistry(registryStrategy, this, this);
+				try {
+					IExtensionPoint extensionPoint = extensionRegistry.getExtensionPoint(ConnectorDiscoveryExtensionReader.EXTENSION_POINT_ID);
+					if (extensionPoint != null) {
+						IExtension[] extensions = extensionPoint.getExtensions();
+						if (extensions.length > 0) {
+							processExtensions(new SubProgressMonitor(monitor, ticksTenPercent * 3), extensions);
+						}
+					}
+				} finally {
+					extensionRegistry.stop(this);
 				}
 			} finally {
-				extensionRegistry.stop(this);
+				registryStrategy = null;
 			}
 		} finally {
-			registryStrategy = null;
+			monitor.done();
 		}
-		monitor.done();
 	}
 
 	private void delete(File file) {

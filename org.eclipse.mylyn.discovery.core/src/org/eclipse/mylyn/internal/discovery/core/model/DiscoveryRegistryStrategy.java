@@ -70,7 +70,7 @@ public class DiscoveryRegistryStrategy extends RegistryStrategy {
 		// we must add a contribution from the core bundle so that we get the
 		// extension point itself
 		try {
-			Bundle bundle = Platform.getBundle(DiscoveryCore.BUNDLE_ID);
+			Bundle bundle = Platform.getBundle(DiscoveryCore.ID_PLUGIN);
 			IContributor contributor = new RegistryContributor(bundle.getSymbolicName(), bundle.getSymbolicName(),
 					null, null);
 
@@ -101,7 +101,7 @@ public class DiscoveryRegistryStrategy extends RegistryStrategy {
 			try {
 				processBundle(registry, bundleFile);
 			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID, NLS.bind(
+				StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN, NLS.bind(
 						Messages.DiscoveryRegistryStrategy_cannot_load_bundle, bundleFile.getName(), e.getMessage()), e));
 			}
 		}

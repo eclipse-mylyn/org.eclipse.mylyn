@@ -31,11 +31,16 @@ import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.osgi.util.NLS;
 
 /**
+ * A utility for accessing web resources
  * 
  * @author David Green
  */
 public class WebUtil {
-
+	/**
+	 * implementors are capable of processing character content
+	 * 
+	 * @see WebUtil#readResource(AbstractWebLocation, TextContentProcessor, IProgressMonitor)
+	 */
 	public interface TextContentProcessor {
 		public void process(Reader reader) throws IOException;
 	}
@@ -56,9 +61,8 @@ public class WebUtil {
 	public static void downloadResource(File target, AbstractWebLocation location, IProgressMonitor monitor)
 			throws IOException {
 		monitor = Policy.monitorFor(monitor);
+		monitor.beginTask("Retrieving " + location.getUrl(), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
 		try {
-			monitor.beginTask("Retrieving " + location.getUrl(), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
-
 			HttpClient client = new HttpClient();
 			org.eclipse.mylyn.commons.net.WebUtil.configureHttpClient(client, ""); //$NON-NLS-1$
 
@@ -89,8 +93,7 @@ public class WebUtil {
 						in.close();
 					}
 				} else {
-					throw new IOException(NLS.bind(Messages.WebUtil_cannotDownload,
-							location.getUrl(), result));
+					throw new IOException(NLS.bind(Messages.WebUtil_cannotDownload, location.getUrl(), result));
 				}
 			} finally {
 				method.releaseConnection();
@@ -103,9 +106,8 @@ public class WebUtil {
 	public static void readResource(AbstractWebLocation location, TextContentProcessor processor,
 			IProgressMonitor monitor) throws IOException {
 		monitor = Policy.monitorFor(monitor);
+		monitor.beginTask("Retrieving " + location.getUrl(), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
 		try {
-			monitor.beginTask("Retrieving " + location.getUrl(), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
-
 			HttpClient client = new HttpClient();
 			org.eclipse.mylyn.commons.net.WebUtil.configureHttpClient(client, ""); //$NON-NLS-1$
 

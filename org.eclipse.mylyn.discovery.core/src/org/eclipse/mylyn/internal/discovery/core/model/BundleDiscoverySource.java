@@ -15,12 +15,11 @@ import java.net.URL;
 import org.osgi.framework.Bundle;
 
 /**
- * 
  * @author David Green
  */
 public class BundleDiscoverySource extends AbstractDiscoverySource {
 
-	private Bundle bundle;
+	private final Bundle bundle;
 
 	public BundleDiscoverySource(Bundle bundle) {
 		if (bundle == null) {

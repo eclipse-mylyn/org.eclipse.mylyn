@@ -78,8 +78,6 @@ class Messages extends NLS {
 
 	public static String RemoteBundleDiscoveryStrategy_io_failure_temp_storage;
 
-	public static String RemoteBundleDiscoveryStrategy_task_loading_remote_extensions;
-
 	public static String RemoteBundleDiscoveryStrategy_task_remote_discovery;
 
 	public static String RemoteBundleDiscoveryStrategy_unrecognized_discovery_url;

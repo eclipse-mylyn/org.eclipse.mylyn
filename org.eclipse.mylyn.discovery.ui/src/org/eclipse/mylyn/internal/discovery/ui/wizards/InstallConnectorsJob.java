@@ -44,10 +44,10 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDescriptor;
 import org.eclipse.mylyn.internal.discovery.ui.DiscoveryUi;
+import org.eclipse.mylyn.internal.discovery.ui.util.DiscoveryUiUtil;
 import org.eclipse.mylyn.internal.discovery.ui.util.SimpleSelectionProvider;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * A job that downloads and installs one or more {@link ConnectorDescriptor connectors}. The bulk of the installation
@@ -82,10 +82,9 @@ public class InstallConnectorsJob implements IRunnableWithProgress {
 	}
 
 	public void doRun(IProgressMonitor monitor) throws CoreException {
+		final int totalWork = installableConnectors.size() * 4;
+		monitor.beginTask(Messages.InstallConnectorsJob_task_configuring, totalWork);
 		try {
-			final int totalWork = installableConnectors.size() * 4;
-			monitor.beginTask(Messages.InstallConnectorsJob_task_configuring, totalWork);
-
 			final String profileId = computeProfileId();
 
 			// Tell p2 that it's okay to use these repositories
@@ -241,16 +240,16 @@ public class InstallConnectorsJob implements IRunnableWithProgress {
 					final boolean[] okayToProceed = new boolean[1];
 					Display.getDefault().syncExec(new Runnable() {
 						public void run() {
-							okayToProceed[0] = MessageDialog.openQuestion(PlatformUI.getWorkbench()
-									.getActiveWorkbenchWindow()
-									.getShell(), Messages.InstallConnectorsJob_questionProceed, NLS.bind(
-									Messages.InstallConnectorsJob_questionProceed_long, new Object[] { notFound }));
+							okayToProceed[0] = MessageDialog.openQuestion(DiscoveryUiUtil.getShell(),
+									Messages.InstallConnectorsJob_questionProceed, NLS.bind(
+											Messages.InstallConnectorsJob_questionProceed_long,
+											new Object[] { notFound }));
 						}
 					});
 					proceed = okayToProceed[0];
 				}
 				if (!proceed) {
-					throw new CoreException(new Status(IStatus.ERROR, DiscoveryUi.BUNDLE_ID, NLS.bind(
+					throw new CoreException(new Status(IStatus.ERROR, DiscoveryUi.ID_PLUGIN, NLS.bind(
 							Messages.InstallConnectorsJob_connectorsNotAvailable, new Object[] { notFound }), null));
 				}
 			} else if (installableUnits.size() > installableConnectors.size()) {
@@ -270,12 +269,14 @@ public class InstallConnectorsJob implements IRunnableWithProgress {
 			monitor.done();
 		} catch (URISyntaxException e) {
 			// should never happen, since we already validated URLs.
-			throw new CoreException(new Status(IStatus.ERROR, DiscoveryUi.BUNDLE_ID,
+			throw new CoreException(new Status(IStatus.ERROR, DiscoveryUi.ID_PLUGIN,
 					Messages.InstallConnectorsJob_unexpectedError_url, e));
 		} catch (MalformedURLException e) {
 			// should never happen, since we already validated URLs.
-			throw new CoreException(new Status(IStatus.ERROR, DiscoveryUi.BUNDLE_ID,
+			throw new CoreException(new Status(IStatus.ERROR, DiscoveryUi.ID_PLUGIN,
 					Messages.InstallConnectorsJob_unexpectedError_url, e));
+		} finally {
+			monitor.done();
 		}
 	}
 
@@ -293,7 +294,7 @@ public class InstallConnectorsJob implements IRunnableWithProgress {
 		if (profiles.length > 0) {
 			return profiles[0].getProfileId();
 		}
-		throw new CoreException(new Status(IStatus.ERROR, DiscoveryUi.BUNDLE_ID,
+		throw new CoreException(new Status(IStatus.ERROR, DiscoveryUi.ID_PLUGIN,
 				Messages.InstallConnectorsJob_profileProblem, null));
 	}
 

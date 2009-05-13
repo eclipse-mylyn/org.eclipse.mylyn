@@ -25,6 +25,6 @@ public class ValidationException extends CoreException {
 	private static final long serialVersionUID = -7542361242327905294L;
 
 	public ValidationException(String message) {
-		super(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID, message));
+		super(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN, message));
 	}
 }

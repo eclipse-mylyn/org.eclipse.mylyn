@@ -13,7 +13,6 @@ package org.eclipse.mylyn.internal.discovery.ui.wizards;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Dictionary;
 import java.util.List;
@@ -42,6 +41,8 @@ import org.eclipse.mylyn.internal.discovery.core.model.Icon;
 import org.eclipse.mylyn.internal.discovery.core.model.RemoteBundleDiscoveryStrategy;
 import org.eclipse.mylyn.internal.discovery.ui.DiscoveryUi;
 import org.eclipse.mylyn.internal.discovery.ui.util.DiscoveryCategoryComparator;
+import org.eclipse.mylyn.internal.discovery.ui.util.DiscoveryUiUtil;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.ACC;
 import org.eclipse.swt.accessibility.AccessibleAdapter;
@@ -84,9 +85,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.WorkbenchMessages;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.WorkbenchJob;
 
 /**
@@ -94,18 +93,9 @@ import org.eclipse.ui.progress.WorkbenchJob;
  * 
  * @author David Green
  * @author Shawn Minto bug 275513
+ * @author Steffen Pingel bug 276012 code review
  */
 public class ConnectorDiscoveryWizardMainPage extends WizardPage {
-
-	/**
-	 * Image descriptor for enabled clear button.
-	 */
-	private static final String CLEAR_ICON = "org.eclipse.ui.internal.dialogs.CLEAR_ICON"; //$NON-NLS-1$
-
-	/**
-	 * Image descriptor for disabled clear button.
-	 */
-	private static final String DISABLED_CLEAR_ICON = "org.eclipse.ui.internal.dialogs.DCLEAR_ICON"; //$NON-NLS-1$
 
 	private static final String COLOR_WHITE = "white"; //$NON-NLS-1$
 
@@ -129,7 +119,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 
 	private WorkbenchJob refreshJob;
 
-	private final String initialText = org.eclipse.mylyn.internal.discovery.ui.wizards.WorkbenchMessages.ConnectorDiscoveryWizardMainPage_typeFilterText;
+	private final String initialText = org.eclipse.mylyn.internal.discovery.ui.wizards.Messages.ConnectorDiscoveryWizardMainPage_typeFilterText;
 
 	private String previousFilterText = ""; //$NON-NLS-1$
 
@@ -139,9 +129,9 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 
 	public ConnectorDiscoveryWizardMainPage() {
 		super(ConnectorDiscoveryWizardMainPage.class.getSimpleName());
-		setTitle(org.eclipse.mylyn.internal.discovery.ui.wizards.WorkbenchMessages.ConnectorDiscoveryWizardMainPage_connectorDiscovery);
+		setTitle(org.eclipse.mylyn.internal.discovery.ui.wizards.Messages.ConnectorDiscoveryWizardMainPage_connectorDiscovery);
 		// setImageDescriptor(image);
-		setDescription(org.eclipse.mylyn.internal.discovery.ui.wizards.WorkbenchMessages.ConnectorDiscoveryWizardMainPage_pageDescription);
+		setDescription(org.eclipse.mylyn.internal.discovery.ui.wizards.Messages.ConnectorDiscoveryWizardMainPage_pageDescription);
 		setPageComplete(false);
 	}
 
@@ -169,7 +159,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 				GridLayoutFactory.fillDefaults().numColumns(ConnectorDescriptorKind.values().length + 1).applyTo(
 						checkboxContainer);
 				Label label = new Label(checkboxContainer, SWT.NULL);
-				label.setText(org.eclipse.mylyn.internal.discovery.ui.wizards.WorkbenchMessages.ConnectorDiscoveryWizardMainPage_filterLabel);
+				label.setText(org.eclipse.mylyn.internal.discovery.ui.wizards.Messages.ConnectorDiscoveryWizardMainPage_filterLabel);
 				for (final ConnectorDescriptorKind kind : ConnectorDescriptorKind.values()) {
 					final Button checkbox = new Button(checkboxContainer, SWT.CHECK);
 					checkbox.setSelection(getWizard().isVisible(kind));
@@ -254,10 +244,6 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 					GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(filterText);
 				} else {
 					GridDataFactory.fillDefaults().grab(true, false).applyTo(filterText);
-					// native platform doesn't support a clear filter text button
-					// so we add one here instead.  Based on FilteredTree implementation
-					initSearchFieldImages();
-
 					clearFilterTextControl = createClearFilterTextControl(filterContainer, filterText);
 					clearFilterTextControl.setVisible(false);
 				}
@@ -325,8 +311,8 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 	}
 
 	private Label createClearFilterTextControl(Composite filterContainer, final Text filterText) {
-		final Image inactiveImage = JFaceResources.getImageRegistry().getDescriptor(DISABLED_CLEAR_ICON).createImage();
-		final Image activeImage = JFaceResources.getImageRegistry().getDescriptor(CLEAR_ICON).createImage();
+		final Image inactiveImage = CommonImages.FIND_CLEAR.createImage();
+		final Image activeImage = CommonImages.FIND_CLEAR_DISABLED.createImage();
 		final Image pressedImage = new Image(filterContainer.getDisplay(), activeImage, SWT.IMAGE_GRAY);
 
 		final Label clearButton = new Label(filterContainer, SWT.NONE);
@@ -407,19 +393,6 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		return clearButton;
 	}
 
-	private void initSearchFieldImages() {
-		ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(PlatformUI.PLUGIN_ID,
-				"$nl$/icons/full/etool16/clear_co.gif"); //$NON-NLS-1$
-		if (descriptor != null) {
-			JFaceResources.getImageRegistry().put(CLEAR_ICON, descriptor);
-		}
-		descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(PlatformUI.PLUGIN_ID,
-				"$nl$/icons/full/dtool16/clear_co.gif"); //$NON-NLS-1$
-		if (descriptor != null) {
-			JFaceResources.getImageRegistry().put(DISABLED_CLEAR_ICON, descriptor);
-		}
-	}
-
 	@Override
 	public ConnectorDiscoveryWizard getWizard() {
 		return (ConnectorDiscoveryWizard) super.getWizard();
@@ -438,11 +411,11 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 	private String getFilterLabel(ConnectorDescriptorKind kind) {
 		switch (kind) {
 		case DOCUMENT:
-			return org.eclipse.mylyn.internal.discovery.ui.wizards.WorkbenchMessages.ConnectorDiscoveryWizardMainPage_filter_documents;
+			return org.eclipse.mylyn.internal.discovery.ui.wizards.Messages.ConnectorDiscoveryWizardMainPage_filter_documents;
 		case TASK:
-			return org.eclipse.mylyn.internal.discovery.ui.wizards.WorkbenchMessages.ConnectorDiscoveryWizardMainPage_filter_tasks;
+			return org.eclipse.mylyn.internal.discovery.ui.wizards.Messages.ConnectorDiscoveryWizardMainPage_filter_tasks;
 		case VCS:
-			return org.eclipse.mylyn.internal.discovery.ui.wizards.WorkbenchMessages.ConnectorDiscoveryWizardMainPage_filter_vcs;
+			return org.eclipse.mylyn.internal.discovery.ui.wizards.Messages.ConnectorDiscoveryWizardMainPage_filter_vcs;
 		default:
 			throw new IllegalStateException(kind.name());
 		}
@@ -477,7 +450,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 
 	public void createBodyContents() {
 		// remove any existing contents
-		for (Control child : new ArrayList<Control>(Arrays.asList(body.getChildren()))) {
+		for (Control child : body.getChildren()) {
 			child.dispose();
 		}
 		clearDisposables();
@@ -491,6 +464,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		ScrolledComposite scrolledComposite = new ScrolledComposite(body, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(scrolledComposite);
 
+		// FIXME 3.2 does white work for any desktop theme, e.g. an inverse theme?
 		Composite scrolledContents = new Composite(scrolledComposite, SWT.NONE);
 		scrolledContents.setBackground(colorWhite);
 		createDiscoveryContents(scrolledContents);
@@ -560,7 +534,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 			if (filterPattern != null) {
 				Link link = new Link(container, SWT.WRAP);
 				link.setFont(container.getFont());
-				link.setText(org.eclipse.mylyn.internal.discovery.ui.wizards.WorkbenchMessages.ConnectorDiscoveryWizardMainPage_noMatchingItems_withFilterText);
+				link.setText(org.eclipse.mylyn.internal.discovery.ui.wizards.Messages.ConnectorDiscoveryWizardMainPage_noMatchingItems_withFilterText);
 				link.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event event) {
 						clearFilterText();
@@ -572,9 +546,9 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 				Label helpText = new Label(container, SWT.WRAP);
 				helpText.setFont(container.getFont());
 				if (atLeastOneKindFiltered) {
-					helpText.setText(org.eclipse.mylyn.internal.discovery.ui.wizards.WorkbenchMessages.ConnectorDiscoveryWizardMainPage_noMatchingItems_filteredType);
+					helpText.setText(org.eclipse.mylyn.internal.discovery.ui.wizards.Messages.ConnectorDiscoveryWizardMainPage_noMatchingItems_filteredType);
 				} else {
-					helpText.setText(org.eclipse.mylyn.internal.discovery.ui.wizards.WorkbenchMessages.ConnectorDiscoveryWizardMainPage_noMatchingItems_noFilter);
+					helpText.setText(org.eclipse.mylyn.internal.discovery.ui.wizards.Messages.ConnectorDiscoveryWizardMainPage_noMatchingItems_noFilter);
 				}
 				helpTextControl = helpText;
 			}
@@ -884,14 +858,14 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 				if (!(cause instanceof CoreException)) {
 					status = new Status(
 							IStatus.ERROR,
-							DiscoveryUi.BUNDLE_ID,
-							org.eclipse.mylyn.internal.discovery.ui.wizards.WorkbenchMessages.ConnectorDiscoveryWizardMainPage_unexpectedException,
+							DiscoveryUi.ID_PLUGIN,
+							org.eclipse.mylyn.internal.discovery.ui.wizards.Messages.ConnectorDiscoveryWizardMainPage_unexpectedException,
 							cause);
 				} else {
 					status = ((CoreException) cause).getStatus();
 				}
-				DiscoveryUi.logAndDisplayStatus(
-						org.eclipse.mylyn.internal.discovery.ui.wizards.WorkbenchMessages.ConnectorDiscoveryWizardMainPage_errorTitle,
+				DiscoveryUiUtil.logAndDisplayStatus(
+						org.eclipse.mylyn.internal.discovery.ui.wizards.Messages.ConnectorDiscoveryWizardMainPage_errorTitle,
 						status);
 			} catch (InterruptedException e) {
 				// cancelled by user so nothing to do here.
@@ -926,8 +900,8 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 				// nothing was discovered: notify the user
 				MessageDialog.openWarning(
 						getShell(),
-						org.eclipse.mylyn.internal.discovery.ui.wizards.WorkbenchMessages.ConnectorDiscoveryWizardMainPage_noConnectorsFound,
-						org.eclipse.mylyn.internal.discovery.ui.wizards.WorkbenchMessages.ConnectorDiscoveryWizardMainPage_noConnectorsFound_description);
+						org.eclipse.mylyn.internal.discovery.ui.wizards.Messages.ConnectorDiscoveryWizardMainPage_noConnectorsFound,
+						org.eclipse.mylyn.internal.discovery.ui.wizards.Messages.ConnectorDiscoveryWizardMainPage_noConnectorsFound_description);
 			}
 		}
 	}

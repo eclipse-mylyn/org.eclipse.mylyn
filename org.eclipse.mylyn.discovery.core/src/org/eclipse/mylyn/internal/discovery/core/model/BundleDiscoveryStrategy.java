@@ -41,52 +41,56 @@ public class BundleDiscoveryStrategy extends AbstractDiscoveryStrategy {
 		IExtensionPoint extensionPoint = getExtensionRegistry().getExtensionPoint(
 				ConnectorDiscoveryExtensionReader.EXTENSION_POINT_ID);
 		IExtension[] extensions = extensionPoint.getExtensions();
-		if (extensions.length > 0) {
-			monitor.beginTask(Messages.BundleDiscoveryStrategy_task_loading_local_extensions,
-					extensions.length == 0 ? 1 : extensions.length);
-
-			processExtensions(new SubProgressMonitor(monitor, extensions.length), extensions);
+		monitor.beginTask(Messages.BundleDiscoveryStrategy_task_loading_local_extensions, extensions.length == 0 ? 1
+				: extensions.length);
+		try {
+			if (extensions.length > 0) {
+				processExtensions(new SubProgressMonitor(monitor, extensions.length), extensions);
+			}
+		} finally {
+			monitor.done();
 		}
-		monitor.done();
 	}
 
 	protected void processExtensions(IProgressMonitor monitor, IExtension[] extensions) {
 		monitor.beginTask(Messages.BundleDiscoveryStrategy_task_processing_extensions, extensions.length == 0 ? 1
 				: extensions.length);
+		try {
+			ConnectorDiscoveryExtensionReader extensionReader = new ConnectorDiscoveryExtensionReader();
 
-		ConnectorDiscoveryExtensionReader extensionReader = new ConnectorDiscoveryExtensionReader();
-
-		for (IExtension extension : extensions) {
-			AbstractDiscoverySource discoverySource = computeDiscoverySource(extension.getContributor());
-			IConfigurationElement[] elements = extension.getConfigurationElements();
-			for (IConfigurationElement element : elements) {
-				if (monitor.isCanceled()) {
-					return;
-				}
-				try {
-					if (ConnectorDiscoveryExtensionReader.CONNECTOR_DESCRIPTOR.equals(element.getName())) {
-						DiscoveryConnector descriptor = extensionReader.readConnectorDescriptor(element,
-								DiscoveryConnector.class);
-						descriptor.setSource(discoverySource);
-						connectors.add(descriptor);
-					} else if (ConnectorDiscoveryExtensionReader.CONNECTOR_CATEGORY.equals(element.getName())) {
-						DiscoveryCategory category = extensionReader.readConnectorCategory(element,
-								DiscoveryCategory.class);
-						category.setSource(discoverySource);
-						categories.add(category);
-					} else {
-						throw new ValidationException(NLS.bind(Messages.BundleDiscoveryStrategy_unexpected_element,
-								element.getName()));
+			for (IExtension extension : extensions) {
+				AbstractDiscoverySource discoverySource = computeDiscoverySource(extension.getContributor());
+				IConfigurationElement[] elements = extension.getConfigurationElements();
+				for (IConfigurationElement element : elements) {
+					if (monitor.isCanceled()) {
+						return;
 					}
-				} catch (ValidationException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.BUNDLE_ID, NLS.bind(
-							Messages.BundleDiscoveryStrategy_3, element.getContributor().getName(), e.getMessage()), e));
+					try {
+						if (ConnectorDiscoveryExtensionReader.CONNECTOR_DESCRIPTOR.equals(element.getName())) {
+							DiscoveryConnector descriptor = extensionReader.readConnectorDescriptor(element,
+									DiscoveryConnector.class);
+							descriptor.setSource(discoverySource);
+							connectors.add(descriptor);
+						} else if (ConnectorDiscoveryExtensionReader.CONNECTOR_CATEGORY.equals(element.getName())) {
+							DiscoveryCategory category = extensionReader.readConnectorCategory(element,
+									DiscoveryCategory.class);
+							category.setSource(discoverySource);
+							categories.add(category);
+						} else {
+							throw new ValidationException(NLS.bind(Messages.BundleDiscoveryStrategy_unexpected_element,
+									element.getName()));
+						}
+					} catch (ValidationException e) {
+						StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN,
+								NLS.bind(Messages.BundleDiscoveryStrategy_3, element.getContributor().getName(),
+										e.getMessage()), e));
+					}
 				}
+				monitor.worked(1);
 			}
-			monitor.worked(1);
+		} finally {
+			monitor.done();
 		}
-
-		monitor.done();
 	}
 
 	protected AbstractDiscoverySource computeDiscoverySource(IContributor contributor) {

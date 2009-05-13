@@ -36,7 +36,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 
 /**
- * 
  * @author David Green
  */
 class ConnectorDescriptorToolTip extends ToolTip {
@@ -112,6 +111,7 @@ class ConnectorDescriptorToolTip extends ToolTip {
 				link.setText(Messages.ConnectorDescriptorToolTip_detailsLink);
 				link.addSelectionListener(new SelectionListener() {
 					public void widgetSelected(SelectionEvent e) {
+						// FIXME 3.2 safe to launch? Should at least check if url starts with http... better to use WorkbenchUtil.openUrl(): bug 276011
 						Program.launch(overview.getUrl());
 					}
 
