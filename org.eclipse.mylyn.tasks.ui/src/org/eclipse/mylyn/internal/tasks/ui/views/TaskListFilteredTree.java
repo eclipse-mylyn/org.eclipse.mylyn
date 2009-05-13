@@ -50,6 +50,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskWorkingSetAction;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskListChangeAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
@@ -65,6 +66,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.PlatformUI;
@@ -116,9 +118,16 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 	private TaskWorkingSetFilter workingSetFilter;
 
-	public TaskListFilteredTree(Composite parent, int treeStyle, PatternFilter filter) {
+	private final IWorkbenchWindow window;
+
+	/**
+	 * @param window
+	 *            can be null. Needed for the working sets to be displayed properly
+	 */
+	public TaskListFilteredTree(Composite parent, int treeStyle, PatternFilter filter, IWorkbenchWindow window) {
 		super(parent, treeStyle, filter);
 		hookContextMenu();
+		this.window = window;
 	}
 
 	@Override
@@ -133,7 +142,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			TasksUi.getTaskActivityManager().removeActivityListener(taskProgressBarActivityListener);
 		}
 		if (taskProgressBarWorkingSetListener != null) {
-			PlatformUI.getWorkbench().getWorkingSetManager().addPropertyChangeListener(
+			PlatformUI.getWorkbench().getWorkingSetManager().removePropertyChangeListener(
 					taskProgressBarWorkingSetListener);
 		}
 
@@ -467,28 +476,30 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 	}
 
 	public void indicateActiveTaskWorkingSet() {
-		Set<IWorkingSet> activeSets = TaskListView.getActiveWorkingSets();
+		if (window != null) {
+			Set<IWorkingSet> activeSets = TaskWorkingSetUpdater.getActiveWorkingSets(window);
 
-		if (filterComposite.isDisposed() || activeSets == null) {
-			return;
-		}
+			if (filterComposite.isDisposed() || activeSets == null) {
+				return;
+			}
 
-		if (activeSets.size() == 0) {
-			workingSetLink.setText(TaskWorkingSetAction.LABEL_SETS_NONE);
-			workingSetLink.setToolTipText(Messages.TaskListFilteredTree_Edit_Task_Working_Sets_);
-			currentWorkingSet = null;
-		} else if (activeSets.size() > 1) {
-			workingSetLink.setText(Messages.TaskListFilteredTree__multiple_);
-			workingSetLink.setToolTipText(Messages.TaskListFilteredTree_Edit_Task_Working_Sets_);
-			currentWorkingSet = null;
-		} else {
-			Object[] array = activeSets.toArray();
-			IWorkingSet workingSet = (IWorkingSet) array[0];
-			workingSetLink.setText(workingSet.getLabel());
-			workingSetLink.setToolTipText(Messages.TaskListFilteredTree_Edit_Task_Working_Sets_);
-			currentWorkingSet = workingSet;
+			if (activeSets.size() == 0) {
+				workingSetLink.setText(TaskWorkingSetAction.LABEL_SETS_NONE);
+				workingSetLink.setToolTipText(Messages.TaskListFilteredTree_Edit_Task_Working_Sets_);
+				currentWorkingSet = null;
+			} else if (activeSets.size() > 1) {
+				workingSetLink.setText(Messages.TaskListFilteredTree__multiple_);
+				workingSetLink.setToolTipText(Messages.TaskListFilteredTree_Edit_Task_Working_Sets_);
+				currentWorkingSet = null;
+			} else {
+				Object[] array = activeSets.toArray();
+				IWorkingSet workingSet = (IWorkingSet) array[0];
+				workingSetLink.setText(workingSet.getLabel());
+				workingSetLink.setToolTipText(Messages.TaskListFilteredTree_Edit_Task_Working_Sets_);
+				currentWorkingSet = workingSet;
+			}
+			filterComposite.layout();
 		}
-		filterComposite.layout();
 	}
 
 	public void indicateActiveTask(ITask task) {

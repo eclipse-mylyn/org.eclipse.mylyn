@@ -16,7 +16,6 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -110,7 +109,6 @@ import org.eclipse.mylyn.internal.tasks.ui.util.TaskDragSourceListener;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.util.TreeWalker;
 import org.eclipse.mylyn.internal.tasks.ui.util.TreeWalker.TreeVisitor;
-import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -176,7 +174,6 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -901,7 +898,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		themeManager.addPropertyChangeListener(THEME_CHANGE_LISTENER);
 
 		filteredTree = new TaskListFilteredTree(parent, SWT.MULTI | SWT.VERTICAL | /* SWT.H_SCROLL | */SWT.V_SCROLL
-				| SWT_NO_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION, new SubstringPatternFilter());
+				| SWT_NO_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION, new SubstringPatternFilter(),
+				getViewSite().getWorkbenchWindow());
 		// Set to empty string to disable native tooltips (windows only?)
 		// bug#160897
 		// http://dev.eclipse.org/newslists/news.eclipse.platform.swt/msg29614.html
@@ -1881,25 +1879,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 				Rectangle bounds = selection[0].getBounds();
 				taskListToolTip.show(new Point(bounds.x + 1, bounds.y + 1));
 			}
-		}
-	}
-
-	public static Set<IWorkingSet> getActiveWorkingSets() {
-		if (PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null) {
-			Set<IWorkingSet> allSets = new HashSet<IWorkingSet>(Arrays.asList(PlatformUI.getWorkbench()
-					.getActiveWorkbenchWindow()
-					.getActivePage()
-					.getWorkingSets()));
-			Set<IWorkingSet> tasksSets = new HashSet<IWorkingSet>(allSets);
-			for (IWorkingSet workingSet : allSets) {
-				if (workingSet.getId() == null
-						|| !workingSet.getId().equalsIgnoreCase(TaskWorkingSetUpdater.ID_TASK_WORKING_SET)) {
-					tasksSets.remove(workingSet);
-				}
-			}
-			return tasksSets;
-		} else {
-			return Collections.emptySet();
 		}
 	}
 

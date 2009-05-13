@@ -23,7 +23,6 @@ import org.eclipse.jface.bindings.keys.KeyLookupFactory;
 import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IWorkingSet;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
@@ -83,8 +82,7 @@ public class ToggleWorkingSetAction extends Action {
 			}
 		}
 
-		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().setWorkingSets(
-				newList.toArray(new IWorkingSet[newList.size()]));
+		TaskWorkingSetUpdater.applyWorkingSetsToAllWindows(newList);
 	}
 
 }

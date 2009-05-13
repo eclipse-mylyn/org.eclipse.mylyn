@@ -100,8 +100,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 		IWorkingSet[] workingSets = PlatformUI.getWorkbench().getWorkingSetManager().getWorkingSets();
 
 		if (doTaskWorkingSetsExist()) {
-			ActionContributionItem itemAll = new ActionContributionItem(new ToggleAllWorkingSetsAction(
-					PlatformUI.getWorkbench().getActiveWorkbenchWindow()));
+			ActionContributionItem itemAll = new ActionContributionItem(new ToggleAllWorkingSetsAction());
 //			ActionContributionItem itemNone = new ActionContributionItem(new ToggleNoWorkingSetsAction());
 
 			List<IWorkingSet> sortedWorkingSets = Arrays.asList(workingSets);
@@ -213,8 +212,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 				}
 			}
 
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().setWorkingSets(
-					newList.toArray(new IWorkingSet[newList.size()]));
+			TaskWorkingSetUpdater.applyWorkingSetsToAllWindows(newList);
 		}
 
 	}
@@ -274,7 +272,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 			viewer.addFilter(new WorkingSetFilter(taskWorkingSetIds));
 			viewer.setInput(window.getWorkbench().getWorkingSetManager().getWorkingSets());
 
-			viewer.setCheckedElements(window.getActivePage().getWorkingSets());
+			viewer.setCheckedElements(TaskWorkingSetUpdater.getActiveWorkingSets(window).toArray());
 
 			viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 				public void selectionChanged(SelectionChangedEvent event) {
@@ -316,7 +314,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 			System.arraycopy(selection, 0, setsToEnable, 0, selection.length);
 			newList.addAll(new HashSet<IWorkingSet>(Arrays.asList(setsToEnable)));
 
-			window.getActivePage().setWorkingSets(newList.toArray(new IWorkingSet[newList.size()]));
+			TaskWorkingSetUpdater.applyWorkingSetsToAllWindows(newList);
 			super.okPressed();
 		}
 

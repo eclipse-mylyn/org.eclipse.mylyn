@@ -14,6 +14,9 @@ package org.eclipse.mylyn.internal.tasks.ui.workingsets;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -306,6 +309,34 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 				processResourceDelta(workingSetDelta, event.getDelta());
 			}
 			workingSetDelta.process();
+		}
+	}
+
+	/**
+	 * Must be called from the UI thread
+	 */
+	public static void applyWorkingSetsToAllWindows(Collection<IWorkingSet> workingSets) {
+		IWorkingSet[] workingSetArray = workingSets.toArray(new IWorkingSet[workingSets.size()]);
+		for (IWorkbenchWindow window : PlatformUI.getWorkbench().getWorkbenchWindows()) {
+			for (IWorkbenchPage page : window.getPages()) {
+				page.setWorkingSets(workingSetArray);
+			}
+		}
+	}
+
+	public static Set<IWorkingSet> getActiveWorkingSets(IWorkbenchWindow window) {
+		if (window != null) {
+			Set<IWorkingSet> allSets = new HashSet<IWorkingSet>(Arrays.asList(window.getActivePage().getWorkingSets()));
+			Set<IWorkingSet> tasksSets = new HashSet<IWorkingSet>(allSets);
+			for (IWorkingSet workingSet : allSets) {
+				if (workingSet.getId() == null
+						|| !workingSet.getId().equalsIgnoreCase(TaskWorkingSetUpdater.ID_TASK_WORKING_SET)) {
+					tasksSets.remove(workingSet);
+				}
+			}
+			return tasksSets;
+		} else {
+			return Collections.emptySet();
 		}
 	}
 

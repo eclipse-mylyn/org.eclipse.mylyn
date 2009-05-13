@@ -30,14 +30,12 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskHistoryDropDownAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.WorkingSet;
 
 /**
  * @author Frank Becker
@@ -92,7 +90,7 @@ public class TaskActivationHistoryTest extends TestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		TaskTestUtil.resetTaskList();
-		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().setWorkingSets(new WorkingSet[0]);
+		TaskWorkingSetUpdater.applyWorkingSetsToAllWindows(new HashSet<IWorkingSet>(0));
 	}
 
 	public void testWithWorkingSet() {
@@ -129,7 +127,8 @@ public class TaskActivationHistoryTest extends TestCase {
 		assertTrue(prevHistoryList.get(prevHistoryList.size() - 3) == task12);
 		assertTrue(prevHistoryList.get(prevHistoryList.size() - 4) == task11);
 
-		prevHistoryList = history.getPreviousTasks(TasksUiInternal.getContainersFromWorkingSet(TaskListView.getActiveWorkingSets()));
+		prevHistoryList = history.getPreviousTasks(TasksUiInternal.getContainersFromWorkingSet(TaskWorkingSetUpdater.getActiveWorkingSets(PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow())));
 
 		// Check that the previous history list looks right
 		assertTrue(prevHistoryList.size() >= 2);
@@ -151,10 +150,10 @@ public class TaskActivationHistoryTest extends TestCase {
 		IWorkingSet workingSet = workingSetManager1.createWorkingSet("Task Working Set", new IAdaptable[] { element });
 		workingSet.setId(TaskWorkingSetUpdater.ID_TASK_WORKING_SET);
 		assertTrue(Arrays.asList(workingSet.getElements()).contains(element));
-		Set<IWorkingSet> sets = TaskListView.getActiveWorkingSets();
+		Set<IWorkingSet> sets = TaskWorkingSetUpdater.getActiveWorkingSets(PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow());
 		sets.add(workingSet);
-		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().setWorkingSets(
-				sets.toArray(new WorkingSet[sets.size()]));
+		TaskWorkingSetUpdater.applyWorkingSetsToAllWindows(sets);
 		return workingSet;
 	}
 

@@ -14,6 +14,7 @@ package org.eclipse.mylyn.tasks.tests.ui;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -36,7 +37,6 @@ import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
 
 /**
@@ -110,7 +110,7 @@ public class TaskListFilterTest extends TestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().setWorkingSets(new IWorkingSet[0]);
+		TaskWorkingSetUpdater.applyWorkingSetsToAllWindows(new HashSet<IWorkingSet>(0));
 		view.clearFilters();
 		for (AbstractTaskListFilter filter : previousFilters) {
 			view.addFilter(filter);
@@ -135,17 +135,18 @@ public class TaskListFilterTest extends TestCase {
 
 		TaskWorkingSetFilter workingSetFilter = new TaskWorkingSetFilter();
 		view.addFilter(workingSetFilter);
-		IWorkingSet[] workingSets = { workingSet };
-		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().setWorkingSets(workingSets);
+		HashSet<IWorkingSet> workingSets = new HashSet<IWorkingSet>(1);
+		workingSets.add(workingSet);
+		TaskWorkingSetUpdater.applyWorkingSetsToAllWindows(workingSets);
 		view.getFilteredTree().setFilterText("over");
 		view.getFilteredTree().getRefreshPolicy().internalForceRefresh();
 
 		items = UiTestUtil.getAllData(view.getViewer().getTree());
 		assertFalse(items.contains(taskCompleted));
 		assertTrue(items.contains(taskOverdue));
-		workingSets = new IWorkingSet[0];
+		workingSets = new HashSet<IWorkingSet>(0);
 		view.removeFilter(workingSetFilter);
-		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().setWorkingSets(workingSets);
+		TaskWorkingSetUpdater.applyWorkingSetsToAllWindows(workingSets);
 		taskList.removeFromContainer(category, taskOverdue);
 		taskList.removeFromContainer(category, taskIncomplete);
 		view.getFilteredTree().setFilterText("");

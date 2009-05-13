@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.tasks.tests.ui;
 
+import java.util.HashSet;
+
 import junit.framework.TestCase;
 
 import org.eclipse.core.commands.NotEnabledException;
@@ -18,6 +20,7 @@ import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.commands.MarkTaskHandler.MarkTaskCompleteHandler;
+import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
@@ -42,7 +45,7 @@ public class MarkTaskHandlerTest extends TestCase {
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);
 
 		// TODO figure out which test leaves a filter enabled
-		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().setWorkingSets(new IWorkingSet[0]);
+		TaskWorkingSetUpdater.applyWorkingSetsToAllWindows(new HashSet<IWorkingSet>(0));
 		TaskTestUtil.openTasksViewInActivePerspective().clearFilters();
 	}
 

@@ -20,7 +20,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkingSet;
 
 /**
@@ -28,12 +27,9 @@ import org.eclipse.ui.IWorkingSet;
  */
 public class ToggleAllWorkingSetsAction extends Action {
 
-	private final IWorkbenchWindow window;
-
-	public ToggleAllWorkingSetsAction(IWorkbenchWindow window) {
+	public ToggleAllWorkingSetsAction() {
 		super(Messages.ToggleAllWorkingSetsAction_Show_All, IAction.AS_CHECK_BOX);
 		super.setChecked(TaskWorkingSetUpdater.areNoTaskWorkingSetsEnabled());
-		this.window = window;
 	}
 
 	@Override
@@ -50,7 +46,7 @@ public class ToggleAllWorkingSetsAction extends Action {
 			}
 		}
 		newList.removeAll(tempList);
-		window.getActivePage().setWorkingSets(newList.toArray(new IWorkingSet[newList.size()]));
+		TaskWorkingSetUpdater.applyWorkingSetsToAllWindows(newList);
 	}
 
 	@Override

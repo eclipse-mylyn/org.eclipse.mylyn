@@ -26,7 +26,7 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivationHistory;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskDialogAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.ui.TaskElementLabelProvider;
@@ -143,7 +143,8 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 	@Override
 	protected IContributionItem[] getContributionItems() {
 		List<AbstractTask> tasks = new ArrayList<AbstractTask>(taskHistory.getPreviousTasks());
-		Set<IWorkingSet> sets = TaskListView.getActiveWorkingSets();
+		Set<IWorkingSet> sets = TaskWorkingSetUpdater.getActiveWorkingSets(PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow());
 		if (scopedToWorkingSet && !sets.isEmpty()) {
 			Set<ITask> allWorkingSetTasks = new HashSet<ITask>();
 			for (IWorkingSet workingSet : sets) {
