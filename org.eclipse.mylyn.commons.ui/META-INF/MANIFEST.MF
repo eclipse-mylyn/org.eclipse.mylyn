@@ -8,7 +8,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.jface.text,
  org.eclipse.ui,
  org.eclipse.ui.editors;resolution:=optional,
- org.eclipse.ui.forms;resolution:=optional
+ org.eclipse.ui.forms;resolution:=optional,
+ org.eclipse.ui.browser;resolution:=optional
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Activator: org.eclipse.mylyn.internal.commons.ui.CommonsUiPlugin

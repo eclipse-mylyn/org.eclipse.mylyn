@@ -25,6 +25,14 @@ public class Messages extends NLS {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
 
+	public static String WorkbenchUtil_Browser_Initialization_Failed;
+
+	public static String WorkbenchUtil_Invalid_URL_Error;
+
+	public static String WorkbenchUtil_No_URL_Error;
+
+	public static String WorkbenchUtil_Open_Location_Title;
+
 	public static String ColorSelectionWindow_Close;
 
 	public static String SwtUtil_Fading;
