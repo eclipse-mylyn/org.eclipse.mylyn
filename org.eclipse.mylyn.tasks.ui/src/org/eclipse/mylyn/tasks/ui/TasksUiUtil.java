@@ -11,9 +11,6 @@
 
 package org.eclipse.mylyn.tasks.ui;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Calendar;
 import java.util.List;
 
 import org.eclipse.core.resources.IResource;
@@ -21,7 +18,6 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
@@ -29,12 +25,11 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
-import org.eclipse.mylyn.internal.tasks.ui.Messages;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiMessages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesView;
@@ -50,7 +45,6 @@ import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.wizards.TaskRepositoryWizardDialog;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -59,10 +53,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.browser.IWebBrowser;
-import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
-import org.eclipse.ui.internal.browser.WebBrowserPreference;
-import org.eclipse.ui.internal.browser.WorkbenchBrowserSupport;
 
 /**
  * @noextend This class is not intended to be subclassed by clients.
@@ -373,7 +363,7 @@ public class TasksUiUtil {
 				}
 			}
 			if (!opened) {
-				openUrl(url, 0);
+				WorkbenchUtil.openUrl(url, 0);
 			}
 		}
 	}
@@ -443,54 +433,9 @@ public class TasksUiUtil {
 
 	/**
 	 * @since 3.0
-	 * 
-	 *        TODO: move to commons
 	 */
 	public static void openUrl(String location) {
-		openUrl(location, FLAG_NO_RICH_EDITOR);
-	}
-
-	private static void openUrl(String location, int customFlags) {
-		try {
-			URL url = null;
-
-			if (location != null) {
-				url = new URL(location);
-			}
-			if (WebBrowserPreference.getBrowserChoice() == WebBrowserPreference.EXTERNAL) {
-				try {
-					IWorkbenchBrowserSupport support = PlatformUI.getWorkbench().getBrowserSupport();
-					support.getExternalBrowser().openURL(url);
-				} catch (Exception e) {
-					StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not open task url", e)); //$NON-NLS-1$
-				}
-			} else {
-				IWebBrowser browser = null;
-				int flags = customFlags;
-				if (WorkbenchBrowserSupport.getInstance().isInternalWebBrowserAvailable()) {
-					flags |= IWorkbenchBrowserSupport.AS_EDITOR | IWorkbenchBrowserSupport.LOCATION_BAR
-							| IWorkbenchBrowserSupport.NAVIGATION_BAR;
-				} else {
-					flags |= IWorkbenchBrowserSupport.AS_EXTERNAL | IWorkbenchBrowserSupport.LOCATION_BAR
-							| IWorkbenchBrowserSupport.NAVIGATION_BAR;
-				}
-
-				String generatedId = "org.eclipse.mylyn.web.browser-" + Calendar.getInstance().getTimeInMillis(); //$NON-NLS-1$
-				browser = WorkbenchBrowserSupport.getInstance().createBrowser(flags, generatedId, null, null);
-				browser.openURL(url);
-			}
-		} catch (PartInitException e) {
-			MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.TasksUiUtil_Browser_init_error,
-					Messages.TasksUiUtil_Browser_could_not_be_initiated);
-		} catch (MalformedURLException e) {
-			if (location != null && location.trim().equals("")) { //$NON-NLS-1$
-				MessageDialog.openInformation(Display.getDefault().getActiveShell(), TasksUiMessages.DIALOG_EDITOR,
-						Messages.TasksUiUtil_No_URL_to_open + location);
-			} else {
-				MessageDialog.openInformation(Display.getDefault().getActiveShell(), TasksUiMessages.DIALOG_EDITOR,
-						Messages.TasksUiUtil_Could_not_open_URL_ + location);
-			}
-		}
+		WorkbenchUtil.openUrl(location, FLAG_NO_RICH_EDITOR);
 	}
 
 	/**
@@ -517,7 +462,8 @@ public class TasksUiUtil {
 	 */
 	public static IViewPart openTasksViewInActivePerspective() {
 		try {
-			return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ITasksUiConstants.ID_VIEW_TASKS);
+			return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(
+					ITasksUiConstants.ID_VIEW_TASKS);
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not show Task List view", e)); //$NON-NLS-1$
 			return null;
