@@ -20,7 +20,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
-import java.text.MessageFormat;
 
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
@@ -29,6 +28,7 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.Policy;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * 
@@ -89,7 +89,7 @@ public class WebUtil {
 						in.close();
 					}
 				} else {
-					throw new IOException(MessageFormat.format(Messages.WebUtil_cannotDownload,
+					throw new IOException(NLS.bind(Messages.WebUtil_cannotDownload,
 							location.getUrl(), result));
 				}
 			} finally {

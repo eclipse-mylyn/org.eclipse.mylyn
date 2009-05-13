@@ -45,10 +45,9 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDescriptor;
 import org.eclipse.mylyn.internal.discovery.ui.DiscoveryUi;
 import org.eclipse.mylyn.internal.discovery.ui.util.SimpleSelectionProvider;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
-
-import com.ibm.icu.text.MessageFormat;
 
 /**
  * A job that downloads and installs one or more {@link ConnectorDescriptor connectors}. The bulk of the installation
@@ -244,14 +243,14 @@ public class InstallConnectorsJob implements IRunnableWithProgress {
 						public void run() {
 							okayToProceed[0] = MessageDialog.openQuestion(PlatformUI.getWorkbench()
 									.getActiveWorkbenchWindow()
-									.getShell(), Messages.InstallConnectorsJob_questionProceed, MessageFormat.format(
+									.getShell(), Messages.InstallConnectorsJob_questionProceed, NLS.bind(
 									Messages.InstallConnectorsJob_questionProceed_long, new Object[] { notFound }));
 						}
 					});
 					proceed = okayToProceed[0];
 				}
 				if (!proceed) {
-					throw new CoreException(new Status(IStatus.ERROR, DiscoveryUi.BUNDLE_ID, MessageFormat.format(
+					throw new CoreException(new Status(IStatus.ERROR, DiscoveryUi.BUNDLE_ID, NLS.bind(
 							Messages.InstallConnectorsJob_connectorsNotAvailable, new Object[] { notFound }), null));
 				}
 			} else if (installableUnits.size() > installableConnectors.size()) {

@@ -24,10 +24,9 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDescriptorKind;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDiscovery;
 import org.eclipse.mylyn.internal.discovery.ui.DiscoveryUi;
+import org.eclipse.osgi.util.NLS;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.Version;
-
-import com.ibm.icu.text.MessageFormat;
 
 /**
  * A wizard for performing discovery of connectors and selecting connectors to install. When finish is pressed, selected
@@ -84,7 +83,7 @@ public class ConnectorDiscoveryWizard extends Wizard {
 			IRunnableWithProgress job = new InstallConnectorsJob(mainPage.getInstallableConnectors());
 			getContainer().run(true, true, job);
 		} catch (InvocationTargetException e) {
-			IStatus status = new Status(IStatus.ERROR, DiscoveryUi.BUNDLE_ID, MessageFormat.format(
+			IStatus status = new Status(IStatus.ERROR, DiscoveryUi.BUNDLE_ID, NLS.bind(
 					Messages.ConnectorDiscoveryWizard_installProblems, new Object[] { e.getMessage() }), e);
 			DiscoveryUi.logAndDisplayStatus(Messages.ConnectorDiscoveryWizard_cannotInstall, status);
 		} catch (InterruptedException e) {
