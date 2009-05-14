@@ -45,7 +45,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDescriptor;
 import org.eclipse.mylyn.internal.discovery.ui.DiscoveryUi;
 import org.eclipse.mylyn.internal.discovery.ui.util.DiscoveryUiUtil;
-import org.eclipse.mylyn.internal.discovery.ui.util.SimpleSelectionProvider;
+import org.eclipse.mylyn.internal.provisional.commons.ui.SelectionProviderAdapter;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 
@@ -260,7 +260,7 @@ public class InstallConnectorsJob implements IRunnableWithProgress {
 			// now that we've got what we want, do the install
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
-					IAction installAction = new InstallAction(Policy.getDefault(), new SimpleSelectionProvider(
+					IAction installAction = new InstallAction(Policy.getDefault(), new SelectionProviderAdapter(
 							new StructuredSelection(installableUnits)), profileId);
 					installAction.run();
 				}

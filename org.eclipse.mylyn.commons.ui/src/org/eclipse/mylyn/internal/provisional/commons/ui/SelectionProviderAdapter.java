@@ -29,6 +29,23 @@ public class SelectionProviderAdapter extends EventManager implements ISelection
 
 	private ISelection selection;
 
+	/**
+	 * Constructs a <code>SelectionProviderAdapter</code> and initializes the selection to <code>selection</code>.
+	 * 
+	 * @param selection
+	 *            the initial selection
+	 * @see #setSelection(ISelection)
+	 */
+	public SelectionProviderAdapter(ISelection selection) {
+		setSelection(selection);
+	}
+
+	/**
+	 * Constructs a <code>SelectionProviderAdapter</code> with a <code>null</code> selection.
+	 */
+	public SelectionProviderAdapter() {
+	}
+
 	public void addSelectionChangedListener(ISelectionChangedListener listener) {
 		addListenerObject(listener);
 	}
