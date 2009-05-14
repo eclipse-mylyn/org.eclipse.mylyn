@@ -15,4 +15,4 @@ Export-Package: org.eclipse.mylyn.commons.tests;x-internal:=true,
  org.eclipse.mylyn.commons.tests.manual;x-internal:=true,
  org.eclipse.mylyn.commons.tests.net;x-internal:=true,
  org.eclipse.mylyn.commons.tests.support;x-internal:=true
-Bundle-Vendor: Eclipse.org
+Bundle-Vendor: Eclipse Mylyn
