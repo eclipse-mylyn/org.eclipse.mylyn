@@ -4,7 +4,7 @@ Bundle-Name: Mylyn Tests
 Bundle-SymbolicName: org.eclipse.mylyn.tests
 Bundle-Version: 0.0.0
 Bundle-ActivationPolicy: lazy
-Bundle-Vendor: Eclipse.org
+Bundle-Vendor: Eclipse Mylyn
 Export-Package: org.eclipse.mylyn.tests;x-internal:=true,
  org.eclipse.mylyn.tests.integration;x-internal:=true,
  org.eclipse.mylyn.tests.misc;x-internal:=true
