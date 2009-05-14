@@ -24,7 +24,7 @@ import org.eclipse.mylyn.discovery.tests.core.RemoteBundleDiscoveryStrategyTest;
 public class AllDiscoveryTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.discovery");
+		TestSuite suite = new TestSuite("Tests for org.eclipse.mylyn.discovery");
 		suite.addTestSuite(ConnectorDiscoveryTest.class);
 		suite.addTestSuite(DirectoryParserTest.class);
 		suite.addTestSuite(RemoteBundleDiscoveryStrategyTest.class);
