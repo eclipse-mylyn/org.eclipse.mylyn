@@ -15,12 +15,17 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Dictionary;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IBundleGroup;
+import org.eclipse.core.runtime.IBundleGroupProvider;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -126,6 +131,8 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 	private Pattern filterPattern;
 
 	private Label clearFilterTextControl;
+
+	private Set<String> installedFeatures;
 
 	public ConnectorDiscoveryWizardMainPage() {
 		super(ConnectorDiscoveryWizardMainPage.class.getSimpleName());
@@ -783,6 +790,10 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		if (kindFiltered) {
 			return true;
 		}
+		if (installedFeatures != null && installedFeatures.contains(descriptor.getId())) {
+			// always filter installed features per bug 275777
+			return true;
+		}
 		if (filterPattern != null) {
 			if (filterMatches(descriptor.getName()) || filterMatches(descriptor.getDescription())
 					|| filterMatches(descriptor.getProvider())) {
@@ -833,6 +844,22 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 			try {
 				getContainer().run(true, true, new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+
+						if (ConnectorDiscoveryWizardMainPage.this.installedFeatures == null) {
+							Set<String> installedFeatures = new HashSet<String>();
+							IBundleGroupProvider[] bundleGroupProviders = Platform.getBundleGroupProviders();
+							for (IBundleGroupProvider provider : bundleGroupProviders) {
+								if (monitor.isCanceled()) {
+									throw new InterruptedException();
+								}
+								IBundleGroup[] bundleGroups = provider.getBundleGroups();
+								for (IBundleGroup group : bundleGroups) {
+									installedFeatures.add(group.getIdentifier());
+								}
+							}
+							ConnectorDiscoveryWizardMainPage.this.installedFeatures = installedFeatures;
+						}
+
 						ConnectorDiscovery connectorDiscovery = new ConnectorDiscovery();
 						connectorDiscovery.getDiscoveryStrategies().add(new BundleDiscoveryStrategy());
 						RemoteBundleDiscoveryStrategy remoteDiscoveryStrategy = new RemoteBundleDiscoveryStrategy();
