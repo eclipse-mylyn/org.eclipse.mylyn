@@ -51,9 +51,10 @@ public class TaskPlanningEditorTest extends TestCase {
 		TasksUiPlugin.getTaskList().addTask(task);
 		TasksUiUtil.openTask(task);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		assertTrue(page.getActiveEditor() instanceof TaskEditor);
+		assertNotNull(page);
+		assertEquals(TaskEditor.class, page.getActiveEditor().getClass());
 		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
-		assertTrue(taskEditor.getActivePageInstance() instanceof TaskPlanningEditor);
+		assertEquals(TaskPlanningEditor.class, taskEditor.getActivePageInstance().getClass());
 		TaskPlanningEditor editor = (TaskPlanningEditor) taskEditor.getActivePageInstance();
 		assertFalse(editor.isDirty());
 		editor.setNotes("notes");
@@ -73,9 +74,10 @@ public class TaskPlanningEditorTest extends TestCase {
 		TasksUiPlugin.getTaskList().addTask(task);
 		TasksUiUtil.openTask(task);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		assertTrue(page.getActiveEditor() instanceof TaskEditor);
+		assertNotNull(page);
+		assertEquals(TaskEditor.class, page.getActiveEditor().getClass());
 		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
-		assertTrue(taskEditor.getActivePageInstance() instanceof TaskPlanningEditor);
+		assertEquals(TaskPlanningEditor.class, taskEditor.getActivePageInstance().getClass());
 		TaskPlanningEditor editor = (TaskPlanningEditor) taskEditor.getActivePageInstance();
 		assertFalse(editor.isDirty());
 		assertEquals(DESCRIPTION, editor.getDescription());
@@ -95,10 +97,10 @@ public class TaskPlanningEditorTest extends TestCase {
 		TasksUiPlugin.getTaskList().addTask(task);
 		TasksUiUtil.openTask(task);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		assertTrue(page.getActiveEditor() instanceof TaskEditor);
+		assertNotNull(page);
+		assertEquals(TaskEditor.class, page.getActiveEditor().getClass());
 		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
-		assertTrue(taskEditor.getActivePageInstance() instanceof TaskPlanningEditor);
-
+		assertEquals(TaskPlanningEditor.class, taskEditor.getActivePageInstance().getClass());
 		TaskPlanningEditor editor = (TaskPlanningEditor) taskEditor.getActivePageInstance();
 		assertFalse(editor.isDirty());
 		editor.setDescription(NEW_DESCRIPTION);
