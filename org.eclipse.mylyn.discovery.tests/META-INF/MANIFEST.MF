@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mylyn Connector Discovery Test Plug-in
-Bundle-SymbolicName: org.eclipse.mylyn.discovery.test;singleton:=true
-Bundle-Version: 1.0.0
+Bundle-Name: Mylyn Connector Discovery Tests
+Bundle-SymbolicName: org.eclipse.mylyn.discovery.tests;singleton:=true
+Bundle-Version: 0.0.0
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.eclipse.mylyn.discovery.core;bundle-version="1.0.0",
  org.eclipse.mylyn.discovery.ui;bundle-version="1.0.0",
