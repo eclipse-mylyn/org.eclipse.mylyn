@@ -20,6 +20,7 @@ import org.eclipse.jface.window.ToolTip;
 import org.eclipse.mylyn.internal.discovery.core.model.AbstractDiscoverySource;
 import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryConnector;
 import org.eclipse.mylyn.internal.discovery.core.model.Overview;
+import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.DisposeEvent;
@@ -28,12 +29,12 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
+import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 
 /**
  * @author David Green
@@ -111,8 +112,7 @@ class ConnectorDescriptorToolTip extends ToolTip {
 				link.setText(Messages.ConnectorDescriptorToolTip_detailsLink);
 				link.addSelectionListener(new SelectionListener() {
 					public void widgetSelected(SelectionEvent e) {
-						// FIXME 3.2 safe to launch? Should at least check if url starts with http... better to use WorkbenchUtil.openUrl(): bug 276011
-						Program.launch(overview.getUrl());
+						WorkbenchUtil.openUrl(overview.getUrl(), IWorkbenchBrowserSupport.AS_EXTERNAL);
 					}
 
 					public void widgetDefaultSelected(SelectionEvent e) {

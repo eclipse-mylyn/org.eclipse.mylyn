@@ -90,7 +90,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.internal.WorkbenchMessages;
 import org.eclipse.ui.progress.WorkbenchJob;
 
 /**
@@ -325,7 +324,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		final Label clearButton = new Label(filterContainer, SWT.NONE);
 		clearButton.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
 		clearButton.setImage(inactiveImage);
-		clearButton.setToolTipText(WorkbenchMessages.FilteredTree_ClearToolTip);
+		clearButton.setToolTipText(Messages.ConnectorDiscoveryWizardMainPage_clearButton_toolTip);
 		clearButton.setBackground(filterContainer.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
 		clearButton.addMouseListener(new MouseAdapter() {
 			private MouseMoveListener fMoveListener;
@@ -388,7 +387,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		clearButton.getAccessible().addAccessibleListener(new AccessibleAdapter() {
 			@Override
 			public void getName(AccessibleEvent e) {
-				e.result = WorkbenchMessages.FilteredTree_AccessibleListenerClearButton;
+				e.result = Messages.ConnectorDiscoveryWizardMainPage_clearButton_accessibleListener;
 			}
 		});
 		clearButton.getAccessible().addAccessibleControlListener(new AccessibleControlAdapter() {
@@ -474,7 +473,13 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		// FIXME 3.2 does white work for any desktop theme, e.g. an inverse theme?
 		Composite scrolledContents = new Composite(scrolledComposite, SWT.NONE);
 		scrolledContents.setBackground(colorWhite);
-		createDiscoveryContents(scrolledContents);
+		scrolledContents.setRedraw(false);
+		try {
+			createDiscoveryContents(scrolledContents);
+		} finally {
+			scrolledContents.layout(true);
+			scrolledContents.setRedraw(true);
+		}
 
 		Point bodyIdealSize = scrolledContents.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
 		scrolledContents.setSize(bodyIdealSize);
@@ -663,26 +668,6 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 					if (hasTooltip(connector)) {
 						hookTooltip(connectorContainer, nameLabel, connector);
 					}
-
-//					if (hasOverviewUrl(connector)) {
-//						Link link = new Link(connectorContainer, SWT.NULL);
-//						link.setBackground(background);
-//						link.setText("<a>more details</a>");
-//						GridDataFactory.fillDefaults()
-//								.grab(false, false)
-//								.span(2, 1)
-//								.align(SWT.END, SWT.CENTER)
-//								.applyTo(link);
-//						link.addSelectionListener(new SelectionListener() {
-//							public void widgetSelected(SelectionEvent e) {
-//								Program.launch(connector.getOverview().getUrl());
-//							}
-//
-//							public void widgetDefaultSelected(SelectionEvent e) {
-//								widgetSelected(e);
-//							}
-//						});
-//					}
 
 					border = new Composite(categoryContainer, SWT.NULL);
 					GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 1).applyTo(border);
