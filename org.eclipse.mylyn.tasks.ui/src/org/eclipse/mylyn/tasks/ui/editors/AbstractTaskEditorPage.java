@@ -224,9 +224,8 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 								migrator.setEditor(getTaskEditor());
 								migrator.execute(newTask);
 							}
-						} else {
-							handleSubmitError(job);
 						}
+						handleTaskSubmitted(new SubmitJobEvent(job));
 					} finally {
 						showEditorBusy(false);
 					}
@@ -1055,6 +1054,20 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 	public TaskRepository getTaskRepository() {
 		// FIXME model can be null
 		return getModel().getTaskRepository();
+	}
+
+	/**
+	 * Invoked after task submission has completed. This method is invoked on the UI thread in all cases whether
+	 * submission was successful, canceled or failed. The value returned by <code>event.getJob().getStatus()</code>
+	 * indicates the result of the submit job. Sub-classes may override but are encouraged to invoke the super method.
+	 * 
+	 * @since 3.2
+	 * @see SubmitJob
+	 */
+	protected void handleTaskSubmitted(SubmitJobEvent event) {
+		if (event.getJob().getStatus() != null) {
+			handleSubmitError(event.getJob());
+		}
 	}
 
 	private void handleSubmitError(SubmitJob job) {
