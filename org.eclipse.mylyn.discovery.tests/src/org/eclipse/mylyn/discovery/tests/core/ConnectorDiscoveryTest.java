@@ -8,7 +8,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.internal.discovery.test.core.model;
+package org.eclipse.mylyn.discovery.tests.core;
 
 import java.util.Dictionary;
 import java.util.Properties;
@@ -17,10 +17,10 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.mylyn.discovery.tests.core.mock.DiscoveryConnectorMockFactory;
+import org.eclipse.mylyn.discovery.tests.core.mock.MockDiscoveryStrategy;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDiscovery;
 import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryConnector;
-import org.eclipse.mylyn.internal.discovery.test.core.model.mock.DiscoveryConnectorMockFactory;
-import org.eclipse.mylyn.internal.discovery.test.core.model.mock.MockDiscoveryStrategy;
 
 /**
  * 

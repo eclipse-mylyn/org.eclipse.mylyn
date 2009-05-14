@@ -5,18 +5,18 @@ Bundle-SymbolicName: org.eclipse.mylyn.discovery.ui;singleton:=true
 Bundle-Version: 3.2.0.qualifier
 Bundle-Vendor: Eclipse.org
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Require-Bundle: org.eclipse.mylyn.discovery.core;bundle-version="1.0.0",
- org.eclipse.core.runtime,
+Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
  org.eclipse.core.expressions,
- org.eclipse.mylyn.commons.core;bundle-version="3.1.0",
- org.eclipse.mylyn.commons.ui;bundle-version="3.1.0",
- org.eclipse.equinox.p2.core;bundle-version="1.0.4",
- org.eclipse.equinox.p2.ui;bundle-version="1.0.4",
- org.eclipse.equinox.p2.metadata;bundle-version="1.0.0",
- org.eclipse.equinox.p2.metadata.repository;bundle-version="1.0.0",
- org.eclipse.equinox.p2.repository;bundle-version="1.0.0",
- org.eclipse.equinox.p2.engine;bundle-version="1.0.100"
+ org.eclipse.mylyn.discovery.core;bundle-version="[3.2.0,4.0.0)",
+ org.eclipse.mylyn.commons.core;bundle-version="[3.2.0,4.0.0)",
+ org.eclipse.mylyn.commons.ui;bundle-version="[3.2.0,4.0.0)",
+ org.eclipse.equinox.p2.core;bundle-version="1.0.4";resolution:=optional,
+ org.eclipse.equinox.p2.ui;bundle-version="1.0.4";resolution:=optional,
+ org.eclipse.equinox.p2.metadata;bundle-version="1.0.0";resolution:=optional,
+ org.eclipse.equinox.p2.metadata.repository;bundle-version="1.0.0";resolution:=optional,
+ org.eclipse.equinox.p2.repository;bundle-version="1.0.0";resolution:=optional,
+ org.eclipse.equinox.p2.engine;bundle-version="1.0.100";resolution:=optional
 Export-Package: org.eclipse.mylyn.internal.discovery.ui;x-internal:=true,
  org.eclipse.mylyn.internal.discovery.ui.commands;x-internal:=true,
  org.eclipse.mylyn.internal.discovery.ui.util;x-internal:=true,

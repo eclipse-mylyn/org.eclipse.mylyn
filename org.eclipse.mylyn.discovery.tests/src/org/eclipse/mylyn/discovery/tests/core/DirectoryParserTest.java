@@ -9,7 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.discovery.test.core.model;
+package org.eclipse.mylyn.discovery.tests.core;
 
 import java.io.IOException;
 import java.io.StringReader;
