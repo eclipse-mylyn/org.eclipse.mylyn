@@ -109,8 +109,6 @@ public class Messages extends NLS {
 
 	public static String TasksReminderDialog_Reminders;
 
-	public static String TasksUiMessages_Task_Editor;
-
 	public static String TasksUiPlugin_Initializing_Task_List;
 
 	public static String TasksUiPlugin_Task_Repositories;
@@ -128,14 +126,6 @@ public class Messages extends NLS {
 	public static String TaskHyperlink_Could_not_determine_repository_for_report;
 
 	public static String TaskHyperlink_Open_Task_X_in_X;
-
-	public static String TasksUiUtil_Browser_could_not_be_initiated;
-
-	public static String TasksUiUtil_Browser_init_error;
-
-	public static String TasksUiUtil_Could_not_open_URL_;
-
-	public static String TasksUiUtil_No_URL_to_open;
 
 	public static String AbstractRetrieveTitleFromUrlJob_Retrieving_summary_from_URL;
 
