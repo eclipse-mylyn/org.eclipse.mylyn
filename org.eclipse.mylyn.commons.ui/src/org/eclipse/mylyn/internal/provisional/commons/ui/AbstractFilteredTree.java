@@ -58,6 +58,8 @@ public abstract class AbstractFilteredTree extends FilteredTree {
 	 * @param treeStyle
 	 * @param filter
 	 */
+	// TODO e3.5 move to new FilteredTree API
+	@SuppressWarnings("deprecation")
 	public AbstractFilteredTree(Composite parent, int treeStyle, PatternFilter filter) {
 		super(parent, treeStyle, filter);
 		try {
