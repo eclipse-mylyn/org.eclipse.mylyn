@@ -28,7 +28,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.compare,
  org.eclipse.mylyn.commons.core
 Bundle-ActivationPolicy: lazy
-Bundle-Vendor: Eclipse.org
+Bundle-Vendor: Eclipse Mylyn
 Bundle-ClassPath: bugzilla-test.jar
 Export-Package: org.eclipse.mylyn.bugzilla.tests;x-internal:=true,
  org.eclipse.mylyn.bugzilla.tests.headless;x-internal:=true

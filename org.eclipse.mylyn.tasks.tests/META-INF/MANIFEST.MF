@@ -4,7 +4,7 @@ Bundle-Name: Mylyn Tasks Tests
 Bundle-SymbolicName: org.eclipse.mylyn.tasks.tests;singleton:=true
 Bundle-Version: 0.0.0
 Bundle-Activator: org.eclipse.mylyn.tasks.tests.TasksTestsPlugin
-Bundle-Vendor: Eclipse.org
+Bundle-Vendor: Eclipse Mylyn
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.net,
  org.junit,
