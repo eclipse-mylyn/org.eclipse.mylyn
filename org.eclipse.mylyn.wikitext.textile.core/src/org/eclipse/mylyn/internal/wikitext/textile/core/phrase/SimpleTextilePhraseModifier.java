@@ -24,6 +24,21 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcesso
  */
 public class SimpleTextilePhraseModifier extends PatternBasedElement {
 
+	public enum Mode {
+		/**
+		 * normal phrase content is processed
+		 */
+		NORMAL,
+		/**
+		 * special phrase content, ie: no token replacement
+		 */
+		SPECIAL,
+		/**
+		 * phrase may contain other nested phrases
+		 */
+		NESTING,
+	}
+
 	protected static final int CONTENT_GROUP = Textile.ATTRIBUTES_GROUP_COUNT + 1;
 
 	protected static final int ATTRIBUTES_OFFSET = 1;
@@ -31,11 +46,11 @@ public class SimpleTextilePhraseModifier extends PatternBasedElement {
 	private static class SimplePhraseModifierProcessor extends PatternBasedElementProcessor {
 		private final SpanType spanType;
 
-		private final boolean nesting;
+		private final Mode mode;
 
-		public SimplePhraseModifierProcessor(SpanType spanType, boolean nesting) {
+		public SimplePhraseModifierProcessor(SpanType spanType, Mode mode) {
 			this.spanType = spanType;
-			this.nesting = nesting;
+			this.mode = mode;
 		}
 
 		@Override
@@ -43,10 +58,16 @@ public class SimpleTextilePhraseModifier extends PatternBasedElement {
 			Attributes attributes = new Attributes();
 			configureAttributes(this, attributes);
 			getBuilder().beginSpan(spanType, attributes);
-			if (nesting) {
+			switch (mode) {
+			case NESTING:
 				getMarkupLanguage().emitMarkupLine(parser, state, getStart(this), getContent(this), 0);
-			} else {
+				break;
+			case NORMAL:
 				getMarkupLanguage().emitMarkupText(parser, state, getContent(this));
+				break;
+			case SPECIAL:
+				getBuilder().characters(getContent(this));
+				break;
 			}
 			getBuilder().endSpan();
 		}
@@ -56,10 +77,9 @@ public class SimpleTextilePhraseModifier extends PatternBasedElement {
 
 	private final SpanType spanType;
 
-	private final boolean nesting;
+	private final Mode mode;
 
 	/**
-	 * 
 	 * @param delimiter
 	 *            the text pattern to detect
 	 * @param spanType
@@ -67,10 +87,10 @@ public class SimpleTextilePhraseModifier extends PatternBasedElement {
 	 * @param nesting
 	 *            indicate if this phrase modifier allows nested phrase modifiers
 	 */
-	public SimpleTextilePhraseModifier(String delimiter, SpanType spanType, boolean nesting) {
+	public SimpleTextilePhraseModifier(String delimiter, SpanType spanType, Mode mode) {
 		this.delimiter = delimiter;
 		this.spanType = spanType;
-		this.nesting = nesting;
+		this.mode = mode;
 	}
 
 	@Override
@@ -125,6 +145,6 @@ public class SimpleTextilePhraseModifier extends PatternBasedElement {
 
 	@Override
 	protected PatternBasedElementProcessor newProcessor() {
-		return new SimplePhraseModifierProcessor(spanType, nesting);
+		return new SimplePhraseModifierProcessor(spanType, mode);
 	}
 }

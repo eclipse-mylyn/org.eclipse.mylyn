@@ -26,6 +26,7 @@ import org.eclipse.mylyn.internal.wikitext.textile.core.block.TextileGlossaryBlo
 import org.eclipse.mylyn.internal.wikitext.textile.core.phrase.EscapeTextilePhraseModifier;
 import org.eclipse.mylyn.internal.wikitext.textile.core.phrase.ImageTextilePhraseModifier;
 import org.eclipse.mylyn.internal.wikitext.textile.core.phrase.SimpleTextilePhraseModifier;
+import org.eclipse.mylyn.internal.wikitext.textile.core.phrase.SimpleTextilePhraseModifier.Mode;
 import org.eclipse.mylyn.internal.wikitext.textile.core.token.FootnoteReferenceReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.textile.core.token.HyperlinkReplacementToken;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
@@ -45,11 +46,9 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternEntityReferenc
 
 /**
  * A textile dialect that parses <a href="http://en.wikipedia.org/wiki/Textile_(markup_language)">Textile markup</a>.
- * 
  * Based on the spec available at <a href="http://textile.thresholdstate.com/">http://textile.thresholdstate.com/</a>,
- * supports all current Textile markup constructs.
- * 
- * Additionally supported are <code>{toc}</code> and <code>{glossary}</code>.
+ * supports all current Textile markup constructs. Additionally supported are <code>{toc}</code> and
+ * <code>{glossary}</code>.
  * 
  * @author David Green
  * @since 1.0
@@ -116,17 +115,17 @@ public class TextileLanguage extends AbstractMarkupLanguage {
 		phraseModifierSyntax.add(new HtmlStartTagPhraseModifier(escapingHtml));
 		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.,\\\"'?!;:\\)\\(\\{\\}\\[\\]])|^)(?:", 0); //$NON-NLS-1$
 		phraseModifierSyntax.add(new EscapeTextilePhraseModifier());
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("**", SpanType.BOLD, true)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("??", SpanType.CITATION, true)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("__", SpanType.ITALIC, true)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("_", SpanType.EMPHASIS, true)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("*", SpanType.STRONG, true)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("+", SpanType.INSERTED, true)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("~", SpanType.SUBSCRIPT, false)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("^", SpanType.SUPERSCRIPT, false)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("@", SpanType.CODE, false)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("%", SpanType.SPAN, true)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("-", SpanType.DELETED, true)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("**", SpanType.BOLD, Mode.NESTING)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("??", SpanType.CITATION, Mode.NESTING)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("__", SpanType.ITALIC, Mode.NESTING)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("_", SpanType.EMPHASIS, Mode.NESTING)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("*", SpanType.STRONG, Mode.NESTING)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("+", SpanType.INSERTED, Mode.NESTING)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("~", SpanType.SUBSCRIPT, Mode.NORMAL)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("^", SpanType.SUPERSCRIPT, Mode.NORMAL)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("@", SpanType.CODE, Mode.SPECIAL)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("%", SpanType.SPAN, Mode.NESTING)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("-", SpanType.DELETED, Mode.NESTING)); //$NON-NLS-1$
 		phraseModifierSyntax.add(new ImageTextilePhraseModifier());
 		phraseModifierSyntax.endGroup(")(?=\\W|$)", 0); //$NON-NLS-1$
 	}

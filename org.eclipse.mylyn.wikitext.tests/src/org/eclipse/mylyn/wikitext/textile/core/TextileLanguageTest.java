@@ -28,7 +28,6 @@ import org.eclipse.mylyn.wikitext.core.parser.builder.RecordingDocumentBuilder.E
  * NOTE: most textile test cases can be found in {@link MarkupParserTest}
  * 
  * @author David Green
- * 
  * @see TextileLanguageTasksTest
  */
 public class TextileLanguageTest extends TestCase {
@@ -174,6 +173,15 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(Pattern.compile(".*?<code>code1</code>:.*", Pattern.MULTILINE | Pattern.DOTALL)
 				.matcher(html)
 				.matches());
+	}
+
+	/**
+	 * bug 276395 Incorrect quotation characters inside code
+	 */
+	public void testPhraseModifierCodeWithNestedMarkup() {
+		String html = parser.parseToHtml("a @code 'test' or \"test\" or *b* or <b>bo</b> sample@ more");
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><p>a <code>code 'test' or \"test\" or *b* or &lt;b>bo&lt;/b> sample</code> more</p></body>"));
 	}
 
 	public void testRelativeUrlNoBase() {
