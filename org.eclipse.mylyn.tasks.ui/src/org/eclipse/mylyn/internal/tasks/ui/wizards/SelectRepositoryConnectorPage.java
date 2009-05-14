@@ -45,8 +45,8 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Link;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -139,11 +139,11 @@ public class SelectRepositoryConnectorPage extends WizardPage {
 				}
 
 				if (discoveryWizardCommand.isEnabled()) {
-					Link link = new Link(container, SWT.NULL);
-					GridDataFactory.swtDefaults().align(SWT.END, SWT.CENTER).applyTo(link);
+					Button discoveryButton = new Button(container, SWT.PUSH);
+					GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.CENTER).applyTo(discoveryButton);
 
-					link.setText(Messages.SelectRepositoryConnectorPage_downloadLink);
-					link.addSelectionListener(new SelectionAdapter() {
+					discoveryButton.setText(Messages.SelectRepositoryConnectorPage_activateDiscovery);
+					discoveryButton.addSelectionListener(new SelectionAdapter() {
 						@Override
 						public void widgetSelected(SelectionEvent event) {
 							widgetDefaultSelected(event);

@@ -81,7 +81,7 @@ public class Messages extends NLS {
 
 	public static String SelectRepositoryConnectorPage_discoveryProblemTitle;
 
-	public static String SelectRepositoryConnectorPage_downloadLink;
+	public static String SelectRepositoryConnectorPage_activateDiscovery;
 
 	public static String SelectRepositoryConnectorPage_Select_a_task_repository_type;
 
