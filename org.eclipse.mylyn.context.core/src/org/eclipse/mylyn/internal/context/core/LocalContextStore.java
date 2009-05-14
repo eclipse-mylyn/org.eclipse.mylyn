@@ -76,7 +76,6 @@ public class LocalContextStore implements IContextStore {
 	 */
 	public IInteractionContext loadContext(String handleIdentifier) {
 		return loadContext(handleIdentifier, getFileForContext(handleIdentifier), commonContextScaling);
-//		return importContext(handleIdentifier, getFileForContext(handleIdentifier));
 	}
 
 	public IInteractionContext importContext(String handleIdentifier, File fromFile) throws CoreException {
@@ -89,6 +88,9 @@ public class LocalContextStore implements IContextStore {
 		return context;
 	}
 
+	/**
+	 * @return The loaded context, or a newly created one.
+	 */
 	public IInteractionContext loadContext(String handleIdentifier, File fromFile,
 			IInteractionContextScaling contextScaling) {
 		IInteractionContext loadedContext = externalizer.readContextFromXml(handleIdentifier, fromFile, contextScaling);

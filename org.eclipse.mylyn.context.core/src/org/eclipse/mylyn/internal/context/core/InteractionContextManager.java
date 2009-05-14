@@ -55,7 +55,6 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent.Kind;
  * @author Jevgeni Holodkov
  * @author Shawn Minto
  */
-// FIXME 3.2 review all FIXME comments
 public class InteractionContextManager implements IInteractionContextManager {
 
 	public static final String SOURCE_ID_DECAY = "org.eclipse.mylyn.core.model.interest.decay"; //$NON-NLS-1$
@@ -161,7 +160,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 			} else {
 				context = loadedContext;
 			}
-			// FIXME should not fire event when context == null
+
 			for (final AbstractContextListener listener : contextListeners) {
 				SafeRunner.run(new ISafeRunnable() {
 					public void handleException(Throwable e) {
@@ -177,12 +176,8 @@ public class InteractionContextManager implements IInteractionContextManager {
 				});
 			}
 
-			if (context != null) {
-				suppressListenerNotification = true;
-				internalActivateContext(context);
-			} else {
-				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, "Could not load context")); //$NON-NLS-1$
-			}
+			suppressListenerNotification = true;
+			internalActivateContext(context);
 			suppressListenerNotification = false;
 			contextListeners.addAll(waitingContextListeners);
 			waitingContextListeners.clear();
@@ -562,9 +557,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 	}
 
 	/**
-	 * Returns the highest interest context.
-	 * 
-	 * TODO: refactor this into better multiple context support
+	 * Returns the highest interest context. TODO: refactor this into better multiple context support
 	 */
 	@Deprecated
 	public String getDominantContextHandleForElement(IInteractionElement node) {
@@ -1328,6 +1321,8 @@ public class InteractionContextManager implements IInteractionContextManager {
 		}
 		final IInteractionContext context = getActiveContext();
 		context.updateElementHandle(element, newHandle);
+
+		final List<IInteractionElement> changed = Collections.singletonList(element);
 		for (final AbstractContextListener listener : contextListeners) {
 			SafeRunner.run(new ISafeRunnable() {
 				public void handleException(Throwable e) {
@@ -1336,9 +1331,6 @@ public class InteractionContextManager implements IInteractionContextManager {
 				}
 
 				public void run() throws Exception {
-					// FIXME use singleton list instead that is constructed outside of loop
-					List<IInteractionElement> changed = new ArrayList<IInteractionElement>();
-					changed.add(element);
 					ContextChangeEvent event = new ContextChangeEvent(ContextChangeKind.INTEREST_CHANGED,
 							context.getHandleIdentifier(), context, changed);
 					listener.contextChanged(event);
