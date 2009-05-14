@@ -16,6 +16,7 @@ import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.commons.tests.net.SslProtocolSocketFactoryTest;
 import org.eclipse.mylyn.commons.tests.net.WebUtilTest;
+import org.eclipse.mylyn.discovery.tests.AllDiscoveryTests;
 import org.eclipse.mylyn.jira.tests.AllJiraHeadlessStandaloneTests;
 import org.eclipse.mylyn.tasks.tests.TaskListTest;
 import org.eclipse.mylyn.tasks.tests.TasksUtilTest;
@@ -41,6 +42,9 @@ public class AllHeadlessStandaloneTests {
 //		suite.addTestSuite(ContextExternalizerTest.class);
 //		suite.addTestSuite(DegreeOfInterestTest.class);
 //		suite.addTestSuite(ContextTest.class);
+
+		// discovery
+		suite.addTest(AllDiscoveryTests.suite());
 
 		// tasks
 		suite.addTestSuite(TaskListTest.class);

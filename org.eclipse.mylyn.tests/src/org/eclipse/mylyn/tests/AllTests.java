@@ -17,6 +17,7 @@ import junit.framework.TestSuite;
 import org.eclipse.mylyn.bugzilla.tests.AllBugzillaTests;
 import org.eclipse.mylyn.commons.tests.AllCommonsTests;
 import org.eclipse.mylyn.context.tests.AllContextTests;
+import org.eclipse.mylyn.discovery.tests.AllDiscoveryTests;
 import org.eclipse.mylyn.ide.tests.AllIdeTests;
 import org.eclipse.mylyn.java.tests.AllJavaTests;
 import org.eclipse.mylyn.jira.tests.AllJiraTests;
@@ -39,6 +40,7 @@ public class AllTests {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.tests");
 		suite.addTest(AllCommonsTests.suite());
 		suite.addTest(AllContextTests.suite());
+		suite.addTest(AllDiscoveryTests.suite());
 		suite.addTest(AllJavaTests.suite());
 		suite.addTest(AllMonitorTests.suite());
 		suite.addTest(AllIntegrationTests.suite());
