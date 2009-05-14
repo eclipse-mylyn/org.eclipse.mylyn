@@ -71,6 +71,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
@@ -132,6 +133,10 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 	private Label clearFilterTextControl;
 
 	private Set<String> installedFeatures;
+
+	private Image infoImage;
+
+	private Cursor handCursor;
 
 	public ConnectorDiscoveryWizardMainPage() {
 		super(ConnectorDiscoveryWizardMainPage.class.getSimpleName());
@@ -452,6 +457,8 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		disposables.clear();
 		h1Font = null;
 		h2Font = null;
+		infoImage = null;
+		handCursor = null;
 	}
 
 	public void createBodyContents() {
@@ -460,6 +467,8 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 			child.dispose();
 		}
 		clearDisposables();
+		initializeCursors();
+		initializeImages();
 		initializeFonts();
 		initializeColors();
 
@@ -492,6 +501,20 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 
 		// we've changed it so it needs to know
 		body.layout(true);
+	}
+
+	private void initializeCursors() {
+		if (handCursor == null) {
+			handCursor = new Cursor(getShell().getDisplay(), SWT.CURSOR_HAND);
+			disposables.add(handCursor);
+		}
+	}
+
+	private void initializeImages() {
+		if (infoImage == null) {
+			infoImage = CommonImages.QUESTION.createImage();
+			disposables.add(infoImage);
+		}
 	}
 
 	private void initializeColors() {
@@ -532,7 +555,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 	private void createDiscoveryContents(Composite container) {
 		container.setLayout(new GridLayout(2, false));
 
-		final Color background = container.getBackground();
+		Color background = container.getBackground();
 
 		if (discovery == null || isEmpty(discovery)) {
 			boolean atLeastOneKindFiltered = false;
@@ -587,9 +610,9 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 
 					Label nameLabel = new Label(container, SWT.NULL);
 					nameLabel.setBackground(background);
-					GridDataFactory.fillDefaults().grab(true, false).applyTo(nameLabel);
 					nameLabel.setFont(h1Font);
 					nameLabel.setText(category.getName());
+					GridDataFactory.fillDefaults().grab(true, false).applyTo(nameLabel);
 
 					Label description = new Label(container, SWT.NULL | SWT.WRAP);
 					description.setBackground(background);
@@ -612,7 +635,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 					Composite connectorContainer = new Composite(categoryContainer, SWT.NULL);
 					connectorContainer.setBackground(background);
 					GridDataFactory.fillDefaults().grab(true, false).applyTo(connectorContainer);
-					GridLayout categoryLayout = new GridLayout(2, false);
+					GridLayout categoryLayout = new GridLayout(3, false);
 					categoryLayout.marginLeft = 30;
 					categoryLayout.marginTop = 2;
 					categoryLayout.marginBottom = 2;
@@ -652,22 +675,28 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 
 					Label nameLabel = new Label(connectorContainer, SWT.NULL);
 					nameLabel.setBackground(background);
-					GridDataFactory.fillDefaults().grab(true, false).applyTo(nameLabel);
+					GridDataFactory.fillDefaults().applyTo(nameLabel);
 					nameLabel.setFont(h2Font);
 					nameLabel.setText(connector.getName());
 					nameLabel.addMouseListener(selectMouseListener);
 
+					Label infoLabel = new Label(connectorContainer, SWT.NULL);
+					infoLabel.setBackground(background);
+					if (hasTooltip(connector)) {
+						infoLabel.setImage(infoImage);
+						infoLabel.setCursor(handCursor);
+						hookTooltip(infoLabel, connectorContainer, nameLabel, connector, true);
+
+						GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).applyTo(infoLabel);
+					}
+					GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.FILL).grab(false, true).applyTo(infoLabel);
+
 					Label description = new Label(connectorContainer, SWT.NULL | SWT.WRAP);
 					description.setBackground(background);
-					GridDataFactory.fillDefaults().grab(true, false).hint(100, SWT.DEFAULT).applyTo(description);
+					GridDataFactory.fillDefaults().grab(true, false).span(2, 1).hint(100, SWT.DEFAULT).applyTo(
+							description);
 					description.setText(connector.getDescription());
 					description.addMouseListener(selectMouseListener);
-
-					// hook the tooltip before the link, so that hovering over the link will not
-					// cause the tooltip to obscure the link itself.
-					if (hasTooltip(connector)) {
-						hookTooltip(connectorContainer, nameLabel, connector);
-					}
 
 					border = new Composite(categoryContainer, SWT.NULL);
 					GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 1).applyTo(border);
@@ -680,20 +709,28 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		container.redraw();
 	}
 
-	private void hookTooltip(final Composite container, final Control titleControl, DiscoveryConnector connector) {
-		final ConnectorDescriptorToolTip toolTip = new ConnectorDescriptorToolTip(container, connector);
+	private void hookTooltip(final Control tooltipControl, final Control exitControl, final Control titleControl,
+			DiscoveryConnector connector, final boolean asButton) {
+		final ConnectorDescriptorToolTip toolTip = new ConnectorDescriptorToolTip(tooltipControl, connector);
 		Listener listener = new Listener() {
 			public void handleEvent(Event event) {
 				switch (event.type) {
 				case SWT.Dispose:
 				case SWT.KeyDown:
-				case SWT.MouseDown:
 				case SWT.MouseWheel:
 					toolTip.hide();
 					break;
+				case SWT.MouseDown:
+					if (!asButton) {
+						toolTip.hide();
+						break;
+					}
 				case SWT.MouseHover:
+					if (asButton && event.type == SWT.MouseHover) {
+						break;
+					}
 					Point titleAbsLocation = titleControl.getParent().toDisplay(titleControl.getLocation());
-					Point containerAbsLocation = container.getParent().toDisplay(container.getLocation());
+					Point containerAbsLocation = tooltipControl.getParent().toDisplay(tooltipControl.getLocation());
 					Rectangle bounds = titleControl.getBounds();
 					int relativeX = titleAbsLocation.x - containerAbsLocation.x;
 					int relativeY = titleAbsLocation.y - containerAbsLocation.y;
@@ -701,13 +738,25 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 					relativeY += bounds.height + 3;
 					toolTip.show(new Point(relativeX, relativeY));
 					break;
+				}
+
+			}
+		};
+		hookRecursively(tooltipControl, listener);
+		Listener exitListener = new Listener() {
+			public void handleEvent(Event event) {
+				switch (event.type) {
+				case SWT.KeyDown:
+				case SWT.MouseWheel:
+					toolTip.hide();
+					break;
 				case SWT.MouseExit:
 					/*
 					 * Check if the mouse exit happened because we move over the
 					 * tooltip
 					 */
-					Rectangle containerBounds = container.getBounds();
-					Point displayLocation = container.getParent().toDisplay(containerBounds.x, containerBounds.y);
+					Rectangle containerBounds = exitControl.getBounds();
+					Point displayLocation = exitControl.getParent().toDisplay(containerBounds.x, containerBounds.y);
 					containerBounds.x = displayLocation.x;
 					containerBounds.y = displayLocation.y;
 					if (containerBounds.contains(Display.getCurrent().getCursorLocation())) {
@@ -716,10 +765,9 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 					toolTip.hide();
 					break;
 				}
-
 			}
 		};
-		hookRecursively(container, listener);
+		hookRecursively(exitControl, exitListener);
 	}
 
 	private void hookRecursively(Control control, Listener listener) {
