@@ -176,7 +176,8 @@
 			<fileset dir="${build.home}/3.3/standardUpdateSite"/>
 		</copy>
 		<copy todir="${dist.dir}/e3.4">
-			<fileset dir="${build.home}/3.4/standardUpdateSite"/>
+			<!-- need to use discovery plug-ins from the 3.5 site -->
+			<fileset dir="${build.home}/3.5/standardUpdateSite"/>
 		</copy>
 		<copy todir="${dist.dir}/extras">
 			<fileset dir="${build.home}/3.4/extrasUpdateSite"/>
