@@ -94,7 +94,7 @@ public class SelectRepositoryConnectorPage extends WizardPage {
 
 	public void createControl(Composite parent) {
 		Composite container = new Composite(parent, SWT.NULL);
-		GridLayoutFactory.fillDefaults().numColumns(1).applyTo(container);
+		GridLayoutFactory.fillDefaults().numColumns(1).spacing(0, 3).applyTo(container);
 
 		viewer = new TableViewer(container, SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		viewer.setContentProvider(new RepositoryContentProvider());
