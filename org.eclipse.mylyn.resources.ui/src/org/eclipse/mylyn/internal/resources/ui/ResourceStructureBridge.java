@@ -76,15 +76,18 @@ public class ResourceStructureBridge extends AbstractContextStructureBridge {
 				IContainer container = (IContainer) resource;
 				IResource[] children;
 				try {
-					children = container.members();
-					List<String> childHandles = new ArrayList<String>();
-					for (IResource element : children) {
-						String childHandle = getHandleIdentifier(element);
-						if (childHandle != null) {
-							childHandles.add(childHandle);
+					// make sure that we dont try to get the children of a closed project as this can cause an exception
+					if (container.isAccessible()) {
+						children = container.members();
+						List<String> childHandles = new ArrayList<String>();
+						for (IResource element : children) {
+							String childHandle = getHandleIdentifier(element);
+							if (childHandle != null) {
+								childHandles.add(childHandle);
+							}
 						}
+						return childHandles;
 					}
-					return childHandles;
 				} catch (Exception e) {
 					StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.ID_PLUGIN, "" //$NON-NLS-1$
 							+ "Could not get child", e)); //$NON-NLS-1$
