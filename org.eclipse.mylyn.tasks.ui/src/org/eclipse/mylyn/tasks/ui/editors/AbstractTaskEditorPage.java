@@ -1188,18 +1188,23 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 	 */
 	public void reflow() {
 		if (reflow) {
-			// help the layout managers: ensure that the form width always matches
-			// the parent client area width.
-			Rectangle parentClientArea = form.getParent().getClientArea();
-			Point formSize = form.getSize();
-			if (formSize.x != parentClientArea.width) {
-				ScrollBar verticalBar = form.getVerticalBar();
-				int verticalBarWidth = verticalBar != null ? verticalBar.getSize().x : 15;
-				form.setSize(parentClientArea.width - verticalBarWidth, formSize.y);
-			}
+			try {
+				form.setRedraw(false);
+				// help the layout managers: ensure that the form width always matches
+				// the parent client area width.
+				Rectangle parentClientArea = form.getParent().getClientArea();
+				Point formSize = form.getSize();
+				if (formSize.x != parentClientArea.width) {
+					ScrollBar verticalBar = form.getVerticalBar();
+					int verticalBarWidth = verticalBar != null ? verticalBar.getSize().x : 15;
+					form.setSize(parentClientArea.width - verticalBarWidth, formSize.y);
+				}
 
-			form.layout(true, false);
-			form.reflow(true);
+				form.layout(true, false);
+				form.reflow(true);
+			} finally {
+				form.setRedraw(true);
+			}
 		}
 	}
 
