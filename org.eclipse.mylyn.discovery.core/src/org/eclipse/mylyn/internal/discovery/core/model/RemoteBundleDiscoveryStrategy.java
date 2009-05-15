@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.discovery.core.model;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -172,8 +173,23 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 		}
 	}
 
-	private boolean isUnknownHostException(IOException e) {
-		// ignore
+	/**
+	 * walk the exception chain to determine if the given exception or any of its underlying causes are an
+	 * {@link UnknownHostException}.
+	 * 
+	 * @return true if the exception or one of its causes are {@link UnknownHostException}.
+	 */
+	private boolean isUnknownHostException(Throwable t) {
+		while (t != null) {
+			if (t instanceof UnknownHostException) {
+				return true;
+			}
+			Throwable t2 = t.getCause();
+			if (t2 == t) {
+				break;
+			}
+			t = t2;
+		}
 		return false;
 	}
 
