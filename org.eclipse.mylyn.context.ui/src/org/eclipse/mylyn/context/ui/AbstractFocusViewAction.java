@@ -91,10 +91,10 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 
 	private boolean wasRun = false;
 
+	private Set<Class<?>> cachedPreservedFilters;
+
 	/**
-	 * Work-around for suppressing expansion without breaking API.
-	 * 
-	 * Will be remove post 3.0
+	 * Work-around for suppressing expansion without breaking API. Will be remove post 3.0
 	 */
 	@Deprecated
 	protected boolean internalSuppressExpandAll = false;
@@ -161,7 +161,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 			}
 
 			List<StructuredViewer> viewers = getViewers();
-			Set<Class<?>> excludedFilters = getPreservedFilterClasses();
+			Set<Class<?>> excludedFilters = getPreservedFilterClasses(false);
 			for (StructuredViewer viewer : viewers) {
 				if (previousFilters.containsKey(viewer)) {
 					for (ViewerFilter filter : previousFilters.get(viewer)) {
@@ -439,15 +439,24 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 	/**
 	 * @return filters that should not be removed when the interest filter is installed
 	 */
-	private Set<Class<?>> getPreservedFilterClasses() {
+	private Set<Class<?>> getPreservedFilterClasses(boolean cacheFilters) {
 		if (ContextUiPlugin.getDefault() == null || viewPart == null) {
 			return Collections.emptySet();
 		}
-		try {
-			return ContextUiPlugin.getDefault().getPreservedFilterClasses(viewPart.getSite().getId());
-		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
-					"Could not determine preserved filters", e)); //$NON-NLS-1$
+		if (cachedPreservedFilters == null && cacheFilters) {
+			try {
+				cachedPreservedFilters = ContextUiPlugin.getDefault().getPreservedFilterClasses(
+						viewPart.getSite().getId());
+			} catch (Exception e) {
+				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
+						"Could not determine preserved filters", e)); //$NON-NLS-1$
+			}
+		}
+
+		if (cachedPreservedFilters != null) {
+			return cachedPreservedFilters;
+		} else {
+			// fall back for if the preserved filters have never been cached or there was a problem getting them from context core
 			return Collections.emptySet();
 		}
 	}
@@ -473,7 +482,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 
 			if (viewPart != null && manageFilters) {
 				Set<ViewerFilter> toAdd = new HashSet<ViewerFilter>();
-				Set<Class<?>> preservedFilterClasses = getPreservedFilterClasses();
+				Set<Class<?>> preservedFilterClasses = getPreservedFilterClasses(true);
 
 				for (ViewerFilter filter : previousFilters.get(viewer)) {
 					if (preservedFilterClasses.contains(filter.getClass()) || isPreservedFilter(filter)) {
