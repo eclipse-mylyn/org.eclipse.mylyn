@@ -253,11 +253,11 @@ public class WebUtil {
 
 		if (WebUtil.isRepositoryHttps(url)) {
 			ProtocolSocketFactory socketFactory = new PollingSslProtocolSocketFactory(monitor);
-			Protocol protocol = new Protocol("https", socketFactory, port); //$NON-NLS-1$
+			Protocol protocol = new Protocol("https", socketFactory, HTTPS_PORT); //$NON-NLS-1$
 			hostConfiguration.setHost(host, port, protocol);
 		} else {
 			ProtocolSocketFactory socketFactory = new PollingProtocolSocketFactory(monitor);
-			Protocol protocol = new Protocol("http", socketFactory, port); //$NON-NLS-1$
+			Protocol protocol = new Protocol("http", socketFactory, HTTP_PORT); //$NON-NLS-1$
 			hostConfiguration.setHost(host, port, protocol);
 		}
 
@@ -475,7 +475,6 @@ public class WebUtil {
 	 * @throws IOException
 	 *             if a network occurs
 	 * @return the title; null, if the title could not be determined;
-	 * 
 	 * @since 3.0
 	 */
 	public static String getTitleFromUrl(AbstractWebLocation location, IProgressMonitor monitor) throws IOException {
@@ -542,7 +541,6 @@ public class WebUtil {
 	 * Returns a user agent string that contains information about the platform and operating system. The
 	 * <code>product</code> parameter allows to additional specify custom text that is inserted into the returned
 	 * string. The exact return value depends on the environment.
-	 * 
 	 * <p>
 	 * Examples:
 	 * <ul>
