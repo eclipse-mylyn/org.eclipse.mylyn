@@ -13,6 +13,7 @@ package org.eclipse.mylyn.tasks.core.data;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -95,15 +96,15 @@ public class TaskDataModel {
 	}
 
 	public Set<TaskAttribute> getChangedAttributes() {
-		// TODO 3.2 include unsaved attributes
-		return new HashSet<TaskAttribute>(workingCopy.getEditsData().getRoot().getAttributes().values());
+		Set<TaskAttribute> changedAttributes = new LinkedHashSet<TaskAttribute>();
+		changedAttributes.addAll(workingCopy.getEditsData().getRoot().getAttributes().values());
+		changedAttributes.addAll(unsavedChangedAttributes);
+		return changedAttributes;
 	}
 
 	public Set<TaskAttribute> getChangedOldAttributes() {
-		Set<TaskAttribute> oldAttributes = new HashSet<TaskAttribute>();
-		Set<TaskAttribute> newChangedAttributes = new HashSet<TaskAttribute>();
-		newChangedAttributes.addAll(workingCopy.getEditsData().getRoot().getAttributes().values());
-		newChangedAttributes.addAll(unsavedChangedAttributes);
+		Set<TaskAttribute> newChangedAttributes = getChangedAttributes();
+		Set<TaskAttribute> oldAttributes = new LinkedHashSet<TaskAttribute>();
 		TaskData repositoryReadData = workingCopy.getRepositoryData();
 		if (repositoryReadData != null) {
 			for (TaskAttribute taskAttribute : newChangedAttributes) {
