@@ -233,7 +233,7 @@ public class InvisibleContextElementsPart {
 		invisibleSection.setClient(invisibleSectionClient);
 
 		Composite tableComposite = toolkit.createComposite(invisibleSectionClient);
-		GridDataFactory.fillDefaults().hint(SWT.DEFAULT, 200).grab(true, false).applyTo(tableComposite);
+		GridDataFactory.fillDefaults().hint(500, 200).grab(true, false).applyTo(tableComposite);
 		TableColumnLayout layout = new TableColumnLayout();
 		tableComposite.setLayout(layout);
 
@@ -270,7 +270,7 @@ public class InvisibleContextElementsPart {
 		InteractionElementTableSorter invisibleTableSorter = new InteractionElementTableSorter(labelProvider);
 		invisibleTableSorter.setCriteria(0);
 		invisibleTable.setSorter(invisibleTableSorter);
-		createColumn(layout, 0, Messages.InvisibleContextElementsPart_Structure_handle, 300, table,
+		createColumn(layout, 0, Messages.InvisibleContextElementsPart_Structure_handle, 400, table,
 				invisibleTableSorter);
 		createColumn(layout, 1, Messages.InvisibleContextElementsPart_Structure_kind, 100, table, invisibleTableSorter);
 		table.setSortColumn(table.getColumn(0));
