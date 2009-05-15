@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.context.ui;
 
 import org.eclipse.mylyn.internal.context.ui.actions.FocusOutlineAction;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
@@ -21,18 +22,18 @@ import org.eclipse.ui.IWorkbenchPart;
  */
 public class ContentOutlineManager implements IPartListener {
 
-	public void partBroughtToTop(IWorkbenchPart part) {
-//		if (!ContextCorePlugin.getContextManager().isContextActive()) {
-//			return;
-//		} else {
-		if (part instanceof IEditorPart) {
-			IEditorPart editorPart = (IEditorPart) part;
-			FocusOutlineAction applyAction = FocusOutlineAction.getOutlineActionForEditor(editorPart);
-			if (applyAction != null) {
-				applyAction.update(editorPart);
+	public void partBroughtToTop(final IWorkbenchPart part) {
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				if (part instanceof IEditorPart) {
+					IEditorPart editorPart = (IEditorPart) part;
+					FocusOutlineAction applyAction = FocusOutlineAction.getOutlineActionForEditor(editorPart);
+					if (applyAction != null) {
+						applyAction.update(editorPart);
+					}
+				}
 			}
-		}
-//		}
+		});
 	}
 
 	public void partActivated(IWorkbenchPart part) {
