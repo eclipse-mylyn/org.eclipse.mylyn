@@ -13,7 +13,6 @@ package org.eclipse.mylyn.internal.resources.ui;
 
 import java.util.Iterator;
 
-import org.eclipse.core.internal.resources.File;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
@@ -46,10 +45,12 @@ public class ResourceInteractionMonitor extends AbstractUserInteractionMonitor {
 //			Object selectedObject = structuredSelection.getFirstElement();
 			for (Iterator<?> iterator = structuredSelection.iterator(); iterator.hasNext();) {
 				Object selectedObject = iterator.next();
-				if (selectedObject instanceof File) {
-					File file = (File) selectedObject;
-					super.handleElementSelection(part, file, contributeToContext);
+				IResource resource;
+				if (selectedObject instanceof IResource) {
+					resource = (IResource) selectedObject;
+					super.handleElementSelection(part, resource, contributeToContext);
 				}
+
 			}
 		} else if (selection instanceof TextSelection) {
 			if (part instanceof EditorPart) {
