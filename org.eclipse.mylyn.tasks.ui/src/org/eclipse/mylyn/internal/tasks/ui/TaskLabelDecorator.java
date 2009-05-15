@@ -11,9 +11,6 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -52,17 +49,8 @@ public class TaskLabelDecorator implements ILightweightLabelDecorator {
 			String repositoryUrl = repositoryElement.getRepositoryUrl();
 			TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(
 					repositoryElement.getConnectorKind(), repositoryUrl);
-			if (repositoryUrl != null && taskRepository != null) {
-				if (taskRepository.getRepositoryUrl().equals(taskRepository.getRepositoryLabel())) {
-					try {
-						URL url = new URL(repositoryUrl);
-						decoration.addSuffix("   [" + url.getHost() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
-					} catch (MalformedURLException e) {
-						decoration.addSuffix(Messages.TaskLabelDecorator____unknown_host___);
-					}
-				} else {
-					decoration.addSuffix("   [" + taskRepository.getRepositoryLabel() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
-				}
+			if (taskRepository != null) {
+				decoration.addSuffix("   [" + taskRepository.getRepositoryLabel() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		} else if (element instanceof TaskRepository) {
 			ImageDescriptor overlay = TasksUiPlugin.getDefault().getOverlayIcon(
