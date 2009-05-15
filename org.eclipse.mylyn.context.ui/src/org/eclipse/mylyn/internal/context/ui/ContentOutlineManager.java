@@ -23,6 +23,7 @@ import org.eclipse.ui.IWorkbenchPart;
 public class ContentOutlineManager implements IPartListener {
 
 	public void partBroughtToTop(final IWorkbenchPart part) {
+		// use the display async due to bug 261977: [context] outline view does not filter contents when new editor is opened
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				if (part instanceof IEditorPart) {
