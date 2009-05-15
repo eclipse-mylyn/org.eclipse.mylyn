@@ -26,16 +26,28 @@ public class Messages extends NLS {
 	}
 
 	public static String DefaultTaskContributor_Bundle_Version;
+
 	public static String DefaultTaskContributor_DATE;
+
 	public static String DefaultTaskContributor_Error;
-	public static String DefaultTaskContributor_Error_DETAILS;
+
+	public static String DefaultTaskContributor_Error_Details;
+
 	public static String DefaultTaskContributor_EXCEPTION_STACK_TRACE;
+
 	public static String DefaultTaskContributor_Info;
+
 	public static String DefaultTaskContributor_INSTALLED_FEATURES_AND_PLUGINS;
+
 	public static String DefaultTaskContributor_MESSAGE;
+
 	public static String DefaultTaskContributor_OK;
+
 	public static String DefaultTaskContributor_PLUGIN;
+
 	public static String DefaultTaskContributor_SESSION_DATA;
+
 	public static String DefaultTaskContributor_SEVERITY;
+
 	public static String DefaultTaskContributor_Warning;
 }
