@@ -12,10 +12,7 @@
 package org.eclipse.mylyn.internal.context.ui.editors;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -23,7 +20,7 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -34,9 +31,7 @@ import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextChangeEvent;
 import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.internal.commons.ui.SwtUtil;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.actions.ContextAttachAction;
@@ -46,7 +41,6 @@ import org.eclipse.mylyn.internal.context.ui.actions.ContextRetrieveAction;
 import org.eclipse.mylyn.internal.context.ui.views.ContextNodeOpenListener;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DelayedRefreshJob;
-import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -62,7 +56,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Scale;
@@ -124,6 +117,9 @@ public class ContextEditorFormPage extends FormPage {
 				} else {
 					updateExpansionState(null);
 				}
+			}
+			if (invisiblePart != null) {
+				invisiblePart.updateInvisibleElementsSection();
 			}
 		}
 
@@ -353,67 +349,12 @@ public class ContextEditorFormPage extends FormPage {
 				// ignore
 			}
 		});
-
-		Label removeInvisble = toolkit.createLabel(sectionClient, ""); //$NON-NLS-1$
-		removeInvisble.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_CLEAR));
-		Hyperlink removeInvisibleLink = toolkit.createHyperlink(sectionClient,
-				Messages.ContextEditorFormPage_Remove_Invisible_, SWT.NONE);
-		removeInvisibleLink.addMouseListener(new MouseListener() {
-
-			public void mouseUp(MouseEvent e) {
-				if (commonViewer == null) {
-					MessageDialog.openWarning(WorkbenchUtil.getShell(),
-							Messages.ContextEditorFormPage_Remove_Invisible,
-							Messages.ContextEditorFormPage_Activate_task_to_remove_invisible0);
-					return;
-				}
-
-				boolean confirmed = MessageDialog.openConfirm(Display.getCurrent().getActiveShell(),
-						Messages.ContextEditorFormPage_Remove_Invisible,
-						Messages.ContextEditorFormPage_Remove_every_element_not_visible);
-				if (confirmed) {
-					Set<Object> allVisible = new HashSet<Object>();
-					SwtUtil.collectItemData(commonViewer.getTree().getItems(), allVisible);
-
-					if (ContextCore.getContextManager().isContextActive()) {
-						IInteractionContext context = ContextCore.getContextManager().getActiveContext();
-						List<IInteractionElement> allToRemove = context.getAllElements();
-
-						List<IInteractionElement> allVisibleElements = new ArrayList<IInteractionElement>();
-						for (Object visibleObject : allVisible) {
-							AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
-									visibleObject);
-							if (bridge != null) {
-								String handle = bridge.getHandleIdentifier(visibleObject);
-								if (handle != null) {
-									IInteractionElement element = context.get(handle);
-									allVisibleElements.add(element);
-								}
-							}
-						}
-						allToRemove.removeAll(allVisibleElements);
-						ContextCore.getContextManager().deleteElements(allToRemove);
-					} else {
-						MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
-								Messages.ContextEditorFormPage_Remove_Invisible,
-								Messages.ContextEditorFormPage_No_context_active);
-					}
-				}
-			}
-
-			public void mouseDoubleClick(MouseEvent e) {
-				// ignore
-			}
-
-			public void mouseDown(MouseEvent e) {
-				// ignore
-			}
-		});
-
 		section.setExpanded(true);
 	}
 
 	private ContextEditorDelayedRefreshJob refreshJob;
+
+	private InvisibleContextElementsPart invisiblePart;
 
 	/**
 	 * Scales logarithmically to a reasonable interest threshold range (e.g. -10000..10000).
@@ -464,6 +405,12 @@ public class ContextEditorFormPage extends FormPage {
 		section.setClient(sectionClient);
 
 		updateContentArea();
+
+		toolkit.createLabel(composite, "  "); //$NON-NLS-1$
+
+		invisiblePart = new InvisibleContextElementsPart(commonViewer);
+		Control invisibleControl = invisiblePart.createControl(toolkit, composite);
+		GridDataFactory.fillDefaults().applyTo(invisibleControl);
 	}
 
 	private void createActivateTaskHyperlink(Composite parent) {

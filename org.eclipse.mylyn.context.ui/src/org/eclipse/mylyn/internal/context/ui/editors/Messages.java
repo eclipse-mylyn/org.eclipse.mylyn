@@ -31,7 +31,7 @@ public class Messages extends NLS {
 
 	public static String ContextEditorFormPage_Activate_task_to_edit_context;
 
-	public static String ContextEditorFormPage_Activate_task_to_remove_invisible0;
+	public static String ContextEditorFormPage_Activate_task_to_remove_invisible;
 
 	public static String ContextEditorFormPage_Attach_context_;
 
@@ -52,4 +52,16 @@ public class Messages extends NLS {
 	public static String ContextEditorFormPage_Show_All_Elements;
 
 	public static String ContextPageFactory_Context;
+
+	public static String InvisibleContextElementsPart_Collecting_all_invisible;
+
+	public static String InvisibleContextElementsPart_Computing_invisible_elements;
+
+	public static String InvisibleContextElementsPart_Invisible_elements;
+
+	public static String InvisibleContextElementsPart_Structure_handle;
+
+	public static String InvisibleContextElementsPart_Structure_kind;
+
+	public static String InvisibleContextElementsPart_Updating_invisible_element_list;
 }
