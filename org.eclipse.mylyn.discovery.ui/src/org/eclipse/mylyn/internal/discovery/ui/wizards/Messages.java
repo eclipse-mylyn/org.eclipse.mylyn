@@ -22,6 +22,8 @@ class Messages extends NLS {
 
 	public static String ConnectorDescriptorToolTip_detailsLink;
 
+	public static String ConnectorDescriptorToolTip_detailsLink_tooltip;
+
 	public static String ConnectorDiscoveryWizard_cannotInstall;
 
 	public static String ConnectorDiscoveryWizard_connectorDiscovery;

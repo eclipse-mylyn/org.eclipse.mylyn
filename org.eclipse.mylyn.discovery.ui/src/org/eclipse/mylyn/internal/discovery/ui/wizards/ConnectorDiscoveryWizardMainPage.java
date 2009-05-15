@@ -262,7 +262,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		}
 		{ // container
 			body = new Composite(container, SWT.NULL);
-			GridDataFactory.fillDefaults().grab(true, true).applyTo(body);
+			GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 480).applyTo(body);
 		}
 
 		setControl(container);
@@ -599,7 +599,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 				}
 				{ // category header
 					Label iconLabel = new Label(container, SWT.NULL);
-					iconLabel.setBackground(background);
+					configureLook(iconLabel, background);
 					if (category.getIcon() != null) {
 						Image image = computeIconImage(category.getSource(), category.getIcon());
 						if (image != null) {
@@ -609,19 +609,19 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 					GridDataFactory.swtDefaults().align(SWT.CENTER, SWT.BEGINNING).span(1, 2).applyTo(iconLabel);
 
 					Label nameLabel = new Label(container, SWT.NULL);
-					nameLabel.setBackground(background);
+					configureLook(nameLabel, background);
 					nameLabel.setFont(h1Font);
 					nameLabel.setText(category.getName());
 					GridDataFactory.fillDefaults().grab(true, false).applyTo(nameLabel);
 
 					Label description = new Label(container, SWT.NULL | SWT.WRAP);
-					description.setBackground(background);
+					configureLook(description, background);
 					GridDataFactory.fillDefaults().grab(true, false).hint(100, SWT.DEFAULT).applyTo(description);
 					description.setText(category.getDescription());
 				}
 
 				Composite categoryContainer = new Composite(container, SWT.NULL);
-				categoryContainer.setBackground(background);
+				configureLook(categoryContainer, background);
 				GridDataFactory.fillDefaults().span(2, 1).grab(true, false).indent(0, 5).applyTo(categoryContainer);
 				categoryContainer.setLayout(new GridLayout(1, false));
 
@@ -633,7 +633,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 						continue;
 					}
 					Composite connectorContainer = new Composite(categoryContainer, SWT.NULL);
-					connectorContainer.setBackground(background);
+					configureLook(connectorContainer, background);
 					GridDataFactory.fillDefaults().grab(true, false).applyTo(connectorContainer);
 					GridLayout categoryLayout = new GridLayout(3, false);
 					categoryLayout.marginLeft = 30;
@@ -642,7 +642,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 					connectorContainer.setLayout(categoryLayout);
 
 					final Button checkbox = new Button(connectorContainer, SWT.CHECK | SWT.FLAT);
-					checkbox.setBackground(background);
+					configureLook(checkbox, background);
 					checkbox.setSelection(installableConnectors.contains(connector));
 
 					MouseAdapter selectMouseListener = new MouseAdapter() {
@@ -674,14 +674,14 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 					GridDataFactory.swtDefaults().align(SWT.CENTER, SWT.BEGINNING).span(1, 2).applyTo(checkbox);
 
 					Label nameLabel = new Label(connectorContainer, SWT.NULL);
-					nameLabel.setBackground(background);
+					configureLook(nameLabel, background);
 					GridDataFactory.fillDefaults().applyTo(nameLabel);
 					nameLabel.setFont(h2Font);
 					nameLabel.setText(connector.getName());
 					nameLabel.addMouseListener(selectMouseListener);
 
 					Label infoLabel = new Label(connectorContainer, SWT.NULL);
-					infoLabel.setBackground(background);
+					configureLook(infoLabel, background);
 					if (hasTooltip(connector)) {
 						infoLabel.setImage(infoImage);
 						infoLabel.setCursor(handCursor);
@@ -692,10 +692,16 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 					GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.FILL).grab(false, true).applyTo(infoLabel);
 
 					Label description = new Label(connectorContainer, SWT.NULL | SWT.WRAP);
-					description.setBackground(background);
+					configureLook(description, background);
+
 					GridDataFactory.fillDefaults().grab(true, false).span(2, 1).hint(100, SWT.DEFAULT).applyTo(
 							description);
-					description.setText(connector.getDescription());
+					String descriptionText = connector.getDescription();
+					int maxDescriptionLength = 162;
+					if (descriptionText.length() > maxDescriptionLength) {
+						descriptionText = descriptionText.substring(0, maxDescriptionLength);
+					}
+					description.setText(descriptionText.replaceAll("(\\r\\n)|\\n|\\r", " ")); //$NON-NLS-1$ //$NON-NLS-2$
 					description.addMouseListener(selectMouseListener);
 
 					border = new Composite(categoryContainer, SWT.NULL);
@@ -707,6 +713,10 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		}
 		container.layout(true);
 		container.redraw();
+	}
+
+	private void configureLook(Control control, Color background) {
+		control.setBackground(background);
 	}
 
 	private void hookTooltip(final Control tooltipControl, final Control exitControl, final Control titleControl,

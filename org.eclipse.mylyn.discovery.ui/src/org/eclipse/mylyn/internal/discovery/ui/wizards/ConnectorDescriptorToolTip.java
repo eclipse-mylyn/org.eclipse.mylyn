@@ -21,6 +21,7 @@ import org.eclipse.mylyn.internal.discovery.core.model.AbstractDiscoverySource;
 import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryConnector;
 import org.eclipse.mylyn.internal.discovery.core.model.Overview;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.DisposeEvent;
@@ -59,57 +60,62 @@ class ConnectorDescriptorToolTip extends ToolTip {
 
 		Composite container = new Composite(parent, SWT.NULL);
 		container.setBackground(background);
-		GridDataFactory.fillDefaults().grab(true, true).hint(/*347*/640, SWT.DEFAULT).applyTo(container);
+		GridDataFactory.fillDefaults().grab(true, true).hint(/*347*/650, SWT.DEFAULT).applyTo(container);
 
-		GridLayoutFactory.fillDefaults().margins(5, 5).spacing(0, 3).applyTo(container);
+		GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).spacing(3, 0).applyTo(container);
 
 		final Overview overview = descriptor.getOverview();
 		if (overview != null) {
 			String summary = overview.getSummary();
+			Image image = null;
+			if (overview.getScreenshot() != null) {
+				image = computeImage(descriptor.getSource(), overview.getScreenshot());
+				if (image != null) {
+					final Image fimage = image;
+					container.addDisposeListener(new DisposeListener() {
+						public void widgetDisposed(DisposeEvent e) {
+							fimage.dispose();
+						}
+					});
+				}
+			}
 			if (summary != null) {
 				Label summaryLabel = new Label(container, SWT.WRAP);
-				GridDataFactory.fillDefaults().grab(true, false).hint(100, SWT.DEFAULT).applyTo(summaryLabel);
+				GridDataFactory.fillDefaults().grab(true, false).hint(320, 240).span(image == null ? 2 : 1, 1).applyTo(
+						summaryLabel);
 				summaryLabel.setText(summary);
 				summaryLabel.setBackground(background);
 			}
-			if (overview.getScreenshot() != null) {
-				final Image image = computeImage(descriptor.getSource(), overview.getScreenshot());
-				if (image != null) {
-					container.addDisposeListener(new DisposeListener() {
-						public void widgetDisposed(DisposeEvent e) {
-							image.dispose();
-						}
-					});
+			if (image != null) {
+				// put the image in a scrolled composite.  This achieves two things:
+				// - we get a border
+				// - if the supplied image is too large, it doesn't blow out the layout
+				// FIXME: do we want to scale images here?
+				ScrolledComposite scrolledComposite = new ScrolledComposite(container, SWT.H_SCROLL | SWT.V_SCROLL
+						| SWT.BORDER);
+				scrolledComposite.setBackground(background);
+				GridDataFactory.fillDefaults()
+						.grab(false, false)
+						.align(SWT.CENTER, SWT.BEGINNING)
+						.hint(320, 240)
+						.applyTo(scrolledComposite);
 
-					// put the image in a scrolled composite.  This achieves two things:
-					// - we get a border
-					// - if the supplied image is too large, it doesn't blow out the layout
-					// FIXME: do we want to scale images here?
-					ScrolledComposite scrolledComposite = new ScrolledComposite(container, SWT.H_SCROLL | SWT.V_SCROLL
-							| SWT.BORDER);
-					scrolledComposite.setBackground(background);
-					GridDataFactory.fillDefaults()
-							.grab(false, false)
-							.align(SWT.CENTER, SWT.CENTER)
-							.hint(320, 240)
-							.applyTo(scrolledComposite);
+				Label imageLabel = new Label(scrolledComposite, SWT.NULL);
+				imageLabel.setBackground(background);
+				imageLabel.setImage(image);
 
-					Label imageLabel = new Label(scrolledComposite, SWT.NULL);
-					imageLabel.setBackground(background);
-					imageLabel.setImage(image);
+				scrolledComposite.setExpandHorizontal(true);
+				scrolledComposite.setExpandVertical(true);
+				scrolledComposite.setMinSize(320, 240);
 
-					scrolledComposite.setExpandHorizontal(true);
-					scrolledComposite.setExpandVertical(true);
-					scrolledComposite.setMinSize(320, 240);
-
-					scrolledComposite.setContent(imageLabel);
-				}
+				scrolledComposite.setContent(imageLabel);
 			}
 			if (overview.getUrl() != null && overview.getUrl().length() > 0) {
 				Link link = new Link(container, SWT.NULL);
 				link.setBackground(background);
-				GridDataFactory.fillDefaults().grab(false, false).align(SWT.END, SWT.CENTER).applyTo(link);
+				GridDataFactory.fillDefaults().grab(false, false).span(2, 1).align(SWT.END, SWT.CENTER).applyTo(link);
 				link.setText(Messages.ConnectorDescriptorToolTip_detailsLink);
+				link.setToolTipText(NLS.bind(Messages.ConnectorDescriptorToolTip_detailsLink_tooltip, overview.getUrl()));
 				link.addSelectionListener(new SelectionListener() {
 					public void widgetSelected(SelectionEvent e) {
 						WorkbenchUtil.openUrl(overview.getUrl(), IWorkbenchBrowserSupport.AS_EXTERNAL);
