@@ -18,11 +18,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IBundleGroup;
+import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.internal.provisional.tasks.bugs.AbstractTaskContributor;
 import org.eclipse.mylyn.internal.tasks.bugs.wizards.ErrorLogStatus;
 import org.eclipse.mylyn.internal.tasks.bugs.wizards.FeatureStatus;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
+import org.eclipse.osgi.util.NLS;
 import org.osgi.framework.Bundle;
 
 /**
@@ -31,17 +34,27 @@ import org.osgi.framework.Bundle;
 public class DefaultTaskContributor extends AbstractTaskContributor {
 
 	public void appendErrorDetails(StringBuilder sb, IStatus status, Date date) {
-		sb.append(Messages.DefaultTaskContributor_Error_DETAILS);
+		sb.append("\n\n");
+		sb.append(Messages.DefaultTaskContributor_Error_Details);
 		if (date != null) {
-			sb.append(Messages.DefaultTaskContributor_DATE);
-			sb.append(date);
+			sb.append("\n"); //$NON-NLS-1$
+			sb.append(NLS.bind("Date: {0}", date));
 		}
-		sb.append(Messages.DefaultTaskContributor_MESSAGE);
-		sb.append(status.getMessage());
-		sb.append(Messages.DefaultTaskContributor_SEVERITY);
-		sb.append(getSeverityText(status.getSeverity()));
-		sb.append(Messages.DefaultTaskContributor_PLUGIN);
-		sb.append(status.getPlugin());
+		sb.append("\n"); //$NON-NLS-1$
+		sb.append(NLS.bind("Message: {0}", status.getMessage()));
+		sb.append("\n"); //$NON-NLS-1$
+		sb.append(NLS.bind("Severity: {0}", getSeverityText(status.getSeverity())));
+		IProduct product = Platform.getProduct();
+		if (product != null) {
+			sb.append("\n"); //$NON-NLS-1$
+			if (product.getName() != null) {
+				sb.append(NLS.bind("Product: {0} ({1})", product.getName(), product.getId()));
+			} else {
+				sb.append(NLS.bind("Product: {0}", product.getId()));
+			}
+		}
+		sb.append("\n"); //$NON-NLS-1$
+		sb.append(NLS.bind("Plugin: {0}", status.getPlugin()));
 	}
 
 	@Override
@@ -68,7 +81,8 @@ public class DefaultTaskContributor extends AbstractTaskContributor {
 					for (Bundle bundle : bundles) {
 						sb.append("  "); //$NON-NLS-1$
 						sb.append(bundle.getSymbolicName());
-						String version = (String) bundle.getHeaders().get(Messages.DefaultTaskContributor_Bundle_Version);
+						String version = (String) bundle.getHeaders().get(
+								Messages.DefaultTaskContributor_Bundle_Version);
 						if (version != null) {
 							sb.append(" "); //$NON-NLS-1$
 							sb.append(version);
