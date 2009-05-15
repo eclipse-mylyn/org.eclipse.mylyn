@@ -69,8 +69,6 @@ public class Messages extends NLS {
 
 	public static String TaskJobFactory_Refreshing_repository_configuration;
 
-	public static String TaskLabelDecorator____unknown_host___;
-
 	public static String TaskListBackupManager_Error_occured_during_scheduled_tasklist_backup;
 
 	public static String TaskListBackupManager_Scheduled_task_data_backup;

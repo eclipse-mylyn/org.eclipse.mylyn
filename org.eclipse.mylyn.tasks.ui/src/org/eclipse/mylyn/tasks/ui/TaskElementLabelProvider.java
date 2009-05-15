@@ -13,7 +13,6 @@ package org.eclipse.mylyn.tasks.ui;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IColorProvider;
@@ -55,11 +54,7 @@ import org.eclipse.ui.themes.IThemeManager;
  */
 public class TaskElementLabelProvider extends LabelProvider implements IColorProvider, IFontProvider {
 
-	private static final String NO_SUMMARY_AVAILABLE = Messages.TaskElementLabelProvider__no_summary_available_;
-
 	private final IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
-
-	private static final Pattern pattern = Pattern.compile("\\d*: .*"); //$NON-NLS-1$
 
 	private boolean wideImages = false;
 
@@ -166,20 +161,15 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 	public String getText(Object object) {
 		if (object instanceof ITask) {
 			ITask task = (ITask) object;
-			if (task.getSummary() == null) {
-				if (task.getTaskKey() != null) {
-					return task.getTaskKey() + NO_SUMMARY_AVAILABLE;
-				} else {
-					return task.getTaskId() + NO_SUMMARY_AVAILABLE;
-				}
-			} else if (!pattern.matcher(task.getSummary()).matches()) {
-				if (task.getTaskKey() != null) {
-					return task.getTaskKey() + ": " + task.getSummary(); //$NON-NLS-1$
-				} else {
-					return task.getSummary();
-				}
+			String summary = task.getSummary();
+			if (summary == null) {
+				summary = Messages.TaskElementLabelProvider__no_summary_available_;
+			}
+			String taskKey = task.getTaskKey();
+			if (taskKey != null) {
+				return taskKey + ": " + summary; //$NON-NLS-1$
 			} else {
-				return task.getSummary();
+				return summary;
 			}
 		} else if (object instanceof IRepositoryElement) {
 			IRepositoryElement element = (IRepositoryElement) object;
