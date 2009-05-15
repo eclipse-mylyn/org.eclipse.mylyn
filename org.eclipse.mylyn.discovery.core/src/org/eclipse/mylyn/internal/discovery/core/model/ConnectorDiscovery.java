@@ -59,7 +59,6 @@ public class ConnectorDiscovery {
 	/**
 	 * Initialize this by performing discovery. Discovery may take a long time as it involves network access.
 	 * PRECONDITION: must add at least one {@link #getDiscoveryStrategies() discovery strategy} prior to calling.
-	 * 
 	 */
 	public void performDiscovery(IProgressMonitor monitor) throws CoreException {
 		if (discoveryStrategies.isEmpty()) {
@@ -71,7 +70,6 @@ public class ConnectorDiscovery {
 		final int totalTicks = 10000;
 		monitor.beginTask(Messages.ConnectorDiscovery_task_discovering_connectors, totalTicks);
 		try {
-			// FIXME: policy for where categories can be declared
 			for (AbstractDiscoveryStrategy discoveryStrategy : discoveryStrategies) {
 				discoveryStrategy.setCategories(categories);
 				discoveryStrategy.setConnectors(connectors);

@@ -22,6 +22,8 @@ class Messages extends NLS {
 
 	public static String BundleDiscoveryStrategy_3;
 
+	public static String BundleDiscoveryStrategy_categoryDisallowed;
+
 	public static String BundleDiscoveryStrategy_task_loading_local_extensions;
 
 	public static String BundleDiscoveryStrategy_task_processing_extensions;

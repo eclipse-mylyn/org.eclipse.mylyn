@@ -75,7 +75,14 @@ public class BundleDiscoveryStrategy extends AbstractDiscoveryStrategy {
 							DiscoveryCategory category = extensionReader.readConnectorCategory(element,
 									DiscoveryCategory.class);
 							category.setSource(discoverySource);
-							categories.add(category);
+							if (!discoverySource.getPolicy().isPermitCategories()) {
+								StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN, NLS.bind(
+										Messages.BundleDiscoveryStrategy_categoryDisallowed,
+										new Object[] { category.getName(), category.getId(),
+												element.getContributor().getName() }), null));
+							} else {
+								categories.add(category);
+							}
 						} else {
 							throw new ValidationException(NLS.bind(Messages.BundleDiscoveryStrategy_unexpected_element,
 									element.getName()));

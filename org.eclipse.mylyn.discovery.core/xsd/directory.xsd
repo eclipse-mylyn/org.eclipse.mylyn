@@ -38,6 +38,7 @@
  			<complexContent>
 				<extension base="tns:OpenAttrsComplex">
 					<attribute name="url" type="anyURI"/>
+					<attribute name="permitCategories" type="boolean"/>
 				</extension>
 			</complexContent>
 		</complexType>

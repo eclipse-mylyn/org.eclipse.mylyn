@@ -15,13 +15,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
@@ -35,22 +33,24 @@ import org.eclipse.core.runtime.spi.RegistryContributor;
 import org.eclipse.core.runtime.spi.RegistryStrategy;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.discovery.core.DiscoveryCore;
+import org.eclipse.mylyn.internal.discovery.core.model.Directory.Entry;
 import org.eclipse.osgi.util.NLS;
 import org.osgi.framework.Bundle;
 
 /**
- * 
  * @author David Green
  */
-public class DiscoveryRegistryStrategy extends RegistryStrategy {
-
-	private Set<File> bundleFiles = new HashSet<File>();
+class DiscoveryRegistryStrategy extends RegistryStrategy {
 
 	private final List<JarFile> jars = new ArrayList<JarFile>();
 
 	private final Map<IContributor, File> contributorToJarFile = new HashMap<IContributor, File>();
 
+	private final Map<IContributor, Entry> contributorToDirectoryEntry = new HashMap<IContributor, Entry>();
+
 	private final Object token;
+
+	private Map<File, Entry> bundleFileToDirectoryEntry;
 
 	public DiscoveryRegistryStrategy(File[] storageDirs, boolean[] cacheReadOnly, Object token) {
 		super(storageDirs, cacheReadOnly);
@@ -85,29 +85,23 @@ public class DiscoveryRegistryStrategy extends RegistryStrategy {
 		}
 	}
 
-	public Set<File> getBundleFiles() {
-		return bundleFiles;
-	}
-
-	public void setBundleFiles(Set<File> bundleFiles) {
-		this.bundleFiles = bundleFiles;
-	}
-
 	private void processBundles(IExtensionRegistry registry) {
-		if (bundleFiles == null) {
+		if (bundleFileToDirectoryEntry == null) {
 			throw new IllegalStateException();
 		}
-		for (File bundleFile : bundleFiles) {
+		for (java.util.Map.Entry<File, Entry> bundleFile : bundleFileToDirectoryEntry.entrySet()) {
 			try {
-				processBundle(registry, bundleFile);
+				processBundle(registry, bundleFile.getValue(), bundleFile.getKey());
 			} catch (Exception e) {
 				StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN, NLS.bind(
-						Messages.DiscoveryRegistryStrategy_cannot_load_bundle, bundleFile.getName(), e.getMessage()), e));
+						Messages.DiscoveryRegistryStrategy_cannot_load_bundle, new Object[] {
+								bundleFile.getKey().getName(), bundleFile.getValue().getLocation(), e.getMessage() }),
+						e));
 			}
 		}
 	}
 
-	private void processBundle(IExtensionRegistry registry, File bundleFile) throws IOException {
+	private void processBundle(IExtensionRegistry registry, Directory.Entry entry, File bundleFile) throws IOException {
 		JarFile jarFile = new JarFile(bundleFile);
 		jars.add(jarFile);
 
@@ -121,6 +115,7 @@ public class DiscoveryRegistryStrategy extends RegistryStrategy {
 			return;
 		}
 		contributorToJarFile.put(contributor, bundleFile);
+		contributorToDirectoryEntry.put(contributor, entry);
 
 		ResourceBundle translationBundle = loadTranslationBundle(jarFile);
 
@@ -197,6 +192,24 @@ public class DiscoveryRegistryStrategy extends RegistryStrategy {
 			throw new IllegalArgumentException(contributor.getName());
 		}
 		return file;
+	}
+
+	/**
+	 * get the directory entry that corresponds to the given contributor.
+	 * 
+	 * @throws IllegalArgumentException
+	 *             if the given contributor is unknown
+	 */
+	public Entry getDirectoryEntry(IContributor contributor) {
+		Entry entry = contributorToDirectoryEntry.get(contributor);
+		if (entry == null) {
+			throw new IllegalArgumentException(contributor.getName());
+		}
+		return entry;
+	}
+
+	public void setBundles(Map<File, Entry> bundleFileToDirectoryEntry) {
+		this.bundleFileToDirectoryEntry = bundleFileToDirectoryEntry;
 	}
 
 }

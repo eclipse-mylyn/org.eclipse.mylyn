@@ -13,8 +13,8 @@ package org.eclipse.mylyn.internal.discovery.core.model;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.core.internal.registry.ExtensionRegistry;
 import org.eclipse.core.runtime.CoreException;
@@ -29,6 +29,7 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.internal.discovery.core.DiscoveryCore;
+import org.eclipse.mylyn.internal.discovery.core.model.Directory.Entry;
 import org.eclipse.mylyn.internal.discovery.core.util.WebUtil;
 import org.eclipse.mylyn.internal.discovery.core.util.WebUtil.TextContentProcessor;
 import org.eclipse.osgi.util.NLS;
@@ -47,6 +48,8 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 	private DiscoveryRegistryStrategy registryStrategy;
 
 	private File temporaryStorage;
+
+	private int maxDiscoveryJarDownloadAttempts = 1;
 
 	@Override
 	public void performDiscovery(IProgressMonitor monitor) throws CoreException {
@@ -85,7 +88,6 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 
 			Directory directory;
 
-			// FIXME: Eclipse network/proxy settings
 			WebLocation webLocation = new WebLocation(directoryUrl);
 			try {
 				final Directory[] temp = new Directory[1];
@@ -111,40 +113,45 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 						Messages.RemoteBundleDiscoveryStrategy_empty_directory));
 			}
 
-			Set<File> bundles = new HashSet<File>();
+			Map<File, Directory.Entry> bundleFileToDirectoryEntry = new HashMap<File, Directory.Entry>();
 
 			// TODO: multithreaded downloading
 			for (Directory.Entry entry : directory.getEntries()) {
 				String bundleUrl = entry.getLocation();
-				try {
-					if (!bundleUrl.startsWith("http://") && !bundleUrl.startsWith("https://")) { //$NON-NLS-1$//$NON-NLS-2$
-						StatusHandler.log(new Status(IStatus.WARNING, DiscoveryCore.ID_PLUGIN, NLS.bind(
-								Messages.RemoteBundleDiscoveryStrategy_unrecognized_discovery_url, bundleUrl)));
-						continue;
-					}
-					String lastPathElement = bundleUrl.lastIndexOf('/') == -1 ? bundleUrl
-							: bundleUrl.substring(bundleUrl.lastIndexOf('/'));
-					File target = File.createTempFile(
-							lastPathElement.replaceAll("^[a-zA-Z0-9_.]", "_") + "_", ".jar", temporaryStorage); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$
+				int attempts = 0;
+				for (int attemptCount = 0; attemptCount < maxDiscoveryJarDownloadAttempts; ++attemptCount) {
+					try {
+						if (!bundleUrl.startsWith("http://") && !bundleUrl.startsWith("https://")) { //$NON-NLS-1$//$NON-NLS-2$
+							StatusHandler.log(new Status(IStatus.WARNING, DiscoveryCore.ID_PLUGIN, NLS.bind(
+									Messages.RemoteBundleDiscoveryStrategy_unrecognized_discovery_url, bundleUrl)));
+							continue;
+						}
+						String lastPathElement = bundleUrl.lastIndexOf('/') == -1 ? bundleUrl
+								: bundleUrl.substring(bundleUrl.lastIndexOf('/'));
+						File target = File.createTempFile(
+								lastPathElement.replaceAll("^[a-zA-Z0-9_.]", "_") + "_", ".jar", temporaryStorage); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$
 
-					if (monitor.isCanceled()) {
-						return;
-					}
+						if (monitor.isCanceled()) {
+							return;
+						}
 
-					// FIXME: Eclipse network/proxy settings
-					WebUtil.downloadResource(target, new WebLocation(bundleUrl), new SubProgressMonitor(monitor,
-							ticksTenPercent * 4 / directory.getEntries().size()));
-					bundles.add(target);
-				} catch (IOException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN, NLS.bind(
-							Messages.RemoteBundleDiscoveryStrategy_cannot_download_bundle, bundleUrl, e.getMessage()),
-							e));
+						WebUtil.downloadResource(target, new WebLocation(bundleUrl), new SubProgressMonitor(monitor,
+								ticksTenPercent * 4 / directory.getEntries().size()));
+						bundleFileToDirectoryEntry.put(target, entry);
+					} catch (IOException e) {
+						StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN, NLS.bind(
+								Messages.RemoteBundleDiscoveryStrategy_cannot_download_bundle, bundleUrl,
+								e.getMessage()), e));
+						if (isUnknownHostException(e)) {
+							break;
+						}
+					}
 				}
 			}
 			try {
 				registryStrategy = new DiscoveryRegistryStrategy(new File[] { registryCacheFolder },
 						new boolean[] { false }, this);
-				registryStrategy.setBundleFiles(bundles);
+				registryStrategy.setBundles(bundleFileToDirectoryEntry);
 				IExtensionRegistry extensionRegistry = new ExtensionRegistry(registryStrategy, this, this);
 				try {
 					IExtensionPoint extensionPoint = extensionRegistry.getExtensionPoint(ConnectorDiscoveryExtensionReader.EXTENSION_POINT_ID);
@@ -163,6 +170,11 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 		} finally {
 			monitor.done();
 		}
+	}
+
+	private boolean isUnknownHostException(IOException e) {
+		// ignore
+		return false;
 	}
 
 	private void delete(File file) {
@@ -199,6 +211,31 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 
 	@Override
 	protected AbstractDiscoverySource computeDiscoverySource(IContributor contributor) {
-		return new JarDiscoverySource(contributor.getName(), registryStrategy.getJarFile(contributor));
+		Entry directoryEntry = registryStrategy.getDirectoryEntry(contributor);
+		Policy policy = new Policy(directoryEntry.isPermitCategories());
+		JarDiscoverySource discoverySource = new JarDiscoverySource(contributor.getName(),
+				registryStrategy.getJarFile(contributor));
+		discoverySource.setPolicy(policy);
+		return discoverySource;
+	}
+
+	/**
+	 * indicate how many times discovyer jar downloads should be attempted
+	 */
+	public int getMaxDiscoveryJarDownloadAttempts() {
+		return maxDiscoveryJarDownloadAttempts;
+	}
+
+	/**
+	 * indicate how many times discovyer jar downloads should be attempted
+	 * 
+	 * @param maxDiscoveryJarDownloadAttempts
+	 *            a number >= 1
+	 */
+	public void setMaxDiscoveryJarDownloadAttempts(int maxDiscoveryJarDownloadAttempts) {
+		if (maxDiscoveryJarDownloadAttempts < 1 || maxDiscoveryJarDownloadAttempts > 2) {
+			throw new IllegalArgumentException();
+		}
+		this.maxDiscoveryJarDownloadAttempts = maxDiscoveryJarDownloadAttempts;
 	}
 }

@@ -20,7 +20,6 @@ import org.eclipse.mylyn.internal.discovery.core.model.Directory;
 import org.eclipse.mylyn.internal.discovery.core.model.DirectoryParser;
 
 /**
- * 
  * @author David Green
  */
 @SuppressWarnings("restriction")
@@ -76,5 +75,45 @@ public class DirectoryParserTest extends TestCase {
 		assertNotNull(directory);
 		assertEquals(1, directory.getEntries().size());
 		assertEquals("http://foo.bar.nodomain/baz.jar", directory.getEntries().get(0).getLocation());
+	}
+
+	public void testParsePermitCategoriesTrue() throws IOException {
+		Directory directory = parser.parse(new StringReader(
+				"<directory xmlns=\"http://www.eclipse.org/mylyn/discovery/directory/\"><entry url=\"http://foo.bar.nodomain/baz.jar\" permitCategories=\"true\"/></directory>"));
+		assertNotNull(directory);
+		assertEquals(1, directory.getEntries().size());
+		assertEquals(true, directory.getEntries().get(0).isPermitCategories());
+	}
+
+	public void testParsePermitCategoriesFalse() throws IOException {
+		Directory directory = parser.parse(new StringReader(
+				"<directory xmlns=\"http://www.eclipse.org/mylyn/discovery/directory/\"><entry url=\"http://foo.bar.nodomain/baz.jar\" permitCategories=\"false\"/></directory>"));
+		assertNotNull(directory);
+		assertEquals(1, directory.getEntries().size());
+		assertEquals(false, directory.getEntries().get(0).isPermitCategories());
+	}
+
+	public void testParsePermitCategoriesNotSpecified() throws IOException {
+		Directory directory = parser.parse(new StringReader(
+				"<directory xmlns=\"http://www.eclipse.org/mylyn/discovery/directory/\"><entry url=\"http://foo.bar.nodomain/baz.jar\"/></directory>"));
+		assertNotNull(directory);
+		assertEquals(1, directory.getEntries().size());
+		assertEquals(false, directory.getEntries().get(0).isPermitCategories());
+	}
+
+	public void testParsePermitCategoriesSpecifiedBadly() throws IOException {
+		Directory directory = parser.parse(new StringReader(
+				"<directory xmlns=\"http://www.eclipse.org/mylyn/discovery/directory/\"><entry url=\"http://foo.bar.nodomain/baz.jar\" permitCategories=\"\"/></directory>"));
+		assertNotNull(directory);
+		assertEquals(1, directory.getEntries().size());
+		assertEquals(false, directory.getEntries().get(0).isPermitCategories());
+	}
+
+	public void testParsePermitCategoriesSpecifiedBadly2() throws IOException {
+		Directory directory = parser.parse(new StringReader(
+				"<directory xmlns=\"http://www.eclipse.org/mylyn/discovery/directory/\"><entry url=\"http://foo.bar.nodomain/baz.jar\" permitCategories=\"asdf\"/></directory>"));
+		assertNotNull(directory);
+		assertEquals(1, directory.getEntries().size());
+		assertEquals(false, directory.getEntries().get(0).isPermitCategories());
 	}
 }

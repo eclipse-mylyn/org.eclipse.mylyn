@@ -117,6 +117,7 @@ public class DirectoryParser {
 				if (url != null && url.length() > 0) {
 					Entry entry = new Entry();
 					entry.setLocation(url);
+					entry.setPermitCategories(Boolean.parseBoolean(atts.getValue("permitCategories"))); //$NON-NLS-1$
 					directory.getEntries().add(entry);
 				}
 			}

@@ -54,7 +54,6 @@ public class WebUtil {
 	 *            the web location of the content
 	 * @param monitor
 	 *            the monitor
-	 * 
 	 * @throws IOException
 	 *             if a network or IO problem occurs
 	 */
@@ -125,6 +124,8 @@ public class WebUtil {
 					} finally {
 						in.close();
 					}
+				} else {
+					throw new IOException(NLS.bind(Messages.WebUtil_cannotDownload, location.getUrl(), result));
 				}
 			} finally {
 				method.releaseConnection();

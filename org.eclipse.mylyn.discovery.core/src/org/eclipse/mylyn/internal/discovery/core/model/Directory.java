@@ -27,15 +27,37 @@ public class Directory {
 	public static final class Entry {
 		private String location;
 
+		private boolean permitCategories;
+
 		public Entry() {
 		}
 
+		/**
+		 * the location of the entry (an URL)
+		 */
 		public String getLocation() {
 			return location;
 		}
 
+		/**
+		 * the location of the entry (an URL)
+		 */
 		public void setLocation(String location) {
 			this.location = location;
+		}
+
+		/**
+		 * indicate if creation of categories by this location is permitted
+		 */
+		public boolean isPermitCategories() {
+			return permitCategories;
+		}
+
+		/**
+		 * indicate if creation of categories by this location is permitted
+		 */
+		public void setPermitCategories(boolean permitCategories) {
+			this.permitCategories = permitCategories;
 		}
 	}
 

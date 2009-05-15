@@ -14,6 +14,7 @@ package org.eclipse.mylyn.discovery.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.mylyn.discovery.tests.core.BundleDiscoveryStrategyTest;
 import org.eclipse.mylyn.discovery.tests.core.ConnectorDiscoveryTest;
 import org.eclipse.mylyn.discovery.tests.core.DirectoryParserTest;
 import org.eclipse.mylyn.discovery.tests.core.RemoteBundleDiscoveryStrategyTest;
@@ -27,6 +28,7 @@ public class AllDiscoveryTests {
 		TestSuite suite = new TestSuite("Tests for org.eclipse.mylyn.discovery");
 		suite.addTestSuite(ConnectorDiscoveryTest.class);
 		suite.addTestSuite(DirectoryParserTest.class);
+		suite.addTestSuite(BundleDiscoveryStrategyTest.class);
 		suite.addTestSuite(RemoteBundleDiscoveryStrategyTest.class);
 		return suite;
 	}
