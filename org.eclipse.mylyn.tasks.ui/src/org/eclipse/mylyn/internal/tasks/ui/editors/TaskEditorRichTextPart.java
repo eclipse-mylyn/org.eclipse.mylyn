@@ -207,7 +207,6 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 		}
 	}
 
-	// TODO 3.2 move to AbstractTaskEditorPart? 
 	protected Action getMaximizePartAction() {
 		if (toggleToMaximizePartAction == null) {
 			toggleToMaximizePartAction = new ToggleToMaximizePartAction();
