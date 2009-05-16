@@ -2,6 +2,7 @@
 <?eclipse version="3.0"?>
 <plugin>
    <extension-point id="pluginRepositoryMappings" name="Plug-in to Repository Mappings" schema="schema/pluginRepositoryMappings.exsd"/>
+   <extension-point id="support" name="Integrated Support" schema="schema/support.exsd"/>
    <extension-point id="taskContributors" name="Task Contributors" schema="schema/taskContributors.exsd"/>
    
    <extension point="org.eclipse.ui.popupMenus">

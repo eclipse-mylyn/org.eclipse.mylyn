@@ -30,9 +30,6 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
  */
 public class PluginRepositoryMappingManager {
 
-	private static final String[] MAPPING_CHILD_ELEMENTS = new String[] { IRepositoryConstants.PRODUCT,
-			IRepositoryConstants.COMPONENT };
-
 	private static final String EXTENSION_ID_PLUGIN_REPOSITORY_MAPPING = "org.eclipse.mylyn.tasks.bugs.pluginRepositoryMappings"; //$NON-NLS-1$
 
 	private static final String ELEMENT_MAPPING = "mapping"; //$NON-NLS-1$
@@ -40,6 +37,8 @@ public class PluginRepositoryMappingManager {
 	private static final String ELEMENT_BRANDING = "branding"; //$NON-NLS-1$
 
 	private static final String ELEMENT_REPOSITORY = "repository"; //$NON-NLS-1$
+
+	private static final String ELEMENT_PROPERTY = "property"; //$NON-NLS-1$
 
 	private static final String ATTRIBUTE_PLUGIN_ID_PREFIX = "pluginIdPrefix"; //$NON-NLS-1$
 
@@ -52,6 +51,8 @@ public class PluginRepositoryMappingManager {
 	private static final String ATTRIBUTE_BRANDING_DESCRIPTION = "description"; //$NON-NLS-1$
 
 	private static final String ATTRIBUTE_BRANDING_CATEGORY = "category"; //$NON-NLS-1$
+
+	private static final String ATTRIBUTE_NAME = "name"; //$NON-NLS-1$
 
 	private static final String ATTRIBUTE_VALUE = "value"; //$NON-NLS-1$
 
@@ -72,11 +73,10 @@ public class PluginRepositoryMappingManager {
 			attributes.put(IRepositoryConstants.CONNECTOR_KIND, connectorKind);
 		}
 		// attributes
-		for (String elementName : MAPPING_CHILD_ELEMENTS) {
-			for (IConfigurationElement attributeElement : element.getChildren(elementName)) {
-				String value = attributeElement.getAttribute(ATTRIBUTE_VALUE);
-				attributes.put(elementName, value);
-			}
+		for (IConfigurationElement attributeElement : element.getChildren(ELEMENT_PROPERTY)) {
+			String name = attributeElement.getAttribute(ATTRIBUTE_NAME);
+			String value = attributeElement.getAttribute(ATTRIBUTE_VALUE);
+			attributes.put(name, value);
 		}
 		// branding
 		for (IConfigurationElement attributeElement : element.getChildren(ELEMENT_BRANDING)) {

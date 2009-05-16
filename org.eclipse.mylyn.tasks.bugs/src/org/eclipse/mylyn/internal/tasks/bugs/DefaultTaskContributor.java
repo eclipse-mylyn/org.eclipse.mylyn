@@ -22,16 +22,22 @@ import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.internal.provisional.tasks.bugs.AbstractTaskContributor;
+import org.eclipse.mylyn.internal.provisional.tasks.bugs.ITaskContribution;
 import org.eclipse.mylyn.internal.tasks.bugs.wizards.ErrorLogStatus;
 import org.eclipse.mylyn.internal.tasks.bugs.wizards.FeatureStatus;
-import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.osgi.util.NLS;
 import org.osgi.framework.Bundle;
 
 /**
  * @author Steffen Pingel
  */
+@SuppressWarnings("deprecation")
 public class DefaultTaskContributor extends AbstractTaskContributor {
+
+	@Override
+	public void process(ITaskContribution contribution) {
+		contribution.appendToDescription(getDescription(contribution.getStatus()));
+	}
 
 	public void appendErrorDetails(StringBuilder sb, IStatus status, Date date) {
 		sb.append("\n\n");
@@ -116,11 +122,6 @@ public class DefaultTaskContributor extends AbstractTaskContributor {
 			}
 			return sb.toString();
 		}
-	}
-
-	@Override
-	public String getEditorId(IStatus status) {
-		return TaskEditor.ID_EDITOR;
 	}
 
 	private String getSeverityText(int severity) {

@@ -11,8 +11,6 @@
 
 package org.eclipse.mylyn.internal.tasks.bugs;
 
-import java.util.Map;
-
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -34,9 +32,12 @@ public class TaskErrorReporter {
 
 	private final TaskContributorManager contributorManager;
 
+	private final SupportProviderManager providerManager;
+
 	public TaskErrorReporter() {
 		this.contributorManager = new TaskContributorManager();
 		this.mappingManager = new PluginRepositoryMappingManager();
+		this.providerManager = new SupportProviderManager();
 	}
 
 	public TaskContributorManager getContributorManager() {
@@ -58,25 +59,27 @@ public class TaskErrorReporter {
 		return AbstractErrorReporter.PRIORITY_NONE;
 	}
 
-	public void process(IStatus status) {
-		Assert.isNotNull(status);
-		AttributeTaskMapper mapper = preProcess(status);
-		postProcess(mapper);
-	}
+//	public void process(IStatus status) {
+//		Assert.isNotNull(status);
+//		AttributeTaskMapper mapper = preProcess(status);
+//		postProcess(mapper);
+//	}
 
-	public AttributeTaskMapper preProcess(IStatus status) {
+	public SupportRequest preProcess(IStatus status) {
 		Assert.isNotNull(status);
-		String pluginId = status.getPlugin();
-		Map<String, String> attributes = mappingManager.getAllAttributes(pluginId);
-		contributorManager.preProcess(status, attributes);
-		return new AttributeTaskMapper(attributes);
+		//Map<String, String> attributes = mappingManager.getAllAttributes(namespace);
+		SupportRequest request = new SupportRequest(providerManager, status);
+		contributorManager.preProcess(request);
+		return request;
 	}
 
 	public void postProcess(AttributeTaskMapper mapper) {
 		Assert.isNotNull(mapper);
-		TaskData taskData;
+		contributorManager.process(mapper);
 		try {
-			taskData = mapper.createTaskData(null);
+			TaskData taskData = mapper.createTaskData(null);
+			mapper.setTaskData(taskData);
+			contributorManager.postProcess(mapper);
 			TasksUiInternal.createAndOpenNewTask(taskData);
 		} catch (CoreException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksBugsPlugin.ID_PLUGIN, "Unexpected error reporting error", //$NON-NLS-1$

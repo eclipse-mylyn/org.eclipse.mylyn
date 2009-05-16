@@ -12,18 +12,24 @@
 package org.eclipse.mylyn.internal.tasks.bugs.wizards;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.mylyn.internal.provisional.tasks.bugs.IProduct;
+import org.eclipse.mylyn.internal.provisional.tasks.bugs.ITaskContribution;
 import org.eclipse.mylyn.internal.tasks.bugs.AttributeTaskMapper;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.internal.tasks.bugs.SupportRequest;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -35,22 +41,36 @@ public class ReportErrorPage extends WizardPage {
 
 	private final IStatus status;
 
-	private final AttributeTaskMapper mapper;
+	private final SupportRequest request;
 
-	protected TaskRepository taskRepository;
+	private final List<AttributeTaskMapper> contributions;
 
-	public ReportErrorPage(AttributeTaskMapper mapper, IStatus status) {
+	private AttributeTaskMapper selectedContribution;
+
+	private Combo contributionCombo;
+
+	public ReportErrorPage(SupportRequest request, IStatus status) {
 		super("reportError"); //$NON-NLS-1$
-		this.mapper = mapper;
+		this.request = request;
 		this.status = status;
+		this.contributions = new ArrayList<AttributeTaskMapper>();
+		addContributions(request.getContributions());
 		setTitle(Messages.ReportErrorPage_Report_as_Bug);
 		setMessage(MessageFormat.format(Messages.ReportErrorPage_AN_UNEXPETED_ERROR_HAS_OCCURED_IN_PLUGIN,
 				status.getPlugin()));
 	}
 
+	private void addContributions(List<ITaskContribution> contributions) {
+		for (ITaskContribution contribution : contributions) {
+			if (((AttributeTaskMapper) contribution).isMappingComplete()) {
+				this.contributions.add((AttributeTaskMapper) contribution);
+			}
+		}
+	}
+
 	public void createControl(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
-		composite.setLayout(new GridLayout(1, true));
+		composite.setLayout(new GridLayout(2, false));
 
 //		Group errorGroup = new Group(composite, SWT.NONE);
 //		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, false).applyTo(errorGroup);
@@ -62,19 +82,32 @@ public class ReportErrorPage extends WizardPage {
 
 		Text text = new Text(composite, SWT.MULTI | SWT.READ_ONLY | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
 		text.setText(status.getMessage());
-		GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).applyTo(text);
+		GridDataFactory.fillDefaults().span(2, 1).grab(true, true).applyTo(text);
 
 		// space
-		new Label(composite, SWT.NONE);
+		label = new Label(composite, SWT.NONE);
+		GridDataFactory.fillDefaults().span(2, 1).applyTo(label);
 
-		if (mapper.isMappingComplete()) {
+		selectedContribution = null;
+		if (!contributions.isEmpty()) {
 			final Button defaultRepositoryButton = new Button(composite, SWT.RADIO);
-			defaultRepositoryButton.setText(Messages.ReportErrorPage_Report_to_
-					+ mapper.getTaskRepository().getRepositoryLabel());
+			defaultRepositoryButton.setText(Messages.ReportErrorPage_Report_to_);
 			defaultRepositoryButton.setSelection(true);
+			selectedContribution = contributions.get(0);
+			if (contributions.size() == 1) {
+				label = new Label(composite, SWT.NONE);
+				label.setText(getLabel(selectedContribution));
+			} else {
+				contributionCombo = new Combo(composite, SWT.READ_ONLY);
+				for (AttributeTaskMapper contribution : contributions) {
+					contributionCombo.add(getLabel(contribution));
+				}
+				contributionCombo.select(0);
+			}
 
 			final Button selectRepositoryButton = new Button(composite, SWT.RADIO);
 			selectRepositoryButton.setText(Messages.ReportErrorPage_Select_repository);
+			GridDataFactory.fillDefaults().span(2, 1).grab(true, true).applyTo(selectRepositoryButton);
 
 			defaultRepositoryButton.addSelectionListener(new SelectionAdapter() {
 				@Override
@@ -82,7 +115,12 @@ public class ReportErrorPage extends WizardPage {
 					if (defaultRepositoryButton.getSelection()) {
 						selectRepositoryButton.setSelection(false);
 					}
-					taskRepository = mapper.getTaskRepository();
+					if (contributionCombo != null) {
+						contributionCombo.setEnabled(true);
+						selectedContribution = contributions.get(contributionCombo.getSelectionIndex());
+					} else {
+						selectedContribution = contributions.get(0);
+					}
 					getContainer().updateButtons();
 				}
 			});
@@ -92,27 +130,30 @@ public class ReportErrorPage extends WizardPage {
 				public void widgetSelected(SelectionEvent event) {
 					if (selectRepositoryButton.getSelection()) {
 						defaultRepositoryButton.setSelection(false);
+						if (contributionCombo != null) {
+							contributionCombo.setEnabled(false);
+						}
 					}
-					taskRepository = null;
 					getContainer().updateButtons();
 				}
 			});
-
-			taskRepository = mapper.getTaskRepository();
-		} else {
-			taskRepository = null;
 		}
 		setControl(composite);
 		Dialog.applyDialogFont(composite);
 	}
 
-	@Override
-	public boolean canFlipToNextPage() {
-		return taskRepository == null;
+	private String getLabel(AttributeTaskMapper contribution) {
+		IProduct product = contribution.getProduct();
+		return NLS.bind("{0} - {1}", product.getProvider().getName(), product.getName());
 	}
 
-	public TaskRepository getTaskRepository() {
-		return taskRepository;
+	@Override
+	public boolean canFlipToNextPage() {
+		return selectedContribution == null;
+	}
+
+	public AttributeTaskMapper getSelectedContribution() {
+		return selectedContribution;
 	}
 
 	@Override

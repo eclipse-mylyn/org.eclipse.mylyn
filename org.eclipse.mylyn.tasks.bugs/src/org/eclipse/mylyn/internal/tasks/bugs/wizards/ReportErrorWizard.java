@@ -14,6 +14,8 @@ package org.eclipse.mylyn.internal.tasks.bugs.wizards;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.internal.tasks.bugs.AttributeTaskMapper;
+import org.eclipse.mylyn.internal.tasks.bugs.KeyValueMapping;
+import org.eclipse.mylyn.internal.tasks.bugs.SupportRequest;
 import org.eclipse.mylyn.internal.tasks.bugs.TaskErrorReporter;
 import org.eclipse.mylyn.internal.tasks.core.ITaskRepositoryFilter;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewTaskPage;
@@ -25,7 +27,7 @@ public class ReportErrorWizard extends Wizard {
 
 	private final IStatus status;
 
-	private final AttributeTaskMapper mapper;
+	private final SupportRequest request;
 
 	private ReportErrorPage reportErrorPage;
 
@@ -36,25 +38,28 @@ public class ReportErrorWizard extends Wizard {
 	public ReportErrorWizard(TaskErrorReporter taskErrorReporter, IStatus status) {
 		this.taskErrorReporter = taskErrorReporter;
 		this.status = status;
-		this.mapper = taskErrorReporter.preProcess(status);
+		this.request = taskErrorReporter.preProcess(status);
 		setWindowTitle(Messages.ReportErrorWizard_Report_as_Bug);
 	}
 
 	@Override
 	public void addPages() {
-		reportErrorPage = new ReportErrorPage(mapper, status);
+		reportErrorPage = new ReportErrorPage(request, status);
 		addPage(reportErrorPage);
-		newTaskPage = new NewTaskPage(ITaskRepositoryFilter.CAN_CREATE_NEW_TASK, mapper.getTaskMapping());
+		KeyValueMapping defaultMapping = new KeyValueMapping(
+				((AttributeTaskMapper) request.getDefaultContribution()).getAttributes());
+		newTaskPage = new NewTaskPage(ITaskRepositoryFilter.CAN_CREATE_NEW_TASK, defaultMapping);
 		addPage(newTaskPage);
 	}
 
 	@Override
 	public boolean performFinish() {
-		if (reportErrorPage.getTaskRepository() != null) {
-			taskErrorReporter.postProcess(mapper);
+		if (reportErrorPage.getSelectedContribution() != null) {
+			taskErrorReporter.postProcess(reportErrorPage.getSelectedContribution());
 			return true;
 		} else {
 			return newTaskPage.performFinish();
 		}
 	}
+
 }

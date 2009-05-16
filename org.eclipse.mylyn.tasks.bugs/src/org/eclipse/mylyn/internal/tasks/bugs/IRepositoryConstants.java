@@ -27,14 +27,19 @@ public class IRepositoryConstants {
 
 	public static final String PRODUCT = "product"; //$NON-NLS-1$
 
+	@Deprecated
 	public static final String PRODUCT_CATEGORY = "productCategory"; //$NON-NLS-1$
 
+	@Deprecated
 	public static final String PRODUCT_DESCRIPTION = "productDescription"; //$NON-NLS-1$
 
+	@Deprecated
 	public static final String PRODUCT_NAME = "productName"; //$NON-NLS-1$
 
+	@Deprecated
 	public static final String PRODUCT_TITLE = "productTitle"; //$NON-NLS-1$
 
+	@Deprecated
 	public static final String REPOSITORY_KIND = "repositoryKind"; //$NON-NLS-1$
 
 	public static final String REPOSITORY_URL = "repositoryUrl"; //$NON-NLS-1$

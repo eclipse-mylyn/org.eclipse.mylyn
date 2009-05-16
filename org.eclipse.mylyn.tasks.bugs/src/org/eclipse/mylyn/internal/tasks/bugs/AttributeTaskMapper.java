@@ -11,35 +11,75 @@
 
 package org.eclipse.mylyn.internal.tasks.bugs;
 
-import java.util.Date;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.mylyn.internal.provisional.tasks.bugs.IProduct;
+import org.eclipse.mylyn.internal.provisional.tasks.bugs.ISupportResponse;
+import org.eclipse.mylyn.internal.provisional.tasks.bugs.ITaskContribution;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
-import org.eclipse.mylyn.tasks.core.TaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * @author Steffen Pingel
  */
-public class AttributeTaskMapper {
+public class AttributeTaskMapper implements ITaskContribution, ISupportResponse {
 
 	private final Map<String, String> attributes;
 
-	public AttributeTaskMapper(Map<String, String> attributes) {
-		Assert.isNotNull(attributes);
-		this.attributes = attributes;
+	private final IProduct product;
+
+	private final IStatus status;
+
+	private TaskData taskData;
+
+	public AttributeTaskMapper(IStatus status, IProduct product) {
+		Assert.isNotNull(status);
+		Assert.isNotNull(product);
+		this.status = status;
+		this.product = product;
+		this.attributes = new HashMap<String, String>();
 	}
 
-	public boolean isMappingComplete() {
-		return getTaskRepository() != null && attributes.get(IRepositoryConstants.PRODUCT) != null;
+	public void appendToDescription(String text) {
+		String description = getAttribute(IRepositoryConstants.DESCRIPTION);
+		setAttribute(IRepositoryConstants.DESCRIPTION, (description != null) ? description + text : text);
+	}
+
+	public TaskData createTaskData(IProgressMonitor monitor) throws CoreException {
+		ITaskMapping taskMapping = getTaskMapping();
+		return TasksUiInternal.createTaskData(getTaskRepository(), taskMapping, taskMapping, monitor);
+	}
+
+	public String getAttribute(String name) {
+		return attributes.get(name);
+	}
+
+	public Map<String, String> getAttributes() {
+		return attributes;
+	}
+
+	public IProduct getProduct() {
+		return product;
+	}
+
+	public IStatus getStatus() {
+		return status;
+	}
+
+	public TaskData getTaskData() {
+		return taskData;
+	}
+
+	public ITaskMapping getTaskMapping() {
+		return new KeyValueMapping(attributes);
 	}
 
 	public TaskRepository getTaskRepository() {
@@ -54,139 +94,16 @@ public class AttributeTaskMapper {
 		return taskRepository;
 	}
 
-	public TaskData createTaskData(IProgressMonitor monitor) throws CoreException {
-		ITaskMapping taskMapping = getTaskMapping();
-		return TasksUiInternal.createTaskData(getTaskRepository(), taskMapping, taskMapping, monitor);
+	public boolean isMappingComplete() {
+		return getTaskRepository() != null;
 	}
 
-	public ITaskMapping getTaskMapping() {
-		return new KeyValueMapping(attributes);
+	public void setAttribute(String name, String value) {
+		attributes.put(name, value);
 	}
 
-	private static class KeyValueMapping extends TaskMapping {
-
-		private final Map<String, String> attributes;
-
-		public KeyValueMapping(Map<String, String> attributes) {
-			Assert.isNotNull(attributes);
-			this.attributes = attributes;
-		}
-
-		@Override
-		public void merge(ITaskMapping source) {
-		}
-
-		@Override
-		public Date getCompletionDate() {
-			// ignore
-			return null;
-		}
-
-		@Override
-		public String getComponent() {
-			return attributes.get(IRepositoryConstants.COMPONENT);
-		}
-
-		@Override
-		public Date getCreationDate() {
-			// ignore
-			return null;
-		}
-
-		@Override
-		public String getDescription() {
-			return attributes.get(IRepositoryConstants.DESCRIPTION);
-		}
-
-		@Override
-		public Date getDueDate() {
-			// ignore
-			return null;
-		}
-
-		@Override
-		public Date getModificationDate() {
-			// ignore
-			return null;
-		}
-
-		@Override
-		public String getOwner() {
-			// ignore
-			return null;
-		}
-
-		@Override
-		public PriorityLevel getPriorityLevel() {
-			// ignore
-			return null;
-		}
-
-		@Override
-		public String getProduct() {
-			return attributes.get(IRepositoryConstants.PRODUCT);
-		}
-
-		@Override
-		public String getSummary() {
-			// ignore
-			return null;
-		}
-
-		@Override
-		public TaskData getTaskData() {
-			// ignore
-			return null;
-		}
-
-		@Override
-		public String getTaskKey() {
-			// ignore
-			return null;
-		}
-
-		@Override
-		public String getTaskKind() {
-			// ignore
-			return null;
-		}
-
-		@Override
-		public String getTaskUrl() {
-			// ignore
-			return null;
-		}
-
-		@Override
-		public List<String> getCc() {
-			// ignore
-			return null;
-		}
-
-		@Override
-		public List<String> getKeywords() {
-			// ignore
-			return null;
-		}
-
-		@Override
-		public String getReporter() {
-			// ignore
-			return null;
-		}
-
-		@Override
-		public String getResolution() {
-			// ignore
-			return null;
-		}
-
-		@Override
-		public String getTaskStatus() {
-			// ignore
-			return null;
-		}
-
+	void setTaskData(TaskData taskData) {
+		this.taskData = taskData;
 	}
 
 }

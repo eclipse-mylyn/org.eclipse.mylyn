@@ -36,7 +36,6 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylyn.internal.tasks.bugs.AttributeTaskMapper;
 import org.eclipse.mylyn.internal.tasks.bugs.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.bugs.PluginRepositoryMappingManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -211,10 +210,10 @@ public class SelectProductPage extends WizardPage {
 	private void addProduct(Map<String, FeatureGroup> featureGroupByName, IBundleGroup bundleGroup) {
 		Map<String, String> attributes = manager.getAllAttributes(bundleGroup.getIdentifier());
 
-		AttributeTaskMapper mapper = new AttributeTaskMapper(attributes);
-		if (!mapper.isMappingComplete()) {
-			return;
-		}
+//		AttributeTaskMapper mapper = new AttributeTaskMapper(attributes);
+//		if (!mapper.isMappingComplete()) {
+//			return;
+//		}
 
 		String imageUrl = bundleGroup.getProperty(IBundleGroupConstants.FEATURE_IMAGE);
 		if (imageUrl == null) {
