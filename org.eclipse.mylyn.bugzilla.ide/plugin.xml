@@ -11,23 +11,45 @@
             urlRepository="https://bugs.eclipse.org/bugs"
             version="3.0"/>
    </extension>
-   <extension
-         point="org.eclipse.mylyn.tasks.bugs.pluginRepositoryMappings">
-      <mapping
-            pluginIdPrefix="org.eclipse">
-         <repository
-               kind="bugzilla"
-               url="https://bugs.eclipse.org/bugs">
-         </repository>
-      </mapping>
-      <mapping
-            pluginIdPrefix="org.eclipse.mylyn">
-         <product
-               value="%product.name">
-         </product>
-         <branding
-               name="%product.description">
-         </branding>
-      </mapping>
-   </extension>
+<extension point="org.eclipse.mylyn.tasks.bugs.support">
+<category
+  id="org.eclipse.mylyn.tasks.bugs.openSource"
+  name="Open-Source"
+  description="Community supported Open-Source projects"/>
+<provider
+      categoryId="org.eclipse.mylyn.tasks.bugs.openSource"
+      description="Eclipse Open-Source projects"
+      icon="icons/branding32/eclipse.png"
+      id="org.eclipse"
+      name="Eclipse.org"/>
+<mapping
+  namespace="org.eclipse">
+  <repository
+    kind="bugzilla"
+    url="https://bugs.eclipse.org/bugs">
+  </repository>
+</mapping>
+<product
+  id="org.eclipse.mylyn"
+  name="Mylyn"
+  providerId="org.eclipse"
+  description="Task Management and Task-Focused Interface"
+  pluginId="org.eclipse.mylyn" />
+<mapping
+  namespace="org.eclipse.mylyn"
+  productId="org.eclipse.mylyn">
+  <property
+    name="product"
+    value="Mylyn">
+  </property>
+</mapping>
+<mapping
+  namespace="org.eclipse.mylyn.tasks"
+  productId="org.eclipse.mylyn">
+  <property
+    name="component"
+    value="Tasks">
+  </property>
+</mapping>
+</extension>
 </plugin>
