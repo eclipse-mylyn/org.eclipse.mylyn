@@ -477,11 +477,12 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		// we put the contents in a scrolled composite since we don't know how
 		// big it will be
 		ScrolledComposite scrolledComposite = new ScrolledComposite(body, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+		configureLook(scrolledComposite, colorWhite);
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(scrolledComposite);
 
 		// FIXME 3.2 does white work for any desktop theme, e.g. an inverse theme?
 		Composite scrolledContents = new Composite(scrolledComposite, SWT.NONE);
-		scrolledContents.setBackground(colorWhite);
+		configureLook(scrolledContents, colorWhite);
 		scrolledContents.setRedraw(false);
 		try {
 			createDiscoveryContents(scrolledContents);
@@ -489,13 +490,10 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 			scrolledContents.layout(true);
 			scrolledContents.setRedraw(true);
 		}
-
-		Point bodyIdealSize = scrolledContents.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
-		scrolledContents.setSize(bodyIdealSize);
+		scrolledContents.setSize(scrolledContents.computeSize(body.getSize().x, SWT.DEFAULT, true));
 
 		scrolledComposite.setExpandHorizontal(true);
-		scrolledComposite.setExpandVertical(true);
-		scrolledComposite.setMinSize(bodyIdealSize);
+		scrolledComposite.setMinWidth(100);
 
 		scrolledComposite.setContent(scrolledContents);
 
@@ -553,7 +551,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 	}
 
 	private void createDiscoveryContents(Composite container) {
-		container.setLayout(new GridLayout(2, false));
+		GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(false).margins(3, 3).applyTo(container);
 
 		Color background = container.getBackground();
 
@@ -627,6 +625,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 
 				Composite border = new Composite(categoryContainer, SWT.NULL);
 				GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 1).applyTo(border);
+				GridLayoutFactory.fillDefaults().applyTo(border);
 				border.addPaintListener(new ConnectorBorderPaintListener());
 				for (final DiscoveryConnector connector : category.getConnectors()) {
 					if (isFiltered(connector)) {
@@ -706,6 +705,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 
 					border = new Composite(categoryContainer, SWT.NULL);
 					GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 1).applyTo(border);
+					GridLayoutFactory.fillDefaults().applyTo(border);
 					border.addPaintListener(new ConnectorBorderPaintListener());
 
 				}
