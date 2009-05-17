@@ -90,6 +90,10 @@ public abstract class ControlListItem extends Composite {
 		mouseTrackListener = doCreateMouseTrackListener();
 		createContent();
 		registerChild(this);
+		Control[] children = getChildren();
+		for (Control child : children) {
+			registerChild(child);
+		}
 		setHot(false);
 		refresh();
 	}

@@ -33,6 +33,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Widget;
 
 /**
@@ -111,11 +112,11 @@ public abstract class ControlListViewer extends StructuredViewer {
 		control.addTraverseListener(new TraverseListener() {
 			private boolean handleEvent = true;
 
-			public void keyTraversed(TraverseEvent e) {
+			public void keyTraversed(TraverseEvent event) {
 				if (!handleEvent) {
 					return;
 				}
-				switch (e.detail) {
+				switch (event.detail) {
 				case SWT.TRAVERSE_ARROW_PREVIOUS: {
 					Control[] children = control.getChildren();
 					if (children.length > 0) {
@@ -158,7 +159,18 @@ public abstract class ControlListViewer extends StructuredViewer {
 				}
 				default:
 					handleEvent = false;
-					control.traverse(e.detail);
+					event.doit = true;
+					Control control = ControlListViewer.this.control;
+					Shell shell = control.getShell();
+					while (control != null) {
+						if (control.traverse(event.detail)) {
+							break;
+						}
+						if (!event.doit || control == shell) {
+							break;
+						}
+						control = control.getParent();
+					}
 					handleEvent = true;
 					break;
 				}
