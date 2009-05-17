@@ -20,7 +20,7 @@
          <sequence>
             <element ref="category" minOccurs="0" maxOccurs="unbounded"/>
             <element ref="mapping" minOccurs="0" maxOccurs="unbounded"/>
-            <element ref="product" minOccurs="0" maxOccurs="1"/>
+            <element ref="product" minOccurs="0" maxOccurs="unbounded"/>
             <element ref="provider" minOccurs="0" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
@@ -108,7 +108,7 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="name" type="string" use="required">
+         <attribute name="name" type="string">
             <annotation>
                <documentation>
                   
@@ -122,10 +122,31 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="pluginId" type="string">
+         <attribute name="icon" type="string">
+            <annotation>
+               <documentation>
+                  A 32x32 branding icon.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="url" type="string">
             <annotation>
                <documentation>
                   
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="featureId" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="pluginId" type="string">
+            <annotation>
+               <documentation>
+                  If specified the product is only listed if the referenced plug-in is installed.
                </documentation>
             </annotation>
          </attribute>
@@ -134,14 +155,14 @@
 
    <element name="property">
       <complexType>
-         <attribute name="value" type="string" use="required">
+         <attribute name="name" type="string" use="required">
             <annotation>
                <documentation>
                   
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="name" type="string" use="required">
+         <attribute name="value" type="string" use="required">
             <annotation>
                <documentation>
                   
@@ -168,6 +189,13 @@
             </annotation>
          </attribute>
          <attribute name="description" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="weight" type="string">
             <annotation>
                <documentation>
                   
@@ -207,21 +235,21 @@
                </documentation>
             </annotation>
          </attribute>
+         <attribute name="icon" type="string">
+            <annotation>
+               <documentation>
+                  A 32x32 branding icon.
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="resource"/>
+               </appInfo>
+            </annotation>
+         </attribute>
          <attribute name="url" type="string">
             <annotation>
                <documentation>
                   
                </documentation>
-            </annotation>
-         </attribute>
-         <attribute name="icon" type="string">
-            <annotation>
-               <documentation>
-                  A 32x32 icon branding icon.
-               </documentation>
-               <appInfo>
-                  <meta.attribute kind="resource"/>
-               </appInfo>
             </annotation>
          </attribute>
       </complexType>

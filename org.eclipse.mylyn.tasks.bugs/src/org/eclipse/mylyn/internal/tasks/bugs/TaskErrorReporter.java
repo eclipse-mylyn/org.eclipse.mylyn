@@ -95,4 +95,8 @@ public class TaskErrorReporter {
 		dialog.open();
 	}
 
+	public SupportProviderManager getProviderManager() {
+		return providerManager;
+	}
+
 }

@@ -14,42 +14,18 @@ package org.eclipse.mylyn.internal.tasks.bugs;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.internal.provisional.tasks.bugs.IProvider;
 
-public class SupportCategory {
+public class SupportCategory extends AbstractSupportElement {
 
-	private String description;
-
-	private final String id;
-
-	private String name;
+	private static final int DEFAULT_WEIGHT = 1000;
 
 	private List<IProvider> providers;
 
-	public SupportCategory(String id) {
-		Assert.isNotNull(id);
-		this.id = id;
-	}
+	private int weight;
 
-	public String getDescription() {
-		return description;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public void setName(String name) {
-		this.name = name;
+	public SupportCategory() {
+		setWeight(DEFAULT_WEIGHT);
 	}
 
 	public void add(IProvider provider) {
@@ -57,6 +33,24 @@ public class SupportCategory {
 			providers = new ArrayList<IProvider>();
 		}
 		providers.add(provider);
+	}
+
+	public void remove(IProvider provider) {
+		if (providers != null) {
+			providers.remove(provider);
+		}
+	}
+
+	public List<IProvider> getProviders() {
+		return new ArrayList<IProvider>(providers);
+	}
+
+	public int getWeight() {
+		return weight;
+	}
+
+	public void setWeight(int weight) {
+		this.weight = weight;
 	}
 
 }

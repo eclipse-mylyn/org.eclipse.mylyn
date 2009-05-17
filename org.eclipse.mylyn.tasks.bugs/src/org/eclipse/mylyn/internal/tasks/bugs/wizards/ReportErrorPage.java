@@ -91,12 +91,11 @@ public class ReportErrorPage extends WizardPage {
 		selectedContribution = null;
 		if (!contributions.isEmpty()) {
 			final Button defaultRepositoryButton = new Button(composite, SWT.RADIO);
-			defaultRepositoryButton.setText(Messages.ReportErrorPage_Report_to_);
 			defaultRepositoryButton.setSelection(true);
 			selectedContribution = contributions.get(0);
 			if (contributions.size() == 1) {
-				label = new Label(composite, SWT.NONE);
-				label.setText(getLabel(selectedContribution));
+				defaultRepositoryButton.setText(NLS.bind("Report to: {0}", getLabel(selectedContribution)));
+				GridDataFactory.fillDefaults().span(2, 1).applyTo(defaultRepositoryButton);
 			} else {
 				contributionCombo = new Combo(composite, SWT.READ_ONLY);
 				for (AttributeTaskMapper contribution : contributions) {
@@ -107,7 +106,7 @@ public class ReportErrorPage extends WizardPage {
 
 			final Button selectRepositoryButton = new Button(composite, SWT.RADIO);
 			selectRepositoryButton.setText(Messages.ReportErrorPage_Select_repository);
-			GridDataFactory.fillDefaults().span(2, 1).grab(true, true).applyTo(selectRepositoryButton);
+			GridDataFactory.fillDefaults().span(2, 1).applyTo(selectRepositoryButton);
 
 			defaultRepositoryButton.addSelectionListener(new SelectionAdapter() {
 				@Override
@@ -134,6 +133,7 @@ public class ReportErrorPage extends WizardPage {
 							contributionCombo.setEnabled(false);
 						}
 					}
+					selectedContribution = null;
 					getContainer().updateButtons();
 				}
 			});

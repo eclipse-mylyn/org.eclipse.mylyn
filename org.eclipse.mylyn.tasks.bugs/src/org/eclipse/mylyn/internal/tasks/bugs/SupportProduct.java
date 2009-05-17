@@ -16,68 +16,27 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.eclipse.core.runtime.IBundleGroup;
 import org.eclipse.mylyn.internal.provisional.tasks.bugs.IProduct;
 import org.eclipse.mylyn.internal.provisional.tasks.bugs.IProvider;
 
 /**
  * @author Steffen Pingel
  */
-public class SupportProduct implements IProduct {
+public class SupportProduct extends AbstractSupportElement implements IProduct {
 
-	private String description;
+	private IBundleGroup bundleGroup;
 
-	private String name;
-
-	private String id;
-
-	private IProvider provider;
-
-	private String pluginId;
+	private boolean installed;
 
 	TreeMap<String, ProductRepositoryMapping> mappingByNamespace;
 
+	private String pluginId;
+
+	private IProvider provider;
+
 	public SupportProduct() {
 		mappingByNamespace = new TreeMap<String, ProductRepositoryMapping>();
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public IProvider getProvider() {
-		return provider;
-	}
-
-	public void setProvider(IProvider provider) {
-		this.provider = provider;
-	}
-
-	public String getPluginId() {
-		return pluginId;
-	}
-
-	public void setPluginId(String pluginId) {
-		this.pluginId = pluginId;
 	}
 
 	public void addRepositoryMapping(ProductRepositoryMapping mapping) {
@@ -87,14 +46,6 @@ public class SupportProduct implements IProduct {
 		} else {
 			mappingByNamespace.put(mapping.getNamespace(), mapping);
 		}
-	}
-
-	public ProductRepositoryMapping getMapping(String prefix) {
-		return mappingByNamespace.get(prefix);
-	}
-
-	public boolean hasMappings() {
-		return !mappingByNamespace.isEmpty();
 	}
 
 	public Map<String, String> getAllAttributes(String prefix) {
@@ -126,6 +77,60 @@ public class SupportProduct implements IProduct {
 			}
 		}
 		return null;
+	}
+
+	public IBundleGroup getBundleGroup() {
+		return bundleGroup;
+	}
+
+	public ProductRepositoryMapping getMapping(String prefix) {
+		return mappingByNamespace.get(prefix);
+	}
+
+	public String getPluginId() {
+		return pluginId;
+	}
+
+	public IProvider getProvider() {
+		return provider;
+	}
+
+	public boolean hasMappings() {
+		return !mappingByNamespace.isEmpty();
+	}
+
+	/**
+	 * @deprecated Use {@link #isInstalled()} instead
+	 */
+	public boolean isEnabled() {
+		return isInstalled();
+	}
+
+	public boolean isInstalled() {
+		return installed;
+	}
+
+	public void setBundleGroup(IBundleGroup bundleGroup) {
+		this.bundleGroup = bundleGroup;
+	}
+
+	/**
+	 * @deprecated Use {@link #setInstalled(boolean)} instead
+	 */
+	public void setEnabled(boolean enabled) {
+		setInstalled(enabled);
+	}
+
+	public void setInstalled(boolean enabled) {
+		this.installed = enabled;
+	}
+
+	public void setPluginId(String pluginId) {
+		this.pluginId = pluginId;
+	}
+
+	public void setProvider(IProvider provider) {
+		this.provider = provider;
 	}
 
 }

@@ -11,55 +11,24 @@
 
 package org.eclipse.mylyn.internal.tasks.bugs;
 
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.internal.provisional.tasks.bugs.IProvider;
 
 /**
  * @author Steffen Pingel
  */
-public class SupportProvider implements IProvider {
+public class SupportProvider extends AbstractSupportElement implements IProvider {
 
-	private String description;
-
-	private String name;
-
-	private String id;
-
-	private ImageDescriptor icon;
+	SupportCategory category;
 
 	public SupportProvider() {
 	}
 
-	public String getDescription() {
-		return description;
+	public SupportCategory getCategory() {
+		return category;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public ImageDescriptor getIcon() {
-		return icon;
-	}
-
-	public void setIcon(ImageDescriptor icon) {
-		this.icon = icon;
+	public void setCategory(SupportCategory category) {
+		this.category = category;
 	}
 
 }

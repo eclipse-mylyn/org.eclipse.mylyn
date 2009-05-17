@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.internal.tasks.bugs;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -18,6 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IBundleGroup;
+import org.eclipse.core.runtime.IBundleGroupProvider;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -25,9 +29,12 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.tasks.bugs.IProvider;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.ui.branding.IBundleGroupConstants;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
  * @author Steffen Pingel
@@ -38,11 +45,17 @@ public class SupportProviderManager {
 
 	private static final String ATTRIBUTE_DESCRIPTION = "description"; //$NON-NLS-1$
 
+	private static final String ATTRIBUTE_FEATURE_ID = "featureId"; //$NON-NLS-1$
+
+	private static final String ATTRIBUTE_ICON = "icon"; //$NON-NLS-1$
+
 	private static final String ATTRIBUTE_ID = "id"; //$NON-NLS-1$
 
 	private static final String ATTRIBUTE_NAME = "name"; //$NON-NLS-1$
 
 	private static final String ATTRIBUTE_NAMESPACE = "namespace"; //$NON-NLS-1$
+
+	private static final String ATTRIBUTE_PLUGIN_ID = "pluginId"; //$NON-NLS-1$
 
 	private static final String ATTRIBUTE_PRODUCT_ID = "productId"; //$NON-NLS-1$
 
@@ -52,7 +65,11 @@ public class SupportProviderManager {
 
 	private static final String ATTRIBUTE_REPOSITORY_URL = "url"; //$NON-NLS-1$
 
+	private static final String ATTRIBUTE_URL = "url"; //$NON-NLS-1$
+
 	private static final String ATTRIBUTE_VALUE = "value"; //$NON-NLS-1$
+
+	private static final String ATTRIBUTE_WEIGHT = "weight"; //$NON-NLS-1$
 
 	private static final String ELEMENT_CATEGORY = "category"; //$NON-NLS-1$
 
@@ -67,6 +84,8 @@ public class SupportProviderManager {
 	private static final String ELEMENT_REPOSITORY = "repository"; //$NON-NLS-1$
 
 	private static final String EXTENSION_ID_PLUGIN_SUPPORT = "org.eclipse.mylyn.tasks.bugs.support"; //$NON-NLS-1$
+
+	private HashMap<String, IBundleGroup> bundleGroupById;
 
 	private List<SupportCategory> categories;
 
@@ -100,6 +119,25 @@ public class SupportProviderManager {
 		return true;
 	}
 
+	private IBundleGroup getBundleGroup(String featureId) {
+		if (bundleGroupById == null) {
+			bundleGroupById = new HashMap<String, IBundleGroup>();
+			IBundleGroupProvider[] providers = Platform.getBundleGroupProviders();
+			if (providers != null) {
+				for (IBundleGroupProvider provider : providers) {
+					for (IBundleGroup bundleGroup : provider.getBundleGroups()) {
+						bundleGroupById.put(bundleGroup.getIdentifier(), bundleGroup);
+					}
+				}
+			}
+		}
+		return bundleGroupById.get(featureId);
+	}
+
+	public Collection<SupportCategory> getCategories() {
+		return Collections.unmodifiableList(categories);
+	}
+
 	public SupportCategory getCategory(String categoryId) {
 		for (SupportCategory category : categories) {
 			if (category.getId().equals(categoryId)) {
@@ -109,19 +147,83 @@ public class SupportProviderManager {
 		return null;
 	}
 
+	public SupportProduct getDefaultProduct() {
+		return defaultProduct;
+	}
+
 	public SupportProduct getProduct(String productId) {
 		return productById.get(productId);
+	}
+
+	public Collection<SupportProduct> getProducts() {
+		return Collections.unmodifiableCollection(productById.values());
 	}
 
 	public SupportProvider getProvider(String providerId) {
 		return providerById.get(providerId);
 	}
 
+	public Collection<SupportProvider> getProviders() {
+		return Collections.unmodifiableCollection(providerById.values());
+	}
+
+	private boolean readAttributes(IConfigurationElement element, AbstractSupportElement item) {
+		item.setId(element.getAttribute(ATTRIBUTE_ID));
+		item.setName(element.getAttribute(ATTRIBUTE_NAME));
+		item.setDescription(element.getAttribute(ATTRIBUTE_DESCRIPTION));
+		item.setUrl(element.getAttribute(ATTRIBUTE_URL));
+		String iconPath = element.getAttribute(ATTRIBUTE_ICON);
+		if (iconPath != null) {
+			ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(element.getContributor().getName(),
+					iconPath);
+			if (descriptor != null) {
+				item.setIcon(descriptor);
+			}
+		}
+
+		// optionally complement data from referenced feature
+		String featureId = element.getAttribute(ATTRIBUTE_FEATURE_ID);
+		if (featureId != null) {
+			IBundleGroup bundleGroup = getBundleGroup(featureId);
+			if (bundleGroup == null) {
+				// indicate that the specified feature was not found
+				return false;
+			} else {
+				if (item.getName() == null) {
+					item.setName(bundleGroup.getName());
+				}
+				if (item.getDescription() == null) {
+					item.setDescription(bundleGroup.getDescription());
+				}
+				if (item.getIcon() == null) {
+					String imageUrl = bundleGroup.getProperty(IBundleGroupConstants.FEATURE_IMAGE);
+					if (imageUrl != null) {
+						try {
+							item.setIcon(ImageDescriptor.createFromURL(new URL(imageUrl)));
+						} catch (MalformedURLException e) {
+							// ignore 
+						}
+					}
+				}
+				if (item instanceof SupportProduct) {
+					((SupportProduct) item).setBundleGroup(bundleGroup);
+				}
+			}
+		}
+		return true;
+	}
+
 	private void readCategory(IConfigurationElement element) {
-		String id = element.getAttribute(ATTRIBUTE_ID);
-		SupportCategory category = new SupportCategory(id);
-		category.setName(element.getAttribute(ATTRIBUTE_NAME));
-		category.setDescription(element.getAttribute(ATTRIBUTE_DESCRIPTION));
+		SupportCategory category = new SupportCategory();
+		readAttributes(element, category);
+		String weight = element.getAttribute(ATTRIBUTE_WEIGHT);
+		if (weight != null) {
+			try {
+				category.setWeight(Integer.parseInt(weight));
+			} catch (NumberFormatException e) {
+				// ignore
+			}
+		}
 		categories.add(category);
 	}
 
@@ -166,6 +268,9 @@ public class SupportProviderManager {
 				}
 			}
 		}
+
+		// clear cache
+		bundleGroupById = null;
 	}
 
 	private ProductRepositoryMapping readMapping(IConfigurationElement element) {
@@ -225,11 +330,16 @@ public class SupportProviderManager {
 					new String[] { element.getNamespaceIdentifier(), id, providerId })));
 			return null;
 		}
+		boolean enabled = true;
+		String pluginId = element.getAttribute(ATTRIBUTE_PLUGIN_ID);
+		if (pluginId != null) {
+			enabled &= Platform.getBundle(pluginId) != null;
+		}
 		SupportProduct product = new SupportProduct();
-		product.setId(id);
+		enabled &= readAttributes(element, product);
+		// disable products that do not have a corresponding plug-in or feature installed
+		product.setInstalled(enabled);
 		product.setProvider(provider);
-		product.setName(element.getAttribute(ATTRIBUTE_NAME));
-		product.setDescription(element.getAttribute(ATTRIBUTE_DESCRIPTION));
 		if (!addProduct(product)) {
 			StatusHandler.log(new Status(IStatus.WARNING, TasksBugsPlugin.ID_PLUGIN, NLS.bind(
 					"Product contributed by {0} ignored, id ''{1}'' already present", //$NON-NLS-1$
@@ -243,9 +353,7 @@ public class SupportProviderManager {
 	private SupportProvider readProvider(IConfigurationElement element) {
 		String id = element.getAttribute(ATTRIBUTE_ID);
 		SupportProvider provider = new SupportProvider();
-		provider.setId(id);
-		provider.setName(element.getAttribute(ATTRIBUTE_NAME));
-		provider.setDescription(element.getAttribute(ATTRIBUTE_DESCRIPTION));
+		readAttributes(element, provider);
 		if (!addProvider(provider)) {
 			StatusHandler.log(new Status(IStatus.WARNING, TasksBugsPlugin.ID_PLUGIN, NLS.bind(
 					"Provider contributed by {0} ignored, id ''{1}'' already present", //$NON-NLS-1$
@@ -262,15 +370,8 @@ public class SupportProviderManager {
 		}
 		providerById.put(id, provider);
 		category.add(provider);
+		provider.setCategory(category);
 		return provider;
-	}
-
-	public Collection<SupportProduct> getProducts() {
-		return Collections.unmodifiableCollection(productById.values());
-	}
-
-	public SupportProduct getDefaultProduct() {
-		return defaultProduct;
 	}
 
 }
