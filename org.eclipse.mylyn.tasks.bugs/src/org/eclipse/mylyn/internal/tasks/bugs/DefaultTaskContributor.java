@@ -22,9 +22,16 @@ import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.internal.provisional.tasks.bugs.AbstractTaskContributor;
+import org.eclipse.mylyn.internal.provisional.tasks.bugs.ISupportResponse;
 import org.eclipse.mylyn.internal.provisional.tasks.bugs.ITaskContribution;
 import org.eclipse.mylyn.internal.tasks.bugs.wizards.ErrorLogStatus;
-import org.eclipse.mylyn.internal.tasks.bugs.wizards.FeatureStatus;
+import org.eclipse.mylyn.internal.tasks.bugs.wizards.ProductStatus;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.ITaskMapping;
+import org.eclipse.mylyn.tasks.core.TaskMapping;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.osgi.util.NLS;
 import org.osgi.framework.Bundle;
 
@@ -40,6 +47,51 @@ public class DefaultTaskContributor extends AbstractTaskContributor {
 		if (description != null) {
 			contribution.appendToDescription(description);
 		}
+	}
+
+	@Override
+	public void postProcess(ISupportResponse response) {
+		IStatus contribution = response.getStatus();
+		TaskData taskData = response.getTaskData();
+		if (contribution instanceof ProductStatus) {
+			AbstractRepositoryConnector connector = TasksUi.getRepositoryConnector(taskData.getConnectorKind());
+			ITaskMapping mapping = connector.getTaskMapping(taskData);
+			mapping.merge(new TaskMapping() {
+				@Override
+				public String getSeverity() {
+					return "enhancement"; //$NON-NLS-1$
+				}
+			});
+		}
+		if (response.getProduct() != null) {
+			IBundleGroup bundleGroup = ((SupportProduct) response.getProduct()).getBundleGroup();
+			if (bundleGroup != null) {
+				TaskAttribute attribute = taskData.getRoot().getMappedAttribute(TaskAttribute.VERSION);
+				if (attribute != null) {
+					final String version = getBestMatch(bundleGroup.getVersion(), attribute.getOptions());
+					if (version.length() > 0) {
+						AbstractRepositoryConnector connector = TasksUi.getRepositoryConnector(taskData.getConnectorKind());
+						ITaskMapping mapping = connector.getTaskMapping(taskData);
+						mapping.merge(new TaskMapping() {
+							@Override
+							public String getVersion() {
+								return version;
+							}
+						});
+					}
+				}
+			}
+		}
+	}
+
+	private String getBestMatch(String version, Map<String, String> options) {
+		String match = ""; //$NON-NLS-1$
+		for (String option : options.values()) {
+			if (version.startsWith(option) && option.length() > match.length()) {
+				match = option;
+			}
+		}
+		return match;
 	}
 
 	public void appendErrorDetails(StringBuilder sb, IStatus status, Date date) {
@@ -74,8 +126,8 @@ public class DefaultTaskContributor extends AbstractTaskContributor {
 	}
 
 	public String getDescription(IStatus status) {
-		if (status instanceof FeatureStatus) {
-			SupportProduct product = (SupportProduct) ((FeatureStatus) status).getProduct();
+		if (status instanceof ProductStatus) {
+			SupportProduct product = (SupportProduct) ((ProductStatus) status).getProduct();
 			if (product.getBundleGroup() != null) {
 				StringBuilder sb = new StringBuilder();
 				sb.append("\n\n\n"); //$NON-NLS-1$

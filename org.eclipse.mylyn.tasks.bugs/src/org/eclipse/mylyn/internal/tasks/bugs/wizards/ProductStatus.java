@@ -18,11 +18,11 @@ import org.eclipse.mylyn.internal.provisional.tasks.bugs.IProduct;
 /**
  * @author Steffen Pingel
  */
-public class FeatureStatus extends Status {
+public class ProductStatus extends Status {
 
 	private final IProduct product;
 
-	public FeatureStatus(IProduct product) {
+	public ProductStatus(IProduct product) {
 		super(IStatus.INFO, product.getId(), ""); //$NON-NLS-1$
 		this.product = product;
 	}

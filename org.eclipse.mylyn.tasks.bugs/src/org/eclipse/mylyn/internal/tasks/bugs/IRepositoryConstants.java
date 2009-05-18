@@ -44,4 +44,12 @@ public class IRepositoryConstants {
 
 	public static final String REPOSITORY_URL = "repositoryUrl"; //$NON-NLS-1$
 
+	public static final String SEVERITY = "severity"; //$NON-NLS-1$
+
+	public static final String VERSION = "version"; //$NON-NLS-1$
+
+	public static final String SUMMARY = "summary"; //$NON-NLS-1$
+
+	public static final String PRIORITY = "priority";
+
 }

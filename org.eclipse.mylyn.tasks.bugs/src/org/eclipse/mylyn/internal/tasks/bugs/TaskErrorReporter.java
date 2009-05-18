@@ -20,7 +20,7 @@ import org.eclipse.mylyn.commons.core.AbstractErrorReporter;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.provisional.tasks.bugs.IProduct;
-import org.eclipse.mylyn.internal.tasks.bugs.wizards.FeatureStatus;
+import org.eclipse.mylyn.internal.tasks.bugs.wizards.ProductStatus;
 import org.eclipse.mylyn.internal.tasks.bugs.wizards.ReportErrorWizard;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -90,8 +90,8 @@ public class TaskErrorReporter {
 	}
 
 	public void handle(final IStatus status) {
-		if (status instanceof FeatureStatus) {
-			SupportRequest request = preProcess(status, ((FeatureStatus) status).getProduct());
+		if (status instanceof ProductStatus) {
+			SupportRequest request = preProcess(status, ((ProductStatus) status).getProduct());
 			postProcess((AttributeTaskMapper) request.getDefaultContribution());
 		} else {
 			ReportErrorWizard wizard = new ReportErrorWizard(TaskErrorReporter.this, status);

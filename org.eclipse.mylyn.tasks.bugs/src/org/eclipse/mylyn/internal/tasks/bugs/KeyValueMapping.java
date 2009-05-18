@@ -11,16 +11,16 @@
 
 package org.eclipse.mylyn.internal.tasks.bugs;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskMapping;
-import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
-import org.eclipse.mylyn.tasks.core.data.TaskData;
 
+/**
+ * @author Steffen Pingel
+ */
 public class KeyValueMapping extends TaskMapping {
 
 	private final Map<String, String> attributes;
@@ -31,26 +31,8 @@ public class KeyValueMapping extends TaskMapping {
 	}
 
 	@Override
-	public List<String> getCc() {
-		// ignore
-		return null;
-	}
-
-	@Override
-	public Date getCompletionDate() {
-		// ignore
-		return null;
-	}
-
-	@Override
 	public String getComponent() {
 		return attributes.get(IRepositoryConstants.COMPONENT);
-	}
-
-	@Override
-	public Date getCreationDate() {
-		// ignore
-		return null;
 	}
 
 	@Override
@@ -59,33 +41,20 @@ public class KeyValueMapping extends TaskMapping {
 	}
 
 	@Override
-	public Date getDueDate() {
-		// ignore
-		return null;
-	}
-
-	@Override
 	public List<String> getKeywords() {
-		// ignore
-		return null;
-	}
-
-	@Override
-	public Date getModificationDate() {
-		// ignore
+		// TODO implement
 		return null;
 	}
 
 	@Override
 	public String getOwner() {
-		// ignore
+		// TODO implement
 		return null;
 	}
 
 	@Override
-	public PriorityLevel getPriorityLevel() {
-		// ignore
-		return null;
+	public String getPriority() {
+		return attributes.get(IRepositoryConstants.PRIORITY);
 	}
 
 	@Override
@@ -94,51 +63,24 @@ public class KeyValueMapping extends TaskMapping {
 	}
 
 	@Override
-	public String getReporter() {
-		// ignore
-		return null;
-	}
-
-	@Override
-	public String getResolution() {
-		// ignore
-		return null;
+	public String getSeverity() {
+		return attributes.get(IRepositoryConstants.SEVERITY);
 	}
 
 	@Override
 	public String getSummary() {
-		// ignore
-		return null;
-	}
-
-	@Override
-	public TaskData getTaskData() {
-		// ignore
-		return null;
-	}
-
-	@Override
-	public String getTaskKey() {
-		// ignore
-		return null;
+		return attributes.get(IRepositoryConstants.SUMMARY);
 	}
 
 	@Override
 	public String getTaskKind() {
-		// ignore
+		// TODO implement
 		return null;
 	}
 
 	@Override
-	public String getTaskStatus() {
-		// ignore
-		return null;
-	}
-
-	@Override
-	public String getTaskUrl() {
-		// ignore
-		return null;
+	public String getVersion() {
+		return attributes.get(IRepositoryConstants.VERSION);
 	}
 
 	@Override

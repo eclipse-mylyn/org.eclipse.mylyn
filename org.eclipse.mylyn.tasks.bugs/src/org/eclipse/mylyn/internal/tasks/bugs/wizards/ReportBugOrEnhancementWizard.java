@@ -112,7 +112,7 @@ public class ReportBugOrEnhancementWizard extends Wizard {
 		// delay run this until after the dialog has been closed
 		getShell().getDisplay().asyncExec(new Runnable() {
 			public void run() {
-				TasksBugsPlugin.getTaskErrorReporter().handle(new FeatureStatus((IProduct) product));
+				TasksBugsPlugin.getTaskErrorReporter().handle(new ProductStatus((IProduct) product));
 			}
 		});
 
