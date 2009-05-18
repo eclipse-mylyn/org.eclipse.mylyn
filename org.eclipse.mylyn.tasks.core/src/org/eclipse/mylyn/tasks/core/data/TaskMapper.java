@@ -124,10 +124,8 @@ public class TaskMapper implements ITaskMapping {
 	}
 
 	/**
-	 * TODO update comment
-	 * 
-	 * Sets attribute values from <code>sourceTaskData</code> on <code>targetTaskData</code>. Sets the following
-	 * attributes:
+	 * TODO update comment Sets attribute values from <code>sourceTaskData</code> on <code>targetTaskData</code>. Sets
+	 * the following attributes:
 	 * <ul>
 	 * <li>summary
 	 * <li>description
@@ -171,10 +169,15 @@ public class TaskMapper implements ITaskMapping {
 			if (source.getProduct() != null) {
 				setProduct(source.getProduct());
 			}
+			if (source.getSeverity() != null) {
+				setSeverity(source.getSeverity());
+			}
 			if (source.getSummary() != null) {
 				setSummary(source.getSummary());
 			}
-
+			if (source.getVersion() != null) {
+				setVersion(source.getVersion());
+			}
 		}
 	}
 
@@ -262,6 +265,13 @@ public class TaskMapper implements ITaskMapping {
 		return getValue(TaskAttribute.RESOLUTION);
 	}
 
+	/**
+	 * @since 3.2
+	 */
+	public String getSeverity() {
+		return getValue(TaskAttribute.SEVERITY);
+	}
+
 	public String getSummary() {
 		return getValue(TaskAttribute.SUMMARY);
 	}
@@ -304,6 +314,13 @@ public class TaskMapper implements ITaskMapping {
 			return taskData.getAttributeMapper().getValueLabels(attribute);
 		}
 		return null;
+	}
+
+	/**
+	 * @since 3.2
+	 */
+	public String getVersion() {
+		return getValue(TaskAttribute.VERSION);
 	}
 
 	public boolean hasChanges(ITask task) {
@@ -399,6 +416,13 @@ public class TaskMapper implements ITaskMapping {
 		setValue(TaskAttribute.USER_REPORTER, reporter);
 	}
 
+	/**
+	 * @since 3.2
+	 */
+	public void setSeverity(String severity) {
+		setValue(TaskAttribute.SEVERITY, severity);
+	}
+
 	public void setSummary(String summary) {
 		setValue(TaskAttribute.SUMMARY, summary);
 	}
@@ -413,6 +437,13 @@ public class TaskMapper implements ITaskMapping {
 
 	public void setTaskUrl(String taskUrl) {
 		setValue(TaskAttribute.TASK_URL, taskUrl);
+	}
+
+	/**
+	 * @since 3.2
+	 */
+	public void setVersion(String version) {
+		setValue(TaskAttribute.VERSION, version);
 	}
 
 	public TaskAttribute setValue(String attributeKey, String value) {

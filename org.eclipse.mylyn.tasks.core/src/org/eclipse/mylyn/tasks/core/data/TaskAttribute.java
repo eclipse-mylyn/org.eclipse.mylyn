@@ -254,6 +254,16 @@ public final class TaskAttribute {
 	@Deprecated
 	public static final String USER_REPORTER_NAME = "task.common.user.reporter.name"; //$NON-NLS-1$
 
+	/**
+	 * @since 3.2
+	 */
+	public static final String SEVERITY = "task.common.severity"; //$NON-NLS-1$
+
+	/**
+	 * @since 3.2
+	 */
+	public static final String VERSION = "task.common.version"; //$NON-NLS-1$
+
 	private Map<String, TaskAttribute> attributeById;
 
 	private final String attributeId;

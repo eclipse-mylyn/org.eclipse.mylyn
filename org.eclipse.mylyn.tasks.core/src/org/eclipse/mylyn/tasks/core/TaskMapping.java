@@ -200,4 +200,20 @@ public class TaskMapping implements ITaskMapping {
 		return null;
 	}
 
+	/**
+	 * @since 3.2
+	 */
+	public String getSeverity() {
+		// ignore
+		return null;
+	}
+
+	/**
+	 * @since 3.2
+	 */
+	public String getVersion() {
+		// ignore
+		return null;
+	}
+
 }

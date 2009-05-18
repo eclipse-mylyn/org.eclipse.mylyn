@@ -54,6 +54,11 @@ public interface ITaskMapping {
 
 	public abstract String getResolution();
 
+	/**
+	 * @since 3.2
+	 */
+	public abstract String getSeverity();
+
 	public abstract String getSummary();
 
 	public abstract String getStatus();
@@ -67,5 +72,10 @@ public interface ITaskMapping {
 	public abstract String getTaskStatus();
 
 	public abstract String getTaskUrl();
+
+	/**
+	 * @since 3.2
+	 */
+	public abstract String getVersion();
 
 }
