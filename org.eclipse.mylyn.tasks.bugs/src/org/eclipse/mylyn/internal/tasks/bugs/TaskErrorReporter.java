@@ -19,6 +19,8 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.commons.core.AbstractErrorReporter;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
+import org.eclipse.mylyn.internal.provisional.tasks.bugs.IProduct;
+import org.eclipse.mylyn.internal.tasks.bugs.wizards.FeatureStatus;
 import org.eclipse.mylyn.internal.tasks.bugs.wizards.ReportErrorWizard;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -65,10 +67,10 @@ public class TaskErrorReporter {
 //		postProcess(mapper);
 //	}
 
-	public SupportRequest preProcess(IStatus status) {
+	public SupportRequest preProcess(IStatus status, IProduct product) {
 		Assert.isNotNull(status);
 		//Map<String, String> attributes = mappingManager.getAllAttributes(namespace);
-		SupportRequest request = new SupportRequest(providerManager, status);
+		SupportRequest request = new SupportRequest(providerManager, status, product);
 		contributorManager.preProcess(request);
 		return request;
 	}
@@ -88,11 +90,16 @@ public class TaskErrorReporter {
 	}
 
 	public void handle(final IStatus status) {
-		ReportErrorWizard wizard = new ReportErrorWizard(TaskErrorReporter.this, status);
-		WizardDialog dialog = new WizardDialog(WorkbenchUtil.getShell(), wizard);
-		dialog.setBlockOnOpen(false);
-		dialog.setPageSize(500, 200);
-		dialog.open();
+		if (status instanceof FeatureStatus) {
+			SupportRequest request = preProcess(status, ((FeatureStatus) status).getProduct());
+			postProcess((AttributeTaskMapper) request.getDefaultContribution());
+		} else {
+			ReportErrorWizard wizard = new ReportErrorWizard(TaskErrorReporter.this, status);
+			WizardDialog dialog = new WizardDialog(WorkbenchUtil.getShell(), wizard);
+			dialog.setBlockOnOpen(false);
+			dialog.setPageSize(500, 200);
+			dialog.open();
+		}
 	}
 
 	public SupportProviderManager getProviderManager() {

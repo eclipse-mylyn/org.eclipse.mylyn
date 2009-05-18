@@ -22,6 +22,9 @@ import org.eclipse.mylyn.internal.provisional.tasks.bugs.IProduct;
 import org.eclipse.mylyn.internal.provisional.tasks.bugs.ISupportRequest;
 import org.eclipse.mylyn.internal.provisional.tasks.bugs.ITaskContribution;
 
+/**
+ * @author Steffen Pingel
+ */
 public class SupportRequest implements ISupportRequest {
 
 	private final Map<String, ITaskContribution> contributionByProductId;
@@ -32,11 +35,23 @@ public class SupportRequest implements ISupportRequest {
 
 	private AttributeTaskMapper defaultContribution;
 
-	public SupportRequest(SupportProviderManager providerManager, IStatus status) {
+	private final IProduct product;
+
+	public SupportRequest(SupportProviderManager providerManager, IStatus status, IProduct product) {
 		this.providerManager = providerManager;
 		this.status = status;
 		this.contributionByProductId = new HashMap<String, ITaskContribution>();
-		process();
+		if (product != null) {
+			this.product = product;
+			this.defaultContribution = process(getNamespace(), (SupportProduct) product);
+		} else {
+			this.product = null;
+			process();
+		}
+	}
+
+	public SupportRequest(SupportProviderManager providerManager, IStatus status) {
+		this(providerManager, status, null);
 	}
 
 	public ITaskContribution getOrCreateContribution(IProduct product) {
@@ -69,6 +84,10 @@ public class SupportRequest implements ISupportRequest {
 		return defaultContribution;
 	}
 
+	public IProduct getProduct() {
+		return product;
+	}
+
 	public IStatus getStatus() {
 		return status;
 	}
@@ -77,16 +96,22 @@ public class SupportRequest implements ISupportRequest {
 		String namespace = getNamespace();
 		Collection<SupportProduct> products = providerManager.getProducts();
 		for (SupportProduct product : products) {
-			Map<String, String> productAttributes = product.getAllAttributes(namespace);
-			if (!productAttributes.isEmpty()) {
-				// merge global and more specific product attributes 
-				Map<String, String> attributes = providerManager.getDefaultProduct().getAllAttributes(namespace);
-				attributes.putAll(productAttributes);
-
-				AttributeTaskMapper contribution = (AttributeTaskMapper) getOrCreateContribution(product);
-				contribution.getAttributes().putAll(attributes);
-			}
+			process(namespace, product);
 		}
+	}
+
+	private AttributeTaskMapper process(String namespace, SupportProduct product) {
+		Map<String, String> productAttributes = product.getAllAttributes(namespace);
+		if (!productAttributes.isEmpty()) {
+			// merge global and more specific product attributes 
+			Map<String, String> attributes = providerManager.getDefaultProduct().getAllAttributes(namespace);
+			attributes.putAll(productAttributes);
+
+			AttributeTaskMapper contribution = (AttributeTaskMapper) getOrCreateContribution(product);
+			contribution.getAttributes().putAll(attributes);
+			return contribution;
+		}
+		return null;
 	}
 
 	private String getNamespace() {

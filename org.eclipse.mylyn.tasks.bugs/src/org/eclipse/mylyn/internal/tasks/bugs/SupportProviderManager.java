@@ -346,6 +346,7 @@ public class SupportProviderManager {
 					element.getNamespaceIdentifier(), id)));
 			return null;
 		}
+		((SupportProvider) provider).add(product);
 		productById.put(id, product);
 		return product;
 	}

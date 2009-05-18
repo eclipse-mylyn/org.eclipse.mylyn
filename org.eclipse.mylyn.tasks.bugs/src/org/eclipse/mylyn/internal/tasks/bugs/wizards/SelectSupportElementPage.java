@@ -35,8 +35,10 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.GradientCanvas;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
+import org.eclipse.mylyn.internal.provisional.tasks.bugs.IProvider;
 import org.eclipse.mylyn.internal.tasks.bugs.AbstractSupportElement;
 import org.eclipse.mylyn.internal.tasks.bugs.SupportCategory;
+import org.eclipse.mylyn.internal.tasks.bugs.SupportProduct;
 import org.eclipse.mylyn.internal.tasks.bugs.SupportProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -241,8 +243,6 @@ public class SelectSupportElementPage extends WizardPage {
 	public SelectSupportElementPage(String pageName, IStructuredContentProvider contentProvider) {
 		super(pageName);
 		this.contentProvider = contentProvider;
-		setTitle(Messages.SelectFeaturePage_SELECT_FEATURE);
-		setMessage("Select a provider or product from the list.");
 	}
 
 	public Image getImage(AbstractSupportElement data) {
@@ -259,6 +259,14 @@ public class SelectSupportElementPage extends WizardPage {
 
 	public void setInput(Object input) {
 		this.input = input;
+
+		if (input instanceof IProvider) {
+			setTitle("Support Provider");
+			setMessage("Select a support provider from the list.");
+		} else {
+			setTitle("Supported Product");
+			setMessage("Select a supported product from the list.");
+		}
 	}
 
 	public void createControl(Composite parent) {
@@ -272,12 +280,13 @@ public class SelectSupportElementPage extends WizardPage {
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-				if (!selection.isEmpty() && selection.getFirstElement() instanceof AbstractSupportElement) {
-					selectedElement = (AbstractSupportElement) selection.getFirstElement();
+				Object object = selection.getFirstElement();
+				if (object instanceof AbstractSupportElement) {
+					selectedElement = (AbstractSupportElement) object;
 				} else {
 					selectedElement = null;
 				}
-				setPageComplete(selectedElement != null);
+				updatePageStatus();
 			}
 		});
 		viewer.addOpenListener(new IOpenListener() {
@@ -315,12 +324,9 @@ public class SelectSupportElementPage extends WizardPage {
 		});
 		viewer.setInput(input);
 
+		setPageComplete(false);
 		setControl(container);
 		Dialog.applyDialogFont(container);
-	}
-
-	private boolean requiresSelection(AbstractSupportElement selectedElement) {
-		return contentProvider.getElements(selectedElement).length > 0;
 	}
 
 	@Override
@@ -335,14 +341,24 @@ public class SelectSupportElementPage extends WizardPage {
 		return selectedElement;
 	}
 
-	@Override
-	public boolean canFlipToNextPage() {
-		return selectedElement != null && requiresSelection(selectedElement);
+	private void updatePageStatus() {
+		if (selectedElement instanceof SupportProvider) {
+			if (contentProvider.getElements(selectedElement).length > 0) {
+				setErrorMessage(null);
+				setPageComplete(true);
+			} else {
+				setErrorMessage("The selected provider does not specify supported products.");
+				setPageComplete(false);
+			}
+		} else if (selectedElement instanceof SupportProduct) {
+			setErrorMessage(null);
+			setPageComplete(true);
+		}
 	}
 
 	@Override
 	public IWizardPage getNextPage() {
-		if (canFlipToNextPage()) {
+		if (selectedElement instanceof SupportProvider) {
 			SelectSupportElementPage page = new SelectSupportElementPage(selectedElement.getId(), contentProvider);
 			page.setInput(selectedElement);
 			page.setWizard(getWizard());
@@ -350,5 +366,4 @@ public class SelectSupportElementPage extends WizardPage {
 		}
 		return null;
 	}
-
 }

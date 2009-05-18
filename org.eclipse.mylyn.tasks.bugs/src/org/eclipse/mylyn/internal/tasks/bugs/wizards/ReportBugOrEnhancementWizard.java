@@ -15,12 +15,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.IBundleGroup;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.mylyn.internal.provisional.tasks.bugs.IProduct;
 import org.eclipse.mylyn.internal.tasks.bugs.AbstractSupportElement;
 import org.eclipse.mylyn.internal.tasks.bugs.SupportProduct;
 import org.eclipse.mylyn.internal.tasks.bugs.SupportProvider;
@@ -41,14 +40,7 @@ public class ReportBugOrEnhancementWizard extends Wizard {
 
 		public Object[] getElements(Object inputElement) {
 			if (inputElement instanceof SupportProvider) {
-				Collection<SupportProduct> products = providerManager.getProducts();
-				SupportProvider provider = (SupportProvider) inputElement;
-				List<SupportProduct> providerProducts = new ArrayList<SupportProduct>();
-				for (SupportProduct product : products) {
-					if (provider.equals(product.getProvider()) && product.isInstalled()) {
-						providerProducts.add(product);
-					}
-				}
+				List<SupportProduct> providerProducts = getProdcuts(inputElement);
 				return providerProducts.toArray();
 			} else if (input == inputElement) {
 				List<AbstractSupportElement> elements = new ArrayList<AbstractSupportElement>();
@@ -58,6 +50,18 @@ public class ReportBugOrEnhancementWizard extends Wizard {
 			} else {
 				return new Object[0];
 			}
+		}
+
+		private List<SupportProduct> getProdcuts(Object inputElement) {
+			Collection<SupportProduct> products = providerManager.getProducts();
+			SupportProvider provider = (SupportProvider) inputElement;
+			List<SupportProduct> providerProducts = new ArrayList<SupportProduct>();
+			for (SupportProduct product : products) {
+				if (provider.equals(product.getProvider()) && product.isInstalled()) {
+					providerProducts.add(product);
+				}
+			}
+			return providerProducts;
 		}
 
 		public void dispose() {
@@ -87,23 +91,28 @@ public class ReportBugOrEnhancementWizard extends Wizard {
 
 	@Override
 	public boolean canFinish() {
-		return getSelectedElement() != null;
+		return getSelectedElement() instanceof SupportProduct;
 	}
 
 	public AbstractSupportElement getSelectedElement() {
-		IWizardPage page = getPages()[getPageCount() - 1];
-		return ((SelectSupportElementPage) page).getSelectedElement();
+		IWizardPage page = getContainer().getCurrentPage();
+		if (page != null) {
+			return ((SelectSupportElementPage) page).getSelectedElement();
+		}
+		return null;
 	}
 
 	@Override
 	public boolean performFinish() {
-		final AbstractSupportElement bundles = getSelectedElement();
-		Assert.isNotNull(bundles);
+		final AbstractSupportElement product = getSelectedElement();
+		if (!(product instanceof SupportProduct)) {
+			return false;
+		}
 
 		// delay run this until after the dialog has been closed
 		getShell().getDisplay().asyncExec(new Runnable() {
 			public void run() {
-				TasksBugsPlugin.getTaskErrorReporter().handle(new FeatureStatus(bundles.getId(), new IBundleGroup[0]));
+				TasksBugsPlugin.getTaskErrorReporter().handle(new FeatureStatus((IProduct) product));
 			}
 		});
 

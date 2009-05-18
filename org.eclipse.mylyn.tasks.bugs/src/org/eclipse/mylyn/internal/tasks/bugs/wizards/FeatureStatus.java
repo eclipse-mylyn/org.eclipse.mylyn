@@ -11,24 +11,24 @@
 
 package org.eclipse.mylyn.internal.tasks.bugs.wizards;
 
-import org.eclipse.core.runtime.IBundleGroup;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.internal.provisional.tasks.bugs.IProduct;
 
 /**
  * @author Steffen Pingel
  */
 public class FeatureStatus extends Status {
 
-	private final IBundleGroup[] bundleGroups;
+	private final IProduct product;
 
-	public FeatureStatus(String id, IBundleGroup[] bundleGroups) {
-		super(IStatus.INFO, id, ""); //$NON-NLS-1$
-		this.bundleGroups = bundleGroups;
+	public FeatureStatus(IProduct product) {
+		super(IStatus.INFO, product.getId(), ""); //$NON-NLS-1$
+		this.product = product;
 	}
 
-	public IBundleGroup[] getBundleGroup() {
-		return bundleGroups;
+	public IProduct getProduct() {
+		return product;
 	}
 
 }

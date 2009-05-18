@@ -11,6 +11,10 @@
 
 package org.eclipse.mylyn.internal.tasks.bugs;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.mylyn.internal.provisional.tasks.bugs.IProduct;
 import org.eclipse.mylyn.internal.provisional.tasks.bugs.IProvider;
 
 /**
@@ -18,7 +22,9 @@ import org.eclipse.mylyn.internal.provisional.tasks.bugs.IProvider;
  */
 public class SupportProvider extends AbstractSupportElement implements IProvider {
 
-	SupportCategory category;
+	private SupportCategory category;
+
+	private List<IProduct> products;
 
 	public SupportProvider() {
 	}
@@ -29,6 +35,23 @@ public class SupportProvider extends AbstractSupportElement implements IProvider
 
 	public void setCategory(SupportCategory category) {
 		this.category = category;
+	}
+
+	public void add(IProduct provider) {
+		if (products == null) {
+			products = new ArrayList<IProduct>();
+		}
+		products.add(provider);
+	}
+
+	public void remove(IProduct provider) {
+		if (products != null) {
+			products.remove(provider);
+		}
+	}
+
+	public List<IProduct> getProducts() {
+		return new ArrayList<IProduct>(products);
 	}
 
 }

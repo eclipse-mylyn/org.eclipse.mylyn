@@ -36,7 +36,10 @@ public class DefaultTaskContributor extends AbstractTaskContributor {
 
 	@Override
 	public void process(ITaskContribution contribution) {
-		contribution.appendToDescription(getDescription(contribution.getStatus()));
+		String description = getDescription(contribution.getStatus());
+		if (description != null) {
+			contribution.appendToDescription(description);
+		}
 	}
 
 	public void appendErrorDetails(StringBuilder sb, IStatus status, Date date) {
@@ -72,32 +75,34 @@ public class DefaultTaskContributor extends AbstractTaskContributor {
 
 	public String getDescription(IStatus status) {
 		if (status instanceof FeatureStatus) {
-			StringBuilder sb = new StringBuilder();
-			sb.append("\n\n\n"); //$NON-NLS-1$
-			sb.append(Messages.DefaultTaskContributor_INSTALLED_FEATURES_AND_PLUGINS);
-			IBundleGroup[] bundleGroups = ((FeatureStatus) status).getBundleGroup();
-			for (IBundleGroup bundleGroup : bundleGroups) {
-				sb.append(bundleGroup.getIdentifier());
-				sb.append(" "); //$NON-NLS-1$
-				sb.append(bundleGroup.getVersion());
-				sb.append("\n"); //$NON-NLS-1$
+			SupportProduct product = (SupportProduct) ((FeatureStatus) status).getProduct();
+			if (product.getBundleGroup() != null) {
+				StringBuilder sb = new StringBuilder();
+				sb.append("\n\n\n"); //$NON-NLS-1$
+				sb.append(Messages.DefaultTaskContributor_INSTALLED_FEATURES_AND_PLUGINS);
+				for (IBundleGroup bundleGroup : new IBundleGroup[] { product.getBundleGroup() }) {
+					sb.append(bundleGroup.getIdentifier());
+					sb.append(" "); //$NON-NLS-1$
+					sb.append(bundleGroup.getVersion());
+					sb.append("\n"); //$NON-NLS-1$
 
-				Bundle[] bundles = bundleGroup.getBundles();
-				if (bundles != null) {
-					for (Bundle bundle : bundles) {
-						sb.append("  "); //$NON-NLS-1$
-						sb.append(bundle.getSymbolicName());
-						String version = (String) bundle.getHeaders().get(
-								Messages.DefaultTaskContributor_Bundle_Version);
-						if (version != null) {
-							sb.append(" "); //$NON-NLS-1$
-							sb.append(version);
+					Bundle[] bundles = bundleGroup.getBundles();
+					if (bundles != null) {
+						for (Bundle bundle : bundles) {
+							sb.append("  "); //$NON-NLS-1$
+							sb.append(bundle.getSymbolicName());
+							String version = (String) bundle.getHeaders().get(
+									Messages.DefaultTaskContributor_Bundle_Version);
+							if (version != null) {
+								sb.append(" "); //$NON-NLS-1$
+								sb.append(version);
+							}
+							sb.append("\n"); //$NON-NLS-1$
 						}
-						sb.append("\n"); //$NON-NLS-1$
 					}
 				}
+				return sb.toString();
 			}
-			return sb.toString();
 		} else if (status instanceof ErrorLogStatus) {
 			ErrorLogStatus errorLogStatus = (ErrorLogStatus) status;
 			StringBuilder sb = new StringBuilder();
@@ -122,6 +127,7 @@ public class DefaultTaskContributor extends AbstractTaskContributor {
 			}
 			return sb.toString();
 		}
+		return null;
 	}
 
 	private String getSeverityText(int severity) {
