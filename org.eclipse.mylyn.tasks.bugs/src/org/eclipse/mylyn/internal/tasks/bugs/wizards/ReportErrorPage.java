@@ -144,7 +144,11 @@ public class ReportErrorPage extends WizardPage {
 
 	private String getLabel(AttributeTaskMapper contribution) {
 		IProduct product = contribution.getProduct();
-		return NLS.bind("{0} - {1}", product.getProvider().getName(), product.getName());
+		if (product.getName() != null) {
+			return NLS.bind("{0} - {1}", product.getProvider().getName(), product.getName());
+		} else {
+			return product.getProvider().getName();
+		}
 	}
 
 	@Override
