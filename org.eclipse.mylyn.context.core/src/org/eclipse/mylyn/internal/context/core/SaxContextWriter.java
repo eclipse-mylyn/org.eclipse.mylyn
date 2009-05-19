@@ -69,7 +69,8 @@ public class SaxContextWriter implements IInteractionContextWriter {
 	}
 
 	private static class InteractionContextInputSource extends InputSource {
-		private IInteractionContext context;
+
+		private final IInteractionContext context;
 
 		public InteractionContextInputSource(IInteractionContext context) {
 			this.context = context;
@@ -79,9 +80,6 @@ public class SaxContextWriter implements IInteractionContextWriter {
 			return this.context;
 		}
 
-		public void setContext(InteractionContext context) {
-			this.context = context;
-		}
 	}
 
 	private class SaxWriter implements XMLReader {
