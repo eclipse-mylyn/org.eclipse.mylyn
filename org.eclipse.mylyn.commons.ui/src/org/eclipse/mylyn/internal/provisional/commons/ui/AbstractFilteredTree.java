@@ -35,7 +35,7 @@ import org.eclipse.ui.dialogs.PatternFilter;
 /**
  * @author Mik Kersten
  */
-public abstract class AbstractFilteredTree extends FilteredTree {
+public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 
 	private static final int filterWidth = 69;
 
@@ -102,23 +102,48 @@ public abstract class AbstractFilteredTree extends FilteredTree {
 
 	@Override
 	protected Composite createFilterControls(Composite parent) {
+		Composite newParent = parent;
+
 		GridLayout gridLayout = new GridLayout(4, false);
 		gridLayout.marginWidth = 0;
-		gridLayout.marginHeight = 2;
+		gridLayout.marginHeight = 0;
+		gridLayout.marginTop = 3;
+		gridLayout.marginBottom = 3;
 		gridLayout.verticalSpacing = 0;
+		if (useNewLook) {
+			newParent = new Composite(parent.getParent(), SWT.NONE);
+			gridLayout.numColumns = 3;
+			newParent.setLayout(gridLayout);
+
+			newParent.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER));
+
+			parent.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER));
+			gridLayout = new GridLayout(3, false);
+			gridLayout.marginWidth = 0;
+			gridLayout.marginHeight = 0;
+			gridLayout.horizontalSpacing = 0;
+			gridLayout.verticalSpacing = 0;
+		}
 		parent.setLayout(gridLayout);
 
-		Label label = new Label(parent, SWT.NONE);
-		label.setText(LABEL_FIND);
-
-		// from super
-		createFilterText(parent);
-		createClearText(parent);
-		if (filterToolBar != null) {
-			filterToolBar.update(false);
-			// initially there is no text to clear
-			filterToolBar.getControl().setVisible(false);
+		if (useNewLook) {
+			Label label = new Label(newParent, SWT.NONE);
+			label.setText(LABEL_FIND);
+			parent.setParent(newParent);
+		} else {
+			Label label = new Label(parent, SWT.NONE);
+			label.setText(LABEL_FIND);
 		}
+
+//		// from super
+//		createFilterText(parent);
+//		createClearText(parent);
+//		if (filterToolBar != null) {
+//			filterToolBar.update(false);
+//			// initially there is no text to clear
+//			filterToolBar.getControl().setVisible(false);
+//		}
+		super.createFilterControls(parent);
 
 		GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, false);
 		gd.minimumWidth = filterWidth;
@@ -133,8 +158,17 @@ public abstract class AbstractFilteredTree extends FilteredTree {
 			}
 		});
 
-		Composite superComposite = new Composite(parent, SWT.NONE);
+		Composite superComposite;
+		if (useNewLook) {
+			superComposite = new Composite(newParent, SWT.NONE);
+		} else {
+			superComposite = new Composite(parent, SWT.NONE);
+		}
 		GridLayout superLayout = new GridLayout(4, false);
+		superLayout.marginWidth = 0;
+		superLayout.marginHeight = 0;
+		superLayout.horizontalSpacing = 0;
+		superLayout.verticalSpacing = 0;
 		GridData superLayoutData = new GridData(SWT.LEFT, SWT.CENTER, true, false);
 		superComposite.setLayout(superLayout);
 		superComposite.setLayoutData(superLayoutData);
