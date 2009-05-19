@@ -46,6 +46,7 @@ public class SearchResultsLabelProvider extends TaskElementLabelProvider {
 					for (ViewerFilter filter : filters) {
 						if (!filter.select(viewer, object, child)) {
 							filtered++;
+							break; //don't count a child more the once
 						}
 					}
 				}
