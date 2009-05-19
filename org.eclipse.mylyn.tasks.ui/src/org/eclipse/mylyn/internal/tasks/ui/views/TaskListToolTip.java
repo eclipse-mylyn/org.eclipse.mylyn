@@ -11,8 +11,6 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
-import com.ibm.icu.text.DateFormat;
-import com.ibm.icu.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -21,9 +19,9 @@ import java.util.List;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.window.ToolTip;
 import org.eclipse.mylyn.commons.core.DateUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.provisional.commons.ui.GradientToolTip;
 import org.eclipse.mylyn.internal.provisional.commons.ui.ScalingHyperlink;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
@@ -73,13 +71,16 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.widgets.Widget;
 
+import com.ibm.icu.text.DateFormat;
+import com.ibm.icu.text.SimpleDateFormat;
+
 /**
  * @author Mik Kersten
  * @author Eric Booth
  * @author Leo Dos Santos - multi-monitor support
  * @author Steffen Pingel
  */
-public class TaskListToolTip extends ToolTip {
+public class TaskListToolTip extends GradientToolTip {
 
 	private final static int MAX_TEXT_WIDTH = 300;
 
@@ -436,7 +437,7 @@ public class TaskListToolTip extends ToolTip {
 	}
 
 	@Override
-	protected Composite createToolTipContentArea(Event event, Composite parent) {
+	protected Composite createToolTipArea(Event event, Composite parent) {
 		assert currentTipElement != null;
 
 		Composite composite = createToolTipContentAreaComposite(parent);
