@@ -48,6 +48,7 @@ import org.eclipse.mylyn.internal.discovery.ui.DiscoveryUi;
 import org.eclipse.mylyn.internal.discovery.ui.util.DiscoveryCategoryComparator;
 import org.eclipse.mylyn.internal.discovery.ui.util.DiscoveryUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.ACC;
 import org.eclipse.swt.accessibility.AccessibleAdapter;
@@ -90,8 +91,11 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Scrollable;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.WorkbenchJob;
+import org.eclipse.ui.themes.IThemeManager;
 
 /**
  * The main wizard page that allows users to select connectors that they wish to install.
@@ -138,6 +142,10 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 
 	private Cursor handCursor;
 
+	private Color colorCategoryGradientStart;
+
+	private Color colorCategoryGradientEnd;
+
 	public ConnectorDiscoveryWizardMainPage() {
 		super(ConnectorDiscoveryWizardMainPage.class.getSimpleName());
 		setTitle(org.eclipse.mylyn.internal.discovery.ui.wizards.Messages.ConnectorDiscoveryWizardMainPage_connectorDiscovery);
@@ -163,102 +171,115 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 			GridDataFactory.fillDefaults().grab(true, false).applyTo(header);
 
 //			 TODO: refresh button?
-
-			if (getWizard().isShowConnectorDescriptorKindFilter()) { // filter buttons
-				Composite checkboxContainer = new Composite(header, SWT.NULL);
-				GridDataFactory.fillDefaults().grab(true, false).applyTo(checkboxContainer);
-				GridLayoutFactory.fillDefaults().numColumns(ConnectorDescriptorKind.values().length + 1).applyTo(
-						checkboxContainer);
-				Label label = new Label(checkboxContainer, SWT.NULL);
-				label.setText(org.eclipse.mylyn.internal.discovery.ui.wizards.Messages.ConnectorDiscoveryWizardMainPage_filterLabel);
-				for (final ConnectorDescriptorKind kind : ConnectorDescriptorKind.values()) {
-					final Button checkbox = new Button(checkboxContainer, SWT.CHECK);
-					checkbox.setSelection(getWizard().isVisible(kind));
-					checkbox.setText(getFilterLabel(kind));
-					checkbox.addSelectionListener(new SelectionListener() {
-						public void widgetSelected(SelectionEvent e) {
-							boolean selection = checkbox.getSelection();
-							getWizard().setVisibility(kind, selection);
-							connectorDescriptorKindVisibilityUpdated();
-						}
-
-						public void widgetDefaultSelected(SelectionEvent e) {
-							widgetSelected(e);
-						}
-					});
-				}
-			}
-
-			if (getWizard().isShowConnectorDescriptorTextFilter()) {
-				Composite filterContainer;
-				boolean nativeSearch = useNativeSearchField(header);
-				if (nativeSearch) {
-					filterContainer = new Composite(header, SWT.NULL);
-				} else {
-					filterContainer = new Composite(header, SWT.BORDER);
-					filterContainer.setBackground(header.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
-				}
+			if (getWizard().isShowConnectorDescriptorKindFilter() || getWizard().isShowConnectorDescriptorTextFilter()) {
+				Composite filterContainer = new Composite(header, SWT.NULL);
 				GridDataFactory.fillDefaults().grab(true, false).applyTo(filterContainer);
-				GridLayoutFactory.fillDefaults().numColumns(2).applyTo(filterContainer);
 
-				if (nativeSearch) {
-					filterText = new Text(filterContainer, SWT.SINGLE | SWT.BORDER | SWT.SEARCH | SWT.ICON_CANCEL);
-				} else {
-					filterText = new Text(filterContainer, SWT.SINGLE);
+				int numColumns = 1; // 1 for label
+				if (getWizard().isShowConnectorDescriptorKindFilter()) {
+					numColumns += ConnectorDescriptorKind.values().length;
 				}
+				if (getWizard().isShowConnectorDescriptorTextFilter()) {
+					++numColumns;
+				}
+				GridLayoutFactory.fillDefaults().numColumns(numColumns).applyTo(filterContainer);
+				Label label = new Label(filterContainer, SWT.NULL);
+				label.setText(org.eclipse.mylyn.internal.discovery.ui.wizards.Messages.ConnectorDiscoveryWizardMainPage_filterLabel);
 
-				filterText.setText(initialText);
-				filterText.addFocusListener(new FocusAdapter() {
-					@Override
-					public void focusGained(FocusEvent e) {
-						Display display = filterText.getDisplay();
-						display.asyncExec(new Runnable() {
-							public void run() {
-								if (!filterText.isDisposed()) {
-									if (initialText.equals(filterText.getText().trim())) {
-										filterText.selectAll();
+				if (getWizard().isShowConnectorDescriptorTextFilter()) {
+					Composite textFilterContainer;
+					boolean nativeSearch = useNativeSearchField(header);
+					if (nativeSearch) {
+						textFilterContainer = new Composite(filterContainer, SWT.NULL);
+					} else {
+						textFilterContainer = new Composite(filterContainer, SWT.BORDER);
+						textFilterContainer.setBackground(header.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+					}
+					GridDataFactory.fillDefaults().grab(true, false).applyTo(textFilterContainer);
+					GridLayoutFactory.fillDefaults().numColumns(2).applyTo(textFilterContainer);
+
+					if (nativeSearch) {
+						filterText = new Text(textFilterContainer, SWT.SINGLE | SWT.BORDER | SWT.SEARCH
+								| SWT.ICON_CANCEL);
+					} else {
+						filterText = new Text(textFilterContainer, SWT.SINGLE);
+					}
+
+					filterText.setText(initialText);
+					filterText.addFocusListener(new FocusAdapter() {
+						@Override
+						public void focusGained(FocusEvent e) {
+							Display display = filterText.getDisplay();
+							display.asyncExec(new Runnable() {
+								public void run() {
+									if (!filterText.isDisposed()) {
+										if (initialText.equals(filterText.getText().trim())) {
+											filterText.selectAll();
+										}
 									}
 								}
-							}
-						});
-					}
+							});
+						}
 
-					@Override
-					public void focusLost(FocusEvent e) {
-						if (filterText.getText().trim().length() == 0) {
-							filterText.setText(initialText);
-						}
-					}
-				});
-				filterText.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseDown(MouseEvent e) {
-						if (filterText.getText().equals(initialText)) {
-							clearFilterText();
-						}
-					}
-				});
-				filterText.addModifyListener(new ModifyListener() {
-					public void modifyText(ModifyEvent e) {
-						filterTextChanged();
-					}
-				});
-				if (nativeSearch) {
-					filterText.addSelectionListener(new SelectionAdapter() {
 						@Override
-						public void widgetDefaultSelected(SelectionEvent e) {
-							if (e.detail == SWT.ICON_CANCEL) {
+						public void focusLost(FocusEvent e) {
+							if (filterText.getText().trim().length() == 0) {
+								filterText.setText(initialText);
+							}
+						}
+					});
+					filterText.addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseDown(MouseEvent e) {
+							if (filterText.getText().equals(initialText)) {
 								clearFilterText();
 							}
 						}
 					});
-					GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(filterText);
-				} else {
-					GridDataFactory.fillDefaults().grab(true, false).applyTo(filterText);
-					clearFilterTextControl = createClearFilterTextControl(filterContainer, filterText);
-					clearFilterTextControl.setVisible(false);
+					filterText.addModifyListener(new ModifyListener() {
+						public void modifyText(ModifyEvent e) {
+							filterTextChanged();
+						}
+					});
+					if (nativeSearch) {
+						filterText.addSelectionListener(new SelectionAdapter() {
+							@Override
+							public void widgetDefaultSelected(SelectionEvent e) {
+								if (e.detail == SWT.ICON_CANCEL) {
+									clearFilterText();
+								}
+							}
+						});
+						GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(filterText);
+					} else {
+						GridDataFactory.fillDefaults().grab(true, false).applyTo(filterText);
+						clearFilterTextControl = createClearFilterTextControl(textFilterContainer, filterText);
+						clearFilterTextControl.setVisible(false);
+					}
 				}
+
+				if (getWizard().isShowConnectorDescriptorKindFilter()) { // filter buttons
+
+					for (final ConnectorDescriptorKind kind : ConnectorDescriptorKind.values()) {
+						final Button checkbox = new Button(filterContainer, SWT.CHECK);
+						checkbox.setSelection(getWizard().isVisible(kind));
+						checkbox.setText(getFilterLabel(kind));
+						checkbox.addSelectionListener(new SelectionListener() {
+							public void widgetSelected(SelectionEvent e) {
+								boolean selection = checkbox.getSelection();
+								getWizard().setVisibility(kind, selection);
+								connectorDescriptorKindVisibilityUpdated();
+							}
+
+							public void widgetDefaultSelected(SelectionEvent e) {
+								widgetSelected(e);
+							}
+						});
+					}
+				}
+
 			}
+
 		}
 		{ // container
 			body = new Composite(container, SWT.NULL);
@@ -459,6 +480,8 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		h2Font = null;
 		infoImage = null;
 		handCursor = null;
+		colorCategoryGradientStart = null;
+		colorCategoryGradientEnd = null;
 	}
 
 	public void createBodyContents() {
@@ -516,12 +539,21 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 	}
 
 	private void initializeColors() {
+		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
 		if (colorWhite == null) {
 			ColorRegistry colorRegistry = JFaceResources.getColorRegistry();
 			if (!colorRegistry.hasValueFor(COLOR_WHITE)) {
 				colorRegistry.put(COLOR_WHITE, new RGB(255, 255, 255));
 			}
 			colorWhite = colorRegistry.get(COLOR_WHITE);
+		}
+		if (colorCategoryGradientStart == null) {
+			colorCategoryGradientStart = themeManager.getCurrentTheme().getColorRegistry().get(
+					CommonThemes.COLOR_CATEGORY_GRADIENT_START);
+			disposables.add(colorCategoryGradientStart);
+			colorCategoryGradientEnd = themeManager.getCurrentTheme().getColorRegistry().get(
+					CommonThemes.COLOR_CATEGORY_GRADIENT_END);
+			disposables.add(colorCategoryGradientEnd);
 		}
 	}
 
@@ -551,11 +583,12 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 	}
 
 	private void createDiscoveryContents(Composite container) {
-		GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(false).margins(3, 3).applyTo(container);
 
 		Color background = container.getBackground();
 
 		if (discovery == null || isEmpty(discovery)) {
+			GridLayoutFactory.fillDefaults().margins(5, 5).applyTo(container);
+
 			boolean atLeastOneKindFiltered = false;
 			for (ConnectorDescriptorKind kind : ConnectorDescriptorKind.values()) {
 				if (!getWizard().isVisible(kind)) {
@@ -587,17 +620,27 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 			}
 			GridDataFactory.fillDefaults().grab(true, false).hint(100, SWT.DEFAULT).applyTo(helpTextControl);
 		} else {
+			GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(false).spacing(0, 0).applyTo(container);
+
 			List<DiscoveryCategory> categories = new ArrayList<DiscoveryCategory>(discovery.getCategories());
 			Collections.sort(categories, new DiscoveryCategoryComparator());
 
+			Composite categoryChildrenContainer = null;
 			for (DiscoveryCategory category : categories) {
 				if (isEmpty(category)) {
 					// don't add empty categories
 					continue;
 				}
 				{ // category header
-					Label iconLabel = new Label(container, SWT.NULL);
-					configureLook(iconLabel, background);
+					Composite categoryHeaderContainer = new Composite(container, SWT.NULL);
+					GridDataFactory.fillDefaults().span(2, 1).applyTo(categoryHeaderContainer);
+					GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).equalWidth(false).applyTo(
+							categoryHeaderContainer);
+
+					paintGradient(categoryHeaderContainer);
+
+					Label iconLabel = new Label(categoryHeaderContainer, SWT.NO_BACKGROUND);
+//					configureLook(iconLabel, background);
 					if (category.getIcon() != null) {
 						Image image = computeIconImage(category.getSource(), category.getIcon());
 						if (image != null) {
@@ -606,32 +649,37 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 					}
 					GridDataFactory.swtDefaults().align(SWT.CENTER, SWT.BEGINNING).span(1, 2).applyTo(iconLabel);
 
-					Label nameLabel = new Label(container, SWT.NULL);
-					configureLook(nameLabel, background);
+					Label nameLabel = new Label(categoryHeaderContainer, SWT.NO_BACKGROUND);
+//					configureLook(nameLabel, background);
 					nameLabel.setFont(h1Font);
 					nameLabel.setText(category.getName());
 					GridDataFactory.fillDefaults().grab(true, false).applyTo(nameLabel);
 
-					Label description = new Label(container, SWT.NULL | SWT.WRAP);
-					configureLook(description, background);
+					Label description = new Label(categoryHeaderContainer, SWT.NO_BACKGROUND | SWT.WRAP);
+//					configureLook(description, background);
 					GridDataFactory.fillDefaults().grab(true, false).hint(100, SWT.DEFAULT).applyTo(description);
 					description.setText(category.getDescription());
 				}
 
-				Composite categoryContainer = new Composite(container, SWT.NULL);
-				configureLook(categoryContainer, background);
-				GridDataFactory.fillDefaults().span(2, 1).grab(true, false).indent(0, 5).applyTo(categoryContainer);
-				categoryContainer.setLayout(new GridLayout(1, false));
+				categoryChildrenContainer = new Composite(container, SWT.NULL);
+				configureLook(categoryChildrenContainer, background);
+				GridDataFactory.fillDefaults().span(2, 1).grab(true, false).applyTo(categoryChildrenContainer);
+				GridLayoutFactory.fillDefaults().spacing(0, 0).applyTo(categoryChildrenContainer);
 
-				Composite border = new Composite(categoryContainer, SWT.NULL);
-				GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 1).applyTo(border);
-				GridLayoutFactory.fillDefaults().applyTo(border);
-				border.addPaintListener(new ConnectorBorderPaintListener());
+				int numChildren = 0;
 				for (final DiscoveryConnector connector : category.getConnectors()) {
 					if (isFiltered(connector)) {
 						continue;
 					}
-					Composite connectorContainer = new Composite(categoryContainer, SWT.NULL);
+
+					if (++numChildren > 1) {
+						Composite border = new Composite(categoryChildrenContainer, SWT.NULL);
+						GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 1).applyTo(border);
+						GridLayoutFactory.fillDefaults().applyTo(border);
+						border.addPaintListener(new ConnectorBorderPaintListener());
+					}
+
+					Composite connectorContainer = new Composite(categoryChildrenContainer, SWT.NULL);
 					configureLook(connectorContainer, background);
 					GridDataFactory.fillDefaults().grab(true, false).applyTo(connectorContainer);
 					GridLayout categoryLayout = new GridLayout(3, false);
@@ -702,17 +750,53 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 					}
 					description.setText(descriptionText.replaceAll("(\\r\\n)|\\n|\\r", " ")); //$NON-NLS-1$ //$NON-NLS-2$
 					description.addMouseListener(selectMouseListener);
-
-					border = new Composite(categoryContainer, SWT.NULL);
-					GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 1).applyTo(border);
-					GridLayoutFactory.fillDefaults().applyTo(border);
-					border.addPaintListener(new ConnectorBorderPaintListener());
-
 				}
 			}
+			// last one gets a border
+			Composite border = new Composite(categoryChildrenContainer, SWT.NULL);
+			GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 1).applyTo(border);
+			GridLayoutFactory.fillDefaults().applyTo(border);
+			border.addPaintListener(new ConnectorBorderPaintListener());
 		}
 		container.layout(true);
 		container.redraw();
+	}
+
+	private void paintGradient(final Scrollable container) {
+		container.addPaintListener(new PaintListener() {
+			public void paintControl(PaintEvent event) {
+				Scrollable scrollable = (Scrollable) event.widget;
+				GC gc = event.gc;
+
+				Rectangle area = scrollable.getClientArea();
+
+				/* Draw Gradient Rectangle */
+				Color oldForeground = gc.getForeground();
+				Color oldBackground = gc.getBackground();
+
+				gc.setForeground(colorCategoryGradientEnd);
+				gc.drawLine(0, area.y, area.width, area.y);
+
+				gc.setForeground(colorCategoryGradientStart);
+				gc.setBackground(colorCategoryGradientEnd);
+
+				// gc.setForeground(categoryGradientStart);
+				// gc.setBackground(categoryGradientEnd);
+				// gc.setForeground(new Clr(Display.getCurrent(), 255, 0, 0));
+
+				gc.fillGradientRectangle(0, area.y + 1, area.width, area.height, true);
+
+				/* Bottom Line */
+				// gc.setForeground();
+				gc.setForeground(colorCategoryGradientEnd);
+				gc.drawLine(0, area.y + area.height - 1, area.width, area.y + area.height - 1);
+
+				gc.setForeground(oldForeground);
+				gc.setBackground(oldBackground);
+				/* Mark as Background being handled */
+//				event.detail &= ~SWT.BACKGROUND;
+			}
+		});
 	}
 
 	private void configureLook(Control control, Color background) {
@@ -725,8 +809,9 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		Listener listener = new Listener() {
 			public void handleEvent(Event event) {
 				switch (event.type) {
-				case SWT.Dispose:
 				case SWT.KeyDown:
+					event.doit = false;
+				case SWT.Dispose:
 				case SWT.MouseWheel:
 					toolTip.hide();
 					break;
@@ -757,6 +842,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 			public void handleEvent(Event event) {
 				switch (event.type) {
 				case SWT.KeyDown:
+					event.doit = false;
 				case SWT.MouseWheel:
 					toolTip.hide();
 					break;
@@ -787,6 +873,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		control.addListener(SWT.MouseExit, listener);
 		control.addListener(SWT.MouseDown, listener);
 		control.addListener(SWT.MouseWheel, listener);
+		control.addListener(SWT.KeyDown, listener);
 		if (control instanceof Composite) {
 			for (Control child : ((Composite) control).getChildren()) {
 				hookRecursively(child, listener);

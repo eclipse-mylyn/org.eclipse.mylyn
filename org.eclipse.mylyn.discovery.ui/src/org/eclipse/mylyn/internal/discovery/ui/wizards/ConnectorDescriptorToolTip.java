@@ -32,6 +32,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
@@ -54,7 +55,7 @@ class ConnectorDescriptorToolTip extends ToolTip {
 	}
 
 	@Override
-	protected Composite createToolTipContentArea(Event event, Composite parent) {
+	protected Composite createToolTipContentArea(Event event, final Composite parent) {
 		parent.setBackground(background);
 		GridLayoutFactory.fillDefaults().applyTo(parent);
 
@@ -127,7 +128,15 @@ class ConnectorDescriptorToolTip extends ToolTip {
 				});
 			}
 		}
-
+		// hack: cause the tooltip to gain focus so that we can capture the escape key
+		//       this must be done async since the tooltip is not yet visible.
+		Display.getCurrent().asyncExec(new Runnable() {
+			public void run() {
+				if (!parent.isDisposed()) {
+					parent.setFocus();
+				}
+			}
+		});
 		return container;
 	}
 
