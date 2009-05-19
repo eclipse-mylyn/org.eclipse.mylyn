@@ -227,7 +227,6 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		toolTip = new TaskListToolTip(viewer.getControl());
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	protected TreeViewer createTreeViewer(Composite parent) {
 		// create a filtered tree
