@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.internal.tasks.bugs;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,7 +35,7 @@ public class ProductRepositoryMapping {
 	}
 
 	public Map<String, String> getAttributes() {
-		return Collections.unmodifiableMap(attributes);
+		return attributes;
 	}
 
 	public String getNamespace() {
