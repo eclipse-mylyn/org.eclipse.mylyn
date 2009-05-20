@@ -573,7 +573,7 @@ public final class TaskRepository extends PlatformObject {
 	}
 
 	/**
-	 * @deprecated #getCredentials(AuthenticationType) instead
+	 * @deprecated #getCredentials(AuthenticationType) == null instead
 	 */
 	@Deprecated
 	public boolean isAnonymous() {
