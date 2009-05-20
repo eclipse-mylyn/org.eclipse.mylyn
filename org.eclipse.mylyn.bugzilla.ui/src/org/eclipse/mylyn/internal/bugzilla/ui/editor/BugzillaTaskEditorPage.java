@@ -73,7 +73,8 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 	public BugzillaTaskEditorPage(TaskEditor editor, String connectorKind) {
 		super(editor, connectorKind);
 		this.attributeEditorMap = new HashMap<TaskAttribute, AbstractAttributeEditor>();
-		setNeedsFooter(true);
+		// disabled, see bug 274790
+		//setNeedsFooter(true);
 	}
 
 	@Override
