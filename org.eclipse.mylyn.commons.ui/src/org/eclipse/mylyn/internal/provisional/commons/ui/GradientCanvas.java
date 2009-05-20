@@ -189,31 +189,35 @@ public class GradientCanvas extends Canvas {
 		}
 
 		if (isSeparatorVisible()) {
-			// bg separator
-			if (hasColor(IFormColors.H_BOTTOM_KEYLINE1)) {
-				igc.setForeground(getColor(IFormColors.H_BOTTOM_KEYLINE1));
-			} else {
-				igc.setForeground(getBackground());
-			}
-			if (getSeparatorAlignment() == SWT.BOTTOM) {
-				igc.drawLine(carea.x, carea.height - 2, carea.x + carea.width - 1, carea.height - 2);
-			} else {
-				igc.drawLine(carea.x, 1, carea.x + carea.width - 1, 1);
-			}
-			if (hasColor(IFormColors.H_BOTTOM_KEYLINE2)) {
-				igc.setForeground(getColor(IFormColors.H_BOTTOM_KEYLINE2));
-			} else {
-				igc.setForeground(getForeground());
-			}
-			if (getSeparatorAlignment() == SWT.BOTTOM) {
-				igc.drawLine(carea.x, carea.height - 1, carea.x + carea.width - 1, carea.height - 1);
-			} else {
-				igc.drawLine(carea.x, 0, carea.x + carea.width - 1, 0);
-			}
+			drawSeparator(carea, igc);
 		}
 		igc.dispose();
 		gc.drawImage(buffer, carea.x, carea.y);
 		buffer.dispose();
+	}
+
+	private void drawSeparator(Rectangle carea, GC igc) {
+		// bg separator
+		if (hasColor(IFormColors.H_BOTTOM_KEYLINE1)) {
+			igc.setForeground(getColor(IFormColors.H_BOTTOM_KEYLINE1));
+		} else {
+			igc.setForeground(getBackground());
+		}
+		if (getSeparatorAlignment() == SWT.BOTTOM) {
+			igc.drawLine(carea.x, carea.height - 2, carea.x + carea.width - 1, carea.height - 2);
+		} else {
+			igc.drawLine(carea.x, 1, carea.x + carea.width - 1, 1);
+		}
+		if (hasColor(IFormColors.H_BOTTOM_KEYLINE2)) {
+			igc.setForeground(getColor(IFormColors.H_BOTTOM_KEYLINE2));
+		} else {
+			igc.setForeground(getForeground());
+		}
+		if (getSeparatorAlignment() == SWT.BOTTOM) {
+			igc.drawLine(carea.x, carea.height - 1, carea.x + carea.width - 1, carea.height - 1);
+		} else {
+			igc.drawLine(carea.x, 0, carea.x + carea.width - 1, 0);
+		}
 	}
 
 	private void updateGradientImage() {
@@ -283,6 +287,10 @@ public class GradientCanvas extends Canvas {
 			if (!gradientInfo.vertical && pos < width) {
 				gc.setBackground(getColor(COLOR_BASE_BG));
 				gc.fillRectangle(pos, 0, width - pos, height);
+			}
+
+			if (isSeparatorVisible()) {
+				drawSeparator(getClientArea(), gc);
 			}
 			gc.setForeground(oldForeground);
 		}
