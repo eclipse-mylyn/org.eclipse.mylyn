@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.commons.ui;
 
+import java.lang.reflect.Method;
+
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
@@ -18,7 +20,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
-import org.eclipse.swt.dnd.ImageTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Color;
@@ -811,31 +813,42 @@ public class SelectToolAction extends Action implements IMenuCreator {
 		return null;
 	}
 
-	public Image getClipboardImage() {
+	private Transfer getImageTransfer() {
 		try {
-			Clipboard clipboard = new Clipboard(parent.getShell().getDisplay());
-			ImageTransfer imageTransfer = ImageTransfer.getInstance();
+			Class<?> clazz = Class.forName("org.eclipse.swt.dnd.ImageTransfer"); //$NON-NLS-1$
+			Method method = clazz.getMethod("getInstance"); //$NON-NLS-1$
+			if (method != null) {
+				return (Transfer) method.invoke(null);
+			}
+		} catch (Exception e) {
+			// ignore
+		} catch (LinkageError e) {
+			// ignore
+		}
+		return null;
+	}
+
+	public Image getClipboardImage() {
+		Clipboard clipboard = new Clipboard(parent.getShell().getDisplay());
+		Transfer imageTransfer = getImageTransfer();
+		if (imageTransfer != null) {
 			Object data = clipboard.getContents(imageTransfer);
 			if (data instanceof ImageData) {
 				Image image = new Image(parent.getShell().getDisplay(), (ImageData) data);
 				return image;
 			}
-		} catch (Exception e) {
-			// None
 		}
 		return null;
 	}
 
 	private boolean existImageOnClipboard() {
-		try {
-			Clipboard clipboard = new Clipboard(parent.getShell().getDisplay());
-			ImageTransfer imageTransfer = ImageTransfer.getInstance();
+		Clipboard clipboard = new Clipboard(parent.getShell().getDisplay());
+		Transfer imageTransfer = getImageTransfer();
+		if (imageTransfer != null) {
 			Object data = clipboard.getContents(imageTransfer);
 			if (data instanceof ImageData) {
 				return true;
 			}
-		} catch (Exception e) {
-			// None
 		}
 		return false;
 	}
