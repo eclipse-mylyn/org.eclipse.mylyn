@@ -106,6 +106,10 @@ import org.eclipse.ui.themes.IThemeManager;
  */
 public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 
+	private static final String DEFAULT_DIRECTORY_URL = "http://www.eclipse.org/mylyn/discovery/directory.xml"; //$NON-NLS-1$
+
+	private static final String SYSTEM_PROPERTY_DIRECTORY_URL = "mylyn.discovery.directory"; //$NON-NLS-1$
+
 	private static final String COLOR_WHITE = "white"; //$NON-NLS-1$
 
 	private static Boolean useNativeSearchField;
@@ -550,10 +554,8 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		if (colorCategoryGradientStart == null) {
 			colorCategoryGradientStart = themeManager.getCurrentTheme().getColorRegistry().get(
 					CommonThemes.COLOR_CATEGORY_GRADIENT_START);
-			disposables.add(colorCategoryGradientStart);
 			colorCategoryGradientEnd = themeManager.getCurrentTheme().getColorRegistry().get(
 					CommonThemes.COLOR_CATEGORY_GRADIENT_END);
-			disposables.add(colorCategoryGradientEnd);
 		}
 	}
 
@@ -765,6 +767,9 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 	private void paintGradient(final Scrollable container) {
 		container.addPaintListener(new PaintListener() {
 			public void paintControl(PaintEvent event) {
+				if (colorCategoryGradientEnd == null || colorCategoryGradientStart == null) {
+					return;
+				}
 				Scrollable scrollable = (Scrollable) event.widget;
 				GC gc = event.gc;
 
@@ -993,9 +998,9 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 						ConnectorDiscovery connectorDiscovery = new ConnectorDiscovery();
 						connectorDiscovery.getDiscoveryStrategies().add(new BundleDiscoveryStrategy());
 						RemoteBundleDiscoveryStrategy remoteDiscoveryStrategy = new RemoteBundleDiscoveryStrategy();
-						// FIXME: the discovery directory URL
-						remoteDiscoveryStrategy.setDirectoryUrl(System.getProperty("mylyn.discovery.directory", //$NON-NLS-1$
-								"http://www.eclipse.org/mylyn/discovery/directory.xml")); //$NON-NLS-1$
+
+						remoteDiscoveryStrategy.setDirectoryUrl(System.getProperty(SYSTEM_PROPERTY_DIRECTORY_URL,
+								DEFAULT_DIRECTORY_URL));
 						connectorDiscovery.getDiscoveryStrategies().add(remoteDiscoveryStrategy);
 						connectorDiscovery.setEnvironment(environment);
 						try {

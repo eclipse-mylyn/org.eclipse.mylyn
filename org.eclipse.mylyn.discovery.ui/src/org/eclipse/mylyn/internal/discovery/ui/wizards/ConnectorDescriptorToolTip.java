@@ -20,6 +20,7 @@ import org.eclipse.jface.window.ToolTip;
 import org.eclipse.mylyn.internal.discovery.core.model.AbstractDiscoverySource;
 import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryConnector;
 import org.eclipse.mylyn.internal.discovery.core.model.Overview;
+import org.eclipse.mylyn.internal.provisional.commons.ui.GradientToolTip;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
@@ -41,7 +42,7 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 /**
  * @author David Green
  */
-class ConnectorDescriptorToolTip extends ToolTip {
+class ConnectorDescriptorToolTip extends GradientToolTip {
 
 	private final DiscoveryConnector descriptor;
 
@@ -55,7 +56,7 @@ class ConnectorDescriptorToolTip extends ToolTip {
 	}
 
 	@Override
-	protected Composite createToolTipContentArea(Event event, final Composite parent) {
+	protected Composite createToolTipArea(Event event, final Composite parent) {
 		parent.setBackground(background);
 		GridLayoutFactory.fillDefaults().applyTo(parent);
 

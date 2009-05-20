@@ -11,9 +11,11 @@
 package org.eclipse.mylyn.internal.discovery.ui.wizards;
 
 import java.lang.reflect.InvocationTargetException;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -86,6 +88,29 @@ public class InstallConnectorsJob implements IRunnableWithProgress {
 		monitor.beginTask(Messages.InstallConnectorsJob_task_configuring, totalWork);
 		try {
 			final String profileId = computeProfileId();
+			// verify that we can resolve hostnames
+			// this is a pre-emptive check so that we can provide better error handling
+			// than that provided by P2.
+			{
+				Set<String> hostnames = new HashSet<String>();
+				for (ConnectorDescriptor descriptor : installableConnectors) {
+					URL url = new URL(descriptor.getSiteUrl());
+					String host = url.getHost();
+					if (host != null && host.length() > 0 && hostnames.add(host)) {
+						try {
+							InetAddress.getByName(host);
+						} catch (UnknownHostException e) {
+							throw new CoreException(
+									new Status(
+											IStatus.ERROR,
+											DiscoveryUi.ID_PLUGIN,
+											NLS.bind(
+													"Error resolving hostname {1} for '{0}': please check your Internet connection and try again.",
+													descriptor.getName(), host), e));
+						}
+					}
+				}
+			}
 
 			// Tell p2 that it's okay to use these repositories
 			Set<URL> repositoryURLs = new HashSet<URL>();

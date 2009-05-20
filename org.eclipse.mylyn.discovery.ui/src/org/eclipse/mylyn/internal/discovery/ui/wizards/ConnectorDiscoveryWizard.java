@@ -35,7 +35,6 @@ import org.osgi.framework.Version;
  * 
  * @see InstallConnectorsJob
  * @see ConnectorDiscoveryWizardMainPage
- * 
  * @author David Green
  */
 public class ConnectorDiscoveryWizard extends Wizard {
@@ -85,7 +84,8 @@ public class ConnectorDiscoveryWizard extends Wizard {
 			getContainer().run(true, true, job);
 		} catch (InvocationTargetException e) {
 			IStatus status = new Status(IStatus.ERROR, DiscoveryUi.ID_PLUGIN, NLS.bind(
-					Messages.ConnectorDiscoveryWizard_installProblems, new Object[] { e.getMessage() }), e);
+					Messages.ConnectorDiscoveryWizard_installProblems, new Object[] { e.getCause().getMessage() }),
+					e.getCause());
 			DiscoveryUiUtil.logAndDisplayStatus(Messages.ConnectorDiscoveryWizard_cannotInstall, status);
 		} catch (InterruptedException e) {
 			// canceled
