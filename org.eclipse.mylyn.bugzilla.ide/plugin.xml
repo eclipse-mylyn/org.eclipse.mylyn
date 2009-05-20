@@ -24,8 +24,10 @@
 			</property>
 		</mapping>
 		<mapping namespace="org.eclipse.mylyn.tasks" productId="org.eclipse.mylyn">
-			<property name="component" value="Tasks">
-			</property>
+			<property name="component" value="Tasks"/>
+		</mapping>
+		<mapping namespace="org.eclipse.mylyn.wikitext" productId="org.eclipse.mylyn">
+			<property name="component" value="WikiText"/>
 		</mapping>
 		<product featureId="org.eclipse.pde" id="org.eclipse.pde"
 			providerId="org.eclipse" />
@@ -36,7 +38,7 @@
 		<product featureId="org.eclipse.platform" id="org.eclipse.platform"
 			providerId="org.eclipse" />
 		<mapping namespace="org.eclipse.platform" productId="org.eclipse.platform">
-			<property name="product" value="PDE">
+			<property name="product" value="Platform">
 			</property>
 		</mapping>
 		<product featureId="org.eclipse.cvs" id="org.eclipse.cvs"
@@ -47,6 +49,27 @@
 			</property>
 			<property name="component" value="CVS">
 			</property>
+		</mapping>
+		<product featureId="org.eclipse.jdt" id="org.eclipse.jdt"
+			providerId="org.eclipse" />
+		<mapping namespace="org.eclipse.jdt" productId="org.eclipse.jdt">
+			<property name="product" value="JDT">
+			</property>
+		</mapping>
+		<product id="org.eclipse.epp.package.java" providerId="org.eclipse" featureId="org.eclipse.epp.package.java.feature" />
+		<mapping namespace="org.eclipse.epp.package.java" productId="org.eclipse.epp.package.java">
+			<property name="product" value="EPP"/>
+			<property name="component" value="java-package"/>
+		</mapping>
+		<product id="org.eclipse.epp.usagedata" providerId="org.eclipse" featureId="org.eclipse.epp.usagedata.feature" />
+		<mapping namespace="org.eclipse.epp.package.java" productId="org.eclipse.epp.package.java">
+			<property name="product" value="EPP"/>
+			<property name="component" value="Usage Data Collector"/>
+		</mapping>
+		<product id="org.eclipse.wst.xml_ui" providerId="org.eclipse" featureId="org.eclipse.wst.xml_ui.feature" />
+		<mapping namespace="org.eclipse.wst" productId="org.eclipse.wst.xml_ui">
+			<property name="product" value="Web Tools"/>
+			<property name="component" value="Web Standard Tools"/>
 		</mapping>
 	</extension>
 </plugin>
