@@ -157,6 +157,10 @@ public class CommonImages {
 
 	public static final ImageDescriptor CUT = create(T_TOOL, "cut.gif"); //$NON-NLS-1$
 
+	public static final ImageDescriptor UNDO = create(T_TOOL, "undo_edit.gif"); //$NON-NLS-1$
+
+	public static final ImageDescriptor REDO = create(T_TOOL, "redo_edit.gif"); //$NON-NLS-1$
+
 	public static final ImageDescriptor STATUS_NORMAL = create(T_EVIEW, "status-normal.gif"); //$NON-NLS-1$
 
 	public static final ImageDescriptor STATUS_CONTEXT = create(T_EVIEW, "status-server-context.gif"); //$NON-NLS-1$
