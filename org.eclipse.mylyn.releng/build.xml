@@ -216,7 +216,20 @@
 	</target>
 	
 	<target name="galileo" depends="clean,build,copy-to-archive,sign">
+		<echo>Run 'ant promot-galileo' to update the galileo site.</echo>
+		<echo>Ensure that the mylyn.build file is updated at the same time.</echo>
 		<!-- re-promote signed build -->
+		<!--
+		<antcall target="promote">
+			<param name="todir" value="weekly"/>
+		</antcall>
+		<antcall target="promote-main">
+			<param name="todir" value="galileo"/>
+		</antcall>
+		-->
+	</target>
+
+	<target name="promote-galileo">
 		<antcall target="promote">
 			<param name="todir" value="weekly"/>
 		</antcall>
