@@ -28,6 +28,7 @@ import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IImplicitlyIntersting;
 import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.internal.context.core.CompositeContextElement;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.internal.WorkingSet;
@@ -82,6 +83,28 @@ public class InterestFilter extends ViewerFilter {
 				if (!object.getClass().getName().equals(Object.class.getCanonicalName())) {
 					String handle = bridge.getHandleIdentifier(object);
 					element = ContextCore.getContextManager().getElement(handle);
+
+					// if we can't find the element, check the parent bridge
+					if (element == null
+							|| (element instanceof CompositeContextElement && ((CompositeContextElement) element).getNodes()
+									.isEmpty())) {
+						String parentContentType = bridge.getParentContentType();
+						AbstractContextStructureBridge parentBridge = ContextCore.getStructureBridge(parentContentType);
+						if (parentBridge != null) {
+							String parentHandle = parentBridge.getHandleIdentifier(object);
+							IInteractionElement parentElement = ContextCore.getContextManager()
+									.getElement(parentHandle);
+							if (parentElement != null && isInteresting(parentElement)) {
+								// do a sanity check to make sure that we are trying to display the element
+								// and not some other representation
+								// If this is removed, you can see the undesired behavior of the parent default 
+								// packages showing up in the package explorer
+								Object objectForHandle = parentBridge.getObjectForHandle(parentHandle);
+								return objectForHandle != null && objectForHandle.equals(object);
+							}
+						}
+					}
+
 				} else {
 					return true;
 				}

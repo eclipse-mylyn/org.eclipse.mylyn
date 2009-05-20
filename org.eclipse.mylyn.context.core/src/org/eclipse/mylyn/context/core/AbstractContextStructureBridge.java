@@ -42,6 +42,16 @@ public abstract class AbstractContextStructureBridge {
 	public abstract String getHandleIdentifier(Object object);
 
 	/**
+	 * @since 3.2
+	 * @param allowChildBridgeHandles
+	 *            true if the structure bridge can return the object handle for a child bridge (for the
+	 *            ResourceStructureBridge)
+	 */
+	public String getParentHandle(String handle, boolean allowChildBridgeHandles) {
+		return getParentHandle(handle);
+	}
+
+	/**
 	 * @return The handle identifier of the element that is the parent of this element in the containment hierarchy, or
 	 *         null if no such parent exists.
 	 */

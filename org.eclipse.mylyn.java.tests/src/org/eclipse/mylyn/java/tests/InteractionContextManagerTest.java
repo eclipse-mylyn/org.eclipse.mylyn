@@ -432,7 +432,7 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 		assertEquals(0, context.getAllElements().size());
 		ContextCorePlugin.getContextManager().processInteractionEvent(type1, InteractionEvent.Kind.SELECTION,
 				MOCK_ORIGIN, context);
-		assertEquals(6, context.getAllElements().size());
+		assertEquals(9, context.getAllElements().size());
 		assertEquals(0, ContextCore.getContextManager().getActiveContext().getAllElements().size());
 		ContextCorePlugin.getContextManager().removeGlobalContext(context);
 	}

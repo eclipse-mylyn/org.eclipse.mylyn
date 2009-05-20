@@ -699,8 +699,11 @@ public class InteractionContextManager implements IInteractionContextManager {
 		IInteractionElement element = addInteractionEvent(interactionContext, event);
 		List<IInteractionElement> interestDelta = new ArrayList<IInteractionElement>();
 		if (propagateToParents && !event.getKind().equals(InteractionEvent.Kind.MANIPULATION)) {
+			Set<String> handles = new HashSet<String>();
+			handles.add(element.getHandleIdentifier());
+
 			propegateInterestToParents(interactionContext, event.getKind(), element, previousInterest, decayOffset, 1,
-					interestDelta);
+					interestDelta, event.getOriginId(), null, handles);
 		}
 		if (event.getKind().isUserEvent() && interactionContext instanceof CompositeInteractionContext) {
 			((CompositeInteractionContext) interactionContext).setActiveElement(element);
@@ -886,7 +889,8 @@ public class InteractionContextManager implements IInteractionContextManager {
 			boolean preserveUninteresting, String sourceId, IInteractionContext context) {
 		Set<IInteractionElement> changedElements = new HashSet<IInteractionElement>();
 		boolean manipulated = manipulateInterestForElementHelper(element, increment, forceLandmark,
-				preserveUninteresting, sourceId, context, changedElements);
+				preserveUninteresting, sourceId, context, changedElements, null);
+
 		if (manipulated) {
 			if (preserveUninteresting || increment) {
 				notifyInterestDelta(new ArrayList<IInteractionElement>(changedElements));
@@ -899,13 +903,39 @@ public class InteractionContextManager implements IInteractionContextManager {
 
 	private boolean manipulateInterestForElementHelper(IInteractionElement element, boolean increment,
 			boolean forceLandmark, boolean preserveUninteresting, String sourceId, IInteractionContext context,
-			Set<IInteractionElement> changedElements) {
+			Set<IInteractionElement> changedElements, AbstractContextStructureBridge forcedBridge) {
 		if (element == null || context == null) {
 			return false;
 		}
 		float originalValue = element.getInterest().getValue();
 		float changeValue = 0;
 		AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(element.getContentType());
+
+		// XXX go through each bridge here?
+		// make sure that we manipulate the interest on all bridges and not just the one that the element
+		// maps to
+		Object objectForHandle = bridge.getObjectForHandle(element.getHandleIdentifier());
+		String parentContentType = bridge.getParentContentType();
+		if (parentContentType != null && objectForHandle != null) {
+			AbstractContextStructureBridge parentBridge = ContextCorePlugin.getDefault().getStructureBridge(
+					parentContentType);
+
+			if (parentBridge != null && parentBridge != forcedBridge) {
+				String parentBridgeHandle = parentBridge.getHandleIdentifier(objectForHandle);
+
+				if (parentBridgeHandle != null) {
+					IInteractionElement parentBridgeElement = context.get(parentBridgeHandle);
+					manipulateInterestForElementHelper(parentBridgeElement, increment, forceLandmark,
+							preserveUninteresting, sourceId, context, changedElements, parentBridge);
+				}
+			}
+		}
+
+		if (forcedBridge != null) {
+			// if there is a forced bridge, we should be using it
+			bridge = forcedBridge;
+		}
+
 		if (!increment) {
 			if (element.getInterest().isLandmark() && bridge.canBeLandmark(element.getHandleIdentifier())) {
 				// keep it interesting
@@ -922,7 +952,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 					if (childElement != null /*&& childElement.getInterest().isInteresting()*/
 							&& !childElement.equals(element)) {
 						manipulateInterestForElementHelper(childElement, increment, forceLandmark,
-								preserveUninteresting, sourceId, context, changedElements);
+								preserveUninteresting, sourceId, context, changedElements, forcedBridge);
 					}
 				}
 			}
@@ -1129,10 +1159,16 @@ public class InteractionContextManager implements IInteractionContextManager {
 	 * Policy is that a parent should not have an interest lower than that of one of its children. This meets our goal
 	 * of having them decay no faster than the children while having their interest be proportional to the interest of
 	 * their children.
+	 * 
+	 * @param forcedBridge
+	 *            The structure bridge that we should use. Can be null, then we will automatically select
+	 * @param handles
+	 *            Handles that have already been handled in the propagation
 	 */
 	private void propegateInterestToParents(IInteractionContext interactionContext, InteractionEvent.Kind kind,
 			IInteractionElement node, float previousInterest, float decayOffset, int level,
-			List<IInteractionElement> interestDelta) {
+			List<IInteractionElement> interestDelta, String origin, AbstractContextStructureBridge forcedBridge,
+			Set<String> handles) {
 
 		if (level > MAX_PROPAGATION || node == null || node.getHandleIdentifier() == null
 				|| node.getInterest().getValue() <= 0) {
@@ -1147,18 +1183,63 @@ public class InteractionContextManager implements IInteractionContextManager {
 
 		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault()
 				.getStructureBridge(node.getContentType());
-		String parentHandle = bridge.getParentHandle(node.getHandleIdentifier());
 
-		// check if should use child bridge
-		for (String contentType : ContextCore.getChildContentTypes(bridge.getContentType())) {
-			AbstractContextStructureBridge childBridge = ContextCore.getStructureBridge(contentType);
-			Object resolved = childBridge.getObjectForHandle(parentHandle);
-			if (resolved != null) {
-				AbstractContextStructureBridge canonicalBridge = ContextCore.getStructureBridge(resolved);
-				// HACK: hard-coded resource content type
-				if (!canonicalBridge.getContentType().equals(ContextCore.CONTENT_TYPE_RESOURCE)) {
-					// NOTE: resetting bridge
-					bridge = canonicalBridge;
+		// make sure that we propagate the interest on all bridges and not just the one that the element
+		// maps to
+		Object objectForHandle = bridge.getObjectForHandle(node.getHandleIdentifier());
+		String parentBridgeContentType = bridge.getParentContentType();
+		if (parentBridgeContentType != null && objectForHandle != null) {
+			AbstractContextStructureBridge parentBridge = ContextCorePlugin.getDefault().getStructureBridge(
+					parentBridgeContentType);
+
+			if (parentBridge != null && parentBridge != forcedBridge) {
+				String parentHandle = parentBridge.getHandleIdentifier(objectForHandle);
+
+				if (parentHandle != null) {
+					// make sure that the element for the parent bridge is in the context
+					IInteractionElement parentBridgeElement = interactionContext.get(parentHandle);
+					float parentPreviousInterest = 0;
+					float parentDecayOffset = 0;
+					if (parentBridgeElement != null) {
+						parentPreviousInterest = parentBridgeElement.getInterest().getValue();
+					}
+					if (kind.isUserEvent()) {
+						parentDecayOffset = ensureIsInteresting(interactionContext, parentBridge.getContentType(),
+								parentHandle, parentBridgeElement, parentPreviousInterest);
+					}
+					if (!handles.contains(parentHandle)) {
+						handles.add(parentHandle);
+						parentBridgeElement = addInteractionEvent(interactionContext, new InteractionEvent(
+								InteractionEvent.Kind.PROPAGATION, parentBridge.getContentType(), parentHandle, origin));
+					} else {
+						parentBridgeElement = interactionContext.get(parentHandle);
+					}
+
+					propegateInterestToParents(interactionContext, kind, parentBridgeElement, previousInterest,
+							parentDecayOffset, level, interestDelta, origin, parentBridge, handles);
+				}
+			}
+		}
+
+		// ensure we use the forced bridge if we are given one
+		if (forcedBridge != null) {
+			bridge = forcedBridge;
+		}
+		String parentHandle = bridge.getParentHandle(node.getHandleIdentifier(), false);
+
+		// do not check child bridges if we are using a foced bridge
+		if (forcedBridge == null) {
+			// check if should use child bridge
+			for (String contentType : ContextCore.getChildContentTypes(bridge.getContentType())) {
+				AbstractContextStructureBridge childBridge = ContextCore.getStructureBridge(contentType);
+				Object resolved = childBridge.getObjectForHandle(parentHandle);
+				if (resolved != null) {
+					AbstractContextStructureBridge canonicalBridge = ContextCore.getStructureBridge(resolved);
+					// HACK: hard-coded resource content type
+					if (!canonicalBridge.getContentType().equals(ContextCore.CONTENT_TYPE_RESOURCE)) {
+						// NOTE: resetting bridge
+						bridge = canonicalBridge;
+					}
 				}
 			}
 		}
@@ -1179,7 +1260,13 @@ public class InteractionContextManager implements IInteractionContextManager {
 				InteractionEvent propagationEvent = new InteractionEvent(InteractionEvent.Kind.PROPAGATION,
 						parentContentType, parentHandle, SOURCE_ID_MODEL_PROPAGATION,
 						InteractionContextManager.CONTAINMENT_PROPAGATION_ID, increment);
-				parentElement = addInteractionEvent(interactionContext, propagationEvent);
+				if (!handles.contains(parentHandle)) {
+					handles.add(parentHandle);
+					parentElement = addInteractionEvent(interactionContext, propagationEvent);
+				} else {
+					parentElement = interactionContext.get(parentHandle);
+				}
+
 			}
 
 			// NOTE: this might be redundant
@@ -1187,9 +1274,14 @@ public class InteractionContextManager implements IInteractionContextManager {
 					&& parentElement.getInterest().getValue() < ContextCore.getCommonContextScaling().getInteresting()) {
 				float parentOffset = ContextCore.getCommonContextScaling().getInteresting()
 						- parentElement.getInterest().getValue() + increment;
-				addInteractionEvent(interactionContext, new InteractionEvent(InteractionEvent.Kind.MANIPULATION,
-						parentElement.getContentType(), parentElement.getHandleIdentifier(),
-						SOURCE_ID_DECAY_CORRECTION, parentOffset));
+				if (!handles.contains(parentHandle)) {
+					handles.add(parentHandle);
+					addInteractionEvent(interactionContext, new InteractionEvent(InteractionEvent.Kind.MANIPULATION,
+							parentElement.getContentType(), parentElement.getHandleIdentifier(),
+							SOURCE_ID_DECAY_CORRECTION, parentOffset));
+				} else {
+					parentElement = interactionContext.get(parentElement.getHandleIdentifier());
+				}
 			}
 
 			if (parentElement != null
@@ -1198,7 +1290,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 				interestDelta.add(0, parentElement);
 			}
 			propegateInterestToParents(interactionContext, kind, parentElement, parentPreviousInterest, decayOffset,
-					level, interestDelta);
+					level, interestDelta, origin, forcedBridge, handles);
 		}
 	}
 
