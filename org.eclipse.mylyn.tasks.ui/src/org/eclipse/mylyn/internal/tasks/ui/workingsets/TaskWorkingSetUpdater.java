@@ -34,6 +34,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.monitor.ui.MonitorUi;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.ui.IWorkbenchPage;
@@ -317,7 +318,7 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 	 */
 	public static void applyWorkingSetsToAllWindows(Collection<IWorkingSet> workingSets) {
 		IWorkingSet[] workingSetArray = workingSets.toArray(new IWorkingSet[workingSets.size()]);
-		for (IWorkbenchWindow window : PlatformUI.getWorkbench().getWorkbenchWindows()) {
+		for (IWorkbenchWindow window : MonitorUi.getMonitoredWindows()) {
 			for (IWorkbenchPage page : window.getPages()) {
 				page.setWorkingSets(workingSetArray);
 			}
