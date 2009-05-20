@@ -82,6 +82,10 @@ class Messages extends NLS {
 
 	public static String RemoteBundleDiscoveryStrategy_task_remote_discovery;
 
+	public static String RemoteBundleDiscoveryStrategy_unexpectedError;
+
+	public static String RemoteBundleDiscoveryStrategy_unknown_host_discovery_directory;
+
 	public static String RemoteBundleDiscoveryStrategy_unrecognized_discovery_url;
 	static {
 		// initialize resource bundle

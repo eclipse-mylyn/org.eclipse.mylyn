@@ -14,8 +14,15 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.eclipse.core.internal.registry.ExtensionRegistry;
 import org.eclipse.core.runtime.CoreException;
@@ -25,6 +32,7 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
@@ -102,6 +110,9 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 				if (directory == null) {
 					throw new IllegalStateException();
 				}
+			} catch (UnknownHostException e) {
+				throw new CoreException(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN, NLS.bind(
+						Messages.RemoteBundleDiscoveryStrategy_unknown_host_discovery_directory, e.getMessage()), e));
 			} catch (IOException e) {
 				throw new CoreException(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN,
 						Messages.RemoteBundleDiscoveryStrategy_io_failure_discovery_directory, e));
@@ -116,39 +127,42 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 
 			Map<File, Directory.Entry> bundleFileToDirectoryEntry = new HashMap<File, Directory.Entry>();
 
-			// TODO: multithreaded downloading
-			for (Directory.Entry entry : directory.getEntries()) {
-				String bundleUrl = entry.getLocation();
-				int attempts = 0;
-				for (int attemptCount = 0; attemptCount < maxDiscoveryJarDownloadAttempts; ++attemptCount) {
+			ExecutorService executorService = createExecutorService(directory.getEntries().size());
+			try {
+				List<Future<DownloadBundleJob>> futures = new ArrayList<Future<DownloadBundleJob>>();
+				// submit jobs
+				for (Directory.Entry entry : directory.getEntries()) {
+					futures.add(executorService.submit(new DownloadBundleJob(entry, monitor)));
+				}
+				int futureSize = ticksTenPercent * 4 / directory.getEntries().size();
+				// collect job results
+				for (Future<DownloadBundleJob> job : futures) {
 					try {
-						if (!bundleUrl.startsWith("http://") && !bundleUrl.startsWith("https://")) { //$NON-NLS-1$//$NON-NLS-2$
-							StatusHandler.log(new Status(IStatus.WARNING, DiscoveryCore.ID_PLUGIN, NLS.bind(
-									Messages.RemoteBundleDiscoveryStrategy_unrecognized_discovery_url, bundleUrl)));
-							continue;
+						DownloadBundleJob bundleJob = job.get();
+						if (bundleJob.file != null) {
+							bundleFileToDirectoryEntry.put(bundleJob.file, bundleJob.entry);
 						}
-						String lastPathElement = bundleUrl.lastIndexOf('/') == -1 ? bundleUrl
-								: bundleUrl.substring(bundleUrl.lastIndexOf('/'));
-						File target = File.createTempFile(
-								lastPathElement.replaceAll("^[a-zA-Z0-9_.]", "_") + "_", ".jar", temporaryStorage); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$
-
-						if (monitor.isCanceled()) {
-							return;
+						monitor.worked(futureSize);
+					} catch (ExecutionException e) {
+						Throwable cause = e.getCause();
+						IStatus status;
+						if (cause instanceof CoreException) {
+							status = ((CoreException) cause).getStatus();
+						} else {
+							status = new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN,
+									Messages.RemoteBundleDiscoveryStrategy_unexpectedError, cause);
 						}
-
-						WebUtil.downloadResource(target, new WebLocation(bundleUrl), new SubProgressMonitor(monitor,
-								ticksTenPercent * 4 / directory.getEntries().size()));
-						bundleFileToDirectoryEntry.put(target, entry);
-					} catch (IOException e) {
-						StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN, NLS.bind(
-								Messages.RemoteBundleDiscoveryStrategy_cannot_download_bundle, bundleUrl,
-								e.getMessage()), e));
-						if (isUnknownHostException(e)) {
-							break;
-						}
+						// log errors but continue on
+						StatusHandler.log(status);
+					} catch (InterruptedException e) {
+						monitor.setCanceled(true);
+						return;
 					}
 				}
+			} finally {
+				executorService.shutdownNow();
 			}
+
 			try {
 				registryStrategy = new DiscoveryRegistryStrategy(new File[] { registryCacheFolder },
 						new boolean[] { false }, this);
@@ -171,6 +185,62 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 		} finally {
 			monitor.done();
 		}
+	}
+
+	private class DownloadBundleJob implements Callable<DownloadBundleJob> {
+		private final IProgressMonitor monitor;
+
+		private final Entry entry;
+
+		private File file;
+
+		public DownloadBundleJob(Entry entry, IProgressMonitor monitor) {
+			this.entry = entry;
+			this.monitor = monitor;
+		}
+
+		public DownloadBundleJob call() {
+
+			String bundleUrl = entry.getLocation();
+			for (int attemptCount = 0; attemptCount < maxDiscoveryJarDownloadAttempts; ++attemptCount) {
+				try {
+					if (!bundleUrl.startsWith("http://") && !bundleUrl.startsWith("https://")) { //$NON-NLS-1$//$NON-NLS-2$
+						StatusHandler.log(new Status(IStatus.WARNING, DiscoveryCore.ID_PLUGIN, NLS.bind(
+								Messages.RemoteBundleDiscoveryStrategy_unrecognized_discovery_url, bundleUrl)));
+						continue;
+					}
+					String lastPathElement = bundleUrl.lastIndexOf('/') == -1 ? bundleUrl
+							: bundleUrl.substring(bundleUrl.lastIndexOf('/'));
+					File target = File.createTempFile(
+							lastPathElement.replaceAll("^[a-zA-Z0-9_.]", "_") + "_", ".jar", temporaryStorage); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$
+
+					if (monitor.isCanceled()) {
+						break;
+					}
+
+					WebUtil.downloadResource(target, new WebLocation(bundleUrl), new NullProgressMonitor() {
+						@Override
+						public boolean isCanceled() {
+							return super.isCanceled() || monitor.isCanceled();
+						}
+					}/*don't use sub progress monitor here*/);
+					file = target;
+				} catch (IOException e) {
+					StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN, NLS.bind(
+							Messages.RemoteBundleDiscoveryStrategy_cannot_download_bundle, bundleUrl, e.getMessage()),
+							e));
+					if (isUnknownHostException(e)) {
+						break;
+					}
+				}
+			}
+			return this;
+		}
+	}
+
+	private ExecutorService createExecutorService(int size) {
+		final int maxThreads = 4;
+		return Executors.newFixedThreadPool(Math.min(size, maxThreads));
 	}
 
 	/**
