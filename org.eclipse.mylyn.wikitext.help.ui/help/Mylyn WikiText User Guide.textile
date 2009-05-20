@@ -375,6 +375,24 @@ h2. Ant Examples
 
 See "the examples":examples for example Ant build scripts.
 
+h2. Markup Language Customization
+
+Mylyn WikiText provides a means of customizing wiki markup languages for use with Ant tasks.  This is useful for altering the markup language to include specialized markup rules specific to your needs.
+
+To customize a markup language you may either extend a markup language using subclassing, or you may provide a @MarkupLanguageConfiguration@.  The best option will vary depending on your needs.  @MarkupLanguageConfiguration@ provides a means of altering a markup language without subclassing the language itself, which makes it reusable with different markup languages.
+
+Following is an example of providing a @MarkupLanguageConfiguration@ configuration:
+
+pre.. 
+<taskdef resource="org/eclipse/mylyn/wikitext/core/util/anttask/tasks.properties" classpathref="wikitext.ant.classpath"/>
+<typedef name="languageConfiguration" classname="org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration" classpathref="wikitext.ant.classpath"/>
+		
+<wikitext-to-eclipse-help markupLanguage="org.eclipse.mylyn.wikitext.textile.core.TextileLanguage" ...>
+	<languageConfiguration escapingHtmlAndXml="true"/>
+</wikitext-to-eclipse-help>
+
+p. See the *Mylyn WikiText Developer Guide* for details on extending a markup language via subclassing.
+
 h1. Textile Syntax
 
 The WikiText editor supports most standard Textile markup.  In addition some markup extensions are supported.  See the markup 'cheat-sheet' for details (press *F1* in the editor).

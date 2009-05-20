@@ -12,7 +12,13 @@
 <project name="org.eclipse.mylyn.wikitext.ui">
 
 	<property name="wikitext.ui.textile.bin" value="../org.eclipse.mylyn.wikitext.textile.core/.tmp.bin"/>
-	
+
+	<path id="wikitext.ant.classpath">
+		<pathelement location="../org.eclipse.mylyn.wikitext.core/@dot"/>
+		<pathelement location="../org.eclipse.mylyn.wikitext.core/bin"/>
+		<pathelement location="${wikitext.ui.textile.bin}"/>
+	</path>
+			
 	<target name="clean">
 		<delete failonerror="false">
 			<fileset dir="help">
@@ -32,14 +38,10 @@
 	<target name="all" depends="plugin-docs, new-and-noteworthy">
 	</target>
 	
+	
 	<target name="plugin-docs" depends="compile-tasks" description="generate plugin help documentation">
-		<taskdef resource="org/eclipse/mylyn/wikitext/core/util/anttask/tasks.properties">
-			<classpath>
-				<pathelement location="../org.eclipse.mylyn.wikitext.core/@dot"/>
-				<pathelement location="../org.eclipse.mylyn.wikitext.core/bin"/>
-				<pathelement location="${wikitext.ui.textile.bin}"/>
-			</classpath>
-		</taskdef>
+		<taskdef resource="org/eclipse/mylyn/wikitext/core/util/anttask/tasks.properties" classpathref="wikitext.ant.classpath"/>
+		
 		<wikitext-to-eclipse-help markupLanguage="org.eclipse.mylyn.wikitext.textile.core.TextileLanguage" 
 			multipleOutputFiles="true"
 			navigationImages="true"

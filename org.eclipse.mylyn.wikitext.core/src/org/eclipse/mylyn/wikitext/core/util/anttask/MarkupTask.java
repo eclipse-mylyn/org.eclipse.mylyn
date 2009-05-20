@@ -19,6 +19,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.eclipse.mylyn.internal.wikitext.core.validation.StandaloneMarkupValidator;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration;
 import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
 import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem;
 import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem.Severity;
@@ -40,6 +41,8 @@ public abstract class MarkupTask extends Task {
 
 	private boolean failOnValidationWarning = false;
 
+	private MarkupLanguageConfiguration markupLanguageConfiguration;
+
 	/**
 	 * The markup language to use. Should correspond to a {@link MarkupLanguage#getName() markup language name}.
 	 */
@@ -59,7 +62,6 @@ public abstract class MarkupTask extends Task {
 	 * language}.
 	 * 
 	 * @return the markup language
-	 * 
 	 * @throws BuildException
 	 *             if the markup language is not specified or if it is unknown.
 	 */
@@ -72,6 +74,9 @@ public abstract class MarkupTask extends Task {
 					markupLanguage);
 			if (internalLinkPattern != null) {
 				language.setInternalLinkPattern(internalLinkPattern);
+			}
+			if (markupLanguageConfiguration != null) {
+				language.configure(markupLanguageConfiguration);
 			}
 			return language;
 		} catch (IllegalArgumentException e) {
@@ -167,4 +172,15 @@ public abstract class MarkupTask extends Task {
 		}
 	}
 
+	/**
+	 * Support a nested markup language configuration.
+	 * 
+	 * @since 1.1
+	 */
+	public void addConfiguredMarkupLanguageConfiguration(MarkupLanguageConfiguration markupLanguageConfiguration) {
+		if (this.markupLanguageConfiguration != null) {
+			throw new BuildException(Messages.getString("MarkupTask.tooManyConfigurations")); //$NON-NLS-1$
+		}
+		this.markupLanguageConfiguration = markupLanguageConfiguration;
+	}
 }
