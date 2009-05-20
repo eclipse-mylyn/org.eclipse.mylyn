@@ -1003,6 +1003,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 								DEFAULT_DIRECTORY_URL));
 						connectorDiscovery.getDiscoveryStrategies().add(remoteDiscoveryStrategy);
 						connectorDiscovery.setEnvironment(environment);
+						connectorDiscovery.setVerifyUpdateSiteAvailability(true);
 						try {
 							connectorDiscovery.performDiscovery(monitor);
 						} catch (CoreException e) {

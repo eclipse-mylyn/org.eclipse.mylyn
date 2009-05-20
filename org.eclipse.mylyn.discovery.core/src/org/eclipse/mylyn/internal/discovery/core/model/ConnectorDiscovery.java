@@ -10,22 +10,34 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.discovery.core.model;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Dictionary;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.internal.discovery.core.DiscoveryCore;
+import org.eclipse.mylyn.internal.discovery.core.util.WebUtil;
 import org.eclipse.osgi.util.NLS;
 import org.osgi.framework.Filter;
 import org.osgi.framework.FrameworkUtil;
@@ -45,6 +57,8 @@ public class ConnectorDiscovery {
 	private final List<AbstractDiscoveryStrategy> discoveryStrategies = new ArrayList<AbstractDiscoveryStrategy>();
 
 	private Dictionary<Object, Object> environment = System.getProperties();
+
+	private boolean verifyUpdateSiteAvailability = false;
 
 	public ConnectorDiscovery() {
 	}
@@ -67,17 +81,22 @@ public class ConnectorDiscovery {
 		connectors = new ArrayList<DiscoveryConnector>();
 		categories = new ArrayList<DiscoveryCategory>();
 
-		final int totalTicks = 10000;
+		final int totalTicks = 100000;
+		final int discoveryTicks = totalTicks - (totalTicks / 10);
+		final int filterTicks = totalTicks - discoveryTicks;
 		monitor.beginTask(Messages.ConnectorDiscovery_task_discovering_connectors, totalTicks);
 		try {
 			for (AbstractDiscoveryStrategy discoveryStrategy : discoveryStrategies) {
 				discoveryStrategy.setCategories(categories);
 				discoveryStrategy.setConnectors(connectors);
-				discoveryStrategy.performDiscovery(new SubProgressMonitor(monitor, totalTicks
+				discoveryStrategy.performDiscovery(new SubProgressMonitor(monitor, discoveryTicks
 						/ discoveryStrategies.size()));
 			}
 
 			filterDescriptors();
+			if (verifyUpdateSiteAvailability) {
+				filterUnavailableDescriptors(new SubProgressMonitor(monitor, filterTicks));
+			}
 			connectCategoriesToDescriptors();
 		} finally {
 			monitor.done();
@@ -119,6 +138,20 @@ public class ConnectorDiscovery {
 			throw new IllegalArgumentException();
 		}
 		this.environment = environment;
+	}
+
+	/**
+	 * indicate if update site availability should be verified. The default is false.
+	 */
+	public boolean isVerifyUpdateSiteAvailability() {
+		return verifyUpdateSiteAvailability;
+	}
+
+	/**
+	 * indicate if update site availability should be verified. The default is false.
+	 */
+	public void setVerifyUpdateSiteAvailability(boolean verifyUpdateSiteAvailability) {
+		this.verifyUpdateSiteAvailability = verifyUpdateSiteAvailability;
 	}
 
 	private void connectCategoriesToDescriptors() {
@@ -167,6 +200,91 @@ public class ConnectorDiscovery {
 		}
 	}
 
+	/**
+	 * filter connectors whose update site is not available
+	 */
+	private void filterUnavailableDescriptors(IProgressMonitor monitor) {
+		Set<URL> urls = new HashSet<URL>();
+		Set<URL> availableUrls = new HashSet<URL>();
+		Map<ConnectorDescriptor, URL> descriptorToUrl = new HashMap<ConnectorDescriptor, URL>();
+
+		for (ConnectorDescriptor descriptor : connectors) {
+			try {
+				String urlText = descriptor.getSiteUrl();
+				if (!urlText.endsWith("/")) { //$NON-NLS-1$
+					urlText += "/"; //$NON-NLS-1$
+				}
+				URL url = new URL(urlText);
+				descriptorToUrl.put(descriptor, url);
+				urls.add(url);
+			} catch (MalformedURLException e) {
+				// ignore
+			}
+		}
+		final int totalTicks = urls.size();
+		monitor.beginTask(Messages.ConnectorDiscovery_task_verifyingAvailability, totalTicks);
+		try {
+			if (!urls.isEmpty()) {
+				ExecutorService executorService = Executors.newFixedThreadPool(Math.min(urls.size(), 4));
+				try {
+					List<Future<VerifyUpdateSiteJob>> futures = new ArrayList<Future<VerifyUpdateSiteJob>>(urls.size());
+					for (URL url : urls) {
+						futures.add(executorService.submit(new VerifyUpdateSiteJob(url)));
+					}
+					for (Future<VerifyUpdateSiteJob> jobFuture : futures) {
+						try {
+							VerifyUpdateSiteJob job = jobFuture.get();
+							if (job.ok) {
+								availableUrls.add(job.url);
+							}
+						} catch (InterruptedException e) {
+							monitor.setCanceled(true);
+							return;
+						} catch (ExecutionException e) {
+							IStatus status;
+							if (e.getCause() instanceof CoreException) {
+								status = ((CoreException) e.getCause()).getStatus();
+							} else {
+								status = new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN,
+										Messages.ConnectorDiscovery_unexpected_exception, e.getCause());
+							}
+							StatusHandler.log(status);
+						}
+						monitor.worked(1);
+					}
+				} finally {
+					executorService.shutdownNow();
+				}
+			}
+			for (ConnectorDescriptor descriptor : new ArrayList<ConnectorDescriptor>(connectors)) {
+				URL url = descriptorToUrl.get(descriptor);
+				if (!availableUrls.contains(url)) {
+					connectors.remove(descriptor);
+				}
+			}
+		} finally {
+			monitor.done();
+		}
+	}
+
+	private static class VerifyUpdateSiteJob implements Callable<VerifyUpdateSiteJob> {
+
+		private final URL url;
+
+		private boolean ok = false;
+
+		public VerifyUpdateSiteJob(URL url) {
+			this.url = url;
+		}
+
+		public VerifyUpdateSiteJob call() throws Exception {
+			URL contentJarUrl = new URL(url, "content.jar"); //$NON-NLS-1$
+			ok = WebUtil.verifyAvailability(new WebLocation(contentJarUrl.toExternalForm()), new NullProgressMonitor());
+			return this;
+		}
+
+	}
+
 	public void dispose() {
 		for (final AbstractDiscoveryStrategy strategy : discoveryStrategies) {
 			SafeRunner.run(new ISafeRunnable() {
@@ -177,7 +295,7 @@ public class ConnectorDiscovery {
 
 				public void handleException(Throwable exception) {
 					StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN,
-							"exception disposing " + strategy.getClass().getName(), exception)); //$NON-NLS-1$
+							Messages.ConnectorDiscovery_exception_disposing + strategy.getClass().getName(), exception));
 				}
 			});
 		}

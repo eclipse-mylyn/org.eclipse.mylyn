@@ -54,9 +54,15 @@ class Messages extends NLS {
 
 	public static String ConnectorDiscovery_duplicate_category_id;
 
+	public static String ConnectorDiscovery_exception_disposing;
+
 	public static String ConnectorDiscovery_illegal_filter_syntax;
 
 	public static String ConnectorDiscovery_task_discovering_connectors;
+
+	public static String ConnectorDiscovery_task_verifyingAvailability;
+
+	public static String ConnectorDiscovery_unexpected_exception;
 
 	public static String ConnectorDiscoveryExtensionReader_unexpected_element_icon;
 

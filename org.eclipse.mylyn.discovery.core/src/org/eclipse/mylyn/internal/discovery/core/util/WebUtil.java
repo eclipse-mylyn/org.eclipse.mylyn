@@ -25,6 +25,7 @@ import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.HeadMethod;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.Policy;
@@ -60,7 +61,7 @@ public class WebUtil {
 	public static void downloadResource(File target, AbstractWebLocation location, IProgressMonitor monitor)
 			throws IOException {
 		monitor = Policy.monitorFor(monitor);
-		monitor.beginTask("Retrieving " + location.getUrl(), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+		monitor.beginTask(NLS.bind(Messages.WebUtil_task_retrievingUrl, location.getUrl()), IProgressMonitor.UNKNOWN);
 		try {
 			HttpClient client = new HttpClient();
 			org.eclipse.mylyn.commons.net.WebUtil.configureHttpClient(client, ""); //$NON-NLS-1$
@@ -102,10 +103,22 @@ public class WebUtil {
 		}
 	}
 
+	/**
+	 * Read a web-based resource at the specified location using the given processor.
+	 * 
+	 * @param location
+	 *            the web location of the content
+	 * @param processor
+	 *            the processor that will handle content
+	 * @param monitor
+	 *            the monitor
+	 * @throws IOException
+	 *             if a network or IO problem occurs
+	 */
 	public static void readResource(AbstractWebLocation location, TextContentProcessor processor,
 			IProgressMonitor monitor) throws IOException {
 		monitor = Policy.monitorFor(monitor);
-		monitor.beginTask("Retrieving " + location.getUrl(), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+		monitor.beginTask(NLS.bind(Messages.WebUtil_task_retrievingUrl, location.getUrl()), IProgressMonitor.UNKNOWN);
 		try {
 			HttpClient client = new HttpClient();
 			org.eclipse.mylyn.commons.net.WebUtil.configureHttpClient(client, ""); //$NON-NLS-1$
@@ -126,6 +139,45 @@ public class WebUtil {
 					}
 				} else {
 					throw new IOException(NLS.bind(Messages.WebUtil_cannotDownload, location.getUrl(), result));
+				}
+			} finally {
+				method.releaseConnection();
+			}
+		} finally {
+			monitor.done();
+		}
+	}
+
+	/**
+	 * Verify availability of the resource at the given web location. Normally this would be done using an HTTP HEAD.
+	 * 
+	 * @param location
+	 *            the location of the resource to verify
+	 * @param monitor
+	 *            the monitor
+	 * @return true if the resource exists
+	 */
+	public static boolean verifyAvailability(AbstractWebLocation location, IProgressMonitor monitor) {
+		monitor = Policy.monitorFor(monitor);
+		monitor.beginTask(NLS.bind(Messages.WebUtil_task_verifyingUrl, location.getUrl()), IProgressMonitor.UNKNOWN);
+		try {
+			HttpClient client = new HttpClient();
+			org.eclipse.mylyn.commons.net.WebUtil.configureHttpClient(client, ""); //$NON-NLS-1$
+
+			HeadMethod method = new HeadMethod(location.getUrl());
+			try {
+				HostConfiguration hostConfiguration = org.eclipse.mylyn.commons.net.WebUtil.createHostConfiguration(
+						client, location, monitor);
+				int result;
+				try {
+					result = org.eclipse.mylyn.commons.net.WebUtil.execute(client, hostConfiguration, method, monitor);
+				} catch (IOException e) {
+					return false;
+				}
+				if (result == HttpStatus.SC_OK) {
+					return true;
+				} else {
+					return false;
 				}
 			} finally {
 				method.releaseConnection();
