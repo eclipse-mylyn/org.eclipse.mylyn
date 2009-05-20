@@ -186,7 +186,8 @@
 			<fileset dir="${build.home}/3.4/incubatorUpdateSite"/>
 		</copy>
 		<copy tofile="${dist.dir}/mylyn-${version}.${qualifier}-e3.3.zip" file="${build.home}/3.3/mylyn-${version}.${qualifier}-e33-standard.zip" />
-		<copy tofile="${dist.dir}/mylyn-${version}.${qualifier}-e3.4.zip" file="${build.home}/3.4/mylyn-${version}.${qualifier}-e3x-standard.zip" />
+		<!-- need to use discovery plug-ins from the 3.5 site -->
+		<copy tofile="${dist.dir}/mylyn-${version}.${qualifier}-e3.4.zip" file="${build.home}/3.5/mylyn-${version}.${qualifier}-e3x-standard.zip" />
 		<copy tofile="${dist.dir}/mylyn-${version}.${qualifier}-extras.zip" file="${build.home}/3.4/mylyn-${version}.${qualifier}-e3x-extras.zip" />
 		<copy tofile="${dist.dir}/mylyn-${version}.${qualifier}-incubator.zip" file="${build.home}/3.4/mylyn-${version}.${qualifier}-e3x-incubator.zip" />
 		<copy tofile="${dist.dir}/mylyn-wikitext-standalone-${version}.${qualifier}.zip" file="${build.home}/3.4/mylyn-wikitext-standalone-${version}.${qualifier}.zip" />
