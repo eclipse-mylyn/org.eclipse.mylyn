@@ -347,8 +347,8 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 	}
 
 	private Label createClearFilterTextControl(Composite filterContainer, final Text filterText) {
-		final Image inactiveImage = CommonImages.FIND_CLEAR.createImage();
-		final Image activeImage = CommonImages.FIND_CLEAR_DISABLED.createImage();
+		final Image inactiveImage = CommonImages.FIND_CLEAR_DISABLED.createImage();
+		final Image activeImage = CommonImages.FIND_CLEAR.createImage();
 		final Image pressedImage = new Image(filterContainer.getDisplay(), activeImage, SWT.IMAGE_GRAY);
 
 		final Label clearButton = new Label(filterContainer, SWT.NONE);
