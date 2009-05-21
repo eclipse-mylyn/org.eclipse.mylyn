@@ -27,11 +27,14 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IBundleGroup;
+import org.eclipse.core.runtime.IBundleGroupProvider;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
@@ -39,10 +42,13 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.internal.discovery.core.DiscoveryCore;
 import org.eclipse.mylyn.internal.discovery.core.util.WebUtil;
+import org.eclipse.osgi.service.resolver.VersionRange;
 import org.eclipse.osgi.util.NLS;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.Filter;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.Version;
 
 /**
  * A means of discovering connectors.
@@ -55,11 +61,15 @@ public class ConnectorDiscovery {
 
 	private List<DiscoveryCategory> categories = Collections.emptyList();
 
+	private List<DiscoveryConnector> filteredConnectors = Collections.emptyList();
+
 	private final List<AbstractDiscoveryStrategy> discoveryStrategies = new ArrayList<AbstractDiscoveryStrategy>();
 
 	private Dictionary<Object, Object> environment = System.getProperties();
 
 	private boolean verifyUpdateSiteAvailability = false;
+
+	private Map<String, Version> featureToVersion = null;
 
 	public ConnectorDiscovery() {
 	}
@@ -80,6 +90,7 @@ public class ConnectorDiscovery {
 			throw new IllegalStateException();
 		}
 		connectors = new ArrayList<DiscoveryConnector>();
+		filteredConnectors = new ArrayList<DiscoveryConnector>();
 		categories = new ArrayList<DiscoveryCategory>();
 
 		final int totalTicks = 100000;
@@ -114,12 +125,21 @@ public class ConnectorDiscovery {
 	}
 
 	/**
-	 * get the connectors
+	 * get the connectors that were discovered and not filtered
 	 * 
 	 * @return the connectors, or an empty list if there are none.
 	 */
 	public List<DiscoveryConnector> getConnectors() {
 		return connectors;
+	}
+
+	/**
+	 * get the connectors that were discovered but filtered
+	 * 
+	 * @return the filtered connectors, or an empty list if there were none.
+	 */
+	public List<DiscoveryConnector> getFilteredConnectors() {
+		return filteredConnectors;
 	}
 
 	/**
@@ -153,6 +173,22 @@ public class ConnectorDiscovery {
 	 */
 	public void setVerifyUpdateSiteAvailability(boolean verifyUpdateSiteAvailability) {
 		this.verifyUpdateSiteAvailability = verifyUpdateSiteAvailability;
+	}
+
+	/**
+	 * <em>not for general use: public for testing purposes only</em> A map of installed features to their version. Used
+	 * to resolve {@link ConnectorDescriptor#getFeatureFilter() feature filters}.
+	 */
+	public Map<String, Version> getFeatureToVersion() {
+		return featureToVersion;
+	}
+
+	/**
+	 * <em>not for general use: public for testing purposes only</em> A map of installed features to their version. Used
+	 * to resolve {@link ConnectorDescriptor#getFeatureFilter() feature filters}.
+	 */
+	public void setFeatureToVersion(Map<String, Version> featureToVersion) {
+		this.featureToVersion = featureToVersion;
 	}
 
 	private void connectCategoriesToDescriptors() {
@@ -196,9 +232,40 @@ public class ConnectorDiscovery {
 				}
 				if (!match) {
 					connectors.remove(connector);
+					filteredConnectors.add(connector);
+				}
+			}
+			for (FeatureFilter featureFilter : connector.getFeatureFilter()) {
+				if (featureToVersion == null) {
+					featureToVersion = computeFeatureToVersion();
+				}
+				boolean match = false;
+				Version version = featureToVersion.get(featureFilter.getFeatureId());
+				if (version != null) {
+					VersionRange versionRange = new VersionRange(featureFilter.getVersion());
+					if (versionRange.isIncluded(version)) {
+						match = true;
+					}
+				}
+				if (!match) {
+					connectors.remove(connector);
+					filteredConnectors.add(connector);
+					break;
 				}
 			}
 		}
+	}
+
+	private Map<String, Version> computeFeatureToVersion() {
+		Map<String, Version> featureToVersion = new HashMap<String, Version>();
+		for (IBundleGroupProvider provider : Platform.getBundleGroupProviders()) {
+			for (IBundleGroup bundleGroup : provider.getBundleGroups()) {
+				for (Bundle bundle : bundleGroup.getBundles()) {
+					featureToVersion.put(bundle.getSymbolicName(), bundle.getVersion());
+				}
+			}
+		}
+		return featureToVersion;
 	}
 
 	/**
@@ -261,10 +328,11 @@ public class ConnectorDiscovery {
 					executorService.shutdownNow();
 				}
 			}
-			for (ConnectorDescriptor descriptor : new ArrayList<ConnectorDescriptor>(connectors)) {
+			for (DiscoveryConnector descriptor : new ArrayList<DiscoveryConnector>(connectors)) {
 				URL url = descriptorToUrl.get(descriptor);
 				if (!availableUrls.contains(url)) {
 					connectors.remove(descriptor);
+					filteredConnectors.add(descriptor);
 				}
 			}
 		} finally {

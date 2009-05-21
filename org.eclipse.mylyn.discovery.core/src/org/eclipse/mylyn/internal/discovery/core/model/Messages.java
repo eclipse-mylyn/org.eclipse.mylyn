@@ -78,6 +78,10 @@ class Messages extends NLS {
 
 	public static String DiscoveryRegistryStrategy_missing_pluginxml;
 
+	public static String FeatureFilter_must_specify_featureFilter_featureId;
+
+	public static String FeatureFilter_must_specify_featureFilter_version;
+
 	public static String RemoteBundleDiscoveryStrategy_cannot_download_bundle;
 
 	public static String RemoteBundleDiscoveryStrategy_empty_directory;

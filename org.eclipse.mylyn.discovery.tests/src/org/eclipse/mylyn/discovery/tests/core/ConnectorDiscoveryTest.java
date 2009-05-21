@@ -11,6 +11,8 @@
 package org.eclipse.mylyn.discovery.tests.core;
 
 import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import junit.framework.TestCase;
@@ -21,9 +23,9 @@ import org.eclipse.mylyn.discovery.tests.core.mock.DiscoveryConnectorMockFactory
 import org.eclipse.mylyn.discovery.tests.core.mock.MockDiscoveryStrategy;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDiscovery;
 import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryConnector;
+import org.osgi.framework.Version;
 
 /**
- * 
  * @author David Green
  */
 @SuppressWarnings("restriction")
@@ -82,6 +84,54 @@ public class ConnectorDiscoveryTest extends TestCase {
 
 		assertFalse(connectorDiscovery.getConnectors().isEmpty());
 		assertEquals(mockDiscoveryStrategy.getConnectorCount(), connectorDiscovery.getConnectors().size());
+	}
+
+	public void testFeatureFilter_PositiveMatch() throws CoreException {
+		mockDiscoveryStrategy.setConnectorMockFactory(new DiscoveryConnectorMockFactory() {
+			@Override
+			protected void populateMockData() {
+				super.populateMockData();
+				featureFilter("com.foo.bar.feature", "[1.0,2.0)");
+			}
+		});
+		Map<String, Version> featureToVersion = new HashMap<String, Version>();
+		featureToVersion.put("com.foo.bar.feature", new Version("1.1"));
+		connectorDiscovery.setFeatureToVersion(featureToVersion);
+		connectorDiscovery.performDiscovery(new NullProgressMonitor());
+
+		assertFalse(connectorDiscovery.getConnectors().isEmpty());
+		assertEquals(mockDiscoveryStrategy.getConnectorCount(), connectorDiscovery.getConnectors().size());
+	}
+
+	public void testFeatureFilter_NegativeMatch_VersionMismatch() throws CoreException {
+		mockDiscoveryStrategy.setConnectorMockFactory(new DiscoveryConnectorMockFactory() {
+			@Override
+			protected void populateMockData() {
+				super.populateMockData();
+				featureFilter("com.foo.bar.feature", "[1.2,2.0)");
+			}
+		});
+		Map<String, Version> featureToVersion = new HashMap<String, Version>();
+		featureToVersion.put("com.foo.bar.feature", new Version("1.1"));
+		connectorDiscovery.setFeatureToVersion(featureToVersion);
+		connectorDiscovery.performDiscovery(new NullProgressMonitor());
+
+		assertTrue(connectorDiscovery.getConnectors().isEmpty());
+	}
+
+	public void testFeatureFilter_NegativeMatch_NotPresent() throws CoreException {
+		mockDiscoveryStrategy.setConnectorMockFactory(new DiscoveryConnectorMockFactory() {
+			@Override
+			protected void populateMockData() {
+				super.populateMockData();
+				featureFilter("com.foo.bar.feature", "[1.2,2.0)");
+			}
+		});
+		Map<String, Version> featureToVersion = new HashMap<String, Version>();
+		connectorDiscovery.setFeatureToVersion(featureToVersion);
+		connectorDiscovery.performDiscovery(new NullProgressMonitor());
+
+		assertTrue(connectorDiscovery.getConnectors().isEmpty());
 	}
 
 	public void testCategorization() throws CoreException {

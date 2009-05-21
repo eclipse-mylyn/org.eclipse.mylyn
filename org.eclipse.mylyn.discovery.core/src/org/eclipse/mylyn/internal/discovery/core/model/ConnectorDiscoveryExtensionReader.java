@@ -29,6 +29,9 @@ public class ConnectorDiscoveryExtensionReader {
 	public static final String ICON = "icon"; //$NON-NLS-1$
 
 	public static final String OVERVIEW = "overview"; //$NON-NLS-1$
+	
+	public static final String FEATURE_FILTER = "featureFilter"; //$NON-NLS-1$
+	
 
 	public ConnectorDescriptor readConnectorDescriptor(IConfigurationElement element) throws ValidationException {
 		return readConnectorDescriptor(element, ConnectorDescriptor.class);
@@ -57,6 +60,11 @@ public class ConnectorDiscoveryExtensionReader {
 		connectorDescriptor.setCategoryId(element.getAttribute("categoryId")); //$NON-NLS-1$
 		connectorDescriptor.setPlatformFilter(element.getAttribute("platformFilter")); //$NON-NLS-1$
 
+		for (IConfigurationElement child: element.getChildren("featureFilter")) { //$NON-NLS-1$
+			FeatureFilter featureFilterItem = readFeatureFilter(child);
+			featureFilterItem.setConnectorDescriptor(connectorDescriptor);
+			connectorDescriptor.getFeatureFilter().add(featureFilterItem);
+		}
 		for (IConfigurationElement child : element.getChildren("icon")) { //$NON-NLS-1$
 			Icon iconItem = readIcon(child);
 			iconItem.setConnectorDescriptor(connectorDescriptor);
@@ -136,4 +144,15 @@ public class ConnectorDiscoveryExtensionReader {
 		return overview;
 	}
 
+	public FeatureFilter readFeatureFilter(IConfigurationElement element) throws ValidationException {
+		FeatureFilter featureFilter = new FeatureFilter();
+		
+		featureFilter.setFeatureId(element.getAttribute("featureId")); //$NON-NLS-1$
+		featureFilter.setVersion(element.getAttribute("version")); //$NON-NLS-1$
+		
+		
+		featureFilter.validate();
+		
+		return featureFilter;
+	}
 }

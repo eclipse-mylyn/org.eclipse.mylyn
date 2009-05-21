@@ -12,11 +12,11 @@ package org.eclipse.mylyn.discovery.tests.core.mock;
 
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDescriptorKind;
 import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryConnector;
+import org.eclipse.mylyn.internal.discovery.core.model.FeatureFilter;
 import org.eclipse.mylyn.internal.discovery.core.model.Icon;
 import org.eclipse.mylyn.internal.discovery.core.model.Overview;
 
 /**
- * 
  * @author David Green
  */
 @SuppressWarnings("restriction")
@@ -113,6 +113,15 @@ public class DiscoveryConnectorMockFactory extends AbstractMockFactory<Discovery
 
 	public DiscoveryConnectorMockFactory siteUrl(String siteUrl) {
 		getMockObject().setSiteUrl(siteUrl);
+		return this;
+	}
+
+	public DiscoveryConnectorMockFactory featureFilter(String featureId, String versionRange) {
+		FeatureFilter featureFilter = new FeatureFilter();
+		featureFilter.setConnectorDescriptor(getMockObject());
+		featureFilter.setFeatureId(featureId);
+		featureFilter.setVersion(versionRange);
+		getMockObject().getFeatureFilter().add(featureFilter);
 		return this;
 	}
 }

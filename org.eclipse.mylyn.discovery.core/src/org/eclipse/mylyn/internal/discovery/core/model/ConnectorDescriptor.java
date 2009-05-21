@@ -37,6 +37,8 @@ public class ConnectorDescriptor {
 
 	protected String platformFilter;
 
+	protected java.util.List<FeatureFilter> featureFilter = new java.util.ArrayList<FeatureFilter>();
+	
 	protected Icon icon;
 
 	protected Overview overview;
@@ -147,6 +149,14 @@ public class ConnectorDescriptor {
 		this.platformFilter = platformFilter;
 	}
 
+	public java.util.List<FeatureFilter> getFeatureFilter() {
+		return featureFilter;
+	}
+	
+	public void setFeatureFilter(java.util.List<FeatureFilter> featureFilter) {
+		this.featureFilter = featureFilter;
+	}
+	
 	public Icon getIcon() {
 		return icon;
 	}
@@ -189,6 +199,9 @@ public class ConnectorDescriptor {
 		}
 		if (categoryId == null || categoryId.length() == 0) {
 			throw new ValidationException(Messages.ConnectorDescriptor_must_specify_connectorDescriptor_categoryId);
+		}
+		for (FeatureFilter featureFilterItem: featureFilter) {
+			featureFilterItem.validate();
 		}
 		if (icon != null) {
 			icon.validate();

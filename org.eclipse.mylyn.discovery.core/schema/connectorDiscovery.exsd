@@ -56,6 +56,7 @@
       </annotation>
       <complexType>
          <sequence>
+            <element ref="featureFilter" minOccurs="0" maxOccurs="unbounded"/>
             <element ref="icon" minOccurs="0" maxOccurs="1"/>
             <element ref="overview" minOccurs="0" maxOccurs="1"/>
          </sequence>
@@ -283,6 +284,33 @@
       </complexType>
    </element>
 
+   <element name="featureFilter">
+      <annotation>
+         <documentation>
+            A means of specifying that a feature must be present in order for the connectorDescriptor to be presented to the user.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="featureId" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The id of the feature to test
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="identifier"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="version" type="string" use="required">
+            <annotation>
+               <documentation>
+                  A version specifier, specified in the same manner as version dependencies are specified in an OSGi manifest.  For example: &quot;[3.0,4.0)&quot;
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
    <annotation>
       <appinfo>
          <meta.section type="since"/>
@@ -329,7 +357,6 @@ All rights reserved. This program and the accompanying materials
 are made available under the terms of the Eclipse Public License v1.0
 which accompanies this distribution, and is available at
 http://www.eclipse.org/legal/epl-v10.html
-
       </documentation>
    </annotation>
 
