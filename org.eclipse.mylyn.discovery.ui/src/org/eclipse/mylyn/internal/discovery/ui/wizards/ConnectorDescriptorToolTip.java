@@ -24,12 +24,10 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.GradientToolTip;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -46,22 +44,18 @@ class ConnectorDescriptorToolTip extends GradientToolTip {
 
 	private final DiscoveryConnector descriptor;
 
-	private final Color background;
-
 	public ConnectorDescriptorToolTip(Control control, DiscoveryConnector descriptor) {
 		super(control, ToolTip.RECREATE, true);
 		this.descriptor = descriptor;
 		setHideOnMouseDown(false); // required for links to work
-		background = control.getBackground();
 	}
 
 	@Override
 	protected Composite createToolTipArea(Event event, final Composite parent) {
-		parent.setBackground(background);
+
 		GridLayoutFactory.fillDefaults().applyTo(parent);
 
-		Composite container = new Composite(parent, SWT.NULL);
-		container.setBackground(background);
+		Composite container = new Composite(parent, SWT.NULL | SWT.NO_BACKGROUND);
 		GridDataFactory.fillDefaults().grab(true, true).hint(/*347*/650, SWT.DEFAULT).applyTo(container);
 
 		GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).spacing(3, 0).applyTo(container);
@@ -86,35 +80,20 @@ class ConnectorDescriptorToolTip extends GradientToolTip {
 				GridDataFactory.fillDefaults().grab(true, false).hint(320, 240).span(image == null ? 2 : 1, 1).applyTo(
 						summaryLabel);
 				summaryLabel.setText(summary);
-				summaryLabel.setBackground(background);
 			}
 			if (image != null) {
-				// put the image in a scrolled composite.  This achieves two things:
-				// - we get a border
-				// - if the supplied image is too large, it doesn't blow out the layout
-				// FIXME: do we want to scale images here?
-				ScrolledComposite scrolledComposite = new ScrolledComposite(container, SWT.H_SCROLL | SWT.V_SCROLL
-						| SWT.BORDER);
-				scrolledComposite.setBackground(background);
+				Label imageLabel = new Label(container, SWT.NULL);
+
+				imageLabel.setImage(image);
+
 				GridDataFactory.fillDefaults()
 						.grab(false, false)
 						.align(SWT.CENTER, SWT.BEGINNING)
 						.hint(320, 240)
-						.applyTo(scrolledComposite);
-
-				Label imageLabel = new Label(scrolledComposite, SWT.NULL);
-				imageLabel.setBackground(background);
-				imageLabel.setImage(image);
-
-				scrolledComposite.setExpandHorizontal(true);
-				scrolledComposite.setExpandVertical(true);
-				scrolledComposite.setMinSize(320, 240);
-
-				scrolledComposite.setContent(imageLabel);
+						.applyTo(imageLabel);
 			}
 			if (overview.getUrl() != null && overview.getUrl().length() > 0) {
 				Link link = new Link(container, SWT.NULL);
-				link.setBackground(background);
 				GridDataFactory.fillDefaults().grab(false, false).span(2, 1).align(SWT.BEGINNING, SWT.CENTER).applyTo(
 						link);
 				link.setText(Messages.ConnectorDescriptorToolTip_detailsLink);
