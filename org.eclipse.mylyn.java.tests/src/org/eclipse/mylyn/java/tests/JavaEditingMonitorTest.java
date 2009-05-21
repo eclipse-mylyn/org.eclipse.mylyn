@@ -1,0 +1,163 @@
+/*******************************************************************************
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Tasktop Technologies - initial API and implementation
+ *******************************************************************************/
+
+package org.eclipse.mylyn.java.tests;
+
+import org.eclipse.jdt.core.IMethod;
+import org.eclipse.jdt.core.IPackageFragment;
+import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
+import org.eclipse.jdt.ui.JavaUI;
+import org.eclipse.jface.text.Document;
+import org.eclipse.jface.text.TextSelection;
+import org.eclipse.mylyn.internal.java.ui.JavaEditingMonitor;
+import org.eclipse.mylyn.monitor.core.IInteractionEventListener;
+import org.eclipse.mylyn.monitor.core.InteractionEvent;
+import org.eclipse.mylyn.monitor.core.InteractionEvent.Kind;
+import org.eclipse.mylyn.monitor.ui.MonitorUi;
+import org.eclipse.mylyn.resources.tests.ResourceTestUtil;
+import org.eclipse.ui.PartInitException;
+
+/**
+ * @author Jingwen Ou
+ * @author Shawn Minto
+ */
+public class JavaEditingMonitorTest extends AbstractJavaContextTest {
+	private IMethod callee;
+
+	private IMethod caller;
+
+	private int editingCount;
+
+	private final JavaEditingMonitor monitor = new JavaEditingMonitor();
+
+	private IPackageFragment pkg;
+
+	private TestJavaProject project;
+
+	private int selectingCount;
+
+	private IType typeFoo;
+
+	@Override
+	protected void setUp() throws Exception {
+		project = new TestJavaProject(this.getClass().getName());
+		pkg = project.createPackage("pkg1");
+		typeFoo = project.createType(pkg, "Foo.java", "public class Foo { }");
+		caller = typeFoo.createMethod("void caller() {  }", null, true, null);
+		callee = typeFoo.createMethod("void callee() { }", callee, true, null);
+
+		selectingCount = 0;
+		editingCount = 0;
+	}
+
+	@Override
+	protected void tearDown() throws Exception {
+		ResourceTestUtil.deleteProject(project.getProject());
+	}
+
+	/**
+	 * Selects a method twice to see whether the editing is handled correctly. Note: Two sequential selections on the
+	 * same element are deemed to be an edit of the selection as this is the best guess that can be made. See bug
+	 * 252306.
+	 */
+	public void testHandleElementEdit() throws PartInitException, JavaModelException, InterruptedException {
+		IInteractionEventListener listener = new IInteractionEventListener() {
+			public void interactionObserved(InteractionEvent event) {
+				if (event.getKind() == Kind.EDIT) {
+					editingCount++;
+				} else if (event.getKind() == Kind.SELECTION) {
+					selectingCount++;
+				}
+			}
+
+			public void startMonitoring() {
+				// ignore
+			}
+
+			public void stopMonitoring() {
+				// ignore
+			}
+		};
+		MonitorUi.addInteractionListener(listener);
+
+		CompilationUnitEditor editorPart = (CompilationUnitEditor) JavaUI.openInEditor(caller);
+		Document document = new Document(typeFoo.getCompilationUnit().getSource());
+
+		// select callee
+		TextSelection calleeSelection = new TextSelection(document, typeFoo.getCompilationUnit().getSource().indexOf(
+				"callee()"), "callee".length());
+		editorPart.setHighlightRange(calleeSelection.getOffset(), calleeSelection.getLength(), true);
+
+		// select it once
+		monitor.handleWorkbenchPartSelection(editorPart, calleeSelection, false);
+
+		assertEquals(0, editingCount);
+		assertEquals(1, selectingCount);
+
+		// select it again
+		monitor.handleWorkbenchPartSelection(editorPart, calleeSelection, false);
+
+		assertEquals(1, editingCount);
+		assertEquals(1, selectingCount);
+	}
+
+	public void testHandleElementSelection() throws PartInitException, JavaModelException, InterruptedException {
+		IInteractionEventListener listener = new IInteractionEventListener() {
+			public void interactionObserved(InteractionEvent event) {
+				if (event.getKind() == Kind.EDIT) {
+					editingCount++;
+				} else if (event.getKind() == Kind.SELECTION) {
+					selectingCount++;
+				}
+			}
+
+			public void startMonitoring() {
+				// ignore
+			}
+
+			public void stopMonitoring() {
+				// ignore
+			}
+		};
+		MonitorUi.addInteractionListener(listener);
+
+		CompilationUnitEditor editorPart = (CompilationUnitEditor) JavaUI.openInEditor(caller);
+		Document document = new Document(typeFoo.getCompilationUnit().getSource());
+
+		// select callee
+		TextSelection calleeSelection = new TextSelection(document, typeFoo.getCompilationUnit().getSource().indexOf(
+				"callee()"), "callee".length());
+		editorPart.setHighlightRange(calleeSelection.getOffset(), calleeSelection.getLength(), true);
+
+		// select it once
+		monitor.handleWorkbenchPartSelection(editorPart, calleeSelection, false);
+
+		assertEquals(0, editingCount);
+		assertEquals(1, selectingCount);
+
+		TextSelection callerSelection = new TextSelection(document, typeFoo.getCompilationUnit().getSource().indexOf(
+				"caller()"), "caller".length());
+		editorPart.setHighlightRange(callerSelection.getOffset(), callerSelection.getLength(), true);
+		// select a different element
+		monitor.handleWorkbenchPartSelection(editorPart, callerSelection, false);
+
+		assertEquals(0, editingCount);
+		assertEquals(2, selectingCount);
+
+		// select a different element
+		monitor.handleWorkbenchPartSelection(editorPart, callerSelection, false);
+
+		assertEquals(1, editingCount);
+		assertEquals(2, selectingCount);
+	}
+}

@@ -51,7 +51,8 @@ public class JavaEditingMonitor extends AbstractUserInteractionMonitor {
 	}
 
 	/**
-	 * Only public for testing
+	 * Only public for testing. Note: Two sequential selections on the same element are deemed to be an edit of the
+	 * selection as this is the best guess that can be made. See bug 252306.
 	 */
 	@Override
 	public void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection, boolean contributeToContext) {
