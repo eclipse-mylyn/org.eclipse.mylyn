@@ -19,7 +19,6 @@ import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDescriptorKind;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDiscovery;
@@ -33,7 +32,7 @@ import org.osgi.framework.Version;
  * A wizard for performing discovery of connectors and selecting connectors to install. When finish is pressed, selected
  * connectors are downloaded and installed.
  * 
- * @see InstallConnectorsJob
+ * @see PrepareInstallProfileJob
  * @see ConnectorDiscoveryWizardMainPage
  * @author David Green
  */
@@ -80,8 +79,11 @@ public class ConnectorDiscoveryWizard extends Wizard {
 	@Override
 	public boolean performFinish() {
 		try {
-			IRunnableWithProgress job = new InstallConnectorsJob(mainPage.getInstallableConnectors());
+			PrepareInstallProfileJob job = new PrepareInstallProfileJob(mainPage.getInstallableConnectors());
 			getContainer().run(true, true, job);
+			if (job.getInstallAction() != null) {
+				job.getInstallAction().run();
+			}
 		} catch (InvocationTargetException e) {
 			IStatus status = new Status(IStatus.ERROR, DiscoveryUi.ID_PLUGIN, NLS.bind(
 					Messages.ConnectorDiscoveryWizard_installProblems, new Object[] { e.getCause().getMessage() }),

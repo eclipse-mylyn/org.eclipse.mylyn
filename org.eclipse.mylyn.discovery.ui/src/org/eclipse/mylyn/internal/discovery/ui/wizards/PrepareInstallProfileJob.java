@@ -40,7 +40,6 @@ import org.eclipse.equinox.internal.provisional.p2.query.Query;
 import org.eclipse.equinox.internal.provisional.p2.ui.actions.InstallAction;
 import org.eclipse.equinox.internal.provisional.p2.ui.operations.ProvisioningUtil;
 import org.eclipse.equinox.internal.provisional.p2.ui.policy.Policy;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -52,20 +51,23 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 
 /**
- * A job that downloads and installs one or more {@link ConnectorDescriptor connectors}. The bulk of the installation
- * work is done by p2; this class just sets up the p2 repository metadata and selects the appropriate features to
- * install.
+ * A job that configures a p2 {@link #getInstallAction() install action} for installing one or more
+ * {@link ConnectorDescriptor connectors}. The bulk of the installation work is done by p2; this class just sets up the
+ * p2 repository metadata and selects the appropriate features to install. After running the job the
+ * {@link #getInstallAction() install action} must be run to perform the installation.
  * 
  * @author David Green
  */
 @SuppressWarnings("restriction")
-public class InstallConnectorsJob implements IRunnableWithProgress {
+public class PrepareInstallProfileJob implements IRunnableWithProgress {
 
 	private static final String P2_FEATURE_GROUP_SUFFIX = ".feature.group"; //$NON-NLS-1$
 
 	private final List<ConnectorDescriptor> installableConnectors;
 
-	public InstallConnectorsJob(List<ConnectorDescriptor> installableConnectors) {
+	private InstallAction installAction;
+
+	public PrepareInstallProfileJob(List<ConnectorDescriptor> installableConnectors) {
 		if (installableConnectors == null || installableConnectors.isEmpty()) {
 			throw new IllegalArgumentException();
 		}
@@ -282,14 +284,8 @@ public class InstallConnectorsJob implements IRunnableWithProgress {
 				throw new IllegalStateException();
 			}
 
-			// now that we've got what we want, do the install
-			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
-					IAction installAction = new InstallAction(Policy.getDefault(), new SelectionProviderAdapter(
-							new StructuredSelection(installableUnits)), profileId);
-					installAction.run();
-				}
-			});
+			installAction = new InstallAction(Policy.getDefault(), new SelectionProviderAdapter(
+					new StructuredSelection(installableUnits)), profileId);
 
 			monitor.done();
 		} catch (URISyntaxException e) {
@@ -323,4 +319,7 @@ public class InstallConnectorsJob implements IRunnableWithProgress {
 				Messages.InstallConnectorsJob_profileProblem, null));
 	}
 
+	public InstallAction getInstallAction() {
+		return installAction;
+	}
 }
