@@ -33,6 +33,7 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
@@ -145,6 +146,10 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 						monitor.worked(futureSize);
 					} catch (ExecutionException e) {
 						Throwable cause = e.getCause();
+						if (cause instanceof OperationCanceledException) {
+							monitor.setCanceled(true);
+							return;
+						}
 						IStatus status;
 						if (cause instanceof CoreException) {
 							status = ((CoreException) cause).getStatus();

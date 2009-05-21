@@ -31,6 +31,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
@@ -241,6 +242,10 @@ public class ConnectorDiscovery {
 							monitor.setCanceled(true);
 							return;
 						} catch (ExecutionException e) {
+							if (e.getCause() instanceof OperationCanceledException) {
+								monitor.setCanceled(true);
+								return;
+							}
 							IStatus status;
 							if (e.getCause() instanceof CoreException) {
 								status = ((CoreException) e.getCause()).getStatus();
