@@ -49,6 +49,7 @@ import org.eclipse.mylyn.internal.discovery.ui.util.DiscoveryCategoryComparator;
 import org.eclipse.mylyn.internal.discovery.ui.util.DiscoveryUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
+import org.eclipse.mylyn.internal.provisional.commons.ui.GradientCanvas;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.ACC;
 import org.eclipse.swt.accessibility.AccessibleAdapter;
@@ -91,7 +92,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Scrollable;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.WorkbenchJob;
@@ -102,7 +102,7 @@ import org.eclipse.ui.themes.IThemeManager;
  * 
  * @author David Green
  * @author Shawn Minto bug 275513
- * @author Steffen Pingel bug 276012 code review
+ * @author Steffen Pingel bug 276012 code review, bug 277191 gradient canvas
  */
 public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 
@@ -636,12 +636,14 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 					continue;
 				}
 				{ // category header
-					Composite categoryHeaderContainer = new Composite(container, SWT.NULL);
+					GradientCanvas categoryHeaderContainer = new GradientCanvas(container, SWT.NONE);
+					categoryHeaderContainer.setBackgroundGradient(new Color[] { colorCategoryGradientStart,
+							colorCategoryGradientEnd }, new int[] { 100 }, true);
+
 					GridDataFactory.fillDefaults().span(2, 1).applyTo(categoryHeaderContainer);
 					GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).equalWidth(false).applyTo(
 							categoryHeaderContainer);
 
-					paintGradient(categoryHeaderContainer);
 
 					Label iconLabel = new Label(categoryHeaderContainer, SWT.NULL);
 					if (category.getIcon() != null) {
@@ -650,15 +652,18 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 							iconLabel.setImage(image);
 						}
 					}
+					iconLabel.setBackground(null);
 					GridDataFactory.swtDefaults().align(SWT.CENTER, SWT.BEGINNING).span(1, 2).applyTo(iconLabel);
 
 					Label nameLabel = new Label(categoryHeaderContainer, SWT.NULL);
 					nameLabel.setFont(h1Font);
 					nameLabel.setText(category.getName());
+					nameLabel.setBackground(null);
 					GridDataFactory.fillDefaults().grab(true, false).applyTo(nameLabel);
 
 					Label description = new Label(categoryHeaderContainer, SWT.WRAP);
 					GridDataFactory.fillDefaults().grab(true, false).hint(100, SWT.DEFAULT).applyTo(description);
+					description.setBackground(null);
 					description.setText(category.getDescription());
 				}
 
@@ -761,46 +766,6 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		}
 		container.layout(true);
 		container.redraw();
-	}
-
-	private void paintGradient(final Scrollable container) {
-		container.addPaintListener(new PaintListener() {
-			public void paintControl(PaintEvent event) {
-				if (colorCategoryGradientEnd == null || colorCategoryGradientStart == null) {
-					return;
-				}
-				Scrollable scrollable = (Scrollable) event.widget;
-				GC gc = event.gc;
-
-				Rectangle area = scrollable.getClientArea();
-
-				/* Draw Gradient Rectangle */
-				Color oldForeground = gc.getForeground();
-				Color oldBackground = gc.getBackground();
-
-				gc.setForeground(colorCategoryGradientEnd);
-				gc.drawLine(0, area.y, area.width, area.y);
-
-				gc.setForeground(colorCategoryGradientStart);
-				gc.setBackground(colorCategoryGradientEnd);
-
-				// gc.setForeground(categoryGradientStart);
-				// gc.setBackground(categoryGradientEnd);
-				// gc.setForeground(new Clr(Display.getCurrent(), 255, 0, 0));
-
-				gc.fillGradientRectangle(0, area.y + 1, area.width, area.height, true);
-
-				/* Bottom Line */
-				// gc.setForeground();
-				gc.setForeground(colorCategoryGradientEnd);
-				gc.drawLine(0, area.y + area.height - 1, area.width, area.y + area.height - 1);
-
-				gc.setForeground(oldForeground);
-				gc.setBackground(oldBackground);
-				/* Mark as Background being handled */
-//				event.detail &= ~SWT.BACKGROUND;
-			}
-		});
 	}
 
 	private void configureLook(Control control, Color background) {
