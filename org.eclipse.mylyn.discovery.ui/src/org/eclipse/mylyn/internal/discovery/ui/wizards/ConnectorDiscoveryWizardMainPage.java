@@ -603,6 +603,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 			Control helpTextControl;
 			if (filterPattern != null) {
 				Link link = new Link(container, SWT.WRAP);
+				link.setBackground(null);
 				link.setFont(container.getFont());
 				link.setText(org.eclipse.mylyn.internal.discovery.ui.wizards.Messages.ConnectorDiscoveryWizardMainPage_noMatchingItems_withFilterText);
 				link.addListener(SWT.Selection, new Listener() {
@@ -614,6 +615,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 				helpTextControl = link;
 			} else {
 				Label helpText = new Label(container, SWT.WRAP);
+				helpText.setBackground(null);
 				helpText.setFont(container.getFont());
 				if (atLeastOneKindFiltered) {
 					helpText.setText(org.eclipse.mylyn.internal.discovery.ui.wizards.Messages.ConnectorDiscoveryWizardMainPage_noMatchingItems_filteredType);
