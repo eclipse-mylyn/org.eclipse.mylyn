@@ -14,8 +14,6 @@ package org.eclipse.mylyn.tasks.core;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -25,11 +23,14 @@ import java.util.Set;
 import java.util.TimeZone;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.equinox.security.storage.EncodingUtils;
+import org.eclipse.equinox.security.storage.ISecurePreferences;
+import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
+import org.eclipse.equinox.security.storage.StorageException;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
@@ -56,7 +57,6 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryPerson;
  * @since 2.0
  * @noextend This class is not intended to be subclassed by clients.
  */
-@SuppressWarnings("deprecation")
 public final class TaskRepository extends PlatformObject {
 
 	public static final String DEFAULT_CHARACTER_ENCODING = "UTF-8"; //$NON-NLS-1$
@@ -109,12 +109,6 @@ public final class TaskRepository extends PlatformObject {
 
 	public static final String NO_VERSION_SPECIFIED = "unknown"; //$NON-NLS-1$
 
-	private static final String AUTH_SCHEME = "Basic"; //$NON-NLS-1$
-
-	private static final String AUTH_REALM = ""; //$NON-NLS-1$
-
-	private static final URL DEFAULT_URL;
-
 	private static final String PROPERTY_CONFIG_TIMESTAMP = "org.eclipse.mylyn.tasklist.repositories.configuration.timestamp"; //$NON-NLS-1$
 
 	public static final String PROXY_USEDEFAULT = "org.eclipse.mylyn.tasklist.repositories.proxy.usedefault"; //$NON-NLS-1$
@@ -149,16 +143,6 @@ public final class TaskRepository extends PlatformObject {
 
 	// HACK: private credentials for headless operation
 	private static Map<String, Map<String, String>> credentials = new HashMap<String, Map<String, String>>();
-
-	static {
-		URL url = null;
-		try {
-			url = new URL("http://eclipse.org/mylyn"); //$NON-NLS-1$
-		} catch (Exception ex) {
-			// TODO ?
-		}
-		DEFAULT_URL = url;
-	}
 
 	private static String getKeyPrefix(AuthenticationType type) {
 		switch (type) {
@@ -234,28 +218,40 @@ public final class TaskRepository extends PlatformObject {
 		this.setProperty(AUTH_PROXY + SAVE_PASSWORD, String.valueOf(true));
 	}
 
-	// TODO e3.4 move to new api
-	private void addAuthInfo(Map<String, String> map) {
+	private ISecurePreferences getSecurePreferences() {
+		ISecurePreferences securePreferences = SecurePreferencesFactory.getDefault()
+				.node(ITasksCoreConstants.ID_PLUGIN);
+		securePreferences = securePreferences.node(EncodingUtils.encodeSlashes(getRepositoryUrl()));
+		return securePreferences;
+	}
+
+	private void addAuthInfo(String username, String password, String userProperty, String passwordProperty) {
 		synchronized (LOCK) {
-			try {
-				if (Platform.isRunning()) {
-					// write the map to the keyring
-					try {
-						Platform.addAuthorizationInfo(new URL(getRepositoryUrl()), AUTH_REALM, AUTH_SCHEME, map);
-					} catch (MalformedURLException ex) {
-						Platform.addAuthorizationInfo(DEFAULT_URL, getRepositoryUrl(), AUTH_SCHEME, map);
-					}
-				} else {
-					Map<String, String> headlessCreds = getAuthInfo();
-					headlessCreds.putAll(map);
+			if (Platform.isRunning()) {
+				try {
+					ISecurePreferences securePreferences = getSecurePreferences();
+					securePreferences.put(userProperty, username, false);
+					securePreferences.put(passwordProperty, password, true);
+				} catch (StorageException e) {
+					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+							"Could not store authorization credentials", e)); //$NON-NLS-1$
 				}
-			} catch (CoreException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-						"Could not set authorization credentials", e)); //$NON-NLS-1$
+			} else {
+				Map<String, String> headlessCreds = credentials.get(getRepositoryUrl());
+				if (headlessCreds == null) {
+					headlessCreds = new HashMap<String, String>();
+					credentials.put(getRepositoryUrl(), headlessCreds);
+				}
+				headlessCreds.put(userProperty, username);
+				headlessCreds.put(passwordProperty, password);
 			}
 		}
 	}
 
+	/**
+	 * @deprecated use {@link #flushAuthenticationCredentials()} instead
+	 */
+	@Deprecated
 	public void clearCredentials() {
 	}
 
@@ -272,7 +268,6 @@ public final class TaskRepository extends PlatformObject {
 		return false;
 	}
 
-	// TODO e3.4 move to new api
 	public void flushAuthenticationCredentials() {
 		// legacy support for versions prior to 2.2 that did not set the enable flag
 		setProperty(getKeyPrefix(AuthenticationType.HTTP) + ENABLED, null);
@@ -284,35 +279,25 @@ public final class TaskRepository extends PlatformObject {
 
 			transientProperties.clear();
 
-			try {
-				if (Platform.isRunning()) {
-					try {
-						Platform.flushAuthorizationInfo(new URL(getRepositoryUrl()), AUTH_REALM, AUTH_SCHEME);
-					} catch (MalformedURLException ex) {
-						Platform.flushAuthorizationInfo(DEFAULT_URL, getRepositoryUrl(), AUTH_SCHEME);
-					}
-				} else {
-					Map<String, String> headlessCreds = getAuthInfo();
+			if (Platform.isRunning()) {
+				ISecurePreferences securePreferences = getSecurePreferences();
+				securePreferences.removeNode();
+			} else {
+				Map<String, String> headlessCreds = credentials.get(getRepositoryUrl());
+				if (headlessCreds != null) {
 					headlessCreds.clear();
 				}
-			} catch (CoreException e) {
-				// FIXME propagate exception?
-				StatusHandler.fail(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-						"Could not flush authorization credentials", e)); //$NON-NLS-1$
 			}
 		}
 	}
 
-	// TODO e3.4 move to new api
-	@SuppressWarnings( { "unchecked" })
-	private Map<String, String> getAuthInfo() {
+	private String getAuthInfo(String property) {
 		synchronized (LOCK) {
 			if (Platform.isRunning()) {
 				try {
-					return Platform.getAuthorizationInfo(new URL(getRepositoryUrl()), AUTH_REALM, AUTH_SCHEME);
-				} catch (MalformedURLException ex) {
-					return Platform.getAuthorizationInfo(DEFAULT_URL, getRepositoryUrl(), AUTH_SCHEME);
-				} catch (Exception e) {
+					ISecurePreferences securePreferences = getSecurePreferences();
+					return securePreferences.get(property, null);
+				} catch (StorageException e) {
 					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
 							"Could not retrieve authorization credentials", e)); //$NON-NLS-1$
 				}
@@ -322,15 +307,11 @@ public final class TaskRepository extends PlatformObject {
 					headlessCreds = new HashMap<String, String>();
 					credentials.put(getRepositoryUrl(), headlessCreds);
 				}
-				return headlessCreds;
+				return headlessCreds.get(property);
 			}
+
 			return null;
 		}
-	}
-
-	private String getAuthInfo(String property) {
-		Map<String, String> map = getAuthInfo();
-		return map == null ? null : map.get(property);
 	}
 
 	public String getCharacterEncoding() {
@@ -447,29 +428,6 @@ public final class TaskRepository extends PlatformObject {
 	public String getProperty(String name) {
 		return this.properties.get(name);
 	}
-
-//	/**
-//	 * @deprecated use {@link TaskRepositoryLocation#getProxyForHost(String, String)} instead
-//	 */
-//	@Deprecated
-//	public Proxy getProxy() {
-//		Proxy proxy = Proxy.NO_PROXY;
-//		if (isDefaultProxyEnabled()) {
-//			proxy = WebClientUtil.getPlatformProxy(getRepositoryUrl());
-//		} else {
-//
-//			String proxyHost = getProperty(PROXY_HOSTNAME);
-//			String proxyPort = getProperty(PROXY_PORT);
-//			String proxyUsername = "";
-//			String proxyPassword = "";
-//			if (proxyHost != null && proxyHost.length() > 0) {
-//				proxyUsername = getProxyUsername();
-//				proxyPassword = getProxyPassword();
-//			}
-//			proxy = WebClientUtil.getProxy(proxyHost, proxyPort, proxyUsername, proxyPassword);
-//		}
-//		return proxy;
-//	}
 
 	/**
 	 * @deprecated use {@link #getCredentials(AuthenticationType)} instead
@@ -649,15 +607,14 @@ public final class TaskRepository extends PlatformObject {
 		if (credentials == null) {
 			setProperty(key + ENABLED, String.valueOf(false));
 			transientProperties.remove(key + PASSWORD);
-			setCredentialsInternal("", "", key + USERNAME, key + PASSWORD); //$NON-NLS-1$ //$NON-NLS-2$
+			addAuthInfo("", "", key + USERNAME, key + PASSWORD); //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
 			setProperty(key + ENABLED, String.valueOf(true));
 			if (savePassword) {
-				setCredentialsInternal(credentials.getUserName(), credentials.getPassword(), key + USERNAME, key
-						+ PASSWORD);
+				addAuthInfo(credentials.getUserName(), credentials.getPassword(), key + USERNAME, key + PASSWORD);
 				transientProperties.remove(key + PASSWORD);
 			} else {
-				setCredentialsInternal(credentials.getUserName(), "", key + USERNAME, key + PASSWORD); //$NON-NLS-1$
+				addAuthInfo(credentials.getUserName(), "", key + USERNAME, key + PASSWORD); //$NON-NLS-1$
 				transientProperties.put(key + PASSWORD, credentials.getPassword());
 			}
 		}
@@ -683,21 +640,6 @@ public final class TaskRepository extends PlatformObject {
 			setCredentials(type, new AuthenticationCredentials(username, password), true);
 		}
 
-	}
-
-	private void setCredentialsInternal(String username, String password, String userProperty, String passwordProperty) {
-		Map<String, String> map = getAuthInfo();
-		if (map == null) {
-			map = new HashMap<String, String>();
-		}
-
-		if (username != null) {
-			map.put(userProperty, username);
-		}
-		if (password != null) {
-			map.put(passwordProperty, password);
-		}
-		addAuthInfo(map);
 	}
 
 	/**
