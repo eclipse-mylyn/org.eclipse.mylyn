@@ -80,11 +80,13 @@ class ConnectorDescriptorToolTip extends GradientToolTip {
 				GridDataFactory.fillDefaults().grab(true, false).hint(320, 240).span(image == null ? 2 : 1, 1).applyTo(
 						summaryLabel);
 				summaryLabel.setText(summary);
+				summaryLabel.setBackground(null);
 			}
 			if (image != null) {
 				Label imageLabel = new Label(container, SWT.NULL);
 
 				imageLabel.setImage(image);
+				imageLabel.setBackground(null);
 
 				GridDataFactory.fillDefaults()
 						.grab(false, false)
@@ -97,6 +99,7 @@ class ConnectorDescriptorToolTip extends GradientToolTip {
 				GridDataFactory.fillDefaults().grab(false, false).span(2, 1).align(SWT.BEGINNING, SWT.CENTER).applyTo(
 						link);
 				link.setText(Messages.ConnectorDescriptorToolTip_detailsLink);
+				link.setBackground(null);
 				link.setToolTipText(NLS.bind(Messages.ConnectorDescriptorToolTip_detailsLink_tooltip, overview.getUrl()));
 				link.addSelectionListener(new SelectionListener() {
 					public void widgetSelected(SelectionEvent e) {

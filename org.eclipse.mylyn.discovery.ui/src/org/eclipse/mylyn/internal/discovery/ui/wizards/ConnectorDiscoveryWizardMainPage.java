@@ -644,7 +644,6 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 					GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).equalWidth(false).applyTo(
 							categoryHeaderContainer);
 
-
 					Label iconLabel = new Label(categoryHeaderContainer, SWT.NULL);
 					if (category.getIcon() != null) {
 						Image image = computeIconImage(category.getSource(), category.getIcon());
@@ -679,6 +678,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 					}
 
 					if (++numChildren > 1) {
+						// a separator between connector descriptors
 						Composite border = new Composite(categoryChildrenContainer, SWT.NULL);
 						GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 1).applyTo(border);
 						GridLayoutFactory.fillDefaults().applyTo(border);
@@ -894,16 +894,10 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 			return true;
 		}
 		if (filterPattern != null) {
-			if (filterMatches(descriptor.getName()) || filterMatches(descriptor.getDescription())
-					|| filterMatches(descriptor.getProvider())) {
-				return false;
+			if (!(filterMatches(descriptor.getName()) || filterMatches(descriptor.getDescription())
+					|| filterMatches(descriptor.getProvider()) || filterMatches(descriptor.getLicense()))) {
+				return true;
 			}
-			if (descriptor.getOverview() != null) {
-				if (filterMatches(descriptor.getOverview().getSummary())) {
-					return false;
-				}
-			}
-			return true;
 		}
 		return false;
 	}
