@@ -68,7 +68,8 @@ public class SubmitTaskJob extends SubmitJob {
 	}
 
 	@Override
-	protected IStatus run(IProgressMonitor monitor) {
+	protected IStatus run(IProgressMonitor jobMonitor) {
+		monitor.attach(jobMonitor);
 		try {
 			monitor.beginTask(Messages.SubmitTaskJob_Submitting_task, 2 * (1 + getSubmitJobListeners().length) * 100);
 
@@ -115,6 +116,7 @@ public class SubmitTaskJob extends SubmitJob {
 		return task;
 	}
 
+	@Override
 	public RepositoryResponse getResponse() {
 		return response;
 	}
