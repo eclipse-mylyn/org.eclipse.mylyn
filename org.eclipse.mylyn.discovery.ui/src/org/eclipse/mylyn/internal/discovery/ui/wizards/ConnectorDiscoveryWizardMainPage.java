@@ -521,6 +521,8 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 
 		scrolledComposite.setExpandHorizontal(true);
 		scrolledComposite.setMinWidth(100);
+		scrolledComposite.setExpandVertical(true);
+		scrolledComposite.setMinHeight(100);
 
 		scrolledComposite.setContent(scrolledContents);
 
@@ -949,7 +951,6 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 	}
 
 	private Image computeIconImage(AbstractDiscoverySource discoverySource, Icon icon) {
-		// FIXME: which image?
 		String imagePath = icon.getImage32();
 		if (imagePath != null && imagePath.length() > 0) {
 			URL resource = discoverySource.getResource(imagePath);
@@ -968,7 +969,6 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 				}
 			}
 		}
-		// FIXME: provide a spacer
 		return null;
 	}
 
