@@ -115,7 +115,8 @@ class ConnectorDescriptorToolTip extends GradientToolTip {
 			if (overview.getUrl() != null && overview.getUrl().length() > 0) {
 				Link link = new Link(container, SWT.NULL);
 				link.setBackground(background);
-				GridDataFactory.fillDefaults().grab(false, false).span(2, 1).align(SWT.END, SWT.CENTER).applyTo(link);
+				GridDataFactory.fillDefaults().grab(false, false).span(2, 1).align(SWT.BEGINNING, SWT.CENTER).applyTo(
+						link);
 				link.setText(Messages.ConnectorDescriptorToolTip_detailsLink);
 				link.setToolTipText(NLS.bind(Messages.ConnectorDescriptorToolTip_detailsLink_tooltip, overview.getUrl()));
 				link.addSelectionListener(new SelectionListener() {
