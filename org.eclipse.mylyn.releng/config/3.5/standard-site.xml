@@ -24,7 +24,7 @@
    <feature url="features/org.eclipse.mylyn.bugzilla_feature_@core@.jar" id="org.eclipse.mylyn.bugzilla_feature" version="@core@">
       <category name="Integration"/>
    </feature>
-    <feature url="features/org.eclipse.mylyn.wikitext_feature_@wikitext@.jar" id="org.eclipse.mylyn.wikitext_feature" version="@wikitext@">
+   <feature url="features/org.eclipse.mylyn.wikitext_feature_@wikitext@.jar" id="org.eclipse.mylyn.wikitext_feature" version="@wikitext@">
       <category name="Integration"/>
    </feature>
    <feature url="features/org.eclipse.mylyn.sdk_feature_@core@.jar" id="org.eclipse.mylyn.sdk_feature" version="@core@">
@@ -33,8 +33,19 @@
    <feature url="features/org.eclipse.mylyn.wikitext.sdk_@wikitext@.jar" id="org.eclipse.mylyn.wikitext.sdk" version="@wikitext@">
       <category name="SDK"/>
    </feature>
-   <category-def name="Features" label="Mylyn Features"/>
-   <category-def name="Integration" label="Mylyn Integration"/>
-   <category-def name="SDK" label="Mylyn Plug-in Development"/>
+   <category-def name="Features" label="Mylyn Features">
+      <description>
+         The Task List and the Task-Focused Interface.
+      </description>
+   </category-def>
+   <category-def name="Integration" label="Mylyn Integration">
+      <description>
+         Mylyn bridges that integrate with documents and programming languages. Mylyn connectors that integrate with task repositories.
+      </description>
+   </category-def>
+   <category-def name="SDK" label="Mylyn Plug-in Development">
+      <description>
+         Source code and documentation for integrators building on Mylyn.
+      </description>
+   </category-def>
 </site>
-

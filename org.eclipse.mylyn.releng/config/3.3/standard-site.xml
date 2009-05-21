@@ -27,7 +27,14 @@
    <feature url="features/org.eclipse.mylyn.wikitext_feature_@wikitext@.jar" id="org.eclipse.mylyn.wikitext_feature" version="@wikitext@">
       <category name="Integration"/>
    </feature>
-   <category-def name="Features" label="Mylyn Features"/>
-   <category-def name="Integration" label="Mylyn Integration"/>
+   <category-def name="Features" label="Mylyn Features">
+      <description>
+         The Task List and the Task-Focused Interface.
+      </description>
+   </category-def>
+   <category-def name="Integration" label="Mylyn Integration">
+      <description>
+         Mylyn bridges that integrate with documents and programming languages. Mylyn connectors that integrate with task repositories.
+      </description>
+   </category-def>
 </site>
-

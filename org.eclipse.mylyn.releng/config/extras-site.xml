@@ -12,6 +12,14 @@
    <feature url="features/org.eclipse.mylyn.extras_sdk_feature_@core@.jar" id="org.eclipse.mylyn.extras_sdk_feature" version="@core@">
       <category name="SDK"/>
    </feature>
-   <category-def name="Integration" label="Mylyn Integration"/>
-   <category-def name="SDK" label="Mylyn Plug-in Development"/>
+   <category-def name="Integration" label="Mylyn Integration">
+      <description>
+         Mylyn bridges that integrate with documents and programming languages. Mylyn connectors that integrate with task repositories.
+      </description>
+   </category-def>
+   <category-def name="SDK" label="Mylyn Plug-in Development">
+      <description>
+         Source code and documentation for integrators building on Mylyn.
+      </description>
+   </category-def>
 </site>
