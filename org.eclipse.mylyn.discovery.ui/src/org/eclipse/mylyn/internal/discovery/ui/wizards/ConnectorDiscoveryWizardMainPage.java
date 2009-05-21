@@ -643,8 +643,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 
 					paintGradient(categoryHeaderContainer);
 
-					Label iconLabel = new Label(categoryHeaderContainer, SWT.NO_BACKGROUND);
-//					configureLook(iconLabel, background);
+					Label iconLabel = new Label(categoryHeaderContainer, SWT.NULL);
 					if (category.getIcon() != null) {
 						Image image = computeIconImage(category.getSource(), category.getIcon());
 						if (image != null) {
@@ -653,14 +652,12 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 					}
 					GridDataFactory.swtDefaults().align(SWT.CENTER, SWT.BEGINNING).span(1, 2).applyTo(iconLabel);
 
-					Label nameLabel = new Label(categoryHeaderContainer, SWT.NO_BACKGROUND);
-//					configureLook(nameLabel, background);
+					Label nameLabel = new Label(categoryHeaderContainer, SWT.NULL);
 					nameLabel.setFont(h1Font);
 					nameLabel.setText(category.getName());
 					GridDataFactory.fillDefaults().grab(true, false).applyTo(nameLabel);
 
-					Label description = new Label(categoryHeaderContainer, SWT.NO_BACKGROUND | SWT.WRAP);
-//					configureLook(description, background);
+					Label description = new Label(categoryHeaderContainer, SWT.WRAP);
 					GridDataFactory.fillDefaults().grab(true, false).hint(100, SWT.DEFAULT).applyTo(description);
 					description.setText(category.getDescription());
 				}
