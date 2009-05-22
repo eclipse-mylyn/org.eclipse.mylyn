@@ -57,6 +57,8 @@ import org.eclipse.swt.accessibility.AccessibleControlAdapter;
 import org.eclipse.swt.accessibility.AccessibleControlEvent;
 import org.eclipse.swt.accessibility.AccessibleEvent;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.FocusAdapter;
@@ -503,12 +505,14 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 
 		// we put the contents in a scrolled composite since we don't know how
 		// big it will be
-		ScrolledComposite scrolledComposite = new ScrolledComposite(body, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+		final ScrolledComposite scrolledComposite = new ScrolledComposite(body, SWT.H_SCROLL | SWT.V_SCROLL
+				| SWT.BORDER);
+		scrolledComposite.setShowFocusedControl(true);
 		configureLook(scrolledComposite, colorWhite);
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(scrolledComposite);
 
 		// FIXME 3.2 does white work for any desktop theme, e.g. an inverse theme?
-		Composite scrolledContents = new Composite(scrolledComposite, SWT.NONE);
+		final Composite scrolledContents = new Composite(scrolledComposite, SWT.NONE);
 		configureLook(scrolledContents, colorWhite);
 		scrolledContents.setRedraw(false);
 		try {
@@ -517,12 +521,22 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 			scrolledContents.layout(true);
 			scrolledContents.setRedraw(true);
 		}
-		scrolledContents.setSize(scrolledContents.computeSize(body.getSize().x, SWT.DEFAULT, true));
+		Point size = scrolledContents.computeSize(body.getSize().x, SWT.DEFAULT, true);
+		scrolledContents.setSize(size);
 
 		scrolledComposite.setExpandHorizontal(true);
 		scrolledComposite.setMinWidth(100);
 		scrolledComposite.setExpandVertical(true);
-		scrolledComposite.setMinHeight(100);
+		scrolledComposite.setMinHeight(size.y);
+
+		scrolledComposite.addControlListener(new ControlAdapter() {
+			@Override
+			public void controlResized(ControlEvent e) {
+				Point size = scrolledContents.computeSize(body.getSize().x, SWT.DEFAULT, true);
+				scrolledContents.setSize(size);
+				scrolledComposite.setMinHeight(size.y);
+			}
+		});
 
 		scrolledComposite.setContent(scrolledContents);
 
@@ -690,7 +704,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 					Composite connectorContainer = new Composite(categoryChildrenContainer, SWT.NULL);
 					configureLook(connectorContainer, background);
 					GridDataFactory.fillDefaults().grab(true, false).applyTo(connectorContainer);
-					GridLayout categoryLayout = new GridLayout(3, false);
+					GridLayout categoryLayout = new GridLayout(5, false);
 					categoryLayout.marginLeft = 30;
 					categoryLayout.marginTop = 2;
 					categoryLayout.marginBottom = 2;
@@ -730,26 +744,37 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 
 					Label nameLabel = new Label(connectorContainer, SWT.NULL);
 					configureLook(nameLabel, background);
-					GridDataFactory.fillDefaults().applyTo(nameLabel);
+					GridDataFactory.fillDefaults().grab(true, false).applyTo(nameLabel);
 					nameLabel.setFont(h2Font);
 					nameLabel.setText(connector.getName());
 					nameLabel.addMouseListener(selectMouseListener);
+
+					Label providerLabel = new Label(connectorContainer, SWT.NULL);
+					configureLook(providerLabel, background);
+					GridDataFactory.fillDefaults().applyTo(providerLabel);
+					providerLabel.setText(connector.getProvider());
+					providerLabel.addMouseListener(selectMouseListener);
+
+					Label licenseLabel = new Label(connectorContainer, SWT.NULL);
+					configureLook(licenseLabel, background);
+					GridDataFactory.fillDefaults().applyTo(licenseLabel);
+					licenseLabel.setText(connector.getLicense());
+					licenseLabel.addMouseListener(selectMouseListener);
 
 					Label infoLabel = new Label(connectorContainer, SWT.NULL);
 					configureLook(infoLabel, background);
 					if (hasTooltip(connector)) {
 						infoLabel.setImage(infoImage);
 						infoLabel.setCursor(handCursor);
+						infoLabel.setToolTipText(Messages.ConnectorDiscoveryWizardMainPage_tooltip_showOverview);
 						hookTooltip(infoLabel, connectorContainer, nameLabel, connector, true);
-
-						GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).applyTo(infoLabel);
 					}
-					GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.FILL).grab(false, true).applyTo(infoLabel);
+					GridDataFactory.fillDefaults().align(SWT.END, SWT.FILL).grab(false, true).applyTo(infoLabel);
 
 					Label description = new Label(connectorContainer, SWT.NULL | SWT.WRAP);
 					configureLook(description, background);
 
-					GridDataFactory.fillDefaults().grab(true, false).span(2, 1).hint(100, SWT.DEFAULT).applyTo(
+					GridDataFactory.fillDefaults().grab(true, false).span(4, 1).hint(100, SWT.DEFAULT).applyTo(
 							description);
 					String descriptionText = connector.getDescription();
 					int maxDescriptionLength = 162;
