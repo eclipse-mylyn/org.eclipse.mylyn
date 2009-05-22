@@ -157,13 +157,16 @@ public class SelectSupportElementPage extends WizardPage {
 			titleLabel.setLayoutData(fd);
 
 			descriptionLabel = new Label(this, SWT.WRAP);
-			fd = new FormData();
-			fd.top = new FormAttachment(titleLabel, 5);
-			fd.left = new FormAttachment(iconLabel, 5);
-			descriptionLabel.setLayoutData(fd);
 
 			toolBarManager = new ToolBarManager(SWT.FLAT);
 			toolBar = toolBarManager.createControl(this);
+
+			fd = new FormData();
+			fd.top = new FormAttachment(titleLabel, 5);
+			fd.left = new FormAttachment(iconLabel, 5);
+			fd.right = new FormAttachment(toolBar, -5);
+			descriptionLabel.setLayoutData(fd);
+
 			fd = new FormData();
 			fd.right = new FormAttachment(100);
 			toolBar.setLayoutData(fd);
@@ -261,11 +264,11 @@ public class SelectSupportElementPage extends WizardPage {
 		this.input = input;
 
 		if (input instanceof IProvider) {
-			setTitle("Support Provider");
-			setMessage("Select a support provider from the list.");
-		} else {
 			setTitle("Supported Product");
 			setMessage("Select a supported product from the list.");
+		} else {
+			setTitle("Support Provider");
+			setMessage("Select a support provider from the list.");
 		}
 	}
 
@@ -275,7 +278,7 @@ public class SelectSupportElementPage extends WizardPage {
 		container.setLayout(layout);
 
 		ControlListViewer viewer = new SupportElementViewer(container, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL);
-		GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, TABLE_HEIGHT).applyTo(viewer.getControl());
+		GridDataFactory.fillDefaults().grab(true, true).hint(600, TABLE_HEIGHT).applyTo(viewer.getControl());
 		viewer.setContentProvider(contentProvider);
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
