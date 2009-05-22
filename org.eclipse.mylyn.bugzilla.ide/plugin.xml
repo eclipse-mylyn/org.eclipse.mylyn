@@ -18,7 +18,7 @@
 			</repository>
 		</mapping>
 		<product featureId="org.eclipse.mylyn_feature" id="org.eclipse.mylyn"
-			pluginId="org.eclipse.mylyn" providerId="org.eclipse" url="http://eclipse.org/mylyn/" />
+			pluginId="org.eclipse.mylyn" providerId="org.eclipse" url="http://eclipse.org/mylyn/support/" />
 		<mapping namespace="org.eclipse.mylyn" productId="org.eclipse.mylyn">
 			<property name="product" value="Mylyn">
 			</property>
