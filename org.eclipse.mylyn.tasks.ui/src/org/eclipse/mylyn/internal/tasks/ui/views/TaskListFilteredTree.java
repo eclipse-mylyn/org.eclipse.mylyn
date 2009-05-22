@@ -498,7 +498,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 				workingSetLink.setToolTipText(Messages.TaskListFilteredTree_Edit_Task_Working_Sets_);
 				currentWorkingSet = workingSet;
 			}
-			filterComposite.layout();
+			relayoutFilterControls();
 		}
 	}
 
@@ -511,8 +511,12 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 			activeTaskLink.setTask(task);
 
-			filterComposite.layout();
+			relayoutFilterControls();
 		}
+	}
+
+	private void relayoutFilterControls() {
+		filterComposite.layout();
 	}
 
 	public String getActiveTaskLabelText() {
@@ -528,7 +532,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		activeTaskLink.setText(Messages.TaskListFilteredTree_Activate);
 		activeTaskLink.setToolTipText(""); //$NON-NLS-1$
 
-		filterComposite.layout();
+		relayoutFilterControls();
 	}
 
 	@Override
