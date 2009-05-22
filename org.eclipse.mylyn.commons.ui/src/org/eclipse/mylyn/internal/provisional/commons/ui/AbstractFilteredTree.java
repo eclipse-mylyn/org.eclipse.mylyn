@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.internal.commons.ui.CommonsUiPlugin;
 import org.eclipse.mylyn.internal.commons.ui.Messages;
 import org.eclipse.swt.SWT;
@@ -37,7 +38,7 @@ import org.eclipse.ui.dialogs.PatternFilter;
  */
 public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 
-	private static final int filterWidth = 69;
+	private static final int FILTER_WIDTH = 120;
 
 	public static final String LABEL_FIND = Messages.AbstractFilteredTree_Find;
 
@@ -100,54 +101,25 @@ public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 
 	@Override
 	protected Composite createFilterControls(Composite parent) {
-		Composite newParent = parent;
-
-		GridLayout gridLayout = new GridLayout(4, false);
+		// replace filterComposite by a new composite
+		filterComposite = new Composite(parent.getParent(), SWT.NONE);
+		GridLayout gridLayout = new GridLayout(1, false);
 		gridLayout.marginWidth = 0;
 		gridLayout.marginHeight = 0;
 		gridLayout.marginTop = 3;
 		gridLayout.marginBottom = 3;
 		gridLayout.verticalSpacing = 0;
-		if (useNewLook) {
-			newParent = new Composite(parent.getParent(), SWT.NONE);
-			gridLayout.numColumns = 3;
-			newParent.setLayout(gridLayout);
+		filterComposite.setLayout(gridLayout);
 
-			newParent.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER));
+		Label label = new Label(filterComposite, SWT.NONE);
+		label.setText(LABEL_FIND);
+		GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).applyTo(label);
 
-			parent.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER));
-			gridLayout = new GridLayout(3, false);
-			gridLayout.marginWidth = 0;
-			gridLayout.marginHeight = 0;
-			gridLayout.horizontalSpacing = 0;
-			gridLayout.verticalSpacing = 0;
-		}
-		parent.setLayout(gridLayout);
-
-		if (useNewLook) {
-			Label label = new Label(newParent, SWT.NONE);
-			label.setText(LABEL_FIND);
-			parent.setParent(newParent);
-		} else {
-			Label label = new Label(parent, SWT.NONE);
-			label.setText(LABEL_FIND);
-		}
-
-//		// from super
-//		createFilterText(parent);
-//		createClearText(parent);
-//		if (filterToolBar != null) {
-//			filterToolBar.update(false);
-//			// initially there is no text to clear
-//			filterToolBar.getControl().setVisible(false);
-//		}
+		// let FilteredTree create the find and clear control
 		super.createFilterControls(parent);
-
-		GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, false);
-		gd.minimumWidth = filterWidth;
-		filterText.setLayoutData(gd);
+		GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).grab(false, false).hint(FILTER_WIDTH,
+				SWT.DEFAULT).minSize(FILTER_WIDTH, SWT.DEFAULT).applyTo(parent);
 		filterText.addKeyListener(new KeyAdapter() {
-
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.character == SWT.ESC) {
@@ -155,28 +127,19 @@ public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 				}
 			}
 		});
+		((GridData) filterText.getLayoutData()).verticalAlignment = SWT.CENTER;
 
-		Composite superComposite;
-		if (useNewLook) {
-			superComposite = new Composite(newParent, SWT.NONE);
-		} else {
-			superComposite = new Composite(parent, SWT.NONE);
-		}
-		GridLayout superLayout = new GridLayout(4, false);
-		superLayout.marginWidth = 0;
-		superLayout.marginHeight = 0;
-		superLayout.horizontalSpacing = 0;
-		superLayout.verticalSpacing = 0;
-		GridData superLayoutData = new GridData(SWT.LEFT, SWT.CENTER, true, false);
-		superComposite.setLayout(superLayout);
-		superComposite.setLayoutData(superLayoutData);
+		// move original filterComposite on new filterComposite
+		parent.setParent(filterComposite);
 
-		Composite workingSetComposite = createActiveWorkingSetComposite(superComposite);
-		workingSetComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
+		Composite workingSetComposite = createActiveWorkingSetComposite(filterComposite);
+		GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).grab(false, false).applyTo(workingSetComposite);
 
-		Composite activeTaskComposite = createActiveTaskComposite(superComposite);
-		activeTaskComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
-		parent.layout();
+		Composite activeTaskComposite = createActiveTaskComposite(filterComposite);
+		GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).grab(true, false).applyTo(activeTaskComposite);
+
+		gridLayout.numColumns = filterComposite.getChildren().length;
+
 		return parent;
 	}
 

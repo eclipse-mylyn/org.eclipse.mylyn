@@ -37,15 +37,20 @@ public class EnhancedFilteredTree extends FilteredTree {
 
 	@Override
 	protected void createControl(Composite parent, int treeStyle) {
+		useNewLook = setNewLook(this);
+		super.createControl(parent, treeStyle);
+	}
+
+	public static boolean setNewLook(FilteredTree tree) {
 		try {
 			Field newStyleField = FilteredTree.class.getDeclaredField("useNewLook"); //$NON-NLS-1$
 			newStyleField.setAccessible(true);
-			newStyleField.setBoolean(this, true);
-			useNewLook = newStyleField.getBoolean(this);
+			newStyleField.setBoolean(tree, true);
+			return newStyleField.getBoolean(tree);
 		} catch (Exception e) {
 			// ignore
 		}
-		super.createControl(parent, treeStyle);
+		return false;
 	}
 
 }
