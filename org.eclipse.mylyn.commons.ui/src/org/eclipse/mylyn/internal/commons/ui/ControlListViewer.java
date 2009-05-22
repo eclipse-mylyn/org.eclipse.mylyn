@@ -22,10 +22,9 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
-import org.eclipse.swt.events.FocusAdapter;
-import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.TraverseEvent;
 import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.graphics.Point;
@@ -77,21 +76,6 @@ public abstract class ControlListViewer extends StructuredViewer {
 		control.setLayout(layout);
 		control.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
 
-		control.addFocusListener(new FocusAdapter() {
-			private boolean settingFocus = false;
-
-			@Override
-			public void focusGained(FocusEvent e) {
-				if (!settingFocus) {
-					// Prevent new focus events as a result this update
-					// occurring
-					settingFocus = true;
-					//setFocus();
-					settingFocus = false;
-				}
-			}
-		});
-
 		control.addControlListener(new ControlListener() {
 			public void controlMoved(ControlEvent e) {
 				updateVisibleItems();
@@ -108,6 +92,15 @@ public abstract class ControlListViewer extends StructuredViewer {
 
 		noEntryArea = new Composite(scrolled, SWT.NONE);
 		doCreateNoEntryArea(noEntryArea);
+
+		scrolled.setExpandHorizontal(true);
+		scrolled.setExpandVertical(true);
+		scrolled.addControlListener(new ControlAdapter() {
+			@Override
+			public void controlResized(ControlEvent e) {
+				updateSize();
+			}
+		});
 
 		control.addTraverseListener(new TraverseListener() {
 			private boolean handleEvent = true;
@@ -221,9 +214,15 @@ public abstract class ControlListViewer extends StructuredViewer {
 		doUpdateContent();
 	}
 
+	private void updateSize() {
+		Point size = control.computeSize(scrolled.getClientArea().width, SWT.DEFAULT, true);
+		control.setSize(size);
+		scrolled.setMinSize(size);
+	}
+
 	protected void doUpdateContent() {
 		if (control.getChildren().length > 0) {
-			updateMinSize();
+			updateSize();
 			scrolled.setContent(control);
 		} else {
 			scrolled.setContent(noEntryArea);
@@ -345,13 +344,7 @@ public abstract class ControlListViewer extends StructuredViewer {
 		}
 		((ControlListItem) widget).refresh();
 
-		updateMinSize();
-	}
-
-	private void updateMinSize() {
-		// Update the minimum size
-		Point size = control.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-		scrolled.setMinSize(size);
+		updateSize();
 	}
 
 	public void remove(Object[] elements) {
