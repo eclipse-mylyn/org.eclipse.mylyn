@@ -20,10 +20,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.net.UnknownHostException;
+import java.util.List;
 
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.URI;
+import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.HeadMethod;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -149,36 +153,63 @@ public class WebUtil {
 	}
 
 	/**
-	 * Verify availability of the resource at the given web location. Normally this would be done using an HTTP HEAD.
+	 * Verify availability of resources at the given web locations. Normally this would be done using an HTTP HEAD.
 	 * 
-	 * @param location
-	 *            the location of the resource to verify
+	 * @param locations
+	 *            the locations of the resource to verify
+	 * @param one
+	 *            indicate if only one of the resources must exist
 	 * @param monitor
 	 *            the monitor
 	 * @return true if the resource exists
 	 */
-	public static boolean verifyAvailability(AbstractWebLocation location, IProgressMonitor monitor) {
+	public static boolean verifyAvailability(List<? extends AbstractWebLocation> locations, boolean one,
+			IProgressMonitor monitor) {
+		if (locations.isEmpty() || locations.size() > 5) {
+			throw new IllegalArgumentException();
+		}
 		monitor = Policy.monitorFor(monitor);
-		monitor.beginTask(NLS.bind(Messages.WebUtil_task_verifyingUrl, location.getUrl()), IProgressMonitor.UNKNOWN);
+		monitor.beginTask(NLS.bind(Messages.WebUtil_task_verifyingUrl, locations.get(0).getUrl()),
+				IProgressMonitor.UNKNOWN);
 		try {
 			HttpClient client = new HttpClient();
 			org.eclipse.mylyn.commons.net.WebUtil.configureHttpClient(client, ""); //$NON-NLS-1$
 
-			HeadMethod method = new HeadMethod(location.getUrl());
+			HeadMethod method = new HeadMethod();
 			try {
-				HostConfiguration hostConfiguration = org.eclipse.mylyn.commons.net.WebUtil.createHostConfiguration(
-						client, location, monitor);
-				int result;
-				try {
-					result = org.eclipse.mylyn.commons.net.WebUtil.execute(client, hostConfiguration, method, monitor);
-				} catch (IOException e) {
-					return false;
+				int countFound = 0;
+				for (AbstractWebLocation location : locations) {
+					try {
+						method.setURI(new URI(location.getUrl(), true));
+					} catch (URIException e) {
+						if (!one) {
+							break;
+						}
+					}
+					HostConfiguration hostConfiguration = org.eclipse.mylyn.commons.net.WebUtil.createHostConfiguration(
+							client, location, monitor);
+					int result;
+					try {
+						result = org.eclipse.mylyn.commons.net.WebUtil.execute(client, hostConfiguration, method,
+								monitor);
+					} catch (IOException e) {
+						if (!one || e instanceof UnknownHostException) {
+							return false;
+						}
+						continue;
+					}
+					if (result == HttpStatus.SC_OK) {
+						++countFound;
+						if (one) {
+							return true;
+						}
+					} else {
+						if (!one) {
+							return false;
+						}
+					}
 				}
-				if (result == HttpStatus.SC_OK) {
-					return true;
-				} else {
-					return false;
-				}
+				return countFound == locations.size();
 			} finally {
 				method.releaseConnection();
 			}

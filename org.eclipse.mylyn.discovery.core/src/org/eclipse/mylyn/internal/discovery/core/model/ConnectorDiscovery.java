@@ -107,7 +107,7 @@ public class ConnectorDiscovery {
 
 			filterDescriptors();
 			if (verifyUpdateSiteAvailability) {
-				filterUnavailableDescriptors(new SubProgressMonitor(monitor, filterTicks));
+				performSiteAvailabilityVerification(new SubProgressMonitor(monitor, filterTicks));
 			}
 			connectCategoriesToDescriptors();
 		} finally {
@@ -163,6 +163,9 @@ public class ConnectorDiscovery {
 
 	/**
 	 * indicate if update site availability should be verified. The default is false.
+	 * 
+	 * @see DiscoveryConnector#getAvailable()
+	 * @see #performSiteAvailabilityVerification(IProgressMonitor)
 	 */
 	public boolean isVerifyUpdateSiteAvailability() {
 		return verifyUpdateSiteAvailability;
@@ -170,6 +173,9 @@ public class ConnectorDiscovery {
 
 	/**
 	 * indicate if update site availability should be verified. The default is false.
+	 * 
+	 * @see DiscoveryConnector#getAvailable()
+	 * @see #performSiteAvailabilityVerification(IProgressMonitor)
 	 */
 	public void setVerifyUpdateSiteAvailability(boolean verifyUpdateSiteAvailability) {
 		this.verifyUpdateSiteAvailability = verifyUpdateSiteAvailability;
@@ -269,9 +275,9 @@ public class ConnectorDiscovery {
 	}
 
 	/**
-	 * filter connectors whose update site is not available
+	 * determine update site availability
 	 */
-	private void filterUnavailableDescriptors(IProgressMonitor monitor) {
+	private void performSiteAvailabilityVerification(IProgressMonitor monitor) {
 		Set<URL> urls = new HashSet<URL>();
 		Set<URL> availableUrls = new HashSet<URL>();
 		Map<ConnectorDescriptor, URL> descriptorToUrl = new HashMap<ConnectorDescriptor, URL>();
@@ -328,12 +334,9 @@ public class ConnectorDiscovery {
 					executorService.shutdownNow();
 				}
 			}
-			for (DiscoveryConnector descriptor : new ArrayList<DiscoveryConnector>(connectors)) {
+			for (DiscoveryConnector descriptor : connectors) {
 				URL url = descriptorToUrl.get(descriptor);
-				if (!availableUrls.contains(url)) {
-					connectors.remove(descriptor);
-					filteredConnectors.add(descriptor);
-				}
+				descriptor.setAvailable(availableUrls.contains(url));
 			}
 		} finally {
 			monitor.done();
@@ -351,8 +354,11 @@ public class ConnectorDiscovery {
 		}
 
 		public VerifyUpdateSiteJob call() throws Exception {
-			URL contentJarUrl = new URL(url, "content.jar"); //$NON-NLS-1$
-			ok = WebUtil.verifyAvailability(new WebLocation(contentJarUrl.toExternalForm()), new NullProgressMonitor());
+			List<WebLocation> locations = new ArrayList<WebLocation>();
+			for (String location : new String[] { "content.jar", "content.xml", "site.xml" }) { //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+				locations.add(new WebLocation(new URL(url, location).toExternalForm()));
+			}
+			ok = WebUtil.verifyAvailability(locations, true, new NullProgressMonitor());
 			return this;
 		}
 

@@ -11,7 +11,6 @@
 package org.eclipse.mylyn.internal.discovery.core.model;
 
 /**
- * 
  * @author David Green
  */
 public class DiscoveryConnector extends ConnectorDescriptor {
@@ -20,6 +19,8 @@ public class DiscoveryConnector extends ConnectorDescriptor {
 	private DiscoveryCategory category;
 
 	private boolean selected;
+
+	private Boolean available;
 
 	public DiscoveryCategory getCategory() {
 		return category;
@@ -54,5 +55,24 @@ public class DiscoveryConnector extends ConnectorDescriptor {
 	 */
 	public void setSelected(boolean selected) {
 		this.selected = selected;
+	}
+
+	/**
+	 * indicate if this connector is available
+	 * 
+	 * @return true if available, false if not, or null if availability is unknown
+	 */
+	public Boolean getAvailable() {
+		return available;
+	}
+
+	/**
+	 * indicate if this connector is available
+	 * 
+	 * @param available
+	 *            true if available, false if not, or null if availability is unknown
+	 */
+	public void setAvailable(Boolean available) {
+		this.available = available;
 	}
 }
