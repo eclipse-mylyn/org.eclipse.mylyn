@@ -27,21 +27,19 @@ public class Messages extends NLS {
 
 	public static String TaskCompareDialog_Ascending;
 
-	public static String TaskCompareDialog_DateCreated;
-
 	public static String TaskCompareDialog_Descending;
 
-	public static String TaskCompareDialog_Priority;
+	public static String TaskCompareDialog_Sort_by;
 
 	public static String TaskCompareDialog_Sorting;
 
-	public static String TaskCompareDialog_SortOrder;
+	public static String TaskCompareDialog_Tasks;
 
-	public static String TaskCompareDialog_Summary;
+	public static String TaskCompareDialog_Then_by;
 
-	public static String TaskCompareDialog_TaskID;
+	public static String TaskListSortDialog_Queries_and_Categories;
 
-	public static String TaskListSortDialog_Sort_order;
+	public static String TaskListSortDialog_Grouped_by;
 
 	public static String TaskListSortDialog_Title;
 

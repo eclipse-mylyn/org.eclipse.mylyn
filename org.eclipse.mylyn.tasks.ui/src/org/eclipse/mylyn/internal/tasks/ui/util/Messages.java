@@ -41,6 +41,16 @@ public class Messages extends NLS {
 
 	public static String ImportExportUtil_Tasks_and_queries_Filter0;
 
+	public static String SortKindEntry_Date_Created;
+
+	public static String SortKindEntry_None;
+
+	public static String SortKindEntry_Priority;
+
+	public static String SortKindEntry_Summary;
+
+	public static String SortKindEntry_Task_ID;
+
 	public static String TaskDataExportOperation_exporting_task_data;
 
 	public static String TasksUiInternal_Configuration_Refresh_Failed;

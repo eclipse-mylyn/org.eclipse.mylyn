@@ -104,10 +104,11 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.TaskListSortAction;
 import org.eclipse.mylyn.internal.tasks.ui.commands.CollapseAllHandler;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskListChangeAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.util.PlatformUtil;
-import org.eclipse.mylyn.internal.tasks.ui.util.TaskComparator;
+import org.eclipse.mylyn.internal.tasks.ui.util.SortCriterion;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDragSourceListener;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.util.TreeWalker;
+import org.eclipse.mylyn.internal.tasks.ui.util.SortCriterion.SortKey;
 import org.eclipse.mylyn.internal.tasks.ui.util.TreeWalker.TreeVisitor;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
@@ -303,17 +304,22 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 	public static final String LABEL_VIEW = Messages.TaskListView_Task_List;
 
+	@Deprecated
 	private static final String MEMENTO_KEY_SORT_DIRECTION = "sortDirection"; //$NON-NLS-1$
 
-	private static final String MEMENTO_KEY_ROOT_SORT_DIRECTION = "rootSortDirection"; //$NON-NLS-1$
-
+	@Deprecated
 	private static final String MEMENTO_KEY_SORTER = "sorter"; //$NON-NLS-1$
 
+	@Deprecated
 	private static final String MEMENTO_KEY_SORTER2 = "sorter2"; //$NON-NLS-1$
 
+	@Deprecated
 	private static final String MEMENTO_KEY_SORT_INDEX = "sortIndex"; //$NON-NLS-1$
 
+	@Deprecated
 	private static final String MEMENTO_SORT_INDEX = "org.eclipse.mylyn.tasklist.ui.views.tasklist.sortIndex"; //$NON-NLS-1$
+
+	private static final String MEMENTO_SORTER = "sorter"; //$NON-NLS-1$
 
 	private static final String MEMENTO_LINK_WITH_EDITOR = "linkWithEditor"; //$NON-NLS-1$
 
@@ -764,109 +770,29 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 	@Override
 	public void saveState(IMemento memento) {
-		IMemento sorter = memento.createChild(MEMENTO_SORT_INDEX);
-		IMemento m = sorter.createChild(MEMENTO_KEY_SORTER);
-		switch (tableSorter.getComparator().getSortByIndex()) {
-		case SUMMARY:
-			m.putInteger(MEMENTO_KEY_SORT_INDEX, 1);
-			break;
-		case DATE_CREATED:
-			m.putInteger(MEMENTO_KEY_SORT_INDEX, 2);
-			break;
-		case TASK_ID:
-			m.putInteger(MEMENTO_KEY_SORT_INDEX, 3);
-			break;
-		default:
-			m.putInteger(MEMENTO_KEY_SORT_INDEX, 0);
+		if (tableSorter != null) {
+			IMemento child = memento.createChild(MEMENTO_SORTER);
+			tableSorter.saveState(child);
 		}
 
-		m.putInteger(MEMENTO_KEY_SORT_DIRECTION, tableSorter.getComparator().getSortDirection());
-		IMemento m2 = sorter.createChild(MEMENTO_KEY_SORTER2);
-		switch (tableSorter.getComparator().getSortByIndex2()) {
-		case SUMMARY:
-			m2.putInteger(MEMENTO_KEY_SORT_INDEX, 1);
-			break;
-		case DATE_CREATED:
-			m2.putInteger(MEMENTO_KEY_SORT_INDEX, 2);
-			break;
-		case TASK_ID:
-			m2.putInteger(MEMENTO_KEY_SORT_INDEX, 3);
-			break;
-		default:
-			m2.putInteger(MEMENTO_KEY_SORT_INDEX, 0);
-		}
-
-		m2.putInteger(MEMENTO_KEY_SORT_DIRECTION, tableSorter.getComparator().getSortDirection2());
 		memento.putString(MEMENTO_LINK_WITH_EDITOR, Boolean.toString(linkWithEditor));
 		memento.putString(MEMENTO_PRESENTATION, currentPresentation.getId());
-		memento.putInteger(MEMENTO_KEY_ROOT_SORT_DIRECTION, tableSorter.getSortDirectionRootElement());
 	}
 
 	private void restoreState() {
 		if (taskListMemento != null) {
-			IMemento sorterMemento = taskListMemento.getChild(MEMENTO_SORT_INDEX);
-			int restoredSortIndex = 0;
-			if (sorterMemento != null) {
-				int sortDirection = -1;
-				IMemento m = sorterMemento.getChild(MEMENTO_KEY_SORTER);
-				if (m != null) {
-					Integer sortIndexInt = m.getInteger(MEMENTO_KEY_SORT_INDEX);
-					if (sortIndexInt != null) {
-						restoredSortIndex = sortIndexInt.intValue();
-					}
-					Integer sortDirInt = m.getInteger(MEMENTO_KEY_SORT_DIRECTION);
-					if (sortDirInt != null) {
-						sortDirection = sortDirInt.intValue();
-						tableSorter.getComparator().setSortDirection(sortDirection);
-						switch (restoredSortIndex) {
-						case 1:
-							tableSorter.getComparator().setSortByIndex(TaskComparator.SortByIndex.SUMMARY);
-							break;
-						case 2:
-							tableSorter.getComparator().setSortByIndex(TaskComparator.SortByIndex.DATE_CREATED);
-							break;
-						case 3:
-							tableSorter.getComparator().setSortByIndex(TaskComparator.SortByIndex.TASK_ID);
-							break;
-						default:
-							tableSorter.getComparator().setSortByIndex(TaskComparator.SortByIndex.PRIORITY);
-						}
-					}
-				}
-
-				IMemento m2 = sorterMemento.getChild(MEMENTO_KEY_SORTER2);
-				if (m2 != null) {
-					Integer sortIndexInt = m2.getInteger(MEMENTO_KEY_SORT_INDEX);
-					if (sortIndexInt != null) {
-						restoredSortIndex = sortIndexInt.intValue();
-					}
-					Integer sortDirInt = m2.getInteger(MEMENTO_KEY_SORT_DIRECTION);
-					if (sortDirInt != null) {
-						sortDirection = sortDirInt.intValue();
-						tableSorter.getComparator().setSortDirection2(sortDirection);
-						switch (restoredSortIndex) {
-						case 1:
-							tableSorter.getComparator().setSortByIndex2(TaskComparator.SortByIndex.SUMMARY);
-							break;
-						case 2:
-							tableSorter.getComparator().setSortByIndex2(TaskComparator.SortByIndex.DATE_CREATED);
-							break;
-						case 3:
-							tableSorter.getComparator().setSortByIndex2(TaskComparator.SortByIndex.TASK_ID);
-							break;
-						default:
-							tableSorter.getComparator().setSortByIndex2(TaskComparator.SortByIndex.PRIORITY);
-						}
+			if (tableSorter != null) {
+				IMemento sorterMemento = taskListMemento.getChild(MEMENTO_SORTER);
+				if (sorterMemento != null) {
+					tableSorter.restoreState(sorterMemento);
+				} else {
+					sorterMemento = taskListMemento.getChild(MEMENTO_SORT_INDEX);
+					if (sorterMemento != null) {
+						migrateSorterState(tableSorter, sorterMemento);
 					}
 				}
 			}
 			applyPresentation(taskListMemento.getString(MEMENTO_PRESENTATION));
-			Integer sortOrder = taskListMemento.getInteger(MEMENTO_KEY_ROOT_SORT_DIRECTION);
-			if (sortOrder != null) {
-				tableSorter.setSortDirectionRootElement(sortOrder);
-			} else {
-				tableSorter.setSortDirectionRootElement(TaskListSorter.DEFAULT_SORT_DIRECTION);
-			}
 		}
 
 		filterWorkingSet = new TaskWorkingSetFilter();
@@ -890,6 +816,67 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		setLinkWithEditor(linkValue);
 
 		getViewer().refresh();
+	}
+
+	/**
+	 * Public for testing only.
+	 */
+	public void migrateSorterState(TaskListSorter tableSorter, IMemento sorterMemento) {
+		int restoredSortIndex = 0;
+		if (sorterMemento != null) {
+			int sortDirection = -1;
+			IMemento m = sorterMemento.getChild(MEMENTO_KEY_SORTER);
+			if (m != null) {
+				Integer sortIndexInt = m.getInteger(MEMENTO_KEY_SORT_INDEX);
+				if (sortIndexInt != null) {
+					restoredSortIndex = sortIndexInt.intValue();
+				}
+				Integer sortDirInt = m.getInteger(MEMENTO_KEY_SORT_DIRECTION);
+				if (sortDirInt != null) {
+					sortDirection = sortDirInt.intValue();
+					tableSorter.getComparator().getSortCriterion(0).setDirection(sortDirection);
+					switch (restoredSortIndex) {
+					case 1:
+						tableSorter.getComparator().getSortCriterion(0).setKey(SortKey.SUMMARY);
+						break;
+					case 2:
+						tableSorter.getComparator().getSortCriterion(0).setKey(SortKey.DATE_CREATED);
+						break;
+					case 3:
+						tableSorter.getComparator().getSortCriterion(0).setKey(SortKey.TASK_ID);
+						break;
+					default:
+						tableSorter.getComparator().getSortCriterion(0).setKey(SortKey.PRIORITY);
+					}
+				}
+			}
+
+			IMemento m2 = sorterMemento.getChild(MEMENTO_KEY_SORTER2);
+			if (m2 != null) {
+				Integer sortIndexInt = m2.getInteger(MEMENTO_KEY_SORT_INDEX);
+				if (sortIndexInt != null) {
+					restoredSortIndex = sortIndexInt.intValue();
+				}
+				Integer sortDirInt = m2.getInteger(MEMENTO_KEY_SORT_DIRECTION);
+				if (sortDirInt != null) {
+					sortDirection = sortDirInt.intValue();
+					tableSorter.getComparator().getSortCriterion(1).setDirection(sortDirection);
+					switch (restoredSortIndex) {
+					case 1:
+						tableSorter.getComparator().getSortCriterion(1).setKey(SortKey.SUMMARY);
+						break;
+					case 2:
+						tableSorter.getComparator().getSortCriterion(1).setKey(SortKey.DATE_CREATED);
+						break;
+					case 3:
+						tableSorter.getComparator().getSortCriterion(1).setKey(SortKey.TASK_ID);
+						break;
+					default:
+						tableSorter.getComparator().getSortCriterion(1).setKey(SortKey.PRIORITY);
+					}
+				}
+			}
+		}
 	}
 
 	@Override
@@ -1140,7 +1127,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					tableSorter.getComparator().setSortDirection(tableSorter.getComparator().getSortDirection() * -1);
+					SortCriterion criterion = tableSorter.getComparator().getSortCriterion(0);
+					criterion.setDirection(criterion.getDirection() * -1);
 					getViewer().refresh(false);
 				}
 			});

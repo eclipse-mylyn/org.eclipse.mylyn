@@ -15,8 +15,7 @@ package org.eclipse.mylyn.internal.tasks.ui.util;
 import java.util.Comparator;
 import java.util.Date;
 
-import org.eclipse.core.runtime.Assert;
-import org.eclipse.mylyn.internal.tasks.ui.dialogs.Messages;
+import org.eclipse.mylyn.internal.tasks.ui.util.SortCriterion.SortKey;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskKeyComparator;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -28,48 +27,15 @@ import org.eclipse.ui.IMemento;
  */
 public class TaskComparator implements Comparator<ITask> {
 
-	public enum SortByIndex {
-		DATE_CREATED, PRIORITY, SUMMARY, TASK_ID;
-
-		public static SortByIndex valueOfLabel(String label) {
-			for (SortByIndex value : values()) {
-				if (value.getLabel().equals(label)) {
-					return value;
-				}
-			}
-			return null;
-		}
-
-		public String getLabel() {
-			switch (this) {
-			case PRIORITY:
-				return Messages.TaskCompareDialog_Priority;
-			case SUMMARY:
-				return Messages.TaskCompareDialog_Summary;
-			case DATE_CREATED:
-				return Messages.TaskCompareDialog_DateCreated;
-			case TASK_ID:
-				return Messages.TaskCompareDialog_TaskID;
-			default:
-				return null;
-			}
-		}
-
-	}
+	private final SortCriterion[] sortCriteria;
 
 	public static final int DEFAULT_SORT_DIRECTION = 1;
 
-	private static final SortByIndex DEFAULT_SORT_INDEX = SortByIndex.PRIORITY;
+	private static final SortKey DEFAULT_SORT_INDEX = SortKey.PRIORITY;
 
-	private static final SortByIndex DEFAULT_SORT_INDEX2 = SortByIndex.DATE_CREATED;
+	private static final SortKey DEFAULT_SORT_INDEX2 = SortKey.DATE_CREATED;
 
-	private static final String MEMENTO_KEY_SORT_DIRECTION = "sortDirection"; //$NON-NLS-1$
-
-	private static final String MEMENTO_KEY_SORT_DIRECTION2 = "sortDirection2"; //$NON-NLS-1$
-
-	private static final String MEMENTO_KEY_SORT_INDEX = "sortIndex"; //$NON-NLS-1$
-
-	private static final String MEMENTO_KEY_SORT_INDEX2 = "sortIndex2"; //$NON-NLS-1$
+	private static final String MEMENTO_KEY_SORT = "sort"; //$NON-NLS-1$
 
 	/**
 	 * Return a array of values to pass to taskKeyComparator.compare() for sorting
@@ -80,7 +46,6 @@ public class TaskComparator implements Comparator<ITask> {
 	 */
 	public static String[] getSortableFromElement(IRepositoryElement element) {
 		final String a[] = new String[] { "", null, element.getSummary() }; //$NON-NLS-1$
-
 		if (element instanceof ITask) {
 			ITask task1 = (ITask) element;
 			if (task1.getTaskKey() != null) {
@@ -90,156 +55,70 @@ public class TaskComparator implements Comparator<ITask> {
 		return a;
 	}
 
-	private SortByIndex sortByIndex = DEFAULT_SORT_INDEX;
-
-	private SortByIndex sortByIndex2 = DEFAULT_SORT_INDEX2;
-
-	private int sortDirection = DEFAULT_SORT_DIRECTION;
-
-	private int sortDirection2 = DEFAULT_SORT_DIRECTION;
-
 	private final TaskKeyComparator taskKeyComparator = new TaskKeyComparator();
 
+	public static final int CRITERIA_COUNT = SortKey.values().length - 1;
+
 	public TaskComparator() {
+		sortCriteria = new SortCriterion[CRITERIA_COUNT];
+		for (int index = 0; index < CRITERIA_COUNT; index++) {
+			sortCriteria[index] = new SortCriterion();
+		}
+		sortCriteria[0].setKey(DEFAULT_SORT_INDEX);
+		sortCriteria[1].setKey(DEFAULT_SORT_INDEX2);
 	}
 
 	public int compare(ITask element1, ITask element2) {
-		if (DEFAULT_SORT_INDEX.equals(sortByIndex)) {
-			int result = sortByPriority(element1, element2, sortDirection);
-			if (result != 0) {
-				return result;
+		for (SortCriterion key : sortCriteria) {
+			int result;
+			switch (key.getKey()) {
+			case DATE_CREATED:
+				result = sortByDate(element1, element2, key.getDirection());
+				break;
+			case PRIORITY:
+				result = sortByPriority(element1, element2, key.getDirection());
+				break;
+			case SUMMARY:
+				result = sortBySummary(element1, element2, key.getDirection());
+				break;
+			case TASK_ID:
+				result = sortByID(element1, element2, key.getDirection());
+				break;
+			default: // NONE
+				return 0;
 			}
 
-			if (DEFAULT_SORT_INDEX2.equals(sortByIndex2)) {
-				return sortByDate(element1, element2, sortDirection2);
-			} else {
-				if (SortByIndex.SUMMARY.equals(sortByIndex2)) {
-					return sortBySummary(element1, element2, sortDirection2);
-				} else if (SortByIndex.TASK_ID.equals(sortByIndex2)) {
-					return sortByID(element1, element2, sortDirection2);
-				} else {
-					return result;
-				}
-			}
-		} else if (DEFAULT_SORT_INDEX2.equals(sortByIndex)) {
-			int result = sortByDate(element1, element2, sortDirection);
 			if (result != 0) {
 				return result;
-			}
-			if (DEFAULT_SORT_INDEX.equals(sortByIndex2)) {
-				return sortByPriority(element1, element2, sortDirection2);
-			} else {
-				if (SortByIndex.SUMMARY.equals(sortByIndex2)) {
-					return sortBySummary(element1, element2, sortDirection2);
-				} else if (SortByIndex.TASK_ID.equals(sortByIndex2)) {
-					return sortByID(element1, element2, sortDirection2);
-				} else {
-					return result;
-				}
-			}
-		} else if (SortByIndex.SUMMARY.equals(sortByIndex)) {
-			int result = sortBySummary(element1, element2, sortDirection);
-			if (result != 0) {
-				return result;
-			}
-			if (DEFAULT_SORT_INDEX2.equals(sortByIndex2)) {
-				return sortByDate(element1, element2, sortDirection2);
-			} else {
-				if (DEFAULT_SORT_INDEX.equals(sortByIndex2)) {
-					return sortByPriority(element1, element2, sortDirection2);
-				} else if (SortByIndex.TASK_ID.equals(sortByIndex2)) {
-					return sortByID(element1, element2, sortDirection2);
-				} else {
-					return result;
-				}
-			}
-		} else {
-			int result = sortByID(element1, element2, sortDirection);
-			if (result != 0) {
-				return result;
-			}
-			if (DEFAULT_SORT_INDEX2.equals(sortByIndex2)) {
-				return sortByDate(element1, element2, sortDirection2);
-			} else {
-				if (DEFAULT_SORT_INDEX.equals(sortByIndex2)) {
-					return sortByPriority(element1, element2, sortDirection2);
-				} else if (SortByIndex.SUMMARY.equals(sortByIndex2)) {
-					return sortBySummary(element1, element2, sortDirection2);
-				} else {
-					return result;
-				}
 			}
 		}
+		return 0;
 	}
 
-	public SortByIndex getSortByIndex() {
-		return sortByIndex;
-	}
-
-	public SortByIndex getSortByIndex2() {
-		return sortByIndex2;
-	}
-
-	public int getSortDirection() {
-		return sortDirection;
-	}
-
-	private int getSortDirection(IMemento memento, String key, int defaultValue) {
-		Integer value = memento.getInteger(key);
-		if (value != null) {
-			return value >= 0 ? 1 : -1;
-		}
-		return defaultValue;
-	}
-
-	public int getSortDirection2() {
-		return sortDirection2;
-	}
-
-	private SortByIndex getSortIndex(IMemento memento, String key, SortByIndex defaultValue) {
-		String value = memento.getString(key);
-		if (value != null) {
-			try {
-				return SortByIndex.valueOf(value);
-			} catch (IllegalArgumentException e) {
-				// ignore
-			}
-		}
-		return defaultValue;
+	public SortCriterion getSortCriterion(int index) {
+		return sortCriteria[index];
 	}
 
 	public void restoreState(IMemento memento) {
-		setSortByIndex(getSortIndex(memento, MEMENTO_KEY_SORT_INDEX, DEFAULT_SORT_INDEX));
-		setSortDirection(getSortDirection(memento, MEMENTO_KEY_SORT_DIRECTION, DEFAULT_SORT_DIRECTION));
-		setSortByIndex2(getSortIndex(memento, MEMENTO_KEY_SORT_INDEX2, DEFAULT_SORT_INDEX2));
-		setSortDirection(getSortDirection(memento, MEMENTO_KEY_SORT_DIRECTION2, DEFAULT_SORT_DIRECTION));
+		if (memento != null) {
+			for (int index = 0; index < CRITERIA_COUNT; index++) {
+				IMemento child = memento.getChild(MEMENTO_KEY_SORT + index);
+				if (child != null && sortCriteria[index] != null) {
+					sortCriteria[index].restoreState(child);
+				}
+			}
+		}
 	}
 
 	public void saveState(IMemento memento) {
-		memento.putString(MEMENTO_KEY_SORT_INDEX, getSortByIndex().name());
-		memento.putInteger(MEMENTO_KEY_SORT_DIRECTION, getSortDirection());
-		memento.putString(MEMENTO_KEY_SORT_INDEX2, getSortByIndex2().name());
-		memento.putInteger(MEMENTO_KEY_SORT_DIRECTION2, getSortDirection2());
-	}
-
-	public void setSortByIndex(SortByIndex sortByIndex) {
-		Assert.isNotNull(sortByIndex);
-		this.sortByIndex = sortByIndex;
-	}
-
-	public void setSortByIndex2(SortByIndex sortByIndex) {
-		Assert.isNotNull(sortByIndex);
-		this.sortByIndex2 = sortByIndex;
-	}
-
-	public void setSortDirection(int sortDirection) {
-		Assert.isTrue(sortDirection == -1 || sortDirection == 1);
-		this.sortDirection = sortDirection;
-	}
-
-	public void setSortDirection2(int sortDirection) {
-		Assert.isTrue(sortDirection == -1 || sortDirection == 1);
-		this.sortDirection2 = sortDirection;
+		if (memento != null) {
+			for (int index = 0; index < CRITERIA_COUNT; index++) {
+				IMemento child = memento.createChild(MEMENTO_KEY_SORT + index);
+				if (child != null && sortCriteria[index] != null) {
+					sortCriteria[index].saveState(child);
+				}
+			}
+		}
 	}
 
 	private int sortByDate(ITask element1, ITask element2, int sortDirection) {

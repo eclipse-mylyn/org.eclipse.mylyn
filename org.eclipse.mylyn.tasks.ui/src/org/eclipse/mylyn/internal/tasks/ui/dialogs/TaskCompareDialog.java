@@ -16,9 +16,11 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.window.IShellProvider;
+import org.eclipse.mylyn.internal.tasks.ui.util.SortCriterion;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskComparator;
-import org.eclipse.mylyn.internal.tasks.ui.util.TaskComparator.SortByIndex;
+import org.eclipse.mylyn.internal.tasks.ui.util.SortCriterion.SortKey;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -28,6 +30,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.dialogs.SelectionDialog;
 
@@ -48,9 +51,11 @@ public class TaskCompareDialog extends SelectionDialog {
 
 	private final TaskComparator taskComparator;
 
+	private String selectedValueLastCombo;
+
 	public TaskCompareDialog(IShellProvider parentShell, TaskComparator taskComparator) {
 		super(parentShell.getShell());
-		SortByIndex[] values = SortByIndex.values();
+		SortCriterion.SortKey[] values = SortCriterion.SortKey.values();
 		propertyText = new String[values.length];
 		for (int i = 0; i < values.length; i++) {
 			propertyText[i] = values[i].getLabel();
@@ -59,33 +64,34 @@ public class TaskCompareDialog extends SelectionDialog {
 		setTitle(Messages.TaskCompareDialog_Sorting);
 	}
 
-	protected void createDialogStartArea(Composite parent) {
-		Label sortByLabel = new Label(parent, SWT.NULL);
-		sortByLabel.setText(Messages.TaskCompareDialog_SortOrder);
-		GridData data = new GridData();
-		data.horizontalSpan = 3;
-		sortByLabel.setLayoutData(data);
-	}
-
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite composite = (Composite) super.createDialogArea(parent);
-
 		initializeDialogUnits(composite);
+		Control control = createContentArea(composite);
+		GridDataFactory.fillDefaults().grab(true, true).applyTo(control);
+		Dialog.applyDialogFont(parent);
+		return composite;
+	}
 
-		Composite prioritiesArea = new Composite(composite, SWT.NULL);
+	protected Control createContentArea(Composite parent) {
+		Group prioritiesArea = new Group(parent, SWT.NONE);
 		prioritiesArea.setLayout(new GridLayout(3, false));
+		prioritiesArea.setText(Messages.TaskCompareDialog_Tasks);
 
-		createDialogStartArea(prioritiesArea);
+		ascendingButtons = new Button[SortCriterion.kindCount];
+		descendingButtons = new Button[SortCriterion.kindCount];
+		priorityCombos = new Combo[SortCriterion.kindCount];
 
-		ascendingButtons = new Button[2];
-		descendingButtons = new Button[2];
-		priorityCombos = new Combo[2];
-
-		for (int i = 0; i < 2; i++) {
+		for (int i = 0; i < SortCriterion.kindCount; i++) {
 			final int index = i;
-			Label numberLabel = new Label(prioritiesArea, SWT.NULL);
-			numberLabel.setText("" + (i + 1) + "."); //$NON-NLS-1$ //$NON-NLS-2$
+			Label numberLabel = new Label(prioritiesArea, SWT.NONE);
+			if (i == 0) {
+				numberLabel.setText(Messages.TaskCompareDialog_Sort_by);
+			} else {
+				numberLabel.setText(Messages.TaskCompareDialog_Then_by);
+			}
+//			numberLabel.setText("" + (i + 1) + "."); //$NON-NLS-1$ //$NON-NLS-2$
 			priorityCombos[i] = new Combo(prioritiesArea, SWT.READ_ONLY);
 			priorityCombos[i].setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
@@ -107,56 +113,101 @@ public class TaskCompareDialog extends SelectionDialog {
 					markDirty();
 				}
 			});
-			if (i < priorityCombos.length - 1) {
+			if (i < priorityCombos.length) {
 				priorityCombos[i].addSelectionListener(new SelectionAdapter() {
 					@Override
 					public void widgetSelected(SelectionEvent e) {
-						int oldSelectionDirection = 1;
-						if (descendingButtons[index].getSelection()) {
-							oldSelectionDirection = -1;
-						}
+//						int oldSelectionDirection = 1;
+//						if (descendingButtons[index].getSelection()) {
+//							oldSelectionDirection = -1;
+//						}
 						ArrayList<String> oldSelectionList = new ArrayList<String>(
 								Arrays.asList(priorityCombos[index].getItems()));
-						oldSelectionList.removeAll(Arrays.asList(priorityCombos[index + 1].getItems()));
-						if (oldSelectionList.size() != 1) {
-							return;
+						String oldSelection;
+						if (index + 1 == SortCriterion.kindCount) {
+							oldSelection = selectedValueLastCombo;
+						} else {
+							oldSelectionList.removeAll(Arrays.asList(priorityCombos[index + 1].getItems()));
+							oldSelection = propertyText[SortKey.NONE.ordinal()];
+							if (oldSelectionList.size() == 1) {
+								oldSelection = oldSelectionList.get(0);
+							}
 						}
-						String oldSelection = oldSelectionList.get(0);
 						String newSelection = priorityCombos[index].getItem(priorityCombos[index].getSelectionIndex());
 						if (oldSelection.equals(newSelection)) {
 							return;
 						}
-						for (int j = index + 1; j < priorityCombos.length; j++) {
-							int newSelectionIndex = priorityCombos[j].indexOf(newSelection);
-							//this combo's current selection is equal to newSelection
-							if (priorityCombos[j].getSelectionIndex() == newSelectionIndex) {
-								priorityCombos[j].remove(newSelection);
-								int insertionPoint = -1
-										- Arrays.binarySearch(priorityCombos[j].getItems(), oldSelection,
-												columnComparator);
-								if (insertionPoint >= 0 && insertionPoint <= priorityCombos[j].getItemCount()) {
-									priorityCombos[j].add(oldSelection, insertionPoint);
-								} else {
-									priorityCombos[j].add(oldSelection);
+						if (index + 1 == SortCriterion.kindCount) {
+							selectedValueLastCombo = newSelection;
+						}
+						if (oldSelection.equals(propertyText[SortKey.NONE.ordinal()])) {
+							ascendingButtons[index].setEnabled(true);
+							descendingButtons[index].setEnabled(true);
+							if (index + 1 < SortCriterion.kindCount) {
+								priorityCombos[index + 1].setEnabled(true);
+								ArrayList<String> availablePriorities = new ArrayList<String>(
+										Arrays.asList(priorityCombos[index].getItems()));
+								availablePriorities.remove(newSelection);
+								for (int k = index + 1; k < SortCriterion.kindCount; k++) {
+									priorityCombos[k].removeAll();
+									for (int j = 0; j < availablePriorities.size(); j++) {
+										priorityCombos[k].add(availablePriorities.get(j));
+									}
+									priorityCombos[k].select(priorityCombos[k].indexOf(propertyText[SortKey.NONE.ordinal()]));
 								}
-								priorityCombos[j].select(priorityCombos[j].indexOf(oldSelection));
-								ascendingButtons[index].setSelection(ascendingButtons[j].getSelection());
-								descendingButtons[index].setSelection(descendingButtons[j].getSelection());
-								ascendingButtons[j].setSelection(oldSelectionDirection == 1);
-								descendingButtons[j].setSelection(oldSelectionDirection == -1);
 							}
-							//this combo contains newSelection
-							else if (newSelectionIndex >= 0) {
-								String currentText = priorityCombos[j].getText();
-								priorityCombos[j].remove(newSelection);
-								int insertionPoint = -1
-										- Arrays.binarySearch(priorityCombos[j].getItems(), oldSelection,
-												columnComparator);
-								if (insertionPoint >= 0 && insertionPoint <= priorityCombos[j].getItemCount()) {
-									priorityCombos[j].add(oldSelection, insertionPoint);
-									priorityCombos[j].select(priorityCombos[j].indexOf(currentText));
-								} else {
-									priorityCombos[j].add(oldSelection);
+						} else if (newSelection.equals(propertyText[SortKey.NONE.ordinal()])) {
+							ascendingButtons[index].setEnabled(false);
+							descendingButtons[index].setEnabled(false);
+							if (index + 1 < SortCriterion.kindCount) {
+								ArrayList<String> availablePriorities = new ArrayList<String>(
+										Arrays.asList(priorityCombos[index].getItems()));
+								for (int k = index + 1; k < SortCriterion.kindCount; k++) {
+									priorityCombos[k].setEnabled(true);
+									priorityCombos[k].removeAll();
+									for (int j = 0; j < availablePriorities.size(); j++) {
+										priorityCombos[k].add(availablePriorities.get(j));
+									}
+									priorityCombos[k].select(priorityCombos[k].indexOf(propertyText[SortKey.NONE.ordinal()]));
+									priorityCombos[k].setEnabled(false);
+									ascendingButtons[k].setEnabled(false);
+									descendingButtons[k].setEnabled(false);
+								}
+							}
+						} else {
+							for (int j = index + 1; j < priorityCombos.length; j++) {
+								int newSelectionIndex = priorityCombos[j].indexOf(newSelection);
+								//this combo's current selection is equal to newSelection
+								if (priorityCombos[j].getSelectionIndex() == newSelectionIndex) {
+									priorityCombos[j].remove(newSelection);
+									int insertionPoint = -1
+											- Arrays.binarySearch(priorityCombos[j].getItems(), oldSelection,
+													columnComparator);
+									if (insertionPoint >= 0 && insertionPoint <= priorityCombos[j].getItemCount()) {
+										priorityCombos[j].add(oldSelection, insertionPoint);
+									} else {
+										priorityCombos[j].add(oldSelection);
+									}
+									priorityCombos[j].select(priorityCombos[j].indexOf(oldSelection));
+// remove the comment if you want to move the current ascending/descending 								
+//									ascendingButtons[index].setSelection(ascendingButtons[j].getSelection());
+//									descendingButtons[index].setSelection(descendingButtons[j].getSelection());
+//									ascendingButtons[j].setSelection(oldSelectionDirection == 1);
+//									descendingButtons[j].setSelection(oldSelectionDirection == -1);
+								}
+								//this combo contains newSelection
+								else if (newSelectionIndex >= 0) {
+									String currentText = priorityCombos[j].getText();
+									priorityCombos[j].remove(newSelection);
+									int insertionPoint = -1
+											- Arrays.binarySearch(priorityCombos[j].getItems(), oldSelection,
+													columnComparator);
+									if (insertionPoint >= 0 && insertionPoint <= priorityCombos[j].getItemCount()) {
+										priorityCombos[j].add(oldSelection, insertionPoint);
+										priorityCombos[j].select(priorityCombos[j].indexOf(currentText));
+									} else {
+										priorityCombos[j].add(oldSelection);
+									}
 								}
 							}
 						}
@@ -173,31 +224,21 @@ public class TaskCompareDialog extends SelectionDialog {
 			}
 
 		}
-		int a[] = new int[2];
-		int b[] = new int[2];
-		a[0] = taskComparator.getSortByIndex().ordinal();
-		a[1] = taskComparator.getSortByIndex2().ordinal();
-		b[0] = taskComparator.getSortDirection();
-		b[1] = taskComparator.getSortDirection2();
-		updateUI(a, b);
-		Dialog.applyDialogFont(composite);
-		return composite;
+		updateUI();
+		return prioritiesArea;
 	}
 
 	@Override
 	protected void okPressed() {
 		if (isDirty()) {
-			taskComparator.setSortByIndex(SortByIndex.valueOfLabel(priorityCombos[0].getText()));
-			taskComparator.setSortByIndex2(SortByIndex.valueOfLabel(priorityCombos[1].getText()));
-			if (descendingButtons[0].getSelection()) {
-				taskComparator.setSortDirection(-1);
-			} else {
-				taskComparator.setSortDirection(1);
-			}
-			if (descendingButtons[1].getSelection()) {
-				taskComparator.setSortDirection2(-1);
-			} else {
-				taskComparator.setSortDirection2(1);
+			for (int i = 0; i < SortCriterion.kindCount; i++) {
+				SortCriterion keyEntries = taskComparator.getSortCriterion(i);
+				keyEntries.setKey(SortKey.valueOfLabel(priorityCombos[i].getText()));
+				if (descendingButtons[i].getSelection()) {
+					keyEntries.setDirection(-1);
+				} else {
+					keyEntries.setDirection(1);
+				}
 			}
 		}
 		super.okPressed();
@@ -230,18 +271,41 @@ public class TaskCompareDialog extends SelectionDialog {
 		}
 	};
 
-	protected void updateUI(int[] priorities, int[] directions) {
+	protected void updateUI() {
 		ArrayList<String> availablePriorities = new ArrayList<String>(Arrays.asList(propertyText));
-
-		for (int i = 0; i < priorityCombos.length; i++) {
+		for (int i = 0; i < TaskComparator.CRITERIA_COUNT; i++) {
+			SortCriterion criterion = taskComparator.getSortCriterion(i);
 			priorityCombos[i].removeAll();
 			for (int j = 0; j < availablePriorities.size(); j++) {
 				priorityCombos[i].add(availablePriorities.get(j));
 			}
-			priorityCombos[i].select(priorityCombos[i].indexOf(propertyText[priorities[i]]));
-			availablePriorities.remove(propertyText[priorities[i]]);
-			ascendingButtons[i].setSelection(directions[i] == 1);
-			descendingButtons[i].setSelection(directions[i] == -1);
+			priorityCombos[i].select(priorityCombos[i].indexOf(propertyText[criterion.getKey().ordinal()]));
+			ascendingButtons[i].setSelection(criterion.getDirection() == 1);
+			descendingButtons[i].setSelection(criterion.getDirection() == -1);
+			if (i == TaskComparator.CRITERIA_COUNT - 1) {
+				selectedValueLastCombo = propertyText[criterion.getKey().ordinal()];
+			}
+			if (criterion.getKey() != SortKey.NONE) {
+				availablePriorities.remove(propertyText[criterion.getKey().ordinal()]);
+			} else {
+				ascendingButtons[i].setEnabled(false);
+				descendingButtons[i].setEnabled(false);
+				for (int k = i + 1; k < TaskComparator.CRITERIA_COUNT; k++) {
+					for (int j = 0; j < availablePriorities.size(); j++) {
+						priorityCombos[k].add(availablePriorities.get(j));
+					}
+					priorityCombos[k].select(priorityCombos[k].indexOf(propertyText[SortKey.NONE.ordinal()]));
+					if (k == TaskComparator.CRITERIA_COUNT - 1) {
+						selectedValueLastCombo = propertyText[SortKey.NONE.ordinal()];
+					}
+					ascendingButtons[k].setSelection(taskComparator.getSortCriterion(k).getDirection() == 1);
+					descendingButtons[k].setSelection(taskComparator.getSortCriterion(k).getDirection() == -1);
+					priorityCombos[k].setEnabled(false);
+					ascendingButtons[k].setEnabled(false);
+					descendingButtons[k].setEnabled(false);
+				}
+				break;
+			}
 		}
 	}
 
