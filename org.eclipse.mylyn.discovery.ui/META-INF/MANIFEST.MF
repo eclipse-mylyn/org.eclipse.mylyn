@@ -16,7 +16,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.equinox.p2.metadata;bundle-version="1.0.0";resolution:=optional,
  org.eclipse.equinox.p2.metadata.repository;bundle-version="1.0.0";resolution:=optional,
  org.eclipse.equinox.p2.repository;bundle-version="1.0.0";resolution:=optional,
- org.eclipse.equinox.p2.engine;bundle-version="1.0.100";resolution:=optional
+ org.eclipse.equinox.p2.engine;bundle-version="1.0.100";resolution:=optional,
+ org.eclipse.equinox.p2.director;bundle-version="1.0.100";resolution:=optional
 Export-Package: org.eclipse.mylyn.internal.discovery.ui;x-internal:=true,
  org.eclipse.mylyn.internal.discovery.ui.commands;x-internal:=true,
  org.eclipse.mylyn.internal.discovery.ui.util;x-internal:=true,

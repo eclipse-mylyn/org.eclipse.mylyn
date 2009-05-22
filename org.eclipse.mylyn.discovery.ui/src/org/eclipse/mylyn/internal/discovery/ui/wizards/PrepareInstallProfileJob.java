@@ -26,9 +26,11 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.equinox.internal.provisional.p2.core.Version;
+import org.eclipse.equinox.internal.provisional.p2.director.ProfileChangeRequest;
 import org.eclipse.equinox.internal.provisional.p2.engine.IProfile;
 import org.eclipse.equinox.internal.provisional.p2.engine.IProfileRegistry;
 import org.eclipse.equinox.internal.provisional.p2.metadata.IInstallableUnit;
@@ -38,15 +40,13 @@ import org.eclipse.equinox.internal.provisional.p2.query.Collector;
 import org.eclipse.equinox.internal.provisional.p2.query.MatchQuery;
 import org.eclipse.equinox.internal.provisional.p2.query.Query;
 import org.eclipse.equinox.internal.provisional.p2.ui.actions.InstallAction;
+import org.eclipse.equinox.internal.provisional.p2.ui.operations.PlannerResolutionOperation;
 import org.eclipse.equinox.internal.provisional.p2.ui.operations.ProvisioningUtil;
-import org.eclipse.equinox.internal.provisional.p2.ui.policy.Policy;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDescriptor;
 import org.eclipse.mylyn.internal.discovery.ui.DiscoveryUi;
 import org.eclipse.mylyn.internal.discovery.ui.util.DiscoveryUiUtil;
-import org.eclipse.mylyn.internal.provisional.commons.ui.SelectionProviderAdapter;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 
@@ -64,6 +64,12 @@ public class PrepareInstallProfileJob implements IRunnableWithProgress {
 	private static final String P2_FEATURE_GROUP_SUFFIX = ".feature.group"; //$NON-NLS-1$
 
 	private final List<ConnectorDescriptor> installableConnectors;
+
+	private PlannerResolutionOperation plannerResolutionOperation;
+
+	private String profileId;
+
+	private IInstallableUnit[] ius;
 
 	private InstallAction installAction;
 
@@ -86,10 +92,10 @@ public class PrepareInstallProfileJob implements IRunnableWithProgress {
 	}
 
 	public void doRun(IProgressMonitor monitor) throws CoreException {
-		final int totalWork = installableConnectors.size() * 4;
+		final int totalWork = installableConnectors.size() * 6;
 		monitor.beginTask(Messages.InstallConnectorsJob_task_configuring, totalWork);
 		try {
-			final String profileId = computeProfileId();
+			profileId = computeProfileId();
 			// verify that we can resolve hostnames
 			// this is a pre-emptive check so that we can provide better error handling
 			// than that provided by P2.
@@ -102,13 +108,9 @@ public class PrepareInstallProfileJob implements IRunnableWithProgress {
 						try {
 							InetAddress.getByName(host);
 						} catch (UnknownHostException e) {
-							throw new CoreException(
-									new Status(
-											IStatus.ERROR,
-											DiscoveryUi.ID_PLUGIN,
-											NLS.bind(
-													"Error resolving hostname {1} for '{0}': please check your Internet connection and try again.",
-													descriptor.getName(), host), e));
+							throw new CoreException(new Status(IStatus.ERROR, DiscoveryUi.ID_PLUGIN, NLS.bind(
+									Messages.PrepareInstallProfileJob_errorResolvingHostname, descriptor.getName(),
+									host), e));
 						}
 					}
 				}
@@ -284,10 +286,28 @@ public class PrepareInstallProfileJob implements IRunnableWithProgress {
 				throw new IllegalStateException();
 			}
 
-			installAction = new InstallAction(Policy.getDefault(), new SelectionProviderAdapter(
-					new StructuredSelection(installableUnits)), profileId);
+			MultiStatus status = new MultiStatus(DiscoveryUi.ID_PLUGIN, 0, Messages.PrepareInstallProfileJob_ok, null);
+			ius = installableUnits.toArray(new IInstallableUnit[installableUnits.size()]);
+			ProfileChangeRequest profileChangeRequest = InstallAction.computeProfileChangeRequest(ius, profileId,
+					status, new SubProgressMonitor(monitor, installableConnectors.size()));
+			if (status.getSeverity() > IStatus.WARNING) {
+				throw new CoreException(status);
+			}
+			if (profileChangeRequest == null) {
+				// failed but no indication as to why
+				throw new CoreException(new Status(IStatus.ERROR, DiscoveryUi.ID_PLUGIN,
+						Messages.PrepareInstallProfileJob_computeProfileChangeRequestFailed, null));
+			}
+			PlannerResolutionOperation operation = new PlannerResolutionOperation(
+					Messages.PrepareInstallProfileJob_calculatingRequirements, profileId, profileChangeRequest, null,
+					status, true);
+			IStatus operationStatus = operation.execute(new SubProgressMonitor(monitor, installableConnectors.size()));
+			if (operationStatus.getSeverity() > IStatus.WARNING) {
+				throw new CoreException(operationStatus);
+			}
 
-			monitor.done();
+			plannerResolutionOperation = operation;
+
 		} catch (URISyntaxException e) {
 			// should never happen, since we already validated URLs.
 			throw new CoreException(new Status(IStatus.ERROR, DiscoveryUi.ID_PLUGIN,
@@ -317,6 +337,18 @@ public class PrepareInstallProfileJob implements IRunnableWithProgress {
 		}
 		throw new CoreException(new Status(IStatus.ERROR, DiscoveryUi.ID_PLUGIN,
 				Messages.InstallConnectorsJob_profileProblem, null));
+	}
+
+	public PlannerResolutionOperation getPlannerResolutionOperation() {
+		return plannerResolutionOperation;
+	}
+
+	public String getProfileId() {
+		return profileId;
+	}
+
+	public IInstallableUnit[] getIUs() {
+		return ius;
 	}
 
 	public InstallAction getInstallAction() {

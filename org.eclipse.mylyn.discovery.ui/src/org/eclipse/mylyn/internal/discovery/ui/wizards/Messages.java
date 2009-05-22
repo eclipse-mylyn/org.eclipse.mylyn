@@ -78,6 +78,14 @@ class Messages extends NLS {
 
 	public static String ConnectorDiscoveryWizardMainPage_unexpectedException;
 
+	public static String PrepareInstallProfileJob_calculatingRequirements;
+
+	public static String PrepareInstallProfileJob_computeProfileChangeRequestFailed;
+
+	public static String PrepareInstallProfileJob_errorResolvingHostname;
+
+	public static String PrepareInstallProfileJob_ok;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
