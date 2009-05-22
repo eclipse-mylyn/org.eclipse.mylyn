@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.internal.tasks.bugs;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -62,7 +61,7 @@ public class SupportProduct extends AbstractSupportElement implements IProduct {
 		if (attributes != null) {
 			return attributes;
 		} else {
-			return Collections.emptyMap();
+			return new HashMap<String, String>();
 		}
 	}
 
@@ -102,6 +101,7 @@ public class SupportProduct extends AbstractSupportElement implements IProduct {
 	/**
 	 * @deprecated Use {@link #isInstalled()} instead
 	 */
+	@Deprecated
 	public boolean isEnabled() {
 		return isInstalled();
 	}
@@ -117,6 +117,7 @@ public class SupportProduct extends AbstractSupportElement implements IProduct {
 	/**
 	 * @deprecated Use {@link #setInstalled(boolean)} instead
 	 */
+	@Deprecated
 	public void setEnabled(boolean enabled) {
 		setInstalled(enabled);
 	}

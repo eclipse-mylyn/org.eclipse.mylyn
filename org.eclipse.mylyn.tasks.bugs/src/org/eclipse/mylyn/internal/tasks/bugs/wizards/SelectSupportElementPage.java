@@ -320,7 +320,9 @@ public class SelectSupportElementPage extends WizardPage {
 				if (element instanceof SupportCategory) {
 					return ((SupportCategory) element).getWeight() * 2;
 				} else if (element instanceof SupportProvider) {
-					return ((SupportProvider) element).getCategory().getWeight() * 2 + 1;
+					if (((SupportProvider) element).getCategory() != null) {
+						return ((SupportProvider) element).getCategory().getWeight() * 2 + 1;
+					}
 				}
 				return super.category(element);
 			}
