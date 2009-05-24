@@ -100,6 +100,8 @@ public class ScreenshotCreationPage extends WizardPage {
 
 	private Composite paletteArea;
 
+	private int lastDrawAction;
+
 	private SelectToolAction drawLineToolbar;
 
 	private SelectToolAction drawArrowToolbar;
@@ -244,7 +246,10 @@ public class ScreenshotCreationPage extends WizardPage {
 					cropAction.setEnabled(true);
 					cropAction.setChecked(true);
 					markAction.setEnabled(true);
-					clearAction.setEnabled(false);
+					drawLineToolbar.setEnabled(true);
+					drawArrowToolbar.setEnabled(true);
+					drawBoxToolbar.setEnabled(true);
+					drawTextToolbar.setEnabled(true);
 				}
 
 				historyMouseEvent = new ArrayList<int[]>();
@@ -254,6 +259,7 @@ public class ScreenshotCreationPage extends WizardPage {
 				historyCheckpoint = 0;
 				undoAction.setEnabled(false);
 				redoAction.setEnabled(false);
+				clearAction.setEnabled(false);
 			}
 
 			@Override
@@ -330,11 +336,22 @@ public class ScreenshotCreationPage extends WizardPage {
 			public void setChecked(boolean checked) {
 				super.setChecked(checked);
 				if (paletteArea != null) {
+					if (checked) {
+						if (getSelectDrawToolbar() < 0) {
+							setSelectDrawToolbar(lastDrawAction);
+						}
+					} else {
+						int select = getSelectDrawToolbar();
+						if (select >= 0) {
+							lastDrawAction = select;
+							unselectDrawToolbar();
+						}
+					}
 					boolean isDrawText = (drawTextToolbar.getSelect() >= 0) ? false : checked;
-					drawLineToolbar.setEnabled(checked);
-					drawArrowToolbar.setEnabled(checked);
-					drawBoxToolbar.setEnabled(checked);
-					drawTextToolbar.setEnabled(checked);
+					//drawLineToolbar.setEnabled(checked);
+					//drawArrowToolbar.setEnabled(checked);
+					//drawBoxToolbar.setEnabled(checked);
+					//drawTextToolbar.setEnabled(checked);
 					drawColorToolbar.setEnabled(isDrawText);
 					lineTypeToolbar.setEnabled(isDrawText);
 					lineBoldToolbar.setEnabled(isDrawText);
@@ -434,6 +451,8 @@ public class ScreenshotCreationPage extends WizardPage {
 		layout.marginHeight = 0;
 		body.setLayout(layout);
 		createPaletteBars(body);
+		lastDrawAction = getSelectDrawToolbar();
+		unselectDrawToolbar();
 
 		scrolledComposite = new ScrolledComposite(body, SWT.V_SCROLL | SWT.H_SCROLL);
 		scrolledComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -538,6 +557,7 @@ public class ScreenshotCreationPage extends WizardPage {
 
 			@Override
 			public void run() {
+				markAction.run();
 				drawArrowToolbar.setUnselect();
 				drawBoxToolbar.setUnselect();
 				drawTextToolbar.setUnselect();
@@ -548,6 +568,7 @@ public class ScreenshotCreationPage extends WizardPage {
 
 			@Override
 			public void run() {
+				markAction.run();
 				drawLineToolbar.setUnselect();
 				drawBoxToolbar.setUnselect();
 				drawTextToolbar.setUnselect();
@@ -561,6 +582,7 @@ public class ScreenshotCreationPage extends WizardPage {
 
 			@Override
 			public void run() {
+				markAction.run();
 				drawLineToolbar.setUnselect();
 				drawArrowToolbar.setUnselect();
 				drawTextToolbar.setUnselect();
@@ -574,6 +596,7 @@ public class ScreenshotCreationPage extends WizardPage {
 
 			@Override
 			public void run() {
+				markAction.run();
 				drawLineToolbar.setUnselect();
 				drawArrowToolbar.setUnselect();
 				drawBoxToolbar.setUnselect();
@@ -593,6 +616,38 @@ public class ScreenshotCreationPage extends WizardPage {
 		lineBoldToolbar.setVisible(false);
 	}
 
+	private void setSelectDrawToolbar(int drawTool) {
+		if (drawLineToolbar.setSelect(drawTool)) {
+			drawArrowToolbar.setUnselect();
+			drawBoxToolbar.setUnselect();
+			drawTextToolbar.setUnselect();
+			return;
+		}
+		if (drawArrowToolbar.setSelect(drawTool)) {
+			drawLineToolbar.setUnselect();
+			drawBoxToolbar.setUnselect();
+			drawTextToolbar.setUnselect();
+			return;
+		}
+		if (drawBoxToolbar.setSelect(drawTool)) {
+			drawLineToolbar.setUnselect();
+			drawArrowToolbar.setUnselect();
+			drawTextToolbar.setUnselect();
+			return;
+		}
+		drawLineToolbar.setUnselect();
+		drawArrowToolbar.setUnselect();
+		drawBoxToolbar.setUnselect();
+		drawTextToolbar.setSelect(drawTool);
+	}
+
+	private void unselectDrawToolbar() {
+		drawLineToolbar.setUnselect();
+		drawArrowToolbar.setUnselect();
+		drawBoxToolbar.setUnselect();
+		drawTextToolbar.setUnselect();
+	}
+
 	private int getSelectDrawToolbar() {
 		int drawTool;
 		if ((drawTool = drawLineToolbar.getSelect()) >= 0) {
@@ -604,7 +659,10 @@ public class ScreenshotCreationPage extends WizardPage {
 		if ((drawTool = drawBoxToolbar.getSelect()) >= 0) {
 			return drawTool;
 		}
-		return SelectToolAction.DRAW_TEXT;
+		if ((drawTool = drawTextToolbar.getSelect()) >= 0) {
+			return drawTool;
+		}
+		return -1;
 	}
 
 	private ActionContributionItem createAndConfigureCI(IAction action) {
@@ -1298,13 +1356,11 @@ public class ScreenshotCreationPage extends WizardPage {
 			Rectangle bounds = scrolledComposite.getClientArea();
 			if (workImage != null) {
 				Rectangle imageBounds = workImage.getBounds();
-				if (imageBounds.width > bounds.width || imageBounds.height > bounds.height) {
-					double xRatio = (double) bounds.width / imageBounds.width;
-					double yRatio = (double) bounds.height / imageBounds.height;
-					scaleFactor = Math.min(xRatio, yRatio);
-					bounds.width = (int) Math.round(imageBounds.width * scaleFactor);
-					bounds.height = (int) Math.round(imageBounds.height * scaleFactor);
-				}
+				double xRatio = (double) bounds.width / imageBounds.width;
+				double yRatio = (double) bounds.height / imageBounds.height;
+				scaleFactor = Math.min(xRatio, yRatio);
+				bounds.width = (int) Math.round(imageBounds.width * scaleFactor);
+				bounds.height = (int) Math.round(imageBounds.height * scaleFactor);
 			}
 			canvas.setBounds(bounds);
 		} else {

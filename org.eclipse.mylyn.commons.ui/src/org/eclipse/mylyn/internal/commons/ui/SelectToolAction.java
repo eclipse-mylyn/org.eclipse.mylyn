@@ -17,6 +17,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
@@ -169,7 +170,8 @@ public class SelectToolAction extends Action implements IMenuCreator {
 		if (tool == DRAWTEXT_TOOLBAR) {
 			showSelection = true;
 			selectedItemID = DRAW_TEXT;
-			FontData fontData = parent.getShell().getFont().getFontData()[0];
+			// Bug:266123 Set initial font as HEADER_FONT
+			FontData fontData = JFaceResources.getFont(JFaceResources.HEADER_FONT).getFontData()[0];
 			stringCustom = fontData.toString();
 			intgerCustom = rgb2int(255, 0, 0);
 			selectedItemID = intgerCustom;
@@ -203,7 +205,7 @@ public class SelectToolAction extends Action implements IMenuCreator {
 
 			@Override
 			public void clickBody() {
-				selectItem(getToolTipText(), null);
+				selectAndRun(getToolTipText(), null);
 			}
 
 			@Override
@@ -649,6 +651,23 @@ public class SelectToolAction extends Action implements IMenuCreator {
 		return selectedItemID;
 	}
 
+	public boolean setSelect(int select) {
+		if (items != null) {
+			for (ToolActionItem actionItem : items) {
+				if (select == actionItem.id) {
+					selectItem(actionItem.label, null);
+					return true;
+				}
+			}
+		} else {
+			if (getId().equals(DRAWTEXT_TOOLBAR + "")) { //$NON-NLS-1$
+				toolButton.clickBody();
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public void setUnselect() {
 		selectedItemID = -1;
 		if (toolButton != null) {
@@ -668,24 +687,34 @@ public class SelectToolAction extends Action implements IMenuCreator {
 		return stringCustom;
 	}
 
-	protected void selectItem(String label, ImageDescriptor image) {
+	protected void selectAndRun(String label, ImageDescriptor image) {
+		if (selectItem(label, image)) {
+			if (getId().equals(CAPTURE_DROP_DOWN_MENU + "")) { //$NON-NLS-1$
+				if (selectedItemID == CAPTURE_FILE) {
+					FileDialog dialog = new FileDialog(parent.getShell());
+					dialog.setFileName(stringCustom);
+					dialog.setFilterExtensions(new String[] { "*.bmp;*.jpg;*.png", "*.*" }); //$NON-NLS-1$ //$NON-NLS-2$
+					String result = dialog.open();
+					if (result != null && result.length() > 0) {
+						stringCustom = result;
+						run();
+					}
+				} else {
+					run();
+				}
+				selectedItemID = CAPTURE_DESKTOP;
+			} else {
+				run();
+			}
+		}
+	}
+
+	protected boolean selectItem(String label, ImageDescriptor image) {
 		for (ToolActionItem actionItem : items) {
 			if (actionItem.label.equals(label)) {
 				selectedItemID = actionItem.id;
 				if (getId().equals(CAPTURE_DROP_DOWN_MENU + "")) { //$NON-NLS-1$
-					if (selectedItemID == CAPTURE_FILE) {
-						FileDialog dialog = new FileDialog(parent.getShell());
-						dialog.setFileName(filename);
-						dialog.setFilterExtensions(new String[] { "*.bmp;*.jpg;*.png", "*.*" }); //$NON-NLS-1$ //$NON-NLS-2$
-						String result = dialog.open();
-						if (result != null && result.length() > 0) {
-							filename = result;
-							run();
-						}
-					} else {
-						run();
-					}
-					selectedItemID = CAPTURE_DESKTOP;
+					// NONE
 				} else {
 					setToolTipText(label);
 					if (image != null) {
@@ -698,11 +727,11 @@ public class SelectToolAction extends Action implements IMenuCreator {
 						}
 						toolButton.redraw();
 					}
-					run();
 				}
-				break;
+				return true;
 			}
 		}
+		return false;
 	}
 
 	private void addActionsToMenu() {
@@ -710,7 +739,7 @@ public class SelectToolAction extends Action implements IMenuCreator {
 			Action action = new Action() {
 				@Override
 				public void run() {
-					selectItem(getText(), getImageDescriptor());
+					selectAndRun(getText(), getImageDescriptor());
 				}
 			};
 			action.setText(actionItem.label);
@@ -771,8 +800,6 @@ public class SelectToolAction extends Action implements IMenuCreator {
 
 	private boolean showSelection;
 
-	private String filename;
-
 	public boolean getVisible() {
 		if (toolButton != null) {
 			return toolButton.getVisible();
@@ -805,7 +832,7 @@ public class SelectToolAction extends Action implements IMenuCreator {
 
 	public Image getFileImage() {
 		try {
-			Image image = new Image(parent.getShell().getDisplay(), filename);
+			Image image = new Image(parent.getShell().getDisplay(), stringCustom);
 			return image;
 		} catch (Exception e) {
 			// None
