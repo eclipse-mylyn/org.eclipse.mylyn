@@ -55,7 +55,8 @@ class ConnectorDescriptorToolTip extends GradientToolTip {
 
 		GridLayoutFactory.fillDefaults().applyTo(parent);
 
-		Composite container = new Composite(parent, SWT.NULL | SWT.NO_BACKGROUND);
+		Composite container = new Composite(parent, SWT.NULL);
+		container.setBackground(null);
 		GridDataFactory.fillDefaults().grab(true, true).hint(/*347*/650, SWT.DEFAULT).applyTo(container);
 
 		GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).spacing(3, 0).applyTo(container);
