@@ -326,7 +326,7 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 	}
 
 	public static Set<IWorkingSet> getActiveWorkingSets(IWorkbenchWindow window) {
-		if (window != null) {
+		if (window != null && window.getActivePage() != null) {
 			Set<IWorkingSet> allSets = new HashSet<IWorkingSet>(Arrays.asList(window.getActivePage().getWorkingSets()));
 			Set<IWorkingSet> tasksSets = new HashSet<IWorkingSet>(allSets);
 			for (IWorkingSet workingSet : allSets) {
