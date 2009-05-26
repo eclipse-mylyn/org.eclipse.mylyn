@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.notifications;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -121,17 +122,24 @@ public class TaskDataDiff {
 
 	@Override
 	public String toString() {
-		return toString(60);
+		return toString(60, true);
 	}
 
 	// TODO implement trim based on text width
-	public String toString(int maxWidth) {
+	public String toString(int maxWidth, boolean includeNewest) {
 		StringBuilder sb = new StringBuilder();
 		String sep = ""; //$NON-NLS-1$
 		// append first comment
 		int newCommentCount = newComments.size();
 		if (newCommentCount > 0) {
-			ITaskComment comment = newComments.iterator().next();
+			Iterator<ITaskComment> iter = newComments.iterator();
+			ITaskComment comment = iter.next();
+			if (includeNewest) {
+				while (iter.hasNext()) {
+					comment = iter.next();
+				}
+			}
+
 			sb.append(TaskDiffUtil.trim(TaskDiffUtil.commentToString(comment), 60));
 			if (newCommentCount > 1) {
 				sb.append(" (" + (newCommentCount - 1) + Messages.TaskDataDiff_more_); //$NON-NLS-1$

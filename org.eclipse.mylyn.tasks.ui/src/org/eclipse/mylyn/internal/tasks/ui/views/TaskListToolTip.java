@@ -290,7 +290,7 @@ public class TaskListToolTip extends GradientToolTip {
 						TasksUiPlugin.getTaskDataManager());
 				TaskDataDiff diff = notifier.getDiff(task);
 				if (diff != null) {
-					text = diff.toString(MAX_TEXT_WIDTH);
+					text = diff.toString(MAX_TEXT_WIDTH, false);
 				}
 				if (text != null && text.length() > 0) {
 					return text;

@@ -11,9 +11,6 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.notifications;
 
-import java.util.Date;
-
-import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotification;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.swt.graphics.Image;
@@ -31,20 +28,5 @@ public class TaskListNotificationReminder extends TaskListNotification {
 	@Override
 	public Image getNotificationKindImage() {
 		return CommonImages.getImage(CommonImages.OVERLAY_DATE_DUE);
-	}
-
-	@Override
-	public int compareTo(AbstractNotification anotherNotification) throws ClassCastException {
-		if (!(anotherNotification != null)) {
-			throw new ClassCastException("A ITaskListNotification object expected."); //$NON-NLS-1$
-		}
-		Date anotherDate = (anotherNotification).getDate();
-		if (date != null && anotherDate != null) {
-			return date.compareTo(anotherDate);
-		} else if (date == null) {
-			return -1;
-		} else {
-			return 1;
-		}
 	}
 }

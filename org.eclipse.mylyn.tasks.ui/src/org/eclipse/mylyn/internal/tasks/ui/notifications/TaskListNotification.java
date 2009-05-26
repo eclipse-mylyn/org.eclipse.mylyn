@@ -106,16 +106,13 @@ public class TaskListNotification extends AbstractNotification {
 	}
 
 	public int compareTo(AbstractNotification anotherNotification) throws ClassCastException {
-		if (!(anotherNotification != null)) {
-			throw new ClassCastException("A ITaskListNotification object expected."); //$NON-NLS-1$
-		}
-		Date anotherDate = (anotherNotification).getDate();
+		Date anotherDate = anotherNotification.getDate();
 		if (date != null && anotherDate != null) {
-			return date.compareTo(anotherDate);
+			return date.compareTo(anotherDate) * -1;
 		} else if (date == null) {
-			return -1;
-		} else {
 			return 1;
+		} else {
+			return -1;
 		}
 	}
 

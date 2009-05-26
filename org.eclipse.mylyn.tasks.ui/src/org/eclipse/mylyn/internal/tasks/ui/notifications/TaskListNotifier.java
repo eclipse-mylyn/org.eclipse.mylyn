@@ -60,7 +60,7 @@ public class TaskListNotifier implements ITaskDataManagerListener, ITaskListNoti
 			TaskDataDiff diff = getDiff(task);
 			if (diff != null) {
 				TaskListNotification notification = new TaskListNotification(task, token);
-				notification.setDescription(diff.toString());
+				notification.setDescription(diff.toString(60, true));
 				return notification;
 			}
 		}
