@@ -1514,7 +1514,13 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 		this.needsSubmitButton = needsSubmitButton;
 	}
 
-	void fillLeftHeaderToolBar(IToolBarManager toolBarManager) {
+	/**
+	 * This is a provisional method. Do not call or override until the API has been finalized. See bug 274790 for
+	 * details.
+	 * 
+	 * @noreference This method is not intended to be referenced by clients.
+	 */
+	protected void fillLeftHeaderToolBar(IToolBarManager toolBarManager) {
 		if (needsSubmitButton()) {
 			ControlContribution submitButtonContribution = new ControlContribution(
 					"org.eclipse.mylyn.tasks.toolbars.submit") { //$NON-NLS-1$
