@@ -27,6 +27,7 @@ import org.eclipse.jface.text.presentation.IPresentationDamager;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.IPresentationRepairer;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
+import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.DefaultAnnotationHover;
 import org.eclipse.jface.text.source.IAnnotationHover;
@@ -82,6 +83,17 @@ public class HtmlViewerConfiguration extends AbstractTextSourceViewerConfigurati
 		reconciler.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
 
 		return reconciler;
+	}
+
+	/**
+	 * returns null, since spell check is not needed
+	 * 
+	 * @since 1.1
+	 */
+	@Override
+	public IReconciler getReconciler(ISourceViewer sourceViewer) {
+		// no need for a reconciler: no spell check or anything else that can use one
+		return null;
 	}
 
 	private MarkupViewerDamagerRepairer createMarkupViewerDamagerRepairer() {
