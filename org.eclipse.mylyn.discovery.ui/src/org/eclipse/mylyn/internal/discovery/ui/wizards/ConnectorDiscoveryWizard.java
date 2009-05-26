@@ -30,6 +30,7 @@ import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDescriptorKind;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDiscovery;
 import org.eclipse.mylyn.internal.discovery.ui.DiscoveryUi;
 import org.eclipse.mylyn.internal.discovery.ui.util.DiscoveryUiUtil;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
@@ -65,6 +66,7 @@ public class ConnectorDiscoveryWizard extends Wizard {
 	public ConnectorDiscoveryWizard() {
 		setWindowTitle(Messages.ConnectorDiscoveryWizard_connectorDiscovery);
 		setNeedsProgressMonitor(true);
+		setDefaultPageImageDescriptor(CommonImages.BANNER_DISOVERY);
 		createEnvironment();
 	}
 

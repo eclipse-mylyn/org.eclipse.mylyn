@@ -112,9 +112,15 @@ public class CommonImages {
 
 	// Wizard banners
 
-	public static final ImageDescriptor BANNER_SCREENSHOT = create(T_WIZBAN, "banner-screenshot.png"); //$NON-NLS-1$
+	public static final ImageDescriptor BANNER_SCREENSHOT = create(T_WIZBAN, "banner-discovery.png"); //$NON-NLS-1$
 
-	public static final ImageDescriptor BANNER_IMPORT = create(T_WIZBAN, "banner-import.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor BANNER_IMPORT = create(T_TOOL, "discovery.gif"); //$NON-NLS-1$
+
+	// Discovery
+
+	public static final ImageDescriptor DISCOVERY = create(T_TOOL, "discovery.png"); //$NON-NLS-1$
+
+	public static final ImageDescriptor BANNER_DISOVERY = create(T_WIZBAN, "banner-discovery.png"); //$NON-NLS-1$
 
 	// Miscellaneous
 	// TODO: some of the common images below come from the workbench
