@@ -24,7 +24,11 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.jface.text.source.ISourceViewerExtension2;
+import org.eclipse.mylyn.wikitext.ui.annotation.AnchorHrefAnnotation;
+import org.eclipse.mylyn.wikitext.ui.annotation.TitleAnnotation;
 import org.eclipse.mylyn.wikitext.ui.viewer.HtmlTextPresenter;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
@@ -35,7 +39,6 @@ import org.eclipse.ui.editors.text.EditorsUI;
  * A text hover implementation that finds regions based on annotations, and supports HTML markup in the tooltip string.
  * 
  * @author David Green
- * 
  */
 public class TextHover extends DefaultTextHover implements ITextHoverExtension {
 	private final ISourceViewer sourceViewer;
@@ -47,7 +50,10 @@ public class TextHover extends DefaultTextHover implements ITextHoverExtension {
 
 	@Override
 	protected boolean isIncluded(Annotation annotation) {
-		return true;
+		if (annotation.getType().equals(TitleAnnotation.TYPE) || annotation.getType().equals(AnchorHrefAnnotation.TYPE)) {
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -105,5 +111,47 @@ public class TextHover extends DefaultTextHover implements ITextHoverExtension {
 				};
 			}
 		};
+	}
+
+	private IAnnotationModel getAnnotationModel(ISourceViewer viewer) {
+		if (viewer instanceof ISourceViewerExtension2) {
+			ISourceViewerExtension2 extension = (ISourceViewerExtension2) viewer;
+			return extension.getVisualAnnotationModel();
+		}
+		return viewer.getAnnotationModel();
+	}
+
+	@SuppressWarnings( { "unchecked", "deprecation" })
+	@Override
+	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
+		IAnnotationModel model = getAnnotationModel(sourceViewer);
+		if (model == null) {
+			return null;
+		}
+
+		Iterator e = model.getAnnotationIterator();
+		while (e.hasNext()) {
+			Annotation a = (Annotation) e.next();
+			if (isIncluded(a)) {
+				Position p = model.getPosition(a);
+				if (p != null && p.overlapsWith(hoverRegion.getOffset(), hoverRegion.getLength())) {
+					String msg = a.getText();
+					if (msg != null && msg.trim().length() > 0) {
+						if (a.getType().equals(AnchorHrefAnnotation.TYPE)) {
+							if (msg.startsWith("#")) { //$NON-NLS-1$
+								// don't provide hover information for document-internal
+								// links
+								return null;
+							} else {
+								return NLS.bind(Messages.TextHover_hyperlinkHover, msg);
+							}
+						}
+						return msg;
+					}
+				}
+			}
+		}
+
+		return null;
 	}
 }

@@ -25,6 +25,8 @@ class Messages extends NLS {
 	public static String HtmlTextPresentationParser_presentationRequired;
 
 	public static String ImageManager_accessFailed;
+
+	public static String TextHover_hyperlinkHover;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
