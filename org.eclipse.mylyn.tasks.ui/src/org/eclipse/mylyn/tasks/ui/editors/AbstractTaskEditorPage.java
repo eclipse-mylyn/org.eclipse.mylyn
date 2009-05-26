@@ -32,6 +32,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -415,6 +416,8 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 	private Button submitButton;
 
 	private boolean submitEnabled;
+
+	private boolean needsSubmitButton;
 
 	/**
 	 * @since 3.1
@@ -1456,33 +1459,80 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 	}
 
 	/**
-	 * @since 3.2
+	 * Returns true, if the page has an always visible footer.
+	 * 
+	 * @see #setNeedsFooter(boolean)
 	 */
-	public boolean needsFooter() {
+	private boolean needsFooter() {
 		return needsFooter;
 	}
 
 	/**
-	 * @since 3.2
+	 * Specifies that the page should provide an always visible footer. This flag is not set by default.
+	 * 
+	 * @see #createFooterContent(Composite)
+	 * @see #needsFooter()
 	 */
-	public void setNeedsFooter(boolean needsFooter) {
+	@SuppressWarnings("unused")
+	private void setNeedsFooter(boolean needsFooter) {
 		this.needsFooter = needsFooter;
 	}
 
 	private void createFooterContent(Composite parent) {
 		parent.setLayout(new GridLayout());
 
-		submitButton = toolkit.createButton(parent, Messages.TaskEditorActionPart_Submit, SWT.NONE);
-		GridData submitButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-		submitButtonData.widthHint = 100;
-		submitButton.setBackground(null);
-		submitButton.setImage(CommonImages.getImage(TasksUiImages.REPOSITORY_SUBMIT));
-		submitButton.setLayoutData(submitButtonData);
-		submitButton.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event e) {
-				doSubmit();
-			}
-		});
+//		submitButton = toolkit.createButton(parent, Messages.TaskEditorActionPart_Submit, SWT.NONE);
+//		GridData submitButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+//		submitButtonData.widthHint = 100;
+//		submitButton.setBackground(null);
+//		submitButton.setImage(CommonImages.getImage(TasksUiImages.REPOSITORY_SUBMIT));
+//		submitButton.setLayoutData(submitButtonData);
+//		submitButton.addListener(SWT.Selection, new Listener() {
+//			public void handleEvent(Event e) {
+//				doSubmit();
+//			}
+//		});
+	}
+
+	/**
+	 * Returns true, if the page provides a submit button.
+	 * 
+	 * @since 3.2
+	 * @see #setNeedsSubmitButton(boolean)
+	 */
+	public boolean needsSubmitButton() {
+		return needsSubmitButton;
+	}
+
+	/**
+	 * Specifies that the page should provide a submit button. This flag is not set by default.
+	 * 
+	 * @since 3.2
+	 * @see #needsSubmitButton()
+	 */
+	public void setNeedsSubmitButton(boolean needsSubmitButton) {
+		this.needsSubmitButton = needsSubmitButton;
+	}
+
+	void fillLeftHeaderToolBar(IToolBarManager toolBarManager) {
+		if (needsSubmitButton()) {
+			ControlContribution submitButtonContribution = new ControlContribution(
+					"org.eclipse.mylyn.tasks.toolbars.submit") { //$NON-NLS-1$
+				@Override
+				protected Control createControl(Composite parent) {
+					submitButton = toolkit.createButton(parent, Messages.TaskEditorActionPart_Submit, SWT.NONE);
+					submitButton.setImage(CommonImages.getImage(TasksUiImages.REPOSITORY_SUBMIT));
+					submitButton.setBackground(null);
+					submitButton.addListener(SWT.Selection, new Listener() {
+						public void handleEvent(Event e) {
+							doSubmit();
+						}
+					});
+					return submitButton;
+				}
+			};
+			toolBarManager.add(submitButtonContribution);
+		}
 	}
 
 }

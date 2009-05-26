@@ -151,7 +151,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 	 * @param toolkit
 	 */
 	private void createActionButtons(Composite buttonComposite, FormToolkit toolkit) {
-		if (!getTaskEditorPage().needsFooter()) {
+		if (!getTaskEditorPage().needsSubmitButton()) {
 			submitButton = toolkit.createButton(buttonComposite, Messages.TaskEditorActionPart_Submit, SWT.NONE);
 			GridData submitButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 			submitButtonData.widthHint = 100;
