@@ -7,6 +7,9 @@
  * 
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     David Green
+ *     Shawn Minto bug 275513
+ * 	   Steffen Pingel bug 276012 code review, bug 277191 gradient canvas
  *******************************************************************************/
 package org.eclipse.mylyn.internal.discovery.ui.wizards;
 
@@ -46,6 +49,7 @@ import org.eclipse.mylyn.internal.discovery.core.model.Icon;
 import org.eclipse.mylyn.internal.discovery.core.model.RemoteBundleDiscoveryStrategy;
 import org.eclipse.mylyn.internal.discovery.ui.DiscoveryUi;
 import org.eclipse.mylyn.internal.discovery.ui.util.DiscoveryCategoryComparator;
+import org.eclipse.mylyn.internal.discovery.ui.util.DiscoveryConnectorComparator;
 import org.eclipse.mylyn.internal.discovery.ui.util.DiscoveryUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
@@ -103,8 +107,6 @@ import org.eclipse.ui.themes.IThemeManager;
  * The main wizard page that allows users to select connectors that they wish to install.
  * 
  * @author David Green
- * @author Shawn Minto bug 275513
- * @author Steffen Pingel bug 276012 code review, bug 277191 gradient canvas
  */
 public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 
@@ -688,7 +690,9 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 				GridLayoutFactory.fillDefaults().spacing(0, 0).applyTo(categoryChildrenContainer);
 
 				int numChildren = 0;
-				for (final DiscoveryConnector connector : category.getConnectors()) {
+				List<DiscoveryConnector> connectors = new ArrayList<DiscoveryConnector>(category.getConnectors());
+				Collections.sort(connectors, new DiscoveryConnectorComparator());
+				for (final DiscoveryConnector connector : connectors) {
 					if (isFiltered(connector)) {
 						continue;
 					}
@@ -942,12 +946,6 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 				Image image = descriptor.createImage();
 				if (image != null) {
 					disposables.add(image);
-
-					Rectangle bounds = image.getBounds();
-					if (bounds.x != 32 || bounds.y != 32) {
-						// FIXME: scale image
-					}
-
 					return image;
 				}
 			}

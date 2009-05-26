@@ -4,9 +4,9 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
-            description="shows the connector discovery wizard"
+            description="%command.description"
             id="org.eclipse.mylyn.discovery.ui.discoveryWizardCommand"
-            name="Discovery Wizard">
+            name="%command.name">
       </command>
    </extension>
    <extension

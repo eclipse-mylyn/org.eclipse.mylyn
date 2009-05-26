@@ -10,6 +10,6 @@
         Tasktop Technologies - initial API and implementation
  -->
 <plugin>
-   <extension-point id="connectorDiscovery" name="Connector Discovery" schema="schema/connectorDiscovery.exsd"/>
+   <extension-point id="connectorDiscovery" name="%extension-point.name" schema="schema/connectorDiscovery.exsd"/>
 
 </plugin>
