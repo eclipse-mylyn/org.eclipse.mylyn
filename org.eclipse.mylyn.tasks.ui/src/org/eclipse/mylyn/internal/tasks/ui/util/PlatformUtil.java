@@ -18,6 +18,7 @@ import java.lang.reflect.Method;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.ByteArrayTransfer;
+import org.eclipse.swt.widgets.ToolBar;
 
 /**
  * @author Steffen Pingel
@@ -121,6 +122,15 @@ public class PlatformUtil {
 
 	public static ByteArrayTransfer getUrlTransfer() {
 		return urlTransfer;
+	}
+
+	/**
+	 * If a toolbar does not have a standard ToolItem but use only ControlContributions the height of the tool bar needs
+	 * to be forced to be > 0.
+	 */
+	// TODO e3.4: remove, platform has been fixed
+	public static boolean isToolBarHeightBroken(ToolBar toolBar) {
+		return "gtk".equals(SWT.getPlatform()) && toolBar.computeSize(SWT.DEFAULT, SWT.DEFAULT, false).y == 0; //$NON-NLS-1$
 	}
 
 }

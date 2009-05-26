@@ -55,6 +55,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.TaskEditorScheduleAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ToggleTaskActivationAction;
 import org.eclipse.mylyn.internal.tasks.ui.editors.Messages;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionContributor;
+import org.eclipse.mylyn.internal.tasks.ui.util.PlatformUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDragSourceListener;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -78,6 +79,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
@@ -155,6 +157,8 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	private BusyIndicator busyLabel;
 
 	private int initialLeftToolbarSize;
+
+	private boolean noExtraPadding;
 
 	public TaskEditor() {
 	}
@@ -601,7 +605,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		final Point size = leftToolBar.computeSize(SWT.DEFAULT, SWT.DEFAULT, false);
 
 		// padding between toolbar and image, ensure image is at least one pixel wide to avoid SWT error 
-		final int padding = (size.x > 0) ? 10 : 1;
+		final int padding = (size.x > 0 && !noExtraPadding) ? 10 : 1;
 		final Rectangle imageBounds = (image != null) ? image.getBounds() : new Rectangle(0, 0, 0, 0);
 		int tempHeight = (image != null) ? Math.max(size.y + 1, imageBounds.height) : size.y + 1;
 		// avoid extra padding due to margin added by TitleRegion.VMARGIN
@@ -730,7 +734,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 					composite.setBackground(null);
 					String label = taskRepository.getRepositoryLabel();
 					if (label.indexOf("//") != -1) { //$NON-NLS-1$
-						label = label.substring((taskRepository.getRepositoryUrl().indexOf("//") + 2));
+						label = label.substring((taskRepository.getRepositoryUrl().indexOf("//") + 2)); //$NON-NLS-1$
 					}
 
 					Hyperlink link = new Hyperlink(composite, SWT.NONE);
@@ -752,7 +756,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 		toolBarManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 
-		toolBarManager.add(new Separator("page"));
+		toolBarManager.add(new Separator("page")); //$NON-NLS-1$
 		for (IFormPage page : getPages()) {
 			if (page instanceof TaskFormPage) {
 				TaskFormPage taskEditorPage = (TaskFormPage) page;
@@ -786,10 +790,10 @@ public class TaskEditor extends SharedHeaderFormEditor {
 				}
 			};
 		}
-		toolBarManager.add(new Separator("planning"));
+		toolBarManager.add(new Separator("planning")); //$NON-NLS-1$
 		toolBarManager.add(new TaskEditorScheduleAction(task));
 
-		toolBarManager.add(new Separator("activation"));
+		toolBarManager.add(new Separator("activation")); //$NON-NLS-1$
 		toolBarManager.add(activateAction);
 
 		// add external contributions
@@ -797,8 +801,8 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		if (menuService != null && toolBarManager instanceof ContributionManager) {
 			TaskRepository taskRepository = (outgoingNewRepository != null) ? outgoingNewRepository
 					: taskEditorInput.getTaskRepository();
-			menuService.populateContributionManager((ContributionManager) toolBarManager, "toolbar:"
-					+ ID_TOOLBAR_HEADER + "." + taskRepository.getConnectorKind());
+			menuService.populateContributionManager((ContributionManager) toolBarManager, "toolbar:" //$NON-NLS-1$
+					+ ID_TOOLBAR_HEADER + "." + taskRepository.getConnectorKind()); //$NON-NLS-1$
 		}
 
 		toolBarManager.update(true);
@@ -813,7 +817,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		leftToolBarManager.update(true);
 
 		leftToolBarManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-		leftToolBarManager.add(new Separator("page"));
+		leftToolBarManager.add(new Separator("page")); //$NON-NLS-1$
 
 		initialLeftToolbarSize = leftToolBarManager.getSize();
 
@@ -830,26 +834,36 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			TaskRepository outgoingNewRepository = TasksUiUtil.getOutgoingNewTaskRepository(task);
 			TaskRepository taskRepository = (outgoingNewRepository != null) ? outgoingNewRepository
 					: taskEditorInput.getTaskRepository();
-			menuService.populateContributionManager(leftToolBarManager, "toolbar:" + ID_LEFT_TOOLBAR_HEADER + "."
+			menuService.populateContributionManager(leftToolBarManager, "toolbar:" + ID_LEFT_TOOLBAR_HEADER + "." //$NON-NLS-1$ //$NON-NLS-2$
 					+ taskRepository.getConnectorKind());
 		}
 
 		leftToolBarManager.update(true);
 
-		// XXX work around a bug in Gtk that causes the toolbar size to be incorrect if no
-		// tool bar buttons are contributed
-		if (leftToolBar != null) {
-			Point size = leftToolBar.computeSize(SWT.DEFAULT, SWT.DEFAULT, false);
-			boolean changed = false;
-			for (Control control : leftToolBar.getChildren()) {
-				final Point childSize = control.computeSize(SWT.DEFAULT, SWT.DEFAULT, false);
-				if (childSize.y > size.y) {
-					size.y = childSize.y;
-					changed = true;
+		if (hasLeftToolBar()) {
+			// XXX work around a bug in Gtk that causes the toolbar size to be incorrect if no
+			// tool bar buttons are contributed
+			if (leftToolBar != null) {
+				Point size = leftToolBar.computeSize(SWT.DEFAULT, SWT.DEFAULT, false);
+				boolean changed = false;
+				for (Control control : leftToolBar.getChildren()) {
+					final Point childSize = control.computeSize(SWT.DEFAULT, SWT.DEFAULT, false);
+					if (childSize.y > size.y) {
+						size.y = childSize.y;
+						changed = true;
+					}
+				}
+				if (changed) {
+					leftToolBar.setSize(size);
 				}
 			}
-			if (changed) {
-				leftToolBar.setSize(size);
+
+			if (PlatformUtil.isToolBarHeightBroken(leftToolBar)) {
+				ToolItem item = new ToolItem(leftToolBar, SWT.NONE);
+				item.setEnabled(false);
+				item.setImage(CommonImages.getImage(CommonImages.BLANK));
+				item.setWidth(1);
+				noExtraPadding = true;
 			}
 		}
 	}
@@ -904,7 +918,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 				String idLabel = task.getTaskKey();
 				if (idLabel != null) {
-					getHeaderForm().getForm().setText(kindLabel + " " + idLabel);
+					getHeaderForm().getForm().setText(kindLabel + " " + idLabel); //$NON-NLS-1$
 				} else {
 					getHeaderForm().getForm().setText(kindLabel);
 				}
