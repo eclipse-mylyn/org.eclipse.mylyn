@@ -37,6 +37,14 @@ public class Messages extends NLS {
 
 	public static String BugzillaPlanningEditorPart_Team_Planning;
 
+	public static String BugzillaTaskEditorPage_Changes_Submitted_Action_Line;
+
+	public static String BugzillaTaskEditorPage_Changes_Submitted_Email_Line;
+
+	public static String BugzillaTaskEditorPage_Changes_Submitted_Message;
+
+	public static String BugzillaTaskEditorPage_Changes_Submitted_Titel;
+
 	public static String BugzillaTaskEditorPage_Please_enter_a_description_before_submitting;
 
 	public static String BugzillaTaskEditorPage_Please_enter_a_short_summary_before_submitting;

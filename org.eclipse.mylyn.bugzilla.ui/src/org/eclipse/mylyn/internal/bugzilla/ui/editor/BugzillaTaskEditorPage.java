@@ -20,15 +20,20 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCustomField;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryResponse;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskDataHandler;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
+import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
+import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
@@ -36,6 +41,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModelEvent;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModelListener;
+import org.eclipse.mylyn.tasks.core.sync.SubmitJobEvent;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
@@ -45,6 +51,9 @@ import org.eclipse.mylyn.tasks.ui.editors.LayoutHint;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorPartDescriptor;
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
 
 /**
  * @author Rob Elves
@@ -226,6 +235,7 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 			attrToken.setValue(getModel().getTask().getAttribute(BugzillaAttribute.TOKEN.getKey()));
 		}
 
+		getTaskEditor().setMessage("", IMessageProvider.NONE); //$NON-NLS-1$
 		super.doSubmit();
 	}
 
@@ -361,6 +371,37 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 					}
 				}
 			}
+		}
+	}
+
+	@Override
+	protected void handleTaskSubmitted(SubmitJobEvent event) {
+		if (event.getJob().getResponse() != null && event.getJob().getResponse() instanceof BugzillaRepositoryResponse) {
+			final RepositoryResponse response = event.getJob().getResponse();
+			getTaskEditor().setMessage(Messages.BugzillaTaskEditorPage_Changes_Submitted_Message,
+					IMessageProvider.INFORMATION, new HyperlinkAdapter() {
+						@Override
+						public void linkActivated(HyperlinkEvent event) {
+							String mes = ""; //$NON-NLS-1$
+							if (response instanceof BugzillaRepositoryResponse) {
+								BugzillaRepositoryResponse bugzillaResponse = (BugzillaRepositoryResponse) response;
+								for (String iterable_element : bugzillaResponse.getResponseData().keySet()) {
+									mes += NLS.bind(Messages.BugzillaTaskEditorPage_Changes_Submitted_Action_Line,
+											iterable_element);
+									List<String> o = bugzillaResponse.getResponseData().get(iterable_element);
+									for (String string : o) {
+										mes += NLS.bind(Messages.BugzillaTaskEditorPage_Changes_Submitted_Email_Line,
+												string);
+									}
+								}
+								new MessageDialog(WorkbenchUtil.getShell(),
+										Messages.BugzillaTaskEditorPage_Changes_Submitted_Titel, null, mes,
+										MessageDialog.INFORMATION, new String[] { IDialogConstants.OK_LABEL }, 0).open();
+							}
+						}
+					});
+		} else {
+			super.handleTaskSubmitted(event);
 		}
 	}
 
