@@ -35,6 +35,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesSorter;
@@ -143,6 +144,7 @@ public class SelectRepositoryConnectorPage extends WizardPage {
 					GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.CENTER).applyTo(discoveryButton);
 
 					discoveryButton.setText(Messages.SelectRepositoryConnectorPage_activateDiscovery);
+					discoveryButton.setImage(CommonImages.getImage(CommonImages.DISCOVERY));
 					discoveryButton.addSelectionListener(new SelectionAdapter() {
 						@Override
 						public void widgetSelected(SelectionEvent event) {
