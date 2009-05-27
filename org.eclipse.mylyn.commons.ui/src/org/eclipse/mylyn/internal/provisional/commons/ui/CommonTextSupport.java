@@ -25,6 +25,7 @@ import org.eclipse.jface.text.source.AnnotationModel;
 import org.eclipse.jface.text.source.IAnnotationAccess;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
+import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -208,6 +209,7 @@ public class CommonTextSupport {
 	private ISelectionChangedListener selectionChangedListener;
 
 	public CommonTextSupport(IHandlerService handlerService) {
+		Assert.isNotNull(handlerService);
 		this.handlerService = handlerService;
 	}
 
