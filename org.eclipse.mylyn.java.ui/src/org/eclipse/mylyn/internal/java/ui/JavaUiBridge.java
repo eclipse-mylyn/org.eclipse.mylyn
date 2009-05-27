@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2009 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,11 +7,11 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Remy Chi Jian Suen - Bug 256071 Reduce/remove reflection usage in Java bridge
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.java.ui;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,9 +22,9 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.actions.SelectionConverter;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
-import org.eclipse.jdt.internal.ui.javaeditor.JavaOutlinePage;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.text.TextSelection;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
@@ -34,26 +34,16 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.part.Page;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 /**
  * @author Mik Kersten
  */
 public class JavaUiBridge extends AbstractContextUiBridge {
-
-	private Field javaOutlineField = null;
-
-	public JavaUiBridge() {
-		try {
-			javaOutlineField = JavaOutlinePage.class.getDeclaredField("fOutlineViewer"); //$NON-NLS-1$
-			javaOutlineField.setAccessible(true);
-		} catch (Exception e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not get outline viewer", //$NON-NLS-1$
-					e));
-		}
-	}
 
 	@Override
 	public void open(IInteractionElement node) {
@@ -114,19 +104,20 @@ public class JavaUiBridge extends AbstractContextUiBridge {
 
 	@Override
 	public List<TreeViewer> getContentOutlineViewers(IEditorPart editorPart) {
-		if (editorPart == null || javaOutlineField == null) {
+		if (editorPart == null) {
 			return null;
 		}
 		List<TreeViewer> viewers = new ArrayList<TreeViewer>();
 		Object out = editorPart.getAdapter(IContentOutlinePage.class);
-		if (out instanceof JavaOutlinePage) {
-			JavaOutlinePage page = (JavaOutlinePage) out;
+		if (out instanceof Page) {
+			Page page = (Page) out;
 			if (page.getControl() != null) {
-				try {
-					viewers.add((TreeViewer) javaOutlineField.get(page));
-				} catch (Exception e) {
-					StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
-							"Could not get outline viewer", e)); //$NON-NLS-1$
+				IWorkbenchSite site = page.getSite();
+				if (site != null) {
+					ISelectionProvider provider = site.getSelectionProvider();
+					if (provider instanceof TreeViewer) {
+						viewers.add((TreeViewer) provider);
+					}
 				}
 			}
 		}
