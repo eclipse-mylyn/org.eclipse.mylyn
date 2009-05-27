@@ -20,7 +20,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 /**
- * 
  * @author David Green
  */
 public class ShowQuickOutlineCommand extends AbstractHandler {
@@ -34,11 +33,13 @@ public class ShowQuickOutlineCommand extends AbstractHandler {
 		Object activeFocusControl = HandlerUtil.getVariable(event, "activeFocusControl"); //$NON-NLS-1$
 		if (activeFocusControl instanceof Control) {
 			Control control = (Control) activeFocusControl;
-			ISourceViewer viewer = (ISourceViewer) control.getData(ISourceViewer.class.getName());
-			if (viewer != null) {
-				ITextOperationTarget operationTarget = viewer.getTextOperationTarget();
-				if (operationTarget.canDoOperation(QUICK_OUTLINE)) {
-					operationTarget.doOperation(QUICK_OUTLINE);
+			if (!control.isDisposed()) {
+				ISourceViewer viewer = (ISourceViewer) control.getData(ISourceViewer.class.getName());
+				if (viewer != null) {
+					ITextOperationTarget operationTarget = viewer.getTextOperationTarget();
+					if (operationTarget.canDoOperation(QUICK_OUTLINE)) {
+						operationTarget.doOperation(QUICK_OUTLINE);
+					}
 				}
 			}
 		}
