@@ -30,6 +30,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -293,7 +294,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 			body = new Composite(container, SWT.NULL);
 			GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 480).applyTo(body);
 		}
-
+		Dialog.applyDialogFont(container);
 		setControl(container);
 	}
 
@@ -542,6 +543,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 
 		scrolledComposite.setContent(scrolledContents);
 
+		Dialog.applyDialogFont(body);
 		// we've changed it so it needs to know
 		body.layout(true);
 	}
