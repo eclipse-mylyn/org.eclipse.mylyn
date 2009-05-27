@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTextViewerConfiguration.Mode;
@@ -38,8 +37,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 public class RichTextAttributeEditor extends AbstractAttributeEditor {
 
 	private final RichTextEditor editor;
-
-	private Mode mode;
 
 	protected boolean ignoreNotification;
 
@@ -84,7 +81,7 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 	}
 
 	public Mode getMode() {
-		return mode;
+		return editor.getMode();
 	}
 
 	public AbstractRenderingEngine getRenderingEngine() {
@@ -116,8 +113,7 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 	}
 
 	public void setMode(Mode mode) {
-		Assert.isNotNull(mode);
-		this.mode = mode;
+		editor.setMode(mode);
 	}
 
 	public void setRenderingEngine(AbstractRenderingEngine renderingEngine) {
