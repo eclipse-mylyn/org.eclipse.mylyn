@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Frank Becker - fixes for bug 165072 
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.core;
