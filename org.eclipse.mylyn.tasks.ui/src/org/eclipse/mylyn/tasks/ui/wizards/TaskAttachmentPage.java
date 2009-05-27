@@ -42,6 +42,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.ActiveShellExpression;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.contexts.IContextActivation;
 import org.eclipse.ui.contexts.IContextService;
@@ -134,12 +135,15 @@ public class TaskAttachmentPage extends WizardPage {
 		Label label = new Label(composite, SWT.NONE);
 		label.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false));
 		label.setText(Messages.TaskAttachmentPage_Comment);
+
 		AbstractTaskEditorExtension extension = TaskEditorExtensions.getTaskEditorExtension(model.getTaskRepository());
-		String contextId = extension.getEditorContextId();
-		if (contextId != null) {
-			contextService = (IContextService) PlatformUI.getWorkbench().getService(IContextService.class);
-			if (contextService != null) {
-				commentContext = contextService.activateContext(contextId);
+		if (extension != null) {
+			String contextId = extension.getEditorContextId();
+			if (contextId != null) {
+				contextService = (IContextService) PlatformUI.getWorkbench().getService(IContextService.class);
+				if (contextService != null) {
+					commentContext = contextService.activateContext(contextId, new ActiveShellExpression(getShell()));
+				}
 			}
 		}
 
