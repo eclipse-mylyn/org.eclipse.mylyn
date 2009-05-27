@@ -133,6 +133,8 @@ public class PersonalPart extends AbstractLocalEditorPart {
 
 	private IEditorSite editorSite;
 
+	private Composite actualTimeComposite;
+
 	public PersonalPart(int sectionStyle, boolean expandNotesVertically) {
 		super(sectionStyle, Messages.PersonalPart_Personal_Planning);
 		this.expandNotesVertically = expandNotesVertically;
@@ -335,7 +337,15 @@ public class PersonalPart extends AbstractLocalEditorPart {
 
 	private void updateElapsedTime() {
 		long elapsedTime = TasksUiPlugin.getTaskActivityManager().getElapsedTime(task);
-
+		if (elapsedTime > 0) {
+			if (actualTimeComposite != null && !actualTimeComposite.isVisible()) {
+				actualTimeComposite.setVisible(true);
+			}
+		} else {
+			if (actualTimeComposite != null && actualTimeComposite.isVisible()) {
+				actualTimeComposite.setVisible(false);
+			}
+		}
 		String elapsedTimeString = DateUtil.getFormattedDurationShort(elapsedTime);
 		if (elapsedTimeString.equals("")) { //$NON-NLS-1$
 			elapsedTimeString = Messages.TaskEditorPlanningPart_0_SECOUNDS;
@@ -488,7 +498,7 @@ public class PersonalPart extends AbstractLocalEditorPart {
 	@Override
 	protected void setSection(FormToolkit toolkit, Section section) {
 		if (section.getTextClient() == null) {
-			Composite actualTimeComposite = toolkit.createComposite(section);
+			actualTimeComposite = toolkit.createComposite(section);
 			actualTimeComposite.setBackground(null);
 			RowLayout rowLayout = new RowLayout();
 			EditorUtil.center(rowLayout);
