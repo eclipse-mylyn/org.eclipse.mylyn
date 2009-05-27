@@ -22,6 +22,7 @@ import org.eclipse.jface.text.TextEvent;
 import org.eclipse.mylyn.commons.core.DateUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DatePicker;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.DayDateRange;
@@ -224,6 +225,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		toolkit.paintBordersFor(composite);
 		section.setClient(composite);
 		setSection(toolkit, section);
+		CommonUiUtil.setMenu(composite, parent.getMenu());
 		return section;
 	}
 
