@@ -375,7 +375,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 	private ScrolledForm form;
 
-	private boolean formBusy;
+	private boolean busy;
 
 	private Control lastFocusControl;
 
@@ -1387,42 +1387,16 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 	@Override
 	public void showBusy(boolean busy) {
-		if (!getManagedForm().getForm().isDisposed() && busy != formBusy) {
-			// parentEditor.showBusy(busy);
-//			if (synchronizeEditorAction != null) {
-//				synchronizeEditorAction.setEnabled(!busy);
-//			}
-//
-//			if (openBrowserAction != null) {
-//				openBrowserAction.setEnabled(!busy);
-//			}
-//
-//			if (historyAction != null) {
-//				historyAction.setEnabled(!busy);
-//			}
-//
-//			if (actionPart != null) {
-//				actionPart.setSubmitEnabled(!busy);
-//			}
-//
-//			if (newSubTaskAction != null) {
-//				newSubTaskAction.setEnabled(!busy);
-//			}
-//
-//			if (clearOutgoingAction != null) {
-//				clearOutgoingAction.setEnabled(!busy);
-//			}
-
+		if (!getManagedForm().getForm().isDisposed() && this.busy != busy) {
+			setSubmitEnabled(!busy);
 			CommonUiUtil.setEnabled(editorComposite, !busy);
-
-			formBusy = busy;
+			this.busy = busy;
 		}
 	}
 
 	public void showEditorBusy(boolean busy) {
 		getTaskEditor().showBusy(busy);
 		refreshDisabled = busy;
-		setSubmitEnabled(!busy);
 	}
 
 	private void updateHeaderMessage() {
