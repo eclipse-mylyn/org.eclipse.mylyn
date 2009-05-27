@@ -28,6 +28,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
+import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -199,7 +200,9 @@ public class TasksUiUtil {
 	public static int openEditRepositoryWizard(TaskRepository repository) {
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 				repository.getConnectorKind());
-		if (connector == null || !connector.isUserManaged()) {
+		if (connector == null
+				|| (!connector.isUserManaged() && !connector.getConnectorKind().equals(
+						LocalRepositoryConnector.CONNECTOR_KIND))) {
 			return Window.CANCEL;
 		}
 

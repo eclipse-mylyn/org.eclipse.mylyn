@@ -1453,18 +1453,18 @@
                      <instanceof
                            value="org.eclipse.mylyn.tasks.core.TaskRepository">
                      </instanceof>
-                     <test
-                           forcePluginActivation="true"
-                           property="org.eclipse.mylyn.taskRepository.userManaged"
-                           value="true">
-                     </test>
-                     <not>
+                     <or>
+                  	   <test
+        	           		forcePluginActivation="true"
+    	                    property="org.eclipse.mylyn.taskRepository.userManaged"
+	                        value="true">
+                    	 </test>
                         <test
                               forcePluginActivation="true"
                               property="org.eclipse.mylyn.taskRepository.connectorKind"
                               value="local">
                         </test>
-                     </not>
+                     </or>
                   </and>
                </iterate>
             </and>
