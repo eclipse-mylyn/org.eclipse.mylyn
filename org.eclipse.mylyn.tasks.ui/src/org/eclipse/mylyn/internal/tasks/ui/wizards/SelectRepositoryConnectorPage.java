@@ -128,31 +128,25 @@ public class SelectRepositoryConnectorPage extends WizardPage {
 			final Command discoveryWizardCommand = service.getCommand("org.eclipse.mylyn.discovery.ui.discoveryWizardCommand"); //$NON-NLS-1$
 			if (discoveryWizardCommand != null) {
 				// update enabled state in case something has changed (ProxyHandler caches state)
-				// XXX remove reflection when we no longer support 3.3
+				// TODO e3.3 remove reflection
 				try {
 					Command.class.getDeclaredMethod("setEnabled", Object.class).invoke(discoveryWizardCommand, //$NON-NLS-1$
 							createEvaluationContext(handlerService));
-				} catch (InvocationTargetException e1) {
-					Throwable cause = e1.getCause();
-					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "unexpected exception", cause)); //$NON-NLS-1$
-				} catch (Exception e1) {
+				} catch (InvocationTargetException e) {
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+							"Failed to enable discovery command", e)); //$NON-NLS-1$
+				} catch (Exception e) {
 					// expected on Eclipse 3.3
 				}
 
 				if (discoveryWizardCommand.isEnabled()) {
 					Button discoveryButton = new Button(container, SWT.PUSH);
 					GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.CENTER).applyTo(discoveryButton);
-
 					discoveryButton.setText(Messages.SelectRepositoryConnectorPage_activateDiscovery);
 					discoveryButton.setImage(CommonImages.getImage(CommonImages.DISCOVERY));
 					discoveryButton.addSelectionListener(new SelectionAdapter() {
 						@Override
 						public void widgetSelected(SelectionEvent event) {
-							widgetDefaultSelected(event);
-						}
-
-						@Override
-						public void widgetDefaultSelected(SelectionEvent event) {
 							IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(
 									IHandlerService.class);
 							try {

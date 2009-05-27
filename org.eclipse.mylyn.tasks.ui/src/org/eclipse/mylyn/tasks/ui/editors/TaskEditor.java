@@ -222,6 +222,10 @@ public class TaskEditor extends SharedHeaderFormEditor {
 						// bottom align tool bar in title region
 						Point size = leftToolBar.computeSize(SWT.DEFAULT, SWT.DEFAULT, false);
 						int y = leftToolBar.getParent().getSize().y - size.y - 2;
+						if (!hasLeftToolBar()) {
+							// hide tool bar to avoid overlaying busyLabel on windows
+							size.x = 0;
+						}
 						leftToolBar.setBounds(busyLabel.getLocation().x, y, size.x, size.y);
 					}
 				}
@@ -689,6 +693,10 @@ public class TaskEditor extends SharedHeaderFormEditor {
 					if (control != null) {
 						control.setEnabled(!busy);
 					}
+				}
+
+				if (leftToolBar != null) {
+					leftToolBar.setEnabled(!busy);
 				}
 
 				CommonUiUtil.setEnabled(form.getBody(), !busy);

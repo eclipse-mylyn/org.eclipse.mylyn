@@ -33,6 +33,7 @@ public class TracTaskEditorPage extends AbstractTaskEditorPage {
 
 	public TracTaskEditorPage(TaskEditor editor) {
 		super(editor, TracCorePlugin.CONNECTOR_KIND);
+		setNeedsSubmitButton(true);
 	}
 
 	@Override
