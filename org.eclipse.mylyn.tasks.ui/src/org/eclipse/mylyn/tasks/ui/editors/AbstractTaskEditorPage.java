@@ -74,7 +74,7 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorNewCommentPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorOutlineNode;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorOutlinePage;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorPeoplePart;
-import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorPersonalPart;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorPlanningPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorRichTextPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorSummaryPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskMigrator;
@@ -331,11 +331,6 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 	public static final String ID_PART_ACTIONS = "org.eclipse.mylyn.tasks.ui.editors.parts.actions"; //$NON-NLS-1$
 
 	public static final String ID_PART_ATTACHMENTS = "org.eclipse.mylyn.tasks.ui.editors.parts.attachments"; //$NON-NLS-1$
-
-	/**
-	 * @since 3.2
-	 */
-	public static final String ID_PART_PERSONAL = "org.eclipse.mylyn.tasks.ui.editors.parts.personal"; //$NON-NLS-1$
 
 	public static final String ID_PART_ATTRIBUTES = "org.eclipse.mylyn.tasks.ui.editors.parts.attributes"; //$NON-NLS-1$
 
@@ -730,10 +725,10 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 			}
 		}.setPath(PATH_COMMENTS));
 
-		descriptors.add(new TaskEditorPartDescriptor(ID_PART_PERSONAL) {
+		descriptors.add(new TaskEditorPartDescriptor(ID_PART_PLANNING) {
 			@Override
 			public AbstractTaskEditorPart createPart() {
-				return new TaskEditorPersonalPart();
+				return new TaskEditorPlanningPart();
 			}
 		}.setPath(PATH_PLANNING));
 

@@ -62,14 +62,13 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.internal.EditorAreaHelper;
 import org.eclipse.ui.internal.WorkbenchPage;
 
 /**
  * @author Shawn Minto
  */
-public class PersonalPart extends AbstractLocalEditorPart {
+public class PlanningPart extends AbstractLocalEditorPart {
 
 	private boolean needsDueDate;
 
@@ -114,7 +113,7 @@ public class PersonalPart extends AbstractLocalEditorPart {
 
 		@Override
 		public void elapsedTimeUpdated(ITask task, long newElapsedTime) {
-			if (task.equals(PersonalPart.this.task)) {
+			if (task.equals(PlanningPart.this.task)) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						if (elapsedTimeText != null && !elapsedTimeText.isDisposed()) {
@@ -135,19 +134,17 @@ public class PersonalPart extends AbstractLocalEditorPart {
 
 	private Composite actualTimeComposite;
 
-	public PersonalPart(int sectionStyle, boolean expandNotesVertically) {
+	public PlanningPart(int sectionStyle, boolean expandNotesVertically) {
 		super(sectionStyle, Messages.PersonalPart_Personal_Planning);
 		this.expandNotesVertically = expandNotesVertically;
 	}
 
 	public void initialize(IManagedForm managedForm, TaskRepository taskRepository, AbstractTask task,
-			boolean needsDueDate, IEditorSite site) {
+			boolean needsDueDate, IEditorSite site, CommonTextSupport textSupport) {
 		super.initialize(managedForm, taskRepository, task);
 		this.needsDueDate = needsDueDate;
-
-		this.textSupport = new CommonTextSupport((IHandlerService) site.getService(IHandlerService.class));
-		this.textSupport.setSelectionChangedListener((TaskEditorActionContributor) site.getActionBarContributor());
 		this.editorSite = site;
+		this.textSupport = textSupport;
 	}
 
 	private boolean notesEqual() {
@@ -287,7 +284,9 @@ public class PersonalPart extends AbstractLocalEditorPart {
 		noteEditor.getControl().setLayoutData(gd);
 		noteEditor.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		noteEditor.setReadOnly(false);
-		textSupport.install(noteEditor.getViewer(), true);
+		if (textSupport != null) {
+			textSupport.install(noteEditor.getViewer(), true);
+		}
 		noteEditor.getDefaultViewer().addTextListener(new ITextListener() {
 			public void textChanged(TextEvent event) {
 				notesString = noteEditor.getText();
@@ -342,7 +341,7 @@ public class PersonalPart extends AbstractLocalEditorPart {
 				actualTimeComposite.setVisible(true);
 			}
 		} else {
-			if (actualTimeComposite != null && actualTimeComposite.isVisible()) {
+			if (actualTimeComposite != null) {
 				actualTimeComposite.setVisible(false);
 			}
 		}
@@ -472,11 +471,6 @@ public class PersonalPart extends AbstractLocalEditorPart {
 
 	@Override
 	public void dispose() {
-
-		if (textSupport != null) {
-			textSupport.dispose();
-		}
-
 		TasksUiPlugin.getTaskActivityManager().removeActivityListener(timingListener);
 		TasksUiInternal.getTaskList().removeChangeListener(TASK_LIST_LISTENER);
 	}

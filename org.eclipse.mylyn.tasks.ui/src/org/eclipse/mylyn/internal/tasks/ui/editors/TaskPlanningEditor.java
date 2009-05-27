@@ -157,7 +157,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private TaskRepository repository;
 
-	private PersonalPart personalPart;
+	private PlanningPart planningPart;
 
 	public TaskPlanningEditor(TaskEditor editor) {
 		super(editor, ITasksUiConstants.ID_PAGE_PLANNING, Messages.TaskPlanningEditor_Planning);
@@ -294,7 +294,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 			createContributions(editorComposite);
 		}
 
-		personalPart = new PersonalPart(SWT.NONE, true);
+		planningPart = new PlanningPart(SWT.NONE, true);
 		// disable due date picker if it's a repository due date
 		boolean needsDueDate = true;
 		if (task != null) {
@@ -313,11 +313,11 @@ public class TaskPlanningEditor extends TaskFormPage {
 				// ignore
 			}
 		}
-		personalPart.initialize(getManagedForm(), repository, task, needsDueDate, getEditorSite());
-		personalPart.createControl(editorComposite, toolkit);
-		personalPart.getSection().setLayoutData(new GridData(GridData.FILL_BOTH));
+		planningPart.initialize(getManagedForm(), repository, task, needsDueDate, getEditorSite(), textSupport);
+		planningPart.createControl(editorComposite, toolkit);
+		planningPart.getSection().setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		getManagedForm().addPart(personalPart);
+		getManagedForm().addPart(planningPart);
 
 		if (summaryEditor != null && summaryEditor.getTextWidget() != null
 				&& LocalRepositoryConnector.DEFAULT_SUMMARY.equals(summaryEditor.getTextWidget().getText())) {
@@ -659,9 +659,14 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	@Override
 	public void dispose() {
+		if (planningPart != null) {
+			planningPart.dispose();
+		}
+
 		if (textSupport != null) {
 			textSupport.dispose();
 		}
+
 		if (timingListener != null) {
 			TasksUiPlugin.getTaskActivityManager().removeActivityListener(timingListener);
 		}
@@ -685,8 +690,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	/** for testing - should cause dirty state */
 	public void setNotes(String notes) {
-		if (personalPart != null) {
-			personalPart.setNotes(notes);
+		if (planningPart != null) {
+			planningPart.setNotes(notes);
 		}
 	}
 }
