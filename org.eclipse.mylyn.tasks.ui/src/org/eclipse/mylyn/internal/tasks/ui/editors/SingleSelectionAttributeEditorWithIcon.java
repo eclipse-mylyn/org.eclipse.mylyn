@@ -22,6 +22,8 @@ import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModelEvent;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModelListener;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
@@ -125,6 +127,14 @@ public class SingleSelectionAttributeEditorWithIcon extends AbstractAttributeEdi
 			toolkit.adapt(toolBar);
 			setControl(toolBar);
 		}
+		getModel().addModelListener(new TaskDataModelListener() {
+			@Override
+			public void attributeChanged(TaskDataModelEvent event) {
+				if (getTaskAttribute().equals(event.getTaskAttribute())) {
+					refresh();
+				}
+			}
+		});
 		refresh();
 	}
 

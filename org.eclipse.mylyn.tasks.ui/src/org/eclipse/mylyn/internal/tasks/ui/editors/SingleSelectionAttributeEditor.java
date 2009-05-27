@@ -16,6 +16,8 @@ import java.util.Map;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModelEvent;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModelListener;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
@@ -49,7 +51,6 @@ public class SingleSelectionAttributeEditor extends AbstractAttributeEditor {
 			text.setFont(EditorUtil.TEXT_FONT);
 			toolkit.adapt(text, false, false);
 			text.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
-			refresh();
 			setControl(text);
 		} else {
 			combo = new CCombo(parent, SWT.FLAT | SWT.READ_ONLY);
@@ -57,27 +58,30 @@ public class SingleSelectionAttributeEditor extends AbstractAttributeEditor {
 			toolkit.adapt(combo, false, false);
 			combo.setFont(EditorUtil.TEXT_FONT);
 			combo.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-
-			refresh();
-
-			if (values != null) {
-				combo.addSelectionListener(new SelectionAdapter() {
-					@Override
-					public void widgetSelected(SelectionEvent event) {
-						if (!ignoreNotification) {
-							int index = combo.getSelectionIndex();
-							if (index > -1) {
-								Assert.isNotNull(values);
-								Assert.isLegal(index >= 0 && index <= values.length - 1);
-								setValue(values[index]);
-							}
+			combo.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent event) {
+					if (!ignoreNotification) {
+						int index = combo.getSelectionIndex();
+						if (index > -1) {
+							Assert.isNotNull(values);
+							Assert.isLegal(index >= 0 && index <= values.length - 1);
+							setValue(values[index]);
 						}
 					}
-				});
-			}
-
+				}
+			});
 			setControl(combo);
 		}
+		refresh();
+		getModel().addModelListener(new TaskDataModelListener() {
+			@Override
+			public void attributeChanged(TaskDataModelEvent event) {
+				if (getTaskAttribute().equals(event.getTaskAttribute())) {
+					refresh();
+				}
+			}
+		});
 	}
 
 	public String getValue() {
