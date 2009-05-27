@@ -36,23 +36,22 @@ public class ActivateTaskDialogAction extends ActionDelegate implements IWorkben
 
 	@Override
 	public void run(IAction action) {
-		TaskSelectionDialog dlg = new TaskSelectionDialog(window.getShell());
-		dlg.setTitle(Messages.ActivateTaskDialogAction_Activate_Task);
-		dlg.setMessage(Messages.ActivateTaskDialogAction_Select_a_task_to_activate__);
+		TaskSelectionDialogWithRandom dialog = new TaskSelectionDialogWithRandom(window.getShell());
+		dialog.setActivateTask(true);
+		dialog.setTitle(Messages.ActivateTaskDialogAction_Activate_Task);
+		dialog.setMessage(Messages.ActivateTaskDialogAction_Select_a_task_to_activate__);
 
-		if (dlg.open() != Window.OK) {
+		if (dialog.open() != Window.OK) {
 			return;
 		}
 
-		Object result = dlg.getFirstResult();
+		Object result = dialog.getFirstResult();
 		if (result instanceof ITask) {
 			AbstractTask task = (AbstractTask) result;
 			TasksUi.getTaskActivityManager().activateTask(task);
-//			manager.getTaskActivationHistory().addTask(task);
 		}
 		if (TaskListView.getFromActivePerspective() != null) {
 			TaskListView.getFromActivePerspective().refresh();
 		}
 	}
-
 }

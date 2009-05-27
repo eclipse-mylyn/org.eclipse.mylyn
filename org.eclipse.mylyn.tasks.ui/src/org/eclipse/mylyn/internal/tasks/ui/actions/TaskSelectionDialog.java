@@ -505,12 +505,24 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 			});
 		}
 
+		createAdditionalButtons(composite);
+
 		Label filler = new Label(composite, SWT.NONE);
 		filler.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
 		layout.numColumns++;
-		super.createButtonsForButtonBar(composite); // cancel button
+		super.createButtonsForButtonBar(composite); // cancel button		
 
 		return composite;
+	}
+
+	/**
+	 * Allows to add new buttons at the bottom of this dialog next to New Task button
+	 * 
+	 * @param parent
+	 *            the parent composite to contain the button bar
+	 */
+	protected void createAdditionalButtons(Composite parent) {
+		// we don't want to add any new button
 	}
 
 	@Override
@@ -722,7 +734,8 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 		if (item instanceof ITask) {
 			return Status.OK_STATUS;
 		}
-		return new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, Messages.TaskSelectionDialog_Selected_item_is_not_a_task);
+		return new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+				Messages.TaskSelectionDialog_Selected_item_is_not_a_task);
 	}
 
 }

@@ -231,6 +231,8 @@ public class Messages extends NLS {
 
 	public static String TaskSelectionDialog_Open_with_Browser;
 
+	public static String TaskSelectionDialog_Random_Task;
+
 	public static String TaskSelectionDialog_Scanning_tasks;
 
 	public static String TaskSelectionDialog_Search_for_tasks;
@@ -240,6 +242,10 @@ public class Messages extends NLS {
 	public static String TaskSelectionDialog_Selected_item_is_not_a_task;
 
 	public static String TaskSelectionDialog_Show_Completed_Tasks;
+
+	public static String TaskSelectionDialogWithRandom_Feeling_Lazy_Error;
+
+	public static String TaskSelectionDialogWithRandom_Feeling_Lazy_Tooltip;
 
 	public static String TaskWorkingSetAction_All;
 
