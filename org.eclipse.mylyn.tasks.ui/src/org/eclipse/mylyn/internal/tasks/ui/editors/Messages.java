@@ -185,6 +185,8 @@ public class Messages extends NLS {
 
 	public static String TaskPlanningEditor_Active;
 
+	public static String TaskPlanningEditor_Attributes;
+
 	public static String TaskPlanningEditor_Clear;
 
 	public static String TaskPlanningEditor_Complete;

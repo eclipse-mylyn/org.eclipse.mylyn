@@ -36,6 +36,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorExtension;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -53,6 +54,7 @@ import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.forms.AbstractFormPart;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.IManagedForm;
@@ -247,7 +249,20 @@ public class PersonalPart extends AbstractFormPart {
 		Label labelControl = toolkit.createLabel(composite, Messages.PersonalPart_Notes);
 		labelControl.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 
-		noteEditor = new RichTextEditor(taskRepository, SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		if (editorSite != null) {
+			IContextService contextService = (IContextService) editorSite.getService(IContextService.class);
+			if (contextService != null) {
+				AbstractTaskEditorExtension extension = TaskEditorExtensions.getTaskEditorExtension(taskRepository);
+				if (extension != null) {
+					noteEditor = new RichTextEditor(taskRepository, SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL,
+							contextService, extension);
+				}
+			}
+		}
+		if (noteEditor == null) {
+			noteEditor = new RichTextEditor(taskRepository, SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		}
+		noteEditor.setSpellCheckingEnabled(true);
 		noteEditor.createControl(composite, toolkit);
 		noteEditor.setText(notesString);
 		noteEditor.getDefaultViewer().addTextListener(new ITextListener() {
@@ -301,6 +316,7 @@ public class PersonalPart extends AbstractFormPart {
 		elapsedTimeText.setFont(EditorUtil.TEXT_FONT);
 		elapsedTimeText.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
 		toolkit.adapt(elapsedTimeText, true, false);
+		elapsedTimeText.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		elapsedTimeText.setBackground(null);
 		updateElapsedTime();
 		elapsedTimeText.setEditable(false);
@@ -523,6 +539,9 @@ public class PersonalPart extends AbstractFormPart {
 	protected Section createSection(Composite parent, FormToolkit toolkit, int style) {
 		Section section = toolkit.createSection(parent, style);
 		section.setText(getSectionName());
+		section.clientVerticalSpacing = 0;
+		section.descriptionVerticalSpacing = 0;
+		section.marginHeight = 0;
 		return section;
 	}
 

@@ -76,9 +76,10 @@ import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.events.IHyperlinkListener;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
-import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.themes.IThemeManager;
 
@@ -267,8 +268,6 @@ public class TaskPlanningEditor extends TaskFormPage {
 	protected void createFormContent(IManagedForm managedForm) {
 		super.createFormContent(managedForm);
 
-		ScrolledForm form = managedForm.getForm();
-
 		TaskEditorInput taskEditorInput = (TaskEditorInput) getEditorInput();
 		task = (AbstractTask) taskEditorInput.getTask();
 
@@ -285,6 +284,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		//editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 		if (task instanceof LocalTask) {
 			createSummarySection(editorComposite);
+			createAttributesSection(editorComposite);
 		}
 
 		personalPart = new PersonalPart(SWT.NONE, true);
@@ -461,8 +461,22 @@ public class TaskPlanningEditor extends TaskFormPage {
 		}
 		endDate = addNameValueComp(statusComposite, Messages.TaskPlanningEditor_Completed, completionDateString,
 				SWT.FLAT | SWT.READ_ONLY);
+		toolkit.paintBordersFor(statusComposite);
+	}
+
+	private void createAttributesSection(Composite parent) {
+
+		int style = ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE;
+		if (task.getUrl() != null && task.getUrl().length() > 0) {
+			style |= ExpandableComposite.EXPANDED;
+		}
+
+		Section section = toolkit.createSection(parent, style);
+		section.setText(Messages.TaskPlanningEditor_Attributes);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(section);
+
 		// URL
-		Composite urlComposite = toolkit.createComposite(parent);
+		Composite urlComposite = toolkit.createComposite(section);
 		GridLayout urlLayout = new GridLayout(4, false);
 		urlLayout.verticalSpacing = 0;
 		urlLayout.marginHeight = 2;
@@ -532,7 +546,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		});
 
 		toolkit.paintBordersFor(urlComposite);
-		toolkit.paintBordersFor(statusComposite);
+		section.setClient(urlComposite);
 	}
 
 	private TextViewer addTextEditor(TaskRepository repository, Composite parent, String text, boolean spellCheck,
