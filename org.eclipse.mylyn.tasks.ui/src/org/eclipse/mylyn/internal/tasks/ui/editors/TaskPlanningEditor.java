@@ -12,12 +12,15 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -67,6 +70,7 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
@@ -285,6 +289,9 @@ public class TaskPlanningEditor extends TaskFormPage {
 		if (task instanceof LocalTask) {
 			createSummarySection(editorComposite);
 			createAttributesSection(editorComposite);
+
+			// currently there is only one location for extensions
+			createContributions(editorComposite);
 		}
 
 		personalPart = new PersonalPart(SWT.NONE, true);
@@ -318,6 +325,27 @@ public class TaskPlanningEditor extends TaskFormPage {
 			summaryEditor.getTextWidget().setFocus();
 		} else if (summaryEditor != null && summaryEditor.getTextWidget() != null) {
 			summaryEditor.getTextWidget().setFocus();
+		}
+	}
+
+	private void createContributions(final Composite editorComposite) {
+		Collection<AbstractLocalEditorPart> localEditorContributions = TaskEditorContributionExtensionReader.getLocalEditorContributions();
+		for (final AbstractLocalEditorPart part : localEditorContributions) {
+			SafeRunner.run(new ISafeRunnable() {
+				public void handleException(Throwable e) {
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+							"Error creating task editor contribution: \"" + part.getSectionName() + "\"", e)); //$NON-NLS-1$ //$NON-NLS-2$
+				}
+
+				public void run() throws Exception {
+					part.initialize(getManagedForm(), repository, task);
+					Control control = part.createControl(editorComposite, toolkit);
+					part.setControl(control);
+					part.getSection().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+					getManagedForm().addPart(part);
+
+				}
+			});
 		}
 	}
 
@@ -590,7 +618,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 	protected void setButtonStatus() {
 		String url = issueReportURL.getText();
 
-		if (url.length() > 10 && (url.startsWith("http://") || url.startsWith("https://"))) { //$NON-NLS-1$ //$NON-NLS-2$
+		if (url.length() > 10 && (url.startsWith("http://") || url.startsWith("https://"))) {
 			// String defaultPrefix =
 			// ContextCore.getPreferenceStore().getString(
 			// TaskListPreferenceConstants.DEFAULT_URL_PREFIX);

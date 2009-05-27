@@ -17,8 +17,9 @@
          </appInfo>
       </annotation>
       <complexType>
-         <sequence minOccurs="1" maxOccurs="unbounded">
-            <element ref="repositoryTaskEditorPageContribution" minOccurs="0" maxOccurs="1"/>
+         <sequence minOccurs="0" maxOccurs="unbounded">
+            <element ref="repositoryPart" minOccurs="0" maxOccurs="1"/>
+            <element ref="localPart" minOccurs="0" maxOccurs="1"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -47,7 +48,7 @@
       </complexType>
    </element>
 
-   <element name="repositoryTaskEditorPageContribution">
+   <element name="repositoryPart">
       <complexType>
          <attribute name="class" type="string" use="required">
             <annotation>
@@ -71,6 +72,21 @@
                <documentation>
                   
                </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="localPart">
+      <complexType>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.internal.tasks.ui.editors.AbstractLocalEditorPart:"/>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>

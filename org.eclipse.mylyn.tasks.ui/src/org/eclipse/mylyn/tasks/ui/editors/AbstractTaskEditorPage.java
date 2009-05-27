@@ -755,7 +755,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 	}
 
 	private Collection<TaskEditorPartDescriptor> getContributionPartDescriptors() {
-		return TaskEditorContributionExtensionReader.getEditorContributions();
+		return TaskEditorContributionExtensionReader.getRepositoryEditorContributions();
 	}
 
 	protected void createParts() {

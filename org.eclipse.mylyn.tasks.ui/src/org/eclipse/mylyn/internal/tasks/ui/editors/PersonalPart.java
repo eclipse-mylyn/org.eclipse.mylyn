@@ -55,12 +55,10 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.contexts.IContextService;
-import org.eclipse.ui.forms.AbstractFormPart;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
-import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.Section;
@@ -71,11 +69,7 @@ import org.eclipse.ui.internal.WorkbenchPage;
 /**
  * @author Shawn Minto
  */
-public class PersonalPart extends AbstractFormPart {
-
-	private TaskRepository taskRepository;
-
-	private AbstractTask task;
+public class PersonalPart extends AbstractLocalEditorPart {
 
 	private boolean needsDueDate;
 
@@ -137,21 +131,17 @@ public class PersonalPart extends AbstractFormPart {
 
 	private final boolean expandNotesVertically;
 
-	private final int sectionStyle;
-
 	private IEditorSite editorSite;
 
 	public PersonalPart(int sectionStyle, boolean expandNotesVertically) {
-		this.sectionStyle = sectionStyle;
+		super(sectionStyle, Messages.PersonalPart_Personal_Planning);
 		this.expandNotesVertically = expandNotesVertically;
 	}
 
 	public void initialize(IManagedForm managedForm, TaskRepository taskRepository, AbstractTask task,
 			boolean needsDueDate, IEditorSite site) {
-		super.initialize(managedForm);
-		this.task = task;
+		super.initialize(managedForm, taskRepository, task);
 		this.needsDueDate = needsDueDate;
-		this.taskRepository = taskRepository;
 
 		this.textSupport = new CommonTextSupport((IHandlerService) site.getService(IHandlerService.class));
 		this.textSupport.setSelectionChangedListener((TaskEditorActionContributor) site.getActionBarContributor());
@@ -203,7 +193,8 @@ public class PersonalPart extends AbstractFormPart {
 		super.commit(onSave);
 	}
 
-	public void createControl(Composite parent, FormToolkit toolkit) {
+	@Override
+	public Control createControl(Composite parent, FormToolkit toolkit) {
 		Section section = createSection(parent, toolkit, false);
 		Composite composite = toolkit.createComposite(section);
 		int numColumns = (needsDueDate) ? 6 : 4;
@@ -234,6 +225,7 @@ public class PersonalPart extends AbstractFormPart {
 		toolkit.paintBordersFor(composite);
 		section.setClient(composite);
 		setSection(toolkit, section);
+		return section;
 	}
 
 	private void createNotesArea(FormToolkit toolkit, Composite parent, int numColumns) {
@@ -265,12 +257,6 @@ public class PersonalPart extends AbstractFormPart {
 		noteEditor.setSpellCheckingEnabled(true);
 		noteEditor.createControl(composite, toolkit);
 		noteEditor.setText(notesString);
-		noteEditor.getDefaultViewer().addTextListener(new ITextListener() {
-			public void textChanged(TextEvent event) {
-				notesString = noteEditor.getText();
-				markDirty();
-			}
-		});
 
 		final GridData gd = new GridData(GridData.FILL_BOTH);
 		int widthHint = 0;
@@ -300,6 +286,14 @@ public class PersonalPart extends AbstractFormPart {
 		noteEditor.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		noteEditor.setReadOnly(false);
 		textSupport.install(noteEditor.getViewer(), true);
+		noteEditor.getDefaultViewer().addTextListener(new ITextListener() {
+			public void textChanged(TextEvent event) {
+				notesString = noteEditor.getText();
+				if (!notesEqual()) {
+					markDirty();
+				}
+			}
+		});
 		toolkit.paintBordersFor(composite);
 	}
 
@@ -340,12 +334,14 @@ public class PersonalPart extends AbstractFormPart {
 	}
 
 	private void updateElapsedTime() {
-		String elapsedTimeString = DateUtil.getFormattedDurationShort(TasksUiPlugin.getTaskActivityManager()
-				.getElapsedTime(task));
+		long elapsedTime = TasksUiPlugin.getTaskActivityManager().getElapsedTime(task);
+
+		String elapsedTimeString = DateUtil.getFormattedDurationShort(elapsedTime);
 		if (elapsedTimeString.equals("")) { //$NON-NLS-1$
 			elapsedTimeString = Messages.TaskEditorPlanningPart_0_SECOUNDS;
 		}
 		elapsedTimeText.setText(elapsedTimeString);
+
 	}
 
 	private Composite createComposite(Composite parent, int col, FormToolkit toolkit) {
@@ -489,72 +485,28 @@ public class PersonalPart extends AbstractFormPart {
 		}
 	}
 
-	private String getSectionName() {
-		return Messages.PersonalPart_Personal_Planning;
-	}
-
-	// adapted from AbstractTaskEditorPart
-	private Control control;
-
-	private Section section;
-
-	public void setControl(Control control) {
-		this.control = control;
-	}
-
-	public Control getControl() {
-		return control;
-	}
-
+	@Override
 	protected void setSection(FormToolkit toolkit, Section section) {
 		if (section.getTextClient() == null) {
-			Composite toolbarComposite = toolkit.createComposite(section);
-			toolbarComposite.setBackground(null);
+			Composite actualTimeComposite = toolkit.createComposite(section);
+			actualTimeComposite.setBackground(null);
 			RowLayout rowLayout = new RowLayout();
 			EditorUtil.center(rowLayout);
 			rowLayout.marginTop = 0;
 			rowLayout.marginBottom = 0;
-			toolbarComposite.setLayout(rowLayout);
+			actualTimeComposite.setLayout(rowLayout);
 
-			createActualTime(toolkit, toolbarComposite);
+			createActualTime(toolkit, actualTimeComposite);
 
-			section.setTextClient(toolbarComposite);
+			section.setTextClient(actualTimeComposite);
 		}
-		this.section = section;
-		setControl(section);
-	}
 
-	protected Section createSection(Composite parent, FormToolkit toolkit, boolean expandedState) {
-		int style = ExpandableComposite.TITLE_BAR | getSectionStyle();
-		if (expandedState && isTwistie(style)) {
-			style |= ExpandableComposite.EXPANDED;
-		}
-		return createSection(parent, toolkit, style);
-	}
-
-	private boolean isTwistie(int style) {
-		return (style & ExpandableComposite.TWISTIE) == 1;
-	}
-
-	protected Section createSection(Composite parent, FormToolkit toolkit, int style) {
-		Section section = toolkit.createSection(parent, style);
-		section.setText(getSectionName());
-		section.clientVerticalSpacing = 0;
-		section.descriptionVerticalSpacing = 0;
-		section.marginHeight = 0;
-		return section;
-	}
-
-	public Section getSection() {
-		return section;
-	}
-
-	private int getSectionStyle() {
-		return sectionStyle;
+		super.setSection(toolkit, section);
 	}
 
 	/** for testing - should cause dirty state */
 	public void setNotes(String notes) {
 		noteEditor.setText(notes);
 	}
+
 }
