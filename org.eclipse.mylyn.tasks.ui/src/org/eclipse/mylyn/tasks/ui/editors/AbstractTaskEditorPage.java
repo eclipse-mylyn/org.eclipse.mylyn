@@ -47,6 +47,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFormUtil;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.GradientCanvas;
@@ -110,7 +111,6 @@ import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
@@ -1528,7 +1528,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 				@Override
 				protected Control createControl(Composite parent) {
 					submitButton = toolkit.createButton(parent, Messages.TaskEditorActionPart_Submit, SWT.NONE);
-					submitButton.setImage(TasksUiPlugin.getDefault().getBrandingIcon(getConnectorKind()));//CommonImages.getImage(TasksUiImages.REPOSITORY_SUBMIT));
+					submitButton.setImage(CommonImages.getImage(TasksUiImages.REPOSITORY_SUBMIT));
 					submitButton.setBackground(null);
 					submitButton.addListener(SWT.Selection, new Listener() {
 						public void handleEvent(Event e) {
