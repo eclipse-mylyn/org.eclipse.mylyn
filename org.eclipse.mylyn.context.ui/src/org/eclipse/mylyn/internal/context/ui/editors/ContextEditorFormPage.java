@@ -51,6 +51,8 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -186,21 +188,30 @@ public class ContextEditorFormPage extends FormPage {
 
 	@Override
 	protected void createFormContent(IManagedForm managedForm) {
-		super.createFormContent(managedForm);
 		ContextCore.getContextManager().addListener(CONTEXT_LISTENER);
 		task = ((TaskEditorInput) getEditorInput()).getTask();
 
 		form = managedForm.getForm();
+
 		toolkit = managedForm.getToolkit();
 
 		//form.setImage(TaskListImages.getImage(TaskListImages.TASK_ACTIVE_CENTERED));
 		//form.setText(LABEL);
 		//toolkit.decorateFormHeading(form.getForm());
 
-		form.getBody().setLayout(new GridLayout(2, false));
+		form.getBody().setLayout(new FillLayout());
+		Composite composite = new Composite(form.getBody(), SWT.NONE) {
+			@Override
+			public Point computeSize(int widhtHint, int heigtHint, boolean changed) {
+				Rectangle clientArea = getClientArea();
+				return super.computeSize(widhtHint, clientArea.height, changed);
+			}
+		};
+		toolkit.adapt(composite);
+		composite.setLayout(new GridLayout(2, false));
 
-		createActionsSection(form.getBody());
-		createContentSection(form.getBody());
+		createActionsSection(composite);
+		createContentSection(composite);
 
 		form.reflow(true);
 	}
