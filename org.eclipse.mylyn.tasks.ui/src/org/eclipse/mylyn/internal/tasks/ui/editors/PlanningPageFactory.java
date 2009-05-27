@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
@@ -22,7 +23,7 @@ public class PlanningPageFactory extends AbstractTaskEditorPageFactory {
 
 	@Override
 	public boolean canCreatePageFor(TaskEditorInput input) {
-		return true;
+		return input.getTask() instanceof LocalTask;
 	}
 
 	@Override

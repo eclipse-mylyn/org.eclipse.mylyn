@@ -74,7 +74,7 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorNewCommentPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorOutlineNode;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorOutlinePage;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorPeoplePart;
-import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorPlanningPart;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorPersonalPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorRichTextPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorSummaryPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskMigrator;
@@ -331,6 +331,11 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 	public static final String ID_PART_ACTIONS = "org.eclipse.mylyn.tasks.ui.editors.parts.actions"; //$NON-NLS-1$
 
 	public static final String ID_PART_ATTACHMENTS = "org.eclipse.mylyn.tasks.ui.editors.parts.attachments"; //$NON-NLS-1$
+
+	/**
+	 * @since 3.2
+	 */
+	public static final String ID_PART_PERSONAL = "org.eclipse.mylyn.tasks.ui.editors.parts.personal"; //$NON-NLS-1$
 
 	public static final String ID_PART_ATTRIBUTES = "org.eclipse.mylyn.tasks.ui.editors.parts.attributes"; //$NON-NLS-1$
 
@@ -724,14 +729,14 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 				return new TaskEditorNewCommentPart();
 			}
 		}.setPath(PATH_COMMENTS));
-		if (taskData.isNew()) {
-			descriptors.add(new TaskEditorPartDescriptor(ID_PART_PLANNING) {
-				@Override
-				public AbstractTaskEditorPart createPart() {
-					return new TaskEditorPlanningPart();
-				}
-			}.setPath(PATH_PLANNING));
-		}
+
+		descriptors.add(new TaskEditorPartDescriptor(ID_PART_PERSONAL) {
+			@Override
+			public AbstractTaskEditorPart createPart() {
+				return new TaskEditorPersonalPart();
+			}
+		}.setPath(PATH_PLANNING));
+
 		descriptors.add(new TaskEditorPartDescriptor(ID_PART_ACTIONS) {
 			@Override
 			public AbstractTaskEditorPart createPart() {
@@ -815,19 +820,21 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 		getManagedForm().commit(true);
 
-		try {
-			model.save(monitor);
-		} catch (final CoreException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error saving task", e)); //$NON-NLS-1$
-			getTaskEditor().setMessage(Messages.AbstractTaskEditorPage_Could_not_save_task, IMessageProvider.ERROR,
-					new HyperlinkAdapter() {
-						@Override
-						public void linkActivated(HyperlinkEvent event) {
-							TasksUiInternal.displayStatus(Messages.AbstractTaskEditorPage_Save_failed, e.getStatus());
-						}
-					});
+		if (model.isDirty()) {
+			try {
+				model.save(monitor);
+			} catch (final CoreException e) {
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error saving task", e)); //$NON-NLS-1$
+				getTaskEditor().setMessage(Messages.AbstractTaskEditorPage_Could_not_save_task, IMessageProvider.ERROR,
+						new HyperlinkAdapter() {
+							@Override
+							public void linkActivated(HyperlinkEvent event) {
+								TasksUiInternal.displayStatus(Messages.AbstractTaskEditorPage_Save_failed,
+										e.getStatus());
+							}
+						});
+			}
 		}
-
 		// update the summary of unsubmitted repository tasks
 		if (getTask().getSynchronizationState() == SynchronizationState.OUTGOING_NEW) {
 			final String summary = connector.getTaskMapping(model.getTaskData()).getSummary();

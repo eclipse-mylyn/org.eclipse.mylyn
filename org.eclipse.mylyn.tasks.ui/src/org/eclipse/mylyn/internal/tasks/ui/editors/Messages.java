@@ -69,6 +69,10 @@ public class Messages extends NLS {
 
 	public static String DateAttributeEditor_Clear;
 
+	public static String PersonalPart_Notes;
+
+	public static String PersonalPart_Personal_Planning;
+
 	public static String PlanningPageFactory_Planning;
 
 	public static String RichTextAttributeEditor_Viewer_Source;

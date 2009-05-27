@@ -12,8 +12,6 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
-import com.ibm.icu.text.DateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
 
@@ -22,7 +20,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.ITextListener;
@@ -34,27 +31,20 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
-import org.eclipse.mylyn.internal.provisional.commons.ui.DatePicker;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.internal.tasks.core.DayDateRange;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
-import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
-import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
-import org.eclipse.mylyn.internal.tasks.ui.ScheduleDatePicker;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.DeleteTaskEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewSubTaskAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.AbstractRetrieveTitleFromUrlJob;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.monitor.ui.MonitorUi;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
-import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -77,27 +67,22 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.IManagedForm;
-import org.eclipse.ui.forms.events.ExpansionEvent;
-import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
-import org.eclipse.ui.forms.events.IExpansionListener;
 import org.eclipse.ui.forms.events.IHyperlinkListener;
-import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
-import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.themes.IThemeManager;
+
+import com.ibm.icu.text.DateFormat;
 
 /**
  * @author Mik Kersten
@@ -109,17 +94,11 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private static final int NOTES_MINSIZE = 100;
 
-	private DatePicker dueDatePicker;
-
-	private ScheduleDatePicker scheduleDatePicker;
-
 	private AbstractTask task;
 
 	private Composite editorComposite;
 
 	private Text endDate;
-
-	private ScrolledForm form;
 
 	private TextViewer summaryEditor;
 
@@ -128,10 +107,6 @@ public class TaskPlanningEditor extends TaskFormPage {
 	private CCombo priorityCombo;
 
 	private CCombo statusCombo;
-
-	private TextViewer noteEditor;
-
-	private Spinner estimated;
 
 	private ImageHyperlink getDescLink;
 
@@ -175,6 +150,10 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private boolean summaryChanged;
 
+	private TaskRepository repository;
+
+	private PersonalPart personalPart;
+
 	public TaskPlanningEditor(TaskEditor editor) {
 		super(editor, ITasksUiConstants.ID_PAGE_PLANNING, Messages.TaskPlanningEditor_Planning);
 		this.parentEditor = editor;
@@ -213,14 +192,6 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	/** public for testing */
 	public void updateTaskData(final AbstractTask updateTask) {
-		if (scheduleDatePicker != null && !scheduleDatePicker.isDisposed()) {
-			if (updateTask.getScheduledForDate() != null) {
-				scheduleDatePicker.setScheduledDate(updateTask.getScheduledForDate());
-			} else {
-				scheduleDatePicker.setScheduledDate(null);
-			}
-		}
-
 		if (summaryEditor == null) {
 			return;
 		}
@@ -273,29 +244,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 			}
 			TasksUiInternal.getTaskList().notifyElementChanged(task);
 		}
-
-		String note = noteEditor.getTextWidget().getText();// notes.getText();
-		task.setNotes(note);
-		task.setEstimatedTimeHours(estimated.getSelection());
-		if (scheduleDatePicker != null && scheduleDatePicker.getScheduledDate() != null) {
-			if (task.getScheduledForDate() == null
-					|| (task.getScheduledForDate() != null && !scheduleDatePicker.getScheduledDate().equals(
-							task.getScheduledForDate())) || (task).getScheduledForDate() instanceof DayDateRange) {
-				TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, scheduleDatePicker.getScheduledDate());
-				(task).setReminded(false);
-			}
-		} else {
-			TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, null);
-			(task).setReminded(false);
-		}
-		if (dueDatePicker != null && dueDatePicker.getDate() != null) {
-			TasksUiPlugin.getTaskActivityManager().setDueDate(task, dueDatePicker.getDate().getTime());
-		} else {
-			TasksUiPlugin.getTaskActivityManager().setDueDate(task, null);
-		}
-//		if (parentEditor != null) {
-//			parentEditor.notifyTaskChanged();
-//		}
+		super.doSave(monitor);
 		markDirty(false);
 	}
 
@@ -306,7 +255,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	@Override
 	public boolean isDirty() {
-		return isDirty;
+		return isDirty || super.isDirty();
 	}
 
 	@Override
@@ -318,10 +267,14 @@ public class TaskPlanningEditor extends TaskFormPage {
 	protected void createFormContent(IManagedForm managedForm) {
 		super.createFormContent(managedForm);
 
-		form = managedForm.getForm();
+		ScrolledForm form = managedForm.getForm();
 
 		TaskEditorInput taskEditorInput = (TaskEditorInput) getEditorInput();
 		task = (AbstractTask) taskEditorInput.getTask();
+
+		if (task != null) {
+			repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(), task.getRepositoryUrl());
+		}
 
 		toolkit = managedForm.getToolkit();
 
@@ -333,8 +286,31 @@ public class TaskPlanningEditor extends TaskFormPage {
 		if (task instanceof LocalTask) {
 			createSummarySection(editorComposite);
 		}
-		createPlanningSection(editorComposite);
-		createNotesSection(editorComposite);
+
+		personalPart = new PersonalPart(SWT.NONE, true);
+		// disable due date picker if it's a repository due date
+		boolean needsDueDate = true;
+		if (task != null) {
+			try {
+				TaskData taskData = TasksUi.getTaskDataManager().getTaskData(task);
+				if (taskData != null) {
+					AbstractRepositoryConnector connector = TasksUi.getRepositoryConnector(taskData.getConnectorKind());
+					TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(
+							taskData.getConnectorKind(), taskData.getRepositoryUrl());
+					if (connector != null && taskRepository != null
+							&& connector.hasRepositoryDueDate(taskRepository, task, taskData)) {
+						needsDueDate = false;
+					}
+				}
+			} catch (CoreException e) {
+				// ignore
+			}
+		}
+		personalPart.initialize(getManagedForm(), repository, task, needsDueDate, getEditorSite());
+		personalPart.createControl(editorComposite, toolkit);
+		personalPart.getSection().setLayoutData(new GridData(GridData.FILL_BOTH));
+
+		getManagedForm().addPart(personalPart);
 
 		if (summaryEditor != null && summaryEditor.getTextWidget() != null
 				&& LocalRepositoryConnector.DEFAULT_SUMMARY.equals(summaryEditor.getTextWidget().getText())) {
@@ -382,12 +358,6 @@ public class TaskPlanningEditor extends TaskFormPage {
 		summaryComposite.setLayout(summaryLayout);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(summaryComposite);
 
-		TaskRepository repository = null;
-		if (task != null && !(task instanceof LocalTask)) {
-			ITask repositoryTask = task;
-			repository = TasksUi.getRepositoryManager().getRepository(repositoryTask.getConnectorKind(),
-					repositoryTask.getRepositoryUrl());
-		}
 		summaryEditor = addTextEditor(repository, summaryComposite, task.getSummary(), true, SWT.FLAT | SWT.SINGLE);
 
 		GridDataFactory.fillDefaults().hint(WIDTH_SUMMARY, SWT.DEFAULT).minSize(NOTES_MINSIZE, SWT.DEFAULT).grab(true,
@@ -620,284 +590,6 @@ public class TaskPlanningEditor extends TaskFormPage {
 		}
 	}
 
-	private void createPlanningSection(Composite parent) {
-		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE);
-		section.setText(Messages.TaskPlanningEditor_Personal_Planning);
-		section.setLayout(new GridLayout());
-		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		section.setExpanded(true);
-		section.addExpansionListener(new IExpansionListener() {
-			public void expansionStateChanging(ExpansionEvent e) {
-				form.reflow(true);
-			}
-
-			public void expansionStateChanged(ExpansionEvent e) {
-				form.reflow(true);
-			}
-		});
-
-		Composite sectionClient = toolkit.createComposite(section);
-		section.setClient(sectionClient);
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 3;
-		layout.horizontalSpacing = 15;
-		layout.makeColumnsEqualWidth = false;
-		sectionClient.setLayout(layout);
-		GridData clientDataLayout = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-		sectionClient.setLayoutData(clientDataLayout);
-
-		Composite nameValueComp = makeComposite(sectionClient, 3);
-		Label label = toolkit.createLabel(nameValueComp, Messages.TaskPlanningEditor_Scheduled_for);
-		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-
-		scheduleDatePicker = new ScheduleDatePicker(nameValueComp, task, SWT.FLAT);
-		GridData gd = new GridData();
-		gd.widthHint = 135;
-		scheduleDatePicker.setLayoutData(gd);
-		scheduleDatePicker.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-		toolkit.adapt(scheduleDatePicker, false, false);
-		toolkit.paintBordersFor(nameValueComp);
-
-		scheduleDatePicker.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-		scheduleDatePicker.addPickerSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				TaskPlanningEditor.this.markDirty(true);
-			}
-		});
-
-		ImageHyperlink clearScheduledDate = toolkit.createImageHyperlink(nameValueComp, SWT.NONE);
-		clearScheduledDate.setImage(CommonImages.getImage(CommonImages.REMOVE));
-		clearScheduledDate.setToolTipText(Messages.TaskPlanningEditor_Clear);
-		clearScheduledDate.addHyperlinkListener(new HyperlinkAdapter() {
-			@Override
-			public void linkActivated(HyperlinkEvent e) {
-				scheduleDatePicker.setScheduledDate(null);
-				(task).setReminded(false);
-				TaskPlanningEditor.this.markDirty(true);
-			}
-		});
-
-		nameValueComp = makeComposite(sectionClient, 3);
-		label = toolkit.createLabel(nameValueComp, Messages.TaskPlanningEditor_Due);
-		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-
-		dueDatePicker = new DatePicker(nameValueComp, SWT.FLAT, DatePicker.LABEL_CHOOSE, true,
-				TasksUiPlugin.getDefault().getPreferenceStore().getInt(ITasksUiPreferenceConstants.PLANNING_ENDHOUR));
-
-		Calendar calendar = TaskActivityUtil.getCalendar();
-
-		if (task.getDueDate() != null) {
-			calendar.setTime(task.getDueDate());
-			dueDatePicker.setDate(calendar);
-		}
-
-		dueDatePicker.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-		dueDatePicker.addPickerSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent event) {
-				if (!areEqual(dueDatePicker.getDate(), task.getDueDate())) {
-					TaskPlanningEditor.this.markDirty(true);
-				}
-			}
-		});
-
-		dueDatePicker.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-		toolkit.adapt(dueDatePicker, false, false);
-		toolkit.paintBordersFor(nameValueComp);
-
-		ImageHyperlink clearDueDate = toolkit.createImageHyperlink(nameValueComp, SWT.NONE);
-		clearDueDate.setImage(CommonImages.getImage(CommonImages.REMOVE));
-		clearDueDate.setToolTipText(Messages.TaskPlanningEditor_Clear);
-		clearDueDate.addHyperlinkListener(new HyperlinkAdapter() {
-			@Override
-			public void linkActivated(HyperlinkEvent e) {
-				dueDatePicker.setDate(null);
-				if (!areEqual(dueDatePicker.getDate(), task.getDueDate())) {
-					TaskPlanningEditor.this.markDirty(true);
-				}
-			}
-		});
-
-		// disable due date picker if it's a repository due date
-		if (task != null) {
-			try {
-				TaskData taskData = TasksUi.getTaskDataManager().getTaskData(task);
-				if (taskData != null) {
-					AbstractRepositoryConnector connector = TasksUi.getRepositoryConnector(taskData.getConnectorKind());
-					TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(
-							taskData.getConnectorKind(), taskData.getRepositoryUrl());
-					if (connector != null && taskRepository != null
-							&& connector.hasRepositoryDueDate(taskRepository, task, taskData)) {
-						dueDatePicker.setEnabled(false);
-						clearDueDate.setEnabled(false);
-					}
-				}
-			} catch (CoreException e) {
-				// ignore
-			}
-		}
-
-		// Estimated time
-		nameValueComp = makeComposite(sectionClient, 3);
-		label = toolkit.createLabel(nameValueComp, Messages.TaskPlanningEditor_Estimated_hours);
-		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-
-		estimated = new Spinner(nameValueComp, SWT.FLAT);
-		toolkit.adapt(estimated, false, false);
-		estimated.setSelection(task.getEstimatedTimeHours());
-		estimated.setDigits(0);
-		estimated.setMaximum(100);
-		estimated.setMinimum(0);
-		estimated.setIncrement(1);
-		estimated.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				TaskPlanningEditor.this.markDirty(true);
-			}
-		});
-
-		estimated.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-		toolkit.paintBordersFor(nameValueComp);
-		GridData estimatedDataLayout = new GridData();
-		estimatedDataLayout.widthHint = 30;
-		estimated.setLayoutData(estimatedDataLayout);
-
-		ImageHyperlink clearEstimated = toolkit.createImageHyperlink(nameValueComp, SWT.NONE);
-		clearEstimated.setImage(CommonImages.getImage(CommonImages.REMOVE));
-		clearEstimated.setToolTipText(Messages.TaskPlanningEditor_Clear);
-		clearEstimated.addHyperlinkListener(new HyperlinkAdapter() {
-			@Override
-			public void linkActivated(HyperlinkEvent e) {
-				estimated.setSelection(0);
-				TaskPlanningEditor.this.markDirty(true);
-			}
-		});
-
-		// Active Time
-		nameValueComp = makeComposite(sectionClient, 3);
-		GridDataFactory.fillDefaults().applyTo(nameValueComp);
-
-		label = toolkit.createLabel(nameValueComp, Messages.TaskPlanningEditor_Active);
-		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-		label.setToolTipText(Messages.TaskPlanningEditor_Time_working_on_this_task);
-
-		String elapsedTimeString = Messages.TaskPlanningEditor_0_seconds;
-		try {
-			elapsedTimeString = TasksUiInternal.getFormattedDuration(TasksUiPlugin.getTaskActivityManager()
-					.getElapsedTime(task), false);
-			if (elapsedTimeString.equals("")) { //$NON-NLS-1$
-				elapsedTimeString = Messages.TaskPlanningEditor_0_seconds;
-			}
-		} catch (RuntimeException e) {
-			// FIXME what exception is caught here?
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not format elapsed time", e)); //$NON-NLS-1$
-		}
-
-		final Text elapsedTimeText = toolkit.createText(nameValueComp, elapsedTimeString);
-		elapsedTimeText.setText(elapsedTimeString);
-
-		GridData td = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL);
-		td.grabExcessHorizontalSpace = true;
-		elapsedTimeText.setLayoutData(td);
-		elapsedTimeText.setEditable(false);
-
-		timingListener = new TaskActivityAdapter() {
-
-			@Override
-			public void elapsedTimeUpdated(ITask task, long newElapsedTime) {
-				if (task.equals(TaskPlanningEditor.this.task)) {
-					String elapsedTimeString = Messages.TaskPlanningEditor_0_seconds;
-					try {
-						elapsedTimeString = TasksUiInternal.getFormattedDuration(newElapsedTime, false);
-						if (elapsedTimeString.equals("")) { //$NON-NLS-1$
-							elapsedTimeString = Messages.TaskPlanningEditor_0_seconds;
-						}
-
-					} catch (RuntimeException e) {
-						StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-								"Could not format elapsed time", e)); //$NON-NLS-1$
-					}
-					final String elapsedString = elapsedTimeString;
-					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-
-						public void run() {
-							if (!elapsedTimeText.isDisposed()) {
-								elapsedTimeText.setText(elapsedString);
-							}
-						}
-					});
-
-				}
-			}
-		};
-
-		TasksUiPlugin.getTaskActivityManager().addActivityListener(timingListener);
-
-		ImageHyperlink resetActivityTimeButton = toolkit.createImageHyperlink(nameValueComp, SWT.NONE);
-		resetActivityTimeButton.setImage(CommonImages.getImage(CommonImages.REMOVE));
-		resetActivityTimeButton.setToolTipText(Messages.TaskPlanningEditor_Reset);
-		resetActivityTimeButton.addHyperlinkListener(new HyperlinkAdapter() {
-
-			@Override
-			public void linkActivated(HyperlinkEvent e) {
-				if (MessageDialog.openConfirm(TaskPlanningEditor.this.getSite().getShell(),
-						Messages.TaskPlanningEditor_Confirm_Activity_Time_Deletion,
-						Messages.TaskPlanningEditor_Do_you_wish_to_reset_your_activity_time_on_this_task_)) {
-					MonitorUi.getActivityContextManager().removeActivityTime(task.getHandleIdentifier(), 0l,
-							System.currentTimeMillis());
-				}
-			}
-		});
-
-		toolkit.paintBordersFor(sectionClient);
-	}
-
-	private Composite makeComposite(Composite parent, int col) {
-		Composite nameValueComp = toolkit.createComposite(parent);
-		GridLayout layout = new GridLayout(3, false);
-		layout.marginHeight = 3;
-		nameValueComp.setLayout(layout);
-		return nameValueComp;
-	}
-
-	private void createNotesSection(Composite parent) {
-		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
-		section.setText(Messages.TaskPlanningEditor_Notes);
-		section.setExpanded(true);
-		section.setLayout(new GridLayout());
-		section.setLayoutData(new GridData(GridData.FILL_BOTH));
-
-		Composite container = toolkit.createComposite(section);
-		section.setClient(container);
-		container.setLayout(new GridLayout());
-		GridData notesData = new GridData(GridData.FILL_BOTH);
-		notesData.grabExcessVerticalSpace = true;
-		container.setLayoutData(notesData);
-
-		TaskRepository repository = null;
-		if (task != null && !(task instanceof LocalTask)) {
-			ITask repositoryTask = task;
-			repository = TasksUi.getRepositoryManager().getRepository(repositoryTask.getConnectorKind(),
-					repositoryTask.getRepositoryUrl());
-		}
-
-		noteEditor = addTextEditor(repository, container, task.getNotes(), true, SWT.FLAT | SWT.MULTI | SWT.WRAP
-				| SWT.V_SCROLL);
-		GridDataFactory.fillDefaults().minSize(NOTES_MINSIZE, NOTES_MINSIZE).grab(true, true).applyTo(
-				noteEditor.getControl());
-		noteEditor.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-		noteEditor.setEditable(true);
-		noteEditor.addTextListener(new ITextListener() {
-			public void textChanged(TextEvent event) {
-				if (!task.getNotes().equals(noteEditor.getTextWidget().getText())) {
-					markDirty(true);
-				}
-			}
-		});
-
-		toolkit.paintBordersFor(container);
-	}
-
 	private Font getCommentFont() {
 		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
 		Font font = themeManager.getCurrentTheme().getFontRegistry().get(CommonThemes.FONT_EDITOR_COMMENT);
@@ -940,11 +632,6 @@ public class TaskPlanningEditor extends TaskFormPage {
 	}
 
 	/** for testing - should cause dirty state */
-	public void setNotes(String notes) {
-		this.noteEditor.getTextWidget().setText(notes);
-	}
-
-	/** for testing - should cause dirty state */
 	public void setDescription(String desc) {
 		this.summaryEditor.getTextWidget().setText(desc);
 	}
@@ -954,8 +641,10 @@ public class TaskPlanningEditor extends TaskFormPage {
 		return this.summaryEditor.getTextWidget().getText();
 	}
 
-	private boolean areEqual(Object oldValue, Object newValue) {
-		return (oldValue != null) ? oldValue.equals(newValue) : oldValue == newValue;
+	/** for testing - should cause dirty state */
+	public void setNotes(String notes) {
+		if (personalPart != null) {
+			personalPart.setNotes(notes);
+		}
 	}
-
 }

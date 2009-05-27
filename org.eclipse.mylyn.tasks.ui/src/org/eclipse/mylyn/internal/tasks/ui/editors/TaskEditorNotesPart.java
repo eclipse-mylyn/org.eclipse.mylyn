@@ -33,6 +33,7 @@ import org.eclipse.ui.internal.WorkbenchPage;
  * @author Shawn Minto
  * @author Steffen Pingel
  */
+@Deprecated
 public class TaskEditorNotesPart extends AbstractTaskEditorPart {
 
 	private String value;

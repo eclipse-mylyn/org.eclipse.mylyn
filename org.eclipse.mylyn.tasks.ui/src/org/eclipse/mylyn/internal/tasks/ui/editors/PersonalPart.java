@@ -17,8 +17,11 @@ import java.util.Set;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.text.ITextListener;
+import org.eclipse.jface.text.TextEvent;
 import org.eclipse.mylyn.commons.core.DateUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DatePicker;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.DayDateRange;
@@ -32,7 +35,7 @@ import org.eclipse.mylyn.monitor.ui.MonitorUi;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
-import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -41,24 +44,42 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.AbstractFormPart;
 import org.eclipse.ui.forms.IFormColors;
+import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.ui.internal.EditorAreaHelper;
+import org.eclipse.ui.internal.WorkbenchPage;
 
 /**
- * @author Steffen Pingel
+ * @author Shawn Minto
  */
-@Deprecated
-public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
+public class PersonalPart extends AbstractFormPart {
+
+	private TaskRepository taskRepository;
+
+	private AbstractTask task;
+
+	private boolean needsDueDate;
+
+	private String notesString;
+
+	private RichTextEditor noteEditor;
 
 	private static final int CONTROL_WIDTH = 135;
 
@@ -69,8 +90,6 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 	private Spinner estimatedTime;
 
 	private ScheduleDatePicker scheduleDatePicker;
-
-	private AbstractTask task;
 
 	private final ITaskListChangeListener TASK_LIST_LISTENER = new TaskListChangeAdapter() {
 
@@ -99,7 +118,7 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 
 		@Override
 		public void elapsedTimeUpdated(ITask task, long newElapsedTime) {
-			if (task.equals(TaskEditorPlanningPart.this.task)) {
+			if (task.equals(PersonalPart.this.task)) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						if (elapsedTimeText != null && !elapsedTimeText.isDisposed()) {
@@ -112,14 +131,50 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 		}
 	};
 
-	public TaskEditorPlanningPart() {
-		setPartName(Messages.TaskEditorPlanningPart_Personal_Planning);
+	private CommonTextSupport textSupport;
+
+	private final boolean expandNotesVertically;
+
+	private final int sectionStyle;
+
+	private IEditorSite editorSite;
+
+	public PersonalPart(int sectionStyle, boolean expandNotesVertically) {
+		this.sectionStyle = sectionStyle;
+		this.expandNotesVertically = expandNotesVertically;
+	}
+
+	public void initialize(IManagedForm managedForm, TaskRepository taskRepository, AbstractTask task,
+			boolean needsDueDate, IEditorSite site) {
+		super.initialize(managedForm);
+		this.task = task;
+		this.needsDueDate = needsDueDate;
+		this.taskRepository = taskRepository;
+
+		this.textSupport = new CommonTextSupport((IHandlerService) site.getService(IHandlerService.class));
+		this.textSupport.setSelectionChangedListener((TaskEditorActionContributor) site.getActionBarContributor());
+		this.editorSite = site;
+	}
+
+	private boolean notesEqual() {
+		if (task.getNotes() == null && notesString == null) {
+			return true;
+		}
+
+		if (task.getNotes() != null && notesString != null) {
+			return task.getNotes().equals(notesString);
+		}
+		return false;
 	}
 
 	@Override
 	public void commit(boolean onSave) {
-		AbstractTask task = (AbstractTask) getTaskEditorPage().getTask();
 		Assert.isNotNull(task);
+
+		if (!notesEqual()) {
+			task.setNotes(notesString);
+			// XXX REFRESH THE TASLKIST
+		}
 
 		if (scheduleDatePicker != null && scheduleDatePicker.getScheduledDate() != null) {
 			if (task.getScheduledForDate() == null
@@ -146,22 +201,112 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 		super.commit(onSave);
 	}
 
+	public void createControl(Composite parent, FormToolkit toolkit) {
+		Section section = createSection(parent, toolkit, false);
+		Composite composite = toolkit.createComposite(section);
+		int numColumns = (needsDueDate) ? 6 : 4;
+		composite.setLayout(new GridLayout(numColumns, false));
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(composite);
+
+		createScheduledDatePicker(toolkit, composite);
+
+		// disable due date picker if it's a repository due date
+		if (needsDueDate) {
+			createDueDatePicker(toolkit, composite);
+		}
+
+		createEstimatedTime(toolkit, composite);
+
+//		createActualTime(toolkit, composite);
+
+		TasksUiInternal.getTaskList().addChangeListener(TASK_LIST_LISTENER);
+		TasksUiPlugin.getTaskActivityManager().addActivityListener(timingListener);
+
+		this.notesString = task.getNotes();
+		if (this.notesString == null) {
+			this.notesString = ""; //$NON-NLS-1$
+		}
+
+		createNotesArea(toolkit, composite, numColumns);
+
+		toolkit.paintBordersFor(composite);
+		section.setClient(composite);
+		setSection(toolkit, section);
+	}
+
+	private void createNotesArea(FormToolkit toolkit, Composite parent, int numColumns) {
+		Composite composite = toolkit.createComposite(parent);
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 1;
+		layout.marginLeft = 0;
+		layout.marginWidth = 0;
+		composite.setLayout(layout);
+		GridDataFactory.fillDefaults().span(numColumns, SWT.DEFAULT).grab(true, expandNotesVertically).applyTo(
+				composite);
+
+		Label labelControl = toolkit.createLabel(composite, Messages.PersonalPart_Notes);
+		labelControl.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+
+		noteEditor = new RichTextEditor(taskRepository, SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		noteEditor.createControl(composite, toolkit);
+		noteEditor.setText(notesString);
+		noteEditor.getDefaultViewer().addTextListener(new ITextListener() {
+			public void textChanged(TextEvent event) {
+				notesString = noteEditor.getText();
+				markDirty();
+			}
+		});
+
+		final GridData gd = new GridData(GridData.FILL_BOTH);
+		int widthHint = 0;
+
+		if (getManagedForm() != null && getManagedForm().getForm() != null) {
+			widthHint = getManagedForm().getForm().getClientArea().width - 90;
+		}
+		if (widthHint <= 0 && editorSite != null && editorSite.getPage() != null) {
+			EditorAreaHelper editorManager = ((WorkbenchPage) editorSite.getPage()).getEditorPresentation();
+			if (editorManager != null && editorManager.getLayoutPart() != null) {
+				widthHint = editorManager.getLayoutPart().getControl().getBounds().width - 90;
+			}
+		}
+
+		if (widthHint <= 0) {
+			widthHint = 100;
+		}
+
+		gd.widthHint = widthHint;
+		gd.minimumHeight = 100;
+		gd.heightHint = 100;
+		gd.grabExcessHorizontalSpace = true;
+		gd.grabExcessVerticalSpace = expandNotesVertically;
+		gd.horizontalIndent = 10;
+
+		noteEditor.getControl().setLayoutData(gd);
+		noteEditor.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+		noteEditor.setReadOnly(false);
+		textSupport.install(noteEditor.getViewer(), true);
+		toolkit.paintBordersFor(composite);
+	}
+
 	private void createActualTime(FormToolkit toolkit, Composite parent) {
 		Label label = toolkit.createLabel(parent, Messages.TaskEditorPlanningPart_Active);
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		label.setToolTipText(Messages.TaskEditorPlanningPart_Time_working_on_this_task);
+		label.setBackground(null);
 
 		Composite nameValueComp = createComposite(parent, 2, toolkit);
+		nameValueComp.setBackground(null);
 
-		elapsedTimeText = toolkit.createText(nameValueComp, null);
+		elapsedTimeText = new Text(nameValueComp, SWT.FLAT | SWT.READ_ONLY);
+		elapsedTimeText.setFont(EditorUtil.TEXT_FONT);
+		elapsedTimeText.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
+		toolkit.adapt(elapsedTimeText, true, false);
+		elapsedTimeText.setBackground(null);
 		updateElapsedTime();
-
-		GridData td = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL);
-		td.grabExcessHorizontalSpace = true;
-		elapsedTimeText.setLayoutData(td);
 		elapsedTimeText.setEditable(false);
 
 		ImageHyperlink resetActivityTimeButton = toolkit.createImageHyperlink(nameValueComp, SWT.NONE);
+		resetActivityTimeButton.setBackground(null);
 		resetActivityTimeButton.setImage(CommonImages.getImage(CommonImages.FIND_CLEAR));
 		resetActivityTimeButton.setToolTipText(Messages.TaskEditorPlanningPart_Reset);
 		resetActivityTimeButton.addHyperlinkListener(new HyperlinkAdapter() {
@@ -193,35 +338,6 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 		layout.marginHeight = 3;
 		nameValueComp.setLayout(layout);
 		return nameValueComp;
-	}
-
-	@Override
-	public void createControl(Composite parent, FormToolkit toolkit) {
-		task = (AbstractTask) getTaskEditorPage().getTask();
-		boolean hasDueDate = !getTaskEditorPage().getConnector().hasRepositoryDueDate(
-				getTaskEditorPage().getTaskRepository(), task, getTaskData());
-
-		Section section = createSection(parent, toolkit, true);
-		Composite composite = getManagedForm().getToolkit().createComposite(section);
-		composite.setLayout(new GridLayout((hasDueDate) ? 4 : 6, false));
-
-		createScheduledDatePicker(toolkit, composite);
-
-		// disable due date picker if it's a repository due date
-		if (hasDueDate) {
-			createDueDatePicker(toolkit, composite);
-		}
-
-		createEstimatedTime(toolkit, composite);
-
-		createActualTime(toolkit, composite);
-
-		TasksUiInternal.getTaskList().addChangeListener(TASK_LIST_LISTENER);
-		TasksUiPlugin.getTaskActivityManager().addActivityListener(timingListener);
-
-		toolkit.paintBordersFor(composite);
-		section.setClient(composite);
-		setSection(toolkit, section);
 	}
 
 	private void createDueDatePicker(FormToolkit toolkit, Composite parent) {
@@ -334,6 +450,11 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 
 	@Override
 	public void dispose() {
+
+		if (textSupport != null) {
+			textSupport.dispose();
+		}
+
 		TasksUiPlugin.getTaskActivityManager().removeActivityListener(timingListener);
 		TasksUiInternal.getTaskList().removeChangeListener(TASK_LIST_LISTENER);
 	}
@@ -352,4 +473,69 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 		}
 	}
 
+	private String getSectionName() {
+		return Messages.PersonalPart_Personal_Planning;
+	}
+
+	// adapted from AbstractTaskEditorPart
+	private Control control;
+
+	private Section section;
+
+	public void setControl(Control control) {
+		this.control = control;
+	}
+
+	public Control getControl() {
+		return control;
+	}
+
+	protected void setSection(FormToolkit toolkit, Section section) {
+		if (section.getTextClient() == null) {
+			Composite toolbarComposite = toolkit.createComposite(section);
+			toolbarComposite.setBackground(null);
+			RowLayout rowLayout = new RowLayout();
+			rowLayout.center = true;
+			rowLayout.marginTop = 0;
+			rowLayout.marginBottom = 0;
+			toolbarComposite.setLayout(rowLayout);
+
+			createActualTime(toolkit, toolbarComposite);
+
+			section.setTextClient(toolbarComposite);
+		}
+		this.section = section;
+		setControl(section);
+	}
+
+	protected Section createSection(Composite parent, FormToolkit toolkit, boolean expandedState) {
+		int style = ExpandableComposite.TITLE_BAR | getSectionStyle();
+		if (expandedState && isTwistie(style)) {
+			style |= ExpandableComposite.EXPANDED;
+		}
+		return createSection(parent, toolkit, style);
+	}
+
+	private boolean isTwistie(int style) {
+		return (style & ExpandableComposite.TWISTIE) == 1;
+	}
+
+	protected Section createSection(Composite parent, FormToolkit toolkit, int style) {
+		Section section = toolkit.createSection(parent, style);
+		section.setText(getSectionName());
+		return section;
+	}
+
+	public Section getSection() {
+		return section;
+	}
+
+	private int getSectionStyle() {
+		return sectionStyle;
+	}
+
+	/** for testing - should cause dirty state */
+	public void setNotes(String notes) {
+		noteEditor.setText(notes);
+	}
 }
