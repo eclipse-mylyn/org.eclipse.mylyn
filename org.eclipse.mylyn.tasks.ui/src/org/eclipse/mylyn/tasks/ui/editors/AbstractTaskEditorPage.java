@@ -68,6 +68,7 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorAttachmentPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorAttributePart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorCommentPart;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorContributionExtensionReader;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorDescriptionPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorNewCommentPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorOutlineNode;
@@ -743,7 +744,13 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 				return new TaskEditorPeoplePart();
 			}
 		}.setPath(PATH_PEOPLE));
+
+		descriptors.addAll(getContributionPartDescriptors());
 		return descriptors;
+	}
+
+	private Collection<TaskEditorPartDescriptor> getContributionPartDescriptors() {
+		return TaskEditorContributionExtensionReader.getEditorContributions();
 	}
 
 	protected void createParts() {
