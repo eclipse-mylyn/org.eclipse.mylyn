@@ -41,6 +41,8 @@ public class CommonImages {
 
 	private static final String T_OBJ = "obj16"; //$NON-NLS-1$
 
+	private static final String T_OBJ_24 = "obj24"; //$NON-NLS-1$
+
 	private static final String T_WIZBAN = "wizban"; //$NON-NLS-1$
 
 	private static final String T_OVR = "ovr16"; //$NON-NLS-1$
@@ -56,6 +58,16 @@ public class CommonImages {
 	public static final ImageDescriptor PRIORITY_4 = create(T_OBJ, "priority-4.gif"); //$NON-NLS-1$
 
 	public static final ImageDescriptor PRIORITY_5 = create(T_OBJ, "priority-5.gif"); //$NON-NLS-1$
+
+	public static final ImageDescriptor PRIORITY_1_24 = create(T_OBJ_24, "priority-1.png"); //$NON-NLS-1$
+
+	public static final ImageDescriptor PRIORITY_2_24 = create(T_OBJ_24, "priority-2.png"); //$NON-NLS-1$
+
+	public static final ImageDescriptor PRIORITY_3_24 = create(T_OBJ_24, "priority-3.png"); //$NON-NLS-1$
+
+	public static final ImageDescriptor PRIORITY_4_24 = create(T_OBJ_24, "priority-4.png"); //$NON-NLS-1$
+
+	public static final ImageDescriptor PRIORITY_5_24 = create(T_OBJ_24, "priority-5.png"); //$NON-NLS-1$
 
 	// 	Calendars, people and notifications
 
