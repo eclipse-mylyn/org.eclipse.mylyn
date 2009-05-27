@@ -82,7 +82,7 @@ public class DiscoveryConnectorMockFactory extends AbstractMockFactory<Discovery
 	}
 
 	public DiscoveryConnectorMockFactory kind(ConnectorDescriptorKind kind) {
-		getMockObject().setKind(kind);
+		getMockObject().getKind().add(kind);
 		return this;
 	}
 

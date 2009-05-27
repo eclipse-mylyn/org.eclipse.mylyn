@@ -918,7 +918,13 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 	}
 
 	private boolean isFiltered(ConnectorDescriptor descriptor) {
-		boolean kindFiltered = !getWizard().isVisible(descriptor.getKind());
+		boolean kindFiltered = true;
+		for (ConnectorDescriptorKind kind : descriptor.getKind()) {
+			if (getWizard().isVisible(kind)) {
+				kindFiltered = false;
+				break;
+			}
+		}
 		if (kindFiltered) {
 			return true;
 		}

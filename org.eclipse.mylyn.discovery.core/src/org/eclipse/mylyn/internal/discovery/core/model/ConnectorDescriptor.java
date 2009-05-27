@@ -11,6 +11,7 @@
 package org.eclipse.mylyn.internal.discovery.core.model;
 
 import java.net.MalformedURLException;
+import java.util.List;
 
 /**
  * A description of a connector, including kind, description, licensing and brand.
@@ -19,7 +20,7 @@ import java.net.MalformedURLException;
  */
 public class ConnectorDescriptor {
 
-	protected ConnectorDescriptorKind kind;
+	protected java.util.List<ConnectorDescriptorKind> kind = new java.util.ArrayList<ConnectorDescriptorKind>();
 
 	protected String name;
 
@@ -38,7 +39,7 @@ public class ConnectorDescriptor {
 	protected String platformFilter;
 
 	protected java.util.List<FeatureFilter> featureFilter = new java.util.ArrayList<FeatureFilter>();
-	
+
 	protected Icon icon;
 
 	protected Overview overview;
@@ -49,11 +50,11 @@ public class ConnectorDescriptor {
 	/**
 	 * must be one of 'document', 'task', 'vcs'
 	 */
-	public ConnectorDescriptorKind getKind() {
+	public List<ConnectorDescriptorKind> getKind() {
 		return kind;
 	}
 
-	public void setKind(ConnectorDescriptorKind kind) {
+	public void setKind(List<ConnectorDescriptorKind> kind) {
 		this.kind = kind;
 	}
 
@@ -152,11 +153,11 @@ public class ConnectorDescriptor {
 	public java.util.List<FeatureFilter> getFeatureFilter() {
 		return featureFilter;
 	}
-	
+
 	public void setFeatureFilter(java.util.List<FeatureFilter> featureFilter) {
 		this.featureFilter = featureFilter;
 	}
-	
+
 	public Icon getIcon() {
 		return icon;
 	}
@@ -174,7 +175,7 @@ public class ConnectorDescriptor {
 	}
 
 	public void validate() throws ValidationException {
-		if (kind == null) {
+		if (kind == null || kind.isEmpty()) {
 			throw new ValidationException(Messages.ConnectorDescriptor_must_specify_connectorDescriptor_kind);
 		}
 		if (name == null || name.length() == 0) {
@@ -200,7 +201,7 @@ public class ConnectorDescriptor {
 		if (categoryId == null || categoryId.length() == 0) {
 			throw new ValidationException(Messages.ConnectorDescriptor_must_specify_connectorDescriptor_categoryId);
 		}
-		for (FeatureFilter featureFilterItem: featureFilter) {
+		for (FeatureFilter featureFilterItem : featureFilter) {
 			featureFilterItem.validate();
 		}
 		if (icon != null) {

@@ -51,7 +51,7 @@
    <element name="connectorDescriptor">
       <annotation>
          <documentation>
-            A description of a connector, including kind, description, licensing and brand.
+            A description of a connector, including kinds, description, licensing and brand.
          </documentation>
       </annotation>
       <complexType>
@@ -60,22 +60,12 @@
             <element ref="icon" minOccurs="0" maxOccurs="1"/>
             <element ref="overview" minOccurs="0" maxOccurs="1"/>
          </sequence>
-         <attribute name="kind" use="required">
+         <attribute name="kind" type="string" use="required">
             <annotation>
                <documentation>
-                  must be one of &apos;document&apos;, &apos;task&apos;, &apos;vcs&apos;
+                  must be a comma-delimited list of the following values: &apos;document&apos;, &apos;task&apos;, &apos;vcs&apos;
                </documentation>
             </annotation>
-            <simpleType>
-               <restriction base="string">
-                  <enumeration value="document">
-                  </enumeration>
-                  <enumeration value="task">
-                  </enumeration>
-                  <enumeration value="vcs">
-                  </enumeration>
-               </restriction>
-            </simpleType>
          </attribute>
          <attribute name="name" type="string" use="required">
             <annotation>
