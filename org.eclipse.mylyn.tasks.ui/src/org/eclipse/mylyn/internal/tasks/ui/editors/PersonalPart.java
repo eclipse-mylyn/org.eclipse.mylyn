@@ -511,7 +511,7 @@ public class PersonalPart extends AbstractFormPart {
 			Composite toolbarComposite = toolkit.createComposite(section);
 			toolbarComposite.setBackground(null);
 			RowLayout rowLayout = new RowLayout();
-			rowLayout.center = true;
+			EditorUtil.center(rowLayout);
 			rowLayout.marginTop = 0;
 			rowLayout.marginBottom = 0;
 			toolbarComposite.setLayout(rowLayout);
