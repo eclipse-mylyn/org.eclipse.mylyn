@@ -82,4 +82,5 @@ public interface ITasksUiPreferenceConstants {
 	// NOTE: legacy name, do not change
 	public static final String PREF_DATA_DIR = "org.eclipse.mylyn.data.dir"; //$NON-NLS-1$
 
+	public static final String DEFAULT_ATTACHMENTS_DIRECTORY = "org.eclipse.mylyn.tasks.ui.attachments.defaultDirectory"; //$NON-NLS-1$
 }

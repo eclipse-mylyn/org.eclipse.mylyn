@@ -51,6 +51,18 @@ public class Messages extends NLS {
 
 	public static String SortKindEntry_Task_ID;
 
+	public static String SaveAttachmentsAction_directoryDoesntExist;
+
+	public static String SaveAttachmentsAction_directoryDoesntExist0;
+
+	public static String SaveAttachmentsAction_fileExists_doYouWantToOverwrite0;
+
+	public static String SaveAttachmentsAction_overwriteFile0;
+
+	public static String SaveAttachmentsAction_selectDirectory;
+
+	public static String SaveAttachmentsAction_selectDirectoryHint;
+
 	public static String TaskDataExportOperation_exporting_task_data;
 
 	public static String TasksUiInternal_Configuration_Refresh_Failed;

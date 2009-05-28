@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Peter Stibrany - improvements for bug 271197
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.util;
@@ -19,6 +20,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
@@ -29,6 +31,8 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.context.core.ContextCore;
@@ -48,6 +52,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.sync.SubmitJob;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Steffen Pingel
@@ -140,7 +146,8 @@ public class AttachmentUtil {
 			});
 		} catch (InvocationTargetException e) {
 			if (e.getCause() instanceof CoreException) {
-				TasksUiInternal.displayStatus(Messages.AttachmentUtil_Mylyn_Information, ((CoreException) e.getCause()).getStatus());
+				TasksUiInternal.displayStatus(Messages.AttachmentUtil_Mylyn_Information,
+						((CoreException) e.getCause()).getStatus());
 			} else {
 				StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 						"Unexpected error while retrieving context", e)); //$NON-NLS-1$
@@ -160,8 +167,8 @@ public class AttachmentUtil {
 		ContextCorePlugin.getContextStore().saveActiveContext();
 		File sourceContextFile = ContextCorePlugin.getContextStore().getFileForContext(task.getHandleIdentifier());
 		if (!sourceContextFile.exists()) {
-			TasksUiInternal.displayStatus(Messages.AttachmentUtil_Mylyn_Information, new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
-					Messages.AttachmentUtil_The_context_is_empty));
+			TasksUiInternal.displayStatus(Messages.AttachmentUtil_Mylyn_Information, new Status(IStatus.WARNING,
+					TasksUiPlugin.ID_PLUGIN, Messages.AttachmentUtil_The_context_is_empty));
 			return false;
 		}
 
@@ -272,4 +279,31 @@ public class AttachmentUtil {
 		}
 	}
 
+	public static ITaskAttachment getSelectedAttachment() {
+		List<ITaskAttachment> attachments = getSelectedAttachments();
+		if (attachments.isEmpty()) {
+			return null;
+		}
+		return attachments.get(0);
+	}
+
+	public static List<ITaskAttachment> getSelectedAttachments() {
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		if (window != null) {
+			ISelection windowSelection = window.getSelectionService().getSelection();
+			if (windowSelection instanceof IStructuredSelection && !windowSelection.isEmpty()) {
+				IStructuredSelection selection = (IStructuredSelection) windowSelection;
+				List<?> items = selection.toList();
+
+				List<ITaskAttachment> attachments = new ArrayList<ITaskAttachment>();
+				for (Object item : items) {
+					if (item instanceof ITaskAttachment) {
+						attachments.add((ITaskAttachment) item);
+					}
+				}
+				return attachments;
+			}
+		}
+		return Collections.emptyList();
+	}
 }
