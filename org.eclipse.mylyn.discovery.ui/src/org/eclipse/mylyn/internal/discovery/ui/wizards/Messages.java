@@ -72,11 +72,17 @@ class Messages extends NLS {
 
 	public static String ConnectorDiscoveryWizardMainPage_pageDescription;
 
+	public static String ConnectorDiscoveryWizardMainPage_provider_and_license;
+
 	public static String ConnectorDiscoveryWizardMainPage_tooltip_showOverview;
 
 	public static String ConnectorDiscoveryWizardMainPage_typeFilterText;
 
 	public static String ConnectorDiscoveryWizardMainPage_unexpectedException;
+
+	public static String ConnectorDiscoveryWizardMainPage_warningMessageConnectorUnavailable;
+
+	public static String ConnectorDiscoveryWizardMainPage_warningTitleConnectorUnavailable;
 
 	public static String PrepareInstallProfileJob_calculatingRequirements;
 

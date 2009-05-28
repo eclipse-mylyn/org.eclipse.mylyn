@@ -55,6 +55,7 @@ import org.eclipse.mylyn.internal.discovery.ui.util.DiscoveryUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.provisional.commons.ui.GradientCanvas;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.ACC;
 import org.eclipse.swt.accessibility.AccessibleAdapter;
@@ -117,6 +118,8 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 
 	private static final String COLOR_WHITE = "white"; //$NON-NLS-1$
 
+	private static final String COLOR_DARK_GRAY = "DarkGray"; //$NON-NLS-1$
+
 	private static Boolean useNativeSearchField;
 
 	private final List<ConnectorDescriptor> installableConnectors = new ArrayList<ConnectorDescriptor>();
@@ -154,6 +157,8 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 	private Color colorCategoryGradientStart;
 
 	private Color colorCategoryGradientEnd;
+
+	private Color colorDisabled;
 
 	public ConnectorDiscoveryWizardMainPage() {
 		super(ConnectorDiscoveryWizardMainPage.class.getSimpleName());
@@ -530,7 +535,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		scrolledComposite.setExpandHorizontal(true);
 		scrolledComposite.setMinWidth(100);
 		scrolledComposite.setExpandVertical(true);
-		scrolledComposite.setMinHeight(size.y);
+		scrolledComposite.setMinHeight(1);
 
 		scrolledComposite.addControlListener(new ControlAdapter() {
 			@Override
@@ -570,6 +575,13 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 				colorRegistry.put(COLOR_WHITE, new RGB(255, 255, 255));
 			}
 			colorWhite = colorRegistry.get(COLOR_WHITE);
+		}
+		if (colorDisabled == null) {
+			ColorRegistry colorRegistry = JFaceResources.getColorRegistry();
+			if (!colorRegistry.hasValueFor(COLOR_DARK_GRAY)) {
+				colorRegistry.put(COLOR_DARK_GRAY, new RGB(0x69, 0x69, 0x69));
+			}
+			colorDisabled = colorRegistry.get(COLOR_DARK_GRAY);
 		}
 		if (colorCategoryGradientStart == null) {
 			colorCategoryGradientStart = themeManager.getCurrentTheme().getColorRegistry().get(
@@ -644,7 +656,10 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 			}
 			GridDataFactory.fillDefaults().grab(true, false).hint(100, SWT.DEFAULT).applyTo(helpTextControl);
 		} else {
-			GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(false).spacing(0, 0).applyTo(container);
+			GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(false).spacing(0, 0) //
+					// hack for layout issue where bottom one gets cropped
+					.extendedMargins(0, 0, 0, 15)
+					.applyTo(container);
 
 			List<DiscoveryCategory> categories = new ArrayList<DiscoveryCategory>(discovery.getCategories());
 			Collections.sort(categories, new DiscoveryCategoryComparator());
@@ -707,10 +722,13 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 						border.addPaintListener(new ConnectorBorderPaintListener());
 					}
 
+					final boolean unavailable = connector.getAvailable() != null && !connector.getAvailable() ? true
+							: false;
+
 					Composite connectorContainer = new Composite(categoryChildrenContainer, SWT.NULL);
 					configureLook(connectorContainer, background);
 					GridDataFactory.fillDefaults().grab(true, false).applyTo(connectorContainer);
-					GridLayout categoryLayout = new GridLayout(5, false);
+					GridLayout categoryLayout = new GridLayout(4, false);
 					categoryLayout.marginLeft = 30;
 					categoryLayout.marginTop = 2;
 					categoryLayout.marginBottom = 2;
@@ -720,32 +738,13 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 					configureLook(checkbox, background);
 					checkbox.setSelection(installableConnectors.contains(connector));
 
-					MouseAdapter selectMouseListener = new MouseAdapter() {
-						@Override
-						public void mouseUp(MouseEvent e) {
-							boolean selected = !checkbox.getSelection();
-							checkbox.setSelection(selected);
-							modifySelection(connector, selected);
-						}
-					};
-					connectorContainer.addMouseListener(selectMouseListener);
-
 					if (connector.getIcon() != null) {
 						Image image = computeIconImage(connector.getSource(), connector.getIcon());
 						if (image != null) {
 							checkbox.setImage(image);
 						}
 					}
-					checkbox.addSelectionListener(new SelectionListener() {
-						public void widgetDefaultSelected(SelectionEvent e) {
-							widgetSelected(e);
-						}
 
-						public void widgetSelected(SelectionEvent e) {
-							boolean selected = checkbox.getSelection();
-							modifySelection(connector, selected);
-						}
-					});
 					GridDataFactory.swtDefaults().align(SWT.CENTER, SWT.BEGINNING).span(1, 2).applyTo(checkbox);
 
 					Label nameLabel = new Label(connectorContainer, SWT.NULL);
@@ -753,19 +752,12 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 					GridDataFactory.fillDefaults().grab(true, false).applyTo(nameLabel);
 					nameLabel.setFont(h2Font);
 					nameLabel.setText(connector.getName());
-					nameLabel.addMouseListener(selectMouseListener);
 
 					Label providerLabel = new Label(connectorContainer, SWT.NULL);
 					configureLook(providerLabel, background);
 					GridDataFactory.fillDefaults().applyTo(providerLabel);
-					providerLabel.setText(connector.getProvider());
-					providerLabel.addMouseListener(selectMouseListener);
-
-					Label licenseLabel = new Label(connectorContainer, SWT.NULL);
-					configureLook(licenseLabel, background);
-					GridDataFactory.fillDefaults().applyTo(licenseLabel);
-					licenseLabel.setText(connector.getLicense());
-					licenseLabel.addMouseListener(selectMouseListener);
+					providerLabel.setText(NLS.bind(Messages.ConnectorDiscoveryWizardMainPage_provider_and_license,
+							connector.getProvider(), connector.getLicense()));
 
 					Label infoLabel = new Label(connectorContainer, SWT.NULL);
 					configureLook(infoLabel, background);
@@ -780,7 +772,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 					Label description = new Label(connectorContainer, SWT.NULL | SWT.WRAP);
 					configureLook(description, background);
 
-					GridDataFactory.fillDefaults().grab(true, false).span(4, 1).hint(100, SWT.DEFAULT).applyTo(
+					GridDataFactory.fillDefaults().grab(true, false).span(3, 1).hint(100, SWT.DEFAULT).applyTo(
 							description);
 					String descriptionText = connector.getDescription();
 					int maxDescriptionLength = 162;
@@ -788,7 +780,50 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 						descriptionText = descriptionText.substring(0, maxDescriptionLength);
 					}
 					description.setText(descriptionText.replaceAll("(\\r\\n)|\\n|\\r", " ")); //$NON-NLS-1$ //$NON-NLS-2$
-					description.addMouseListener(selectMouseListener);
+
+					MouseAdapter connectorItemMouseListener;
+					if (unavailable) {
+						checkbox.setEnabled(false);
+						nameLabel.setEnabled(false);
+						providerLabel.setEnabled(false);
+						description.setEnabled(false);
+						checkbox.setForeground(colorDisabled);
+						nameLabel.setForeground(colorDisabled);
+						providerLabel.setForeground(colorDisabled);
+						description.setForeground(colorDisabled);
+
+						connectorItemMouseListener = new MouseAdapter() {
+							@Override
+							public void mouseUp(MouseEvent e) {
+								MessageDialog.openWarning(getShell(), Messages.ConnectorDiscoveryWizardMainPage_warningTitleConnectorUnavailable, NLS.bind(
+										Messages.ConnectorDiscoveryWizardMainPage_warningMessageConnectorUnavailable, connector.getName()));
+							}
+						};
+						checkbox.addMouseListener(connectorItemMouseListener);
+					} else {
+						checkbox.addSelectionListener(new SelectionListener() {
+							public void widgetDefaultSelected(SelectionEvent e) {
+								widgetSelected(e);
+							}
+
+							public void widgetSelected(SelectionEvent e) {
+								boolean selected = checkbox.getSelection();
+								modifySelection(connector, selected);
+							}
+						});
+						connectorItemMouseListener = new MouseAdapter() {
+							@Override
+							public void mouseUp(MouseEvent e) {
+								boolean selected = !checkbox.getSelection();
+								checkbox.setSelection(selected);
+								modifySelection(connector, selected);
+							}
+						};
+					}
+					connectorContainer.addMouseListener(connectorItemMouseListener);
+					nameLabel.addMouseListener(connectorItemMouseListener);
+					providerLabel.addMouseListener(connectorItemMouseListener);
+					description.addMouseListener(connectorItemMouseListener);
 				}
 			}
 			// last one gets a border
