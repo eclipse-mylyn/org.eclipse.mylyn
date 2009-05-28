@@ -53,7 +53,6 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -597,13 +596,9 @@ public class TaskListToolTip extends GradientToolTip {
 		textLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER));
 		text = removeTrailingNewline(text);
 		textLabel.setText(TasksUiInternal.escapeLabelText(text));
-		GC gc = new GC(textLabel);
-		int width = Math.min(gc.textExtent(text).x, MAX_WIDTH);
-		try {
-			GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).hint(width, SWT.DEFAULT).applyTo(textLabel);
-		} finally {
-			gc.dispose();
-		}
+		int width = Math.min(textLabel.computeSize(SWT.DEFAULT, SWT.DEFAULT).x, MAX_WIDTH);
+		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).hint(width, SWT.DEFAULT).applyTo(textLabel);
+
 	}
 
 	private static class ProgressData {
