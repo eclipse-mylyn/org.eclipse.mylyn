@@ -40,6 +40,15 @@ public class SingleSelectionAttributeEditor extends AbstractAttributeEditor {
 
 	private String[] values;
 
+	private final TaskDataModelListener modelListener = new TaskDataModelListener() {
+		@Override
+		public void attributeChanged(TaskDataModelEvent event) {
+			if (getTaskAttribute().equals(event.getTaskAttribute())) {
+				refresh();
+			}
+		}
+	};
+
 	public SingleSelectionAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
 	}
@@ -74,14 +83,8 @@ public class SingleSelectionAttributeEditor extends AbstractAttributeEditor {
 			setControl(combo);
 		}
 		refresh();
-		getModel().addModelListener(new TaskDataModelListener() {
-			@Override
-			public void attributeChanged(TaskDataModelEvent event) {
-				if (getTaskAttribute().equals(event.getTaskAttribute())) {
-					refresh();
-				}
-			}
-		});
+
+		getModel().addModelListener(modelListener);
 	}
 
 	public String getValue() {
@@ -147,5 +150,11 @@ public class SingleSelectionAttributeEditor extends AbstractAttributeEditor {
 			getAttributeMapper().setValue(getTaskAttribute(), value);
 			attributeChanged();
 		}
+	}
+
+	@Override
+	public void dispose() {
+		getModel().removeModelListener(modelListener);
+		super.dispose();
 	}
 }
