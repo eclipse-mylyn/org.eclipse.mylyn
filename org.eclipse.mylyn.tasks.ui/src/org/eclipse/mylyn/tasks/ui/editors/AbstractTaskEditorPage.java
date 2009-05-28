@@ -758,9 +758,9 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 		// single column
 		createParts(PATH_HEADER, editorComposite, descriptors);
 		createParts(PATH_ATTRIBUTES, editorComposite, descriptors);
+		createParts(PATH_PLANNING, editorComposite, descriptors);
 		createParts(PATH_ATTACHMENTS, editorComposite, descriptors);
 		createParts(PATH_COMMENTS, editorComposite, descriptors);
-		createParts(PATH_PLANNING, editorComposite, descriptors);
 		// two column
 		Composite bottomComposite = toolkit.createComposite(editorComposite);
 		bottomComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());

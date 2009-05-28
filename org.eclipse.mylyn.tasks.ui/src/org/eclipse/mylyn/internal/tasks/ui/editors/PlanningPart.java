@@ -194,7 +194,12 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 	@Override
 	public Control createControl(Composite parent, FormToolkit toolkit) {
-		Section section = createSection(parent, toolkit, false);
+
+		this.notesString = getTask().getNotes();
+		if (this.notesString == null) {
+			this.notesString = ""; //$NON-NLS-1$
+		}
+		Section section = createSection(parent, toolkit, notesString.length() > 0);
 		Composite composite = toolkit.createComposite(section);
 		int numColumns = (needsDueDate) ? 6 : 4;
 		composite.setLayout(new GridLayout(numColumns, false));
@@ -212,11 +217,6 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 		TasksUiInternal.getTaskList().addChangeListener(TASK_LIST_LISTENER);
 		TasksUiPlugin.getTaskActivityManager().addActivityListener(timingListener);
-
-		this.notesString = getTask().getNotes();
-		if (this.notesString == null) {
-			this.notesString = ""; //$NON-NLS-1$
-		}
 
 		createNotesArea(toolkit, composite, numColumns);
 
@@ -236,8 +236,6 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		GridDataFactory.fillDefaults().span(numColumns, SWT.DEFAULT).grab(true, expandNotesVertically).applyTo(
 				composite);
 
-		Label labelControl = toolkit.createLabel(composite, Messages.PersonalPart_Notes);
-		labelControl.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 
 		if (page != null) {
 			IContextService contextService = (IContextService) page.getEditorSite().getService(IContextService.class);

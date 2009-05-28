@@ -19,12 +19,15 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
@@ -41,14 +44,18 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskFormPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PlatformUI;
@@ -70,6 +77,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 	private TaskRepository repository;
 
 	private AbstractTask task;
+
+	private Button saveButton;
 
 	private final ITaskListChangeListener TASK_LIST_LISTENER = new TaskListChangeAdapter() {
 		@Override
@@ -245,6 +254,25 @@ public class TaskPlanningEditor extends TaskFormPage {
 			}
 		}
 		getManagedForm().refresh();
+	}
+
+	public void fillLeftHeaderToolBar(IToolBarManager toolBarManager) {
+		ControlContribution submitButtonContribution = new ControlContribution("org.eclipse.mylyn.tasks.toolbars.save") { //$NON-NLS-1$
+			@Override
+			protected Control createControl(Composite parent) {
+				saveButton = new Button(parent, SWT.FLAT);
+				saveButton.setText(Messages.TaskPlanningEditor_Save);
+				saveButton.setImage(CommonImages.getImage(TasksUiImages.REPOSITORY_SUBMIT));
+				saveButton.setBackground(null);
+				saveButton.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event e) {
+						doSave(new NullProgressMonitor());
+					}
+				});
+				return saveButton;
+			}
+		};
+		toolBarManager.add(submitButtonContribution);
 	}
 
 }

@@ -55,6 +55,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.TaskEditorScheduleAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ToggleTaskActivationAction;
 import org.eclipse.mylyn.internal.tasks.ui.editors.Messages;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionContributor;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskPlanningEditor;
 import org.eclipse.mylyn.internal.tasks.ui.util.PlatformUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDragSourceListener;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
@@ -834,6 +835,9 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		for (IFormPage page : getPages()) {
 			if (page instanceof AbstractTaskEditorPage) {
 				AbstractTaskEditorPage taskEditorPage = (AbstractTaskEditorPage) page;
+				taskEditorPage.fillLeftHeaderToolBar(leftToolBarManager);
+			} else if (page instanceof TaskPlanningEditor) {
+				TaskPlanningEditor taskEditorPage = (TaskPlanningEditor) page;
 				taskEditorPage.fillLeftHeaderToolBar(leftToolBarManager);
 			}
 		}

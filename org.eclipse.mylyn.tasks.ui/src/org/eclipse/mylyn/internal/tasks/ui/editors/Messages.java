@@ -73,7 +73,7 @@ public class Messages extends NLS {
 
 	public static String PersonalPart_Personal_Planning;
 
-	public static String PlanningPageFactory_Planning;
+	public static String PlanningPageFactory_Private;
 
 	public static String RichTextAttributeEditor_Viewer_Source;
 
@@ -194,6 +194,8 @@ public class Messages extends NLS {
 	public static String TaskPlanningEditor_Planning;
 
 	public static String TaskPlanningEditor_Retrieve_task_description_from_URL;
+
+	public static String TaskPlanningEditor_Save;
 
 	public static String TaskPlanningEditor_Status;
 
