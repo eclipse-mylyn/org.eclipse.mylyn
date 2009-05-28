@@ -161,13 +161,15 @@ public class SummaryPart extends AbstractLocalEditorPart {
 		GridDataFactory.fillDefaults().hint(0, 10).grab(true, false).applyTo(spacer);
 
 		createLabel(headerComposite, toolkit, Messages.TaskPlanningEditor_Created, 0);
-		creationDateText = toolkit.createText(headerComposite, getDateString(getTask().getCreationDate()), SWT.FLAT
-				| SWT.READ_ONLY);
+		// do not use toolkit.createText() to avoid border on Windows
+		creationDateText = new Text(headerComposite, SWT.FLAT | SWT.READ_ONLY);
+		toolkit.adapt(creationDateText, false, false);
 		creationDateText.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
 
 		createLabel(headerComposite, toolkit, Messages.TaskPlanningEditor_Completed, EditorUtil.HEADER_COLUMN_MARGIN);
-		completionDateText = toolkit.createText(headerComposite, getDateString(getTask().getCompletionDate()), SWT.FLAT
-				| SWT.READ_ONLY);
+		// do not use toolkit.createText() to avoid border on Windows
+		completionDateText = new Text(headerComposite, SWT.FLAT | SWT.READ_ONLY);
+		toolkit.adapt(completionDateText, false, false);
 		completionDateText.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
 
 		// ensure layout does not wrap
