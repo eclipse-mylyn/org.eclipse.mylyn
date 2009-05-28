@@ -43,10 +43,7 @@ public class BugzillaTaskEditorPageFactory extends AbstractTaskEditorPageFactory
 
 	@Override
 	public String[] getConflictingIds(TaskEditorInput input) {
-		if (!input.getTask().getConnectorKind().equals(BugzillaCorePlugin.CONNECTOR_KIND)) {
-			return new String[] { ITasksUiConstants.ID_PAGE_PLANNING };
-		}
-		return null;
+		return new String[] { ITasksUiConstants.ID_PAGE_PLANNING };
 	}
 
 	@Override

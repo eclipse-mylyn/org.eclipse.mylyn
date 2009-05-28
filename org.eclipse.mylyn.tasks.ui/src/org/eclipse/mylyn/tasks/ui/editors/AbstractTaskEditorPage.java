@@ -404,6 +404,8 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 	private boolean needsSubmitButton;
 
+	private boolean needsPrivateSection;
+
 	private FocusTracker focusTracker;
 
 	/**
@@ -689,12 +691,14 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 			}
 		}.setPath(PATH_COMMENTS));
 
-		descriptors.add(new TaskEditorPartDescriptor(ID_PART_PLANNING) {
-			@Override
-			public AbstractTaskEditorPart createPart() {
-				return new TaskEditorPlanningPart();
-			}
-		}.setPath(PATH_PLANNING));
+		if (needsPrivateSection() || taskData.isNew()) {
+			descriptors.add(new TaskEditorPartDescriptor(ID_PART_PLANNING) {
+				@Override
+				public AbstractTaskEditorPart createPart() {
+					return new TaskEditorPlanningPart();
+				}
+			}.setPath(PATH_PLANNING));
+		}
 
 		descriptors.add(new TaskEditorPartDescriptor(ID_PART_ACTIONS) {
 			@Override
@@ -1467,6 +1471,26 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 	 */
 	public void setNeedsSubmitButton(boolean needsSubmitButton) {
 		this.needsSubmitButton = needsSubmitButton;
+	}
+
+	/**
+	 * Returns true, if the page provides a submit button.
+	 * 
+	 * @since 3.2
+	 * @see #setNeedsPrivateSection(boolean)
+	 */
+	public boolean needsPrivateSection() {
+		return needsPrivateSection;
+	}
+
+	/**
+	 * Specifies that the page should provide the private section. This flag is not set by default.
+	 * 
+	 * @since 3.2
+	 * @see #needsPrivateSection()
+	 */
+	public void setNeedsPrivateSection(boolean needsPrivateSection) {
+		this.needsPrivateSection = needsPrivateSection;
 	}
 
 	/**
