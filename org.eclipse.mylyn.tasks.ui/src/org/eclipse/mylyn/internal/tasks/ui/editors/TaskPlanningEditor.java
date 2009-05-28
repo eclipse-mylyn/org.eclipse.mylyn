@@ -44,7 +44,6 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskFormPage;
@@ -58,6 +57,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IPropertyListener;
+import org.eclipse.ui.IWorkbenchPartConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IFormPart;
 import org.eclipse.ui.forms.IManagedForm;
@@ -79,6 +80,15 @@ public class TaskPlanningEditor extends TaskFormPage {
 	private AbstractTask task;
 
 	private Button saveButton;
+
+	private final IPropertyListener dirtyStateListener = new IPropertyListener() {
+
+		public void propertyChanged(Object source, int propId) {
+			if (propId == IWorkbenchPartConstants.PROP_DIRTY && saveButton != null) {
+				saveButton.setEnabled(getEditor().isDirty());
+			}
+		}
+	};
 
 	private final ITaskListChangeListener TASK_LIST_LISTENER = new TaskListChangeAdapter() {
 		@Override
@@ -185,6 +195,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	@Override
 	public void dispose() {
+		getEditor().removePropertyListener(dirtyStateListener);
 		if (timingListener != null) {
 			TasksUiPlugin.getTaskActivityManager().removeActivityListener(timingListener);
 		}
@@ -260,22 +271,30 @@ public class TaskPlanningEditor extends TaskFormPage {
 	}
 
 	public void fillLeftHeaderToolBar(IToolBarManager toolBarManager) {
-		ControlContribution submitButtonContribution = new ControlContribution("org.eclipse.mylyn.tasks.toolbars.save") { //$NON-NLS-1$
-			@Override
-			protected Control createControl(Composite parent) {
-				saveButton = new Button(parent, SWT.FLAT);
-				saveButton.setText(Messages.TaskPlanningEditor_Save);
-				saveButton.setImage(CommonImages.getImage(TasksUiImages.REPOSITORY_SUBMIT));
-				saveButton.setBackground(null);
-				saveButton.addListener(SWT.Selection, new Listener() {
-					public void handleEvent(Event e) {
-						doSave(new NullProgressMonitor());
-					}
-				});
-				return saveButton;
-			}
-		};
-		toolBarManager.add(submitButtonContribution);
+		if (getEditorInput() instanceof TaskEditorInput
+				&& ((TaskEditorInput) getEditorInput()).getTask() instanceof LocalTask) {
+			ControlContribution submitButtonContribution = new ControlContribution(
+					"org.eclipse.mylyn.tasks.toolbars.save") { //$NON-NLS-1$
+
+				@Override
+				protected Control createControl(Composite parent) {
+					saveButton = new Button(parent, SWT.FLAT);
+					saveButton.setText(Messages.TaskPlanningEditor_Save);
+					saveButton.setImage(CommonImages.getImage(CommonImages.SAVE));
+					saveButton.setBackground(null);
+					saveButton.addListener(SWT.Selection, new Listener() {
+						public void handleEvent(Event e) {
+							doSave(new NullProgressMonitor());
+						}
+					});
+					saveButton.setEnabled(getEditor().isDirty());
+
+					return saveButton;
+				}
+			};
+			getEditor().addPropertyListener(dirtyStateListener);
+			toolBarManager.add(submitButtonContribution);
+		}
 	}
 
 	@Override
