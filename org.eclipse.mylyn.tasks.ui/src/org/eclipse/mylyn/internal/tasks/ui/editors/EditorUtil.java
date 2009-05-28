@@ -382,7 +382,7 @@ public class EditorUtil {
 			public void paintControl(PaintEvent e) {
 				e.gc.setForeground(toolkit.getColors().getBorderColor());
 				Point size = roundedBorder.getSize();
-				e.gc.drawRoundRectangle(0, 3, size.x - 1, size.y - 7, 5, 5);
+				e.gc.drawRoundRectangle(0, 2, size.x - 1, size.y - 8, 5, 5);
 			}
 		});
 		roundedBorder.setLayout(GridLayoutFactory.fillDefaults().margins(4, 6).create());

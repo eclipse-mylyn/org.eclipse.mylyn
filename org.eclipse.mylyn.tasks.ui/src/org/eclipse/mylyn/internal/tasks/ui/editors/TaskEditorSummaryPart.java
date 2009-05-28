@@ -100,7 +100,7 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 			//can't be added via a factory because these attributes already have a default editor?
 			AbstractAttributeEditor editor = new PriorityAttributeEditor(getModel(), attribute);
 			if (editor != null) {
-				editor.setDecorationEnabled(true);
+				editor.setDecorationEnabled(false);
 				if (forceReadOnly) {
 					editor.setReadOnly(true);
 				}
