@@ -171,6 +171,11 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor BANNER_WORKING_SET = create(WIZBAN, "workset_wiz.png"); //$NON-NLS-1$
 
+	/**
+	 * @since 3.2
+	 */
+	public static final ImageDescriptor BANNER_REPORT_BUG = create(WIZBAN, "bug-wizard.gif"); //$NON-NLS-1$
+
 	public static Image getImageForPriority(PriorityLevel priorityLevel) {
 		if (priorityLevel == null) {
 			return null;

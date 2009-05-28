@@ -13,7 +13,7 @@
 			<action
 		         class="org.eclipse.mylyn.internal.tasks.bugs.actions.NewTaskFromErrorAction"
 		         enablesFor="1"
-		         icon="icons/etool16/task-repository-new.gif"
+		         icon="icons/etool16/task-bug-new.gif"
 		         menubarPath="org.eclipse.pde.runtime.LogView"
 		         id="org.eclipse.mylyn.tasklist.actions.newTaskFromErrorLog"
 		         label="%NewTaskFromErrorAction.label">
@@ -28,7 +28,7 @@
             visible="true"> 
         <action
               class="org.eclipse.mylyn.internal.tasks.bugs.actions.ReportBugAction"
-              icon="icons/etool16/report-bug.gif"
+              icon="icons/etool16/task-bug-new.gif"
               id="org.eclipse.mylyn.tasks.ui.bug.report"
               label="%ReportBugAction.label"
               menubarPath="help/helpStart"

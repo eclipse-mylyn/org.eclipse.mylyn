@@ -19,6 +19,7 @@ import org.eclipse.mylyn.internal.tasks.bugs.SupportRequest;
 import org.eclipse.mylyn.internal.tasks.bugs.TaskErrorReporter;
 import org.eclipse.mylyn.internal.tasks.core.ITaskRepositoryFilter;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewTaskPage;
+import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 
 /**
  * @author Steffen Pingel
@@ -40,6 +41,7 @@ public class ReportErrorWizard extends Wizard {
 		this.status = status;
 		this.request = taskErrorReporter.preProcess(status, null);
 		setWindowTitle(Messages.ReportErrorWizard_Report_as_Bug);
+		setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPORT_BUG);
 	}
 
 	@Override

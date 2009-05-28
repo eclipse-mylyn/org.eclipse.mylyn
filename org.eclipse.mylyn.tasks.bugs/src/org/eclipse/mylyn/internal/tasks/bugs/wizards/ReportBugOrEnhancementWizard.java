@@ -79,7 +79,7 @@ public class ReportBugOrEnhancementWizard extends Wizard {
 		setForcePreviousAndNextButtons(true);
 		setNeedsProgressMonitor(false);
 		setWindowTitle(Messages.ReportBugOrEnhancementWizard_Report_Bug_or_Enhancement);
-		setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
+		setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPORT_BUG);
 	}
 
 	@Override
