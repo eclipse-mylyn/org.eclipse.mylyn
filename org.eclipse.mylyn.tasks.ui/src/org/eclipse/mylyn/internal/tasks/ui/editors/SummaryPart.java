@@ -55,6 +55,8 @@ public class SummaryPart extends AbstractLocalEditorPart {
 
 	private PriorityEditor priorityEditor;
 
+	private boolean initialized;
+
 	public SummaryPart() {
 		super(Messages.SummaryPart_Section_Title);
 	}
@@ -88,10 +90,6 @@ public class SummaryPart extends AbstractLocalEditorPart {
 		});
 		summaryEditor.getViewer().getControl().setMenu(composite.getMenu());
 		EditorUtil.setHeaderFontSizeAndStyle(summaryEditor.getControl());
-
-		if (LocalRepositoryConnector.DEFAULT_SUMMARY.equals(summaryEditor.getText())) {
-			summaryEditor.getViewer().setSelectedRange(0, summaryEditor.getText().length());
-		}
 	}
 
 	@Override
@@ -203,6 +201,12 @@ public class SummaryPart extends AbstractLocalEditorPart {
 		}
 		if (!summaryChanged) {
 			summaryEditor.setText(getTask().getSummary());
+			if (!initialized) {
+				initialized = true;
+				if (LocalRepositoryConnector.DEFAULT_SUMMARY.equals(getTask().getSummary())) {
+					summaryEditor.getViewer().setSelectedRange(0, summaryEditor.getText().length());
+				}
+			}
 		}
 		creationDateText.setText(getDateString(getTask().getCreationDate()));
 		completionDateText.setText(getDateString(getTask().getCompletionDate()));
@@ -210,6 +214,7 @@ public class SummaryPart extends AbstractLocalEditorPart {
 		if (summaryChanged) {
 			markDirty();
 		}
+		((Composite) getControl()).layout();
 	}
 
 	@Override
