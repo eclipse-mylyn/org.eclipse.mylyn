@@ -214,7 +214,8 @@ public class SummaryPart extends AbstractLocalEditorPart {
 		if (summaryChanged) {
 			markDirty();
 		}
-		((Composite) getControl()).layout();
+		// re-layout date fields
+		headerComposite.layout(true);
 	}
 
 	@Override
