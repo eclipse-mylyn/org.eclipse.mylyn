@@ -126,9 +126,13 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 		summaryEditor = createAttributeEditor(getTaskData().getRoot().getMappedAttribute(TaskAttribute.SUMMARY));
 		if (summaryEditor != null) {
 			// create composite to hold rounded border
-			final Composite roundedBorder = EditorUtil.createBorder(composite, toolkit);
-			summaryEditor.createControl(roundedBorder, toolkit);
-			EditorUtil.setHeaderFontSizeAndStyle(summaryEditor.getControl());
+			if (summaryEditor instanceof RichTextAttributeEditor) {
+				Composite roundedBorder = EditorUtil.createBorder(composite, toolkit);
+				summaryEditor.createControl(roundedBorder, toolkit);
+				EditorUtil.setHeaderFontSizeAndStyle(summaryEditor.getControl());
+			} else {
+				summaryEditor.createControl(composite, toolkit);
+			}
 			getTaskEditorPage().getAttributeEditorToolkit().adapt(summaryEditor);
 		}
 	}
