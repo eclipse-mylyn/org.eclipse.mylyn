@@ -61,6 +61,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.DeleteTaskEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewSubTaskAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
+import org.eclipse.mylyn.internal.tasks.ui.editors.FocusTracker;
 import org.eclipse.mylyn.internal.tasks.ui.editors.Messages;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskAttachmentDropListener;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionContributor;
@@ -100,41 +101,27 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CCombo;
-import org.eclipse.swt.custom.CTabFolder;
-import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.events.FocusAdapter;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.ScrollBar;
-import org.eclipse.swt.widgets.Spinner;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.forms.FormColors;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.IFormPart;
@@ -144,7 +131,6 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -378,8 +364,6 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 	private boolean busy;
 
-	private Control lastFocusControl;
-
 	private ISelection lastSelection;
 
 	private TaskDataModel model;
@@ -420,6 +404,8 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 	private boolean needsSubmitButton;
 
+	private FocusTracker focusTracker;
+
 	/**
 	 * @since 3.1
 	 */
@@ -443,23 +429,6 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 	@Override
 	public TaskEditor getEditor() {
 		return (TaskEditor) super.getEditor();
-	}
-
-	private void addFocusListener(Composite composite, FocusListener listener) {
-		Control[] children = composite.getChildren();
-		for (Control control : children) {
-			if ((control instanceof Text) || (control instanceof Button) || (control instanceof Combo)
-					|| (control instanceof CCombo) || (control instanceof Tree) || (control instanceof Table)
-					|| (control instanceof Spinner) || (control instanceof Link)
-					|| (control instanceof org.eclipse.swt.widgets.List) || (control instanceof TabFolder)
-					|| (control instanceof CTabFolder) || (control instanceof Hyperlink)
-					|| (control instanceof FilteredTree) || (control instanceof StyledText)) {
-				control.addFocusListener(listener);
-			}
-			if (control instanceof Composite) {
-				addFocusListener((Composite) control, listener);
-			}
-		}
 	}
 
 	public void addSelectionChangedListener(ISelectionChangedListener listener) {
@@ -646,13 +615,8 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 		createParts();
 
-		FocusListener listener = new FocusAdapter() {
-			@Override
-			public void focusGained(FocusEvent e) {
-				lastFocusControl = (Control) e.widget;
-			}
-		};
-		addFocusListener(editorComposite, listener);
+		focusTracker = new FocusTracker();
+		focusTracker.track(editorComposite);
 //		AbstractTaskEditorPart summaryPart = getPart(ID_PART_SUMMARY);
 //		if (summaryPart != null) {
 //			lastFocusControl = summaryPart.getControl();
@@ -1250,7 +1214,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 					for (Control control : editorComposite.getChildren()) {
 						control.dispose();
 					}
-					lastFocusControl = null;
+					focusTracker.reset();
 					lastSelection = null;
 					for (IFormPart part : getManagedForm().getParts()) {
 						part.dispose();
@@ -1352,8 +1316,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 	@Override
 	public void setFocus() {
-		if (lastFocusControl != null && !lastFocusControl.isDisposed()) {
-			lastFocusControl.setFocus();
+		if (focusTracker.setFocus()) {
 			return;
 		} else {
 			IFormPart[] parts = getManagedForm().getParts();

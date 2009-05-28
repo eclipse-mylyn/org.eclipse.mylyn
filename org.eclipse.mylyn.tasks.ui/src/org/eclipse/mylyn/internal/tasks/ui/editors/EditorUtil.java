@@ -382,12 +382,12 @@ public class EditorUtil {
 			public void paintControl(PaintEvent e) {
 				e.gc.setForeground(toolkit.getColors().getBorderColor());
 				Point size = roundedBorder.getSize();
-				e.gc.drawRoundRectangle(0, 2, size.x - 1, size.y - 8, 5, 5);
+				e.gc.drawRoundRectangle(0, 2, size.x - 1, size.y - 5, 5, 5);
 			}
 		});
 		roundedBorder.setLayout(GridLayoutFactory.fillDefaults().margins(4, 6).create());
-		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).hint(EditorUtil.MAXIMUM_WIDTH, 30).grab(true,
-				false).applyTo(roundedBorder);
+		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).hint(EditorUtil.MAXIMUM_WIDTH, SWT.DEFAULT).grab(
+				true, false).applyTo(roundedBorder);
 		return roundedBorder;
 	}
 

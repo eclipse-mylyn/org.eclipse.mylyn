@@ -109,6 +109,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private FormToolkit toolkit;
 
+	private FocusTracker focusTracker;
+
 	public TaskPlanningEditor(TaskEditor editor) {
 		super(editor, ITasksUiConstants.ID_PAGE_PLANNING, Messages.TaskPlanningEditor_Planning);
 		TasksUiInternal.getTaskList().addChangeListener(TASK_LIST_LISTENER);
@@ -178,6 +180,9 @@ public class TaskPlanningEditor extends TaskFormPage {
 		planningPart.createControl(editorComposite, toolkit);
 		planningPart.getSection().setLayoutData(new GridData(GridData.FILL_BOTH));
 		getManagedForm().addPart(planningPart);
+
+		focusTracker = new FocusTracker();
+		focusTracker.track(editorComposite);
 	}
 
 	@Override
@@ -273,6 +278,20 @@ public class TaskPlanningEditor extends TaskFormPage {
 			}
 		};
 		toolBarManager.add(submitButtonContribution);
+	}
+
+	@Override
+	public void setFocus() {
+		if (focusTracker.setFocus()) {
+			return;
+		} else {
+			IFormPart[] parts = getManagedForm().getParts();
+			if (parts.length > 0) {
+				parts[0].setFocus();
+				return;
+			}
+		}
+		super.setFocus();
 	}
 
 }
