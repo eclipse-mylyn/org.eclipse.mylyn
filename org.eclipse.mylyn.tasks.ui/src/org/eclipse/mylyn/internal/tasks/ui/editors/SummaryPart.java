@@ -102,7 +102,7 @@ public class SummaryPart extends AbstractLocalEditorPart {
 		GridLayout layout = new GridLayout(2, false);
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
-		//layout.marginBottom = 5;
+		layout.verticalSpacing = 3;
 		composite.setLayout(layout);
 
 		priorityEditor = new PriorityEditor() {
