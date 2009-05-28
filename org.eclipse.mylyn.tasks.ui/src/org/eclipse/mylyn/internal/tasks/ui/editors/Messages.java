@@ -165,8 +165,6 @@ public class Messages extends NLS {
 
 	public static String TaskEditorPlanningPart_Estimated;
 
-	public static String TaskEditorPlanningPart_Personal_Planning;
-
 	public static String TaskEditorPlanningPart_Reset;
 
 	public static String TaskEditorPlanningPart_Scheduled;
@@ -181,51 +179,23 @@ public class Messages extends NLS {
 
 	public static String TaskEditorSummaryPart_Summary;
 
-	public static String TaskPlanningEditor_0_seconds;
-
-	public static String TaskPlanningEditor_Active;
-
 	public static String TaskPlanningEditor_Attributes;
-
-	public static String TaskPlanningEditor_Clear;
 
 	public static String TaskPlanningEditor_Complete;
 
 	public static String TaskPlanningEditor_Completed;
 
-	public static String TaskPlanningEditor_Confirm_Activity_Time_Deletion;
-
 	public static String TaskPlanningEditor_Created;
-
-	public static String TaskPlanningEditor_Do_you_wish_to_reset_your_activity_time_on_this_task_;
-
-	public static String TaskPlanningEditor_Due;
-
-	public static String TaskPlanningEditor_Estimated_hours;
 
 	public static String TaskPlanningEditor_Incomplete;
 
-	public static String TaskPlanningEditor__info_editor_for_task_;
-
 	public static String TaskPlanningEditor_Notes;
-
-	public static String TaskPlanningEditor_Open_with_Web_Browser;
-
-	public static String TaskPlanningEditor_Personal_Planning;
 
 	public static String TaskPlanningEditor_Planning;
 
-	public static String TaskPlanningEditor_Priority;
-
-	public static String TaskPlanningEditor_Reset;
-
 	public static String TaskPlanningEditor_Retrieve_task_description_from_URL;
 
-	public static String TaskPlanningEditor_Scheduled_for;
-
 	public static String TaskPlanningEditor_Status;
-
-	public static String TaskPlanningEditor_Time_working_on_this_task;
 
 	public static String TaskPlanningEditor_URL;
 
@@ -262,6 +232,8 @@ public class Messages extends NLS {
 	public static String AbstractTaskEditorPage_Unable_to_submit_at_this_time;
 
 	public static String AttributeEditorToolkit_Content_Assist_Available__X_;
+
+	public static String SummaryPart_Section_Title;
 
 	public static String TaskEditor_Task_;
 

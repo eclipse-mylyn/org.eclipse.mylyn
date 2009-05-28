@@ -23,7 +23,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -31,8 +31,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.internal.EditorAreaHelper;
-import org.eclipse.ui.internal.WorkbenchPage;
 
 /**
  * @author Steffen Pingel
@@ -117,40 +115,10 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 		if (editor.isReadOnly()) {
 			composite.setLayout(new FillWidthLayout(EditorUtil.getLayoutAdvisor(getTaskEditorPage()), 0, 0, 0, 3));
 		} else {
-			final GridData gd = new GridData();
-			// wrap text at this margin, see comment below
-			int width = getEditorWidth();
-			// the goal is to make the text viewer as big as the text so it does not require scrolling when first drawn 
-			// on screen
-			Point size = editor.getViewer().getTextWidget().computeSize(width, SWT.DEFAULT, true);
-			gd.widthHint = EditorUtil.MAXIMUM_WIDTH;
-			gd.minimumWidth = EditorUtil.MAXIMUM_WIDTH;
-			gd.horizontalAlignment = SWT.FILL;
-			gd.grabExcessHorizontalSpace = true;
-			// limit height to be avoid dynamic resizing of the text widget: 
-			// MAXIMUM_HEIGHT < height < MAXIMUM_HEIGHT * 3
-			//gd.minimumHeight = AbstractAttributeEditor.MAXIMUM_HEIGHT;
-			gd.heightHint = Math.min(Math.max(EditorUtil.MAXIMUM_HEIGHT, size.y), EditorUtil.MAXIMUM_HEIGHT * 3);
-			if (getExpandVertically()) {
-				gd.verticalAlignment = SWT.FILL;
-				gd.grabExcessVerticalSpace = true;
-			}
-			editor.getControl().setLayoutData(gd);
+			StyledText textWidget = editor.getViewer().getTextWidget();
+			editor.getControl().setLayoutData(
+					EditorUtil.getTextControlLayoutData(getTaskEditorPage(), textWidget, getExpandVertically()));
 			editor.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-			// shrink the text control if the editor width is reduced, otherwise the text field will always keep it's original 
-			// width and will cause the editor to have a horizonal scroll bar 
-//				composite.addControlListener(new ControlAdapter() {
-//					@Override
-//					public void controlResized(ControlEvent e) {
-//						int width = sectionComposite.getSize().x;
-//						Point size = descriptionTextViewer.getTextWidget().computeSize(width, SWT.DEFAULT, true);
-//						// limit width to parent widget
-//						gd.widthHint = width;
-//						// limit height to avoid dynamic resizing of the text widget
-//						gd.heightHint = Math.min(Math.max(DESCRIPTION_HEIGHT, size.y), DESCRIPTION_HEIGHT * 4);
-//						sectionComposite.layout();
-//					}
-//				});
 		}
 
 		getEditor().getControl().setData(EditorUtil.KEY_TOGGLE_TO_MAXIMIZE_ACTION, getMaximizePartAction());
@@ -164,24 +132,6 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 		toolkit.paintBordersFor(composite);
 		section.setClient(composite);
 		setSection(toolkit, section);
-	}
-
-	private int getEditorWidth() {
-		int widthHint = 0;
-		if (getManagedForm() != null && getManagedForm().getForm() != null) {
-			widthHint = getManagedForm().getForm().getClientArea().width - 90;
-		}
-		if (widthHint <= 0 && getTaskEditorPage().getEditor().getEditorSite() != null
-				&& getTaskEditorPage().getEditor().getEditorSite().getPage() != null) {
-			EditorAreaHelper editorManager = ((WorkbenchPage) getTaskEditorPage().getEditor().getEditorSite().getPage()).getEditorPresentation();
-			if (editorManager != null && editorManager.getLayoutPart() != null) {
-				widthHint = editorManager.getLayoutPart().getControl().getBounds().width - 90;
-			}
-		}
-		if (widthHint <= 0) {
-			widthHint = EditorUtil.MAXIMUM_WIDTH;
-		}
-		return widthHint;
 	}
 
 	public TaskAttribute getAttribute() {

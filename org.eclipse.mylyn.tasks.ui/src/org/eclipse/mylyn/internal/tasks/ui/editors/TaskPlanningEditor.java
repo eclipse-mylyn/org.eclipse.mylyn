@@ -13,7 +13,6 @@
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import java.util.Collection;
-import java.util.Date;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -24,103 +23,55 @@ import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.text.Document;
-import org.eclipse.jface.text.ITextListener;
-import org.eclipse.jface.text.TextEvent;
-import org.eclipse.jface.text.TextViewer;
-import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
-import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.DeleteTaskEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewSubTaskAction;
-import org.eclipse.mylyn.internal.tasks.ui.util.AbstractRetrieveTitleFromUrlJob;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.mylyn.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskFormPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CCombo;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.forms.IFormColors;
+import org.eclipse.ui.forms.IFormPart;
 import org.eclipse.ui.forms.IManagedForm;
-import org.eclipse.ui.forms.events.HyperlinkEvent;
-import org.eclipse.ui.forms.events.IHyperlinkListener;
-import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.ImageHyperlink;
-import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.handlers.IHandlerService;
-import org.eclipse.ui.themes.IThemeManager;
-
-import com.ibm.icu.text.DateFormat;
 
 /**
  * @author Mik Kersten
  * @author Rob Elves
+ * @author Shawn Minto
+ * @author Steffen Pingel
  */
 public class TaskPlanningEditor extends TaskFormPage {
 
-	private static final int WIDTH_SUMMARY = 500;
+	private Composite editorComposite;
 
-	private static final int NOTES_MINSIZE = 100;
+	private TaskRepository repository;
 
 	private AbstractTask task;
 
-	private Composite editorComposite;
-
-	private Text endDate;
-
-	private TextViewer summaryEditor;
-
-	private Text issueReportURL;
-
-	private CCombo priorityCombo;
-
-	private CCombo statusCombo;
-
-	private ImageHyperlink getDescLink;
-
-	private ImageHyperlink openUrlLink;
-
-	private final TaskEditor parentEditor;
-
 	private final ITaskListChangeListener TASK_LIST_LISTENER = new TaskListChangeAdapter() {
-
 		@Override
 		public void containersChanged(Set<TaskContainerDelta> containers) {
 			for (TaskContainerDelta taskContainerDelta : containers) {
@@ -131,9 +82,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 						if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {
 							PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 								public void run() {
-									if (summaryEditor != null && summaryEditor.getTextWidget() != null) {
-										updateTaskData(updateTask);
-									}
+									refresh();
 								}
 							});
 						}
@@ -145,36 +94,102 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	};
 
-	private FormToolkit toolkit;
+	private CommonTextSupport textSupport;
 
 	private ITaskActivityListener timingListener;
 
-	private boolean isDirty;
-
-	private CommonTextSupport textSupport;
-
-	private boolean summaryChanged;
-
-	private TaskRepository repository;
-
-	private PlanningPart planningPart;
+	private FormToolkit toolkit;
 
 	public TaskPlanningEditor(TaskEditor editor) {
 		super(editor, ITasksUiConstants.ID_PAGE_PLANNING, Messages.TaskPlanningEditor_Planning);
-		this.parentEditor = editor;
 		TasksUiInternal.getTaskList().addChangeListener(TASK_LIST_LISTENER);
 	}
 
-	@Override
-	public TaskEditor getEditor() {
-		return (TaskEditor) super.getEditor();
+	private void createContributions(final Composite editorComposite) {
+		Collection<AbstractLocalEditorPart> localEditorContributions = TaskEditorContributionExtensionReader.getLocalEditorContributions();
+		for (final AbstractLocalEditorPart part : localEditorContributions) {
+			SafeRunner.run(new ISafeRunnable() {
+				public void handleException(Throwable e) {
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+							"Error creating task editor contribution: \"" + part.getSectionName() + "\"", e)); //$NON-NLS-1$ //$NON-NLS-2$
+				}
+
+				public void run() throws Exception {
+					initializePart(editorComposite, part);
+				}
+
+			});
+		}
 	}
 
 	@Override
-	public void init(IEditorSite site, IEditorInput input) {
-		super.init(site, input);
-		this.textSupport = new CommonTextSupport((IHandlerService) getSite().getService(IHandlerService.class));
-		this.textSupport.setSelectionChangedListener((TaskEditorActionContributor) getEditorSite().getActionBarContributor());
+	protected void createFormContent(IManagedForm managedForm) {
+		super.createFormContent(managedForm);
+
+		TaskEditorInput taskEditorInput = (TaskEditorInput) getEditorInput();
+		task = (AbstractTask) taskEditorInput.getTask();
+		repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(), task.getRepositoryUrl());
+
+		toolkit = managedForm.getToolkit();
+
+		editorComposite = managedForm.getForm().getBody();
+		GridLayout editorLayout = new GridLayout();
+		editorLayout.verticalSpacing = 3;
+		editorComposite.setLayout(editorLayout);
+
+		if (task instanceof LocalTask) {
+			SummaryPart part = new SummaryPart();
+			part.setTextSupport(textSupport);
+			initializePart(editorComposite, part);
+			initializePart(editorComposite, new AttributePart());
+			// currently there is only one location for extensions
+			createContributions(editorComposite);
+		}
+
+		PlanningPart planningPart = new PlanningPart(SWT.NONE, true);
+		// disable due date picker if it's a repository due date
+		boolean needsDueDate = true;
+		if (task != null) {
+			try {
+				TaskData taskData = TasksUi.getTaskDataManager().getTaskData(task);
+				if (taskData != null) {
+					AbstractRepositoryConnector connector = TasksUi.getRepositoryConnector(taskData.getConnectorKind());
+					TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(
+							taskData.getConnectorKind(), taskData.getRepositoryUrl());
+					if (connector != null && taskRepository != null
+							&& connector.hasRepositoryDueDate(taskRepository, task, taskData)) {
+						needsDueDate = false;
+					}
+				}
+			} catch (CoreException e) {
+				// ignore
+			}
+		}
+		planningPart.initialize(getManagedForm(), repository, task, needsDueDate, this, textSupport);
+		planningPart.createControl(editorComposite, toolkit);
+		planningPart.getSection().setLayoutData(new GridData(GridData.FILL_BOTH));
+		getManagedForm().addPart(planningPart);
+	}
+
+	@Override
+	public void dispose() {
+		if (timingListener != null) {
+			TasksUiPlugin.getTaskActivityManager().removeActivityListener(timingListener);
+		}
+		TasksUiInternal.getTaskList().removeChangeListener(TASK_LIST_LISTENER);
+		super.dispose();
+	}
+
+	@Override
+	public void doSave(IProgressMonitor monitor) {
+		super.doSave(monitor);
+		// update task title
+		TasksUiInternal.getTaskList().notifyElementChanged(task);
+	}
+
+	@Override
+	public void doSaveAs() {
+		// don't support saving as
 	}
 
 	/**
@@ -195,72 +210,24 @@ public class TaskPlanningEditor extends TaskFormPage {
 		}
 	}
 
-	/** public for testing */
-	public void updateTaskData(final AbstractTask updateTask) {
-		if (summaryEditor == null) {
-			return;
-		}
-
-		if (!summaryEditor.getTextWidget().isDisposed()) {
-			if (!summaryChanged) {
-				summaryEditor.getTextWidget().setText(updateTask.getSummary());
-			}
-			if (parentEditor != null) {
-				parentEditor.updateHeaderToolBar();
-			}
-		}
-
-		if (!priorityCombo.isDisposed() && updateTask != null) {
-			PriorityLevel level = PriorityLevel.fromString(updateTask.getPriority());
-			if (level != null) {
-				int prioritySelectionIndex = priorityCombo.indexOf(level.getDescription());
-				priorityCombo.select(prioritySelectionIndex);
-			}
-		}
-		if (!statusCombo.isDisposed()) {
-			if (task.isCompleted()) {
-				statusCombo.select(0);
-			} else {
-				statusCombo.select(1);
-			}
-		}
-		if ((updateTask instanceof LocalTask) && !endDate.isDisposed()) {
-			endDate.setText(getTaskDateString(updateTask));
-		}
+	@Override
+	public TaskEditor getEditor() {
+		return (TaskEditor) super.getEditor();
 	}
 
 	@Override
-	public void doSave(IProgressMonitor monitor) {
-		if (task instanceof LocalTask) {
-			String label = summaryEditor.getTextWidget().getText();
-			task.setSummary(label);
-
-			// TODO: refactor mutation into TaskList?
-			task.setUrl(issueReportURL.getText());
-			String priorityDescription = priorityCombo.getItem(priorityCombo.getSelectionIndex());
-			PriorityLevel level = PriorityLevel.fromDescription(priorityDescription);
-			if (level != null) {
-				task.setPriority(level.toString());
-			}
-			if (!task.isCompleted() && statusCombo.getSelectionIndex() == 0) {
-				task.setCompletionDate(new Date());
-			} else {
-				task.setCompletionDate(null);
-			}
-			TasksUiInternal.getTaskList().notifyElementChanged(task);
-		}
-		super.doSave(monitor);
-		markDirty(false);
+	public void init(IEditorSite site, IEditorInput input) {
+		super.init(site, input);
+		this.textSupport = new CommonTextSupport((IHandlerService) getSite().getService(IHandlerService.class));
+		this.textSupport.setSelectionChangedListener((TaskEditorActionContributor) getEditorSite().getActionBarContributor());
 	}
 
-	@Override
-	public void doSaveAs() {
-		// don't support saving as
-	}
-
-	@Override
-	public boolean isDirty() {
-		return isDirty || super.isDirty();
+	private void initializePart(final Composite editorComposite, final AbstractLocalEditorPart part) {
+		part.initialize(getManagedForm(), repository, task);
+		Control control = part.createControl(editorComposite, toolkit);
+		part.setControl(control);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(control);
+		getManagedForm().addPart(part);
 	}
 
 	@Override
@@ -268,430 +235,16 @@ public class TaskPlanningEditor extends TaskFormPage {
 		return false;
 	}
 
-	@Override
-	protected void createFormContent(IManagedForm managedForm) {
-		super.createFormContent(managedForm);
-
-		TaskEditorInput taskEditorInput = (TaskEditorInput) getEditorInput();
-		task = (AbstractTask) taskEditorInput.getTask();
-
-		if (task != null) {
-			repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(), task.getRepositoryUrl());
-		}
-
-		toolkit = managedForm.getToolkit();
-
-		editorComposite = managedForm.getForm().getBody();
-		GridLayout editorLayout = new GridLayout();
-		editorLayout.verticalSpacing = 3;
-		editorComposite.setLayout(editorLayout);
-		//editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
-		if (task instanceof LocalTask) {
-			createSummarySection(editorComposite);
-			createAttributesSection(editorComposite);
-
-			// currently there is only one location for extensions
-			createContributions(editorComposite);
-		}
-
-		planningPart = new PlanningPart(SWT.NONE, true);
-		// disable due date picker if it's a repository due date
-		boolean needsDueDate = true;
-		if (task != null) {
-			try {
-				TaskData taskData = TasksUi.getTaskDataManager().getTaskData(task);
-				if (taskData != null) {
-					AbstractRepositoryConnector connector = TasksUi.getRepositoryConnector(taskData.getConnectorKind());
-					TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(
-							taskData.getConnectorKind(), taskData.getRepositoryUrl());
-					if (connector != null && taskRepository != null
-							&& connector.hasRepositoryDueDate(taskRepository, task, taskData)) {
-						needsDueDate = false;
-					}
-				}
-			} catch (CoreException e) {
-				// ignore
+	public void refresh() {
+		getEditor().updateHeaderToolBar();
+		IFormPart[] parts = getManagedForm().getParts();
+		// refresh will not be invoked unless parts are stale
+		for (IFormPart part : parts) {
+			if (part instanceof AbstractLocalEditorPart) {
+				((AbstractLocalEditorPart) part).markStale();
 			}
 		}
-		planningPart.initialize(getManagedForm(), repository, task, needsDueDate, getEditorSite(), textSupport);
-		planningPart.createControl(editorComposite, toolkit);
-		planningPart.getSection().setLayoutData(new GridData(GridData.FILL_BOTH));
-
-		getManagedForm().addPart(planningPart);
-
-		if (summaryEditor != null && summaryEditor.getTextWidget() != null
-				&& LocalRepositoryConnector.DEFAULT_SUMMARY.equals(summaryEditor.getTextWidget().getText())) {
-			summaryEditor.setSelectedRange(0, summaryEditor.getTextWidget().getText().length());
-			summaryEditor.getTextWidget().setFocus();
-		} else if (summaryEditor != null && summaryEditor.getTextWidget() != null) {
-			summaryEditor.getTextWidget().setFocus();
-		}
+		getManagedForm().refresh();
 	}
 
-	private void createContributions(final Composite editorComposite) {
-		Collection<AbstractLocalEditorPart> localEditorContributions = TaskEditorContributionExtensionReader.getLocalEditorContributions();
-		for (final AbstractLocalEditorPart part : localEditorContributions) {
-			SafeRunner.run(new ISafeRunnable() {
-				public void handleException(Throwable e) {
-					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-							"Error creating task editor contribution: \"" + part.getSectionName() + "\"", e)); //$NON-NLS-1$ //$NON-NLS-2$
-				}
-
-				public void run() throws Exception {
-					part.initialize(getManagedForm(), repository, task);
-					Control control = part.createControl(editorComposite, toolkit);
-					part.setControl(control);
-					part.getSection().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-					getManagedForm().addPart(part);
-
-				}
-			});
-		}
-	}
-
-	@Override
-	public void setFocus() {
-		// form.setFocus();
-		if (summaryEditor != null && summaryEditor.getTextWidget() != null
-				&& !summaryEditor.getTextWidget().isDisposed()) {
-			summaryEditor.getTextWidget().setFocus();
-		}
-	}
-
-	private Text addNameValueComp(Composite parent, String label, String value, int style) {
-		Composite nameValueComp = toolkit.createComposite(parent);
-		GridLayout layout = new GridLayout(2, false);
-		layout.marginHeight = 3;
-		nameValueComp.setLayout(layout);
-		toolkit.createLabel(nameValueComp, label, SWT.NONE).setForeground(
-				toolkit.getColors().getColor(IFormColors.TITLE));
-		Text text;
-		if ((SWT.READ_ONLY & style) == SWT.READ_ONLY) {
-			text = new Text(nameValueComp, style);
-			toolkit.adapt(text, false, false);
-			text.setText(value);
-		} else {
-			text = toolkit.createText(nameValueComp, value, style);
-		}
-		return text;
-	}
-
-	private void createSummarySection(Composite parent) {
-		// Summary
-		Composite summaryComposite = toolkit.createComposite(parent);
-		GridLayout summaryLayout = new GridLayout();
-		summaryLayout.verticalSpacing = 2;
-		summaryLayout.marginHeight = 2;
-		summaryLayout.marginLeft = 5;
-		summaryComposite.setLayout(summaryLayout);
-		GridDataFactory.fillDefaults().grab(true, false).applyTo(summaryComposite);
-
-		summaryEditor = addTextEditor(repository, summaryComposite, task.getSummary(), true, SWT.FLAT | SWT.SINGLE);
-
-		GridDataFactory.fillDefaults().hint(WIDTH_SUMMARY, SWT.DEFAULT).minSize(NOTES_MINSIZE, SWT.DEFAULT).grab(true,
-				false).applyTo(summaryEditor.getTextWidget());
-		summaryEditor.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-
-		if (!(task instanceof LocalTask)) {
-			summaryEditor.setEditable(false);
-		} else {
-			summaryEditor.setEditable(true);
-			summaryEditor.addTextListener(new ITextListener() {
-				public void textChanged(TextEvent event) {
-					if (!task.getSummary().equals(summaryEditor.getTextWidget().getText())) {
-						summaryChanged = true;
-						markDirty(true);
-					}
-				}
-			});
-		}
-		toolkit.paintBordersFor(summaryComposite);
-
-		Composite statusComposite = toolkit.createComposite(parent);
-		GridLayout compLayout = new GridLayout(8, false);
-		compLayout.verticalSpacing = 0;
-		compLayout.horizontalSpacing = 5;
-		compLayout.marginHeight = 3;
-		statusComposite.setLayout(compLayout);
-		statusComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
-		Composite nameValueComp = toolkit.createComposite(statusComposite);
-		GridLayout nameValueLayout = new GridLayout(2, false);
-		nameValueLayout.marginHeight = 3;
-		nameValueComp.setLayout(nameValueLayout);
-		toolkit.createLabel(nameValueComp, Messages.TaskPlanningEditor_Priority).setForeground(
-				toolkit.getColors().getColor(IFormColors.TITLE));
-		priorityCombo = new CCombo(nameValueComp, SWT.FLAT | SWT.READ_ONLY);
-		toolkit.adapt(priorityCombo, false, false);
-		priorityCombo.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-		toolkit.paintBordersFor(nameValueComp);
-
-		// Populate the combo box with priority levels
-		for (String priorityLevel : TaskListView.PRIORITY_LEVEL_DESCRIPTIONS) {
-			priorityCombo.add(priorityLevel);
-		}
-
-		PriorityLevel level = PriorityLevel.fromString(task.getPriority());
-		if (level != null) {
-			int prioritySelectionIndex = priorityCombo.indexOf(level.getDescription());
-			priorityCombo.select(prioritySelectionIndex);
-		}
-
-		if (!(task instanceof LocalTask)) {
-			priorityCombo.setEnabled(false);
-		} else {
-			priorityCombo.addSelectionListener(new SelectionAdapter() {
-
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					TaskPlanningEditor.this.markDirty(true);
-
-				}
-			});
-		}
-
-		nameValueComp = toolkit.createComposite(statusComposite);
-		nameValueComp.setLayout(new GridLayout(2, false));
-		toolkit.createLabel(nameValueComp, Messages.TaskPlanningEditor_Status).setForeground(
-				toolkit.getColors().getColor(IFormColors.TITLE));
-		statusCombo = new CCombo(nameValueComp, SWT.FLAT | SWT.READ_ONLY);
-		toolkit.adapt(statusCombo, true, true);
-		statusCombo.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-		toolkit.paintBordersFor(nameValueComp);
-		statusCombo.add(Messages.TaskPlanningEditor_Complete);
-		statusCombo.add(Messages.TaskPlanningEditor_Incomplete);
-		if (task.isCompleted()) {
-			statusCombo.select(0);
-		} else {
-			statusCombo.select(1);
-		}
-		if (!(task instanceof LocalTask)) {
-			statusCombo.setEnabled(false);
-		} else {
-			statusCombo.addSelectionListener(new SelectionAdapter() {
-
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					TaskPlanningEditor.this.markDirty(true);
-				}
-			});
-		}
-
-		Date creationDate = task.getCreationDate();
-		String creationDateString = (creationDate != null) ? DateFormat.getDateInstance(DateFormat.LONG).format(
-				creationDate) : ""; //$NON-NLS-1$
-		addNameValueComp(statusComposite, Messages.TaskPlanningEditor_Created, creationDateString, SWT.FLAT
-				| SWT.READ_ONLY);
-
-		String completionDateString = ""; //$NON-NLS-1$
-		if (task.isCompleted()) {
-			completionDateString = getTaskDateString(task);
-		}
-		endDate = addNameValueComp(statusComposite, Messages.TaskPlanningEditor_Completed, completionDateString,
-				SWT.FLAT | SWT.READ_ONLY);
-		toolkit.paintBordersFor(statusComposite);
-	}
-
-	private void createAttributesSection(Composite parent) {
-
-		int style = ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE;
-		if (task.getUrl() != null && task.getUrl().length() > 0) {
-			style |= ExpandableComposite.EXPANDED;
-		}
-
-		Section section = toolkit.createSection(parent, style);
-		section.setText(Messages.TaskPlanningEditor_Attributes);
-		GridDataFactory.fillDefaults().grab(true, false).applyTo(section);
-
-		// URL
-		Composite urlComposite = toolkit.createComposite(section);
-		GridLayout urlLayout = new GridLayout(4, false);
-		urlLayout.verticalSpacing = 0;
-		urlLayout.marginHeight = 2;
-		urlLayout.marginLeft = 5;
-		urlComposite.setLayout(urlLayout);
-		GridDataFactory.fillDefaults().grab(true, false).applyTo(urlComposite);
-
-		Label label = toolkit.createLabel(urlComposite, Messages.TaskPlanningEditor_URL);
-		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-		issueReportURL = toolkit.createText(urlComposite, task.getUrl(), SWT.FLAT);
-		issueReportURL.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
-		if (!(task instanceof LocalTask)) {
-			issueReportURL.setEditable(false);
-		} else {
-			issueReportURL.addModifyListener(new ModifyListener() {
-				public void modifyText(ModifyEvent e) {
-					markDirty(true);
-				}
-			});
-		}
-
-		getDescLink = toolkit.createImageHyperlink(urlComposite, SWT.NONE);
-		getDescLink.setImage(CommonImages.getImage(TasksUiImages.TASK_RETRIEVE));
-		getDescLink.setToolTipText(Messages.TaskPlanningEditor_Retrieve_task_description_from_URL);
-		getDescLink.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
-		setButtonStatus();
-
-		issueReportURL.addKeyListener(new KeyListener() {
-			public void keyPressed(KeyEvent e) {
-				setButtonStatus();
-			}
-
-			public void keyReleased(KeyEvent e) {
-				setButtonStatus();
-			}
-		});
-
-		getDescLink.addHyperlinkListener(new IHyperlinkListener() {
-
-			public void linkActivated(HyperlinkEvent e) {
-				retrieveTaskDescription(issueReportURL.getText());
-			}
-
-			public void linkEntered(HyperlinkEvent e) {
-			}
-
-			public void linkExited(HyperlinkEvent e) {
-			}
-		});
-
-		openUrlLink = toolkit.createImageHyperlink(urlComposite, SWT.NONE);
-		openUrlLink.setImage(CommonImages.getImage(CommonImages.BROWSER_SMALL));
-		openUrlLink.setToolTipText(Messages.TaskPlanningEditor_Open_with_Web_Browser);
-		openUrlLink.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
-		openUrlLink.addHyperlinkListener(new IHyperlinkListener() {
-
-			public void linkActivated(HyperlinkEvent e) {
-				TasksUiUtil.openUrl(issueReportURL.getText());
-			}
-
-			public void linkEntered(HyperlinkEvent e) {
-			}
-
-			public void linkExited(HyperlinkEvent e) {
-			}
-		});
-
-		toolkit.paintBordersFor(urlComposite);
-		section.setClient(urlComposite);
-	}
-
-	private TextViewer addTextEditor(TaskRepository repository, Composite parent, String text, boolean spellCheck,
-			int style) {
-		SourceViewer viewer = new SourceViewer(parent, null, style);
-		viewer.configure(new RepositoryTextViewerConfiguration(repository, spellCheck));
-		textSupport.configure(viewer, new Document(text), spellCheck);
-		viewer.getControl().setMenu(getEditor().getMenu());
-		viewer.getTextWidget().setFont(getCommentFont());
-		return viewer;
-	}
-
-	private void markDirty(boolean dirty) {
-		if (!dirty) {
-			summaryChanged = false;
-		}
-		isDirty = dirty;
-		getManagedForm().dirtyStateChanged();
-	}
-
-	/**
-	 * Attempts to set the task pageTitle to the title from the specified url
-	 */
-	protected void retrieveTaskDescription(final String url) {
-		AbstractRetrieveTitleFromUrlJob job = new AbstractRetrieveTitleFromUrlJob(issueReportURL.getText()) {
-			@Override
-			protected void titleRetrieved(String pageTitle) {
-				if (summaryEditor != null && summaryEditor.getControl() != null
-						&& !summaryEditor.getControl().isDisposed()) {
-					summaryEditor.getTextWidget().setText(pageTitle);
-					TaskPlanningEditor.this.markDirty(true);
-				}
-			}
-		};
-		job.schedule();
-	}
-
-	/**
-	 * Sets the Get Description button enabled or not depending on whether there is a URL specified
-	 */
-	protected void setButtonStatus() {
-		String url = issueReportURL.getText();
-
-		if (url.length() > 10 && (url.startsWith("http://") || url.startsWith("https://"))) {
-			// String defaultPrefix =
-			// ContextCore.getPreferenceStore().getString(
-			// TaskListPreferenceConstants.DEFAULT_URL_PREFIX);
-			// if (url.equals(defaultPrefix)) {
-			// getDescButton.setEnabled(false);
-			// } else {
-			getDescLink.setEnabled(true);
-			// }
-		} else {
-			getDescLink.setEnabled(false);
-		}
-	}
-
-	private Font getCommentFont() {
-		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
-		Font font = themeManager.getCurrentTheme().getFontRegistry().get(CommonThemes.FONT_EDITOR_COMMENT);
-		return font;
-	}
-
-	private String getTaskDateString(ITask task) {
-		if (task == null) {
-			return ""; //$NON-NLS-1$
-		}
-		if (task.getCompletionDate() == null) {
-			return ""; //$NON-NLS-1$
-		}
-
-		String completionDateString = ""; //$NON-NLS-1$
-		try {
-			completionDateString = DateFormat.getDateInstance(DateFormat.LONG).format(task.getCompletionDate());
-		} catch (RuntimeException e) {
-			// FIXME what exception is caught here?
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not format date", e)); //$NON-NLS-1$
-			return completionDateString;
-		}
-		return completionDateString;
-	}
-
-	@Override
-	public void dispose() {
-		if (planningPart != null) {
-			planningPart.dispose();
-		}
-
-		if (textSupport != null) {
-			textSupport.dispose();
-		}
-
-		if (timingListener != null) {
-			TasksUiPlugin.getTaskActivityManager().removeActivityListener(timingListener);
-		}
-		TasksUiInternal.getTaskList().removeChangeListener(TASK_LIST_LISTENER);
-	}
-
-	@Override
-	public String toString() {
-		return Messages.TaskPlanningEditor__info_editor_for_task_ + task + ")"; //$NON-NLS-1$
-	}
-
-	/** for testing - should cause dirty state */
-	public void setDescription(String desc) {
-		this.summaryEditor.getTextWidget().setText(desc);
-	}
-
-	/** for testing */
-	public String getDescription() {
-		return this.summaryEditor.getTextWidget().getText();
-	}
-
-	/** for testing - should cause dirty state */
-	public void setNotes(String notes) {
-		if (planningPart != null) {
-			planningPart.setNotes(notes);
-		}
-	}
 }

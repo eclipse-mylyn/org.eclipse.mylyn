@@ -15,12 +15,15 @@ import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.util.Date;
 
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.ITextOperationTarget;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFormUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
@@ -29,25 +32,39 @@ import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
+import org.eclipse.mylyn.tasks.ui.editors.TaskFormPage;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Widget;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.SharedScrolledComposite;
+import org.eclipse.ui.internal.EditorAreaHelper;
+import org.eclipse.ui.internal.WorkbenchPage;
 
 public class EditorUtil {
+
+	public static final int HEADER_COLUMN_MARGIN = 6;
 
 //	public static final String DATE_FORMAT = "yyyy-MM-dd";
 //
@@ -356,6 +373,101 @@ public class EditorUtil {
 		} catch (Throwable e) {
 			// ignore
 		}
+	}
+
+	public static Composite createBorder(Composite composite, final FormToolkit toolkit) {
+		// create composite to hold rounded border
+		final Composite roundedBorder = toolkit.createComposite(composite);
+		roundedBorder.addPaintListener(new PaintListener() {
+			public void paintControl(PaintEvent e) {
+				e.gc.setForeground(toolkit.getColors().getBorderColor());
+				Point size = roundedBorder.getSize();
+				e.gc.drawRoundRectangle(0, 3, size.x - 1, size.y - 7, 5, 5);
+			}
+		});
+		roundedBorder.setLayout(GridLayoutFactory.fillDefaults().margins(4, 6).create());
+		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).hint(EditorUtil.MAXIMUM_WIDTH, 30).grab(true,
+				false).applyTo(roundedBorder);
+		return roundedBorder;
+	}
+
+	public static Font setHeaderFontSizeAndStyle(Control text) {
+		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).applyTo(text);
+		// .hint(EditorUtil.MAXIMUM_WIDTH, SWT.DEFAULT)
+
+		float sizeFactor = 1.1f;
+		Font initialFont = text.getFont();
+		FontData[] fontData = initialFont.getFontData();
+		for (FontData element : fontData) {
+			element.setHeight((int) (element.getHeight() * sizeFactor));
+			element.setStyle(element.getStyle() | SWT.BOLD);
+		}
+		final Font textFont = new Font(text.getDisplay(), fontData);
+		text.setFont(textFont);
+		text.addDisposeListener(new DisposeListener() {
+			public void widgetDisposed(DisposeEvent e) {
+				textFont.dispose();
+			}
+		});
+		Color color = PlatformUI.getWorkbench().getThemeManager().getCurrentTheme().getColorRegistry().get(
+				CommonThemes.COLOR_COMPLETED);
+		text.setForeground(color);
+		return textFont;
+	}
+
+	public static GridData getTextControlLayoutData(TaskFormPage page, Control control, boolean expandVertically) {
+		final GridData gd = new GridData();
+		// wrap text at this margin, see comment below
+		int width = getEditorWidth(page);
+		// the goal is to make the text viewer as big as the text so it does not require scrolling when first drawn 
+		// on screen
+		Point size = control.computeSize(width, SWT.DEFAULT, true);
+		gd.widthHint = EditorUtil.MAXIMUM_WIDTH;
+		gd.minimumWidth = EditorUtil.MAXIMUM_WIDTH;
+		gd.horizontalAlignment = SWT.FILL;
+		gd.grabExcessHorizontalSpace = true;
+		// limit height to be avoid dynamic resizing of the text widget: 
+		// MAXIMUM_HEIGHT < height < MAXIMUM_HEIGHT * 3
+		//gd.minimumHeight = AbstractAttributeEditor.MAXIMUM_HEIGHT;
+		gd.heightHint = Math.min(Math.max(EditorUtil.MAXIMUM_HEIGHT, size.y), EditorUtil.MAXIMUM_HEIGHT * 3);
+		if (expandVertically) {
+			gd.verticalAlignment = SWT.FILL;
+			gd.grabExcessVerticalSpace = true;
+		}
+		return gd;
+		// shrink the text control if the editor width is reduced, otherwise the text field will always keep it's original 
+		// width and will cause the editor to have a horizonal scroll bar 
+//			composite.addControlListener(new ControlAdapter() {
+//				@Override
+//				public void controlResized(ControlEvent e) {
+//					int width = sectionComposite.getSize().x;
+//					Point size = descriptionTextViewer.getTextWidget().computeSize(width, SWT.DEFAULT, true);
+//					// limit width to parent widget
+//					gd.widthHint = width;
+//					// limit height to avoid dynamic resizing of the text widget
+//					gd.heightHint = Math.min(Math.max(DESCRIPTION_HEIGHT, size.y), DESCRIPTION_HEIGHT * 4);
+//					sectionComposite.layout();
+//				}
+//			});
+
+	}
+
+	private static int getEditorWidth(TaskFormPage page) {
+		int widthHint = 0;
+		if (page.getManagedForm() != null && page.getManagedForm().getForm() != null) {
+			widthHint = page.getManagedForm().getForm().getClientArea().width - 90;
+		}
+		if (widthHint <= 0 && page.getEditor().getEditorSite() != null
+				&& page.getEditor().getEditorSite().getPage() != null) {
+			EditorAreaHelper editorManager = ((WorkbenchPage) page.getEditor().getEditorSite().getPage()).getEditorPresentation();
+			if (editorManager != null && editorManager.getLayoutPart() != null) {
+				widthHint = editorManager.getLayoutPart().getControl().getBounds().width - 90;
+			}
+		}
+		if (widthHint <= 0) {
+			widthHint = EditorUtil.MAXIMUM_WIDTH;
+		}
+		return widthHint;
 	}
 
 }

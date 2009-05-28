@@ -28,53 +28,29 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 public abstract class AbstractLocalEditorPart extends AbstractFormPart {
 
-	private final int sectionStyle;
+	private Control control;
+
+	private TaskRepository repository;
+
+	private Section section;
 
 	private final String sectionName;
 
-	protected TaskRepository taskRepository;
+	private final int sectionStyle;
 
-	protected AbstractTask task;
-
-	public AbstractLocalEditorPart(String sectionName) {
-		this.sectionStyle = ExpandableComposite.TWISTIE;
-		this.sectionName = sectionName;
-	}
+	private AbstractTask task;
 
 	public AbstractLocalEditorPart(int sectionStyle, String sectionName) {
 		this.sectionStyle = sectionStyle;
 		this.sectionName = sectionName;
 	}
 
-	public void initialize(IManagedForm managedForm, TaskRepository taskRepository, AbstractTask task) {
-		super.initialize(managedForm);
-		this.task = task;
-		this.taskRepository = taskRepository;
+	public AbstractLocalEditorPart(String sectionName) {
+		this.sectionStyle = ExpandableComposite.TWISTIE;
+		this.sectionName = sectionName;
 	}
 
 	public abstract Control createControl(Composite parent, FormToolkit toolkit);
-
-	public String getSectionName() {
-		return sectionName;
-	}
-
-	// adapted from AbstractTaskEditorPart
-	private Control control;
-
-	private Section section;
-
-	public void setControl(Control control) {
-		this.control = control;
-	}
-
-	public Control getControl() {
-		return control;
-	}
-
-	protected void setSection(FormToolkit toolkit, Section section) {
-		this.section = section;
-		setControl(section);
-	}
 
 	protected Section createSection(Composite parent, FormToolkit toolkit, boolean expandedState) {
 		int style = ExpandableComposite.TITLE_BAR | getSectionStyle();
@@ -82,10 +58,6 @@ public abstract class AbstractLocalEditorPart extends AbstractFormPart {
 			style |= ExpandableComposite.EXPANDED;
 		}
 		return createSection(parent, toolkit, style);
-	}
-
-	private boolean isTwistie(int style) {
-		return (style & ExpandableComposite.TWISTIE) == 1;
 	}
 
 	protected Section createSection(Composite parent, FormToolkit toolkit, int style) {
@@ -97,12 +69,47 @@ public abstract class AbstractLocalEditorPart extends AbstractFormPart {
 		return section;
 	}
 
+	public Control getControl() {
+		return control;
+	}
+
+	public TaskRepository getRepository() {
+		return repository;
+	}
+
 	public Section getSection() {
 		return section;
 	}
 
+	public String getSectionName() {
+		return sectionName;
+	}
+
 	private int getSectionStyle() {
 		return sectionStyle;
+	}
+
+	public AbstractTask getTask() {
+		return task;
+	}
+
+	public void initialize(IManagedForm managedForm, TaskRepository repository, AbstractTask task) {
+		super.initialize(managedForm);
+		this.task = task;
+		this.repository = repository;
+	}
+
+	private boolean isTwistie(int style) {
+		return (style & ExpandableComposite.TWISTIE) != 0;
+	}
+
+	public void setControl(Control control) {
+		this.control = control;
+	}
+
+	protected void setSection(FormToolkit toolkit, Section section) {
+		this.section = section;
+		setControl(section);
 	}
 
 }

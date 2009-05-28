@@ -32,13 +32,13 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  */
 public class SingleSelectionAttributeEditor extends AbstractAttributeEditor {
 
-	private String[] values;
-
 	private CCombo combo;
 
 	private boolean ignoreNotification;
 
 	private Text text;
+
+	private String[] values;
 
 	public SingleSelectionAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
@@ -92,34 +92,6 @@ public class SingleSelectionAttributeEditor extends AbstractAttributeEditor {
 		return getAttributeMapper().getValueLabel(getTaskAttribute());
 	}
 
-	private void select(String value, String label) {
-		if (values != null) {
-			for (int i = 0; i < values.length; i++) {
-				if (values[i].equals(value)) {
-					combo.select(i);
-					break;
-				}
-			}
-		} else {
-			combo.setText(label);
-		}
-	}
-
-	public void setValue(String value) {
-		String oldValue = getAttributeMapper().getValue(getTaskAttribute());
-		if (!oldValue.equals(value)) {
-			getAttributeMapper().setValue(getTaskAttribute(), value);
-			attributeChanged();
-		}
-	}
-
-	void selectDefaultValue() {
-		if (combo.getSelectionIndex() == -1 && values.length > 0) {
-			combo.select(0);
-			setValue(values[0]);
-		}
-	}
-
 	@Override
 	public void refresh() {
 		try {
@@ -146,6 +118,34 @@ public class SingleSelectionAttributeEditor extends AbstractAttributeEditor {
 			}
 		} finally {
 			ignoreNotification = false;
+		}
+	}
+
+	private void select(String value, String label) {
+		if (values != null) {
+			for (int i = 0; i < values.length; i++) {
+				if (values[i].equals(value)) {
+					combo.select(i);
+					break;
+				}
+			}
+		} else {
+			combo.setText(label);
+		}
+	}
+
+	void selectDefaultValue() {
+		if (combo.getSelectionIndex() == -1 && values.length > 0) {
+			combo.select(0);
+			setValue(values[0]);
+		}
+	}
+
+	public void setValue(String value) {
+		String oldValue = getAttributeMapper().getValue(getTaskAttribute());
+		if (!oldValue.equals(value)) {
+			getAttributeMapper().setValue(getTaskAttribute(), value);
+			attributeChanged();
 		}
 	}
 }

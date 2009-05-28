@@ -38,13 +38,13 @@ import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorExtension;
+import org.eclipse.mylyn.tasks.ui.editors.TaskFormPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -53,7 +53,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.forms.IFormColors;
@@ -63,8 +62,6 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.internal.EditorAreaHelper;
-import org.eclipse.ui.internal.WorkbenchPage;
 
 /**
  * @author Shawn Minto
@@ -94,8 +91,8 @@ public class PlanningPart extends AbstractLocalEditorPart {
 			for (TaskContainerDelta taskContainerDelta : containers) {
 				if (taskContainerDelta.getElement() instanceof ITask) {
 					final AbstractTask updateTask = (AbstractTask) taskContainerDelta.getElement();
-					if (updateTask != null && task != null
-							&& updateTask.getHandleIdentifier().equals(task.getHandleIdentifier())) {
+					if (updateTask != null && getTask() != null
+							&& updateTask.getHandleIdentifier().equals(getTask().getHandleIdentifier())) {
 						if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {
 							PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 								public void run() {
@@ -114,7 +111,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 		@Override
 		public void elapsedTimeUpdated(ITask task, long newElapsedTime) {
-			if (task.equals(PlanningPart.this.task)) {
+			if (task.equals(PlanningPart.this.getTask())) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						if (elapsedTimeText != null && !elapsedTimeText.isDisposed()) {
@@ -131,7 +128,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 	private final boolean expandNotesVertically;
 
-	private IEditorSite editorSite;
+	private TaskFormPage page;
 
 	private Composite actualTimeComposite;
 
@@ -141,53 +138,55 @@ public class PlanningPart extends AbstractLocalEditorPart {
 	}
 
 	public void initialize(IManagedForm managedForm, TaskRepository taskRepository, AbstractTask task,
-			boolean needsDueDate, IEditorSite site, CommonTextSupport textSupport) {
+			boolean needsDueDate, TaskFormPage page, CommonTextSupport textSupport) {
 		super.initialize(managedForm, taskRepository, task);
 		this.needsDueDate = needsDueDate;
-		this.editorSite = site;
+		this.page = page;
 		this.textSupport = textSupport;
 	}
 
 	private boolean notesEqual() {
-		if (task.getNotes() == null && notesString == null) {
+		if (getTask().getNotes() == null && notesString == null) {
 			return true;
 		}
 
-		if (task.getNotes() != null && notesString != null) {
-			return task.getNotes().equals(notesString);
+		if (getTask().getNotes() != null && notesString != null) {
+			return getTask().getNotes().equals(notesString);
 		}
 		return false;
 	}
 
 	@Override
 	public void commit(boolean onSave) {
-		Assert.isNotNull(task);
+		Assert.isNotNull(getTask());
 
 		if (!notesEqual()) {
-			task.setNotes(notesString);
+			getTask().setNotes(notesString);
 			// XXX REFRESH THE TASLKIST
 		}
 
 		if (scheduleDatePicker != null && scheduleDatePicker.getScheduledDate() != null) {
-			if (task.getScheduledForDate() == null
-					|| (task.getScheduledForDate() != null && !scheduleDatePicker.getScheduledDate().equals(
-							task.getScheduledForDate())) || (task).getScheduledForDate() instanceof DayDateRange) {
-				TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, scheduleDatePicker.getScheduledDate());
-				(task).setReminded(false);
+			if (getTask().getScheduledForDate() == null
+					|| (getTask().getScheduledForDate() != null && !scheduleDatePicker.getScheduledDate().equals(
+							getTask().getScheduledForDate()))
+					|| getTask().getScheduledForDate() instanceof DayDateRange) {
+				TasksUiPlugin.getTaskActivityManager()
+						.setScheduledFor(getTask(), scheduleDatePicker.getScheduledDate());
+				getTask().setReminded(false);
 			}
 		} else {
-			TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, null);
-			(task).setReminded(false);
+			TasksUiPlugin.getTaskActivityManager().setScheduledFor(getTask(), null);
+			getTask().setReminded(false);
 		}
 
 		if (estimatedTime != null) {
-			task.setEstimatedTimeHours(estimatedTime.getSelection());
+			getTask().setEstimatedTimeHours(estimatedTime.getSelection());
 		}
 
 		if (dueDatePicker != null && dueDatePicker.getDate() != null) {
-			TasksUiPlugin.getTaskActivityManager().setDueDate(task, dueDatePicker.getDate().getTime());
+			TasksUiPlugin.getTaskActivityManager().setDueDate(getTask(), dueDatePicker.getDate().getTime());
 		} else {
-			TasksUiPlugin.getTaskActivityManager().setDueDate(task, null);
+			TasksUiPlugin.getTaskActivityManager().setDueDate(getTask(), null);
 		}
 
 		super.commit(onSave);
@@ -199,7 +198,6 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		Composite composite = toolkit.createComposite(section);
 		int numColumns = (needsDueDate) ? 6 : 4;
 		composite.setLayout(new GridLayout(numColumns, false));
-		GridDataFactory.fillDefaults().grab(true, false).applyTo(composite);
 
 		createScheduledDatePicker(toolkit, composite);
 
@@ -215,7 +213,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		TasksUiInternal.getTaskList().addChangeListener(TASK_LIST_LISTENER);
 		TasksUiPlugin.getTaskActivityManager().addActivityListener(timingListener);
 
-		this.notesString = task.getNotes();
+		this.notesString = getTask().getNotes();
 		if (this.notesString == null) {
 			this.notesString = ""; //$NON-NLS-1$
 		}
@@ -233,8 +231,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		Composite composite = toolkit.createComposite(parent);
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 1;
-		layout.marginLeft = 0;
-		layout.marginWidth = 0;
+		layout.marginWidth = 1;
 		composite.setLayout(layout);
 		GridDataFactory.fillDefaults().span(numColumns, SWT.DEFAULT).grab(true, expandNotesVertically).applyTo(
 				composite);
@@ -242,48 +239,25 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		Label labelControl = toolkit.createLabel(composite, Messages.PersonalPart_Notes);
 		labelControl.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 
-		if (editorSite != null) {
-			IContextService contextService = (IContextService) editorSite.getService(IContextService.class);
+		if (page != null) {
+			IContextService contextService = (IContextService) page.getEditorSite().getService(IContextService.class);
 			if (contextService != null) {
-				AbstractTaskEditorExtension extension = TaskEditorExtensions.getTaskEditorExtension(taskRepository);
+				AbstractTaskEditorExtension extension = TaskEditorExtensions.getTaskEditorExtension(getRepository());
 				if (extension != null) {
-					noteEditor = new RichTextEditor(taskRepository, SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL,
+					noteEditor = new RichTextEditor(getRepository(), SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL,
 							contextService, extension);
 				}
 			}
 		}
 		if (noteEditor == null) {
-			noteEditor = new RichTextEditor(taskRepository, SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+			noteEditor = new RichTextEditor(getRepository(), SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 		}
 		noteEditor.setSpellCheckingEnabled(true);
 		noteEditor.createControl(composite, toolkit);
 		noteEditor.setText(notesString);
 
-		final GridData gd = new GridData(GridData.FILL_BOTH);
-		int widthHint = 0;
-
-		if (getManagedForm() != null && getManagedForm().getForm() != null) {
-			widthHint = getManagedForm().getForm().getClientArea().width - 90;
-		}
-		if (widthHint <= 0 && editorSite != null && editorSite.getPage() != null) {
-			EditorAreaHelper editorManager = ((WorkbenchPage) editorSite.getPage()).getEditorPresentation();
-			if (editorManager != null && editorManager.getLayoutPart() != null) {
-				widthHint = editorManager.getLayoutPart().getControl().getBounds().width - 90;
-			}
-		}
-
-		if (widthHint <= 0) {
-			widthHint = 100;
-		}
-
-		gd.widthHint = widthHint;
-		gd.minimumHeight = 100;
-		gd.heightHint = 100;
-		gd.grabExcessHorizontalSpace = true;
-		gd.grabExcessVerticalSpace = expandNotesVertically;
-		gd.horizontalIndent = 10;
-
-		noteEditor.getControl().setLayoutData(gd);
+		noteEditor.getControl().setLayoutData(
+				EditorUtil.getTextControlLayoutData(page, noteEditor.getViewer().getControl(), expandNotesVertically));
 		noteEditor.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		noteEditor.setReadOnly(false);
 		if (textSupport != null) {
@@ -329,7 +303,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 				if (MessageDialog.openConfirm(getControl().getShell(),
 						Messages.TaskEditorPlanningPart_Confirm_Activity_Time_Deletion,
 						Messages.TaskEditorPlanningPart_Do_you_wish_to_reset_your_activity_time_on_this_task_)) {
-					MonitorUi.getActivityContextManager().removeActivityTime(task.getHandleIdentifier(), 0l,
+					MonitorUi.getActivityContextManager().removeActivityTime(getTask().getHandleIdentifier(), 0l,
 							System.currentTimeMillis());
 				}
 			}
@@ -337,7 +311,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 	}
 
 	private void updateElapsedTime() {
-		long elapsedTime = TasksUiPlugin.getTaskActivityManager().getElapsedTime(task);
+		long elapsedTime = TasksUiPlugin.getTaskActivityManager().getElapsedTime(getTask());
 		if (elapsedTime > 0) {
 			if (actualTimeComposite != null && !actualTimeComposite.isVisible()) {
 				actualTimeComposite.setVisible(true);
@@ -373,9 +347,9 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		GridDataFactory.fillDefaults().hint(CONTROL_WIDTH, SWT.DEFAULT).applyTo(dueDatePicker);
 		dueDatePicker.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		dueDatePicker.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-		if (task.getDueDate() != null) {
+		if (getTask().getDueDate() != null) {
 			Calendar calendar = TaskActivityUtil.getCalendar();
-			calendar.setTime(task.getDueDate());
+			calendar.setTime(getTask().getDueDate());
 			dueDatePicker.setDate(calendar);
 		}
 		dueDatePicker.addPickerSelectionListener(new SelectionAdapter() {
@@ -411,11 +385,11 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		estimatedTime.setMaximum(100);
 		estimatedTime.setMinimum(0);
 		estimatedTime.setIncrement(1);
-		estimatedTime.setSelection(task.getEstimatedTimeHours());
+		estimatedTime.setSelection(getTask().getEstimatedTimeHours());
 		estimatedTime.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		estimatedTime.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				if (task.getEstimatedTimeHours() != estimatedTime.getSelection()) {
+				if (getTask().getEstimatedTimeHours() != estimatedTime.getSelection()) {
 					markDirty();
 				}
 			}
@@ -440,7 +414,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 		Composite composite = createComposite(parent, 2, toolkit);
 
-		scheduleDatePicker = new ScheduleDatePicker(composite, task, SWT.FLAT);
+		scheduleDatePicker = new ScheduleDatePicker(composite, getTask(), SWT.FLAT);
 		GridDataFactory.fillDefaults().hint(CONTROL_WIDTH, SWT.DEFAULT).applyTo(scheduleDatePicker);
 		scheduleDatePicker.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		toolkit.adapt(scheduleDatePicker, false, false);
@@ -465,7 +439,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 			public void linkActivated(HyperlinkEvent e) {
 				scheduleDatePicker.setScheduledDate(null);
 				// XXX why is this set here?
-				task.setReminded(false);
+				getTask().setReminded(false);
 				markDirty();
 			}
 		});

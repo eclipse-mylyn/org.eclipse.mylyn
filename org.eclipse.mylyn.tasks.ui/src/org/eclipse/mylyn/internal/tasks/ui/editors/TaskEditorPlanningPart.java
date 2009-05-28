@@ -33,7 +33,7 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 				taskEditorPage.getTask(), getTaskData());
 		CommonTextSupport textSupport = (CommonTextSupport) getTaskEditorPage().getAdapter(CommonTextSupport.class);
 		part.initialize(taskEditorPage.getManagedForm(), taskEditorPage.getTaskRepository(),
-				(AbstractTask) taskEditorPage.getTask(), needsDueDate, taskEditorPage.getEditorSite(), textSupport);
+				(AbstractTask) taskEditorPage.getTask(), needsDueDate, taskEditorPage, textSupport);
 	}
 
 	@Override

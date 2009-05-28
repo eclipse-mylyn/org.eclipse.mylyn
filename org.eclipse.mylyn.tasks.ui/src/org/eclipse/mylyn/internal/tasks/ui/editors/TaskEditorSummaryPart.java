@@ -13,9 +13,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
@@ -23,21 +21,13 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
@@ -51,8 +41,6 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 	private Composite headerComposite;
 
 	private AbstractAttributeEditor summaryEditor;
-
-	private Font textFont;
 
 	public TaskEditorSummaryPart() {
 		setPartName(Messages.TaskEditorSummaryPart_Summary);
@@ -110,7 +98,7 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 			boolean forceReadOnly) {
 		if (attribute != null) {
 			//can't be added via a factory because these attributes already have a default editor?
-			AbstractAttributeEditor editor = new SingleSelectionAttributeEditorWithIcon(getModel(), attribute);
+			AbstractAttributeEditor editor = new PriorityAttributeEditor(getModel(), attribute);
 			if (editor != null) {
 				editor.setDecorationEnabled(true);
 				if (forceReadOnly) {
@@ -138,53 +126,10 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 		summaryEditor = createAttributeEditor(getTaskData().getRoot().getMappedAttribute(TaskAttribute.SUMMARY));
 		if (summaryEditor != null) {
 			// create composite to hold rounded border
-			final Composite roundedBorder = toolkit.createComposite(composite);
-			roundedBorder.addPaintListener(new PaintListener() {
-				public void paintControl(PaintEvent e) {
-					e.gc.setForeground(toolkit.getColors().getBorderColor());
-					Point size = roundedBorder.getSize();
-					e.gc.drawRoundRectangle(0, 3, size.x - 1, size.y - 7, 5, 5);
-				}
-			});
-			roundedBorder.setLayout(GridLayoutFactory.fillDefaults().margins(4, 6).create());
-			GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).hint(EditorUtil.MAXIMUM_WIDTH, 30).grab(true,
-					false).applyTo(roundedBorder);
-
+			final Composite roundedBorder = EditorUtil.createBorder(composite, toolkit);
 			summaryEditor.createControl(roundedBorder, toolkit);
-			final Control summaryControl = summaryEditor.getControl();
-			GridDataFactory.fillDefaults()
-					.align(SWT.FILL, SWT.CENTER)
-					.hint(EditorUtil.MAXIMUM_WIDTH, SWT.DEFAULT)
-					.grab(true, false)
-					.applyTo(summaryControl);
-			// change text color, style, size.
-			final StyledText text = ((RichTextAttributeEditor) summaryEditor).getViewer().getTextWidget();
-			setFontSizeAndStyle(composite, text, 1.2f);
-			Color color = PlatformUI.getWorkbench().getThemeManager().getCurrentTheme().getColorRegistry().get(
-					CommonThemes.COLOR_COMPLETED);
-			text.setForeground(color);
-
-			//create rounded border on the composite
+			EditorUtil.setHeaderFontSizeAndStyle(summaryEditor.getControl());
 			getTaskEditorPage().getAttributeEditorToolkit().adapt(summaryEditor);
-		}
-	}
-
-	private void setFontSizeAndStyle(Composite composite, StyledText text, float size) {
-		Font initialFont = text.getFont();
-		FontData[] fontData = initialFont.getFontData();
-		for (FontData element : fontData) {
-			element.setHeight((int) (element.getHeight() * size));
-			element.setStyle(element.getStyle() | SWT.BOLD);
-		}
-		textFont = new Font(composite.getDisplay(), fontData);
-		text.setFont(textFont);
-	}
-
-	@Override
-	public void dispose() {
-		super.dispose();
-		if (textFont != null) {
-			textFont.dispose();
 		}
 	}
 
