@@ -129,17 +129,17 @@ public class PriorityEditor {
 	private ImageDescriptor getLargeImageDescriptor(PriorityLevel priorityLevel) {
 		switch (priorityLevel) {
 		case P1:
-			return CommonImages.PRIORITY_1_24;
+			return CommonImages.PRIORITY_1_LARGE;
 		case P2:
-			return CommonImages.PRIORITY_2_24;
+			return CommonImages.PRIORITY_2_LARGE;
 		case P3:
-			return CommonImages.PRIORITY_3_24;
+			return CommonImages.PRIORITY_3_LARGE;
 		case P4:
-			return CommonImages.PRIORITY_4_24;
+			return CommonImages.PRIORITY_4_LARGE;
 		case P5:
-			return CommonImages.PRIORITY_5_24;
+			return CommonImages.PRIORITY_5_LARGE;
 		default:
-			return CommonImages.PRIORITY_3_24;
+			return CommonImages.PRIORITY_3_LARGE;
 		}
 	}
 

@@ -23,10 +23,10 @@ import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -47,7 +47,11 @@ public class SummaryPart extends AbstractLocalEditorPart {
 
 	protected boolean summaryChanged;
 
-	private CCombo statusCombo;
+	//private CCombo statusCombo;
+
+	private Button statusCompleteButton;
+
+	private Button statusIncompleteButton;
 
 	private Text creationDateText;
 
@@ -98,7 +102,7 @@ public class SummaryPart extends AbstractLocalEditorPart {
 		GridLayout layout = new GridLayout(2, false);
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
-		layout.verticalSpacing = 5;
+		//layout.marginBottom = 5;
 		composite.setLayout(layout);
 
 		priorityEditor = new PriorityEditor() {
@@ -115,7 +119,7 @@ public class SummaryPart extends AbstractLocalEditorPart {
 		}
 		priorityEditor.setLabelByValue(labelByValue);
 		priorityEditor.createControl(composite, toolkit);
-		GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.BEGINNING).span(1, 2).applyTo(priorityEditor.getControl());
+		GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).span(1, 2).applyTo(priorityEditor.getControl());
 
 		createSummaryControl(composite, toolkit);
 
@@ -129,30 +133,50 @@ public class SummaryPart extends AbstractLocalEditorPart {
 	protected Composite createHeaderControls(Composite composite, FormToolkit toolkit) {
 		headerComposite = toolkit.createComposite(composite);
 		GridLayout layout = new GridLayout(1, false);
-		layout.verticalSpacing = 1;
-		layout.marginHeight = 1;
+		layout.marginHeight = 0;
 		layout.marginWidth = 0;
-		layout.marginBottom = 10;
 		headerComposite.setLayout(layout);
 
 		createLabel(headerComposite, toolkit, Messages.TaskPlanningEditor_Status, 0);
-		statusCombo = new CCombo(headerComposite, SWT.FLAT | SWT.READ_ONLY);
-		toolkit.adapt(statusCombo, true, true);
-		statusCombo.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-		statusCombo.add(Messages.TaskPlanningEditor_Complete);
-		statusCombo.add(Messages.TaskPlanningEditor_Incomplete);
-		if (getTask().isCompleted()) {
-			statusCombo.select(0);
-		} else {
-			statusCombo.select(1);
-		}
-		statusCombo.setEnabled(getTask() instanceof LocalTask);
-		statusCombo.addSelectionListener(new SelectionAdapter() {
+		statusIncompleteButton = toolkit.createButton(headerComposite, Messages.TaskPlanningEditor_Incomplete,
+				SWT.RADIO);
+		statusIncompleteButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				markDirty();
+				if (statusIncompleteButton.getSelection()) {
+					statusCompleteButton.setSelection(false);
+					markDirty();
+				}
 			}
 		});
+		statusCompleteButton = toolkit.createButton(headerComposite, Messages.TaskPlanningEditor_Complete, SWT.RADIO);
+		statusCompleteButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (statusCompleteButton.getSelection()) {
+					statusIncompleteButton.setSelection(false);
+					markDirty();
+				}
+			}
+		});
+
+//		statusCombo = new CCombo(headerComposite, SWT.FLAT | SWT.READ_ONLY);
+//		toolkit.adapt(statusCombo, true, true);
+//		statusCombo.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+//		statusCombo.add(Messages.TaskPlanningEditor_Complete);
+//		statusCombo.add(Messages.TaskPlanningEditor_Incomplete);
+//		if (getTask().isCompleted()) {
+//			statusCombo.select(0);
+//		} else {
+//			statusCombo.select(1);
+//		}
+//		statusCombo.setEnabled(getTask() instanceof LocalTask);
+//		statusCombo.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				markDirty();
+//			}
+//		});
 
 		// right align controls
 		Composite spacer = toolkit.createComposite(headerComposite, SWT.NONE);
@@ -194,11 +218,13 @@ public class SummaryPart extends AbstractLocalEditorPart {
 	public void refresh() {
 		PriorityLevel level = PriorityLevel.fromString(getTask().getPriority());
 		priorityEditor.select(level.toString(), level);
-		if (getTask().isCompleted()) {
-			statusCombo.select(0);
-		} else {
-			statusCombo.select(1);
-		}
+		statusIncompleteButton.setSelection(!getTask().isCompleted());
+		statusCompleteButton.setSelection(getTask().isCompleted());
+//		if (getTask().isCompleted()) {
+//			statusCombo.select(0);
+//		} else {
+//			statusCombo.select(1);
+//		}
 		if (!summaryChanged) {
 			summaryEditor.setText(getTask().getSummary());
 			if (!initialized) {
@@ -225,11 +251,20 @@ public class SummaryPart extends AbstractLocalEditorPart {
 			getTask().setPriority(level.toString());
 		}
 		getTask().setSummary(summaryEditor.getText());
-		if (!getTask().isCompleted() && statusCombo.getSelectionIndex() == 0) {
-			getTask().setCompletionDate(new Date());
+		if (statusCompleteButton.getSelection()) {
+			if (!getTask().isCompleted()) {
+				getTask().setCompletionDate(new Date());
+			}
 		} else {
-			getTask().setCompletionDate(null);
+			if (getTask().isCompleted()) {
+				getTask().setCompletionDate(null);
+			}
 		}
+//		if (!getTask().isCompleted() && statusCombo.getSelectionIndex() == 0) {
+//			getTask().setCompletionDate(new Date());
+//		} else {
+//			getTask().setCompletionDate(null);
+//		}
 		summaryChanged = false;
 		super.commit(onSave);
 	}
