@@ -653,10 +653,10 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 			}
 		};
 		addFocusListener(editorComposite, listener);
-		AbstractTaskEditorPart summaryPart = getPart(ID_PART_SUMMARY);
-		if (summaryPart != null) {
-			lastFocusControl = summaryPart.getControl();
-		}
+//		AbstractTaskEditorPart summaryPart = getPart(ID_PART_SUMMARY);
+//		if (summaryPart != null) {
+//			lastFocusControl = summaryPart.getControl();
+//		}
 	}
 
 	protected TaskDataModel createModel(TaskEditorInput input) throws CoreException {
@@ -1354,7 +1354,15 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 	public void setFocus() {
 		if (lastFocusControl != null && !lastFocusControl.isDisposed()) {
 			lastFocusControl.setFocus();
+			return;
+		} else {
+			IFormPart[] parts = getManagedForm().getParts();
+			if (parts.length > 0) {
+				parts[0].setFocus();
+				return;
+			}
 		}
+		super.setFocus();
 	}
 
 	public void setNeedsAddToCategory(boolean needsAddToCategory) {
