@@ -132,6 +132,8 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 				EditorUtil.setHeaderFontSizeAndStyle(summaryEditor.getControl());
 			} else {
 				summaryEditor.createControl(composite, toolkit);
+				GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).hint(EditorUtil.MAXIMUM_WIDTH,
+						SWT.DEFAULT).grab(true, false).applyTo(summaryEditor.getControl());
 			}
 			getTaskEditorPage().getAttributeEditorToolkit().adapt(summaryEditor);
 		}
