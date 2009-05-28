@@ -125,12 +125,20 @@ public class PlatformUtil {
 	}
 
 	/**
-	 * If a toolbar does not have a standard ToolItem but use only ControlContributions the height of the tool bar needs
-	 * to be forced to be > 0.
+	 * If a Gtk toolbar does not have a standard ToolItem but use only ControlContributions a dummy ToolItem needs to be
+	 * added to force the height of the tool bar to be > 0 pixels.
 	 */
 	// TODO e3.4: remove, platform has been fixed
 	public static boolean isToolBarHeightBroken(ToolBar toolBar) {
-		return "gtk".equals(SWT.getPlatform()) && toolBar.computeSize(SWT.DEFAULT, SWT.DEFAULT, false).y == 0; //$NON-NLS-1$
+		return Platform.WS_GTK.equals(SWT.getPlatform()) && toolBar.computeSize(SWT.DEFAULT, SWT.DEFAULT, false).y == 0;
+	}
+
+	/**
+	 * If a Windows toolbar does not have a standard ToolItem but use only ControlContributions a dummy ToolItem needs
+	 * to be added to force the height to be > 22 pixels.
+	 */
+	public static boolean needsToolItemToForceToolBarHeight() {
+		return Platform.WS_WIN32.equals(SWT.getPlatform());
 	}
 
 }

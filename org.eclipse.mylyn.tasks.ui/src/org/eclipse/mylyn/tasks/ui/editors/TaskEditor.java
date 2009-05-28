@@ -70,6 +70,8 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -870,6 +872,20 @@ public class TaskEditor extends SharedHeaderFormEditor {
 				ToolItem item = new ToolItem(leftToolBar, SWT.NONE);
 				item.setEnabled(false);
 				item.setImage(CommonImages.getImage(CommonImages.BLANK));
+				item.setWidth(1);
+				noExtraPadding = true;
+			} else if (PlatformUtil.needsToolItemToForceToolBarHeight()) {
+				ToolItem item = new ToolItem(leftToolBar, SWT.NONE);
+				item.setEnabled(false);
+				final Image image = new Image(item.getDisplay(), CommonImages.getImage(CommonImages.BLANK)
+						.getImageData()
+						.scaledTo(1, 22));
+				item.setImage(image);
+				item.addDisposeListener(new DisposeListener() {
+					public void widgetDisposed(DisposeEvent e) {
+						image.dispose();
+					}
+				});
 				item.setWidth(1);
 				noExtraPadding = true;
 			}
