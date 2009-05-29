@@ -40,6 +40,8 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.viewers.DecorationOverlayIcon;
+import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.discovery.core.model.AbstractDiscoverySource;
 import org.eclipse.mylyn.internal.discovery.core.model.BundleDiscoveryStrategy;
@@ -50,6 +52,7 @@ import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryCategory;
 import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryConnector;
 import org.eclipse.mylyn.internal.discovery.core.model.Icon;
 import org.eclipse.mylyn.internal.discovery.core.model.RemoteBundleDiscoveryStrategy;
+import org.eclipse.mylyn.internal.discovery.ui.DiscoveryImages;
 import org.eclipse.mylyn.internal.discovery.ui.DiscoveryUi;
 import org.eclipse.mylyn.internal.discovery.ui.util.DiscoveryCategoryComparator;
 import org.eclipse.mylyn.internal.discovery.ui.util.DiscoveryConnectorComparator;
@@ -604,6 +607,10 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 
 		private final Display display;
 
+		private Image iconImage;
+
+		private Image warningIconImage;
+
 		public ConnectorDescriptorItemUi(DiscoveryConnector connector, Composite categoryChildrenContainer,
 				Color background) {
 			display = categoryChildrenContainer.getDisplay();
@@ -634,9 +641,9 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 			GridDataFactory.swtDefaults().align(SWT.CENTER, SWT.CENTER).applyTo(iconLabel);
 
 			if (connector.getIcon() != null) {
-				Image image = computeIconImage(connector.getSource(), connector.getIcon(), 32, false);
-				if (image != null) {
-					iconLabel.setImage(image);
+				iconImage = computeIconImage(connector.getSource(), connector.getIcon(), 32, false);
+				if (iconImage != null) {
+					iconLabel.setImage(iconImage);
 				}
 			}
 
@@ -723,8 +730,6 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		public void updateAvailability() {
 			boolean enabled = connector.getAvailable() != null && connector.getAvailable();
 
-			System.out.println(connector.getName() + " enabled: " + enabled);
-
 			checkbox.setEnabled(enabled);
 			nameLabel.setEnabled(enabled);
 			iconLabel.setEnabled(enabled);
@@ -738,6 +743,20 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 			}
 			nameLabel.setForeground(foreground);
 			description.setForeground(foreground);
+
+			if (iconImage != null) {
+				boolean unavailable = !enabled && connector.getAvailable() != null;
+				if (unavailable) {
+					if (warningIconImage == null) {
+						warningIconImage = new DecorationOverlayIcon(iconImage, DiscoveryImages.OVERLAY_WARNING_32,
+								IDecoration.TOP_LEFT).createImage();
+						disposables.add(warningIconImage);
+					}
+					iconLabel.setImage(warningIconImage);
+				} else if (warningIconImage != null) {
+					iconLabel.setImage(iconImage);
+				}
+			}
 		}
 
 		public void propertyChange(PropertyChangeEvent evt) {
