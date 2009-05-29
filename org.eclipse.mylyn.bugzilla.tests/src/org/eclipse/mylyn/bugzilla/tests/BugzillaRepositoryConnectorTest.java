@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
@@ -30,10 +31,12 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaOperation;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaStatus;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskDataHandler;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskAttachment;
 import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
@@ -68,6 +71,36 @@ import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
  * @author Frank Becker
  */
 public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
+
+	public void testSingleRetrievalFailure() throws CoreException {
+		init32();
+		ITask task = generateLocalTaskAndDownload("9999");
+		assertTrue(((AbstractTask) task).getStatus().getMessage().contains(IBugzillaConstants.ERROR_MSG_INVALID_BUG_ID));
+	}
+
+//	public void testMultiRetrievalFailure() throws CoreException {
+//		init32();
+//		ITask task1 = TasksUi.getRepositoryModel().createTask(repository, "1");
+//		ITask taskX = TasksUi.getRepositoryModel().createTask(repository, "9999");
+//		ITask task2 = TasksUi.getRepositoryModel().createTask(repository, "2");
+//		// FIXME task.setStale(true);
+//		TasksUiPlugin.getTaskList().addTask(task1);
+//		TasksUiPlugin.getTaskList().addTask(taskX);
+//		TasksUiPlugin.getTaskList().addTask(task2);
+//		Set<ITask> tasks = new HashSet<ITask>();
+//		tasks.add(task1);
+//		tasks.add(taskX);
+//		tasks.add(task2);
+//		TasksUiInternal.synchronizeTasks(connector, tasks, true, null);
+//
+//		//TasksUiPlugin.getTaskDataManager().setTaskRead(task, true);
+//		assertNotNull(TasksUiPlugin.getTaskDataManager().getTaskData(task1));
+//		assertNotNull(TasksUiPlugin.getTaskDataManager().getTaskData(task2));
+//		assertNull(TasksUiPlugin.getTaskDataManager().getTaskData(taskX));
+//		assertNull(((AbstractTask) task1).getStatus());
+//		assertNull(((AbstractTask) task2).getStatus());
+//		assertEquals(IBugzillaConstants.ERROR_MSG_NO_DATA_RETRIEVED, ((AbstractTask) taskX).getStatus().getMessage());
+//	}
 
 	public void testBugWithoutDescription218() throws Exception {
 		init218();
@@ -111,11 +144,65 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		assertEquals(numComment + 1, numCommentNew);
 	}
 
-//testReassign Bugs
-//Version	BugNum	assigned				reporter
-//2.22		92		user@mylar.eclipse.org	tests@mylar.eclipse.org
-//3.0		 5		tests@mylar.eclipse.org	tests2@mylar.eclipse.org
-//3.1		 1		rob.elves@eclipse.org	tests@mylar.eclipse.org
+	public void testAttachmentToken323() throws Exception {
+		init323();
+		ITask task = generateLocalTaskAndDownload("2");
+		assertNotNull(task);
+		TaskDataModel model = createModel(task);
+		TaskData taskData = model.getTaskData();
+		assertNotNull(taskData);
+		TaskAttribute attachment = taskData.getAttributeMapper().getAttributesByType(taskData,
+				TaskAttribute.TYPE_ATTACHMENT).get(0);
+		assertNotNull(attachment);
+		TaskAttribute obsolete = attachment.getMappedAttribute(TaskAttribute.ATTACHMENT_IS_DEPRECATED);
+		assertNotNull(obsolete);
+		TaskAttribute token = attachment.getAttribute(BugzillaAttribute.TOKEN.getKey());
+		assertNotNull(token);
+		attachment.removeAttribute(BugzillaAttribute.TOKEN.getKey());
+		token = attachment.getAttribute(BugzillaAttribute.TOKEN.getKey());
+		assertNull(token);
+		boolean oldObsoleteOn = obsolete.getValue().equals("1");
+		if (oldObsoleteOn) {
+			obsolete.setValue("0"); //$NON-NLS-1$
+		} else {
+			obsolete.setValue("1"); //$NON-NLS-1$
+		}
+		try {
+			((BugzillaTaskDataHandler) connector.getTaskDataHandler()).postUpdateAttachment(repository, attachment,
+					"update", new NullProgressMonitor());
+			fail("CoreException expected but not reached");
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			IStatus status = e.getStatus();
+			assertTrue(status instanceof BugzillaStatus);
+			assertEquals(IBugzillaConstants.REPOSITORY_STATUS_SUSPICIOUS_ACTION, status.getCode());
+		}
+
+		task = generateLocalTaskAndDownload("2");
+		assertNotNull(task);
+		model = createModel(task);
+		taskData = model.getTaskData();
+		assertNotNull(taskData);
+		attachment = taskData.getAttributeMapper().getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT).get(0);
+		assertNotNull(attachment);
+		obsolete = attachment.getMappedAttribute(TaskAttribute.ATTACHMENT_IS_DEPRECATED);
+		assertNotNull(obsolete);
+		token = attachment.getAttribute(BugzillaAttribute.TOKEN.getKey());
+		assertNotNull(token);
+		oldObsoleteOn = obsolete.getValue().equals("1");
+		if (oldObsoleteOn) {
+			obsolete.setValue("0"); //$NON-NLS-1$
+		} else {
+			obsolete.setValue("1"); //$NON-NLS-1$
+		}
+		try {
+			((BugzillaTaskDataHandler) connector.getTaskDataHandler()).postUpdateAttachment(repository, attachment,
+					"update", new NullProgressMonitor());
+		} catch (CoreException e) {
+			fail("CoreException expected reached");
+		}
+
+	}
 
 	public void testObsoleteAttachment222() throws Exception {
 		init222();
@@ -159,6 +246,12 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		boolean newObsoleteOn = obsolete.getValue().equals("1");
 		assertEquals(true, oldObsoleteOn != newObsoleteOn);
 	}
+
+	//testReassign Bugs
+	//Version	BugNum	assigned				reporter
+	//2.22		92		user@mylar.eclipse.org	tests@mylar.eclipse.org
+	//3.0		 5		tests@mylar.eclipse.org	tests2@mylar.eclipse.org
+	//3.1		 1		rob.elves@eclipse.org	tests@mylar.eclipse.org
 
 	public void testReassign222() throws CoreException {
 		init222();

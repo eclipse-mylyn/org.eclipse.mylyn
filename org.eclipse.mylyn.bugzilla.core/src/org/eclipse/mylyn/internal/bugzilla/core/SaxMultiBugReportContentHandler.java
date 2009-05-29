@@ -50,7 +50,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 
 	private int commentNum = 0;
 
-	private TaskAttachmentMapper attachment;
+	private BugzillaAttachmentMapper attachment;
 
 	private final Map<String, TaskData> taskDataMap;
 
@@ -67,6 +67,8 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 	private boolean isDeprecated = false;
 
 	private boolean isPatch = false;
+
+	private String token;
 
 	private TaskAttribute attachmentAttribute;
 
@@ -119,6 +121,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			commentNum = 0;
 			taskComment = null;
 			longDescs = new ArrayList<TaskComment>();
+			token = null;
 			break;
 		case LONG_DESC:
 			taskComment = new TaskComment(commentNum++);
@@ -325,11 +328,12 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 		case ATTACHID:
 			attachmentAttribute = repositoryTaskData.getRoot().createAttribute(
 					TaskAttribute.PREFIX_ATTACHMENT + parsedText);
-			attachment = TaskAttachmentMapper.createFrom(attachmentAttribute);
+			attachment = BugzillaAttachmentMapper.createFrom(attachmentAttribute);
 			attachment.setLength(new Long(-1));
 			attachment.setAttachmentId(parsedText);
 			attachment.setPatch(isPatch);
 			attachment.setDeprecated(isDeprecated);
+			attachment.setToken(null);
 			break;
 		case DATE:
 			// ignore
@@ -397,6 +401,12 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 
 			updateCustomFields(repositoryTaskData);
 
+			if (token != null) {
+				TaskAttribute tokenAttribute = BugzillaTaskDataHandler.createAttribute(repositoryTaskData,
+						BugzillaAttribute.TOKEN);
+				tokenAttribute.setValue(token);
+			}
+
 			// Guard against empty data sets
 			if (attrCreation != null && !attrCreation.equals("")) { //$NON-NLS-1$
 				collector.accept(repositoryTaskData);
@@ -421,6 +431,13 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			break;
 		case FLAG:
 			//ignore
+			break;
+		case TOKEN:
+			if (attachment != null) {
+				attachment.setToken(parsedText);
+			} else {
+				token = parsedText;
+			}
 			break;
 		default:
 			TaskAttribute defaultAttribute = repositoryTaskData.getRoot().getMappedAttribute(tag.getKey());
