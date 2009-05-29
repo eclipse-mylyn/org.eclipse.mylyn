@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.discovery.core.model;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+
 /**
  * @author David Green
  */
@@ -21,6 +24,12 @@ public class DiscoveryConnector extends ConnectorDescriptor {
 	private boolean selected;
 
 	private Boolean available;
+
+	private final PropertyChangeSupport changeSupport;
+
+	public DiscoveryConnector() {
+		changeSupport = new PropertyChangeSupport(this);
+	}
 
 	public DiscoveryCategory getCategory() {
 		return category;
@@ -73,6 +82,26 @@ public class DiscoveryConnector extends ConnectorDescriptor {
 	 *            true if available, false if not, or null if availability is unknown
 	 */
 	public void setAvailable(Boolean available) {
-		this.available = available;
+		if (available != this.available || (available != null && !available.equals(this.available))) {
+			Boolean previous = this.available;
+			this.available = available;
+			changeSupport.firePropertyChange("available", previous, this.available); //$NON-NLS-1$
+		}
+	}
+
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		changeSupport.addPropertyChangeListener(listener);
+	}
+
+	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+		changeSupport.addPropertyChangeListener(propertyName, listener);
+	}
+
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		changeSupport.removePropertyChangeListener(listener);
+	}
+
+	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+		changeSupport.removePropertyChangeListener(propertyName, listener);
 	}
 }

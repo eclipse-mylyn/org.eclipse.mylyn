@@ -13,13 +13,12 @@ package org.eclipse.mylyn.internal.discovery.core.model;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Dictionary;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -281,31 +280,35 @@ public class ConnectorDiscovery {
 	 * {@link #isVerifyUpdateSiteAvailability()} is true, or it may be invoked later by calling this method.
 	 */
 	public void verifySiteAvailability(IProgressMonitor monitor) {
-		Set<URL> urls = new HashSet<URL>();
-		Set<URL> availableUrls = new HashSet<URL>();
-		Map<ConnectorDescriptor, URL> descriptorToUrl = new HashMap<ConnectorDescriptor, URL>();
 
-		for (ConnectorDescriptor descriptor : connectors) {
+		Map<URL, Collection<DiscoveryConnector>> urlToDescriptors = new HashMap<URL, Collection<DiscoveryConnector>>();
+
+		for (DiscoveryConnector descriptor : connectors) {
 			try {
 				String urlText = descriptor.getSiteUrl();
 				if (!urlText.endsWith("/")) { //$NON-NLS-1$
 					urlText += "/"; //$NON-NLS-1$
 				}
 				URL url = new URL(urlText);
-				descriptorToUrl.put(descriptor, url);
-				urls.add(url);
+				Collection<DiscoveryConnector> collection = urlToDescriptors.get(url);
+				if (collection == null) {
+					collection = new ArrayList<DiscoveryConnector>();
+					urlToDescriptors.put(url, collection);
+				}
+				collection.add(descriptor);
 			} catch (MalformedURLException e) {
 				// ignore
 			}
 		}
-		final int totalTicks = urls.size();
+		final int totalTicks = urlToDescriptors.size();
 		monitor.beginTask(Messages.ConnectorDiscovery_task_verifyingAvailability, totalTicks);
 		try {
-			if (!urls.isEmpty()) {
-				ExecutorService executorService = Executors.newFixedThreadPool(Math.min(urls.size(), 4));
+			if (!urlToDescriptors.isEmpty()) {
+				ExecutorService executorService = Executors.newFixedThreadPool(Math.min(urlToDescriptors.size(), 4));
 				try {
-					List<Future<VerifyUpdateSiteJob>> futures = new ArrayList<Future<VerifyUpdateSiteJob>>(urls.size());
-					for (URL url : urls) {
+					List<Future<VerifyUpdateSiteJob>> futures = new ArrayList<Future<VerifyUpdateSiteJob>>(
+							urlToDescriptors.size());
+					for (URL url : urlToDescriptors.keySet()) {
 						futures.add(executorService.submit(new VerifyUpdateSiteJob(url)));
 					}
 					for (Future<VerifyUpdateSiteJob> jobFuture : futures) {
@@ -313,8 +316,10 @@ public class ConnectorDiscovery {
 							for (;;) {
 								try {
 									VerifyUpdateSiteJob job = jobFuture.get(3L, TimeUnit.SECONDS);
-									if (job.ok) {
-										availableUrls.add(job.url);
+
+									Collection<DiscoveryConnector> descriptors = urlToDescriptors.get(job.url);
+									for (DiscoveryConnector descriptor : descriptors) {
+										descriptor.setAvailable(job.ok);
 									}
 									break;
 								} catch (TimeoutException e) {
@@ -345,10 +350,6 @@ public class ConnectorDiscovery {
 				} finally {
 					executorService.shutdownNow();
 				}
-			}
-			for (DiscoveryConnector descriptor : connectors) {
-				URL url = descriptorToUrl.get(descriptor);
-				descriptor.setAvailable(availableUrls.contains(url));
 			}
 		} finally {
 			monitor.done();

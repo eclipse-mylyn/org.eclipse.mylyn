@@ -13,6 +13,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.discovery.ui.wizards;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -581,7 +583,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		}
 	}
 
-	private class ConnectorDescriptorItemUi {
+	private class ConnectorDescriptorItemUi implements PropertyChangeListener, Runnable {
 		private final DiscoveryConnector connector;
 
 		private final Button checkbox;
@@ -600,10 +602,13 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 
 		private final Composite connectorContainer;
 
+		private final Display display;
+
 		public ConnectorDescriptorItemUi(DiscoveryConnector connector, Composite categoryChildrenContainer,
 				Color background) {
-
+			display = categoryChildrenContainer.getDisplay();
 			this.connector = connector;
+			connector.addPropertyChangeListener(this);
 			connectorContainer = new Composite(categoryChildrenContainer, SWT.NULL);
 			configureLook(connectorContainer, background);
 			GridDataFactory.fillDefaults().grab(true, false).applyTo(connectorContainer);
@@ -718,6 +723,8 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		public void updateAvailability() {
 			boolean enabled = connector.getAvailable() != null && connector.getAvailable();
 
+			System.out.println(connector.getName() + " enabled: " + enabled);
+
 			checkbox.setEnabled(enabled);
 			nameLabel.setEnabled(enabled);
 			iconLabel.setEnabled(enabled);
@@ -729,9 +736,18 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 			} else {
 				foreground = colorDisabled;
 			}
-			checkbox.setForeground(foreground);
 			nameLabel.setForeground(foreground);
 			description.setForeground(foreground);
+		}
+
+		public void propertyChange(PropertyChangeEvent evt) {
+			display.asyncExec(this);
+		}
+
+		public void run() {
+			if (!connectorContainer.isDisposed()) {
+				updateAvailability();
+			}
 		}
 	}
 
@@ -1084,23 +1100,42 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 				Throwable cause = e.getCause();
 				IStatus status;
 				if (!(cause instanceof CoreException)) {
-					status = new Status(
-							IStatus.ERROR,
-							DiscoveryUi.ID_PLUGIN,
-							org.eclipse.mylyn.internal.discovery.ui.wizards.Messages.ConnectorDiscoveryWizardMainPage_unexpectedException,
-							cause);
+					status = new Status(IStatus.ERROR, DiscoveryUi.ID_PLUGIN,
+							Messages.ConnectorDiscoveryWizardMainPage_unexpectedException, cause);
 				} else {
 					status = ((CoreException) cause).getStatus();
 				}
-				DiscoveryUiUtil.logAndDisplayStatus(
-						org.eclipse.mylyn.internal.discovery.ui.wizards.Messages.ConnectorDiscoveryWizardMainPage_errorTitle,
-						status);
+				DiscoveryUiUtil.logAndDisplayStatus(Messages.ConnectorDiscoveryWizardMainPage_errorTitle, status);
 			} catch (InterruptedException e) {
 				// cancelled by user so nothing to do here.
 				wasCancelled = true;
 			}
 			if (discovery != null) {
 				discoveryUpdated(wasCancelled);
+				try {
+					getContainer().run(true, true, new IRunnableWithProgress() {
+						public void run(IProgressMonitor monitor) throws InvocationTargetException,
+								InterruptedException {
+							discovery.verifySiteAvailability(monitor);
+						}
+					});
+				} catch (InvocationTargetException e) {
+					Throwable cause = e.getCause();
+					IStatus status;
+					if (!(cause instanceof CoreException)) {
+						status = new Status(IStatus.ERROR, DiscoveryUi.ID_PLUGIN,
+								Messages.ConnectorDiscoveryWizardMainPage_unexpectedException, cause);
+					} else {
+						status = ((CoreException) cause).getStatus();
+					}
+					DiscoveryUiUtil.logAndDisplayStatus(Messages.ConnectorDiscoveryWizardMainPage_errorTitle, status);
+				} catch (InterruptedException e) {
+					// cancelled by user so nothing to do here.
+					wasCancelled = true;
+				}
+				// createBodyContents() shouldn't be necessary but for some reason checkboxes don't 
+				// regain their enabled state
+				createBodyContents();
 			}
 		}
 	}
