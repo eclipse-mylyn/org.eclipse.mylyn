@@ -67,12 +67,11 @@ import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.FocusAdapter;
-import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.events.PaintEvent;
@@ -102,6 +101,7 @@ import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.progress.WorkbenchJob;
 import org.eclipse.ui.themes.IThemeManager;
 
@@ -139,8 +139,6 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 	private Text filterText;
 
 	private WorkbenchJob refreshJob;
-
-	private final String initialText = org.eclipse.mylyn.internal.discovery.ui.wizards.Messages.ConnectorDiscoveryWizardMainPage_typeFilterText;
 
 	private String previousFilterText = ""; //$NON-NLS-1$
 
@@ -219,37 +217,6 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 						filterText = new Text(textFilterContainer, SWT.SINGLE);
 					}
 
-					filterText.setText(initialText);
-					filterText.addFocusListener(new FocusAdapter() {
-						@Override
-						public void focusGained(FocusEvent e) {
-							Display display = filterText.getDisplay();
-							display.asyncExec(new Runnable() {
-								public void run() {
-									if (!filterText.isDisposed()) {
-										if (initialText.equals(filterText.getText().trim())) {
-											filterText.selectAll();
-										}
-									}
-								}
-							});
-						}
-
-						@Override
-						public void focusLost(FocusEvent e) {
-							if (filterText.getText().trim().length() == 0) {
-								filterText.setText(initialText);
-							}
-						}
-					});
-					filterText.addMouseListener(new MouseAdapter() {
-						@Override
-						public void mouseDown(MouseEvent e) {
-							if (filterText.getText().equals(initialText)) {
-								clearFilterText();
-							}
-						}
-					});
 					filterText.addModifyListener(new ModifyListener() {
 						public void modifyText(ModifyEvent e) {
 							filterTextChanged();
@@ -330,9 +297,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 				}
 				String text = filterText.getText();
 				text = text.trim();
-				if (initialText.equals(text)) {
-					text = ""; //$NON-NLS-1$
-				}
+
 				if (!previousFilterText.equals(text)) {
 					previousFilterText = text;
 					filterPattern = createPattern(previousFilterText);
@@ -616,6 +581,160 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		}
 	}
 
+	private class ConnectorDescriptorItemUi {
+		private final DiscoveryConnector connector;
+
+		private final Button checkbox;
+
+		private final Label iconLabel;
+
+		private final Label nameLabel;
+
+		private final Label infoLabel;
+
+		private final Label providerLabel;
+
+		private final Label description;
+
+		private final Composite checkboxContainer;
+
+		private final Composite connectorContainer;
+
+		public ConnectorDescriptorItemUi(DiscoveryConnector connector, Composite categoryChildrenContainer,
+				Color background) {
+
+			this.connector = connector;
+			connectorContainer = new Composite(categoryChildrenContainer, SWT.NULL);
+			configureLook(connectorContainer, background);
+			GridDataFactory.fillDefaults().grab(true, false).applyTo(connectorContainer);
+			GridLayout categoryLayout = new GridLayout(4, false);
+			categoryLayout.marginLeft = 7;
+			categoryLayout.marginTop = 2;
+			categoryLayout.marginBottom = 2;
+			connectorContainer.setLayout(categoryLayout);
+
+			checkboxContainer = new Composite(connectorContainer, SWT.NULL);
+			configureLook(checkboxContainer, background);
+			GridDataFactory.swtDefaults().align(SWT.CENTER, SWT.BEGINNING).span(1, 2).applyTo(checkboxContainer);
+			GridLayoutFactory.fillDefaults().numColumns(2).applyTo(checkboxContainer);
+
+			checkbox = new Button(checkboxContainer, SWT.CHECK | SWT.FLAT);
+			configureLook(checkbox, background);
+			checkbox.setSelection(installableConnectors.contains(connector));
+
+			GridDataFactory.swtDefaults().align(SWT.CENTER, SWT.CENTER).applyTo(checkbox);
+
+			iconLabel = new Label(checkboxContainer, SWT.NULL);
+			configureLook(iconLabel, background);
+			GridDataFactory.swtDefaults().align(SWT.CENTER, SWT.CENTER).applyTo(iconLabel);
+
+			if (connector.getIcon() != null) {
+				Image image = computeIconImage(connector.getSource(), connector.getIcon(), 32, false);
+				if (image != null) {
+					iconLabel.setImage(image);
+				}
+			}
+
+			nameLabel = new Label(connectorContainer, SWT.NULL);
+			configureLook(nameLabel, background);
+			GridDataFactory.fillDefaults().grab(true, false).applyTo(nameLabel);
+			nameLabel.setFont(h2Font);
+			nameLabel.setText(connector.getName());
+
+			providerLabel = new Label(connectorContainer, SWT.NULL);
+			configureLook(providerLabel, background);
+			GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).applyTo(providerLabel);
+			providerLabel.setText(NLS.bind(Messages.ConnectorDiscoveryWizardMainPage_provider_and_license,
+					connector.getProvider(), connector.getLicense()));
+
+			infoLabel = new Label(connectorContainer, SWT.NULL);
+			configureLook(infoLabel, background);
+			if (hasTooltip(connector)) {
+				infoLabel.setImage(infoImage);
+				infoLabel.setCursor(handCursor);
+				infoLabel.setToolTipText(Messages.ConnectorDiscoveryWizardMainPage_tooltip_showOverview);
+				hookTooltip(infoLabel, connectorContainer, nameLabel, connector, true);
+			}
+			GridDataFactory.fillDefaults().align(SWT.END, SWT.FILL).grab(false, true).applyTo(infoLabel);
+
+			description = new Label(connectorContainer, SWT.NULL | SWT.WRAP);
+			configureLook(description, background);
+
+			GridDataFactory.fillDefaults().grab(true, false).span(3, 1).hint(100, SWT.DEFAULT).applyTo(description);
+			String descriptionText = connector.getDescription();
+			int maxDescriptionLength = 162;
+			if (descriptionText.length() > maxDescriptionLength) {
+				descriptionText = descriptionText.substring(0, maxDescriptionLength);
+			}
+			description.setText(descriptionText.replaceAll("(\\r\\n)|\\n|\\r", " ")); //$NON-NLS-1$ //$NON-NLS-2$
+
+			// always disabled color to make it less prominent
+			providerLabel.setForeground(colorDisabled);
+
+			checkbox.addSelectionListener(new SelectionListener() {
+				public void widgetDefaultSelected(SelectionEvent e) {
+					widgetSelected(e);
+				}
+
+				public void widgetSelected(SelectionEvent e) {
+					boolean selected = checkbox.getSelection();
+					maybeModifySelection(selected);
+				}
+			});
+			MouseListener connectorItemMouseListener = new MouseAdapter() {
+				@Override
+				public void mouseUp(MouseEvent e) {
+					boolean selected = !checkbox.getSelection();
+					if (maybeModifySelection(selected)) {
+						checkbox.setSelection(selected);
+					}
+				}
+			};
+			checkboxContainer.addMouseListener(connectorItemMouseListener);
+			connectorContainer.addMouseListener(connectorItemMouseListener);
+			iconLabel.addMouseListener(connectorItemMouseListener);
+			nameLabel.addMouseListener(connectorItemMouseListener);
+			providerLabel.addMouseListener(connectorItemMouseListener);
+			description.addMouseListener(connectorItemMouseListener);
+		}
+
+		protected boolean maybeModifySelection(boolean selected) {
+			if (selected) {
+				if (connector.getAvailable() == null) {
+					return false;
+				}
+				if (!connector.getAvailable()) {
+					MessageDialog.openWarning(getShell(),
+							Messages.ConnectorDiscoveryWizardMainPage_warningTitleConnectorUnavailable, NLS.bind(
+									Messages.ConnectorDiscoveryWizardMainPage_warningMessageConnectorUnavailable,
+									connector.getName()));
+					return false;
+				}
+			}
+			ConnectorDiscoveryWizardMainPage.this.modifySelection(connector, selected);
+			return true;
+		}
+
+		public void updateAvailability() {
+			boolean enabled = connector.getAvailable() != null && connector.getAvailable();
+
+			checkbox.setEnabled(enabled);
+			nameLabel.setEnabled(enabled);
+			iconLabel.setEnabled(enabled);
+			providerLabel.setEnabled(enabled);
+			description.setEnabled(enabled);
+			Color foreground;
+			if (enabled) {
+				foreground = connectorContainer.getForeground();
+			} else {
+				foreground = colorDisabled;
+			}
+			checkbox.setForeground(foreground);
+			nameLabel.setForeground(foreground);
+			description.setForeground(foreground);
+		}
+	}
+
 	private void createDiscoveryContents(Composite container) {
 
 		Color background = container.getBackground();
@@ -633,7 +752,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 			Control helpTextControl;
 			if (filterPattern != null) {
 				Link link = new Link(container, SWT.WRAP);
-				link.setBackground(null);
+
 				link.setFont(container.getFont());
 				link.setText(org.eclipse.mylyn.internal.discovery.ui.wizards.Messages.ConnectorDiscoveryWizardMainPage_noMatchingItems_withFilterText);
 				link.addListener(SWT.Selection, new Listener() {
@@ -645,7 +764,6 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 				helpTextControl = link;
 			} else {
 				Label helpText = new Label(container, SWT.WRAP);
-				helpText.setBackground(null);
 				helpText.setFont(container.getFont());
 				if (atLeastOneKindFiltered) {
 					helpText.setText(org.eclipse.mylyn.internal.discovery.ui.wizards.Messages.ConnectorDiscoveryWizardMainPage_noMatchingItems_filteredType);
@@ -654,6 +772,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 				}
 				helpTextControl = helpText;
 			}
+			configureLook(helpTextControl, background);
 			GridDataFactory.fillDefaults().grab(true, false).hint(100, SWT.DEFAULT).applyTo(helpTextControl);
 		} else {
 			GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(false).spacing(0, 0) //
@@ -672,8 +791,12 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 				}
 				{ // category header
 					GradientCanvas categoryHeaderContainer = new GradientCanvas(container, SWT.NONE);
+					categoryHeaderContainer.setSeparatorVisible(true);
+					categoryHeaderContainer.setSeparatorAlignment(SWT.TOP);
 					categoryHeaderContainer.setBackgroundGradient(new Color[] { colorCategoryGradientStart,
 							colorCategoryGradientEnd }, new int[] { 100 }, true);
+					categoryHeaderContainer.putColor(IFormColors.H_BOTTOM_KEYLINE1, colorCategoryGradientStart);
+					categoryHeaderContainer.putColor(IFormColors.H_BOTTOM_KEYLINE2, colorCategoryGradientEnd);
 
 					GridDataFactory.fillDefaults().span(2, 1).applyTo(categoryHeaderContainer);
 					GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).equalWidth(false).applyTo(
@@ -681,7 +804,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 
 					Label iconLabel = new Label(categoryHeaderContainer, SWT.NULL);
 					if (category.getIcon() != null) {
-						Image image = computeIconImage(category.getSource(), category.getIcon());
+						Image image = computeIconImage(category.getSource(), category.getIcon(), 48, true);
 						if (image != null) {
 							iconLabel.setImage(image);
 						}
@@ -722,108 +845,9 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 						border.addPaintListener(new ConnectorBorderPaintListener());
 					}
 
-					final boolean unavailable = connector.getAvailable() != null && !connector.getAvailable() ? true
-							: false;
-
-					Composite connectorContainer = new Composite(categoryChildrenContainer, SWT.NULL);
-					configureLook(connectorContainer, background);
-					GridDataFactory.fillDefaults().grab(true, false).applyTo(connectorContainer);
-					GridLayout categoryLayout = new GridLayout(4, false);
-					categoryLayout.marginLeft = 30;
-					categoryLayout.marginTop = 2;
-					categoryLayout.marginBottom = 2;
-					connectorContainer.setLayout(categoryLayout);
-
-					final Button checkbox = new Button(connectorContainer, SWT.CHECK | SWT.FLAT);
-					configureLook(checkbox, background);
-					checkbox.setSelection(installableConnectors.contains(connector));
-
-					if (connector.getIcon() != null) {
-						Image image = computeIconImage(connector.getSource(), connector.getIcon());
-						if (image != null) {
-							checkbox.setImage(image);
-						}
-					}
-
-					GridDataFactory.swtDefaults().align(SWT.CENTER, SWT.BEGINNING).span(1, 2).applyTo(checkbox);
-
-					Label nameLabel = new Label(connectorContainer, SWT.NULL);
-					configureLook(nameLabel, background);
-					GridDataFactory.fillDefaults().grab(true, false).applyTo(nameLabel);
-					nameLabel.setFont(h2Font);
-					nameLabel.setText(connector.getName());
-
-					Label providerLabel = new Label(connectorContainer, SWT.NULL);
-					configureLook(providerLabel, background);
-					GridDataFactory.fillDefaults().applyTo(providerLabel);
-					providerLabel.setText(NLS.bind(Messages.ConnectorDiscoveryWizardMainPage_provider_and_license,
-							connector.getProvider(), connector.getLicense()));
-
-					Label infoLabel = new Label(connectorContainer, SWT.NULL);
-					configureLook(infoLabel, background);
-					if (hasTooltip(connector)) {
-						infoLabel.setImage(infoImage);
-						infoLabel.setCursor(handCursor);
-						infoLabel.setToolTipText(Messages.ConnectorDiscoveryWizardMainPage_tooltip_showOverview);
-						hookTooltip(infoLabel, connectorContainer, nameLabel, connector, true);
-					}
-					GridDataFactory.fillDefaults().align(SWT.END, SWT.FILL).grab(false, true).applyTo(infoLabel);
-
-					Label description = new Label(connectorContainer, SWT.NULL | SWT.WRAP);
-					configureLook(description, background);
-
-					GridDataFactory.fillDefaults().grab(true, false).span(3, 1).hint(100, SWT.DEFAULT).applyTo(
-							description);
-					String descriptionText = connector.getDescription();
-					int maxDescriptionLength = 162;
-					if (descriptionText.length() > maxDescriptionLength) {
-						descriptionText = descriptionText.substring(0, maxDescriptionLength);
-					}
-					description.setText(descriptionText.replaceAll("(\\r\\n)|\\n|\\r", " ")); //$NON-NLS-1$ //$NON-NLS-2$
-
-					MouseAdapter connectorItemMouseListener;
-					if (unavailable) {
-						checkbox.setEnabled(false);
-						nameLabel.setEnabled(false);
-						providerLabel.setEnabled(false);
-						description.setEnabled(false);
-						checkbox.setForeground(colorDisabled);
-						nameLabel.setForeground(colorDisabled);
-						providerLabel.setForeground(colorDisabled);
-						description.setForeground(colorDisabled);
-
-						connectorItemMouseListener = new MouseAdapter() {
-							@Override
-							public void mouseUp(MouseEvent e) {
-								MessageDialog.openWarning(getShell(), Messages.ConnectorDiscoveryWizardMainPage_warningTitleConnectorUnavailable, NLS.bind(
-										Messages.ConnectorDiscoveryWizardMainPage_warningMessageConnectorUnavailable, connector.getName()));
-							}
-						};
-						checkbox.addMouseListener(connectorItemMouseListener);
-					} else {
-						checkbox.addSelectionListener(new SelectionListener() {
-							public void widgetDefaultSelected(SelectionEvent e) {
-								widgetSelected(e);
-							}
-
-							public void widgetSelected(SelectionEvent e) {
-								boolean selected = checkbox.getSelection();
-								modifySelection(connector, selected);
-							}
-						});
-						connectorItemMouseListener = new MouseAdapter() {
-							@Override
-							public void mouseUp(MouseEvent e) {
-								boolean selected = !checkbox.getSelection();
-								checkbox.setSelection(selected);
-								modifySelection(connector, selected);
-							}
-						};
-					}
-					connectorContainer.addMouseListener(connectorItemMouseListener);
-					nameLabel.addMouseListener(connectorItemMouseListener);
-					providerLabel.addMouseListener(connectorItemMouseListener);
-					description.addMouseListener(connectorItemMouseListener);
+					ConnectorDescriptorItemUi itemUi = new ConnectorDescriptorItemUi(connector,
+							categoryChildrenContainer, background);
+					itemUi.updateAvailability();
 				}
 			}
 			// last one gets a border
@@ -980,8 +1004,25 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		return text != null && filterPattern.matcher(text).find();
 	}
 
-	private Image computeIconImage(AbstractDiscoverySource discoverySource, Icon icon) {
-		String imagePath = icon.getImage32();
+	private Image computeIconImage(AbstractDiscoverySource discoverySource, Icon icon, int dimension, boolean fallback) {
+		String imagePath;
+		switch (dimension) {
+		case 64:
+			imagePath = icon.getImage64();
+			if (imagePath != null || !fallback) {
+				break;
+			}
+		case 48:
+			imagePath = icon.getImage48();
+			if (imagePath != null || !fallback) {
+				break;
+			}
+		case 32:
+			imagePath = icon.getImage32();
+			break;
+		default:
+			throw new IllegalArgumentException();
+		}
 		if (imagePath != null && imagePath.length() > 0) {
 			URL resource = discoverySource.getResource(imagePath);
 			if (resource != null) {
@@ -1027,7 +1068,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 								DEFAULT_DIRECTORY_URL));
 						connectorDiscovery.getDiscoveryStrategies().add(remoteDiscoveryStrategy);
 						connectorDiscovery.setEnvironment(environment);
-						connectorDiscovery.setVerifyUpdateSiteAvailability(true);
+						connectorDiscovery.setVerifyUpdateSiteAvailability(false);
 						try {
 							connectorDiscovery.performDiscovery(monitor);
 						} catch (CoreException e) {

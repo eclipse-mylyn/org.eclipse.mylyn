@@ -114,6 +114,7 @@ public class ConnectorDiscoveryWizard extends Wizard {
 					Messages.ConnectorDiscoveryWizard_installProblems, new Object[] { e.getCause().getMessage() }),
 					e.getCause());
 			DiscoveryUiUtil.logAndDisplayStatus(Messages.ConnectorDiscoveryWizard_cannotInstall, status);
+			return false;
 		} catch (InterruptedException e) {
 			// canceled
 		}

@@ -25,6 +25,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IBundleGroup;
@@ -107,7 +109,7 @@ public class ConnectorDiscovery {
 
 			filterDescriptors();
 			if (verifyUpdateSiteAvailability) {
-				performSiteAvailabilityVerification(new SubProgressMonitor(monitor, filterTicks));
+				verifySiteAvailability(new SubProgressMonitor(monitor, filterTicks));
 			}
 			connectCategoriesToDescriptors();
 		} finally {
@@ -165,7 +167,7 @@ public class ConnectorDiscovery {
 	 * indicate if update site availability should be verified. The default is false.
 	 * 
 	 * @see DiscoveryConnector#getAvailable()
-	 * @see #performSiteAvailabilityVerification(IProgressMonitor)
+	 * @see #verifySiteAvailability(IProgressMonitor)
 	 */
 	public boolean isVerifyUpdateSiteAvailability() {
 		return verifyUpdateSiteAvailability;
@@ -175,7 +177,7 @@ public class ConnectorDiscovery {
 	 * indicate if update site availability should be verified. The default is false.
 	 * 
 	 * @see DiscoveryConnector#getAvailable()
-	 * @see #performSiteAvailabilityVerification(IProgressMonitor)
+	 * @see #verifySiteAvailability(IProgressMonitor)
 	 */
 	public void setVerifyUpdateSiteAvailability(boolean verifyUpdateSiteAvailability) {
 		this.verifyUpdateSiteAvailability = verifyUpdateSiteAvailability;
@@ -275,9 +277,10 @@ public class ConnectorDiscovery {
 	}
 
 	/**
-	 * determine update site availability
+	 * Determine update site availability. This may be performed automatically as part of discovery when
+	 * {@link #isVerifyUpdateSiteAvailability()} is true, or it may be invoked later by calling this method.
 	 */
-	private void performSiteAvailabilityVerification(IProgressMonitor monitor) {
+	public void verifySiteAvailability(IProgressMonitor monitor) {
 		Set<URL> urls = new HashSet<URL>();
 		Set<URL> availableUrls = new HashSet<URL>();
 		Map<ConnectorDescriptor, URL> descriptorToUrl = new HashMap<ConnectorDescriptor, URL>();
@@ -307,9 +310,18 @@ public class ConnectorDiscovery {
 					}
 					for (Future<VerifyUpdateSiteJob> jobFuture : futures) {
 						try {
-							VerifyUpdateSiteJob job = jobFuture.get();
-							if (job.ok) {
-								availableUrls.add(job.url);
+							for (;;) {
+								try {
+									VerifyUpdateSiteJob job = jobFuture.get(3L, TimeUnit.SECONDS);
+									if (job.ok) {
+										availableUrls.add(job.url);
+									}
+									break;
+								} catch (TimeoutException e) {
+									if (monitor.isCanceled()) {
+										return;
+									}
+								}
 							}
 						} catch (InterruptedException e) {
 							monitor.setCanceled(true);
