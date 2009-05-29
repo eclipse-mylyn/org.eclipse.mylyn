@@ -11,19 +11,35 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
+import org.eclipse.mylyn.internal.tasks.core.ITaskList;
+import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTextViewerConfiguration.Mode;
 import org.eclipse.mylyn.internal.tasks.ui.util.AbstractRetrieveTitleFromUrlJob;
+import org.eclipse.mylyn.internal.tasks.ui.util.TaskContainerComparator;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.IFormPart;
+import org.eclipse.ui.forms.events.ExpansionAdapter;
+import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
@@ -40,12 +56,24 @@ public class AttributePart extends AbstractLocalEditorPart {
 
 	private RichTextEditor urlEditor;
 
+	private CCombo categoryChooser;
+
+	protected AbstractTaskCategory category;
+
+	private Label categoryLabel;
+
+	private List<AbstractTaskCategory> categories;
+
 	public AttributePart() {
 		super(Messages.TaskPlanningEditor_Attributes);
 	}
 
 	@Override
 	public void commit(boolean onSave) {
+		if (category != null) {
+			TasksUiPlugin.getTaskList().addTask(getTask(), category);
+			category = null;
+		}
 		getTask().setUrl(urlEditor.getText());
 		super.commit(onSave);
 	}
@@ -53,24 +81,38 @@ public class AttributePart extends AbstractLocalEditorPart {
 	@Override
 	public Control createControl(Composite parent, FormToolkit toolkit) {
 		int style = ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE;
+		//		| ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT;
 		if (getTask().getUrl() != null && getTask().getUrl().length() > 0) {
 			style |= ExpandableComposite.EXPANDED;
 		}
 
-		Section section = toolkit.createSection(parent, style);
+		Section section = createSection(parent, toolkit, style);
 		section.setText(Messages.TaskPlanningEditor_Attributes);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(section);
+		createSectionClient(section, toolkit);
+		setSection(toolkit, section);
 
-		// URL
-		Composite urlComposite = toolkit.createComposite(section);
-		GridLayout urlLayout = new GridLayout(4, false);
+		Composite composite = toolkit.createComposite(section);
+		composite.setLayout(new GridLayout(4, false));
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(section);
+
+		Label label = toolkit.createLabel(composite, "Category:");
+		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+
+		createCategoryChooser(composite, toolkit);
+
+		// url
+		label = toolkit.createLabel(composite, Messages.TaskPlanningEditor_URL);
+		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+		GridDataFactory.defaultsFor(label).indent(20, 0).applyTo(label);
+
+		Composite urlComposite = toolkit.createComposite(composite);
+		GridLayout urlLayout = new GridLayout(2, false);
 		urlLayout.verticalSpacing = 0;
-		urlLayout.marginWidth = 0;
+		urlLayout.marginWidth = 1;
 		urlComposite.setLayout(urlLayout);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(urlComposite);
 
-		Label label = toolkit.createLabel(urlComposite, Messages.TaskPlanningEditor_URL);
-		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		urlEditor = new RichTextEditor(getRepository(), SWT.FLAT | SWT.SINGLE) {
 			@Override
 			protected void valueChanged(String value) {
@@ -82,23 +124,53 @@ public class AttributePart extends AbstractLocalEditorPart {
 		urlEditor.createControl(urlComposite, toolkit);
 		urlEditor.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		urlEditor.getViewer().getControl().setMenu(parent.getMenu());
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(urlEditor.getControl());
 
 		fetchUrlLink = toolkit.createImageHyperlink(urlComposite, SWT.NONE);
 		fetchUrlLink.setImage(CommonImages.getImage(TasksUiImages.TASK_RETRIEVE));
 		fetchUrlLink.setToolTipText(Messages.TaskPlanningEditor_Retrieve_task_description_from_URL);
-		fetchUrlLink.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 		fetchUrlLink.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				featchUrl(urlEditor.getText());
 			}
 		});
-
-		refresh();
-
 		toolkit.paintBordersFor(urlComposite);
-		section.setClient(urlComposite);
+
+		toolkit.paintBordersFor(composite);
+		section.setClient(composite);
 		return section;
+	}
+
+	private void createSectionClient(final Section section, FormToolkit toolkit) {
+		if (section.getTextClient() == null) {
+			final Composite textClient = toolkit.createComposite(section);
+			textClient.setBackground(null);
+			RowLayout rowLayout = new RowLayout();
+			EditorUtil.center(rowLayout);
+			rowLayout.marginLeft = 20;
+			rowLayout.marginTop = 1;
+			rowLayout.marginBottom = 1;
+			textClient.setLayout(rowLayout);
+
+			Label label = toolkit.createLabel(textClient, "Category:");
+			label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+			label.setBackground(null);
+
+			categoryLabel = toolkit.createLabel(textClient, "");
+			categoryLabel.setBackground(null);
+
+			toolkit.paintBordersFor(textClient);
+
+			section.setTextClient(textClient);
+			section.addExpansionListener(new ExpansionAdapter() {
+				@Override
+				public void expansionStateChanging(ExpansionEvent e) {
+					textClient.setVisible(!e.getState());
+				}
+			});
+			textClient.setVisible(!section.isExpanded());
+		}
 	}
 
 	/**
@@ -126,10 +198,59 @@ public class AttributePart extends AbstractLocalEditorPart {
 
 	@Override
 	public void refresh() {
+		ITaskList taskList = TasksUiInternal.getTaskList();
+		categories = new ArrayList<AbstractTaskCategory>(taskList.getCategories());
+		Collections.sort(categories, new TaskContainerComparator());
+
+		AbstractTaskCategory selectedCategory = category;
+		if (selectedCategory == null) {
+			selectedCategory = TaskCategory.getParentTaskCategory(getTask());
+		}
+		categoryChooser.removeAll();
+		int selectedIndex = 0;
+		for (int i = 0; i < categories.size(); i++) {
+			AbstractTaskCategory category = categories.get(i);
+			categoryChooser.add(category.getSummary());
+			if (category.equals(selectedCategory)) {
+				selectedIndex = i;
+			}
+		}
+		categoryChooser.select(selectedIndex);
+		updateCategoryLabel();
+
 		String url = getTask().getUrl();
 		urlEditor.setText(url != null ? url : ""); //$NON-NLS-1$
+
 		updateButtons();
 		super.refresh();
+	}
+
+	private void updateCategoryLabel() {
+		if (category == null) {
+			AbstractTaskCategory parentTaskCategory = TaskCategory.getParentTaskCategory(getTask());
+			categoryLabel.setText((parentTaskCategory != null) ? parentTaskCategory.getSummary() : ""); //$NON-NLS-1$
+		} else {
+			categoryLabel.setText(category.getSummary());
+		}
+		if (!getSection().isExpanded()) {
+			getSection().layout(true, true);
+		}
+	}
+
+	private void createCategoryChooser(Composite buttonComposite, FormToolkit toolkit) {
+		categoryChooser = new CCombo(buttonComposite, SWT.FLAT | SWT.READ_ONLY);
+		categoryChooser.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+		toolkit.adapt(categoryChooser, false, false);
+		categoryChooser.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent event) {
+				if (categoryChooser.getSelectionIndex() != -1) {
+					category = categories.get(categoryChooser.getSelectionIndex());
+					updateCategoryLabel();
+					markDirty();
+				}
+			}
+		});
 	}
 
 }
