@@ -79,7 +79,7 @@ public class SummaryPart extends AbstractLocalEditorPart {
 
 		summaryEditor = new RichTextEditor(getRepository(), SWT.SINGLE);
 		summaryEditor.setSpellCheckingEnabled(true);
-		summaryEditor.setReadOnly(!(getTask() instanceof LocalTask));
+		summaryEditor.setReadOnly(!isSummaryEditable());
 		summaryEditor.createControl(borderComposite, toolkit);
 		if (textSupport != null) {
 			textSupport.install(summaryEditor.getViewer(), true);
@@ -182,7 +182,7 @@ public class SummaryPart extends AbstractLocalEditorPart {
 		Composite spacer = toolkit.createComposite(headerComposite, SWT.NONE);
 		GridDataFactory.fillDefaults().hint(0, 10).grab(true, false).applyTo(spacer);
 
-		createLabel(headerComposite, toolkit, Messages.TaskPlanningEditor_Created, 0);
+		createLabel(headerComposite, toolkit, getCreatedDateLabel(), 0);
 		// do not use toolkit.createText() to avoid border on Windows
 		creationDateText = new Text(headerComposite, SWT.FLAT | SWT.READ_ONLY);
 		toolkit.adapt(creationDateText, false, false);
@@ -281,6 +281,14 @@ public class SummaryPart extends AbstractLocalEditorPart {
 		if (!summaryEditor.getControl().isDisposed()) {
 			summaryEditor.setText(value);
 		}
+	}
+
+	protected String getCreatedDateLabel() {
+		return Messages.TaskPlanningEditor_Created;
+	}
+
+	protected boolean isSummaryEditable() {
+		return getTask() instanceof LocalTask;
 	}
 
 }
