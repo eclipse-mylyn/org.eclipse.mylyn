@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.mylyn.discovery.core.connectorDiscovery">
+      <connectorCategory
+            description="%connectorCategory.description.0"
+            id="org.eclipse.mylyn.discovery.site.categories.connectorCategoryEclipseOrg"
+            name="%connectorCategory.name.0">
+         <icon
+               image32="images/eclipse32.png"/>
+      </connectorCategory>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.discovery.core.connectorDiscovery">
+      <connectorDescriptor
+            categoryId="org.eclipse.mylyn.discovery.site.categories.connectorCategoryEclipseOrg"
+            description="%connectorDescriptor.description.0"
+            id="org.eclipse.mylyn.trac_feature"
+            kind="task"
+            license="%connectorDescriptor.license.0"
+            name="%connectorDescriptor.name.0"
+            provider="%connectorDescriptor.provider.0"
+            siteUrl="http://download.eclipse.org/tools/mylyn/update/weekly/extras">
+         <icon
+               image32="images/trac32.png"
+               image64="images/trac64.png">
+         </icon>
+         <overview
+               screenshot="images/trac-screenshot-320x240.png"
+               summary="%connectorDescriptor.overview.summary.0"
+               url="http://www.eclipse.org/mylyn/">
+         </overview>
+      </connectorDescriptor>
+      <connectorDescriptor
+            categoryId="org.eclipse.mylyn.discovery.site.categories.connectorCategoryEclipseOrg"
+            description="The JIRA connector supports JIRA 3.4 or later."
+            id="org.eclipse.mylyn.jira_feature"
+            kind="task"
+            license="EPL"
+            name="Atlassian JIRA"
+            provider="Eclipse Mylyn"
+            siteUrl="http://download.eclipse.org/tools/mylyn/update/weekly/extras">
+         <icon
+               image32="images/jira32.png">
+         </icon>
+         <overview
+               screenshot="images/jira-screenshot-320x240.png"
+               summary="With the JIRA connector, you can query your JIRA server and access your issues from Eclipse. You can then quickly view and update your issues using a rich editor. When someone modifies one of your tasks, you&apos;ll see an incoming change notification in your task list. Now there&apos;s no need to use a web browser and email client to stay on top of your JIRA issues. Tasktop also provides task time tracking as well as personal, sophisticated scheduling for your JIRA tasks so you can prioritize your work beyond that available through JIRA."
+               url="http://confluence.atlassian.com/display/JIRAEXT/Mylyn">
+         </overview>
+      </connectorDescriptor>
+   </extension>
+
+</plugin>
