@@ -215,6 +215,8 @@ public class CommonImages {
 
 	public static final ImageDescriptor IMAGE_FILE = create(T_OBJ, "file-image.gif"); //$NON-NLS-1$
 
+	public static final ImageDescriptor FILE_PLAIN = create(T_OBJ, "file-plain.png"); //$NON-NLS-1$
+
 	public static final ImageDescriptor QUESTION = create(T_OBJ, "question.gif"); //$NON-NLS-1$
 
 	public static final ImageDescriptor SEPARATOR_LIST = create(T_TOOL, "content-assist-separator.gif"); //$NON-NLS-1$
