@@ -732,38 +732,35 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		toolBarManager.update(true);
 
 		TaskRepository outgoingNewRepository = TasksUiUtil.getOutgoingNewTaskRepository(task);
-		if (!LocalRepositoryConnector.CONNECTOR_KIND.equals(taskEditorInput.getTaskRepository().getConnectorKind())
-				|| outgoingNewRepository != null) {
-			final TaskRepository taskRepository = (outgoingNewRepository != null) ? outgoingNewRepository
-					: taskEditorInput.getTaskRepository();
-			ControlContribution repositoryLabelControl = new ControlContribution(Messages.AbstractTaskEditorPage_Title) {
-				@Override
-				protected Control createControl(Composite parent) {
-					FormToolkit toolkit = getHeaderForm().getToolkit();
-					Composite composite = toolkit.createComposite(parent);
-					composite.setLayout(new RowLayout());
-					composite.setBackground(null);
-					String label = taskRepository.getRepositoryLabel();
-					if (label.indexOf("//") != -1) { //$NON-NLS-1$
-						label = label.substring((taskRepository.getRepositoryUrl().indexOf("//") + 2)); //$NON-NLS-1$
-					}
-
-					Hyperlink link = new Hyperlink(composite, SWT.NONE);
-					link.setText(label);
-					link.setFont(JFaceResources.getBannerFont());
-					link.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-					link.addHyperlinkListener(new HyperlinkAdapter() {
-						@Override
-						public void linkActivated(HyperlinkEvent e) {
-							TasksUiUtil.openEditRepositoryWizard(taskRepository);
-						}
-					});
-
-					return composite;
+		final TaskRepository taskRepository = (outgoingNewRepository != null) ? outgoingNewRepository
+				: taskEditorInput.getTaskRepository();
+		ControlContribution repositoryLabelControl = new ControlContribution(Messages.AbstractTaskEditorPage_Title) {
+			@Override
+			protected Control createControl(Composite parent) {
+				FormToolkit toolkit = getHeaderForm().getToolkit();
+				Composite composite = toolkit.createComposite(parent);
+				composite.setLayout(new RowLayout());
+				composite.setBackground(null);
+				String label = taskRepository.getRepositoryLabel();
+				if (label.indexOf("//") != -1) { //$NON-NLS-1$
+					label = label.substring((taskRepository.getRepositoryUrl().indexOf("//") + 2)); //$NON-NLS-1$
 				}
-			};
-			toolBarManager.add(repositoryLabelControl);
-		}
+
+				Hyperlink link = new Hyperlink(composite, SWT.NONE);
+				link.setText(label);
+				link.setFont(JFaceResources.getBannerFont());
+				link.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+				link.addHyperlinkListener(new HyperlinkAdapter() {
+					@Override
+					public void linkActivated(HyperlinkEvent e) {
+						TasksUiUtil.openEditRepositoryWizard(taskRepository);
+					}
+				});
+
+				return composite;
+			}
+		};
+		toolBarManager.add(repositoryLabelControl);
 
 		toolBarManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 
@@ -810,8 +807,6 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		// add external contributions
 		menuService = (IMenuService) getSite().getService(IMenuService.class);
 		if (menuService != null && toolBarManager instanceof ContributionManager) {
-			TaskRepository taskRepository = (outgoingNewRepository != null) ? outgoingNewRepository
-					: taskEditorInput.getTaskRepository();
 			menuService.populateContributionManager((ContributionManager) toolBarManager, "toolbar:" //$NON-NLS-1$
 					+ ID_TOOLBAR_HEADER + "." + taskRepository.getConnectorKind()); //$NON-NLS-1$
 		}

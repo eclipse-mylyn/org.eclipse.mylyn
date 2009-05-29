@@ -40,6 +40,8 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorExtension;
 import org.eclipse.mylyn.tasks.ui.editors.TaskFormPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -83,6 +85,8 @@ public class PlanningPart extends AbstractLocalEditorPart {
 	private Spinner estimatedTime;
 
 	private ScheduleDatePicker scheduleDatePicker;
+
+	private static final String PERSONAL_NOTES = Messages.PlanningPart_Personal_Notes;
 
 	private final ITaskListChangeListener TASK_LIST_LISTENER = new TaskListChangeAdapter() {
 
@@ -151,7 +155,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		}
 
 		if (getTask().getNotes() != null && notesString != null) {
-			return getTask().getNotes().equals(notesString);
+			return getTask().getNotes().equals(notesString) || notesString.equals(PERSONAL_NOTES);
 		}
 		return false;
 	}
@@ -227,7 +231,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		return section;
 	}
 
-	private void createNotesArea(FormToolkit toolkit, Composite parent, int numColumns) {
+	private void createNotesArea(final FormToolkit toolkit, Composite parent, int numColumns) {
 		Composite composite = toolkit.createComposite(parent);
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 1;
@@ -235,7 +239,6 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		composite.setLayout(layout);
 		GridDataFactory.fillDefaults().span(numColumns, SWT.DEFAULT).grab(true, expandNotesVertically).applyTo(
 				composite);
-
 
 		if (page != null) {
 			IContextService contextService = (IContextService) page.getEditorSite().getService(IContextService.class);
@@ -252,6 +255,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		}
 		noteEditor.setSpellCheckingEnabled(true);
 		noteEditor.createControl(composite, toolkit);
+
 		noteEditor.setText(notesString);
 
 		noteEditor.getControl().setLayoutData(
@@ -261,7 +265,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		if (textSupport != null) {
 			textSupport.install(noteEditor.getViewer(), true);
 		}
-		noteEditor.getDefaultViewer().addTextListener(new ITextListener() {
+		noteEditor.getViewer().addTextListener(new ITextListener() {
 			public void textChanged(TextEvent event) {
 				notesString = noteEditor.getText();
 				if (!notesEqual()) {
@@ -269,7 +273,45 @@ public class PlanningPart extends AbstractLocalEditorPart {
 				}
 			}
 		});
+		addNotesLabelText(toolkit, composite);
 		toolkit.paintBordersFor(composite);
+	}
+
+	private void addNotesLabelText(final FormToolkit toolkit, Composite composite) {
+
+		if (notesString.length() == 0) {
+			notesString = PERSONAL_NOTES;
+			noteEditor.setText(notesString);
+		}
+
+		FocusListener removePersonalNotesFocusListener = new FocusListener() {
+
+			public void focusGained(FocusEvent e) {
+				if (noteEditor.getText().equals(PERSONAL_NOTES)) {
+					noteEditor.setText(""); //$NON-NLS-1$
+
+					if (noteEditor.getViewer() != null) {
+						noteEditor.getViewer().getTextWidget().setForeground(toolkit.getColors().getForeground());
+					}
+				}
+			}
+
+			public void focusLost(FocusEvent e) {
+			}
+		};
+		boolean changeColor = false;
+		if (noteEditor.getText().equals(PERSONAL_NOTES)) {
+			changeColor = true;
+		}
+
+		if (noteEditor.getViewer() != null) {
+			noteEditor.getViewer().getTextWidget().addFocusListener(removePersonalNotesFocusListener);
+			if (changeColor) {
+				noteEditor.getViewer().getTextWidget().setForeground(
+						composite.getShell().getDisplay().getSystemColor(SWT.COLOR_GRAY));
+			}
+		}
+
 	}
 
 	private void createActualTime(FormToolkit toolkit, Composite parent) {

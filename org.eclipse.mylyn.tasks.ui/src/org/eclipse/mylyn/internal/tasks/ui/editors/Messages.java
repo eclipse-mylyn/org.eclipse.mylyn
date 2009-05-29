@@ -75,6 +75,8 @@ public class Messages extends NLS {
 
 	public static String PlanningPageFactory_Private;
 
+	public static String PlanningPart_Personal_Notes;
+
 	public static String RichTextAttributeEditor_Viewer_Source;
 
 	public static String TaskAttachmentDropListener_Note_that_only_the_first_file_dragged_will_be_attached;
