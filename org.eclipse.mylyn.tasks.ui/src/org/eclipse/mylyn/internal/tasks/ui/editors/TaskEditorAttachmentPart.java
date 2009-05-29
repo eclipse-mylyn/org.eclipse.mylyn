@@ -17,9 +17,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
@@ -241,6 +243,19 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 				break;
 			}
 		}
+	}
+
+	@Override
+	protected void fillToolBar(ToolBarManager toolBarManager) {
+		Action attachFileAction = new Action() {
+			@Override
+			public void run() {
+				EditorUtil.openNewAttachmentWizard(getTaskEditorPage(), Mode.DEFAULT, null);
+			}
+		};
+		attachFileAction.setToolTipText(Messages.TaskEditorAttachmentPart_Attach_);
+		attachFileAction.setImageDescriptor(CommonImages.FILE_PLAIN);
+		toolBarManager.add(attachFileAction);
 	}
 
 }
