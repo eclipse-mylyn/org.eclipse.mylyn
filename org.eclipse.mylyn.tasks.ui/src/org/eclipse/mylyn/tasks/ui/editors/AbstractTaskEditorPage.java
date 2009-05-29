@@ -1504,7 +1504,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 					"org.eclipse.mylyn.tasks.toolbars.submit") { //$NON-NLS-1$
 				@Override
 				protected Control createControl(Composite parent) {
-					submitButton = toolkit.createButton(parent, Messages.TaskEditorActionPart_Submit, SWT.NONE);
+					submitButton = toolkit.createButton(parent, Messages.TaskEditorActionPart_Submit + " ", SWT.NONE); //$NON-NLS-1$
 					submitButton.setImage(CommonImages.getImage(TasksUiImages.REPOSITORY_SUBMIT));
 					submitButton.setBackground(null);
 					submitButton.addListener(SWT.Selection, new Listener() {
