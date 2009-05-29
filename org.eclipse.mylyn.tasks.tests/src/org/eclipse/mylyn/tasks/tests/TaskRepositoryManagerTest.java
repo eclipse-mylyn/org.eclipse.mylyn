@@ -12,22 +12,15 @@
 package org.eclipse.mylyn.tasks.tests;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.equinox.security.storage.EncodingUtils;
-import org.eclipse.equinox.security.storage.ISecurePreferences;
-import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -88,42 +81,43 @@ public class TaskRepositoryManagerTest extends TestCase {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
-	public void testsUseSecureStorage() throws Exception {
-		TaskRepository repository = new TaskRepository("bugzilla", "http://repository2/");
-		repository.setProperty(ITasksCoreConstants.PROPERTY_USE_SECURE_STORAGE, "true");
-		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("testUserName",
-				"testPassword"), true);
-
-		ISecurePreferences securePreferences = SecurePreferencesFactory.getDefault()
-				.node(ITasksCoreConstants.ID_PLUGIN);
-		securePreferences = securePreferences.node(EncodingUtils.encodeSlashes(repository.getUrl()));
-		assertEquals("testPassword", securePreferences.get(AUTH_PASSWORD, null));
-		assertEquals("testUserName", repository.getProperty(AUTH_USERNAME));
-		assertEquals("shouldbenull", securePreferences.get(AUTH_USERNAME, "shouldbenull"));
-		assertNull(Platform.getAuthorizationInfo(new URL(repository.getUrl()), AUTH_REALM, AUTH_SCHEME));
-	}
-
-	@SuppressWarnings("deprecation")
-	public void testsUseKeyring() throws Exception {
-		TaskRepository repository = new TaskRepository("bugzilla", "http://repository3/");
-		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("testUserName",
-				"testPassword"), true);
-
-		repository.setCredentials(AuthenticationType.HTTP,
-				new AuthenticationCredentials("httpUserName", "httpPassword"), true);
-
-		ISecurePreferences securePreferences = SecurePreferencesFactory.getDefault()
-				.node(ITasksCoreConstants.ID_PLUGIN);
-		securePreferences = securePreferences.node(EncodingUtils.encodeSlashes(repository.getUrl()));
-		assertNull(securePreferences.get(AUTH_PASSWORD, null));
-		assertNull("testUserName", repository.getProperty(AUTH_USERNAME));
-		Map map = Platform.getAuthorizationInfo(new URL(repository.getUrl()), AUTH_REALM, AUTH_SCHEME);
-		assertEquals("testUserName", map.get(AUTH_USERNAME));
-		assertEquals("testPassword", map.get(AUTH_PASSWORD));
-		assertEquals("httpUserName", map.get(AUTH_HTTP_USERNAME));
-		assertEquals("httpPassword", map.get(AUTH_HTTP_PASSWORD));
-	}
+	// TODO e3.4 re-enable keystore tests
+//	@SuppressWarnings("deprecation")
+//	public void testsUseSecureStorage() throws Exception {
+//		TaskRepository repository = new TaskRepository("bugzilla", "http://repository2/");
+//		repository.setProperty(ITasksCoreConstants.PROPERTY_USE_SECURE_STORAGE, "true");
+//		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("testUserName",
+//				"testPassword"), true);
+//
+//		ISecurePreferences securePreferences = SecurePreferencesFactory.getDefault()
+//				.node(ITasksCoreConstants.ID_PLUGIN);
+//		securePreferences = securePreferences.node(EncodingUtils.encodeSlashes(repository.getUrl()));
+//		assertEquals("testPassword", securePreferences.get(AUTH_PASSWORD, null));
+//		assertEquals("testUserName", repository.getProperty(AUTH_USERNAME));
+//		assertEquals("shouldbenull", securePreferences.get(AUTH_USERNAME, "shouldbenull"));
+//		assertNull(Platform.getAuthorizationInfo(new URL(repository.getUrl()), AUTH_REALM, AUTH_SCHEME));
+//	}
+//
+//	@SuppressWarnings("deprecation")
+//	public void testsUseKeyring() throws Exception {
+//		TaskRepository repository = new TaskRepository("bugzilla", "http://repository3/");
+//		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("testUserName",
+//				"testPassword"), true);
+//
+//		repository.setCredentials(AuthenticationType.HTTP,
+//				new AuthenticationCredentials("httpUserName", "httpPassword"), true);
+//
+//		ISecurePreferences securePreferences = SecurePreferencesFactory.getDefault()
+//				.node(ITasksCoreConstants.ID_PLUGIN);
+//		securePreferences = securePreferences.node(EncodingUtils.encodeSlashes(repository.getUrl()));
+//		assertNull(securePreferences.get(AUTH_PASSWORD, null));
+//		assertNull("testUserName", repository.getProperty(AUTH_USERNAME));
+//		Map map = Platform.getAuthorizationInfo(new URL(repository.getUrl()), AUTH_REALM, AUTH_SCHEME);
+//		assertEquals("testUserName", map.get(AUTH_USERNAME));
+//		assertEquals("testPassword", map.get(AUTH_PASSWORD));
+//		assertEquals("httpUserName", map.get(AUTH_HTTP_USERNAME));
+//		assertEquals("httpPassword", map.get(AUTH_HTTP_PASSWORD));
+//	}
 
 //	public void testMigrationToSecureStorage() throws Exception {
 //		TaskRepository repository1 = new TaskRepository("bugzilla", "http://repository1/");
