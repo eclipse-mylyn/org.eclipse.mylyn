@@ -225,6 +225,9 @@ public class TaskEditor extends SharedHeaderFormEditor {
 						// bottom align tool bar in title region
 						Point size = leftToolBar.computeSize(SWT.DEFAULT, SWT.DEFAULT, false);
 						int y = leftToolBar.getParent().getSize().y - size.y - 2;
+						if (PlatformUtil.needsCarbonToolBarFix()) {
+							y += 5;
+						}
 						if (!hasLeftToolBar()) {
 							// hide tool bar to avoid overlaying busyLabel on windows
 							size.x = 0;
@@ -610,6 +613,9 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		}
 
 		final Point size = leftToolBar.computeSize(SWT.DEFAULT, SWT.DEFAULT, false);
+		if (PlatformUtil.needsCarbonToolBarFix()) {
+			size.y = 22;
+		}
 
 		// padding between toolbar and image, ensure image is at least one pixel wide to avoid SWT error 
 		final int padding = (size.x > 0 && !noExtraPadding) ? 10 : 1;
@@ -876,9 +882,13 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			} else if (PlatformUtil.needsToolItemToForceToolBarHeight()) {
 				ToolItem item = new ToolItem(leftToolBar, SWT.NONE);
 				item.setEnabled(false);
+				int scaleHeight = 22;
+				if (PlatformUtil.needsCarbonToolBarFix()) {
+					scaleHeight = 32;
+				}
 				final Image image = new Image(item.getDisplay(), CommonImages.getImage(CommonImages.BLANK)
 						.getImageData()
-						.scaledTo(1, 22));
+						.scaledTo(1, scaleHeight));
 				item.setImage(image);
 				item.addDisposeListener(new DisposeListener() {
 					public void widgetDisposed(DisposeEvent e) {
