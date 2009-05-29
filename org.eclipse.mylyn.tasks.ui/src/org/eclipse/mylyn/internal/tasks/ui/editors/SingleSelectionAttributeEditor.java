@@ -21,6 +21,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataModelListener;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
@@ -84,6 +86,13 @@ public class SingleSelectionAttributeEditor extends AbstractAttributeEditor {
 		}
 		refresh();
 
+		getControl().addDisposeListener(new DisposeListener() {
+
+			public void widgetDisposed(DisposeEvent e) {
+				getModel().removeModelListener(modelListener);
+			}
+
+		});
 		getModel().addModelListener(modelListener);
 	}
 
@@ -150,11 +159,5 @@ public class SingleSelectionAttributeEditor extends AbstractAttributeEditor {
 			getAttributeMapper().setValue(getTaskAttribute(), value);
 			attributeChanged();
 		}
-	}
-
-	@Override
-	public void dispose() {
-		getModel().removeModelListener(modelListener);
-		super.dispose();
 	}
 }

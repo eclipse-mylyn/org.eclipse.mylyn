@@ -19,6 +19,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataModelEvent;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModelListener;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
@@ -30,6 +32,15 @@ public class PriorityAttributeEditor extends AbstractAttributeEditor {
 	private PriorityEditor editor;
 
 	private ITaskMapping mapping;
+
+	private final TaskDataModelListener modelListener = new TaskDataModelListener() {
+		@Override
+		public void attributeChanged(TaskDataModelEvent event) {
+			if (getTaskAttribute().equals(event.getTaskAttribute())) {
+				refresh();
+			}
+		}
+	};
 
 	public PriorityAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
@@ -49,14 +60,14 @@ public class PriorityAttributeEditor extends AbstractAttributeEditor {
 		editor.setReadOnly(isReadOnly());
 		editor.createControl(parent, toolkit);
 		setControl(editor.getControl());
-		getModel().addModelListener(new TaskDataModelListener() {
-			@Override
-			public void attributeChanged(TaskDataModelEvent event) {
-				if (getTaskAttribute().equals(event.getTaskAttribute())) {
-					refresh();
-				}
+		getControl().addDisposeListener(new DisposeListener() {
+
+			public void widgetDisposed(DisposeEvent e) {
+				getModel().removeModelListener(modelListener);
 			}
+
 		});
+		getModel().addModelListener(modelListener);
 		refresh();
 	}
 
