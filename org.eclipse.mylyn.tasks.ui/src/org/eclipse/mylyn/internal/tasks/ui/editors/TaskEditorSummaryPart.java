@@ -36,10 +36,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  */
 public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 
-	private static final int COLUMN_MARGIN = 6;
-
-	private Composite headerComposite;
-
 	private AbstractAttributeEditor summaryEditor;
 
 	public TaskEditorSummaryPart() {
@@ -47,7 +43,7 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 	}
 
 	private void addAttribute(Composite composite, FormToolkit toolkit, TaskAttribute attribute) {
-		addAttribute(composite, toolkit, attribute, COLUMN_MARGIN);
+		addAttribute(composite, toolkit, attribute, EditorUtil.HEADER_COLUMN_MARGIN);
 	}
 
 	private void addAttribute(Composite composite, FormToolkit toolkit, TaskAttribute attribute, int indent) {
@@ -77,7 +73,7 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 					if (priorityLevel != null) {
 						Image image = CommonImages.getImage(TasksUiInternal.getPriorityImage(getTaskEditorPage().getTask()));
 						if (image != null) {
-							Label label = toolkit.createLabel(headerComposite, null);
+							Label label = toolkit.createLabel(composite, null);
 							label.setImage(image);
 							GridDataFactory.defaultsFor(label).indent(5, -3).applyTo(label);
 						}
@@ -168,7 +164,6 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 
 		if (needsHeader()) {
 			createHeaderLayout(composite, toolkit);
-			GridDataFactory.fillDefaults().grab(true, false).applyTo(headerComposite);
 		}
 
 		toolkit.paintBordersFor(composite);
@@ -177,12 +172,13 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 	}
 
 	protected Composite createHeaderLayout(Composite composite, FormToolkit toolkit) {
-		headerComposite = toolkit.createComposite(composite);
+		Composite headerComposite = toolkit.createComposite(composite);
 		GridLayout layout = new GridLayout(1, false);
 		layout.verticalSpacing = 1;
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
 		headerComposite.setLayout(layout);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(headerComposite);
 
 //		ITaskMapping mapping = getTaskEditorPage().getConnector().getTaskMapping(getTaskData());
 //		if (mapping != null) {
