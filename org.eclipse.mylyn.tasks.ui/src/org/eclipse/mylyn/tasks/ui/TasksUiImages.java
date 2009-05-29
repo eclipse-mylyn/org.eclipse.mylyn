@@ -93,6 +93,9 @@ public class TasksUiImages {
 	public static final ImageDescriptor REPOSITORY_SYNCHRONIZE_SMALL = create(TOOL_SMALL,
 			"repository-synchronize-small.png"); //$NON-NLS-1$
 
+	public static final ImageDescriptor REPOSITORY_SYNCHRONIZE_ATTRIBUTES = create(TOOL,
+			"repository-synchronize-attributes.png"); //$NON-NLS-1$
+
 	public static final ImageDescriptor REPOSITORY_SYNCHRONIZE = create(TOOL, "repository-synchronize.gif"); //$NON-NLS-1$
 
 	public static final ImageDescriptor REPOSITORY_SUBMIT = create(TOOL, "repository-submit.gif"); //$NON-NLS-1$

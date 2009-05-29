@@ -206,9 +206,10 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 							public void run() {
 								getTaskEditorPage().showEditorBusy(false);
 								if (job.getStatus() != null) {
-									getTaskEditorPage().getTaskEditor().setStatus(
-											Messages.TaskEditorAttributePart_Updating_of_repository_configuration_failed, Messages.TaskEditorAttributePart_Update_Failed,
-											job.getStatus());
+									getTaskEditorPage().getTaskEditor()
+											.setStatus(
+													Messages.TaskEditorAttributePart_Updating_of_repository_configuration_failed,
+													Messages.TaskEditorAttributePart_Update_Failed, job.getStatus());
 								} else {
 									getTaskEditorPage().refreshFormContent();
 								}
@@ -245,7 +246,7 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 //				}
 //			}
 		};
-		repositoryConfigRefresh.setImageDescriptor(TasksUiImages.REPOSITORY_SYNCHRONIZE_SMALL);
+		repositoryConfigRefresh.setImageDescriptor(TasksUiImages.REPOSITORY_SYNCHRONIZE_ATTRIBUTES);
 		repositoryConfigRefresh.selectionChanged(new StructuredSelection(getTaskEditorPage().getTaskRepository()));
 		repositoryConfigRefresh.setToolTipText(Messages.TaskEditorAttributePart_Refresh_Attributes);
 		toolBar.add(repositoryConfigRefresh);

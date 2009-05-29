@@ -49,12 +49,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.internal.WorkbenchImages;
 
 /**
  * @author Mik Kersten
@@ -164,7 +162,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 
 		Button attachFileButton = toolkit.createButton(attachmentControlsComposite,
 				Messages.TaskEditorAttachmentPart_Attach_, SWT.PUSH);
-		attachFileButton.setImage(WorkbenchImages.getImage(ISharedImages.IMG_OBJ_FILE));
+		attachFileButton.setImage(CommonImages.getImage(CommonImages.FILE_PLAIN));
 		attachFileButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
