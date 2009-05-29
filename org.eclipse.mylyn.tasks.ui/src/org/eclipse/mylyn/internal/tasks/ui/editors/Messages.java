@@ -235,6 +235,8 @@ public class Messages extends NLS {
 
 	public static String AttributeEditorToolkit_Content_Assist_Available__X_;
 
+	public static String AttributePart_Category_;
+
 	public static String SummaryPart_Section_Title;
 
 	public static String TaskEditor_Task_;

@@ -96,7 +96,7 @@ public class AttributePart extends AbstractLocalEditorPart {
 		composite.setLayout(new GridLayout(4, false));
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(section);
 
-		Label label = toolkit.createLabel(composite, "Category:");
+		Label label = toolkit.createLabel(composite, Messages.AttributePart_Category_);
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 
 		createCategoryChooser(composite, toolkit);
@@ -153,11 +153,11 @@ public class AttributePart extends AbstractLocalEditorPart {
 			rowLayout.marginBottom = 1;
 			textClient.setLayout(rowLayout);
 
-			Label label = toolkit.createLabel(textClient, "Category:");
+			Label label = toolkit.createLabel(textClient, Messages.AttributePart_Category_);
 			label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 			label.setBackground(null);
 
-			categoryLabel = toolkit.createLabel(textClient, "");
+			categoryLabel = toolkit.createLabel(textClient, ""); //$NON-NLS-1$
 			categoryLabel.setBackground(null);
 
 			toolkit.paintBordersFor(textClient);
