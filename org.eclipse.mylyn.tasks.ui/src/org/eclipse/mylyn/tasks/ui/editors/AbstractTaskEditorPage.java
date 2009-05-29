@@ -537,6 +537,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 			editorComposite = form.getBody();
 			// TODO consider using TableWrapLayout, it makes resizing much faster
 			GridLayout editorLayout = new GridLayout();
+			editorLayout.verticalSpacing = 0;
 			editorComposite.setLayout(editorLayout);
 
 			//form.setData("focusScrolling", Boolean.FALSE);
