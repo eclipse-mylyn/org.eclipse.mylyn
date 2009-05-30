@@ -26,7 +26,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ContributionManager;
-import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -37,14 +36,12 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.resource.CompositeImageDescriptor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
-import org.eclipse.mylyn.internal.provisional.commons.ui.SelectionProviderAdapter;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.editor.EditorBusyIndicator;
 import org.eclipse.mylyn.internal.provisional.commons.ui.editor.IBusyEditor;
@@ -55,7 +52,6 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.TaskEditorScheduleAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ToggleTaskActivationAction;
 import org.eclipse.mylyn.internal.tasks.ui.editors.Messages;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionContributor;
-import org.eclipse.mylyn.internal.tasks.ui.editors.TaskPlanningEditor;
 import org.eclipse.mylyn.internal.tasks.ui.util.PlatformUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDragSourceListener;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
@@ -65,21 +61,19 @@ import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.FileTransfer;
-import org.eclipse.swt.dnd.TextTransfer;
-import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -89,7 +83,6 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.contexts.IContextService;
-import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.forms.editor.SharedHeaderFormEditor;
@@ -98,7 +91,6 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.internal.forms.widgets.BusyIndicator;
 import org.eclipse.ui.internal.forms.widgets.FormHeading;
 import org.eclipse.ui.internal.forms.widgets.TitleRegion;
@@ -162,6 +154,8 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	private int initialLeftToolbarSize;
 
 	private boolean noExtraPadding;
+
+	private boolean headerLabelInitialized;
 
 	public TaskEditor() {
 	}
@@ -494,22 +488,22 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	}
 
 	private void installTitleDrag(Form form) {
-		if (titleDragSourceListener == null && !hasLeftToolBar()) {
-			Transfer[] transferTypes;
-			if (null == task) {
-				transferTypes = new Transfer[] { TextTransfer.getInstance() };
-			} else {
-				transferTypes = new Transfer[] { LocalSelectionTransfer.getTransfer(), TextTransfer.getInstance(),
-						FileTransfer.getInstance() };
-			}
-			titleDragSourceListener = new TaskDragSourceListener(new SelectionProviderAdapter() {
-				@Override
-				public ISelection getSelection() {
-					return new StructuredSelection(task);
-				}
-			});
-			form.addTitleDragSupport(DND.DROP_MOVE | DND.DROP_LINK, transferTypes, titleDragSourceListener);
-		}
+//		if (titleDragSourceListener == null && !hasLeftToolBar()) {
+//			Transfer[] transferTypes;
+//			if (null == task) {
+//				transferTypes = new Transfer[] { TextTransfer.getInstance() };
+//			} else {
+//				transferTypes = new Transfer[] { LocalSelectionTransfer.getTransfer(), TextTransfer.getInstance(),
+//						FileTransfer.getInstance() };
+//			}
+//			titleDragSourceListener = new TaskDragSourceListener(new SelectionProviderAdapter() {
+//				@Override
+//				public ISelection getSelection() {
+//					return new StructuredSelection(task);
+//				}
+//			});
+//			form.addTitleDragSupport(DND.DROP_MOVE | DND.DROP_LINK, transferTypes, titleDragSourceListener);
+//		}
 	}
 
 	@Override
@@ -740,33 +734,33 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		TaskRepository outgoingNewRepository = TasksUiUtil.getOutgoingNewTaskRepository(task);
 		final TaskRepository taskRepository = (outgoingNewRepository != null) ? outgoingNewRepository
 				: taskEditorInput.getTaskRepository();
-		ControlContribution repositoryLabelControl = new ControlContribution(Messages.AbstractTaskEditorPage_Title) {
-			@Override
-			protected Control createControl(Composite parent) {
-				FormToolkit toolkit = getHeaderForm().getToolkit();
-				Composite composite = toolkit.createComposite(parent);
-				composite.setLayout(new RowLayout());
-				composite.setBackground(null);
-				String label = taskRepository.getRepositoryLabel();
-				if (label.indexOf("//") != -1) { //$NON-NLS-1$
-					label = label.substring((taskRepository.getRepositoryUrl().indexOf("//") + 2)); //$NON-NLS-1$
-				}
-
-				Hyperlink link = new Hyperlink(composite, SWT.NONE);
-				link.setText(label);
-				link.setFont(JFaceResources.getBannerFont());
-				link.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-				link.addHyperlinkListener(new HyperlinkAdapter() {
-					@Override
-					public void linkActivated(HyperlinkEvent e) {
-						TasksUiUtil.openEditRepositoryWizard(taskRepository);
-					}
-				});
-
-				return composite;
-			}
-		};
-		toolBarManager.add(repositoryLabelControl);
+//		ControlContribution repositoryLabelControl = new ControlContribution(Messages.AbstractTaskEditorPage_Title) {
+//			@Override
+//			protected Control createControl(Composite parent) {
+//				FormToolkit toolkit = getHeaderForm().getToolkit();
+//				Composite composite = toolkit.createComposite(parent);
+//				composite.setLayout(new RowLayout());
+//				composite.setBackground(null);
+//				String label = taskRepository.getRepositoryLabel();
+//				if (label.indexOf("//") != -1) { //$NON-NLS-1$
+//					label = label.substring((taskRepository.getRepositoryUrl().indexOf("//") + 2)); //$NON-NLS-1$
+//				}
+//
+//				Hyperlink link = new Hyperlink(composite, SWT.NONE);
+//				link.setText(label);
+//				link.setFont(JFaceResources.getBannerFont());
+//				link.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+//				link.addHyperlinkListener(new HyperlinkAdapter() {
+//					@Override
+//					public void linkActivated(HyperlinkEvent e) {
+//						TasksUiUtil.openEditRepositoryWizard(taskRepository);
+//					}
+//				});
+//
+//				return composite;
+//			}
+//		};
+//		toolBarManager.add(repositoryLabelControl);
 
 		toolBarManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 
@@ -810,6 +804,39 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		toolBarManager.add(new Separator("activation")); //$NON-NLS-1$
 		toolBarManager.add(activateAction);
 
+//		ContributionItem spacer = new ContributionItem() {
+//			@Override
+//			public void fill(ToolBar toolbar, int index) {
+//				ToolItem item = new ToolItem(toolbar, SWT.NONE);
+//				int scaleHeight = 42;
+//				if (PlatformUtil.needsCarbonToolBarFix()) {
+//					scaleHeight = 32;
+//				}
+//				final Image image = new Image(toolbar.getDisplay(), CommonImages.getImage(CommonImages.BLANK)
+//						.getImageData()
+//						.scaledTo(1, scaleHeight));
+//				item.setImage(image);
+//				item.addDisposeListener(new DisposeListener() {
+//					public void widgetDisposed(DisposeEvent e) {
+//						image.dispose();
+//					}
+//				});
+//				item.setWidth(5);
+//				item.setEnabled(false);
+//			}
+//		};
+//		toolBarManager.add(spacer);
+
+		for (IFormPage page : getPages()) {
+			if (page instanceof AbstractTaskEditorPage) {
+				AbstractTaskEditorPage taskEditorPage = (AbstractTaskEditorPage) page;
+				taskEditorPage.fillLeftHeaderToolBar(toolBarManager);
+			} /*else if (page instanceof TaskPlanningEditor) { 
+				TaskPlanningEditor taskEditorPage = (TaskPlanningEditor) page;
+				taskEditorPage.fillLeftHeaderToolBar(toolBarManager);
+				}*/
+		}
+
 		// add external contributions
 		menuService = (IMenuService) getSite().getService(IMenuService.class);
 		if (menuService != null && toolBarManager instanceof ContributionManager) {
@@ -833,15 +860,15 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 		initialLeftToolbarSize = leftToolBarManager.getSize();
 
-		for (IFormPage page : getPages()) {
-			if (page instanceof AbstractTaskEditorPage) {
-				AbstractTaskEditorPage taskEditorPage = (AbstractTaskEditorPage) page;
-				taskEditorPage.fillLeftHeaderToolBar(leftToolBarManager);
-			} else if (page instanceof TaskPlanningEditor) {
-				TaskPlanningEditor taskEditorPage = (TaskPlanningEditor) page;
-				taskEditorPage.fillLeftHeaderToolBar(leftToolBarManager);
-			}
-		}
+//		for (IFormPage page : getPages()) {
+//			if (page instanceof AbstractTaskEditorPage) {
+//				AbstractTaskEditorPage taskEditorPage = (AbstractTaskEditorPage) page;
+//				taskEditorPage.fillLeftHeaderToolBar(leftToolBarManager);
+//			} else if (page instanceof TaskPlanningEditor) {
+//				TaskPlanningEditor taskEditorPage = (TaskPlanningEditor) page;
+//				taskEditorPage.fillLeftHeaderToolBar(leftToolBarManager);
+//			}
+//		}
 
 		// add external contributions
 		menuService = (IMenuService) getSite().getService(IMenuService.class);
@@ -932,28 +959,52 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		if (hasLeftToolBar()) {
 			getHeaderForm().getForm().setText(null);
 		} else {
-			String connectorKind;
 			TaskRepository outgoingNewRepository = TasksUiUtil.getOutgoingNewTaskRepository(task);
-			if (outgoingNewRepository != null) {
-				connectorKind = outgoingNewRepository.getConnectorKind();
-			} else {
-				connectorKind = task.getConnectorKind();
+			final TaskRepository taskRepository = (outgoingNewRepository != null) ? outgoingNewRepository
+					: taskEditorInput.getTaskRepository();
+
+//			if (connectorKind.equals(LocalRepositoryConnector.CONNECTOR_KIND)) {
+//				getHeaderForm().getForm().setText(Messages.TaskEditor_Task_ + task.getSummary());
+//			} else {
+//				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(connectorKind);
+//				String kindLabel = ""; //$NON-NLS-1$
+//				if (connectorUi != null) {
+//					kindLabel = connectorUi.getTaskKindLabel(task);
+//				}
+//
+//				String idLabel = task.getTaskKey();
+//				if (idLabel != null) {
+//					getHeaderForm().getForm().setText(kindLabel + " " + idLabel); //$NON-NLS-1$
+//				} else {
+//					getHeaderForm().getForm().setText(kindLabel);
+//				}
+//			}
+			String label = taskRepository.getRepositoryLabel();
+			if (label.indexOf("//") != -1) { //$NON-NLS-1$
+				label = label.substring((taskRepository.getRepositoryUrl().indexOf("//") + 2)); //$NON-NLS-1$
 			}
+			if (!headerLabelInitialized) {
+				headerLabelInitialized = true;
+				getHeaderForm().getForm().setText(label);
+				getHeaderForm().getForm().setFont(JFaceResources.getBannerFont());
+				try {
+					FormHeading heading = (FormHeading) getHeaderForm().getForm().getForm().getHead();
 
-			if (connectorKind.equals(LocalRepositoryConnector.CONNECTOR_KIND)) {
-				getHeaderForm().getForm().setText(Messages.TaskEditor_Task_ + task.getSummary());
-			} else {
-				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(connectorKind);
-				String kindLabel = ""; //$NON-NLS-1$
-				if (connectorUi != null) {
-					kindLabel = connectorUi.getTaskKindLabel(task);
-				}
+					Field field = FormHeading.class.getDeclaredField("titleRegion"); //$NON-NLS-1$
+					field.setAccessible(true);
 
-				String idLabel = task.getTaskKey();
-				if (idLabel != null) {
-					getHeaderForm().getForm().setText(kindLabel + " " + idLabel); //$NON-NLS-1$
-				} else {
-					getHeaderForm().getForm().setText(kindLabel);
+					TitleRegion titleRegion = (TitleRegion) field.get(heading);
+					Label titleLabel = (Label) titleRegion.getChildren()[0];
+					titleLabel.addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseDown(MouseEvent e) {
+							TasksUiUtil.openEditRepositoryWizard(taskRepository);
+						}
+					});
+					titleLabel.setCursor(Display.getDefault().getSystemCursor(SWT.CURSOR_HAND));
+				} catch (Exception e) {
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+							"Failed to register mouse listener in header", e)); //$NON-NLS-1$
 				}
 			}
 		}

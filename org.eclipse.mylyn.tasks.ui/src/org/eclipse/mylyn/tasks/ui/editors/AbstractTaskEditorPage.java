@@ -862,16 +862,16 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 					toolBarManager.add(clearOutgoingAction);
 				}
 
-				if (task.getSynchronizationState() != SynchronizationState.OUTGOING_NEW) {
-					synchronizeEditorAction = new SynchronizeEditorAction();
-					synchronizeEditorAction.selectionChanged(new StructuredSelection(getTaskEditor()));
-					toolBarManager.add(synchronizeEditorAction);
-				}
-
 				NewSubTaskAction newSubTaskAction = new NewSubTaskAction();
 				newSubTaskAction.selectionChanged(newSubTaskAction, new StructuredSelection(task));
 				if (newSubTaskAction.isEnabled()) {
 					toolBarManager.add(newSubTaskAction);
+				}
+
+				if (task.getSynchronizationState() != SynchronizationState.OUTGOING_NEW) {
+					synchronizeEditorAction = new SynchronizeEditorAction();
+					synchronizeEditorAction.selectionChanged(new StructuredSelection(getTaskEditor()));
+					toolBarManager.add(synchronizeEditorAction);
 				}
 
 				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskData.getConnectorKind());
@@ -1504,8 +1504,21 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 			ControlContribution submitButtonContribution = new ControlContribution(
 					"org.eclipse.mylyn.tasks.toolbars.submit") { //$NON-NLS-1$
 				@Override
+				protected int computeWidth(Control control) {
+					return super.computeWidth(control) + 5;
+				}
+
+				@Override
 				protected Control createControl(Composite parent) {
-					submitButton = toolkit.createButton(parent, Messages.TaskEditorActionPart_Submit + " ", SWT.NONE); //$NON-NLS-1$
+					Composite composite = new Composite(parent, SWT.NONE);
+					composite.setBackground(null);
+					GridLayout layout = new GridLayout();
+					layout.marginWidth = 0;
+					layout.marginHeight = 0;
+					layout.marginLeft = 10;
+					composite.setLayout(layout);
+
+					submitButton = toolkit.createButton(composite, Messages.TaskEditorActionPart_Submit + " ", SWT.NONE); //$NON-NLS-1$
 					submitButton.setImage(CommonImages.getImage(TasksUiImages.REPOSITORY_SUBMIT));
 					submitButton.setBackground(null);
 					submitButton.addListener(SWT.Selection, new Listener() {
@@ -1513,11 +1526,11 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 							doSubmit();
 						}
 					});
-					return submitButton;
+					GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.BOTTOM).applyTo(submitButton);
+					return composite;
 				}
 			};
 			toolBarManager.add(submitButtonContribution);
 		}
 	}
-
 }
