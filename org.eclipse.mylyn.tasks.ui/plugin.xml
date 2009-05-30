@@ -798,7 +798,7 @@
    <extension point="org.eclipse.mylyn.tasks.ui.actions">    
       <dynamicPopupMenu
             class="org.eclipse.mylyn.internal.tasks.ui.ScheduleTaskMenuContributor"
-            menuPath="tasks"/>
+            menuPath="new"/>
       <dynamicPopupMenu
             class="org.eclipse.mylyn.internal.tasks.ui.MoveToCategoryMenuContributor"
             menuPath="tasks"/>
@@ -1112,6 +1112,16 @@
     </factory>
     <factory
           adaptableType="org.eclipse.mylyn.tasks.core.ITaskAttachment"
+          class="org.eclipse.mylyn.internal.tasks.ui.TasksAdapterFactory">
+       <adapter
+             type="org.eclipse.mylyn.tasks.core.ITask">
+       </adapter>
+       <adapter
+             type="org.eclipse.mylyn.tasks.core.TaskRepository">
+       </adapter>
+    </factory>
+    <factory
+          adaptableType="org.eclipse.mylyn.tasks.core.ITaskComment"
           class="org.eclipse.mylyn.internal.tasks.ui.TasksAdapterFactory">
        <adapter
              type="org.eclipse.mylyn.tasks.core.ITask">
@@ -1485,17 +1495,20 @@
             <iterate
                   operator="or">
                <and>
-                  <instanceof
-                        value="org.eclipse.mylyn.internal.tasks.core.AbstractTask">
-                  </instanceof>
-                  <test
-                        property="org.eclipse.mylyn.task.hasLocalCompletionState"
-                        value="true">
-                  </test>
-                  <test
-                        property="org.eclipse.mylyn.task.isCompleted"
-                        value="false">
-                  </test>
+                  <adapt
+                        type="org.eclipse.mylyn.tasks.core.ITask">
+                     <test
+                           property="org.eclipse.mylyn.task.isCompleted"
+                           value="false">
+                     </test>
+                     <test
+                           property="org.eclipse.mylyn.task.hasLocalCompletionState"
+                           value="true">
+                     </test>
+                     <instanceof
+                           value="org.eclipse.mylyn.internal.tasks.core.AbstractTask">
+                     </instanceof>
+                  </adapt>
                </and>
             </iterate>
          </enabledWhen>
@@ -1507,17 +1520,20 @@
             <iterate
                   operator="or">
                <and>
-                  <instanceof
-                        value="org.eclipse.mylyn.internal.tasks.core.AbstractTask">
-                  </instanceof>
-                  <test
-                        property="org.eclipse.mylyn.task.hasLocalCompletionState"
-                        value="true">
-                  </test>
-                  <test
-                        property="org.eclipse.mylyn.task.isCompleted"
-                        value="true">
-                  </test>
+                  <adapt
+                        type="org.eclipse.mylyn.tasks.core.ITask">
+                     <test
+                           property="org.eclipse.mylyn.task.isCompleted"
+                           value="true">
+                     </test>
+                     <test
+                           property="org.eclipse.mylyn.task.hasLocalCompletionState"
+                           value="true">
+                     </test>
+                     <instanceof
+                           value="org.eclipse.mylyn.internal.tasks.core.AbstractTask">
+                     </instanceof>
+                  </adapt>
                </and>
             </iterate>
          </enabledWhen>
@@ -1529,13 +1545,16 @@
             <iterate
                   operator="or">
                <and>
-                  <instanceof
-                        value="org.eclipse.mylyn.internal.tasks.core.AbstractTask">
-                  </instanceof>
-                  <test
-                        property="org.eclipse.mylyn.task.hasEdits"
-                        value="true">
-                  </test>
+                  <adapt
+                        type="org.eclipse.mylyn.tasks.core.ITask">
+                     <test
+                           property="org.eclipse.mylyn.task.hasEdits"
+                           value="true">
+                     </test>
+                     <instanceof
+                           value="org.eclipse.mylyn.internal.tasks.core.AbstractTask">
+                     </instanceof>
+                  </adapt>
                </and>
             </iterate>
          </enabledWhen>
@@ -1596,18 +1615,16 @@
          </menu>
       </menuContribution>
       <menuContribution
-            locationURI="popup:org.eclipse.ui.popup.any?before=navigate">
+            locationURI="popup:org.eclipse.ui.popup.any?after=new">
          <menu
                id="org.eclipse.mylyn.tasks.ui.menu.task.mark"
                label="%menu.task.mark.label">
             <visibleWhen
                   checkEnabled="false">
                <iterate>
-                  <or>
-                     <instanceof
-                           value="org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer">
-                     </instanceof>
-                  </or>
+                  <adapt
+                        type="org.eclipse.mylyn.tasks.core.ITask">
+                  </adapt>
                </iterate>
             </visibleWhen>
             <separator

@@ -317,7 +317,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		configureContextMenuManager(menuManager);
 		Menu menu = menuManager.createContextMenu(getContainer());
 		getContainer().setMenu(menu);
-		getEditorSite().registerContextMenu(menuManager, getEditorSite().getSelectionProvider(), false);
+		getEditorSite().registerContextMenu(menuManager, getEditorSite().getSelectionProvider(), true);
 
 		// install context menu on form heading and title
 		getHeaderForm().getForm().setMenu(menu);

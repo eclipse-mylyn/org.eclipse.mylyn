@@ -113,6 +113,8 @@ public class TasksUiInternal {
 	// TODO e3.4 replace with SWT.NO_SCROLL constant
 	public static final int SWT_NO_SCROLL = 1 << 4;
 
+	public static final String ID_MENU_ACTIVE_TASK = "org.eclipse.mylyn.tasks.ui.menus.activeTask"; //$NON-NLS-1$
+
 	public static MultiRepositoryAwareWizard createNewTaskWizard(ITaskMapping taskSelection) {
 		return new NewTaskWizardInternal(taskSelection);
 	}

@@ -22,7 +22,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
@@ -32,6 +34,7 @@ import org.eclipse.mylyn.internal.tasks.core.AutomaticRepositoryTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListRunnable;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
+import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnsubmittedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -50,7 +53,7 @@ import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 /**
  * @author Mik Kersten
  */
-public class DeleteAction extends Action {
+public class DeleteAction extends Action implements ISelectionChangedListener {
 
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.delete"; //$NON-NLS-1$
 
@@ -190,6 +193,16 @@ public class DeleteAction extends Action {
 				}
 			}
 		}
+	}
+
+	public void selectionChanged(SelectionChangedEvent event) {
+		ISelection selection = event.getSelection();
+		if (selection instanceof IStructuredSelection) {
+			Object element = ((IStructuredSelection) selection).getFirstElement();
+			setEnabled(element instanceof ITask
+					|| (element != null && !(element instanceof UncategorizedTaskContainer)));
+		}
+		setEnabled(false);
 	}
 
 }

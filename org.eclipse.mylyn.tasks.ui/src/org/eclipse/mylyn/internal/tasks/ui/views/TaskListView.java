@@ -20,13 +20,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -38,7 +35,6 @@ import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -63,15 +59,11 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DelayedRefreshJob;
 import org.eclipse.mylyn.internal.provisional.commons.ui.SubstringPatternFilter;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
-import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
-import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.CategorizedPresentation;
-import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.ScheduledPresentation;
 import org.eclipse.mylyn.internal.tasks.ui.TaskArchiveFilter;
@@ -80,27 +72,17 @@ import org.eclipse.mylyn.internal.tasks.ui.TaskPriorityFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskWorkingSetFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CollapseAllAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.DeleteAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.EditRepositoryPropertiesAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ExpandAllAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.FilterCompletedTasksAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.GoIntoAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.GoUpAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.GroupSubTasksAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.LinkWithEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewTaskAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.OpenTaskListElementAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenTasksUiPreferencesAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.OpenWithBrowserAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.PresentationDropDownSelectionAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.RemoveFromCategoryAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.RenameAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.ShowInSearchViewAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeAutomaticallyAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskListSortAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.TaskListViewActionGroup;
 import org.eclipse.mylyn.internal.tasks.ui.commands.CollapseAllHandler;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskListChangeAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.util.PlatformUtil;
@@ -111,7 +93,6 @@ import org.eclipse.mylyn.internal.tasks.ui.util.TreeWalker;
 import org.eclipse.mylyn.internal.tasks.ui.util.SortCriterion.SortKey;
 import org.eclipse.mylyn.internal.tasks.ui.util.TreeWalker.TreeVisitor;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
-import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
@@ -185,7 +166,6 @@ import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.IShowInTarget;
 import org.eclipse.ui.part.ShowInContext;
 import org.eclipse.ui.part.ViewPart;
-import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 import org.eclipse.ui.themes.IThemeManager;
 
 /**
@@ -296,6 +276,12 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 	// TODO e3.4 replace with SWT.NO_SCROLL constant
 	public static final int SWT_NO_SCROLL = 1 << 4;
 
+	private static final String ID_SEPARATOR_FILTERS = "filters"; //$NON-NLS-1$
+
+	private static final String ID_SEPARATOR_TASKS = "tasks"; //$NON-NLS-1$
+
+	private static final String ID_SEPARATOR_CONTEXT = "context"; //$NON-NLS-1$
+
 	/**
 	 * @deprecated Use {@link ITasksUiConstants#ID_VIEW_TASKS} instead
 	 */
@@ -325,22 +311,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 	private static final String MEMENTO_PRESENTATION = "presentation"; //$NON-NLS-1$
 
-	private static final String ID_SEPARATOR_NEW = "new"; //$NON-NLS-1$
-
-	public static final String ID_SEPARATOR_OPERATIONS = "operations"; //$NON-NLS-1$
-
-	public static final String ID_SEPARATOR_CONTEXT = "context"; //$NON-NLS-1$
-
-	public static final String ID_SEPARATOR_TASKS = "tasks"; //$NON-NLS-1$
-
-	private static final String ID_SEPARATOR_FILTERS = "filters"; //$NON-NLS-1$
-
-	private static final String ID_SEPARATOR_REPOSITORY = "repository"; //$NON-NLS-1$
-
-	private static final String ID_SEPARATOR_PROPERTIES = "properties"; //$NON-NLS-1$
-
-	public static final String ID_SEPARATOR_NAVIGATE = "navigate"; //$NON-NLS-1$
-
 	private static final String LABEL_NO_TASKS = "no task active"; //$NON-NLS-1$
 
 	private final static int SIZE_MAX_SELECTION_HISTORY = 10;
@@ -356,7 +326,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 	private static List<AbstractTaskListPresentation> presentationsSecondary = new ArrayList<AbstractTaskListPresentation>();
 
-	private boolean focusedMode = false;
+	private boolean focusedMode;
 
 	private boolean linkWithEditor;
 
@@ -368,31 +338,11 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 	private DrillDownAdapter drillDownAdapter;
 
-	private AbstractTaskContainer drilledIntoCategory = null;
-
-	private GoIntoAction goIntoAction;
-
-	private GoUpAction goUpAction;
-
-	private CopyTaskDetailsAction copyDetailsAction;
-
-	private OpenTaskListElementAction openAction;
-
-	private OpenWithBrowserAction openWithBrowser;
-
-	private RenameAction renameAction;
+	private AbstractTaskContainer drilledIntoCategory;
 
 	private CollapseAllAction collapseAll;
 
 	private ExpandAllAction expandAll;
-
-	private DeleteAction deleteAction;
-
-	private RemoveFromCategoryAction removeFromCategoryAction;
-
-	private final TaskActivateAction activateAction = new TaskActivateAction();
-
-	private final TaskDeactivateAction deactivateAction = new TaskDeactivateAction();
 
 	private FilterCompletedTasksAction filterCompleteTask;
 
@@ -401,8 +351,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 	private SynchronizeAutomaticallyAction synchronizeAutomatically;
 
 	private OpenTasksUiPreferencesAction openPreferencesAction;
-
-	//private FilterArchiveContainerAction filterArchiveCategory;
 
 	private PriorityDropDownAction filterOnPriorityAction;
 
@@ -443,6 +391,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 	private Color categoryGradientEnd;
 
 	private CustomTaskListDecorationDrawer customDrawer;
+
+	private TaskListViewActionGroup actionGroup;
 
 	private final IPageListener PAGE_LISTENER = new IPageListener() {
 		public void pageActivated(IWorkbenchPage page) {
@@ -891,6 +841,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		// bug#160897
 		// http://dev.eclipse.org/newslists/news.eclipse.platform.swt/msg29614.html
 		getViewer().getTree().setToolTipText(""); //$NON-NLS-1$
+		getSite().registerContextMenu(TasksUiInternal.ID_MENU_ACTIVE_TASK, filteredTree.getActiveTaskMenuManager(),
+				filteredTree.getActiveTaskSelectionProvider());
 
 		filteredTree.getFilterControl().addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
@@ -964,8 +916,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 			public void keyPressed(KeyEvent e) {
 				if (e.keyCode == SWT.F2 && e.stateMask == 0) {
-					if (renameAction.isEnabled()) {
-						renameAction.run();
+					if (actionGroup.getRenameAction().isEnabled()) {
+						actionGroup.getRenameAction().run();
 					}
 				} else if ((e.keyCode & SWT.KEYCODE_BIT) != 0) {
 					// Do nothing here since it is key code
@@ -1004,17 +956,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 						getViewer().refresh(event.getElement());
 					}
 				});
-			}
-		});
-
-		// HACK: shouldn't need to update explicitly
-		getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent event) {
-				Object selectedObject = ((IStructuredSelection) getViewer().getSelection()).getFirstElement();
-				if (selectedObject instanceof ITaskContainer) {
-					updateActionEnablement(renameAction, (ITaskContainer) selectedObject);
-					updateActionEnablement(deleteAction, (ITaskContainer) selectedObject);
-				}
 			}
 		});
 
@@ -1068,8 +1009,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 	private void hookGlobalActions() {
 		IActionBars bars = getViewSite().getActionBars();
-		bars.setGlobalActionHandler(ActionFactory.DELETE.getId(), deleteAction);
-		bars.setGlobalActionHandler(ActionFactory.COPY.getId(), copyDetailsAction);
+		bars.setGlobalActionHandler(ActionFactory.DELETE.getId(), actionGroup.getDeleteAction());
+		bars.setGlobalActionHandler(ActionFactory.COPY.getId(), actionGroup.getCopyDetailsAction());
 	}
 
 	private void applyPresentation(String id) {
@@ -1188,8 +1129,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		}
 	};
 
-	private ShowInSearchViewAction showInSearchViewAction;
-
 	private void initDragAndDrop(Composite parent) {
 		Transfer[] dragTypes = new Transfer[] { LocalSelectionTransfer.getTransfer(), FileTransfer.getInstance() };
 		Transfer[] dropTypes = new Transfer[] { LocalSelectionTransfer.getTransfer(), FileTransfer.getInstance(),
@@ -1218,7 +1157,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		menuManager.setRemoveAllWhenShown(true);
 		menuManager.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {
-				TaskListView.this.fillContextMenu(manager);
+				actionGroup.fillContextMenu(manager);
 			}
 		});
 		Menu menu = menuManager.createContextMenu(getViewer().getControl());
@@ -1234,7 +1173,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 	private void fillLocalPullDown(IMenuManager manager) {
 		updateDrillDownActions();
-		manager.add(goUpAction);
+		manager.add(actionGroup.getGoUpAction());
 		manager.add(collapseAll);
 		manager.add(expandAll);
 		manager.add(new Separator(ID_SEPARATOR_FILTERS));
@@ -1269,134 +1208,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
-	/*
-	 * TODO: clean up, consider relying on extension points for groups
-	 */
-	private void fillContextMenu(final IMenuManager manager) {
-		updateDrillDownActions();
-		final ITaskContainer element;
-
-		final Object firstSelectedObject = ((IStructuredSelection) getViewer().getSelection()).getFirstElement();
-		if (firstSelectedObject instanceof ITaskContainer) {
-			element = (ITaskContainer) firstSelectedObject;
-		} else {
-			element = null;
-		}
-		final List<IRepositoryElement> selectedElements = getSelectedTaskContainers();
-		AbstractTask task = null;
-		if (element instanceof ITask) {
-			task = (AbstractTask) element;
-		}
-
-		manager.add(new Separator(ID_SEPARATOR_NEW));
-		manager.add(new Separator());
-
-		if (element instanceof ITask) {
-			addAction(openAction, manager, element);
-		}
-		addAction(openWithBrowser, manager, element);
-		if (showInSearchViewAction.isEnabled()) {
-			manager.add(showInSearchViewAction);
-		}
-		if (task != null) {
-			if (task.isActive()) {
-				manager.add(deactivateAction);
-			} else {
-				manager.add(activateAction);
-			}
-		}
-
-		manager.add(new Separator());
-
-		Map<String, List<IDynamicSubMenuContributor>> dynamicMenuMap = TasksUiPlugin.getDefault().getDynamicMenuMap();
-		for (String menuPath : dynamicMenuMap.keySet()) {
-			if (!ID_SEPARATOR_CONTEXT.equals(menuPath)) {
-				for (final IDynamicSubMenuContributor contributor : dynamicMenuMap.get(menuPath)) {
-					SafeRunnable.run(new ISafeRunnable() {
-						public void handleException(Throwable e) {
-							StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-									"Menu contributor failed")); //$NON-NLS-1$
-						}
-
-						public void run() throws Exception {
-							MenuManager subMenuManager = contributor.getSubMenuManager(selectedElements);
-							if (subMenuManager != null) {
-								addMenuManager(subMenuManager, manager, element);
-							}
-						}
-
-					});
-				}
-			}
-		}
-		manager.add(new Separator(ID_SEPARATOR_NAVIGATE));
-//		manager.add(new Separator(ID_SEPARATOR_OPERATIONS));
-		manager.add(new Separator());
-
-		addAction(copyDetailsAction, manager, element);
-
-		boolean enableRemove = true;
-		for (IRepositoryElement repositoryElement : selectedElements) {
-			if (repositoryElement instanceof ITask) {
-				AbstractTaskCategory tempCategory = TaskCategory.getParentTaskCategory((AbstractTask) repositoryElement);
-				if (tempCategory == null) {
-					enableRemove = false;
-					break;
-				}
-			}
-		}
-		if (enableRemove) {
-			addAction(removeFromCategoryAction, manager, element);
-		}
-
-		// This should also test for null, or else nothing to delete!
-		addAction(deleteAction, manager, element);
-		if (!(element instanceof ITask)) {
-			addAction(renameAction, manager, element);
-		}
-
-		if (element != null && !(element instanceof ITask)) {
-			manager.add(goIntoAction);
-		}
-		if (drilledIntoCategory != null) {
-			manager.add(goUpAction);
-		}
-		manager.add(new Separator(ID_SEPARATOR_CONTEXT));
-		manager.add(new Separator(ID_SEPARATOR_OPERATIONS));
-
-		if (element instanceof ITask) {
-			for (String menuPath : dynamicMenuMap.keySet()) {
-				if (ID_SEPARATOR_CONTEXT.equals(menuPath)) {
-					for (IDynamicSubMenuContributor contributor : dynamicMenuMap.get(menuPath)) {
-						MenuManager subMenuManager = contributor.getSubMenuManager(selectedElements);
-						if (subMenuManager != null) {
-							addMenuManager(subMenuManager, manager, element);
-						}
-					}
-				}
-			}
-		}
-		if (element instanceof IRepositoryQuery) {
-			EditRepositoryPropertiesAction repositoryPropertiesAction = new EditRepositoryPropertiesAction();
-			repositoryPropertiesAction.selectionChanged(new StructuredSelection(element));
-			if (repositoryPropertiesAction.isEnabled()) {
-				MenuManager subMenu = new MenuManager(Messages.TaskListView_Repository);
-				manager.add(subMenu);
-
-				UpdateRepositoryConfigurationAction resetRepositoryConfigurationAction = new UpdateRepositoryConfigurationAction();
-				resetRepositoryConfigurationAction.selectionChanged(new StructuredSelection(element));
-				subMenu.add(resetRepositoryConfigurationAction);
-				subMenu.add(new Separator());
-				subMenu.add(repositoryPropertiesAction);
-			}
-		}
-		manager.add(new Separator(ID_SEPARATOR_REPOSITORY));
-		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-
-		manager.add(new Separator());
-		manager.add(new Separator(ID_SEPARATOR_PROPERTIES));
-	}
-
 	public List<IRepositoryElement> getSelectedTaskContainers() {
 		List<IRepositoryElement> selectedElements = new ArrayList<IRepositoryElement>();
 		for (Iterator<?> i = ((IStructuredSelection) getViewer().getSelection()).iterator(); i.hasNext();) {
@@ -1408,86 +1219,12 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		return selectedElements;
 	}
 
-	private void addMenuManager(IMenuManager menuToAdd, IMenuManager manager, ITaskContainer element) {
-		if ((element instanceof ITask) || element instanceof IRepositoryQuery) {
-			manager.add(menuToAdd);
-		}
-	}
-
-	private void addAction(Action action, IMenuManager manager, ITaskContainer element) {
-		manager.add(action);
-		if (element != null) {
-			updateActionEnablement(action, element);
-		}
-	}
-
-	// TODO move the enablement to the action classes
-	private void updateActionEnablement(Action action, ITaskContainer element) {
-		if (element instanceof ITask) {
-			if (action instanceof OpenWithBrowserAction) {
-				if (TasksUiInternal.isValidUrl(((ITask) element).getUrl())) {
-					action.setEnabled(true);
-				} else {
-					action.setEnabled(false);
-				}
-			} else if (action instanceof DeleteAction) {
-				action.setEnabled(true);
-			} else if (action instanceof OpenTaskListElementAction) {
-				action.setEnabled(true);
-			} else if (action instanceof CopyTaskDetailsAction) {
-				action.setEnabled(true);
-			} else if (action instanceof RenameAction) {
-				action.setEnabled(true);
-			}
-		} else if (element != null) {
-			if (action instanceof DeleteAction) {
-				if (element instanceof UncategorizedTaskContainer) {
-					action.setEnabled(false);
-				} else {
-					action.setEnabled(true);
-				}
-			} else if (action instanceof GoIntoAction) {
-				TaskCategory cat = (TaskCategory) element;
-				if (cat.getChildren().size() > 0) {
-					action.setEnabled(true);
-				} else {
-					action.setEnabled(false);
-				}
-			} else if (action instanceof OpenTaskListElementAction) {
-				action.setEnabled(true);
-			} else if (action instanceof CopyTaskDetailsAction) {
-				action.setEnabled(true);
-			} else if (action instanceof RenameAction) {
-				if (element instanceof AbstractTaskCategory) {
-					AbstractTaskCategory container = (AbstractTaskCategory) element;
-					action.setEnabled(container.isUserManaged());
-				} else if (element instanceof IRepositoryQuery) {
-					action.setEnabled(true);
-				}
-			}
-		} else {
-			action.setEnabled(true);
-		}
-	}
-
 	private void makeActions() {
-		copyDetailsAction = new CopyTaskDetailsAction();
-		copyDetailsAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.COPY);
+		actionGroup = new TaskListViewActionGroup(this, drillDownAdapter);
+		actionGroup.getOpenAction().setViewer(getViewer());
 
-		goIntoAction = new GoIntoAction();
-		goUpAction = new GoUpAction(drillDownAdapter);
-
-		//newLocalTaskAction = new NewLocalTaskAction(this);
-		removeFromCategoryAction = new RemoveFromCategoryAction(this);
-		renameAction = new RenameAction(this);
-		filteredTree.getViewer().addSelectionChangedListener(renameAction);
-
-		deleteAction = new DeleteAction();
 		collapseAll = new CollapseAllAction(this);
 		expandAll = new ExpandAllAction(this);
-		openAction = new OpenTaskListElementAction(this.getViewer());
-		openWithBrowser = new OpenWithBrowserAction();
-		showInSearchViewAction = new ShowInSearchViewAction();
 		filterCompleteTask = new FilterCompletedTasksAction(this);
 		filterSubTasksAction = new GroupSubTasksAction(this);
 		synchronizeAutomatically = new SynchronizeAutomaticallyAction();
@@ -1499,15 +1236,12 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		presentationDropDownSelectionAction = new PresentationDropDownSelectionAction(this);
 		newTaskAction = new NewTaskAction();
 		filteredTree.getViewer().addSelectionChangedListener(newTaskAction);
-		filteredTree.getViewer().addSelectionChangedListener(openWithBrowser);
-		filteredTree.getViewer().addSelectionChangedListener(showInSearchViewAction);
-		filteredTree.getViewer().addSelectionChangedListener(copyDetailsAction);
 	}
 
 	private void hookOpenAction() {
 		getViewer().addOpenListener(new IOpenListener() {
 			public void open(OpenEvent event) {
-				openAction.run();
+				actionGroup.getOpenAction().run();
 			}
 		});
 
@@ -1517,7 +1251,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 						ITasksUiPreferenceConstants.ACTIVATE_WHEN_OPENED)) {
 					AbstractTask selectedTask = TaskListView.getFromActivePerspective().getSelectedTask();
 					if (selectedTask != null) {
-						activateAction.run(selectedTask);
+						actionGroup.getActivateAction().run(selectedTask);
 					}
 				}
 			}
@@ -1583,11 +1317,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 	}
 
 	public void updateDrillDownActions() {
-		if (drillDownAdapter.canGoBack()) {
-			goUpAction.setEnabled(true);
-		} else {
-			goUpAction.setEnabled(false);
-		}
+		actionGroup.updateDrillDownActions();
 	}
 
 	boolean isInRenameAction = false;
@@ -1609,8 +1339,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 				drilledIntoCategory = (AbstractTaskContainer) element;
 				drillDownAdapter.goInto();
 				IActionBars bars = getViewSite().getActionBars();
-				bars.getToolBarManager().remove(goUpAction.getId());
-				bars.getToolBarManager().add(goUpAction);
+				bars.getToolBarManager().remove(actionGroup.getGoUpAction().getId());
+				bars.getToolBarManager().add(actionGroup.getGoUpAction());
 				bars.updateActionBars();
 				updateDrillDownActions();
 			}

@@ -14,9 +14,11 @@ package org.eclipse.mylyn.internal.tasks.ui.commands;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -43,6 +45,9 @@ public abstract class AbstractTaskHandler extends AbstractHandler {
 	}
 
 	private void process(ExecutionEvent event, Object item, boolean recurse) throws ExecutionException {
+		if (!(item instanceof IRepositoryElement)) {
+			item = Platform.getAdapterManager().getAdapter(item, ITask.class);
+		}
 		if (item instanceof ITask) {
 			execute(event, (ITask) item);
 		}

@@ -11,29 +11,17 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.OpenTaskListElementAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.OpenWithBrowserAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
+import org.eclipse.mylyn.internal.provisional.commons.ui.SelectionProviderAdapter;
+import org.eclipse.mylyn.internal.tasks.ui.actions.RepositoryElementActionGroup;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
 import org.eclipse.mylyn.tasks.core.TaskActivationAdapter;
@@ -69,19 +57,15 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 
 	public static String ID_CONTROL = "org.eclipse.mylyn.tasks.ui.trim.control"; //$NON-NLS-1$
 
-	private Composite composite = null;
+	private Composite composite;
 
-	private ITask activeTask = null;
+	private ITask activeTask;
 
-	private MenuManager menuManager = null;
+	private MenuManager menuManager;
 
-	private Menu menu = null;
+	private Menu menu;
 
 	private TaskHyperlink activeTaskLabel;
-
-	private final OpenWithBrowserAction openWithBrowserAction = new OpenWithBrowserAction();
-
-	private final CopyTaskDetailsAction copyTaskDetailsAction = new CopyTaskDetailsAction();
 
 	private Point p;
 
@@ -109,6 +93,8 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 			}
 		}
 	};
+
+	private SelectionProviderAdapter activeTaskSelectionProvider;
 
 	public TaskTrimWidget() {
 		TasksUi.getTaskActivityManager().addActivationListener(TASK_ACTIVATION_LISTENER);
@@ -218,16 +204,19 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 		activeTaskLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
-				if (activeTask == null) {
-					return;
-				}
+				// only handle left clicks, context menu is handled by platform
+				if (e.button == 1) {
+					if (activeTask == null) {
+						return;
+					}
 
-				TaskListView taskListView = TaskListView.getFromActivePerspective();
-				if (taskListView != null && taskListView.getDrilledIntoCategory() != null) {
-					taskListView.goUpToRoot();
-				}
+					TaskListView taskListView = TaskListView.getFromActivePerspective();
+					if (taskListView != null && taskListView.getDrilledIntoCategory() != null) {
+						taskListView.goUpToRoot();
+					}
 
-				TasksUiInternal.refreshAndOpenTaskListElement(activeTask);
+					TasksUiInternal.refreshAndOpenTaskListElement(activeTask);
+				}
 			}
 		});
 
@@ -235,91 +224,22 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 	}
 
 	private void hookContextMenu() {
+		activeTaskSelectionProvider = new SelectionProviderAdapter();
+
+		final RepositoryElementActionGroup actionGroup = new RepositoryElementActionGroup();
+		actionGroup.setSelectionProvider(activeTaskSelectionProvider);
+
 		menuManager = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 		menuManager.setRemoveAllWhenShown(true);
 		menuManager.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {
-				fillContextMenu(manager);
+				actionGroup.fillContextMenu(manager);
+				// trims do not have a workbench part so there is no simple way of registering the 
+				// context menu
+				ObjectActionContributorManager.getManager().contributeObjectActions(null, manager,
+						activeTaskSelectionProvider);
 			}
 		});
-	}
-
-	// Inspired by TaskListView, TaskEditorActionContributor.
-	private void fillContextMenu(IMenuManager manager) {
-		if (activeTask != null) {
-			IStructuredSelection selection = new StructuredSelection(activeTask);
-			openWithBrowserAction.selectionChanged(selection);
-			copyTaskDetailsAction.selectionChanged(selection);
-
-			manager.add(new OpenTaskListElementAction(null) {
-				@Override
-				public void run() {
-					TasksUiInternal.refreshAndOpenTaskListElement(activeTask);
-				}
-			});
-
-			manager.add(openWithBrowserAction);
-			if (TasksUiInternal.isValidUrl(activeTask.getUrl())) {
-				openWithBrowserAction.setEnabled(true);
-			} else {
-				openWithBrowserAction.setEnabled(false);
-			}
-
-			if (activeTask.isActive()) {
-				manager.add(new TaskDeactivateAction() {
-					@Override
-					public void run() {
-						super.run(activeTask);
-					}
-				});
-			} else {
-				manager.add(new TaskActivateAction() {
-					@Override
-					public void run() {
-//						TasksUiPlugin.getTaskListManager().getTaskActivationHistory().addTask(activeTask);
-						super.run(activeTask);
-					}
-				});
-			}
-
-			manager.add(new Separator());
-
-			for (String menuPath : TasksUiPlugin.getDefault().getDynamicMenuMap().keySet()) {
-				for (IDynamicSubMenuContributor contributor : TasksUiPlugin.getDefault().getDynamicMenuMap().get(
-						menuPath)) {
-					List<IRepositoryElement> selectedElements = new ArrayList<IRepositoryElement>();
-					selectedElements.add(activeTask);
-					MenuManager subMenuManager = contributor.getSubMenuManager(selectedElements);
-					if (subMenuManager != null) {
-						manager.add(subMenuManager);
-					}
-				}
-			}
-
-			manager.add(new Separator());
-			manager.add(copyTaskDetailsAction);
-			manager.add(new Separator());
-
-			ObjectActionContributorManager.getManager().contributeObjectActions(null, manager,
-					new ISelectionProvider() {
-
-						public void addSelectionChangedListener(ISelectionChangedListener listener) {
-							// ignore
-						}
-
-						public ISelection getSelection() {
-							return new StructuredSelection(activeTask);
-						}
-
-						public void removeSelectionChangedListener(ISelectionChangedListener listener) {
-							// ignore
-						}
-
-						public void setSelection(ISelection selection) {
-							// ignore
-						}
-					});
-		}
 	}
 
 	public void indicateActiveTask() {
@@ -331,6 +251,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 		activeTaskLabel.setText(activeTask.getSummary());
 		activeTaskLabel.setUnderlined(true);
 		activeTaskLabel.setToolTipText(activeTask.getSummary());
+		activeTaskSelectionProvider.setSelection(new StructuredSelection(activeTask));
 	}
 
 	public void indicateNoActiveTask() {
@@ -341,6 +262,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 		activeTaskLabel.setText(Messages.TaskTrimWidget__no_active_task_);
 		activeTaskLabel.setUnderlined(false);
 		activeTaskLabel.setToolTipText(""); //$NON-NLS-1$
+		activeTaskSelectionProvider.setSelection(StructuredSelection.EMPTY);
 	}
 
 //	// From PerspectiveBarContributionItem

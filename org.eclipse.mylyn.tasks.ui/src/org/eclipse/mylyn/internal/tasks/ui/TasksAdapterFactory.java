@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.tasks.ui;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
+import org.eclipse.mylyn.tasks.core.ITaskComment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 
@@ -37,6 +38,8 @@ public class TasksAdapterFactory implements IAdapterFactory {
 				return ((TaskEditorInput) adaptable).getTask();
 			} else if (adaptable instanceof ITaskAttachment) {
 				return ((ITaskAttachment) adaptable).getTask();
+			} else if (adaptable instanceof ITaskComment) {
+				return ((ITaskComment) adaptable).getTask();
 			}
 		}
 		if (adapterType == TaskRepository.class) {
@@ -44,6 +47,8 @@ public class TasksAdapterFactory implements IAdapterFactory {
 				return ((TaskEditorInput) adaptable).getTaskRepository();
 			} else if (adaptable instanceof ITaskAttachment) {
 				return ((ITaskAttachment) adaptable).getTaskRepository();
+			} else if (adaptable instanceof ITaskComment) {
+				return ((ITaskComment) adaptable).getTask();
 			}
 		}
 		return null;

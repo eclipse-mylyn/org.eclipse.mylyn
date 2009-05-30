@@ -152,7 +152,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 				TasksUiMenus.fillTaskAttachmentMenu(manager);
 			}
 		});
-		getTaskEditorPage().getEditorSite().registerContextMenu(ID_POPUP_MENU, menuManager, attachmentsViewer, false);
+		getTaskEditorPage().getEditorSite().registerContextMenu(ID_POPUP_MENU, menuManager, attachmentsViewer, true);
 		Menu menu = menuManager.createContextMenu(attachmentsTable);
 		attachmentsTable.setMenu(menu);
 	}
