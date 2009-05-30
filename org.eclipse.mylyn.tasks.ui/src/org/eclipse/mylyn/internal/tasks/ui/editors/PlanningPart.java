@@ -76,7 +76,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 	private RichTextEditor noteEditor;
 
-	private static final int CONTROL_WIDTH = 135;
+	private static final int CONTROL_WIDTH = 120;
 
 	private DatePicker dueDatePicker;
 
