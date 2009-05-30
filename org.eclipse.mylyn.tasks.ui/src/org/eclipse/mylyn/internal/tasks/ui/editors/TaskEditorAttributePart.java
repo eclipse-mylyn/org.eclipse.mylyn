@@ -55,11 +55,11 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 
-	private static final int LABEL_WIDTH = 100;
+	private static final int LABEL_WIDTH = 110;
 
 	private static final int COLUMN_WIDTH = 140;
 
-	private static final int COLUMN_GAP = 5;
+	private static final int COLUMN_GAP = 20;
 
 	private static final int MULTI_COLUMN_WIDTH = COLUMN_WIDTH + 5 + COLUMN_GAP + LABEL_WIDTH + 5 + COLUMN_WIDTH;
 
