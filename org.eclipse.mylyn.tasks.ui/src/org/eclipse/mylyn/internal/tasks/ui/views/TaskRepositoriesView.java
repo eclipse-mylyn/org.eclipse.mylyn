@@ -260,11 +260,12 @@ public class TaskRepositoriesView extends ViewPart {
 	}
 
 	private void fillContextMenu(IMenuManager manager) {
+		manager.add(new Separator("new")); //$NON-NLS-1$
 		manager.add(addRepositoryAction);
-		manager.add(new Separator());
+		manager.add(new Separator("edit")); //$NON-NLS-1$
 		manager.add(deleteRepositoryAction);
 		manager.add(resetConfigurationAction);
-		manager.add(new Separator());
+		manager.add(new Separator("operations")); //$NON-NLS-1$
 		manager.add(offlineAction);
 		manager.add(new Separator("repository")); //$NON-NLS-1$
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
