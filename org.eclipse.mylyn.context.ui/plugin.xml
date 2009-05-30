@@ -434,13 +434,13 @@
                 ifEmpty="false"
                 operator="and">
              <and>
-                <instanceof
-                      value="org.eclipse.mylyn.tasks.core.ITask">
-                </instanceof>
-                <test
-                      property="org.eclipse.mylyn.task.canPostAttachment"
-                      value="true">
-                </test>
+                <adapt
+                      type="org.eclipse.mylyn.tasks.core.ITask">
+                   <test
+                         property="org.eclipse.mylyn.task.canPostAttachment"
+                         value="true">
+                   </test>
+                </adapt>
              </and>
           </iterate>
        </enabledWhen>
@@ -453,17 +453,17 @@
                 ifEmpty="false"
                 operator="and">
              <and>
-                <instanceof
-                      value="org.eclipse.mylyn.tasks.core.ITask">
-                </instanceof>
-                <test
-                      property="org.eclipse.mylyn.task.canPostAttachment"
-                      value="true">
-                </test>
-                <test
-                      property="org.eclipse.mylyn.task.hasRepositoryContext"
-                      value="true">
-                </test>
+                <adapt
+                      type="org.eclipse.mylyn.tasks.core.ITask">
+                   <test
+                         property="org.eclipse.mylyn.task.canPostAttachment"
+                         value="true">
+                   </test>
+                   <test
+                         property="org.eclipse.mylyn.task.hasRepositoryContext"
+                         value="true">
+                   </test>
+                </adapt>
              </and>
           </iterate>
        </enabledWhen>
@@ -476,13 +476,13 @@
                 ifEmpty="false"
                 operator="and">
              <and>
-                <instanceof
-                      value="org.eclipse.mylyn.tasks.core.ITask">
-                </instanceof>
-                <test
-                      property="org.eclipse.mylyn.task.hasLocalContext"
-                      value="true">
-                </test>
+                <adapt
+                      type="org.eclipse.mylyn.tasks.core.ITask">
+                   <test
+                         property="org.eclipse.mylyn.task.hasLocalContext"
+                         value="true">
+                   </test>
+                </adapt>
              </and>
           </iterate>
        </enabledWhen>
@@ -495,13 +495,13 @@
                 ifEmpty="false"
                 operator="and">
              <and>
-                <instanceof
-                      value="org.eclipse.mylyn.tasks.core.ITask">
-                </instanceof>
-                <test
-                      property="org.eclipse.mylyn.task.hasLocalContext"
-                      value="true">
-                </test>
+                <adapt
+                      type="org.eclipse.mylyn.tasks.core.ITask">
+                   <test
+                         property="org.eclipse.mylyn.task.hasLocalContext"
+                         value="true">
+                   </test>
+                </adapt>
              </and>
           </iterate>
        </enabledWhen>
@@ -517,10 +517,6 @@
                 <instanceof
                       value="org.eclipse.mylyn.tasks.core.ITaskAttachment">
                 </instanceof>
-                <test
-                      property="org.eclipse.mylyn.task.attachment.isContext"
-                      value="true">
-                </test>
              </and>
           </iterate>
        </enabledWhen>
