@@ -12,7 +12,6 @@
 package org.eclipse.mylyn.internal.tasks.bugs;
 
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.core.runtime.CoreException;
@@ -20,135 +19,84 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.provisional.tasks.bugs.AbstractTaskContributor;
+import org.eclipse.mylyn.internal.provisional.tasks.bugs.AbstractSupportHandler;
 import org.eclipse.mylyn.internal.provisional.tasks.bugs.ISupportResponse;
 import org.eclipse.mylyn.internal.provisional.tasks.bugs.ITaskContribution;
-import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 /**
  * @author Steffen Pingel
  */
-@SuppressWarnings("deprecation")
-public class TaskContributorManager {
+public class SupportHandlerManager {
 
 	private static final String ELEMENT_CLASS = "class"; //$NON-NLS-1$
 
-	private static final String ELEMENT_TASK_CONTRIBUTOR = "contributor"; //$NON-NLS-1$
+	private static final String ELEMENT_TASK_HANDLER = "handler"; //$NON-NLS-1$
 
-	private static final String EXTENSION_ID_TASK_CONTRIBUTORS = "org.eclipse.mylyn.tasks.bugs.taskContributors"; //$NON-NLS-1$
+	private static final String EXTENSION_ID_TASK_CONTRIBUTORS = "org.eclipse.mylyn.tasks.bugs.support"; //$NON-NLS-1$
 
-	private final DefaultTaskContributor defaultTaskContributor = new DefaultTaskContributor();
+	private final DefaultSupportHandler defaultSupportHandler = new DefaultSupportHandler();
 
 	private boolean readExtensions;
 
-	private final List<AbstractTaskContributor> taskContributors = new CopyOnWriteArrayList<AbstractTaskContributor>();
+	private final List<AbstractSupportHandler> taskContributors = new CopyOnWriteArrayList<AbstractSupportHandler>();
 
-	public TaskContributorManager() {
+	public SupportHandlerManager() {
 	}
 
-	public void addErrorReporter(AbstractTaskContributor taskContributor) {
+	public void addErrorReporter(AbstractSupportHandler taskContributor) {
 		taskContributors.add(taskContributor);
 	}
 
-	public String getEditorId(IStatus status) {
+	public void process(final ITaskContribution contribution, final IProgressMonitor monitor) {
 		readExtensions();
 
-		for (AbstractTaskContributor contributor : taskContributors) {
-			String editorId = contributor.getEditorId(status);
-			if (editorId != null) {
-				return editorId;
+		for (final AbstractSupportHandler contributor : taskContributors) {
+			SafeRunner.run(new ISafeRunnable() {
+				public void handleException(Throwable e) {
+					StatusHandler.log(new Status(IStatus.ERROR, TasksBugsPlugin.ID_PLUGIN, "Task contributor failed", e)); //$NON-NLS-1$
+				}
+
+				public void run() throws Exception {
+					contributor.process(contribution, monitor);
+				}
+			});
+			if (contribution.isHandled()) {
+				break;
 			}
 		}
-
-		return defaultTaskContributor.getEditorId(status);
+		if (!contribution.isHandled()) {
+			defaultSupportHandler.process(contribution, monitor);
+		}
 	}
 
-	@Deprecated
-	public void postProcess(final IStatus status, final TaskData taskData) {
+	public void postProcess(final ISupportResponse response, final IProgressMonitor monitor) {
 		readExtensions();
 
-		for (final AbstractTaskContributor contributor : taskContributors) {
+		for (final AbstractSupportHandler contributor : taskContributors) {
 			SafeRunner.run(new ISafeRunnable() {
 				public void handleException(Throwable e) {
 					StatusHandler.log(new Status(IStatus.ERROR, TasksBugsPlugin.ID_PLUGIN, "Task contributor failed", e)); //$NON-NLS-1$
 				}
 
 				public void run() throws Exception {
-					contributor.postProcess(status, taskData);
+					contributor.postProcess(response, monitor);
 				}
 			});
 		}
-	}
-
-	public void process(final ITaskContribution contribution) {
-		readExtensions();
-
-		for (final AbstractTaskContributor contributor : taskContributors) {
-			SafeRunner.run(new ISafeRunnable() {
-				public void handleException(Throwable e) {
-					StatusHandler.log(new Status(IStatus.ERROR, TasksBugsPlugin.ID_PLUGIN, "Task contributor failed", e)); //$NON-NLS-1$
-				}
-
-				public void run() throws Exception {
-					contributor.process(contribution);
-				}
-			});
-		}
-		defaultTaskContributor.process(contribution);
-	}
-
-	public void postProcess(final ISupportResponse response) {
-		readExtensions();
-
-		for (final AbstractTaskContributor contributor : taskContributors) {
-			SafeRunner.run(new ISafeRunnable() {
-				public void handleException(Throwable e) {
-					StatusHandler.log(new Status(IStatus.ERROR, TasksBugsPlugin.ID_PLUGIN, "Task contributor failed", e)); //$NON-NLS-1$
-				}
-
-				public void run() throws Exception {
-					contributor.postProcess(response);
-				}
-			});
-		}
-		defaultTaskContributor.postProcess(response);
-	}
-
-	@Deprecated
-	public void preProcess(final IStatus status, final AttributeTaskMapper contribution) {
-		readExtensions();
-
-		final boolean[] handled = new boolean[1];
-		for (final AbstractTaskContributor contributor : taskContributors) {
-			SafeRunner.run(new ISafeRunnable() {
-				public void handleException(Throwable e) {
-					StatusHandler.log(new Status(IStatus.ERROR, TasksBugsPlugin.ID_PLUGIN, "Task contributor failed", e)); //$NON-NLS-1$
-				}
-
-				public void run() throws Exception {
-					Map<String, String> contributorAttributes = contributor.getAttributes(status);
-					if (contributorAttributes != null) {
-						handled[0] = true;
-						contribution.getAttributes().putAll(contributorAttributes);
-					}
-				}
-			});
-		}
-		if (!handled[0]) {
-			contribution.getAttributes().putAll(defaultTaskContributor.getAttributes(status));
-		}
+		defaultSupportHandler.postProcess(response, monitor);
 	}
 
 	public void preProcess(final SupportRequest request) {
 		readExtensions();
 
-		for (final AbstractTaskContributor contributor : taskContributors) {
+		for (final AbstractSupportHandler contributor : taskContributors) {
 			SafeRunner.run(new ISafeRunnable() {
 				public void handleException(Throwable e) {
 					StatusHandler.log(new Status(IStatus.ERROR, TasksBugsPlugin.ID_PLUGIN, "Task contributor failed", e)); //$NON-NLS-1$
@@ -159,7 +107,7 @@ public class TaskContributorManager {
 				}
 			});
 		}
-		defaultTaskContributor.preProcess(request);
+		defaultSupportHandler.preProcess(request);
 	}
 
 	private synchronized void readExtensions() {
@@ -174,7 +122,7 @@ public class TaskContributorManager {
 		for (IExtension extension : extensions) {
 			IConfigurationElement[] elements = extension.getConfigurationElements();
 			for (IConfigurationElement element : elements) {
-				if (element.getName().equals(ELEMENT_TASK_CONTRIBUTOR)) {
+				if (element.getName().equals(ELEMENT_TASK_HANDLER)) {
 					readTaskContributor(element);
 				}
 			}
@@ -184,12 +132,12 @@ public class TaskContributorManager {
 	private void readTaskContributor(IConfigurationElement element) {
 		try {
 			Object object = element.createExecutableExtension(ELEMENT_CLASS);
-			if (object instanceof AbstractTaskContributor) {
-				taskContributors.add((AbstractTaskContributor) object);
+			if (object instanceof AbstractSupportHandler) {
+				taskContributors.add((AbstractSupportHandler) object);
 			} else {
 				StatusHandler.log(new Status(IStatus.WARNING, TasksBugsPlugin.ID_PLUGIN,
 						"Could not load task contributor extenstion: \"" + object.getClass().getCanonicalName() + "\"" //$NON-NLS-1$ //$NON-NLS-2$
-								+ " does not implement \"" + AbstractTaskContributor.class.getCanonicalName() + "\"")); //$NON-NLS-1$ //$NON-NLS-2$
+								+ " does not implement \"" + AbstractSupportHandler.class.getCanonicalName() + "\"")); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		} catch (CoreException e) {
 			StatusHandler.log(new Status(IStatus.WARNING, TasksBugsPlugin.ID_PLUGIN,
@@ -197,7 +145,7 @@ public class TaskContributorManager {
 		}
 	}
 
-	public void removeErrorReporter(AbstractTaskContributor taskContributor) {
+	public void removeErrorReporter(AbstractSupportHandler taskContributor) {
 		taskContributors.remove(taskContributor);
 	}
 

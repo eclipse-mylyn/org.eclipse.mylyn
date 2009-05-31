@@ -20,7 +20,9 @@ import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 /**
  * @author Steffen Pingel
  * @since 3.0
+ * @deprecated use {@link AbstractSupportHandler} instead, as of 3.2 all taskContributor extensions are ignored
  */
+@Deprecated
 public abstract class AbstractTaskContributor {
 
 	/**
@@ -30,9 +32,8 @@ public abstract class AbstractTaskContributor {
 	}
 
 	/**
-	 * @deprecated use {@link #contribute(ISTatus, ITaskContribution)} instead
+	 * @since 3.0
 	 */
-	@Deprecated
 	public abstract Map<String, String> getAttributes(IStatus status);
 
 	/**
@@ -41,8 +42,8 @@ public abstract class AbstractTaskContributor {
 	 * @param status
 	 *            the status
 	 * @return id of editor
+	 * @since 3.0
 	 */
-	@Deprecated
 	public String getEditorId(IStatus status) {
 		return null;
 	}
@@ -54,9 +55,8 @@ public abstract class AbstractTaskContributor {
 	}
 
 	/**
-	 * @deprecated use {@link #postProcess(ISupportResponse)} instead
+	 * @since 3.0
 	 */
-	@Deprecated
 	public void postProcess(IStatus status, TaskData taskData) {
 	}
 

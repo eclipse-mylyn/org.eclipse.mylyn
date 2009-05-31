@@ -11,31 +11,30 @@
 
 package org.eclipse.mylyn.internal.provisional.tasks.bugs;
 
-import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * @author Steffen Pingel
  * @since 3.2
- * @noextend This interface is not intended to be extended by clients.
- * @noimplement This interface is not intended to be implemented by clients.
  */
-public interface ITaskContribution {
+public class AbstractSupportHandler {
 
 	/**
-	 * Appends <code>text</code> to the description of the task.
+	 * @since 3.2
 	 */
-	public abstract void appendToDescription(String text);
+	public void preProcess(ISupportRequest request) {
+	}
 
-	public abstract String getAttribute(String name);
+	/**
+	 * @since 3.2
+	 */
+	public void process(ITaskContribution contribution, IProgressMonitor monitor) {
+	}
 
-	public abstract IProduct getProduct();
-
-	public abstract IStatus getStatus();
-
-	public abstract boolean isHandled();
-
-	public abstract void setAttribute(String name, String value);
-
-	public abstract void setHandled(boolean handled);
+	/**
+	 * @since 3.2
+	 */
+	public void postProcess(ISupportResponse response, IProgressMonitor monitor) {
+	}
 
 }

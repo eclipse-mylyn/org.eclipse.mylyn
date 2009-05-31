@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.wizard.IWizardPage;
@@ -24,6 +25,8 @@ import org.eclipse.mylyn.internal.tasks.bugs.AbstractSupportElement;
 import org.eclipse.mylyn.internal.tasks.bugs.SupportProduct;
 import org.eclipse.mylyn.internal.tasks.bugs.SupportProvider;
 import org.eclipse.mylyn.internal.tasks.bugs.SupportProviderManager;
+import org.eclipse.mylyn.internal.tasks.bugs.SupportRequest;
+import org.eclipse.mylyn.internal.tasks.bugs.TaskErrorReporter;
 import org.eclipse.mylyn.internal.tasks.bugs.TasksBugsPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 
@@ -77,7 +80,7 @@ public class ReportBugOrEnhancementWizard extends Wizard {
 
 	public ReportBugOrEnhancementWizard() {
 		setForcePreviousAndNextButtons(true);
-		setNeedsProgressMonitor(false);
+		setNeedsProgressMonitor(true);
 		setWindowTitle(Messages.ReportBugOrEnhancementWizard_Report_Bug_or_Enhancement);
 		setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPORT_BUG);
 	}
@@ -109,14 +112,10 @@ public class ReportBugOrEnhancementWizard extends Wizard {
 			return false;
 		}
 
-		// delay run this until after the dialog has been closed
-		getShell().getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				TasksBugsPlugin.getTaskErrorReporter().handle(new ProductStatus((IProduct) product));
-			}
-		});
-
-		return true;
+		TaskErrorReporter reporter = TasksBugsPlugin.getTaskErrorReporter();
+		IStatus status = new ProductStatus((IProduct) product);
+		SupportRequest request = reporter.preProcess(status, ((ProductStatus) status).getProduct());
+		return reporter.process(request.getDefaultContribution(), getContainer());
 	}
 
 }

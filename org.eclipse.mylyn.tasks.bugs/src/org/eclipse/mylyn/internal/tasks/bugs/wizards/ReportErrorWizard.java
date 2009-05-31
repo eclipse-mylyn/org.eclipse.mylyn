@@ -42,6 +42,7 @@ public class ReportErrorWizard extends Wizard {
 		this.request = taskErrorReporter.preProcess(status, null);
 		setWindowTitle(Messages.ReportErrorWizard_Report_as_Bug);
 		setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPORT_BUG);
+		setNeedsProgressMonitor(true);
 	}
 
 	@Override
@@ -57,8 +58,7 @@ public class ReportErrorWizard extends Wizard {
 	@Override
 	public boolean performFinish() {
 		if (reportErrorPage.getSelectedContribution() != null) {
-			taskErrorReporter.postProcess(reportErrorPage.getSelectedContribution());
-			return true;
+			return taskErrorReporter.process(reportErrorPage.getSelectedContribution(), getContainer());
 		} else {
 			return newTaskPage.performFinish();
 		}

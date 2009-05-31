@@ -16,9 +16,9 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.tasks.core.TaskMapping;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.views.markers.MarkerViewHandler;
 import org.eclipse.ui.views.markers.internal.MarkerType;
 import org.eclipse.ui.views.markers.internal.MarkerTypesModel;
@@ -62,7 +62,7 @@ public class NewTaskFromMarkerHandler extends MarkerViewHandler {
 
 		};
 
-		TasksUiUtil.openNewTaskEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), mapping, null);
+		TasksUiUtil.openNewTaskEditor(WorkbenchUtil.getShell(), mapping, null);
 		return null;
 	}
 

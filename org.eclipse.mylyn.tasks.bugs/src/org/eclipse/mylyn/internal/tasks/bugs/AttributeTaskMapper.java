@@ -40,6 +40,8 @@ public class AttributeTaskMapper implements ITaskContribution, ISupportResponse 
 
 	private TaskData taskData;
 
+	private boolean handled;
+
 	public AttributeTaskMapper(IStatus status, IProduct product) {
 		Assert.isNotNull(status);
 		Assert.isNotNull(product);
@@ -104,6 +106,14 @@ public class AttributeTaskMapper implements ITaskContribution, ISupportResponse 
 
 	void setTaskData(TaskData taskData) {
 		this.taskData = taskData;
+	}
+
+	public boolean isHandled() {
+		return handled;
+	}
+
+	public void setHandled(boolean handled) {
+		this.handled = handled;
 	}
 
 }

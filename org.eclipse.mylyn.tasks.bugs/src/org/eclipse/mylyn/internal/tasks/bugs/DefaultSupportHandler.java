@@ -14,14 +14,14 @@ package org.eclipse.mylyn.internal.tasks.bugs;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IBundleGroup;
 import org.eclipse.core.runtime.IProduct;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylyn.internal.provisional.tasks.bugs.AbstractTaskContributor;
+import org.eclipse.mylyn.internal.provisional.tasks.bugs.AbstractSupportHandler;
 import org.eclipse.mylyn.internal.provisional.tasks.bugs.ISupportRequest;
 import org.eclipse.mylyn.internal.provisional.tasks.bugs.ISupportResponse;
 import org.eclipse.mylyn.internal.provisional.tasks.bugs.ITaskContribution;
@@ -39,8 +39,7 @@ import org.osgi.framework.Bundle;
 /**
  * @author Steffen Pingel
  */
-@SuppressWarnings("deprecation")
-public class DefaultTaskContributor extends AbstractTaskContributor {
+public class DefaultSupportHandler extends AbstractSupportHandler {
 
 	@Override
 	public void preProcess(ISupportRequest request) {
@@ -52,7 +51,7 @@ public class DefaultTaskContributor extends AbstractTaskContributor {
 	}
 
 	@Override
-	public void process(ITaskContribution contribution) {
+	public void process(ITaskContribution contribution, IProgressMonitor monitor) {
 		if (contribution.getAttribute(IRepositoryConstants.DESCRIPTION) == null) {
 			String description = getDescription(contribution.getStatus());
 			if (description != null) {
@@ -62,7 +61,7 @@ public class DefaultTaskContributor extends AbstractTaskContributor {
 	}
 
 	@Override
-	public void postProcess(ISupportResponse response) {
+	public void postProcess(ISupportResponse response, IProgressMonitor monitor) {
 		IStatus contribution = response.getStatus();
 		TaskData taskData = response.getTaskData();
 		if (contribution instanceof ProductStatus) {
@@ -143,13 +142,6 @@ public class DefaultTaskContributor extends AbstractTaskContributor {
 				sb.append(NLS.bind(" ({0})", product.getId())); //$NON-NLS-1$
 			}
 		}
-	}
-
-	@Override
-	public Map<String, String> getAttributes(IStatus status) {
-		Map<String, String> attributes = new HashMap<String, String>();
-		attributes.put(IRepositoryConstants.DESCRIPTION, getDescription(status));
-		return attributes;
 	}
 
 	public String getDescription(IStatus status) {

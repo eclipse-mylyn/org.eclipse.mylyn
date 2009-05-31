@@ -697,8 +697,7 @@ public class TasksUiInternal {
 		TaskRepository localTaskRepository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
 				task.getRepositoryUrl());
 		TaskEditorInput editorInput = new TaskEditorInput(localTaskRepository, task);
-		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		TasksUiUtil.openEditor(editorInput, TaskEditor.ID_EDITOR, page);
+		TasksUiUtil.openEditor(editorInput, TaskEditor.ID_EDITOR, null);
 	}
 
 	/**
