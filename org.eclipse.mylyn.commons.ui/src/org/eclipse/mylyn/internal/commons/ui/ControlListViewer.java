@@ -49,6 +49,8 @@ public abstract class ControlListViewer extends StructuredViewer {
 
 	private final Composite noEntryArea;
 
+	protected boolean hasFocus;
+
 	/**
 	 * Create a new instance of the receiver with a control that is a child of parent with style style.
 	 * 
@@ -65,7 +67,16 @@ public abstract class ControlListViewer extends StructuredViewer {
 		control = new Composite(scrolled, SWT.NONE) {
 			@Override
 			public boolean setFocus() {
+				forceFocus();
 				return true;
+			}
+
+			@Override
+			public void setVisible(boolean visible) {
+				super.setVisible(visible);
+				if (visible) {
+					updateSize();
+				}
 			}
 		};
 		GridLayout layout = new GridLayout();
@@ -101,7 +112,6 @@ public abstract class ControlListViewer extends StructuredViewer {
 				updateSize();
 			}
 		});
-
 		control.addTraverseListener(new TraverseListener() {
 			private boolean handleEvent = true;
 
@@ -215,7 +225,8 @@ public abstract class ControlListViewer extends StructuredViewer {
 	}
 
 	private void updateSize() {
-		Point size = control.computeSize(scrolled.getClientArea().width, SWT.DEFAULT, true);
+		// XXX need a small offset in case the list has a scroll bar
+		Point size = control.computeSize(scrolled.getClientArea().width - 20, SWT.DEFAULT, true);
 		control.setSize(size);
 		scrolled.setMinSize(size);
 	}
@@ -237,6 +248,16 @@ public abstract class ControlListViewer extends StructuredViewer {
 	 */
 	private ControlListItem createNewItem(Object element) {
 		final ControlListItem item = doCreateItem(control, element);
+//		item.getChildren()[0].addPaintListener(new PaintListener() {
+//			public void paintControl(PaintEvent e) {
+//				if (hasFocus && item.isSelected()) {
+//					Point size = item.getSize();
+//					e.gc.setForeground(e.gc.getDevice().getSystemColor(SWT.COLOR_DARK_GRAY));
+//					e.gc.setLineDash(new int[] { 1, 2 });
+//					e.gc.drawRoundRectangle(0, 0, size.x - 1, size.y - 1, 5, 5);
+//				}
+//			}
+//		});
 		item.setIndexListener(new ControlListItem.IndexListener() {
 			public void selectNext() {
 				Control[] children = control.getChildren();
@@ -264,6 +285,7 @@ public abstract class ControlListViewer extends StructuredViewer {
 
 			public void select() {
 				setSelection(new StructuredSelection(item.getData()));
+				setFocus();
 			}
 		});
 
@@ -410,14 +432,16 @@ public abstract class ControlListViewer extends StructuredViewer {
 	public void setFocus() {
 		Control[] children = control.getChildren();
 		if (children.length > 0) {
-			for (Control element : children) {
-				ControlListItem item = (ControlListItem) element;
-				if (item.isSelected()) {
-					item.setFocus();
-					return;
-				}
-			}
-			children[0].setFocus();
+			// causes the item's tool bar to get focus when clicked which is undesirable 
+//			for (Control element : children) {
+//				ControlListItem item = (ControlListItem) element;
+//				if (item.isSelected()) {
+//					if (item.setFocus()) {
+//						return;
+//					}
+//				}
+//			}
+			control.forceFocus();
 		} else {
 			noEntryArea.setFocus();
 		}

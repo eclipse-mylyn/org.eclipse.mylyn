@@ -22,7 +22,6 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.ui.forms.IFormColors;
 
 /**
  * Based on {@link org.eclipse.ui.internal.forms.widgets.FormHeading}.
@@ -37,6 +36,17 @@ public class GradientCanvas extends Canvas {
 	private static final int BACKGROUND_IMAGE_TILED = 1 << 3;
 
 	public static final String COLOR_BASE_BG = "baseBg"; //$NON-NLS-1$
+
+	static String PREFIX = "org.eclipse.ui.forms."; //$NON-NLS-1$
+
+	static String H_PREFIX = PREFIX + "H_"; //$NON-NLS-1$
+
+	public static String H_BOTTOM_KEYLINE1 = H_PREFIX + "BOTTOM_KEYLINE1"; //$NON-NLS-1$
+
+	/**
+	 * Key for the form header bottom keyline 2 color.
+	 */
+	public static String H_BOTTOM_KEYLINE2 = H_PREFIX + "BOTTOM_KEYLINE2"; //$NON-NLS-1$
 
 	private Image backgroundImage;
 
@@ -198,8 +208,8 @@ public class GradientCanvas extends Canvas {
 
 	private void drawSeparator(Rectangle carea, GC igc) {
 		// bg separator
-		if (hasColor(IFormColors.H_BOTTOM_KEYLINE1)) {
-			igc.setForeground(getColor(IFormColors.H_BOTTOM_KEYLINE1));
+		if (hasColor(H_BOTTOM_KEYLINE1)) {
+			igc.setForeground(getColor(H_BOTTOM_KEYLINE1));
 		} else {
 			igc.setForeground(getBackground());
 		}
@@ -208,8 +218,8 @@ public class GradientCanvas extends Canvas {
 		} else {
 			igc.drawLine(carea.x, 1, carea.x + carea.width - 1, 1);
 		}
-		if (hasColor(IFormColors.H_BOTTOM_KEYLINE2)) {
-			igc.setForeground(getColor(IFormColors.H_BOTTOM_KEYLINE2));
+		if (hasColor(H_BOTTOM_KEYLINE2)) {
+			igc.setForeground(getColor(H_BOTTOM_KEYLINE2));
 		} else {
 			igc.setForeground(getForeground());
 		}

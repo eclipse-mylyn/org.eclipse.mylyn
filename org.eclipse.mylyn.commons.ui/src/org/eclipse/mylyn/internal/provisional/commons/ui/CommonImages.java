@@ -219,6 +219,8 @@ public class CommonImages {
 
 	public static final ImageDescriptor QUESTION = create(T_OBJ, "question.gif"); //$NON-NLS-1$
 
+	public static final ImageDescriptor INFORMATION = create(T_OBJ, "message_info.gif"); //$NON-NLS-1$
+
 	public static final ImageDescriptor SEPARATOR_LIST = create(T_TOOL, "content-assist-separator.gif"); //$NON-NLS-1$
 
 	public static final ImageDescriptor PART_MAXIMIZE = create(T_TOOL, "maximize.png"); //$NON-NLS-1$

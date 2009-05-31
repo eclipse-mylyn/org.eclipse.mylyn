@@ -83,7 +83,7 @@ public abstract class ControlListItem extends Composite {
 	 * @param progressInfo
 	 */
 	public ControlListItem(Composite parent, int style, Object element) {
-		super(parent, style);
+		super(parent, style | SWT.NO_FOCUS);
 		setData(element);
 		setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
 		mouseListener = doCreateMouseListener();
