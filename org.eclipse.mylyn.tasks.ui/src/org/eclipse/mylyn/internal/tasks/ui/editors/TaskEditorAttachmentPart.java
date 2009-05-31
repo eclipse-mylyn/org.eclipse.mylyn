@@ -209,7 +209,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 
 	private void expandSection(FormToolkit toolkit, Section section) {
 		attachmentsComposite = toolkit.createComposite(section);
-		attachmentsComposite.setLayout(new GridLayout(1, false));
+		attachmentsComposite.setLayout(EditorUtil.createSectionClientLayout());
 		attachmentsComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		getTaskEditorPage().registerDefaultDropListener(section);

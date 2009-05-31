@@ -205,8 +205,9 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		}
 		Section section = createSection(parent, toolkit, notesString.length() > 0);
 		Composite composite = toolkit.createComposite(section);
-		int numColumns = (needsDueDate) ? 6 : 4;
-		composite.setLayout(new GridLayout(numColumns, false));
+		GridLayout layout = EditorUtil.createSectionClientLayout();
+		layout.numColumns = (needsDueDate) ? 6 : 4;
+		composite.setLayout(layout);
 
 		createScheduledDatePicker(toolkit, composite);
 
@@ -222,7 +223,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		TasksUiInternal.getTaskList().addChangeListener(TASK_LIST_LISTENER);
 		TasksUiPlugin.getTaskActivityManager().addActivityListener(timingListener);
 
-		createNotesArea(toolkit, composite, numColumns);
+		createNotesArea(toolkit, composite, layout.numColumns);
 
 		toolkit.paintBordersFor(composite);
 		section.setClient(composite);

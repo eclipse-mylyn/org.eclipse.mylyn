@@ -99,7 +99,9 @@ public class SummaryPart extends AbstractLocalEditorPart {
 	@Override
 	public Control createControl(Composite parent, FormToolkit toolkit) {
 		Composite composite = toolkit.createComposite(parent);
-		GridLayout layout = new GridLayout(2, false);
+		GridLayout layout = EditorUtil.createSectionClientLayout();
+		layout.numColumns = 2;
+		layout.marginTop = 0;
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
 		layout.verticalSpacing = 3;

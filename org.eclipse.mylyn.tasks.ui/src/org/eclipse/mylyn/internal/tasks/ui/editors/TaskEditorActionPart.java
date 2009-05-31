@@ -237,8 +237,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		Section section = createSection(parent, toolkit, true);
 
 		Composite buttonComposite = toolkit.createComposite(section);
-		GridLayout buttonLayout = new GridLayout();
-		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(buttonComposite);
+		GridLayout buttonLayout = EditorUtil.createSectionClientLayout();
 		buttonLayout.numColumns = 4;
 		buttonComposite.setLayout(buttonLayout);
 

@@ -22,7 +22,6 @@ import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
@@ -85,9 +84,7 @@ public class TaskEditorNotesPart extends AbstractTaskEditorPart {
 		Section section = createSection(parent, toolkit, this.value != null && this.value.length() > 0);
 
 		Composite composite = toolkit.createComposite(section);
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 1;
-		composite.setLayout(layout);
+		composite.setLayout(EditorUtil.createSectionClientLayout());
 
 		noteEditor = new SourceViewer(composite, null, SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 		noteEditor.configure(new RepositoryTextViewerConfiguration(getModel().getTaskRepository(), true));

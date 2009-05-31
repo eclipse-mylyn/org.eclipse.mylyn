@@ -87,14 +87,16 @@ public class AttributePart extends AbstractLocalEditorPart {
 		}
 
 		Section section = createSection(parent, toolkit, style);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(section);
 		section.setText(Messages.TaskPlanningEditor_Attributes);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(section);
 		createSectionClient(section, toolkit);
 		setSection(toolkit, section);
 
 		Composite composite = toolkit.createComposite(section);
-		composite.setLayout(new GridLayout(4, false));
-		GridDataFactory.fillDefaults().grab(true, false).applyTo(section);
+		GridLayout layout = EditorUtil.createSectionClientLayout();
+		layout.numColumns = 4;
+		composite.setLayout(layout);
 
 		Label label = toolkit.createLabel(composite, Messages.AttributePart_Category_);
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));

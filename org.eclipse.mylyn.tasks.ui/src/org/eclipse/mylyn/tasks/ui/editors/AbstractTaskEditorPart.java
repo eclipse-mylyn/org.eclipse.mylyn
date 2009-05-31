@@ -143,9 +143,9 @@ public abstract class AbstractTaskEditorPart extends AbstractFormPart {
 				toolbarComposite.setLayout(rowLayout);
 
 				toolBarManager.createControl(toolbarComposite);
-				section.setTextClient(toolbarComposite);
 				section.clientVerticalSpacing = 0;
 				section.descriptionVerticalSpacing = 0;
+				section.setTextClient(toolbarComposite);
 			}
 		}
 		setControl(section);

@@ -154,7 +154,9 @@ public class TaskPlanningEditor extends TaskFormPage {
 		toolkit = managedForm.getToolkit();
 
 		editorComposite = managedForm.getForm().getBody();
-		editorComposite.setLayout(new GridLayout());
+		GridLayout layout = new GridLayout();
+		layout.verticalSpacing = 0;
+		editorComposite.setLayout(layout);
 
 		if (task instanceof LocalTask) {
 			SummaryPart part = new SummaryPart();

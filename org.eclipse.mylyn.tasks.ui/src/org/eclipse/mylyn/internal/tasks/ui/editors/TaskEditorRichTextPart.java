@@ -25,7 +25,6 @@ import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
@@ -105,9 +104,7 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 		Section section = createSection(parent, toolkit, sectionStyle);
 
 		composite = toolkit.createComposite(section);
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 1;
-		composite.setLayout(layout);
+		composite.setLayout(EditorUtil.createSectionClientLayout());
 
 		editor = (RichTextAttributeEditor) attributEditor;
 

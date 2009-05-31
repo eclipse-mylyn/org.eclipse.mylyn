@@ -44,6 +44,7 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -468,6 +469,16 @@ public class EditorUtil {
 			widthHint = EditorUtil.MAXIMUM_WIDTH;
 		}
 		return widthHint;
+	}
+
+	public static GridLayout createSectionClientLayout() {
+		GridLayout layout = new GridLayout();
+		layout.marginHeight = 0;
+		// leave 1px for borders
+		layout.marginTop = 2;
+		// spacing if a section is expanded
+		layout.marginBottom = 8;
+		return layout;
 	}
 
 }

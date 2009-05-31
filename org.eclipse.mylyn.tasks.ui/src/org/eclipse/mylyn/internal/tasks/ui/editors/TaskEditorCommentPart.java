@@ -658,10 +658,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 	private void expandSection(final FormToolkit toolkit, final Section section) {
 		Composite composite = toolkit.createComposite(section);
 		section.setClient(composite);
-
-		GridLayout layout = new GridLayout();
-		layout.marginHeight = 0;
-		composite.setLayout(layout);
+		composite.setLayout(EditorUtil.createSectionClientLayout());
 
 		List<CommentGroupViewer> viewers = getCommentGroupViewers();
 		for (CommentGroupViewer viewer : viewers) {

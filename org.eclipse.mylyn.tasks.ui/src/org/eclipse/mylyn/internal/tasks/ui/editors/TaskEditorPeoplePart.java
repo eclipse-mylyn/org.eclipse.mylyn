@@ -49,8 +49,8 @@ public class TaskEditorPeoplePart extends AbstractTaskEditorPart {
 		Section section = createSection(parent, toolkit, true);
 
 		Composite peopleComposite = toolkit.createComposite(section);
-		GridLayout layout = new GridLayout(2, false);
-		layout.marginWidth = 5;
+		GridLayout layout = EditorUtil.createSectionClientLayout();
+		layout.numColumns = 2;
 		peopleComposite.setLayout(layout);
 
 		addAttribute(peopleComposite, toolkit, getTaskData().getRoot().getMappedAttribute(TaskAttribute.USER_ASSIGNED));
