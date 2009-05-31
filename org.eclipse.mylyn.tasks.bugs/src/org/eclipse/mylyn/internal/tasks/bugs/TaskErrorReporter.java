@@ -61,7 +61,7 @@ public class TaskErrorReporter {
 		ICoreRunnable runner = new ICoreRunnable() {
 			public void run(IProgressMonitor monitor) throws CoreException {
 				try {
-					monitor.beginTask("Processing support request", IProgressMonitor.UNKNOWN);
+					monitor.beginTask(Messages.TaskErrorReporter_Job_Progress_Process_support_request, IProgressMonitor.UNKNOWN);
 					process((AttributeTaskMapper) response, monitor);
 				} finally {
 					monitor.done();
@@ -71,8 +71,8 @@ public class TaskErrorReporter {
 		try {
 			CommonUiUtil.run(context, runner);
 		} catch (CoreException e) {
-			TasksUiInternal.logAndDisplayStatus("Error Reporting", new Status(IStatus.ERROR, TasksBugsPlugin.ID_PLUGIN,
-					"Unexpected error while creating task for error report", e));
+			TasksUiInternal.logAndDisplayStatus(Messages.TaskErrorReporter_Create_Task_Error_Title, new Status(IStatus.ERROR, TasksBugsPlugin.ID_PLUGIN,
+					Messages.TaskErrorReporter_Create_Task_Error_Message, e));
 			return false;
 		} catch (OperationCanceledException e) {
 			return false;

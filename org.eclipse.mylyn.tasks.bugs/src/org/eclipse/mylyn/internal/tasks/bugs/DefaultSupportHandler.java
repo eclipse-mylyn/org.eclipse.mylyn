@@ -110,15 +110,15 @@ public class DefaultSupportHandler extends AbstractSupportHandler {
 		sb.append(Messages.DefaultTaskContributor_Error_Details);
 		if (date != null) {
 			sb.append("\n"); //$NON-NLS-1$
-			sb.append(NLS.bind("Date: {0}", date));
+			sb.append(NLS.bind(Messages.DefaultSupportHandler_Date_X, date));
 		}
 		sb.append("\n"); //$NON-NLS-1$
-		sb.append(NLS.bind("Message: {0}", status.getMessage()));
+		sb.append(NLS.bind(Messages.DefaultSupportHandler_Message_X, status.getMessage()));
 		sb.append("\n"); //$NON-NLS-1$
-		sb.append(NLS.bind("Severity: {0}", getSeverityText(status.getSeverity())));
+		sb.append(NLS.bind(Messages.DefaultSupportHandler_Severity_X, getSeverityText(status.getSeverity())));
 		appendProductInformation(sb);
 		sb.append("\n"); //$NON-NLS-1$
-		sb.append(NLS.bind("Plugin: {0}", status.getPlugin()));
+		sb.append(NLS.bind(Messages.DefaultSupportHandler_Plugin_X, status.getPlugin()));
 	}
 
 	private void appendProductInformation(StringBuilder sb) {
@@ -126,9 +126,9 @@ public class DefaultSupportHandler extends AbstractSupportHandler {
 		if (product != null) {
 			sb.append("\n"); //$NON-NLS-1$
 			if (product.getName() != null) {
-				sb.append(NLS.bind("Product: {0}", product.getName()));
+				sb.append(NLS.bind(Messages.DefaultSupportHandler_Product_X, product.getName()));
 			} else {
-				sb.append(NLS.bind("Product: {0}", product.getId()));
+				sb.append(NLS.bind(Messages.DefaultSupportHandler_Product_X, product.getId()));
 			}
 			Bundle definingBundle = product.getDefiningBundle();
 			if (definingBundle != null) {
@@ -150,10 +150,10 @@ public class DefaultSupportHandler extends AbstractSupportHandler {
 			if (product.getBundleGroup() != null) {
 				StringBuilder sb = new StringBuilder();
 				sb.append("\n\n\n"); //$NON-NLS-1$
-				sb.append("-- Configuration Details --");
+				sb.append(Messages.DefaultSupportHandler_Configuration_Details);
 				appendProductInformation(sb);
 				sb.append("\n"); //$NON-NLS-1$
-				sb.append("Installed Features:");
+				sb.append(Messages.DefaultSupportHandler_Installed_Features);
 				sb.append("\n"); //$NON-NLS-1$
 				for (IBundleGroup bundleGroup : new IBundleGroup[] { product.getBundleGroup() }) {
 					sb.append(" "); //$NON-NLS-1$
@@ -183,11 +183,11 @@ public class DefaultSupportHandler extends AbstractSupportHandler {
 			ErrorLogStatus errorLogStatus = (ErrorLogStatus) status;
 			StringBuilder sb = new StringBuilder();
 			sb.append("\n\n"); //$NON-NLS-1$
-			sb.append("What steps will reproduce the problem?");
+			sb.append(Messages.DefaultSupportHandler_What_steps_message);
 			sb.append("\n"); //$NON-NLS-1$
-			sb.append("1. \n");
-			sb.append("2. \n");
-			sb.append("3. \n");
+			sb.append(Messages.DefaultSupportHandler_Step_1);
+			sb.append(Messages.DefaultSupportHandler_Step_2);
+			sb.append(Messages.DefaultSupportHandler_Step_3);
 			appendErrorDetails(sb, errorLogStatus, errorLogStatus.getDate());
 			if (errorLogStatus.getLogSessionData() != null) {
 				sb.append(Messages.DefaultTaskContributor_SESSION_DATA);

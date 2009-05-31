@@ -283,11 +283,11 @@ public class SelectSupportElementPage extends WizardPage {
 		this.input = input;
 
 		if (input instanceof IProvider) {
-			setTitle("Supported Product");
-			setMessage("Select a supported product from the list.");
+			setTitle(Messages.SelectSupportElementPage_Supported_Product_Title);
+			setMessage(Messages.SelectSupportElementPage_Support_Product_Description);
 		} else {
-			setTitle("Support Provider");
-			setMessage("Select a support provider from the list.");
+			setTitle(Messages.SelectSupportElementPage_Support_Provider_Title);
+			setMessage(Messages.SelectSupportElementPage_Support_Provider_Description);
 		}
 	}
 
@@ -371,7 +371,7 @@ public class SelectSupportElementPage extends WizardPage {
 				setErrorMessage(null);
 				setPageComplete(true);
 			} else {
-				setErrorMessage("The selected provider does not specify supported products.");
+				setErrorMessage(Messages.SelectSupportElementPage_No_products_Message);
 				setPageComplete(false);
 			}
 		} else if (selectedElement instanceof SupportProduct) {

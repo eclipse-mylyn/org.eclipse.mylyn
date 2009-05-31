@@ -31,17 +31,23 @@ public class Messages extends NLS {
 
 	public static String ReportErrorPage_Report_as_Bug;
 
-	public static String ReportErrorPage_Report_to_;
+	public static String ReportErrorPage_Report_to;
 
 	public static String ReportErrorPage_Select_repository;
 
 	public static String ReportErrorPage_AN_UNEXPETED_ERROR_HAS_OCCURED_IN_PLUGIN;
 
+	public static String ReportErrorPage_Xprovider_Xproduct;
+
 	public static String ReportErrorWizard_Report_as_Bug;
 
-	public static String SelectFeaturePage_SELECT_FEATURE;
+	public static String SelectSupportElementPage_No_products_Message;
 
-	public static String SelectProductPage_Other;
+	public static String SelectSupportElementPage_Support_Product_Description;
 
-	public static String SelectProductPage_SELECT_PRODUCT;
+	public static String SelectSupportElementPage_Support_Provider_Description;
+
+	public static String SelectSupportElementPage_Support_Provider_Title;
+
+	public static String SelectSupportElementPage_Supported_Product_Title;
 }

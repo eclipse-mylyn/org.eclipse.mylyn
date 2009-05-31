@@ -25,9 +25,27 @@ public class Messages extends NLS {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
 
-	public static String DefaultTaskContributor_Bundle_Version;
+	public static String DefaultSupportHandler_Configuration_Details;
 
-	public static String DefaultTaskContributor_DATE;
+	public static String DefaultSupportHandler_Date_X;
+
+	public static String DefaultSupportHandler_Installed_Features;
+
+	public static String DefaultSupportHandler_Message_X;
+
+	public static String DefaultSupportHandler_Plugin_X;
+
+	public static String DefaultSupportHandler_Product_X;
+
+	public static String DefaultSupportHandler_Severity_X;
+
+	public static String DefaultSupportHandler_Step_1;
+
+	public static String DefaultSupportHandler_Step_2;
+
+	public static String DefaultSupportHandler_Step_3;
+
+	public static String DefaultSupportHandler_What_steps_message;
 
 	public static String DefaultTaskContributor_Error;
 
@@ -37,17 +55,15 @@ public class Messages extends NLS {
 
 	public static String DefaultTaskContributor_Info;
 
-	public static String DefaultTaskContributor_INSTALLED_FEATURES_AND_PLUGINS;
-
-	public static String DefaultTaskContributor_MESSAGE;
-
 	public static String DefaultTaskContributor_OK;
-
-	public static String DefaultTaskContributor_PLUGIN;
 
 	public static String DefaultTaskContributor_SESSION_DATA;
 
-	public static String DefaultTaskContributor_SEVERITY;
-
 	public static String DefaultTaskContributor_Warning;
+
+	public static String TaskErrorReporter_Create_Task_Error_Message;
+
+	public static String TaskErrorReporter_Create_Task_Error_Title;
+
+	public static String TaskErrorReporter_Job_Progress_Process_support_request;
 }

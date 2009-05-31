@@ -50,6 +50,6 @@ public class IRepositoryConstants {
 
 	public static final String SUMMARY = "summary"; //$NON-NLS-1$
 
-	public static final String PRIORITY = "priority";
+	public static final String PRIORITY = "priority"; //$NON-NLS-1$
 
 }
