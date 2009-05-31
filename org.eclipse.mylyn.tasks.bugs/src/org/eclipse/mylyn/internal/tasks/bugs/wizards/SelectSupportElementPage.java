@@ -30,9 +30,8 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.commons.ui.ControlListItem;
 import org.eclipse.mylyn.internal.commons.ui.ControlListViewer;
-import org.eclipse.mylyn.internal.commons.ui.NotificationPopupColors;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.provisional.commons.ui.GradientCanvas;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.provisional.tasks.bugs.IProvider;
@@ -51,7 +50,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
+import org.eclipse.ui.themes.IThemeManager;
 
 /**
  * @author Steffen Pingel
@@ -59,70 +60,9 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 @SuppressWarnings("restriction")
 public class SelectSupportElementPage extends WizardPage {
 
-	public class SupportElementViewer extends ControlListViewer {
-
-		public SupportElementViewer(Composite parent, int style) {
-			super(parent, style);
-			// ignore
-		}
-
-		@Override
-		protected ControlListItem doCreateItem(Composite parent, Object element) {
-			if (element instanceof SupportCategory) {
-				return new CategoryItem(parent, SWT.NONE, element);
-			}
-			return new SupportElementItem(parent, SWT.NONE, element);
-		}
-
-	}
-
-	private class CategoryItem extends ControlListItem {
-
-		private Label label;
-
-		public CategoryItem(Composite parent, int style, Object element) {
-			super(parent, style, element);
-		}
-
-		@Override
-		protected void createContent() {
-			FillLayout layout = new FillLayout();
-			setLayout(layout);
-
-			GradientCanvas canvas = new GradientCanvas(this, SWT.NONE);
-			NotificationPopupColors color = new NotificationPopupColors(getDisplay(), JFaceResources.getResources());
-			canvas.setBackgroundGradient(new Color[] { color.getGradientBegin(), color.getGradientEnd() },
-					new int[] { 100 }, true);
-			canvas.setLayout(new GridLayout(1, false));
-
-			label = new Label(canvas, SWT.NONE);
-			label.setFont(JFaceResources.getHeaderFont());
-			label.setBackground(null);
-
-			canvas.setSize(canvas.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-
-			refresh();
-		}
-
-		@Override
-		protected void refresh() {
-			AbstractSupportElement data = (AbstractSupportElement) getData();
-			label.setText(data.getName());
-		}
-
-		@Override
-		public void setForeground(Color color) {
-			// ignore
-		}
-
-		@Override
-		public void setBackground(Color color) {
-			// ignore
-		}
-
-	}
-
 	private class SupportElementItem extends ControlListItem {
+
+		private static final int ICON_GAP = 10;
 
 		private ToolBar toolBar;
 
@@ -134,36 +74,72 @@ public class SelectSupportElementPage extends WizardPage {
 
 		private ToolBarManager toolBarManager;
 
+		private boolean gradientBackground;
+
+		private GradientCanvas canvas;
+
 		public SupportElementItem(Composite parent, int style, Object element) {
 			super(parent, style, element);
+			registerChild(titleLabel);
+			registerChild(iconLabel);
+			registerChild(descriptionLabel);
+			registerChild(toolBar);
+		}
+
+		public void setGradientBackground(boolean gradientBackground) {
+			this.gradientBackground = gradientBackground;
+
+			if (gradientBackground) {
+				IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
+				Color colorCategoryGradientStart = themeManager.getCurrentTheme().getColorRegistry().get(
+						CommonThemes.COLOR_CATEGORY_GRADIENT_START);
+				Color colorCategoryGradientEnd = themeManager.getCurrentTheme().getColorRegistry().get(
+						CommonThemes.COLOR_CATEGORY_GRADIENT_END);
+
+				canvas.setSeparatorVisible(true);
+				canvas.setSeparatorAlignment(SWT.TOP);
+				canvas.setBackgroundGradient(new Color[] { colorCategoryGradientStart, colorCategoryGradientEnd },
+						new int[] { 100 }, true);
+				canvas.putColor(GradientCanvas.H_BOTTOM_KEYLINE1, colorCategoryGradientStart);
+				canvas.putColor(GradientCanvas.H_BOTTOM_KEYLINE2, colorCategoryGradientEnd);
+
+			}
+		}
+
+		public boolean isGradientBackground() {
+			return gradientBackground;
 		}
 
 		@Override
 		protected void createContent() {
+			setLayout(new FillLayout());
+
+			canvas = new GradientCanvas(this, SWT.NONE);
+
 			FormLayout layout = new FormLayout();
 			layout.marginHeight = 3;
 			layout.marginWidth = 3;
-			setLayout(layout);
+			canvas.setLayout(layout);
 
-			iconLabel = new Label(this, SWT.NONE);
+			iconLabel = new Label(canvas, SWT.NONE);
 			FormData fd = new FormData();
 			fd.left = new FormAttachment(0);
 			iconLabel.setLayoutData(fd);
 
-			titleLabel = new Label(this, SWT.NONE);
-			titleLabel.setFont(CommonFonts.BOLD);
+			titleLabel = new Label(canvas, SWT.NONE);
+			titleLabel.setFont(JFaceResources.getBannerFont());
 			fd = new FormData();
-			fd.left = new FormAttachment(iconLabel, 5);
+			fd.left = new FormAttachment(iconLabel, ICON_GAP);
 			titleLabel.setLayoutData(fd);
 
-			descriptionLabel = new Label(this, SWT.WRAP);
+			descriptionLabel = new Label(canvas, SWT.WRAP);
 
 			toolBarManager = new ToolBarManager(SWT.FLAT);
-			toolBar = toolBarManager.createControl(this);
+			toolBar = toolBarManager.createControl(canvas);
 
 			fd = new FormData();
 			fd.top = new FormAttachment(titleLabel, 5);
-			fd.left = new FormAttachment(iconLabel, 5);
+			fd.left = new FormAttachment(iconLabel, 10);
 			fd.right = new FormAttachment(toolBar, -5);
 			descriptionLabel.setLayoutData(fd);
 
@@ -181,20 +157,43 @@ public class SelectSupportElementPage extends WizardPage {
 		}
 
 		@Override
+		public void setBackground(Color color) {
+			if (isGradientBackground()) {
+				return;
+			}
+			super.setBackground(color);
+		}
+
+		@Override
 		public void setForeground(Color color) {
+			if (isGradientBackground()) {
+				// ignore
+				return;
+			}
 			super.setForeground(color);
 			if (isSelected()) {
-				descriptionLabel.setForeground(getDisplay().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+				titleLabel.setForeground(color);
+				descriptionLabel.setForeground(color);
 			} else {
-				descriptionLabel.setForeground(getDisplay().getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW));
+				titleLabel.setForeground(color);
+				descriptionLabel.setForeground(getDisplay().getSystemColor(SWT.COLOR_DARK_GRAY));
 			}
-
 		}
 
 		@Override
 		protected void refresh() {
 			AbstractSupportElement data = (AbstractSupportElement) getData();
-			iconLabel.setImage(getImage(data));
+			Image image = getImage(data);
+			if (image == null) {
+				// left align with column
+				((FormData) titleLabel.getLayoutData()).left = new FormAttachment(0);
+				((FormData) descriptionLabel.getLayoutData()).left = new FormAttachment(0);
+			} else {
+				// leave space between icon and text
+				((FormData) titleLabel.getLayoutData()).left = new FormAttachment(iconLabel, ICON_GAP);
+				((FormData) descriptionLabel.getLayoutData()).left = new FormAttachment(iconLabel, ICON_GAP);
+			}
+			iconLabel.setImage(image);
 			titleLabel.setText(data.getName());
 			descriptionLabel.setText(data.getDescription());
 
@@ -207,7 +206,7 @@ public class SelectSupportElementPage extends WizardPage {
 						WorkbenchUtil.openUrl(url, IWorkbenchBrowserSupport.AS_EXTERNAL);
 					}
 				};
-				action.setImageDescriptor(CommonImages.QUESTION);
+				action.setImageDescriptor(CommonImages.INFORMATION);
 				toolBarManager.add(action);
 			}
 			toolBarManager.update(false);
@@ -223,12 +222,32 @@ public class SelectSupportElementPage extends WizardPage {
 		public void setSelected(boolean select) {
 			super.setSelected(select);
 			updateToolBar();
+			canvas.redraw();
 		}
 
 		private void updateToolBar() {
 			if (toolBar != null) {
 				toolBar.setVisible(isHot() || isSelected());
 			}
+		}
+
+	}
+
+	public class SupportElementViewer extends ControlListViewer {
+
+		public SupportElementViewer(Composite parent, int style) {
+			super(parent, style);
+			// ignore
+		}
+
+		@Override
+		protected ControlListItem doCreateItem(Composite parent, Object element) {
+			if (element instanceof SupportCategory) {
+				SupportElementItem item = new SupportElementItem(parent, SWT.NONE, element);
+				item.setGradientBackground(true);
+				return item;
+			}
+			return new SupportElementItem(parent, SWT.NONE, element);
 		}
 
 	}
@@ -278,7 +297,7 @@ public class SelectSupportElementPage extends WizardPage {
 		container.setLayout(layout);
 
 		ControlListViewer viewer = new SupportElementViewer(container, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL);
-		GridDataFactory.fillDefaults().grab(true, true).hint(600, TABLE_HEIGHT).applyTo(viewer.getControl());
+		GridDataFactory.fillDefaults().grab(true, true).hint(500, TABLE_HEIGHT).applyTo(viewer.getControl());
 		viewer.setContentProvider(contentProvider);
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
@@ -358,6 +377,9 @@ public class SelectSupportElementPage extends WizardPage {
 		} else if (selectedElement instanceof SupportProduct) {
 			setErrorMessage(null);
 			setPageComplete(true);
+		} else {
+			setErrorMessage(null);
+			setPageComplete(false);
 		}
 	}
 
