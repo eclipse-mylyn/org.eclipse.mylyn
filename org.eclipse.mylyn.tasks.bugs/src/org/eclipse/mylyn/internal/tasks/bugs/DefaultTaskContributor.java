@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.internal.provisional.tasks.bugs.AbstractTaskContributor;
+import org.eclipse.mylyn.internal.provisional.tasks.bugs.ISupportRequest;
 import org.eclipse.mylyn.internal.provisional.tasks.bugs.ISupportResponse;
 import org.eclipse.mylyn.internal.provisional.tasks.bugs.ITaskContribution;
 import org.eclipse.mylyn.internal.tasks.bugs.wizards.ErrorLogStatus;
@@ -42,10 +43,21 @@ import org.osgi.framework.Bundle;
 public class DefaultTaskContributor extends AbstractTaskContributor {
 
 	@Override
-	public void process(ITaskContribution contribution) {
+	public void preProcess(ISupportRequest request) {
+		ITaskContribution contribution = request.getDefaultContribution();
 		String description = getDescription(contribution.getStatus());
 		if (description != null) {
 			contribution.appendToDescription(description);
+		}
+	}
+
+	@Override
+	public void process(ITaskContribution contribution) {
+		if (contribution.getAttribute(IRepositoryConstants.DESCRIPTION) == null) {
+			String description = getDescription(contribution.getStatus());
+			if (description != null) {
+				contribution.appendToDescription(description);
+			}
 		}
 	}
 
@@ -95,7 +107,7 @@ public class DefaultTaskContributor extends AbstractTaskContributor {
 	}
 
 	public void appendErrorDetails(StringBuilder sb, IStatus status, Date date) {
-		sb.append("\n\n");
+		sb.append("\n\n"); //$NON-NLS-1$
 		sb.append(Messages.DefaultTaskContributor_Error_Details);
 		if (date != null) {
 			sb.append("\n"); //$NON-NLS-1$
@@ -105,17 +117,32 @@ public class DefaultTaskContributor extends AbstractTaskContributor {
 		sb.append(NLS.bind("Message: {0}", status.getMessage()));
 		sb.append("\n"); //$NON-NLS-1$
 		sb.append(NLS.bind("Severity: {0}", getSeverityText(status.getSeverity())));
+		appendProductInformation(sb);
+		sb.append("\n"); //$NON-NLS-1$
+		sb.append(NLS.bind("Plugin: {0}", status.getPlugin()));
+	}
+
+	private void appendProductInformation(StringBuilder sb) {
 		IProduct product = Platform.getProduct();
 		if (product != null) {
 			sb.append("\n"); //$NON-NLS-1$
 			if (product.getName() != null) {
-				sb.append(NLS.bind("Product: {0} ({1})", product.getName(), product.getId()));
+				sb.append(NLS.bind("Product: {0}", product.getName()));
 			} else {
 				sb.append(NLS.bind("Product: {0}", product.getId()));
 			}
+			Bundle definingBundle = product.getDefiningBundle();
+			if (definingBundle != null) {
+				Object version = definingBundle.getHeaders().get("Bundle-Version"); //$NON-NLS-1$
+				if (version != null) {
+					sb.append(" "); //$NON-NLS-1$
+					sb.append(version);
+				}
+			}
+			if (product.getName() != null) {
+				sb.append(NLS.bind(" ({0})", product.getId())); //$NON-NLS-1$
+			}
 		}
-		sb.append("\n"); //$NON-NLS-1$
-		sb.append(NLS.bind("Plugin: {0}", status.getPlugin()));
 	}
 
 	@Override
@@ -131,33 +158,44 @@ public class DefaultTaskContributor extends AbstractTaskContributor {
 			if (product.getBundleGroup() != null) {
 				StringBuilder sb = new StringBuilder();
 				sb.append("\n\n\n"); //$NON-NLS-1$
-				sb.append(Messages.DefaultTaskContributor_INSTALLED_FEATURES_AND_PLUGINS);
+				sb.append("-- Configuration Details --");
+				appendProductInformation(sb);
+				sb.append("\n"); //$NON-NLS-1$
+				sb.append("Installed Features:");
+				sb.append("\n"); //$NON-NLS-1$
 				for (IBundleGroup bundleGroup : new IBundleGroup[] { product.getBundleGroup() }) {
+					sb.append(" "); //$NON-NLS-1$
 					sb.append(bundleGroup.getIdentifier());
 					sb.append(" "); //$NON-NLS-1$
 					sb.append(bundleGroup.getVersion());
 					sb.append("\n"); //$NON-NLS-1$
 
-					Bundle[] bundles = bundleGroup.getBundles();
-					if (bundles != null) {
-						for (Bundle bundle : bundles) {
-							sb.append("  "); //$NON-NLS-1$
-							sb.append(bundle.getSymbolicName());
-							String version = (String) bundle.getHeaders().get(
-									Messages.DefaultTaskContributor_Bundle_Version);
-							if (version != null) {
-								sb.append(" "); //$NON-NLS-1$
-								sb.append(version);
-							}
-							sb.append("\n"); //$NON-NLS-1$
-						}
-					}
+//					Bundle[] bundles = bundleGroup.getBundles();
+//					if (bundles != null) {
+//						for (Bundle bundle : bundles) {
+//							sb.append("  "); //$NON-NLS-1$
+//							sb.append(bundle.getSymbolicName());
+//							String version = (String) bundle.getHeaders().get(
+//									Messages.DefaultTaskContributor_Bundle_Version);
+//							if (version != null) {
+//								sb.append(" "); //$NON-NLS-1$
+//								sb.append(version);
+//							}
+//							sb.append("\n"); //$NON-NLS-1$
+//						}
+//					}
 				}
 				return sb.toString();
 			}
 		} else if (status instanceof ErrorLogStatus) {
 			ErrorLogStatus errorLogStatus = (ErrorLogStatus) status;
 			StringBuilder sb = new StringBuilder();
+			sb.append("\n\n"); //$NON-NLS-1$
+			sb.append("What steps will reproduce the problem?");
+			sb.append("\n"); //$NON-NLS-1$
+			sb.append("1. \n");
+			sb.append("2. \n");
+			sb.append("3. \n");
 			appendErrorDetails(sb, errorLogStatus, errorLogStatus.getDate());
 			if (errorLogStatus.getLogSessionData() != null) {
 				sb.append(Messages.DefaultTaskContributor_SESSION_DATA);
