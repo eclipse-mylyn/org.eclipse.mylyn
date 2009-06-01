@@ -15,7 +15,9 @@ import java.net.URL;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.mylyn.internal.discovery.core.model.AbstractDiscoverySource;
 import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryConnector;
@@ -28,7 +30,9 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -42,7 +46,11 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
  */
 class ConnectorDescriptorToolTip extends GradientToolTip {
 
+	private static final String COLOR_BLACK = "black";
+
 	private final DiscoveryConnector descriptor;
+
+	private Color colorBlack;
 
 	public ConnectorDescriptorToolTip(Control control, DiscoveryConnector descriptor) {
 		super(control, ToolTip.RECREATE, true);
@@ -52,6 +60,13 @@ class ConnectorDescriptorToolTip extends GradientToolTip {
 
 	@Override
 	protected Composite createToolTipArea(Event event, final Composite parent) {
+		if (colorBlack == null) {
+			ColorRegistry colorRegistry = JFaceResources.getColorRegistry();
+			if (!colorRegistry.hasValueFor(COLOR_BLACK)) {
+				colorRegistry.put(COLOR_BLACK, new RGB(0, 0, 0));
+			}
+			colorBlack = colorRegistry.get(COLOR_BLACK);
+		}
 
 		GridLayoutFactory.fillDefaults().applyTo(parent);
 
@@ -63,6 +78,8 @@ class ConnectorDescriptorToolTip extends GradientToolTip {
 
 		final Overview overview = descriptor.getOverview();
 		if (overview != null) {
+			int borderWidth = 1;
+
 			String summary = overview.getSummary();
 			Image image = null;
 			if (overview.getScreenshot() != null) {
@@ -78,22 +95,26 @@ class ConnectorDescriptorToolTip extends GradientToolTip {
 			}
 			if (summary != null) {
 				Label summaryLabel = new Label(container, SWT.WRAP);
-				GridDataFactory.fillDefaults().grab(true, false).hint(320, 240).span(image == null ? 2 : 1, 1).applyTo(
-						summaryLabel);
+				GridDataFactory.fillDefaults().grab(true, false).hint(320, 240 + (borderWidth * 2)).span(
+						image == null ? 2 : 1, 1).applyTo(summaryLabel);
 				summaryLabel.setText(summary);
 				summaryLabel.setBackground(null);
 			}
 			if (image != null) {
-				Label imageLabel = new Label(container, SWT.NULL);
+				final Composite imageContainer = new Composite(container, SWT.BORDER);
+				GridLayoutFactory.fillDefaults().applyTo(imageContainer);
 
+				GridDataFactory.fillDefaults().grab(false, false).align(SWT.CENTER, SWT.BEGINNING).hint(
+						320 + (borderWidth * 2), 240 + (borderWidth * 2)).applyTo(imageContainer);
+
+				Label imageLabel = new Label(imageContainer, SWT.NULL);
+				GridDataFactory.fillDefaults().hint(320, 240).indent(borderWidth, borderWidth).applyTo(imageLabel);
 				imageLabel.setImage(image);
 				imageLabel.setBackground(null);
+				imageLabel.setSize(320, 240);
 
-				GridDataFactory.fillDefaults()
-						.grab(false, false)
-						.align(SWT.CENTER, SWT.BEGINNING)
-						.hint(320, 240)
-						.applyTo(imageLabel);
+				// creates a border
+				imageContainer.setBackground(colorBlack);
 			}
 			if (overview.getUrl() != null && overview.getUrl().length() > 0) {
 				Link link = new Link(container, SWT.NULL);
