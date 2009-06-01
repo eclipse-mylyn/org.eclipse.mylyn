@@ -30,7 +30,6 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
@@ -203,7 +202,8 @@ public class RepositoryElementActionGroup {
 			}
 		}
 
-		MenuManager copyDetailsSubMenu = new MenuManager(Messages.RepositoryElementActionGroup_Copy_Detail_Menu_Label, CommonImages.COPY, CopyTaskDetailsAction.ID);
+		MenuManager copyDetailsSubMenu = new MenuManager(Messages.RepositoryElementActionGroup_Copy_Detail_Menu_Label,
+				CopyTaskDetailsAction.ID);
 		copyDetailsSubMenu.add(copyKeyAction);
 		copyDetailsSubMenu.add(copyUrlAction);
 		copyDetailsSubMenu.add(copyDetailsAction);
