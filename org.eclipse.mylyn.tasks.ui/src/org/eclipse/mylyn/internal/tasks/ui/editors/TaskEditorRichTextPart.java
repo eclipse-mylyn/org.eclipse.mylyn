@@ -258,7 +258,9 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 			toggleBrowserAction.setChecked(false);
 			manager.add(toggleBrowserAction);
 		}
-		manager.add(getMaximizePartAction());
+		if (!getEditor().isReadOnly()) {
+			manager.add(getMaximizePartAction());
+		}
 		super.fillToolBar(manager);
 	}
 
