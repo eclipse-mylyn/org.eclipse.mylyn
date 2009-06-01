@@ -19,12 +19,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
@@ -39,7 +35,6 @@ import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnsubmittedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -47,18 +42,19 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.BaseSelectionListenerAction;
 import org.eclipse.ui.internal.WorkbenchImages;
 import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 
 /**
  * @author Mik Kersten
  */
-public class DeleteAction extends Action implements ISelectionChangedListener {
+public class DeleteAction extends BaseSelectionListenerAction {
 
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.delete"; //$NON-NLS-1$
 
 	public DeleteAction() {
-		setText(Messages.DeleteAction_Delete);
+		super(Messages.DeleteAction_Delete);
 		setId(ID);
 		setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
 		setActionDefinitionId(IWorkbenchActionDefinitionIds.DELETE);
@@ -66,8 +62,7 @@ public class DeleteAction extends Action implements ISelectionChangedListener {
 
 	@Override
 	public void run() {
-		ISelection selection = TaskListView.getFromActivePerspective().getViewer().getSelection();
-		doDelete(((IStructuredSelection) selection).toList());
+		doDelete(getStructuredSelection().toList());
 	}
 
 	protected void doDelete(final List<?> toDelete) {
@@ -195,14 +190,15 @@ public class DeleteAction extends Action implements ISelectionChangedListener {
 		}
 	}
 
-	public void selectionChanged(SelectionChangedEvent event) {
-		ISelection selection = event.getSelection();
-		if (selection instanceof IStructuredSelection) {
-			Object element = ((IStructuredSelection) selection).getFirstElement();
-			setEnabled(element instanceof ITask
-					|| (element != null && !(element instanceof UncategorizedTaskContainer)));
+	@Override
+	protected boolean updateSelection(IStructuredSelection selection) {
+		List<?> elements = (selection).toList();
+		for (Object object : elements) {
+			if (object instanceof UncategorizedTaskContainer) {
+				return false;
+			}
 		}
-		setEnabled(false);
+		return true;
 	}
 
 }

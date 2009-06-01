@@ -187,7 +187,7 @@ public class RepositoryElementActionGroup {
 
 		addAction(ID_SEPARATOR_EDIT, copyDetailsAction, manager, element);
 		if (!isInEditor()) {
-			addAction(ID_SEPARATOR_EDIT, deleteAction, manager, element);
+			manager.appendToGroup(ID_SEPARATOR_EDIT, deleteAction);
 		}
 		removeFromCategoryAction.selectionChanged(selection);
 		removeFromCategoryAction.setEnabled(isRemoveFromCategoryEnabled(selectedElements));
