@@ -36,6 +36,8 @@ public class TaskListSynchronizationScheduler {
 
 	private SynchronizationJob createRefreshJob() {
 		SynchronizationJob job = jobFactory.createSynchronizeRepositoriesJob(null);
+		// do not show in progress view by default
+		job.setSystem(true);
 		job.setUser(false);
 		job.setFullSynchronization(true);
 		return job;
@@ -80,6 +82,8 @@ public class TaskListSynchronizationScheduler {
 	public SynchronizationJob synchronize(TaskRepository repository) {
 		// TODO check if a synchronization for repository is already running
 		SynchronizationJob job = jobFactory.createSynchronizeRepositoriesJob(Collections.singleton(repository));
+		// do not show in progress view by default
+		job.setSystem(true);
 		job.setUser(false);
 		job.setFullSynchronization(false);
 		job.schedule();

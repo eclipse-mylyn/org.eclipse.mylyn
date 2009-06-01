@@ -25,6 +25,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -85,39 +86,46 @@ public class RepositoryElementActionGroup {
 
 	private ISelectionProvider selectionProvider;
 
+	private final List<ISelectionChangedListener> actions;
+
+	private final AutoUpdateQueryAction autoUpdateAction;
+
 	public RepositoryElementActionGroup() {
+		actions = new ArrayList<ISelectionChangedListener>();
+
 		activateAction = new TaskActivateAction();
 		deactivateAction = new TaskDeactivateAction();
 
-		copyDetailsAction = new CopyTaskDetailsAction();
+		copyDetailsAction = add(new CopyTaskDetailsAction());
 		copyDetailsAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.COPY);
 
-		removeFromCategoryAction = new RemoveFromCategoryAction();
+		removeFromCategoryAction = add(new RemoveFromCategoryAction());
 
-		deleteAction = new DeleteAction();
-		openAction = new OpenTaskListElementAction();
-		openWithBrowserAction = new OpenWithBrowserAction();
-		showInSearchViewAction = new ShowInSearchViewAction();
-		showInTaskListAction = new ShowInTaskListAction();
+		deleteAction = add(new DeleteAction());
+		openAction = add(new OpenTaskListElementAction());
+		openWithBrowserAction = add(new OpenWithBrowserAction());
+		showInSearchViewAction = add(new ShowInSearchViewAction());
+		showInTaskListAction = add(new ShowInTaskListAction());
+
+		autoUpdateAction = add(new AutoUpdateQueryAction());
+	}
+
+	private <T extends ISelectionChangedListener> T add(T action) {
+		actions.add(action);
+		return action;
 	}
 
 	public void setSelectionProvider(ISelectionProvider selectionProvider) {
 		if (this.selectionProvider != null) {
-			this.selectionProvider.removeSelectionChangedListener(openWithBrowserAction);
-			this.selectionProvider.removeSelectionChangedListener(showInSearchViewAction);
-			this.selectionProvider.removeSelectionChangedListener(copyDetailsAction);
-			this.selectionProvider.removeSelectionChangedListener(deleteAction);
-			this.selectionProvider.removeSelectionChangedListener(openAction);
-			this.selectionProvider.removeSelectionChangedListener(removeFromCategoryAction);
+			for (ISelectionChangedListener action : actions) {
+				this.selectionProvider.removeSelectionChangedListener(action);
+			}
 		}
 		this.selectionProvider = selectionProvider;
 		if (selectionProvider != null) {
-			selectionProvider.addSelectionChangedListener(openWithBrowserAction);
-			selectionProvider.addSelectionChangedListener(showInSearchViewAction);
-			selectionProvider.addSelectionChangedListener(copyDetailsAction);
-			selectionProvider.addSelectionChangedListener(deleteAction);
-			selectionProvider.addSelectionChangedListener(openAction);
-			selectionProvider.addSelectionChangedListener(removeFromCategoryAction);
+			for (ISelectionChangedListener action : actions) {
+				this.selectionProvider.addSelectionChangedListener(action);
+			}
 		}
 	}
 
@@ -128,7 +136,7 @@ public class RepositoryElementActionGroup {
 		manager.add(new Separator(ID_SEPARATOR_TASKS)); // move to
 		manager.add(new Separator(ID_SEPARATOR_NAVIGATE));
 		manager.add(new Separator(ID_SEPARATOR_REPOSITORY)); // synchronize
-		manager.add(new Separator(ID_SEPARATOR_OPERATIONS)); // import/export, context
+		manager.add(new Separator(ID_SEPARATOR_OPERATIONS)); // repository properties, import/export, context
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 		manager.add(new Separator(ID_SEPARATOR_PROPERTIES)); // properties
 
@@ -195,12 +203,16 @@ public class RepositoryElementActionGroup {
 			manager.appendToGroup(ID_SEPARATOR_EDIT, removeFromCategoryAction);
 		}
 
+		if (autoUpdateAction.isEnabled()) {
+			manager.appendToGroup(ID_SEPARATOR_REPOSITORY, autoUpdateAction);
+		}
+
 		if (element instanceof IRepositoryQuery) {
 			EditRepositoryPropertiesAction repositoryPropertiesAction = new EditRepositoryPropertiesAction();
 			repositoryPropertiesAction.selectionChanged(new StructuredSelection(element));
 			if (repositoryPropertiesAction.isEnabled()) {
 				MenuManager subMenu = new MenuManager(Messages.TaskListView_Repository);
-				manager.appendToGroup(ID_SEPARATOR_REPOSITORY, subMenu);
+				manager.appendToGroup(ID_SEPARATOR_OPERATIONS, subMenu);
 
 				UpdateRepositoryConfigurationAction resetRepositoryConfigurationAction = new UpdateRepositoryConfigurationAction();
 				resetRepositoryConfigurationAction.selectionChanged(new StructuredSelection(element));

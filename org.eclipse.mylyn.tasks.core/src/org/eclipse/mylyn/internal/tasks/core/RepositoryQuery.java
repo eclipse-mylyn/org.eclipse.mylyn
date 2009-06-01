@@ -132,4 +132,13 @@ public class RepositoryQuery extends AbstractTaskContainer implements IRepositor
 		attributeMap.setAttribute(key, value);
 	}
 
+	public boolean getAutoUpdate() {
+		String value = getAttribute(ITasksCoreConstants.ATTRIBUTE_AUTO_UPDATE);
+		return value == null || Boolean.valueOf(value);
+	}
+
+	public void setAutoUpdate(boolean autoUpdate) {
+		setAttribute(ITasksCoreConstants.ATTRIBUTE_AUTO_UPDATE, Boolean.toString(autoUpdate));
+	}
+
 }

@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -49,8 +50,6 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 	private final IRepositoryManager repositoryManager;
 
 	private Set<TaskRepository> repositories;
-
-	private final Object family = new Object();
 
 	private final IRepositoryModel tasksModel;
 
@@ -99,12 +98,21 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 						repository.getRepositoryLabel()));
 
 				final AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(repository.getConnectorKind());
-				Set<RepositoryQuery> queries = taskList.getRepositoryQueries(repository.getRepositoryUrl());
+				Set<RepositoryQuery> queries = new HashSet<RepositoryQuery>(
+						taskList.getRepositoryQueries(repository.getRepositoryUrl()));
+				// remove queries that are not configured for auto update
+				if (!isUser()) {
+					for (Iterator<RepositoryQuery> it = queries.iterator(); it.hasNext();) {
+						if (!it.next().getAutoUpdate()) {
+							it.remove();
+						}
+					}
+				}
 
 				if (isUser() || queries.isEmpty()) {
 					monitor.worked(20);
 				} else {
-					// occasionally request update of repository configuration attributes
+					// occasionally request update of repository configuration attributes as part of background synchronizations
 					updateRepositoryConfiguration(repository, connector, new SubProgressMonitor(monitor, 20));
 				}
 
@@ -136,7 +144,7 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 				repository, queries) {
 			@Override
 			public boolean belongsTo(Object family) {
-				return SynchronizeRepositoriesJob.this.family == family;
+				return ITasksCoreConstants.JOB_FAMILY_SYNCHRONIZATION == family;
 			}
 		};
 		job.setUser(isUser());
@@ -149,8 +157,9 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 		}
 	}
 
-	public Object getFamily() {
-		return family;
+	@Override
+	public boolean belongsTo(Object family) {
+		return ITasksCoreConstants.JOB_FAMILY_SYNCHRONIZATION == family;
 	}
 
 	private void updateRepositoryConfiguration(TaskRepository repository, AbstractRepositoryConnector connector,

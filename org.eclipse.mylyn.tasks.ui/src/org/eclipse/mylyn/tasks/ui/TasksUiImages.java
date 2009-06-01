@@ -83,6 +83,9 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor QUERY_NEW = create(TOOL, "query-new.gif"); //$NON-NLS-1$
 
+	public static final ImageDescriptor QUERY_OFFLINE = ImageDescriptor.createWithFlags(TasksUiImages.QUERY,
+			SWT.IMAGE_GRAY);
+
 	public static final ImageDescriptor QUERY_UNMATCHED = create(TOOL, "query-unmatched.png"); //$NON-NLS-1$
 
 	public static final ImageDescriptor REPOSITORY = create("eview16", "repository.gif"); //$NON-NLS-1$ //$NON-NLS-2$

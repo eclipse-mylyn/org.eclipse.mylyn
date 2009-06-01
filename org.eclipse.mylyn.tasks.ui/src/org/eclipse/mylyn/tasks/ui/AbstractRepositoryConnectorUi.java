@@ -21,6 +21,7 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.ui.Messages;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
@@ -36,9 +37,7 @@ import org.eclipse.mylyn.tasks.ui.wizards.ITaskSearchPage;
 import org.eclipse.mylyn.tasks.ui.wizards.TaskAttachmentPage;
 
 /**
- * Extend to provide connector-specific UI extensions.
- * 
- * TODO: consider refactoring into extension points
+ * Extend to provide connector-specific UI extensions. TODO: consider refactoring into extension points
  * 
  * @author Mik Kersten
  * @since 2.0
@@ -114,16 +113,15 @@ public abstract class AbstractRepositoryConnectorUi {
 	}
 
 	/**
-	 * Connector-specific task icons. Not recommended to override unless providing custom icons and kind overlays.
-	 * 
-	 * For connectors that have a decorator that they want to reuse, the connector can maintain a reference to the label
+	 * Connector-specific task icons. Not recommended to override unless providing custom icons and kind overlays. For
+	 * connectors that have a decorator that they want to reuse, the connector can maintain a reference to the label
 	 * provider and get the descriptor from the images it returns.
 	 * 
 	 * @since 3.0
 	 */
 	public ImageDescriptor getImageDescriptor(IRepositoryElement element) {
-		if (element instanceof IRepositoryQuery) {
-			return TasksUiImages.QUERY;
+		if (element instanceof RepositoryQuery) {
+			return ((RepositoryQuery) element).getAutoUpdate() ? TasksUiImages.QUERY : TasksUiImages.QUERY_OFFLINE;
 		} else if (element instanceof ITask) {
 			return TasksUiImages.TASK;
 		} else {
