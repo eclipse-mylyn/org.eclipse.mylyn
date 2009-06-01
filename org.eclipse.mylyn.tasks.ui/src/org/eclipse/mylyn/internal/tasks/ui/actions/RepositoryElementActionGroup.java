@@ -30,11 +30,13 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction.Mode;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.Messages;
 import org.eclipse.mylyn.internal.tasks.ui.views.UpdateRepositoryConfigurationAction;
@@ -66,6 +68,10 @@ public class RepositoryElementActionGroup {
 
 	protected static final String ID_SEPARATOR_EDIT = "edit"; //$NON-NLS-1$
 
+	private final CopyTaskDetailsAction copyUrlAction;
+
+	private final CopyTaskDetailsAction copyKeyAction;
+
 	private final CopyTaskDetailsAction copyDetailsAction;
 
 	private final OpenTaskListElementAction openAction;
@@ -96,8 +102,12 @@ public class RepositoryElementActionGroup {
 		activateAction = new TaskActivateAction();
 		deactivateAction = new TaskDeactivateAction();
 
-		copyDetailsAction = add(new CopyTaskDetailsAction());
-		copyDetailsAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.COPY);
+		copyKeyAction = add(new CopyTaskDetailsAction(Mode.KEY));
+		copyUrlAction = add(new CopyTaskDetailsAction(Mode.URL));
+		copyDetailsAction = add(new CopyTaskDetailsAction(Mode.SUMMARY_URL));
+		if (!isInEditor()) {
+			copyDetailsAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.COPY);
+		}
 
 		removeFromCategoryAction = add(new RemoveFromCategoryAction());
 
@@ -193,10 +203,12 @@ public class RepositoryElementActionGroup {
 			}
 		}
 
-		addAction(ID_SEPARATOR_EDIT, copyDetailsAction, manager, element);
-		if (!isInEditor()) {
-			manager.appendToGroup(ID_SEPARATOR_EDIT, deleteAction);
-		}
+		MenuManager copyDetailsSubMenu = new MenuManager(Messages.RepositoryElementActionGroup_Copy_Detail_Menu_Label, CommonImages.COPY, CopyTaskDetailsAction.ID);
+		copyDetailsSubMenu.add(copyKeyAction);
+		copyDetailsSubMenu.add(copyUrlAction);
+		copyDetailsSubMenu.add(copyDetailsAction);
+		manager.appendToGroup(ID_SEPARATOR_EDIT, copyDetailsSubMenu);
+
 		removeFromCategoryAction.selectionChanged(selection);
 		removeFromCategoryAction.setEnabled(isRemoveFromCategoryEnabled(selectedElements));
 		if (removeFromCategoryAction.isEnabled()) {

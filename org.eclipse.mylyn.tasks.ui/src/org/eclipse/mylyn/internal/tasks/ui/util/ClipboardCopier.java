@@ -23,7 +23,19 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Steffen Pingel
  */
-public abstract class ClipboardCopier {
+public class ClipboardCopier {
+
+	public interface TextProvider {
+
+		public abstract String getTextForElement(Object element);
+
+	}
+
+	private static ClipboardCopier instance = new ClipboardCopier();
+
+	public static ClipboardCopier getDefault() {
+		return instance;
+	}
 
 	private Clipboard clipboard;
 
@@ -32,12 +44,12 @@ public abstract class ClipboardCopier {
 	public ClipboardCopier() {
 	}
 
-	public void copy(IStructuredSelection selection) {
+	public void copy(IStructuredSelection selection, TextProvider provider) {
 		if (!selection.isEmpty()) {
 			StringBuilder sb = new StringBuilder();
 			for (Iterator<?> it = selection.iterator(); it.hasNext();) {
 				Object item = it.next();
-				String textForElement = getTextForElement(item);
+				String textForElement = provider.getTextForElement(item);
 				if (textForElement != null) {
 					if (sb.length() > 0) {
 						sb.append(LINE_SEPARATOR);
@@ -49,8 +61,6 @@ public abstract class ClipboardCopier {
 			copy(sb.toString());
 		}
 	}
-
-	protected abstract String getTextForElement(Object element);
 
 	public void copy(String text) {
 		if (clipboard == null) {

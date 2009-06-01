@@ -22,15 +22,16 @@ import org.eclipse.ui.actions.BaseSelectionListenerAction;
  */
 public class CopyCommentDetailsAction extends BaseSelectionListenerAction {
 
-	private final ClipboardCopier copier;
-
 	public CopyCommentDetailsAction() {
 		super(Messages.CopyCommentDetailsAction_Copy_User_ID);
 		setToolTipText(Messages.CopyCommentDetailsAction_Copy_User_ID_Tooltip);
 		setImageDescriptor(CommonImages.COPY);
-		copier = new ClipboardCopier() {
-			@Override
-			protected String getTextForElement(Object element) {
+	}
+
+	@Override
+	public void run() {
+		ClipboardCopier.getDefault().copy(getStructuredSelection(), new ClipboardCopier.TextProvider() {
+			public String getTextForElement(Object element) {
 				if (element instanceof ITaskComment) {
 					ITaskComment comment = (ITaskComment) element;
 					IRepositoryPerson author = comment.getAuthor();
@@ -40,17 +41,7 @@ public class CopyCommentDetailsAction extends BaseSelectionListenerAction {
 				}
 				return null;
 			}
-		};
-	}
-
-	@Override
-	public void run() {
-		copier.copy(getStructuredSelection());
-	}
-
-	public void dispose() {
-		copier.dispose();
-
+		});
 	}
 
 }

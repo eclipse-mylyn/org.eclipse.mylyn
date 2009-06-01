@@ -58,12 +58,4 @@ public class CommentActionGroup extends ActionGroup {
 		return StructuredSelection.EMPTY;
 	}
 
-	@Override
-	public void dispose() {
-		super.dispose();
-		if (copyDetailsAction != null) {
-			copyDetailsAction.dispose();
-		}
-	}
-
 }

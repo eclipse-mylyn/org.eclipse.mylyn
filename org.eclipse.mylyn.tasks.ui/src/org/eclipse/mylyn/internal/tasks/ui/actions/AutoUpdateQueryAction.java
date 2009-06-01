@@ -30,7 +30,7 @@ import org.eclipse.ui.actions.BaseSelectionListenerAction;
 public class AutoUpdateQueryAction extends BaseSelectionListenerAction {
 
 	public AutoUpdateQueryAction() {
-		super("Synchronize Automatically");
+		super(Messages.AutoUpdateQueryAction_Synchronize_Automatically_Label);
 		setChecked(false);
 	}
 
@@ -61,7 +61,7 @@ public class AutoUpdateQueryAction extends BaseSelectionListenerAction {
 				TasksUiPlugin.getTaskList().notifyElementsChanged(Collections.singleton(query));
 			} catch (CoreException e) {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Failed to set offline status for query", e));
+						"Failed to set offline status for query", e)); //$NON-NLS-1$
 			}
 		}
 	}
