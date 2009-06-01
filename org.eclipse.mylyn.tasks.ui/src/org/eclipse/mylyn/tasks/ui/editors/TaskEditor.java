@@ -827,15 +827,15 @@ public class TaskEditor extends SharedHeaderFormEditor {
 //		};
 //		toolBarManager.add(spacer);
 
-		for (IFormPage page : getPages()) {
-			if (page instanceof AbstractTaskEditorPage) {
-				AbstractTaskEditorPage taskEditorPage = (AbstractTaskEditorPage) page;
-				taskEditorPage.fillLeftHeaderToolBar(toolBarManager);
-			} /*else if (page instanceof TaskPlanningEditor) { 
-				TaskPlanningEditor taskEditorPage = (TaskPlanningEditor) page;
-				taskEditorPage.fillLeftHeaderToolBar(toolBarManager);
-				}*/
-		}
+//		for (IFormPage page : getPages()) {
+//			if (page instanceof AbstractTaskEditorPage) {
+//				AbstractTaskEditorPage taskEditorPage = (AbstractTaskEditorPage) page;
+//				taskEditorPage.fillLeftHeaderToolBar(toolBarManager);
+//			} else if (page instanceof TaskPlanningEditor) {
+//				TaskPlanningEditor taskEditorPage = (TaskPlanningEditor) page;
+//				taskEditorPage.fillLeftHeaderToolBar(toolBarManager);
+//			}
+//		}
 
 		// add external contributions
 		menuService = (IMenuService) getSite().getService(IMenuService.class);
