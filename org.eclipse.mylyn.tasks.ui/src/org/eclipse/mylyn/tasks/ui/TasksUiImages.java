@@ -180,6 +180,10 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor BANNER_WORKING_SET = create(WIZBAN, "workset_wiz.png"); //$NON-NLS-1$
 
+	public static final ImageDescriptor PRESENTATION_CATEGORIZED = create(TOOL, "presentation-categorized.png"); //$NON-NLS-1$
+
+	public static final ImageDescriptor PRESENTATION_SCHEDULED = create(TOOL, "presentation-scheduled.png"); //$NON-NLS-1$
+
 	/**
 	 * @since 3.2
 	 */
