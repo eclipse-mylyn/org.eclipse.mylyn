@@ -217,8 +217,8 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 		addAttribute(headerComposite, toolkit, keyAttribute);
 
 		// right align controls
-		Composite spacer = toolkit.createComposite(headerComposite, SWT.NONE);
-		GridDataFactory.fillDefaults().hint(0, 10).grab(true, false).applyTo(spacer);
+//		Composite spacer = toolkit.createComposite(headerComposite, SWT.NONE);
+//		GridDataFactory.fillDefaults().hint(0, 10).grab(true, false).applyTo(spacer);
 
 		TaskAttribute dateCreation = getTaskData().getRoot().getMappedAttribute(TaskAttribute.DATE_CREATION);
 		addAttribute(headerComposite, toolkit, dateCreation);

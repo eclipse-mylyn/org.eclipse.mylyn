@@ -181,10 +181,10 @@ public class SummaryPart extends AbstractLocalEditorPart {
 //		});
 
 		// right align controls
-		Composite spacer = toolkit.createComposite(headerComposite, SWT.NONE);
-		GridDataFactory.fillDefaults().hint(0, 10).grab(true, false).applyTo(spacer);
+//		Composite spacer = toolkit.createComposite(headerComposite, SWT.NONE);
+//		GridDataFactory.fillDefaults().hint(0, 10).grab(true, false).applyTo(spacer);
 
-		createLabel(headerComposite, toolkit, getCreatedDateLabel(), 0);
+		createLabel(headerComposite, toolkit, getCreatedDateLabel(), EditorUtil.HEADER_COLUMN_MARGIN);
 		// do not use toolkit.createText() to avoid border on Windows
 		creationDateText = new Text(headerComposite, SWT.FLAT | SWT.READ_ONLY);
 		toolkit.adapt(creationDateText, false, false);
