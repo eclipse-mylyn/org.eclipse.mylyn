@@ -95,7 +95,7 @@ public class SubmitTaskJob extends SubmitJob {
 		} catch (CoreException e) {
 			errorStatus = e.getStatus();
 		} catch (OperationCanceledException e) {
-			return Status.CANCEL_STATUS;
+			errorStatus = Status.CANCEL_STATUS;
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
 					"Unexpected error during task submission", e)); //$NON-NLS-1$
@@ -105,7 +105,7 @@ public class SubmitTaskJob extends SubmitJob {
 			monitor.done();
 		}
 		fireDone();
-		return Status.OK_STATUS;
+		return (errorStatus == Status.CANCEL_STATUS) ? Status.CANCEL_STATUS : Status.OK_STATUS;
 	}
 
 	private ITask createTask(IProgressMonitor monitor, TaskData updatedTaskData) throws CoreException {

@@ -41,7 +41,7 @@ public class SubmitTaskAttachmentJob extends SubmitJob {
 
 	private final AbstractRepositoryConnector connector;
 
-	private IStatus error;
+	private IStatus errorStatus;
 
 	private final AbstractTaskAttachmentSource source;
 
@@ -72,7 +72,7 @@ public class SubmitTaskAttachmentJob extends SubmitJob {
 
 	@Override
 	public IStatus getStatus() {
-		return error;
+		return errorStatus;
 	}
 
 	@Override
@@ -84,7 +84,7 @@ public class SubmitTaskAttachmentJob extends SubmitJob {
 	public IStatus run(IProgressMonitor monitor) {
 		final AbstractTaskAttachmentHandler attachmentHandler = connector.getTaskAttachmentHandler();
 		if (attachmentHandler == null) {
-			error = new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+			errorStatus = new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
 					"The task repository does not support attachments."); //$NON-NLS-1$
 			return Status.OK_STATUS;
 		}
@@ -101,14 +101,14 @@ public class SubmitTaskAttachmentJob extends SubmitJob {
 			taskDataManager.putUpdatedTaskData(task, taskData, true);
 			fireTaskSynchronized(monitor);
 		} catch (CoreException e) {
-			error = e.getStatus();
+			errorStatus = e.getStatus();
 		} catch (OperationCanceledException e) {
-			return Status.CANCEL_STATUS;
+			errorStatus = Status.CANCEL_STATUS;
 		} finally {
 			monitor.done();
 		}
 		fireDone();
-		return Status.OK_STATUS;
+		return (errorStatus == Status.CANCEL_STATUS) ? Status.CANCEL_STATUS : Status.OK_STATUS;
 	}
 
 }

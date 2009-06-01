@@ -1045,7 +1045,8 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 	 * @see SubmitJob
 	 */
 	protected void handleTaskSubmitted(SubmitJobEvent event) {
-		if (event.getJob().getStatus() != null) {
+		IStatus status = event.getJob().getStatus();
+		if (status != null && status.getSeverity() != IStatus.CANCEL) {
 			handleSubmitError(event.getJob());
 		}
 	}
