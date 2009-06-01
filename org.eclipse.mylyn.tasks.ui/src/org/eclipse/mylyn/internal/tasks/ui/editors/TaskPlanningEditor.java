@@ -127,15 +127,16 @@ public class TaskPlanningEditor extends TaskFormPage {
 	}
 
 	private void createContributions(final Composite editorComposite) {
-		Collection<AbstractLocalEditorPart> localEditorContributions = TaskEditorContributionExtensionReader.getLocalEditorContributions();
-		for (final AbstractLocalEditorPart part : localEditorContributions) {
+		Collection<LocalTaskEditorContributionDescriptor> localEditorContributions = TaskEditorContributionExtensionReader.getLocalEditorContributions();
+		for (final LocalTaskEditorContributionDescriptor descriptor : localEditorContributions) {
 			SafeRunner.run(new ISafeRunnable() {
 				public void handleException(Throwable e) {
 					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-							"Error creating task editor contribution: \"" + part.getSectionName() + "\"", e)); //$NON-NLS-1$ //$NON-NLS-2$
+							"Error creating task editor contribution: \"" + descriptor.getId() + "\"", e)); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 
 				public void run() throws Exception {
+					AbstractLocalEditorPart part = descriptor.createPart();
 					initializePart(editorComposite, part);
 				}
 
