@@ -318,9 +318,17 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 				&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
 						IContextUiPreferenceContstants.AUTO_MANAGE_EXPANSION)) {
 			TreeViewer treeViewer = (TreeViewer) viewer;
+
+			// HACK to fix bug 278569: [context] errors with Markers view and active Mylyn task
+			if ("org.eclipse.ui.internal.views.markers.MarkersTreeViewer".equals(treeViewer.getClass() //$NON-NLS-1$
+					.getCanonicalName())) {
+				objectToRefresh = null;
+			}
+
 			if (objectToRefresh == null) {
 				treeViewer.expandAll();
 			} else {
+
 				treeViewer.reveal(objectToRefresh);
 				boolean failed = false;
 				try {
