@@ -46,7 +46,7 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
  */
 class ConnectorDescriptorToolTip extends GradientToolTip {
 
-	private static final String COLOR_BLACK = "black";
+	private static final String COLOR_BLACK = "black"; //$NON-NLS-1$
 
 	private final DiscoveryConnector descriptor;
 
