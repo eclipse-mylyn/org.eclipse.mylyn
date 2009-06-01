@@ -52,10 +52,10 @@ import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryCategory;
 import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryConnector;
 import org.eclipse.mylyn.internal.discovery.core.model.Icon;
 import org.eclipse.mylyn.internal.discovery.core.model.RemoteBundleDiscoveryStrategy;
+import org.eclipse.mylyn.internal.discovery.core.util.DiscoveryCategoryComparator;
+import org.eclipse.mylyn.internal.discovery.core.util.DiscoveryConnectorComparator;
 import org.eclipse.mylyn.internal.discovery.ui.DiscoveryImages;
 import org.eclipse.mylyn.internal.discovery.ui.DiscoveryUi;
-import org.eclipse.mylyn.internal.discovery.ui.util.DiscoveryCategoryComparator;
-import org.eclipse.mylyn.internal.discovery.ui.util.DiscoveryConnectorComparator;
 import org.eclipse.mylyn.internal.discovery.ui.util.DiscoveryUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
@@ -866,7 +866,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 
 				int numChildren = 0;
 				List<DiscoveryConnector> connectors = new ArrayList<DiscoveryConnector>(category.getConnectors());
-				Collections.sort(connectors, new DiscoveryConnectorComparator());
+				Collections.sort(connectors, new DiscoveryConnectorComparator(category));
 				for (final DiscoveryConnector connector : connectors) {
 					if (isFiltered(connector)) {
 						continue;

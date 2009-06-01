@@ -30,6 +30,8 @@ class Messages extends NLS {
 
 	public static String BundleDiscoveryStrategy_unexpected_element;
 
+	public static String ConnectorCategory_connectorCategory_relevance_invalid;
+
 	public static String ConnectorCategory_must_specify_connectorCategory_id;
 
 	public static String ConnectorCategory_must_specify_connectorCategory_name;
@@ -81,6 +83,8 @@ class Messages extends NLS {
 	public static String FeatureFilter_must_specify_featureFilter_featureId;
 
 	public static String FeatureFilter_must_specify_featureFilter_version;
+
+	public static String Group_must_specify_group_id;
 
 	public static String RemoteBundleDiscoveryStrategy_cannot_download_bundle;
 

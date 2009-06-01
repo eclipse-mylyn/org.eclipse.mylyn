@@ -23,7 +23,11 @@ public class ConnectorCategory {
 
 	protected String description;
 
+	protected String relevance;
+
 	protected Icon icon;
+
+	protected java.util.List<Group> group = new java.util.ArrayList<Group>();
 
 	public ConnectorCategory() {
 	}
@@ -61,12 +65,32 @@ public class ConnectorCategory {
 		this.description = description;
 	}
 
+	/**
+	 * A relevance, which is a number from 0 to 100. Categories with higher relevance are displayed with preference in
+	 * the UI.
+	 */
+	public String getRelevance() {
+		return relevance;
+	}
+
+	public void setRelevance(String relevance) {
+		this.relevance = relevance;
+	}
+
 	public Icon getIcon() {
 		return icon;
 	}
 
 	public void setIcon(Icon icon) {
 		this.icon = icon;
+	}
+
+	public java.util.List<Group> getGroup() {
+		return group;
+	}
+
+	public void setGroup(java.util.List<Group> group) {
+		this.group = group;
 	}
 
 	public void validate() throws ValidationException {
@@ -78,6 +102,19 @@ public class ConnectorCategory {
 		}
 		if (icon != null) {
 			icon.validate();
+		}
+		if (relevance != null) {
+			try {
+				int r = Integer.parseInt(relevance, 10);
+				if (r < 0 || r > 100) {
+					throw new NumberFormatException();
+				}
+			} catch (NumberFormatException e) {
+				throw new ValidationException(Messages.ConnectorCategory_connectorCategory_relevance_invalid);
+			}
+		}
+		for (Group groupItem : group) {
+			groupItem.validate();
 		}
 	}
 }

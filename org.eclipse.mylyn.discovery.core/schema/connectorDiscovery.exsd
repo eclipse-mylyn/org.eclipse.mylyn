@@ -141,6 +141,13 @@
                </documentation>
             </annotation>
          </attribute>
+         <attribute name="groupId" type="string">
+            <annotation>
+               <documentation>
+                  The id of the connectorCategory group.  See group/@id for more details.
+               </documentation>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 
@@ -153,6 +160,7 @@
       <complexType>
          <sequence>
             <element ref="icon" minOccurs="0" maxOccurs="1"/>
+            <element ref="group" minOccurs="0" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="id" type="string" use="required">
             <annotation>
@@ -182,6 +190,13 @@
                <appinfo>
                   <meta.attribute translatable="true"/>
                </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="relevance" type="string">
+            <annotation>
+               <documentation>
+                  A relevance, which is a number from 0 to 100.  Categories with higher relevance are displayed with preference in the UI.
+               </documentation>
             </annotation>
          </attribute>
       </complexType>
@@ -295,6 +310,23 @@
             <annotation>
                <documentation>
                   A version specifier, specified in the same manner as version dependencies are specified in an OSGi manifest.  For example: &quot;[3.0,4.0)&quot;
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="group">
+      <annotation>
+         <documentation>
+            groups provide a way to anchor connectors in a grouping with other like entries.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  An identifier that identifies the group.  Must be unique for a particular connectorCategory.
                </documentation>
             </annotation>
          </attribute>

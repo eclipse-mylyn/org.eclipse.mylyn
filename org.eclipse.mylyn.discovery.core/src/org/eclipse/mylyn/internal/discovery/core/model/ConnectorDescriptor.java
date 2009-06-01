@@ -38,6 +38,8 @@ public class ConnectorDescriptor {
 
 	protected String platformFilter;
 
+	protected String groupId;
+
 	protected java.util.List<FeatureFilter> featureFilter = new java.util.ArrayList<FeatureFilter>();
 
 	protected Icon icon;
@@ -148,6 +150,17 @@ public class ConnectorDescriptor {
 
 	public void setPlatformFilter(String platformFilter) {
 		this.platformFilter = platformFilter;
+	}
+
+	/**
+	 * The id of the connectorCategory group. See group/@id for more details.
+	 */
+	public String getGroupId() {
+		return groupId;
+	}
+
+	public void setGroupId(String groupId) {
+		this.groupId = groupId;
 	}
 
 	public java.util.List<FeatureFilter> getFeatureFilter() {

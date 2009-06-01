@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Tasktop Technologies and others.
+ * Copyright (c) 2009 Task top Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,6 +31,8 @@ public class ConnectorDiscoveryExtensionReader {
 	public static final String OVERVIEW = "overview"; //$NON-NLS-1$
 
 	public static final String FEATURE_FILTER = "featureFilter"; //$NON-NLS-1$
+
+	public static final String GROUP = "group"; //$NON-NLS-1$
 
 	public ConnectorDescriptor readConnectorDescriptor(IConfigurationElement element) throws ValidationException {
 		return readConnectorDescriptor(element, ConnectorDescriptor.class);
@@ -64,6 +66,7 @@ public class ConnectorDiscoveryExtensionReader {
 		connectorDescriptor.setId(element.getAttribute("id")); //$NON-NLS-1$
 		connectorDescriptor.setCategoryId(element.getAttribute("categoryId")); //$NON-NLS-1$
 		connectorDescriptor.setPlatformFilter(element.getAttribute("platformFilter")); //$NON-NLS-1$
+		connectorDescriptor.setGroupId(element.getAttribute("groupId")); //$NON-NLS-1$
 
 		for (IConfigurationElement child : element.getChildren("featureFilter")) { //$NON-NLS-1$
 			FeatureFilter featureFilterItem = readFeatureFilter(child);
@@ -108,6 +111,7 @@ public class ConnectorDiscoveryExtensionReader {
 		connectorCategory.setId(element.getAttribute("id")); //$NON-NLS-1$
 		connectorCategory.setName(element.getAttribute("name")); //$NON-NLS-1$
 		connectorCategory.setDescription(element.getAttribute("description")); //$NON-NLS-1$
+		connectorCategory.setRelevance(element.getAttribute("relevance")); //$NON-NLS-1$
 
 		for (IConfigurationElement child : element.getChildren("icon")) { //$NON-NLS-1$
 			Icon iconItem = readIcon(child);
@@ -116,6 +120,11 @@ public class ConnectorDiscoveryExtensionReader {
 				throw new ValidationException(Messages.ConnectorDiscoveryExtensionReader_unexpected_element_icon);
 			}
 			connectorCategory.setIcon(iconItem);
+		}
+		for (IConfigurationElement child : element.getChildren("group")) { //$NON-NLS-1$
+			Group groupItem = readGroup(child);
+			groupItem.setConnectorCategory(connectorCategory);
+			connectorCategory.getGroup().add(groupItem);
 		}
 
 		connectorCategory.validate();
@@ -159,4 +168,15 @@ public class ConnectorDiscoveryExtensionReader {
 
 		return featureFilter;
 	}
+
+	public Group readGroup(IConfigurationElement element) throws ValidationException {
+		Group group = new Group();
+
+		group.setId(element.getAttribute("id")); //$NON-NLS-1$
+
+		group.validate();
+
+		return group;
+	}
+
 }

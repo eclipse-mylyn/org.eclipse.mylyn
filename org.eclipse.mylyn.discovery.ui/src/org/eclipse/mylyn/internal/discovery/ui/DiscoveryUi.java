@@ -10,9 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.discovery.ui;
 
-
 /**
- * 
  * @author David Green
  */
 public abstract class DiscoveryUi {
@@ -21,4 +19,5 @@ public abstract class DiscoveryUi {
 
 	private DiscoveryUi() {
 	}
+
 }
