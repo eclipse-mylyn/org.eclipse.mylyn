@@ -136,4 +136,11 @@ public interface ITasksCoreConstants {
 
 	public static final String PROPERTY_LINK_PROVIDER_TIMEOUT = "org.eclipse.mylyn.linkProviderTimeout"; //$NON-NLS-1$
 
+	/**
+	 * Boolean value that indicates that queries participate in automatic synchronizations.
+	 */
+	public static final String ATTRIBUTE_AUTO_UPDATE = "org.eclipse.mylyn.tasks.core.synchronization.auto"; //$NON-NLS-1$
+
+	public static final Object JOB_FAMILY_SYNCHRONIZATION = new Object();
+
 }

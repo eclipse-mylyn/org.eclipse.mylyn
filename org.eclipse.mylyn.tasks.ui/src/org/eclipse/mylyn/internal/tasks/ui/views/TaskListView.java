@@ -61,6 +61,7 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.SubstringPatternFilter;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.CategorizedPresentation;
@@ -166,6 +167,7 @@ import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.IShowInTarget;
 import org.eclipse.ui.part.ShowInContext;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 import org.eclipse.ui.themes.IThemeManager;
 
 /**
@@ -831,6 +833,13 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 	@Override
 	public void createPartControl(Composite parent) {
+		IWorkbenchSiteProgressService progress = (IWorkbenchSiteProgressService) getSite().getAdapter(
+				IWorkbenchSiteProgressService.class);
+		if (progress != null) {
+			// show indicator for all running query synchronizations
+			progress.showBusyForFamily(ITasksCoreConstants.JOB_FAMILY_SYNCHRONIZATION);
+		}
+
 		themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		themeManager.addPropertyChangeListener(THEME_CHANGE_LISTENER);
 
