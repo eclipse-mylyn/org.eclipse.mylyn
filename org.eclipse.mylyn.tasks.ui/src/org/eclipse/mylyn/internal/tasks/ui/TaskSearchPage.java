@@ -348,6 +348,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 	@Override
 	public void setVisible(boolean visible) {
 		if (firstView) {
+			firstView = false;
 			getControl().setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
 
 			List<TaskRepository> repositories = TasksUi.getRepositoryManager().getAllRepositories();
@@ -404,7 +405,6 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 					// null, false);
 				}
 			}
-			firstView = false;
 		}
 
 		if (queryPages == null) {

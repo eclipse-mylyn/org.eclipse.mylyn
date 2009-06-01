@@ -101,7 +101,7 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 				}
 			});
 
-			GridDataFactory.fillDefaults().grab(true, false).applyTo(datePicker);
+			GridDataFactory.fillDefaults().hint(120, SWT.DEFAULT).grab(true, false).applyTo(datePicker);
 			datePicker.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 			toolkit.adapt(datePicker, false, false);
 
