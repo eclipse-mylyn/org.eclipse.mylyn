@@ -20,10 +20,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
@@ -45,12 +45,13 @@ import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.BaseSelectionListenerAction;
 import org.eclipse.ui.progress.IProgressService;
 
 /**
  * @author Steffen Pingel
  */
-public class NewSubTaskAction extends Action implements IViewActionDelegate, IExecutableExtension {
+public class NewSubTaskAction extends BaseSelectionListenerAction implements IViewActionDelegate, IExecutableExtension {
 
 	public static final String ID = "org.eclipse.mylyn.tasks.ui.new.subtask"; //$NON-NLS-1$
 
@@ -172,10 +173,11 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 	public void init(IViewPart view) {
 	}
 
-	public void selectionChanged(IAction action, ISelection selection) {
+	@Override
+	protected boolean updateSelection(IStructuredSelection selection) {
 		selectedTask = null;
-		if (selection instanceof StructuredSelection) {
-			Object selectedObject = ((StructuredSelection) selection).getFirstElement();
+		if (selection.size() == 1) {
+			Object selectedObject = selection.getFirstElement();
 			if (selectedObject instanceof LocalTask) {
 				selectedTask = (AbstractTask) selectedObject;
 			} else if (selectedObject instanceof ITask) {
@@ -188,8 +190,16 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 				}
 			}
 		}
+		return selectedTask != null;
+	}
 
-		action.setEnabled(selectedTask != null);
+	public void selectionChanged(IAction action, ISelection selection) {
+		if (selection instanceof StructuredSelection) {
+			selectionChanged((IStructuredSelection) selection);
+		} else {
+			setEnabled(false);
+		}
+		action.setEnabled(isEnabled());
 	}
 
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data)

@@ -1615,7 +1615,7 @@
          </menu>
       </menuContribution>
       <menuContribution
-            locationURI="popup:org.eclipse.ui.popup.any?after=new">
+            locationURI="popup:org.eclipse.ui.popup.any?after=navigate">
          <menu
                id="org.eclipse.mylyn.tasks.ui.menu.task.mark"
                label="%menu.task.mark.label">

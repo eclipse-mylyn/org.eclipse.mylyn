@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
@@ -61,7 +62,7 @@ public class RepositoryElementActionGroup {
 
 	private static final String ID_SEPARATOR_PROPERTIES = "properties"; //$NON-NLS-1$
 
-	private static final String ID_SEPARATOR_NAVIGATE = "navigate"; //$NON-NLS-1$
+	protected static final String ID_SEPARATOR_NAVIGATE = "navigate"; //$NON-NLS-1$
 
 	private static final String ID_SEPARATOR_OPEN = "open"; //$NON-NLS-1$
 
@@ -95,8 +96,12 @@ public class RepositoryElementActionGroup {
 
 	private final AutoUpdateQueryAction autoUpdateAction;
 
+	private final NewSubTaskAction newSubTaskAction;
+
 	public RepositoryElementActionGroup() {
 		actions = new ArrayList<ISelectionChangedListener>();
+
+		newSubTaskAction = add(new NewSubTaskAction());
 
 		activateAction = new TaskActivateAction();
 		deactivateAction = new TaskDeactivateAction();
@@ -139,11 +144,11 @@ public class RepositoryElementActionGroup {
 	}
 
 	public void fillContextMenu(final IMenuManager manager) {
-		manager.add(new Separator(ID_SEPARATOR_NEW)); // new, mark, schedule
+		manager.add(new Separator(ID_SEPARATOR_NEW)); // new, schedule
+		manager.add(new GroupMarker(ID_SEPARATOR_NAVIGATE)); // mark, go into, go up
 		manager.add(new Separator(ID_SEPARATOR_OPEN)); // open, activate
 		manager.add(new Separator(ID_SEPARATOR_EDIT)); // cut, copy paste, delete, rename
 		manager.add(new Separator(ID_SEPARATOR_TASKS)); // move to
-		manager.add(new Separator(ID_SEPARATOR_NAVIGATE));
 		manager.add(new Separator(ID_SEPARATOR_REPOSITORY)); // synchronize
 		manager.add(new Separator(ID_SEPARATOR_OPERATIONS)); // repository properties, import/export, context
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
@@ -163,6 +168,12 @@ public class RepositoryElementActionGroup {
 			task = (AbstractTask) element;
 		}
 
+		if (!isInTaskList() && newSubTaskAction.isEnabled()) {
+			MenuManager newSubMenu = new MenuManager("New");
+			newSubMenu.add(newSubTaskAction);
+			manager.appendToGroup(ID_SEPARATOR_NEW, newSubMenu);
+		}
+
 		if (element instanceof ITask && !isInEditor()) {
 			addAction(ID_SEPARATOR_OPEN, openAction, manager, element);
 		}
@@ -180,25 +191,6 @@ public class RepositoryElementActionGroup {
 				manager.appendToGroup(ID_SEPARATOR_OPEN, deactivateAction);
 			} else {
 				manager.appendToGroup(ID_SEPARATOR_OPEN, activateAction);
-			}
-		}
-
-		Map<String, List<IDynamicSubMenuContributor>> dynamicMenuMap = TasksUiPlugin.getDefault().getDynamicMenuMap();
-		for (final String menuPath : dynamicMenuMap.keySet()) {
-			for (final IDynamicSubMenuContributor contributor : dynamicMenuMap.get(menuPath)) {
-				SafeRunnable.run(new ISafeRunnable() {
-					public void handleException(Throwable e) {
-						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Menu contributor failed")); //$NON-NLS-1$
-					}
-
-					public void run() throws Exception {
-						MenuManager subMenuManager = contributor.getSubMenuManager(selectedElements);
-						if (subMenuManager != null) {
-							addMenuManager(menuPath, subMenuManager, manager, element);
-						}
-					}
-
-				});
 			}
 		}
 
@@ -231,6 +223,24 @@ public class RepositoryElementActionGroup {
 				subMenu.add(resetRepositoryConfigurationAction);
 				subMenu.add(new Separator());
 				subMenu.add(repositoryPropertiesAction);
+			}
+		}
+
+		Map<String, List<IDynamicSubMenuContributor>> dynamicMenuMap = TasksUiPlugin.getDefault().getDynamicMenuMap();
+		for (final String menuPath : dynamicMenuMap.keySet()) {
+			for (final IDynamicSubMenuContributor contributor : dynamicMenuMap.get(menuPath)) {
+				SafeRunnable.run(new ISafeRunnable() {
+					public void handleException(Throwable e) {
+						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Menu contributor failed")); //$NON-NLS-1$
+					}
+
+					public void run() throws Exception {
+						MenuManager subMenuManager = contributor.getSubMenuManager(selectedElements);
+						if (subMenuManager != null) {
+							addMenuManager(menuPath, subMenuManager, manager, element);
+						}
+					}
+				});
 			}
 		}
 	}
