@@ -29,6 +29,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
@@ -139,6 +140,11 @@ public class RepositoryElementActionGroup {
 		if (selectionProvider != null) {
 			for (ISelectionChangedListener action : actions) {
 				this.selectionProvider.addSelectionChangedListener(action);
+				ISelection selection = selectionProvider.getSelection();
+				if (selection == null) {
+					selection = StructuredSelection.EMPTY;
+				}
+				action.selectionChanged(new SelectionChangedEvent(selectionProvider, selection));
 			}
 		}
 	}
@@ -194,13 +200,17 @@ public class RepositoryElementActionGroup {
 			}
 		}
 
-		MenuManager copyDetailsSubMenu = new MenuManager(Messages.RepositoryElementActionGroup_Copy_Detail_Menu_Label,
-				CopyTaskDetailsAction.ID);
-		copyDetailsSubMenu.add(copyKeyAction);
-		copyDetailsSubMenu.add(copyUrlAction);
-		copyDetailsSubMenu.add(copyDetailsAction);
-		manager.appendToGroup(ID_SEPARATOR_EDIT, copyDetailsSubMenu);
-
+		if (!selection.isEmpty()) {
+			MenuManager copyDetailsSubMenu = new MenuManager(
+					Messages.RepositoryElementActionGroup_Copy_Detail_Menu_Label, CopyTaskDetailsAction.ID);
+			copyDetailsSubMenu.add(copyKeyAction);
+			copyDetailsSubMenu.add(copyUrlAction);
+			copyDetailsSubMenu.add(copyDetailsAction);
+			manager.appendToGroup(ID_SEPARATOR_EDIT, copyDetailsSubMenu);
+		}
+		if (isInTaskList()) {
+			manager.appendToGroup(ID_SEPARATOR_EDIT, deleteAction);
+		}
 		removeFromCategoryAction.selectionChanged(selection);
 		removeFromCategoryAction.setEnabled(isRemoveFromCategoryEnabled(selectedElements));
 		if (removeFromCategoryAction.isEnabled()) {

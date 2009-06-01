@@ -1505,9 +1505,6 @@
                            property="org.eclipse.mylyn.task.hasLocalCompletionState"
                            value="true">
                      </test>
-                     <instanceof
-                           value="org.eclipse.mylyn.internal.tasks.core.AbstractTask">
-                     </instanceof>
                   </adapt>
                </and>
             </iterate>
@@ -1530,9 +1527,6 @@
                            property="org.eclipse.mylyn.task.hasLocalCompletionState"
                            value="true">
                      </test>
-                     <instanceof
-                           value="org.eclipse.mylyn.internal.tasks.core.AbstractTask">
-                     </instanceof>
                   </adapt>
                </and>
             </iterate>
@@ -1551,9 +1545,6 @@
                            property="org.eclipse.mylyn.task.hasEdits"
                            value="true">
                      </test>
-                     <instanceof
-                           value="org.eclipse.mylyn.internal.tasks.core.AbstractTask">
-                     </instanceof>
                   </adapt>
                </and>
             </iterate>
@@ -1621,7 +1612,8 @@
                label="%menu.task.mark.label">
             <visibleWhen
                   checkEnabled="false">
-               <iterate>
+               <iterate
+                     ifEmpty="false">
                   <adapt
                         type="org.eclipse.mylyn.tasks.core.ITask">
                   </adapt>
@@ -1644,9 +1636,12 @@
                      checkEnabled="false">
                   <iterate>
                      <not>
-                        <instanceof
-                              value="org.eclipse.mylyn.internal.tasks.core.LocalTask">
-                        </instanceof>
+                        <adapt
+                              type="org.eclipse.mylyn.tasks.core.ITask">
+                           <instanceof
+                                 value="org.eclipse.mylyn.internal.tasks.core.LocalTask">
+                           </instanceof>
+                        </adapt>
                      </not>
                   </iterate>
                </visibleWhen>
@@ -1660,9 +1655,12 @@
                      checkEnabled="false">
                   <iterate>
                      <not>
-                        <instanceof
-                              value="org.eclipse.mylyn.internal.tasks.core.LocalTask">
-                        </instanceof>
+                        <adapt
+                              type="org.eclipse.mylyn.tasks.core.ITask">
+                           <instanceof
+                                 value="org.eclipse.mylyn.internal.tasks.core.LocalTask">
+                           </instanceof>
+                        </adapt>
                      </not>
                   </iterate>
                </visibleWhen>
@@ -1675,16 +1673,14 @@
                <visibleWhen
                      checkEnabled="false">
                   <iterate>
-                     <and>
-                        <instanceof
-                              value="org.eclipse.mylyn.internal.tasks.core.AbstractTask">
-                        </instanceof>
                      <not>
+                        <adapt
+                              type="org.eclipse.mylyn.tasks.core.ITask">
                            <instanceof
                                  value="org.eclipse.mylyn.internal.tasks.core.LocalTask">
                            </instanceof>
+                        </adapt>
                      </not>
-                     </and>
                   </iterate>
                </visibleWhen>
             </command>
@@ -1706,13 +1702,13 @@
                <iterate
                      operator="or">
                   <and>
-                     <instanceof
-                           value="org.eclipse.mylyn.internal.tasks.core.AbstractTask">
-                     </instanceof>
-                     <test
-                           property="org.eclipse.mylyn.task.hasLocalCompletionState"
-                           value="true">
-                     </test>
+                     <adapt
+                           type="org.eclipse.mylyn.tasks.core.ITask">
+	                     <test
+	                           property="org.eclipse.mylyn.task.hasLocalCompletionState"
+	                           value="true">
+	                     </test>
+                     </adapt>
                   </and>
                </iterate>
             </visibleWhen>

@@ -76,7 +76,7 @@ public class TaskListViewActionGroup extends RepositoryElementActionGroup {
 		if (goUpAction.isEnabled()) {
 			manager.appendToGroup(ID_SEPARATOR_NAVIGATE, goUpAction);
 		}
-		if (!(element instanceof ITask)) {
+		if (!(element instanceof ITask) && renameAction.isEnabled() && element != null) {
 			manager.appendToGroup(ID_SEPARATOR_EDIT, renameAction);
 		}
 	}

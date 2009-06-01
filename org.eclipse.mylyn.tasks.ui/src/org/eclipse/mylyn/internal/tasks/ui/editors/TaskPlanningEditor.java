@@ -29,6 +29,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
+import org.eclipse.mylyn.internal.provisional.commons.ui.SelectionProviderAdapter;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
@@ -246,6 +247,9 @@ public class TaskPlanningEditor extends TaskFormPage {
 		super.init(site, input);
 		this.textSupport = new CommonTextSupport((IHandlerService) getSite().getService(IHandlerService.class));
 		this.textSupport.setSelectionChangedListener((TaskEditorActionContributor) getEditorSite().getActionBarContributor());
+
+		site.setSelectionProvider(new SelectionProviderAdapter(new StructuredSelection(
+				((TaskEditorInput) input).getTask())));
 	}
 
 	private void initializePart(final Composite editorComposite, final AbstractLocalEditorPart part) {

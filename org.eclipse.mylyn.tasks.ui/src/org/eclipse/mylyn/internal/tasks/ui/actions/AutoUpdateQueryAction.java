@@ -32,6 +32,7 @@ public class AutoUpdateQueryAction extends BaseSelectionListenerAction {
 	public AutoUpdateQueryAction() {
 		super(Messages.AutoUpdateQueryAction_Synchronize_Automatically_Label);
 		setChecked(false);
+		setEnabled(false);
 	}
 
 	@Override
