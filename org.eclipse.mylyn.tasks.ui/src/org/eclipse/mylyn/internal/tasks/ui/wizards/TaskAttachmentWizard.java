@@ -320,7 +320,8 @@ public class TaskAttachmentWizard extends Wizard {
 	}
 
 	private void handleDone(SubmitJob job) {
-		if (job.getStatus() != null) {
+		IStatus status = job.getStatus();
+		if (status != null && status.getSeverity() != IStatus.CANCEL) {
 			TasksUiInternal.displayStatus(Messages.TaskAttachmentWizard_Attachment_Failed, job.getStatus());
 		}
 	}

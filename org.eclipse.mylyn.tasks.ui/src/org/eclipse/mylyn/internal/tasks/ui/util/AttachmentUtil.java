@@ -196,7 +196,8 @@ public class AttachmentUtil {
 			// canceled
 			return false;
 		}
-		if (submitJob.getStatus() != null) {
+		IStatus status = submitJob.getStatus();
+		if (status != null && status.getSeverity() != IStatus.CANCEL) {
 			TasksUiInternal.displayStatus(Messages.AttachmentUtil_Mylyn_Information, submitJob.getStatus());
 			return false;
 		}
