@@ -24,6 +24,7 @@ import org.eclipse.mylyn.tasks.ui.editors.LayoutHint;
 import org.eclipse.mylyn.tasks.ui.editors.LayoutHint.ColumnSpan;
 import org.eclipse.mylyn.tasks.ui.editors.LayoutHint.RowSpan;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -161,6 +162,12 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 		} finally {
 			ignoreNotification = false;
 		}
+	}
+
+	@Override
+	protected void decorateIncoming(Color color) {
+		super.decorateIncoming(color);
+		getEditorViewer().getTextWidget().setBackground(color);
 	}
 
 }
