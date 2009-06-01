@@ -167,7 +167,9 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 	@Override
 	protected void decorateIncoming(Color color) {
 		super.decorateIncoming(color);
-		getEditorViewer().getTextWidget().setBackground(color);
+		if (getEditorViewer() != null && getEditorViewer().getTextWidget() != null) {
+			getEditorViewer().getTextWidget().setBackground(color);
+		}
 	}
 
 }
