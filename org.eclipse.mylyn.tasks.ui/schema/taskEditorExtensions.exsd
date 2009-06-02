@@ -2,9 +2,9 @@
 <!-- Schema file written by PDE -->
 <schema targetNamespace="org.eclipse.mylyn.tasks.ui" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
-      <appinfo>
+      <appInfo>
          <meta.schema plugin="org.eclipse.mylyn.tasks.ui" id="taskEditorExtensions" name="Task Editor Extensions"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          An extension to the Mylyn task editor that can provide viewing and editing controls that are markup-aware.
 This extension provides a means to register such extensions, and to associate those extensions with a specific connector kind.
@@ -13,9 +13,9 @@ This extension provides a means to register such extensions, and to associate th
 
    <element name="extension">
       <annotation>
-         <appinfo>
+         <appInfo>
             <meta.element />
-         </appinfo>
+         </appInfo>
       </annotation>
       <complexType>
          <sequence>
@@ -41,9 +41,9 @@ This extension provides a means to register such extensions, and to associate th
                <documentation>
                   
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute translatable="true"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
@@ -61,9 +61,9 @@ This extension provides a means to register such extensions, and to associate th
                <documentation>
                   the fully qualified class name of the class that extends org.eclipse.mylyn.internal.sandbox.ui.editors.AbstractTaskEditorExtension
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.mylyn.internal.sandbox.ui.editors.AbstractTaskEditorExtension:"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="id" type="string" use="required">
@@ -71,9 +71,9 @@ This extension provides a means to register such extensions, and to associate th
                <documentation>
                   a unique identifier identifying the extension
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute kind="identifier"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="name" type="string" use="required">
@@ -81,9 +81,9 @@ This extension provides a means to register such extensions, and to associate th
                <documentation>
                   A human-readable name for the extension that is presented to the Eclipse user in the UI.    Should be translated.  Used in the UI to identify the type of extension, so the name should indicate what the extension is for, and it should be short so that it can be displayed on one line (for example as an option in a combo box.)  Example: &quot;TracWiki&quot;, or &quot;Textile&quot;.
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute translatable="true"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
@@ -114,18 +114,18 @@ This extension provides a means to register such extensions, and to associate th
    </element>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="since"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          3.1
       </documentation>
    </annotation>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="examples"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          To register a task editor extension:
 
@@ -152,18 +152,18 @@ To make a task editor extension the default for a specific connector kind:
    </annotation>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="apiinfo"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          [Enter API information here.]
       </documentation>
    </annotation>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="implementation"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          [Enter information about supplied implementation of this extension point.]
       </documentation>
