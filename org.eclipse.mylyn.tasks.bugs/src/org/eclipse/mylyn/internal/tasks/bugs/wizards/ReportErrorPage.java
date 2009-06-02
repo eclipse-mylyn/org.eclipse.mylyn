@@ -106,7 +106,7 @@ public class ReportErrorPage extends WizardPage {
 				contributionCombo.select(0);
 				contributionCombo.addSelectionListener(new SelectionAdapter() {
 					@Override
-					public void widgetDefaultSelected(SelectionEvent e) {
+					public void widgetSelected(SelectionEvent e) {
 						int selectionIndex = contributionCombo.getSelectionIndex();
 						if (selectionIndex != -1) {
 							selectedContribution = contributions.get(selectionIndex);
