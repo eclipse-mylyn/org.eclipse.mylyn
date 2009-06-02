@@ -84,12 +84,13 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 	}
 
 	private void createAttachmentTable(FormToolkit toolkit, final Composite attachmentsComposite) {
-		Table attachmentsTable = toolkit.createTable(attachmentsComposite, SWT.MULTI | SWT.BORDER | SWT.FULL_SELECTION);
+		Table attachmentsTable = toolkit.createTable(attachmentsComposite, SWT.MULTI | SWT.FULL_SELECTION);
 		attachmentsTable.setLinesVisible(true);
 		attachmentsTable.setHeaderVisible(true);
 		attachmentsTable.setLayout(new GridLayout());
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).hint(500, SWT.DEFAULT).applyTo(
 				attachmentsTable);
+		attachmentsTable.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 
 		for (int i = 0; i < attachmentsColumns.length; i++) {
 			TableColumn column = new TableColumn(attachmentsTable, SWT.LEFT, i);
@@ -223,6 +224,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 
 		createButtons(attachmentsComposite, toolkit);
 
+		toolkit.paintBordersFor(attachmentsComposite);
 		section.setClient(attachmentsComposite);
 	}
 
