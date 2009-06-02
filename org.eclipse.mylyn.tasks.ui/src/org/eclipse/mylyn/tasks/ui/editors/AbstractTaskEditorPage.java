@@ -32,7 +32,6 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -47,7 +46,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFormUtil;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.GradientCanvas;
@@ -402,7 +400,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 	private boolean submitEnabled;
 
-	private boolean needsSubmitButton;
+	private boolean needsSubmit;
 
 	private boolean needsPrivateSection;
 
@@ -418,6 +416,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 		this.reflow = true;
 		this.selectionChangedListeners = new ListenerList();
 		this.submitEnabled = true;
+		this.needsSubmit = true;
 	}
 
 	public AbstractTaskEditorPage(TaskEditor editor, String connectorKind) {
@@ -825,7 +824,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 	}
 
 	public void doSubmit() {
-		if (!submitEnabled) {
+		if (!submitEnabled || !needsSubmit()) {
 			return;
 		}
 
@@ -1458,20 +1457,20 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 	 * Returns true, if the page provides a submit button.
 	 * 
 	 * @since 3.2
-	 * @see #setNeedsSubmitButton(boolean)
+	 * @see #setNeedsSubmit(boolean)
 	 */
-	public boolean needsSubmitButton() {
-		return needsSubmitButton;
+	public boolean needsSubmit() {
+		return needsSubmit;
 	}
 
 	/**
-	 * Specifies that the page should provide a submit button. This flag is not set by default.
+	 * Specifies that the page supports submitting. This flag is to true by default.
 	 * 
 	 * @since 3.2
-	 * @see #needsSubmitButton()
+	 * @see #needsSubmit()
 	 */
-	public void setNeedsSubmitButton(boolean needsSubmitButton) {
-		this.needsSubmitButton = needsSubmitButton;
+	public void setNeedsSubmit(boolean needsSubmitButton) {
+		this.needsSubmit = needsSubmitButton;
 	}
 
 	/**
@@ -1494,44 +1493,39 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 		this.needsPrivateSection = needsPrivateSection;
 	}
 
-	/**
-	 * This is a provisional method. Do not call or override until the API has been finalized. See bug 274790 for
-	 * details.
-	 * 
-	 * @noreference This method is not intended to be referenced by clients.
-	 */
-	protected void fillLeftHeaderToolBar(IToolBarManager toolBarManager) {
-		if (needsSubmitButton()) {
-			ControlContribution submitButtonContribution = new ControlContribution(
-					"org.eclipse.mylyn.tasks.toolbars.submit") { //$NON-NLS-1$
-				@Override
-				protected int computeWidth(Control control) {
-					return super.computeWidth(control) + 5;
-				}
+//	private void fillLeftHeaderToolBar(IToolBarManager toolBarManager) {
+//		if (needsSubmit()) {
+//			ControlContribution submitButtonContribution = new ControlContribution(
+//					"org.eclipse.mylyn.tasks.toolbars.submit") { //$NON-NLS-1$
+//				@Override
+//				protected int computeWidth(Control control) {
+//					return super.computeWidth(control) + 5;
+//				}
+//
+//				@Override
+//				protected Control createControl(Composite parent) {
+//					Composite composite = new Composite(parent, SWT.NONE);
+//					composite.setBackground(null);
+//					GridLayout layout = new GridLayout();
+//					layout.marginWidth = 0;
+//					layout.marginHeight = 0;
+//					layout.marginLeft = 10;
+//					composite.setLayout(layout);
+//
+//					submitButton = toolkit.createButton(composite, Messages.TaskEditorActionPart_Submit + " ", SWT.NONE); //$NON-NLS-1$
+//					submitButton.setImage(CommonImages.getImage(TasksUiImages.REPOSITORY_SUBMIT));
+//					submitButton.setBackground(null);
+//					submitButton.addListener(SWT.Selection, new Listener() {
+//						public void handleEvent(Event e) {
+//							doSubmit();
+//						}
+//					});
+//					GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.BOTTOM).applyTo(submitButton);
+//					return composite;
+//				}
+//			};
+//			toolBarManager.add(submitButtonContribution);
+//		}
+//	}
 
-				@Override
-				protected Control createControl(Composite parent) {
-					Composite composite = new Composite(parent, SWT.NONE);
-					composite.setBackground(null);
-					GridLayout layout = new GridLayout();
-					layout.marginWidth = 0;
-					layout.marginHeight = 0;
-					layout.marginLeft = 10;
-					composite.setLayout(layout);
-
-					submitButton = toolkit.createButton(composite, Messages.TaskEditorActionPart_Submit + " ", SWT.NONE); //$NON-NLS-1$
-					submitButton.setImage(CommonImages.getImage(TasksUiImages.REPOSITORY_SUBMIT));
-					submitButton.setBackground(null);
-					submitButton.addListener(SWT.Selection, new Listener() {
-						public void handleEvent(Event e) {
-							doSubmit();
-						}
-					});
-					GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.BOTTOM).applyTo(submitButton);
-					return composite;
-				}
-			};
-			toolBarManager.add(submitButtonContribution);
-		}
-	}
 }

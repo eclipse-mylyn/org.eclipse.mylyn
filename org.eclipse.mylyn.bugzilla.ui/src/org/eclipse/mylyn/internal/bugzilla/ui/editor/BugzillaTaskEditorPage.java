@@ -82,7 +82,6 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 	public BugzillaTaskEditorPage(TaskEditor editor, String connectorKind) {
 		super(editor, connectorKind);
 		this.attributeEditorMap = new HashMap<TaskAttribute, AbstractAttributeEditor>();
-		setNeedsSubmitButton(true);
 		setNeedsPrivateSection(true);
 	}
 
