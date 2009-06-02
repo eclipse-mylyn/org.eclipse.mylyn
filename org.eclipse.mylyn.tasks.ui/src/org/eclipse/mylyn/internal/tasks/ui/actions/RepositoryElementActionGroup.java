@@ -38,7 +38,6 @@ import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction.Mode;
-import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.Messages;
 import org.eclipse.mylyn.internal.tasks.ui.views.UpdateRepositoryConfigurationAction;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
@@ -183,7 +182,9 @@ public class RepositoryElementActionGroup {
 		if (element instanceof ITask && !isInEditor()) {
 			addAction(ID_SEPARATOR_OPEN, openAction, manager, element);
 		}
-		addAction(ID_SEPARATOR_OPEN, openWithBrowserAction, manager, element);
+		if (openWithBrowserAction.isEnabled()) {
+			manager.appendToGroup(ID_SEPARATOR_OPEN, openWithBrowserAction);
+		}
 		showInSearchViewAction.selectionChanged(selection);
 		if (showInSearchViewAction.isEnabled()) {
 			manager.appendToGroup(ID_SEPARATOR_OPEN, showInSearchViewAction);
@@ -304,25 +305,13 @@ public class RepositoryElementActionGroup {
 		if (element != null) {
 			updateActionEnablement(action, element);
 		}
-		if (action instanceof OpenWithBrowserAction) {
-			if (action.isEnabled()) {
-				manager.appendToGroup(path, action);
-			}
-		} else {
-			manager.appendToGroup(path, action);
-		}
+		manager.appendToGroup(path, action);
 	}
 
 	// TODO move the enablement to the action classes
 	private void updateActionEnablement(Action action, ITaskContainer element) {
 		if (element instanceof ITask) {
-			if (action instanceof OpenWithBrowserAction) {
-				if (TasksUiInternal.isValidUrl(((ITask) element).getUrl())) {
-					action.setEnabled(true);
-				} else {
-					action.setEnabled(false);
-				}
-			} else if (action instanceof OpenTaskListElementAction) {
+			if (action instanceof OpenTaskListElementAction) {
 				action.setEnabled(true);
 			} else if (action instanceof CopyTaskDetailsAction) {
 				action.setEnabled(true);
