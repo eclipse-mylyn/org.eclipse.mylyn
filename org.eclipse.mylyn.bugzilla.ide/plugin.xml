@@ -7,11 +7,17 @@
 			version="3.0" />
 	</extension>
 	<extension point="org.eclipse.mylyn.tasks.bugs.support">
-		<category description="Community supported Open-Source projects"
-			id="org.eclipse.mylyn.tasks.bugs.openSource" name="Open-Source"
+    <category
+          description="Commercial support"
+          id="org.eclipse.mylyn.tasks.bugs.commercial"
+          name="Commercial Support"
+          weight="500">
+    </category>
+		<category description="Community supported open source projects"
+			id="org.eclipse.mylyn.tasks.bugs.openSource" name="Open Source Community"
 			weight="900" />
 		<provider categoryId="org.eclipse.mylyn.tasks.bugs.openSource"
-			description="Eclipse Open-Source projects" icon="icons/branding32/eclipse.png"
+			description="Eclipse open source community bug tracker" icon="icons/branding32/eclipse.png"
 			id="org.eclipse" name="Eclipse.org" url="http://eclipse.org/" />
 		<mapping namespace="org.eclipse">
 			<repository kind="bugzilla" url="https://bugs.eclipse.org/bugs">
