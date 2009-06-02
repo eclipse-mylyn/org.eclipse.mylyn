@@ -981,22 +981,22 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		final TaskRepository taskRepository = (outgoingNewRepository != null) ? outgoingNewRepository
 				: taskEditorInput.getTaskRepository();
 
-		if (taskRepository.getConnectorKind().equals(LocalRepositoryConnector.CONNECTOR_KIND)) {
-			getHeaderForm().getForm().setText(Messages.TaskEditor_Task_ + task.getSummary());
-		} else {
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskRepository.getConnectorKind());
-			String kindLabel = ""; //$NON-NLS-1$
-			if (connectorUi != null) {
-				kindLabel = connectorUi.getTaskKindLabel(task);
-			}
+//		if (taskRepository.getConnectorKind().equals(LocalRepositoryConnector.CONNECTOR_KIND)) {
+//			getHeaderForm().getForm().setText(Messages.TaskEditor_Task_ + task.getSummary());
+//		} else {
+		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskRepository.getConnectorKind());
+		String kindLabel = ""; //$NON-NLS-1$
+		if (connectorUi != null) {
+			kindLabel = connectorUi.getTaskKindLabel(task);
+		}
 
 //			String idLabel = task.getTaskKey();
 //			if (idLabel != null) {
 //				getHeaderForm().getForm().setText(kindLabel + " " + idLabel); //$NON-NLS-1$
 //			} else {
-			getHeaderForm().getForm().setText(kindLabel);
+		getHeaderForm().getForm().setText(kindLabel);
 //			}
-		}
+//		}
 
 		// repository label
 //		String label = taskRepository.getRepositoryLabel();
