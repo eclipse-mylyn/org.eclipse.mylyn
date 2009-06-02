@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.internal.context.ui;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -23,7 +22,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -329,29 +327,29 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 				treeViewer.expandAll();
 			} else {
 
-				treeViewer.reveal(objectToRefresh);
-				boolean failed = false;
-				try {
-					// reveal will fail if the content provider does not properly implement getParent();
-					// check if node is now visible in view and fallback to expandAll() in 
-					// case of an error
-					Method method = AbstractTreeViewer.class.getDeclaredMethod(
-							"internalGetWidgetToSelect", Object.class); //$NON-NLS-1$
-					method.setAccessible(true);
-					if (method.invoke(treeViewer, objectToRefresh) == null) {
-						failed = true;
-					}
-				} catch (Exception e) {
-					if (!internalExpandExceptionLogged) {
-						internalExpandExceptionLogged = true;
-						StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
-								"Failed to verify expansion state, falling back to expanding all nodes", e)); //$NON-NLS-1$
-					}
-					failed = true;
-				}
-				if (failed) {
-					treeViewer.expandAll();
-				}
+//				treeViewer.reveal(objectToRefresh);
+//				boolean failed = false;
+//				try {
+//					// reveal will fail if the content provider does not properly implement getParent();
+//					// check if node is now visible in view and fallback to expandAll() in 
+//					// case of an error
+//					Method method = AbstractTreeViewer.class.getDeclaredMethod(
+//							"internalGetWidgetToSelect", Object.class); //$NON-NLS-1$
+//					method.setAccessible(true);
+//					if (method.invoke(treeViewer, objectToRefresh) == null) {
+//						failed = true;
+//					}
+//				} catch (Exception e) {
+//					if (!internalExpandExceptionLogged) {
+//						internalExpandExceptionLogged = true;
+//						StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
+//								"Failed to verify expansion state, falling back to expanding all nodes", e)); //$NON-NLS-1$
+//					}
+//					failed = true;
+//				}
+//				if (failed) {
+				treeViewer.expandAll();
+//				}
 			}
 		}
 	}
