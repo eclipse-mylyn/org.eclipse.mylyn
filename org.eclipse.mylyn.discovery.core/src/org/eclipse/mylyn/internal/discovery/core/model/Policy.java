@@ -18,8 +18,8 @@ package org.eclipse.mylyn.internal.discovery.core.model;
  */
 public class Policy {
 	/**
-	 * Define system property <code>org.eclipse.mylyn.internal.discovery.core.model.Policy=true</code> to allow for
-	 * categories to be permitted by anyone. For testing purposes.
+	 * Define system property <code>org.eclipse.mylyn.internal.discovery.core.model.Policy.permissive=true</code> to
+	 * allow for categories to be permitted by anyone. For testing purposes.
 	 */
 	private static final boolean PERMISSIVE = Boolean.getBoolean(Policy.class.getName() + ".permissive"); //$NON-NLS-1$
 
