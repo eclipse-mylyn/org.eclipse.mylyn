@@ -631,6 +631,8 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 			GridLayoutFactory.fillDefaults().numColumns(2).applyTo(checkboxContainer);
 
 			checkbox = new Button(checkboxContainer, SWT.CHECK | SWT.FLAT);
+			// help UI tests
+			checkbox.setData("connectorId", connector.getId()); //$NON-NLS-1$
 			configureLook(checkbox, background);
 			checkbox.setSelection(installableConnectors.contains(connector));
 
@@ -1156,6 +1158,8 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 				// regain their enabled state
 				createBodyContents();
 			}
+			// help UI tests
+			body.setData("discoveryComplete", "true"); //$NON-NLS-1$//$NON-NLS-2$
 		}
 	}
 

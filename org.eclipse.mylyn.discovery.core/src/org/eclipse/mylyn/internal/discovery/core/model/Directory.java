@@ -20,6 +20,7 @@ import java.util.List;
  * @author David Green
  */
 public class Directory {
+
 	/**
 	 * an entry in the directory, which represents a specific discovery source. Future versions of this class may
 	 * include policy or other attributes declared by the directory.

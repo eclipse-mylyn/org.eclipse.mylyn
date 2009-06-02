@@ -19,12 +19,12 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.mylyn.discovery.tests.DiscoveryTests;
 import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryCategory;
 import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryConnector;
 import org.eclipse.mylyn.internal.discovery.core.model.RemoteBundleDiscoveryStrategy;
 
 /**
- * 
  * @author David Green
  */
 @SuppressWarnings("restriction")
@@ -35,7 +35,7 @@ public class RemoteBundleDiscoveryStrategyTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		discoveryStrategy = new RemoteBundleDiscoveryStrategy();
-		discoveryStrategy.setDirectoryUrl("http://localhost/~dgreen/plugins/directory.txt");
+		discoveryStrategy.setDirectoryUrl(DiscoveryTests.DEFAULT_MYLYN_DISCOVERY_URL);
 		discoveryStrategy.setCategories(new ArrayList<DiscoveryCategory>());
 		discoveryStrategy.setConnectors(new ArrayList<DiscoveryConnector>());
 	}

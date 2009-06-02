@@ -17,6 +17,12 @@ package org.eclipse.mylyn.internal.discovery.core.model;
  * @author David Green
  */
 public class Policy {
+	/**
+	 * Define system property <code>org.eclipse.mylyn.internal.discovery.core.model.Policy=true</code> to allow for
+	 * categories to be permitted by anyone. For testing purposes.
+	 */
+	private static final boolean PERMISSIVE = Boolean.getBoolean(Policy.class.getName() + ".permissive"); //$NON-NLS-1$
+
 	private static final Policy DEFAULT = new Policy(false);
 
 	private final boolean permitCategories;
@@ -26,7 +32,7 @@ public class Policy {
 	}
 
 	public boolean isPermitCategories() {
-		return permitCategories;
+		return permitCategories || PERMISSIVE;
 	}
 
 	public static Policy defaultPolicy() {
