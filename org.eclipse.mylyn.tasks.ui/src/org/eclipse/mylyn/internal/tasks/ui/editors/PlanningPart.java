@@ -31,6 +31,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.internal.tasks.ui.ScheduleDatePicker;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.PlatformUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.monitor.ui.MonitorUi;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -427,7 +428,9 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		estimatedTime.setMinimum(0);
 		estimatedTime.setIncrement(1);
 		estimatedTime.setSelection(getTask().getEstimatedTimeHours());
-		estimatedTime.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+		if (!PlatformUtil.spinnerHasNativeBorder()) {
+			estimatedTime.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+		}
 		estimatedTime.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				if (getTask().getEstimatedTimeHours() != estimatedTime.getSelection()) {

@@ -108,11 +108,15 @@ public class PlatformUtil {
 	public static int getTreeItemSquish() {
 		if ("gtk".equals(SWT.getPlatform())) { //$NON-NLS-1$
 			return 8;
-		} else if ("carbon".equals(SWT.getPlatform()) || "cocoa".equals(SWT.getPlatform())) { //$NON-NLS-1$ //$NON-NLS-2$
+		} else if (isMac()) {
 			return 3;
 		} else {
 			return 0;
 		}
+	}
+
+	private static boolean isMac() {
+		return "carbon".equals(SWT.getPlatform()) || "cocoa".equals(SWT.getPlatform()); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	// TODO e3.5: remove, platform has been fixed, see bug 272046
@@ -148,6 +152,10 @@ public class PlatformUtil {
 	 */
 	public static boolean needsCarbonToolBarFix() {
 		return Platform.WS_CARBON.equals(SWT.getPlatform());
+	}
+
+	public static boolean spinnerHasNativeBorder() {
+		return isMac();
 	}
 
 }
