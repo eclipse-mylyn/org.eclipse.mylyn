@@ -75,7 +75,7 @@ public abstract class ControlListViewer extends StructuredViewer {
 			public void setVisible(boolean visible) {
 				super.setVisible(visible);
 				if (visible) {
-					updateSize();
+					updateSize(control);
 				}
 			}
 		};
@@ -109,7 +109,7 @@ public abstract class ControlListViewer extends StructuredViewer {
 		scrolled.addControlListener(new ControlAdapter() {
 			@Override
 			public void controlResized(ControlEvent e) {
-				updateSize();
+				updateSize(scrolled.getContent());
 			}
 		});
 		control.addTraverseListener(new TraverseListener() {
@@ -224,7 +224,10 @@ public abstract class ControlListViewer extends StructuredViewer {
 		doUpdateContent();
 	}
 
-	private void updateSize() {
+	private void updateSize(Control control) {
+		if (control == null) {
+			return;
+		}
 		// XXX need a small offset in case the list has a scroll bar
 		Point size = control.computeSize(scrolled.getClientArea().width - 20, SWT.DEFAULT, true);
 		control.setSize(size);
@@ -233,9 +236,10 @@ public abstract class ControlListViewer extends StructuredViewer {
 
 	protected void doUpdateContent() {
 		if (control.getChildren().length > 0) {
-			updateSize();
+			updateSize(control);
 			scrolled.setContent(control);
 		} else {
+			updateSize(noEntryArea);
 			scrolled.setContent(noEntryArea);
 		}
 	}
@@ -366,7 +370,7 @@ public abstract class ControlListViewer extends StructuredViewer {
 		}
 		((ControlListItem) widget).refresh();
 
-		updateSize();
+		updateSize(control);
 	}
 
 	public void remove(Object[] elements) {
