@@ -862,16 +862,16 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 					toolBarManager.add(clearOutgoingAction);
 				}
 
-				NewSubTaskAction newSubTaskAction = new NewSubTaskAction();
-				newSubTaskAction.selectionChanged(newSubTaskAction, new StructuredSelection(task));
-				if (newSubTaskAction.isEnabled()) {
-					toolBarManager.add(newSubTaskAction);
-				}
-
 				if (task.getSynchronizationState() != SynchronizationState.OUTGOING_NEW) {
 					synchronizeEditorAction = new SynchronizeEditorAction();
 					synchronizeEditorAction.selectionChanged(new StructuredSelection(getTaskEditor()));
 					toolBarManager.add(synchronizeEditorAction);
+				}
+
+				NewSubTaskAction newSubTaskAction = new NewSubTaskAction();
+				newSubTaskAction.selectionChanged(newSubTaskAction, new StructuredSelection(task));
+				if (newSubTaskAction.isEnabled()) {
+					toolBarManager.add(newSubTaskAction);
 				}
 
 				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskData.getConnectorKind());

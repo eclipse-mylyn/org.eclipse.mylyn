@@ -566,38 +566,42 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		setMessage(message, type, null);
 	}
 
+	private boolean isHeaderFormDisposed() {
+		return getHeaderForm() == null || getHeaderForm().getForm() == null || getHeaderForm().getForm().isDisposed();
+	}
+
 	/**
 	 * @since 2.3
 	 */
 	public void setMessage(String message, int type, IHyperlinkListener listener) {
-		if (getHeaderForm() != null && getHeaderForm().getForm() != null) {
-			if (!getHeaderForm().getForm().isDisposed()) {
-				try {
-					// avoid flicker of the left header toolbar
-					getHeaderForm().getForm().setRedraw(false);
+		if (isHeaderFormDisposed()) {
+			return;
+		}
 
-					Form form = getHeaderForm().getForm().getForm();
-					form.setMessage(message, type);
-					if (messageHyperLinkListener != null) {
-						form.removeMessageHyperlinkListener(messageHyperLinkListener);
-					}
-					if (listener != null) {
-						form.addMessageHyperlinkListener(listener);
-					}
-					messageHyperLinkListener = listener;
+		try {
+			// avoid flicker of the left header toolbar
+			getHeaderForm().getForm().setRedraw(false);
 
-					// make sure the busyLabel image is large enough to accommodate the tool bar
-					if (hasLeftToolBar()) {
-						if (message != null && busyLabel != null && hasLeftToolBar()) {
-							setHeaderImage(busyLabel.getImage());
-						} else {
-							updateHeaderImage();
-						}
-					}
-				} finally {
-					getHeaderForm().getForm().setRedraw(true);
+			Form form = getHeaderForm().getForm().getForm();
+			form.setMessage(message, type);
+			if (messageHyperLinkListener != null) {
+				form.removeMessageHyperlinkListener(messageHyperLinkListener);
+			}
+			if (listener != null) {
+				form.addMessageHyperlinkListener(listener);
+			}
+			messageHyperLinkListener = listener;
+
+			// make sure the busyLabel image is large enough to accommodate the tool bar
+			if (hasLeftToolBar()) {
+				if (message != null && busyLabel != null && hasLeftToolBar()) {
+					setHeaderImage(busyLabel.getImage());
+				} else {
+					updateHeaderImage();
 				}
 			}
+		} finally {
+			getHeaderForm().getForm().setRedraw(true);
 		}
 	}
 
@@ -725,6 +729,10 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	 * @since 3.0
 	 */
 	public void updateHeaderToolBar() {
+		if (isHeaderFormDisposed()) {
+			return;
+		}
+
 		final Form form = getHeaderForm().getForm().getForm();
 		toolBarManager = form.getToolBarManager();
 
