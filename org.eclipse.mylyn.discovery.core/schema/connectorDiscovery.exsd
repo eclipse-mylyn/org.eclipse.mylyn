@@ -2,9 +2,9 @@
 <!-- Schema file written by PDE -->
 <schema targetNamespace="org.eclipse.mylyn.discovery.core" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
-      <appinfo>
+      <appInfo>
          <meta.schema plugin="org.eclipse.mylyn.discovery.core" id="connectorDiscovery" name="Connector Discovery"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          An extension point for contributing to the Mylyn connector discovery mechanism.
       </documentation>
@@ -12,9 +12,9 @@
 
    <element name="extension">
       <annotation>
-         <appinfo>
+         <appInfo>
             <meta.element />
-         </appinfo>
+         </appInfo>
       </annotation>
       <complexType>
          <sequence>
@@ -40,9 +40,9 @@
                <documentation>
                   
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute translatable="true"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
@@ -72,9 +72,9 @@
                <documentation>
                   the name of the connector including the name of the organization that produces the repository if appropriate, for example &apos;Mozilla Bugzilla&apos;.
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute translatable="true"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="provider" type="string" use="required">
@@ -82,9 +82,9 @@
                <documentation>
                   The name of the organization that supplies the connector.
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute translatable="true"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="license" type="string" use="required">
@@ -92,9 +92,9 @@
                <documentation>
                   The short name of the license, for example &apos;EPL 1.0&apos;, &apos;GPL 2.0&apos;, or &apos;Commercial&apos;.
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute translatable="true"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="description" type="string">
@@ -102,9 +102,9 @@
                <documentation>
                   A description of the connector.  Plug-ins should provide a description, especially if the description is not self-evident from the @name and @organization.
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute translatable="true"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="siteUrl" type="string" use="required">
@@ -119,9 +119,9 @@
                <documentation>
                   The id of the feature that installs this connector
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute kind="identifier"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="categoryId" type="string" use="required">
@@ -129,9 +129,9 @@
                <documentation>
                   the id of the connectorCategory in which this connector belongs
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute kind="identifier"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="platformFilter" type="string">
@@ -167,9 +167,9 @@
                <documentation>
                   an id that uniquely identifies the category
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute kind="identifier"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="name" type="string" use="required">
@@ -177,9 +177,9 @@
                <documentation>
                   the name of the category, as it is displayed in the ui.
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute translatable="true"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="description" type="string">
@@ -187,9 +187,9 @@
                <documentation>
                   A description of the category
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute translatable="true"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="relevance" type="string">
@@ -209,9 +209,9 @@
                <documentation>
                   
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute kind="resource"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="image32" type="string">
@@ -219,9 +219,9 @@
                <documentation>
                   
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute kind="resource"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="image48" type="string">
@@ -229,9 +229,9 @@
                <documentation>
                   
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute kind="resource"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="image64" type="string">
@@ -239,9 +239,9 @@
                <documentation>
                   
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute kind="resource"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="image128" type="string">
@@ -249,9 +249,9 @@
                <documentation>
                   
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute kind="resource"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
@@ -264,9 +264,9 @@
                <documentation>
                   
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute translatable="true"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="url" type="string">
@@ -281,9 +281,9 @@
                <documentation>
                   320x240 PNG, JPEG or GIF
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute kind="resource"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
@@ -301,9 +301,9 @@
                <documentation>
                   The id of the feature to test
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute kind="identifier"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="version" type="string" use="required">
@@ -334,45 +334,45 @@
    </element>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="since"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          3.2
       </documentation>
    </annotation>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="examples"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          [Enter extension point usage example here.]
       </documentation>
    </annotation>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="apiinfo"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          [Enter API information here.]
       </documentation>
    </annotation>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="implementation"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          [Enter information about supplied implementation of this extension point.]
       </documentation>
    </annotation>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="copyright"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          Copyright (c) 2009 Tasktop Technologies and others.
 All rights reserved. This program and the accompanying materials
