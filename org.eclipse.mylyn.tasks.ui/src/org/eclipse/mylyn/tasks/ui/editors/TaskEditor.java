@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ContributionManager;
+import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -66,12 +67,11 @@ import org.eclipse.swt.dnd.DragSource;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IEditorInput;
@@ -80,6 +80,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.contexts.IContextService;
+import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.forms.editor.SharedHeaderFormEditor;
@@ -88,6 +89,7 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.internal.forms.widgets.BusyIndicator;
 import org.eclipse.ui.internal.forms.widgets.FormHeading;
 import org.eclipse.ui.internal.forms.widgets.TitleRegion;
@@ -749,33 +751,33 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		TaskRepository outgoingNewRepository = TasksUiUtil.getOutgoingNewTaskRepository(task);
 		final TaskRepository taskRepository = (outgoingNewRepository != null) ? outgoingNewRepository
 				: taskEditorInput.getTaskRepository();
-//		ControlContribution repositoryLabelControl = new ControlContribution(Messages.AbstractTaskEditorPage_Title) {
-//			@Override
-//			protected Control createControl(Composite parent) {
-//				FormToolkit toolkit = getHeaderForm().getToolkit();
-//				Composite composite = toolkit.createComposite(parent);
-//				composite.setLayout(new RowLayout());
-//				composite.setBackground(null);
-//				String label = taskRepository.getRepositoryLabel();
-//				if (label.indexOf("//") != -1) { //$NON-NLS-1$
-//					label = label.substring((taskRepository.getRepositoryUrl().indexOf("//") + 2)); //$NON-NLS-1$
-//				}
-//
-//				Hyperlink link = new Hyperlink(composite, SWT.NONE);
-//				link.setText(label);
-//				link.setFont(JFaceResources.getBannerFont());
-//				link.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-//				link.addHyperlinkListener(new HyperlinkAdapter() {
-//					@Override
-//					public void linkActivated(HyperlinkEvent e) {
-//						TasksUiUtil.openEditRepositoryWizard(taskRepository);
-//					}
-//				});
-//
-//				return composite;
-//			}
-//		};
-//		toolBarManager.add(repositoryLabelControl);
+		ControlContribution repositoryLabelControl = new ControlContribution(Messages.AbstractTaskEditorPage_Title) {
+			@Override
+			protected Control createControl(Composite parent) {
+				FormToolkit toolkit = getHeaderForm().getToolkit();
+				Composite composite = toolkit.createComposite(parent);
+				composite.setLayout(new RowLayout());
+				composite.setBackground(null);
+				String label = taskRepository.getRepositoryLabel();
+				if (label.indexOf("//") != -1) { //$NON-NLS-1$
+					label = label.substring((taskRepository.getRepositoryUrl().indexOf("//") + 2)); //$NON-NLS-1$
+				}
+
+				Hyperlink link = new Hyperlink(composite, SWT.NONE);
+				link.setText(label);
+				link.setFont(JFaceResources.getBannerFont());
+				link.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+				link.addHyperlinkListener(new HyperlinkAdapter() {
+					@Override
+					public void linkActivated(HyperlinkEvent e) {
+						TasksUiUtil.openEditRepositoryWizard(taskRepository);
+					}
+				});
+
+				return composite;
+			}
+		};
+		toolBarManager.add(repositoryLabelControl);
 
 		toolBarManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 
@@ -973,57 +975,59 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	private void updateHeaderLabel() {
 //		if (hasLeftToolBar()) {
 //			getHeaderForm().getForm().setText(null);
-//		} else {
+//			return;
+//		}
 		TaskRepository outgoingNewRepository = TasksUiUtil.getOutgoingNewTaskRepository(task);
 		final TaskRepository taskRepository = (outgoingNewRepository != null) ? outgoingNewRepository
 				: taskEditorInput.getTaskRepository();
 
-//			if (connectorKind.equals(LocalRepositoryConnector.CONNECTOR_KIND)) {
-//				getHeaderForm().getForm().setText(Messages.TaskEditor_Task_ + task.getSummary());
-//			} else {
-//				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(connectorKind);
-//				String kindLabel = ""; //$NON-NLS-1$
-//				if (connectorUi != null) {
-//					kindLabel = connectorUi.getTaskKindLabel(task);
-//				}
-//
-//				String idLabel = task.getTaskKey();
-//				if (idLabel != null) {
-//					getHeaderForm().getForm().setText(kindLabel + " " + idLabel); //$NON-NLS-1$
-//				} else {
-//					getHeaderForm().getForm().setText(kindLabel);
-//				}
-//			}
-		String label = taskRepository.getRepositoryLabel();
-		if (label.indexOf("//") != -1) { //$NON-NLS-1$
-			label = label.substring((taskRepository.getRepositoryUrl().indexOf("//") + 2)); //$NON-NLS-1$
-		}
-		if (!headerLabelInitialized) {
-			headerLabelInitialized = true;
-			getHeaderForm().getForm().setText(label);
-			getHeaderForm().getForm().setFont(JFaceResources.getBannerFont());
-			try {
-				FormHeading heading = (FormHeading) getHeaderForm().getForm().getForm().getHead();
-
-				Field field = FormHeading.class.getDeclaredField("titleRegion"); //$NON-NLS-1$
-				field.setAccessible(true);
-
-				TitleRegion titleRegion = (TitleRegion) field.get(heading);
-				Label titleLabel = (Label) titleRegion.getChildren()[0];
-				titleLabel.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseDown(MouseEvent e) {
-						if (e.button == 1) {
-							TasksUiUtil.openEditRepositoryWizard(taskRepository);
-						}
-					}
-				});
-				titleLabel.setCursor(Display.getDefault().getSystemCursor(SWT.CURSOR_HAND));
-			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Failed to register mouse listener in header", e)); //$NON-NLS-1$
+		if (taskRepository.getConnectorKind().equals(LocalRepositoryConnector.CONNECTOR_KIND)) {
+			getHeaderForm().getForm().setText(Messages.TaskEditor_Task_ + task.getSummary());
+		} else {
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskRepository.getConnectorKind());
+			String kindLabel = ""; //$NON-NLS-1$
+			if (connectorUi != null) {
+				kindLabel = connectorUi.getTaskKindLabel(task);
 			}
+
+//			String idLabel = task.getTaskKey();
+//			if (idLabel != null) {
+//				getHeaderForm().getForm().setText(kindLabel + " " + idLabel); //$NON-NLS-1$
+//			} else {
+			getHeaderForm().getForm().setText(kindLabel);
+//			}
 		}
+
+		// repository label
+//		String label = taskRepository.getRepositoryLabel();
+//		if (label.indexOf("//") != -1) { //$NON-NLS-1$
+//			label = label.substring((taskRepository.getRepositoryUrl().indexOf("//") + 2)); //$NON-NLS-1$
+//		}
+//		if (!headerLabelInitialized) {
+//			headerLabelInitialized = true;
+//			getHeaderForm().getForm().setText(label);
+//			getHeaderForm().getForm().setFont(JFaceResources.getBannerFont());
+//			try {
+//				FormHeading heading = (FormHeading) getHeaderForm().getForm().getForm().getHead();
+//
+//				Field field = FormHeading.class.getDeclaredField("titleRegion"); //$NON-NLS-1$
+//				field.setAccessible(true);
+//
+//				TitleRegion titleRegion = (TitleRegion) field.get(heading);
+//				Label titleLabel = (Label) titleRegion.getChildren()[0];
+//				titleLabel.addMouseListener(new MouseAdapter() {
+//					@Override
+//					public void mouseDown(MouseEvent e) {
+//						if (e.button == 1) {
+//							TasksUiUtil.openEditRepositoryWizard(taskRepository);
+//						}
+//					}
+//				});
+//				titleLabel.setCursor(Display.getDefault().getSystemCursor(SWT.CURSOR_HAND));
+//			} catch (Exception e) {
+//				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+//						"Failed to register mouse listener in header", e)); //$NON-NLS-1$
+//			}
 //		}
 	}
 
