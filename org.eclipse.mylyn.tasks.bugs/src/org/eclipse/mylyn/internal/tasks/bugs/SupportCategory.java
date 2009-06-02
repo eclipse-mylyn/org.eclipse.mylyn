@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.tasks.bugs;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.mylyn.internal.provisional.tasks.bugs.IProvider;
@@ -42,6 +43,9 @@ public class SupportCategory extends AbstractSupportElement {
 	}
 
 	public List<IProvider> getProviders() {
+		if (providers == null) {
+			return Collections.emptyList();
+		}
 		return new ArrayList<IProvider>(providers);
 	}
 

@@ -94,14 +94,25 @@ public class ReportErrorPage extends WizardPage {
 			defaultRepositoryButton.setSelection(true);
 			selectedContribution = contributions.get(0);
 			if (contributions.size() == 1) {
-				defaultRepositoryButton.setText(NLS.bind(Messages.ReportErrorPage_Report_to, getLabel(selectedContribution)));
+				defaultRepositoryButton.setText(NLS.bind(Messages.ReportErrorPage_Report_to,
+						getLabel(selectedContribution)));
 				GridDataFactory.fillDefaults().span(2, 1).applyTo(defaultRepositoryButton);
 			} else {
+				defaultRepositoryButton.setText(Messages.ReportErrorPage_Report_to_Label);
 				contributionCombo = new Combo(composite, SWT.READ_ONLY);
 				for (AttributeTaskMapper contribution : contributions) {
 					contributionCombo.add(getLabel(contribution));
 				}
 				contributionCombo.select(0);
+				contributionCombo.addSelectionListener(new SelectionAdapter() {
+					@Override
+					public void widgetDefaultSelected(SelectionEvent e) {
+						int selectionIndex = contributionCombo.getSelectionIndex();
+						if (selectionIndex != -1) {
+							selectedContribution = contributions.get(selectionIndex);
+						}
+					}
+				});
 			}
 
 			final Button selectRepositoryButton = new Button(composite, SWT.RADIO);
@@ -145,7 +156,8 @@ public class ReportErrorPage extends WizardPage {
 	private String getLabel(AttributeTaskMapper contribution) {
 		IProduct product = contribution.getProduct();
 		if (product.getName() != null) {
-			return NLS.bind(Messages.ReportErrorPage_Xprovider_Xproduct, product.getProvider().getName(), product.getName());
+			return NLS.bind(Messages.ReportErrorPage_Xprovider_Xproduct, product.getProvider().getName(),
+					product.getName());
 		} else {
 			return product.getProvider().getName();
 		}

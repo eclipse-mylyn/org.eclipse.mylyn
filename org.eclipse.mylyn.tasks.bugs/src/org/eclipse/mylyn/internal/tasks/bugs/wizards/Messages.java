@@ -33,6 +33,8 @@ public class Messages extends NLS {
 
 	public static String ReportErrorPage_Report_to;
 
+	public static String ReportErrorPage_Report_to_Label;
+
 	public static String ReportErrorPage_Select_repository;
 
 	public static String ReportErrorPage_AN_UNEXPETED_ERROR_HAS_OCCURED_IN_PLUGIN;

@@ -21,7 +21,9 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.internal.provisional.tasks.bugs.IProduct;
+import org.eclipse.mylyn.internal.provisional.tasks.bugs.IProvider;
 import org.eclipse.mylyn.internal.tasks.bugs.AbstractSupportElement;
+import org.eclipse.mylyn.internal.tasks.bugs.SupportCategory;
 import org.eclipse.mylyn.internal.tasks.bugs.SupportProduct;
 import org.eclipse.mylyn.internal.tasks.bugs.SupportProvider;
 import org.eclipse.mylyn.internal.tasks.bugs.SupportProviderManager;
@@ -47,8 +49,16 @@ public class ReportBugOrEnhancementWizard extends Wizard {
 				return providerProducts.toArray();
 			} else if (input == inputElement) {
 				List<AbstractSupportElement> elements = new ArrayList<AbstractSupportElement>();
-				elements.addAll(providerManager.getProviders());
-				elements.addAll(providerManager.getCategories());
+				Collection<SupportCategory> categories = providerManager.getCategories();
+				for (SupportCategory category : categories) {
+					List<IProvider> providers = category.getProviders();
+					if (!providers.isEmpty()) {
+						elements.add(category);
+						for (IProvider provider : providers) {
+							elements.add((AbstractSupportElement) provider);
+						}
+					}
+				}
 				return elements.toArray();
 			} else {
 				return new Object[0];
