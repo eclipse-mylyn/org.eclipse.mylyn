@@ -52,4 +52,6 @@ public class IRepositoryConstants {
 
 	public static final String PRIORITY = "priority"; //$NON-NLS-1$
 
+	public static final String MAPPING_COMPLETE = "org.eclipse.mylyn.tasks.bugs.mappingComplete"; //$NON-NLS-1$
+
 }

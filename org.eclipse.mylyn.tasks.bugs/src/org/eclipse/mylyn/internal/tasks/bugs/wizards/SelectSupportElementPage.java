@@ -250,6 +250,14 @@ public class SelectSupportElementPage extends WizardPage {
 			return new SupportElementItem(parent, SWT.NONE, element);
 		}
 
+		@Override
+		protected void doCreateNoEntryArea(Composite parent) {
+			parent.setLayout(new FillLayout());
+
+			Label label = new Label(parent, SWT.WRAP);
+			label.setText(Messages.SelectSupportElementPage_No_support_providers_Error0);
+		}
+
 	}
 
 	private static final int TABLE_HEIGHT = 200;

@@ -97,7 +97,7 @@ public class AttributeTaskMapper implements ITaskContribution, ISupportResponse 
 	}
 
 	public boolean isMappingComplete() {
-		return getTaskRepository() != null;
+		return getAttribute(IRepositoryConstants.MAPPING_COMPLETE) != null || getTaskRepository() != null;
 	}
 
 	public void setAttribute(String name, String value) {

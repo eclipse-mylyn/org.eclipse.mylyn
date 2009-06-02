@@ -45,6 +45,8 @@ public class Messages extends NLS {
 
 	public static String SelectSupportElementPage_No_products_Message;
 
+	public static String SelectSupportElementPage_No_support_providers_Error0;
+
 	public static String SelectSupportElementPage_Support_Product_Description;
 
 	public static String SelectSupportElementPage_Support_Provider_Description;
