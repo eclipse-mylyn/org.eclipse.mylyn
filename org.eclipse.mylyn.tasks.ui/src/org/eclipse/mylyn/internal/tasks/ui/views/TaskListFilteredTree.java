@@ -140,7 +140,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 	private void hookContextMenu() {
 		final RepositoryElementActionGroup actionGroup = new RepositoryElementActionGroup();
-		actionGroup.setSelectionProvider(activeTaskSelectionProvider);
+		actionGroup.setSelectionProvider(getActiveTaskSelectionProvider());
 
 		activeTaskMenuManager = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 		activeTaskMenuManager.setRemoveAllWhenShown(true);
@@ -166,8 +166,6 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 	@Override
 	protected Composite createProgressComposite(Composite container) {
-		this.activeTaskSelectionProvider = new SelectionProviderAdapter();
-
 		Composite progressComposite = new Composite(container, SWT.NONE);
 		GridLayout progressLayout = new GridLayout(1, false);
 		progressLayout.marginWidth = 4;
@@ -504,7 +502,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			}
 
 			activeTaskLink.setTask(task);
-			activeTaskSelectionProvider.setSelection(new StructuredSelection(task));
+			getActiveTaskSelectionProvider().setSelection(new StructuredSelection(task));
 
 			relayoutFilterControls();
 		}
@@ -526,7 +524,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		activeTaskLink.setTask(null);
 		activeTaskLink.setText(Messages.TaskListFilteredTree_Activate);
 		activeTaskLink.setToolTipText(""); //$NON-NLS-1$
-		activeTaskSelectionProvider.setSelection(StructuredSelection.EMPTY);
+		getActiveTaskSelectionProvider().setSelection(StructuredSelection.EMPTY);
 
 		relayoutFilterControls();
 	}
@@ -558,6 +556,9 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 	}
 
 	public SelectionProviderAdapter getActiveTaskSelectionProvider() {
+		if (activeTaskSelectionProvider == null) {
+			activeTaskSelectionProvider = new SelectionProviderAdapter();
+		}
 		return activeTaskSelectionProvider;
 	}
 
