@@ -229,7 +229,7 @@
 			<param name="todir" value="weekly"/>
 		</antcall>
 		
-		<echo>Run 'ant promot-galileo' to update the galileo site.</echo>
+		<echo>Run 'ant promote-galileo' to update the galileo site.</echo>
 		<echo>Ensure that the mylyn.build file is updated at the same time.</echo>
 		<!--
 		<antcall target="promote-main">
