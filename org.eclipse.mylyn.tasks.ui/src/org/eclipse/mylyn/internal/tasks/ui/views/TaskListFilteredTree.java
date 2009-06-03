@@ -139,8 +139,6 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 	}
 
 	private void hookContextMenu() {
-		activeTaskSelectionProvider = new SelectionProviderAdapter();
-
 		final RepositoryElementActionGroup actionGroup = new RepositoryElementActionGroup();
 		actionGroup.setSelectionProvider(activeTaskSelectionProvider);
 
@@ -168,6 +166,8 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 	@Override
 	protected Composite createProgressComposite(Composite container) {
+		this.activeTaskSelectionProvider = new SelectionProviderAdapter();
+
 		Composite progressComposite = new Composite(container, SWT.NONE);
 		GridLayout progressLayout = new GridLayout(1, false);
 		progressLayout.marginWidth = 4;
