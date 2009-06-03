@@ -44,6 +44,8 @@ public class PriorityAttributeEditor extends AbstractAttributeEditor {
 
 	public PriorityAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
+		boolean noOptions = getAttributeMapper().getOptions(getTaskAttribute()).size() == 0;
+		setReadOnly(isReadOnly() || noOptions);
 	}
 
 	@Override
