@@ -72,6 +72,8 @@ import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseAdapter;
@@ -162,6 +164,8 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 	private Color colorCategoryGradientEnd;
 
 	private Color colorDisabled;
+
+	private ScrolledComposite bodyScrolledComposite;
 
 	public ConnectorDiscoveryWizardMainPage() {
 		super(ConnectorDiscoveryWizardMainPage.class.getSimpleName());
@@ -481,16 +485,13 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 
 		GridLayoutFactory.fillDefaults().applyTo(body);
 
-		// we put the contents in a scrolled composite since we don't know how
-		// big it will be
-		final ScrolledComposite scrolledComposite = new ScrolledComposite(body, SWT.H_SCROLL | SWT.V_SCROLL
-				| SWT.BORDER);
-		scrolledComposite.setShowFocusedControl(true);
-		configureLook(scrolledComposite, colorWhite);
-		GridDataFactory.fillDefaults().grab(true, true).applyTo(scrolledComposite);
+		bodyScrolledComposite = new ScrolledComposite(body, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+
+		configureLook(bodyScrolledComposite, colorWhite);
+		GridDataFactory.fillDefaults().grab(true, true).applyTo(bodyScrolledComposite);
 
 		// FIXME 3.2 does white work for any desktop theme, e.g. an inverse theme?
-		final Composite scrolledContents = new Composite(scrolledComposite, SWT.NONE);
+		final Composite scrolledContents = new Composite(bodyScrolledComposite, SWT.NONE);
 		configureLook(scrolledContents, colorWhite);
 		scrolledContents.setRedraw(false);
 		try {
@@ -502,21 +503,21 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		Point size = scrolledContents.computeSize(body.getSize().x, SWT.DEFAULT, true);
 		scrolledContents.setSize(size);
 
-		scrolledComposite.setExpandHorizontal(true);
-		scrolledComposite.setMinWidth(100);
-		scrolledComposite.setExpandVertical(true);
-		scrolledComposite.setMinHeight(1);
+		bodyScrolledComposite.setExpandHorizontal(true);
+		bodyScrolledComposite.setMinWidth(100);
+		bodyScrolledComposite.setExpandVertical(true);
+		bodyScrolledComposite.setMinHeight(1);
 
-		scrolledComposite.addControlListener(new ControlAdapter() {
+		bodyScrolledComposite.addControlListener(new ControlAdapter() {
 			@Override
 			public void controlResized(ControlEvent e) {
 				Point size = scrolledContents.computeSize(body.getSize().x, SWT.DEFAULT, true);
 				scrolledContents.setSize(size);
-				scrolledComposite.setMinHeight(size.y);
+				bodyScrolledComposite.setMinHeight(size.y);
 			}
 		});
 
-		scrolledComposite.setContent(scrolledContents);
+		bodyScrolledComposite.setContent(scrolledContents);
 
 		Dialog.applyDialogFont(body);
 		// we've changed it so it needs to know
@@ -532,7 +533,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 
 	private void initializeImages() {
 		if (infoImage == null) {
-			infoImage = CommonImages.QUESTION.createImage();
+			infoImage = DiscoveryImages.MESSAGE_INFO.createImage();
 			disposables.add(infoImage);
 		}
 	}
@@ -616,25 +617,33 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 			display = categoryChildrenContainer.getDisplay();
 			this.connector = connector;
 			connector.addPropertyChangeListener(this);
+
 			connectorContainer = new Composite(categoryChildrenContainer, SWT.NULL);
+
 			configureLook(connectorContainer, background);
 			GridDataFactory.fillDefaults().grab(true, false).applyTo(connectorContainer);
-			GridLayout categoryLayout = new GridLayout(4, false);
-			categoryLayout.marginLeft = 7;
-			categoryLayout.marginTop = 2;
-			categoryLayout.marginBottom = 2;
-			connectorContainer.setLayout(categoryLayout);
+			GridLayout layout = new GridLayout(4, false);
+			layout.marginLeft = 7;
+			layout.marginTop = 2;
+			layout.marginBottom = 2;
+			connectorContainer.setLayout(layout);
 
 			checkboxContainer = new Composite(connectorContainer, SWT.NULL);
 			configureLook(checkboxContainer, background);
 			GridDataFactory.swtDefaults().align(SWT.CENTER, SWT.BEGINNING).span(1, 2).applyTo(checkboxContainer);
 			GridLayoutFactory.fillDefaults().numColumns(2).applyTo(checkboxContainer);
 
-			checkbox = new Button(checkboxContainer, SWT.CHECK | SWT.FLAT);
+			checkbox = new Button(checkboxContainer, SWT.CHECK);
 			// help UI tests
 			checkbox.setData("connectorId", connector.getId()); //$NON-NLS-1$
 			configureLook(checkbox, background);
 			checkbox.setSelection(installableConnectors.contains(connector));
+			checkbox.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusGained(FocusEvent e) {
+					bodyScrolledComposite.showControl(connectorContainer);
+				}
+			});
 
 			GridDataFactory.swtDefaults().align(SWT.CENTER, SWT.CENTER).applyTo(checkbox);
 
@@ -907,8 +916,6 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		Listener listener = new Listener() {
 			public void handleEvent(Event event) {
 				switch (event.type) {
-				case SWT.KeyDown:
-					event.doit = false;
 				case SWT.Dispose:
 				case SWT.MouseWheel:
 					toolTip.hide();
@@ -939,8 +946,6 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		Listener exitListener = new Listener() {
 			public void handleEvent(Event event) {
 				switch (event.type) {
-				case SWT.KeyDown:
-					event.doit = false;
 				case SWT.MouseWheel:
 					toolTip.hide();
 					break;
@@ -971,7 +976,6 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		control.addListener(SWT.MouseExit, listener);
 		control.addListener(SWT.MouseDown, listener);
 		control.addListener(SWT.MouseWheel, listener);
-		control.addListener(SWT.KeyDown, listener);
 		if (control instanceof Composite) {
 			for (Control child : ((Composite) control).getChildren()) {
 				hookRecursively(child, listener);
