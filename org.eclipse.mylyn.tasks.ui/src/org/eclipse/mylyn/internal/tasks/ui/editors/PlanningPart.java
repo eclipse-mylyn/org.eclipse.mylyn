@@ -15,6 +15,7 @@ import java.util.Calendar;
 import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.text.ITextListener;
@@ -31,6 +32,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.internal.tasks.ui.ScheduleDatePicker;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.actions.TaskEditorScheduleAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.PlatformUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.monitor.ui.MonitorUi;
@@ -136,6 +138,8 @@ public class PlanningPart extends AbstractLocalEditorPart {
 	private TaskFormPage page;
 
 	private Composite actualTimeComposite;
+
+	private ToolBarManager toolBarManager;
 
 	public PlanningPart(int sectionStyle, boolean expandNotesVertically) {
 		super(sectionStyle, Messages.PersonalPart_Personal_Planning);
@@ -316,13 +320,23 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 	}
 
-	private void createActualTime(FormToolkit toolkit, Composite parent) {
-		Label label = toolkit.createLabel(parent, Messages.TaskEditorPlanningPart_Active);
+	private void createActualTime(FormToolkit toolkit, Composite toolbarComposite) {
+
+		actualTimeComposite = toolkit.createComposite(toolbarComposite);
+		actualTimeComposite.setBackground(null);
+		actualTimeComposite.setBackgroundMode(SWT.INHERIT_FORCE);
+		RowLayout rowLayout = new RowLayout();
+		EditorUtil.center(rowLayout);
+		rowLayout.marginTop = 0;
+		rowLayout.marginBottom = 0;
+		actualTimeComposite.setLayout(rowLayout);
+
+		Label label = toolkit.createLabel(actualTimeComposite, Messages.TaskEditorPlanningPart_Active);
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		label.setToolTipText(Messages.TaskEditorPlanningPart_Time_working_on_this_task);
 		label.setBackground(null);
 
-		Composite nameValueComp = createComposite(parent, 2, toolkit);
+		Composite nameValueComp = createComposite(actualTimeComposite, 2, toolkit);
 		nameValueComp.setBackground(null);
 
 		elapsedTimeText = new Text(nameValueComp, SWT.FLAT | SWT.READ_ONLY);
@@ -493,6 +507,10 @@ public class PlanningPart extends AbstractLocalEditorPart {
 	public void dispose() {
 		TasksUiPlugin.getTaskActivityManager().removeActivityListener(timingListener);
 		TasksUiInternal.getTaskList().removeChangeListener(TASK_LIST_LISTENER);
+
+		if (toolBarManager != null) {
+			toolBarManager.dispose();
+		}
 	}
 
 	private void updateFromTask(AbstractTask updateTask) {
@@ -512,20 +530,30 @@ public class PlanningPart extends AbstractLocalEditorPart {
 	@Override
 	protected void setSection(FormToolkit toolkit, Section section) {
 		if (section.getTextClient() == null) {
-			actualTimeComposite = toolkit.createComposite(section);
-			actualTimeComposite.setBackground(null);
+			Composite toolbarComposite = toolkit.createComposite(section);
+			toolbarComposite.setBackground(null);
 			RowLayout rowLayout = new RowLayout();
-			EditorUtil.center(rowLayout);
 			rowLayout.marginTop = 0;
 			rowLayout.marginBottom = 0;
-			actualTimeComposite.setLayout(rowLayout);
+			EditorUtil.center(rowLayout);
+			toolbarComposite.setLayout(rowLayout);
 
-			createActualTime(toolkit, actualTimeComposite);
+			createActualTime(toolkit, toolbarComposite);
 
-			section.setTextClient(actualTimeComposite);
+			fillToolbar(toolbarComposite);
+			section.setTextClient(toolbarComposite);
+
 		}
 
 		super.setSection(toolkit, section);
+	}
+
+	private void fillToolbar(Composite parent) {
+		if (toolBarManager == null) {
+			toolBarManager = new ToolBarManager(SWT.FLAT | SWT.HORIZONTAL);
+			toolBarManager.add(new TaskEditorScheduleAction(getTask()));
+			toolBarManager.createControl(parent);
+		}
 	}
 
 	/** for testing - should cause dirty state */
