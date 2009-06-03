@@ -86,6 +86,8 @@ class Messages extends NLS {
 
 	public static String Group_must_specify_group_id;
 
+	public static String Kind_must_specify_kind_kind;
+
 	public static String RemoteBundleDiscoveryStrategy_cannot_download_bundle;
 
 	public static String RemoteBundleDiscoveryStrategy_empty_directory;

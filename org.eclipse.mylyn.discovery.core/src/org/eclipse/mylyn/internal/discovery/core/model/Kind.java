@@ -24,7 +24,7 @@ public class Kind {
 	
 	public void validate() throws ValidationException {
 		if (kind == null) {
-			throw new ValidationException("Must specify kind/@kind");
+			throw new ValidationException(Messages.Kind_must_specify_kind_kind);
 		}
 	}
 }
