@@ -22,6 +22,7 @@
             <element ref="mapping" minOccurs="0" maxOccurs="unbounded"/>
             <element ref="product" minOccurs="0" maxOccurs="unbounded"/>
             <element ref="provider" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="handler" minOccurs="0" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
