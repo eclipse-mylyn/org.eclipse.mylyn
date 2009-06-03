@@ -28,10 +28,6 @@ public class TaskEditorExtensionPartDescriptor extends TaskEditorPartDescriptor 
 
 	private final IConfigurationElement element;
 
-	private AbstractTaskEditorPart editorPart;
-
-	private boolean hasInitialized;
-
 	public TaskEditorExtensionPartDescriptor(String id, IConfigurationElement element) {
 		super(id);
 		this.element = element;
@@ -41,14 +37,10 @@ public class TaskEditorExtensionPartDescriptor extends TaskEditorPartDescriptor 
 
 	@Override
 	public AbstractTaskEditorPart createPart() {
-		if (!hasInitialized) {
-			try {
-				editorPart = (AbstractTaskEditorPart) element.createExecutableExtension(ATTR_CLASS);
-			} catch (Exception e) {
-				throw new IllegalArgumentException(e);
-			}
-			hasInitialized = true;
+		try {
+			return (AbstractTaskEditorPart) element.createExecutableExtension(ATTR_CLASS);
+		} catch (Exception e) {
+			throw new IllegalArgumentException(e);
 		}
-		return editorPart;
 	}
 }
