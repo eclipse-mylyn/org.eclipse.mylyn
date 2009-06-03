@@ -14,7 +14,6 @@ package org.eclipse.mylyn.internal.discovery.core.model;
 import org.eclipse.osgi.util.NLS;
 
 /**
- * 
  * @author David Green
  */
 class Messages extends NLS {
@@ -85,8 +84,6 @@ class Messages extends NLS {
 	public static String FeatureFilter_must_specify_featureFilter_version;
 
 	public static String Group_must_specify_group_id;
-
-	public static String Kind_must_specify_kind_kind;
 
 	public static String RemoteBundleDiscoveryStrategy_cannot_download_bundle;
 
