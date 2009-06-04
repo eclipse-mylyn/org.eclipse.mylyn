@@ -145,7 +145,7 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 	public void createControl(Composite parent, final FormToolkit toolkit) {
 		initialize();
 
-		boolean expand = getTaskData().isNew() || hasIncoming;
+		boolean expand = shouldExpandOnCreate();
 		final Section section = createSection(parent, toolkit, expand);
 		if (expand) {
 			expandSection(toolkit, section);
@@ -161,6 +161,13 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 			});
 		}
 		setSection(toolkit, section);
+	}
+
+	/**
+	 * Integrator requested the ability to control whether the attributes section is expanded on creation.
+	 */
+	protected boolean shouldExpandOnCreate() {
+		return getTaskData().isNew() || hasIncoming;
 	}
 
 	private void expandSection(FormToolkit toolkit, Section section) {
