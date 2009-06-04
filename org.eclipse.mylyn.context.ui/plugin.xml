@@ -353,6 +353,8 @@
              label="%menu.task.context.label">
           <visibleWhen
                 checkEnabled="false">
+                               <with
+                        variable="activeMenuSelection">
              <and>
                 <count
                       value="1">
@@ -363,6 +365,7 @@
                    </adapt>
                 </iterate>
              </and>
+             </with>
           </visibleWhen>
           <separator
                 name="group.repository"
