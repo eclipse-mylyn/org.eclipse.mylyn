@@ -161,11 +161,11 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 	private Image headerImage;
 
-	private int initialLeftToolbarSize;
+//	private int initialLeftToolbarSize;
 
 	private boolean noExtraPadding;
 
-	private boolean headerLabelInitialized;
+//	private boolean headerLabelInitialized;
 
 	private BusyIndicator busyLabel;
 
@@ -824,6 +824,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	/**
 	 * @since 3.0
 	 */
+	@SuppressWarnings("restriction")
 	public void updateHeaderToolBar() {
 		if (isHeaderFormDisposed()) {
 			return;
@@ -844,14 +845,16 @@ public class TaskEditor extends SharedHeaderFormEditor {
 				FormToolkit toolkit = getHeaderForm().getToolkit();
 				Composite composite = toolkit.createComposite(parent);
 				RowLayout layout = new RowLayout();
-				layout.marginTop = 0;
-				layout.marginBottom = 0;
-				EditorUtil.center(layout);
+				if (PlatformUtil.hasNarrowToolBar()) {
+					layout.marginTop = 0;
+					layout.marginBottom = 0;
+					EditorUtil.center(layout);
+				}
 				composite.setLayout(layout);
 				composite.setBackground(null);
 				String label = taskRepository.getRepositoryLabel();
 				if (label.indexOf("//") != -1) { //$NON-NLS-1$
-					label = label.substring((taskRepository.getRepositoryUrl().indexOf("//") + 2));
+					label = label.substring((taskRepository.getRepositoryUrl().indexOf("//") + 2)); //$NON-NLS-1$
 				}
 
 				ImageHyperlink link = new ImageHyperlink(composite, SWT.NONE);
@@ -870,9 +873,9 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		};
 		toolBarManager.add(repositoryLabelControl);
 
-		toolBarManager.add(new GroupMarker("repository"));
-		toolBarManager.add(new GroupMarker("new"));
-		toolBarManager.add(new GroupMarker("open"));
+		toolBarManager.add(new GroupMarker("repository")); //$NON-NLS-1$
+		toolBarManager.add(new GroupMarker("new")); //$NON-NLS-1$
+		toolBarManager.add(new GroupMarker("open")); //$NON-NLS-1$
 		toolBarManager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
 
 		final String taskUrl = task.getUrl();
@@ -889,7 +892,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			openWithBrowserAction.setImageDescriptor(compositeDescriptor);
 			//openWithBrowserAction.setImageDescriptor(CommonImages.BROWSER_OPEN_TASK);
 			openWithBrowserAction.setToolTipText(Messages.AbstractTaskEditorPage_Open_with_Web_Browser);
-			toolBarManager.appendToGroup("open", openWithBrowserAction);
+			toolBarManager.appendToGroup("open", openWithBrowserAction); //$NON-NLS-1$
 		}
 
 		if (activateAction == null) {
@@ -906,7 +909,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			};
 		}
 
-		toolBarManager.add(new GroupMarker("page"));
+		toolBarManager.add(new GroupMarker("page")); //$NON-NLS-1$
 		for (IFormPage page : getPages()) {
 			if (page instanceof TaskFormPage) {
 				TaskFormPage taskEditorPage = (TaskFormPage) page;
@@ -915,7 +918,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		}
 
 		toolBarManager.add(new Separator("planning")); //$NON-NLS-1$
-		toolBarManager.add(new Separator("activation"));
+		toolBarManager.add(new Separator("activation")); //$NON-NLS-1$
 
 //		ContributionItem spacer = new ContributionItem() {
 //			@Override
@@ -954,7 +957,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		menuService = (IMenuService) getSite().getService(IMenuService.class);
 		if (menuService != null && toolBarManager instanceof ContributionManager) {
 			menuService.populateContributionManager((ContributionManager) toolBarManager, "toolbar:" //$NON-NLS-1$
-					+ ID_TOOLBAR_HEADER + "." + taskRepository.getConnectorKind());
+					+ ID_TOOLBAR_HEADER + "." + taskRepository.getConnectorKind()); //$NON-NLS-1$
 		}
 
 		toolBarManager.update(true);
@@ -967,10 +970,10 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	private void updateLeftHeaderToolBar() {
 		leftToolBarManager.removeAll();
 
-		leftToolBarManager.add(new Separator("activation"));
+		leftToolBarManager.add(new Separator("activation")); //$NON-NLS-1$
 		leftToolBarManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 
-		initialLeftToolbarSize = leftToolBarManager.getSize();
+//		initialLeftToolbarSize = leftToolBarManager.getSize();
 
 		leftToolBarManager.add(activateAction);
 
@@ -990,7 +993,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			TaskRepository outgoingNewRepository = TasksUiUtil.getOutgoingNewTaskRepository(task);
 			TaskRepository taskRepository = (outgoingNewRepository != null) ? outgoingNewRepository
 					: taskEditorInput.getTaskRepository();
-			menuService.populateContributionManager(leftToolBarManager, "toolbar:" + ID_LEFT_TOOLBAR_HEADER + "."
+			menuService.populateContributionManager(leftToolBarManager, "toolbar:" + ID_LEFT_TOOLBAR_HEADER + "." //$NON-NLS-1$ //$NON-NLS-2$
 					+ taskRepository.getConnectorKind());
 		}
 

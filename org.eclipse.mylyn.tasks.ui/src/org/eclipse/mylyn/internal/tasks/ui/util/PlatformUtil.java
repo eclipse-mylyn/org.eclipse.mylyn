@@ -158,4 +158,8 @@ public class PlatformUtil {
 		return isMac();
 	}
 
+	public static boolean hasNarrowToolBar() {
+		return Platform.WS_WIN32.equals(SWT.getPlatform());
+	}
+
 }
