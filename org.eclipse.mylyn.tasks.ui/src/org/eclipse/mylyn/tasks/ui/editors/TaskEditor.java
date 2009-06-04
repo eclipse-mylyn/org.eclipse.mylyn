@@ -844,6 +844,8 @@ public class TaskEditor extends SharedHeaderFormEditor {
 				FormToolkit toolkit = getHeaderForm().getToolkit();
 				Composite composite = toolkit.createComposite(parent);
 				RowLayout layout = new RowLayout();
+				layout.marginTop = 0;
+				layout.marginBottom = 0;
 				EditorUtil.center(layout);
 				composite.setLayout(layout);
 				composite.setBackground(null);
