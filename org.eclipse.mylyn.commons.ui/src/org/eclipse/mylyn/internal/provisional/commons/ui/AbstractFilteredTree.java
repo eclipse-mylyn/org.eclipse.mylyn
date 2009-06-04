@@ -23,8 +23,11 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.internal.commons.ui.CommonsUiPlugin;
 import org.eclipse.mylyn.internal.commons.ui.Messages;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -38,7 +41,11 @@ import org.eclipse.ui.dialogs.PatternFilter;
  */
 public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 
-	private static final int FILTER_WIDTH = 120;
+	private static final int FILTER_WIDTH_MIN = 50;
+
+	private static final int FILTER_WIDTH_MAX = 300;
+
+	private static final float FILTER_WIDTH_RATIO = 0.3f;
 
 	public static final String LABEL_FIND = Messages.AbstractFilteredTree_Find;
 
@@ -100,7 +107,7 @@ public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 	}
 
 	@Override
-	protected Composite createFilterControls(Composite parent) {
+	protected Composite createFilterControls(final Composite parent) {
 		// replace filterComposite by a new composite
 		filterComposite = new Composite(parent.getParent(), SWT.NONE);
 		GridLayout gridLayout = new GridLayout(1, false);
@@ -117,8 +124,27 @@ public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 
 		// let FilteredTree create the find and clear control
 		super.createFilterControls(parent);
-		GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).grab(false, false).hint(FILTER_WIDTH,
-				SWT.DEFAULT).minSize(FILTER_WIDTH, SWT.DEFAULT).applyTo(parent);
+		GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).grab(false, false).hint(FILTER_WIDTH_MIN,
+				SWT.DEFAULT).minSize(FILTER_WIDTH_MIN, SWT.DEFAULT).applyTo(parent);
+		filterComposite.addControlListener(new ControlAdapter() {
+			boolean handlingEvents;
+
+			@Override
+			public void controlResized(ControlEvent e) {
+				if (handlingEvents) {
+					return;
+				}
+				try {
+					handlingEvents = true;
+					Point size = parent.getParent().getSize();
+					int width = Math.max(FILTER_WIDTH_MIN, (int) (size.x * FILTER_WIDTH_RATIO));
+					((GridData) parent.getLayoutData()).widthHint = Math.min(width, FILTER_WIDTH_MAX);
+					parent.getParent().layout();
+				} finally {
+					handlingEvents = false;
+				}
+			}
+		});
 		filterText.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
