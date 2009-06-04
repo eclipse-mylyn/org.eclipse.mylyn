@@ -218,10 +218,8 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			titleRegion.addControlListener(new ControlAdapter() {
 				@Override
 				public void controlResized(ControlEvent e) {
-					Control busyLabel = getBusyLabel();
-					if (busyLabel != null) {
-						updateSizeAndLocations();
-					}
+					// do not create busyLabel to avoid recurssion
+					updateSizeAndLocations();
 				}
 			});
 		} catch (Exception e) {
@@ -242,6 +240,9 @@ public class TaskEditor extends SharedHeaderFormEditor {
 				leftToolBarManager = null;
 			}
 		}
+
+		updateHeader();
+
 		return composite;
 	}
 
@@ -260,7 +261,14 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 			TitleRegion titleRegion = (TitleRegion) field.get(heading);
 
-			busyLabel = (BusyIndicator) titleRegion.getChildren()[1];
+			for (Control child : titleRegion.getChildren()) {
+				if (child instanceof BusyIndicator) {
+					busyLabel = (BusyIndicator) child;
+				}
+			}
+			if (busyLabel == null) {
+				return null;
+			}
 			busyLabel.addControlListener(new ControlAdapter() {
 				@Override
 				public void controlMoved(ControlEvent e) {
@@ -438,7 +446,6 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	@Override
 	protected void createHeaderContents(IManagedForm headerForm) {
 		getToolkit().decorateFormHeading(headerForm.getForm().getForm());
-		updateHeader();
 	}
 
 	@Override
