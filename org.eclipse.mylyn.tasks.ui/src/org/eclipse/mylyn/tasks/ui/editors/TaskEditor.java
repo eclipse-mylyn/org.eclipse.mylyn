@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ContributionManager;
 import org.eclipse.jface.action.ControlContribution;
+import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -34,6 +35,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.resource.CompositeImageDescriptor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.util.LocalSelectionTransfer;
@@ -41,6 +43,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.commons.ui.TaskListImageDescriptor;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.SelectionProviderAdapter;
@@ -53,6 +56,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ToggleTaskActivationAction;
 import org.eclipse.mylyn.internal.tasks.ui.editors.Messages;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionContributor;
+import org.eclipse.mylyn.internal.tasks.ui.util.PlatformUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDragSourceListener;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -66,13 +70,21 @@ import org.eclipse.swt.dnd.DragSource;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
@@ -88,7 +100,7 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.Hyperlink;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.internal.forms.widgets.BusyIndicator;
 import org.eclipse.ui.internal.forms.widgets.FormHeading;
 import org.eclipse.ui.internal.forms.widgets.TitleRegion;
@@ -116,7 +128,9 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	 */
 	public static final String ID_TOOLBAR_HEADER = "org.eclipse.mylyn.tasks.ui.editors.task.toolbar.header"; //$NON-NLS-1$
 
-//	private static final String ID_LEFT_TOOLBAR_HEADER = "org.eclipse.mylyn.tasks.ui.editors.task.toolbar.header.left"; //$NON-NLS-1$
+	private static final String ID_LEFT_TOOLBAR_HEADER = "org.eclipse.mylyn.tasks.ui.editors.task.toolbar.header.left"; //$NON-NLS-1$
+
+	private static final int LEFT_TOOLBAR_HEADER_TOOLBAR_PADDING = 2;
 
 	private ToggleTaskActivationAction activateAction;
 
@@ -141,19 +155,21 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 	private IToolBarManager toolBarManager;
 
-//	private ToolBarManager leftToolBarManager;
-//
-//	private ToolBar leftToolBar;
-//
-//	private Image headerImage;
+	private ToolBarManager leftToolBarManager;
+
+	private ToolBar leftToolBar;
+
+	private Image headerImage;
+
+	private int initialLeftToolbarSize;
+
+	private boolean noExtraPadding;
+
+	private boolean headerLabelInitialized;
 
 	private BusyIndicator busyLabel;
 
-//	private int initialLeftToolbarSize;
-
-//	private boolean noExtraPadding;
-
-	private boolean headerLabelInitialized;
+	private Label titleLabel;
 
 	private static boolean toolBarFailureLogged;
 
@@ -168,6 +184,73 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		// create left tool bar that replaces form heading label
 		try {
 			FormHeading heading = (FormHeading) getHeaderForm().getForm().getForm().getHead();
+
+			Field field = FormHeading.class.getDeclaredField("titleRegion"); //$NON-NLS-1$
+			field.setAccessible(true);
+
+			TitleRegion titleRegion = (TitleRegion) field.get(heading);
+
+			leftToolBarManager = new ToolBarManager(SWT.FLAT);
+			leftToolBar = leftToolBarManager.createControl(titleRegion);
+			leftToolBar.addControlListener(new ControlAdapter() {
+				private boolean ignoreResizeEvents;
+
+				@Override
+				public void controlResized(ControlEvent e) {
+					if (ignoreResizeEvents) {
+						return;
+					}
+					ignoreResizeEvents = true;
+					try {
+						// the tool bar contents has changed, update state
+						updateHeaderImage();
+						updateHeaderLabel();
+					} finally {
+						ignoreResizeEvents = false;
+					}
+				}
+			});
+
+			titleLabel = new Label(titleRegion, SWT.NONE);
+			titleLabel.setForeground(heading.getForeground());
+			titleLabel.setFont(heading.getFont());
+
+			titleRegion.addControlListener(new ControlAdapter() {
+				@Override
+				public void controlResized(ControlEvent e) {
+					Control busyLabel = getBusyLabel();
+					if (busyLabel != null) {
+						updateSizeAndLocations();
+					}
+				}
+			});
+		} catch (Exception e) {
+			if (!toolBarFailureLogged) {
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						"Failed to obtain busy label toolbar", e)); //$NON-NLS-1$
+			}
+			if (titleLabel != null) {
+				titleLabel.dispose();
+				titleLabel = null;
+			}
+			if (leftToolBar != null) {
+				leftToolBar.dispose();
+				leftToolBar = null;
+			}
+			if (leftToolBarManager != null) {
+				leftToolBarManager.dispose();
+				leftToolBarManager = null;
+			}
+		}
+		return composite;
+	}
+
+	private BusyIndicator getBusyLabel() {
+		if (busyLabel != null) {
+			return busyLabel;
+		}
+		try {
+			FormHeading heading = (FormHeading) getHeaderForm().getForm().getForm().getHead();
 			// ensure that busy label exists
 			heading.setBusy(true);
 			heading.setBusy(false);
@@ -178,73 +261,65 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			TitleRegion titleRegion = (TitleRegion) field.get(heading);
 
 			busyLabel = (BusyIndicator) titleRegion.getChildren()[1];
+			busyLabel.addControlListener(new ControlAdapter() {
+				@Override
+				public void controlMoved(ControlEvent e) {
+					updateSizeAndLocations();
+				}
+			});
+			// the busy label may get disposed if it has no image
+			busyLabel.addDisposeListener(new DisposeListener() {
+				public void widgetDisposed(DisposeEvent e) {
+					busyLabel = null;
+				}
+			});
 
-//			leftToolBarManager = new ToolBarManager(SWT.FLAT);
-//			leftToolBar = leftToolBarManager.createControl(titleRegion);
-//			leftToolBar.moveAbove(busyLabel);
-//			leftToolBar.setLocation(busyLabel.getLocation().x, 1);
-////			if (headerImage != null) {
-////				busyLabel.setImage(headerImage);
-////			}
-//			leftToolBar.addControlListener(new ControlAdapter() {
-//				private boolean ignoreResizeEvents;
-//
-//				@Override
-//				public void controlResized(ControlEvent e) {
-//					if (ignoreResizeEvents) {
-//						return;
-//					}
-//					ignoreResizeEvents = true;
-//					try {
-//						// the tool bar contents has changed, update state
-//						updateHeaderImage();
-//						updateHeaderLabel();
-//					} finally {
-//						ignoreResizeEvents = false;
-//					}
-//				}
-//			});
-//			busyLabel.addControlListener(new ControlAdapter() {
-//				@Override
-//				public void controlMoved(ControlEvent e) {
-//					if (leftToolBar != null) {
-//						leftToolBar.setLocation(busyLabel.getLocation().x, leftToolBar.getLocation().y);
-//					}
-//				}
-//			});
-//			titleRegion.addControlListener(new ControlAdapter() {
-//				@Override
-//				public void controlResized(ControlEvent e) {
-//					if (leftToolBar != null) {
-//						// bottom align tool bar in title region
-//						Point size = leftToolBar.computeSize(SWT.DEFAULT, SWT.DEFAULT, false);
-//						int y = leftToolBar.getParent().getSize().y - size.y - 2;
-//						if (PlatformUtil.needsCarbonToolBarFix()) {
-//							y += 5;
-//						}
-//						if (!hasLeftToolBar()) {
-//							// hide tool bar to avoid overlaying busyLabel on windows
-//							size.x = 0;
-//						}
-//						leftToolBar.setBounds(busyLabel.getLocation().x, y, size.x, size.y);
-//					}
-//				}
-//			});
+			if (leftToolBar != null) {
+				leftToolBar.moveAbove(busyLabel);
+			}
+			if (titleLabel != null) {
+				titleLabel.moveAbove(busyLabel);
+			}
+
+			updateSizeAndLocations();
+
+			return busyLabel;
 		} catch (Exception e) {
 			if (!toolBarFailureLogged) {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 						"Failed to obtain busy label toolbar", e)); //$NON-NLS-1$
 			}
-//			if (leftToolBar != null) {
-//				leftToolBar.dispose();
-//				leftToolBar = null;
-//			}
-//			if (leftToolBarManager != null) {
-//				leftToolBarManager.dispose();
-//				leftToolBarManager = null;
-//			}
+			busyLabel = null;
 		}
-		return composite;
+		return busyLabel;
+	}
+
+	private void updateSizeAndLocations() {
+		if (busyLabel == null || busyLabel.isDisposed()) {
+			return;
+		}
+
+		Point leftToolBarSize = new Point(0, 0);
+		if (leftToolBar != null && !leftToolBar.isDisposed()) {
+			// bottom align tool bar in title region
+			leftToolBarSize = leftToolBar.getSize();
+			int y = leftToolBar.getParent().getSize().y - leftToolBarSize.y - 2;
+			if (PlatformUtil.needsCarbonToolBarFix()) {
+				y += 5;
+			}
+			if (!hasLeftToolBar()) {
+				// hide tool bar to avoid overlaying busyLabel on windows
+				leftToolBarSize.x = 0;
+			}
+			leftToolBar.setBounds(busyLabel.getLocation().x, y, leftToolBarSize.x, leftToolBarSize.y);
+		}
+		if (titleLabel != null && !titleLabel.isDisposed()) {
+			// center align title text in title region
+			Point size = titleLabel.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+			int y = (titleLabel.getParent().getSize().y - size.y) / 2;
+			titleLabel.setBounds(busyLabel.getLocation().x + LEFT_TOOLBAR_HEADER_TOOLBAR_PADDING + leftToolBarSize.x,
+					y, size.x, size.y);
+		}
 	}
 
 	Composite getEditorParent() {
@@ -368,9 +443,9 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 	@Override
 	public void dispose() {
-//		if (headerImage != null) {
-//			headerImage.dispose();
-//		}
+		if (headerImage != null) {
+			headerImage.dispose();
+		}
 		if (editorBusyIndicator != null) {
 			editorBusyIndicator.stop();
 		}
@@ -504,12 +579,13 @@ public class TaskEditor extends SharedHeaderFormEditor {
 					return new StructuredSelection(task);
 				}
 			});
-			if (busyLabel != null) {
-				DragSource source = new DragSource(busyLabel, DND.DROP_MOVE | DND.DROP_LINK);
+
+			if (titleLabel != null) {
+				DragSource source = new DragSource(titleLabel, DND.DROP_MOVE | DND.DROP_LINK);
 				source.setTransfer(transferTypes);
 				source.addDragListener(titleDragSourceListener);
-
-				//form.addTitleDragSupport(DND.DROP_MOVE | DND.DROP_LINK, transferTypes, titleDragSourceListener);
+			} else {
+				form.addTitleDragSupport(DND.DROP_MOVE | DND.DROP_LINK, transferTypes, titleDragSourceListener);
 			}
 		}
 	}
@@ -601,65 +677,70 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			messageHyperLinkListener = listener;
 
 			// make sure the busyLabel image is large enough to accommodate the tool bar
-//			if (hasLeftToolBar()) {
-//				if (message != null && busyLabel != null && hasLeftToolBar()) {
-//					setHeaderImage(busyLabel.getImage());
-//				} else {
-//					updateHeaderImage();
-//				}
-//			}
+			if (hasLeftToolBar()) {
+				BusyIndicator busyLabel = getBusyLabel();
+				if (message != null && busyLabel != null) {
+					setHeaderImage(busyLabel.getImage());
+				} else {
+					setHeaderImage(null);
+				}
+			}
 		} finally {
 			getHeaderForm().getForm().setRedraw(true);
 		}
 	}
 
-//	private void setHeaderImage(final Image image) {
-//		if (busyLabel == null) {
-//			return;
-//		}
-//
-//		final Point size = leftToolBar.computeSize(SWT.DEFAULT, SWT.DEFAULT, false);
-//		if (PlatformUtil.needsCarbonToolBarFix()) {
-//			size.y = 22;
-//		}
-//
-//		// padding between toolbar and image, ensure image is at least one pixel wide to avoid SWT error 
-//		final int padding = (size.x > 0 && !noExtraPadding) ? 10 : 1;
-//		final Rectangle imageBounds = (image != null) ? image.getBounds() : new Rectangle(0, 0, 0, 0);
-//		int tempHeight = (image != null) ? Math.max(size.y + 1, imageBounds.height) : size.y + 1;
-//		// avoid extra padding due to margin added by TitleRegion.VMARGIN
-//		final int height = (tempHeight > imageBounds.height + 5) ? tempHeight - 5 : tempHeight;
-//
-//		CompositeImageDescriptor descriptor = new CompositeImageDescriptor() {
-//			@Override
-//			protected void drawCompositeImage(int width, int height) {
-//				if (image != null) {
-//					drawImage(image.getImageData(), size.x + padding, (height - image.getBounds().height) / 2);
-//				}
-//			}
-//
-//			@Override
-//			protected Point getSize() {
-//				return new Point(size.x + padding + imageBounds.width, height);
-//			}
-//
-//		};
-//		Image newHeaderImage = descriptor.createImage();
-//
-//		// directly set on busyLabel since getHeaderForm().getForm().setImage() does not update 
-//		// the image if a message is currently displayed
-//		busyLabel.setImage(newHeaderImage);
-//
-//		if (headerImage != null) {
-//			headerImage.dispose();
-//		}
-//		headerImage = newHeaderImage;
-//
-//		// avoid extra padding due to large title font
-//		// TODO reset font in case tool bar is empty
-//		leftToolBar.getParent().setFont(JFaceResources.getDefaultFont());
-//		getHeaderForm().getForm().reflow(true);
-//	}
+	private void setHeaderImage(final Image image) {
+		BusyIndicator busyLabel = getBusyLabel();
+		if (busyLabel == null) {
+			return;
+		}
+
+		final Point size = leftToolBar.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+		if (PlatformUtil.needsCarbonToolBarFix()) {
+			size.y = 22;
+		}
+		Point titleSize = titleLabel.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+		size.x += titleSize.x + LEFT_TOOLBAR_HEADER_TOOLBAR_PADDING;
+		size.y = Math.max(titleSize.y, size.y);
+
+		// padding between toolbar and image, ensure image is at least one pixel wide to avoid SWT error 
+		final int padding = (size.x > 0 && !noExtraPadding) ? 10 : 1;
+		final Rectangle imageBounds = (image != null) ? image.getBounds() : new Rectangle(0, 0, 0, 0);
+		int tempHeight = (image != null) ? Math.max(size.y + 1, imageBounds.height) : size.y + 1;
+		// avoid extra padding due to margin added by TitleRegion.VMARGIN
+		final int height = (tempHeight > imageBounds.height + 5) ? tempHeight - 5 : tempHeight;
+
+		CompositeImageDescriptor descriptor = new CompositeImageDescriptor() {
+			@Override
+			protected void drawCompositeImage(int width, int height) {
+				if (image != null) {
+					drawImage(image.getImageData(), size.x + padding, (height - image.getBounds().height) / 2);
+				}
+			}
+
+			@Override
+			protected Point getSize() {
+				return new Point(size.x + padding + imageBounds.width, height);
+			}
+
+		};
+		Image newHeaderImage = descriptor.createImage();
+
+		// directly set on busyLabel since getHeaderForm().getForm().setImage() does not update 
+		// the image if a message is currently displayed
+		busyLabel.setImage(newHeaderImage);
+
+		if (headerImage != null) {
+			headerImage.dispose();
+		}
+		headerImage = newHeaderImage;
+
+		// avoid extra padding due to large title font
+		// TODO reset font in case tool bar is empty
+		//leftToolBar.getParent().setFont(JFaceResources.getDefaultFont());
+		getHeaderForm().getForm().reflow(true);
+	}
 
 	/**
 	 * @since 3.1
@@ -710,9 +791,9 @@ public class TaskEditor extends SharedHeaderFormEditor {
 					}
 				}
 
-//				if (leftToolBar != null) {
-//					leftToolBar.setEnabled(!busy);
-//				}
+				if (leftToolBar != null) {
+					leftToolBar.setEnabled(!busy);
+				}
 
 				CommonUiUtil.setEnabled(form.getBody(), !busy);
 				for (IFormPage page : getPages()) {
@@ -745,7 +826,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		toolBarManager = form.getToolBarManager();
 
 		toolBarManager.removeAll();
-		toolBarManager.update(true);
+//		toolBarManager.update(true);
 
 		TaskRepository outgoingNewRepository = TasksUiUtil.getOutgoingNewTaskRepository(task);
 		final TaskRepository taskRepository = (outgoingNewRepository != null) ? outgoingNewRepository
@@ -759,10 +840,10 @@ public class TaskEditor extends SharedHeaderFormEditor {
 				composite.setBackground(null);
 				String label = taskRepository.getRepositoryLabel();
 				if (label.indexOf("//") != -1) { //$NON-NLS-1$
-					label = label.substring((taskRepository.getRepositoryUrl().indexOf("//") + 2)); //$NON-NLS-1$
+					label = label.substring((taskRepository.getRepositoryUrl().indexOf("//") + 2));
 				}
 
-				Hyperlink link = new Hyperlink(composite, SWT.NONE);
+				ImageHyperlink link = new ImageHyperlink(composite, SWT.NONE);
 				link.setText(label);
 				link.setFont(JFaceResources.getBannerFont());
 				link.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
@@ -778,15 +859,10 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		};
 		toolBarManager.add(repositoryLabelControl);
 
-		toolBarManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-
-		toolBarManager.add(new Separator("page")); //$NON-NLS-1$
-		for (IFormPage page : getPages()) {
-			if (page instanceof TaskFormPage) {
-				TaskFormPage taskEditorPage = (TaskFormPage) page;
-				taskEditorPage.fillToolBar(toolBarManager);
-			}
-		}
+		toolBarManager.add(new GroupMarker("repository"));
+		toolBarManager.add(new GroupMarker("new"));
+		toolBarManager.add(new GroupMarker("open"));
+		toolBarManager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
 
 		final String taskUrl = task.getUrl();
 		if (taskUrl != null && taskUrl.length() > 0) {
@@ -796,9 +872,13 @@ public class TaskEditor extends SharedHeaderFormEditor {
 					TasksUiUtil.openUrl(taskUrl);
 				}
 			};
-			openWithBrowserAction.setImageDescriptor(CommonImages.BROWSER_OPEN_TASK);
+			ImageDescriptor overlay = TasksUiPlugin.getDefault().getOverlayIcon(taskRepository.getConnectorKind());
+			ImageDescriptor compositeDescriptor = new TaskListImageDescriptor(TasksUiImages.REPOSITORY_SMALL, overlay,
+					false, true);
+			openWithBrowserAction.setImageDescriptor(compositeDescriptor);
+			//openWithBrowserAction.setImageDescriptor(CommonImages.BROWSER_OPEN_TASK);
 			openWithBrowserAction.setToolTipText(Messages.AbstractTaskEditorPage_Open_with_Web_Browser);
-			toolBarManager.add(openWithBrowserAction);
+			toolBarManager.appendToGroup("open", openWithBrowserAction);
 		}
 
 		if (activateAction == null) {
@@ -814,11 +894,17 @@ public class TaskEditor extends SharedHeaderFormEditor {
 				}
 			};
 		}
-		toolBarManager.add(new Separator("planning")); //$NON-NLS-1$
-//		toolBarManager.add(new TaskEditorScheduleAction(task));
 
-		toolBarManager.add(new Separator("activation")); //$NON-NLS-1$
-		toolBarManager.add(activateAction);
+		toolBarManager.add(new GroupMarker("page"));
+		for (IFormPage page : getPages()) {
+			if (page instanceof TaskFormPage) {
+				TaskFormPage taskEditorPage = (TaskFormPage) page;
+				taskEditorPage.fillToolBar(toolBarManager);
+			}
+		}
+
+		toolBarManager.add(new Separator("planning")); //$NON-NLS-1$
+		toolBarManager.add(new Separator("activation"));
 
 //		ContributionItem spacer = new ContributionItem() {
 //			@Override
@@ -857,25 +943,26 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		menuService = (IMenuService) getSite().getService(IMenuService.class);
 		if (menuService != null && toolBarManager instanceof ContributionManager) {
 			menuService.populateContributionManager((ContributionManager) toolBarManager, "toolbar:" //$NON-NLS-1$
-					+ ID_TOOLBAR_HEADER + "." + taskRepository.getConnectorKind()); //$NON-NLS-1$
+					+ ID_TOOLBAR_HEADER + "." + taskRepository.getConnectorKind());
 		}
 
 		toolBarManager.update(true);
 
 		// XXX move this call
-//		updateLeftHeaderToolBar();
+		updateLeftHeaderToolBar();
 		updateHeader();
 	}
 
-//	private void updateLeftHeaderToolBar() {
-//		leftToolBarManager.removeAll();
-//		leftToolBarManager.update(true);
-//
-//		leftToolBarManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-//		leftToolBarManager.add(new Separator("page")); //$NON-NLS-1$
-//
-//		initialLeftToolbarSize = leftToolBarManager.getSize();
-//
+	private void updateLeftHeaderToolBar() {
+		leftToolBarManager.removeAll();
+
+		leftToolBarManager.add(new Separator("activation"));
+		leftToolBarManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+
+		initialLeftToolbarSize = leftToolBarManager.getSize();
+
+		leftToolBarManager.add(activateAction);
+
 //		for (IFormPage page : getPages()) {
 //			if (page instanceof AbstractTaskEditorPage) {
 //				AbstractTaskEditorPage taskEditorPage = (AbstractTaskEditorPage) page;
@@ -885,69 +972,74 @@ public class TaskEditor extends SharedHeaderFormEditor {
 //				taskEditorPage.fillLeftHeaderToolBar(leftToolBarManager);
 //			}
 //		}
-//
-//		// add external contributions
-//		menuService = (IMenuService) getSite().getService(IMenuService.class);
-//		if (menuService != null && leftToolBarManager instanceof ContributionManager) {
-//			TaskRepository outgoingNewRepository = TasksUiUtil.getOutgoingNewTaskRepository(task);
-//			TaskRepository taskRepository = (outgoingNewRepository != null) ? outgoingNewRepository
-//					: taskEditorInput.getTaskRepository();
-//			menuService.populateContributionManager(leftToolBarManager, "toolbar:" + ID_LEFT_TOOLBAR_HEADER + "." //$NON-NLS-1$ //$NON-NLS-2$
-//					+ taskRepository.getConnectorKind());
-//		}
-//
-//		leftToolBarManager.update(true);
-//
-//		if (hasLeftToolBar()) {
-//			// XXX work around a bug in Gtk that causes the toolbar size to be incorrect if no
-//			// tool bar buttons are contributed
-//			if (leftToolBar != null) {
-//				Point size = leftToolBar.computeSize(SWT.DEFAULT, SWT.DEFAULT, false);
-//				boolean changed = false;
-//				for (Control control : leftToolBar.getChildren()) {
-//					final Point childSize = control.computeSize(SWT.DEFAULT, SWT.DEFAULT, false);
-//					if (childSize.y > size.y) {
-//						size.y = childSize.y;
-//						changed = true;
-//					}
-//				}
-//				if (changed) {
-//					leftToolBar.setSize(size);
-//				}
-//			}
-//
-//			if (PlatformUtil.isToolBarHeightBroken(leftToolBar)) {
-//				ToolItem item = new ToolItem(leftToolBar, SWT.NONE);
-//				item.setEnabled(false);
-//				item.setImage(CommonImages.getImage(CommonImages.BLANK));
-//				item.setWidth(1);
-//				noExtraPadding = true;
-//			} else if (PlatformUtil.needsToolItemToForceToolBarHeight()) {
-//				ToolItem item = new ToolItem(leftToolBar, SWT.NONE);
-//				item.setEnabled(false);
-//				int scaleHeight = 22;
-//				if (PlatformUtil.needsCarbonToolBarFix()) {
-//					scaleHeight = 32;
-//				}
-//				final Image image = new Image(item.getDisplay(), CommonImages.getImage(CommonImages.BLANK)
-//						.getImageData()
-//						.scaledTo(1, scaleHeight));
-//				item.setImage(image);
-//				item.addDisposeListener(new DisposeListener() {
-//					public void widgetDisposed(DisposeEvent e) {
-//						image.dispose();
-//					}
-//				});
-//				item.setWidth(1);
-//				noExtraPadding = true;
-//			}
-//		}
-//	}
+
+		// add external contributions
+		menuService = (IMenuService) getSite().getService(IMenuService.class);
+		if (menuService != null && leftToolBarManager instanceof ContributionManager) {
+			TaskRepository outgoingNewRepository = TasksUiUtil.getOutgoingNewTaskRepository(task);
+			TaskRepository taskRepository = (outgoingNewRepository != null) ? outgoingNewRepository
+					: taskEditorInput.getTaskRepository();
+			menuService.populateContributionManager(leftToolBarManager, "toolbar:" + ID_LEFT_TOOLBAR_HEADER + "."
+					+ taskRepository.getConnectorKind());
+		}
+
+		leftToolBarManager.update(true);
+
+		if (hasLeftToolBar()) {
+			// XXX work around a bug in Gtk that causes the toolbar size to be incorrect if no
+			// tool bar buttons are contributed
+			if (leftToolBar != null) {
+				Point size = leftToolBar.computeSize(SWT.DEFAULT, SWT.DEFAULT, false);
+				boolean changed = false;
+				for (Control control : leftToolBar.getChildren()) {
+					final Point childSize = control.computeSize(SWT.DEFAULT, SWT.DEFAULT, false);
+					if (childSize.y > size.y) {
+						size.y = childSize.y;
+						changed = true;
+					}
+				}
+				if (changed) {
+					leftToolBar.setSize(size);
+				}
+			}
+
+			if (PlatformUtil.isToolBarHeightBroken(leftToolBar)) {
+				ToolItem item = new ToolItem(leftToolBar, SWT.NONE);
+				item.setEnabled(false);
+				item.setImage(CommonImages.getImage(CommonImages.BLANK));
+				item.setWidth(1);
+				noExtraPadding = true;
+			} else if (PlatformUtil.needsToolItemToForceToolBarHeight()) {
+				ToolItem item = new ToolItem(leftToolBar, SWT.NONE);
+				item.setEnabled(false);
+				int scaleHeight = 22;
+				if (PlatformUtil.needsCarbonToolBarFix()) {
+					scaleHeight = 32;
+				}
+				final Image image = new Image(item.getDisplay(), CommonImages.getImage(CommonImages.BLANK)
+						.getImageData()
+						.scaledTo(1, scaleHeight));
+				item.setImage(image);
+				item.addDisposeListener(new DisposeListener() {
+					public void widgetDisposed(DisposeEvent e) {
+						image.dispose();
+					}
+				});
+				item.setWidth(1);
+				noExtraPadding = true;
+			}
+		}
+	}
 
 	private void updateHeaderImage() {
-//		if (hasLeftToolBar()) {
-//			setHeaderImage(null);
-//		} else {
+		if (hasLeftToolBar()) {
+			setHeaderImage(null);
+		} else {
+			getHeaderForm().getForm().setImage(getBrandingImage());
+		}
+	}
+
+	private Image getBrandingImage() {
 		String connectorKind;
 		TaskRepository outgoingNewRepository = TasksUiUtil.getOutgoingNewTaskRepository(task);
 		if (outgoingNewRepository != null) {
@@ -957,25 +1049,20 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		}
 
 		if (LocalRepositoryConnector.CONNECTOR_KIND.equals(connectorKind)) {
-			getHeaderForm().getForm().setImage(CommonImages.getImage(TasksUiImages.TASK));
+			return CommonImages.getImage(TasksUiImages.TASK);
 		} else {
 			ImageDescriptor overlay = TasksUiPlugin.getDefault().getOverlayIcon(connectorKind);
 			Image image = CommonImages.getImageWithOverlay(TasksUiImages.REPOSITORY, overlay, false, false);
-			getHeaderForm().getForm().setImage(image);
+			return image;
 		}
-//		}
 	}
 
-//	private boolean hasLeftToolBar() {
-//		return leftToolBar != null && leftToolBarManager != null
+	private boolean hasLeftToolBar() {
+		return leftToolBar != null && leftToolBarManager != null;
 //				&& leftToolBarManager.getSize() > initialLeftToolbarSize;
-//	}
+	}
 
 	private void updateHeaderLabel() {
-//		if (hasLeftToolBar()) {
-//			getHeaderForm().getForm().setText(null);
-//			return;
-//		}
 		TaskRepository outgoingNewRepository = TasksUiUtil.getOutgoingNewTaskRepository(task);
 		final TaskRepository taskRepository = (outgoingNewRepository != null) ? outgoingNewRepository
 				: taskEditorInput.getTaskRepository();
@@ -989,45 +1076,21 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			kindLabel = connectorUi.getTaskKindLabel(task);
 		}
 
-//			String idLabel = task.getTaskKey();
-//			if (idLabel != null) {
-//				getHeaderForm().getForm().setText(kindLabel + " " + idLabel); //$NON-NLS-1$
-//			} else {
-		getHeaderForm().getForm().setText(kindLabel);
-//			}
+//		String idLabel = task.getTaskKey();
+//		String label;
+//		if (idLabel != null) {
+//			label = kindLabel + " " + idLabel; 
+//		} else {
+//			label = kindLabel;
 //		}
 
-		// repository label
-//		String label = taskRepository.getRepositoryLabel();
-//		if (label.indexOf("//") != -1) { //$NON-NLS-1$
-//			label = label.substring((taskRepository.getRepositoryUrl().indexOf("//") + 2)); //$NON-NLS-1$
-//		}
-//		if (!headerLabelInitialized) {
-//			headerLabelInitialized = true;
-//			getHeaderForm().getForm().setText(label);
-//			getHeaderForm().getForm().setFont(JFaceResources.getBannerFont());
-//			try {
-//				FormHeading heading = (FormHeading) getHeaderForm().getForm().getForm().getHead();
-//
-//				Field field = FormHeading.class.getDeclaredField("titleRegion"); //$NON-NLS-1$
-//				field.setAccessible(true);
-//
-//				TitleRegion titleRegion = (TitleRegion) field.get(heading);
-//				Label titleLabel = (Label) titleRegion.getChildren()[0];
-//				titleLabel.addMouseListener(new MouseAdapter() {
-//					@Override
-//					public void mouseDown(MouseEvent e) {
-//						if (e.button == 1) {
-//							TasksUiUtil.openEditRepositoryWizard(taskRepository);
-//						}
-//					}
-//				});
-//				titleLabel.setCursor(Display.getDefault().getSystemCursor(SWT.CURSOR_HAND));
-//			} catch (Exception e) {
-//				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-//						"Failed to register mouse listener in header", e)); //$NON-NLS-1$
-//			}
-//		}
+		if (hasLeftToolBar() && titleLabel != null) {
+			titleLabel.setText(kindLabel);
+			getHeaderForm().getForm().setText(null);
+			setHeaderImage(null);
+		} else {
+			getHeaderForm().getForm().setText(kindLabel);
+		}
 	}
 
 	/**

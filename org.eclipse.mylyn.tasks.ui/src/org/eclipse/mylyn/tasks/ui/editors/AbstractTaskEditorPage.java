@@ -46,6 +46,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFormUtil;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.GradientCanvas;
@@ -77,6 +78,7 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorPlanningPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorRichTextPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorSummaryPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskMigrator;
+import org.eclipse.mylyn.internal.tasks.ui.editors.ToolBarButtonContribution;
 import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -401,6 +403,8 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 	private boolean submitEnabled;
 
 	private boolean needsSubmit;
+
+	private boolean needsSubmitButton;
 
 	private boolean needsPrivateSection;
 
@@ -848,29 +852,29 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 		if (taskData == null) {
 			synchronizeEditorAction = new SynchronizeEditorAction();
 			synchronizeEditorAction.selectionChanged(new StructuredSelection(getTaskEditor()));
-			toolBarManager.add(synchronizeEditorAction);
+			toolBarManager.appendToGroup("repository", synchronizeEditorAction);
 		} else {
 			if (taskData.isNew()) {
 				DeleteTaskEditorAction deleteAction = new DeleteTaskEditorAction(getTask());
-				toolBarManager.add(deleteAction);
+				toolBarManager.appendToGroup("new", deleteAction);
 			} else if (taskRepository != null) {
 				ClearOutgoingAction clearOutgoingAction = new ClearOutgoingAction(
 						Collections.singletonList((IRepositoryElement) task));
 				(clearOutgoingAction).setTaskEditorPage(this);
 				if (clearOutgoingAction.isEnabled()) {
-					toolBarManager.add(clearOutgoingAction);
+					toolBarManager.appendToGroup("new", clearOutgoingAction);
 				}
 
 				if (task.getSynchronizationState() != SynchronizationState.OUTGOING_NEW) {
 					synchronizeEditorAction = new SynchronizeEditorAction();
 					synchronizeEditorAction.selectionChanged(new StructuredSelection(getTaskEditor()));
-					toolBarManager.add(synchronizeEditorAction);
+					toolBarManager.appendToGroup("repository", synchronizeEditorAction);
 				}
 
 				NewSubTaskAction newSubTaskAction = new NewSubTaskAction();
 				newSubTaskAction.selectionChanged(newSubTaskAction, new StructuredSelection(task));
 				if (newSubTaskAction.isEnabled()) {
-					toolBarManager.add(newSubTaskAction);
+					toolBarManager.appendToGroup("new", newSubTaskAction);
 				}
 
 				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskData.getConnectorKind());
@@ -886,9 +890,29 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 						historyAction.setImageDescriptor(TasksUiImages.TASK_REPOSITORY_HISTORY);
 						historyAction.setToolTipText(Messages.AbstractTaskEditorPage_History);
-						toolBarManager.add(historyAction);
+						toolBarManager.appendToGroup("open", historyAction);
 					}
 				}
+			}
+			if (needsSubmitButton()) {
+				ToolBarButtonContribution submitButtonContribution = new ToolBarButtonContribution(
+						"org.eclipse.mylyn.tasks.toolbars.submit") { //$NON-NLS-1$
+					@Override
+					protected Control createButton(Composite composite) {
+						submitButton = toolkit.createButton(composite,
+								Messages.TaskEditorActionPart_Submit + " ", SWT.NONE); //$NON-NLS-1$
+						submitButton.setImage(CommonImages.getImage(TasksUiImages.REPOSITORY_SUBMIT));
+						submitButton.setBackground(null);
+						submitButton.addListener(SWT.Selection, new Listener() {
+							public void handleEvent(Event e) {
+								doSubmit();
+							}
+						});
+						return submitButton;
+					}
+				};
+				submitButtonContribution.marginLeft = 10;
+				toolBarManager.add(submitButtonContribution);
 			}
 		}
 	}
@@ -1454,7 +1478,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 	}
 
 	/**
-	 * Returns true, if the page provides a submit button.
+	 * Returns true, if the page supports a submit operation.
 	 * 
 	 * @since 3.2
 	 * @see #setNeedsSubmit(boolean)
@@ -1464,13 +1488,34 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 	}
 
 	/**
-	 * Specifies that the page supports submitting. This flag is to true by default.
+	 * Specifies that the page supports the submit operation. This flag is to true by default.
 	 * 
 	 * @since 3.2
 	 * @see #needsSubmit()
+	 * @see #doSubmit()
 	 */
-	public void setNeedsSubmit(boolean needsSubmitButton) {
-		this.needsSubmit = needsSubmitButton;
+	public void setNeedsSubmit(boolean needsSubmit) {
+		this.needsSubmit = needsSubmit;
+	}
+
+	/**
+	 * Returns true, if the page provides a submit button.
+	 * 
+	 * @since 3.2
+	 * @see #setNeedsSubmitButton(boolean)
+	 */
+	public boolean needsSubmitButton() {
+		return needsSubmitButton;
+	}
+
+	/**
+	 * Specifies that the page supports submitting. This flag is to true by default.
+	 * 
+	 * @since 3.2
+	 * @see #needsSubmitButton()
+	 */
+	public void setNeedsSubmitButton(boolean needsSubmitButton) {
+		this.needsSubmitButton = needsSubmitButton;
 	}
 
 	/**
