@@ -213,6 +213,13 @@ public class SummaryPart extends AbstractLocalEditorPart {
 		if (date == null) {
 			return "-"; //$NON-NLS-1$
 		}
+		return EditorUtil.getDateFormat().format(date);
+	}
+
+	private String getDateTimeString(Date date) {
+		if (date == null) {
+			return "-"; //$NON-NLS-1$
+		}
 		return EditorUtil.getDateTimeFormat().format(date);
 	}
 
@@ -237,13 +244,23 @@ public class SummaryPart extends AbstractLocalEditorPart {
 			}
 		}
 		creationDateText.setText(getDateString(getTask().getCreationDate()));
+		updateToolTip(creationDateText, getTask().getCreationDate());
 		completionDateText.setText(getDateString(getTask().getCompletionDate()));
+		updateToolTip(completionDateText, getTask().getCompletionDate());
 		super.refresh();
 		if (summaryChanged) {
 			markDirty();
 		}
 		// re-layout date fields
 		headerComposite.layout(true);
+	}
+
+	private void updateToolTip(Text text, Date date) {
+		if (date != null) {
+			text.setToolTipText(getDateTimeString(date));
+		} else {
+			text.setToolTipText(null);
+		}
 	}
 
 	@Override
