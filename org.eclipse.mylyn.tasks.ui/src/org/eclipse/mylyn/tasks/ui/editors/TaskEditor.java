@@ -66,6 +66,7 @@ import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSource;
 import org.eclipse.swt.dnd.FileTransfer;
@@ -82,7 +83,6 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IEditorInput;
@@ -169,7 +169,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 	private BusyIndicator busyLabel;
 
-	private Label titleLabel;
+	private StyledText titleLabel;
 
 	private static boolean toolBarFailureLogged;
 
@@ -211,7 +211,8 @@ public class TaskEditor extends SharedHeaderFormEditor {
 				}
 			});
 
-			titleLabel = new Label(titleRegion, SWT.NONE);
+			//titleLabel = new Label(titleRegion, SWT.NONE);
+			titleLabel = new StyledText(titleRegion, SWT.READ_ONLY);
 			titleLabel.setForeground(heading.getForeground());
 			titleLabel.setFont(heading.getFont());
 
@@ -1101,13 +1102,10 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			kindLabel = connectorUi.getTaskKindLabel(task);
 		}
 
-//		String idLabel = task.getTaskKey();
-//		String label;
-//		if (idLabel != null) {
-//			label = kindLabel + " " + idLabel; 
-//		} else {
-//			label = kindLabel;
-//		}
+		String idLabel = task.getTaskKey();
+		if (idLabel != null) {
+			kindLabel += " " + idLabel; //$NON-NLS-1$
+		}
 
 		if (hasLeftToolBar() && titleLabel != null) {
 			titleLabel.setText(kindLabel);

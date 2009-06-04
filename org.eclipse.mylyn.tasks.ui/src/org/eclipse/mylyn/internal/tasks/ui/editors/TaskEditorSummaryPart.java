@@ -213,8 +213,8 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 			addAttribute(headerComposite, toolkit, resolutionAtribute, 0, false);
 		}
 
-		TaskAttribute keyAttribute = getTaskData().getRoot().getMappedAttribute(TaskAttribute.TASK_KEY);
-		addAttribute(headerComposite, toolkit, keyAttribute);
+//		TaskAttribute keyAttribute = getTaskData().getRoot().getMappedAttribute(TaskAttribute.TASK_KEY);
+//		addAttribute(headerComposite, toolkit, keyAttribute);
 
 		// right align controls
 //		Composite spacer = toolkit.createComposite(headerComposite, SWT.NONE);
