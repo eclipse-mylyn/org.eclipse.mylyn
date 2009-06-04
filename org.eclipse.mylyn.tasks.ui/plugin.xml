@@ -1624,12 +1624,20 @@
                label="%menu.task.mark.label">
             <visibleWhen
                   checkEnabled="false">
+                  <with
+                        variable="activeMenuSelection">
                <iterate
                      ifEmpty="false">
-                  <adapt
-                        type="org.eclipse.mylyn.tasks.core.ITask">
-                  </adapt>
+                  <or>
+                     <adapt
+                           type="org.eclipse.mylyn.tasks.core.ITask">
+                     </adapt>
+                     <instanceof
+                           value="org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer">
+                     </instanceof>
+                  </or>
                </iterate>
+                  </with>
             </visibleWhen>
             <separator
                   name="group.taskStatus"
@@ -1646,16 +1654,9 @@
                   style="push">
                <visibleWhen
                      checkEnabled="false">
-                  <iterate>
-                     <not>
-                        <adapt
-                              type="org.eclipse.mylyn.tasks.core.ITask">
-                           <instanceof
-                                 value="org.eclipse.mylyn.internal.tasks.core.LocalTask">
-                           </instanceof>
-                        </adapt>
-                     </not>
-                  </iterate>
+                  <reference
+                        definitionId="org.eclipse.mylyn.tasks.ui.expressions.repositoryElements">
+                  </reference>
                </visibleWhen>
             </command>
             <command
@@ -1665,16 +1666,9 @@
                   style="push">
                <visibleWhen
                      checkEnabled="false">
-                  <iterate>
-                     <not>
-                        <adapt
-                              type="org.eclipse.mylyn.tasks.core.ITask">
-                           <instanceof
-                                 value="org.eclipse.mylyn.internal.tasks.core.LocalTask">
-                           </instanceof>
-                        </adapt>
-                     </not>
-                  </iterate>
+                  <reference
+                        definitionId="org.eclipse.mylyn.tasks.ui.expressions.repositoryElements">
+                  </reference>
                </visibleWhen>
             </command>
             <command
@@ -1868,5 +1862,32 @@
        		 id="org.eclipse.mylyn.tasks.ui.taskEditorExtensionSettings"
              class="org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorExtensionSettingsContribution">
        </taskRepositoryPageContribution>
+    </extension>
+    <extension
+          point="org.eclipse.core.expressions.definitions">
+       <definition
+             id="org.eclipse.mylyn.tasks.ui.expressions.repositoryElements">
+             <with variable="activeMenuSelection">
+          <iterate>
+             <or>
+                <and>
+                   <instanceof
+                         value="org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer">
+                   </instanceof>
+                   <not>
+                      <instanceof
+                            value="org.eclipse.mylyn.internal.tasks.core.LocalTask">
+                      </instanceof>
+                   </not></and>
+                <adapt
+                      type="org.eclipse.mylyn.tasks.core.ITask">
+                   <instanceof
+                         value="org.eclipse.mylyn.internal.tasks.core.LocalTask">
+                   </instanceof>
+                </adapt>
+             </or>
+          </iterate>
+             </with>
+       </definition>
     </extension>
 </plugin>
