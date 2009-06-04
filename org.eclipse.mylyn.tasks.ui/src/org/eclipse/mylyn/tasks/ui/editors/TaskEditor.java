@@ -54,6 +54,7 @@ import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ToggleTaskActivationAction;
+import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.Messages;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionContributor;
 import org.eclipse.mylyn.internal.tasks.ui.util.PlatformUtil;
@@ -129,7 +130,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 	private static final String ID_LEFT_TOOLBAR_HEADER = "org.eclipse.mylyn.tasks.ui.editors.task.toolbar.header.left"; //$NON-NLS-1$
 
-	private static final int LEFT_TOOLBAR_HEADER_TOOLBAR_PADDING = 2;
+	private static final int LEFT_TOOLBAR_HEADER_TOOLBAR_PADDING = 3;
 
 	private ToggleTaskActivationAction activateAction;
 
@@ -842,7 +843,9 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			protected Control createControl(Composite parent) {
 				FormToolkit toolkit = getHeaderForm().getToolkit();
 				Composite composite = toolkit.createComposite(parent);
-				composite.setLayout(new RowLayout());
+				RowLayout layout = new RowLayout();
+				EditorUtil.center(layout);
+				composite.setLayout(layout);
 				composite.setBackground(null);
 				String label = taskRepository.getRepositoryLabel();
 				if (label.indexOf("//") != -1) { //$NON-NLS-1$
