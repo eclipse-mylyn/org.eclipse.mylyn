@@ -84,7 +84,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
@@ -995,45 +994,52 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		if (hasLeftToolBar()) {
 			// XXX work around a bug in Gtk that causes the toolbar size to be incorrect if no
 			// tool bar buttons are contributed
-			if (leftToolBar != null) {
-				Point size = leftToolBar.computeSize(SWT.DEFAULT, SWT.DEFAULT, false);
-				boolean changed = false;
-				for (Control control : leftToolBar.getChildren()) {
-					final Point childSize = control.computeSize(SWT.DEFAULT, SWT.DEFAULT, false);
-					if (childSize.y > size.y) {
-						size.y = childSize.y;
-						changed = true;
-					}
-				}
-				if (changed) {
-					leftToolBar.setSize(size);
-				}
-			}
+//			if (leftToolBar != null) {
+//				Point size = leftToolBar.computeSize(SWT.DEFAULT, SWT.DEFAULT, false);
+//				boolean changed = false;
+//				for (Control control : leftToolBar.getChildren()) {
+//					final Point childSize = control.computeSize(SWT.DEFAULT, SWT.DEFAULT, false);
+//					if (childSize.y > size.y) {
+//						size.y = childSize.y;
+//						changed = true;
+//					}
+//				}
+//				if (changed) {
+//					leftToolBar.setSize(size);
+//				}
+//			}
+//
+//			if (PlatformUtil.isToolBarHeightBroken(leftToolBar)) {
+//				ToolItem item = new ToolItem(leftToolBar, SWT.NONE);
+//				item.setEnabled(false);
+//				item.setImage(CommonImages.getImage(CommonImages.BLANK));
+//				item.setWidth(1);
+//				noExtraPadding = true;
+//			} else if (PlatformUtil.needsToolItemToForceToolBarHeight()) {
+//				ToolItem item = new ToolItem(leftToolBar, SWT.NONE);
+//				item.setEnabled(false);
+//				int scaleHeight = 22;
+//				if (PlatformUtil.needsCarbonToolBarFix()) {
+//					scaleHeight = 32;
+//				}
+//				final Image image = new Image(item.getDisplay(), CommonImages.getImage(CommonImages.BLANK)
+//						.getImageData()
+//						.scaledTo(1, scaleHeight));
+//				item.setImage(image);
+//				item.addDisposeListener(new DisposeListener() {
+//					public void widgetDisposed(DisposeEvent e) {
+//						image.dispose();
+//					}
+//				});
+//				item.setWidth(1);
+//				noExtraPadding = true;
+//			}
 
-			if (PlatformUtil.isToolBarHeightBroken(leftToolBar)) {
-				ToolItem item = new ToolItem(leftToolBar, SWT.NONE);
-				item.setEnabled(false);
-				item.setImage(CommonImages.getImage(CommonImages.BLANK));
-				item.setWidth(1);
-				noExtraPadding = true;
-			} else if (PlatformUtil.needsToolItemToForceToolBarHeight()) {
-				ToolItem item = new ToolItem(leftToolBar, SWT.NONE);
-				item.setEnabled(false);
-				int scaleHeight = 22;
-				if (PlatformUtil.needsCarbonToolBarFix()) {
-					scaleHeight = 32;
-				}
-				final Image image = new Image(item.getDisplay(), CommonImages.getImage(CommonImages.BLANK)
-						.getImageData()
-						.scaledTo(1, scaleHeight));
-				item.setImage(image);
-				item.addDisposeListener(new DisposeListener() {
-					public void widgetDisposed(DisposeEvent e) {
-						image.dispose();
-					}
-				});
-				item.setWidth(1);
-				noExtraPadding = true;
+			// fix size of toolbar on Gtk with Eclipse 3.3 
+			Point size = leftToolBar.getSize();
+			if (size.x == 0 && size.y == 0) {
+				size = leftToolBar.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+				leftToolBar.setSize(size);
 			}
 		}
 	}
