@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.discovery.core.model;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -280,25 +279,21 @@ public class ConnectorDiscovery {
 	 * {@link #isVerifyUpdateSiteAvailability()} is true, or it may be invoked later by calling this method.
 	 */
 	public void verifySiteAvailability(IProgressMonitor monitor) {
-
-		Map<URL, Collection<DiscoveryConnector>> urlToDescriptors = new HashMap<URL, Collection<DiscoveryConnector>>();
+		// NOTE: we don't put java.net.URLs in the map since it involves DNS activity when
+		//       computing the hash code.
+		Map<String, Collection<DiscoveryConnector>> urlToDescriptors = new HashMap<String, Collection<DiscoveryConnector>>();
 
 		for (DiscoveryConnector descriptor : connectors) {
-			try {
-				String urlText = descriptor.getSiteUrl();
-				if (!urlText.endsWith("/")) { //$NON-NLS-1$
-					urlText += "/"; //$NON-NLS-1$
-				}
-				URL url = new URL(urlText);
-				Collection<DiscoveryConnector> collection = urlToDescriptors.get(url);
-				if (collection == null) {
-					collection = new ArrayList<DiscoveryConnector>();
-					urlToDescriptors.put(url, collection);
-				}
-				collection.add(descriptor);
-			} catch (MalformedURLException e) {
-				// ignore
+			String url = descriptor.getSiteUrl();
+			if (!url.endsWith("/")) { //$NON-NLS-1$
+				url += "/"; //$NON-NLS-1$
 			}
+			Collection<DiscoveryConnector> collection = urlToDescriptors.get(url);
+			if (collection == null) {
+				collection = new ArrayList<DiscoveryConnector>();
+				urlToDescriptors.put(url, collection);
+			}
+			collection.add(descriptor);
 		}
 		final int totalTicks = urlToDescriptors.size();
 		monitor.beginTask(Messages.ConnectorDiscovery_task_verifyingAvailability, totalTicks);
@@ -308,7 +303,7 @@ public class ConnectorDiscovery {
 				try {
 					List<Future<VerifyUpdateSiteJob>> futures = new ArrayList<Future<VerifyUpdateSiteJob>>(
 							urlToDescriptors.size());
-					for (URL url : urlToDescriptors.keySet()) {
+					for (String url : urlToDescriptors.keySet()) {
 						futures.add(executorService.submit(new VerifyUpdateSiteJob(url)));
 					}
 					for (Future<VerifyUpdateSiteJob> jobFuture : futures) {
@@ -358,18 +353,19 @@ public class ConnectorDiscovery {
 
 	private static class VerifyUpdateSiteJob implements Callable<VerifyUpdateSiteJob> {
 
-		private final URL url;
+		private final String url;
 
 		private boolean ok = false;
 
-		public VerifyUpdateSiteJob(URL url) {
+		public VerifyUpdateSiteJob(String url) {
 			this.url = url;
 		}
 
 		public VerifyUpdateSiteJob call() throws Exception {
+			URL baseUrl = new URL(url);
 			List<WebLocation> locations = new ArrayList<WebLocation>();
 			for (String location : new String[] { "content.jar", "content.xml", "site.xml" }) { //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-				locations.add(new WebLocation(new URL(url, location).toExternalForm()));
+				locations.add(new WebLocation(new URL(baseUrl, location).toExternalForm()));
 			}
 			ok = WebUtil.verifyAvailability(locations, true, new NullProgressMonitor());
 			return this;
