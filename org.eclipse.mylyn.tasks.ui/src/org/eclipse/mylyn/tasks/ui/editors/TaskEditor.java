@@ -278,6 +278,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			// the busy label may get disposed if it has no image
 			busyLabel.addDisposeListener(new DisposeListener() {
 				public void widgetDisposed(DisposeEvent e) {
+					busyLabel.setMenu(null);
 					busyLabel = null;
 				}
 			});
@@ -786,7 +787,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			}
 		}
 
-		if (getHeaderForm() != null && getHeaderForm().getForm() != null && !getHeaderForm().getForm().isDisposed()) {
+		if (!isHeaderFormDisposed()) {
 			Form form = getHeaderForm().getForm().getForm();
 			if (form != null && !form.isDisposed()) {
 				// TODO consider only disabling certain actions 
@@ -800,6 +801,9 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 				if (leftToolBar != null) {
 					leftToolBar.setEnabled(!busy);
+				}
+				if (titleLabel != null) {
+					titleLabel.setEnabled(busy);
 				}
 
 				CommonUiUtil.setEnabled(form.getBody(), !busy);
