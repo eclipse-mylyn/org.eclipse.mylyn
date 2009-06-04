@@ -803,7 +803,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 					leftToolBar.setEnabled(!busy);
 				}
 				if (titleLabel != null) {
-					titleLabel.setEnabled(busy);
+					titleLabel.setEnabled(!busy);
 				}
 
 				CommonUiUtil.setEnabled(form.getBody(), !busy);
@@ -1096,7 +1096,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 //			getHeaderForm().getForm().setText(Messages.TaskEditor_Task_ + task.getSummary());
 //		} else {
 		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskRepository.getConnectorKind());
-		String kindLabel = ""; //$NON-NLS-1$
+		String kindLabel = Messages.TaskEditor_Task;
 		if (connectorUi != null) {
 			kindLabel = connectorUi.getTaskKindLabel(task);
 		}

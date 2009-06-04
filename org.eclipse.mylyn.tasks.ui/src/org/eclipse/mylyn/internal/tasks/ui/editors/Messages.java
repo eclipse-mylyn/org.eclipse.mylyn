@@ -241,6 +241,8 @@ public class Messages extends NLS {
 
 	public static String SummaryPart_Section_Title;
 
+	public static String TaskEditor_Task;
+
 	public static String TaskEditor_Task_;
 
 	public static String TaskEditor_Task_added_to_the_Uncategorized_container;
