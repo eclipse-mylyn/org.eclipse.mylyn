@@ -596,7 +596,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 
 		private final Label nameLabel;
 
-		private final Label infoLabel;
+		private Button infoButton;
 
 		private final Label providerLabel;
 
@@ -670,15 +670,23 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 			providerLabel.setText(NLS.bind(Messages.ConnectorDiscoveryWizardMainPage_provider_and_license,
 					connector.getProvider(), connector.getLicense()));
 
-			infoLabel = new Label(connectorContainer, SWT.NULL);
-			configureLook(infoLabel, background);
 			if (hasTooltip(connector)) {
-				infoLabel.setImage(infoImage);
-				infoLabel.setCursor(handCursor);
-				infoLabel.setToolTipText(Messages.ConnectorDiscoveryWizardMainPage_tooltip_showOverview);
-				hookTooltip(infoLabel, connectorContainer, nameLabel, connector, true);
+				infoButton = new Button(connectorContainer, SWT.FLAT);
+				configureLook(infoButton, background);
+				infoButton.setImage(infoImage);
+				paintFlatButton(infoButton);
+				infoButton.setToolTipText(Messages.ConnectorDiscoveryWizardMainPage_tooltip_showOverview);
+				hookTooltip(infoButton, connectorContainer, nameLabel, connector);
+				infoButton.addFocusListener(new FocusAdapter() {
+					@Override
+					public void focusGained(FocusEvent e) {
+						bodyScrolledComposite.showControl(connectorContainer);
+					}
+				});
+				GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).hint(16, 16).applyTo(infoButton);
+			} else {
+				new Label(connectorContainer, SWT.NULL);
 			}
-			GridDataFactory.fillDefaults().align(SWT.END, SWT.FILL).grab(false, true).applyTo(infoLabel);
 
 			description = new Label(connectorContainer, SWT.NULL | SWT.WRAP);
 			configureLook(description, background);
@@ -719,6 +727,19 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 			nameLabel.addMouseListener(connectorItemMouseListener);
 			providerLabel.addMouseListener(connectorItemMouseListener);
 			description.addMouseListener(connectorItemMouseListener);
+		}
+
+		private void paintFlatButton(Button button) {
+			button.addPaintListener(new PaintListener() {
+				public void paintControl(PaintEvent e) {
+					Button button = (Button) e.widget;
+					Rectangle bounds = button.getImage().getBounds();
+					GC gc = e.gc;
+					gc.setBackground(button.getBackground());
+					gc.fillRectangle(bounds);
+					gc.drawImage(button.getImage(), 0, 0);
+				}
+			});
 		}
 
 		protected boolean maybeModifySelection(boolean selected) {
@@ -909,8 +930,8 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		control.setBackground(background);
 	}
 
-	private void hookTooltip(final Control tooltipControl, final Control exitControl, final Control titleControl,
-			DiscoveryConnector connector, final boolean asButton) {
+	private void hookTooltip(final Button tooltipControl, final Control exitControl, final Control titleControl,
+			DiscoveryConnector connector) {
 		final ConnectorDescriptorToolTip toolTip = new ConnectorDescriptorToolTip(tooltipControl, connector);
 		Listener listener = new Listener() {
 			public void handleEvent(Event event) {
@@ -919,29 +940,25 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 				case SWT.MouseWheel:
 					toolTip.hide();
 					break;
-				case SWT.MouseDown:
-					if (!asButton) {
-						toolTip.hide();
-						break;
-					}
-				case SWT.MouseHover:
-					if (asButton && event.type == SWT.MouseHover) {
-						break;
-					}
-					Point titleAbsLocation = titleControl.getParent().toDisplay(titleControl.getLocation());
-					Point containerAbsLocation = tooltipControl.getParent().toDisplay(tooltipControl.getLocation());
-					Rectangle bounds = titleControl.getBounds();
-					int relativeX = titleAbsLocation.x - containerAbsLocation.x;
-					int relativeY = titleAbsLocation.y - containerAbsLocation.y;
-
-					relativeY += bounds.height + 3;
-					toolTip.show(new Point(relativeX, relativeY));
-					break;
 				}
 
 			}
 		};
-		hookRecursively(tooltipControl, listener);
+		tooltipControl.addListener(SWT.Dispose, listener);
+		tooltipControl.addListener(SWT.MouseWheel, listener);
+		tooltipControl.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Point titleAbsLocation = titleControl.getParent().toDisplay(titleControl.getLocation());
+				Point containerAbsLocation = tooltipControl.getParent().toDisplay(tooltipControl.getLocation());
+				Rectangle bounds = titleControl.getBounds();
+				int relativeX = titleAbsLocation.x - containerAbsLocation.x;
+				int relativeY = titleAbsLocation.y - containerAbsLocation.y;
+
+				relativeY += bounds.height + 3;
+				toolTip.show(new Point(relativeX, relativeY));
+			}
+		});
 		Listener exitListener = new Listener() {
 			public void handleEvent(Event event) {
 				switch (event.type) {
