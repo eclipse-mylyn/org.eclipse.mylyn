@@ -743,7 +743,6 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 
 			checkbox.setEnabled(enabled);
 			nameLabel.setEnabled(enabled);
-			iconLabel.setEnabled(enabled);
 			providerLabel.setEnabled(enabled);
 			description.setEnabled(enabled);
 			Color foreground;
