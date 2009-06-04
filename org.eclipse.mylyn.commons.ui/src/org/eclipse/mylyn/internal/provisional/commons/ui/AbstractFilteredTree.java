@@ -41,7 +41,7 @@ import org.eclipse.ui.dialogs.PatternFilter;
  */
 public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 
-	private static final int FILTER_WIDTH_MIN = 50;
+	private static final int FILTER_WIDTH_MIN = 60;
 
 	private static final int FILTER_WIDTH_MAX = 300;
 
