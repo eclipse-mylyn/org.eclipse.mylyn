@@ -52,6 +52,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -253,11 +254,56 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 			createRadioButtons(buttonComposite, toolkit, selectedOperation);
 		}
 
+		createOperationAttributes(buttonComposite, toolkit);
+
 		createActionButtons(buttonComposite, toolkit);
 
 		toolkit.paintBordersFor(buttonComposite);
 		section.setClient(buttonComposite);
 		setSection(toolkit, section);
+	}
+
+	private void createOperationAttributes(Composite buttonComposite, FormToolkit toolkit) {
+		Composite parent = null;
+		List<TaskAttribute> result = new ArrayList<TaskAttribute>();
+		for (TaskAttribute taskAttribute : getTaskData().getRoot().getAttributes().values()) {
+
+			if (TaskAttribute.KIND_OPERATION.equals(taskAttribute.getMetaData().getKind())) {
+				if (parent == null) {
+					parent = toolkit.createComposite(buttonComposite);
+					parent.setLayout(new GridLayout(2, false));
+					GridDataFactory.fillDefaults().span(4, 1).grab(true, false).applyTo(parent);
+					toolkit.paintBordersFor(parent);
+				}
+
+				addAttribute(parent, toolkit, taskAttribute);
+			}
+		}
+	}
+
+	private void addAttribute(Composite attributesComposite, FormToolkit toolkit, TaskAttribute taskAttribute) {
+		AbstractAttributeEditor attributeEditor = createAttributeEditor(taskAttribute);
+		if (attributeEditor.hasLabel() && attributeEditor.getLabel().length() != 0) {
+			attributeEditor.createLabelControl(attributesComposite, toolkit);
+			Label label = attributeEditor.getLabelControl();
+			String text = label.getText();
+			label.setText(text);
+			GridData gd = GridDataFactory.fillDefaults()
+					.align(SWT.LEFT, SWT.CENTER)
+					.hint(SWT.DEFAULT, SWT.DEFAULT)
+					.create();
+			label.setLayoutData(gd);
+		}
+
+		attributeEditor.createControl(attributesComposite, toolkit);
+		getTaskEditorPage().getAttributeEditorToolkit().adapt(attributeEditor);
+		GridData gd = new GridData(GridData.FILL, GridData.CENTER, true, false);
+		gd.minimumWidth = DEFAULT_FIELD_WIDTH;
+		if (attributeEditor.getLabelControl() == null) {
+			gd.horizontalSpan = 2;
+		}
+		attributeEditor.getControl().setLayoutData(gd);
+
 	}
 
 	private void addAttribute(Composite composite, FormToolkit toolkit, TaskAttribute attribute, Button button) {
