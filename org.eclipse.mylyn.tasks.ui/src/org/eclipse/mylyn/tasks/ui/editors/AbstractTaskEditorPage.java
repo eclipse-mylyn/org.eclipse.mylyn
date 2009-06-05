@@ -1345,7 +1345,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 	@Override
 	public void setFocus() {
-		if (focusTracker.setFocus()) {
+		if (focusTracker != null && focusTracker.setFocus()) {
 			return;
 		} else {
 			IFormPart[] parts = getManagedForm().getParts();
