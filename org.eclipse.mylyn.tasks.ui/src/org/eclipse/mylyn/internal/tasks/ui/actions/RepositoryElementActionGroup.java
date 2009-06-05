@@ -103,7 +103,7 @@ public class RepositoryElementActionGroup {
 
 		newSubTaskAction = add(new NewSubTaskAction());
 
-		activateAction = new TaskActivateAction();
+		activateAction = add(new TaskActivateAction());
 		deactivateAction = new TaskDeactivateAction();
 
 		copyKeyAction = add(new CopyTaskDetailsAction(Mode.KEY));

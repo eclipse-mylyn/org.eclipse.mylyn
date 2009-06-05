@@ -1,4 +1,5 @@
 /*******************************************************************************
+ 
  * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -11,26 +12,28 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
 /**
  * @author Mik Kersten
  */
-public class TaskActivateAction extends Action implements IViewActionDelegate {
+public class TaskActivateAction extends BaseSelectionListenerAction implements IViewActionDelegate {
 
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.context.activate"; //$NON-NLS-1$
 
 	public TaskActivateAction() {
+		super(Messages.TaskActivateAction_Activate);
 		setId(ID);
-		setText(Messages.TaskActivateAction_Activate);
 		setImageDescriptor(TasksUiImages.CONTEXT_ACTIVE_CENTERED);
 	}
 
@@ -43,6 +46,7 @@ public class TaskActivateAction extends Action implements IViewActionDelegate {
 		run(TaskListView.getFromActivePerspective().getSelectedTask());
 	}
 
+	@Deprecated
 	public void run(ITask task) {
 		if (task != null && !task.isActive()) {
 			TasksUi.getTaskActivityManager().activateTask(task);
@@ -54,6 +58,17 @@ public class TaskActivateAction extends Action implements IViewActionDelegate {
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
-		// ignore
+		if (selection instanceof IStructuredSelection) {
+			selectionChanged((IStructuredSelection) selection);
+		} else {
+			selectionChanged(StructuredSelection.EMPTY);
+		}
+		action.setEnabled(isEnabled());
 	}
+
+	@Override
+	protected boolean updateSelection(IStructuredSelection selection) {
+		return selection != null && selection.size() == 1 && selection.getFirstElement() instanceof ITask;
+	}
+
 }

@@ -25,7 +25,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivationHistory;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskDialogAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
@@ -117,7 +116,7 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 			if (targetTask.isActive()) {
 				return;
 			}
-			new TaskActivateAction().run(targetTask);
+			TasksUi.getTaskActivityManager().activateTask(targetTask);
 		}
 	}
 

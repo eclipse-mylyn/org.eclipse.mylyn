@@ -11,12 +11,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
@@ -34,19 +29,14 @@ public class TaskDeactivateAction extends Action {
 		setImageDescriptor(TasksUiImages.CONTEXT_INACTIVE_EMPTY);
 	}
 
+	@Deprecated
 	public void run(ITask task) {
-		try {
-			if (task != null) {
-				TasksUi.getTaskActivityManager().deactivateTask(task);
-			}
-		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Closing task editor on task deactivation failed", e)); //$NON-NLS-1$
-		}
+		TasksUi.getTaskActivityManager().deactivateTask(task);
 	}
 
 	@Override
 	public void run() {
-		run(TaskListView.getFromActivePerspective().getSelectedTask());
+		TasksUi.getTaskActivityManager().deactivateActiveTask();
 	}
+
 }
