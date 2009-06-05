@@ -60,6 +60,8 @@ class Messages extends NLS {
 
 	public static String ConnectorDiscoveryWizardMainPage_filterLabel;
 
+	public static String ConnectorDiscoveryWizardMainPage_message_with_cause;
+
 	public static String ConnectorDiscoveryWizardMainPage_noConnectorsFound;
 
 	public static String ConnectorDiscoveryWizardMainPage_noConnectorsFound_description;

@@ -30,6 +30,7 @@ import org.eclipse.core.runtime.IBundleGroup;
 import org.eclipse.core.runtime.IBundleGroupProvider;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
@@ -1139,14 +1140,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 					}
 				});
 			} catch (InvocationTargetException e) {
-				Throwable cause = e.getCause();
-				IStatus status;
-				if (!(cause instanceof CoreException)) {
-					status = new Status(IStatus.ERROR, DiscoveryUi.ID_PLUGIN,
-							Messages.ConnectorDiscoveryWizardMainPage_unexpectedException, cause);
-				} else {
-					status = ((CoreException) cause).getStatus();
-				}
+				IStatus status = computeStatus(e, Messages.ConnectorDiscoveryWizardMainPage_unexpectedException);
 				DiscoveryUiUtil.logAndDisplayStatus(getShell(), Messages.ConnectorDiscoveryWizardMainPage_errorTitle,
 						status);
 			} catch (InterruptedException e) {
@@ -1164,14 +1158,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 							}
 						});
 					} catch (InvocationTargetException e) {
-						Throwable cause = e.getCause();
-						IStatus status;
-						if (!(cause instanceof CoreException)) {
-							status = new Status(IStatus.ERROR, DiscoveryUi.ID_PLUGIN,
-									Messages.ConnectorDiscoveryWizardMainPage_unexpectedException, cause);
-						} else {
-							status = ((CoreException) cause).getStatus();
-						}
+						IStatus status = computeStatus(e, Messages.ConnectorDiscoveryWizardMainPage_unexpectedException);
 						DiscoveryUiUtil.logAndDisplayStatus(getShell(),
 								Messages.ConnectorDiscoveryWizardMainPage_errorTitle, status);
 					} catch (InterruptedException e) {
@@ -1186,6 +1173,22 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 			// help UI tests
 			body.setData("discoveryComplete", "true"); //$NON-NLS-1$//$NON-NLS-2$
 		}
+	}
+
+	private IStatus computeStatus(InvocationTargetException e, String message) {
+		Throwable cause = e.getCause();
+		IStatus statusCause;
+		if (!(cause instanceof CoreException)) {
+			statusCause = ((CoreException) cause).getStatus();
+		} else {
+			statusCause = new Status(IStatus.ERROR, DiscoveryUi.ID_PLUGIN, cause.getMessage(), cause);
+		}
+		if (statusCause.getMessage() != null) {
+			message = NLS.bind(Messages.ConnectorDiscoveryWizardMainPage_message_with_cause, message,
+					statusCause.getMessage());
+		}
+		IStatus status = new MultiStatus(DiscoveryUi.ID_PLUGIN, 0, new IStatus[] { statusCause }, message, cause);
+		return status;
 	}
 
 	@Override
