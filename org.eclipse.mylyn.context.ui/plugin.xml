@@ -353,19 +353,31 @@
              label="%menu.task.context.label">
           <visibleWhen
                 checkEnabled="false">
-                               <with
-                        variable="activeMenuSelection">
-             <and>
-                <count
-                      value="1">
-                </count>
-                <iterate>
-                   <adapt
-                         type="org.eclipse.mylyn.tasks.core.ITask">
-                   </adapt>
-                </iterate>
-             </and>
-             </with>
+             <or>
+	             <with
+	             		variable="activeMenuSelection">                
+		             <and>
+		                <count
+		                      value="1">
+		                </count>
+		                <iterate>
+		                   <adapt
+		                         type="org.eclipse.mylyn.tasks.core.ITask">
+		                   </adapt>
+		                </iterate>
+		             </and>
+	             </with>
+	             <and>
+	                <count
+	                      value="1">
+	                </count>
+	                <iterate>
+	                   <adapt
+	                         type="org.eclipse.mylyn.tasks.core.ITask">
+	                   </adapt>
+	                </iterate>
+	             </and>
+		 	</or>	             
           </visibleWhen>
           <separator
                 name="group.repository"
@@ -433,80 +445,92 @@
           class="org.eclipse.mylyn.internal.context.ui.commands.AttachContextHandler"
           commandId="org.eclipse.mylyn.context.ui.commands.task.attachContext">
        <enabledWhen>
-          <iterate
-                ifEmpty="false"
-                operator="and">
-             <and>
-                <adapt
-                      type="org.eclipse.mylyn.tasks.core.ITask">
-                   <test
-                         property="org.eclipse.mylyn.task.canPostAttachment"
-                         value="true">
-                   </test>
-                </adapt>
-             </and>
-          </iterate>
+	      <with 
+	      		variable="activeMenuSelection">                       	
+	          <iterate
+	                ifEmpty="false"
+	                operator="and">
+	             <and>
+	                <adapt
+	                      type="org.eclipse.mylyn.tasks.core.ITask">
+	                   <test
+	                         property="org.eclipse.mylyn.task.canPostAttachment"
+	                         value="true">
+	                   </test>
+	                </adapt>
+	             </and>
+	          </iterate>
+	       </with>
        </enabledWhen>
     </handler>
     <handler
           class="org.eclipse.mylyn.internal.context.ui.commands.RetrieveContextHandler"
           commandId="org.eclipse.mylyn.context.ui.commands.task.retrieveContext">
        <enabledWhen>
-          <iterate
-                ifEmpty="false"
-                operator="and">
-             <and>
-                <adapt
-                      type="org.eclipse.mylyn.tasks.core.ITask">
-                   <test
-                         property="org.eclipse.mylyn.task.canPostAttachment"
-                         value="true">
-                   </test>
-                   <test
-                         property="org.eclipse.mylyn.task.hasRepositoryContext"
-                         value="true">
-                   </test>
-                </adapt>
-             </and>
-          </iterate>
+	      <with 
+	      		variable="activeMenuSelection">                       	
+	          <iterate
+	                ifEmpty="false"
+	                operator="and">
+	             <and>
+	                <adapt
+	                      type="org.eclipse.mylyn.tasks.core.ITask">
+	                   <test
+	                         property="org.eclipse.mylyn.task.canPostAttachment"
+	                         value="true">
+	                   </test>
+	                   <test
+	                         property="org.eclipse.mylyn.task.hasRepositoryContext"
+	                         value="true">
+	                   </test>
+	                </adapt>
+	             </and>
+	          </iterate>
+	     </with>
        </enabledWhen>
     </handler>
     <handler
           class="org.eclipse.mylyn.internal.context.ui.commands.CopyContextHandler"
           commandId="org.eclipse.mylyn.context.ui.commands.task.copyContext">
        <enabledWhen>
-          <iterate
-                ifEmpty="false"
-                operator="and">
-             <and>
-                <adapt
-                      type="org.eclipse.mylyn.tasks.core.ITask">
-                   <test
-                         property="org.eclipse.mylyn.task.hasLocalContext"
-                         value="true">
-                   </test>
-                </adapt>
-             </and>
-          </iterate>
+       	 <with 
+	     		variable="activeMenuSelection">                       	
+	          <iterate
+	                ifEmpty="false"
+	                operator="and">
+	             <and>
+	                <adapt
+	                      type="org.eclipse.mylyn.tasks.core.ITask">
+	                   <test
+	                         property="org.eclipse.mylyn.task.hasLocalContext"
+	                         value="true">
+	                   </test>
+	                </adapt>
+	             </and>
+	          </iterate>
+	      </with>
        </enabledWhen>
     </handler>
     <handler
           class="org.eclipse.mylyn.internal.context.ui.commands.ClearContextHandler"
           commandId="org.eclipse.mylyn.context.ui.commands.task.clearContext">
        <enabledWhen>
-          <iterate
-                ifEmpty="false"
-                operator="and">
-             <and>
-                <adapt
-                      type="org.eclipse.mylyn.tasks.core.ITask">
-                   <test
-                         property="org.eclipse.mylyn.task.hasLocalContext"
-                         value="true">
-                   </test>
-                </adapt>
-             </and>
-          </iterate>
+   	      <with 
+	      		variable="activeMenuSelection">                       	
+	          <iterate
+	                ifEmpty="false"
+	                operator="and">
+	             <and>
+	                <adapt
+	                      type="org.eclipse.mylyn.tasks.core.ITask">
+	                   <test
+	                         property="org.eclipse.mylyn.task.hasLocalContext"
+	                         value="true">
+	                   </test>
+	                </adapt>
+	             </and>
+	          </iterate>
+	      </with>
        </enabledWhen>
     </handler>
     <handler

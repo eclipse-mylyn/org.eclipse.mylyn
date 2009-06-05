@@ -16,10 +16,9 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.context.ui.wizards.ContextRetrieveWizard;
+import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.ui.commands.AbstractTaskHandler;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Steffen Pingel
@@ -29,15 +28,12 @@ public class RetrieveContextHandler extends AbstractTaskHandler {
 	@Override
 	protected void execute(ExecutionEvent event, ITask task) throws ExecutionException {
 		ContextRetrieveWizard wizard = new ContextRetrieveWizard(task);
-		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-		if (shell != null && !shell.isDisposed()) {
-			WizardDialog dialog = new WizardDialog(shell, wizard);
-			dialog.create();
-			dialog.setBlockOnOpen(true);
-			if (dialog.open() == Window.CANCEL) {
-				dialog.close();
-				return;
-			}
+		WizardDialog dialog = new WizardDialog(WorkbenchUtil.getShell(), wizard);
+		dialog.create();
+		dialog.setBlockOnOpen(true);
+		if (dialog.open() == Window.CANCEL) {
+			dialog.close();
+			return;
 		}
 	}
 
