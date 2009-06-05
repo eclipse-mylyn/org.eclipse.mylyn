@@ -26,7 +26,6 @@ public class BundleDiscoverySource extends AbstractDiscoverySource {
 			throw new IllegalArgumentException();
 		}
 		this.bundle = bundle;
-		setPolicy(new Policy(true));
 	}
 
 	@Override
