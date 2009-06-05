@@ -1130,8 +1130,9 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 							connectorDiscovery.performDiscovery(monitor);
 						} catch (CoreException e) {
 							throw new InvocationTargetException(e);
+						} finally {
+							ConnectorDiscoveryWizardMainPage.this.discovery = connectorDiscovery;
 						}
-						ConnectorDiscoveryWizardMainPage.this.discovery = connectorDiscovery;
 						if (monitor.isCanceled()) {
 							throw new InterruptedException();
 						}
@@ -1146,33 +1147,37 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 				} else {
 					status = ((CoreException) cause).getStatus();
 				}
-				DiscoveryUiUtil.logAndDisplayStatus(Messages.ConnectorDiscoveryWizardMainPage_errorTitle, status);
+				DiscoveryUiUtil.logAndDisplayStatus(getShell(), Messages.ConnectorDiscoveryWizardMainPage_errorTitle,
+						status);
 			} catch (InterruptedException e) {
 				// cancelled by user so nothing to do here.
 				wasCancelled = true;
 			}
 			if (discovery != null) {
 				discoveryUpdated(wasCancelled);
-				try {
-					getContainer().run(true, true, new IRunnableWithProgress() {
-						public void run(IProgressMonitor monitor) throws InvocationTargetException,
-								InterruptedException {
-							discovery.verifySiteAvailability(monitor);
+				if (!discovery.getConnectors().isEmpty()) {
+					try {
+						getContainer().run(true, true, new IRunnableWithProgress() {
+							public void run(IProgressMonitor monitor) throws InvocationTargetException,
+									InterruptedException {
+								discovery.verifySiteAvailability(monitor);
+							}
+						});
+					} catch (InvocationTargetException e) {
+						Throwable cause = e.getCause();
+						IStatus status;
+						if (!(cause instanceof CoreException)) {
+							status = new Status(IStatus.ERROR, DiscoveryUi.ID_PLUGIN,
+									Messages.ConnectorDiscoveryWizardMainPage_unexpectedException, cause);
+						} else {
+							status = ((CoreException) cause).getStatus();
 						}
-					});
-				} catch (InvocationTargetException e) {
-					Throwable cause = e.getCause();
-					IStatus status;
-					if (!(cause instanceof CoreException)) {
-						status = new Status(IStatus.ERROR, DiscoveryUi.ID_PLUGIN,
-								Messages.ConnectorDiscoveryWizardMainPage_unexpectedException, cause);
-					} else {
-						status = ((CoreException) cause).getStatus();
+						DiscoveryUiUtil.logAndDisplayStatus(getShell(),
+								Messages.ConnectorDiscoveryWizardMainPage_errorTitle, status);
+					} catch (InterruptedException e) {
+						// cancelled by user so nothing to do here.
+						wasCancelled = true;
 					}
-					DiscoveryUiUtil.logAndDisplayStatus(Messages.ConnectorDiscoveryWizardMainPage_errorTitle, status);
-				} catch (InterruptedException e) {
-					// cancelled by user so nothing to do here.
-					wasCancelled = true;
 				}
 				// createBodyContents() shouldn't be necessary but for some reason checkboxes don't 
 				// regain their enabled state

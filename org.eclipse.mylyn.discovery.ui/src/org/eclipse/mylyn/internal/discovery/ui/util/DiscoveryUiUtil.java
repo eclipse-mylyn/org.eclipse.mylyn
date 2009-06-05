@@ -23,7 +23,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * 
  * @author David Green
  * @author Steffen Pingel much of this is copied from TasksUiInternal
  */
@@ -32,10 +31,17 @@ public abstract class DiscoveryUiUtil {
 	}
 
 	public static void logAndDisplayStatus(final String title, final IStatus status) {
+		logAndDisplayStatus(null, title, status);
+	}
+
+	public static void logAndDisplayStatus(Shell shell, final String title, final IStatus status) {
 		StatusHandler.log(status);
 		IWorkbench workbench = PlatformUI.getWorkbench();
 		if (workbench != null && !workbench.getDisplay().isDisposed()) {
-			displayStatus(getShell(), title, status, true);
+			if (shell == null) {
+				shell = getShell();
+			}
+			displayStatus(shell, title, status, true);
 		}
 	}
 
@@ -96,7 +102,6 @@ public abstract class DiscoveryUiUtil {
 	 * 
 	 * @param shell
 	 *            A shell to exclude from the search. May be <code>null</code>.
-	 * 
 	 * @return Shell or <code>null</code>.
 	 */
 	public static Shell getModalShellExcluding(Shell shell) {
