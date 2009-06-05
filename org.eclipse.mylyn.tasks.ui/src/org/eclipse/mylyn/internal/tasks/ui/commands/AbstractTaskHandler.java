@@ -34,7 +34,10 @@ public abstract class AbstractTaskHandler extends AbstractHandler {
 	}
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		ISelection selection = HandlerUtil.getCurrentSelection(event);
+		ISelection selection = HandlerUtil.getActiveMenuSelection(event);
+		if (selection == null || selection.isEmpty()) {
+			selection = HandlerUtil.getCurrentSelection(event);
+		}
 		if (selection instanceof IStructuredSelection) {
 			Object[] items = ((IStructuredSelection) selection).toArray();
 			for (Object item : items) {

@@ -1303,8 +1303,20 @@
             sequence="M2+M3+R">
       </key>
       <key
+            commandId="org.eclipse.mylyn.tasks.ui.command.markTaskRead"
+            contextId="org.eclipse.mylyn.tasks.ui.editors.task"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M2+M3+R">
+      </key>
+      <key
             commandId="org.eclipse.mylyn.tasks.ui.command.markTaskUnread"
             contextId="org.eclipse.mylyn.tasks.ui.views.tasks"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M2+M3+U">
+      </key>
+      <key
+            commandId="org.eclipse.mylyn.tasks.ui.command.markTaskUnread"
+            contextId="org.eclipse.mylyn.tasks.ui.editors.task"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M2+M3+U">
       </key>
@@ -1624,20 +1636,33 @@
                label="%menu.task.mark.label">
             <visibleWhen
                   checkEnabled="false">
-                  <with
-                        variable="activeMenuSelection">
-               <iterate
-                     ifEmpty="false">
-                  <or>
-                     <adapt
-                           type="org.eclipse.mylyn.tasks.core.ITask">
-                     </adapt>
-                     <instanceof
-                           value="org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer">
-                     </instanceof>
-                  </or>
-               </iterate>
-                  </with>
+          		<or>
+               	   <with
+               	   			variable="activeMenuSelection">
+		               <iterate
+		                     ifEmpty="false">
+		                  <or>
+		                     <adapt
+		                           type="org.eclipse.mylyn.tasks.core.ITask">
+		                     </adapt>
+		                     <instanceof
+		                           value="org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer">
+		                     </instanceof>
+		                  </or>
+		               </iterate>
+		           </with>
+	               <iterate
+	                     ifEmpty="false">
+	                  <or>
+	                     <adapt
+	                           type="org.eclipse.mylyn.tasks.core.ITask">
+	                     </adapt>
+	                     <instanceof
+	                           value="org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer">
+	                     </instanceof>
+	                  </or>
+	               </iterate>
+				</or>		            
             </visibleWhen>
             <separator
                   name="group.taskStatus"
@@ -1867,7 +1892,19 @@
           point="org.eclipse.core.expressions.definitions">
        <definition
              id="org.eclipse.mylyn.tasks.ui.expressions.repositoryElements">
-             <with variable="activeMenuSelection">
+          <or>
+			<with variable="activeMenuSelection">
+      <reference
+            definitionId="org.eclipse.mylyn.tasks.ui.expressions.repositoryElementsIterator">
+      </reference>                
+			</with>
+   <reference
+         definitionId="org.eclipse.mylyn.tasks.ui.expressions.repositoryElementsIterator">
+   </reference>
+		  </or>
+       </definition>
+       <definition
+             id="org.eclipse.mylyn.tasks.ui.expressions.repositoryElementsIterator">
           <iterate>
              <or>
                 <and>
@@ -1878,16 +1915,18 @@
                       <instanceof
                             value="org.eclipse.mylyn.internal.tasks.core.LocalTask">
                       </instanceof>
-                   </not></and>
+                   </not>
+                </and>
                 <adapt
                       type="org.eclipse.mylyn.tasks.core.ITask">
-                   <instanceof
-                         value="org.eclipse.mylyn.internal.tasks.core.LocalTask">
-                   </instanceof>
+                   <not>
+                      <instanceof
+                            value="org.eclipse.mylyn.internal.tasks.core.LocalTask">
+                      </instanceof>
+                   </not>
                 </adapt>
              </or>
           </iterate>
-             </with>
-       </definition>
+		</definition>       
     </extension>
 </plugin>

@@ -387,6 +387,9 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		updateTitleImage();
 		updateHeaderToolBar();
 		installTitleDrag(getHeaderForm().getForm().getForm());
+
+		// do this late to allow pages to replace the selection provider
+		getEditorSite().registerContextMenu(menuManager, getEditorSite().getSelectionProvider(), true);
 	}
 
 	private void initialize() {
@@ -404,7 +407,6 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		configureContextMenuManager(menuManager);
 		Menu menu = menuManager.createContextMenu(getContainer());
 		getContainer().setMenu(menu);
-		getEditorSite().registerContextMenu(menuManager, getEditorSite().getSelectionProvider(), true);
 
 		// install context menu on form heading and title
 		getHeaderForm().getForm().setMenu(menu);
@@ -563,6 +565,9 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 		this.taskEditorInput = (TaskEditorInput) input;
 		this.task = taskEditorInput.getTask();
+
+		// initialize selection 
+		site.getSelectionProvider().setSelection(new StructuredSelection(task));
 
 		setPartName(input.getName());
 

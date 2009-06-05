@@ -1110,6 +1110,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 	public void init(IEditorSite site, IEditorInput input) {
 		super.init(site, input);
 
+		// XXX consider propagating selection events to site selection provider instead to avoid conflicts with other pages
 		site.setSelectionProvider(this);
 
 		TaskEditorInput taskEditorInput = (TaskEditorInput) input;

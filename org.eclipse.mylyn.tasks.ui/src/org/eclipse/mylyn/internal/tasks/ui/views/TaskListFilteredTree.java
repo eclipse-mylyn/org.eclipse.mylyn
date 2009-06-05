@@ -22,6 +22,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractFilteredTree;
@@ -424,8 +425,12 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 				if (activeTaskMenu != null) {
 					activeTaskMenu.dispose();
 				}
-				activeTaskMenu = activeTaskMenuManager.createContextMenu(container);
-				activeTaskMenu.setVisible(true);
+				// do not show menu for
+				ISelection selection = getActiveTaskSelectionProvider().getSelection();
+				if (selection != null && !selection.isEmpty()) {
+					activeTaskMenu = activeTaskMenuManager.createContextMenu(container);
+					activeTaskMenu.setVisible(true);
+				}
 			}
 		});
 
