@@ -232,7 +232,7 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 		// ensure that the composite does not show a bunch of blank space
 		if (layout.numColumns == 0) {
 			layout.numColumns = 1;
-			new Label(headerComposite, SWT.NONE).setText(" "); //$NON-NLS-1$
+			toolkit.createLabel(headerComposite, " "); //$NON-NLS-1$
 		}
 		return headerComposite;
 	}
