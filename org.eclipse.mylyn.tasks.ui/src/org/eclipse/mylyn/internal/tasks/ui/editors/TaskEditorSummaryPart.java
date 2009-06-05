@@ -228,6 +228,12 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 
 		// ensure layout does not wrap
 		layout.numColumns = headerComposite.getChildren().length;
+
+		// ensure that the composite does not show a bunch of blank space
+		if (layout.numColumns == 0) {
+			layout.numColumns = 1;
+			new Label(headerComposite, SWT.NONE).setText(" "); //$NON-NLS-1$
+		}
 		return headerComposite;
 	}
 
