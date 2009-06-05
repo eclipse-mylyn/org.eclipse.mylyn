@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2009 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
+import org.eclipse.core.commands.Command;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
@@ -24,6 +25,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskCommandIds;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
@@ -35,6 +37,7 @@ import org.eclipse.ui.handlers.IHandlerService;
 /**
  * @author Mik Kersten
  * @author Steffen Pingel
+ * @author David Green
  */
 public class AddRepositoryAction extends Action {
 
@@ -50,7 +53,13 @@ public class AddRepositoryAction extends Action {
 		setImageDescriptor(TasksUiImages.REPOSITORY_NEW);
 		setText(TITLE);
 		setId(ID);
-		setEnabled(TasksUiPlugin.getRepositoryManager().hasUserManagedRepositoryConnectors());
+		boolean enabled = TasksUiPlugin.getRepositoryManager().hasUserManagedRepositoryConnectors();
+		if (!enabled) {
+			// bug 279054 enable the action if connector discovery is present/enabled
+			Command command = TasksUiInternal.getConfiguredDiscoveryWizardCommand();
+			enabled = command != null && command.isEnabled();
+		}
+		setEnabled(enabled);
 	}
 
 	public boolean getPromptToAddQuery() {

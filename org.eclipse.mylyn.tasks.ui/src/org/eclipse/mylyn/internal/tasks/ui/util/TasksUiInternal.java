@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2009 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.util;
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.MessageFormat;
@@ -21,11 +22,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.commands.Command;
+import org.eclipse.core.expressions.EvaluationContext;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.ProgressMonitorWrapper;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
@@ -104,6 +108,8 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.handlers.IHandlerService;
 
 /**
  * @author Steffen Pingel
@@ -117,6 +123,40 @@ public class TasksUiInternal {
 
 	public static MultiRepositoryAwareWizard createNewTaskWizard(ITaskMapping taskSelection) {
 		return new NewTaskWizardInternal(taskSelection);
+	}
+
+	/**
+	 * get the connector discovery wizard command. Calling code should check {@link Command#isEnabled()} on return.
+	 * 
+	 * @return the command, or null if it is not available.
+	 */
+	public static Command getConfiguredDiscoveryWizardCommand() {
+		ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+		final Command discoveryWizardCommand = service.getCommand("org.eclipse.mylyn.discovery.ui.discoveryWizardCommand"); //$NON-NLS-1$
+		if (discoveryWizardCommand != null) {
+			IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(
+					IHandlerService.class);
+
+			// update enabled state in case something has changed (ProxyHandler caches state)
+			// TODO e3.3 remove reflection
+			try {
+				EvaluationContext evaluationContext = createDiscoveryWizardEvaluationContext(handlerService);
+				Command.class.getDeclaredMethod("setEnabled", Object.class).invoke(discoveryWizardCommand, evaluationContext); //$NON-NLS-1$
+			} catch (InvocationTargetException e) {
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						"Failed to enable discovery command", e)); //$NON-NLS-1$
+			} catch (Exception e) {
+				// expected on Eclipse 3.3
+			}
+		}
+		return discoveryWizardCommand;
+	}
+
+	public static EvaluationContext createDiscoveryWizardEvaluationContext(IHandlerService handlerService) {
+		EvaluationContext evaluationContext = new EvaluationContext(handlerService.getCurrentState(), Platform.class);
+		// must specify this variable otherwise the PlatformPropertyTester won't work
+		evaluationContext.addVariable("platform", Platform.class); //$NON-NLS-1$
+		return evaluationContext;
 	}
 
 	public static ImageDescriptor getPriorityImage(ITask task) {

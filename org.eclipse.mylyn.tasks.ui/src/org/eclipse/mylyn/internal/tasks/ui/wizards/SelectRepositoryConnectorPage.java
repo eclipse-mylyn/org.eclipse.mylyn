@@ -11,16 +11,13 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.expressions.EvaluationContext;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -34,7 +31,6 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
@@ -49,7 +45,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
 
 /**
@@ -121,49 +116,32 @@ public class SelectRepositoryConnectorPage extends WizardPage {
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(viewer.getControl());
 
 		// add a hyperlink for connector discovery if it's available and enabled.
-		ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
-		IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
-		if (service != null && handlerService != null) {
-			// we integrate with discovery via a well-known command, which when invoked launches the discovery wizard
-			final Command discoveryWizardCommand = service.getCommand("org.eclipse.mylyn.discovery.ui.discoveryWizardCommand"); //$NON-NLS-1$
-			if (discoveryWizardCommand != null) {
-				// update enabled state in case something has changed (ProxyHandler caches state)
-				// TODO e3.3 remove reflection
-				try {
-					Command.class.getDeclaredMethod("setEnabled", Object.class).invoke(discoveryWizardCommand, //$NON-NLS-1$
-							createEvaluationContext(handlerService));
-				} catch (InvocationTargetException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-							"Failed to enable discovery command", e)); //$NON-NLS-1$
-				} catch (Exception e) {
-					// expected on Eclipse 3.3
+
+		// we integrate with discovery via a well-known command, which when invoked launches the discovery wizard
+		final Command discoveryWizardCommand = TasksUiInternal.getConfiguredDiscoveryWizardCommand();
+		if (discoveryWizardCommand != null && discoveryWizardCommand.isEnabled()) {
+			Button discoveryButton = new Button(container, SWT.PUSH);
+			GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.CENTER).applyTo(discoveryButton);
+			discoveryButton.setText(Messages.SelectRepositoryConnectorPage_activateDiscovery);
+			discoveryButton.setImage(CommonImages.getImage(CommonImages.DISCOVERY));
+			discoveryButton.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent event) {
+					IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(
+							IHandlerService.class);
+					try {
+						discoveryWizardCommand.executeWithChecks(createExecutionEvent(discoveryWizardCommand,
+								handlerService));
+					} catch (Exception e) {
+						IStatus status = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
+								Messages.SelectRepositoryConnectorPage_discoveryProblemMessage,
+								new Object[] { e.getMessage() }), e);
+						TasksUiInternal.logAndDisplayStatus(
+								Messages.SelectRepositoryConnectorPage_discoveryProblemTitle, status);
+					}
 				}
 
-				if (discoveryWizardCommand.isEnabled()) {
-					Button discoveryButton = new Button(container, SWT.PUSH);
-					GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.CENTER).applyTo(discoveryButton);
-					discoveryButton.setText(Messages.SelectRepositoryConnectorPage_activateDiscovery);
-					discoveryButton.setImage(CommonImages.getImage(CommonImages.DISCOVERY));
-					discoveryButton.addSelectionListener(new SelectionAdapter() {
-						@Override
-						public void widgetSelected(SelectionEvent event) {
-							IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(
-									IHandlerService.class);
-							try {
-								discoveryWizardCommand.executeWithChecks(createExecutionEvent(discoveryWizardCommand,
-										handlerService));
-							} catch (Exception e) {
-								IStatus status = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
-										Messages.SelectRepositoryConnectorPage_discoveryProblemMessage,
-										new Object[] { e.getMessage() }), e);
-								TasksUiInternal.logAndDisplayStatus(
-										Messages.SelectRepositoryConnectorPage_discoveryProblemTitle, status);
-							}
-						}
-
-					});
-				}
-			}
+			});
 		}
 
 		Dialog.applyDialogFont(container);
@@ -171,14 +149,8 @@ public class SelectRepositoryConnectorPage extends WizardPage {
 	}
 
 	private ExecutionEvent createExecutionEvent(Command command, IHandlerService handlerService) {
-		return new ExecutionEvent(command, Collections.emptyMap(), null, createEvaluationContext(handlerService));
-	}
-
-	private EvaluationContext createEvaluationContext(IHandlerService handlerService) {
-		EvaluationContext evaluationContext = new EvaluationContext(handlerService.getCurrentState(), Platform.class);
-		// must specify this variable otherwise the PlatformPropertyTester won't work
-		evaluationContext.addVariable("platform", Platform.class); //$NON-NLS-1$
-		return evaluationContext;
+		return new ExecutionEvent(command, Collections.emptyMap(), null,
+				TasksUiInternal.createDiscoveryWizardEvaluationContext(handlerService));
 	}
 
 	public AbstractRepositoryConnector getConnector() {
