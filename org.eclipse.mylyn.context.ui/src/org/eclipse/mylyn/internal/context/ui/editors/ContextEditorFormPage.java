@@ -41,12 +41,12 @@ import org.eclipse.mylyn.internal.context.ui.actions.ContextRetrieveAction;
 import org.eclipse.mylyn.internal.context.ui.views.ContextNodeOpenListener;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DelayedRefreshJob;
-import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -427,18 +427,10 @@ public class ContextEditorFormPage extends FormPage {
 	private void createActivateTaskHyperlink(Composite parent) {
 		activateTaskHyperlink = toolkit.createHyperlink(parent,
 				Messages.ContextEditorFormPage_Activate_task_to_edit_context, SWT.NONE);
-		activateTaskHyperlink.addMouseListener(new MouseListener() {
-
+		activateTaskHyperlink.addMouseListener(new MouseAdapter() {
+			@Override
 			public void mouseUp(MouseEvent e) {
-				new TaskActivateAction().run(task);
-			}
-
-			public void mouseDoubleClick(MouseEvent e) {
-				// ignore
-			}
-
-			public void mouseDown(MouseEvent e) {
-				// ignore
+				TasksUi.getTaskActivityManager().activateTask(task);
 			}
 		});
 	}
