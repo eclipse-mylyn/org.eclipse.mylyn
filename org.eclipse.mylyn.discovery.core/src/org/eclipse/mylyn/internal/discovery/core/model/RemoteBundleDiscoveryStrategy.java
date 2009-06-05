@@ -23,6 +23,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.eclipse.core.internal.registry.ExtensionRegistry;
 import org.eclipse.core.runtime.CoreException;
@@ -139,7 +141,17 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 				// collect job results
 				for (Future<DownloadBundleJob> job : futures) {
 					try {
-						DownloadBundleJob bundleJob = job.get();
+						DownloadBundleJob bundleJob;
+						for (;;) {
+							try {
+								bundleJob = job.get(3L, TimeUnit.SECONDS);
+								break;
+							} catch (TimeoutException e) {
+								if (monitor.isCanceled()) {
+									return;
+								}
+							}
+						}
 						if (bundleJob.file != null) {
 							bundleFileToDirectoryEntry.put(bundleJob.file, bundleJob.entry);
 						}
