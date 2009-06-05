@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.part.MultiPageEditorActionBarContributor;
 
@@ -163,6 +164,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 	public void init(IActionBars bars, IWorkbenchPage page) {
 		super.init(bars, page);
 		actionSupport.install(bars);
+		bars.setGlobalActionHandler(ActionFactory.REFRESH.getId(), actionGroup.getSynchronizeEditorAction());
 	}
 
 	public void selectionChanged(SelectionChangedEvent event) {

@@ -76,6 +76,8 @@ import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -215,6 +217,13 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			titleLabel = new StyledText(titleRegion, SWT.READ_ONLY);
 			titleLabel.setForeground(heading.getForeground());
 			titleLabel.setFont(heading.getFont());
+			// XXX work-around problem that causes field to maintain selection when unfocused
+			titleLabel.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					titleLabel.setSelection(0);
+				}
+			});
 
 			titleRegion.addControlListener(new ControlAdapter() {
 				@Override

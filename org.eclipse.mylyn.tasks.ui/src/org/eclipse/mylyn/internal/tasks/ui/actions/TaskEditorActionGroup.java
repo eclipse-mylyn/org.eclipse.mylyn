@@ -34,6 +34,7 @@ public class TaskEditorActionGroup extends RepositoryElementActionGroup {
 
 	public TaskEditorActionGroup(WorkbenchActionSupport actionSupport) {
 		this.actionSupport = actionSupport;
+		synchronizeEditorAction.setActionDefinitionId("org.eclipse.ui.file.refresh"); //$NON-NLS-1$
 	}
 
 	public void fillContextMenu(IMenuManager manager, TaskEditor editor, boolean addClipboard) {
