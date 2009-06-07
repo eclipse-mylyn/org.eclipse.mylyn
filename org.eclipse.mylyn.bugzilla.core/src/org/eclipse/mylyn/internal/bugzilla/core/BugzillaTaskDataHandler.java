@@ -587,7 +587,11 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		subTaskData.getRoot().getMappedAttribute(BugzillaAttribute.DEPENDSON.getKey()).setValue(""); //$NON-NLS-1$
 		subTaskData.getRoot().getMappedAttribute(TaskAttribute.DESCRIPTION).setValue(""); //$NON-NLS-1$
 		subTaskData.getRoot().getMappedAttribute(TaskAttribute.SUMMARY).setValue(""); //$NON-NLS-1$
-		subTaskData.getRoot().getMappedAttribute(TaskAttribute.KEYWORDS).setValue(""); //$NON-NLS-1$
+		TaskAttribute keywords = subTaskData.getRoot().getMappedAttribute(TaskAttribute.KEYWORDS);
+		if (keywords != null) {
+			// only if the repository has keywords this attribut exists		
+			keywords.setValue(""); //$NON-NLS-1$
+		}
 		subTaskData.getRoot().getAttribute(BugzillaAttribute.BLOCKED.getKey()).setValue(parentTaskData.getTaskId());
 		TaskAttribute parentAttributeAssigned = parentTaskData.getRoot()
 				.getMappedAttribute(TaskAttribute.USER_ASSIGNED);
