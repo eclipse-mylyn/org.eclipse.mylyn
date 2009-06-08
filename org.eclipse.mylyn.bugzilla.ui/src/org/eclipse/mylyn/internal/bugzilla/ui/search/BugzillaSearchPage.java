@@ -1374,9 +1374,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	}
 
 	private void updateAttributesFromConfiguration(String[] selectedProducts) {
-		if (repositoryConfiguration == null) {
-			updateConfiguration(false);
-		}
 		if (repositoryConfiguration != null) {
 			String[] saved_product = product.getSelection();
 			String[] saved_component = component.getSelection();
