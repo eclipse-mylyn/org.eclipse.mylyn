@@ -16,23 +16,24 @@ import java.lang.reflect.Field;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.internal.commons.ui.CommonsUiPlugin;
 import org.eclipse.mylyn.internal.commons.ui.Messages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
 
@@ -59,6 +60,10 @@ public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 
 	private boolean showProgress = false;
 
+	private Color textColor = null;
+
+	private Font textFont = null;
+
 	/**
 	 * XXX: using reflection to gain access
 	 * 
@@ -74,11 +79,40 @@ public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 			refreshField.setAccessible(true);
 			refreshJob = (Job) refreshField.get(this);
 			refreshPolicy = new AdaptiveRefreshPolicy(refreshJob);
+
+			filterText.addFocusListener(new FocusListener() {
+
+				public void focusLost(FocusEvent focusEvent) {
+					if ("".equals(filterText.getText())) { //$NON-NLS-1$
+						filterText.setText(LABEL_FIND);
+						setGrayFilterText(true);
+					}
+				}
+
+				public void focusGained(FocusEvent focusEvent) {
+					if (LABEL_FIND.equals(filterText.getText())) {
+						filterText.setText(""); //$NON-NLS-1$
+						setGrayFilterText(false);
+					}
+				}
+			});
+
+			filterText.addKeyListener(new KeyListener() {
+
+				public void keyReleased(KeyEvent e) {
+					// ignore
+				}
+
+				public void keyPressed(KeyEvent e) {
+					// could consider doing this only on the first keystroke
+					setGrayFilterText(false);
+				}
+			});
 		} catch (Exception e) {
 			CommonsUiPlugin.getDefault().getLog().log(
 					new Status(IStatus.ERROR, CommonsUiPlugin.ID_PLUGIN, "Could not get refresh job", e)); //$NON-NLS-1$
 		}
-		setInitialText(""); //$NON-NLS-1$
+		setInitialText(LABEL_FIND);
 	}
 
 	@Override
@@ -113,14 +147,11 @@ public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 		GridLayout gridLayout = new GridLayout(1, false);
 		gridLayout.marginWidth = 0;
 		gridLayout.marginHeight = 0;
-		gridLayout.marginTop = 3;
+		gridLayout.marginLeft = 3;
+		gridLayout.marginTop = 5;
 		gridLayout.marginBottom = 3;
 		gridLayout.verticalSpacing = 0;
 		filterComposite.setLayout(gridLayout);
-
-		Label label = new Label(filterComposite, SWT.NONE);
-		label.setText(LABEL_FIND);
-		GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).applyTo(label);
 
 		// let FilteredTree create the find and clear control
 		super.createFilterControls(parent);
@@ -166,32 +197,19 @@ public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 
 		gridLayout.numColumns = filterComposite.getChildren().length;
 
+		textColor = filterText.getForeground();
+		textFont = filterText.getFont();
+		setGrayFilterText(true);
 		return parent;
 	}
 
-	private void createClearText(Composite parent) {
-		// only create the button if the text widget doesn't support one
-		// natively
-		if ((filterText.getStyle() & SWT.CANCEL) == 0) {
-			filterToolBar = new ToolBarManager(SWT.FLAT | SWT.HORIZONTAL);
-			filterToolBar.createControl(parent);
-
-			IAction clearTextAction = new Action("", IAction.AS_PUSH_BUTTON) {//$NON-NLS-1$
-				/*
-				 * (non-Javadoc)
-				 * 
-				 * @see org.eclipse.jface.action.Action#run()
-				 */
-				@Override
-				public void run() {
-					clearText();
-				}
-			};
-
-			clearTextAction.setToolTipText(Messages.AbstractFilteredTree_Clear);
-			clearTextAction.setImageDescriptor(CommonImages.FIND_CLEAR);
-			clearTextAction.setDisabledImageDescriptor(CommonImages.FIND_CLEAR_DISABLED);
-			filterToolBar.add(clearTextAction);
+	private void setGrayFilterText(boolean gray) {
+		if (gray) {
+			filterText.setForeground(parent.getShell().getDisplay().getSystemColor(SWT.COLOR_GRAY));
+			filterText.setFont(CommonFonts.ITALIC);
+		} else {
+			filterText.setForeground(textColor);
+			filterText.setFont(textFont);
 		}
 	}
 
@@ -212,9 +230,13 @@ public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 		// Note that the scheduling of the refresh job that is done in the super class will be overridden 
 		// by the call to refreshPolicy.textChanged().
 		super.textChanged();
-
 		if (refreshPolicy != null) {
-			refreshPolicy.textChanged(getFilterString());
+			if (LABEL_FIND.equals(getFilterString())) {
+				clearText();
+				refreshPolicy.textChanged(""); //$NON-NLS-1$
+			} else {
+				refreshPolicy.textChanged(getFilterString());
+			}
 		}
 		// bug 165353 work-around for premature return at FilteredTree.java:374
 		updateToolbar(true);
