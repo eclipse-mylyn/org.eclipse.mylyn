@@ -33,25 +33,25 @@ public class BugzillaClientManager implements IRepositoryListener {
 	public BugzillaClientManager() {
 	}
 
-	public synchronized BugzillaClient getClient(TaskRepository taskRepository, IProgressMonitor monitor)
-			throws CoreException {
-		BugzillaClient client = clientByUrl.get(taskRepository.getRepositoryUrl());
-		if (client == null) {
-
-			String language = taskRepository.getProperty(IBugzillaConstants.BUGZILLA_LANGUAGE_SETTING);
-			if (language == null || language.equals("")) { //$NON-NLS-1$
-				language = IBugzillaConstants.DEFAULT_LANG;
+	public BugzillaClient getClient(TaskRepository taskRepository, IProgressMonitor monitor) throws CoreException {
+		BugzillaClient client;
+		synchronized (clientByUrl) {
+			client = clientByUrl.get(taskRepository.getRepositoryUrl());
+			if (client == null) {
+				String language = taskRepository.getProperty(IBugzillaConstants.BUGZILLA_LANGUAGE_SETTING);
+				if (language == null || language.equals("")) { //$NON-NLS-1$
+					language = IBugzillaConstants.DEFAULT_LANG;
+				}
+				try {
+					client = createClient(taskRepository);
+				} catch (MalformedURLException e) {
+					throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+							"Malformed Repository Url", e)); //$NON-NLS-1$
+				}
+				clientByUrl.put(taskRepository.getRepositoryUrl(), client);
 			}
-			try {
-				client = createClient(taskRepository);
-			} catch (MalformedURLException e) {
-				throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-						"Malformed Repository Url", e)); //$NON-NLS-1$
-			}
-			clientByUrl.put(taskRepository.getRepositoryUrl(), client);
-			client.setRepositoryConfiguration(BugzillaCorePlugin.getRepositoryConfiguration(taskRepository, false,
-					monitor));
 		}
+		client.setRepositoryConfiguration(BugzillaCorePlugin.getRepositoryConfiguration(taskRepository, false, monitor));
 		return client;
 	}
 
@@ -59,20 +59,22 @@ public class BugzillaClientManager implements IRepositoryListener {
 		return BugzillaClientFactory.createClient(taskRepository);
 	}
 
-	public synchronized void repositoryAdded(TaskRepository repository) {
+	public void repositoryAdded(TaskRepository repository) {
 		// make sure there is no stale client still in the cache, bug #149939
 		removeClient(repository);
 	}
 
-	public synchronized void repositoryRemoved(TaskRepository repository) {
+	public void repositoryRemoved(TaskRepository repository) {
 		removeClient(repository);
 	}
 
 	private void removeClient(TaskRepository repository) {
-		clientByUrl.remove(repository.getRepositoryUrl());
+		synchronized (clientByUrl) {
+			clientByUrl.remove(repository.getRepositoryUrl());
+		}
 	}
 
-	public synchronized void repositorySettingsChanged(TaskRepository repository) {
+	public void repositorySettingsChanged(TaskRepository repository) {
 		removeClient(repository);
 	}
 
