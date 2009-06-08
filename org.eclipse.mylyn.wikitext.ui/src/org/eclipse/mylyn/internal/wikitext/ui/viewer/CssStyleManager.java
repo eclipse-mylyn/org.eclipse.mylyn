@@ -228,7 +228,6 @@ public class CssStyleManager {
 	}
 
 	/**
-	 * 
 	 * @param defaultFont
 	 *            the default font to use
 	 * @param defaultMonospaceFont
@@ -326,13 +325,30 @@ public class CssStyleManager {
 	}
 
 	private String[] computeMonospaceFontNames() {
-		String os = Platform.getOS();
-		boolean linux = Platform.OS_LINUX.equals(os);
+		boolean linux = false;
+		boolean macosx = false;
+		try {
+			String os = Platform.getOS();
+			macosx = Platform.OS_MACOSX.equals(os);
+			linux = Platform.OS_LINUX.equals(os);
+		} catch (Exception e) {
+			// stand-alone
+			String osName = System.getProperty("os.name"); //$NON-NLS-1$
+			if (osName != null) {
+				// see somewhat comprehensive list of possible values here:
+				// http://lopica.sourceforge.net/os.html
+
+				if (osName.startsWith("Mac")) { //$NON-NLS-1$
+					macosx = true;
+				} else if (osName.startsWith("Linux")) { //$NON-NLS-1$
+					linux = true;
+				}
+			}
+		}
 		if (linux) {
 			return new String[] { "monospace", "Courier New", "Courier" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 			};
 		}
-		boolean macosx = Platform.OS_MACOSX.equals(os);
 		if (macosx) {
 			return new String[] { "Courier", "Courier New" //$NON-NLS-1$//$NON-NLS-2$
 			};
@@ -595,7 +611,6 @@ public class CssStyleManager {
 	 * 
 	 * @param cssColor
 	 *            the css color
-	 * 
 	 * @return the RGB value or null if it cannot be determined.
 	 */
 	public static Integer cssColorRgb(String cssColor) {
