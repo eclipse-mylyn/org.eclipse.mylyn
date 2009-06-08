@@ -41,6 +41,8 @@ public class TaskDataExportTest extends AbstractContextTest {
 
 	private File destinationDir;
 
+	private File mylynFolder;
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -53,7 +55,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 		assertNotNull(wizardPage);
 
 		// Create test export destination directory
-		File mylynFolder = new File(TasksUiPlugin.getDefault().getDataDirectory());
+		mylynFolder = new File(TasksUiPlugin.getDefault().getDataDirectory());
 		destinationDir = new File(mylynFolder.getParent(), "TestDir");
 		CommonsTestUtil.deleteFolder(destinationDir);
 		destinationDir.mkdir();
@@ -97,7 +99,6 @@ public class TaskDataExportTest extends AbstractContextTest {
 		wizard.dispose();
 		wizardPage.dispose();
 		CommonsTestUtil.deleteFolder(destinationDir);
-		File mylynFolder = new File(TasksUiPlugin.getDefault().getDataDirectory());
 		// Create folder/file structure
 		File tasklist = new File(mylynFolder, "tasks.xml.zip");
 		tasklist.delete();
@@ -141,9 +142,43 @@ public class TaskDataExportTest extends AbstractContextTest {
 		}
 	}
 
-	public void testSnapshot() throws Exception {
+	public void testSnapshotWithoutContext() throws Exception {
 		final TaskDataExportOperation backupJob = new TaskDataSnapshotOperation(destinationDir.getPath(),
 				"testBackup.zip");
+		File activityFile = new File(mylynFolder, "contexts/activity.xml.zip");
+		if (activityFile.exists()) {
+			assertTrue(activityFile.delete());
+		}
+		backupJob.run(new NullProgressMonitor());
+		// check that the task list file was exported
+		File[] files = destinationDir.listFiles();
+		assertEquals(1, files.length);
+		ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(files[0]));
+		try {
+			ArrayList<String> entries = new ArrayList<String>();
+			ZipEntry entry = zipInputStream.getNextEntry();
+			while (entry != null) {
+				entries.add(entry.getName());
+				entry = zipInputStream.getNextEntry();
+			}
+			assertFalse(entries.contains(".hidden"));
+			assertTrue(entries.contains("tasks.xml.zip"));
+			assertTrue(entries.contains("repositories.xml.zip"));
+			assertFalse(entries.contains("contexts/activity.xml.zip"));
+			assertFalse(entries.contains("tasks"));
+			assertEquals(2, entries.size());
+		} finally {
+			zipInputStream.close();
+		}
+	}
+
+	public void testSnapshotWithContext() throws Exception {
+		final TaskDataExportOperation backupJob = new TaskDataSnapshotOperation(destinationDir.getPath(),
+				"testBackup.zip");
+		File activityFile = new File(mylynFolder, "contexts/activity.xml.zip");
+		if (!activityFile.exists()) {
+			assertTrue(activityFile.createNewFile());
+		}
 		backupJob.run(new NullProgressMonitor());
 		// check that the task list file was exported
 		File[] files = destinationDir.listFiles();
