@@ -932,6 +932,10 @@ public class BugzillaClient {
 		BugzillaRepositoryResponse response;
 		authenticate(new SubProgressMonitor(monitor, 1));
 
+		if (repositoryConfiguration == null) {
+			getRepositoryConfiguration(new SubProgressMonitor(monitor, 1));
+		}
+
 		if (taskData == null) {
 			return null;
 		} else if (taskData.isNew()) {
@@ -1651,6 +1655,11 @@ public class BugzillaClient {
 
 	public void getTaskData(Set<String> taskIds, final TaskDataCollector collector, final TaskAttributeMapper mapper,
 			final IProgressMonitor monitor) throws IOException, CoreException {
+
+		if (repositoryConfiguration == null) {
+			getRepositoryConfiguration(new SubProgressMonitor(monitor, 1));
+		}
+
 		GzipPostMethod method = null;
 		HashMap<String, TaskData> taskDataMap = new HashMap<String, TaskData>();
 		// make a copy to modify set
