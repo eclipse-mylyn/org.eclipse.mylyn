@@ -50,8 +50,9 @@ public class BugzillaClientManager implements IRepositoryListener {
 				}
 				clientByUrl.put(taskRepository.getRepositoryUrl(), client);
 			}
+			RepositoryConfiguration config = BugzillaCorePlugin.getRepositoryConfiguration(taskRepository.getUrl());
+			client.setRepositoryConfiguration(config);
 		}
-		client.setRepositoryConfiguration(BugzillaCorePlugin.getRepositoryConfiguration(taskRepository, false, monitor));
 		return client;
 	}
 

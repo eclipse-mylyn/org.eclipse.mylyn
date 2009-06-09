@@ -1055,21 +1055,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				if (getTaskRepository() != null) {
 					updateAttributesFromConfiguration(null);
 					if (product.getItemCount() == 0) {
-						try {
-							repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(
-									getTaskRepository(), true, new NullProgressMonitor());
-							updateAttributesFromConfiguration(null);
-						} catch (final CoreException e1) {
-							PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-								public void run() {
-									MessageDialog.openError(Display.getDefault().getActiveShell(),
-											Messages.BugzillaSearchPage_Bugzilla_Search_Page, MessageFormat.format(
-													Messages.BugzillaSearchPage_Unable_to_get_configuration_X,
-													Messages.BugzillaSearchPage_Task_Repositories)
-													+ "\n\n"); //$NON-NLS-1$
-								}
-							});
-						}
+						updateConfiguration(true);
+						updateAttributesFromConfiguration(null);
 					}
 				}
 				if (originalQuery != null) {
@@ -1202,9 +1189,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	}
 
 	/**
-	 * Creates the bugzilla query URL start.
-	 * 
-	 * Example: https://bugs.eclipse.org/bugs/buglist.cgi?
+	 * Creates the bugzilla query URL start. Example: https://bugs.eclipse.org/bugs/buglist.cgi?
 	 */
 	private StringBuilder getQueryURLStart(TaskRepository repository) {
 		StringBuilder sb = new StringBuilder(repository.getRepositoryUrl());
@@ -1217,9 +1202,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	}
 
 	/**
-	 * Goes through the query form and builds up the query parameters.
-	 * 
-	 * Example: short_desc_type=substring&amp;short_desc=bla&amp; ... TODO: The encoding here should match
+	 * Goes through the query form and builds up the query parameters. Example:
+	 * short_desc_type=substring&amp;short_desc=bla&amp; ... TODO: The encoding here should match
 	 * TaskRepository.getCharacterEncoding()
 	 * 
 	 * @throws UnsupportedEncodingException

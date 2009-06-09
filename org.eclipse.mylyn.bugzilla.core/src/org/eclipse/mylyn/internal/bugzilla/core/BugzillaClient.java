@@ -705,7 +705,7 @@ public class BugzillaClient {
 				Iterator<TaskAttribute> itr = attributes.iterator();
 				while (itr.hasNext()) {
 					TaskAttribute a = itr.next();
-					if (a.getId().startsWith("task.common.kind.flag_type")) { //$NON-NLS-1$
+					if (a.getId().startsWith("task.common.kind.flag_type") && repositoryConfiguration != null) { //$NON-NLS-1$
 						List<BugzillaFlag> flags = repositoryConfiguration.getFlags();
 						TaskAttribute requestee = a.getAttribute("requestee"); //$NON-NLS-1$
 						a = a.getAttribute("state"); //$NON-NLS-1$
@@ -1184,7 +1184,7 @@ public class BugzillaClient {
 					if (id.equals(BugzillaAttribute.DELTA_TS.getKey())) {
 						value = stripTimeZone(value);
 					}
-					if (id.startsWith("task.common.kind.flag_type")) { //$NON-NLS-1$
+					if (id.startsWith("task.common.kind.flag_type") && repositoryConfiguration != null) { //$NON-NLS-1$
 						List<BugzillaFlag> flags = repositoryConfiguration.getFlags();
 						TaskAttribute requestee = a.getAttribute("requestee"); //$NON-NLS-1$
 						a = a.getAttribute("state"); //$NON-NLS-1$
