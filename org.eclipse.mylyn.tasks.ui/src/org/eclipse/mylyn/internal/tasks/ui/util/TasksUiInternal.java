@@ -727,6 +727,10 @@ public class TasksUiInternal {
 		if (summary != null && summary.length() > 0) {
 			task.setSummary(summary);
 		}
+		String taskKind = mapping.getTaskKind();
+		if (taskKind != null && taskKind.length() > 0) {
+			task.setTaskKind(taskKind);
+		}
 		UnsubmittedTaskContainer unsubmitted = TasksUiPlugin.getTaskList().getUnsubmittedContainer(
 				taskData.getRepositoryUrl());
 		if (unsubmitted != null) {
