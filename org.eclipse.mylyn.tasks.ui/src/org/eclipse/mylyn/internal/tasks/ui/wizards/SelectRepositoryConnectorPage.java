@@ -140,7 +140,6 @@ public class SelectRepositoryConnectorPage extends WizardPage {
 								Messages.SelectRepositoryConnectorPage_discoveryProblemTitle, status);
 					}
 				}
-
 			});
 		}
 
@@ -148,7 +147,7 @@ public class SelectRepositoryConnectorPage extends WizardPage {
 		setControl(container);
 	}
 
-	private ExecutionEvent createExecutionEvent(Command command, IHandlerService handlerService) {
+	static ExecutionEvent createExecutionEvent(Command command, IHandlerService handlerService) {
 		return new ExecutionEvent(command, Collections.emptyMap(), null,
 				TasksUiInternal.createDiscoveryWizardEvaluationContext(handlerService));
 	}

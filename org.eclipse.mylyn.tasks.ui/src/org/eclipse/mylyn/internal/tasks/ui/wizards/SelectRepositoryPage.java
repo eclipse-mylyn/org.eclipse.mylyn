@@ -18,7 +18,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.commands.Command;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -33,17 +37,20 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardNode;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardSelectionPage;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.ITaskRepositoryFilter;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AddRepositoryAction;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesSorter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoryLabelProvider;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -54,6 +61,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.IHandlerService;
 
 /**
  * @author Mik Kersten
@@ -120,10 +128,14 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 		GridData gridData = new GridData(GridData.FILL_BOTH | GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL);
 		table.setLayoutData(gridData);
 
+		Composite buttonContainer = new Composite(container, SWT.NULL);
+		GridLayout buttonLayout = new GridLayout(2, false);
+		buttonContainer.setLayout(buttonLayout);
+
 		final AddRepositoryAction action = new AddRepositoryAction();
 		action.setPromptToAddQuery(false);
 
-		Button button = new Button(container, SWT.NONE);
+		Button button = new Button(buttonContainer, SWT.NONE);
 		button.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING));
 		button.setText(AddRepositoryAction.TITLE);
 		button.setEnabled(action.isEnabled());
@@ -138,6 +150,31 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 				}
 			}
 		});
+
+		final Command discoveryWizardCommand = TasksUiInternal.getConfiguredDiscoveryWizardCommand();
+		if (discoveryWizardCommand != null && discoveryWizardCommand.isEnabled()) {
+			Button discoveryButton = new Button(buttonContainer, SWT.PUSH);
+			GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.CENTER).applyTo(discoveryButton);
+			discoveryButton.setText(Messages.SelectRepositoryConnectorPage_activateDiscovery);
+			discoveryButton.setImage(CommonImages.getImage(CommonImages.DISCOVERY));
+			discoveryButton.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent event) {
+					IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(
+							IHandlerService.class);
+					try {
+						discoveryWizardCommand.executeWithChecks(SelectRepositoryConnectorPage.createExecutionEvent(
+								discoveryWizardCommand, handlerService));
+					} catch (Exception e) {
+						IStatus status = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
+								Messages.SelectRepositoryConnectorPage_discoveryProblemMessage,
+								new Object[] { e.getMessage() }), e);
+						TasksUiInternal.logAndDisplayStatus(
+								Messages.SelectRepositoryConnectorPage_discoveryProblemTitle, status);
+					}
+				}
+			});
+		}
 
 		Dialog.applyDialogFont(container);
 		setControl(container);
