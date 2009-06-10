@@ -20,7 +20,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.mylyn.internal.discovery.core.model.AbstractDiscoverySource;
-import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryConnector;
 import org.eclipse.mylyn.internal.discovery.core.model.Overview;
 import org.eclipse.mylyn.internal.provisional.commons.ui.GradientToolTip;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
@@ -44,17 +43,20 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 /**
  * @author David Green
  */
-class ConnectorDescriptorToolTip extends GradientToolTip {
+class OverviewToolTip extends GradientToolTip {
 
 	private static final String COLOR_BLACK = "black"; //$NON-NLS-1$
 
-	private final DiscoveryConnector descriptor;
+	private final Overview overview;
+
+	private final AbstractDiscoverySource source;
 
 	private Color colorBlack;
 
-	public ConnectorDescriptorToolTip(Control control, DiscoveryConnector descriptor) {
+	public OverviewToolTip(Control control, AbstractDiscoverySource source, Overview overview) {
 		super(control, ToolTip.RECREATE, true);
-		this.descriptor = descriptor;
+		this.source = source;
+		this.overview = overview;
 		setHideOnMouseDown(false); // required for links to work
 	}
 
@@ -76,14 +78,13 @@ class ConnectorDescriptorToolTip extends GradientToolTip {
 
 		GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).spacing(3, 0).applyTo(container);
 
-		final Overview overview = descriptor.getOverview();
 		if (overview != null) {
 			int borderWidth = 1;
 
 			String summary = overview.getSummary();
 			Image image = null;
 			if (overview.getScreenshot() != null) {
-				image = computeImage(descriptor.getSource(), overview.getScreenshot());
+				image = computeImage(source, overview.getScreenshot());
 				if (image != null) {
 					final Image fimage = image;
 					container.addDisposeListener(new DisposeListener() {

@@ -23,9 +23,16 @@ public class Overview {
 
 	protected ConnectorDescriptor connectorDescriptor;
 
+	protected ConnectorCategory connectorCategory;
+
 	public Overview() {
 	}
 
+	/**
+	 * A description providing detailed information about the item. Newlines can be used to format the text into
+	 * multiple paragraphs if necessary. Text must fit into an area 320x240, otherwise it will be truncated in the UI.
+	 * More lengthy descriptions can be provided on a web page if required, see @url.
+	 */
 	public String getSummary() {
 		return summary;
 	}
@@ -35,7 +42,7 @@ public class Overview {
 	}
 
 	/**
-	 * HTML
+	 * An URL that points to a web page with more information relevant to the connector or category.
 	 */
 	public String getUrl() {
 		return url;
@@ -62,6 +69,14 @@ public class Overview {
 
 	public void setConnectorDescriptor(ConnectorDescriptor connectorDescriptor) {
 		this.connectorDescriptor = connectorDescriptor;
+	}
+
+	public ConnectorCategory getConnectorCategory() {
+		return connectorCategory;
+	}
+
+	public void setConnectorCategory(ConnectorCategory connectorCategory) {
+		this.connectorCategory = connectorCategory;
 	}
 
 	public void validate() throws ValidationException {

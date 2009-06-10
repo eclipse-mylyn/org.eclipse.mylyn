@@ -121,6 +121,14 @@ public class ConnectorDiscoveryExtensionReader {
 			}
 			connectorCategory.setIcon(iconItem);
 		}
+		for (IConfigurationElement child : element.getChildren("overview")) { //$NON-NLS-1$
+			Overview overviewItem = readOverview(child);
+			overviewItem.setConnectorCategory(connectorCategory);
+			if (connectorCategory.getOverview() != null) {
+				throw new ValidationException(Messages.ConnectorDiscoveryExtensionReader_unexpected_element_overview);
+			}
+			connectorCategory.setOverview(overviewItem);
+		}
 		for (IConfigurationElement child : element.getChildren("group")) { //$NON-NLS-1$
 			Group groupItem = readGroup(child);
 			groupItem.setConnectorCategory(connectorCategory);

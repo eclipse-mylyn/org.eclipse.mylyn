@@ -52,6 +52,7 @@ import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDiscovery;
 import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryCategory;
 import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryConnector;
 import org.eclipse.mylyn.internal.discovery.core.model.Icon;
+import org.eclipse.mylyn.internal.discovery.core.model.Overview;
 import org.eclipse.mylyn.internal.discovery.core.model.RemoteBundleDiscoveryStrategy;
 import org.eclipse.mylyn.internal.discovery.core.util.DiscoveryCategoryComparator;
 import org.eclipse.mylyn.internal.discovery.core.util.DiscoveryConnectorComparator;
@@ -677,7 +678,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 				infoButton.setImage(infoImage);
 				paintFlatButton(infoButton);
 				infoButton.setToolTipText(Messages.ConnectorDiscoveryWizardMainPage_tooltip_showOverview);
-				hookTooltip(infoButton, connectorContainer, nameLabel, connector);
+				hookTooltip(infoButton, connectorContainer, nameLabel, connector.getSource(), connector.getOverview());
 				infoButton.addFocusListener(new FocusAdapter() {
 					@Override
 					public void focusGained(FocusEvent e) {
@@ -728,19 +729,6 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 			nameLabel.addMouseListener(connectorItemMouseListener);
 			providerLabel.addMouseListener(connectorItemMouseListener);
 			description.addMouseListener(connectorItemMouseListener);
-		}
-
-		private void paintFlatButton(Button button) {
-			button.addPaintListener(new PaintListener() {
-				public void paintControl(PaintEvent e) {
-					Button button = (Button) e.widget;
-					Rectangle bounds = button.getImage().getBounds();
-					GC gc = e.gc;
-					gc.setBackground(button.getBackground());
-					gc.fillRectangle(bounds);
-					gc.drawImage(button.getImage(), 0, 0);
-				}
-			});
 		}
 
 		protected boolean maybeModifySelection(boolean selected) {
@@ -802,6 +790,19 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		}
 	}
 
+	private void paintFlatButton(Button button) {
+		button.addPaintListener(new PaintListener() {
+			public void paintControl(PaintEvent e) {
+				Button button = (Button) e.widget;
+				Rectangle bounds = button.getImage().getBounds();
+				GC gc = e.gc;
+				gc.setBackground(button.getBackground());
+				gc.fillRectangle(bounds);
+				gc.drawImage(button.getImage(), 0, 0);
+			}
+		});
+	}
+
 	private void createDiscoveryContents(Composite container) {
 
 		Color background = container.getBackground();
@@ -857,7 +858,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 					continue;
 				}
 				{ // category header
-					GradientCanvas categoryHeaderContainer = new GradientCanvas(container, SWT.NONE);
+					final GradientCanvas categoryHeaderContainer = new GradientCanvas(container, SWT.NONE);
 					categoryHeaderContainer.setSeparatorVisible(true);
 					categoryHeaderContainer.setSeparatorAlignment(SWT.TOP);
 					categoryHeaderContainer.setBackgroundGradient(new Color[] { colorCategoryGradientStart,
@@ -866,7 +867,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 					categoryHeaderContainer.putColor(IFormColors.H_BOTTOM_KEYLINE2, colorCategoryGradientEnd);
 
 					GridDataFactory.fillDefaults().span(2, 1).applyTo(categoryHeaderContainer);
-					GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).equalWidth(false).applyTo(
+					GridLayoutFactory.fillDefaults().numColumns(3).margins(5, 5).equalWidth(false).applyTo(
 							categoryHeaderContainer);
 
 					Label iconLabel = new Label(categoryHeaderContainer, SWT.NULL);
@@ -883,10 +884,29 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 					nameLabel.setFont(h1Font);
 					nameLabel.setText(category.getName());
 					nameLabel.setBackground(null);
-					GridDataFactory.fillDefaults().grab(true, false).applyTo(nameLabel);
 
+					GridDataFactory.fillDefaults().grab(true, false).applyTo(nameLabel);
+					if (hasTooltip(category)) {
+						Button infoButton = new Button(categoryHeaderContainer, SWT.FLAT);
+						configureLook(infoButton, background);
+						infoButton.setImage(infoImage);
+						paintFlatButton(infoButton);
+						infoButton.setToolTipText(Messages.ConnectorDiscoveryWizardMainPage_tooltip_showOverview);
+						hookTooltip(infoButton, categoryHeaderContainer, nameLabel, category.getSource(),
+								category.getOverview());
+						infoButton.addFocusListener(new FocusAdapter() {
+							@Override
+							public void focusGained(FocusEvent e) {
+								bodyScrolledComposite.showControl(categoryHeaderContainer);
+							}
+						});
+						GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).hint(16, 16).applyTo(infoButton);
+					} else {
+						new Label(categoryHeaderContainer, SWT.NULL);
+					}
 					Label description = new Label(categoryHeaderContainer, SWT.WRAP);
-					GridDataFactory.fillDefaults().grab(true, false).hint(100, SWT.DEFAULT).applyTo(description);
+					GridDataFactory.fillDefaults().grab(true, false).span(2, 1).hint(100, SWT.DEFAULT).applyTo(
+							description);
 					description.setBackground(null);
 					description.setText(category.getDescription());
 				}
@@ -932,8 +952,8 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 	}
 
 	private void hookTooltip(final Button tooltipControl, final Control exitControl, final Control titleControl,
-			DiscoveryConnector connector) {
-		final ConnectorDescriptorToolTip toolTip = new ConnectorDescriptorToolTip(tooltipControl, connector);
+			AbstractDiscoverySource source, Overview overview) {
+		final OverviewToolTip toolTip = new OverviewToolTip(tooltipControl, source, overview);
 		Listener listener = new Listener() {
 			public void handleEvent(Event event) {
 				switch (event.type) {
@@ -1003,6 +1023,11 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 	private boolean hasTooltip(final DiscoveryConnector connector) {
 		return connector.getOverview() != null && connector.getOverview().getSummary() != null
 				&& connector.getOverview().getSummary().length() > 0;
+	}
+
+	private boolean hasTooltip(final DiscoveryCategory category) {
+		return category.getOverview() != null && category.getOverview().getSummary() != null
+				&& category.getOverview().getSummary().length() > 0;
 	}
 
 	/**

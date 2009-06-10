@@ -27,6 +27,8 @@ public class ConnectorCategory {
 
 	protected Icon icon;
 
+	protected Overview overview;
+
 	protected java.util.List<Group> group = new java.util.ArrayList<Group>();
 
 	public ConnectorCategory() {
@@ -85,6 +87,14 @@ public class ConnectorCategory {
 		this.icon = icon;
 	}
 
+	public Overview getOverview() {
+		return overview;
+	}
+
+	public void setOverview(Overview overview) {
+		this.overview = overview;
+	}
+
 	public java.util.List<Group> getGroup() {
 		return group;
 	}
@@ -112,6 +122,9 @@ public class ConnectorCategory {
 			} catch (NumberFormatException e) {
 				throw new ValidationException(Messages.ConnectorCategory_connectorCategory_relevance_invalid);
 			}
+		}
+		if (overview != null) {
+			overview.validate();
 		}
 		for (Group groupItem : group) {
 			groupItem.validate();
