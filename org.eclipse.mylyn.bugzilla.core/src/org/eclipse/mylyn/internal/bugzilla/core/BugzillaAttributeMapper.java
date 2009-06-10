@@ -156,12 +156,32 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 					parsedDate = new SimpleDateFormat(dateFormat_1).parse(dateString);
 				}
 			} catch (ParseException e1) {
-				return null;
-			} catch (NumberFormatException e1) {
-				return null;
+
+				try {
+					// Fall back to legacy formats
+					String delta_ts_format = dateFormat_1;
+					String creation_ts_format = dateFormat_2;
+					String deadline_format = dateFormat_3;
+					String customAttribute_format = dateFormat_1;
+					String comment_creation_ts_format = dateFormat_2;
+					String attachment_creation_ts_format = dateFormat_2;
+					if (attributeId.equals(BugzillaAttribute.DELTA_TS.getKey())) {
+						parsedDate = new SimpleDateFormat(delta_ts_format).parse(dateString);
+					} else if (attributeId.equals(BugzillaAttribute.CREATION_TS.getKey())) {
+						parsedDate = new SimpleDateFormat(creation_ts_format).parse(dateString);
+					} else if (attributeId.equals(BugzillaAttribute.BUG_WHEN.getKey())) {
+						parsedDate = new SimpleDateFormat(comment_creation_ts_format).parse(dateString);
+					} else if (attributeId.equals(BugzillaAttribute.DATE.getKey())) {
+						parsedDate = new SimpleDateFormat(attachment_creation_ts_format).parse(dateString);
+					} else if (attributeId.equals(BugzillaAttribute.DEADLINE.getKey())) {
+						parsedDate = new SimpleDateFormat(deadline_format).parse(dateString);
+					} else if (attributeId.startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX)) {
+						parsedDate = new SimpleDateFormat(customAttribute_format).parse(dateString);
+					}
+				} catch (ParseException e2) {
+				}
 			}
 		} catch (NumberFormatException e) {
-			return null;
 		}
 		return parsedDate;
 	}
