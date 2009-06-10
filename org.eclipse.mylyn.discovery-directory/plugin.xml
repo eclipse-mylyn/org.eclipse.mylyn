@@ -6,15 +6,17 @@
       <connectorCategory
             description="%connectorCategory.description.eclipse"
             id="org.eclipse.mylyn.discovery.site.categories.connectorCategoryEclipseOrg"
-            name="%connectorCategory.name.eclipse">
+            name="%connectorCategory.name.eclipse"
+            relevance="50">
          <icon
                image32="images/eclipse-32.png"
                image48="images/eclipse-48.png"/>
       </connectorCategory>
 	  <connectorCategory
-            description="%connectorCategory.description.community"
-            id="org.eclipse.mylyn.discovery.directory.community"
-            name="%connectorCategory.name.community">
+         description="%connectorCategory.description.community"
+         id="org.eclipse.mylyn.discovery.directory.community"
+         name="%connectorCategory.name.community"
+         relevance="20">
          <icon
                image32="images/community-32.png"
                image48="images/community-48.png">
