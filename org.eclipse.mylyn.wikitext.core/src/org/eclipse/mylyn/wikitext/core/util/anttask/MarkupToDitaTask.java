@@ -10,16 +10,11 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.core.util.anttask;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -245,25 +240,6 @@ public class MarkupToDitaTask extends MarkupTask {
 		}
 	}
 
-	private String readFully(File inputFile) {
-		StringWriter w = new StringWriter();
-		try {
-			Reader r = new InputStreamReader(new BufferedInputStream(new FileInputStream(inputFile)));
-			try {
-				int i;
-				while ((i = r.read()) != -1) {
-					w.write((char) i);
-				}
-			} finally {
-				r.close();
-			}
-		} catch (IOException e) {
-			throw new BuildException(MessageFormat.format(
-					Messages.getString("MarkupToDitaTask.13"), inputFile, e.getMessage()), e); //$NON-NLS-1$
-		}
-		return w.toString();
-	}
-
 	/**
 	 * The format of the DocBook output file. Consists of a pattern where the '$1' is replaced with the filename of the
 	 * input file. Default value is <code>$1.ditamap</code>
@@ -292,7 +268,6 @@ public class MarkupToDitaTask extends MarkupTask {
 	}
 
 	/**
-	 * 
 	 * The book title.
 	 * 
 	 * @param bookTitle
@@ -308,7 +283,6 @@ public class MarkupToDitaTask extends MarkupTask {
 	 * <pre>
 	 * &lt;!DOCTYPE bookmap PUBLIC \&quot;-//OASIS//DTD DITA 1.1 BookMap//EN\&quot;  \&quot;http://docs.oasis-open.org/dita/v1.1/OS/dtd/bookmap.dtd\&quot;&gt;
 	 * </pre>
-	 * 
 	 */
 	public void setDoctype(String doctype) {
 		this.doctype = doctype;
@@ -334,7 +308,6 @@ public class MarkupToDitaTask extends MarkupTask {
 	 * <pre>
 	 * &lt;!DOCTYPE topic PUBLIC \&quot;-//OASIS//DTD DITA 1.1 Topic//EN\&quot;&gt;
 	 * </pre>
-	 * 
 	 */
 	public void setTopicDoctype(String topicDoctype) {
 		this.topicDoctype = topicDoctype;

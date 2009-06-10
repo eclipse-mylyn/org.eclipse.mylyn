@@ -10,15 +10,10 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.core.util.anttask;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.Reader;
 import java.io.Writer;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -33,9 +28,7 @@ import org.eclipse.mylyn.wikitext.core.parser.builder.XslfoDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 
 /**
- * 
  * @author David Green
- * 
  * @since 1.1
  */
 public class MarkupToXslfoTask extends MarkupTask {
@@ -112,9 +105,7 @@ public class MarkupToXslfoTask extends MarkupTask {
 	 * @param baseDir
 	 * @param source
 	 * @return
-	 * 
 	 * @return the lightweight markup, or null if the file was not written
-	 * 
 	 * @throws BuildException
 	 */
 	protected String processFile(MarkupLanguage markupLanguage, final File baseDir, final File source)
@@ -177,25 +168,6 @@ public class MarkupToXslfoTask extends MarkupTask {
 
 	protected File computeXslfoFile(final File source, String name) {
 		return new File(source.getParentFile(), xslfoFilenameFormat.replace("$1", name)); //$NON-NLS-1$
-	}
-
-	protected String readFully(File inputFile) {
-		StringBuilder w = new StringBuilder((int) inputFile.length());
-		try {
-			Reader r = new InputStreamReader(new BufferedInputStream(new FileInputStream(inputFile)));
-			try {
-				int i;
-				while ((i = r.read()) != -1) {
-					w.append((char) i);
-				}
-			} finally {
-				r.close();
-			}
-		} catch (IOException e) {
-			throw new BuildException(MessageFormat.format(
-					Messages.getString("MarkupToXslfoTask.10"), inputFile, e.getMessage()), e); //$NON-NLS-1$
-		}
-		return w.toString();
 	}
 
 	/**

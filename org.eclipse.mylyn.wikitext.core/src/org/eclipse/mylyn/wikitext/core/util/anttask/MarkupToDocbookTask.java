@@ -10,16 +10,10 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.core.util.anttask;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -173,25 +167,6 @@ public class MarkupToDocbookTask extends MarkupTask {
 
 	}
 
-	private String readFully(File inputFile) {
-		StringWriter w = new StringWriter();
-		try {
-			Reader r = new InputStreamReader(new BufferedInputStream(new FileInputStream(inputFile)));
-			try {
-				int i;
-				while ((i = r.read()) != -1) {
-					w.write((char) i);
-				}
-			} finally {
-				r.close();
-			}
-		} catch (IOException e) {
-			throw new BuildException(MessageFormat.format(
-					Messages.getString("MarkupToDocbookTask.13"), inputFile, e.getMessage()), e); //$NON-NLS-1$
-		}
-		return w.toString();
-	}
-
 	/**
 	 * The format of the DocBook output file. Consists of a pattern where the '$1' is replaced with the filename of the
 	 * input file. Default value is <code>$1.xml</code>
@@ -222,7 +197,6 @@ public class MarkupToDocbookTask extends MarkupTask {
 	}
 
 	/**
-	 * 
 	 * The book title.
 	 * 
 	 * @param bookTitle
@@ -235,7 +209,6 @@ public class MarkupToDocbookTask extends MarkupTask {
 	/**
 	 * Set the XML doctype of the docbook. The doctype should look something like this:
 	 * <code>&lt;!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd"&gt;</code>
-	 * 
 	 */
 	public void setDoctype(String doctype) {
 		this.doctype = doctype;

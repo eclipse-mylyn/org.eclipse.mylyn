@@ -10,7 +10,13 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.core.util.anttask;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.text.MessageFormat;
 import java.util.List;
 
@@ -42,6 +48,8 @@ public abstract class MarkupTask extends Task {
 	private boolean failOnValidationWarning = false;
 
 	private MarkupLanguageConfiguration markupLanguageConfiguration;
+
+	private String sourceEncoding;
 
 	/**
 	 * The markup language to use. Should correspond to a {@link MarkupLanguage#getName() markup language name}.
@@ -140,6 +148,29 @@ public abstract class MarkupTask extends Task {
 		this.failOnValidationWarning = failOnValidationWarning;
 	}
 
+	/**
+	 * The source encoding.
+	 * 
+	 * @return the source encoding, or null if the default encoding is to be used.
+	 * @see java.nio.charset.Charset
+	 * @since 1.1
+	 */
+	public String getSourceEncoding() {
+		return sourceEncoding;
+	}
+
+	/**
+	 * The source encoding. The is the character encoding to be used when reading source files.
+	 * 
+	 * @param sourceEncoding
+	 *            the source encoding, or null if the default encoding is to be used.
+	 * @see java.nio.charset.Charset
+	 * @since 1.1
+	 */
+	public void setSourceEncoding(String sourceEncoding) {
+		this.sourceEncoding = sourceEncoding;
+	}
+
 	protected void performValidation(File source, String markupContent) {
 		if (!validate) {
 			return;
@@ -182,5 +213,33 @@ public abstract class MarkupTask extends Task {
 			throw new BuildException(Messages.getString("MarkupTask.tooManyConfigurations")); //$NON-NLS-1$
 		}
 		this.markupLanguageConfiguration = markupLanguageConfiguration;
+	}
+
+	/**
+	 * @since 1.1
+	 */
+	protected String readFully(File inputFile) {
+		StringBuilder w = new StringBuilder((int) inputFile.length());
+		try {
+			InputStream input = new BufferedInputStream(new FileInputStream(inputFile));
+			try {
+				Reader r = sourceEncoding == null ? new InputStreamReader(input) : new InputStreamReader(input,
+						sourceEncoding);
+				try {
+					int i;
+					while ((i = r.read()) != -1) {
+						w.append((char) i);
+					}
+				} finally {
+					r.close();
+				}
+			} finally {
+				input.close();
+			}
+		} catch (IOException e) {
+			throw new BuildException(MessageFormat.format(
+					Messages.getString("MarkupTask.cannotReadSource"), inputFile, e.getMessage()), e); //$NON-NLS-1$
+		}
+		return w.toString();
 	}
 }
