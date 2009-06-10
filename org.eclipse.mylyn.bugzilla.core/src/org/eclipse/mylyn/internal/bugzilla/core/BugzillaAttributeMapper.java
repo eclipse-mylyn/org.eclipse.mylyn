@@ -18,6 +18,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
@@ -29,30 +31,86 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
  */
 public class BugzillaAttributeMapper extends TaskAttributeMapper {
 
-	private static final String DATE_FORMAT_1 = "yyyy-MM-dd HH:mm"; //$NON-NLS-1$
+	private final SimpleDateFormat delta_ts_Format;
 
-	private static final String DATE_FORMAT_2 = "yyyy-MM-dd HH:mm:ss"; //$NON-NLS-1$
+	private final SimpleDateFormat delta_ts_Format_Timezone;
 
-	private static final String DATE_FORMAT_3 = "yyyy-MM-dd"; //$NON-NLS-1$
+	private final SimpleDateFormat creation_ts_Format;
 
-	private static final String delta_ts_format = DATE_FORMAT_2;
+	private final SimpleDateFormat creation_ts_Format_Timezone;
 
-	private static final String creation_ts_format = DATE_FORMAT_1;
+	private final SimpleDateFormat deadline_Format;
 
-	private static final String deadline_format = DATE_FORMAT_3;
+	private final SimpleDateFormat deadline_Format_Timezone;
 
-	private static final String customAttribute_format = DATE_FORMAT_2;
+	private final SimpleDateFormat customAttribute_Format;
+
+	private final SimpleDateFormat customAttribute_Format_Timezone;
 
 	/**
-	 * public for testing Bugzilla 2.18 uses DATE_FORMAT_1 but later versions use DATE_FORMAT_2 Using lowest common
-	 * denominator DATE_FORMAT_1
+	 * public for testing Bugzilla < 2.22 uses "yyyy-MM-dd HH:mm" but later versions use "yyyy-MM-dd HH:mm:ss" Using
+	 * lowest common denominator "yyyy-MM-dd HH:mm"
 	 */
-	public static final String comment_creation_ts_format = DATE_FORMAT_1;
+	private final SimpleDateFormat comment_creation_ts_Format;
 
-	private static final String attachment_creation_ts_format = DATE_FORMAT_1;
+	private final SimpleDateFormat comment_creation_ts_Format_Timezone;
+
+	private final SimpleDateFormat attachment_creation_ts_Format;
+
+	private final SimpleDateFormat attachment_creation_ts_Format_Timezone;
+
+	private final String dateFormat_1 = "yyyy-MM-dd HH:mm:ss"; //$NON-NLS-1$
+
+	private final String dateFormat_2 = "yyyy-MM-dd HH:mm"; //$NON-NLS-1$
+
+	private final String dateFormat_3 = "yyyy-MM-dd"; //$NON-NLS-1$
+
+	private final String dateFormat_1_TimeZone = "yyyy-MM-dd HH:mm:ss zzz"; //$NON-NLS-1$
+
+	private final String dateFormat_2_TimeZone = "yyyy-MM-dd HH:mm zzz"; //$NON-NLS-1$
+
+	private final String dateFormat_3_TimeZone = "yyyy-MM-dd zzz"; //$NON-NLS-1$
 
 	public BugzillaAttributeMapper(TaskRepository taskRepository) {
 		super(taskRepository);
+		delta_ts_Format = new SimpleDateFormat(dateFormat_1);
+		creation_ts_Format = new SimpleDateFormat(dateFormat_2);
+		deadline_Format = new SimpleDateFormat(dateFormat_3);
+		customAttribute_Format = new SimpleDateFormat(dateFormat_1);
+		RepositoryConfiguration repositoryConfiguration;
+		BugzillaVersion bugzillaVersion = null;
+		try {
+			repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(getTaskRepository(), false,
+					new NullProgressMonitor());
+			if (repositoryConfiguration != null) {
+				bugzillaVersion = repositoryConfiguration.getInstallVersion();
+			} else {
+				bugzillaVersion = BugzillaVersion.MIN_VERSION;
+			}
+		} catch (CoreException e) {
+			bugzillaVersion = BugzillaVersion.MIN_VERSION;
+		}
+
+		if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_2_22) < 0) {
+			comment_creation_ts_Format = new SimpleDateFormat(dateFormat_2);
+			attachment_creation_ts_Format = new SimpleDateFormat(dateFormat_2);
+		} else {
+			comment_creation_ts_Format = new SimpleDateFormat(dateFormat_1);
+			attachment_creation_ts_Format = new SimpleDateFormat(dateFormat_1);
+		}
+
+		delta_ts_Format_Timezone = new SimpleDateFormat(dateFormat_1_TimeZone);
+		creation_ts_Format_Timezone = new SimpleDateFormat(dateFormat_2_TimeZone);
+		deadline_Format_Timezone = new SimpleDateFormat(dateFormat_3_TimeZone);
+		customAttribute_Format_Timezone = new SimpleDateFormat(dateFormat_1_TimeZone);
+
+		if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_2_22) < 0) {
+			comment_creation_ts_Format_Timezone = new SimpleDateFormat(dateFormat_2_TimeZone);
+			attachment_creation_ts_Format_Timezone = new SimpleDateFormat(dateFormat_2_TimeZone);
+		} else {
+			comment_creation_ts_Format_Timezone = new SimpleDateFormat(dateFormat_1_TimeZone);
+			attachment_creation_ts_Format_Timezone = new SimpleDateFormat(dateFormat_1_TimeZone);
+		}
 	}
 
 	@Override
@@ -93,20 +151,38 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 		Date parsedDate = null;
 		try {
 			if (attributeId.equals(BugzillaAttribute.DELTA_TS.getKey())) {
-				parsedDate = new SimpleDateFormat(delta_ts_format).parse(dateString);
+				parsedDate = delta_ts_Format_Timezone.parse(dateString);
 			} else if (attributeId.equals(BugzillaAttribute.CREATION_TS.getKey())) {
-				parsedDate = new SimpleDateFormat(creation_ts_format).parse(dateString);
+				parsedDate = creation_ts_Format_Timezone.parse(dateString);
 			} else if (attributeId.equals(BugzillaAttribute.BUG_WHEN.getKey())) {
-				parsedDate = new SimpleDateFormat(comment_creation_ts_format).parse(dateString);
+				parsedDate = comment_creation_ts_Format_Timezone.parse(dateString);
 			} else if (attributeId.equals(BugzillaAttribute.DATE.getKey())) {
-				parsedDate = new SimpleDateFormat(attachment_creation_ts_format).parse(dateString);
+				parsedDate = attachment_creation_ts_Format_Timezone.parse(dateString);
 			} else if (attributeId.equals(BugzillaAttribute.DEADLINE.getKey())) {
-				parsedDate = new SimpleDateFormat(deadline_format).parse(dateString);
+				parsedDate = deadline_Format_Timezone.parse(dateString);
 			} else if (attributeId.startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX)) {
-				parsedDate = new SimpleDateFormat(customAttribute_format).parse(dateString);
+				parsedDate = customAttribute_Format_Timezone.parse(dateString);
 			}
 		} catch (ParseException e) {
-			return null;
+			try {
+				if (attributeId.equals(BugzillaAttribute.DELTA_TS.getKey())) {
+					parsedDate = delta_ts_Format.parse(dateString);
+				} else if (attributeId.equals(BugzillaAttribute.CREATION_TS.getKey())) {
+					parsedDate = creation_ts_Format.parse(dateString);
+				} else if (attributeId.equals(BugzillaAttribute.BUG_WHEN.getKey())) {
+					parsedDate = comment_creation_ts_Format.parse(dateString);
+				} else if (attributeId.equals(BugzillaAttribute.DATE.getKey())) {
+					parsedDate = attachment_creation_ts_Format.parse(dateString);
+				} else if (attributeId.equals(BugzillaAttribute.DEADLINE.getKey())) {
+					parsedDate = deadline_Format.parse(dateString);
+				} else if (attributeId.startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX)) {
+					parsedDate = customAttribute_Format.parse(dateString);
+				}
+			} catch (ParseException e1) {
+				return null;
+			} catch (NumberFormatException e1) {
+				return null;
+			}
 		} catch (NumberFormatException e) {
 			return null;
 		}
@@ -120,17 +196,17 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 			String attributeId = attribute.getId();
 
 			if (attributeId.equals(BugzillaAttribute.DELTA_TS.getKey())) {
-				dateString = new SimpleDateFormat(delta_ts_format).format(date);
+				dateString = delta_ts_Format.format(date);
 			} else if (attributeId.equals(BugzillaAttribute.CREATION_TS.getKey())) {
-				dateString = new SimpleDateFormat(creation_ts_format).format(date);
+				dateString = creation_ts_Format.format(date);
 			} else if (attributeId.equals(BugzillaAttribute.BUG_WHEN.getKey())) {
-				dateString = new SimpleDateFormat(comment_creation_ts_format).format(date);
+				dateString = comment_creation_ts_Format.format(date);
 			} else if (attributeId.equals(BugzillaAttribute.DATE.getKey())) {
-				dateString = new SimpleDateFormat(attachment_creation_ts_format).format(date);
+				dateString = attachment_creation_ts_Format.format(date);
 			} else if (attributeId.equals(BugzillaAttribute.DEADLINE.getKey())) {
-				dateString = new SimpleDateFormat(deadline_format).format(date);
+				dateString = deadline_Format.format(date);
 			} else if (attributeId.startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX)) {
-				dateString = new SimpleDateFormat(customAttribute_format).format(date);
+				dateString = customAttribute_Format.format(date);
 			}
 
 			if (dateString == null) {

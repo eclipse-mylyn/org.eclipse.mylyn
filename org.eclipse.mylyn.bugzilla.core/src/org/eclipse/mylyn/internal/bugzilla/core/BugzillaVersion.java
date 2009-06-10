@@ -24,6 +24,8 @@ public class BugzillaVersion implements Comparable<BugzillaVersion>, Serializabl
 
 	public final static BugzillaVersion BUGZILLA_2_18 = new BugzillaVersion("2.18"); //$NON-NLS-1$
 
+	public final static BugzillaVersion BUGZILLA_2_22 = new BugzillaVersion("2.22"); //$NON-NLS-1$
+
 	public final static BugzillaVersion BUGZILLA_3_0 = new BugzillaVersion("3.0"); //$NON-NLS-1$
 
 	public final static BugzillaVersion BUGZILLA_3_2 = new BugzillaVersion("3.2"); //$NON-NLS-1$

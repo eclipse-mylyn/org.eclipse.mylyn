@@ -43,6 +43,7 @@ public class AllBugzillaTests {
 		suite.addTestSuite(BugzillaTaskHistoryTest.class);
 		suite.addTestSuite(BugzillaRepository32Test.class);
 		suite.addTestSuite(BugzillaVersionTest.class);
+		suite.addTestSuite(BugzillaDateTimeTests.class);
 		return suite;
 	}
 
