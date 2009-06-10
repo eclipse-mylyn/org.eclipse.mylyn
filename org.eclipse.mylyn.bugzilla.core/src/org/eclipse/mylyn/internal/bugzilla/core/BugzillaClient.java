@@ -934,6 +934,7 @@ public class BugzillaClient {
 
 		if (repositoryConfiguration == null) {
 			getRepositoryConfiguration(new SubProgressMonitor(monitor, 1));
+			BugzillaCorePlugin.addRepositoryConfiguration(repositoryConfiguration);
 		}
 
 		if (taskData == null) {
@@ -1658,6 +1659,7 @@ public class BugzillaClient {
 
 		if (repositoryConfiguration == null) {
 			getRepositoryConfiguration(new SubProgressMonitor(monitor, 1));
+			BugzillaCorePlugin.addRepositoryConfiguration(repositoryConfiguration);
 		}
 
 		GzipPostMethod method = null;

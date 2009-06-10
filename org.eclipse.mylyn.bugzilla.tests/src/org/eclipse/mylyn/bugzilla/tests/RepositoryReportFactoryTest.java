@@ -136,7 +136,6 @@ public class RepositoryReportFactoryTest extends TestCase {
 		String bugid = "2";
 		setRepository(BugzillaCorePlugin.CONNECTOR_KIND, IBugzillaTestConstants.TEST_BUGZILLA_222_URL);
 		TaskData report = init(bugid);
-
 		assertNotNull(report);
 		assertEquals("search-match-test 1", report.getRoot()
 				.getAttribute(BugzillaAttribute.SHORT_DESC.getKey())
@@ -170,8 +169,8 @@ public class RepositoryReportFactoryTest extends TestCase {
 		TaskCommentMapper commentMap = TaskCommentMapper.createFrom(comments.get(0));
 		assertEquals("relves@cs.ubc.ca", commentMap.getAuthor().getPersonId());
 		assertEquals("browser comment", commentMap.getText());
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		assertEquals(format.parse("2006-05-30 18:56"), commentMap.getCreationDate());
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		assertEquals(format.parse("2006-05-30 18:56:24"), commentMap.getCreationDate());
 	}
 
 	public void testReadingReport2201() throws Exception {

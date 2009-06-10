@@ -152,8 +152,10 @@ public class BugzillaCorePlugin extends Plugin {
 
 	/** public for testing */
 	public static void addRepositoryConfiguration(RepositoryConfiguration config) {
-		repositoryConfigurations.remove(config.getRepositoryUrl());
-		repositoryConfigurations.put(config.getRepositoryUrl(), config);
+		if (config != null) {
+			repositoryConfigurations.remove(config.getRepositoryUrl());
+			repositoryConfigurations.put(config.getRepositoryUrl(), config);
+		}
 	}
 
 	// /**

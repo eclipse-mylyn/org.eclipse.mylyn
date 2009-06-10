@@ -14,14 +14,15 @@ package org.eclipse.mylyn.bugzilla.tests;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
@@ -54,7 +55,7 @@ public class BugzillaConfigurationTest extends TestCase {
 	}
 
 	private BugzillaClient createClient(String hostUrl, String username, String password, String htAuthUser,
-			String htAuthPass, String encoding) throws MalformedURLException, CoreException {
+			String htAuthPass, String encoding) throws CoreException, IOException {
 		TaskRepository taskRepository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, hostUrl);
 
 		AuthenticationCredentials credentials = new AuthenticationCredentials(username, password);
@@ -63,7 +64,9 @@ public class BugzillaConfigurationTest extends TestCase {
 		AuthenticationCredentials webCredentials = new AuthenticationCredentials(htAuthUser, htAuthPass);
 		taskRepository.setCredentials(AuthenticationType.HTTP, webCredentials, false);
 		taskRepository.setCharacterEncoding(encoding);
-		return bugzillaClientManager.getClient(taskRepository, null);
+		BugzillaClient client = bugzillaClientManager.getClient(taskRepository, null);
+		client.getRepositoryConfiguration(new NullProgressMonitor());
+		return client;
 	}
 
 	public void test222RDFProductConfig() throws Exception {

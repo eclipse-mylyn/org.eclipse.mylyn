@@ -133,6 +133,12 @@ public abstract class AbstractBugzillaTest extends TestCase {
 		assertEquals(abstractRepositoryClient.getConnectorKind(), DEFAULT_KIND);
 
 		connector = (BugzillaRepositoryConnector) abstractRepositoryClient;
+		try {
+			BugzillaCorePlugin.getRepositoryConfiguration(repository, false, new NullProgressMonitor());
+		} catch (CoreException e) {
+			e.printStackTrace();
+			fail();
+		}
 	}
 
 	protected ITask generateLocalTaskAndDownload(String taskNumber) throws CoreException {
