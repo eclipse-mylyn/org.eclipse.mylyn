@@ -1053,10 +1053,18 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 				// TODO: update status, resolution, severity etc if possible...
 				if (getTaskRepository() != null) {
+					repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(getTaskRepository().getUrl());
 					updateAttributesFromConfiguration(null);
 					if (product.getItemCount() == 0) {
-						updateConfiguration(true);
-						updateAttributesFromConfiguration(null);
+						Display.getDefault().asyncExec(new Runnable() {
+							public void run() {
+								if (getControl() != null && !getControl().isDisposed()) {
+									updateConfiguration(true);
+									updateAttributesFromConfiguration(null);
+								}
+							}
+
+						});
 					}
 				}
 				if (originalQuery != null) {
@@ -1836,7 +1844,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			};
 
 			try {
-				// TODO: make cancelable (bug 143011)
 				if (getContainer() != null) {
 					getContainer().run(true, true, updateRunnable);
 				} else if (getSearchContainer() != null) {
@@ -1853,10 +1860,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 					CoreException cause = ((CoreException) ex.getCause());
 					if (cause.getStatus() instanceof RepositoryStatus
 							&& ((RepositoryStatus) cause.getStatus()).isHtmlMessage()) {
-						// TOOD: use StatusManager
-
-//									this.setControlsEnabled(false);
-//									scontainer.setPerformActionEnabled(false);
 						if (shell != null) {
 							shell.setEnabled(false);
 						}
