@@ -109,6 +109,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.progress.WorkbenchJob;
@@ -598,7 +600,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 
 		private final Label nameLabel;
 
-		private Button infoButton;
+		private ToolItem infoButton;
 
 		private final Label providerLabel;
 
@@ -673,19 +675,14 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 					connector.getProvider(), connector.getLicense()));
 
 			if (hasTooltip(connector)) {
-				infoButton = new Button(connectorContainer, SWT.FLAT);
-				configureLook(infoButton, background);
+				ToolBar toolBar = new ToolBar(connectorContainer, SWT.FLAT | SWT.BORDER);
+
+				infoButton = new ToolItem(toolBar, SWT.FLAT);
 				infoButton.setImage(infoImage);
-				paintFlatButton(infoButton);
 				infoButton.setToolTipText(Messages.ConnectorDiscoveryWizardMainPage_tooltip_showOverview);
-				hookTooltip(infoButton, connectorContainer, nameLabel, connector.getSource(), connector.getOverview());
-				infoButton.addFocusListener(new FocusAdapter() {
-					@Override
-					public void focusGained(FocusEvent e) {
-						bodyScrolledComposite.showControl(connectorContainer);
-					}
-				});
-				GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).hint(16, 16).applyTo(infoButton);
+				hookTooltip(toolBar, infoButton, connectorContainer, nameLabel, connector.getSource(),
+						connector.getOverview());
+				GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).applyTo(toolBar);
 			} else {
 				new Label(connectorContainer, SWT.NULL);
 			}
@@ -790,19 +787,6 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		}
 	}
 
-	private void paintFlatButton(Button button) {
-		button.addPaintListener(new PaintListener() {
-			public void paintControl(PaintEvent e) {
-				Button button = (Button) e.widget;
-				Rectangle bounds = button.getImage().getBounds();
-				GC gc = e.gc;
-				gc.setBackground(button.getBackground());
-				gc.fillRectangle(bounds);
-				gc.drawImage(button.getImage(), 0, 0);
-			}
-		});
-	}
-
 	private void createDiscoveryContents(Composite container) {
 
 		Color background = container.getBackground();
@@ -887,20 +871,13 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 
 					GridDataFactory.fillDefaults().grab(true, false).applyTo(nameLabel);
 					if (hasTooltip(category)) {
-						Button infoButton = new Button(categoryHeaderContainer, SWT.FLAT);
-						configureLook(infoButton, background);
+						ToolBar toolBar = new ToolBar(categoryHeaderContainer, SWT.FLAT | SWT.BORDER);
+						ToolItem infoButton = new ToolItem(toolBar, SWT.PUSH);
 						infoButton.setImage(infoImage);
-						paintFlatButton(infoButton);
 						infoButton.setToolTipText(Messages.ConnectorDiscoveryWizardMainPage_tooltip_showOverview);
-						hookTooltip(infoButton, categoryHeaderContainer, nameLabel, category.getSource(),
+						hookTooltip(toolBar, infoButton, categoryHeaderContainer, nameLabel, category.getSource(),
 								category.getOverview());
-						infoButton.addFocusListener(new FocusAdapter() {
-							@Override
-							public void focusGained(FocusEvent e) {
-								bodyScrolledComposite.showControl(categoryHeaderContainer);
-							}
-						});
-						GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).hint(16, 16).applyTo(infoButton);
+						GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).applyTo(toolBar);
 					} else {
 						new Label(categoryHeaderContainer, SWT.NULL);
 					}
@@ -951,8 +928,8 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		control.setBackground(background);
 	}
 
-	private void hookTooltip(final Button tooltipControl, final Control exitControl, final Control titleControl,
-			AbstractDiscoverySource source, Overview overview) {
+	private void hookTooltip(final Control tooltipControl, final ToolItem tipActivator, final Control exitControl,
+			final Control titleControl, AbstractDiscoverySource source, Overview overview) {
 		final OverviewToolTip toolTip = new OverviewToolTip(tooltipControl, source, overview);
 		Listener listener = new Listener() {
 			public void handleEvent(Event event) {
@@ -965,9 +942,9 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 
 			}
 		};
-		tooltipControl.addListener(SWT.Dispose, listener);
-		tooltipControl.addListener(SWT.MouseWheel, listener);
-		tooltipControl.addSelectionListener(new SelectionAdapter() {
+		tipActivator.addListener(SWT.Dispose, listener);
+		tipActivator.addListener(SWT.MouseWheel, listener);
+		tipActivator.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				Point titleAbsLocation = titleControl.getParent().toDisplay(titleControl.getLocation());
