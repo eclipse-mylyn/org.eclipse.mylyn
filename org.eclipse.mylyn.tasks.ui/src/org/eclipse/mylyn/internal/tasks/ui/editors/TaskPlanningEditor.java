@@ -91,7 +91,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		}
 	};
 
-	private final ITaskListChangeListener TASK_LIST_LISTENER = new TaskListChangeAdapter() {
+	private final ITaskListChangeListener taskListChangeListener = new TaskListChangeAdapter() {
 		@Override
 		public void containersChanged(Set<TaskContainerDelta> containers) {
 			for (TaskContainerDelta taskContainerDelta : containers) {
@@ -124,7 +124,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	public TaskPlanningEditor(TaskEditor editor) {
 		super(editor, ITasksUiConstants.ID_PAGE_PLANNING, Messages.TaskPlanningEditor_Planning);
-		TasksUiInternal.getTaskList().addChangeListener(TASK_LIST_LISTENER);
+		TasksUiInternal.getTaskList().addChangeListener(taskListChangeListener);
 	}
 
 	private void createContributions(final Composite editorComposite) {
@@ -203,7 +203,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		if (timingListener != null) {
 			TasksUiPlugin.getTaskActivityManager().removeActivityListener(timingListener);
 		}
-		TasksUiInternal.getTaskList().removeChangeListener(TASK_LIST_LISTENER);
+		TasksUiInternal.getTaskList().removeChangeListener(taskListChangeListener);
 		super.dispose();
 	}
 
@@ -266,6 +266,11 @@ public class TaskPlanningEditor extends TaskFormPage {
 	}
 
 	public void refresh() {
+		if (getManagedForm().getForm().isDisposed()) {
+			// editor possibly closed as part of submit
+			return;
+		}
+
 		getEditor().updateHeaderToolBar();
 		IFormPart[] parts = getManagedForm().getParts();
 		// refresh will not be invoked unless parts are stale

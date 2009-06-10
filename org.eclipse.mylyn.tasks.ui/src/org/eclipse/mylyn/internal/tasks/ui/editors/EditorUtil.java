@@ -77,7 +77,7 @@ public class EditorUtil {
 
 	public static final int MAXIMUM_HEIGHT = 140;
 
-	public static final int MAXIMUM_WIDTH = 500;
+	public static final int MAXIMUM_WIDTH = 300;
 
 	// XXX why is this required?
 	public static final Font TEXT_FONT = JFaceResources.getDefaultFont();
