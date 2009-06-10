@@ -11,6 +11,12 @@
          <icon
                image32="images/eclipse-32.png"
                image48="images/eclipse-48.png"/>
+         <group
+               id="org.eclipse.mylyn.discovery-directory.group1">
+         </group>
+         <group
+               id="org.eclipse.mylyn.discovery-directory.group2">
+         </group>
       </connectorCategory>
 	  <connectorCategory
          description="%connectorCategory.description.community"
@@ -29,7 +35,7 @@
       <connectorDescriptor
             categoryId="org.eclipse.mylyn.discovery.site.categories.connectorCategoryEclipseOrg"
             description="%connectorDescriptor.description.bugzilla"
-            groupId="1-bundled"
+            groupId="org.eclipse.mylyn.discovery-directory.group1"
             id="org.eclipse.mylyn.bugzilla_feature"
             kind="task"
             license="%connectorDescriptor.license.bugzilla"
@@ -50,7 +56,7 @@
       <connectorDescriptor
             categoryId="org.eclipse.mylyn.discovery.site.categories.connectorCategoryEclipseOrg"
             description="%connectorDescriptor.description.trac"
-            groupId="2-secondary"
+            groupId="org.eclipse.mylyn.discovery-directory.group1"
             id="org.eclipse.mylyn.trac_feature"
             kind="task"
             license="%connectorDescriptor.license.trac"
