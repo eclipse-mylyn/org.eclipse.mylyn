@@ -16,7 +16,7 @@
          description="%connectorCategory.description.community"
          id="org.eclipse.mylyn.discovery.directory.community"
          name="%connectorCategory.name.community"
-         relevance="20">
+         relevance="10">
          <icon
                image32="images/community-32.png"
                image48="images/community-48.png">
@@ -29,6 +29,7 @@
       <connectorDescriptor
             categoryId="org.eclipse.mylyn.discovery.site.categories.connectorCategoryEclipseOrg"
             description="%connectorDescriptor.description.bugzilla"
+            groupId="1-bundled"
             id="org.eclipse.mylyn.bugzilla_feature"
             kind="task"
             license="%connectorDescriptor.license.bugzilla"
@@ -49,6 +50,7 @@
       <connectorDescriptor
             categoryId="org.eclipse.mylyn.discovery.site.categories.connectorCategoryEclipseOrg"
             description="%connectorDescriptor.description.trac"
+            groupId="2-secondary"
             id="org.eclipse.mylyn.trac_feature"
             kind="task"
             license="%connectorDescriptor.license.trac"
