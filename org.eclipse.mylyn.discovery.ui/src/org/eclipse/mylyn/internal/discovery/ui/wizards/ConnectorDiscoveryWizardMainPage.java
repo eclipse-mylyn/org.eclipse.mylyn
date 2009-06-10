@@ -873,6 +873,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 					GridDataFactory.fillDefaults().grab(true, false).applyTo(nameLabel);
 					if (hasTooltip(category)) {
 						ToolBar toolBar = new ToolBar(categoryHeaderContainer, SWT.FLAT | SWT.BORDER);
+						toolBar.setBackground(null);
 						ToolItem infoButton = new ToolItem(toolBar, SWT.PUSH);
 						infoButton.setImage(infoImage);
 						infoButton.setToolTipText(Messages.ConnectorDiscoveryWizardMainPage_tooltip_showOverview);
