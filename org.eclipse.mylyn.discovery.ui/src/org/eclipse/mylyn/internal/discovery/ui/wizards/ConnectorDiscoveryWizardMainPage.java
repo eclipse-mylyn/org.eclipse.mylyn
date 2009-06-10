@@ -676,6 +676,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 
 			if (hasTooltip(connector)) {
 				ToolBar toolBar = new ToolBar(connectorContainer, SWT.FLAT | SWT.BORDER);
+				toolBar.setBackground(background);
 
 				infoButton = new ToolItem(toolBar, SWT.FLAT);
 				infoButton.setImage(infoImage);
