@@ -1007,6 +1007,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		getSite().setSelectionProvider(getViewer());
 		getSite().getPage().addPartListener(editorListener);
 
+		// we need to update the icon here as the action was not created when the presentation was applied
+		updatePresentationSelectorImage();
+
 		// Need to do this because the page, which holds the active working set is not around on creation, see bug 203179
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().addPageListener(PAGE_LISTENER);
 	}
@@ -1050,9 +1053,15 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 			refresh(true);
 
 			currentPresentation = presentation;
-			presentationDropDownSelectionAction.setImageDescriptor(currentPresentation.getImageDescriptor());
+			updatePresentationSelectorImage();
 		} finally {
 			getViewer().getControl().setRedraw(true);
+		}
+	}
+
+	private void updatePresentationSelectorImage() {
+		if (presentationDropDownSelectionAction != null && currentPresentation != null) {
+			presentationDropDownSelectionAction.setImageDescriptor(currentPresentation.getImageDescriptor());
 		}
 	}
 
