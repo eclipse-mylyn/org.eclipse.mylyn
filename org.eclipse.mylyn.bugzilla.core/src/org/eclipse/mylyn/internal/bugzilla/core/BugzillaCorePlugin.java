@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -88,9 +89,7 @@ public class BugzillaCorePlugin extends Plugin {
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		if (!repositoryConfigurations.isEmpty()) {
-			writeRepositoryConfigFile();
-		}
+		writeRepositoryConfigFile();
 
 		INSTANCE = null;
 		super.stop(context);
@@ -101,10 +100,7 @@ public class BugzillaCorePlugin extends Plugin {
 	}
 
 	public static Map<String, RepositoryConfiguration> getConfigurations() {
-		if (!cacheFileRead) {
-			readRepositoryConfigurationFile();
-			cacheFileRead = true;
-		}
+		readRepositoryConfigurationFile();
 		return repositoryConfigurations;
 	}
 
@@ -117,10 +113,7 @@ public class BugzillaCorePlugin extends Plugin {
 	 * @return cached repository configuration. If not already cached, null is returned.
 	 */
 	public static RepositoryConfiguration getRepositoryConfiguration(String repositoryUrl) {
-		if (!cacheFileRead) {
-			readRepositoryConfigurationFile();
-			cacheFileRead = true;
-		}
+		readRepositoryConfigurationFile();
 		return repositoryConfigurations.get(repositoryUrl);
 	}
 
@@ -131,31 +124,41 @@ public class BugzillaCorePlugin extends Plugin {
 			IProgressMonitor monitor) throws CoreException {
 		monitor = Policy.monitorFor(monitor);
 		try {
-			if (!cacheFileRead) {
-				readRepositoryConfigurationFile();
-				cacheFileRead = true;
-			}
-			if (repositoryConfigurations.get(repository.getRepositoryUrl()) == null || forceRefresh) {
-				BugzillaClient client = connector.getClientManager().getClient(repository, monitor);
-				RepositoryConfiguration config = client.getRepositoryConfiguration(monitor);
-				if (config != null) {
-					addRepositoryConfiguration(config);
+			readRepositoryConfigurationFile();
+			RepositoryConfiguration configuration;
+			configuration = repositoryConfigurations.get(repository.getRepositoryUrl());
+			if (configuration == null || forceRefresh) {
+				synchronized (repositoryConfigurations) {
+					// check if another thread already retrieved configuration
+					configuration = repositoryConfigurations.get(repository.getRepositoryUrl());
+					if (configuration == null || forceRefresh) {
+						BugzillaClient client = connector.getClientManager().getClient(repository, monitor);
+						configuration = client.getRepositoryConfiguration(monitor);
+						if (configuration != null) {
+							internalAddConfiguration(configuration);
+						}
+					}
 				}
-
 			}
-			return repositoryConfigurations.get(repository.getRepositoryUrl());
+			return configuration;//repositoryConfigurations.get(repository.getRepositoryUrl());
 		} catch (IOException e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, 1,
 					"Error retrieving task attributes from repository.\n\n" + e.getMessage(), e)); //$NON-NLS-1$
 		}
 	}
 
-	/** public for testing */
 	public static void addRepositoryConfiguration(RepositoryConfiguration config) {
 		if (config != null) {
-			repositoryConfigurations.remove(config.getRepositoryUrl());
-			repositoryConfigurations.put(config.getRepositoryUrl(), config);
+			readRepositoryConfigurationFile();
+			synchronized (repositoryConfigurations) {
+				internalAddConfiguration(config);
+			}
 		}
+	}
+
+	private static void internalAddConfiguration(RepositoryConfiguration config) {
+		repositoryConfigurations.remove(config.getRepositoryUrl());
+		repositoryConfigurations.put(config.getRepositoryUrl(), config);
 	}
 
 	// /**
@@ -170,48 +173,56 @@ public class BugzillaCorePlugin extends Plugin {
 
 	/** public for testing */
 	public static void removeConfiguration(RepositoryConfiguration config) {
-		repositoryConfigurations.remove(config.getRepositoryUrl());
+		synchronized (repositoryConfigurations) {
+			repositoryConfigurations.remove(config.getRepositoryUrl());
+		}
 	}
 
 	/** public for testing */
-	public static void readRepositoryConfigurationFile() {
+	public static synchronized void readRepositoryConfigurationFile() {
+
 		// IPath configFile = getProductConfigurationCachePath();
-		if (repositoryConfigurationFile == null || !repositoryConfigurationFile.exists()) {
+		if (cacheFileRead || repositoryConfigurationFile == null || !repositoryConfigurationFile.exists()) {
 			return;
 		}
-		ObjectInputStream in = null;
-		try {
-			in = new ObjectInputStream(new FileInputStream(repositoryConfigurationFile));
-			int size = in.readInt();
-			for (int nX = 0; nX < size; nX++) {
-				RepositoryConfiguration item = (RepositoryConfiguration) in.readObject();
-				if (item != null) {
-					repositoryConfigurations.put(item.getRepositoryUrl(), item);
-				}
-			}
-		} catch (Exception e) {
-			log(new Status(IStatus.INFO, BugzillaCorePlugin.ID_PLUGIN, ERROR_INCOMPATIBLE_CONFIGURATION));
+
+		synchronized (repositoryConfigurations) {
+			ObjectInputStream in = null;
 			try {
-				if (in != null) {
-					in.close();
-				}
-				if (repositoryConfigurationFile != null && repositoryConfigurationFile.exists()) {
-					if (repositoryConfigurationFile.delete()) {
-						// successfully deleted
-					} else {
-						log(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, 0, ERROR_DELETING_CONFIGURATION, e));
+				in = new ObjectInputStream(new FileInputStream(repositoryConfigurationFile));
+				int size = in.readInt();
+				for (int nX = 0; nX < size; nX++) {
+					RepositoryConfiguration item = (RepositoryConfiguration) in.readObject();
+					if (item != null) {
+						repositoryConfigurations.put(item.getRepositoryUrl(), item);
 					}
 				}
-
-			} catch (Exception ex) {
-				log(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, 0, ERROR_DELETING_CONFIGURATION, e));
-			}
-		} finally {
-			if (in != null) {
+			} catch (Exception e) {
+				log(new Status(IStatus.INFO, BugzillaCorePlugin.ID_PLUGIN, ERROR_INCOMPATIBLE_CONFIGURATION));
 				try {
-					in.close();
-				} catch (IOException e) {
-					// ignore
+					if (in != null) {
+						in.close();
+					}
+					if (repositoryConfigurationFile != null && repositoryConfigurationFile.exists()) {
+						if (repositoryConfigurationFile.delete()) {
+							// successfully deleted
+						} else {
+							log(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, 0,
+									ERROR_DELETING_CONFIGURATION, e));
+						}
+					}
+
+				} catch (Exception ex) {
+					log(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, 0, ERROR_DELETING_CONFIGURATION, e));
+				}
+			} finally {
+				cacheFileRead = true;
+				if (in != null) {
+					try {
+						in.close();
+					} catch (IOException e) {
+						// ignore
+					}
 				}
 			}
 		}
@@ -219,16 +230,20 @@ public class BugzillaCorePlugin extends Plugin {
 
 	/** public for testing */
 	public static void writeRepositoryConfigFile() {
-		// IPath configFile = getProductConfigurationCachePath();
 		if (repositoryConfigurationFile != null) {
 			ObjectOutputStream out = null;
 			try {
-				out = new ObjectOutputStream(new FileOutputStream(repositoryConfigurationFile));
-				out.writeInt(repositoryConfigurations.size());
-				for (String key : repositoryConfigurations.keySet()) {
-					RepositoryConfiguration item = repositoryConfigurations.get(key);
-					if (item != null) {
-						out.writeObject(item);
+				Set<RepositoryConfiguration> tempConfigs;
+				synchronized (repositoryConfigurations) {
+					tempConfigs = new HashSet<RepositoryConfiguration>(repositoryConfigurations.values());
+				}
+				if (tempConfigs.size() > 0) {
+					out = new ObjectOutputStream(new FileOutputStream(repositoryConfigurationFile));
+					out.writeInt(tempConfigs.size());
+					for (RepositoryConfiguration repositoryConfiguration : tempConfigs) {
+						if (repositoryConfiguration != null) {
+							out.writeObject(repositoryConfiguration);
+						}
 					}
 				}
 			} catch (IOException e) {
