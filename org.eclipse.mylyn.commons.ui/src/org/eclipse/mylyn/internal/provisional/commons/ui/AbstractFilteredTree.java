@@ -46,7 +46,7 @@ public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 
 	private static final int FILTER_WIDTH_MAX = 300;
 
-	private static final float FILTER_WIDTH_RATIO = 0.3f;
+	private static final float FILTER_WIDTH_RATIO = 0.35f;
 
 	public static final String LABEL_FIND = Messages.AbstractFilteredTree_Find;
 
