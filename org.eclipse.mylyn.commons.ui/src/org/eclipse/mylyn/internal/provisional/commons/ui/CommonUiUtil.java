@@ -34,7 +34,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class CommonUiUtil {
 
-	private static final String KEY_DISABLED = "org.eclipse.mylyn.commons.ui.disabled"; //$NON-NLS-1$
+	private static final String KEY_ENABLED = "org.eclipse.mylyn.commons.ui.enabled"; //$NON-NLS-1$
 
 	public static void busyCursorWhile(final ICoreRunnable runnable) throws OperationCanceledException, CoreException {
 		try {
@@ -158,54 +158,61 @@ public class CommonUiUtil {
 		}
 	}
 
-	public static void setEnabled(Composite composite, boolean enabled) {
-		if (enabled) {
-			enable(composite);
+	public static void setEnabled(Composite composite, boolean restore) {
+		if (restore) {
+			restoreState(composite);
 		} else {
-			disable(composite);
+			saveStateAndDisable(composite);
 		}
 	}
 
-	private static void disable(Composite composite) {
+	private static void saveStateAndDisable(Composite composite) {
 		if (!composite.isDisposed()) {
-			if (!composite.getEnabled()) {
-				composite.setData(KEY_DISABLED, Boolean.TRUE);
-			} else {
-				composite.setEnabled(false);
+			Object data = composite.getData(KEY_ENABLED);
+			if (data == null) {
+				if (!composite.getEnabled()) {
+					composite.setData(KEY_ENABLED, Boolean.FALSE);
+				} else {
+					composite.setData(KEY_ENABLED, Boolean.TRUE);
+					composite.setEnabled(false);
+				}
 			}
 			for (Control control : composite.getChildren()) {
 				if (control instanceof Composite) {
-					disable((Composite) control);
+					saveStateAndDisable((Composite) control);
 				} else {
-					if (!control.getEnabled()) {
-						control.setData(KEY_DISABLED, Boolean.TRUE);
-					} else {
-						control.setEnabled(false);
+					data = control.getData(KEY_ENABLED);
+					if (data == null) {
+						if (!control.getEnabled()) {
+							control.setData(KEY_ENABLED, Boolean.FALSE);
+						} else {
+							control.setData(KEY_ENABLED, Boolean.TRUE);
+							control.setEnabled(false);
+						}
 					}
 				}
 			}
 		}
 	}
 
-	private static void enable(Composite composite) {
+	private static void restoreState(Composite composite) {
 		if (!composite.isDisposed()) {
-			if (composite.getData(KEY_DISABLED) == null) {
-				composite.setEnabled(true);
-			} else {
-				composite.setData(KEY_DISABLED, null);
+			Object data = composite.getData(KEY_ENABLED);
+			if (data != null) {
+				composite.setEnabled(data == Boolean.TRUE);
+				composite.setData(KEY_ENABLED, null);
 			}
 			for (Control control : composite.getChildren()) {
 				if (control instanceof Composite) {
-					enable((Composite) control);
+					restoreState((Composite) control);
 				} else {
-					if (control.getData(KEY_DISABLED) == null) {
-						control.setEnabled(true);
-					} else {
-						control.setData(KEY_DISABLED, null);
+					data = control.getData(KEY_ENABLED);
+					if (data != null) {
+						control.setEnabled(data == Boolean.TRUE);
+						control.setData(KEY_ENABLED, null);
 					}
 				}
 			}
 		}
 	}
-
 }
