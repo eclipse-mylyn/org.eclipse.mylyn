@@ -659,12 +659,21 @@
 	<!-- ===================================================================== -->
 
 	<target name="fix-permissions">
-		<chmod dir="${dir}" perm="g+w"/>
+		<!--
+		<chmod perm="g+w">
+			<fileset dir="${dir}"/>
+		</chmod>
+		-->
 		<!--
 		<chgrp group="${dist.group}">
 			<fileset dir="${target.dir}"/>
 		</chgrp>
 		-->
+		<exec dir="${dir}" executable="/bin/chmod" failonerror="false">
+			<arg value="-R"/>
+			<arg value="g+w"/>
+			<arg value="."/>
+		</exec>
 		<exec dir="${dir}" executable="/bin/chgrp" failonerror="false">
 			<arg value="-R"/>
 			<arg value="${dist.group}"/>
