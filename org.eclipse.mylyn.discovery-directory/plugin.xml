@@ -77,7 +77,7 @@
       <connectorDescriptor
             categoryId="org.eclipse.mylyn.discovery.directory.community"
             description="%connectorDescriptor.description.mantis"
-            id="com.tasktop.discovery.directory.connectorDescriptor.mantis"
+            id="com.itsolut.mantis_feature"
             kind="task"
             license="%connectorDescriptor.license.mantis"
             name="%connectorDescriptor.name.mantis"
