@@ -253,6 +253,8 @@ public class Messages extends NLS {
 
 	public static String TaskSelectionDialogWithRandom_Feeling_Lazy_Error;
 
+	public static String TaskSelectionDialogWithRandom_Feeling_Lazy_Error_Title;
+
 	public static String TaskSelectionDialogWithRandom_Feeling_Lazy_Tooltip;
 
 	public static String TaskWorkingSetAction_All;

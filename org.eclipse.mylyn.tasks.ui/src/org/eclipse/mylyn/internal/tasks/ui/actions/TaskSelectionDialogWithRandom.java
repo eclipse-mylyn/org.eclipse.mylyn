@@ -89,7 +89,7 @@ public class TaskSelectionDialogWithRandom extends TaskSelectionDialog {
 					close();
 				} catch (Exception e) {
 					MessageDialog.openInformation(Display.getDefault().getActiveShell(),
-							Messages.TaskSelectionDialog_Random_Task,
+							Messages.TaskSelectionDialogWithRandom_Feeling_Lazy_Error_Title,
 							Messages.TaskSelectionDialogWithRandom_Feeling_Lazy_Error);
 				}
 			}
