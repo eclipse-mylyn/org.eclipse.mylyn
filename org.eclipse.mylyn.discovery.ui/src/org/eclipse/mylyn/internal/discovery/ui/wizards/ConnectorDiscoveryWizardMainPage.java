@@ -668,8 +668,8 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 			providerLabel = new Label(connectorContainer, SWT.NULL);
 			configureLook(providerLabel, background);
 			GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).applyTo(providerLabel);
-			providerLabel.setText(NLS.bind(Messages.ConnectorDiscoveryWizardMainPage_provider_and_license,
-					connector.getProvider(), connector.getLicense()));
+			providerLabel.setText(NLS.bind(Messages.ConnectorDiscoveryWizardMainPage_provider_and_license, Messages.ConnectorDiscoveryWizardMainPage_provider_by
+					+ connector.getProvider(), connector.getLicense()));
 
 			if (hasTooltip(connector)) {
 				infoButton = new Button(connectorContainer, SWT.FLAT);
@@ -761,7 +761,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		}
 
 		public void updateAvailability() {
-			boolean enabled = connector.getAvailable() != null && connector.getAvailable();
+			boolean enabled = true;//= connector.getAvailable() != null && connector.getAvailable();
 
 			checkbox.setEnabled(enabled);
 			nameLabel.setEnabled(enabled);

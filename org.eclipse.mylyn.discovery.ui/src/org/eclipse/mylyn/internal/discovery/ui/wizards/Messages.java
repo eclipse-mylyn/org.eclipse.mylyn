@@ -44,6 +44,8 @@ class Messages extends NLS {
 
 	public static String InstallConnectorsJob_unexpectedError_url;
 
+	public static String ConnectorDiscoveryWizardMainPage_provider_by;
+
 	public static String ConnectorDiscoveryWizardMainPage_clearButton_accessibleListener;
 
 	public static String ConnectorDiscoveryWizardMainPage_clearButton_toolTip;
