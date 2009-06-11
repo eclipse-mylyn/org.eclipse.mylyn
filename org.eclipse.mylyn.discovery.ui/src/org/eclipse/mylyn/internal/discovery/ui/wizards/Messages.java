@@ -85,6 +85,8 @@ class Messages extends NLS {
 
 	public static String ConnectorDiscoveryWizardMainPage_warningTitleConnectorUnavailable;
 
+	public static String PrepareInstallProfileJob_notFoundDescriptorDetail;
+
 	public static String PrepareInstallProfileJob_calculatingRequirements;
 
 	public static String PrepareInstallProfileJob_computeProfileChangeRequestFailed;

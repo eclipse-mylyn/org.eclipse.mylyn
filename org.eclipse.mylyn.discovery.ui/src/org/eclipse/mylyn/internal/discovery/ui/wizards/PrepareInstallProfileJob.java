@@ -278,8 +278,18 @@ public class PrepareInstallProfileJob implements IRunnableWithProgress {
 					proceed = okayToProceed[0];
 				}
 				if (!proceed) {
+					String notFoundDescription = ""; //$NON-NLS-1$
+					for (ConnectorDescriptor descriptor : installableConnectors) {
+						if (!foundIds.contains(descriptor.getId())) {
+							if (notFoundDescription.length() > 0) {
+								notFoundDescription += Messages.InstallConnectorsJob_commaSeparator;
+							}
+							notFoundDescription += NLS.bind(Messages.PrepareInstallProfileJob_notFoundDescriptorDetail,
+									new Object[] { descriptor.getName(), descriptor.getId(), descriptor.getSiteUrl() });
+						}
+					}
 					throw new CoreException(new Status(IStatus.ERROR, DiscoveryUi.ID_PLUGIN, NLS.bind(
-							Messages.InstallConnectorsJob_connectorsNotAvailable, new Object[] { notFound }), null));
+							Messages.InstallConnectorsJob_connectorsNotAvailable, notFoundDescription), null));
 				}
 			} else if (installableUnits.size() > installableConnectors.size()) {
 				// should never ever happen
