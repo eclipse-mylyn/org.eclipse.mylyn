@@ -24,7 +24,11 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  */
 public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 
-	private final PlanningPart part = new PlanningPart(ExpandableComposite.TWISTIE, false);
+	private final PlanningPart part;
+
+	public TaskEditorPlanningPart() {
+		part = new PlanningPart(ExpandableComposite.TWISTIE, false);
+	}
 
 	@Override
 	public void initialize(AbstractTaskEditorPage taskEditorPage) {
@@ -32,8 +36,11 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 		boolean needsDueDate = !taskEditorPage.getConnector().hasRepositoryDueDate(taskEditorPage.getTaskRepository(),
 				taskEditorPage.getTask(), getTaskData());
 		CommonTextSupport textSupport = (CommonTextSupport) getTaskEditorPage().getAdapter(CommonTextSupport.class);
+		// disable notes for new tasks to avoid confusion due to showing multiple input fields
 		part.initialize(taskEditorPage.getManagedForm(), taskEditorPage.getTaskRepository(),
 				(AbstractTask) taskEditorPage.getTask(), needsDueDate, taskEditorPage, textSupport);
+		part.setNeedsNotes(!getModel().getTaskData().isNew());
+		part.setAlwaysExpand(getModel().getTaskData().isNew());
 	}
 
 	@Override

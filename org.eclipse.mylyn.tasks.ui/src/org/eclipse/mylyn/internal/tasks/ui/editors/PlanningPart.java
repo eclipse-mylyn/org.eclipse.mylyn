@@ -141,9 +141,14 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 	private ToolBarManager toolBarManager;
 
+	private boolean needsNotes;
+
+	private boolean alwaysExpand;
+
 	public PlanningPart(int sectionStyle, boolean expandNotesVertically) {
 		super(sectionStyle, Messages.PersonalPart_Personal_Planning);
 		this.expandNotesVertically = expandNotesVertically;
+		this.needsNotes = true;
 	}
 
 	public void initialize(IManagedForm managedForm, TaskRepository taskRepository, AbstractTask task,
@@ -203,12 +208,11 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 	@Override
 	public Control createControl(Composite parent, FormToolkit toolkit) {
-
 		this.notesString = getTask().getNotes();
 		if (this.notesString == null) {
 			this.notesString = ""; //$NON-NLS-1$
 		}
-		Section section = createSection(parent, toolkit, notesString.length() > 0);
+		Section section = createSection(parent, toolkit, isAlwaysExpand() || notesString.length() > 0);
 		Composite composite = toolkit.createComposite(section);
 		GridLayout layout = EditorUtil.createSectionClientLayout();
 		layout.numColumns = (needsDueDate) ? 6 : 4;
@@ -228,7 +232,9 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		TasksUiInternal.getTaskList().addChangeListener(TASK_LIST_LISTENER);
 		TasksUiPlugin.getTaskActivityManager().addActivityListener(timingListener);
 
-		createNotesArea(toolkit, composite, layout.numColumns);
+		if (needsNotes()) {
+			createNotesArea(toolkit, composite, layout.numColumns);
+		}
 
 		toolkit.paintBordersFor(composite);
 		section.setClient(composite);
@@ -556,9 +562,20 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		}
 	}
 
-	/** for testing - should cause dirty state */
-	public void setNotes(String notes) {
-		noteEditor.setText(notes);
+	public boolean needsNotes() {
+		return needsNotes;
+	}
+
+	public void setNeedsNotes(boolean needsNotes) {
+		this.needsNotes = needsNotes;
+	}
+
+	public boolean isAlwaysExpand() {
+		return alwaysExpand;
+	}
+
+	public void setAlwaysExpand(boolean alwaysExpand) {
+		this.alwaysExpand = alwaysExpand;
 	}
 
 }
