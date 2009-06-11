@@ -96,10 +96,21 @@ public class EditorUtilTest extends TestCase {
 
 		CommonUiUtil.setEnabled(composite, false);
 		CommonUiUtil.setEnabled(composite, true);
-		// the second time all state information should have been removed and all controls enabled
+		// the second call should have not changed anything 
 		CommonUiUtil.setEnabled(composite, true);
 		assertTrue(composite.getEnabled());
-		assertTrue(label.getEnabled());
+		assertFalse(label.getEnabled());
+	}
+
+	public void testSetEnabledWithoutDisabling() {
+		Shell shell = new Shell();
+		Composite composite = new Composite(shell, SWT.NONE);
+		composite.setEnabled(false);
+
+		CommonUiUtil.setEnabled(composite, true);
+		assertFalse(composite.getEnabled());
+		CommonUiUtil.setEnabled(composite, true);
+		assertFalse(composite.getEnabled());
 	}
 
 }
