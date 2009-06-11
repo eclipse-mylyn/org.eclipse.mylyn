@@ -1050,6 +1050,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 			refresh(true);
 
 			currentPresentation = presentation;
+			presentationDropDownSelectionAction.setImageDescriptor(currentPresentation.getImageDescriptor());
 		} finally {
 			getViewer().getControl().setRedraw(true);
 		}

@@ -1161,13 +1161,13 @@
    <extension point="org.eclipse.mylyn.tasks.ui.presentations">
       <presentation
             class="org.eclipse.mylyn.internal.tasks.ui.CategorizedPresentation"
-            icon="icons/etool16/category.gif"
+            icon="icons/etool16/presentation-categorized.png"
             id="org.eclipse.mylyn.tasks.ui.categorized"
             name="%CategorizedPresentation.name"
             primary="true"/>
       <presentation
             class="org.eclipse.mylyn.internal.tasks.ui.ScheduledPresentation"
-            icon="icons/etool16/calendar.gif"
+            icon="icons/etool16/presentation-scheduled.png"
             id="org.eclipse.mylyn.tasks.ui.scheduled"
             name="%ScheduledPresentation.name"
             primary="true"/>
