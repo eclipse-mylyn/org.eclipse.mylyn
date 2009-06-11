@@ -38,6 +38,7 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.resource.CompositeImageDescriptor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.ISelection;
@@ -221,6 +222,9 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			//titleLabel = new Label(titleRegion, SWT.NONE);
 			// need a viewer for copy support
 			TextViewer titleViewer = new TextViewer(titleRegion, SWT.READ_ONLY);
+			// Eclipse 3.3 needs a document, otherwise an NPE is thrown
+			titleViewer.setDocument(new Document());
+
 			titleLabel = titleViewer.getTextWidget();
 			titleLabel.setForeground(heading.getForeground());
 			titleLabel.setFont(heading.getFont());
