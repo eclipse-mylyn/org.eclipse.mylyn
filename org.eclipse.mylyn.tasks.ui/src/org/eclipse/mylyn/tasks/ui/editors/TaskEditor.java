@@ -38,6 +38,7 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.resource.CompositeImageDescriptor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -45,6 +46,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.commons.ui.TaskListImageDescriptor;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.SelectionProviderAdapter;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
@@ -103,6 +105,7 @@ import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.internal.forms.widgets.BusyIndicator;
 import org.eclipse.ui.internal.forms.widgets.FormHeading;
 import org.eclipse.ui.internal.forms.widgets.TitleRegion;
@@ -173,6 +176,8 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 	private StyledText titleLabel;
 
+	private CommonTextSupport textSupport;
+
 	private static boolean toolBarFailureLogged;
 
 	public TaskEditor() {
@@ -214,7 +219,9 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			});
 
 			//titleLabel = new Label(titleRegion, SWT.NONE);
-			titleLabel = new StyledText(titleRegion, SWT.READ_ONLY);
+			// need a viewer for copy support
+			TextViewer titleViewer = new TextViewer(titleRegion, SWT.READ_ONLY);
+			titleLabel = titleViewer.getTextWidget();
 			titleLabel.setForeground(heading.getForeground());
 			titleLabel.setFont(heading.getFont());
 			// XXX work-around problem that causes field to maintain selection when unfocused
@@ -232,6 +239,12 @@ public class TaskEditor extends SharedHeaderFormEditor {
 					updateSizeAndLocations();
 				}
 			});
+
+			IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
+			if (handlerService != null) {
+				textSupport = new CommonTextSupport(handlerService);
+				textSupport.install(titleViewer, false);
+			}
 		} catch (Exception e) {
 			if (!toolBarFailureLogged) {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
@@ -475,7 +488,9 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		if (menuService != null && toolBarManager instanceof ContributionManager) {
 			menuService.releaseContributions((ContributionManager) toolBarManager);
 		}
-
+		if (textSupport != null) {
+			textSupport.dispose();
+		}
 		super.dispose();
 	}
 
