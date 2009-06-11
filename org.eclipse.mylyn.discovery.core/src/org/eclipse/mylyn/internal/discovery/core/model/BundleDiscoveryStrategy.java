@@ -77,8 +77,8 @@ public class BundleDiscoveryStrategy extends AbstractDiscoveryStrategy {
 							category.setSource(discoverySource);
 							if (!discoverySource.getPolicy().isPermitCategories()) {
 								StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN, NLS.bind(
-										Messages.BundleDiscoveryStrategy_categoryDisallowed,
-										new Object[] { category.getName(), category.getId(),
+										Messages.BundleDiscoveryStrategy_categoryDisallowed, new Object[] {
+												category.getName(), category.getId(),
 												element.getContributor().getName() }), null));
 							} else {
 								categories.add(category);
@@ -101,7 +101,11 @@ public class BundleDiscoveryStrategy extends AbstractDiscoveryStrategy {
 	}
 
 	protected AbstractDiscoverySource computeDiscoverySource(IContributor contributor) {
-		return new BundleDiscoverySource(Platform.getBundle(contributor.getName()));
+		Policy policy = new Policy(true);
+		BundleDiscoverySource bundleDiscoverySource = new BundleDiscoverySource(
+				Platform.getBundle(contributor.getName()));
+		bundleDiscoverySource.setPolicy(policy);
+		return bundleDiscoverySource;
 	}
 
 	protected IExtensionRegistry getExtensionRegistry() {
