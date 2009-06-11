@@ -205,8 +205,8 @@ public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 
 	private void setGrayFilterText(boolean gray) {
 		if (gray) {
-			filterText.setForeground(parent.getShell().getDisplay().getSystemColor(SWT.COLOR_GRAY));
-			filterText.setFont(CommonFonts.ITALIC);
+			filterText.setForeground(CommonColors.GRAY_MID);
+//			filterText.setFont(CommonFonts.ITALIC);
 		} else {
 			filterText.setForeground(textColor);
 			filterText.setFont(textFont);
