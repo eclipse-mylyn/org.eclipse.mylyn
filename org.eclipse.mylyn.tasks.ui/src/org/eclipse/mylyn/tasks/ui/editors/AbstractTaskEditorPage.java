@@ -1489,7 +1489,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 	}
 
 	/**
-	 * Specifies that the page supports the submit operation. This flag is to true by default.
+	 * Specifies that the page supports the submit operation. This flag is set to true by default.
 	 * 
 	 * @since 3.2
 	 * @see #needsSubmit()
@@ -1510,7 +1510,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 	}
 
 	/**
-	 * Specifies that the page supports submitting. This flag is to true by default.
+	 * Specifies that the page supports submitting. This flag is set to false by default.
 	 * 
 	 * @since 3.2
 	 * @see #needsSubmitButton()
