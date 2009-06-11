@@ -1225,7 +1225,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 		if (forcedBridge != null) {
 			bridge = forcedBridge;
 		}
-		String parentHandle = bridge.getParentHandle(node.getHandleIdentifier(), false);
+		String parentHandle = bridge.getParentHandle(node.getHandleIdentifier(), forcedBridge == null); //false);
 
 		// do not check child bridges if we are using a foced bridge
 		if (forcedBridge == null) {

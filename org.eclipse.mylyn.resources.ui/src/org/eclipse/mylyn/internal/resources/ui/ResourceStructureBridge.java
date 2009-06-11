@@ -47,7 +47,7 @@ public class ResourceStructureBridge extends AbstractContextStructureBridge {
 	@Override
 	public String getParentHandle(String handle, boolean allowChildBridgeHandles) {
 		if (allowChildBridgeHandles) {
-			getParentHandle(handle);
+			return getParentHandle(handle);
 		} else {
 			IResource resource = (IResource) getObjectForHandle(handle);
 			if (resource != null) {
