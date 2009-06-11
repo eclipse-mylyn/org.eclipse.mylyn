@@ -52,6 +52,7 @@ import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDiscovery;
 import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryCategory;
 import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryConnector;
 import org.eclipse.mylyn.internal.discovery.core.model.Icon;
+import org.eclipse.mylyn.internal.discovery.core.model.Overview;
 import org.eclipse.mylyn.internal.discovery.core.model.RemoteBundleDiscoveryStrategy;
 import org.eclipse.mylyn.internal.discovery.core.util.DiscoveryCategoryComparator;
 import org.eclipse.mylyn.internal.discovery.core.util.DiscoveryConnectorComparator;
@@ -108,6 +109,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.progress.WorkbenchJob;
@@ -597,7 +600,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 
 		private final Label nameLabel;
 
-		private Button infoButton;
+		private ToolItem infoButton;
 
 		private final Label providerLabel;
 
@@ -668,23 +671,19 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 			providerLabel = new Label(connectorContainer, SWT.NULL);
 			configureLook(providerLabel, background);
 			GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).applyTo(providerLabel);
-			providerLabel.setText(NLS.bind(Messages.ConnectorDiscoveryWizardMainPage_provider_and_license, Messages.ConnectorDiscoveryWizardMainPage_provider_by
-					+ connector.getProvider(), connector.getLicense()));
+			providerLabel.setText(NLS.bind(Messages.ConnectorDiscoveryWizardMainPage_provider_and_license,
+					connector.getProvider(), connector.getLicense()));
 
 			if (hasTooltip(connector)) {
-				infoButton = new Button(connectorContainer, SWT.FLAT);
-				configureLook(infoButton, background);
+				ToolBar toolBar = new ToolBar(connectorContainer, SWT.FLAT);
+				toolBar.setBackground(background);
+
+				infoButton = new ToolItem(toolBar, SWT.PUSH);
 				infoButton.setImage(infoImage);
-				paintFlatButton(infoButton);
 				infoButton.setToolTipText(Messages.ConnectorDiscoveryWizardMainPage_tooltip_showOverview);
-				hookTooltip(infoButton, connectorContainer, nameLabel, connector);
-				infoButton.addFocusListener(new FocusAdapter() {
-					@Override
-					public void focusGained(FocusEvent e) {
-						bodyScrolledComposite.showControl(connectorContainer);
-					}
-				});
-				GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).hint(16, 16).applyTo(infoButton);
+				hookTooltip(toolBar, infoButton, connectorContainer, nameLabel, connector.getSource(),
+						connector.getOverview());
+				GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).applyTo(toolBar);
 			} else {
 				new Label(connectorContainer, SWT.NULL);
 			}
@@ -730,19 +729,6 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 			description.addMouseListener(connectorItemMouseListener);
 		}
 
-		private void paintFlatButton(Button button) {
-			button.addPaintListener(new PaintListener() {
-				public void paintControl(PaintEvent e) {
-					Button button = (Button) e.widget;
-					Rectangle bounds = button.getImage().getBounds();
-					GC gc = e.gc;
-					gc.setBackground(button.getBackground());
-					gc.fillRectangle(bounds);
-					gc.drawImage(button.getImage(), 0, 0);
-				}
-			});
-		}
-
 		protected boolean maybeModifySelection(boolean selected) {
 			if (selected) {
 				if (connector.getAvailable() == null) {
@@ -761,7 +747,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		}
 
 		public void updateAvailability() {
-			boolean enabled = true;//= connector.getAvailable() != null && connector.getAvailable();
+			boolean enabled = connector.getAvailable() != null && connector.getAvailable();
 
 			checkbox.setEnabled(enabled);
 			nameLabel.setEnabled(enabled);
@@ -857,7 +843,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 					continue;
 				}
 				{ // category header
-					GradientCanvas categoryHeaderContainer = new GradientCanvas(container, SWT.NONE);
+					final GradientCanvas categoryHeaderContainer = new GradientCanvas(container, SWT.NONE);
 					categoryHeaderContainer.setSeparatorVisible(true);
 					categoryHeaderContainer.setSeparatorAlignment(SWT.TOP);
 					categoryHeaderContainer.setBackgroundGradient(new Color[] { colorCategoryGradientStart,
@@ -866,7 +852,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 					categoryHeaderContainer.putColor(IFormColors.H_BOTTOM_KEYLINE2, colorCategoryGradientEnd);
 
 					GridDataFactory.fillDefaults().span(2, 1).applyTo(categoryHeaderContainer);
-					GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).equalWidth(false).applyTo(
+					GridLayoutFactory.fillDefaults().numColumns(3).margins(5, 5).equalWidth(false).applyTo(
 							categoryHeaderContainer);
 
 					Label iconLabel = new Label(categoryHeaderContainer, SWT.NULL);
@@ -883,10 +869,23 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 					nameLabel.setFont(h1Font);
 					nameLabel.setText(category.getName());
 					nameLabel.setBackground(null);
-					GridDataFactory.fillDefaults().grab(true, false).applyTo(nameLabel);
 
+					GridDataFactory.fillDefaults().grab(true, false).applyTo(nameLabel);
+					if (hasTooltip(category)) {
+						ToolBar toolBar = new ToolBar(categoryHeaderContainer, SWT.FLAT);
+						toolBar.setBackground(null);
+						ToolItem infoButton = new ToolItem(toolBar, SWT.PUSH);
+						infoButton.setImage(infoImage);
+						infoButton.setToolTipText(Messages.ConnectorDiscoveryWizardMainPage_tooltip_showOverview);
+						hookTooltip(toolBar, infoButton, categoryHeaderContainer, nameLabel, category.getSource(),
+								category.getOverview());
+						GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).applyTo(toolBar);
+					} else {
+						new Label(categoryHeaderContainer, SWT.NULL);
+					}
 					Label description = new Label(categoryHeaderContainer, SWT.WRAP);
-					GridDataFactory.fillDefaults().grab(true, false).hint(100, SWT.DEFAULT).applyTo(description);
+					GridDataFactory.fillDefaults().grab(true, false).span(2, 1).hint(100, SWT.DEFAULT).applyTo(
+							description);
 					description.setBackground(null);
 					description.setText(category.getDescription());
 				}
@@ -931,10 +930,9 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		control.setBackground(background);
 	}
 
-	private void hookTooltip(final Button tooltipControl, final Control exitControl, final Control titleControl,
-			DiscoveryConnector connector) {
-		final OverviewToolTip toolTip = new OverviewToolTip(tooltipControl, connector.getSource(),
-				connector.getOverview());
+	private void hookTooltip(final Control tooltipControl, final ToolItem tipActivator, final Control exitControl,
+			final Control titleControl, AbstractDiscoverySource source, Overview overview) {
+		final OverviewToolTip toolTip = new OverviewToolTip(tooltipControl, source, overview);
 		Listener listener = new Listener() {
 			public void handleEvent(Event event) {
 				switch (event.type) {
@@ -946,9 +944,9 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 
 			}
 		};
-		tooltipControl.addListener(SWT.Dispose, listener);
-		tooltipControl.addListener(SWT.MouseWheel, listener);
-		tooltipControl.addSelectionListener(new SelectionAdapter() {
+		tipActivator.addListener(SWT.Dispose, listener);
+		tipActivator.addListener(SWT.MouseWheel, listener);
+		tipActivator.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				Point titleAbsLocation = titleControl.getParent().toDisplay(titleControl.getLocation());
@@ -1004,6 +1002,11 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 	private boolean hasTooltip(final DiscoveryConnector connector) {
 		return connector.getOverview() != null && connector.getOverview().getSummary() != null
 				&& connector.getOverview().getSummary().length() > 0;
+	}
+
+	private boolean hasTooltip(final DiscoveryCategory category) {
+		return category.getOverview() != null && category.getOverview().getSummary() != null
+				&& category.getOverview().getSummary().length() > 0;
 	}
 
 	/**

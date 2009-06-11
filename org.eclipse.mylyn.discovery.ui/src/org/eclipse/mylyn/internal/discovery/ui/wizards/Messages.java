@@ -14,7 +14,6 @@ package org.eclipse.mylyn.internal.discovery.ui.wizards;
 import org.eclipse.osgi.util.NLS;
 
 /**
- * 
  * @author David Green
  */
 class Messages extends NLS {
@@ -43,8 +42,6 @@ class Messages extends NLS {
 	public static String InstallConnectorsJob_task_configuring;
 
 	public static String InstallConnectorsJob_unexpectedError_url;
-
-	public static String ConnectorDiscoveryWizardMainPage_provider_by;
 
 	public static String ConnectorDiscoveryWizardMainPage_clearButton_accessibleListener;
 
