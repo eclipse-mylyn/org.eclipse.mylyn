@@ -48,10 +48,8 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
  * An abstract base class for repository settings page that supports the <code>taskRepositoryPageContribution</code>
- * extension point.
- * 
- * {@link ITaskRepositoryPage} implementations are encouraged to extend {@link AbstractRepositorySettingsPage} if
- * possible as it provides a standard UI for managing server settings.
+ * extension point. {@link ITaskRepositoryPage} implementations are encouraged to extend
+ * {@link AbstractRepositorySettingsPage} if possible as it provides a standard UI for managing server settings.
  * 
  * @see AbstractRepositorySettingsPage
  * @author David Green
@@ -312,9 +310,7 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 
 	/**
 	 * Validate all settings in the page including contributions. This method should be called whenever a setting is
-	 * changed on the page.
-	 * 
-	 * The results of validation are applied and the buttons of the page are updated.
+	 * changed on the page. The results of validation are applied and the buttons of the page are updated.
 	 * 
 	 * @see #validate(IProgressMonitor)
 	 * @see #applyValidationResult(IStatus[])
@@ -382,7 +378,7 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 							if (pageContributor.isEnabled()) {
 								contributors.add(pageContributor);
 							}
-						} catch (Exception e) {
+						} catch (Throwable e) {
 							StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load " //$NON-NLS-1$
 									+ TASK_REPOSITORY_PAGE_CONTRIBUTION + " '" + id + "' from plug-in " //$NON-NLS-1$//$NON-NLS-2$
 									+ element.getContributor().getName(), e));

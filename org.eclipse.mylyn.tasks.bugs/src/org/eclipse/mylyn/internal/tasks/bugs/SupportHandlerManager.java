@@ -14,7 +14,6 @@ package org.eclipse.mylyn.internal.tasks.bugs;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -139,7 +138,7 @@ public class SupportHandlerManager {
 						"Could not load task contributor extenstion: \"" + object.getClass().getCanonicalName() + "\"" //$NON-NLS-1$ //$NON-NLS-2$
 								+ " does not implement \"" + AbstractSupportHandler.class.getCanonicalName() + "\"")); //$NON-NLS-1$ //$NON-NLS-2$
 			}
-		} catch (CoreException e) {
+		} catch (Throwable e) {
 			StatusHandler.log(new Status(IStatus.WARNING, TasksBugsPlugin.ID_PLUGIN,
 					"Could not load task contributor extension", e)); //$NON-NLS-1$
 		}

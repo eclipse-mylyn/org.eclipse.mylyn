@@ -14,7 +14,6 @@ package org.eclipse.mylyn.internal.tasks.ui.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -251,7 +250,7 @@ public class TasksUiExtensionReader {
 			}
 
 			TaskListView.addPresentation(presentation);
-		} catch (CoreException e) {
+		} catch (Throwable e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 					"Could not load presentation extension", e)); //$NON-NLS-1$
 		}
@@ -269,7 +268,7 @@ public class TasksUiExtensionReader {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 						"Could not load duplicate detector " + obj.getClass().getCanonicalName())); //$NON-NLS-1$
 			}
-		} catch (CoreException e) {
+		} catch (Throwable e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load duplicate detector", e)); //$NON-NLS-1$
 		}
 	}
@@ -285,7 +284,7 @@ public class TasksUiExtensionReader {
 						"Could not load repository link provider " //$NON-NLS-1$
 								+ repositoryLinkProvider.getClass().getCanonicalName()));
 			}
-		} catch (CoreException e) {
+		} catch (Throwable e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 					"Could not load repository link provider", e)); //$NON-NLS-1$
 		}
@@ -310,7 +309,7 @@ public class TasksUiExtensionReader {
 						"Could not load editor page factory " + item.getClass().getCanonicalName() + " must implement " //$NON-NLS-1$ //$NON-NLS-2$
 								+ AbstractTaskEditorPageFactory.class.getCanonicalName()));
 			}
-		} catch (CoreException e) {
+		} catch (Throwable e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load page editor factory", //$NON-NLS-1$
 					e));
 		}
@@ -326,7 +325,7 @@ public class TasksUiExtensionReader {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load connector core " //$NON-NLS-1$
 						+ connectorCore.getClass().getCanonicalName()));
 			}
-		} catch (CoreException e) {
+		} catch (Throwable e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load connector core", e)); //$NON-NLS-1$
 		}
 	}
@@ -359,7 +358,7 @@ public class TasksUiExtensionReader {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load connector ui " //$NON-NLS-1$
 						+ connectorUiObject.getClass().getCanonicalName()));
 			}
-		} catch (CoreException e) {
+		} catch (Throwable e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load connector ui", e)); //$NON-NLS-1$
 		}
 	}
@@ -412,7 +411,7 @@ public class TasksUiExtensionReader {
 						"Could not load dynamic popup menu: " + dynamicPopupContributor.getClass().getCanonicalName() //$NON-NLS-1$
 								+ " must implement " + IDynamicSubMenuContributor.class.getCanonicalName())); //$NON-NLS-1$
 			}
-		} catch (CoreException e) {
+		} catch (Throwable e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 					"Could not load dynamic popup menu extension", e)); //$NON-NLS-1$
 		}
@@ -429,7 +428,7 @@ public class TasksUiExtensionReader {
 						"Could not load task list migrator migrator: " + migratorObject.getClass().getCanonicalName() //$NON-NLS-1$
 								+ " must implement " + AbstractTaskListMigrator.class.getCanonicalName())); //$NON-NLS-1$
 			}
-		} catch (CoreException e) {
+		} catch (Throwable e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 					"Could not load task list migrator extension", e)); //$NON-NLS-1$
 		}

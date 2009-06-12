@@ -31,7 +31,7 @@ public class LocalTaskEditorContributionDescriptor {
 		try {
 			return (AbstractLocalEditorPart) element.createExecutableExtension("class"); //$NON-NLS-1$
 		} catch (Exception e) {
-			throw new IllegalArgumentException(e);
+			throw new RuntimeException(e);
 		}
 	}
 

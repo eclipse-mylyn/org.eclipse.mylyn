@@ -40,7 +40,7 @@ public class TaskEditorExtensionPartDescriptor extends TaskEditorPartDescriptor 
 		try {
 			return (AbstractTaskEditorPart) element.createExecutableExtension(ATTR_CLASS);
 		} catch (Exception e) {
-			throw new IllegalArgumentException(e);
+			throw new RuntimeException(e);
 		}
 	}
 }
