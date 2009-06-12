@@ -325,7 +325,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 						monitors.add(0, (AbstractUserActivityMonitor) activityTimer);
 					}
 				}
-			} catch (CoreException e) {
+			} catch (Throwable e) {
 				StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN, "Could not load activity timer", //$NON-NLS-1$
 						e));
 			}

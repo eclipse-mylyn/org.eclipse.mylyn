@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -113,7 +112,7 @@ public class ErrorReporterManager {
 						"Could not load error reporter extenstion: \"" + object.getClass().getCanonicalName() + "\"" //$NON-NLS-1$ //$NON-NLS-2$
 								+ " does not implement \"" + AbstractErrorReporter.class.getCanonicalName() + "\"")); //$NON-NLS-1$ //$NON-NLS-2$
 			}
-		} catch (CoreException e) {
+		} catch (Throwable e) {
 			StatusHandler.log(new Status(IStatus.WARNING, ICommonsCoreConstants.ID_PLUGIN,
 					"Could not load error reporter extension", e)); //$NON-NLS-1$
 		}
