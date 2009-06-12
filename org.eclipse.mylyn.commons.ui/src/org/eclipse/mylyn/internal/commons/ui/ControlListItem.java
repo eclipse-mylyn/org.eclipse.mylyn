@@ -113,7 +113,9 @@ public abstract class ControlListItem extends Composite {
 				enterCount--;
 				getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						updateHotState();
+						if (!isDisposed()) {
+							updateHotState();
+						}
 					}
 				});
 			}
