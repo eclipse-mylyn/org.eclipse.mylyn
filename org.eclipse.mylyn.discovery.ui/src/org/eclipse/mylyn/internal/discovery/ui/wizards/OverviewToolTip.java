@@ -55,6 +55,12 @@ class OverviewToolTip extends GradientToolTip {
 
 	public OverviewToolTip(Control control, AbstractDiscoverySource source, Overview overview) {
 		super(control, ToolTip.RECREATE, true);
+		if (source == null) {
+			throw new IllegalArgumentException();
+		}
+		if (overview == null) {
+			throw new IllegalArgumentException();
+		}
 		this.source = source;
 		this.overview = overview;
 		setHideOnMouseDown(false); // required for links to work
@@ -74,67 +80,73 @@ class OverviewToolTip extends GradientToolTip {
 
 		Composite container = new Composite(parent, SWT.NULL);
 		container.setBackground(null);
-		GridDataFactory.fillDefaults().grab(true, true).hint(/*347*/650, SWT.DEFAULT).applyTo(container);
 
-		GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).spacing(3, 0).applyTo(container);
-
-		if (overview != null) {
-			int borderWidth = 1;
-
-			String summary = overview.getSummary();
-			Image image = null;
-			if (overview.getScreenshot() != null) {
-				image = computeImage(source, overview.getScreenshot());
-				if (image != null) {
-					final Image fimage = image;
-					container.addDisposeListener(new DisposeListener() {
-						public void widgetDisposed(DisposeEvent e) {
-							fimage.dispose();
-						}
-					});
-				}
-			}
-			if (summary != null) {
-				Label summaryLabel = new Label(container, SWT.WRAP);
-				GridDataFactory.fillDefaults().grab(true, false).hint(320, 240 + (borderWidth * 2)).span(
-						image == null ? 2 : 1, 1).applyTo(summaryLabel);
-				summaryLabel.setText(summary);
-				summaryLabel.setBackground(null);
-			}
+		Image image = null;
+		if (overview.getScreenshot() != null) {
+			image = computeImage(source, overview.getScreenshot());
 			if (image != null) {
-				final Composite imageContainer = new Composite(container, SWT.BORDER);
-				GridLayoutFactory.fillDefaults().applyTo(imageContainer);
-
-				GridDataFactory.fillDefaults().grab(false, false).align(SWT.CENTER, SWT.BEGINNING).hint(
-						320 + (borderWidth * 2), 240 + (borderWidth * 2)).applyTo(imageContainer);
-
-				Label imageLabel = new Label(imageContainer, SWT.NULL);
-				GridDataFactory.fillDefaults().hint(320, 240).indent(borderWidth, borderWidth).applyTo(imageLabel);
-				imageLabel.setImage(image);
-				imageLabel.setBackground(null);
-				imageLabel.setSize(320, 240);
-
-				// creates a border
-				imageContainer.setBackground(colorBlack);
-			}
-			if (overview.getUrl() != null && overview.getUrl().length() > 0) {
-				Link link = new Link(container, SWT.NULL);
-				GridDataFactory.fillDefaults().grab(false, false).span(2, 1).align(SWT.BEGINNING, SWT.CENTER).applyTo(
-						link);
-				link.setText(Messages.ConnectorDescriptorToolTip_detailsLink);
-				link.setBackground(null);
-				link.setToolTipText(NLS.bind(Messages.ConnectorDescriptorToolTip_detailsLink_tooltip, overview.getUrl()));
-				link.addSelectionListener(new SelectionListener() {
-					public void widgetSelected(SelectionEvent e) {
-						WorkbenchUtil.openUrl(overview.getUrl(), IWorkbenchBrowserSupport.AS_EXTERNAL);
-					}
-
-					public void widgetDefaultSelected(SelectionEvent e) {
-						widgetSelected(e);
+				final Image fimage = image;
+				container.addDisposeListener(new DisposeListener() {
+					public void widgetDisposed(DisposeEvent e) {
+						fimage.dispose();
 					}
 				});
 			}
 		}
+
+		GridDataFactory.fillDefaults().grab(true, true).hint(image == null ? 500 : 650, SWT.DEFAULT).applyTo(container);
+
+		GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).spacing(3, 0).applyTo(container);
+
+		int borderWidth = 1;
+
+		String summary = overview.getSummary();
+
+		if (summary != null) {
+			Label summaryLabel = new Label(container, SWT.WRAP);
+			GridDataFactory gridDataFactory = GridDataFactory.fillDefaults().grab(true, false).span(
+					image == null ? 2 : 1, 1);
+			if (image != null) {
+				gridDataFactory.hint(320, 240 + (borderWidth * 2));
+			}
+			gridDataFactory.applyTo(summaryLabel);
+
+			summaryLabel.setText(summary);
+			summaryLabel.setBackground(null);
+		}
+		if (image != null) {
+			final Composite imageContainer = new Composite(container, SWT.BORDER);
+			GridLayoutFactory.fillDefaults().applyTo(imageContainer);
+
+			GridDataFactory.fillDefaults().grab(false, false).align(SWT.CENTER, SWT.BEGINNING).hint(
+					320 + (borderWidth * 2), 240 + (borderWidth * 2)).applyTo(imageContainer);
+
+			Label imageLabel = new Label(imageContainer, SWT.NULL);
+			GridDataFactory.fillDefaults().hint(320, 240).indent(borderWidth, borderWidth).applyTo(imageLabel);
+			imageLabel.setImage(image);
+			imageLabel.setBackground(null);
+			imageLabel.setSize(320, 240);
+
+			// creates a border
+			imageContainer.setBackground(colorBlack);
+		}
+		if (overview.getUrl() != null && overview.getUrl().length() > 0) {
+			Link link = new Link(container, SWT.NULL);
+			GridDataFactory.fillDefaults().grab(false, false).span(2, 1).align(SWT.BEGINNING, SWT.CENTER).applyTo(link);
+			link.setText(Messages.ConnectorDescriptorToolTip_detailsLink);
+			link.setBackground(null);
+			link.setToolTipText(NLS.bind(Messages.ConnectorDescriptorToolTip_detailsLink_tooltip, overview.getUrl()));
+			link.addSelectionListener(new SelectionListener() {
+				public void widgetSelected(SelectionEvent e) {
+					WorkbenchUtil.openUrl(overview.getUrl(), IWorkbenchBrowserSupport.AS_EXTERNAL);
+				}
+
+				public void widgetDefaultSelected(SelectionEvent e) {
+					widgetSelected(e);
+				}
+			});
+		}
+
 		// hack: cause the tooltip to gain focus so that we can capture the escape key
 		//       this must be done async since the tooltip is not yet visible.
 		Display.getCurrent().asyncExec(new Runnable() {
