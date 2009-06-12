@@ -358,11 +358,12 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 	private TaskListSortAction sortDialogAction;
 
-	private PresentationDropDownSelectionAction presentationDropDownSelectionAction;
-
 	private NewTaskAction newTaskAction;
 
 	private LinkWithEditorAction linkWithEditorAction;
+
+	private final PresentationDropDownSelectionAction presentationDropDownSelectionAction = new PresentationDropDownSelectionAction(
+			this);
 
 	private final TaskPriorityFilter filterPriority = new TaskPriorityFilter();
 
@@ -1252,7 +1253,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		sortDialogAction = new TaskListSortAction(getSite(), this);
 		filterOnPriorityAction = new PriorityDropDownAction(this);
 		linkWithEditorAction = new LinkWithEditorAction(this);
-		presentationDropDownSelectionAction = new PresentationDropDownSelectionAction(this);
 		newTaskAction = new NewTaskAction();
 		filteredTree.getViewer().addSelectionChangedListener(newTaskAction);
 	}
