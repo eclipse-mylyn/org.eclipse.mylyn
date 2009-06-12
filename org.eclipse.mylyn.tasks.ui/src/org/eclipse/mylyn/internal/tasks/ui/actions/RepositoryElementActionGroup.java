@@ -154,8 +154,8 @@ public class RepositoryElementActionGroup {
 		manager.add(new Separator(ID_SEPARATOR_OPEN)); // open, activate
 		manager.add(new Separator(ID_SEPARATOR_EDIT)); // cut, copy paste, delete, rename
 		manager.add(new Separator(ID_SEPARATOR_TASKS)); // move to
+		manager.add(new GroupMarker(ID_SEPARATOR_OPERATIONS)); // repository properties, import/export, context
 		manager.add(new Separator(ID_SEPARATOR_REPOSITORY)); // synchronize
-		manager.add(new Separator(ID_SEPARATOR_OPERATIONS)); // repository properties, import/export, context
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 		manager.add(new Separator(ID_SEPARATOR_PROPERTIES)); // properties
 
