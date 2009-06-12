@@ -31,7 +31,9 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -93,46 +95,62 @@ class OverviewToolTip extends GradientToolTip {
 				});
 			}
 		}
+		final boolean hasLearnMoreLink = overview.getUrl() != null && overview.getUrl().length() > 0;
 
-		GridDataFactory.fillDefaults().grab(true, true).hint(image == null ? 500 : 650, SWT.DEFAULT).applyTo(container);
+		final int borderWidth = 1;
+		final int fixedImageHeight = 240;
+		final int fixedImageWidth = 320;
+		final int heightHint = fixedImageHeight + (borderWidth * 2);
+		final int widthHint = fixedImageWidth;
+
+		final int containerWidthHintWithImage = 650;
+		final int containerWidthHintWithoutImage = 500;
+
+		GridDataFactory.fillDefaults().grab(true, true).hint(
+				image == null ? containerWidthHintWithoutImage : containerWidthHintWithImage, SWT.DEFAULT).applyTo(
+				container);
 
 		GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).spacing(3, 0).applyTo(container);
 
-		int borderWidth = 1;
-
 		String summary = overview.getSummary();
 
-		if (summary != null) {
-			Label summaryLabel = new Label(container, SWT.WRAP);
-			GridDataFactory gridDataFactory = GridDataFactory.fillDefaults().grab(true, false).span(
-					image == null ? 2 : 1, 1);
-			if (image != null) {
-				gridDataFactory.hint(320, 240 + (borderWidth * 2));
-			}
-			gridDataFactory.applyTo(summaryLabel);
+		Composite summaryContainer = new Composite(container, SWT.NULL);
+		summaryContainer.setBackground(null);
+		GridLayoutFactory.fillDefaults().applyTo(summaryContainer);
 
-			summaryLabel.setText(summary);
-			summaryLabel.setBackground(null);
+		GridDataFactory gridDataFactory = GridDataFactory.fillDefaults().grab(true, false).span(image == null ? 2 : 1,
+				1);
+		if (image != null) {
+			gridDataFactory.hint(widthHint, heightHint);
 		}
+		gridDataFactory.applyTo(summaryContainer);
+
+		Label summaryLabel = new Label(summaryContainer, SWT.WRAP);
+		summaryLabel.setText(summary);
+		summaryLabel.setBackground(null);
+
+		GridDataFactory.fillDefaults().grab(true, false).align(SWT.BEGINNING, SWT.BEGINNING).applyTo(summaryLabel);
+
 		if (image != null) {
 			final Composite imageContainer = new Composite(container, SWT.BORDER);
 			GridLayoutFactory.fillDefaults().applyTo(imageContainer);
 
 			GridDataFactory.fillDefaults().grab(false, false).align(SWT.CENTER, SWT.BEGINNING).hint(
-					320 + (borderWidth * 2), 240 + (borderWidth * 2)).applyTo(imageContainer);
+					widthHint + (borderWidth * 2), heightHint).applyTo(imageContainer);
 
 			Label imageLabel = new Label(imageContainer, SWT.NULL);
-			GridDataFactory.fillDefaults().hint(320, 240).indent(borderWidth, borderWidth).applyTo(imageLabel);
+			GridDataFactory.fillDefaults().hint(widthHint, fixedImageHeight).indent(borderWidth, borderWidth).applyTo(
+					imageLabel);
 			imageLabel.setImage(image);
 			imageLabel.setBackground(null);
-			imageLabel.setSize(320, 240);
+			imageLabel.setSize(widthHint, fixedImageHeight);
 
 			// creates a border
 			imageContainer.setBackground(colorBlack);
 		}
-		if (overview.getUrl() != null && overview.getUrl().length() > 0) {
-			Link link = new Link(container, SWT.NULL);
-			GridDataFactory.fillDefaults().grab(false, false).span(2, 1).align(SWT.BEGINNING, SWT.CENTER).applyTo(link);
+		if (hasLearnMoreLink) {
+			Link link = new Link(summaryContainer, SWT.NULL);
+			GridDataFactory.fillDefaults().grab(false, false).align(SWT.BEGINNING, SWT.CENTER).applyTo(link);
 			link.setText(Messages.ConnectorDescriptorToolTip_detailsLink);
 			link.setBackground(null);
 			link.setToolTipText(NLS.bind(Messages.ConnectorDescriptorToolTip_detailsLink_tooltip, overview.getUrl()));
@@ -146,7 +164,14 @@ class OverviewToolTip extends GradientToolTip {
 				}
 			});
 		}
-
+		if (image == null) {
+			// prevent overviews with no image from providing unlimited text.
+			Point optimalSize = summaryContainer.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+			if (optimalSize.y > (heightHint + 10)) {
+				((GridData) summaryContainer.getLayoutData()).heightHint = heightHint;
+				container.layout(true);
+			}
+		}
 		// hack: cause the tooltip to gain focus so that we can capture the escape key
 		//       this must be done async since the tooltip is not yet visible.
 		Display.getCurrent().asyncExec(new Runnable() {
