@@ -20,7 +20,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -428,7 +427,7 @@ public class ContextCorePlugin extends Plugin {
 					}
 				}
 				ContextCorePlugin.getDefault().addStructureBridge(bridge);
-			} catch (CoreException e) {
+			} catch (Throwable e) {
 				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN,
 						"Could not load bridge extension", e)); //$NON-NLS-1$
 			}
@@ -453,7 +452,7 @@ public class ContextCorePlugin extends Plugin {
 				if (contentType != null) {
 					ContextCorePlugin.getDefault().addRelationProvider(contentType, relationProvider);
 				}
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN,
 						"Could not load relation provider", e)); //$NON-NLS-1$
 			}
