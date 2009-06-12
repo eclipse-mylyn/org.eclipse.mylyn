@@ -47,9 +47,7 @@ import org.eclipse.ui.part.IShowInTarget;
 import org.eclipse.ui.part.ShowInContext;
 
 /**
- * A quick outline popup.
- * 
- * Design based on PDE class by the same name.
+ * A quick outline popup. Design based on PDE class by the same name.
  * 
  * @author David Green
  */
@@ -89,10 +87,11 @@ public class QuickOutlinePopupDialog extends PopupDialog implements IInformation
 		return exclusions;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		patternFilter = new PatternFilter();
-		// Eclipse 3.5: use the new look constructor if available.
+		// TODO e3.5: use the new look constructor if available.
 		try {
 			Constructor<FilteredTree> constructor = FilteredTree.class.getConstructor(Composite.class, int.class,
 					PatternFilter.class, boolean.class);
