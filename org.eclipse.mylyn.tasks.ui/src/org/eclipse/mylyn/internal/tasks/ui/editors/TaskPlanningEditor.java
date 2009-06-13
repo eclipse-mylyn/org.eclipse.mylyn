@@ -169,7 +169,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 			createContributions(editorComposite);
 		}
 
-		PlanningPart planningPart = new PlanningPart(SWT.NONE, true);
+		PlanningPart planningPart = new PlanningPart(SWT.NONE);
 		// disable due date picker if it's a repository due date
 		boolean needsDueDate = true;
 		if (task != null) {

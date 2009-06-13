@@ -27,7 +27,7 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 	private final PlanningPart part;
 
 	public TaskEditorPlanningPart() {
-		part = new PlanningPart(ExpandableComposite.TWISTIE, false);
+		part = new PlanningPart(ExpandableComposite.TWISTIE);
 	}
 
 	@Override

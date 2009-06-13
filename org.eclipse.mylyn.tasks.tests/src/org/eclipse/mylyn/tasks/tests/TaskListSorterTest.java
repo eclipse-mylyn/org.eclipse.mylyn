@@ -50,8 +50,6 @@ import org.eclipse.ui.XMLMemento;
  */
 public class TaskListSorterTest extends TestCase {
 
-	private static final String MEMENTO_SORT_INDEX = "org.eclipse.mylyn.tasklist.ui.views.tasklist.sortIndex"; //$NON-NLS-1$
-
 	private static final String MEMENTO_KEY_SORT_DIRECTION = "sortDirection"; //$NON-NLS-1$
 
 	private static final String MEMENTO_KEY_SORT_INDEX = "sortIndex"; //$NON-NLS-1$

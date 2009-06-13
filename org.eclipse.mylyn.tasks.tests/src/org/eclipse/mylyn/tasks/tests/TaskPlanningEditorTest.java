@@ -22,11 +22,11 @@ import org.eclipse.ui.PlatformUI;
 // FIXME re-enable tests
 public class TaskPlanningEditorTest extends TestCase {
 
-	private static final String MOCK_LABEL = "label";
-
-	private static final String DESCRIPTION = "summary";
-
-	private static final String NEW_DESCRIPTION = "new summary";
+//	private static final String MOCK_LABEL = "label";
+//
+//	private static final String DESCRIPTION = "summary";
+//
+//	private static final String NEW_DESCRIPTION = "new summary";
 
 	@Override
 	protected void setUp() throws Exception {

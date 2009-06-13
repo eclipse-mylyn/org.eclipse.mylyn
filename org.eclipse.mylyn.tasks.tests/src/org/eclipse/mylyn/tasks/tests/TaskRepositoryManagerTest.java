@@ -43,25 +43,25 @@ public class TaskRepositoryManagerTest extends TestCase {
 
 	private static final String ANOTHER_URL = "http://codehaus.org";
 
-	private final String USERNAME = ".username"; //$NON-NLS-1$
-
-	private final String PASSWORD = ".password"; //$NON-NLS-1$
-
-	private final String AUTH_REPOSITORY = "org.eclipse.mylyn.tasklist.repositories"; //$NON-NLS-1$
-
-	private final String AUTH_PASSWORD = AUTH_REPOSITORY + PASSWORD;
-
-	private final String AUTH_USERNAME = AUTH_REPOSITORY + USERNAME;
-
-	private final String AUTH_HTTP = "org.eclipse.mylyn.tasklist.repositories.httpauth"; //$NON-NLS-1$
-
-	private final String AUTH_HTTP_PASSWORD = AUTH_HTTP + PASSWORD;
-
-	private final String AUTH_HTTP_USERNAME = AUTH_HTTP + USERNAME;
-
-	private final String AUTH_SCHEME = "Basic"; //$NON-NLS-1$
-
-	private final String AUTH_REALM = ""; //$NON-NLS-1$
+//	private final String USERNAME = ".username"; //$NON-NLS-1$
+//
+//	private final String PASSWORD = ".password"; //$NON-NLS-1$
+//
+//	private final String AUTH_REPOSITORY = "org.eclipse.mylyn.tasklist.repositories"; //$NON-NLS-1$
+//
+//	private final String AUTH_PASSWORD = AUTH_REPOSITORY + PASSWORD;
+//
+//	private final String AUTH_USERNAME = AUTH_REPOSITORY + USERNAME;
+//
+//	private final String AUTH_HTTP = "org.eclipse.mylyn.tasklist.repositories.httpauth"; //$NON-NLS-1$
+//
+//	private final String AUTH_HTTP_PASSWORD = AUTH_HTTP + PASSWORD;
+//
+//	private final String AUTH_HTTP_USERNAME = AUTH_HTTP + USERNAME;
+//
+//	private final String AUTH_SCHEME = "Basic"; //$NON-NLS-1$
+//
+//	private final String AUTH_REALM = ""; //$NON-NLS-1$
 
 	private TaskRepositoryManager manager;
 

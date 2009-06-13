@@ -165,10 +165,7 @@ public class BugzillaDateTimeTests extends AbstractBugzillaTest {
 			assertEquals(29, calendar.get(Calendar.MINUTE));
 			assertEquals(35, calendar.get(Calendar.SECOND));
 
-			int of = defaultTimeZone.getRawOffset();
-			of = TimeZone.getDefault().getRawOffset();
 			attribute = taskData.getRoot().getAttribute(BugzillaAttribute.DEADLINE.getKey());
-			String val = attribute.getValue();
 			assertEquals("2009-06-24", attribute.getValue());
 			date = taskData.getAttributeMapper().getDateValue(attribute);
 			calendar.setTime(date);

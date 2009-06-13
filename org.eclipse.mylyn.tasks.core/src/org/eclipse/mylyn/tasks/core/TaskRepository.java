@@ -387,6 +387,7 @@ public final class TaskRepository extends PlatformObject {
 		return false;
 	}
 
+	@SuppressWarnings("unchecked")
 	private String getAuthInfo(String property) {
 		synchronized (LOCK) {
 			if (Platform.isRunning()) {
@@ -439,6 +440,7 @@ public final class TaskRepository extends PlatformObject {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private String getFromLegacyKeystore(String property) {
 		String propertyValue = null;
 		try {

@@ -31,6 +31,8 @@ public class Messages extends NLS {
 
 	public static String RepositoryElementActionGroup_Copy_Detail_Menu_Label;
 
+	public static String RepositoryElementActionGroup_New;
+
 	public static String TaskInputDialog_Clear;
 
 	public static String TaskInputDialog_Description;

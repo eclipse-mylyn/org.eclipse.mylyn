@@ -852,29 +852,29 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 		if (taskData == null) {
 			synchronizeEditorAction = new SynchronizeEditorAction();
 			synchronizeEditorAction.selectionChanged(new StructuredSelection(getTaskEditor()));
-			toolBarManager.appendToGroup("repository", synchronizeEditorAction);
+			toolBarManager.appendToGroup("repository", synchronizeEditorAction); //$NON-NLS-1$
 		} else {
 			if (taskData.isNew()) {
 				DeleteTaskEditorAction deleteAction = new DeleteTaskEditorAction(getTask());
-				toolBarManager.appendToGroup("new", deleteAction);
+				toolBarManager.appendToGroup("new", deleteAction); //$NON-NLS-1$
 			} else if (taskRepository != null) {
 				ClearOutgoingAction clearOutgoingAction = new ClearOutgoingAction(
 						Collections.singletonList((IRepositoryElement) task));
 				(clearOutgoingAction).setTaskEditorPage(this);
 				if (clearOutgoingAction.isEnabled()) {
-					toolBarManager.appendToGroup("new", clearOutgoingAction);
+					toolBarManager.appendToGroup("new", clearOutgoingAction); //$NON-NLS-1$
 				}
 
 				if (task.getSynchronizationState() != SynchronizationState.OUTGOING_NEW) {
 					synchronizeEditorAction = new SynchronizeEditorAction();
 					synchronizeEditorAction.selectionChanged(new StructuredSelection(getTaskEditor()));
-					toolBarManager.appendToGroup("repository", synchronizeEditorAction);
+					toolBarManager.appendToGroup("repository", synchronizeEditorAction); //$NON-NLS-1$
 				}
 
 				NewSubTaskAction newSubTaskAction = new NewSubTaskAction();
 				newSubTaskAction.selectionChanged(newSubTaskAction, new StructuredSelection(task));
 				if (newSubTaskAction.isEnabled()) {
-					toolBarManager.appendToGroup("new", newSubTaskAction);
+					toolBarManager.appendToGroup("new", newSubTaskAction); //$NON-NLS-1$
 				}
 
 				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskData.getConnectorKind());
@@ -890,7 +890,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 						historyAction.setImageDescriptor(TasksUiImages.TASK_REPOSITORY_HISTORY);
 						historyAction.setToolTipText(Messages.AbstractTaskEditorPage_History);
-						toolBarManager.appendToGroup("open", historyAction);
+						toolBarManager.appendToGroup("open", historyAction); //$NON-NLS-1$
 					}
 				}
 			}

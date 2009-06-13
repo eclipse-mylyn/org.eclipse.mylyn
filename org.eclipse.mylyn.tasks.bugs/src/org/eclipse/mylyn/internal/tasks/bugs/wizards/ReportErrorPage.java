@@ -41,8 +41,6 @@ public class ReportErrorPage extends WizardPage {
 
 	private final IStatus status;
 
-	private final SupportRequest request;
-
 	private final List<AttributeTaskMapper> contributions;
 
 	private AttributeTaskMapper selectedContribution;
@@ -51,7 +49,6 @@ public class ReportErrorPage extends WizardPage {
 
 	public ReportErrorPage(SupportRequest request, IStatus status) {
 		super("reportError"); //$NON-NLS-1$
-		this.request = request;
 		this.status = status;
 		this.contributions = new ArrayList<AttributeTaskMapper>();
 		addContributions(request.getContributions());

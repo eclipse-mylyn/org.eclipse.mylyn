@@ -265,9 +265,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 
 	private void createOperationAttributes(Composite buttonComposite, FormToolkit toolkit) {
 		Composite parent = null;
-		List<TaskAttribute> result = new ArrayList<TaskAttribute>();
 		for (TaskAttribute taskAttribute : getTaskData().getRoot().getAttributes().values()) {
-
 			if (TaskAttribute.KIND_OPERATION.equals(taskAttribute.getMetaData().getKind())) {
 				if (parent == null) {
 					parent = toolkit.createComposite(buttonComposite);

@@ -174,7 +174,7 @@ public class RepositoryElementActionGroup {
 		}
 
 		if (!isInTaskList() && newSubTaskAction.isEnabled()) {
-			MenuManager newSubMenu = new MenuManager("New");
+			MenuManager newSubMenu = new MenuManager(Messages.RepositoryElementActionGroup_New);
 			newSubMenu.add(newSubTaskAction);
 			manager.appendToGroup(ID_SEPARATOR_NEW, newSubMenu);
 		}
