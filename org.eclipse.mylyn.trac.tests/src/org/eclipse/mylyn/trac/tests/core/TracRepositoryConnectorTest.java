@@ -24,6 +24,7 @@ import junit.framework.TestCase;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
@@ -179,7 +180,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 			}
 		};
 		IStatus queryStatus = connector.performQuery(repository, query, hitCollector, null, new NullProgressMonitor());
-		assertTrue(queryStatus.isOK());
+		assertEquals(Status.OK_STATUS, queryStatus);
 		assertEquals(3, result.size());
 		assertEquals(data.tickets.get(0).getId() + "", result.get(0).getTaskId());
 		assertEquals(data.tickets.get(1).getId() + "", result.get(1).getTaskId());

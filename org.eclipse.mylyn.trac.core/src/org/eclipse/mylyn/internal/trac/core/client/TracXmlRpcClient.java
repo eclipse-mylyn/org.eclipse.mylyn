@@ -442,7 +442,9 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 	private boolean isAPIVersionOrHigher(int epoch, int major, int minor, IProgressMonitor monitor)
 			throws TracException {
 		updateAPIVersion(monitor);
-		return (epochAPIVersion > epoch || (epochAPIVersion == epoch && majorAPIVersion > major || (majorAPIVersion == major && minorAPIVersion >= minor)));
+		return epochAPIVersion > epoch //
+				|| epochAPIVersion == epoch && (majorAPIVersion > major //
+				|| majorAPIVersion == major && minorAPIVersion >= minor);
 	}
 
 	public TracTicket getTicket(int id, IProgressMonitor monitor) throws TracException {
@@ -516,10 +518,21 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		return tickets;
 	}
 
+	public void searchForTicketIds(TracSearch query, List<Integer> tickets, IProgressMonitor monitor)
+			throws TracException {
+		// an empty query string is not valid, therefore prepend order
+		Object[] result = (Object[]) call(monitor,
+				"ticket.query", "order=id" + query.toQuery(supportsMaxSearchResults(monitor))); //$NON-NLS-1$ //$NON-NLS-2$
+		for (Object item : result) {
+			tickets.add((Integer) item);
+		}
+	}
+
 	@SuppressWarnings("unchecked")
 	public void search(TracSearch query, List<TracTicket> tickets, IProgressMonitor monitor) throws TracException {
 		// an empty query string is not valid, therefore prepend order
-		Object[] result = (Object[]) call(monitor, "ticket.query", "order=id" + query.toQuery()); //$NON-NLS-1$ //$NON-NLS-2$
+		Object[] result = (Object[]) call(monitor,
+				"ticket.query", "order=id" + query.toQuery(supportsMaxSearchResults(monitor))); //$NON-NLS-1$ //$NON-NLS-2$
 
 		Map<String, Object>[] calls = new Map[result.length];
 		for (int i = 0; i < calls.length; i++) {
@@ -531,6 +544,14 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 			Object[] ticketResult = (Object[]) getMultiCallResult(item);
 			tickets.add(parseTicket(ticketResult));
 		}
+	}
+
+	private boolean supportsWorkFlow(IProgressMonitor monitor) throws TracException {
+		return isAPIVersionOrHigher(2, 0, 0, monitor);
+	}
+
+	private boolean supportsMaxSearchResults(IProgressMonitor monitor) throws TracException {
+		return isAPIVersionOrHigher(2, 0, 0, monitor);
 	}
 
 	private TracTicket parseTicket(Object[] ticketResult) throws InvalidTicketException {
@@ -595,14 +616,18 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		Collections.sort(data.severities);
 		advance(monitor, 1);
 
-		boolean trac011 = isAPIVersionOrHigher(1, 0, 0, monitor);
-		attributes = getTicketAttributes("ticket.status", trac011, monitor); //$NON-NLS-1$
-		data.ticketStatus = new ArrayList<TracTicketStatus>(result.length);
-		for (TicketAttributeResult attribute : attributes) {
-			data.ticketStatus.add(new TracTicketStatus(attribute.name, attribute.value));
+		if (supportsWorkFlow(monitor)) {
+			data.ticketStatus = new ArrayList<TracTicketStatus>();
+		} else {
+			boolean assignValues = isAPIVersionOrHigher(1, 0, 0, monitor);
+			attributes = getTicketAttributes("ticket.status", assignValues, monitor); //$NON-NLS-1$
+			data.ticketStatus = new ArrayList<TracTicketStatus>(result.length);
+			for (TicketAttributeResult attribute : attributes) {
+				data.ticketStatus.add(new TracTicketStatus(attribute.name, attribute.value));
+			}
+			Collections.sort(data.ticketStatus);
+			advance(monitor, 1);
 		}
-		Collections.sort(data.ticketStatus);
-		advance(monitor, 1);
 
 		attributes = getTicketAttributes("ticket.type", monitor); //$NON-NLS-1$
 		data.ticketTypes = new ArrayList<TracTicketType>(result.length);
