@@ -133,8 +133,6 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 	private CommonTextSupport textSupport;
 
-	private final boolean expandNotesVertically;
-
 	private TaskFormPage page;
 
 	private Composite actualTimeComposite;
@@ -145,9 +143,8 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 	private boolean alwaysExpand;
 
-	public PlanningPart(int sectionStyle, boolean expandNotesVertically) {
+	public PlanningPart(int sectionStyle) {
 		super(sectionStyle, Messages.PersonalPart_Personal_Planning);
-		this.expandNotesVertically = expandNotesVertically;
 		this.needsNotes = true;
 	}
 
@@ -249,8 +246,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		layout.numColumns = 1;
 		layout.marginWidth = 1;
 		composite.setLayout(layout);
-		GridDataFactory.fillDefaults().span(numColumns, SWT.DEFAULT).grab(true, expandNotesVertically).applyTo(
-				composite);
+		GridDataFactory.fillDefaults().span(numColumns, SWT.DEFAULT).grab(true, true).applyTo(composite);
 
 		if (page != null) {
 			IContextService contextService = (IContextService) page.getEditorSite().getService(IContextService.class);
@@ -271,7 +267,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		noteEditor.setText(notesString);
 
 		noteEditor.getControl().setLayoutData(
-				EditorUtil.getTextControlLayoutData(page, noteEditor.getViewer().getControl(), expandNotesVertically));
+				EditorUtil.getTextControlLayoutData(page, noteEditor.getViewer().getControl(), true));
 		noteEditor.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		noteEditor.setReadOnly(false);
 		if (textSupport != null) {
