@@ -444,6 +444,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 				return new RepositoryStatus(repository.getRepositoryUrl(), IStatus.ERROR, TracCorePlugin.ID_PLUGIN,
 						RepositoryStatus.ERROR_REPOSITORY, "The query is invalid: \"" + query.getUrl() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
 			}
+			search.setMax(TaskDataCollector.MAX_HITS);
 
 			ITracClient client;
 			try {

@@ -27,6 +27,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter.CompareOperator;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * Represents a Trac search. A search can have multiple {@link TracSearchFilter}s that all need to match.
@@ -42,6 +43,8 @@ public class TracSearch {
 	private String orderBy;
 
 	private boolean ascending = true;
+
+	private int max = -1;
 
 	public TracSearch(String queryParameter) {
 		fromUrl(queryParameter);
@@ -101,6 +104,10 @@ public class TracSearch {
 				sb.append("&desc=1"); //$NON-NLS-1$
 			}
 		}
+		if (max != -1) {
+			sb.append("&max="); //$NON-NLS-1$
+			sb.append(max);
+		}
 		for (TracSearchFilter filter : filterByFieldName.values()) {
 			sb.append("&"); //$NON-NLS-1$
 			sb.append(filter.getFieldName());
@@ -134,6 +141,10 @@ public class TracSearch {
 			// TODO figure out why search must be ordered when logged in (otherwise
 			// no results will be returned)
 			sb.append("&order=id"); //$NON-NLS-1$
+		}
+		if (max != -1) {
+			sb.append("&max="); //$NON-NLS-1$
+			sb.append(max);
 		}
 
 		for (TracSearchFilter filter : filterByFieldName.values()) {
@@ -169,6 +180,13 @@ public class TracSearch {
 						setAscending(!"1".equals(value)); //$NON-NLS-1$
 					} else if ("group".equals(key) || "groupdesc".equals(key) || "verbose".equals(key)) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						// ignore these parameters
+					} else if ("max".equals(key)) { //$NON-NLS-1$
+						try {
+							setMax(Integer.parseInt(value));
+						} catch (NumberFormatException e) {
+							StatusHandler.log(new Status(IStatus.WARNING, TracCorePlugin.ID_PLUGIN, NLS.bind(
+									"Illegal format in URL, expected a number ''{0}''", value), e)); //$NON-NLS-1$							
+						}
 					} else {
 						addFilter(key, value);
 					}
@@ -178,6 +196,14 @@ public class TracSearch {
 				}
 			}
 		}
+	}
+
+	public int getMax() {
+		return max;
+	}
+
+	public void setMax(int max) {
+		this.max = max;
 	}
 
 }
