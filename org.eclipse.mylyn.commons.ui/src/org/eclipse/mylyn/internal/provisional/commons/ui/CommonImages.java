@@ -41,8 +41,6 @@ public class CommonImages {
 
 	private static final String T_OBJ = "obj16"; //$NON-NLS-1$
 
-	private static final String T_OBJ_24 = "obj24"; //$NON-NLS-1$
-
 	private static final String T_OBJ_32 = "obj32"; //$NON-NLS-1$
 
 	private static final String T_WIZBAN = "wizban"; //$NON-NLS-1$

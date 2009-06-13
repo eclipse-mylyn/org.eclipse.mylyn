@@ -27,10 +27,12 @@ public class EnhancedFilteredTree extends FilteredTree {
 
 	protected boolean useNewLook;
 
+	@SuppressWarnings("deprecation")
 	public EnhancedFilteredTree(Composite parent, int treeStyle, PatternFilter filter) {
 		super(parent, treeStyle, filter);
 	}
 
+	@SuppressWarnings("deprecation")
 	public EnhancedFilteredTree(Composite parent) {
 		super(parent);
 	}
