@@ -22,9 +22,8 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
 /**
  * @author Mik Kersten
- * 
- *         TODO: make package-visible
  */
+// TODO: make package-visible
 public class DegreeOfInterest implements IDegreeOfInterest {
 
 	private final List<InteractionEvent> events = new ArrayList<InteractionEvent>();
@@ -142,7 +141,7 @@ public class DegreeOfInterest implements IDegreeOfInterest {
 	/**
 	 * Sums predicted and propagated values
 	 */
-	// TODO 3.2 improve method name
+	// TODO 3.3 improve method name
 	public boolean isPropagated() {
 		float value = selections * contextScaling.get(InteractionEvent.Kind.SELECTION) + edits
 				* contextScaling.get(InteractionEvent.Kind.EDIT);
