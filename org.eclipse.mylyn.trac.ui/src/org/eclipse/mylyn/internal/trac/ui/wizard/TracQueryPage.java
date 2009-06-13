@@ -11,18 +11,20 @@
 
 package org.eclipse.mylyn.internal.trac.ui.wizard;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
+import org.eclipse.mylyn.internal.provisional.commons.ui.ICoreRunnable;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
@@ -53,7 +55,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.progress.IProgressService;
 
 /**
  * Trac search page. Provides a form similar to the one the Bugzilla connector uses.
@@ -370,28 +371,28 @@ public class TracQueryPage extends AbstractRepositoryQueryPage {
 
 		if (!client.hasAttributes() || force) {
 			try {
-				IRunnableWithProgress runnable = new IRunnableWithProgress() {
-					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+				ICoreRunnable runnable = new ICoreRunnable() {
+
+					public void run(IProgressMonitor monitor) throws CoreException {
 						try {
 							client.updateAttributes(monitor, force);
 						} catch (TracException e) {
-							throw new InvocationTargetException(e);
+							throw new CoreException(TracCorePlugin.toStatus(e, getTaskRepository()));
 						}
 					}
 				};
 
 				if (getContainer() != null) {
-					getContainer().run(true, true, runnable);
+					CommonUiUtil.run(getContainer(), runnable);
 				} else if (getSearchContainer() != null) {
-					getSearchContainer().getRunnableContext().run(true, true, runnable);
+					CommonUiUtil.run(getSearchContainer().getRunnableContext(), runnable);
 				} else {
-					IProgressService service = PlatformUI.getWorkbench().getProgressService();
-					service.busyCursorWhile(runnable);
+					CommonUiUtil.run(PlatformUI.getWorkbench().getProgressService(), runnable);
 				}
-			} catch (InvocationTargetException e) {
-				setErrorMessage(TracCorePlugin.toStatus(e.getCause(), getTaskRepository()).getMessage());
+			} catch (CoreException e) {
+				CommonUiUtil.setMessage(this, e.getStatus());
 				return;
-			} catch (InterruptedException e) {
+			} catch (OperationCanceledException e) {
 				return;
 			}
 		}
@@ -658,15 +659,15 @@ public class TracQueryPage extends AbstractRepositoryQueryPage {
 			}
 		}
 
-		public void selectItems(String[] items) {
-			list.deselectAll();
-			for (String item : items) {
-				int i = list.indexOf(item);
-				if (i != -1) {
-					list.select(i);
-				}
-			}
-		}
+//		public void selectItems(String[] items) {
+//			list.deselectAll();
+//			for (String item : items) {
+//				int i = list.indexOf(item);
+//				if (i != -1) {
+//					list.select(i);
+//				}
+//			}
+//		}
 
 	}
 

@@ -471,6 +471,8 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 					}
 					resultCollector.accept(taskData);
 				}
+			} catch (OperationCanceledException e) {
+				throw e;
 			} catch (Throwable e) {
 				return TracCorePlugin.toStatus(e, repository);
 			}
