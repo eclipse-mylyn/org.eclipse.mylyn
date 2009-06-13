@@ -349,7 +349,7 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 		}
 	}
 
-	private static TaskAttribute createAttribute(TaskData data, TracAttribute tracAttribute) {
+	public static TaskAttribute createAttribute(TaskData data, TracAttribute tracAttribute) {
 		TaskAttribute attr = data.getRoot().createAttribute(tracAttribute.getTracKey());
 		TaskAttributeMetaData metaData = attr.getMetaData();
 		metaData.setType(tracAttribute.getType());

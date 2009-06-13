@@ -90,12 +90,19 @@ public class TracSearch {
 	}
 
 	/**
+	 * @see #toQuery(boolean)
+	 */
+	public String toQuery() {
+		return toQuery(false);
+	}
+
+	/**
 	 * Returns a Trac query string that conforms to the format defined at {@link http
 	 * ://projects.edgewall.com/trac/wiki/TracQuery#QueryLanguage}.
 	 * 
 	 * @return the empty string, if no search order and criteria are defined; a string that starts with &amp;, otherwise
 	 */
-	public String toQuery() {
+	public String toQuery(boolean supportsMax) {
 		StringBuilder sb = new StringBuilder();
 		if (orderBy != null) {
 			sb.append("&order="); //$NON-NLS-1$
@@ -104,7 +111,7 @@ public class TracSearch {
 				sb.append("&desc=1"); //$NON-NLS-1$
 			}
 		}
-		if (max != -1) {
+		if (supportsMax && max != -1) {
 			sb.append("&max="); //$NON-NLS-1$
 			sb.append(max);
 		}

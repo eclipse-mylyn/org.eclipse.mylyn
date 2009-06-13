@@ -118,12 +118,22 @@ public interface ITracClient {
 	 *            the search criteria
 	 * @param result
 	 *            the list of found tickets
-	 * @param monitor
-	 *            TODO
 	 * @throws TracException
 	 *             thrown in case of a connection error
 	 */
 	void search(TracSearch query, List<TracTicket> result, IProgressMonitor monitor) throws TracException;
+
+	/**
+	 * Queries ticket id from repository. All found tickets are added to <code>result</code>.
+	 * 
+	 * @param query
+	 *            the search criteria
+	 * @param result
+	 *            the list of found tickets
+	 * @throws TracException
+	 *             thrown in case of a connection error
+	 */
+	void searchForTicketIds(TracSearch query, List<Integer> result, IProgressMonitor monitor) throws TracException;
 
 	/**
 	 * Validates the repository connection.

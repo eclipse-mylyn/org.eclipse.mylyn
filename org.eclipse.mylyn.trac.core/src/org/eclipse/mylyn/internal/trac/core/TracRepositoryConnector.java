@@ -448,28 +448,54 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 			ITracClient client;
 			try {
-				client = getClientManager().getTracClient(repository);
-				List<TracTicket> tickets = new ArrayList<TracTicket>();
-				client.search(search, tickets, monitor);
-
 				Map<String, ITask> taskById = null;
+
+				client = getClientManager().getTracClient(repository);
 				client.updateAttributes(monitor, false);
-				for (TracTicket ticket : tickets) {
-					TaskData taskData = taskDataHandler.createTaskDataFromTicket(client, repository, ticket, monitor);
-					taskData.setPartial(true);
-					if (session != null && !session.isFullSynchronization() && hasRichEditor(repository)) {
+
+				if (session != null && session.isFullSynchronization() && hasRichEditor(repository)
+						&& !session.getTasks().isEmpty()) {
+					// performance optimization: only fetch task ids, all changed tasks have already been marked stale by preSynchronization() 
+					List<Integer> ticketIds = new ArrayList<Integer>();
+					client.searchForTicketIds(search, ticketIds, monitor);
+
+					for (Integer id : ticketIds) {
 						if (taskById == null) {
 							taskById = new HashMap<String, ITask>();
 							for (ITask task : session.getTasks()) {
 								taskById.put(task.getTaskId(), task);
 							}
 						}
-						ITask task = taskById.get(ticket.getId() + ""); //$NON-NLS-1$
-						if (task != null && hasTaskChanged(repository, task, taskData)) {
-							session.markStale(task);
-						}
+						TaskData taskData = new TaskData(taskDataHandler.getAttributeMapper(repository),
+								TracCorePlugin.CONNECTOR_KIND, repository.getRepositoryUrl(), id + ""); //$NON-NLS-1$
+						taskData.setPartial(true);
+						TaskAttribute attribute = TracTaskDataHandler.createAttribute(taskData, TracAttribute.ID);
+						attribute.setValue(id + ""); //$NON-NLS-1$
+						resultCollector.accept(taskData);
 					}
-					resultCollector.accept(taskData);
+				} else {
+					List<TracTicket> tickets = new ArrayList<TracTicket>();
+					client.search(search, tickets, monitor);
+
+					for (TracTicket ticket : tickets) {
+						TaskData taskData = taskDataHandler.createTaskDataFromTicket(client, repository, ticket,
+								monitor);
+						taskData.setPartial(true);
+						if (session != null && !session.isFullSynchronization() && hasRichEditor(repository)) {
+							if (taskById == null) {
+								taskById = new HashMap<String, ITask>();
+								for (ITask task : session.getTasks()) {
+									taskById.put(task.getTaskId(), task);
+								}
+							}
+							// preSyncronization() only handles full synchronizations
+							ITask task = taskById.get(ticket.getId() + ""); //$NON-NLS-1$
+							if (task != null && hasTaskChanged(repository, task, taskData)) {
+								session.markStale(task);
+							}
+						}
+						resultCollector.accept(taskData);
+					}
 				}
 			} catch (OperationCanceledException e) {
 				throw e;

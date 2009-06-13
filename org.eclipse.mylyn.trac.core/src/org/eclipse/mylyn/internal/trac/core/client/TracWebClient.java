@@ -298,6 +298,15 @@ public class TracWebClient extends AbstractTracClient {
 		}
 	}
 
+	public void searchForTicketIds(TracSearch query, List<Integer> result, IProgressMonitor monitor)
+			throws TracException {
+		List<TracTicket> ticketResult = new ArrayList<TracTicket>();
+		search(query, ticketResult, monitor);
+		for (TracTicket tracTicket : ticketResult) {
+			result.add(tracTicket.getId());
+		}
+	}
+
 	public void search(TracSearch query, List<TracTicket> tickets, IProgressMonitor monitor) throws TracException {
 		GetMethod method = connect(repositoryUrl + ITracClient.QUERY_URL + query.toUrl(), monitor);
 		try {
