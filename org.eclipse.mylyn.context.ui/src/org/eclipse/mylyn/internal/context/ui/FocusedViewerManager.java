@@ -140,7 +140,7 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 	 */
 	private boolean syncRefreshMode = false;
 
-	private boolean internalExpandExceptionLogged;
+//	private boolean internalExpandExceptionLogged;
 
 	public FocusedViewerManager() {
 		// NOTE: no longer using viewer part tracker due to bug 162346
