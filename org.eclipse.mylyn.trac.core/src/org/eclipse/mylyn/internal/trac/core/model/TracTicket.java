@@ -84,7 +84,7 @@ public class TracTicket {
 
 	private List<TracAttachment> attachments;
 
-	private String[] actions;
+	private TracAction[] actions;
 
 	private String[] resolutions;
 
@@ -206,11 +206,11 @@ public class TracTicket {
 		return (attachments != null) ? attachments.toArray(new TracAttachment[0]) : null;
 	}
 
-	public void setActions(String[] actions) {
+	public void setActions(TracAction[] actions) {
 		this.actions = actions;
 	}
 
-	public String[] getActions() {
+	public TracAction[] getActions() {
 		return actions;
 	}
 

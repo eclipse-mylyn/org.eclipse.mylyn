@@ -1243,7 +1243,9 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 					for (Control control : editorComposite.getChildren()) {
 						control.dispose();
 					}
-					focusTracker.reset();
+					if (focusTracker != null) {
+						focusTracker.reset();
+					}
 					lastSelection = null;
 					for (IFormPart part : getManagedForm().getParts()) {
 						part.dispose();

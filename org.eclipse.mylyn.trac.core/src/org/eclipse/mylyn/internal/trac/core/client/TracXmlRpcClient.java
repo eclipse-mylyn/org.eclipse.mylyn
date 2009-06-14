@@ -46,6 +46,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
@@ -55,11 +56,13 @@ import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.commons.net.UnsupportedRequestException;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
+import org.eclipse.mylyn.internal.trac.core.model.TracAction;
 import org.eclipse.mylyn.internal.trac.core.model.TracAttachment;
 import org.eclipse.mylyn.internal.trac.core.model.TracComment;
 import org.eclipse.mylyn.internal.trac.core.model.TracComponent;
 import org.eclipse.mylyn.internal.trac.core.model.TracMilestone;
 import org.eclipse.mylyn.internal.trac.core.model.TracPriority;
+import org.eclipse.mylyn.internal.trac.core.model.TracRepositoryInfo;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
 import org.eclipse.mylyn.internal.trac.core.model.TracSeverity;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
@@ -71,11 +74,13 @@ import org.eclipse.mylyn.internal.trac.core.model.TracVersion;
 import org.eclipse.mylyn.internal.trac.core.model.TracWikiPage;
 import org.eclipse.mylyn.internal.trac.core.model.TracWikiPageInfo;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
+import org.eclipse.mylyn.internal.trac.core.model.TracTicketField.Type;
 import org.eclipse.mylyn.internal.trac.core.util.HttpMethodInterceptor;
 import org.eclipse.mylyn.internal.trac.core.util.TracHttpClientTransportFactory;
 import org.eclipse.mylyn.internal.trac.core.util.TracUtil;
 import org.eclipse.mylyn.internal.trac.core.util.TracXmlRpcClientRequest;
 import org.eclipse.mylyn.internal.trac.core.util.TracHttpClientTransportFactory.TracHttpException;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * Represents a Trac repository that is accessed through the Trac XmlRpcPlugin.
@@ -146,7 +151,9 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 				if (isTracd && digestScheme != null) {
 					probeAuthenticationScheme(monitor);
 				}
-
+				if (DEBUG) {
+					System.err.println("Calling " + location.getUrl() + ": " + method + " " + TracUtil.toString(parameters)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				}
 				TracXmlRpcClientRequest request = new TracXmlRpcClientRequest(xmlrpc.getClientConfig(), method,
 						parameters, monitor);
 				return xmlrpc.execute(request);
@@ -177,6 +184,8 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 
 	}
 
+	private static final boolean DEBUG = Boolean.valueOf(Platform.getDebugOption("org.eclipse.mylyn.trac.core/debug/xmlrpc")); //$NON-NLS-1$
+
 	public static final String XMLRPC_URL = "/xmlrpc"; //$NON-NLS-1$
 
 	public static final String REQUIRED_REVISION = "1950"; //$NON-NLS-1$
@@ -197,12 +206,6 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 
 	private TracHttpClientTransportFactory factory;
 
-	private int majorAPIVersion = -1;
-
-	private int minorAPIVersion = -1;
-
-	private int epochAPIVersion = -1;
-
 	private boolean accountMangerAuthenticationFailed;
 
 	private XmlRpcClientConfigImpl config;
@@ -216,6 +219,8 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 	private final AuthScope authScope;
 
 	private boolean isTracd;
+
+	private TracRepositoryInfo info = new TracRepositoryInfo();
 
 	public TracXmlRpcClient(AbstractWebLocation location, Version version) {
 		super(location, version);
@@ -386,7 +391,7 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 	private void checkForException(Object result) throws NumberFormatException, XmlRpcException {
 		if (result instanceof Map<?, ?>) {
 			Map<?, ?> exceptionData = (Map<?, ?>) result;
-			if (exceptionData.containsKey("faultCode") && exceptionData.containsKey("faultString")) { //$NON-NLS-1$ //$NON-NLS-2$
+			if (exceptionData.containsKey("faultCode") && exceptionData.containsKey("faultString")) { //$NON-NLS-1$ //$NON-NLS-2$ 
 				throw new XmlRpcException(Integer.parseInt(exceptionData.get("faultCode").toString()), //$NON-NLS-1$
 						(String) exceptionData.get("faultString")); //$NON-NLS-1$
 			}
@@ -404,7 +409,10 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		return ((Object[]) item)[0];
 	}
 
-	public void validate(IProgressMonitor monitor) throws TracException {
+	public TracRepositoryInfo validate(IProgressMonitor monitor) throws TracException {
+		Integer epochAPIVersion;
+		Integer majorAPIVersion;
+		Integer minorAPIVersion;
 		try {
 			Object[] result = (Object[]) call(monitor, "system.getAPIVersion"); //$NON-NLS-1$
 			if (result.length >= 3) {
@@ -416,35 +424,32 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 				majorAPIVersion = (Integer) result[0];
 				minorAPIVersion = (Integer) result[1];
 			} else {
-				throw new TracException(
-						"The API version is unsupported, please update your Trac XML-RPC Plugin to revision " //$NON-NLS-1$
-								+ REQUIRED_REVISION + " or later"); //$NON-NLS-1$
+				throw new TracException(NLS.bind(Messages.TracXmlRpcClient_API_version_unsupported_Error,
+						REQUIRED_REVISION));
 			}
 		} catch (TracNoSuchMethodException e) {
-			throw new TracException(
-					"Required API calls are missing, please update your Trac XML-RPC Plugin to revision " //$NON-NLS-1$
-							+ REQUIRED_REVISION + " or later"); //$NON-NLS-1$
+			throw new TracException(NLS.bind(Messages.TracXmlRpcClient_Required_API_calls_missing_Error,
+					REQUIRED_REVISION));
 		}
 
-		if (!isAPIVersionOrHigher(REQUIRED_EPOCH, REQUIRED_MAJOR, REQUIRED_MINOR, monitor)) {
-			throw new TracException("The API version " + majorAPIVersion + "." + minorAPIVersion //$NON-NLS-1$ //$NON-NLS-2$
-					+ " is unsupported, please update your Trac XML-RPC Plugin to revision " + REQUIRED_REVISION //$NON-NLS-1$
-					+ " or later"); //$NON-NLS-1$
+		info = new TracRepositoryInfo(epochAPIVersion, majorAPIVersion, minorAPIVersion);
+		if (!info.isApiVersionOrHigher(REQUIRED_EPOCH, REQUIRED_MAJOR, REQUIRED_MINOR)) {
+			throw new TracException(NLS.bind(Messages.TracXmlRpcClient_API_version_X_unsupported_Error,
+					info.toString(), REQUIRED_REVISION));
 		}
+		return info;
 	}
 
 	private void updateAPIVersion(IProgressMonitor monitor) throws TracException {
-		if (epochAPIVersion == -1 || majorAPIVersion == -1 || minorAPIVersion == -1) {
+		if (info.isStale()) {
 			validate(monitor);
 		}
 	}
 
-	private boolean isAPIVersionOrHigher(int epoch, int major, int minor, IProgressMonitor monitor)
+	private boolean isApiVersionOrHigher(int epoch, int major, int minor, IProgressMonitor monitor)
 			throws TracException {
 		updateAPIVersion(monitor);
-		return epochAPIVersion > epoch //
-				|| epochAPIVersion == epoch && (majorAPIVersion > major //
-				|| majorAPIVersion == major && minorAPIVersion >= minor);
+		return info.isApiVersionOrHigher(epoch, major, minor);
 	}
 
 	public TracTicket getTicket(int id, IProgressMonitor monitor) throws TracException {
@@ -461,7 +466,7 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 			ticket.addAttachment(parseAttachment((Object[]) item));
 		}
 
-		String[] actions = getActions(id, monitor);
+		TracAction[] actions = getActions(id, monitor);
 		ticket.setActions(actions);
 
 		updateAttributes(new NullProgressMonitor(), false);
@@ -547,11 +552,11 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 	}
 
 	private boolean supportsWorkFlow(IProgressMonitor monitor) throws TracException {
-		return isAPIVersionOrHigher(2, 0, 0, monitor);
+		return isApiVersionOrHigher(1, 0, 1, monitor);
 	}
 
 	private boolean supportsMaxSearchResults(IProgressMonitor monitor) throws TracException {
-		return isAPIVersionOrHigher(2, 0, 0, monitor);
+		return isApiVersionOrHigher(1, 0, 0, monitor);
 	}
 
 	private TracTicket parseTicket(Object[] ticketResult) throws InvalidTicketException {
@@ -616,18 +621,14 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		Collections.sort(data.severities);
 		advance(monitor, 1);
 
-		if (supportsWorkFlow(monitor)) {
-			data.ticketStatus = new ArrayList<TracTicketStatus>();
-		} else {
-			boolean assignValues = isAPIVersionOrHigher(1, 0, 0, monitor);
-			attributes = getTicketAttributes("ticket.status", assignValues, monitor); //$NON-NLS-1$
-			data.ticketStatus = new ArrayList<TracTicketStatus>(result.length);
-			for (TicketAttributeResult attribute : attributes) {
-				data.ticketStatus.add(new TracTicketStatus(attribute.name, attribute.value));
-			}
-			Collections.sort(data.ticketStatus);
-			advance(monitor, 1);
+		boolean assignValues = isApiVersionOrHigher(1, 0, 0, monitor);
+		attributes = getTicketAttributes("ticket.status", assignValues, monitor); //$NON-NLS-1$
+		data.ticketStatus = new ArrayList<TracTicketStatus>(result.length);
+		for (TicketAttributeResult attribute : attributes) {
+			data.ticketStatus.add(new TracTicketStatus(attribute.name, attribute.value));
 		}
+		Collections.sort(data.ticketStatus);
+		advance(monitor, 1);
 
 		attributes = getTicketAttributes("ticket.type", monitor); //$NON-NLS-1$
 		data.ticketTypes = new ArrayList<TracTicketType>(result.length);
@@ -832,18 +833,22 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		if (summary == null || description == null) {
 			throw new InvalidTicketException();
 		}
-		if (isAPIVersionOrHigher(0, 0, 2, monitor)) {
+		if (supportsNotifications(monitor)) {
 			return (Integer) call(monitor, "ticket.create", summary, description, attributes, true); //$NON-NLS-1$
 		} else {
 			return (Integer) call(monitor, "ticket.create", summary, description, attributes); //$NON-NLS-1$
 		}
 	}
 
+	private boolean supportsNotifications(IProgressMonitor monitor) throws TracException {
+		return isApiVersionOrHigher(0, 0, 2, monitor);
+	}
+
 	public void updateTicket(TracTicket ticket, String comment, IProgressMonitor monitor) throws TracException {
 		updateAPIVersion(monitor);
 
 		Map<String, String> attributes = ticket.getValues();
-		if (isAPIVersionOrHigher(0, 0, 2, monitor)) {
+		if (supportsNotifications(monitor)) {
 			call(monitor, "ticket.update", ticket.getId(), comment, attributes, true); //$NON-NLS-1$
 		} else {
 			call(monitor, "ticket.update", ticket.getId(), comment, attributes); //$NON-NLS-1$
@@ -860,13 +865,45 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		return result;
 	}
 
-	public String[] getActions(int id, IProgressMonitor monitor) throws TracException {
-		Object[] actions = (Object[]) call(monitor, "ticket.getAvailableActions", id); //$NON-NLS-1$
-		String[] result = new String[actions.length];
-		for (int i = 0; i < result.length; i++) {
-			result[i] = (String) actions[i];
+	public TracAction[] getActions(int id, IProgressMonitor monitor) throws TracException {
+		if (supportsWorkFlow(monitor)) {
+			Object[] actions = (Object[]) call(monitor, "ticket.getActions", id); //$NON-NLS-1$
+			TracAction[] result = new TracAction[actions.length];
+			for (int i = 0; i < result.length; i++) {
+				Object[] entry = (Object[]) actions[i];
+				TracAction action = new TracAction((String) entry[0]);
+				action.setLabel((String) entry[1]);
+				action.setHint((String) entry[2]);
+				Object[] inputs = (Object[]) entry[3];
+				// each action can be associated with fields
+				for (Object inputArray : inputs) {
+					Object[] inputEntry = (Object[]) inputArray;
+					TracTicketField field = new TracTicketField((String) inputEntry[0]);
+					field.setDefaultValue((String) inputEntry[1]);
+					Object[] optionEntry = (Object[]) inputEntry[2];
+					if (optionEntry.length == 0) {
+						field.setType(Type.TEXT);
+					} else {
+						field.setType(Type.SELECT);
+						String[] options = new String[optionEntry.length];
+						for (int j = 0; j < options.length; j++) {
+							options[j] = (String) optionEntry[j];
+						}
+						field.setOptions(options);
+					}
+					action.addField(field);
+				}
+				result[i] = action;
+			}
+			return result;
+		} else {
+			Object[] actions = (Object[]) call(monitor, "ticket.getAvailableActions", id); //$NON-NLS-1$
+			TracAction[] result = new TracAction[actions.length];
+			for (int i = 0; i < result.length; i++) {
+				result[i] = new TracAction((String) actions[i]);
+			}
+			return result;
 		}
-		return result;
 	}
 
 	public Date getTicketLastChanged(Integer id, IProgressMonitor monitor) throws TracException {

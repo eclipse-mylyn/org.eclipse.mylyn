@@ -77,6 +77,18 @@ public class Messages extends NLS {
 
 	public static String TracRepositoryConnector_TRAC_SUPPORTS_0_9_OR_0_10_THROUGH_WEB_AND_XML_RPC;
 
+	public static String TracTaskDataHandler_Accept;
+
+	public static String TracTaskDataHandler_Leave;
+
+	public static String TracTaskDataHandler_Leave_as_Status;
+
+	public static String TracTaskDataHandler_Leave_as_Status_Resolution;
+
+	public static String TracTaskDataHandler_Reopen;
+
+	public static String TracTaskDataHandler_Resolve_as;
+
 	public static String TracWikiHandler_Download_Wiki_Page;
 
 	public static String TracWikiHandler_Download_Wiki_Page_Names;

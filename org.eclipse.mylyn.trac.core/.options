@@ -1,0 +1,3 @@
+
+# TracXmlRpcClient
+org.eclipse.mylyn.trac.core/debug/xmlrpc=false

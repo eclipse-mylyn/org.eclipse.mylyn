@@ -128,7 +128,6 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 	}
 
 	public void contextMenuAboutToShow(IMenuManager manager, boolean addClipboard) {
-		actionGroup.getSynchronizeEditorAction().selectionChanged(new StructuredSelection(this.getEditor()));
 		actionGroup.fillContextMenu(manager, editor, addClipboard);
 	}
 
@@ -181,8 +180,10 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 		if (activeEditor instanceof TaskEditor) {
 			this.editor = (TaskEditor) activeEditor;
 			this.editor.getSite().getSelectionProvider().addSelectionChangedListener(selectionProvider);
+			actionGroup.getSynchronizeEditorAction().selectionChanged(new StructuredSelection(this.editor));
 			updateSelectableActions(selectionProvider.getSelection());
 		} else {
+			actionGroup.getSynchronizeEditorAction().selectionChanged(StructuredSelection.EMPTY);
 			this.editor = null;
 		}
 	}

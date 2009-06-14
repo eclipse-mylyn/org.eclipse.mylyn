@@ -428,7 +428,7 @@ public class TracWebClient extends AbstractTracClient {
 					if (version.startsWith("Trac 0.9")) { //$NON-NLS-1$
 						return new TracRepositoryInfo(0, 0, 0, version);
 					} else if (version.startsWith("Trac 0.10")) { //$NON-NLS-1$
-						return new TracRepositoryInfo(0, 1, 0, version);
+						return new TracRepositoryInfo(0, 0, 1, version);
 					} else if (version.startsWith("Trac 0.11")) { //$NON-NLS-1$
 						return new TracRepositoryInfo(1, 0, 0, version);
 					} else {

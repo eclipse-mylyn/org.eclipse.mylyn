@@ -12,7 +12,6 @@
 package org.eclipse.mylyn.internal.trac.core;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -28,6 +27,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.client.InvalidTicketException;
+import org.eclipse.mylyn.internal.trac.core.model.TracAction;
 import org.eclipse.mylyn.internal.trac.core.model.TracAttachment;
 import org.eclipse.mylyn.internal.trac.core.model.TracComment;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
@@ -49,6 +49,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskOperation;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Steffen Pingel
@@ -208,44 +209,61 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 			}
 		}
 
-		String[] actions = ticket.getActions();
+		TracAction[] actions = ticket.getActions();
 		if (actions != null) {
-			// add operations in a defined order
-			List<String> actionList = new ArrayList<String>(Arrays.asList(actions));
-			addOperation(repository, data, ticket, actionList, "leave"); //$NON-NLS-1$
-			addOperation(repository, data, ticket, actionList, "accept"); //$NON-NLS-1$
-			addOperation(repository, data, ticket, actionList, "resolve"); //$NON-NLS-1$
-			addOperation(repository, data, ticket, actionList, "reopen"); //$NON-NLS-1$
+			// add actions and set first as default
+			for (TracAction action : actions) {
+				addOperation(repository, data, ticket, action, action == actions[0]);
+			}
 		}
 
 		return changedAttributes;
 	}
 
-	private static void addOperation(TaskRepository repository, TaskData data, TracTicket ticket, List<String> actions,
-			String action) {
-		if (!actions.remove(action)) {
-			return;
-		}
-
-		String label = null;
-		if ("leave".equals(action)) { //$NON-NLS-1$
-			// TODO provide better label for Leave action
-			//label = "Leave as " + data.getStatus() + " " + data.getResolution();
-			label = "Leave"; //$NON-NLS-1$
-		} else if ("accept".equals(action)) { //$NON-NLS-1$
-			label = "Accept"; //$NON-NLS-1$
-		} else if ("resolve".equals(action)) { //$NON-NLS-1$
-			label = "Resolve as"; //$NON-NLS-1$
-		} else if ("reopen".equals(action)) { //$NON-NLS-1$
-			label = "Reopen"; //$NON-NLS-1$
+	private static void addOperation(TaskRepository repository, TaskData data, TracTicket ticket, TracAction action,
+			boolean setAsDefault) {
+		String label = action.getLabel();
+		if (label == null) {
+			if ("leave".equals(action.getId())) { //$NON-NLS-1$
+				String status = ticket.getValue(Key.STATUS);
+				if (status != null) {
+					String resolution = ticket.getValue(Key.RESOLUTION);
+					if (resolution != null) {
+						label = NLS.bind(Messages.TracTaskDataHandler_Leave_as_Status_Resolution, status, resolution);
+					} else {
+						label = NLS.bind(Messages.TracTaskDataHandler_Leave_as_Status, status);
+					}
+				} else {
+					label = Messages.TracTaskDataHandler_Leave;
+				}
+			} else if ("accept".equals(action.getId())) { //$NON-NLS-1$
+				label = Messages.TracTaskDataHandler_Accept;
+			} else if ("resolve".equals(action.getId())) { //$NON-NLS-1$
+				label = Messages.TracTaskDataHandler_Resolve_as;
+			} else if ("reopen".equals(action.getId())) { //$NON-NLS-1$
+				label = Messages.TracTaskDataHandler_Reopen;
+			} else {
+				label = action.getId();
+			}
 		}
 
 		if (label != null) {
-			TaskAttribute attribute = data.getRoot().createAttribute(TaskAttribute.PREFIX_OPERATION + action);
-			TaskOperation.applyTo(attribute, action, label);
-			if ("resolve".equals(action)) { //$NON-NLS-1$
+			TaskAttribute attribute = data.getRoot().createAttribute(TaskAttribute.PREFIX_OPERATION + action.getId());
+			TaskOperation.applyTo(attribute, action.getId(), label);
+			if (!action.getFields().isEmpty()) {
+				// TODO support more than one field
+				TracTicketField field = action.getFields().get(0);
+				TaskAttribute fieldAttribute = createAttribute(data, field);
+				fieldAttribute.getMetaData().setKind(null);
+				attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, fieldAttribute.getId());
+			} else if ("resolve".equals(action)) { //$NON-NLS-1$
 				attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID,
 						TracAttribute.RESOLUTION.getTracKey());
+			}
+
+			if (setAsDefault) {
+				TaskAttribute operationAttribute = data.getRoot().createAttribute(TaskAttribute.OPERATION);
+				TaskOperation.applyTo(operationAttribute, action.getId(), label);
 			}
 		}
 	}
@@ -293,7 +311,7 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 		data.getRoot().createAttribute(TaskAttribute.OPERATION).getMetaData().setType(TaskAttribute.TYPE_OPERATION);
 	}
 
-	private static void createAttribute(TaskData data, TracTicketField field) {
+	private static TaskAttribute createAttribute(TaskData data, TracTicketField field) {
 		TaskAttribute attr = data.getRoot().createAttribute(field.getName());
 		TaskAttributeMetaData metaData = attr.getMetaData();
 		metaData.defaults();
@@ -347,6 +365,7 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 				attr.setValue(field.getDefaultValue());
 			}
 		}
+		return attr;
 	}
 
 	public static TaskAttribute createAttribute(TaskData data, TracAttribute tracAttribute) {
@@ -551,6 +570,7 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 					ticket.putValue("status", TracRepositoryConnector.TaskStatus.NEW.toStatusString()); //$NON-NLS-1$
 				}
 			}
+			ticket.putValue("action", action); //$NON-NLS-1$
 		}
 
 		return ticket;
