@@ -199,7 +199,9 @@ public class CommonUiUtil {
 		if (!composite.isDisposed()) {
 			Object data = composite.getData(KEY_ENABLED);
 			if (data != null) {
-				composite.setEnabled(data == Boolean.TRUE);
+				if (data == Boolean.TRUE) {
+					composite.setEnabled(data == Boolean.TRUE);
+				}
 				composite.setData(KEY_ENABLED, null);
 			}
 			for (Control control : composite.getChildren()) {
@@ -208,7 +210,9 @@ public class CommonUiUtil {
 				} else {
 					data = control.getData(KEY_ENABLED);
 					if (data != null) {
-						control.setEnabled(data == Boolean.TRUE);
+						if (data == Boolean.TRUE) {
+							control.setEnabled(true);
+						}
 						control.setData(KEY_ENABLED, null);
 					}
 				}
