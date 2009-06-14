@@ -357,7 +357,8 @@ public class TracTaskDataHandlerTest extends TestCase {
 	}
 
 	public void testGetSubTaskIds() throws Exception {
-		TaskData taskData = new TaskData(new TracAttributeMapper(new TaskRepository("", "")),
+		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
+		TaskData taskData = new TaskData(new TracAttributeMapper(new TaskRepository("", ""), client),
 				TracCorePlugin.CONNECTOR_KIND, "", "");
 		TaskAttribute blockedBy = taskData.getRoot().createAttribute(TracTaskDataHandler.ATTRIBUTE_BLOCKED_BY);
 		Collection<String> subTaskIds;

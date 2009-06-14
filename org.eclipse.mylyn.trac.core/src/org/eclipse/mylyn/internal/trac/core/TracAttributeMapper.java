@@ -13,7 +13,11 @@ package org.eclipse.mylyn.internal.trac.core;
 
 import java.util.Date;
 import java.util.EnumSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.util.TracUtil;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -36,6 +40,8 @@ public class TracAttributeMapper extends TaskAttributeMapper {
 
 	public static final EnumSet<Flag> NO_FLAGS = EnumSet.noneOf(Flag.class);
 
+	private final ITracClient client;
+
 	public static boolean isInternalAttribute(TaskAttribute attribute) {
 		String type = attribute.getMetaData().getType();
 		if (TaskAttribute.TYPE_ATTACHMENT.equals(type) || TaskAttribute.TYPE_OPERATION.equals(type)
@@ -47,8 +53,10 @@ public class TracAttributeMapper extends TaskAttributeMapper {
 				|| NEW_CC.equals(id);
 	}
 
-	public TracAttributeMapper(TaskRepository taskRepository) {
+	public TracAttributeMapper(TaskRepository taskRepository, ITracClient client) {
 		super(taskRepository);
+		Assert.isNotNull(client);
+		this.client = client;
 	}
 
 	@Override
@@ -69,6 +77,50 @@ public class TracAttributeMapper extends TaskAttributeMapper {
 		} else {
 			attribute.setValue(TracUtil.toTracTime(date) + ""); //$NON-NLS-1$
 		}
+	}
+
+	@Override
+	public Map<String, String> getOptions(TaskAttribute attribute) {
+		Map<String, String> options = getRepositoryOptions(attribute);
+		return (options != null) ? options : super.getOptions(attribute);
+	}
+
+	public Map<String, String> getRepositoryOptions(TaskAttribute attribute) {
+		if (client.hasAttributes()) {
+			String attributeId = attribute.getId();
+			if (TracAttribute.STATUS.getTracKey().equals(attributeId)) {
+				return getOptions(client.getTicketStatus(), false);
+			} else if (TracAttribute.RESOLUTION.getTracKey().equals(attributeId)) {
+				return getOptions(client.getTicketResolutions(), false);
+			} else if (TracAttribute.COMPONENT.getTracKey().equals(attributeId)) {
+				return getOptions(client.getComponents(), false);
+			} else if (TracAttribute.VERSION.getTracKey().equals(attributeId)) {
+				return getOptions(client.getVersions(), true);
+			} else if (TracAttribute.PRIORITY.getTracKey().equals(attributeId)) {
+				return getOptions(client.getPriorities(), false);
+			} else if (TracAttribute.SEVERITY.getTracKey().equals(attributeId)) {
+				return getOptions(client.getSeverities(), false);
+			} else if (TracAttribute.MILESTONE.getTracKey().equals(attributeId)) {
+				return getOptions(client.getMilestones(), true);
+			} else if (TracAttribute.TYPE.getTracKey().equals(attributeId)) {
+				return getOptions(client.getTicketTypes(), false);
+			}
+		}
+		return null;
+	}
+
+	private Map<String, String> getOptions(Object[] values, boolean allowEmpty) {
+		if (values != null && values.length > 0) {
+			Map<String, String> options = new LinkedHashMap<String, String>();
+			if (allowEmpty) {
+				options.put("", ""); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			for (Object value : values) {
+				options.put(value.toString(), value.toString());
+			}
+			return options;
+		}
+		return null;
 	}
 
 }

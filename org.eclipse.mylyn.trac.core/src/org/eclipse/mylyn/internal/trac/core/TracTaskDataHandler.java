@@ -380,10 +380,10 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 	}
 
 	private static TaskAttribute createAttribute(TaskData data, TracAttribute tracAttribute, Object[] values,
-			boolean allowEmtpy) {
+			boolean allowEmpty) {
 		TaskAttribute attr = createAttribute(data, tracAttribute);
 		if (values != null && values.length > 0) {
-			if (allowEmtpy) {
+			if (allowEmpty) {
 				attr.putOption("", ""); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			for (Object value : values) {
@@ -502,8 +502,9 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 //	}
 
 	@Override
-	public TaskAttributeMapper getAttributeMapper(TaskRepository taskRepository) {
-		return new TracAttributeMapper(taskRepository);
+	public TaskAttributeMapper getAttributeMapper(TaskRepository repository) {
+		ITracClient client = connector.getClientManager().getTracClient(repository);
+		return new TracAttributeMapper(repository, client);
 	}
 
 	public boolean supportsSubtasks(TaskData taskData) {
