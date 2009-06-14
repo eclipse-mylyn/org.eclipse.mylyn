@@ -69,8 +69,6 @@ public class Messages extends NLS {
 
 	public static String CopyCommentDetailsAction_Copy_User_ID_Tooltip;
 
-	public static String CopyTaskDetailsAction_Copy_Details;
-
 	public static String CopyTaskDetailsAction_ID_Menu_Label;
 
 	public static String CopyTaskDetailsAction_Summary_and_Url_Menu_Label;

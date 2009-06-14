@@ -69,8 +69,6 @@ public class Messages extends NLS {
 
 	public static String DateAttributeEditor_Clear;
 
-	public static String PersonalPart_Notes;
-
 	public static String PersonalPart_Personal_Planning;
 
 	public static String PlanningPageFactory_Private;
@@ -80,8 +78,6 @@ public class Messages extends NLS {
 	public static String RichTextAttributeEditor_Viewer_Source;
 
 	public static String TaskAttachmentDropListener_Note_that_only_the_first_file_dragged_will_be_attached;
-
-	public static String TaskEditorActionContributor_Add_to_X;
 
 	public static String TaskEditorActionPart_Actions;
 
@@ -242,8 +238,6 @@ public class Messages extends NLS {
 	public static String SummaryPart_Section_Title;
 
 	public static String TaskEditor_Task;
-
-	public static String TaskEditor_Task_;
 
 	public static String TaskEditor_Task_added_to_the_Uncategorized_container;
 

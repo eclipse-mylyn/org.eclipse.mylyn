@@ -77,8 +77,6 @@ public class Messages extends NLS {
 
 	public static String TracRepositoryConnector_Trac_Client_Label;
 
-	public static String TracRepositoryConnector_TRAC_SUPPORTS_0_9_OR_0_10_THROUGH_WEB_AND_XML_RPC;
-
 	public static String TracTaskDataHandler_Accept;
 
 	public static String TracTaskDataHandler_Leave;
