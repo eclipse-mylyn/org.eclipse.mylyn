@@ -641,19 +641,22 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	public void updateTaskFromTaskData(TaskRepository taskRepository, ITask task, TaskData taskData) {
 		TaskMapper mapper = getTaskMapping(taskData);
 		mapper.applyTo(task);
-		if (isCompleted(mapper.getStatus())) {
-			Date modificationDate = mapper.getModificationDate();
-			if (modificationDate == null) {
-				// web mode does not set a date
-				modificationDate = DEFAULT_COMPLETION_DATE;
+		String status = mapper.getStatus();
+		if (status != null) {
+			if (isCompleted(mapper.getStatus())) {
+				Date modificationDate = mapper.getModificationDate();
+				if (modificationDate == null) {
+					// web mode does not set a date
+					modificationDate = DEFAULT_COMPLETION_DATE;
+				}
+				task.setCompletionDate(modificationDate);
+			} else {
+				task.setCompletionDate(null);
 			}
-			task.setCompletionDate(modificationDate);
-		} else {
-			task.setCompletionDate(null);
 		}
 		task.setUrl(taskRepository.getRepositoryUrl() + ITracClient.TICKET_URL + taskData.getTaskId());
-		task.setAttribute(TASK_KEY_SUPPORTS_SUBTASKS, Boolean.toString(taskDataHandler.supportsSubtasks(taskData)));
 		if (!taskData.isPartial()) {
+			task.setAttribute(TASK_KEY_SUPPORTS_SUBTASKS, Boolean.toString(taskDataHandler.supportsSubtasks(taskData)));
 			Date date = task.getModificationDate();
 			task.setAttribute(TASK_KEY_UPDATE_DATE, (date != null) ? TracUtil.toTracTime(date) + "" : null); //$NON-NLS-1$
 		}
