@@ -53,7 +53,8 @@ public class TracTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 
 	@Override
 	public String[] getConflictingIds(TaskEditorInput input) {
-		if (TracRepositoryConnector.hasRichEditor(input.getTaskRepository())) {
+		if (TracRepositoryConnector.hasRichEditor(input.getTaskRepository())
+				|| TasksUiUtil.isOutgoingNewTask(input.getTask(), TracCorePlugin.CONNECTOR_KIND)) {
 			return new String[] { ITasksUiConstants.ID_PAGE_PLANNING };
 		} else {
 			return super.getConflictingIds(input);

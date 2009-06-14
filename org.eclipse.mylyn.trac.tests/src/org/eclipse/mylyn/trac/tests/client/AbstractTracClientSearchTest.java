@@ -185,12 +185,12 @@ public abstract class AbstractTracClientSearchTest extends AbstractTracClientTes
 		assertEquals(0, result.size());
 	}
 
-	public void testSearchMilestone1010() throws Exception {
+	public void testSearchMilestone1_010() throws Exception {
 		connect010();
 		searchMilestone1();
 	}
 
-	public void testSearchMilestone1011() throws Exception {
+	public void testSearchMilestone1_011() throws Exception {
 		connect011();
 		searchMilestone1();
 	}
@@ -204,12 +204,12 @@ public abstract class AbstractTracClientSearchTest extends AbstractTracClientTes
 		assertTicketEquals(tickets.get(0), result.get(0));
 	}
 
-	public void testSearchMilestone2010() throws Exception {
+	public void testSearchMilestone2_0_10() throws Exception {
 		connect010();
 		searchMilestone2();
 	}
 
-	public void testSearchMilestone2011() throws Exception {
+	public void testSearchMilestone2_0_11() throws Exception {
 		connect011();
 		searchMilestone2();
 	}
