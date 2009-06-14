@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.internal.trac.core.model.TracComponent;
 import org.eclipse.mylyn.internal.trac.core.model.TracMilestone;
 import org.eclipse.mylyn.internal.trac.core.model.TracPriority;
+import org.eclipse.mylyn.internal.trac.core.model.TracRepositoryInfo;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
 import org.eclipse.mylyn.internal.trac.core.model.TracSeverity;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
@@ -51,9 +52,9 @@ public interface ITracClient {
 		public String toString() {
 			switch (this) {
 			case TRAC_0_9:
-				return "Web (Trac 0.9 or 0.10)"; //$NON-NLS-1$
+				return "Web"; //$NON-NLS-1$
 			case XML_RPC:
-				return "XML-RPC Plugin (Rev. " + TracXmlRpcClient.REQUIRED_REVISION + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+				return "XML-RPC"; //$NON-NLS-1$ 
 			default:
 				return null;
 			}
@@ -138,10 +139,11 @@ public interface ITracClient {
 	/**
 	 * Validates the repository connection.
 	 * 
+	 * @return information about the repository
 	 * @throws TracException
 	 *             thrown in case of a connection error
 	 */
-	void validate(IProgressMonitor monitor) throws TracException;
+	TracRepositoryInfo validate(IProgressMonitor monitor) throws TracException;
 
 	/**
 	 * Returns true, if the repository details are cached. If this method returns true, invoking

@@ -17,6 +17,9 @@ import java.net.URL;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.internal.trac.core.TracClientFactory;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
@@ -25,12 +28,14 @@ import org.eclipse.mylyn.internal.trac.core.client.TracException;
 import org.eclipse.mylyn.internal.trac.core.client.TracLoginException;
 import org.eclipse.mylyn.internal.trac.core.client.TracPermissionDeniedException;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
+import org.eclipse.mylyn.internal.trac.core.model.TracRepositoryInfo;
 import org.eclipse.mylyn.internal.trac.ui.TracUiPlugin;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -162,7 +167,7 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
 		private final TaskRepository taskRepository;
 
-		private final Version version;
+		private Version version;
 
 		private Version result;
 
@@ -199,21 +204,22 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 		public void validate(IProgressMonitor monitor) throws MalformedURLException, TracException {
 			AbstractWebLocation location = new TaskRepositoryLocationFactory().createWebLocation(taskRepository);
 
+			TracRepositoryInfo info;
 			if (version != null) {
 				ITracClient client = TracClientFactory.createClient(location, version);
-				client.validate(monitor);
+				info = client.validate(monitor);
 			} else {
 				// probe version: XML-RPC access first, then web
 				// access
 				try {
-					ITracClient client = TracClientFactory.createClient(location, Version.XML_RPC);
-					client.validate(monitor);
-					result = Version.XML_RPC;
+					version = Version.XML_RPC;
+					ITracClient client = TracClientFactory.createClient(location, version);
+					info = client.validate(monitor);
 				} catch (TracException e) {
 					try {
-						ITracClient client = TracClientFactory.createClient(location, Version.TRAC_0_9);
-						client.validate(monitor);
-						result = Version.TRAC_0_9;
+						version = Version.TRAC_0_9;
+						ITracClient client = TracClientFactory.createClient(location, version);
+						info = client.validate(monitor);
 
 						if (e instanceof TracPermissionDeniedException) {
 							setStatus(RepositoryStatus.createStatus(repositoryUrl, IStatus.INFO,
@@ -226,7 +232,20 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 						throw new TracException();
 					}
 				}
+				result = version;
 			}
+
+			if (version == Version.XML_RPC && info.isApiVersion(1, 0, 0)) {
+				setStatus(RepositoryStatus.createStatus(repositoryUrl, IStatus.INFO, TracUiPlugin.ID_PLUGIN,
+						Messages.TracRepositorySettingsPage_Authentication_credentials_valid_Update_to_latest_XmlRpcPlugin_Warning));
+			}
+
+			MultiStatus status = new MultiStatus(TracUiPlugin.ID_PLUGIN, 0, NLS.bind("Validation results for {0}", //$NON-NLS-1$
+					taskRepository.getRepositoryLabel()), null);
+			status.add(new Status(IStatus.INFO, TracUiPlugin.ID_PLUGIN, NLS.bind("Version: {0}", info.toString()))); //$NON-NLS-1$
+			status.add(new Status(IStatus.INFO, TracUiPlugin.ID_PLUGIN,
+					NLS.bind("Access Type: {0}", version.toString()))); //$NON-NLS-1$
+			StatusHandler.log(status);
 		}
 
 		public Version getResult() {

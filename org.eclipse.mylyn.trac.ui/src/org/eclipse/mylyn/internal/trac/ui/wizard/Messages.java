@@ -101,6 +101,8 @@ public class Messages extends NLS {
 
 	public static String TracRepositorySettingsPage_Authentication_credentials_are_valid;
 
+	public static String TracRepositorySettingsPage_Authentication_credentials_valid_Update_to_latest_XmlRpcPlugin_Warning;
+
 	public static String TracRepositorySettingsPage_Automatic__Use_Validate_Settings_;
 
 	public static String TracRepositorySettingsPage_EXAMPLE_HTTP_TRAC_EDGEWALL_ORG;

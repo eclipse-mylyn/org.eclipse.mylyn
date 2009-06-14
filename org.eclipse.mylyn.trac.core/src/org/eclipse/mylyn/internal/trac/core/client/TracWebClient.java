@@ -53,6 +53,7 @@ import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.model.TracComponent;
 import org.eclipse.mylyn.internal.trac.core.model.TracMilestone;
 import org.eclipse.mylyn.internal.trac.core.model.TracPriority;
+import org.eclipse.mylyn.internal.trac.core.model.TracRepositoryInfo;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter;
 import org.eclipse.mylyn.internal.trac.core.model.TracSeverity;
@@ -394,7 +395,7 @@ public class TracWebClient extends AbstractTracClient {
 		return values;
 	}
 
-	public void validate(IProgressMonitor monitor) throws TracException {
+	public TracRepositoryInfo validate(IProgressMonitor monitor) throws TracException {
 		GetMethod method = connect(repositoryUrl + "/", monitor); //$NON-NLS-1$
 		try {
 			InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
@@ -423,14 +424,24 @@ public class TracWebClient extends AbstractTracClient {
 					}
 				}
 
-				if (version != null && !(version.startsWith("Trac 0.9") || version.startsWith("Trac 0.10"))) { //$NON-NLS-1$ //$NON-NLS-2$
-					throw new TracException("The Trac version " + version //$NON-NLS-1$
-							+ " is unsupported. Please use version 0.9.x or 0.10.x."); //$NON-NLS-1$
+				if (version != null) {
+					if (version.startsWith("Trac 0.9")) { //$NON-NLS-1$
+						return new TracRepositoryInfo(0, 0, 0, version);
+					} else if (version.startsWith("Trac 0.10")) { //$NON-NLS-1$
+						return new TracRepositoryInfo(0, 1, 0, version);
+					} else if (version.startsWith("Trac 0.11")) { //$NON-NLS-1$
+						return new TracRepositoryInfo(1, 0, 0, version);
+					} else {
+						throw new TracException("The Trac version " + version //$NON-NLS-1$
+								+ " is unsupported. Please use version 0.9, 0.10. or 0.11"); //$NON-NLS-1$
+					}
 				}
 
 				if (!valid) {
 					throw new TracException("Not a valid Trac repository"); //$NON-NLS-1$
 				}
+
+				return new TracRepositoryInfo(version);
 			} finally {
 				in.close();
 			}
@@ -688,18 +699,22 @@ public class TracWebClient extends AbstractTracClient {
 	}
 
 	private void addResolutionAndStatus() {
-		data.ticketResolutions = new ArrayList<TracTicketResolution>(5);
-		data.ticketResolutions.add(new TracTicketResolution("fixed", 1)); //$NON-NLS-1$
-		data.ticketResolutions.add(new TracTicketResolution("invalid", 2)); //$NON-NLS-1$
-		data.ticketResolutions.add(new TracTicketResolution("wontfix", 3)); //$NON-NLS-1$
-		data.ticketResolutions.add(new TracTicketResolution("duplicate", 4)); //$NON-NLS-1$
-		data.ticketResolutions.add(new TracTicketResolution("worksforme", 5)); //$NON-NLS-1$
+		if (data.ticketResolutions == null || data.ticketResolutions.isEmpty()) {
+			data.ticketResolutions = new ArrayList<TracTicketResolution>(5);
+			data.ticketResolutions.add(new TracTicketResolution("fixed", 1)); //$NON-NLS-1$
+			data.ticketResolutions.add(new TracTicketResolution("invalid", 2)); //$NON-NLS-1$
+			data.ticketResolutions.add(new TracTicketResolution("wontfix", 3)); //$NON-NLS-1$
+			data.ticketResolutions.add(new TracTicketResolution("duplicate", 4)); //$NON-NLS-1$
+			data.ticketResolutions.add(new TracTicketResolution("worksforme", 5)); //$NON-NLS-1$
+		}
 
-		data.ticketStatus = new ArrayList<TracTicketStatus>(4);
-		data.ticketStatus.add(new TracTicketStatus("new", 1)); //$NON-NLS-1$
-		data.ticketStatus.add(new TracTicketStatus("assigned", 2)); //$NON-NLS-1$
-		data.ticketStatus.add(new TracTicketStatus("reopened", 3)); //$NON-NLS-1$
-		data.ticketStatus.add(new TracTicketStatus("closed", 4)); //$NON-NLS-1$
+		if (data.ticketStatus == null || data.ticketStatus.isEmpty()) {
+			data.ticketStatus = new ArrayList<TracTicketStatus>(4);
+			data.ticketStatus.add(new TracTicketStatus("new", 1)); //$NON-NLS-1$
+			data.ticketStatus.add(new TracTicketStatus("assigned", 2)); //$NON-NLS-1$
+			data.ticketStatus.add(new TracTicketStatus("reopened", 3)); //$NON-NLS-1$
+			data.ticketStatus.add(new TracTicketStatus("closed", 4)); //$NON-NLS-1$
+		}
 	}
 
 	private List<String> getOptionValues(HtmlStreamTokenizer tokenizer) throws IOException, ParseException {

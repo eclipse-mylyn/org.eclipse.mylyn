@@ -27,5 +27,8 @@ public class Messages extends NLS {
 	}
 
 	public static String TracWebClient_Updating_attributes;
+	public static String TracXmlRpcClient_API_version_unsupported_Error;
+	public static String TracXmlRpcClient_API_version_X_unsupported_Error;
+	public static String TracXmlRpcClient_Required_API_calls_missing_Error;
 
 }
