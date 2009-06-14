@@ -225,8 +225,6 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		}
 	}
 
-	private final static String CLIENT_LABEL = Messages.TracRepositoryConnector_TRAC_SUPPORTS_0_9_OR_0_10_THROUGH_WEB_AND_XML_RPC;
-
 	private final static Date DEFAULT_COMPLETION_DATE = new Date(0);
 
 	private static int TASK_PRIORITY_LEVELS = 5;
@@ -374,7 +372,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public String getLabel() {
-		return CLIENT_LABEL;
+		return Messages.TracRepositoryConnector_Trac_Client_Label;
 	}
 
 	@Override
