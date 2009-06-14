@@ -848,6 +848,10 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		updateAPIVersion(monitor);
 
 		Map<String, String> attributes = ticket.getValues();
+		if (!supportsWorkFlow(monitor)) {
+			// submitted as part of status and resolution updates for Trac < 0.11
+			attributes.remove("action"); //$NON-NLS-1$
+		}
 		if (supportsNotifications(monitor)) {
 			call(monitor, "ticket.update", ticket.getId(), comment, attributes, true); //$NON-NLS-1$
 		} else {
