@@ -540,7 +540,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					for (TaskContainerDelta taskContainerDelta : deltas) {
-						if (ScheduledPresentation.ID.equals(getCurrentPresentation().getId())) {
+						if (isScheduledPresentation()) {
 							// TODO: implement refresh policy for scheduled presentation
 							refreshJob.refresh();
 						} else {

@@ -81,7 +81,7 @@ public class TasksUiUtilTest extends TestCase {
 		assertEquals(1, activePage.getEditorReferences().length);
 		IEditorPart editor = activePage.getEditorReferences()[0].getEditor(true);
 		assertNotNull(editor);
-		assertEquals(TaskEditor.class, editor);
+		assertEquals(TaskEditor.class, editor.getClass());
 
 		TasksUiUtil.openTask(cat1task2);
 		assertEquals(2, activePage.getEditorReferences().length);
