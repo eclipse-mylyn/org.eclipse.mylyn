@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Frank Becker - fix for bug 280172
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.views;
@@ -117,6 +118,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		super(parent, treeStyle, filter);
 		hookContextMenu();
 		this.window = window;
+		indicateActiveTaskWorkingSet();
 	}
 
 	@Override
@@ -333,7 +335,6 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 				workingSetButton.setImage(CommonImages.getImage(CommonImages.TOOLBAR_ARROW_RIGHT));
 			}
 		});
-		indicateActiveTaskWorkingSet();
 
 		workingSetLink.addMouseListener(new MouseAdapter() {
 			@Override
@@ -473,30 +474,31 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 	}
 
 	public void indicateActiveTaskWorkingSet() {
-		if (window != null) {
-			Set<IWorkingSet> activeSets = TaskWorkingSetUpdater.getActiveWorkingSets(window);
-
-			if (filterComposite.isDisposed() || activeSets == null) {
-				return;
-			}
-
-			if (activeSets.size() == 0) {
-				workingSetLink.setText(TaskWorkingSetAction.LABEL_SETS_NONE);
-				workingSetLink.setToolTipText(Messages.TaskListFilteredTree_Edit_Task_Working_Sets_);
-				currentWorkingSet = null;
-			} else if (activeSets.size() > 1) {
-				workingSetLink.setText(Messages.TaskListFilteredTree__multiple_);
-				workingSetLink.setToolTipText(Messages.TaskListFilteredTree_Edit_Task_Working_Sets_);
-				currentWorkingSet = null;
-			} else {
-				Object[] array = activeSets.toArray();
-				IWorkingSet workingSet = (IWorkingSet) array[0];
-				workingSetLink.setText(workingSet.getLabel());
-				workingSetLink.setToolTipText(Messages.TaskListFilteredTree_Edit_Task_Working_Sets_);
-				currentWorkingSet = workingSet;
-			}
-			relayoutFilterControls();
+		if (window == null || workingSetLink == null || filterComposite == null || filterComposite.isDisposed()) {
+			return;
 		}
+
+		Set<IWorkingSet> activeSets = TaskWorkingSetUpdater.getActiveWorkingSets(window);
+		if (activeSets == null) {
+			return;
+		}
+
+		if (activeSets.size() == 0) {
+			workingSetLink.setText(TaskWorkingSetAction.LABEL_SETS_NONE);
+			workingSetLink.setToolTipText(Messages.TaskListFilteredTree_Edit_Task_Working_Sets_);
+			currentWorkingSet = null;
+		} else if (activeSets.size() > 1) {
+			workingSetLink.setText(Messages.TaskListFilteredTree__multiple_);
+			workingSetLink.setToolTipText(Messages.TaskListFilteredTree_Edit_Task_Working_Sets_);
+			currentWorkingSet = null;
+		} else {
+			Object[] array = activeSets.toArray();
+			IWorkingSet workingSet = (IWorkingSet) array[0];
+			workingSetLink.setText(workingSet.getLabel());
+			workingSetLink.setToolTipText(Messages.TaskListFilteredTree_Edit_Task_Working_Sets_);
+			currentWorkingSet = workingSet;
+		}
+		relayoutFilterControls();
 	}
 
 	public void indicateActiveTask(ITask task) {
