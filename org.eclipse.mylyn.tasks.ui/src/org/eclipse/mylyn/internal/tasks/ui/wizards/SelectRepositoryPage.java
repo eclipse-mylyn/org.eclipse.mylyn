@@ -49,6 +49,7 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoryLabelProvider;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
@@ -137,6 +138,7 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 
 		Button button = new Button(buttonContainer, SWT.NONE);
 		button.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING));
+		button.setImage(CommonImages.getImage(TasksUiImages.REPOSITORY_NEW));
 		button.setText(AddRepositoryAction.TITLE);
 		button.setEnabled(action.isEnabled());
 		button.addSelectionListener(new SelectionAdapter() {
