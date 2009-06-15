@@ -17,7 +17,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.provisional.commons.ui.SelectionProviderAdapter;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchActionSupport;
-import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 
@@ -35,6 +34,7 @@ public class TaskEditorActionGroup extends RepositoryElementActionGroup {
 	public TaskEditorActionGroup(WorkbenchActionSupport actionSupport) {
 		this.actionSupport = actionSupport;
 		synchronizeEditorAction.setActionDefinitionId("org.eclipse.ui.file.refresh"); //$NON-NLS-1$
+		synchronizeEditorAction.setEnabled(false);
 	}
 
 	public void fillContextMenu(IMenuManager manager, TaskEditor editor, boolean addClipboard) {
@@ -55,7 +55,7 @@ public class TaskEditorActionGroup extends RepositoryElementActionGroup {
 		newTaskFromSelectionAction.selectionChanged(selection);
 
 		manager.add(new Separator());
-		if (!(task instanceof LocalTask)) {
+		if (synchronizeEditorAction.isEnabled()) {
 			manager.appendToGroup(ID_SEPARATOR_REPOSITORY, synchronizeEditorAction);
 		}
 	}

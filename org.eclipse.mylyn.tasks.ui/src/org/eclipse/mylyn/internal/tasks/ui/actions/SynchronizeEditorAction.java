@@ -11,11 +11,11 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
-import java.util.Iterator;
-
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -26,6 +26,7 @@ import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
 /**
  * @author Rob Elves
+ * @author Steffen Pingel
  */
 public class SynchronizeEditorAction extends BaseSelectionListenerAction {
 
@@ -39,54 +40,59 @@ public class SynchronizeEditorAction extends BaseSelectionListenerAction {
 		// setAccelerator(SWT.MOD1 + 'r');
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void run() {
-		if (getStructuredSelection() != null) {
-			for (Iterator it = getStructuredSelection().iterator(); it.hasNext();) {
-				runWithSelection(it.next());
-			}
+		IStructuredSelection selection = getStructuredSelection();
+		if (selection == null) {
+			return;
 		}
-	}
-
-	private void runWithSelection(final Object selectedObject) {
-		final TaskEditor editor;
-		final ITask task;
-		if (selectedObject instanceof TaskEditor) {
-			editor = (TaskEditor) selectedObject;
-			task = editor.getTaskEditorInput().getTask();
-		} else {
+		Object selectedObject = selection.getFirstElement();
+		if (!(selectedObject instanceof TaskEditor)) {
 			return;
 		}
 
-		if (task != null) {
-			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-					task.getConnectorKind());
-			if (connector != null) {
-				TasksUiInternal.synchronizeTask(connector, task, true, new JobChangeAdapter() {
-					@Override
-					public void done(IJobChangeEvent event) {
-						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-							public void run() {
-								try {
-									if (selectedObject instanceof TaskEditor) {
-										TaskEditor editor = (TaskEditor) selectedObject;
-										editor.refreshPages();
-									}
-								} finally {
-									if (editor != null) {
-										editor.showBusy(false);
-									}
-								}
+		final TaskEditor editor = (TaskEditor) selectedObject;
+		final ITask task = editor.getTaskEditorInput().getTask();
+		if (task == null) {
+			return;
+		}
+
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+				task.getConnectorKind());
+		if (connector == null) {
+			return;
+		}
+
+		TasksUiInternal.synchronizeTask(connector, task, true, new JobChangeAdapter() {
+			@Override
+			public void done(IJobChangeEvent event) {
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						try {
+							editor.refreshPages();
+						} finally {
+							if (editor != null) {
+								editor.showBusy(false);
 							}
-						});
+						}
 					}
 				});
 			}
-			if (editor != null) {
-				editor.showBusy(true);
-			}
+		});
+		if (editor != null) {
+			editor.showBusy(true);
 		}
-
 	}
+
+	@Override
+	protected boolean updateSelection(IStructuredSelection selection) {
+		Object selectedObject = selection.getFirstElement();
+		if (selectedObject instanceof TaskEditor) {
+			TaskEditor editor = (TaskEditor) selectedObject;
+			ITask task = editor.getTaskEditorInput().getTask();
+			return !(task instanceof LocalTask);
+		}
+		return false;
+	}
+
 }
