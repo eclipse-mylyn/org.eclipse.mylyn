@@ -20,10 +20,10 @@ import junit.framework.TestSuite;
 public class AllTests {
 
 	public static Test suite() {
-		// the order of these tests might still matter, but shouldn't
-		TestSuite suite = new TestSuite("All Tests for org.eclipse.mylyn.tests");
-		suite.addTest(AllConnectorTests.suite());
+		TestSuite suite = new TestSuite("Tests for org.eclipse.mylyn.tests");
 		suite.addTest(AllNonConnectorTests.suite());
+		suite.addTest(AllConnectorTests.suite());
 		return suite;
 	}
+
 }
