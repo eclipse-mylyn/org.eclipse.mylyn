@@ -832,14 +832,20 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 			return;
 		}
 
-		showEditorBusy(true);
+		try {
+			showEditorBusy(true);
 
-		doSave(new NullProgressMonitor());
+			doSave(new NullProgressMonitor());
 
-		SubmitJob submitJob = TasksUiInternal.getJobFactory().createSubmitTaskJob(connector,
-				getModel().getTaskRepository(), task, getModel().getTaskData(), getModel().getChangedOldAttributes());
-		submitJob.addSubmitJobListener(new SubmitTaskJobListener(getAttachContext()));
-		submitJob.schedule();
+			SubmitJob submitJob = TasksUiInternal.getJobFactory().createSubmitTaskJob(connector,
+					getModel().getTaskRepository(), task, getModel().getTaskData(),
+					getModel().getChangedOldAttributes());
+			submitJob.addSubmitJobListener(new SubmitTaskJobListener(getAttachContext()));
+			submitJob.schedule();
+		} catch (RuntimeException e) {
+			showEditorBusy(false);
+			throw e;
+		}
 	}
 
 	/**
