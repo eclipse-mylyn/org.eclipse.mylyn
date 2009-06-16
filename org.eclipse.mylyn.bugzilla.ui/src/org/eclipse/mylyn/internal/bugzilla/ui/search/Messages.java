@@ -35,8 +35,6 @@ public class Messages extends NLS {
 
 	public static String BugzillaSearchPage_Bugzilla_Query;
 
-	public static String BugzillaSearchPage_Bugzilla_Search_Page;
-
 	public static String BugzillaSearchPage_cc;
 
 	public static String BugzillaSearchPage_Changed_in;
@@ -100,10 +98,6 @@ public class Messages extends NLS {
 	public static String BugzillaSearchPage_substring;
 
 	public static String BugzillaSearchPage_Summary;
-
-	public static String BugzillaSearchPage_Task_Repositories;
-
-	public static String BugzillaSearchPage_Unable_to_get_configuration_X;
 
 	public static String BugzillaSearchPage_Update_Attributes_from_Repository;
 

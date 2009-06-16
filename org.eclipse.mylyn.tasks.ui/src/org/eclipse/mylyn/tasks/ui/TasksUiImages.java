@@ -111,8 +111,6 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor REPOSITORY_SMALL = create(OBJ, "repository-small.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor REPOSITORY_SMALL_TOP = create(OBJ, "repository-small-top.gif"); //$NON-NLS-1$
-
 	public static final ImageDescriptor REPOSITORY_NEW = create("etool16", "repository-new.gif"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	/**

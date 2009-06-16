@@ -108,7 +108,6 @@ public class TaskListToolTip extends GradientToolTip {
 		super(control);
 		this.control = control;
 		setShift(new Point(1, 1));
-		control.getDisplay();
 		titleColor = TasksUiPlugin.getDefault().getFormColors(control.getDisplay()).getColor(IFormColors.TITLE);
 	}
 
