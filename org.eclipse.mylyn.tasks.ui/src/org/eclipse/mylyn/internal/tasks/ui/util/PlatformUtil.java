@@ -137,23 +137,6 @@ public class PlatformUtil {
 		return Platform.WS_GTK.equals(SWT.getPlatform()) && toolBar.computeSize(SWT.DEFAULT, SWT.DEFAULT, false).y == 0;
 	}
 
-	/**
-	 * If a Windows toolbar does not have a standard ToolItem but use only ControlContributions a dummy ToolItem needs
-	 * to be added to force the height to be > 22 pixels.
-	 */
-	public static boolean needsToolItemToForceToolBarHeight() {
-		return Platform.WS_WIN32.equals(SWT.getPlatform()) || needsCarbonToolBarFix();
-	}
-
-	/**
-	 * If a Carbon toolbar does not have a standard ToolItem but use only ControlContributions the control contribution
-	 * will only be about as half as tall the toolbar. The work-around is to make the toolbar twice as tall as the
-	 * contribution.
-	 */
-	public static boolean needsCarbonToolBarFix() {
-		return Platform.WS_CARBON.equals(SWT.getPlatform());
-	}
-
 	public static boolean spinnerHasNativeBorder() {
 		return isMac();
 	}

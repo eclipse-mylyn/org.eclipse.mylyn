@@ -340,9 +340,6 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			// bottom align tool bar in title region
 			leftToolBarSize = leftToolBar.getSize();
 			int y = leftToolBar.getParent().getSize().y - leftToolBarSize.y - 2;
-			if (PlatformUtil.needsCarbonToolBarFix()) {
-				y += 5;
-			}
 			if (!hasLeftToolBar()) {
 				// hide tool bar to avoid overlaying busyLabel on windows
 				leftToolBarSize.x = 0;
@@ -739,9 +736,6 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		}
 
 		final Point size = leftToolBar.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
-		if (PlatformUtil.needsCarbonToolBarFix()) {
-			size.y = 22;
-		}
 		Point titleSize = titleLabel.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
 		size.x += titleSize.x + LEFT_TOOLBAR_HEADER_TOOLBAR_PADDING;
 		size.y = Math.max(titleSize.y, size.y);
