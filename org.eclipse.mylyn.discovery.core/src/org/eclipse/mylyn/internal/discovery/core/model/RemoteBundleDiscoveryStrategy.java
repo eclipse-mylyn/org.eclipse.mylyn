@@ -144,7 +144,7 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 						DownloadBundleJob bundleJob;
 						for (;;) {
 							try {
-								bundleJob = job.get(3L, TimeUnit.SECONDS);
+								bundleJob = job.get(1L, TimeUnit.SECONDS);
 								break;
 							} catch (TimeoutException e) {
 								if (monitor.isCanceled()) {

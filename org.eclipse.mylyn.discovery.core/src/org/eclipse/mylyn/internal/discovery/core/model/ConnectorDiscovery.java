@@ -310,7 +310,7 @@ public class ConnectorDiscovery {
 						try {
 							for (;;) {
 								try {
-									VerifyUpdateSiteJob job = jobFuture.get(3L, TimeUnit.SECONDS);
+									VerifyUpdateSiteJob job = jobFuture.get(1L, TimeUnit.SECONDS);
 
 									Collection<DiscoveryConnector> descriptors = urlToDescriptors.get(job.url);
 									for (DiscoveryConnector descriptor : descriptors) {
