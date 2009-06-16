@@ -28,8 +28,4 @@ public class Messages extends NLS {
 
 	public static String CvsCommitWorkflowProvider_Commit_Resources_in_Task_Context;
 
-	public static String CvsContextChangeSet_Attempting_to_commit_resource;
-
-	public static String CvsContextChangeSet_Mylyn_Change_Set_Management;
-
 }
