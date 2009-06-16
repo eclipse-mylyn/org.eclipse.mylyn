@@ -32,7 +32,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskOperation;
  */
 public class RepositoryConfiguration implements Serializable {
 
-	private static final long serialVersionUID = -3600257926613730005L;
+	private static final long serialVersionUID = -1162588743524741054L;
 
 	private String repositoryUrl = "<unknown>"; //$NON-NLS-1$
 
@@ -67,6 +67,8 @@ public class RepositoryConfiguration implements Serializable {
 	private final List<BugzillaFlag> flags = new ArrayList<BugzillaFlag>();
 
 	private BugzillaVersion version = BugzillaVersion.MIN_VERSION;
+
+	private String encoding = null;
 
 	public RepositoryConfiguration() {
 		super();
@@ -696,5 +698,13 @@ public class RepositoryConfiguration implements Serializable {
 			}
 		}
 		return null;
+	}
+
+	public void setEncoding(String encoding) {
+		this.encoding = encoding;
+	}
+
+	public String getEncoding() {
+		return encoding;
 	}
 }

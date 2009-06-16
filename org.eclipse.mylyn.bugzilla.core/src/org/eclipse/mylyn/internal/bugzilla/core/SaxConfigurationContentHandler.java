@@ -43,6 +43,8 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 
 	private static final String ELEMENT_INSTALL_VERSION = "install_version"; //$NON-NLS-1$
 
+	private static final String ELEMENT_DB_ENCODING = "db_encoding"; //$NON-NLS-1$
+
 	private static final String ATTRIBUTE_RDF_ABOUT = "rdf:about"; //$NON-NLS-1$
 
 	private static final String ATTRIBUTE_RESOURCE = "resource"; //$NON-NLS-1$
@@ -149,6 +151,8 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 
 	private static final int IN_FLAG_TYPE = 1 << 25;
 
+	private static final int IN_DB_ENCODING = 1 << 26;
+
 	private int state = EXPECTING_ROOT;
 
 	private String currentProduct = ""; //$NON-NLS-1$
@@ -244,6 +248,8 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			parseResource(attributes);
 		} else if (localName.equals(ELEMENT_INSTALL_VERSION)) {
 			state = state | IN_INSTALL_VERSION;
+		} else if (localName.equals(ELEMENT_DB_ENCODING)) {
+			state = state | IN_DB_ENCODING;
 		} else if (localName.equals(ELEMENT_TARGET_MILESTONES)) {
 			state = state | IN_TARGET_MILESTONES;
 		} else if (localName.equals(ELEMENT_TARGET_MILESTONE)) {
@@ -377,6 +383,9 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 		} else if (localName.equals(ELEMENT_INSTALL_VERSION)) {
 			state = state & ~IN_INSTALL_VERSION;
 			configuration.setInstallVersion(characters.toString());
+		} else if (localName.equals(ELEMENT_DB_ENCODING)) {
+			state = state & ~IN_DB_ENCODING;
+			configuration.setEncoding(characters.toString());
 		} else if (localName.equals(ELEMENT_TARGET_MILESTONE)) {
 			state = state & ~IN_TARGET_MILESTONE;
 		} else if (localName.equals(ELEMENT_TARGET_MILESTONES)) {

@@ -241,7 +241,7 @@ public class BugzillaClient {
 			}
 
 			getMethod.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=" //$NON-NLS-1$ //$NON-NLS-2$
-					+ characterEncoding);
+					+ getCharacterEncoding());
 
 			// Resolves bug#195113
 			httpClient.getParams().setParameter("http.protocol.single-cookie-header", true); //$NON-NLS-1$
@@ -357,7 +357,7 @@ public class BugzillaClient {
 					+ IBugzillaConstants.URL_POST_LOGIN), true);
 
 			postMethod.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=" //$NON-NLS-1$ //$NON-NLS-2$
-					+ characterEncoding);
+					+ getCharacterEncoding());
 
 			postMethod.setRequestBody(formData);
 			postMethod.setDoAuthentication(true);
@@ -447,7 +447,7 @@ public class BugzillaClient {
 							pairs.add(new NameValuePair(nameValue[0].trim(), "")); //$NON-NLS-1$
 						} else if (nameValue.length == 2 && nameValue[0] != null && nameValue[1] != null) {
 							pairs.add(new NameValuePair(nameValue[0].trim(), URLDecoder.decode(nameValue[1].trim(),
-									characterEncoding)));
+									getCharacterEncoding())));
 						}
 					}
 				}
@@ -494,7 +494,7 @@ public class BugzillaClient {
 	}
 
 	protected RepositoryQueryResultsFactory getQueryResultsFactory(InputStream stream) {
-		return new RepositoryQueryResultsFactory(stream, characterEncoding);
+		return new RepositoryQueryResultsFactory(stream, getCharacterEncoding());
 	}
 
 	public static void setupExistingBugAttributes(String serverUrl, TaskData existingReport) {
@@ -561,7 +561,7 @@ public class BugzillaClient {
 						for (String type : VALID_CONFIG_CONTENT_TYPES) {
 							if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
 								RepositoryConfigurationFactory configFactory = new RepositoryConfigurationFactory(
-										stream, characterEncoding);
+										stream, getCharacterEncoding());
 
 								repositoryConfiguration = configFactory.getConfiguration();
 
@@ -620,6 +620,16 @@ public class BugzillaClient {
 		}
 	}
 
+	private String getCharacterEncoding() {
+		if (repositoryConfiguration != null && repositoryConfiguration.getEncoding() != null
+				&& repositoryConfiguration.getEncoding().length() > 0) {
+			// Special case for eclipse.org. See bug#280361 and bug#275102
+			return repositoryConfiguration.getEncoding();
+		} else {
+			return characterEncoding;
+		}
+	}
+
 	public void postAttachment(String bugReportID, String comment, AbstractTaskAttachmentSource source,
 			TaskAttribute attachmentAttribute, IProgressMonitor monitor) throws HttpException, IOException,
 			CoreException {
@@ -669,7 +679,7 @@ public class BugzillaClient {
 			// actually sending the contents.
 			postMethod.getParams().setBooleanParameter(HttpMethodParams.USE_EXPECT_CONTINUE, true);
 			List<PartBase> parts = new ArrayList<PartBase>();
-			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_ACTION, VALUE_ACTION_INSERT, characterEncoding));
+			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_ACTION, VALUE_ACTION_INSERT, getCharacterEncoding()));
 			AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
 			String username;
 			String password;
@@ -682,15 +692,16 @@ public class BugzillaClient {
 
 			}
 			if (username != null && password != null) {
-				parts.add(new StringPart(IBugzillaConstants.POST_INPUT_BUGZILLA_LOGIN, username, characterEncoding));
-				parts.add(new StringPart(IBugzillaConstants.POST_INPUT_BUGZILLA_PASSWORD, password, characterEncoding));
+				parts.add(new StringPart(IBugzillaConstants.POST_INPUT_BUGZILLA_LOGIN, username, getCharacterEncoding()));
+				parts.add(new StringPart(IBugzillaConstants.POST_INPUT_BUGZILLA_PASSWORD, password,
+						getCharacterEncoding()));
 			}
-			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_BUGID, bugReportID, characterEncoding));
+			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_BUGID, bugReportID, getCharacterEncoding()));
 			if (description != null) {
-				parts.add(new StringPart(IBugzillaConstants.POST_INPUT_DESCRIPTION, description, characterEncoding));
+				parts.add(new StringPart(IBugzillaConstants.POST_INPUT_DESCRIPTION, description, getCharacterEncoding()));
 			}
 			if (comment != null) {
-				parts.add(new StringPart(IBugzillaConstants.POST_INPUT_COMMENT, comment, characterEncoding));
+				parts.add(new StringPart(IBugzillaConstants.POST_INPUT_COMMENT, comment, getCharacterEncoding()));
 			}
 			parts.add(new FilePart(IBugzillaConstants.POST_INPUT_DATA, new TaskAttachmentPartSource(source, filename)));
 
@@ -790,7 +801,8 @@ public class BugzillaClient {
 		authenticate(monitor);
 
 		postMethod = new GzipPostMethod(WebUtil.getRequestPath(repositoryUrl.toString() + formUrl), true);
-		postMethod.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=" + characterEncoding); //$NON-NLS-1$ //$NON-NLS-2$
+		postMethod.setRequestHeader(
+				"Content-Type", "application/x-www-form-urlencoded; charset=" + getCharacterEncoding()); //$NON-NLS-1$ //$NON-NLS-2$
 
 		httpClient.getHttpConnectionManager().getParams().setSoTimeout(WebUtil.getConnectionTimeout());
 
@@ -1428,7 +1440,7 @@ public class BugzillaClient {
 
 		String bugUrl = taskData.getRepositoryUrl() + IBugzillaConstants.URL_GET_SHOW_BUG + taskData.getTaskId();
 		GzipGetMethod getMethod = new GzipGetMethod(WebUtil.getRequestPath(bugUrl), false);
-		getMethod.setRequestHeader("Content-Type", "text/xml; charset=" + characterEncoding); //$NON-NLS-1$ //$NON-NLS-2$ 
+		getMethod.setRequestHeader("Content-Type", "text/xml; charset=" + getCharacterEncoding()); //$NON-NLS-1$ //$NON-NLS-2$ 
 		httpClient.getParams().setParameter("http.protocol.single-cookie-header", true); //$NON-NLS-1$
 		getMethod.setDoAuthentication(true);
 
@@ -1439,7 +1451,7 @@ public class BugzillaClient {
 			if (code == HttpURLConnection.HTTP_OK) {
 				inStream = getResponseStream(getMethod, monitor);
 				HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(new BufferedReader(new InputStreamReader(
-						inStream, characterEncoding)), null);
+						inStream, getCharacterEncoding())), null);
 				for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
 					if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == Tag.INPUT
 							&& !((HtmlTag) (token.getValue())).isEndTag()) {
@@ -1501,7 +1513,7 @@ public class BugzillaClient {
 	 */
 	private void parseHtmlError(InputStream inputStream) throws IOException, CoreException {
 
-		BufferedReader in = new BufferedReader(new InputStreamReader(inputStream, characterEncoding));
+		BufferedReader in = new BufferedReader(new InputStreamReader(inputStream, getCharacterEncoding()));
 		parseHtmlError(in);
 	}
 
@@ -1627,7 +1639,7 @@ public class BugzillaClient {
 			if (method != null) {
 				InputStream in = getResponseStream(method, monitor);
 				try {
-					BugzillaTaskHistoryParser parser = new BugzillaTaskHistoryParser(in, characterEncoding);
+					BugzillaTaskHistoryParser parser = new BugzillaTaskHistoryParser(in, getCharacterEncoding());
 					try {
 						return parser.retrieveHistory(bugzillaLanguageSettings);
 					} catch (LoginException e) {
@@ -1706,7 +1718,7 @@ public class BugzillaClient {
 						if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
 							InputStream input = getResponseStream(method, monitor);
 							try {
-								MultiBugReportFactory factory = new MultiBugReportFactory(input, characterEncoding);
+								MultiBugReportFactory factory = new MultiBugReportFactory(input, getCharacterEncoding());
 								List<BugzillaCustomField> customFields = new ArrayList<BugzillaCustomField>();
 								if (repositoryConfiguration != null) {
 									customFields = repositoryConfiguration.getCustomFields();
@@ -1790,7 +1802,7 @@ public class BugzillaClient {
 			}
 
 			headMethod.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=" //$NON-NLS-1$ //$NON-NLS-2$
-					+ characterEncoding);
+					+ getCharacterEncoding());
 
 			// WARNING!! Setting browser compatability breaks Bugzilla
 			// authentication
