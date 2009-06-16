@@ -225,6 +225,8 @@ public class CommonImages {
 
 	public static final ImageDescriptor PREVIEW_WEB = create(T_TOOL, "preview-web.png"); //$NON-NLS-1$
 
+	public static final ImageDescriptor WEB = create(T_TOOL, "web.png"); //$NON-NLS-1$
+
 	public static final ImageDescriptor FIND = create(T_TOOL, "find.gif"); //$NON-NLS-1$
 
 	public static final ImageDescriptor SAVE = create(T_TOOL, "save.gif"); //$NON-NLS-1$;

@@ -32,6 +32,7 @@ import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackAdapter;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -220,7 +221,8 @@ public abstract class AbstractNotificationPopup extends Window {
 		Label titleTextLabel = new Label(parent, SWT.NONE);
 		titleTextLabel.setText(getPopupShellTitle());
 		titleTextLabel.setFont(CommonFonts.BOLD);
-		titleTextLabel.setForeground(color.getTitleText());
+		titleTextLabel.setForeground(getTitleForeground());
+//		titleTextLabel.setForeground(color.getTitleText());
 		titleTextLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true));
 		titleTextLabel.setCursor(parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND));
 
@@ -246,6 +248,10 @@ public abstract class AbstractNotificationPopup extends Window {
 			}
 
 		});
+	}
+
+	protected Color getTitleForeground() {
+		return color.getTitleText();
 	}
 
 	private void initResources() {
