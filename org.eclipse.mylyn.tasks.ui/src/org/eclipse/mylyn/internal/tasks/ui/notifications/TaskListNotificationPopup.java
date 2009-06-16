@@ -24,12 +24,15 @@ import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 
@@ -60,6 +63,12 @@ public class TaskListNotificationPopup extends AbstractNotificationPopup {
 	@Override
 	protected void createTitleArea(Composite parent) {
 		super.createTitleArea(parent);
+	}
+
+	@Override
+	protected Color getTitleForeground() {
+		return TasksUiPlugin.getDefault().getFormColors(Display.getDefault()).getColor(IFormColors.TITLE);
+
 	}
 
 	@Override
@@ -120,7 +129,7 @@ public class TaskListNotificationPopup extends AbstractNotificationPopup {
 				if (notification.getDescription() != null) {
 					descriptionText = notification.getDescription();
 				}
-				if (descriptionText != null && !descriptionText.trim().equals("")) { //$NON-NLS-1$
+				if (descriptionText != null && !descriptionText.trim().equals("")) {
 					Label descriptionLabel = new Label(notificationComposite, SWT.NO_FOCUS);
 					descriptionLabel.setText(descriptionText);
 					descriptionLabel.setBackground(parent.getBackground());
@@ -135,7 +144,7 @@ public class TaskListNotificationPopup extends AbstractNotificationPopup {
 				TaskHyperlink remainingHyperlink = new TaskHyperlink(notificationComposite, SWT.NO_FOCUS);
 				remainingHyperlink.setBackground(parent.getBackground());
 
-				remainingHyperlink.setText(numNotificationsRemain + " " + NOTIFICATIONS_HIDDEN); //$NON-NLS-1$
+				remainingHyperlink.setText(numNotificationsRemain + " " + NOTIFICATIONS_HIDDEN);
 				GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(remainingHyperlink);
 				remainingHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 					@Override

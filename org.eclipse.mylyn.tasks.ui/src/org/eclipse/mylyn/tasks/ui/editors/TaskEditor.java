@@ -45,7 +45,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.commons.ui.TaskListImageDescriptor;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
@@ -918,10 +917,10 @@ public class TaskEditor extends SharedHeaderFormEditor {
 					TasksUiUtil.openUrl(taskUrl);
 				}
 			};
-			ImageDescriptor overlay = TasksUiPlugin.getDefault().getOverlayIcon(taskRepository.getConnectorKind());
-			ImageDescriptor compositeDescriptor = new TaskListImageDescriptor(TasksUiImages.REPOSITORY_SMALL, overlay,
-					false, true);
-			openWithBrowserAction.setImageDescriptor(compositeDescriptor);
+//			ImageDescriptor overlay = TasksUiPlugin.getDefault().getOverlayIcon(taskRepository.getConnectorKind());
+//			ImageDescriptor compositeDescriptor = new TaskListImageDescriptor(TasksUiImages.REPOSITORY_SMALL_TOP,
+//					overlay, false, true);
+			openWithBrowserAction.setImageDescriptor(CommonImages.WEB);
 			//openWithBrowserAction.setImageDescriptor(CommonImages.BROWSER_OPEN_TASK);
 			openWithBrowserAction.setToolTipText(Messages.AbstractTaskEditorPage_Open_with_Web_Browser);
 			toolBarManager.appendToGroup("open", openWithBrowserAction); //$NON-NLS-1$

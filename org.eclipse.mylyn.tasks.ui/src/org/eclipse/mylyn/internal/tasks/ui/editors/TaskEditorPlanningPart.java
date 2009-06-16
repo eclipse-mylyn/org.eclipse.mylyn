@@ -46,6 +46,7 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
 		part.createControl(parent, toolkit);
+		part.getSection().setToolTipText(Messages.TaskEditorPlanningPart_TaskEditorPlanningPart_tooltip);
 		setSection(toolkit, part.getSection());
 	}
 

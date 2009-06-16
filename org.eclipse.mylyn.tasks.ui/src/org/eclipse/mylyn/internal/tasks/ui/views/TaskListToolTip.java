@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.commons.core.DateUtil;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.GradientToolTip;
 import org.eclipse.mylyn.internal.provisional.commons.ui.ScalingHyperlink;
@@ -53,6 +54,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -69,6 +71,7 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.widgets.Widget;
+import org.eclipse.ui.forms.IFormColors;
 
 import com.ibm.icu.text.DateFormat;
 import com.ibm.icu.text.SimpleDateFormat;
@@ -99,11 +102,14 @@ public class TaskListToolTip extends GradientToolTip {
 
 	private final Control control;
 
+	private final Color titleColor;
+
 	public TaskListToolTip(Control control) {
 		super(control);
-
 		this.control = control;
 		setShift(new Point(1, 1));
+		control.getDisplay();
+		titleColor = TasksUiPlugin.getDefault().getFormColors(control.getDisplay()).getColor(IFormColors.TITLE);
 	}
 
 	public void dispose() {
@@ -161,6 +167,8 @@ public class TaskListToolTip extends GradientToolTip {
 			sb.append(getRepositoryLabel(query.getConnectorKind(), query.getRepositoryUrl()));
 			sb.append("]"); //$NON-NLS-1$
 			return sb.toString();
+		} else if (element instanceof ITask) {
+			return ((ITask) element).getSummary();
 		} else {
 			return new TaskElementLabelProvider(false).getText(element);
 		}
@@ -441,7 +449,7 @@ public class TaskListToolTip extends GradientToolTip {
 
 		Composite composite = createToolTipContentAreaComposite(parent);
 
-		addIconAndLabel(composite, getImage(currentTipElement), getTitleText(currentTipElement));
+		addIconAndLabel(composite, getImage(currentTipElement), getTitleText(currentTipElement), true);
 
 		String detailsText = getDetailsText(currentTipElement);
 		if (detailsText != null) {
@@ -584,6 +592,10 @@ public class TaskListToolTip extends GradientToolTip {
 	}
 
 	protected void addIconAndLabel(Composite parent, Image image, String text) {
+		addIconAndLabel(parent, image, text, false);
+	}
+
+	protected void addIconAndLabel(Composite parent, Image image, String text, boolean title) {
 		Label imageLabel = new Label(parent, SWT.NONE);
 		imageLabel.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
 		imageLabel.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
@@ -591,14 +603,18 @@ public class TaskListToolTip extends GradientToolTip {
 		imageLabel.setImage(image);
 
 		Label textLabel = new Label(parent, SWT.WRAP);
-		textLabel.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
+		if (title) {
+			textLabel.setFont(CommonFonts.BOLD);
+			textLabel.setForeground(titleColor);
+		} else {
+			textLabel.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
+		}
 		textLabel.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
 		textLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER));
 		text = removeTrailingNewline(text);
 		textLabel.setText(TasksUiInternal.escapeLabelText(text));
 		int width = Math.min(textLabel.computeSize(SWT.DEFAULT, SWT.DEFAULT).x, MAX_WIDTH);
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).hint(width, SWT.DEFAULT).applyTo(textLabel);
-
 	}
 
 	private static class ProgressData {

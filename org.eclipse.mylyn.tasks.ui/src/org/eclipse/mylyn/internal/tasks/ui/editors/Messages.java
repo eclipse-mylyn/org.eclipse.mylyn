@@ -167,6 +167,8 @@ public class Messages extends NLS {
 
 	public static String TaskEditorPlanningPart_Scheduled;
 
+	public static String TaskEditorPlanningPart_TaskEditorPlanningPart_tooltip;
+
 	public static String TaskEditorPlanningPart_Time_working_on_this_task;
 
 	public static String TaskEditorRichTextPart_Browser_Preview;
