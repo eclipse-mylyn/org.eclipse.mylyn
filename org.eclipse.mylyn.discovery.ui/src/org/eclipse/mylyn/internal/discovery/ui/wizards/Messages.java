@@ -77,8 +77,6 @@ class Messages extends NLS {
 
 	public static String ConnectorDiscoveryWizardMainPage_tooltip_showOverview;
 
-	public static String ConnectorDiscoveryWizardMainPage_typeFilterText;
-
 	public static String ConnectorDiscoveryWizardMainPage_unexpectedException;
 
 	public static String ConnectorDiscoveryWizardMainPage_warningMessageConnectorUnavailable;

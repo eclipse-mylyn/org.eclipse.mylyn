@@ -37,8 +37,6 @@ public class Messages extends NLS {
 
 	public static String SwtUtil_Fading;
 
-	public static String AbstractFilteredTree_Clear;
-
 	public static String AbstractFilteredTree_Find;
 
 	public static String AbstractNotificationPopup_Close_Notification_Job;
