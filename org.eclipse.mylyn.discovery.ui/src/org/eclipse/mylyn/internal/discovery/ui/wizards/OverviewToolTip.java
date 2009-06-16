@@ -118,8 +118,9 @@ class OverviewToolTip extends GradientToolTip {
 		summaryContainer.setBackground(null);
 		GridLayoutFactory.fillDefaults().applyTo(summaryContainer);
 
-		GridDataFactory gridDataFactory = GridDataFactory.fillDefaults().grab(true, false).span(image == null ? 2 : 1,
-				1);
+		GridDataFactory gridDataFactory = GridDataFactory.fillDefaults()
+				.grab(true, true)
+				.span(image == null ? 2 : 1, 1);
 		if (image != null) {
 			gridDataFactory.hint(widthHint, heightHint);
 		}
@@ -129,7 +130,7 @@ class OverviewToolTip extends GradientToolTip {
 		summaryLabel.setText(summary);
 		summaryLabel.setBackground(null);
 
-		GridDataFactory.fillDefaults().grab(true, false).align(SWT.BEGINNING, SWT.BEGINNING).applyTo(summaryLabel);
+		GridDataFactory.fillDefaults().grab(true, true).align(SWT.BEGINNING, SWT.BEGINNING).applyTo(summaryLabel);
 
 		if (image != null) {
 			final Composite imageContainer = new Composite(container, SWT.BORDER);
