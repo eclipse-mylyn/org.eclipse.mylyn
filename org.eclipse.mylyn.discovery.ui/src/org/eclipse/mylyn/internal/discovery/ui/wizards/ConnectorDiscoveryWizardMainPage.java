@@ -515,7 +515,8 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		bodyScrolledComposite.addControlListener(new ControlAdapter() {
 			@Override
 			public void controlResized(ControlEvent e) {
-				Point size = scrolledContents.computeSize(body.getSize().x, SWT.DEFAULT, true);
+				// XXX small offset in case list has a scroll bar
+				Point size = scrolledContents.computeSize(body.getSize().x - 20, SWT.DEFAULT, true);
 				scrolledContents.setSize(size);
 				bodyScrolledComposite.setMinHeight(size.y);
 			}
@@ -635,9 +636,10 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 			checkboxContainer = new Composite(connectorContainer, SWT.NULL);
 			configureLook(checkboxContainer, background);
 			GridDataFactory.swtDefaults().align(SWT.CENTER, SWT.BEGINNING).span(1, 2).applyTo(checkboxContainer);
-			GridLayoutFactory.fillDefaults().numColumns(2).applyTo(checkboxContainer);
+			GridLayoutFactory.fillDefaults().spacing(1, 1).numColumns(2).applyTo(checkboxContainer);
 
 			checkbox = new Button(checkboxContainer, SWT.CHECK);
+			checkbox.setText(" "); //$NON-NLS-1$
 			// help UI tests
 			checkbox.setData("connectorId", connector.getId()); //$NON-NLS-1$
 			configureLook(checkbox, background);
@@ -685,7 +687,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 						connector.getOverview());
 				GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).applyTo(toolBar);
 			} else {
-				new Label(connectorContainer, SWT.NULL);
+				new Label(connectorContainer, SWT.NULL).setText(" "); //$NON-NLS-1$
 			}
 
 			description = new Label(connectorContainer, SWT.NULL | SWT.WRAP);
@@ -828,10 +830,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 			configureLook(helpTextControl, background);
 			GridDataFactory.fillDefaults().grab(true, false).hint(100, SWT.DEFAULT).applyTo(helpTextControl);
 		} else {
-			GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(false).spacing(0, 0) //
-					// hack for layout issue where bottom one gets cropped
-					.extendedMargins(0, 0, 0, 15)
-					.applyTo(container);
+			GridLayoutFactory.fillDefaults().numColumns(2).spacing(0, 0).applyTo(container);
 
 			List<DiscoveryCategory> categories = new ArrayList<DiscoveryCategory>(discovery.getCategories());
 			Collections.sort(categories, new DiscoveryCategoryComparator());
@@ -881,7 +880,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 								category.getOverview());
 						GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).applyTo(toolBar);
 					} else {
-						new Label(categoryHeaderContainer, SWT.NULL);
+						new Label(categoryHeaderContainer, SWT.NULL).setText(" "); //$NON-NLS-1$
 					}
 					Label description = new Label(categoryHeaderContainer, SWT.WRAP);
 					GridDataFactory.fillDefaults().grab(true, false).span(2, 1).hint(100, SWT.DEFAULT).applyTo(
