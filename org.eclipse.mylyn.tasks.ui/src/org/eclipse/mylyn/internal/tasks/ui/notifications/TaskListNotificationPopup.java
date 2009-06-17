@@ -129,7 +129,7 @@ public class TaskListNotificationPopup extends AbstractNotificationPopup {
 				if (notification.getDescription() != null) {
 					descriptionText = notification.getDescription();
 				}
-				if (descriptionText != null && !descriptionText.trim().equals("")) {
+				if (descriptionText != null && !descriptionText.trim().equals("")) { //$NON-NLS-1$
 					Label descriptionLabel = new Label(notificationComposite, SWT.NO_FOCUS);
 					descriptionLabel.setText(descriptionText);
 					descriptionLabel.setBackground(parent.getBackground());
@@ -144,7 +144,7 @@ public class TaskListNotificationPopup extends AbstractNotificationPopup {
 				TaskHyperlink remainingHyperlink = new TaskHyperlink(notificationComposite, SWT.NO_FOCUS);
 				remainingHyperlink.setBackground(parent.getBackground());
 
-				remainingHyperlink.setText(numNotificationsRemain + " " + NOTIFICATIONS_HIDDEN);
+				remainingHyperlink.setText(numNotificationsRemain + " " + NOTIFICATIONS_HIDDEN); //$NON-NLS-1$
 				GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(remainingHyperlink);
 				remainingHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 					@Override

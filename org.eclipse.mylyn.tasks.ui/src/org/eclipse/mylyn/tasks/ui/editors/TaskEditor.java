@@ -855,7 +855,6 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	/**
 	 * @since 3.0
 	 */
-	@SuppressWarnings("restriction")
 	public void updateHeaderToolBar() {
 		if (isHeaderFormDisposed()) {
 			return;
