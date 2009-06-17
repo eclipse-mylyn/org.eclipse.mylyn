@@ -896,7 +896,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 						historyAction.setImageDescriptor(TasksUiImages.TASK_REPOSITORY_HISTORY);
 						historyAction.setToolTipText(Messages.AbstractTaskEditorPage_History);
-						toolBarManager.appendToGroup("open", historyAction); //$NON-NLS-1$
+						toolBarManager.prependToGroup("open", historyAction); //$NON-NLS-1$
 					}
 				}
 			}
