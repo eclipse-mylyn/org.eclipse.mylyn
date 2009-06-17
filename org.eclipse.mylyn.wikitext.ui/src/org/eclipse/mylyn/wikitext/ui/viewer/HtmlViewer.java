@@ -259,8 +259,8 @@ public class HtmlViewer extends SourceViewer {
 	/**
 	 * <em>not API</em>
 	 * 
-	 * @noreference This method is not intended to be referenced by clients.
 	 * @since 1.1
+	 * @noreference This method is not intended to be referenced by clients.
 	 */
 	public Stylesheet getStylesheet() {
 		return stylesheet;
@@ -269,8 +269,8 @@ public class HtmlViewer extends SourceViewer {
 	/**
 	 * <em>not API</em>
 	 * 
-	 * @noreference This method is not intended to be referenced by clients.
 	 * @since 1.1
+	 * @noreference This method is not intended to be referenced by clients.
 	 */
 	public void setStylesheet(Stylesheet stylesheet) {
 		this.stylesheet = stylesheet;

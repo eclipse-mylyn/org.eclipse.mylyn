@@ -320,6 +320,7 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 
 		/**
 		 * @noreference This method is not intended to be referenced by clients.
+		 * @noreference This method is not intended to be referenced by clients.
 		 */
 		@Override
 		protected AnnotationHyperlinkDetector createAnnotationHyperlinkDetector() {

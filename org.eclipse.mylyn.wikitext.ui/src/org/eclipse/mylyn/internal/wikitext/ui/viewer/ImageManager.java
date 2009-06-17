@@ -64,30 +64,26 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 
-
-
 /**
- * Manages all aspects of image download/display in an {@link HtmlViewer}.
- * 
- * Manages the download of images for viewing in an {@link HtmlViewer}, and creates appropriate space for their display.
- * 
- * Downloads image data in a background thread, instantiates the corresopnding images, and ensures that enough vertical
- * space exists in the viewer to display the images.
+ * Manages all aspects of image download/display in an {@link HtmlViewer}. Manages the download of images for viewing in
+ * an {@link HtmlViewer}, and creates appropriate space for their display. Downloads image data in a background thread,
+ * instantiates the corresopnding images, and ensures that enough vertical space exists in the viewer to display the
+ * images.
  * 
  * @see ImageAnnotation
  * @see ImageDrawingStrategy
  * @see ImageCache
  * @see HtmlViewer
- * 
  * @author David Green
- * 
  */
 public class ImageManager implements ITextInputListener, DisposeListener, IDocumentListener, ISelectionChangedListener {
 	private class HyperlinkMouseListener implements MouseMoveListener, MouseListener {
+		@SuppressWarnings("unused")
 		public void mouseEnter(MouseEvent e) {
 			// ignore
 		}
 
+		@SuppressWarnings("unused")
 		public void mouseExit(MouseEvent e) {
 			disarm();
 		}
@@ -465,11 +461,8 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 								}
 							} catch (Exception e) {
 								if (WikiTextUiPlugin.getDefault() != null) {
-									WikiTextUiPlugin.getDefault()
-											.log(
-													IStatus.ERROR,
-													NLS.bind(
-															Messages.ImageManager_accessFailed, new Object[] { location }), e); 
+									WikiTextUiPlugin.getDefault().log(IStatus.ERROR,
+											NLS.bind(Messages.ImageManager_accessFailed, new Object[] { location }), e);
 								}
 								urlToImageData.put(imgSrc, null);
 							}

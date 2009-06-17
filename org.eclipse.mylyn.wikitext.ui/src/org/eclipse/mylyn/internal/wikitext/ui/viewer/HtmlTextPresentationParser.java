@@ -67,7 +67,6 @@ import org.xml.sax.XMLReader;
  * </ol>
  * 
  * @author David Green
- * 
  */
 public class HtmlTextPresentationParser {
 	/**
@@ -152,12 +151,14 @@ public class HtmlTextPresentationParser {
 
 		int textChildCount = 0;
 
+		@SuppressWarnings("unused")
 		final int originalOffset;
 
 		int offset;
 
 		boolean skipWhitespace = true;
 
+		@SuppressWarnings("unused")
 		boolean spanElement;
 
 		boolean blockElement;
@@ -1062,9 +1063,8 @@ public class HtmlTextPresentationParser {
 	/**
 	 * get the bullet characters that are to be used when presenting bulleted lists. For an indent level of one, the
 	 * first character is used, for indent level 2 the second character is used, etc unless the indent level exceeds the
-	 * number of characters provided in which case the last character is used.
-	 * 
-	 * Note that not all characters are available with all fonts.
+	 * number of characters provided in which case the last character is used. Note that not all characters are
+	 * available with all fonts.
 	 */
 	public char[] getBulletChars() {
 		return bulletChars;
@@ -1073,9 +1073,8 @@ public class HtmlTextPresentationParser {
 	/**
 	 * set the bullet characters that are to be used when presenting bulleted lists. For an indent level of one, the
 	 * first character is used, for indent level 2 the second character is used, etc unless the indent level exceeds the
-	 * number of characters provided in which case the last character is used.
-	 * 
-	 * Note that not all characters are available with all fonts.
+	 * number of characters provided in which case the last character is used. Note that not all characters are
+	 * available with all fonts.
 	 */
 	public void setBulletChars(char[] bulletChars) {
 		this.bulletChars = bulletChars;
