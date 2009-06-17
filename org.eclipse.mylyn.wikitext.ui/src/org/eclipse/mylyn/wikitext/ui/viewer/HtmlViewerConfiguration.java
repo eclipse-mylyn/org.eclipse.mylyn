@@ -124,6 +124,9 @@ public class HtmlViewerConfiguration extends AbstractTextSourceViewerConfigurati
 		return detectors;
 	}
 
+	/**
+	 * @noreference This method is not intended to be referenced by clients.
+	 */
 	protected AnnotationHyperlinkDetector createAnnotationHyperlinkDetector() {
 		return new AnnotationHyperlinkDetector();
 	}

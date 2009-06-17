@@ -48,7 +48,6 @@ import org.xml.sax.SAXException;
  * be displayed without using a Browser widget.
  * 
  * @see HtmlViewerConfiguration
- * 
  * @author David Green
  * @since 1.0
  */
@@ -259,6 +258,8 @@ public class HtmlViewer extends SourceViewer {
 
 	/**
 	 * <em>not API</em>
+	 * 
+	 * @noreference This method is not intended to be referenced by clients.
 	 */
 	public Stylesheet getStylesheet() {
 		return stylesheet;

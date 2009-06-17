@@ -216,7 +216,6 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 	 *            the repository from which settings should be used
 	 * @param markupLanguage
 	 *            the markup language to configure
-	 * 
 	 * @see #configureDefaultInternalLinkPattern(TaskRepository, MarkupLanguage)
 	 */
 	protected void configureMarkupLanguage(TaskRepository taskRepository, MarkupLanguageType markupLanguage) {
@@ -319,6 +318,9 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 			return hyperlinkDetectorTargets;
 		}
 
+		/**
+		 * @noreference This method is not intended to be referenced by clients.
+		 */
 		@Override
 		protected AnnotationHyperlinkDetector createAnnotationHyperlinkDetector() {
 			return new PlatformUrlAnnotationHyperlinkDetector();
