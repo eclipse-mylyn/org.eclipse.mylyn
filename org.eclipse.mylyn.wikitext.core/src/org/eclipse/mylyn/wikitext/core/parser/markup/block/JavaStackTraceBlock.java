@@ -22,6 +22,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
  * common for stack traces to be clipped to eliminate unrelated text).
  * 
  * @author David Green
+ * @since 1.1
  */
 public class JavaStackTraceBlock extends Block {
 

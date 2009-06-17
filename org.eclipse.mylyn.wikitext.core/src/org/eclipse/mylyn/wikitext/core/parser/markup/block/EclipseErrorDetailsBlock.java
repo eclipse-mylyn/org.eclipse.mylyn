@@ -24,6 +24,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
  * block terminates with the first {@link MarkupLanguage#isEmptyLine(String) empty line}.
  * 
  * @author David Green
+ * @since 1.1
  */
 public class EclipseErrorDetailsBlock extends Block {
 
