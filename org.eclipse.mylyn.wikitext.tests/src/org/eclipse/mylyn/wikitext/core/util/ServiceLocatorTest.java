@@ -36,7 +36,7 @@ public class ServiceLocatorTest extends TestCase {
 		} catch (IllegalArgumentException e) {
 			// if this test fails it may be because it's run stand-alone and the Textile
 			// language is loaded from a folder instead of a jar file.
-			fail(e.getMessage());
+			fail(e.getMessage() + " NOTE: THIS TEST WILL FAIL IF THE CLASSES UNDER TEST ARE NOT IN A JAR");
 			return;
 		}
 		assertNotNull(markupLanguage);
