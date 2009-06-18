@@ -2,6 +2,7 @@
 <project name="build-helper" default="all" basedir=".">
 	
 	<import file="getDependenciesHelper.xml"/>
+	<import file="utils.xml"/>
 
 	<!-- ===================================================================== -->
 	<!-- build targets -->

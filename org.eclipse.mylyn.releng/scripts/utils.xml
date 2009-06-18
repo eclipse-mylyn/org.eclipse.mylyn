@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="utils" default="all" basedir=".">
+	
+	<macrodef name="extract-version">
+		<attribute name="property"/>
+		<attribute name="file"/>
+		<sequential>
+			<loadfile property="@{property}" srcFile="@{file}">
+				<filterchain>
+					<linecontains>
+						<contains value="Bundle-Version: "/>
+					</linecontains>
+					<striplinebreaks/>
+					<tokenfilter>
+					      <filetokenizer/>
+					      <replaceregex pattern="Bundle-Version: ([0-9a-zA-Z.]*)"
+					                    flags="s"
+					                    replace="\1"/>
+					</tokenfilter>
+				</filterchain>
+			</loadfile>
+		</sequential>
+	</macrodef>
+	
+</project>

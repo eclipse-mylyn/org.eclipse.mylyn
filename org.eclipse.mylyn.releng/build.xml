@@ -384,4 +384,23 @@
 		<move file="${results.home}/junit-noframes.html" tofile="${results.home}/standalone-tests.html"/>
 	</target>
 	
+	<target name="discovery">
+		<cvs cvsRoot=":pserver:anonymous@dev.eclipse.org:/cvsroot/tools" 
+				package="org.eclipse.mylyn/org.eclipse.mylyn.discovery-directory"
+				dest="${build.home}" />
+		<property name="discovery.dir" value="${build.home}/org.eclipse.mylyn/org.eclipse.mylyn.discovery-directory"/>
+		<extract-version property="discovery.version" file="${discovery.dir}/META-INF/MANIFEST.MF"/>
+		<echo>Detected discovery directory ${discovery.version}</echo>
+		<property name="discovery.jar" value="${dist.home}/discovery/org.eclipse.mylyn.discovery_${discovery.version}.jar"/>
+		<available property="discovery.exists" file="${discovery.jar}"/>
+		<antcall target="discovery-update"/>
+		<copy file="${discovery.jar}" tofile="${dist.home}/discovery/org.eclipse.mylyn.discovery.jar"/>
+	</target>
+
+	<target name="discovery-update" unless="discovery.exists">
+		<jar destfile="${discovery.jar}">
+			<fileset dir="${discovery.dir}"/>
+		</jar>
+	</target>
+
 </project>
