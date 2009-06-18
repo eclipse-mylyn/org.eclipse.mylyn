@@ -136,8 +136,7 @@ public abstract class AbstractBugzillaTest extends TestCase {
 		try {
 			BugzillaCorePlugin.getRepositoryConfiguration(repository, false, new NullProgressMonitor());
 		} catch (CoreException e) {
-			e.printStackTrace();
-			fail();
+			throw new RuntimeException(e);
 		}
 	}
 
