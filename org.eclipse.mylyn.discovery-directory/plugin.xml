@@ -86,7 +86,7 @@
          <icon
                image32="images/mantis-32.png"></icon>
          <overview
-               screenshot="images/mantis-screenshot.png"
+               screenshot="images/mantis-screenshot-320x240.png"
                summary="%connectorDescriptor.overview.summary.mantis"
                url="http://mylyn-mantis.wiki.sourceforge.net/">
          </overview>
