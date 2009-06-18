@@ -604,10 +604,8 @@ public class TaskListToolTip extends GradientToolTip {
 		Label textLabel = new Label(parent, SWT.WRAP);
 		if (title) {
 			textLabel.setFont(CommonFonts.BOLD);
-			textLabel.setForeground(titleColor);
-		} else {
-			textLabel.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
 		}
+		textLabel.setForeground(titleColor);
 		textLabel.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
 		textLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER));
 		text = removeTrailingNewline(text);
