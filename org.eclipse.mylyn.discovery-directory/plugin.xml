@@ -43,8 +43,7 @@
             provider="%connectorDescriptor.provider.bugzilla"
             siteUrl="http://download.eclipse.org/tools/mylyn/update/weekly/e3.4">
          <icon
-               image32="images/bugzilla32.png"
-               image64="images/bugzilla48.png">
+               image32="images/bugzilla32.png">
          </icon>
          <overview
                screenshot="images/bugzilla-screenshot-320x240.png"
