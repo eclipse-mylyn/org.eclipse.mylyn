@@ -898,9 +898,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 	}
 
 	public void testMissingHits() throws Exception {
-		init(IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
-		//repository.setAuthenticationCredentials("username", "password");
-		String queryString = "https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=&classification=Tools&product=Mylyn&component=Bugzilla&long_desc_type=allwordssubstr&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&status_whiteboard_type=allwordssubstr&status_whiteboard=&keywords_type=allwords&keywords=&bug_status=NEW&priority=P1&priority=P2&emailtype1=substring&email1=&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
+		init323();
+		String queryString = "http://mylyn.eclipse.org/bugs323/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=&product=TestProduct&long_desc_type=substring&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&deadlinefrom=&deadlineto=&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&emailassigned_to1=1&emailtype1=substring&email1=&emailassigned_to2=1&emailreporter2=1&emailcc2=1&emailtype2=substring&email2=&bugidtype=include&bug_id=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
 		RepositoryQuery query = new RepositoryQuery(BugzillaCorePlugin.CONNECTOR_KIND, "test");
 		query.setRepositoryUrl(repository.getRepositoryUrl());
 		query.setUrl(queryString);
@@ -909,15 +908,15 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		TasksUiInternal.synchronizeQuery(connector, query, null, true);
 
 		for (ITask task : query.getChildren()) {
-			assertTrue(task.getSynchronizationState() == SynchronizationState.INCOMING);
+			assertTrue(task.getSynchronizationState() == SynchronizationState.INCOMING_NEW);
 			TasksUiPlugin.getTaskDataManager().setTaskRead(task, true);
 			assertTrue(task.getSynchronizationState() == SynchronizationState.SYNCHRONIZED);
 		}
 
-		repository.setSynchronizationTimeStamp("1970-01-01");//getSynchronizationTimeStamp();
+		repository.setSynchronizationTimeStamp("1970-01-01");
 		TasksUiInternal.synchronizeQuery(connector, query, null, true);
 		for (ITask task : query.getChildren()) {
-			assertTrue(task.getSynchronizationState() == SynchronizationState.INCOMING);
+			assertTrue(task.getSynchronizationState() == SynchronizationState.SYNCHRONIZED);
 		}
 	}
 
