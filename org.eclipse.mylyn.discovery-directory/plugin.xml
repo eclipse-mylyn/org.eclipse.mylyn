@@ -81,7 +81,7 @@
             license="%connectorDescriptor.license.mantis"
             name="%connectorDescriptor.name.mantis"
             provider="%connectorDescriptor.provider.mantis"
-            siteUrl="http://mylyn-mantis.sourceforge.net/eclipse/update-dev/">
+            siteUrl="http://mylyn-mantis.sourceforge.net/eclipse/update/">
          <icon
                image32="images/mantis-32.png"></icon>
          <overview
