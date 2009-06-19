@@ -769,7 +769,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 				if (unavailable) {
 					if (warningIconImage == null) {
 						warningIconImage = new DecorationOverlayIcon(iconImage, DiscoveryImages.OVERLAY_WARNING_32,
-								IDecoration.TOP_LEFT).createImage();
+								IDecoration.BOTTOM_RIGHT).createImage();
 						disposables.add(warningIconImage);
 					}
 					iconLabel.setImage(warningIconImage);
