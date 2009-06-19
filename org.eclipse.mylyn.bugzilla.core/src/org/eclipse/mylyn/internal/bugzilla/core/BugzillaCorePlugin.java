@@ -325,9 +325,11 @@ public class BugzillaCorePlugin extends Plugin {
 
 			String OS = Platform.getOS();
 			String platform = Platform.getOSArch();
+			String ws = Platform.getWS();
 
 			String bugzillaOS = null; // Bugzilla String for OS
 			String bugzillaPlatform = null; // Bugzilla String for Platform
+			String[] wsExtentions = null;
 /*
 			AIX -> AIX
 			Linux -> Linux
@@ -336,6 +338,27 @@ public class BugzillaCorePlugin extends Plugin {
 			MacOS X -> Mac OS X
  */
 
+			if (ws.length() > 1) {
+				char first = ws.charAt(0);
+				char firstLower = Character.toLowerCase(first);
+				char firstUpper = Character.toUpperCase(first);
+				String[] wsExtentionsTemp = { " - " + firstUpper + ws.substring(1, ws.length()), //$NON-NLS-1$
+						" - " + firstLower + ws.substring(1, ws.length()), //$NON-NLS-1$
+						" " + firstUpper + ws.substring(1, ws.length()), //$NON-NLS-1$
+						" " + firstLower + ws.substring(1, ws.length()), "" }; //$NON-NLS-1$//$NON-NLS-2$
+				wsExtentions = wsExtentionsTemp;
+			} else if (ws.length() == 1) {
+				char first = ws.charAt(0);
+				char firstLower = Character.toLowerCase(first);
+				char firstUpper = Character.toUpperCase(first);
+				String[] wsExtentionsTemp = { " - " + firstUpper, " - " + firstLower, " " + firstUpper, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						" " + firstLower, "" }; //$NON-NLS-1$//$NON-NLS-2$
+				wsExtentions = wsExtentionsTemp;
+			} else {
+				String[] wsExtentionsTemp = { "" }; //$NON-NLS-1$
+				wsExtentions = wsExtentionsTemp;
+			}
+
 			bugzillaOS = System.getProperty("os.name") + " " + System.getProperty("os.version"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			// We start with the most specific Value as the Search String.
 			// If we didn't find it we remove the last part of the version String or the OS Name from
@@ -343,17 +366,24 @@ public class BugzillaCorePlugin extends Plugin {
 			//
 			// The search in casesensitive.
 			if (opSysAttribute != null) {
-				while (bugzillaOS != null && opSysAttribute.getOption(bugzillaOS) == null) {
-					int dotindex = bugzillaOS.lastIndexOf('.');
-					if (dotindex > 0) {
-						bugzillaOS = bugzillaOS.substring(0, dotindex);
-					} else {
-						int spaceindex = bugzillaOS.lastIndexOf(' ');
-						if (spaceindex > 0) {
-							bugzillaOS = bugzillaOS.substring(0, spaceindex);
+				for (String element : wsExtentions) {
+					String bugzillaOSTemp = bugzillaOS;
+					while (bugzillaOSTemp != null && opSysAttribute.getOption(bugzillaOSTemp + element) == null) {
+						int dotindex = bugzillaOSTemp.lastIndexOf('.');
+						if (dotindex > 0) {
+							bugzillaOSTemp = bugzillaOSTemp.substring(0, dotindex);
 						} else {
-							bugzillaOS = null;
+							int spaceindex = bugzillaOSTemp.lastIndexOf(' ');
+							if (spaceindex > 0) {
+								bugzillaOSTemp = bugzillaOSTemp.substring(0, spaceindex);
+							} else {
+								bugzillaOSTemp = null;
+							}
 						}
+					}
+					if (bugzillaOSTemp != null) {
+						bugzillaOS = bugzillaOSTemp + element;
+						break;
 					}
 				}
 			} else {
