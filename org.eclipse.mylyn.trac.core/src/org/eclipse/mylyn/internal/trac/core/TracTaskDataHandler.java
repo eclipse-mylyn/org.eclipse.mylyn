@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -122,12 +123,23 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 				createDefaultAttributes(taskData, client, true);
 				updateTaskData(repository, taskData, ticket);
 			}
+			removeEmptySingleSelectAttributes(taskData);
 			return taskData;
 		} catch (OperationCanceledException e) {
 			throw e;
 		} catch (Exception e) {
 			// TODO catch TracException
 			throw new CoreException(TracCorePlugin.toStatus(e, repository));
+		}
+	}
+
+	private void removeEmptySingleSelectAttributes(TaskData taskData) {
+		List<TaskAttribute> attributes = new ArrayList<TaskAttribute>(taskData.getRoot().getAttributes().values());
+		for (TaskAttribute attribute : attributes) {
+			if (TaskAttribute.TYPE_SINGLE_SELECT.equals(attribute.getMetaData().getType())
+					&& attribute.getValue().length() == 0 && attribute.getOptions().isEmpty()) {
+				taskData.getRoot().removeAttribute(attribute.getId());
+			}
 		}
 	}
 
@@ -271,21 +283,22 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 	public static void createDefaultAttributes(TaskData data, ITracClient client, boolean existingTask) {
 		data.setVersion(TASK_DATA_VERSION);
 
-		createAttribute(data, TracAttribute.SUMMARY);
-		createAttribute(data, TracAttribute.DESCRIPTION);
+		createAttribute(data, client, TracAttribute.SUMMARY);
+		createAttribute(data, client, TracAttribute.DESCRIPTION);
 		if (existingTask) {
-			createAttribute(data, TracAttribute.TIME);
-			createAttribute(data, TracAttribute.CHANGE_TIME);
-			createAttribute(data, TracAttribute.STATUS, client.getTicketStatus());
-			createAttribute(data, TracAttribute.RESOLUTION, client.getTicketResolutions());
+			createAttribute(data, client, TracAttribute.TIME);
+			createAttribute(data, client, TracAttribute.CHANGE_TIME);
+			createAttribute(data, client, TracAttribute.STATUS);
+			createAttribute(data, client, TracAttribute.RESOLUTION);
 		}
-		createAttribute(data, TracAttribute.COMPONENT, client.getComponents());
-		createAttribute(data, TracAttribute.VERSION, client.getVersions(), true);
-		createAttribute(data, TracAttribute.PRIORITY, client.getPriorities());
-		createAttribute(data, TracAttribute.SEVERITY, client.getSeverities());
-		createAttribute(data, TracAttribute.MILESTONE, client.getMilestones(), true);
-		createAttribute(data, TracAttribute.TYPE, client.getTicketTypes());
-		createAttribute(data, TracAttribute.KEYWORDS);
+		createAttribute(data, client, TracAttribute.COMPONENT);
+		createAttribute(data, client, TracAttribute.VERSION);
+		createAttribute(data, client, TracAttribute.PRIORITY);
+		createAttribute(data, client, TracAttribute.SEVERITY);
+		createAttribute(data, client, TracAttribute.MILESTONE);
+		createAttribute(data, client, TracAttribute.TYPE);
+		createAttribute(data, client, TracAttribute.KEYWORDS);
+		// custom fields
 		TracTicketField[] fields = client.getTicketFields();
 		if (fields != null) {
 			for (TracTicketField field : fields) {
@@ -295,11 +308,11 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 			}
 		}
 		// people
-		createAttribute(data, TracAttribute.OWNER);
+		createAttribute(data, client, TracAttribute.OWNER);
 		if (existingTask) {
-			createAttribute(data, TracAttribute.REPORTER);
+			createAttribute(data, client, TracAttribute.REPORTER);
 		}
-		createAttribute(data, TracAttribute.CC);
+		createAttribute(data, client, TracAttribute.CC);
 		if (existingTask) {
 			data.getRoot().createAttribute(TracAttributeMapper.NEW_CC).getMetaData().setType(
 					TaskAttribute.TYPE_SHORT_TEXT).setReadOnly(false);
@@ -369,6 +382,10 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 	}
 
 	public static TaskAttribute createAttribute(TaskData data, TracAttribute tracAttribute) {
+		return createAttribute(data, null, tracAttribute);
+	}
+
+	public static TaskAttribute createAttribute(TaskData data, ITracClient client, TracAttribute tracAttribute) {
 		TaskAttribute attr = data.getRoot().createAttribute(tracAttribute.getTracKey());
 		TaskAttributeMetaData metaData = attr.getMetaData();
 		metaData.setType(tracAttribute.getType());
@@ -376,27 +393,30 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 		metaData.setLabel(tracAttribute.toString());
 		metaData.setReadOnly(tracAttribute.isReadOnly());
 		metaData.putValue(TRAC_KEY, tracAttribute.getTracKey());
-		return attr;
-	}
-
-	private static TaskAttribute createAttribute(TaskData data, TracAttribute tracAttribute, Object[] values,
-			boolean allowEmpty) {
-		TaskAttribute attr = createAttribute(data, tracAttribute);
-		if (values != null && values.length > 0) {
-			if (allowEmpty) {
-				attr.putOption("", ""); //$NON-NLS-1$ //$NON-NLS-2$
+		if (client != null) {
+			TracTicketField field = client.getTicketFieldByName(tracAttribute.getTracKey());
+			Map<String, String> values = TracAttributeMapper.getRepositoryOptions(client, attr.getId());
+			if (values != null && values.size() > 0) {
+				boolean setDefault = field == null || !field.isOptional();
+				for (Entry<String, String> value : values.entrySet()) {
+					attr.putOption(value.getKey(), value.getValue());
+					// set first value as default, may get overwritten below
+					if (setDefault) {
+						attr.setValue(value.getKey());
+					}
+					setDefault = false;
+				}
+			} else if (TaskAttribute.TYPE_SINGLE_SELECT.equals(tracAttribute.getType())) {
+				attr.getMetaData().setReadOnly(true);
 			}
-			for (Object value : values) {
-				attr.putOption(value.toString(), value.toString());
+			if (field != null) {
+				String defaultValue = field.getDefaultValue();
+				if (defaultValue != null && defaultValue.length() > 0) {
+					attr.setValue(defaultValue);
+				}
 			}
-		} else {
-			attr.getMetaData().setReadOnly(true);
 		}
 		return attr;
-	}
-
-	private static TaskAttribute createAttribute(TaskData data, TracAttribute tracAttribute, Object[] values) {
-		return createAttribute(data, tracAttribute, values, false);
 	}
 
 	@Override
@@ -432,6 +452,7 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 			ITracClient client = connector.getClientManager().getTracClient(repository);
 			client.updateAttributes(monitor, false);
 			createDefaultAttributes(data, client, false);
+			removeEmptySingleSelectAttributes(data);
 			return true;
 		} catch (OperationCanceledException e) {
 			throw e;

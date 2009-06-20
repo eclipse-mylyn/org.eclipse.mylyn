@@ -165,6 +165,8 @@ public interface ITracClient {
 
 	TracTicketField[] getTicketFields();
 
+	TracTicketField getTicketFieldByName(String tracKey);
+
 	TracMilestone[] getMilestones();
 
 	TracPriority[] getPriorities();

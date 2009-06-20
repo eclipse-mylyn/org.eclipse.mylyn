@@ -81,35 +81,34 @@ public class TracAttributeMapper extends TaskAttributeMapper {
 
 	@Override
 	public Map<String, String> getOptions(TaskAttribute attribute) {
-		Map<String, String> options = getRepositoryOptions(attribute);
+		Map<String, String> options = getRepositoryOptions(client, attribute.getId());
 		return (options != null) ? options : super.getOptions(attribute);
 	}
 
-	public Map<String, String> getRepositoryOptions(TaskAttribute attribute) {
+	public static Map<String, String> getRepositoryOptions(ITracClient client, String trackKey) {
 		if (client.hasAttributes()) {
-			String attributeId = attribute.getId();
-			if (TracAttribute.STATUS.getTracKey().equals(attributeId)) {
+			if (TracAttribute.STATUS.getTracKey().equals(trackKey)) {
 				return getOptions(client.getTicketStatus(), false);
-			} else if (TracAttribute.RESOLUTION.getTracKey().equals(attributeId)) {
+			} else if (TracAttribute.RESOLUTION.getTracKey().equals(trackKey)) {
 				return getOptions(client.getTicketResolutions(), false);
-			} else if (TracAttribute.COMPONENT.getTracKey().equals(attributeId)) {
+			} else if (TracAttribute.COMPONENT.getTracKey().equals(trackKey)) {
 				return getOptions(client.getComponents(), false);
-			} else if (TracAttribute.VERSION.getTracKey().equals(attributeId)) {
+			} else if (TracAttribute.VERSION.getTracKey().equals(trackKey)) {
 				return getOptions(client.getVersions(), true);
-			} else if (TracAttribute.PRIORITY.getTracKey().equals(attributeId)) {
+			} else if (TracAttribute.PRIORITY.getTracKey().equals(trackKey)) {
 				return getOptions(client.getPriorities(), false);
-			} else if (TracAttribute.SEVERITY.getTracKey().equals(attributeId)) {
+			} else if (TracAttribute.SEVERITY.getTracKey().equals(trackKey)) {
 				return getOptions(client.getSeverities(), false);
-			} else if (TracAttribute.MILESTONE.getTracKey().equals(attributeId)) {
+			} else if (TracAttribute.MILESTONE.getTracKey().equals(trackKey)) {
 				return getOptions(client.getMilestones(), true);
-			} else if (TracAttribute.TYPE.getTracKey().equals(attributeId)) {
+			} else if (TracAttribute.TYPE.getTracKey().equals(trackKey)) {
 				return getOptions(client.getTicketTypes(), false);
 			}
 		}
 		return null;
 	}
 
-	private Map<String, String> getOptions(Object[] values, boolean allowEmpty) {
+	private static Map<String, String> getOptions(Object[] values, boolean allowEmpty) {
 		if (values != null && values.length > 0) {
 			Map<String, String> options = new LinkedHashMap<String, String>();
 			if (allowEmpty) {

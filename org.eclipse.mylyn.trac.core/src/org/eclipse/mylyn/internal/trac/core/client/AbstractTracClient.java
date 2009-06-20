@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URL;
+import java.util.HashMap;
 
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HostConfiguration;
@@ -152,6 +153,24 @@ public abstract class AbstractTracClient implements ITracClient {
 
 	public TracTicketField[] getTicketFields() {
 		return (data.ticketFields != null) ? data.ticketFields.toArray(new TracTicketField[0]) : null;
+	}
+
+	public TracTicketField getTicketFieldByName(String name) {
+		if (data.ticketFields != null) {
+			// lazily fill fieldByName map
+			if (data.ticketFieldByName == null) {
+				synchronized (data) {
+					if (data.ticketFieldByName == null) {
+						data.ticketFieldByName = new HashMap<String, TracTicketField>();
+						for (TracTicketField field : data.ticketFields) {
+							data.ticketFieldByName.put(field.getName(), field);
+						}
+					}
+				}
+			}
+			return data.ticketFieldByName.get(name);
+		}
+		return null;
 	}
 
 	public TracTicketResolution[] getTicketResolutions() {

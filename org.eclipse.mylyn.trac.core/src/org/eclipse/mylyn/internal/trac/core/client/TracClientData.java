@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.trac.core.client;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.mylyn.internal.trac.core.model.TracComponent;
 import org.eclipse.mylyn.internal.trac.core.model.TracMilestone;
@@ -47,5 +48,7 @@ public class TracClientData implements Serializable {
 	List<TracVersion> versions;
 
 	long lastUpdate;
+
+	transient Map<String, TracTicketField> ticketFieldByName;
 
 }
