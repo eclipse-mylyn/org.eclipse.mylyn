@@ -33,6 +33,7 @@ import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
@@ -42,7 +43,6 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -59,6 +59,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
@@ -479,7 +480,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 					String accountCreationUrl = TasksUiPlugin.getConnectorUi(connector.getConnectorKind())
 							.getAccountCreationUrl(repository);
 					if (accountCreationUrl != null) {
-						TasksUiUtil.openUrl(accountCreationUrl);
+						WorkbenchUtil.openUrl(accountCreationUrl, IWorkbenchBrowserSupport.AS_EXTERNAL);
 					}
 				}
 			}
@@ -499,7 +500,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 					String accountManagementUrl = TasksUiPlugin.getConnectorUi(connector.getConnectorKind())
 							.getAccountManagementUrl(repository);
 					if (accountManagementUrl != null) {
-						TasksUiUtil.openUrl(accountManagementUrl);
+						WorkbenchUtil.openUrl(accountManagementUrl, IWorkbenchBrowserSupport.AS_EXTERNAL);
 					}
 				}
 			}
@@ -1230,9 +1231,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	}
 
 	/**
-	 * Exposes StringFieldEditor.refreshValidState()
-	 * 
-	 * TODO: is there a better way?
+	 * Exposes StringFieldEditor.refreshValidState() TODO: is there a better way?
 	 */
 	private static class RepositoryStringFieldEditor extends StringFieldEditor {
 		public RepositoryStringFieldEditor(String name, String labelText, int style, Composite parent) {
