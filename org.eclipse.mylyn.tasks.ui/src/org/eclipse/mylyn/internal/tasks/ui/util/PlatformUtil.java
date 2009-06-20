@@ -145,4 +145,11 @@ public class PlatformUtil {
 		return Platform.WS_WIN32.equals(SWT.getPlatform());
 	}
 
+	/**
+	 * On Cocoa the bounds from an TreeViewer are handed in the way that scrolling did not change them. So when you have
+	 * initial not visible Element the bound of them are outside of the TreeViewer control
+	 */
+	public static boolean needsTreeItemBoundsFix() {
+		return "cocoa".equals(SWT.getPlatform()); //$NON-NLS-1$
+	}
 }
