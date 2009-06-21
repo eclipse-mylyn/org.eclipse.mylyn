@@ -528,6 +528,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 	@Override
 	protected void createFormContent(final IManagedForm managedForm) {
+		super.createFormContent(managedForm);
 		form = managedForm.getForm();
 
 		toolkit = managedForm.getToolkit();

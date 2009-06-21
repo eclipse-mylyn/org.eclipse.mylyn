@@ -188,6 +188,8 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		this.editorParent = parent;
 		Composite composite = super.createPageContainer(parent);
 
+		EditorUtil.initializeScrollbars(getHeaderForm().getForm());
+
 		// create left tool bar that replaces form heading label
 		try {
 			FormHeading heading = (FormHeading) getHeaderForm().getForm().getForm().getHead();

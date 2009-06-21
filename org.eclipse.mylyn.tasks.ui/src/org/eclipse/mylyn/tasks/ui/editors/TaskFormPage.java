@@ -12,6 +12,8 @@
 package org.eclipse.mylyn.tasks.ui.editors;
 
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
+import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
 
@@ -30,6 +32,12 @@ public class TaskFormPage extends FormPage {
 	}
 
 	protected void fillToolBar(IToolBarManager toolBarManager) {
+	}
+
+	@Override
+	protected void createFormContent(IManagedForm managedForm) {
+		super.createFormContent(managedForm);
+		EditorUtil.initializeScrollbars(managedForm.getForm());
 	}
 
 }

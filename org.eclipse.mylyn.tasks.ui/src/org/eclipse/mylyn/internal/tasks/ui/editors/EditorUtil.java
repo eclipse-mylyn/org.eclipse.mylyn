@@ -50,6 +50,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
@@ -64,6 +65,8 @@ import org.eclipse.ui.internal.EditorAreaHelper;
 import org.eclipse.ui.internal.WorkbenchPage;
 
 public class EditorUtil {
+
+	private static final int PAGE_H_SCROLL_INCREMENT = 64;
 
 	public static final int HEADER_COLUMN_MARGIN = 6;
 
@@ -479,6 +482,14 @@ public class EditorUtil {
 		// spacing if a section is expanded
 		layout.marginBottom = 8;
 		return layout;
+	}
+
+	public static void initializeScrollbars(ScrolledForm form) {
+		// initialize scroll bars
+		ScrollBar hbar = form.getHorizontalBar();
+		if (hbar != null) {
+			hbar.setIncrement(PAGE_H_SCROLL_INCREMENT);
+		}
 	}
 
 }
