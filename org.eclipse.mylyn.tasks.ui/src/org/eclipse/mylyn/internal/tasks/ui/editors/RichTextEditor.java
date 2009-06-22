@@ -25,6 +25,7 @@ import org.eclipse.jface.text.ITextListener;
 import org.eclipse.jface.text.TextEvent;
 import org.eclipse.jface.text.source.AnnotationModel;
 import org.eclipse.jface.text.source.IAnnotationAccess;
+import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFormUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
@@ -150,7 +151,7 @@ public class RichTextEditor {
 
 	private SourceViewer configure(final SourceViewer viewer, Document document, boolean readOnly) {
 		// do this before setting the document to not require invalidating the presentation
-		installHyperlinkPresenter(viewer);
+		installHyperlinkPresenter(viewer, repository, getMode());
 
 		if (readOnly) {
 			viewer.setDocument(document);
@@ -382,14 +383,15 @@ public class RichTextEditor {
 		return extension != null && !isReadOnly();
 	}
 
-	private RepositoryTextViewerConfiguration installHyperlinkPresenter(SourceViewer viewer) {
+	public static RepositoryTextViewerConfiguration installHyperlinkPresenter(ISourceViewer viewer,
+			TaskRepository repository, Mode mode) {
 		RepositoryTextViewerConfiguration configuration = new RepositoryTextViewerConfiguration(repository, false);
-		configuration.setMode(getMode());
+		configuration.setMode(mode);
 
 		// do not configure viewer, this has already been done in extension
 
 		AbstractHyperlinkTextPresentationManager manager;
-		if (getMode() == Mode.DEFAULT) {
+		if (mode == Mode.DEFAULT) {
 			manager = new HighlightingHyperlinkTextPresentationManager();
 			manager.setHyperlinkDetectors(configuration.getDefaultHyperlinkDetectors(viewer, null));
 			manager.install(viewer);
@@ -397,7 +399,7 @@ public class RichTextEditor {
 			manager = new TaskHyperlinkTextPresentationManager();
 			manager.setHyperlinkDetectors(configuration.getDefaultHyperlinkDetectors(viewer, Mode.TASK));
 			manager.install(viewer);
-		} else if (getMode() == Mode.TASK_RELATION) {
+		} else if (mode == Mode.TASK_RELATION) {
 			manager = new TaskHyperlinkTextPresentationManager();
 			manager.setHyperlinkDetectors(configuration.getDefaultHyperlinkDetectors(viewer, Mode.TASK_RELATION));
 			manager.install(viewer);

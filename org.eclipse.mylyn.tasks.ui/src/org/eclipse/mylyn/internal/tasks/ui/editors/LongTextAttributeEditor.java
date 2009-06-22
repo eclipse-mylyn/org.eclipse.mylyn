@@ -12,9 +12,10 @@
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import org.eclipse.jface.text.Document;
-import org.eclipse.jface.text.TextViewer;
+import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFormUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
+import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTextViewerConfiguration.Mode;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
@@ -44,9 +45,11 @@ public class LongTextAttributeEditor extends AbstractAttributeEditor {
 		if (!isReadOnly()) {
 			style |= SWT.V_SCROLL;
 		}
-		TextViewer viewer = new TextViewer(parent, style);
+		SourceViewer viewer = new SourceViewer(parent, null, style);
+		RepositoryTextViewerConfiguration configuration = RichTextEditor.installHyperlinkPresenter(viewer,
+				getModel().getTaskRepository(), Mode.DEFAULT);
+		viewer.configure(configuration);
 		viewer.setDocument(new Document(getValue()));
-
 		final StyledText text = viewer.getTextWidget();
 		toolkit.adapt(text, false, false);
 

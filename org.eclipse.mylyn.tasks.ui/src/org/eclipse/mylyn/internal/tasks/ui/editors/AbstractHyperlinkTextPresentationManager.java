@@ -18,11 +18,11 @@ import java.util.List;
 
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextPresentationListener;
+import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.ITextViewerExtension4;
 import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
-import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.mylyn.tasks.ui.IHighlightingHyperlink;
 import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
 import org.eclipse.swt.custom.StyleRange;
@@ -69,7 +69,7 @@ public abstract class AbstractHyperlinkTextPresentationManager {
 
 	private final ITextPresentationListener textPresentationListener = new Support();
 
-	private ISourceViewer viewer;
+	private ITextViewer viewer;
 
 	public AbstractHyperlinkTextPresentationManager() {
 	}
@@ -146,9 +146,11 @@ public abstract class AbstractHyperlinkTextPresentationManager {
 		return regions;
 	}
 
-	public void install(ISourceViewer viewer) {
+	public void install(ITextViewer viewer) {
 		this.viewer = viewer;
-		((ITextViewerExtension4) viewer).addTextPresentationListener(textPresentationListener);
+		if (viewer instanceof ITextViewerExtension4) {
+			((ITextViewerExtension4) viewer).addTextPresentationListener(textPresentationListener);
+		}
 	}
 
 	public boolean select(IHyperlink hyperlink) {
