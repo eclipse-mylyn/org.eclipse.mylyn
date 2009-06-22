@@ -658,10 +658,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 	}
 
 	public TaskListView() {
-		PlatformUI.getWorkbench().getWorkingSetManager().addPropertyChangeListener(this);
-		TasksUiPlugin.getTaskActivityManager().addActivityListener(TASK_ACTIVITY_LISTENER);
-		TasksUiPlugin.getTaskActivityManager().addActivationListener(TASK_ACTIVATION_LISTENER);
-		TasksUiInternal.getTaskList().addChangeListener(TASKLIST_CHANGE_LISTENER);
 	}
 
 	@Override
@@ -679,6 +675,10 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		final IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		if (themeManager != null) {
 			themeManager.removePropertyChangeListener(THEME_CHANGE_LISTENER);
+		}
+
+		if (editorListener != null) {
+			getSite().getPage().removePartListener(editorListener);
 		}
 
 		customDrawer.dispose();
@@ -1010,6 +1010,11 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 		// we need to update the icon here as the action was not created when the presentation was applied
 		updatePresentationSelectorImage();
+
+		PlatformUI.getWorkbench().getWorkingSetManager().addPropertyChangeListener(this);
+		TasksUiPlugin.getTaskActivityManager().addActivityListener(TASK_ACTIVITY_LISTENER);
+		TasksUiPlugin.getTaskActivityManager().addActivationListener(TASK_ACTIVATION_LISTENER);
+		TasksUiInternal.getTaskList().addChangeListener(TASKLIST_CHANGE_LISTENER);
 
 		// Need to do this because the page, which holds the active working set is not around on creation, see bug 203179
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().addPageListener(PAGE_LISTENER);
