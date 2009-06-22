@@ -561,6 +561,9 @@ public class ScreenshotCreationPage extends WizardPage {
 				drawArrowToolbar.setUnselect();
 				drawBoxToolbar.setUnselect();
 				drawTextToolbar.setUnselect();
+				drawColorToolbar.setEnabled(true);
+				lineTypeToolbar.setEnabled(true);
+				lineBoldToolbar.setEnabled(true);
 			}
 		};
 		drawLineToolbar.setEnabled(false);
