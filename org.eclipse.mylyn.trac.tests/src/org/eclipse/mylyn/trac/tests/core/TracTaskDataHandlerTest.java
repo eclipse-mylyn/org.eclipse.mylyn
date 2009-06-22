@@ -43,6 +43,7 @@ import org.eclipse.mylyn.internal.trac.core.util.TracUtil;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
+import org.eclipse.mylyn.tasks.core.TaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -402,6 +403,42 @@ public class TracTaskDataHandlerTest extends TestCase {
 			subTaskIds.add(taskRelation.getTaskId());
 		}
 		return subTaskIds;
+	}
+
+	public void testInitializeTaskData_0_10() throws Exception {
+		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
+		initializeTaskData();
+	}
+
+	public void testInitializeTaskData_0_11() throws Exception {
+		init(TracTestConstants.TEST_TRAC_011_URL, Version.XML_RPC);
+		initializeTaskData();
+	}
+
+	private void initializeTaskData() throws Exception {
+		TaskData taskData = new TaskData(taskDataHandler.getAttributeMapper(repository), TracCorePlugin.CONNECTOR_KIND,
+				"", "");
+		TaskMapping mapping = new TaskMapping() {
+			@Override
+			public String getDescription() {
+				return "description";
+			}
+
+			@Override
+			public String getSummary() {
+				return "summary";
+			}
+		};
+		taskDataHandler.initializeTaskData(repository, taskData, mapping, new NullProgressMonitor());
+		// initializeTaskData() should ignore the initialization data 
+		TaskMapper mapper = new TracTaskMapper(taskData, null);
+		assertEquals("", mapper.getSummary());
+		assertEquals("", mapper.getDescription());
+		// check for default values
+		assertEquals("Defect", mapper.getTaskKind());
+		assertEquals("major", mapper.getPriority());
+		// empty attributes should not exist
+		assertNull(taskData.getRoot().getAttribute(TracAttribute.SEVERITY.getTracKey()));
 	}
 
 }
