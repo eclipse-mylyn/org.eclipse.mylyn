@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2009 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Kevin Barnes, IBM Corporation - fix for bug 277974
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.views;
@@ -64,6 +65,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Scrollable;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.ToolBar;
@@ -79,7 +81,7 @@ import com.ibm.icu.text.SimpleDateFormat;
 /**
  * @author Mik Kersten
  * @author Eric Booth
- * @author Leo Dos Santos - multi-monitor support
+ * @author Leo Dos Santos
  * @author Steffen Pingel
  */
 public class TaskListToolTip extends GradientToolTip {
@@ -428,12 +430,7 @@ public class TaskListToolTip extends GradientToolTip {
 				Rectangle bounds = getBounds(tipWidget);
 				if (tipWidget instanceof ScalingHyperlink) {
 					currentTipElement = getTaskListElement(tipWidget);
-				} else if (tipWidget instanceof TreeItem) {
-					Tree tree = ((TreeItem) tipWidget).getParent();
-					if ((bounds != null && tree.getClientArea().contains(bounds.x, bounds.y))) {
-						currentTipElement = getTaskListElement(tipWidget);
-					}
-				} else if ((bounds != null && control.getBounds().contains(bounds.x, bounds.y))) {
+				} else if (bounds != null && contains(bounds.x, bounds.y)) {
 					currentTipElement = getTaskListElement(tipWidget);
 				}
 			}
@@ -444,6 +441,14 @@ public class TaskListToolTip extends GradientToolTip {
 			return false;
 		} else {
 			return true;
+		}
+	}
+
+	private boolean contains(int x, int y) {
+		if (control instanceof Scrollable) {
+			return ((Scrollable) control).getClientArea().contains(x, y);
+		} else {
+			return control.getBounds().contains(x, y);
 		}
 	}
 
