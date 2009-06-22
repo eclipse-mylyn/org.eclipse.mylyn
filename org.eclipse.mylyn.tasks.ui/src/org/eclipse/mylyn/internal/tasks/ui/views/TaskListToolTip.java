@@ -428,8 +428,12 @@ public class TaskListToolTip extends GradientToolTip {
 				Rectangle bounds = getBounds(tipWidget);
 				if (tipWidget instanceof ScalingHyperlink) {
 					currentTipElement = getTaskListElement(tipWidget);
-				} else if (PlatformUtil.needsTreeItemBoundsFix()
-						|| (bounds != null && control.getBounds().contains(bounds.x, bounds.y))) {
+				} else if (tipWidget instanceof TreeItem) {
+					Tree tree = ((TreeItem) tipWidget).getParent();
+					if ((bounds != null && tree.getClientArea().contains(bounds.x, bounds.y))) {
+						currentTipElement = getTaskListElement(tipWidget);
+					}
+				} else if ((bounds != null && control.getBounds().contains(bounds.x, bounds.y))) {
 					currentTipElement = getTaskListElement(tipWidget);
 				}
 			}
