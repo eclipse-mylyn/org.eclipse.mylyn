@@ -151,7 +151,7 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 				if (isTracd && digestScheme != null) {
 					probeAuthenticationScheme(monitor);
 				}
-				if (DEBUG) {
+				if (DEBUG_XMLRPC) {
 					System.err.println("Calling " + location.getUrl() + ": " + method + " " + TracUtil.toString(parameters)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				}
 				TracXmlRpcClientRequest request = new TracXmlRpcClientRequest(xmlrpc.getClientConfig(), method,
@@ -159,12 +159,21 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 				return xmlrpc.execute(request);
 			} catch (TracHttpException e) {
 				if (e.code == HttpStatus.SC_UNAUTHORIZED) {
+					if (DEBUG_AUTH) {
+						System.err.println(location.getUrl() + ": Unauthorized (" + e.code + ")"); //$NON-NLS-1$ //$NON-NLS-2$ 
+					}
 					digestScheme = null;
 					throw new TracLoginException();
 				} else if (e.code == HttpStatus.SC_FORBIDDEN) {
+					if (DEBUG_AUTH) {
+						System.err.println(location.getUrl() + ": Forbidden (" + e.code + ")"); //$NON-NLS-1$ //$NON-NLS-2$ 
+					}
 					digestScheme = null;
 					throw new TracPermissionDeniedException();
 				} else if (e.code == HttpStatus.SC_PROXY_AUTHENTICATION_REQUIRED) {
+					if (DEBUG_AUTH) {
+						System.err.println(location.getUrl() + ": Proxy authentication required (" + e.code + ")"); //$NON-NLS-1$ //$NON-NLS-2$ 
+					}
 					throw new TracProxyAuthenticationException();
 				} else {
 					throw new TracException(e);
@@ -181,10 +190,9 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 				throw new TracException(e);
 			}
 		}
-
 	}
 
-	private static final boolean DEBUG = Boolean.valueOf(Platform.getDebugOption("org.eclipse.mylyn.trac.core/debug/xmlrpc")); //$NON-NLS-1$
+	private static final boolean DEBUG_XMLRPC = Boolean.valueOf(Platform.getDebugOption("org.eclipse.mylyn.trac.core/debug/xmlrpc")); //$NON-NLS-1$
 
 	public static final String XMLRPC_URL = "/xmlrpc"; //$NON-NLS-1$
 
@@ -247,8 +255,14 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 				public void processRequest(HttpMethod method) {
 					DigestScheme scheme = digestScheme;
 					if (scheme != null) {
+						if (DEBUG_AUTH) {
+							System.err.println(location.getUrl() + ": Digest scheme is present"); //$NON-NLS-1$ 
+						}
 						Credentials creds = httpClient.getState().getCredentials(authScope);
 						if (creds != null) {
+							if (DEBUG_AUTH) {
+								System.err.println(location.getUrl() + ": Setting digest scheme for request"); //$NON-NLS-1$ 
+							}
 							method.getHostAuthState().setAuthScheme(digestScheme);
 							method.getHostAuthState().setAuthRequested(true);
 						}
@@ -259,6 +273,9 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 					AuthScheme authScheme = method.getHostAuthState().getAuthScheme();
 					if (authScheme instanceof DigestScheme) {
 						digestScheme = (DigestScheme) authScheme;
+						if (DEBUG_AUTH) {
+							System.err.println(location.getUrl() + ": Received digest scheme"); //$NON-NLS-1$ 
+						}
 					}
 				}
 			});
@@ -298,21 +315,44 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 			return;
 		}
 
+		if (DEBUG_AUTH) {
+			System.err.println(location.getUrl() + ": Probing authentication"); //$NON-NLS-1$ 
+		}
 		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(httpClient, location, monitor);
 		HeadMethod method = new HeadMethod(getXmlRpcUrl(credentials).toString());
 		try {
 			// execute without any credentials set
 			int result = WebUtil.execute(httpClient, hostConfiguration, method, new HttpState(), monitor);
+			if (DEBUG_AUTH) {
+				System.err.println(location.getUrl() + ": Received authentication response (" + result + ")"); //$NON-NLS-1$ //$NON-NLS-2$ 
+			}
 			if (result == HttpStatus.SC_UNAUTHORIZED || result == HttpStatus.SC_FORBIDDEN) {
 				AuthScheme authScheme = method.getHostAuthState().getAuthScheme();
 				if (authScheme instanceof DigestScheme) {
 					this.digestScheme = (DigestScheme) authScheme;
+					if (DEBUG_AUTH) {
+						System.err.println(location.getUrl() + ": Received digest scheme"); //$NON-NLS-1$ 
+					}
 				} else if (authScheme instanceof BasicScheme) {
 					httpClient.getParams().setAuthenticationPreemptive(true);
+					if (DEBUG_AUTH) {
+						System.err.println(location.getUrl() + ": Received basic scheme"); //$NON-NLS-1$ 
+					}
+				} else if (authScheme != null) {
+					if (DEBUG_AUTH) {
+						System.err.println(location.getUrl() + ": Received scheme (" + authScheme.getClass() + ")"); //$NON-NLS-1$ //$NON-NLS-2$ 
+					}
+				} else {
+					if (DEBUG_AUTH) {
+						System.err.println(location.getUrl() + ": No authentication scheme received"); //$NON-NLS-1$ 
+					}
 				}
 
 				Header header = method.getResponseHeader("Server"); //$NON-NLS-1$
 				isTracd = (header != null && header.getValue().startsWith("tracd")); //$NON-NLS-1$
+				if (DEBUG_AUTH && isTracd) {
+					System.err.println(location.getUrl() + ": Tracd detected"); //$NON-NLS-1$ 
+				}
 
 //					Header header = method.getResponseHeader("WWW-Authenticate");
 //					if (header != null) {

@@ -24,6 +24,7 @@ import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.WebUtil;
@@ -41,6 +42,8 @@ import org.eclipse.mylyn.internal.trac.core.model.TracVersion;
  * @author Steffen Pingel
  */
 public abstract class AbstractTracClient implements ITracClient {
+
+	protected static final boolean DEBUG_AUTH = Boolean.valueOf(Platform.getDebugOption("org.eclipse.mylyn.trac.core/debug/authentication")); //$NON-NLS-1$
 
 	protected static final String USER_AGENT = "TracConnector"; //$NON-NLS-1$
 
@@ -98,7 +101,13 @@ public abstract class AbstractTracClient implements ITracClient {
 
 		post.setRequestBody(data);
 		try {
+			if (DEBUG_AUTH) {
+				System.err.println(location.getUrl() + ": Attempting form-based account manager authentication"); //$NON-NLS-1$ 
+			}
 			int code = WebUtil.execute(httpClient, hostConfiguration, post, monitor);
+			if (DEBUG_AUTH) {
+				System.err.println(location.getUrl() + ": Received account manager response (" + code + ")"); //$NON-NLS-1$ //$NON-NLS-2$ 
+			}
 			// code should be a redirect in case of success  
 			if (code == HttpURLConnection.HTTP_OK) {
 				throw new TracLoginException();
