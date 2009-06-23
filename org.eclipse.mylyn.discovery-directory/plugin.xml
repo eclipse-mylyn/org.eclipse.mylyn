@@ -36,7 +36,7 @@
             categoryId="org.eclipse.mylyn.discovery.site.categories.connectorCategoryEclipseOrg"
             description="%connectorDescriptor.description.bugzilla"
             groupId="org.eclipse.mylyn.discovery-directory.bundled"
-            id="org.eclipse.mylyn.bugzilla_feature1"
+            id="org.eclipse.mylyn.bugzilla_feature"
             kind="task"
             license="%connectorDescriptor.license.bugzilla"
             name="%connectorDescriptor.name.bugzilla"
@@ -90,6 +90,7 @@
                url="http://mylyn-mantis.wiki.sourceforge.net/">
          </overview>
       </connectorDescriptor>
+      
       <connectorDescriptor
             categoryId="org.eclipse.mylyn.discovery.directory.community"
             description="%connectorDescriptor.description.foglyn"
@@ -111,7 +112,6 @@
                url="http://www.foglyn.com/?connectordiscovery">
          </overview>
       </connectorDescriptor>
-	</extension>
 
 	<!--
       <connectorDescriptor
@@ -133,4 +133,6 @@
          </overview>
       </connectorDescriptor>
      -->
+
+	</extension>
 </plugin>
