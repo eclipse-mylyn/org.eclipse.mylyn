@@ -90,6 +90,27 @@
                url="http://mylyn-mantis.wiki.sourceforge.net/">
          </overview>
       </connectorDescriptor>
+      <connectorDescriptor
+            categoryId="org.eclipse.mylyn.discovery.directory.community"
+            description="%connectorDescriptor.description.foglyn"
+            id="com.foglyn"
+            kind="task"
+            license="%connectorDescriptor.license.foglyn"
+            name="%connectorDescriptor.name.foglyn"
+            provider="%connectorDescriptor.provider.foglyn"
+            siteUrl="http://update.foglyn.com/stable">
+         <icon
+               image128="images/foglyn-128.png"
+               image32="images/foglyn-32.png"
+               image48="images/foglyn-48.png"
+               image64="images/foglyn-64.png">
+         </icon>
+         <overview
+               screenshot="images/foglyn-screenshot-320x240.png"
+               summary="%connectorDescriptor.overview.summary.foglyn"
+               url="http://www.foglyn.com/?connectordiscovery">
+         </overview>
+      </connectorDescriptor>
 	</extension>
 
 	<!--
