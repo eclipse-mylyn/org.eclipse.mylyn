@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Holger Voormann - tests for bug 279029
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.tracwiki.core;
 
@@ -19,8 +20,6 @@ import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class TracWikiLanguageTest extends TestCase {
@@ -385,24 +384,26 @@ public class TracWikiLanguageTest extends TestCase {
 	}
 
 	public void testWikiWordNegativeMatch() {
-		markupLanaguage.setInternalLinkPattern("https://foo.bar/wiki/{0}");
-		String html = parser.parseToHtml("A noWikiWord points somewhere");
-		System.out.println(html);
-		assertTrue(html.contains("<body><p>A noWikiWord points somewhere</p></body>"));
+		testWikiWordNegativeMatch("A noWikiWord points somewhere");
+		testWikiWordNegativeMatch("A noAWikiWord points somewhere");
+		testWikiWordNegativeMatch("A aBBaB points somewhere");
+		testWikiWordNegativeMatch("A XML HTML or PDF points NOT somewhere");
+		testWikiWordNegativeMatch("not a WikiWOrd");
+		testWikiWordNegativeMatch("not a 1WikiWord");
+		testWikiWordNegativeMatch("1WikiWord WIkiWord O2WikiWord");
+		testWikiWordNegativeMatch("Wiki-Word Wi-kiWord");
+		testWikiWordNegativeMatch("not a WikiWord", "not a !WikiWord");
 	}
 
-	public void testWikiWordNegativeMatch2() {
-		markupLanaguage.setInternalLinkPattern("https://foo.bar/wiki/{0}");
-		String html = parser.parseToHtml("A noAWikiWord points somewhere");
-		System.out.println(html);
-		assertTrue(html.contains("<body><p>A noAWikiWord points somewhere</p></body>"));
+	private void testWikiWordNegativeMatch(String toTest) {
+		testWikiWordNegativeMatch(toTest, toTest);
 	}
 
-	public void testWikiWordNegativeMatch3() {
+	private void testWikiWordNegativeMatch(String expected, String toTest) {
 		markupLanaguage.setInternalLinkPattern("https://foo.bar/wiki/{0}");
-		String html = parser.parseToHtml("A aBBaB points somewhere");
+		String html = parser.parseToHtml(toTest);
 		System.out.println(html);
-		assertTrue(html.contains("<body><p>A aBBaB points somewhere</p></body>"));
+		assertTrue(html.contains("<body><p>" + expected + "</p></body>"));
 	}
 
 	public void testWikiWordAtLineStart() {
@@ -419,12 +420,13 @@ public class TracWikiLanguageTest extends TestCase {
 		assertTrue(html.contains("<body><p>a <a href=\"https://foo.bar/wiki/WikiWord\">WikiWord</a></p></body>"));
 	}
 
-	public void testWikiWord2() {
-		markupLanaguage.setInternalLinkPattern("https://foo.bar/wiki/{0}");
-		String html = parser.parseToHtml("a BBaB");
-		System.out.println(html);
-		assertTrue(html.contains("<body><p>a <a href=\"https://foo.bar/wiki/BBaB\">BBaB</a></p></body>"));
-	}
+// BBaB is not a WikiWord because of the two sequenced upper-case letters
+//	public void testWikiWord2() {
+//		markupLanaguage.setInternalLinkPattern("https://foo.bar/wiki/{0}");
+//		String html = parser.parseToHtml("a BBaB");
+//		System.out.println(html);
+//		assertTrue(html.contains("<body><p>a <a href=\"https://foo.bar/wiki/BBaB\">BBaB</a></p></body>"));
+//	}
 
 	public void testWikiWordNoAutolink() {
 		markupLanaguage.setAutoLinking(false);

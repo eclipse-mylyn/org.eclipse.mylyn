@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Holger Voormann - fix for bug 279029
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.tracwiki.core.token;
 
@@ -20,7 +21,6 @@ import org.eclipse.mylyn.wikitext.tracwiki.core.TracWikiLanguage;
  * Matches WikiWord internal hyperlinks.
  * 
  * @author David Green
- * 
  * @see TracWikiLanguage#isAutoLinking()
  */
 public class WikiWordReplacementToken extends PatternBasedElement {
@@ -29,7 +29,7 @@ public class WikiWordReplacementToken extends PatternBasedElement {
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		return "(?<![a-zA-Z])(!)?([A-Z]\\w+(?:[A-Z]\\w*)+)"; //$NON-NLS-1$
+		return "(?<![a-zA-Z])(!)?([A-Z][a-z]+([A-Z][a-z]+)+)"; //$NON-NLS-1$
 	}
 
 	@Override
