@@ -36,7 +36,7 @@
             categoryId="org.eclipse.mylyn.discovery.site.categories.connectorCategoryEclipseOrg"
             description="%connectorDescriptor.description.bugzilla"
             groupId="org.eclipse.mylyn.discovery-directory.bundled"
-            id="org.eclipse.mylyn.bugzilla_feature"
+            id="org.eclipse.mylyn.bugzilla_feature1"
             kind="task"
             license="%connectorDescriptor.license.bugzilla"
             name="%connectorDescriptor.name.bugzilla"
