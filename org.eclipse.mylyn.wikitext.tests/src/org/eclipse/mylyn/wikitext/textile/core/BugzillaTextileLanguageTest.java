@@ -118,4 +118,29 @@ public class BugzillaTextileLanguageTest extends TestCase {
 		System.out.println(html);
 		assertTrue(html.contains("<p>some &lt;span class=\"s\">mark&lt;/span> up</p>"));
 	}
+
+	public void testJavaStackTraceDetection() {
+		String html = parser.parseToHtml("text\n" + "java.lang.Exception: java.lang.IllegalStateException\n"
+				+ "	at org.eclipse.mylyn.internal.wikitext.tasks.ui.util.Test.main(Test.java:21)\n"
+				+ "Caused by: java.lang.IllegalStateException\n" + "	... 1 more\n" + "text");
+		System.out.println(html);
+		assertTrue(html.contains("<p>text</p><pre class=\"javaStackTrace\">java.lang.Exception"));
+		assertTrue(html.contains("</pre><p>text</p>"));
+	}
+
+	public void testJavaStackTraceDetection_bug280805() {
+		String html = parser.parseToHtml("text\n" + "java.lang.Exception: java.lang.IllegalStateException\n"
+				+ "	at org.eclipse.mylyn.internal.wikitext.tasks.ui.util.test.main(Test.java:21)\n"
+				+ "Caused by: java.lang.IllegalStateException\n" + "	... 1 more\n" + "text");
+		System.out.println(html);
+		assertTrue(html.contains("<p>text</p><pre class=\"javaStackTrace\">java.lang.Exception"));
+		assertTrue(html.contains("</pre><p>text</p>"));
+	}
+
+	public void testEclipseErrorDetailsBlock() {
+		String html = parser.parseToHtml("text\n-- Error Details --\ndetail line 1\n\nno detail");
+		System.out.println(html);
+		assertTrue(html.contains("<p>text</p><pre class=\"eclipseErrorDetails\">-- Error Details --"));
+		assertTrue(html.contains("</pre><p>no detail</p>"));
+	}
 }
