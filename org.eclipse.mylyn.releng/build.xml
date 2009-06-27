@@ -327,7 +327,7 @@
 		<echo message="Current WikiText version: ${version.wikitext}"></echo>
 		
 		<fail message="Use -DnewVersion=x.y.z to set new version." unless="newVersion"/>
-		<fail message="Use -DnewWikiTextVersion=x.y.z to set new WikiText version." unless="newWikiTextVersion"/>		
+		<fail message="Use -DnewWikiTextVersion=x.y.z to set new WikiText version." unless="newWikiTextVersion"/>
 
 		<echo message="New Mylyn version: ${newVersion}"></echo>
 		<echo message="New WikiText version: ${newWikiTextVersion}"></echo>
