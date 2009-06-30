@@ -437,4 +437,11 @@ public class BugzillaCorePlugin extends Plugin {
 	public BugzillaLanguageSettings getLanguageSetting(String language) {
 		return BugzillaRepositoryConnector.getLanguageSetting(language);
 	}
+
+	/**
+	 * this method is only for testing
+	 */
+	public static void setCacheFileRead(boolean cacheFileRead) {
+		BugzillaCorePlugin.cacheFileRead = cacheFileRead;
+	}
 }
