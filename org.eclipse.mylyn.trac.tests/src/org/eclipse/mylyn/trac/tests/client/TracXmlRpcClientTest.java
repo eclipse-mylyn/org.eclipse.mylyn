@@ -12,6 +12,7 @@
 
 package org.eclipse.mylyn.trac.tests.client;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
@@ -22,9 +23,14 @@ import org.eclipse.mylyn.internal.trac.core.client.TracPermissionDeniedException
 import org.eclipse.mylyn.internal.trac.core.client.TracRemoteException;
 import org.eclipse.mylyn.internal.trac.core.client.TracXmlRpcClient;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
+import org.eclipse.mylyn.internal.trac.core.model.TracAction;
+import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
+import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
+import org.eclipse.mylyn.internal.trac.core.model.TracTicketField;
 import org.eclipse.mylyn.internal.trac.core.model.TracVersion;
 import org.eclipse.mylyn.internal.trac.core.model.TracWikiPage;
 import org.eclipse.mylyn.internal.trac.core.model.TracWikiPageInfo;
+import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylyn.trac.tests.support.TracTestConstants;
 
 /**
@@ -45,7 +51,7 @@ public class TracXmlRpcClientTest extends AbstractTracClientRepositoryTest {
 	public void testValidateFailNoAuth() throws Exception {
 		connect(TracTestConstants.TEST_TRAC_010_URL, "", "");
 		try {
-			repository.validate(callback);
+			client.validate(callback);
 			fail("Expected TracPermissiongDeniedException");
 		} catch (TracPermissionDeniedException e) {
 		}
@@ -54,7 +60,7 @@ public class TracXmlRpcClientTest extends AbstractTracClientRepositoryTest {
 	public void testMulticallExceptions() throws Exception {
 		connect010();
 		try {
-			((TracXmlRpcClient) repository).getTickets(new int[] { 1, Integer.MAX_VALUE }, null);
+			((TracXmlRpcClient) client).getTickets(new int[] { 1, Integer.MAX_VALUE }, null);
 			fail("Expected TracRemoteException");
 		} catch (TracRemoteException e) {
 		}
@@ -71,9 +77,9 @@ public class TracXmlRpcClientTest extends AbstractTracClientRepositoryTest {
 	}
 
 	public void updateAttributes() throws Exception {
-		assertNull(repository.getMilestones());
-		repository.updateAttributes(new NullProgressMonitor(), true);
-		TracVersion[] versions = repository.getVersions();
+		assertNull(client.getMilestones());
+		client.updateAttributes(new NullProgressMonitor(), true);
+		TracVersion[] versions = client.getVersions();
 		assertEquals(2, versions.length);
 		Arrays.sort(versions, new Comparator<TracVersion>() {
 			public int compare(TracVersion o1, TracVersion o2) {
@@ -88,6 +94,88 @@ public class TracXmlRpcClientTest extends AbstractTracClientRepositoryTest {
 		assertEquals(new Date(0), versions[1].getTime());
 	}
 
+	public void testSearchValidateTicket010() throws Exception {
+		connect010();
+		searchValidateTicket();
+	}
+
+	public void testSearchValidateTicket011() throws Exception {
+		connect011();
+		searchValidateTicket();
+	}
+
+	public void searchValidateTicket() throws Exception {
+		TracSearch search = new TracSearch();
+		search.addFilter("summary", "summary1");
+		List<TracTicket> result = new ArrayList<TracTicket>();
+		client.search(search, result, null);
+		assertEquals(1, result.size());
+		assertTicketEquals(tickets.get(0), result.get(0));
+		assertEquals("component1", result.get(0).getValue(Key.COMPONENT));
+		assertEquals("description1", result.get(0).getValue(Key.DESCRIPTION));
+		assertEquals("milestone1", result.get(0).getValue(Key.MILESTONE));
+		assertEquals("anonymous", result.get(0).getValue(Key.REPORTER));
+		assertEquals("summary1", result.get(0).getValue(Key.SUMMARY));
+		// assertEquals("", result.get(0).getValue(Key.VERSION));
+	}
+
+	public void testGetTicketActions010() throws Exception {
+		connect010();
+
+		TracTicket ticket = client.getTicket(tickets.get(0).getId(), null);
+		TracAction[] actions = ticket.getActions();
+		assertNotNull(actions);
+		assertEquals(4, actions.length);
+		assertEquals("leave", actions[0].getId());
+		assertNull(actions[0].getLabel());
+		assertEquals(0, actions[0].getFields().size());
+		assertEquals("resolve", actions[1].getId());
+		assertNull(actions[1].getLabel());
+		assertEquals(0, actions[1].getFields().size());
+		assertEquals("reassign", actions[2].getId());
+		assertNull(actions[2].getLabel());
+		assertEquals(0, actions[2].getFields().size());
+		assertEquals("accept", actions[3].getId());
+		assertNull(actions[3].getLabel());
+		assertEquals(0, actions[3].getFields().size());
+
+		ticket = client.getTicket(tickets.get(1).getId(), null);
+		actions = ticket.getActions();
+		assertNotNull(actions);
+		assertEquals(2, actions.length);
+		assertEquals("leave", actions[0].getId());
+		assertEquals("reopen", actions[1].getId());
+	}
+
+	public void testGetTicketActions011() throws Exception {
+		connect011();
+
+		TracTicket ticket = client.getTicket(tickets.get(0).getId(), null);
+		TracAction[] actions = ticket.getActions();
+		assertNotNull(actions);
+		assertEquals(4, actions.length);
+		assertEquals("leave", actions[0].getId());
+		assertEquals("resolve", actions[1].getId());
+		assertEquals("resolve", actions[1].getLabel());
+		assertNotNull(actions[1].getHint());
+		List<TracTicketField> fields = actions[1].getFields();
+		assertEquals(1, fields.size());
+		assertEquals(5, fields.get(0).getOptions().length);
+		assertEquals("fixed", fields.get(0).getOptions()[0]);
+		assertEquals("reassign", actions[2].getId());
+		fields = actions[2].getFields();
+		assertEquals(1, fields.size());
+		assertNull(fields.get(0).getOptions());
+		assertEquals("accept", actions[3].getId());
+
+		ticket = client.getTicket(tickets.get(1).getId(), null);
+		actions = ticket.getActions();
+		assertNotNull(actions);
+		assertEquals(2, actions.length);
+		assertEquals("leave", actions[0].getId());
+		assertEquals("reopen", actions[1].getId());
+	}
+
 	public void testWikiToHtml010() throws Exception {
 		connect010();
 		wikiToHtml(TracTestConstants.TEST_TRAC_010_URL);
@@ -99,10 +187,10 @@ public class TracXmlRpcClientTest extends AbstractTracClientRepositoryTest {
 	}
 
 	public void wikiToHtml(String tracUrl) throws Exception {
-		String html = ((TracXmlRpcClient) repository).wikiToHtml("", null);
+		String html = ((TracXmlRpcClient) client).wikiToHtml("", null);
 		assertEquals("", html);
 
-		html = ((TracXmlRpcClient) repository).wikiToHtml("A simple line of text.", null);
+		html = ((TracXmlRpcClient) client).wikiToHtml("A simple line of text.", null);
 		assertEquals("<p>\nA simple line of text.\n</p>\n", html);
 
 		String source = "= WikiFormattingTesting =\n" + " * '''bold''', '''!''' can be bold too''', and '''! '''\n"
@@ -114,18 +202,18 @@ public class TracXmlRpcClientTest extends AbstractTracClientRepositoryTest {
 				+ tracUrl
 				+ "/wiki/WikiFormattingTesting\" rel=\"nofollow\">WikiFormattingTesting?</a></h1>\n<ul><li><strong>bold</strong>, <strong>\'\'\' can be bold too</strong>, and <strong>! </strong>\n</li><li><i>italic</i>\n</li><li><strong><i>bold italic</i></strong>\n</li><li><span class=\"underline\">underline</span>\n</li><li><tt>monospace</tt> or <tt>monospace</tt>\n</li><li><del>strike-through</del>\n</li><li><sup>superscript</sup> \n</li><li><sub>subscript</sub>\n</li></ul><h1 id=\"Heading\">Heading</h1>\n<h2 id=\"Subheading\">Subheading</h2>\n";
 
-		html = ((TracXmlRpcClient) repository).wikiToHtml(source, null);
+		html = ((TracXmlRpcClient) client).wikiToHtml(source, null);
 		assertEquals(expectedHtml, html);
 	}
 
 	public void testValidateWikiAPI010() throws Exception {
 		connect010();
-		((TracXmlRpcClient) repository).validateWikiRpcApi(null);
+		((TracXmlRpcClient) client).validateWikiRpcApi(null);
 	}
 
 	public void testValidateWikiAPI011() throws Exception {
 		connect011();
-		((TracXmlRpcClient) repository).validateWikiRpcApi(null);
+		((TracXmlRpcClient) client).validateWikiRpcApi(null);
 	}
 
 	public void testGetAllWikiPageNames010() throws Exception {
@@ -139,7 +227,7 @@ public class TracXmlRpcClientTest extends AbstractTracClientRepositoryTest {
 	}
 
 	private void getAllWikiPageNames() throws Exception {
-		String[] names = ((TracXmlRpcClient) repository).getAllWikiPageNames(null);
+		String[] names = ((TracXmlRpcClient) client).getAllWikiPageNames(null);
 		List<String> all = Arrays.asList(names);
 		assertTrue(all.contains("Test"));
 	}
@@ -155,7 +243,7 @@ public class TracXmlRpcClientTest extends AbstractTracClientRepositoryTest {
 	}
 
 	private void getWikiPage() throws Exception {
-		TracWikiPage page = ((TracXmlRpcClient) repository).getWikiPage("TestGetPage", null);
+		TracWikiPage page = ((TracXmlRpcClient) client).getWikiPage("TestGetPage", null);
 		assertEquals("TestGetPage", page.getPageInfo().getPageName());
 		assertEquals("tests@mylyn.eclipse.org", page.getPageInfo().getAuthor());
 		assertEquals(2, page.getPageInfo().getVersion());
@@ -165,7 +253,7 @@ public class TracXmlRpcClientTest extends AbstractTracClientRepositoryTest {
 		assertEquals("Version 2", page.getContent());
 		assertTrue(page.getPageHTML().startsWith("<html>"));
 
-		page = ((TracXmlRpcClient) repository).getWikiPage("TestGetPage", 1, null);
+		page = ((TracXmlRpcClient) client).getWikiPage("TestGetPage", 1, null);
 		assertEquals("TestGetPage", page.getPageInfo().getPageName());
 		assertEquals("anonymous", page.getPageInfo().getAuthor());
 		assertEquals(1, page.getPageInfo().getVersion());
@@ -186,98 +274,98 @@ public class TracXmlRpcClientTest extends AbstractTracClientRepositoryTest {
 	private void getWikiPageInvalid() throws Exception {
 		// get info -- non-existing version
 		try {
-			((TracXmlRpcClient) repository).getWikiPageInfo("Test", 10, null);
+			((TracXmlRpcClient) client).getWikiPageInfo("Test", 10, null);
 			fail("Expected TracRemoteException");
 		} catch (TracRemoteException e) {
 		}
 
 		// get info -- non-existing page name
 		try {
-			((TracXmlRpcClient) repository).getWikiPageInfo("NoSuchPage", null);
+			((TracXmlRpcClient) client).getWikiPageInfo("NoSuchPage", null);
 			fail("Expected TracRemoteException");
 		} catch (TracRemoteException e) {
 		}
 
 		// get info -- null parameter
 		try {
-			((TracXmlRpcClient) repository).getWikiPageInfo(null, null);
+			((TracXmlRpcClient) client).getWikiPageInfo(null, null);
 			fail("Expected RuntimeException");
 		} catch (IllegalArgumentException e) {
 		}
 
 		// get content -- non-existing version
 		try {
-			((TracXmlRpcClient) repository).getWikiPageContent("Test", 10, null);
+			((TracXmlRpcClient) client).getWikiPageContent("Test", 10, null);
 			fail("Expected TracRemoteException");
 		} catch (TracRemoteException e) {
 		}
 
 		// get content -- non-existing page name
 		try {
-			((TracXmlRpcClient) repository).getWikiPageContent("NoSuchPage", null);
+			((TracXmlRpcClient) client).getWikiPageContent("NoSuchPage", null);
 			fail("Expected TracRemoteException");
 		} catch (TracRemoteException e) {
 		}
 
 		// get content -- null parameter
 		try {
-			((TracXmlRpcClient) repository).getWikiPageContent(null, null);
+			((TracXmlRpcClient) client).getWikiPageContent(null, null);
 			fail("Expected RuntimeException");
 		} catch (IllegalArgumentException e) {
 		}
 
 		// get HTML -- non-existing version
 		try {
-			((TracXmlRpcClient) repository).getWikiPageHtml("Test", 10, null);
+			((TracXmlRpcClient) client).getWikiPageHtml("Test", 10, null);
 			fail("Expected TracRemoteException");
 		} catch (TracRemoteException e) {
 		}
 
 		// get HTML -- non-existing page name
 		try {
-			((TracXmlRpcClient) repository).getWikiPageHtml("NoSuchPage", null);
+			((TracXmlRpcClient) client).getWikiPageHtml("NoSuchPage", null);
 			fail("Expected TracRemoteException");
 		} catch (TracRemoteException e) {
 		}
 
 		// get HTML -- null parameter
 		try {
-			((TracXmlRpcClient) repository).getWikiPageHtml(null, null);
+			((TracXmlRpcClient) client).getWikiPageHtml(null, null);
 			fail("Expected RuntimeException");
 		} catch (IllegalArgumentException e) {
 		}
 
 		// get a page -- non-existing version
 		try {
-			((TracXmlRpcClient) repository).getWikiPage("Test", 10, null);
+			((TracXmlRpcClient) client).getWikiPage("Test", 10, null);
 			fail("Expected TracRemoteException");
 		} catch (TracRemoteException e) {
 		}
 
 		// get a page -- non-existing page name
 		try {
-			((TracXmlRpcClient) repository).getWikiPage("NoSuchPage", null);
+			((TracXmlRpcClient) client).getWikiPage("NoSuchPage", null);
 			fail("Expected TracRemoteException");
 		} catch (TracRemoteException e) {
 		}
 
 		// get a page -- null parameter
 		try {
-			((TracXmlRpcClient) repository).getWikiPage(null, null);
+			((TracXmlRpcClient) client).getWikiPage(null, null);
 			fail("Expected RuntimeException");
 		} catch (IllegalArgumentException e) {
 		}
 
 		// get all versions of a page -- non-existing page name
 		try {
-			((TracXmlRpcClient) repository).getWikiPageInfoAllVersions("NoSuchPage", null);
+			((TracXmlRpcClient) client).getWikiPageInfoAllVersions("NoSuchPage", null);
 			fail("Expected TracRemoteException");
 		} catch (TracRemoteException e) {
 		}
 
 		// get all versions of a page -- null parameter
 		try {
-			((TracXmlRpcClient) repository).getWikiPageInfoAllVersions(null, null);
+			((TracXmlRpcClient) client).getWikiPageInfoAllVersions(null, null);
 			fail("Expected RuntimeException");
 		} catch (IllegalArgumentException e) {
 		}
@@ -296,7 +384,7 @@ public class TracXmlRpcClientTest extends AbstractTracClientRepositoryTest {
 	private void getWikiPageInfoAllVersions() throws Exception {
 		String pageName = "Test";
 
-		TracWikiPageInfo[] versions = ((TracXmlRpcClient) repository).getWikiPageInfoAllVersions(pageName, null);
+		TracWikiPageInfo[] versions = ((TracXmlRpcClient) client).getWikiPageInfoAllVersions(pageName, null);
 		assertTrue(versions.length >= 1);
 		int counter = 1;
 		for (TracWikiPageInfo version : versions) {
@@ -316,7 +404,7 @@ public class TracXmlRpcClientTest extends AbstractTracClientRepositoryTest {
 	}
 
 	private void getRecentWikiChanges() throws Exception {
-		TracWikiPageInfo[] changes = ((TracXmlRpcClient) repository).getRecentWikiChanges(new Date(0), null);
+		TracWikiPageInfo[] changes = ((TracXmlRpcClient) client).getRecentWikiChanges(new Date(0), null);
 		TracWikiPageInfo testPage = null;
 		for (TracWikiPageInfo item : changes) {
 			assertTrue(item.getPageName() != null);
@@ -340,4 +428,5 @@ public class TracXmlRpcClientTest extends AbstractTracClientRepositoryTest {
 	private void putWikiPage() throws Exception {
 		// TODO testing wiki.putPage()
 	}
+
 }

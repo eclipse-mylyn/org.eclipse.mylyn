@@ -235,8 +235,13 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 				result = version;
 			}
 
-			if (version == Version.XML_RPC && info.isApiVersion(1, 0, 0)) {
-				setStatus(RepositoryStatus.createStatus(repositoryUrl, IStatus.INFO, TracUiPlugin.ID_PLUGIN,
+			if (version == Version.XML_RPC //
+					&& (info.isApiVersion(1, 0, 0) //
+					|| (info.isApiVersionOrHigher(1, 0, 3) && info.isApiVersionOrSmaller(1, 0, 5)))) {
+				setStatus(RepositoryStatus.createStatus(
+						repositoryUrl,
+						IStatus.INFO,
+						TracUiPlugin.ID_PLUGIN,
 						Messages.TracRepositorySettingsPage_Authentication_credentials_valid_Update_to_latest_XmlRpcPlugin_Warning));
 			}
 

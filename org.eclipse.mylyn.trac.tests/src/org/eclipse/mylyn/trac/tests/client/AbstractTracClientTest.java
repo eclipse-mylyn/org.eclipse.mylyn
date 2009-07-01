@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.trac.tests.client;
 
 import java.net.Proxy;
+import java.util.Map;
 
 import junit.framework.TestCase;
 
@@ -25,7 +26,9 @@ import org.eclipse.mylyn.context.tests.support.TestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.trac.core.TracClientFactory;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
+import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
 import org.eclipse.mylyn.trac.tests.support.TracTestConstants;
+import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.Ticket;
 
 /**
  * Provides a base implementation for test cases that access trac repositories.
@@ -36,7 +39,7 @@ public abstract class AbstractTracClientTest extends TestCase {
 
 	public String repositoryUrl;
 
-	public ITracClient repository;
+	public ITracClient client;
 
 	public String username;
 
@@ -105,9 +108,19 @@ public abstract class AbstractTracClientTest extends TestCase {
 				return proxy;
 			}
 		});
-		this.repository = TracClientFactory.createClient(location, version);
+		this.client = TracClientFactory.createClient(location, version);
 
-		return this.repository;
+		return this.client;
+	}
+
+	protected void assertTicketEquals(Ticket ticket, TracTicket tracTicket) throws Exception {
+		assertTrue(tracTicket.isValid());
+
+		Map<?, ?> expectedValues = ticket.getValues();
+		Map<String, String> values = tracTicket.getValues();
+		for (String key : values.keySet()) {
+			assertEquals("Values for key '" + key + "' did not match", expectedValues.get(key), values.get(key));
+		}
 	}
 
 }

@@ -16,11 +16,10 @@ import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.trac.tests.client.TracClientFactoryTest;
 import org.eclipse.mylyn.trac.tests.client.TracClientProxyTest;
+import org.eclipse.mylyn.trac.tests.client.TracRepositoryInfoTest;
 import org.eclipse.mylyn.trac.tests.client.TracSearchTest;
 import org.eclipse.mylyn.trac.tests.client.TracTicketTest;
-import org.eclipse.mylyn.trac.tests.client.TracWebClientSearchTest;
 import org.eclipse.mylyn.trac.tests.client.TracWebClientTest;
-import org.eclipse.mylyn.trac.tests.client.TracXmlRpcClientSearchTest;
 import org.eclipse.mylyn.trac.tests.client.TracXmlRpcClientTest;
 import org.eclipse.mylyn.trac.tests.core.TracClientManagerTest;
 
@@ -37,10 +36,9 @@ public class AllTracHeadlessStandaloneTests {
 		// client
 		suite.addTestSuite(TracSearchTest.class);
 		suite.addTestSuite(TracTicketTest.class);
+		suite.addTestSuite(TracRepositoryInfoTest.class);
 		suite.addTestSuite(TracXmlRpcClientTest.class);
-		suite.addTestSuite(TracXmlRpcClientSearchTest.class);
 		suite.addTestSuite(TracWebClientTest.class);
-		suite.addTestSuite(TracWebClientSearchTest.class);
 		suite.addTestSuite(TracClientFactoryTest.class);
 		suite.addTestSuite(TracClientProxyTest.class);
 		return suite;

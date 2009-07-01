@@ -254,6 +254,8 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 				label = Messages.TracTaskDataHandler_Resolve_as;
 			} else if ("reopen".equals(action.getId())) { //$NON-NLS-1$
 				label = Messages.TracTaskDataHandler_Reopen;
+			} else if ("reassign".equals(action.getId())) { //$NON-NLS-1$
+				// do not add reassign for Trac 0.10 since the assigned to field is editable  
 			} else {
 				label = action.getId();
 			}
@@ -268,7 +270,7 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 				TaskAttribute fieldAttribute = createAttribute(data, field);
 				fieldAttribute.getMetaData().setKind(null);
 				attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, fieldAttribute.getId());
-			} else if ("resolve".equals(action)) { //$NON-NLS-1$
+			} else if ("resolve".equals(action.getId())) { //$NON-NLS-1$
 				attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID,
 						TracAttribute.RESOLUTION.getTracKey());
 			}

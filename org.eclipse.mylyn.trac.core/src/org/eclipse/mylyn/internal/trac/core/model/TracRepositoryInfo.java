@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Steffen Pingel and others.
+ * Copyright (c) 2009 Steffen Pingel and others. 
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -76,6 +76,12 @@ public class TracRepositoryInfo {
 		return apiEpoch > epoch //
 				|| apiEpoch == epoch && (apiMajor > major //
 				|| apiMajor == major && apiMinor >= minor);
+	}
+
+	public boolean isApiVersionOrSmaller(int epoch, int major, int minor) {
+		return apiEpoch < epoch //
+				|| apiEpoch == epoch && (apiMajor < major //
+				|| apiMajor == major && apiMinor <= minor);
 	}
 
 	public boolean isStale() {

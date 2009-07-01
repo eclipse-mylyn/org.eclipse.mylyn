@@ -49,6 +49,7 @@ import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskOperation;
 import org.eclipse.mylyn.tasks.core.data.TaskRelation;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.trac.tests.support.TestFixture;
@@ -439,6 +440,51 @@ public class TracTaskDataHandlerTest extends TestCase {
 		assertEquals("major", mapper.getPriority());
 		// empty attributes should not exist
 		assertNull(taskData.getRoot().getAttribute(TracAttribute.SEVERITY.getTracKey()));
+	}
+
+	public void testOperations_XmlRpc_0_10() throws Exception {
+		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
+		operations(false);
+	}
+
+	public void testOperations_XmlRpc_0_11() throws Exception {
+		init(TracTestConstants.TEST_TRAC_011_URL, Version.XML_RPC);
+		operations(true);
+	}
+
+	protected void operations(boolean hasReassign) throws Exception {
+		TaskData taskData = taskDataHandler.getTaskData(repository, "1", new NullProgressMonitor());
+		List<TaskAttribute> operations = taskData.getAttributeMapper().getAttributesByType(taskData,
+				TaskAttribute.TYPE_OPERATION);
+		assertEquals((hasReassign ? 5 : 4), operations.size());
+
+		TaskOperation operation = taskData.getAttributeMapper().getTaskOperation(operations.get(0));
+		assertEquals(TaskAttribute.OPERATION, operation.getTaskAttribute().getId());
+
+		operation = taskData.getAttributeMapper().getTaskOperation(operations.get(1));
+		assertEquals("leave", operation.getOperationId());
+		assertNotNull(operation.getLabel());
+
+		operation = taskData.getAttributeMapper().getTaskOperation(operations.get(2));
+		assertEquals("resolve", operation.getOperationId());
+		assertNotNull(operation.getLabel());
+		String associatedId = operation.getTaskAttribute().getMetaData().getValue(
+				TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID);
+		assertNotNull(associatedId);
+
+		if (hasReassign) {
+			operation = taskData.getAttributeMapper().getTaskOperation(operations.get(3));
+			assertEquals("reassign", operation.getOperationId());
+			assertNotNull(operation.getLabel());
+
+			operation = taskData.getAttributeMapper().getTaskOperation(operations.get(4));
+			assertEquals("accept", operation.getOperationId());
+			assertNotNull(operation.getLabel());
+		} else {
+			operation = taskData.getAttributeMapper().getTaskOperation(operations.get(3));
+			assertEquals("accept", operation.getOperationId());
+			assertNotNull(operation.getLabel());
+		}
 	}
 
 }
