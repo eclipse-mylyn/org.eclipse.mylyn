@@ -544,8 +544,9 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 
 		Collection<TaskAttribute> attributes = data.getRoot().getAttributes().values();
 		for (TaskAttribute attribute : attributes) {
-			if (TracAttributeMapper.isInternalAttribute(attribute)) {
-				// ignore
+			if (TracAttributeMapper.isInternalAttribute(attribute)
+					|| TracAttribute.RESOLUTION.getTracKey().equals(attribute.getId())) {
+				// ignore internal attributes, resolution is set through operations
 			} else if (!attribute.getMetaData().isReadOnly()) {
 				ticket.putValue(attribute.getId(), attribute.getValue());
 			}

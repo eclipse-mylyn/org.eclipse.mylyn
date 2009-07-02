@@ -486,4 +486,26 @@ public class TracTaskDataHandlerTest extends TestCase {
 		}
 	}
 
+	public void testPostTaskDataUnsetResolutionXmlRpc010() throws Exception {
+		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
+		postTaskDataUnsetResolution();
+	}
+
+	public void testPostTaskDataUnsetResolutionXmlRpc011() throws Exception {
+		init(TracTestConstants.TEST_TRAC_011_URL, Version.XML_RPC);
+		postTaskDataUnsetResolution();
+	}
+
+	private void postTaskDataUnsetResolution() throws Exception {
+		TracTicket ticket = TracTestUtil.createTicket(client, "postTaskDataUnsetResolution");
+		TaskData taskData = taskDataHandler.getTaskData(repository, ticket.getId() + "", new NullProgressMonitor());
+		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(TaskAttribute.RESOLUTION);
+		attribute.setValue("fixed");
+		taskDataHandler.postTaskData(repository, taskData, null, new NullProgressMonitor());
+
+		// should not set resolution unless resolve operation is selected
+		taskData = taskDataHandler.getTaskData(repository, ticket.getId() + "", new NullProgressMonitor());
+		attribute = taskData.getRoot().getMappedAttribute(TaskAttribute.RESOLUTION);
+		assertEquals("", attribute.getValue());
+	}
 }
