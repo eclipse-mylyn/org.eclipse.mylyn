@@ -351,11 +351,10 @@ public class TracTaskDataHandlerTest extends TestCase {
 		assertEquals("", subTaskMapper.getSummary());
 		assertEquals("", subTaskMapper.getDescription());
 		assertEquals(component, subTaskMapper.getComponent());
-		assertEquals(parentTaskData.getTaskId(), subTaskData.getRoot().getMappedAttribute(
-				TracTaskDataHandler.ATTRIBUTE_BLOCKING).getValue());
-		assertEquals("", parentTaskData.getRoot()
-				.getMappedAttribute(TracTaskDataHandler.ATTRIBUTE_BLOCKED_BY)
-				.getValue());
+		TaskAttribute attribute = subTaskData.getRoot().getMappedAttribute(TracTaskDataHandler.ATTRIBUTE_BLOCKING);
+		assertEquals(parentTaskData.getTaskId(), attribute.getValue());
+		attribute = parentTaskData.getRoot().getMappedAttribute(TracTaskDataHandler.ATTRIBUTE_BLOCKED_BY);
+		assertEquals("", attribute.getValue());
 	}
 
 	public void testGetSubTaskIds() throws Exception {

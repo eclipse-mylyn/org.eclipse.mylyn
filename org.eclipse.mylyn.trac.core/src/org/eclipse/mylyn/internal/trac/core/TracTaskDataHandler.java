@@ -380,6 +380,9 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 				attr.setValue(field.getDefaultValue());
 			}
 		}
+		if (ATTRIBUTE_BLOCKED_BY.equals(field.getName()) || ATTRIBUTE_BLOCKING.equals(field.getName())) {
+			metaData.setType(TaskAttribute.TYPE_TASK_DEPENDENCY);
+		}
 		return attr;
 	}
 
