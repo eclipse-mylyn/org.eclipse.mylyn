@@ -265,6 +265,7 @@ public class TestProxy implements Runnable {
 				handleConnection(socket);
 			}
 		} catch (InterruptedIOException e) {
+			// ignore
 		} catch (IOException e) {
 			setException(e);
 		} finally {
@@ -310,6 +311,13 @@ public class TestProxy implements Runnable {
 
 	public void stop() {
 		stopped = true;
+		try {
+			if (serverSocket != null) {
+				serverSocket.close();
+			}
+		} catch (IOException e1) {
+			// ignore
+		}
 		runner.interrupt();
 		try {
 			runner.join(500);
