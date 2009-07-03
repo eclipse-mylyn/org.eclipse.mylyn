@@ -77,6 +77,8 @@ public class TasksUiUtilTest extends TestCase {
 	}
 
 	public void testOpenTaskFromTask() {
+		TasksUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
+
 		TasksUiUtil.openTask(cat1task1);
 		assertEquals(1, activePage.getEditorReferences().length);
 		IEditorPart editor = activePage.getEditorReferences()[0].getEditor(true);
@@ -85,8 +87,9 @@ public class TasksUiUtilTest extends TestCase {
 
 		TasksUiUtil.openTask(cat1task2);
 		assertEquals(2, activePage.getEditorReferences().length);
-		assertTrue(editor instanceof TaskEditor);
-		assertTrue(activePage.getEditorReferences()[1].getEditor(true) instanceof TaskEditor);
+		editor = activePage.getEditorReferences()[1].getEditor(true);
+		assertNotNull(editor);
+		assertEquals(TaskEditor.class, editor.getClass());
 	}
 
 	public void testOpenTaskFromString() {

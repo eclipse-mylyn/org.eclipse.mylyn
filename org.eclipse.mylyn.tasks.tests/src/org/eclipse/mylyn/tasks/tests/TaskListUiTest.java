@@ -189,6 +189,8 @@ public class TaskListUiTest extends TestCase {
 		int numListenersDuring = 0;
 		int numListenersAfter = 0;
 
+		TasksUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
+
 		Set<ITaskListChangeListener> listeners = taskList.getChangeListeners();
 		numListenersBefore = listeners.size();
 
