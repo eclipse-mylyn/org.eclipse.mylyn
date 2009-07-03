@@ -198,7 +198,8 @@ public class TaskListUiTest extends TestCase {
 		listeners = taskList.getChangeListeners();
 		numListenersDuring = listeners.size();
 
-		assertEquals(numListenersDuring, numListenersBefore + 2);
+		// each editor adds a listener for the editor and planning part
+		assertEquals(numListenersDuring, numListenersBefore + 4);
 
 		TasksUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
 
