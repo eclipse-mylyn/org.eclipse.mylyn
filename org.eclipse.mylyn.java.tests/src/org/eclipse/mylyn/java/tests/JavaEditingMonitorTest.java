@@ -114,7 +114,7 @@ public class JavaEditingMonitorTest extends AbstractJavaContextTest {
 		monitor.handleWorkbenchPartSelection(editorPart, calleeSelection, false);
 
 		assertEquals(1, editingCount);
-		assertEquals(1, selectingCount);
+		assertEquals(6, selectingCount);
 	}
 
 	public void testHandleElementSelection() throws PartInitException, JavaModelException, InterruptedException {
