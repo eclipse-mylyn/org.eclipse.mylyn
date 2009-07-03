@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2009 Jingwen Ou and others. 
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Tasktop Technologies - initial API and implementation
+ *     Jingwen Ou - initial API and implementation
+ *     Tasktop Technologies - improvements
  *******************************************************************************/
 
 package org.eclipse.mylyn.java.tests;
@@ -30,8 +31,10 @@ import org.eclipse.ui.PartInitException;
 /**
  * @author Jingwen Ou
  * @author Shawn Minto
+ * @author Steffen Pingel
  */
 public class JavaEditingMonitorTest extends AbstractJavaContextTest {
+
 	private IMethod callee;
 
 	private IMethod caller;
@@ -48,6 +51,8 @@ public class JavaEditingMonitorTest extends AbstractJavaContextTest {
 
 	private IType typeFoo;
 
+	private IInteractionEventListener listener;
+
 	@Override
 	protected void setUp() throws Exception {
 		project = new TestJavaProject(this.getClass().getName());
@@ -56,22 +61,7 @@ public class JavaEditingMonitorTest extends AbstractJavaContextTest {
 		caller = typeFoo.createMethod("void caller() {  }", null, true, null);
 		callee = typeFoo.createMethod("void callee() { }", callee, true, null);
 
-		selectingCount = 0;
-		editingCount = 0;
-	}
-
-	@Override
-	protected void tearDown() throws Exception {
-		ResourceTestUtil.deleteProject(project.getProject());
-	}
-
-	/**
-	 * Selects a method twice to see whether the editing is handled correctly. Note: Two sequential selections on the
-	 * same element are deemed to be an edit of the selection as this is the best guess that can be made. See bug
-	 * 252306.
-	 */
-	public void testHandleElementEdit() throws PartInitException, JavaModelException, InterruptedException {
-		IInteractionEventListener listener = new IInteractionEventListener() {
+		listener = new IInteractionEventListener() {
 			public void interactionObserved(InteractionEvent event) {
 				if (event.getKind() == Kind.EDIT) {
 					editingCount++;
@@ -89,7 +79,23 @@ public class JavaEditingMonitorTest extends AbstractJavaContextTest {
 			}
 		};
 		MonitorUi.addInteractionListener(listener);
+	}
 
+	@Override
+	protected void tearDown() throws Exception {
+		if (listener != null) {
+			MonitorUi.removeInteractionListener(listener);
+		}
+
+		ResourceTestUtil.deleteProject(project.getProject());
+	}
+
+	/**
+	 * Selects a method twice to see whether the editing is handled correctly. Note: Two sequential selections on the
+	 * same element are deemed to be an edit of the selection as this is the best guess that can be made. See bug
+	 * 252306.
+	 */
+	public void testHandleElementEdit() throws PartInitException, JavaModelException, InterruptedException {
 		CompilationUnitEditor editorPart = (CompilationUnitEditor) JavaUI.openInEditor(caller);
 		Document document = new Document(typeFoo.getCompilationUnit().getSource());
 
@@ -102,7 +108,7 @@ public class JavaEditingMonitorTest extends AbstractJavaContextTest {
 		monitor.handleWorkbenchPartSelection(editorPart, calleeSelection, false);
 
 		assertEquals(0, editingCount);
-		assertEquals(1, selectingCount);
+		assertEquals(6, selectingCount);
 
 		// select it again
 		monitor.handleWorkbenchPartSelection(editorPart, calleeSelection, false);
@@ -112,25 +118,6 @@ public class JavaEditingMonitorTest extends AbstractJavaContextTest {
 	}
 
 	public void testHandleElementSelection() throws PartInitException, JavaModelException, InterruptedException {
-		IInteractionEventListener listener = new IInteractionEventListener() {
-			public void interactionObserved(InteractionEvent event) {
-				if (event.getKind() == Kind.EDIT) {
-					editingCount++;
-				} else if (event.getKind() == Kind.SELECTION) {
-					selectingCount++;
-				}
-			}
-
-			public void startMonitoring() {
-				// ignore
-			}
-
-			public void stopMonitoring() {
-				// ignore
-			}
-		};
-		MonitorUi.addInteractionListener(listener);
-
 		CompilationUnitEditor editorPart = (CompilationUnitEditor) JavaUI.openInEditor(caller);
 		Document document = new Document(typeFoo.getCompilationUnit().getSource());
 
