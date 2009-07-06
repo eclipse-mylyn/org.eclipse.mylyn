@@ -565,6 +565,47 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			attrAddSelfToCc.getMetaData().setKind(null);
 		}
 
+		List<BugzillaCustomField> customFields = new ArrayList<BugzillaCustomField>();
+		if (repositoryConfiguration != null) {
+			customFields = repositoryConfiguration.getCustomFields();
+		}
+		for (BugzillaCustomField bugzillaCustomField : customFields) {
+			if (bugzillaCustomField.isEnterBug()) {
+				TaskAttribute attribute = taskData.getRoot().createAttribute(bugzillaCustomField.getName());
+				if (attribute != null) {
+					attribute.getMetaData().defaults().setLabel(bugzillaCustomField.getDescription());
+					attribute.getMetaData().setKind(TaskAttribute.KIND_DEFAULT);
+
+					switch (bugzillaCustomField.getType()) {
+					case 1: // Free Text
+						attribute.getMetaData().setType(TaskAttribute.TYPE_SHORT_TEXT);
+						break;
+					case 2: // Drop Down
+						attribute.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
+						break;
+					case 3: // Multiple-Selection Box
+						attribute.getMetaData().setType(TaskAttribute.TYPE_MULTI_SELECT);
+						break;
+					case 4: // Large Text Box
+						attribute.getMetaData().setType(TaskAttribute.TYPE_LONG_TEXT);
+						break;
+					case 5: // Date/Time
+						attribute.getMetaData().setType(TaskAttribute.TYPE_DATETIME);
+						break;
+
+					default:
+						List<String> options = bugzillaCustomField.getOptions();
+						if (options.size() > 0) {
+							attribute.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
+						} else {
+							attribute.getMetaData().setType(TaskAttribute.TYPE_SHORT_TEXT);
+						}
+					}
+					attribute.getMetaData().setReadOnly(false);
+				}
+			}
+		}
+
 		return true;
 	}
 

@@ -26,16 +26,23 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.sync.SubmitTaskJob;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
+import org.eclipse.mylyn.tasks.core.TaskMapping;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
@@ -479,6 +486,47 @@ public class BugzillaRepository32Test extends AbstractBugzillaTest {
 			// Submit changes
 			submit(task, taskData, changed);
 		}
+	}
 
+	public void testCustomAttributesNewTask() throws Exception {
+		final TaskMapping taskMappingInit = new TaskMapping() {
+			@Override
+			public String getSummary() {
+				return "The Summary";
+			}
+
+			@Override
+			public String getDescription() {
+				return "The Description";
+			}
+
+			@Override
+			public String getProduct() {
+				return "TestProduct";
+			}
+		};
+
+		TaskRepository taskRepository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND,
+				IBugzillaTestConstants.TEST_BUGZILLA_32_URL);
+		TasksUiPlugin.getRepositoryManager().addRepository(taskRepository);
+
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+				taskRepository.getConnectorKind());
+		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(taskRepository);
+		TaskData taskData = new TaskData(mapper, taskRepository.getConnectorKind(), taskRepository.getRepositoryUrl(),
+				"");
+		assertTrue(taskDataHandler.initializeTaskData(taskRepository, taskData, taskMappingInit, null));
+		TaskAttribute productAttribute = taskData.getRoot().getAttribute(BugzillaAttribute.PRODUCT.getKey());
+		assertNotNull(productAttribute);
+		assertEquals("TestProduct", productAttribute.getValue());
+		TaskAttribute colorAttribute = taskData.getRoot().getAttribute("cf_colors");
+		assertNotNull(colorAttribute);
+		TaskAttribute planningAttribute = taskData.getRoot().getAttribute("cf_planning");
+		assertNotNull(planningAttribute);
+		TaskAttribute shortstoryAttribute = taskData.getRoot().getAttribute("cf_shortstory");
+		assertNull(shortstoryAttribute);
+		TaskAttribute longstoryAttribute = taskData.getRoot().getAttribute("cf_longstory");
+		assertNull(longstoryAttribute);
 	}
 }
