@@ -359,7 +359,7 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 
 	/**
 	 * bug 251657: wrap preferences so that we can alter the current line highlight based on the focus state of the
-	 * provided control
+	 * provided control. bug 273528: override workspace preferences to eliminate print margin in the task editor
 	 * 
 	 * @author David Green
 	 */
@@ -399,6 +399,9 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 				if (!controlFocused) {
 					return false;
 				}
+			}
+			if (AbstractDecoratedTextEditorPreferenceConstants.EDITOR_PRINT_MARGIN.equals(name)) {
+				return false;
 			}
 			return super.getBoolean(name);
 		}
