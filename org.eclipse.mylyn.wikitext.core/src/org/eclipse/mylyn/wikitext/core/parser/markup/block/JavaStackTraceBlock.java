@@ -37,11 +37,9 @@ public class JavaStackTraceBlock extends Block {
 
 	private static final String FQN_PART = PACKAGE_PART + "(\\." + PACKAGE_PART + ")*\\." + CLASS_PART; //$NON-NLS-1$ //$NON-NLS-2$
 
-	private static final String START_PART = "(Caused by:\\s+)?" + FQN_PART + "(:\\s+\\w.*)?";//$NON-NLS-1$ //$NON-NLS-2$
-
-	private static final String CONTINUE_PART = "(at\\s+" + FQN_PART + "\\.((\\<init\\>)|([a-zA-Z0-9_$]+))\\(.*?\\)))|\\.{3}\\s\\d+\\smore"; //$NON-NLS-1$//$NON-NLS-2$
-
-	private static final Pattern STACK_TRACE_PATTERN = Pattern.compile("\\s*((" + START_PART + ")|(" + CONTINUE_PART + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	private static final Pattern STACK_TRACE_PATTERN = Pattern.compile("\\s*((" + "((Caused by:\\s+)|(at\\s+))?" //$NON-NLS-1$//$NON-NLS-2$
+			+ FQN_PART + "((:\\s+\\w.*)|(\\.((\\<init\\>)|([a-zA-Z0-9_$]+))\\(.*?\\)))?" //$NON-NLS-1$
+			+ ")|(\\.\\.\\.\\s\\d+\\smore))"); //$NON-NLS-1$ 
 
 	private int blockLineCount = 0;
 

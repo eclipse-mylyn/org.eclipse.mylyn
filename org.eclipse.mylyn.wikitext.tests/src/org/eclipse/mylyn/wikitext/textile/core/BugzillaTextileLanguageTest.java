@@ -17,6 +17,7 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.internal.wikitext.tasks.ui.util.Util;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration;
+import org.eclipse.mylyn.wikitext.core.parser.markup.block.JavaStackTraceBlock;
 
 /**
  * @author David Green
@@ -135,6 +136,13 @@ public class BugzillaTextileLanguageTest extends TestCase {
 		System.out.println(html);
 		assertTrue(html.contains("<p>text</p><pre class=\"javaStackTrace\">java.lang.Exception"));
 		assertTrue(html.contains("</pre><p>text</p>"));
+	}
+
+	public void testJavaStackTraceDetection_bug273629() {
+		boolean canStart = new JavaStackTraceBlock().canStart(
+				"org.eclipse.ui.internal.PerspectiveBarContributionItem.select(PerspectiveBarContributionItem.java:124)",
+				0);
+		assertTrue(canStart);
 	}
 
 	public void testEclipseErrorDetailsBlock() {
