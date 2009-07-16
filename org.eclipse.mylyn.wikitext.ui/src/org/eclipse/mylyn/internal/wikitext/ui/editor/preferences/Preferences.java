@@ -26,7 +26,6 @@ import org.eclipse.mylyn.internal.wikitext.ui.viewer.HtmlTextPresentationParser;
 
 /**
  * @see WikiTextUiPlugin#getPreferences()
- * 
  * @author David Green
  */
 public class Preferences implements Cloneable {
@@ -91,12 +90,12 @@ public class Preferences implements Cloneable {
 
 	private Map<String, String> cssByBlockModifierType = new LinkedHashMap<String, String>();
 	{
-		cssByBlockModifierType.put(BLOCK_H1, "font-size: 130%; font-weight: bold;"); //$NON-NLS-1$
-		cssByBlockModifierType.put(BLOCK_H2, "font-size: 125%; font-weight: bold;"); //$NON-NLS-1$
-		cssByBlockModifierType.put(BLOCK_H3, "font-size: 110%; font-weight: bold;"); //$NON-NLS-1$
-		cssByBlockModifierType.put(BLOCK_H4, "font-weight: bold;"); //$NON-NLS-1$
-		cssByBlockModifierType.put(BLOCK_H5, "font-size: 83%; font-weight: bold;"); //$NON-NLS-1$
-		cssByBlockModifierType.put(BLOCK_H6, "font-size: 75%; font-weight: bold;"); //$NON-NLS-1$
+		cssByBlockModifierType.put(BLOCK_H1, "font-size: 120%; font-weight: bold; color: #172f47;"); //$NON-NLS-1$
+		cssByBlockModifierType.put(BLOCK_H2, "font-size: 110%; font-weight: bold; color: #172f47;"); //$NON-NLS-1$
+		cssByBlockModifierType.put(BLOCK_H3, "font-size: 105%; font-weight: bold; color: #172f47;"); //$NON-NLS-1$
+		cssByBlockModifierType.put(BLOCK_H4, "font-weight: bold; color: #172f47;"); //$NON-NLS-1$
+		cssByBlockModifierType.put(BLOCK_H5, "font-size: 90%; font-weight: bold; color: #172f47;"); //$NON-NLS-1$
+		cssByBlockModifierType.put(BLOCK_H6, "font-size: 80%; font-weight: bold; color: #172f47;"); //$NON-NLS-1$
 		cssByBlockModifierType.put(BLOCK_BC, "font-family: monospace; color: #4444CC;"); //$NON-NLS-1$
 		cssByBlockModifierType.put(BLOCK_PRE, "font-family: monospace;"); //$NON-NLS-1$
 		cssByBlockModifierType.put(BLOCK_QUOTE, "color: rgb(38,86,145);"); //$NON-NLS-1$

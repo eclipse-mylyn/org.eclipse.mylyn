@@ -1,31 +1,37 @@
 /* these are the default styles that would normally be applied by a browser */
 h1 {
-	font-size: 150%;
+	font-size: 120%;
 	font-weight: bold;
+	color: #172f47;
 }
 
 h2 {
-	font-size: 125%;
+	font-size: 110%;
 	font-weight: bold;
+	color: #172f47;
 }
 
 h3 {
-	font-size: 110%;
+	font-size: 105%;
 	font-weight: bold;
+	color: #172f47;
 }
 
 h4 {
 	font-weight: bold;
+	color: #172f47;
 }
 
 h5 {
-	font-size: 83%;
+	font-size: 90%;
 	font-weight: bold;
+	color: #172f47;
 }
 
 h6 {
-	font-size: 67%;
+	font-size: 80%;
 	font-weight: bold;
+	color: #172f47;
 }
 
 b {
