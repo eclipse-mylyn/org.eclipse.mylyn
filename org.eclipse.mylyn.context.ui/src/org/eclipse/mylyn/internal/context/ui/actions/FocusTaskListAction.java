@@ -171,7 +171,7 @@ public class FocusTaskListAction extends AbstractFocusViewAction implements IFil
 	}
 
 	public void filterTextChanged(final String text) {
-		if (isChecked() && (text == null || "".equals(text))) { //$NON-NLS-1$
+		if (isChecked() && (text == null || "".equals(text.trim()))) { //$NON-NLS-1$
 			IViewPart part = FocusTaskListAction.super.getPartForAction();
 			if (part instanceof TaskListView) {
 				((TaskListView) part).getViewer().expandAll();
