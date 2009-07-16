@@ -22,6 +22,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -69,6 +70,7 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 
 		@Override
 		protected void doRefresh(Object[] items) {
+
 			if (viewer == null) {
 				return;
 			} else if (viewer.getControl().isDisposed()) {
@@ -92,23 +94,21 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 						try {
 							viewer.getControl().setRedraw(false);
 							viewer.refresh(minor);
-							// prior to Mylyn 3.1 used: FocusedViewerManager.this.updateExpansionState(viewer, null);
-							for (Object item : items) {
-								Object objectToRefresh = getObjectToRefresh(item);
-								if (objectToRefresh != null) {
-									FocusedViewerManager.this.updateExpansionState(viewer, objectToRefresh);
-								}
-							}
-
+							FocusedViewerManager.this.updateExpansionState(viewer, null);
 						} finally {
 							viewer.getControl().setRedraw(true);
 						}
 					} else { // don't need to worry about content changes
 						try {
 							viewer.getControl().setRedraw(false);
-
 							for (Object item : items) {
-								Object objectToRefresh = getObjectToRefresh(item);
+								Object objectToRefresh = item;
+								if (item instanceof IInteractionElement) {
+									IInteractionElement node = (IInteractionElement) item;
+									AbstractContextStructureBridge structureBridge = ContextCorePlugin.getDefault()
+											.getStructureBridge(node.getContentType());
+									objectToRefresh = structureBridge.getObjectForHandle(node.getHandleIdentifier());
+								}
 								if (objectToRefresh != null) {
 									viewer.update(objectToRefresh, null);
 									FocusedViewerManager.this.updateExpansionState(viewer, objectToRefresh);
@@ -121,17 +121,6 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 				}
 			}
 
-		}
-
-		private Object getObjectToRefresh(Object item) {
-			Object objectToRefresh = item;
-			if (item instanceof IInteractionElement) {
-				IInteractionElement node = (IInteractionElement) item;
-				AbstractContextStructureBridge structureBridge = ContextCorePlugin.getDefault().getStructureBridge(
-						node.getContentType());
-				objectToRefresh = structureBridge.getObjectForHandle(node.getHandleIdentifier());
-			}
-			return objectToRefresh;
 		}
 	}
 
@@ -326,30 +315,7 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 			if (objectToRefresh == null) {
 				treeViewer.expandAll();
 			} else {
-
-//				treeViewer.reveal(objectToRefresh);
-//				boolean failed = false;
-//				try {
-//					// reveal will fail if the content provider does not properly implement getParent();
-//					// check if node is now visible in view and fallback to expandAll() in 
-//					// case of an error
-//					Method method = AbstractTreeViewer.class.getDeclaredMethod(
-//							"internalGetWidgetToSelect", Object.class); //$NON-NLS-1$
-//					method.setAccessible(true);
-//					if (method.invoke(treeViewer, objectToRefresh) == null) {
-//						failed = true;
-//					}
-//				} catch (Exception e) {
-//					if (!internalExpandExceptionLogged) {
-//						internalExpandExceptionLogged = true;
-//						StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
-//								"Failed to verify expansion state, falling back to expanding all nodes", e)); //$NON-NLS-1$
-//					}
-//					failed = true;
-//				}
-//				if (failed) {
-				treeViewer.expandAll();
-//				}
+					treeViewer.expandToLevel(objectToRefresh, AbstractTreeViewer.ALL_LEVELS);
 			}
 		}
 	}
