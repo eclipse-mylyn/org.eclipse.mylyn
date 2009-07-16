@@ -449,6 +449,10 @@ public class ContextEditorFormPage extends FormPage {
 			if (commonViewer == null) {
 				createViewer(sectionClient);
 			}
+
+			if (invisiblePart != null) {
+				invisiblePart.setCommonViewer(commonViewer);
+			}
 			updateFilterThreshold();
 		} else {
 			doiScale.setEnabled(false);
@@ -456,6 +460,9 @@ public class ContextEditorFormPage extends FormPage {
 			if (commonViewer != null) {
 				commonViewer.getControl().dispose();
 				commonViewer = null;
+				if (invisiblePart != null) {
+					invisiblePart.setCommonViewer(commonViewer);
+				}
 				disposeRefreshJob();
 			}
 			if (activateTaskHyperlink == null) {

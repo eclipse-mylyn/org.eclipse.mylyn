@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.context.ui.editors;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -203,7 +204,7 @@ public class InvisibleContextElementsPart {
 
 	private Section invisibleSection;
 
-	private final CommonViewer commonViewer;
+	private CommonViewer commonViewer;
 
 	public InvisibleContextElementsPart(CommonViewer commonViewer) {
 		this.commonViewer = commonViewer;
@@ -319,6 +320,8 @@ public class InvisibleContextElementsPart {
 				IInteractionContext context = ContextCore.getContextManager().getActiveContext();
 				updateInvisibleSectionInBackground(context, allVisible);
 			}
+		} else {
+			updateInvisibleSectionInBackground(null, null);
 		}
 	}
 
@@ -360,6 +363,9 @@ public class InvisibleContextElementsPart {
 	}
 
 	private List<IInteractionElement> getAllInvisibleElements(IInteractionContext context, Collection<Object> allVisible) {
+		if (context == null || allVisible == null) {
+			return Collections.emptyList();
+		}
 		List<IInteractionElement> allToRemove = context.getAllElements();
 
 		List<IInteractionElement> allVisibleElements = new ArrayList<IInteractionElement>();
@@ -405,6 +411,11 @@ public class InvisibleContextElementsPart {
 		Set<Object> allVisible = new HashSet<Object>();
 		SwtUtil.collectItemData(commonViewer.getTree().getItems(), allVisible);
 		return allVisible;
+	}
+
+	protected void setCommonViewer(CommonViewer commonViewer) {
+		this.commonViewer = commonViewer;
+		updateInvisibleElementsSection();
 	}
 
 }
