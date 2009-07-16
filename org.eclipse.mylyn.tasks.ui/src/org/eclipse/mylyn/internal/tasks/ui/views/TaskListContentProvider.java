@@ -32,9 +32,7 @@ import org.eclipse.mylyn.tasks.core.ITaskContainer;
 
 /**
  * Provides custom content for the task list, e.g. guaranteed visibility of some elements, ability to suppress
- * containers showing if nothing should show under them.
- * 
- * TODO: move to viewer filter architecture?
+ * containers showing if nothing should show under them. TODO: move to viewer filter architecture?
  * 
  * @author Mik Kersten
  * @author Rob Elves
@@ -121,7 +119,7 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	 * See bug 109693
 	 */
 	private boolean containsNoFilterText(String filterText) {
-		return filterText == null || filterText.length() == 0;
+		return filterText == null || filterText.trim().length() == 0;
 	}
 
 	private boolean selectContainer(ITaskContainer container) {
@@ -132,7 +130,7 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	}
 
 	private List<IRepositoryElement> getFilteredChildrenFor(Object parent) {
-		if (containsNoFilterText((this.taskListView.getFilteredTree().getFilterControl()).getText())) {
+		if (containsNoFilterText(this.taskListView.getFilteredTree().getFilterString())) {
 			List<IRepositoryElement> children = new ArrayList<IRepositoryElement>();
 			if (parent instanceof ITask) {
 				Collection<ITask> subTasks = ((AbstractTask) parent).getChildren();
@@ -189,7 +187,7 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	}
 
 	protected boolean filter(Object parent, Object object) {
-		boolean emptyFilterText = containsNoFilterText((this.taskListView.getFilteredTree().getFilterControl()).getText());
+		boolean emptyFilterText = containsNoFilterText(this.taskListView.getFilteredTree().getFilterString());
 		for (AbstractTaskListFilter filter : this.taskListView.getFilters()) {
 			if (emptyFilterText) {
 				if (!filter.select(parent, object)) {

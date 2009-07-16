@@ -1051,7 +1051,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 	public void applyPresentation(AbstractTaskListPresentation presentation) {
 		try {
 			getViewer().getControl().setRedraw(false);
-			if (!filteredTree.getFilterControl().getText().equals("")) { //$NON-NLS-1$
+			if (!filteredTree.getFilterString().equals("")) { //$NON-NLS-1$
 				filteredTree.getFilterControl().setText(""); //$NON-NLS-1$
 			}
 			AbstractTaskListContentProvider contentProvider = presentation.getContentProvider(this);
@@ -1507,8 +1507,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 	private void updateFilterEnablement() {
 		boolean enabled = !isFocusedMode();
 		if (enabled) {
-			Text textControl = filteredTree.getFilterControl();
-			if (textControl != null && textControl.getText().length() > 0) {
+			String filterText = filteredTree.getFilterString();
+			if (filterText != null && filterText.length() > 0) {
 				enabled = false;
 			}
 		}
