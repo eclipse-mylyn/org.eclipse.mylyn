@@ -432,6 +432,10 @@
                 <iterate>
                    <adapt
                          type="org.eclipse.mylyn.tasks.core.ITaskAttachment">
+                      <test
+                            property="org.eclipse.mylyn.task.attachment.isContext"
+                            value="true">
+                      </test>
                    </adapt>
                 </iterate>
              </and>
