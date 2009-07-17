@@ -478,6 +478,13 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		taskDataNew[0] = TasksUiInternal.createTaskData(repository, taskMappingInit, taskMappingSelect, null);
 		ITask taskNew = TasksUiUtil.createOutgoingNewTask(taskDataNew[0].getConnectorKind(),
 				taskDataNew[0].getRepositoryUrl());
+
+		//set Color to a legal value if exists
+		TaskAttribute colorAttribute = taskDataNew[0].getRoot().getAttribute("cf_colors");
+		if (colorAttribute != null) {
+			colorAttribute.setValue("Green");
+		}
+
 		ITaskDataWorkingCopy workingCopy = TasksUi.getTaskDataManager().createWorkingCopy(taskNew, taskDataNew[0]);
 		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
 		workingCopy.save(changed, null);
