@@ -225,6 +225,8 @@ public class Messages extends NLS {
 
 	public static String TaskDeactivateAction_Deactivate;
 
+	public static String TaskEditorScheduleAction_Private_Scheduling;
+
 	public static String TaskListSortAction_Sort_;
 
 	public static String TaskSelectionDialog__matches;

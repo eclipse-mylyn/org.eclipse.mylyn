@@ -41,6 +41,7 @@ public class TaskEditorScheduleAction extends Action implements IMenuCreator {
 		this.task = task;
 		this.setImageDescriptor(CommonImages.SCHEDULE_DAY);
 		setMenuCreator(this);
+		setToolTipText(Messages.TaskEditorScheduleAction_Private_Scheduling);
 	}
 
 	@Override
