@@ -13,14 +13,13 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.ui.dialogs.UiLegendDialog;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.intro.IIntroManager;
 import org.eclipse.ui.intro.IIntroPart;
 
@@ -44,12 +43,15 @@ public class ShowTasksUiLegendAction implements IWorkbenchWindowActionDelegate, 
 		IIntroManager introMgr = wbWindow.getWorkbench().getIntroManager();
 		IIntroPart intro = introMgr.getIntro();
 		if (intro != null) {
-			introMgr.setIntroStandby(intro, true);
+			try {
+				introMgr.setIntroStandby(intro, true);
+			} catch (NullPointerException e) {
+				// bug 270351: ignore exception
+			}
 		}
 
 		TasksUiUtil.openTasksViewInActivePerspective();
-		Shell parentShell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-		UiLegendDialog uiLegendDialog = new UiLegendDialog(parentShell);
+		UiLegendDialog uiLegendDialog = new UiLegendDialog(WorkbenchUtil.getShell());
 		uiLegendDialog.open();
 	}
 
