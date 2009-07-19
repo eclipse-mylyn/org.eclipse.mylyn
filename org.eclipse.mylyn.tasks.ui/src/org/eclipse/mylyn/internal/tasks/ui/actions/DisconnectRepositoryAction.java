@@ -46,12 +46,13 @@ public class DisconnectRepositoryAction extends Action implements ISelectionChan
 		TasksUiPlugin.getRepositoryManager().notifyRepositorySettingsChanged(repository);
 	}
 
+	@Deprecated
 	public void selectionChanged(IAction action, ISelection selection) {
 	}
 
 	public void selectionChanged(SelectionChangedEvent event) {
 		ISelection selection = event.getSelection();
-		if (selection instanceof IStructuredSelection) {
+		if (selection instanceof IStructuredSelection && ((IStructuredSelection) selection).size() == 1) {
 			Object selectedObject = ((IStructuredSelection) selection).getFirstElement();
 			if (selectedObject instanceof TaskRepository) {
 				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
