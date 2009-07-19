@@ -11,21 +11,20 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
-import java.lang.reflect.InvocationTargetException;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
+import org.eclipse.mylyn.internal.provisional.commons.ui.ICoreRunnable;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
@@ -130,27 +129,16 @@ public class NewSubTaskAction extends BaseSelectionListenerAction implements IVi
 		final boolean[] result = new boolean[1];
 		IProgressService service = PlatformUI.getWorkbench().getProgressService();
 		try {
-			service.busyCursorWhile(new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					try {
-						result[0] = taskDataHandler.initializeSubTaskData(taskRepository, taskData, selectedTaskData,
-								new NullProgressMonitor());
-					} catch (CoreException e) {
-						throw new InvocationTargetException(e);
-					}
+			CommonUiUtil.run(service, new ICoreRunnable() {
+				public void run(IProgressMonitor monitor) throws CoreException {
+					result[0] = taskDataHandler.initializeSubTaskData(taskRepository, taskData, selectedTaskData,
+							monitor);
 				}
 			});
-		} catch (InvocationTargetException e) {
-			if (e.getCause() instanceof CoreException) {
-				TasksUiInternal.displayStatus(Messages.NewSubTaskAction_Unable_to_create_subtask,
-						((CoreException) e.getCause()).getStatus());
-			} else {
-				StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						Messages.NewSubTaskAction_Could_not_initialize_sub_task_data_for_task_ + selectedTask.getUrl(),
-						e));
-			}
+		} catch (CoreException e) {
+			TasksUiInternal.displayStatus(Messages.NewSubTaskAction_Unable_to_create_subtask, e.getStatus());
 			return null;
-		} catch (InterruptedException e) {
+		} catch (OperationCanceledException e) {
 			// canceled
 			return null;
 		}
