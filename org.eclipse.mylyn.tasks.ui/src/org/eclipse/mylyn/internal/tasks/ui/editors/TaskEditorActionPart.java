@@ -46,6 +46,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -154,15 +155,16 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 	private void createActionButtons(Composite buttonComposite, FormToolkit toolkit) {
 		//if (!getTaskEditorPage().needsSubmitButton()) {
 		submitButton = toolkit.createButton(buttonComposite, Messages.TaskEditorActionPart_Submit, SWT.NONE);
-		GridData submitButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-		submitButtonData.widthHint = 100;
 		submitButton.setImage(CommonImages.getImage(TasksUiImages.REPOSITORY_SUBMIT));
-		submitButton.setLayoutData(submitButtonData);
 		submitButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event e) {
 				getTaskEditorPage().doSubmit();
 			}
 		});
+		Point minSize = submitButton.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+		GridData submitButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+		submitButtonData.widthHint = Math.max(100, minSize.x);
+		submitButton.setLayoutData(submitButtonData);
 
 		setSubmitEnabled(true);
 
