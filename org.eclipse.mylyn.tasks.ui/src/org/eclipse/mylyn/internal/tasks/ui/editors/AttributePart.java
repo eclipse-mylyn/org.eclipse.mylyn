@@ -80,8 +80,8 @@ public class AttributePart extends AbstractLocalEditorPart {
 
 	@Override
 	public Control createControl(Composite parent, FormToolkit toolkit) {
-		int style = ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE
-				| ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT;
+		int style = ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE;
+//				| ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT;
 		if (getTask().getUrl() != null && getTask().getUrl().length() > 0) {
 			style |= ExpandableComposite.EXPANDED;
 		}

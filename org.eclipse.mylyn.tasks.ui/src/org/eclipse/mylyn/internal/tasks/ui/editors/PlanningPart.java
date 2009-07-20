@@ -32,7 +32,6 @@ import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.internal.tasks.ui.ScheduleDatePicker;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.actions.TaskEditorScheduleAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.PlatformUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.monitor.ui.MonitorUi;
@@ -551,11 +550,11 @@ public class PlanningPart extends AbstractLocalEditorPart {
 	}
 
 	private void fillToolbar(Composite parent) {
-		if (toolBarManager == null) {
-			toolBarManager = new ToolBarManager(SWT.FLAT | SWT.HORIZONTAL);
-			toolBarManager.add(new TaskEditorScheduleAction(getTask()));
-			toolBarManager.createControl(parent);
-		}
+//		if (toolBarManager == null) {
+//			toolBarManager = new ToolBarManager(SWT.FLAT | SWT.HORIZONTAL);
+//			toolBarManager.add(new TaskEditorScheduleAction(getTask()));
+//			toolBarManager.createControl(parent);
+//		}
 	}
 
 	public boolean needsNotes() {
