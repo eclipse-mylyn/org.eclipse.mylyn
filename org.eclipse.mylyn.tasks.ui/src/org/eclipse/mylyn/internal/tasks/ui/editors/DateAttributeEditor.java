@@ -106,7 +106,7 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 			toolkit.adapt(datePicker, false, false);
 
 			ImageHyperlink clearDeadlineDate = toolkit.createImageHyperlink(dateWithClearComposite, SWT.NONE);
-			clearDeadlineDate.setImage(CommonImages.getImage(CommonImages.REMOVE));
+			clearDeadlineDate.setImage(CommonImages.getImage(CommonImages.CLEAR));
 			clearDeadlineDate.setToolTipText(Messages.DateAttributeEditor_Clear);
 			clearDeadlineDate.addHyperlinkListener(new HyperlinkAdapter() {
 				@Override
