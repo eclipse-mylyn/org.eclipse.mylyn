@@ -38,6 +38,8 @@ import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Tests TaskListView's filtering mechanism.
@@ -189,7 +191,8 @@ public class TaskListUiTest extends TestCase {
 		int numListenersDuring = 0;
 		int numListenersAfter = 0;
 
-		TasksUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
+		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		assertTrue(activePage.closeAllEditors(false));
 
 		Set<ITaskListChangeListener> listeners = taskList.getChangeListeners();
 		numListenersBefore = listeners.size();
@@ -203,7 +206,7 @@ public class TaskListUiTest extends TestCase {
 		// each editor adds a listener for the editor and planning part
 		assertEquals(numListenersDuring, numListenersBefore + 4);
 
-		TasksUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
+		assertTrue(activePage.closeAllEditors(false));
 
 		listeners = taskList.getChangeListeners();
 		numListenersAfter = listeners.size();

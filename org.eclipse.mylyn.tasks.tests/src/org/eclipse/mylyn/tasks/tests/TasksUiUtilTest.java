@@ -66,7 +66,7 @@ public class TasksUiUtilTest extends TestCase {
 		assertEquals(cat1.getChildren().size(), 2);
 
 		activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		activePage.closeAllEditors(false);
+		assertTrue(activePage.closeAllEditors(false));
 		assertEquals(0, activePage.getEditorReferences().length);
 	}
 
@@ -77,8 +77,6 @@ public class TasksUiUtilTest extends TestCase {
 	}
 
 	public void testOpenTaskFromTask() {
-		TasksUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
-
 		TasksUiUtil.openTask(cat1task1);
 		assertEquals(1, activePage.getEditorReferences().length);
 		IEditorPart editor = activePage.getEditorReferences()[0].getEditor(true);
@@ -95,25 +93,28 @@ public class TasksUiUtilTest extends TestCase {
 	public void testOpenTaskFromString() {
 		TasksUiUtil.openTask((String) null);
 		assertEquals(1, activePage.getEditorReferences().length);
-		assertTrue(activePage.getEditorReferences()[0].getEditor(true) instanceof WebBrowserEditor);
+		IEditorPart editor = activePage.getEditorReferences()[0].getEditor(true);
+		assertEquals(WebBrowserEditor.class, editor.getClass());
 	}
 
 	public void testOpenUrl() {
 		TasksUiUtil.openUrl(null);
 		assertEquals(1, activePage.getEditorReferences().length);
 		IEditorPart editor = activePage.getEditorReferences()[0].getEditor(true);
-		assertTrue(editor instanceof WebBrowserEditor);
-		assertTrue(editor.getEditorInput() instanceof WebBrowserEditorInput);
+		assertEquals(WebBrowserEditor.class, editor.getClass());
+		assertEquals(WebBrowserEditorInput.class, editor.getEditorInput().getClass());
 		assertEquals(null, ((WebBrowserEditorInput) editor.getEditorInput()).getURL());
 
 		TasksUiUtil.openUrl("http://eclipse.org/mylyn");
 		assertEquals(2, activePage.getEditorReferences().length);
 		editor = activePage.getEditorReferences()[0].getEditor(true);
-		assertTrue(editor instanceof WebBrowserEditor);
+		assertEquals(WebBrowserEditor.class, editor.getClass());
+		assertEquals(WebBrowserEditorInput.class, editor.getEditorInput().getClass());
 		assertEquals(null, ((WebBrowserEditorInput) editor.getEditorInput()).getURL());
 
 		IEditorPart editor2 = activePage.getEditorReferences()[1].getEditor(true);
-		assertTrue(editor2 instanceof WebBrowserEditor);
+		assertEquals(WebBrowserEditor.class, editor2.getClass());
+		assertEquals(WebBrowserEditorInput.class, editor2.getEditorInput().getClass());
 		assertNotNull(((WebBrowserEditorInput) editor2.getEditorInput()).getURL());
 		assertEquals("http://eclipse.org/mylyn", ((WebBrowserEditorInput) editor2.getEditorInput()).getURL().toString());
 	}
@@ -123,8 +124,8 @@ public class TasksUiUtilTest extends TestCase {
 		TasksUiUtil.openUrl(null);
 		assertEquals(1, activePage.getEditorReferences().length);
 		IEditorPart editor = activePage.getEditorReferences()[0].getEditor(true);
-		assertTrue(editor instanceof WebBrowserEditor);
-		assertTrue(editor.getEditorInput() instanceof WebBrowserEditorInput);
+		assertEquals(WebBrowserEditor.class, editor.getClass());
+		assertEquals(WebBrowserEditorInput.class, editor.getEditorInput().getClass());
 		assertEquals(null, ((WebBrowserEditorInput) editor.getEditorInput()).getURL());
 		WebBrowserEditorInput input = ((WebBrowserEditorInput) editor.getEditorInput());
 		Field f = input.getClass().getDeclaredField("style");
@@ -135,7 +136,8 @@ public class TasksUiUtilTest extends TestCase {
 		TasksUiUtil.openUrl("http://eclipse.org/mylyn");
 		assertEquals(2, activePage.getEditorReferences().length);
 		editor = activePage.getEditorReferences()[0].getEditor(true);
-		assertTrue(editor instanceof WebBrowserEditor);
+		assertEquals(WebBrowserEditor.class, editor.getClass());
+		assertEquals(WebBrowserEditorInput.class, editor.getEditorInput().getClass());
 		assertEquals(null, ((WebBrowserEditorInput) editor.getEditorInput()).getURL());
 		input = ((WebBrowserEditorInput) editor.getEditorInput());
 		f = input.getClass().getDeclaredField("style");
@@ -144,7 +146,8 @@ public class TasksUiUtilTest extends TestCase {
 		assertFalse((style & TasksUiUtil.FLAG_NO_RICH_EDITOR) == 0);
 
 		IEditorPart editor2 = activePage.getEditorReferences()[1].getEditor(true);
-		assertTrue(editor2 instanceof WebBrowserEditor);
+		assertEquals(WebBrowserEditor.class, editor2.getClass());
+		assertEquals(WebBrowserEditorInput.class, editor2.getEditorInput().getClass());
 		assertNotNull(((WebBrowserEditorInput) editor2.getEditorInput()).getURL());
 		assertEquals("http://eclipse.org/mylyn", ((WebBrowserEditorInput) editor2.getEditorInput()).getURL().toString());
 		input = ((WebBrowserEditorInput) editor.getEditorInput());
@@ -157,7 +160,8 @@ public class TasksUiUtilTest extends TestCase {
 		TasksUiUtil.openTask("http://eclipse.org/mylyn/test");
 		assertEquals(3, activePage.getEditorReferences().length);
 		editor = activePage.getEditorReferences()[2].getEditor(true);
-		assertTrue(editor instanceof WebBrowserEditor);
+		assertEquals(WebBrowserEditor.class, editor.getClass());
+		assertEquals(WebBrowserEditorInput.class, editor.getEditorInput().getClass());
 		assertEquals("http://eclipse.org/mylyn/test", ((WebBrowserEditorInput) editor.getEditorInput()).getURL()
 				.toString());
 		input = ((WebBrowserEditorInput) editor.getEditorInput());
@@ -166,4 +170,5 @@ public class TasksUiUtilTest extends TestCase {
 		style = (Integer) f.get(input);
 		assertTrue((style & TasksUiUtil.FLAG_NO_RICH_EDITOR) == 0);
 	}
+
 }
