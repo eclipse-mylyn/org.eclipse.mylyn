@@ -103,8 +103,6 @@ public class RichTextEditor {
 
 	private SourceViewer defaultViewer;
 
-	private final Document document;
-
 	private Composite editorComposite;
 
 	private StackLayout editorLayout;
@@ -144,7 +142,6 @@ public class RichTextEditor {
 		this.contextService = contextService;
 		this.extension = extension;
 		this.text = ""; //$NON-NLS-1$
-		this.document = new Document();
 		this.viewSourceAction = new ViewSourceAction();
 		setMode(Mode.DEFAULT);
 	}
@@ -243,11 +240,11 @@ public class RichTextEditor {
 						}
 					});
 				}
-				configure(editorViewer, document, isReadOnly());
+				configure(editorViewer, new Document(getText()), isReadOnly());
 				show(editorViewer);
 			} else {
 				defaultViewer = createDefaultEditor(editorComposite, style);
-				configure(defaultViewer, document, isReadOnly());
+				configure(defaultViewer, new Document(getText()), isReadOnly());
 				show(defaultViewer);
 			}
 
@@ -258,7 +255,7 @@ public class RichTextEditor {
 			viewSourceAction.setEnabled(true);
 		} else {
 			defaultViewer = createDefaultEditor(parent, style);
-			configure(defaultViewer, document, isReadOnly());
+			configure(defaultViewer, new Document(getText()), isReadOnly());
 			setControl(defaultViewer.getControl());
 
 			viewSourceAction.setEnabled(false);
@@ -295,7 +292,7 @@ public class RichTextEditor {
 	public SourceViewer getDefaultViewer() {
 		if (defaultViewer == null) {
 			defaultViewer = createDefaultEditor(editorComposite, style);
-			configure(defaultViewer, document, isReadOnly());
+			configure(defaultViewer, new Document(getText()), isReadOnly());
 
 			// fixed font size
 			defaultViewer.getTextWidget().setFont(JFaceResources.getFontRegistry().get(JFaceResources.TEXT_FONT));
@@ -335,13 +332,10 @@ public class RichTextEditor {
 				previewViewerStyle |= SWT.V_SCROLL;
 			}
 			previewViewer = extension.createViewer(repository, editorComposite, previewViewerStyle);
-			configure(previewViewer, new Document(editorViewer.getDocument().get()), true);
+			configure(previewViewer, new Document(getText()), true);
 			// adapt maximize action
 			previewViewer.getControl().setData(EditorUtil.KEY_TOGGLE_TO_MAXIMIZE_ACTION,
 					editorViewer.getControl().getData(EditorUtil.KEY_TOGGLE_TO_MAXIMIZE_ACTION));
-		} else {
-			// update content
-			previewViewer.setDocument(new Document(editorViewer.getDocument().get()));
 		}
 		return previewViewer;
 	}
@@ -490,7 +484,10 @@ public class RichTextEditor {
 
 	public void setText(String value) {
 		this.text = value;
-		document.set(value);
+		SourceViewer viewer = getViewer();
+		if (viewer != null) {
+			viewer.getDocument().set(value);
+		}
 	}
 
 	/**
@@ -501,7 +498,6 @@ public class RichTextEditor {
 		if (editorComposite == null) {
 			return;
 		}
-
 		editorLayout.topControl = control;
 		if (editorComposite.getParent().getLayout() instanceof FillWidthLayout) {
 			((FillWidthLayout) editorComposite.getParent().getLayout()).flush();
@@ -514,6 +510,8 @@ public class RichTextEditor {
 	 * Brings <code>viewer</code> to top.
 	 */
 	private void show(SourceViewer viewer) {
+		// WikiText modifies the document therefore, set a new document every time a viewer is changed to synchronize content between viewers 
+		viewer.setDocument(new Document(getText()));
 		show(viewer.getControl());
 	}
 
