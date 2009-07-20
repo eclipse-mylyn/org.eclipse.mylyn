@@ -59,6 +59,11 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 			return;
 		}
 
+		editor.showEditor();
+		if (togglePreviewAction != null) {
+			togglePreviewAction.setChecked(false);
+		}
+
 		StringBuilder strBuilder = new StringBuilder();
 		String oldText = editor.getViewer().getDocument().get();
 		if (strBuilder.length() != 0) {
@@ -73,6 +78,7 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 			getTaskEditorPage().getModel().attributeChanged(attribute);
 		}
 		editor.getViewer().getTextWidget().setCaretOffset(strBuilder.length());
+		editor.getViewer().getTextWidget().showSelection();
 	}
 
 	public int getSectionStyle() {
