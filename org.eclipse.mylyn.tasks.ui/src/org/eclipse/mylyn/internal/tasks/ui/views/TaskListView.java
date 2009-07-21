@@ -1205,7 +1205,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		manager.add(sortDialogAction);
 		manager.add(filterOnPriorityAction);
 		manager.add(filterCompleteTask);
-		//manager.add(filterArchiveCategory);
 		manager.add(filterSubTasksAction);
 
 		manager.add(new Separator(ID_SEPARATOR_TASKS));
@@ -1228,6 +1227,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		manager.add(newTaskAction);
 		manager.add(presentationDropDownSelectionAction);
 		manager.add(new Separator());
+		manager.add(filterCompleteTask);
 		manager.add(collapseAll);
 		manager.add(new GroupMarker(ID_SEPARATOR_CONTEXT));
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
@@ -1539,9 +1539,11 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		IToolBarManager manager = getViewSite().getActionBars().getToolBarManager();
 
 		if (focusedMode && isAutoExpandMode()) {
+			manager.remove(FilterCompletedTasksAction.ID);
 			manager.remove(CollapseAllAction.ID);
 		} else if (manager.find(CollapseAllAction.ID) == null) {
 			manager.prependToGroup(ID_SEPARATOR_CONTEXT, collapseAll);
+			manager.prependToGroup(ID_SEPARATOR_CONTEXT, filterCompleteTask);
 		}
 		manager.update(false);
 		updateFilterEnablement();
