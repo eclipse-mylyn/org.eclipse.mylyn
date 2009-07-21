@@ -1824,6 +1824,10 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	}
 
 	private void updateConfiguration(final boolean force) {
+		String[] selectedProducts = product.getSelection();
+		if (selectedProducts != null && selectedProducts.length == 0) {
+			selectedProducts = null;
+		}
 		if (getTaskRepository() != null) {
 			IRunnableWithProgress updateRunnable = new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
@@ -1893,7 +1897,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				return;
 			}
 
-			updateAttributesFromConfiguration(null);
+			updateAttributesFromConfiguration(selectedProducts);
 		}
 	}
 
