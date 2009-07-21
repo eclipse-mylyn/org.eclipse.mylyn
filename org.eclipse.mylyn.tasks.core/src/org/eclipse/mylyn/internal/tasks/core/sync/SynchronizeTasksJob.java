@@ -27,6 +27,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.mylyn.commons.core.DelegatingProgressMonitor;
+import org.eclipse.mylyn.commons.core.IDelegatingProgressMonitor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
@@ -79,6 +81,8 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 
 	private final List<IStatus> statuses;
 
+	private final IDelegatingProgressMonitor monitor;
+
 	public SynchronizeTasksJob(TaskList taskList, TaskDataManager synchronizationManager, IRepositoryModel tasksModel,
 			AbstractRepositoryConnector connector, TaskRepository taskRepository, Set<ITask> tasks) {
 		this(taskList, synchronizationManager, tasksModel, connector, (IRepositoryManager) null, tasks);
@@ -96,10 +100,12 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 		this.allTasks = tasks;
 		this.statuses = new ArrayList<IStatus>();
 		setRule(new MutexSchedulingRule());
+		this.monitor = new DelegatingProgressMonitor();
 	}
 
 	@Override
-	public IStatus run(IProgressMonitor monitor) {
+	public IStatus run(IProgressMonitor jobMonitor) {
+		monitor.attach(jobMonitor);
 		try {
 			if (taskRepository == null) {
 				try {
@@ -147,7 +153,8 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 		synchronizedTaskRelations(monitor, relationsByTaskId);
 	}
 
-	public void synchronizedTaskRelations(IProgressMonitor monitor, Map<String, TaskRelation[]> relationsByTaskId) {
+	public void synchronizedTaskRelations(IProgressMonitor jobMonitor, Map<String, TaskRelation[]> relationsByTaskId) {
+		monitor.attach(jobMonitor);
 		updateRelations = false;
 		for (String taskId : relationsByTaskId.keySet()) {
 			ITask parentTask = taskList.getTask(taskRepository.getRepositoryUrl(), taskId);
@@ -327,4 +334,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 		return Collections.unmodifiableCollection(statuses);
 	}
 
+	public IDelegatingProgressMonitor getMonitor() {
+		return monitor;
+	}
 }

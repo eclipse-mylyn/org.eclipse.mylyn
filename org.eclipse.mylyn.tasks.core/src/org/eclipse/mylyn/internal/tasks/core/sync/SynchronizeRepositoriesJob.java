@@ -25,6 +25,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.mylyn.commons.core.DelegatingProgressMonitor;
+import org.eclipse.mylyn.commons.core.IDelegatingProgressMonitor;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
@@ -53,6 +55,8 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 
 	private final IRepositoryModel tasksModel;
 
+	private final IDelegatingProgressMonitor monitor;
+
 	public SynchronizeRepositoriesJob(TaskList taskList, TaskDataManager taskDataManager, IRepositoryModel tasksModel,
 			IRepositoryManager repositoryManager) {
 		super(Messages.SynchronizeRepositoriesJob_Synchronizing_Task_List);
@@ -60,6 +64,7 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 		this.taskDataManager = taskDataManager;
 		this.tasksModel = tasksModel;
 		this.repositoryManager = repositoryManager;
+		this.monitor = new DelegatingProgressMonitor();
 	}
 
 	public Collection<TaskRepository> getRepositories() {
@@ -75,7 +80,8 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 	}
 
 	@Override
-	public IStatus run(IProgressMonitor monitor) {
+	public IStatus run(IProgressMonitor jobMonitor) {
+		monitor.attach(jobMonitor);
 		// get the current list of repositories
 		Set<TaskRepository> repositories = this.repositories;
 		if (repositories == null) {
@@ -181,5 +187,9 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 		} finally {
 			monitor.done();
 		}
+	}
+
+	public IDelegatingProgressMonitor getMonitor() {
+		return monitor;
 	}
 }
