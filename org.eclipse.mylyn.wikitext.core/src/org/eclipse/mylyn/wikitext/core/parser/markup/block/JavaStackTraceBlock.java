@@ -45,10 +45,11 @@ public class JavaStackTraceBlock extends Block {
 
 	@Override
 	public boolean canStart(String line, int lineOffset) {
-		if (lineOffset == 0 && STACK_TRACE_PATTERN.matcher(line).matches()) {
-			blockLineCount = 0;
-			return true;
-		}
+		// XXX disabled due to bug 283629 
+		//		if (lineOffset == 0 && STACK_TRACE_PATTERN.matcher(line).matches()) {
+//			blockLineCount = 0;
+//			return true;
+//		}
 		return false;
 	}
 
