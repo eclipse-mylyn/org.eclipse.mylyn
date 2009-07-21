@@ -35,6 +35,8 @@ public class AllTasksTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.tasks.tests");
+		suite.addTestSuite(TasksUiUtilTest.class);
+		suite.addTestSuite(TaskListUiTest.class);
 		suite.addTestSuite(TaskRepositoryTest.class);
 		suite.addTestSuite(LinkProviderTest.class);
 		suite.addTestSuite(TaskActivationActionTest.class);
@@ -55,9 +57,7 @@ public class AllTasksTests {
 		suite.addTestSuite(TaskListSorterTest.class);
 		suite.addTestSuite(TaskKeyComparatorTest.class);
 		suite.addTestSuite(TaskTest.class);
-		suite.addTestSuite(TaskListUiTest.class);
 		suite.addTestSuite(TaskListDropAdapterTest.class);
-		suite.addTestSuite(TasksUiUtilTest.class);
 		suite.addTestSuite(TaskDataExportTest.class);
 		suite.addTestSuite(ScheduledPresentationTest.class);
 		suite.addTestSuite(TaskActivityTimingTest.class);
