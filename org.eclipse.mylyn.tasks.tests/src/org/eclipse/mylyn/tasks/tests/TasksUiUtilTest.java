@@ -50,6 +50,7 @@ public class TasksUiUtilTest extends TestCase {
 		taskList = TasksUiPlugin.getTaskList();
 
 		TaskTestUtil.resetTaskListAndRepositories();
+		TasksUiPlugin.getDefault().getLocalTaskRepository();
 
 		cat1 = new TaskCategory("First Category");
 		taskList.addCategory(cat1);

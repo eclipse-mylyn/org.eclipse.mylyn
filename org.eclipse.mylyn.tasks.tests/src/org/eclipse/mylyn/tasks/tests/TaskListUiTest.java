@@ -91,6 +91,7 @@ public class TaskListUiTest extends TestCase {
 
 		// make sure no unmatched folders exist
 		TaskTestUtil.resetTaskListAndRepositories();
+		TasksUiPlugin.getDefault().getLocalTaskRepository();
 		TasksUiUtil.openTasksViewInActivePerspective();
 
 		cat1 = new TaskCategory("First Category");
