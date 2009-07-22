@@ -153,8 +153,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 		synchronizedTaskRelations(monitor, relationsByTaskId);
 	}
 
-	public void synchronizedTaskRelations(IProgressMonitor jobMonitor, Map<String, TaskRelation[]> relationsByTaskId) {
-		monitor.attach(jobMonitor);
+	public void synchronizedTaskRelations(IProgressMonitor monitor, Map<String, TaskRelation[]> relationsByTaskId) {
 		updateRelations = false;
 		for (String taskId : relationsByTaskId.keySet()) {
 			ITask parentTask = taskList.getTask(taskRepository.getRepositoryUrl(), taskId);
