@@ -39,29 +39,15 @@ public class TaskEditorScheduleAction extends Action implements IMenuCreator {
 
 	public TaskEditorScheduleAction(ITask task) {
 		this.task = task;
-		updateImageDescriptor(task);
+		this.setImageDescriptor(CommonImages.SCHEDULE_DAY);
 		setMenuCreator(this);
 		setToolTipText(Messages.TaskEditorScheduleAction_Private_Scheduling);
-		scheduleMenuContributor.setScheduleAction(this);
 	}
 
 	@Override
 	public void run() {
-		if (((AbstractTask) task).getScheduledForDate() == null) {
-			TasksUiPlugin.getTaskActivityManager().setScheduledFor((AbstractTask) task,
-					TaskActivityUtil.getCurrentWeek().getToday());
-		} else {
-			TasksUiPlugin.getTaskActivityManager().setScheduledFor((AbstractTask) task, null);
-		}
-		updateImageDescriptor(task);
-	}
-
-	public void updateImageDescriptor(ITask task) {
-		if (task instanceof AbstractTask && ((AbstractTask) task).getScheduledForDate() != null) {
-			setImageDescriptor(CommonImages.SCHEDULE_DAY);
-		} else {
-			setImageDescriptor(CommonImages.SCHEDULE);
-		}
+		TasksUiPlugin.getTaskActivityManager().setScheduledFor((AbstractTask) task,
+				TaskActivityUtil.getCurrentWeek().getToday());
 	}
 
 	public Menu getMenu(Control parent) {

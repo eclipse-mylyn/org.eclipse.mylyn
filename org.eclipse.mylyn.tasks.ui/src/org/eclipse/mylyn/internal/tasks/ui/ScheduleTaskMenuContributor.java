@@ -27,7 +27,6 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.DateRange;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.WeekDateRange;
-import org.eclipse.mylyn.internal.tasks.ui.actions.TaskEditorScheduleAction;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.ui.PlatformUI;
@@ -39,8 +38,6 @@ import org.eclipse.ui.PlatformUI;
 public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 
 	private AbstractTask singleTaskSelection;
-
-	private TaskEditorScheduleAction scheduleAction;
 
 	private final List<IRepositoryElement> taskListElementsToSchedule = new ArrayList<IRepositoryElement>();
 
@@ -115,7 +112,9 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 		Action action = createDateSelectionAction(week, CommonImages.SCHEDULE_WEEK);
 		subMenuManager.add(action);
 		// Special case: This Week holds previous weeks' scheduled tasks
-		if (isThisWeek(singleTaskSelection)) {
+		if (singleTaskSelection != null && singleTaskSelection.getScheduledForDate() != null
+				&& singleTaskSelection.getScheduledForDate() instanceof WeekDateRange
+				&& singleTaskSelection.getScheduledForDate().isBefore(week)) {
 			// Tasks scheduled for 'someday' float into this week
 			action.setChecked(true);
 		}
@@ -198,12 +197,6 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 		return subMenuManager;
 	}
 
-	private boolean isThisWeek(AbstractTask task) {
-		return task != null && task.getScheduledForDate() != null
-				&& task.getScheduledForDate() instanceof WeekDateRange
-				&& task.getScheduledForDate().isBefore(TaskActivityUtil.getCurrentWeek());
-	}
-
 	private boolean selectionIncludesCompletedTasks() {
 		if (singleTaskSelection instanceof AbstractTask) {
 			if ((singleTaskSelection).isCompleted()) {
@@ -261,9 +254,6 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 				} else {
 					TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, null);
 				}
-				if (scheduleAction != null && singleTaskSelection != null) {
-					scheduleAction.updateImageDescriptor(singleTaskSelection);
-				}
 			}
 		}
 	}
@@ -279,7 +269,4 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 		return TasksUiPlugin.getTaskActivityManager().isPastReminder(task);
 	}
 
-	public void setScheduleAction(TaskEditorScheduleAction scheduleAction) {
-		this.scheduleAction = scheduleAction;
-	}
 }
