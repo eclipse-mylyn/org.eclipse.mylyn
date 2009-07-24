@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Tasktop Technologies - initial API and implementation
+ *     Steffen Pingel - initial API and implementation
  *     Jorrit Schippers - fix for bug 254862
  *******************************************************************************/
 
