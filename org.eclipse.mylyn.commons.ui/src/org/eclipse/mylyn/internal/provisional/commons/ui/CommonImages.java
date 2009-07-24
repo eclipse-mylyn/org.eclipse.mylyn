@@ -75,8 +75,6 @@ public class CommonImages {
 
 	public static final ImageDescriptor CALENDAR_SMALL = create(T_OBJ, "calendar-small.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor SCHEDULE = create(T_TOOL, "schedule.png"); //$NON-NLS-1$
-
 	public static final ImageDescriptor SCHEDULE_DAY = create(T_TOOL, "schedule-day.png"); //$NON-NLS-1$
 
 	public static final ImageDescriptor SCHEDULE_WEEK = create(T_TOOL, "schedule-week.png"); //$NON-NLS-1$
