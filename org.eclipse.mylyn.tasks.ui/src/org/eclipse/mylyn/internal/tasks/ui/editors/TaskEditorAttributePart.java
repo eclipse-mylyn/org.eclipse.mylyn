@@ -163,6 +163,21 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 		setSection(toolkit, section);
 	}
 
+	@Override
+	protected String getInfoOverlayText() {
+		TaskAttribute product = getModel().getTaskData().getRoot().getMappedAttribute(TaskAttribute.PRODUCT);
+		TaskAttribute component = getModel().getTaskData().getRoot().getMappedAttribute(TaskAttribute.COMPONENT);
+		if (product != null && component != null) {
+			return product.getValue() + " / " + component.getValue(); //$NON-NLS-1$
+		} else if (product != null) {
+			return product.getValue();
+		} else if (component != null) {
+			return component.getValue();
+		} else {
+			return null;
+		}
+	}
+
 	/**
 	 * Integrator requested the ability to control whether the attributes section is expanded on creation.
 	 */
