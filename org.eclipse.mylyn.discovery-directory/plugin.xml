@@ -51,7 +51,7 @@
             license="%connectorDescriptor.license.bugzilla"
             name="%connectorDescriptor.name.bugzilla"
             provider="%connectorDescriptor.provider.bugzilla"
-            siteUrl="http://download.eclipse.org/tools/mylyn/update/weekly/e3.4">
+            siteUrl="http://download.eclipse.org/tools/mylyn/update/e3.4">
          <icon
                image32="images/bugzilla32.png">
          </icon>
@@ -71,7 +71,7 @@
             license="%connectorDescriptor.license.trac"
             name="%connectorDescriptor.name.trac"
             provider="%connectorDescriptor.provider.trac"
-            siteUrl="http://download.eclipse.org/tools/mylyn/update/weekly/extras">
+            siteUrl="http://download.eclipse.org/tools/mylyn/update/extras">
          <icon
                image32="images/trac32.png"
                image64="images/trac64.png">
@@ -132,7 +132,7 @@
             license="EPL"
             name="Atlassian JIRA"
             provider="Eclipse Mylyn"
-            siteUrl="http://download.eclipse.org/tools/mylyn/update/weekly/extras">
+            siteUrl="http://download.eclipse.org/tools/mylyn/update/extras">
          <icon
                image32="images/jira32.png">
          </icon>
