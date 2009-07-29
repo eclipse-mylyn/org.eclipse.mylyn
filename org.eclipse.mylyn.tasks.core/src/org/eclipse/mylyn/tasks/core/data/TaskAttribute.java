@@ -452,6 +452,9 @@ public final class TaskAttribute {
 		return taskData;
 	}
 
+	/**
+	 * @return empty String if not available
+	 */
 	public String getValue() {
 		if (values.size() > 0) {
 			return values.get(0);

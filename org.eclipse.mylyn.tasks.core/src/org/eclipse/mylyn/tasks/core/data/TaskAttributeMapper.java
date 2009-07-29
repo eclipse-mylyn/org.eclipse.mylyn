@@ -174,6 +174,9 @@ public class TaskAttributeMapper {
 		return taskRepository;
 	}
 
+	/**
+	 * @return empty String if not available
+	 */
 	public String getValue(TaskAttribute taskAttribute) {
 		return taskAttribute.getValue();
 	}

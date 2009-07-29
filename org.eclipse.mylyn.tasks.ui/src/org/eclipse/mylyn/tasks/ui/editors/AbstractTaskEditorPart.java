@@ -23,7 +23,11 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.AbstractFormPart;
+import org.eclipse.ui.forms.IFormColors;
+import org.eclipse.ui.forms.events.ExpansionAdapter;
+import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
@@ -138,9 +142,11 @@ public abstract class AbstractTaskEditorPart extends AbstractFormPart {
 				Composite toolbarComposite = toolkit.createComposite(section);
 				toolbarComposite.setBackground(null);
 				RowLayout rowLayout = new RowLayout();
-				rowLayout.marginTop = 0;
+				rowLayout.marginTop = 2;
 				rowLayout.marginBottom = 0;
 				toolbarComposite.setLayout(rowLayout);
+
+				createInfoOverlay(toolbarComposite, section, toolkit);
 
 				toolBarManager.createControl(toolbarComposite);
 				section.clientVerticalSpacing = 0;
@@ -149,6 +155,39 @@ public abstract class AbstractTaskEditorPart extends AbstractFormPart {
 			}
 		}
 		setControl(section);
+	}
+
+	/**
+	 * Clients can implement to provide attribute overlay text
+	 * 
+	 * @param section
+	 */
+	private void createInfoOverlay(Composite composite, Section section, FormToolkit toolkit) {
+		String text = getInfoOverlayText();
+		if (text == null) {
+			return;
+		}
+
+		final Label label = toolkit.createLabel(composite, text);
+		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+		label.setBackground(null);
+		label.setVisible(!section.isExpanded());
+
+		section.addExpansionListener(new ExpansionAdapter() {
+			@Override
+			public void expansionStateChanging(ExpansionEvent e) {
+				label.setVisible(!e.getState());
+			}
+		});
+	}
+
+	/**
+	 * Clients can override to show summary information for the part.
+	 * 
+	 * @since 3.3
+	 */
+	protected String getInfoOverlayText() {
+		return null;
 	}
 
 	protected boolean setSelection(ISelection selection) {
