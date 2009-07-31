@@ -64,6 +64,8 @@ public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 
 	private Font textFont = null;
 
+	private String previousFilterText;
+
 	/**
 	 * XXX: using reflection to gain access
 	 * 
@@ -229,13 +231,20 @@ public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 		// It is necessary to correctly set the private narrowingDown flag in the super class. 
 		// Note that the scheduling of the refresh job that is done in the super class will be overridden 
 		// by the call to refreshPolicy.textChanged().
+		String text = getFilterString();
+		if (text == null || text.equals(previousFilterText)) {
+			return;
+		}
 		super.textChanged();
+
+		previousFilterText = text;
+
 		if (refreshPolicy != null) {
-			if (LABEL_FIND.equals(getFilterString())) {
+			if (LABEL_FIND.equals(text)) {
 				clearText();
 				refreshPolicy.textChanged(""); //$NON-NLS-1$
 			} else {
-				refreshPolicy.textChanged(getFilterString());
+				refreshPolicy.textChanged(text);
 			}
 		}
 		// bug 165353 work-around for premature return at FilteredTree.java:374
