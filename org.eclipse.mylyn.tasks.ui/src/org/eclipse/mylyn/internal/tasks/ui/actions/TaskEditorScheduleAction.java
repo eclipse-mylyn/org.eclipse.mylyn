@@ -47,8 +47,12 @@ public class TaskEditorScheduleAction extends Action implements IMenuCreator {
 
 	@Override
 	public void run() {
-		TasksUiPlugin.getTaskActivityManager().setScheduledFor((AbstractTask) task,
-				TaskActivityUtil.getCurrentWeek().getToday());
+		if (((AbstractTask) task).getScheduledForDate() == null) {
+			TasksUiPlugin.getTaskActivityManager().setScheduledFor((AbstractTask) task,
+					TaskActivityUtil.getCurrentWeek().getToday());
+		} else {
+			TasksUiPlugin.getTaskActivityManager().setScheduledFor((AbstractTask) task, null);
+		}
 		updateImageDescriptor(task);
 	}
 
