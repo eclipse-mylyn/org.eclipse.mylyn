@@ -577,7 +577,7 @@ public class BugzillaClient {
 										} else {
 											throw new CoreException(
 													new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN,
-															"Unable to retrieve repository configuration. Ensure credentials are valid.")); //$NON-NLS-1$
+															"No products found in repository configuration. Ensure credentials are valid.")); //$NON-NLS-1$
 										}
 									}
 								}
