@@ -170,11 +170,11 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 
 		String productLabel = ""; //$NON-NLS-1$
 		if (product != null) {
-			productLabel = getModel().getTaskData().getAttributeMapper().getValue(product);
+			productLabel = getModel().getTaskData().getAttributeMapper().getValueLabel(product);
 		}
 		String componentLabel = ""; //$NON-NLS-1$
 		if (component != null) {
-			componentLabel = getModel().getTaskData().getAttributeMapper().getValue(component);
+			componentLabel = getModel().getTaskData().getAttributeMapper().getValueLabel(component);
 		}
 
 		if (!"".equals(productLabel) && !"".equals(componentLabel)) { //$NON-NLS-1$//$NON-NLS-2$
