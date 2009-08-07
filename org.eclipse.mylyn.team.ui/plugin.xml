@@ -160,11 +160,11 @@
              recognizedKeyword="repository.kind"/>
        <templateVariable
              class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$RepositoryUrl"
-             description="%CommitTemplateVariables.RepositoryUrl.description.2"
+             description="%CommitTemplateVariables.RepositoryUrl.description"
              recognizedKeyword="repository.url"/>
        <templateVariable
              class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskAssignee"
-             description="%CommitTemplateVariables.TaskAssignee.description.3"
+             description="%CommitTemplateVariables.TaskAssignee.description"
              recognizedKeyword="task.assignee"/>
        <templateVariable
              class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskCc"
