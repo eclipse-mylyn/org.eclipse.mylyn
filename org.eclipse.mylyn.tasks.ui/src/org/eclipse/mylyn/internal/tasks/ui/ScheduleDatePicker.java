@@ -11,8 +11,6 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
-import com.ibm.icu.text.DateFormat;
-import com.ibm.icu.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -44,8 +42,6 @@ public class ScheduleDatePicker extends Composite {
 	private Button pickButton = null;
 
 	private final List<SelectionListener> pickerListeners = new LinkedList<SelectionListener>();
-
-	private final SimpleDateFormat simpleDateFormat = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.MEDIUM);
 
 	private final String initialText = DatePicker.LABEL_CHOOSE;
 
@@ -88,8 +84,8 @@ public class ScheduleDatePicker extends Composite {
 		tasks.add(task);
 	}
 
+	@Deprecated
 	public void setDatePattern(String pattern) {
-		simpleDateFormat.applyPattern(pattern);
 	}
 
 	private void initialize(int style) {
