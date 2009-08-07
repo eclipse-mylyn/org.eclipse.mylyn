@@ -40,7 +40,7 @@ public class TaskEditorBloatMonitor extends AbstractEditorTracker {
 		List<IEditorReference> toClose = new ArrayList<IEditorReference>();
 		int totalTaskEditors = 0;
 		for (IEditorReference editorReference : page.getEditorReferences()) {
-			if (editorReference.getId().equals(TaskEditor.ID_EDITOR)) {
+			if (TaskEditor.ID_EDITOR.equals(editorReference.getId())) {
 				totalTaskEditors++;
 			}
 
@@ -49,7 +49,7 @@ public class TaskEditorBloatMonitor extends AbstractEditorTracker {
 		if (totalTaskEditors > MAX_EDITORS) {
 			for (IEditorReference editorReference : page.getEditorReferences()) {
 				try {
-					if (editorReference.getId().equals(TaskEditor.ID_EDITOR)) {
+					if (TaskEditor.ID_EDITOR.equals(editorReference.getId())) {
 						TaskEditorInput taskEditorInput = (TaskEditorInput) editorReference.getEditorInput();
 						TaskEditor taskEditor = (TaskEditor) editorReference.getEditor(false);
 						if (taskEditor == null) {
