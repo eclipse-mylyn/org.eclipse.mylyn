@@ -24,6 +24,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
@@ -41,6 +42,7 @@ import org.eclipse.mylyn.internal.tasks.ui.AddExistingTaskJob;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenTaskSearchAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenWithBrowserAction;
 import org.eclipse.mylyn.internal.tasks.ui.search.SearchResultTreeContentProvider.GroupBy;
+import org.eclipse.mylyn.internal.tasks.ui.util.TaskDragSourceListener;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListToolTip;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
@@ -56,6 +58,9 @@ import org.eclipse.search.ui.ISearchResult;
 import org.eclipse.search.ui.text.AbstractTextSearchViewPage;
 import org.eclipse.search.ui.text.Match;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.FileTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
@@ -222,6 +227,12 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 				searchResultProvider, viewer), PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator());
 		viewer.setLabelProvider(labelProvider);
 		viewer.setSorter(searchResultSorter);
+
+		Transfer[] dragTypes = new Transfer[] { LocalSelectionTransfer.getTransfer(), FileTransfer.getInstance() };
+
+		getViewer().addDragSupport(DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK, dragTypes,
+				new TaskDragSourceListener(getViewer()));
+
 		sortByDialogAction = new SearchResultSortAction(this);
 
 		toolTip = new TaskListToolTip(viewer.getControl());
