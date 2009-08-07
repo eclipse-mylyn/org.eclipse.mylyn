@@ -63,7 +63,6 @@ plugin@org.eclipse.mylyn.team.ui=e_3_5_m_3_2_x,:pserver:anonymous@dev.eclipse.or
 plugin@org.eclipse.mylyn.trac.core=e_3_5_m_3_2_x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.trac.core
 plugin@org.eclipse.mylyn.trac.ui=e_3_5_m_3_2_x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.trac.ui
 plugin@org.eclipse.mylyn.trac.wiki=e_3_5_m_3_2_x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/sandbox/org.eclipse.mylyn.trac.wiki
-plugin@org.eclipse.mylyn.web.ui=e_3_5_m_3_2_x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.web.ui
 plugin@org.eclipse.mylyn.web.tasks=e_3_5_m_3_2_x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.web.tasks
 plugin@org.eclipse.mylyn.wikitext.confluence.core=e_3_5_m_3_2_x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.wikitext.confluence.core
 plugin@org.eclipse.mylyn.wikitext.confluence.ui=e_3_5_m_3_2_x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.wikitext.confluence.ui
