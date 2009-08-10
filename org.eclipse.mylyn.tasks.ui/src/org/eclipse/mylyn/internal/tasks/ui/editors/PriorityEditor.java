@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Tasktop Technologies and others.
+ * Copyright (c) 2009 Tasktop Technologies and others. 
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Maarten Meijer - fix for bug 284559
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
@@ -127,20 +128,21 @@ public class PriorityEditor {
 	}
 
 	private ImageDescriptor getLargeImageDescriptor(PriorityLevel priorityLevel) {
-		switch (priorityLevel) {
-		case P1:
-			return CommonImages.PRIORITY_1_LARGE;
-		case P2:
-			return CommonImages.PRIORITY_2_LARGE;
-		case P3:
-			return CommonImages.PRIORITY_3_LARGE;
-		case P4:
-			return CommonImages.PRIORITY_4_LARGE;
-		case P5:
-			return CommonImages.PRIORITY_5_LARGE;
-		default:
-			return CommonImages.PRIORITY_3_LARGE;
+		if (priorityLevel != null) {
+			switch (priorityLevel) {
+			case P1:
+				return CommonImages.PRIORITY_1_LARGE;
+			case P2:
+				return CommonImages.PRIORITY_2_LARGE;
+			case P3:
+				return CommonImages.PRIORITY_3_LARGE;
+			case P4:
+				return CommonImages.PRIORITY_4_LARGE;
+			case P5:
+				return CommonImages.PRIORITY_5_LARGE;
+			}
 		}
+		return CommonImages.PRIORITY_3_LARGE;
 	}
 
 	private Image getSmallImage(String value) {
