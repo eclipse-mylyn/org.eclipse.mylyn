@@ -44,6 +44,31 @@
             name="Test XML content type"
             priority="normal">
       </content-type>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.tasks.bugs.support">
+      <provider
+            categoryId="org.eclipse.mylyn.tasks.tests.category1"
+            id="org.eclipse.mylyn.tasks.tests.provider1"
+            name="Test Provider">
+      </provider>
+      <category
+            id="org.eclipse.mylyn.tasks.tests.category1"
+            name="Test Category">
+      </category>
+      <product
+            id="org.eclipse.mylyn.tasks.tests.product1"
+            name="Test Product"
+            providerId="org.eclipse.mylyn.tasks.tests.provider1">
+      </product>
+      <mapping
+            namespace="org.eclipse.mylyn.tasks.tests"
+            productId="org.eclipse.mylyn.tasks.tests.product1">
+         <repository
+               kind="bugzilla"
+               url="https://bugs.eclipse.org/bugs">
+         </repository>
+      </mapping>
    </extension>  
    
 </plugin>

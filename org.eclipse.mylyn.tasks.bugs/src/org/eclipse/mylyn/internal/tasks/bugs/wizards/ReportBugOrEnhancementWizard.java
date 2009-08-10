@@ -88,6 +88,8 @@ public class ReportBugOrEnhancementWizard extends Wizard {
 
 	}
 
+	private SupportContentProvider contentProvider;
+
 	public ReportBugOrEnhancementWizard() {
 		setForcePreviousAndNextButtons(true);
 		setNeedsProgressMonitor(true);
@@ -97,7 +99,8 @@ public class ReportBugOrEnhancementWizard extends Wizard {
 
 	@Override
 	public void addPages() {
-		SelectSupportElementPage page = new SelectSupportElementPage("selectProvider", new SupportContentProvider()); //$NON-NLS-1$
+		contentProvider = new SupportContentProvider();
+		SelectSupportElementPage page = new SelectSupportElementPage("selectProvider", contentProvider); //$NON-NLS-1$
 		page.setInput(new Object());
 		addPage(page);
 	}
@@ -110,7 +113,14 @@ public class ReportBugOrEnhancementWizard extends Wizard {
 	public AbstractSupportElement getSelectedElement() {
 		IWizardPage page = getContainer().getCurrentPage();
 		if (page != null) {
-			return ((SelectSupportElementPage) page).getSelectedElement();
+			AbstractSupportElement element = ((SelectSupportElementPage) page).getSelectedElement();
+			if (!(element instanceof SupportProduct)) {
+				Object[] elements = contentProvider.getElements(element);
+				if (elements.length == 1) {
+					return (AbstractSupportElement) elements[0];
+				}
+			}
+			return element;
 		}
 		return null;
 	}

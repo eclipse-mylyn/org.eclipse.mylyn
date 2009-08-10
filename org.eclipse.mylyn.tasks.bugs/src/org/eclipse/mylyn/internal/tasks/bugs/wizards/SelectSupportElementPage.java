@@ -23,6 +23,7 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.IWizardPage;
@@ -195,7 +196,7 @@ public class SelectSupportElementPage extends WizardPage {
 			}
 			iconLabel.setImage(image);
 			titleLabel.setText(data.getName());
-			descriptionLabel.setText(data.getDescription());
+			descriptionLabel.setText((data.getDescription() != null) ? data.getDescription(): "");
 
 			toolBarManager.removeAll();
 			final String url = data.getUrl();
@@ -321,8 +322,15 @@ public class SelectSupportElementPage extends WizardPage {
 		});
 		viewer.addOpenListener(new IOpenListener() {
 			public void open(OpenEvent event) {
-				if (getWizard().performFinish()) {
-					((WizardDialog) getContainer()).close();
+				if (getWizard().canFinish()) {
+					if (getWizard().performFinish()) {
+						((WizardDialog) getContainer()).close();
+					}
+				} else {
+					IWizardPage nextPage = getNextPage();
+					if (nextPage != null) {
+						((WizardDialog) getContainer()).showPage(nextPage);
+					}
 				}
 			}
 		});
@@ -356,7 +364,13 @@ public class SelectSupportElementPage extends WizardPage {
 		});
 		viewer.setInput(input);
 
-		setPageComplete(false);
+		Object[] elements = contentProvider.getElements(input);
+		if (elements.length == 1) {
+			viewer.setSelection(new StructuredSelection(elements[0]));
+		} else {
+			setPageComplete(false);
+		}
+
 		setControl(container);
 		Dialog.applyDialogFont(container);
 	}
@@ -399,6 +413,6 @@ public class SelectSupportElementPage extends WizardPage {
 			page.setWizard(getWizard());
 			return page;
 		}
-		return null;
+		return super.getNextPage();
 	}
 }
