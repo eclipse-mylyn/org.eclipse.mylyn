@@ -32,6 +32,7 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
 import org.eclipse.mylyn.internal.provisional.commons.ui.SelectionProviderAdapter;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -225,12 +226,14 @@ public class TaskPlanningEditor extends TaskFormPage {
 	@Override
 	public void fillToolBar(IToolBarManager toolBarManager) {
 		TaskEditorInput taskEditorInput = (TaskEditorInput) getEditorInput();
-		if (taskEditorInput.getTask() instanceof LocalTask) {
+		ITask task = taskEditorInput.getTask();
+		if (task instanceof LocalTask
+				&& task.getAttribute(ITasksCoreConstants.ATTRIBUTE_OUTGOING_NEW_CONNECTOR_KIND) == null) {
 			DeleteTaskEditorAction deleteAction = new DeleteTaskEditorAction(taskEditorInput.getTask());
 			toolBarManager.add(deleteAction);
 
 			NewSubTaskAction newSubTaskAction = new NewSubTaskAction();
-			newSubTaskAction.selectionChanged(newSubTaskAction, new StructuredSelection(taskEditorInput.getTask()));
+			newSubTaskAction.selectionChanged(newSubTaskAction, new StructuredSelection(task));
 			if (newSubTaskAction.isEnabled()) {
 				toolBarManager.add(newSubTaskAction);
 			}
