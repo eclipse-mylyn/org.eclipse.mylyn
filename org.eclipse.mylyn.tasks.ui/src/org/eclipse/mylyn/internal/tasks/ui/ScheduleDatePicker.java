@@ -37,9 +37,9 @@ import org.eclipse.swt.widgets.Text;
  */
 public class ScheduleDatePicker extends Composite {
 
-	private Text scheduledDateText = null;
+	private Text scheduledDateText;
 
-	private Button pickButton = null;
+	private Button pickButton;
 
 	private final List<SelectionListener> pickerListeners = new LinkedList<SelectionListener>();
 
@@ -82,10 +82,6 @@ public class ScheduleDatePicker extends Composite {
 		};
 		tasks = new ArrayList<IRepositoryElement>();
 		tasks.add(task);
-	}
-
-	@Deprecated
-	public void setDatePattern(String pattern) {
 	}
 
 	private void initialize(int style) {
