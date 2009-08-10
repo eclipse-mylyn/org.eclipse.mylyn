@@ -906,8 +906,8 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 						"org.eclipse.mylyn.tasks.toolbars.submit") { //$NON-NLS-1$
 					@Override
 					protected Control createButton(Composite composite) {
-						submitButton = toolkit.createButton(composite,
-								Messages.TaskEditorActionPart_Submit + " ", SWT.NONE); //$NON-NLS-1$
+						submitButton = new Button(composite, SWT.FLAT);
+						submitButton.setText(Messages.TaskEditorActionPart_Submit + " "); //$NON-NLS-1$
 						submitButton.setImage(CommonImages.getImage(TasksUiImages.REPOSITORY_SUBMIT));
 						submitButton.setBackground(null);
 						submitButton.addListener(SWT.Selection, new Listener() {
@@ -1038,11 +1038,13 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 	public AbstractTaskEditorPart getPart(String partId) {
 		Assert.isNotNull(partId);
-		for (IFormPart part : getManagedForm().getParts()) {
-			if (part instanceof AbstractTaskEditorPart) {
-				AbstractTaskEditorPart taskEditorPart = (AbstractTaskEditorPart) part;
-				if (partId.equals(taskEditorPart.getPartId())) {
-					return taskEditorPart;
+		if (getManagedForm() != null) {
+			for (IFormPart part : getManagedForm().getParts()) {
+				if (part instanceof AbstractTaskEditorPart) {
+					AbstractTaskEditorPart taskEditorPart = (AbstractTaskEditorPart) part;
+					if (partId.equals(taskEditorPart.getPartId())) {
+						return taskEditorPart;
+					}
 				}
 			}
 		}
@@ -1224,8 +1226,8 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 	 * Updates the editor contents in place.
 	 */
 	public void refreshFormContent() {
-		if (getManagedForm().getForm().isDisposed()) {
-			// editor possibly closed as part of submit
+		if (getManagedForm() == null || getManagedForm().getForm().isDisposed()) {
+			// editor possibly closed as part of submit or page has not been intialized, yet
 			return;
 		}
 
@@ -1405,7 +1407,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 	@Override
 	public void showBusy(boolean busy) {
-		if (!getManagedForm().getForm().isDisposed() && this.busy != busy) {
+		if (getManagedForm() != null && !getManagedForm().getForm().isDisposed() && this.busy != busy) {
 			setSubmitEnabled(!busy);
 			CommonUiUtil.setEnabled(editorComposite, !busy);
 			this.busy = busy;
