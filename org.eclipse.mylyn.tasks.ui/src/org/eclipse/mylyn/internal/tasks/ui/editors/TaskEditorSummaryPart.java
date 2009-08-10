@@ -13,6 +13,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
@@ -121,15 +122,21 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 	private void addSummaryText(Composite composite, final FormToolkit toolkit) {
 		summaryEditor = createAttributeEditor(getTaskData().getRoot().getMappedAttribute(TaskAttribute.SUMMARY));
 		if (summaryEditor != null) {
-			// create composite to hold rounded border
 			if (summaryEditor instanceof RichTextAttributeEditor) {
+				// create composite to hold rounded border
 				Composite roundedBorder = EditorUtil.createBorder(composite, toolkit, !summaryEditor.isReadOnly());
 				summaryEditor.createControl(roundedBorder, toolkit);
 				EditorUtil.setHeaderFontSizeAndStyle(summaryEditor.getControl());
 			} else {
-				summaryEditor.createControl(composite, toolkit);
+				final Composite border = toolkit.createComposite(composite);
 				GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).hint(EditorUtil.MAXIMUM_WIDTH,
-						SWT.DEFAULT).grab(true, false).applyTo(summaryEditor.getControl());
+						SWT.DEFAULT).grab(true, false).applyTo(border);
+				// leave some padding for the border of the attribute editor
+				border.setLayout(GridLayoutFactory.fillDefaults().margins(1, 4).create());
+				summaryEditor.createControl(border, toolkit);
+				GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).applyTo(
+						summaryEditor.getControl());
+				toolkit.paintBordersFor(border);
 			}
 			getTaskEditorPage().getAttributeEditorToolkit().adapt(summaryEditor);
 		}
