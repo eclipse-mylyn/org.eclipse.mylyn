@@ -11,5 +11,5 @@
 /**
  * @author David Green
  */
-package org.eclipse.mylyn.internal.wikitext.trac.ui;
+package org.eclipse.mylyn.internal.wikitext.tracwiki.ui;
 
