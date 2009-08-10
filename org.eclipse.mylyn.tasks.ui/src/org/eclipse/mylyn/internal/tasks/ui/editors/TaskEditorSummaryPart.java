@@ -123,7 +123,7 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 		if (summaryEditor != null) {
 			// create composite to hold rounded border
 			if (summaryEditor instanceof RichTextAttributeEditor) {
-				Composite roundedBorder = EditorUtil.createBorder(composite, toolkit);
+				Composite roundedBorder = EditorUtil.createBorder(composite, toolkit, !summaryEditor.isReadOnly());
 				summaryEditor.createControl(roundedBorder, toolkit);
 				EditorUtil.setHeaderFontSizeAndStyle(summaryEditor.getControl());
 			} else {

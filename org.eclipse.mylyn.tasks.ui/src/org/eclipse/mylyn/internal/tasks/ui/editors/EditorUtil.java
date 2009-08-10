@@ -379,20 +379,26 @@ public class EditorUtil {
 		}
 	}
 
-	public static Composite createBorder(Composite composite, final FormToolkit toolkit) {
+	public static Composite createBorder(Composite composite, final FormToolkit toolkit, boolean paintBorder) {
 		// create composite to hold rounded border
 		final Composite roundedBorder = toolkit.createComposite(composite);
-		roundedBorder.addPaintListener(new PaintListener() {
-			public void paintControl(PaintEvent e) {
-				e.gc.setForeground(toolkit.getColors().getBorderColor());
-				Point size = roundedBorder.getSize();
-				e.gc.drawRoundRectangle(0, 2, size.x - 1, size.y - 5, 5, 5);
-			}
-		});
+		if (paintBorder) {
+			roundedBorder.addPaintListener(new PaintListener() {
+				public void paintControl(PaintEvent e) {
+					e.gc.setForeground(toolkit.getColors().getBorderColor());
+					Point size = roundedBorder.getSize();
+					e.gc.drawRoundRectangle(0, 2, size.x - 1, size.y - 5, 5, 5);
+				}
+			});
+		}
 		roundedBorder.setLayout(GridLayoutFactory.fillDefaults().margins(4, 6).create());
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).hint(EditorUtil.MAXIMUM_WIDTH, SWT.DEFAULT).grab(
 				true, false).applyTo(roundedBorder);
 		return roundedBorder;
+	}
+
+	public static Composite createBorder(Composite composite, final FormToolkit toolkit) {
+		return createBorder(composite, toolkit, true);
 	}
 
 	public static Font setHeaderFontSizeAndStyle(Control text) {
