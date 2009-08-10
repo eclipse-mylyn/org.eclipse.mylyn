@@ -169,22 +169,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				task.setAttribute(BugzillaAttribute.BUG_SEVERITY.getKey(), attrSeverity.getValue());
 			}
 
-			// Due Date
-			if (taskData.getRoot().getMappedAttribute(BugzillaAttribute.ESTIMATED_TIME.getKey()) != null) {
-				Date dueDate = null;
-				// HACK: if estimated_time field exists, time tracking is
-				// enabled
-				try {
-					TaskAttribute attributeDeadline = taskData.getRoot().getMappedAttribute(
-							BugzillaAttribute.DEADLINE.getKey());
-					if (attributeDeadline != null) {
-						dueDate = new SimpleDateFormat(DEADLINE_FORMAT).parse(attributeDeadline.getValue());
-					}
-				} catch (Exception e) {
-					// ignore
-				}
-				task.setDueDate(dueDate);
-			}
 		}
 
 		updateExtendedAttributes(task, taskData);

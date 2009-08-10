@@ -407,7 +407,16 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 				tokenAttribute.setValue(token);
 			}
 
-			// Guard against empty data sets
+			// Work around (bug#285796) If planning enabled (ESTIMATE_TIME attr present) create DEADLINE attr since it should be present.
+			TaskAttribute estimatedTimeAttr = repositoryTaskData.getRoot().getMappedAttribute(
+					BugzillaAttribute.ESTIMATED_TIME.getKey());
+			TaskAttribute deadlineAttr = repositoryTaskData.getRoot().getMappedAttribute(
+					BugzillaAttribute.DEADLINE.getKey());
+			if (estimatedTimeAttr != null && deadlineAttr == null) {
+				BugzillaTaskDataHandler.createAttribute(repositoryTaskData, BugzillaAttribute.DEADLINE);
+			}
+
+			// Save/Add to collector. Guard against empty data sets
 			if (attrCreation != null && !attrCreation.equals("")) { //$NON-NLS-1$
 				collector.accept(repositoryTaskData);
 			}
