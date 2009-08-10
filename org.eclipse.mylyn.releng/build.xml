@@ -221,6 +221,7 @@
 	</target>
 
 	<target name="sign" depends="init,init-scripts">
+		<chmod perm="755" file="bin/sign-update-site.sh"/>
 		<exec executable="bin/sign-update-site.sh" failonerror="true">
 			<arg value="${version}"/>
 			<arg value="${qualifier}"/>

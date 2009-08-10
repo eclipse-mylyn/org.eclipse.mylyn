@@ -1,3 +1,4 @@
+#!/bin/bash -e
 #*******************************************************************************
 # Copyright (c) 2009 Tasktop Technologies and others.
 # All rights reserved. This program and the accompanying materials
@@ -8,7 +9,6 @@
 # Contributors:
 #      Tasktop Technologies - initial API and implementation
 #*******************************************************************************
-#!/bin/bash -e
 
 help() {
   echo "usage: sign-update-site.sh major build"
