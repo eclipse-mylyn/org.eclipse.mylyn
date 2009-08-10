@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.ViewerComparator;
@@ -291,6 +293,10 @@ public abstract class ControlListViewer extends StructuredViewer {
 				setSelection(new StructuredSelection(item.getData()));
 				setFocus();
 			}
+
+			public void open() {
+				handleOpen();
+			}
 		});
 
 		// Refresh to populate with the current tasks
@@ -344,6 +350,14 @@ public abstract class ControlListViewer extends StructuredViewer {
 			}
 		}
 		return selection;
+	}
+
+	protected void handleOpen() {
+		Control control = getControl();
+		if (control != null && !control.isDisposed()) {
+			ISelection selection = getSelection();
+			fireOpen(new OpenEvent(this, selection));
+		}
 	}
 
 	@Override

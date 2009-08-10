@@ -33,6 +33,7 @@ public abstract class ControlListItem extends Composite {
 	static String DARK_COLOR_KEY = "org.eclipse.mylyn.commons.ui.ControlListItem.DARK_COLOR"; //$NON-NLS-1$
 
 	interface IndexListener {
+
 		/**
 		 * Select the item previous to the receiver.
 		 */
@@ -47,6 +48,9 @@ public abstract class ControlListItem extends Composite {
 		 * Select the receiver.
 		 */
 		public void select();
+
+		public void open();
+
 	}
 
 	IndexListener indexListener;
@@ -139,7 +143,11 @@ public abstract class ControlListItem extends Composite {
 			@Override
 			public void mouseDown(MouseEvent e) {
 				if (indexListener != null) {
-					indexListener.select();
+					if (e.count == 2) {
+						indexListener.open();
+					} else {
+						indexListener.select();
+					}
 				}
 			}
 		};
