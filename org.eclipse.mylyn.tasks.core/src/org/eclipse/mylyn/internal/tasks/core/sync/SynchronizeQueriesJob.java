@@ -51,6 +51,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.data.TaskRelation;
 import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Mik Kersten
@@ -239,6 +240,9 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 			return Status.CANCEL_STATUS;
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Synchronization failed", e)); //$NON-NLS-1$
+		} catch (LinkageError e) {
+			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, NLS.bind(
+					"Synchronization for connector ''{0}'' failed", connector.getConnectorKind()), e)); //$NON-NLS-1$
 		} finally {
 			monitor.done();
 		}

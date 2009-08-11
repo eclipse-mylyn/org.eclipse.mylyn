@@ -19,14 +19,15 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.commons.core.DelegatingProgressMonitor;
 import org.eclipse.mylyn.commons.core.IDelegatingProgressMonitor;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
@@ -37,6 +38,7 @@ import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.IRepositoryModel;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * Updates the task list.
@@ -129,7 +131,7 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 //			if (isUser()) {
 //				Job.getJobManager().join(family, monitor);
 //			}
-		} catch (InterruptedException e) {
+		} catch (OperationCanceledException e) {
 			return Status.CANCEL_STATUS;
 		} finally {
 			monitor.done();
@@ -169,7 +171,7 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 	}
 
 	private void updateRepositoryConfiguration(TaskRepository repository, AbstractRepositoryConnector connector,
-			IProgressMonitor monitor) throws InterruptedException {
+			IProgressMonitor monitor) {
 		try {
 			if (!isUser()) {
 				monitor = Policy.backgroundMonitorFor(monitor);
@@ -181,9 +183,14 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 				connector.updateRepositoryConfiguration(repository, monitor);
 				repository.setConfigurationDate(new Date());
 			}
-		} catch (CoreException e) {
+		} catch (OperationCanceledException e) {
+			throw e;
+		} catch (Exception e) {
 			repository.setStatus(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
 					"Updating of repository configuration failed", e)); //$NON-NLS-1$
+		} catch (LinkageError e) {
+			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, NLS.bind(
+					"Internal error while updating repository configuration for ''{0}''", repository.getUrl()), e)); //$NON-NLS-1$
 		} finally {
 			monitor.done();
 		}
