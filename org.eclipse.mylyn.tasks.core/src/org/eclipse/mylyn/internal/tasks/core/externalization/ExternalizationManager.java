@@ -177,10 +177,6 @@ public class ExternalizationManager {
 			super(jobTitle);
 		}
 
-		public IExternalizationContext getContext() {
-			return context;
-		}
-
 		public void setContext(IExternalizationContext saveContext) {
 			this.context = saveContext;
 		}

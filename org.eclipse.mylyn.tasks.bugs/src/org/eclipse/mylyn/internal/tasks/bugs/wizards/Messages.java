@@ -27,6 +27,8 @@ public class Messages extends NLS {
 
 	public static String ReportBugOrEnhancementWizard_Report_Bug_or_Enhancement;
 
+	public static String ReportBugOrEnhancementWizard_Support_request_faild_Information_incomplete_Error;
+
 	public static String ReportErrorPage_Details;
 
 	public static String ReportErrorPage_Report_as_Bug;

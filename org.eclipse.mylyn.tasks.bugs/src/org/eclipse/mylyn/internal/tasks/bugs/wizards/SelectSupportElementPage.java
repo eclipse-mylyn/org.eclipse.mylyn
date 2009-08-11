@@ -196,7 +196,7 @@ public class SelectSupportElementPage extends WizardPage {
 			}
 			iconLabel.setImage(image);
 			titleLabel.setText(data.getName());
-			descriptionLabel.setText((data.getDescription() != null) ? data.getDescription(): "");
+			descriptionLabel.setText((data.getDescription() != null) ? data.getDescription() : ""); //$NON-NLS-1$
 
 			toolBarManager.removeAll();
 			final String url = data.getUrl();

@@ -157,7 +157,7 @@ public class ReportBugOrEnhancementWizard extends Wizard {
 		if (!((AttributeTaskMapper) request.getDefaultContribution()).isMappingComplete()) {
 			TasksUiInternal.displayStatus(Messages.ReportBugOrEnhancementWizard_Report_Bug_or_Enhancement, new Status(
 					IStatus.ERROR, TasksBugsPlugin.ID_PLUGIN,
-					"Creation of a support request failed. The information for the selected product is incomplete."));
+					Messages.ReportBugOrEnhancementWizard_Support_request_faild_Information_incomplete_Error));
 			return false;
 		}
 		return reporter.process(request.getDefaultContribution(), getContainer());

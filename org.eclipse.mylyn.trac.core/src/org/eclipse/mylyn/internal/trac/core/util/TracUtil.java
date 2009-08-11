@@ -111,7 +111,7 @@ public class TracUtil {
 				prependSeparator = true;
 			}
 			sb.append("]"); //$NON-NLS-1$
-		} else if (object instanceof Map) {
+		} else if (object instanceof Map<?, ?>) {
 			sb.append("{"); //$NON-NLS-1$
 			boolean prependSeparator = false;
 			for (Map.Entry<?, ?> entry : ((Map<?, ?>) object).entrySet()) {
