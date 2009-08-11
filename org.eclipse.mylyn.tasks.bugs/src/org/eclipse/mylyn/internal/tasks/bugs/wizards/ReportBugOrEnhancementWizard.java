@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.wizard.IWizardPage;
@@ -23,6 +24,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.internal.provisional.tasks.bugs.IProduct;
 import org.eclipse.mylyn.internal.provisional.tasks.bugs.IProvider;
 import org.eclipse.mylyn.internal.tasks.bugs.AbstractSupportElement;
+import org.eclipse.mylyn.internal.tasks.bugs.AttributeTaskMapper;
 import org.eclipse.mylyn.internal.tasks.bugs.SupportCategory;
 import org.eclipse.mylyn.internal.tasks.bugs.SupportProduct;
 import org.eclipse.mylyn.internal.tasks.bugs.SupportProvider;
@@ -30,6 +32,7 @@ import org.eclipse.mylyn.internal.tasks.bugs.SupportProviderManager;
 import org.eclipse.mylyn.internal.tasks.bugs.SupportRequest;
 import org.eclipse.mylyn.internal.tasks.bugs.TaskErrorReporter;
 import org.eclipse.mylyn.internal.tasks.bugs.TasksBugsPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 
 /**
@@ -45,16 +48,23 @@ public class ReportBugOrEnhancementWizard extends Wizard {
 
 		public Object[] getElements(Object inputElement) {
 			if (inputElement instanceof SupportProvider) {
-				List<SupportProduct> providerProducts = getProdcuts(inputElement);
+				List<SupportProduct> providerProducts = getProducts((SupportProvider) inputElement);
 				return providerProducts.toArray();
 			} else if (input == inputElement) {
 				List<AbstractSupportElement> elements = new ArrayList<AbstractSupportElement>();
 				Collection<SupportCategory> categories = providerManager.getCategories();
 				for (SupportCategory category : categories) {
 					List<IProvider> providers = category.getProviders();
-					if (!providers.isEmpty()) {
+					// filter valid providers
+					List<IProvider> validProviders = new ArrayList<IProvider>();
+					for (IProvider provider : providers) {
+						if (isValid((SupportProvider) provider)) {
+							validProviders.add(provider);
+						}
+					}
+					if (!validProviders.isEmpty()) {
 						elements.add(category);
-						for (IProvider provider : providers) {
+						for (IProvider provider : validProviders) {
 							elements.add((AbstractSupportElement) provider);
 						}
 					}
@@ -65,9 +75,18 @@ public class ReportBugOrEnhancementWizard extends Wizard {
 			}
 		}
 
-		private List<SupportProduct> getProdcuts(Object inputElement) {
+		private boolean isValid(SupportProvider provider) {
 			Collection<SupportProduct> products = providerManager.getProducts();
-			SupportProvider provider = (SupportProvider) inputElement;
+			for (SupportProduct product : products) {
+				if (provider.equals(product.getProvider()) && product.isInstalled()) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		private List<SupportProduct> getProducts(SupportProvider provider) {
+			Collection<SupportProduct> products = providerManager.getProducts();
 			List<SupportProduct> providerProducts = new ArrayList<SupportProduct>();
 			for (SupportProduct product : products) {
 				if (provider.equals(product.getProvider()) && product.isInstalled()) {
@@ -135,6 +154,12 @@ public class ReportBugOrEnhancementWizard extends Wizard {
 		TaskErrorReporter reporter = TasksBugsPlugin.getTaskErrorReporter();
 		IStatus status = new ProductStatus((IProduct) product);
 		SupportRequest request = reporter.preProcess(status, ((ProductStatus) status).getProduct());
+		if (!((AttributeTaskMapper) request.getDefaultContribution()).isMappingComplete()) {
+			TasksUiInternal.displayStatus(Messages.ReportBugOrEnhancementWizard_Report_Bug_or_Enhancement, new Status(
+					IStatus.ERROR, TasksBugsPlugin.ID_PLUGIN,
+					"Creation of a support request failed. The information for the selected product is incomplete."));
+			return false;
+		}
 		return reporter.process(request.getDefaultContribution(), getContainer());
 	}
 

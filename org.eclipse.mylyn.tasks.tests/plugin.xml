@@ -69,6 +69,12 @@
                url="https://bugs.eclipse.org/bugs">
          </repository>
       </mapping>
+      <provider
+            categoryId="org.eclipse.mylyn.tasks.tests.category1"
+            description="Provider that has no products definded"
+            id="org.eclipse.mylyn.tasks.tests.provider2"
+            name="Invalid Test Provider">
+      </provider>
    </extension>  
    
 </plugin>

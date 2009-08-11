@@ -711,7 +711,11 @@ public class TasksUiInternal {
 		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(taskRepository);
 		TaskData taskData = new TaskData(mapper, taskRepository.getConnectorKind(), taskRepository.getRepositoryUrl(),
 				""); //$NON-NLS-1$
-		taskDataHandler.initializeTaskData(taskRepository, taskData, initializationData, monitor);
+		boolean result = taskDataHandler.initializeTaskData(taskRepository, taskData, initializationData, monitor);
+		if (!result) {
+			throw new CoreException(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					"Initialization of task failed. The provided data is insufficient.")); //$NON-NLS-1$
+		}
 		if (selectionData != null) {
 			connector.getTaskMapping(taskData).merge(selectionData);
 		}
