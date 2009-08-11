@@ -120,7 +120,8 @@ public abstract class AbstractLocalEditorPart extends AbstractFormPart {
 		super.refresh();
 	}
 
-	protected abstract void refresh(boolean discardChanges);
+	protected void refresh(boolean discardChanges) {
+	}
 
 	protected void markDirty(Control control) {
 		control.setData(FLAG_DIRTY, Boolean.TRUE);
