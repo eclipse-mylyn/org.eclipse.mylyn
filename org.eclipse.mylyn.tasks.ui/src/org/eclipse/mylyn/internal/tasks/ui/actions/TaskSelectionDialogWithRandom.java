@@ -64,7 +64,10 @@ public class TaskSelectionDialogWithRandom extends TaskSelectionDialog {
 					Set<ITask> allScheduled = ((TaskActivityManager) TasksUi.getTaskActivityManager()).getAllScheduledTasks();
 					if (!allScheduled.isEmpty()) {
 						selectedTasks.addAll(allScheduled);
-					} else {
+						// XXX bug 280939 make sure all scheduled tasks actually exist 
+						selectedTasks.retainAll(TasksUiPlugin.getTaskList().getAllTasks());
+					}
+					if (selectedTasks.isEmpty()) {
 						selectedTasks.addAll(TasksUiPlugin.getTaskList().getAllTasks());
 					}
 
