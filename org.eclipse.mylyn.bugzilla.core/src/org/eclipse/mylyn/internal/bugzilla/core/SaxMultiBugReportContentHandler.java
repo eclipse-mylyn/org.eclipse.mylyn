@@ -130,7 +130,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			if (taskComment != null) {
 				if (attributes != null && attributes.getLength() > 0) {
 					String name = attributes.getValue(ATTRIBUTE_NAME);
-					if (name != null) {
+					if (name != null && name.length() > 0) {
 						taskComment.authorName = name;
 					}
 				}
