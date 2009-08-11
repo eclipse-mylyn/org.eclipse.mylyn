@@ -32,6 +32,7 @@ public class AllMonitorTests {
 		suite.addTestSuite(InteractionEventExternalizationTest.class);
 		suite.addTestSuite(MonitorPackagingTest.class);
 		suite.addTestSuite(MultiWindowMonitorTest.class);
+		suite.addTestSuite(ActivityContextManagerTest.class);
 		return suite;
 	}
 

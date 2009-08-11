@@ -322,6 +322,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 				if (element.getAttribute(ELEMENT_CLASS) != null) {
 					Object activityTimer = element.createExecutableExtension(ELEMENT_CLASS);
 					if (activityTimer instanceof AbstractUserActivityMonitor) {
+						// TODO set id for monitor to identify instance
 						monitors.add(0, (AbstractUserActivityMonitor) activityTimer);
 					}
 				}

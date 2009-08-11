@@ -11,14 +11,20 @@
 
 package org.eclipse.mylyn.internal.monitor.ui;
 
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import org.eclipse.core.runtime.ISafeRunnable;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.SafeRunner;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
@@ -42,15 +48,17 @@ import org.eclipse.ui.PlatformUI;
 @SuppressWarnings("restriction")
 public class ActivityContextManager implements IActivityContextManager {
 
-	private AbstractUserActivityMonitor userActivityMonitor;
+	//private AbstractUserActivityMonitor userActivityMonitor;
 
 	private final Set<IUserAttentionListener> attentionListeners = new CopyOnWriteArraySet<IUserAttentionListener>();
 
 	private final CheckActivityJob checkJob;
 
+	private volatile String lastInteractionOrigin;
+
 	private IWorkingSet[] workingSets;
 
-	private final ArrayList<AbstractUserActivityMonitor> activityMonitors;
+	private final List<AbstractUserActivityMonitor> activityMonitors;
 
 	public static final String ACTIVITY_TIMEOUT = "org.eclipse.mylyn.monitor.ui.activity.timeout"; //$NON-NLS-1$
 
@@ -64,8 +72,8 @@ public class ActivityContextManager implements IActivityContextManager {
 		}
 	};
 
-	public ActivityContextManager(ArrayList<AbstractUserActivityMonitor> monitors) {
-		this.activityMonitors = monitors;
+	public ActivityContextManager(List<AbstractUserActivityMonitor> monitors) {
+		this.activityMonitors = new CopyOnWriteArrayList<AbstractUserActivityMonitor>(monitors);
 		checkJob = new CheckActivityJob(new IActivityManagerCallback() {
 			public void addMonitoredActivityTime(long localStartTime, long currentTime) {
 				ActivityContextManager.this.addMonitoredActivityTime(localStartTime, currentTime);
@@ -76,7 +84,7 @@ public class ActivityContextManager implements IActivityContextManager {
 			}
 
 			public long getLastEventTime() {
-				return ActivityContextManager.this.getLastEventTime();
+				return ActivityContextManager.this.getLastInteractionTime();
 			}
 
 			public void active() {
@@ -100,8 +108,16 @@ public class ActivityContextManager implements IActivityContextManager {
 	}
 
 	public void start() {
-		for (AbstractUserActivityMonitor monitor : activityMonitors) {
-			monitor.start();
+		for (final AbstractUserActivityMonitor monitor : activityMonitors) {
+			SafeRunner.run(new ISafeRunnable() {
+				public void handleException(Throwable e) {
+					disableFailedMonitor(monitor, e);
+				}
+
+				public void run() throws Exception {
+					monitor.start();
+				}
+			});
 		}
 		updateWorkingSetSelection();
 		PlatformUI.getWorkbench().getWorkingSetManager().addPropertyChangeListener(WORKING_SET_CHANGE_LISTENER);
@@ -109,8 +125,16 @@ public class ActivityContextManager implements IActivityContextManager {
 	}
 
 	public void stop() {
-		for (AbstractUserActivityMonitor monitor : activityMonitors) {
-			monitor.stop();
+		for (final AbstractUserActivityMonitor monitor : activityMonitors) {
+			SafeRunner.run(new ISafeRunnable() {
+				public void handleException(Throwable e) {
+					disableFailedMonitor(monitor, e);
+				}
+
+				public void run() throws Exception {
+					monitor.stop();
+				}
+			});
 		}
 		PlatformUI.getWorkbench().getWorkingSetManager().removePropertyChangeListener(WORKING_SET_CHANGE_LISTENER);
 		checkJob.cancel();
@@ -126,11 +150,9 @@ public class ActivityContextManager implements IActivityContextManager {
 
 	private void addMonitoredActivityTime(long start, long end) {
 		if ((end > 0 && start > 0) && (end > start)) {
-
-			String origin = InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH;
-
-			if (userActivityMonitor != null && userActivityMonitor.getOriginId() != null) {
-				origin = userActivityMonitor.getOriginId();
+			String origin = lastInteractionOrigin;
+			if (origin == null) {
+				origin = InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH;
 			}
 
 			String handle = getStructureHandle();
@@ -190,15 +212,34 @@ public class ActivityContextManager implements IActivityContextManager {
 		}
 	}
 
-	private long getLastEventTime() {
-		for (AbstractUserActivityMonitor monitor : activityMonitors) {
-			if (monitor.isEnabled()) {
-				userActivityMonitor = monitor;
-				return userActivityMonitor.getLastInteractionTime();
+	public long getLastInteractionTime() {
+		for (final AbstractUserActivityMonitor monitor : activityMonitors) {
+			final boolean[] success = new boolean[1];
+			final long[] result = new long[1];
+			SafeRunner.run(new ISafeRunnable() {
+				public void handleException(Throwable e) {
+					disableFailedMonitor(monitor, e);
+				}
+
+				public void run() throws Exception {
+					if (monitor.isEnabled()) {
+						result[0] = monitor.getLastInteractionTime();
+						lastInteractionOrigin = monitor.getOriginId();
+						success[0] = true;
+					}
+				}
+			});
+			if (success[0]) {
+				return result[0];
 			}
 		}
-
 		return -1;
+	}
+
+	private void disableFailedMonitor(AbstractUserActivityMonitor monitor, Throwable e) {
+		StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN,
+				"Activity monitor ''{0}'' was disabled due to a failure")); //$NON-NLS-1$
+		activityMonitors.remove(monitor);
 	}
 
 	public void setInactivityTimeout(int inactivityTimeout) {

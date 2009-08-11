@@ -27,6 +27,9 @@ public class WorkbenchUserActivityMonitor extends AbstractUserActivityMonitor {
 
 	private Display display;
 
+	public WorkbenchUserActivityMonitor() {
+	}
+
 	@Override
 	public void start() {
 		display = MonitorUiPlugin.getDefault().getWorkbench().getDisplay();
