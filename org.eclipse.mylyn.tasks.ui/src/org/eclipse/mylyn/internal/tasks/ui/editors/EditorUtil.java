@@ -390,8 +390,10 @@ public class EditorUtil {
 					e.gc.drawRoundRectangle(0, 2, size.x - 1, size.y - 5, 5, 5);
 				}
 			});
+			roundedBorder.setLayout(GridLayoutFactory.fillDefaults().margins(4, 6).create());
+		} else {
+			roundedBorder.setLayout(GridLayoutFactory.fillDefaults().margins(0, 6).create());
 		}
-		roundedBorder.setLayout(GridLayoutFactory.fillDefaults().margins(4, 6).create());
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).hint(EditorUtil.MAXIMUM_WIDTH, SWT.DEFAULT).grab(
 				true, false).applyTo(roundedBorder);
 		return roundedBorder;
