@@ -45,10 +45,6 @@ public class SummaryPart extends AbstractLocalEditorPart {
 
 	private RichTextEditor summaryEditor;
 
-	protected boolean summaryChanged;
-
-	//private CCombo statusCombo;
-
 	private Button statusCompleteButton;
 
 	private Button statusIncompleteButton;
@@ -87,8 +83,7 @@ public class SummaryPart extends AbstractLocalEditorPart {
 		summaryEditor.getViewer().addTextListener(new ITextListener() {
 			public void textChanged(TextEvent event) {
 				if (!getTask().getSummary().equals(summaryEditor.getText())) {
-					summaryChanged = true;
-					markDirty();
+					markDirty(summaryEditor.getControl());
 				}
 			}
 		});
@@ -110,9 +105,9 @@ public class SummaryPart extends AbstractLocalEditorPart {
 		priorityEditor = new PriorityEditor() {
 			@Override
 			protected void valueChanged(String value) {
-				markDirty();
 				priorityEditor.select(value, PriorityLevel.fromString(value));
 				priorityEditor.setToolTipText(value);
+				markDirty(priorityEditor.getControl());
 			};
 		};
 		Map<String, String> labelByValue = new LinkedHashMap<String, String>();
@@ -147,7 +142,7 @@ public class SummaryPart extends AbstractLocalEditorPart {
 			public void widgetSelected(SelectionEvent e) {
 				if (statusIncompleteButton.getSelection()) {
 					statusCompleteButton.setSelection(false);
-					markDirty();
+					markDirty(statusCompleteButton);
 				}
 			}
 		});
@@ -157,28 +152,10 @@ public class SummaryPart extends AbstractLocalEditorPart {
 			public void widgetSelected(SelectionEvent e) {
 				if (statusCompleteButton.getSelection()) {
 					statusIncompleteButton.setSelection(false);
-					markDirty();
+					markDirty(statusCompleteButton);
 				}
 			}
 		});
-
-//		statusCombo = new CCombo(headerComposite, SWT.FLAT | SWT.READ_ONLY);
-//		toolkit.adapt(statusCombo, true, true);
-//		statusCombo.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-//		statusCombo.add(Messages.TaskPlanningEditor_Complete);
-//		statusCombo.add(Messages.TaskPlanningEditor_Incomplete);
-//		if (getTask().isCompleted()) {
-//			statusCombo.select(0);
-//		} else {
-//			statusCombo.select(1);
-//		}
-//		statusCombo.setEnabled(getTask() instanceof LocalTask);
-//		statusCombo.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				markDirty();
-//			}
-//		});
 
 		// right align controls
 //		Composite spacer = toolkit.createComposite(headerComposite, SWT.NONE);
@@ -224,17 +201,16 @@ public class SummaryPart extends AbstractLocalEditorPart {
 	}
 
 	@Override
-	public void refresh() {
-		PriorityLevel level = PriorityLevel.fromString(getTask().getPriority());
-		priorityEditor.select(level.toString(), level);
-		statusIncompleteButton.setSelection(!getTask().isCompleted());
-		statusCompleteButton.setSelection(getTask().isCompleted());
-//		if (getTask().isCompleted()) {
-//			statusCombo.select(0);
-//		} else {
-//			statusCombo.select(1);
-//		}
-		if (!summaryChanged) {
+	public void refresh(boolean discardChanges) {
+		if (shouldRefresh(priorityEditor.getControl(), discardChanges)) {
+			PriorityLevel level = PriorityLevel.fromString(getTask().getPriority());
+			priorityEditor.select(level.toString(), level);
+		}
+		if (shouldRefresh(statusCompleteButton, discardChanges)) {
+			statusIncompleteButton.setSelection(!getTask().isCompleted());
+			statusCompleteButton.setSelection(getTask().isCompleted());
+		}
+		if (shouldRefresh(summaryEditor.getControl(), discardChanges)) {
 			summaryEditor.setText(getTask().getSummary());
 			if (!initialized) {
 				initialized = true;
@@ -247,10 +223,6 @@ public class SummaryPart extends AbstractLocalEditorPart {
 		updateToolTip(creationDateText, getTask().getCreationDate());
 		completionDateText.setText(getDateString(getTask().getCompletionDate()));
 		updateToolTip(completionDateText, getTask().getCompletionDate());
-		super.refresh();
-		if (summaryChanged) {
-			markDirty();
-		}
 		// re-layout date fields
 		headerComposite.layout(true);
 	}
@@ -269,7 +241,9 @@ public class SummaryPart extends AbstractLocalEditorPart {
 		if (level != null) {
 			getTask().setPriority(level.toString());
 		}
+		clearState(priorityEditor.getControl());
 		getTask().setSummary(summaryEditor.getText());
+		clearState(summaryEditor.getControl());
 		if (statusCompleteButton.getSelection()) {
 			if (!getTask().isCompleted()) {
 				getTask().setCompletionDate(new Date());
@@ -279,12 +253,7 @@ public class SummaryPart extends AbstractLocalEditorPart {
 				getTask().setCompletionDate(null);
 			}
 		}
-//		if (!getTask().isCompleted() && statusCombo.getSelectionIndex() == 0) {
-//			getTask().setCompletionDate(new Date());
-//		} else {
-//			getTask().setCompletionDate(null);
-//		}
-		summaryChanged = false;
+		clearState(statusCompleteButton);
 		super.commit(onSave);
 	}
 

@@ -73,8 +73,10 @@ public class AttributePart extends AbstractLocalEditorPart {
 		if (category != null) {
 			TasksUiPlugin.getTaskList().addTask(getTask(), category);
 			category = null;
+			clearState(categoryChooser);
 		}
 		getTask().setUrl(urlEditor.getText());
+		clearState(urlEditor.getControl());
 		super.commit(onSave);
 	}
 
@@ -119,7 +121,7 @@ public class AttributePart extends AbstractLocalEditorPart {
 			@Override
 			protected void valueChanged(String value) {
 				updateButtons();
-				markDirty();
+				markDirty(urlEditor.getControl());
 			}
 		};
 		urlEditor.setMode(Mode.URL);
@@ -199,32 +201,35 @@ public class AttributePart extends AbstractLocalEditorPart {
 	}
 
 	@Override
-	public void refresh() {
-		ITaskList taskList = TasksUiInternal.getTaskList();
-		categories = new ArrayList<AbstractTaskCategory>(taskList.getCategories());
-		Collections.sort(categories, new TaskContainerComparator());
+	public void refresh(boolean discardChanges) {
+		if (shouldRefresh(categoryChooser, discardChanges)) {
+			ITaskList taskList = TasksUiInternal.getTaskList();
+			categories = new ArrayList<AbstractTaskCategory>(taskList.getCategories());
+			Collections.sort(categories, new TaskContainerComparator());
 
-		AbstractTaskCategory selectedCategory = category;
-		if (selectedCategory == null) {
-			selectedCategory = TaskCategory.getParentTaskCategory(getTask());
-		}
-		categoryChooser.removeAll();
-		int selectedIndex = 0;
-		for (int i = 0; i < categories.size(); i++) {
-			AbstractTaskCategory category = categories.get(i);
-			categoryChooser.add(category.getSummary());
-			if (category.equals(selectedCategory)) {
-				selectedIndex = i;
+			AbstractTaskCategory selectedCategory = category;
+			if (selectedCategory == null) {
+				selectedCategory = TaskCategory.getParentTaskCategory(getTask());
 			}
+			categoryChooser.removeAll();
+			int selectedIndex = 0;
+			for (int i = 0; i < categories.size(); i++) {
+				AbstractTaskCategory category = categories.get(i);
+				categoryChooser.add(category.getSummary());
+				if (category.equals(selectedCategory)) {
+					selectedIndex = i;
+				}
+			}
+			categoryChooser.select(selectedIndex);
+			updateCategoryLabel();
 		}
-		categoryChooser.select(selectedIndex);
-		updateCategoryLabel();
 
-		String url = getTask().getUrl();
-		urlEditor.setText(url != null ? url : ""); //$NON-NLS-1$
+		if (shouldRefresh(urlEditor.getControl(), discardChanges)) {
+			String url = getTask().getUrl();
+			urlEditor.setText(url != null ? url : ""); //$NON-NLS-1$
+		}
 
 		updateButtons();
-		super.refresh();
 	}
 
 	private void updateCategoryLabel() {
@@ -249,7 +254,7 @@ public class AttributePart extends AbstractLocalEditorPart {
 				if (categoryChooser.getSelectionIndex() != -1) {
 					category = categories.get(categoryChooser.getSelectionIndex());
 					updateCategoryLabel();
-					markDirty();
+					markDirty(categoryChooser);
 				}
 			}
 		});

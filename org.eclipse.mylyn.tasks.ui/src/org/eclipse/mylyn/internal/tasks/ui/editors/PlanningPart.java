@@ -102,7 +102,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 						if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {
 							PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 								public void run() {
-									updateFromTask(updateTask);
+									refresh(false);
 								}
 							});
 						}
@@ -514,20 +514,6 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		}
 	}
 
-	private void updateFromTask(AbstractTask updateTask) {
-		if (scheduleDatePicker != null && !scheduleDatePicker.isDisposed()) {
-			if (updateTask.getScheduledForDate() != null) {
-				scheduleDatePicker.setScheduledDate(updateTask.getScheduledForDate());
-			} else {
-				scheduleDatePicker.setScheduledDate(null);
-			}
-		}
-
-		if (estimatedTime != null && !estimatedTime.isDisposed()) {
-			estimatedTime.setSelection(updateTask.getEstimatedTimeHours());
-		}
-	}
-
 	@Override
 	protected void setSection(FormToolkit toolkit, Section section) {
 		if (section.getTextClient() == null) {
@@ -571,6 +557,23 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 	public void setAlwaysExpand(boolean alwaysExpand) {
 		this.alwaysExpand = alwaysExpand;
+	}
+
+	@Override
+	protected void refresh(boolean discardChanges) {
+		if (scheduleDatePicker != null && !scheduleDatePicker.isDisposed()) {
+			if (getTask().getScheduledForDate() != null) {
+				scheduleDatePicker.setScheduledDate(getTask().getScheduledForDate());
+			} else {
+				scheduleDatePicker.setScheduledDate(null);
+			}
+		}
+
+		if (estimatedTime != null && !estimatedTime.isDisposed()) {
+			estimatedTime.setSelection(getTask().getEstimatedTimeHours());
+		}
+
+		// TODO refresh notes
 	}
 
 }

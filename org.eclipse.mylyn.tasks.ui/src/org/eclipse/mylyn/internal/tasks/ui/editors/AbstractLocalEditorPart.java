@@ -28,6 +28,8 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 public abstract class AbstractLocalEditorPart extends AbstractFormPart {
 
+	private static final String FLAG_DIRTY = "LocalEditor.dirty"; //$NON-NLS-1$
+
 	private Control control;
 
 	private TaskRepository repository;
@@ -110,6 +112,31 @@ public abstract class AbstractLocalEditorPart extends AbstractFormPart {
 	protected void setSection(FormToolkit toolkit, Section section) {
 		this.section = section;
 		setControl(section);
+	}
+
+	@Override
+	public void refresh() {
+		refresh(true);
+		super.refresh();
+	}
+
+	protected abstract void refresh(boolean discardChanges);
+
+	protected void markDirty(Control control) {
+		control.setData(FLAG_DIRTY, Boolean.TRUE);
+		markDirty();
+	}
+
+	protected boolean shouldRefresh(Control control, boolean discardChanges) {
+		if (discardChanges) {
+			clearState(control);
+			return true;
+		}
+		return control.getData(FLAG_DIRTY) == null;
+	}
+
+	protected void clearState(Control control) {
+		control.setData(FLAG_DIRTY, null);
 	}
 
 }

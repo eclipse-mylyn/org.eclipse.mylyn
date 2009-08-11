@@ -279,10 +279,12 @@ public class TaskPlanningEditor extends TaskFormPage {
 		// refresh will not be invoked unless parts are stale
 		for (IFormPart part : parts) {
 			if (part instanceof AbstractLocalEditorPart) {
-				((AbstractLocalEditorPart) part).markStale();
+				((AbstractLocalEditorPart) part).refresh(false);
+			} else {
+				part.refresh();
 			}
 		}
-		getManagedForm().refresh();
+		getManagedForm().reflow(true);
 	}
 
 	public void fillLeftHeaderToolBar(IToolBarManager toolBarManager) {
