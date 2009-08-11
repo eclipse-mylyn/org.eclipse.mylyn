@@ -158,10 +158,6 @@ public class CheckActivityJobTest extends TestCase {
 			return true;
 		}
 
-		public void setPreviousEventTime(long previousEventTime) {
-			this.previousEventTime = previousEventTime;
-		}
-
 		public void setTick(long tick) {
 			this.tick = tick;
 		}
