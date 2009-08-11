@@ -15,8 +15,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListBackupManager;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -29,7 +29,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
  * Wizard Page for the Task Data Export Wizard
@@ -54,8 +53,7 @@ public class TaskDataExportWizardPage extends WizardPage {
 	public TaskDataExportWizardPage() {
 		super(PAGE_ID);
 		setPageComplete(false);
-		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(TasksUiPlugin.ID_PLUGIN,
-				"icons/wizban/banner-export.gif")); //$NON-NLS-1$
+		setImageDescriptor(CommonImages.BANNER_EXPORT);
 		setTitle(Messages.TaskDataExportWizardPage_Export_Mylyn_Task_Data);
 	}
 
