@@ -522,19 +522,22 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		try {
 			getTaskEditorPage().setReflow(false);
 
+			@SuppressWarnings("unused")
 			boolean collapsed = false;
 			List<CommentGroupViewer> viewers = getCommentGroupViewers();
 			for (int i = 0; i < viewers.size(); i++) {
 				if (viewers.get(i).isExpanded()) {
 					viewers.get(i).setExpanded(false);
 					collapsed = viewers.get(i).isRenderedInSubSection();
-					break;
+					// bug 280152: collapse all groups
+					//break;
 				}
 			}
 
-			if (!collapsed && section != null) {
-				CommonFormUtil.setExpanded(section, false);
-			}
+			// keep section expanded
+//			if (!collapsed && section != null) {
+//				CommonFormUtil.setExpanded(section, false);
+//			}
 		} finally {
 			getTaskEditorPage().setReflow(true);
 		}
@@ -604,9 +607,12 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 					public void expansionStateChanged(ExpansionEvent event) {
 						if (section.getClient() == null) {
 							try {
+								expandAllInProgress = true;
 								getTaskEditorPage().setReflow(false);
+
 								expandSection(toolkit, section);
 							} finally {
+								expandAllInProgress = false;
 								getTaskEditorPage().setReflow(true);
 							}
 							getTaskEditorPage().reflow();
@@ -643,7 +649,8 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 					for (int i = viewers.size() - 1; i >= 0; i--) {
 						if (!viewers.get(i).isFullyExpanded()) {
 							viewers.get(i).setExpanded(true);
-							break;
+							// bug 280152: expand all groups
+							//break;
 						}
 					}
 				}
