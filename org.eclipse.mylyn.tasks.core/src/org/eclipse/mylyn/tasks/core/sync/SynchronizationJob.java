@@ -12,6 +12,8 @@
 package org.eclipse.mylyn.tasks.core.sync;
 
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.mylyn.commons.core.DelegatingProgressMonitor;
+import org.eclipse.mylyn.commons.core.IDelegatingProgressMonitor;
 
 /**
  * @author Steffen Pingel
@@ -24,11 +26,14 @@ public abstract class SynchronizationJob extends Job {
 
 	private boolean fullSynchronization = false;
 
+	protected final IDelegatingProgressMonitor monitor;
+
 	/**
 	 * @since 3.0
 	 */
 	public SynchronizationJob(String name) {
 		super(name);
+		this.monitor = new DelegatingProgressMonitor();
 	}
 
 //	public boolean isChangedTasksSynchronization() {
@@ -53,4 +58,7 @@ public abstract class SynchronizationJob extends Job {
 		this.fullSynchronization = fullSynchronization;
 	}
 
+	public IDelegatingProgressMonitor getMonitor() {
+		return monitor;
+	}
 }

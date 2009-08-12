@@ -31,8 +31,6 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.mylyn.commons.core.DelegatingProgressMonitor;
-import org.eclipse.mylyn.commons.core.IDelegatingProgressMonitor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
@@ -123,8 +121,6 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 
 	private final List<IStatus> statuses;
 
-	private final IDelegatingProgressMonitor monitor;
-
 	public SynchronizeQueriesJob(TaskList taskList, TaskDataManager taskDataManager, IRepositoryModel tasksModel,
 			AbstractRepositoryConnector connector, TaskRepository repository, Set<RepositoryQuery> queries) {
 		super(Messages.SynchronizeQueriesJob_Synchronizing_Queries + " (" + repository.getRepositoryLabel() + ")"); //$NON-NLS-1$//$NON-NLS-2$
@@ -135,7 +131,6 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 		this.repository = repository;
 		this.queries = queries;
 		this.statuses = new ArrayList<IStatus>();
-		this.monitor = new DelegatingProgressMonitor();
 	}
 
 	@Override
@@ -329,7 +324,4 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 		return Collections.unmodifiableCollection(statuses);
 	}
 
-	public IDelegatingProgressMonitor getMonitor() {
-		return monitor;
-	}
 }

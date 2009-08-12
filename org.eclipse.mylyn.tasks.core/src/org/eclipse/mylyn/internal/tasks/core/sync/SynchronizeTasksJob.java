@@ -27,8 +27,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.mylyn.commons.core.DelegatingProgressMonitor;
-import org.eclipse.mylyn.commons.core.IDelegatingProgressMonitor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
@@ -81,8 +79,6 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 
 	private final List<IStatus> statuses;
 
-	private final IDelegatingProgressMonitor monitor;
-
 	public SynchronizeTasksJob(TaskList taskList, TaskDataManager synchronizationManager, IRepositoryModel tasksModel,
 			AbstractRepositoryConnector connector, TaskRepository taskRepository, Set<ITask> tasks) {
 		this(taskList, synchronizationManager, tasksModel, connector, (IRepositoryManager) null, tasks);
@@ -100,7 +96,6 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 		this.allTasks = tasks;
 		this.statuses = new ArrayList<IStatus>();
 		setRule(new MutexSchedulingRule());
-		this.monitor = new DelegatingProgressMonitor();
 	}
 
 	@Override
@@ -333,7 +328,4 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 		return Collections.unmodifiableCollection(statuses);
 	}
 
-	public IDelegatingProgressMonitor getMonitor() {
-		return monitor;
-	}
 }
