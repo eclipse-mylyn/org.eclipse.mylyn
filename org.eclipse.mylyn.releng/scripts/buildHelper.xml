@@ -682,7 +682,7 @@
 		-->
 		<exec dir="${dir}" executable="/bin/chmod" failonerror="false">
 			<arg value="-R"/>
-			<arg value="g+w"/>
+			<arg value="g+w,o+r"/>
 			<arg value="."/>
 		</exec>
 		<exec dir="${dir}" executable="/bin/chgrp" failonerror="false">
