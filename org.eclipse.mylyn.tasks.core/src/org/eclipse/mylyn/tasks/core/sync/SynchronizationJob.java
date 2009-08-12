@@ -26,6 +26,9 @@ public abstract class SynchronizationJob extends Job {
 
 	private boolean fullSynchronization = false;
 
+	/**
+	 * @since 3.3
+	 */
 	protected final IDelegatingProgressMonitor monitor;
 
 	/**
@@ -58,6 +61,9 @@ public abstract class SynchronizationJob extends Job {
 		this.fullSynchronization = fullSynchronization;
 	}
 
+	/**
+	 * @since 3.3
+	 */
 	public IDelegatingProgressMonitor getMonitor() {
 		return monitor;
 	}
