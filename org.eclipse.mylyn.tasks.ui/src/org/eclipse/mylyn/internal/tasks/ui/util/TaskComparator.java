@@ -141,9 +141,6 @@ public class TaskComparator implements Comparator<ITask> {
 		} else if (key2 == null) {
 			return -sortDirection;
 		}
-		System.err.print(key1);
-		System.err.print(" ");
-		System.err.println(key2);
 		return sortDirection * key1.compareTo(key2);
 	}
 
