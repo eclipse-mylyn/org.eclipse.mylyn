@@ -189,6 +189,8 @@ public class Messages extends NLS {
 
 	public static String AbstractRepositorySettingsPage_Enable_proxy_authentication;
 
+	public static String AbstractRepositorySettingsPage_Enter_a_user_id_Message0;
+
 	public static String AbstractRepositorySettingsPage_Enter_a_valid_server_url;
 
 	public static String AbstractRepositorySettingsPage_Http_Authentication;

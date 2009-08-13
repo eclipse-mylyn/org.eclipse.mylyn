@@ -61,7 +61,6 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 		super(pageName, repository, query);
 		this.connector = TasksUi.getRepositoryConnector(getTaskRepository().getConnectorKind());
 		setTitle(Messages.AbstractRepositoryQueryPage2_Enter_query_parameters);
-		setDescription(Messages.AbstractRepositoryQueryPage2_If_attributes_are_blank_or_stale_press_the_Update_button);
 	}
 
 	public void setNeedsRepositoryConfiguration(boolean needsRepositoryConfiguration) {

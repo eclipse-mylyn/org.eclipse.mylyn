@@ -1264,18 +1264,13 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			errorMessage = Messages.AbstractRepositorySettingsPage_Enter_a_valid_server_url;
 		}
 		if (errorMessage == null) {
-			errorMessage = credentialsComplete();
+			if ((!needsAnonymousLogin() || !anonymousButton.getSelection()) && isMissingCredentials()) {
+				errorMessage = Messages.AbstractRepositorySettingsPage_Enter_a_user_id_Message0;
+			}
 		}
 
-		setErrorMessage(errorMessage);
+		setMessage(errorMessage, repository == null ? IMessageProvider.NONE : IMessageProvider.ERROR);
 		return errorMessage == null && super.isPageComplete();
-	}
-
-	private String credentialsComplete() {
-		if ((!needsAnonymousLogin() || !anonymousButton.getSelection()) && isMissingCredentials()) {
-			return Messages.AbstractRepositorySettingsPage_Repository_user_name_and_password_must_not_be_blank;
-		}
-		return null;
 	}
 
 	private boolean isMissingCredentials() {

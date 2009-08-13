@@ -50,6 +50,7 @@ public class TaskRepositoryWizardDialog extends WizardDialog {
 	 */
 	public TaskRepositoryWizardDialog(Shell parentShell, IWizard newWizard) {
 		super(parentShell, newWizard);
+		setHelpAvailable(false);
 	}
 
 	/**
