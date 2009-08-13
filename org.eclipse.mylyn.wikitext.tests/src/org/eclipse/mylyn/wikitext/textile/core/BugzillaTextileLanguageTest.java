@@ -17,6 +17,7 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.internal.wikitext.tasks.ui.util.Util;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration;
+import org.eclipse.mylyn.wikitext.core.parser.markup.block.JavaStackTraceBlock;
 
 /**
  * @author David Green
@@ -119,31 +120,36 @@ public class BugzillaTextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<p>some &lt;span class=\"s\">mark&lt;/span> up</p>"));
 	}
 
-	// FIXME disabled due to bug 283629
-//	public void testJavaStackTraceDetection() {
-//		String html = parser.parseToHtml("text\n" + "java.lang.Exception: java.lang.IllegalStateException\n"
-//				+ "	at org.eclipse.mylyn.internal.wikitext.tasks.ui.util.Test.main(Test.java:21)\n"
-//				+ "Caused by: java.lang.IllegalStateException\n" + "	... 1 more\n" + "text");
-//		System.out.println(html);
-//		assertTrue(html.contains("<p>text</p><pre class=\"javaStackTrace\">java.lang.Exception"));
-//		assertTrue(html.contains("</pre><p>text</p>"));
-//	}
-//
-//	public void testJavaStackTraceDetection_bug280805() {
-//		String html = parser.parseToHtml("text\n" + "java.lang.Exception: java.lang.IllegalStateException\n"
-//				+ "	at org.eclipse.mylyn.internal.wikitext.tasks.ui.util.test.main(Test.java:21)\n"
-//				+ "Caused by: java.lang.IllegalStateException\n" + "	... 1 more\n" + "text");
-//		System.out.println(html);
-//		assertTrue(html.contains("<p>text</p><pre class=\"javaStackTrace\">java.lang.Exception"));
-//		assertTrue(html.contains("</pre><p>text</p>"));
-//	}
-//
-//	public void testJavaStackTraceDetection_bug273629() {
-//		boolean canStart = new JavaStackTraceBlock().canStart(
-//				"org.eclipse.ui.internal.PerspectiveBarContributionItem.select(PerspectiveBarContributionItem.java:124)",
-//				0);
-//		assertTrue(canStart);
-//	}
+	public void testJavaStackTraceDetection() {
+		String html = parser.parseToHtml("text\n" + "java.lang.Exception: java.lang.IllegalStateException\n"
+				+ "	at org.eclipse.mylyn.internal.wikitext.tasks.ui.util.Test.main(Test.java:21)\n"
+				+ "Caused by: java.lang.IllegalStateException\n" + "	... 1 more\n" + "text");
+		System.out.println(html);
+		assertTrue(html.contains("<p>text</p><pre class=\"javaStackTrace\">java.lang.Exception"));
+		assertTrue(html.contains("</pre><p>text</p>"));
+	}
+
+	public void testJavaStackTraceDetection_bug280805() {
+		String html = parser.parseToHtml("text\n" + "java.lang.Exception: java.lang.IllegalStateException\n"
+				+ "	at org.eclipse.mylyn.internal.wikitext.tasks.ui.util.test.main(Test.java:21)\n"
+				+ "Caused by: java.lang.IllegalStateException\n" + "	... 1 more\n" + "text");
+		System.out.println(html);
+		assertTrue(html.contains("<p>text</p><pre class=\"javaStackTrace\">java.lang.Exception"));
+		assertTrue(html.contains("</pre><p>text</p>"));
+	}
+
+	public void testJavaStackTraceDetection_bug273629() {
+		boolean canStart = new JavaStackTraceBlock().canStart(
+				"org.eclipse.ui.internal.PerspectiveBarContributionItem.select(PerspectiveBarContributionItem.java:124)",
+				0);
+		assertTrue(canStart);
+	}
+
+	public void testJavaStackTraceDetection_bug283629() {
+		boolean canStart = new JavaStackTraceBlock().canStart(
+				" org.eclipse.ui.texteditor.AbstractDecoratedTextEditor$11.run()V+165", 0);
+		assertFalse(canStart);
+	}
 
 	public void testEclipseErrorDetailsBlock() {
 		String html = parser.parseToHtml("text\n-- Error Details --\ndetail line 1\n\nno detail");

@@ -33,7 +33,7 @@ public class JavaStackTraceBlock extends Block {
 
 	private static final String PACKAGE_PART = "([a-z][a-z0-9]*)"; //$NON-NLS-1$
 
-	private static final String CLASS_PART = "([A-Za-z][a-z0-9_$]*)+"; //$NON-NLS-1$
+	private static final String CLASS_PART = "[A-Za-z][a-zA-Z0-9_$]*"; //$NON-NLS-1$
 
 	private static final String FQN_PART = PACKAGE_PART + "(\\." + PACKAGE_PART + ")*\\." + CLASS_PART; //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -45,11 +45,10 @@ public class JavaStackTraceBlock extends Block {
 
 	@Override
 	public boolean canStart(String line, int lineOffset) {
-		// XXX disabled due to bug 283629 
-		//		if (lineOffset == 0 && STACK_TRACE_PATTERN.matcher(line).matches()) {
-//			blockLineCount = 0;
-//			return true;
-//		}
+		if (lineOffset == 0 && STACK_TRACE_PATTERN.matcher(line).matches()) {
+			blockLineCount = 0;
+			return true;
+		}
 		return false;
 	}
 
