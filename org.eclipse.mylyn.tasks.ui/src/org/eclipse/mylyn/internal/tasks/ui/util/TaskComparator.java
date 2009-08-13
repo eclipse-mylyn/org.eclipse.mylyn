@@ -84,6 +84,9 @@ public class TaskComparator implements Comparator<ITask> {
 			case TASK_ID:
 				result = sortByID(element1, element2, key.getDirection());
 				break;
+			case TASK_TYPE:
+				result = compare(element1.getTaskKind(), element2.getTaskKind(), key.getDirection());
+				break;
 			default: // NONE
 				return 0;
 			}
@@ -130,6 +133,18 @@ public class TaskComparator implements Comparator<ITask> {
 			return -sortDirection;
 		}
 		return sortDirection * date1.compareTo(date2);
+	}
+
+	private <T> int compare(Comparable<T> key1, T key2, int sortDirection) {
+		if (key1 == null) {
+			return (key2 != null) ? sortDirection : 0;
+		} else if (key2 == null) {
+			return -sortDirection;
+		}
+		System.err.print(key1);
+		System.err.print(" ");
+		System.err.println(key2);
+		return sortDirection * key1.compareTo(key2);
 	}
 
 	private int sortByID(ITask element1, ITask element2, int sortDirection) {
