@@ -54,7 +54,7 @@ public class BugzillaImages {
 
 	public static final ImageDescriptor OVERLAY_ENHANCEMENT = create(T_VIEW, "overlay-enhancement.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor OVERLAY_MINOR = create(T_VIEW, "overlay-minor.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor OVERLAY_TRIVIAL = create(T_VIEW, "overlay-trivial.gif"); //$NON-NLS-1$
 
 	private static ImageDescriptor create(String prefix, String name) {
 		try {

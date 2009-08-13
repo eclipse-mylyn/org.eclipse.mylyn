@@ -87,9 +87,11 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 		List<LegendElement> legendItems = new ArrayList<LegendElement>();
 		legendItems.add(LegendElement.createTask("blocker", BugzillaImages.OVERLAY_CRITICAL)); //$NON-NLS-1$
 		legendItems.add(LegendElement.createTask("critical", BugzillaImages.OVERLAY_CRITICAL)); //$NON-NLS-1$
-		legendItems.add(LegendElement.createTask("major", BugzillaImages.OVERLAY_MAJOR)); //$NON-NLS-1$
+		legendItems.add(LegendElement.createTask("major", BugzillaImages.OVERLAY_CRITICAL)); //$NON-NLS-1$
+		legendItems.add(LegendElement.createTask("minor", BugzillaImages.OVERLAY_MAJOR)); //$NON-NLS-1$
+		legendItems.add(LegendElement.createTask("normal", null)); //$NON-NLS-1$
 		legendItems.add(LegendElement.createTask("enhancement", BugzillaImages.OVERLAY_ENHANCEMENT)); //$NON-NLS-1$
-		legendItems.add(LegendElement.createTask("trivial", BugzillaImages.OVERLAY_MINOR)); //$NON-NLS-1$
+		legendItems.add(LegendElement.createTask("trivial", BugzillaImages.OVERLAY_TRIVIAL)); //$NON-NLS-1$
 		return legendItems;
 	}
 
@@ -98,14 +100,14 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 		String severity = task.getAttribute(BugzillaAttribute.BUG_SEVERITY.getKey());
 		if (severity != null) {
 			// XXX: refactor to use configuration
-			if ("blocker".equals(severity) || "critical".equals(severity)) { //$NON-NLS-1$ //$NON-NLS-2$
+			if ("blocker".equals(severity) || "critical".equals(severity) || "major".equals(severity)) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				return BugzillaImages.OVERLAY_CRITICAL;
-			} else if ("major".equals(severity)) { //$NON-NLS-1$
+			} else if ("minor".equals(severity)) { //$NON-NLS-1$
 				return BugzillaImages.OVERLAY_MAJOR;
 			} else if ("enhancement".equals(severity)) { //$NON-NLS-1$
 				return BugzillaImages.OVERLAY_ENHANCEMENT;
-			} else if ("trivial".equals(severity) || "minor".equals(severity)) { //$NON-NLS-1$ //$NON-NLS-2$
-				return BugzillaImages.OVERLAY_MINOR;
+			} else if ("trivial".equals(severity)) { //$NON-NLS-1$ 
+				return BugzillaImages.OVERLAY_TRIVIAL;
 			} else {
 				return null;
 			}
