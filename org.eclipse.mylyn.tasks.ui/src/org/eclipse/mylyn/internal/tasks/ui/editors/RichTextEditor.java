@@ -93,6 +93,8 @@ public class RichTextEditor {
 
 	}
 
+	private static final String KEY_TEXT_VERSION = "org.eclipse.mylyn.tasks.ui.textVersion"; //$NON-NLS-1$
+
 	private BrowserPreviewViewer browserViewer;
 
 	private IContextActivation contextActivation;
@@ -131,6 +133,11 @@ public class RichTextEditor {
 
 	private String text;
 
+	/**
+	 * Changed each time text is updated.
+	 */
+	private int textVersion;
+
 	public RichTextEditor(TaskRepository repository, int style) {
 		this(repository, style, null, null);
 	}
@@ -150,8 +157,8 @@ public class RichTextEditor {
 		// do this before setting the document to not require invalidating the presentation
 		installHyperlinkPresenter(viewer, repository, getMode());
 
+		updateDocument(viewer, document, readOnly);
 		if (readOnly) {
-			viewer.setDocument(document);
 			if (extension != null) {
 				// setting view source action
 				viewer.getControl().setData(ViewSourceHandler.VIEW_SOURCE_ACTION, viewSourceAction);
@@ -163,7 +170,6 @@ public class RichTextEditor {
 				});
 			}
 		} else {
-			configureAsEditor(viewer, document);
 			installListeners(viewer);
 			viewer.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		}
@@ -180,25 +186,35 @@ public class RichTextEditor {
 	}
 
 	/** Configures annotation model for spell checking. */
-	private void configureAsEditor(SourceViewer viewer, Document document) {
-		AnnotationModel annotationModel = new AnnotationModel();
-		viewer.showAnnotations(false);
-		viewer.showAnnotationsOverview(false);
-		IAnnotationAccess annotationAccess = new DefaultMarkerAnnotationAccess();
-		final SourceViewerDecorationSupport support = new SourceViewerDecorationSupport(viewer, null, annotationAccess,
-				EditorsUI.getSharedTextColors());
-		Iterator<?> e = new MarkerAnnotationPreferences().getAnnotationPreferences().iterator();
-		while (e.hasNext()) {
-			support.setAnnotationPreference((AnnotationPreference) e.next());
+	private void updateDocument(SourceViewer viewer, Document document, boolean readOnly) {
+		if (new Integer(this.textVersion).equals(viewer.getData(KEY_TEXT_VERSION))) {
+			// already up-to-date, skip re-loading of the document
+			return;
 		}
-		support.install(EditorsUI.getPreferenceStore());
-		viewer.getTextWidget().addDisposeListener(new DisposeListener() {
-			public void widgetDisposed(DisposeEvent e) {
-				support.uninstall();
+
+		if (readOnly) {
+			viewer.setDocument(document);
+		} else {
+			AnnotationModel annotationModel = new AnnotationModel();
+			viewer.showAnnotations(false);
+			viewer.showAnnotationsOverview(false);
+			IAnnotationAccess annotationAccess = new DefaultMarkerAnnotationAccess();
+			final SourceViewerDecorationSupport support = new SourceViewerDecorationSupport(viewer, null,
+					annotationAccess, EditorsUI.getSharedTextColors());
+			Iterator<?> e = new MarkerAnnotationPreferences().getAnnotationPreferences().iterator();
+			while (e.hasNext()) {
+				support.setAnnotationPreference((AnnotationPreference) e.next());
 			}
-		});
-		//viewer.getTextWidget().setIndent(2);
-		viewer.setDocument(document, annotationModel);
+			support.install(EditorsUI.getPreferenceStore());
+			viewer.getTextWidget().addDisposeListener(new DisposeListener() {
+				public void widgetDisposed(DisposeEvent e) {
+					support.uninstall();
+				}
+			});
+			//viewer.getTextWidget().setIndent(2);
+			viewer.setDocument(document, annotationModel);
+		}
+		viewer.setData(KEY_TEXT_VERSION, this.textVersion);
 	}
 
 	public void createControl(Composite parent, FormToolkit toolkit) {
@@ -241,11 +257,11 @@ public class RichTextEditor {
 					});
 				}
 				configure(editorViewer, new Document(getText()), isReadOnly());
-				show(editorViewer);
+				show(editorViewer.getControl());
 			} else {
 				defaultViewer = createDefaultEditor(editorComposite, style);
 				configure(defaultViewer, new Document(getText()), isReadOnly());
-				show(defaultViewer);
+				show(defaultViewer.getControl());
 			}
 
 			if (!isReadOnly() && (style & TasksUiInternal.SWT_NO_SCROLL) == 0) {
@@ -409,6 +425,8 @@ public class RichTextEditor {
 				String value = viewer.getTextWidget().getText();
 				if (!RichTextEditor.this.text.equals(value)) {
 					RichTextEditor.this.text = value;
+					RichTextEditor.this.textVersion++;
+					viewer.setData(KEY_TEXT_VERSION, RichTextEditor.this.textVersion);
 					valueChanged(value);
 					CommonFormUtil.ensureVisible(viewer.getTextWidget());
 				}
@@ -484,6 +502,7 @@ public class RichTextEditor {
 
 	public void setText(String value) {
 		this.text = value;
+		this.textVersion++;
 		SourceViewer viewer = getViewer();
 		if (viewer != null) {
 			viewer.getDocument().set(value);
@@ -511,7 +530,8 @@ public class RichTextEditor {
 	 */
 	private void show(SourceViewer viewer) {
 		// WikiText modifies the document therefore, set a new document every time a viewer is changed to synchronize content between viewers 
-		viewer.setDocument(new Document(getText()));
+		// ensure that editor has an annotation model
+		updateDocument(viewer, new Document(getText()), !viewer.isEditable());
 		show(viewer.getControl());
 	}
 
