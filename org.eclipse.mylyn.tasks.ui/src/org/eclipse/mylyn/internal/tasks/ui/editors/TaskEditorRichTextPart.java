@@ -193,7 +193,7 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 
 			GridData gd = (GridData) getEditor().getControl().getLayoutData();
 
-			if (originalHeight == -1) {
+			if (originalHeight == -1 && !isAutoTogglePreview()) { //for auto toggle editors, SWT.DEFAULT is a valid hint
 				originalHeight = gd.heightHint;
 			}
 
@@ -270,4 +270,7 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 		super.fillToolBar(manager);
 	}
 
+	protected boolean isAutoTogglePreview() {
+		return false;
+	}
 }

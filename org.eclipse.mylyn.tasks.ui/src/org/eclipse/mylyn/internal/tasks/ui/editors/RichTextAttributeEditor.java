@@ -172,4 +172,10 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 		}
 	}
 
+	/**
+	 * Tries to enable auto toggling of preview (editable on click)
+	 */
+	public void enableAutoTogglePreview() {
+		editor.enableAutoTogglePreview();
+	}
 }

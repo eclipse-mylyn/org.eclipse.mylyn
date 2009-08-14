@@ -43,6 +43,8 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
@@ -137,6 +139,8 @@ public class RichTextEditor {
 	 * Changed each time text is updated.
 	 */
 	private int textVersion;
+
+	private boolean stickyPreview = false;
 
 	public RichTextEditor(TaskRepository repository, int style) {
 		this(repository, style, null, null);
@@ -352,6 +356,7 @@ public class RichTextEditor {
 			// adapt maximize action
 			previewViewer.getControl().setData(EditorUtil.KEY_TOGGLE_TO_MAXIMIZE_ACTION,
 					editorViewer.getControl().getData(EditorUtil.KEY_TOGGLE_TO_MAXIMIZE_ACTION));
+			installMenu(previewViewer.getControl(), editorViewer.getControl().getMenu());
 		}
 		return previewViewer;
 	}
@@ -550,15 +555,21 @@ public class RichTextEditor {
 	public void showEditor() {
 		if (getEditorViewer() != null) {
 			show(getEditorViewer());
+			stickyPreview = false;
 		} else {
 			show(getDefaultViewer());
 		}
 	}
 
-	public void showPreview() {
+	private void showPreview(boolean sticky) {
 		if (!isReadOnly()) {
 			show(getPreviewViewer());
+			stickyPreview = sticky;
 		}
+	}
+
+	public void showPreview() {
+		showPreview(true);
 	}
 
 	private void unsetContext() {
@@ -572,6 +583,31 @@ public class RichTextEditor {
 	}
 
 	protected void valueChanged(String value) {
+	}
+
+	public void enableAutoTogglePreview() {
+		if (getPreviewViewer() != null) {
+			show(getPreviewViewer());
+			previewViewer.getTextWidget().addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseUp(MouseEvent e) {
+					if (!stickyPreview) {
+						int offset = previewViewer.getTextWidget().getCaretOffset();
+						showEditor();
+						editorViewer.getTextWidget().setCaretOffset(offset);
+					}
+				}
+			});
+			editorViewer.getTextWidget().addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					super.focusLost(e);
+					if (!stickyPreview) {
+						showPreview(false);
+					}
+				}
+			});
+		}
 	}
 
 }
