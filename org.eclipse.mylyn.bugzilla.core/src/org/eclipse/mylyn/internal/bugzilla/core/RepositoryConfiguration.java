@@ -366,11 +366,33 @@ public class RepositoryConfiguration implements Serializable {
 		return customFields;
 	}
 
-	public void configureTaskData(TaskData taskData) {
+	public void configureTaskData(TaskData taskData, boolean localuser) {
 		if (taskData != null) {
 			addMissingFlags(taskData);
 			updateAttributeOptions(taskData);
 			addValidOperations(taskData);
+			if (localuser) {
+				removeDomain(taskData);
+			}
+		}
+	}
+
+	private void removeDomain(TaskData taskData) {
+		for (BugzillaAttribute element : BugzillaAttribute.PERSON_ATTRIBUTES) {
+			TaskAttribute attribute = taskData.getRoot().getAttribute(element.getKey());
+			if (attribute != null) {
+				cleanShortLogin(attribute);
+			}
+		}
+	}
+
+	private void cleanShortLogin(TaskAttribute a) {
+		if (a.getValue() != null && a.getValue().length() > 0) {
+			int atIndex = a.getValue().indexOf("@"); //$NON-NLS-1$
+			if (atIndex != -1) {
+				String newValue = a.getValue().substring(0, atIndex);
+				a.setValue(newValue);
+			}
 		}
 	}
 

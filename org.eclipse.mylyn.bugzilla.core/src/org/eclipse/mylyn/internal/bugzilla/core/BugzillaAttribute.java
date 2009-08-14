@@ -197,6 +197,8 @@ public enum BugzillaAttribute {
 
 	public static final BugzillaAttribute[] EXTENDED_ATTRIBUTES = { DELTA_TS, BUG_SEVERITY, PRODUCT };
 
+	public static final BugzillaAttribute[] PERSON_ATTRIBUTES = { ASSIGNED_TO, REPORTER, QA_CONTACT };
+
 	BugzillaAttribute(String prettyName, String idKey, String type, boolean hidden, boolean readonly) {
 		this.prettyName = prettyName;
 		this.keyString = idKey;

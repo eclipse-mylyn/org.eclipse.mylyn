@@ -428,7 +428,8 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			return true;
 
 		} else {
-			repositoryConfiguration.configureTaskData(taskData);
+			boolean shortLogin = Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN));
+			repositoryConfiguration.configureTaskData(taskData, shortLogin);
 		}
 		return true;
 	}
