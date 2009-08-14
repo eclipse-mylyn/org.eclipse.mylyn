@@ -29,6 +29,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaImages;
+import org.eclipse.mylyn.internal.bugzilla.ui.TaskAttachmentHyperlink;
 import org.eclipse.mylyn.internal.bugzilla.ui.search.BugzillaSearchPage;
 import org.eclipse.mylyn.internal.bugzilla.ui.wizard.NewBugzillaTaskWizard;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
@@ -49,7 +50,11 @@ import org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard;
  */
 public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 
-	private static final String regexp = "(duplicate of|bug|task)( ?#? ?)(\\d+)"; //$NON-NLS-1$
+	private static final int TASK_NUM_GROUP = 3;
+
+	private static final int ATTACHMENT_NUM_GROUP = 4;
+
+	private static final String regexp = "(?:(duplicate of|bug|task)( ?#? ?)(\\d+))|(?:Created an attachment\\s*\\(id=(\\d+)\\))"; //$NON-NLS-1$
 
 	private static final Pattern PATTERN = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
 
@@ -79,8 +84,6 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 			return MessageFormat.format(Messages.BugzillaConnectorUi__In_reply_to_comment_X_, taskComment.getNumber());
 		}
 	}
-
-	private static final int TASK_NUM_GROUP = 3;
 
 	@Override
 	public List<LegendElement> getLegendElements() {
@@ -202,17 +205,24 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 		}
 
 		try {
-
-			String bugId = m.group(TASK_NUM_GROUP).trim();
 			start += regionOffset;
 			end += regionOffset;
-
 			IRegion sregion = new Region(start, end - start);
-			return new TaskHyperlink(sregion, repository, bugId);
+
+			String bugId = m.group(TASK_NUM_GROUP);
+			if (bugId == null) {
+				String attachmentId = m.group(ATTACHMENT_NUM_GROUP);
+				if (attachmentId != null) {
+					return new TaskAttachmentHyperlink(sregion, repository, attachmentId);
+				}
+			} else {
+				bugId.trim();
+				return new TaskHyperlink(sregion, repository, bugId);
+			}
 
 		} catch (NumberFormatException e) {
-			return null;
 		}
+		return null;
 	}
 
 	@Override
