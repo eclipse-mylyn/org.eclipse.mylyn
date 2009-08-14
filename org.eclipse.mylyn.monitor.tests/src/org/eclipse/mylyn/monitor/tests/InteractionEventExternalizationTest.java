@@ -43,7 +43,8 @@ public class InteractionEventExternalizationTest extends AbstractContextTest {
 	}
 
 	public void testManualExternalization() throws IOException {
-		UiUsageMonitorPlugin.getPrefs().setValue(MonitorPreferenceConstants.PREF_MONITORING_OBFUSCATE, false);
+		UiUsageMonitorPlugin.getDefault().getPreferenceStore().setValue(
+				MonitorPreferenceConstants.PREF_MONITORING_OBFUSCATE, false);
 
 		List<InteractionEvent> events = new ArrayList<InteractionEvent>();
 		File f = new File(PATH);
@@ -72,6 +73,7 @@ public class InteractionEventExternalizationTest extends AbstractContextTest {
 		}
 
 		infile.delete();
-		UiUsageMonitorPlugin.getPrefs().setValue(MonitorPreferenceConstants.PREF_MONITORING_OBFUSCATE, true);
+		UiUsageMonitorPlugin.getDefault().getPreferenceStore().setValue(
+				MonitorPreferenceConstants.PREF_MONITORING_OBFUSCATE, true);
 	}
 }
