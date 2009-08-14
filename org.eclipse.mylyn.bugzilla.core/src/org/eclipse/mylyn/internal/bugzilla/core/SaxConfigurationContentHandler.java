@@ -87,8 +87,6 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 
 	private static final String ELEMENT_TYPE = "type"; //$NON-NLS-1$
 
-	private static final String ELEMENT_TYPE_DESC = "type_desc"; //$NON-NLS-1$
-
 	private static final String ELEMENT_ENTER_BUG = "enter_bug"; //$NON-NLS-1$
 
 	private static final String ELEMENT_REQUESTABLE = "requestable"; //$NON-NLS-1$
@@ -170,8 +168,6 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 	private String currentMultiplicable;
 
 	private int currentId;
-
-	private String currentTypeDesc = ""; //$NON-NLS-1$
 
 	private String currentEnterBug = ""; //$NON-NLS-1$
 
@@ -269,7 +265,6 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			currentName = ""; //$NON-NLS-1$
 			currentDescription = ""; //$NON-NLS-1$
 			currentType = ""; //$NON-NLS-1$
-			currentTypeDesc = ""; //$NON-NLS-1$
 			currentEnterBug = ""; //$NON-NLS-1$
 			currentId = -1;
 		} else if (localName.equals(ELEMENT_FLAG_TYPES)) {
@@ -401,7 +396,7 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 		} else if (localName.equals(ELEMENT_FIELD)) {
 			if (currentName.startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX)) {
 				BugzillaCustomField newField = new BugzillaCustomField(currentDescription, currentName, currentType,
-						currentTypeDesc, currentEnterBug);
+						currentEnterBug);
 				List<String> customOptionList = customOption.get(currentName);
 				if (customOptionList != null && !customOptionList.isEmpty()) {
 					newField.setOptions(customOptionList);
@@ -415,8 +410,6 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			currentType = characters.toString();
 		} else if (localName.equals(ELEMENT_ID)) {
 			currentId = Integer.parseInt(characters.toString());
-		} else if (localName.equals(ELEMENT_TYPE_DESC)) {
-			currentTypeDesc = characters.toString();
 		} else if (localName.equals(ELEMENT_ENTER_BUG)) {
 			currentEnterBug = characters.toString();
 		} else if (localName.equals(ELEMENT_REQUESTABLE)) {

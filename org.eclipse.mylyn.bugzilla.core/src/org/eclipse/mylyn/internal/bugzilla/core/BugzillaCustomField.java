@@ -24,9 +24,58 @@ import java.util.List;
 public class BugzillaCustomField implements Serializable {
 
 	// old version	private static final long serialVersionUID = 5703683576871326128L;
-	private static final long serialVersionUID = 7273310489883205486L;
+	//              private static final long serialVersionUID = 7273310489883205486L;
+
+	private static final long serialVersionUID = 8268371206426652131L;
 
 	public static final String CUSTOM_FIELD_PREFIX = "cf_"; //$NON-NLS-1$
+
+	public static enum FieldType {
+		UNKNOWN, FreeText, DropDown, MultipleSelection, LargeText, DateTime;
+
+		private static int parseInt(String type) {
+			try {
+				return Integer.parseInt(type);
+			} catch (NumberFormatException e) {
+				return -1;
+			}
+		}
+
+		@Override
+		public String toString() {
+			switch (this.ordinal()) {
+			case 1:
+				return "Free Text"; //$NON-NLS-1$
+			case 2:
+				return "Drop Down"; //$NON-NLS-1$
+			case 3:
+				return "Multiple-Selection Box"; //$NON-NLS-1$
+			case 4:
+				return "Large Text Box"; //$NON-NLS-1$
+			case 5:
+				return "Date/Time"; //$NON-NLS-1$
+			default:
+				return super.toString();
+			}
+		}
+
+		public static FieldType convert(String change) {
+			switch (parseInt(change)) {
+			case 1:
+				return FreeText;
+			case 2:
+				return DropDown;
+			case 3:
+				return MultipleSelection;
+			case 4:
+				return LargeText;
+			case 5:
+				return DateTime;
+			default:
+				return UNKNOWN;
+			}
+		}
+	}
 
 	private final String name;
 
@@ -36,16 +85,15 @@ public class BugzillaCustomField implements Serializable {
 
 	final private int type;
 
-	final private String typeDesc;
+	final private FieldType fieldType;
 
 	final private boolean enterBug;
 
-	public BugzillaCustomField(String description, String name, String type, String typeDesc, String enterBug) {
+	public BugzillaCustomField(String description, String name, String type, String enterBug) {
 		this.description = description;
 		this.name = name;
-
 		this.type = parseInt(type);
-		this.typeDesc = typeDesc;
+		this.fieldType = FieldType.convert(type);
 		this.enterBug = "1".equals(enterBug); //$NON-NLS-1$
 	}
 
@@ -77,25 +125,33 @@ public class BugzillaCustomField implements Serializable {
 		this.options.add(option);
 	}
 
-	/*
-	* @since 3.0.2
-	*/
+	/**
+	 * @since 3.0.2
+	 * @deprecated use {@link #getFieldType()} instead
+	 */
+	@Deprecated
 	public int getType() {
 		return type;
 	}
 
-	/*
-	* @since 3.0.2
-	*/
+	/**
+	 * @since 3.0.2
+	 * @deprecated use {@link #getFieldType().toString()} instead
+	 */
+	@Deprecated
 	public String getTypeDesc() {
-		return typeDesc;
+		return getFieldType().toString();
 	}
 
-	/*
-	* @since 3.0.2
-	*/
+	/**
+	 * @since 3.0.2
+	 */
 	public boolean isEnterBug() {
 		return enterBug;
+	}
+
+	public FieldType getFieldType() {
+		return fieldType;
 	}
 
 }

@@ -172,20 +172,20 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 							attribute.getMetaData().defaults().setLabel(desc).setReadOnly(false);
 							attribute.getMetaData().setKind(TaskAttribute.KIND_DEFAULT);
 							attribute.getMetaData().setType(TaskAttribute.TYPE_SHORT_TEXT);
-							switch (customField.getType()) {
-							case 1: // Free Text
+							switch (customField.getFieldType()) {
+							case FreeText:
 								attribute.getMetaData().setType(TaskAttribute.TYPE_SHORT_TEXT);
 								break;
-							case 2: // Drop Down
+							case DropDown:
 								attribute.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
 								break;
-							case 3: // Multiple-Selection Box
+							case MultipleSelection:
 								attribute.getMetaData().setType(TaskAttribute.TYPE_MULTI_SELECT);
 								break;
-							case 4: // Large Text Box
+							case LargeText:
 								attribute.getMetaData().setType(TaskAttribute.TYPE_LONG_TEXT);
 								break;
-							case 5: // Date/Time
+							case DateTime:
 								attribute.getMetaData().setType(TaskAttribute.TYPE_DATETIME);
 								break;
 
@@ -577,25 +577,26 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 					attribute.getMetaData().defaults().setLabel(bugzillaCustomField.getDescription());
 					attribute.getMetaData().setKind(TaskAttribute.KIND_DEFAULT);
 
-					switch (bugzillaCustomField.getType()) {
-					case 1: // Free Text
+					List<String> options = bugzillaCustomField.getOptions();
+
+					switch (bugzillaCustomField.getFieldType()) {
+					case FreeText:
 						attribute.getMetaData().setType(TaskAttribute.TYPE_SHORT_TEXT);
 						break;
-					case 2: // Drop Down
+					case DropDown:
 						attribute.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
 						break;
-					case 3: // Multiple-Selection Box
+					case MultipleSelection:
 						attribute.getMetaData().setType(TaskAttribute.TYPE_MULTI_SELECT);
 						break;
-					case 4: // Large Text Box
+					case LargeText:
 						attribute.getMetaData().setType(TaskAttribute.TYPE_LONG_TEXT);
 						break;
-					case 5: // Date/Time
+					case DateTime:
 						attribute.getMetaData().setType(TaskAttribute.TYPE_DATETIME);
 						break;
 
 					default:
-						List<String> options = bugzillaCustomField.getOptions();
 						if (options.size() > 0) {
 							attribute.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
 						} else {
@@ -603,6 +604,16 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 						}
 					}
 					attribute.getMetaData().setReadOnly(false);
+
+					for (String option : options) {
+						attribute.putOption(option, option);
+					}
+
+					if (bugzillaCustomField.getFieldType() == BugzillaCustomField.FieldType.DropDown
+							&& options.size() > 0) {
+						attribute.setValue(options.get(0));
+					}
+
 				}
 			}
 		}

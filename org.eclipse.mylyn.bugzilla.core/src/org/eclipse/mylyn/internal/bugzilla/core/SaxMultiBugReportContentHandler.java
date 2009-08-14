@@ -234,20 +234,20 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 					atr.getMetaData().defaults().setLabel(desc).setReadOnly(false);
 					atr.getMetaData().setKind(TaskAttribute.KIND_DEFAULT);
 					atr.getMetaData().setType(TaskAttribute.TYPE_SHORT_TEXT);
-					switch (customField.getType()) {
-					case 1: // Free Text
+					switch (customField.getFieldType()) {
+					case FreeText:
 						atr.getMetaData().setType(TaskAttribute.TYPE_SHORT_TEXT);
 						break;
-					case 2: // Drop Down
+					case DropDown:
 						atr.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
 						break;
-					case 3: // Multiple-Selection Box
+					case MultipleSelection:
 						atr.getMetaData().setType(TaskAttribute.TYPE_MULTI_SELECT);
 						break;
-					case 4: // Large Text Box
+					case LargeText:
 						atr.getMetaData().setType(TaskAttribute.TYPE_LONG_TEXT);
 						break;
-					case 5: // Date/Time
+					case DateTime:
 						atr.getMetaData().setType(TaskAttribute.TYPE_DATETIME);
 						break;
 
@@ -475,20 +475,20 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 					atr.getMetaData().defaults().setLabel(bugzillaCustomField.getDescription());
 					atr.getMetaData().setKind(TaskAttribute.KIND_DEFAULT);
 
-					switch (bugzillaCustomField.getType()) {
-					case 1: // Free Text
+					switch (bugzillaCustomField.getFieldType()) {
+					case FreeText:
 						atr.getMetaData().setType(TaskAttribute.TYPE_SHORT_TEXT);
 						break;
-					case 2: // Drop Down
+					case DropDown:
 						atr.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
 						break;
-					case 3: // Multiple-Selection Box
+					case MultipleSelection:
 						atr.getMetaData().setType(TaskAttribute.TYPE_MULTI_SELECT);
 						break;
-					case 4: // Large Text Box
+					case LargeText:
 						atr.getMetaData().setType(TaskAttribute.TYPE_LONG_TEXT);
 						break;
-					case 5: // Date/Time
+					case DateTime:
 						atr.getMetaData().setType(TaskAttribute.TYPE_DATETIME);
 						break;
 
