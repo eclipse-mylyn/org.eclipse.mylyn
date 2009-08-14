@@ -640,20 +640,20 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			if (section != null) {
 				// the expandAllInProgress flag will ensure that comments in top-level groups have been 
 				// expanded, no need to expand groups explicitly
-				boolean expandGroups = section.getClient() != null;
+				//boolean expandGroups = section.getClient() != null;
 
 				CommonFormUtil.setExpanded(section, true);
 
-				if (expandGroups) {
-					List<CommentGroupViewer> viewers = getCommentGroupViewers();
-					for (int i = viewers.size() - 1; i >= 0; i--) {
-						if (!viewers.get(i).isFullyExpanded()) {
-							viewers.get(i).setExpanded(true);
-							// bug 280152: expand all groups
-							//break;
-						}
+				//if (expandGroups) {
+				List<CommentGroupViewer> viewers = getCommentGroupViewers();
+				for (int i = viewers.size() - 1; i >= 0; i--) {
+					if (!viewers.get(i).isFullyExpanded()) {
+						viewers.get(i).setExpanded(true);
+						// bug 280152: expand all groups
+						//break;
 					}
 				}
+				//}
 			}
 		} finally {
 			expandAllInProgress = false;
