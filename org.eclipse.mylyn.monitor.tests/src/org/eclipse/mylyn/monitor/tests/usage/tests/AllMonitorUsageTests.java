@@ -23,6 +23,7 @@ public class AllMonitorUsageTests {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.monitor.ui.usage.tests");
 		suite.addTestSuite(FileDisplayDialogTest.class);
 		suite.addTestSuite(DefaultPreferenceConfigTest.class);
+		suite.addTestSuite(InteractionEventLoggerTest.class);
 		return suite;
 	}
 
