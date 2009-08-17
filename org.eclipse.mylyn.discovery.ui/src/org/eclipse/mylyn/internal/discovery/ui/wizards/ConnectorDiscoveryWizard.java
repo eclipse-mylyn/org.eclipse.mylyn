@@ -10,30 +10,17 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.discovery.ui.wizards;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.equinox.internal.provisional.p2.ui.IProvHelpContextIds;
-import org.eclipse.equinox.internal.provisional.p2.ui.QueryableMetadataRepositoryManager;
-import org.eclipse.equinox.internal.provisional.p2.ui.dialogs.PreselectedIUInstallWizard;
-import org.eclipse.equinox.internal.provisional.p2.ui.dialogs.ProvisioningWizardDialog;
-import org.eclipse.equinox.internal.provisional.p2.ui.policy.Policy;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDescriptorKind;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDiscovery;
 import org.eclipse.mylyn.internal.discovery.ui.DiscoveryUi;
-import org.eclipse.mylyn.internal.discovery.ui.util.DiscoveryUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
-import org.eclipse.osgi.util.NLS;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.Version;
 
@@ -45,7 +32,6 @@ import org.osgi.framework.Version;
  * @see ConnectorDiscoveryWizardMainPage
  * @author David Green
  */
-@SuppressWarnings("restriction")
 public class ConnectorDiscoveryWizard extends Wizard {
 
 	private ConnectorDiscoveryWizardMainPage mainPage;
@@ -89,36 +75,7 @@ public class ConnectorDiscoveryWizard extends Wizard {
 
 	@Override
 	public boolean performFinish() {
-		try {
-			final PrepareInstallProfileJob job = new PrepareInstallProfileJob(mainPage.getInstallableConnectors());
-			getContainer().run(true, true, job);
-
-			if (job.getPlannerResolutionOperation() != null
-					&& job.getPlannerResolutionOperation().getProvisioningPlan() != null) {
-				Display.getCurrent().asyncExec(new Runnable() {
-					public void run() {
-						PreselectedIUInstallWizard wizard = new PreselectedIUInstallWizard(Policy.getDefault(),
-								job.getProfileId(), job.getIUs(), job.getPlannerResolutionOperation(),
-								new QueryableMetadataRepositoryManager(Policy.getDefault().getQueryContext(), false));
-						WizardDialog dialog = new ProvisioningWizardDialog(getShell(), wizard);
-						dialog.create();
-						PlatformUI.getWorkbench().getHelpSystem().setHelp(dialog.getShell(),
-								IProvHelpContextIds.INSTALL_WIZARD);
-
-						dialog.open();
-					}
-				});
-			}
-		} catch (InvocationTargetException e) {
-			IStatus status = new Status(IStatus.ERROR, DiscoveryUi.ID_PLUGIN, NLS.bind(
-					Messages.ConnectorDiscoveryWizard_installProblems, new Object[] { e.getCause().getMessage() }),
-					e.getCause());
-			DiscoveryUiUtil.logAndDisplayStatus(Messages.ConnectorDiscoveryWizard_cannotInstall, status);
-			return false;
-		} catch (InterruptedException e) {
-			// canceled
-		}
-		return true;
+		return DiscoveryUi.install(mainPage.getInstallableConnectors(), getContainer());
 	}
 
 	/**

@@ -16,7 +16,7 @@ import org.eclipse.osgi.util.NLS;
 /**
  * @author David Green
  */
-class Messages extends NLS {
+public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.discovery.ui.wizards.messages"; //$NON-NLS-1$
 
 	public static String ConnectorDescriptorToolTip_detailsLink;
