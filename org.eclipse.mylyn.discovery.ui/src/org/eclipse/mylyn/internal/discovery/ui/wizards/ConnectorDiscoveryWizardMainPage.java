@@ -687,7 +687,9 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 						connector.getOverview());
 				GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).applyTo(toolBar);
 			} else {
-				new Label(connectorContainer, SWT.NULL).setText(" "); //$NON-NLS-1$
+				Label label = new Label(connectorContainer, SWT.NULL);
+				label.setText(" "); //$NON-NLS-1$
+				configureLook(label, background);
 			}
 
 			description = new Label(connectorContainer, SWT.NULL | SWT.WRAP);
@@ -880,7 +882,9 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 								category.getOverview());
 						GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).applyTo(toolBar);
 					} else {
-						new Label(categoryHeaderContainer, SWT.NULL).setText(" "); //$NON-NLS-1$
+						Label label = new Label(categoryHeaderContainer, SWT.NULL);
+						label.setText(" "); //$NON-NLS-1$
+						label.setBackground(null);
 					}
 					Label description = new Label(categoryHeaderContainer, SWT.WRAP);
 					GridDataFactory.fillDefaults().grab(true, false).span(2, 1).hint(100, SWT.DEFAULT).applyTo(
@@ -1181,7 +1185,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 	private IStatus computeStatus(InvocationTargetException e, String message) {
 		Throwable cause = e.getCause();
 		IStatus statusCause;
-		if (!(cause instanceof CoreException)) {
+		if (cause instanceof CoreException) {
 			statusCause = ((CoreException) cause).getStatus();
 		} else {
 			statusCause = new Status(IStatus.ERROR, DiscoveryUi.ID_PLUGIN, cause.getMessage(), cause);

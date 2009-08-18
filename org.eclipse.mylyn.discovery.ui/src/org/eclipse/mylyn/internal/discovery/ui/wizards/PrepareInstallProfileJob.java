@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.equinox.internal.provisional.p2.core.Version;
@@ -84,8 +85,10 @@ public class PrepareInstallProfileJob implements IRunnableWithProgress {
 		try {
 			doRun(monitor);
 			if (monitor.isCanceled()) {
-				throw new InterruptedException();
+				throw new OperationCanceledException();
 			}
+		} catch (OperationCanceledException e) {
+			throw new InterruptedException();
 		} catch (Exception e) {
 			throw new InvocationTargetException(e);
 		}

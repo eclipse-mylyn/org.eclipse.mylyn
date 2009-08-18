@@ -70,6 +70,7 @@ public abstract class DiscoveryUi {
 			return false;
 		} catch (InterruptedException e) {
 			// canceled
+			return false;
 		}
 		return true;
 	}
