@@ -18,6 +18,7 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.mylyn.internal.monitor.core.collection.DataOverviewCollector;
 import org.eclipse.mylyn.internal.monitor.core.collection.IUsageCollector;
 import org.eclipse.mylyn.internal.monitor.usage.InteractionEventLogger;
@@ -27,7 +28,6 @@ import org.eclipse.mylyn.monitor.core.AbstractMonitorLog;
 import org.eclipse.mylyn.monitor.tests.MonitorTestsPlugin;
 
 /**
- * 
  * @author Gail Murphy
  */
 public class DataOverviewCollectorTest extends TestCase {
@@ -88,7 +88,7 @@ public class DataOverviewCollectorTest extends TestCase {
 		ReportGenerator generator = new ReportGenerator(UiUsageMonitorPlugin.getDefault().getInteractionLogger(),
 				collectors);
 		generator.forceSyncForTesting(true);
-		generator.getStatisticsFromInteractionHistories(interactionHistoryFiles, null);
+		generator.getStatisticsFromInteractionHistories(interactionHistoryFiles, (IJobChangeListener) null);
 
 		// cleanup
 		logFile.delete();
