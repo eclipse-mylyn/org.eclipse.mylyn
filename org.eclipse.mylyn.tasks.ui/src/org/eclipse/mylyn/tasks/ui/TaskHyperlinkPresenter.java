@@ -12,7 +12,6 @@
 
 package org.eclipse.mylyn.tasks.ui;
 
-import java.lang.reflect.Constructor;
 import java.util.Iterator;
 
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -21,7 +20,7 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.jface.text.hyperlink.DefaultHyperlinkPresenter;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
-import org.eclipse.jface.text.hyperlink.IHyperlinkPresenter;
+import org.eclipse.jface.text.hyperlink.MultipleHyperlinkPresenter;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -35,7 +34,7 @@ import org.eclipse.swt.graphics.RGB;
  * @author Frank Becker
  * @since 3.1
  */
-public final class TaskHyperlinkPresenter extends DefaultHyperlinkPresenter {
+public final class TaskHyperlinkPresenter extends MultipleHyperlinkPresenter {
 
 	private IRegion activeRegion;
 
@@ -47,14 +46,11 @@ public final class TaskHyperlinkPresenter extends DefaultHyperlinkPresenter {
 
 	private ITextViewer textViewer;
 
-	private IHyperlinkPresenter multiplePresenter;
-
 	/**
 	 * @see DefaultHyperlinkPresenter#DefaultHyperlinkPresenter(IPreferenceStore)
 	 */
 	public TaskHyperlinkPresenter(IPreferenceStore store) {
 		super(store);
-		initMultipleHyperlinkSupport(IPreferenceStore.class, store);
 	}
 
 	/**
@@ -62,33 +58,12 @@ public final class TaskHyperlinkPresenter extends DefaultHyperlinkPresenter {
 	 */
 	public TaskHyperlinkPresenter(RGB color) {
 		super(color);
-		initMultipleHyperlinkSupport(RGB.class, color);
-	}
-
-	@Override
-	public boolean canShowMultipleHyperlinks() {
-		return multiplePresenter != null;
-	}
-
-	// TODO e3.4 remove reflection
-	@SuppressWarnings("unchecked")
-	private <T> void initMultipleHyperlinkSupport(Class<T> argClass, T arg) {
-		try {
-			Class<IHyperlinkPresenter> clazz = (Class<IHyperlinkPresenter>) Class.forName("org.eclipse.jface.text.hyperlink.MultipleHyperlinkPresenter"); //$NON-NLS-1$
-			Constructor<IHyperlinkPresenter> constructor = clazz.getDeclaredConstructor(argClass);
-			multiplePresenter = constructor.newInstance(arg);
-		} catch (Throwable t) {
-			// ignore
-		}
 	}
 
 	@Override
 	public void install(ITextViewer textViewer) {
 		this.textViewer = textViewer;
 		super.install(textViewer);
-		if (multiplePresenter != null) {
-			multiplePresenter.install(textViewer);
-		}
 	}
 
 	@Override
@@ -96,9 +71,6 @@ public final class TaskHyperlinkPresenter extends DefaultHyperlinkPresenter {
 		hideHyperlinks();
 		this.textViewer = null;
 		super.uninstall();
-		if (multiplePresenter != null) {
-			multiplePresenter.uninstall();
-		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -120,8 +92,8 @@ public final class TaskHyperlinkPresenter extends DefaultHyperlinkPresenter {
 
 	@Override
 	public void showHyperlinks(IHyperlink[] hyperlinks) {
-		if (hyperlinks.length > 1 && multiplePresenter != null) {
-			multiplePresenter.showHyperlinks(hyperlinks);
+		if (hyperlinks.length > 1) {
+			super.showHyperlinks(hyperlinks);
 		} else {
 			activeRegion = null;
 			if (hyperlinks.length > 0 && hyperlinks[0] instanceof TaskHyperlink) {
@@ -159,9 +131,6 @@ public final class TaskHyperlinkPresenter extends DefaultHyperlinkPresenter {
 				textViewer.getTextWidget().setToolTipText(null);
 			}
 			currentTaskHyperlink = null;
-		}
-		if (multiplePresenter != null) {
-			multiplePresenter.hideHyperlinks();
 		}
 		super.hideHyperlinks();
 	}

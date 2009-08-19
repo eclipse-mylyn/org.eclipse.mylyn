@@ -369,7 +369,10 @@ public class EditorUtil {
 		CommonUiUtil.setMenu(composite, menu);
 	}
 
-	// TODO e3.4 replace reflection by assignment to RowLayout.center
+	/**
+	 * @deprecated use {@link RowLayout#center} instead
+	 */
+	@Deprecated
 	public static void center(RowLayout rowLayout) {
 		try {
 			Field field = RowLayout.class.getDeclaredField("center"); //$NON-NLS-1$

@@ -151,7 +151,7 @@ public class AttributePart extends AbstractLocalEditorPart {
 			final Composite textClient = toolkit.createComposite(section);
 			textClient.setBackground(null);
 			RowLayout rowLayout = new RowLayout();
-			EditorUtil.center(rowLayout);
+			rowLayout.center = true;
 			rowLayout.marginLeft = 20;
 			rowLayout.marginTop = 1;
 			rowLayout.marginBottom = 1;

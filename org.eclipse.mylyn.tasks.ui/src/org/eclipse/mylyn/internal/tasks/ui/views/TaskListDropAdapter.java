@@ -31,7 +31,6 @@ import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.AbstractRetrieveTitleFromUrlJob;
-import org.eclipse.mylyn.internal.tasks.ui.util.PlatformUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskScheduleContentProvider.Unscheduled;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -43,6 +42,7 @@ import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.TransferData;
+import org.eclipse.swt.dnd.URLTransfer;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -235,7 +235,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			} else {
 				return false;
 			}
-		} else if (PlatformUtil.getUrlTransfer().isSupportedType(transferType)) {
+		} else if (URLTransfer.getInstance().isSupportedType(transferType)) {
 			return true;
 		}
 

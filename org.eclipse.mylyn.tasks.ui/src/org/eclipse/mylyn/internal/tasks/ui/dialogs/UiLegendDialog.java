@@ -34,10 +34,8 @@ public class UiLegendDialog extends PopupDialog {
 
 	private UiLegendControl content;
 
-	// TODO e3.4 move to new api
-	@SuppressWarnings("deprecation")
 	public UiLegendDialog(Shell parent) {
-		super(parent, PopupDialog.INFOPOPUP_SHELLSTYLE | SWT.ON_TOP, false, false, false, false, null, null);
+		super(parent, PopupDialog.INFOPOPUP_SHELLSTYLE | SWT.ON_TOP, false, false, false, false, false, null, null);
 	}
 
 	@Override

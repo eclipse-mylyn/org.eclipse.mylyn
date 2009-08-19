@@ -32,7 +32,6 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.tasks.ui.commands.ViewSourceHandler;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTextViewerConfiguration.Mode;
-import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractRenderingEngine;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorExtension;
@@ -225,7 +224,7 @@ public class RichTextEditor {
 		this.toolkit = toolkit;
 
 		int style = this.style;
-		if (!isReadOnly() && (style & TasksUiInternal.SWT_NO_SCROLL) == 0) {
+		if (!isReadOnly() && (style & SWT.NO_SCROLL) == 0) {
 			style |= SWT.V_SCROLL;
 		}
 
@@ -268,7 +267,7 @@ public class RichTextEditor {
 				show(defaultViewer.getControl());
 			}
 
-			if (!isReadOnly() && (style & TasksUiInternal.SWT_NO_SCROLL) == 0) {
+			if (!isReadOnly() && (style & SWT.NO_SCROLL) == 0) {
 				editorComposite.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 			}
 

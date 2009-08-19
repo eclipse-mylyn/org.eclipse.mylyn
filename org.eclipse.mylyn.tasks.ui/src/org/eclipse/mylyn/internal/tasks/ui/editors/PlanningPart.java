@@ -327,7 +327,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		actualTimeComposite.setBackground(null);
 		actualTimeComposite.setBackgroundMode(SWT.INHERIT_FORCE);
 		RowLayout rowLayout = new RowLayout();
-		EditorUtil.center(rowLayout);
+		rowLayout.center = true;
 		rowLayout.marginTop = 0;
 		rowLayout.marginBottom = 0;
 		actualTimeComposite.setLayout(rowLayout);
@@ -522,7 +522,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 			RowLayout rowLayout = new RowLayout();
 			rowLayout.marginTop = 0;
 			rowLayout.marginBottom = 0;
-			EditorUtil.center(rowLayout);
+			rowLayout.center = true;
 			toolbarComposite.setLayout(rowLayout);
 
 			createActualTime(toolkit, toolbarComposite);

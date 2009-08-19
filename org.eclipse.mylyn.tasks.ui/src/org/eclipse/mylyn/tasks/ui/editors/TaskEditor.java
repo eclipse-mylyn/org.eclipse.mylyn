@@ -881,7 +881,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 				if (PlatformUtil.hasNarrowToolBar()) {
 					layout.marginTop = 0;
 					layout.marginBottom = 0;
-					EditorUtil.center(layout);
+					layout.center = true;
 				}
 				composite.setLayout(layout);
 				composite.setBackground(null);

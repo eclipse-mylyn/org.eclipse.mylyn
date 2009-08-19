@@ -84,7 +84,6 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.PresentationDropDownSelection
 import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeAutomaticallyAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskListSortAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskListViewActionGroup;
-import org.eclipse.mylyn.internal.tasks.ui.commands.CollapseAllHandler;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskListChangeAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.util.PlatformUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.SortCriterion;
@@ -114,6 +113,7 @@ import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.RTFTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.dnd.URLTransfer;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.FocusAdapter;
@@ -162,6 +162,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.contexts.IContextService;
+import org.eclipse.ui.handlers.CollapseAllHandler;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.IShowInTarget;
@@ -274,9 +275,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 			}
 		}
 	}
-
-	// TODO e3.4 replace with SWT.NO_SCROLL constant
-	public static final int SWT_NO_SCROLL = 1 << 4;
 
 	private static final String ID_SEPARATOR_FILTERS = "filters"; //$NON-NLS-1$
 
@@ -845,7 +843,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		themeManager.addPropertyChangeListener(THEME_CHANGE_LISTENER);
 
 		filteredTree = new TaskListFilteredTree(parent, SWT.MULTI | SWT.VERTICAL | /* SWT.H_SCROLL | */SWT.V_SCROLL
-				| SWT_NO_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION, new SubstringPatternFilter(),
+				| SWT.NO_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION, new SubstringPatternFilter(),
 				getViewSite().getWorkbenchWindow());
 		// Set to empty string to disable native tooltips (windows only?)
 		// bug#160897
@@ -1022,7 +1020,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 	private void initHandlers() {
 		IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
-		handlerService.activateHandler(CollapseAllHandler.ID_COMMAND, new CollapseAllHandler(getViewer()));
+		handlerService.activateHandler(CollapseAllHandler.COMMAND_ID, new CollapseAllHandler(getViewer()));
 	}
 
 	private void hookGlobalActions() {
@@ -1157,7 +1155,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 	private void initDragAndDrop(Composite parent) {
 		Transfer[] dragTypes = new Transfer[] { LocalSelectionTransfer.getTransfer(), FileTransfer.getInstance() };
 		Transfer[] dropTypes = new Transfer[] { LocalSelectionTransfer.getTransfer(), FileTransfer.getInstance(),
-				TextTransfer.getInstance(), RTFTransfer.getInstance(), PlatformUtil.getUrlTransfer() };
+				TextTransfer.getInstance(), RTFTransfer.getInstance(), URLTransfer.getInstance() };
 
 		getViewer().addDragSupport(DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK, dragTypes,
 				new TaskDragSourceListener(getViewer()));
@@ -1273,9 +1271,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 			public void doubleClick(DoubleClickEvent event) {
 				if (TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
 						ITasksUiPreferenceConstants.ACTIVATE_WHEN_OPENED)) {
-					AbstractTask selectedTask = TaskListView.getFromActivePerspective().getSelectedTask();
-					if (selectedTask != null) {
-						actionGroup.getActivateAction().run(selectedTask);
+					AbstractTask selectedTask = getSelectedTask();
+					if (selectedTask != null && !selectedTask.isActive()) {
+						TasksUi.getTaskActivityManager().activateTask(selectedTask);
 					}
 				}
 			}
