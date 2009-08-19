@@ -196,8 +196,7 @@ public class ContextEditorManager extends AbstractContextListener {
 		}
 
 		// we don't have a good match here, try to make an educated guess
-		// TODO e3.4 replace by memento.getBoolean()
-		Boolean isActive = Boolean.valueOf(memento.getString(ATTRIBUTE_IS_ACTIVE));
+		Boolean isActive = memento.getBoolean(ATTRIBUTE_IS_ACTIVE);
 		if (isActive == null) {
 			isActive = false;
 		}
@@ -251,9 +250,8 @@ public class ContextEditorManager extends AbstractContextListener {
 					number = ((WorkbenchWindow) window).getNumber();
 				}
 				memento.putInteger(ATTRIBUTE_NUMER, number);
-				// TODO e3.4 replace by memento.putBoolean()
-				memento.putString(ATTRIBUTE_IS_LAUNCHING, (window == launchingWindow) ? "true" : "false"); //$NON-NLS-1$ //$NON-NLS-2$
-				memento.putString(ATTRIBUTE_IS_ACTIVE, (window == activeWindow) ? "true" : "false"); //$NON-NLS-1$ //$NON-NLS-2$
+				memento.putBoolean(ATTRIBUTE_IS_LAUNCHING, window == launchingWindow);
+				memento.putBoolean(ATTRIBUTE_IS_ACTIVE, window == activeWindow);
 				((WorkbenchPage) window.getActivePage()).getEditorManager().saveState(memento);
 			}
 			// TODO: avoid storing with preferences due to bloat?

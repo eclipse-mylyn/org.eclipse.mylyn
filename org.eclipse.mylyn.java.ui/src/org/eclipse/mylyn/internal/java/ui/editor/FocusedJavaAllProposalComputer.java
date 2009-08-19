@@ -38,18 +38,6 @@ import org.eclipse.mylyn.internal.java.ui.JavaUiUtil;
 public class FocusedJavaAllProposalComputer extends JavaCompletionProposalComputer {
 
 	/**
-	 * @see CompletionProposal#METHOD_REF_WITH_CASTED_RECEIVER
-	 */
-	// TODO e3.4 replace by CompletionProposal.METHOD_REF_WITH_CASTED_RECEIVER
-	public static final int METHOD_REF_WITH_CASTED_RECEIVER = 24;
-
-	/**
-	 * @see CompletionProposal#METHOD_REF_WITH_CASTED_RECEIVER
-	 */
-	// TODO e3.4 replace by CompletionProposal.METHOD_REF_WITH_CASTED_RECEIVER
-	public static final int FIELD_REF_WITH_CASTED_RECEIVER = 25;
-
-	/**
 	 * @see CompletionProposal#CONSTRUCTOR_INVOCATION
 	 */
 	// TODO e3.5 replace by CompletionProposal.CONSTRUCTOR_INVOCATION
@@ -103,11 +91,7 @@ public class FocusedJavaAllProposalComputer extends JavaCompletionProposalComput
 			// ignore
 		}
 		collector.setIgnored(CompletionProposal.FIELD_REF, false);
-		try {
-			collector.setIgnored(FIELD_REF_WITH_CASTED_RECEIVER, false);
-		} catch (IllegalArgumentException e) {
-			// ignore
-		}
+		collector.setIgnored(CompletionProposal.FIELD_REF_WITH_CASTED_RECEIVER, false);
 		collector.setIgnored(CompletionProposal.KEYWORD, false);
 		collector.setIgnored(CompletionProposal.LABEL_REF, false);
 		collector.setIgnored(CompletionProposal.LOCAL_VARIABLE_REF, false);
@@ -119,11 +103,7 @@ public class FocusedJavaAllProposalComputer extends JavaCompletionProposalComput
 		} catch (IllegalArgumentException e) {
 			// ignore
 		}
-		try {
-			collector.setIgnored(METHOD_REF_WITH_CASTED_RECEIVER, false);
-		} catch (IllegalArgumentException e) {
-			// ignore
-		}
+		collector.setIgnored(CompletionProposal.METHOD_REF_WITH_CASTED_RECEIVER, false);
 		collector.setIgnored(CompletionProposal.PACKAGE_REF, false);
 		collector.setIgnored(CompletionProposal.POTENTIAL_METHOD_DECLARATION, false);
 		collector.setIgnored(CompletionProposal.VARIABLE_DECLARATION, false);
