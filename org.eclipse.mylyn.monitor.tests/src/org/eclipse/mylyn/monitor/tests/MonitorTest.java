@@ -20,7 +20,6 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.internal.monitor.ui.BrowserMonitor;
 import org.eclipse.mylyn.internal.monitor.ui.KeybindingCommandMonitor;
 import org.eclipse.mylyn.internal.monitor.ui.PerspectiveChangeMonitor;
 import org.eclipse.mylyn.internal.monitor.usage.InteractionEventLogger;
@@ -41,8 +40,6 @@ public class MonitorTest extends TestCase implements IMonitorLifecycleListener {
 	private final MockSelectionMonitor selectionMonitor = new MockSelectionMonitor();
 
 	private final KeybindingCommandMonitor commandMonitor = new KeybindingCommandMonitor();
-
-	private final BrowserMonitor browserMonitor = new BrowserMonitor();
 
 	private final PerspectiveChangeMonitor perspectiveMonitor = new PerspectiveChangeMonitor();
 
@@ -77,17 +74,6 @@ public class MonitorTest extends TestCase implements IMonitorLifecycleListener {
 		generateSelection();
 		assertEquals(2, logger.getHistoryFromFile(monitorFile).size());
 		UiUsageMonitorPlugin.getDefault().stopMonitoring();
-	}
-
-	public void testUrlFilter() {
-		browserMonitor.setAcceptedUrls("url1,url2,url3");
-		assertEquals(3, browserMonitor.getAcceptedUrls().size());
-
-		browserMonitor.setAcceptedUrls(null);
-		assertEquals(0, browserMonitor.getAcceptedUrls().size());
-
-		browserMonitor.setAcceptedUrls("");
-		assertEquals(0, browserMonitor.getAcceptedUrls().size());
 	}
 
 	@SuppressWarnings( { "deprecation", "unchecked" })

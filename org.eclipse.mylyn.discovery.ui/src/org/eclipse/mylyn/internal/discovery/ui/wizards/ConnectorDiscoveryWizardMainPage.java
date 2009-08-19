@@ -494,7 +494,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage {
 		configureLook(bodyScrolledComposite, colorWhite);
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(bodyScrolledComposite);
 
-		// FIXME 3.2 does white work for any desktop theme, e.g. an inverse theme?
+		// FIXME 3.3 does white work for any desktop theme, e.g. an inverse theme?
 		final Composite scrolledContents = new Composite(bodyScrolledComposite, SWT.NONE);
 		configureLook(scrolledContents, colorWhite);
 		scrolledContents.setRedraw(false);
