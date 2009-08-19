@@ -155,8 +155,6 @@ public class Messages extends NLS {
 
 	public static String NewSubTaskAction_The_connector_does_not_support_creating_subtasks_for_this_task;
 
-	public static String NewSubTaskAction_Could_not_initialize_sub_task_data_for_task_;
-
 	public static String NewSubTaskAction_Could_not_retrieve_task_data_for_task_;
 
 	public static String NewSubTaskAction_Create_a_new_subtask;

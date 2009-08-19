@@ -217,8 +217,6 @@ public class Messages extends NLS {
 
 	public static String AbstractRepositorySettingsPage_Repository_url_is_invalid;
 
-	public static String AbstractRepositorySettingsPage_Repository_user_name_and_password_must_not_be_blank;
-
 	public static String AbstractRepositorySettingsPage_Save_Password;
 
 	public static String AbstractRepositorySettingsPage_Server_;
