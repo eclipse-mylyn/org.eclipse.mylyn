@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.util;
 
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.MessageFormat;
@@ -133,18 +132,9 @@ public class TasksUiInternal {
 		if (discoveryWizardCommand != null) {
 			IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(
 					IHandlerService.class);
-
+			EvaluationContext evaluationContext = createDiscoveryWizardEvaluationContext(handlerService);
 			// update enabled state in case something has changed (ProxyHandler caches state)
-			// TODO e3.3 remove reflection
-			try {
-				EvaluationContext evaluationContext = createDiscoveryWizardEvaluationContext(handlerService);
-				Command.class.getDeclaredMethod("setEnabled", Object.class).invoke(discoveryWizardCommand, evaluationContext); //$NON-NLS-1$
-			} catch (InvocationTargetException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Failed to enable discovery command", e)); //$NON-NLS-1$
-			} catch (Exception e) {
-				// expected on Eclipse 3.3
-			}
+			discoveryWizardCommand.setEnabled(evaluationContext);
 		}
 		return discoveryWizardCommand;
 	}
