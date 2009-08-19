@@ -11,8 +11,6 @@
 
 package org.eclipse.mylyn.internal.provisional.commons.ui;
 
-import java.lang.reflect.Field;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
@@ -36,11 +34,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
+import org.eclipse.ui.progress.WorkbenchJob;
 
 /**
  * @author Mik Kersten
  */
-public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
+public abstract class AbstractFilteredTree extends FilteredTree {
 
 	private static final int FILTER_WIDTH_MIN = 60;
 
@@ -50,7 +49,7 @@ public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 
 	public static final String LABEL_FIND = Messages.AbstractFilteredTree_Find;
 
-	private Job refreshJob;
+	private WorkbenchJob refreshJob;
 
 	private AdaptiveRefreshPolicy refreshPolicy;
 
@@ -74,12 +73,9 @@ public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 	 * @param filter
 	 */
 	public AbstractFilteredTree(Composite parent, int treeStyle, PatternFilter filter) {
-		super(parent, treeStyle, filter);
+		super(parent, treeStyle, filter, true);
 		try {
-			// TODO e3.4 override doCreateRefreshJob() instead
-			Field refreshField = FilteredTree.class.getDeclaredField("refreshJob"); //$NON-NLS-1$
-			refreshField.setAccessible(true);
-			refreshJob = (Job) refreshField.get(this);
+			// the super constructor calls doCreateRefreshJob() which assigns refreshJob
 			refreshPolicy = new AdaptiveRefreshPolicy(refreshJob);
 
 			filterText.addFocusListener(new FocusListener() {
@@ -115,6 +111,12 @@ public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 					new Status(IStatus.ERROR, CommonsUiPlugin.ID_PLUGIN, "Could not get refresh job", e)); //$NON-NLS-1$
 		}
 		setInitialText(LABEL_FIND);
+	}
+
+	@Override
+	protected WorkbenchJob doCreateRefreshJob() {
+		this.refreshJob = super.doCreateRefreshJob();
+		return this.refreshJob;
 	}
 
 	@Override

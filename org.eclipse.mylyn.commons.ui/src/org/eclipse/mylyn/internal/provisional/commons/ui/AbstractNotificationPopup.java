@@ -120,8 +120,6 @@ public abstract class AbstractNotificationPopup extends Window {
 
 	private FadeJob fadeJob;
 
-	private boolean supportsFading;
-
 	private boolean fadingEnabled;
 
 	public AbstractNotificationPopup(Display display) {
@@ -337,26 +335,20 @@ public abstract class AbstractNotificationPopup extends Window {
 		shell.setLocation(fixupDisplayBounds(shell.getSize(), shell.getLocation()));
 
 		if (isFadingEnabled()) {
-			supportsFading = SwtUtil.setAlpha(shell, 0);
-		} else {
-			supportsFading = false;
+			shell.setAlpha(0);
 		}
 		shell.setVisible(true);
-		if (supportsFading) {
-			fadeJob = SwtUtil.fadeIn(shell, new IFadeListener() {
-				public void faded(Shell shell, int alpha) {
-					if (shell.isDisposed()) {
-						return;
-					}
-
-					if (alpha == 255) {
-						scheduleAutoClose();
-					}
+		fadeJob = SwtUtil.fadeIn(shell, new IFadeListener() {
+			public void faded(Shell shell, int alpha) {
+				if (shell.isDisposed()) {
+					return;
 				}
-			});
-		} else {
-			scheduleAutoClose();
-		}
+
+				if (alpha == 255) {
+					scheduleAutoClose();
+				}
+			}
+		});
 
 		return Window.OK;
 	}
@@ -541,34 +533,30 @@ public abstract class AbstractNotificationPopup extends Window {
 		if (fadeJob != null) {
 			fadeJob.cancelAndWait(false);
 		}
-		if (supportsFading) {
-			fadeJob = SwtUtil.fadeOut(getShell(), new IFadeListener() {
-				public void faded(Shell shell, int alpha) {
-					if (!shell.isDisposed()) {
-						if (alpha == 0) {
-							shell.close();
-						} else if (isMouseOver(shell)) {
-							if (fadeJob != null) {
-								fadeJob.cancelAndWait(false);
-							}
-							fadeJob = SwtUtil.fastFadeIn(shell, new IFadeListener() {
-								public void faded(Shell shell, int alpha) {
-									if (shell.isDisposed()) {
-										return;
-									}
-
-									if (alpha == 255) {
-										scheduleAutoClose();
-									}
-								}
-							});
+		fadeJob = SwtUtil.fadeOut(getShell(), new IFadeListener() {
+			public void faded(Shell shell, int alpha) {
+				if (!shell.isDisposed()) {
+					if (alpha == 0) {
+						shell.close();
+					} else if (isMouseOver(shell)) {
+						if (fadeJob != null) {
+							fadeJob.cancelAndWait(false);
 						}
+						fadeJob = SwtUtil.fastFadeIn(shell, new IFadeListener() {
+							public void faded(Shell shell, int alpha) {
+								if (shell.isDisposed()) {
+									return;
+								}
+
+								if (alpha == 255) {
+									scheduleAutoClose();
+								}
+							}
+						});
 					}
 				}
-			});
-		} else {
-			shell.close();
-		}
+			}
+		});
 	}
 
 	@Override

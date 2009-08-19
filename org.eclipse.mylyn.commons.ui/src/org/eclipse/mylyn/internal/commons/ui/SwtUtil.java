@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.internal.commons.ui;
 
-import java.lang.reflect.Method;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -41,33 +40,6 @@ public class SwtUtil {
 		}
 	}
 
-	// TODO e3.4 get rid of reflection on 3.4 branch
-	public static boolean setAlpha(Shell shell, int value) {
-		Method method = null;
-		try {
-			method = shell.getClass().getMethod("setAlpha", new Class[] { int.class }); //$NON-NLS-1$
-			method.setAccessible(true);
-			//shell.setAlpha(value);
-			method.invoke(shell, new Object[] { value });
-			return true;
-		} catch (Exception e) {
-			// ignore, not supported on Eclipse 3.3
-			return false;
-		}
-	}
-
-	// TODO e3.4 get rid of reflection on 3.4 branch
-	public static int getAlpha(Shell shell) {
-		Method method = null;
-		try {
-			method = shell.getClass().getMethod("getAlpha"); //$NON-NLS-1$
-			method.setAccessible(true);
-			return (Integer) method.invoke(shell);
-		} catch (Exception e) {
-			return 0xFF;
-		}
-	}
-
 	public static FadeJob fastFadeIn(Shell shell, IFadeListener listener) {
 		return new FadeJob(shell, 2 * FADE_IN_INCREMENT, FADE_RESCHEDULE_DELAY, listener);
 	}
@@ -78,42 +50,6 @@ public class SwtUtil {
 
 	public static FadeJob fadeOut(Shell shell, IFadeListener listener) {
 		return new FadeJob(shell, FADE_OUT_INCREMENT, FADE_RESCHEDULE_DELAY, listener);
-	}
-
-	// TODO e3.4 get rid of reflection on 3.4 branch
-	public static void fade(Shell shell, boolean fadeIn, int increment, int speed) {
-		try {
-			Method method = shell.getClass().getMethod("setAlpha", new Class[] { int.class }); //$NON-NLS-1$
-			method.setAccessible(true);
-
-			if (fadeIn) {
-				for (int i = 0; i <= 255; i += increment) {
-					// shell.setAlpha(i);
-					method.invoke(shell, new Object[] { i });
-					try {
-						Thread.sleep(speed);
-					} catch (InterruptedException e) {
-						// ignore
-					}
-				}
-				// shell.setAlpha(255);
-				method.invoke(shell, new Object[] { 255 });
-			} else {
-				for (int i = 244; i >= 0; i -= increment) {
-					// shell.setAlpha(i);
-					method.invoke(shell, new Object[] { i });
-					try {
-						Thread.sleep(speed);
-					} catch (InterruptedException e) {
-						// ignore
-					}
-				}
-				// shell.setAlpha(0);
-				method.invoke(shell, new Object[] { 0 });
-			}
-		} catch (Exception e) {
-			// ignore, not supported on Eclipse 3.3
-		}
 	}
 
 	public static class FadeJob extends Job {
@@ -138,7 +74,7 @@ public class SwtUtil {
 			if (delay < 1) {
 				throw new IllegalArgumentException("delay must be > 0"); //$NON-NLS-1$
 			}
-			this.currentAlpha = getAlpha(shell);
+			this.currentAlpha = shell.getAlpha();
 			this.shell = shell;
 			this.increment = increment;
 			this.delay = delay;
@@ -168,7 +104,7 @@ public class SwtUtil {
 			Display.getDefault().syncExec(new Runnable() {
 				public void run() {
 					if (setAlpha) {
-						SwtUtil.setAlpha(shell, getLastAlpha());
+						shell.setAlpha(getLastAlpha());
 					}
 				}
 			});
@@ -198,12 +134,7 @@ public class SwtUtil {
 						return;
 					}
 
-					if (!SwtUtil.setAlpha(shell, currentAlpha)) {
-						// just in case it failed for some other reason than lack of support on the platform
-						currentAlpha = getLastAlpha();
-						SwtUtil.setAlpha(shell, currentAlpha);
-						stopped = true;
-					}
+					shell.setAlpha(currentAlpha);
 
 					if (fadeListener != null) {
 						fadeListener.faded(shell, currentAlpha);
