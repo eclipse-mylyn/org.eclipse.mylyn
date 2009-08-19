@@ -117,7 +117,7 @@ public class DelegatingProgressMonitor implements IDelegatingProgressMonitor {
 	public void setCanceled(boolean value) {
 		this.canceled = value;
 		for (IProgressMonitor monitor : monitors) {
-			monitor.setCanceled(true);
+			monitor.setCanceled(value);
 		}
 	}
 
