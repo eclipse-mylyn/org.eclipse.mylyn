@@ -122,7 +122,9 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 
 		super.createControl(parent, toolkit);
 		addDuplicateDetection(getComposite(), toolkit);
-		getEditor().enableAutoTogglePreview();
+		if (!getTaskData().isNew()) {
+			getEditor().enableAutoTogglePreview();
+		}
 	}
 
 	@Override
