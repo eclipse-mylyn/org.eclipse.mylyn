@@ -1607,8 +1607,8 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			return;
 		}
 
-		applyValidatorResult(validator);
 		getWizard().getContainer().updateButtons();
+		applyValidatorResult(validator);
 	}
 
 	/**
