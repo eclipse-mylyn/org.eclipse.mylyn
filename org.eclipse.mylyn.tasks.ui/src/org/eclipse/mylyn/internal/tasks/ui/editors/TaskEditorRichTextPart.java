@@ -19,6 +19,9 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFormUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextEditor.State;
+import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextEditor.StateChangedEvent;
+import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextEditor.StateChangedListener;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
@@ -49,6 +52,8 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 	private Action togglePreviewAction;
 
 	private Action toggleBrowserAction;
+
+	private boolean ignoreToggleEvents;
 
 	public TaskEditorRichTextPart() {
 		setSectionStyle(ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED);
@@ -242,12 +247,25 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 			togglePreviewAction.setImageDescriptor(CommonImages.PREVIEW_WEB);
 			togglePreviewAction.setToolTipText(Messages.TaskEditorRichTextPart_Preview);
 			togglePreviewAction.setChecked(false);
+			getEditor().getEditor().addStateChangedListener(new StateChangedListener() {
+				public void stateChanged(StateChangedEvent event) {
+					try {
+						ignoreToggleEvents = true;
+						togglePreviewAction.setChecked(event.state == State.PREVIEW);
+					} finally {
+						ignoreToggleEvents = false;
+					}
+				}
+			});
 			manager.add(togglePreviewAction);
 		}
 		if (togglePreviewAction == null && getEditor().hasBrowser()) {
 			toggleBrowserAction = new Action("", SWT.TOGGLE) { //$NON-NLS-1$
 				@Override
 				public void run() {
+					if (ignoreToggleEvents) {
+						return;
+					}
 					if (isChecked()) {
 						editor.showBrowser();
 					} else {
@@ -262,6 +280,16 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 			toggleBrowserAction.setImageDescriptor(CommonImages.PREVIEW_WEB);
 			toggleBrowserAction.setToolTipText(Messages.TaskEditorRichTextPart_Browser_Preview);
 			toggleBrowserAction.setChecked(false);
+			getEditor().getEditor().addStateChangedListener(new StateChangedListener() {
+				public void stateChanged(StateChangedEvent event) {
+					try {
+						ignoreToggleEvents = true;
+						toggleBrowserAction.setChecked(event.state == State.BROWSER);
+					} finally {
+						ignoreToggleEvents = false;
+					}
+				}
+			});
 			manager.add(toggleBrowserAction);
 		}
 		if (!getEditor().isReadOnly()) {

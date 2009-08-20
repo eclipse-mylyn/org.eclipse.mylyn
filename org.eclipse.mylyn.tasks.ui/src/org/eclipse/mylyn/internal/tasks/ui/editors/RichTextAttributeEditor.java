@@ -77,6 +77,10 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 		setControl(editor.getControl());
 	}
 
+	public RichTextEditor getEditor() {
+		return editor;
+	}
+
 	public SourceViewer getEditorViewer() {
 		return editor.getEditorViewer();
 	}
@@ -167,8 +171,8 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 	@Override
 	protected void decorateIncoming(Color color) {
 		super.decorateIncoming(color);
-		if (getEditorViewer() != null && getEditorViewer().getTextWidget() != null) {
-			getEditorViewer().getTextWidget().setBackground(color);
+		if (editor != null) {
+			editor.setBackground(color);
 		}
 	}
 

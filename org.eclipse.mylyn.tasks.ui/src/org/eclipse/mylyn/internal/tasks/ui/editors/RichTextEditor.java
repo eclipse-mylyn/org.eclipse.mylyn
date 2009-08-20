@@ -17,6 +17,7 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.resource.JFaceResources;
@@ -44,6 +45,7 @@ import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
@@ -70,6 +72,22 @@ import org.eclipse.ui.themes.IThemeManager;
  * @author Jingwen Ou
  */
 public class RichTextEditor {
+
+	public enum State {
+		DEFAULT, BROWSER, EDITOR, PREVIEW;
+	};
+
+	public static class StateChangedEvent {
+
+		public State state;
+
+	}
+
+	public interface StateChangedListener {
+
+		public void stateChanged(StateChangedEvent event);
+
+	}
 
 	public class ViewSourceAction extends Action {
 
@@ -140,6 +158,8 @@ public class RichTextEditor {
 	private int textVersion;
 
 	private boolean stickyPreview = false;
+
+	private final ListenerList stateChangedListeners = new ListenerList(ListenerList.IDENTITY);
 
 	public RichTextEditor(TaskRepository repository, int style) {
 		this(repository, style, null, null);
@@ -338,6 +358,9 @@ public class RichTextEditor {
 		return mode;
 	}
 
+	/**
+	 * @return The preview source viewer or null if there is no extension available or the attribute is read only
+	 */
 	private SourceViewer getPreviewViewer() {
 		if (extension == null) {
 			return null;
@@ -356,6 +379,8 @@ public class RichTextEditor {
 			previewViewer.getControl().setData(EditorUtil.KEY_TOGGLE_TO_MAXIMIZE_ACTION,
 					editorViewer.getControl().getData(EditorUtil.KEY_TOGGLE_TO_MAXIMIZE_ACTION));
 			installMenu(previewViewer.getControl(), editorViewer.getControl().getMenu());
+			//set the background color in case there is an incoming to show
+			previewViewer.getTextWidget().setBackground(editorComposite.getBackground());
 		}
 		return previewViewer;
 	}
@@ -527,6 +552,27 @@ public class RichTextEditor {
 		}
 		editorComposite.layout();
 		control.setFocus();
+		fireStateChangedEvent();
+	}
+
+	protected void fireStateChangedEvent() {
+		if (stateChangedListeners.isEmpty()) {
+			return;
+		}
+		StateChangedEvent event = new StateChangedEvent();
+		if (defaultViewer != null && defaultViewer.getControl() == editorLayout.topControl) {
+			event.state = State.DEFAULT;
+		} else if (defaultViewer != null && editorViewer.getControl() == editorLayout.topControl) {
+			event.state = State.EDITOR;
+		} else if (previewViewer != null && previewViewer.getControl() == editorLayout.topControl) {
+			event.state = State.PREVIEW;
+		} else if (browserViewer != null && browserViewer.getControl() == editorLayout.topControl) {
+			event.state = State.BROWSER;
+		}
+		Object[] listeners = stateChangedListeners.getListeners();
+		for (Object listener : listeners) {
+			((StateChangedListener) listener).stateChanged(event);
+		}
 	}
 
 	/**
@@ -561,7 +607,7 @@ public class RichTextEditor {
 	}
 
 	private void showPreview(boolean sticky) {
-		if (!isReadOnly()) {
+		if (!isReadOnly() && getPreviewViewer() != null) {
 			show(getPreviewViewer());
 			stickyPreview = sticky;
 		}
@@ -585,12 +631,12 @@ public class RichTextEditor {
 	}
 
 	public void enableAutoTogglePreview() {
-		if (getPreviewViewer() != null) {
+		if (!isReadOnly() && getPreviewViewer() != null) {
 			show(getPreviewViewer());
 			previewViewer.getTextWidget().addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseUp(MouseEvent e) {
-					if (!stickyPreview) {
+					if (e.count == 2 && !stickyPreview) {
 						int offset = previewViewer.getTextWidget().getCaretOffset();
 						showEditor();
 						editorViewer.getTextWidget().setCaretOffset(offset);
@@ -607,6 +653,28 @@ public class RichTextEditor {
 				}
 			});
 		}
+	}
+
+	/**
+	 * Sets the background color for all instantiated viewers
+	 * 
+	 * @param color
+	 */
+	public void setBackground(Color color) {
+		if (editorComposite != null && !editorComposite.isDisposed()) {
+			editorComposite.setBackground(color);
+			for (Control child : editorComposite.getChildren()) {
+				child.setBackground(color);
+			}
+		}
+	}
+
+	public void addStateChangedListener(StateChangedListener listener) {
+		stateChangedListeners.add(listener);
+	}
+
+	public void removeStateChangedListener(StateChangedListener listener) {
+		stateChangedListeners.remove(listener);
 	}
 
 }
