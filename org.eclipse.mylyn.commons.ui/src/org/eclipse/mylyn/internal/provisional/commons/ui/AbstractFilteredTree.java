@@ -32,14 +32,13 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.progress.WorkbenchJob;
 
 /**
  * @author Mik Kersten
  */
-public abstract class AbstractFilteredTree extends FilteredTree {
+public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 
 	private static final int FILTER_WIDTH_MIN = 60;
 

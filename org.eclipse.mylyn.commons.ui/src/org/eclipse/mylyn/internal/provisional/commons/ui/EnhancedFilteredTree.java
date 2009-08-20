@@ -22,10 +22,14 @@ import org.eclipse.ui.dialogs.PatternFilter;
  * 
  * @author Hiroyuki Inaba
  */
-@Deprecated
+// TODO e3.5 remove this class and replace with FilteredTree
 public class EnhancedFilteredTree extends FilteredTree {
 
 	protected boolean useNewLook;
+
+	public EnhancedFilteredTree(Composite parent, int treeStyle, PatternFilter filter, boolean useNewLook) {
+		super(parent, treeStyle, filter);
+	}
 
 	public EnhancedFilteredTree(Composite parent, int treeStyle, PatternFilter filter) {
 		super(parent, treeStyle, filter);
