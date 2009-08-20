@@ -41,6 +41,7 @@ import org.eclipse.mylyn.internal.context.ui.actions.ContextRetrieveAction;
 import org.eclipse.mylyn.internal.context.ui.views.ContextNodeOpenListener;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DelayedRefreshJob;
+import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
@@ -48,7 +49,6 @@ import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
@@ -65,6 +65,7 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
@@ -281,64 +282,44 @@ public class ContextEditorFormPage extends FormPage {
 			doiScale.setEnabled(false);
 		}
 
-		Label attachImage = toolkit.createLabel(sectionClient, ""); //$NON-NLS-1$
-		attachImage.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_ATTACH));
-		attachImage.setEnabled(task != null);
-		Hyperlink attachHyperlink = toolkit.createHyperlink(sectionClient,
-				Messages.ContextEditorFormPage_Attach_context_, SWT.NONE);
-		attachHyperlink.setEnabled(task != null);
-		attachHyperlink.addMouseListener(new MouseListener() {
+		if (AttachmentUtil.canUploadAttachment(task)) {
+			Label attachImage = toolkit.createLabel(sectionClient, ""); //$NON-NLS-1$
+			attachImage.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_ATTACH));
+			attachImage.setEnabled(task != null);
+			Hyperlink attachHyperlink = toolkit.createHyperlink(sectionClient,
+					Messages.ContextEditorFormPage_Attach_context_, SWT.NONE);
+			attachHyperlink.setEnabled(task != null);
+			attachHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+				@Override
+				public void linkActivated(HyperlinkEvent e) {
+					new ContextAttachAction().run(task);
+				}
+			});
+		}
 
-			public void mouseUp(MouseEvent e) {
-				new ContextAttachAction().run(task);
-			}
-
-			public void mouseDoubleClick(MouseEvent e) {
-				// ignore
-			}
-
-			public void mouseDown(MouseEvent e) {
-				// ignore
-			}
-		});
-
-		Label retrieveImage = toolkit.createLabel(sectionClient, ""); //$NON-NLS-1$
-		retrieveImage.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_RETRIEVE));
-		retrieveImage.setEnabled(task != null);
-		Hyperlink retrieveHyperlink = toolkit.createHyperlink(sectionClient,
-				Messages.ContextEditorFormPage_Retrieve_Context_, SWT.NONE);
-		retrieveHyperlink.setEnabled(task != null);
-		retrieveHyperlink.addMouseListener(new MouseListener() {
-
-			public void mouseUp(MouseEvent e) {
-				new ContextRetrieveAction().run(task);
-			}
-
-			public void mouseDoubleClick(MouseEvent e) {
-				// ignore
-			}
-
-			public void mouseDown(MouseEvent e) {
-				// ignore
-			}
-		});
+		if (AttachmentUtil.canDownloadAttachment(task)) {
+			Label retrieveImage = toolkit.createLabel(sectionClient, ""); //$NON-NLS-1$
+			retrieveImage.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_RETRIEVE));
+			retrieveImage.setEnabled(task != null);
+			Hyperlink retrieveHyperlink = toolkit.createHyperlink(sectionClient,
+					Messages.ContextEditorFormPage_Retrieve_Context_, SWT.NONE);
+			retrieveHyperlink.setEnabled(task != null);
+			retrieveHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+				@Override
+				public void linkActivated(HyperlinkEvent e) {
+					new ContextRetrieveAction().run(task);
+				}
+			});
+		}
 
 		Label copyImage = toolkit.createLabel(sectionClient, ""); //$NON-NLS-1$
 		copyImage.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_COPY));
 		Hyperlink copyHyperlink = toolkit.createHyperlink(sectionClient,
 				Messages.ContextEditorFormPage_Copy_Context_to_, SWT.NONE);
-		copyHyperlink.addMouseListener(new MouseListener() {
-
-			public void mouseUp(MouseEvent e) {
+		copyHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
+			public void linkActivated(HyperlinkEvent e) {
 				new ContextCopyAction().run(task);
-			}
-
-			public void mouseDoubleClick(MouseEvent e) {
-				// ignore
-			}
-
-			public void mouseDown(MouseEvent e) {
-				// ignore
 			}
 		});
 
@@ -346,18 +327,10 @@ public class ContextEditorFormPage extends FormPage {
 		clearImage.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_CLEAR));
 		Hyperlink clearHyperlink = toolkit.createHyperlink(sectionClient, Messages.ContextEditorFormPage_RemoveAll,
 				SWT.NONE);
-		clearHyperlink.addMouseListener(new MouseListener() {
-
-			public void mouseUp(MouseEvent e) {
+		clearHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
+			public void linkActivated(HyperlinkEvent e) {
 				new ContextClearAction().run(task);
-			}
-
-			public void mouseDoubleClick(MouseEvent e) {
-				// ignore
-			}
-
-			public void mouseDown(MouseEvent e) {
-				// ignore
 			}
 		});
 		section.setExpanded(true);
