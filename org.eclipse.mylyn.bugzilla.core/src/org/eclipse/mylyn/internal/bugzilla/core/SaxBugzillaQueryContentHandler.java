@@ -63,6 +63,14 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 		try {
 			tag = BugzillaAttribute.valueOf(localName.trim().toUpperCase(Locale.ENGLISH));
 			switch (tag) {
+			case QUERY_TIMESTAMP:
+				if (collector instanceof BugzillaTaskDataCollector) {
+					if (parsedText != null && parsedText.length() > 0) {
+						BugzillaTaskDataCollector bCollector = (BugzillaTaskDataCollector) collector;
+						bCollector.setQueryTimestamp(parsedText);
+					}
+				}
+				break;
 			case ID:
 				taskData = new TaskData(mapper, getConnectorKind(), repositoryUrl, parsedText);
 				taskData.setPartial(true);
@@ -96,7 +104,7 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 	}
 
 	protected String getConnectorKind() {
-		return BugzillaCorePlugin.CONNECTOR_KIND;
+		return mapper.getTaskRepository().getConnectorKind();
 	}
 
 	public int getResultCount() {

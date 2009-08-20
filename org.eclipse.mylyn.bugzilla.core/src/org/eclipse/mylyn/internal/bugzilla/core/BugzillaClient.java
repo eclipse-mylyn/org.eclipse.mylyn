@@ -497,7 +497,7 @@ public class BugzillaClient {
 		return new RepositoryQueryResultsFactory(stream, getCharacterEncoding());
 	}
 
-	private static void setupExistingBugAttributes(String serverUrl, TaskData existingReport) {
+	protected static void setupExistingBugAttributes(String serverUrl, TaskData existingReport) {
 		// ordered list of elements as they appear in UI
 		// and additional elements that may not appear in the incoming xml
 		// stream but need to be present for bug submission / not always dirty
@@ -509,8 +509,7 @@ public class BugzillaClient {
 				BugzillaAttribute.ASSIGNED_TO, BugzillaAttribute.TARGET_MILESTONE, BugzillaAttribute.REPORTER,
 				BugzillaAttribute.DEPENDSON, BugzillaAttribute.BLOCKED, BugzillaAttribute.BUG_FILE_LOC,
 				BugzillaAttribute.NEWCC, BugzillaAttribute.KEYWORDS, BugzillaAttribute.CC,
-				BugzillaAttribute.NEW_COMMENT, BugzillaAttribute.QA_CONTACT, BugzillaAttribute.STATUS_WHITEBOARD
-		};
+				BugzillaAttribute.NEW_COMMENT, BugzillaAttribute.QA_CONTACT, BugzillaAttribute.STATUS_WHITEBOARD };
 
 		for (BugzillaAttribute element : reportElements) {
 			BugzillaTaskDataHandler.createAttribute(existingReport, element);

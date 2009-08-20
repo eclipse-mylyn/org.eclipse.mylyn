@@ -147,6 +147,8 @@ public class Messages extends NLS {
 
 	public static String BugzillaAttribute_URL;
 
+	public static String BugzillaAttribute_Query_Timestamp;
+
 	public static String BugzillaAttribute_used_by_search_engine_bugs;
 
 	public static String BugzillaAttribute_used_by_search_engine_desc;

@@ -253,37 +253,30 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		}
 	}
 
-	/**
-	 * TODO: clean up use of BugzillaTaskDataCollector
-	 */
 	private void queryForChanged(final TaskRepository repository, Set<ITask> changedTasks, String urlQueryString,
-			ISynchronizationSession context, IProgressMonitor monitor) throws UnsupportedEncodingException,
+			ISynchronizationSession syncSession, IProgressMonitor monitor) throws UnsupportedEncodingException,
 			CoreException {
 
 		HashMap<String, ITask> taskById = new HashMap<String, ITask>();
-		for (ITask task : context.getTasks()) {
+		for (ITask task : syncSession.getTasks()) {
 			taskById.put(task.getTaskId(), task);
 		}
-		final Set<TaskData> changedTaskData = new HashSet<TaskData>();
-		TaskDataCollector collector = new TaskDataCollector() {
 
-			@Override
-			public void accept(TaskData taskData) {
-				changedTaskData.add(taskData);
-			}
-		};
+		BugzillaTaskDataCollector collector = new BugzillaTaskDataCollector();
 
 		// TODO: Decouple from internals
 		IRepositoryQuery query = new RepositoryQuery(repository.getConnectorKind(), ""); //$NON-NLS-1$
 		query.setSummary(Messages.BugzillaRepositoryConnector_Query_for_changed_tasks);
 		query.setUrl(urlQueryString);
-		performQuery(repository, query, collector, context, monitor);
-
-		for (TaskData data : changedTaskData) {
+		performQuery(repository, query, collector, syncSession, monitor);
+		for (TaskData data : collector.getTaskData()) {
 			ITask changedTask = taskById.get(data.getTaskId());
 			if (changedTask != null) {
 				changedTasks.add(changedTask);
 			}
+		}
+		if (collector.getQueryTimestamp() != null) {
+			syncSession.setData(collector.getQueryTimestamp());
 		}
 
 	}
@@ -313,6 +306,13 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				// due to invalid authorization token, forcing relogin fixes
 				client.logout(monitor);
 				client.getSearchHits(query, resultCollector, mapper, monitor);
+			}
+
+			if (resultCollector instanceof BugzillaTaskDataCollector) {
+				BugzillaTaskDataCollector bCollector = (BugzillaTaskDataCollector) resultCollector;
+				if (bCollector.getQueryTimestamp() != null) {
+					event.setData(bCollector.getQueryTimestamp());
+				}
 			}
 
 			return Status.OK_STATUS;
@@ -511,11 +511,15 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	private String getSynchronizationTimestamp(ISynchronizationSession event) {
 		Date mostRecent = new Date(0);
 		String mostRecentTimeStamp = event.getTaskRepository().getSynchronizationTimeStamp();
-		for (ITask task : event.getChangedTasks()) {
-			Date taskModifiedDate = task.getModificationDate();
-			if (taskModifiedDate != null && taskModifiedDate.after(mostRecent)) {
-				mostRecent = taskModifiedDate;
-				mostRecentTimeStamp = task.getAttribute(BugzillaAttribute.DELTA_TS.getKey());
+		if (event.getData() != null) {
+			mostRecentTimeStamp = (String) event.getData();
+		} else {
+			for (ITask task : event.getChangedTasks()) {
+				Date taskModifiedDate = task.getModificationDate();
+				if (taskModifiedDate != null && taskModifiedDate.after(mostRecent)) {
+					mostRecent = taskModifiedDate;
+					mostRecentTimeStamp = task.getAttribute(BugzillaAttribute.DELTA_TS.getKey());
+				}
 			}
 		}
 		return mostRecentTimeStamp;

@@ -183,7 +183,9 @@ public enum BugzillaAttribute {
 
 	INSTALLATION(Messages.BugzillaAttribute_used_by_search_engine_installation, "installation", null, false, false), //$NON-NLS-1$
 
-	BUGS(Messages.BugzillaAttribute_used_by_search_engine_bugs, "bugs", null, false, false); //$NON-NLS-1$
+	BUGS(Messages.BugzillaAttribute_used_by_search_engine_bugs, "bugs", null, false, false), //$NON-NLS-1$
+
+	QUERY_TIMESTAMP(Messages.BugzillaAttribute_Query_Timestamp, "query_timestamp", null, false, false); //$NON-NLS-1$
 
 	private final boolean isHidden;
 
