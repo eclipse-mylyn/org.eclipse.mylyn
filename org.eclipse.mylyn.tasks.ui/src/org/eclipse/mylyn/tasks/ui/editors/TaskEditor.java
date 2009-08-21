@@ -113,6 +113,7 @@ import org.eclipse.ui.internal.forms.widgets.TitleRegion;
 import org.eclipse.ui.menus.IMenuService;
 import org.eclipse.ui.part.WorkbenchPart;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
+import org.eclipse.ui.services.IDisposable;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 /**
@@ -494,6 +495,9 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		if (textSupport != null) {
 			textSupport.dispose();
 		}
+		if (messageHyperLinkListener instanceof IDisposable) {
+			((IDisposable) messageHyperLinkListener).dispose();
+		}
 		super.dispose();
 	}
 
@@ -711,6 +715,9 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			form.setMessage(message, type);
 			if (messageHyperLinkListener != null) {
 				form.removeMessageHyperlinkListener(messageHyperLinkListener);
+				if (messageHyperLinkListener instanceof IDisposable) {
+					((IDisposable) messageHyperLinkListener).dispose();
+				}
 			}
 			if (listener != null) {
 				form.addMessageHyperlinkListener(listener);

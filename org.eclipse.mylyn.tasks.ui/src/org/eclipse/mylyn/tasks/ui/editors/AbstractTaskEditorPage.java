@@ -51,7 +51,9 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.GradientCanvas;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListRunnable;
+import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.internal.tasks.core.data.ITaskDataManagerListener;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManagerEvent;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -134,6 +136,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.ui.services.IDisposable;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 /**
@@ -310,6 +313,41 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 				refresh(event.getTask());
 			}
 		}
+	};
+
+	private class NotInTaskListListener extends HyperlinkAdapter implements ITaskListChangeListener, IDisposable {
+
+		public NotInTaskListListener() {
+			TasksUiPlugin.getTaskList().addChangeListener(this);
+		}
+
+		@Override
+		public void linkActivated(HyperlinkEvent e) {
+			if (TasksUiPlugin.getTaskList().getTask(task.getRepositoryUrl(), task.getTaskId()) == null) {
+				TasksUiPlugin.getTaskList().addTask(task, TasksUiPlugin.getTaskList().getDefaultCategory());
+				getTaskEditor().setMessage(null, IMessageProvider.NONE);
+			}
+		}
+
+		public void containersChanged(Set<TaskContainerDelta> containers) {
+			// clears message if task is added to Task List.
+			for (TaskContainerDelta taskContainerDelta : containers) {
+				if (task.equals(taskContainerDelta.getElement())) {
+					if (taskContainerDelta.getKind().equals(TaskContainerDelta.Kind.ADDED)) {
+						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+							public void run() {
+								getTaskEditor().setMessage(null, IMessageProvider.NONE);
+							}
+						});
+					}
+				}
+			}
+		}
+
+		public void dispose() {
+			TasksUiPlugin.getTaskList().removeChangeListener(this);
+		}
+
 	};
 
 	private static final String ERROR_NOCONNECTIVITY = Messages.AbstractTaskEditorPage_Unable_to_submit_at_this_time;
@@ -1435,17 +1473,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 		if (getTaskEditor().getMessage() == null
 				&& TasksUiPlugin.getTaskList().getTask(task.getRepositoryUrl(), task.getTaskId()) == null) {
 			getTaskEditor().setMessage(Messages.AbstractTaskEditorPage_Add_task_to_tasklist,
-					IMessageProvider.INFORMATION, new HyperlinkAdapter() {
-						@Override
-						public void linkActivated(HyperlinkEvent e) {
-							if (TasksUiPlugin.getTaskList().getTask(task.getRepositoryUrl(), task.getTaskId()) == null) {
-								TasksUiPlugin.getTaskList().addTask(task,
-										TasksUiPlugin.getTaskList().getDefaultCategory());
-								getTaskEditor().setMessage(null, IMessageProvider.NONE, null);
-//								updateHeaderMessage();
-							}
-						}
-					});
+					IMessageProvider.INFORMATION, new NotInTaskListListener());
 		}
 	}
 
