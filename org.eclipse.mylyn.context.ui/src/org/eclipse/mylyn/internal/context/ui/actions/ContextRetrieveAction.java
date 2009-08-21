@@ -19,15 +19,14 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.context.ui.commands.RetrieveContextAttachmentHandler;
 import org.eclipse.mylyn.internal.context.ui.commands.RetrieveContextHandler;
 import org.eclipse.mylyn.internal.context.ui.wizards.ContextRetrieveWizard;
+import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
@@ -67,15 +66,12 @@ public class ContextRetrieveAction extends Action implements IViewActionDelegate
 
 	public void run(ITask task) {
 		ContextRetrieveWizard wizard = new ContextRetrieveWizard(task);
-		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-		if (shell != null && !shell.isDisposed()) {
-			WizardDialog dialog = new WizardDialog(shell, wizard);
-			dialog.create();
-			dialog.setBlockOnOpen(true);
-			if (dialog.open() == Window.CANCEL) {
-				dialog.close();
-				return;
-			}
+		WizardDialog dialog = new WizardDialog(WorkbenchUtil.getShell(), wizard);
+		dialog.create();
+		dialog.setBlockOnOpen(true);
+		if (dialog.open() == Window.CANCEL) {
+			dialog.close();
+			return;
 		}
 	}
 

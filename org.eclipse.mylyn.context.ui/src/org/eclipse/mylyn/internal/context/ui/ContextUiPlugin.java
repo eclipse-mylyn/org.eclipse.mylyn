@@ -30,7 +30,6 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.TextSelection;
@@ -47,7 +46,9 @@ import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.IContextUiStartup;
+import org.eclipse.mylyn.internal.context.ui.wizards.RetrieveLatestContextDialog;
 import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
+import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.monitor.ui.MonitorUi;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
@@ -185,7 +186,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 	private static final ITaskActivationListener TASK_ACTIVATION_LISTENER = new TaskActivationAdapter() {
 
-		@SuppressWarnings( { "deprecation", "restriction" })
+		@SuppressWarnings( { "restriction" })
 		@Override
 		public void taskActivated(ITask task) {
 			if (CoreUtil.TEST_MODE) {
@@ -196,13 +197,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			boolean hasLocalContext = ContextCore.getContextManager().hasContext(task.getHandleIdentifier());
 			if (!hasLocalContext) {
 				if (org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil.hasContextAttachment(task)) {
-					boolean getRemote = MessageDialog.openQuestion(PlatformUI.getWorkbench()
-							.getActiveWorkbenchWindow()
-							.getShell(), Messages.ContextUiPlugin_Task_Activation,
-							Messages.ContextUiPlugin_No_local_task_context_exists);
-					if (getRemote) {
-						new org.eclipse.mylyn.internal.context.ui.actions.ContextRetrieveAction().run(task);
-					}
+					RetrieveLatestContextDialog.openQuestion(WorkbenchUtil.getShell(), task);
 				}
 			}
 		}

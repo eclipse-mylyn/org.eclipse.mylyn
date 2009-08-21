@@ -15,12 +15,12 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.ui.commands.ClearContextHandler;
+import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
@@ -58,9 +58,8 @@ public class ContextClearAction extends TaskContextAction {
 	}
 
 	public boolean run(ITask task) {
-		boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow()
-				.getShell(), Messages.ContextClearAction_Confirm_clear_context,
+		boolean deleteConfirmed = MessageDialog.openQuestion(WorkbenchUtil.getShell(),
+				Messages.ContextClearAction_Confirm_clear_context,
 				Messages.ContextClearAction_Clear_the_context_for_the_selected_task);
 		if (!deleteConfirmed) {
 			return false;
