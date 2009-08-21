@@ -325,6 +325,10 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 			}
 			editorControl.setLayoutData(gd);
 
+			if (editor instanceof PersonAttributeEditor) {
+				editorControl = ((PersonAttributeEditor) editor).getText();
+			}
+
 			// the following listeners are hooked up so that changes to something in the actions area
 			// will cause the corresponding radio button to become selected.  Note that we can't just use
 			// a focus listener due to bug 254806

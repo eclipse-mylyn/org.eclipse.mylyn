@@ -28,6 +28,7 @@ import org.eclipse.mylyn.internal.tasks.ui.PersonProposalLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalProvider;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.Messages;
+import org.eclipse.mylyn.internal.tasks.ui.editors.PersonAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTextViewerConfiguration.Mode;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -73,8 +74,10 @@ public class AttributeEditorToolkit {
 	}
 
 	public void adapt(AbstractAttributeEditor editor) {
-		if (editor.getControl() instanceof Text || editor.getControl() instanceof CCombo) {
-			Control control = editor.getControl();
+		if (editor.getControl() instanceof Text || editor.getControl() instanceof CCombo
+				|| editor instanceof PersonAttributeEditor) {
+			Control control = (editor instanceof PersonAttributeEditor) ? ((PersonAttributeEditor) editor).getText()
+					: editor.getControl();
 			if (!editor.isReadOnly() && hasContentAssist(editor.getTaskAttribute())) {
 				IContentProposalProvider contentProposalProvider = createContentProposalProvider(editor.getTaskAttribute());
 				ILabelProvider labelPropsalProvider = createLabelProposalProvider(editor.getTaskAttribute());
