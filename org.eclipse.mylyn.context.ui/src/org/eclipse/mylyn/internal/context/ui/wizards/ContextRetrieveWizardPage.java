@@ -11,10 +11,7 @@
 
 package org.eclipse.mylyn.internal.context.ui.wizards;
 
-import com.ibm.icu.text.DateFormat;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.Dialog;
@@ -38,6 +35,8 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+
+import com.ibm.icu.text.DateFormat;
 
 /**
  * @author Rob Elves
@@ -108,26 +107,7 @@ public class ContextRetrieveWizardPage extends WizardPage {
 
 		List<ITaskAttachment> contextAttachments = AttachmentUtil.getContextAttachments(repository, task);
 
-		Collections.sort(contextAttachments, new Comparator<ITaskAttachment>() {
-
-			public int compare(ITaskAttachment attachment1, ITaskAttachment attachment2) {
-
-				Date created1 = null;
-				Date created2 = null;
-				created1 = attachment1.getCreationDate();
-				created2 = attachment2.getCreationDate();
-				if (created1 != null && created2 != null) {
-					return (-1) * created1.compareTo(created2);
-				} else if (created1 == null && created2 != null) {
-					return 1;
-				} else if (created1 != null && created2 == null) {
-					return -1;
-				} else {
-					return 0;
-				}
-			}
-
-		});
+		Collections.sort(contextAttachments, new TaskAttachmentComparator());
 
 		TableColumn[] columns = new TableColumn[3];
 		columns[0] = new TableColumn(contextTable, SWT.LEFT);
