@@ -287,7 +287,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 		private void refresh(final ITask task) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					if (refreshDisabled) {
+					if (refreshDisabled || busy) {
 						return;
 					}
 
