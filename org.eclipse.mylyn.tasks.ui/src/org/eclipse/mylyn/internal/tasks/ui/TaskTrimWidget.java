@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
+import java.util.Set;
+
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -19,6 +21,8 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.provisional.commons.ui.SelectionProviderAdapter;
+import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
+import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.internal.tasks.ui.actions.RepositoryElementActionGroup;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
@@ -37,6 +41,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -67,9 +72,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 
 	private TaskHyperlink activeTaskLabel;
 
-	private Point p;
-
-	private final ITaskActivationListener TASK_ACTIVATION_LISTENER = new TaskActivationAdapter() {
+	private final ITaskActivationListener taskActivationListener = new TaskActivationAdapter() {
 
 		@Override
 		public void taskActivated(ITask task) {
@@ -85,7 +88,29 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 
 	};
 
-	private final IPropertyChangeListener SHOW_TRIM_LISTENER = new IPropertyChangeListener() {
+	private final ITaskListChangeListener taskListListener = new ITaskListChangeListener() {
+		public void containersChanged(Set<TaskContainerDelta> containers) {
+			// update label in case task changes
+			if (activeTask != null) {
+				for (TaskContainerDelta taskContainerDelta : containers) {
+					if (activeTask.equals(taskContainerDelta.getElement())) {
+						if (taskContainerDelta.getKind().equals(TaskContainerDelta.Kind.CONTENT)) {
+							Display.getDefault().asyncExec(new Runnable() {
+								public void run() {
+									if (activeTask != null && activeTask.isActive()) {
+										indicateActiveTask();
+									}
+								}
+							});
+							return;
+						}
+					}
+				}
+			}
+		}
+	};
+
+	private final IPropertyChangeListener preferencesListener = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
 			String property = event.getProperty();
 			if (property.equals(ITasksUiPreferenceConstants.SHOW_TRIM)) {
@@ -97,8 +122,9 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 	private SelectionProviderAdapter activeTaskSelectionProvider;
 
 	public TaskTrimWidget() {
-		TasksUi.getTaskActivityManager().addActivationListener(TASK_ACTIVATION_LISTENER);
-		TasksUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(SHOW_TRIM_LISTENER);
+		TasksUi.getTaskActivityManager().addActivationListener(taskActivationListener);
+		TasksUiPlugin.getTaskList().addChangeListener(taskListListener);
+		TasksUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(preferencesListener);
 		hookContextMenu();
 	}
 
@@ -131,8 +157,9 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 		}
 		menu = null;
 
-		TasksUi.getTaskActivityManager().removeActivationListener(TASK_ACTIVATION_LISTENER);
-		TasksUiPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(SHOW_TRIM_LISTENER);
+		TasksUi.getTaskActivityManager().removeActivationListener(taskActivationListener);
+		TasksUiPlugin.getTaskList().removeChangeListener(taskListListener);
+		TasksUiPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(preferencesListener);
 	}
 
 	@Override
@@ -163,7 +190,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 
 	private Composite createStatusComposite(final Composite container) {
 		GC gc = new GC(container);
-		p = gc.textExtent("WWWWWWWWWWWWWWW"); //$NON-NLS-1$
+		Point p = gc.textExtent("WWWWWWWWWWWWWWW"); //$NON-NLS-1$
 		gc.dispose();
 
 		activeTaskLabel = new TaskHyperlink(container, SWT.RIGHT);
