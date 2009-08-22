@@ -1453,6 +1453,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 		}
 	}
 
+	// TODO m4.0 remove
 	public void showEditorBusy(boolean busy) {
 		getTaskEditor().showBusy(busy);
 		refreshDisabled = busy;
