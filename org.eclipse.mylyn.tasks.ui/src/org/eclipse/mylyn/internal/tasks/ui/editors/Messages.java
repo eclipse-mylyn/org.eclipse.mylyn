@@ -71,6 +71,8 @@ public class Messages extends NLS {
 
 	public static String PersonalPart_Personal_Planning;
 
+	public static String PersonAttributeEditor_Insert_My_User_Id_Tooltip;
+
 	public static String PlanningPageFactory_Private;
 
 	public static String PlanningPart_Personal_Notes;

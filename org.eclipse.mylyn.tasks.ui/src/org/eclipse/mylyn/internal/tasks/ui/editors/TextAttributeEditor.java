@@ -49,8 +49,7 @@ public class TextAttributeEditor extends AbstractAttributeEditor {
 			text.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
 			text.setText(getValue());
 		} else {
-			text = new Text(parent, SWT.FLAT);
-			text.setText(getValue());
+			text = toolkit.createText(parent, getValue(), SWT.FLAT);
 			text.setFont(EditorUtil.TEXT_FONT);
 			text.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 			text.addModifyListener(new ModifyListener() {

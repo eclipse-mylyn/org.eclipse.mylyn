@@ -570,6 +570,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 		form = managedForm.getForm();
 
 		toolkit = managedForm.getToolkit();
+		toolkit.setBorderStyle(SWT.NULL);
 		registerDefaultDropListener(form);
 		CommonFormUtil.disableScrollingOnFocus(form);
 

@@ -63,6 +63,7 @@ public class PersonAttributeEditor extends TextAttributeEditor {
 			GridDataFactory.fillDefaults().grab(true, false).applyTo(getText());
 
 			final ImageHyperlink selfLink = new ImageHyperlink(composite, SWT.NO_FOCUS);
+			selfLink.setToolTipText(Messages.PersonAttributeEditor_Insert_My_User_Id_Tooltip);
 			selfLink.setActiveImage(CommonImages.getImage(CommonImages.PERSON_ME));
 			selfLink.setHoverImage(CommonImages.getImage(CommonImages.PERSON_ME));
 			selfLink.addHyperlinkListener(new HyperlinkAdapter() {
