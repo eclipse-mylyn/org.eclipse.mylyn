@@ -930,8 +930,8 @@ public class TasksUiInternal {
 		// a tab at the end of the text will make sure that the @ will not create a weird space in the action text
 		// bug 287347: @ at start of task name cause a weird space in activation history menu
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=287347
-		if (taskDescription.contains("@")) {
-			taskDescription += "\t";
+		if (taskDescription.contains("@")) { //$NON-NLS-1$
+			taskDescription += "\t"; //$NON-NLS-1$
 		}
 		return taskDescription;
 	}
