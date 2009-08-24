@@ -921,4 +921,19 @@ public class TasksUiInternal {
 		return null;
 	}
 
+	/**
+	 * Clean text for use as the text of an action to ensure that it is displayed properly
+	 * 
+	 * @return The cleaned text
+	 */
+	public static String cleanTextForAction(String taskDescription) {
+		// a tab at the end of the text will make sure that the @ will not create a weird space in the action text
+		// bug 287347: @ at start of task name cause a weird space in activation history menu
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=287347
+		if (taskDescription.contains("@")) {
+			taskDescription += "\t";
+		}
+		return taskDescription;
+	}
+
 }

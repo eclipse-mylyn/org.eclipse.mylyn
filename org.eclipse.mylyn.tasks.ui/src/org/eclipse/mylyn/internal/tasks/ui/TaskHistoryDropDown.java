@@ -25,6 +25,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivationHistory;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskDialogAction;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
@@ -104,9 +105,7 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 			if (taskDescription.length() > MAX_LABEL_LENGTH) {
 				taskDescription = taskDescription.subSequence(0, MAX_LABEL_LENGTH - 3) + "..."; //$NON-NLS-1$
 			}
-			if (taskDescription.contains("@")) {
-				taskDescription += "\t";
-			}
+			taskDescription = TasksUiInternal.cleanTextForAction(taskDescription);
 			setText(taskDescription);
 			setEnabled(true);
 			setToolTipText(task.getSummary());
