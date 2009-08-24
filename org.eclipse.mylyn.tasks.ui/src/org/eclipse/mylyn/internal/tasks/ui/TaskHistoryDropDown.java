@@ -104,6 +104,9 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 			if (taskDescription.length() > MAX_LABEL_LENGTH) {
 				taskDescription = taskDescription.subSequence(0, MAX_LABEL_LENGTH - 3) + "..."; //$NON-NLS-1$
 			}
+			if (taskDescription.contains("@")) {
+				taskDescription += "\t";
+			}
 			setText(taskDescription);
 			setEnabled(true);
 			setToolTipText(task.getSummary());
