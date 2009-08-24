@@ -11,9 +11,9 @@
 
 package org.eclipse.mylyn.tests.integration;
 
-import org.eclipse.mylyn.internal.compatibility.JavaRuntimeVersionChecker;
-
 import junit.framework.TestCase;
+
+import org.eclipse.mylyn.internal.compatibility.JavaRuntimeVersionChecker;
 
 /**
  * @author Steffen Pingel
@@ -27,10 +27,11 @@ public class JavaRuntimeVersionCheckerTest extends TestCase {
 		assertEquals(1.6f, JavaRuntimeVersionChecker.parseVersion("1.6."));
 		assertEquals(1.6f, JavaRuntimeVersionChecker.parseVersion("1.6.0_14-b08"));
 		assertEquals(1.5f, JavaRuntimeVersionChecker.parseVersion("1.5.0_16"));
+		assertEquals(1.5f, JavaRuntimeVersionChecker.parseVersion("1.5.0.07-_20_mar_2007_05_31"));
+
 		assertEquals(0.0f, JavaRuntimeVersionChecker.parseVersion("1.0ab.3_abc"));
 		assertEquals(0.0f, JavaRuntimeVersionChecker.parseVersion("1.-5"));
 		assertEquals(0.0f, JavaRuntimeVersionChecker.parseVersion("1.5_14"));
 		assertEquals(0.0f, JavaRuntimeVersionChecker.parseVersion("abc"));
 	}
-
 }

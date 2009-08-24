@@ -14,8 +14,6 @@ package org.eclipse.mylyn.tests.integration;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.mylyn.internal.compatibility.JavaRuntimeVersionChecker;
-
 /**
  * @author Mik Kersten
  */
@@ -24,7 +22,7 @@ public class AllIntegrationTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.tests.integration");
 		suite.addTestSuite(ChangeDataDirTest.class);
-		suite.addTestSuite(JavaRuntimeVersionChecker.class);
+		suite.addTestSuite(JavaRuntimeVersionCheckerTest.class);
 		suite.addTest(RepositoryConnectorsTest.suite());
 		return suite;
 	}
