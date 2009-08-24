@@ -276,6 +276,14 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 					updateFromTaskData(repository, task, taskData);
 				}
 			}
+
+			@Override
+			public void failed(String taskId, IStatus status) {
+				ITask task = idToTask.get(taskId);
+				if (task != null) {
+					updateStatus(taskRepository, task, status);
+				}
+			}
 		};
 
 		if (!isUser()) {

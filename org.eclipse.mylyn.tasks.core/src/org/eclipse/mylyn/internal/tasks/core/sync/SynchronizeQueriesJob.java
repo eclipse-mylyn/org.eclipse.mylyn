@@ -103,6 +103,19 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 			return resultCount;
 		}
 
+		@Override
+		public void failed(String taskId, IStatus status) {
+			ITask task = taskList.getTask(repositoryQuery.getRepositoryUrl(), taskId);
+			if (task != null && status != null) {
+				statuses.add(status);
+				((AbstractTask) task).setStatus(status);
+				if (!isUser()) {
+					((AbstractTask) task).setSynchronizing(false);
+				}
+				taskList.notifyElementChanged(task);
+			}
+		}
+
 	}
 
 	public static final String MAX_HITS_REACHED = Messages.SynchronizeQueriesJob_Max_allowed_number_of_hits_returned_exceeded;

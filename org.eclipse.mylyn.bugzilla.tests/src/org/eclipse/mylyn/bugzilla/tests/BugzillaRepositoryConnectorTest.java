@@ -78,29 +78,29 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		assertTrue(((AbstractTask) task).getStatus().getMessage().contains(IBugzillaConstants.ERROR_MSG_INVALID_BUG_ID));
 	}
 
-//	public void testMultiRetrievalFailure() throws CoreException {
-//		init32();
-//		ITask task1 = TasksUi.getRepositoryModel().createTask(repository, "1");
-//		ITask taskX = TasksUi.getRepositoryModel().createTask(repository, "9999");
-//		ITask task2 = TasksUi.getRepositoryModel().createTask(repository, "2");
-//		// FIXME task.setStale(true);
-//		TasksUiPlugin.getTaskList().addTask(task1);
-//		TasksUiPlugin.getTaskList().addTask(taskX);
-//		TasksUiPlugin.getTaskList().addTask(task2);
-//		Set<ITask> tasks = new HashSet<ITask>();
-//		tasks.add(task1);
-//		tasks.add(taskX);
-//		tasks.add(task2);
-//		TasksUiInternal.synchronizeTasks(connector, tasks, true, null);
-//
-//		//TasksUiPlugin.getTaskDataManager().setTaskRead(task, true);
-//		assertNotNull(TasksUiPlugin.getTaskDataManager().getTaskData(task1));
-//		assertNotNull(TasksUiPlugin.getTaskDataManager().getTaskData(task2));
-//		assertNull(TasksUiPlugin.getTaskDataManager().getTaskData(taskX));
-//		assertNull(((AbstractTask) task1).getStatus());
-//		assertNull(((AbstractTask) task2).getStatus());
-//		assertEquals(IBugzillaConstants.ERROR_MSG_NO_DATA_RETRIEVED, ((AbstractTask) taskX).getStatus().getMessage());
-//	}
+	public void testMultiRetrievalFailure() throws CoreException {
+		init32();
+		ITask task1 = TasksUi.getRepositoryModel().createTask(repository, "1");
+		ITask taskX = TasksUi.getRepositoryModel().createTask(repository, "9999");
+		ITask task2 = TasksUi.getRepositoryModel().createTask(repository, "2");
+		// FIXME task.setStale(true);
+		TasksUiPlugin.getTaskList().addTask(task1);
+		TasksUiPlugin.getTaskList().addTask(taskX);
+		TasksUiPlugin.getTaskList().addTask(task2);
+		Set<ITask> tasks = new HashSet<ITask>();
+		tasks.add(task1);
+		tasks.add(taskX);
+		tasks.add(task2);
+		TasksUiInternal.synchronizeTasks(connector, tasks, true, null);
+
+		//TasksUiPlugin.getTaskDataManager().setTaskRead(task, true);
+		assertNotNull(TasksUiPlugin.getTaskDataManager().getTaskData(task1));
+		assertNotNull(TasksUiPlugin.getTaskDataManager().getTaskData(task2));
+		assertNull(TasksUiPlugin.getTaskDataManager().getTaskData(taskX));
+		assertNull(((AbstractTask) task1).getStatus());
+		assertNull(((AbstractTask) task2).getStatus());
+		assertEquals(IBugzillaConstants.ERROR_MSG_NO_DATA_RETRIEVED, ((AbstractTask) taskX).getStatus().getMessage());
+	}
 
 	public void testBugWithoutDescription218() throws Exception {
 		init218();

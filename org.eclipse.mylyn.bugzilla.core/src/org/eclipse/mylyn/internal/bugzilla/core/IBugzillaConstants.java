@@ -228,6 +228,8 @@ public interface IBugzillaConstants {
 
 	public static final String ERROR_MSG_INVALID_BUG_ID = Messages.IBugzillaConstants_invalid_bug_id_requested_bug_id_does_not_exist;
 
+	public static final String ERROR_MSG_NO_DATA_RETRIEVED = Messages.IBugzillaConstants_NO_DATA_RETRIEVED_FOR_TASK;
+
 	public static final String INVALID_CREDENTIALS = Messages.IBugzillaConstants_invalid_repository_credentials;
 
 	public static final String SHOW_ACTIVITY = "/show_activity.cgi?id="; //$NON-NLS-1$
@@ -270,4 +272,5 @@ public interface IBugzillaConstants {
 	public static final String LAST_PRODUCT_SELECTION = "last.selection.product"; //$NON-NLS-1$
 
 	public static final String LAST_COMPONENT_SELECTION = "last.selection.component"; //$NON-NLS-1$
+
 }

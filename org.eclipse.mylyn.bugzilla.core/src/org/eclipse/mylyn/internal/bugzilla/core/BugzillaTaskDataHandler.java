@@ -300,6 +300,11 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
 				private final TaskDataCollector collector;
 
+				@Override
+				public void failed(String taskId, IStatus status) {
+					collector.failed(taskId, status);
+				}
+
 				public CollectorWrapper(TaskDataCollector collector, IProgressMonitor monitor2) {
 					this.collector = collector;
 					this.monitor2 = monitor2;

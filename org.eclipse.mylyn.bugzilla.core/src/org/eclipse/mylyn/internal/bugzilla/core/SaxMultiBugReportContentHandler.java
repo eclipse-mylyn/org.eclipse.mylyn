@@ -72,6 +72,8 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 
 	private TaskAttribute attachmentAttribute;
 
+	private boolean bugParseErrorOccurred;
+
 	public SaxMultiBugReportContentHandler(TaskAttributeMapper mapper, TaskDataCollector collector,
 			Map<String, TaskData> taskDataMap, List<BugzillaCustomField> customFields) {
 		this.taskDataMap = taskDataMap;
@@ -116,6 +118,8 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 		case BUG:
 			if (attributes != null && (attributes.getValue("error") != null)) { //$NON-NLS-1$
 				errorMessage = attributes.getValue("error"); //$NON-NLS-1$
+				bugParseErrorOccurred = true;
+				repositoryTaskData = null;
 			}
 			attachIdToComment = new HashMap<String, TaskCommentMapper>();
 			commentNum = 0;
@@ -279,13 +283,11 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 		}
 		switch (tag) {
 		case BUG_ID: {
-			try {
-				repositoryTaskData = taskDataMap.get(parsedText.trim());
-				if (repositoryTaskData == null) {
-					errorMessage = parsedText + Messages.SaxMultiBugReportContentHandler_id_not_found;
-				}
-			} catch (Exception e) {
-				errorMessage = Messages.SaxMultiBugReportContentHandler_Bug_id_from_server_did_not_match_requested_id;
+			repositoryTaskData = taskDataMap.get(parsedText.trim());
+			if (repositoryTaskData == null) {
+				errorMessage = parsedText + Messages.SaxMultiBugReportContentHandler_id_not_found;
+				bugParseErrorOccurred = true;
+				break;
 			}
 
 			TaskAttribute attr = repositoryTaskData.getRoot().getMappedAttribute(tag.getKey());
@@ -382,7 +384,10 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			break;
 		case BUG:
 			// Reached end of bug.
-
+			if (bugParseErrorOccurred) {
+				bugParseErrorOccurred = false;
+				break;
+			}
 			addDescriptionAndComments();
 
 			// Need to set LONGDESCLENGTH to number of comments + 1 for description
@@ -420,6 +425,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			if (attrCreation != null && !attrCreation.equals("")) { //$NON-NLS-1$
 				collector.accept(repositoryTaskData);
 			}
+			repositoryTaskData = null;
 			break;
 		case BLOCKED:
 			// handled similarly to DEPENDSON

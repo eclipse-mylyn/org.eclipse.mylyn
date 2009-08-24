@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.tasks.core.data;
 
+import org.eclipse.core.runtime.IStatus;
+
 /**
  * This class is used for collecting tasks, e.g. when performing queries on a repository.
  * 
@@ -25,5 +27,11 @@ public abstract class TaskDataCollector {
 	public static final int MAX_HITS = 5000;
 
 	public abstract void accept(TaskData taskData);
+
+	/**
+	 * @since 3.3
+	 */
+	public void failed(String taskId, IStatus status) {
+	}
 
 }
