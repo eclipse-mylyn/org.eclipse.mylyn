@@ -115,6 +115,9 @@ import org.eclipse.ui.handlers.IHandlerService;
  */
 public class TasksUiInternal {
 
+	// TODO e3.5 replace by SWT.SHEET
+	public static final int SWT_SHEET = 1 << 28;
+
 	public static final String ID_MENU_ACTIVE_TASK = "org.eclipse.mylyn.tasks.ui.menus.activeTask"; //$NON-NLS-1$
 
 	public static MultiRepositoryAwareWizard createNewTaskWizard(ITaskMapping taskSelection) {
