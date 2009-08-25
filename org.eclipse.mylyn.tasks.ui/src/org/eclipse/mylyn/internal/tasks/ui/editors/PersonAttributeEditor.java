@@ -20,6 +20,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.events.MouseTrackListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -76,7 +77,7 @@ public class PersonAttributeEditor extends TextAttributeEditor {
 					}
 				}
 			});
-			GridDataFactory.fillDefaults().applyTo(selfLink);
+			GridDataFactory.fillDefaults().exclude(true).applyTo(selfLink);
 			MouseTrackListener mouseListener = new MouseTrackAdapter() {
 				int version = 0;
 
@@ -129,4 +130,13 @@ public class PersonAttributeEditor extends TextAttributeEditor {
 		attributeChanged();
 	}
 
+	@Override
+	protected void decorateIncoming(Color color) {
+		if (getControl() != null) {
+			getControl().setBackground(color);
+		}
+		if (getText() != null && getText() != getControl()) {
+			getText().setBackground(color);
+		}
+	}
 }
