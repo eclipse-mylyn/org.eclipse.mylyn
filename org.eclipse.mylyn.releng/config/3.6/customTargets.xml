@@ -8,7 +8,6 @@
     Contributors:
          Tasktop Technologies - initial API and implementation
  -->
-<project name="Build specific targets and properties for Eclispe 3.3" default="noDefault">
-	<property name="skipSDK" value="true" />
+<project name="Build specific targets and properties for Eclispe 3.5" default="noDefault">
 	<import file="../customTargets.xml"/>
 </project>

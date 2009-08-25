@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="dependencies.test"
+      label="Test Dependencies"
+      version="@VERSION@">
+
+   <license url="">
+      
+   </license>
+
+   <includes
+         id="org.eclipse.swtbot.eclipse"
+         version="0.0.0"/>
+
+</feature>

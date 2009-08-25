@@ -9,7 +9,7 @@
          Tasktop Technologies - initial API and implementation
  -->
 
-<project name="os-helper" default="" basedir=".">
+<project name="os" default="" basedir=".">
 	<!-- check for mac first, it has os.family unix and mac -->
 	<condition property="build.system" value="macosx-carbon"><and><os family="mac"/></and></condition>
 	<condition property="build.system" value="linux-gtk"><and><os family="unix"/><os arch="i386"/></and></condition>
@@ -17,6 +17,6 @@
 	<condition property="build.system" value="linux-gtk-x86_64"><and><os family="unix"/><os arch="x86_64"/></and></condition>
 	<condition property="build.system" value="linux-gtk-x86_64"><and><os family="unix"/><os arch="amd64"/></and></condition>
 	<condition property="build.system" value="win32"><and><os family="windows"/></and></condition>
-	<dirname property="os-helper.basedir" file="${ant.file.os-helper}"/>
-	<property file="${os-helper.basedir}/defaults-${build.system}.properties"/>
+	<dirname property="os.basedir" file="${ant.file.os}"/>
+	<property file="${os.basedir}/defaults-${build.system}.properties"/>
 </project>

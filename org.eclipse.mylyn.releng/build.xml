@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><!--
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
     Copyright (c) 2009 Tasktop Technologies and others.
     All rights reserved. This program and the accompanying materials
     are made available under the terms of the Eclipse Public License v1.0
@@ -9,13 +10,13 @@
          Tasktop Technologies - initial API and implementation
  -->
 
-<project name="mylyn" default="all" basedir=".">
+<project name="build" default="all" basedir=".">
 	<property file="${build.config}" />
 	<property file="local.properties" />
-	<import file="scripts/osHelper.xml" />
+	<import file="scripts/os.xml" />
 	<property file="defaults.properties" />
 	<property file="scripts/defaults-all.properties" />
-	<import file="scripts/buildHelper.xml" />
+	<import file="scripts/functions.xml" />
 	
 	<target name="all" depends="clean,build,standalone-tests,tests,performance-tests">
 	</target>
@@ -104,7 +105,7 @@
 		</antcall>
 	</target>
 
-	<target name="generate-metadata" depends="init">
+	<target name="generate-all-metadata" depends="init">
 		<antcall target="for-each-target">
 			<param name="call" value="generate-metadata-sites"/>
 		</antcall>
@@ -178,7 +179,7 @@
 		</java>
 	</target>
 	
-	<target name="dist" depends="init,pack,generate-metadata,copy-to-archive">
+	<target name="dist" depends="init,pack,generate-all-metadata,copy-to-archive">
 	</target>
 		
 	<target name="copy-to-archive">
@@ -227,7 +228,7 @@
 		</exec>
 	</target>
 	
-	<target name="galileo" depends="clean,build,generate-metadata,copy-to-archive">
+	<target name="galileo" depends="clean,build,generate-all-metadata,copy-to-archive">
 		<!-- promote unpacked version early for testing -->
 		<antcall target="promote">
 			<param name="todir" value="weekly"/>
@@ -363,8 +364,8 @@
 
 	<target name="pre-build">
 		<delete>
-			<fileset dir="${build.home}/${build.target}/maps" includes="mylyn*.map">
-				<exclude name="*${build.target}.map"/>
+			<fileset dir="${build.home}/${base.target}/maps" includes="mylyn*.map">
+				<exclude name="*${base.target}.map"/>
 			</fileset>
 		</delete>
 	</target>
