@@ -2,7 +2,7 @@
 <feature
       id="dependencies.build"
       label="Build Dependencies"
-      version="@version@">
+      version="@VERSION@">
 
    <license url="">
       

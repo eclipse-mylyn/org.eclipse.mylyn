@@ -26,7 +26,7 @@
 	<target name="all" depends="clean,build,tests">
 	</target>
 
-	<target name="clean" depends="clean-build,clean-tests,clean-results">
+	<target name="clean" depends="clean-update,clean-build,clean-tests,clean-results">
 		<delete file="${build.timestamp}"/>
 	</target>
 
@@ -36,11 +36,16 @@
 		</antcall>
 	</target>
 
+	<target name="clean-update">
+		<delete dir="${build.home}/update"/>
+	</target>
+
 	<target name="clean-results">
 		<delete dir="${build.results}"/>
 	</target>
 
 	<target name="clean-tools">
+		<antcall target="clean-basebuilder"/>
 		<antcall target="for-each-target">
 			<param name="call" value="clean-tools-helper"/>
 		</antcall>
@@ -65,6 +70,7 @@
 		<antcall target="for-each-target">
 			<param name="call" value="tests-helper"/>
 			<param name="test.target" value="run"/>
+			<param name="test.plugin" value="${build.test.eclipse.plugin}"/>
 			<param name="test.classname" value="${build.test.eclipse.suite}"/>
 		</antcall>
 	</target>
@@ -73,6 +79,7 @@
 		<antcall target="for-each-target">
 			<param name="call" value="tests-helper"/>
 			<param name="test.target" value="performance"/>
+			<param name="test.plugin" value="${build.test.performance.plugin}"/>
 			<param name="test.classname" value="${build.test.performance.suite}"/>
 		</antcall>
 	</target>
@@ -81,7 +88,14 @@
 		<antcall target="for-each-target">
 			<param name="call" value="tests-helper"/>
 			<param name="test.target" value="swtbot"/>
+			<param name="test.plugin" value="${build.test.swtbot.plugin}"/>
 			<param name="test.classname" value="${build.test.swtbot.suite}"/>
+		</antcall>
+	</target>
+
+	<target name="standalone-tests" depends="init-tests">
+		<antcall target="for-each-target">
+			<param name="call" value="standalone-tests-helper"/>
 		</antcall>
 	</target>
 
@@ -112,6 +126,12 @@
 	</target>
 
 	<target name="post-tests">
+	</target>
+
+	<target name="pre-standalone-tests">
+	</target>
+
+	<target name="post-standalone-tests">
 	</target>
 
 	<target name="pre-report">
@@ -162,7 +182,7 @@
 			<init-base-properties activity="@{activity}" target="@{target}"/>
 			
 			<available file="${base.home}/eclipse" property="base.exists"/>
-			<antcall target="install-${activity.type}"/>
+			<antcall target="provision-${activity.type}"/>
         </sequential>
     </macrodef>
 
@@ -170,7 +190,7 @@
         <sequential>
         	<property name="base.builder.home" value="${tools.home}/basebuilder-${basebuilder.version}"/>
 			<available file="${base.builder.home}/eclipse" property="base.builder.exists"/>
-			<antcall target="install-basebuilder"/>
+			<antcall target="provision-basebuilder"/>
         </sequential>
     </macrodef>
 
@@ -198,7 +218,7 @@
 		<attribute name="failonerror" default="true"/>
 		<attribute name="timeout" default="10000000" />
 		<attribute name="output" default="NOT SET" />
-		<attribute name="alwayslog" default="true" />
+		<attribute name="consolelog" default="${consolelog}" />
 		<element name="args" optional="true" implicit="true"/>
 		<sequential>
 			<init-basebuilder/>
@@ -234,7 +254,7 @@
 		   		<arg value="-data"/>
 		   		<arg value="${build.home}/workspace"/>
 				<args />
-				<redirector alwayslog="@{alwayslog}"/>
+				<redirector alwayslog="@{consolelog}"/>
 			</java>
 		</sequential>
 	</macrodef>
@@ -326,10 +346,27 @@
 	</target>
 
 	<!-- ===================================================================== -->
+	<!-- clean targets -->
+	<!-- ===================================================================== -->
+
+	<target name="clean-basebuilder">
+		<property name="base.builder.home" value="${tools.home}/basebuilder-${basebuilder.version}"/>
+		<delete dir="${base.builder.home}" />
+	</target>
+	
+	<target name="clean-tools-helper">
+    	<property name="eclipse.sdk.home" value="${eclipse.base}/sdk-${eclipse.sdk.version}" />
+		<delete dir="${eclipse.sdk.home}" />
+    	<property name="eclipse.test.home" value="${eclipse.base}/test-${eclipse.sdk.version}" />
+		<delete dir="${eclipse.test.home}" />
+	</target>
+
+	<!-- ===================================================================== -->
 	<!-- build targets -->
 	<!-- ===================================================================== -->
 
-	<target name="install-build" unless="base.exists">
+	<!--- one time setup for test target environment -->
+	<target name="provision-build" unless="base.exists">
 		<!-- setup for download targets -->
 		<property name="downloadsDir" value="${tools.home}"/> 
 
@@ -338,6 +375,10 @@
 		<install-into-base url="${base.url}" exists="eclipse"/>
 	</target>
 	
+	<target name="clean-build-helper">
+		<delete dir="${build.home}/${base.target}" />
+	</target>
+
 	<target name="build-helper-init">
 		<init-base activity="build"/>
 		
@@ -350,7 +391,17 @@
 		</copy>
 	</target>
 
-	<target name="build-helper" depends="build-helper-init,pre-build">
+	<target name="install-build-dependencies">
+		<available property="feature.exists" file="${basedir}/build-dependencies-feature"/>
+  	    <antcall target="publish-feature">
+  	    	<param name="feature" value="dependencies.build"/>
+			<param name="version" value="0.0.0.${qualifier}"/>
+			<param name="featureDir" value="${basedir}/build-dependencies-feature"/>
+		</antcall>
+		<install-feature-into-base featureId="dependencies.build"/>
+	</target>
+
+	<target name="build-helper" depends="build-helper-init,install-build-dependencies,pre-build">
 		<init-basebuilder/>
     	<path id="pde.build.script.id"> 
     		<fileset dir="${base.builder.home}/eclipse/plugins">
@@ -379,14 +430,11 @@
 		
 		<antcall target="post-build"/>
     </target>
+
 	
 	<!-- ===================================================================== -->
-	<!-- clean helper targets -->
+	<!-- test helper targets -->
 	<!-- ===================================================================== -->
-
-	<target name="clean-build-helper">
-		<delete dir="${build.home}/${base.target}" />
-	</target>
 
 	<target name="clean-tests-helper">
     	<property name="eclipse.home" value="${eclipse.base}/test-${eclipse.sdk.version}/eclipse" />
@@ -399,12 +447,155 @@
 		</delete>
 	</target>
 
-	<target name="clean-tools-helper">
-    	<property name="eclipse.sdk.home" value="${eclipse.base}/sdk-${eclipse.sdk.version}" />
-		<delete dir="${eclipse.sdk.home}" />
-    	<property name="eclipse.test.home" value="${eclipse.base}/test-${eclipse.sdk.version}" />
-		<delete dir="${eclipse.test.home}" />
+	<!--- one time setup for test target environment -->
+	<target name="provision-test" unless="base.exists">
+		<!-- setup for download targets -->
+		<property name="downloadsDir" value="${tools.home}"/> 
+
+		<!-- extract sdk for building -->
+		<mkdir dir="${base.home}" />
+		<install-into-base url="${base.url}" exists="eclipse"/>
+		<install-into-base url="${base.url.test}" exists="eclipse/plugins/org.eclipse.test_3.2.0"/>
+		<install-into-base url="${eclipse.url.derby}" exists="eclipse/plugins/org.apache.derby.core_10.4.2" unpackDest="${base.home}/eclipse"/>
+		<replaceregexp file="${base.home}/eclipse/plugins/org.apache.derby.core_10.4.2/plugin.xml"
+			match="org.apache.derby.core" replace="org.apache.derby" byline="true"/>
 	</target>
+
+	<target name="tests-helper-init">
+		<init-base activity="test"/>
+		
+    	<property name="eclipse.home" value="${base.home}/eclipse" />
+  	    <condition property="install.dir" value="${eclipse.home}" else="${eclipse.home}/dropins/test"><equals arg1="${base.target}" arg2="3.3"/></condition>
+
+		<delete failonerror="false" includeemptydirs="true">
+			<fileset dir="${eclipse.home}">
+				<include name="dropins/test*/**"/>
+			</fileset>
+		</delete>
+
+		<antcall target="install-tests-helper-performance-tests"/>
+	</target>
+
+	<target name="install-tests-dependencies">
+		<available property="feature.exists" file="${basedir}/test-dependencies-feature"/>
+  	    <antcall target="publish-feature">
+  	    	<param name="feature" value="dependencies.test"/>
+			<param name="version" value="0.0.0.${qualifier}"/>
+			<param name="featureDir" value="${basedir}/test-dependencies-feature"/>
+		</antcall>
+		<install-feature-into-base featureId="dependencies.test"/>
+			
+		<antcall target="extract-tests"/>
+	</target>
+		
+	<target name="extract-tests">
+		<available property="dist.exists" file="${build.home}/${base.target}/${build.dist}"/>
+		<fail message="${build.home}/${base.target}/${build.dist} does not exist, try running 'build'" unless="dist.exists"/>
+		
+		<!-- copy build features to eclipse directory -->
+		<unzip dest="${install.dir}">
+			<fileset dir="${build.home}/${base.target}/${build.dist}">
+				<include name="*.zip"/>
+				<exclude name="*sdk*"/>
+			</fileset>
+		</unzip>
+	</target>
+
+	<target name="install-tests-helper-performance-tests" if="build.replacePerformanceTestPlugin">
+		<!-- replace performance plug-in with patched version from test feature -->
+		<delete failonerror="false" includeemptydirs="true">
+			<fileset dir="${base.home}">
+				<include name="plugins/org.eclipse.test.performance*/**"/>
+			</fileset>
+		</delete>
+	</target>
+	
+	<target name="tests-helper" depends="tests-helper-init,install-tests-dependencies,pre-tests">
+		<init-basebuilder/>
+    	<path id="library.id"> 
+    		<fileset dir="${base.home}/eclipse/plugins">
+            	<include name="org.eclipse.test_*/library.xml"/>
+          	</fileset>
+    	</path> 
+    	<property name="library" refid="library.id"/>
+		<dirname property="functions.basedir" file="${ant.file.functions}"/>
+
+		<exec-eclipse timeout="${build.test.timeout}" activity="testing">
+    		<arg value="-buildfile"/>
+    		<arg value="${functions.basedir}/test.xml"/>
+    		<arg value="-Dos=${build.os}"/>
+    		<arg value="-Dws=${build.ws}"/>
+    		<arg value="-Darch=${build.arch}"/>
+    		<arg value="-Declipse-home=${base.home}/eclipse"/>    		
+    		<arg value="-Dlibrary-file=${library}"/>
+    		<arg value="-Dplugin-name=${build.test.plugin}"/>
+    		<arg value="-Dclassname=${test.classname}"/>
+    		<arg value="-DextraVMargs= 
+    	    -ea
+    		-Xmx384m
+    		-XX:MaxPermSize=128m
+    	    -Declipse.perf.dbloc=${build.db} 
+    	    -Declipse.perf.config=build=${qualifier};config=${build.host}-${build.target};jvm=${java.version}
+    	    -Declipse.perf.assertAgainst=build=${build.assertAgainst}
+    	    ${build.extraTestArgs}" />
+    		<arg value="${test.target}"/>
+		</exec-eclipse>
+		
+		<copy todir="${build.results}/test-${build.target}">
+			<fileset dir="${base.home}/results"/>
+		</copy>
+		
+		<antcall target="post-tests"/>
+    </target>
+	
+	<target name="standalone-tests-helper-init">
+    	<property name="install.dir" value="${build.home}/${base.target}/standalone-tests" />
+		<delete dir="${install.dir}"/>
+		<mkdir dir="${install.dir}"/>
+		
+    	<antcall target="extract-tests"/>
+	</target>
+
+	<target name="standalone-tests-helper" depends="standalone-tests-helper-init,pre-standalone-tests">
+		<init-basebuilder/>
+		
+		<!-- pick up all jared and extracted plug-ins --> 
+		<path id="tests.classpath">
+			<fileset dir="${install.dir}">
+				<include name="**/*.jar"/>
+				<exclude name="**/*ui*.jar"/>
+			</fileset>
+			<dirset dir="${install.dir}/plugins">
+				<include name="*"/>
+				<exclude name="*ui*"/>
+			</dirset>
+			<fileset dir="${base.builder.home}/eclipse/plugins">
+				<include name="org.junit_*/junit.jar"/>
+				<include name="org.eclipse.core.jobs_*.jar"/>
+				<include name="org.eclipse.core.net_*.jar"/>
+				<include name="org.eclipse.core.runtime_*.jar"/>
+				<include name="org.eclipse.equinox.common_*.jar"/>
+				<include name="org.eclipse.osgi_*.jar"/>
+			</fileset>
+		</path>
+		
+		<property name="output.dir" value="${build.results}/test-${base.target}"/>
+		<mkdir dir="${output.dir}"/>
+		
+		<echo message="Testing standalone ${version}.${qualifier}" />
+		<junit printsummary="yes" haltonfailure="no" 
+			failureproperty="junit_test_failed" fork="true" forkmode="once" maxmemory="256m">
+			<classpath>
+				<path refid="tests.classpath"/>
+			</classpath>
+			<syspropertyset>
+				<propertyref prefix="build.test.standalone.properties."/>
+				<mapper type="glob" from="build.test.standalone.properties.*" to="*"/>
+			</syspropertyset> 
+			<formatter type="xml" />
+			<test todir="${output.dir}" name="${build.test.standalone.suite}"/>
+		</junit>
+    </target>
 
 	<!-- ===================================================================== -->
 	<!-- report helper targets -->
@@ -530,112 +721,33 @@
 			<arg value="${base.home}"/>
 		</exec-eclipse>
 	</target>
-	
-	<!-- ===================================================================== -->
-	<!-- test helper targets -->
-	<!-- ===================================================================== -->
 
-	<target name="install-test" unless="base.exists">
-		<!-- setup for download targets -->
-		<property name="downloadsDir" value="${tools.home}"/> 
-
-		<!-- extract sdk for building -->
-		<mkdir dir="${base.home}" />
-		<install-into-base url="${base.url}" exists="eclipse"/>
-		<install-into-base url="${base.url.test}" exists="eclipse/plugins/org.eclipse.test_3.2.0"/>
-		<install-into-base url="${eclipse.url.derby}" exists="eclipse/plugins/org.apache.derby.core_10.4.2" unpackDest="${base.home}/eclipse"/>
-		<replaceregexp file="${base.home}/eclipse/plugins/org.apache.derby.core_10.4.2/plugin.xml"
-			match="org.apache.derby.core" replace="org.apache.derby" byline="true"/>
-	</target>
-
-	<target name="tests-helper-init">
-		<init-base activity="test"/>
-		
-    	<property name="eclipse.home" value="${base.home}/eclipse" />
-  	    <condition property="install.dir" value="${eclipse.home}" else="${eclipse.home}/dropins/test"><equals arg1="${base.target}" arg2="3.3"/></condition>
-
-		<delete failonerror="false" includeemptydirs="true">
-			<fileset dir="${eclipse.home}">
-				<include name="dropins/test*/**"/>
-			</fileset>
-		</delete>
-
-		<antcall target="install-tests-helper-performance-tests"/>
-	</target>
-
-	<target name="install-tests-dependencies">
-  	    <antcall target="publish-feature">
-  	    	<param name="feature" value="dependencies.test"/>
-			<param name="version" value="0.0.0.${qualifier}"/>
-			<param name="featureDir" value="${basedir}/test-dependencies-feature"/>
-		</antcall>
-		<install-feature-into-base featureId="dependencies.test"/>
+	<target name="publish-feature" if="feature.exists">
+		<mkdir dir="${build.home}/update/features"/>
 			
-		<antcall target="extract-tests"/>
-	</target>
-		
-	<target name="extract-tests">
-		<!-- copy build features to eclipse directory -->
-		<unzip dest="${install.dir}">
-			<fileset dir="${build.home}/${base.target}/${build.dist}">
-				<include name="*.zip"/>
-				<exclude name="*sdk*"/>
-			</fileset>
-		</unzip>
+		<delete dir="${build.home}/tmp/feature" failonerror="false"/>
+ 		<copy todir="${build.home}/tmp/feature">
+    		<fileset dir="${featureDir}"/>
+    		<filterset>
+    			<filter token="VERSION" value="${version}"/>
+    		</filterset>
+    	</copy>
+    			    	
+		<delete file="${build.home}/update/features/${feature}_${version}.jar"/>
+		<jar destfile="${build.home}/update/features/${feature}_${version}.jar" >
+			<fileset dir="${build.home}/tmp/feature"/>
+		</jar>
+		<antcall target="generate-metadata">
+			<param name="dir" value="${build.home}/update"/>
+			<param name="name" value="Updates"/>
+		</antcall>
 	</target>
 
-	<target name="install-tests-helper-performance-tests" if="build.replacePerformanceTestPlugin">
-		<!-- replace performance plug-in with patched version from test feature -->
-		<delete failonerror="false" includeemptydirs="true">
-			<fileset dir="${base.home}">
-				<include name="plugins/org.eclipse.test.performance*/**"/>
-			</fileset>
-		</delete>
-	</target>
-	
-	<target name="tests-helper" depends="tests-helper-init,install-tests-dependencies,pre-tests">
-		<init-basebuilder/>
-    	<path id="library.id"> 
-    		<fileset dir="${base.home}/eclipse/plugins">
-            	<include name="org.eclipse.test_*/library.xml"/>
-          	</fileset>
-    	</path> 
-    	<property name="library" refid="library.id"/>
-		<dirname property="functions.basedir" file="${ant.file.functions}"/>
-
-		<exec-eclipse timeout="${build.test.timeout}" activity="testing">
-    		<arg value="-buildfile"/>
-    		<arg value="${functions.basedir}/test.xml"/>
-    		<arg value="-Dos=${build.os}"/>
-    		<arg value="-Dws=${build.ws}"/>
-    		<arg value="-Darch=${build.arch}"/>
-    		<arg value="-Declipse-home=${base.home}/eclipse"/>    		
-    		<arg value="-Dlibrary-file=${library}"/>
-    		<arg value="-Dplugin-name=${build.test.plugin}"/>
-    		<arg value="-Dclassname=${test.classname}"/>
-    		<arg value="-DextraVMargs= 
-    	    -ea
-    		-Xmx384m
-    		-XX:MaxPermSize=128m
-    	    -Declipse.perf.dbloc=${build.db} 
-    	    -Declipse.perf.config=build=${qualifier};config=${build.host}-${build.target};jvm=${java.version}
-    	    -Declipse.perf.assertAgainst=build=${build.assertAgainst}
-    	    ${build.extraTestArgs}" />
-    		<arg value="${test.target}"/>
-		</exec-eclipse>
-		
-		<copy todir="${build.results}/test-${build.target}">
-			<fileset dir="${base.home}/results"/>
-		</copy>
-		
-		<antcall target="post-tests"/>
-    </target>
-	
 	<!-- ===================================================================== -->
-	<!-- other helper targets -->
+	<!-- basebuilder targets -->
 	<!-- ===================================================================== -->
 
-	<target name="install-basebuilder" unless="base.builder.exists">
+	<target name="provision-basebuilder" unless="base.builder.exists">
 		<mkdir dir="${base.builder.home}" />
 
 		<echo message="Getting basebuilder from CVS"/>
@@ -664,6 +776,10 @@
 		<delete dir="${base.home}/org.eclipse.releng.basebuilder" failonerror="false"/>
 	</target>
 		
+	<!-- ===================================================================== -->
+	<!-- other targets -->
+	<!-- ===================================================================== -->
+
 	<target name="fix-permissions">
 		<chmod perm="g+w">
 			<fileset dir="${dir}"/>
@@ -853,26 +969,5 @@
     		<arg value="win32.win32.x86,gtk.linux.x86,gtk.linux.x86_64,cocoa.macosx.x86,cocoa.macosx.x86_64,carbon.macosx.ppc"/>
 		</java>
     </target>
-
-	<target name="publish-feature">
-		<mkdir dir="${build.home}/update/features"/>
-			
-		<delete dir="${build.home}/tmp/feature" failonerror="false"/>
- 		<copy todir="${build.home}/tmp/feature">
-    		<fileset dir="${featureDir}"/>
-    		<filterset>
-    			<filter token="VERSION" value="${version}"/>
-    		</filterset>
-    	</copy>
-    			    	
-		<delete file="${build.home}/update/features/${feature}_${version}.jar"/>
-		<jar destfile="${build.home}/update/features/${feature}_${version}.jar" >
-			<fileset dir="${build.home}/tmp/feature"/>
-		</jar>
-		<antcall target="generate-metadata">
-			<param name="dir" value="${build.home}/update"/>
-			<param name="name" value="Updates"/>
-		</antcall>
-	</target>
 	
 </project>

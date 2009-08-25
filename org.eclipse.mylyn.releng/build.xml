@@ -21,72 +21,6 @@
 	<target name="all" depends="clean,build,standalone-tests,tests,performance-tests">
 	</target>
 
-	<target name="build" depends="init-build,init">
-		<antcall target="for-each-target">
-			<param name="call" value="mylyn-build-helper"/>
-		</antcall>
-	</target>
-
-	<target name="mylyn-build-helper">
-  	    <condition property="versionPostfix" value="e33" else="e3x"><equals arg1="${build.target}" arg2="3.3"/></condition>
-		<antcall target="build-helper">
-			<param name="build.extraBuildArgs" value="-DmylynQualifier=${qualifier}"/>
-			<param name="build.forceContextQualifier" value="${qualifier}-${versionPostfix}"/>			
-		</antcall>		
-	</target>
-
-	<target name="standalone-tests" depends="init-tests">
-		<antcall target="for-each-target">
-			<param name="call" value="standalone-tests-helper"/>
-		</antcall>
-	</target>
-		
-	<target name="standalone-tests-helper">
-    	<property name="install.dir" value="${build.home}/standalone-tests" />
-		<delete dir="${install.dir}"/>
-		<antcall target="install-tests-helper"/>
-		
-    	<property name="timeout" value="3600000" />
-    	<property name="eclipse.home" value="${eclipse.base}/test-${eclipse.sdk.version}/eclipse" />
-		<property name="vmargs" value=" -Xms40m -Xmx256m"/>    	
-    	<property name="log" value="${build.results}/test-standalone-${build.target}.log" />
-		<path id="tests.classpath">
-			<fileset dir="${install.dir}">
-				<include name="plugins/**/*.jar"/>
-				<exclude name="plugins/**/ui*.jar"/>
-			</fileset>
-			<dirset dir="${install.dir}/plugins">
-				<include name="*"/>
-				<exclude name="*ui*"/>
-			</dirset>
-			<fileset dir="${eclipse.home}/plugins">
-				<include name="org.junit_*/junit.jar"/>
-				<include name="org.eclipse.core.jobs_*.jar"/>
-				<include name="org.eclipse.core.net_*.jar"/>
-				<include name="org.eclipse.core.runtime_*.jar"/>
-				<include name="org.eclipse.equinox.common_*.jar"/>
-				<include name="org.eclipse.osgi_*.jar"/>
-				<!--
-				<include name="*.jar"/>
-				-->
-			</fileset>
-		</path>
-		
-		<property name="output.dir" value="${build.results}/test-${build.target}"/>
-		<mkdir dir="${output.dir}"/>
-		
-		<echo message="Testing standalone ${version}.${qualifier} on Eclipse ${eclipse.sdk.version}" />
-		<junit printsummary="yes" haltonfailure="no" 
-			failureproperty="junit_test_failed" fork="true" forkmode="once" maxmemory="256m">
-			<classpath>
-				<path refid="tests.classpath"/>
-			</classpath>
-			<sysproperty key="mylyn.credentials" value="${build.credentials}"/>
-			<formatter type="xml" />
-			<test todir="${output.dir}" name="org.eclipse.mylyn.tests.AllHeadlessStandaloneTests"/>
-		</junit>
-    </target>
-
 	<target name="pack" depends="init">
 		<antcall target="for-each-target">
 			<param name="call" value="pack-sites"/>
@@ -95,13 +29,13 @@
 
 	<target name="pack-sites" depends="init">
 		<antcall target="pack-helper">
-			<param name="dir" value="${build.home}/${build.target}/standardUpdateSite"/>
+			<param name="dir" value="${build.home}/${base.target}/standardUpdateSite"/>
 		</antcall>
 		<antcall target="pack-helper">
-			<param name="dir" value="${build.home}/${build.target}/extrasUpdateSite"/>
+			<param name="dir" value="${build.home}/${base.target}/extrasUpdateSite"/>
 		</antcall>
 		<antcall target="pack-helper">
-			<param name="dir" value="${build.home}/${build.target}/incubatorUpdateSite"/>
+			<param name="dir" value="${build.home}/${base.target}/incubatorUpdateSite"/>
 		</antcall>
 	</target>
 
@@ -112,17 +46,17 @@
 	</target>
 
 	<target name="generate-metadata-sites" depends="init">
-  	    <condition property="label" value="3.3" else="3.4 and 3.5"><equals arg1="${build.target}" arg2="3.3"/></condition>
+  	    <condition property="label" value="3.3" else="3.4, 3.5 and 3.6"><equals arg1="${base.target}" arg2="3.3"/></condition>
 		<antcall target="generate-metadata-helper">
-			<param name="dir" value="${build.home}/${build.target}/standardUpdateSite"/>
+			<param name="dir" value="${build.home}/${base.target}/standardUpdateSite"/>
 			<param name="name" value="Mylyn Weekly for Eclipse ${label}"/>
 		</antcall>
 		<antcall target="generate-metadata-helper">
-			<param name="dir" value="${build.home}/${build.target}/extrasUpdateSite"/>
+			<param name="dir" value="${build.home}/${base.target}/extrasUpdateSite"/>
 			<param name="name" value="Mylyn Weekly Extras"/>
 		</antcall>
 		<antcall target="generate-metadata-helper">
-			<param name="dir" value="${build.home}/${build.target}/incubatorUpdateSite"/>
+			<param name="dir" value="${build.home}/${base.target}/incubatorUpdateSite"/>
 			<param name="name" value="Mylyn Weekly Incubator"/>
 		</antcall>
 	</target>
@@ -141,11 +75,11 @@
 	<target name="publish-helper">
 		<antcall target="publish-helper-run">
 			<param name="file" value="org.eclipse.mylyn.tests.AllTests.xml"/>
-			<param name="tag" value="[e${build.target}]"/>
+			<param name="tag" value="[e${base.target}]"/>
 		</antcall>
 		<antcall target="publish-helper-run">
 			<param name="file" value="org.eclipse.mylyn.tests.AllPerformanceTests.xml"/>
-			<param name="tag" value="[e${build.target}-perf]"/>
+			<param name="tag" value="[e${base.target}-perf]"/>
 		</antcall>
 	</target>
 
@@ -159,7 +93,7 @@
 	<target name="publish-helper-run">
     	<path id="file.id"> 
     		<fileset dir="${build.results}">
-            	<include name="test-${build.target}/${file}"/>
+            	<include name="test-${base.target}/${file}"/>
           	</fileset>
     	</path> 
     	<property name="file.path" refid="file.id"/>
@@ -368,6 +302,10 @@
 				<exclude name="*${base.target}.map"/>
 			</fileset>
 		</delete>
+
+		<property name="build.extraBuildArgs" value="-DmylynQualifier=${qualifier}"/>
+		<condition property="versionPostfix" value="e33" else="e3x"><equals arg1="${base.target}" arg2="3.3"/></condition>
+		<property name="build.forceContextQualifier" value="${qualifier}-${versionPostfix}" />
 	</target>
 
 	<target name="pre-tests">	
