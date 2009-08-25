@@ -50,7 +50,7 @@
   <!-- performance test target -->
   <target name="performance-suite">
     <property name="plugin-name" value="${plugin-name}"/>
-    <property name="workspace" value="${eclipse-home}/test_folder"/>
+    <property name="workspace" value="${eclipse-home}/test-workspace"/>
     <delete dir="${workspace}" quiet="true"/>
     <ant target="ui-test" antfile="${library-file}" dir="${eclipse-home}">
       <property name="data-dir" value="${workspace}"/>
@@ -70,7 +70,7 @@
   <!-- swtbot test target -->
   <target name="swtbot-suite">
     <property name="plugin-name" value="${plugin-name}"/>
-    <property name="workspace" value="${eclipse-home}/test_folder"/>
+    <property name="workspace" value="${eclipse-home}/test-workspace"/>
     <delete dir="${workspace}" quiet="true"/>
       
     <ant target="swtbot-test" antfile="${swtbot-library-file}" dir="${eclipse-home}">

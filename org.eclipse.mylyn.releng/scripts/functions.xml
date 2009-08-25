@@ -181,7 +181,7 @@
         <sequential>
 			<init-base-properties activity="@{activity}" target="@{target}"/>
 			
-			<available file="${base.home}/eclipse" property="base.exists"/>
+			<available file="${base.home}/.provisioned" property="base.exists"/>
 			<antcall target="provision-${activity.type}"/>
         </sequential>
     </macrodef>
@@ -373,6 +373,8 @@
 		<!-- extract sdk for building -->
 		<mkdir dir="${base.home}" />
 		<install-into-base url="${base.url}" exists="eclipse"/>
+		
+		<touch file="${base.home}/.provisioned"/>
 	</target>
 	
 	<target name="clean-build-helper">
@@ -391,7 +393,7 @@
 		</copy>
 	</target>
 
-	<target name="install-build-dependencies">
+	<target name="install-build-dependencies" unless="skipUpdate">
 		<available property="feature.exists" file="${basedir}/build-dependencies-feature"/>
   	    <antcall target="publish-feature">
   	    	<param name="feature" value="dependencies.build"/>
@@ -455,10 +457,33 @@
 		<!-- extract sdk for building -->
 		<mkdir dir="${base.home}" />
 		<install-into-base url="${base.url}" exists="eclipse"/>
+		<install-into-base url="${base.url.swtbot}" exists="eclipse/plugins/org.eclipse.test_3.2.0"/>
 		<install-into-base url="${base.url.test}" exists="eclipse/plugins/org.eclipse.test_3.2.0"/>
 		<install-into-base url="${eclipse.url.derby}" exists="eclipse/plugins/org.apache.derby.core_10.4.2" unpackDest="${base.home}/eclipse"/>
 		<replaceregexp file="${base.home}/eclipse/plugins/org.apache.derby.core_10.4.2/plugin.xml"
 			match="org.apache.derby.core" replace="org.apache.derby" byline="true"/>
+		<install-into-base url="${base.url.swtbot}" exists="eclipse/plugins/org.eclipse.swtbot.eclipse.junit4.headeless_2.0.0.${swtbot.rev}"/>
+		<delete>
+			<fileset dir="${base.home}/eclipse">
+				<include name="plugins/org.eclipse.swtbot*junit3*/**"/>
+			</fileset>			
+		</delete>
+		
+		<!-- replace org.junit with a org.junit4 making both plug-ins export identical classes to support
+			 running SWTbot tests on JUnit4 mixed with legacy JUnit3 tests --> 
+		<dirname property="functions.basedir" file="${ant.file.functions}"/>
+		<copy todir="${base.home}/eclipse/dropins">
+			<fileset dir="${functions.basedir}/tools">
+				<include name="org.junit*"/>
+			</fileset>			
+		</copy>
+		<delete>
+			<fileset dir="${base.home}/eclipse">
+				<include name="plugins/org.junit*/**"/>
+			</fileset>			
+		</delete>
+		
+		<touch file="${base.home}/.provisioned"/>
 	</target>
 
 	<target name="tests-helper-init">
@@ -476,7 +501,7 @@
 		<antcall target="install-tests-helper-performance-tests"/>
 	</target>
 
-	<target name="install-tests-dependencies">
+	<target name="install-tests-dependencies" unless="skipUpdate">
 		<available property="feature.exists" file="${basedir}/test-dependencies-feature"/>
   	    <antcall target="publish-feature">
   	    	<param name="feature" value="dependencies.test"/>
@@ -518,9 +543,15 @@
           	</fileset>
     	</path> 
     	<property name="library" refid="library.id"/>
+    	<path id="swtbot.library.id"> 
+    		<fileset dir="${base.home}/eclipse/plugins">
+            	<include name="org.eclipse.swtbot.eclipse.junit4.headless_*/library.xml"/>
+          	</fileset>
+    	</path> 
+    	<property name="swtbot.library" refid="swtbot.library.id"/>
 		<dirname property="functions.basedir" file="${ant.file.functions}"/>
 
-		<exec-eclipse timeout="${build.test.timeout}" activity="testing">
+		<exec-eclipse timeout="${build.test.timeout}" activity="${test.target}-testing">
     		<arg value="-buildfile"/>
     		<arg value="${functions.basedir}/test.xml"/>
     		<arg value="-Dos=${build.os}"/>
@@ -528,20 +559,21 @@
     		<arg value="-Darch=${build.arch}"/>
     		<arg value="-Declipse-home=${base.home}/eclipse"/>    		
     		<arg value="-Dlibrary-file=${library}"/>
-    		<arg value="-Dplugin-name=${build.test.plugin}"/>
+			<arg value="-Dswtbot-library-file=${swtbot.library}"/>
+    		<arg value="-Dplugin-name=${test.plugin}"/>
     		<arg value="-Dclassname=${test.classname}"/>
     		<arg value="-DextraVMargs= 
     	    -ea
     		-Xmx384m
     		-XX:MaxPermSize=128m
     	    -Declipse.perf.dbloc=${build.db} 
-    	    -Declipse.perf.config=build=${qualifier};config=${build.host}-${build.target};jvm=${java.version}
+    	    -Declipse.perf.config=build=${qualifier};config=${build.host}-${base.target};jvm=${java.version}
     	    -Declipse.perf.assertAgainst=build=${build.assertAgainst}
     	    ${build.extraTestArgs}" />
     		<arg value="${test.target}"/>
 		</exec-eclipse>
 		
-		<copy todir="${build.results}/test-${build.target}">
+		<copy todir="${build.results}/test-${base.target}">
 			<fileset dir="${base.home}/results"/>
 		</copy>
 		
@@ -602,7 +634,7 @@
 	<!-- ===================================================================== -->
 
 	<target name="report-helper-init">
-		<property name="results.home" value="${build.results}/test-${build.target}" />
+		<property name="results.home" value="${build.results}/test-${base.target}" />
 		<mkdir dir="${results.home}" />
 	</target>
 	
