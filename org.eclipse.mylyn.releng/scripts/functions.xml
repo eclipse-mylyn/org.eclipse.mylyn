@@ -355,7 +355,7 @@
 	</target>
 	
 	<target name="clean-tools-helper">
-    	<property name="eclipse.sdk.home" value="${eclipse.base}/sdk-${eclipse.sdk.version}" />
+    	<property name="eclipse.sdk.home" value="${eclipse.base}/build-${eclipse.sdk.version}" />
 		<delete dir="${eclipse.sdk.home}" />
     	<property name="eclipse.test.home" value="${eclipse.base}/test-${eclipse.sdk.version}" />
 		<delete dir="${eclipse.test.home}" />
