@@ -397,7 +397,7 @@
 		<available property="feature.exists" file="${basedir}/build-dependencies-feature"/>
   	    <antcall target="publish-feature">
   	    	<param name="feature" value="dependencies.build"/>
-			<param name="version" value="0.0.0.${qualifier}"/>
+			<param name="version" value="1.0.0.${qualifier}"/>
 			<param name="featureDir" value="${basedir}/build-dependencies-feature"/>
 		</antcall>
 		<install-feature-into-base featureId="dependencies.build"/>
@@ -505,7 +505,7 @@
 		<available property="feature.exists" file="${basedir}/test-dependencies-feature"/>
   	    <antcall target="publish-feature">
   	    	<param name="feature" value="dependencies.test"/>
-			<param name="version" value="0.0.0.${qualifier}"/>
+			<param name="version" value="1.0.0.${qualifier}"/>
 			<param name="featureDir" value="${basedir}/test-dependencies-feature"/>
 		</antcall>
 		<install-feature-into-base featureId="dependencies.test"/>
@@ -702,6 +702,8 @@
 			<arg value="${featureId}.feature.group"/>
 			<arg value="-profile"/>
 			<arg value="${base.config.eclipse.p2.profile}"/>
+			<arg value="-profileProperties"/> 
+			<arg value="org.eclipse.update.install.features=true"/>
 			<arg value="-destination"/>
 			<arg value="${base.home}/eclipse"/>
 		</exec-eclipse>
