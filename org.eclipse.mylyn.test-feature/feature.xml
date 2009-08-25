@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><!--
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
     Copyright (c) 2009 Tasktop Technologies and others.
     All rights reserved. This program and the accompanying materials
     are made available under the terms of the Eclipse Public License v1.0
@@ -8,7 +9,6 @@
     Contributors:
          Tasktop Technologies - initial API and implementation
  -->
-
 <feature
       id="org.eclipse.mylyn.test_feature"
       label="Mylyn Test Feature"
@@ -272,5 +272,12 @@ Java and all Java-based trademarks are trademarks of Sun Microsystems, Inc. in t
          download-size="0"
          install-size="0"
          version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.mylyn.tests.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>
