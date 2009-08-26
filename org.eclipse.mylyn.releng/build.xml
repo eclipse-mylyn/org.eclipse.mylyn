@@ -18,7 +18,7 @@
 	<property file="scripts/defaults-all.properties" />
 	<import file="scripts/functions.xml" />
 	
-	<target name="all" depends="clean,build,standalone-tests,tests,performance-tests">
+	<target name="all" depends="clean,build,standalone-tests,tests">
 	</target>
 
 	<target name="pack" depends="init">
