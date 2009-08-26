@@ -356,10 +356,18 @@
 	</target>
 	
 	<target name="clean-tools-helper">
-    	<property name="eclipse.sdk.home" value="${eclipse.base}/build-${eclipse.sdk.version}" />
-		<delete dir="${eclipse.sdk.home}" />
-    	<property name="eclipse.test.home" value="${eclipse.base}/test-${eclipse.sdk.version}" />
-		<delete dir="${eclipse.test.home}" />
+		<antcall target="clean-build-tools-helper"/>
+		<antcall target="clean-test-tools-helper"/>
+	</target>
+
+	<target name="clean-build-tools-helper">
+		<init-base-properties activity="build"/>
+		<delete dir="${base.home}" />
+	</target>
+
+	<target name="clean-test-tools-helper">
+		<init-base-properties activity="test"/>
+		<delete dir="${base.home}" />
 	</target>
 
 	<!-- ===================================================================== -->
@@ -440,7 +448,7 @@
 	<!-- ===================================================================== -->
 
 	<target name="clean-tests-helper">
-    	<property name="eclipse.home" value="${eclipse.base}/test-${eclipse.sdk.version}/eclipse" />
+    	<property name="eclipse.home" value="${tools.home}/test-${base.version}/eclipse" />
 		<delete failonerror="false">
 			<fileset dir="${eclipse.home}/configuration" includes="*.log" />
 		</delete>
@@ -648,25 +656,8 @@
 	</target>
 
 	<target name="performance-report-helper">
-    	<property name="timeout" value="3600000" />
-		<property name="application" value="org.eclipse.test.performance.ui.resultGenerator" />
-    	<property name="eclipse.home" value="${eclipse.base}/test-${eclipse.sdk.version}/eclipse" />
-		<property name="vmargs" value="-Xms40m -Xmx256m"/>    	
-		
-		<echo message="Creating performance test report for ${version}.${qualifier} on Eclipse ${eclipse.sdk.version}" />
-    	<java fork="true" dir="." timeout="${timeout}" logError="true" failonerror="false" 
-    		classname="org.eclipse.core.launcher.Main">
-	        <classpath>
-	    		<fileset dir="${eclipse.home}/plugins">
-	            	<include name="org.eclipse.equinox.launcher_*.jar"/>
-	          	</fileset>
-	        </classpath>
-    		<jvmarg line="${vmargs}"/>
-		    <arg value="-consolelog"/>
-    		<arg value="-data"/>
-    		<arg value="${build.home}/workspace"/>
-		    <arg value="-application"/>
-    		<arg value="${application}"/>
+		<echo message="Creating performance test report for ${version}.${qualifier}" />
+		<exec-eclipse activity="performance-report" application="org.eclipse.test.performance.ui.resultGenerator" >
     		<arg value="-Declipse.perf.dbloc=${build.db}"/>
     		<arg value="-baseline"/>
     		<arg value="${build.baseline}"/>
@@ -681,7 +672,7 @@
     		<arg value="-print"/>
     		<arg value="-scenario.pattern"/>
     		<arg value="${build.scenario}%"/>
-		</java>
+		</exec-eclipse>
     </target>
 
 	<!-- ===================================================================== -->
