@@ -64,7 +64,7 @@
 		</antcall>
 	</target>
 
-	<target name="tests" depends="eclipse-tests,performance-tests">
+	<target name="tests" depends="eclipse-tests,swtbot-tests,performance-tests">
 	</target>
 
 	<target name="eclipse-tests" depends="init-tests">
@@ -693,12 +693,29 @@
 		<property file="${base.home}/eclipse/configuration/config.ini" prefix="base.config"/>
 		
 		<echo message="Installing ${featureId}"/>
-		<exec-eclipse activity="install" application="org.eclipse.equinox.p2.director"
-			 extravmargs="-Declipse.p2.data.area=${base.home}/eclipse/p2">
+		<exec-eclipse activity="uninstall" application="org.eclipse.equinox.p2.director"
+			 extravmargs="-Declipse.p2.data.area=${base.home}/eclipse/p2 -Declipse.p2.MD5Check=false" failonerror="false">
     		<arg value="-metadataRepository"/>
     		<arg value="${updateSite},${base.sites}"/>
     		<arg value="-artifactRepository"/>
     		<arg value="${updateSite},${base.sites}"/>
+			<arg value="-roaming"/>
+			<arg value="-uninstallIU"/>
+			<arg value="${featureId}.feature.group"/>
+			<arg value="-profile"/>
+			<arg value="${base.config.eclipse.p2.profile}"/>
+			<arg value="-profileProperties"/> 
+			<arg value="org.eclipse.update.install.features=true"/>
+			<arg value="-destination"/>
+			<arg value="${base.home}/eclipse"/>
+		</exec-eclipse>
+		<exec-eclipse activity="install" application="org.eclipse.equinox.p2.director"
+			 extravmargs="-Declipse.p2.data.area=${base.home}/eclipse/p2 -Declipse.p2.MD5Check=false">
+    		<arg value="-metadataRepository"/>
+    		<arg value="${updateSite},${base.sites}"/>
+    		<arg value="-artifactRepository"/>
+    		<arg value="${updateSite},${base.sites}"/>
+			<arg value="-roaming"/>
 			<arg value="-installIU"/>
 			<arg value="${featureId}.feature.group"/>
 			<arg value="-profile"/>
