@@ -31,6 +31,7 @@
 	</target>
 
 	<target name="clean-build">
+		<delete dir="${build.home}/workspace"/>
 		<antcall target="for-each-target">
 			<param name="call" value="clean-build-helper"/>
 		</antcall>
@@ -214,7 +215,7 @@
 		<attribute name="activity"/>
 		<attribute name="application" default="org.eclipse.ant.core.antRunner" />
 		<attribute name="extravmargs" default=""/>
-		<attribute name="vmargs" default=" -Xms40m -Xmx512m"/>    	
+		<attribute name="vmargs" default=" -Xms40m -Xmx512m -XX:MaxPermSize=128m"/>    	
 		<attribute name="failonerror" default="true"/>
 		<attribute name="timeout" default="10000000" />
 		<attribute name="output" default="NOT SET" />
@@ -574,7 +575,7 @@
 		</exec-eclipse>
 		
 		<copy todir="${build.results}/test-${base.target}">
-			<fileset dir="${base.home}/results"/>
+			<fileset dir="${base.home}/eclipse/results"/>
 		</copy>
 		
 		<antcall target="post-tests"/>

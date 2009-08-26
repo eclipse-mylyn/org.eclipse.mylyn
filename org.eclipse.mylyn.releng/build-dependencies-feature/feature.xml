@@ -8,8 +8,8 @@
       
    </license>
 
-   <includes
-         id="org.eclipse.swtbot.eclipse"
-         version="0.0.0"/>
+   <requires>
+      <import feature="org.eclipse.swtbot.eclipse" version="2.0.0" match="greaterOrEqual"/>
+   </requires>
 
 </feature>
