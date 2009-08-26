@@ -37,6 +37,7 @@ import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.window.Window;
+import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
@@ -1889,8 +1890,11 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 					return;
 				}
 
-				MessageDialog.openError(shell, Messages.BugzillaSearchPage_Error_updating_search_options,
-						MessageFormat.format(Messages.BugzillaSearchPage_Error_was_X, ex.getCause().getMessage()));
+				// FIXME improve error reporting
+				if (!CoreUtil.TEST_MODE) {
+					MessageDialog.openError(shell, Messages.BugzillaSearchPage_Error_updating_search_options,
+							MessageFormat.format(Messages.BugzillaSearchPage_Error_was_X, ex.getCause().getMessage()));
+				}
 				return;
 
 			} catch (InterruptedException ex) {
