@@ -539,7 +539,7 @@
 	<target name="install-tests-helper-performance-tests" if="build.replacePerformanceTestPlugin">
 		<!-- replace performance plug-in with patched version from test feature -->
 		<delete failonerror="false" includeemptydirs="true">
-			<fileset dir="${base.home}">
+			<fileset dir="${base.home}/eclipse">
 				<include name="plugins/org.eclipse.test.performance*/**"/>
 			</fileset>
 		</delete>
