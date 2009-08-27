@@ -107,6 +107,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
@@ -959,7 +960,7 @@ public class TasksUiInternal {
 					try {
 						if (object != null) {
 							EvaluationContext context = new EvaluationContext(service.getCurrentState(), object);
-							context.addVariable("activeSelection", new StructuredSelection(object)); //$NON-NLS-1$
+							context.addVariable(ISources.ACTIVE_CURRENT_SELECTION_NAME, new StructuredSelection(object));
 							service.executeCommandInContext(new ParameterizedCommand(command, null), event, context);
 						} else {
 							service.executeCommand(commandId, event);
