@@ -1089,7 +1089,8 @@ public class BugzillaClient {
 				if (value == null) {
 					continue;
 				}
-				if (a.getId().equals(BugzillaAttribute.NEWCC.getKey())) {
+				String id = a.getId();
+				if (id.equals(BugzillaAttribute.NEWCC.getKey())) {
 					TaskAttribute b = taskData.getRoot().createAttribute(BugzillaAttribute.CC.getKey());
 					b.getMetaData().defaults().setReadOnly(BugzillaAttribute.CC.isReadOnly()).setKind(
 							BugzillaAttribute.CC.getKind()).setLabel(BugzillaAttribute.CC.toString()).setType(
@@ -1104,7 +1105,16 @@ public class BugzillaClient {
 				} else {
 					cleanQAContact(a);
 				}
-				fields.put(a.getId(), new NameValuePair(a.getId(), value));
+				if (a.getMetaData().getType() != null
+						&& a.getMetaData().getType().equals(TaskAttribute.TYPE_MULTI_SELECT)) {
+					List<String> values = a.getValues();
+					int i = 0;
+					for (String string : values) {
+						fields.put(id + i++, new NameValuePair(id, string != null ? string : "")); //$NON-NLS-1$
+					}
+				} else if (id != null && id.compareTo("") != 0) { //$NON-NLS-1$
+					fields.put(id, new NameValuePair(id, value != null ? value : "")); //$NON-NLS-1$
+				}
 			}
 		}
 
