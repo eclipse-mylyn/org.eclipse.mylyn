@@ -482,11 +482,13 @@
 		<!-- replace org.junit with a org.junit4 making both plug-ins export identical classes to support
 			 running SWTbot tests on JUnit4 mixed with legacy JUnit3 tests --> 
 		<dirname property="functions.basedir" file="${ant.file.functions}"/>
+		<!--
 		<delete>
 			<fileset dir="${base.home}/eclipse">
 				<include name="plugins/org.junit*/**"/>
 			</fileset>			
 		</delete>
+		-->
 		<copy todir="${base.home}/eclipse/plugins">
 			<fileset dir="${functions.basedir}/tools">
 				<include name="org.junit*"/>
