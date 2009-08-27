@@ -70,7 +70,7 @@
 	<target name="eclipse-tests" depends="init-tests">
 		<antcall target="for-each-target">
 			<param name="call" value="tests-helper"/>
-			<param name="test.target" value="run"/>
+			<param name="test.target" value="eclipse"/>
 			<param name="test.plugin" value="${build.test.eclipse.plugin}"/>
 			<param name="test.classname" value="${build.test.eclipse.suite}"/>
 		</antcall>
@@ -560,7 +560,7 @@
     	<property name="swtbot.library" refid="swtbot.library.id"/>
 		<dirname property="functions.basedir" file="${ant.file.functions}"/>
 
-		<exec-eclipse timeout="${build.test.timeout}" activity="${test.target}-testing">
+		<exec-eclipse timeout="${build.test.timeout}" activity="${test.target}-tests">
     		<arg value="-buildfile"/>
     		<arg value="${functions.basedir}/test.xml"/>
     		<arg value="-Dos=${build.os}"/>
