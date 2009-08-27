@@ -951,6 +951,16 @@
             categoryId="org.eclipse.ui.category.navigate"
             id="org.eclipse.mylyn.tasks.ui.command.deactivateAllTasks"
             name="%command.deactivateAllTasks.name"/>
+      <command
+            categoryId="org.eclipse.ui.category.navigate"
+            id="org.eclipse.mylyn.tasks.ui.command.activateSelectedTask"
+            name="Activate Selected Task"
+            defaultHandler="org.eclipse.mylyn.internal.tasks.ui.commands.ActivateTaskHandler"/>
+      <command
+            categoryId="org.eclipse.ui.category.navigate"
+            id="org.eclipse.mylyn.tasks.ui.command.deactivateSelectedTask"
+            name="Deactivate Selected Task"
+            defaultHandler="org.eclipse.mylyn.internal.tasks.ui.commands.DeactivateTaskHandler"/>
    </extension>
    <extension
          point="org.eclipse.ui.bindings">
@@ -1109,6 +1119,16 @@
           adaptableType="org.eclipse.mylyn.tasks.core.TaskRepository"
           class="org.eclipse.mylyn.internal.tasks.ui.TaskRepositoryAdapterFactory">
        <adapter type="org.eclipse.ui.IActionFilter"/>
+    </factory>
+    <factory
+          adaptableType="org.eclipse.mylyn.tasks.ui.editors.TaskEditor"
+          class="org.eclipse.mylyn.internal.tasks.ui.TasksAdapterFactory">
+       <adapter
+             type="org.eclipse.mylyn.tasks.core.ITask">
+       </adapter>
+       <adapter
+             type="org.eclipse.mylyn.tasks.core.TaskRepository">
+       </adapter>
     </factory>
     <factory
           adaptableType="org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput"
@@ -1647,20 +1667,9 @@
             <visibleWhen
                   checkEnabled="false">
           		<or>
-               	   <with
-               	   			variable="activeMenuSelection">
-		               <iterate
-		                     ifEmpty="false">
-		                  <or>
-		                     <adapt
-		                           type="org.eclipse.mylyn.tasks.core.ITask">
-		                     </adapt>
-		                     <instanceof
-		                           value="org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer">
-		                     </instanceof>
-		                  </or>
-		               </iterate>
-		           </with>
+	               <with variable="activePartId">
+	                	<equals value="org.eclipse.mylyn.tasks.ui.editors.task" />
+				   </with>
 	               <iterate
 	                     ifEmpty="false">
 	                  <or>
@@ -1902,19 +1911,6 @@
           point="org.eclipse.core.expressions.definitions">
        <definition
              id="org.eclipse.mylyn.tasks.ui.expressions.repositoryElements">
-          <or>
-			<with variable="activeMenuSelection">
-      <reference
-            definitionId="org.eclipse.mylyn.tasks.ui.expressions.repositoryElementsIterator">
-      </reference>                
-			</with>
-   <reference
-         definitionId="org.eclipse.mylyn.tasks.ui.expressions.repositoryElementsIterator">
-   </reference>
-		  </or>
-       </definition>
-       <definition
-             id="org.eclipse.mylyn.tasks.ui.expressions.repositoryElementsIterator">
           <iterate>
              <or>
                 <and>

@@ -1159,9 +1159,6 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 	public void init(IEditorSite site, IEditorInput input) {
 		super.init(site, input);
 
-		// XXX consider propagating selection events to site selection provider instead to avoid conflicts with other pages
-		site.setSelectionProvider(this);
-
 		TaskEditorInput taskEditorInput = (TaskEditorInput) input;
 		this.task = taskEditorInput.getTask();
 		this.defaultSelection = new StructuredSelection(task);
@@ -1391,6 +1388,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 		if (!selection.equals(lastSelection)) {
 			this.lastSelection = selection;
 			fireSelectionChanged(lastSelection);
+			getSite().getSelectionProvider().setSelection(selection);
 		}
 	}
 

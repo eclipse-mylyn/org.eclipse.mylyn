@@ -23,7 +23,6 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractFilteredTree;
@@ -92,8 +91,6 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 	private MenuManager activeTaskMenuManager;
 
-	private Menu activeTaskMenu;
-
 	private TaskListToolTip taskListToolTip;
 
 	private ITaskListChangeListener changeListener;
@@ -109,6 +106,10 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 	private final IWorkbenchWindow window;
 
 	private SelectionProviderAdapter activeTaskSelectionProvider;
+
+	private RepositoryElementActionGroup actionGroup;
+
+	private StructuredSelection activeSelection;
 
 	/**
 	 * @param window
@@ -136,14 +137,13 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			PlatformUI.getWorkbench().getWorkingSetManager().removePropertyChangeListener(
 					taskProgressBarWorkingSetListener);
 		}
-
+		activeTaskMenuManager.dispose();
 		super.dispose();
 		taskListToolTip.dispose();
 	}
 
 	private void hookContextMenu() {
-		final RepositoryElementActionGroup actionGroup = new RepositoryElementActionGroup();
-		actionGroup.setSelectionProvider(getActiveTaskSelectionProvider());
+		actionGroup = new RepositoryElementActionGroup();
 
 		activeTaskMenuManager = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 		activeTaskMenuManager.setRemoveAllWhenShown(true);
@@ -423,13 +423,16 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 		activeTaskLink.addMenuDetectListener(new MenuDetectListener() {
 			public void menuDetected(MenuDetectEvent e) {
-				if (activeTaskMenu != null) {
-					activeTaskMenu.dispose();
-				}
-				// do not show menu for
-				ISelection selection = getActiveTaskSelectionProvider().getSelection();
-				if (selection != null && !selection.isEmpty()) {
-					activeTaskMenu = activeTaskMenuManager.createContextMenu(container);
+				// do not show menu for inactive task link
+				if (activeTaskSelectionProvider != null && activeSelection != null && !activeSelection.isEmpty()) {
+					// grab focus since the active task will become the active selection: this causes the focus listener on the task list viewer to reset the active selection when focus is set back to the task list
+					activeTaskLink.setFocus();
+
+					// set site selection to active task
+					activeTaskSelectionProvider.setSelection(activeSelection);
+
+					// show menu that has been registered with view
+					Menu activeTaskMenu = activeTaskMenuManager.createContextMenu(container);
 					activeTaskMenu.setVisible(true);
 				}
 			}
@@ -509,7 +512,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			}
 
 			activeTaskLink.setTask(task);
-			getActiveTaskSelectionProvider().setSelection(new StructuredSelection(task));
+			activeSelection = new StructuredSelection(task);
 
 			relayoutFilterControls();
 		}
@@ -531,7 +534,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		activeTaskLink.setTask(null);
 		activeTaskLink.setText(Messages.TaskListFilteredTree_Activate);
 		activeTaskLink.setToolTipText(""); //$NON-NLS-1$
-		getActiveTaskSelectionProvider().setSelection(StructuredSelection.EMPTY);
+		activeSelection = StructuredSelection.EMPTY;
 
 		relayoutFilterControls();
 	}
@@ -563,10 +566,12 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 	}
 
 	public SelectionProviderAdapter getActiveTaskSelectionProvider() {
-		if (activeTaskSelectionProvider == null) {
-			activeTaskSelectionProvider = new SelectionProviderAdapter();
-		}
 		return activeTaskSelectionProvider;
+	}
+
+	public void setActiveTaskSelectionProvider(SelectionProviderAdapter activeTaskSelectionProvider) {
+		this.activeTaskSelectionProvider = activeTaskSelectionProvider;
+		this.actionGroup.setSelectionProvider(activeTaskSelectionProvider);
 	}
 
 }

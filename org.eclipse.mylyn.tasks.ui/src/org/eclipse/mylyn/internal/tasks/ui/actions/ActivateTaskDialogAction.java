@@ -15,9 +15,9 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.actions.ActionDelegate;
@@ -48,7 +48,7 @@ public class ActivateTaskDialogAction extends ActionDelegate implements IWorkben
 		Object result = dialog.getFirstResult();
 		if (result instanceof ITask) {
 			AbstractTask task = (AbstractTask) result;
-			TasksUi.getTaskActivityManager().activateTask(task);
+			TasksUiInternal.activateTaskThroughCommand(task);
 		}
 		if (TaskListView.getFromActivePerspective() != null) {
 			TaskListView.getFromActivePerspective().refresh();

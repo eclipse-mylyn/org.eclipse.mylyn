@@ -19,6 +19,7 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivationHistory;
 import org.eclipse.mylyn.internal.tasks.ui.TaskHistoryDropDown;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.swt.widgets.Control;
@@ -83,7 +84,7 @@ public class ActivateTaskHistoryDropDownAction extends Action implements IWorkbe
 		if (taskHistory.hasPrevious()) {
 			AbstractTask previousTask = taskHistory.getPreviousTask();
 			if (previousTask != null && !previousTask.isActive()) {
-				TasksUiPlugin.getTaskActivityManager().activateTask(previousTask);
+				TasksUiInternal.activateTaskThroughCommand(previousTask);
 				if (TaskListView.getFromActivePerspective() != null) {
 					TaskListView.getFromActivePerspective().refresh();
 				}

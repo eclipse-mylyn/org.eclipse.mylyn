@@ -16,6 +16,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.ITaskComment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 
 /**
@@ -34,7 +35,9 @@ public class TasksAdapterFactory implements IAdapterFactory {
 
 	public Object getAdapter(final Object adaptable, @SuppressWarnings("unchecked") Class adapterType) {
 		if (adapterType == ITask.class) {
-			if (adaptable instanceof TaskEditorInput) {
+			if (adaptable instanceof TaskEditor) {
+				return ((TaskEditor) adaptable).getTaskEditorInput().getTask();
+			} else if (adaptable instanceof TaskEditorInput) {
 				return ((TaskEditorInput) adaptable).getTask();
 			} else if (adaptable instanceof ITaskAttachment) {
 				return ((ITaskAttachment) adaptable).getTask();
@@ -43,7 +46,9 @@ public class TasksAdapterFactory implements IAdapterFactory {
 			}
 		}
 		if (adapterType == TaskRepository.class) {
-			if (adaptable instanceof TaskEditorInput) {
+			if (adaptable instanceof TaskEditor) {
+				return ((TaskEditor) adaptable).getTaskEditorInput().getTaskRepository();
+			} else if (adaptable instanceof TaskEditorInput) {
 				return ((TaskEditorInput) adaptable).getTaskRepository();
 			} else if (adaptable instanceof ITaskAttachment) {
 				return ((ITaskAttachment) adaptable).getTaskRepository();

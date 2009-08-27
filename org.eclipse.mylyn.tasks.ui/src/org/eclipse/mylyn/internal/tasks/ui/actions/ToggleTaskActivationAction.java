@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.action.Action;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -60,7 +61,7 @@ public class ToggleTaskActivationAction extends Action implements ITaskActivatio
 	@Override
 	public void run() {
 		if (!task.isActive()) {
-			TasksUi.getTaskActivityManager().activateTask(task);
+			TasksUiInternal.activateTaskThroughCommand(task);
 		} else {
 			TasksUi.getTaskActivityManager().deactivateTask(task);
 		}

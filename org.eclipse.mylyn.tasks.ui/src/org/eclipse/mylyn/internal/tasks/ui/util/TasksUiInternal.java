@@ -22,6 +22,11 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.NotEnabledException;
+import org.eclipse.core.commands.NotHandledException;
+import org.eclipse.core.commands.ParameterizedCommand;
+import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.core.expressions.EvaluationContext;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -42,6 +47,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizard;
@@ -94,7 +100,9 @@ import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -109,6 +117,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.ui.services.IServiceLocator;
 
 /**
  * @author Steffen Pingel
@@ -937,6 +946,66 @@ public class TasksUiInternal {
 			taskDescription += "\t"; //$NON-NLS-1$
 		}
 		return taskDescription;
+	}
+
+	public static void executeCommand(IServiceLocator serviceLocator, String commandId, String title, Object object,
+			Event event) throws NotEnabledException {
+		IHandlerService service = (IHandlerService) serviceLocator.getService(IHandlerService.class);
+		if (service != null) {
+			ICommandService commandService = (ICommandService) serviceLocator.getService(ICommandService.class);
+			if (commandService != null) {
+				Command command = commandService.getCommand(commandId);
+				if (command != null) {
+					try {
+						if (object != null) {
+							EvaluationContext context = new EvaluationContext(service.getCurrentState(), object);
+							context.addVariable("activeSelection", new StructuredSelection(object)); //$NON-NLS-1$
+							service.executeCommandInContext(new ParameterizedCommand(command, null), event, context);
+						} else {
+							service.executeCommand(commandId, event);
+						}
+					} catch (ExecutionException e) {
+						TasksUiInternal.displayStatus(title, new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+								"Command execution failed", e)); //$NON-NLS-1$
+					} catch (NotDefinedException e) {
+						TasksUiInternal.displayStatus(title, new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+								NLS.bind("The command with the id ''{0}'' is not defined.", commandId), e)); //$NON-NLS-1$
+					} catch (NotHandledException e) {
+						TasksUiInternal.displayStatus(title, new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+								NLS.bind("The command with the id ''{0}'' is not bound.", commandId), e)); //$NON-NLS-1$
+					}
+				} else {
+					TasksUiInternal.displayStatus(title, new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
+							"The command with the id ''{0}'' does not exist.", commandId))); //$NON-NLS-1$
+				}
+			} else {
+				TasksUiInternal.displayStatus(
+						title,
+						new Status(
+								IStatus.ERROR,
+								TasksUiPlugin.ID_PLUGIN,
+								NLS.bind(
+										"Command service is not available to execute command with the id ''{0}''.", commandId), new Exception())); //$NON-NLS-1$
+			}
+		} else {
+			TasksUiInternal.displayStatus(
+					title,
+					new Status(
+							IStatus.ERROR,
+							TasksUiPlugin.ID_PLUGIN,
+							NLS.bind(
+									"Handler service is not available to execute command with the id ''{0}''.", commandId), new Exception())); //$NON-NLS-1$
+		}
+	}
+
+	public static void activateTaskThroughCommand(ITask task) {
+		try {
+			TasksUiInternal.executeCommand(PlatformUI.getWorkbench(),
+					"org.eclipse.mylyn.tasks.ui.command.activateSelectedTask", "Activate Task", task, null); //$NON-NLS-1$
+		} catch (NotEnabledException e) {
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
+					"Failed to activate task ''{0}''.", task.getSummary()), e)); //$NON-NLS-1$
+		}
 	}
 
 }

@@ -158,7 +158,7 @@ public class AttachmentUtil {
 			return false;
 		}
 		TasksUiInternal.getTaskList().notifyElementChanged(task);
-		TasksUi.getTaskActivityManager().activateTask(task);
+		TasksUiInternal.activateTaskThroughCommand(task);
 		return true;
 	}
 

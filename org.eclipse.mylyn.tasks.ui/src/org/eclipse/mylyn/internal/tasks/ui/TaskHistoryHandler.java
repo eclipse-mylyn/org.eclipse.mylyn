@@ -24,6 +24,7 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivationHistory;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskDialogAction;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -63,7 +64,7 @@ public class TaskHistoryHandler extends AbstractHandler implements IElementUpdat
 			if (taskHistory.hasPrevious()) {
 				AbstractTask previousTask = taskHistory.getPreviousTask();
 				if (previousTask != null && !previousTask.isActive()) {
-					TasksUi.getTaskActivityManager().activateTask(previousTask);
+					TasksUiInternal.activateTaskThroughCommand(previousTask);
 				}
 			} else {
 				IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);

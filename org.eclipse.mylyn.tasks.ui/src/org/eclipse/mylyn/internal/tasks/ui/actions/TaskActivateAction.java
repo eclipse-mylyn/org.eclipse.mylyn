@@ -34,6 +34,7 @@ public class TaskActivateAction extends BaseSelectionListenerAction implements I
 	public TaskActivateAction() {
 		super(Messages.TaskActivateAction_Activate);
 		setId(ID);
+		setActionDefinitionId("org.eclipse.mylyn.tasks.ui.command.activateSelectedTask"); //$NON-NLS-1$
 		setImageDescriptor(TasksUiImages.CONTEXT_ACTIVE_CENTERED);
 	}
 

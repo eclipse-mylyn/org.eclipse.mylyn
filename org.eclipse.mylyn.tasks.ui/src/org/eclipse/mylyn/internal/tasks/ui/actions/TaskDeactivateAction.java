@@ -25,6 +25,7 @@ public class TaskDeactivateAction extends Action {
 
 	public TaskDeactivateAction() {
 		setId(ID);
+		setActionDefinitionId("org.eclipse.mylyn.tasks.ui.command.deactivateSelectedTask"); //$NON-NLS-1$
 		setText(Messages.TaskDeactivateAction_Deactivate);
 		setImageDescriptor(TasksUiImages.CONTEXT_INACTIVE_EMPTY);
 	}

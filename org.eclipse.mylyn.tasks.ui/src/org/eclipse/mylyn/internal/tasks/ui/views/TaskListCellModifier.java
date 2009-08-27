@@ -21,6 +21,7 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -126,7 +127,7 @@ class TaskListCellModifier implements ICellModifier {
 			if (task.isActive()) {
 				TasksUi.getTaskActivityManager().deactivateTask(task);
 			} else {
-				TasksUi.getTaskActivityManager().activateTask(task);
+				TasksUiInternal.activateTaskThroughCommand(task);
 			}
 		}
 	}

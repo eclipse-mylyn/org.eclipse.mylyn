@@ -336,6 +336,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 	private TaskListFilteredTree filteredTree;
 
+	private org.eclipse.mylyn.internal.provisional.commons.ui.SelectionProviderAdapter selectionProvider;
+
 	private DrillDownAdapter drillDownAdapter;
 
 	private AbstractTaskContainer drilledIntoCategory;
@@ -839,6 +841,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 			progress.showBusyForFamily(ITasksCoreConstants.JOB_FAMILY_SYNCHRONIZATION);
 		}
 
+		this.selectionProvider = new org.eclipse.mylyn.internal.provisional.commons.ui.SelectionProviderAdapter();
+		getSite().setSelectionProvider(selectionProvider);
+
 		themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		themeManager.addPropertyChangeListener(THEME_CHANGE_LISTENER);
 
@@ -850,7 +855,16 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		// http://dev.eclipse.org/newslists/news.eclipse.platform.swt/msg29614.html
 		getViewer().getTree().setToolTipText(""); //$NON-NLS-1$
 		getSite().registerContextMenu(TasksUiInternal.ID_MENU_ACTIVE_TASK, filteredTree.getActiveTaskMenuManager(),
-				filteredTree.getActiveTaskSelectionProvider());
+				selectionProvider);
+		filteredTree.setActiveTaskSelectionProvider(selectionProvider);
+
+		getViewer().addSelectionChangedListener(this.selectionProvider);
+		getViewer().getControl().addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				selectionProvider.setSelection(getViewer().getSelection());
+			}
+		});
 
 		filteredTree.getFilterControl().addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
@@ -1003,7 +1017,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 			contextSupport.activateContext(ITasksUiConstants.ID_VIEW_TASKS);
 		}
 
-		getSite().setSelectionProvider(getViewer());
 		getSite().getPage().addPartListener(editorListener);
 
 		// we need to update the icon here as the action was not created when the presentation was applied
@@ -1273,7 +1286,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 						ITasksUiPreferenceConstants.ACTIVATE_WHEN_OPENED)) {
 					AbstractTask selectedTask = getSelectedTask();
 					if (selectedTask != null && !selectedTask.isActive()) {
-						TasksUi.getTaskActivityManager().activateTask(selectedTask);
+						TasksUiInternal.activateTaskThroughCommand(selectedTask);
 					}
 				}
 			}

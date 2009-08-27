@@ -242,7 +242,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			titleRegion.addControlListener(new ControlAdapter() {
 				@Override
 				public void controlResized(ControlEvent e) {
-					// do not create busyLabel to avoid recurssion
+					// do not create busyLabel to avoid recursion
 					updateSizeAndLocations();
 				}
 			});

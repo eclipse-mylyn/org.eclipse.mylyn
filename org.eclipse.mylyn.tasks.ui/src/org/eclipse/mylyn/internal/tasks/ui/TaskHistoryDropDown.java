@@ -118,7 +118,7 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 			if (targetTask.isActive()) {
 				return;
 			}
-			TasksUi.getTaskActivityManager().activateTask(targetTask);
+			TasksUiInternal.activateTaskThroughCommand(targetTask);
 		}
 	}
 
