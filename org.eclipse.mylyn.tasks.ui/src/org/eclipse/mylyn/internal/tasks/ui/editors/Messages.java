@@ -61,6 +61,10 @@ public class Messages extends NLS {
 
 	public static String CategoryEditorInput_Category_Editor;
 
+	public static String CheckboxMultiSelectAttributeEditor_Edit;
+
+	public static String CheckboxMultiSelectAttributeEditor_Select_X;
+
 	public static String CommentGroupStrategy_Current;
 
 	public static String CommentGroupStrategy_Older;
