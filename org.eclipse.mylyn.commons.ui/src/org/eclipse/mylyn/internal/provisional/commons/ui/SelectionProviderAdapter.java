@@ -25,7 +25,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
  * 
  * @author Steffen Pingel
  */
-public class SelectionProviderAdapter extends EventManager implements ISelectionProvider {
+public class SelectionProviderAdapter extends EventManager implements ISelectionProvider, ISelectionChangedListener {
 
 	private ISelection selection;
 
@@ -58,7 +58,8 @@ public class SelectionProviderAdapter extends EventManager implements ISelection
 		removeListenerObject(listener);
 	}
 
-	protected void selectionChanged(final SelectionChangedEvent event) {
+	public void selectionChanged(final SelectionChangedEvent event) {
+		this.selection = event.getSelection();
 		Object[] listeners = getListeners();
 		for (int i = 0; i < listeners.length; ++i) {
 			final ISelectionChangedListener listener = (ISelectionChangedListener) listeners[i];
@@ -71,7 +72,6 @@ public class SelectionProviderAdapter extends EventManager implements ISelection
 	}
 
 	public void setSelection(ISelection selection) {
-		this.selection = selection;
 		selectionChanged(new SelectionChangedEvent(this, selection));
 	}
 
