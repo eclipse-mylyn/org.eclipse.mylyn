@@ -28,6 +28,7 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.ScalingHyperlink;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.DateRange;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
@@ -219,6 +220,12 @@ public class TaskListToolTip extends GradientToolTip {
 			sb.append(getRepositoryLabel(task.getConnectorKind(), task.getRepositoryUrl()));
 			sb.append("]"); //$NON-NLS-1$
 			sb.append("\n"); //$NON-NLS-1$
+
+			String extendedToolTipInfo = task.getAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_EXTENDED_TOOLTIP);
+			if (extendedToolTipInfo != null && extendedToolTipInfo.length() > 0) {
+				sb.append(extendedToolTipInfo);
+				sb.append("\n"); //$NON-NLS-1$
+			}
 			return sb.toString();
 		} else {
 			return null;

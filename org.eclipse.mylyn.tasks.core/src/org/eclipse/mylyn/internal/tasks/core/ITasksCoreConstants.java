@@ -57,6 +57,8 @@ public interface ITasksCoreConstants {
 
 	public static final String ATTRIBUTE_OUTGOING_NEW_CONNECTOR_KIND = "outgoingNewConnectorKind"; //$NON-NLS-1$
 
+	public static final String ATTRIBUTE_TASK_EXTENDED_TOOLTIP = "task.common.extended.tooltip"; //$NON-NLS-1$
+
 	public static final String PROPERTY_USE_SECURE_STORAGE = "org.eclipse.mylyn.tasklist.repositories.configuration.securestorage"; //$NON-NLS-1$
 
 	/**
