@@ -33,6 +33,7 @@ import org.eclipse.mylyn.internal.wikitext.tracwiki.core.token.RevisionLogReplac
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.token.SourceLinkReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.token.TicketAttachmentLinkReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.token.TicketLinkReplacementToken;
+import org.eclipse.mylyn.internal.wikitext.tracwiki.core.token.WikiLinkReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.token.WikiWordReplacementToken;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
@@ -61,9 +62,7 @@ public class TracWikiLanguage extends AbstractMarkupLanguage {
 	 * 
 	 * @param pageName
 	 *            the name of the page to target
-	 * 
 	 * @return the href to access the page
-	 * 
 	 * @see MarkupLanguage#getInternalLinkPattern()
 	 */
 	public String toInternalHref(String pageName) {
@@ -289,6 +288,7 @@ public class TracWikiLanguage extends AbstractMarkupLanguage {
 		tokenSyntax.add(new ReportLinkReplacementToken());
 		tokenSyntax.add(new MilestoneLinkReplacementToken());
 		tokenSyntax.add(new SourceLinkReplacementToken());
+		tokenSyntax.add(new WikiLinkReplacementToken());
 		if (configuration == null || configuration.isWikiWordLinking() == null || configuration.isWikiWordLinking()) {
 			tokenSyntax.add(new WikiWordReplacementToken());
 		}

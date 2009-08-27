@@ -383,6 +383,13 @@ public class TracWikiLanguageTest extends TestCase {
 		assertTrue(html.contains("<body><p>A WikiWord points somewhere</p></body>"));
 	}
 
+	public void testWikiColon() {
+		markupLanaguage.setInternalLinkPattern("https://foo.bar/wiki/{0}");
+		String html = parser.parseToHtml("A wiki:word points somewhere");
+		System.out.println(html);
+		assertTrue(html.contains("<body><p>A <a href=\"https://foo.bar/wiki/word\">word</a> points somewhere</p></body>"));
+	}
+
 	public void testWikiWordNegativeMatch() {
 		testWikiWordNegativeMatch("A noWikiWord points somewhere");
 		testWikiWordNegativeMatch("A noAWikiWord points somewhere");
