@@ -544,7 +544,7 @@
 		</delete>
 	</target>
 	
-	<target name="tests-helper" depends="tests-helper-init,install-tests-dependencies,pre-tests">
+	<target name="tests-helper" depends="clean-test-tools-helper,tests-helper-init,install-tests-dependencies,pre-tests">
 		<init-basebuilder/>
     	<path id="library.id"> 
     		<fileset dir="${base.home}/eclipse/plugins">
