@@ -488,12 +488,12 @@
 				<include name="plugins/org.junit*/**"/>
 			</fileset>			
 		</delete>
-		-->
 		<copy todir="${base.home}/eclipse/plugins">
 			<fileset dir="${functions.basedir}/tools">
 				<include name="org.junit*"/>
 			</fileset>			
 		</copy>
+		-->
 		
 		<touch file="${base.home}/.provisioned"/>
 	</target>
@@ -511,18 +511,22 @@
 		</delete>
 
 		<antcall target="install-tests-helper-performance-tests"/>
-		<available property="dependencies.test.exists" file="${basedir}/test-dependencies"/>
+		<available property="dependencies.test.exists" file="${basedir}/config/test-dependencies"/>
 	</target>
 
-	<target name="install-tests-dependencies" if="dependencies.test.exist" unless="skipUpdate">
+	<target name="install-tests-dependencies" if="dependencies.test.exists" unless="skipUpdate">
+		<dirname property="functions.basedir" file="${ant.file.functions}"/>
+		<copy todir="${build.home}/update/plugins">
+			<fileset dir="${functions.basedir}/tools">
+				<include name="org.junit*"/>
+			</fileset>
+		</copy>
   	    <antcall target="publish-feature">
   	    	<param name="feature" value="dependencies.test"/>
 			<param name="version" value="1.0.0.${qualifier}"/>
-			<param name="featureDir" value="${basedir}/test-dependencies-feature"/>
+			<param name="featureDir" value="${basedir}/config/test-dependencies"/>
 		</antcall>
 		<install-feature-into-base featureId="dependencies.test"/>
-			
-		<antcall target="extract-tests"/>
 	</target>
 		
 	<target name="install-tests-bundles">

@@ -5,11 +5,29 @@
       version="@VERSION@">
 
    <license url="">
-	  License. 
+      License.
    </license>
 
    <requires>
       <import feature="org.eclipse.swtbot.eclipse" version="2.0.0" match="greaterOrEqual"/>
    </requires>
+
+   <plugin
+         id="org.junit"
+         download-size="0"
+         install-size="0"
+         version="3.8.999"/>
+
+   <plugin
+         id="org.junit4"
+         download-size="0"
+         install-size="0"
+         version="4.3.999"/>
+
+   <plugin
+         id="org.junit4"
+         download-size="0"
+         install-size="0"
+         version="4.5.999"/>
 
 </feature>
