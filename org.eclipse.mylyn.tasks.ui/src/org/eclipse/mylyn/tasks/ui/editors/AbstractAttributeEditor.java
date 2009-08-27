@@ -77,7 +77,9 @@ public abstract class AbstractAttributeEditor {
 
 	/**
 	 * @since 3.0
+	 * @deprecated Method is never called
 	 */
+	@Deprecated
 	public void dispose() {
 	}
 
@@ -216,7 +218,6 @@ public abstract class AbstractAttributeEditor {
 	/**
 	 * Refreshes the state of the widget from the data model. The default implementation throws
 	 * <code>UnsupportedOperationException</code>.
-	 * 
 	 * <p>
 	 * Subclasses should overwrite this method.
 	 * 
