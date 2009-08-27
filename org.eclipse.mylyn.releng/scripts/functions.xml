@@ -509,7 +509,7 @@
 		</delete>
 
 		<antcall target="install-tests-helper-performance-tests"/>
-		<available property="dependencies.test.exists" file="${basedir}/test-dependencies-feature"/>
+		<available property="dependencies.test.exists" file="${basedir}/test-dependencies"/>
 	</target>
 
 	<target name="install-tests-dependencies" if="dependencies.test.exist" unless="skipUpdate">
@@ -523,7 +523,7 @@
 		<antcall target="extract-tests"/>
 	</target>
 		
-	<target name="extract-tests">
+	<target name="install-tests-bundles">
 		<available property="dist.exists" file="${build.home}/${base.target}/${build.dist}"/>
 		<fail message="${build.home}/${base.target}/${build.dist} does not exist, try running 'build'" unless="dist.exists"/>
 		
@@ -546,7 +546,7 @@
 	</target>
 	
 	<!-- clean test environment before every run to ensure that Eclipse picks up content in dropins --> 
-	<target name="tests-helper" depends="clean-test-tools-helper,tests-helper-init,install-tests-dependencies,pre-tests">
+	<target name="tests-helper" depends="clean-test-tools-helper,tests-helper-init,install-tests-dependencies,install-tests-bundles,pre-tests">
 		<init-basebuilder/>
     	<path id="library.id"> 
     		<fileset dir="${base.home}/eclipse/plugins">
