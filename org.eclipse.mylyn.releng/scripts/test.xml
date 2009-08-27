@@ -77,7 +77,7 @@
       <property name="data-dir" value="${workspace}" />
       <property name="plugin-name" value="${plugin-name}" />
       <property name="classname" value="${classname}" />
-      <property name="vmargs" value=" -Xms128M -Xmx368M -XX:MaxPermSize=256M ${jvmOption}" />
+      <property name="vmargs" value=" -Xms128M -Xmx368M -XX:MaxPermSize=256M" />
     </ant>
   </target>
 
