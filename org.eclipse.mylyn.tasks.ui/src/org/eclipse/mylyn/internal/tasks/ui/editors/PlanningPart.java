@@ -439,7 +439,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		// Estimated time
 		estimatedTime = new Spinner(composite, SWT.FLAT);
 		estimatedTime.setDigits(0);
-		estimatedTime.setMaximum(100);
+		estimatedTime.setMaximum(10000);
 		estimatedTime.setMinimum(0);
 		estimatedTime.setIncrement(1);
 		estimatedTime.setSelection(getTask().getEstimatedTimeHours());
