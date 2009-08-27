@@ -684,7 +684,7 @@
 		<property file="${base.home}/eclipse/configuration/config.ini" prefix="base.config"/>
 		
 		<echo message="Installing ${featureId}"/>
-		<exec-eclipse activity="uninstall" application="org.eclipse.equinox.p2.director"
+		<exec-eclipse activity="install-bundle" application="org.eclipse.equinox.p2.director"
 			 extravmargs="-Declipse.p2.data.area=${base.home}/eclipse/p2 -Declipse.p2.MD5Check=false" failonerror="false">
     		<arg value="-metadataRepository"/>
     		<arg value="${updateSite},${base.sites}"/>
@@ -700,7 +700,7 @@
 			<arg value="-destination"/>
 			<arg value="${base.home}/eclipse"/>
 		</exec-eclipse>
-		<exec-eclipse activity="install" application="org.eclipse.equinox.p2.director"
+		<exec-eclipse activity="install-bundle" application="org.eclipse.equinox.p2.director"
 			 extravmargs="-Declipse.p2.data.area=${base.home}/eclipse/p2 -Declipse.p2.MD5Check=false">
     		<arg value="-metadataRepository"/>
     		<arg value="${updateSite},${base.sites}"/>
