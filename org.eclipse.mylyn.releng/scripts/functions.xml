@@ -365,7 +365,7 @@
 		<delete dir="${base.home}" />
 	</target>
 
-	<target name="clean-test-tools-helper">
+	<target name="clean-test-tools-helper" unless="skipClean">
 		<init-base-properties activity="test"/>
 		<delete dir="${base.home}" />
 	</target>
@@ -400,14 +400,15 @@
 				<include name="*.map"/>
 			</fileset>
 		</copy>
+
+		<available property="dependencies.build.exists" file="${basedir}/config/build-dependencies"/>
 	</target>
 
-	<target name="install-build-dependencies" unless="skipUpdate">
-		<available property="feature.exists" file="${basedir}/build-dependencies-feature"/>
+	<target name="install-build-dependencies" if="dependencies.build.exists" unless="skipUpdate">
   	    <antcall target="publish-feature">
   	    	<param name="feature" value="dependencies.build"/>
 			<param name="version" value="1.0.0.${qualifier}"/>
-			<param name="featureDir" value="${basedir}/build-dependencies-feature"/>
+			<param name="featureDir" value="${basedir}/config/build-dependencies"/>
 		</antcall>
 		<install-feature-into-base featureId="dependencies.build"/>
 	</target>
@@ -508,10 +509,10 @@
 		</delete>
 
 		<antcall target="install-tests-helper-performance-tests"/>
+		<available property="dependencies.test.exists" file="${basedir}/test-dependencies-feature"/>
 	</target>
 
-	<target name="install-tests-dependencies" unless="skipUpdate">
-		<available property="feature.exists" file="${basedir}/test-dependencies-feature"/>
+	<target name="install-tests-dependencies" if="dependencies.test.exist" unless="skipUpdate">
   	    <antcall target="publish-feature">
   	    	<param name="feature" value="dependencies.test"/>
 			<param name="version" value="1.0.0.${qualifier}"/>
@@ -544,6 +545,7 @@
 		</delete>
 	</target>
 	
+	<!-- clean test environment before every run to ensure that Eclipse picks up content in dropins --> 
 	<target name="tests-helper" depends="clean-test-tools-helper,tests-helper-init,install-tests-dependencies,pre-tests">
 		<init-basebuilder/>
     	<path id="library.id"> 
@@ -765,7 +767,7 @@
 		</exec-eclipse>
 	</target>
 
-	<target name="publish-feature" if="feature.exists">
+	<target name="publish-feature">
 		<mkdir dir="${build.home}/update/features"/>
 			
 		<delete dir="${build.home}/tmp/feature" failonerror="false"/>

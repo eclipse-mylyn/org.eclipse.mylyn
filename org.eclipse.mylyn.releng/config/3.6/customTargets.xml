@@ -8,6 +8,6 @@
     Contributors:
          Tasktop Technologies - initial API and implementation
  -->
-<project name="Build specific targets and properties for Eclispe 3.5" default="noDefault">
+<project name="Build specific targets and properties for Eclispe 3.6" default="noDefault">
 	<import file="../customTargets.xml"/>
 </project>
