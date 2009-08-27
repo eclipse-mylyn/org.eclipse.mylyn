@@ -32,7 +32,6 @@ public class AttachContextHandler extends AbstractTaskHandler {
 		dialog.create();
 		dialog.setBlockOnOpen(true);
 		if (dialog.open() == Window.CANCEL) {
-			dialog.close();
 			return;
 		}
 	}

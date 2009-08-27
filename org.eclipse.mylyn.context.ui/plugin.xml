@@ -33,11 +33,11 @@
 			 class="org.eclipse.mylyn.internal.context.ui.editors.ContextPageFactory"/>
    	</extension>
  
+ <!--
   	<extension point = "org.eclipse.ui.popupMenus">
      <objectContribution
         id="org.eclipse.mylyn.context.ui.actions.interest.contribution"
         objectClass="org.eclipse.mylyn.context.core.IInteractionElement">
-        <!-- TODO 3.1: remove? -->
      	<action  
   		  	label="%InterestDecrementAction.label" 
 	  		tooltip="%InterestDecrementAction.tooltip"
@@ -55,56 +55,8 @@
 	  		icon="icons/elcl16/interest-increase.gif"
 	  		enablesFor="*"/>
 	 </objectContribution> 
-	 
-	 <!--
-	 <objectContribution
-           adaptable="false"
-           id="org.eclipse.mylyn.context.ui.tasks.contribution"
-           objectClass="org.eclipse.mylyn.internal.tasks.core.AbstractTask">
-		<action
-              class="org.eclipse.mylyn.internal.context.ui.actions.ContextClearAction"
-              enablesFor="1"
-              icon="icons/elcl16/context-clear.gif"
-              id="org.eclipse.mylyn.context.ui.task.clear"
-              label="Clear Context"
-              menubarPath="context"
-              tooltip="Clear Context">
-        </action>
-  		<action
-        	class="org.eclipse.mylyn.internal.context.ui.actions.ContextCopyAction"
-        	icon="icons/elcl16/context-transfer.gif"
-        	id="org.eclipse.mylyn.context.ui.task.copy.context.to"
-        	label="Copy Context to..."
-        	menubarPath="context"
-        	tooltip="Copy Context to...">
-  		</action>
-	 </objectContribution>
-	 -->
-	 
-	 <!--
-     <objectContribution
-           adaptable="false"
-           id="org.eclipse.mylyn.ui.tasks.repository.hits..action.contribution"
-           objectClass="org.eclipse.mylyn.internal.tasks.core.AbstractTask">
-        <action
-              class="org.eclipse.mylyn.internal.context.ui.actions.ContextRetrieveAction"
-              enablesFor="1"
-              icon="icons/etool16/context-retrieve.gif"
-              id="org.eclipse.mylyn.context.ui.repository.task.retrieve"
-              label="Retrieve Context..."
-              menubarPath="context">
-        </action> 
-        <action
-              class="org.eclipse.mylyn.internal.context.ui.actions.ContextAttachAction"
-              enablesFor="1"
-              icon="icons/etool16/context-attach.gif"
-              id="org.eclipse.mylyn.context.ui.repository.task.attach"
-              label="Attach Context..."
-              menubarPath="context">
-        </action>
-	 </objectContribution>
-	 -->
    </extension>
+-->
     
     <!-- See org.eclipse.mylyn.tasks.ui/plugin.xml -->
    	<extension
@@ -363,21 +315,8 @@
              label="%menu.task.context.label">
           <visibleWhen
                 checkEnabled="false">
-             <or>
-	             <with
-	             		variable="activeMenuSelection">                
-		             <and>
-		                <count
-		                      value="1">
-		                </count>
-		                <iterate>
-		                   <adapt
-		                         type="org.eclipse.mylyn.tasks.core.ITask">
-		                   </adapt>
-		                </iterate>
-		             </and>
-	             </with>
-	             <and>
+            <or>
+	            <and>
 	                <count
 	                      value="1">
 	                </count>
@@ -386,8 +325,8 @@
 	                         type="org.eclipse.mylyn.tasks.core.ITask">
 	                   </adapt>
 	                </iterate>
-	             </and>
-		 	</or>	             
+	            </and>
+	        </or>
           </visibleWhen>
           <separator
                 name="group.repository"
@@ -435,10 +374,7 @@
              style="push">
           <visibleWhen
                 checkEnabled="false">
-             <and>
-                <count
-                      value="1">
-                </count>
+             <or>
                 <iterate>
                    <adapt
                          type="org.eclipse.mylyn.tasks.core.ITaskAttachment">
@@ -448,7 +384,7 @@
                       </test>
                    </adapt>
                 </iterate>
-             </and>
+             </or>
           </visibleWhen>
        </command>
     </menuContribution>
@@ -459,8 +395,6 @@
           class="org.eclipse.mylyn.internal.context.ui.commands.AttachContextHandler"
           commandId="org.eclipse.mylyn.context.ui.commands.task.attachContext">
        <enabledWhen>
-	      <with 
-	      		variable="activeMenuSelection">                       	
 	          <iterate
 	                ifEmpty="false"
 	                operator="and">
@@ -474,15 +408,12 @@
 	                </adapt>
 	             </and>
 	          </iterate>
-	       </with>
        </enabledWhen>
     </handler>
     <handler
           class="org.eclipse.mylyn.internal.context.ui.commands.RetrieveContextHandler"
           commandId="org.eclipse.mylyn.context.ui.commands.task.retrieveContext">
        <enabledWhen>
-	      <with 
-	      		variable="activeMenuSelection">                       	
 	          <iterate
 	                ifEmpty="false"
 	                operator="and">
@@ -490,7 +421,7 @@
 	                <adapt
 	                      type="org.eclipse.mylyn.tasks.core.ITask">
 	                   <test
-	                         property="org.eclipse.mylyn.task.canPostAttachment"
+	                         property="org.eclipse.mylyn.task.canGetAttachment"
 	                         value="true">
 	                   </test>
 	                   <test
@@ -500,15 +431,12 @@
 	                </adapt>
 	             </and>
 	          </iterate>
-	     </with>
        </enabledWhen>
     </handler>
     <handler
           class="org.eclipse.mylyn.internal.context.ui.commands.CopyContextHandler"
           commandId="org.eclipse.mylyn.context.ui.commands.task.copyContext">
        <enabledWhen>
-       	 <with 
-	     		variable="activeMenuSelection">                       	
 	          <iterate
 	                ifEmpty="false"
 	                operator="and">
@@ -522,15 +450,12 @@
 	                </adapt>
 	             </and>
 	          </iterate>
-	      </with>
        </enabledWhen>
     </handler>
     <handler
           class="org.eclipse.mylyn.internal.context.ui.commands.ClearContextHandler"
           commandId="org.eclipse.mylyn.context.ui.commands.task.clearContext">
        <enabledWhen>
-   	      <with 
-	      		variable="activeMenuSelection">                       	
 	          <iterate
 	                ifEmpty="false"
 	                operator="and">
@@ -544,22 +469,22 @@
 	                </adapt>
 	             </and>
 	          </iterate>
-	      </with>
        </enabledWhen>
     </handler>
     <handler
           class="org.eclipse.mylyn.internal.context.ui.commands.RetrieveContextAttachmentHandler"
           commandId="org.eclipse.mylyn.context.ui.commands.attachment.retrieveContext">
        <enabledWhen>
-          <iterate
-                ifEmpty="false"
-                operator="and">
-             <and>
+          <and>
+          	  <count value="1"/>
+	          <iterate
+	                ifEmpty="false"
+	                operator="and">
                 <instanceof
                       value="org.eclipse.mylyn.tasks.core.ITaskAttachment">
                 </instanceof>
-             </and>
-          </iterate>
+	          </iterate>
+	      </and>
        </enabledWhen>
     </handler>
  </extension>
