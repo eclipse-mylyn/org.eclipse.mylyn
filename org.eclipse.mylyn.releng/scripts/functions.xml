@@ -602,7 +602,7 @@
 		<delete dir="${install.dir}"/>
 		<mkdir dir="${install.dir}"/>
 		
-    	<antcall target="extract-tests"/>
+    	<antcall target="install-tests-bundles"/>
 	</target>
 
 	<target name="standalone-tests-helper" depends="standalone-tests-helper-init,pre-standalone-tests">
