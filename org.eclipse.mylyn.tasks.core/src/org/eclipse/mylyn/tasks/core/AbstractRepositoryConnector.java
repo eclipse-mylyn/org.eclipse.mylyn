@@ -72,6 +72,15 @@ public abstract class AbstractRepositoryConnector {
 	}
 
 	/**
+	 * Whether the connector can delete the task on the Task Repository
+	 * 
+	 * @since 3.3
+	 */
+	public boolean canDeleteTask(TaskRepository repository, ITask task) {
+		return false;
+	}
+
+	/**
 	 * @return the unique kind of the repository, e.g. "bugzilla"
 	 * @since 2.0
 	 */
@@ -238,6 +247,17 @@ public abstract class AbstractRepositoryConnector {
 	 */
 	public abstract IStatus performQuery(TaskRepository repository, IRepositoryQuery query,
 			TaskDataCollector collector, ISynchronizationSession session, IProgressMonitor monitor);
+
+	/**
+	 * Delete the task from the server
+	 * 
+	 * @throws UnsupportedOperationException
+	 *             if this is not implemented by the connector
+	 * @since 3.3
+	 */
+	public IStatus deleteTask(TaskRepository repository, ITask task, IProgressMonitor monitor) throws CoreException {
+		throw new UnsupportedOperationException();
+	}
 
 	/**
 	 * Hook into the synchronization process.
