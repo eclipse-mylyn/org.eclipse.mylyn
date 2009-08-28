@@ -39,12 +39,24 @@
 		</antcall>
 	</target>
 
+	<target name="pack-dist-sites" depends="init">
+		<antcall target="pack">
+			<param name="dir" value="${build.home}/3.5/standardUpdateSite"/>
+		</antcall>
+		<antcall target="pack">
+			<param name="dir" value="${build.home}/3.4/extrasUpdateSite"/>
+		</antcall>
+		<antcall target="pack">
+			<param name="dir" value="${build.home}/3.4/incubatorUpdateSite"/>
+		</antcall>
+	</target>
+
 	<target name="generate-metadata-all" depends="init">
 		<antcall target="for-each-target">
 			<param name="call" value="generate-metadata-sites"/>
 		</antcall>
 	</target>
-
+	
 	<target name="generate-metadata-sites" depends="init">
   	    <condition property="label" value="3.3" else="3.4, 3.5 and 3.6"><equals arg1="${base.target}" arg2="3.3"/></condition>
 		<antcall target="generate-metadata-helper">
@@ -57,6 +69,21 @@
 		</antcall>
 		<antcall target="generate-metadata-helper">
 			<param name="dir" value="${build.home}/${base.target}/incubatorUpdateSite"/>
+			<param name="name" value="Mylyn Weekly Incubator"/>
+		</antcall>
+	</target>
+
+	<target name="generate-metadata-dist-sites" depends="init">
+		<antcall target="generate-metadata-helper">
+			<param name="dir" value="${build.home}/3.5/standardUpdateSite"/>
+			<param name="name" value="Mylyn Weekly for Eclipse 3.4, 3.5 and 3.6"/>
+		</antcall>
+		<antcall target="generate-metadata-helper">
+			<param name="dir" value="${build.home}/3.4/extrasUpdateSite"/>
+			<param name="name" value="Mylyn Weekly Extras"/>
+		</antcall>
+		<antcall target="generate-metadata-helper">
+			<param name="dir" value="${build.home}/3.4/incubatorUpdateSite"/>
 			<param name="name" value="Mylyn Weekly Incubator"/>
 		</antcall>
 	</target>
@@ -116,7 +143,10 @@
 	
 	<target name="dist" depends="init,pack-all,generate-metadata-all,copy-to-archive">
 	</target>
-		
+
+	<target name="dist-sites" depends="init,pack-dist-sites,generate-metadata-dist-sites,copy-to-archive">
+	</target>
+
 	<target name="copy-to-archive">
 		<property name="dist.dir" value="${dist.home}/update-archive/${version}/${qualifier}" />
 		<copy todir="${dist.dir}/e3.4">
