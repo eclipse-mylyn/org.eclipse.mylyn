@@ -21,25 +21,25 @@
 	<target name="all" depends="clean,build,standalone-tests,tests">
 	</target>
 
-	<target name="pack" depends="init">
+	<target name="pack-all" depends="init">
 		<antcall target="for-each-target">
 			<param name="call" value="pack-sites"/>
 		</antcall>
 	</target>
 
 	<target name="pack-sites" depends="init">
-		<antcall target="pack-helper">
+		<antcall target="pack">
 			<param name="dir" value="${build.home}/${base.target}/standardUpdateSite"/>
 		</antcall>
-		<antcall target="pack-helper">
+		<antcall target="pack">
 			<param name="dir" value="${build.home}/${base.target}/extrasUpdateSite"/>
 		</antcall>
-		<antcall target="pack-helper">
+		<antcall target="pack">
 			<param name="dir" value="${build.home}/${base.target}/incubatorUpdateSite"/>
 		</antcall>
 	</target>
 
-	<target name="generate-all-metadata" depends="init">
+	<target name="generate-metadata-all" depends="init">
 		<antcall target="for-each-target">
 			<param name="call" value="generate-metadata-sites"/>
 		</antcall>
@@ -66,6 +66,7 @@
 			<param name="call" value="publish-helper"/>
 			<param name="skip3.3" value="true"/>
 			<param name="skip3.5" value="true"/>
+			<param name="skip3.6" value="true"/>
 		</antcall>
 		<antcall target="for-each-target">
 			<param name="call" value="publish-helper-standalone"/>
@@ -113,14 +114,11 @@
 		</java>
 	</target>
 	
-	<target name="dist" depends="init,pack,generate-all-metadata,copy-to-archive">
+	<target name="dist" depends="init,pack-all,generate-metadata-all,copy-to-archive">
 	</target>
 		
 	<target name="copy-to-archive">
 		<property name="dist.dir" value="${dist.home}/update-archive/${version}/${qualifier}" />
-		<copy todir="${dist.dir}/e3.3">
-			<fileset dir="${build.home}/3.3/standardUpdateSite"/>
-		</copy>
 		<copy todir="${dist.dir}/e3.4">
 			<!-- need to use discovery plug-ins from the 3.5 site -->
 			<fileset dir="${build.home}/3.5/standardUpdateSite"/>
@@ -131,7 +129,6 @@
 		<copy todir="${dist.dir}/incubator">
 			<fileset dir="${build.home}/3.4/incubatorUpdateSite"/>
 		</copy>
-		<copy tofile="${dist.dir}/mylyn-${version}.${qualifier}-e3.3.zip" file="${build.home}/3.3/mylyn-${version}.${qualifier}-e33-standard.zip" />
 		<!-- need to use discovery plug-ins from the 3.5 site -->
 		<copy tofile="${dist.dir}/mylyn-${version}.${qualifier}-e3.4.zip" file="${build.home}/3.5/mylyn-${version}.${qualifier}-e3x-standard.zip" />
 		<copy tofile="${dist.dir}/mylyn-${version}.${qualifier}-extras.zip" file="${build.home}/3.4/mylyn-${version}.${qualifier}-e3x-extras.zip" />
@@ -162,7 +159,7 @@
 		</exec>
 	</target>
 	
-	<target name="galileo" depends="clean,build,generate-all-metadata,copy-to-archive">
+	<target name="galileo" depends="clean,build,generate-metadata-all,copy-to-archive">
 		<!-- promote unpacked version early for testing -->
 		<antcall target="promote">
 			<param name="todir" value="weekly"/>
@@ -209,7 +206,6 @@
 			<mapper type="regexp" from="(.*)${version}.${qualifier}(.*)" to="\1latest\2"/>
 		</move>
 		-->
-		<move tofile="${target.dir}/mylyn-latest-e3.3.zip" file="${target.dir}/mylyn-${version}.${qualifier}-e3.3.zip" />
 		<move tofile="${target.dir}/mylyn-latest-e3.4.zip" file="${target.dir}/mylyn-${version}.${qualifier}-e3.4.zip" />
 		<move tofile="${target.dir}/mylyn-latest-extras.zip" file="${target.dir}/mylyn-${version}.${qualifier}-extras.zip" />
 		<move tofile="${target.dir}/mylyn-latest-incubator.zip" file="${target.dir}/mylyn-${version}.${qualifier}-incubator.zip" />
