@@ -59,30 +59,30 @@
 	
 	<target name="generate-metadata-sites" depends="init">
   	    <condition property="label" value="3.3" else="3.4, 3.5 and 3.6"><equals arg1="${base.target}" arg2="3.3"/></condition>
-		<antcall target="generate-metadata-helper">
+		<antcall target="generate-metadata">
 			<param name="dir" value="${build.home}/${base.target}/standardUpdateSite"/>
 			<param name="name" value="Mylyn Weekly for Eclipse ${label}"/>
 		</antcall>
-		<antcall target="generate-metadata-helper">
+		<antcall target="generate-metadata">
 			<param name="dir" value="${build.home}/${base.target}/extrasUpdateSite"/>
 			<param name="name" value="Mylyn Weekly Extras"/>
 		</antcall>
-		<antcall target="generate-metadata-helper">
+		<antcall target="generate-metadata">
 			<param name="dir" value="${build.home}/${base.target}/incubatorUpdateSite"/>
 			<param name="name" value="Mylyn Weekly Incubator"/>
 		</antcall>
 	</target>
 
 	<target name="generate-metadata-dist-sites" depends="init">
-		<antcall target="generate-metadata-helper">
+		<antcall target="generate-metadata">
 			<param name="dir" value="${build.home}/3.5/standardUpdateSite"/>
 			<param name="name" value="Mylyn Weekly for Eclipse 3.4, 3.5 and 3.6"/>
 		</antcall>
-		<antcall target="generate-metadata-helper">
+		<antcall target="generate-metadata">
 			<param name="dir" value="${build.home}/3.4/extrasUpdateSite"/>
 			<param name="name" value="Mylyn Weekly Extras"/>
 		</antcall>
-		<antcall target="generate-metadata-helper">
+		<antcall target="generate-metadata">
 			<param name="dir" value="${build.home}/3.4/incubatorUpdateSite"/>
 			<param name="name" value="Mylyn Weekly Incubator"/>
 		</antcall>
