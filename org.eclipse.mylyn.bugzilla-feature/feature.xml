@@ -48,7 +48,7 @@
       <import feature="org.eclipse.mylyn_feature" version="3.3.0.qualifier" match="perfect"/>
       <import plugin="org.eclipse.mylyn.commons.net" version="3.0.0" match="compatible"/>
       <import plugin="org.eclipse.mylyn.commons.core" version="3.0.0" match="compatible"/>
-      <import plugin="org.eclipse.mylyn.commons.ui" version="3.0.0" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.commons.ui" version="3.3.0" match="compatible"/>
    </requires>
 
    <plugin
