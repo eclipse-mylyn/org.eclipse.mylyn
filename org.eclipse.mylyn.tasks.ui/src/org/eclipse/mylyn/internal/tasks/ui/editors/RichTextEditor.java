@@ -349,9 +349,13 @@ public class RichTextEditor {
 	}
 
 	private Font getFont() {
-		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
-		Font font = themeManager.getCurrentTheme().getFontRegistry().get(CommonThemes.FONT_EDITOR_COMMENT);
-		return font;
+		if (mode == Mode.DEFAULT) {
+			IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
+			Font font = themeManager.getCurrentTheme().getFontRegistry().get(CommonThemes.FONT_EDITOR_COMMENT);
+			return font;
+		} else {
+			return EditorUtil.TEXT_FONT;
+		}
 	}
 
 	public Mode getMode() {
