@@ -801,6 +801,9 @@
 	<!-- ===================================================================== -->
 
 	<target name="provision-basebuilder" unless="base.builder.exists">
+		<!-- setup for download targets -->
+		<property name="downloadsDir" value="${tools.home}"/> 
+
 		<mkdir dir="${base.builder.home}" />
 
 		<echo message="Getting basebuilder from CVS"/>
