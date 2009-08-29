@@ -418,32 +418,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			monitor.worked(1);
 
 			try {
-				taskListNotificationManager.addNotificationProvider(REMINDER_NOTIFICATION_PROVIDER);
-//				taskListNotificationManager.addNotificationProvider(INCOMING_NOTIFICATION_PROVIDER);
-				taskListNotificationManager.addNotificationProvider(new TaskListNotifier(getRepositoryModel(),
-						getTaskDataManager()));
-				taskListNotificationManager.startNotification(NOTIFICATION_DELAY);
-				getPreferenceStore().addPropertyChangeListener(taskListNotificationManager);
-			} catch (Throwable t) {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Could not initialize notifications", t)); //$NON-NLS-1$
-			}
-			monitor.worked(1);
-
-			try {
-				taskListBackupManager = new TaskListBackupManager(getBackupFolderPath());
-				getPreferenceStore().addPropertyChangeListener(taskListBackupManager);
-
-				synchronizationScheduler = new TaskListSynchronizationScheduler(taskJobFactory);
-				updateSynchronizationScheduler(true);
-			} catch (Throwable t) {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Could not initialize task list backup and synchronization", t)); //$NON-NLS-1$
-			}
-			monitor.worked(1);
-
-			try {
-
 				getPreferenceStore().addPropertyChangeListener(PROPERTY_LISTENER);
 
 				// TODO: get rid of this, hack to make decorators show
@@ -463,6 +437,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			}
 			return new Status(IStatus.OK, TasksUiPlugin.ID_PLUGIN, IStatus.OK, "", null); //$NON-NLS-1$
 		}
+
 	}
 
 	public TasksUiPlugin() {
@@ -471,6 +446,10 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	}
 
 	private void updateSynchronizationScheduler(boolean initial) {
+		if (synchronizationScheduler == null) {
+			return;
+		}
+
 		boolean enabled = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
 				ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED);
 		if (enabled) {
@@ -795,7 +774,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	/**
 	 * Invoked on startup and when data is loaded from disk or when the data directory changes.
-	 * 
 	 * <p>
 	 * Public for testing.
 	 */
@@ -998,7 +976,11 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		}
 	}
 
-	public static TaskListBackupManager getBackupManager() {
+	public static synchronized TaskListBackupManager getBackupManager() {
+		if (INSTANCE.taskListBackupManager == null) {
+			INSTANCE.taskListBackupManager = new TaskListBackupManager(INSTANCE.getBackupFolderPath());
+			INSTANCE.getPreferenceStore().addPropertyChangeListener(INSTANCE.taskListBackupManager);
+		}
 		return INSTANCE.taskListBackupManager;
 	}
 
@@ -1019,6 +1001,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		return repositoryConnectorUiMap.get(kind);
 	}
 
+	@Deprecated
 	public static TaskListSynchronizationScheduler getSynchronizationScheduler() {
 		return synchronizationScheduler;
 	}
@@ -1137,7 +1120,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	/**
 	 * Retrieve the task repository that has been associated with the given project (or resource belonging to a project)
-	 * 
 	 * NOTE: if call does not return in LINK_PROVIDER_TIMEOUT_SECONDS, the provide will be disabled until the next time
 	 * that the Workbench starts.
 	 */
@@ -1249,6 +1231,31 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			uiFactory = new TasksUiFactory();
 		}
 		return uiFactory;
+	}
+
+	public void initializeNotificationsAndSynchronization() {
+		try {
+			taskListNotificationManager.addNotificationProvider(REMINDER_NOTIFICATION_PROVIDER);
+//				taskListNotificationManager.addNotificationProvider(INCOMING_NOTIFICATION_PROVIDER);
+			taskListNotificationManager.addNotificationProvider(new TaskListNotifier(getRepositoryModel(),
+					getTaskDataManager()));
+			taskListNotificationManager.startNotification(NOTIFICATION_DELAY);
+			getPreferenceStore().addPropertyChangeListener(taskListNotificationManager);
+		} catch (Throwable t) {
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					"Could not initialize notifications", t)); //$NON-NLS-1$
+		}
+
+		try {
+			// trigger backup scheduler
+			getBackupManager();
+
+			synchronizationScheduler = new TaskListSynchronizationScheduler(taskJobFactory);
+			updateSynchronizationScheduler(true);
+		} catch (Throwable t) {
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					"Could not initialize task list backup and synchronization", t)); //$NON-NLS-1$
+		}
 	}
 
 }

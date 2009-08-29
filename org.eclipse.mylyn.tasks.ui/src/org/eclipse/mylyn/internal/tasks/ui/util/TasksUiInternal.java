@@ -389,7 +389,15 @@ public class TasksUiInternal {
 	}
 
 	public static SynchronizationJob synchronizeRepository(TaskRepository repository, boolean force) {
-		return TasksUiPlugin.getSynchronizationScheduler().synchronize(repository);
+		// TODO check if a synchronization for repository is already running
+		SynchronizationJob job = TasksUiInternal.getJobFactory().createSynchronizeRepositoriesJob(
+				Collections.singleton(repository));
+		// do not show in progress view by default
+		job.setSystem(true);
+		job.setUser(false);
+		job.setFullSynchronization(false);
+		job.schedule();
+		return job;
 	}
 
 	/**

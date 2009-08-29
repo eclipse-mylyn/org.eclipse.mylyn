@@ -657,7 +657,14 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		return null;
 	}
 
+	private static boolean initializedSynchronization;
+
 	public TaskListView() {
+		if (!initializedSynchronization) {
+			initializedSynchronization = true;
+			// trigger additional initialization when task list is first made visible.
+			TasksUiPlugin.getDefault().initializeNotificationsAndSynchronization();
+		}
 	}
 
 	@Override

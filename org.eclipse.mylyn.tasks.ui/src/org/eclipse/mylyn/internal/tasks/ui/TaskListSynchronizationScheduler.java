@@ -79,6 +79,7 @@ public class TaskListSynchronizationScheduler {
 		}
 	}
 
+	@Deprecated
 	public SynchronizationJob synchronize(TaskRepository repository) {
 		// TODO check if a synchronization for repository is already running
 		SynchronizationJob job = jobFactory.createSynchronizeRepositoriesJob(Collections.singleton(repository));
