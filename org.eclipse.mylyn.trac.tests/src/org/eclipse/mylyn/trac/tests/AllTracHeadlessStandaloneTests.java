@@ -14,34 +14,41 @@ package org.eclipse.mylyn.trac.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.trac.tests.client.TracClientFactoryTest;
 import org.eclipse.mylyn.trac.tests.client.TracClientProxyTest;
+import org.eclipse.mylyn.trac.tests.client.TracClientTest;
 import org.eclipse.mylyn.trac.tests.client.TracRepositoryInfoTest;
 import org.eclipse.mylyn.trac.tests.client.TracSearchTest;
 import org.eclipse.mylyn.trac.tests.client.TracTicketTest;
-import org.eclipse.mylyn.trac.tests.client.TracWebClientTest;
 import org.eclipse.mylyn.trac.tests.client.TracXmlRpcClientTest;
 import org.eclipse.mylyn.trac.tests.core.TracClientManagerTest;
+import org.eclipse.mylyn.trac.tests.support.TracFixture;
 
 /**
- * @author Mik Kersten
  * @author Steffen Pingel
  */
 public class AllTracHeadlessStandaloneTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Headless Standalone Tests for org.eclipse.mylyn.trac.tests");
-		// other
-		suite.addTestSuite(TracClientManagerTest.class);
-		// client
+		// client tests
 		suite.addTestSuite(TracSearchTest.class);
 		suite.addTestSuite(TracTicketTest.class);
 		suite.addTestSuite(TracRepositoryInfoTest.class);
-		suite.addTestSuite(TracXmlRpcClientTest.class);
-		suite.addTestSuite(TracWebClientTest.class);
 		suite.addTestSuite(TracClientFactoryTest.class);
 		suite.addTestSuite(TracClientProxyTest.class);
+		// core tests
+		suite.addTestSuite(TracClientManagerTest.class);
+		// network tests
+		for (TracFixture fixture : TracFixture.ALL) {
+			TestSuite fixtureSuite = fixture.createSuite();
+			fixtureSuite.addTestSuite(TracClientTest.class);
+			if (fixture.getAccessMode() == Version.XML_RPC) {
+				fixtureSuite.addTestSuite(TracXmlRpcClientTest.class);
+			}
+			suite.addTest(fixtureSuite);
+		}
 		return suite;
 	}
-
 }

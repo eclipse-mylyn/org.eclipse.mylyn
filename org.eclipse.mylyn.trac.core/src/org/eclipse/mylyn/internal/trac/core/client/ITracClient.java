@@ -110,7 +110,12 @@ public interface ITracClient {
 	/**
 	 * Returns the access type.
 	 */
-	Version getVersion();
+	Version getAccessMode();
+
+	/**
+	 * Returns the repository url.
+	 */
+	String getUrl();
 
 	/**
 	 * Queries tickets from repository. All found tickets are added to <code>result</code>.

@@ -11,12 +11,13 @@
 
 package org.eclipse.mylyn.trac.tests.support;
 
+import junit.framework.TestCase;
+
 import org.eclipse.mylyn.context.tests.support.TestUtil.PrivilegeLevel;
+import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.client.TracException;
-import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.model.TracAttachment;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
-import org.eclipse.mylyn.trac.tests.client.AbstractTracClientTest;
 import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
 
 /**
@@ -25,28 +26,26 @@ import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
  * 
  * @author Steffen Pingel
  */
-public class TracTestCleanupUtil extends AbstractTracClientTest {
+public class TracTestCleanupUtil extends TestCase {
 
 	private TestData data;
 
-	public TracTestCleanupUtil() {
-		super(Version.XML_RPC, PrivilegeLevel.ADMIN);
-	}
+	private ITracClient client;
 
 	@Override
 	protected void setUp() throws Exception {
-		super.setUp();
-
-		data = TestFixture.init010();
+		data = TracFixture.init010();
 	}
 
 	public void testCleanup010() throws Exception {
-		connect010();
+		TracFixture fixture = TracFixture.TRAC_0_10_XML_RPC.activate();
+		client = fixture.connect(PrivilegeLevel.ADMIN);
 		cleanup();
 	}
 
 	public void testCleanup011() throws Exception {
-		connect011();
+		TracFixture fixture = TracFixture.TRAC_0_11_XML_RPC.activate();
+		client = fixture.connect(PrivilegeLevel.ADMIN);
 		cleanup();
 	}
 

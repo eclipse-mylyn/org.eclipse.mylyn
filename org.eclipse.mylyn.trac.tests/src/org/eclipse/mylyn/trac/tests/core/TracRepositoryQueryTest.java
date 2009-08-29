@@ -18,14 +18,13 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.ui.RefactorRepositoryUrlOperation;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
-import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.trac.tests.support.TracFixture;
 import org.eclipse.mylyn.trac.tests.support.TracTestConstants;
-import org.eclipse.mylyn.trac.tests.support.TracTestUtil;
 
 /**
  * @author Steffen Pingel
@@ -33,7 +32,7 @@ import org.eclipse.mylyn.trac.tests.support.TracTestUtil;
 public class TracRepositoryQueryTest extends TestCase {
 
 	public void testChangeRepositoryUrl() throws Exception {
-		TaskRepository repository = TracTestUtil.init(TracTestConstants.TEST_TRAC_096_URL, Version.XML_RPC);
+		TaskRepository repository = TracFixture.DEFAULT.singleRepository();
 
 		TracSearch search = new TracSearch();
 		String queryUrl = repository.getRepositoryUrl() + ITracClient.QUERY_URL + search.toUrl();

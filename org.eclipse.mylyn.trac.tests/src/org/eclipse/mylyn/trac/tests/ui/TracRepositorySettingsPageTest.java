@@ -11,29 +11,28 @@
 
 package org.eclipse.mylyn.trac.tests.ui;
 
-import java.net.Proxy;
+import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.ui.wizard.TracRepositorySettingsPage;
 import org.eclipse.mylyn.internal.trac.ui.wizard.TracRepositorySettingsPage.TracValidator;
-import org.eclipse.mylyn.trac.tests.client.AbstractTracClientTest;
-import org.eclipse.mylyn.trac.tests.support.TracTestConstants;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.trac.tests.support.TracFixture;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Steffen Pingel
  */
-public class TracRepositorySettingsPageTest extends AbstractTracClientTest {
+public class TracRepositorySettingsPageTest extends TestCase {
 
 	private TracRepositorySettingsPage page;
 
 	private TracValidator validator;
 
 	public TracRepositorySettingsPageTest() {
-		super(null);
 	}
 
 	@Override
@@ -47,28 +46,20 @@ public class TracRepositorySettingsPageTest extends AbstractTracClientTest {
 		page.setVisible(true);
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
-
-		// TestFixture.cleanupRepository1();
-	}
-
-	@Override
-	public ITracClient connect(String url, String username, String password, Proxy proxy, Version version)
-			throws Exception {
+	protected void initialize(TracFixture fixture) throws Exception {
+		// initialize page from test fixture
+		TaskRepository repository = fixture.repository();
 		page.setAnonymous(false);
-		page.setUrl(url);
-		page.setUserId(username);
-		page.setPassword(password);
-		page.setTracVersion(version);
-		validator = page.new TracValidator(page.createTaskRepository(), version);
-		return null;
+		page.setUrl(repository.getRepositoryUrl());
+		page.setUserId(repository.getCredentials(AuthenticationType.REPOSITORY).getUserName());
+		page.setPassword(repository.getCredentials(AuthenticationType.REPOSITORY).getPassword());
+		page.setTracVersion(fixture.getAccessMode());
+
+		validator = page.new TracValidator(page.createTaskRepository(), fixture.getAccessMode());
 	}
 
 	public void testValidateXmlRpc() throws Exception {
-		version = Version.XML_RPC;
-		connect010();
+		initialize(TracFixture.TRAC_0_10_XML_RPC);
 
 		validator.run(new NullProgressMonitor());
 		assertNull(validator.getResult());
@@ -76,8 +67,7 @@ public class TracRepositorySettingsPageTest extends AbstractTracClientTest {
 	}
 
 	public void testValidateWeb() throws Exception {
-		version = Version.TRAC_0_9;
-		connect010();
+		initialize(TracFixture.TRAC_0_10_WEB);
 
 		validator.run(new NullProgressMonitor());
 		assertNull(validator.getResult());
@@ -85,8 +75,10 @@ public class TracRepositorySettingsPageTest extends AbstractTracClientTest {
 	}
 
 	public void testValidateAutomaticUser() throws Exception {
-		version = null;
-		connect010();
+		initialize(TracFixture.TRAC_0_10_XML_RPC);
+
+		page.setTracVersion(null);
+		validator = page.new TracValidator(page.createTaskRepository(), null);
 
 		validator.run(new NullProgressMonitor());
 		assertEquals(Version.XML_RPC, validator.getResult());
@@ -94,8 +86,12 @@ public class TracRepositorySettingsPageTest extends AbstractTracClientTest {
 	}
 
 	public void testValidateAutomaticAnonymous() throws Exception {
-		version = null;
-		connect(TracTestConstants.TEST_TRAC_010_URL, "", "");
+		initialize(TracFixture.TRAC_0_10_XML_RPC);
+
+		page.setUserId("");
+		page.setPassword("");
+		page.setTracVersion(null);
+		validator = page.new TracValidator(page.createTaskRepository(), null);
 
 		validator.run(new NullProgressMonitor());
 		assertEquals(Version.TRAC_0_9, validator.getResult());

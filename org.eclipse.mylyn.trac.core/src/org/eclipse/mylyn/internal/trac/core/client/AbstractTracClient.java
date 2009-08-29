@@ -82,7 +82,7 @@ public abstract class AbstractTracClient implements ITracClient {
 		return httpClient;
 	}
 
-	public Version getVersion() {
+	public Version getAccessMode() {
 		return version;
 	}
 
@@ -230,6 +230,10 @@ public abstract class AbstractTracClient implements ITracClient {
 			return new String[] { "leave", "reopen" }; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return null;
+	}
+
+	public String getUrl() {
+		return repositoryUrl;
 	}
 
 }

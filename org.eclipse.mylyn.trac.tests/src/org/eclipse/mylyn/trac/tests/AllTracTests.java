@@ -14,12 +14,14 @@ package org.eclipse.mylyn.trac.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.mylyn.trac.tests.core.RepositorySearchTest;
+import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.trac.tests.core.TracAttachmentHandlerTest;
 import org.eclipse.mylyn.trac.tests.core.TracRepositoryConnectorTest;
+import org.eclipse.mylyn.trac.tests.core.TracRepositoryConnectorWebTest;
 import org.eclipse.mylyn.trac.tests.core.TracRepositoryQueryTest;
-import org.eclipse.mylyn.trac.tests.core.TracTaskDataHandlerTest;
+import org.eclipse.mylyn.trac.tests.core.TracTaskDataHandlerXmlRpcTest;
 import org.eclipse.mylyn.trac.tests.core.TracUtilTest;
+import org.eclipse.mylyn.trac.tests.support.TracFixture;
 import org.eclipse.mylyn.trac.tests.ui.TracHyperlinkUtilTest;
 import org.eclipse.mylyn.trac.tests.ui.TracRepositorySettingsPageTest;
 
@@ -32,15 +34,23 @@ public class AllTracTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Tests for org.eclipse.mylyn.trac.tests");
 		suite.addTest(AllTracHeadlessStandaloneTests.suite());
-		suite.addTestSuite(TracRepositoryConnectorTest.class);
 		suite.addTestSuite(TracUtilTest.class);
 		suite.addTestSuite(TracRepositoryQueryTest.class);
-		suite.addTestSuite(TracAttachmentHandlerTest.class);
-		suite.addTestSuite(RepositorySearchTest.class);
-		suite.addTestSuite(TracTaskDataHandlerTest.class);
 		// XXX fails when run from continuous build: suite.addTestSuite(TracTaskEditorTest.class);
 		suite.addTestSuite(TracRepositorySettingsPageTest.class);
 		suite.addTestSuite(TracHyperlinkUtilTest.class);
+		// network tests
+		for (TracFixture fixture : TracFixture.ALL) {
+			TestSuite fixtureSuite = fixture.createSuite();
+			fixtureSuite.addTestSuite(TracRepositoryConnectorTest.class);
+			if (fixture.getAccessMode() == Version.XML_RPC) {
+				fixtureSuite.addTestSuite(TracTaskDataHandlerXmlRpcTest.class);
+				fixtureSuite.addTestSuite(TracAttachmentHandlerTest.class);
+			} else {
+				fixtureSuite.addTestSuite(TracRepositoryConnectorWebTest.class);
+			}
+			suite.addTest(fixtureSuite);
+		}
 		return suite;
 	}
 

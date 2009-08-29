@@ -15,19 +15,30 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Proxy.Type;
 
+import junit.framework.TestCase;
+
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.mylyn.commons.net.IProxyProvider;
+import org.eclipse.mylyn.commons.net.WebLocation;
+import org.eclipse.mylyn.internal.trac.core.TracClientFactory;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.client.TracException;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.trac.tests.support.TestProxy;
 import org.eclipse.mylyn.trac.tests.support.TracTestConstants;
 
-public class TracClientProxyTest extends AbstractTracClientTest {
+/**
+ * @author Steffen Pingel
+ */
+public class TracClientProxyTest extends TestCase {
 
 	private TestProxy testProxy;
 
 	private Proxy proxy;
 
 	private int proxyPort;
+
+	private Version version;
 
 	public TracClientProxyTest() {
 	}
@@ -70,12 +81,16 @@ public class TracClientProxyTest extends AbstractTracClientTest {
 	private void connectProxy(String url, String expectedMethod) throws Exception {
 		testProxy.setResponse(TestProxy.NOT_FOUND);
 		proxy = new Proxy(Type.HTTP, new InetSocketAddress("localhost", proxyPort));
-		ITracClient client = connect(url, proxy);
+		WebLocation location = new WebLocation(url, "", "", new IProxyProvider() {
+			public Proxy getProxyForHost(String host, String proxyType) {
+				return proxy;
+			}
+		});
+		ITracClient client = TracClientFactory.createClient(location, version);
 		try {
-			client.validate(callback);
+			client.validate(new NullProgressMonitor());
 		} catch (TracException e) {
 		}
-
 		assertEquals(expectedMethod, testProxy.getRequest().getMethod());
 	}
 

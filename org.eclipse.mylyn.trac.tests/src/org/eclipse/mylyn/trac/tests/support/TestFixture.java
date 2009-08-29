@@ -11,84 +11,68 @@
 
 package org.eclipse.mylyn.trac.tests.support;
 
+import java.net.Proxy;
+
+import org.eclipse.mylyn.commons.net.AbstractWebLocation;
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.commons.net.IProxyProvider;
+import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.context.tests.support.TestUtil;
 import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
 import org.eclipse.mylyn.context.tests.support.TestUtil.PrivilegeLevel;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 
-/**
- * Initializes Trac repositories to a defined state. This is done once per test run, since cleaning and initializing the
- * repository for each test method would take too long.
- * 
- * @author Steffen Pingel
- */
 public class TestFixture {
 
-	public static XmlRpcServer.TestData data010;
+	protected final String repositoryUrl;
 
-	/**
-	 * Adds the existing repository content to the test data of <code>server</code>.
-	 */
-	private static void initializeTestData(XmlRpcServer server) throws Exception {
-		server.ticketMilestone("milestone1").itemCreated();
-		server.ticketMilestone("milestone2").itemCreated();
-		server.ticketMilestone("milestone3").itemCreated();
-		server.ticketMilestone("milestone4").itemCreated();
-		server.ticketMilestone("mile&stone").itemCreated();
+	private final String connectorKind;
 
-		server.ticketVersion("1.0").itemCreated();
-		server.ticketVersion("2.0").itemCreated();
-
-		server.ticket(1).itemCreated();
-		server.ticket(2).itemCreated();
-		server.ticket(3).itemCreated();
-		server.ticket(4).itemCreated();
-		server.ticket(5).itemCreated();
-		server.ticket(6).itemCreated();
-		server.ticket(7).itemCreated();
-		server.ticket(8).itemCreated();
+	public TestFixture(String connectorKind, String repositoryUrl) {
+		this.connectorKind = connectorKind;
+		this.repositoryUrl = repositoryUrl;
 	}
 
-//	private static void initializeRepository(XmlRpcServer server) throws Exception {
-//		server.ticketVersion(null).deleteAll();
-//		server.ticketVersion("1.0").create(0, "");
-//		server.ticketVersion("2.0").create(0, "");
-//
-//		server.ticketMilestone(null).deleteAll();
-//		server.ticketMilestone("milestone1").create();
-//		server.ticketMilestone("milestone2").create();
-//		server.ticketMilestone("milestone3").create();
-//		server.ticketMilestone("milestone4").create();
-//
-//		server.ticket().deleteAll();
-//		Ticket ticket = server.ticket().create("summary1", "description1");
-//		ticket.update("comment", "milestone", "milestone1");
-//		ticket = server.ticket().create("summary2", "description2");
-//		ticket.update("comment", "milestone", "milestone2");
-//		ticket = server.ticket().create("summary3", "description3");
-//		ticket.update("comment", "milestone", "milestone2");
-//		ticket = server.ticket().create("summary4", "description4");
-//	
-//	    ticket = server.ticket().create("test html entities: ���", "���\n\nmulti\nline\n\n'''bold'''\n");
-// 	    ticket = server.ticket().create("offline handler test", "");
-//	}
-
-	public static XmlRpcServer.TestData init010() throws Exception {
-		if (data010 == null) {
-			Credentials credentials = TestUtil.readCredentials(PrivilegeLevel.USER);
-			XmlRpcServer server = new XmlRpcServer(TracTestConstants.TEST_TRAC_010_URL, credentials.username,
-					credentials.password);
-
-			initializeTestData(server);
-			data010 = server.getData();
-		}
-		return data010;
+	public String getConnectorKind() {
+		return connectorKind;
 	}
 
-	public static void cleanup010() throws Exception {
-		if (data010 != null) {
-			// data010.cleanup();
-			data010 = null;
-		}
+	public String getRepositoryUrl() {
+		return repositoryUrl;
+	}
+
+	public TaskRepository repository() {
+		TaskRepository repository = new TaskRepository(connectorKind, repositoryUrl);
+		Credentials credentials = TestUtil.readCredentials(PrivilegeLevel.USER);
+		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials(credentials.username,
+				credentials.password), false);
+		return repository;
+	}
+
+	public AbstractWebLocation location() throws Exception {
+		return location(PrivilegeLevel.USER);
+	}
+
+	public AbstractWebLocation location(PrivilegeLevel level) throws Exception {
+		return location(level, Proxy.NO_PROXY);
+	}
+
+	public AbstractWebLocation location(PrivilegeLevel level, Proxy proxy) throws Exception {
+		Credentials credentials = TestUtil.readCredentials(level);
+		return location(credentials.username, credentials.password, proxy);
+	}
+
+	public AbstractWebLocation location(String username, String password) throws Exception {
+		return location(username, password, Proxy.NO_PROXY);
+	}
+
+	public AbstractWebLocation location(String username, String password, final Proxy proxy) throws Exception {
+		return new WebLocation(repositoryUrl, username, password, new IProxyProvider() {
+			public Proxy getProxyForHost(String host, String proxyType) {
+				return proxy;
+			}
+		});
 	}
 
 }

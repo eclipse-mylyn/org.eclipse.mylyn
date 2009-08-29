@@ -23,14 +23,12 @@ import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
-import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.mylyn.trac.tests.support.TestFixture;
-import org.eclipse.mylyn.trac.tests.support.TracTestConstants;
+import org.eclipse.mylyn.trac.tests.support.TracFixture;
 import org.eclipse.mylyn.trac.tests.support.TracTestUtil;
 import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
 
@@ -50,25 +48,13 @@ public class TracAttachmentHandlerTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		data = TestFixture.init010();
+		data = TracFixture.init010();
 		connector = (TracRepositoryConnector) TasksUi.getRepositoryConnector(TracCorePlugin.CONNECTOR_KIND);
 		attachmentHandler = connector.getTaskAttachmentHandler();
+		repository = TracFixture.current().singleRepository();
 	}
 
-	protected void init(String url, Version version) {
-		repository = TracTestUtil.init(url, version);
-	}
-
-	public void testDownloadAttachmentXmlRpc010() throws Exception {
-		downloadAttachmentXmlRpc(TracTestConstants.TEST_TRAC_010_URL);
-	}
-
-	public void testDownloadAttachmentXmlRpc011() throws Exception {
-		downloadAttachmentXmlRpc(TracTestConstants.TEST_TRAC_011_URL);
-	}
-
-	private void downloadAttachmentXmlRpc(String url) throws Exception {
-		init(url, Version.XML_RPC);
+	public void testDownloadAttachment() throws Exception {
 		ITask task = TracTestUtil.createTask(repository, data.attachmentTicketId + "");
 		List<ITaskAttachment> attachments = TracTestUtil.getTaskAttachments(task);
 		assertTrue(attachments.size() > 0);
@@ -83,16 +69,7 @@ public class TracAttachmentHandlerTest extends TestCase {
 		}
 	}
 
-	public void testGetAttachmentDataXmlRpc010() throws Exception {
-		getAttachmentDataXmlRpc(TracTestConstants.TEST_TRAC_010_URL);
-	}
-
-	public void testGetAttachmentDataXmlRpc011() throws Exception {
-		getAttachmentDataXmlRpc(TracTestConstants.TEST_TRAC_011_URL);
-	}
-
-	private void getAttachmentDataXmlRpc(String url) throws Exception {
-		init(url, Version.XML_RPC);
+	public void testGetAttachmentData() throws Exception {
 		ITask task = TracTestUtil.createTask(repository, data.attachmentTicketId + "");
 		List<ITaskAttachment> attachments = TracTestUtil.getTaskAttachments(task);
 		assertTrue(attachments.size() > 0);
@@ -106,16 +83,7 @@ public class TracAttachmentHandlerTest extends TestCase {
 		assertEquals("Mylar\n", new String(result));
 	}
 
-	public void testUploadAttachmentXmlRpc010() throws Exception {
-		uploadAttachmentXmlRpc(TracTestConstants.TEST_TRAC_010_URL);
-	}
-
-	public void testUploadAttachmentXmlRpc011() throws Exception {
-		uploadAttachmentXmlRpc(TracTestConstants.TEST_TRAC_011_URL);
-	}
-
-	private void uploadAttachmentXmlRpc(String url) throws Exception {
-		init(url, Version.XML_RPC);
+	public void testUploadAttachment() throws Exception {
 		ITask task = TracTestUtil.createTask(repository, data.attachmentTicketId + "");
 		File file = File.createTempFile("attachment", null);
 		file.deleteOnExit();
@@ -139,25 +107,25 @@ public class TracAttachmentHandlerTest extends TestCase {
 	}
 
 	public void testCanUploadAttachmentXmlRpc() throws Exception {
-		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
+		repository = TracFixture.TRAC_0_10_XML_RPC.singleRepository();
 		ITask task = TracTestUtil.createTask(repository, data.attachmentTicketId + "");
 		assertTrue(attachmentHandler.canPostContent(repository, task));
 	}
 
 	public void testCanUploadAttachmentWeb() throws Exception {
-		init(TracTestConstants.TEST_TRAC_010_URL, Version.TRAC_0_9);
+		repository = TracFixture.TRAC_0_10_WEB.singleRepository();
 		ITask task = TracTestUtil.createTask(repository, data.attachmentTicketId + "");
 		assertFalse(attachmentHandler.canPostContent(repository, task));
 	}
 
 	public void testCanDownloadAttachmentXmlRpc() throws Exception {
-		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
+		repository = TracFixture.TRAC_0_10_XML_RPC.singleRepository();
 		ITask task = TracTestUtil.createTask(repository, data.attachmentTicketId + "");
 		assertTrue(attachmentHandler.canGetContent(repository, task));
 	}
 
 	public void testCanDownloadAttachmentWeb() throws Exception {
-		init(TracTestConstants.TEST_TRAC_010_URL, Version.TRAC_0_9);
+		repository = TracFixture.TRAC_0_10_WEB.singleRepository();
 		ITask task = TracTestUtil.createTask(repository, data.attachmentTicketId + "");
 		assertFalse(attachmentHandler.canGetContent(repository, task));
 	}

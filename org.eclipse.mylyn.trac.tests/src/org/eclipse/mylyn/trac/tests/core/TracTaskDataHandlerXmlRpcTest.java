@@ -18,7 +18,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import junit.framework.TestCase;
 
@@ -36,7 +35,6 @@ import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
 import org.eclipse.mylyn.internal.trac.core.TracTaskDataHandler;
 import org.eclipse.mylyn.internal.trac.core.TracTaskMapper;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
-import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylyn.internal.trac.core.util.TracUtil;
@@ -52,7 +50,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskOperation;
 import org.eclipse.mylyn.tasks.core.data.TaskRelation;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.mylyn.trac.tests.support.TestFixture;
+import org.eclipse.mylyn.trac.tests.support.TracFixture;
 import org.eclipse.mylyn.trac.tests.support.TracTestConstants;
 import org.eclipse.mylyn.trac.tests.support.TracTestUtil;
 import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
@@ -60,7 +58,7 @@ import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
 /**
  * @author Steffen Pingel
  */
-public class TracTaskDataHandlerTest extends TestCase {
+public class TracTaskDataHandlerXmlRpcTest extends TestCase {
 
 	private TracRepositoryConnector connector;
 
@@ -72,19 +70,16 @@ public class TracTaskDataHandlerTest extends TestCase {
 
 	private ITracClient client;
 
-	public TracTaskDataHandlerTest() {
+	public TracTaskDataHandlerXmlRpcTest() {
 	}
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		data = TestFixture.init010();
+		data = TracFixture.init010();
 		connector = (TracRepositoryConnector) TasksUi.getRepositoryConnector(TracCorePlugin.CONNECTOR_KIND);
 		taskDataHandler = connector.getTaskDataHandler();
-	}
-
-	protected void init(String url, Version version) {
-		repository = TracTestUtil.init(url, version);
+		repository = TracFixture.current().singleRepository();
 		client = connector.getClientManager().getTracClient(repository);
 	}
 
@@ -97,41 +92,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 		return session;
 	}
 
-	public void testPreSynchronizationWeb096() throws Exception {
-		init(TracTestConstants.TEST_TRAC_096_URL, Version.TRAC_0_9);
-		ITask task = TracTestUtil.createTask(repository, data.offlineHandlerTicketId + "");
-
-		Set<ITask> tasks = new HashSet<ITask>();
-		tasks.add(task);
-		SynchronizationSession session = createSession();
-		session.setTasks(tasks);
-
-		assertEquals(null, repository.getSynchronizationTimeStamp());
-		connector.preSynchronization(session, null);
-		assertTrue(session.needsPerformQueries());
-		assertEquals(null, repository.getSynchronizationTimeStamp());
-		// bug 238043: assertEquals(Collections.emptySet(), session.getStaleTasks());
-		assertEquals(null, session.getStaleTasks());
-
-		int time = (int) (System.currentTimeMillis() / 1000) + 1;
-		repository.setSynchronizationTimeStamp(time + "");
-		connector.preSynchronization(session, null);
-		assertTrue(session.needsPerformQueries());
-		// bug 238043: assertEquals(Collections.emptySet(), session.getStaleTasks());
-		assertEquals(null, session.getStaleTasks());
-	}
-
-	public void testMarkStaleTasksXmlRpc010() throws Exception {
-		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
-		markStaleTasks();
-	}
-
-	public void testMarkStaleTasksXmlRpc011() throws Exception {
-		init(TracTestConstants.TEST_TRAC_011_URL, Version.XML_RPC);
-		markStaleTasks();
-	}
-
-	private void markStaleTasks() throws Exception {
+	public void testMarkStaleTasks() throws Exception {
 		SynchronizationSession session;
 		TracTicket ticket = TracTestUtil.createTicket(client, "markStaleTasks");
 		ITask task = TracTestUtil.createTask(repository, ticket.getId() + "");
@@ -179,17 +140,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 		assertEquals(Collections.singleton(task), session.getStaleTasks());
 	}
 
-	public void testMarkStaleTasksNoTimeStampXmlRpc010() throws Exception {
-		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
-		markStaleTasksNoTimeStamp();
-	}
-
-	public void testMarkStaleTasksNoTimeStampXmlRpc011() throws Exception {
-		init(TracTestConstants.TEST_TRAC_011_URL, Version.XML_RPC);
-		markStaleTasksNoTimeStamp();
-	}
-
-	private void markStaleTasksNoTimeStamp() throws Exception {
+	public void testMarkStaleTasksNoTimeStamp() throws Exception {
 		SynchronizationSession session;
 		ITask task = TracTestUtil.createTask(repository, data.offlineHandlerTicketId + "");
 
@@ -226,17 +177,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 		}
 	}
 
-	public void testAttachmentChangesLastModifiedDate010() throws Exception {
-		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
-		attachmentChangesLastModifiedDate();
-	}
-
-	public void testAttachmentChangesLastModifiedDate011() throws Exception {
-		init(TracTestConstants.TEST_TRAC_011_URL, Version.XML_RPC);
-		attachmentChangesLastModifiedDate();
-	}
-
-	private void attachmentChangesLastModifiedDate() throws Exception {
+	public void testAttachmentChangesLastModifiedDate() throws Exception {
 		AbstractTaskAttachmentHandler attachmentHandler = connector.getTaskAttachmentHandler();
 		ITask task = TracTestUtil.createTask(repository, data.attachmentTicketId + "");
 		Date lastModified = task.getModificationDate();
@@ -249,17 +190,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 				newLastModified.after(lastModified));
 	}
 
-	public void testAttachmentUrlEncoding010() throws Exception {
-		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
-		attachmentUrlEncoding();
-	}
-
-	public void testAttachmentUrlEncoding011() throws Exception {
-		init(TracTestConstants.TEST_TRAC_011_URL, Version.XML_RPC);
-		attachmentUrlEncoding();
-	}
-
-	private void attachmentUrlEncoding() throws Exception {
+	public void testAttachmentUrlEncoding() throws Exception {
 		AbstractTaskAttachmentHandler attachmentHandler = connector.getTaskAttachmentHandler();
 		TracTicket ticket = TracTestUtil.createTicket(client, "attachment url test");
 		ITask task = TracTestUtil.createTask(repository, ticket.getId() + "");
@@ -277,17 +208,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 				+ "/https%253A%252F%252Fbugs.eclipse.org%252Fbugs.xml.zip", attachments.get(0).getUrl());
 	}
 
-	public void testPostTaskDataInvalidCredentials010() throws Exception {
-		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
-		postTaskDataInvalidCredentials();
-	}
-
-	public void testPostTaskDataInvalidCredentials011() throws Exception {
-		init(TracTestConstants.TEST_TRAC_011_URL, Version.XML_RPC);
-		postTaskDataInvalidCredentials();
-	}
-
-	private void postTaskDataInvalidCredentials() throws Exception {
+	public void testPostTaskDataInvalidCredentials() throws Exception {
 		ITask task = TracTestUtil.createTask(repository, data.offlineHandlerTicketId + "");
 		TaskData taskData = TasksUi.getTaskDataManager().getTaskData(task);
 		taskData.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW).setValue("new comment");
@@ -301,8 +222,6 @@ public class TracTaskDataHandlerTest extends TestCase {
 	}
 
 	public void testCanInitializeTaskData() throws Exception {
-		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
-
 		ITask task = new TaskTask(TracCorePlugin.CONNECTOR_KIND, "", "");
 		assertFalse(taskDataHandler.canInitializeSubTaskData(repository, task));
 		task.setAttribute(TracRepositoryConnector.TASK_KEY_SUPPORTS_SUBTASKS, Boolean.TRUE.toString());
@@ -322,7 +241,6 @@ public class TracTaskDataHandlerTest extends TestCase {
 	}
 
 	public void testInitializeSubTaskDataInvalidParent() throws Exception {
-		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
 		TaskData parentTaskData = taskDataHandler.getTaskData(repository, data.offlineHandlerTicketId + "",
 				new NullProgressMonitor());
 		try {
@@ -333,7 +251,6 @@ public class TracTaskDataHandlerTest extends TestCase {
 	}
 
 	public void testInitializeSubTaskData() throws Exception {
-		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
 		TaskData parentTaskData = taskDataHandler.getTaskData(repository, data.offlineHandlerTicketId + "", null);
 		TaskMapper parentTaskMapper = new TracTaskMapper(parentTaskData, null);
 		parentTaskMapper.setSummary("abc");
@@ -358,7 +275,6 @@ public class TracTaskDataHandlerTest extends TestCase {
 	}
 
 	public void testGetSubTaskIds() throws Exception {
-		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
 		TaskData taskData = new TaskData(new TracAttributeMapper(new TaskRepository("", ""), client),
 				TracCorePlugin.CONNECTOR_KIND, "", "");
 		TaskAttribute blockedBy = taskData.getRoot().createAttribute(TracTaskDataHandler.ATTRIBUTE_BLOCKED_BY);
@@ -405,17 +321,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 		return subTaskIds;
 	}
 
-	public void testInitializeTaskData_0_10() throws Exception {
-		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
-		initializeTaskData();
-	}
-
-	public void testInitializeTaskData_0_11() throws Exception {
-		init(TracTestConstants.TEST_TRAC_011_URL, Version.XML_RPC);
-		initializeTaskData();
-	}
-
-	private void initializeTaskData() throws Exception {
+	public void testInitializeTaskData() throws Exception {
 		TaskData taskData = new TaskData(taskDataHandler.getAttributeMapper(repository), TracCorePlugin.CONNECTOR_KIND,
 				"", "");
 		TaskMapping mapping = new TaskMapping() {
@@ -441,17 +347,9 @@ public class TracTaskDataHandlerTest extends TestCase {
 		assertNull(taskData.getRoot().getAttribute(TracAttribute.SEVERITY.getTracKey()));
 	}
 
-	public void testOperations_XmlRpc_0_10() throws Exception {
-		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
-		operations(false);
-	}
+	public void testOperations() throws Exception {
+		boolean hasReassign = TracTestConstants.TEST_TRAC_011_URL.equals(repository.getRepositoryUrl());
 
-	public void testOperations_XmlRpc_0_11() throws Exception {
-		init(TracTestConstants.TEST_TRAC_011_URL, Version.XML_RPC);
-		operations(true);
-	}
-
-	protected void operations(boolean hasReassign) throws Exception {
 		TaskData taskData = taskDataHandler.getTaskData(repository, "1", new NullProgressMonitor());
 		List<TaskAttribute> operations = taskData.getAttributeMapper().getAttributesByType(taskData,
 				TaskAttribute.TYPE_OPERATION);
@@ -486,17 +384,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 		}
 	}
 
-	public void testPostTaskDataUnsetResolutionXmlRpc010() throws Exception {
-		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
-		postTaskDataUnsetResolution();
-	}
-
-	public void testPostTaskDataUnsetResolutionXmlRpc011() throws Exception {
-		init(TracTestConstants.TEST_TRAC_011_URL, Version.XML_RPC);
-		postTaskDataUnsetResolution();
-	}
-
-	private void postTaskDataUnsetResolution() throws Exception {
+	public void testPostTaskDataUnsetResolution() throws Exception {
 		TracTicket ticket = TracTestUtil.createTicket(client, "postTaskDataUnsetResolution");
 		TaskData taskData = taskDataHandler.getTaskData(repository, ticket.getId() + "", new NullProgressMonitor());
 		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(TaskAttribute.RESOLUTION);
@@ -508,4 +396,5 @@ public class TracTaskDataHandlerTest extends TestCase {
 		attribute = taskData.getRoot().getMappedAttribute(TaskAttribute.RESOLUTION);
 		assertEquals("", attribute.getValue());
 	}
+
 }
