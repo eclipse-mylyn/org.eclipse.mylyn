@@ -624,6 +624,7 @@
 				<include name="org.eclipse.core.net_*.jar"/>
 				<include name="org.eclipse.core.runtime_*.jar"/>
 				<include name="org.eclipse.equinox.common_*.jar"/>
+				<include name="org.eclipse.equinox.security_*.jar"/>
 				<include name="org.eclipse.osgi_*.jar"/>
 			</fileset>
 		</path>
@@ -640,7 +641,8 @@
 			<syspropertyset>
 				<propertyref prefix="build.test.standalone.properties."/>
 				<mapper type="glob" from="build.test.standalone.properties.*" to="*"/>
-			</syspropertyset> 
+			</syspropertyset>
+			<jvmarg line="${build.extraTestArgs}"/>
 			<formatter type="xml" />
 			<test todir="${output.dir}" name="${build.test.standalone.suite}"/>
 		</junit>
@@ -656,7 +658,7 @@
 	</target>
 	
 	<target name="report-helper" depends="report-helper-init,pre-report">
-		<xslt style="${basedir}/scripts/JUNIT.XSL" basedir="${results.home}" includes="org*.xml" destdir="${results.home}" />
+		<xslt style="${basedir}/scripts/junit.xsl" basedir="${results.home}" includes="org*.xml" destdir="${results.home}" />
 		
 		<antcall target="performance-report-helper"/>
 		
@@ -810,6 +812,9 @@
 			failonerror="true" />
 		<antcall target="get-build-dependencies-helper-svn"/>
 		<move file="${base.builder.home}/org.eclipse.releng.basebuilder" tofile="${base.builder.home}/eclipse"/>
+		<install-into-base url="${eclipse.url.derby}" exists="plugins/org.apache.derby.core_10.4.2" unpackDest="${base.builder.home}/eclipse"/>
+		<replaceregexp file="${base.builder.home}/eclipse/plugins/org.apache.derby.core_10.4.2/plugin.xml"
+			match="org.apache.derby.core" replace="org.apache.derby" byline="true"/>
 	</target>
 
 	<target name="get-build-dependencies-helper-svn" if="eclipse.url.svn">
