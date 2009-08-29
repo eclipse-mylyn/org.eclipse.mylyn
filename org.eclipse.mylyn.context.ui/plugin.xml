@@ -263,7 +263,10 @@
 			%InterestDecoratorLightweight.description
 		 </description>
          <enablement>
-            <objectClass name="java.lang.Object"/>
+            <systemProperty
+                 name="org.eclipse.mylyn.context.core.context.active"
+                 value="true">
+            </systemProperty>
          </enablement>
       </decorator>
    </extension>

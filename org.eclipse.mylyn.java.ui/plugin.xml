@@ -453,6 +453,12 @@
           style="toggle"
           toolbarPath="org.eclipse.ui.edit.text.actionSet.presentation/Presentation"
           tooltip="%ToggleActiveFoldingAction.tooltip">
+       <enablement>
+           <systemProperty
+                 name="org.eclipse.mylyn.context.core.context.active"
+                 value="true">
+           </systemProperty>
+       </enablement>
       	</action> 
       	<!--
         <action
