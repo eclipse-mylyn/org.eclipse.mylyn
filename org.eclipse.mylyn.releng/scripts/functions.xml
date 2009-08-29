@@ -190,7 +190,7 @@
     <macrodef name="init-basebuilder">
         <sequential>
         	<property name="base.builder.home" value="${tools.home}/basebuilder-${basebuilder.version}"/>
-			<available file="${base.builder.home}/eclipse" property="base.builder.exists"/>
+			<available file="${base.builder.home}/.provisioned" property="base.builder.exists"/>
 			<antcall target="provision-basebuilder"/>
         </sequential>
     </macrodef>
@@ -818,6 +818,8 @@
 		<install-into-base url="${eclipse.url.derby}" exists="plugins/org.apache.derby.core_10.4.2" unpackDest="${base.builder.home}/eclipse"/>
 		<replaceregexp file="${base.builder.home}/eclipse/plugins/org.apache.derby.core_10.4.2/plugin.xml"
 			match="org.apache.derby.core" replace="org.apache.derby" byline="true"/>
+		
+		<touch file="${base.builder.home}/.provisioned"/>
 	</target>
 
 	<target name="get-build-dependencies-helper-svn" if="eclipse.url.svn">
