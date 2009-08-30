@@ -248,7 +248,7 @@
 					output="${log}">
 				<!-- Uncomment to debug <jvmarg value="-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=y"/> -->
 			    <jvmarg line="@{vmargs} @{extravmargs}"/>
-		   		<arg value="-clean"/>
+		   		<!-- <arg value="-clean"/> -->
 			    <arg value="-application"/>
 		   		<arg value="@{application}"/>
 				<arg value="-consolelog"/>
