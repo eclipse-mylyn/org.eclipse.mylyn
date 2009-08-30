@@ -49,6 +49,11 @@
 	<target name="getMapFiles" depends="checkLocalMaps" unless="skipMaps">
 		<property name="mapsCheckoutTag" value="HEAD" />
 		<cvs cvsRoot="${mapsRepo}" package="${mapsRoot}" dest="${buildDirectory}/maps" tag="${mapsCheckoutTag}" />
+		<delete failonerror="false">
+			<fileset dir="${buildDirectory}/maps" includes="**/mylyn*.map">
+				<exclude name="**/*${baseTarget}.map"/>
+			</fileset>
+		</delete>
 	</target>
 
 	<target name="checkLocalMaps">

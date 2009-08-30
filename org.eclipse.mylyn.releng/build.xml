@@ -323,7 +323,7 @@
 	</target>
 
 	<target name="pre-build">
-		<delete>
+		<delete failonerror="false">
 			<fileset dir="${build.home}/${base.target}/maps" includes="mylyn*.map">
 				<exclude name="*${base.target}.map"/>
 			</fileset>

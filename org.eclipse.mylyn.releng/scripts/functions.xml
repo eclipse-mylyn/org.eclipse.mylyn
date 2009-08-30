@@ -395,16 +395,18 @@
 		<init-base activity="build"/>
 		
     	<property name="eclipse.home" value="${base.home}/eclipse" />
-		
+		<antcall target="build-helper-copy-maps"/>
+		<available property="dependencies.build.exists" file="${basedir}/config/build-dependencies"/>
+	</target>
+
+	<target name="build-helper-copy-maps" unless="skipCopyMaps">
 		<copy todir="${build.home}/${base.target}/maps">
 			<fileset dir="${basedir}/maps">
 				<include name="*.map"/>
 			</fileset>
 		</copy>
-
-		<available property="dependencies.build.exists" file="${basedir}/config/build-dependencies"/>
 	</target>
-
+		
 	<target name="install-build-dependencies" if="dependencies.build.exists" unless="skipUpdate">
   	    <antcall target="publish-feature">
   	    	<param name="feature" value="dependencies.build"/>
@@ -431,6 +433,7 @@
     	<exec-eclipse activity="build">
     		<arg value="-buildfile"/>
     		<arg value="${pde.build.script}"/>
+    		<arg value="-DbaseTarget=${base.target}"/>    		
     		<arg value="-DbaseLocation=${eclipse.home}"/>    		
     		<arg value="-Dbuilder=${builder}"/>
     		<arg value="-DbuildDirectory=${build.home}/${base.target}"/>
@@ -568,7 +571,11 @@
     	</path> 
     	<property name="swtbot.library" refid="swtbot.library.id"/>
 		<dirname property="functions.basedir" file="${ant.file.functions}"/>
-    	<property name="build.perf.qualifer" value="${qualifer}"/>
+		<tstamp>
+			<format property="time" pattern="'yyyyMMddHHmm" locale="en,US" timezone="UTC"/>
+		</tstamp>
+		<condition property="build.perf.qualifer" value="${build.baseline.prefix}${time}" else="${qualifier}"><isset property="build.perf.baseline"/></condition>
+		<condition property="build.perf.assertAgainst" value="" else="-Declipse.perf.assertAgainst=build=${build.assertAgainst}"><isset property="build.perf.baseline"/></condition>
 
 		<exec-eclipse timeout="${build.test.timeout}" activity="${test.target}-tests">
     		<arg value="-buildfile"/>
@@ -587,7 +594,7 @@
     		-XX:MaxPermSize=128m
     	    -Declipse.perf.dbloc=${build.db} 
     	    -Declipse.perf.config=build=${build.perf.qualifier};config=${build.host}-${base.target};jvm=sun
-    	    -Declipse.perf.assertAgainst=build=${build.assertAgainst}
+    		${build.perf.assertAgainst}
     	    ${build.extraTestArgs}" />
     		<arg value="${test.target}"/>
 		</exec-eclipse>
@@ -613,7 +620,7 @@
 		<!-- pick up all jared and extracted plug-ins --> 
 		<path id="tests.classpath">
 			<fileset dir="${install.dir}">
-				<include name="**/*.jar"/>
+				<include name="	**/*.jar"/>
 				<exclude name="**/*ui*.jar"/>
 			</fileset>
 			<dirset dir="${install.dir}/plugins">
@@ -671,6 +678,8 @@
 			extravmargs="-Declipse.perf.dbloc=${build.db}">
     		<arg value="-baseline"/>
     		<arg value="${build.baseline}"/>
+    		<arg value="-baseline.prefix"/>
+    		<arg value="${build.baseline.prefix}"/>
     		<arg value="-current"/>
     		<arg value="${qualifier}"/>
     		<arg value="-config"/>
@@ -810,7 +819,7 @@
 		<property name="downloadsDir" value="${tools.home}"/> 
 
 		<mkdir dir="${base.builder.home}" />
-
+<!--
 		<echo message="Getting basebuilder from CVS"/>
 		<cvs cvsRoot=":pserver:anonymous@dev.eclipse.org:/cvsroot/eclipse"
 			package="org.eclipse.releng.basebuilder"
@@ -823,12 +832,12 @@
 		<install-into-base url="${eclipse.url.derby}" exists="plugins/org.apache.derby.core_10.4.2" unpackDest="${base.builder.home}/eclipse"/>
 		<replaceregexp file="${base.builder.home}/eclipse/plugins/org.apache.derby.core_10.4.2/plugin.xml"
 			match="org.apache.derby.core" replace="org.apache.derby" byline="true"/>
-
-		<!-- replace performance test tools with patched versoin -->
+-->
+		<!-- replace performance test tools with patched version -->
 		<dirname property="functions.basedir" file="${ant.file.functions}"/>
-		<delete>
-			<fileset dir="${base.builder.home}/eclipse/plugins">
-				<include name="org.eclipse.test.performance*/**"/>
+		<delete includeemptydirs="true">
+			<fileset dir="${base.builder.home}/eclipse">
+				<include name="plugins/org.eclipse.test.performance*/**"/>
 			</fileset>
 		</delete>
 		<copy todir="${base.builder.home}/eclipse/plugins">
