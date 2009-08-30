@@ -317,6 +317,9 @@
 		<mkdir dir="${eclipse.base}"/>
 		<mkdir dir="${build.home}"/>
 		<mkdir dir="${build.results}"/>
+		<tstamp>
+			<format property="time" pattern="yyyyMMddHHmm" locale="en,US" timezone="UTC"/>
+		</tstamp>
 		<echo>Running on ${os.name} ${os.version} (${os.arch}) / ${build.system} / ${build.os}-${build.arch}-${build.ws}, ${ant.version}, Java ${ant.java.version}</echo>
 	</target>
 
@@ -571,9 +574,6 @@
     	</path> 
     	<property name="swtbot.library" refid="swtbot.library.id"/>
 		<dirname property="functions.basedir" file="${ant.file.functions}"/>
-		<tstamp>
-			<format property="time" pattern="yyyyMMddHHmm" locale="en,US" timezone="UTC"/>
-		</tstamp>
 		<condition property="build.perf.qualifier" value="${build.baseline.prefix}_${time}" else="${qualifier}"><isset property="build.perf.baseline"/></condition>
 		<condition property="build.perf.assertAgainst" value="" else="-Declipse.perf.assertAgainst=build=${build.baseline}"><isset property="build.perf.baseline"/></condition>
 
@@ -620,7 +620,7 @@
 		<!-- pick up all jared and extracted plug-ins --> 
 		<path id="tests.classpath">
 			<fileset dir="${install.dir}">
-				<include name="	**/*.jar"/>
+				<include name="**/*.jar"/>
 				<exclude name="**/*ui*.jar"/>
 			</fileset>
 			<dirset dir="${install.dir}/plugins">
@@ -673,6 +673,8 @@
 	</target>
 
 	<target name="performance-report" depends="init">
+		<condition property="build.perf.qualifier" value="${build.baseline}" else="${qualifier}"><isset property="build.perf.baseline"/></condition>
+
 		<echo message="Creating performance test report for ${version}.${qualifier}" />
 		<exec-eclipse activity="performance-report" application="org.eclipse.test.performance.ui.resultGenerator" 
 			extravmargs="-Declipse.perf.dbloc=${build.db}">
@@ -681,9 +683,11 @@
     		<arg value="-baseline.prefix"/>
     		<arg value="${build.baseline.prefix}"/>
     		<arg value="-current"/>
-    		<arg value="${qualifier}"/>
+    		<arg value="${build.perf.qualifier}"/>
     		<arg value="-config"/>
     		<arg value="${build.configs}"/>
+    		<arg value="-config.properties"/>
+    		<arg value="${build.configs.properties}"/>
 			<arg value="-components"/>
 			<arg value="${build.components}"/>
     		<arg value="-jvm"/>
