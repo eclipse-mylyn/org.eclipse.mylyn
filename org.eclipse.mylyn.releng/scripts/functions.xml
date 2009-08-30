@@ -667,8 +667,8 @@
 
 	<target name="performance-report-helper">
 		<echo message="Creating performance test report for ${version}.${qualifier}" />
-		<exec-eclipse activity="performance-report" application="org.eclipse.test.performance.ui.resultGenerator" >
-    		<arg value="-Declipse.perf.dbloc=${build.db}"/>
+		<exec-eclipse activity="performance-report" application="org.eclipse.test.performance.ui.resultGenerator" 
+			extravmargs="-Declipse.perf.dbloc=${build.db}">
     		<arg value="-baseline"/>
     		<arg value="${build.baseline}"/>
     		<arg value="-current"/>
