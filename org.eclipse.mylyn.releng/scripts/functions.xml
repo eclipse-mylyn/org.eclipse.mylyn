@@ -568,6 +568,7 @@
     	</path> 
     	<property name="swtbot.library" refid="swtbot.library.id"/>
 		<dirname property="functions.basedir" file="${ant.file.functions}"/>
+    	<property name="build.perf.qualifer" value="${qualifer}"/>
 
 		<exec-eclipse timeout="${build.test.timeout}" activity="${test.target}-tests">
     		<arg value="-buildfile"/>
@@ -585,7 +586,7 @@
     		-Xmx384m
     		-XX:MaxPermSize=128m
     	    -Declipse.perf.dbloc=${build.db} 
-    	    -Declipse.perf.config=build=${qualifier};config=${build.host}-${base.target};jvm=sun
+    	    -Declipse.perf.config=build=${build.perf.qualifier};config=${build.host}-${base.target};jvm=sun
     	    -Declipse.perf.assertAgainst=build=${build.assertAgainst}
     	    ${build.extraTestArgs}" />
     		<arg value="${test.target}"/>
