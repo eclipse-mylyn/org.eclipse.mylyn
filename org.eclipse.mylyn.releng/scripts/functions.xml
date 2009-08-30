@@ -572,10 +572,10 @@
     	<property name="swtbot.library" refid="swtbot.library.id"/>
 		<dirname property="functions.basedir" file="${ant.file.functions}"/>
 		<tstamp>
-			<format property="time" pattern="'yyyyMMddHHmm" locale="en,US" timezone="UTC"/>
+			<format property="time" pattern="yyyyMMddHHmm" locale="en,US" timezone="UTC"/>
 		</tstamp>
-		<condition property="build.perf.qualifer" value="${build.baseline.prefix}${time}" else="${qualifier}"><isset property="build.perf.baseline"/></condition>
-		<condition property="build.perf.assertAgainst" value="" else="-Declipse.perf.assertAgainst=build=${build.assertAgainst}"><isset property="build.perf.baseline"/></condition>
+		<condition property="build.perf.qualifier" value="${build.baseline.prefix}_${time}" else="${qualifier}"><isset property="build.perf.baseline"/></condition>
+		<condition property="build.perf.assertAgainst" value="" else="-Declipse.perf.assertAgainst=build=${build.baseline}"><isset property="build.perf.baseline"/></condition>
 
 		<exec-eclipse timeout="${build.test.timeout}" activity="${test.target}-tests">
     		<arg value="-buildfile"/>
