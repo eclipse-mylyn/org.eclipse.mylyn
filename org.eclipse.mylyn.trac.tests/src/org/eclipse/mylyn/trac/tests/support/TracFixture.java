@@ -13,9 +13,6 @@ package org.eclipse.mylyn.trac.tests.support;
 
 import java.net.Proxy;
 
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.IProxyProvider;
@@ -44,28 +41,28 @@ public class TracFixture extends TestFixture {
 	public static XmlRpcServer.TestData data010;
 
 	public static TracFixture TRAC_0_9_WEB = new TracFixture(Version.TRAC_0_9, TracTestConstants.TEST_TRAC_096_URL,
-			"0.9/Web");
+			"0.9", "Web");
 
 	public static TracFixture TRAC_0_10_WEB = new TracFixture(Version.TRAC_0_9, TracTestConstants.TEST_TRAC_010_URL,
-			"0.10/Web");
+			"0.10", "Web");
 
 	public static TracFixture TRAC_0_10_XML_RPC = new TracFixture(Version.XML_RPC, TracTestConstants.TEST_TRAC_010_URL,
-			"0.10/XML-RPC");
+			"0.10", "XML-RPC");
 
 	public static TracFixture TRAC_0_10_XML_RPC_DIGEST_AUTH = new TracFixture(Version.XML_RPC,
-			TracTestConstants.TEST_TRAC_010_DIGEST_AUTH_URL, "0.10/XML-RPC/DigestAuth");
+			TracTestConstants.TEST_TRAC_010_DIGEST_AUTH_URL, "0.10", "XML-RPC/DigestAuth");
 
 	public static TracFixture TRAC_0_10_XML_RPC_FORM_AUTH = new TracFixture(Version.XML_RPC,
-			TracTestConstants.TEST_TRAC_010_FORM_AUTH_URL, "0.10/XML-RPC/FormAuth");
+			TracTestConstants.TEST_TRAC_010_FORM_AUTH_URL, "0.10", "XML-RPC/FormAuth");
 
 	public static TracFixture TRAC_0_10_XML_RPC_SSL = new TracFixture(Version.XML_RPC,
-			TracTestConstants.TEST_TRAC_010_SSL_URL, "0.10/XML-RPC/SSL");
+			TracTestConstants.TEST_TRAC_010_SSL_URL, "0.10", "XML-RPC/SSL");
 
 	public static TracFixture TRAC_0_11_WEB = new TracFixture(Version.TRAC_0_9, TracTestConstants.TEST_TRAC_011_URL,
-			"0.11/Web");
+			"0.11", "Web");
 
 	public static TracFixture TRAC_0_11_XML_RPC = new TracFixture(Version.XML_RPC, TracTestConstants.TEST_TRAC_011_URL,
-			"0.11/XML-RPC");
+			"0.11", "XML-RPC");
 
 	public static TracFixture DEFAULT = TRAC_0_11_XML_RPC;
 
@@ -129,12 +126,14 @@ public class TracFixture extends TestFixture {
 
 	private final String version;
 
-	public TracFixture(Version accessMode, String url, String version) {
+	public TracFixture(Version accessMode, String url, String version, String info) {
 		super(TracCorePlugin.CONNECTOR_KIND, url);
 		this.accessMode = accessMode;
 		this.version = version;
+		setInfo("Trac " + version + "/" + info);
 	}
 
+	@Override
 	public TracFixture activate() {
 		current = this;
 		return this;
@@ -173,17 +172,6 @@ public class TracFixture extends TestFixture {
 			}
 		});
 		return TracClientFactory.createClient(location, version);
-	}
-
-	public TestSuite createSuite() {
-		TestSuite suite = new TestSuite("Testing on Trac " + getVersion());
-		suite.addTest(new TestCase("activiating " + getRepositoryUrl()) {
-			@Override
-			protected void runTest() throws Throwable {
-				TracFixture.this.activate();
-			}
-		});
-		return suite;
 	}
 
 	public Version getAccessMode() {

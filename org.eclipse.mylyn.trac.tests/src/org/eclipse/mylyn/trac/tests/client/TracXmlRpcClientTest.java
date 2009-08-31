@@ -33,8 +33,8 @@ import org.eclipse.mylyn.internal.trac.core.model.TracVersion;
 import org.eclipse.mylyn.internal.trac.core.model.TracWikiPage;
 import org.eclipse.mylyn.internal.trac.core.model.TracWikiPageInfo;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
-import org.eclipse.mylyn.trac.tests.support.TracTestConstants;
 import org.eclipse.mylyn.trac.tests.support.TracFixture;
+import org.eclipse.mylyn.trac.tests.support.TracTestConstants;
 import org.eclipse.mylyn.trac.tests.support.TracTestUtil;
 import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
 import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.Ticket;
@@ -110,7 +110,7 @@ public class TracXmlRpcClientTest extends TestCase {
 		// assertEquals("", result.get(0).getValue(Key.VERSION));
 	}
 
-	public void testGetTicketActions010() throws Exception {
+	public void testGetTicketActions() throws Exception {
 		if (client.getUrl().equals(TracTestConstants.TEST_TRAC_010_URL)) {
 			TracTicket ticket = client.getTicket(tickets.get(0).getId(), null);
 			TracAction[] actions = ticket.getActions();
