@@ -93,8 +93,20 @@ public class TracTestUtil {
 		Map<?, ?> expectedValues = ticket.getValues();
 		Map<String, String> values = tracTicket.getValues();
 		for (String key : values.keySet()) {
-			Assert.assertEquals("Values for key '" + key + "' did not match", expectedValues.get(key), values.get(key));
+			Object expected = expectedValues.get(key);
+			String actual = values.get(key);
+			if (key.equals("reporter")) {
+				// Trac 0.11 obfuscates email addresses by replacing the domain with the Ellipses character, 
+				// mangle expected value accordingly
+				if (actual != null && actual.endsWith("\u2026") && expected instanceof String) {
+					String expectedString = (String) expected;
+					int i = expectedString.indexOf("@");
+					if (i != -1) {
+						expected = expectedString.substring(0, i + 1) + "\u2026";
+					}
+				}
+			}
+			Assert.assertEquals("Values for key '" + key + "' did not match", expected, actual);
 		}
 	}
-
 }

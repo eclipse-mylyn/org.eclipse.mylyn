@@ -433,8 +433,8 @@ public class TracWebClient extends AbstractTracClient {
 					} else if (version.startsWith("Trac 0.11")) { //$NON-NLS-1$
 						return new TracRepositoryInfo(1, 0, 0, version);
 					} else {
-						throw new TracException(NLS.bind(
-								Messages.TracWebClient_Trac_version_X_is_unsupported_Error, version));
+						throw new TracException(NLS.bind(Messages.TracWebClient_Trac_version_X_is_unsupported_Error,
+								version));
 					}
 				}
 
@@ -744,6 +744,8 @@ public class TracWebClient extends AbstractTracClient {
 				sb.append(" "); //$NON-NLS-1$
 			} else if (token.getType() == Token.COMMENT) {
 				// ignore
+			} else if (token.getType() == Token.TAG && ((HtmlTag) token.getValue()).getTagType() == Tag.A) {
+				// ignore, Trac 0.11 wraps milestone values in links
 			} else {
 				break;
 			}
