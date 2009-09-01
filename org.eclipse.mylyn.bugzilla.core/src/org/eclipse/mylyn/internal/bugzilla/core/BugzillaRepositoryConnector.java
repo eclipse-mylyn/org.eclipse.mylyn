@@ -34,6 +34,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
@@ -211,7 +212,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			String urlQueryBase = repository.getRepositoryUrl() + CHANGED_BUGS_CGI_QUERY
 					+ URLEncoder.encode(dateString, repository.getCharacterEncoding()) + CHANGED_BUGS_CGI_ENDDATE;
 
-			String urlQueryString = urlQueryBase + BUG_ID;
+			StringBuilder urlQueryString = new StringBuilder(Math.min(30 + 9 * session.getTasks().size(), 7009));
+			urlQueryString.append(urlQueryBase + BUG_ID);
 
 			Set<ITask> changedTasks = new HashSet<ITask>();
 			Iterator<ITask> itr = session.getTasks().iterator();
@@ -221,20 +223,19 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				ITask task = itr.next();
 				checking.add(task);
 				queryCounter++;
-				String newurlQueryString = URLEncoder.encode(task.getTaskId() + ",", repository.getCharacterEncoding()); //$NON-NLS-1$
-				urlQueryString += newurlQueryString;
-				if (queryCounter >= 1000) {
-					queryForChanged(repository, changedTasks, urlQueryString, session, new SubProgressMonitor(monitor,
-							queryCounter));
+				urlQueryString.append(URLEncoder.encode(task.getTaskId() + ",", repository.getCharacterEncoding())); //$NON-NLS-1$
+				if (urlQueryString.length() >= 7000) {
+					queryForChanged(repository, changedTasks, urlQueryString.toString(), session,
+							new SubProgressMonitor(monitor, queryCounter));
 
 					queryCounter = 0;
-					urlQueryString = urlQueryBase + BUG_ID;
-					newurlQueryString = ""; //$NON-NLS-1$
+					urlQueryString.setLength(0);
+					urlQueryString.append(urlQueryBase + BUG_ID);
 				}
 
 				if (!itr.hasNext() && queryCounter != 0) {
-					queryForChanged(repository, changedTasks, urlQueryString, session, new SubProgressMonitor(monitor,
-							queryCounter));
+					queryForChanged(repository, changedTasks, urlQueryString.toString(), session,
+							new SubProgressMonitor(monitor, queryCounter));
 				}
 			}
 
@@ -275,7 +276,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				changedTasks.add(changedTask);
 			}
 		}
-		if (collector.getQueryTimestamp() != null) {
+		if (syncSession.getData() == null && collector.getQueryTimestamp() != null) {
 			syncSession.setData(collector.getQueryTimestamp());
 		}
 
