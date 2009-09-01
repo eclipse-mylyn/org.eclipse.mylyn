@@ -1,15 +1,16 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2009 Nathan Hapke and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Tasktop Technologies - initial API and implementation
+ *     Nathan Hapke - initial API and implementation
+ *     Tasktop Technologies - improvements
  *******************************************************************************/
 
-package org.eclipse.mylyn.bugzilla.tests.headless;
+package org.eclipse.mylyn.bugzilla.tests.core;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -17,36 +18,24 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylyn.bugzilla.tests.IBugzillaTestConstants;
+import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
-import org.eclipse.mylyn.context.tests.support.TestUtil;
-import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaLanguageSettings;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
-import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 
 /**
- * Example use of headless API (no ui dependencies)
- * 
- * @author Rob Elves
  * @author Nathan Hapke
+ * @author Rob Elves
  */
-public class BugzillaQueryTest extends TestCase {
+public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 
 	private TaskRepository repository;
-
-	@SuppressWarnings("unused")
-	private AbstractRepositoryConnector connectorOriginal;
 
 	private BugzillaRepositoryConnector connector;
 
@@ -55,26 +44,12 @@ public class BugzillaQueryTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		super.setUp();
-
-		connectorOriginal = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-				BugzillaCorePlugin.CONNECTOR_KIND);
-
-		BugzillaLanguageSettings language = BugzillaCorePlugin.getDefault().getLanguageSetting(
-				IBugzillaConstants.DEFAULT_LANG);
-
+		repository = BugzillaFixture.current().repository();
 		connector = new BugzillaRepositoryConnector();
-		BugzillaRepositoryConnector.addLanguageSetting(language);
+//		BugzillaLanguageSettings language = BugzillaCorePlugin.getDefault().getLanguageSetting(
+//				IBugzillaConstants.DEFAULT_LANG);
+//		BugzillaRepositoryConnector.addLanguageSetting(language);
 		handler = connector.getTaskDataHandler();
-		repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, IBugzillaTestConstants.TEST_BUGZILLA_222_URL);
-		Credentials credentials = TestUtil.readCredentials();
-		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials(credentials.username,
-				credentials.password), false);
-	}
-
-	@Override
-	protected void tearDown() throws Exception {
-
 	}
 
 	/**
@@ -158,23 +133,6 @@ public class BugzillaQueryTest extends TestCase {
 		}
 	}
 
-	// README
-	// public void testPostBug() throws Exception {
-	// RepositoryTaskData taskData = handler.getTaskData(repository, "1");
-	// assertNotNull(taskData);
-	// assertEquals("user@mylar.eclipse.org", taskData.getAssignedTo());
-	// assertEquals("foo", taskData.getDescription());
-	// taskData.setSummary("New Summary");
-	// // post this modification back to the repository
-	// handler.postTaskData(repository, taskData);
-	//
-	// // You can use the getAttributeValue to pull up the information on any
-	// // part of the bug
-	// // assertEquals("P1",
-	// //
-	// taskData.getAttributeValue(BugzillaReportElement.PRIORITY.getKeyString()));
-	// }
-
 	public void testQueryViaConnector() throws Exception {
 		String queryUrlString = repository.getRepositoryUrl()
 				+ "/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=search-match-test&product=TestProduct&long_desc_type=substring&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&deadlinefrom=&deadlineto=&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&emailassigned_to1=1&emailtype1=substring&email1=&emailassigned_to2=1&emailreporter2=1&emailcc2=1&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
@@ -200,37 +158,5 @@ public class BugzillaQueryTest extends TestCase {
 					"search-match-test"));
 		}
 	}
+
 }
-
-// public void testValidateCredentials() throws IOException,
-// BugzillaException, KeyManagementException,
-// GeneralSecurityException {
-// BugzillaClient.validateCredentials(null, repository.getUrl(),
-// repository.getCharacterEncoding(),
-// repository.getUserName(), repository.getPassword());
-// }
-//
-// public void testValidateCredentialsInvalidProxy() throws IOException,
-// BugzillaException, KeyManagementException,
-// GeneralSecurityException {
-// BugzillaClient.validateCredentials(new Proxy(Proxy.Type.HTTP, new
-// InetSocketAddress("localhost", 12356)),
-// repository.getUrl(), repository.getCharacterEncoding(),
-// repository.getUserName(), repository
-// .getPassword());
-// }
-
-// public void testCredentialsEncoding() throws IOException,
-// BugzillaException, KeyManagementException,
-// GeneralSecurityException {
-// String poundSignUTF8 =
-// BugzillaClient.addCredentials(IBugzillaTestConstants.TEST_BUGZILLA_222_URL,
-// "UTF-8",
-// "testUser", "\u00A3");
-// assertTrue(poundSignUTF8.endsWith("password=%C2%A3"));
-// String poundSignISO =
-// BugzillaClient.addCredentials(IBugzillaTestConstants.TEST_BUGZILLA_222_URL,
-// "ISO-8859-1", "testUser", "\u00A3");
-// assertFalse(poundSignISO.contains("%C2%A3"));
-// assertTrue(poundSignISO.endsWith("password=%A3"));
-// }

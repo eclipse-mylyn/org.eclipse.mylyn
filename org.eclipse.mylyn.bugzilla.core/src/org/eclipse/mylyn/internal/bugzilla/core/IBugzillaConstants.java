@@ -160,7 +160,6 @@ public interface IBugzillaConstants {
 
 	static final String VALUES_TARGET = "org.eclipse.mylyn.bugzilla.values.target"; //$NON-NLS-1$
 
-	static final String ECLIPSE_BUGZILLA_URL = "https://bugs.eclipse.org/bugs"; //$NON-NLS-1$
 
 	// Default values for keys
 

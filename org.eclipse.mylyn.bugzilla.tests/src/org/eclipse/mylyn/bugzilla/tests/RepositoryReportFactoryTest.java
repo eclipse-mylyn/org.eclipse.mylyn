@@ -60,7 +60,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 		String bugid = "1";
 		String errorMessage = "";
 		try {
-			setRepository(BugzillaCorePlugin.CONNECTOR_KIND, IBugzillaTestConstants.TEST_BUGZILLA_222_URL);
+			setRepository(BugzillaCorePlugin.CONNECTOR_KIND, BugzillaTestConstants.TEST_BUGZILLA_222_URL);
 			repository.setAuthenticationCredentials("invalid", "invalid");
 			init(bugid);
 		} catch (CoreException e) {
@@ -75,7 +75,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 		String bugid = "-1";
 		String errorMessage = "";
 		try {
-			setRepository(BugzillaCorePlugin.CONNECTOR_KIND, IBugzillaTestConstants.TEST_BUGZILLA_222_URL);
+			setRepository(BugzillaCorePlugin.CONNECTOR_KIND, BugzillaTestConstants.TEST_BUGZILLA_222_URL);
 			// If this isn't called the BugzillaClient will be reused (with old
 			// credentials) so
 			// force drop of old client connection.
@@ -134,7 +134,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 
 	public void testReadingReport222() throws Exception {
 		String bugid = "2";
-		setRepository(BugzillaCorePlugin.CONNECTOR_KIND, IBugzillaTestConstants.TEST_BUGZILLA_222_URL);
+		setRepository(BugzillaCorePlugin.CONNECTOR_KIND, BugzillaTestConstants.TEST_BUGZILLA_222_URL);
 		TaskData report = init(bugid);
 		assertNotNull(report);
 		assertEquals("search-match-test 1", report.getRoot()
@@ -175,7 +175,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 
 	public void testReadingReport2201() throws Exception {
 		String bugid = "1";
-		setRepository(BugzillaCorePlugin.CONNECTOR_KIND, IBugzillaTestConstants.TEST_BUGZILLA_2201_URL);
+		setRepository(BugzillaCorePlugin.CONNECTOR_KIND, BugzillaTestConstants.TEST_BUGZILLA_2201_URL);
 		TaskData report = init(bugid);
 
 		assertNotNull(report);
@@ -348,7 +348,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 
 	public void testReadingReport218() throws Exception {
 		String bugid = "1";
-		setRepository(BugzillaCorePlugin.CONNECTOR_KIND, IBugzillaTestConstants.TEST_BUGZILLA_218_URL);
+		setRepository(BugzillaCorePlugin.CONNECTOR_KIND, BugzillaTestConstants.TEST_BUGZILLA_218_URL);
 		TaskData report = init(bugid);
 		assertNotNull(report);
 		assertEquals("1", report.getRoot().getAttribute(BugzillaAttribute.BUG_ID.getKey()).getValue());
@@ -377,7 +377,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 	}
 
 	public void testTimeTracking222() throws Exception {
-		setRepository(BugzillaCorePlugin.CONNECTOR_KIND, IBugzillaTestConstants.TEST_BUGZILLA_222_URL);
+		setRepository(BugzillaCorePlugin.CONNECTOR_KIND, BugzillaTestConstants.TEST_BUGZILLA_222_URL);
 		TaskData report = init("11");
 		assertEquals("7.50", report.getRoot().getAttribute(BugzillaAttribute.ESTIMATED_TIME.getKey()).getValue());
 		assertEquals("4.00", report.getRoot().getAttribute(BugzillaAttribute.ACTUAL_TIME.getKey()).getValue());
@@ -414,7 +414,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 	// }
 
 	public void testTimeTracking218() throws Exception {
-		setRepository(BugzillaCorePlugin.CONNECTOR_KIND, IBugzillaTestConstants.TEST_BUGZILLA_218_URL);
+		setRepository(BugzillaCorePlugin.CONNECTOR_KIND, BugzillaTestConstants.TEST_BUGZILLA_218_URL);
 		TaskData report = init("19");
 		TaskAttribute root = report.getRoot();
 		assertEquals("7.50", root.getAttribute(BugzillaAttribute.ESTIMATED_TIME.getKey()).getValue());
@@ -424,7 +424,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 
 	public void testMultipleDepensOn() throws Exception {
 		String bugid = "5";
-		setRepository(BugzillaCorePlugin.CONNECTOR_KIND, IBugzillaTestConstants.TEST_BUGZILLA_218_URL);
+		setRepository(BugzillaCorePlugin.CONNECTOR_KIND, BugzillaTestConstants.TEST_BUGZILLA_218_URL);
 		TaskData report = init(bugid);
 		assertNotNull(report);
 		TaskAttribute root = report.getRoot();
@@ -435,7 +435,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 
 	public void testBugReportAPI() throws Exception {
 		String bugid = "3";
-		setRepository(BugzillaCorePlugin.CONNECTOR_KIND, IBugzillaTestConstants.TEST_BUGZILLA_222_URL);
+		setRepository(BugzillaCorePlugin.CONNECTOR_KIND, BugzillaTestConstants.TEST_BUGZILLA_222_URL);
 		TaskData report = init(bugid);
 		assertNotNull(report);
 		assertTrue(report != null);

@@ -14,8 +14,11 @@ package org.eclipse.mylyn.bugzilla.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.mylyn.bugzilla.tests.headless.BugzillaQueryTest;
-import org.eclipse.mylyn.bugzilla.tests.headless.BugzillaTaskHistoryTest;
+import org.eclipse.mylyn.bugzilla.tests.core.BugzillaRepositoryConnectorStandaloneTest;
+import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaRepositorySettingsPageTest;
+import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaSearchPageTest;
+import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaTaskHyperlinkDetectorTest;
+import org.eclipse.mylyn.bugzilla.tests.ui.TaskEditorTest;
 
 /**
  * @author Mik Kersten
@@ -24,25 +27,19 @@ public class AllBugzillaTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Tests for org.eclipse.mylyn.bugzilla.tests");
-		suite.addTestSuite(RepositoryTaskHandleTest.class);
+		suite.addTest(AllBugzillaHeadlessStandaloneTests.suite());
 		suite.addTestSuite(BugzillaTaskCompletionTest.class);
 		suite.addTestSuite(BugzillaTaskDataHandlerTest.class);
-		suite.addTestSuite(TaskListStandaloneTest.class);
-		suite.addTestSuite(BugzillaTaskListTest.class);
 		suite.addTestSuite(TaskEditorTest.class);
-		suite.addTestSuite(BugzillaQueryTest.class);
-		suite.addTestSuite(RepositoryEditorWizardTest.class);
+		suite.addTestSuite(BugzillaRepositoryConnectorStandaloneTest.class);
+		suite.addTestSuite(BugzillaRepositorySettingsPageTest.class);
 		suite.addTestSuite(RepositoryReportFactoryTest.class);
-		suite.addTestSuite(BugzillaConfigurationTest.class);
 		suite.addTestSuite(BugzillaTaskHyperlinkDetectorTest.class);
 		suite.addTestSuite(BugzillaSearchTest.class);
 		suite.addTestSuite(BugzillaRepositoryConnectorTest.class);
 		suite.addTestSuite(EncodingTest.class);
-		suite.addTestSuite(BugzillaProductParserTest.class);
-		suite.addTestSuite(BugzillaSearchDialogTest.class);
-		suite.addTestSuite(BugzillaTaskHistoryTest.class);
+		suite.addTestSuite(BugzillaSearchPageTest.class);
 		suite.addTestSuite(BugzillaRepository32Test.class);
-		suite.addTestSuite(BugzillaVersionTest.class);
 		suite.addTestSuite(BugzillaDateTimeTests.class);
 		return suite;
 	}

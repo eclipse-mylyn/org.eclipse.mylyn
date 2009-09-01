@@ -265,8 +265,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		doReassignOld(taskNumber, "tests@mylyn.eclipse.org");
 	}
 
-	public void testReassign31() throws CoreException {
-		init31();
+	public void testReassign32() throws CoreException {
+		init32();
 		String taskNumber = "1";
 
 		// Get the task
@@ -770,7 +770,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		assertEquals(format1.parse("2007-03-20 16:37"), mapper.getCreationDate());
 		assertEquals(format2.parse("2008-09-24 13:33:02"), mapper.getModificationDate());
 
-		assertEquals(IBugzillaTestConstants.TEST_BUGZILLA_30_URL, mapper.getTaskUrl());
+		assertEquals(BugzillaTestConstants.TEST_BUGZILLA_30_URL, mapper.getTaskUrl());
 		assertEquals(BugzillaCorePlugin.CONNECTOR_KIND, mapper.getTaskKind());
 		assertEquals("2", mapper.getTaskKey());
 
@@ -945,7 +945,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 	}
 
 	public void testCustomFields() throws Exception {
-		init(IBugzillaTestConstants.TEST_BUGZILLA_303_URL);
+		init(BugzillaTestConstants.TEST_BUGZILLA_303_URL);
 
 		String taskNumber = "1";
 

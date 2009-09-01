@@ -79,40 +79,40 @@ public abstract class AbstractBugzillaTest extends TestCase {
 		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 	}
 
+	protected void init34() {
+		init(BugzillaTestConstants.TEST_BUGZILLA_34_URL);
+	}
+
 	protected void init323() {
-		init(IBugzillaTestConstants.TEST_BUGZILLA_323_URL);
+		init(BugzillaTestConstants.TEST_BUGZILLA_323_URL);
 	}
 
 	protected void init322() {
-		init(IBugzillaTestConstants.TEST_BUGZILLA_322_URL);
+		init(BugzillaTestConstants.TEST_BUGZILLA_322_URL);
 	}
 
 	protected void init32() {
-		init(IBugzillaTestConstants.TEST_BUGZILLA_32_URL);
-	}
-
-	protected void init31() {
-		init(IBugzillaTestConstants.TEST_BUGZILLA_31_URL);
+		init(BugzillaTestConstants.TEST_BUGZILLA_32_URL);
 	}
 
 	protected void init30() {
-		init(IBugzillaTestConstants.TEST_BUGZILLA_30_URL);
+		init(BugzillaTestConstants.TEST_BUGZILLA_30_URL);
 	}
 
 	protected void init222() {
-		init(IBugzillaTestConstants.TEST_BUGZILLA_222_URL);
+		init(BugzillaTestConstants.TEST_BUGZILLA_222_URL);
 	}
 
 	protected void init2201() {
-		init(IBugzillaTestConstants.TEST_BUGZILLA_2201_URL);
+		init(BugzillaTestConstants.TEST_BUGZILLA_2201_URL);
 	}
 
 	protected void init220() {
-		init(IBugzillaTestConstants.TEST_BUGZILLA_220_URL);
+		init(BugzillaTestConstants.TEST_BUGZILLA_220_URL);
 	}
 
 	protected void init218() {
-		init(IBugzillaTestConstants.TEST_BUGZILLA_218_URL);
+		init(BugzillaTestConstants.TEST_BUGZILLA_218_URL);
 	}
 
 	@SuppressWarnings("deprecation")

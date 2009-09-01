@@ -23,8 +23,13 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.TaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * @author Frank Becker
@@ -125,7 +130,7 @@ public class BugzillaTaskDataHandlerTest extends TestCase {
 
 	public void testCloneTaskData() throws Exception {
 		String bugid = "9";
-		setRepository(BugzillaCorePlugin.CONNECTOR_KIND, IBugzillaTestConstants.TEST_BUGZILLA_30_URL);
+		setRepository(BugzillaCorePlugin.CONNECTOR_KIND, BugzillaTestConstants.TEST_BUGZILLA_30_URL);
 		TaskData report1 = init(bugid);
 
 		assertNotNull(report1);
@@ -133,7 +138,7 @@ public class BugzillaTaskDataHandlerTest extends TestCase {
 		testAttributesFromCloneBug(report1, true);
 
 		bugid = "10";
-		setRepository(BugzillaCorePlugin.CONNECTOR_KIND, IBugzillaTestConstants.TEST_BUGZILLA_30_URL);
+		setRepository(BugzillaCorePlugin.CONNECTOR_KIND, BugzillaTestConstants.TEST_BUGZILLA_30_URL);
 		TaskData report2 = init(bugid);
 
 		assertNotNull(report2);
@@ -172,11 +177,45 @@ public class BugzillaTaskDataHandlerTest extends TestCase {
 
 	public void testCharacterEscaping() throws CoreException {
 		String bugid = "17";
-		setRepository(BugzillaCorePlugin.CONNECTOR_KIND, IBugzillaTestConstants.TEST_BUGZILLA_30_URL);
+		setRepository(BugzillaCorePlugin.CONNECTOR_KIND, BugzillaTestConstants.TEST_BUGZILLA_30_URL);
 		TaskData report1 = init(bugid);
 		assertEquals("Testing! \"&@ $\" &amp;", report1.getRoot()
 				.getAttribute(BugzillaAttribute.SHORT_DESC.getKey())
 				.getValue());
+	}
+
+	public void testinitializeTaskData() throws Exception {
+		final TaskMapping taskMappingInit = new TaskMapping() {
+			@Override
+			public String getSummary() {
+				return "The Summary";
+			}
+
+			@Override
+			public String getDescription() {
+				return "The Description";
+			}
+		};
+		final TaskMapping taskMappingSelect = new TaskMapping() {
+			@Override
+			public String getProduct() {
+				return "TestProduct";
+			}
+		};
+
+		TaskRepository taskRepository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND,
+				BugzillaTestConstants.TEST_BUGZILLA_222_URL);
+		TasksUiPlugin.getRepositoryManager().addRepository(taskRepository);
+
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+				taskRepository.getConnectorKind());
+		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(taskRepository);
+		TaskData taskData = new TaskData(mapper, taskRepository.getConnectorKind(), taskRepository.getRepositoryUrl(),
+				"");
+		assertTrue(taskDataHandler.initializeTaskData(taskRepository, taskData, null, null));
+		assertTrue(taskDataHandler.initializeTaskData(taskRepository, taskData, taskMappingInit, null));
+		assertTrue(taskDataHandler.initializeTaskData(taskRepository, taskData, taskMappingSelect, null));
 	}
 
 }

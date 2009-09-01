@@ -1,15 +1,16 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2009 Nathan Hapke and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Tasktop Technologies - initial API and implementation
+ *     Nathan Hapke - initial API and implementation
+ *     Tasktop Technologies - improvements
  *******************************************************************************/
 
-package org.eclipse.mylyn.bugzilla.tests.headless;
+package org.eclipse.mylyn.bugzilla.tests.client;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,43 +20,31 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import org.eclipse.mylyn.bugzilla.tests.AbstractBugzillaTest;
-import org.eclipse.mylyn.bugzilla.tests.IBugzillaTestConstants;
-import org.eclipse.mylyn.context.tests.support.TestUtil;
-import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
+import junit.framework.TestCase;
+
+import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.history.AssignmentEvent;
 import org.eclipse.mylyn.internal.bugzilla.core.history.ResolutionEvent;
 import org.eclipse.mylyn.internal.bugzilla.core.history.StatusEvent;
 import org.eclipse.mylyn.internal.bugzilla.core.history.TaskHistory;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
 
-public class BugzillaTaskHistoryTest extends AbstractBugzillaTest {
-
-	private TaskRepository repository;
-
-	private BugzillaRepositoryConnector connector;
+/**
+ * @author Nathan Hapke
+ * @author Steffen Pingel
+ */
+public class BugzillaTaskHistoryTest extends TestCase {
 
 	private static final String HISTORY_FILE_NAME = "storedHistory.history";
 
-	private static final String REPORT_ID = "1";
+	private BugzillaClient client;
 
 	@Override
 	public void setUp() throws Exception {
-		super.setUp();
-		connector = new BugzillaRepositoryConnector();
-		repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, IBugzillaTestConstants.TEST_BUGZILLA_222_URL);
-
-		Credentials credentials = TestUtil.readCredentials();
-		repository.setAuthenticationCredentials(credentials.username, credentials.password);
+		client = BugzillaFixture.current().client();
 	}
 
 	public void testGetBugHistory() throws Exception {
-
-		BugzillaClient client = connector.getClientManager().getClient(repository, null);
-		assertNotNull(client);
 		TaskHistory history = client.getHistory("1", null);
 		assertNotNull(history);
 
@@ -66,8 +55,6 @@ public class BugzillaTaskHistoryTest extends AbstractBugzillaTest {
 	}
 
 	public void testAssignmentEvent() throws Exception {
-		BugzillaClient client = connector.getClientManager().getClient(repository, null);
-		assertNotNull(client);
 		TaskHistory history = client.getHistory("1", null);
 		assertNotNull(history);
 
@@ -81,9 +68,6 @@ public class BugzillaTaskHistoryTest extends AbstractBugzillaTest {
 	}
 
 	public void testStatusEvent() throws Exception {
-
-		BugzillaClient client = connector.getClientManager().getClient(repository, null);
-		assertNotNull(client);
 		TaskHistory history = client.getHistory("1", null);
 		assertNotNull(history);
 
@@ -96,9 +80,7 @@ public class BugzillaTaskHistoryTest extends AbstractBugzillaTest {
 	}
 
 	public void testResolutionEvent() throws Exception {
-		BugzillaClient client = connector.getClientManager().getClient(repository, null);
-		assertNotNull(client);
-		TaskHistory history = client.getHistory(REPORT_ID, null);
+		TaskHistory history = client.getHistory("1", null);
 		assertNotNull(history);
 
 		ResolutionEvent resolutionChange = history.getResolutionEvents().get(0);
@@ -109,23 +91,22 @@ public class BugzillaTaskHistoryTest extends AbstractBugzillaTest {
 		assertEquals("Resolution", resolutionChange.getWhat());
 	}
 
-	public void testStoredHistory() throws Exception {
-		BugzillaClient client = connector.getClientManager().getClient(repository, null);
-		assertNotNull(client);
-		TaskHistory history = client.getHistory(REPORT_ID, null);
+	public void testPersistHistory() throws Exception {
+		TaskHistory history = client.getHistory("1", null);
 		assertNotNull(history);
-		storeHistory(history);
+		try {
+			storeHistory(history);
 
-		history = getStoredHistory();
+			history = getStoredHistory();
 
-		assertEquals(1, history.getAssignmentEvents().size());
-		assertEquals(2, history.getStatusEvents().size());
-		assertEquals(1, history.getResolutionEvents().size());
-		assertEquals(12, history.getOtherEvents().size());
-
-		// Remove file
-		File storedHistoryFile = new File(HISTORY_FILE_NAME);
-		assertTrue(storedHistoryFile.delete());
+			assertEquals(1, history.getAssignmentEvents().size());
+			assertEquals(2, history.getStatusEvents().size());
+			assertEquals(1, history.getResolutionEvents().size());
+			assertEquals(12, history.getOtherEvents().size());
+		} finally {
+			// clean up
+			new File(HISTORY_FILE_NAME).delete();
+		}
 	}
 
 	private void storeHistory(TaskHistory history) throws FileNotFoundException, IOException {
@@ -143,4 +124,5 @@ public class BugzillaTaskHistoryTest extends AbstractBugzillaTest {
 		in.close();
 		return history;
 	}
+
 }

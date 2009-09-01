@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Bugzilla Connector Tests
 Bundle-SymbolicName: org.eclipse.mylyn.bugzilla.tests
 Bundle-Version: 0.0.0
-Bundle-Activator: org.eclipse.mylyn.bugzilla.tests.BugzillaTestPlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.junit,
@@ -27,9 +26,11 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.mylyn.commons.ui,
  org.eclipse.compare,
  org.eclipse.mylyn.commons.core
-Bundle-ActivationPolicy: lazy
 Bundle-Vendor: Eclipse Mylyn
 Bundle-ClassPath: bugzilla-test.jar
 Export-Package: org.eclipse.mylyn.bugzilla.tests;x-internal:=true,
- org.eclipse.mylyn.bugzilla.tests.headless;x-internal:=true
+ org.eclipse.mylyn.bugzilla.tests.client;x-internal:=true,
+ org.eclipse.mylyn.bugzilla.tests.core;x-internal:=true,
+ org.eclipse.mylyn.bugzilla.tests.support;x-internal:=true,
+ org.eclipse.mylyn.bugzilla.tests.ui;x-internal:=true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

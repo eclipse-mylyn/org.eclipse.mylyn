@@ -108,6 +108,10 @@ public class BugzillaCorePlugin extends Plugin {
 		repositoryConfigurationFile = file;
 	}
 
+	public static File getConfigurationCacheFile() {
+		return repositoryConfigurationFile;
+	}
+
 	/**
 	 * @since 2.1
 	 * @return cached repository configuration. If not already cached, null is returned.
@@ -198,7 +202,8 @@ public class BugzillaCorePlugin extends Plugin {
 					}
 				}
 			} catch (Exception e) {
-				log(new Status(IStatus.INFO, BugzillaCorePlugin.ID_PLUGIN, ERROR_INCOMPATIBLE_CONFIGURATION));
+				StatusHandler.log(new Status(IStatus.INFO, BugzillaCorePlugin.ID_PLUGIN,
+						ERROR_INCOMPATIBLE_CONFIGURATION));
 				try {
 					if (in != null) {
 						in.close();
@@ -207,13 +212,14 @@ public class BugzillaCorePlugin extends Plugin {
 						if (repositoryConfigurationFile.delete()) {
 							// successfully deleted
 						} else {
-							log(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, 0,
+							StatusHandler.log(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, 0,
 									ERROR_DELETING_CONFIGURATION, e));
 						}
 					}
 
 				} catch (Exception ex) {
-					log(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, 0, ERROR_DELETING_CONFIGURATION, e));
+					StatusHandler.log(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, 0,
+							ERROR_DELETING_CONFIGURATION, e));
 				}
 			} finally {
 				cacheFileRead = true;
@@ -247,7 +253,8 @@ public class BugzillaCorePlugin extends Plugin {
 					}
 				}
 			} catch (IOException e) {
-				log(e);
+				StatusHandler.log(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN, 0,
+						"Failed to write repository configuration cache", e)); //$NON-NLS-1$
 			} finally {
 				if (out != null) {
 					try {
@@ -258,30 +265,6 @@ public class BugzillaCorePlugin extends Plugin {
 				}
 			}
 		}
-	}
-
-	/**
-	 * Convenience method for logging statuses to the plugin log
-	 * 
-	 * @param status
-	 *            the status to log
-	 */
-	public static void log(IStatus status) {
-		getDefault().getLog().log(status);
-	}
-
-	/**
-	 * Convenience method for logging exceptions to the plugin log
-	 * 
-	 * @param e
-	 *            the exception to log
-	 */
-	public static void log(Exception e) {
-		String message = e.getMessage();
-		if (e.getMessage() == null) {
-			message = e.getClass().toString();
-		}
-		log(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, 0, message, e));
 	}
 
 	/**

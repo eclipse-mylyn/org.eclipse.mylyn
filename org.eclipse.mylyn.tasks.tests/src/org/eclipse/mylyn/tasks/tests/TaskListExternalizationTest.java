@@ -11,7 +11,9 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -21,6 +23,7 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.DateRange;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
@@ -30,10 +33,13 @@ import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * @author Robert Elves
@@ -379,6 +385,269 @@ public class TaskListExternalizationTest extends TestCase {
 		ITask localTask = TasksUiInternal.createNewLocalTask("Task 1");
 		assertNotNull(localTask);
 		assertEquals(1, ((AbstractTask) localTask).getParentContainers().size());
+	}
+
+	@SuppressWarnings("null")
+	public void testRemindedPersistance() throws Exception {
+		String bugNumber = "106939";
+		ITask task = TasksUi.getRepositoryModel().createTask(repository, bugNumber);
+		TaskTask task1 = null;
+		if (task instanceof TaskTask) {
+			task1 = (TaskTask) task;
+		}
+		assertNotNull(task1);
+
+		TasksUiPlugin.getTaskList().addTask(task1);
+
+		task1.setReminded(true);
+		TaskTestUtil.saveAndReadTasklist();
+
+		TaskList taskList = TasksUiPlugin.getTaskList();
+		assertEquals(1, taskList.getAllTasks().size());
+		Set<ITask> tasksReturned = taskList.getTasks(MockRepositoryConnector.REPOSITORY_URL);
+		assertNotNull(tasksReturned);
+		assertEquals(1, tasksReturned.size());
+		for (ITask taskRet : tasksReturned) {
+			assertTrue(((AbstractTask) taskRet).isReminded());
+		}
+	}
+
+	public void testRepositoryTaskExternalization() throws Exception {
+		TaskTask task = (TaskTask) TasksUi.getRepositoryModel().createTask(repository, "1");
+		task.setTaskKind("kind");
+		TasksUiPlugin.getTaskList().addTask(task);
+		TaskTestUtil.saveAndReadTasklist();
+		assertEquals(1, TasksUiPlugin.getTaskList()
+				.getUnmatchedContainer(MockRepositoryConnector.REPOSITORY_URL)
+				.getChildren()
+				.size());
+		ITask readTask = TasksUiPlugin.getTaskList()
+				.getUnmatchedContainer(MockRepositoryConnector.REPOSITORY_URL)
+				.getChildren()
+				.iterator()
+				.next();
+
+		assertEquals(task.getHandleIdentifier(), readTask.getHandleIdentifier());
+		assertEquals(task.getSummary(), readTask.getSummary());
+		assertEquals(task.getTaskKind(), readTask.getTaskKind());
+	}
+
+	public void testQueryExternalization() throws Exception {
+		RepositoryQuery query = (RepositoryQuery) TasksUi.getRepositoryModel().createRepositoryQuery(repository);
+		assertEquals(MockRepositoryConnector.REPOSITORY_URL, query.getRepositoryUrl());
+		assertEquals("<never>", query.getLastSynchronizedTimeStamp());
+		query.setLastSynchronizedStamp("today");
+		TasksUiPlugin.getTaskList().addQuery(query);
+
+		TaskTestUtil.saveAndReadTasklist();
+		assertEquals(1, TasksUiPlugin.getTaskList().getQueries().size());
+		IRepositoryQuery readQuery = TasksUiPlugin.getTaskList().getQueries().iterator().next();
+		assertEquals(query.getRepositoryUrl(), readQuery.getRepositoryUrl());
+		assertEquals("today", query.getLastSynchronizedTimeStamp());
+		assertEquals(MockRepositoryConnector.REPOSITORY_URL, readQuery.getRepositoryUrl());
+	}
+
+	public void testDeleteQuery() {
+		RepositoryQuery query = new RepositoryQuery(MockRepositoryConnector.REPOSITORY_KIND, "queryUrl");
+		query.setRepositoryUrl("repositoryUrl");
+		TasksUiPlugin.getTaskList().addQuery(query);
+
+		IRepositoryQuery readQuery = TasksUiPlugin.getTaskList().getQueries().iterator().next();
+		assertEquals(query, readQuery);
+
+		TasksUiPlugin.getTaskList().deleteQuery(query);
+		assertEquals(0, TasksUiPlugin.getTaskList().getQueries().size());
+	}
+
+	public void testDeleteQueryAfterRename() {
+		RepositoryQuery query = new RepositoryQuery(MockRepositoryConnector.REPOSITORY_KIND, "queryUrl");
+		query.setRepositoryUrl("repositoryUrl");
+		TasksUiPlugin.getTaskList().addQuery(query);
+
+		IRepositoryQuery readQuery = TasksUiPlugin.getTaskList().getQueries().iterator().next();
+		assertEquals(query, readQuery);
+		query.setSummary("newName");
+		TasksUiPlugin.getTaskList().deleteQuery(query);
+		assertEquals(0, TasksUiPlugin.getTaskList().getQueries().size());
+	}
+
+	public void testCreateQueryWithSameName() {
+		RepositoryQuery query = new RepositoryQuery(MockRepositoryConnector.REPOSITORY_KIND, "queryUrl");
+		query.setRepositoryUrl("repositoryUrl");
+		TasksUiPlugin.getTaskList().addQuery(query);
+		assertEquals(1, TasksUiPlugin.getTaskList().getQueries().size());
+		IRepositoryQuery readQuery = TasksUiPlugin.getTaskList().getQueries().iterator().next();
+		assertEquals(query, readQuery);
+
+		try {
+			query = new RepositoryQuery(MockRepositoryConnector.REPOSITORY_KIND, "queryUrl");
+			query.setRepositoryUrl("repositoryUrl");
+			TasksUiPlugin.getTaskList().addQuery(query);
+			fail("Expected IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+			if (!e.getMessage().equals("Handle queryUrl already exists in task list")) {
+				throw e;
+			}
+		}
+		assertEquals(1, TasksUiPlugin.getTaskList().getQueries().size());
+	}
+
+	public void testRepositoryUrlHandles() throws Exception {
+		String taskId = "123";
+		String repositoryUrl = "http://bugs.eclipse.org";
+		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND, repositoryUrl);
+		TasksUiPlugin.getRepositoryManager().addRepository(repository);
+
+		ITask bugTask = new TaskTask("bugzilla", repositoryUrl, taskId);
+		bugTask.setSummary("Summary");
+		assertEquals(repositoryUrl, bugTask.getRepositoryUrl());
+
+		TasksUiPlugin.getTaskList().addTask(bugTask);
+		TaskTestUtil.saveAndReadTasklist();
+
+		ITask readReport = TasksUiPlugin.getTaskList().getTask(repositoryUrl, taskId);
+		assertEquals("Summary", readReport.getSummary());
+		assertEquals(repositoryUrl, readReport.getRepositoryUrl());
+		TasksUiPlugin.getRepositoryManager().removeRepository(repository,
+				TasksUiPlugin.getDefault().getRepositoriesFilePath());
+	}
+
+	public void testDueDateExternalization() throws Exception {
+		AbstractTask task = new LocalTask("1", "task 1");
+		Date dueDate = new Date();
+		task.setDueDate(dueDate);
+		TasksUiPlugin.getTaskList().addTask(task);
+		assertEquals(1, TasksUiPlugin.getTaskList().getAllTasks().size());
+
+		TaskTestUtil.saveAndReadTasklist();
+
+		assertEquals(1, TasksUiPlugin.getTaskList().getAllTasks().size());
+		Collection<ITask> readList = TasksUiPlugin.getTaskList().getDefaultCategory().getChildren();
+		ITask readTask = readList.iterator().next();
+		assertTrue(readTask.getSummary().equals("task 1"));
+		assertTrue(readTask.getDueDate().compareTo(dueDate) == 0);
+	}
+
+	public void testPastReminder() throws InterruptedException {
+		AbstractTask task = new LocalTask("1", "1");
+
+		task.setScheduledForDate(new DateRange(Calendar.getInstance()));
+		Thread.sleep(2000);
+		assertFalse(TasksUiPlugin.getTaskActivityManager().isPastReminder(task));
+
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.MINUTE, 2);
+		task.setScheduledForDate(new DateRange(cal));
+		assertFalse(TasksUiPlugin.getTaskActivityManager().isPastReminder(task));
+
+		Calendar cal1 = Calendar.getInstance();
+		cal1.add(Calendar.MINUTE, -2);
+		task.setScheduledForDate(new DateRange(cal1, cal));
+		assertFalse(TasksUiPlugin.getTaskActivityManager().isPastReminder(task));
+
+		Calendar cal2 = Calendar.getInstance();
+		cal2.add(Calendar.MINUTE, -2);
+		task.setScheduledForDate(new DateRange(cal2));
+		task.setCompletionDate(new Date());
+		assertFalse(TasksUiPlugin.getTaskActivityManager().isPastReminder(task));
+	}
+
+	public void testDates() throws Exception {
+		TaskTestUtil.resetTaskListAndRepositories();
+
+		Date start = Calendar.getInstance().getTime();
+		Date creation = new Date();
+		AbstractTask task = new LocalTask("1", "task 1");
+
+		TasksUiPlugin.getTaskList().addTask(task);
+		assertNull(task.getCreationDate());
+		task.setCreationDate(start);
+		assertEquals(start, task.getCreationDate());
+
+		assertNull(task.getCompletionDate());
+		task.setCompletionDate(creation);
+		assertEquals(creation, task.getCompletionDate());
+
+		assertEquals(1, TasksUiPlugin.getTaskList().getRootElements().size());
+		TasksUiPlugin.getExternalizationManager().requestSave();
+
+		assertNotNull(TasksUiPlugin.getTaskList());
+		assertEquals(1, TasksUiPlugin.getTaskList().getDefaultCategory().getChildren().size());
+
+		Collection<ITask> readList = TasksUiPlugin.getTaskList().getDefaultCategory().getChildren();
+		AbstractTask readTask = (AbstractTask) readList.iterator().next();
+		assertTrue(readTask.getSummary().equals("task 1"));
+
+		assertEquals("should be: " + creation, task.getCreationDate(), readTask.getCreationDate());
+		assertEquals(task.getCompletionDate(), readTask.getCompletionDate());
+		assertEquals(task.getScheduledForDate(), readTask.getScheduledForDate());
+	}
+
+	// Task retention when connector missing upon startup
+	public void testOrphanedTasks() throws Exception {
+		// make some tasks
+		// save them
+		assertEquals(0, TasksUiPlugin.getTaskList().getAllTasks().size());
+		ITask task = new TaskTask(MockRepositoryConnector.REPOSITORY_KIND, "http://bugs", "1");
+		TasksUiPlugin.getTaskList().addTask(task);
+
+		// reload tasklist and check that they persist
+		TaskTestUtil.saveAndReadTasklist();
+		assertEquals(1, TasksUiPlugin.getTaskList().getAllTasks().size());
+
+		// removed/disable externalizers
+		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().removeRepositoryConnector(
+				MockRepositoryConnector.REPOSITORY_KIND);
+
+		// reload tasklist ensure task didn't load
+		TaskTestUtil.saveAndReadTasklist();
+		assertEquals(0, TasksUiPlugin.getTaskList().getAllTasks().size());
+		// Save the task list (tasks with missing connectors should get
+		// persisted)
+		TasksUiPlugin.getExternalizationManager().save(true);
+
+		// re-enable connector
+		TasksUiPlugin.getRepositoryManager().addRepositoryConnector(connector);
+
+		// re-load tasklist
+		TaskTestUtil.saveAndReadTasklist();
+
+		// ensure that task now gets loaded
+		assertEquals(1, TasksUiPlugin.getTaskList().getAllTasks().size());
+		assertNotNull("1", TasksUiPlugin.getTaskList().getTask("http://bugs", "1"));
+	}
+
+	// Query retention when connector missing/fails to load
+	public void testOrphanedQueries() throws Exception {
+		// make a query
+		assertEquals(0, TasksUiPlugin.getTaskList().getQueries().size());
+		RepositoryQuery query = new RepositoryQuery(MockRepositoryConnector.REPOSITORY_KIND, "bugzillaQuery");
+		TasksUiPlugin.getTaskList().addQuery(query);
+		TasksUiPlugin.getExternalizationManager().save(true);
+
+		// reload tasklist and check that they persist
+		TaskTestUtil.saveAndReadTasklist();
+		assertEquals(1, TasksUiPlugin.getTaskList().getQueries().size());
+
+		// removed/disable externalizers
+		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().removeRepositoryConnector(
+				MockRepositoryConnector.REPOSITORY_KIND);
+
+		// reload tasklist ensure query didn't load
+		TaskTestUtil.saveAndReadTasklist();
+		assertEquals(0, TasksUiPlugin.getTaskList().getQueries().size());
+		// Save the task list (queries with missing connectors should get
+		// persisted)
+		TasksUiPlugin.getExternalizationManager().requestSave();
+
+		// re-enable connector
+		TasksUiPlugin.getRepositoryManager().addRepositoryConnector(connector);
+
+		// re-load tasklist
+		TaskTestUtil.saveAndReadTasklist();
+
+		// ensure that query now gets loaded
+		assertEquals(1, TasksUiPlugin.getTaskList().getQueries().size());
 	}
 
 }
