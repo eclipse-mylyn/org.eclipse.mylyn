@@ -50,6 +50,9 @@ public class BugzillaFixture extends TestFixture {
 	public static BugzillaFixture BUGS_3_2 = new BugzillaFixture(BugzillaTestConstants.TEST_BUGZILLA_32_URL, //
 			"3.2.4", "");
 
+	public static BugzillaFixture BUGS_3_2_2 = new BugzillaFixture(BugzillaTestConstants.TEST_BUGZILLA_322_URL, //
+			"3.2.2", "");
+
 	public static BugzillaFixture BUGS_3_2_3 = new BugzillaFixture(BugzillaTestConstants.TEST_BUGZILLA_323_URL, //
 			"3.2.3", "");
 
@@ -58,8 +61,8 @@ public class BugzillaFixture extends TestFixture {
 
 	public static BugzillaFixture DEFAULT = BUGS_3_4;
 
-	public static final BugzillaFixture[] ALL = new BugzillaFixture[] { BUGS_2_18, BUGS_2_20, BUGS_2_22, BUGS_3_2,
-			BUGS_3_2_3, BUGS_3_4 };
+	public static final BugzillaFixture[] ALL = new BugzillaFixture[] { BUGS_2_18, BUGS_2_20, BUGS_2_22, BUGS_3_0,
+			BUGS_3_2_2, BUGS_3_2_3, BUGS_3_2, BUGS_3_4 };
 
 	private final String version;
 

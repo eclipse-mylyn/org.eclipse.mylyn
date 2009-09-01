@@ -10,7 +10,7 @@
  *     Tasktop Technologies - improvements
  *******************************************************************************/
 
-package org.eclipse.mylyn.bugzilla.tests.client;
+package org.eclipse.mylyn.bugzilla.tests.core;
 
 import java.io.File;
 import java.io.FileInputStream;

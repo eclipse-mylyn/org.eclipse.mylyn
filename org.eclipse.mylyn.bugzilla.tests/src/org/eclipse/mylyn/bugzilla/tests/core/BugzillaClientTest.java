@@ -9,7 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.bugzilla.tests.client;
+package org.eclipse.mylyn.bugzilla.tests.core;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;

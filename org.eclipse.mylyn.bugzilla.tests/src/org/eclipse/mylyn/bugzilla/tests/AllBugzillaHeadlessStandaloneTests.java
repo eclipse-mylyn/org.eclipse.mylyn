@@ -14,10 +14,10 @@ package org.eclipse.mylyn.bugzilla.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.mylyn.bugzilla.tests.client.BugzillaClientTest;
-import org.eclipse.mylyn.bugzilla.tests.client.BugzillaTaskHistoryTest;
+import org.eclipse.mylyn.bugzilla.tests.core.BugzillaClientTest;
 import org.eclipse.mylyn.bugzilla.tests.core.BugzillaConfigurationTest;
 import org.eclipse.mylyn.bugzilla.tests.core.BugzillaRepositoryConnectorStandaloneTest;
+import org.eclipse.mylyn.bugzilla.tests.core.BugzillaTaskHistoryTest;
 import org.eclipse.mylyn.bugzilla.tests.core.BugzillaVersionTest;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 
