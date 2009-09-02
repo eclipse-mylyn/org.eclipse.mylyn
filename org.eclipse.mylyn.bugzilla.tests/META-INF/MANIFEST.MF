@@ -29,7 +29,6 @@ Require-Bundle: org.eclipse.ui,
 Bundle-Vendor: Eclipse Mylyn
 Bundle-ClassPath: bugzilla-test.jar
 Export-Package: org.eclipse.mylyn.bugzilla.tests;x-internal:=true,
- org.eclipse.mylyn.bugzilla.tests.client;x-internal:=true,
  org.eclipse.mylyn.bugzilla.tests.core;x-internal:=true,
  org.eclipse.mylyn.bugzilla.tests.support;x-internal:=true,
  org.eclipse.mylyn.bugzilla.tests.ui;x-internal:=true
