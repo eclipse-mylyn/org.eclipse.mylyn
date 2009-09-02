@@ -12,11 +12,15 @@
 
 package org.eclipse.mylyn.internal.java.ui.editor;
 
+import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jdt.core.CompletionContext;
 import org.eclipse.jdt.core.CompletionProposal;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.text.JavaHeuristicScanner;
@@ -26,6 +30,8 @@ import org.eclipse.jdt.ui.text.java.CompletionProposalCollector;
 import org.eclipse.jdt.ui.text.java.ContentAssistInvocationContext;
 import org.eclipse.jdt.ui.text.java.JavaContentAssistInvocationContext;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.java.ui.JavaUiBridgePlugin;
 import org.eclipse.mylyn.internal.java.ui.JavaUiUtil;
 
 /**
@@ -49,6 +55,18 @@ public class FocusedJavaAllProposalComputer extends JavaCompletionProposalComput
 	// TODO e3.5 replace by CompletionProposal.ANONYMOUS_CLASS_CONSTRUCTOR_INVOCATION
 	public static final int ANONYMOUS_CLASS_CONSTRUCTOR_INVOCATION = 27;
 
+	private static Field field;
+	static {
+		try {
+			field = JavaContentAssistInvocationContext.class.getDeclaredField("fCoreContext"); //$NON-NLS-1$
+			field.setAccessible(true);
+		} catch (Exception e) {
+			// ignore
+		}
+	}
+
+	private boolean coreContextExceptionLogged;
+
 	public FocusedJavaAllProposalComputer() {
 		FocusedJavaProposalProcessor.getDefault().addMonitoredComputer(this);
 	}
@@ -57,6 +75,24 @@ public class FocusedJavaAllProposalComputer extends JavaCompletionProposalComput
 	@Override
 	public List computeCompletionProposals(ContentAssistInvocationContext context, IProgressMonitor monitor) {
 		if (shouldReturnResults()) {
+			// TODO e3.6 remove code below (work-around for bug 271252)
+			if (field != null) {
+				try {
+					CompletionContext coreContext = (CompletionContext) field.get(context);
+					if (coreContext != null && !coreContext.isExtended()) {
+						// trigger re-computation of coreContext to ensure that coreContext is extended
+						field.set(context, null);
+					}
+				} catch (Exception e) {
+					if (!coreContextExceptionLogged) {
+						coreContextExceptionLogged = true;
+						StatusHandler.log(new Status(
+								IStatus.WARNING,
+								JavaUiBridgePlugin.ID_PLUGIN,
+								"An error was encountered while computing Task-Focused content assist. To recover use Restore Defaults in Preferences > Java > Editor > Content Assist > Advanced.", e)); //$NON-NLS-1$
+					}
+				}
+			}
 			List proposals = super.computeCompletionProposals(context, monitor);
 			return FocusedJavaProposalProcessor.getDefault().projectInterestModel(this, proposals);
 		} else {
