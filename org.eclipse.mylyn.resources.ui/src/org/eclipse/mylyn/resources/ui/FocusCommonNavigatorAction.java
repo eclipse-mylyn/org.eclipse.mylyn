@@ -35,6 +35,7 @@ import org.eclipse.mylyn.context.ui.AbstractAutoFocusViewAction;
 import org.eclipse.mylyn.context.ui.InterestFilter;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
@@ -152,13 +153,20 @@ public abstract class FocusCommonNavigatorAction extends AbstractAutoFocusViewAc
 	}
 
 	@Override
-	protected void select(StructuredViewer viewer, ISelection toSelect) {
-		if (commonNavigator == null) {
-			commonNavigator = (CommonNavigator) super.getPartForAction();
-		}
-		if (commonNavigator != null) {
-			commonNavigator.selectReveal(toSelect);
-		}
+	protected void select(StructuredViewer viewer, final ISelection toSelect) {
+		// We need to delay the setting of the selection until after the selection event is processed
+		// 288416: unable to open a C element when focus is enabled
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=288416
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				if (commonNavigator == null) {
+					commonNavigator = (CommonNavigator) FocusCommonNavigatorAction.super.getPartForAction();
+				}
+				if (commonNavigator != null) {
+					commonNavigator.selectReveal(toSelect);
+				}
+			}
+		});
 	}
 
 	// TODO: should have better way of doing this
