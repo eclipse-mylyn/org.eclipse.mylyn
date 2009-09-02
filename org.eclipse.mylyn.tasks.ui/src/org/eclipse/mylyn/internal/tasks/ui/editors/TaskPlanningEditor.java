@@ -36,7 +36,6 @@ import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.actions.DeleteTaskEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewSubTaskAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -229,8 +228,6 @@ public class TaskPlanningEditor extends TaskFormPage {
 		ITask task = taskEditorInput.getTask();
 		if (task instanceof LocalTask
 				&& task.getAttribute(ITasksCoreConstants.ATTRIBUTE_OUTGOING_NEW_CONNECTOR_KIND) == null) {
-			DeleteTaskEditorAction deleteAction = new DeleteTaskEditorAction(taskEditorInput.getTask());
-			toolBarManager.add(deleteAction);
 
 			NewSubTaskAction newSubTaskAction = new NewSubTaskAction();
 			newSubTaskAction.selectionChanged(newSubTaskAction, new StructuredSelection(task));

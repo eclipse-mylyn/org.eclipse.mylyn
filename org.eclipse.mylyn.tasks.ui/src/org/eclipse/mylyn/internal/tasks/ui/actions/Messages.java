@@ -75,31 +75,39 @@ public class Messages extends NLS {
 
 	public static String CopyTaskDetailsAction_Url_Menu_Label;
 
-	public static String DeleteAction_Confirm_Delete;
+	public static String DeleteAction_Also_delete_from_repository_X;
+
+	public static String DeleteAction_Delete_Tasks;
 
 	public static String DeleteAction_Delete;
 
 	public static String DeleteAction_Delete_all_of_the_unsubmitted_tasks;
 
-	public static String DeleteAction_Delete_the_elements_listed_below;
+	public static String DeleteAction_Delete_elements_from_task_list_context_planning_deleted;
 
 	public static String DeleteAction_Delete_failed;
 
 	public static String DeleteAction_Delete_in_progress;
 
-	public static String DeleteAction_Delete_the_planning_information_and_context_for_the_repository_task;
+	public static String DeleteAction_Delete_task_from_task_list_context_planning_deleted;
+
+	public static String DeleteAction_Delete_tasks_from_task_list_context_planning_deleted;
 
 	public static String DeleteAction_Delete_the_planning_information_and_context_of_all_unmatched_tasks;
 
+	public static String DeleteAction_Deleting_tasks_from_repositories;
+
+	public static String DeleteAction_Not_supported;
+
 	public static String DeleteAction_Nothing_selected;
+
+	public static String DeleteAction_Permanently_delete_from_task_list;
 
 	public static String DeleteAction_Permanently_delete_the_category;
 
 	public static String DeleteAction_Permanently_delete_the_element_listed_below;
 
 	public static String DeleteAction_Permanently_delete_the_query;
-
-	public static String DeleteAction_Permanently_delete_the_task_listed_below;
 
 	public static String DeleteTaskRepositoryAction_Confirm_Delete;
 

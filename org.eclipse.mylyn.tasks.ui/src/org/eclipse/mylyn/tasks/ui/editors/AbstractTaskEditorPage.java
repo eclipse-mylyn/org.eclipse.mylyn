@@ -903,6 +903,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 		} else {
 			if (taskData.isNew()) {
 				DeleteTaskEditorAction deleteAction = new DeleteTaskEditorAction(getTask());
+				deleteAction.setImageDescriptor(CommonImages.CLEAR);
 				toolBarManager.appendToGroup("new", deleteAction); //$NON-NLS-1$
 			} else if (taskRepository != null) {
 				ClearOutgoingAction clearOutgoingAction = new ClearOutgoingAction(

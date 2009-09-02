@@ -21,8 +21,6 @@ import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.commons.core.DelegatingProgressMonitor;
-import org.eclipse.mylyn.commons.core.IDelegatingProgressMonitor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
@@ -39,16 +37,10 @@ public abstract class SubmitJob extends TaskJob {
 	private final List<SubmitJobListener> submitJobListeners = Collections.synchronizedList(new ArrayList<SubmitJobListener>());
 
 	/**
-	 * @since 3.2
-	 */
-	protected final IDelegatingProgressMonitor monitor;
-
-	/**
 	 * @since 3.0
 	 */
 	public SubmitJob(String name) {
 		super(name);
-		this.monitor = new DelegatingProgressMonitor();
 	}
 
 	/**
@@ -131,12 +123,5 @@ public abstract class SubmitJob extends TaskJob {
 	 * @since 3.2
 	 */
 	public abstract RepositoryResponse getResponse();
-
-	/**
-	 * @since 3.2
-	 */
-	public IDelegatingProgressMonitor getMonitor() {
-		return monitor;
-	}
 
 }

@@ -13,6 +13,8 @@ package org.eclipse.mylyn.tasks.core.sync;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.mylyn.commons.core.DelegatingProgressMonitor;
+import org.eclipse.mylyn.commons.core.IDelegatingProgressMonitor;
 
 /**
  * @author Steffen Pingel
@@ -20,12 +22,17 @@ import org.eclipse.core.runtime.jobs.Job;
  * @noextend This class is not intended to be subclassed by clients.
  */
 public abstract class TaskJob extends Job {
+	/**
+	 * @since 3.3
+	 */
+	protected final IDelegatingProgressMonitor monitor;
 
 	/**
 	 * @since 3.0
 	 */
 	public TaskJob(String name) {
 		super(name);
+		this.monitor = new DelegatingProgressMonitor();
 	}
 
 	/**
@@ -33,4 +40,10 @@ public abstract class TaskJob extends Job {
 	 */
 	public abstract IStatus getStatus();
 
+	/**
+	 * @since 3.3
+	 */
+	public IDelegatingProgressMonitor getMonitor() {
+		return monitor;
+	}
 }
