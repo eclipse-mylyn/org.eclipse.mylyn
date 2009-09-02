@@ -16,6 +16,7 @@ import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.jira.tests.AllJiraTests;
 import org.eclipse.mylyn.trac.tests.AllTracTests;
+import org.eclipse.mylyn.xplanner.tests.AllXPlannerTests;
 
 /**
  * @author Shawn Minto
@@ -28,7 +29,7 @@ public class AllConnectorTests {
 		// FIXME re-enable suite.addTest(AllBugzillaTests.suite());
 		suite.addTest(AllJiraTests.suite());
 		suite.addTest(AllTracTests.suite());
-		// FIXME re-enable suite.addTest(AllXPlannerTests.suite());
+		suite.addTest(AllXPlannerTests.suite());
 		return suite;
 	}
 }
