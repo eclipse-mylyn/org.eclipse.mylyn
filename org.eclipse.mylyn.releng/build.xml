@@ -378,4 +378,25 @@
 		</jar>
 	</target>
 
+	<target name="mirror" unless="mirror.exists">
+		<antcall target="ant-helper">
+			<param name="buildfile" value="${basedir}/build.xml"/>
+			<param name="targets" value="mirror-p2"/>
+			<param name="extraArgs" value="-Dlocation=file://${build.home}/mirror-p2"/>
+		</antcall>
+	</target>
+
+	<target name="mirror-p2">
+		<!-- P2 fails with OOM if directory already exists: bug 280147 -->
+		<!--<delete dir="${location}" failonerror="false"/>-->
+		<p2.mirror verbose="true">
+			<repository location="${location}" name="Mirror" />
+			<iu id="dependencies.test.feature.group" />
+			<source>
+					<repository location="file://${build.home}/update" />
+					<repository location="${swtbot.site.3.5}" />
+			</source>
+		</p2.mirror>
+	</target>
+	
 </project>
