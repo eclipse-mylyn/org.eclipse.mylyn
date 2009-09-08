@@ -59,6 +59,7 @@
 	           windowtitle="Mylyn WikiText API Reference">
 		    <fileset dir=".." defaultexcludes="yes">
 		    	<include name="org.eclipse.mylyn.wikitext*/src/org/eclipse/mylyn/**/*.java"/>
+		    	<include name="org.eclipse.mylyn.wikitext*/src_ant/org/eclipse/mylyn/**/*.java"/>
 				<exclude name="org.eclipse.mylyn.wikitext*.tests/**"/>
 				<exclude name="**/internal/**"/>
 		    </fileset>

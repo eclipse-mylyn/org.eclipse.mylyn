@@ -25,5 +25,33 @@
             priority="normal">
       </content-type>
    </extension>   
+   	 <extension
+       point="org.eclipse.ant.core.antTasks">
+    	<antTask
+          class="org.eclipse.mylyn.wikitext.core.util.anttask.MarkupToEclipseHelpTask"
+          library="lib/wikitext-ant.jar"
+          name="wikitext-to-eclipse-help">
+    	</antTask>
+    	<antTask
+          class="org.eclipse.mylyn.wikitext.core.util.anttask.MarkupToHtmlTask"
+          library="lib/wikitext-ant.jar"
+          name="wikitext-to-html">
+    	</antTask>
+    	<antTask
+          class="org.eclipse.mylyn.wikitext.core.util.anttask.MarkupToDocbookTask"
+          library="lib/wikitext-ant.jar"
+          name="wikitext-to-docbook">
+    	</antTask> 
+    	<antTask
+          class="org.eclipse.mylyn.wikitext.core.util.anttask.MarkupToDitaTask"
+          library="lib/wikitext-ant.jar"
+          name="wikitext-to-dita">
+    	</antTask>
+    	<antTask
+          class="org.eclipse.mylyn.wikitext.core.util.anttask.MarkupToXslfoTask"
+          library="lib/wikitext-ant.jar"
+          name="wikitext-to-xslfo">
+    	</antTask>   	    	
+    </extension>
    
 </plugin>
