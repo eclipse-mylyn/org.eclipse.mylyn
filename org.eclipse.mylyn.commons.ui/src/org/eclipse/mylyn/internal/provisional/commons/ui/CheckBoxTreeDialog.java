@@ -63,8 +63,7 @@ public class CheckBoxTreeDialog extends Dialog {
 
 	}
 
-	public CheckBoxTreeDialog(Shell shell, List<String> values, Map<String, String> validValues,
-			String dialogLabel) {
+	public CheckBoxTreeDialog(Shell shell, List<String> values, Map<String, String> validValues, String dialogLabel) {
 		super(shell);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 		this.selectedValues = values;
@@ -133,6 +132,15 @@ public class CheckBoxTreeDialog extends Dialog {
 			viewer.setInput(validValues);
 
 			Set<String> invalidValues = new HashSet<String>();
+
+			// Remove any currently entered invalid values
+			for (String value : selectedValues) {
+				if (!validValues.containsKey(value)) {
+					invalidValues.add(value);
+				}
+			}
+
+			// Remove any unselected values
 			for (String value : validValues.keySet()) {
 				if (!viewer.setChecked(value, true)) {
 					invalidValues.add(value);
