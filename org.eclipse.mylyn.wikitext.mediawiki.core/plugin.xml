@@ -45,4 +45,18 @@
 		      class="org.eclipse.mylyn.internal.wikitext.mediawiki.core.validation.MediaWikiReferenceValidationRule"
 		      markupLanguage="MediaWiki"/>
 	 </extension>
+	 <extension
+       point="org.eclipse.ant.core.antTasks">
+    	<antTask
+          class="org.eclipse.mylyn.internal.wikitext.mediawiki.core.tasks.MediaWikiImageFetcher"
+          library="lib/mediawiki-ant.jar"
+          name="mediawiki-fetch-images">
+    	</antTask>
+    </extension>
+  <extension
+        point="org.eclipse.ant.core.extraClasspathEntries">
+     <extraClasspathEntry
+           library="lib/mediawiki-ant.jar">
+     </extraClasspathEntry>
+  </extension>
 </plugin>

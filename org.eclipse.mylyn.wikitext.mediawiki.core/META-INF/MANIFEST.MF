@@ -10,6 +10,7 @@ Require-Bundle: org.eclipse.mylyn.wikitext.core;bundle-version="[1.2.0,1.3.0)",
 Export-Package: org.eclipse.mylyn.internal.wikitext.mediawiki.core;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.mediawiki.core.block;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.mediawiki.core.phrase;x-internal:=true,
+ org.eclipse.mylyn.internal.wikitext.mediawiki.core.tasks;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.mediawiki.core.token;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.mediawiki.core.validation;x-internal:=true,
  org.eclipse.mylyn.wikitext.mediawiki.core
