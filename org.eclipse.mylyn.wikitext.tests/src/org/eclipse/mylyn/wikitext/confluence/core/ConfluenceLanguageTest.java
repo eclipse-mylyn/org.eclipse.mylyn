@@ -21,8 +21,6 @@ import org.eclipse.mylyn.wikitext.core.parser.builder.DocBookDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class ConfluenceLanguageTest extends TestCase {
@@ -167,6 +165,27 @@ public class ConfluenceLanguageTest extends TestCase {
 		assertTrue(html.contains("hr <hr/> foo"));
 	}
 
+	/**
+	 * line starts with a horizontal rule, which is important since it is very similar to a level-4 list case.
+	 */
+	public void testHorizontalRule2() {
+		String html = parser.parseToHtml("---- an hr foo");
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<hr/> an hr foo"));
+	}
+
+	public void testHorizontalRule3() {
+		String html = parser.parseToHtml("an hr foo ----");
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("an hr foo <hr/>"));
+	}
+
+	public void testHorizontalRule4() {
+		String html = parser.parseToHtml("text\n----\nmore text");
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<hr/>"));
+	}
+
 	public void testHyperlink() {
 		String html = parser.parseToHtml("a [http://example.com] hyperlink");
 		System.out.println("HTML: \n" + html);
@@ -281,6 +300,17 @@ public class ConfluenceLanguageTest extends TestCase {
 
 		System.out.println("HTML: \n" + html);
 		assertTrue(html.contains("<ol><li>a list<ul><li>nested</li><li>nested2</li></ul></li><li>level1</li></ol>"));
+	}
+
+	/**
+	 * test scenario where we have a level-4 nested list, which happens to start with the same pattern as a horizontal
+	 * rule. We want to match as a list in this case.
+	 */
+	public void testListWithHrPattern() throws IOException {
+		String html = parser.parseToHtml("- first\n-- second\n--- third\n---- fourth");
+
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<ul style=\"list-style: square\"><li>first<ul><li>second<ul><li>third<ul><li>fourth</li></ul></li></ul></li></ul></li></ul>"));
 	}
 
 	public void testImage() {

@@ -130,7 +130,18 @@ public class ListBlock extends Block {
 		listState = null;
 		if (lineOffset == 0) {
 			matcher = startPattern.matcher(line);
-			return matcher.matches();
+			final boolean matches = matcher.matches();
+			if (matches) {
+				String listSpec = matcher.group(1);
+				if (listSpec.charAt(0) == '-') {
+					int level = calculateLevel(listSpec);
+					if (level == 4) {
+						// don't match hr
+						return false;
+					}
+				}
+			}
+			return matches;
 		} else {
 			matcher = null;
 			return false;

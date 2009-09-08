@@ -133,7 +133,7 @@ public class ConfluenceLanguage extends AbstractMarkupLanguage {
 		tokenSyntax.add(new HyperlinkReplacementToken());
 		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\w\\s)(---)(?=\\s\\w))", "#8212")); // emdash //$NON-NLS-1$ //$NON-NLS-2$
 		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\w\\s)(--)(?=\\s\\w))", "#8211")); // endash //$NON-NLS-1$ //$NON-NLS-2$
-		tokenSyntax.add(new PatternLiteralReplacementToken("(?:(?<=\\w\\s)(----)(?=\\s\\w))", "<hr/>")); // horizontal rule //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new PatternLiteralReplacementToken("(----)", "<hr/>")); // horizontal rule //$NON-NLS-1$ //$NON-NLS-2$
 		tokenSyntax.add(new PatternLineBreakReplacementToken("(\\\\\\\\)")); // line break //$NON-NLS-1$
 		tokenSyntax.add(new ImpliedHyperlinkReplacementToken());
 		tokenSyntax.add(new AnchorReplacementToken());
