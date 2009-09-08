@@ -291,7 +291,9 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 			createAttribute(data, client, TracAttribute.TIME);
 			createAttribute(data, client, TracAttribute.CHANGE_TIME);
 			createAttribute(data, client, TracAttribute.STATUS);
-			createAttribute(data, client, TracAttribute.RESOLUTION);
+			TaskAttribute attribute = createAttribute(data, client, TracAttribute.RESOLUTION);
+			// reset default value to avoid "fixed" resolution on tasks created through web 
+			attribute.setValue(""); //$NON-NLS-1$
 		}
 		createAttribute(data, client, TracAttribute.COMPONENT);
 		createAttribute(data, client, TracAttribute.VERSION);

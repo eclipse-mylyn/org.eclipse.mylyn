@@ -338,6 +338,7 @@ public class TracTaskDataHandlerXmlRpcTest extends TestCase {
 		taskDataHandler.initializeTaskData(repository, taskData, mapping, new NullProgressMonitor());
 		// initializeTaskData() should ignore the initialization data 
 		TaskMapper mapper = new TracTaskMapper(taskData, null);
+		assertEquals(null, mapper.getResolution());
 		assertEquals("", mapper.getSummary());
 		assertEquals("", mapper.getDescription());
 		// check for default values
