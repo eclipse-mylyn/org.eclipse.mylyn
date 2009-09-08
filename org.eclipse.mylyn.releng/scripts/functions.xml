@@ -249,7 +249,7 @@
 					output="${log}">
 				<!-- Uncomment to debug <jvmarg value="-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=y"/> -->
 			    <jvmarg line="@{vmargs} @{extravmargs}"/>
-		   		<arg value="-clean"/>
+		   		<!-- <arg value="-clean"/> -->
 			    <arg value="-application"/>
 		   		<arg value="@{application}"/>
 				<arg value="-consolelog"/>
@@ -281,9 +281,8 @@
 	</macrodef>
 
 	<macrodef name="install-feature-into-base">
-		<attribute name="activity"/>
 		<attribute name="featureId"/>
-		<attribute name="updateSite" default="file:${build.home}/update-${activity},file:${build.home}/mirror-${base.target}"/>
+		<attribute name="updateSite" default="file:${build.home}/update"/>
 		<sequential>
 			<antcall target="install-bundle">
 				<param name="featureId" value="@{featureId}" />
@@ -417,10 +416,10 @@
 			<param name="version" value="1.0.0.${qualifier}"/>
 			<param name="featureDir" value="${basedir}/config/build-dependencies"/>
 		</antcall>
-		<install-feature-into-base featureId="dependencies.build" activity="build"/>
+		<install-feature-into-base featureId="dependencies.build"/>
 	</target>
 
-	<target name="build-helper" depends="build-helper-init,mirror-dependencies,install-build-dependencies,pre-build">
+	<target name="build-helper" depends="build-helper-init,install-build-dependencies,pre-build">
 		<init-basebuilder/>
     	<path id="pde.build.script.id"> 
     		<fileset dir="${base.builder.home}/eclipse/plugins">
@@ -712,28 +711,36 @@
 		<fail message="Require property 'base.home' is not set" unless="base.home"/>
 		<property file="${base.home}/eclipse/configuration/config.ini" prefix="base.config"/>
 		
-		<echo message="Uninstalling ${featureId}"/>
+		<echo message="Installing ${featureId}"/>
 		<exec-eclipse activity="install-bundle" application="org.eclipse.equinox.p2.director"
 			 extravmargs="-Declipse.p2.data.area=${base.home}/eclipse/p2 -Declipse.p2.MD5Check=false" failonerror="false">
+    		<arg value="-metadataRepository"/>
+    		<arg value="${updateSite},${base.sites}"/>
+    		<arg value="-artifactRepository"/>
+    		<arg value="${updateSite},${base.sites}"/>
+			<arg value="-roaming"/>
 			<arg value="-uninstallIU"/>
 			<arg value="${featureId}.feature.group"/>
 			<arg value="-profile"/>
 			<arg value="${base.config.eclipse.p2.profile}"/>
+			<arg value="-profileProperties"/> 
+			<arg value="org.eclipse.update.install.features=true"/>
 			<arg value="-destination"/>
 			<arg value="${base.home}/eclipse"/>
 		</exec-eclipse>
-		
-		<echo message="Installing ${featureId}"/>
 		<exec-eclipse activity="install-bundle" application="org.eclipse.equinox.p2.director"
 			 extravmargs="-Declipse.p2.data.area=${base.home}/eclipse/p2 -Declipse.p2.MD5Check=false">
     		<arg value="-metadataRepository"/>
     		<arg value="${updateSite},${base.sites}"/>
     		<arg value="-artifactRepository"/>
     		<arg value="${updateSite},${base.sites}"/>
+			<arg value="-roaming"/>
 			<arg value="-installIU"/>
 			<arg value="${featureId}.feature.group"/>
 			<arg value="-profile"/>
 			<arg value="${base.config.eclipse.p2.profile}"/>
+			<arg value="-profileProperties"/> 
+			<arg value="org.eclipse.update.install.features=true"/>
 			<arg value="-destination"/>
 			<arg value="${base.home}/eclipse"/>
 		</exec-eclipse>
@@ -948,28 +955,6 @@
 		</exec-eclipse>
     </target>
 
-	<target name="mirror-dependencies" unless="mirror.exists">
-		<antcall target="ant-helper">
-			<param name="buildfile" value="${ant.file.functions}"/>
-			<param name="targets" value="mirror-dependencies-helper"/>
-			<param name="extraArgs" value="-Dlocation=file://${build.home}/mirror-p2"/>
-		</antcall>
-	</target>
-
-	<target name="mirror-dependencies-location">
-		<!-- P2 fails with OOM if directory already exists: bug 280147 -->
-		<!--<delete dir="${location}" failonerror="false"/>-->
-		<p2.mirror verbose="true">
-			<repository location="${location}" name="Mirror" />
-			<iu id="dependencies.test.feature.group" />
-			<slicingoptions includeFeatures="false"/>
-			<source>
-					<repository location="file://${build.home}/update" />
-					<repository location="${swtbot.site.3.5}" />
-			</source>
-		</p2.mirror>
-	</target>
-	
 	<target name="mirror-helper">
 		<fail unless="from">required parameter missing: from</fail>
 		<fail unless="to">required parameter missing: to</fail>
