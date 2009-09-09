@@ -42,7 +42,7 @@
   <!-- after all the tests have been run should go here. -->
   <target name="eclipse" depends="init,suite,cleanup">
     <ant target="collect" antfile="${library-file}" dir="${eclipse-home}">
-      <property name="includes" value="*.xml"/>
+      <property name="includes" value="*test*.xml"/>
       <property name="output-file" value="${plugin-name}.xml"/>
     </ant>
   </target>
@@ -62,7 +62,7 @@
   <!-- This target runs the performance test suites. -->
   <target name="performance" depends="init,performance-suite,cleanup">
     <ant target="collect" antfile="${library-file}" dir="${eclipse-home}">
-      <property name="includes" value="*.xml"/>
+      <property name="includes" value="*test*.xml"/>
       <property name="output-file" value="${plugin-name}.xml"/>
     </ant>
   </target>
@@ -84,7 +84,7 @@
   <!-- This target runs the swtbot test suites. -->
   <target name="swtbot" depends="init,swtbot-suite,cleanup">
     <ant target="collect" antfile="${library-file}" dir="${eclipse-home}">
-      <property name="includes" value="*.xml"/>
+      <property name="includes" value="*test*.xml"/>
       <property name="output-file" value="${plugin-name}.xml"/>
     </ant>
   </target>		
