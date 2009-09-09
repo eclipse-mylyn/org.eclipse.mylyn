@@ -602,8 +602,10 @@
 		<copy todir="${build.results}/test-${base.target}">
 			<fileset dir="${base.home}/eclipse/results"/>
 		</copy>
-		<copy todir="${build.results}/test-${base.target}" failonerror="false">
-			<dirset dir="${base.home}/eclipse/screenshots"/>
+		<copy todir="${build.results}/test-${base.target}">
+			<dirset dir="${base.home}/eclipse">
+				<include name="screenshots"/>
+			</dirset>
 		</copy>
 		
 		<antcall target="post-tests"/>
