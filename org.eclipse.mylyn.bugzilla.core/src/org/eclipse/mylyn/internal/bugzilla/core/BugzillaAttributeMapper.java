@@ -83,7 +83,7 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 	/**
 	 * Note: Date formatters constructed within method for thread safety
 	 */
-	private Date getDate(String attributeId, String dateString) {
+	protected Date getDate(String attributeId, String dateString) {
 		Date parsedDate = null;
 
 		/**

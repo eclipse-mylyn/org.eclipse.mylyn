@@ -66,7 +66,11 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	private static final String COMMENT_FORMAT = "yyyy-MM-dd HH:mm"; //$NON-NLS-1$
 
-	private static final String DEADLINE_FORMAT = "yyyy-MM-dd"; //$NON-NLS-1$
+	//private static final String DEADLINE_FORMAT = "yyyy-MM-dd"; //$NON-NLS-1$
+
+	private static final String TIMESTAMP_WITH_OFFSET = "yyyy-MM-dd HH:mm:ss Z"; //$NON-NLS-1$
+
+	private static final long HOUR = 1000 * 60 * 60;
 
 	private final BugzillaTaskAttachmentHandler attachmentHandler = new BugzillaTaskAttachmentHandler(this);
 
@@ -76,7 +80,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	protected static BugzillaLanguageSettings enSetting;
 
-	protected final static Set<BugzillaLanguageSettings> languages = new LinkedHashSet<BugzillaLanguageSettings>();
+	protected static final Set<BugzillaLanguageSettings> languages = new LinkedHashSet<BugzillaLanguageSettings>();
 
 	@Override
 	public String getLabel() {
@@ -312,7 +316,12 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			if (resultCollector instanceof BugzillaTaskDataCollector) {
 				BugzillaTaskDataCollector bCollector = (BugzillaTaskDataCollector) resultCollector;
 				if (bCollector.getQueryTimestamp() != null) {
-					event.setData(bCollector.getQueryTimestamp());
+					Date queryDate = ((BugzillaAttributeMapper) mapper).getDate(BugzillaAttribute.DELTA_TS.getKey(),
+							bCollector.getQueryTimestamp());
+					if (queryDate != null) {
+						// Ensure time is in right format
+						event.setData(new SimpleDateFormat(TIMESTAMP_WITH_OFFSET).format(queryDate));
+					}
 				}
 			}
 
@@ -488,13 +497,57 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 		String lastKnownMod = task.getAttribute(BugzillaAttribute.DELTA_TS.getKey());
 		if (lastKnownMod != null) {
-			TaskAttribute attrModification = taskData.getRoot().getMappedAttribute(TaskAttribute.DATE_MODIFICATION);
-			if (attrModification != null) {
-				return !lastKnownMod.equals(attrModification.getValue());
-			}
 
+			TaskAttribute attrModification = taskData.getRoot().getMappedAttribute(TaskAttribute.DATE_MODIFICATION);
+			if (attrModification != null && attrModification.getValue() != null
+					&& attrModification.getValue().length() > 0) {
+
+				boolean cachedHasTZ = hasTimzone(lastKnownMod);
+				boolean repoHasTZ = hasTimzone(attrModification.getValue());
+				if (!cachedHasTZ && !repoHasTZ) { // State 1
+					return !lastKnownMod.equals(attrModification.getValue());
+				}
+
+				BugzillaAttributeMapper mapper = (BugzillaAttributeMapper) taskData.getAttributeMapper();
+				Date oldModDate = mapper.getDate(BugzillaAttribute.DELTA_TS.getKey(), lastKnownMod);
+				Date newModDate = mapper.getDateValue(attrModification);
+
+				// If either of the dates can't be parsed, fall back to string comparison
+				if (oldModDate == null) {
+					((AbstractTask) task).setStatus(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+							"Unable to parse cached task modification timestamp " + lastKnownMod)); //$NON-NLS-1$
+					return !lastKnownMod.equals(attrModification.getValue());
+				} else if (newModDate == null) {
+					((AbstractTask) task).setStatus(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+							"Unable to parse incoming task modification timestamp " + attrModification.getValue())); //$NON-NLS-1$
+					return !lastKnownMod.equals(attrModification.getValue());
+				}
+
+				if ((cachedHasTZ && !repoHasTZ) || (!cachedHasTZ && repoHasTZ)) { // State 2 (unlikely) || Sate 3
+					long delta = Math.abs(newModDate.getTime() - oldModDate.getTime());
+					if (delta == 0) {
+						return false;
+					} else if (delta > 0 && delta % HOUR == 0 && delta < 24 * HOUR) {
+						// If same time but in different time zones, ignore/migrate
+						return false;
+					}
+					return true;
+				} else if (cachedHasTZ && repoHasTZ) { //State 4 (of 4)
+					// Date Compare
+					return oldModDate.compareTo(newModDate) != 0;
+				}
+			}
 		}
 		return true;
+	}
+
+	private boolean hasTimzone(String dateString) {
+		if (dateString == null || dateString.length() == 0) {
+			return false;
+		}
+		String[] parts = dateString.split(" "); //$NON-NLS-1$
+		boolean hasTimeZone = (parts != null && parts.length == 3);
+		return hasTimeZone;
 	}
 
 	@Override

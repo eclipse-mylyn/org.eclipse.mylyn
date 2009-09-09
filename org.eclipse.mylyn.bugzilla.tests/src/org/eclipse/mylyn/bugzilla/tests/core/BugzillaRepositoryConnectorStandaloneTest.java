@@ -23,9 +23,12 @@ import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 
@@ -50,6 +53,81 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 //				IBugzillaConstants.DEFAULT_LANG);
 //		BugzillaRepositoryConnector.addLanguageSetting(language);
 		handler = connector.getTaskDataHandler();
+	}
+
+	public void testHasChanged() {
+		AbstractTask task = new TaskTask(repository.getConnectorKind(), repository.getRepositoryUrl(), "1");
+		task.setAttribute(BugzillaAttribute.DELTA_TS.getKey(), "2008-02-02 12:01:12");
+		TaskData data = new TaskData(connector.getTaskDataHandler().getAttributeMapper(repository),
+				repository.getConnectorKind(), repository.getRepositoryUrl(), "1");
+		TaskAttribute attribute = data.getRoot().createAttribute(BugzillaAttribute.DELTA_TS.getKey());
+
+		// Testing State 1
+
+		// Offline no timezone, repository no timezone, same time
+		attribute.setValue("2008-02-02 12:01:12");
+		assertFalse(connector.hasTaskChanged(repository, task, data));
+
+		// Offline no timezone, repository no timezone, different date
+		attribute.setValue("2008-02-03 12:01:12");
+		assertTrue(connector.hasTaskChanged(repository, task, data));
+
+		// Offline no timezone, repository no timezone, different time
+		attribute.setValue("2008-02-02 12:03:12");
+		assertTrue(connector.hasTaskChanged(repository, task, data));
+
+		// Offline no timezone, repository no timezone, different (older) time
+		attribute.setValue("2008-02-02 12:03:00");
+		assertTrue(connector.hasTaskChanged(repository, task, data));
+
+		// Testing Fuzzy States 2 & 3
+
+		// Offline have timezone, repository no timezone, same time
+		task.setAttribute(BugzillaAttribute.DELTA_TS.getKey(), "2008-02-02 12:01:12 -0700");
+		attribute.setValue("2008-02-02 12:01:12");
+		assertFalse(connector.hasTaskChanged(repository, task, data));
+
+		// Offline have timezone, repository no timezone, different time
+		task.setAttribute(BugzillaAttribute.DELTA_TS.getKey(), "2008-02-02 12:01:12 -0700");
+		attribute.setValue("2008-02-02 12:01:13");
+		assertTrue(connector.hasTaskChanged(repository, task, data));
+
+		// Offline no timezone, repository has timezone
+		task.setAttribute(BugzillaAttribute.DELTA_TS.getKey(), "2008-02-02 12:01:12");
+		attribute.setValue("2008-02-02 12:01:12 -0700");
+		assertFalse(connector.hasTaskChanged(repository, task, data));
+
+		// Offline no timezone, repository has timezone and different time (fuzzy check doesn't pass)
+		attribute.setValue("2008-02-02 12:01:13 -0700");
+		assertTrue(connector.hasTaskChanged(repository, task, data));
+
+		// Test backwards in time
+		task.setAttribute(BugzillaAttribute.DELTA_TS.getKey(), "2008-02-02 12:01:12");
+		attribute.setValue("2008-02-02 12:01:03 -0700");
+		assertTrue(connector.hasTaskChanged(repository, task, data));
+
+		// Testing State 4
+
+		// Same world time, reported wrt different time zones
+		task.setAttribute(BugzillaAttribute.DELTA_TS.getKey(), "2009-09-04 00:00:00 PDT");
+		attribute.setValue("2009-09-04 03:00:00 EDT");
+		assertFalse(connector.hasTaskChanged(repository, task, data));
+
+		// Different times, same time zone
+		task.setAttribute(BugzillaAttribute.DELTA_TS.getKey(), "2009-09-04 12:00:00 PDT");
+		attribute.setValue("2009-09-04 12:00:01 PDT");
+		assertTrue(connector.hasTaskChanged(repository, task, data));
+
+		// Same times, bogus format (string compare)
+		task.setAttribute(BugzillaAttribute.DELTA_TS.getKey(), "2009-09-04 12:00:::01 PDT");
+		attribute.setValue("2009-09-04 12:00:::01 PDT");
+		assertFalse(connector.hasTaskChanged(repository, task, data));
+
+		// Same times, bogus format (string compare)
+		task.setAttribute(BugzillaAttribute.DELTA_TS.getKey(), "2009-09-04X12:00:::01 PDT");
+		attribute.setValue("2009-09-04 12:00:::01 PDT");
+		assertTrue(connector.hasTaskChanged(repository, task, data));
+
 	}
 
 	/**
