@@ -599,11 +599,11 @@
     	    ${build.extraTestArgs}" />
     		<arg value="${test.target}"/>
 		</exec-eclipse>
-		
+
 		<copy todir="${build.results}/test-${base.target}">
 			<fileset dir="${base.home}/eclipse/results"/>
 			<fileset dir="${base.home}/eclipse">
-				<include name="screenshots/**"/>
+				<include name="screenshots/*"/>
 			</fileset>
 		</copy>
 		
