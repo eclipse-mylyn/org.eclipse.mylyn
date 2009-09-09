@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.util;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -19,13 +20,10 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.commons.core.ZipFileUtil;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
@@ -36,9 +34,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
  * 
  * @author Wesley Coelho
  * @author Mik Kersten
- * @author Rob Elves
- * 
- *         TODO: Move into internal.tasks.core
+ * @author Rob Elves TODO: Move into internal.tasks.core
  */
 @SuppressWarnings("restriction")
 public class TaskDataExportOperation implements IRunnableWithProgress {
@@ -58,11 +54,10 @@ public class TaskDataExportOperation implements IRunnableWithProgress {
 		this.destinationDirectory = destinationDirectory;
 	}
 
-	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-
+	public void run(IProgressMonitor monitor) throws InvocationTargetException {
 		monitor = Policy.monitorFor(monitor);
-		Set<File> filesToExport = new HashSet<File>();
 
+		Set<File> filesToExport = new HashSet<File>();
 		selectFiles(filesToExport);
 
 		if (filesToExport.size() > 0 && Platform.isRunning()) {
@@ -71,24 +66,20 @@ public class TaskDataExportOperation implements IRunnableWithProgress {
 
 				Job.getJobManager().beginRule(ITasksCoreConstants.ROOT_SCHEDULING_RULE,
 						new SubProgressMonitor(monitor, 1));
-				File destZipFile = new File(destinationDirectory + File.separator + destinationFilename);
 
-				//TODO: append a (2) to the file?
-				if (destZipFile.exists()) {
-					destZipFile.delete();
-				}
-
-				ZipFileUtil.createZipFile(destZipFile, new ArrayList<File>(filesToExport), TasksUiPlugin.getDefault()
-						.getDataDirectory(), monitor);
-			} catch (Exception e) {
-				StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not perform export", //$NON-NLS-1$
-						e));
+				ZipFileUtil.createZipFile(getDestinationFile(), new ArrayList<File>(filesToExport),
+						TasksUiPlugin.getDefault().getDataDirectory(), monitor);
+			} catch (IOException e) {
+				throw new InvocationTargetException(e);
 			} finally {
-
 				Job.getJobManager().endRule(ITasksCoreConstants.ROOT_SCHEDULING_RULE);
 				monitor.done();
 			}
 		}
+	}
+
+	public File getDestinationFile() {
+		return new File(destinationDirectory + File.separator + destinationFilename);
 	}
 
 	protected void selectFiles(Set<File> filesToExport) {

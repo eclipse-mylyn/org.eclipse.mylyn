@@ -12,9 +12,7 @@
 package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
-import com.ibm.icu.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -38,6 +36,8 @@ import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
+
+import com.ibm.icu.text.SimpleDateFormat;
 
 /**
  * @author Rob Elves
@@ -140,7 +140,8 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 				IProgressService service = PlatformUI.getWorkbench().getProgressService();
 				service.run(false, true, backupJob);
 			}
-		} catch (InvocationTargetException e) {
+		} catch (InterruptedException e) {
+		} catch (Throwable e) {
 			if (!errorDisplayed) {
 				final Status status = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 						Messages.TaskListBackupManager_Error_occured_during_scheduled_tasklist_backup, e);
@@ -158,8 +159,11 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 					});
 				}
 			}
-		} catch (InterruptedException e) {
-			return;
+
+			// clean up corrupt backup file
+			if (backupJob.getDestinationFile() != null) {
+				backupJob.getDestinationFile().delete();
+			}
 		}
 	}
 
