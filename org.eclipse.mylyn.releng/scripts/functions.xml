@@ -64,8 +64,7 @@
 		</antcall>
 	</target>
 
-	<!-- eclipse-tests,swtbot-tests,performance-tests -->
-	<target name="tests" depends="swtbot-tests">
+	<target name="tests" depends="eclipse-tests,swtbot-tests,performance-tests">
 	</target>
 
 	<target name="eclipse-tests" depends="init-tests">
