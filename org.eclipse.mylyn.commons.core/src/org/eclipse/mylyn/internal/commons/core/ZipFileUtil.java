@@ -154,9 +154,6 @@ public class ZipFileUtil {
 	 */
 	public static void createZipFile(File zipFile, List<File> files, String rootPath, IProgressMonitor monitor)
 			throws FileNotFoundException, IOException {
-		if (zipFile.exists()) {
-			zipFile.delete();
-		}
 		if (rootPath == null) {
 			rootPath = ""; //$NON-NLS-1$
 		} else if (!rootPath.endsWith("\\") || !rootPath.endsWith("/")) { //$NON-NLS-1$ //$NON-NLS-2$
@@ -164,9 +161,7 @@ public class ZipFileUtil {
 		}
 
 		ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(zipFile));
-
 		try {
-
 			for (File file : files) {
 				try {
 					addZipEntry(zipOut, rootPath, file);
@@ -178,7 +173,6 @@ public class ZipFileUtil {
 							+ file.getName() + " to zip", e)); //$NON-NLS-1$
 				}
 			}
-
 		} finally {
 			zipOut.close();
 		}
@@ -213,14 +207,17 @@ public class ZipFileUtil {
 				// Transfer bytes from the file to the ZIP file
 				// and compress the files
 				FileInputStream in = new FileInputStream(file);
-				int len;
-				while ((len = in.read(buf)) > 0) {
-					zipOut.write(buf, 0, len);
+				try {
+					int len;
+					while ((len = in.read(buf)) > 0) {
+						zipOut.write(buf, 0, len);
+					}
+				} finally {
+					in.close();
 				}
 
 				// Complete the entry
 				zipOut.closeEntry();
-				in.close();
 			}
 		}
 	}
