@@ -189,7 +189,7 @@
 		</exec>
 	</target>
 	
-	<target name="galileo" depends="clean,build,generate-metadata-all,copy-to-archive">
+	<target name="helios" depends="clean,build,generate-metadata-all,copy-to-archive">
 		<!-- promote unpacked version early for testing -->
 		<antcall target="promote">
 			<param name="todir" value="weekly"/>
@@ -202,18 +202,18 @@
 			<param name="todir" value="weekly"/>
 		</antcall>
 		
-		<echo>Run 'ant promote-galileo' to update the galileo site.</echo>
+		<echo>Run 'ant promote-helios' to update the helios site.</echo>
 		<echo>Ensure that the mylyn.build file is updated at the same time.</echo>
 		<!--
 		<antcall target="promote-main">
-			<param name="todir" value="galileo"/>
+			<param name="todir" value="helios"/>
 		</antcall>
 		-->
 	</target>
 
-	<target name="promote-galileo">
+	<target name="promote-helios">
 		<antcall target="promote-main">
-			<param name="todir" value="galileo"/>
+			<param name="todir" value="helios"/>
 		</antcall>
 	</target>
 
@@ -392,6 +392,7 @@
 		<p2.mirror verbose="true">
 			<repository location="${location}" name="Mirror" />
 			<iu id="dependencies.test.feature.group" />
+			<slicingoptions includeFeatures="false"/>
 			<source>
 					<repository location="file://${build.home}/update" />
 					<repository location="${swtbot.site.3.5}" />

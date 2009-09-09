@@ -602,6 +602,9 @@
 		<copy todir="${build.results}/test-${base.target}">
 			<fileset dir="${base.home}/eclipse/results"/>
 		</copy>
+		<copy todir="${build.results}/test-${base.target}" failonerror="false">
+			<dirset dir="${base.home}/eclipse/screenshots"/>
+		</copy>
 		
 		<antcall target="post-tests"/>
     </target>
@@ -718,13 +721,10 @@
     		<arg value="${updateSite},${base.sites}"/>
     		<arg value="-artifactRepository"/>
     		<arg value="${updateSite},${base.sites}"/>
-			<arg value="-roaming"/>
 			<arg value="-uninstallIU"/>
 			<arg value="${featureId}.feature.group"/>
 			<arg value="-profile"/>
 			<arg value="${base.config.eclipse.p2.profile}"/>
-			<arg value="-profileProperties"/> 
-			<arg value="org.eclipse.update.install.features=true"/>
 			<arg value="-destination"/>
 			<arg value="${base.home}/eclipse"/>
 		</exec-eclipse>
@@ -734,13 +734,10 @@
     		<arg value="${updateSite},${base.sites}"/>
     		<arg value="-artifactRepository"/>
     		<arg value="${updateSite},${base.sites}"/>
-			<arg value="-roaming"/>
 			<arg value="-installIU"/>
 			<arg value="${featureId}.feature.group"/>
 			<arg value="-profile"/>
 			<arg value="${base.config.eclipse.p2.profile}"/>
-			<arg value="-profileProperties"/> 
-			<arg value="org.eclipse.update.install.features=true"/>
 			<arg value="-destination"/>
 			<arg value="${base.home}/eclipse"/>
 		</exec-eclipse>
