@@ -379,31 +379,36 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 	protected void handleTaskSubmitted(SubmitJobEvent event) {
 		if (event.getJob().getResponse() != null && event.getJob().getResponse() instanceof BugzillaRepositoryResponse) {
 			final RepositoryResponse response = event.getJob().getResponse();
-			getTaskEditor().setMessage(Messages.BugzillaTaskEditorPage_Changes_Submitted_Message,
-					IMessageProvider.INFORMATION, new HyperlinkAdapter() {
-						@Override
-						public void linkActivated(HyperlinkEvent event) {
-							String mes = ""; //$NON-NLS-1$
-							if (response instanceof BugzillaRepositoryResponse) {
-								BugzillaRepositoryResponse bugzillaResponse = (BugzillaRepositoryResponse) response;
-								for (String iterable_element : bugzillaResponse.getResponseData().keySet()) {
-									mes += NLS.bind(Messages.BugzillaTaskEditorPage_Changes_Submitted_Action_Line,
-											iterable_element);
-									List<String> o = bugzillaResponse.getResponseData().get(iterable_element);
-									for (String string : o) {
-										mes += NLS.bind(Messages.BugzillaTaskEditorPage_Changes_Submitted_Email_Line,
-												string);
+			if (response instanceof BugzillaRepositoryResponse) {
+				final BugzillaRepositoryResponse bugzillaResponse = (BugzillaRepositoryResponse) response;
+				if (bugzillaResponse.getResponseData().size() > 0) {
+					getTaskEditor().setMessage(Messages.BugzillaTaskEditorPage_Changes_Submitted_Message,
+							IMessageProvider.INFORMATION, new HyperlinkAdapter() {
+								@Override
+								public void linkActivated(HyperlinkEvent event) {
+									String mes = ""; //$NON-NLS-1$
+									for (String iterable_element : bugzillaResponse.getResponseData().keySet()) {
+										mes += NLS.bind(Messages.BugzillaTaskEditorPage_Changes_Submitted_Action_Line,
+												iterable_element);
+										List<String> o = bugzillaResponse.getResponseData().get(iterable_element);
+										for (String string : o) {
+											mes += NLS.bind(
+													Messages.BugzillaTaskEditorPage_Changes_Submitted_Email_Line,
+													string);
+										}
 									}
+									new MessageDialog(WorkbenchUtil.getShell(),
+											Messages.BugzillaTaskEditorPage_Changes_Submitted_Titel, null, mes,
+											MessageDialog.INFORMATION, new String[] { IDialogConstants.OK_LABEL }, 0).open();
 								}
-								new MessageDialog(WorkbenchUtil.getShell(),
-										Messages.BugzillaTaskEditorPage_Changes_Submitted_Titel, null, mes,
-										MessageDialog.INFORMATION, new String[] { IDialogConstants.OK_LABEL }, 0).open();
-							}
-						}
-					});
+							});
+				} else {
+					getTaskEditor().setMessage(Messages.BugzillaTaskEditorPage_Changes_Submitted_Message,
+							IMessageProvider.INFORMATION);
+				}
+			}
 		} else {
 			super.handleTaskSubmitted(event);
 		}
 	}
-
 }
