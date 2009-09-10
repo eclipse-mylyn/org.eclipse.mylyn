@@ -1215,7 +1215,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 						parentBridgeElement = interactionContext.get(parentHandle);
 					}
 
-					propegateInterestToParents(interactionContext, kind, parentBridgeElement, previousInterest,
+					propegateInterestToParents(interactionContext, kind, parentBridgeElement, parentPreviousInterest,
 							parentDecayOffset, level, interestDelta, origin, parentBridge, handles);
 				}
 			}
