@@ -14,6 +14,7 @@ package org.eclipse.mylyn.java.tests;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -449,6 +450,101 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 		assertEquals(0, context.getAllElements().size());
 		assertEquals(0, ContextCore.getContextManager().getActiveContext().getAllElements().size());
 		ContextCorePlugin.getContextManager().removeGlobalContext(context);
+	}
+
+	public void testExplicitContextManipulationListener() throws JavaModelException {
+
+		StubContextElementedDeletedListener listener = new StubContextElementedDeletedListener();
+		try {
+			manager.addListener(listener);
+
+			IMethod m1 = type1.createMethod("void m1() { }", null, true, null);
+			IInteractionElement node = ContextCore.getContextManager().getElement(m1.getHandleIdentifier());
+			assertFalse(node.getInterest().isInteresting());
+
+			InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.MANIPULATION,
+					new JavaStructureBridge().getContentType(), m1.getHandleIdentifier(), "source");
+			IInteractionElement element = ContextCorePlugin.getContextManager().processInteractionEvent(event, true);
+
+			// test implicit manipulation
+			manager.manipulateInterestForElement(element, true, false, true, "test", false);
+			assertEquals(0, listener.explicitDeletionEventCount);
+			assertEquals(0, listener.implicitDeletionEventCount);
+
+			manager.manipulateInterestForElement(element, false, false, true, "test", false);
+			assertEquals(0, listener.explicitDeletionEventCount);
+			assertEquals(1, listener.implicitDeletionEventCount);
+			listener.reset();
+
+			// test emplicit manipulation
+			manager.manipulateInterestForElement(element, true, false, true, "test", false);
+			assertEquals(0, listener.explicitDeletionEventCount);
+			assertEquals(0, listener.implicitDeletionEventCount);
+
+			manager.manipulateInterestForElement(element, false, false, true, "test", true);
+			assertEquals(1, listener.explicitDeletionEventCount);
+			assertEquals(0, listener.implicitDeletionEventCount);
+			listener.reset();
+
+			// test implicit deletion
+			ContextCorePlugin.getContextManager().processInteractionEvent(event, true);
+			assertEquals(0, listener.explicitDeletionEventCount);
+			assertEquals(0, listener.implicitDeletionEventCount);
+
+			manager.deleteElements(Collections.singleton(element), false);
+			assertEquals(0, listener.explicitDeletionEventCount);
+			assertEquals(1, listener.implicitDeletionEventCount);
+			listener.reset();
+
+			// test explicit deletion
+			ContextCorePlugin.getContextManager().processInteractionEvent(event, true);
+			assertEquals(0, listener.explicitDeletionEventCount);
+			assertEquals(0, listener.implicitDeletionEventCount);
+
+			manager.deleteElements(Collections.singleton(element), true);
+			assertEquals(1, listener.explicitDeletionEventCount);
+			assertEquals(0, listener.implicitDeletionEventCount);
+			listener.reset();
+
+			// test old deletion
+			ContextCorePlugin.getContextManager().processInteractionEvent(event, true);
+			assertEquals(0, listener.explicitDeletionEventCount);
+			assertEquals(0, listener.implicitDeletionEventCount);
+
+			manager.deleteElements(Collections.singleton(element));
+			assertEquals(0, listener.explicitDeletionEventCount);
+			assertEquals(1, listener.implicitDeletionEventCount);
+		} finally {
+			// clean up
+			manager.removeListener(listener);
+		}
+	}
+
+	private class StubContextElementedDeletedListener extends AbstractContextListener {
+
+		private int explicitDeletionEventCount;
+
+		private int implicitDeletionEventCount;
+
+		void reset() {
+			implicitDeletionEventCount = 0;
+			explicitDeletionEventCount = 0;
+		}
+
+		@Override
+		public void contextChanged(ContextChangeEvent event) {
+			switch (event.getEventKind()) {
+
+			case LANDMARKS_REMOVED:
+			case ELEMENTS_DELETED:
+				if (event.isExplicitManipulation()) {
+					explicitDeletionEventCount++;
+				} else {
+					implicitDeletionEventCount++;
+				}
+				break;
+			}
+		}
 	}
 
 }

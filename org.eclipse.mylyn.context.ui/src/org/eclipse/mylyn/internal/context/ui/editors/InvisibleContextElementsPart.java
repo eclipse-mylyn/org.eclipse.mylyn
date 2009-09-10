@@ -174,7 +174,7 @@ public class InvisibleContextElementsPart {
 											allVisible);
 									Display.getDefault().asyncExec(new Runnable() {
 										public void run() {
-											ContextCore.getContextManager().deleteElements(allToRemove);
+											ContextCorePlugin.getContextManager().deleteElements(allToRemove, true);
 										}
 									});
 

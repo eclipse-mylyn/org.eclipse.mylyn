@@ -37,8 +37,18 @@ public class ContextChangeEvent {
 
 	private final List<IInteractionElement> elements;
 
+	private final boolean isExplicitManipulation;
+
 	public ContextChangeEvent(ContextChangeKind eventKind, String contextHandle, IInteractionContext context,
 			List<IInteractionElement> elements) {
+		this(eventKind, contextHandle, context, elements, false);
+	}
+
+	/**
+	 * @since 3.3
+	 */
+	public ContextChangeEvent(ContextChangeKind eventKind, String contextHandle, IInteractionContext context,
+			List<IInteractionElement> elements, boolean isExplicitManipulation) {
 		Assert.isNotNull(eventKind);
 		this.contextHandle = contextHandle;
 		this.context = context;
@@ -48,6 +58,7 @@ public class ContextChangeEvent {
 		} else {
 			this.elements = elements;
 		}
+		this.isExplicitManipulation = isExplicitManipulation;
 	}
 
 	/**
@@ -96,5 +107,16 @@ public class ContextChangeEvent {
 		IInteractionContext activeContext = ContextCore.getContextManager().getActiveContext();
 		return activeContext != null && activeContext.getHandleIdentifier() != null
 				&& activeContext.getHandleIdentifier().equals(contextHandle);
+	}
+
+	/**
+	 * Whether the event was a result of a users explicit manipulation of the context (i.e. mark as landmark) This can
+	 * only be true for {@link ContextChangeKind#LANDMARKS_ADDED},{@link ContextChangeKind#LANDMARKS_REMOVED} and
+	 * {@link ContextChangeKind#ELEMENTS_DELETED}
+	 * 
+	 * @since 3.3
+	 */
+	public boolean isExplicitManipulation() {
+		return isExplicitManipulation;
 	}
 }

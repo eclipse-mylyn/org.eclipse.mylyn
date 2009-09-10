@@ -257,8 +257,14 @@ public class InteractionContextManager implements IInteractionContextManager {
 		}
 	}
 
+	@Deprecated
 	protected void checkForLandmarkDeltaAndNotify(float previousInterest, final IInteractionElement node,
 			final IInteractionContext context) {
+		checkForLandmarkDeltaAndNotify(previousInterest, node, context, false);
+	}
+
+	protected void checkForLandmarkDeltaAndNotify(float previousInterest, final IInteractionElement node,
+			final IInteractionContext context, final boolean isExplicitManipulation) {
 		// TODO: don't call interestChanged if it's a landmark?
 		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault()
 				.getStructureBridge(node.getContentType());
@@ -277,7 +283,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 							List<IInteractionElement> changed = new ArrayList<IInteractionElement>(1);
 							changed.add(node);
 							ContextChangeEvent event = new ContextChangeEvent(ContextChangeKind.LANDMARKS_REMOVED,
-									context.getHandleIdentifier(), context, changed);
+									context.getHandleIdentifier(), context, changed, isExplicitManipulation);
 							listener.contextChanged(event);
 						}
 					});
@@ -296,7 +302,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 							List<IInteractionElement> changed = new ArrayList<IInteractionElement>(1);
 							changed.add(node);
 							ContextChangeEvent event = new ContextChangeEvent(ContextChangeKind.LANDMARKS_ADDED,
-									context.getHandleIdentifier(), context, changed);
+									context.getHandleIdentifier(), context, changed, isExplicitManipulation);
 							listener.contextChanged(event);
 						}
 					});
@@ -449,10 +455,14 @@ public class InteractionContextManager implements IInteractionContextManager {
 
 	public void deleteElement(IInteractionElement element) {
 		delete(element, getActiveContext());
-		notifyElementsDeleted(getActiveContext(), Arrays.asList(new IInteractionElement[] { element }));
+		notifyElementsDeleted(getActiveContext(), Arrays.asList(new IInteractionElement[] { element }), false);
 	}
 
 	public void deleteElements(Collection<IInteractionElement> elements) {
+		deleteElements(elements, false);
+	}
+
+	public void deleteElements(Collection<IInteractionElement> elements, boolean isExplicitManipulation) {
 		Assert.isNotNull(elements);
 		IInteractionContext context = getActiveContext();
 		if (elements.size() == 0 || context == null) {
@@ -461,7 +471,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 
 		context.delete(elements);
 
-		notifyElementsDeleted(getActiveContext(), new ArrayList<IInteractionElement>(elements));
+		notifyElementsDeleted(getActiveContext(), new ArrayList<IInteractionElement>(elements), isExplicitManipulation);
 	}
 
 	private void delete(IInteractionElement element, IInteractionContext context) {
@@ -675,8 +685,14 @@ public class InteractionContextManager implements IInteractionContextManager {
 		}
 	}
 
+	@Deprecated
 	public List<IInteractionElement> internalProcessInteractionEvent(InteractionEvent event,
 			IInteractionContext interactionContext, boolean propagateToParents) {
+		return internalProcessInteractionEvent(event, interactionContext, propagateToParents, false);
+	}
+
+	public List<IInteractionElement> internalProcessInteractionEvent(InteractionEvent event,
+			IInteractionContext interactionContext, boolean propagateToParents, boolean isExplicitManipulation) {
 		if (contextCapturePaused || InteractionEvent.Kind.COMMAND.equals(event.getKind())
 				|| suppressListenerNotification) {
 			return Collections.emptyList();
@@ -703,7 +719,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 			handles.add(element.getHandleIdentifier());
 
 			propegateInterestToParents(interactionContext, event.getKind(), element, previousInterest, decayOffset, 1,
-					interestDelta, event.getOriginId(), null, handles);
+					interestDelta, event.getOriginId(), null, handles, isExplicitManipulation);
 		}
 		if (event.getKind().isUserEvent() && interactionContext instanceof CompositeInteractionContext) {
 			((CompositeInteractionContext) interactionContext).setActiveElement(element);
@@ -713,7 +729,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 			interestDelta.add(element);
 		}
 
-		checkForLandmarkDeltaAndNotify(previousInterest, element, interactionContext);
+		checkForLandmarkDeltaAndNotify(previousInterest, element, interactionContext, isExplicitManipulation);
 		return interestDelta;
 	}
 
@@ -872,30 +888,43 @@ public class InteractionContextManager implements IInteractionContextManager {
 	 * Manipulates interest for the active context.
 	 */
 	// TODO 3.3 revise or remove this and it's helper
+	@Deprecated
 	public boolean manipulateInterestForElement(IInteractionElement element, boolean increment, boolean forceLandmark,
 			boolean preserveUninteresting, String sourceId) {
+		return manipulateInterestForElement(element, increment, forceLandmark, preserveUninteresting, sourceId, false);
+	}
+
+	public boolean manipulateInterestForElement(IInteractionElement element, boolean increment, boolean forceLandmark,
+			boolean preserveUninteresting, String sourceId, boolean isExplicitManipulation) {
 		if (!isContextActive()) {
 			return false;
 		} else {
 			return manipulateInterestForElement(element, increment, forceLandmark, preserveUninteresting, sourceId,
-					activeContext);
+					activeContext, isExplicitManipulation);
 		}
+	}
+
+	@Deprecated
+	public boolean manipulateInterestForElement(IInteractionElement element, boolean increment, boolean forceLandmark,
+			boolean preserveUninteresting, String sourceId, IInteractionContext context) {
+		return manipulateInterestForElement(element, increment, forceLandmark, preserveUninteresting, sourceId, false);
 	}
 
 	/**
 	 * @return true if interest was manipulated successfully
 	 */
 	public boolean manipulateInterestForElement(IInteractionElement element, boolean increment, boolean forceLandmark,
-			boolean preserveUninteresting, String sourceId, IInteractionContext context) {
+			boolean preserveUninteresting, String sourceId, IInteractionContext context, boolean isExplicitManipulation) {
 		Set<IInteractionElement> changedElements = new HashSet<IInteractionElement>();
 		boolean manipulated = manipulateInterestForElementHelper(element, increment, forceLandmark,
-				preserveUninteresting, sourceId, context, changedElements, null);
+				preserveUninteresting, sourceId, context, changedElements, null, isExplicitManipulation);
 
 		if (manipulated) {
 			if (preserveUninteresting || increment) {
 				notifyInterestDelta(new ArrayList<IInteractionElement>(changedElements));
 			} else {
-				notifyElementsDeleted(context, new ArrayList<IInteractionElement>(changedElements));
+				notifyElementsDeleted(context, new ArrayList<IInteractionElement>(changedElements),
+						isExplicitManipulation);
 			}
 		}
 		return manipulated;
@@ -903,7 +932,8 @@ public class InteractionContextManager implements IInteractionContextManager {
 
 	private boolean manipulateInterestForElementHelper(IInteractionElement element, boolean increment,
 			boolean forceLandmark, boolean preserveUninteresting, String sourceId, IInteractionContext context,
-			Set<IInteractionElement> changedElements, AbstractContextStructureBridge forcedBridge) {
+			Set<IInteractionElement> changedElements, AbstractContextStructureBridge forcedBridge,
+			boolean isExplicitManipulation) {
 		if (element == null || context == null) {
 			return false;
 		}
@@ -926,7 +956,8 @@ public class InteractionContextManager implements IInteractionContextManager {
 				if (parentBridgeHandle != null) {
 					IInteractionElement parentBridgeElement = context.get(parentBridgeHandle);
 					manipulateInterestForElementHelper(parentBridgeElement, increment, forceLandmark,
-							preserveUninteresting, sourceId, context, changedElements, parentBridge);
+							preserveUninteresting, sourceId, context, changedElements, parentBridge,
+							isExplicitManipulation);
 				}
 			}
 		}
@@ -952,7 +983,8 @@ public class InteractionContextManager implements IInteractionContextManager {
 					if (childElement != null /*&& childElement.getInterest().isInteresting()*/
 							&& !childElement.equals(element)) {
 						manipulateInterestForElementHelper(childElement, increment, forceLandmark,
-								preserveUninteresting, sourceId, context, changedElements, forcedBridge);
+								preserveUninteresting, sourceId, context, changedElements, forcedBridge,
+								isExplicitManipulation);
 					}
 				}
 			}
@@ -971,7 +1003,8 @@ public class InteractionContextManager implements IInteractionContextManager {
 		if (increment || preserveUninteresting) {
 			InteractionEvent interactionEvent = new InteractionEvent(InteractionEvent.Kind.MANIPULATION,
 					element.getContentType(), element.getHandleIdentifier(), sourceId, changeValue);
-			List<IInteractionElement> interestDelta = internalProcessInteractionEvent(interactionEvent, context, true);
+			List<IInteractionElement> interestDelta = internalProcessInteractionEvent(interactionEvent, context, true,
+					isExplicitManipulation);
 			changedElements.addAll(interestDelta);
 //			notifyInterestDelta(interestDelta);
 		} else { //if (changeValue < context.getScaling().getInteresting()) {
@@ -999,7 +1032,8 @@ public class InteractionContextManager implements IInteractionContextManager {
 		return newMetaContext;
 	}
 
-	private void notifyElementsDeleted(final IInteractionContext context, final List<IInteractionElement> interestDelta) {
+	private void notifyElementsDeleted(final IInteractionContext context,
+			final List<IInteractionElement> interestDelta, final boolean isExplicitManipulation) {
 		if (!interestDelta.isEmpty()) {
 			for (final AbstractContextListener listener : contextListeners) {
 				SafeRunner.run(new ISafeRunnable() {
@@ -1010,7 +1044,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 
 					public void run() throws Exception {
 						ContextChangeEvent event = new ContextChangeEvent(ContextChangeKind.ELEMENTS_DELETED,
-								context.getHandleIdentifier(), context, interestDelta);
+								context.getHandleIdentifier(), context, interestDelta, isExplicitManipulation);
 						listener.contextChanged(event);
 					}
 				});
@@ -1168,14 +1202,14 @@ public class InteractionContextManager implements IInteractionContextManager {
 	private void propegateInterestToParents(IInteractionContext interactionContext, InteractionEvent.Kind kind,
 			IInteractionElement node, float previousInterest, float decayOffset, int level,
 			List<IInteractionElement> interestDelta, String origin, AbstractContextStructureBridge forcedBridge,
-			Set<String> handles) {
+			Set<String> handles, boolean isExplicitManipulation) {
 
 		if (level > MAX_PROPAGATION || node == null || node.getHandleIdentifier() == null
 				|| node.getInterest().getValue() <= 0) {
 			return;
 		}
 
-		checkForLandmarkDeltaAndNotify(previousInterest, node, interactionContext);
+		checkForLandmarkDeltaAndNotify(previousInterest, node, interactionContext, isExplicitManipulation);
 		level++; // original is 1st level
 
 		// NOTE: original code summed parent interest
@@ -1216,7 +1250,8 @@ public class InteractionContextManager implements IInteractionContextManager {
 					}
 
 					propegateInterestToParents(interactionContext, kind, parentBridgeElement, parentPreviousInterest,
-							parentDecayOffset, level, interestDelta, origin, parentBridge, handles);
+							parentDecayOffset, level, interestDelta, origin, parentBridge, handles,
+							isExplicitManipulation);
 				}
 			}
 		}
@@ -1290,7 +1325,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 				interestDelta.add(0, parentElement);
 			}
 			propegateInterestToParents(interactionContext, kind, parentElement, parentPreviousInterest, decayOffset,
-					level, interestDelta, origin, forcedBridge, handles);
+					level, interestDelta, origin, forcedBridge, handles, isExplicitManipulation);
 		}
 	}
 

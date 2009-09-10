@@ -67,7 +67,9 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 
 	public void run(IAction action) {
 		if (!ContextCore.getContextManager().isContextActive()) {
-			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), Messages.AbstractInterestManipulationAction_Interest_Manipulation, Messages.AbstractInterestManipulationAction_No_task_context_is_active);
+			MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
+					Messages.AbstractInterestManipulationAction_Interest_Manipulation,
+					Messages.AbstractInterestManipulationAction_No_task_context_is_active);
 			return;
 		}
 
@@ -94,7 +96,7 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 						}
 					}
 					boolean manipulated = ContextCorePlugin.getContextManager().manipulateInterestForElement(node,
-							increment, false, preserveUninteresting, SOURCE_ID, getContext());
+							increment, false, preserveUninteresting, SOURCE_ID, getContext(), true);
 					if (!manipulated) {
 						UiUtil.displayInterestManipulationFailure();
 					}
@@ -104,12 +106,14 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 			IInteractionElement node = ContextCore.getContextManager().getActiveElement();
 			if (node != null) {
 				boolean manipulated = ContextCorePlugin.getContextManager().manipulateInterestForElement(node,
-						increment, false, false, SOURCE_ID, getContext());
+						increment, false, false, SOURCE_ID, getContext(), true);
 				if (!manipulated) {
 					UiUtil.displayInterestManipulationFailure();
 				}
 			} else {
-				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), Messages.AbstractInterestManipulationAction_Interest_Manipulation, Messages.AbstractInterestManipulationAction_No_task_context_is_active);
+				MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
+						Messages.AbstractInterestManipulationAction_Interest_Manipulation,
+						Messages.AbstractInterestManipulationAction_No_task_context_is_active);
 			}
 		}
 	}
