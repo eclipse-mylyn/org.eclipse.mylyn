@@ -63,64 +63,88 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 
 		private boolean minor = false;
 
+		private boolean updateExpansion;
+
 		public FocusedViewerDelayedRefreshJob(StructuredViewer viewer, String name, boolean minor) {
 			super(viewer, name);
 			this.minor = minor;
+
 		}
 
 		@Override
 		protected void doRefresh(Object[] items) {
-
-			if (viewer == null) {
-				return;
-			} else if (viewer.getControl().isDisposed()) {
-				managedViewers.remove(viewer);
-			} else {
-				if (items == null || items.length == 0) {
-					if (!minor) {
-						viewer.refresh(false);
-						FocusedViewerManager.this.updateExpansionState(viewer, null);
-					} else {
-						try {
-							viewer.getControl().setRedraw(false);
-							viewer.refresh(true);
-							FocusedViewerManager.this.updateExpansionState(viewer, null);
-						} finally {
-							viewer.getControl().setRedraw(true);
-						}
-					}
+			try {
+				if (viewer == null) {
+					return;
+				} else if (viewer.getControl().isDisposed()) {
+					managedViewers.remove(viewer);
 				} else {
-					if (filteredViewers.contains(viewer)) {
-						try {
-							viewer.getControl().setRedraw(false);
-							viewer.refresh(minor);
-							FocusedViewerManager.this.updateExpansionState(viewer, null);
-						} finally {
-							viewer.getControl().setRedraw(true);
-						}
-					} else { // don't need to worry about content changes
-						try {
-							viewer.getControl().setRedraw(false);
-							for (Object item : items) {
-								Object objectToRefresh = item;
-								if (item instanceof IInteractionElement) {
-									IInteractionElement node = (IInteractionElement) item;
-									AbstractContextStructureBridge structureBridge = ContextCorePlugin.getDefault()
-											.getStructureBridge(node.getContentType());
-									objectToRefresh = structureBridge.getObjectForHandle(node.getHandleIdentifier());
-								}
-								if (objectToRefresh != null) {
-									viewer.update(objectToRefresh, null);
-									FocusedViewerManager.this.updateExpansionState(viewer, objectToRefresh);
-								}
+					if (items == null || items.length == 0) {
+						if (!minor) {
+							viewer.refresh(false);
+							if (updateExpansion) {
+								FocusedViewerManager.this.updateExpansionState(viewer, null);
 							}
-						} finally {
-							viewer.getControl().setRedraw(true);
+						} else {
+							try {
+								viewer.getControl().setRedraw(false);
+								viewer.refresh(true);
+								if (updateExpansion) {
+									FocusedViewerManager.this.updateExpansionState(viewer, null);
+								}
+							} finally {
+								viewer.getControl().setRedraw(true);
+							}
+						}
+					} else {
+						if (filteredViewers.contains(viewer)) {
+							try {
+								viewer.getControl().setRedraw(false);
+								viewer.refresh(minor);
+								if (updateExpansion) {
+									FocusedViewerManager.this.updateExpansionState(viewer, null);
+								}
+							} finally {
+								viewer.getControl().setRedraw(true);
+							}
+						} else { // don't need to worry about content changes
+							try {
+								viewer.getControl().setRedraw(false);
+								for (Object item : items) {
+									Object objectToRefresh = item;
+									if (item instanceof IInteractionElement) {
+										IInteractionElement node = (IInteractionElement) item;
+										AbstractContextStructureBridge structureBridge = ContextCorePlugin.getDefault()
+												.getStructureBridge(node.getContentType());
+										objectToRefresh = structureBridge.getObjectForHandle(node.getHandleIdentifier());
+									}
+									if (objectToRefresh != null) {
+										viewer.update(objectToRefresh, null);
+										if (updateExpansion) {
+											FocusedViewerManager.this.updateExpansionState(viewer, objectToRefresh);
+										}
+									}
+								}
+							} finally {
+								viewer.getControl().setRedraw(true);
+							}
 						}
 					}
 				}
+			} finally {
+				updateExpansion = false;
 			}
 
+		}
+
+		public void refreshElements(Object[] elements, boolean updateExpansion) {
+			this.updateExpansion |= updateExpansion;
+			super.refreshElements(elements);
+		}
+
+		@Override
+		public void refreshElements(Object[] elements) {
+			refreshElements(elements, true);
 		}
 	}
 
@@ -160,7 +184,7 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 				// TODO consider a mechanism to identify only views that provide focus
 				UiUtil.initializeViewerSelection(viewPart);
 				Set<IInteractionElement> emptySet = Collections.emptySet();
-				refreshViewer(emptySet, true, viewer);
+				refreshViewer(emptySet, true, viewer, true);
 			} catch (Exception e) {
 				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
 						"Could not initialize focused viewer", e)); //$NON-NLS-1$
@@ -215,74 +239,99 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 			}
 			break;
 		case INTEREST_CHANGED:
-			refreshViewers(event.getElements(), false);
+			if (event.isActiveContext()) {
+				refreshViewers(event.getElements(), false, true);
+			}
 			break;
 		case LANDMARKS_ADDED:
-			refreshViewers(event.getElements(), true);
+			if (event.isActiveContext()) {
+				refreshViewers(event.getElements(), true, false);
+			}
 			break;
 		case LANDMARKS_REMOVED:
-			refreshViewers(event.getElements(), true);
+			if (event.isActiveContext()) {
+				refreshViewers(event.getElements(), true, false);
+			}
 			break;
 		case ELEMENTS_DELETED:
-			/*
-			 * TODO: consider making this work per-element and parent
-			 * Should we collect all parents before calling refresh?
-			 */
-			ArrayList<IInteractionElement> toRefresh = new ArrayList<IInteractionElement>();
-			for (IInteractionElement interactionElement : event.getElements()) {
-				AbstractContextStructureBridge structureBridge = ContextCore.getStructureBridge(interactionElement.getContentType());
-				IInteractionElement parent = ContextCore.getContextManager().getElement(
-						structureBridge.getParentHandle(interactionElement.getHandleIdentifier()));
-				if (parent != null) {
-					toRefresh.add(parent);
+			if (event.isActiveContext()) {
+				/*
+				 * TODO: consider making this work per-element and parent
+				 * Should we collect all parents before calling refresh?
+				 */
+				ArrayList<IInteractionElement> toRefresh = new ArrayList<IInteractionElement>();
+				for (IInteractionElement interactionElement : event.getElements()) {
+					AbstractContextStructureBridge structureBridge = ContextCore.getStructureBridge(interactionElement.getContentType());
+					IInteractionElement parent = ContextCore.getContextManager().getElement(
+							structureBridge.getParentHandle(interactionElement.getHandleIdentifier()));
+					if (parent != null) {
+						toRefresh.add(parent);
+					}
 				}
+				refreshViewers(toRefresh, false, false);
 			}
-			refreshViewers(toRefresh, false);
-
 			break;
 		}
 	}
 
 	protected void refreshViewers() {
 		List<IInteractionElement> toRefresh = Collections.emptyList();
-		refreshViewers(toRefresh, true);
+		refreshViewers(toRefresh, true, true);
 	}
 
+	@Deprecated
 	protected void refreshViewers(IInteractionElement node, boolean updateLabels) {
+		refreshViewers(node, updateLabels, true);
+	}
+
+	protected void refreshViewers(IInteractionElement node, boolean updateLabels, boolean updateExpansion) {
 		List<IInteractionElement> toRefresh = new ArrayList<IInteractionElement>();
 		toRefresh.add(node);
-		refreshViewers(toRefresh, updateLabels);
+		refreshViewers(toRefresh, updateLabels, updateExpansion);
 	}
 
+	@Deprecated
 	protected void refreshViewers(final List<IInteractionElement> nodesToRefresh, final boolean updateLabels) {
+		refreshViewers(nodesToRefresh, updateLabels, true);
+	}
+
+	protected void refreshViewers(final List<IInteractionElement> nodesToRefresh, final boolean updateLabels,
+			final boolean updateExpansion) {
 		// TODO replace by Assert.isNotNull(nodesToRefresh);
 		if (nodesToRefresh == null) {
 			return;
 		}
 
 		if (syncRefreshMode) {
-			internalRefresh(new HashSet<IInteractionElement>(nodesToRefresh), updateLabels);
+			internalRefresh(new HashSet<IInteractionElement>(nodesToRefresh), updateLabels, updateExpansion);
 		} else {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					internalRefresh(new HashSet<IInteractionElement>(nodesToRefresh), updateLabels);
+					internalRefresh(new HashSet<IInteractionElement>(nodesToRefresh), updateLabels, updateExpansion);
 				}
 			});
 		}
 	}
 
-	private void internalRefresh(final Set<IInteractionElement> nodesToRefresh, final boolean updateLabels) {
+	private void internalRefresh(final Set<IInteractionElement> nodesToRefresh, final boolean updateLabels,
+			final boolean updateExpansion) {
 		try {
 			for (StructuredViewer viewer : managedViewers) {
-				refreshViewer(nodesToRefresh, updateLabels, viewer);
+				refreshViewer(nodesToRefresh, updateLabels, viewer, updateExpansion);
 			}
 		} catch (Throwable t) {
 			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not refresh viewer", t)); //$NON-NLS-1$
 		}
 	}
 
+	@Deprecated
 	public void refreshViewer(final Set<IInteractionElement> nodesToRefresh, final boolean updateLabels,
 			StructuredViewer viewer) {
+		refreshViewer(nodesToRefresh, updateLabels, viewer, true);
+	}
+
+	public void refreshViewer(final Set<IInteractionElement> nodesToRefresh, final boolean updateLabels,
+			StructuredViewer viewer, boolean updateExpansion) {
 
 		Map<StructuredViewer, FocusedViewerDelayedRefreshJob> refreshJobs = null;
 		if (updateLabels) {
@@ -295,7 +344,7 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 			job = new FocusedViewerDelayedRefreshJob(viewer, "refresh viewer", updateLabels); //$NON-NLS-1$
 			refreshJobs.put(viewer, job);
 		}
-		job.refreshElements(nodesToRefresh.toArray());
+		job.refreshElements(nodesToRefresh.toArray(), updateExpansion);
 
 	}
 
@@ -315,7 +364,7 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 			if (objectToRefresh == null) {
 				treeViewer.expandAll();
 			} else {
-					treeViewer.expandToLevel(objectToRefresh, AbstractTreeViewer.ALL_LEVELS);
+				treeViewer.expandToLevel(objectToRefresh, AbstractTreeViewer.ALL_LEVELS);
 			}
 		}
 	}
