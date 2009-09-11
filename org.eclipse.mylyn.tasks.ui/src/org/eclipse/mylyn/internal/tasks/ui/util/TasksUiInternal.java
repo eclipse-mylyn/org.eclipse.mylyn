@@ -41,6 +41,8 @@ import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.IInputValidator;
+import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -70,8 +72,6 @@ import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnsubmittedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.OpenRepositoryTaskJob;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.editors.CategoryEditor;
-import org.eclipse.mylyn.internal.tasks.ui.editors.CategoryEditorInput;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.MultiRepositoryAwareWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
@@ -232,16 +232,25 @@ public class TasksUiInternal {
 	}
 
 	public static void openEditor(TaskCategory category) {
-		final IEditorInput input = new CategoryEditorInput(category);
-		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-				if (window != null) {
-					IWorkbenchPage page = window.getActivePage();
-					TasksUiUtil.openEditor(input, CategoryEditor.ID_EDITOR, page);
-				}
-			}
-		});
+		final String name = category.getSummary();
+		InputDialog dialog = new InputDialog(WorkbenchUtil.getShell(), Messages.TasksUiInternal_Rename_Category_Title, Messages.TasksUiInternal_Rename_Category_Message, name,
+				new IInputValidator() {
+					public String isValid(String newName) {
+						if (newName.trim().length() == 0 || newName.equals(name)) {
+							return ""; //$NON-NLS-1$
+						}
+						Set<AbstractTaskCategory> categories = TasksUiPlugin.getTaskList().getCategories();
+						for (AbstractTaskCategory category : categories) {
+							if (newName.equals(category.getSummary())) {
+								return Messages.TasksUiInternal_Rename_Category_Name_already_exists_Error;
+							}
+						}
+						return null;
+					}
+				});
+		if (dialog.open() == Window.OK) {
+			TasksUiPlugin.getTaskList().renameContainer(category, dialog.getValue());
+		}
 	}
 
 	public static void refreshAndOpenTaskListElement(IRepositoryElement element) {
@@ -1010,7 +1019,7 @@ public class TasksUiInternal {
 	public static void activateTaskThroughCommand(ITask task) {
 		try {
 			TasksUiInternal.executeCommand(PlatformUI.getWorkbench(),
-					"org.eclipse.mylyn.tasks.ui.command.activateSelectedTask", "Activate Task", task, null); //$NON-NLS-1$
+					"org.eclipse.mylyn.tasks.ui.command.activateSelectedTask", Messages.TasksUiInternal_Activate_Task, task, null); //$NON-NLS-1$
 		} catch (NotEnabledException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
 					"Failed to activate task ''{0}''.", task.getSummary()), e)); //$NON-NLS-1$

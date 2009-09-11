@@ -89,9 +89,17 @@ public class Messages extends NLS {
 
 	public static String TasksUiInternal__seconds;
 
+	public static String TasksUiInternal_Activate_Task;
+
 	public static String TasksUiInternal_Failed_to_open_task;
 
 	public static String TasksUiInternal_No_repository_found;
+
+	public static String TasksUiInternal_Rename_Category_Message;
+
+	public static String TasksUiInternal_Rename_Category_Name_already_exists_Error;
+
+	public static String TasksUiInternal_Rename_Category_Title;
 
 	public static String TasksUiInternal_See_error_log_for_details;
 
