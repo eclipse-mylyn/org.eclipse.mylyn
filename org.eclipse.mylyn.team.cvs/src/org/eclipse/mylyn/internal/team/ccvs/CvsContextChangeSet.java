@@ -54,9 +54,12 @@ public class CvsContextChangeSet extends CVSActiveChangeSet implements IAdaptabl
 
 	private final ITask task;
 
+	private final ActiveChangeSetManager manager;
+
 	public CvsContextChangeSet(ITask task, ActiveChangeSetManager manager) {
 		super(manager, task.getSummary());
 		this.task = task;
+		this.manager = manager;
 		updateLabel();
 	}
 
@@ -119,7 +122,8 @@ public class CvsContextChangeSet extends CVSActiveChangeSet implements IAdaptabl
 		if (!suppressInterestContribution && resource != null) {
 			Set<IResource> resources = new HashSet<IResource>();
 			resources.add(resource);
-			if (ResourcesUiBridgePlugin.getDefault() != null) {
+			if (ResourcesUiBridgePlugin.getDefault() != null && manager.isDefault(this)) {
+				// only add to the context if it is the active change set (bug 289240)
 				ResourcesUi.addResourceToContext(resources, InteractionEvent.Kind.SELECTION);
 			}
 		}
