@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
@@ -41,7 +42,7 @@ public class CheckBoxTreeDialog extends Dialog {
 
 	private CheckboxFilteredTree valueTree;
 
-	private final List<String> selectedValues;
+	private final Set<String> selectedValues;
 
 	private final String dialogLabel;
 
@@ -65,10 +66,13 @@ public class CheckBoxTreeDialog extends Dialog {
 
 	public CheckBoxTreeDialog(Shell shell, List<String> values, Map<String, String> validValues, String dialogLabel) {
 		super(shell);
-		setShellStyle(getShellStyle() | SWT.RESIZE);
-		this.selectedValues = values;
+		Assert.isNotNull(values);
+		Assert.isNotNull(validValues);
+		Assert.isNotNull(dialogLabel);
+		this.selectedValues = new HashSet<String>(values);
 		this.validValues = validValues;
 		this.dialogLabel = dialogLabel;
+		setShellStyle(getShellStyle() | SWT.RESIZE);
 	}
 
 	@Override
@@ -172,7 +176,7 @@ public class CheckBoxTreeDialog extends Dialog {
 		return composite;
 	}
 
-	public List<String> getSelectedValues() {
-		return selectedValues;
+	public Set<String> getSelectedValues() {
+		return new HashSet<String>(selectedValues);
 	}
 }
