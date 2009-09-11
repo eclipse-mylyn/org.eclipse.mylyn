@@ -50,6 +50,7 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
@@ -640,10 +641,21 @@ public class RichTextEditor {
 			previewViewer.getTextWidget().addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseUp(MouseEvent e) {
-					if (e.count == 2 && !stickyPreview) {
-						int offset = previewViewer.getTextWidget().getCaretOffset();
-						showEditor();
-						editorViewer.getTextWidget().setCaretOffset(offset);
+					if (e.count == 1 && !stickyPreview) {
+						// delay switching in case user intended to select text
+						Display.getDefault().timerExec(Display.getDefault().getDoubleClickTime(), new Runnable() {
+							public void run() {
+								if (previewViewer.getTextWidget() == null || previewViewer.getTextWidget().isDisposed()) {
+									return;
+								}
+
+								if (previewViewer.getTextWidget().getSelectionCount() == 0) {
+									int offset = previewViewer.getTextWidget().getCaretOffset();
+									showEditor();
+									editorViewer.getTextWidget().setCaretOffset(offset);
+								}
+							}
+						});
 					}
 				}
 			});
