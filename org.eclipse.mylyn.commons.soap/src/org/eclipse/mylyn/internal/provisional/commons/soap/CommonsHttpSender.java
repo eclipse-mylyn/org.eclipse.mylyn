@@ -28,6 +28,8 @@
  *   - commented calls to commons logging out 
  *   - added timeout thread for idle connections
  *   - added AxisHttpFault to provide additional details in case of http error
+ * Pawel Niewiadomski 
+ *   - fixed user agent handling (bug 288441)
  */
 package org.eclipse.mylyn.internal.provisional.commons.soap;
 
@@ -116,7 +118,6 @@ public class CommonsHttpSender extends BasicHandler {
 	 * 
 	 * @param msgContext
 	 *            the messsage context
-	 * 
 	 * @throws AxisFault
 	 */
 	public void invoke(MessageContext msgContext) throws AxisFault {
@@ -375,7 +376,6 @@ public class CommonsHttpSender extends BasicHandler {
 	 * 
 	 * @param cookie
 	 *            initial cookie value
-	 * 
 	 * @return a cleaned up cookie value.
 	 */
 	private String cleanupCookie(String cookie) {
@@ -441,7 +441,6 @@ public class CommonsHttpSender extends BasicHandler {
 	 *            the message context
 	 * @param tmpURL
 	 *            the url to post to.
-	 * 
 	 * @throws Exception
 	 */
 	protected void addContextInfo(HttpMethodBase method, HttpClient httpClient, MessageContext msgContext, URL tmpURL)
@@ -549,7 +548,12 @@ public class CommonsHttpSender extends BasicHandler {
 						httpChunkStream = JavaUtils.isTrue(val);
 					}
 				} else {
-					method.addRequestHeader(key, value);
+					// let plug-ins using SOAP be able to set their own user-agent header (i.e. for tracking purposes)
+					if (HTTPConstants.HEADER_USER_AGENT.equalsIgnoreCase(key)) {
+						method.setRequestHeader(key, value);
+					} else {
+						method.addRequestHeader(key, value);
+					}
 				}
 			}
 		}
@@ -562,7 +566,6 @@ public class CommonsHttpSender extends BasicHandler {
 	 *            host name
 	 * @param nonProxyHosts
 	 *            string containing the list of non proxy hosts
-	 * 
 	 * @return true/false
 	 */
 	protected boolean isHostInNonProxyList(String host, String nonProxyHosts) {
@@ -599,7 +602,6 @@ public class CommonsHttpSender extends BasicHandler {
 	 * @param str
 	 *            the (non-null) string that must be matched against the pattern
 	 * @param isCaseSensitive
-	 * 
 	 * @return <code>true</code> when the string matches against the pattern, <code>false</code> otherwise.
 	 */
 	protected static boolean match(String pattern, String str, boolean isCaseSensitive) {
