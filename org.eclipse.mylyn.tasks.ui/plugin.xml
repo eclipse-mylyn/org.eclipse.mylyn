@@ -174,6 +174,16 @@
       </decorator>
    </extension>
 
+  	<extension
+        point="org.eclipse.ui.editors">
+     <editor
+           class="org.eclipse.mylyn.tasks.ui.editors.TaskEditor"
+           contributorClass="org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionContributor"
+           icon="icons/etool16/task.gif"
+           id="org.eclipse.mylyn.tasks.ui.editors.task"
+           name="%TaskEditor.name"/>
+	</extension>
+	
       <extension point="org.eclipse.ui.perspectiveExtensions">
           <perspectiveExtension targetID="org.eclipse.jdt.ui.JavaPerspective">
                <viewShortcut id="org.eclipse.mylyn.tasks.ui.views.tasks"/>
