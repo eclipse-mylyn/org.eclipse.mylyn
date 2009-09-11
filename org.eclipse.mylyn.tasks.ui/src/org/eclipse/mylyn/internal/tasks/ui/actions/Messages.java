@@ -109,6 +109,8 @@ public class Messages extends NLS {
 
 	public static String DeleteAction_Permanently_delete_the_query;
 
+	public static String DeleteTaskEditorAction_Delete_Task;
+
 	public static String DeleteTaskRepositoryAction_Confirm_Delete;
 
 	public static String DeleteTaskRepositoryAction_Delete_Specific_Task_Repository;

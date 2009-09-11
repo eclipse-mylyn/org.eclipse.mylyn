@@ -80,6 +80,8 @@ public class RepositoryElementActionGroup {
 
 	private final DeleteAction deleteAction;
 
+	private final DeleteTaskEditorAction deleteTaskEditorAction;
+
 	private final RemoveFromCategoryAction removeFromCategoryAction;
 
 	private final ShowInSearchViewAction showInSearchViewAction;
@@ -116,6 +118,7 @@ public class RepositoryElementActionGroup {
 		removeFromCategoryAction = add(new RemoveFromCategoryAction());
 
 		deleteAction = add(new DeleteAction());
+		deleteTaskEditorAction = add(new DeleteTaskEditorAction());
 		openAction = add(new OpenTaskListElementAction());
 		openWithBrowserAction = add(new OpenWithBrowserAction());
 		showInSearchViewAction = add(new ShowInSearchViewAction());
@@ -212,6 +215,11 @@ public class RepositoryElementActionGroup {
 		if (isInTaskList()) {
 			manager.appendToGroup(ID_SEPARATOR_EDIT, deleteAction);
 		}
+
+		if (isInEditor()) {
+			manager.appendToGroup(ID_SEPARATOR_TASKS, deleteTaskEditorAction);
+		}
+
 		removeFromCategoryAction.selectionChanged(selection);
 		removeFromCategoryAction.setEnabled(isRemoveFromCategoryEnabled(selectedElements));
 		if (removeFromCategoryAction.isEnabled()) {
