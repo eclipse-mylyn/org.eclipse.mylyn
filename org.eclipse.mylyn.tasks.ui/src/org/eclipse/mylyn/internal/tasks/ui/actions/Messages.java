@@ -175,7 +175,11 @@ public class Messages extends NLS {
 
 	public static String NewSubTaskAction_Unable_to_create_subtask;
 
+	public static String NewTaskAction_Add_Repository;
+
 	public static String NewTaskAction_new_task;
+
+	public static String NewTaskAction_Show_Wizard_Label;
 
 	public static String NewTaskFromSelectionAction_Comment_;
 

@@ -11,8 +11,6 @@
 
 package org.eclipse.mylyn.tasks.ui;
 
-import java.util.List;
-
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdaptable;
@@ -255,11 +253,11 @@ public class TasksUiUtil {
 	 */
 	public static boolean openNewTaskEditor(Shell shell, ITaskMapping taskSelection, TaskRepository taskRepository) {
 		final IWizard wizard;
-		List<TaskRepository> repositories = TasksUi.getRepositoryManager().getAllRepositories();
-		if (taskRepository == null && repositories.size() == 1) {
-			// only the Local repository connector is available
-			taskRepository = repositories.get(0);
-		}
+//		List<TaskRepository> repositories = TasksUi.getRepositoryManager().getAllRepositories();
+//		if (taskRepository == null && repositories.size() == 1) {
+//			// only the Local repository connector is available
+//			taskRepository = repositories.get(0);
+//		}
 
 		if (taskRepository != null) {
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskRepository.getConnectorKind());

@@ -66,14 +66,20 @@ public class NewTaskAction extends BaseSelectionListenerAction implements IMenuC
 
 	private Menu dropDownMenu;
 
-	public NewTaskAction() {
+	private NewTaskAction(boolean alwaysShowWizard) {
 		super(LABEL_NEW_TASK);
-		setMenuCreator(this);
+		if (!alwaysShowWizard) {
+			setMenuCreator(this);
+		}
 		setText(LABEL_NEW_TASK);
 		setToolTipText(LABEL_NEW_TASK);
 		setId(ID);
 		setEnabled(true);
 		setImageDescriptor(TasksUiImages.TASK_NEW);
+	}
+
+	public NewTaskAction() {
+		this(false);
 	}
 
 	@Override
@@ -138,6 +144,11 @@ public class NewTaskAction extends BaseSelectionListenerAction implements IMenuC
 	}
 
 	private void addActionsToMenu() {
+		NewTaskAction newTaskAction = new NewTaskAction(true);
+		newTaskAction.setText(Messages.NewTaskAction_Show_Wizard_Label);
+		new ActionContributionItem(newTaskAction).fill(dropDownMenu, -1);
+		new Separator().fill(dropDownMenu, -1);
+
 		Set<TaskRepository> includedRepositories = new HashSet<TaskRepository>();
 		TaskRepository localRepository = TasksUi.getRepositoryManager().getRepository(
 				LocalRepositoryConnector.CONNECTOR_KIND, LocalRepositoryConnector.REPOSITORY_URL);
@@ -170,7 +181,7 @@ public class NewTaskAction extends BaseSelectionListenerAction implements IMenuC
 		}
 
 		if (!includedRepositories.isEmpty()) {
-			new Separator().fill(dropDownMenu, -1);
+			//new Separator().fill(dropDownMenu, -1);
 			ArrayList<TaskRepository> listOfRepositories = new ArrayList<TaskRepository>(includedRepositories);
 			final TaskRepositoriesSorter comparator = new TaskRepositoriesSorter();
 			Collections.sort(listOfRepositories, new Comparator<TaskRepository>() {
@@ -187,7 +198,10 @@ public class NewTaskAction extends BaseSelectionListenerAction implements IMenuC
 		new ActionContributionItem(new NewQueryAction()).fill(dropDownMenu, -1);
 		new ActionContributionItem(new NewCategoryAction()).fill(dropDownMenu, -1);
 		new Separator().fill(dropDownMenu, -1);
-		new ActionContributionItem(new AddRepositoryAction()).fill(dropDownMenu, -1);
+		AddRepositoryAction action = new AddRepositoryAction();
+		action.setText(Messages.NewTaskAction_Add_Repository);
+		action.setImageDescriptor(null);
+		new ActionContributionItem(action).fill(dropDownMenu, -1);
 		new Separator(IWorkbenchActionConstants.MB_ADDITIONS);
 	}
 
