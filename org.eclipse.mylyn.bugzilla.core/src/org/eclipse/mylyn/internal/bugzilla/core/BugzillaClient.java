@@ -446,6 +446,13 @@ public class BugzillaClient {
 						if (nameValue.length == 1) {
 							pairs.add(new NameValuePair(nameValue[0].trim(), "")); //$NON-NLS-1$
 						} else if (nameValue.length == 2 && nameValue[0] != null && nameValue[1] != null) {
+
+							//Hack around bugzilla's change of attribute name for comment search field bug#289155
+							if (nameValue[0].startsWith("long_desc")) {
+								pairs.add(new NameValuePair(nameValue[0].replace("long_desc", "longdesc"),
+										URLDecoder.decode(nameValue[1].trim(), getCharacterEncoding())));
+							}
+
 							pairs.add(new NameValuePair(nameValue[0].trim(), URLDecoder.decode(nameValue[1].trim(),
 									getCharacterEncoding())));
 						}

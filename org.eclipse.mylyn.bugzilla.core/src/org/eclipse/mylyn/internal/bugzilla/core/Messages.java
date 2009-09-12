@@ -199,7 +199,7 @@ public class Messages extends NLS {
 
 	public static String BugzillaOperation_Reassign_to_default_assignee;
 
-	public static String BugzillaRepositoryConnector_BUGZILLA_SUPPORTS_2_18_TO_3_0;
+	public static String BugzillaRepositoryConnector_BUGZILLA_CONNECTOR_LABEL;
 
 	public static String BugzillaRepositoryConnector_Check_repository_configuration;
 

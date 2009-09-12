@@ -22,6 +22,9 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.bugzilla.tests.BugzillaTestConstants;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.context.tests.support.TestUtil;
+import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
+import org.eclipse.mylyn.context.tests.support.TestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClientManager;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
@@ -97,7 +100,8 @@ public class BugzillaFixture extends TestFixture {
 	}
 
 	public BugzillaClient client() throws CoreException, IOException {
-		return client(getRepositoryUrl(), "", "", "", "", "UTF-8");
+		Credentials credentials = TestUtil.readCredentials(PrivilegeLevel.USER);
+		return client(getRepositoryUrl(), credentials.username, credentials.password, "", "", "UTF-8");
 	}
 
 	public BugzillaClient client(String hostUrl, String username, String password, String htAuthUser,

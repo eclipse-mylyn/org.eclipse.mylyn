@@ -13,6 +13,8 @@ package org.eclipse.mylyn.bugzilla.tests.core;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
+import java.util.HashSet;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
@@ -20,12 +22,21 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.context.tests.support.TestUtil.PrivilegeLevel;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttributeMapper;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClientFactory;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * @author Robert Elves
@@ -34,8 +45,11 @@ public class BugzillaClientTest extends TestCase {
 
 	private BugzillaClient client;
 
+	private TaskRepository repository;
+
 	@Override
 	protected void setUp() throws Exception {
+		repository = BugzillaFixture.current().singleRepository();
 		client = BugzillaFixture.current().client();
 	}
 
@@ -77,6 +91,43 @@ public class BugzillaClientTest extends TestCase {
 		client = new BugzillaClient(location, repository.getCharacterEncoding(), repository.getProperties(),
 				BugzillaRepositoryConnector.getLanguageSetting(IBugzillaConstants.DEFAULT_LANG));
 		client.validate(new NullProgressMonitor());
+	}
+
+	public void testCommentQuery() throws Exception {
+		BugzillaAttributeMapper mapper = new BugzillaAttributeMapper(repository);
+		TaskData newData = new TaskData(mapper, BugzillaFixture.current().getConnectorKind(), BugzillaFixture.current()
+				.getRepositoryUrl(), "");
+
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryConnector(BugzillaFixture.current()
+				.getConnectorKind());
+		connector.getTaskDataHandler().initializeTaskData(repository, newData, null, new NullProgressMonitor());
+		newData.getRoot().getMappedAttribute(TaskAttribute.SUMMARY).setValue("testCommentQuery()");
+		newData.getRoot().getMappedAttribute(TaskAttribute.PRODUCT).setValue("TestProduct");
+		newData.getRoot().getMappedAttribute(TaskAttribute.COMPONENT).setValue("TestComponent");
+		newData.getRoot().getMappedAttribute(BugzillaAttribute.VERSION.getKey()).setValue("1");
+		newData.getRoot().getMappedAttribute(BugzillaAttribute.OP_SYS.getKey()).setValue("All");
+		long timestamp = System.currentTimeMillis();
+		newData.getRoot().getMappedAttribute(TaskAttribute.DESCRIPTION).setValue("" + timestamp);
+		RepositoryResponse response = client.postTaskData(newData, new NullProgressMonitor());
+
+		String bugid = response.getTaskId();
+		RepositoryQuery query = new RepositoryQuery(BugzillaFixture.current().getConnectorKind(), "123");
+		query.setRepositoryUrl(BugzillaFixture.current().getRepositoryUrl());
+		query.setUrl("?long_desc_type=allwordssubstr&long_desc=" + timestamp + "&bug_status=NEW&");
+
+		final Set<TaskData> returnedData = new HashSet<TaskData>();
+
+		TaskDataCollector collector = new TaskDataCollector() {
+
+			@Override
+			public void accept(TaskData taskData) {
+				returnedData.add(taskData);
+			}
+		};
+
+		client.getSearchHits(query, collector, mapper, new NullProgressMonitor());
+		assertEquals(1, returnedData.size());
+		assertEquals(bugid, returnedData.iterator().next().getTaskId());
 	}
 
 //	public void testCredentialsEncoding() throws IOException, BugzillaException, KeyManagementException,

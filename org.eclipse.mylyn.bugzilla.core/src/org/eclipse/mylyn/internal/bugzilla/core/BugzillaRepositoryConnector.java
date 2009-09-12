@@ -62,7 +62,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	private static final String CHANGED_BUGS_CGI_QUERY = "/buglist.cgi?query_format=advanced&chfieldfrom="; //$NON-NLS-1$
 
-	private static final String CLIENT_LABEL = Messages.BugzillaRepositoryConnector_BUGZILLA_SUPPORTS_2_18_TO_3_0;
+	private static final String CLIENT_LABEL = Messages.BugzillaRepositoryConnector_BUGZILLA_CONNECTOR_LABEL;
 
 	private static final String COMMENT_FORMAT = "yyyy-MM-dd HH:mm"; //$NON-NLS-1$
 
