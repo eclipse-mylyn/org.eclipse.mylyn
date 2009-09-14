@@ -30,7 +30,6 @@ import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
  * A document builder that creates an OASIS DITA topic
  * 
  * @author David Green
- * 
  * @see DitaBookMapDocumentBuilder
  */
 public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
@@ -68,12 +67,34 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private String rootTitle;
 
+	/**
+	 * Create a DitaTopicDocumentBuilder that writes formatted output to the given writer. Output without formatting can
+	 * be created using {@link #DitaTopicDocumentBuilder(XmlStreamWriter, boolean)}.
+	 * 
+	 * @param out
+	 *            the writer to which formatted XML content output
+	 */
 	public DitaTopicDocumentBuilder(Writer out) {
 		super(out);
 	}
 
+	/**
+	 * Equivalent to <code>new DitaTopicDocumentBuilder(writer,true)</code>
+	 * 
+	 * @see #DitaTopicDocumentBuilder(XmlStreamWriter, boolean)
+	 */
 	public DitaTopicDocumentBuilder(XmlStreamWriter writer) {
-		super(wrapStreamWriter(writer));
+		this(writer, true);
+	}
+
+	/**
+	 * @param writer
+	 *            the writer to which output is written
+	 * @param formatting
+	 *            indicate if the writer should format output
+	 */
+	public DitaTopicDocumentBuilder(XmlStreamWriter writer, boolean formatting) {
+		super(formatting ? wrapStreamWriter(writer) : writer);
 	}
 
 	@Override
@@ -82,6 +103,9 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 		return wrapStreamWriter(writer);
 	}
 
+	/**
+	 * wrap the stream writer in order to produce formatted output
+	 */
 	private static FormattingXMLStreamWriter wrapStreamWriter(XmlStreamWriter writer) {
 		return new FormattingXMLStreamWriter(writer) {
 			@Override
@@ -544,9 +568,7 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * the outline if available, otherwise null
-	 * 
-	 * {@link #setOutline(OutlineItem)}
+	 * the outline if available, otherwise null {@link #setOutline(OutlineItem)}
 	 */
 	public OutlineItem getOutline() {
 		return outline;

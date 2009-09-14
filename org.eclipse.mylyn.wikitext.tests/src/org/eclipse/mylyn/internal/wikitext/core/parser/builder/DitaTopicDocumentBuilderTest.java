@@ -19,6 +19,7 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.core.util.DefaultXmlStreamWriter;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 public class DitaTopicDocumentBuilderTest extends TestCase {
@@ -58,5 +59,23 @@ public class DitaTopicDocumentBuilderTest extends TestCase {
 
 		assertTrue(Pattern.compile(".*?<topic>\\s*<title></title>\\s*<body>\\s*<p>foo</p>\\s*<p>bar</p>\\s*</body>.*",
 				Pattern.DOTALL).matcher(dita).matches());
+	}
+
+	public void testNoFormatting() {
+		parser = new MarkupParser();
+		parser.setMarkupLanguage(new TextileLanguage());
+		out = new StringWriter();
+		DefaultXmlStreamWriter xmlStreamWriter = new DefaultXmlStreamWriter(out);
+		builder = new DitaTopicDocumentBuilder(xmlStreamWriter, false);
+		parser.setBuilder(builder);
+
+		parser.parse("h1. Title1\n\nsome content in a para");
+
+		xmlStreamWriter.close();
+
+		String dita = out.toString();
+		System.out.println("DITA: \n" + dita);
+
+		assertTrue(dita.contains("<topic id=\"Title1\"><title>Title1</title><body><p>some content in a para</p></body></topic>"));
 	}
 }
