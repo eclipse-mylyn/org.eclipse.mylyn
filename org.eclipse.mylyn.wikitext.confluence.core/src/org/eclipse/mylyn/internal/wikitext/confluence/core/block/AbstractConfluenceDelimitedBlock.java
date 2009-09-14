@@ -42,8 +42,8 @@ public abstract class AbstractConfluenceDelimitedBlock extends ParameterizedBloc
 		int segmentEnd = end;
 		boolean terminating = false;
 
-		Matcher endMatcher = endPattern.matcher(line);
 		if (offset < end) {
+			Matcher endMatcher = endPattern.matcher(line);
 			if (blockLineCount == 0) {
 				endMatcher.region(offset, end);
 			}
