@@ -350,6 +350,7 @@ WikiText conversion to DITA is performed using the @wikitext-to-dita@ task.  In 
 | @topicDoctype@ | Overrides the DTD doctype to use in the target topic files. Optional.  |
 | @topicFolder@ | The relative folder name to use for topic files when producing multiple output files. Optional, defaults to 'topics'.  |
 | @topicStrategy@ | Specify how multiple output files are generated.  Optional, defaults to 'FIRST'.  Must be one of 'FIRST', 'LEVEL1' or 'NONE'.  'FIRST' indicates that multiple topic files are to be created, split at the level of the first heading encountered in the file.  'LEVEL1' indicates that multiple topic files are to be created, split one file for each level-1 heading encountered.  'NONE' indicates that multiple topic files are not to be created.  Only a single topic file is created, with no bookmap. |
+| @formatting@ | Indicate if the XML output should be formatted.  Defaults to 'true'. |
 
 h4. wikitext-to-dita - Multiple Files Example
 

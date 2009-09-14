@@ -123,6 +123,42 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 		assertTrue(firstTopicContent.contains("<p>some content</p>"));
 	}
 
+	public void testCreatesMapbookNoFormatting() throws IOException {
+		File markupFile = createSimpleTextileMarkup();
+		ditaTask.setBookTitle("Sample Title");
+		ditaTask.setFile(markupFile);
+		ditaTask.setFormatting(false);
+
+		ditaTask.execute();
+
+		listFiles();
+
+		File ditamapFile = new File(tempFolder, "markup.ditamap");
+		assertTrue(ditamapFile.exists());
+		File firstHeadingFile = new File(topicsFolder, "FirstHeading.dita");
+		assertTrue(firstHeadingFile.exists());
+		File secondHeadingFile = new File(topicsFolder, "SecondHeading.dita");
+		assertTrue(secondHeadingFile.exists());
+
+		String ditamapContent = getContent(ditamapFile);
+
+		System.out.println(ditamapContent);
+
+		assertTrue(ditamapContent.contains("<bookmap><title>Sample Title</title><chapter href=\"topics/FirstHeading.dita\" navtitle=\"First Heading\"/><chapter href=\"topics/SecondHeading.dita\" navtitle=\"Second Heading\"/></bookmap>"));
+
+		String firstTopicContent = getContent(firstHeadingFile);
+//		<?xml version='1.0' ?><!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA 1.1 Topic//EN" "http://docs.oasis-open.org/dita/v1.1/OS/dtd/topic.dtd">
+//		<topic id="FirstHeading">
+//			<title>First Heading</title>
+//			<body>
+//				<p>some content</p>
+//			</body>
+//		</topic>
+		System.out.println(firstTopicContent);
+
+		assertTrue(firstTopicContent.contains("<topic id=\"FirstHeading\"><title>First Heading</title><body><p>some content</p></body></topic>"));
+	}
+
 	public void testCreatesSingleTopic() throws IOException {
 		File markupFile = createSimpleTextileMarkup();
 		ditaTask.setBookTitle("Sample Title");
@@ -149,6 +185,30 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 		assertTrue(firstTopicContent.contains("<topic id=\"SecondHeading\">"));
 		assertTrue(firstTopicContent.contains("<title>Second Heading</title>"));
 		assertTrue(firstTopicContent.contains("<p>some more content</p>"));
+	}
+
+	public void testCreatesSingleTopicNoFormatting() throws IOException {
+		File markupFile = createSimpleTextileMarkup();
+		ditaTask.setBookTitle("Sample Title");
+		ditaTask.setFile(markupFile);
+		ditaTask.setFilenameFormat("$1.dita");
+		ditaTask.setTopicStrategy(MarkupToDitaTask.BreakStrategy.NONE);
+		ditaTask.setFormatting(false);
+
+		ditaTask.execute();
+
+		listFiles();
+
+		File ditamapFile = new File(tempFolder, "markup.ditamap");
+		assertFalse(ditamapFile.exists());
+		File firstHeadingFile = new File(tempFolder, "markup.dita");
+		assertTrue(firstHeadingFile.exists());
+
+		String firstTopicContent = getContent(firstHeadingFile);
+
+		System.out.println(firstTopicContent);
+
+		assertTrue(firstTopicContent.contains("<topic><title>Sample Title</title><topic id=\"FirstHeading\"><title>First Heading</title><body><p>some content</p></body></topic><topic id=\"SecondHeading\"><title>Second Heading</title><body><p>some more content</p></body></topic></topic>"));
 	}
 
 	public void testMapbookXRef() throws IOException {

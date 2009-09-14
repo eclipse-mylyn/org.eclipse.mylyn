@@ -23,19 +23,17 @@ import java.util.Stack;
 import org.eclipse.mylyn.internal.wikitext.core.parser.builder.DitaTopicDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
+import org.eclipse.mylyn.wikitext.core.util.DefaultXmlStreamWriter;
 import org.eclipse.mylyn.wikitext.core.util.FormattingXMLStreamWriter;
 import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
 import org.eclipse.mylyn.wikitext.core.util.anttask.MarkupToDitaTask;
 
 /**
  * a document builder that can produce OASIS DITA output in the form of a book map and multiple topic output files, one
- * for each level-1 heading.
- * 
- * This document builder differs from others in that it implements {@link Closeable} and therefore must be closed after
- * use. Also this document builder produces multiple output files.
+ * for each level-1 heading. This document builder differs from others in that it implements {@link Closeable} and
+ * therefore must be closed after use. Also this document builder produces multiple output files.
  * 
  * @author David Green
- * 
  * @see DocBookDocumentBuilder
  * @see MarkupToDitaTask
  * @since 1.0
@@ -71,6 +69,8 @@ public class DitaBookMapDocumentBuilder extends AbstractXmlDocumentBuilder imple
 	private OutlineItem outline;
 
 	private int topicBreakLevel = 1;
+
+	private boolean formattingDependencies = true;
 
 	public DitaBookMapDocumentBuilder(Writer out) {
 		super(out);
@@ -198,7 +198,8 @@ public class DitaBookMapDocumentBuilder extends AbstractXmlDocumentBuilder imple
 			titleText = ""; //$NON-NLS-1$
 			mapEntryOpen = true;
 
-			currentTopic = new DitaTopicDocumentBuilder(currentTopicOut);
+			currentTopic = new DitaTopicDocumentBuilder(new DefaultXmlStreamWriter(currentTopicOut),
+					formattingDependencies);
 			if (topicDoctype != null) {
 				currentTopic.setDoctype(topicDoctype);
 			}
@@ -360,9 +361,7 @@ public class DitaBookMapDocumentBuilder extends AbstractXmlDocumentBuilder imple
 	}
 
 	/**
-	 * the outline if available, otherwise null
-	 * 
-	 * {@link #setOutline(OutlineItem)}
+	 * the outline if available, otherwise null {@link #setOutline(OutlineItem)}
 	 */
 	public OutlineItem getOutline() {
 		return outline;
@@ -389,4 +388,23 @@ public class DitaBookMapDocumentBuilder extends AbstractXmlDocumentBuilder imple
 	public void setTopicBreakLevel(int topicBreakLevel) {
 		this.topicBreakLevel = topicBreakLevel;
 	}
+
+	/**
+	 * Indicate if dependencies should be formatted
+	 * 
+	 * @since 1.2
+	 */
+	public boolean isFormattingDependencies() {
+		return formattingDependencies;
+	}
+
+	/**
+	 * Indicate if dependencies should be formatted
+	 * 
+	 * @since 1.2
+	 */
+	public void setFormattingDependencies(boolean formattingDependencies) {
+		this.formattingDependencies = formattingDependencies;
+	}
+
 }

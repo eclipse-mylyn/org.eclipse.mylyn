@@ -30,6 +30,8 @@ import org.eclipse.mylyn.wikitext.core.parser.builder.DitaBookMapDocumentBuilder
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
+import org.eclipse.mylyn.wikitext.core.util.DefaultXmlStreamWriter;
+import org.eclipse.mylyn.wikitext.core.util.FormattingXMLStreamWriter;
 
 /**
  * An Ant task for converting markup to OASIS DITA format.
@@ -70,6 +72,8 @@ public class MarkupToDitaTask extends MarkupTask {
 	private String topicFolder = "topics"; //$NON-NLS-1$
 
 	private BreakStrategy topicStrategy = BreakStrategy.FIRST;
+
+	private boolean formatting = true;
 
 	/**
 	 * Adds a set of files to process.
@@ -173,7 +177,8 @@ public class MarkupToDitaTask extends MarkupTask {
 			}
 			try {
 				if (topicStrategy == BreakStrategy.NONE) {
-					DitaTopicDocumentBuilder builder = new DitaTopicDocumentBuilder(writer);
+					DitaTopicDocumentBuilder builder = new DitaTopicDocumentBuilder(new DefaultXmlStreamWriter(writer),
+							formatting);
 					builder.setRootTopicTitle(bookTitle);
 
 					MarkupParser parser = new MarkupParser();
@@ -187,8 +192,12 @@ public class MarkupToDitaTask extends MarkupTask {
 
 					parser.parse(markupContent);
 				} else {
-					DitaBookMapDocumentBuilder builder = new DitaBookMapDocumentBuilder(writer);
+					DitaBookMapDocumentBuilder builder = new DitaBookMapDocumentBuilder(
+							formatting ? new FormattingXMLStreamWriter(new DefaultXmlStreamWriter(writer))
+									: new DefaultXmlStreamWriter(writer));
 					try {
+						builder.setFormattingDependencies(formatting);
+
 						MarkupParser parser = new MarkupParser();
 						parser.setMarkupLanguage(markupLanguage);
 						parser.setBuilder(builder);
@@ -343,6 +352,24 @@ public class MarkupToDitaTask extends MarkupTask {
 
 	public void setTopicStrategy(BreakStrategy topicStrategy) {
 		this.topicStrategy = topicStrategy;
+	}
+
+	/**
+	 * Indicate if the dita output should be formatted
+	 * 
+	 * @since 1.2
+	 */
+	public boolean isFormatting() {
+		return formatting;
+	}
+
+	/**
+	 * Indicate if the dita output should be formatted
+	 * 
+	 * @since 1.2
+	 */
+	public void setFormatting(boolean formatting) {
+		this.formatting = formatting;
 	}
 
 }
