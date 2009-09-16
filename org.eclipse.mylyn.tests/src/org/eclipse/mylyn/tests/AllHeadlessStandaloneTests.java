@@ -14,6 +14,7 @@ package org.eclipse.mylyn.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.mylyn.bugzilla.tests.AllBugzillaHeadlessStandaloneTests;
 import org.eclipse.mylyn.commons.tests.net.SslProtocolSocketFactoryTest;
 import org.eclipse.mylyn.commons.tests.net.WebUtilTest;
 import org.eclipse.mylyn.discovery.tests.AllDiscoveryTests;
@@ -55,6 +56,9 @@ public class AllHeadlessStandaloneTests {
 
 		// wikitext
 		suite.addTest(org.eclipse.mylyn.wikitext.tests.HeadlessStandaloneTests.suite());
+
+		// bugzilla
+		suite.addTest(AllBugzillaHeadlessStandaloneTests.suite());
 
 		// trac
 		suite.addTest(AllTracHeadlessStandaloneTests.suite());
