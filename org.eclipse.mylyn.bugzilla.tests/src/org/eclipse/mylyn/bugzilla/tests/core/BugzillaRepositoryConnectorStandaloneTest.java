@@ -12,7 +12,9 @@
 
 package org.eclipse.mylyn.bugzilla.tests.core;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import junit.framework.TestCase;
@@ -21,13 +23,14 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.context.tests.support.TestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
@@ -35,6 +38,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 /**
  * @author Nathan Hapke
  * @author Rob Elves
+ * @author Thomas Ehrnhoefer
+ * @author Steffen Pingel
  */
 public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 
@@ -42,20 +47,16 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 
 	private BugzillaRepositoryConnector connector;
 
-	@SuppressWarnings("unused")
-	private AbstractTaskDataHandler handler;
+	private BugzillaClient client;
 
 	@Override
-	protected void setUp() throws Exception {
+	public void setUp() throws Exception {
+		client = BugzillaFixture.current().client(PrivilegeLevel.USER);
 		repository = BugzillaFixture.current().repository();
-		connector = new BugzillaRepositoryConnector();
-//		BugzillaLanguageSettings language = BugzillaCorePlugin.getDefault().getLanguageSetting(
-//				IBugzillaConstants.DEFAULT_LANG);
-//		BugzillaRepositoryConnector.addLanguageSetting(language);
-		handler = connector.getTaskDataHandler();
+		connector = BugzillaFixture.current().connector();
 	}
 
-	public void testHasChanged() {
+	public void testHasTaskChanged() {
 		AbstractTask task = new TaskTask(repository.getConnectorKind(), repository.getRepositoryUrl(), "1");
 		task.setAttribute(BugzillaAttribute.DELTA_TS.getKey(), "2008-02-02 12:01:12");
 		TaskData data = new TaskData(connector.getTaskDataHandler().getAttributeMapper(repository),
@@ -139,102 +140,126 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 				&& auth.getUserName() != null && !auth.getUserName().equals(""));
 	}
 
-	public void testGetBug() throws Exception {
+	public void testGetTaskData() throws Exception {
+		TaskData taskData = BugzillaFixture.current().createTask(PrivilegeLevel.USER, null, null);
 		Set<String> taskIds = new HashSet<String>();
-		taskIds.add("1");
-		final Set<TaskData> changedTaskData = new HashSet<TaskData>();
+		taskIds.add(taskData.getTaskId());
+		final Set<TaskData> results = new HashSet<TaskData>();
 		TaskDataCollector collector = new TaskDataCollector() {
-
 			@Override
 			public void accept(TaskData taskData) {
-				changedTaskData.add(taskData);
+				results.add(taskData);
 			}
 		};
 		connector.getTaskDataHandler().getMultiTaskData(repository, taskIds, collector, new NullProgressMonitor());
-		assertEquals(1, changedTaskData.size());
-		for (TaskData taskData : changedTaskData) {
-			String taskId = taskData.getTaskId();
-			if (taskId.equals("1")) {
-				assertEquals("user@mylar.eclipse.org", taskData.getRoot().getAttribute(
-						BugzillaAttribute.ASSIGNED_TO.getKey()).getValue());
-				assertEquals("foo", taskData.getRoot().getAttribute(BugzillaAttribute.LONG_DESC.getKey()).getValue());
-				// You can use the getAttributeValue to pull up the information on any
-				// part of the bug
-				assertEquals("P1", taskData.getRoot().getAttribute(BugzillaAttribute.PRIORITY.getKey()).getValue());
-
-			} else {
-				fail("Unexpected TaskData returned");
-			}
-		}
+		assertEquals(1, results.size());
+		TaskData updatedTaskData = results.iterator().next();
+		String taskId = updatedTaskData.getTaskId();
+		assertEquals(taskId, updatedTaskData.getTaskId());
+		assertEquals(taskData.getRoot().getAttribute(BugzillaAttribute.ASSIGNED_TO.getKey()).getValue(),
+				updatedTaskData.getRoot().getAttribute(BugzillaAttribute.ASSIGNED_TO.getKey()).getValue());
+		assertEquals(taskData.getRoot().getAttribute(BugzillaAttribute.LONG_DESC.getKey()).getValue(),
+				updatedTaskData.getRoot().getAttribute(BugzillaAttribute.LONG_DESC.getKey()).getValue());
+		assertEquals(taskData.getRoot().getAttribute(BugzillaAttribute.PRIORITY.getKey()).getValue(),
+				updatedTaskData.getRoot().getAttribute(BugzillaAttribute.PRIORITY.getKey()).getValue());
 	}
 
-	public void testGetBugs() throws Exception {
+	public void testGetMultiTaskData() throws Exception {
+		TaskData taskData = BugzillaFixture.current().createTask(PrivilegeLevel.USER, null, null);
+		TaskData taskData2 = BugzillaFixture.current().createTask(PrivilegeLevel.USER, null, null);
+		TaskData taskData3 = BugzillaFixture.current().createTask(PrivilegeLevel.USER, null, null);
 		Set<String> taskIds = new HashSet<String>();
-		taskIds.add("1");
-		taskIds.add("2");
-		taskIds.add("4");
-		final Set<TaskData> changedTaskData = new HashSet<TaskData>();
+		taskIds.add(taskData.getTaskId());
+		taskIds.add(taskData2.getTaskId());
+		taskIds.add(taskData3.getTaskId());
+		final Map<String, TaskData> results = new HashMap<String, TaskData>();
 		TaskDataCollector collector = new TaskDataCollector() {
-
 			@Override
 			public void accept(TaskData taskData) {
-				changedTaskData.add(taskData);
+				results.put(taskData.getTaskId(), taskData);
 			}
 		};
 		connector.getTaskDataHandler().getMultiTaskData(repository, taskIds, collector, new NullProgressMonitor());
-		assertEquals(3, changedTaskData.size());
-		for (TaskData taskData : changedTaskData) {
-			String taskId = taskData.getTaskId();
-			if (taskId.equals("1")) {
-				assertEquals("user@mylar.eclipse.org", taskData.getRoot().getAttribute(
-						BugzillaAttribute.ASSIGNED_TO.getKey()).getValue());
-				assertEquals("foo", taskData.getRoot().getAttribute(BugzillaAttribute.LONG_DESC.getKey()).getValue());
-				// You can use the getAttributeValue to pull up the information on any
-				// part of the bug
-				assertEquals("P1", taskData.getRoot().getAttribute(BugzillaAttribute.PRIORITY.getKey()).getValue());
+		assertEquals(3, results.size());
 
-			} else if (taskId.equals("2")) {
-				assertEquals("nhapke@cs.ubc.ca", taskData.getRoot()
-						.getAttribute(BugzillaAttribute.ASSIGNED_TO.getKey())
-						.getValue());
-				assertEquals("search-match-test 1", taskData.getRoot().getAttribute(
-						BugzillaAttribute.LONG_DESC.getKey()).getValue());
-			} else if (taskId.equals("4")) {
-				assertEquals("relves@cs.ubc.ca", taskData.getRoot()
-						.getAttribute(BugzillaAttribute.REPORTER.getKey())
-						.getValue());
-				assertEquals("Test", taskData.getRoot().getAttribute(BugzillaAttribute.LONG_DESC.getKey()).getValue());
-			} else {
-				fail("Unexpected TaskData returned");
-			}
+		TaskData updatedTaskData = results.get(taskData.getTaskId());
+		assertEquals(taskData.getRoot().getAttribute(BugzillaAttribute.ASSIGNED_TO.getKey()).getValue(),
+				updatedTaskData.getRoot().getAttribute(BugzillaAttribute.ASSIGNED_TO.getKey()).getValue());
+		assertEquals(taskData.getRoot().getAttribute(BugzillaAttribute.LONG_DESC.getKey()).getValue(),
+				updatedTaskData.getRoot().getAttribute(BugzillaAttribute.LONG_DESC.getKey()).getValue());
+		assertEquals(taskData.getRoot().getAttribute(BugzillaAttribute.PRIORITY.getKey()).getValue(),
+				updatedTaskData.getRoot().getAttribute(BugzillaAttribute.PRIORITY.getKey()).getValue());
 
-		}
+		updatedTaskData = results.get(taskData2.getTaskId());
+		assertEquals(taskData2.getRoot().getAttribute(BugzillaAttribute.ASSIGNED_TO.getKey()).getValue(),
+				updatedTaskData.getRoot().getAttribute(BugzillaAttribute.ASSIGNED_TO.getKey()).getValue());
+		assertEquals(taskData2.getRoot().getAttribute(BugzillaAttribute.LONG_DESC.getKey()).getValue(),
+				updatedTaskData.getRoot().getAttribute(BugzillaAttribute.LONG_DESC.getKey()).getValue());
+
+		updatedTaskData = results.get(taskData3.getTaskId());
+		assertEquals(taskData3.getRoot().getAttribute(BugzillaAttribute.ASSIGNED_TO.getKey()).getValue(),
+				updatedTaskData.getRoot().getAttribute(BugzillaAttribute.REPORTER.getKey()).getValue());
+		assertEquals(taskData3.getRoot().getAttribute(BugzillaAttribute.LONG_DESC.getKey()).getValue(),
+				updatedTaskData.getRoot().getAttribute(BugzillaAttribute.LONG_DESC.getKey()).getValue());
 	}
 
-	public void testQueryViaConnector() throws Exception {
+	public void testPerformQuery() throws Exception {
+		TaskData taskData = BugzillaFixture.current().createTask(PrivilegeLevel.USER, null, null);
+
+		// queries for bugs assigned to tests@mylyn.eclipse.org, updated in the last hour, trivial with P1
+		String priority = "P1";
+		String severity = "trivial";
+		String email = "tests%40mylyn.eclipse.org";
 		String queryUrlString = repository.getRepositoryUrl()
-				+ "/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=search-match-test&product=TestProduct&long_desc_type=substring&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&deadlinefrom=&deadlineto=&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&emailassigned_to1=1&emailtype1=substring&email1=&emailassigned_to2=1&emailreporter2=1&emailcc2=1&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
+				+ "/buglist.cgi?priority="
+				+ priority
+				+ "&emailassigned_to1=1&query_format=advanced&emailreporter1=1&field0-0-0=bug_status&bug_severity="
+				+ severity
+				+ "&bug_status=UNCONFIRMED&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&type0-0-1=equals&value0-0-1=tests%40mylyn.eclipse.org&email1="
+				+ email + "&type0-0-0=notequals&field0-0-1=reporter&value0-0-0=UNCONFIRMED&emailtype1=exact";
 
-		// holds onto actual hit objects
-		BugzillaRepositoryConnector connector = new BugzillaRepositoryConnector();
+		// make sure initial task is not P1/trivial
+		assertFalse(taskData.getRoot().getMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).getValue().equals(
+				priority));
+		assertFalse(taskData.getRoot().getMappedAttribute(BugzillaAttribute.BUG_SEVERITY.getKey()).getValue().equals(
+				severity));
+
+		// run query
 		RepositoryQuery query = new RepositoryQuery(repository.getConnectorKind(), "handle-testQueryViaConnector");
 		query.setUrl(queryUrlString);
-
-		final Set<TaskData> changedTaskData = new HashSet<TaskData>();
+		final Map<String, TaskData> changedTaskData = new HashMap<String, TaskData>();
 		TaskDataCollector collector = new TaskDataCollector() {
-
 			@Override
 			public void accept(TaskData taskData) {
-				changedTaskData.add(taskData);
+				changedTaskData.put(taskData.getTaskId(), taskData);
 			}
 		};
-
 		connector.performQuery(repository, query, collector, null, new NullProgressMonitor());
-		assertEquals(2, changedTaskData.size());
-		for (TaskData taskData : changedTaskData) {
-			assertTrue(taskData.getRoot().getAttribute(BugzillaAttribute.SHORT_DESC.getKey()).getValue().contains(
-					"search-match-test"));
-		}
+
+		// set priority and severity on task
+		taskData.getRoot().getMappedAttribute(BugzillaAttribute.SHORT_DESC.getKey()).setValue(
+				System.currentTimeMillis() + "");
+		taskData.getRoot().getMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue(priority);
+		taskData.getRoot().getMappedAttribute(BugzillaAttribute.BUG_SEVERITY.getKey()).setValue(severity);
+		TaskData taskDataNew = BugzillaFixture.current().submitTask(taskData, client);
+
+		// run query again
+		final Map<String, TaskData> changedTaskData2 = new HashMap<String, TaskData>();
+		TaskDataCollector collector2 = new TaskDataCollector() {
+			@Override
+			public void accept(TaskData taskData) {
+				changedTaskData2.put(taskData.getTaskId(), taskData);
+			}
+		};
+		connector.performQuery(repository, query, collector2, null, new NullProgressMonitor());
+
+		// compare query results
+		changedTaskData2.keySet().removeAll(changedTaskData.keySet());
+		assertEquals(1, changedTaskData2.size());
+		taskData = changedTaskData2.get(taskData.getTaskId());
+		assertNotNull(taskData);
+		assertTrue(taskData.getRoot().getAttribute(BugzillaAttribute.SHORT_DESC.getKey()).getValue().equals(
+				taskDataNew.getRoot().getAttribute(BugzillaAttribute.SHORT_DESC.getKey()).getValue()));
 	}
 
 }

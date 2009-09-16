@@ -14,30 +14,44 @@ package org.eclipse.mylyn.bugzilla.tests.support;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collections;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.bugzilla.tests.BugzillaTestConstants;
-import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.context.tests.support.TestUtil;
 import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
 import org.eclipse.mylyn.context.tests.support.TestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClientManager;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.osgi.framework.Bundle;
 
 /**
  * @author Steffen Pingel
+ * @author Thomas Ehrnhoefer
  */
 public class BugzillaFixture extends TestFixture {
 
 	private static BugzillaFixture current;
 
+	/**
+	 * @deprecated not supported any more
+	 */
+	@Deprecated
 	public static BugzillaFixture BUGS_2_18 = new BugzillaFixture(BugzillaTestConstants.TEST_BUGZILLA_218_URL,//
 			"2.18.6", "");
 
@@ -53,9 +67,17 @@ public class BugzillaFixture extends TestFixture {
 	public static BugzillaFixture BUGS_3_2 = new BugzillaFixture(BugzillaTestConstants.TEST_BUGZILLA_32_URL, //
 			"3.2.4", "");
 
+	/**
+	 * @deprecated use latest 3.2 -> BUGS_3_2
+	 */
+	@Deprecated
 	public static BugzillaFixture BUGS_3_2_2 = new BugzillaFixture(BugzillaTestConstants.TEST_BUGZILLA_322_URL, //
 			"3.2.2", "");
 
+	/**
+	 * @deprecated use latest 3.2 -> BUGS_3_2
+	 */
+	@Deprecated
 	public static BugzillaFixture BUGS_3_2_3 = new BugzillaFixture(BugzillaTestConstants.TEST_BUGZILLA_323_URL, //
 			"3.2.3", "");
 
@@ -64,8 +86,8 @@ public class BugzillaFixture extends TestFixture {
 
 	public static BugzillaFixture DEFAULT = BUGS_3_4;
 
-	public static final BugzillaFixture[] ALL = new BugzillaFixture[] { BUGS_2_18, BUGS_2_20, BUGS_2_22, BUGS_3_0,
-			BUGS_3_2_2, BUGS_3_2_3, BUGS_3_2, BUGS_3_4 };
+	public static final BugzillaFixture[] ALL = new BugzillaFixture[] { BUGS_2_20, BUGS_2_22, BUGS_3_0, BUGS_3_2,
+			BUGS_3_4 };
 
 	private final String version;
 
@@ -106,19 +128,36 @@ public class BugzillaFixture extends TestFixture {
 
 	public BugzillaClient client(String hostUrl, String username, String password, String htAuthUser,
 			String htAuthPass, String encoding) throws CoreException, IOException {
-		TaskRepository taskRepository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, hostUrl);
+		WebLocation location = new WebLocation(hostUrl);
+		location.setCredentials(AuthenticationType.REPOSITORY, username, password);
+		location.setCredentials(AuthenticationType.HTTP, htAuthUser, htAuthPass);
+		return client(location, encoding);
 
-		AuthenticationCredentials credentials = new AuthenticationCredentials(username, password);
-		taskRepository.setCredentials(AuthenticationType.REPOSITORY, credentials, false);
+	}
 
-		AuthenticationCredentials webCredentials = new AuthenticationCredentials(htAuthUser, htAuthPass);
-		taskRepository.setCredentials(AuthenticationType.HTTP, webCredentials, false);
+	public BugzillaClient client(AbstractWebLocation location, String encoding) throws CoreException {
+
+		TaskRepository taskRepository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, location.getUrl());
+
+		taskRepository.setCredentials(AuthenticationType.REPOSITORY,
+				location.getCredentials(AuthenticationType.REPOSITORY), false);
+
+		taskRepository.setCredentials(AuthenticationType.HTTP, location.getCredentials(AuthenticationType.HTTP), false);
 		taskRepository.setCharacterEncoding(encoding);
 
-		BugzillaClientManager bugzillaClientManager = new BugzillaClientManager();
+		BugzillaRepositoryConnector connector = new BugzillaRepositoryConnector();
+		super.connector = connector;
+		BugzillaClientManager bugzillaClientManager = connector.getClientManager();
 		BugzillaClient client = bugzillaClientManager.getClient(taskRepository, null);
-		client.getRepositoryConfiguration(new NullProgressMonitor());
+
+		BugzillaCorePlugin.setConnector(connector);
+		BugzillaCorePlugin.getRepositoryConfiguration(taskRepository, true, new NullProgressMonitor());
 		return client;
+	}
+
+	public BugzillaClient client(PrivilegeLevel level) throws Exception {
+		AbstractWebLocation location = location(level);
+		return client(location, "UTF-8");
 	}
 
 	public static File getFile(String filename) throws IOException {
@@ -131,6 +170,52 @@ public class BugzillaFixture extends TestFixture {
 			filename = localURL.getFile() + "../../../../../../../" + filename;
 		}
 		return new File(filename);
+	}
+
+	/**
+	 * Create and returns a minimal task.
+	 * 
+	 * @param summary
+	 *            may be <code>null</code>
+	 * @param description
+	 *            may be <code>null</code>
+	 * @return The taskData retrieved from updating the task
+	 */
+	public TaskData createTask(PrivilegeLevel level, String summary, String description) throws Exception {
+		if (summary == null) {
+			summary = "summary";
+		}
+		if (description == null) {
+			description = "description";
+		}
+		BugzillaClient client = client(level);
+		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(repository());
+		TaskData taskData = new TaskData(mapper, repository().getConnectorKind(), repository().getRepositoryUrl(), "");
+		taskDataHandler.initializeTaskData(repository(), taskData, null, null);
+		taskData.getRoot().createMappedAttribute(TaskAttribute.SUMMARY).setValue(summary);
+		taskData.getRoot().createMappedAttribute(TaskAttribute.DESCRIPTION).setValue("description");
+		return submitTask(taskData, client);
+	}
+
+	public TaskData submitTask(TaskData taskData, BugzillaClient client) throws IOException, CoreException {
+		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(repository());
+		final TaskData[] newData = new TaskData[1];
+		RepositoryResponse result = client.postTaskData(taskData, null);
+		String bugId = result.getTaskId();
+		client.getTaskData(Collections.singleton(bugId), new TaskDataCollector() {
+			@Override
+			public void accept(TaskData data) {
+				newData[0] = data;
+			}
+		}, mapper, null);
+		return newData[0];
+	}
+
+	@Override
+	public BugzillaRepositoryConnector connector() {
+		return (BugzillaRepositoryConnector) connector;
 	}
 
 }

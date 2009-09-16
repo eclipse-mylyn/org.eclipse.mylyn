@@ -95,7 +95,10 @@ public class BugzillaCorePlugin extends Plugin {
 		super.stop(context);
 	}
 
-	static void setConnector(BugzillaRepositoryConnector theConnector) {
+	/**
+	 * public for testing
+	 */
+	public static void setConnector(BugzillaRepositoryConnector theConnector) {
 		connector = theConnector;
 	}
 

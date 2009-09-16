@@ -36,10 +36,10 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * @author Robert Elves
+ * @author Thomas Ehrnhoefer
  */
 public class BugzillaClientTest extends TestCase {
 
@@ -49,7 +49,7 @@ public class BugzillaClientTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		repository = BugzillaFixture.current().singleRepository();
+		repository = BugzillaFixture.current().repository();
 		client = BugzillaFixture.current().client();
 	}
 
@@ -58,20 +58,23 @@ public class BugzillaClientTest extends TestCase {
 		assertNotNull(config);
 		assertEquals(BugzillaFixture.current().getVersion(), config.getInstallVersion().toString());
 		assertEquals(7, config.getStatusValues().size());
-		assertEquals(9, config.getResolutions().size());
-		assertEquals(6, config.getPlatforms().size());
-		assertEquals(32, config.getOSs().size());
+		assertEquals(8, config.getResolutions().size());
+		assertEquals(8, config.getPlatforms().size());
+		assertEquals(36, config.getOSs().size());
 		assertEquals(5, config.getPriorities().size());
 		assertEquals(7, config.getSeverities().size());
-		assertTrue(config.getProducts().size() > 50);
+		assertEquals(3, config.getProducts().size());
 		assertEquals(4, config.getOpenStatusValues().size());
-		assertEquals(14, config.getComponents("Mylyn").size());
-		assertEquals(27, config.getKeywords().size());
-		assertEquals(1, config.getComponents("TestProduct").size());
-		assertEquals(1, config.getVersions("TestProduct").size());
-		assertEquals(0, config.getTargetMilestones("TestProduct").size());
-		// assertEquals(10, config.getComponents("Hyades").size());
-		// assertEquals(1, config.getTargetMilestones("TestProduct").size());
+		assertEquals(2, config.getKeywords().size());
+		assertEquals(2, config.getComponents("ManualTest").size());
+		assertEquals(4, config.getVersions("ManualTest").size());
+		assertEquals(4, config.getTargetMilestones("ManualTest").size());
+		assertEquals(2, config.getComponents("TestProduct").size());
+		assertEquals(4, config.getVersions("TestProduct").size());
+		assertEquals(4, config.getTargetMilestones("TestProduct").size());
+		assertEquals(2, config.getComponents("Scratch").size());
+		assertEquals(4, config.getVersions("Scratch").size());
+		assertEquals(4, config.getTargetMilestones("Scratch").size());
 	}
 
 	public void testValidate() throws Exception {
@@ -90,7 +93,12 @@ public class BugzillaClientTest extends TestCase {
 		client = BugzillaClientFactory.createClient(repository);
 		client = new BugzillaClient(location, repository.getCharacterEncoding(), repository.getProperties(),
 				BugzillaRepositoryConnector.getLanguageSetting(IBugzillaConstants.DEFAULT_LANG));
-		client.validate(new NullProgressMonitor());
+		try {
+			client.validate(new NullProgressMonitor());
+			fail("invalid proxy did not cause connection error");
+		} catch (Exception e) {
+			// ignore
+		}
 	}
 
 	public void testCommentQuery() throws Exception {
@@ -98,8 +106,7 @@ public class BugzillaClientTest extends TestCase {
 		TaskData newData = new TaskData(mapper, BugzillaFixture.current().getConnectorKind(), BugzillaFixture.current()
 				.getRepositoryUrl(), "");
 
-		AbstractRepositoryConnector connector = TasksUi.getRepositoryConnector(BugzillaFixture.current()
-				.getConnectorKind());
+		AbstractRepositoryConnector connector = BugzillaFixture.current().connector();
 		connector.getTaskDataHandler().initializeTaskData(repository, newData, null, new NullProgressMonitor());
 		newData.getRoot().getMappedAttribute(TaskAttribute.SUMMARY).setValue("testCommentQuery()");
 		newData.getRoot().getMappedAttribute(TaskAttribute.PRODUCT).setValue("TestProduct");

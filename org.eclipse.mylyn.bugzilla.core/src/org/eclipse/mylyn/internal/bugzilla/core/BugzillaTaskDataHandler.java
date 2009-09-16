@@ -429,7 +429,9 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			}
 
 			initializeNewTaskDataAttributes(repositoryConfiguration, taskData, product, component, monitor);
-			BugzillaCorePlugin.getDefault().setPlatformDefaultsOrGuess(repository, taskData);
+			if (BugzillaCorePlugin.getDefault() != null) {
+				BugzillaCorePlugin.getDefault().setPlatformDefaultsOrGuess(repository, taskData);
+			}
 			return true;
 
 		} else {

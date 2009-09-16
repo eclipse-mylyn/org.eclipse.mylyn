@@ -26,10 +26,12 @@ import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
 import org.eclipse.mylyn.context.tests.support.TestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
  * @author Steffen Pingel
+ * @author Thomas Ehrnhoefer
  */
 public abstract class TestFixture {
 
@@ -38,6 +40,8 @@ public abstract class TestFixture {
 	private String info;
 
 	protected final String repositoryUrl;
+
+	protected AbstractRepositoryConnector connector;
 
 	public TestFixture(String connectorKind, String repositoryUrl) {
 		this.connectorKind = connectorKind;
@@ -124,6 +128,10 @@ public abstract class TestFixture {
 				credentials.password), false);
 		manager.addRepository(repository);
 		return repository;
+	}
+
+	public AbstractRepositoryConnector connector() {
+		return connector;
 	}
 
 }
