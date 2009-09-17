@@ -915,22 +915,26 @@
 		</delete>
 		
 		<echo message="Generating P2 meta-data for ${dir}" />
-		<exec-eclipse activity="generate-metadata" application="org.eclipse.equinox.p2.metadata.generator.EclipseGenerator">
-    		<arg value="-updateSite"/>
+		<exec-eclipse activity="generate-metadata" application="org.eclipse.equinox.p2.publisher.FeaturesAndBundlesPublisher">
+	  		<arg value="-source"/>
     		<arg value="${dir}"/>
-    		<arg value="-site"/>
-    		<arg value="file:${dir}/site.xml"/>
     		<arg value="-metadataRepository"/>
     		<arg value="file:${dir}"/>
-    		<arg value="-metadataRepositoryName"/>
-    		<arg value="${name}"/>
     		<arg value="-artifactRepository"/>
     		<arg value="file:${dir}"/>
-    		<arg value="-artifactRepositoryName"/>
+    		<arg value="-repositoryName"/>
     		<arg value="${name}"/>
     		<arg value="-compress"/>
-    		<arg value="-reusePack200Files"/>
-    		<arg value="noDefaultIUs"/>
+    		<arg value="-reusePackedFiles"/>
+		</exec-eclipse>
+		<exec-eclipse activity="publish-categories" application="org.eclipse.equinox.p2.publisher.CategoryPublisher">
+    		<arg value="-categoryDefinition"/>
+    		<arg value="file:${dir}/site.xml"/>
+    		<arg value="-categoryQualifier"/>
+    		<arg value="-metadataRepository"/>
+    		<arg value="file:${dir}"/>
+    		<arg value="-compress"/>
+    		<arg value="-reusePackedFiles"/>
 		</exec-eclipse>
     </target>
 
