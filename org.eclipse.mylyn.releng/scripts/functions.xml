@@ -38,9 +38,11 @@
 	</target>
 
 	<target name="clean-update">
-		<delete dir="${build.home}/update"/>
+		<antcall target="for-each-target">
+			<param name="call" value="clean-update-helper"/>
+		</antcall>
 	</target>
-
+	
 	<target name="clean-results">
 		<delete dir="${build.results}"/>
 	</target>
@@ -282,7 +284,7 @@
 
 	<macrodef name="install-feature-into-base">
 		<attribute name="featureId"/>
-		<attribute name="updateSite" default="file:${build.home}/update"/>
+		<attribute name="updateSite" default="file:${build.home}/update-${base.target}"/>
 		<sequential>
 			<antcall target="install-bundle">
 				<param name="featureId" value="@{featureId}" />
@@ -455,6 +457,10 @@
 	<!-- test helper targets -->
 	<!-- ===================================================================== -->
 
+	<target name="clean-update-helper">
+		<delete dir="${build.home}/update-${base.target}"/>
+	</target>
+
 	<target name="clean-tests-helper">
     	<property name="eclipse.home" value="${tools.home}/test-${base.version}/eclipse" />
 		<delete failonerror="false">
@@ -523,7 +529,7 @@
 
 	<target name="install-tests-dependencies" if="dependencies.test.exists" unless="skipUpdate">
 		<dirname property="functions.basedir" file="${ant.file.functions}"/>
-		<copy todir="${build.home}/update/plugins">
+		<copy todir="${build.home}/update-${base.target}/plugins">
 			<fileset dir="${functions.basedir}/tools">
 				<include name="org.junit*"/>
 			</fileset>
@@ -791,7 +797,7 @@
 	</target>
 
 	<target name="publish-feature">
-		<mkdir dir="${build.home}/update/features"/>
+		<mkdir dir="${build.home}/update-${base.target}/features"/>
 			
 		<delete dir="${build.home}/tmp/feature" failonerror="false"/>
  		<copy todir="${build.home}/tmp/feature">
@@ -801,12 +807,12 @@
     		</filterset>
     	</copy>
     			    	
-		<delete file="${build.home}/update/features/${feature}_${version}.jar"/>
-		<jar destfile="${build.home}/update/features/${feature}_${version}.jar" >
+		<delete file="${build.home}/update-${base.target}/features/${feature}_${version}.jar"/>
+		<jar destfile="${build.home}/update-${base.target}/features/${feature}_${version}.jar" >
 			<fileset dir="${build.home}/tmp/feature"/>
 		</jar>
 		<antcall target="generate-metadata">
-			<param name="dir" value="${build.home}/update"/>
+			<param name="dir" value="${build.home}/update-${base.target}"/>
 			<param name="name" value="Updates"/>
 		</antcall>
 	</target>
@@ -907,6 +913,7 @@
 		<fail unless="dir">required parameter missing: dir</fail>
 		<fail unless="name">required parameter missing: name</fail>
 
+		<!-- work around P2 bug that causes jars to get deleted when meta-data exists -->
 		<delete>
 			<fileset dir="${dir}">
 				<include name="artifacts.*"/>
@@ -927,17 +934,25 @@
     		<arg value="-compress"/>
     		<arg value="-reusePackedFiles"/>
 		</exec-eclipse>
-		<exec-eclipse activity="publish-categories" application="org.eclipse.equinox.p2.publisher.CategoryPublisher">
-    		<arg value="-categoryDefinition"/>
-    		<arg value="file:${dir}/site.xml"/>
-    		<arg value="-categoryQualifier"/>
-    		<arg value="-metadataRepository"/>
-    		<arg value="file:${dir}"/>
-    		<arg value="-compress"/>
-    		<arg value="-reusePackedFiles"/>
-		</exec-eclipse>
     </target>
 
+	<target name="publish-categories-check">
+		<fail unless="dir">required parameter missing: dir</fail>
+		<available property="site.exists" file="${dir}/site.xml"/>
+	</target>
+	
+	<target name="publish-categories" depends="publish-categories-check" if="site.exists">		
+		<exec-eclipse activity="publish-categories" application="org.eclipse.equinox.p2.publisher.CategoryPublisher">
+			<arg value="-categoryDefinition"/>
+			<arg value="file:${dir}/site.xml"/>
+			<arg value="-categoryQualifier"/>
+			<arg value="-metadataRepository"/>
+			<arg value="file:${dir}"/>
+			<arg value="-compress"/>
+			<arg value="-reusePackedFiles"/>
+		</exec-eclipse>
+	</target>
+	
 	<target name="packager">
 		<init-basebuilder/>
 
