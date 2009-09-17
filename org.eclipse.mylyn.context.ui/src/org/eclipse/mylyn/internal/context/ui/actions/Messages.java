@@ -29,41 +29,7 @@ public class Messages extends NLS {
 
 	public static String AbstractInterestManipulationAction_No_task_context_is_active;
 
-	public static String ContextAttachAction_Attach_;
-
-	public static String ContextAttachAction_Attach_Task_Context;
-
-	public static String ContextAttachAction_Context_Attachment;
-
-	public static String ContextAttachAction_Task_must_be_synchronized_before_attaching_context;
-
-	public static String ContextClearAction_Clear;
-
-	public static String ContextClearAction_Clear_the_context_for_the_selected_task;
-
-	public static String ContextClearAction_Confirm_clear_context;
-
-	public static String ContextCopyAction_Copy_Context;
-
-	public static String ContextCopyAction_Copy_Task_Context_to_;
-
-	public static String ContextCopyAction_Copy_to_;
-
-	public static String ContextCopyAction_No_source_task_selected;
-
-	public static String ContextCopyAction_No_target_task_selected;
-
-	public static String ContextCopyAction_Select_Target_Task;
-
-	public static String ContextCopyAction_Select_the_target_task__;
-
-	public static String ContextCopyAction_Source_task_does_not_have_a_context;
-
-	public static String ContextCopyAction_Target_task_can_not_be_the_same_as_source_task;
-
-	public static String ContextRetrieveAction_Retrieve_;
-
-	public static String ContextRetrieveAction_Retrieve_Task_Context;
+	public static String AbstractInterestManipulationAction_Not_a_valid_landmark;
 
 	public static String FocusTaskListAction_No_tasks_scheduled_for_this_week;
 

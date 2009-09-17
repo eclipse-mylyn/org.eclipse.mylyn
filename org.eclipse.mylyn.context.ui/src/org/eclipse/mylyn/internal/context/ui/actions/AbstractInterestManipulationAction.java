@@ -20,7 +20,7 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.context.ui.UiUtil;
+import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
@@ -67,7 +67,7 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 
 	public void run(IAction action) {
 		if (!ContextCore.getContextManager().isContextActive()) {
-			MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
+			MessageDialog.openInformation(WorkbenchUtil.getShell(),
 					Messages.AbstractInterestManipulationAction_Interest_Manipulation,
 					Messages.AbstractInterestManipulationAction_No_task_context_is_active);
 			return;
@@ -98,7 +98,7 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 					boolean manipulated = ContextCorePlugin.getContextManager().manipulateInterestForElement(node,
 							increment, false, preserveUninteresting, SOURCE_ID, getContext(), true);
 					if (!manipulated) {
-						UiUtil.displayInterestManipulationFailure();
+						AbstractInterestManipulationAction.displayInterestManipulationFailure();
 					}
 				}
 			}
@@ -108,7 +108,7 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 				boolean manipulated = ContextCorePlugin.getContextManager().manipulateInterestForElement(node,
 						increment, false, false, SOURCE_ID, getContext(), true);
 				if (!manipulated) {
-					UiUtil.displayInterestManipulationFailure();
+					AbstractInterestManipulationAction.displayInterestManipulationFailure();
 				}
 			} else {
 				MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
@@ -140,4 +140,11 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 	public void selectionChanged(IAction action, ISelection selection) {
 		this.selection = selection;
 	}
+
+	public static void displayInterestManipulationFailure() {
+		MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
+				Messages.AbstractInterestManipulationAction_Interest_Manipulation,
+				Messages.AbstractInterestManipulationAction_Not_a_valid_landmark);
+	}
+
 }

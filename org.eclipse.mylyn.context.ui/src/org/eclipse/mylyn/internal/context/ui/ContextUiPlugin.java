@@ -276,7 +276,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 					for (IViewReference viewReference : views) {
 						IViewPart viewPart = viewReference.getView(false);
 						if (viewPart != null) {
-							UiUtil.initializeViewerSelection(viewPart);
+							FocusedViewerManager.initializeViewerSelection(viewPart);
 						}
 					}
 				}

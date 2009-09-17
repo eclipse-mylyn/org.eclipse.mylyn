@@ -25,10 +25,6 @@ public class Messages extends NLS {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
 
-	public static String ContextUiPlugin_No_local_task_context_exists;
-
-	public static String ContextUiPlugin_Task_Activation;
-
 	public static String TaskContextWorkingSetPage_Cannot_create_another_Active_Taskscape_Working_Set;
 
 	public static String TaskContextWorkingSetPage_CREATE_THE_MYLYN_CONTEXT_WORKING_SET;
@@ -40,10 +36,6 @@ public class Messages extends NLS {
 	public static String TaskContextWorkingSetPage_NOTE_THIS_WORKING_SET_SHOULD_ONLY_BE_USED_FOR_SEARCHS;
 
 	public static String TaskContextWorkingSetPage_TASK_CONTEXT_FOR_SEARCH;
-
-	public static String UiUtil_Mylyn_Interest_Manipulation;
-
-	public static String UiUtil_Not_a_valid_landmark;
 
 	public static String AbstractFocusViewAction_Apply_Mylyn;
 

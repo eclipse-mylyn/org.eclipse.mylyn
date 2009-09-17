@@ -24,6 +24,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.commons.core.StatusHandler;
@@ -182,7 +184,7 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 				// correctly initialized on startup and do not have the dummy selection event
 				// sent to them.  See PartPluginAction and bug 213545.
 				// TODO consider a mechanism to identify only views that provide focus
-				UiUtil.initializeViewerSelection(viewPart);
+				FocusedViewerManager.initializeViewerSelection(viewPart);
 				Set<IInteractionElement> emptySet = Collections.emptySet();
 				refreshViewer(emptySet, true, viewer, true);
 			} catch (Exception e) {
@@ -378,6 +380,22 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 
 	public void forceRefresh() {
 		refreshViewers();
+	}
+
+	public static void initializeViewerSelection(IWorkbenchPart part) {
+		ISelectionProvider selectionProvider = part.getSite().getSelectionProvider();
+		if (selectionProvider != null) {
+			ISelection selection = selectionProvider.getSelection();
+			try {
+				if (selection != null) {
+					selectionProvider.setSelection(selection);
+				} else {
+					selectionProvider.setSelection(StructuredSelection.EMPTY);
+				}
+			} catch (UnsupportedOperationException e) {
+				// ignore if the selection does not support setting a selection, see bug 217634
+			}
+		}
 	}
 
 }
