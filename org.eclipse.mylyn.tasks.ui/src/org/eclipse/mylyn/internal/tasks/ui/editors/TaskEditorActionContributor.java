@@ -68,9 +68,9 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 				AbstractTaskEditorPage page = (AbstractTaskEditorPage) activePage;
 				return page.canPerformAction(actionId);
 			} else if (activePage != null) {
-				WorkbenchActionCallback textSupport = (WorkbenchActionCallback) activePage.getAdapter(WorkbenchActionCallback.class);
-				if (textSupport != null) {
-					return textSupport.canPerformAction(actionId, control);
+				WorkbenchActionCallback callback = (WorkbenchActionCallback) activePage.getAdapter(WorkbenchActionCallback.class);
+				if (callback != null) {
+					return callback.canPerformAction(actionId, control);
 				}
 			}
 			return super.canPerformAction(actionId, control);
@@ -84,9 +84,9 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 				page.doAction(actionId);
 				return;
 			} else if (activePage != null) {
-				WorkbenchActionCallback textSupport = (WorkbenchActionCallback) activePage.getAdapter(WorkbenchActionCallback.class);
-				if (textSupport != null) {
-					textSupport.doAction(actionId, control);
+				WorkbenchActionCallback callback = (WorkbenchActionCallback) activePage.getAdapter(WorkbenchActionCallback.class);
+				if (callback != null) {
+					callback.doAction(actionId, control);
 					return;
 				}
 			}
