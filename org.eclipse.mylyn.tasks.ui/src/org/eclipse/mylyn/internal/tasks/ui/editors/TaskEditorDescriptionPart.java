@@ -122,8 +122,9 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 
 		super.createControl(parent, toolkit);
 		addDuplicateDetection(getComposite(), toolkit);
+		getEditor().enableAutoTogglePreview();
 		if (!getTaskData().isNew()) {
-			getEditor().enableAutoTogglePreview();
+			getEditor().showPreview();
 		}
 	}
 
@@ -191,8 +192,4 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 		}
 	}
 
-	@Override
-	protected boolean isAutoTogglePreview() {
-		return !getEditor().isReadOnly() && getEditor().hasPreview();
-	}
 }

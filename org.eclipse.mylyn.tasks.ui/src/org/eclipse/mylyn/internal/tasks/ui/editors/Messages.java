@@ -171,6 +171,8 @@ public class Messages extends NLS {
 
 	public static String TaskEditorRichTextPart_Browser_Preview;
 
+	public static String TaskEditorRichTextPart_Edit_Tooltip;
+
 	public static String TaskEditorRichTextPart_Maximize;
 
 	public static String TaskEditorRichTextPart_Preview;

@@ -49,7 +49,7 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 
 	private ToggleToMaximizePartAction toggleToMaximizePartAction;
 
-	private Action togglePreviewAction;
+	private Action toggleEditAction;
 
 	private Action toggleBrowserAction;
 
@@ -65,8 +65,8 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 		}
 
 		editor.showEditor();
-		if (togglePreviewAction != null) {
-			togglePreviewAction.setChecked(false);
+		if (toggleEditAction != null) {
+			toggleEditAction.setChecked(false);
 		}
 
 		StringBuilder strBuilder = new StringBuilder();
@@ -180,7 +180,7 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 
 		private static final int SECTION_HEADER_HEIGHT = 50;
 
-		private int originalHeight = -1;
+		private int originalHeight = -2;
 
 		public ToggleToMaximizePartAction() {
 			super("", SWT.TOGGLE); //$NON-NLS-1$
@@ -198,7 +198,7 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 
 			GridData gd = (GridData) getEditor().getControl().getLayoutData();
 
-			if (originalHeight == -1 && !isAutoTogglePreview()) { //for auto toggle editors, SWT.DEFAULT is a valid hint
+			if (originalHeight == -2) {
 				originalHeight = gd.heightHint;
 			}
 
@@ -230,13 +230,13 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 	@Override
 	protected void fillToolBar(ToolBarManager manager) {
 		if (getEditor().hasPreview()) {
-			togglePreviewAction = new Action("", SWT.TOGGLE) { //$NON-NLS-1$
+			toggleEditAction = new Action("", SWT.TOGGLE) { //$NON-NLS-1$
 				@Override
 				public void run() {
 					if (isChecked()) {
-						editor.showPreview();
-					} else {
 						editor.showEditor();
+					} else {
+						editor.showPreview();
 					}
 
 					if (toggleBrowserAction != null) {
@@ -244,22 +244,22 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 					}
 				}
 			};
-			togglePreviewAction.setImageDescriptor(CommonImages.PREVIEW_WEB);
-			togglePreviewAction.setToolTipText(Messages.TaskEditorRichTextPart_Preview);
-			togglePreviewAction.setChecked(false);
+			toggleEditAction.setImageDescriptor(CommonImages.EDIT);
+			toggleEditAction.setToolTipText(Messages.TaskEditorRichTextPart_Edit_Tooltip);
+			toggleEditAction.setChecked(true);
 			getEditor().getEditor().addStateChangedListener(new StateChangedListener() {
 				public void stateChanged(StateChangedEvent event) {
 					try {
 						ignoreToggleEvents = true;
-						togglePreviewAction.setChecked(event.state == State.PREVIEW);
+						toggleEditAction.setChecked(event.state == State.EDITOR || event.state == State.DEFAULT);
 					} finally {
 						ignoreToggleEvents = false;
 					}
 				}
 			});
-			manager.add(togglePreviewAction);
+			manager.add(toggleEditAction);
 		}
-		if (togglePreviewAction == null && getEditor().hasBrowser()) {
+		if (toggleEditAction == null && getEditor().hasBrowser()) {
 			toggleBrowserAction = new Action("", SWT.TOGGLE) { //$NON-NLS-1$
 				@Override
 				public void run() {
@@ -272,8 +272,8 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 						editor.showEditor();
 					}
 
-					if (togglePreviewAction != null) {
-						togglePreviewAction.setChecked(false);
+					if (toggleEditAction != null) {
+						toggleEditAction.setChecked(false);
 					}
 				}
 			};
@@ -298,7 +298,4 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 		super.fillToolBar(manager);
 	}
 
-	protected boolean isAutoTogglePreview() {
-		return false;
-	}
 }

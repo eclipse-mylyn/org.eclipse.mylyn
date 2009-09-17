@@ -158,8 +158,6 @@ public class RichTextEditor {
 	 */
 	private int textVersion;
 
-	private boolean stickyPreview = false;
-
 	private final ListenerList stateChangedListeners = new ListenerList(ListenerList.IDENTITY);
 
 	public RichTextEditor(TaskRepository repository, int style) {
@@ -567,7 +565,7 @@ public class RichTextEditor {
 		StateChangedEvent event = new StateChangedEvent();
 		if (defaultViewer != null && defaultViewer.getControl() == editorLayout.topControl) {
 			event.state = State.DEFAULT;
-		} else if (defaultViewer != null && editorViewer.getControl() == editorLayout.topControl) {
+		} else if (editorViewer != null && editorViewer.getControl() == editorLayout.topControl) {
 			event.state = State.EDITOR;
 		} else if (previewViewer != null && previewViewer.getControl() == editorLayout.topControl) {
 			event.state = State.PREVIEW;
@@ -605,7 +603,6 @@ public class RichTextEditor {
 	public void showEditor() {
 		if (getEditorViewer() != null) {
 			show(getEditorViewer());
-			stickyPreview = false;
 		} else {
 			show(getDefaultViewer());
 		}
@@ -614,7 +611,6 @@ public class RichTextEditor {
 	private void showPreview(boolean sticky) {
 		if (!isReadOnly() && getPreviewViewer() != null) {
 			show(getPreviewViewer());
-			stickyPreview = sticky;
 		}
 	}
 
@@ -637,13 +633,15 @@ public class RichTextEditor {
 
 	public void enableAutoTogglePreview() {
 		if (!isReadOnly() && getPreviewViewer() != null) {
-			show(getPreviewViewer());
-			previewViewer.getTextWidget().addMouseListener(new MouseAdapter() {
+			final MouseAdapter listener = new MouseAdapter() {
+				private boolean toggled;
+
 				@Override
 				public void mouseUp(MouseEvent e) {
-					if (e.count == 1 && !stickyPreview) {
+					if (!toggled && e.count == 1) {
 						// delay switching in case user intended to select text
 						Display.getDefault().timerExec(Display.getDefault().getDoubleClickTime(), new Runnable() {
+
 							public void run() {
 								if (previewViewer.getTextWidget() == null || previewViewer.getTextWidget().isDisposed()) {
 									return;
@@ -653,21 +651,24 @@ public class RichTextEditor {
 									int offset = previewViewer.getTextWidget().getCaretOffset();
 									showEditor();
 									editorViewer.getTextWidget().setCaretOffset(offset);
+
+									// only do this once, let the user manage toggling from then on
+									toggled = true;
 								}
 							}
 						});
 					}
 				}
-			});
-			editorViewer.getTextWidget().addFocusListener(new FocusAdapter() {
-				@Override
-				public void focusLost(FocusEvent e) {
-					super.focusLost(e);
-					if (!stickyPreview) {
-						showPreview(false);
-					}
-				}
-			});
+			};
+			previewViewer.getTextWidget().addMouseListener(listener);
+//			editorViewer.getTextWidget().addFocusListener(new FocusAdapter() {
+//				@Override
+//				public void focusLost(FocusEvent e) {
+//					if (!previewSticky) {
+//						showPreview(false);
+//					}
+//				}
+//			});
 		}
 	}
 
