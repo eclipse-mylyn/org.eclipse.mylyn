@@ -208,11 +208,9 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 				}
 
 				Set<ITask> tasksToBeSynchronized = new HashSet<ITask>();
-				if (session.getStaleTasks() != null) {
-					for (ITask task : session.getStaleTasks()) {
-						tasksToBeSynchronized.add(task);
-						((AbstractTask) task).setSynchronizing(true);
-					}
+				for (ITask task : session.getStaleTasks()) {
+					tasksToBeSynchronized.add(task);
+					((AbstractTask) task).setSynchronizing(true);
 				}
 
 				// synchronize tasks that were marked by the connector

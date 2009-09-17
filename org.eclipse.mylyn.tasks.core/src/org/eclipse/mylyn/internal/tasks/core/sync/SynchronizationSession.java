@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.tasks.core.sync;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -64,7 +65,11 @@ public class SynchronizationSession implements ISynchronizationSession {
 	}
 
 	public Set<ITask> getStaleTasks() {
-		return staleTasks;
+		if (staleTasks == null) {
+			return Collections.emptySet();
+		} else {
+			return staleTasks;
+		}
 	}
 
 	public IStatus getStatus() {
