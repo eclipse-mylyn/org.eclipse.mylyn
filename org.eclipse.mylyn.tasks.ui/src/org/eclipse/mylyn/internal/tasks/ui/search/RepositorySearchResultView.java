@@ -38,7 +38,6 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskGroup;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
-import org.eclipse.mylyn.internal.tasks.ui.AddExistingTaskJob;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenTaskSearchAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenWithBrowserAction;
 import org.eclipse.mylyn.internal.tasks.ui.search.SearchResultTreeContentProvider.GroupBy;
@@ -48,9 +47,7 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskListToolTip;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.search.ui.IContextMenuConstants;
 import org.eclipse.search.ui.ISearchQuery;
@@ -70,7 +67,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.part.IShowInTargetList;
-import org.eclipse.ui.progress.IProgressService;
 
 /**
  * Displays the results of a Repository search.
@@ -371,21 +367,12 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 	}
 
 	private void moveToCategory(AbstractTaskCategory category) {
-		final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
 		StructuredSelection selection = (StructuredSelection) this.getViewer().getSelection();
 		for (Iterator<?> iterator = selection.iterator(); iterator.hasNext();) {
 			Object selectedObject = iterator.next();
 			if (selectedObject instanceof ITask) {
 				ITask task = (ITask) selectedObject;
-				TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
-						task.getRepositoryUrl());
-				final AddExistingTaskJob job = new AddExistingTaskJob(repository, task.getTaskId(), category);
-				job.schedule();
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						progressService.showInDialog(RepositorySearchResultView.this.getSite().getShell(), job);
-					}
-				});
+				TasksUiInternal.getTaskList().addTask(task, category);
 			}
 		}
 	}

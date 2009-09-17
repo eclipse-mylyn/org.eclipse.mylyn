@@ -233,8 +233,8 @@ public class TasksUiInternal {
 
 	public static void openEditor(TaskCategory category) {
 		final String name = category.getSummary();
-		InputDialog dialog = new InputDialog(WorkbenchUtil.getShell(), Messages.TasksUiInternal_Rename_Category_Title, Messages.TasksUiInternal_Rename_Category_Message, name,
-				new IInputValidator() {
+		InputDialog dialog = new InputDialog(WorkbenchUtil.getShell(), Messages.TasksUiInternal_Rename_Category_Title,
+				Messages.TasksUiInternal_Rename_Category_Message, name, new IInputValidator() {
 					public String isValid(String newName) {
 						if (newName.trim().length() == 0 || newName.equals(name)) {
 							return ""; //$NON-NLS-1$
@@ -765,13 +765,49 @@ public class TasksUiInternal {
 		TasksUiUtil.openEditor(editorInput, TaskEditor.ID_EDITOR, null);
 	}
 
+	public static boolean openTask(TaskRepository repository, String taskId, TaskOpenListener listener) {
+		Assert.isNotNull(repository);
+		Assert.isNotNull(taskId);
+
+		AbstractTask task = (AbstractTask) TasksUiInternal.getTaskList().getTask(repository.getRepositoryUrl(), taskId);
+		if (task == null) {
+			task = TasksUiPlugin.getTaskList().getTaskByKey(repository.getRepositoryUrl(), taskId);
+		}
+		if (task != null) {
+			boolean result = TasksUiUtil.openTask(task);
+			if (listener != null) {
+				if (result) {
+					listener.taskOpened(new TaskOpenEvent(repository, task, taskId));
+				}
+			}
+			return result;
+		} else {
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
+			if (connectorUi != null) {
+				try {
+					return TasksUiInternal.openRepositoryTask(connectorUi.getConnectorKind(),
+							repository.getRepositoryUrl(), taskId, listener);
+				} catch (Exception e) {
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+							"Internal error while opening repository task", e)); //$NON-NLS-1$
+				}
+			}
+		}
+		return false;
+	}
+
+	public static boolean openRepositoryTask(String connectorKind, String repositoryUrl, String id) {
+		return openRepositoryTask(connectorKind, repositoryUrl, id, null);
+	}
+
 	/**
 	 * Only override if task should be opened by a custom editor, default behavior is to open with a rich editor,
 	 * falling back to the web browser if not available.
 	 * 
 	 * @return true if the task was successfully opened
 	 */
-	public static boolean openRepositoryTask(String connectorKind, String repositoryUrl, String id) {
+	public static boolean openRepositoryTask(String connectorKind, String repositoryUrl, String id,
+			TaskOpenListener listener) {
 		IRepositoryManager repositoryManager = TasksUi.getRepositoryManager();
 		AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(connectorKind);
 		String taskUrl = connector.getTaskUrl(repositoryUrl, id);
@@ -792,6 +828,7 @@ public class TasksUiInternal {
 		IWorkbenchPage page = window.getActivePage();
 
 		OpenRepositoryTaskJob job = new OpenRepositoryTaskJob(connectorKind, repositoryUrl, id, taskUrl, page);
+		job.setListener(listener);
 		job.schedule();
 
 		return true;
@@ -1018,7 +1055,8 @@ public class TasksUiInternal {
 
 	public static void activateTaskThroughCommand(ITask task) {
 		try {
-			TasksUiInternal.executeCommand(PlatformUI.getWorkbench(),
+			TasksUiInternal.executeCommand(
+					PlatformUI.getWorkbench(),
 					"org.eclipse.mylyn.tasks.ui.command.activateSelectedTask", Messages.TasksUiInternal_Activate_Task, task, null); //$NON-NLS-1$
 		} catch (NotEnabledException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(

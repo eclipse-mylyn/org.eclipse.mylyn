@@ -410,26 +410,7 @@ public class TasksUiUtil {
 	public static boolean openTask(TaskRepository repository, String taskId) {
 		Assert.isNotNull(repository);
 		Assert.isNotNull(taskId);
-
-		AbstractTask task = (AbstractTask) TasksUiInternal.getTaskList().getTask(repository.getRepositoryUrl(), taskId);
-		if (task == null) {
-			task = TasksUiPlugin.getTaskList().getTaskByKey(repository.getRepositoryUrl(), taskId);
-		}
-		if (task != null) {
-			return TasksUiUtil.openTask(task);
-		} else {
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
-			if (connectorUi != null) {
-				try {
-					return TasksUiInternal.openRepositoryTask(connectorUi.getConnectorKind(),
-							repository.getRepositoryUrl(), taskId);
-				} catch (Exception e) {
-					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-							"Internal error while opening repository task", e)); //$NON-NLS-1$
-				}
-			}
-		}
-		return false;
+		return TasksUiInternal.openTask(repository, taskId, null);
 	}
 
 	/**

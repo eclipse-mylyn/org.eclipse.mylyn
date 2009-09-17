@@ -19,6 +19,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.mylyn.internal.tasks.ui.util.TaskOpenEvent;
+import org.eclipse.mylyn.internal.tasks.ui.util.TaskOpenListener;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -45,6 +47,8 @@ public class OpenRepositoryTaskJob extends Job {
 
 	private ITask task;
 
+	private TaskOpenListener listener;
+
 	public OpenRepositoryTaskJob(String repositoryKind, String repositoryUrl, String taskId, String taskUrl,
 			IWorkbenchPage page) {
 		super(MessageFormat.format(Messages.OpenRepositoryTaskJob_Opening_repository_task_X, taskId));
@@ -64,10 +68,14 @@ public class OpenRepositoryTaskJob extends Job {
 		return task;
 	}
 
+	public void setListener(TaskOpenListener listener) {
+		this.listener = listener;
+	}
+
 	@Override
 	public IStatus run(IProgressMonitor monitor) {
 		monitor.beginTask(Messages.OpenRepositoryTaskJob_Opening_Remote_Task, 10);
-		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(repositoryKind, repositoryUrl);
+		final TaskRepository repository = TasksUi.getRepositoryManager().getRepository(repositoryKind, repositoryUrl);
 		if (repository == null) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
@@ -93,7 +101,12 @@ public class OpenRepositoryTaskJob extends Job {
 				TasksUiPlugin.getTaskDataManager().putUpdatedTaskData(task, taskData, true);
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						TasksUiUtil.openTask(task);
+						boolean result = TasksUiUtil.openTask(task);
+						if (listener != null) {
+							if (result) {
+								listener.taskOpened(new TaskOpenEvent(repository, task, taskId));
+							}
+						}
 					}
 				});
 			} else {

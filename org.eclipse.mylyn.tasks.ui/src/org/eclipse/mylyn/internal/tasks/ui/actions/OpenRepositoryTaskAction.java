@@ -17,18 +17,22 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylyn.internal.tasks.ui.AddExistingTaskJob;
+import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
+import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.commands.RemoteTaskSelectionDialog;
+import org.eclipse.mylyn.internal.tasks.ui.util.TaskOpenEvent;
+import org.eclipse.mylyn.internal.tasks.ui.util.TaskOpenListener;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.progress.IProgressService;
 
 /**
  * @author Mik Kersten
@@ -38,9 +42,7 @@ public class OpenRepositoryTaskAction extends Action implements IWorkbenchWindow
 	private static final String OPEN_REMOTE_TASK_DIALOG_DIALOG_SETTINGS = "org.eclipse.mylyn.tasks.ui.open.remote"; //$NON-NLS-1$
 
 	public void run(IAction action) {
-		RemoteTaskSelectionDialog dlg = new RemoteTaskSelectionDialog(PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow()
-				.getShell());
+		RemoteTaskSelectionDialog dlg = new RemoteTaskSelectionDialog(WorkbenchUtil.getShell());
 		dlg.setTitle(Messages.OpenRepositoryTask_Open_Repository_Task);
 
 		IDialogSettings settings = TasksUiPlugin.getDefault().getDialogSettings();
@@ -73,28 +75,34 @@ public class OpenRepositoryTaskAction extends Action implements IWorkbenchWindow
 	 * Selected a repository, so try to obtain the task using taskId
 	 */
 	private void openRemoteTask(RemoteTaskSelectionDialog dlg) {
-		String[] selectedIds = dlg.getSelectedIds();
+		final AbstractTaskCategory finalCategory;
 		if (dlg.shouldAddToTaskList()) {
-			for (String id : selectedIds) {
-				final IProgressService svc = PlatformUI.getWorkbench().getProgressService();
-				final AddExistingTaskJob job = new AddExistingTaskJob(dlg.getSelectedTaskRepository(), id,
-						dlg.getSelectedCategory());
-				job.schedule();
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-
-					public void run() {
-						svc.showInDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), job);
-					}
-
-				});
-			}
-		} else {
-			boolean openSuccessful = false;
-			for (String id : selectedIds) {
-				boolean opened = TasksUiUtil.openTask(dlg.getSelectedTaskRepository(), id);
-				if (opened) {
-					openSuccessful = true;
+			AbstractTaskCategory category = dlg.getSelectedCategory();
+			TaskListView taskListView = TaskListView.getFromActivePerspective();
+			if (category == null) {
+				Object selectedObject = ((IStructuredSelection) taskListView.getViewer().getSelection()).getFirstElement();
+				if (selectedObject instanceof TaskCategory) {
+					category = (TaskCategory) selectedObject;
 				}
+			}
+			finalCategory = category;
+		} else {
+			finalCategory = null;
+		}
+
+		String[] selectedIds = dlg.getSelectedIds();
+		boolean openSuccessful = false;
+		for (String id : selectedIds) {
+			boolean opened = TasksUiInternal.openTask(dlg.getSelectedTaskRepository(), id, new TaskOpenListener() {
+				@Override
+				public void taskOpened(TaskOpenEvent event) {
+					if (finalCategory != null && event.getTask() != null) {
+						TasksUiInternal.getTaskList().addTask(event.getTask(), finalCategory);
+					}
+				}
+			});
+			if (opened) {
+				openSuccessful = true;
 			}
 			if (!openSuccessful) {
 				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),

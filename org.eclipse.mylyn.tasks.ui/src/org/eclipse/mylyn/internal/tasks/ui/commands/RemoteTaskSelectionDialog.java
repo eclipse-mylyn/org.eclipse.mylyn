@@ -21,6 +21,7 @@ import java.util.Set;
 import org.eclipse.core.commands.common.CommandException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -120,7 +121,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 		Label matchingTasksLabel = new Label(area, SWT.NONE);
 		matchingTasksLabel.setText(Messages.RemoteTaskSelectionDialog_Matching_tasks);
 		tasksViewer = new TableViewer(area, SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		tasksViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(400, 200).create());
+		tasksViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(400, 400).create());
 		tasksViewer.setLabelProvider(new DecoratingLabelProvider(new TaskElementLabelProvider(true),
 				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
 		tasksViewer.setContentProvider(new ArrayContentProvider());
@@ -177,7 +178,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 		table.showSelection();
 
 		Composite repositoriesComposite = new Composite(area, SWT.NONE);
-		repositoriesComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+		repositoriesComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 		repositoriesComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).create());
 
 		Label repositoriesLabel = new Label(repositoriesComposite, SWT.NONE);
@@ -267,21 +268,35 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 
 		});
 
+		validate();
+
+		Dialog.applyDialogFont(area);
 		return area;
 	}
 
 	private void validate() {
 		if (idText.getText().trim().equals("")) { //$NON-NLS-1$
-			updateStatus(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, 0,
+			updateStatus(new Status(IStatus.INFO, TasksUiPlugin.ID_PLUGIN, 0,
 					Messages.RemoteTaskSelectionDialog_Enter_a_valid_task_ID, null));
 			return;
 		}
 		if (tasksViewer.getSelection().isEmpty() && repositoriesViewer.getSelection().isEmpty()) {
-			updateStatus(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, 0,
+			updateStatus(new Status(IStatus.INFO, TasksUiPlugin.ID_PLUGIN, 0,
 					Messages.RemoteTaskSelectionDialog_Select_a_task_or_repository, null));
 			return;
 		}
 		updateStatus(new Status(IStatus.OK, TasksUiPlugin.ID_PLUGIN, 0, "", null)); //$NON-NLS-1$
+	}
+
+	@Override
+	protected void updateStatus(IStatus status) {
+		super.updateStatus(status);
+
+		// support disabling button for non-error statuses
+		Button okButton = getOkButton();
+		if (okButton != null && !okButton.isDisposed()) {
+			okButton.setEnabled(status.isOK());
+		}
 	}
 
 	private String[] selectedIds;
