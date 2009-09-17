@@ -18,8 +18,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CheckBoxTreeDialog;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
@@ -33,12 +35,12 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.SharedScrolledComposite;
@@ -67,25 +69,23 @@ public class CheckboxMultiSelectAttributeEditor extends AbstractAttributeEditor 
 		composite.setLayout(layout);
 
 		valueText = toolkit.createText(composite, "", SWT.FLAT | SWT.WRAP); //$NON-NLS-1$
+		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).applyTo(valueText);
 		valueText.setFont(EditorUtil.TEXT_FONT);
-
-		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-		valueText.setLayoutData(gd);
 		valueText.setEditable(false);
-		Button changeValueButton = toolkit.createButton(composite, Messages.CheckboxMultiSelectAttributeEditor_Edit,
-				SWT.FLAT);
-		gd = new GridData();
-		changeValueButton.setLayoutData(gd);
-		changeValueButton.addSelectionListener(new SelectionAdapter() {
+
+		ToolBar toolBar = new ToolBar(composite, SWT.FLAT);
+		ToolItem item = new ToolItem(toolBar, SWT.FLAT);
+		item.setImage(CommonImages.getImage(CommonImages.EDIT));
+		item.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				List<String> values = getValues();
 				Map<String, String> validValues = getAttributeMapper().getOptions(getTaskAttribute());
 
 				CheckBoxTreeDialog selectionDialog = new CheckBoxTreeDialog(WorkbenchUtil.getShell(), values,
-						validValues, NLS.bind(Messages.CheckboxMultiSelectAttributeEditor_Select_X, getLabel()));
+						validValues, NLS.bind(Messages.CheckboxMultiSelectAttributeEditor_Select_X,
+								EditorUtil.removeColon(getLabel())));
 				int responseCode = selectionDialog.open();
-
 				if (responseCode == Window.OK) {
 					Set<String> newValues = selectionDialog.getSelectedValues();
 					if (!new HashSet<String>(values).equals(newValues)) {

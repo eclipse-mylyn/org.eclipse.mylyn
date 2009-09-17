@@ -503,4 +503,9 @@ public class EditorUtil {
 		}
 	}
 
+	public static String removeColon(String label) {
+		label = label.trim();
+		return (label.endsWith(":")) ? label.substring(0, label.length() - 1) : label; //$NON-NLS-1$
+	}
+
 }
