@@ -237,8 +237,6 @@ public class Messages extends NLS {
 
 	public static String IBugzillaConstants_requested_operation_not_permitted;
 
-	public static String SaxMultiBugReportContentHandler_Bug_id_from_server_did_not_match_requested_id;
-
 	public static String SaxMultiBugReportContentHandler_id_not_found;
 
 	public static String BugzillaStatus_repositoryLoginFailure;
@@ -257,5 +255,4 @@ public class Messages extends NLS {
 
 	public static String BugzillaStatus_errorRepository;
 
-	public static String MultiBugReportFactory_NO_DATA_AVAILABLE_FOR_TASK;
 }

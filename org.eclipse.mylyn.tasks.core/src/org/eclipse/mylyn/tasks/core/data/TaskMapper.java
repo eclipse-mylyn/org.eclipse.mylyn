@@ -23,7 +23,6 @@ import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
  * @author Steffen Pingel
  * @since 3.0
  */
-// TODO 3.3 add setTaskKey() method
 public class TaskMapper implements ITaskMapping {
 
 	private final boolean createNonExistingAttributes;
@@ -433,6 +432,13 @@ public class TaskMapper implements ITaskMapping {
 
 	public void setTaskKind(String taskKind) {
 		setValue(TaskAttribute.TASK_KIND, taskKind);
+	}
+
+	/**
+	 * @since 3.3
+	 */
+	public void setTaskKey(String taskKey) {
+		setValue(TaskAttribute.TASK_KEY, taskKey);
 	}
 
 	public void setTaskUrl(String taskUrl) {

@@ -53,14 +53,6 @@ public class Messages extends NLS {
 
 	public static String BrowserPreviewViewer_The_repository_does_not_support_HTML_preview;
 
-	public static String CategoryEditor_Category_Summary;
-
-	public static String CategoryEditor_Description_;
-
-	public static String CategoryEditor_URL_;
-
-	public static String CategoryEditorInput_Category_Editor;
-
 	public static String CheckboxMultiSelectAttributeEditor_Edit;
 
 	public static String CheckboxMultiSelectAttributeEditor_Select_X;

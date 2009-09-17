@@ -27,8 +27,6 @@ public class Messages extends NLS {
 
 	public static String ActivityExternalizationParticipant_Activity_Context;
 
-	public static String AddExistingTaskJob_Adding_task_X_;
-
 	public static String ChangeActivityHandleOperation_Activity_migration;
 
 	public static String DialogErrorReporter_Mylyn_Error;
