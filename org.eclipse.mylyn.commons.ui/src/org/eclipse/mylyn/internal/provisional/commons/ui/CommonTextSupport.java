@@ -14,13 +14,14 @@ package org.eclipse.mylyn.internal.provisional.commons.ui;
 import java.util.Iterator;
 
 import org.eclipse.core.commands.IHandler;
+import org.eclipse.core.commands.operations.IOperationHistoryListener;
+import org.eclipse.core.commands.operations.OperationHistoryEvent;
+import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.text.Document;
-import org.eclipse.jface.text.ITextListener;
 import org.eclipse.jface.text.ITextOperationTarget;
-import org.eclipse.jface.text.TextEvent;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.text.source.AnnotationModel;
 import org.eclipse.jface.text.source.IAnnotationAccess;
@@ -35,6 +36,7 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.ActiveShellExpression;
@@ -55,6 +57,22 @@ import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
  * @author Steffen Pingel
  */
 public class CommonTextSupport {
+
+	private class UndoRedoListener implements IOperationHistoryListener {
+
+		private TextViewer viewer;
+
+		public void historyNotification(OperationHistoryEvent event) {
+			if (viewer != null && selectionChangedListener != null && Display.getCurrent() != null) {
+				selectionChangedListener.selectionChanged(new SelectionChangedEvent(viewer, viewer.getSelection()));
+			}
+		}
+
+		public void setViewer(TextViewer viewer) {
+			this.viewer = viewer;
+		}
+
+	}
 
 	private class TextViewerFocusListener implements FocusListener {
 
@@ -208,9 +226,12 @@ public class CommonTextSupport {
 
 	private ISelectionChangedListener selectionChangedListener;
 
+	private final UndoRedoListener undoRedoListener;
+
 	public CommonTextSupport(IHandlerService handlerService) {
 		Assert.isNotNull(handlerService);
 		this.handlerService = handlerService;
+		this.undoRedoListener = new UndoRedoListener();
 	}
 
 	private IHandlerActivation activateHandler(TextViewer viewer, int operation, String actionDefinitionId) {
@@ -227,6 +248,9 @@ public class CommonTextSupport {
 		}
 		contentAssistHandlerActivation = activateHandler(viewer, ISourceViewer.CONTENTASSIST_PROPOSALS,
 				ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
+
+		undoRedoListener.setViewer(viewer);
+		OperationHistoryFactory.getOperationHistory().addOperationHistoryListener(undoRedoListener);
 	}
 
 	public void configure(final TextViewer viewer, Document document, boolean spellCheck) {
@@ -280,6 +304,9 @@ public class CommonTextSupport {
 			handlerService.deactivateHandler(contentAssistHandlerActivation);
 			contentAssistHandlerActivation = null;
 		}
+
+		undoRedoListener.setViewer(null);
+		OperationHistoryFactory.getOperationHistory().removeOperationHistoryListener(undoRedoListener);
 	}
 
 	public void dispose() {
@@ -294,14 +321,6 @@ public class CommonTextSupport {
 		viewer.getControl().addFocusListener(new TextViewerFocusListener(viewer, spellCheck));
 		if (selectionChangedListener != null) {
 			viewer.addSelectionChangedListener(selectionChangedListener);
-			viewer.addTextListener(new ITextListener() {
-				public void textChanged(TextEvent event) {
-					if (selectionChangedListener != null) {
-						selectionChangedListener.selectionChanged(new SelectionChangedEvent(viewer,
-								viewer.getSelection()));
-					}
-				}
-			});
 		}
 		setTextViewer(viewer.getControl(), viewer);
 	}
