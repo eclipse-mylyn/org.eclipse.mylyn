@@ -20,9 +20,11 @@ import java.util.Set;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CheckBoxTreeDialog;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
+import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.IInPlaceDialogCloseListener;
+import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.InPlaceCheckBoxTreeDialog;
+import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.InPlaceDialogCloseEvent;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
@@ -73,27 +75,33 @@ public class CheckboxMultiSelectAttributeEditor extends AbstractAttributeEditor 
 		valueText.setFont(EditorUtil.TEXT_FONT);
 		valueText.setEditable(false);
 
-		ToolBar toolBar = new ToolBar(composite, SWT.FLAT);
+		final ToolBar toolBar = new ToolBar(composite, SWT.FLAT);
 		ToolItem item = new ToolItem(toolBar, SWT.FLAT);
 		item.setImage(CommonImages.getImage(CommonImages.EDIT));
 		item.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				List<String> values = getValues();
+				final List<String> values = getValues();
 				Map<String, String> validValues = getAttributeMapper().getOptions(getTaskAttribute());
 
-				CheckBoxTreeDialog selectionDialog = new CheckBoxTreeDialog(WorkbenchUtil.getShell(), values,
-						validValues, NLS.bind(Messages.CheckboxMultiSelectAttributeEditor_Select_X,
-								EditorUtil.removeColon(getLabel())));
-				int responseCode = selectionDialog.open();
-				if (responseCode == Window.OK) {
-					Set<String> newValues = selectionDialog.getSelectedValues();
-					if (!new HashSet<String>(values).equals(newValues)) {
-						setValues(new ArrayList<String>(newValues));
-						attributeChanged();
-						updateText();
+				final InPlaceCheckBoxTreeDialog selectionDialog = new InPlaceCheckBoxTreeDialog(
+						WorkbenchUtil.getShell(), toolBar, values, validValues, NLS.bind(
+								Messages.CheckboxMultiSelectAttributeEditor_Select_X, getLabel()));
+
+				selectionDialog.addCloseListener(new IInPlaceDialogCloseListener() {
+
+					public void dialogClosing(InPlaceDialogCloseEvent event) {
+						if (event.getReturnCode() == Window.OK) {
+							Set<String> newValues = selectionDialog.getSelectedValues();
+							if (!new HashSet<String>(values).equals(newValues)) {
+								setValues(new ArrayList<String>(newValues));
+								attributeChanged();
+								updateText();
+							}
+						}
 					}
-				}
+				});
+				selectionDialog.open();
 			}
 		});
 		toolkit.adapt(valueText, false, false);
@@ -118,7 +126,7 @@ public class CheckboxMultiSelectAttributeEditor extends AbstractAttributeEditor 
 				Point size = valueText.getSize();
 				// subtract 1 from size for border
 				Point newSize = valueText.computeSize(size.x - 1, SWT.DEFAULT);
-				if (!newSize.equals(valueText.getSize())) {
+				if (newSize.y != size.y) {
 					reflow();
 				}
 			}
