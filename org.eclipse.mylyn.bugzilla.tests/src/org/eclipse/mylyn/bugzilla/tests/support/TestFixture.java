@@ -153,13 +153,14 @@ public abstract class TestFixture {
 			if (i != -1) {
 				int j = path.lastIndexOf(File.separatorChar, i);
 				if (j != -1) {
-					path = path.substring(0, j);
+					path = path.substring(0, j) + File.separator;
 				} else {
 					Assert.fail("Unable to determine location for '" + filename + "' at '" + path + "'");
 				}
 			} else {
 				String[] tokens = path.split("\\.");
-				for (int j = 0; j < tokens.length + 1; j++) {
+				for (@SuppressWarnings("unused")
+				String token : tokens) {
 					path += ".." + File.separator;
 				}
 				if (path.contains("bin" + File.separator)) {

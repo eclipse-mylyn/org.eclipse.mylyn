@@ -13,13 +13,10 @@ package org.eclipse.mylyn.bugzilla.tests.support;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Collections;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.bugzilla.tests.BugzillaTestConstants;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
@@ -38,7 +35,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
-import org.osgi.framework.Bundle;
 
 /**
  * @author Steffen Pingel
@@ -161,15 +157,7 @@ public class BugzillaFixture extends TestFixture {
 	}
 
 	public static File getFile(String filename) throws IOException {
-		Bundle bundle = Platform.getBundle("org.eclipse.mylyn.bugzilla.tests");
-		if (bundle != null) {
-			URL localURL = FileLocator.toFileURL(bundle.getEntry(filename));
-			filename = localURL.getFile();
-		} else {
-			URL localURL = BugzillaFixture.class.getResource("");
-			filename = localURL.getFile() + "../../../../../../../" + filename;
-		}
-		return new File(filename);
+		return TestFixture.getFile("org.eclipse.mylyn.bugzilla.tests", BugzillaFixture.class, filename);
 	}
 
 	/**
