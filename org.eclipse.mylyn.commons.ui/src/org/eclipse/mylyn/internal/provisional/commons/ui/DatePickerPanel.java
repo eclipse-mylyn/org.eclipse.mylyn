@@ -19,10 +19,12 @@ import java.util.List;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.ListViewer;
+import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
@@ -83,6 +85,15 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 		calendar.addSelectionListener(new SelectionAdapter() {
 
 			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				date.set(Calendar.YEAR, calendar.getYear());
+				date.set(Calendar.MONTH, calendar.getMonth());
+				date.set(Calendar.DAY_OF_MONTH, calendar.getDay());
+				setSelection(new DateSelection(date, true));
+				notifyListeners(new SelectionChangedEvent(DatePickerPanel.this, getSelection()));
+			}
+
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				date.set(Calendar.YEAR, calendar.getYear());
 				date.set(Calendar.MONTH, calendar.getMonth());
@@ -99,7 +110,6 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 
 	/**
 	 * This method initializes the month combo
-	 * 
 	 */
 	private void createTimeList(Composite composite) {
 
@@ -127,6 +137,16 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 				date.set(Calendar.HOUR_OF_DAY, timeList.getSelectionIndex());
 				date.set(Calendar.MINUTE, 0);
 				setSelection(new DateSelection(date));
+				notifyListeners(new SelectionChangedEvent(DatePickerPanel.this, getSelection()));
+			}
+		});
+
+		listViewer.addOpenListener(new IOpenListener() {
+
+			public void open(OpenEvent event) {
+				date.set(Calendar.HOUR_OF_DAY, timeList.getSelectionIndex());
+				date.set(Calendar.MINUTE, 0);
+				setSelection(new DateSelection(date, true));
 				notifyListeners(new SelectionChangedEvent(DatePickerPanel.this, getSelection()));
 			}
 		});
@@ -186,12 +206,24 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 	public class DateSelection implements ISelection {
 		private final Calendar date;
 
+		private final boolean isDefaultSelection;
+
 		public DateSelection(Calendar calendar) {
+			this(calendar, false);
+		}
+
+		public DateSelection(Calendar calendar, boolean isDefaultSelection) {
 			date = calendar;
+			this.isDefaultSelection = isDefaultSelection;
+
 		}
 
 		public boolean isEmpty() {
 			return date == null;
+		}
+
+		public boolean isDefaultSelection() {
+			return isDefaultSelection;
 		}
 
 		public Calendar getDate() {

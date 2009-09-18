@@ -66,6 +66,9 @@ public class DateSelectionDialog extends Dialog {
 				if (!event.getSelection().isEmpty()) {
 					DateSelection dateSelection = (DateSelection) event.getSelection();
 					selectedDate = dateSelection.getDate().getTime();
+					if (dateSelection.isDefaultSelection()) {
+						okPressed();
+					}
 				}
 			}
 		});

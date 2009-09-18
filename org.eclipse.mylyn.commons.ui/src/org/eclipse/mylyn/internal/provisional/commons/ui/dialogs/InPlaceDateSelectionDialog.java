@@ -71,6 +71,9 @@ public class InPlaceDateSelectionDialog extends AbstractInPlaceDialog {
 				if (!event.getSelection().isEmpty()) {
 					DateSelection dateSelection = (DateSelection) event.getSelection();
 					selectedDate = dateSelection.getDate().getTime();
+					if (dateSelection.isDefaultSelection()) {
+						close();
+					}
 				}
 			}
 		});
