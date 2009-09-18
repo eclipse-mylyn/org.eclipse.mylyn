@@ -87,7 +87,7 @@ public class CommonImages {
 
 	public static final ImageDescriptor PERSON_ME = create(T_TOOL, "person-me.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor PERSON_ME_SMALL = create(T_TOOL, "person-me-small.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor PERSON_ME_SMALL = create(T_TOOL, "person-me-small.png"); //$NON-NLS-1$
 
 	public static final ImageDescriptor PERSON_ME_NARROW = create(T_TOOL, "person-me-narrow.gif"); //$NON-NLS-1$
 
