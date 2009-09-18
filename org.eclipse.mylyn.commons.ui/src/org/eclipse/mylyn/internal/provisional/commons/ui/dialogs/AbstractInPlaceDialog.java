@@ -24,6 +24,8 @@ import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.commons.ui.CommonsUiPlugin;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridLayout;
@@ -52,9 +54,19 @@ public abstract class AbstractInPlaceDialog extends PopupDialog {
 
 	private final Set<IInPlaceDialogCloseListener> listeners = new HashSet<IInPlaceDialogCloseListener>();
 
+	private final Control openControl;
+
+	DisposeListener disposeListener = new DisposeListener() {
+
+		public void widgetDisposed(DisposeEvent e) {
+			dispose();
+		}
+	};
+
 	public AbstractInPlaceDialog(Shell parent, int side, Control openControl) {
 		super(parent, PopupDialog.INFOPOPUP_SHELLSTYLE, false, false, false, false, false, null, null);
 		this.side = side;
+		this.openControl = openControl;
 
 		Rectangle bounds;
 		if (openControl == null || openControl.isDisposed()) {
@@ -65,8 +77,11 @@ public abstract class AbstractInPlaceDialog extends PopupDialog {
 			bounds.x = absPosition.x - bounds.x;
 			bounds.y = absPosition.y - bounds.y;
 		}
-
 		this.controlBounds = bounds;
+		if (openControl != null) {
+			openControl.addDisposeListener(disposeListener);
+		}
+
 	}
 
 	@Override
@@ -115,6 +130,11 @@ public abstract class AbstractInPlaceDialog extends PopupDialog {
 		createButton(composite, Window.CANCEL, Messages.AbstractInPlacePopupDialog_Cancel);
 	}
 
+	protected void dispose() {
+		setReturnCode(Window.CANCEL);
+		close();
+	}
+
 	protected Control createButton(Composite composite, final int returnCode, String text) {
 		ImageHyperlink link = new ImageHyperlink(composite, SWT.NONE);
 		link.setText(text);
@@ -148,6 +168,7 @@ public abstract class AbstractInPlaceDialog extends PopupDialog {
 			setReturnCode(Window.OK);
 		}
 		notifyClosing();
+		openControl.removeDisposeListener(disposeListener);
 		return super.close();
 	}
 
