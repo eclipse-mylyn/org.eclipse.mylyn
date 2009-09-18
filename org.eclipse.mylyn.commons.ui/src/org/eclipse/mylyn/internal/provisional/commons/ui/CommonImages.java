@@ -87,6 +87,8 @@ public class CommonImages {
 
 	public static final ImageDescriptor PERSON_ME = create(T_TOOL, "person-me.gif"); //$NON-NLS-1$
 
+	public static final ImageDescriptor PERSON_ME_SMALL = create(T_TOOL, "person-me-small.gif"); //$NON-NLS-1$
+
 	public static final ImageDescriptor PERSON_ME_NARROW = create(T_TOOL, "person-me-narrow.gif"); //$NON-NLS-1$
 
 	public static final ImageDescriptor NOTIFICATION_CLOSE = create(T_EVIEW, "notification-close.gif"); //$NON-NLS-1$
@@ -177,6 +179,8 @@ public class CommonImages {
 
 	public static final ImageDescriptor EDIT = create(T_TOOL, "edit.gif"); //$NON-NLS-1$
 
+	public static final ImageDescriptor EDIT_SMALL = create(T_TOOL, "edit-small.png"); //$NON-NLS-1$
+
 	public static final ImageDescriptor CUT = create(T_TOOL, "cut.gif"); //$NON-NLS-1$
 
 	public static final ImageDescriptor UNDO = create(T_TOOL, "undo_edit.gif"); //$NON-NLS-1$
@@ -218,6 +222,8 @@ public class CommonImages {
 	public static final ImageDescriptor IMAGE_FILE = create(T_OBJ, "file-image.gif"); //$NON-NLS-1$
 
 	public static final ImageDescriptor FILE_PLAIN = create(T_OBJ, "file-plain.png"); //$NON-NLS-1$
+
+	public static final ImageDescriptor FILE_PLAIN_SMALL = create(T_OBJ, "file-small.png"); //$NON-NLS-1$
 
 	public static final ImageDescriptor QUESTION = create(T_OBJ, "question.gif"); //$NON-NLS-1$
 
