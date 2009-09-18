@@ -66,8 +66,14 @@ public class CheckboxMultiSelectAttributeEditor extends AbstractAttributeEditor 
 		this.parent = parent;
 
 		Composite composite = toolkit.createComposite(parent);
+		composite.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		GridLayout layout = new GridLayout(2, false);
-		layout.marginWidth = 1;
+		layout.marginWidth = 0;
+		layout.marginBottom = 0;
+		layout.marginLeft = 0;
+		layout.marginRight = 0;
+		layout.marginTop = 0;
+		layout.marginHeight = 0;
 		composite.setLayout(layout);
 
 		valueText = toolkit.createText(composite, "", SWT.FLAT | SWT.WRAP); //$NON-NLS-1$
@@ -78,6 +84,8 @@ public class CheckboxMultiSelectAttributeEditor extends AbstractAttributeEditor 
 		final ToolBar toolBar = new ToolBar(composite, SWT.FLAT);
 		ToolItem item = new ToolItem(toolBar, SWT.FLAT);
 		item.setImage(CommonImages.getImage(CommonImages.EDIT_SMALL));
+		item.setToolTipText(Messages.CheckboxMultiSelectAttributeEditor_Edit);
+		GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.BOTTOM).applyTo(toolBar);
 		item.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
