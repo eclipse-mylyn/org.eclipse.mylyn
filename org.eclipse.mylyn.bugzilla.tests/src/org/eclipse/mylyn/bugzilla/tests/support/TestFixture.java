@@ -151,6 +151,10 @@ public abstract class TestFixture {
 			String path = localURL.getFile();
 			int i = path.indexOf("!");
 			if (i != -1) {
+				// class file is nested in jar, use jar path as base
+				if (path.startsWith("file:")) {
+					path = path.substring(5);
+				}
 				int j = path.lastIndexOf(File.separatorChar, i);
 				if (j != -1) {
 					path = path.substring(0, j) + File.separator;
@@ -158,6 +162,7 @@ public abstract class TestFixture {
 					Assert.fail("Unable to determine location for '" + filename + "' at '" + path + "'");
 				}
 			} else {
+				// create relative path to base of class file location
 				String[] tokens = path.split("\\.");
 				for (@SuppressWarnings("unused")
 				String token : tokens) {
