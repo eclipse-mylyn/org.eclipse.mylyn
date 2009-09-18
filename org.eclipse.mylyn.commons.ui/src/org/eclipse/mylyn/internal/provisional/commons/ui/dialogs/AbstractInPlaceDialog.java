@@ -116,10 +116,9 @@ public abstract class AbstractInPlaceDialog extends PopupDialog {
 		buttonComposite.setLayout(gl);
 		GridDataFactory.fillDefaults().grab(true, false).align(SWT.END, SWT.CENTER).applyTo(buttonComposite);
 		createButtons(buttonComposite);
+		Dialog.applyDialogFont(parent);
 
 		parent.pack();
-
-		Dialog.applyDialogFont(parent);
 
 		return parent;
 	}
