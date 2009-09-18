@@ -51,6 +51,12 @@ public class Messages extends NLS {
 
 	public static String ContextRetrieveWizardPage_Task;
 
+	public static String RetrieveLatestContextDialog_Dialog_Title;
+
+	public static String RetrieveLatestContextDialog_No_local_context_exists;
+
+	public static String RetrieveLatestContextDialog_Show_All_Contexts_Label;
+
 	public static String RetrieveLatestContextDialog_Task_Activation0;
 
 	public static String RetrieveLatestContextDialog_Task_ActivationNo_local_context;
@@ -58,4 +64,6 @@ public class Messages extends NLS {
 	public static String RetrieveLatestContextDialog_Task_ActivationSelect_from_history;
 
 	public static String RetrieveLatestContextDialog_Task_ActivationUnknown;
+
+	public static String RetrieveLatestContextDialog_Unknown;
 }

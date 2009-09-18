@@ -47,7 +47,6 @@ import com.ibm.icu.text.DateFormat;
 public class RetrieveLatestContextDialog extends MessageDialog {
 
 	public static boolean openQuestion(Shell shell, ITask task) {
-		String title = Messages.RetrieveLatestContextDialog_Task_Activation0;
 		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
 				task.getRepositoryUrl());
 		List<ITaskAttachment> contextAttachments = AttachmentUtil.getContextAttachments(repository, task);
@@ -60,7 +59,7 @@ public class RetrieveLatestContextDialog extends MessageDialog {
 						: attachment.getAuthor().getPersonId();
 			}
 			if (author == null) {
-				author = Messages.RetrieveLatestContextDialog_Task_ActivationUnknown;
+				author = Messages.RetrieveLatestContextDialog_Unknown;
 			}
 			Date date = attachment.getCreationDate();
 			String dateString = null;
@@ -68,15 +67,17 @@ public class RetrieveLatestContextDialog extends MessageDialog {
 				dateString = DateFormat.getDateInstance(DateFormat.LONG).format(date);
 			}
 			if (dateString == null) {
-				dateString = Messages.RetrieveLatestContextDialog_Task_ActivationUnknown;
+				dateString = Messages.RetrieveLatestContextDialog_Unknown;
 			}
-			String message = NLS.bind(Messages.RetrieveLatestContextDialog_Task_ActivationNo_local_context, author,
+			String message = NLS.bind(
+					Messages.RetrieveLatestContextDialog_No_local_context_exists, author,
 					dateString);
 			int kind = QUESTION;
 			int style = SWT.NONE;
 
-			RetrieveLatestContextDialog dialog = new RetrieveLatestContextDialog(shell, title, null, message, kind,
-					new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0, task, attachment);
+			RetrieveLatestContextDialog dialog = new RetrieveLatestContextDialog(shell, Messages.RetrieveLatestContextDialog_Dialog_Title, null, message,
+					kind, new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0, task,
+					attachment);
 			style &= TasksUiInternal.SWT_SHEET;
 			dialog.setShellStyle(dialog.getShellStyle() | style);
 			return dialog.open() == 0;
@@ -159,7 +160,7 @@ public class RetrieveLatestContextDialog extends MessageDialog {
 
 	protected Control createLink(Composite parent) {
 		link = new Link(parent, SWT.NONE);
-		link.setText(Messages.RetrieveLatestContextDialog_Task_ActivationSelect_from_history);
+		link.setText(Messages.RetrieveLatestContextDialog_Show_All_Contexts_Label);
 		link.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
