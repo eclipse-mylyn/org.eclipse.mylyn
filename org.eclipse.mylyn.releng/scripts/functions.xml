@@ -716,11 +716,21 @@
 	<!-- install helper targets -->
 	<!-- ===================================================================== -->
 
-	<target name="install-bundle">
+	<target name="uninstall-bundle-check">
+    	<path id="path.id"> 
+    		<fileset dir="${base.home}/eclipse/features">
+            	<include name="${featureId}_*/feature.xml"/>
+          	</fileset>
+    	</path> 
+    	<property name="path" refid="path.id"/>
+		<condition property="bundle.isinstalled" value="true"><not><equals arg1="${path}" arg2=""/></not></condition>
+	</target>
+
+	<target name="uninstall-bundle" depends="uninstall-bundle-check" if="bundle.isinstalled">
 		<fail message="Require property 'base.home' is not set" unless="base.home"/>
 		<property file="${base.home}/eclipse/configuration/config.ini" prefix="base.config"/>
 		
-		<echo message="Installing ${featureId}"/>
+		<echo message="Uninstalling ${featureId}"/>
 		<exec-eclipse activity="install-bundle" application="org.eclipse.equinox.p2.director"
 			 extravmargs="-Declipse.p2.data.area=${base.home}/eclipse/p2 -Declipse.p2.MD5Check=false" failonerror="false">
     		<arg value="-metadataRepository"/>
@@ -734,6 +744,13 @@
 			<arg value="-destination"/>
 			<arg value="${base.home}/eclipse"/>
 		</exec-eclipse>
+	</target>
+		
+	<target name="install-bundle" depends="uninstall-bundle">
+		<fail message="Require property 'base.home' is not set" unless="base.home"/>
+		<property file="${base.home}/eclipse/configuration/config.ini" prefix="base.config"/>
+		
+		<echo message="Installing ${featureId}"/>
 		<exec-eclipse activity="install-bundle" application="org.eclipse.equinox.p2.director"
 			 extravmargs="-Declipse.p2.data.area=${base.home}/eclipse/p2 -Declipse.p2.MD5Check=false">
     		<arg value="-metadataRepository"/>
