@@ -72,6 +72,7 @@ Export-Package: org.eclipse.mylyn.internal.commons.ui;x-internal:=true;
    org.eclipse.ui.dialogs,
    org.eclipse.swt.widgets,
    org.eclipse.jface.dialogs",
+ org.eclipse.mylyn.internal.provisional.commons.ui.dialogs;uses:="org.eclipse.swt.graphics,org.eclipse.swt.widgets,org.eclipse.jface.dialogs",
  org.eclipse.mylyn.internal.provisional.commons.ui.editor;
   x-friends:="org.eclipse.mylyn.bugzilla.core,
    org.eclipse.mylyn.bugzilla.ide,

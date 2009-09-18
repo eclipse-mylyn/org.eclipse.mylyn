@@ -8,7 +8,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.internal.provisional.commons.ui;
+package org.eclipse.mylyn.internal.provisional.commons.ui.dialogs;
 
 import java.util.HashSet;
 import java.util.List;
@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
@@ -25,6 +24,8 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.mylyn.internal.provisional.commons.ui.EnhancedFilteredTree;
+import org.eclipse.mylyn.internal.provisional.commons.ui.SubstringPatternFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -35,8 +36,9 @@ import org.eclipse.ui.dialogs.PatternFilter;
 
 /**
  * @author Shawn Minto
+ * @since 3.3
  */
-public class CheckBoxTreeDialog extends Dialog {
+public class InPlaceCheckBoxTreeDialog extends AbstractInPlaceDialog {
 
 	private final Map<String, String> validValues;
 
@@ -64,19 +66,20 @@ public class CheckBoxTreeDialog extends Dialog {
 
 	}
 
-	public CheckBoxTreeDialog(Shell shell, List<String> values, Map<String, String> validValues, String dialogLabel) {
-		super(shell);
+	public InPlaceCheckBoxTreeDialog(Shell shell, Control openControl, List<String> values,
+			Map<String, String> validValues, String dialogLabel) {
+		super(shell, SWT.RIGHT, openControl);
 		Assert.isNotNull(values);
 		Assert.isNotNull(validValues);
 		Assert.isNotNull(dialogLabel);
 		this.selectedValues = new HashSet<String>(values);
 		this.validValues = validValues;
 		this.dialogLabel = dialogLabel;
-		setShellStyle(getShellStyle() | SWT.RESIZE);
+		setShellStyle(getShellStyle());
 	}
 
 	@Override
-	protected Control createDialogArea(Composite parent) {
+	protected Control createControl(Composite parent) {
 		getShell().setText(dialogLabel);
 
 		Composite composite = new Composite(parent, SWT.NONE);
@@ -169,14 +172,11 @@ public class CheckBoxTreeDialog extends Dialog {
 
 		});
 
-		parent.pack();
-
-		applyDialogFont(composite);
-
-		return composite;
+		return valueTree;
 	}
 
 	public Set<String> getSelectedValues() {
 		return new HashSet<String>(selectedValues);
 	}
+
 }

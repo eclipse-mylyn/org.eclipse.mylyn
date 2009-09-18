@@ -21,6 +21,9 @@ import java.util.List;
 
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.commons.ui.Messages;
+import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.IInPlaceDialogCloseListener;
+import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.InPlaceDialogCloseEvent;
+import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.InPlaceDateSelectionDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -144,7 +147,7 @@ public class DatePicker extends Composite {
 
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				Calendar newCalendar = Calendar.getInstance();
+				final Calendar newCalendar = Calendar.getInstance();
 				newCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
 				newCalendar.set(Calendar.MINUTE, 0);
 				newCalendar.set(Calendar.SECOND, 0);
@@ -152,29 +155,39 @@ public class DatePicker extends Composite {
 				if (date != null) {
 					newCalendar.setTime(date.getTime());
 				}
-
 				Shell shell = null;
 				if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
 					shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 				} else {
 					shell = new Shell(PlatformUI.getWorkbench().getDisplay());
 				}
-				DateSelectionDialog dialog = new DateSelectionDialog(shell, newCalendar, DatePicker.TITLE_DIALOG,
-						includeTimeOfday, selectedHourOfDay);
+
+				final InPlaceDateSelectionDialog dialog = new InPlaceDateSelectionDialog(shell, pickButton,
+						newCalendar, DatePicker.TITLE_DIALOG, includeTimeOfday, selectedHourOfDay);
 				pickButton.setEnabled(false);
 				dateText.setEnabled(false);
+				dialog.addCloseListener(new IInPlaceDialogCloseListener() {
 
-				int dialogResponse = dialog.open();
-				if (dialog.getDate() != null) {
-					newCalendar.setTime(dialog.getDate());
-				} else {
-					newCalendar = null;
-				}
-				dateSelected(dialogResponse == Window.CANCEL, newCalendar);
+					public void dialogClosing(InPlaceDialogCloseEvent event) {
+						Calendar selectedCalendar = newCalendar;
 
-				// Display display = Display.getCurrent();
-				// showDatePicker((display.getCursorLocation().x),
-				// (display.getCursorLocation().y));
+						if (event.getReturnCode() == InPlaceDateSelectionDialog.ID_CLEAR) {
+							selectedCalendar = null;
+						} else if (event.getReturnCode() == Window.OK) {
+							if (dialog.getDate() != null) {
+								if (selectedCalendar == null) {
+									selectedCalendar = Calendar.getInstance();
+								}
+								selectedCalendar.setTime(dialog.getDate());
+							} else {
+								selectedCalendar = null;
+							}
+
+						}
+						dateSelected(event.getReturnCode() == Window.CANCEL, selectedCalendar);
+					}
+				});
+				dialog.open();
 			}
 		});
 

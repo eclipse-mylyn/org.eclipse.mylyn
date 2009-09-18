@@ -75,7 +75,7 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 		if (includeTime) {
 			gridLayout.numColumns = 2;
 		} else {
-			gridLayout.numColumns = 2;
+			gridLayout.numColumns = 1;
 		}
 		this.setLayout(gridLayout);
 
