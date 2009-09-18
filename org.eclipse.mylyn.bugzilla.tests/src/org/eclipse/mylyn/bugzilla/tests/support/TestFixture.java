@@ -11,11 +11,17 @@
 
 package org.eclipse.mylyn.bugzilla.tests.support;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.Proxy;
+import java.net.URL;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
@@ -28,6 +34,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.osgi.framework.Bundle;
 
 /**
  * @author Steffen Pingel
@@ -132,6 +139,36 @@ public abstract class TestFixture {
 
 	public AbstractRepositoryConnector connector() {
 		return connector;
+	}
+
+	public static File getFile(String bundleId, Class<?> clazz, String filename) throws IOException {
+		Bundle bundle = Platform.getBundle(bundleId);
+		if (bundle != null) {
+			URL localURL = FileLocator.toFileURL(bundle.getEntry(filename));
+			filename = localURL.getFile();
+		} else {
+			URL localURL = clazz.getResource("");
+			String path = localURL.getFile();
+			int i = path.indexOf("!");
+			if (i != -1) {
+				int j = path.lastIndexOf(File.separatorChar, i);
+				if (j != -1) {
+					path = path.substring(0, j);
+				} else {
+					Assert.fail("Unable to determine location for '" + filename + "' at '" + path + "'");
+				}
+			} else {
+				String[] tokens = path.split("\\.");
+				for (int j = 0; j < tokens.length + 1; j++) {
+					path += ".." + File.separator;
+				}
+				if (path.contains("bin" + File.separator)) {
+					path += ".." + File.separator;
+				}
+			}
+			filename = path + filename.replaceAll("/", File.separator);
+		}
+		return new File(filename);
 	}
 
 }
