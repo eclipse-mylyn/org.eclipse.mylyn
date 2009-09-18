@@ -16,9 +16,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -56,10 +59,13 @@ public class FileTaskAttachmentSource extends AbstractTaskAttachmentSource {
 		extensions2Types.put("html", "text/html"); //$NON-NLS-1$ //$NON-NLS-2$
 		extensions2Types.put("htm", "text/html"); //$NON-NLS-1$ //$NON-NLS-2$
 		extensions2Types.put("xhtml", "application/xhtml+xml"); //$NON-NLS-1$//$NON-NLS-2$
+		extensions2Types.put("jpe", "image/jpeg"); //$NON-NLS-1$ //$NON-NLS-2$
 		extensions2Types.put("jpg", "image/jpeg"); //$NON-NLS-1$ //$NON-NLS-2$
 		extensions2Types.put("jpeg", "image/jpeg"); //$NON-NLS-1$ //$NON-NLS-2$
 		extensions2Types.put("gif", "image/gif"); //$NON-NLS-1$ //$NON-NLS-2$
 		extensions2Types.put("png", "image/png"); //$NON-NLS-1$ //$NON-NLS-2$
+		extensions2Types.put("tif", "image/tiff"); //$NON-NLS-1$ //$NON-NLS-2$
+		extensions2Types.put("tiff", "image/tiff"); //$NON-NLS-1$ //$NON-NLS-2$
 		extensions2Types.put("xml", APPLICATION_XML); //$NON-NLS-1$
 		extensions2Types.put("zip", APPLICATION_OCTET_STREAM); //$NON-NLS-1$
 		extensions2Types.put("tar", APPLICATION_OCTET_STREAM); //$NON-NLS-1$
@@ -92,6 +98,13 @@ public class FileTaskAttachmentSource extends AbstractTaskAttachmentSource {
 
 		// fall back to a safe mime type
 		return APPLICATION_OCTET_STREAM;
+	}
+
+	public static String[] getContentTypes() {
+		Set<String> types = new HashSet<String>(extensions2Types.values());
+		String[] array = types.toArray(new String[0]);
+		Arrays.sort(array);
+		return array;
 	}
 
 	private String contentType;

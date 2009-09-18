@@ -12,10 +12,6 @@
 
 package org.eclipse.mylyn.tasks.ui.wizards;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.context.core.ContextCore;
@@ -57,19 +53,6 @@ import org.eclipse.ui.handlers.IHandlerService;
  * @since 3.0
  */
 public class TaskAttachmentPage extends WizardPage {
-
-	private static List<String> contentTypes;
-
-	static {
-		contentTypes = new LinkedList<String>();
-		contentTypes.add("text/plain"); //$NON-NLS-1$
-		contentTypes.add("text/html"); //$NON-NLS-1$
-		contentTypes.add("application/xml"); //$NON-NLS-1$
-		contentTypes.add("image/gif"); //$NON-NLS-1$
-		contentTypes.add("image/jpeg"); //$NON-NLS-1$
-		contentTypes.add("image/png"); //$NON-NLS-1$
-		contentTypes.add(FileTaskAttachmentSource.APPLICATION_OCTET_STREAM);
-	}
 
 	private Button attachContextButton;
 
@@ -167,16 +150,14 @@ public class TaskAttachmentPage extends WizardPage {
 
 		contentTypeList = new Combo(composite, SWT.BORDER | SWT.DROP_DOWN | SWT.READ_ONLY);
 		contentTypeList.setLayoutData(new GridData(SWT.DEFAULT, SWT.DEFAULT, false, false, 2, 1));
-		Iterator<String> iter = contentTypes.iterator();
-		int i = 0;
+		String[] contentTypes = FileTaskAttachmentSource.getContentTypes();
 		int selection = 0;
-		while (iter.hasNext()) {
-			String next = iter.next();
+		for (int i = 0; i < contentTypes.length; i++) {
+			String next = contentTypes[i];
 			contentTypeList.add(next);
 			if (next.equalsIgnoreCase(model.getContentType())) {
 				selection = i;
 			}
-			i++;
 		}
 
 		/* Update attachment on select content type */
