@@ -85,7 +85,7 @@ public class PersonAttributeEditor extends TextAttributeEditor {
 				public void mouseEnter(MouseEvent e) {
 					((GridData) selfLink.getLayoutData()).exclude = false;
 					composite.layout();
-					selfLink.setImage(CommonImages.getImage(CommonImages.PERSON_ME));
+					selfLink.setImage(CommonImages.getImage(CommonImages.PERSON_ME_SMALL));
 					selfLink.redraw();
 					version++;
 				}
