@@ -378,7 +378,8 @@
           <visibleWhen
                 checkEnabled="false">
              <or>
-                <iterate>
+                <iterate
+                      ifEmpty="false">
                    <adapt
                          type="org.eclipse.mylyn.tasks.core.ITaskAttachment">
                       <test
