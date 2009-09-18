@@ -77,7 +77,7 @@ public class CheckboxMultiSelectAttributeEditor extends AbstractAttributeEditor 
 
 		final ToolBar toolBar = new ToolBar(composite, SWT.FLAT);
 		ToolItem item = new ToolItem(toolBar, SWT.FLAT);
-		item.setImage(CommonImages.getImage(CommonImages.EDIT));
+		item.setImage(CommonImages.getImage(CommonImages.EDIT_SMALL));
 		item.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

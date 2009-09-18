@@ -244,7 +244,7 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 					}
 				}
 			};
-			toggleEditAction.setImageDescriptor(CommonImages.EDIT);
+			toggleEditAction.setImageDescriptor(CommonImages.EDIT_SMALL);
 			toggleEditAction.setToolTipText(Messages.TaskEditorRichTextPart_Edit_Tooltip);
 			toggleEditAction.setChecked(true);
 			getEditor().getEditor().addStateChangedListener(new StateChangedListener() {

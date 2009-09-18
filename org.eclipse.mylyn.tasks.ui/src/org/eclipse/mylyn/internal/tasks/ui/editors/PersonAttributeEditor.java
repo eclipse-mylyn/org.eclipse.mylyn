@@ -65,8 +65,8 @@ public class PersonAttributeEditor extends TextAttributeEditor {
 
 			final ImageHyperlink selfLink = new ImageHyperlink(composite, SWT.NO_FOCUS);
 			selfLink.setToolTipText(Messages.PersonAttributeEditor_Insert_My_User_Id_Tooltip);
-			selfLink.setActiveImage(CommonImages.getImage(CommonImages.PERSON_ME));
-			selfLink.setHoverImage(CommonImages.getImage(CommonImages.PERSON_ME));
+			selfLink.setActiveImage(CommonImages.getImage(CommonImages.PERSON_ME_SMALL));
+			selfLink.setHoverImage(CommonImages.getImage(CommonImages.PERSON_ME_SMALL));
 			selfLink.addHyperlinkListener(new HyperlinkAdapter() {
 				@Override
 				public void linkActivated(HyperlinkEvent e) {

@@ -256,7 +256,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 			}
 		};
 		attachFileAction.setToolTipText(Messages.TaskEditorAttachmentPart_Attach_);
-		attachFileAction.setImageDescriptor(CommonImages.FILE_PLAIN);
+		attachFileAction.setImageDescriptor(CommonImages.FILE_PLAIN_SMALL);
 		toolBarManager.add(attachFileAction);
 	}
 

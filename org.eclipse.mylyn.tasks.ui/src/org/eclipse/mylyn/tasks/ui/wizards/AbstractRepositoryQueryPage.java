@@ -14,6 +14,7 @@ package org.eclipse.mylyn.tasks.ui.wizards;
 import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
@@ -69,7 +70,7 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 	public boolean isPageComplete() {
 		String queryTitle = getQueryTitle();
 		if (queryTitle == null || queryTitle.equals("")) { //$NON-NLS-1$
-			setErrorMessage(Messages.AbstractRepositoryQueryPage_Please_specify_a_title_for_the_query);
+			setMessage(Messages.AbstractRepositoryQueryPage_Please_specify_a_title_for_the_query);
 			return false;
 		} else {
 			Set<RepositoryQuery> queries = TasksUiInternal.getTaskList().getQueries();
@@ -78,27 +79,26 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 			if (query != null) {
 				oldSummary = query.getSummary();
 			}
-			if (oldSummary != null && queryTitle.equals(oldSummary)) {
-				setErrorMessage(null);
-				return true;
-			}
-
-			for (AbstractTaskCategory category : categories) {
-				if (queryTitle.equals(category.getSummary())) {
-					setErrorMessage(Messages.AbstractRepositoryQueryPage_A_category_with_this_name_already_exists);
-					return false;
-				}
-			}
-			for (RepositoryQuery repositoryQuery : queries) {
-				if (query == null || !query.equals(repositoryQuery)) {
-					if (queryTitle.equals(repositoryQuery.getSummary())) {
-						setErrorMessage(Messages.AbstractRepositoryQueryPage_A_query_with_this_name_already_exists);
+			if (oldSummary == null || !queryTitle.equals(oldSummary)) {
+				for (AbstractTaskCategory category : categories) {
+					if (queryTitle.equals(category.getSummary())) {
+						setMessage(Messages.AbstractRepositoryQueryPage_A_category_with_this_name_already_exists,
+								IMessageProvider.ERROR);
 						return false;
+					}
+				}
+				for (RepositoryQuery repositoryQuery : queries) {
+					if (query == null || !query.equals(repositoryQuery)) {
+						if (queryTitle.equals(repositoryQuery.getSummary())) {
+							setMessage(Messages.AbstractRepositoryQueryPage_A_query_with_this_name_already_exists,
+									IMessageProvider.ERROR);
+							return false;
+						}
 					}
 				}
 			}
 		}
-		setErrorMessage(null);
+		setMessage(null);
 		return true;
 	}
 
