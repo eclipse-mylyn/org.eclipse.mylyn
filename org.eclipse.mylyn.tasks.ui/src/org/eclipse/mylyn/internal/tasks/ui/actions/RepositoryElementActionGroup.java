@@ -212,7 +212,7 @@ public class RepositoryElementActionGroup {
 			copyDetailsSubMenu.add(copyDetailsAction);
 			manager.appendToGroup(ID_SEPARATOR_EDIT, copyDetailsSubMenu);
 		}
-		if (isInTaskList()) {
+		if (isInTaskList() && !selection.isEmpty()) {
 			manager.appendToGroup(ID_SEPARATOR_EDIT, deleteAction);
 		}
 

@@ -345,24 +345,11 @@
                menubarPath="repository"
                tooltip="%SynchronizeSelectedAction.tooltip">
             <enablement>
-               <and>
                   <not>
                      <objectClass
                            name="org.eclipse.mylyn.internal.tasks.core.LocalTask">
                      </objectClass>
                   </not>
-                  <or>
-                     <objectClass
-                           name="org.eclipse.mylyn.internal.tasks.core.RepositoryQuery">
-                     </objectClass>
-                     <objectClass
-                           name="org.eclipse.mylyn.internal.tasks.core.AbstractTask">
-                     </objectClass>
-                     <objectClass
-                           name="org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer">
-                     </objectClass>
-                  </or>
-               </and>
             </enablement>
          </action>
          
@@ -1054,6 +1041,12 @@
                 optional="true"
                 values="org.eclipse.mylyn.internal.tasks.ui.commands.TaskRepositoryParameterValues">
           </commandParameter>
+       </command>
+       <command
+             categoryId="org.eclipse.mylyn.tasks.ui.commands"
+             defaultHandler="org.eclipse.mylyn.internal.tasks.ui.commands.SynchronizeAllHandler"
+             id="org.eclipse.mylyn.tasks.ui.command.SynchronizeAll"
+             name="%SynchronizeAllAction.label">
        </command>
     </extension>
     <extension
