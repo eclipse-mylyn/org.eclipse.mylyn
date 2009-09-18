@@ -51,6 +51,8 @@ public class Messages extends NLS {
 
 	public static String BugzillaSearchPage_Email_2;
 
+	public static String BugzillaSearchPage_Enter_search_option;
+
 	public static String BugzillaSearchPage_Error_updating_search_options;
 
 	public static String BugzillaSearchPage_Error_was_X;

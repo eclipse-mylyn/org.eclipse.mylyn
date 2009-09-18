@@ -30,6 +30,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.DialogSettings;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ComboContentAdapter;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
@@ -1131,13 +1132,23 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 						throw new NumberFormatException();
 					}
 				} catch (NumberFormatException ex) {
-					setErrorMessage(NLS.bind(Messages.BugzillaSearchPage_Number_of_days_must_be_a_positive_integer,
-							days));
+					setMessage(NLS.bind(Messages.BugzillaSearchPage_Number_of_days_must_be_a_positive_integer, days),
+							IMessageProvider.ERROR);
 					return false;
 				}
 			}
 		}
-		return getWizard() == null ? canQuery() : canQuery() && super.isPageComplete();
+		if (getWizard() == null) {
+			return canQuery();
+		} else {
+			if (super.isPageComplete()) {
+				if (canQuery()) {
+					return true;
+				}
+				setMessage(Messages.BugzillaSearchPage_Enter_search_option);
+			}
+			return false;
+		}
 	}
 
 	/**
