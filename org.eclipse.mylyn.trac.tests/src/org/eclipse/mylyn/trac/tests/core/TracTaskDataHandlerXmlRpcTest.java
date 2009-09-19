@@ -118,15 +118,13 @@ public class TracTaskDataHandlerXmlRpcTest extends TestCase {
 		// TODO this was fixed so it returns false now but only if the 
 		// query returns a single task
 		assertFalse(session.needsPerformQueries());
-		// bug 238043: assertEquals(Collections.emptySet(), session.getStaleTasks());
-		assertEquals(null, session.getStaleTasks());
+		assertEquals(Collections.emptySet(), session.getStaleTasks());
 
 		repository.setSynchronizationTimeStamp((lastModified + 1) + "");
 		session = createSession(task);
 		connector.preSynchronization(session, null);
 		assertFalse(session.needsPerformQueries());
-		// bug 238043: assertEquals(Collections.emptySet(), session.getStaleTasks());
-		assertEquals(null, session.getStaleTasks());
+		assertEquals(Collections.emptySet(), session.getStaleTasks());
 
 		// change ticket making sure it gets a new change time
 		Thread.sleep(1000);

@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.trac.tests.core;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -70,15 +71,13 @@ public class TracRepositoryConnectorWebTest extends TestCase {
 		connector.preSynchronization(session, null);
 		assertTrue(session.needsPerformQueries());
 		assertEquals(null, repository.getSynchronizationTimeStamp());
-		// bug 238043: assertEquals(Collections.emptySet(), session.getStaleTasks());
-		assertEquals(null, session.getStaleTasks());
+		assertEquals(Collections.emptySet(), session.getStaleTasks());
 
 		int time = (int) (System.currentTimeMillis() / 1000) + 1;
 		repository.setSynchronizationTimeStamp(time + "");
 		connector.preSynchronization(session, null);
 		assertTrue(session.needsPerformQueries());
-		// bug 238043: assertEquals(Collections.emptySet(), session.getStaleTasks());
-		assertEquals(null, session.getStaleTasks());
+		assertEquals(Collections.emptySet(), session.getStaleTasks());
 	}
 
 }
