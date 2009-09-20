@@ -16,6 +16,7 @@ import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.commons.tests.net.SslProtocolSocketFactoryTest;
 import org.eclipse.mylyn.commons.tests.net.WebUtilTest;
+import org.eclipse.mylyn.commons.tests.ui.CommonUiUtilTest;
 
 /**
  * @author Mik Kersten
@@ -26,6 +27,7 @@ public class AllCommonsTests {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.commons.tests");
 		suite.addTestSuite(SslProtocolSocketFactoryTest.class);
 		suite.addTestSuite(WebUtilTest.class);
+		suite.addTestSuite(CommonUiUtilTest.class);
 		return suite;
 	}
 

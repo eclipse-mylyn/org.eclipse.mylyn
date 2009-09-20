@@ -219,4 +219,11 @@ public class CommonUiUtil {
 			}
 		}
 	}
+
+	/**
+	 * Returns text masking the &amp;-character from decoration as an accelerator in SWT labels.
+	 */
+	public static String toLabel(String text) {
+		return (text != null) ? text.replaceAll("&", "&&") : null; // mask & from SWT //$NON-NLS-1$ //$NON-NLS-2$
+	}
 }
