@@ -22,7 +22,9 @@ import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.HttpVersion;
+import org.apache.commons.httpclient.auth.AuthScheme;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.xmlrpc.XmlRpcException;
@@ -90,21 +92,25 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 		protected InputStream getInputStream() throws XmlRpcException {
 			int responseCode = method.getStatusCode();
 			if (responseCode != HttpURLConnection.HTTP_OK) {
-				throw new TracHttpException(responseCode);
+				TracHttpException e = new TracHttpException(responseCode);
+				if (responseCode == HttpStatus.SC_UNAUTHORIZED) {
+					e.setAuthScheme(method.getHostAuthState().getAuthScheme());
+				}
+				throw e;
 			}
 
 			try {
 				return method.getResponseBodyAsStream();
 			} catch (HttpException e) {
-				throw new XmlRpcClientException("Error in HTTP transport: " + e.getMessage(), e); //$NON-NLS-1$
+				throw new XmlRpcClientException("Error in HTTP transport: " + e.getMessage(), e);
 			} catch (IOException e) {
-				throw new XmlRpcClientException("I/O error in server communication: " + e.getMessage(), e); //$NON-NLS-1$
+				throw new XmlRpcClientException("I/O error in server communication: " + e.getMessage(), e);
 			}
 		}
 
 		@Override
 		protected String getUserAgent() {
-			return WebUtil.getUserAgent(""); //$NON-NLS-1$
+			return WebUtil.getUserAgent("");
 		}
 
 		@Override
@@ -168,7 +174,7 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 				}
 
 				public String getContentType() {
-					return "text/xml"; //$NON-NLS-1$
+					return "text/xml";
 				}
 
 				public boolean isRepeatable() {
@@ -216,10 +222,10 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 				if (t instanceof XmlRpcException) {
 					throw (XmlRpcException) t;
 				} else {
-					throw new XmlRpcException("Unexpected exception: " + t.getMessage(), t); //$NON-NLS-1$
+					throw new XmlRpcException("Unexpected exception: " + t.getMessage(), t);
 				}
 			} catch (IOException e) {
-				throw new XmlRpcException("I/O error while communicating with HTTP server: " + e.getMessage(), e); //$NON-NLS-1$
+				throw new XmlRpcException("I/O error while communicating with HTTP server: " + e.getMessage(), e);
 			}
 		}
 
@@ -229,8 +235,18 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 
 		private static final long serialVersionUID = 9032521978140685830L;
 
+		private AuthScheme authScheme;
+
 		public TracHttpException(int responseCode) {
-			super(responseCode, "HTTP Error " + responseCode); //$NON-NLS-1$
+			super(responseCode, "HTTP Error " + responseCode);
+		}
+
+		public AuthScheme getAuthScheme() {
+			return authScheme;
+		}
+
+		public void setAuthScheme(AuthScheme authScheme) {
+			this.authScheme = authScheme;
 		}
 
 	}

@@ -21,6 +21,8 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.trac.core.TracClientFactory;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
@@ -186,6 +188,14 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 				throw new CoreException(RepositoryStatus.createStatus(repositoryUrl, IStatus.ERROR,
 						TracUiPlugin.ID_PLUGIN, INVALID_REPOSITORY_URL));
 			} catch (TracLoginException e) {
+				if (e.isNtlmAuthRequested()) {
+					AuthenticationCredentials credentials = taskRepository.getCredentials(AuthenticationType.REPOSITORY);
+					if (!credentials.getUserName().contains("\\")) { //$NON-NLS-1$
+						throw new CoreException(
+								RepositoryStatus.createStatus(repositoryUrl, IStatus.ERROR, TracUiPlugin.ID_PLUGIN,
+										Messages.TracRepositorySettingsPage_NTLM_authentication_requested_Error));
+					}
+				}
 				throw new CoreException(RepositoryStatus.createStatus(repositoryUrl, IStatus.ERROR,
 						TracUiPlugin.ID_PLUGIN, INVALID_LOGIN));
 			} catch (TracPermissionDeniedException e) {

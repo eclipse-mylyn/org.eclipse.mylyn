@@ -20,11 +20,21 @@ public class TracLoginException extends TracException {
 
 	private static final long serialVersionUID = -6128773690643367414L;
 
+	private boolean ntlmAuthRequested;
+
 	public TracLoginException() {
 	}
 
 	public TracLoginException(String message) {
 		super(message);
+	}
+
+	public boolean isNtlmAuthRequested() {
+		return ntlmAuthRequested;
+	}
+
+	void setNtlmAuthRequested(boolean ntlmAuthRequested) {
+		this.ntlmAuthRequested = ntlmAuthRequested;
 	}
 
 }

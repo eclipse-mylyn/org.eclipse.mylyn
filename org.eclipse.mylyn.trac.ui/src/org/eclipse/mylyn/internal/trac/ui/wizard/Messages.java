@@ -109,5 +109,7 @@ public class Messages extends NLS {
 
 	public static String TracRepositorySettingsPage_No_Trac_repository_found_at_url;
 
+	public static String TracRepositorySettingsPage_NTLM_authentication_requested_Error;
+
 	public static String TracRepositorySettingsPage_Trac_Repository_Settings;
 }

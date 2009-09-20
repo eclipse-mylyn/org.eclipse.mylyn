@@ -38,6 +38,7 @@ import org.apache.commons.httpclient.auth.AuthScheme;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.auth.BasicScheme;
 import org.apache.commons.httpclient.auth.DigestScheme;
+import org.apache.commons.httpclient.auth.NTLMScheme;
 import org.apache.commons.httpclient.methods.HeadMethod;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
@@ -163,7 +164,9 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 						System.err.println(location.getUrl() + ": Unauthorized (" + e.code + ")"); //$NON-NLS-1$ //$NON-NLS-2$ 
 					}
 					digestScheme = null;
-					throw new TracLoginException();
+					TracLoginException exception = new TracLoginException();
+					exception.setNtlmAuthRequested(e.getAuthScheme() instanceof NTLMScheme);
+					throw exception;
 				} else if (e.code == HttpStatus.SC_FORBIDDEN) {
 					if (DEBUG_AUTH) {
 						System.err.println(location.getUrl() + ": Forbidden (" + e.code + ")"); //$NON-NLS-1$ //$NON-NLS-2$ 
