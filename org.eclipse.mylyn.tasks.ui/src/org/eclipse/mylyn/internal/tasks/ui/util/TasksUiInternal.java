@@ -57,6 +57,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
@@ -866,9 +867,10 @@ public class TasksUiInternal {
 
 	/**
 	 * Returns text masking the &amp;-character from decoration as an accelerator in SWT labels.
+	 * @deprecated Use {@link CommonUiUtil#toLabel(String)} instead
 	 */
 	public static String escapeLabelText(String text) {
-		return (text != null) ? text.replace("&", "&&") : null; // mask & from SWT //$NON-NLS-1$ //$NON-NLS-2$
+		return CommonUiUtil.toLabel(text);
 	}
 
 	public static void preservingSelection(final TreeViewer viewer, Runnable runnable) {

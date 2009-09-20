@@ -12,7 +12,7 @@
 package org.eclipse.mylyn.tasks.ui.editors;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
@@ -109,7 +109,7 @@ public abstract class AbstractAttributeEditor {
 	 */
 	public String getLabel() {
 		String label = getAttributeMapper().getLabel(getTaskAttribute());
-		return TasksUiInternal.escapeLabelText(label);
+		return CommonUiUtil.toLabel(label);
 	}
 
 	/**
