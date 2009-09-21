@@ -22,8 +22,8 @@ import java.util.List;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.commons.ui.Messages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.IInPlaceDialogCloseListener;
-import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.InPlaceDialogCloseEvent;
 import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.InPlaceDateSelectionDialog;
+import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.InPlaceDialogCloseEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -42,10 +42,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * Temporary date picker from patch posted to: https://bugs.eclipse.org/bugs/show_bug.cgi?taskId=19945
- * 
- * see bug# 19945
- * 
+ * Temporary date picker from patch posted to: https://bugs.eclipse.org/bugs/show_bug.cgi?taskId=19945 see bug# 19945
  * TODO: remove this class when an SWT date picker is added
  * 
  * @author Bahadir Yagan
@@ -155,17 +152,18 @@ public class DatePicker extends Composite {
 				if (date != null) {
 					newCalendar.setTime(date.getTime());
 				}
-				Shell shell = null;
-				if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
-					shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-				} else {
-					shell = new Shell(PlatformUI.getWorkbench().getDisplay());
+				Shell shell = pickButton.getShell();
+				if (shell == null) {
+					//fall back
+					if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
+						shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+					} else {
+						shell = new Shell(PlatformUI.getWorkbench().getDisplay());
+					}
 				}
 
 				final InPlaceDateSelectionDialog dialog = new InPlaceDateSelectionDialog(shell, pickButton,
 						newCalendar, DatePicker.TITLE_DIALOG, includeTimeOfday, selectedHourOfDay);
-				pickButton.setEnabled(false);
-				dateText.setEnabled(false);
 				dialog.addCloseListener(new IInPlaceDialogCloseListener() {
 
 					public void dialogClosing(InPlaceDialogCloseEvent event) {
@@ -277,8 +275,6 @@ public class DatePicker extends Composite {
 			notifyPickerListeners();
 		}
 
-		pickButton.setEnabled(true);
-		dateText.setEnabled(true);
 	}
 
 	private void notifyPickerListeners() {
