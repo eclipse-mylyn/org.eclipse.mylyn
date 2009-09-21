@@ -1108,6 +1108,7 @@ public class BugzillaClient {
 						}
 					}
 					a = b;
+					id = a.getId();
 					cleanIfShortLogin(a);
 				} else {
 					cleanQAContact(a);
