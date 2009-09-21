@@ -70,6 +70,14 @@ public class TracClientFactoryTest extends TestCase {
 		probeClient(TracTestConstants.TEST_TRAC_010_DIGEST_AUTH_URL, true);
 	}
 
+	public void testProbeClient010FormAuth() throws Exception {
+		probeClient(TracTestConstants.TEST_TRAC_010_FORM_AUTH_URL, true);
+	}
+
+	public void testProbeClient011() throws Exception {
+		probeClient(TracTestConstants.TEST_TRAC_011_URL, true);
+	}
+
 	protected void probeClient(String url, boolean xmlrpcInstalled) throws Exception {
 		Credentials credentials = TestUtil.readCredentials(PrivilegeLevel.USER);
 		WebLocation location = new WebLocation(url, credentials.username, credentials.password);

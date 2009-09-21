@@ -68,8 +68,17 @@ public class TracFixture extends TestFixture {
 
 	//public static TracFixture DEFAULT = TRAC_0_11_WEB;
 
+	/**
+	 * Standard configurations for running all test against.
+	 */
 	public static final TracFixture[] ALL = new TracFixture[] { TRAC_0_9_WEB, TRAC_0_10_WEB, TRAC_0_11_WEB,
-			TRAC_0_10_XML_RPC, TRAC_0_11_XML_RPC, };
+			TRAC_0_10_XML_RPC, TRAC_0_11_XML_RPC, /* TRAC_0_10_XML_RPC_SSL, */};
+
+	/**
+	 * Misc configurations for running a limited number of test against.
+	 */
+	public static final TracFixture[] MISC = new TracFixture[] { TRAC_0_10_XML_RPC_DIGEST_AUTH,
+			TRAC_0_10_XML_RPC_FORM_AUTH, };
 
 	public static void cleanup010() throws Exception {
 		if (data010 != null) {
