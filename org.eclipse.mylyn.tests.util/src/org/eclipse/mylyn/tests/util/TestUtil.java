@@ -66,7 +66,12 @@ public class TestUtil {
 			File file;
 			String filename = System.getProperty(KEY_CREDENTIALS_FILE);
 			if (filename == null) {
-				file = getFile("org.eclipse.context.tests", TestUtil.class, "credentials.properties");
+				file = getFile("org.eclipse.mylyn.context.tests", TestUtil.class, "credentials.properties");
+				if (!file.exists()) {
+					// lookup may have reverted to this plug-in, try to lookup file in org.eclipse.context.tests plug-in
+					File path = new File(file.getParentFile().getParentFile(), "org.eclipse.mylyn.context.tests");
+					file = new File(path, file.getName());
+				}
 			} else {
 				file = new File(filename);
 			}
@@ -135,9 +140,8 @@ public class TestUtil {
 				}
 			} else {
 				// create relative path to base of class file location
-				String[] tokens = path.split("\\.");
-				for (@SuppressWarnings("unused")
-				String token : tokens) {
+				String[] tokens = clazz.getName().split("\\.");
+				for (int j = 0; j < tokens.length - 1; j++) {
 					path += ".." + File.separator;
 				}
 				if (path.contains("bin" + File.separator)) {
@@ -146,6 +150,6 @@ public class TestUtil {
 			}
 			filename = path + filename.replaceAll("/", File.separator);
 		}
-		return new File(filename);
+		return new File(filename).getCanonicalFile();
 	}
 }
