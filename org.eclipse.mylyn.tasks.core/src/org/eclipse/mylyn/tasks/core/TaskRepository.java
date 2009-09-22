@@ -669,7 +669,7 @@ public final class TaskRepository extends PlatformObject {
 
 	@Override
 	public int hashCode() {
-		return getRepositoryUrl().hashCode() * 31 + getConnectorKind().hashCode();
+		return getConnectorKind().hashCode();
 	}
 
 	public boolean hasProperty(String name) {

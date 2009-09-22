@@ -72,7 +72,7 @@ public class TaskAttachmentTest extends TestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-		manager.removeRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		manager.removeRepository(repository);
 	}
 
 	public void testCopyToClipboardAction() throws Exception {

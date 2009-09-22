@@ -131,14 +131,18 @@ public class TaskRepositoryManager implements IRepositoryManager {
 		}
 	}
 
+	@Deprecated
 	public void removeRepository(final TaskRepository repository, String repositoryFilePath) {
+		removeRepository(repository);
+	}
+
+	public void removeRepository(final TaskRepository repository) {
 		Set<TaskRepository> repositories = repositoryMap.get(repository.getConnectorKind());
 		if (repositories != null) {
 			repository.flushAuthenticationCredentials();
 			repositories.remove(repository);
 		}
 		repository.removeChangeListener(PROPERTY_CHANGE_LISTENER);
-		saveRepositories(repositoryFilePath);
 		for (final IRepositoryListener listener : listeners) {
 			SafeRunner.run(new ISafeRunnable() {
 				public void handleException(Throwable e) {
@@ -343,13 +347,17 @@ public class TaskRepositoryManager implements IRepositoryManager {
 		return true;
 	}
 
+	@Deprecated
+	public void clearRepositories(String repositoriesFilePath) {
+		clearRepositories();
+	}
+
 	/**
 	 * For testing.
 	 */
-	public void clearRepositories(String repositoriesFilePath) {
+	public void clearRepositories() {
 		repositoryMap.clear();
 		orphanedRepositories.clear();
-		saveRepositories(repositoriesFilePath);
 	}
 
 	public void notifyRepositorySettingsChanged(final TaskRepository repository) {

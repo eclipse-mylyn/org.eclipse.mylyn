@@ -14,6 +14,7 @@ package org.eclipse.mylyn.tasks.tests;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -77,14 +78,14 @@ public class TaskRepositoryManagerTest extends TestCase {
 		super.setUp();
 		manager = TasksUiPlugin.getRepositoryManager();
 		assertNotNull(manager);
-		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		manager.clearRepositories();
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		if (manager != null) {
-			manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
+			manager.clearRepositories();
 		}
 	}
 
@@ -144,7 +145,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 //		assertEquals("testhttpuser", map.get(AUTH_HTTP_USERNAME));
 //		assertEquals("testhttppassword", map.get(AUTH_HTTP_PASSWORD));
 //
-//		assertTrue(TasksUiPlugin.getRepositoryManager().migrateToSecureStorage(repository1));
+//		assertTrue(manager.migrateToSecureStorage(repository1));
 //
 //		assertNull(Platform.getAuthorizationInfo(new URL(repository1.getUrl()), AUTH_REALM, AUTH_SCHEME));
 //
@@ -172,7 +173,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 	public void testQueryDeletion() {
 		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND,
 				MockRepositoryConnector.REPOSITORY_URL);
-		TasksUiPlugin.getRepositoryManager().addRepository(repository);
+		manager.addRepository(repository);
 
 		MockTask task = new MockTask("1");
 		MockRepositoryQuery query = new MockRepositoryQuery("Test");
@@ -332,4 +333,14 @@ public class TaskRepositoryManagerTest extends TestCase {
 		assertEquals("got: " + manager.getAllRepositories(), 2, manager.getAllRepositories().size());
 	}
 
+	public void testDeletion() {
+		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND,
+				MockRepositoryConnector.REPOSITORY_URL);
+		manager.addRepository(repository);
+		repository.setRepositoryUrl("http://newurl");
+		manager.removeRepository(repository);
+		assertNull(manager.getRepository("http://newurl"));
+		assertNull(manager.getRepository(MockRepositoryConnector.REPOSITORY_KIND));
+		assertEquals(Collections.emptySet(), manager.getRepositories(MockRepositoryConnector.REPOSITORY_KIND));
+	}
 }
