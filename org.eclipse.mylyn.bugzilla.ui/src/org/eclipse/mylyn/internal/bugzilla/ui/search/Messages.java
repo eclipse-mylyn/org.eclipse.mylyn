@@ -81,6 +81,8 @@ public class Messages extends NLS {
 
 	public static String BugzillaSearchPage_PROORITY;
 
+	public static String BugzillaSearchPage_qacontact;
+
 	public static String BugzillaSearchPage_Query_Title;
 
 	public static String BugzillaSearchPage_regexp;

@@ -121,11 +121,11 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 	private static final String[] keywordOperationValues = { "allwords", "anywords", "nowords" }; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 
-	private static final String[] emailRoleValues = { "emailassigned_to1", "emailreporter1", "emailcc1", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			"emaillongdesc1" }; //$NON-NLS-1$
+	private static final String[] emailRoleValues = { "emailassigned_to1", "emailreporter1", "emailcc1", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+			"emaillongdesc1", "emailqa_contact1" }; //$NON-NLS-1$ //$NON-NLS-2$
 
-	private static final String[] emailRoleValues2 = { "emailassigned_to2", "emailreporter2", "emailcc2", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			"emaillongdesc2" }; //$NON-NLS-1$
+	private static final String[] emailRoleValues2 = { "emailassigned_to2", "emailreporter2", "emailcc2", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+			"emaillongdesc2", "emailqa_contact2" }; //$NON-NLS-1$ //$NON-NLS-2$
 
 	// dialog store id constants
 	private final static String DIALOG_BOUNDS_KEY = "ResizableDialogBounds"; //$NON-NLS-1$
@@ -490,7 +490,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		emailLayout.marginWidth = 0;
 		emailLayout.marginHeight = 0;
 		emailLayout.horizontalSpacing = 2;
-		emailLayout.numColumns = 4;
+		emailLayout.numColumns = 5;
 		emailComposite.setLayout(emailLayout);
 
 		Button button0 = new Button(emailComposite, SWT.CHECK);
@@ -505,7 +505,10 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		Button button3 = new Button(emailComposite, SWT.CHECK);
 		button3.setText(Messages.BugzillaSearchPage_commenter);
 
-		emailButtons = new Button[] { button0, button1, button2, button3 };
+		Button button4 = new Button(emailComposite, SWT.CHECK);
+		button4.setText(Messages.BugzillaSearchPage_qacontact);
+
+		emailButtons = new Button[] { button0, button1, button2, button3, button4 };
 
 		// operation combo
 		emailOperation = new Combo(composite, SWT.SINGLE | SWT.READ_ONLY | SWT.BORDER);
@@ -541,7 +544,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		emailLayout2.marginWidth = 0;
 		emailLayout2.marginHeight = 0;
 		emailLayout2.horizontalSpacing = 2;
-		emailLayout2.numColumns = 4;
+		emailLayout2.numColumns = 5;
 		emailComposite2.setLayout(emailLayout2);
 
 		Button e2button0 = new Button(emailComposite2, SWT.CHECK);
@@ -556,7 +559,10 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		Button e2button3 = new Button(emailComposite2, SWT.CHECK);
 		e2button3.setText(Messages.BugzillaSearchPage_commenter);
 
-		emailButtons2 = new Button[] { e2button0, e2button1, e2button2, e2button3 };
+		Button e2button4 = new Button(emailComposite2, SWT.CHECK);
+		e2button4.setText(Messages.BugzillaSearchPage_qacontact);
+
+		emailButtons2 = new Button[] { e2button0, e2button1, e2button2, e2button3, e2button4 };
 
 		// operation combo
 		emailOperation2 = new Combo(composite, SWT.SINGLE | SWT.READ_ONLY | SWT.BORDER);
@@ -1608,6 +1614,15 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				} else {
 					emailButtons[3].setSelection(false);
 				}
+			} else if (key.equals("emailqa_contact1")) { // HACK: email //$NON-NLS-1$
+				// buttons assumed
+				// to be in same
+				// position
+				if (value.equals("1")) { //$NON-NLS-1$
+					emailButtons[4].setSelection(true);
+				} else {
+					emailButtons[4].setSelection(false);
+				}
 			} else if (key.equals("emailtype1")) { //$NON-NLS-1$
 				int index = 0;
 				for (String item : emailOperation.getItems()) {
@@ -1656,6 +1671,15 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 					emailButtons2[3].setSelection(true);
 				} else {
 					emailButtons2[3].setSelection(false);
+				}
+			} else if (key.equals("emailqa_contact2")) { // HACK: email //$NON-NLS-1$
+				// buttons assumed
+				// to be in same
+				// position
+				if (value.equals("1")) { //$NON-NLS-1$
+					emailButtons2[4].setSelection(true);
+				} else {
+					emailButtons2[4].setSelection(false);
 				}
 			} else if (key.equals("emailtype2")) { //$NON-NLS-1$
 				int index = 0;
