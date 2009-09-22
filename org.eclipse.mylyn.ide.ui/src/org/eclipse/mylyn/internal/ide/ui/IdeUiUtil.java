@@ -19,6 +19,8 @@ import org.eclipse.ui.views.navigator.ResourceNavigator;
 /**
  * @author Mik Kersten
  */
+// TODO e3.5
+@SuppressWarnings("deprecation")
 public class IdeUiUtil {
 
 	public static final String ID_VIEW_SYNCHRONIZE = "org.eclipse.team.sync.views.SynchronizeView"; //$NON-NLS-1$

@@ -35,6 +35,8 @@ import org.eclipse.ui.views.navigator.ToggleLinkingAction;
 /**
  * @author Mik Kersten
  */
+// TODO e3.5
+@SuppressWarnings("deprecation")
 public class FocusResourceNavigatorAction extends AbstractAutoFocusViewAction {
 
 	public FocusResourceNavigatorAction() {

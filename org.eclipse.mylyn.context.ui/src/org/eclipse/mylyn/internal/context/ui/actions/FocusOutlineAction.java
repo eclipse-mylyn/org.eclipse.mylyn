@@ -14,7 +14,6 @@ package org.eclipse.mylyn.internal.context.ui.actions;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
@@ -98,10 +97,6 @@ public class FocusOutlineAction extends AbstractFocusViewAction {
 			}
 		}
 		return viewers;
-	}
-
-	public void propertyChange(PropertyChangeEvent event) {
-		// ignore
 	}
 
 	public static FocusOutlineAction getOutlineActionForEditor(IEditorPart part) {

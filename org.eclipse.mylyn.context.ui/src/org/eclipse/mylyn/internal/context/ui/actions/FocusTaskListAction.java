@@ -16,7 +16,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.ViewerSorter;
@@ -164,10 +163,6 @@ public class FocusTaskListAction extends AbstractFocusViewAction implements IFil
 				});
 			}
 		}
-	}
-
-	public void propertyChange(PropertyChangeEvent event) {
-		// ignore
 	}
 
 	public void filterTextChanged(final String text) {

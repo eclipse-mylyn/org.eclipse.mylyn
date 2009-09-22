@@ -27,6 +27,8 @@ import org.eclipse.ui.views.navigator.ResourceNavigator;
 /**
  * @author Mik Kersten
  */
+// TODO e3.5
+@SuppressWarnings("deprecation")
 public abstract class AbstractResourceContextTest extends AbstractContextTest {
 
 	protected InteractionContextManager manager = ContextCorePlugin.getContextManager();
