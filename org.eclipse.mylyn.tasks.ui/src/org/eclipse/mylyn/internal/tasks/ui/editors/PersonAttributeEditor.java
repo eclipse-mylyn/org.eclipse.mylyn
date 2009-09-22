@@ -77,7 +77,7 @@ public class PersonAttributeEditor extends TextAttributeEditor {
 					}
 				}
 			});
-			GridDataFactory.fillDefaults().exclude(true).applyTo(selfLink);
+			GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).exclude(true).applyTo(selfLink);
 			MouseTrackListener mouseListener = new MouseTrackAdapter() {
 				int version = 0;
 
@@ -106,6 +106,7 @@ public class PersonAttributeEditor extends TextAttributeEditor {
 					});
 				}
 			};
+			composite.addMouseTrackListener(mouseListener);
 			getText().addMouseTrackListener(mouseListener);
 			selfLink.addMouseTrackListener(mouseListener);
 
