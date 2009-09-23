@@ -30,7 +30,7 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.osgi.framework.adaptor.BundleClassLoader;
+import org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader;
 
 @SuppressWarnings("restriction")
 public class CommonTestUtil {
@@ -133,8 +133,10 @@ public class CommonTestUtil {
 		Class<?> clazz = (source instanceof Class<?>) ? (Class<?>) source : source.getClass();
 		if (Platform.isRunning()) {
 			ClassLoader classLoader = clazz.getClassLoader();
-			if (classLoader instanceof BundleClassLoader) {
-				URL url = ((BundleClassLoader) classLoader).getBundle().getEntry(filename);
+			if (classLoader instanceof DefaultClassLoader) {
+				// TODO e3.5 replace with: URL url = ((BundleClassLoader) classLoader).getBundle().getEntry(filename);
+				URL url = ((DefaultClassLoader) classLoader).getClasspathManager().getBaseData().getBundle().getEntry(
+						filename);
 				if (url != null) {
 					URL localURL = FileLocator.toFileURL(url);
 					return new File(localURL.getFile());
