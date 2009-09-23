@@ -16,7 +16,7 @@ import java.io.File;
 import junit.framework.TestCase;
 
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.mylyn.commons.tests.support.CommonsTestUtil;
+import org.eclipse.mylyn.commons.tests.support.CommonTestUtil;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
@@ -82,7 +82,7 @@ public class ChangeDataDirTest extends TestCase {
 		ITask readTaskBeforeMove = taskList.getTask(handle);
 		assertNotNull(readTaskBeforeMove);
 		assertTrue(taskList.getAllTasks().size() > 0);
-		CommonsTestUtil.copyFolder(new File(TasksUiPlugin.getDefault().getDataDirectory()), new File(newDataDir));
+		CommonTestUtil.copyFolder(new File(TasksUiPlugin.getDefault().getDataDirectory()), new File(newDataDir));
 		TasksUiPlugin.getDefault().setDataDirectory(newDataDir);
 		assertTrue(taskList.getAllTasks().size() > 0);
 		ITask readTaskAfterMove = taskList.getTask(handle);
