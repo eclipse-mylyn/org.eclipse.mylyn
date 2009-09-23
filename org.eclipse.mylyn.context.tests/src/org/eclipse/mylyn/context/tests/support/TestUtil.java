@@ -19,19 +19,17 @@ import java.util.Properties;
 import junit.framework.AssertionFailedError;
 
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.tests.ContextTestsPlugin;
-import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Steffen Pingel
+ * @deprecated use {@link org.eclipse.mylyn.tests.util.TestUtil} instead
  */
+@Deprecated
 public class TestUtil {
-
-	private static boolean contextUiLazyStarted;
 
 	public static final String KEY_CREDENTIALS_FILE = "mylyn.credentials";
 
@@ -119,24 +117,6 @@ public class TestUtil {
 		}
 
 		return new Credentials(username, password);
-	}
-
-	/**
-	 * Test cases that rely on lazy startup of Context Ui (e.g. context bridges) need to invoke this method prior to
-	 * running the test.
-	 */
-	public static void triggerContextUiLazyStart() {
-		if (contextUiLazyStarted) {
-			return;
-		}
-
-		contextUiLazyStarted = true;
-
-		// make sure monitor UI is started and logs the start interaction event 
-		MonitorUiPlugin.getDefault();
-
-		ContextCore.getContextManager().activateContext("startup");
-		ContextCore.getContextManager().deactivateContext("startup");
 	}
 
 	public static IViewPart openView(String id) throws PartInitException {

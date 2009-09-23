@@ -16,7 +16,7 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.context.core.AbstractContextListener;
-import org.eclipse.mylyn.context.tests.support.TestUtil;
+import org.eclipse.mylyn.context.tests.support.ContextTestUtil;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.team.ui.ContextActiveChangeSetManager;
 
@@ -27,7 +27,7 @@ public class IdeStartupTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		TestUtil.triggerContextUiLazyStart();
+		ContextTestUtil.triggerContextUiLazyStart();
 	}
 
 	public void testChangeSetsStartup() {

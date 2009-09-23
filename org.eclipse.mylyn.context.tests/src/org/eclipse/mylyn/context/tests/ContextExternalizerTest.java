@@ -16,7 +16,7 @@ import java.io.FileOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.eclipse.core.runtime.Path;
+import org.eclipse.mylyn.commons.tests.support.CommonTestUtil;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextScaling;
@@ -24,7 +24,6 @@ import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
 import org.eclipse.mylyn.context.tests.support.DomContextReader;
 import org.eclipse.mylyn.context.tests.support.DomContextWriter;
-import org.eclipse.mylyn.context.tests.support.FileTool;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextExternalizer;
@@ -67,8 +66,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 	}
 
 	public void testSaxExternalizationAgainstDom() throws Exception {
-		File file = FileTool.getFileInPlugin(ContextTestsPlugin.getDefault(), new Path(
-				"testdata/externalizer/testcontext.xml.zip"));
+		File file = CommonTestUtil.getFile(this, "testdata/externalizer/testcontext.xml.zip");
 		assertTrue(file.getAbsolutePath(), file.exists());
 		InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
 //		externalizer.setReader(new DomContextReader());

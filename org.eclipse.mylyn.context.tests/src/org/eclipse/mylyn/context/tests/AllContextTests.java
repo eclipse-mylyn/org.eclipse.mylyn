@@ -14,7 +14,7 @@ package org.eclipse.mylyn.context.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.mylyn.context.tests.support.TestUtil;
+import org.eclipse.mylyn.context.tests.support.ContextTestUtil;
 
 /**
  * @author Mik Kersten
@@ -24,7 +24,7 @@ public class AllContextTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.context.tests");
 
-		TestUtil.triggerContextUiLazyStart();
+		ContextTestUtil.triggerContextUiLazyStart();
 
 		// $JUnit-BEGIN$
 		suite.addTestSuite(InteractionContextListeningTest.class);
