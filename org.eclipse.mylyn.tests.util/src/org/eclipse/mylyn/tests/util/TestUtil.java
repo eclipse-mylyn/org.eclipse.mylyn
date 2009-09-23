@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Pawel Niewiadomski - fixes for bug 288347
  *******************************************************************************/
 
 package org.eclipse.mylyn.tests.util;
@@ -28,7 +29,7 @@ public class TestUtil {
 	public static final String KEY_CREDENTIALS_FILE = "mylyn.credentials";
 
 	public enum PrivilegeLevel {
-		ANONYMOUS, GUEST, USER, ADMIN
+		ANONYMOUS, GUEST, USER, ADMIN, READ_ONLY
 	};
 
 	public static class Credentials {
@@ -91,6 +92,8 @@ public class TestUtil {
 			return createCredentials(properties, realm + "guest.", "guest@mylyn.eclipse.org", defaultPassword);
 		case USER:
 			return createCredentials(properties, realm, "tests@mylyn.eclipse.org", defaultPassword);
+		case READ_ONLY:
+			return createCredentials(properties, realm, "read-only@mylyn.eclipse.org", defaultPassword);
 		case ADMIN:
 			return createCredentials(properties, realm + "admin.", "admin@mylyn.eclipse.org", null);
 		}
