@@ -22,7 +22,6 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.commons.tests.support.UiTestUtil;
 import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.context.tests.support.TestUtil;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.ContextUi;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
@@ -46,7 +45,7 @@ public class FocusViewActionTest extends AbstractJavaContextTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		view = TestUtil.openView(FocusOutlineAction.ID_CONTENT_OUTLINE);
+		view = UiTestUtil.openView(FocusOutlineAction.ID_CONTENT_OUTLINE);
 		assertNotNull(view);
 		assertNotNull(ContextUiPlugin.getDefault());
 		assertNotNull(JavaUiBridgePlugin.getDefault());
@@ -74,7 +73,7 @@ public class FocusViewActionTest extends AbstractJavaContextTest {
 	@SuppressWarnings("deprecation")
 	public void testContents() throws JavaModelException, PartInitException {
 		IMethod m1 = type1.createMethod("void m1() { }", null, true, null);
-		TestUtil.openView("org.eclipse.ui.views.ContentOutline");
+		UiTestUtil.openView("org.eclipse.ui.views.ContentOutline");
 		JavaUI.openInEditor(m1);
 
 //		FocusOutlineAction.getDefault().update(true);
