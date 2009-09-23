@@ -23,54 +23,29 @@ import java.util.Random;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.mylyn.context.tests.support.FileTool;
+import org.eclipse.mylyn.commons.tests.support.CommonTestUtil;
 import org.eclipse.mylyn.internal.monitor.usage.InteractionEventLogger;
-import org.eclipse.mylyn.monitor.tests.MonitorTestsPlugin;
 import org.eclipse.swt.widgets.Display;
 
+/**
+ * @author Shawn Minto
+ */
 public class InteractionEventLoggerTest extends TestCase {
 
-	public void testLoggerProgress() throws Exception {
-		runWith(FileTool.getFileInPlugin(MonitorTestsPlugin.getDefault(), new Path("testdata/monitor-log.xml")));
-	}
+	private final Calendar c = Calendar.getInstance();
 
-	public void testLoggerProgressZip() throws Exception {
-		runWith(FileTool.getFileInPlugin(MonitorTestsPlugin.getDefault(), new Path("testdata/usage-parsing.zip")));
-	}
+	private final DateFormat dateFormat = InteractionEventLogger.dateFormat();
 
-	public void testLoggerProgressBig() throws Exception {
-		File file = createBigDummyFile();
-		runWith(file);
-		file.delete();
-	}
+	private final Random random = new Random();
 
-	private void runWith(final File monitorFile) throws InvocationTargetException, InterruptedException {
-		ProgressMonitorDialog dialog = new ProgressMonitorDialog(Display.getCurrent().getActiveShell());
-		dialog.run(true, true, new IRunnableWithProgress() {
+	private File createBigDummyFile() throws IOException {
+		File monitorFile = File.createTempFile("interaction_history_temp", ".xml");
 
-			public void run(IProgressMonitor monitor) {
-				monitor.beginTask("Running test job", 1);
-				InteractionEventLogger l = new InteractionEventLogger(null);
-				l.getHistoryFromFile(monitorFile, new SubProgressMonitor(monitor, 1));
-				monitor.done();
-			}
-		});
-	}
-
-	private File createBigDummyFile() {
-		File monitorFile = new File("interaction_history_temp.xml");
-
-		if (monitorFile.exists()) {
-			monitorFile.delete();
-		}
+		BufferedWriter out = new BufferedWriter(new FileWriter(monitorFile));
 		try {
-			monitorFile.createNewFile();
-
-			BufferedWriter out = new BufferedWriter(new FileWriter(monitorFile));
 			for (int i = 0; i < 20000; i++) {
 				out.write("<interactionEvent>");
 				out.newLine();
@@ -103,12 +78,43 @@ public class InteractionEventLoggerTest extends TestCase {
 				out.write("</interactionEvent>");
 				out.newLine();
 			}
+		} finally {
 			out.close();
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
-
 		return monitorFile;
+	}
+
+	private void runWith(final File monitorFile) throws InvocationTargetException, InterruptedException {
+		ProgressMonitorDialog dialog = new ProgressMonitorDialog(Display.getCurrent().getActiveShell());
+		dialog.run(true, true, new IRunnableWithProgress() {
+
+			public void run(IProgressMonitor monitor) {
+				monitor.beginTask("Running test job", 1);
+				InteractionEventLogger l = new InteractionEventLogger(null);
+				l.getHistoryFromFile(monitorFile, new SubProgressMonitor(monitor, 1));
+				monitor.done();
+			}
+		});
+	}
+
+	public void testLoggerProgress() throws Exception {
+		runWith(CommonTestUtil.getFile(this, "testdata/monitor-log.xml"));
+	}
+
+	public void testLoggerProgressBig() throws Exception {
+		File file = createBigDummyFile();
+		file.deleteOnExit();
+		runWith(file);
+		file.delete();
+	}
+
+	public void testLoggerProgressZip() throws Exception {
+		runWith(CommonTestUtil.getFile(this, "testdata/usage-parsing.zip"));
+	}
+
+	private void writeRandomDate(BufferedWriter out) throws IOException {
+		c.setTimeInMillis(random.nextLong());
+		out.write(dateFormat.format(c.getTime()));
 	}
 
 	private void writeRandomString(BufferedWriter out) throws IOException {
@@ -117,14 +123,4 @@ public class InteractionEventLoggerTest extends TestCase {
 		}
 	}
 
-	Random random = new Random();
-
-	DateFormat dateFormat = InteractionEventLogger.dateFormat();
-
-	Calendar c = Calendar.getInstance();
-
-	private void writeRandomDate(BufferedWriter out) throws IOException {
-		c.setTimeInMillis(random.nextLong());
-		out.write(dateFormat.format(c.getTime()));
-	}
 }

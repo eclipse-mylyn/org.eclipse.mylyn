@@ -17,15 +17,14 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
+import org.eclipse.mylyn.commons.tests.support.CommonTestUtil;
 import org.eclipse.mylyn.internal.monitor.core.collection.DataOverviewCollector;
 import org.eclipse.mylyn.internal.monitor.core.collection.IUsageCollector;
 import org.eclipse.mylyn.internal.monitor.usage.InteractionEventLogger;
 import org.eclipse.mylyn.internal.monitor.usage.ReportGenerator;
 import org.eclipse.mylyn.internal.monitor.usage.UiUsageMonitorPlugin;
 import org.eclipse.mylyn.monitor.core.AbstractMonitorLog;
-import org.eclipse.mylyn.monitor.tests.MonitorTestsPlugin;
 
 /**
  * @author Gail Murphy
@@ -67,31 +66,33 @@ public class DataOverviewCollectorTest extends TestCase {
 		List<File> interactionHistoryFiles = new ArrayList<File>();
 
 		// Access two interaction history files that are copies of each other
-		File firstInteractionHistoryFile = FileTool.getFileInPlugin(MonitorTestsPlugin.getDefault(), new Path(
-				"testdata/USAGE-1.1.1-usage-1-2005-12-05-1-1-1.zip"));
+		File firstInteractionHistoryFile = CommonTestUtil.getFile(this,
+				"testdata/USAGE-1.1.1-usage-1-2005-12-05-1-1-1.zip");
 		interactionHistoryFiles.add(firstInteractionHistoryFile);
-		File secondInteractionHistoryFile = FileTool.getFileInPlugin(MonitorTestsPlugin.getDefault(), new Path(
-				"testdata/USAGE-1.1.1-usage-2-2005-12-05-1-1-1.zip"));
+		File secondInteractionHistoryFile = CommonTestUtil.getFile(this,
+				"testdata/USAGE-1.1.1-usage-2-2005-12-05-1-1-1.zip");
 		interactionHistoryFiles.add(secondInteractionHistoryFile);
 
 		// Initialize fake logger
-		File logFile = new File("test-log.xml");
-		logFile.delete();
-		AbstractMonitorLog logger = new InteractionEventLogger(logFile);
-		logger.startMonitoring();
+		File logFile = File.createTempFile("test-log", ".xml");
+		logFile.deleteOnExit();
+		try {
+			AbstractMonitorLog logger = new InteractionEventLogger(logFile);
+			logger.startMonitoring();
 
-		// Prepare collectors
-		List<IUsageCollector> collectors = new ArrayList<IUsageCollector>();
-		dataOverviewCollector = new DataOverviewCollector("test-");
-		collectors.add(dataOverviewCollector);
+			// Prepare collectors
+			List<IUsageCollector> collectors = new ArrayList<IUsageCollector>();
+			dataOverviewCollector = new DataOverviewCollector("test-");
+			collectors.add(dataOverviewCollector);
 
-		ReportGenerator generator = new ReportGenerator(UiUsageMonitorPlugin.getDefault().getInteractionLogger(),
-				collectors);
-		generator.forceSyncForTesting(true);
-		generator.getStatisticsFromInteractionHistories(interactionHistoryFiles, (IJobChangeListener) null);
-
-		// cleanup
-		logFile.delete();
+			ReportGenerator generator = new ReportGenerator(UiUsageMonitorPlugin.getDefault().getInteractionLogger(),
+					collectors);
+			generator.forceSyncForTesting(true);
+			generator.getStatisticsFromInteractionHistories(interactionHistoryFiles, (IJobChangeListener) null);
+		} finally {
+			// cleanup
+			logFile.delete();
+		}
 	}
 
 	@Override

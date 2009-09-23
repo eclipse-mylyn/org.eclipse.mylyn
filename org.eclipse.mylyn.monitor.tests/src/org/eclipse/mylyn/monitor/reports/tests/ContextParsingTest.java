@@ -16,32 +16,24 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.Path;
+import org.eclipse.mylyn.commons.tests.support.CommonTestUtil;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
 import org.eclipse.mylyn.internal.monitor.usage.InteractionEventLogger;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
-import org.eclipse.mylyn.monitor.tests.MonitorTestsPlugin;
 
 /**
  * @author Mik Kersten
  */
 public class ContextParsingTest extends TestCase {
 
-	private static final String PATH_USAGE_FILE = "testdata/usage-parsing.zip";
-
 	private List<InteractionEvent> events;
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		File file;
-		if (MonitorTestsPlugin.getDefault() != null) {
-			file = FileTool.getFileInPlugin(MonitorTestsPlugin.getDefault(), new Path(PATH_USAGE_FILE));
-		} else {
-			file = new File(PATH_USAGE_FILE);
-		}
+		File file = CommonTestUtil.getFile(this, "testdata/usage-parsing.zip");
 		InteractionEventLogger logger = new InteractionEventLogger(file);
 		events = logger.getHistoryFromFile(file);
 	}

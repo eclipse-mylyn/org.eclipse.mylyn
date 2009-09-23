@@ -17,10 +17,8 @@ import java.util.Calendar;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.Path;
-import org.eclipse.mylyn.context.tests.support.FileTool;
+import org.eclipse.mylyn.commons.tests.support.CommonTestUtil;
 import org.eclipse.mylyn.internal.monitor.usage.FileDisplayDialog;
-import org.eclipse.mylyn.monitor.tests.MonitorTestsPlugin;
 
 /**
  * @author Meghan Allen
@@ -33,7 +31,7 @@ public class FileDisplayDialogTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		monitorFile = FileTool.getFileInPlugin(MonitorTestsPlugin.getDefault(), new Path("testdata/monitor-log.xml"));
+		monitorFile = CommonTestUtil.getFile(this, "testdata/monitor-log.xml");
 	}
 
 	@Override

@@ -3,12 +3,12 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Monitor Tests
 Bundle-SymbolicName: org.eclipse.mylyn.monitor.tests
 Bundle-Version: 0.0.0
-Bundle-Activator: org.eclipse.mylyn.monitor.tests.MonitorTestsPlugin
 Bundle-Vendor: Eclipse Mylyn
 Require-Bundle: org.eclipse.core.runtime,
  org.junit,
  org.eclipse.jface,
  org.eclipse.ui.workbench,
+ org.eclipse.mylyn.commons.tests,
  org.eclipse.mylyn.context.core,
  org.eclipse.mylyn.context.tests,
  org.eclipse.jdt.ui,
@@ -20,7 +20,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn.monitor.ui,
  org.eclipse.mylyn.monitor.core,
  org.eclipse.mylyn.commons.core
-Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: mylyn-monitor-tests.jar
 Export-Package: org.eclipse.mylyn.monitor.reports.tests;x-internal:=true,
  org.eclipse.mylyn.monitor.tests;x-internal:=true,
