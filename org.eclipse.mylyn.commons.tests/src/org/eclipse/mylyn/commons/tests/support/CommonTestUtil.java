@@ -158,7 +158,7 @@ public class CommonTestUtil {
 				if (path.startsWith("file:")) {
 					path = path.substring(5);
 				}
-				return new File(filename);
+				return new File(path + filename);
 			} else {
 				// remove all package segments from name
 				String directory = clazz.getName().replaceAll("[^.]", "");
