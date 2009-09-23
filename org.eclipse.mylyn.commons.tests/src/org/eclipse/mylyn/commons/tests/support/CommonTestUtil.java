@@ -134,7 +134,7 @@ public class CommonTestUtil {
 		if (Platform.isRunning()) {
 			ClassLoader classLoader = clazz.getClassLoader();
 			if (classLoader instanceof BundleClassLoader) {
-				URL url = ((BundleClassLoader) classLoader).getResource(filename);
+				URL url = ((BundleClassLoader) classLoader).getBundle().getEntry(filename);
 				if (url != null) {
 					URL localURL = FileLocator.toFileURL(url);
 					return new File(localURL.getFile());
