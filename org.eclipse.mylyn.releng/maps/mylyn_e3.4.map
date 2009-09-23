@@ -99,6 +99,7 @@ plugin@org.eclipse.mylyn.sandbox.tests=HEAD,:pserver:anonymous@dev.eclipse.org:/
 plugin@org.eclipse.mylyn.tasks.tests=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.tasks.tests
 plugin@org.eclipse.mylyn.team.tests=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.team.tests
 plugin@org.eclipse.mylyn.tests=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.tests
+plugin@org.eclipse.mylyn.tests.util=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.tests.util
 plugin@org.eclipse.mylyn.tests.ui=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.tests.ui
 plugin@org.eclipse.mylyn.trac.tests=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.trac.tests
 plugin@org.eclipse.mylyn.wikitext.tests=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.wikitext.tests
