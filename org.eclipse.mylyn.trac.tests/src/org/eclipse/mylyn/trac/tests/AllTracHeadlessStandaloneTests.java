@@ -42,18 +42,18 @@ public class AllTracHeadlessStandaloneTests {
 		suite.addTestSuite(TracClientManagerTest.class);
 		// network tests
 		for (TracFixture fixture : TracFixture.ALL) {
-			TestSuite fixtureSuite = fixture.createSuite();
-			fixture.add(fixtureSuite, TracClientTest.class);
+			fixture.createSuite(suite);
+			fixture.add(TracClientTest.class);
 			if (fixture.getAccessMode() == Version.XML_RPC) {
-				fixture.add(fixtureSuite, TracXmlRpcClientTest.class);
+				fixture.add(TracXmlRpcClientTest.class);
 			}
-			suite.addTest(fixtureSuite);
+			fixture.done();
 		}
 		// validation tests
 		for (TracFixture fixture : TracFixture.MISC) {
-			TestSuite fixtureSuite = fixture.createSuite();
-			fixture.add(fixtureSuite, TracClientTest.class);
-			suite.addTest(fixtureSuite);
+			fixture.createSuite(suite);
+			fixture.add(TracClientTest.class);
+			fixture.done();
 		}
 		return suite;
 	}

@@ -151,6 +151,11 @@ public class TracFixture extends TestFixture {
 		return this;
 	}
 
+	@Override
+	protected TestFixture getDefault() {
+		return DEFAULT;
+	}
+
 	public ITracClient connect() throws Exception {
 		return connect(repositoryUrl);
 	}
@@ -198,7 +203,7 @@ public class TracFixture extends TestFixture {
 	public TaskRepository singleRepository() {
 		TracCorePlugin.getDefault().getConnector().getClientManager().writeCache();
 		TaskRepositoryManager manager = TasksUiPlugin.getRepositoryManager();
-		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		manager.clearRepositories();
 
 		Credentials credentials = TestUtil.readCredentials(PrivilegeLevel.USER);
 		TaskRepository repository = new TaskRepository(TracCorePlugin.CONNECTOR_KIND, repositoryUrl);

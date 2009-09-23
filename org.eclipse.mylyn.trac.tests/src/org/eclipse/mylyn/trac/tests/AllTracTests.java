@@ -41,15 +41,15 @@ public class AllTracTests {
 		suite.addTestSuite(TracHyperlinkUtilTest.class);
 		// network tests
 		for (TracFixture fixture : TracFixture.ALL) {
-			TestSuite fixtureSuite = fixture.createSuite();
-			fixtureSuite.addTestSuite(TracRepositoryConnectorTest.class);
+			fixture.createSuite(suite);
+			fixture.add(TracRepositoryConnectorTest.class);
 			if (fixture.getAccessMode() == Version.XML_RPC) {
-				fixtureSuite.addTestSuite(TracTaskDataHandlerXmlRpcTest.class);
-				fixtureSuite.addTestSuite(TracAttachmentHandlerTest.class);
+				fixture.add(TracTaskDataHandlerXmlRpcTest.class);
+				fixture.add(TracAttachmentHandlerTest.class);
 			} else {
-				fixtureSuite.addTestSuite(TracRepositoryConnectorWebTest.class);
+				fixture.add(TracRepositoryConnectorWebTest.class);
 			}
-			suite.addTest(fixtureSuite);
+			fixture.done();
 		}
 		return suite;
 	}

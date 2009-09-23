@@ -31,12 +31,12 @@ public class AllBugzillaHeadlessStandaloneTests {
 		suite.addTestSuite(BugzillaConfigurationTest.class);
 		suite.addTestSuite(BugzillaVersionTest.class);
 		for (BugzillaFixture fixture : BugzillaFixture.ALL) {
-			TestSuite fixtureSuite = fixture.createSuite();
-			fixture.add(fixtureSuite, BugzillaClientTest.class);
+			fixture.createSuite(suite);
+			fixture.add(BugzillaClientTest.class);
 			// XXX: re-enable when webservice is used for retrieval of history
 //			fixture.add(fixtureSuite, BugzillaTaskHistoryTest.class); 
-			fixture.add(fixtureSuite, BugzillaRepositoryConnectorStandaloneTest.class);
-			suite.addTest(fixtureSuite);
+			fixture.add(BugzillaRepositoryConnectorStandaloneTest.class);
+			fixture.done();
 		}
 		return suite;
 	}

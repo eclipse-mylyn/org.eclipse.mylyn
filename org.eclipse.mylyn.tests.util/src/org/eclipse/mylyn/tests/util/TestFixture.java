@@ -16,6 +16,7 @@ import java.net.Proxy;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
@@ -35,6 +36,24 @@ import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
  * @author Thomas Ehrnhoefer
  */
 public abstract class TestFixture {
+
+	private final class Activation extends TestCase {
+		private final boolean activate;
+
+		private Activation(String name, boolean activate) {
+			super(name);
+			this.activate = activate;
+		}
+
+		@Override
+		protected void runTest() throws Throwable {
+			if (activate) {
+				activate();
+			} else {
+				getDefault().activate();
+			}
+		}
+	}
 
 	/**
 	 * Clears all tasks.
@@ -80,6 +99,8 @@ public abstract class TestFixture {
 
 	protected final String repositoryUrl;
 
+	private TestSuite suite;
+
 	public TestFixture(String connectorKind, String repositoryUrl) {
 		this.connectorKind = connectorKind;
 		this.repositoryUrl = repositoryUrl;
@@ -87,7 +108,10 @@ public abstract class TestFixture {
 
 	protected abstract TestFixture activate();
 
-	public void add(TestSuite suite, Class<? extends TestCase> clazz) {
+	protected abstract TestFixture getDefault();
+
+	public void add(Class<? extends TestCase> clazz) {
+		Assert.isNotNull(suite, "Invoke createSuite() first");
 		if (Boolean.parseBoolean(System.getProperty("mylyn.tests.annotate")) && getInfo() != null) {
 			suite.addTest(new TestSuite(clazz, clazz.getName() + " [" + getInfo() + "]"));
 		} else {
@@ -99,15 +123,17 @@ public abstract class TestFixture {
 		return connector;
 	}
 
-	public TestSuite createSuite() {
-		TestSuite suite = new TestSuite("Testing on " + getInfo());
-		suite.addTest(new TestCase("activiating " + getRepositoryUrl()) {
-			@Override
-			protected void runTest() throws Throwable {
-				activate();
-			}
-		});
+	public TestSuite createSuite(TestSuite parentSuite) {
+		suite = new TestSuite("Testing on " + getInfo());
+		parentSuite.addTest(suite);
+		suite.addTest(new Activation("repository: " + getRepositoryUrl() + " [" + getInfo() + "]", true));
 		return suite;
+	}
+
+	public void done() {
+		Assert.isNotNull(suite, "Invoke createSuite() first");
+		suite.addTest(new Activation("done", false));
+		suite = null;
 	}
 
 	public String getConnectorKind() {

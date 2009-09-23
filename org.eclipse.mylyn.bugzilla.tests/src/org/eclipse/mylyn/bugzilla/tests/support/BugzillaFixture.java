@@ -114,6 +114,11 @@ public class BugzillaFixture extends TestFixture {
 		return this;
 	}
 
+	@Override
+	protected TestFixture getDefault() {
+		return DEFAULT;
+	}
+
 	public String getVersion() {
 		return version;
 	}
