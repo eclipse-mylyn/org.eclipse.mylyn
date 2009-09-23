@@ -35,6 +35,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn.resources.tests,
  org.eclipse.mylyn.monitor.core,
  org.eclipse.mylyn.pde.ui,
+ org.eclipse.mylyn.commons.tests,
  org.eclipse.mylyn.context.tests
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: mylyn-java-tests.jar

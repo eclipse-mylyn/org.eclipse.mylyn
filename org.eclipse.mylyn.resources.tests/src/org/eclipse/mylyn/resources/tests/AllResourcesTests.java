@@ -14,7 +14,7 @@ package org.eclipse.mylyn.resources.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.mylyn.context.tests.support.TestUtil;
+import org.eclipse.mylyn.context.tests.support.ContextTestUtil;
 
 /**
  * @author Mik Kersten
@@ -22,7 +22,7 @@ import org.eclipse.mylyn.context.tests.support.TestUtil;
 public class AllResourcesTests {
 
 	public static Test suite() {
-		TestUtil.triggerContextUiLazyStart();
+		ContextTestUtil.triggerContextUiLazyStart();
 
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.resources.tests");
 		suite.addTestSuite(ResourceChangeMonitorTest.class);

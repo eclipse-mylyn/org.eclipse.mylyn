@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.context.tests.support.TestUtil;
+import org.eclipse.mylyn.context.tests.support.ContextTestUtil;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
 
 /**
@@ -34,7 +34,7 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 //		ResourcesUiBridgePlugin.getDefault().setResourceMonitoringEnabled(true);
 		ResourcesUiBridgePlugin.getInterestUpdater().setSyncExec(true);
 
-		TestUtil.triggerContextUiLazyStart();
+		ContextTestUtil.triggerContextUiLazyStart();
 	}
 
 	@Override

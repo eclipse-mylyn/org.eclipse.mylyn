@@ -25,7 +25,7 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.context.tests.support.ResourceHelper;
+import org.eclipse.mylyn.context.tests.support.ContextTestUtil;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
 import org.eclipse.mylyn.java.tests.TestJavaProject;
@@ -62,8 +62,8 @@ public class WorkspaceSetupHelper {
 
 		workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 
-		project1 = ResourceHelper.createJavaPluginProjectFromZip("project1", "project1.zip");
-		project2 = ResourceHelper.createJavaPluginProjectFromZip("project2", "project2.zip");
+		project1 = ContextTestUtil.createJavaPluginProjectFromZip("project1", "project1.zip");
+		project2 = ContextTestUtil.createJavaPluginProjectFromZip("project2", "project2.zip");
 
 		jdtCoreDomProject = new TestJavaProject("workspace-helper-project");
 		IPackageFragment jdtCoreDomPkg = jdtCoreDomProject.createPackage("org.eclipse.jdt.core.dom");
