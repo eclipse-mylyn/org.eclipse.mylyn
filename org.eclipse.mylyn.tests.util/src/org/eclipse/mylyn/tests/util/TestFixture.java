@@ -113,7 +113,7 @@ public abstract class TestFixture {
 	public void add(Class<? extends TestCase> clazz) {
 		Assert.isNotNull(suite, "Invoke createSuite() first");
 		if (Boolean.parseBoolean(System.getProperty("mylyn.tests.annotate")) && getInfo() != null) {
-			suite.addTest(new TestSuite(clazz, clazz.getName() + " [" + getInfo() + "]"));
+			suite.addTest(new TestSuite(clazz, clazz.getName() + " [@" + getInfo() + "]"));
 		} else {
 			suite.addTestSuite(clazz);
 		}
