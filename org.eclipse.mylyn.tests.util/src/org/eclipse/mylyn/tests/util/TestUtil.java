@@ -64,6 +64,9 @@ public class TestUtil {
 			if (filename == null) {
 				try {
 					file = getFile(TestUtil.class, "credentials.properties");
+					if (!file.exists()) {
+						throw new AssertionFailedError();
+					}
 				} catch (AssertionFailedError e) {
 					file = getFile(TestUtil.class, "../org.eclipse.mylyn.context.tests/credentials.properties");
 					// lookup may have reverted to this plug-in, try to lookup file in org.eclipse.context.tests plug-in

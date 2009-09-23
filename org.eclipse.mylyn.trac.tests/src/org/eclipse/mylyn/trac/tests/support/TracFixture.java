@@ -17,9 +17,6 @@ import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.IProxyProvider;
 import org.eclipse.mylyn.commons.net.WebLocation;
-import org.eclipse.mylyn.context.tests.support.TestUtil;
-import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
-import org.eclipse.mylyn.context.tests.support.TestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.trac.core.TracClientFactory;
@@ -28,6 +25,9 @@ import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tests.util.TestFixture;
+import org.eclipse.mylyn.tests.util.TestUtil;
+import org.eclipse.mylyn.tests.util.TestUtil.Credentials;
+import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
 
 /**
  * Initializes Trac repositories to a defined state. This is done once per test run, since cleaning and initializing the

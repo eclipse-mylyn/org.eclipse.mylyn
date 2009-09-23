@@ -26,16 +26,15 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
-import org.eclipse.mylyn.context.tests.support.TestUtil;
-import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
-import org.eclipse.mylyn.context.tests.support.TestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.trac.core.util.TracHttpClientTransportFactory;
+import org.eclipse.mylyn.tests.util.TestUtil;
+import org.eclipse.mylyn.tests.util.TestUtil.Credentials;
+import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.trac.tests.support.TracTestConstants;
 
 /**
  * Test cases for <a href="http://trac-hacks.org/wiki/XmlRpcPlugin">Trac XML-RPC Plugin</a> (revision 1188 or higher is
  * required).
- * 
  * <p>
  * This class does not depend on any Mylyn (connector) classes except for TracHttpClientTransportFactory which is needed
  * for initialization of HttpClient.

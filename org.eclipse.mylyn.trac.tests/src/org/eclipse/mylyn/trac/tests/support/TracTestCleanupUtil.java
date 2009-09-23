@@ -13,11 +13,11 @@ package org.eclipse.mylyn.trac.tests.support;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.context.tests.support.TestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.client.TracException;
 import org.eclipse.mylyn.internal.trac.core.model.TracAttachment;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
+import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
 
 /**
