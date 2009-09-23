@@ -36,13 +36,49 @@ import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
  */
 public abstract class TestFixture {
 
+	/**
+	 * Clears all tasks.
+	 */
+	public static void resetTaskList() throws Exception {
+		TasksUi.getTaskActivityManager().deactivateActiveTask();
+		TasksUiPlugin.getTaskListExternalizationParticipant().resetTaskList();
+		TaskListView view = TaskListView.getFromActivePerspective();
+		if (view != null) {
+			view.refresh();
+		}
+	}
+
+	/**
+	 * Clears tasks and repositories. When this method returns only the local task repository will exist and the task
+	 * list will only have default categories but no tasks.
+	 */
+	public static void resetTaskListAndRepositories() throws Exception {
+		TasksUiPlugin.getRepositoryManager().clearRepositories();
+		TasksUiPlugin.getDefault().getLocalTaskRepository();
+		resetTaskList();
+	}
+
+	/**
+	 * @see #resetTaskList()
+	 */
+	public static void saveAndReadTasklist() throws Exception {
+		TasksUiPlugin.getTaskList().notifyElementsChanged(null);
+		saveTaskList();
+		resetTaskList();
+		TasksUiPlugin.getDefault().initializeDataSources();
+	}
+
+	public static void saveTaskList() {
+		TasksUiPlugin.getExternalizationManager().requestSave();
+	}
+
+	protected AbstractRepositoryConnector connector;
+
 	private final String connectorKind;
 
 	private String info;
 
 	protected final String repositoryUrl;
-
-	protected AbstractRepositoryConnector connector;
 
 	public TestFixture(String connectorKind, String repositoryUrl) {
 		this.connectorKind = connectorKind;
@@ -57,6 +93,10 @@ public abstract class TestFixture {
 		} else {
 			suite.addTestSuite(clazz);
 		}
+	}
+
+	public AbstractRepositoryConnector connector() {
+		return connector;
 	}
 
 	public TestSuite createSuite() {
@@ -129,32 +169,6 @@ public abstract class TestFixture {
 				credentials.password), false);
 		manager.addRepository(repository);
 		return repository;
-	}
-
-	public AbstractRepositoryConnector connector() {
-		return connector;
-	}
-
-	/**
-	 * Clears tasks and repositories. When this method returns only the local task repository will exist and the task
-	 * list will only have default categories but no tasks.
-	 */
-	public static void resetTaskListAndRepositories() throws Exception {
-		TasksUiPlugin.getRepositoryManager().clearRepositories();
-		TasksUiPlugin.getDefault().getLocalTaskRepository();
-		resetTaskList();
-	}
-
-	/**
-	 * Clears all tasks.
-	 */
-	public static void resetTaskList() throws Exception {
-		TasksUi.getTaskActivityManager().deactivateActiveTask();
-		TasksUiPlugin.getTaskListExternalizationParticipant().resetTaskList();
-		TaskListView view = TaskListView.getFromActivePerspective();
-		if (view != null) {
-			view.refresh();
-		}
 	}
 
 }

@@ -62,11 +62,13 @@ public class TestUtil {
 			File file;
 			String filename = System.getProperty(KEY_CREDENTIALS_FILE);
 			if (filename == null) {
-				file = getFile(TestUtil.class, "credentials.properties");
-				if (!file.exists()) {
+				try {
+					file = getFile(TestUtil.class, "credentials.properties");
+				} catch (AssertionFailedError e) {
+					file = getFile(TestUtil.class, "../org.eclipse.mylyn.context.tests/credentials.properties");
 					// lookup may have reverted to this plug-in, try to lookup file in org.eclipse.context.tests plug-in
-					File path = new File(file.getParentFile().getParentFile(), "org.eclipse.mylyn.context.tests");
-					file = new File(path, file.getName());
+					//File path = new File(file.getParentFile().getParentFile(), "org.eclipse.mylyn.context.tests");
+					//file = new File(path, file.getName());
 				}
 			} else {
 				file = new File(filename);
