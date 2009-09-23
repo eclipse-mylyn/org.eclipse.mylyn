@@ -15,7 +15,7 @@ import java.io.File;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.commons.tests.support.CommonsTestUtil;
+import org.eclipse.mylyn.commons.tests.support.CommonTestUtil;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListBackupManager;
@@ -33,7 +33,7 @@ public class TaskListBackupManagerTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		backupManager = TasksUiPlugin.getBackupManager();
-		CommonsTestUtil.deleteFolder(new File(TasksUiPlugin.getDefault().getBackupFolderPath()));
+		CommonTestUtil.deleteFolder(new File(TasksUiPlugin.getDefault().getBackupFolderPath()));
 		TaskTestUtil.resetTaskList();
 	}
 

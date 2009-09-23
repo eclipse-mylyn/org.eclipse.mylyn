@@ -158,7 +158,7 @@ public class BugzillaFixture extends TestFixture {
 	}
 
 	public static File getFile(String filename) throws IOException {
-		return TestUtil.getFile("org.eclipse.mylyn.bugzilla.tests", BugzillaFixture.class, filename);
+		return TestUtil.getFile(BugzillaFixture.class, filename);
 	}
 
 	/**

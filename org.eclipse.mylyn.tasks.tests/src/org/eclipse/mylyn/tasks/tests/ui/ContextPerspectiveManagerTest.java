@@ -13,7 +13,7 @@ package org.eclipse.mylyn.tasks.tests.ui;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.context.tests.support.TestUtil;
+import org.eclipse.mylyn.context.tests.support.ContextTestUtil;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.IContextUiPreferenceContstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
@@ -35,7 +35,7 @@ public class ContextPerspectiveManagerTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		TestUtil.triggerContextUiLazyStart();
+		ContextTestUtil.triggerContextUiLazyStart();
 
 		TaskTestUtil.resetTaskListAndRepositories();
 		previousSetting = ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(

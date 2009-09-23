@@ -18,7 +18,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylyn.commons.tests.support.CommonsTestUtil;
+import org.eclipse.mylyn.commons.tests.support.CommonTestUtil;
 import org.eclipse.mylyn.context.tests.AbstractContextTest;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDataExportOperation;
@@ -57,7 +57,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 		// Create test export destination directory
 		mylynFolder = new File(TasksUiPlugin.getDefault().getDataDirectory());
 		destinationDir = new File(mylynFolder.getParent(), "TestDir");
-		CommonsTestUtil.deleteFolder(destinationDir);
+		CommonTestUtil.deleteFolder(destinationDir);
 		destinationDir.mkdir();
 
 		// Create folder/file structure
@@ -98,7 +98,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 	protected void tearDown() throws Exception {
 		wizard.dispose();
 		wizardPage.dispose();
-		CommonsTestUtil.deleteFolder(destinationDir);
+		CommonTestUtil.deleteFolder(destinationDir);
 		// Create folder/file structure
 		File tasklist = new File(mylynFolder, "tasks.xml.zip");
 		tasklist.delete();
@@ -107,9 +107,9 @@ public class TaskDataExportTest extends AbstractContextTest {
 		File tasks = new File(mylynFolder, "tasksandstuff");
 		File tasksSubDir = new File(tasks, "sub");
 		File backup = new File(mylynFolder, "backup");
-		CommonsTestUtil.deleteFolder(backup);
-		CommonsTestUtil.deleteFolder(tasksSubDir);
-		CommonsTestUtil.deleteFolder(tasks);
+		CommonTestUtil.deleteFolder(backup);
+		CommonTestUtil.deleteFolder(tasksSubDir);
+		CommonTestUtil.deleteFolder(tasks);
 		super.tearDown();
 	}
 

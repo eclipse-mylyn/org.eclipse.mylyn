@@ -21,7 +21,7 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.mylyn.context.tests.UiTestUtil;
+import org.eclipse.mylyn.commons.tests.support.UiTestUtil;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
