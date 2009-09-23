@@ -676,7 +676,10 @@
 	</target>
 	
 	<target name="report-helper" depends="report-helper-init,pre-report">
-		<xslt style="${basedir}/scripts/junit.xsl" basedir="${results.home}" includes="org*.xml" destdir="${results.home}" />
+		<!-- transform Eclipse unit tests with custom style sheets -->
+		<xslt style="${basedir}/scripts/junit.xsl" basedir="${results.home}" excludes="TEST-*" includes="*Tests.xml" destdir="${results.home}" />
+		<!-- annotate test output with test suite names -->
+		<xslt style="${basedir}/scripts/test-suite.xsl" basedir="${results.home}" includes="*Tests.xml" destdir="${build.results}/test-results" extension="-${base.target}.xml" />
 		
 		<antcall target="post-report"/>
 	</target>
