@@ -19,7 +19,7 @@
 	  <xsl:attribute name="name">
 		<xsl:value-of select="@name" /><xsl:value-of select="$fixture" />
 	  </xsl:attribute>
-	  <xsl:text>&#xa;</xsl:text>
+	  <xsl:apply-templates/>
 	</xsl:copy>
   </xsl:template>
 
