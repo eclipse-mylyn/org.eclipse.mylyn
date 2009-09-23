@@ -27,6 +27,7 @@ import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tests.util.TestFixture;
 
 /**
  * Initializes Trac repositories to a defined state. This is done once per test run, since cleaning and initializing the
