@@ -126,7 +126,7 @@ public abstract class TestFixture {
 	public TestSuite createSuite(TestSuite parentSuite) {
 		suite = new TestSuite("Testing on " + getInfo());
 		parentSuite.addTest(suite);
-		suite.addTest(new Activation("repository: " + getRepositoryUrl() + " [" + getInfo() + "]", true));
+		suite.addTest(new Activation("repository: " + getRepositoryUrl() + " [@" + getInfo() + "]", true));
 		return suite;
 	}
 
