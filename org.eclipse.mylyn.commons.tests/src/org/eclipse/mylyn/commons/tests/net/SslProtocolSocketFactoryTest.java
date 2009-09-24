@@ -18,8 +18,9 @@ import java.net.Socket;
 import junit.framework.TestCase;
 
 import org.apache.commons.httpclient.params.HttpConnectionParams;
+import org.apache.commons.httpclient.protocol.SecureProtocolSocketFactory;
 import org.eclipse.mylyn.commons.tests.support.TestProxy;
-import org.eclipse.mylyn.internal.commons.net.SslProtocolSocketFactory;
+import org.eclipse.mylyn.internal.commons.net.PollingSslProtocolSocketFactory;
 
 /**
  * @author Steffen Pingel
@@ -44,7 +45,7 @@ public class SslProtocolSocketFactoryTest extends TestCase {
 	}
 
 	public void testTrustAllSslProtocolSocketFactory() throws Exception {
-		SslProtocolSocketFactory factory = SslProtocolSocketFactory.getInstance();
+		SecureProtocolSocketFactory factory = new PollingSslProtocolSocketFactory();
 		Socket s;
 
 		s = factory.createSocket(proxyAddress.getHostName(), proxyAddress.getPort());

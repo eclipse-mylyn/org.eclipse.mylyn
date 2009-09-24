@@ -21,6 +21,7 @@ import java.net.Proxy;
 import java.net.Socket;
 import java.net.Proxy.Type;
 import java.text.ParseException;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -58,6 +59,7 @@ import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer.Token;
 import org.eclipse.mylyn.internal.commons.net.AuthenticatedProxy;
 import org.eclipse.mylyn.internal.commons.net.CloneableHostConfiguration;
 import org.eclipse.mylyn.internal.commons.net.CommonsNetPlugin;
+import org.eclipse.mylyn.internal.commons.net.MonitoredRequest;
 import org.eclipse.mylyn.internal.commons.net.PollingInputStream;
 import org.eclipse.mylyn.internal.commons.net.PollingProtocolSocketFactory;
 import org.eclipse.mylyn.internal.commons.net.PollingSslProtocolSocketFactory;
@@ -157,6 +159,10 @@ public class WebUtil {
 
 	private static MultiThreadedHttpConnectionManager connectionManager;
 
+	private static ProtocolSocketFactory sslSocketFactory = new PollingSslProtocolSocketFactory();
+
+	private static PollingProtocolSocketFactory socketFactory = new PollingProtocolSocketFactory();
+
 	/**
 	 * @since 3.0
 	 */
@@ -204,9 +210,7 @@ public class WebUtil {
 	 */
 	public static void connect(final Socket socket, final InetSocketAddress address, final int timeout,
 			IProgressMonitor monitor) throws IOException {
-		if (socket == null) {
-			throw new IllegalArgumentException();
-		}
+		Assert.isNotNull(socket);
 
 		WebRequest<?> executor = new WebRequest<Object>() {
 			@Override
@@ -222,9 +226,7 @@ public class WebUtil {
 				socket.connect(address, timeout);
 				return null;
 			}
-
 		};
-
 		executeInternal(monitor, executor);
 	}
 
@@ -252,11 +254,9 @@ public class WebUtil {
 		}
 
 		if (WebUtil.isRepositoryHttps(url)) {
-			ProtocolSocketFactory socketFactory = new PollingSslProtocolSocketFactory(monitor);
-			Protocol protocol = new Protocol("https", socketFactory, HTTPS_PORT); //$NON-NLS-1$
+			Protocol protocol = new Protocol("https", sslSocketFactory, HTTPS_PORT); //$NON-NLS-1$
 			hostConfiguration.setHost(host, port, protocol);
 		} else {
-			ProtocolSocketFactory socketFactory = new PollingProtocolSocketFactory(monitor);
 			Protocol protocol = new Protocol("http", socketFactory, HTTP_PORT); //$NON-NLS-1$
 			hostConfiguration.setHost(host, port, protocol);
 		}
@@ -282,13 +282,15 @@ public class WebUtil {
 
 		monitor = Policy.monitorFor(monitor);
 
-		WebRequest<Integer> executor = new WebRequest<Integer>() {
+		MonitoredRequest<Integer> executor = new MonitoredRequest<Integer>(monitor) {
 			@Override
 			public void abort() {
+				super.abort();
 				method.abort();
 			}
 
-			public Integer call() throws Exception {
+			@Override
+			public Integer execute() throws Exception {
 				return client.executeMethod(hostConfiguration, method, state);
 			}
 		};
@@ -305,14 +307,16 @@ public class WebUtil {
 		Future<T> future = CommonsNetPlugin.getExecutorService().submit(request);
 		while (true) {
 			if (monitor.isCanceled()) {
-				if (!future.cancel(false)) {
-					request.abort();
-				}
+				request.abort();
+
 				// wait for executor to finish
+				future.cancel(false);
 				try {
 					if (!future.isCancelled()) {
 						future.get();
 					}
+				} catch (CancellationException e) {
+					// ignore
 				} catch (InterruptedException e) {
 					// ignore
 				} catch (ExecutionException e) {

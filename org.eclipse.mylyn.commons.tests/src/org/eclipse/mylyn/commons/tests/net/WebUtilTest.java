@@ -40,7 +40,7 @@ import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.commons.tests.support.TestProxy;
 import org.eclipse.mylyn.commons.tests.support.TestProxy.Message;
 import org.eclipse.mylyn.internal.commons.net.AuthenticatedProxy;
-import org.eclipse.mylyn.internal.commons.net.SslProtocolSocketFactory;
+import org.eclipse.mylyn.internal.commons.net.PollingSslProtocolSocketFactory;
 
 /**
  * @author Steffen Pingel
@@ -481,14 +481,14 @@ public class WebUtilTest extends TestCase {
 	}
 
 	public void testLocationConnectSslClientCert() throws Exception {
-		if (!SslProtocolSocketFactory.getInstance().hasKeyManager()) {
-			// skip if keystore property is not set
-			return;
-		}
-
 		String url = "https://mylyn.eclipse.org/secure/";
 		AbstractWebLocation location = new WebLocation(url, null, null, null);
 		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, null);
+
+		if (!((PollingSslProtocolSocketFactory) hostConfiguration.getProtocol().getSocketFactory()).hasKeyManager()) {
+			// skip test if keystore property is not set
+			return;
+		}
 
 		GetMethod method = new GetMethod(WebUtil.getRequestPath(url));
 		int statusCode = client.executeMethod(hostConfiguration, method);

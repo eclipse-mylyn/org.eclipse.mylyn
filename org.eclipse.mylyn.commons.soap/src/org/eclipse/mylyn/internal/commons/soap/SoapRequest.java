@@ -43,7 +43,9 @@ public class SoapRequest {
 	}
 
 	public void cancel() {
+		// the method gets set at a later point in SoapHttpSender, wait to make sure we close the underlying connection
 		while (method == null) {
+			// safe guard in case the method is never set, e.g. in case of an Exception
 			if (done) {
 				throw new OperationCanceledException();
 			}

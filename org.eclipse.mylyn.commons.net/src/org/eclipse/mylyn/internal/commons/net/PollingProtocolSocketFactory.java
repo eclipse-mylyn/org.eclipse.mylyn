@@ -22,8 +22,6 @@ import javax.net.SocketFactory;
 import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.apache.commons.httpclient.params.HttpConnectionParams;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.mylyn.commons.net.WebUtil;
 
 /**
  * @author Steffen Pingel
@@ -32,10 +30,7 @@ public class PollingProtocolSocketFactory implements ProtocolSocketFactory {
 
 	private final static SocketFactory factory = SocketFactory.getDefault();
 
-	private final IProgressMonitor monitor;
-
-	public PollingProtocolSocketFactory(IProgressMonitor monitor) {
-		this.monitor = monitor;
+	public PollingProtocolSocketFactory() {
 	}
 
 	public Socket createSocket(String host, int port) throws IOException, UnknownHostException {
@@ -56,8 +51,7 @@ public class PollingProtocolSocketFactory implements ProtocolSocketFactory {
 		int timeout = params.getConnectionTimeout();
 		Socket socket = factory.createSocket();
 		socket.bind(new InetSocketAddress(localAddress, localPort));
-		// FIME convert OperationCanceledException?
-		WebUtil.connect(socket, new InetSocketAddress(host, port), timeout, monitor);
+		MonitoredRequest.connect(socket, new InetSocketAddress(host, port), timeout);
 		return socket;
 	}
 
