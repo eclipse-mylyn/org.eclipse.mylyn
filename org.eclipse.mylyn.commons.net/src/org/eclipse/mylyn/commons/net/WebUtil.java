@@ -169,6 +169,7 @@ public class WebUtil {
 	public static void configureHttpClient(HttpClient client, String userAgent) {
 		client.getParams().setBooleanParameter(HttpClientParams.ALLOW_CIRCULAR_REDIRECTS, true);
 		client.getParams().setParameter(HttpMethodParams.USER_AGENT, getUserAgent(userAgent));
+		client.getParams().setConnectionManagerTimeout(CONNECTION_TIMEOUT_INTERVAL);
 		// TODO consider setting this as the default
 		//client.getParams().setCookiePolicy(CookiePolicy.RFC_2109);
 		configureHttpClientConnectionManager(client);
@@ -461,6 +462,7 @@ public class WebUtil {
 
 	public static InputStream getResponseBodyAsStream(HttpMethodBase method, IProgressMonitor monitor)
 			throws IOException {
+//		return method.getResponseBodyAsStream();
 		monitor = Policy.monitorFor(monitor);
 		return new PollingInputStream(new TimeoutInputStream(method.getResponseBodyAsStream(), BUFFER_SIZE,
 				POLL_INTERVAL, CLOSE_TIMEOUT), POLL_ATTEMPTS, monitor);
