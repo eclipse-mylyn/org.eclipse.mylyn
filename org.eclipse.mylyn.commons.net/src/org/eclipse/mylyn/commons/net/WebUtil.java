@@ -74,6 +74,20 @@ import org.eclipse.mylyn.internal.commons.net.TimeoutInputStream;
  */
 public class WebUtil {
 
+	// FIXME remove this again
+	private static final boolean TEST_MODE;
+
+	static {
+		String application = System.getProperty("eclipse.application", ""); //$NON-NLS-1$ //$NON-NLS-2$
+		if (application.length() > 0) {
+			TEST_MODE = application.endsWith("testapplication"); //$NON-NLS-1$
+		} else {
+			// eclipse 3.3 does not the eclipse.application property
+			String commands = System.getProperty("eclipse.commands", ""); //$NON-NLS-1$ //$NON-NLS-2$
+			TEST_MODE = commands.contains("testapplication\n"); //$NON-NLS-1$
+		}
+	}
+
 	/**
 	 * like Mylyn/2.1.0 (Rally Connector 1.0) Eclipse/3.3.0 (JBuilder 2007) HttpClient/3.0.1 Java/1.5.0_11 (Sun)
 	 * Linux/2.6.20-16-lowlatency (i386; en)
@@ -179,9 +193,14 @@ public class WebUtil {
 		client.getHttpConnectionManager().getParams().setSoTimeout(WebUtil.SOCKET_TIMEOUT);
 		client.getHttpConnectionManager().getParams().setConnectionTimeout(WebUtil.CONNNECT_TIMEOUT);
 		// FIXME fix connection leaks
-		client.getHttpConnectionManager().getParams().setMaxConnectionsPerHost(
-				HostConfiguration.ANY_HOST_CONFIGURATION, 100);
-		client.getHttpConnectionManager().getParams().setMaxTotalConnections(1000);
+		if (TEST_MODE) {
+			client.getHttpConnectionManager().getParams().setMaxConnectionsPerHost(
+					HostConfiguration.ANY_HOST_CONFIGURATION, 1);
+		} else {
+			client.getHttpConnectionManager().getParams().setMaxConnectionsPerHost(
+					HostConfiguration.ANY_HOST_CONFIGURATION, 100);
+			client.getHttpConnectionManager().getParams().setMaxTotalConnections(1000);
+		}
 	}
 
 	private static void configureHttpClientProxy(HttpClient client, HostConfiguration hostConfiguration,
