@@ -66,7 +66,6 @@ import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter.CompareOperat
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylyn.internal.trac.core.util.TracUtil;
 import org.eclipse.mylyn.internal.trac.core.util.TracHttpClientTransportFactory.TracHttpException;
-import org.eclipse.osgi.util.NLS;
 
 /**
  * Represents a Trac repository that is accessed through the Trac's query script and web interface.
@@ -104,17 +103,22 @@ public class TracWebClient extends AbstractTracClient {
 				} catch (IOException e) {
 					method.releaseConnection();
 					throw e;
+				} catch (RuntimeException e) {
+					method.releaseConnection();
+					throw e;
 				}
 
 				if (code == HttpURLConnection.HTTP_OK) {
 					return method;
-				} else if (code == HttpURLConnection.HTTP_UNAUTHORIZED || code == HttpURLConnection.HTTP_FORBIDDEN) {
-					// login or re-authenticate due to an expired session
-					method.releaseConnection();
-					authenticated = false;
-					authenticate(monitor);
 				} else {
-					throw new TracHttpException(code);
+					method.releaseConnection();
+					if (code == HttpURLConnection.HTTP_UNAUTHORIZED || code == HttpURLConnection.HTTP_FORBIDDEN) {
+						// login or re-authenticate due to an expired session
+						authenticated = false;
+						authenticate(monitor);
+					} else {
+						throw new TracHttpException(code);
+					}
 				}
 			}
 
@@ -399,57 +403,7 @@ public class TracWebClient extends AbstractTracClient {
 	public TracRepositoryInfo validate(IProgressMonitor monitor) throws TracException {
 		GetMethod method = connect(repositoryUrl + "/", monitor); //$NON-NLS-1$
 		try {
-			InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
-			try {
-				BufferedReader reader = new BufferedReader(new InputStreamReader(in, method.getResponseCharSet()));
-
-				boolean inFooter = false;
-				boolean valid = false;
-				String version = null;
-
-				HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(reader, null);
-				for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
-					if (token.getType() == Token.TAG) {
-						HtmlTag tag = (HtmlTag) token.getValue();
-						if (tag.getTagType() == Tag.DIV) {
-							String id = tag.getAttribute("id"); //$NON-NLS-1$
-							inFooter = !tag.isEndTag() && "footer".equals(id); //$NON-NLS-1$
-						} else if (tag.getTagType() == Tag.STRONG && inFooter) {
-							version = getText(tokenizer);
-						} else if (tag.getTagType() == Tag.A) {
-							String id = tag.getAttribute("id"); //$NON-NLS-1$
-							if ("tracpowered".equals(id)) { //$NON-NLS-1$
-								valid = true;
-							}
-						}
-					}
-				}
-
-				if (version != null) {
-					if (version.startsWith("Trac 0.9")) { //$NON-NLS-1$
-						return new TracRepositoryInfo(0, 0, 0, version);
-					} else if (version.startsWith("Trac 0.10")) { //$NON-NLS-1$
-						return new TracRepositoryInfo(0, 0, 1, version);
-					} else if (version.startsWith("Trac 0.11")) { //$NON-NLS-1$
-						return new TracRepositoryInfo(1, 0, 0, version);
-					} else {
-						throw new TracException(NLS.bind(Messages.TracWebClient_Trac_version_X_is_unsupported_Error,
-								version));
-					}
-				}
-
-				if (!valid) {
-					throw new TracException("Not a valid Trac repository"); //$NON-NLS-1$
-				}
-
-				return new TracRepositoryInfo(version);
-			} finally {
-				in.close();
-			}
-		} catch (IOException e) {
-			throw new TracException(e);
-		} catch (ParseException e) {
-			throw new TracException(e);
+			return new TracRepositoryInfo();
 		} finally {
 			method.releaseConnection();
 		}
