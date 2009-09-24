@@ -178,6 +178,10 @@ public class WebUtil {
 	private static void configureHttpClientConnectionManager(HttpClient client) {
 		client.getHttpConnectionManager().getParams().setSoTimeout(WebUtil.SOCKET_TIMEOUT);
 		client.getHttpConnectionManager().getParams().setConnectionTimeout(WebUtil.CONNNECT_TIMEOUT);
+		// FIXME fix connection leaks
+		client.getHttpConnectionManager().getParams().setMaxConnectionsPerHost(
+				HostConfiguration.ANY_HOST_CONFIGURATION, 100);
+		client.getHttpConnectionManager().getParams().setMaxTotalConnections(1000);
 	}
 
 	private static void configureHttpClientProxy(HttpClient client, HostConfiguration hostConfiguration,
