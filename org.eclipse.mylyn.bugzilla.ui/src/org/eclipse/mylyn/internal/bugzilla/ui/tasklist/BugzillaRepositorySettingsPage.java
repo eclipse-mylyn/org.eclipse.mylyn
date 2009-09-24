@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClientFactory;
@@ -299,6 +300,8 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		public void run(IProgressMonitor monitor) throws CoreException {
 			try {
 				validate(monitor);
+			} catch (OperationCanceledException e) {
+				throw e;
 			} catch (Exception e) {
 				displayError(repository.getRepositoryUrl(), e);
 			}

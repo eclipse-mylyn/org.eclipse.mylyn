@@ -159,6 +159,7 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
 		if (((TracValidator) validator).getResult() != null) {
 			setTracVersion(((TracValidator) validator).getResult());
+			getContainer().updateButtons();
 		}
 	}
 
@@ -191,9 +192,9 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 				if (e.isNtlmAuthRequested()) {
 					AuthenticationCredentials credentials = taskRepository.getCredentials(AuthenticationType.REPOSITORY);
 					if (!credentials.getUserName().contains("\\")) { //$NON-NLS-1$
-						throw new CoreException(
-								RepositoryStatus.createStatus(repositoryUrl, IStatus.ERROR, TracUiPlugin.ID_PLUGIN,
-										Messages.TracRepositorySettingsPage_NTLM_authentication_requested_Error));
+						throw new CoreException(RepositoryStatus.createStatus(repositoryUrl, IStatus.ERROR,
+								TracUiPlugin.ID_PLUGIN,
+								Messages.TracRepositorySettingsPage_NTLM_authentication_requested_Error));
 					}
 				}
 				throw new CoreException(RepositoryStatus.createStatus(repositoryUrl, IStatus.ERROR,
