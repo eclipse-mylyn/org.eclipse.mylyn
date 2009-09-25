@@ -686,10 +686,13 @@ public class TaskList implements ITaskList, ITransferList {
 
 	private void unlock() {
 		HashSet<TaskContainerDelta> toFire = null;
-		if (lock.getDepth() == 1) {
-			toFire = new HashSet<TaskContainerDelta>(delta);
+		try {
+			if (lock.getDepth() == 1) {
+				toFire = new HashSet<TaskContainerDelta>(delta);
+			}
+		} finally {
+			lock.release();
 		}
-		lock.release();
 		if (toFire != null && toFire.size() > 0) {
 			fireDelta(toFire);
 		}
