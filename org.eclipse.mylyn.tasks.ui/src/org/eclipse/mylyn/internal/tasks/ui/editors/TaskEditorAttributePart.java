@@ -230,7 +230,8 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 			public void run() {
 				getTaskEditorPage().showEditorBusy(true);
 				final TaskJob job = TasksUiInternal.getJobFactory().createUpdateRepositoryConfigurationJob(
-						getTaskEditorPage().getConnector(), getTaskEditorPage().getTaskRepository());
+						getTaskEditorPage().getConnector(), getTaskEditorPage().getTaskRepository(),
+						getTaskEditorPage().getTask());
 				job.addJobChangeListener(new JobChangeAdapter() {
 					@Override
 					public void done(IJobChangeEvent event) {

@@ -3,6 +3,12 @@
     <resource path="src/org/eclipse/mylyn/internal/tasks/ui/TaskJobFactory.java" type="org.eclipse.mylyn.internal.tasks.ui.TaskJobFactory">
         <filter id="571519004">
             <message_arguments>
+                <message_argument value="org.eclipse.mylyn.internal.tasks.ui.TaskJobFactory.createUpdateRepositoryConfigurationJob(AbstractRepositoryConnector, TaskRepository, ITask)"/>
+                <message_argument value="TaskJob"/>
+            </message_arguments>
+        </filter>
+        <filter id="571519004">
+            <message_arguments>
                 <message_argument value="org.eclipse.mylyn.internal.tasks.ui.TaskJobFactory.createUpdateRepositoryConfigurationJob(AbstractRepositoryConnector, TaskRepository)"/>
                 <message_argument value="TaskJob"/>
             </message_arguments>

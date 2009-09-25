@@ -128,7 +128,7 @@ public class TaskJobFactory implements ITaskJobFactory {
 	}
 
 	public TaskJob createUpdateRepositoryConfigurationJob(final AbstractRepositoryConnector connector,
-			final TaskRepository taskRepository) {
+			final TaskRepository taskRepository, final ITask task) {
 		TaskJob updateJob = new TaskJob(Messages.TaskJobFactory_Refreshing_repository_configuration) {
 			private IStatus error;
 
@@ -137,7 +137,7 @@ public class TaskJobFactory implements ITaskJobFactory {
 				monitor.beginTask(Messages.TaskJobFactory_Receiving_configuration, IProgressMonitor.UNKNOWN);
 				try {
 					try {
-						connector.updateRepositoryConfiguration(taskRepository, monitor);
+						connector.updateRepositoryConfiguration(taskRepository, task, monitor);
 					} catch (CoreException e) {
 						error = e.getStatus();
 					}

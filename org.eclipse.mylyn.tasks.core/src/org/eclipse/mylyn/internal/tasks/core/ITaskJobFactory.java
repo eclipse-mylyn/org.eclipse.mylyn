@@ -41,7 +41,7 @@ public interface ITaskJobFactory {
 			ITask task, TaskData taskData, Set<TaskAttribute> changedAttributes);
 
 	public abstract TaskJob createUpdateRepositoryConfigurationJob(AbstractRepositoryConnector connector,
-			TaskRepository taskRepository);
+			TaskRepository taskRepository, ITask task);
 
 	public abstract SubmitJob createSubmitTaskAttachmentJob(AbstractRepositoryConnector connector,
 			TaskRepository taskRepository, ITask task, AbstractTaskAttachmentSource source, String comment,

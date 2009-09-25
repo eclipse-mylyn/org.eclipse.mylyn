@@ -315,7 +315,7 @@ public class TasksUiInternal {
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 				taskRepository.getConnectorKind());
 		final TaskJob job = TasksUiInternal.getJobFactory().createUpdateRepositoryConfigurationJob(connector,
-				taskRepository);
+				taskRepository, null);
 		job.addJobChangeListener(new JobChangeAdapter() {
 			@Override
 			public void done(IJobChangeEvent event) {
@@ -867,8 +867,10 @@ public class TasksUiInternal {
 
 	/**
 	 * Returns text masking the &amp;-character from decoration as an accelerator in SWT labels.
+	 * 
 	 * @deprecated Use {@link CommonUiUtil#toLabel(String)} instead
 	 */
+	@Deprecated
 	public static String escapeLabelText(String text) {
 		return CommonUiUtil.toLabel(text);
 	}

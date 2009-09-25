@@ -29,9 +29,7 @@ import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 
 /**
  * Encapsulates common operations that can be performed on a task repository. Extend to connect with a Java API or WS
- * API for accessing the repository.
- * 
- * Only methods that take a progress monitor can do network I/O.
+ * API for accessing the repository. Only methods that take a progress monitor can do network I/O.
  * 
  * @author Mik Kersten
  * @author Rob Elves
@@ -226,7 +224,6 @@ public abstract class AbstractRepositoryConnector {
 	/**
 	 * Runs <code>query</code> on <code>repository</code>, results are passed to <code>collector</code>. If a repository
 	 * does not return the full task data for a result, {@link TaskData#isPartial()} will return true.
-	 * 
 	 * <p>
 	 * Implementors must complete executing <code>query</code> before returning from this method.
 	 * 
@@ -286,12 +283,33 @@ public abstract class AbstractRepositoryConnector {
 	}
 
 	/**
-	 * Reset and update the repository attributes from the server (e.g. products, components)
+	 * Updates the local repository configuration cache (e.g. products and components). Connectors are encouraged to
+	 * implement {@link #updateRepositoryConfiguration(TaskRepository, ITask, IProgressMonitor)} in addition this
+	 * method.
 	 * 
+	 * @param repository
+	 *            the repository to update configuration for
 	 * @since 3.0
+	 * @see #isRepositoryConfigurationStale(TaskRepository, IProgressMonitor)
 	 */
 	public abstract void updateRepositoryConfiguration(TaskRepository taskRepository, IProgressMonitor monitor)
 			throws CoreException;
+
+	/**
+	 * Updates the local repository configuration cache (e.g. products and components). The default implementation
+	 * invokes {@link #updateRepositoryConfiguration(TaskRepository, IProgressMonitor)}.
+	 * 
+	 * @param repository
+	 *            the repository to update configuration for
+	 * @param task
+	 *            if not null, limit the update to the details relevant to task
+	 * @see #updateRepositoryConfiguration(TaskRepository, IProgressMonitor)
+	 * @since 3.3
+	 */
+	public void updateRepositoryConfiguration(TaskRepository taskRepository, ITask task, IProgressMonitor monitor)
+			throws CoreException {
+		updateRepositoryConfiguration(taskRepository, monitor);
+	}
 
 	/**
 	 * @since 3.0
