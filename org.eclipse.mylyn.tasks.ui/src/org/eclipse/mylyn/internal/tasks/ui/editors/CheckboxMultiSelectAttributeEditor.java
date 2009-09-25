@@ -22,9 +22,10 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
-import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.IInPlaceDialogCloseListener;
+import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.AbstractInPlaceDialog;
+import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.IInPlaceDialogListener;
 import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.InPlaceCheckBoxTreeDialog;
-import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.InPlaceDialogCloseEvent;
+import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.InPlaceDialogEvent;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
@@ -96,11 +97,18 @@ public class CheckboxMultiSelectAttributeEditor extends AbstractAttributeEditor 
 						WorkbenchUtil.getShell(), toolBar, values, validValues, NLS.bind(
 								Messages.CheckboxMultiSelectAttributeEditor_Select_X, getLabel()));
 
-				selectionDialog.addCloseListener(new IInPlaceDialogCloseListener() {
+				selectionDialog.addEventListener(new IInPlaceDialogListener() {
 
-					public void dialogClosing(InPlaceDialogCloseEvent event) {
+					public void buttonPressed(InPlaceDialogEvent event) {
 						if (event.getReturnCode() == Window.OK) {
 							Set<String> newValues = selectionDialog.getSelectedValues();
+							if (!new HashSet<String>(values).equals(newValues)) {
+								setValues(new ArrayList<String>(newValues));
+								attributeChanged();
+								updateText();
+							}
+						} else if (event.getReturnCode() == AbstractInPlaceDialog.ID_CLEAR) {
+							Set<String> newValues = new HashSet<String>();
 							if (!new HashSet<String>(values).equals(newValues)) {
 								setValues(new ArrayList<String>(newValues));
 								attributeChanged();
