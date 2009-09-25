@@ -12,20 +12,13 @@
 package org.eclipse.mylyn.internal.provisional.commons.ui.dialogs;
 
 /**
- * Event sent with an {@link IInPlaceDialogCloseListener} that contains information about the close event that occurred
+ * Listener interface for close events from an {@link AbstractInPlaceDialog}
  * 
  * @author Shawn Minto
  * @since 3.3
  */
-public class InPlaceDialogCloseEvent {
+public interface IInPlaceDialogListener {
 
-	private final int returnCode;
+	public void buttonPressed(InPlaceDialogEvent event);
 
-	public InPlaceDialogCloseEvent(int returnCode) {
-		this.returnCode = returnCode;
-	}
-
-	public int getReturnCode() {
-		return returnCode;
-	}
 }

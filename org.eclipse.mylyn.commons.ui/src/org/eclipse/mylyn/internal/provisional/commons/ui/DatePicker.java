@@ -21,9 +21,10 @@ import java.util.List;
 
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.commons.ui.Messages;
-import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.IInPlaceDialogCloseListener;
+import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.AbstractInPlaceDialog;
+import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.IInPlaceDialogListener;
 import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.InPlaceDateSelectionDialog;
-import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.InPlaceDialogCloseEvent;
+import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.InPlaceDialogEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -164,13 +165,13 @@ public class DatePicker extends Composite {
 
 				final InPlaceDateSelectionDialog dialog = new InPlaceDateSelectionDialog(shell, pickButton,
 						newCalendar, DatePicker.TITLE_DIALOG, includeTimeOfday, selectedHourOfDay);
-				dialog.addCloseListener(new IInPlaceDialogCloseListener() {
+				dialog.addEventListener(new IInPlaceDialogListener() {
 
-					public void dialogClosing(InPlaceDialogCloseEvent event) {
+					public void buttonPressed(InPlaceDialogEvent event) {
 						Calendar selectedCalendar = newCalendar;
 
-						if (event.getReturnCode() == InPlaceDateSelectionDialog.ID_CLEAR) {
-							selectedCalendar = null;
+						if (event.getReturnCode() == AbstractInPlaceDialog.ID_CLEAR) {
+							dateSelected(event.getReturnCode() == Window.CANCEL, null);
 						} else if (event.getReturnCode() == Window.OK) {
 							if (dialog.getDate() != null) {
 								if (selectedCalendar == null) {
@@ -180,9 +181,9 @@ public class DatePicker extends Composite {
 							} else {
 								selectedCalendar = null;
 							}
-
+							dateSelected(event.getReturnCode() == Window.CANCEL, selectedCalendar);
 						}
-						dateSelected(event.getReturnCode() == Window.CANCEL, selectedCalendar);
+
 					}
 				});
 				dialog.open();

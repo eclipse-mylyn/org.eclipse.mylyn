@@ -83,7 +83,12 @@ public class InPlaceCheckBoxTreeDialog extends AbstractInPlaceDialog {
 		getShell().setText(dialogLabel);
 
 		Composite composite = new Composite(parent, SWT.NONE);
-		composite.setLayout(new GridLayout());
+		GridLayout layout = new GridLayout();
+		layout.marginHeight = MARGIN_SIZE;
+		layout.marginWidth = MARGIN_SIZE;
+		layout.horizontalSpacing = 0;
+		layout.verticalSpacing = 0;
+		composite.setLayout(layout);
 		GridData gd = new GridData(GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL | GridData.FILL_BOTH);
 		composite.setLayoutData(gd);
 

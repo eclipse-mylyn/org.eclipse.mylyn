@@ -18,25 +18,27 @@ import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.PopupDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.commons.ui.CommonsUiPlugin;
+import org.eclipse.mylyn.internal.commons.ui.Messages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.forms.events.HyperlinkAdapter;
-import org.eclipse.ui.forms.events.HyperlinkEvent;
-import org.eclipse.ui.forms.widgets.ImageHyperlink;
 
 /**
  * Abstract class for an in-place popup dialog that has a cancel button and sends and ok event when the dialog is closed
@@ -46,13 +48,17 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
  */
 public abstract class AbstractInPlaceDialog extends PopupDialog {
 
+	public static final int ID_CLEAR = IDialogConstants.CLIENT_ID + 1;
+
+	protected static final int MARGIN_SIZE = 3;
+
 	private final int side;
 
 	private final Rectangle controlBounds;
 
 	private Control control;
 
-	private final Set<IInPlaceDialogCloseListener> listeners = new HashSet<IInPlaceDialogCloseListener>();
+	private final Set<IInPlaceDialogListener> listeners = new HashSet<IInPlaceDialogListener>();
 
 	private final Control openControl;
 
@@ -107,8 +113,8 @@ public abstract class AbstractInPlaceDialog extends PopupDialog {
 		gl = new GridLayout();
 		gl.marginHeight = 0;
 		gl.marginWidth = 0;
-		gl.marginBottom = 5;
-		gl.marginRight = 5;
+		gl.marginBottom = MARGIN_SIZE;
+		gl.marginRight = MARGIN_SIZE;
 		gl.horizontalSpacing = 10;
 		gl.verticalSpacing = 0;
 		gl.numColumns = 1;
@@ -120,13 +126,24 @@ public abstract class AbstractInPlaceDialog extends PopupDialog {
 
 		parent.pack();
 
+		setBackgroundColor(parent);
+
 		return parent;
+	}
+
+	private void setBackgroundColor(Composite parent) {
+		parent.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_WHITE));
+		for (Control control : parent.getChildren()) {
+			if (control instanceof Composite) {
+				setBackgroundColor((Composite) control);
+			}
+		}
 	}
 
 	protected abstract Control createControl(Composite composite);
 
 	protected void createButtons(Composite composite) {
-		createButton(composite, Window.CANCEL, Messages.AbstractInPlacePopupDialog_Cancel);
+		createButton(composite, ID_CLEAR, Messages.DateSelectionDialog_Clear, true);
 	}
 
 	protected void dispose() {
@@ -134,23 +151,30 @@ public abstract class AbstractInPlaceDialog extends PopupDialog {
 		close();
 	}
 
-	protected Control createButton(Composite composite, final int returnCode, String text) {
-		ImageHyperlink link = new ImageHyperlink(composite, SWT.NONE);
-		link.setText(text);
-		link.setUnderlined(true);
-		link.addHyperlinkListener(new HyperlinkAdapter() {
-			@Override
-			public void linkActivated(HyperlinkEvent e) {
-				setReturnCode(returnCode);
-				close();
+	protected Control createButton(Composite composite, final int returnCode, String text, final boolean shouldClose) {
+		Button button = new Button(composite, SWT.NONE);
+		button.setText(text);
+		button.addSelectionListener(new SelectionListener() {
 
+			public void widgetSelected(SelectionEvent e) {
+				setReturnCode(returnCode);
+				if (shouldClose) {
+					close();
+				} else {
+					notifyButtonPressed(false);
+				}
+			}
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+				widgetSelected(e);
 			}
 		});
+
 		if (composite.getLayout() instanceof GridLayout) {
 			((GridLayout) composite.getLayout()).numColumns = composite.getChildren().length;
 		}
-		GridDataFactory.fillDefaults().applyTo(link);
-		return link;
+		GridDataFactory.fillDefaults().applyTo(button);
+		return button;
 	}
 
 	@Override
@@ -166,26 +190,26 @@ public abstract class AbstractInPlaceDialog extends PopupDialog {
 		if (getReturnCode() == -1) {
 			setReturnCode(Window.OK);
 		}
-		notifyClosing();
+		notifyButtonPressed(true);
 		openControl.removeDisposeListener(disposeListener);
 		return super.close();
 	}
 
-	public void addCloseListener(IInPlaceDialogCloseListener listener) {
+	public void addEventListener(IInPlaceDialogListener listener) {
 		listeners.add(listener);
 	}
 
-	public void removeCloseListener(IInPlaceDialogCloseListener listener) {
+	public void removeCloseListener(IInPlaceDialogListener listener) {
 		listeners.remove(listener);
 	}
 
-	private void notifyClosing() {
-		final InPlaceDialogCloseEvent event = new InPlaceDialogCloseEvent(getReturnCode());
-		for (final IInPlaceDialogCloseListener listener : listeners) {
+	private void notifyButtonPressed(boolean isClosing) {
+		final InPlaceDialogEvent event = new InPlaceDialogEvent(getReturnCode(), isClosing);
+		for (final IInPlaceDialogListener listener : listeners) {
 			SafeRunnable.run(new ISafeRunnable() {
 
 				public void run() throws Exception {
-					listener.dialogClosing(event);
+					listener.buttonPressed(event);
 				}
 
 				public void handleException(Throwable exception) {

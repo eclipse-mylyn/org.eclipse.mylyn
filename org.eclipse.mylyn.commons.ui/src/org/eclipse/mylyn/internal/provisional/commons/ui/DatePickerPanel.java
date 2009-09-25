@@ -55,16 +55,24 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 
 	private int hourOfDay = 0;
 
+	/**
+	 * @Since 3.3
+	 */
 	public DatePickerPanel(Composite parent, int style, Calendar initialDate, boolean includeTime, int hourOfDay) {
+		this(parent, style, initialDate, includeTime, hourOfDay, -1);
+	}
+
+	public DatePickerPanel(Composite parent, int style, Calendar initialDate, boolean includeTime, int hourOfDay,
+			int marginSize) {
 		super(parent, style);
 		this.date = initialDate;
 		this.hourOfDay = hourOfDay;
-		initialize(includeTime);
+		initialize(includeTime, marginSize);
 		setDate(date);
 		//this.setBackground()
 	}
 
-	private void initialize(boolean includeTime) {
+	private void initialize(boolean includeTime, int marginSize) {
 		if (date == null) {
 			date = Calendar.getInstance();
 			date.set(Calendar.HOUR_OF_DAY, hourOfDay);
@@ -78,6 +86,9 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 			gridLayout.numColumns = 2;
 		} else {
 			gridLayout.numColumns = 1;
+		}
+		if (marginSize != -1) {
+			gridLayout.marginWidth = marginSize;
 		}
 		this.setLayout(gridLayout);
 
@@ -151,7 +162,7 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 			}
 		});
 
-		GridDataFactory.fillDefaults().hint(SWT.DEFAULT, 150).grab(false, true).applyTo(timeList);
+		GridDataFactory.fillDefaults().hint(SWT.DEFAULT, 50).applyTo(timeList);
 		if (date != null) {
 			listViewer.setSelection(new StructuredSelection(times[date.get(Calendar.HOUR_OF_DAY)]), true);
 		} else {
@@ -161,10 +172,21 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 	}
 
 	public void setDate(Calendar date) {
+		setDate(date, false);
+	}
+
+	/**
+	 * @since 3.3
+	 */
+	public void setDate(Calendar date, boolean notifyListeners) {
 		this.date = date;
 		calendar.setYear(date.get(Calendar.YEAR));
 		calendar.setMonth(date.get(Calendar.MONTH));
 		calendar.setDay(date.get(Calendar.DAY_OF_MONTH));
+		if (notifyListeners) {
+			setSelection(new DateSelection(date, false));
+			notifyListeners(new SelectionChangedEvent(DatePickerPanel.this, getSelection()));
+		}
 	}
 
 	public void keyPressed(KeyEvent e) {

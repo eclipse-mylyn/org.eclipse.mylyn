@@ -14,7 +14,7 @@ package org.eclipse.mylyn.internal.provisional.commons.ui.dialogs;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.mylyn.internal.commons.ui.Messages;
@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class InPlaceDateSelectionDialog extends AbstractInPlaceDialog {
 
-	public static final int ID_CLEAR = IDialogConstants.CLIENT_ID + 1;
+	private static final int ID_TODAY = ID_CLEAR + 1;
 
 	private Date selectedDate = null;
 
@@ -64,7 +64,8 @@ public class InPlaceDateSelectionDialog extends AbstractInPlaceDialog {
 	@Override
 	protected Control createControl(Composite parent) {
 		getShell().setText(title);
-		final DatePickerPanel datePanel = new DatePickerPanel(parent, SWT.NULL, initialCalendar, includeTime, hourOfDay);
+		final DatePickerPanel datePanel = new DatePickerPanel(parent, SWT.NULL, initialCalendar, includeTime,
+				hourOfDay, MARGIN_SIZE);
 		datePanel.addSelectionChangedListener(new ISelectionChangedListener() {
 
 			public void selectionChanged(SelectionChangedEvent event) {
@@ -80,6 +81,28 @@ public class InPlaceDateSelectionDialog extends AbstractInPlaceDialog {
 
 		datePanel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
 
+		addEventListener(new IInPlaceDialogListener() {
+
+			public void buttonPressed(InPlaceDialogEvent event) {
+				if (!event.isClosing() && event.getReturnCode() == ID_TODAY && !datePanel.isDisposed()) {
+					Calendar today = Calendar.getInstance();
+					ISelection selection = datePanel.getSelection();
+					if (selection instanceof DateSelection && !selection.isEmpty()) {
+						Calendar selectedDate = ((DateSelection) selection).getDate();
+						if (selectedDate != null) {
+							today.set(Calendar.HOUR_OF_DAY, selectedDate.get(Calendar.HOUR_OF_DAY));
+							today.set(Calendar.MINUTE, selectedDate.get(Calendar.MINUTE));
+							today.set(Calendar.SECOND, selectedDate.get(Calendar.SECOND));
+							today.set(Calendar.MILLISECOND, selectedDate.get(Calendar.MILLISECOND));
+						}
+					}
+					datePanel.setDate(today, true);
+					setReturnCode(-1);
+				}
+			}
+
+		});
+
 		return datePanel;
 	}
 
@@ -90,7 +113,7 @@ public class InPlaceDateSelectionDialog extends AbstractInPlaceDialog {
 
 	@Override
 	protected void createButtons(Composite composite) {
-		createButton(composite, ID_CLEAR, Messages.DateSelectionDialog_Clear);
+		createButton(composite, ID_TODAY, Messages.InPlaceDateSelectionDialog_Today, false);
 		super.createButtons(composite);
 	}
 
