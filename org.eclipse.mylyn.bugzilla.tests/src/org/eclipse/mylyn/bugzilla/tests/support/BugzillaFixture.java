@@ -105,7 +105,7 @@ public class BugzillaFixture extends TestFixture {
 	public BugzillaFixture(String url, String version, String info) {
 		super(BugzillaCorePlugin.CONNECTOR_KIND, url);
 		this.version = version;
-		setInfo("Bugzilla " + version + ((info.length() > 0) ? "/" + info : ""));
+		setInfo("Bugzilla", version, info);
 	}
 
 	@Override

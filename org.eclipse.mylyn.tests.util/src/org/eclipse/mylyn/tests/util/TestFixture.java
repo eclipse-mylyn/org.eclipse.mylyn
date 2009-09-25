@@ -95,11 +95,13 @@ public abstract class TestFixture {
 
 	private final String connectorKind;
 
-	private String info;
+	private String simpleInfo;
 
 	protected final String repositoryUrl;
 
 	private TestSuite suite;
+
+	private String repositoryName;
 
 	public TestFixture(String connectorKind, String repositoryUrl) {
 		this.connectorKind = connectorKind;
@@ -112,11 +114,7 @@ public abstract class TestFixture {
 
 	public void add(Class<? extends TestCase> clazz) {
 		Assert.isNotNull(suite, "Invoke createSuite() first");
-		if (Boolean.parseBoolean(System.getProperty("mylyn.tests.annotate")) && getInfo() != null) {
-			suite.addTest(new TestSuite(clazz, clazz.getName() + " [@" + getInfo() + "]"));
-		} else {
-			suite.addTestSuite(clazz);
-		}
+		suite.addTestSuite(clazz);
 	}
 
 	public AbstractRepositoryConnector connector() {
@@ -126,7 +124,7 @@ public abstract class TestFixture {
 	public TestSuite createSuite(TestSuite parentSuite) {
 		suite = new TestSuite("Testing on " + getInfo());
 		parentSuite.addTest(suite);
-		suite.addTest(new Activation("repository: " + getRepositoryUrl() + " [@" + getInfo() + "]", true));
+		suite.addTest(new Activation("repository: " + getRepositoryUrl() + " [@" + getSimpleInfo() + "]", true));
 		return suite;
 	}
 
@@ -141,11 +139,15 @@ public abstract class TestFixture {
 	}
 
 	public String getInfo() {
-		return info;
+		return repositoryName + " " + simpleInfo;
 	}
 
 	public String getRepositoryUrl() {
 		return repositoryUrl;
+	}
+
+	public String getSimpleInfo() {
+		return simpleInfo;
 	}
 
 	public AbstractWebLocation location() throws Exception {
@@ -181,8 +183,14 @@ public abstract class TestFixture {
 		return repository;
 	}
 
-	protected void setInfo(String info) {
-		this.info = info;
+	protected void setInfo(String repositoryName, String version, String description) {
+		Assert.isNotNull(repositoryName);
+		Assert.isNotNull(version);
+		this.repositoryName = repositoryName;
+		this.simpleInfo = version;
+		if (description != null && description.length() > 0) {
+			this.simpleInfo += "/" + description;
+		}
 	}
 
 	public TaskRepository singleRepository() {

@@ -142,7 +142,7 @@ public class TracFixture extends TestFixture {
 		super(TracCorePlugin.CONNECTOR_KIND, url);
 		this.accessMode = accessMode;
 		this.version = version;
-		setInfo("Trac " + version + "/" + info);
+		setInfo("Trac", version, info);
 	}
 
 	@Override
