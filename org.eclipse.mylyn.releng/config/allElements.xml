@@ -87,6 +87,10 @@
 			<property name="type" value="feature" />
 			<property name="id" value="org.eclipse.mylyn.test_feature" />
 		</ant>
+		<ant antfile="${genericTargets}" target="${target}">
+			<property name="type" value="feature" />
+			<property name="id" value="org.eclipse.mylyn.tests.performance_feature" />
+		</ant>
 		<antcall target="allElementDelegatorSdk" />
 	</target>
 	<target name="allElementDelegatorSdk" unless="skipSDK">
@@ -254,6 +258,9 @@
 		<ant antfile="${assembleScriptName}" dir="${buildDirectory}" />
 	</target>
 	<target name="assemble.org.eclipse.mylyn.test_feature">
+		<ant antfile="${assembleScriptName}" dir="${buildDirectory}" />
+	</target>
+	<target name="assemble.org.eclipse.mylyn.tests.performance_feature">
 		<ant antfile="${assembleScriptName}" dir="${buildDirectory}" />
 	</target>
 	<target name="assemble.org.eclipse.mylyn.sdk_feature">
