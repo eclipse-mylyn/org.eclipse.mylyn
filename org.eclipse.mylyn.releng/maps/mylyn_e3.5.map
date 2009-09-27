@@ -26,6 +26,7 @@ feature@org.eclipse.mylyn.experimental_sdk_feature=R_3_2_0,:pserver:anonymous@de
 
 !******* OTHER *******
 feature@org.eclipse.mylyn.test_feature=R_3_2_0,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.test-feature
+feature@org.eclipse.mylyn.tests.performance_feature=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/sandbox/org.eclipse.mylyn.tests.performance-feature
 
 
 !******* PLUGINS **********
