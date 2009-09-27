@@ -72,4 +72,9 @@ public class UiTestUtil {
 	public static IViewPart openView(String id) throws PartInitException {
 		return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(id);
 	}
+
+	public static void closeAllEditors() {
+		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
+	}
+
 }
