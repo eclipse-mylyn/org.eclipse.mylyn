@@ -99,6 +99,7 @@ plugin@org.eclipse.mylyn.sandbox.tests=R_3_2_0,:pserver:anonymous@dev.eclipse.or
 plugin@org.eclipse.mylyn.tasks.tests=R_3_2_0,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.tasks.tests
 plugin@org.eclipse.mylyn.team.tests=R_3_2_0,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.team.tests
 plugin@org.eclipse.mylyn.tests=R_3_2_0,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.tests
+plugin@org.eclipse.mylyn.tests.performance=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.tests.performance
 plugin@org.eclipse.mylyn.tests.ui=R_3_2_0,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.tests.ui
 plugin@org.eclipse.mylyn.trac.tests=R_3_2_0,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.trac.tests
 plugin@org.eclipse.mylyn.wikitext.tests=R_3_2_0,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.wikitext.tests
