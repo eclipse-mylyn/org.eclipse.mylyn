@@ -51,6 +51,11 @@ public class SoapHttpSender extends CommonsHttpSender {
 	 */
 	public static final String USER_AGENT = "org.eclipse.mylyn.commons.soap.userAgent"; //$NON-NLS-1$
 
+	/**
+	 * The key for enabling a work-around in case the server responds with an empty content encoding.
+	 */
+	public static final String ALLOW_EMPTY_CONTENT_ENCODING = "org.eclipse.mylyn.commons.soap.allowEmptyContentEncoding"; //$NON-NLS-1$
+
 	@Override
 	protected HostConfiguration getHostConfiguration(HttpClient client, MessageContext context, URL url) {
 		AbstractWebLocation location = (AbstractWebLocation) context.getProperty(LOCATION);

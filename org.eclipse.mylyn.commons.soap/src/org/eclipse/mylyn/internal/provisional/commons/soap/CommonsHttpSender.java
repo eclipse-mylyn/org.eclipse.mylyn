@@ -92,7 +92,7 @@ import org.eclipse.mylyn.commons.net.WebUtil;
  *         HttpState. Also we need to setCookiePolicy on HttpState to CookiePolicy.COMPATIBILITY else it is defaulting
  *         to RFC2109Spec and adding Version information to it and tomcat server not recognizing it
  */
-@SuppressWarnings( { "serial", "unchecked", "null" })
+@SuppressWarnings({ "serial", "unchecked", "null" })
 public class CommonsHttpSender extends BasicHandler {
 
 	/** Field log */
@@ -231,6 +231,8 @@ public class CommonsHttpSender extends BasicHandler {
 			if (contentEncoding != null) {
 				if (contentEncoding.getValue().equalsIgnoreCase(HTTPConstants.COMPRESSION_GZIP)) {
 					releaseConnectionOnCloseStream = new GZIPInputStream(releaseConnectionOnCloseStream);
+				} else if (contentEncoding.getValue().equals("") && msgContext.isPropertyTrue(SoapHttpSender.ALLOW_EMPTY_CONTENT_ENCODING)) { //$NON-NLS-1$
+					// assume no encoding
 				} else {
 					AxisFault fault = new AxisFault("HTTP", "unsupported content-encoding of '" //$NON-NLS-1$ //$NON-NLS-2$
 							+ contentEncoding.getValue() + "' found", null, null); //$NON-NLS-1$
