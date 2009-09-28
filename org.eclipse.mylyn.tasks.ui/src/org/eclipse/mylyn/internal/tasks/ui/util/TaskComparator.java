@@ -19,6 +19,7 @@ import org.eclipse.mylyn.internal.tasks.ui.util.SortCriterion.SortKey;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskKeyComparator;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.ui.IMemento;
 
 /**
@@ -33,7 +34,9 @@ public class TaskComparator implements Comparator<ITask> {
 
 	private static final SortKey DEFAULT_SORT_INDEX = SortKey.PRIORITY;
 
-	private static final SortKey DEFAULT_SORT_INDEX2 = SortKey.DATE_CREATED;
+	private static final SortKey DEFAULT_SORT_INDEX2 = SortKey.RANK;
+
+	private static final SortKey DEFAULT_SORT_INDEX3 = SortKey.DATE_CREATED;
 
 	private static final String MEMENTO_KEY_SORT = "sort"; //$NON-NLS-1$
 
@@ -66,6 +69,7 @@ public class TaskComparator implements Comparator<ITask> {
 		}
 		sortCriteria[0].setKey(DEFAULT_SORT_INDEX);
 		sortCriteria[1].setKey(DEFAULT_SORT_INDEX2);
+		sortCriteria[2].setKey(DEFAULT_SORT_INDEX3);
 	}
 
 	public int compare(ITask element1, ITask element2) {
@@ -74,6 +78,9 @@ public class TaskComparator implements Comparator<ITask> {
 			switch (key.getKey()) {
 			case DATE_CREATED:
 				result = sortByDate(element1, element2, key.getDirection());
+				break;
+			case RANK:
+				result = sortByRank(element1, element2, key.getDirection());
 				break;
 			case PRIORITY:
 				result = sortByPriority(element1, element2, key.getDirection());
@@ -153,6 +160,33 @@ public class TaskComparator implements Comparator<ITask> {
 			return -sortDirection;
 		}
 		return sortDirection * taskKeyComparator.compare2(key1, key2);
+	}
+
+	private int sortByRank(ITask element1, ITask element2, int sortDirection) {
+
+		if (element1.getConnectorKind() != null && element2.getConnectorKind() != null
+				&& element1.getConnectorKind().equals(element2.getConnectorKind())) {
+			// only compare rank of elements from the same connector
+
+			if (element1.getRepositoryUrl() != null && element2.getRepositoryUrl() != null
+					&& element1.getRepositoryUrl().equals(element2.getRepositoryUrl())) {
+
+				// only compare the rank of elements in the same repository
+				String rankString1 = element1.getAttribute(TaskAttribute.RANK);
+				String rankString2 = element2.getAttribute(TaskAttribute.RANK);
+				if (rankString1 != null && rankString2 != null && rankString1.length() > 0 && rankString2.length() > 0) {
+					try {
+						Double rank1 = Double.parseDouble(rankString1);
+						Double rank2 = Double.parseDouble(rankString2);
+						return sortDirection * rank1.compareTo(rank2);
+					} catch (NumberFormatException e) {
+						// ignore, means that there is no rank on one of the elements
+					}
+				}
+			}
+		}
+
+		return 0;
 	}
 
 	private int sortByPriority(ITask element1, ITask element2, int sortDirection) {

@@ -22,7 +22,7 @@ import org.eclipse.ui.IMemento;
 public class SortCriterion {
 
 	public enum SortKey {
-		NONE, DATE_CREATED, PRIORITY, SUMMARY, TASK_ID, TASK_TYPE;
+		NONE, DATE_CREATED, PRIORITY, RANK, SUMMARY, TASK_ID, TASK_TYPE;
 
 		public static SortKey valueOfLabel(String label) {
 			for (SortKey value : values()) {
@@ -41,6 +41,8 @@ public class SortCriterion {
 				return Messages.SortKindEntry_Priority;
 			case SUMMARY:
 				return Messages.SortKindEntry_Summary;
+			case RANK:
+				return Messages.SortKindEntry_Rank;
 			case DATE_CREATED:
 				return Messages.SortKindEntry_Date_Created;
 			case TASK_ID:

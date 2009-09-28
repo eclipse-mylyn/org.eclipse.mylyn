@@ -49,6 +49,8 @@ public class Messages extends NLS {
 
 	public static String SortKindEntry_Priority;
 
+	public static String SortKindEntry_Rank;
+
 	public static String SortKindEntry_Summary;
 
 	public static String SortKindEntry_Task_ID;

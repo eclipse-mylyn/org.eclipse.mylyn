@@ -153,6 +153,11 @@ public final class TaskAttribute {
 	public static final String TASK_KIND = "task.common.kind"; //$NON-NLS-1$
 
 	/**
+	 * @since 3.3
+	 */
+	public static final String RANK = "task.common.rank"; //$NON-NLS-1$
+
+	/**
 	 * @since 3.0
 	 */
 	public static final String TASK_URL = "task.common.url"; //$NON-NLS-1$
