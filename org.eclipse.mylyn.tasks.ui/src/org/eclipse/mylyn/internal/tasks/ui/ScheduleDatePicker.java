@@ -16,6 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DatePicker;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.DateRange;
@@ -25,12 +26,17 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
 
 /**
  * @author Rob Elves
@@ -52,6 +58,8 @@ public class ScheduleDatePicker extends Composite {
 	private DateRange scheduledDate;
 
 	private final boolean isFloating = false;
+
+	private ImageHyperlink clearControl;
 
 	public ScheduleDatePicker(Composite parent, AbstractTask task, int style) {
 		super(parent, style);
@@ -86,7 +94,7 @@ public class ScheduleDatePicker extends Composite {
 
 	private void initialize(int style) {
 
-		GridLayout gridLayout = new GridLayout(2, false);
+		GridLayout gridLayout = new GridLayout(3, false);
 		gridLayout.horizontalSpacing = 0;
 		gridLayout.verticalSpacing = 0;
 		gridLayout.marginWidth = 0;
@@ -103,6 +111,29 @@ public class ScheduleDatePicker extends Composite {
 		scheduledDateText.setLayoutData(dateTextGridData);
 		scheduledDateText.setText(initialText);
 
+		clearControl = new ImageHyperlink(this, SWT.NONE);
+		clearControl.setImage(CommonImages.getImage(CommonImages.CLEAR));
+		clearControl.setToolTipText(Messages.ScheduleDatePicker_Clear);
+		clearControl.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
+			public void linkActivated(HyperlinkEvent e) {
+
+				setScheduledDate(null);
+				for (IRepositoryElement task : tasks) {
+					if (task instanceof AbstractTask) {
+						// XXX why is this set here?
+						((AbstractTask) task).setReminded(false);
+					}
+				}
+
+				notifyPickerListeners();
+
+			}
+
+		});
+		clearControl.setBackground(clearControl.getDisplay().getSystemColor(SWT.COLOR_WHITE));
+		clearControl.setLayoutData(new GridData());
+
 		pickButton = new Button(this, style | SWT.ARROW | SWT.DOWN);
 		GridData pickButtonGridData = new GridData(SWT.RIGHT, SWT.FILL, false, true);
 		pickButtonGridData.verticalIndent = 0;
@@ -115,11 +146,23 @@ public class ScheduleDatePicker extends Composite {
 				Menu menu = menuManager.createContextMenu(pickButton);
 				pickButton.setMenu(menu);
 				menu.setVisible(true);
+				Point location = pickButton.toDisplay(pickButton.getLocation());
+				Rectangle bounds = pickButton.getBounds();
+
+				menu.setLocation(location.x - pickButton.getBounds().x, location.y + bounds.height + 2);
 			}
 		});
 
 		updateDateText();
 		pack();
+	}
+
+	private void updateClearControlVisibility() {
+		if (clearControl != null && clearControl.getLayoutData() instanceof GridData) {
+			GridData gd = (GridData) clearControl.getLayoutData();
+			gd.exclude = scheduledDate == null;
+			clearControl.getParent().layout();
+		}
 	}
 
 	public void addPickerSelectionListener(SelectionListener listener) {
@@ -154,12 +197,14 @@ public class ScheduleDatePicker extends Composite {
 			scheduledDateText.setText(DatePicker.LABEL_CHOOSE);
 			scheduledDateText.setEnabled(true);
 		}
+		updateClearControlVisibility();
 	}
 
 	@Override
 	public void setEnabled(boolean enabled) {
 		scheduledDateText.setEnabled(enabled);
 		pickButton.setEnabled(enabled);
+		clearControl.setEnabled(enabled);
 		super.setEnabled(enabled);
 	}
 

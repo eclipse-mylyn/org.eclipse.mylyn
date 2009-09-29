@@ -15,7 +15,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DatePicker;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -31,10 +30,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.forms.events.HyperlinkAdapter;
-import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.ImageHyperlink;
 
 /**
  * @author Steffen Pingel
@@ -62,7 +58,7 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 			setControl(text);
 		} else {
 			Composite dateWithClearComposite = toolkit.createComposite(composite);
-			GridLayout layout = new GridLayout(2, false);
+			GridLayout layout = new GridLayout(1, false);
 			layout.marginHeight = 2;
 			layout.marginWidth = 1;
 			layout.verticalSpacing = 2;
@@ -104,20 +100,6 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 			GridDataFactory.fillDefaults().hint(120, SWT.DEFAULT).grab(true, false).applyTo(datePicker);
 			datePicker.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 			toolkit.adapt(datePicker, false, false);
-
-			ImageHyperlink clearDeadlineDate = toolkit.createImageHyperlink(dateWithClearComposite, SWT.NONE);
-			clearDeadlineDate.setImage(CommonImages.getImage(CommonImages.CLEAR));
-			clearDeadlineDate.setToolTipText(Messages.DateAttributeEditor_Clear);
-			clearDeadlineDate.addHyperlinkListener(new HyperlinkAdapter() {
-				@Override
-				public void linkActivated(HyperlinkEvent e) {
-					if (getValue() != null) {
-						setValue(null);
-					}
-					datePicker.setDate(null);
-				}
-
-			});
 
 			toolkit.paintBordersFor(dateWithClearComposite);
 			setControl(dateWithClearComposite);

@@ -49,6 +49,8 @@ public class Messages extends NLS {
 
 	public static String RefactorRepositoryUrlOperation_Repository_URL_update;
 
+	public static String ScheduleDatePicker_Clear;
+
 	public static String ScheduleTaskMenuContributor_Cannot_schedule_completed_tasks;
 
 	public static String ScheduleTaskMenuContributor_Choose_Date_;

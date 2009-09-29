@@ -398,7 +398,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		Label label = toolkit.createLabel(parent, Messages.TaskEditorPlanningPart_Due);
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 
-		Composite composite = createComposite(parent, 2, toolkit);
+		Composite composite = createComposite(parent, 1, toolkit);
 
 		dueDatePicker = new DatePicker(composite, SWT.FLAT, DatePicker.LABEL_CHOOSE, true, 0);
 		GridDataFactory.fillDefaults().hint(CONTROL_WIDTH, SWT.DEFAULT).applyTo(dueDatePicker);
@@ -417,17 +417,6 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		});
 		toolkit.adapt(dueDatePicker, false, false);
 		toolkit.paintBordersFor(composite);
-
-		ImageHyperlink clearDueDate = toolkit.createImageHyperlink(composite, SWT.NONE);
-		clearDueDate.setImage(CommonImages.getImage(CommonImages.FIND_CLEAR));
-		clearDueDate.setToolTipText(Messages.TaskEditorPlanningPart_Clear);
-		clearDueDate.addHyperlinkListener(new HyperlinkAdapter() {
-			@Override
-			public void linkActivated(HyperlinkEvent e) {
-				dueDatePicker.setDate(null);
-				markDirty();
-			}
-		});
 	}
 
 	private void createEstimatedTime(FormToolkit toolkit, Composite parent) {
@@ -486,19 +475,6 @@ public class PlanningPart extends AbstractLocalEditorPart {
 			}
 
 			public void widgetSelected(SelectionEvent arg0) {
-				markDirty();
-			}
-		});
-
-		ImageHyperlink clearScheduledDate = toolkit.createImageHyperlink(composite, SWT.NONE);
-		clearScheduledDate.setImage(CommonImages.getImage(CommonImages.FIND_CLEAR));
-		clearScheduledDate.setToolTipText(Messages.TaskEditorPlanningPart_Clear);
-		clearScheduledDate.addHyperlinkListener(new HyperlinkAdapter() {
-			@Override
-			public void linkActivated(HyperlinkEvent e) {
-				scheduleDatePicker.setScheduledDate(null);
-				// XXX why is this set here?
-				getTask().setReminded(false);
 				markDirty();
 			}
 		});
