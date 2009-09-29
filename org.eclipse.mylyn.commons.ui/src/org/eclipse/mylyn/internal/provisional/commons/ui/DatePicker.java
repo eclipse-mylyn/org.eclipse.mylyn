@@ -41,6 +41,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
 
 /**
  * Temporary date picker from patch posted to: https://bugs.eclipse.org/bugs/show_bug.cgi?taskId=19945 see bug# 19945
@@ -74,6 +77,8 @@ public class DatePicker extends Composite {
 
 	private int selectedHourOfDay = 0;
 
+	private ImageHyperlink clearControl;
+
 	public DatePicker(Composite parent, int style, String initialText, boolean includeHours, int selectedHourOfDay) {
 		super(parent, style);
 		this.initialText = initialText;
@@ -95,7 +100,7 @@ public class DatePicker extends Composite {
 	}
 
 	private void initialize(int style) {
-		GridLayout gridLayout = new GridLayout(2, false);
+		GridLayout gridLayout = new GridLayout(3, false);
 		gridLayout.horizontalSpacing = 0;
 		gridLayout.verticalSpacing = 0;
 		gridLayout.marginWidth = 0;
@@ -136,6 +141,19 @@ public class DatePicker extends Composite {
 
 			}
 		});
+
+		clearControl = new ImageHyperlink(this, SWT.NONE);
+		clearControl.setImage(CommonImages.getImage(CommonImages.CLEAR));
+		clearControl.setToolTipText(Messages.DatePicker_Clear);
+		clearControl.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
+			public void linkActivated(HyperlinkEvent e) {
+				dateSelected(false, null);
+			}
+
+		});
+		clearControl.setBackground(clearControl.getDisplay().getSystemColor(SWT.COLOR_WHITE));
+		clearControl.setLayoutData(new GridData());
 
 		pickButton = new Button(this, style | SWT.ARROW | SWT.DOWN);
 		GridData pickButtonGridData = new GridData(SWT.RIGHT, SWT.FILL, false, true);
@@ -189,7 +207,7 @@ public class DatePicker extends Composite {
 				dialog.open();
 			}
 		});
-
+		updateClearControlVisibility();
 		pack();
 	}
 
@@ -293,12 +311,23 @@ public class DatePicker extends Composite {
 			dateText.setText(LABEL_CHOOSE);
 			dateText.setEnabled(true);
 		}
+
+		updateClearControlVisibility();
+	}
+
+	private void updateClearControlVisibility() {
+		if (clearControl != null && clearControl.getLayoutData() instanceof GridData) {
+			GridData gd = (GridData) clearControl.getLayoutData();
+			gd.exclude = date == null;
+			clearControl.getParent().layout();
+		}
 	}
 
 	@Override
 	public void setEnabled(boolean enabled) {
 		dateText.setEnabled(enabled);
 		pickButton.setEnabled(enabled);
+		clearControl.setEnabled(enabled);
 		super.setEnabled(enabled);
 	}
 

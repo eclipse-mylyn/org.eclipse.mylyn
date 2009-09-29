@@ -45,6 +45,8 @@ public class Messages extends NLS {
 
 	public static String DatePicker_Choose_Date;
 
+	public static String DatePicker_Clear;
+
 	public static String DateSelectionDialog_Clear;
 
 	public static String DateSelectionDialog_Date_Selection;
