@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
@@ -134,6 +135,7 @@ public class TaskJobFactory implements ITaskJobFactory {
 
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
+				monitor = SubMonitor.convert(monitor);
 				monitor.beginTask(Messages.TaskJobFactory_Receiving_configuration, IProgressMonitor.UNKNOWN);
 				try {
 					try {
