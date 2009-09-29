@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package org.eclipse.cdt.mylyn.internal.ui;
+package org.eclipse.mylyn.internal.cdt.ui;
 
 import java.util.ArrayList;
 import java.util.Collections;

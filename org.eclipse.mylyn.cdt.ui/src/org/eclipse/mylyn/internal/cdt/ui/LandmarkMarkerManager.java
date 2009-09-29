@@ -8,7 +8,7 @@
 /*
  * Created on Feb 16, 2005
  */
-package org.eclipse.cdt.mylyn.internal.ui;
+package org.eclipse.mylyn.internal.cdt.ui;
 
 import java.util.HashMap;
 import java.util.List;

@@ -9,7 +9,7 @@
  *     Red Hat Inc. - Modification for CDT usage
  *******************************************************************************/
 
-package org.eclipse.cdt.mylyn.internal.ui.actions;
+package org.eclipse.mylyn.internal.cdt.ui.actions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,7 +21,6 @@ import org.eclipse.cdt.internal.ui.actions.SelectionConverter;
 import org.eclipse.cdt.internal.ui.cview.CView;
 import org.eclipse.cdt.internal.ui.cview.ToggleLinkingAction;
 import org.eclipse.cdt.internal.ui.editor.CEditor;
-import org.eclipse.cdt.mylyn.internal.ui.CDTDeclarationsFilter;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IContributionItem;
@@ -33,6 +32,7 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylyn.context.ui.AbstractAutoFocusViewAction;
 import org.eclipse.mylyn.context.ui.InterestFilter;
+import org.eclipse.mylyn.internal.cdt.ui.CDTDeclarationsFilter;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
 

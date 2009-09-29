@@ -9,7 +9,7 @@
  * 		Red Hat Inc. - Initial implementation based on JavaUiBridge
  *******************************************************************************/
 
-package org.eclipse.cdt.mylyn.internal.ui;
+package org.eclipse.mylyn.internal.cdt.ui;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

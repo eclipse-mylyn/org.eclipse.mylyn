@@ -5,13 +5,13 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package org.eclipse.cdt.mylyn.internal.ui;
+package org.eclipse.mylyn.internal.cdt.ui;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.cdt.internal.ui.editor.CEditor;
-import org.eclipse.cdt.mylyn.internal.ui.editor.ActiveFoldingListener;
+import org.eclipse.mylyn.internal.cdt.ui.editor.ActiveFoldingListener;
 import org.eclipse.mylyn.monitor.ui.AbstractEditorTracker;
 import org.eclipse.ui.IEditorPart;
 

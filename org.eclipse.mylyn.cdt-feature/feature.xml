@@ -4,7 +4,7 @@
       label="%featureName"
       version="5.1.0.qualifier"
       provider-name="%providerName"
-      plugin="org.eclipse.cdt.mylyn">
+      plugin="org.eclipse.mylyn">
 
    <description>
       %description
@@ -52,11 +52,5 @@
          version="0.0.0"
          unpack="false"/>
 
-   <plugin
-         id="org.eclipse.cdt.mylyn"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
 </feature>

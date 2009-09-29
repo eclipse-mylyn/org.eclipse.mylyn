@@ -8,7 +8,7 @@
 /*
  * Created on May 16, 2005
  */
-package org.eclipse.cdt.mylyn.internal.ui.editor;
+package org.eclipse.mylyn.internal.cdt.ui.editor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +20,6 @@ import org.eclipse.cdt.core.model.IParent;
 import org.eclipse.cdt.core.model.ITranslationUnit;
 import org.eclipse.cdt.internal.ui.editor.CEditor;
 import org.eclipse.cdt.internal.ui.editor.CSourceViewer;
-import org.eclipse.cdt.mylyn.internal.ui.CDTStructureBridge;
-import org.eclipse.cdt.mylyn.internal.ui.CDTUIBridgePlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
@@ -32,6 +30,8 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.internal.cdt.ui.CDTStructureBridge;
+import org.eclipse.mylyn.internal.cdt.ui.CDTUIBridgePlugin;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 

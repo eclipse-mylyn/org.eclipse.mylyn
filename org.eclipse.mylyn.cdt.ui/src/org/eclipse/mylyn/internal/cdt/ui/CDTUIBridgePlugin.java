@@ -8,7 +8,7 @@
  * Contributors:
  * 		Red Hat Inc. - modification from Java to CDT
  *******************************************************************************/
-package org.eclipse.cdt.mylyn.internal.ui;
+package org.eclipse.mylyn.internal.cdt.ui;
 
 import java.text.MessageFormat;
 import java.util.MissingResourceException;
@@ -16,10 +16,10 @@ import java.util.ResourceBundle;
 
 import org.eclipse.cdt.core.model.CoreModel;
 import org.eclipse.cdt.internal.ui.editor.CEditor;
-import org.eclipse.cdt.mylyn.internal.ui.editor.ActiveFoldingListener;
 import org.eclipse.cdt.ui.CUIPlugin;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.context.ui.IContextUiStartup;
+import org.eclipse.mylyn.internal.cdt.ui.editor.ActiveFoldingListener;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 import org.eclipse.ui.IEditorPart;

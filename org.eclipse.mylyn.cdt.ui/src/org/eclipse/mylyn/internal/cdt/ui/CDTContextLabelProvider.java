@@ -9,7 +9,7 @@
  * Created on Aug 6, 2004
  * Modified for CDT usage Feb 28, 2008
  */
-package org.eclipse.cdt.mylyn.internal.ui;
+package org.eclipse.mylyn.internal.cdt.ui;
 
 import org.eclipse.cdt.core.model.ICElement;
 import org.eclipse.cdt.internal.ui.viewsupport.AppearanceAwareLabelProvider;

@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.cdt.mylyn.internal.ui.actions;
+package org.eclipse.mylyn.internal.cdt.ui.actions;
 
 import org.eclipse.cdt.internal.ui.cview.CView;
 import org.eclipse.jface.action.Action;
