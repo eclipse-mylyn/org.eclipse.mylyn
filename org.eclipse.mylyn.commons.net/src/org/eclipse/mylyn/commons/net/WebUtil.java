@@ -55,6 +55,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer.Token;
 import org.eclipse.mylyn.internal.commons.net.AuthenticatedProxy;
 import org.eclipse.mylyn.internal.commons.net.CloneableHostConfiguration;
@@ -102,7 +103,7 @@ public class WebUtil {
 
 	private static final int HTTPS_PORT = 443;
 
-	private static final int POLL_INTERVAL = 1000;
+	private static final int POLL_INTERVAL = 500;
 
 	private static final int POLL_ATTEMPTS = SOCKET_TIMEOUT / POLL_INTERVAL;
 
@@ -326,11 +327,11 @@ public class WebUtil {
 	 * @since 3.0
 	 */
 	public static <T> T execute(IProgressMonitor monitor, WebRequest<T> request) throws Throwable {
-		monitor = Policy.monitorFor(monitor);
+		SubMonitor subMonitor = SubMonitor.convert(monitor);
 
 		Future<T> future = CommonsNetPlugin.getExecutorService().submit(request);
 		while (true) {
-			if (monitor.isCanceled()) {
+			if (subMonitor.isCanceled()) {
 				request.abort();
 
 				// wait for executor to finish
@@ -355,6 +356,9 @@ public class WebUtil {
 				throw e.getCause();
 			} catch (TimeoutException ignored) {
 			}
+
+			subMonitor.setWorkRemaining(20);
+			subMonitor.worked(1);
 		}
 	}
 
