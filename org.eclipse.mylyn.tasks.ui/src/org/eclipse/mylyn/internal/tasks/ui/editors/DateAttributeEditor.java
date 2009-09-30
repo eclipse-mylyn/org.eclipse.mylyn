@@ -27,7 +27,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -57,14 +56,7 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 			text.setText(getTextValue());
 			setControl(text);
 		} else {
-			Composite dateWithClearComposite = toolkit.createComposite(composite);
-			GridLayout layout = new GridLayout(1, false);
-			layout.marginHeight = 2;
-			layout.marginWidth = 1;
-			layout.verticalSpacing = 2;
-			layout.horizontalSpacing = 2;
-			dateWithClearComposite.setLayout(layout);
-			datePicker = new DatePicker(dateWithClearComposite, SWT.FLAT, getTextValue(), showTime, 0);
+			datePicker = new DatePicker(composite, SWT.FLAT, getTextValue(), showTime, 0);
 			datePicker.setFont(EditorUtil.TEXT_FONT);
 			if (!showTime) {
 				datePicker.setDateFormat(EditorUtil.getDateFormat());
@@ -101,8 +93,7 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 			datePicker.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 			toolkit.adapt(datePicker, false, false);
 
-			toolkit.paintBordersFor(dateWithClearComposite);
-			setControl(dateWithClearComposite);
+			setControl(datePicker);
 		}
 	}
 

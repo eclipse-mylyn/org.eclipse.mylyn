@@ -95,7 +95,7 @@ public class ScheduleDatePicker extends Composite {
 	private void initialize(int style) {
 
 		GridLayout gridLayout = new GridLayout(3, false);
-		gridLayout.horizontalSpacing = 0;
+		gridLayout.horizontalSpacing = 3;
 		gridLayout.verticalSpacing = 0;
 		gridLayout.marginWidth = 0;
 		gridLayout.marginHeight = 0;
@@ -112,7 +112,8 @@ public class ScheduleDatePicker extends Composite {
 		scheduledDateText.setText(initialText);
 
 		clearControl = new ImageHyperlink(this, SWT.NONE);
-		clearControl.setImage(CommonImages.getImage(CommonImages.CLEAR));
+		clearControl.setImage(CommonImages.getImage(CommonImages.FIND_CLEAR_DISABLED));
+		clearControl.setHoverImage(CommonImages.getImage(CommonImages.FIND_CLEAR));
 		clearControl.setToolTipText(Messages.ScheduleDatePicker_Clear);
 		clearControl.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
