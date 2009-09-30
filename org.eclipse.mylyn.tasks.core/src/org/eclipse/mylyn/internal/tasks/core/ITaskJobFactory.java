@@ -43,6 +43,10 @@ public interface ITaskJobFactory {
 	public abstract TaskJob createUpdateRepositoryConfigurationJob(AbstractRepositoryConnector connector,
 			TaskRepository taskRepository, ITask task);
 
+	@Deprecated
+	public abstract TaskJob createUpdateRepositoryConfigurationJob(AbstractRepositoryConnector connector,
+			TaskRepository taskRepository);
+
 	public abstract SubmitJob createSubmitTaskAttachmentJob(AbstractRepositoryConnector connector,
 			TaskRepository taskRepository, ITask task, AbstractTaskAttachmentSource source, String comment,
 			TaskAttribute attachmentAttribute);

@@ -163,6 +163,13 @@ public class TaskJobFactory implements ITaskJobFactory {
 		return updateJob;
 	}
 
+	@Deprecated
+	public TaskJob createUpdateRepositoryConfigurationJob(final AbstractRepositoryConnector connector,
+			final TaskRepository taskRepository) {
+
+		return createUpdateRepositoryConfigurationJob(connector, taskRepository, null);
+	}
+
 	public SubmitJob createSubmitTaskAttachmentJob(AbstractRepositoryConnector connector,
 			TaskRepository taskRepository, final ITask task, AbstractTaskAttachmentSource source, String comment,
 			TaskAttribute attachmentAttribute) {
