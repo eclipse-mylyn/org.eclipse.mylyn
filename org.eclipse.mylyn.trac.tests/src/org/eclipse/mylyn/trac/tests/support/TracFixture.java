@@ -13,12 +13,8 @@ package org.eclipse.mylyn.trac.tests.support;
 
 import java.net.Proxy;
 
-import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
-import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.IProxyProvider;
 import org.eclipse.mylyn.commons.net.WebLocation;
-import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.trac.core.TracClientFactory;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
@@ -202,21 +198,21 @@ public class TracFixture extends TestFixture {
 	@Override
 	public TaskRepository singleRepository() {
 		TracCorePlugin.getDefault().getConnector().getClientManager().writeCache();
-		TaskRepositoryManager manager = TasksUiPlugin.getRepositoryManager();
-		manager.clearRepositories();
+		TaskRepository repository = super.singleRepository();
+		TracCorePlugin.getDefault().getConnector().getClientManager().readCache();
+		return repository;
+	}
 
-		Credentials credentials = TestUtil.readCredentials(PrivilegeLevel.USER);
-		TaskRepository repository = new TaskRepository(TracCorePlugin.CONNECTOR_KIND, repositoryUrl);
-		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials(credentials.username,
-				credentials.password), false);
+	@Override
+	protected void configureRepository(TaskRepository repository) {
 		repository.setTimeZoneId(ITracClient.TIME_ZONE);
 		repository.setCharacterEncoding(ITracClient.CHARSET);
 		repository.setVersion(accessMode.name());
+	}
 
-		manager.addRepository(repository);
-		TracCorePlugin.getDefault().getConnector().getClientManager().readCache();
-
-		return repository;
+	@Override
+	protected void resetRepositories() {
+		TracCorePlugin.getDefault().getConnector().getClientManager().clearClients();
 	}
 
 //	private static void initializeRepository(XmlRpcServer server) throws Exception {

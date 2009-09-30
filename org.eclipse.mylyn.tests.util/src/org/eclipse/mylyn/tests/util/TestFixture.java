@@ -38,6 +38,7 @@ import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
 public abstract class TestFixture {
 
 	private final class Activation extends TestCase {
+
 		private final boolean activate;
 
 		private Activation(String name, boolean activate) {
@@ -53,6 +54,7 @@ public abstract class TestFixture {
 				getDefault().activate();
 			}
 		}
+
 	}
 
 	/**
@@ -95,13 +97,13 @@ public abstract class TestFixture {
 
 	private final String connectorKind;
 
-	private String simpleInfo;
+	private String repositoryName;
 
 	protected final String repositoryUrl;
 
-	private TestSuite suite;
+	private String simpleInfo;
 
-	private String repositoryName;
+	private TestSuite suite;
 
 	public TestFixture(String connectorKind, String repositoryUrl) {
 		this.connectorKind = connectorKind;
@@ -110,11 +112,12 @@ public abstract class TestFixture {
 
 	protected abstract TestFixture activate();
 
-	protected abstract TestFixture getDefault();
-
 	public void add(Class<? extends TestCase> clazz) {
 		Assert.isNotNull(suite, "Invoke createSuite() first");
 		suite.addTestSuite(clazz);
+	}
+
+	protected void configureRepository(TaskRepository repository) {
 	}
 
 	public AbstractRepositoryConnector connector() {
@@ -137,6 +140,8 @@ public abstract class TestFixture {
 	public String getConnectorKind() {
 		return connectorKind;
 	}
+
+	protected abstract TestFixture getDefault();
 
 	public String getInfo() {
 		return repositoryName + " " + simpleInfo;
@@ -183,6 +188,9 @@ public abstract class TestFixture {
 		return repository;
 	}
 
+	protected void resetRepositories() {
+	}
+
 	protected void setInfo(String repositoryName, String version, String description) {
 		Assert.isNotNull(repositoryName);
 		Assert.isNotNull(version);
@@ -196,11 +204,13 @@ public abstract class TestFixture {
 	public TaskRepository singleRepository() {
 		TaskRepositoryManager manager = TasksUiPlugin.getRepositoryManager();
 		manager.clearRepositories();
+		resetRepositories();
 
 		TaskRepository repository = new TaskRepository(connectorKind, repositoryUrl);
 		Credentials credentials = TestUtil.readCredentials(PrivilegeLevel.USER);
 		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials(credentials.username,
 				credentials.password), false);
+		configureRepository(repository);
 		manager.addRepository(repository);
 		return repository;
 	}
