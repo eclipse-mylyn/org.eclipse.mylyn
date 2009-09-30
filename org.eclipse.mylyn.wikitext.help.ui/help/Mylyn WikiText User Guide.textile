@@ -386,8 +386,15 @@ To customize a markup language you may either extend a markup language using sub
 Following is an example of providing a @MarkupLanguageConfiguration@ configuration:
 
 pre.. 
+<wikitext-to-eclipse-help markupLanguage="org.eclipse.mylyn.wikitext.textile.core.TextileLanguage" ...>
+	<markupLanguageConfiguration escapingHtmlAndXml="true"/>
+</wikitext-to-eclipse-help>
+
+p. You may decide to customize your markup language by subclassing @MarkupLanguageConfiguration@.  In this case your Ant script may look more like this:
+
+pre.. 
 <taskdef resource="org/eclipse/mylyn/wikitext/core/util/anttask/tasks.properties" classpathref="wikitext.ant.classpath"/>
-<typedef name="languageConfiguration" classname="org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration" classpathref="wikitext.ant.classpath"/>
+<typedef name="languageConfiguration" classname="com.example.wikitext.MyCustomizedMarkupLanguageConfiguration" classpathref="wikitext.ant.classpath"/>
 		
 <wikitext-to-eclipse-help markupLanguage="org.eclipse.mylyn.wikitext.textile.core.TextileLanguage" ...>
 	<languageConfiguration escapingHtmlAndXml="true"/>
