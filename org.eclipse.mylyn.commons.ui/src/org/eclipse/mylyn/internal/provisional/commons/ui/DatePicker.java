@@ -213,6 +213,7 @@ public class DatePicker extends Composite {
 		});
 		updateClearControlVisibility();
 		pack();
+		setBackground(getDisplay().getSystemColor(SWT.COLOR_WHITE));
 	}
 
 	public void addPickerSelectionListener(SelectionListener listener) {
