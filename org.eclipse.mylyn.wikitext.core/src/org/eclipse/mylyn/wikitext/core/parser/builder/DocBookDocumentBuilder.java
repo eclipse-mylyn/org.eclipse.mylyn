@@ -25,6 +25,7 @@ import java.util.regex.Pattern;
 import org.eclipse.mylyn.internal.wikitext.core.util.css.CssParser;
 import org.eclipse.mylyn.internal.wikitext.core.util.css.CssRule;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
+import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.util.MarkupToDocbook;
 import org.eclipse.mylyn.wikitext.core.util.FormattingXMLStreamWriter;
 import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
@@ -35,7 +36,6 @@ import org.eclipse.mylyn.wikitext.core.util.anttask.MarkupToDocbookTask;
  * 
  * @author David Green
  * @author Peter Friese bug 273355 Support image scaling for Textile -> DocBook
- * 
  * @see MarkupToDocbook
  * @see MarkupToDocbookTask
  * @see DitaBookMapDocumentBuilder
@@ -389,6 +389,20 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 		case MONOSPACE:
 			writer.writeStartElement("literal"); //$NON-NLS-1$
 			break;
+		case LINK: {
+			LinkAttributes linkAttributes = (LinkAttributes) attributes;
+			String href = linkAttributes.getHref();
+			if (href.startsWith("#")) { //$NON-NLS-1$
+				writer.writeStartElement("link"); //$NON-NLS-1$
+				if (href.length() > 1) {
+					writer.writeAttribute("linkend", href.substring(1)); //$NON-NLS-1$
+				}
+			} else {
+				writer.writeStartElement("ulink"); //$NON-NLS-1$
+				writer.writeAttribute("url", href); //$NON-NLS-1$
+			}
+		}
+			break;
 		default:
 			Logger.getLogger(DocBookDocumentBuilder.class.getName()).warning("No docbook mapping for " + type); //$NON-NLS-1$
 			writer.writeStartElement("phrase"); //$NON-NLS-1$
@@ -601,9 +615,8 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 	/**
 	 * Indicate if this builder should generate an automatic glossary if acronyms are used. When the automatic glossary
 	 * is enabled and acronyms are used in the document, then an <code>appendix</code> with title 'Glossary' is added to
-	 * the document, with a <code>glosslist</code> generated for all of the acronyms that appear in the document.
-	 * 
-	 * The default is true.
+	 * the document, with a <code>glosslist</code> generated for all of the acronyms that appear in the document. The
+	 * default is true.
 	 */
 	public boolean isAutomaticGlossary() {
 		return automaticGlossary;
@@ -612,9 +625,8 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 	/**
 	 * Indicate if this builder should generate an automatic glossary if acronyms are used. When the automatic glossary
 	 * is enabled and acronyms are used in the document, then an <code>appendix</code> with title 'Glossary' is added to
-	 * the document, with a <code>glosslist</code> generated for all of the acronyms that appear in the document.
-	 * 
-	 * The default is true.
+	 * the document, with a <code>glosslist</code> generated for all of the acronyms that appear in the document. The
+	 * default is true.
 	 */
 	public void setAutomaticGlossary(boolean automaticGlossary) {
 		this.automaticGlossary = automaticGlossary;

@@ -20,6 +20,7 @@ import java.util.Set;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.IdGenerator;
+import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.Locator;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
@@ -67,6 +68,17 @@ public abstract class DocumentLocalReferenceValidationRule extends ValidationRul
 			private OutlineBuilderExtension(OutlineItem root, int labelMaxLength) {
 				super(root, labelMaxLength);
 				OutlineParserExtension.this.idGenerator = idGenerator;
+			}
+
+			@Override
+			public void beginSpan(SpanType type, Attributes attributes) {
+				super.beginSpan(type, attributes);
+				if (type == SpanType.LINK) {
+					if (attributes instanceof LinkAttributes) {
+						LinkAttributes linkAttributes = (LinkAttributes) attributes;
+						processLink(getLocator(), linkAttributes.getHref());
+					}
+				}
 			}
 
 			@Override
@@ -130,8 +142,10 @@ public abstract class DocumentLocalReferenceValidationRule extends ValidationRul
 					if (problems == null) {
 						problems = new ArrayList<ValidationProblem>();
 					}
-					problems.add(new ValidationProblem(Severity.ERROR, MessageFormat.format(
-							Messages.getString("DocumentLocalReferenceValidationRule.0"), reference.name), reference.offset, //$NON-NLS-1$
+					problems.add(new ValidationProblem(
+							Severity.ERROR,
+							MessageFormat.format(
+									Messages.getString("DocumentLocalReferenceValidationRule.0"), reference.name), reference.offset, //$NON-NLS-1$
 							reference.length));
 				}
 			}

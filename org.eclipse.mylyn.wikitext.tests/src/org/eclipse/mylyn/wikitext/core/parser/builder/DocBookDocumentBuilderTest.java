@@ -16,13 +16,13 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylyn.wikitext.confluence.core.ConfluenceLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
+import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class DocBookDocumentBuilderTest extends TestCase {
@@ -175,5 +175,28 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		System.out.println("DocBook: \n" + docbook);
 
 		assertTrue(docbook.contains("<book><title></title><chapter><title></title><para>foo</para><para>bar</para></chapter></book>"));
+	}
+
+	public void testSpanLink() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.DIV, new Attributes());
+
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		LinkAttributes attributes = new LinkAttributes();
+		attributes.setHref("#test1234");
+		builder.beginSpan(SpanType.LINK, attributes);
+		builder.beginSpan(SpanType.EMPHASIS, new Attributes());
+		builder.characters("link text");
+		builder.endSpan();
+		builder.endSpan();
+		builder.endBlock(); // PARAGRAPH
+
+		builder.endBlock(); // DIV
+		builder.endDocument();
+
+		String docbook = out.toString();
+		System.out.println("DocBook: \n" + docbook);
+
+		assertTrue(docbook.contains("<book><title></title><chapter><title></title><para><link linkend=\"test1234\"><emphasis>link text</emphasis></link></para></chapter></book>"));
 	}
 }

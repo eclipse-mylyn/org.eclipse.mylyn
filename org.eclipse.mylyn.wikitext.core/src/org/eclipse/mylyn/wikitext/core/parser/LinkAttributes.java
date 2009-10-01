@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.core.parser;
 
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 
 /**
@@ -23,6 +24,8 @@ public class LinkAttributes extends Attributes {
 	private String target;
 
 	private String rel;
+
+	private String href;
 
 	/**
 	 * The target of a link, as defined by the HTML spec.
@@ -47,7 +50,6 @@ public class LinkAttributes extends Attributes {
 	 * The 'rel' of a link, as defined by the HTML spec.
 	 * 
 	 * @return the ref or null if there should be none
-	 * 
 	 * @see HtmlDocumentBuilder#getLinkRel()
 	 */
 	public String getRel() {
@@ -59,11 +61,28 @@ public class LinkAttributes extends Attributes {
 	 * 
 	 * @param rel
 	 *            the rel or null if there should be none
-	 * 
 	 * @see HtmlDocumentBuilder#setLinkRel(String)
 	 */
 	public void setRel(String rel) {
 		this.rel = rel;
+	}
+
+	/**
+	 * The target of the link. To be used with {@link SpanType#LINK}.
+	 * 
+	 * @since 1.2
+	 */
+	public String getHref() {
+		return href;
+	}
+
+	/**
+	 * The target of the link. To be used with {@link SpanType#LINK}.
+	 * 
+	 * @since 1.2
+	 */
+	public void setHref(String href) {
+		this.href = href;
 	}
 
 }

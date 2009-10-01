@@ -18,9 +18,7 @@ package org.eclipse.mylyn.wikitext.core.parser;
  * may take a more specific subclass of {@link Attributes}.
  * </p>
  * 
- * 
  * @author David Green
- * 
  */
 public abstract class DocumentBuilder {
 
@@ -64,7 +62,14 @@ public abstract class DocumentBuilder {
 		 * 
 		 * @since 1.1
 		 */
-		QUOTE
+		QUOTE,
+
+		/**
+		 * a hyperlink
+		 * 
+		 * @since 1.2
+		 */
+		LINK
 	}
 
 	/**
@@ -83,20 +88,16 @@ public abstract class DocumentBuilder {
 	public abstract void endDocument();
 
 	/**
-	 * Begin a block of the specified type.
-	 * 
-	 * Builder implementations may do a best-effort application of the provided attributes. Note that the provided
-	 * attributes *may* be a subclass of the {@link Attributes} class, in which case the builder may attempt to apply
-	 * the attributes specified. Builders may choose to ignore attributes, and should fail silently if the given
-	 * attributes are not as expected.
-	 * 
-	 * Each call to this method must be matched by a corresponding call to {@link #endBlock()}.
+	 * Begin a block of the specified type. Builder implementations may do a best-effort application of the provided
+	 * attributes. Note that the provided attributes *may* be a subclass of the {@link Attributes} class, in which case
+	 * the builder may attempt to apply the attributes specified. Builders may choose to ignore attributes, and should
+	 * fail silently if the given attributes are not as expected. Each call to this method must be matched by a
+	 * corresponding call to {@link #endBlock()}.
 	 * 
 	 * @param type
 	 * @param attributes
 	 *            the attributes to apply to the block. Callers may choose to specify a more specialized set of
 	 *            attributes by providing a subclass instance.
-	 * 
 	 * @see #endBlock()
 	 */
 	public abstract void beginBlock(BlockType type, Attributes attributes);
@@ -108,16 +109,12 @@ public abstract class DocumentBuilder {
 	public abstract void endBlock();
 
 	/**
-	 * Begin a span of the specified type.
-	 * 
-	 * Builder implementations may do a best-effort application of the provided attributes.
-	 * 
-	 * Each call to this method must be matched by a corresponding call to {@link #endSpan()}.
+	 * Begin a span of the specified type. Builder implementations may do a best-effort application of the provided
+	 * attributes. Each call to this method must be matched by a corresponding call to {@link #endSpan()}.
 	 * 
 	 * @param type
 	 * @param attributes
 	 *            the attributes to apply to the span
-	 * 
 	 * @see #endSpan()
 	 */
 	public abstract void beginSpan(SpanType type, Attributes attributes);
@@ -131,17 +128,14 @@ public abstract class DocumentBuilder {
 	public abstract void endSpan();
 
 	/**
-	 * Begin a heading of the specified level (usually 1-6).
-	 * 
-	 * Builder implementations may do a best-effort application of the provided attributes.
-	 * 
-	 * Each call to this method must be matched by a corresponding call to {@link #endHeading()}.
+	 * Begin a heading of the specified level (usually 1-6). Builder implementations may do a best-effort application of
+	 * the provided attributes. Each call to this method must be matched by a corresponding call to
+	 * {@link #endHeading()}.
 	 * 
 	 * @param level
 	 *            the level of the heading, usually 1-6
 	 * @param attributes
 	 *            the attributes to apply to the heading
-	 * 
 	 * @see #endHeading()
 	 */
 	public abstract void beginHeading(int level, Attributes attributes);
@@ -180,7 +174,8 @@ public abstract class DocumentBuilder {
 	public abstract void image(Attributes attributes, String url);
 
 	/**
-	 * Create a hyperlink to the given url
+	 * Create a hyperlink to the given url. If {@link LinkAttributes} are used, the attributes must not have the
+	 * {@link LinkAttributes#getHref() href} attribute set.
 	 * 
 	 * @param attributes
 	 *            the attributes of the link
@@ -220,7 +215,6 @@ public abstract class DocumentBuilder {
 	 *            the url (which may be internal to the page if prefixed with a hash '#')
 	 * @param imageUrl
 	 *            the url of the image, which may be relative
-	 * 
 	 * @see #imageLink(Attributes, Attributes, String, String)
 	 */
 	public final void imageLink(Attributes attributes, String href, String imageUrl) {

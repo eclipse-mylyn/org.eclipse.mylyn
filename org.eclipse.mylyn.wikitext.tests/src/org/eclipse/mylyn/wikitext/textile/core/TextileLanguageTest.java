@@ -920,6 +920,34 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<a href=\"http://www.google.com\">hyperlink</a>"));
 	}
 
+	public void testHyperlinkWithClass() throws IOException {
+		String html = parser.parseToHtml("Here comes a \"(test)hyperlink\":http://www.google.com to something");
+
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<a href=\"http://www.google.com\" class=\"test\">hyperlink</a>"));
+	}
+
+	public void testHyperlinkWithEmphasis() throws IOException {
+		String html = parser.parseToHtml("Here comes a \"_Click me_\":/stories/10146 to something");
+
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<a href=\"/stories/10146\"><em>Click me</em></a>"));
+	}
+
+	public void testHyperlinkWithPunctuation() throws IOException {
+		String html = parser.parseToHtml("Here comes a \"Click me!\":/stories/10146 to something");
+
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<a href=\"/stories/10146\">Click me!</a>"));
+	}
+
+	public void testHyperlinkWithBold() throws IOException {
+		String html = parser.parseToHtml("Here comes a \"*Click me*\":/stories/10146 to something");
+
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<a href=\"/stories/10146\"><strong>Click me</strong></a>"));
+	}
+
 	public void testHyperlinkTail() throws IOException {
 		String[] tails = new String[] { ",", ".", ")", ":", ";" };
 		for (String tail : tails) {
@@ -1113,7 +1141,7 @@ public class TextileLanguageTest extends TestCase {
 		String html = parser.parseToHtml(markup);
 
 		System.out.println("HTML: \n" + html);
-		assertTrue(html.contains("<p>I am crazy about <a href=\"https://textile-j.dev.java.net\">TextileJ</a><br/>and <a href=\"https://textile-j.dev.java.net\">it's</a> <a href=\"https://textile-j.dev.java.net\">all</a> I ever<br/><a href=\"https://textile-j.dev.java.net\">link to</a>!</p><p>[textilej]https://textile-j.dev.java.net</p>"));
+		assertTrue(html.contains("<p>I am crazy about <a href=\"https://textile-j.dev.java.net\">TextileJ</a><br/>and <a href=\"https://textile-j.dev.java.net\">it&#8217;s</a> <a href=\"https://textile-j.dev.java.net\">all</a> I ever<br/><a href=\"https://textile-j.dev.java.net\">link to</a>!</p><p>[textilej]https://textile-j.dev.java.net</p>"));
 	}
 
 	public void testXmlEscaping() {

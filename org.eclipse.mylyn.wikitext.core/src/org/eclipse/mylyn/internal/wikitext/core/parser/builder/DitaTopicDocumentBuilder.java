@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes;
+import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.builder.AbstractXmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.builder.DitaBookMapDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.builder.DocBookDocumentBuilder;
@@ -416,6 +417,12 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 			break;
 		case QUOTE:
 			writer.writeStartElement("q"); //$NON-NLS-1$
+			break;
+		case LINK: {
+			LinkAttributes linkAttributes = (LinkAttributes) attributes;
+			writer.writeStartElement("xref"); //$NON-NLS-1$
+			writer.writeAttribute("href", computeDitaXref(linkAttributes.getHref())); //$NON-NLS-1$
+		}
 			break;
 		default:
 			Logger.getLogger(DocBookDocumentBuilder.class.getName()).warning("No DITA topic mapping for " + type); //$NON-NLS-1$
