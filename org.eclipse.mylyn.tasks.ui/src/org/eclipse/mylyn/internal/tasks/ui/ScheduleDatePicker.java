@@ -95,7 +95,7 @@ public class ScheduleDatePicker extends Composite {
 	private void initialize(int style) {
 
 		GridLayout gridLayout = new GridLayout(3, false);
-		gridLayout.horizontalSpacing = 3;
+		gridLayout.horizontalSpacing = 0;
 		gridLayout.verticalSpacing = 0;
 		gridLayout.marginWidth = 0;
 		gridLayout.marginHeight = 0;
@@ -133,11 +133,14 @@ public class ScheduleDatePicker extends Composite {
 
 		});
 		clearControl.setBackground(clearControl.getDisplay().getSystemColor(SWT.COLOR_WHITE));
-		clearControl.setLayoutData(new GridData());
+		GridData clearButtonGridData = new GridData();
+		clearButtonGridData.horizontalIndent = 3;
+		clearControl.setLayoutData(clearButtonGridData);
 
 		pickButton = new Button(this, style | SWT.ARROW | SWT.DOWN);
 		GridData pickButtonGridData = new GridData(SWT.RIGHT, SWT.FILL, false, true);
 		pickButtonGridData.verticalIndent = 0;
+		pickButtonGridData.horizontalIndent = 3;
 		pickButton.setLayoutData(pickButtonGridData);
 		pickButton.addSelectionListener(new SelectionAdapter() {
 			@Override
