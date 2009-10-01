@@ -13,6 +13,7 @@ package org.eclipse.mylyn.wikitext.textile.core;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,6 +24,7 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.builder.RecordingDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.builder.RecordingDocumentBuilder.Event;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration;
 
 /**
  * NOTE: most textile test cases can be found in {@link MarkupParserTest}
@@ -800,6 +802,17 @@ public class TextileLanguageTest extends TestCase {
 
 		System.out.println("HTML: \n" + html);
 		assertTrue(html.contains("some &#8220;thing is&#8221; quoted"));
+	}
+
+	public void testDoubleQuotationsGerman() throws IOException {
+		MarkupLanguageConfiguration configuration = new MarkupLanguageConfiguration();
+		configuration.setLocale(Locale.GERMAN);
+		parser.getMarkupLanguage().configure(configuration);
+
+		String html = parser.parseToHtml("some \"thing is\" quoted");
+
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("some &#8222;thing is&#8221; quoted"));
 	}
 
 	public void testDoubleQuotationsInTable() throws IOException {

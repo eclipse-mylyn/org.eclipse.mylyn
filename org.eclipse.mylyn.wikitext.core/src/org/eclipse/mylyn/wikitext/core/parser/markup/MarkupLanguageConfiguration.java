@@ -7,12 +7,14 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Martin Kurz - initial locale support (bug 290961)
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.core.parser.markup;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage.PatternBasedSyntax;
 
@@ -22,7 +24,6 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage.PatternBased
  * features.
  * 
  * @author David Green
- * 
  * @since 1.0
  */
 public class MarkupLanguageConfiguration implements Cloneable {
@@ -42,6 +43,8 @@ public class MarkupLanguageConfiguration implements Cloneable {
 	private boolean optimizeForRepositoryUsage = false;
 
 	private Boolean wikiWordLinking = true;
+
+	protected Locale locale;
 
 	public List<PatternBasedElement> getTokens() {
 		return tokens;
@@ -157,6 +160,27 @@ public class MarkupLanguageConfiguration implements Cloneable {
 	 */
 	public void setWikiWordLinking(Boolean wikiWordLinking) {
 		this.wikiWordLinking = wikiWordLinking;
+	}
+
+	/**
+	 * The locale to use for output, which may affect literals emitted into the output.
+	 * 
+	 * @return configured locale or null if the default locale should be used
+	 * @since 1.2
+	 */
+	public Locale getLocale() {
+		return locale;
+	}
+
+	/**
+	 * The locale to use for output, which may affect literals emitted into the output.
+	 * 
+	 * @param locale
+	 *            the locale or null if the default locale should be used
+	 * @since 1.2
+	 */
+	public void setLocale(Locale locale) {
+		this.locale = locale;
 	}
 
 	public void addBlockExtensions(List<Block> blocks, List<Block> paragraphBreakingBlocks) {

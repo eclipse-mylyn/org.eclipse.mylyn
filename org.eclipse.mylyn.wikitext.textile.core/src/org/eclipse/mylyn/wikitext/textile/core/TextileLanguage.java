@@ -7,10 +7,13 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Martin Kurz - initial locale support (bug 290961)
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.textile.core;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import org.eclipse.mylyn.internal.wikitext.textile.core.TextileContentState;
 import org.eclipse.mylyn.internal.wikitext.textile.core.block.CodeBlock;
@@ -54,6 +57,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternEntityReferenc
  * @since 1.0
  */
 public class TextileLanguage extends AbstractMarkupLanguage {
+	private static final String BUNDLE_NAME = "org.eclipse.mylyn.wikitext.textile.core.language"; //$NON-NLS-1$
 
 	private boolean preprocessFootnotes = false;
 
@@ -141,8 +145,14 @@ public class TextileLanguage extends AbstractMarkupLanguage {
 		tokenSyntax.add(new HyperlinkReplacementToken());
 		tokenSyntax.add(new FootnoteReferenceReplacementToken());
 		if (configuration == null || !configuration.isOptimizeForRepositoryUsage()) {
-			tokenSyntax.add(new EntityWrappingReplacementToken("\"", "#8220", "#8221")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			tokenSyntax.add(new EntityWrappingReplacementToken("'", "#8216", "#8217")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			ResourceBundle res = ResourceBundle.getBundle(BUNDLE_NAME, configuration == null
+					|| configuration.getLocale() == null ? Locale.ENGLISH : configuration.getLocale());
+
+			tokenSyntax.add(new EntityWrappingReplacementToken(
+					"\"", res.getString("quote_left"), res.getString("quote_right"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			tokenSyntax.add(new EntityWrappingReplacementToken(
+					"'", res.getString("singlequote_left"), res.getString("singlequote_right"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
 			tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\w)(')(?=\\w))", "#8217")); // apostrophe //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\w\\s)(--)(?=\\s\\w))", "#8212")); // emdash //$NON-NLS-1$ //$NON-NLS-2$
