@@ -65,6 +65,12 @@
 				<pathelement location="../org.eclipse.mylyn.wikitext.core/bin"/>
 			</classpath>
 		</javac>
+		<copy todir="${wikitext.ui.textile.bin}" failonerror="true" overwrite="false">
+			<fileset dir="../org.eclipse.mylyn.wikitext.textile.core/src">
+				<exclude name="**/*.java"/>
+				<exclude name="**/package.htm*"/>
+			</fileset>
+		</copy>
 	</target>
 	
 
