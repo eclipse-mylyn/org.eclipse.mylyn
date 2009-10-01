@@ -81,7 +81,8 @@ public class RefactoringTest extends AbstractJavaContextTest {
 			Thread.sleep(200);
 		}
 		project.build();
-		ICompilationUnit unit = (ICompilationUnit) p1.getChildren()[0];
+		ICompilationUnit unit = p1.getCompilationUnit("NewName.java");
+		assertNotNull(unit);
 
 		IType newType = unit.getTypes()[0];
 		IInteractionElement oldParentNode = ContextCore.getContextManager()
