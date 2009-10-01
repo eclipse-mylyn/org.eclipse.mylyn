@@ -87,7 +87,6 @@ public class DateSelectionDialog extends Dialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		super.createButtonsForButtonBar(parent);
-		createButton(parent, IDialogConstants.CLIENT_ID + 1, Messages.DateSelectionDialog_Clear, false);
 	}
 
 	@Override

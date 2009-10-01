@@ -35,6 +35,9 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DateTime;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.widgets.Hyperlink;
 
 /**
  * @author Bahadir Yagan
@@ -117,6 +120,29 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 		if (includeTime) {
 			createTimeList(this);
 		}
+
+		Hyperlink todayLink = new Hyperlink(this, SWT.NONE);
+		todayLink.setText(Messages.DatePickerPanel_Today);
+		todayLink.setUnderlined(true);
+		todayLink.setForeground(CommonColors.HYPERLINK_WIDGET);
+		GridDataFactory.fillDefaults().span(2, 1).grab(true, false).align(SWT.CENTER, SWT.TOP).applyTo(todayLink);
+		todayLink.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
+			public void linkActivated(HyperlinkEvent e) {
+				Calendar today = Calendar.getInstance();
+				ISelection selection = getSelection();
+				if (selection instanceof DateSelection && !selection.isEmpty()) {
+					Calendar selectedDate = ((DateSelection) selection).getDate();
+					if (selectedDate != null) {
+						today.set(Calendar.HOUR_OF_DAY, selectedDate.get(Calendar.HOUR_OF_DAY));
+						today.set(Calendar.MINUTE, selectedDate.get(Calendar.MINUTE));
+						today.set(Calendar.SECOND, selectedDate.get(Calendar.SECOND));
+						today.set(Calendar.MILLISECOND, selectedDate.get(Calendar.MILLISECOND));
+					}
+				}
+				setDate(today, true);
+			}
+		});
 	}
 
 	/**

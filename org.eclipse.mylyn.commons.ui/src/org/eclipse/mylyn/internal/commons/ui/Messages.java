@@ -51,8 +51,6 @@ public class Messages extends NLS {
 
 	public static String DateSelectionDialog_Date_Selection;
 
-	public static String InPlaceDateSelectionDialog_Today;
-
 	public static String ScreenshotCreationPage_After_capturing;
 
 	public static String ScreenshotCreationPage_Annotate;
