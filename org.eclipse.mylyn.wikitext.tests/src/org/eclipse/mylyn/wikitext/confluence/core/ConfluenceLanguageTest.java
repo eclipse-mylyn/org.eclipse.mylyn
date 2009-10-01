@@ -12,6 +12,8 @@ package org.eclipse.mylyn.wikitext.confluence.core;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
@@ -250,6 +252,36 @@ public class ConfluenceLanguageTest extends TestCase {
 		String html = parser.parseToHtml("a [Example Two | http://example.com ] hyperlink");
 		System.out.println("HTML: \n" + html);
 		assertTrue(html.contains("<body><p>a <a href=\"http://example.com\">Example Two</a> hyperlink</p></body>"));
+	}
+
+	public void testHyperlinkMailtoNoBase() {
+
+		StringWriter out = new StringWriter();
+
+		HtmlDocumentBuilder builder = new HtmlDocumentBuilder(out);
+		builder.setBase(null);
+		parser.setBuilder(builder);
+
+		parser.parse("[test|mailto:foo@bar.com]");
+
+		System.out.println(out.toString());
+
+		assertTrue(out.toString().contains("<a href=\"mailto:foo@bar.com\">test</a>"));
+	}
+
+	public void testHyperlinkMailtoWithBase() throws URISyntaxException {
+
+		StringWriter out = new StringWriter();
+
+		HtmlDocumentBuilder builder = new HtmlDocumentBuilder(out);
+		builder.setBase(new URI("/"));
+		parser.setBuilder(builder);
+
+		parser.parse("[test|mailto:foo@bar.com]");
+
+		System.out.println(out.toString());
+
+		assertTrue(out.toString().contains("<a href=\"mailto:foo@bar.com\">test</a>"));
 	}
 
 	public void testNamedAnchor() {

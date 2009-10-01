@@ -19,12 +19,10 @@ import org.eclipse.mylyn.wikitext.core.util.DefaultXmlStreamWriter;
 import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
 
 /**
- * 
- * 
  * @author David Green
  */
 public abstract class AbstractXmlDocumentBuilder extends DocumentBuilder {
-	private static final Pattern ABSOLUTE_URL_PATTERN = Pattern.compile("[a-zA-Z]{3,8}://?.*"); //$NON-NLS-1$
+	private static final Pattern ABSOLUTE_URL_PATTERN = Pattern.compile("(([a-zA-Z]{3,8}://?.*)|(mailto:.*))"); //$NON-NLS-1$
 
 	protected XmlStreamWriter writer;
 
@@ -74,7 +72,6 @@ public abstract class AbstractXmlDocumentBuilder extends DocumentBuilder {
 	 * 
 	 * @param url
 	 *            the URL
-	 * 
 	 * @return true if the given URL links to an external source
 	 */
 	protected boolean isExternalLink(String url) {
