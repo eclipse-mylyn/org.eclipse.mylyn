@@ -29,6 +29,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta.Kind;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
@@ -78,6 +79,9 @@ public class TaskActivityManager implements ITaskActivityManager {
 			for (TaskContainerDelta taskContainerDelta : containers) {
 				if (taskContainerDelta.getKind() == TaskContainerDelta.Kind.ROOT) {
 					reloadPlanningData();
+				} else if (!taskContainerDelta.isTransient() && Kind.DELETED == taskContainerDelta.getKind()
+						&& taskContainerDelta.getElement() instanceof ITask && taskActivationHistory != null) {
+					taskActivationHistory.removeTask((ITask) taskContainerDelta.getElement());
 				}
 			}
 		}
@@ -103,7 +107,6 @@ public class TaskActivityManager implements ITaskActivityManager {
 	 * Set the first day of the week (Calendar.SUNDAY | Calendar.MONDAY)
 	 * 
 	 * @see http://en.wikipedia.org/wiki/Days_of_the_week#First_day_of_the_week
-	 * 
 	 * @param startDay
 	 *            (Calendar.SUNDAY | Calendar.MONDAY)
 	 */
