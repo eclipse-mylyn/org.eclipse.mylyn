@@ -323,7 +323,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 	}
 
 	private void createActualTime(FormToolkit toolkit, Composite toolbarComposite) {
-		actualTimeComposite = toolkit.createComposite(toolbarComposite, SWT.BORDER);
+		actualTimeComposite = toolkit.createComposite(toolbarComposite);
 		actualTimeComposite.setBackground(null);
 		actualTimeComposite.setBackgroundMode(SWT.INHERIT_FORCE);
 		RowLayout rowLayout = new RowLayout();
