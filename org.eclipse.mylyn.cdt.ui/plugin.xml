@@ -30,7 +30,7 @@
    <extension
        point="org.eclipse.mylyn.context.ui.startup">
       <startup
-          class="org.eclipse.mylyn.internal.cdt.ui.CDTUIBridgePlugin$CDTUIBridgeStartup">
+          class="org.eclipse.mylyn.internal.cdt.ui.CDTUIBridgePlugin">
     </startup>
    </extension>
    <extension
@@ -152,25 +152,6 @@
             </and>
          </visibility>
       </objectContribution>
-      <viewerContribution
-            id="org.eclipse.mylyn.cdt.ui.browse.filtered.contribution"
-            targetID="org.eclipse.cdt.ui.CView">
-         <action
-               class="org.eclipse.mylyn.internal.cdt.ui.actions.ShowFilteredChildrenAction"
-               enablesFor="1"
-               icon="icons/etool16/browse-filtered.gif"
-               id="org.eclipse.mylyn.cdt.ui.action3"
-               label="%ShowFilteredChildren.label"
-               menubarPath="group.reorganize"
-               tooltip="%ShowFilteredChildren.tooltip">
-         </action>
-         <visibility>
-            <systemProperty
-                  name="org.eclipse.mylyn.context.core.context.active"
-                  value="true">
-            </systemProperty>
-         </visibility>
-      </viewerContribution>
    </extension>
    <extension
          point="org.eclipse.ui.navigator.viewer">

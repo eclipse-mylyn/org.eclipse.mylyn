@@ -16,8 +16,8 @@ import org.eclipse.cdt.core.model.ITranslationUnit;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 
@@ -41,19 +41,18 @@ public class InterestUpdateDeltaListener implements IElementChangedListener {
 		try {
 			ICElement added = null;
 			ICElement removed = null;
-			for (int i = 0; i < delta.length; i++) {
-				ICElementDelta child = delta[i];
+			for (ICElementDelta child : delta) {
 				if (child.getElement() instanceof ITranslationUnit) {
 					// FIXME: not sure I modified this correctly from the java version
-					if (((ITranslationUnit)child.getElement()).getParent() != null) {
+					if (((ITranslationUnit) child.getElement()).getParent() != null) {
 						// see bug 195361, do not reduce interest of temporary working copy
 						return;
-					} 
+					}
 				}
-				
+
 				if (child.getKind() == ICElementDelta.ADDED) {
 					if (added == null) {
-						added = child.getElement();	
+						added = child.getElement();
 					}
 				} else if (child.getKind() == ICElementDelta.REMOVED) {
 					if (removed == null) {
@@ -64,34 +63,33 @@ public class InterestUpdateDeltaListener implements IElementChangedListener {
 			}
 
 			if (added != null && removed != null) {
-				IInteractionElement element = ContextCorePlugin.getContextManager().getElement(
+				IInteractionElement element = ContextCore.getContextManager().getElement(
 						CDTStructureBridge.getHandleForElement(removed));
 				if (element != null) {
 					resetHandle(element, CDTStructureBridge.getHandleForElement(added));
 				}
 			} else if (removed != null) {
-				
-				IInteractionElement element = ContextCorePlugin.getContextManager().getElement(
+
+				IInteractionElement element = ContextCore.getContextManager().getElement(
 						CDTStructureBridge.getHandleForElement(removed));
 				if (element != null) {
 					delete(element);
 				}
 			}
 		} catch (Throwable t) {
-			StatusHandler.fail(new Status(IStatus.ERROR, CDTUIBridgePlugin.PLUGIN_ID,
-					CDTUIBridgePlugin.getResourceString("MylynCDT.deltaUpdateFailure"), t)); // $NON-NLS-1$
+			StatusHandler.fail(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN, "delta update failed", t)); //$NON-NLS-1$
 		}
 	}
 
 	private void resetHandle(final IInteractionElement element, final String newHandle) {
 		if (!asyncExecMode) {
-			ContextCorePlugin.getContextManager().updateHandle(element, newHandle);
+			ContextCore.getContextManager().updateHandle(element, newHandle);
 		} else {
 			IWorkbench workbench = PlatformUI.getWorkbench();
 			if (workbench != null) {
 				workbench.getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						ContextCorePlugin.getContextManager().updateHandle(element, newHandle);
+						ContextCore.getContextManager().updateHandle(element, newHandle);
 					}
 				});
 			}
@@ -100,13 +98,13 @@ public class InterestUpdateDeltaListener implements IElementChangedListener {
 
 	private void delete(final IInteractionElement element) {
 		if (!asyncExecMode) {
-			ContextCorePlugin.getContextManager().deleteElement(element);
+			ContextCore.getContextManager().deleteElement(element);
 		} else {
 			IWorkbench workbench = PlatformUI.getWorkbench();
 			if (workbench != null) {
 				workbench.getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						ContextCorePlugin.getContextManager().deleteElement(element);
+						ContextCore.getContextManager().deleteElement(element);
 					}
 				});
 			}

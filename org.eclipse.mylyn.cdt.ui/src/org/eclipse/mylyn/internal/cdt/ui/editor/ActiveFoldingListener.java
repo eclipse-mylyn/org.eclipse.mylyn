@@ -28,7 +28,8 @@ import org.eclipse.jface.text.source.projection.ProjectionAnnotationModel;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
-import org.eclipse.mylyn.context.core.IInteractionContext;
+import org.eclipse.mylyn.context.core.ContextChangeEvent;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.cdt.ui.CDTStructureBridge;
 import org.eclipse.mylyn.internal.cdt.ui.CDTUIBridgePlugin;
@@ -44,12 +45,12 @@ public class ActiveFoldingListener extends AbstractContextListener {
 
 	private ProjectionAnnotationModel updater;
 
-	private static CDTStructureBridge bridge = (CDTStructureBridge) ContextCorePlugin.getDefault()
-			.getStructureBridge(CDTStructureBridge.CONTENT_TYPE);
+	private static CDTStructureBridge bridge = (CDTStructureBridge) ContextCorePlugin.getDefault().getStructureBridge(
+			CDTStructureBridge.CONTENT_TYPE);
 
 	private boolean enabled = false;
 
-	private IPropertyChangeListener PREFERENCE_LISTENER = new IPropertyChangeListener() {
+	private final IPropertyChangeListener PREFERENCE_LISTENER = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
 			if (event.getProperty().equals(CDTUIBridgePlugin.AUTO_FOLDING_ENABLED)) {
 				if (event.getNewValue().equals(Boolean.TRUE.toString())) {
@@ -62,13 +63,14 @@ public class ActiveFoldingListener extends AbstractContextListener {
 		}
 	};
 
+	@SuppressWarnings("restriction")
 	public ActiveFoldingListener(CEditor editor) {
 		this.editor = editor;
 		if (ContextUiPlugin.getDefault() == null) {
-			StatusHandler.fail(new Status(IStatus.ERROR, CDTUIBridgePlugin.PLUGIN_ID,
-					CDTUIBridgePlugin.getResourceString("MylynCDT.initFoldingFailure"))); // $NON-NLS-1$
-		} else { 
-			ContextCorePlugin.getContextManager().addListener(this);
+			StatusHandler.fail(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN,
+					"could not update folding, Mylyn is not correctly installed")); //$NON-NLS-1$
+		} else {
+			ContextCore.getContextManager().addListener(this);
 			ContextUiPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
 
 			enabled = ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
@@ -76,31 +78,32 @@ public class ActiveFoldingListener extends AbstractContextListener {
 			updateFolding();
 		}
 	}
-	
+
 	protected void collapseElements(ICElement[] elements) {
 		for (int i = 0; i < elements.length; ++i) {
 			collapse(elements[i]);
 		}
 	}
-	
+
 	private void collapse(ICElement element) {
-		CSourceViewer viewer = (CSourceViewer)editor.getViewer();
+		CSourceViewer viewer = (CSourceViewer) editor.getViewer();
 		viewer.doOperation(ProjectionViewer.COLLAPSE);
 	}
-	
+
 	protected void expandElements(ICElement[] elements) {
 		for (int i = 0; i < elements.length; ++i) {
 			expand(elements[i]);
 		}
 	}
-	
+
 	private void expand(ICElement element) {
-		CSourceViewer viewer = (CSourceViewer)editor.getViewer();
+		CSourceViewer viewer = (CSourceViewer) editor.getViewer();
 		viewer.doOperation(ProjectionViewer.EXPAND);
 	}
 
+	@SuppressWarnings("restriction")
 	public void dispose() {
-		ContextCorePlugin.getContextManager().removeListener(this);
+		ContextCore.getContextManager().removeListener(this);
 		ContextUiPlugin.getDefault().getPluginPreferences().removePropertyChangeListener(PREFERENCE_LISTENER);
 	}
 
@@ -109,7 +112,7 @@ public class ActiveFoldingListener extends AbstractContextListener {
 	}
 
 	public void updateFolding() {
-		if (!enabled || !ContextCorePlugin.getContextManager().isContextActive()) {
+		if (!enabled || !ContextCore.getContextManager().isContextActive()) {
 			editor.resetProjection();
 		} else if (editor.getInputCElement() == null) {
 			return;
@@ -123,7 +126,7 @@ public class ActiveFoldingListener extends AbstractContextListener {
 					ITranslationUnit compilationUnit = (ITranslationUnit) element;
 					List<ICElement> allChildren = getAllChildren(compilationUnit);
 					for (ICElement child : allChildren) {
-						IInteractionElement interactionElement = ContextCorePlugin.getContextManager().getElement(
+						IInteractionElement interactionElement = ContextCore.getContextManager().getElement(
 								bridge.getHandleIdentifier(child));
 						if (interactionElement != null && interactionElement.getInterest().isInteresting()) {
 							toExpand.add(child);
@@ -135,10 +138,10 @@ public class ActiveFoldingListener extends AbstractContextListener {
 
 				collapseElements(toCollapse.toArray(new ICElement[toCollapse.size()]));
 				expandElements(toExpand.toArray(new ICElement[toExpand.size()]));
-					
+
 			} catch (Exception e) {
-				StatusHandler.fail(new Status(IStatus.ERROR, CDTUIBridgePlugin.PLUGIN_ID,
-						CDTUIBridgePlugin.getResourceString("MylynCDT.updateFoldingFailure"), e)); // $NON-NLS-1$
+				StatusHandler.fail(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN,
+						"could not update folding, Mylyn is not correctly installed", e)); //$NON-NLS-1$
 			}
 		}
 	}
@@ -158,7 +161,7 @@ public class ActiveFoldingListener extends AbstractContextListener {
 		return allChildren;
 	}
 
-	public void interestChanged(List<IInteractionElement> elements) {
+	private void updateExpansion(List<IInteractionElement> elements) {
 		for (IInteractionElement element : elements) {
 			if (updater == null || !enabled) {
 				return;
@@ -191,43 +194,20 @@ public class ActiveFoldingListener extends AbstractContextListener {
 		}
 	}
 
-	public void contextActivated(IInteractionContext context) {
-		if (ContextUiPlugin.getDefault()
-				.getPreferenceStore()
-				.getBoolean(CDTUIBridgePlugin.AUTO_FOLDING_ENABLED)) {
-			updateFolding();
+	@SuppressWarnings("restriction")
+	@Override
+	public void contextChanged(ContextChangeEvent event) {
+		switch (event.getEventKind()) {
+		case ACTIVATED:
+		case DEACTIVATED:
+		case CLEARED:
+			if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(CDTUIBridgePlugin.AUTO_FOLDING_ENABLED)) {
+				updateFolding();
+			}
+			break;
+		case INTEREST_CHANGED:
+			updateExpansion(event.getElements());
+			break;
 		}
-	}
-
-	public void contextDeactivated(IInteractionContext context) {
-		if (ContextUiPlugin.getDefault()
-				.getPreferenceStore()
-				.getBoolean(CDTUIBridgePlugin.AUTO_FOLDING_ENABLED)) {
-			updateFolding();
-		}
-	}
-
-	public void contextCleared(IInteractionContext context) {
-		if (ContextUiPlugin.getDefault()
-				.getPreferenceStore()
-				.getBoolean(CDTUIBridgePlugin.AUTO_FOLDING_ENABLED)) {
-			updateFolding();
-		}
-	}
-
-	public void landmarkAdded(IInteractionElement element) {
-		// ignore
-	}
-
-	public void landmarkRemoved(IInteractionElement element) {
-		// ignore
-	}
-
-	public void relationsChanged(IInteractionElement node) {
-		// ignore
-	}
-
-	public void elementDeleted(IInteractionElement node) {
-		// ignore
 	}
 }

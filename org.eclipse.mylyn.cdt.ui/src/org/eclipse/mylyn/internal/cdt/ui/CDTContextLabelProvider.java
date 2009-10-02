@@ -19,21 +19,19 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
-import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Mik Kersten
  * @author Jeff Johnston
+ * @author Shawn Minto
  */
 public class CDTContextLabelProvider extends AppearanceAwareLabelProvider {
 
-	private static final String LABEL_ELEMENT_MISSING_KEY = "MylynCDT.missingElementLabel"; // $NON-NLS-1$
-	private static final String CONTAINMENT_RELATION_NAME_KEY = "MylynCDT.containmentRelation"; // $NON-NLS-1$
-
 	public CDTContextLabelProvider() {
-		super(AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS,
-				AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS | CElementImageProvider.SMALL_ICONS);
+		super(AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS, AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS
+				| CElementImageProvider.SMALL_ICONS);
 	}
 
 	@Override
@@ -43,7 +41,7 @@ public class CDTContextLabelProvider extends AppearanceAwareLabelProvider {
 			if (CDTStructureBridge.CONTENT_TYPE.equals(node.getContentType())) {
 				ICElement element = CDTStructureBridge.getElementForHandle(node.getHandleIdentifier());
 				if (element == null) {
-					return CDTUIBridgePlugin.getResourceString(LABEL_ELEMENT_MISSING_KEY);
+					return Messages.CDTContextLabelProvider_Missing_Element;
 				} else {
 					return getTextForElement(element);
 				}
@@ -57,19 +55,10 @@ public class CDTContextLabelProvider extends AppearanceAwareLabelProvider {
 	}
 
 	private String getTextForElement(ICElement element) {
-		// FIXME: Removed due to missing interface in 3.0.  Should this test be done somehow?
-//		if (DelegatingContextLabelProvider.isQualifyNamesMode()) {
-//			if (element instanceof IMethod || element instanceof IFunction) {
-//				String parentName = ((ICElement) element).getParent().getElementName();
-//				if (parentName != null && parentName != "") {
-//					return parentName + '.' + super.getText(element);
-//				}
-//			}
-//		}
 		if (element.exists()) {
 			return super.getText(element);
 		} else {
-			return CDTUIBridgePlugin.getResourceString(LABEL_ELEMENT_MISSING_KEY);
+			return Messages.CDTContextLabelProvider_Missing_Element;
 		}
 	}
 
@@ -79,14 +68,15 @@ public class CDTContextLabelProvider extends AppearanceAwareLabelProvider {
 			IInteractionElement node = (IInteractionElement) object;
 			if (node.getContentType().equals(CDTStructureBridge.CONTENT_TYPE)) {
 				ICElement element = CDTStructureBridge.getElementForHandle(node.getHandleIdentifier());
-				if (element != null)
+				if (element != null) {
 					return super.getImage(element);
+				}
 				return null;
 			}
 		} else if (object instanceof IInteractionRelation) {
 			ImageDescriptor descriptor = getIconForRelationship(((IInteractionRelation) object).getRelationshipHandle());
 			if (descriptor != null) {
-				return ContextUiImages.getImage(descriptor);
+				return CommonImages.getImage(descriptor);
 			} else {
 				return null;
 			}
@@ -99,9 +89,10 @@ public class CDTContextLabelProvider extends AppearanceAwareLabelProvider {
 		return null;
 	}
 
+	@SuppressWarnings("restriction")
 	private String getNameForRelationship(String relationshipHandle) {
 		if (relationshipHandle.equals(InteractionContextManager.CONTAINMENT_PROPAGATION_ID)) {
-			return CDTUIBridgePlugin.getResourceString(CONTAINMENT_RELATION_NAME_KEY);
+			return Messages.CDTContextLabelProvider_Containment;
 		} else {
 			return null;
 		}
@@ -109,8 +100,8 @@ public class CDTContextLabelProvider extends AppearanceAwareLabelProvider {
 
 	public static AppearanceAwareLabelProvider createCDTUiLabelProvider() {
 		AppearanceAwareLabelProvider cdtUiLabelProvider = new AppearanceAwareLabelProvider(
-				AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS,
-				AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS | CElementImageProvider.SMALL_ICONS);
+				AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS, AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS
+						| CElementImageProvider.SMALL_ICONS);
 		cdtUiLabelProvider.addLabelDecorator(new ProblemsLabelDecorator(null));
 		return cdtUiLabelProvider;
 	}

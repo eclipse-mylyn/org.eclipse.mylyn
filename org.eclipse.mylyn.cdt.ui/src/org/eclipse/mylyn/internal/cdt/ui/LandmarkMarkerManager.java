@@ -11,7 +11,6 @@
 package org.eclipse.mylyn.internal.cdt.ui;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.cdt.core.model.CModelException;
@@ -30,9 +29,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
-import org.eclipse.mylyn.context.core.IInteractionContext;
+import org.eclipse.mylyn.context.core.ContextChangeEvent;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 
 /**
  * @author Mik Kersten
@@ -40,52 +39,69 @@ import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
  */
 public class LandmarkMarkerManager extends AbstractContextListener {
 
-	private static final String ID_MARKER_LANDMARK = "org.eclipse.mylyn.context.ui.markers.landmark"; // $NON-NLS-1$
+	private static final String ID_MARKER_LANDMARK = "org.eclipse.mylyn.context.ui.markers.landmark"; //$NON-NLS-1$
 
-	private Map<IInteractionElement, Long> markerMap = new HashMap<IInteractionElement, Long>();
+	private final Map<IInteractionElement, Long> markerMap = new HashMap<IInteractionElement, Long>();
 
 	public LandmarkMarkerManager() {
 		super();
 	}
 
-	public void contextActivated(IInteractionContext taskscape) {
-		modelUpdated();
-	}
-
-	public void contextDeactivated(IInteractionContext taskscape) {
-		modelUpdated();
-	}
-
-	public void contextCleared(IInteractionContext context) {
-		modelUpdated();
+	@Override
+	public void contextChanged(ContextChangeEvent event) {
+		switch (event.getEventKind()) {
+		case PRE_ACTIVATED:
+			break;
+		case ACTIVATED:
+			modelUpdated();
+			break;
+		case DEACTIVATED:
+			modelUpdated();
+			break;
+		case CLEARED:
+			modelUpdated();
+			break;
+		case INTEREST_CHANGED:
+			break;
+		case LANDMARKS_ADDED:
+			for (IInteractionElement element : event.getElements()) {
+				addedLandmark(element);
+			}
+			break;
+		case LANDMARKS_REMOVED:
+			for (IInteractionElement element : event.getElements()) {
+				removedLandmark(element);
+			}
+			break;
+		case ELEMENTS_DELETED:
+			break;
+		}
 	}
 
 	private void modelUpdated() {
 		try {
 			for (IInteractionElement node : markerMap.keySet()) {
-				landmarkRemoved(node);
+				removedLandmark(node);
 			}
 			markerMap.clear();
-			for (IInteractionElement node : ContextCorePlugin.getContextManager().getActiveLandmarks()) {
-				landmarkAdded(node);
+			for (IInteractionElement node : ContextCore.getContextManager().getActiveLandmarks()) {
+				addedLandmark(node);
 			}
 		} catch (Throwable t) {
-			StatusHandler.fail(new Status(IStatus.ERROR, CDTUIBridgePlugin.PLUGIN_ID,
-					CDTUIBridgePlugin.getResourceString("MylynCDT.landmarkUpdateFailure"), t)); // $NON-NLS-1$
+			StatusHandler.fail(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN,
+					"could not update landmark markers", t)); //$NON-NLS-1$
 		}
 	}
 
-	public void interestChanged(List<IInteractionElement> nodes) {
-		// don't care when the interest changes
-	}
-
-	public void landmarkAdded(final IInteractionElement node) {
-		if (node == null || node.getContentType() == null)
+	private void addedLandmark(final IInteractionElement node) {
+		if (node == null || node.getContentType() == null) {
 			return;
+		}
 		if (node.getContentType().equals(CDTStructureBridge.CONTENT_TYPE)) {
 			final ICElement element = CDTStructureBridge.getElementForHandle(node.getHandleIdentifier());
-			if (element == null || !element.exists())
+			if (element == null || !element.exists()) {
 				return;
+			}
 			if (element instanceof IMethod || element instanceof IFunction) {
 				try {
 					final ISourceRange range = ((ISourceReference) element).getSourceRange();
@@ -97,7 +113,7 @@ public class LandmarkMarkerManager extends AbstractContextListener {
 								if (marker != null && range != null) {
 									marker.setAttribute(IMarker.CHAR_START, range.getStartPos());
 									marker.setAttribute(IMarker.CHAR_END, range.getStartPos() + range.getLength());
-									marker.setAttribute(IMarker.MESSAGE, CDTUIBridgePlugin.getResourceString("MylynCDT.landmark")); // $NON-NLS-1$
+									marker.setAttribute(IMarker.MESSAGE, Messages.LandmarkMarkerManager_Mylyn_Landmark);
 									marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_INFO);
 									markerMap.put(node, marker.getId());
 								}
@@ -106,23 +122,25 @@ public class LandmarkMarkerManager extends AbstractContextListener {
 						resource.getWorkspace().run(runnable, null);
 					}
 				} catch (CModelException e) {
-					StatusHandler.fail(new Status(IStatus.ERROR, CDTUIBridgePlugin.PLUGIN_ID,
-							CDTUIBridgePlugin.getResourceString("MylynCDT.markerUpdateFailure"), e)); // $NON-NLS-1$
+					StatusHandler.fail(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN,
+							"could not update markers", e)); //$NON-NLS-1$
 				} catch (CoreException e) {
-					StatusHandler.fail(new Status(IStatus.ERROR, CDTUIBridgePlugin.PLUGIN_ID,
-							CDTUIBridgePlugin.getResourceString("MylynCDT.markerUpdateFailure"), e)); // $NON-NLS-1$
+					StatusHandler.fail(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN,
+							"could not update markers", e)); //$NON-NLS-1$
 				}
 			}
 		}
 	}
 
-	public void landmarkRemoved(final IInteractionElement node) {
-		if (node == null)
+	private void removedLandmark(final IInteractionElement node) {
+		if (node == null) {
 			return;
+		}
 		if (node.getContentType().equals(CDTStructureBridge.CONTENT_TYPE)) {
 			ICElement element = CDTStructureBridge.getElementForHandle(node.getHandleIdentifier());
-			if (element == null || !element.exists())
+			if (element == null || !element.exists()) {
 				return;
+			}
 			if (element.getAncestor(ICElement.C_UNIT) != null // stuff
 					// from
 					// .class
@@ -137,12 +155,13 @@ public class LandmarkMarkerManager extends AbstractContextListener {
 									if (markerMap.containsKey(node)) {
 										long id = markerMap.get(node);
 										IMarker marker = resource.getMarker(id);
-										if (marker != null)
+										if (marker != null) {
 											marker.delete();
+										}
 									}
 								} catch (NullPointerException e) {
-									StatusHandler.log(new Status(IStatus.ERROR, CDTUIBridgePlugin.PLUGIN_ID,
-											CDTUIBridgePlugin.getResourceString("MylynCDT.log.markerUpdateFailure"), e)); // $NON-NLS-1$
+									StatusHandler.log(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN,
+											"Could not update markers.", e)); //$NON-NLS-1$
 								}
 							}
 						}
@@ -151,8 +170,8 @@ public class LandmarkMarkerManager extends AbstractContextListener {
 				} catch (CModelException e) {
 					// ignore the Java Model errors
 				} catch (CoreException e) {
-					StatusHandler.fail(new Status(IStatus.ERROR, CDTUIBridgePlugin.PLUGIN_ID,
-							CDTUIBridgePlugin.getResourceString("MylynCDT.landmarkUpdateFailure"), e)); // $NON-NLS-1$
+					StatusHandler.fail(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN,
+							"could not update landmark markers", e)); //$NON-NLS-1$
 				}
 			}
 		}

@@ -27,9 +27,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -41,6 +42,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 /**
  * @author Mik Kersten
  * @author Jeff Johnston
+ * @author Shawn Minto
  */
 public class CDTUiBridge extends AbstractContextUiBridge {
 
@@ -48,11 +50,11 @@ public class CDTUiBridge extends AbstractContextUiBridge {
 
 	public CDTUiBridge() {
 		try {
-			cOutlineField = AbstractCModelOutlinePage.class.getDeclaredField("fTreeViewer");
+			cOutlineField = AbstractCModelOutlinePage.class.getDeclaredField("fTreeViewer"); //$NON-NLS-1$
 			cOutlineField.setAccessible(true);
 		} catch (Exception e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, CDTUIBridgePlugin.PLUGIN_ID, 
-					CDTUIBridgePlugin.getResourceString("MylynCDT.outlineViewerFailure"), e)); // $NON-NLS-1$
+			StatusHandler.fail(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN,
+					"could not get install Mylyn on Outline viewer", e)); //$NON-NLS-1$
 		}
 	}
 
@@ -60,41 +62,40 @@ public class CDTUiBridge extends AbstractContextUiBridge {
 	public void open(IInteractionElement node) {
 		try {
 			ICElement cElement = CDTStructureBridge.getElementForHandle(node.getHandleIdentifier());
-			if (cElement == null || !cElement.exists())
+			if (cElement == null || !cElement.exists()) {
 				return;
-			IEditorPart part = EditorUtility.openInEditor(cElement);
-		} catch (Throwable t) {
-			StatusHandler.fail(new Status(IStatus.ERROR, CDTUIBridgePlugin.PLUGIN_ID, 
-					CDTUIBridgePlugin.getFormattedString("MylynCDT.openEditorFailure", // $NON-NLS-1$ 
-					new String[]{node.getHandleIdentifier()}), t));
+			}
+			EditorUtility.openInEditor(cElement);
+		} catch (CModelException t) {
+			StatusHandler.fail(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN, NLS.bind(
+					"could not open editor for: {0}", new String[] { node.getHandleIdentifier() }), t)); //$NON-NLS-1$
+		} catch (PartInitException t) {
+			StatusHandler.fail(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN, NLS.bind(
+					"could not open editor for: {0}", new String[] { node.getHandleIdentifier() }), t)); //$NON-NLS-1$
 		}
 	}
 
 	@Override
 	public void close(IInteractionElement node) {
-		try {
-			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-			if (page != null) {
-				List<IEditorReference> toClose = new ArrayList<IEditorReference>(4);
-				for (IEditorReference reference : page.getEditorReferences()) {
-					try {
-						ICElement input = (ICElement) reference.getEditorInput().getAdapter(ICElement.class);
-						if (input != null
-								&& node.getHandleIdentifier().equals(CDTStructureBridge.getHandleForElement(input))) {
-							toClose.add(reference);
-						}
-					} catch (PartInitException e) {
-						// ignore
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		if (page != null) {
+			List<IEditorReference> toClose = new ArrayList<IEditorReference>(4);
+			for (IEditorReference reference : page.getEditorReferences()) {
+				try {
+					ICElement input = (ICElement) reference.getEditorInput().getAdapter(ICElement.class);
+					if (input != null
+							&& node.getHandleIdentifier().equals(CDTStructureBridge.getHandleForElement(input))) {
+						toClose.add(reference);
 					}
-				}
-				if (toClose.size() > 0) {
-					page.closeEditors(toClose.toArray(new IEditorReference[toClose.size()]), true);
+				} catch (PartInitException e) {
+					// ignore
 				}
 			}
-		} catch (Throwable t) {
-			StatusHandler.fail(new Status(IStatus.ERROR, CDTUIBridgePlugin.PLUGIN_ID, 
-					CDTUIBridgePlugin.getResourceString("MylynCDT.autoCloseEditorFailure"), t)); // $NON-NLS-1$ 
+			if (toClose.size() > 0) {
+				page.closeEditors(toClose.toArray(new IEditorReference[toClose.size()]), true);
+			}
 		}
+
 	}
 
 	@Override
@@ -107,9 +108,8 @@ public class CDTUiBridge extends AbstractContextUiBridge {
 		Object adapter = input.getAdapter(ICElement.class);
 		if (adapter instanceof ICElement) {
 			ICElement cElement = (ICElement) adapter;
-			String handle = ContextCorePlugin.getDefault().getStructureBridge(cElement).getHandleIdentifier(
-					cElement);
-			return ContextCorePlugin.getContextManager().getElement(handle);
+			String handle = ContextCore.getStructureBridge(cElement).getHandleIdentifier(cElement);
+			return ContextCore.getContextManager().getElement(handle);
 		} else {
 			return null;
 		}
@@ -117,8 +117,9 @@ public class CDTUiBridge extends AbstractContextUiBridge {
 
 	@Override
 	public List<TreeViewer> getContentOutlineViewers(IEditorPart editorPart) {
-		if (editorPart == null || cOutlineField == null)
+		if (editorPart == null || cOutlineField == null) {
 			return null;
+		}
 		List<TreeViewer> viewers = new ArrayList<TreeViewer>();
 		Object out = editorPart.getAdapter(IContentOutlinePage.class);
 		if (out instanceof CContentOutlinePage) {
@@ -127,8 +128,8 @@ public class CDTUiBridge extends AbstractContextUiBridge {
 				try {
 					viewers.add((TreeViewer) cOutlineField.get(page));
 				} catch (Exception e) {
-					StatusHandler.log(new Status(IStatus.ERROR, CDTUIBridgePlugin.PLUGIN_ID, 
-							CDTUIBridgePlugin.getResourceString("MylynCDT.log.getOutlineViewerFailure"), e)); // $NON-NLS-1$ 
+					StatusHandler.log(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN,
+							"Could not get Outline viewer.", e)); //$NON-NLS-1$
 				}
 			}
 		}
@@ -144,8 +145,9 @@ public class CDTUiBridge extends AbstractContextUiBridge {
 					return SelectionConverter.getElementAtOffset(((CEditor) editor).getInputCElement(), textSelection);
 				} else {
 					Object element = ((CEditor) editor).getInputCElement();
-					if (element instanceof ICElement)
+					if (element instanceof ICElement) {
 						return element;
+					}
 				}
 			} catch (CModelException e) {
 				// ignore

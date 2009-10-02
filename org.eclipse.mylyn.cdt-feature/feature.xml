@@ -6,20 +6,20 @@
       provider-name="%providerName"
       plugin="org.eclipse.mylyn">
 
-   <description>
+   <description url="http://eclipse.org/mylyn">
       %description
    </description>
 
-   <copyright url="http://www.eclipse.org/legal/epl-v10.html">
+   <copyright>
       %copyright
    </copyright>
 
-   <license url="%licenseURL">
+   <license url="license.html">
       %license
    </license>
 
    <url>
-      <update label="%updateSiteName" url="http://download.eclipse.org/tools/cdt/releases/galileo"/>
+      <update label="%updateSiteName" url="http://download.eclipse.org/tools/mylyn/update/e3.3"/>
    </url>
 
    <requires>

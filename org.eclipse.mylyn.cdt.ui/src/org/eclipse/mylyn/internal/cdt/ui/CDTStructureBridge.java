@@ -28,9 +28,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.resources.ui.ResourceStructureBridge;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.views.markers.internal.ConcreteMarker;
 
@@ -40,7 +39,8 @@ import org.eclipse.ui.views.markers.internal.ConcreteMarker;
  */
 public class CDTStructureBridge extends AbstractContextStructureBridge {
 
-	public final static String CONTENT_TYPE = "c/c++"; // $NON-NLS-1$
+	public final static String CONTENT_TYPE = "c/c++"; //$NON-NLS-1$
+
 	public final static int C_SOURCEROOT = 1000;
 
 	public CDTStructureBridge() {
@@ -82,19 +82,20 @@ public class CDTStructureBridge extends AbstractContextStructureBridge {
 				try {
 					children = parent.getChildren();
 					List<String> childHandles = new ArrayList<String>();
-					for (int i = 0; i < children.length; i++) {
-						String childHandle = getHandleIdentifier(children[i]);
-						if (childHandle != null)
+					for (ICElement element2 : children) {
+						String childHandle = getHandleIdentifier(element2);
+						if (childHandle != null) {
 							childHandles.add(childHandle);
+						}
 					}
-					AbstractContextStructureBridge parentBridge = ContextCorePlugin.getDefault().getStructureBridge(
-							parentContentType);
-					if (parentBridge != null && parentBridge instanceof ResourceStructureBridge) {
+					AbstractContextStructureBridge parentBridge = ContextCore.getStructureBridge(parentContentType);
+					if (parentBridge != null && ContextCore.CONTENT_TYPE_RESOURCE.equals(parentBridge.getContentType())) {
 						// TODO: Make sure line below is correct
 						if (element.getElementType() < ICElement.C_NAMESPACE) {
 							List<String> resourceChildren = parentBridge.getChildHandles(handle);
-							if (!resourceChildren.isEmpty())
+							if (!resourceChildren.isEmpty()) {
 								childHandles.addAll(resourceChildren);
+							}
 						}
 					}
 
@@ -106,11 +107,10 @@ public class CDTStructureBridge extends AbstractContextStructureBridge {
 		}
 		return Collections.emptyList();
 	}
-	
+
 	public static ICElement getElementForHandle(String handle) {
 		return CoreModel.create(handle);
 	}
-
 
 	@Override
 	public Object getObjectForHandle(String handle) {
@@ -126,7 +126,7 @@ public class CDTStructureBridge extends AbstractContextStructureBridge {
 	public static String getHandleForElement(ICElement element) {
 		return element.getHandleIdentifier();
 	}
-	
+
 	/**
 	 * Uses resource-compatible path for projects
 	 */
@@ -145,13 +145,12 @@ public class CDTStructureBridge extends AbstractContextStructureBridge {
 		return null;
 	}
 
-
 	@Override
 	public String getLabel(Object object) {
 		if (object instanceof ICElement) {
 			return ((ICElement) object).getElementName();
 		} else {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 	}
 
@@ -182,17 +181,16 @@ public class CDTStructureBridge extends AbstractContextStructureBridge {
 
 	@Override
 	public boolean canFilter(Object object) {
-		// FIXME: Removed some logic from JavaStructureBridge...is it necessary?
 		if (object instanceof IWorkingSet) {
 			try {
 				IWorkingSet workingSet = (IWorkingSet) object;
 				IAdaptable[] elements = workingSet.getElements();
-				for (int i = 0; i < elements.length; i++) {
-					IAdaptable adaptable = elements[i];
-					IInteractionElement element = ContextCorePlugin.getContextManager().getElement(
+				for (IAdaptable adaptable : elements) {
+					IInteractionElement element = ContextCore.getContextManager().getElement(
 							getHandleIdentifier(adaptable));
-					if (element.getInterest().isInteresting())
+					if (element.getInterest().isInteresting()) {
 						return false;
+					}
 				}
 			} catch (Exception e) {
 				return false;
@@ -211,27 +209,29 @@ public class CDTStructureBridge extends AbstractContextStructureBridge {
 	public String getHandleForOffsetInObject(Object object, int offset) {
 		IMarker marker;
 		int charStart = 0;
-		if (object instanceof ConcreteMarker)
-			marker = ((ConcreteMarker)object).getMarker();
+		if (object instanceof ConcreteMarker) {
+			marker = ((ConcreteMarker) object).getMarker();
+		}
 		if (object instanceof IMarker) {
-			marker = (IMarker)object;
+			marker = (IMarker) object;
 		} else {
 			return null;
 		}
-		
+
 		Object attribute = marker.getAttribute(IMarker.CHAR_START, 0);
 		if (attribute instanceof Integer) {
-			charStart = ((Integer)attribute).intValue();
+			charStart = ((Integer) attribute).intValue();
 		}
-		
+
 		try {
 			ITranslationUnit translationUnit = null;
 			IResource resource = marker.getResource();
 			if (resource instanceof IFile) {
-				IFile file = (IFile)resource;
+				IFile file = (IFile) resource;
 				if (CoreModel.isValidTranslationUnitName(null, file.getName())) {
 					ICElement element = CoreModel.getDefault().create(file);
-					translationUnit = CoreModel.getDefault().createTranslationUnitFrom(element.getCProject(), element.getPath());
+					translationUnit = CoreModel.getDefault().createTranslationUnitFrom(element.getCProject(),
+							element.getPath());
 				} else {
 					return null;
 				}
@@ -239,8 +239,9 @@ public class CDTStructureBridge extends AbstractContextStructureBridge {
 			if (translationUnit != null) {
 				ICElement cElement = translationUnit.getElementAtOffset(charStart);
 				if (cElement != null) {
-					if (cElement instanceof IInclude)
+					if (cElement instanceof IInclude) {
 						cElement = cElement.getParent().getParent();
+					}
 					return cElement.getElementName();
 				} else {
 					return null;
@@ -249,8 +250,9 @@ public class CDTStructureBridge extends AbstractContextStructureBridge {
 				return null;
 			}
 		} catch (CModelException ex) {
-			if (ex.doesNotExist())
+			if (ex.doesNotExist()) {
 				StatusHandler.fail(ex.getStatus());
+			}
 			return null;
 		}
 	}
@@ -286,8 +288,9 @@ public class CDTStructureBridge extends AbstractContextStructureBridge {
 			case ICElement.C_VARIABLE_LOCAL:
 			case ICElement.C_CLASS:
 				ITranslationUnit cu = (ITranslationUnit) element.getAncestor(ICElement.C_UNIT);
-				if (cu != null)
+				if (cu != null) {
 					return getErrorTicksFromMarkers(element.getResource(), IResource.DEPTH_ONE, null);
+				}
 			}
 		} catch (CoreException e) {
 			// ignore
@@ -297,12 +300,12 @@ public class CDTStructureBridge extends AbstractContextStructureBridge {
 
 	private boolean getErrorTicksFromMarkers(IResource res, int depth, ISourceReference sourceElement)
 			throws CoreException {
-		if (res == null || !res.isAccessible())
+		if (res == null || !res.isAccessible()) {
 			return false;
+		}
 		IMarker[] markers = res.findMarkers(IMarker.PROBLEM, true, depth);
 		if (markers != null) {
-			for (int i = 0; i < markers.length; i++) {
-				IMarker curr = markers[i];
+			for (IMarker curr : markers) {
 				if (sourceElement == null) {
 					int priority = curr.getAttribute(IMarker.SEVERITY, -1);
 					if (priority == IMarker.SEVERITY_ERROR) {

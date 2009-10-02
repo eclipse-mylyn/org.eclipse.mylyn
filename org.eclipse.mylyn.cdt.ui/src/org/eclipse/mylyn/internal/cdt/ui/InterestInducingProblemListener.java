@@ -18,37 +18,38 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 
 /**
  * @author Mik Kersten
  * @author Jeff Johnston
  */
+//XXX REMOVE THIS CLASS?
 public class InterestInducingProblemListener implements IProblemChangedListener, IPropertyChangeListener {
 
-	public static final String PREDICTED_INTEREST_ERRORS = "org.eclipse.cdt.mylyn.ui.interest.prediction.errors"; // $NON-NLS-1$
+	public static final String PREDICTED_INTEREST_ERRORS = "org.eclipse.cdt.mylyn.ui.interest.prediction.errors"; //$NON-NLS-1$
 
-	// TODO: consider getting rid of this
-	private CDTStructureBridge cdtStructureBridge = new CDTStructureBridge();
+	private final CDTStructureBridge cdtStructureBridge = new CDTStructureBridge();
 
+	@SuppressWarnings("restriction")
 	public void problemsChanged(IResource[] changedResources, boolean isMarkerChange) {
 		try {
-			if (!ContextCorePlugin.getContextManager().isContextActive()) {
+			if (!ContextCore.getContextManager().isContextActive()) {
 				return;
 			} else {
-				for (int i = 0; i < changedResources.length; i++) {
-					IResource resource = changedResources[i];
+				for (IResource resource : changedResources) {
 					if (resource instanceof IFile) {
 						ICElement cdtElement = (ICElement) resource.getAdapter(ICElement.class);
 						if (cdtElement != null) {
-							IInteractionElement element = ContextCorePlugin.getContextManager().getElement(
+							IInteractionElement element = ContextCore.getContextManager().getElement(
 									CDTStructureBridge.getHandleForElement(cdtElement));
 							if (!cdtStructureBridge.containsProblem(element)) {
-								ContextCorePlugin.getContextManager().removeErrorPredictedInterest(
+								((InteractionContextManager) ContextCore.getContextManager()).removeErrorPredictedInterest(
 										element.getHandleIdentifier(), CDTStructureBridge.CONTENT_TYPE, true);
 							} else {
-								ContextCorePlugin.getContextManager().addErrorPredictedInterest(
+								((InteractionContextManager) ContextCore.getContextManager()).addErrorPredictedInterest(
 										element.getHandleIdentifier(), CDTStructureBridge.CONTENT_TYPE, true);
 							}
 						}
@@ -56,8 +57,8 @@ public class InterestInducingProblemListener implements IProblemChangedListener,
 				}
 			}
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, CDTUIBridgePlugin.PLUGIN_ID, 
-					CDTUIBridgePlugin.getResourceString("MylynCDT.updateMarkerFailure"), e)); // $NON-NLS-1$
+			StatusHandler.log(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN,
+					"could not update on marker change", e)); //$NON-NLS-1$
 		}
 	}
 

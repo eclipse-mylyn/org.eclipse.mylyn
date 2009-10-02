@@ -51,7 +51,8 @@ public class FocusCViewAction extends AbstractAutoFocusViewAction {
 			throws CoreException {
 		Object elementToSelect = null;
 		if (changedSelection instanceof TextSelection && part instanceof CEditor) {
-			ICElement cdtElement = SelectionConverter.getElementAtOffset(((CEditor) part).getInputCElement(), changedSelection);
+			ICElement cdtElement = SelectionConverter.getElementAtOffset(((CEditor) part).getInputCElement(),
+					changedSelection);
 			elementToSelect = cdtElement;
 		}
 
@@ -71,13 +72,11 @@ public class FocusCViewAction extends AbstractAutoFocusViewAction {
 	}
 
 	// TODO: should have better way of doing this
+	@Override
 	protected void setManualFilteringAndLinkingEnabled(boolean enabled) {
 		IViewPart part = super.getPartForAction();
 		if (part instanceof CView) {
-			for (IContributionItem item : ((CView) part).getViewSite()
-					.getActionBars()
-					.getToolBarManager()
-					.getItems()) {
+			for (IContributionItem item : ((CView) part).getViewSite().getActionBars().getToolBarManager().getItems()) {
 				if (item instanceof ActionContributionItem) {
 					ActionContributionItem actionItem = (ActionContributionItem) item;
 					if (actionItem.getAction() instanceof ToggleLinkingAction) {
@@ -85,14 +84,11 @@ public class FocusCViewAction extends AbstractAutoFocusViewAction {
 					}
 				}
 			}
-			for (IContributionItem item : ((CView) part).getViewSite()
-					.getActionBars()
-					.getMenuManager()
-					.getItems()) {
+			for (IContributionItem item : ((CView) part).getViewSite().getActionBars().getMenuManager().getItems()) {
 				if (item instanceof ActionContributionItem) {
 					ActionContributionItem actionItem = (ActionContributionItem) item;
 					// TODO: file bug asking for extensibility
-					if (actionItem.getAction().getClass().getSimpleName().equals("ShowFilterDialogAction")) { // $NON-NLS-1$
+					if (actionItem.getAction().getClass().getSimpleName().equals("ShowFilterDialogAction")) { //$NON-NLS-1$
 						actionItem.getAction().setEnabled(enabled);
 					}
 				}
