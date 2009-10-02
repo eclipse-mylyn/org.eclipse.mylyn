@@ -21,6 +21,7 @@ import org.eclipse.mylyn.bugzilla.tests.BugzillaTestConstants;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.WebLocation;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClientManager;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
@@ -188,6 +189,10 @@ public class BugzillaFixture extends TestFixture {
 		TaskData taskData = new TaskData(mapper, repository().getConnectorKind(), repository().getRepositoryUrl(), "");
 		taskDataHandler.initializeTaskData(repository(), taskData, null, null);
 		taskData.getRoot().createMappedAttribute(TaskAttribute.SUMMARY).setValue(summary);
+		taskData.getRoot().createMappedAttribute(TaskAttribute.DESCRIPTION).setValue("description");
+		taskData.getRoot().createMappedAttribute(BugzillaAttribute.OP_SYS.getKey()).setValue("All");
+		taskData.getRoot().createMappedAttribute(BugzillaAttribute.REP_PLATFORM.getKey()).setValue("All");
+		taskData.getRoot().createMappedAttribute(BugzillaAttribute.VERSION.getKey()).setValue("unspecified");
 		taskData.getRoot().createMappedAttribute(TaskAttribute.DESCRIPTION).setValue("description");
 		return submitTask(taskData, client);
 	}
