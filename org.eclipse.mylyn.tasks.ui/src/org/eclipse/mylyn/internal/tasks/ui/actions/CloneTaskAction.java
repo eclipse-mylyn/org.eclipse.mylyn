@@ -22,6 +22,7 @@ import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
@@ -92,6 +93,13 @@ public class CloneTaskAction extends BaseSelectionListenerAction implements IVie
 					if (mapping.getDescription() != null) {
 						((DefaultTaskMapping) taskSelection).setDescription(description + "\n\n" //$NON-NLS-1$
 								+ mapping.getDescription());
+
+						TaskAttribute attrDescription = mapping.getTaskData().getRoot().getMappedAttribute(
+								TaskAttribute.DESCRIPTION);
+						if (attrDescription != null) {
+							attrDescription.getMetaData().setReadOnly(false);
+						}
+
 					}
 					mapping.merge(taskSelection);
 					taskSelection = mapping;

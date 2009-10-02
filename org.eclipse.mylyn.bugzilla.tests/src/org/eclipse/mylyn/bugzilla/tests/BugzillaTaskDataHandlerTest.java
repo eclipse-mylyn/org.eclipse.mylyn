@@ -13,23 +13,23 @@ package org.eclipse.mylyn.bugzilla.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
-import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.DefaultTaskMapping;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.mylyn.tests.util.TestUtil;
-import org.eclipse.mylyn.tests.util.TestUtil.Credentials;
+import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
 
 /**
  * @author Frank Becker
@@ -37,149 +37,42 @@ import org.eclipse.mylyn.tests.util.TestUtil.Credentials;
  */
 public class BugzillaTaskDataHandlerTest extends TestCase {
 
-	TaskRepository repository;
+	private TaskRepository repository;
 
-	BugzillaRepositoryConnector connector;
+	private BugzillaRepositoryConnector connector;
 
-	private TaskData init(String taskId) throws CoreException {
-		return connector.getTaskData(repository, taskId, new NullProgressMonitor());
-	}
+	private BugzillaClient client;
 
-	private TaskRepository setRepository(String kind, String url) {
-		connector = (BugzillaRepositoryConnector) TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-				BugzillaCorePlugin.CONNECTOR_KIND);
-		repository = new TaskRepository(kind, url);
-		Credentials credentials = TestUtil.readCredentials();
-		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials(credentials.username,
-				credentials.password), true);
-		return repository;
-	}
-
-	private void testAttributesFromCloneBug(TaskData repositoryTaskData, boolean valueFromBug9) {
-		assertEquals("Clone Bug 1", repositoryTaskData.getRoot()
-				.getAttribute(BugzillaAttribute.SHORT_DESC.getKey())
-				.getValue());
-		assertEquals("This Bug is used to test the cloneTaskData", repositoryTaskData.getRoot().getAttribute(
-				BugzillaAttribute.LONG_DESC.getKey()).getValue());
-		assertEquals("TestProduct", repositoryTaskData.getRoot()
-				.getAttribute(BugzillaAttribute.PRODUCT.getKey())
-				.getValue());
-		assertEquals("TestComponent", repositoryTaskData.getRoot()
-				.getAttribute(BugzillaAttribute.COMPONENT.getKey())
-				.getValue());
-		assertEquals("PC", repositoryTaskData.getRoot()
-				.getAttribute(BugzillaAttribute.REP_PLATFORM.getKey())
-				.getValue());
-		assertEquals("Windows", repositoryTaskData.getRoot().getAttribute(BugzillaAttribute.OP_SYS.getKey()).getValue());
-		assertEquals("unspecified", repositoryTaskData.getRoot()
-				.getAttribute(BugzillaAttribute.VERSION.getKey())
-				.getValue());
-		assertEquals("P3", repositoryTaskData.getRoot().getAttribute(BugzillaAttribute.PRIORITY.getKey()).getValue());
-		assertEquals("enhancement", repositoryTaskData.getRoot()
-				.getAttribute(BugzillaAttribute.BUG_SEVERITY.getKey())
-				.getValue());
-		// "---" is not contained in the repository configuration therefore not added as a valid target_milestone
-		// it is however returned in the bug xml.
-//		assertEquals("---", repositoryTaskData.getRoot()
-//				.getAttribute(BugzillaAttribute.TARGET_MILESTONE.getKey())
-//				.getValue());
-		assertEquals("Unclassified", repositoryTaskData.getRoot().getAttribute(
-				BugzillaAttribute.CLASSIFICATION.getKey()).getValue());
-		if (valueFromBug9) {
-			assertEquals("9", repositoryTaskData.getRoot().getAttribute(BugzillaAttribute.BUG_ID.getKey()).getValue());
-			assertEquals("1.00", repositoryTaskData.getRoot()
-					.getAttribute(BugzillaAttribute.REMAINING_TIME.getKey())
-					.getValue());
-			assertEquals("1.00", repositoryTaskData.getRoot()
-					.getAttribute(BugzillaAttribute.ESTIMATED_TIME.getKey())
-					.getValue());
-			assertEquals("2007-12-12", repositoryTaskData.getRoot()
-					.getAttribute(BugzillaAttribute.DEADLINE.getKey())
-					.getValue());
-			assertEquals("NEW", repositoryTaskData.getRoot()
-					.getAttribute(BugzillaAttribute.BUG_STATUS.getKey())
-					.getValue());
-			assertEquals("2007-11-14 15:12", repositoryTaskData.getRoot().getAttribute(
-					BugzillaAttribute.CREATION_TS.getKey()).getValue());
-			assertEquals("2007-11-14 15:14:46", repositoryTaskData.getRoot().getAttribute(
-					BugzillaAttribute.DELTA_TS.getKey()).getValue());
-			assertEquals("tests@mylyn.eclipse.org", repositoryTaskData.getRoot().getAttribute(
-					BugzillaAttribute.REPORTER.getKey()).getValue());
-			assertEquals("tests2@mylyn.eclipse.org", repositoryTaskData.getRoot().getAttribute(
-					BugzillaAttribute.ASSIGNED_TO.getKey()).getValue());
-		} else {
-			assertEquals("2.00", repositoryTaskData.getRoot()
-					.getAttribute(BugzillaAttribute.REMAINING_TIME.getKey())
-					.getValue());
-			assertEquals("2.00", repositoryTaskData.getRoot()
-					.getAttribute(BugzillaAttribute.ESTIMATED_TIME.getKey())
-					.getValue());
-			assertEquals("2008-01-01", repositoryTaskData.getRoot()
-					.getAttribute(BugzillaAttribute.DEADLINE.getKey())
-					.getValue());
-			assertEquals("2007-11-14 15:30", repositoryTaskData.getRoot().getAttribute(
-					BugzillaAttribute.CREATION_TS.getKey()).getValue());
-			assertEquals("2007-11-14 15:30:38", repositoryTaskData.getRoot().getAttribute(
-					BugzillaAttribute.DELTA_TS.getKey()).getValue());
-			assertEquals("tests2@mylyn.eclipse.org", repositoryTaskData.getRoot().getAttribute(
-					BugzillaAttribute.REPORTER.getKey()).getValue());
-			assertEquals("tests@mylyn.eclipse.org", repositoryTaskData.getRoot().getAttribute(
-					BugzillaAttribute.ASSIGNED_TO.getKey()).getValue());
-		}
+	@Override
+	public void setUp() throws Exception {
+		client = BugzillaFixture.current().client(PrivilegeLevel.USER);
+		repository = BugzillaFixture.current().repository();
+		connector = BugzillaFixture.current().connector();
 	}
 
 	public void testCloneTaskData() throws Exception {
-		String bugid = "9";
-		setRepository(BugzillaCorePlugin.CONNECTOR_KIND, BugzillaTestConstants.TEST_BUGZILLA_30_URL);
-		TaskData report1 = init(bugid);
+		TaskData taskData = BugzillaFixture.current().createTask(PrivilegeLevel.USER, "test summary for clone",
+				"test description for clone");
+		taskData.getRoot().getMappedAttribute(TaskAttribute.PRIORITY).setValue("P5");
+		//BugzillaFixture.current().submitTask(taskData, client);
+		ITaskMapping mapping = connector.getTaskMapping(taskData);
+		DefaultTaskMapping taskSelection = new DefaultTaskMapping();
+		taskSelection.setDescription("Test description");
 
-		assertNotNull(report1);
+		TaskAttribute attrDescription = mapping.getTaskData().getRoot().getMappedAttribute(TaskAttribute.DESCRIPTION);
+		if (attrDescription != null) {
+			attrDescription.getMetaData().setReadOnly(false);
+		}
 
-		testAttributesFromCloneBug(report1, true);
+		mapping.merge(taskSelection);
+		assertEquals("test summary for clone", mapping.getSummary());
+		assertEquals("Test description", mapping.getDescription());
 
-		bugid = "10";
-		setRepository(BugzillaCorePlugin.CONNECTOR_KIND, BugzillaTestConstants.TEST_BUGZILLA_30_URL);
-		TaskData report2 = init(bugid);
-
-		assertNotNull(report2);
-		assertEquals("" + bugid, report2.getRoot().getAttribute(BugzillaAttribute.BUG_ID.getKey()).getValue());
-		assertEquals("2.00", report2.getRoot().getAttribute(BugzillaAttribute.REMAINING_TIME.getKey()).getValue());
-		assertEquals("2.00", report2.getRoot().getAttribute(BugzillaAttribute.ESTIMATED_TIME.getKey()).getValue());
-		assertEquals("2008-01-01", report2.getRoot().getAttribute(BugzillaAttribute.DEADLINE.getKey()).getValue());
-
-		assertEquals("Clone Bug 2", report2.getRoot().getAttribute(BugzillaAttribute.SHORT_DESC.getKey()).getValue());
-		assertEquals("other Bug for cloneTaskData", report2.getRoot()
-				.getAttribute(BugzillaAttribute.LONG_DESC.getKey())
-				.getValue());
-		assertEquals("TestProduct", report2.getRoot().getAttribute(BugzillaAttribute.PRODUCT.getKey()).getValue());
-		assertEquals("TestComponent", report2.getRoot().getAttribute(BugzillaAttribute.COMPONENT.getKey()).getValue());
-		assertEquals("PC", report2.getRoot().getAttribute(BugzillaAttribute.REP_PLATFORM.getKey()).getValue());
-		assertEquals("Mac OS", report2.getRoot().getAttribute(BugzillaAttribute.OP_SYS.getKey()).getValue());
-		assertEquals("unspecified", report2.getRoot().getAttribute(BugzillaAttribute.VERSION.getKey()).getValue());
-		assertEquals("P2", report2.getRoot().getAttribute(BugzillaAttribute.PRIORITY.getKey()).getValue());
-		assertEquals("critical", report2.getRoot().getAttribute(BugzillaAttribute.BUG_SEVERITY.getKey()).getValue());
-		assertEquals("ASSIGNED", report2.getRoot().getAttribute(BugzillaAttribute.BUG_STATUS.getKey()).getValue());
-		assertEquals("2007-11-14 15:30", report2.getRoot()
-				.getAttribute(BugzillaAttribute.CREATION_TS.getKey())
-				.getValue());
-		assertEquals("2008-04-08 20:03:35", report2.getRoot()
-				.getAttribute(BugzillaAttribute.DELTA_TS.getKey())
-				.getValue());
-		// Same discrepancy as in above test related to "---" target milestone not being in repository coonfiguration
-//		assertEquals("---", report2.getRoot().getAttribute(BugzillaAttribute.TARGET_MILESTONE.getKey()).getValue());
-		assertEquals("tests2@mylyn.eclipse.org", report2.getRoot()
-				.getAttribute(BugzillaAttribute.REPORTER.getKey())
-				.getValue());
-		assertEquals("tests@mylyn.eclipse.org", report2.getRoot()
-				.getAttribute(BugzillaAttribute.ASSIGNED_TO.getKey())
-				.getValue());
 	}
 
-	public void testCharacterEscaping() throws CoreException {
-		String bugid = "17";
-		setRepository(BugzillaCorePlugin.CONNECTOR_KIND, BugzillaTestConstants.TEST_BUGZILLA_30_URL);
-		TaskData report1 = init(bugid);
-		assertEquals("Testing! \"&@ $\" &amp;", report1.getRoot()
+	public void testCharacterEscaping() throws Exception {
+		TaskData taskData = BugzillaFixture.current().createTask(PrivilegeLevel.USER, "Testing! \"&@ $\" &amp;", null);
+		assertEquals("Testing! \"&@ $\" &amp;", taskData.getRoot()
 				.getAttribute(BugzillaAttribute.SHORT_DESC.getKey())
 				.getValue());
 	}
