@@ -109,6 +109,7 @@ public class DatePicker extends Composite {
 
 		dateText = new Text(this, style);
 		GridData dateTextGridData = new GridData(SWT.FILL, SWT.FILL, false, false);
+		dateTextGridData.heightHint = 5;
 		dateTextGridData.grabExcessHorizontalSpace = true;
 		dateTextGridData.verticalAlignment = SWT.FILL;
 
@@ -213,7 +214,7 @@ public class DatePicker extends Composite {
 		});
 		updateClearControlVisibility();
 		pack();
-		setBackground(getDisplay().getSystemColor(SWT.COLOR_WHITE));
+		setBackground(getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
 	}
 
 	public void addPickerSelectionListener(SelectionListener listener) {
@@ -231,9 +232,9 @@ public class DatePicker extends Composite {
 
 	@Override
 	public void setBackground(Color backgroundColor) {
-		dateText.setBackground(backgroundColor);
-		pickButton.setBackground(backgroundColor);
 		super.setBackground(backgroundColor);
+		dateText.setBackground(backgroundColor);
+		pickButton.setBackground(null);
 	}
 
 	public void setDate(Calendar date) {
