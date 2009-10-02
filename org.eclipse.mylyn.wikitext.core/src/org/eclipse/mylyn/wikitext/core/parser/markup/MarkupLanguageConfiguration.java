@@ -44,7 +44,7 @@ public class MarkupLanguageConfiguration implements Cloneable {
 
 	private Boolean wikiWordLinking = true;
 
-	protected Locale locale;
+	private Locale locale;
 
 	public List<PatternBasedElement> getTokens() {
 		return tokens;
