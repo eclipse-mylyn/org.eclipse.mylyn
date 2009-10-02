@@ -23,7 +23,6 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylyn.internal.provisional.commons.ui.EnhancedFilteredTree;
 import org.eclipse.mylyn.internal.provisional.commons.ui.SubstringPatternFilter;
 import org.eclipse.swt.SWT;
@@ -131,7 +130,7 @@ public class InPlaceCheckBoxTreeDialog extends AbstractInPlaceDialog {
 
 			});
 
-			viewer.setSorter(new ViewerSorter());
+			//viewer.setSorter(new ViewerSorter());
 			viewer.setLabelProvider(new LabelProvider() {
 				@Override
 				public String getText(Object element) {
