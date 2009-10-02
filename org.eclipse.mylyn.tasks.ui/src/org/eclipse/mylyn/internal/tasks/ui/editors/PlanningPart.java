@@ -209,6 +209,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 			this.notesString = ""; //$NON-NLS-1$
 		}
 		Section section = createSection(parent, toolkit, isAlwaysExpand() || notesString.length() > 0);
+		section.clientVerticalSpacing = 0;
 		Composite composite = toolkit.createComposite(section);
 		GridLayout layout = EditorUtil.createSectionClientLayout();
 		layout.numColumns = (needsDueDate) ? 6 : 4;
@@ -351,7 +352,8 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 		ImageHyperlink resetActivityTimeButton = toolkit.createImageHyperlink(nameValueComp, SWT.NONE);
 		resetActivityTimeButton.setBackground(null);
-		resetActivityTimeButton.setImage(CommonImages.getImage(CommonImages.FIND_CLEAR));
+		resetActivityTimeButton.setImage(CommonImages.getImage(CommonImages.FIND_CLEAR_DISABLED));
+		resetActivityTimeButton.setHoverImage(CommonImages.getImage(CommonImages.FIND_CLEAR));
 		resetActivityTimeButton.setToolTipText(Messages.TaskEditorPlanningPart_Reset);
 		resetActivityTimeButton.addHyperlinkListener(new HyperlinkAdapter() {
 

@@ -681,10 +681,6 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 	@Override
 	protected void fillToolBar(ToolBarManager barManager) {
-		if (commentAttributes.isEmpty()) {
-			return;
-		}
-
 		Action collapseAllAction = new Action("") { //$NON-NLS-1$
 			@Override
 			public void run() {
@@ -704,6 +700,11 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		expandAllAction.setImageDescriptor(CommonImages.EXPAND_ALL_SMALL);
 		expandAllAction.setToolTipText(Messages.TaskEditorCommentPart_Expand_Comments);
 		barManager.add(expandAllAction);
+
+		if (commentAttributes.isEmpty()) {
+			collapseAllAction.setEnabled(false);
+			expandAllAction.setEnabled(false);
+		}
 	}
 
 	public CommentGroupStrategy getCommentGroupStrategy() {

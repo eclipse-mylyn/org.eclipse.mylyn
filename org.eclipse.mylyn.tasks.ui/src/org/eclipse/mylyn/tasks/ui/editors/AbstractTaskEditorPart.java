@@ -144,6 +144,7 @@ public abstract class AbstractTaskEditorPart extends AbstractFormPart {
 				RowLayout rowLayout = new RowLayout();
 				rowLayout.marginTop = 2;
 				rowLayout.marginBottom = 0;
+				rowLayout.center = true;
 				toolbarComposite.setLayout(rowLayout);
 
 				createInfoOverlay(toolbarComposite, section, toolkit);
