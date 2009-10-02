@@ -172,36 +172,33 @@ public class BugzillaClient {
 
 	private final AbstractWebLocation location;
 
-	private BugzillaRepositoryConnector connector;
+	private final BugzillaRepositoryConnector connector;
 
 	public BugzillaClient(AbstractWebLocation location, String characterEncoding, Map<String, String> configParameters,
-			BugzillaLanguageSettings languageSettings) throws MalformedURLException {
+			BugzillaLanguageSettings languageSettings, BugzillaRepositoryConnector connector)
+			throws MalformedURLException {
 		this.repositoryUrl = new URL(location.getUrl());
 		this.location = location;
 		this.characterEncoding = characterEncoding;
 		this.configParameters = configParameters;
 		this.bugzillaLanguageSettings = languageSettings;
+		this.connector = connector;
 		this.proxy = location.getProxyForHost(location.getUrl(), IProxyData.HTTP_PROXY_TYPE);
 		WebUtil.configureHttpClient(httpClient, USER_AGENT);
-
 	}
 
 	public BugzillaClient(AbstractWebLocation location, TaskRepository taskRepository,
 			BugzillaRepositoryConnector connector) throws MalformedURLException {
+		this(location, taskRepository.getCharacterEncoding(), taskRepository.getProperties(),
+				getLanguageSettings(taskRepository), connector);
+	}
+
+	private static BugzillaLanguageSettings getLanguageSettings(TaskRepository taskRepository) {
 		String language = taskRepository.getProperty(IBugzillaConstants.BUGZILLA_LANGUAGE_SETTING);
 		if (language == null || language.equals("")) { //$NON-NLS-1$
 			language = IBugzillaConstants.DEFAULT_LANG;
 		}
-
-		this.connector = connector;
-		this.repositoryUrl = new URL(location.getUrl());
-		this.location = location;
-		this.characterEncoding = taskRepository.getCharacterEncoding();
-		this.configParameters = taskRepository.getProperties();
-		this.bugzillaLanguageSettings = connector.getLanguageSetting(language);
-		this.proxy = location.getProxyForHost(location.getUrl(), IProxyData.HTTP_PROXY_TYPE);
-		WebUtil.configureHttpClient(httpClient, USER_AGENT);
-
+		return BugzillaRepositoryConnector.getLanguageSetting(language);
 	}
 
 	public void validate(IProgressMonitor monitor) throws IOException, CoreException {
