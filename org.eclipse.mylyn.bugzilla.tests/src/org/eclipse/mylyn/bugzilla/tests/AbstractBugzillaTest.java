@@ -134,7 +134,7 @@ public abstract class AbstractBugzillaTest extends TestCase {
 
 		connector = (BugzillaRepositoryConnector) abstractRepositoryClient;
 		try {
-			BugzillaCorePlugin.getRepositoryConfiguration(repository, false, new NullProgressMonitor());
+			connector.getRepositoryConfiguration(repository, false, new NullProgressMonitor());
 		} catch (CoreException e) {
 			throw new RuntimeException(e);
 		}

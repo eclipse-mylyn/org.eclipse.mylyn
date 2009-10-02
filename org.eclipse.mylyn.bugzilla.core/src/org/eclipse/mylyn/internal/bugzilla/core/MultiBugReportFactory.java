@@ -33,15 +33,18 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
  */
 public class MultiBugReportFactory extends AbstractReportFactory {
 
-	public MultiBugReportFactory(InputStream inStream, String encoding) {
+	private final BugzillaRepositoryConnector connector;
+
+	public MultiBugReportFactory(InputStream inStream, String encoding, BugzillaRepositoryConnector connector) {
 		super(inStream, encoding);
+		this.connector = connector;
 	}
 
 	public void populateReport(Map<String, TaskData> bugMap, TaskDataCollector collector, TaskAttributeMapper mapper,
 			List<BugzillaCustomField> customFields) throws IOException, CoreException {
 
 		SaxMultiBugReportContentHandler contentHandler = new SaxMultiBugReportContentHandler(mapper, collector, bugMap,
-				customFields);
+				customFields, connector);
 		collectResults(contentHandler, false);
 
 		for (TaskData data : bugMap.values()) {

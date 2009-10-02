@@ -175,7 +175,7 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 
 	private String about;
 
-	private final RepositoryConfiguration configuration = new RepositoryConfiguration();
+	private final RepositoryConfiguration configuration;
 
 	private final Map<String, List<String>> components = new HashMap<String, List<String>>();
 
@@ -198,6 +198,14 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 	private String currentComponent = ""; //$NON-NLS-1$
 
 	private String currentCustomOptionName = ""; //$NON-NLS-1$
+
+	private final BugzillaRepositoryConnector connector;
+
+	public SaxConfigurationContentHandler(BugzillaRepositoryConnector connector) {
+		super();
+		this.connector = connector;
+		configuration = new RepositoryConfiguration();
+	}
 
 	public RepositoryConfiguration getConfiguration() {
 		return configuration;

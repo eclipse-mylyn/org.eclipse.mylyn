@@ -74,11 +74,15 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 
 	private boolean bugParseErrorOccurred;
 
+	private final BugzillaRepositoryConnector connector;
+
 	public SaxMultiBugReportContentHandler(TaskAttributeMapper mapper, TaskDataCollector collector,
-			Map<String, TaskData> taskDataMap, List<BugzillaCustomField> customFields) {
+			Map<String, TaskData> taskDataMap, List<BugzillaCustomField> customFields,
+			BugzillaRepositoryConnector connector) {
 		this.taskDataMap = taskDataMap;
 		this.customFields = customFields;
 		this.collector = collector;
+		this.connector = connector;
 	}
 
 	public boolean errorOccurred() {
@@ -177,7 +181,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			if (attributes != null && attributes.getLength() > 0) {
 				String name = attributes.getValue(ATTRIBUTE_NAME);
 				if (name != null) {
-					BugzillaFlagMapper mapper = new BugzillaFlagMapper();
+					BugzillaFlagMapper mapper = new BugzillaFlagMapper(connector);
 					String requestee = attributes.getValue("requestee"); //$NON-NLS-1$
 					mapper.setRequestee(requestee);
 					String setter = attributes.getValue("setter"); //$NON-NLS-1$
@@ -468,7 +472,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 	}
 
 	private void updateCustomFields(TaskData taskData) {
-		RepositoryConfiguration config = BugzillaCorePlugin.getRepositoryConfiguration(repositoryTaskData.getRepositoryUrl());
+		RepositoryConfiguration config = connector.getRepositoryConfiguration(repositoryTaskData.getRepositoryUrl());
 		if (config != null) {
 			for (BugzillaCustomField bugzillaCustomField : config.getCustomFields()) {
 

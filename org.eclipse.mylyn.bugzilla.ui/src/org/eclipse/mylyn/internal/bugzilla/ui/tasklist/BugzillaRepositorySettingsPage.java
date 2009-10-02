@@ -27,12 +27,14 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClientFactory;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaLanguageSettings;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaStatus;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -113,7 +115,8 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		}
 
 		if (null != repository) {
-			repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(repository.getRepositoryUrl());
+			BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) TasksUi.getRepositoryConnector(repository.getConnectorKind());
+			repositoryConfiguration = connector.getRepositoryConfiguration(repository.getRepositoryUrl());
 			platform = repository.getProperty(IBugzillaConstants.BUGZILLA_DEF_PLATFORM);
 			os = repository.getProperty(IBugzillaConstants.BUGZILLA_DEF_OS);
 		}
@@ -148,8 +151,9 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 									monitor.beginTask(
 											Messages.BugzillaRepositorySettingsPage_Retrieving_repository_configuration,
 											IProgressMonitor.UNKNOWN);
-									repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(repository,
-											false, monitor);
+									BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) TasksUi.getRepositoryConnector(repository.getConnectorKind());
+									repositoryConfiguration = connector.getRepositoryConfiguration(repository, false,
+											monitor);
 									if (repositoryConfiguration != null) {
 										platform = repository.getProperty(IBugzillaConstants.BUGZILLA_DEF_PLATFORM);
 										os = repository.getProperty(IBugzillaConstants.BUGZILLA_DEF_OS);
@@ -200,7 +204,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		new Label(parent, SWT.NONE).setText(Messages.BugzillaRepositorySettingsPage_Language_);
 		languageSettingCombo = new Combo(parent, SWT.DROP_DOWN);
 
-		for (BugzillaLanguageSettings bugzillaLanguageSettings : BugzillaCorePlugin.getDefault().getLanguageSettings()) {
+		for (BugzillaLanguageSettings bugzillaLanguageSettings : BugzillaRepositoryConnector.getLanguageSettings()) {
 			languageSettingCombo.add(bugzillaLanguageSettings.getLanguageName());
 		}
 		if (repository != null) {
@@ -334,7 +338,8 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 						IProgressMonitor.UNKNOWN);
 				BugzillaClient client = null;
 
-				client = BugzillaClientFactory.createClient(repository);
+				BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) TasksUi.getRepositoryConnector(repository.getConnectorKind());
+				client = BugzillaClientFactory.createClient(repository, connector);
 				client.validate(monitor);
 			} finally {
 				monitor.done();

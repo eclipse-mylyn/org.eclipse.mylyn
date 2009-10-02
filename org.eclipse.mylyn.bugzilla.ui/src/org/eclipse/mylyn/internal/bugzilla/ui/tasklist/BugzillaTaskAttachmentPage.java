@@ -15,12 +15,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaFlag;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaFlagMapper;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentModel;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.wizards.TaskAttachmentPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -61,7 +62,9 @@ public class BugzillaTaskAttachmentPage extends TaskAttachmentPage {
 	@Override
 	public void createControl(Composite parent) {
 		super.createControl(parent);
-		RepositoryConfiguration configuration = BugzillaCorePlugin.getRepositoryConfiguration(getModel().getTaskRepository()
+		BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) TasksUi.getRepositoryConnector(getModel().getTaskRepository()
+				.getConnectorKind());
+		RepositoryConfiguration configuration = connector.getRepositoryConfiguration(getModel().getTaskRepository()
 				.getRepositoryUrl());
 		if (configuration != null) {
 			List<BugzillaFlag> flags = configuration.getFlags();
@@ -83,7 +86,7 @@ public class BugzillaTaskAttachmentPage extends TaskAttachmentPage {
 				if (flagComposite == null) {
 					flagComposite = createFlagSection(pageComposite);
 				}
-				BugzillaFlagMapper mapper = new BugzillaFlagMapper();
+				BugzillaFlagMapper mapper = new BugzillaFlagMapper(connector);
 				mapper.setRequestee(""); //$NON-NLS-1$
 				mapper.setSetter(""); //$NON-NLS-1$
 				mapper.setState(" "); //$NON-NLS-1$

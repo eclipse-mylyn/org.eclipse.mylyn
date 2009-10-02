@@ -23,11 +23,13 @@ import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClientFactory;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.ui.tasklist.BugzillaRepositorySettingsPage;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.EditRepositoryWizard;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tests.util.TestUtil;
 import org.eclipse.mylyn.tests.util.TestUtil.Credentials;
 import org.eclipse.ui.PlatformUI;
@@ -63,7 +65,9 @@ public class BugzillaRepositorySettingsPageTest extends TestCase {
 		AuthenticationCredentials webCredentials = new AuthenticationCredentials(htAuthUser, htAuthPass);
 		taskRepository.setCredentials(AuthenticationType.HTTP, webCredentials, false);
 		taskRepository.setCharacterEncoding(encoding);
-		return BugzillaClientFactory.createClient(taskRepository);
+
+		BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) TasksUi.getRepositoryConnector(repository.getConnectorKind());
+		return BugzillaClientFactory.createClient(taskRepository, connector);
 	}
 
 	public void testValidationInvalidPassword() throws Exception {

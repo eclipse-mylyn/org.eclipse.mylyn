@@ -75,6 +75,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.history.TaskHistory;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
@@ -171,6 +172,8 @@ public class BugzillaClient {
 
 	private final AbstractWebLocation location;
 
+	private BugzillaRepositoryConnector connector;
+
 	public BugzillaClient(AbstractWebLocation location, String characterEncoding, Map<String, String> configParameters,
 			BugzillaLanguageSettings languageSettings) throws MalformedURLException {
 		this.repositoryUrl = new URL(location.getUrl());
@@ -178,6 +181,24 @@ public class BugzillaClient {
 		this.characterEncoding = characterEncoding;
 		this.configParameters = configParameters;
 		this.bugzillaLanguageSettings = languageSettings;
+		this.proxy = location.getProxyForHost(location.getUrl(), IProxyData.HTTP_PROXY_TYPE);
+		WebUtil.configureHttpClient(httpClient, USER_AGENT);
+
+	}
+
+	public BugzillaClient(AbstractWebLocation location, TaskRepository taskRepository,
+			BugzillaRepositoryConnector connector) throws MalformedURLException {
+		String language = taskRepository.getProperty(IBugzillaConstants.BUGZILLA_LANGUAGE_SETTING);
+		if (language == null || language.equals("")) { //$NON-NLS-1$
+			language = IBugzillaConstants.DEFAULT_LANG;
+		}
+
+		this.connector = connector;
+		this.repositoryUrl = new URL(location.getUrl());
+		this.location = location;
+		this.characterEncoding = taskRepository.getCharacterEncoding();
+		this.configParameters = taskRepository.getProperties();
+		this.bugzillaLanguageSettings = connector.getLanguageSetting(language);
 		this.proxy = location.getProxyForHost(location.getUrl(), IProxyData.HTTP_PROXY_TYPE);
 		WebUtil.configureHttpClient(httpClient, USER_AGENT);
 
@@ -565,7 +586,7 @@ public class BugzillaClient {
 						for (String type : VALID_CONFIG_CONTENT_TYPES) {
 							if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
 								RepositoryConfigurationFactory configFactory = new RepositoryConfigurationFactory(
-										stream, getCharacterEncoding());
+										stream, getCharacterEncoding(), connector);
 
 								repositoryConfiguration = configFactory.getConfiguration();
 
@@ -950,7 +971,7 @@ public class BugzillaClient {
 
 		if (repositoryConfiguration == null) {
 			getRepositoryConfiguration(new SubProgressMonitor(monitor, 1));
-			BugzillaCorePlugin.addRepositoryConfiguration(repositoryConfiguration);
+			connector.addRepositoryConfiguration(repositoryConfiguration);
 		}
 
 		if (taskData == null) {
@@ -1687,7 +1708,7 @@ public class BugzillaClient {
 
 		if (repositoryConfiguration == null) {
 			getRepositoryConfiguration(new SubProgressMonitor(monitor, 1));
-			BugzillaCorePlugin.addRepositoryConfiguration(repositoryConfiguration);
+			connector.addRepositoryConfiguration(repositoryConfiguration);
 		}
 
 		GzipPostMethod method = null;
@@ -1734,7 +1755,8 @@ public class BugzillaClient {
 						if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
 							InputStream input = getResponseStream(method, monitor);
 							try {
-								MultiBugReportFactory factory = new MultiBugReportFactory(input, getCharacterEncoding());
+								MultiBugReportFactory factory = new MultiBugReportFactory(input,
+										getCharacterEncoding(), connector);
 								List<BugzillaCustomField> customFields = new ArrayList<BugzillaCustomField>();
 								if (repositoryConfiguration != null) {
 									customFields = repositoryConfiguration.getCustomFields();

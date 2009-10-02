@@ -25,13 +25,15 @@ import org.xml.sax.SAXParseException;
  * @author Rob Elves
  */
 public class RepositoryConfigurationFactory extends AbstractReportFactory {
+	private final BugzillaRepositoryConnector connector;
 
-	public RepositoryConfigurationFactory(InputStream inStream, String encoding) {
+	public RepositoryConfigurationFactory(InputStream inStream, String encoding, BugzillaRepositoryConnector connector) {
 		super(inStream, encoding);
+		this.connector = connector;
 	}
 
 	public RepositoryConfiguration getConfiguration() throws IOException, CoreException {
-		SaxConfigurationContentHandler contentHandler = new SaxConfigurationContentHandler();
+		SaxConfigurationContentHandler contentHandler = new SaxConfigurationContentHandler(connector);
 		collectResults(contentHandler, true);
 		RepositoryConfiguration config = contentHandler.getConfiguration();
 		return config;

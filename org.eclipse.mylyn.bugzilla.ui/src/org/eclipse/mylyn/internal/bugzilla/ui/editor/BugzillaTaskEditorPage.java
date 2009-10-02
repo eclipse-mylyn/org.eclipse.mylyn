@@ -27,6 +27,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCustomField;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryResponse;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskDataHandler;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
@@ -290,8 +291,10 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 				if (taskAttribute.getId().equals(BugzillaAttribute.PRODUCT.getKey())) {
 					RepositoryConfiguration repositoryConfiguration = null;
 					try {
-						repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(
-								getModel().getTaskRepository(), false, new NullProgressMonitor());
+						BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) TasksUi.getRepositoryConnector(getModel().getTaskRepository()
+								.getConnectorKind());
+						repositoryConfiguration = connector.getRepositoryConfiguration(getModel().getTaskRepository(),
+								false, new NullProgressMonitor());
 					} catch (CoreException e) {
 						StatusHandler.log(new RepositoryStatus(getTaskRepository(), IStatus.ERROR,
 								BugzillaUiPlugin.ID_PLUGIN, 0, "Failed to obtain repository configuration", e)); //$NON-NLS-1$

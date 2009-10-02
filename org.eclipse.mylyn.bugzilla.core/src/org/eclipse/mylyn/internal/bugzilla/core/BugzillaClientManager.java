@@ -30,7 +30,10 @@ public class BugzillaClientManager implements IRepositoryListener {
 
 	private final Map<String, BugzillaClient> clientByUrl = new HashMap<String, BugzillaClient>();
 
-	public BugzillaClientManager() {
+	private final BugzillaRepositoryConnector connector;
+
+	public BugzillaClientManager(BugzillaRepositoryConnector connector) {
+		this.connector = connector;
 	}
 
 	public BugzillaClient getClient(TaskRepository taskRepository, IProgressMonitor monitor) throws CoreException {
@@ -50,14 +53,14 @@ public class BugzillaClientManager implements IRepositoryListener {
 				}
 				clientByUrl.put(taskRepository.getRepositoryUrl(), client);
 			}
-			RepositoryConfiguration config = BugzillaCorePlugin.getRepositoryConfiguration(taskRepository.getUrl());
+			RepositoryConfiguration config = connector.getRepositoryConfiguration(taskRepository.getUrl());
 			client.setRepositoryConfiguration(config);
 		}
 		return client;
 	}
 
 	protected BugzillaClient createClient(TaskRepository taskRepository) throws MalformedURLException {
-		return BugzillaClientFactory.createClient(taskRepository);
+		return BugzillaClientFactory.createClient(taskRepository, connector);
 	}
 
 	public void repositoryAdded(TaskRepository repository) {

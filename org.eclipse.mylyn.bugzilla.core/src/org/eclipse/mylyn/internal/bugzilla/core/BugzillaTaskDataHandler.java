@@ -48,14 +48,14 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
 		VERSION_0(0f) {
 			@Override
-			void migrate(TaskRepository repository, TaskData data) {
+			void migrate(TaskRepository repository, TaskData data, BugzillaRepositoryConnector connector) {
 				// ignore
 			}
 		},
 
 		VERSION_1_0(1.0f) {
 			@Override
-			void migrate(TaskRepository repository, TaskData data) {
+			void migrate(TaskRepository repository, TaskData data, BugzillaRepositoryConnector connector) {
 				// 1: the value was stored in the attribute rather than the key
 				for (TaskAttribute attribute : new ArrayList<TaskAttribute>(data.getRoot().getAttributes().values())) {
 					if (attribute.getId().equals(BugzillaAttribute.DESC.getKey())) {
@@ -74,7 +74,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 				for (TaskAttribute taskAttribute : operationsToRemove) {
 					data.getRoot().removeAttribute(taskAttribute.getId());
 				}
-				RepositoryConfiguration configuration = BugzillaCorePlugin.getRepositoryConfiguration(repository.getRepositoryUrl());
+				RepositoryConfiguration configuration = connector.getRepositoryConfiguration(repository.getRepositoryUrl());
 				if (configuration != null) {
 					configuration.addValidOperations(data);
 				}
@@ -82,26 +82,26 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		},
 		VERSION_2_0(2.0f) {
 			@Override
-			void migrate(TaskRepository repository, TaskData data) {
+			void migrate(TaskRepository repository, TaskData data, BugzillaRepositoryConnector connector) {
 				updateAttribute(data, BugzillaAttribute.LONG_DESC);
 			}
 		},
 		VERSION_3_0(3.0f) {
 			@Override
-			void migrate(TaskRepository repository, TaskData data) {
+			void migrate(TaskRepository repository, TaskData data, BugzillaRepositoryConnector connector) {
 				updateAttribute(data, BugzillaAttribute.NEW_COMMENT);
 			}
 		},
 		VERSION_4_0(4.0f) {
 			@Override
-			void migrate(TaskRepository repository, TaskData data) {
+			void migrate(TaskRepository repository, TaskData data, BugzillaRepositoryConnector connector) {
 				updateAttribute(data, BugzillaAttribute.DEADLINE);
 				updateAttribute(data, BugzillaAttribute.ACTUAL_TIME);
 			}
 		},
 		VERSION_4_1(4.1f) {
 			@Override
-			void migrate(TaskRepository repository, TaskData data) {
+			void migrate(TaskRepository repository, TaskData data, BugzillaRepositoryConnector connector) {
 				updateAttribute(data, BugzillaAttribute.VOTES);
 				TaskAttribute attrDeadline = data.getRoot().getMappedAttribute(BugzillaAttribute.VOTES.getKey());
 				if (attrDeadline != null) {
@@ -111,7 +111,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		},
 		VERSION_4_2(4.2f) {
 			@Override
-			void migrate(TaskRepository repository, TaskData data) {
+			void migrate(TaskRepository repository, TaskData data, BugzillaRepositoryConnector connector) {
 				updateAttribute(data, BugzillaAttribute.CC);
 				updateAttribute(data, BugzillaAttribute.DEPENDSON);
 				updateAttribute(data, BugzillaAttribute.BLOCKED);
@@ -124,7 +124,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		},
 		VERSION_4_3(4.3f) {
 			@Override
-			void migrate(TaskRepository repository, TaskData data) {
+			void migrate(TaskRepository repository, TaskData data, BugzillaRepositoryConnector connector) {
 				// migrate custom attributes
 				for (TaskAttribute attribute : data.getRoot().getAttributes().values()) {
 					if (attribute.getId().startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX)) {
@@ -141,16 +141,16 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		},
 		VERSION_4_4(4.4f) {
 			@Override
-			void migrate(TaskRepository repository, TaskData data) {
+			void migrate(TaskRepository repository, TaskData data, BugzillaRepositoryConnector connector) {
 				// summary didn't have spell checking, update to short rich text
 				updateAttribute(data, BugzillaAttribute.SHORT_DESC);
 			}
 		},
 		VERSION_4_5(4.5f) {
 			@Override
-			void migrate(TaskRepository repository, TaskData data) {
+			void migrate(TaskRepository repository, TaskData data, BugzillaRepositoryConnector connector) {
 				// migrate custom attributes
-				RepositoryConfiguration configuration = BugzillaCorePlugin.getRepositoryConfiguration(repository.getRepositoryUrl());
+				RepositoryConfiguration configuration = connector.getRepositoryConfiguration(repository.getRepositoryUrl());
 
 				if (configuration == null) {
 					return;
@@ -205,7 +205,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		},
 		VERSION_CURRENT(4.6f) {
 			@Override
-			void migrate(TaskRepository repository, TaskData data) {
+			void migrate(TaskRepository repository, TaskData data, BugzillaRepositoryConnector connector) {
 				data.setVersion(TaskDataVersion.VERSION_CURRENT.toString());
 			}
 		};
@@ -220,7 +220,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			return versionNumber;
 		}
 
-		abstract void migrate(TaskRepository repository, TaskData data);
+		abstract void migrate(TaskRepository repository, TaskData data, BugzillaRepositoryConnector connector);
 
 		@Override
 		public String toString() {
@@ -237,7 +237,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		}
 	}
 
-	private final BugzillaRepositoryConnector connector;
+	protected final BugzillaRepositoryConnector connector;
 
 	public BugzillaTaskDataHandler(BugzillaRepositoryConnector connector) {
 		this.connector = connector;
@@ -356,7 +356,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
 		for (TaskDataVersion version : TaskDataVersion.values()) {
 			if (bugzillaTaskDataVersion <= version.getVersionNum()) {
-				version.migrate(taskRepository, taskData);
+				version.migrate(taskRepository, taskData, connector);
 			}
 		}
 	}
@@ -397,8 +397,8 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		// fresh from the repository (not locally stored data that may not have been migrated).
 		taskData.setVersion(TaskDataVersion.VERSION_CURRENT.toString());
 
-		RepositoryConfiguration repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(repository,
-				false, monitor);
+		RepositoryConfiguration repositoryConfiguration = connector.getRepositoryConfiguration(repository, false,
+				monitor);
 
 		if (repositoryConfiguration == null) {
 			return false;
@@ -429,14 +429,14 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			}
 
 			initializeNewTaskDataAttributes(repositoryConfiguration, taskData, product, component, monitor);
-			if (BugzillaCorePlugin.getDefault() != null) {
-				BugzillaCorePlugin.getDefault().setPlatformDefaultsOrGuess(repository, taskData);
+			if (connector != null) {
+				connector.setPlatformDefaultsOrGuess(repository, taskData);
 			}
 			return true;
 
 		} else {
 			boolean shortLogin = Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN));
-			repositoryConfiguration.configureTaskData(taskData, shortLogin);
+			repositoryConfiguration.configureTaskData(taskData, shortLogin, connector);
 		}
 		return true;
 	}
@@ -662,7 +662,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
 	@Override
 	public TaskAttributeMapper getAttributeMapper(TaskRepository taskRepository) {
-		return new BugzillaAttributeMapper(taskRepository);
+		return new BugzillaAttributeMapper(taskRepository, connector);
 	}
 
 	public static TaskAttribute createAttribute(TaskData data, BugzillaAttribute key) {

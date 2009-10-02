@@ -35,6 +35,12 @@ public class BugzillaFlagMapper {
 
 	private int number;
 
+	private final BugzillaRepositoryConnector connector;
+
+	public BugzillaFlagMapper(BugzillaRepositoryConnector connector) {
+		this.connector = connector;
+	}
+
 	public String getRequestee() {
 		return requestee;
 	}
@@ -95,7 +101,7 @@ public class BugzillaFlagMapper {
 		BugzillaVersion bugzillaVersion = null;
 		RepositoryConfiguration repositoryConfiguration;
 		try {
-			repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(mapper.getTaskRepository(), false,
+			repositoryConfiguration = connector.getRepositoryConfiguration(mapper.getTaskRepository(), false,
 					new NullProgressMonitor());
 			bugzillaVersion = repositoryConfiguration.getInstallVersion();
 		} catch (CoreException e) {

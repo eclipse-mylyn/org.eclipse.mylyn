@@ -40,7 +40,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
@@ -1061,7 +1061,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 				// TODO: update status, resolution, severity etc if possible...
 				if (getTaskRepository() != null) {
-					repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(getTaskRepository().getUrl());
+					BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) TasksUi.getRepositoryConnector(getTaskRepository().getConnectorKind());
+					repositoryConfiguration = connector.getRepositoryConfiguration(getTaskRepository().getUrl());
 					updateAttributesFromConfiguration(null);
 					if (product.getItemCount() == 0) {
 						Display.getDefault().asyncExec(new Runnable() {
@@ -1873,8 +1874,9 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 					try {
 						monitor.beginTask(Messages.BugzillaSearchPage_Updating_search_options_,
 								IProgressMonitor.UNKNOWN);
-						repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(getTaskRepository(),
-								force, monitor);
+						BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) TasksUi.getRepositoryConnector(getTaskRepository().getConnectorKind());
+						repositoryConfiguration = connector.getRepositoryConfiguration(getTaskRepository(), force,
+								monitor);
 					} catch (final Exception e) {
 						throw new InvocationTargetException(e);
 					} finally {

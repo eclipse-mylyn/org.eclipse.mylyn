@@ -19,7 +19,7 @@ import java.io.InputStreamReader;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.core.SaxConfigurationContentHandler;
 import org.eclipse.mylyn.internal.bugzilla.core.XmlCleaner;
@@ -36,12 +36,10 @@ import org.xml.sax.helpers.XMLReaderFactory;
 public class BugzillaConfigurationTest extends TestCase {
 
 	public void testRepositoryConfigurationCachePersistance() throws Exception {
-		if (BugzillaCorePlugin.getConfigurationCacheFile() == null) {
-			File file = File.createTempFile("bugzilla", null);
-			file.deleteOnExit();
-			BugzillaCorePlugin.setConfigurationCacheFile(file);
-		}
-		
+		File file = File.createTempFile("bugzilla", null);
+		file.deleteOnExit();
+
+		BugzillaRepositoryConnector connector = new BugzillaRepositoryConnector(file);
 		RepositoryConfiguration configuration1 = new RepositoryConfiguration();
 		configuration1.setRepositoryUrl("url1");
 		configuration1.addProduct("Test Product 1");
@@ -52,22 +50,40 @@ public class BugzillaConfigurationTest extends TestCase {
 		configuration2.addProduct("Test Product 2");
 		assertEquals(1, configuration2.getProducts().size());
 
-		BugzillaCorePlugin.addRepositoryConfiguration(configuration1);
-		BugzillaCorePlugin.addRepositoryConfiguration(configuration2);
-		BugzillaCorePlugin.writeRepositoryConfigFile();
-		assertNotNull(BugzillaCorePlugin.getRepositoryConfiguration(configuration1.getRepositoryUrl()));
-		assertNotNull(BugzillaCorePlugin.getRepositoryConfiguration(configuration2.getRepositoryUrl()));
-		BugzillaCorePlugin.removeConfiguration(configuration1);
-		BugzillaCorePlugin.removeConfiguration(configuration2);
-		assertNull(BugzillaCorePlugin.getRepositoryConfiguration(configuration1.getRepositoryUrl()));
-		assertNull(BugzillaCorePlugin.getRepositoryConfiguration(configuration2.getRepositoryUrl()));
-		BugzillaCorePlugin.setCacheFileRead(false);
-		BugzillaCorePlugin.readRepositoryConfigurationFile();
-		assertNotNull(BugzillaCorePlugin.getRepositoryConfiguration(configuration1.getRepositoryUrl()));
-		assertNotNull(BugzillaCorePlugin.getRepositoryConfiguration(configuration2.getRepositoryUrl()));
-		RepositoryConfiguration testLoadedConfig = BugzillaCorePlugin.getRepositoryConfiguration(configuration1.getRepositoryUrl());
+		connector.addRepositoryConfiguration(configuration1);
+		connector.addRepositoryConfiguration(configuration2);
+		connector.writeRepositoryConfigFile();
+		assertNotNull(connector.getRepositoryConfiguration(configuration1.getRepositoryUrl()));
+		assertNotNull(connector.getRepositoryConfiguration(configuration2.getRepositoryUrl()));
+
+		connector.removeConfiguration(configuration1);
+		connector.removeConfiguration(configuration2);
+		assertNull(connector.getRepositoryConfiguration(configuration1.getRepositoryUrl()));
+		assertNull(connector.getRepositoryConfiguration(configuration2.getRepositoryUrl()));
+
+		connector = new BugzillaRepositoryConnector(file);
+		connector.readRepositoryConfigurationFile();
+		assertNotNull(connector.getRepositoryConfiguration(configuration1.getRepositoryUrl()));
+		assertNotNull(connector.getRepositoryConfiguration(configuration2.getRepositoryUrl()));
+		RepositoryConfiguration testLoadedConfig = connector.getRepositoryConfiguration(configuration1.getRepositoryUrl());
 		assertEquals(1, testLoadedConfig.getProducts().size());
 		assertEquals(configuration1.getProducts().get(0), testLoadedConfig.getProducts().get(0));
+	}
+
+	public void testNullCacheFile() {
+		BugzillaRepositoryConnector connector = new BugzillaRepositoryConnector();
+		connector.readRepositoryConfigurationFile();
+		RepositoryConfiguration configuration1 = new RepositoryConfiguration();
+		configuration1.setRepositoryUrl("url1");
+		configuration1.addProduct("Test Product 1");
+		assertNull(connector.getRepositoryConfiguration(configuration1.getRepositoryUrl()));
+
+		connector.addRepositoryConfiguration(configuration1);
+		assertNotNull(connector.getRepositoryConfiguration(configuration1.getRepositoryUrl()));
+
+		connector = new BugzillaRepositoryConnector();
+		connector.readRepositoryConfigurationFile();
+		assertNull(connector.getRepositoryConfiguration(configuration1.getRepositoryUrl()));
 	}
 
 	// FIXME re-enable?
@@ -104,7 +120,8 @@ public class BugzillaConfigurationTest extends TestCase {
 
 		}
 
-		SaxConfigurationContentHandler contentHandler = new SaxConfigurationContentHandler();
+		SaxConfigurationContentHandler contentHandler = new SaxConfigurationContentHandler(
+				new BugzillaRepositoryConnector());
 		final XMLReader reader = XMLReaderFactory.createXMLReader();
 		reader.setContentHandler(contentHandler);
 		reader.setErrorHandler(new ErrorHandler() {

@@ -11,7 +11,12 @@
 
 package org.eclipse.mylyn.internal.bugzilla.core;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.MessageFormat;
@@ -25,11 +30,14 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
@@ -81,6 +89,65 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	protected static BugzillaLanguageSettings enSetting;
 
 	protected static final Set<BugzillaLanguageSettings> languages = new LinkedHashSet<BugzillaLanguageSettings>();
+
+	private static final String ERROR_DELETING_CONFIGURATION = "Error removing corrupt repository configuration file."; //$NON-NLS-1$
+
+	private static final String ERROR_INCOMPATIBLE_CONFIGURATION = "Reset Bugzilla repository configuration cache due to format change"; //$NON-NLS-1$
+
+	private boolean cacheFileRead;
+
+	private File repositoryConfigurationFile;
+
+	private final Map<String, RepositoryConfiguration> repositoryConfigurations = new HashMap<String, RepositoryConfiguration>();
+
+	// A Map from Java's  Platform to Buzilla's
+	private static final Map<String, String> java2buzillaPlatformMap = new HashMap<String, String>();
+
+	private static final String OPTION_ALL = "All"; //$NON-NLS-1$
+
+	static {
+		enSetting = new BugzillaLanguageSettings(IBugzillaConstants.DEFAULT_LANG);
+		enSetting.addLanguageAttribute("error_login", "Login"); //$NON-NLS-1$ //$NON-NLS-2$
+		enSetting.addLanguageAttribute("error_login", "log in"); //$NON-NLS-1$ //$NON-NLS-2$
+		enSetting.addLanguageAttribute("error_login", "check e-mail"); //$NON-NLS-1$ //$NON-NLS-2$
+		enSetting.addLanguageAttribute("error_login", "Invalid Username Or Password"); //$NON-NLS-1$ //$NON-NLS-2$
+		enSetting.addLanguageAttribute("error_collision", "Mid-air collision!"); //$NON-NLS-1$ //$NON-NLS-2$
+		enSetting.addLanguageAttribute("error_comment_required", "Comment Required"); //$NON-NLS-1$ //$NON-NLS-2$
+		enSetting.addLanguageAttribute("error_logged_out", "logged out"); //$NON-NLS-1$ //$NON-NLS-2$
+		enSetting.addLanguageAttribute("bad_login", "Login"); //$NON-NLS-1$ //$NON-NLS-2$
+		enSetting.addLanguageAttribute("bad_login", "log in"); //$NON-NLS-1$ //$NON-NLS-2$
+		enSetting.addLanguageAttribute("bad_login", "check e-mail"); //$NON-NLS-1$ //$NON-NLS-2$
+		enSetting.addLanguageAttribute("bad_login", "Invalid Username Or Password"); //$NON-NLS-1$ //$NON-NLS-2$
+		enSetting.addLanguageAttribute("bad_login", "error"); //$NON-NLS-1$ //$NON-NLS-2$
+		enSetting.addLanguageAttribute("processed", "processed"); //$NON-NLS-1$ //$NON-NLS-2$
+		enSetting.addLanguageAttribute("changes_submitted", "Changes submitted"); //$NON-NLS-1$ //$NON-NLS-2$
+		enSetting.addLanguageAttribute("changes_submitted", "added to Bug"); //$NON-NLS-1$ //$NON-NLS-2$
+		enSetting.addLanguageAttribute("bug", "Bug"); //$NON-NLS-1$ //$NON-NLS-2$
+		enSetting.addLanguageAttribute("bug", "Issue"); //$NON-NLS-1$ //$NON-NLS-2$
+		enSetting.addLanguageAttribute("submitted", "Submitted"); //$NON-NLS-1$ //$NON-NLS-2$
+		enSetting.addLanguageAttribute("submitted", "posted"); //$NON-NLS-1$ //$NON-NLS-2$
+		enSetting.addLanguageAttribute("suspicious_action", "Suspicious action"); //$NON-NLS-1$ //$NON-NLS-2$
+		languages.add(enSetting);
+
+		java2buzillaPlatformMap.put("x86", "PC"); // can be PC or Macintosh! //$NON-NLS-1$ //$NON-NLS-2$
+		java2buzillaPlatformMap.put("x86_64", "PC"); //$NON-NLS-1$ //$NON-NLS-2$
+		java2buzillaPlatformMap.put("ia64", "PC"); //$NON-NLS-1$ //$NON-NLS-2$
+		java2buzillaPlatformMap.put("ia64_32", "PC"); //$NON-NLS-1$ //$NON-NLS-2$
+		java2buzillaPlatformMap.put("sparc", "Sun"); //$NON-NLS-1$ //$NON-NLS-2$
+		java2buzillaPlatformMap.put("ppc", "Power PC"); // not Power! //$NON-NLS-1$ //$NON-NLS-2$
+	}
+
+	public BugzillaRepositoryConnector() {
+		if (BugzillaCorePlugin.getDefault() != null) {
+			BugzillaCorePlugin.getDefault().setConnector(this);
+			IPath path = BugzillaCorePlugin.getDefault().getConfigurationCachePath();
+			this.repositoryConfigurationFile = path.toFile();
+		}
+	}
+
+	public BugzillaRepositoryConnector(File repositoryConfigurationFile) {
+		this.repositoryConfigurationFile = repositoryConfigurationFile;
+	}
 
 	@Override
 	public String getLabel() {
@@ -381,32 +448,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	public BugzillaClientManager getClientManager() {
 		if (clientManager == null) {
-			clientManager = new BugzillaClientManager();
-			// TODO: Move this initialization elsewhere
-			BugzillaCorePlugin.setConnector(this);
-			enSetting = new BugzillaLanguageSettings(IBugzillaConstants.DEFAULT_LANG);
-			enSetting.addLanguageAttribute("error_login", "Login"); //$NON-NLS-1$ //$NON-NLS-2$
-			enSetting.addLanguageAttribute("error_login", "log in"); //$NON-NLS-1$ //$NON-NLS-2$
-			enSetting.addLanguageAttribute("error_login", "check e-mail"); //$NON-NLS-1$ //$NON-NLS-2$
-			enSetting.addLanguageAttribute("error_login", "Invalid Username Or Password"); //$NON-NLS-1$ //$NON-NLS-2$
-			enSetting.addLanguageAttribute("error_collision", "Mid-air collision!"); //$NON-NLS-1$ //$NON-NLS-2$
-			enSetting.addLanguageAttribute("error_comment_required", "Comment Required"); //$NON-NLS-1$ //$NON-NLS-2$
-			enSetting.addLanguageAttribute("error_logged_out", "logged out"); //$NON-NLS-1$ //$NON-NLS-2$
-			enSetting.addLanguageAttribute("bad_login", "Login"); //$NON-NLS-1$ //$NON-NLS-2$
-			enSetting.addLanguageAttribute("bad_login", "log in"); //$NON-NLS-1$ //$NON-NLS-2$
-			enSetting.addLanguageAttribute("bad_login", "check e-mail"); //$NON-NLS-1$ //$NON-NLS-2$
-			enSetting.addLanguageAttribute("bad_login", "Invalid Username Or Password"); //$NON-NLS-1$ //$NON-NLS-2$
-			enSetting.addLanguageAttribute("bad_login", "error"); //$NON-NLS-1$ //$NON-NLS-2$
-			enSetting.addLanguageAttribute("processed", "processed"); //$NON-NLS-1$ //$NON-NLS-2$
-			enSetting.addLanguageAttribute("changes_submitted", "Changes submitted"); //$NON-NLS-1$ //$NON-NLS-2$
-			enSetting.addLanguageAttribute("changes_submitted", "added to Bug"); //$NON-NLS-1$ //$NON-NLS-2$
-			enSetting.addLanguageAttribute("bug", "Bug"); //$NON-NLS-1$ //$NON-NLS-2$
-			enSetting.addLanguageAttribute("bug", "Issue"); //$NON-NLS-1$ //$NON-NLS-2$
-			enSetting.addLanguageAttribute("submitted", "Submitted"); //$NON-NLS-1$ //$NON-NLS-2$
-			enSetting.addLanguageAttribute("submitted", "posted"); //$NON-NLS-1$ //$NON-NLS-2$
-			enSetting.addLanguageAttribute("suspicious_action", "Suspicious action"); //$NON-NLS-1$ //$NON-NLS-2$
-			languages.add(enSetting);
-
+			clientManager = new BugzillaClientManager(this);
 		}
 		return clientManager;
 	}
@@ -414,7 +456,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public void updateRepositoryConfiguration(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
 		if (repository != null) {
-			BugzillaCorePlugin.getRepositoryConfiguration(repository, true, monitor);
+			getRepositoryConfiguration(repository, true, monitor);
 		}
 	}
 
@@ -606,6 +648,286 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				return taskData.getRepositoryUrl();
 			}
 		};
+	}
+
+	/** public for testing */
+	public synchronized void readRepositoryConfigurationFile() {
+		if (cacheFileRead || repositoryConfigurationFile == null || !repositoryConfigurationFile.exists()) {
+			return;
+		}
+
+		synchronized (repositoryConfigurations) {
+			ObjectInputStream in = null;
+			try {
+				in = new ObjectInputStream(new FileInputStream(repositoryConfigurationFile));
+				int size = in.readInt();
+				for (int nX = 0; nX < size; nX++) {
+					RepositoryConfiguration item = (RepositoryConfiguration) in.readObject();
+					if (item != null) {
+						repositoryConfigurations.put(item.getRepositoryUrl(), item);
+					}
+				}
+			} catch (Exception e) {
+				StatusHandler.log(new Status(IStatus.INFO, BugzillaCorePlugin.ID_PLUGIN,
+						ERROR_INCOMPATIBLE_CONFIGURATION));
+				try {
+					if (in != null) {
+						in.close();
+					}
+					if (repositoryConfigurationFile != null && repositoryConfigurationFile.exists()) {
+						if (repositoryConfigurationFile.delete()) {
+							// successfully deleted
+						} else {
+							StatusHandler.log(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, 0,
+									ERROR_DELETING_CONFIGURATION, e));
+						}
+					}
+
+				} catch (Exception ex) {
+					StatusHandler.log(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, 0,
+							ERROR_DELETING_CONFIGURATION, e));
+				}
+			} finally {
+				cacheFileRead = true;
+				if (in != null) {
+					try {
+						in.close();
+					} catch (IOException e) {
+						// ignore
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Retrieves the latest repository configuration from the server
+	 */
+	public RepositoryConfiguration getRepositoryConfiguration(TaskRepository repository, boolean forceRefresh,
+			IProgressMonitor monitor) throws CoreException {
+		monitor = Policy.monitorFor(monitor);
+		try {
+			readRepositoryConfigurationFile();
+			RepositoryConfiguration configuration;
+			configuration = repositoryConfigurations.get(repository.getRepositoryUrl());
+			if (configuration == null || forceRefresh) {
+				synchronized (repositoryConfigurations) {
+					// check if another thread already retrieved configuration
+					configuration = repositoryConfigurations.get(repository.getRepositoryUrl());
+					if (configuration == null || forceRefresh) {
+						BugzillaClient client = clientManager.getClient(repository, monitor);
+						configuration = client.getRepositoryConfiguration(monitor);
+						if (configuration != null) {
+							internalAddConfiguration(configuration);
+						}
+					}
+				}
+			}
+			return configuration;//repositoryConfigurations.get(repository.getRepositoryUrl());
+		} catch (IOException e) {
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, 1,
+					"Error retrieving task attributes from repository.\n\n" + e.getMessage(), e)); //$NON-NLS-1$
+		}
+	}
+
+	public void addRepositoryConfiguration(RepositoryConfiguration config) {
+		if (config != null) {
+			readRepositoryConfigurationFile();
+			synchronized (repositoryConfigurations) {
+				internalAddConfiguration(config);
+			}
+		}
+	}
+
+	private void internalAddConfiguration(RepositoryConfiguration config) {
+		repositoryConfigurations.remove(config.getRepositoryUrl());
+		repositoryConfigurations.put(config.getRepositoryUrl(), config);
+	}
+
+	public RepositoryConfiguration getRepositoryConfiguration(String repositoryUrl) {
+		readRepositoryConfigurationFile();
+		return repositoryConfigurations.get(repositoryUrl);
+	}
+
+	/** public for testing */
+	public void removeConfiguration(RepositoryConfiguration config) {
+		synchronized (repositoryConfigurations) {
+			repositoryConfigurations.remove(config.getRepositoryUrl());
+		}
+	}
+
+	/** public for testing */
+	public void writeRepositoryConfigFile() {
+		if (repositoryConfigurationFile != null) {
+			ObjectOutputStream out = null;
+			try {
+				Set<RepositoryConfiguration> tempConfigs;
+				synchronized (repositoryConfigurations) {
+					tempConfigs = new HashSet<RepositoryConfiguration>(repositoryConfigurations.values());
+				}
+				if (tempConfigs.size() > 0) {
+					out = new ObjectOutputStream(new FileOutputStream(repositoryConfigurationFile));
+					out.writeInt(tempConfigs.size());
+					for (RepositoryConfiguration repositoryConfiguration : tempConfigs) {
+						if (repositoryConfiguration != null) {
+							out.writeObject(repositoryConfiguration);
+						}
+					}
+				}
+			} catch (IOException e) {
+				StatusHandler.log(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN, 0,
+						"Failed to write repository configuration cache", e)); //$NON-NLS-1$
+			} finally {
+				if (out != null) {
+					try {
+						out.close();
+					} catch (IOException e) {
+						// ignore
+					}
+				}
+			}
+		}
+	}
+
+	public void stop() {
+		writeRepositoryConfigFile();
+	}
+
+	public void setPlatformDefaultsOrGuess(TaskRepository repository, TaskData newBugModel) {
+
+		String platform = repository.getProperty(IBugzillaConstants.BUGZILLA_DEF_PLATFORM);
+		String os = repository.getProperty(IBugzillaConstants.BUGZILLA_DEF_OS);
+
+		// set both or none
+		if (null != os && null != platform) {
+			TaskAttribute opSysAttribute = newBugModel.getRoot().getAttribute(BugzillaAttribute.OP_SYS.getKey());
+			TaskAttribute platformAttribute = newBugModel.getRoot().getAttribute(
+					BugzillaAttribute.REP_PLATFORM.getKey());
+
+			// TODO something can still go wrong when the allowed values on the repository change...
+			opSysAttribute.setValue(os);
+			platformAttribute.setValue(platform);
+			return;
+		}
+		// fall through to old code
+		setPlatformOptions(newBugModel);
+	}
+
+	public void setPlatformOptions(TaskData newBugModel) {
+		try {
+
+			// Get OS Lookup Map
+			// Check that the result is in Values, if it is not, set it to other
+			// Defaults to the first of each (sorted) list All, All
+			TaskAttribute opSysAttribute = newBugModel.getRoot().getAttribute(BugzillaAttribute.OP_SYS.getKey());
+			TaskAttribute platformAttribute = newBugModel.getRoot().getAttribute(
+					BugzillaAttribute.REP_PLATFORM.getKey());
+
+			String OS = Platform.getOS();
+			String platform = Platform.getOSArch();
+			String ws = Platform.getWS();
+
+			String bugzillaOS = null; // Bugzilla String for OS
+			String bugzillaPlatform = null; // Bugzilla String for Platform
+			String[] wsExtentions = null;
+/*
+			AIX -> AIX
+			Linux -> Linux
+			HP-UX -> HP-UX
+			Solaris -> Solaris
+			MacOS X -> Mac OS X
+ */
+
+			if (ws.length() > 1) {
+				char first = ws.charAt(0);
+				char firstLower = Character.toLowerCase(first);
+				char firstUpper = Character.toUpperCase(first);
+				String[] wsExtentionsTemp = { " - " + firstUpper + ws.substring(1, ws.length()), //$NON-NLS-1$
+						" - " + firstLower + ws.substring(1, ws.length()), //$NON-NLS-1$
+						" " + firstUpper + ws.substring(1, ws.length()), //$NON-NLS-1$
+						" " + firstLower + ws.substring(1, ws.length()), "" }; //$NON-NLS-1$//$NON-NLS-2$
+				wsExtentions = wsExtentionsTemp;
+			} else if (ws.length() == 1) {
+				char first = ws.charAt(0);
+				char firstLower = Character.toLowerCase(first);
+				char firstUpper = Character.toUpperCase(first);
+				String[] wsExtentionsTemp = { " - " + firstUpper, " - " + firstLower, " " + firstUpper, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						" " + firstLower, "" }; //$NON-NLS-1$//$NON-NLS-2$
+				wsExtentions = wsExtentionsTemp;
+			} else {
+				String[] wsExtentionsTemp = { "" }; //$NON-NLS-1$
+				wsExtentions = wsExtentionsTemp;
+			}
+
+			bugzillaOS = System.getProperty("os.name") + " " + System.getProperty("os.version"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			// We start with the most specific Value as the Search String.
+			// If we didn't find it we remove the last part of the version String or the OS Name from
+			// the Search String and continue with the test until we found it or the Search String is empty.
+			//
+			// The search in casesensitive.
+			if (opSysAttribute != null) {
+				for (String element : wsExtentions) {
+					String bugzillaOSTemp = bugzillaOS;
+					while (bugzillaOSTemp != null && opSysAttribute.getOption(bugzillaOSTemp + element) == null) {
+						int dotindex = bugzillaOSTemp.lastIndexOf('.');
+						if (dotindex > 0) {
+							bugzillaOSTemp = bugzillaOSTemp.substring(0, dotindex);
+						} else {
+							int spaceindex = bugzillaOSTemp.lastIndexOf(' ');
+							if (spaceindex > 0) {
+								bugzillaOSTemp = bugzillaOSTemp.substring(0, spaceindex);
+							} else {
+								bugzillaOSTemp = null;
+							}
+						}
+					}
+					if (bugzillaOSTemp != null) {
+						bugzillaOS = bugzillaOSTemp + element;
+						break;
+					}
+				}
+			} else {
+				bugzillaOS = null;
+			}
+
+			if (platform != null && java2buzillaPlatformMap.containsKey(platform)) {
+				bugzillaPlatform = java2buzillaPlatformMap.get(platform);
+				// Bugzilla knows the following Platforms [All, Macintosh, Other, PC, Power PC, Sun]
+				// Platform.getOSArch() returns "x86" on Intel Mac's and "ppc" on Power Mac's
+				// so bugzillaPlatform is "Power" or "PC".
+				//
+				// If the OS is "macosx" we change the Platform to "Macintosh"
+				//
+				if (bugzillaPlatform != null
+						&& (bugzillaPlatform.compareTo("Power") == 0 || bugzillaPlatform.compareTo("PC") == 0) //$NON-NLS-1$ //$NON-NLS-2$
+						&& OS != null && OS.compareTo("macosx") == 0) { //$NON-NLS-1$
+					// TODO: this may not even be a legal value in another repository!
+					bugzillaPlatform = "Macintosh"; //$NON-NLS-1$
+				} else if (platformAttribute != null && platformAttribute.getOption(bugzillaPlatform) == null) {
+					// If the platform we found is not int the list of available
+					// optinos, set the
+					// Bugzilla Platform to null, and juse use "other"
+					bugzillaPlatform = null;
+				}
+			}
+			// Set the OS and the Platform in the taskData
+			if (bugzillaOS != null && opSysAttribute != null) {
+				opSysAttribute.setValue(bugzillaOS);
+			} else if (opSysAttribute != null && opSysAttribute.getOption(OPTION_ALL) != null) {
+				opSysAttribute.setValue(OPTION_ALL);
+			}
+
+			if (bugzillaPlatform != null && platformAttribute != null) {
+				platformAttribute.setValue(bugzillaPlatform);
+			} else if (opSysAttribute != null && platformAttribute != null
+					&& platformAttribute.getOption(OPTION_ALL) != null) {
+				opSysAttribute.setValue(OPTION_ALL);
+			}
+
+		} catch (Exception e) {
+			StatusHandler.log(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, "could not set platform options", //$NON-NLS-1$
+					e));
+		}
 	}
 
 }

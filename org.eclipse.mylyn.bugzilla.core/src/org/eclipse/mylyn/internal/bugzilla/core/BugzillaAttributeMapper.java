@@ -42,8 +42,11 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 
 	private final String dateFormat_3_TimeZone = "yyyy-MM-dd zzz"; //$NON-NLS-1$
 
-	public BugzillaAttributeMapper(TaskRepository taskRepository) {
+	private final BugzillaRepositoryConnector connector;
+
+	public BugzillaAttributeMapper(TaskRepository taskRepository, BugzillaRepositoryConnector connector) {
 		super(taskRepository);
+		this.connector = connector;
 	}
 
 	@Override
@@ -93,7 +96,7 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 
 		RepositoryConfiguration repositoryConfiguration;
 		BugzillaVersion bugzillaVersion = null;
-		repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(getTaskRepository().getUrl());
+		repositoryConfiguration = connector.getRepositoryConfiguration(getTaskRepository().getUrl());
 		if (repositoryConfiguration != null) {
 			bugzillaVersion = repositoryConfiguration.getInstallVersion();
 		} else {
@@ -192,7 +195,7 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 
 			RepositoryConfiguration repositoryConfiguration;
 			BugzillaVersion bugzillaVersion = null;
-			repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(getTaskRepository().getUrl());
+			repositoryConfiguration = connector.getRepositoryConfiguration(getTaskRepository().getUrl());
 			if (repositoryConfiguration != null) {
 				bugzillaVersion = repositoryConfiguration.getInstallVersion();
 			} else {
@@ -353,7 +356,7 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 
 	@Override
 	public Map<String, String> getOptions(TaskAttribute attribute) {
-		RepositoryConfiguration configuration = BugzillaCorePlugin.getRepositoryConfiguration(getTaskRepository().getRepositoryUrl());
+		RepositoryConfiguration configuration = connector.getRepositoryConfiguration(getTaskRepository().getRepositoryUrl());
 		if (configuration != null) {
 			TaskAttribute attributeProduct = attribute.getTaskData().getRoot().getMappedAttribute(
 					BugzillaAttribute.PRODUCT.getKey());

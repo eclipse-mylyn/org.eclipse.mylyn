@@ -71,7 +71,6 @@ public class RepositoryConfiguration implements Serializable {
 	private String encoding = null;
 
 	public RepositoryConfiguration() {
-		super();
 	}
 
 	public void addStatus(String status) {
@@ -366,9 +365,9 @@ public class RepositoryConfiguration implements Serializable {
 		return customFields;
 	}
 
-	public void configureTaskData(TaskData taskData, boolean localuser) {
+	public void configureTaskData(TaskData taskData, boolean localuser, BugzillaRepositoryConnector connector) {
 		if (taskData != null) {
-			addMissingFlags(taskData);
+			addMissingFlags(taskData, connector);
 			updateAttributeOptions(taskData);
 			addValidOperations(taskData);
 			if (localuser) {
@@ -396,7 +395,7 @@ public class RepositoryConfiguration implements Serializable {
 		}
 	}
 
-	private void addMissingFlags(TaskData taskData) {
+	private void addMissingFlags(TaskData taskData, BugzillaRepositoryConnector connector) {
 		List<String> existingFlags = new ArrayList<String>();
 		List<BugzillaFlag> flags = getFlags();
 		for (TaskAttribute attribute : new HashSet<TaskAttribute>(taskData.getRoot().getAttributes().values())) {
@@ -433,7 +432,7 @@ public class RepositoryConfiguration implements Serializable {
 			if (existingFlags.contains(bugzillaFlag.getName()) && !bugzillaFlag.isMultiplicable()) {
 				continue;
 			}
-			BugzillaFlagMapper mapper = new BugzillaFlagMapper();
+			BugzillaFlagMapper mapper = new BugzillaFlagMapper(connector);
 			mapper.setRequestee(""); //$NON-NLS-1$
 			mapper.setSetter(""); //$NON-NLS-1$
 			mapper.setState(" "); //$NON-NLS-1$

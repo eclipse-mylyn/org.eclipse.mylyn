@@ -14,8 +14,6 @@ package org.eclipse.mylyn.internal.bugzilla.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
@@ -88,11 +86,6 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 		super.start(context);
 		getPreferenceStore().setDefault(IBugzillaConstants.MAX_RESULTS, 100);
 
-		IPath repConfigCacheFile = getProductConfigurationCachePath();
-		if (repConfigCacheFile != null) {
-			BugzillaCorePlugin.setConfigurationCacheFile(repConfigCacheFile.toFile());
-		}
-
 		BugzillaRepositoryConnector bugzillaConnector = (BugzillaRepositoryConnector) TasksUi.getRepositoryManager()
 				.getRepositoryConnector(BugzillaCorePlugin.CONNECTOR_KIND);
 
@@ -101,15 +94,6 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 		// NOTE: initializing extensions in start(..) has caused race
 		// conditions previously
 		BugzillaUiExtensionReader.initStartupExtensions();
-	}
-
-	/**
-	 * Returns the path to the file cacheing the product configuration.
-	 */
-	private static IPath getProductConfigurationCachePath() {
-		IPath stateLocation = Platform.getStateLocation(BugzillaCorePlugin.getDefault().getBundle());
-		IPath configFile = stateLocation.append("repositoryConfigurations"); //$NON-NLS-1$
-		return configFile;
 	}
 
 	public int getMaxResults() {

@@ -25,15 +25,12 @@ public class BugzillaClientFactory {
 
 	protected static TaskRepositoryLocationFactory taskRepositoryLocationFactory = new TaskRepositoryLocationFactory();
 
-	public static BugzillaClient createClient(TaskRepository taskRepository) throws MalformedURLException {
-		String language = taskRepository.getProperty(IBugzillaConstants.BUGZILLA_LANGUAGE_SETTING);
-		if (language == null || language.equals("")) { //$NON-NLS-1$
-			language = IBugzillaConstants.DEFAULT_LANG;
-		}
-		BugzillaLanguageSettings languageSettings = BugzillaRepositoryConnector.getLanguageSetting(language);
+	public static BugzillaClient createClient(TaskRepository taskRepository, BugzillaRepositoryConnector connector)
+			throws MalformedURLException {
 		AbstractWebLocation location = taskRepositoryLocationFactory.createWebLocation(taskRepository);
-		BugzillaClient client = new BugzillaClient(location, taskRepository.getCharacterEncoding(),
-				taskRepository.getProperties(), languageSettings);
+
+		BugzillaClient client = new BugzillaClient(location, taskRepository, connector);
+
 		return client;
 
 	}

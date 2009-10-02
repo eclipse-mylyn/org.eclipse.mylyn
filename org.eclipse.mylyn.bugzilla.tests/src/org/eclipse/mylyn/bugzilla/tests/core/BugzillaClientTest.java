@@ -24,12 +24,9 @@ import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttributeMapper;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClientFactory;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
-import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -80,8 +77,7 @@ public class BugzillaClientTest extends TestCase {
 	public void testValidate() throws Exception {
 		TaskRepository repository = BugzillaFixture.current().repository();
 		AbstractWebLocation location = BugzillaFixture.current().location();
-		client = new BugzillaClient(location, repository.getCharacterEncoding(), repository.getProperties(),
-				BugzillaRepositoryConnector.getLanguageSetting(IBugzillaConstants.DEFAULT_LANG));
+		client = new BugzillaClient(location, repository, BugzillaFixture.current().connector());
 		client.validate(new NullProgressMonitor());
 	}
 
@@ -90,9 +86,7 @@ public class BugzillaClientTest extends TestCase {
 		AbstractWebLocation location = BugzillaFixture.current().location(PrivilegeLevel.USER,
 				new Proxy(Proxy.Type.HTTP, new InetSocketAddress("localhost", 12356)));
 
-		client = BugzillaClientFactory.createClient(repository);
-		client = new BugzillaClient(location, repository.getCharacterEncoding(), repository.getProperties(),
-				BugzillaRepositoryConnector.getLanguageSetting(IBugzillaConstants.DEFAULT_LANG));
+		client = new BugzillaClient(location, repository, BugzillaFixture.current().connector());
 		try {
 			client.validate(new NullProgressMonitor());
 			fail("invalid proxy did not cause connection error");
@@ -102,11 +96,11 @@ public class BugzillaClientTest extends TestCase {
 	}
 
 	public void testCommentQuery() throws Exception {
-		BugzillaAttributeMapper mapper = new BugzillaAttributeMapper(repository);
+		BugzillaRepositoryConnector connector = BugzillaFixture.current().connector();
+		BugzillaAttributeMapper mapper = new BugzillaAttributeMapper(repository, connector);
 		TaskData newData = new TaskData(mapper, BugzillaFixture.current().getConnectorKind(), BugzillaFixture.current()
 				.getRepositoryUrl(), "");
 
-		AbstractRepositoryConnector connector = BugzillaFixture.current().connector();
 		connector.getTaskDataHandler().initializeTaskData(repository, newData, null, new NullProgressMonitor());
 		newData.getRoot().getMappedAttribute(TaskAttribute.SUMMARY).setValue("testCommentQuery()");
 		newData.getRoot().getMappedAttribute(TaskAttribute.PRODUCT).setValue("TestProduct");

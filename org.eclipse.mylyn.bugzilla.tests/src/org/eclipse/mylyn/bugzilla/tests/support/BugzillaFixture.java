@@ -153,8 +153,7 @@ public class BugzillaFixture extends TestFixture {
 		BugzillaClientManager bugzillaClientManager = connector.getClientManager();
 		BugzillaClient client = bugzillaClientManager.getClient(taskRepository, null);
 
-		BugzillaCorePlugin.setConnector(connector);
-		BugzillaCorePlugin.getRepositoryConfiguration(taskRepository, true, new NullProgressMonitor());
+		connector.getRepositoryConfiguration(taskRepository, true, new NullProgressMonitor());
 		return client;
 	}
 
