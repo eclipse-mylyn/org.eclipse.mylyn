@@ -57,6 +57,8 @@ public class CheckboxMultiSelectAttributeEditor extends AbstractAttributeEditor 
 
 	private Composite parent;
 
+	private ToolBar toolBar;
+
 	public CheckboxMultiSelectAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
 		setLayoutHint(new LayoutHint(RowSpan.SINGLE, ColumnSpan.MULTIPLE));
@@ -82,7 +84,7 @@ public class CheckboxMultiSelectAttributeEditor extends AbstractAttributeEditor 
 		valueText.setFont(EditorUtil.TEXT_FONT);
 		valueText.setEditable(false);
 
-		final ToolBar toolBar = new ToolBar(composite, SWT.FLAT);
+		toolBar = new ToolBar(composite, SWT.FLAT);
 		ToolItem item = new ToolItem(toolBar, SWT.FLAT);
 		item.setImage(CommonImages.getImage(CommonImages.EDIT_SMALL));
 		item.setToolTipText(Messages.CheckboxMultiSelectAttributeEditor_Edit);
@@ -197,8 +199,12 @@ public class CheckboxMultiSelectAttributeEditor extends AbstractAttributeEditor 
 
 	@Override
 	protected void decorateIncoming(Color color) {
+		super.decorateIncoming(color);
 		if (valueText != null && !valueText.isDisposed()) {
 			valueText.setBackground(color);
+		}
+		if (toolBar != null && !toolBar.isDisposed()) {
+			toolBar.setBackground(color);
 		}
 	}
 

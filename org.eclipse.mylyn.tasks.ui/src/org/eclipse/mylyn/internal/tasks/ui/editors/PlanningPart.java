@@ -323,14 +323,15 @@ public class PlanningPart extends AbstractLocalEditorPart {
 	}
 
 	private void createActualTime(FormToolkit toolkit, Composite toolbarComposite) {
-
-		actualTimeComposite = toolkit.createComposite(toolbarComposite);
+		actualTimeComposite = toolkit.createComposite(toolbarComposite, SWT.BORDER);
 		actualTimeComposite.setBackground(null);
 		actualTimeComposite.setBackgroundMode(SWT.INHERIT_FORCE);
 		RowLayout rowLayout = new RowLayout();
 		rowLayout.center = true;
 		rowLayout.marginTop = 0;
 		rowLayout.marginBottom = 0;
+		rowLayout.marginLeft = 0;
+		rowLayout.marginRight = 0;
 		actualTimeComposite.setLayout(rowLayout);
 
 		Label label = toolkit.createLabel(actualTimeComposite, Messages.TaskEditorPlanningPart_Active);
@@ -338,10 +339,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		label.setToolTipText(Messages.TaskEditorPlanningPart_Time_working_on_this_task);
 		label.setBackground(null);
 
-		Composite nameValueComp = createComposite(actualTimeComposite, 2, toolkit);
-		nameValueComp.setBackground(null);
-
-		elapsedTimeText = new Text(nameValueComp, SWT.FLAT | SWT.READ_ONLY);
+		elapsedTimeText = new Text(actualTimeComposite, SWT.FLAT | SWT.READ_ONLY);
 		elapsedTimeText.setFont(EditorUtil.TEXT_FONT);
 		elapsedTimeText.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
 		toolkit.adapt(elapsedTimeText, true, false);
@@ -350,13 +348,12 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		updateElapsedTime();
 		elapsedTimeText.setEditable(false);
 
-		ImageHyperlink resetActivityTimeButton = toolkit.createImageHyperlink(nameValueComp, SWT.NONE);
+		ImageHyperlink resetActivityTimeButton = toolkit.createImageHyperlink(actualTimeComposite, SWT.NONE);
 		resetActivityTimeButton.setBackground(null);
 		resetActivityTimeButton.setImage(CommonImages.getImage(CommonImages.FIND_CLEAR_DISABLED));
 		resetActivityTimeButton.setHoverImage(CommonImages.getImage(CommonImages.FIND_CLEAR));
 		resetActivityTimeButton.setToolTipText(Messages.TaskEditorPlanningPart_Reset);
 		resetActivityTimeButton.addHyperlinkListener(new HyperlinkAdapter() {
-
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				if (MessageDialog.openConfirm(getControl().getShell(),
