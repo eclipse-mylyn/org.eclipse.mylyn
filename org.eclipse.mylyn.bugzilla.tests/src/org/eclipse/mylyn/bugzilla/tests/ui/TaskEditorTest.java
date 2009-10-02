@@ -34,7 +34,7 @@ public class TaskEditorTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		BugzillaFixture.current();
-		repository = BugzillaFixture.DEFAULT.singleRepository();
+		repository = BugzillaFixture.current().repository();
 	}
 
 	@Override
