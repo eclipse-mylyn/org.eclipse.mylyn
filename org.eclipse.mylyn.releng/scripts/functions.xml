@@ -73,7 +73,7 @@
 		<antcall target="for-each-target">
 			<param name="call" value="tests-helper"/>
 			<param name="test.target" value="eclipse"/>
-			<param name="test.plugin" value=".eclipse.plugin}"/>
+			<param name="test.plugin" value="${build.test.eclipse.plugin}"/>
 			<param name="test.classname" value="${build.test.eclipse.suite}"/>
 		</antcall>
 	</target>
