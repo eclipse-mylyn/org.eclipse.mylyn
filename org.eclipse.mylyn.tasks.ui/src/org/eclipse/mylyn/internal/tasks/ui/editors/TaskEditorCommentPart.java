@@ -102,8 +102,8 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			if (renderedInSubSection) {
 				return createSection(parent, toolkit);
 			} else {
-				Label seperator = toolkit.createSeparator(parent, SWT.HORIZONTAL);
-				GridDataFactory.fillDefaults().grab(true, false).applyTo(seperator);
+				Label separator = toolkit.createSeparator(parent, SWT.HORIZONTAL);
+				GridDataFactory.fillDefaults().grab(true, false).applyTo(separator);
 				return createCommentViewers(parent, toolkit);
 			}
 		}
