@@ -12,8 +12,13 @@ package org.eclipse.mylyn.internal.cdt.ui;
 
 import org.eclipse.cdt.core.model.CoreModel;
 import org.eclipse.cdt.internal.ui.editor.CEditor;
+import org.eclipse.cdt.ui.CUIPlugin;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.ui.IContextUiStartup;
+import org.eclipse.mylyn.internal.cdt.ui.contentassist.CDTContentAssistUtils;
 import org.eclipse.mylyn.internal.cdt.ui.editor.ActiveFoldingEditorTracker;
 import org.eclipse.mylyn.internal.cdt.ui.editor.ActiveFoldingListener;
 import org.eclipse.mylyn.monitor.ui.MonitorUi;
@@ -24,6 +29,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.ui.progress.UIJob;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -37,13 +43,11 @@ public class CDTUIBridgePlugin extends AbstractUIPlugin implements IContextUiSta
 
 	public static final String AUTO_FOLDING_ENABLED = "org.eclipse.mylyn.context.ui.editor.folding.enabled"; //$NON-NLS-1$
 
-	private static final String MYLYN_FIRST_RUN = "org.eclipse.mylyn.ui.first.run.0_4_9"; //$NON-NLS-1$
+	private static final String MYLYN_RUN_COUNT = "org.eclipse.mylyn.cdt.ui.run.count.3_3_0"; //$NON-NLS-1$
 
 	private static CDTUIBridgePlugin INSTANCE;
 
 	private final LandmarkMarkerManager landmarkMarkerManager = new LandmarkMarkerManager();
-
-	private final InterestInducingProblemListener problemListener = new InterestInducingProblemListener();
 
 	private CDTEditorMonitor cEditingMonitor;
 
@@ -62,7 +66,7 @@ public class CDTUIBridgePlugin extends AbstractUIPlugin implements IContextUiSta
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		initDefaultPrefs();
+		initializeContentAssist();
 	}
 
 	public void lazyStartup() {
@@ -72,15 +76,6 @@ public class CDTUIBridgePlugin extends AbstractUIPlugin implements IContextUiSta
 		installEditorTracker(PlatformUI.getWorkbench());
 		CoreModel.getDefault().addElementChangedListener(cElementChangeListener);
 
-		getPreferenceStore().addPropertyChangeListener(problemListener);
-		if (getPreferenceStore().getBoolean(InterestInducingProblemListener.PREDICTED_INTEREST_ERRORS)) {
-			problemListener.enable();
-		}
-	}
-
-	private void initDefaultPrefs() {
-		getPreferenceStore().setDefault(InterestInducingProblemListener.PREDICTED_INTEREST_ERRORS, false);
-		getPreferenceStore().setDefault(MYLYN_FIRST_RUN, true);
 	}
 
 	private void lazyStop() {
@@ -95,6 +90,24 @@ public class CDTUIBridgePlugin extends AbstractUIPlugin implements IContextUiSta
 
 		super.stop(context);
 		INSTANCE = null;
+	}
+
+	private void initializeContentAssist() {
+
+		int count = getPreferenceStore().getInt(MYLYN_RUN_COUNT);
+		if (count < 1) {
+			getPreferenceStore().setValue(MYLYN_RUN_COUNT, count + 1);
+
+			new UIJob("Initializing Focused CDT Content Assist") { //$NON-NLS-1$
+				@Override
+				public IStatus runInUIThread(IProgressMonitor monitor) {
+					CDTContentAssistUtils.installContentAssist(CUIPlugin.getDefault().getPreferenceStore(), true);
+					return Status.OK_STATUS;
+				}
+			}.schedule();
+		}
+
+		CDTContentAssistUtils.updateDefaultPreference(CUIPlugin.getDefault().getPreferenceStore());
 	}
 
 	private void installEditorTracker(IWorkbench workbench) {

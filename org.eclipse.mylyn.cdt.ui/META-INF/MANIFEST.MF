@@ -26,4 +26,5 @@ Bundle-Activator: org.eclipse.mylyn.internal.cdt.ui.CDTUIBridgePlugin
 Import-Package: com.ibm.icu.text
 Export-Package: org.eclipse.mylyn.internal.cdt.ui;x-internal:=true,
  org.eclipse.mylyn.internal.cdt.ui.actions;x-internal:=true,
+ org.eclipse.mylyn.internal.cdt.ui.contentassist;x-internal:=true,
  org.eclipse.mylyn.internal.cdt.ui.editor;x-internal:=true

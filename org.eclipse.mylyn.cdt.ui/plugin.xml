@@ -172,4 +172,27 @@
          </includes>
       </viewerContentBinding>
    </extension>
+   
+   <!-- Content Assist -->
+
+    <extension
+        point="org.eclipse.cdt.ui.completionProposalComputer"
+        id="org.eclipse.mylyn.cdt.ui.parserProposalCategory"
+        name="Parsing-based Proposals (Task-Focused)">
+       <proposalCategory
+             icon="icons/elcl16/proposals-other.gif"></proposalCategory>
+    </extension>
+    <extension
+          id="FocusedDOMCompletionProposalComputer"
+          name="Parsing-based Proposals (Task-Focused)"
+          point="org.eclipse.cdt.ui.completionProposalComputer">
+       <completionProposalComputer
+             activate="true"
+             categoryId="org.eclipse.mylyn.cdt.ui.parserProposalCategory"
+             class="org.eclipse.mylyn.internal.cdt.ui.contentassist.FocusedDOMCompletionProposalComputer">
+          <partition type="__dftl_partition_content_type"/>
+          <partition type="__c_preprocessor"/>
+       </completionProposalComputer>
+    </extension>
+   
 </plugin>
