@@ -47,6 +47,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.forms.IFormColors;
@@ -101,6 +102,8 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			if (renderedInSubSection) {
 				return createSection(parent, toolkit);
 			} else {
+				Label seperator = toolkit.createSeparator(parent, SWT.HORIZONTAL);
+				GridDataFactory.fillDefaults().grab(true, false).applyTo(seperator);
 				return createCommentViewers(parent, toolkit);
 			}
 		}
