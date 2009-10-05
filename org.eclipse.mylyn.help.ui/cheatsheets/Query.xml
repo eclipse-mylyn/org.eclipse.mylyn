@@ -17,7 +17,7 @@
    </intro>
    <item title="Open the Task List view" dialog="true" skip="false">
       <description>
-         If the Task List view is not opened, select in the main menu  <b>Window &gt; Show View &gt; Task List</b> or click on the &quot;Click to Perform&quot; link below.
+         If the Task List view is not opened, select in the main menu  <b>Window &gt; Show View &gt; Other... &gt; Tasks &gt;Task List</b> or click on the &quot;Click to Perform&quot; link below.
       </description>
       <command serialization="org.eclipse.ui.views.showView(org.eclipse.ui.views.showView.viewId=org.eclipse.mylyn.tasks.ui.views.tasks)" confirm="true">
       </command>
@@ -26,13 +26,13 @@
       <description>
          In this step you can learn how to setup your Bugzilla account, but you can skip it.
 <br/><br/>
-If the Task Repositories view isn&apos;t opened, select in the main menu  <b>Window &gt; Show View &gt; Other... &gt; Mylyn &gt; Task Repositry</b>.
+If the Task Repositories view isn&apos;t opened, select in the main menu  <b>Window &gt; Show View &gt; Other... &gt; Tasks &gt; Task Repository</b>.
 <br/><br/>
-In the Task Repositories  view you can see <b>Eclipse.org</b>. Right click on it and select <b>Properties</b>.<br/>
+In the Task Repositories view you can see <b>Eclipse.org</b>. Right click on it and select <b>Properties</b>.<br/>
 Check out the <b>Anonymous Access</b> checkbox.<br/>
 Enter your user id for the <b>User ID</b> and password for the <b>Password</b>. <br/>
 Click on the <b>Validate Settings</b> button to check your given parameters.<br/>
-If you do not have an account you can register one, if you click on the <b>Create new accout</b> link.<br/>
+If you do not have an account you can create one by clicking on the <b>Create new accout</b> link.<br/>
 Click on the <b>Finish</b> button to save the values and close the dialog.
       </description>
    </item>

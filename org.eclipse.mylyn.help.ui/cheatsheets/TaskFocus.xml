@@ -12,14 +12,14 @@
 <cheatsheet title="Use Task-Focused UI">
    <intro>
       <description>
-         This cheat sheet shows you how to handle a task lifecycle and how to use task-focused UI.
+         This cheat sheet introduces the task lifecycle and shows how to use the task-focused user interface.
 <br/>
 You need an existing project for this sheet.
       </description>
    </intro>
    <item title="Open the Task List view" dialog="true" skip="false">
       <description>
-         If the Task List view is not opened, select in the main menu  <b>Window &gt; Show View &gt; Other... &gt; Mylyn &gt; Task List</b> or click on the &quot;Click to Perform&quot; link below.
+         If the Task List view is not opened, select in the main menu  <b>Window &gt; Show View &gt; Other... &gt; Tasks &gt; Task List</b> or click on the &quot;Click to Perform&quot; link below.
       </description>
       <command serialization="org.eclipse.ui.views.showView(org.eclipse.ui.views.showView.viewId=org.eclipse.mylyn.tasks.ui.views.tasks)" confirm="true">
       </command>
@@ -29,7 +29,7 @@ You need an existing project for this sheet.
          In the Task List view, click on the right mouse button, then select <b>New &gt; Category</b>. Enter <b>Tutorials</b> for the category&apos;s name.
 <br/><br/>
 Then right click on the <b>Tutorials</b> category and select <b>New &gt; Task</b>. In the <b>New Task</b> dialog select <b>Local</b> then click on the <b>Finish</b> button.
- Enter <b>Learn task-focus</b>  for the task&apos;s title and change the priority to <b>High</b>. You can add some notes,  too.
+ Enter <b>Learn task-focus</b>  for the task&apos;s title and change the priority to <b>High</b> using the drop down to the left of the summary. Feel free to add some notes as well.
 <br/><br/>
 Right click on the new task and select <b>Activate</b> to activate the task.
       </description>
@@ -53,31 +53,28 @@ After the file is opened you can see the class both  in the <b>Package Explorer<
    </item>
    <item title="Add method to focus" dialog="true" skip="false">
       <description>
-         Select in the Editor a method then you can see this  method in the <b>Outline</b> view and in the <b>Package Explorer</b> under the class file.
+         Select a method within the editor will result in this method appearing in other focused views including the <b>Outline</b> and <b>Package Explorer</b> views.
 <br/><br/>
 Next press the Alt button and click on the class in the <b>Outline</b> view.<br/> 
-Now you can see all methods. Methods which aren&apos;t in the focus are in <b>grey</b> color. Select another method from the list. After that all methods will disappear which aren&apos;t in the focus.
+Now you can see all methods. Methods which aren&apos;t in the task context appear in <b>gray</b> color. Select another method from the list. After selecting, all methods that are not part of the the active task&apos;s context will no longer be revealed.
       </description>
    </item>
    <item title="Landmark" dialog="true" skip="false">
       <description>
-         If an element&apos;s interest rank is high enough, it becomes a landmark, which is an implicitly created bookmark. Landmarks are showed in bold font.
+         If an element&apos;s interest rank is high enough, it becomes a landmark. Landmarks are showed in <b>bold</b> font.
 <br/><br/>
-Select the a method in the <b>Outline</b> view or in the <b>Package Explorer</b>. Right click on the method and select <b>Mark as Landmark</b>. After then  this method becomes a landmark.
-<br/><br/>
-Also you can use key bindings. <b>Ctrl+Shift+Alt+UpArrow</b> to mark the element as landmark or <b>Ctrl+Shift+Alt+DownArrow</b> to mark less interesting for the element.
+You can manually promote an element to landmark status by right clicking on the element and selecting <b>Mark as Landmark</b>.
       </description>
    </item>
-   <item title="Remove method from focus" dialog="true" skip="false">
+   <item title="Remove from focus" dialog="true" skip="false">
       <description>
-         Right click on a method which is in the focus and select <b>Remove from Focus</b>. After then this method will disappear from the list.
+         Right click on a method which is in focus and select <b>Remove from Focus</b>. The method will disappear from the view. You can get it back again by Alt+clicking and re-selecting the method.
       </description>
    </item>
    <item title="Open another file" dialog="true" skip="false">
       <description>
          Press down the <b>Alt</b> button and <b>click</b> on the <b>project</b>. Select an arbitrary file from the list with <b>Alt+click</b>. After you open the new file you can see it in the focus and all files will disappear which aren&apos;t in the focus.
 <br/>
-You can use <b>Alt+RightArrow</b> instead of <b>Alt+click</b>.
       </description>
    </item>
    <item title="Quick Context View" dialog="true" skip="false">
@@ -90,7 +87,7 @@ You can use <b>Alt+RightArrow</b> instead of <b>Alt+click</b>.
          In the Task List view, click on the right mouse button on the <b>Learn task-focus</b> task and select deactivate.
 <br/>
 Click again on the task with the right mouse button and select <b>Mark &gt; Complete</b>. <br/>
-After then the task&apos;s name will be struck through.
+The task&apos;s name will be struck through in the Task List indicating completion.
       </description>
    </item>
 </cheatsheet>
