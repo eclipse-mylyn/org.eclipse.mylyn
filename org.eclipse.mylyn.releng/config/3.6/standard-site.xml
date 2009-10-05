@@ -25,6 +25,9 @@
    <feature url="features/org.eclipse.mylyn.java_feature_@core@.jar" id="org.eclipse.mylyn.java_feature" version="@core@">
       <category name="Integration"/>
    </feature>
+   <feature url="features/org.eclipse.cdt.mylyn_@cdt@.jar" id="org.eclipse.cdt.mylyn" version="@cdt@">
+      <category name="Integration"/>
+   </feature>
    <feature url="features/org.eclipse.mylyn.team_feature_@core@.jar" id="org.eclipse.mylyn.team_feature" version="@core@">
       <category name="Integration"/>
    </feature>
