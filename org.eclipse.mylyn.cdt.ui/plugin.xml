@@ -195,4 +195,38 @@
        </completionProposalComputer>
     </extension>
    
+   <!-- Editor Folding -->
+
+ <extension point="org.eclipse.ui.actionSets">
+	<actionSet
+            id="org.eclipse.mylyn.cdt.ui.actionSet"
+            label="%actionSet.label"
+            visible="true">
+  		<action
+          class="org.eclipse.mylyn.internal.cdt.ui.actions.ToggleActiveFoldingAction"
+          definitionId="org.eclipse.mylyn.cdt.ui.editor.folding.auto"
+          icon="icons/elcl16/interest-folding.gif"
+          id="org.eclipse.mylyn.cdt.ui.editor.folding.auto"
+          label="%ToggleActiveFoldingAction.label"
+          style="toggle"
+          toolbarPath="org.eclipse.ui.edit.text.actionSet.presentation/Presentation"
+          tooltip="%ToggleActiveFoldingAction.tooltip">
+      	</action> 
+    </actionSet>
+   </extension>
+
+   <extension point="org.eclipse.ui.commands">
+      <category
+            name="%commands.category.name"
+            description="%commands.category.description"
+            id="org.eclipse.mylyn.cdt.ui.commands">
+      </category>
+	  <command
+         categoryId="org.eclipse.mylyn.cdt.ui.commands"
+         description="%command.folding.auto.description"
+         id="org.eclipse.mylyn.cdt.ui.editor.folding.auto"
+         name="%command.folding.auto.name">
+      </command>
+    </extension>
+   
 </plugin>

@@ -53,11 +53,10 @@ public class CDTUIBridgePlugin extends AbstractUIPlugin implements IContextUiSta
 
 	private final InterestUpdateDeltaListener cElementChangeListener = new InterestUpdateDeltaListener();
 
-	private ActiveFoldingEditorTracker editorTracker;
+	private ActiveFoldingEditorTracker activeFoldingEditorTracker;
 
 	public CDTUIBridgePlugin() {
 		super();
-		INSTANCE = this;
 	}
 
 	/**
@@ -66,14 +65,18 @@ public class CDTUIBridgePlugin extends AbstractUIPlugin implements IContextUiSta
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		INSTANCE = this;
 		initializeContentAssist();
 	}
 
 	public void lazyStartup() {
+
+		// TODO do in a UI JOB? and only on first run
+		installFoldingEditorTracker(PlatformUI.getWorkbench());
+
 		ContextCore.getContextManager().addListener(landmarkMarkerManager);
 		cEditingMonitor = new CDTEditorMonitor();
 		MonitorUi.getSelectionMonitors().add(cEditingMonitor);
-		installEditorTracker(PlatformUI.getWorkbench());
 		CoreModel.getDefault().addElementChangedListener(cElementChangeListener);
 
 	}
@@ -82,12 +85,12 @@ public class CDTUIBridgePlugin extends AbstractUIPlugin implements IContextUiSta
 		ContextCore.getContextManager().removeListener(landmarkMarkerManager);
 		MonitorUi.getSelectionMonitors().remove(cEditingMonitor);
 		CoreModel.getDefault().removeElementChangedListener(cElementChangeListener);
+		uninstallFoldingEditorTracker(PlatformUI.getWorkbench());
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		lazyStop();
-
 		super.stop(context);
 		INSTANCE = null;
 	}
@@ -98,7 +101,7 @@ public class CDTUIBridgePlugin extends AbstractUIPlugin implements IContextUiSta
 		if (count < 1) {
 			getPreferenceStore().setValue(MYLYN_RUN_COUNT, count + 1);
 
-			new UIJob("Initializing Focused CDT Content Assist") { //$NON-NLS-1$
+			new UIJob(Messages.CDTUIBridgePlugin_Initializing_Content_Assist) {
 				@Override
 				public IStatus runInUIThread(IProgressMonitor monitor) {
 					CDTContentAssistUtils.installContentAssist(CUIPlugin.getDefault().getPreferenceStore(), true);
@@ -110,29 +113,27 @@ public class CDTUIBridgePlugin extends AbstractUIPlugin implements IContextUiSta
 		CDTContentAssistUtils.updateDefaultPreference(CUIPlugin.getDefault().getPreferenceStore());
 	}
 
-	private void installEditorTracker(IWorkbench workbench) {
-		editorTracker = new ActiveFoldingEditorTracker();
-		editorTracker.install(workbench);
-		// workbench.addWindowListener(editorTracker);
-		// IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
-		// for (int i = 0; i < windows.length; i++) {
-		// windows[i].addPageListener(editorTracker);
-		// IWorkbenchPage[] pages = windows[i].getPages();
-		// for (int j = 0; j < pages.length; j++) {
-		// pages[j].addPartListener(editorTracker);
-		// }
-		// }
+	private void uninstallFoldingEditorTracker(IWorkbench workbench) {
+		if (activeFoldingEditorTracker != null) {
+			activeFoldingEditorTracker.dispose(workbench);
+			activeFoldingEditorTracker = null;
+		}
+	}
+
+	private void installFoldingEditorTracker(IWorkbench workbench) {
+		activeFoldingEditorTracker = new ActiveFoldingEditorTracker();
+		activeFoldingEditorTracker.install(workbench);
 
 		// update editors that are already opened
 		for (IWorkbenchWindow w : PlatformUI.getWorkbench().getWorkbenchWindows()) {
 			IWorkbenchPage page = w.getActivePage();
 			if (page != null) {
 				IEditorReference[] references = page.getEditorReferences();
-				for (IEditorReference element : references) {
-					IEditorPart part = element.getEditor(false);
+				for (IEditorReference reference : references) {
+					IEditorPart part = reference.getEditor(false);
 					if (part != null && part instanceof CEditor) {
 						CEditor editor = (CEditor) part;
-						editorTracker.registerEditor(editor);
+						activeFoldingEditorTracker.registerEditor(editor);
 						ActiveFoldingListener.resetProjection(editor);
 					}
 				}
