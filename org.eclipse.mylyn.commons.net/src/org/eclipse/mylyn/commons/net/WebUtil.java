@@ -196,7 +196,7 @@ public class WebUtil {
 		// FIXME fix connection leaks
 		if (TEST_MODE) {
 			client.getHttpConnectionManager().getParams().setMaxConnectionsPerHost(
-					HostConfiguration.ANY_HOST_CONFIGURATION, 1);
+					HostConfiguration.ANY_HOST_CONFIGURATION, 2);
 		} else {
 			client.getHttpConnectionManager().getParams().setMaxConnectionsPerHost(
 					HostConfiguration.ANY_HOST_CONFIGURATION, 100);
