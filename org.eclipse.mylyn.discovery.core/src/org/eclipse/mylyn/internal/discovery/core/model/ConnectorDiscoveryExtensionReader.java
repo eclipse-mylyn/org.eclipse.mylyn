@@ -26,6 +26,8 @@ public class ConnectorDiscoveryExtensionReader {
 
 	public static final String CONNECTOR_CATEGORY = "connectorCategory"; //$NON-NLS-1$
 
+	public static final String CERTIFICATION = "certification"; //$NON-NLS-1$
+
 	public static final String ICON = "icon"; //$NON-NLS-1$
 
 	public static final String OVERVIEW = "overview"; //$NON-NLS-1$
@@ -65,6 +67,7 @@ public class ConnectorDiscoveryExtensionReader {
 		connectorDescriptor.setSiteUrl(element.getAttribute("siteUrl")); //$NON-NLS-1$
 		connectorDescriptor.setId(element.getAttribute("id")); //$NON-NLS-1$
 		connectorDescriptor.setCategoryId(element.getAttribute("categoryId")); //$NON-NLS-1$
+		connectorDescriptor.setCertificationId(element.getAttribute("certificationId")); //$NON-NLS-1$
 		connectorDescriptor.setPlatformFilter(element.getAttribute("platformFilter")); //$NON-NLS-1$
 		connectorDescriptor.setGroupId(element.getAttribute("groupId")); //$NON-NLS-1$
 
@@ -75,7 +78,6 @@ public class ConnectorDiscoveryExtensionReader {
 		}
 		for (IConfigurationElement child : element.getChildren("icon")) { //$NON-NLS-1$
 			Icon iconItem = readIcon(child);
-			iconItem.setConnectorDescriptor(connectorDescriptor);
 			if (connectorDescriptor.getIcon() != null) {
 				throw new ValidationException(Messages.ConnectorDiscoveryExtensionReader_unexpected_element_icon);
 			}
@@ -115,7 +117,6 @@ public class ConnectorDiscoveryExtensionReader {
 
 		for (IConfigurationElement child : element.getChildren("icon")) { //$NON-NLS-1$
 			Icon iconItem = readIcon(child);
-			iconItem.setConnectorCategory(connectorCategory);
 			if (connectorCategory.getIcon() != null) {
 				throw new ValidationException(Messages.ConnectorDiscoveryExtensionReader_unexpected_element_icon);
 			}
@@ -138,6 +139,34 @@ public class ConnectorDiscoveryExtensionReader {
 		connectorCategory.validate();
 
 		return connectorCategory;
+	}
+
+	public <T extends Certification> T readCertification(IConfigurationElement element, Class<T> clazz)
+			throws ValidationException {
+		T certification;
+		try {
+			certification = clazz.newInstance();
+		} catch (Exception e) {
+			throw new IllegalStateException(e);
+		}
+
+		certification.setId(element.getAttribute("id")); //$NON-NLS-1$
+		certification.setName(element.getAttribute("name")); //$NON-NLS-1$
+		certification.setUrl(element.getAttribute("url")); //$NON-NLS-1$
+
+		for (IConfigurationElement child : element.getChildren("icon")) { //$NON-NLS-1$
+			Icon iconItem = readIcon(child);
+			if (certification.getIcon() != null) {
+				throw new ValidationException(Messages.ConnectorDiscoveryExtensionReader_unexpected_element_icon);
+			}
+			certification.setIcon(iconItem);
+		}
+		for (IConfigurationElement child : element.getChildren("description")) { //$NON-NLS-1$
+			certification.setDescription(child.getValue());
+		}
+		certification.validate();
+
+		return certification;
 	}
 
 	public Icon readIcon(IConfigurationElement element) throws ValidationException {

@@ -20,6 +20,7 @@
          <sequence>
             <element ref="connectorCategory" minOccurs="0" maxOccurs="unbounded"/>
             <element ref="connectorDescriptor" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="certification" minOccurs="0" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -119,9 +120,6 @@
                <documentation>
                   The id of the feature that installs this connector
                </documentation>
-               <appinfo>
-                  <meta.attribute kind="identifier"/>
-               </appinfo>
             </annotation>
          </attribute>
          <attribute name="categoryId" type="string" use="required">
@@ -130,7 +128,7 @@
                   the id of the connectorCategory in which this connector belongs
                </documentation>
                <appinfo>
-                  <meta.attribute kind="identifier"/>
+                  <meta.attribute kind="identifier" basedOn="org.eclipse.mylyn.discovery.core.connectorDiscovery/connectorCategory/@id"/>
                </appinfo>
             </annotation>
          </attribute>
@@ -146,6 +144,19 @@
                <documentation>
                   The id of the connectorCategory group.  See group/@id for more details.
                </documentation>
+               <appinfo>
+                  <meta.attribute kind="identifier" basedOn="org.eclipse.mylyn.discovery.core.connectorDiscovery/connectorDescriptor/@groupId"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="certificationId" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="identifier" basedOn="org.eclipse.mylyn.discovery.core.connectorDiscovery/certification/@id"/>
+               </appinfo>
             </annotation>
          </attribute>
       </complexType>
@@ -168,9 +179,6 @@
                <documentation>
                   an id that uniquely identifies the category
                </documentation>
-               <appinfo>
-                  <meta.attribute kind="identifier"/>
-               </appinfo>
             </annotation>
          </attribute>
          <attribute name="name" type="string" use="required">
@@ -183,7 +191,7 @@
                </appinfo>
             </annotation>
          </attribute>
-         <attribute name="description" type="string">
+         <attribute name="description" type="string" use="required">
             <annotation>
                <documentation>
                   A description of the category
@@ -307,9 +315,6 @@
                <documentation>
                   The id of the feature to test
                </documentation>
-               <appinfo>
-                  <meta.attribute kind="identifier"/>
-               </appinfo>
             </annotation>
          </attribute>
          <attribute name="version" type="string" use="required">
@@ -337,6 +342,53 @@
             </annotation>
          </attribute>
       </complexType>
+   </element>
+
+   <element name="certification">
+      <complexType>
+         <sequence>
+            <element ref="icon" minOccurs="0" maxOccurs="1"/>
+            <element ref="description"/>
+         </sequence>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  An id that uniquely identifies the certification.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The name of the certification, as it is displayed in the ui.
+               </documentation>
+               <appinfo>
+                  <meta.attribute translatable="true"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="url" type="string">
+            <annotation>
+               <documentation>
+                  An URL that points to a web page with more information relevant to the certification.
+               </documentation>
+               <appinfo>
+                  <meta.attribute translatable="true"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="description" type="string">
+      <annotation>
+         <appinfo>
+            <meta.element translatable="true"/>
+         </appinfo>
+         <documentation>
+            A textual description.
+         </documentation>
+      </annotation>
    </element>
 
    <annotation>

@@ -61,6 +61,8 @@ public class ConnectorDiscovery {
 
 	private List<DiscoveryCategory> categories = Collections.emptyList();
 
+	private List<DiscoveryCertification> certifications = Collections.emptyList();
+
 	private List<DiscoveryConnector> filteredConnectors = Collections.emptyList();
 
 	private final List<AbstractDiscoveryStrategy> discoveryStrategies = new ArrayList<AbstractDiscoveryStrategy>();
@@ -92,6 +94,7 @@ public class ConnectorDiscovery {
 		connectors = new ArrayList<DiscoveryConnector>();
 		filteredConnectors = new ArrayList<DiscoveryConnector>();
 		categories = new ArrayList<DiscoveryCategory>();
+		certifications = new ArrayList<DiscoveryCertification>();
 
 		final int totalTicks = 100000;
 		final int discoveryTicks = totalTicks - (totalTicks / 10);
@@ -101,6 +104,7 @@ public class ConnectorDiscovery {
 			for (AbstractDiscoveryStrategy discoveryStrategy : discoveryStrategies) {
 				discoveryStrategy.setCategories(categories);
 				discoveryStrategy.setConnectors(connectors);
+				discoveryStrategy.setCertifications(certifications);
 				discoveryStrategy.performDiscovery(new SubProgressMonitor(monitor, discoveryTicks
 						/ discoveryStrategies.size()));
 			}
@@ -110,6 +114,7 @@ public class ConnectorDiscovery {
 				verifySiteAvailability(new SubProgressMonitor(monitor, filterTicks));
 			}
 			connectCategoriesToDescriptors();
+			connectCertificationsToDescriptors();
 		} finally {
 			monitor.done();
 		}
@@ -195,6 +200,32 @@ public class ConnectorDiscovery {
 	 */
 	public void setFeatureToVersion(Map<String, Version> featureToVersion) {
 		this.featureToVersion = featureToVersion;
+	}
+
+	private void connectCertificationsToDescriptors() {
+		Map<String, DiscoveryCertification> idToCertification = new HashMap<String, DiscoveryCertification>();
+		for (DiscoveryCertification certification : certifications) {
+			DiscoveryCertification previous = idToCertification.put(certification.getId(), certification);
+			if (previous != null) {
+				StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN, NLS.bind(
+						"Duplicate certification id ''{0}'': declaring sources: {1}, {2}",
+						new Object[] { certification.getId(), certification.getSource().getId(),
+								previous.getSource().getId() })));
+			}
+		}
+
+		for (DiscoveryConnector connector : connectors) {
+			if (connector.getCertificationId() != null) {
+				DiscoveryCertification certification = idToCertification.get(connector.getCertificationId());
+				if (certification != null) {
+					connector.setCertification(certification);
+				} else {
+					StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN, NLS.bind(
+							"Unknown category ''{0}'' referenced by connector ''{1}'' declared in {2}", new Object[] {
+									connector.getCertificationId(), connector.getId(), connector.getSource().getId() })));
+				}
+			}
+		}
 	}
 
 	private void connectCategoriesToDescriptors() {

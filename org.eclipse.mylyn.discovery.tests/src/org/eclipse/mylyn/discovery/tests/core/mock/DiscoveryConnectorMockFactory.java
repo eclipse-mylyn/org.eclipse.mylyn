@@ -52,7 +52,6 @@ public class DiscoveryConnectorMockFactory extends AbstractMockFactory<Discovery
 		overview.setUrl("http://example.nodomain/some/path/updateSite3.x/overview.html");
 
 		icon(icon).overview(overview);
-		icon.setConnectorDescriptor(getMockObject());
 		overview.setConnectorDescriptor(getMockObject());
 	}
 

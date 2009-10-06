@@ -83,6 +83,11 @@ public class BundleDiscoveryStrategy extends AbstractDiscoveryStrategy {
 							} else {
 								categories.add(category);
 							}
+						} else if (ConnectorDiscoveryExtensionReader.CERTIFICATION.equals(element.getName())) {
+							DiscoveryCertification certification = extensionReader.readCertification(element,
+									DiscoveryCertification.class);
+							certification.setSource(discoverySource);
+							certifications.add(certification);
 						} else {
 							throw new ValidationException(NLS.bind(Messages.BundleDiscoveryStrategy_unexpected_element,
 									element.getName()));

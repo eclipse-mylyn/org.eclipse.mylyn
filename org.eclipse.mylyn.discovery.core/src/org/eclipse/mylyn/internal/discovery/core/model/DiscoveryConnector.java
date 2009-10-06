@@ -25,6 +25,8 @@ public class DiscoveryConnector extends ConnectorDescriptor {
 
 	private Boolean available;
 
+	private DiscoveryCertification certification;
+
 	private final PropertyChangeSupport changeSupport;
 
 	public DiscoveryConnector() {
@@ -45,6 +47,14 @@ public class DiscoveryConnector extends ConnectorDescriptor {
 
 	public void setSource(AbstractDiscoverySource source) {
 		this.source = source;
+	}
+
+	public DiscoveryCertification getCertification() {
+		return certification;
+	}
+
+	public void setCertification(DiscoveryCertification certification) {
+		this.certification = certification;
 	}
 
 	/**

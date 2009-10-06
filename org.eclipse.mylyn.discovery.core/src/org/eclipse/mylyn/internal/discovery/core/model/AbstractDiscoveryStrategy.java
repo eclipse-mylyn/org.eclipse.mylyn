@@ -27,6 +27,8 @@ public abstract class AbstractDiscoveryStrategy {
 
 	protected List<DiscoveryConnector> connectors;
 
+	protected List<DiscoveryCertification> certifications;
+
 	/**
 	 * Perform discovery and add discovered items to {@link #getCategories() categories} and {@link #getConnectors()}.
 	 * 
@@ -51,6 +53,15 @@ public abstract class AbstractDiscoveryStrategy {
 		this.connectors = connectors;
 	}
 
+	public List<DiscoveryCertification> getCertifications() {
+		return certifications;
+	}
+
+	public void setCertifications(List<DiscoveryCertification> certifications) {
+		this.certifications = certifications;
+	}
+
 	public void dispose() {
 	}
+
 }

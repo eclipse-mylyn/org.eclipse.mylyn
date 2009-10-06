@@ -14,9 +14,9 @@
    <extension
          point="org.eclipse.mylyn.discovery.core.connectorDiscovery">
       <connectorCategory
-            description="a category for testing purposes"
+            description="%connectorCategory.description"
             id="org.eclipse.mylyn.discovery.tests.connectorCategory1"
-            name="Test Category">
+            name="%connectorCategory.name">
       </connectorCategory>
       <connectorDescriptor
             categoryId="org.eclipse.mylyn.discovery.tests.connectorCategory1"
@@ -28,6 +28,14 @@
             provider="UnitTesting"
             siteUrl="http://foo.nodomain/site">
       </connectorDescriptor>
+      <certification
+            id="org.eclipse.mylyn.discovery.tests.certification1"
+            name="%certification.name"
+            url="%certification.url">
+         <description>
+            %certification.description
+         </description>
+      </certification>
    </extension>
 
 </plugin>

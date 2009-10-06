@@ -11,11 +11,11 @@
 package org.eclipse.mylyn.internal.discovery.core.model;
 
 /**
- * a category of connectors, which is a way of organizing connectors in top-level groups.
+ * A certification for connectors.
  * 
- * @author David Green
+ * @author Steffen Pingel
  */
-public class ConnectorCategory {
+public class Certification {
 
 	protected String id;
 
@@ -23,15 +23,11 @@ public class ConnectorCategory {
 
 	protected String description;
 
-	protected String relevance;
-
 	protected Icon icon;
 
-	protected Overview overview;
+	protected String url;
 
-	protected java.util.List<Group> group = new java.util.ArrayList<Group>();
-
-	public ConnectorCategory() {
+	public Certification() {
 	}
 
 	/**
@@ -67,18 +63,6 @@ public class ConnectorCategory {
 		this.description = description;
 	}
 
-	/**
-	 * A relevance, which is a number from 0 to 100. Categories with higher relevance are displayed with preference in
-	 * the UI.
-	 */
-	public String getRelevance() {
-		return relevance;
-	}
-
-	public void setRelevance(String relevance) {
-		this.relevance = relevance;
-	}
-
 	public Icon getIcon() {
 		return icon;
 	}
@@ -87,20 +71,12 @@ public class ConnectorCategory {
 		this.icon = icon;
 	}
 
-	public Overview getOverview() {
-		return overview;
+	public String getUrl() {
+		return url;
 	}
 
-	public void setOverview(Overview overview) {
-		this.overview = overview;
-	}
-
-	public java.util.List<Group> getGroup() {
-		return group;
-	}
-
-	public void setGroup(java.util.List<Group> group) {
-		this.group = group;
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 	public void validate() throws ValidationException {
@@ -110,27 +86,8 @@ public class ConnectorCategory {
 		if (name == null || name.length() == 0) {
 			throw new ValidationException(Messages.ConnectorCategory_must_specify_connectorCategory_name);
 		}
-		if (description == null || description.length() == 0) {
-			throw new ValidationException("Must specify connectorCategory/@description");
-		}
 		if (icon != null) {
 			icon.validate();
-		}
-		if (relevance != null) {
-			try {
-				int r = Integer.parseInt(relevance, 10);
-				if (r < 0 || r > 100) {
-					throw new NumberFormatException();
-				}
-			} catch (NumberFormatException e) {
-				throw new ValidationException(Messages.ConnectorCategory_connectorCategory_relevance_invalid);
-			}
-		}
-		if (overview != null) {
-			overview.validate();
-		}
-		for (Group groupItem : group) {
-			groupItem.validate();
 		}
 	}
 }

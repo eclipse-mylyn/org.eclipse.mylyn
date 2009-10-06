@@ -25,10 +25,6 @@ public class Icon {
 
 	protected String image128;
 
-	protected ConnectorDescriptor connectorDescriptor;
-
-	protected ConnectorCategory connectorCategory;
-
 	public Icon() {
 	}
 
@@ -72,22 +68,7 @@ public class Icon {
 		this.image128 = image128;
 	}
 
-	public ConnectorDescriptor getConnectorDescriptor() {
-		return connectorDescriptor;
-	}
-
-	public void setConnectorDescriptor(ConnectorDescriptor connectorDescriptor) {
-		this.connectorDescriptor = connectorDescriptor;
-	}
-
-	public ConnectorCategory getConnectorCategory() {
-		return connectorCategory;
-	}
-
-	public void setConnectorCategory(ConnectorCategory connectorCategory) {
-		this.connectorCategory = connectorCategory;
-	}
-
 	public void validate() throws ValidationException {
 	}
+
 }

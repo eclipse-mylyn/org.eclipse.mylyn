@@ -4,27 +4,19 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.mylyn.internal.discovery.core.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * @author David Green
+ * @author Steffen Pingel
  */
-public class DiscoveryCategory extends ConnectorCategory {
+public class DiscoveryCertification extends Certification {
 
 	private AbstractDiscoverySource source;
-
-	private final List<DiscoveryConnector> connectors = new ArrayList<DiscoveryConnector>();
-
-	public List<DiscoveryConnector> getConnectors() {
-		return connectors;
-	}
 
 	public AbstractDiscoverySource getSource() {
 		return source;

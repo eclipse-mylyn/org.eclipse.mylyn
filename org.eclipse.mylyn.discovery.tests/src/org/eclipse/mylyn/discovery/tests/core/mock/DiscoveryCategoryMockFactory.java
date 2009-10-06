@@ -14,7 +14,6 @@ import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryCategory;
 import org.eclipse.mylyn.internal.discovery.core.model.Icon;
 
 /**
- * 
  * @author David Green
  */
 @SuppressWarnings("restriction")
@@ -43,7 +42,6 @@ public class DiscoveryCategoryMockFactory extends AbstractMockFactory<DiscoveryC
 		icon.setImage64("images/ico64.png");
 
 		getMockObject().setIcon(icon);
-		icon.setConnectorCategory(getMockObject());
 	}
 
 	public DiscoveryCategoryMockFactory description(String description) {

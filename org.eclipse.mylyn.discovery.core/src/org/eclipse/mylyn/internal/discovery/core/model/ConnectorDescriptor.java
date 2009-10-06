@@ -46,6 +46,8 @@ public class ConnectorDescriptor {
 
 	protected Overview overview;
 
+	protected String certificationId;
+
 	public ConnectorDescriptor() {
 	}
 
@@ -139,6 +141,14 @@ public class ConnectorDescriptor {
 
 	public void setCategoryId(String categoryId) {
 		this.categoryId = categoryId;
+	}
+
+	public String getCertificationId() {
+		return certificationId;
+	}
+
+	public void setCertificationId(String certificationId) {
+		this.certificationId = certificationId;
 	}
 
 	/**
