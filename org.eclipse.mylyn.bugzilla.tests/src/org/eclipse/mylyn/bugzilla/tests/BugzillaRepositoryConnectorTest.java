@@ -25,12 +25,14 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaOperation;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaStatus;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskDataHandler;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
@@ -51,6 +53,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.TaskMapping;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
@@ -65,6 +68,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskOperation;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
 
 /**
  * @author Rob Elves
@@ -72,18 +76,39 @@ import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
  */
 public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
-	public void testSingleRetrievalFailure() throws CoreException {
-		init32();
-		ITask task = generateLocalTaskAndDownload("9999");
-		assertTrue(((AbstractTask) task).getStatus().getMessage().contains(IBugzillaConstants.ERROR_MSG_INVALID_BUG_ID));
+	private BugzillaClient client;
+
+	private TaskRepository repository;
+
+	private BugzillaRepositoryConnector connector;
+
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		this.client = BugzillaFixture.current().client();
+		this.connector = BugzillaFixture.current().connector();
+		this.repository = BugzillaFixture.current().repository();
+		TasksUi.getRepositoryManager().addRepository(repository);
 	}
 
-	public void testMultiRetrievalFailure() throws CoreException {
-		init32();
-		ITask task1 = TasksUi.getRepositoryModel().createTask(repository, "1");
+	public void testSingleRetrievalFailure() throws CoreException {
+		try {
+			connector.getTaskData(repository, "9999", new NullProgressMonitor());
+			fail("Invalid id error should have resulted");
+		} catch (CoreException e) {
+			assertTrue(e.getStatus().getMessage().contains(IBugzillaConstants.ERROR_MSG_INVALID_BUG_ID));
+		}
+
+	}
+
+	public void testMultiRetrievalFailure() throws Exception {
+
+		TaskData taskData1 = BugzillaFixture.current().createTask(PrivilegeLevel.USER, null, null);
+		TaskData taskData2 = BugzillaFixture.current().createTask(PrivilegeLevel.USER, null, null);
+
+		ITask task1 = TasksUi.getRepositoryModel().createTask(repository, taskData1.getTaskId());
 		ITask taskX = TasksUi.getRepositoryModel().createTask(repository, "9999");
-		ITask task2 = TasksUi.getRepositoryModel().createTask(repository, "2");
-		// FIXME task.setStale(true);
+		ITask task2 = TasksUi.getRepositoryModel().createTask(repository, taskData2.getTaskId());
 		TasksUiPlugin.getTaskList().addTask(task1);
 		TasksUiPlugin.getTaskList().addTask(taskX);
 		TasksUiPlugin.getTaskList().addTask(task2);
