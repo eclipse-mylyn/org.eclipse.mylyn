@@ -42,6 +42,8 @@ import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
@@ -102,8 +104,16 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			if (renderedInSubSection) {
 				return createSection(parent, toolkit);
 			} else {
-				Label separator = toolkit.createSeparator(parent, SWT.HORIZONTAL);
-				GridDataFactory.fillDefaults().grab(true, false).applyTo(separator);
+				// show a separator before current comments
+				final Label separator = toolkit.createSeparator(parent, SWT.HORIZONTAL | SWT.SHADOW_NONE);
+				separator.addPaintListener(new PaintListener() {
+					public void paintControl(PaintEvent e) {
+						e.gc.drawLine(0, 0, separator.getSize().x, 0);
+					}
+				});
+				separator.setForeground(toolkit.getColors().getColor(IFormColors.TB_BORDER));
+				GridDataFactory.fillDefaults().grab(true, false).indent(2 * INDENT, 0).applyTo(separator);
+
 				return createCommentViewers(parent, toolkit);
 			}
 		}
