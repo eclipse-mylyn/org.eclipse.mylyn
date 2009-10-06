@@ -153,12 +153,12 @@ public class JavaEditingMonitorTest extends AbstractJavaContextTest {
 		monitor.handleWorkbenchPartSelection(editorPart, callerSelection, false);
 
 		assertEquals(0, editingCount);
-		assertEquals(4, selectingCount);
+		assertEquals(3, selectingCount);
 
 		// select a different element
 		monitor.handleWorkbenchPartSelection(editorPart, callerSelection, false);
 
 		assertEquals(1, editingCount);
-		assertEquals(4, selectingCount);
+		assertEquals(3, selectingCount);
 	}
 }
