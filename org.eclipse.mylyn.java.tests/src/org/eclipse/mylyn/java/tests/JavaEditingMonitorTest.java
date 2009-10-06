@@ -104,6 +104,9 @@ public class JavaEditingMonitorTest extends AbstractJavaContextTest {
 	 * 252306.
 	 */
 	public void testHandleElementEdit() throws PartInitException, JavaModelException, InterruptedException {
+		assertEquals(0, editingCount);
+		assertEquals(0, selectingCount);
+
 		CompilationUnitEditor editorPart = (CompilationUnitEditor) JavaUI.openInEditor(caller);
 		Document document = new Document(typeFoo.getCompilationUnit().getSource());
 
@@ -135,7 +138,7 @@ public class JavaEditingMonitorTest extends AbstractJavaContextTest {
 		// select callee
 		TextSelection calleeSelection = new TextSelection(document, typeFoo.getCompilationUnit().getSource().indexOf(
 				"callee()"), "callee".length());
-//		editorPart.setHighlightRange(calleeSelection.getOffset(), calleeSelection.getLength(), true);
+		editorPart.setHighlightRange(calleeSelection.getOffset(), calleeSelection.getLength(), true);
 
 		// select it once
 		monitor.handleWorkbenchPartSelection(editorPart, calleeSelection, false);
@@ -145,7 +148,7 @@ public class JavaEditingMonitorTest extends AbstractJavaContextTest {
 
 		TextSelection callerSelection = new TextSelection(document, typeFoo.getCompilationUnit().getSource().indexOf(
 				"caller()"), "caller".length());
-//		editorPart.setHighlightRange(callerSelection.getOffset(), callerSelection.getLength(), true);
+		editorPart.setHighlightRange(callerSelection.getOffset(), callerSelection.getLength(), true);
 		// select a different element
 		monitor.handleWorkbenchPartSelection(editorPart, callerSelection, false);
 
