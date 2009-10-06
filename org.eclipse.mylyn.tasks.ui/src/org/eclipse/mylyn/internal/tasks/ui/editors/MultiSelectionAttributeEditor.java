@@ -48,7 +48,7 @@ public class MultiSelectionAttributeEditor extends AbstractAttributeEditor {
 	public void createControl(Composite parent, FormToolkit toolkit) {
 		list = new List(parent, SWT.FLAT | SWT.MULTI | SWT.V_SCROLL);
 		toolkit.adapt(list, false, false);
-		list.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+		list.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 		list.setFont(EditorUtil.TEXT_FONT);
 
 		Map<String, String> labelByValue = getAttributeMapper().getOptions(getTaskAttribute());

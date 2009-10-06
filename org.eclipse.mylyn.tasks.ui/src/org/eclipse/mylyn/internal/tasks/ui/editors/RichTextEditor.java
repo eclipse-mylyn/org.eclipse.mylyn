@@ -193,7 +193,7 @@ public class RichTextEditor {
 			}
 		} else {
 			installListeners(viewer);
-			viewer.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+			viewer.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 		}
 
 		// enable cut/copy/paste
@@ -287,7 +287,7 @@ public class RichTextEditor {
 			}
 
 			if (!isReadOnly() && (style & SWT.NO_SCROLL) == 0) {
-				editorComposite.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+				editorComposite.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 			}
 
 			viewSourceAction.setEnabled(true);

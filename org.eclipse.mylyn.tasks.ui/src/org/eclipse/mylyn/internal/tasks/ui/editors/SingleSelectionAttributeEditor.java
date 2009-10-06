@@ -68,7 +68,7 @@ public class SingleSelectionAttributeEditor extends AbstractAttributeEditor {
 			combo.setVisibleItemCount(10);
 			toolkit.adapt(combo, false, false);
 			combo.setFont(EditorUtil.TEXT_FONT);
-			combo.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+			combo.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 			combo.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent event) {

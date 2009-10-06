@@ -90,7 +90,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		attachmentsTable.setLayout(new GridLayout());
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).hint(500, SWT.DEFAULT).applyTo(
 				attachmentsTable);
-		attachmentsTable.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+		attachmentsTable.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 
 		for (int i = 0; i < attachmentsColumns.length; i++) {
 			TableColumn column = new TableColumn(attachmentsTable, SWT.LEFT, i);

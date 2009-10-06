@@ -126,7 +126,7 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 			StyledText textWidget = editor.getViewer().getTextWidget();
 			editor.getControl().setLayoutData(
 					EditorUtil.getTextControlLayoutData(getTaskEditorPage(), textWidget, getExpandVertically()));
-			editor.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+			editor.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 		}
 
 		getEditor().getControl().setData(EditorUtil.KEY_TOGGLE_TO_MAXIMIZE_ACTION, getMaximizePartAction());

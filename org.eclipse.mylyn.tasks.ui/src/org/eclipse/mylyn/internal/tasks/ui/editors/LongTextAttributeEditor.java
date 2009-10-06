@@ -60,7 +60,7 @@ public class LongTextAttributeEditor extends AbstractAttributeEditor {
 			viewer.setEditable(false);
 		} else {
 			viewer.setEditable(true);
-			text.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+			text.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 			text.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
 					setValue(text.getText());

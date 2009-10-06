@@ -57,7 +57,7 @@ public class PersonAttributeEditor extends TextAttributeEditor {
 			parentLayout.marginWidth = 0;
 			parentLayout.horizontalSpacing = 0;
 			composite.setLayout(parentLayout);
-			composite.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+			composite.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 
 			super.createControl(composite, toolkit);
 			getText().setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);

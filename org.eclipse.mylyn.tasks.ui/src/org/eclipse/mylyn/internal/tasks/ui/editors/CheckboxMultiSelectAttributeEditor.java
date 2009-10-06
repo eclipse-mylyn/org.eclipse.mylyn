@@ -20,7 +20,6 @@ import java.util.Set;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.AbstractInPlaceDialog;
 import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.IInPlaceDialogListener;
@@ -39,11 +38,10 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.SharedScrolledComposite;
@@ -57,7 +55,7 @@ public class CheckboxMultiSelectAttributeEditor extends AbstractAttributeEditor 
 
 	private Composite parent;
 
-	private ToolBar toolBar;
+	private Button button;
 
 	public CheckboxMultiSelectAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
@@ -69,7 +67,7 @@ public class CheckboxMultiSelectAttributeEditor extends AbstractAttributeEditor 
 		this.parent = parent;
 
 		Composite composite = toolkit.createComposite(parent);
-		composite.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+		composite.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 		GridLayout layout = new GridLayout(2, false);
 		layout.marginWidth = 0;
 		layout.marginBottom = 0;
@@ -84,19 +82,16 @@ public class CheckboxMultiSelectAttributeEditor extends AbstractAttributeEditor 
 		valueText.setFont(EditorUtil.TEXT_FONT);
 		valueText.setEditable(false);
 
-		toolBar = new ToolBar(composite, SWT.FLAT);
-		ToolItem item = new ToolItem(toolBar, SWT.FLAT);
-		item.setImage(CommonImages.getImage(CommonImages.EDIT_SMALL));
-		item.setToolTipText(Messages.CheckboxMultiSelectAttributeEditor_Edit);
-		GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.BOTTOM).applyTo(toolBar);
-		item.addSelectionListener(new SelectionAdapter() {
+		button = toolkit.createButton(composite, "", SWT.ARROW | SWT.DOWN); //$NON-NLS-1$
+		GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.TOP).applyTo(button);
+		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				final List<String> values = getValues();
 				Map<String, String> validValues = getAttributeMapper().getOptions(getTaskAttribute());
 
 				final InPlaceCheckBoxTreeDialog selectionDialog = new InPlaceCheckBoxTreeDialog(
-						WorkbenchUtil.getShell(), toolBar, values, validValues, NLS.bind(
+						WorkbenchUtil.getShell(), button, values, validValues, NLS.bind(
 								Messages.CheckboxMultiSelectAttributeEditor_Select_X, getLabel()));
 
 				selectionDialog.addEventListener(new IInPlaceDialogListener() {
@@ -203,8 +198,8 @@ public class CheckboxMultiSelectAttributeEditor extends AbstractAttributeEditor 
 		if (valueText != null && !valueText.isDisposed()) {
 			valueText.setBackground(color);
 		}
-		if (toolBar != null && !toolBar.isDisposed()) {
-			toolBar.setBackground(color);
+		if (button != null && !button.isDisposed()) {
+			button.setBackground(color);
 		}
 	}
 

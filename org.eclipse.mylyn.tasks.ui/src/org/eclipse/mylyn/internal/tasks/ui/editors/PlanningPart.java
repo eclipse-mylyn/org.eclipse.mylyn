@@ -268,7 +268,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 		noteEditor.getControl().setLayoutData(
 				EditorUtil.getTextControlLayoutData(page, noteEditor.getViewer().getControl(), true));
-		noteEditor.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+		noteEditor.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 		noteEditor.setReadOnly(false);
 		if (textSupport != null) {
 			textSupport.install(noteEditor.getViewer(), true);
@@ -402,7 +402,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		dueDatePicker = new DatePicker(composite, SWT.FLAT, DatePicker.LABEL_CHOOSE, true, 0);
 		GridDataFactory.fillDefaults().hint(CONTROL_WIDTH, SWT.DEFAULT).applyTo(dueDatePicker);
 		dueDatePicker.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-		dueDatePicker.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+		dueDatePicker.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 		if (getTask().getDueDate() != null) {
 			Calendar calendar = TaskActivityUtil.getCalendar();
 			calendar.setTime(getTask().getDueDate());
@@ -432,7 +432,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		estimatedTime.setIncrement(1);
 		estimatedTime.setSelection(getTask().getEstimatedTimeHours());
 		if (!PlatformUtil.spinnerHasNativeBorder()) {
-			estimatedTime.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+			estimatedTime.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 		}
 		estimatedTime.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
@@ -463,7 +463,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 		scheduleDatePicker = new ScheduleDatePicker(composite, getTask(), SWT.FLAT);
 		GridDataFactory.fillDefaults().hint(CONTROL_WIDTH, SWT.DEFAULT).applyTo(scheduleDatePicker);
-		scheduleDatePicker.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+		scheduleDatePicker.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 		toolkit.adapt(scheduleDatePicker, false, false);
 		toolkit.paintBordersFor(composite);
 

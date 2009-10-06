@@ -246,7 +246,7 @@ public class AttributePart extends AbstractLocalEditorPart {
 
 	private void createCategoryChooser(Composite buttonComposite, FormToolkit toolkit) {
 		categoryChooser = new CCombo(buttonComposite, SWT.FLAT | SWT.READ_ONLY);
-		categoryChooser.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+		categoryChooser.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 		toolkit.adapt(categoryChooser, false, false);
 		categoryChooser.addSelectionListener(new SelectionAdapter() {
 			@Override

@@ -122,7 +122,7 @@ public class TaskEditorNotesPart extends AbstractTaskEditorPart {
 		gd.grabExcessHorizontalSpace = true;
 
 		noteEditor.getControl().setLayoutData(gd);
-		noteEditor.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+		noteEditor.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 		noteEditor.setEditable(true);
 
 		toolkit.paintBordersFor(composite);

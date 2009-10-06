@@ -186,7 +186,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		addToCategory = getManagedForm().getToolkit().createButton(buttonComposite,
 				Messages.TaskEditorActionPart_Add_to_Category, SWT.CHECK);
 		categoryChooser = new CCombo(buttonComposite, SWT.FLAT | SWT.READ_ONLY);
-		categoryChooser.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+		categoryChooser.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 		categoryChooser.setLayoutData(GridDataFactory.swtDefaults().hint(150, SWT.DEFAULT).create());
 		toolkit.adapt(categoryChooser, false, false);
 		categoryChooser.setFont(TEXT_FONT);
