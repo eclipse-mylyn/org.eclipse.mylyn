@@ -16,11 +16,8 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.DefaultTaskMapping;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -28,7 +25,6 @@ import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
 
 /**
@@ -96,19 +92,12 @@ public class BugzillaTaskDataHandlerTest extends TestCase {
 			}
 		};
 
-		TaskRepository taskRepository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND,
-				BugzillaTestConstants.TEST_BUGZILLA_222_URL);
-		TasksUiPlugin.getRepositoryManager().addRepository(taskRepository);
-
-		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-				taskRepository.getConnectorKind());
 		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
-		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(taskRepository);
-		TaskData taskData = new TaskData(mapper, taskRepository.getConnectorKind(), taskRepository.getRepositoryUrl(),
-				"");
-		assertTrue(taskDataHandler.initializeTaskData(taskRepository, taskData, null, null));
-		assertTrue(taskDataHandler.initializeTaskData(taskRepository, taskData, taskMappingInit, null));
-		assertTrue(taskDataHandler.initializeTaskData(taskRepository, taskData, taskMappingSelect, null));
+		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(repository);
+		TaskData taskData = new TaskData(mapper, repository.getConnectorKind(), repository.getRepositoryUrl(), "");
+		assertTrue(taskDataHandler.initializeTaskData(repository, taskData, null, null));
+		assertTrue(taskDataHandler.initializeTaskData(repository, taskData, taskMappingInit, null));
+		assertTrue(taskDataHandler.initializeTaskData(repository, taskData, taskMappingSelect, null));
 	}
 
 }
