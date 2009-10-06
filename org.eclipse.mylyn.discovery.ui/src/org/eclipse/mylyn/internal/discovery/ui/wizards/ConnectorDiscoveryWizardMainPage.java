@@ -15,6 +15,8 @@ package org.eclipse.mylyn.internal.discovery.ui.wizards;
 
 import java.util.List;
 
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDescriptor;
@@ -49,6 +51,11 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage implements IShe
 		viewer.setShowConnectorDescriptorKindFilter(getWizard().isShowConnectorDescriptorKindFilter());
 		viewer.setShowConnectorDescriptorTextFilter(getWizard().isShowConnectorDescriptorTextFilter());
 		viewer.setMinimumHeight(MINIMUM_HEIGHT);
+		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				setPageComplete(!viewer.getInstallableConnectors().isEmpty());
+			}
+		});
 		viewer.createControl(parent);
 
 		String url = System.getProperty(SYSTEM_PROPERTY_DIRECTORY_URL, DEFAULT_DIRECTORY_URL);
