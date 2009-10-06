@@ -14,34 +14,43 @@
    <extension
          point="org.eclipse.mylyn.discovery.core.connectorDiscovery">
       <connectorCategory
-            description="%connectorCategory.description.eclipse"
-            id="org.eclipse.mylyn.discovery.site.categories.connectorCategoryEclipseOrg"
-            name="%connectorCategory.name.eclipse"
+            description="Task and Change Management"
+            id="org.eclipse.mylyn.discovery.directory.categories.TaskManagement"
+            name="Task and Change Management"
             relevance="50">
-         <icon
-               image32="images/eclipse-32.png"
-               image48="images/eclipse-48.png"/>
          <group
-               id="org.eclipse.mylyn.discovery-directory.bundled">
+               id="certified">
          </group>
          <group
-               id="org.eclipse.mylyn.discovery-directory.extra">
+               id="bundled">
+         </group>
+         <group
+               id="extra">
          </group>
       </connectorCategory>
 	  <connectorCategory
-         description="%connectorCategory.description.community"
-         id="org.eclipse.mylyn.discovery.directory.community"
-         name="%connectorCategory.name.community"
-         relevance="10">
-         <icon
-               image32="images/community-32.png"
-               image48="images/community-48.png">
-         </icon>
+         description="Source Code Management"
+         id="org.eclipse.mylyn.discovery.directory.categories.SourceCodeManagement"
+         name="Source Code Management"
+         relevance="40">
       </connectorCategory>
+   <connectorCategory
+         description="Build Management"
+         id="org.eclipse.mylyn.discovery.directory.categories.BuildManagement"
+         name="Build Management"
+         relevance="30">
+   </connectorCategory>
+   <connectorCategory
+         description="Utilities"
+         id="org.eclipse.mylyn.discovery.directory.categories.Utilities"
+         name="Utilities"
+         relevance="10">
+   </connectorCategory>
    </extension>
    
    <extension
          point="org.eclipse.mylyn.discovery.core.connectorDiscovery">
+      <!--
       <connectorDescriptor
             categoryId="org.eclipse.mylyn.discovery.site.categories.connectorCategoryEclipseOrg"
             description="%connectorDescriptor.description.bugzilla"
@@ -61,11 +70,11 @@
                url="http://eclipse.org/mylyn/">
          </overview>
       </connectorDescriptor>
-   
+   	  -->
       <connectorDescriptor
-            categoryId="org.eclipse.mylyn.discovery.site.categories.connectorCategoryEclipseOrg"
+            categoryId="org.eclipse.mylyn.discovery.directory.categories.TaskManagement"
             description="%connectorDescriptor.description.trac"
-            groupId="org.eclipse.mylyn.discovery-directory.extra"
+            groupId="extra"
             id="org.eclipse.mylyn.trac_feature"
             kind="task"
             license="%connectorDescriptor.license.trac"
@@ -84,7 +93,7 @@
       </connectorDescriptor>
 
       <connectorDescriptor
-            categoryId="org.eclipse.mylyn.discovery.directory.community"
+            categoryId="org.eclipse.mylyn.discovery.directory.categories.TaskManagement"
             description="%connectorDescriptor.description.mantis"
             id="com.itsolut.mantis_feature"
             kind="task"
@@ -102,7 +111,7 @@
       </connectorDescriptor>
       
       <connectorDescriptor
-            categoryId="org.eclipse.mylyn.discovery.directory.community"
+            categoryId="org.eclipse.mylyn.discovery.directory.categories.TaskManagement"
             description="%connectorDescriptor.description.foglyn"
             id="com.foglyn"
             kind="task"
