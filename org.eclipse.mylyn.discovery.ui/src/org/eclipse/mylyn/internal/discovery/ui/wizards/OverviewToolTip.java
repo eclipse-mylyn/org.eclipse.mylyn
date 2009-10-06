@@ -13,11 +13,10 @@ package org.eclipse.mylyn.internal.discovery.ui.wizards;
 
 import java.net.URL;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.mylyn.internal.discovery.core.model.AbstractDiscoverySource;
 import org.eclipse.mylyn.internal.discovery.core.model.Overview;
@@ -25,14 +24,14 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.GradientToolTip;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -47,37 +46,27 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
  */
 class OverviewToolTip extends GradientToolTip {
 
-	private static final String COLOR_BLACK = "black"; //$NON-NLS-1$
-
 	private final Overview overview;
 
 	private final AbstractDiscoverySource source;
 
-	private Color colorBlack;
+	private final Control parent;
 
-	public OverviewToolTip(Control control, AbstractDiscoverySource source, Overview overview) {
+	private final Image leftImage;
+
+	public OverviewToolTip(Control control, AbstractDiscoverySource source, Overview overview, Image leftImage) {
 		super(control, ToolTip.RECREATE, true);
-		if (source == null) {
-			throw new IllegalArgumentException();
-		}
-		if (overview == null) {
-			throw new IllegalArgumentException();
-		}
+		Assert.isNotNull(source);
+		Assert.isNotNull(overview);
+		this.parent = control;
 		this.source = source;
 		this.overview = overview;
+		this.leftImage = leftImage;
 		setHideOnMouseDown(false); // required for links to work
 	}
 
 	@Override
 	protected Composite createToolTipArea(Event event, final Composite parent) {
-		if (colorBlack == null) {
-			ColorRegistry colorRegistry = JFaceResources.getColorRegistry();
-			if (!colorRegistry.hasValueFor(COLOR_BLACK)) {
-				colorRegistry.put(COLOR_BLACK, new RGB(0, 0, 0));
-			}
-			colorBlack = colorRegistry.get(COLOR_BLACK);
-		}
-
 		GridLayoutFactory.fillDefaults().applyTo(parent);
 
 		Composite container = new Composite(parent, SWT.NULL);
@@ -110,7 +99,18 @@ class OverviewToolTip extends GradientToolTip {
 				image == null ? containerWidthHintWithoutImage : containerWidthHintWithImage, SWT.DEFAULT).applyTo(
 				container);
 
-		GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).spacing(3, 0).applyTo(container);
+		GridLayoutFactory.fillDefaults().numColumns((leftImage != null) ? 3 : 2).margins(5, 5).spacing(3, 0).applyTo(
+				container);
+
+		if (leftImage != null) {
+			Label imageLabel = new Label(container, SWT.NONE);
+			imageLabel.setImage(leftImage);
+			int imageWidthHint = leftImage.getBounds().width + 5;
+			GridDataFactory.fillDefaults()
+					.align(SWT.BEGINNING, SWT.BEGINNING)
+					.hint(imageWidthHint, SWT.DEFAULT)
+					.applyTo(imageLabel);
+		}
 
 		String summary = overview.getSummary();
 
@@ -126,8 +126,14 @@ class OverviewToolTip extends GradientToolTip {
 		}
 		gridDataFactory.applyTo(summaryContainer);
 
-		Label summaryLabel = new Label(summaryContainer, SWT.WRAP);
+		StyledText summaryLabel = new StyledText(summaryContainer, SWT.WRAP | SWT.READ_ONLY | SWT.NO_FOCUS);
 		summaryLabel.setText(summary);
+		Point size = summaryLabel.computeSize(widthHint, SWT.DEFAULT);
+		if (size.y > heightHint - 20) {
+			summaryLabel.dispose();
+			summaryLabel = new StyledText(summaryContainer, SWT.WRAP | SWT.READ_ONLY | SWT.NO_FOCUS | SWT.V_SCROLL);
+			summaryLabel.setText(summary);
+		}
 		summaryLabel.setBackground(null);
 
 		GridDataFactory.fillDefaults().grab(true, true).align(SWT.BEGINNING, SWT.BEGINNING).applyTo(summaryLabel);
@@ -147,7 +153,7 @@ class OverviewToolTip extends GradientToolTip {
 			imageLabel.setSize(widthHint, fixedImageHeight);
 
 			// creates a border
-			imageContainer.setBackground(colorBlack);
+			imageContainer.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_BLACK));
 		}
 		if (hasLearnMoreLink) {
 			Link link = new Link(summaryContainer, SWT.NULL);
@@ -194,4 +200,16 @@ class OverviewToolTip extends GradientToolTip {
 		}
 		return null;
 	}
+
+	public void show(Control titleControl) {
+		Point titleAbsLocation = titleControl.getParent().toDisplay(titleControl.getLocation());
+		Point containerAbsLocation = parent.getParent().toDisplay(parent.getLocation());
+		Rectangle bounds = titleControl.getBounds();
+		int relativeX = titleAbsLocation.x - containerAbsLocation.x;
+		int relativeY = titleAbsLocation.y - containerAbsLocation.y;
+
+		relativeY += bounds.height + 3;
+		show(new Point(relativeX, relativeY));
+	}
+
 }

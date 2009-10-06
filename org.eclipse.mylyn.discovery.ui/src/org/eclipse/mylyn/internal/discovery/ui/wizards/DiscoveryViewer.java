@@ -67,6 +67,7 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.provisional.commons.ui.GradientCanvas;
 import org.eclipse.mylyn.internal.provisional.commons.ui.SelectionProviderAdapter;
+import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.ACC;
@@ -117,7 +118,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.progress.WorkbenchJob;
 import org.eclipse.ui.themes.IThemeManager;
@@ -167,7 +170,7 @@ public class DiscoveryViewer {
 
 		private Image warningIconImage;
 
-		public ConnectorDescriptorItemUi(DiscoveryConnector connector, Composite categoryChildrenContainer,
+		public ConnectorDescriptorItemUi(final DiscoveryConnector connector, Composite categoryChildrenContainer,
 				Color background) {
 			display = categoryChildrenContainer.getDisplay();
 			this.connector = connector;
@@ -224,8 +227,23 @@ public class DiscoveryViewer {
 			configureLook(providerLabel, background);
 			GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).applyTo(providerLabel);
 			if (connector.getCertification() != null) {
-				providerLabel.setText(NLS.bind("by {0}, {1}, <a>{2}</a>", new String[] { connector.getProvider(),
+				providerLabel.setText(NLS.bind("by {0}, {1}, <a>Certified</a>", new String[] { connector.getProvider(),
 						connector.getLicense(), connector.getCertification().getName() }));
+				if (connector.getCertification().getUrl() != null) {
+					providerLabel.addSelectionListener(new SelectionAdapter() {
+						@Override
+						public void widgetSelected(SelectionEvent e) {
+							WorkbenchUtil.openUrl(connector.getCertification().getUrl(),
+									IWorkbenchBrowserSupport.AS_EXTERNAL);
+						}
+					});
+				}
+				Overview overview = new Overview();
+				overview.setSummary(connector.getCertification().getDescription());
+				overview.setUrl(connector.getCertification().getUrl());
+				Image image = computeIconImage(connector.getSource(), connector.getCertification().getIcon(), 48, true);
+				hookTooltip(providerLabel, providerLabel, connectorContainer, nameLabel, connector.getSource(),
+						overview, image);
 			} else {
 				providerLabel.setText(NLS.bind(Messages.ConnectorDiscoveryWizardMainPage_provider_and_license,
 						connector.getProvider(), connector.getLicense()));
@@ -239,7 +257,7 @@ public class DiscoveryViewer {
 				infoButton.setImage(infoImage);
 				infoButton.setToolTipText(Messages.ConnectorDiscoveryWizardMainPage_tooltip_showOverview);
 				hookTooltip(toolBar, infoButton, connectorContainer, nameLabel, connector.getSource(),
-						connector.getOverview());
+						connector.getOverview(), null);
 				GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).applyTo(toolBar);
 			} else {
 				Label label = new Label(connectorContainer, SWT.NULL);
@@ -284,7 +302,8 @@ public class DiscoveryViewer {
 			connectorContainer.addMouseListener(connectorItemMouseListener);
 			iconLabel.addMouseListener(connectorItemMouseListener);
 			nameLabel.addMouseListener(connectorItemMouseListener);
-			providerLabel.addMouseListener(connectorItemMouseListener);
+			// the provider has clickable links
+			//providerLabel.addMouseListener(connectorItemMouseListener);
 			description.addMouseListener(connectorItemMouseListener);
 		}
 
@@ -877,7 +896,7 @@ public class DiscoveryViewer {
 						infoButton.setImage(infoImage);
 						infoButton.setToolTipText(Messages.ConnectorDiscoveryWizardMainPage_tooltip_showOverview);
 						hookTooltip(toolBar, infoButton, categoryHeaderContainer, nameLabel, category.getSource(),
-								category.getOverview());
+								category.getOverview(), null);
 						GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).applyTo(toolBar);
 					} else {
 						new Label(categoryHeaderContainer, SWT.NULL).setText(" "); //$NON-NLS-1$
@@ -1085,12 +1104,15 @@ public class DiscoveryViewer {
 		}
 	}
 
-	private void hookTooltip(final Control tooltipControl, final ToolItem tipActivator, final Control exitControl,
-			final Control titleControl, AbstractDiscoverySource source, Overview overview) {
-		final OverviewToolTip toolTip = new OverviewToolTip(tooltipControl, source, overview);
+	private void hookTooltip(final Control parent, final Widget tipActivator, final Control exitControl,
+			final Control titleControl, AbstractDiscoverySource source, Overview overview, Image image) {
+		final OverviewToolTip toolTip = new OverviewToolTip(parent, source, overview, image);
 		Listener listener = new Listener() {
 			public void handleEvent(Event event) {
 				switch (event.type) {
+				case SWT.MouseHover:
+					toolTip.show(titleControl);
+					break;
 				case SWT.Dispose:
 				case SWT.MouseWheel:
 					toolTip.hide();
@@ -1101,19 +1123,15 @@ public class DiscoveryViewer {
 		};
 		tipActivator.addListener(SWT.Dispose, listener);
 		tipActivator.addListener(SWT.MouseWheel, listener);
-		tipActivator.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				Point titleAbsLocation = titleControl.getParent().toDisplay(titleControl.getLocation());
-				Point containerAbsLocation = tooltipControl.getParent().toDisplay(tooltipControl.getLocation());
-				Rectangle bounds = titleControl.getBounds();
-				int relativeX = titleAbsLocation.x - containerAbsLocation.x;
-				int relativeY = titleAbsLocation.y - containerAbsLocation.y;
-
-				relativeY += bounds.height + 3;
-				toolTip.show(new Point(relativeX, relativeY));
+		if (image != null) {
+			tipActivator.addListener(SWT.MouseHover, listener);
+		}
+		Listener selectionListener = new Listener() {
+			public void handleEvent(Event event) {
+				toolTip.show(titleControl);
 			}
-		});
+		};
+		tipActivator.addListener(SWT.Selection, selectionListener);
 		Listener exitListener = new Listener() {
 			public void handleEvent(Event event) {
 				switch (event.type) {
