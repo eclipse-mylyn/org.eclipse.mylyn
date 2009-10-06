@@ -223,6 +223,7 @@
 		<!-- Generate the "site.xml" file in the "updateSite folder -->
 		<copy file="${builder}/${SiteXmlFile}" tofile="${UpdateSiteLocation}/site.xml">
 			<filterset>
+				<filter token="cdt" value="${org.eclipse.cdt.mylyn}" />
 				<filter token="core" value="${org.eclipse.mylyn_feature}" />
 				<filter token="wikitext" value="${org.eclipse.mylyn.wikitext_feature}" />
 			</filterset>
