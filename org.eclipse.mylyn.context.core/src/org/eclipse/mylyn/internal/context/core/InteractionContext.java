@@ -249,6 +249,10 @@ public class InteractionContext implements IInteractionContext {
 	}
 
 	public synchronized void collapse() {
+		collapseHistory(interactionHistory);
+	}
+
+	private synchronized void collapseHistory(List<InteractionEvent> interactionHistoryToCollapseTo) {
 		List<InteractionEvent> collapsedHistory = new ArrayList<InteractionEvent>();
 		for (InteractionContextElement node : elementMap.values()) {
 			if (!node.equals(activeNode)) {
@@ -259,8 +263,30 @@ public class InteractionContext implements IInteractionContext {
 			collapseNode(collapsedHistory, activeNode);
 		}
 
-		interactionHistory.clear();
-		interactionHistory.addAll(collapsedHistory);
+		interactionHistoryToCollapseTo.clear();
+		interactionHistoryToCollapseTo.addAll(collapsedHistory);
+	}
+
+	/**
+	 * This method is only used for asynchronous saving of task contexts
+	 * 
+	 * @return a context with a copy of the collapsed interaction history. All other fields are not set.
+	 */
+	synchronized IInteractionContext createCollapsedWritableCopy() {
+		InteractionContext copiedContext = new InteractionContext(handleIdentifier, contextScaling);
+		copiedContext.contentLimitedTo = contentLimitedTo;
+
+		collapseHistory(copiedContext.interactionHistory);
+		
+		// none of the following are used for writing contexts so we aren't going to try to copy them
+		//copiedContext.numUserEvents = numUserEvents;
+		// copiedContext.lastEdgeNode = lastEdgeNode;
+		// copiedContext.lastEdgeEvent = lastEdgeEvent;
+		// copiedContext.landmarkMap = landmarkMap;
+		// copiedContext.elementMap = elementMap;
+		// copiedContext.activeNode = activeNode;
+
+		return copiedContext;
 	}
 
 	private void collapseNode(List<InteractionEvent> collapsedHistory, InteractionContextElement node) {

@@ -414,13 +414,19 @@ public class InteractionContextManager implements IInteractionContextManager {
 		}
 	}
 
+	public void saveContext(IInteractionContext context) {
+		if (context != null && contextStore != null) {
+			contextStore.saveContext(context);
+		}
+	}
+
 	public void deactivateContext(String handleIdentifier) {
 		try {
 			System.setProperty(InteractionContextManager.PROPERTY_CONTEXT_ACTIVE, Boolean.FALSE.toString());
 
 			final IInteractionContext context = activeContext.getContextMap().get(handleIdentifier);
 			if (context != null) {
-				contextStore.saveContext(context);
+				saveContext(context);
 				activeContext.getContextMap().remove(handleIdentifier);
 
 				setContextCapturePaused(true);

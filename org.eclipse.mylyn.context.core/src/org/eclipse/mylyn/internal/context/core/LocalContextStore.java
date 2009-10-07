@@ -128,11 +128,14 @@ public class LocalContextStore implements IContextStore {
 				// FIXME this should not reference the context manager
 				ContextCore.getContextManager().setContextCapturePaused(true);
 			}
+			synchronized (context) {
+				IInteractionContext contextToSave = context;
+				if (context instanceof InteractionContext) {
+					contextToSave = ((InteractionContext) context).createCollapsedWritableCopy();
+				}
 
-			if (context instanceof InteractionContext) {
-				((InteractionContext) context).collapse();
+				externalizer.writeContextToXml(contextToSave, getFileForContext(contextToSave.getHandleIdentifier()));
 			}
-			externalizer.writeContextToXml(context, getFileForContext(context.getHandleIdentifier()));
 
 			if (context.getAllElements().size() == 0) {
 				removeFromCache(context);
