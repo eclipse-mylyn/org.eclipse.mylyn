@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="functions" default="all" basedir=".">
 	
-	<import file="get-dependencies.xml"/>
+ 	<import file="get-dependencies.xml"/>
 
 	<!-- ===================================================================== -->
 	<!-- build targets -->
@@ -956,6 +956,8 @@
     		<arg value="-compress"/>
     		<arg value="-reusePackedFiles"/>
 		</exec-eclipse>
+		
+		<antcall target="publish-categories"/>
     </target>
 
 	<target name="publish-categories-check">
