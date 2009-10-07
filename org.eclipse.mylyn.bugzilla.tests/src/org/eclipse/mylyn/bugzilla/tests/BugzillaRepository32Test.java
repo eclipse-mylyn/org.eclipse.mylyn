@@ -20,22 +20,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.sync.SubmitTaskJob;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.TaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
@@ -76,7 +74,7 @@ public class BugzillaRepository32Test extends AbstractBugzillaTest {
 
 		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
 		changed.add(attrPriority);
-		submit(task, taskData, changed);
+		BugzillaFixture.current().submitTask(taskData, client);
 
 		task = generateLocalTaskAndDownload(taskNumber);
 		assertNotNull(task);
@@ -155,15 +153,15 @@ public class BugzillaRepository32Test extends AbstractBugzillaTest {
 
 	}
 
-	@Override
-	protected RepositoryResponse submit(ITask task, TaskData taskData, Set<TaskAttribute> changedAttributes)
-			throws CoreException {
-
-		RepositoryResponse response = connector.getTaskDataHandler().postTaskData(repository, taskData,
-				changedAttributes, new NullProgressMonitor());
-		((AbstractTask) task).setSubmitting(true);
-		return response;
-	}
+//	@Override
+//	protected RepositoryResponse submit(ITask task, TaskData taskData, Set<TaskAttribute> changedAttributes)
+//			throws CoreException {
+//
+//		RepositoryResponse response = connector.getTaskDataHandler().postTaskData(repository, taskData,
+//				changedAttributes, new NullProgressMonitor());
+//		((AbstractTask) task).setSubmitting(true);
+//		return response;
+//	}
 
 	protected void submit(ITask task, TaskDataModel model) throws Exception {
 
@@ -258,7 +256,7 @@ public class BugzillaRepository32Test extends AbstractBugzillaTest {
 		changed.add(flagC);
 		changed.add(flagD);
 
-		submit(task, taskData, changed);
+		BugzillaFixture.current().submitTask(taskData, client);
 		task = generateLocalTaskAndDownload(taskNumber);
 		assertNotNull(task);
 		taskData = TasksUiPlugin.getTaskDataManager().getTaskData(task);
@@ -324,7 +322,7 @@ public class BugzillaRepository32Test extends AbstractBugzillaTest {
 		changed.add(flagC);
 		changed.add(flagD);
 
-		submit(task, taskData, changed);
+		BugzillaFixture.current().submitTask(taskData, client);
 		task = generateLocalTaskAndDownload(taskNumber);
 		assertNotNull(task);
 		taskData = TasksUiPlugin.getTaskDataManager().getTaskData(task);
@@ -467,7 +465,7 @@ public class BugzillaRepository32Test extends AbstractBugzillaTest {
 	}
 
 	private void changeCollorAndSubmit(ITask task, TaskData taskData, TaskAttribute colorAttribute, boolean red,
-			boolean green, boolean yellow, boolean blue) throws CoreException {
+			boolean green, boolean yellow, boolean blue) throws Exception {
 		if (!red && green && !yellow && !blue) {
 			List<String> newValue = new ArrayList<String>(2);
 			newValue.add("Red");
@@ -476,7 +474,7 @@ public class BugzillaRepository32Test extends AbstractBugzillaTest {
 			Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
 			changed.add(colorAttribute);
 			// Submit changes
-			submit(task, taskData, changed);
+			BugzillaFixture.current().submitTask(taskData, client);
 		} else if (red && green && !yellow && !blue) {
 			List<String> newValue = new ArrayList<String>(2);
 			newValue.add("Green");
@@ -484,7 +482,7 @@ public class BugzillaRepository32Test extends AbstractBugzillaTest {
 			Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
 			changed.add(colorAttribute);
 			// Submit changes
-			submit(task, taskData, changed);
+			BugzillaFixture.current().submitTask(taskData, client);
 		}
 	}
 

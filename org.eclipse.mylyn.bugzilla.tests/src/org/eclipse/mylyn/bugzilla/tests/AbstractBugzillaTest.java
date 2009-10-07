@@ -17,11 +17,12 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
@@ -29,12 +30,9 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
-import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
-import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.sync.SubmitJob;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -59,6 +57,8 @@ public abstract class AbstractBugzillaTest extends TestCase {
 
 	protected TaskList taskList;
 
+	protected BugzillaClient client;
+
 	public AbstractBugzillaTest() {
 		super();
 	}
@@ -70,6 +70,10 @@ public abstract class AbstractBugzillaTest extends TestCase {
 				ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
 		manager = TasksUiPlugin.getRepositoryManager();
 		TestFixture.resetTaskListAndRepositories();
+		this.client = BugzillaFixture.current().client();
+		this.connector = BugzillaFixture.current().connector();
+		this.repository = BugzillaFixture.current().repository();
+		TasksUi.getRepositoryManager().addRepository(repository);
 	}
 
 	@Override
@@ -140,14 +144,14 @@ public abstract class AbstractBugzillaTest extends TestCase {
 		}
 	}
 
-	protected ITask generateLocalTaskAndDownload(String taskNumber) throws CoreException {
-		ITask task = TasksUi.getRepositoryModel().createTask(repository, taskNumber);
-		// FIXME task.setStale(true);
-		TasksUiPlugin.getTaskList().addTask(task);
-		TasksUiInternal.synchronizeTask(connector, task, true, null);
-		TasksUiPlugin.getTaskDataManager().setTaskRead(task, true);
-		return task;
-	}
+//	protected ITask generateLocalTaskAndDownload(String taskNumber) throws CoreException {
+//		ITask task = TasksUi.getRepositoryModel().createTask(repository, taskNumber);
+//		// FIXME task.setStale(true);
+//		TasksUiPlugin.getTaskList().addTask(task);
+//		TasksUiInternal.synchronizeTask(connector, task, true, null);
+//		TasksUiPlugin.getTaskDataManager().setTaskRead(task, true);
+//		return task;
+//	}
 
 	protected TaskDataModel createModel(ITask task) throws CoreException {
 		ITaskDataWorkingCopy taskDataState = getWorkingCopy(task);
@@ -169,19 +173,20 @@ public abstract class AbstractBugzillaTest extends TestCase {
 		}
 	}
 
-	protected RepositoryResponse submit(ITask task, TaskData taskData, Set<TaskAttribute> changedAttributes)
-			throws CoreException {
-		RepositoryResponse response = connector.getTaskDataHandler().postTaskData(repository, taskData,
-				changedAttributes, new NullProgressMonitor());
-		((AbstractTask) task).setSubmitting(true);
-		return response;
-	}
-
 	protected void synchAndAssertState(Set<ITask> tasks, SynchronizationState state) {
 		for (ITask task : tasks) {
 			TasksUiInternal.synchronizeTask(connector, task, true, null);
 			TasksUiPlugin.getTaskDataManager().setTaskRead(task, true);
 			assertEquals(task.getSynchronizationState(), state);
 		}
+	}
+
+	public ITask generateLocalTaskAndDownload(String id) throws CoreException {
+		TasksUi.getRepositoryManager().addRepository(repository);
+		ITask task = TasksUi.getRepositoryModel().createTask(repository, id);
+		TasksUiPlugin.getTaskList().addTask(task);
+		TasksUiInternal.synchronizeTask(connector, task, true, null);
+		TasksUiPlugin.getTaskDataManager().setTaskRead(task, true);
+		return task;
 	}
 }

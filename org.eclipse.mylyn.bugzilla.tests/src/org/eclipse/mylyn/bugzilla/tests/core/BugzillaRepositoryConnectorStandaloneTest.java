@@ -29,6 +29,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
+import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -241,7 +242,8 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 				System.currentTimeMillis() + "");
 		taskData.getRoot().getMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue(priority);
 		taskData.getRoot().getMappedAttribute(BugzillaAttribute.BUG_SEVERITY.getKey()).setValue(severity);
-		TaskData taskDataNew = BugzillaFixture.current().submitTask(taskData, client);
+		RepositoryResponse response = BugzillaFixture.current().submitTask(taskData, client);
+		TaskData taskDataNew = BugzillaFixture.current().getTask(response.getTaskId(), client);
 
 		// run query again
 		final Map<String, TaskData> changedTaskData2 = new HashMap<String, TaskData>();
