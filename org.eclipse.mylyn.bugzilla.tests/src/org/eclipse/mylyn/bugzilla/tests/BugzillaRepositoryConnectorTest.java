@@ -34,11 +34,8 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizationSession;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.search.RepositorySearchResult;
-import org.eclipse.mylyn.internal.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.TaskMapping;
@@ -759,20 +756,21 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		// // test anonymous query (note that this demonstrates query via
 		// eclipse search (ui)
 
-		String queryUrl = "http://mylyn.eclipse.org/bugs218/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=search-match-test&product=TestProduct&long_desc_type=substring&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&deadlinefrom=&deadlineto=&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&emailassigned_to1=1&emailtype1=substring&email1=&emailassigned_to2=1&emailreporter2=1&emailcc2=1&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
-		IRepositoryQuery bugzillaQuery = TasksUi.getRepositoryModel().createRepositoryQuery(repository);
-		bugzillaQuery.setUrl(queryUrl);
-		SearchHitCollector collector = new SearchHitCollector(taskList, repository, bugzillaQuery);
-		RepositorySearchResult result = (RepositorySearchResult) collector.getSearchResult();
-
-		collector.run(new NullProgressMonitor());
-		assertEquals(2, result.getElements().length);
-
-		for (Object element : result.getElements()) {
-			assertEquals(true, element instanceof ITask);
-			ITask hit = (ITask) element;
-			assertTrue(hit.getSummary().contains("search-match-test"));
-		}
+//		String queryUrl = repository.getRepositoryUrl()
+//				+"buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=search-match-test&product=TestProduct&long_desc_type=substring&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&deadlinefrom=&deadlineto=&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&emailassigned_to1=1&emailtype1=substring&email1=&emailassigned_to2=1&emailreporter2=1&emailcc2=1&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
+//		IRepositoryQuery bugzillaQuery = TasksUi.getRepositoryModel().createRepositoryQuery(repository);
+//		bugzillaQuery.setUrl(queryUrl);
+//		SearchHitCollector collector = new SearchHitCollector(taskList, repository, bugzillaQuery);
+//		RepositorySearchResult result = (RepositorySearchResult) collector.getSearchResult();
+//
+//		collector.run(new NullProgressMonitor());
+//		assertEquals(2, result.getElements().length);
+//
+//		for (Object element : result.getElements()) {
+//			assertEquals(true, element instanceof ITask);
+//			ITask hit = (ITask) element;
+//			assertTrue(hit.getSummary().contains("search-match-test"));
+//		}
 
 		// test anonymous update of configuration
 		RepositoryConfiguration config = connector.getRepositoryConfiguration(repository, false, null);

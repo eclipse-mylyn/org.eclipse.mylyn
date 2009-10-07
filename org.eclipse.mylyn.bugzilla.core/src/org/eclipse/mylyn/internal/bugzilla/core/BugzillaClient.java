@@ -62,6 +62,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
@@ -1650,9 +1651,11 @@ public class BugzillaClient {
 				}
 			}
 
-			throw new CoreException(RepositoryStatus.createHtmlStatus(repositoryUrl.toString(), IStatus.INFO,
+			RepositoryStatus status = RepositoryStatus.createHtmlStatus(repositoryUrl.toString(), IStatus.INFO,
 					BugzillaCorePlugin.ID_PLUGIN, RepositoryStatus.ERROR_REPOSITORY,
-					"A repository error has occurred.", body)); //$NON-NLS-1$
+					"A repository error has occurred.", body); //$NON-NLS-1$
+			StatusHandler.log(status);
+			throw new CoreException(status);
 
 		} catch (ParseException e) {
 			loggedIn = false;

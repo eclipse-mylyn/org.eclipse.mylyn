@@ -192,7 +192,9 @@ public class BugzillaFixture extends TestFixture {
 		taskData.getRoot().createMappedAttribute(BugzillaAttribute.OP_SYS.getKey()).setValue("All");
 		taskData.getRoot().createMappedAttribute(BugzillaAttribute.REP_PLATFORM.getKey()).setValue("All");
 		taskData.getRoot().createMappedAttribute(BugzillaAttribute.VERSION.getKey()).setValue("unspecified");
-		return submitTask(taskData, client);
+		RepositoryResponse response = submitTask(taskData, client);
+		String bugId = response.getTaskId();
+		return getTask(bugId, client);
 	}
 
 	/**
@@ -216,19 +218,12 @@ public class BugzillaFixture extends TestFixture {
 		return newData[0];
 	}
 
-	public TaskData submitTask(TaskData taskData, BugzillaClient client) throws IOException, CoreException {
+	public RepositoryResponse submitTask(TaskData taskData, BugzillaClient client) throws IOException, CoreException {
 		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(repository());
 		final TaskData[] newData = new TaskData[1];
 		RepositoryResponse result = client.postTaskData(taskData, null);
-		String bugId = result.getTaskId();
-		client.getTaskData(Collections.singleton(bugId), new TaskDataCollector() {
-			@Override
-			public void accept(TaskData data) {
-				newData[0] = data;
-			}
-		}, mapper, null);
-		return newData[0];
+		return result;
 	}
 
 	@Override

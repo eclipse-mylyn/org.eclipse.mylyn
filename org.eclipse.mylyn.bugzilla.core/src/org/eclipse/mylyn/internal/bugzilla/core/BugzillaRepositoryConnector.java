@@ -911,18 +911,22 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				}
 			}
 			// Set the OS and the Platform in the taskData
-			if (bugzillaOS != null && opSysAttribute != null) {
+			if (bugzillaOS != null && opSysAttribute != null && opSysAttribute.getOption(bugzillaOS) != null) {
 				opSysAttribute.setValue(bugzillaOS);
-			} else if (opSysAttribute != null && opSysAttribute.getOption(OPTION_ALL) != null) {
-				opSysAttribute.setValue(OPTION_ALL);
 			}
 
-			if (bugzillaPlatform != null && platformAttribute != null) {
+			/*else if (opSysAttribute != null && opSysAttribute.getOption(OPTION_ALL) != null) {
+				opSysAttribute.setValue(OPTION_ALL);
+			}*/
+
+			if (bugzillaPlatform != null && platformAttribute != null
+					&& platformAttribute.getOption(bugzillaPlatform) != null) {
 				platformAttribute.setValue(bugzillaPlatform);
-			} else if (opSysAttribute != null && platformAttribute != null
+			}
+			/*else if (opSysAttribute != null && platformAttribute != null
 					&& platformAttribute.getOption(OPTION_ALL) != null) {
 				opSysAttribute.setValue(OPTION_ALL);
-			}
+			}*/
 
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, "could not set platform options", //$NON-NLS-1$

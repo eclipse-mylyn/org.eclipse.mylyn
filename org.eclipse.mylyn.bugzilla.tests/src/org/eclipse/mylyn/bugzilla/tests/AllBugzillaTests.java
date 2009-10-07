@@ -37,6 +37,7 @@ public class AllBugzillaTests {
 		suite.addTestSuite(BugzillaTaskHyperlinkDetectorTest.class);
 		suite.addTestSuite(BugzillaSearchTest.class);
 		suite.addTestSuite(BugzillaRepositoryConnectorTest.class);
+		suite.addTestSuite(BugzillaAttachmentHandlerTest.class);
 		suite.addTestSuite(EncodingTest.class);
 		suite.addTestSuite(BugzillaSearchPageTest.class);
 		suite.addTestSuite(BugzillaRepository32Test.class);
