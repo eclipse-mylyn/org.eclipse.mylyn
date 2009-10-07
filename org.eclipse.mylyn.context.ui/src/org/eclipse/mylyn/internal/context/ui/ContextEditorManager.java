@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -133,7 +134,7 @@ public class ContextEditorManager extends AbstractContextListener {
 				// TODO change where memento is stored
 				IWorkbenchWindow activeWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 				try {
-					mementoString = readEditorMemento(context);
+					mementoString = readEditorMemento(context.getHandleIdentifier());
 					if (mementoString != null && !mementoString.trim().equals("")) { //$NON-NLS-1$
 						IMemento memento = XMLMemento.createReadRoot(new StringReader(mementoString));
 						IMemento[] children = memento.getChildren(KEY_MONITORED_WINDOW_OPEN_EDITORS);
@@ -225,8 +226,8 @@ public class ContextEditorManager extends AbstractContextListener {
 		return null;
 	}
 
-	private String readEditorMemento(IInteractionContext context) {
-		return preferenceStore.getString(PREFS_PREFIX + context.getHandleIdentifier());
+	private String readEditorMemento(String handleIdentifier) {
+		return preferenceStore.getString(PREFS_PREFIX + handleIdentifier);
 	}
 
 	public void closeEditorsAndSaveMemento(IInteractionContext context) {
@@ -439,4 +440,14 @@ public class ContextEditorManager extends AbstractContextListener {
 			}
 		}
 	}
+
+	public void copyEditorMemento(String sourceHandle, String targetHandle) {
+		Assert.isNotNull(sourceHandle);
+		Assert.isNotNull(targetHandle);
+		String memento = readEditorMemento(sourceHandle);
+		if (memento != null) {
+			writeEditorMemento(targetHandle, memento);
+		}
+	}
+
 }

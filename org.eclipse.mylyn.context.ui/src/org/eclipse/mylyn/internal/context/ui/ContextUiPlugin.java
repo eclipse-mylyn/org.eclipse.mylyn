@@ -220,6 +220,8 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		viewerManager = new FocusedViewerManager();
 		perspectiveManager = new ContextPerspectiveManager(getPreferenceStore());
 
+		editorManager = new ContextEditorManager();
+
 		ContextCore.getContextManager().addListener(contextActivationListener);
 		if (ContextCore.getContextManager().isContextActive()) {
 			initLazyStart();
@@ -255,7 +257,6 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			MonitorUi.addWindowPerspectiveListener(perspectiveManager);
 			TasksUi.getTaskActivityManager().addActivationListener(TASK_ACTIVATION_LISTENER);
 
-			editorManager = new ContextEditorManager();
 			ContextCore.getContextManager().addListener(editorManager);
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Context UI initialization failed", //$NON-NLS-1$
