@@ -186,7 +186,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 	private static final ITaskActivationListener TASK_ACTIVATION_LISTENER = new TaskActivationAdapter() {
 
-		@SuppressWarnings( { "restriction" })
+		@SuppressWarnings({ "restriction" })
 		@Override
 		public void taskActivated(ITask task) {
 			if (CoreUtil.TEST_MODE) {
@@ -323,7 +323,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		store.setDefault(IContextUiPreferenceContstants.AUTO_MANAGE_PERSPECTIVES, false);
 		store.setDefault(IContextUiPreferenceContstants.AUTO_MANAGE_EDITORS, true);
 		store.setDefault(IContextUiPreferenceContstants.AUTO_MANAGE_EXPANSION, true);
-		store.setDefault(IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE, true);
+		store.setDefault(IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE, false);
 		store.setDefault(IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING, true);
 	}
 
