@@ -753,31 +753,13 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		ITask task = this.generateLocalTaskAndDownload(data.getTaskId());
 		assertNotNull(task);
 
-		// // test anonymous query (note that this demonstrates query via
-		// eclipse search (ui)
-
-//		String queryUrl = repository.getRepositoryUrl()
-//				+"buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=search-match-test&product=TestProduct&long_desc_type=substring&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&deadlinefrom=&deadlineto=&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&emailassigned_to1=1&emailtype1=substring&email1=&emailassigned_to2=1&emailreporter2=1&emailcc2=1&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
-//		IRepositoryQuery bugzillaQuery = TasksUi.getRepositoryModel().createRepositoryQuery(repository);
-//		bugzillaQuery.setUrl(queryUrl);
-//		SearchHitCollector collector = new SearchHitCollector(taskList, repository, bugzillaQuery);
-//		RepositorySearchResult result = (RepositorySearchResult) collector.getSearchResult();
-//
-//		collector.run(new NullProgressMonitor());
-//		assertEquals(2, result.getElements().length);
-//
-//		for (Object element : result.getElements()) {
-//			assertEquals(true, element instanceof ITask);
-//			ITask hit = (ITask) element;
-//			assertTrue(hit.getSummary().contains("search-match-test"));
-//		}
-
 		// test anonymous update of configuration
 		RepositoryConfiguration config = connector.getRepositoryConfiguration(repository, false, null);
 		assertNotNull(config);
 		assertTrue(config.getComponents().size() > 0);
 	}
 
+	// FIXME: Time Tracking needs to be enabled on test servers
 	public void testTimeTracker() throws Exception {
 		timeTracker(15, true);
 	}

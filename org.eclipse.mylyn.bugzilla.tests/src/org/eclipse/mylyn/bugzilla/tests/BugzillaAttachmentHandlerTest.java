@@ -19,6 +19,7 @@ import java.util.Date;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
@@ -27,8 +28,10 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaStatus;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskDataHandler;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskAttachment;
 import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
@@ -37,6 +40,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
 
 /**
  * @author Robert Elves
@@ -54,13 +58,100 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		super.tearDown();
 	}
 
-	public void testAttachmentToken323() throws Exception {
-		init323();
-		ITask task = generateLocalTaskAndDownload("2");
-		assertNotNull(task);
-		TaskDataModel model = createModel(task);
-		TaskData taskData = model.getTaskData();
+	public void testAttachToExistingReport() throws Exception {
+		TaskData taskData = BugzillaFixture.current().createTask(PrivilegeLevel.USER, null, null);
 		assertNotNull(taskData);
+		int numAttached = taskData.getAttributeMapper()
+				.getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT)
+				.size();
+
+		assertNotNull(repository.getCredentials(AuthenticationType.REPOSITORY));
+		assertNotNull(repository.getCredentials(AuthenticationType.REPOSITORY).getUserName());
+		assertNotNull(repository.getCredentials(AuthenticationType.REPOSITORY).getPassword());
+		BugzillaClient client = connector.getClientManager().getClient(repository, new NullProgressMonitor());
+
+		TaskAttribute attrAttachment = taskData.getAttributeMapper().createTaskAttachment(taskData);
+		TaskAttachmentMapper attachmentMapper = TaskAttachmentMapper.createFrom(attrAttachment);
+
+		/* Initialize a local attachment */
+		attachmentMapper.setDescription("Test attachment " + new Date());
+		attachmentMapper.setContentType("text/plain");
+		attachmentMapper.setPatch(false);
+		attachmentMapper.setComment("Automated JUnit attachment test");
+		attachmentMapper.applyTo(attrAttachment);
+
+		/* Test attempt to upload a non-existent file */
+		String filePath = "/this/is/not/a/real-file";
+
+		FileTaskAttachmentSource attachment = new FileTaskAttachmentSource(new File(filePath));
+		attachment.setContentType(FileTaskAttachmentSource.APPLICATION_OCTET_STREAM);
+		attachment.setDescription(AttachmentUtil.CONTEXT_DESCRIPTION);
+		attachment.setName("mylyn-context.zip");
+
+		try {
+			client.postAttachment(taskData.getTaskId(), attachmentMapper.getComment(), attachment, attrAttachment,
+					new NullProgressMonitor());
+			fail("never reach this!");
+		} catch (Exception e) {
+			assertEquals("A repository error has occurred.", e.getMessage());
+		}
+
+		taskData = BugzillaFixture.current().getTask(taskData.getTaskId(), client);
+		assertNotNull(taskData);
+		assertEquals(numAttached, taskData.getAttributeMapper().getAttributesByType(taskData,
+				TaskAttribute.TYPE_ATTACHMENT).size());
+
+		/* Test attempt to upload an empty file */
+		String fileName = "test-attach-" + System.currentTimeMillis() + ".txt";
+		File attachFile = new File(fileName);
+		attachFile.createNewFile();
+		BufferedWriter write = new BufferedWriter(new FileWriter(attachFile));
+
+		attachment = new FileTaskAttachmentSource(attachFile);
+		attachment.setContentType(FileTaskAttachmentSource.APPLICATION_OCTET_STREAM);
+		attachment.setDescription(AttachmentUtil.CONTEXT_DESCRIPTION);
+		attachment.setName("mylyn-context.zip");
+
+		try {
+			client.postAttachment(taskData.getTaskId(), attachmentMapper.getComment(), attachment, attrAttachment,
+					new NullProgressMonitor());
+			fail("never reach this!");
+		} catch (Exception e) {
+			assertEquals("A repository error has occurred.", e.getMessage());
+		}
+
+		taskData = BugzillaFixture.current().getTask(taskData.getTaskId(), client);
+		assertNotNull(taskData);
+		assertEquals(numAttached, taskData.getAttributeMapper().getAttributesByType(taskData,
+				TaskAttribute.TYPE_ATTACHMENT).size());
+
+		/* Test uploading a proper file */
+		write.write("test file");
+		write.close();
+		try {
+			client.postAttachment(taskData.getTaskId(), attachmentMapper.getComment(), attachment, attrAttachment,
+					new NullProgressMonitor());
+		} catch (Exception e) {
+			fail("never reach this!");
+		}
+
+		taskData = BugzillaFixture.current().getTask(taskData.getTaskId(), client);
+		assertNotNull(taskData);
+		assertEquals(numAttached + 1, taskData.getAttributeMapper().getAttributesByType(taskData,
+				TaskAttribute.TYPE_ATTACHMENT).size());
+		// use assertion to track clean-up
+		assertTrue(attachFile.delete());
+	}
+
+	public void testAttachmentToken() throws Exception {
+		TaskData taskData = BugzillaFixture.current().createTask(PrivilegeLevel.USER, null, null);
+		assertNotNull(taskData);
+
+		doAttachment(taskData);
+
+		taskData = BugzillaFixture.current().getTask(taskData.getTaskId(), client);
+		assertNotNull(taskData);
+
 		TaskAttribute attachment = taskData.getAttributeMapper().getAttributesByType(taskData,
 				TaskAttribute.TYPE_ATTACHMENT).get(0);
 		assertNotNull(attachment);
@@ -88,10 +179,7 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 			assertEquals(IBugzillaConstants.REPOSITORY_STATUS_SUSPICIOUS_ACTION, status.getCode());
 		}
 
-		task = generateLocalTaskAndDownload("2");
-		assertNotNull(task);
-		model = createModel(task);
-		taskData = model.getTaskData();
+		taskData = BugzillaFixture.current().getTask(taskData.getTaskId(), client);
 		assertNotNull(taskData);
 		attachment = taskData.getAttributeMapper().getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT).get(0);
 		assertNotNull(attachment);
@@ -114,21 +202,46 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 
 	}
 
-	public void testObsoleteAttachment222() throws Exception {
-		init222();
-		doObsoleteAttachment("81");
+	private void doAttachment(TaskData taskData) throws Exception {
+		TaskAttribute attrAttachment = taskData.getAttributeMapper().createTaskAttachment(taskData);
+		TaskAttachmentMapper attachmentMapper = TaskAttachmentMapper.createFrom(attrAttachment);
+
+		/* Initialize a local attachment */
+		attachmentMapper.setDescription("Test attachment " + new Date());
+		attachmentMapper.setContentType("text/plain");
+		attachmentMapper.setPatch(false);
+		attachmentMapper.setComment("Automated JUnit attachment test");
+		attachmentMapper.applyTo(attrAttachment);
+
+		String fileName = "test-attach-" + System.currentTimeMillis() + ".txt";
+		File attachFile = new File(fileName);
+		attachFile.createNewFile();
+		BufferedWriter write = new BufferedWriter(new FileWriter(attachFile));
+		/* Test uploading a proper file */
+		write.write("test file");
+		write.close();
+
+		FileTaskAttachmentSource attachment = new FileTaskAttachmentSource(attachFile);
+		attachment.setContentType(FileTaskAttachmentSource.APPLICATION_OCTET_STREAM);
+		attachment.setDescription(AttachmentUtil.CONTEXT_DESCRIPTION);
+		attachment.setName("mylyn-context.zip");
+
+		try {
+			client.postAttachment(taskData.getTaskId(), attachmentMapper.getComment(), attachment, attrAttachment,
+					new NullProgressMonitor());
+		} catch (Exception e) {
+			fail("never reach this!");
+		}
+
 	}
 
-	public void testObsoleteAttachment32() throws Exception {
-		init32();
-		doObsoleteAttachment("2");
-	}
+	public void testObsoleteAttachment() throws Exception {
+		TaskData taskData = BugzillaFixture.current().createTask(PrivilegeLevel.USER, null, null);
+		assertNotNull(taskData);
 
-	private void doObsoleteAttachment(String taskNumber) throws CoreException {
-		ITask task = generateLocalTaskAndDownload(taskNumber);
-		assertNotNull(task);
-		TaskDataModel model = createModel(task);
-		TaskData taskData = model.getTaskData();
+		doAttachment(taskData);
+
+		taskData = BugzillaFixture.current().getTask(taskData.getTaskId(), client);
 		assertNotNull(taskData);
 		TaskAttribute attachment = taskData.getAttributeMapper().getAttributesByType(taskData,
 				TaskAttribute.TYPE_ATTACHMENT).get(0);
@@ -144,10 +257,7 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		((BugzillaTaskDataHandler) connector.getTaskDataHandler()).postUpdateAttachment(repository, attachment,
 				"update", new NullProgressMonitor()); //$NON-NLS-1$
 
-		task = generateLocalTaskAndDownload(taskNumber);
-		assertNotNull(task);
-		model = createModel(task);
-		taskData = model.getTaskData();
+		taskData = BugzillaFixture.current().getTask(taskData.getTaskId(), client);
 		assertNotNull(taskData);
 		attachment = taskData.getAttributeMapper().getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT).get(0);
 		assertNotNull(attachment);
@@ -155,110 +265,6 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		assertNotNull(obsolete);
 		boolean newObsoleteOn = obsolete.getValue().equals("1");
 		assertEquals(true, oldObsoleteOn != newObsoleteOn);
-	}
-
-	public void testAttachToExistingReport() throws Exception {
-		init222();
-		String taskNumber = "33";
-		ITask task = generateLocalTaskAndDownload(taskNumber);
-		assertNotNull(task);
-		TaskDataModel model = createModel(task);
-		TaskData taskData = model.getTaskData();
-		assertNotNull(taskData);
-		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
-		assertEquals(taskNumber, taskData.getTaskId());
-		int numAttached = taskData.getAttributeMapper()
-				.getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT)
-				.size();
-		String fileName = "test-attach-" + System.currentTimeMillis() + ".txt";
-
-		assertNotNull(repository.getCredentials(AuthenticationType.REPOSITORY));
-		assertNotNull(repository.getCredentials(AuthenticationType.REPOSITORY).getUserName());
-		assertNotNull(repository.getCredentials(AuthenticationType.REPOSITORY).getPassword());
-		BugzillaClient client = connector.getClientManager().getClient(repository, new NullProgressMonitor());
-
-		TaskAttribute attrAttachment = taskData.getAttributeMapper().createTaskAttachment(taskData);
-		TaskAttachmentMapper attachmentMapper = TaskAttachmentMapper.createFrom(attrAttachment);
-
-		/* Initialize a local attachment */
-		attachmentMapper.setDescription("Test attachment " + new Date());
-		attachmentMapper.setContentType("text/plain");
-		attachmentMapper.setPatch(false);
-		attachmentMapper.setComment("Automated JUnit attachment test");
-		attachmentMapper.applyTo(attrAttachment);
-
-		/* Test attempt to upload a non-existent file */
-		String filePath = "/this/is/not/a/real-file";
-
-		FileTaskAttachmentSource attachment = new FileTaskAttachmentSource(new File(filePath));
-		attachment.setContentType(FileTaskAttachmentSource.APPLICATION_OCTET_STREAM);
-		attachment.setDescription(AttachmentUtil.CONTEXT_DESCRIPTION);
-		attachment.setName("mylyn-context.zip");
-
-		try {
-			client.postAttachment(taskNumber, attachmentMapper.getComment(), attachment, attrAttachment,
-					new NullProgressMonitor());
-			fail("never reach this!");
-		} catch (Exception e) {
-			assertEquals("A repository error has occurred.", e.getMessage());
-		}
-		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
-
-		task = TasksUi.getRepositoryModel().createTask(repository, taskNumber);
-		assertNotNull(task);
-		model = createModel(task);
-		taskData = model.getTaskData();
-		assertNotNull(taskData);
-		assertEquals(numAttached, taskData.getAttributeMapper().getAttributesByType(taskData,
-				TaskAttribute.TYPE_ATTACHMENT).size());
-
-		/* Test attempt to upload an empty file */
-		File attachFile = new File(fileName);
-		attachFile.createNewFile();
-		BufferedWriter write = new BufferedWriter(new FileWriter(attachFile));
-
-		attachment = new FileTaskAttachmentSource(attachFile);
-		attachment.setContentType(FileTaskAttachmentSource.APPLICATION_OCTET_STREAM);
-		attachment.setDescription(AttachmentUtil.CONTEXT_DESCRIPTION);
-		attachment.setName("mylyn-context.zip");
-
-		try {
-			client.postAttachment(taskNumber, attachmentMapper.getComment(), attachment, attrAttachment,
-					new NullProgressMonitor());
-			fail("never reach this!");
-		} catch (Exception e) {
-			assertEquals("A repository error has occurred.", e.getMessage());
-		}
-		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
-
-		task = generateLocalTaskAndDownload(taskNumber);
-		assertNotNull(task);
-		model = createModel(task);
-		taskData = model.getTaskData();
-		assertNotNull(taskData);
-		assertEquals(numAttached, taskData.getAttributeMapper().getAttributesByType(taskData,
-				TaskAttribute.TYPE_ATTACHMENT).size());
-
-		/* Test uploading a proper file */
-		write.write("test file");
-		write.close();
-		try {
-			client.postAttachment(taskNumber, attachmentMapper.getComment(), attachment, attrAttachment,
-					new NullProgressMonitor());
-		} catch (Exception e) {
-			fail("never reach this!");
-		}
-		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
-
-		task = generateLocalTaskAndDownload(taskNumber);
-		assertNotNull(task);
-		model = createModel(task);
-		taskData = model.getTaskData();
-		assertNotNull(taskData);
-		assertEquals(numAttached + 1, taskData.getAttributeMapper().getAttributesByType(taskData,
-				TaskAttribute.TYPE_ATTACHMENT).size());
-		// use assertion to track clean-up
-		assertTrue(attachFile.delete());
 	}
 
 	/**
@@ -292,17 +298,13 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 	}
 
 	public void testContextAttachFailure() throws Exception {
-		init218();
-		ITask task = this.generateLocalTaskAndDownload("3");
-		assertNotNull(task);
-		TaskDataModel model = createModel(task);
-		TaskData taskData = model.getTaskData();
+		TaskData taskData = BugzillaFixture.current().createTask(PrivilegeLevel.USER, null, null);
 		assertNotNull(taskData);
-//		assertNotNull(TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task.getRepositoryUrl(),
-//				task.getTaskId()));
+		ITask task = TasksUi.getRepositoryModel().createTask(repository, taskData.getTaskId());
+		TasksUiPlugin.getTaskList().addTask(task);
 		TasksUi.getTaskActivityManager().activateTask(task);
-		File sourceContextFile = ContextCorePlugin.getContextStore().getFileForContext(task.getHandleIdentifier());
-		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
+		File sourceContextFile = ContextCorePlugin.getContextStore().getFileForContext(
+				RepositoryTaskHandleUtil.getHandle(repository.getRepositoryUrl(), taskData.getTaskId()));
 		sourceContextFile.createNewFile();
 		sourceContextFile.deleteOnExit();
 		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("wrong", "wrong"), false);
@@ -326,9 +328,7 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 			connector.getTaskAttachmentHandler().postContent(repository, task, attachment,
 					attachmentMapper.getComment(), attrAttachment, new NullProgressMonitor());
 		} catch (CoreException e) {
-			assertEquals(
-					"Unable to login to http://mylyn.eclipse.org/bugs218.\n\ninvalid username or password \n\nPlease validate credentials via Task Repositories view.",
-					e.getMessage());
+			assertTrue(e.getMessage().contains("invalid username or password"));
 			assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
 			return;
 		}
