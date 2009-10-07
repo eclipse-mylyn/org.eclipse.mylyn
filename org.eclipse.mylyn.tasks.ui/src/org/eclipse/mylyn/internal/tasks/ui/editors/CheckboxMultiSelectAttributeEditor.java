@@ -64,62 +64,71 @@ public class CheckboxMultiSelectAttributeEditor extends AbstractAttributeEditor 
 
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
-		this.parent = parent;
+		if (isReadOnly()) {
+			valueText = new Text(parent, SWT.FLAT | SWT.READ_ONLY | SWT.WRAP);
+			valueText.setFont(EditorUtil.TEXT_FONT);
+			toolkit.adapt(valueText, false, false);
+			valueText.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
+			updateText();
+			setControl(valueText);
+		} else {
+			this.parent = parent;
 
-		Composite composite = toolkit.createComposite(parent);
-		composite.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
-		GridLayout layout = new GridLayout(2, false);
-		layout.marginWidth = 0;
-		layout.marginBottom = 0;
-		layout.marginLeft = 0;
-		layout.marginRight = 0;
-		layout.marginTop = 0;
-		layout.marginHeight = 0;
-		composite.setLayout(layout);
+			Composite composite = toolkit.createComposite(parent);
+			composite.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
+			GridLayout layout = new GridLayout(2, false);
+			layout.marginWidth = 0;
+			layout.marginBottom = 0;
+			layout.marginLeft = 0;
+			layout.marginRight = 0;
+			layout.marginTop = 0;
+			layout.marginHeight = 0;
+			composite.setLayout(layout);
 
-		valueText = toolkit.createText(composite, "", SWT.FLAT | SWT.WRAP); //$NON-NLS-1$
-		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).applyTo(valueText);
-		valueText.setFont(EditorUtil.TEXT_FONT);
-		valueText.setEditable(false);
+			valueText = toolkit.createText(composite, "", SWT.FLAT | SWT.WRAP); //$NON-NLS-1$
+			GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).applyTo(valueText);
+			valueText.setFont(EditorUtil.TEXT_FONT);
+			valueText.setEditable(false);
 
-		button = toolkit.createButton(composite, "", SWT.ARROW | SWT.DOWN); //$NON-NLS-1$
-		GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.TOP).applyTo(button);
-		button.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				final List<String> values = getValues();
-				Map<String, String> validValues = getAttributeMapper().getOptions(getTaskAttribute());
+			button = toolkit.createButton(composite, "", SWT.ARROW | SWT.DOWN); //$NON-NLS-1$
+			GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.TOP).applyTo(button);
+			button.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					final List<String> values = getValues();
+					Map<String, String> validValues = getAttributeMapper().getOptions(getTaskAttribute());
 
-				final InPlaceCheckBoxTreeDialog selectionDialog = new InPlaceCheckBoxTreeDialog(
-						WorkbenchUtil.getShell(), button, values, validValues, NLS.bind(
-								Messages.CheckboxMultiSelectAttributeEditor_Select_X, getLabel()));
+					final InPlaceCheckBoxTreeDialog selectionDialog = new InPlaceCheckBoxTreeDialog(
+							WorkbenchUtil.getShell(), button, values, validValues, NLS.bind(
+									Messages.CheckboxMultiSelectAttributeEditor_Select_X, getLabel()));
 
-				selectionDialog.addEventListener(new IInPlaceDialogListener() {
+					selectionDialog.addEventListener(new IInPlaceDialogListener() {
 
-					public void buttonPressed(InPlaceDialogEvent event) {
-						if (event.getReturnCode() == Window.OK) {
-							Set<String> newValues = selectionDialog.getSelectedValues();
-							if (!new HashSet<String>(values).equals(newValues)) {
-								setValues(new ArrayList<String>(newValues));
-								attributeChanged();
-								updateText();
-							}
-						} else if (event.getReturnCode() == AbstractInPlaceDialog.ID_CLEAR) {
-							Set<String> newValues = new HashSet<String>();
-							if (!new HashSet<String>(values).equals(newValues)) {
-								setValues(new ArrayList<String>(newValues));
-								attributeChanged();
-								updateText();
+						public void buttonPressed(InPlaceDialogEvent event) {
+							if (event.getReturnCode() == Window.OK) {
+								Set<String> newValues = selectionDialog.getSelectedValues();
+								if (!new HashSet<String>(values).equals(newValues)) {
+									setValues(new ArrayList<String>(newValues));
+									attributeChanged();
+									updateText();
+								}
+							} else if (event.getReturnCode() == AbstractInPlaceDialog.ID_CLEAR) {
+								Set<String> newValues = new HashSet<String>();
+								if (!new HashSet<String>(values).equals(newValues)) {
+									setValues(new ArrayList<String>(newValues));
+									attributeChanged();
+									updateText();
+								}
 							}
 						}
-					}
-				});
-				selectionDialog.open();
-			}
-		});
-		toolkit.adapt(valueText, false, false);
-		updateText();
-		setControl(composite);
+					});
+					selectionDialog.open();
+				}
+			});
+			toolkit.adapt(valueText, false, false);
+			updateText();
+			setControl(composite);
+		}
 	}
 
 	private void updateText() {
