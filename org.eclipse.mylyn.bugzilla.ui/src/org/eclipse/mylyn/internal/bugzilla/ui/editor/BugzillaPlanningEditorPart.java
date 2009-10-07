@@ -121,7 +121,6 @@ public class BugzillaPlanningEditorPart extends AbstractTaskEditorPart {
 
 		}
 		if (addTimeAttribute != null) {
-			addTimeAttribute.setValue("0"); //$NON-NLS-1$
 			attributeEditor = createAttributeEditor(addTimeAttribute);
 			attributeEditor.createLabelControl(timeComposite, toolkit);
 			attributeEditor.createControl(timeComposite, toolkit);
