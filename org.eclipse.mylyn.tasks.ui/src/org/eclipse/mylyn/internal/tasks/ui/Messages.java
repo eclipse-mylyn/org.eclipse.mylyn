@@ -25,6 +25,8 @@ public class Messages extends NLS {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
 
+	public static String ActiveContextExternalizationParticipant_Active_Task_Context;
+
 	public static String ActivityExternalizationParticipant_Activity_Context;
 
 	public static String ChangeActivityHandleOperation_Activity_migration;

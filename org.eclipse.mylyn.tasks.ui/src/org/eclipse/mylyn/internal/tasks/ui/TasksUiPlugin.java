@@ -350,6 +350,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private static TaskListExternalizationParticipant taskListExternalizationParticipant;
 
+	private ActiveContextExternalizationParticipant activeContextExternalizationParticipant;
+
 	private final Set<IRepositoryModelListener> listeners = new HashSet<IRepositoryModelListener>();
 
 	private static TaskList taskList;
@@ -435,6 +437,10 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			} finally {
 				monitor.done();
 			}
+			activeContextExternalizationParticipant = new ActiveContextExternalizationParticipant(
+					externalizationManager);
+			externalizationManager.addParticipant(activeContextExternalizationParticipant);
+			activeContextExternalizationParticipant.registerListeners();
 			return new Status(IStatus.OK, TasksUiPlugin.ID_PLUGIN, IStatus.OK, "", null); //$NON-NLS-1$
 		}
 

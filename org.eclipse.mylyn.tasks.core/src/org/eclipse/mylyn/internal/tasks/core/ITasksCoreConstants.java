@@ -49,6 +49,8 @@ public interface ITasksCoreConstants {
 
 	public static final ISchedulingRule ACTIVITY_SCHEDULING_RULE = new MutexSchedulingRule();
 
+	public static final ISchedulingRule ACTIVE_CONTEXT_SCHEDULING_RULE = new MutexSchedulingRule();
+
 	public static final ISchedulingRule TASKLIST_SCHEDULING_RULE = new MutexSchedulingRule();
 
 	public static final ISchedulingRule ROOT_SCHEDULING_RULE = new RootSchedulingRule();
