@@ -119,13 +119,13 @@ public class JavaEditingMonitorTest extends AbstractJavaContextTest {
 		monitor.handleWorkbenchPartSelection(editorPart, calleeSelection, false);
 
 		assertEquals(0, editingCount);
-		assertEquals(2, selectingCount);
+		assertEquals(5, selectingCount);
 
 		// select it again
 		monitor.handleWorkbenchPartSelection(editorPart, calleeSelection, false);
 
 		assertEquals(1, editingCount);
-		assertEquals(2, selectingCount);
+		assertEquals(5, selectingCount);
 	}
 
 	public void testHandleElementSelection() throws PartInitException, JavaModelException, InterruptedException {
@@ -144,7 +144,7 @@ public class JavaEditingMonitorTest extends AbstractJavaContextTest {
 		monitor.handleWorkbenchPartSelection(editorPart, calleeSelection, false);
 
 		assertEquals(0, editingCount);
-		assertEquals(2, selectingCount);
+		assertEquals(5, selectingCount);
 
 		TextSelection callerSelection = new TextSelection(document, typeFoo.getCompilationUnit().getSource().indexOf(
 				"caller()"), "caller".length());
@@ -153,12 +153,12 @@ public class JavaEditingMonitorTest extends AbstractJavaContextTest {
 		monitor.handleWorkbenchPartSelection(editorPart, callerSelection, false);
 
 		assertEquals(0, editingCount);
-		assertEquals(3, selectingCount);
+		assertEquals(6, selectingCount);
 
 		// select a different element
 		monitor.handleWorkbenchPartSelection(editorPart, callerSelection, false);
 
 		assertEquals(1, editingCount);
-		assertEquals(3, selectingCount);
+		assertEquals(6, selectingCount);
 	}
 }
