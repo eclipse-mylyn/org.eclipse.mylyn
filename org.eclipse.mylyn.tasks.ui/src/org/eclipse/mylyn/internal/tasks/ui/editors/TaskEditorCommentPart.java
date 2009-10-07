@@ -86,13 +86,25 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		}
 
 		private Composite createCommentViewers(Composite parent, FormToolkit toolkit) {
+			List<CommentViewer> viewers = getCommentViewers();
 			Composite composite = toolkit.createComposite(parent);
+			if (viewers.size() >= CommentGroupStrategy.MAX_CURRENT) {
+				// show a separator before current comments
+				final Label separator = toolkit.createSeparator(composite, SWT.HORIZONTAL | SWT.SHADOW_NONE);
+				separator.addPaintListener(new PaintListener() {
+					public void paintControl(PaintEvent e) {
+						e.gc.drawLine(0, 0, separator.getSize().x, 0);
+					}
+				});
+				separator.setForeground(toolkit.getColors().getColor(IFormColors.TB_BORDER));
+				GridDataFactory.fillDefaults().grab(true, false).indent(2 * INDENT, 0).applyTo(separator);
+
+			}
 			GridLayout contentLayout = new GridLayout();
 			contentLayout.marginHeight = 0;
 			contentLayout.marginWidth = 0;
 			composite.setLayout(contentLayout);
 
-			List<CommentViewer> viewers = getCommentViewers();
 			for (CommentViewer commentViewer : viewers) {
 				Control control = commentViewer.createControl(composite, toolkit);
 				GridDataFactory.fillDefaults().grab(true, false).applyTo(control);
@@ -104,16 +116,6 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			if (renderedInSubSection) {
 				return createSection(parent, toolkit);
 			} else {
-				// show a separator before current comments
-				final Label separator = toolkit.createSeparator(parent, SWT.HORIZONTAL | SWT.SHADOW_NONE);
-				separator.addPaintListener(new PaintListener() {
-					public void paintControl(PaintEvent e) {
-						e.gc.drawLine(0, 0, separator.getSize().x, 0);
-					}
-				});
-				separator.setForeground(toolkit.getColors().getColor(IFormColors.TB_BORDER));
-				GridDataFactory.fillDefaults().grab(true, false).indent(2 * INDENT, 0).applyTo(separator);
-
 				return createCommentViewers(parent, toolkit);
 			}
 		}
