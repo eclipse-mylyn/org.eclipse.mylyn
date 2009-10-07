@@ -36,7 +36,7 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 
 	private final String dateFormat_3 = "yyyy-MM-dd"; //$NON-NLS-1$
 
-	private final String dateFormat_1_TimeZone = "yyyy-MM-dd HH:mm:ss zzz"; //$NON-NLS-1$
+	private final String dateFormat_1_TimeZone = "yyyy-MM-dd HH:mm:ss Z"; //$NON-NLS-1$
 
 	private final String dateFormat_2_TimeZone = "yyyy-MM-dd HH:mm zzz"; //$NON-NLS-1$
 
@@ -113,7 +113,11 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 			if (attributeId.equals(BugzillaAttribute.DELTA_TS.getKey())) {
 				parsedDate = new SimpleDateFormat(dateFormat_1_TimeZone).parse(dateString);
 			} else if (attributeId.equals(BugzillaAttribute.CREATION_TS.getKey())) {
-				parsedDate = new SimpleDateFormat(dateFormat_2_TimeZone).parse(dateString);
+				if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_2_22) < 0) {
+					parsedDate = new SimpleDateFormat(dateFormat_2_TimeZone).parse(dateString);
+				} else {
+					parsedDate = new SimpleDateFormat(dateFormat_1_TimeZone).parse(dateString);
+				}
 			} else if (attributeId.equals(BugzillaAttribute.BUG_WHEN.getKey())) {
 				if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_2_22) < 0) {
 					comment_creation_ts_Format_Timezone = new SimpleDateFormat(dateFormat_2_TimeZone);

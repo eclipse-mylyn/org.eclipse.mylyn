@@ -170,7 +170,7 @@ public class FlagAttributeEditor extends AbstractAttributeEditor {
 		if (setter != null) {
 			String setterValue = setter.getValue();
 			if (setterValue != null && !setterValue.equals("")) { //$NON-NLS-1$
-				if (setterValue.indexOf("@") != 0) { //$NON-NLS-1$
+				if (setterValue.indexOf("@") > -1) { //$NON-NLS-1$
 					setterValue = setterValue.substring(0, setterValue.indexOf("@")); //$NON-NLS-1$
 				}
 				label = setterValue + ": " + label; //$NON-NLS-1$
