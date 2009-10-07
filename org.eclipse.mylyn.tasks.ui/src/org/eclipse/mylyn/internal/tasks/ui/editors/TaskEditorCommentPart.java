@@ -88,6 +88,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		private Composite createCommentViewers(Composite parent, FormToolkit toolkit) {
 			List<CommentViewer> viewers = getCommentViewers();
 			Composite composite = toolkit.createComposite(parent);
+
 			if (viewers.size() >= CommentGroupStrategy.MAX_CURRENT) {
 				// show a separator before current comments
 				final Label separator = toolkit.createSeparator(composite, SWT.HORIZONTAL | SWT.SHADOW_NONE);
@@ -98,8 +99,8 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 				});
 				separator.setForeground(toolkit.getColors().getColor(IFormColors.TB_BORDER));
 				GridDataFactory.fillDefaults().grab(true, false).indent(2 * INDENT, 0).applyTo(separator);
-
 			}
+
 			GridLayout contentLayout = new GridLayout();
 			contentLayout.marginHeight = 0;
 			contentLayout.marginWidth = 0;
