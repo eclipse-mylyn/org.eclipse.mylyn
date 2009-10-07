@@ -130,7 +130,7 @@ public class MultiWindowMonitorTest extends TestCase {
 
 	private final InteractionEventLogger logger = UiUsageMonitorPlugin.getDefault().getInteractionLogger();
 
-	private final MockSelectionMonitor selectionMonitor = new MockSelectionMonitor();
+	private MockSelectionMonitor selectionMonitor;
 
 	private IWorkbenchWindow window1;
 
@@ -145,6 +145,7 @@ public class MultiWindowMonitorTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		selectionMonitor = new MockSelectionMonitor();
 		monitoringWasEnabled = UiUsageMonitorPlugin.getDefault().isMonitoringEnabled();
 		UiUsageMonitorPlugin.getDefault().stopMonitoring();
 
@@ -173,6 +174,9 @@ public class MultiWindowMonitorTest extends TestCase {
 		window4.close();
 		if (monitoringWasEnabled) {
 			UiUsageMonitorPlugin.getDefault().startMonitoring();
+		}
+		if (selectionMonitor != null) {
+			selectionMonitor.dispose();
 		}
 	}
 

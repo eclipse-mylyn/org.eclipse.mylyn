@@ -37,7 +37,7 @@ public class MonitorTest extends TestCase implements IMonitorLifecycleListener {
 
 	private final InteractionEventLogger logger = UiUsageMonitorPlugin.getDefault().getInteractionLogger();
 
-	private final MockSelectionMonitor selectionMonitor = new MockSelectionMonitor();
+	private MockSelectionMonitor selectionMonitor;
 
 	private final KeybindingCommandMonitor commandMonitor = new KeybindingCommandMonitor();
 
@@ -46,11 +46,15 @@ public class MonitorTest extends TestCase implements IMonitorLifecycleListener {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		selectionMonitor = new MockSelectionMonitor();
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
+		if (selectionMonitor != null) {
+			selectionMonitor.dispose();
+		}
 	}
 
 	public void testEnablement() throws IOException {
