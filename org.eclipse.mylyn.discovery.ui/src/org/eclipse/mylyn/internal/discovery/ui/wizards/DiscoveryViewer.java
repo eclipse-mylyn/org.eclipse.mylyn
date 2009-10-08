@@ -242,7 +242,7 @@ public class DiscoveryViewer {
 				overview.setSummary(connector.getCertification().getDescription());
 				overview.setUrl(connector.getCertification().getUrl());
 				Image image = computeIconImage(connector.getSource(), connector.getCertification().getIcon(), 48, true);
-				hookTooltip(providerLabel, providerLabel, connectorContainer, nameLabel, connector.getSource(),
+				hookTooltip(providerLabel, providerLabel, connectorContainer, providerLabel, connector.getSource(),
 						overview, image);
 			} else {
 				providerLabel.setText(NLS.bind(Messages.ConnectorDiscoveryWizardMainPage_provider_and_license,
