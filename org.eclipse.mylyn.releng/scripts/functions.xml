@@ -951,7 +951,9 @@
     		<arg value="file:${dir}"/>
     		<arg value="-artifactRepository"/>
     		<arg value="file:${dir}"/>
-    		<arg value="-repositoryName"/>
+    		<arg value="-metadataRepositoryName"/>
+    		<arg value="${name}"/>
+    		<arg value="-artifactRepositoryName"/>
     		<arg value="${name}"/>
     		<arg value="-compress"/>
     		<arg value="-reusePackedFiles"/>
@@ -969,13 +971,9 @@
 		<exec-eclipse activity="publish-categories" application="org.eclipse.equinox.p2.publisher.CategoryPublisher">
 			<arg value="-categoryDefinition"/>
 			<arg value="file:${dir}/site.xml"/>
-			<arg value="-categoryQualifier"/>
-    		<arg value="-repositoryName"/>
-    		<arg value="${name}"/>
 			<arg value="-metadataRepository"/>
 			<arg value="file:${dir}"/>
 			<arg value="-compress"/>
-			<arg value="-reusePackedFiles"/>
 		</exec-eclipse>
 	</target>
 	
