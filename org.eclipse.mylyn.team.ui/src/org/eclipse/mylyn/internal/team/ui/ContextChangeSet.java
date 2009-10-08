@@ -36,6 +36,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.team.ui.AbstractTaskReference;
 import org.eclipse.mylyn.team.ui.IContextChangeSet;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.team.core.TeamException;
 import org.eclipse.team.core.diff.IDiff;
 import org.eclipse.team.core.diff.provider.ThreeWayDiff;
@@ -260,9 +261,13 @@ public class ContextChangeSet extends ActiveChangeSet/*CVSActiveChangeSet*/imple
 			}
 
 			if (unmatchedRepositoryFound) {
-				proceed = MessageDialog.openQuestion(WorkbenchUtil.getShell(),
-						Messages.ContextChangeSet_Mylyn_Change_Set_Management,
-						Messages.ContextChangeSet_ATTEMPTING_TO_COMMIT_RESOURCE);
+				if (Display.getCurrent() != null) {
+					proceed = MessageDialog.openQuestion(WorkbenchUtil.getShell(),
+							Messages.ContextChangeSet_Mylyn_Change_Set_Management,
+							Messages.ContextChangeSet_ATTEMPTING_TO_COMMIT_RESOURCE);
+				} else {
+					proceed = false;
+				}
 			}
 		}
 
