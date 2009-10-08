@@ -381,7 +381,7 @@
 		<antcall target="discovery-update"/>
 		<copy file="${discovery.jar}" tofile="${dist.home}/discovery/org.eclipse.mylyn.discovery-3.3.jar"/>
 	</target>
-
+	
 	<target name="discovery-update" unless="discovery.exists">
 		<jar destfile="${discovery.jar}">
 			<fileset dir="${discovery.dir}"/>

@@ -295,6 +295,27 @@
 		</sequential>
 	</macrodef>
 
+	<macrodef name="extract-version">
+		<attribute name="property"/>
+		<attribute name="file"/>
+		<sequential>
+			<loadfile property="@{property}" srcFile="@{file}">
+				<filterchain>
+					<linecontains>
+						<contains value="Bundle-Version: "/>
+					</linecontains>
+					<striplinebreaks/>
+					<tokenfilter>
+					      <filetokenizer/>
+					      <replaceregex pattern="Bundle-Version: ([0-9.]*).qualifier"
+					                    flags="s"
+					                    replace="\1"/>
+					</tokenfilter>
+				</filterchain>
+			</loadfile>
+		</sequential>
+	</macrodef>
+
 	<target name="run-target" unless="skip">
 		<echo>Running ${call} for ${base.target}</echo>
 		<antcall target="${call}"/>
