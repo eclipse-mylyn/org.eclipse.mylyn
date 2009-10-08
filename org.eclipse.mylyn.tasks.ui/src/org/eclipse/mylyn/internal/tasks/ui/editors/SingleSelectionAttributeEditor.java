@@ -56,7 +56,7 @@ public class SingleSelectionAttributeEditor extends AbstractAttributeEditor {
 	}
 
 	@Override
-	public void createControl(Composite parent, FormToolkit toolkit) {
+	public void createControl(final Composite parent, FormToolkit toolkit) {
 		if (isReadOnly()) {
 			text = new Text(parent, SWT.FLAT | SWT.READ_ONLY);
 			text.setFont(EditorUtil.TEXT_FONT);
@@ -82,6 +82,7 @@ public class SingleSelectionAttributeEditor extends AbstractAttributeEditor {
 					}
 				}
 			});
+			EditorUtil.addScrollListener(combo);
 			setControl(combo);
 		}
 		refresh();

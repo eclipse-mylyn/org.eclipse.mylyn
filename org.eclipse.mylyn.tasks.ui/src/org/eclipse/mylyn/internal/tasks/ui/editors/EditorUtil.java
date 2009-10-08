@@ -34,9 +34,13 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.TaskFormPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
@@ -49,8 +53,11 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.ScrollBar;
+import org.eclipse.swt.widgets.Scrollable;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
@@ -63,6 +70,7 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.SharedScrolledComposite;
 import org.eclipse.ui.internal.EditorAreaHelper;
 import org.eclipse.ui.internal.WorkbenchPage;
+import org.eclipse.ui.internal.forms.widgets.FormUtil;
 
 public class EditorUtil {
 
@@ -506,6 +514,62 @@ public class EditorUtil {
 	public static String removeColon(String label) {
 		label = label.trim();
 		return (label.endsWith(":")) ? label.substring(0, label.length() - 1) : label; //$NON-NLS-1$
+	}
+
+	public static void scroll(ScrolledComposite scomp, int xoffset, int yoffset) {
+		Point origin = scomp.getOrigin();
+		Point contentSize = scomp.getContent().getSize();
+		int xorigin = origin.x + xoffset;
+		int yorigin = origin.y + yoffset;
+		xorigin = Math.max(xorigin, 0);
+		xorigin = Math.min(xorigin, contentSize.x - 1);
+		yorigin = Math.max(yorigin, 0);
+		yorigin = Math.min(yorigin, contentSize.y - 1);
+		scomp.setOrigin(xorigin, yorigin);
+	}
+
+	public static void addScrollListener(final Scrollable textWidget) {
+		if (textWidget.getVerticalBar() != null) {
+			textWidget.addMouseWheelListener(new MouseWheelListener() {
+				public void mouseScrolled(MouseEvent event) {
+					ScrollBar verticalBar = textWidget.getVerticalBar();
+					ScrolledComposite form = FormUtil.getScrolledComposite(textWidget);
+					if (verticalBar != null && form != null) {
+						if (event.count < 0) {
+							// scroll form down
+							if (verticalBar.getSelection() + verticalBar.getThumb() == verticalBar.getMaximum()) {
+								EditorUtil.scroll(form, 0, form.getVerticalBar().getIncrement());
+							}
+						} else {
+							// scroll form up
+							if (verticalBar.getSelection() == verticalBar.getMinimum()) {
+								EditorUtil.scroll(form, 0, -form.getVerticalBar().getIncrement());
+							}
+						}
+					}
+				}
+			});
+		}
+	}
+
+	public static void addScrollListener(final CCombo combo) {
+		combo.addListener(SWT.KeyDown, new Listener() {
+			public void handleEvent(Event event) {
+				if (event.keyCode == SWT.ARROW_UP) {
+					ScrolledComposite form = FormUtil.getScrolledComposite(combo);
+					if (form != null) {
+						EditorUtil.scroll(form, 0, -form.getVerticalBar().getIncrement());
+						event.doit = false;
+					}
+				} else if (event.keyCode == SWT.ARROW_DOWN) {
+					ScrolledComposite form = FormUtil.getScrolledComposite(combo);
+					if (form != null) {
+						EditorUtil.scroll(form, 0, form.getVerticalBar().getIncrement());
+						event.doit = false;
+					}
+				}
+			}
+		});
 	}
 
 }

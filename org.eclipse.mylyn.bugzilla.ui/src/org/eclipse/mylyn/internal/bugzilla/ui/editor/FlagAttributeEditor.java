@@ -11,6 +11,7 @@ package org.eclipse.mylyn.internal.bugzilla.ui.editor;
 import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
@@ -71,6 +72,7 @@ public class FlagAttributeEditor extends AbstractAttributeEditor {
 			if (tooltip != null) {
 				combo.setToolTipText(tooltip);
 			}
+			EditorUtil.addScrollListener(combo);
 
 			Map<String, String> labelByValue = getAttributeMapper().getAssoctiatedAttribute(getTaskAttribute())
 					.getOptions();
