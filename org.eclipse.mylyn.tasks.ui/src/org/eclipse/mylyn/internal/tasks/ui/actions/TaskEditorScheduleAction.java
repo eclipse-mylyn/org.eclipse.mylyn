@@ -12,22 +12,32 @@
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import java.util.Collections;
+import java.util.Set;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
+import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.internal.tasks.ui.ScheduleTaskMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskListChangeAdapter;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.ui.PlatformUI;
 
 /**
+ * <p>
+ * <b>Note:</b> this action must be disposed.
+ * 
  * @author Mik Kersten
+ * @author Steffen Pingel
  */
 public class TaskEditorScheduleAction extends Action implements IMenuCreator {
 
@@ -37,12 +47,35 @@ public class TaskEditorScheduleAction extends Action implements IMenuCreator {
 
 	private final ScheduleTaskMenuContributor scheduleMenuContributor = new ScheduleTaskMenuContributor();
 
+	private final ITaskListChangeListener TASK_LIST_LISTENER = new TaskListChangeAdapter() {
+
+		@Override
+		public void containersChanged(Set<TaskContainerDelta> containers) {
+			for (TaskContainerDelta taskContainerDelta : containers) {
+				if (taskContainerDelta.getElement() instanceof ITask) {
+					final AbstractTask updateTask = (AbstractTask) taskContainerDelta.getElement();
+					if (task.equals(updateTask)) {
+						if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {
+							PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+								public void run() {
+									updateImageDescriptor();
+								}
+							});
+						}
+					}
+				}
+			}
+		}
+
+	};
+
 	public TaskEditorScheduleAction(ITask task) {
+		Assert.isNotNull(task);
 		this.task = task;
-		updateImageDescriptor(task);
+		updateImageDescriptor();
 		setMenuCreator(this);
 		setToolTipText(Messages.TaskEditorScheduleAction_Private_Scheduling);
-		scheduleMenuContributor.setScheduleAction(this);
+		TasksUiPlugin.getTaskList().addChangeListener(TASK_LIST_LISTENER);
 	}
 
 	@Override
@@ -53,15 +86,15 @@ public class TaskEditorScheduleAction extends Action implements IMenuCreator {
 		} else {
 			TasksUiPlugin.getTaskActivityManager().setScheduledFor((AbstractTask) task, null);
 		}
-		updateImageDescriptor(task);
 	}
 
-	public void updateImageDescriptor(ITask task) {
+	public void updateImageDescriptor() {
 		if (task instanceof AbstractTask && ((AbstractTask) task).getScheduledForDate() != null) {
 			setImageDescriptor(CommonImages.SCHEDULE_DAY);
 		} else {
 			setImageDescriptor(CommonImages.SCHEDULE);
 		}
+		setEnabled(!task.isCompleted());
 	}
 
 	public Menu getMenu(Control parent) {
@@ -84,6 +117,7 @@ public class TaskEditorScheduleAction extends Action implements IMenuCreator {
 		if (menuManager != null) {
 			menuManager.dispose();
 		}
+		TasksUiPlugin.getTaskList().removeChangeListener(TASK_LIST_LISTENER);
 	}
 
 }

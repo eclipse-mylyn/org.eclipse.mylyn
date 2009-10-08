@@ -180,6 +180,8 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 	private CommonTextSupport textSupport;
 
+	private TaskEditorScheduleAction scheduleAction;
+
 	private static boolean toolBarFailureLogged;
 
 	public TaskEditor() {
@@ -480,6 +482,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 	@Override
 	public void dispose() {
+		disposeScheduleAction();
 		if (headerImage != null) {
 			headerImage.dispose();
 		}
@@ -950,7 +953,9 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		}
 
 		toolBarManager.add(new Separator("planning")); //$NON-NLS-1$
-		toolBarManager.add(new TaskEditorScheduleAction(task));
+		disposeScheduleAction();
+		scheduleAction = new TaskEditorScheduleAction(task);
+		toolBarManager.add(scheduleAction);
 
 		toolBarManager.add(new GroupMarker("page")); //$NON-NLS-1$
 		for (IFormPage page : getPages()) {
@@ -1007,6 +1012,13 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		// XXX move this call
 		updateLeftHeaderToolBar();
 		updateHeader();
+	}
+
+	private void disposeScheduleAction() {
+		if (scheduleAction != null) {
+			scheduleAction.dispose();
+			scheduleAction = null;
+		}
 	}
 
 	private void updateLeftHeaderToolBar() {
