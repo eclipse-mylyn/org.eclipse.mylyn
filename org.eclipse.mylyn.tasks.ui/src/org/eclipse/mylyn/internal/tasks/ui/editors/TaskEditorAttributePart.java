@@ -31,7 +31,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 import org.eclipse.mylyn.tasks.core.sync.TaskJob;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
-import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.mylyn.tasks.ui.editors.LayoutHint;
 import org.eclipse.mylyn.tasks.ui.editors.LayoutHint.ColumnSpan;
 import org.eclipse.mylyn.tasks.ui.editors.LayoutHint.RowSpan;
@@ -45,15 +44,13 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.forms.events.ExpansionAdapter;
-import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * @author Steffen Pingel
  */
-public class TaskEditorAttributePart extends AbstractTaskEditorPart {
+public class TaskEditorAttributePart extends AbstractTaskEditorSection {
 
 	private static final int LABEL_WIDTH = 110;
 
@@ -144,23 +141,7 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 	@Override
 	public void createControl(Composite parent, final FormToolkit toolkit) {
 		initialize();
-
-		boolean expand = shouldExpandOnCreate();
-		final Section section = createSection(parent, toolkit, expand);
-		if (expand) {
-			expandSection(toolkit, section);
-		} else {
-			section.addExpansionListener(new ExpansionAdapter() {
-				@Override
-				public void expansionStateChanged(ExpansionEvent event) {
-					if (attributesComposite == null) {
-						expandSection(toolkit, section);
-						getTaskEditorPage().reflow();
-					}
-				}
-			});
-		}
-		setSection(toolkit, section);
+		super.createControl(parent, toolkit);
 	}
 
 	@Override
@@ -191,11 +172,13 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 	/**
 	 * Integrator requested the ability to control whether the attributes section is expanded on creation.
 	 */
+	@Override
 	protected boolean shouldExpandOnCreate() {
 		return getTaskData().isNew() || hasIncoming;
 	}
 
-	private void expandSection(FormToolkit toolkit, Section section) {
+	@Override
+	protected Control createSectionClient(FormToolkit toolkit, Section section) {
 		attributesComposite = toolkit.createComposite(section);
 		attributesComposite.addListener(SWT.MouseDown, new Listener() {
 			public void handleEvent(Event event) {
@@ -220,7 +203,7 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 		createAttributeControls(attributesComposite, toolkit, attributesLayout.numColumns);
 		toolkit.paintBordersFor(attributesComposite);
 
-		section.setClient(attributesComposite);
+		return attributesComposite;
 	}
 
 	@Override
