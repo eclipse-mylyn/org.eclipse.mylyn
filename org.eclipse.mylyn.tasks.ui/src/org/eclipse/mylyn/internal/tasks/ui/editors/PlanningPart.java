@@ -40,6 +40,7 @@ import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorExtension;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.TaskFormPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
@@ -61,6 +62,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.IManagedForm;
+import org.eclipse.ui.forms.events.ExpansionAdapter;
+import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -142,6 +145,8 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 	private boolean alwaysExpand;
 
+	private Composite sectionClient;
+
 	public PlanningPart(int sectionStyle) {
 		super(sectionStyle, Messages.PersonalPart_Personal_Planning);
 		this.needsNotes = true;
@@ -203,26 +208,47 @@ public class PlanningPart extends AbstractLocalEditorPart {
 	}
 
 	@Override
-	public Control createControl(Composite parent, FormToolkit toolkit) {
+	public Control createControl(Composite parent, final FormToolkit toolkit) {
 		this.notesString = getTask().getNotes();
 		if (this.notesString == null) {
 			this.notesString = ""; //$NON-NLS-1$
 		}
-		Section section = createSection(parent, toolkit, isAlwaysExpand() || notesString.length() > 0);
+		boolean expand = isAlwaysExpand() || notesString.length() > 0;
+		final Section section = createSection(parent, toolkit, expand);
 		section.clientVerticalSpacing = 0;
-		Composite composite = toolkit.createComposite(section);
+		if (section.isExpanded()) {
+			expandSection(toolkit, section);
+		} else {
+			section.addExpansionListener(new ExpansionAdapter() {
+				@Override
+				public void expansionStateChanged(ExpansionEvent event) {
+					if (sectionClient == null) {
+						expandSection(toolkit, section);
+						if (page instanceof AbstractTaskEditorPage) {
+							((AbstractTaskEditorPage) page).reflow();
+						}
+					}
+				}
+			});
+		}
+		setSection(toolkit, section);
+		return section;
+	}
+
+	private void expandSection(FormToolkit toolkit, Section section) {
+		sectionClient = toolkit.createComposite(section);
 		GridLayout layout = EditorUtil.createSectionClientLayout();
 		layout.numColumns = (needsDueDate) ? 6 : 4;
-		composite.setLayout(layout);
+		sectionClient.setLayout(layout);
 
-		createScheduledDatePicker(toolkit, composite);
+		createScheduledDatePicker(toolkit, sectionClient);
 
 		// disable due date picker if it's a repository due date
 		if (needsDueDate) {
-			createDueDatePicker(toolkit, composite);
+			createDueDatePicker(toolkit, sectionClient);
 		}
 
-		createEstimatedTime(toolkit, composite);
+		createEstimatedTime(toolkit, sectionClient);
 
 //		createActualTime(toolkit, composite);
 
@@ -230,14 +256,12 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		TasksUiPlugin.getTaskActivityManager().addActivityListener(timingListener);
 
 		if (needsNotes()) {
-			createNotesArea(toolkit, composite, layout.numColumns);
+			createNotesArea(toolkit, sectionClient, layout.numColumns);
 		}
 
-		toolkit.paintBordersFor(composite);
-		section.setClient(composite);
-		setSection(toolkit, section);
-		CommonUiUtil.setMenu(composite, parent.getMenu());
-		return section;
+		toolkit.paintBordersFor(sectionClient);
+		section.setClient(sectionClient);
+		CommonUiUtil.setMenu(sectionClient, section.getParent().getMenu());
 	}
 
 	private void createNotesArea(final FormToolkit toolkit, Composite parent, int numColumns) {
