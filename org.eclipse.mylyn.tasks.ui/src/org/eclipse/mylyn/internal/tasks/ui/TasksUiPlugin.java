@@ -51,6 +51,7 @@ import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotification;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColors;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
@@ -471,7 +472,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		}
 	}
 
-	@SuppressWarnings( { "restriction" })
+	@SuppressWarnings({ "restriction" })
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
@@ -1257,6 +1258,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			getBackupManager();
 
 			synchronizationScheduler = new TaskListSynchronizationScheduler(taskJobFactory);
+			MonitorUiPlugin.getDefault().getActivityContextManager().addListener(synchronizationScheduler);
 			updateSynchronizationScheduler(true);
 		} catch (Throwable t) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
