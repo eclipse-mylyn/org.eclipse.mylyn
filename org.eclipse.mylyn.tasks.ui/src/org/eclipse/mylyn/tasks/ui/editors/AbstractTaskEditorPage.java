@@ -1434,7 +1434,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 		if (actionPart instanceof TaskEditorActionPart) {
 			((TaskEditorActionPart) actionPart).setSubmitEnabled(enabled);
 		}
-		if (submitButton != null) {
+		if (submitButton != null && !submitButton.isDisposed()) {
 			submitButton.setEnabled(enabled);
 		}
 		submitEnabled = enabled;
