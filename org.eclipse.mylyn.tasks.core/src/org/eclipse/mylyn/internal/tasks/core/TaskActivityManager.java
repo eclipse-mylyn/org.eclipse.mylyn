@@ -173,9 +173,10 @@ public class TaskActivityManager implements ITaskActivityManager {
 			for (Calendar cal : new HashSet<Calendar>(activityMap.keySet())) {
 				activityMap.remove(cal);
 			}
+			long elapsedTime = getElapsedTime(task);
 			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
 				try {
-					listener.elapsedTimeUpdated(task, getElapsedTime(task));
+					listener.elapsedTimeUpdated(task, elapsedTime);
 				} catch (Throwable t) {
 					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
 							"Task activity listener failed: \"" + listener + "\"", t)); //$NON-NLS-1$ //$NON-NLS-2$

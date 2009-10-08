@@ -231,6 +231,10 @@ public class PlanningPart extends AbstractLocalEditorPart {
 				}
 			});
 		}
+
+		TasksUiInternal.getTaskList().addChangeListener(TASK_LIST_LISTENER);
+		TasksUiPlugin.getTaskActivityManager().addActivityListener(timingListener);
+
 		setSection(toolkit, section);
 		return section;
 	}
@@ -251,9 +255,6 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		createEstimatedTime(toolkit, sectionClient);
 
 //		createActualTime(toolkit, composite);
-
-		TasksUiInternal.getTaskList().addChangeListener(TASK_LIST_LISTENER);
-		TasksUiPlugin.getTaskActivityManager().addActivityListener(timingListener);
 
 		if (needsNotes()) {
 			createNotesArea(toolkit, sectionClient, layout.numColumns);
