@@ -95,6 +95,10 @@ public class ActivityContextManager implements IActivityContextManager {
 		checkJob.setPriority(Job.INTERACTIVE);
 	}
 
+	void init(List<AbstractUserActivityMonitor> monitors) {
+		this.activityMonitors.addAll(monitors);
+	}
+
 	protected void updateWorkingSetSelection() {
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {

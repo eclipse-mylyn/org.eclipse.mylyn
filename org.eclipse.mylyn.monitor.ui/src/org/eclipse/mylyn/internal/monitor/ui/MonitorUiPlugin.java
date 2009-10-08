@@ -32,7 +32,6 @@ import org.eclipse.mylyn.monitor.core.IInteractionEventListener;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.ui.AbstractUserActivityMonitor;
 import org.eclipse.mylyn.monitor.ui.AbstractUserInteractionMonitor;
-import org.eclipse.mylyn.monitor.ui.IActivityContextManager;
 import org.eclipse.ui.IPageListener;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IPerspectiveListener;
@@ -146,6 +145,8 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 		getPreferenceStore().setDefault(ActivityContextManager.ACTIVITY_TIMEOUT, DEFAULT_ACTIVITY_TIMEOUT);
 		getPreferenceStore().setDefault(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED, true);
+
+		this.activityContextManager = new ActivityContextManager(new ArrayList<AbstractUserActivityMonitor>(0));
 
 		if (CoreUtil.TEST_MODE) {
 			init();
@@ -333,7 +334,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 		}
 	}
 
-	public IActivityContextManager getActivityContextManager() {
+	public ActivityContextManager getActivityContextManager() {
 		return activityContextManager;
 	}
 
@@ -409,7 +410,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 			monitors.add(new WorkbenchUserActivityMonitor());
 			new MonitorUiExtensionPointReader().initExtensions();
 
-			activityContextManager = new ActivityContextManager(monitors);
+			activityContextManager.init(monitors);
 
 			updateActivityTimout();
 
