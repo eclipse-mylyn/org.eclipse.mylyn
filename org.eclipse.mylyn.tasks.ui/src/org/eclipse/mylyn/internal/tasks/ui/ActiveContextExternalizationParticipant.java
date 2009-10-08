@@ -16,10 +16,7 @@ import java.io.File;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.ContextChangeEvent;
 import org.eclipse.mylyn.context.core.ContextCore;
@@ -75,12 +72,7 @@ public class ActiveContextExternalizationParticipant extends AbstractExternaliza
 	public void registerListeners() {
 		ContextCore.getContextManager().addListener(listener);
 		TasksUi.getTaskActivityManager().addActivityListener(this);
-		if (MonitorUiPlugin.getDefault().getActivityContextManager() != null) {
-			((ActivityContextManager) MonitorUiPlugin.getDefault().getActivityContextManager()).addListener(this);
-		} else {
-			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
-					"Unable to register user activity listener.", new Exception())); //$NON-NLS-1$
-		}
+		((ActivityContextManager) MonitorUiPlugin.getDefault().getActivityContextManager()).addListener(this);
 	}
 
 	// currently not called since no way to remove a participant
