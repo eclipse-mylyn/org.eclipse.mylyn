@@ -48,7 +48,6 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 	/**
 	 * Constructor - set preference store to ContextUiPlugin store since the tasklist plugin needs access to the values
 	 * stored from the preference page because it needs access to the highlighters on start up.
-	 * 
 	 */
 	public ContextUiPreferencePage() {
 		super();
@@ -161,7 +160,7 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 				IContextUiPreferenceContstants.AUTO_MANAGE_EDITORS));
 
 		if (getContainer() instanceof IWorkbenchPreferenceContainer) {
-			String message = "<a>''{0}''</a> " + Messages.ContextUiPreferencePage_will_be_toggled_with_activation; //$NON-NLS-1$
+			String message = Messages.ContextUiPreferencePage_will_be_toggled_with_activation;
 			new PreferenceLinkArea(groupEditors, SWT.NONE, "org.eclipse.ui.preferencePages.Editors", message, //$NON-NLS-1$
 					(IWorkbenchPreferenceContainer) getContainer(), null);
 		}
