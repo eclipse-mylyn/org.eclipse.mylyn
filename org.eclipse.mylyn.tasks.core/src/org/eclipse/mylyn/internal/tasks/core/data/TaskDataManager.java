@@ -109,6 +109,7 @@ public class TaskDataManager implements ITaskDataManager {
 		Assert.isNotNull(task);
 		final String kind = task.getConnectorKind();
 		final TaskDataState[] result = new TaskDataState[1];
+		final boolean[] changed = new boolean[1];
 		taskList.run(new ITaskListRunnable() {
 			public void execute(IProgressMonitor monitor) throws CoreException {
 				final File file = getMigratedFile(task, kind);
@@ -127,9 +128,11 @@ public class TaskDataManager implements ITaskDataManager {
 					case INCOMING:
 					case INCOMING_NEW:
 						task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
+						changed[0] = true;
 						break;
 					case CONFLICT:
 						task.setSynchronizationState(SynchronizationState.OUTGOING);
+						changed[0] = true;
 						break;
 					}
 					task.setMarkReadPending(true);
@@ -137,7 +140,9 @@ public class TaskDataManager implements ITaskDataManager {
 				result[0] = state;
 			}
 		});
-		taskList.notifyElementChanged(task);
+		if (changed[0]) {
+			taskList.notifyElementChanged(task);
+		}
 		return result[0];
 	}
 
@@ -145,6 +150,7 @@ public class TaskDataManager implements ITaskDataManager {
 		final AbstractTask task = (AbstractTask) itask;
 		Assert.isNotNull(task);
 		final String kind = task.getConnectorKind();
+		final boolean[] changed = new boolean[1];
 		taskList.run(new ITaskListRunnable() {
 			public void execute(IProgressMonitor monitor) throws CoreException {
 				final File file = getFile(task, kind);
@@ -152,11 +158,15 @@ public class TaskDataManager implements ITaskDataManager {
 				switch (task.getSynchronizationState()) {
 				case SYNCHRONIZED:
 					task.setSynchronizationState(SynchronizationState.OUTGOING);
+					changed[0] = true;
+					break;
 				}
 				taskList.addTask(task);
 			}
 		});
-		taskList.notifyElementChanged(task);
+		if (changed[0]) {
+			taskList.notifyElementChanged(task);
+		}
 	}
 
 	public void putUpdatedTaskData(final ITask itask, final TaskData taskData, final boolean user) throws CoreException {
@@ -267,6 +277,7 @@ public class TaskDataManager implements ITaskDataManager {
 		final AbstractTask task = (AbstractTask) itask;
 		Assert.isNotNull(task);
 		final String kind = task.getConnectorKind();
+		final TaskDataManagerEvent event = new TaskDataManagerEvent(this, itask);
 		taskList.run(new ITaskListRunnable() {
 			public void execute(IProgressMonitor monitor) throws CoreException {
 				File dataFile = getFile(task, kind);
@@ -276,15 +287,18 @@ public class TaskDataManager implements ITaskDataManager {
 				switch (task.getSynchronizationState()) {
 				case OUTGOING:
 					task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
+					event.setTaskChanged(true);
 					break;
 				case CONFLICT:
 					task.setSynchronizationState(SynchronizationState.INCOMING);
+					event.setTaskChanged(true);
 					break;
 				}
 			}
 		});
-		taskList.notifyElementChanged(task);
-		final TaskDataManagerEvent event = new TaskDataManagerEvent(this, itask);
+		if (event.getTaskChanged()) {
+			taskList.notifyElementChanged(task);
+		}
 		fireEditsDiscarded(event);
 	}
 
@@ -431,6 +445,7 @@ public class TaskDataManager implements ITaskDataManager {
 	public void setTaskRead(final ITask itask, final boolean read) {
 		final AbstractTask task = (AbstractTask) itask;
 		Assert.isNotNull(task);
+		final boolean changed[] = new boolean[1];
 		try {
 			taskList.run(new ITaskListRunnable() {
 				public void execute(IProgressMonitor monitor) throws CoreException {
@@ -440,10 +455,12 @@ public class TaskDataManager implements ITaskDataManager {
 						case INCOMING_NEW:
 							task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
 							task.setMarkReadPending(true);
+							changed[0] = true;
 							break;
 						case CONFLICT:
 							task.setSynchronizationState(SynchronizationState.OUTGOING);
 							task.setMarkReadPending(true);
+							changed[0] = true;
 							break;
 						}
 					} else {
@@ -451,6 +468,7 @@ public class TaskDataManager implements ITaskDataManager {
 						case SYNCHRONIZED:
 							task.setSynchronizationState(SynchronizationState.INCOMING);
 							task.setMarkReadPending(false);
+							changed[0] = true;
 							break;
 						}
 					}
@@ -460,7 +478,9 @@ public class TaskDataManager implements ITaskDataManager {
 			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
 					"Unexpected error while marking task read", e)); //$NON-NLS-1$
 		}
-		taskList.notifyElementChanged(task);
+		if (changed[0]) {
+			taskList.notifyElementChanged(task);
+		}
 	}
 
 	void putEdits(final ITask itask, final TaskData editsData) throws CoreException {
@@ -468,6 +488,7 @@ public class TaskDataManager implements ITaskDataManager {
 		Assert.isNotNull(task);
 		final String kind = task.getConnectorKind();
 		Assert.isNotNull(editsData);
+		final boolean[] changed = new boolean[1];
 		taskList.run(new ITaskListRunnable() {
 			public void execute(IProgressMonitor monitor) throws CoreException {
 				taskDataStore.putEdits(getFile(task, kind), editsData);
@@ -476,14 +497,18 @@ public class TaskDataManager implements ITaskDataManager {
 				case INCOMING_NEW:
 					// TODO throw exception instead?
 					task.setSynchronizationState(SynchronizationState.CONFLICT);
+					changed[0] = true;
 					break;
 				case SYNCHRONIZED:
 					task.setSynchronizationState(SynchronizationState.OUTGOING);
+					changed[0] = true;
 					break;
 				}
 			}
 		});
-		taskList.notifySynchronizationStateChanged(task);
+		if (changed[0]) {
+			taskList.notifySynchronizationStateChanged(task);
+		}
 	}
 
 	private void fireTaskDataUpdated(final TaskDataManagerEvent event) {

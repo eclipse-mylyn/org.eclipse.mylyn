@@ -331,7 +331,7 @@ public class TasksUiUtil {
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 				task.getConnectorKind());
 		if (connector.canSynchronizeTask(taskRepository, task)) {
-			TasksUiInternal.synchronizeTask(connector, task, false, null);
+			TasksUiInternal.synchronizeTaskInBackground(connector, task);
 		}
 	}
 

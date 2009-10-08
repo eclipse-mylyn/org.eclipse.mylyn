@@ -71,6 +71,8 @@ import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnsubmittedTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizationScheduler;
+import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizationScheduler.Synchronizer;
 import org.eclipse.mylyn.internal.tasks.ui.OpenRepositoryTaskJob;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
@@ -125,6 +127,8 @@ import org.eclipse.ui.services.IServiceLocator;
  * @author Steffen Pingel
  */
 public class TasksUiInternal {
+
+	private static SynchronizationScheduler synchronizationScheduler = new SynchronizationScheduler();
 
 	// TODO e3.5 replace by SWT.SHEET
 	public static final int SWT_SHEET = 1 << 28;
@@ -398,16 +402,43 @@ public class TasksUiInternal {
 		return job;
 	}
 
+	public static void synchronizeRepositoryInBackground(final TaskRepository repository) {
+		synchronizationScheduler.schedule(repository, new Synchronizer<SynchronizationJob>() {
+			@Override
+			public SynchronizationJob createJob() {
+				return synchronizeRepositoryInternal(repository, false);
+			}
+		});
+	}
+
 	public static SynchronizationJob synchronizeRepository(TaskRepository repository, boolean force) {
-		// TODO check if a synchronization for repository is already running
+		SynchronizationJob job = synchronizeRepositoryInternal(repository, force);
+		synchronizationScheduler.cancel(repository);
+		job.schedule();
+		return job;
+	}
+
+	private static SynchronizationJob synchronizeRepositoryInternal(TaskRepository repository, boolean force) {
 		SynchronizationJob job = TasksUiInternal.getJobFactory().createSynchronizeRepositoriesJob(
 				Collections.singleton(repository));
 		// do not show in progress view by default
 		job.setSystem(true);
-		job.setUser(false);
+		job.setUser(force);
 		job.setFullSynchronization(false);
-		job.schedule();
 		return job;
+	}
+
+	public static void synchronizeTaskInBackground(final AbstractRepositoryConnector connector, final ITask task) {
+		synchronizationScheduler.schedule(task, new Synchronizer<Job>() {
+			@Override
+			public Job createJob() {
+				SynchronizationJob job = TasksUiPlugin.getTaskJobFactory().createSynchronizeTasksJob(connector,
+						Collections.singleton(task));
+				job.setUser(false);
+				job.setSystem(true);
+				return job;
+			}
+		});
 	}
 
 	/**
@@ -431,12 +462,14 @@ public class TasksUiInternal {
 		ITaskList taskList = TasksUiInternal.getTaskList();
 		for (ITask task : tasks) {
 			((AbstractTask) task).setSynchronizing(true);
+			synchronizationScheduler.cancel(task);
 		}
 		((TaskList) taskList).notifySynchronizationStateChanged(tasks);
 		// TODO notify task list?
 
 		SynchronizationJob job = TasksUiPlugin.getTaskJobFactory().createSynchronizeTasksJob(connector, tasks);
 		job.setUser(force);
+		job.setSystem(!force);
 		job.setPriority(Job.DECORATE);
 		if (listener != null) {
 			job.addJobChangeListener(listener);

@@ -11,12 +11,9 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
-import java.util.Collections;
-
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.mylyn.internal.tasks.core.ITaskJobFactory;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
 
 /**
@@ -77,18 +74,6 @@ public class TaskListSynchronizationScheduler {
 				refreshJob.schedule(delay);
 			}
 		}
-	}
-
-	@Deprecated
-	public SynchronizationJob synchronize(TaskRepository repository) {
-		// TODO check if a synchronization for repository is already running
-		SynchronizationJob job = jobFactory.createSynchronizeRepositoriesJob(Collections.singleton(repository));
-		// do not show in progress view by default
-		job.setSystem(true);
-		job.setUser(false);
-		job.setFullSynchronization(false);
-		job.schedule();
-		return job;
 	}
 
 }

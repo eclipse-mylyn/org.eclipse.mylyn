@@ -254,8 +254,10 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 	}
 
 	private void resetStatus(ITask task) {
-		((AbstractTask) task).setStatus(null);
-		taskList.notifySynchronizationStateChanged(task);
+		if (((AbstractTask) task).getStatus() != null) {
+			((AbstractTask) task).setStatus(null);
+			taskList.notifySynchronizationStateChanged(task);
+		}
 	}
 
 	private void synchronizeTasks(IProgressMonitor monitor, final TaskRepository repository, Set<ITask> tasks)

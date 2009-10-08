@@ -202,7 +202,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 				public void run() {
 					try {
 						if (job.getStatus() == null) {
-							TasksUiInternal.synchronizeRepository(getTaskRepository(), false);
+							TasksUiInternal.synchronizeRepositoryInBackground(getTaskRepository());
 							if (job.getTask().equals(getTask())) {
 								refreshFormContent();
 							} else {
