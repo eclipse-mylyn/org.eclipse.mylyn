@@ -194,6 +194,13 @@ public class ConfluenceLanguageTest extends TestCase {
 		assertTrue(html.contains("<body><p>a <a href=\"http://example.com\">http://example.com</a> hyperlink</p></body>"));
 	}
 
+	public void testHyperlinkPartiallyExpressed() {
+		// bug 290434
+		String html = parser.parseToHtml("a [ |] hyperlink");
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><p>a  hyperlink</p></body>"));
+	}
+
 	public void testHyperlinkWithTitle() {
 		String html = parser.parseToHtml("a [Example|http://example.com] hyperlink");
 		System.out.println("HTML: \n" + html);
