@@ -13,9 +13,11 @@ package org.eclipse.mylyn.internal.discovery.ui.commands;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.discovery.ui.util.DiscoveryUiUtil;
 import org.eclipse.mylyn.internal.discovery.ui.wizards.ConnectorDiscoveryWizard;
+import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 
 /**
  * A command that causes the {@link ConnectorDiscoveryWizard} to appear in a dialog.
@@ -24,11 +26,21 @@ import org.eclipse.mylyn.internal.discovery.ui.wizards.ConnectorDiscoveryWizard;
  */
 public class ShowConnectorDiscoveryWizardCommandHandler extends AbstractHandler {
 
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	private static final String ID_P2_INSTALL_UI = "org.eclipse.equinox.p2.ui.sdk/org.eclipse.equinox.p2.ui.sdk.install"; //$NON-NLS-1$
 
-		ConnectorDiscoveryWizard wizard = new ConnectorDiscoveryWizard();
-		WizardDialog dialog = new WizardDialog(DiscoveryUiUtil.getShell(), wizard);
-		dialog.open();
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		
+		// check to make sure that the p2 install ui is enabled
+		if (WorkbenchUtil.allowUseOf(ID_P2_INSTALL_UI)) {
+			ConnectorDiscoveryWizard wizard = new ConnectorDiscoveryWizard();
+			WizardDialog dialog = new WizardDialog(DiscoveryUiUtil.getShell(), wizard);
+			dialog.open();
+		} else {
+			MessageDialog.openWarning(
+					DiscoveryUiUtil.getShell(),
+					Messages.ShowConnectorDiscoveryWizardCommandHandler_Install_Connectors,
+					Messages.ShowConnectorDiscoveryWizardCommandHandler_Unable_To_Install_No_P2);
+		}
 
 		return null;
 	}
