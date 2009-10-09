@@ -44,12 +44,13 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.forms.IFormColors;
@@ -107,9 +108,15 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			} else {
 				if (TaskEditorCommentPart.this.commentAttributes.size() >= CommentGroupStrategy.MAX_CURRENT) {
 					// show a separator before current comments
-					final Label separator = toolkit.createSeparator(parent, SWT.HORIZONTAL | SWT.SHADOW_NONE);
+					final Canvas separator = new Canvas(parent, SWT.NONE) {
+						@Override
+						public Point computeSize(int wHint, int hHint, boolean changed) {
+							return new Point((wHint == SWT.DEFAULT) ? 1 : wHint, 1);
+						}
+					};
 					separator.addPaintListener(new PaintListener() {
 						public void paintControl(PaintEvent e) {
+							e.gc.setForeground(separator.getForeground());
 							e.gc.drawLine(0, 0, separator.getSize().x, 0);
 						}
 					});
