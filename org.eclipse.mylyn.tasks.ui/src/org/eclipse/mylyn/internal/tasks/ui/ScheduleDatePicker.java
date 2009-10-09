@@ -104,9 +104,9 @@ public class ScheduleDatePicker extends Composite {
 		scheduledDateText = new Text(this, style);
 		scheduledDateText.setEditable(false);
 		GridData dateTextGridData = new GridData(SWT.FILL, SWT.FILL, false, false);
+		dateTextGridData.heightHint = 5;
 		dateTextGridData.grabExcessHorizontalSpace = true;
-		dateTextGridData.widthHint = SWT.FILL;
-		dateTextGridData.verticalIndent = 0;
+		dateTextGridData.verticalAlignment = SWT.FILL;
 
 		scheduledDateText.setLayoutData(dateTextGridData);
 		scheduledDateText.setText(initialText);
