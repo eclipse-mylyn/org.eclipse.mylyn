@@ -71,6 +71,8 @@ public class Messages extends NLS {
 
 	public static String PlanningPageFactory_Private;
 
+	public static String PlanningPart_Estimated_Time_Hours;
+
 	public static String PlanningPart_Personal_Notes;
 
 	public static String RichTextAttributeEditor_Viewer_Source;
@@ -168,6 +170,8 @@ public class Messages extends NLS {
 	public static String TaskEditorPlanningPart_TaskEditorPlanningPart_tooltip;
 
 	public static String TaskEditorPlanningPart_Time_working_on_this_task;
+
+	public static String TaskEditorPlanningPart_No_scheduled_date;
 
 	public static String TaskEditorRichTextPart_Browser_Preview;
 

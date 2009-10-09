@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.RowDataFactory;
 import org.eclipse.jface.text.ITextListener;
 import org.eclipse.jface.text.TextEvent;
 import org.eclipse.mylyn.commons.core.DateUtil;
@@ -26,6 +27,7 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DatePicker;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.DateRange;
 import org.eclipse.mylyn.internal.tasks.core.DayDateRange;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
@@ -91,6 +93,8 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 	private ScheduleDatePicker scheduleDatePicker;
 
+	private Label scheduledText;
+
 	private static final String PERSONAL_NOTES = Messages.PlanningPart_Personal_Notes;
 
 	private final ITaskListChangeListener TASK_LIST_LISTENER = new TaskListChangeAdapter() {
@@ -146,6 +150,8 @@ public class PlanningPart extends AbstractLocalEditorPart {
 	private boolean alwaysExpand;
 
 	private Composite sectionClient;
+
+	private Composite toolbarComposite;
 
 	public PlanningPart(int sectionStyle) {
 		super(sectionStyle, Messages.PersonalPart_Personal_Planning);
@@ -242,7 +248,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 	private void expandSection(FormToolkit toolkit, Section section) {
 		sectionClient = toolkit.createComposite(section);
 		GridLayout layout = EditorUtil.createSectionClientLayout();
-		layout.numColumns = (needsDueDate) ? 6 : 4;
+		layout.numColumns = (needsDueDate) ? 8 : 6;
 		sectionClient.setLayout(layout);
 
 		createScheduledDatePicker(toolkit, sectionClient);
@@ -254,7 +260,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 		createEstimatedTime(toolkit, sectionClient);
 
-//		createActualTime(toolkit, composite);
+		createActualTime(toolkit, sectionClient);
 
 		if (needsNotes()) {
 			createNotesArea(toolkit, sectionClient, layout.numColumns);
@@ -445,6 +451,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 	private void createEstimatedTime(FormToolkit toolkit, Composite parent) {
 		Label label = toolkit.createLabel(parent, Messages.TaskEditorPlanningPart_Estimated);
+		label.setToolTipText(Messages.PlanningPart_Estimated_Time_Hours);
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 
 		Composite composite = createComposite(parent, 2, toolkit);
@@ -452,7 +459,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		// Estimated time
 		estimatedTime = new Spinner(composite, SWT.FLAT);
 		estimatedTime.setDigits(0);
-		estimatedTime.setMaximum(10000);
+		estimatedTime.setMaximum(9999);
 		estimatedTime.setMinimum(0);
 		estimatedTime.setIncrement(1);
 		estimatedTime.setSelection(getTask().getEstimatedTimeHours());
@@ -464,17 +471,6 @@ public class PlanningPart extends AbstractLocalEditorPart {
 				if (getTask().getEstimatedTimeHours() != estimatedTime.getSelection()) {
 					markDirty();
 				}
-			}
-		});
-
-		ImageHyperlink clearEstimated = toolkit.createImageHyperlink(composite, SWT.NONE);
-		clearEstimated.setImage(CommonImages.getImage(CommonImages.FIND_CLEAR));
-		clearEstimated.setToolTipText(Messages.TaskEditorPlanningPart_Clear);
-		clearEstimated.addHyperlinkListener(new HyperlinkAdapter() {
-			@Override
-			public void linkActivated(HyperlinkEvent e) {
-				estimatedTime.setSelection(0);
-				markDirty();
 			}
 		});
 		toolkit.paintBordersFor(composite);
@@ -517,7 +513,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 	@Override
 	protected void setSection(FormToolkit toolkit, Section section) {
 		if (section.getTextClient() == null) {
-			Composite toolbarComposite = toolkit.createComposite(section);
+			toolbarComposite = toolkit.createComposite(section);
 			toolbarComposite.setBackground(null);
 			RowLayout rowLayout = new RowLayout();
 			rowLayout.marginTop = 0;
@@ -525,7 +521,8 @@ public class PlanningPart extends AbstractLocalEditorPart {
 			rowLayout.center = true;
 			toolbarComposite.setLayout(rowLayout);
 
-			createActualTime(toolkit, toolbarComposite);
+			//createActualTime(toolkit, toolbarComposite);
+			createScheduledText(toolkit, toolbarComposite);
 
 			fillToolbar(toolbarComposite);
 			section.setTextClient(toolbarComposite);
@@ -533,6 +530,19 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		}
 
 		super.setSection(toolkit, section);
+	}
+
+	private void createScheduledText(FormToolkit toolkit, Composite toolbarComposite) {
+		DateRange scheduledForDate = getTask().getScheduledForDate();
+		String scheduledString = Messages.TaskEditorPlanningPart_No_scheduled_date;
+		if (scheduledForDate != null) {
+			scheduledString = scheduledForDate.toString();
+		}
+		scheduledText = toolkit.createLabel(toolbarComposite, scheduledString, SWT.READ_ONLY);
+		scheduledText.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+		RowDataFactory.swtDefaults().applyTo(scheduledText);
+
+		scheduledText.setBackground(null);
 	}
 
 	private void fillToolbar(Composite parent) {
@@ -561,11 +571,22 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 	@Override
 	protected void refresh(boolean discardChanges) {
-		if (scheduleDatePicker != null && !scheduleDatePicker.isDisposed()) {
-			if (getTask().getScheduledForDate() != null) {
+		if (getTask().getScheduledForDate() != null) {
+			if (scheduleDatePicker != null && !scheduleDatePicker.isDisposed()) {
 				scheduleDatePicker.setScheduledDate(getTask().getScheduledForDate());
-			} else {
+			}
+			if (scheduledText != null && !scheduledText.isDisposed()) {
+				scheduledText.setText(getTask().getScheduledForDate().toString());
+				toolbarComposite.getParent().layout(true);
+
+			}
+		} else {
+			if (scheduleDatePicker != null && !scheduleDatePicker.isDisposed()) {
 				scheduleDatePicker.setScheduledDate(null);
+			}
+			if (scheduledText != null && !scheduledText.isDisposed()) {
+				scheduledText.setText(Messages.TaskEditorPlanningPart_No_scheduled_date);
+				toolbarComposite.getParent().layout(true);
 			}
 		}
 
