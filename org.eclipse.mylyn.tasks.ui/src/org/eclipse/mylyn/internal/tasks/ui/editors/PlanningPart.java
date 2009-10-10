@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.layout.RowDataFactory;
 import org.eclipse.jface.text.ITextListener;
 import org.eclipse.jface.text.TextEvent;
 import org.eclipse.mylyn.commons.core.DateUtil;
@@ -540,8 +539,6 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		}
 		scheduledText = toolkit.createLabel(toolbarComposite, scheduledString, SWT.READ_ONLY);
 		scheduledText.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-		RowDataFactory.swtDefaults().applyTo(scheduledText);
-
 		scheduledText.setBackground(null);
 	}
 
