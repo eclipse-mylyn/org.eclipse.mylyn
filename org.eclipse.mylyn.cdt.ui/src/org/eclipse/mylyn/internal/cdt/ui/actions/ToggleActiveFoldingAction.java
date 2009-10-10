@@ -19,7 +19,6 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.cdt.ui.CDTUIBridgePlugin;
-import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IActionDelegate2;
 import org.eclipse.ui.IEditorPart;
@@ -37,10 +36,8 @@ public class ToggleActiveFoldingAction extends Action implements IWorkbenchWindo
 	private IAction parentAction = null;
 
 	public ToggleActiveFoldingAction() {
-		super();
 		INSTANCE = this;
 		setText(Messages.ToggleActiveFoldingAction_Active_Folding);
-		setImageDescriptor(TasksUiImages.CONTEXT_FOCUS);
 	}
 
 	public static void toggleFolding(boolean on) {

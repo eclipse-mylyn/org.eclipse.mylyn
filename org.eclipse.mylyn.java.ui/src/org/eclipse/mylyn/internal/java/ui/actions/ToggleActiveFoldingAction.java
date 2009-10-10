@@ -36,7 +36,6 @@ public class ToggleActiveFoldingAction extends Action implements IWorkbenchWindo
 	private IAction parentAction = null;
 
 	public ToggleActiveFoldingAction() {
-		super();
 		INSTANCE = this;
 		setText(Messages.ToggleActiveFoldingAction_Active_folding);
 	}
