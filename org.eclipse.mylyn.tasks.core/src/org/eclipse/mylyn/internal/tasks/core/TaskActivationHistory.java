@@ -43,7 +43,7 @@ public class TaskActivationHistory {
 	 */
 	private int previousIndex = -1;
 
-	public void addTask(AbstractTask task) {
+	public synchronized void addTask(AbstractTask task) {
 		boolean isPreviousTask = false;
 		// optimization: do not modify list, if task is already last
 		if (history.isEmpty() || history.get(history.size() - 1) != task) {
@@ -61,15 +61,20 @@ public class TaskActivationHistory {
 		}
 	}
 
-	public boolean containsTask(ITask task) {
+	public synchronized void addTaskInternal(AbstractTask task) {
+		history.add(task);
+	}
+
+	public synchronized void clear() {
+		history.clear();
+		previousIndex = -1;
+	}
+
+	public synchronized boolean containsTask(ITask task) {
 		return history.contains(task);
 	}
 
-	public boolean removeTask(ITask task) {
-		return history.remove(task);
-	}
-
-	public AbstractTask getPreviousTask() {
+	public synchronized AbstractTask getPreviousTask() {
 		if (history.isEmpty()) {
 			return null;
 		}
@@ -81,14 +86,14 @@ public class TaskActivationHistory {
 		}
 	}
 
-	public List<AbstractTask> getPreviousTasks() {
+	public synchronized List<AbstractTask> getPreviousTasks() {
 		return Collections.unmodifiableList(new ArrayList<AbstractTask>(history));
 	}
 
 	/**
 	 * Returns task activation history for tasks present in <code>containers</code>
 	 */
-	public List<AbstractTask> getPreviousTasks(Set<AbstractTaskContainer> containers) {
+	public synchronized List<AbstractTask> getPreviousTasks(Set<AbstractTaskContainer> containers) {
 		if (containers.isEmpty()) {
 			return getPreviousTasks();
 		}
@@ -106,22 +111,21 @@ public class TaskActivationHistory {
 		return Collections.unmodifiableList(allScopedTasks);
 	}
 
-	public boolean hasPrevious() {
+	public synchronized int getSize() {
+		return history.size();
+	}
+
+	public synchronized boolean hasPrevious() {
 		return getPreviousTask() != null;
 	}
 
-	public void clear() {
-		history.clear();
-		previousIndex = -1;
-	}
-
-	public int indexOf(ITask task) {
+	public synchronized int indexOf(ITask task) {
 		return history.indexOf(task);
 
 	}
 
-	public int getSize() {
-		return history.size();
+	public synchronized boolean removeTask(ITask task) {
+		return history.remove(task);
 	}
 
 }

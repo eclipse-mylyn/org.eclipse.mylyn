@@ -162,6 +162,7 @@ public class AttributePart extends AbstractLocalEditorPart {
 			label.setBackground(null);
 
 			categoryLabel = toolkit.createLabel(textClient, ""); //$NON-NLS-1$
+			categoryLabel.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 			categoryLabel.setBackground(null);
 
 			toolkit.paintBordersFor(textClient);

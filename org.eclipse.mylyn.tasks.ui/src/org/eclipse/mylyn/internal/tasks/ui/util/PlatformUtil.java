@@ -15,11 +15,25 @@ package org.eclipse.mylyn.internal.tasks.ui.util;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
 
 /**
  * @author Steffen Pingel
  */
 public class PlatformUtil {
+
+	private static class Eclipse36Checker {
+		public static final boolean result;
+		static {
+			boolean methodAvailable = false;
+			try {
+				StyledText.class.getMethod("setTabStops", int[].class); //$NON-NLS-1$
+				methodAvailable = true;
+			} catch (NoSuchMethodException e) {
+			}
+			result = methodAvailable;
+		}
+	}
 
 	/**
 	 * bug 247182: file import dialog doesn't work on Mac OS X if the file extension has more than one dot.
@@ -86,7 +100,11 @@ public class PlatformUtil {
 	}
 
 	public static boolean spinnerHasNativeBorder() {
-		return isMac();
+		return isMac() && !isEclipse36orLater();
+	}
+
+	private static boolean isEclipse36orLater() {
+		return Eclipse36Checker.result;
 	}
 
 	public static boolean hasNarrowToolBar() {
