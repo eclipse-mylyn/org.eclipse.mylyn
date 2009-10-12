@@ -42,12 +42,12 @@ import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextChangeEvent;
 import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.IContextUiStartup;
 import org.eclipse.mylyn.internal.context.ui.wizards.RetrieveLatestContextDialog;
-import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.monitor.ui.MonitorUi;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -186,7 +186,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 	private static final ITaskActivationListener TASK_ACTIVATION_LISTENER = new TaskActivationAdapter() {
 
-		@SuppressWarnings({ "restriction" })
+		@SuppressWarnings("restriction")
 		@Override
 		public void taskActivated(ITask task) {
 			if (CoreUtil.TEST_MODE) {
@@ -243,13 +243,8 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		}
 	}
 
-	@SuppressWarnings("restriction")
 	private void lazyStart(IWorkbench workbench) {
 		try {
-			MonitorUiPlugin.getDefault()
-					.getPreferenceStore()
-					.setValue(MonitorUiPlugin.PREF_USER_ACTIVITY_ENABLED, true);
-			MonitorUiPlugin.getDefault().savePluginPreferences();
 			ContextCore.getContextManager().addListener(viewerManager);
 			MonitorUi.addWindowPartListener(contentOutlineManager);
 			perspectiveManager.addManagedPerspective(ITasksUiConstants.ID_PERSPECTIVE_PLANNING);
