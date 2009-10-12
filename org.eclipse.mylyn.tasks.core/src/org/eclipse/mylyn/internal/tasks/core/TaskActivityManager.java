@@ -144,7 +144,8 @@ public class TaskActivityManager implements ITaskActivityManager {
 
 	public void clearActivity() {
 		activeTasks.clear();
-		taskActivationHistory.clear();
+		// handled in TaskActivationExternalizationParticipant now
+		//taskActivationHistory.clear();
 		taskElapsedTimeMap.clear();
 		workingSetElapsedTimeMap.clear();
 	}

@@ -16,17 +16,16 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.text.ITextListener;
 import org.eclipse.jface.text.TextEvent;
+import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.mylyn.commons.core.DateUtil;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DatePicker;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.internal.tasks.core.DateRange;
 import org.eclipse.mylyn.internal.tasks.core.DayDateRange;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
@@ -35,7 +34,6 @@ import org.eclipse.mylyn.internal.tasks.ui.ScheduleDatePicker;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.PlatformUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.monitor.ui.MonitorUi;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
@@ -65,10 +63,7 @@ import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
-import org.eclipse.ui.forms.events.HyperlinkAdapter;
-import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.Section;
 
 /**
@@ -86,13 +81,11 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 	private DatePicker dueDatePicker;
 
-	private Text elapsedTimeText;
+	private Text activeTimeText;
 
-	private Spinner estimatedTime;
+	private Spinner estimatedTimeSpinner;
 
 	private ScheduleDatePicker scheduleDatePicker;
-
-	private Label scheduledText;
 
 	private static final String PERSONAL_NOTES = Messages.PlanningPart_Personal_Notes;
 
@@ -126,21 +119,36 @@ public class PlanningPart extends AbstractLocalEditorPart {
 			if (task.equals(PlanningPart.this.getTask())) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						if (elapsedTimeText != null && !elapsedTimeText.isDisposed()) {
-							updateElapsedTime();
+						if (activeTimeText != null && !activeTimeText.isDisposed()) {
+							updateActiveTime();
 						}
 					}
 				});
-
 			}
 		}
+	};
+
+	private final IPropertyChangeListener ACTIVITY_PROPERTY_LISTENER = new org.eclipse.jface.util.IPropertyChangeListener() {
+
+		public void propertyChange(org.eclipse.jface.util.PropertyChangeEvent event) {
+			if (event.getProperty().equals(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED)) {
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						if (activeTimeText != null && !activeTimeText.isDisposed()) {
+							updateActiveTime();
+						}
+					}
+				});
+			}
+		}
+
 	};
 
 	private CommonTextSupport textSupport;
 
 	private TaskFormPage page;
 
-	private Composite actualTimeComposite;
+	private Composite activeTimeComposite;
 
 	private ToolBarManager toolBarManager;
 
@@ -150,10 +158,11 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 	private Composite sectionClient;
 
-	private Composite toolbarComposite;
+	private boolean activeTimeEnabled;
 
 	public PlanningPart(int sectionStyle) {
 		super(sectionStyle, Messages.PersonalPart_Personal_Planning);
+		this.activeTimeEnabled = true;
 		this.needsNotes = true;
 	}
 
@@ -199,8 +208,8 @@ public class PlanningPart extends AbstractLocalEditorPart {
 			getTask().setReminded(false);
 		}
 
-		if (estimatedTime != null) {
-			getTask().setEstimatedTimeHours(estimatedTime.getSelection());
+		if (estimatedTimeSpinner != null) {
+			getTask().setEstimatedTimeHours(estimatedTimeSpinner.getSelection());
 		}
 
 		if (dueDatePicker != null && dueDatePicker.getDate() != null) {
@@ -239,6 +248,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 		TasksUiInternal.getTaskList().addChangeListener(TASK_LIST_LISTENER);
 		TasksUiPlugin.getTaskActivityManager().addActivityListener(timingListener);
+		MonitorUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(ACTIVITY_PROPERTY_LISTENER);
 
 		setSection(toolkit, section);
 		return section;
@@ -247,7 +257,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 	private void expandSection(FormToolkit toolkit, Section section) {
 		sectionClient = toolkit.createComposite(section);
 		GridLayout layout = EditorUtil.createSectionClientLayout();
-		layout.numColumns = (needsDueDate) ? 8 : 6;
+		layout.numColumns = (needsDueDate) ? 6 : 4;
 		sectionClient.setLayout(layout);
 
 		createScheduledDatePicker(toolkit, sectionClient);
@@ -259,7 +269,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 		createEstimatedTime(toolkit, sectionClient);
 
-		createActualTime(toolkit, sectionClient);
+//		createActualTime(toolkit, composite);
 
 		if (needsNotes()) {
 			createNotesArea(toolkit, sectionClient, layout.numColumns);
@@ -352,66 +362,70 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 	}
 
-	private void createActualTime(FormToolkit toolkit, Composite toolbarComposite) {
-		actualTimeComposite = toolkit.createComposite(toolbarComposite);
-		actualTimeComposite.setBackground(null);
-		actualTimeComposite.setBackgroundMode(SWT.INHERIT_FORCE);
+	private void createActiveTimeControl(FormToolkit toolkit, Composite toolbarComposite) {
+		activeTimeComposite = toolkit.createComposite(toolbarComposite);
+		activeTimeComposite.setBackground(null);
+		activeTimeComposite.setBackgroundMode(SWT.INHERIT_FORCE);
 		RowLayout rowLayout = new RowLayout();
 		rowLayout.center = true;
 		rowLayout.marginTop = 0;
 		rowLayout.marginBottom = 0;
 		rowLayout.marginLeft = 0;
 		rowLayout.marginRight = 0;
-		actualTimeComposite.setLayout(rowLayout);
+		activeTimeComposite.setLayout(rowLayout);
 
-		Label label = toolkit.createLabel(actualTimeComposite, Messages.TaskEditorPlanningPart_Active);
+		Label label = toolkit.createLabel(activeTimeComposite, Messages.TaskEditorPlanningPart_Active);
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		label.setToolTipText(Messages.TaskEditorPlanningPart_Time_working_on_this_task);
 		label.setBackground(null);
 
-		elapsedTimeText = new Text(actualTimeComposite, SWT.FLAT | SWT.READ_ONLY);
-		elapsedTimeText.setFont(EditorUtil.TEXT_FONT);
-		elapsedTimeText.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
-		toolkit.adapt(elapsedTimeText, true, false);
-		elapsedTimeText.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-		elapsedTimeText.setBackground(null);
-		updateElapsedTime();
-		elapsedTimeText.setEditable(false);
+		activeTimeText = new Text(activeTimeComposite, SWT.FLAT | SWT.READ_ONLY);
+		activeTimeText.setFont(EditorUtil.TEXT_FONT);
+		activeTimeText.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
+		toolkit.adapt(activeTimeText, true, false);
+		activeTimeText.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+		activeTimeText.setBackground(null);
+		updateActiveTime();
+		activeTimeText.setEditable(false);
 
-		ImageHyperlink resetActivityTimeButton = toolkit.createImageHyperlink(actualTimeComposite, SWT.NONE);
-		resetActivityTimeButton.setBackground(null);
-		resetActivityTimeButton.setImage(CommonImages.getImage(CommonImages.FIND_CLEAR_DISABLED));
-		resetActivityTimeButton.setHoverImage(CommonImages.getImage(CommonImages.FIND_CLEAR));
-		resetActivityTimeButton.setToolTipText(Messages.TaskEditorPlanningPart_Reset);
-		resetActivityTimeButton.addHyperlinkListener(new HyperlinkAdapter() {
-			@Override
-			public void linkActivated(HyperlinkEvent e) {
-				if (MessageDialog.openConfirm(getControl().getShell(),
-						Messages.TaskEditorPlanningPart_Confirm_Activity_Time_Deletion,
-						Messages.TaskEditorPlanningPart_Do_you_wish_to_reset_your_activity_time_on_this_task_)) {
-					MonitorUi.getActivityContextManager().removeActivityTime(getTask().getHandleIdentifier(), 0l,
-							System.currentTimeMillis());
-				}
-			}
-		});
+//		ImageHyperlink resetActivityTimeButton = toolkit.createImageHyperlink(activeTimeComposite, SWT.NONE);
+//		resetActivityTimeButton.setBackground(null);
+//		resetActivityTimeButton.setImage(CommonImages.getImage(CommonImages.FIND_CLEAR_DISABLED));
+//		resetActivityTimeButton.setHoverImage(CommonImages.getImage(CommonImages.FIND_CLEAR));
+//		resetActivityTimeButton.setToolTipText(Messages.TaskEditorPlanningPart_Reset);
+//		resetActivityTimeButton.addHyperlinkListener(new HyperlinkAdapter() {
+//			@Override
+//			public void linkActivated(HyperlinkEvent e) {
+//				if (MessageDialog.openConfirm(getControl().getShell(),
+//						Messages.TaskEditorPlanningPart_Confirm_Activity_Time_Deletion,
+//						Messages.TaskEditorPlanningPart_Do_you_wish_to_reset_your_activity_time_on_this_task_)) {
+//					MonitorUi.getActivityContextManager().removeActivityTime(getTask().getHandleIdentifier(), 0l,
+//							System.currentTimeMillis());
+//				}
+//			}
+//		});
 	}
 
-	private void updateElapsedTime() {
-		long elapsedTime = TasksUiPlugin.getTaskActivityManager().getElapsedTime(getTask());
+	private void updateActiveTime() {
+		long elapsedTime = 0;
+		if (isActiveTimeEnabled() && MonitorUiPlugin.getDefault().isActivityTrackingEnabled()) {
+			elapsedTime = TasksUiPlugin.getTaskActivityManager().getElapsedTime(getTask());
+		}
+
 		if (elapsedTime > 0) {
-			if (actualTimeComposite != null && !actualTimeComposite.isVisible()) {
-				actualTimeComposite.setVisible(true);
+			if (activeTimeComposite != null && !activeTimeComposite.isVisible()) {
+				activeTimeComposite.setVisible(true);
 			}
 		} else {
-			if (actualTimeComposite != null) {
-				actualTimeComposite.setVisible(false);
+			if (activeTimeComposite != null) {
+				activeTimeComposite.setVisible(false);
 			}
 		}
 		String elapsedTimeString = DateUtil.getFormattedDurationShort(elapsedTime);
 		if (elapsedTimeString.equals("")) { //$NON-NLS-1$
 			elapsedTimeString = Messages.TaskEditorPlanningPart_0_SECOUNDS;
 		}
-		elapsedTimeText.setText(elapsedTimeString);
+		activeTimeText.setText(elapsedTimeString);
 
 	}
 
@@ -450,28 +464,39 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 	private void createEstimatedTime(FormToolkit toolkit, Composite parent) {
 		Label label = toolkit.createLabel(parent, Messages.TaskEditorPlanningPart_Estimated);
-		label.setToolTipText(Messages.PlanningPart_Estimated_Time_Hours);
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 
 		Composite composite = createComposite(parent, 2, toolkit);
 
 		// Estimated time
-		estimatedTime = new Spinner(composite, SWT.FLAT);
-		estimatedTime.setDigits(0);
-		estimatedTime.setMaximum(9999);
-		estimatedTime.setMinimum(0);
-		estimatedTime.setIncrement(1);
-		estimatedTime.setSelection(getTask().getEstimatedTimeHours());
+		estimatedTimeSpinner = new Spinner(composite, SWT.FLAT);
+		estimatedTimeSpinner.setDigits(0);
+		estimatedTimeSpinner.setMaximum(10000);
+		estimatedTimeSpinner.setMinimum(0);
+		estimatedTimeSpinner.setIncrement(1);
+		estimatedTimeSpinner.setSelection(getTask().getEstimatedTimeHours());
 		if (!PlatformUtil.spinnerHasNativeBorder()) {
-			estimatedTime.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
+			estimatedTimeSpinner.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 		}
-		estimatedTime.addModifyListener(new ModifyListener() {
+		estimatedTimeSpinner.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				if (getTask().getEstimatedTimeHours() != estimatedTime.getSelection()) {
+				if (getTask().getEstimatedTimeHours() != estimatedTimeSpinner.getSelection()) {
 					markDirty();
 				}
 			}
 		});
+
+//		ImageHyperlink clearEstimated = toolkit.createImageHyperlink(composite, SWT.NONE);
+//		clearEstimated.setImage(CommonImages.getImage(CommonImages.FIND_CLEAR_DISABLED));
+//		clearEstimated.setHoverImage(CommonImages.getImage(CommonImages.FIND_CLEAR));
+//		clearEstimated.setToolTipText(Messages.TaskEditorPlanningPart_Clear);
+//		clearEstimated.addHyperlinkListener(new HyperlinkAdapter() {
+//			@Override
+//			public void linkActivated(HyperlinkEvent e) {
+//				estimatedTime.setSelection(0);
+//				markDirty();
+//			}
+//		});
 		toolkit.paintBordersFor(composite);
 	}
 
@@ -503,6 +528,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 	public void dispose() {
 		TasksUiPlugin.getTaskActivityManager().removeActivityListener(timingListener);
 		TasksUiInternal.getTaskList().removeChangeListener(TASK_LIST_LISTENER);
+		MonitorUiPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(ACTIVITY_PROPERTY_LISTENER);
 
 		if (toolBarManager != null) {
 			toolBarManager.dispose();
@@ -512,7 +538,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 	@Override
 	protected void setSection(FormToolkit toolkit, Section section) {
 		if (section.getTextClient() == null) {
-			toolbarComposite = toolkit.createComposite(section);
+			Composite toolbarComposite = toolkit.createComposite(section);
 			toolbarComposite.setBackground(null);
 			RowLayout rowLayout = new RowLayout();
 			rowLayout.marginLeft = 0;
@@ -522,8 +548,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 			rowLayout.center = true;
 			toolbarComposite.setLayout(rowLayout);
 
-			//createActualTime(toolkit, toolbarComposite);
-			createScheduledText(toolkit, toolbarComposite);
+			createActiveTimeControl(toolkit, toolbarComposite);
 
 			ToolBarManager toolBarManager = new ToolBarManager(SWT.FLAT);
 			fillToolBar(toolBarManager);
@@ -540,17 +565,6 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		}
 
 		super.setSection(toolkit, section);
-	}
-
-	private void createScheduledText(FormToolkit toolkit, Composite toolbarComposite) {
-		DateRange scheduledForDate = getTask().getScheduledForDate();
-		String scheduledString = Messages.TaskEditorPlanningPart_No_scheduled_date;
-		if (scheduledForDate != null) {
-			scheduledString = scheduledForDate.toString();
-		}
-		scheduledText = toolkit.createLabel(toolbarComposite, scheduledString, SWT.READ_ONLY);
-		scheduledText.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-		scheduledText.setBackground(null);
 	}
 
 	protected void fillToolBar(ToolBarManager toolBarManager) {
@@ -574,30 +588,30 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 	@Override
 	protected void refresh(boolean discardChanges) {
-		if (getTask().getScheduledForDate() != null) {
-			if (scheduleDatePicker != null && !scheduleDatePicker.isDisposed()) {
+		if (scheduleDatePicker != null && !scheduleDatePicker.isDisposed()) {
+			if (getTask().getScheduledForDate() != null) {
 				scheduleDatePicker.setScheduledDate(getTask().getScheduledForDate());
-			}
-			if (scheduledText != null && !scheduledText.isDisposed()) {
-				scheduledText.setText(getTask().getScheduledForDate().toString());
-				toolbarComposite.getParent().layout(true);
-
-			}
-		} else {
-			if (scheduleDatePicker != null && !scheduleDatePicker.isDisposed()) {
+			} else {
 				scheduleDatePicker.setScheduledDate(null);
-			}
-			if (scheduledText != null && !scheduledText.isDisposed()) {
-				scheduledText.setText(Messages.TaskEditorPlanningPart_No_scheduled_date);
-				toolbarComposite.getParent().layout(true);
 			}
 		}
 
-		if (estimatedTime != null && !estimatedTime.isDisposed()) {
-			estimatedTime.setSelection(getTask().getEstimatedTimeHours());
+		if (estimatedTimeSpinner != null && !estimatedTimeSpinner.isDisposed()) {
+			estimatedTimeSpinner.setSelection(getTask().getEstimatedTimeHours());
 		}
 
 		// TODO refresh notes
+	}
+
+	public boolean isActiveTimeEnabled() {
+		return activeTimeEnabled;
+	}
+
+	public void setActiveTimeEnabled(boolean activeTimeEnabled) {
+		this.activeTimeEnabled = activeTimeEnabled;
+		if (activeTimeComposite != null && !activeTimeComposite.isDisposed()) {
+			updateActiveTime();
+		}
 	}
 
 }

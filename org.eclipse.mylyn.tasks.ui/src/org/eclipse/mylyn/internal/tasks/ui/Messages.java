@@ -63,6 +63,8 @@ public class Messages extends NLS {
 
 	public static String ScheduleTaskMenuContributor_Schedule_for;
 
+	public static String TaskActivationExternalizationParticipant_Task_Activation_History;
+
 	public static String TaskHistoryDropDown_Activate_Task_;
 
 	public static String TaskHistoryDropDown_Deactivate_Task;

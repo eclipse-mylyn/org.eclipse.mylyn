@@ -17,7 +17,9 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.externalization.AbstractExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.core.externalization.ExternalizationManager;
@@ -40,6 +42,13 @@ public class ActivityExternalizationParticipant extends AbstractExternalizationP
 
 	public ActivityExternalizationParticipant(ExternalizationManager manager) {
 		this.manager = manager;
+		MonitorUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(new IPropertyChangeListener() {
+			public void propertyChange(org.eclipse.jface.util.PropertyChangeEvent event) {
+				if (event.getProperty().equals(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED)) {
+					requestSave();
+				}
+			}
+		});
 	}
 
 	@Override
@@ -47,7 +56,8 @@ public class ActivityExternalizationParticipant extends AbstractExternalizationP
 		Assert.isNotNull(context);
 		switch (context.getKind()) {
 		case SAVE:
-			if (ContextCorePlugin.getDefault() != null && ContextCorePlugin.getContextManager() != null) {
+			if (ContextCorePlugin.getDefault() != null && MonitorUiPlugin.getDefault().isActivityTrackingEnabled()
+					&& ContextCorePlugin.getContextManager() != null) {
 				setDirty(false);
 				ContextCorePlugin.getContextManager().saveActivityMetaContext();
 			}
@@ -105,10 +115,14 @@ public class ActivityExternalizationParticipant extends AbstractExternalizationP
 
 	public void elapsedTimeUpdated(ITask task, long newElapsedTime) {
 		if (System.currentTimeMillis() - lastUpdate > 1000 * 60) {
-			setDirty(true);
-			manager.requestSave();
-			lastUpdate = System.currentTimeMillis();
+			requestSave();
 		}
+	}
+
+	private void requestSave() {
+		setDirty(true);
+		manager.requestSave();
+		lastUpdate = System.currentTimeMillis();
 	}
 
 }

@@ -88,4 +88,8 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 		part.dispose();
 	}
 
+	public PlanningPart getPlanningPart() {
+		return part;
+	}
+
 }

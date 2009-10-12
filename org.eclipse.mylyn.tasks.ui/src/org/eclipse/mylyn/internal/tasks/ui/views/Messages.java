@@ -69,6 +69,8 @@ public class Messages extends NLS {
 
 	public static String TaskListSorter_No_Grouping;
 
+	public static String TaskListToolTip_Active_X;
+
 	public static String TaskListToolTip_Automatic_container_for_all_local_tasks;
 
 	public static String TaskListToolTip_Automatic_container_for_repository_tasks;

@@ -35,6 +35,7 @@ import org.eclipse.core.resources.ISaveParticipant;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
@@ -91,6 +92,7 @@ import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.AbstractTaskRepositoryLinkProvider;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IStartup;
@@ -355,6 +357,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private final Set<IRepositoryModelListener> listeners = new HashSet<IRepositoryModelListener>();
 
+	private File activationHistoryFile;
+
 	private static TaskList taskList;
 
 	private static RepositoryModel repositoryModel;
@@ -413,6 +417,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 						}
 					}
 				}
+
 				//taskActivityMonitor.reloadActivityTime();
 			} catch (Throwable t) {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
@@ -444,7 +449,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			activeContextExternalizationParticipant.registerListeners();
 			return new Status(IStatus.OK, TasksUiPlugin.ID_PLUGIN, IStatus.OK, "", null); //$NON-NLS-1$
 		}
-
 	}
 
 	public TasksUiPlugin() {
@@ -514,6 +518,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			taskList.addChangeListener(taskListExternalizationParticipant);
 
 			taskActivityManager = new TaskActivityManager(repositoryManager, taskList);
+
 			taskActivityManager.addActivationListener(taskListExternalizationParticipant);
 
 			// initialize
@@ -578,6 +583,15 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			externalizationManager.addParticipant(ACTIVITY_EXTERNALIZTAION_PARTICIPANT);
 			taskActivityManager.addActivityListener(ACTIVITY_EXTERNALIZTAION_PARTICIPANT);
 			taskActivityMonitor.setExternalizationParticipant(ACTIVITY_EXTERNALIZTAION_PARTICIPANT);
+
+			// initialize externalization for task activation history
+			IPath stateLocation = Platform.getStateLocation(getBundle());
+			activationHistoryFile = stateLocation.append("TaskActivationHistory.xml").toFile(); //$NON-NLS-1$
+			TaskActivationExternalizationParticipant taskActivationExternalizationParticipant = new TaskActivationExternalizationParticipant(
+					externalizationManager, taskList, taskActivityManager.getTaskActivationHistory(),
+					activationHistoryFile);
+			taskActivityManager.addActivationListener(taskActivationExternalizationParticipant);
+			externalizationManager.addParticipant(taskActivationExternalizationParticipant);
 
 			// initialize managers
 			initializeDataSources();
@@ -646,8 +660,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 							repositoryManager.addRepository(taskRepository);
 						}
 					} catch (Throwable t) {
-						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-								"Could not load repository template", t)); //$NON-NLS-1$
+						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
+								"Could not load repository template for repository {0}", template.repositoryUrl), t)); //$NON-NLS-1$
 					}
 				}
 			}
@@ -798,6 +812,26 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		ContextCorePlugin.getContextManager().loadActivityMetaContext();
 		taskActivityMonitor.reloadActivityTime();
 		taskActivityManager.reloadPlanningData();
+
+		if (!activationHistoryFile.exists() && taskActivityManager.getTaskActivationHistory().getSize() == 0) {
+			// fall back to activity history
+			List<ITask> tasks = taskActivityMonitor.getActivationHistory();
+			for (ITask task : tasks) {
+				taskActivityManager.getTaskActivationHistory().addTask((AbstractTask) task);
+			}
+		}
+
+		if (!MonitorUiPlugin.getDefault().getPreferenceStore().getBoolean(
+				MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED + ".checked")) { //$NON-NLS-1$
+			if (!taskActivityMonitor.getActivationHistory().isEmpty()) {
+				// tasks have been active before so fore preference enabled
+				MonitorUiPlugin.getDefault().getPreferenceStore().setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED,
+						true);
+			}
+			MonitorUiPlugin.getDefault().getPreferenceStore().setValue(
+					MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED + ".checked", true); //$NON-NLS-1$
+			MonitorUiPlugin.getDefault().savePluginPreferences();
+		}
 
 		// inform listeners that initialization is complete
 		for (final IRepositoryModelListener listener : listeners) {

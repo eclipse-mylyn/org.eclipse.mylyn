@@ -41,6 +41,8 @@ public class Messages extends NLS {
 
 	public static String TasksUiPreferencePage_Enable_inactivity_timeouts;
 
+	public static String TasksUiPreferencePage_Enable_Time_Tracking;
+
 	public static String TasksUiPreferencePage_Error_applying_Task_List_data_directory_changes;
 
 	public static String TasksUiPreferencePage_Folder_Selection;
@@ -78,6 +80,8 @@ public class Messages extends NLS {
 	public static String TasksUiPreferencePage_Task_Editing;
 
 	public static String TasksUiPreferencePage_Task_Timing;
+
+	public static String TasksUiPreferencePage_Track_Time_Spent;
 
 	public static String TasksUiPreferencePage_Use_the_Restore_dialog_to_recover_missing_tasks;
 

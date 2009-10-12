@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
@@ -42,6 +43,8 @@ public class TaskActivityMonitor {
 
 	private final TaskList taskList;
 
+	private final List<ITask> activationHistory;
+
 	private final AbstractContextListener CONTEXT_LISTENER = new AbstractContextListener() {
 
 		@Override
@@ -64,6 +67,7 @@ public class TaskActivityMonitor {
 		this.taskActivityManager = taskActivityManager;
 		this.contextManager = contextManager;
 		this.taskList = TasksUiPlugin.getTaskList();
+		this.activationHistory = new ArrayList<ITask>();
 	}
 
 	public void start() {
@@ -77,7 +81,7 @@ public class TaskActivityMonitor {
 				if ((event.getDelta().equals(InteractionContextManager.ACTIVITY_DELTA_ACTIVATED))) {
 					AbstractTask activatedTask = taskList.getTask(event.getStructureHandle());
 					if (activatedTask != null) {
-						taskActivityManager.getTaskActivationHistory().addTask(activatedTask);
+						activationHistory.add(activatedTask);
 						return true;
 					}
 				}
@@ -119,6 +123,7 @@ public class TaskActivityMonitor {
 	}
 
 	public void reloadActivityTime() {
+		activationHistory.clear();
 		taskActivityManager.clearActivity();
 		List<InteractionEvent> events = contextManager.getActivityMetaContext().getInteractionHistory();
 		for (InteractionEvent event : events) {
@@ -129,17 +134,21 @@ public class TaskActivityMonitor {
 	/**
 	 * Returns the task corresponding to the interaction event history item at the specified position
 	 */
-	protected ITask getHistoryTaskAt(int pos) {
-		InteractionEvent event = contextManager.getActivityMetaContext().getInteractionHistory().get(pos);
-		if (event.getDelta().equals(InteractionContextManager.ACTIVITY_DELTA_ACTIVATED)) {
-			return TasksUiPlugin.getTaskList().getTask(event.getStructureHandle());
-		} else {
-			return null;
-		}
-	}
+//	protected ITask getHistoryTaskAt(int pos) {
+//		InteractionEvent event = contextManager.getActivityMetaContext().getInteractionHistory().get(pos);
+//		if (event.getDelta().equals(InteractionContextManager.ACTIVITY_DELTA_ACTIVATED)) {
+//			return TasksUiPlugin.getTaskList().getTask(event.getStructureHandle());
+//		} else {
+//			return null;
+//		}
+//	}
 
 	public void setExternalizationParticipant(ActivityExternalizationParticipant participant) {
 		this.externalizationParticipant = participant;
+	}
+
+	public List<ITask> getActivationHistory() {
+		return new ArrayList<ITask>(activationHistory);
 	}
 
 }

@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.commons.core.DateUtil;
+import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
@@ -180,19 +181,16 @@ public class TaskListToolTip extends GradientToolTip {
 		if (element instanceof ScheduledTaskContainer) {
 			ScheduledTaskContainer container = (ScheduledTaskContainer) element;
 			int estimateTotal = 0;
-			long elapsedTotal = 0;
+			long activeTotal = 0;
 			for (ITask child : container.getChildren()) {
 				if (child instanceof AbstractTask) {
 					estimateTotal += ((AbstractTask) child).getEstimatedTimeHours();
-					elapsedTotal += TasksUiPlugin.getTaskActivityManager().getElapsedTime(child,
+					activeTotal += TasksUiPlugin.getTaskActivityManager().getElapsedTime(child,
 							container.getDateRange());
 				}
 			}
 			StringBuilder sb = new StringBuilder();
-			sb.append(NLS.bind(Messages.TaskListToolTip_Estimate, estimateTotal));
-			sb.append("\n"); //$NON-NLS-1$
-			sb.append(NLS.bind(Messages.TaskListToolTip_Elapsed, DateUtil.getFormattedDurationShort(elapsedTotal)));
-			sb.append("\n"); //$NON-NLS-1$
+			appendEstimateAndActive(sb, estimateTotal, activeTotal);
 			return sb.toString();
 		} else if (element instanceof ITask) {
 			ITask task = (ITask) element;
@@ -232,6 +230,17 @@ public class TaskListToolTip extends GradientToolTip {
 		}
 	}
 
+	private void appendEstimateAndActive(StringBuilder sb, int estimateTotal, long activeTotal) {
+		if (!MonitorUiPlugin.getDefault().isActivityTrackingEnabled()) {
+			return;
+		}
+
+		sb.append(NLS.bind(Messages.TaskListToolTip_Estimate, estimateTotal));
+		sb.append("\n"); //$NON-NLS-1$
+		sb.append(NLS.bind(Messages.TaskListToolTip_Active_X, DateUtil.getFormattedDurationShort(activeTotal)));
+		sb.append("\n"); //$NON-NLS-1$
+	}
+
 	private String getRepositoryLabel(String repositoryKind, String repositoryUrl) {
 		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(repositoryKind, repositoryUrl);
 		if (repository != null) {
@@ -245,28 +254,6 @@ public class TaskListToolTip extends GradientToolTip {
 	}
 
 	private String getActivityText(IRepositoryElement element) {
-//		if (element instanceof ScheduledTaskDelegate) {
-//			ScheduledTaskDelegate task = (ScheduledTaskDelegate) element;
-//
-//			StringBuilder sb = new StringBuilder();
-//			Date date = task.getScheduledForDate();
-//			if (date != null) {
-//				sb.append("Scheduled for: ");
-//				sb.append(new SimpleDateFormat("E").format(date)).append(", ");
-//				sb.append(DateFormat.getDateInstance(DateFormat.LONG).format(date));
-//				sb.append(" (").append(DateFormat.getTimeInstance(DateFormat.SHORT).format(date)).append(")\n");
-//			}
-//
-//			long elapsed = TasksUiPlugin.getTaskActivityManager().getElapsedTime(task.getCorrespondingTask(),
-//					task.getDateRangeContainer().getStart(), task.getDateRangeContainer().getEnd());
-//			String elapsedTimeString = DateUtil.getFormattedDurationShort(elapsed);
-//			sb.append("Elapsed: ");
-//			sb.append(elapsedTimeString);
-//			sb.append("\n");
-//
-//			return sb.toString();
-//		} else 
-//			
 		if (element instanceof ITask) {
 			AbstractTask task = (AbstractTask) element;
 
@@ -286,11 +273,8 @@ public class TaskListToolTip extends GradientToolTip {
 				sb.append(NLS.bind(Messages.TaskListToolTip_Scheduled, scheduledDate.toString()));
 				sb.append("\n"); //$NON-NLS-1$
 			}
-
 			long elapsed = TasksUiPlugin.getTaskActivityManager().getElapsedTime(task);
-			sb.append(NLS.bind(Messages.TaskListToolTip_Elapsed, DateUtil.getFormattedDurationShort(elapsed)));
-			sb.append("\n"); //$NON-NLS-1$
-
+			appendEstimateAndActive(sb, (task).getEstimatedTimeHours(), elapsed);
 			return sb.toString();
 		}
 		return null;
