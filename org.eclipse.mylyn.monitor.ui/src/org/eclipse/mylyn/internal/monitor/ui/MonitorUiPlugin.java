@@ -81,26 +81,19 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 	public static final String OBFUSCATED_LABEL = "[obfuscated]"; //$NON-NLS-1$
 
-	public static final String PREF_USER_ACTIVITY_ENABLED = "org.eclipse.mylyn.monitor.user.activity.enabled"; //$NON-NLS-1$
+	public static final String ACTIVITY_TRACKING_ENABLED = "org.eclipse.mylyn.monitor.activity.tracking.enabled"; //$NON-NLS-1$
 
 	private IWorkbenchWindow launchingWorkbenchWindow = null;
 
 	private final org.eclipse.jface.util.IPropertyChangeListener PROPERTY_LISTENER = new org.eclipse.jface.util.IPropertyChangeListener() {
-
 		public void propertyChange(org.eclipse.jface.util.PropertyChangeEvent event) {
 			if (event.getProperty().equals(ActivityContextManager.ACTIVITY_TIMEOUT)
 					|| event.getProperty().equals(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED)) {
 				updateActivityTimout();
-			} else if (event.getProperty().equals(PREF_USER_ACTIVITY_ENABLED)) {
-				if (getPreferenceStore().getBoolean(PREF_USER_ACTIVITY_ENABLED)) {
-					activityContextManager.start();
-				} else {
-					activityContextManager.stop();
-				}
-
+			} else if (event.getProperty().equals(ACTIVITY_TRACKING_ENABLED)) {
+				setActivityTrackingEnabled(getPreferenceStore().getBoolean(ACTIVITY_TRACKING_ENABLED));
 			}
 		}
-
 	};
 
 	protected IWindowListener WINDOW_LISTENER = new IWindowListener() {
@@ -135,6 +128,8 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 		}
 	};
 
+	private boolean activityTrackingEnabled;
+
 	public MonitorUiPlugin() {
 		INSTANCE = this;
 	}
@@ -145,6 +140,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 		getPreferenceStore().setDefault(ActivityContextManager.ACTIVITY_TIMEOUT, DEFAULT_ACTIVITY_TIMEOUT);
 		getPreferenceStore().setDefault(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED, true);
+		getPreferenceStore().setDefault(ACTIVITY_TRACKING_ENABLED, false);
 
 		this.activityContextManager = new ActivityContextManager(new ArrayList<AbstractUserActivityMonitor>(0));
 
@@ -414,9 +410,8 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 			updateActivityTimout();
 
-			if (getPreferenceStore().getBoolean(PREF_USER_ACTIVITY_ENABLED)) {
-				activityContextManager.start();
-			}
+			activityContextManager.start();
+			setActivityTrackingEnabled(getPreferenceStore().getBoolean(ACTIVITY_TRACKING_ENABLED));
 
 			getPreferenceStore().addPropertyChangeListener(PROPERTY_LISTENER);
 
@@ -433,4 +428,13 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 			activityContextManager.setInactivityTimeout(0);
 		}
 	}
+
+	public void setActivityTrackingEnabled(boolean b) {
+		this.activityTrackingEnabled = b;
+	}
+
+	public boolean isActivityTrackingEnabled() {
+		return activityTrackingEnabled;
+	}
+
 }
