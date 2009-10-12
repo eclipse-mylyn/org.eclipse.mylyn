@@ -11,6 +11,10 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFormUtil;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
@@ -24,10 +28,28 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  */
 public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 
+	private class NotesAction extends Action {
+		public NotesAction() {
+			setImageDescriptor(CommonImages.NOTES_SMALL);
+			setToolTipText("Add Private Notes");
+		}
+
+		@Override
+		public void run() {
+			CommonFormUtil.setExpanded(part.getSection(), true);
+			part.getControl().setFocus();
+		}
+	};
+
 	private final PlanningPart part;
 
 	public TaskEditorPlanningPart() {
-		part = new PlanningPart(ExpandableComposite.TWISTIE);
+		part = new PlanningPart(ExpandableComposite.TWISTIE) {
+			@Override
+			protected void fillToolBar(ToolBarManager toolBarManager) {
+				toolBarManager.add(new NotesAction());
+			}
+		};
 	}
 
 	@Override

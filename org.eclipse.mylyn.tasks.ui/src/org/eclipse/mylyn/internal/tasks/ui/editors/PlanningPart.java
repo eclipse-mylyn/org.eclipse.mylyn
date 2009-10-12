@@ -515,6 +515,8 @@ public class PlanningPart extends AbstractLocalEditorPart {
 			toolbarComposite = toolkit.createComposite(section);
 			toolbarComposite.setBackground(null);
 			RowLayout rowLayout = new RowLayout();
+			rowLayout.marginLeft = 0;
+			rowLayout.marginRight = 0;
 			rowLayout.marginTop = 0;
 			rowLayout.marginBottom = 0;
 			rowLayout.center = true;
@@ -523,9 +525,18 @@ public class PlanningPart extends AbstractLocalEditorPart {
 			//createActualTime(toolkit, toolbarComposite);
 			createScheduledText(toolkit, toolbarComposite);
 
-			fillToolbar(toolbarComposite);
-			section.setTextClient(toolbarComposite);
+			ToolBarManager toolBarManager = new ToolBarManager(SWT.FLAT);
+			fillToolBar(toolBarManager);
 
+			// TODO toolBarManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+
+			if (toolBarManager.getSize() > 0) {
+				toolBarManager.createControl(toolbarComposite);
+				section.clientVerticalSpacing = 0;
+				section.descriptionVerticalSpacing = 0;
+			}
+
+			section.setTextClient(toolbarComposite);
 		}
 
 		super.setSection(toolkit, section);
@@ -542,12 +553,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		scheduledText.setBackground(null);
 	}
 
-	private void fillToolbar(Composite parent) {
-//		if (toolBarManager == null) {
-//			toolBarManager = new ToolBarManager(SWT.FLAT | SWT.HORIZONTAL);
-//			toolBarManager.add(new TaskEditorScheduleAction(getTask()));
-//			toolBarManager.createControl(parent);
-//		}
+	protected void fillToolBar(ToolBarManager toolBarManager) {
 	}
 
 	public boolean needsNotes() {
