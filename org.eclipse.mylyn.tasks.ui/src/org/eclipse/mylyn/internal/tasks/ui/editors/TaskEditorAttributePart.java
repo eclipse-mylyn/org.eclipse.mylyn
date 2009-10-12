@@ -45,7 +45,6 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * @author Steffen Pingel
@@ -178,8 +177,8 @@ public class TaskEditorAttributePart extends AbstractTaskEditorSection {
 	}
 
 	@Override
-	protected Control createSectionClient(FormToolkit toolkit, Section section) {
-		attributesComposite = toolkit.createComposite(section);
+	protected Control createContent(FormToolkit toolkit, Composite parent) {
+		attributesComposite = toolkit.createComposite(parent);
 		attributesComposite.addListener(SWT.MouseDown, new Listener() {
 			public void handleEvent(Event event) {
 				Control focus = event.display.getFocusControl();

@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.IFormColors;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
@@ -49,7 +50,11 @@ public class BugzillaPlanningEditorPart extends AbstractTaskEditorPart {
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
 		initialize();
-		Section timeSection = createSection(parent, toolkit, hasIncoming);
+		int style = ExpandableComposite.SHORT_TITLE_BAR | ExpandableComposite.TWISTIE;
+		if (hasIncoming) {
+			style |= ExpandableComposite.EXPANDED;
+		}
+		Section timeSection = createSection(parent, toolkit, style);
 
 		GridLayout gl = new GridLayout();
 		GridData gd = new GridData(SWT.FILL, SWT.NONE, false, false);

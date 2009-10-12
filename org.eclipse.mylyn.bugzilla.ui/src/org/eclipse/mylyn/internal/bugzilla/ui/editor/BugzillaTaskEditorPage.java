@@ -111,7 +111,7 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 						public AbstractTaskEditorPart createPart() {
 							return new BugzillaPlanningEditorPart();
 						}
-					}.setPath(PATH_ATTRIBUTES));
+					}.setPath(ID_PART_ATTRIBUTES + "/" + PATH_PLANNING)); //$NON-NLS-1$
 				}
 			}
 		} catch (CoreException e) {

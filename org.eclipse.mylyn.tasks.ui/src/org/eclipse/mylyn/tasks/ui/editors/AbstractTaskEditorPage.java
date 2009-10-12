@@ -61,6 +61,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.ClearOutgoingAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.DeleteTaskEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewSubTaskAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeEditorAction;
+import org.eclipse.mylyn.internal.tasks.ui.editors.AbstractTaskEditorSection;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.FocusTracker;
 import org.eclipse.mylyn.internal.tasks.ui.editors.Messages;
@@ -780,6 +781,8 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 		createParts(PATH_ACTIONS, bottomComposite, descriptors);
 		createParts(PATH_PEOPLE, bottomComposite, descriptors);
 		bottomComposite.pack(true);
+
+		createSubParts(descriptors);
 	}
 
 	private void createParts(String path, final Composite parent, Collection<TaskEditorPartDescriptor> descriptors) {
@@ -799,6 +802,35 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 					}
 				});
 				it.remove();
+			}
+		}
+	}
+
+	private void createSubParts(Collection<TaskEditorPartDescriptor> descriptors) {
+		for (Iterator<TaskEditorPartDescriptor> it = descriptors.iterator(); it.hasNext();) {
+			final TaskEditorPartDescriptor descriptor = it.next();
+			int i;
+			String path = descriptor.getPath();
+			if (path != null && (i = path.indexOf("/")) != -1) { //$NON-NLS-1$
+				String parentId = path.substring(0, i);
+				final String subPath = path.substring(i + 1);
+				final AbstractTaskEditorPart parentPart = getPart(parentId);
+				if (parentPart instanceof AbstractTaskEditorSection) {
+					SafeRunner.run(new ISafeRunnable() {
+						public void handleException(Throwable e) {
+							StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+									"Error creating task editor part: \"" + descriptor.getId() + "\"", e)); //$NON-NLS-1$ //$NON-NLS-2$
+						}
+
+						public void run() throws Exception {
+							AbstractTaskEditorPart part = descriptor.createPart();
+							part.setPartId(descriptor.getId());
+							initializePart(null, part);
+							((AbstractTaskEditorSection) parentPart).addSubPart(subPath, part);
+						}
+					});
+					it.remove();
+				}
 			}
 		}
 	}
@@ -1196,27 +1228,26 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 	private void initializePart(Composite parent, AbstractTaskEditorPart part) {
 		getManagedForm().addPart(part);
 		part.initialize(this);
-		part.createControl(parent, toolkit);
-		if (part.getControl() != null) {
-			if (ID_PART_ACTIONS.equals(part.getPartId())) {
-				// do not expand horizontally
-				GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(false, false).applyTo(part.getControl());
-			} else {
-				if (part.getExpandVertically()) {
-					GridDataFactory.fillDefaults()
-							.align(SWT.FILL, SWT.FILL)
-							.grab(true, true)
-							.applyTo(part.getControl());
+		if (parent != null) {
+			part.createControl(parent, toolkit);
+			if (part.getControl() != null) {
+				if (ID_PART_ACTIONS.equals(part.getPartId())) {
+					// do not expand horizontally
+					GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(false, false).applyTo(
+							part.getControl());
 				} else {
-					GridDataFactory.fillDefaults()
-							.align(SWT.FILL, SWT.TOP)
-							.grab(true, false)
-							.applyTo(part.getControl());
+					if (part.getExpandVertically()) {
+						GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(
+								part.getControl());
+					} else {
+						GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, false).applyTo(
+								part.getControl());
+					}
 				}
-			}
-			// for outline
-			if (ID_PART_COMMENTS.equals(part.getPartId())) {
-				EditorUtil.setMarker(part.getControl(), TaskEditorOutlineNode.LABEL_COMMENTS);
+				// for outline
+				if (ID_PART_COMMENTS.equals(part.getPartId())) {
+					EditorUtil.setMarker(part.getControl(), TaskEditorOutlineNode.LABEL_COMMENTS);
+				}
 			}
 		}
 	}
