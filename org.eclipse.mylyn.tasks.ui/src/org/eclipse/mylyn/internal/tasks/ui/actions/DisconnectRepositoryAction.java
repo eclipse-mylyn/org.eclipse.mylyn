@@ -17,6 +17,8 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryDelta;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryDelta.Type;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.Messages;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -43,7 +45,8 @@ public class DisconnectRepositoryAction extends Action implements ISelectionChan
 	@Override
 	public void run() {
 		repository.setOffline(isChecked());
-		TasksUiPlugin.getRepositoryManager().notifyRepositorySettingsChanged(repository);
+		TasksUiPlugin.getRepositoryManager().notifyRepositorySettingsChanged(repository,
+				new TaskRepositoryDelta(Type.OFFLINE));
 	}
 
 	@Deprecated

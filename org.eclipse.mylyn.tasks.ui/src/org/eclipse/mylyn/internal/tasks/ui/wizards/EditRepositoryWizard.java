@@ -19,6 +19,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryDelta;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryDelta.Type;
 import org.eclipse.mylyn.internal.tasks.ui.RefactorRepositoryUrlOperation;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -78,7 +80,8 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 			if (oldUrl != null && newUrl != null && !oldUrl.equals(newUrl)) {
 				TasksUiPlugin.getRepositoryManager().notifyRepositoryUrlChanged(repository, oldUrl);
 			}
-			TasksUiPlugin.getRepositoryManager().notifyRepositorySettingsChanged(repository);
+			TasksUiPlugin.getRepositoryManager().notifyRepositorySettingsChanged(repository,
+					new TaskRepositoryDelta(Type.ALL));
 			TasksUiPlugin.getExternalizationManager().requestSave();
 			return true;
 		}

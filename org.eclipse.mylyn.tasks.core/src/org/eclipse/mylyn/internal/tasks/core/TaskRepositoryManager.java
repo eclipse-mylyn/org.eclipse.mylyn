@@ -31,6 +31,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryDelta.Type;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryListener;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
@@ -68,7 +69,8 @@ public class TaskRepositoryManager implements IRepositoryManager {
 	private final PropertyChangeListener PROPERTY_CHANGE_LISTENER = new PropertyChangeListener() {
 
 		public void propertyChange(PropertyChangeEvent evt) {
-			TaskRepositoryManager.this.notifyRepositorySettingsChanged((TaskRepository) evt.getSource());
+			TaskRepositoryManager.this.notifyRepositorySettingsChanged((TaskRepository) evt.getSource(),
+					new TaskRepositoryDelta(Type.PROPERTY, evt.getPropertyName()));
 		}
 	};
 
@@ -361,6 +363,11 @@ public class TaskRepositoryManager implements IRepositoryManager {
 	}
 
 	public void notifyRepositorySettingsChanged(final TaskRepository repository) {
+		notifyRepositorySettingsChanged(repository, new TaskRepositoryDelta(Type.ALL));
+	}
+
+	public void notifyRepositorySettingsChanged(final TaskRepository repository, TaskRepositoryDelta delta) {
+		final TaskRepositoryChangeEvent event = new TaskRepositoryChangeEvent(this, repository, delta);
 		for (final IRepositoryListener listener : listeners) {
 			SafeRunner.run(new ISafeRunnable() {
 				public void handleException(Throwable e) {
@@ -369,6 +376,9 @@ public class TaskRepositoryManager implements IRepositoryManager {
 				}
 
 				public void run() throws Exception {
+					if (listener instanceof IRepositoryChangeListener) {
+						((IRepositoryChangeListener) listener).repositoryChanged(event);
+					}
 					listener.repositorySettingsChanged(repository);
 				}
 			});

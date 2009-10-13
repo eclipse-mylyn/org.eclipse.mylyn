@@ -20,7 +20,9 @@ import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.commons.net.UnsupportedRequestException;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryDelta;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryLocation;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryDelta.Type;
 import org.eclipse.mylyn.internal.tasks.ui.dialogs.TaskRepositoryCredentialsDialog;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.swt.widgets.Shell;
@@ -152,7 +154,8 @@ public class TaskRepositoryLocationUi extends TaskRepositoryLocation {
 			AuthenticationCredentials credentials = new AuthenticationCredentials(dialog.getUserName(),
 					dialog.getPassword());
 			taskRepository.setCredentials(authType, credentials, dialog.getSavePassword());
-			TasksUiPlugin.getRepositoryManager().notifyRepositorySettingsChanged(taskRepository);
+			TasksUiPlugin.getRepositoryManager().notifyRepositorySettingsChanged(taskRepository,
+					new TaskRepositoryDelta(Type.CREDENTIALS, authType));
 		}
 	}
 

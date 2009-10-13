@@ -67,7 +67,9 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryDelta;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryDelta.Type;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataStore;
 import org.eclipse.mylyn.internal.tasks.core.externalization.ExternalizationManager;
@@ -476,7 +478,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		}
 	}
 
-	@SuppressWarnings({ "restriction" })
+	@SuppressWarnings("restriction")
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
@@ -530,10 +532,11 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				if (proxyService != null) {
 					proxyChangeListener = new IProxyChangeListener() {
 						public void proxyInfoChanged(IProxyChangeEvent event) {
-							List<TaskRepository> repos = repositoryManager.getAllRepositories();
-							for (TaskRepository repo : repos) {
-								if (repo.isDefaultProxyEnabled()) {
-									repositoryManager.notifyRepositorySettingsChanged(repo);
+							List<TaskRepository> repositories = repositoryManager.getAllRepositories();
+							for (TaskRepository repository : repositories) {
+								if (repository.isDefaultProxyEnabled()) {
+									repositoryManager.notifyRepositorySettingsChanged(repository,
+											new TaskRepositoryDelta(Type.PROYX));
 								}
 							}
 						}
