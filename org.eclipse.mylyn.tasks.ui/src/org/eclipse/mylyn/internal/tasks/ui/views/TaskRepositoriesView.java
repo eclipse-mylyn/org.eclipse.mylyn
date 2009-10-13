@@ -299,13 +299,15 @@ public class TaskRepositoriesView extends ViewPart {
 
 		@Override
 		public void repositorySettingsChanged(TaskRepository repository) {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					if (!getViewer().getControl().isDisposed()) {
-						getViewer().refresh(true);
+			if (PlatformUI.isWorkbenchRunning() && !PlatformUI.getWorkbench().getDisplay().isDisposed()) {
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						if (!getViewer().getControl().isDisposed()) {
+							getViewer().refresh(true);
+						}
 					}
-				}
-			});
+				});
+			}
 		}
 
 	}
