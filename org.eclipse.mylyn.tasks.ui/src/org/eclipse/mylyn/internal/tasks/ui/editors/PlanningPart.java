@@ -450,13 +450,12 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		if (show && (elapsedTime > 0 || getTask().isActive())) {
 			if (activeTimeComposite != null && !activeTimeComposite.isVisible()) {
 				activeTimeComposite.setVisible(true);
-
-				String elapsedTimeString = DateUtil.getFormattedDurationShort(elapsedTime);
-				if (elapsedTimeString.equals("")) { //$NON-NLS-1$
-					elapsedTimeString = Messages.TaskEditorPlanningPart_0_SECOUNDS;
-				}
-				activeTimeText.setText(elapsedTimeString);
 			}
+			String elapsedTimeString = DateUtil.getFormattedDurationShort(elapsedTime);
+			if (elapsedTimeString.equals("")) { //$NON-NLS-1$
+				elapsedTimeString = Messages.TaskEditorPlanningPart_0_SECOUNDS;
+			}
+			activeTimeText.setText(elapsedTimeString);
 		} else {
 			if (activeTimeComposite != null) {
 				activeTimeComposite.setVisible(false);
