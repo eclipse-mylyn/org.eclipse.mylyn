@@ -332,7 +332,7 @@ public class WebUtil {
 
 		Future<T> future = CommonsNetPlugin.getExecutorService().submit(request);
 		while (true) {
-			if (subMonitor.isCanceled()) {
+			if (monitor.isCanceled()) {
 				request.abort();
 
 				// wait for executor to finish
