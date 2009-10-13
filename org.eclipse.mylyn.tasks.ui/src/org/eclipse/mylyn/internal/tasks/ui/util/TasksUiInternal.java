@@ -1027,18 +1027,18 @@ public class TasksUiInternal {
 	}
 
 	/**
-	 * Clean text for use as the text of an action to ensure that it is displayed properly
+	 * Cleans text for use as the text of an action to ensure that it is displayed properly.
 	 * 
-	 * @return The cleaned text
+	 * @return the cleaned text
 	 */
-	public static String cleanTextForAction(String taskDescription) {
+	public static String cleanTextForAction(String label) {
 		// a tab at the end of the text will make sure that the @ will not create a weird space in the action text
 		// bug 287347: @ at start of task name cause a weird space in activation history menu
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=287347
-		if (taskDescription.contains("@")) { //$NON-NLS-1$
-			taskDescription += "\t"; //$NON-NLS-1$
+		if (label.contains("@")) { //$NON-NLS-1$
+			label += "\t"; //$NON-NLS-1$
 		}
-		return taskDescription;
+		return CommonUiUtil.toLabel(label);
 	}
 
 	public static void executeCommand(IServiceLocator serviceLocator, String commandId, String title, Object object,
