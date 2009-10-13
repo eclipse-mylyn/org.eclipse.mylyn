@@ -33,7 +33,7 @@ import org.osgi.framework.BundleContext;
 /**
  * The activator class controls the plug-in life cycle
  */
-// TODO 3.3 change the name of this class to avoid the word "focused"
+// TODO 3.4 change the name of this class to avoid the word "focused"
 public class FocusedTeamUiPlugin extends AbstractUIPlugin {
 
 	public static final String ID_PLUGIN = "org.eclipse.mylyn.team.ui"; //$NON-NLS-1$

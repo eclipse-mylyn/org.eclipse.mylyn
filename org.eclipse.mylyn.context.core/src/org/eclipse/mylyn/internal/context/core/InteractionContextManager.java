@@ -893,7 +893,6 @@ public class InteractionContextManager implements IInteractionContextManager {
 	/**
 	 * Manipulates interest for the active context.
 	 */
-	// TODO 3.3 revise or remove this and it's helper
 	@Deprecated
 	public boolean manipulateInterestForElement(IInteractionElement element, boolean increment, boolean forceLandmark,
 			boolean preserveUninteresting, String sourceId) {

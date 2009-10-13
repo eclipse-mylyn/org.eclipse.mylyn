@@ -17,8 +17,6 @@ import java.util.List;
 import org.eclipse.compare.internal.CompareEditor;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
@@ -120,29 +118,6 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 				// disabled per bug 291107: showEditorCloseWarning();
 				ContextCorePlugin.getContextManager().manipulateInterestForElement(element, false, false, false,
 						SOURCE_ID);
-			}
-		}
-	}
-
-	private void showEditorCloseWarning() {
-		if (ContextCore.getContextManager().isContextActive()
-				&& org.eclipse.mylyn.internal.context.ui.ContextUiPlugin.getDefault()
-						.getPreferenceStore()
-						.getBoolean(
-								org.eclipse.mylyn.internal.context.ui.IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING)) {
-			try {
-				if (!CoreUtil.TEST_MODE) {
-					MessageDialog.openInformation(
-							PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-							"Mylyn", //$NON-NLS-1$
-							Messages.EditorInteractionMonitor_Closing_a_file_automatically_removes_it_from_the_Task_Context);
-				}
-			} finally {
-				org.eclipse.mylyn.internal.context.ui.ContextUiPlugin.getDefault()
-						.getPreferenceStore()
-						.setValue(
-								org.eclipse.mylyn.internal.context.ui.IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING,
-								false);
 			}
 		}
 	}

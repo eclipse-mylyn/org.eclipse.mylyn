@@ -27,6 +27,8 @@ public class Messages extends NLS {
 
 	public static String ContextEditorFormPage_No_context_active;
 
+	public static String ContextEditorFormPage_No_context_attachments_Error;
+
 	public static String ContextEditorFormPage_Actions;
 
 	public static String ContextEditorFormPage_Activate_task_to_edit_context;
@@ -34,6 +36,8 @@ public class Messages extends NLS {
 	public static String ContextEditorFormPage_Activate_task_to_remove_invisible;
 
 	public static String ContextEditorFormPage_Attach_context_;
+
+	public static String ContextEditorFormPage_Context_is_empty_Error;
 
 	public static String ContextEditorFormPage_Copy_Context_to_;
 

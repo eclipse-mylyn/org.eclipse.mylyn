@@ -90,7 +90,7 @@ public class ActiveFoldingListener extends AbstractContextListener {
 	}
 
 	public static void resetProjection(JavaEditor javaEditor) {
-		// XXX 3.3 remove?
+		// XXX 3.4 remove?
 	}
 
 	public void updateFolding() {

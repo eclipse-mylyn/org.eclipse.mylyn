@@ -296,7 +296,7 @@ public class ContextEditorFormPage extends FormPage {
 			Hyperlink retrieveHyperlink = toolkit.createHyperlink(sectionClient,
 					Messages.ContextEditorFormPage_Retrieve_Context_, SWT.NONE);
 			bindCommand(retrieveHyperlink, IContextUiConstants.ID_COMMAND_RETRIEVE_CONTEXT,
-					"The task does not have any context attachments.");
+					Messages.ContextEditorFormPage_No_context_attachments_Error);
 		}
 
 		Label copyImage = toolkit.createLabel(sectionClient, ""); //$NON-NLS-1$
@@ -304,14 +304,14 @@ public class ContextEditorFormPage extends FormPage {
 		Hyperlink copyHyperlink = toolkit.createHyperlink(sectionClient,
 				Messages.ContextEditorFormPage_Copy_Context_to_, SWT.NONE);
 		bindCommand(copyHyperlink, IContextUiConstants.ID_COMMAND_COPY_CONTEXT,
-				"The task context is empty. Activate the task to build a context.");
+				Messages.ContextEditorFormPage_Context_is_empty_Error);
 
 		Label clearImage = toolkit.createLabel(sectionClient, ""); //$NON-NLS-1$
 		clearImage.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_CLEAR));
 		Hyperlink clearHyperlink = toolkit.createHyperlink(sectionClient, Messages.ContextEditorFormPage_RemoveAll,
 				SWT.NONE);
 		bindCommand(clearHyperlink, IContextUiConstants.ID_COMMAND_CLEAR_CONTEXT,
-				"The task context is empty. Activate the task to build a context.");
+				Messages.ContextEditorFormPage_Context_is_empty_Error);
 		section.setExpanded(true);
 	}
 
