@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
+import java.util.Date;
+
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
@@ -100,7 +102,7 @@ public class TaskListSynchronizationScheduler implements IUserAttentionListener 
 	private synchronized void cancel() {
 		// prevent listener from rescheduling due to cancel
 		if (TRACE_ENABLED) {
-			System.err.println("Canceling synchronization in " + DateUtil.getFormattedDurationShort(this.scheduledTime - System.currentTimeMillis())); //$NON-NLS-1$
+			System.err.println("Canceling synchronization scheduled to run in " + DateUtil.getFormattedDurationShort(this.scheduledTime - System.currentTimeMillis())); //$NON-NLS-1$
 		}
 		refreshJob.removeJobChangeListener(jobListener);
 		refreshJob.cancel();
@@ -126,8 +128,8 @@ public class TaskListSynchronizationScheduler implements IUserAttentionListener 
 			this.scheduledTime = 0;
 
 			if (refreshJob != null) {
-				refreshJob.removeJobChangeListener(jobListener);
 				cancel();
+				refreshJob.removeJobChangeListener(jobListener);
 				refreshJob = null;
 			}
 
@@ -143,7 +145,7 @@ public class TaskListSynchronizationScheduler implements IUserAttentionListener 
 		synchronized (this) {
 			if (!userActive) {
 				if (TRACE_ENABLED) {
-					System.err.println("User activity detected"); //$NON-NLS-1$
+					trace("User activity detected"); //$NON-NLS-1$
 				}
 				this.userActive = true;
 				// reset inactive interval each time the user becomes active
@@ -157,6 +159,10 @@ public class TaskListSynchronizationScheduler implements IUserAttentionListener 
 				}
 			}
 		}
+	}
+
+	private void trace(String message) {
+		System.err.println("[" + new Date() + "] " + message); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public void userAttentionLost() {

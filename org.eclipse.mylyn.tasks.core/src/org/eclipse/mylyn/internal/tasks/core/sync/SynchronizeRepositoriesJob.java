@@ -22,6 +22,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
@@ -44,6 +45,8 @@ import org.eclipse.osgi.util.NLS;
  * @author Steffen Pingel
  */
 public class SynchronizeRepositoriesJob extends SynchronizationJob {
+
+	private static final boolean TRACE_ENABLED = Boolean.valueOf(Platform.getDebugOption("org.eclipse.mylyn.tasks.core/debug/synchronization")); //$NON-NLS-1$
 
 	private final TaskList taskList;
 
@@ -87,12 +90,18 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 		try {
 			monitor.beginTask(Messages.SynchronizeRepositoriesJob_Processing, repositories.size() * 100);
 
+			if (TRACE_ENABLED) {
+				trace("Starting repository synchronization");
+			}
 			for (TaskRepository repository : repositories) {
 				if (monitor.isCanceled()) {
 					return Status.CANCEL_STATUS;
 				}
 
 				if (repository.isOffline()) {
+					if (TRACE_ENABLED) {
+						trace("Skipping synchronization for " + repository.getRepositoryLabel());
+					}
 					monitor.worked(100);
 					continue;
 				}
@@ -115,13 +124,21 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 				if (isUser() || queries.isEmpty()) {
 					monitor.worked(20);
 				} else {
+					if (TRACE_ENABLED) {
+						trace("Updating configurarion for " + repository.getRepositoryLabel());
+					}
 					// occasionally request update of repository configuration attributes as part of background synchronizations
 					updateRepositoryConfiguration(repository, connector, new SubProgressMonitor(monitor, 20));
 				}
 
+				if (TRACE_ENABLED) {
+					trace("Synchronizing queries for " + repository.getRepositoryLabel());
+				}
 				updateQueries(repository, connector, queries, monitor);
 			}
-
+			if (TRACE_ENABLED) {
+				trace("Completed repository synchronization");
+			}
 			// it's better to remove the job from the progress view instead of having it blocked until all child jobs finish
 //			if (isUser()) {
 //				Job.getJobManager().join(family, monitor);
@@ -190,4 +207,9 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 			monitor.done();
 		}
 	}
+
+	private void trace(String message) {
+		System.err.println("[" + new Date() + "] " + message); //$NON-NLS-1$ //$NON-NLS-2$
+	}
+
 }
