@@ -87,7 +87,6 @@ then
  # extract site
 
  /bin/rm $TMP || true
- unzip e3.3
  unzip e3.4
  unzip extras
  unzip incubator
@@ -122,13 +121,11 @@ fi
 
 echo Unzipping signed files, output is logged to $DST/sign.log
 /usr/bin/unzip -o -d $TMP $OUT/mylyn.zip >> $DST/sign.log
-rezip e3.3
 rezip e3.4
 rezip extras
 rezip incubator
 
-pack e3.3 "Mylyn for Eclipse 3.3"
-pack e3.4 "Mylyn for Eclipse 3.4 and 3.5"
+pack e3.4 "Mylyn for Eclipse 3.4, 3.5 and 3.6"
 pack extras "Mylyn Extras"
 pack incubator "Mylyn Incubator"
 
