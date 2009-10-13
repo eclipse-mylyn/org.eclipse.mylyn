@@ -68,6 +68,9 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 
 	@Override
 	public boolean isPageComplete() {
+		// reset error message to maintain backward compatibility: bug 288892
+		setErrorMessage(null);
+
 		String queryTitle = getQueryTitle();
 		if (queryTitle == null || queryTitle.equals("")) { //$NON-NLS-1$
 			setMessage(Messages.AbstractRepositoryQueryPage_Please_specify_a_title_for_the_query);
