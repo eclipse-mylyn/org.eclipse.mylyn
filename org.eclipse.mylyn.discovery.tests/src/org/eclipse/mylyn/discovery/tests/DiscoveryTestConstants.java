@@ -11,7 +11,11 @@
 
 package org.eclipse.mylyn.discovery.tests;
 
-public abstract class DiscoveryTests {
+/**
+ * @author David Green
+ */
+public abstract class DiscoveryTestConstants {
+
 	/**
 	 * the URL of the mylyn discovery directory, may be overridden using the system property
 	 * <tt>mylyn.discovery.directory</tt>
@@ -19,6 +23,7 @@ public abstract class DiscoveryTests {
 	public static final String DEFAULT_MYLYN_DISCOVERY_URL = System.getProperty("mylyn.discovery.directory",
 			"http://www.eclipse.org/mylyn/discovery/directory.xml");
 
-	private DiscoveryTests() {
+	private DiscoveryTestConstants() {
 	}
+	
 }

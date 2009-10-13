@@ -15,7 +15,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylyn.discovery.tests.DiscoveryTests;
+import org.eclipse.mylyn.discovery.tests.DiscoveryTestConstants;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDiscovery;
 import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryConnector;
 import org.eclipse.mylyn.internal.discovery.core.model.RemoteBundleDiscoveryStrategy;
@@ -26,7 +26,6 @@ import org.eclipse.mylyn.internal.discovery.core.model.RemoteBundleDiscoveryStra
  * 
  * @author David Green
  */
-@SuppressWarnings("restriction")
 public class ConnectorDiscoveryRemoteTest extends TestCase {
 
 	private ConnectorDiscovery connectorDiscovery;
@@ -39,7 +38,7 @@ public class ConnectorDiscoveryRemoteTest extends TestCase {
 
 		connectorDiscovery.getDiscoveryStrategies().clear();
 		RemoteBundleDiscoveryStrategy remoteStrategy = new RemoteBundleDiscoveryStrategy();
-		remoteStrategy.setDirectoryUrl(DiscoveryTests.DEFAULT_MYLYN_DISCOVERY_URL);
+		remoteStrategy.setDirectoryUrl(DiscoveryTestConstants.DEFAULT_MYLYN_DISCOVERY_URL);
 		connectorDiscovery.getDiscoveryStrategies().add(remoteStrategy);
 	}
 

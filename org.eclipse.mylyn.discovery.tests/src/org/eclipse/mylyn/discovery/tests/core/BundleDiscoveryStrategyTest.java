@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.discovery.tests.core.mock.MockBundleDiscoveryStrategy;
 import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryCategory;
+import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryCertification;
 import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryConnector;
 import org.eclipse.mylyn.internal.discovery.core.model.Policy;
 
@@ -34,6 +35,8 @@ public class BundleDiscoveryStrategyTest extends TestCase {
 
 	private final List<DiscoveryConnector> connectors = new ArrayList<DiscoveryConnector>();
 
+	private final List<DiscoveryCertification> certifications = new ArrayList<DiscoveryCertification>();
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -41,6 +44,7 @@ public class BundleDiscoveryStrategyTest extends TestCase {
 		discoveryStrategy.setPolicy(new Policy(true));
 		discoveryStrategy.setCategories(categories);
 		discoveryStrategy.setConnectors(connectors);
+		discoveryStrategy.setCertifications(certifications);
 	}
 
 	public void testDiscovery() throws CoreException {
@@ -52,6 +56,8 @@ public class BundleDiscoveryStrategyTest extends TestCase {
 		assertNotNull(category);
 		DiscoveryConnector connector = findConnectorById("org.eclipse.mylyn.discovery.tests.connectorDescriptor1");
 		assertNotNull(connector);
+		DiscoveryCertification certification = findCertificationById("org.eclipse.mylyn.discovery.tests.certification1");
+		assertNotNull(certification);
 	}
 
 	public void testDiscoveryNoCategoriesPolicy() throws CoreException {
@@ -78,4 +84,14 @@ public class BundleDiscoveryStrategyTest extends TestCase {
 		}
 		return null;
 	}
+
+	private DiscoveryCertification findCertificationById(String id) {
+		for (DiscoveryCertification descriptor : certifications) {
+			if (id.equals(descriptor.getId())) {
+				return descriptor;
+			}
+		}
+		return null;
+	}
+
 }
