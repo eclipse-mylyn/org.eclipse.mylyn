@@ -370,7 +370,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 	private void addNotesLabelText(final FormToolkit toolkit, Composite composite) {
 
-		if (notesString.length() == 0) {
+		if (notesString.length() == 0 && !noteEditor.getViewer().getTextWidget().isFocusControl()) {
 			notesString = PERSONAL_NOTES;
 			noteEditor.setText(notesString);
 		}
