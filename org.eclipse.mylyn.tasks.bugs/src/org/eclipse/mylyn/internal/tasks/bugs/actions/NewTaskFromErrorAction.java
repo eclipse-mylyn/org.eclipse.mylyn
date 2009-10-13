@@ -45,6 +45,8 @@ public class NewTaskFromErrorAction implements IObjectActionDelegate {
 	 * @param includeChildren
 	 *            Indicates if it should include subentries, if the {@link LogEntry} have any
 	 */
+	// FIXME 3.4 re-enable (bug 279267)
+	@SuppressWarnings("unused")
 	private void buildDescriptionFromLogEntry(LogEntry entry, StringBuilder sb, boolean includeChildren) {
 		sb.append(Messages.NewTaskFromErrorAction_ERROR_LOG_DATE);
 		sb.append(entry.getDate());

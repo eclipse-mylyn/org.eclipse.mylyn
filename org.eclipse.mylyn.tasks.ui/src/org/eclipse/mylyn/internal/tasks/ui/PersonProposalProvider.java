@@ -176,7 +176,7 @@ public class PersonProposalProvider implements IContentProposalProvider {
 		addAddress(task.getOwner(), addressSet);
 	}
 
-	// TODO 3.3 re-implement
+	// TODO 3.4 re-implement
 	private void addAddresses(TaskData data, Set<String> addressSet) {
 		// addressSet.add(data.getAssignedTo());  // owner
 		//		addAddress(data.getReporter(), addressSet); // ??

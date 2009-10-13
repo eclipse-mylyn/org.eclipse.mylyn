@@ -56,6 +56,7 @@ public class MockTask extends AbstractTask {
 		return "Mock Task: " + super.getHandleIdentifier();
 	}
 
+	@Deprecated
 	@Override
 	public boolean isLocal() {
 		// ignore

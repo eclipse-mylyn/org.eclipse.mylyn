@@ -648,6 +648,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 
 	private static class TaskComment {
 
+		@SuppressWarnings("unused")
 		public int number;
 
 		public String author;
@@ -660,8 +661,10 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 
 		public String timeWorked;
 
+		@SuppressWarnings("unused")
 		public boolean hasAttachment;
 
+		@SuppressWarnings("unused")
 		public String attachmentId;
 
 		public TaskComment(int num) {

@@ -103,8 +103,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	// A Map from Java's  Platform to Buzilla's
 	private static final Map<String, String> java2buzillaPlatformMap = new HashMap<String, String>();
 
-	private static final String OPTION_ALL = "All"; //$NON-NLS-1$
-
 	static {
 		enSetting = new BugzillaLanguageSettings(IBugzillaConstants.DEFAULT_LANG);
 		enSetting.addLanguageAttribute("error_login", "Login"); //$NON-NLS-1$ //$NON-NLS-2$

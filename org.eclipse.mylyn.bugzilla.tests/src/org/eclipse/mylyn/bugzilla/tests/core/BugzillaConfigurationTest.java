@@ -120,8 +120,7 @@ public class BugzillaConfigurationTest extends TestCase {
 
 		}
 
-		SaxConfigurationContentHandler contentHandler = new SaxConfigurationContentHandler(
-				new BugzillaRepositoryConnector());
+		SaxConfigurationContentHandler contentHandler = new SaxConfigurationContentHandler();
 		final XMLReader reader = XMLReaderFactory.createXMLReader();
 		reader.setContentHandler(contentHandler);
 		reader.setErrorHandler(new ErrorHandler() {

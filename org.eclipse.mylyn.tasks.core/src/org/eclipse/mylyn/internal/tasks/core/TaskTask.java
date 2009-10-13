@@ -34,6 +34,7 @@ public class TaskTask extends AbstractTask {
 		return taskKey;
 	}
 
+	@Deprecated
 	@Override
 	public boolean isLocal() {
 		return false;

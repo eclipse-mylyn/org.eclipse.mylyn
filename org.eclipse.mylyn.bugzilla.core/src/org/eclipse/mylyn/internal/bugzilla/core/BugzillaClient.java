@@ -584,7 +584,7 @@ public class BugzillaClient {
 						for (String type : VALID_CONFIG_CONTENT_TYPES) {
 							if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
 								RepositoryConfigurationFactory configFactory = new RepositoryConfigurationFactory(
-										stream, getCharacterEncoding(), connector);
+										stream, getCharacterEncoding());
 
 								repositoryConfiguration = configFactory.getConfiguration();
 

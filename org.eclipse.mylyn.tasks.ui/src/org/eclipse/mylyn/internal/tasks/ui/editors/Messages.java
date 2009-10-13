@@ -53,8 +53,6 @@ public class Messages extends NLS {
 
 	public static String BrowserPreviewViewer_The_repository_does_not_support_HTML_preview;
 
-	public static String CheckboxMultiSelectAttributeEditor_Edit;
-
 	public static String CheckboxMultiSelectAttributeEditor_Select_X;
 
 	public static String CommentGroupStrategy_Current;
@@ -70,8 +68,6 @@ public class Messages extends NLS {
 	public static String PersonAttributeEditor_Insert_My_User_Id_Tooltip;
 
 	public static String PlanningPageFactory_Private;
-
-	public static String PlanningPart_Estimated_Time_Hours;
 
 	public static String PlanningPart_Personal_Notes;
 
@@ -153,7 +149,7 @@ public class Messages extends NLS {
 
 	public static String TaskEditorPlanningPart_Active;
 
-	public static String TaskEditorPlanningPart_Clear;
+	public static String TaskEditorPlanningPart_Add_Private_Notes_Tooltip;
 
 	public static String TaskEditorPlanningPart_Confirm_Activity_Time_Deletion;
 
@@ -163,23 +159,17 @@ public class Messages extends NLS {
 
 	public static String TaskEditorPlanningPart_Estimated;
 
-	public static String TaskEditorPlanningPart_Reset;
-
 	public static String TaskEditorPlanningPart_Scheduled;
 
 	public static String TaskEditorPlanningPart_TaskEditorPlanningPart_tooltip;
 
 	public static String TaskEditorPlanningPart_Time_working_on_this_task;
 
-	public static String TaskEditorPlanningPart_No_scheduled_date;
-
 	public static String TaskEditorRichTextPart_Browser_Preview;
 
 	public static String TaskEditorRichTextPart_Edit_Tooltip;
 
 	public static String TaskEditorRichTextPart_Maximize;
-
-	public static String TaskEditorRichTextPart_Preview;
 
 	public static String TaskEditorSummaryPart_Summary;
 

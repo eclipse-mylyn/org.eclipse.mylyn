@@ -22,6 +22,7 @@ public class LocalTask extends AbstractTask {
 		super(LocalRepositoryConnector.REPOSITORY_URL, taskId, summary);
 	}
 
+	@Deprecated
 	@Override
 	public boolean isLocal() {
 		return true;
@@ -37,6 +38,7 @@ public class LocalTask extends AbstractTask {
 		return true;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public String getLastReadTimeStamp() {
 		return SYNC_DATE_NOW;

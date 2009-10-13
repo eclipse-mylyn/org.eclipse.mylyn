@@ -199,11 +199,7 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 
 	private String currentCustomOptionName = ""; //$NON-NLS-1$
 
-	private final BugzillaRepositoryConnector connector;
-
-	public SaxConfigurationContentHandler(BugzillaRepositoryConnector connector) {
-		super();
-		this.connector = connector;
+	public SaxConfigurationContentHandler() {
 		configuration = new RepositoryConfiguration();
 	}
 

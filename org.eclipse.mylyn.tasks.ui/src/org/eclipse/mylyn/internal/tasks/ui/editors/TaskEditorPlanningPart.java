@@ -31,7 +31,7 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 	private class NotesAction extends Action {
 		public NotesAction() {
 			setImageDescriptor(CommonImages.NOTES_SMALL);
-			setToolTipText("Add Private Notes");
+			setToolTipText(Messages.TaskEditorPlanningPart_Add_Private_Notes_Tooltip);
 		}
 
 		@Override

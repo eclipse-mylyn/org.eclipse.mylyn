@@ -77,8 +77,6 @@ public class Messages extends NLS {
 
 	public static String TaskListToolTip_Due;
 
-	public static String TaskListToolTip_Elapsed;
-
 	public static String TaskListToolTip_Estimate;
 
 	public static String TaskListToolTip_Please_synchronize_manually_for_full_error_message;

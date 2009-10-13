@@ -126,7 +126,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 		assertEquals("httpPassword", map.get(AUTH_HTTP_PASSWORD));
 	}
 
-	// FIXME 3.3 re-enable test
+	// FIXME 3.4 re-enable test
 //	public void testMigrationToSecureStorage() throws Exception {
 //		TaskRepository repository1 = new TaskRepository("bugzilla", "http://repository1/");
 //

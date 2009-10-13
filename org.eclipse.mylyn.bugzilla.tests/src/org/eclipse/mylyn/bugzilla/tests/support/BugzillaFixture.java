@@ -219,9 +219,6 @@ public class BugzillaFixture extends TestFixture {
 	}
 
 	public RepositoryResponse submitTask(TaskData taskData, BugzillaClient client) throws IOException, CoreException {
-		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
-		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(repository());
-		final TaskData[] newData = new TaskData[1];
 		RepositoryResponse result = client.postTaskData(taskData, null);
 		return result;
 	}
