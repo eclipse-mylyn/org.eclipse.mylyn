@@ -119,7 +119,7 @@ public class JavaEditingMonitorTest extends AbstractJavaContextTest {
 		monitor.handleWorkbenchPartSelection(editorPart, calleeSelection, false);
 
 		assertEquals(0, editingCount);
-		assertEquals(2, selectingCount);
+		assertEquals(1, selectingCount);
 
 		// select it again
 		monitor.handleWorkbenchPartSelection(editorPart, calleeSelection, false);
@@ -144,7 +144,7 @@ public class JavaEditingMonitorTest extends AbstractJavaContextTest {
 		monitor.handleWorkbenchPartSelection(editorPart, calleeSelection, false);
 
 		assertEquals(0, editingCount);
-		assertEquals(2, selectingCount);
+		assertEquals(1, selectingCount);
 
 		TextSelection callerSelection = new TextSelection(document, typeFoo.getCompilationUnit().getSource().indexOf(
 				"caller()"), "caller".length());
