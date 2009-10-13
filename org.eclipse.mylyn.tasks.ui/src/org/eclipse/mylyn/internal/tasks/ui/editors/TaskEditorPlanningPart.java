@@ -37,7 +37,11 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 		@Override
 		public void run() {
 			CommonFormUtil.setExpanded(part.getSection(), true);
-			part.getControl().setFocus();
+			if (part.getNoteEditor() != null && part.getNoteEditor().getControl() != null) {
+				part.getNoteEditor().getControl().setFocus();
+			} else {
+				part.getControl().setFocus();
+			}
 		}
 	};
 

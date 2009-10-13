@@ -35,7 +35,9 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.PlatformUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
+import org.eclipse.mylyn.tasks.core.TaskActivationAdapter;
 import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorExtension;
@@ -109,7 +111,35 @@ public class PlanningPart extends AbstractLocalEditorPart {
 				}
 			}
 		}
+	};
 
+	private final ITaskActivationListener activationListener = new TaskActivationAdapter() {
+
+		@Override
+		public void taskActivated(ITask task) {
+			if (task.equals(getTask())) {
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						if (activeTimeText != null && !activeTimeText.isDisposed()) {
+							updateActiveTime();
+						}
+					}
+				});
+			}
+		}
+
+		@Override
+		public void taskDeactivated(ITask task) {
+			if (task.equals(getTask())) {
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						if (activeTimeText != null && !activeTimeText.isDisposed()) {
+							updateActiveTime();
+						}
+					}
+				});
+			}
+		}
 	};
 
 	private final ITaskActivityListener timingListener = new TaskActivityAdapter() {
@@ -248,6 +278,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 		TasksUiInternal.getTaskList().addChangeListener(TASK_LIST_LISTENER);
 		TasksUiPlugin.getTaskActivityManager().addActivityListener(timingListener);
+		TasksUiPlugin.getTaskActivityManager().addActivationListener(activationListener);
 		MonitorUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(ACTIVITY_PROPERTY_LISTENER);
 
 		setSection(toolkit, section);
@@ -380,6 +411,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		label.setBackground(null);
 
 		activeTimeText = new Text(activeTimeComposite, SWT.FLAT | SWT.READ_ONLY);
+		activeTimeText.setText("00:00"); //$NON-NLS-1$
 		activeTimeText.setFont(EditorUtil.TEXT_FONT);
 		activeTimeText.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
 		toolkit.adapt(activeTimeText, true, false);
@@ -407,26 +439,23 @@ public class PlanningPart extends AbstractLocalEditorPart {
 	}
 
 	private void updateActiveTime() {
-		long elapsedTime = 0;
-		if (isActiveTimeEnabled() && MonitorUiPlugin.getDefault().isActivityTrackingEnabled()) {
-			elapsedTime = TasksUiPlugin.getTaskActivityManager().getElapsedTime(getTask());
-		}
-
-		if (elapsedTime > 0) {
+		boolean show = MonitorUiPlugin.getDefault().isActivityTrackingEnabled() && isActiveTimeEnabled();
+		long elapsedTime = TasksUiInternal.getActiveTime(getTask());
+		if (show && (elapsedTime > 0 || getTask().isActive())) {
 			if (activeTimeComposite != null && !activeTimeComposite.isVisible()) {
 				activeTimeComposite.setVisible(true);
+
+				String elapsedTimeString = DateUtil.getFormattedDurationShort(elapsedTime);
+				if (elapsedTimeString.equals("")) { //$NON-NLS-1$
+					elapsedTimeString = Messages.TaskEditorPlanningPart_0_SECOUNDS;
+				}
+				activeTimeText.setText(elapsedTimeString);
 			}
 		} else {
 			if (activeTimeComposite != null) {
 				activeTimeComposite.setVisible(false);
 			}
 		}
-		String elapsedTimeString = DateUtil.getFormattedDurationShort(elapsedTime);
-		if (elapsedTimeString.equals("")) { //$NON-NLS-1$
-			elapsedTimeString = Messages.TaskEditorPlanningPart_0_SECOUNDS;
-		}
-		activeTimeText.setText(elapsedTimeString);
-
 	}
 
 	private Composite createComposite(Composite parent, int col, FormToolkit toolkit) {
@@ -526,6 +555,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 	@Override
 	public void dispose() {
+		TasksUiPlugin.getTaskActivityManager().removeActivationListener(activationListener);
 		TasksUiPlugin.getTaskActivityManager().removeActivityListener(timingListener);
 		TasksUiInternal.getTaskList().removeChangeListener(TASK_LIST_LISTENER);
 		MonitorUiPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(ACTIVITY_PROPERTY_LISTENER);
@@ -612,6 +642,10 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		if (activeTimeComposite != null && !activeTimeComposite.isDisposed()) {
 			updateActiveTime();
 		}
+	}
+
+	public RichTextEditor getNoteEditor() {
+		return noteEditor;
 	}
 
 }

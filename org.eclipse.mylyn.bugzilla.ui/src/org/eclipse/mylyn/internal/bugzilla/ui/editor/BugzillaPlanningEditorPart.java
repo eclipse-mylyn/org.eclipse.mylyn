@@ -18,6 +18,7 @@ import java.util.Set;
 
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskDataHandler;
+import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
@@ -50,11 +51,12 @@ public class BugzillaPlanningEditorPart extends AbstractTaskEditorPart {
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
 		initialize();
-		int style = ExpandableComposite.SHORT_TITLE_BAR | ExpandableComposite.TWISTIE;
+		int style = ExpandableComposite.TWISTIE;
 		if (hasIncoming) {
 			style |= ExpandableComposite.EXPANDED;
 		}
 		Section timeSection = createSection(parent, toolkit, style);
+		EditorUtil.setTitleBarForeground(timeSection, toolkit.getColors().getColor(IFormColors.TITLE));
 
 		GridLayout gl = new GridLayout();
 		GridData gd = new GridData(SWT.FILL, SWT.NONE, false, false);

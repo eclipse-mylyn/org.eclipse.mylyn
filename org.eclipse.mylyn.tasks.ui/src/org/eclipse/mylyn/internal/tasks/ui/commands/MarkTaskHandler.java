@@ -16,10 +16,14 @@ import java.util.Date;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ClearOutgoingAction;
+import org.eclipse.mylyn.internal.tasks.ui.editors.Messages;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.monitor.ui.MonitorUi;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
 
@@ -34,6 +38,18 @@ public abstract class MarkTaskHandler extends AbstractTaskHandler {
 			ClearOutgoingAction action = new ClearOutgoingAction(Collections.singletonList((IRepositoryElement) task));
 			if (action.isEnabled()) {
 				action.run();
+			}
+		}
+	}
+
+	public static class ClearActiveTimeHandler extends AbstractTaskHandler {
+		@Override
+		protected void execute(ExecutionEvent event, ITask task) throws ExecutionException {
+			if (MessageDialog.openConfirm(WorkbenchUtil.getShell(),
+					Messages.TaskEditorPlanningPart_Confirm_Activity_Time_Deletion,
+					Messages.TaskEditorPlanningPart_Do_you_wish_to_reset_your_activity_time_on_this_task_)) {
+				MonitorUi.getActivityContextManager().removeActivityTime(task.getHandleIdentifier(), 0l,
+						System.currentTimeMillis());
 			}
 		}
 	}

@@ -1251,6 +1251,11 @@
       </command>
       <command
             categoryId="org.eclipse.mylyn.tasks.ui.commands"
+            id="org.eclipse.mylyn.tasks.ui.command.task.clearActiveTime"
+            name="Clear Active Time">
+      </command>
+      <command
+            categoryId="org.eclipse.mylyn.tasks.ui.commands"
             defaultHandler="org.eclipse.mylyn.internal.tasks.ui.commands.NewSubTaskHandler"
             id="org.eclipse.mylyn.tasks.ui.command.new.subtask"
             name="%command.new.subtask.name">
@@ -1592,6 +1597,24 @@
             </iterate>
          </enabledWhen>
       </handler>
+      <handler
+            class="org.eclipse.mylyn.internal.tasks.ui.commands.MarkTaskHandler$ClearActiveTimeHandler"
+            commandId="org.eclipse.mylyn.tasks.ui.command.task.clearActiveTime">
+         <enabledWhen>
+            <iterate
+                  operator="or">
+               <and>
+                  <adapt
+                        type="org.eclipse.mylyn.tasks.core.ITask">
+                     <test
+                           property="org.eclipse.mylyn.task.hasActiveTime"
+                           value="true">
+                     </test>
+                  </adapt>
+               </and>
+            </iterate>
+         </enabledWhen>
+      </handler>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -1722,6 +1745,18 @@
                   </iterate>
                </visibleWhen>
             </command>
+			<separator
+                  name="group.timeTracking"
+                  visible="true">
+            </separator>
+            <command
+                  commandId="org.eclipse.mylyn.tasks.ui.command.task.clearActiveTime"
+                  label="Clear Active Time..."
+                  mnemonic="T"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="true"/>
+            </command>
             <separator
                   name="additions">
             </separator>
@@ -1824,7 +1859,7 @@
             class="org.eclipse.mylyn.internal.tasks.ui.util.TaskPropertyTester"
             id="org.eclipse.mylyn.tasks.ui.propertyTester.task"
             namespace="org.eclipse.mylyn.task"
-            properties="canGetAttachment,canPostAttachment,connectorKind,hasEdits,hasLocalContext,hasLocalCompletionState,hasRepositoryContext,isCompleted,isLocal,"
+            properties="canGetAttachment,canPostAttachment,connectorKind,hasActiveTime,hasEdits,hasLocalContext,hasLocalCompletionState,hasRepositoryContext,isCompleted,isLocal,"
             type="org.eclipse.mylyn.tasks.core.ITask">
       </propertyTester>
       <propertyTester

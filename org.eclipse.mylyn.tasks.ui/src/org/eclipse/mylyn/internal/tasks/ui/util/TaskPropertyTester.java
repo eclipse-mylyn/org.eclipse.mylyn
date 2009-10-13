@@ -27,6 +27,8 @@ public class TaskPropertyTester extends PropertyTester {
 
 	private static final String PROPERTY_CONNECTOR_KIND = "connectorKind"; //$NON-NLS-1$
 
+	private static final String PROPERTY_HAS_ACTIVE_TIME = "hasActiveTime"; //$NON-NLS-1$
+
 	private static final String PROPERTY_HAS_EDITS = "hasEdits"; //$NON-NLS-1$
 
 	private static final String PROPERTY_HAS_LOCAL_CONTEXT = "hasLocalContext"; //$NON-NLS-1$
@@ -53,6 +55,8 @@ public class TaskPropertyTester extends PropertyTester {
 				return equals(AttachmentUtil.canDownloadAttachment(task), expectedValue);
 			} else if (PROPERTY_CAN_GET_ATTACHEMNT.equals(property)) {
 				return equals(AttachmentUtil.canUploadAttachment(task), expectedValue);
+			} else if (PROPERTY_HAS_ACTIVE_TIME.equals(property)) {
+				return equals(TasksUiInternal.getActiveTime(task) > 0, expectedValue);
 			} else if (PROPERTY_HAS_EDITS.equals(property)) {
 				return equals(ClearOutgoingAction.hasOutgoingChanges(task), expectedValue);
 			} else if (PROPERTY_HAS_LOCAL_CONTEXT.equals(property)) {

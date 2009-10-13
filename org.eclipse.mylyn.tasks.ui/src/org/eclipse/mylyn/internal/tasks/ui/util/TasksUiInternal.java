@@ -56,6 +56,7 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
@@ -1099,6 +1100,13 @@ public class TasksUiInternal {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
 					"Failed to activate task ''{0}''.", task.getSummary()), e)); //$NON-NLS-1$
 		}
+	}
+
+	public static long getActiveTime(ITask task) {
+		if (MonitorUiPlugin.getDefault().isActivityTrackingEnabled()) {
+			return TasksUiPlugin.getTaskActivityManager().getElapsedTime(task);
+		}
+		return 0;
 	}
 
 }
