@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.discovery.tests.DiscoveryTestConstants;
 import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryCategory;
+import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryCertification;
 import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryConnector;
 import org.eclipse.mylyn.internal.discovery.core.model.RemoteBundleDiscoveryStrategy;
 
@@ -38,6 +39,7 @@ public class RemoteBundleDiscoveryStrategyTest extends TestCase {
 		discoveryStrategy.setDirectoryUrl(DiscoveryTestConstants.DEFAULT_MYLYN_DISCOVERY_URL);
 		discoveryStrategy.setCategories(new ArrayList<DiscoveryCategory>());
 		discoveryStrategy.setConnectors(new ArrayList<DiscoveryConnector>());
+		discoveryStrategy.setCertifications(new ArrayList<DiscoveryCertification>());
 	}
 
 	public void testPerformDiscovery() throws CoreException, IOException {
