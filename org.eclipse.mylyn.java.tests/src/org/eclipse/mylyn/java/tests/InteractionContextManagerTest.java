@@ -107,7 +107,8 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 
 	public void testShellLifecycleActivityStart() {
 		List<InteractionEvent> events = manager.getActivityMetaContext().getInteractionHistory();
-		assertEquals(InteractionContextManager.ACTIVITY_DELTA_STARTED, events.get(0).getDelta());
+		assertEquals("Activity monitoring possibly activated before context ui startup",
+				InteractionContextManager.ACTIVITY_DELTA_STARTED, events.get(0).getDelta());
 		assertEquals(InteractionContextManager.ACTIVITY_DELTA_ACTIVATED, events.get(1).getDelta());
 	}
 
