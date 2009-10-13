@@ -84,7 +84,7 @@ public class TaskListSynchronizationScheduler implements IUserAttentionListener 
 				if (this.scheduledTime < System.currentTimeMillis() + delay) {
 					// already scheduled, nothing to do
 					if (TRACE_ENABLED) {
-						System.err.println("Synchronzation already scheduled in " + DateUtil.getFormattedDurationShort(this.scheduledTime - System.currentTimeMillis())); //$NON-NLS-1$
+						System.err.println("Synchronization already scheduled in " + DateUtil.getFormattedDurationShort(this.scheduledTime - System.currentTimeMillis())); //$NON-NLS-1$
 					}
 					return;
 				} else {
@@ -109,7 +109,7 @@ public class TaskListSynchronizationScheduler implements IUserAttentionListener 
 
 	private void schedule(long interval) {
 		if (TRACE_ENABLED) {
-			System.err.println("Scheduling synchronzation in " + DateUtil.getFormattedDurationShort(interval)); //$NON-NLS-1$
+			System.err.println("Scheduling synchronization in " + DateUtil.getFormattedDurationShort(interval)); //$NON-NLS-1$
 		}
 		this.scheduledTime = System.currentTimeMillis() + interval;
 		refreshJob.schedule(interval);
