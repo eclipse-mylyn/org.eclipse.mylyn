@@ -118,7 +118,7 @@ public class LandmarkMarkerManager extends AbstractContextListener {
 		if (node == null || node.getContentType() == null) {
 			return null;
 		}
-		if (node.getContentType().equals(JavaStructureBridge.CONTENT_TYPE)) {
+		if (JavaStructureBridge.CONTENT_TYPE.equals(node.getContentType())) {
 			final IJavaElement element = JavaCore.create(node.getHandleIdentifier());
 			if (!element.exists()) {
 				return null;
@@ -155,7 +155,7 @@ public class LandmarkMarkerManager extends AbstractContextListener {
 		if (node == null) {
 			return null;
 		}
-		if (node.getContentType().equals(JavaStructureBridge.CONTENT_TYPE)) {
+		if (JavaStructureBridge.CONTENT_TYPE.equals(node.getContentType())) {
 			IJavaElement element = JavaCore.create(node.getHandleIdentifier());
 			if (!element.exists()) {
 				return null;
