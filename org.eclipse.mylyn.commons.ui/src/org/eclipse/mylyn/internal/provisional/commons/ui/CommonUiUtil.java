@@ -14,9 +14,11 @@ package org.eclipse.mylyn.internal.provisional.commons.ui;
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.dialogs.DialogPage;
@@ -226,4 +228,24 @@ public class CommonUiUtil {
 	public static String toLabel(String text) {
 		return (text != null) ? text.replaceAll("&", "&&") : null; // mask & from SWT //$NON-NLS-1$ //$NON-NLS-2$
 	}
+
+	public static String getProductName() {
+		return getProductName(null);
+	}
+
+	public static String getProductName(String defaultName) {
+		IProduct product = Platform.getProduct();
+		if (product != null) {
+			String productName = product.getName();
+			if (productName != null) {
+				String LABEL_SDK = "SDK"; //$NON-NLS-1$
+				if (productName.endsWith(LABEL_SDK)) {
+					productName = productName.substring(0, productName.length() - LABEL_SDK.length()).trim();
+				}
+				return productName;
+			}
+		}
+		return defaultName;
+	}
+
 }

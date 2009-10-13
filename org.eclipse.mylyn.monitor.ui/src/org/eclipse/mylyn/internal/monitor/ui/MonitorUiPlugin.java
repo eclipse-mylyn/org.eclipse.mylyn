@@ -437,4 +437,11 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 		return activityTrackingEnabled;
 	}
 
+	/**
+	 * Returns true, if other activity monitors than {@link WorkbenchUserActivityMonitor} have been registered.
+	 */
+	public boolean isTrackingOsTime() {
+		return monitors.size() > 1;
+	}
+
 }

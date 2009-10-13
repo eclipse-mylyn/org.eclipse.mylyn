@@ -12,10 +12,8 @@
 
 package org.eclipse.mylyn.internal.provisional.commons.ui;
 
-import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.resource.JFaceResources;
@@ -153,13 +151,8 @@ public abstract class AbstractNotificationPopup extends Window {
 	 * @return the name to be used in the title of the popup.
 	 */
 	protected String getPopupShellTitle() {
-		IProduct product = Platform.getProduct();
-		if (product != null) {
-			String productName = product.getName();
-			String LABEL_SDK = "SDK"; //$NON-NLS-1$
-			if (productName.endsWith(LABEL_SDK)) {
-				productName = productName.substring(0, productName.length() - LABEL_SDK.length());
-			}
+		String productName = CommonUiUtil.getProductName();
+		if (productName != null) {
 			return productName + " " + LABEL_NOTIFICATION; //$NON-NLS-1$
 		} else {
 			return LABEL_NOTIFICATION;
