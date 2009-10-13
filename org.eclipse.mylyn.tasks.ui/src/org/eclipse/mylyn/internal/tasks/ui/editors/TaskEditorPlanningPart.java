@@ -51,7 +51,9 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 		part = new PlanningPart(ExpandableComposite.TWISTIE) {
 			@Override
 			protected void fillToolBar(ToolBarManager toolBarManager) {
-				toolBarManager.add(new NotesAction());
+				NotesAction notesAction = new NotesAction();
+				notesAction.setEnabled(needsNotes());
+				toolBarManager.add(notesAction);
 			}
 		};
 	}

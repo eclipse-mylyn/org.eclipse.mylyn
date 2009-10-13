@@ -28,10 +28,12 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DatePicker;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.DateRange;
 import org.eclipse.mylyn.internal.tasks.core.DayDateRange;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
+import org.eclipse.mylyn.internal.tasks.core.WeekDateRange;
 import org.eclipse.mylyn.internal.tasks.ui.ScheduleDatePicker;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.PlatformUtil;
@@ -46,6 +48,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorExtension;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.TaskFormPage;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
@@ -54,6 +57,7 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -196,6 +200,8 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 	private boolean activeTimeEnabled;
 
+	private Label scheduledLabel;
+
 	public PlanningPart(int sectionStyle) {
 		super(sectionStyle, Messages.PersonalPart_Personal_Planning);
 		this.activeTimeEnabled = true;
@@ -306,11 +312,11 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 		createEstimatedTime(toolkit, sectionClient);
 
-//		createActualTime(toolkit, composite);
-
 		if (needsNotes()) {
 			createNotesArea(toolkit, sectionClient, layout.numColumns);
 		}
+
+		createActiveTime(toolkit, sectionClient, layout.numColumns);
 
 		toolkit.paintBordersFor(sectionClient);
 		section.setClient(sectionClient);
@@ -399,8 +405,9 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 	}
 
-	private void createActiveTimeControl(FormToolkit toolkit, Composite toolbarComposite) {
+	private void createActiveTime(FormToolkit toolkit, Composite toolbarComposite, int numColumns) {
 		activeTimeComposite = toolkit.createComposite(toolbarComposite);
+		GridDataFactory.fillDefaults().span(numColumns, SWT.DEFAULT).grab(false, false).applyTo(activeTimeComposite);
 		activeTimeComposite.setBackground(null);
 		activeTimeComposite.setBackgroundMode(SWT.INHERIT_FORCE);
 		RowLayout rowLayout = new RowLayout();
@@ -411,7 +418,14 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		rowLayout.marginRight = 0;
 		activeTimeComposite.setLayout(rowLayout);
 
-		Label label = toolkit.createLabel(activeTimeComposite, Messages.TaskEditorPlanningPart_Active);
+		String labelString;
+		if (MonitorUiPlugin.getDefault().isTrackingOsTime()) {
+			labelString = "Active time:";
+		} else {
+			String productName = CommonUiUtil.getProductName("Eclipse");
+			labelString = NLS.bind("Active time spent in {0}:", productName);
+		}
+		Label label = toolkit.createLabel(activeTimeComposite, labelString);
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		label.setToolTipText(Messages.TaskEditorPlanningPart_Time_working_on_this_task);
 		label.setBackground(null);
@@ -450,6 +464,8 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		if (show && (elapsedTime > 0 || getTask().isActive())) {
 			if (activeTimeComposite != null && !activeTimeComposite.isVisible()) {
 				activeTimeComposite.setVisible(true);
+				((GridData) activeTimeComposite.getLayoutData()).exclude = false;
+				activeTimeComposite.getParent().layout();
 			}
 			String elapsedTimeString = DateUtil.getFormattedDurationShort(elapsedTime);
 			if (elapsedTimeString.equals("")) { //$NON-NLS-1$
@@ -457,7 +473,9 @@ public class PlanningPart extends AbstractLocalEditorPart {
 			}
 			activeTimeText.setText(elapsedTimeString);
 		} else {
-			if (activeTimeComposite != null) {
+			if (activeTimeComposite != null && activeTimeComposite.isVisible()) {
+				((GridData) activeTimeComposite.getLayoutData()).exclude = true;
+				activeTimeComposite.getParent().layout();
 				activeTimeComposite.setVisible(false);
 			}
 		}
@@ -572,6 +590,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 	@Override
 	protected void setSection(FormToolkit toolkit, Section section) {
+		super.setSection(toolkit, section);
 		if (section.getTextClient() == null) {
 			Composite toolbarComposite = toolkit.createComposite(section);
 			toolbarComposite.setBackground(null);
@@ -583,7 +602,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 			rowLayout.center = true;
 			toolbarComposite.setLayout(rowLayout);
 
-			createActiveTimeControl(toolkit, toolbarComposite);
+			createScheduledLabel(toolbarComposite, section, toolkit);
 
 			ToolBarManager toolBarManager = new ToolBarManager(SWT.FLAT);
 			fillToolBar(toolBarManager);
@@ -598,8 +617,56 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 			section.setTextClient(toolbarComposite);
 		}
+	}
 
-		super.setSection(toolkit, section);
+	private void createScheduledLabel(Composite composite, Section section, FormToolkit toolkit) {
+		scheduledLabel = toolkit.createLabel(composite, ""); //$NON-NLS-1$
+		scheduledLabel.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+		scheduledLabel.setBackground(null);
+		updateScheduledLabel(section.isExpanded());
+		section.addExpansionListener(new ExpansionAdapter() {
+			@Override
+			public void expansionStateChanging(ExpansionEvent event) {
+				updateScheduledLabel(event.getState());
+			}
+		});
+	}
+
+	private void updateScheduledLabel(boolean sectionIsExpanded) {
+		if (scheduledLabel != null && !scheduledLabel.isDisposed()) {
+			if (!sectionIsExpanded && !getTask().isCompleted()) {
+				DateRange date = getTask().getScheduledForDate();
+				if (date != null) {
+					scheduledLabel.setText(getLabel(date));
+				} else {
+					scheduledLabel.setText(""); //$NON-NLS-1$
+				}
+				if (!scheduledLabel.isVisible()) {
+					scheduledLabel.setVisible(true);
+				}
+				scheduledLabel.getParent().getParent().layout(true);
+			} else {
+				if (scheduledLabel.isVisible()) {
+					scheduledLabel.setVisible(false);
+					scheduledLabel.getParent().getParent().layout(true);
+				}
+			}
+		}
+	}
+
+	private String getLabel(DateRange dateRange) {
+		if (dateRange.isPresent() && !(dateRange instanceof WeekDateRange)) {
+			return "Today";
+		}
+		if (TaskActivityUtil.getCurrentWeek().includes(dateRange)) {
+			return "This Week";
+		}
+		Calendar endNextWeek = TaskActivityUtil.getCalendar();
+		endNextWeek.add(Calendar.DAY_OF_YEAR, 7);
+		if (TaskActivityUtil.getNextWeek().includes(dateRange) && dateRange.before(endNextWeek)) {
+			return "Next Week";
+		}
+		return "Later";
 	}
 
 	protected void fillToolBar(ToolBarManager toolBarManager) {
@@ -629,6 +696,10 @@ public class PlanningPart extends AbstractLocalEditorPart {
 			} else {
 				scheduleDatePicker.setScheduledDate(null);
 			}
+		}
+
+		if (scheduledLabel != null && !scheduledLabel.isDisposed()) {
+			updateScheduledLabel(getSection().isExpanded());
 		}
 
 		if (estimatedTimeSpinner != null && !estimatedTimeSpinner.isDisposed()) {
