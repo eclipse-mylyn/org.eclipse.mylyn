@@ -21,9 +21,9 @@ public abstract class DiscoveryTestConstants {
 	 * <tt>mylyn.discovery.directory</tt>
 	 */
 	public static final String DEFAULT_MYLYN_DISCOVERY_URL = System.getProperty("mylyn.discovery.directory",
-			"http://www.eclipse.org/mylyn/discovery/directory.xml");
+			"http://www.eclipse.org/mylyn/discovery/directory-3.3.xml");
 
 	private DiscoveryTestConstants() {
 	}
-	
+
 }
