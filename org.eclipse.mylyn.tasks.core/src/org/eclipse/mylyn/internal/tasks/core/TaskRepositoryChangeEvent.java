@@ -27,7 +27,7 @@ public class TaskRepositoryChangeEvent extends EventObject {
 
 	private final TaskRepositoryDelta delta;
 
-	TaskRepositoryChangeEvent(Object source, TaskRepository repository, TaskRepositoryDelta delta) {
+	public TaskRepositoryChangeEvent(Object source, TaskRepository repository, TaskRepositoryDelta delta) {
 		super(source);
 		Assert.isNotNull(source);
 		Assert.isNotNull(repository);
