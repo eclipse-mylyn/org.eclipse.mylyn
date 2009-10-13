@@ -18,7 +18,6 @@ import org.eclipse.mylyn.context.tests.support.ContextTestUtil;
 import org.eclipse.mylyn.java.tests.search.JUnitReferencesSearchPluginTest;
 import org.eclipse.mylyn.java.tests.search.JavaImplementorsSearchPluginTest;
 import org.eclipse.mylyn.java.tests.search.JavaReadAccessSearchPluginTest;
-import org.eclipse.mylyn.java.tests.search.JavaReferencesSearchTest;
 import org.eclipse.mylyn.java.tests.search.JavaWriteAccessSearchPluginTest;
 import org.eclipse.mylyn.java.tests.xml.XmlSearchPluginTest;
 
@@ -39,7 +38,7 @@ public class AllJavaTests {
 		suite.addTestSuite(ContentOutlineRefreshTest.class);
 		suite.addTestSuite(TypeHistoryManagerTest.class);
 		suite.addTestSuite(PackageExplorerRefreshTest.class);
-		// XXX reenable test case?
+		// XXX 3.4 re-enable test case?
 		//suite.addTestSuite(ResultUpdaterTest.class);
 		suite.addTestSuite(ProblemsListTest.class);
 		suite.addTestSuite(InterestFilterTest.class);
@@ -47,7 +46,8 @@ public class AllJavaTests {
 		suite.addTestSuite(JavaStructureTest.class);
 		suite.addTestSuite(JavaImplementorsSearchPluginTest.class);
 		suite.addTestSuite(JavaReadAccessSearchPluginTest.class);
-		suite.addTestSuite(JavaReferencesSearchTest.class);
+		// XXX 3.4 re-enable test case?
+		//suite.addTestSuite(JavaReferencesSearchTest.class);
 		suite.addTestSuite(JavaWriteAccessSearchPluginTest.class);
 		suite.addTestSuite(JUnitReferencesSearchPluginTest.class);
 		suite.addTestSuite(XmlSearchPluginTest.class);

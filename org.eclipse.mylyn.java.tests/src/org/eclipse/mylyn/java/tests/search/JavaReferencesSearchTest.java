@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
+import org.eclipse.mylyn.commons.tests.support.UiTestUtil;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.tests.support.search.ISearchPluginTest;
@@ -56,6 +57,9 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 
 	@Override
 	protected void setUp() throws Exception {
+		UiTestUtil.closeWelcomeView();
+		UiTestUtil.closeAllEditors();
+
 		// TODO: clear the relationship providers?
 		WorkspaceSetupHelper.setupWorkspace();
 		jp1 = WorkspaceSetupHelper.getProject1();
