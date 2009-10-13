@@ -16,12 +16,14 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.text.ITextListener;
 import org.eclipse.jface.text.TextEvent;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.mylyn.commons.core.DateUtil;
 import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DatePicker;
@@ -34,6 +36,7 @@ import org.eclipse.mylyn.internal.tasks.ui.ScheduleDatePicker;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.PlatformUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.monitor.ui.MonitorUi;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
@@ -65,7 +68,10 @@ import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.Section;
 
 /**
@@ -420,22 +426,22 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		updateActiveTime();
 		activeTimeText.setEditable(false);
 
-//		ImageHyperlink resetActivityTimeButton = toolkit.createImageHyperlink(activeTimeComposite, SWT.NONE);
-//		resetActivityTimeButton.setBackground(null);
-//		resetActivityTimeButton.setImage(CommonImages.getImage(CommonImages.FIND_CLEAR_DISABLED));
-//		resetActivityTimeButton.setHoverImage(CommonImages.getImage(CommonImages.FIND_CLEAR));
-//		resetActivityTimeButton.setToolTipText(Messages.TaskEditorPlanningPart_Reset);
-//		resetActivityTimeButton.addHyperlinkListener(new HyperlinkAdapter() {
-//			@Override
-//			public void linkActivated(HyperlinkEvent e) {
-//				if (MessageDialog.openConfirm(getControl().getShell(),
-//						Messages.TaskEditorPlanningPart_Confirm_Activity_Time_Deletion,
-//						Messages.TaskEditorPlanningPart_Do_you_wish_to_reset_your_activity_time_on_this_task_)) {
-//					MonitorUi.getActivityContextManager().removeActivityTime(getTask().getHandleIdentifier(), 0l,
-//							System.currentTimeMillis());
-//				}
-//			}
-//		});
+		ImageHyperlink resetActivityTimeButton = toolkit.createImageHyperlink(activeTimeComposite, SWT.NONE);
+		resetActivityTimeButton.setBackground(null);
+		resetActivityTimeButton.setImage(CommonImages.getImage(CommonImages.FIND_CLEAR_DISABLED));
+		resetActivityTimeButton.setHoverImage(CommonImages.getImage(CommonImages.FIND_CLEAR));
+		resetActivityTimeButton.setToolTipText(Messages.PlanningPart_Reset_Active_Time);
+		resetActivityTimeButton.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
+			public void linkActivated(HyperlinkEvent e) {
+				if (MessageDialog.openConfirm(getControl().getShell(),
+						Messages.TaskEditorPlanningPart_Confirm_Activity_Time_Deletion,
+						Messages.TaskEditorPlanningPart_Do_you_wish_to_reset_your_activity_time_on_this_task_)) {
+					MonitorUi.getActivityContextManager().removeActivityTime(getTask().getHandleIdentifier(), 0l,
+							System.currentTimeMillis());
+				}
+			}
+		});
 	}
 
 	private void updateActiveTime() {
