@@ -19,7 +19,7 @@
    </license>
 
    <url>
-      <update label="%updateSiteName" url="http://download.eclipse.org/tools/mylyn/update/e3.3"/>
+      <update label="%updateSiteName" url="http://download.eclipse.org/tools/mylyn/update/e3.4"/>
    </url>
 
    <requires>
