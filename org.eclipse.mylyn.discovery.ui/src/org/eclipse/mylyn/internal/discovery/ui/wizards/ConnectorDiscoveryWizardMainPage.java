@@ -50,6 +50,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage implements IShe
 		viewer = new DiscoveryViewer(this, getContainer());
 		viewer.setShowConnectorDescriptorKindFilter(getWizard().isShowConnectorDescriptorKindFilter());
 		viewer.setShowConnectorDescriptorTextFilter(getWizard().isShowConnectorDescriptorTextFilter());
+		viewer.setVerifyUpdateSiteAvailability(true);
 		viewer.setMinimumHeight(MINIMUM_HEIGHT);
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
