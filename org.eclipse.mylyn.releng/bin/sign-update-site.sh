@@ -94,7 +94,7 @@ then
  echo Creating archive for singing, output is logged to $DST/sign.log
  /bin/rm $DST/mylyn.zip || true
  cd $TMP
- /usr/bin/find -name "org.eclipse.mylyn*.jar" | zip $DST/mylyn.zip -@ > $DST/sign.log
+ /usr/bin/find -name "org.eclipse*mylyn*.jar" | zip $DST/mylyn.zip -@ > $DST/sign.log
 
  # sign
 
