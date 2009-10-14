@@ -69,9 +69,25 @@ public class Messages extends NLS {
 
 	public static String PlanningPageFactory_Private;
 
+	public static String PlanningPart_Active_time_in_Product_Label;
+
+	public static String PlanningPart_Active_time_Label;
+
+	public static String PlanningPart_Default_Product;
+
+	public static String PlanningPart_Later;
+
+	public static String PlanningPart_Next_Week;
+
 	public static String PlanningPart_Personal_Notes;
 
 	public static String PlanningPart_Reset_Active_Time;
+
+	public static String PlanningPart_Scheduled_for_X_Tooltip;
+
+	public static String PlanningPart_This_Week;
+
+	public static String PlanningPart_Today;
 
 	public static String RichTextAttributeEditor_Viewer_Source;
 

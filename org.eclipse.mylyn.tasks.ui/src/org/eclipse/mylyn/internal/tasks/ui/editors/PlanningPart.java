@@ -420,10 +420,10 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 		String labelString;
 		if (MonitorUiPlugin.getDefault().isTrackingOsTime()) {
-			labelString = "Active time:";
+			labelString = Messages.PlanningPart_Active_time_Label;
 		} else {
-			String productName = CommonUiUtil.getProductName("Eclipse");
-			labelString = NLS.bind("Active time spent in {0}:", productName);
+			String productName = CommonUiUtil.getProductName(Messages.PlanningPart_Default_Product);
+			labelString = NLS.bind(Messages.PlanningPart_Active_time_in_Product_Label, productName);
 		}
 		Label label = toolkit.createLabel(activeTimeComposite, labelString);
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
@@ -638,8 +638,10 @@ public class PlanningPart extends AbstractLocalEditorPart {
 				DateRange date = getTask().getScheduledForDate();
 				if (date != null) {
 					scheduledLabel.setText(getLabel(date));
+					scheduledLabel.setToolTipText(NLS.bind(Messages.PlanningPart_Scheduled_for_X_Tooltip, date.toString()));
 				} else {
 					scheduledLabel.setText(""); //$NON-NLS-1$
+					scheduledLabel.setToolTipText(null);
 				}
 				if (!scheduledLabel.isVisible()) {
 					scheduledLabel.setVisible(true);
@@ -655,18 +657,27 @@ public class PlanningPart extends AbstractLocalEditorPart {
 	}
 
 	private String getLabel(DateRange dateRange) {
-		if (dateRange.isPresent() && !(dateRange instanceof WeekDateRange)) {
-			return "Today";
+		if (dateRange instanceof WeekDateRange) {
+			if (dateRange.includes(TaskActivityUtil.getCalendar())) {
+				return Messages.PlanningPart_This_Week;
+			} else if (TaskActivityUtil.getNextWeek().compareTo(dateRange) == 0) {
+				return Messages.PlanningPart_Next_Week;
+			}
+		} else {
+			if (dateRange.isPresent() && !(dateRange instanceof WeekDateRange)
+					|| TasksUiPlugin.getTaskActivityManager().isPastReminder(dateRange, false)) {
+				return Messages.PlanningPart_Today;
+			}
+			if (TaskActivityUtil.getCurrentWeek().includes(dateRange)) {
+				return Messages.PlanningPart_This_Week;
+			}
+			Calendar endNextWeek = TaskActivityUtil.getCalendar();
+			endNextWeek.add(Calendar.DAY_OF_YEAR, 7);
+			if (TaskActivityUtil.getNextWeek().includes(dateRange) && dateRange.before(endNextWeek)) {
+				return Messages.PlanningPart_Next_Week;
+			}
 		}
-		if (TaskActivityUtil.getCurrentWeek().includes(dateRange)) {
-			return "This Week";
-		}
-		Calendar endNextWeek = TaskActivityUtil.getCalendar();
-		endNextWeek.add(Calendar.DAY_OF_YEAR, 7);
-		if (TaskActivityUtil.getNextWeek().includes(dateRange) && dateRange.before(endNextWeek)) {
-			return "Next Week";
-		}
-		return "Later";
+		return Messages.PlanningPart_Later;
 	}
 
 	protected void fillToolBar(ToolBarManager toolBarManager) {
