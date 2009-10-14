@@ -437,7 +437,6 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		toolkit.adapt(activeTimeText, true, false);
 		activeTimeText.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		activeTimeText.setBackground(null);
-		updateActiveTime();
 		activeTimeText.setEditable(false);
 
 		ImageHyperlink resetActivityTimeButton = toolkit.createImageHyperlink(activeTimeComposite, SWT.NONE);
@@ -456,11 +455,13 @@ public class PlanningPart extends AbstractLocalEditorPart {
 				}
 			}
 		});
+		updateActiveTime();
 	}
 
 	private void updateActiveTime() {
 		boolean show = MonitorUiPlugin.getDefault().isActivityTrackingEnabled() && isActiveTimeEnabled();
 		long elapsedTime = TasksUiInternal.getActiveTime(getTask());
+		boolean visible = activeTimeComposite != null && activeTimeComposite.isVisible();
 		if (show && (elapsedTime > 0 || getTask().isActive())) {
 			if (activeTimeComposite != null && !activeTimeComposite.isVisible()) {
 				activeTimeComposite.setVisible(true);
@@ -473,10 +474,15 @@ public class PlanningPart extends AbstractLocalEditorPart {
 			}
 			activeTimeText.setText(elapsedTimeString);
 		} else {
-			if (activeTimeComposite != null && activeTimeComposite.isVisible()) {
+			if (activeTimeComposite != null) {
 				((GridData) activeTimeComposite.getLayoutData()).exclude = true;
 				activeTimeComposite.getParent().layout();
 				activeTimeComposite.setVisible(false);
+			}
+		}
+		if (!needsNotes() && visible != (activeTimeComposite != null && activeTimeComposite.isVisible())) {
+			if (page instanceof AbstractTaskEditorPage) {
+				((AbstractTaskEditorPage) page).reflow();
 			}
 		}
 	}
@@ -638,7 +644,8 @@ public class PlanningPart extends AbstractLocalEditorPart {
 				DateRange date = getTask().getScheduledForDate();
 				if (date != null) {
 					scheduledLabel.setText(getLabel(date));
-					scheduledLabel.setToolTipText(NLS.bind(Messages.PlanningPart_Scheduled_for_X_Tooltip, date.toString()));
+					scheduledLabel.setToolTipText(NLS.bind(Messages.PlanningPart_Scheduled_for_X_Tooltip,
+							date.toString()));
 				} else {
 					scheduledLabel.setText(""); //$NON-NLS-1$
 					scheduledLabel.setToolTipText(null);
