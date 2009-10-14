@@ -302,7 +302,7 @@
                tooltip="%NewTaskAction.tooltip"> 
   		</action>-->
          <action
-               class="org.eclipse.mylyn.internal.tasks.ui.actions.ShowTasksUiLegendAction"
+               class="org.eclipse.mylyn.internal.tasks.ui.actions.WelcomeIntroAction"
                icon="icons/etool16/icons-legend.gif"
                id="org.eclipse.mylyn.doc.legend.show.action"
                label="%ShowTasksUiLegendAction.label"

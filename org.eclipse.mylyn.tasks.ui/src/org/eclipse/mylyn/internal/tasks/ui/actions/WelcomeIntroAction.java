@@ -13,13 +13,17 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
-import org.eclipse.mylyn.internal.tasks.ui.dialogs.UiLegendDialog;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.MultiRepositoryAwareWizard;
+import org.eclipse.mylyn.tasks.core.TaskMapping;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.intro.IIntroManager;
 import org.eclipse.ui.intro.IIntroPart;
 
@@ -27,7 +31,7 @@ import org.eclipse.ui.intro.IIntroPart;
  * @author Mik Kersten
  * @author Leo Dos Santos
  */
-public class ShowTasksUiLegendAction implements IWorkbenchWindowActionDelegate, IViewActionDelegate {
+public class WelcomeIntroAction implements IWorkbenchWindowActionDelegate, IViewActionDelegate {
 
 	private IWorkbenchWindow wbWindow;
 
@@ -51,8 +55,13 @@ public class ShowTasksUiLegendAction implements IWorkbenchWindowActionDelegate, 
 		}
 
 		TasksUiUtil.openTasksViewInActivePerspective();
-		UiLegendDialog uiLegendDialog = new UiLegendDialog(WorkbenchUtil.getShell());
-		uiLegendDialog.open();
+
+		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+		MultiRepositoryAwareWizard wizard = TasksUiInternal.createNewTaskWizard(new TaskMapping());
+		WizardDialog dialog = null;
+		dialog = new WizardDialog(shell, wizard);
+		dialog.setBlockOnOpen(false);
+		dialog.open();
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
