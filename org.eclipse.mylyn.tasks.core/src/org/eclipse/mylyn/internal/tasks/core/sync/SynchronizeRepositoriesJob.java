@@ -91,7 +91,7 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 			monitor.beginTask(Messages.SynchronizeRepositoriesJob_Processing, repositories.size() * 100);
 
 			if (TRACE_ENABLED) {
-				trace("Starting repository synchronization");
+				trace("Starting repository synchronization"); //$NON-NLS-1$
 			}
 			for (TaskRepository repository : repositories) {
 				if (monitor.isCanceled()) {
@@ -100,7 +100,7 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 
 				if (repository.isOffline()) {
 					if (TRACE_ENABLED) {
-						trace("Skipping synchronization for " + repository.getRepositoryLabel());
+						trace("Skipping synchronization for " + repository.getRepositoryLabel()); //$NON-NLS-1$
 					}
 					monitor.worked(100);
 					continue;
@@ -124,20 +124,17 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 				if (isUser() || queries.isEmpty()) {
 					monitor.worked(20);
 				} else {
-					if (TRACE_ENABLED) {
-						trace("Updating configurarion for " + repository.getRepositoryLabel());
-					}
 					// occasionally request update of repository configuration attributes as part of background synchronizations
 					updateRepositoryConfiguration(repository, connector, new SubProgressMonitor(monitor, 20));
 				}
 
 				if (TRACE_ENABLED) {
-					trace("Synchronizing queries for " + repository.getRepositoryLabel());
+					trace("Synchronizing queries for " + repository.getRepositoryLabel()); //$NON-NLS-1$
 				}
 				updateQueries(repository, connector, queries, monitor);
 			}
 			if (TRACE_ENABLED) {
-				trace("Completed repository synchronization");
+				trace("Completed repository synchronization"); //$NON-NLS-1$
 			}
 			// it's better to remove the job from the progress view instead of having it blocked until all child jobs finish
 //			if (isUser()) {
@@ -192,6 +189,9 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 					Messages.SynchronizeRepositoriesJob_Updating_repository_configuration_for_X,
 					repository.getRepositoryUrl()), 100);
 			if (connector.isRepositoryConfigurationStale(repository, monitor)) {
+				if (TRACE_ENABLED) {
+					trace("Updating configuration for " + repository.getRepositoryLabel()); //$NON-NLS-1$
+				}
 				connector.updateRepositoryConfiguration(repository, monitor);
 				repository.setConfigurationDate(new Date());
 			}

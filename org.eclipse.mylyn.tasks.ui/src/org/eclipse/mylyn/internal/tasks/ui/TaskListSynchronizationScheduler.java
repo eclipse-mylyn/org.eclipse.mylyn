@@ -79,14 +79,14 @@ public class TaskListSynchronizationScheduler implements IUserAttentionListener 
 				this.incactiveInterval *= 3;
 				delay = this.incactiveInterval;
 				if (TRACE_ENABLED) {
-					System.err.println("Set inactive interval to " + DateUtil.getFormattedDurationShort(this.incactiveInterval)); //$NON-NLS-1$
+					trace("Set inactive interval to " + DateUtil.getFormattedDurationShort(this.incactiveInterval)); //$NON-NLS-1$
 				}
 			}
 			if (this.scheduledTime != 0) {
 				if (this.scheduledTime < System.currentTimeMillis() + delay) {
 					// already scheduled, nothing to do
 					if (TRACE_ENABLED) {
-						System.err.println("Synchronization already scheduled in " + DateUtil.getFormattedDurationShort(this.scheduledTime - System.currentTimeMillis())); //$NON-NLS-1$
+						trace("Synchronization already scheduled in " + DateUtil.getFormattedDurationShort(this.scheduledTime - System.currentTimeMillis())); //$NON-NLS-1$
 					}
 					return;
 				} else {
@@ -102,7 +102,7 @@ public class TaskListSynchronizationScheduler implements IUserAttentionListener 
 	private synchronized void cancel() {
 		// prevent listener from rescheduling due to cancel
 		if (TRACE_ENABLED) {
-			System.err.println("Canceling synchronization scheduled to run in " + DateUtil.getFormattedDurationShort(this.scheduledTime - System.currentTimeMillis())); //$NON-NLS-1$
+			trace("Canceling synchronization scheduled to run in " + DateUtil.getFormattedDurationShort(this.scheduledTime - System.currentTimeMillis())); //$NON-NLS-1$
 		}
 		refreshJob.removeJobChangeListener(jobListener);
 		refreshJob.cancel();
@@ -111,7 +111,7 @@ public class TaskListSynchronizationScheduler implements IUserAttentionListener 
 
 	private void schedule(long interval) {
 		if (TRACE_ENABLED) {
-			System.err.println("Scheduling synchronization in " + DateUtil.getFormattedDurationShort(interval)); //$NON-NLS-1$
+			trace("Scheduling synchronization in " + DateUtil.getFormattedDurationShort(interval)); //$NON-NLS-1$
 		}
 		this.scheduledTime = System.currentTimeMillis() + interval;
 		refreshJob.schedule(interval);
