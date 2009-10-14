@@ -196,12 +196,11 @@
     </extension>
    
    <!-- Editor Folding -->
-
- <extension point="org.eclipse.ui.actionSets">
-	<actionSet
+	<extension point="org.eclipse.ui.actionSets">
+	  <actionSet
             id="org.eclipse.mylyn.cdt.ui.actionSet"
             label="%actionSet.label"
-            visible="true">
+            visible="false">
   		<action
           class="org.eclipse.mylyn.internal.cdt.ui.actions.ToggleActiveFoldingAction"
           definitionId="org.eclipse.mylyn.cdt.ui.editor.folding.auto"
@@ -211,9 +210,25 @@
           style="toggle"
           toolbarPath="org.eclipse.ui.edit.text.actionSet.presentation/Presentation"
           tooltip="%ToggleActiveFoldingAction.tooltip">
+          <enablement>
+          	 <systemProperty
+                 name="org.eclipse.mylyn.context.core.context.active"
+                 value="true">
+           </systemProperty>
+       	  </enablement>
       	</action> 
     </actionSet>
    </extension>
+   <extension
+         point="org.eclipse.ui.actionSetPartAssociations">
+      <actionSetPartAssociation
+            targetID="org.eclipse.mylyn.cdt.ui.actionSet">
+         <part
+               id="org.eclipse.cdt.ui.editor.CEditor">
+         </part>
+      </actionSetPartAssociation>
+   </extension>
+ 
 
    <extension point="org.eclipse.ui.commands">
       <category
