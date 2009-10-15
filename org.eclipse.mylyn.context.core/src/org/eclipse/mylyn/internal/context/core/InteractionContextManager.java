@@ -912,7 +912,8 @@ public class InteractionContextManager implements IInteractionContextManager {
 	@Deprecated
 	public boolean manipulateInterestForElement(IInteractionElement element, boolean increment, boolean forceLandmark,
 			boolean preserveUninteresting, String sourceId, IInteractionContext context) {
-		return manipulateInterestForElement(element, increment, forceLandmark, preserveUninteresting, sourceId, false);
+		return manipulateInterestForElement(element, increment, forceLandmark, preserveUninteresting, sourceId,
+				context, false);
 	}
 
 	/**
