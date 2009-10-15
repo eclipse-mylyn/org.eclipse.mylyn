@@ -148,109 +148,114 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 
 	@Override
 	public IStatus run(IProgressMonitor jobMonitor) {
-		monitor.attach(jobMonitor);
 		try {
-			monitor.beginTask(Messages.SynchronizeQueriesJob_Processing, 20 + queries.size() * 20 + 40 + 10);
-
-			Set<ITask> allTasks;
-			if (!isFullSynchronization()) {
-				allTasks = new HashSet<ITask>();
-				for (RepositoryQuery query : queries) {
-					allTasks.addAll(query.getChildren());
-				}
-			} else {
-				allTasks = taskList.getTasks(repository.getRepositoryUrl());
-			}
-
-			ObjectSchedulingRule rule = new ObjectSchedulingRule(repository);
+			monitor.setCanceled(false);
+			monitor.attach(jobMonitor);
 			try {
-				Job.getJobManager().beginRule(rule, monitor);
+				monitor.beginTask(Messages.SynchronizeQueriesJob_Processing, 20 + queries.size() * 20 + 40 + 10);
 
-				final Map<String, TaskRelation[]> relationsByTaskId = new HashMap<String, TaskRelation[]>();
-				SynchronizationSession session = new SynchronizationSession(taskDataManager) {
-					@Override
-					public void putTaskData(ITask task, TaskData taskData) throws CoreException {
-						boolean changed = connector.hasTaskChanged(repository, task, taskData);
-						taskDataManager.putUpdatedTaskData(task, taskData, isUser(), this);
-						if (taskData.isPartial()) {
-							if (changed && connector.canSynchronizeTask(repository, task)) {
-								markStale(task);
-							}
-						} else {
-							Collection<TaskRelation> relations = connector.getTaskRelations(taskData);
-							if (relations != null) {
-								relationsByTaskId.put(task.getTaskId(), relations.toArray(new TaskRelation[0]));
+				Set<ITask> allTasks;
+				if (!isFullSynchronization()) {
+					allTasks = new HashSet<ITask>();
+					for (RepositoryQuery query : queries) {
+						allTasks.addAll(query.getChildren());
+					}
+				} else {
+					allTasks = taskList.getTasks(repository.getRepositoryUrl());
+				}
+
+				ObjectSchedulingRule rule = new ObjectSchedulingRule(repository);
+				try {
+					Job.getJobManager().beginRule(rule, monitor);
+
+					final Map<String, TaskRelation[]> relationsByTaskId = new HashMap<String, TaskRelation[]>();
+					SynchronizationSession session = new SynchronizationSession(taskDataManager) {
+						@Override
+						public void putTaskData(ITask task, TaskData taskData) throws CoreException {
+							boolean changed = connector.hasTaskChanged(repository, task, taskData);
+							taskDataManager.putUpdatedTaskData(task, taskData, isUser(), this);
+							if (taskData.isPartial()) {
+								if (changed && connector.canSynchronizeTask(repository, task)) {
+									markStale(task);
+								}
+							} else {
+								Collection<TaskRelation> relations = connector.getTaskRelations(taskData);
+								if (relations != null) {
+									relationsByTaskId.put(task.getTaskId(), relations.toArray(new TaskRelation[0]));
+								}
 							}
 						}
-					}
-				};
-				session.setTaskRepository(repository);
-				session.setFullSynchronization(isFullSynchronization());
-				session.setTasks(Collections.unmodifiableSet(allTasks));
-				session.setNeedsPerformQueries(true);
-				session.setUser(isUser());
+					};
+					session.setTaskRepository(repository);
+					session.setFullSynchronization(isFullSynchronization());
+					session.setTasks(Collections.unmodifiableSet(allTasks));
+					session.setNeedsPerformQueries(true);
+					session.setUser(isUser());
 
-				updateQueryStatus(null);
-				try {
-					boolean success = preSynchronization(session, new SubProgressMonitor(monitor, 20));
+					updateQueryStatus(null);
+					try {
+						boolean success = preSynchronization(session, new SubProgressMonitor(monitor, 20));
 
-					if ((success && session.needsPerformQueries()) || isUser()) {
-						// synchronize queries, tasks changed within query are added to set of tasks to be synchronized
-						synchronizeQueries(monitor, session);
-					} else {
-						monitor.worked(queries.size() * 20);
+						if ((success && session.needsPerformQueries()) || isUser()) {
+							// synchronize queries, tasks changed within query are added to set of tasks to be synchronized
+							synchronizeQueries(monitor, session);
+						} else {
+							monitor.worked(queries.size() * 20);
+						}
+					} finally {
+						for (RepositoryQuery repositoryQuery : queries) {
+							repositoryQuery.setSynchronizing(false);
+						}
+						taskList.notifySynchronizationStateChanged(queries);
 					}
+
+					Set<ITask> tasksToBeSynchronized = new HashSet<ITask>();
+					for (ITask task : session.getStaleTasks()) {
+						tasksToBeSynchronized.add(task);
+						((AbstractTask) task).setSynchronizing(true);
+					}
+
+					// synchronize tasks that were marked by the connector
+					SynchronizeTasksJob job = new SynchronizeTasksJob(taskList, taskDataManager, tasksModel, connector,
+							repository, tasksToBeSynchronized);
+					job.setUser(isUser());
+					job.setSession(session);
+					if (!tasksToBeSynchronized.isEmpty()) {
+						Policy.checkCanceled(monitor);
+						IStatus result = job.run(new SubProgressMonitor(monitor, 30));
+						if (result == Status.CANCEL_STATUS) {
+							throw new OperationCanceledException();
+						}
+						statuses.addAll(job.getStatuses());
+					}
+					monitor.subTask(Messages.SynchronizeQueriesJob_Receiving_related_tasks);
+					job.synchronizedTaskRelations(monitor, relationsByTaskId);
+					monitor.worked(10);
+
+					session.setChangedTasks(tasksToBeSynchronized);
+					if (statuses.size() > 0) {
+						Status status = new MultiStatus(ITasksCoreConstants.ID_PLUGIN, 0,
+								statuses.toArray(new IStatus[0]), "Query synchronization failed", null); //$NON-NLS-1$
+						session.setStatus(status);
+					}
+
+					// hook into the connector for synchronization time stamp management
+					postSynchronization(session, new SubProgressMonitor(monitor, 10));
 				} finally {
-					for (RepositoryQuery repositoryQuery : queries) {
-						repositoryQuery.setSynchronizing(false);
-					}
-					taskList.notifySynchronizationStateChanged(queries);
+					Job.getJobManager().endRule(rule);
 				}
-
-				Set<ITask> tasksToBeSynchronized = new HashSet<ITask>();
-				for (ITask task : session.getStaleTasks()) {
-					tasksToBeSynchronized.add(task);
-					((AbstractTask) task).setSynchronizing(true);
-				}
-
-				// synchronize tasks that were marked by the connector
-				SynchronizeTasksJob job = new SynchronizeTasksJob(taskList, taskDataManager, tasksModel, connector,
-						repository, tasksToBeSynchronized);
-				job.setUser(isUser());
-				job.setSession(session);
-				if (!tasksToBeSynchronized.isEmpty()) {
-					Policy.checkCanceled(monitor);
-					IStatus result = job.run(new SubProgressMonitor(monitor, 30));
-					if (result == Status.CANCEL_STATUS) {
-						throw new OperationCanceledException();
-					}
-					statuses.addAll(job.getStatuses());
-				}
-				monitor.subTask(Messages.SynchronizeQueriesJob_Receiving_related_tasks);
-				job.synchronizedTaskRelations(monitor, relationsByTaskId);
-				monitor.worked(10);
-
-				session.setChangedTasks(tasksToBeSynchronized);
-				if (statuses.size() > 0) {
-					Status status = new MultiStatus(ITasksCoreConstants.ID_PLUGIN, 0, statuses.toArray(new IStatus[0]),
-							"Query synchronization failed", null); //$NON-NLS-1$
-					session.setStatus(status);
-				}
-
-				// hook into the connector for synchronization time stamp management
-				postSynchronization(session, new SubProgressMonitor(monitor, 10));
+			} catch (OperationCanceledException e) {
+				return Status.CANCEL_STATUS;
+			} catch (Exception e) {
+				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Synchronization failed", e)); //$NON-NLS-1$
+			} catch (LinkageError e) {
+				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, NLS.bind(
+						"Synchronization for connector ''{0}'' failed", connector.getConnectorKind()), e)); //$NON-NLS-1$
 			} finally {
-				Job.getJobManager().endRule(rule);
+				monitor.done();
 			}
-		} catch (OperationCanceledException e) {
-			return Status.CANCEL_STATUS;
-		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Synchronization failed", e)); //$NON-NLS-1$
-		} catch (LinkageError e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, NLS.bind(
-					"Synchronization for connector ''{0}'' failed", connector.getConnectorKind()), e)); //$NON-NLS-1$
 		} finally {
-			monitor.done();
+			monitor.detach(jobMonitor);
 		}
 		return Status.OK_STATUS;
 	}

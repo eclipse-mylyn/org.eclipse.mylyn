@@ -81,69 +81,75 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 
 	@Override
 	public IStatus run(IProgressMonitor jobMonitor) {
-		monitor.attach(jobMonitor);
-		// get the current list of repositories
-		Set<TaskRepository> repositories = this.repositories;
-		if (repositories == null) {
-			repositories = new HashSet<TaskRepository>(repositoryManager.getAllRepositories());
-		}
 		try {
-			monitor.beginTask(Messages.SynchronizeRepositoriesJob_Processing, repositories.size() * 100);
+			monitor.setCanceled(false);
+			monitor.attach(jobMonitor);
 
-			if (TRACE_ENABLED) {
-				trace("Starting repository synchronization"); //$NON-NLS-1$
+			// get the current list of repositories
+			Set<TaskRepository> repositories = this.repositories;
+			if (repositories == null) {
+				repositories = new HashSet<TaskRepository>(repositoryManager.getAllRepositories());
 			}
-			for (TaskRepository repository : repositories) {
-				if (monitor.isCanceled()) {
-					return Status.CANCEL_STATUS;
-				}
-
-				if (repository.isOffline()) {
-					if (TRACE_ENABLED) {
-						trace("Skipping synchronization for " + repository.getRepositoryLabel()); //$NON-NLS-1$
-					}
-					monitor.worked(100);
-					continue;
-				}
-
-				monitor.setTaskName(MessageFormat.format(Messages.SynchronizeRepositoriesJob_Processing_,
-						repository.getRepositoryLabel()));
-
-				final AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(repository.getConnectorKind());
-				Set<RepositoryQuery> queries = new HashSet<RepositoryQuery>(
-						taskList.getRepositoryQueries(repository.getRepositoryUrl()));
-				// remove queries that are not configured for auto update
-				if (!isUser()) {
-					for (Iterator<RepositoryQuery> it = queries.iterator(); it.hasNext();) {
-						if (!it.next().getAutoUpdate()) {
-							it.remove();
-						}
-					}
-				}
-
-				if (isUser() || queries.isEmpty()) {
-					monitor.worked(20);
-				} else {
-					// occasionally request update of repository configuration attributes as part of background synchronizations
-					updateRepositoryConfiguration(repository, connector, new SubProgressMonitor(monitor, 20));
-				}
+			try {
+				monitor.beginTask(Messages.SynchronizeRepositoriesJob_Processing, repositories.size() * 100);
 
 				if (TRACE_ENABLED) {
-					trace("Synchronizing queries for " + repository.getRepositoryLabel()); //$NON-NLS-1$
+					trace("Starting repository synchronization"); //$NON-NLS-1$
 				}
-				updateQueries(repository, connector, queries, monitor);
-			}
-			if (TRACE_ENABLED) {
-				trace("Completed repository synchronization"); //$NON-NLS-1$
-			}
-			// it's better to remove the job from the progress view instead of having it blocked until all child jobs finish
+				for (TaskRepository repository : repositories) {
+					if (monitor.isCanceled()) {
+						return Status.CANCEL_STATUS;
+					}
+
+					if (repository.isOffline()) {
+						if (TRACE_ENABLED) {
+							trace("Skipping synchronization for " + repository.getRepositoryLabel()); //$NON-NLS-1$
+						}
+						monitor.worked(100);
+						continue;
+					}
+
+					monitor.setTaskName(MessageFormat.format(Messages.SynchronizeRepositoriesJob_Processing_,
+							repository.getRepositoryLabel()));
+
+					final AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(repository.getConnectorKind());
+					Set<RepositoryQuery> queries = new HashSet<RepositoryQuery>(
+							taskList.getRepositoryQueries(repository.getRepositoryUrl()));
+					// remove queries that are not configured for auto update
+					if (!isUser()) {
+						for (Iterator<RepositoryQuery> it = queries.iterator(); it.hasNext();) {
+							if (!it.next().getAutoUpdate()) {
+								it.remove();
+							}
+						}
+					}
+
+					if (isUser() || queries.isEmpty()) {
+						monitor.worked(20);
+					} else {
+						// occasionally request update of repository configuration attributes as part of background synchronizations
+						updateRepositoryConfiguration(repository, connector, new SubProgressMonitor(monitor, 20));
+					}
+
+					if (TRACE_ENABLED) {
+						trace("Synchronizing queries for " + repository.getRepositoryLabel()); //$NON-NLS-1$
+					}
+					updateQueries(repository, connector, queries, monitor);
+				}
+				if (TRACE_ENABLED) {
+					trace("Completed repository synchronization"); //$NON-NLS-1$
+				}
+				// it's better to remove the job from the progress view instead of having it blocked until all child jobs finish
 //			if (isUser()) {
 //				Job.getJobManager().join(family, monitor);
 //			}
-		} catch (OperationCanceledException e) {
-			return Status.CANCEL_STATUS;
+			} catch (OperationCanceledException e) {
+				return Status.CANCEL_STATUS;
+			} finally {
+				monitor.done();
+			}
 		} finally {
-			monitor.done();
+			monitor.detach(jobMonitor);
 		}
 		return Status.OK_STATUS;
 	}

@@ -100,43 +100,48 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 
 	@Override
 	public IStatus run(IProgressMonitor jobMonitor) {
-		monitor.attach(jobMonitor);
 		try {
-			if (taskRepository == null) {
-				try {
-					monitor.beginTask(Messages.SynchronizeTasksJob_Processing, allTasks.size() * 100);
-					// group tasks by repository
-					Map<TaskRepository, Set<ITask>> tasksByRepository = new HashMap<TaskRepository, Set<ITask>>();
-					for (ITask task : allTasks) {
-						TaskRepository repository = repositoryManager.getRepository(task.getConnectorKind(),
-								task.getRepositoryUrl());
-						Set<ITask> tasks = tasksByRepository.get(repository);
-						if (tasks == null) {
-							tasks = new HashSet<ITask>();
-							tasksByRepository.put(repository, tasks);
+			monitor.setCanceled(false);
+			monitor.attach(jobMonitor);
+			try {
+				if (taskRepository == null) {
+					try {
+						monitor.beginTask(Messages.SynchronizeTasksJob_Processing, allTasks.size() * 100);
+						// group tasks by repository
+						Map<TaskRepository, Set<ITask>> tasksByRepository = new HashMap<TaskRepository, Set<ITask>>();
+						for (ITask task : allTasks) {
+							TaskRepository repository = repositoryManager.getRepository(task.getConnectorKind(),
+									task.getRepositoryUrl());
+							Set<ITask> tasks = tasksByRepository.get(repository);
+							if (tasks == null) {
+								tasks = new HashSet<ITask>();
+								tasksByRepository.put(repository, tasks);
+							}
+							tasks.add(task);
 						}
-						tasks.add(task);
+						// synchronize tasks for each repositories
+						for (TaskRepository taskRepository : tasksByRepository.keySet()) {
+							setName(MessageFormat.format(Messages.SynchronizeTasksJob_Synchronizing_Tasks__X_,
+									taskRepository.getRepositoryLabel()));
+							this.taskRepository = taskRepository;
+							Set<ITask> repositoryTasks = tasksByRepository.get(taskRepository);
+							run(repositoryTasks, new SubProgressMonitor(monitor, repositoryTasks.size() * 100));
+						}
+					} finally {
+						monitor.done();
 					}
-					// synchronize tasks for each repositories
-					for (TaskRepository taskRepository : tasksByRepository.keySet()) {
-						setName(MessageFormat.format(Messages.SynchronizeTasksJob_Synchronizing_Tasks__X_,
-								taskRepository.getRepositoryLabel()));
-						this.taskRepository = taskRepository;
-						Set<ITask> repositoryTasks = tasksByRepository.get(taskRepository);
-						run(repositoryTasks, new SubProgressMonitor(monitor, repositoryTasks.size() * 100));
-					}
-				} finally {
-					monitor.done();
+				} else {
+					run(allTasks, monitor);
 				}
-			} else {
-				run(allTasks, monitor);
+			} catch (OperationCanceledException e) {
+				for (ITask task : allTasks) {
+					((AbstractTask) task).setSynchronizing(false);
+					taskList.notifyElementChanged(task);
+				}
+				return Status.CANCEL_STATUS;
 			}
-		} catch (OperationCanceledException e) {
-			for (ITask task : allTasks) {
-				((AbstractTask) task).setSynchronizing(false);
-				taskList.notifyElementChanged(task);
-			}
-			return Status.CANCEL_STATUS;
+		} finally {
+			monitor.detach(jobMonitor);
 		}
 		return Status.OK_STATUS;
 	}
