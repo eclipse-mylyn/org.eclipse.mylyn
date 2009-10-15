@@ -556,12 +556,20 @@ public class EditorUtil {
 		combo.addListener(SWT.KeyDown, new Listener() {
 			public void handleEvent(Event event) {
 				if (event.keyCode == SWT.ARROW_UP) {
+					if (combo.isFocusControl()) {
+						// could be a legitimate key event, let CCombo handle it
+						return;
+					}
 					ScrolledComposite form = FormUtil.getScrolledComposite(combo);
 					if (form != null) {
 						EditorUtil.scroll(form, 0, -form.getVerticalBar().getIncrement());
 						event.doit = false;
 					}
 				} else if (event.keyCode == SWT.ARROW_DOWN) {
+					if (combo.isFocusControl()) {
+						// could be a legitimate key event, let CCombo handle it
+						return;
+					}
 					ScrolledComposite form = FormUtil.getScrolledComposite(combo);
 					if (form != null) {
 						EditorUtil.scroll(form, 0, form.getVerticalBar().getIncrement());
