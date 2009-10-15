@@ -540,17 +540,18 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 		if (activityTrackingEnabledButton.getSelection()) {
 			timeoutEnabledButton.setEnabled(true);
-			synchScheduleTime.setEnabled(enableBackgroundSynch.getSelection());
 			timeoutMinutes.setEnabled(timeoutEnabledButton.getSelection());
 			timeoutLabel1.setEnabled(timeoutEnabledButton.getSelection());
 			timeoutLabel2.setEnabled(timeoutEnabledButton.getSelection());
 		} else {
 			timeoutEnabledButton.setEnabled(false);
-			synchScheduleTime.setEnabled(false);
 			timeoutMinutes.setEnabled(false);
 			timeoutLabel1.setEnabled(false);
 			timeoutLabel2.setEnabled(false);
 		}
+
+		synchScheduleTime.setEnabled(enableBackgroundSynch.getSelection());
+
 	}
 
 	private String getMinutesString() {
