@@ -233,7 +233,7 @@ public class TaskListToolTip extends GradientToolTip {
 	private void appendEstimateAndActive(StringBuilder sb, int estimateTotal, long activeTotal) {
 		sb.append(NLS.bind(Messages.TaskListToolTip_Estimate, estimateTotal));
 		sb.append("\n"); //$NON-NLS-1$
-		if (!MonitorUiPlugin.getDefault().isActivityTrackingEnabled()) {
+		if (MonitorUiPlugin.getDefault().isActivityTrackingEnabled()) {
 			sb.append(NLS.bind(Messages.TaskListToolTip_Active_X, DateUtil.getFormattedDurationShort(activeTotal)));
 			sb.append("\n"); //$NON-NLS-1$
 		}
