@@ -16,6 +16,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
@@ -32,6 +34,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.PatternFilter;
+import org.eclipse.ui.progress.WorkbenchJob;
 
 /**
  * @author Shawn Minto
@@ -51,6 +54,20 @@ public class InPlaceCheckBoxTreeDialog extends AbstractInPlaceDialog {
 
 		public CheckboxFilteredTree(Composite parent, int treeStyle, PatternFilter filter) {
 			super(parent, treeStyle, filter);
+		}
+
+		@Override
+		protected WorkbenchJob doCreateRefreshJob() {
+			WorkbenchJob job = super.doCreateRefreshJob();
+			job.addJobChangeListener(new JobChangeAdapter() {
+				@Override
+				public void done(IJobChangeEvent event) {
+					if (event.getResult() != null && event.getResult().isOK() && !getViewer().getTree().isDisposed()) {
+						getViewer().setCheckedElements(selectedValues.toArray());
+					}
+				}
+			});
+			return job;
 		}
 
 		@Override
