@@ -782,10 +782,9 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 		createParts(PATH_PEOPLE, bottomComposite, descriptors);
 		bottomComposite.pack(true);
 
-		createSubParts(descriptors);
 	}
 
-	private void createParts(String path, final Composite parent, Collection<TaskEditorPartDescriptor> descriptors) {
+	private void createParts(String path, final Composite parent, final Collection<TaskEditorPartDescriptor> descriptors) {
 		for (Iterator<TaskEditorPartDescriptor> it = descriptors.iterator(); it.hasNext();) {
 			final TaskEditorPartDescriptor descriptor = it.next();
 			if (path == null || path.equals(descriptor.getPath())) {
@@ -798,7 +797,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 					public void run() throws Exception {
 						AbstractTaskEditorPart part = descriptor.createPart();
 						part.setPartId(descriptor.getId());
-						initializePart(parent, part);
+						initializePart(parent, part, descriptors);
 					}
 				});
 				it.remove();
@@ -806,16 +805,15 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 		}
 	}
 
-	private void createSubParts(Collection<TaskEditorPartDescriptor> descriptors) {
-		for (Iterator<TaskEditorPartDescriptor> it = descriptors.iterator(); it.hasNext();) {
-			final TaskEditorPartDescriptor descriptor = it.next();
+	private void createSubParts(final AbstractTaskEditorSection parentPart,
+			final Collection<TaskEditorPartDescriptor> descriptors) {
+		for (final TaskEditorPartDescriptor descriptor : descriptors) {
 			int i;
 			String path = descriptor.getPath();
 			if (path != null && (i = path.indexOf("/")) != -1) { //$NON-NLS-1$
 				String parentId = path.substring(0, i);
 				final String subPath = path.substring(i + 1);
-				final AbstractTaskEditorPart parentPart = getPart(parentId);
-				if (parentPart instanceof AbstractTaskEditorSection) {
+				if (parentId.equals(parentPart.getPartId())) {
 					SafeRunner.run(new ISafeRunnable() {
 						public void handleException(Throwable e) {
 							StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
@@ -825,11 +823,11 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 						public void run() throws Exception {
 							AbstractTaskEditorPart part = descriptor.createPart();
 							part.setPartId(descriptor.getId());
-							initializePart(null, part);
-							((AbstractTaskEditorSection) parentPart).addSubPart(subPath, part);
+							getManagedForm().addPart(part);
+							part.initialize(AbstractTaskEditorPage.this);
+							parentPart.addSubPart(subPath, part);
 						}
 					});
-					it.remove();
 				}
 			}
 		}
@@ -1225,9 +1223,13 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 		}
 	}
 
-	private void initializePart(Composite parent, AbstractTaskEditorPart part) {
+	private void initializePart(Composite parent, AbstractTaskEditorPart part,
+			Collection<TaskEditorPartDescriptor> descriptors) {
 		getManagedForm().addPart(part);
 		part.initialize(this);
+		if (part instanceof AbstractTaskEditorSection) {
+			createSubParts((AbstractTaskEditorSection) part, descriptors);
+		}
 		if (parent != null) {
 			part.createControl(parent, toolkit);
 			if (part.getControl() != null) {
