@@ -396,47 +396,54 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		// Note: setting current version to latest assumes the data arriving here is either for a new task or is
 		// fresh from the repository (not locally stored data that may not have been migrated).
 		taskData.setVersion(TaskDataVersion.VERSION_CURRENT.toString());
+		try {
+			monitor = Policy.monitorFor(monitor);
 
-		RepositoryConfiguration repositoryConfiguration = connector.getRepositoryConfiguration(repository, false,
-				monitor);
+			monitor.beginTask("Initialize Task Data", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
 
-		if (repositoryConfiguration == null) {
-			return false;
-		}
+			RepositoryConfiguration repositoryConfiguration = connector.getRepositoryConfiguration(repository, false,
+					monitor);
 
-		if (taskData.isNew()) {
-			String product = null;
-			String component = null;
-			if (initializationData == null || initializationData.getProduct() == null) {
-				if (repositoryConfiguration.getProducts().size() > 0) {
-					product = repositoryConfiguration.getProducts().get(0);
-				}
-			} else {
-				product = initializationData.getProduct();
-			}
-
-			if (product == null) {
+			if (repositoryConfiguration == null) {
 				return false;
 			}
 
-			if (initializationData != null && initializationData.getComponent() != null
-					&& initializationData.getComponent().length() > 0) {
-				component = initializationData.getComponent();
-			}
+			if (taskData.isNew()) {
+				String product = null;
+				String component = null;
+				if (initializationData == null || initializationData.getProduct() == null) {
+					if (repositoryConfiguration.getProducts().size() > 0) {
+						product = repositoryConfiguration.getProducts().get(0);
+					}
+				} else {
+					product = initializationData.getProduct();
+				}
 
-			if (component == null && repositoryConfiguration.getComponents(product).size() > 0) {
-				component = repositoryConfiguration.getComponents(product).get(0);
-			}
+				if (product == null) {
+					return false;
+				}
 
-			initializeNewTaskDataAttributes(repositoryConfiguration, taskData, product, component, monitor);
-			if (connector != null) {
-				connector.setPlatformDefaultsOrGuess(repository, taskData);
-			}
-			return true;
+				if (initializationData != null && initializationData.getComponent() != null
+						&& initializationData.getComponent().length() > 0) {
+					component = initializationData.getComponent();
+				}
 
-		} else {
-			boolean shortLogin = Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN));
-			repositoryConfiguration.configureTaskData(taskData, shortLogin, connector);
+				if (component == null && repositoryConfiguration.getComponents(product).size() > 0) {
+					component = repositoryConfiguration.getComponents(product).get(0);
+				}
+
+				initializeNewTaskDataAttributes(repositoryConfiguration, taskData, product, component, monitor);
+				if (connector != null) {
+					connector.setPlatformDefaultsOrGuess(repository, taskData);
+				}
+				return true;
+
+			} else {
+				boolean shortLogin = Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN));
+				repositoryConfiguration.configureTaskData(taskData, shortLogin, connector);
+			}
+		} finally {
+			monitor.done();
 		}
 		return true;
 	}
