@@ -14,7 +14,7 @@
    <extension
          point="org.eclipse.mylyn.discovery.core.connectorDiscovery">
       <connectorCategory
-            description="Integrations for task and project management systems."
+            description="Task, change, bug and project tracking."
             id="org.eclipse.mylyn.discovery.directory.categories.TaskManagement"
             name="Task and Change Management"
             relevance="50">
@@ -29,7 +29,7 @@
          </group>
       </connectorCategory>
 	  <connectorCategory
-         description="Tools for the management of revisions of source code."
+         description="Software configuration and version control."
          id="org.eclipse.mylyn.discovery.directory.categories.SourceCodeManagement"
          name="Source Code Management"
          relevance="40">
@@ -38,7 +38,7 @@
       </group>
       </connectorCategory>
    <connectorCategory
-         description="Integrations for managing and monitoring continuous build systems."
+         description="Build and continuous integration."
          id="org.eclipse.mylyn.discovery.directory.categories.BuildManagement"
          name="Build Management"
          relevance="30">
@@ -47,7 +47,7 @@
       </group>
    </connectorCategory>
    <connectorCategory
-         description="Development tools for code coverage, source code metrics and other development related tasks."
+         description="Development tools for code analysis, coverage, metrics and more."
          id="org.eclipse.mylyn.discovery.directory.categories.Utilities"
          name="Utilities"
          relevance="10">
