@@ -121,8 +121,6 @@ import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
-
-
 /**
  * A text editor for editing lightweight markup. Can be configured to accept any {@link MarkupLanguage}, with pluggable
  * content assist, validation, and cheat-sheet help content.
@@ -570,7 +568,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 					builder.endBlock();
 					builder.endDocument();
 
-					xhtml = writer.toString();
+					xhtml = documentWriter.toString();
 				}
 			}
 			if (revealItem) {
@@ -1031,7 +1029,6 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	 * 
 	 * @param file
 	 *            the file for which the preference should be looked up
-	 * 
 	 * @return the markup language preference, or null if it was not set or could not be loaded.
 	 */
 	public static MarkupLanguage loadMarkupLanguagePreference(IFile file) {
@@ -1047,7 +1044,6 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	 * 
 	 * @param file
 	 *            the file for which the preference should be looked up
-	 * 
 	 * @return the markup language name, or null if no preference exists
 	 */
 	public static String getMarkupLanguagePreference(IFile file) {
@@ -1077,11 +1073,8 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 				file.setPersistentProperty(new QualifiedName(WikiTextUiPlugin.getDefault().getPluginId(),
 						MARKUP_LANGUAGE), preference);
 			} catch (CoreException e) {
-				WikiTextUiPlugin.getDefault()
-						.log(
-								IStatus.ERROR,
-								NLS.bind(Messages.MarkupEditor_markupPreferenceError2,
-										new Object[] { preference }), e);
+				WikiTextUiPlugin.getDefault().log(IStatus.ERROR,
+						NLS.bind(Messages.MarkupEditor_markupPreferenceError2, new Object[] { preference }), e);
 			}
 		}
 	}
