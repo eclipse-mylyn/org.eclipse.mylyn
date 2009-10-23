@@ -49,8 +49,8 @@ $JAVA_HOME/bin/java \
 chmod 664 $DIR/artifacts.jar $DIR/content.jar $DIR/digest.zip
 }
 
-pack e3.3 "Mylyn for Eclipse 3.3"
-pack e3.4 "Mylyn for Eclipse 3.4 and 3.5"
+#pack e3.3 "Mylyn for Eclipse 3.3"
+pack e3.4 "Mylyn for Eclipse 3.4, 3.5 and 3.6"
 pack extras "Mylyn Extras"
 pack incubator "Mylyn Incubator"
 
