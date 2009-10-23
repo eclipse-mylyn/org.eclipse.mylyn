@@ -91,8 +91,8 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 		legendItems.add(LegendElement.createTask("blocker", BugzillaImages.OVERLAY_CRITICAL)); //$NON-NLS-1$
 		legendItems.add(LegendElement.createTask("critical", BugzillaImages.OVERLAY_CRITICAL)); //$NON-NLS-1$
 		legendItems.add(LegendElement.createTask("major", BugzillaImages.OVERLAY_CRITICAL)); //$NON-NLS-1$
-		legendItems.add(LegendElement.createTask("minor", BugzillaImages.OVERLAY_MAJOR)); //$NON-NLS-1$
 		legendItems.add(LegendElement.createTask("normal", null)); //$NON-NLS-1$
+		legendItems.add(LegendElement.createTask("minor", BugzillaImages.OVERLAY_MAJOR)); //$NON-NLS-1$
 		legendItems.add(LegendElement.createTask("enhancement", BugzillaImages.OVERLAY_ENHANCEMENT)); //$NON-NLS-1$
 		legendItems.add(LegendElement.createTask("trivial", BugzillaImages.OVERLAY_TRIVIAL)); //$NON-NLS-1$
 		return legendItems;
