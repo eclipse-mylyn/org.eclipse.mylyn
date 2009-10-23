@@ -1263,13 +1263,15 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		if (errorMessage == null && !isValidUrl(url)) {
 			errorMessage = Messages.AbstractRepositorySettingsPage_Enter_a_valid_server_url;
 		}
+
 		if (errorMessage == null) {
 			if ((!needsAnonymousLogin() || !anonymousButton.getSelection()) && isMissingCredentials()) {
 				errorMessage = Messages.AbstractRepositorySettingsPage_Enter_a_user_id_Message0;
 			}
+			setMessage(errorMessage, repository == null ? IMessageProvider.NONE : IMessageProvider.ERROR);
+		} else {
+			setMessage(errorMessage, IMessageProvider.ERROR);
 		}
-
-		setMessage(errorMessage, repository == null ? IMessageProvider.NONE : IMessageProvider.ERROR);
 		return errorMessage == null && super.isPageComplete();
 	}
 
