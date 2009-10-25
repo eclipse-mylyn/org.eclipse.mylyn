@@ -728,7 +728,7 @@ public class TextileLanguageTest extends TestCase {
 		String html = parser.parseToHtml("some no tag <!-- nt");
 
 		System.out.println("HTML: \n" + html);
-		assertTrue(html.contains("&lt;!--"));
+		assertTrue(html.contains("&lt;!&#8212;"));
 	}
 
 	public void testHtmlLiteralFalsePositive3() throws IOException {
@@ -890,6 +890,27 @@ public class TextileLanguageTest extends TestCase {
 
 		System.out.println("HTML: \n" + html);
 		assertTrue(html.contains("one &#8212; two"));
+	}
+
+	public void testEmDashAtStartOfLine() throws IOException {
+		String html = parser.parseToHtml("-- two");
+
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("&#8212; two"));
+	}
+
+	public void testEmDashNegativeNoPrecedingSpace() throws IOException {
+		String html = parser.parseToHtml("one-- two");
+
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("one&#8212; two"));
+	}
+
+	public void testEmDashAfterImage() throws IOException {
+		String html = parser.parseToHtml("!images/button.png(Button)! -- Button");
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<p><img alt=\"Button\" title=\"Button\" border=\"0\" src=\"images/button.png\""
+				+ "/> &#8212; Button</p>"));
 	}
 
 	public void testEnDash() throws IOException {
