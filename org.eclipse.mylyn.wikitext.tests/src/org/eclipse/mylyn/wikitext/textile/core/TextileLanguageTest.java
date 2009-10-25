@@ -591,7 +591,7 @@ public class TextileLanguageTest extends TestCase {
 		String html = parser.parseToHtml("Here comes an !imageUrl(alt text)! with more text");
 
 		System.out.println("HTML: \n" + html);
-		assertTrue(html.contains("<img alt=\"(alt text)\" title=\"(alt text)\" border=\"0\" src=\"imageUrl\"/>"));
+		assertTrue(html.contains("<img alt=\"alt text\" title=\"alt text\" border=\"0\" src=\"imageUrl\"/>"));
 	}
 
 	public void testImageAlignLeft() throws IOException {

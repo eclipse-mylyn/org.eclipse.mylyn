@@ -20,8 +20,6 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class ImageTextilePhraseModifier extends PatternBasedElement {
@@ -36,7 +34,7 @@ public class ImageTextilePhraseModifier extends PatternBasedElement {
 	protected String getPattern(int groupOffset) {
 		String quotedDelimiter = Pattern.quote("!"); //$NON-NLS-1$
 
-		return quotedDelimiter + Textile.REGEX_ATTRIBUTES + "(<|>|=)?([^\\s!](?:.*?\\S)?)(\\([^\\)]+\\))?" + // content //$NON-NLS-1$
+		return quotedDelimiter + Textile.REGEX_ATTRIBUTES + "(<|>|=)?([^\\s!](?:.*?\\S)?)(?:\\(([^\\)]+)\\))?" + // content //$NON-NLS-1$
 				quotedDelimiter + "(:([^\\s]*[^\\s!.)(,]))?"; // optional hyperlink suffix //$NON-NLS-1$
 	}
 
