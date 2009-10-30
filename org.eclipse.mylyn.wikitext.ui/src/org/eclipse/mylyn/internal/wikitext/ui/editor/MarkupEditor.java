@@ -39,6 +39,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.commands.ActionHandler;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
@@ -97,6 +98,7 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -219,7 +221,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 
 	@Override
 	protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler ruler, int styles) {
-
+		initializeFonts();
 		tabFolder = new CTabFolder(parent, SWT.BOTTOM);
 
 		{
@@ -351,6 +353,19 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		}
 
 		return viewer;
+	}
+
+	private void initializeFonts() {
+		Font font = null;
+		String symbolicFontName = getFontPropertyPreferenceKey();
+
+		if (symbolicFontName != null && !JFaceResources.TEXT_FONT.equals(symbolicFontName)) {
+			font = JFaceResources.getFont(symbolicFontName);
+		}
+		if (font == null) {
+			font = JFaceResources.getTextFont();
+		}
+		sourceViewerConfiguration.setDefaultFont(font);
 	}
 
 	@Override

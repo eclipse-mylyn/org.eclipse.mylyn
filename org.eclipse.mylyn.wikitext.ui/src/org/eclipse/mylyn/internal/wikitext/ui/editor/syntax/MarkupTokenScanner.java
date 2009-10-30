@@ -31,8 +31,6 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Font;
 
-
-
 /**
  * A token scanner that uses the results of the {@link FastMarkupPartitioner} to identify tokens.
  * 
@@ -44,18 +42,37 @@ public class MarkupTokenScanner implements ITokenScanner {
 
 	private Iterator<Token> tokenIt = null;
 
-	private final CssStyleManager styleManager;
+	private CssStyleManager styleManager;
 
-	private final FontState defaultState;
+	private FontState defaultState;
 
 	private Preferences preferences;
 
 	private final CssParser cssParser = new CssParser();
 
 	public MarkupTokenScanner(Font defaultFont, Font defaultMonospaceFont) {
+		initialize(defaultFont, defaultMonospaceFont);
+		reloadPreferences();
+	}
+
+	/**
+	 * Reset the fonts used by this token scanner.
+	 * 
+	 * @param defaultFont
+	 *            the default font, must not be null.
+	 * @param defaultMonospaceFont
+	 *            the default monospace font, or null if a suitable default should be selected
+	 */
+	public void resetFonts(Font defaultFont, Font defaultMonospaceFont) {
+		if (defaultFont == null) {
+			throw new IllegalArgumentException();
+		}
+		initialize(defaultFont, defaultMonospaceFont);
+	}
+
+	private void initialize(Font defaultFont, Font defaultMonospaceFont) {
 		styleManager = new CssStyleManager(defaultFont, defaultMonospaceFont);
 		defaultState = styleManager.createDefaultFontState();
-		reloadPreferences();
 	}
 
 	public void reloadPreferences() {

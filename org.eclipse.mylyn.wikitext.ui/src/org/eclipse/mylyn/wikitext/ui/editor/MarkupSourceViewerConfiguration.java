@@ -64,12 +64,11 @@ import org.eclipse.ui.texteditor.HippieProposalProcessor;
  * A source viewer configuration suitable for installing on a markup editor
  * 
  * @author David Green
- * 
  * @since 1.1
  */
 public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerConfiguration {
 
-	private ITokenScanner scanner;
+	private MarkupTokenScanner scanner;
 
 	private MarkupTemplateCompletionProcessor completionProcessor;
 
@@ -249,9 +248,8 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 	}
 
 	/**
-	 * provide access to an information presenter that can be used to pop-up a quick outline.
-	 * 
-	 * Source viewers should configure as follows:
+	 * provide access to an information presenter that can be used to pop-up a quick outline. Source viewers should
+	 * configure as follows:
 	 * 
 	 * <pre>
 	 * public void configure(SourceViewerConfiguration configuration) {
@@ -265,7 +263,6 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 	 * 
 	 * @param sourceViewer
 	 *            the source viewer for which the presenter should be created
-	 * 
 	 * @return the presenter
 	 */
 	public IInformationPresenter getOutlineInformationPresenter(ISourceViewer sourceViewer) {
@@ -329,7 +326,15 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 	 * the default font, as used by the {@link #getMarkupScanner() scanner}.
 	 */
 	public void setDefaultFont(Font defaultFont) {
-		this.defaultFont = defaultFont;
+		if (defaultFont == null) {
+			throw new IllegalArgumentException();
+		}
+		if (defaultFont != this.defaultFont) {
+			this.defaultFont = defaultFont;
+			if (scanner != null) {
+				scanner.resetFonts(defaultFont, defaultMonospaceFont);
+			}
+		}
 	}
 
 	/**
@@ -343,7 +348,12 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 	 * the default font for monospace text, as used by the {@link #getMarkupScanner() scanner}.
 	 */
 	public void setDefaultMonospaceFont(Font defaultMonospaceFont) {
-		this.defaultMonospaceFont = defaultMonospaceFont;
+		if (this.defaultMonospaceFont != defaultMonospaceFont) {
+			this.defaultMonospaceFont = defaultMonospaceFont;
+			if (scanner != null) {
+				scanner.resetFonts(defaultFont, defaultMonospaceFont);
+			}
+		}
 	}
 
 	/**
