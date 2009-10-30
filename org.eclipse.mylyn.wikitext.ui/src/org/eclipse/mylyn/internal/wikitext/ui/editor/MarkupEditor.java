@@ -279,7 +279,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 			}
 
 			public void widgetSelected(SelectionEvent selectionevent) {
-				if (tabFolder.getSelection() == previewTab) {
+				if (isShowingPreview()) {
 					updatePreview(getNearestMatchingOutlineItem());
 				}
 			}
@@ -477,6 +477,9 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 								++documentGeneration;
 							}
 							scheduleOutlineUpdate();
+							if (isShowingPreview()) {
+								updatePreview(null);
+							}
 						}
 
 					};
@@ -598,7 +601,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "rawtypes" })
 	@Override
 	public Object getAdapter(Class adapter) {
 		if (IContentOutlinePage.class == adapter) {
@@ -1163,7 +1166,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 
 	public void selectAndReveal(OutlineItem item) {
 		selectAndReveal(item.getOffset(), item.getLength());
-		if (tabFolder.getSelection() == previewTab) {
+		if (isShowingPreview()) {
 			// scroll preview to the selected item.
 			revealInBrowser(item);
 		}
@@ -1201,4 +1204,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		updateOutlineSelection();
 	}
 
+	private boolean isShowingPreview() {
+		return tabFolder.getSelection() == previewTab;
+	}
 }
