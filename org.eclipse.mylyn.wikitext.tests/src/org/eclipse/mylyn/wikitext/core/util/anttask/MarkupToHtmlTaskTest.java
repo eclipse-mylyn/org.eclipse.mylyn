@@ -54,6 +54,24 @@ public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 		assertTrue(content.contains("</body>"));
 	}
 
+	public void testSimpleOutputStrictXHTML() throws IOException {
+		File markup = createSimpleTextileMarkupWithImage();
+		task.setFile(markup);
+		task.setXhtmlStrict(true);
+		task.execute();
+
+		listFiles();
+
+		File htmlFile = new File(markup.getParentFile(), "markup.html");
+		assertTrue(htmlFile.exists() && htmlFile.isFile());
+
+		String content = getContent(htmlFile);
+		System.out.println(content);
+
+		// verify that alt is present on img tag.
+		assertTrue(Pattern.compile("<img.*?alt=\"\"").matcher(content).find());
+	}
+
 	public void testSimpleOutputAlternateTitle() throws IOException {
 		File markup = createSimpleTextileMarkup();
 		task.setFile(markup);
@@ -123,6 +141,17 @@ public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 			writer.println("h1. Second Heading");
 			writer.println();
 			writer.println("some more content");
+		} finally {
+			writer.close();
+		}
+		return markupFile;
+	}
+
+	protected File createSimpleTextileMarkupWithImage() throws IOException {
+		File markupFile = new File(tempFolder, "markup.textile");
+		PrintWriter writer = new PrintWriter(new FileWriter(markupFile));
+		try {
+			writer.println("some content with !image.png! an image");
 		} finally {
 			writer.close();
 		}

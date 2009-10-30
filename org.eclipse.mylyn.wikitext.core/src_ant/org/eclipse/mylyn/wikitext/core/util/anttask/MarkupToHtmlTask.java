@@ -72,6 +72,8 @@ public class MarkupToHtmlTask extends MarkupTask {
 
 	private String defaultAbsoluteLinkTarget;
 
+	private boolean xhtmlStrict = false;
+
 	@Override
 	public void execute() throws BuildException {
 		if (file == null && filesets.isEmpty()) {
@@ -221,6 +223,7 @@ public class MarkupToHtmlTask extends MarkupTask {
 				builder.setLinkRel(linkRel);
 				builder.setDefaultAbsoluteLinkTarget(defaultAbsoluteLinkTarget);
 				builder.setPrependImagePrefix(prependImagePrefix);
+				builder.setXhtmlStrict(xhtmlStrict);
 
 				SplittingStrategy splittingStrategy = multipleOutputFiles ? new DefaultSplittingStrategy()
 						: new NoSplittingStrategy();
@@ -504,6 +507,26 @@ public class MarkupToHtmlTask extends MarkupTask {
 	 */
 	public void setDefaultAbsoluteLinkTarget(String defaultAbsoluteLinkTarget) {
 		this.defaultAbsoluteLinkTarget = defaultAbsoluteLinkTarget;
+	}
+
+	/**
+	 * Indicate if the builder should attempt to conform to strict XHTML rules. The default is false.
+	 * 
+	 * @see HtmlDocumentBuilder#isXhtmlStrict()
+	 * @since 1.3
+	 */
+	public boolean isXhtmlStrict() {
+		return xhtmlStrict;
+	}
+
+	/**
+	 * Indicate if the builder should attempt to conform to strict XHTML rules. The default is false.
+	 * 
+	 * @see HtmlDocumentBuilder#isXhtmlStrict()
+	 * @since 1.3
+	 */
+	public void setXhtmlStrict(boolean xhtmlStrict) {
+		this.xhtmlStrict = xhtmlStrict;
 	}
 
 }
