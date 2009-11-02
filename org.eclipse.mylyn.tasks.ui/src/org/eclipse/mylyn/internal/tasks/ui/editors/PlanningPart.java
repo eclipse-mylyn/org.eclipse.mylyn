@@ -663,24 +663,24 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		}
 	}
 
-	private String getLabel(DateRange dateRange) {
+	/**
+	 * Returns a short label that describes <code>dateRage</code>. Public for testing.
+	 */
+	public static String getLabel(DateRange dateRange) {
 		if (dateRange instanceof WeekDateRange) {
-			if (dateRange.includes(TaskActivityUtil.getCalendar())) {
+			if (dateRange.isPast() || dateRange.isPresent()) {
 				return Messages.PlanningPart_This_Week;
 			} else if (TaskActivityUtil.getNextWeek().compareTo(dateRange) == 0) {
 				return Messages.PlanningPart_Next_Week;
 			}
 		} else {
-			if (dateRange.isPresent() && !(dateRange instanceof WeekDateRange)
-					|| TasksUiPlugin.getTaskActivityManager().isPastReminder(dateRange, false)) {
+			if (dateRange.isPast() || dateRange.isPresent()) {
 				return Messages.PlanningPart_Today;
 			}
 			if (TaskActivityUtil.getCurrentWeek().includes(dateRange)) {
 				return Messages.PlanningPart_This_Week;
 			}
-			Calendar endNextWeek = TaskActivityUtil.getCalendar();
-			endNextWeek.add(Calendar.DAY_OF_YEAR, 7);
-			if (TaskActivityUtil.getNextWeek().includes(dateRange) && dateRange.before(endNextWeek)) {
+			if (TaskActivityUtil.getNextWeek().includes(dateRange)) {
 				return Messages.PlanningPart_Next_Week;
 			}
 		}

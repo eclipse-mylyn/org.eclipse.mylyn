@@ -76,13 +76,13 @@ public class TaskActivityUtil {
 
 	public static Calendar snapEndOfWeek(Calendar cal) {
 
-		cal.set(Calendar.DAY_OF_WEEK, getLastCalDayInt(cal));
+		cal.set(Calendar.DAY_OF_WEEK, getLastDayOfWeek(cal));
 
 		snapEndOfDay(cal);
 		return cal;
 	}
 
-	private static int getLastCalDayInt(Calendar cal) {
+	public static int getLastDayOfWeek(Calendar cal) {
 		int last = cal.getFirstDayOfWeek() - 1;
 
 		if (last == 0) {
