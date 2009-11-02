@@ -78,6 +78,10 @@ public class AttributeEditorToolkit {
 				|| editor instanceof PersonAttributeEditor) {
 			Control control = (editor instanceof PersonAttributeEditor) ? ((PersonAttributeEditor) editor).getText()
 					: editor.getControl();
+			if (control == null) {
+				// fall back in case getText() returns null
+				control = editor.getControl();
+			}
 			if (!editor.isReadOnly() && hasContentAssist(editor.getTaskAttribute())) {
 				IContentProposalProvider contentProposalProvider = createContentProposalProvider(editor.getTaskAttribute());
 				ILabelProvider labelPropsalProvider = createLabelProposalProvider(editor.getTaskAttribute());
