@@ -1259,13 +1259,15 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	public boolean isPageComplete() {
 		String errorMessage = null;
 		String url = getRepositoryUrl();
+		// check for errors
 		errorMessage = isUniqueUrl(url);
-		if (errorMessage == null && !isValidUrl(url)) {
-			errorMessage = Messages.AbstractRepositorySettingsPage_Enter_a_valid_server_url;
-		}
-
 		if (errorMessage == null) {
-			if ((!needsAnonymousLogin() || !anonymousButton.getSelection()) && isMissingCredentials()) {
+			// check for messages
+			if (!isValidUrl(url)) {
+				errorMessage = Messages.AbstractRepositorySettingsPage_Enter_a_valid_server_url;
+			}
+			if (errorMessage == null && (!needsAnonymousLogin() || !anonymousButton.getSelection())
+					&& isMissingCredentials()) {
 				errorMessage = Messages.AbstractRepositorySettingsPage_Enter_a_user_id_Message0;
 			}
 			setMessage(errorMessage, repository == null ? IMessageProvider.NONE : IMessageProvider.ERROR);
