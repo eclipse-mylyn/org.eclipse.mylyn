@@ -106,11 +106,9 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 			}
 			return editor.getControl();
 		} else {
-			//some connectors don't have priorities.  in this case we just show the defalut icon.
+			//some connectors don't have priorities.  in this case we just show no icon.
 			//this can't be handled within the attribute editor, as it asserts that the attribute cannot be null
-			Label imageOnly = toolkit.createLabel(composite, ""); //$NON-NLS-1$
-			imageOnly.setImage(CommonImages.getImage(CommonImages.PRIORITY_3_LARGE));
-			return imageOnly;
+			return null;
 		}
 	}
 
@@ -156,18 +154,22 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 		// add priority as an icon 
 		TaskAttribute priorityAttribute = getTaskData().getRoot().getMappedAttribute(TaskAttribute.PRIORITY);
 		final Control priorityEditor = addAttributeWithIcon(composite, toolkit, priorityAttribute, false);
-		GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).span(1, 2).applyTo(priorityEditor);
-		// forward focus to the summary editor		
-		priorityEditor.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusGained(FocusEvent e) {
-				if (summaryEditor != null && summaryEditor.getControl() != null) {
-					summaryEditor.getControl().setFocus();
-					//only forward it on first view
-					priorityEditor.removeFocusListener(this);
+		if (priorityEditor != null) {
+			GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).span(1, 2).applyTo(priorityEditor);
+			// forward focus to the summary editor		
+			priorityEditor.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusGained(FocusEvent e) {
+					if (summaryEditor != null && summaryEditor.getControl() != null) {
+						summaryEditor.getControl().setFocus();
+						//only forward it on first view
+						priorityEditor.removeFocusListener(this);
+					}
 				}
-			}
-		});
+			});
+		} else {
+			layout.numColumns = 1;
+		}
 
 		addSummaryText(composite, toolkit);
 
