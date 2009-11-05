@@ -219,6 +219,12 @@ public class TaskListToolTip extends GradientToolTip {
 			sb.append("]"); //$NON-NLS-1$
 			sb.append("\n"); //$NON-NLS-1$
 
+			String owner = ((ITask) element).getOwner();
+			if (owner != null) {
+				sb.append(NLS.bind(Messages.TaskListToolTip_Assigned_to_X, owner));
+				sb.append("\n"); //$NON-NLS-1$
+			}
+
 			String extendedToolTipInfo = task.getAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_EXTENDED_TOOLTIP);
 			if (extendedToolTipInfo != null && extendedToolTipInfo.length() > 0) {
 				sb.append(extendedToolTipInfo);
