@@ -55,24 +55,26 @@ public class MonitorPackagingTest extends AbstractContextTest {
 
 		// Open the ZIP file
 		ZipFile zf = new ZipFile(zipFile);
+		try {
+			int numEntries = 0;
 
-		int numEntries = 0;
-
-		// Enumerate each entry
-		for (Enumeration<? extends ZipEntry> entries = zf.entries(); entries.hasMoreElements();) {
-			numEntries++;
-			String zipEntryName = ((ZipEntry) entries.nextElement()).getName();
-			assertTrue("Unknown Entry: " + zipEntryName, zipEntryName.compareTo(monitorFile.getName()) == 0);// ||
-			// zipEntryName.compareTo(logFile.getName())
-			// ==
-			// 0);
+			// Enumerate each entry
+			for (Enumeration<? extends ZipEntry> entries = zf.entries(); entries.hasMoreElements();) {
+				numEntries++;
+				String zipEntryName = ((ZipEntry) entries.nextElement()).getName();
+				assertTrue("Unknown Entry: " + zipEntryName, zipEntryName.compareTo(monitorFile.getName()) == 0);// ||
+				// zipEntryName.compareTo(logFile.getName())
+				// ==
+				// 0);
+			}
+			assertEquals("Results not correct size", 1, numEntries);
+			// check the length of the zip
+			// long fileLength = monitorFile.length() + logFile.length();
+			// if(monitorFile.length() != 0 || logFile.length() != 0)
+			// assertTrue("Zip didn't help", fileLength > zipFile.length());
+		} finally {
+			zf.close();
 		}
-		assertEquals("Results not correct size", 1, numEntries);
-
-		// check the length of the zip
-		// long fileLength = monitorFile.length() + logFile.length();
-		// if(monitorFile.length() != 0 || logFile.length() != 0)
-		// assertTrue("Zip didn't help", fileLength > zipFile.length());
 
 		// delete it
 		zipFile.delete();

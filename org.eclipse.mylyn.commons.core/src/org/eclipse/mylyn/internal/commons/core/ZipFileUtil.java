@@ -27,6 +27,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -38,7 +39,6 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
  * @author Wesley Coelho
  * @author Shawn Minto (Wrote methods that were moved here)
  */
-// FIXME add try/finally blocks that properly close streams
 public class ZipFileUtil {
 
 	/**
@@ -53,78 +53,58 @@ public class ZipFileUtil {
 	public static List<File> unzipFiles(File zippedfile, String destPath, IProgressMonitor monitor)
 			throws FileNotFoundException, IOException {
 		ZipFile zipFile = new ZipFile(zippedfile);
-
-		Enumeration<? extends ZipEntry> entries = zipFile.entries();
-		List<File> outputFiles = new ArrayList<File>();
-		File destinationFile = new File(destPath);
-		if (!destinationFile.exists()) {
-			destinationFile.mkdirs();
-		}
-		while (entries.hasMoreElements()) {
-			ZipEntry entry = entries.nextElement();
-			File outputFile = new File(destinationFile, entry.getName());
-			if (entry.isDirectory() && !outputFile.exists()) {
-				outputFile.mkdirs();
-				continue;
+		try {
+			Enumeration<? extends ZipEntry> entries = zipFile.entries();
+			List<File> outputFiles = new ArrayList<File>();
+			File destinationFile = new File(destPath);
+			if (!destinationFile.exists()) {
+				destinationFile.mkdirs();
 			}
+			while (entries.hasMoreElements()) {
+				ZipEntry entry = entries.nextElement();
+				File outputFile = new File(destinationFile, entry.getName());
+				if (entry.isDirectory() && !outputFile.exists()) {
+					outputFile.mkdirs();
+					continue;
+				}
 
-			if (!outputFile.getParentFile().exists()) {
-				outputFile.getParentFile().mkdirs();
-			}
+				if (!outputFile.getParentFile().exists()) {
+					outputFile.getParentFile().mkdirs();
+				}
 
-			InputStream inputStream = zipFile.getInputStream(entry);
-			FileOutputStream outStream = new FileOutputStream(outputFile);
-			copyByteStream(inputStream, outStream);
+				InputStream inputStream = new BufferedInputStream(zipFile.getInputStream(entry));
+				try {
+					OutputStream outStream = new BufferedOutputStream(new FileOutputStream(outputFile));
+					try {
+						copyStream(inputStream, outStream);
+					} finally {
+						outStream.close();
+					}
+				} finally {
+					inputStream.close();
+				}
 
-			outputFiles.add(outputFile);
-			if (monitor != null) {
-				monitor.worked(1);
-			}
-		}
-		return outputFiles;
-	}
-
-	public static List<File> extactEntries(File zippedFile, List<ZipEntry> entries, String destPath)
-			throws FileNotFoundException, IOException {
-		ZipFile zipFile = new ZipFile(zippedFile);
-		List<File> outputFiles = new ArrayList<File>();
-		for (ZipEntry entry : entries) {
-			if (entry.isDirectory()) {
-				// Assume directories are stored parents first then children.		          
-				(new File(entry.getName())).mkdir();
-				continue;
-			}
-			InputStream inputStream = zipFile.getInputStream(entry);
-			File outputFile = new File(destPath + File.separator + entry.getName());
-			FileOutputStream outStream = new FileOutputStream(outputFile);
-			copyByteStream(inputStream, outStream);
-			outputFiles.add(outputFile);
-		}
-		return outputFiles;
-	}
-
-	public static void copyByteStream(InputStream in, OutputStream out) throws IOException {
-		if (in != null && out != null) {
-			BufferedInputStream inBuffered = new BufferedInputStream(in);
-
-			int bufferSize = 1000;
-			byte[] buffer = new byte[bufferSize];
-
-			int readCount;
-
-			BufferedOutputStream fout = new BufferedOutputStream(out);
-
-			while ((readCount = inBuffered.read(buffer)) != -1) {
-				if (readCount < bufferSize) {
-					fout.write(buffer, 0, readCount);
-				} else {
-					fout.write(buffer);
+				outputFiles.add(outputFile);
+				if (monitor != null) {
+					monitor.worked(1);
 				}
 			}
-			fout.flush();
-			fout.close();
-			in.close();
+			return outputFiles;
+		} finally {
+			zipFile.close();
 		}
+	}
+
+	private static void copyStream(InputStream in, OutputStream out) throws IOException {
+		Assert.isNotNull(in);
+		Assert.isNotNull(out);
+
+		byte[] buffer = new byte[4096];
+		int readCount;
+		while ((readCount = in.read(buffer)) != -1) {
+			out.write(buffer, 0, readCount);
+		}
+		out.flush();
 	}
 
 	/**
@@ -200,18 +180,9 @@ public class ZipFileUtil {
 				}
 
 				zipOut.putNextEntry(new ZipEntry(path));
-
-				// Create a buffer for reading the files
-				byte[] buf = new byte[1024];
-
-				// Transfer bytes from the file to the ZIP file
-				// and compress the files
-				FileInputStream in = new FileInputStream(file);
+				InputStream in = new BufferedInputStream(new FileInputStream(file));
 				try {
-					int len;
-					while ((len = in.read(buf)) > 0) {
-						zipOut.write(buf, 0, len);
-					}
+					copyStream(in, zipOut);
 				} finally {
 					in.close();
 				}
