@@ -1458,12 +1458,18 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		startingUrl = startingUrl.substring(startingUrl.indexOf("?") + 1); //$NON-NLS-1$
 		String[] options = startingUrl.split("&"); //$NON-NLS-1$
 		for (String option : options) {
-			String key = option.substring(0, option.indexOf("=")); //$NON-NLS-1$
-			String value = URLDecoder.decode(option.substring(option.indexOf("=") + 1), //$NON-NLS-1$
-					getTaskRepository().getCharacterEncoding());
+			String key;
+			int endindex = option.indexOf("=");
+			if (endindex == -1) {
+				key = null;
+			} else {
+				key = option.substring(0, option.indexOf("=")); //$NON-NLS-1$
+			}
 			if (key == null) {
 				continue;
 			}
+			String value = URLDecoder.decode(option.substring(option.indexOf("=") + 1), //$NON-NLS-1$
+					getTaskRepository().getCharacterEncoding());
 
 			if (key.equals("short_desc")) { //$NON-NLS-1$
 				summaryPattern.setText(value);
