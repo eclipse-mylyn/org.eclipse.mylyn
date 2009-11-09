@@ -64,7 +64,6 @@ import org.eclipse.cdt.internal.core.dom.parser.cpp.CPPImplicitFunction;
 import org.eclipse.cdt.internal.core.dom.parser.cpp.CPPImplicitMethod;
 import org.eclipse.cdt.internal.core.dom.parser.cpp.CPPImplicitTypedef;
 import org.eclipse.cdt.internal.core.dom.parser.cpp.ICPPInternalBinding;
-import org.eclipse.cdt.internal.core.dom.parser.cpp.semantics.CPPTemplates.CPPImplicitFunctionTemplate;
 import org.eclipse.cdt.internal.ui.text.contentassist.CContentAssistInvocationContext;
 import org.eclipse.cdt.internal.ui.text.contentassist.CProposalContextInformation;
 import org.eclipse.cdt.internal.ui.text.contentassist.ParsingBasedProposalComputer;
@@ -287,7 +286,7 @@ public class DOMCompletionProposalComputer extends ParsingBasedProposalComputer 
 	protected void handleBinding(IBinding binding, CContentAssistInvocationContext cContext, String prefix,
 			IASTCompletionContext astContext, List<ICompletionProposal> proposals) {
 
-		if ((binding instanceof CPPImplicitFunction || binding instanceof CPPImplicitFunctionTemplate || binding instanceof CPPImplicitTypedef)
+		if ((binding instanceof CPPImplicitFunction || binding instanceof CPPImplicitTypedef)
 				&& !(binding instanceof CPPImplicitMethod)) {
 			return;
 		}
