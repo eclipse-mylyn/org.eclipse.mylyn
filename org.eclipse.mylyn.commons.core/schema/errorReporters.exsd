@@ -6,11 +6,16 @@
          <meta.schema plugin="org.eclipse.mylyn.commons.core" id="errorReporters" name="Error Reporters"/>
       </appInfo>
       <documentation>
-         [Enter description of this extension point.]
+         Error reporters process IStatus objects.
       </documentation>
    </annotation>
 
    <element name="extension">
+      <annotation>
+         <appInfo>
+            <meta.element />
+         </appInfo>
+      </annotation>
       <complexType>
          <sequence>
             <element ref="errorReporter"/>
@@ -79,37 +84,24 @@
          <meta.section type="since"/>
       </appInfo>
       <documentation>
-         [Enter the first release in which this extension point appears.]
+         3.0
       </documentation>
    </annotation>
 
-   <annotation>
-      <appInfo>
-         <meta.section type="examples"/>
-      </appInfo>
-      <documentation>
-         [Enter extension point usage example here.]
-      </documentation>
-   </annotation>
 
-   <annotation>
-      <appInfo>
-         <meta.section type="apiInfo"/>
-      </appInfo>
-      <documentation>
-         [Enter API information here.]
-      </documentation>
-   </annotation>
 
 
    <annotation>
       <appInfo>
-         <meta.section type="implementation"/>
+         <meta.section type="copyright"/>
       </appInfo>
       <documentation>
-         [Enter information about supplied implementation of this extension point.]
+         Copyright (c) 2009 Tasktop Technologies and others.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
       </documentation>
    </annotation>
-
 
 </schema>
