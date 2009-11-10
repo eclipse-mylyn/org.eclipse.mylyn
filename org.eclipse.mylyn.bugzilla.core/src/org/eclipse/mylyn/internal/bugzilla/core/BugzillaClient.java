@@ -1654,7 +1654,8 @@ public class BugzillaClient {
 			RepositoryStatus status = RepositoryStatus.createHtmlStatus(repositoryUrl.toString(), IStatus.INFO,
 					BugzillaCorePlugin.ID_PLUGIN, RepositoryStatus.ERROR_REPOSITORY,
 					"A repository error has occurred.", body); //$NON-NLS-1$
-			StatusHandler.log(status);
+			StatusHandler.log(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN,
+					"A repository error has occurred: " + body)); //$NON-NLS-1$
 			throw new CoreException(status);
 
 		} catch (ParseException e) {
