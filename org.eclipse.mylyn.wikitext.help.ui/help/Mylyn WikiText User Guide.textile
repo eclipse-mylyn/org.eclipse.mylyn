@@ -264,6 +264,8 @@ The @markupLanguage@ attribute accepts any of the following values (depending on
 | @helpPrefix@ | The prefix to URLs in the toc.xml, typically the relative path from the plugin to the help files (wikitext-to-eclipse-help only). For example, if the help file is in 'help/index.html' then the help prefix would be 'help' |
 | @defaultAbsoluteLinkTarget@ | Specify that hyperlinks to external resources (@<a href@) should use a @target@ attribute to cause them to be opened in a seperate window or tab.  The value specified becomes the value of the @target@ attribute on anchors where the href is an absolute URL. |
 | @xhtmlStrict@ | Indicate if the builder should attempt to conform to strict XHTML rules. The default is false. |
+| @emitDoctype@ | Indicate if the builder should emit a DTD doctype declaration.  The default is true. |
+| @htmlDoctype@ | The doctype to use.  Defaults to @<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">@. |
 
 *stylesheet*
 

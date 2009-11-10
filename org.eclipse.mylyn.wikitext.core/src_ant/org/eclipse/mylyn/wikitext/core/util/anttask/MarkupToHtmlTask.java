@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Peter Stibrany - bug 294383 
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.core.util.anttask;
 
@@ -73,6 +74,10 @@ public class MarkupToHtmlTask extends MarkupTask {
 	private String defaultAbsoluteLinkTarget;
 
 	private boolean xhtmlStrict = false;
+
+	private boolean emitDoctype = true;
+
+	private String htmlDoctype = null;
 
 	@Override
 	public void execute() throws BuildException {
@@ -217,7 +222,10 @@ public class MarkupToHtmlTask extends MarkupTask {
 				}
 
 				builder.setTitle(title == null ? name : title);
-				builder.setEmitDtd(true);
+				builder.setEmitDtd(emitDoctype);
+				if (emitDoctype && htmlDoctype != null) {
+					builder.setHtmlDtd(htmlDoctype);
+				}
 				builder.setUseInlineStyles(useInlineCssStyles);
 				builder.setSuppressBuiltInStyles(suppressBuiltInCssStyles);
 				builder.setLinkRel(linkRel);
@@ -527,6 +535,49 @@ public class MarkupToHtmlTask extends MarkupTask {
 	 */
 	public void setXhtmlStrict(boolean xhtmlStrict) {
 		this.xhtmlStrict = xhtmlStrict;
+	}
+
+	/**
+	 * Indicate if the builder should emit DOCTYPE declaration. Default is true.
+	 * 
+	 * @see HtmlDocumentBuilder#isEmitDtd()
+	 * @since 1.3
+	 */
+	public boolean getEmitDoctype() {
+		return emitDoctype;
+	}
+
+	/**
+	 * Indicate if the builder should emit DOCTYPE declaration. Default is true.
+	 * 
+	 * @see HtmlDocumentBuilder#isEmitDtd()
+	 * @since 1.3
+	 */
+	public void setEmitDoctype(boolean emitDtd) {
+		this.emitDoctype = emitDtd;
+	}
+
+	/**
+	 * The DTD to use in the output document. Ignored if {@link #getEmitDoctype() emitDoctype} is false.
+	 * 
+	 * @see HtmlDocumentBuilder#isEmitDtd()
+	 * @return the DTD to use, or null if the default DTD should be used
+	 * @since 1.3
+	 */
+	public String getHtmlDoctype() {
+		return htmlDoctype;
+	}
+
+	/**
+	 * The DTD to use in the output document. Ignored if {@link #getEmitDoctype() emitDoctype} is false. The doctype
+	 * should take the form: <code>&lt;!DOCTYPE html ...&gt;</code>
+	 * 
+	 * @param htmlDoctype
+	 *            the DTD to use, or null if the default DTD should be used
+	 * @since 1.3
+	 */
+	public void setHtmlDoctype(String htmlDoctype) {
+		this.htmlDoctype = htmlDoctype;
 	}
 
 }
