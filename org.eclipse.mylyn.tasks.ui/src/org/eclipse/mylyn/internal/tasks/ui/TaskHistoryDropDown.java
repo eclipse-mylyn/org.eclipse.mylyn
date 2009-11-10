@@ -31,7 +31,10 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.ui.TaskElementLabelProvider;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.CompoundContributionItem;
@@ -120,6 +123,15 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 			}
 			TasksUiInternal.activateTaskThroughCommand(targetTask);
 		}
+
+		@Override
+		public void runWithEvent(Event event) {
+			run();
+			if ((event.stateMask & SWT.SHIFT) != 0) {
+				TasksUiUtil.openTask(targetTask);
+			}
+		}
+
 	}
 
 	private final TaskElementLabelProvider labelProvider = new TaskElementLabelProvider(false);
