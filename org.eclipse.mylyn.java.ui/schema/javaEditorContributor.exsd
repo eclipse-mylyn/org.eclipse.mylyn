@@ -3,17 +3,17 @@
 <schema targetNamespace="org.eclipse.mylyn.java.ui" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.mylyn.java.ui" id="javaEditorContributor" name="Mylyn Java Editor Contributor"/>
+         <meta.schema plugin="org.eclipse.mylyn.java.ui" id="javaEditorContributor" name="Java Editor Contributor"/>
       </appInfo>
       <documentation>
-         
+         This extension point has been deprecated and is no longer used.
       </documentation>
    </annotation>
 
    <element name="extension">
       <annotation>
          <appInfo>
-            <meta.element deprecated="true" />
+            <meta.element deprecated="true" internal="true" />
          </appInfo>
       </annotation>
       <complexType>

@@ -20,6 +20,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
 /**
  * @author Mik Kersten
  */
+@Deprecated
 public abstract class AbstractEditorHyperlinkDetector implements IHyperlinkDetector {
 
 	private ITextEditor editor;
