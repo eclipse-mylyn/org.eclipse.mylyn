@@ -9,6 +9,7 @@
  *     Willian Mitsuda - initial API and implementation
  *     Tasktop Technologies - improvements
  *     Eugene Kuleshov - improvements
+ *     Benjamin Muskalla - fix for bug 291992
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.actions;
@@ -453,7 +454,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 			String text = ((ITextSelection) selection).getText();
 			int n = text.indexOf('\n');
 			if (n > -1) {
-				text.substring(0, n);
+				text = text.substring(0, n);
 			}
 			setInitialPattern(text);
 		}
