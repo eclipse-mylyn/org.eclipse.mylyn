@@ -70,6 +70,13 @@ import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
  * @since 1.0
  */
 public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage> extends AbstractTaskEditorExtension {
+	/**
+	 * Provide a means to disable WikiWord linking. This feature is experimental and may be removed in a future release.
+	 * To enable this feature, set the system property <tt>MarkupTaskEditorExtension.wikiWordDisabled</tt> to
+	 * <tt>true</tt>. eg, <tt>-DMarkupTaskEditorExtension.wikiWordDisabled=true</tt>
+	 */
+	private static final boolean DISABLE_WIKI_WORD = Boolean.getBoolean(MarkupTaskEditorExtension.class.getSimpleName()
+			+ ".wikiWordDisabled"); //$NON-NLS-1$
 
 	private static final String ID_CONTEXT_EDITOR_TASK = "org.eclipse.mylyn.tasks.ui.TaskEditor"; //$NON-NLS-1$
 
@@ -129,9 +136,20 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 	@SuppressWarnings("unchecked")
 	private MarkupLanguageType createRepositoryMarkupLanguage(TaskRepository taskRepository) {
 		MarkupLanguageType copy = (MarkupLanguageType) markupLanguage.clone();
-		MarkupLanguageConfiguration configuration = Util.create(taskRepository.getConnectorKind());
+		MarkupLanguageConfiguration configuration = createMarkupLanguageConfiguration(taskRepository);
 		copy.configure(configuration);
 		return copy;
+	}
+
+	/**
+	 * @since 1.3
+	 */
+	protected MarkupLanguageConfiguration createMarkupLanguageConfiguration(TaskRepository taskRepository) {
+		MarkupLanguageConfiguration configuration = Util.create(taskRepository.getConnectorKind());
+		if (DISABLE_WIKI_WORD) {
+			configuration.setWikiWordLinking(false);
+		}
+		return configuration;
 	}
 
 	protected TaskMarkupViewerConfiguration createViewerConfiguration(TaskRepository taskRepository,
