@@ -100,10 +100,14 @@ public class RepositoryElementActionGroup {
 
 	private final NewSubTaskAction newSubTaskAction;
 
+	private final CloneTaskAction cloneTaskAction;
+
 	public RepositoryElementActionGroup() {
 		actions = new ArrayList<ISelectionChangedListener>();
 
 		newSubTaskAction = add(new NewSubTaskAction());
+
+		cloneTaskAction = add(new CloneTaskAction());
 
 		activateAction = add(new TaskActivateAction());
 		deactivateAction = new TaskDeactivateAction();
@@ -176,9 +180,15 @@ public class RepositoryElementActionGroup {
 			task = (AbstractTask) element;
 		}
 
-		if (!isInTaskList() && newSubTaskAction.isEnabled()) {
+		if (!isInTaskList()) {
 			MenuManager newSubMenu = new MenuManager(Messages.RepositoryElementActionGroup_New);
-			newSubMenu.add(newSubTaskAction);
+			if (newSubTaskAction.isEnabled()) {
+				newSubMenu.add(newSubTaskAction);
+			}
+			if (cloneTaskAction.isEnabled()) {
+				newSubMenu.add(new Separator());
+				newSubMenu.add(cloneTaskAction);
+			}
 			manager.appendToGroup(ID_SEPARATOR_NEW, newSubMenu);
 		}
 

@@ -27,7 +27,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
@@ -46,10 +45,9 @@ public class CloneTaskAction extends BaseSelectionListenerAction implements IVie
 	protected ISelection selection;
 
 	public CloneTaskAction() {
-		super(Messages.CloneTaskAction_Clone_This_Task);
+		super(Messages.CloneTaskAction_Clone_Label);
 		setId(ID);
 		setImageDescriptor(TasksUiImages.TASK_NEW);
-		setAccelerator(SWT.MOD1 + 'd');
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {

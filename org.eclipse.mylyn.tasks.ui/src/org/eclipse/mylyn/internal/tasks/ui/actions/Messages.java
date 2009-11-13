@@ -51,6 +51,8 @@ public class Messages extends NLS {
 
 	public static String ClearOutgoingAction_Discard_all_outgoing_changes_;
 
+	public static String CloneTaskAction_Clone_Label;
+
 	public static String CloneTaskAction_Clone_Task_Failed;
 
 	public static String CloneTaskAction_Clone_This_Task;
