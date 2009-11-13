@@ -205,8 +205,8 @@ public class OutlineItem {
 			OutlineItem thisRoot = computeRoot(this);
 			OutlineItem otherRoot = computeRoot(other);
 			if (thisRoot != otherRoot && thisRoot.getResourcePath() != otherRoot.getResourcePath()) {
-				if (thisRoot.getResourcePath() != null
-						&& !thisRoot.getResourcePath().equals(otherRoot.getResourcePath())) {
+				if (thisRoot.getResourcePath() == null
+						|| !thisRoot.getResourcePath().equals(otherRoot.getResourcePath())) {
 					isEqual = false;
 				}
 			}
@@ -308,7 +308,6 @@ public class OutlineItem {
 		/**
 		 * @param item
 		 *            the item to visit
-		 * 
 		 * @return true if the items children should be visited
 		 */
 		public boolean visit(OutlineItem item);
