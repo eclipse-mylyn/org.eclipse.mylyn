@@ -616,7 +616,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		return null;
 	}
 
-	@SuppressWarnings({ "rawtypes" })
+	@SuppressWarnings("unchecked")
 	@Override
 	public Object getAdapter(Class adapter) {
 		if (IContentOutlinePage.class == adapter) {
