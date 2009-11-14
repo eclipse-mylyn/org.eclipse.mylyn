@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.JFaceResources;
@@ -135,6 +136,7 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 		createSettingControls(compositeContainer);
 		createContributionControls(compositeContainer);
 
+		Dialog.applyDialogFont(compositeContainer);
 		setControl(compositeContainer);
 		//getControl().getShell().pack();
 	}
