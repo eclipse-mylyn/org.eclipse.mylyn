@@ -50,11 +50,11 @@ import org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard;
  */
 public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 
-	private static final int TASK_NUM_GROUP = 3;
+	private static final int TASK_NUM_GROUP = 5;
 
-	private static final int ATTACHMENT_NUM_GROUP = 4;
+	private static final int ATTACHMENT_NUM_GROUP = 6;
 
-	private static final String regexp = "(?:(duplicate of| bug| task)( ?#? ?)(\\d+))|(?:Created an attachment\\s*\\(id=(\\d+)\\))"; //$NON-NLS-1$
+	private static final String regexp = "(?:(duplicate of|(\\s|^)+bug|(\\s|^)+task)( ?#? ?)(\\d+))|(?:Created an attachment\\s*\\(id=(\\d+)\\))"; //$NON-NLS-1$
 
 	private static final Pattern PATTERN = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
 
