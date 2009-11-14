@@ -17,8 +17,6 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.jface.preference.JFacePreferences;
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
@@ -186,22 +184,14 @@ public class RepositoryTextViewerConfiguration extends TextSourceViewerConfigura
 	private static class RepositoryTextScanner extends RuleBasedScanner {
 
 		public RepositoryTextScanner(Mode mode) {
-			IToken bugToken = new Token(new TextAttribute(JFaceResources.getColorRegistry().get(
-					JFacePreferences.ACTIVE_HYPERLINK_COLOR)));
 			IToken quoteToken = new Token(new TextAttribute(CommonColors.TEXT_QUOTED));
-			IRule[] rules = new IRule[8];
-			rules[0] = (new SingleLineRule("http://", " ", bugToken)); //$NON-NLS-1$ //$NON-NLS-2$
-			rules[1] = (new SingleLineRule("https://", " ", bugToken)); //$NON-NLS-1$ //$NON-NLS-2$
-			rules[2] = (new SingleLineRule("http://", "\n", bugToken)); //$NON-NLS-1$ //$NON-NLS-2$  
-			rules[3] = (new SingleLineRule("https://", "\n", bugToken)); //$NON-NLS-1$ //$NON-NLS-2$ 
-			rules[4] = (new SingleLineRule("*** This bug has been ", "***", bugToken)); //$NON-NLS-1$ //$NON-NLS-2$
-			rules[5] = (new SingleLineRule("http://", "", bugToken, '\\', true)); //$NON-NLS-1$ //$NON-NLS-2$ 
-			rules[6] = (new SingleLineRule("https://", "", bugToken, '\\', true)); //$NON-NLS-1$ //$NON-NLS-2$ 
+			IRule[] rules = new IRule[1];
 			SingleLineRule quoteRule = new SingleLineRule(">", null, quoteToken, (char) 0, true); //$NON-NLS-1$
 			quoteRule.setColumnConstraint(0);
-			rules[7] = quoteRule;
+			rules[0] = quoteRule;
 			setRules(rules);
 		}
+
 	}
 
 	@Override
