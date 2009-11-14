@@ -20,6 +20,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.bindings.keys.IKeyLookup;
 import org.eclipse.jface.bindings.keys.KeyLookupFactory;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IWorkingSet;
@@ -31,11 +32,12 @@ public class ToggleWorkingSetAction extends Action {
 
 	private final IWorkingSet workingSet;
 
-	public ToggleWorkingSetAction(IWorkingSet set) {
-		super(set.getLabel(), IAction.AS_CHECK_BOX);
-		setImageDescriptor(set.getImageDescriptor());
-		this.workingSet = set;
-		setChecked(TaskWorkingSetUpdater.isWorkingSetEnabled(set));
+	public ToggleWorkingSetAction(IWorkingSet workingSet) {
+		super("", IAction.AS_CHECK_BOX); //$NON-NLS-1$
+		this.workingSet = workingSet;
+		setText(CommonUiUtil.toMenuLabel(workingSet.getLabel()));
+		setImageDescriptor(workingSet.getImageDescriptor());
+		setChecked(TaskWorkingSetUpdater.isWorkingSetEnabled(workingSet));
 	}
 
 	@Override

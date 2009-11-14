@@ -22,6 +22,7 @@ import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivationHistory;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskDialogAction;
@@ -108,7 +109,7 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 			if (taskDescription.length() > MAX_LABEL_LENGTH) {
 				taskDescription = taskDescription.subSequence(0, MAX_LABEL_LENGTH - 3) + "..."; //$NON-NLS-1$
 			}
-			taskDescription = TasksUiInternal.cleanTextForAction(taskDescription);
+			taskDescription = CommonUiUtil.toMenuLabel(taskDescription);
 			setText(taskDescription);
 			setEnabled(true);
 			setToolTipText(task.getSummary());
