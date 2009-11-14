@@ -33,6 +33,8 @@ import org.eclipse.swt.widgets.Shell;
  * 
  * @author Willian Mitsuda
  */
+// FIXME 3.4 remove this class
+@Deprecated
 public class ColorSelectionWindow extends Window {
 
 	private ColorCanvas[] colors;
