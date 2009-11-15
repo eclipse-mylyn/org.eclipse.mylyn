@@ -28,7 +28,6 @@ import org.eclipse.mylyn.internal.discovery.core.model.RemoteBundleDiscoveryStra
 /**
  * @author David Green
  */
-@SuppressWarnings("restriction")
 public class RemoteBundleDiscoveryStrategyTest extends TestCase {
 
 	private RemoteBundleDiscoveryStrategy discoveryStrategy;

@@ -208,7 +208,7 @@ public class ConnectorDiscovery {
 			DiscoveryCertification previous = idToCertification.put(certification.getId(), certification);
 			if (previous != null) {
 				StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN, NLS.bind(
-						"Duplicate certification id ''{0}'': declaring sources: {1}, {2}",
+						"Duplicate certification id ''{0}'': declaring sources: {1}, {2}", //$NON-NLS-1$
 						new Object[] { certification.getId(), certification.getSource().getId(),
 								previous.getSource().getId() })));
 			}
@@ -221,8 +221,8 @@ public class ConnectorDiscovery {
 					connector.setCertification(certification);
 				} else {
 					StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN, NLS.bind(
-							"Unknown category ''{0}'' referenced by connector ''{1}'' declared in {2}", new Object[] {
-									connector.getCertificationId(), connector.getId(), connector.getSource().getId() })));
+							"Unknown category ''{0}'' referenced by connector ''{1}'' declared in {2}", new Object[] { //$NON-NLS-1$
+							connector.getCertificationId(), connector.getId(), connector.getSource().getId() })));
 				}
 			}
 		}

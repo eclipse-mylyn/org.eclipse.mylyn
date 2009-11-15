@@ -111,7 +111,7 @@ public class ConnectorCategory {
 			throw new ValidationException(Messages.ConnectorCategory_must_specify_connectorCategory_name);
 		}
 		if (description == null || description.length() == 0) {
-			throw new ValidationException("Must specify connectorCategory/@description");
+			throw new ValidationException("Must specify connectorCategory/@description"); //$NON-NLS-1$
 		}
 		if (icon != null) {
 			icon.validate();

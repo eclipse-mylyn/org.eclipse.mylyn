@@ -16,7 +16,6 @@ import org.eclipse.mylyn.internal.discovery.core.model.Icon;
 /**
  * @author David Green
  */
-@SuppressWarnings("restriction")
 public class DiscoveryCategoryMockFactory extends AbstractMockFactory<DiscoveryCategory> {
 
 	DiscoveryCategory category;

@@ -16,7 +16,6 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryCategory;
 import org.eclipse.mylyn.internal.discovery.core.util.DiscoveryCategoryComparator;
 
-@SuppressWarnings("restriction")
 public class DiscoveryCategoryComparatorTest extends TestCase {
 
 	private DiscoveryCategoryComparator comparator;

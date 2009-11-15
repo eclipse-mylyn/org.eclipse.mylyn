@@ -19,7 +19,6 @@ import org.eclipse.mylyn.internal.discovery.core.model.Overview;
 /**
  * @author David Green
  */
-@SuppressWarnings("restriction")
 public class DiscoveryConnectorMockFactory extends AbstractMockFactory<DiscoveryConnector> {
 
 	public DiscoveryConnectorMockFactory() {

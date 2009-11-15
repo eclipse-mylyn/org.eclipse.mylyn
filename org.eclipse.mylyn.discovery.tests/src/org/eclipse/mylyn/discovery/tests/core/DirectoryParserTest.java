@@ -22,7 +22,6 @@ import org.eclipse.mylyn.internal.discovery.core.model.DirectoryParser;
 /**
  * @author David Green
  */
-@SuppressWarnings("restriction")
 public class DirectoryParserTest extends TestCase {
 
 	private DirectoryParser parser;

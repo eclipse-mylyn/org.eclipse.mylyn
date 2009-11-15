@@ -17,10 +17,8 @@ import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryCategory;
 import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryConnector;
 
 /**
- * 
  * @author David Green
  */
-@SuppressWarnings("restriction")
 public class MockDiscoveryStrategy extends AbstractDiscoveryStrategy {
 
 	private int connectorCount = 15;

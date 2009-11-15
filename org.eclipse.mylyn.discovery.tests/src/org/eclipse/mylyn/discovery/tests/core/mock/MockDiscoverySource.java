@@ -15,10 +15,8 @@ import java.net.URL;
 import org.eclipse.mylyn.internal.discovery.core.model.AbstractDiscoverySource;
 
 /**
- * 
  * @author David Green
  */
-@SuppressWarnings("restriction")
 public class MockDiscoverySource extends AbstractDiscoverySource {
 
 	@Override

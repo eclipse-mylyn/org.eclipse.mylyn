@@ -18,7 +18,6 @@ import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryConnector;
 import org.eclipse.mylyn.internal.discovery.core.model.Group;
 import org.eclipse.mylyn.internal.discovery.core.util.DiscoveryConnectorComparator;
 
-@SuppressWarnings("restriction")
 public class DiscoveryConnectorComparatorTest extends TestCase {
 
 	private DiscoveryCategory category;

@@ -227,7 +227,7 @@ public class DiscoveryViewer {
 			configureLook(providerLabel, background);
 			GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).applyTo(providerLabel);
 			if (connector.getCertification() != null) {
-				providerLabel.setText(NLS.bind("by {0}, {1}, <a>Certified</a>", new String[] { connector.getProvider(),
+				providerLabel.setText(NLS.bind(Messages.DiscoveryViewer_Certification_Label0, new String[] { connector.getProvider(),
 						connector.getLicense(), connector.getCertification().getName() }));
 				if (connector.getCertification().getUrl() != null) {
 					providerLabel.addSelectionListener(new SelectionAdapter() {

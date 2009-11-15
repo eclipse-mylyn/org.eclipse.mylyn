@@ -28,7 +28,6 @@ import org.osgi.framework.Version;
 /**
  * @author David Green
  */
-@SuppressWarnings("restriction")
 public class ConnectorDiscoveryTest extends TestCase {
 
 	private ConnectorDiscovery connectorDiscovery;
