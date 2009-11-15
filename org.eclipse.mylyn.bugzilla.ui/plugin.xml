@@ -18,8 +18,8 @@
          point="org.eclipse.mylyn.tasks.ui.repositories">
 
       <connectorCore
+            id="bugzilla"
             class="org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector"
-            id="org.eclipse.mylyn.bugzilla.tasklist.repositories"
             name="%BugzillaRepositoryConnector.name"/> 
             
       <connectorUi

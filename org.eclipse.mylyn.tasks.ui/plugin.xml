@@ -1162,8 +1162,8 @@
          name="%local.repository.name"
          point="org.eclipse.mylyn.tasks.ui.repositories">
       <connectorCore
+            id="local"
             class="org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector"
-            id="org.eclipse.mylyn.tasks.connector.local"
             name="%LocalRepositoryConnector.name"/>            
       <connectorUi
             brandingIcon="icons/etool16/person.gif"

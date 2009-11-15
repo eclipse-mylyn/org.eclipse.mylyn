@@ -1459,7 +1459,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		String[] options = startingUrl.split("&"); //$NON-NLS-1$
 		for (String option : options) {
 			String key;
-			int endindex = option.indexOf("=");
+			int endindex = option.indexOf("="); //$NON-NLS-1$
 			if (endindex == -1) {
 				key = null;
 			} else {
