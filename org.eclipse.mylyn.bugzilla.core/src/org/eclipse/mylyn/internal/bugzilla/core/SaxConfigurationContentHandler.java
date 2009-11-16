@@ -11,11 +11,15 @@
 
 package org.eclipse.mylyn.internal.bugzilla.core;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -384,7 +388,16 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			configuration.setInstallVersion(characters.toString());
 		} else if (localName.equals(ELEMENT_DB_ENCODING)) {
 			state = state & ~IN_DB_ENCODING;
-			configuration.setEncoding(characters.toString());
+			String charsetString = characters.toString().trim();
+			if (charsetString.length() > 0) {
+				try {
+					Charset.forName(charsetString);
+					configuration.setEncoding(charsetString);
+				} catch (Exception e) {
+					StatusHandler.log(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN,
+							"Unrecognized encoding in configuration: " + charsetString)); //$NON-NLS-1$
+				}
+			}
 		} else if (localName.equals(ELEMENT_TARGET_MILESTONE)) {
 			state = state & ~IN_TARGET_MILESTONE;
 		} else if (localName.equals(ELEMENT_TARGET_MILESTONES)) {
