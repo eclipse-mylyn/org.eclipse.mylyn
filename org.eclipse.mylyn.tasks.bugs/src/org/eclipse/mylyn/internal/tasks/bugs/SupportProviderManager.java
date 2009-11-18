@@ -182,12 +182,13 @@ public class SupportProviderManager {
 		}
 
 		// optionally complement data from referenced feature
+		boolean available = true;
 		String featureId = element.getAttribute(ATTRIBUTE_FEATURE_ID);
 		if (featureId != null) {
 			IBundleGroup bundleGroup = getBundleGroup(featureId);
 			if (bundleGroup == null) {
 				// indicate that the specified feature was not found
-				return false;
+				available = false;
 			} else {
 				if (item.getName() == null) {
 					item.setName(bundleGroup.getName());
@@ -215,7 +216,7 @@ public class SupportProviderManager {
 			item.setName(Messages.SupportProviderManager_Product_Unknown);
 		}
 
-		return true;
+		return available;
 	}
 
 	private void readCategory(IConfigurationElement element) {
