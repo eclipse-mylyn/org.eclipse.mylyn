@@ -61,6 +61,8 @@ public class Messages extends NLS {
 
 	public static String DefaultTaskContributor_Warning;
 
+	public static String SupportProviderManager_Product_Unknown;
+
 	public static String TaskErrorReporter_Create_Task_Error_Message;
 
 	public static String TaskErrorReporter_Create_Task_Error_Title;

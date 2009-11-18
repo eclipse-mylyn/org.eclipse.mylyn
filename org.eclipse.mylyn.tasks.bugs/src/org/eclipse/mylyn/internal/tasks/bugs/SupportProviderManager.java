@@ -210,6 +210,11 @@ public class SupportProviderManager {
 				}
 			}
 		}
+
+		if (item.getName() == null) {
+			item.setName(Messages.SupportProviderManager_Product_Unknown);
+		}
+
 		return true;
 	}
 
