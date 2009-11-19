@@ -18,8 +18,10 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
@@ -44,6 +46,42 @@ public class TaskMapperTest extends TestCase {
 		mapper = new StubTaskAttributeMapper(taskRepository);
 		source = new TaskMapper(new TaskData(mapper, "kind", "http://url", "1"), true);
 		target = new TaskMapper(new TaskData(mapper, "kind", "http://url", "2"), true);
+	}
+
+	public void testTaskSchema() {
+		source.setReporter("reporter");
+
+		TaskAttribute attribute = source.getTaskData().getRoot().getAttribute(TaskAttribute.USER_REPORTER);
+		assertNotNull(attribute);
+		assertEquals("reporter", attribute.getValue());
+		assertEquals("Reporter", attribute.getMetaData().getLabel());
+		assertEquals(TaskAttribute.TYPE_PERSON, attribute.getMetaData().getType());
+	}
+
+	public void testTaskAttachmentMapperSchema() {
+		TaskAttribute attachmentAttribute = mapper.createTaskAttachment(source.getTaskData());
+		TaskAttachmentMapper mapper = new TaskAttachmentMapper();
+		mapper.setAuthor(taskRepository.createPerson("reporter"));
+		mapper.applyTo(attachmentAttribute);
+
+		TaskAttribute attribute = attachmentAttribute.getAttribute(TaskAttribute.ATTACHMENT_AUTHOR);
+		assertNotNull(attribute);
+		assertEquals("reporter", attribute.getValue());
+		assertEquals("Author", attribute.getMetaData().getLabel());
+		assertEquals(TaskAttribute.TYPE_PERSON, attribute.getMetaData().getType());
+	}
+
+	public void testTaskCommentMapperSchema() {
+		TaskAttribute attachmentAttribute = mapper.createTaskAttachment(source.getTaskData());
+		TaskCommentMapper mapper = new TaskCommentMapper();
+		mapper.setAuthor(taskRepository.createPerson("reporter"));
+		mapper.applyTo(attachmentAttribute);
+
+		TaskAttribute attribute = attachmentAttribute.getAttribute(TaskAttribute.COMMENT_AUTHOR);
+		assertNotNull(attribute);
+		assertEquals("reporter", attribute.getValue());
+		assertEquals("Author", attribute.getMetaData().getLabel());
+		assertEquals(TaskAttribute.TYPE_PERSON, attribute.getMetaData().getType());
 	}
 
 	public void testCloneTaskCloneCommonAttributes() {
