@@ -14,6 +14,7 @@ package org.eclipse.mylyn.tasks.core.data;
 import java.util.Date;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.mylyn.internal.tasks.core.data.DefaultTaskSchema;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.ITaskComment;
 
@@ -133,28 +134,25 @@ public class TaskCommentMapper {
 			mapper.setValue(taskAttribute, getCommentId());
 		}
 		if (getAuthor() != null) {
-			TaskAttribute child = taskAttribute.createMappedAttribute(TaskAttribute.COMMENT_AUTHOR);
-			child.getMetaData().defaults().setType(TaskAttribute.TYPE_PERSON);
+			TaskAttribute child = DefaultTaskSchema.getField(TaskAttribute.COMMENT_AUTHOR).createAttribute(
+					taskAttribute);
 			mapper.setRepositoryPerson(child, getAuthor());
 		}
 		if (getCreationDate() != null) {
-			TaskAttribute child = taskAttribute.createMappedAttribute(TaskAttribute.COMMENT_DATE);
-			child.getMetaData().defaults().setType(TaskAttribute.TYPE_DATE);
+			TaskAttribute child = DefaultTaskSchema.getField(TaskAttribute.COMMENT_DATE).createAttribute(taskAttribute);
 			mapper.setDateValue(child, getCreationDate());
 		}
 		if (getNumber() != null) {
-			TaskAttribute child = taskAttribute.createMappedAttribute(TaskAttribute.COMMENT_NUMBER);
-			child.getMetaData().defaults().setType(TaskAttribute.TYPE_INTEGER);
+			TaskAttribute child = DefaultTaskSchema.getField(TaskAttribute.COMMENT_NUMBER).createAttribute(
+					taskAttribute);
 			mapper.setIntegerValue(child, getNumber());
 		}
 		if (getUrl() != null) {
-			TaskAttribute child = taskAttribute.createMappedAttribute(TaskAttribute.COMMENT_URL);
-			child.getMetaData().defaults().setType(TaskAttribute.TYPE_URL);
+			TaskAttribute child = DefaultTaskSchema.getField(TaskAttribute.COMMENT_URL).createAttribute(taskAttribute);
 			mapper.setValue(child, getUrl());
 		}
 		if (getText() != null) {
-			TaskAttribute child = taskAttribute.createMappedAttribute(TaskAttribute.COMMENT_TEXT);
-			child.getMetaData().defaults().setType(TaskAttribute.TYPE_LONG_RICH_TEXT);
+			TaskAttribute child = DefaultTaskSchema.getField(TaskAttribute.COMMENT_TEXT).createAttribute(taskAttribute);
 			mapper.setValue(child, getText());
 			taskAttribute.putMetaDatum(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, child.getId());
 		}

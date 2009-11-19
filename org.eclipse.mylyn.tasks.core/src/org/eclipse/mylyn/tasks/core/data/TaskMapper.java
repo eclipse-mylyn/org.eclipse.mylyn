@@ -15,6 +15,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.mylyn.internal.tasks.core.data.DefaultTaskSchema;
+import org.eclipse.mylyn.internal.tasks.core.data.DefaultTaskSchema.Field;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
@@ -181,9 +183,14 @@ public class TaskMapper implements ITaskMapping {
 	}
 
 	private TaskAttribute createAttribute(String attributeKey, String type) {
-		attributeKey = taskData.getAttributeMapper().mapToRepositoryKey(taskData.getRoot(), attributeKey);
-		TaskAttribute attribute = taskData.getRoot().createAttribute(attributeKey);
-		attribute.getMetaData().defaults().setType(type);
+		TaskAttribute attribute;
+		Field field = DefaultTaskSchema.getField(attributeKey);
+		if (field != null) {
+			attribute = field.createAttribute(taskData.getRoot());
+		} else {
+			attribute = taskData.getRoot().createMappedAttribute(attributeKey);
+			attribute.getMetaData().defaults().setType(type);
+		}
 		return attribute;
 	}
 
