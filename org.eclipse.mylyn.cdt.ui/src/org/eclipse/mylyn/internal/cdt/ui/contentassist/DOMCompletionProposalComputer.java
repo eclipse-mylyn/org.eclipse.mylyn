@@ -84,6 +84,7 @@ import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.cdt.ui.CDTUIBridgePlugin;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -642,7 +643,7 @@ public class DOMCompletionProposalComputer extends ParsingBasedProposalComputer 
 	}
 
 	private Image getImage(ImageDescriptor desc) {
-		return desc != null ? CUIPlugin.getImageDescriptorRegistry().get(desc) : null;
+		return desc != null ? CommonImages.getImage(desc) : null;
 	}
 
 	private Image getImage(IBinding binding) {
@@ -707,6 +708,6 @@ public class DOMCompletionProposalComputer extends ParsingBasedProposalComputer 
 		} catch (DOMException e) {
 		}
 
-		return imageDescriptor != null ? CUIPlugin.getImageDescriptorRegistry().get(imageDescriptor) : null;
+		return imageDescriptor != null ? CommonImages.getImage(imageDescriptor) : null;
 	}
 }
