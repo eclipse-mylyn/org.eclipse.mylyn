@@ -268,7 +268,7 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 		contextService.activateContext(CONTEXT);
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings( { "unchecked" })
 	@Override
 	public Object getAdapter(Class adapter) {
 		if (adapter == IContentOutlinePage.class) {
