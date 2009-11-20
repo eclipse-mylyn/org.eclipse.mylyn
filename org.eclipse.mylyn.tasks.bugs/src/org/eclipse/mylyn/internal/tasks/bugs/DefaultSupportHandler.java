@@ -188,15 +188,7 @@ public class DefaultSupportHandler extends AbstractSupportHandler {
 			sb.append(Messages.DefaultSupportHandler_Step_1);
 			sb.append(Messages.DefaultSupportHandler_Step_2);
 			sb.append(Messages.DefaultSupportHandler_Step_3);
-			appendErrorDetails(sb, errorLogStatus, errorLogStatus.getDate());
-			if (errorLogStatus.getLogSessionData() != null) {
-				sb.append(Messages.DefaultTaskContributor_SESSION_DATA);
-				sb.append(errorLogStatus.getLogSessionData());
-			}
-			if (errorLogStatus.getStack() != null) {
-				sb.append(Messages.DefaultTaskContributor_EXCEPTION_STACK_TRACE);
-				sb.append(errorLogStatus.getStack());
-			}
+			appendStatus(errorLogStatus, sb, true);
 			return sb.toString();
 		} else {
 			StringBuilder sb = new StringBuilder();
@@ -210,6 +202,29 @@ public class DefaultSupportHandler extends AbstractSupportHandler {
 			return sb.toString();
 		}
 		return null;
+	}
+
+	private void appendStatus(IStatus status, StringBuilder sb, boolean includeSessionData) {
+		Date date = (status instanceof ErrorLogStatus) ? ((ErrorLogStatus) status).getDate() : null;
+		appendErrorDetails(sb, status, date);
+		if (status instanceof ErrorLogStatus) {
+			ErrorLogStatus errorStatus = (ErrorLogStatus) status;
+			if (includeSessionData && errorStatus.getLogSessionData() != null) {
+				sb.append(Messages.DefaultTaskContributor_SESSION_DATA);
+				sb.append(errorStatus.getLogSessionData());
+			}
+			if (errorStatus.getStack() != null) {
+				sb.append(Messages.DefaultTaskContributor_EXCEPTION_STACK_TRACE);
+				sb.append(errorStatus.getStack());
+			}
+		}
+
+		IStatus[] children = status.getChildren();
+		if (children != null) {
+			for (IStatus child : children) {
+				appendStatus(child, sb, false);
+			}
+		}
 	}
 
 	private String getSeverityText(int severity) {

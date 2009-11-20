@@ -35,57 +35,8 @@ public class NewTaskFromErrorAction implements IObjectActionDelegate {
 
 	private LogEntry entry;
 
-	/**
-	 * Fills a {@link StringBuilder} with {@link LogEntry} information, optionally including subentries too
-	 * 
-	 * @param entry
-	 *            The {@link LogEntry} who provides the information
-	 * @param sb
-	 *            An {@link StringBuilder} to be filled with
-	 * @param includeChildren
-	 *            Indicates if it should include subentries, if the {@link LogEntry} have any
-	 */
-	// FIXME 3.4 re-enable (bug 279267)
-	@SuppressWarnings("unused")
-	private void buildDescriptionFromLogEntry(LogEntry entry, StringBuilder sb, boolean includeChildren) {
-		sb.append(Messages.NewTaskFromErrorAction_ERROR_LOG_DATE);
-		sb.append(entry.getDate());
-		sb.append(Messages.NewTaskFromErrorAction_MESSGAE);
-		sb.append(entry.getMessage());
-		sb.append(Messages.NewTaskFromErrorAction_SEVERITY + entry.getSeverityText());
-		sb.append(Messages.NewTaskFromErrorAction_PLUGIN_ID);
-		sb.append(entry.getPluginId());
-		sb.append(Messages.NewTaskFromErrorAction_STACK_TRACE);
-		if (entry.getStack() == null) {
-			sb.append(Messages.NewTaskFromErrorAction_no_stack_trace_available);
-		} else {
-			sb.append(entry.getStack());
-		}
-
-		if (includeChildren && entry.hasChildren()) {
-			Object[] children = entry.getChildren(null);
-			for (Object child : children) {
-				if (child instanceof LogEntry) {
-					buildDescriptionFromLogEntry((LogEntry) child, sb, includeChildren);
-				}
-			}
-		}
-	}
-
 	private void createTask(LogEntry entry) {
-		// FIXME reenable
-//		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-//		boolean includeChildren = false;
-//
-//		if (entry.hasChildren()
-//				&& MessageDialog.openQuestion(shell, "Report Bug", "Include children of this entry in the report?")) {
-//			includeChildren = true;
-//		}
-//		StringBuilder sb = new StringBuilder();
-//		buildDescriptionFromLogEntry(entry, sb, true);
-
 		ErrorLogStatus status = createStatus(entry);
-
 		new ErrorReporterManager().fail(status);
 	}
 
