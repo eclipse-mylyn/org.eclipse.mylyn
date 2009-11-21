@@ -855,8 +855,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		themeManager.addPropertyChangeListener(THEME_CHANGE_LISTENER);
 
 		filteredTree = new TaskListFilteredTree(parent, SWT.MULTI | SWT.VERTICAL | /* SWT.H_SCROLL | */SWT.V_SCROLL
-				| SWT.NO_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION, new SubstringPatternFilter(),
-				getViewSite().getWorkbenchWindow());
+				| SWT.NO_SCROLL | SWT.FULL_SELECTION, new SubstringPatternFilter(), getViewSite().getWorkbenchWindow());
 		// Set to empty string to disable native tooltips (windows only?)
 		// bug#160897
 		// http://dev.eclipse.org/newslists/news.eclipse.platform.swt/msg29614.html

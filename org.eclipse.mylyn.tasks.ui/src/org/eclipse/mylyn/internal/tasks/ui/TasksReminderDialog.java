@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
-import com.ibm.icu.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -38,6 +37,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
+import com.ibm.icu.text.DateFormat;
+
 /**
  * @author Ken Sueda
  */
@@ -48,7 +49,8 @@ public class TasksReminderDialog extends Dialog {
 
 	private TableViewer tableViewer = null;
 
-	private final String[] columnNames = new String[] { Messages.TasksReminderDialog_Description, Messages.TasksReminderDialog_Priority, Messages.TasksReminderDialog_Reminder_Day };
+	private final String[] columnNames = new String[] { Messages.TasksReminderDialog_Description,
+			Messages.TasksReminderDialog_Priority, Messages.TasksReminderDialog_Reminder_Day };
 
 	private static final int DISMISS_ALL_ID = 200;
 
@@ -96,7 +98,7 @@ public class TasksReminderDialog extends Dialog {
 	}
 
 	private void createTable(Composite parent) {
-		int style = SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION;
+		int style = SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION;
 		table = new Table(parent, style);
 		GridLayout tlayout = new GridLayout();
 		table.setLayout(tlayout);
