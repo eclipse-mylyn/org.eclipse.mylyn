@@ -30,7 +30,7 @@ public class TaskRepositoryParameterValues implements IParameterValues {
 		Collection<AbstractRepositoryConnector> connectors = TasksUi.getRepositoryManager().getRepositoryConnectors();
 		Map<String, String> values = new HashMap<String, String>();
 		for (AbstractRepositoryConnector connector : connectors) {
-			values.put(connector.getConnectorKind(), connector.getLabel());
+			values.put(connector.getLabel(), connector.getConnectorKind());
 		}
 		return values;
 	}
