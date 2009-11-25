@@ -67,9 +67,10 @@ public class OslcServiceDiscoveryProvider implements ITreeContentProvider {
 		return manager.mayHaveChildren(element);
 	}
 
+	@SuppressWarnings("unchecked")
 	public Object[] getElements(Object inputElement) {
-		if (inputElement instanceof List) {
-			List<OslcServiceProvider> rootProviders = ((List) inputElement);
+		if (inputElement instanceof List<?>) {
+			List<OslcServiceProvider> rootProviders = (List<OslcServiceProvider>) inputElement;
 			Object[] result = new Object[rootProviders.size()];
 			for (int x = 0; x < rootProviders.size(); x++) {
 				result[x] = new ServiceProviderCatalogWrapper(rootProviders.get(x));
