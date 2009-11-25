@@ -48,6 +48,9 @@
         	help.imagefolder="${imageFolder}"
         	targetfolder="userguide"
         	wiki.url.base="${mylyn.help.doc.url.base}/Mylyn"/>
+		<replaceregexp file="userguide/Mylyn Reference-toc.xml" match="(&lt;topic.*?href=&quot;userguide/Task-Repository-Connectors.html.*?&gt;(\s*&lt;topic\s*href=&quot;.*?&quot;\s*label=&quot;.*&quot;&gt;\s*?&lt;/topic&gt;)+)(\s*)(&lt;/topic&gt;)"
+		    		replace="\1\3&lt;anchor id=&quot;additions-repository-connectors&quot;/&gt;\3\4"
+					flags="s"/>
     </target>
 	
 	<macrodef name="eclipse-wiki-to-help">
