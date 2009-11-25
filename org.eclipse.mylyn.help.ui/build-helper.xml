@@ -22,8 +22,10 @@
 	<path id="wikitext.tasks.classpath">
 		<pathelement location="../org.eclipse.mylyn.wikitext.core/@dot"/>
 		<pathelement location="../org.eclipse.mylyn.wikitext.core/bin"/>
+		<pathelement location="../org.eclipse.mylyn.wikitext.core/bin_ant"/>
 		<pathelement location="../org.eclipse.mylyn.wikitext.mediawiki.core/@dot"/>
 		<pathelement location="../org.eclipse.mylyn.wikitext.mediawiki.core/bin"/>
+		<pathelement location="../org.eclipse.mylyn.wikitext.mediawiki.core/bin_ant"/>
 	</path>
 	
 	<taskdef classpathref="tasks.classpath" resource="org/eclipse/mylyn/internal/help/ui/anttask/tasks.properties"/>
