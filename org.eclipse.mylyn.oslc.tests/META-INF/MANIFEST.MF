@@ -13,3 +13,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn.oslc.ui,
  org.eclipse.mylyn.oslc.core
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Export-Package: org.eclipse.mylyn.oslc.cm.tests;x-internal:=true
