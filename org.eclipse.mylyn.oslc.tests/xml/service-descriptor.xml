@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<oslc_cm:ServiceDescriptor xmlns:oslc_cm="http://open-services.net/xmlns/cm/1.0/" xmlns:dc="http://purl.org/dc/terms/" xmlns:cq="http://www.ibm.com/xmlns/prod/rational/clearquest/1.0/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://mylyn.eclipse.org/oslc/cqrest/repo/7.0.0/db/SAMPL/">
+<dc:title>RCM/CQ OSLC CM Service Description Document</dc:title>
+<dc:description>Rational Change Management/ClearQuest OSLC CM Services available for 7.0.0/SAMPL.</dc:description>
+<dc:contributor rdf:resource="http://www.ibm.com/software/awdtools/clearquest/" oslc_cm:version="1.0">
+<dc:title>IBM Rational ClearQuest</dc:title>
+<dc:identifier>com.ibm.rational.cm.clearquest</dc:identifier>
+<oslc_cm:icon>http://mylyn.eclipse.org/oslc/_rcm-resources/clearquest.ico</oslc_cm:icon>
+</dc:contributor>
+<oslc_cm:changeRequests oslc_cm:domain="CM" oslc_cm:version="1.0">
+<oslc_cm:home>
+<dc:title>Change Requests</dc:title>
+<oslc_cm:url>http://mylyn.eclipse.org/cqweb/restapi/7.0.0/SAMPL?format=html</oslc_cm:url>
+</oslc_cm:home>
+<oslc_cm:factory>
+<dc:title>Unattended location for the creation of ClearQuest Records</dc:title>
+<oslc_cm:url>http://mylyn.eclipse.org/oslc/cqrest/repo/7.0.0/db/SAMPL/record</oslc_cm:url>
+</oslc_cm:factory>
+<oslc_cm:creationDialog oslc_cm:default="true" oslc_cm:hintWidth="703px" oslc_cm:hintHeight="510px">
+<dc:title>New Defect - IBM Rational ClearQuest</dc:title>
+<dc:description>Web dialog for creating new Defect records</dc:description>
+<oslc_cm:label>Defect</oslc_cm:label>
+<oslc_cm:url>http://mylyn.eclipse.org/oslc/cqrest/repo/7.0.0/db/SAMPL/record-type/16777224/creationDialog?dc%3Atype=Defect</oslc_cm:url>
+</oslc_cm:creationDialog>
+<oslc_cm:creationDialog oslc_cm:hintWidth="727px" oslc_cm:hintHeight="471px">
+<dc:title>New Email_Rule - IBM Rational ClearQuest</dc:title>
+<dc:description>Web dialog for creating new Email_Rule records</dc:description>
+<oslc_cm:label>Email_Rule</oslc_cm:label>
+<oslc_cm:url>http://mylyn.eclipse.org/oslc/cqrest/repo/7.0.0/db/SAMPL/record-type/16777753/creationDialog?dc%3Atype=Email_Rule</oslc_cm:url>
+</oslc_cm:creationDialog>
+<oslc_cm:creationDialog oslc_cm:hintWidth="777px" oslc_cm:hintHeight="471px">
+<dc:title>New New1 - IBM Rational ClearQuest</dc:title>
+<dc:description>Web dialog for creating new New1 records</dc:description>
+<oslc_cm:label>New1</oslc_cm:label>
+<oslc_cm:url>http://mylyn.eclipse.org/oslc/cqrest/repo/7.0.0/db/SAMPL/record-type/16778055/creationDialog?dc%3Atype=New1</oslc_cm:url>
+</oslc_cm:creationDialog>
+<oslc_cm:creationDialog oslc_cm:hintWidth="674px" oslc_cm:hintHeight="342px">
+<dc:title>New ratl_replicas - IBM Rational ClearQuest</dc:title>
+<dc:description>Web dialog for creating new ratl_replicas records</dc:description>
+<oslc_cm:label>ratl_replicas</oslc_cm:label>
+<oslc_cm:url>http://mylyn.eclipse.org/oslc/cqrest/repo/7.0.0/db/SAMPL/record-type/16777220/creationDialog?dc%3Atype=ratl_replicas</oslc_cm:url>
+</oslc_cm:creationDialog>
+<oslc_cm:creationDialog oslc_cm:hintWidth="722px" oslc_cm:hintHeight="194px">
+<dc:title>New groups - IBM Rational ClearQuest</dc:title>
+<dc:description>Web dialog for creating new groups records</dc:description>
+<oslc_cm:label>groups</oslc_cm:label>
+<oslc_cm:url>http://mylyn.eclipse.org/oslc/cqrest/repo/7.0.0/db/SAMPL/record-type/16777222/creationDialog?dc%3Atype=groups</oslc_cm:url>
+</oslc_cm:creationDialog>
+<oslc_cm:creationDialog oslc_cm:hintWidth="803px" oslc_cm:hintHeight="588px">
+<dc:title>New Customer - IBM Rational ClearQuest</dc:title>
+<dc:description>Web dialog for creating new Customer records</dc:description>
+<oslc_cm:label>Customer</oslc_cm:label>
+<oslc_cm:url>http://mylyn.eclipse.org/oslc/cqrest/repo/7.0.0/db/SAMPL/record-type/16777937/creationDialog?dc%3Atype=Customer</oslc_cm:url>
+</oslc_cm:creationDialog>
+<oslc_cm:creationDialog oslc_cm:hintWidth="651px" oslc_cm:hintHeight="294px">
+<dc:title>New Project - IBM Rational ClearQuest</dc:title>
+<dc:description>Web dialog for creating new Project records</dc:description>
+<oslc_cm:label>Project</oslc_cm:label>
+<oslc_cm:url>http://mylyn.eclipse.org/oslc/cqrest/repo/7.0.0/db/SAMPL/record-type/16777899/creationDialog?dc%3Atype=Project</oslc_cm:url>
+</oslc_cm:creationDialog>
+<oslc_cm:creationDialog oslc_cm:hintWidth="703px" oslc_cm:hintHeight="376px">
+<dc:title>New users - IBM Rational ClearQuest</dc:title>
+<dc:description>Web dialog for creating new users records</dc:description>
+<oslc_cm:label>users</oslc_cm:label>
+<oslc_cm:url>http://mylyn.eclipse.org/oslc/cqrest/repo/7.0.0/db/SAMPL/record-type/16777223/creationDialog?dc%3Atype=users</oslc_cm:url>
+</oslc_cm:creationDialog>
+<oslc_cm:simpleQuery cq:supportsOslcSearchTerms="true">
+<dc:title>Simple GET-based Record Query</dc:title>
+<oslc_cm:url>http://mylyn.eclipse.org/oslc/cqrest/repo/7.0.0/db/SAMPL/record</oslc_cm:url>
+</oslc_cm:simpleQuery>
+<oslc_cm:selectionDialog oslc_cm:default="true" oslc_cm:hintWidth="640px" oslc_cm:hintHeight="540px">
+<dc:title>Choose ClearQuest Record - IBM Rational ClearQuest</dc:title>
+<dc:description>Web dialog for finding and selecting ClearQuest Record records</dc:description>
+<oslc_cm:label>ClearQuest Record</oslc_cm:label>
+<oslc_cm:url>http://mylyn.eclipse.org/cqweb/chooseRecord.cq?type=cq.repo.cq-rectype%3A16777224%407.0.0%2FSAMPL&amp;restrictType=false</oslc_cm:url>
+</oslc_cm:selectionDialog>
+<oslc_cm:selectionDialog oslc_cm:hintWidth="640px" oslc_cm:hintHeight="540px">
+<dc:title>Choose Defect - IBM Rational ClearQuest</dc:title>
+<dc:description>Web dialog for finding and selecting Defect records</dc:description>
+<oslc_cm:label>Defect</oslc_cm:label>
+<oslc_cm:url>http://mylyn.eclipse.org/cqweb/chooseRecord.cq?type=cq.repo.cq-rectype%3A16777224%407.0.0%2FSAMPL&amp;restrictType=true</oslc_cm:url>
+</oslc_cm:selectionDialog>
+<oslc_cm:selectionDialog oslc_cm:hintWidth="640px" oslc_cm:hintHeight="540px">
+<dc:title>Choose Email_Rule - IBM Rational ClearQuest</dc:title>
+<dc:description>Web dialog for finding and selecting Email_Rule records</dc:description>
+<oslc_cm:label>Email_Rule</oslc_cm:label>
+<oslc_cm:url>http://mylyn.eclipse.org/cqweb/chooseRecord.cq?type=cq.repo.cq-rectype%3A16777753%407.0.0%2FSAMPL&amp;restrictType=true</oslc_cm:url>
+</oslc_cm:selectionDialog>
+<oslc_cm:selectionDialog oslc_cm:hintWidth="640px" oslc_cm:hintHeight="540px">
+<dc:title>Choose New1 - IBM Rational ClearQuest</dc:title>
+<dc:description>Web dialog for finding and selecting New1 records</dc:description>
+<oslc_cm:label>New1</oslc_cm:label>
+<oslc_cm:url>http://mylyn.eclipse.org/cqweb/chooseRecord.cq?type=cq.repo.cq-rectype%3A16778055%407.0.0%2FSAMPL&amp;restrictType=true</oslc_cm:url>
+</oslc_cm:selectionDialog>
+<oslc_cm:selectionDialog oslc_cm:hintWidth="640px" oslc_cm:hintHeight="540px">
+<dc:title>Choose ratl_replicas - IBM Rational ClearQuest</dc:title>
+<dc:description>Web dialog for finding and selecting ratl_replicas records</dc:description>
+<oslc_cm:label>ratl_replicas</oslc_cm:label>
+<oslc_cm:url>http://mylyn.eclipse.org/cqweb/chooseRecord.cq?type=cq.repo.cq-rectype%3A16777220%407.0.0%2FSAMPL&amp;restrictType=true</oslc_cm:url>
+</oslc_cm:selectionDialog>
+<oslc_cm:selectionDialog oslc_cm:hintWidth="640px" oslc_cm:hintHeight="540px">
+<dc:title>Choose groups - IBM Rational ClearQuest</dc:title>
+<dc:description>Web dialog for finding and selecting groups records</dc:description>
+<oslc_cm:label>groups</oslc_cm:label>
+<oslc_cm:url>http://mylyn.eclipse.org/cqweb/chooseRecord.cq?type=cq.repo.cq-rectype%3A16777222%407.0.0%2FSAMPL&amp;restrictType=true</oslc_cm:url>
+</oslc_cm:selectionDialog>
+<oslc_cm:selectionDialog oslc_cm:hintWidth="640px" oslc_cm:hintHeight="540px">
+<dc:title>Choose history - IBM Rational ClearQuest</dc:title>
+<dc:description>Web dialog for finding and selecting history records</dc:description>
+<oslc_cm:label>history</oslc_cm:label>
+<oslc_cm:url>http://mylyn.eclipse.org/cqweb/chooseRecord.cq?type=cq.repo.cq-rectype%3A16777219%407.0.0%2FSAMPL&amp;restrictType=true</oslc_cm:url>
+</oslc_cm:selectionDialog>
+<oslc_cm:selectionDialog oslc_cm:hintWidth="640px" oslc_cm:hintHeight="540px">
+<dc:title>Choose Customer - IBM Rational ClearQuest</dc:title>
+<dc:description>Web dialog for finding and selecting Customer records</dc:description>
+<oslc_cm:label>Customer</oslc_cm:label>
+<oslc_cm:url>http://mylyn.eclipse.org/cqweb/chooseRecord.cq?type=cq.repo.cq-rectype%3A16777937%407.0.0%2FSAMPL&amp;restrictType=true</oslc_cm:url>
+</oslc_cm:selectionDialog>
+<oslc_cm:selectionDialog oslc_cm:hintWidth="640px" oslc_cm:hintHeight="540px">
+<dc:title>Choose attachments - IBM Rational ClearQuest</dc:title>
+<dc:description>Web dialog for finding and selecting attachments records</dc:description>
+<oslc_cm:label>attachments</oslc_cm:label>
+<oslc_cm:url>http://mylyn.eclipse.org/cqweb/chooseRecord.cq?type=cq.repo.cq-rectype%3A16777221%407.0.0%2FSAMPL&amp;restrictType=true</oslc_cm:url>
+</oslc_cm:selectionDialog>
+<oslc_cm:selectionDialog oslc_cm:hintWidth="640px" oslc_cm:hintHeight="540px">
+<dc:title>Choose Project - IBM Rational ClearQuest</dc:title>
+<dc:description>Web dialog for finding and selecting Project records</dc:description>
+<oslc_cm:label>Project</oslc_cm:label>
+<oslc_cm:url>http://mylyn.eclipse.org/cqweb/chooseRecord.cq?type=cq.repo.cq-rectype%3A16777899%407.0.0%2FSAMPL&amp;restrictType=true</oslc_cm:url>
+</oslc_cm:selectionDialog>
+<oslc_cm:selectionDialog oslc_cm:hintWidth="640px" oslc_cm:hintHeight="540px">
+<dc:title>Choose users - IBM Rational ClearQuest</dc:title>
+<dc:description>Web dialog for finding and selecting users records</dc:description>
+<oslc_cm:label>users</oslc_cm:label>
+<oslc_cm:url>http://mylyn.eclipse.org/cqweb/chooseRecord.cq?type=cq.repo.cq-rectype%3A16777223%407.0.0%2FSAMPL&amp;restrictType=true</oslc_cm:url>
+</oslc_cm:selectionDialog>
+<cq:namedQuery>
+<dc:title>Location for named queries and folders</dc:title>
+<oslc_cm:url>http://mylyn.eclipse.org/oslc/cqrest/repo/7.0.0/db/SAMPL/query-folder</oslc_cm:url>
+</cq:namedQuery>
+<cq:schema>
+<dc:title>URL to request record type definitions in XSD</dc:title>
+<oslc_cm:url>http://mylyn.eclipse.org/oslc/cqrest/repo/7.0.0/db/SAMPL/record-type</oslc_cm:url>
+</cq:schema>
+<cq:defaultRecordType>
+<dc:title>URL of the default record type</dc:title>
+<oslc_cm:url>http://mylyn.eclipse.org/oslc/cqrest/repo/7.0.0/db/SAMPL/record-type/16777224</oslc_cm:url>
+</cq:defaultRecordType>
+</oslc_cm:changeRequests>
+</oslc_cm:ServiceDescriptor>

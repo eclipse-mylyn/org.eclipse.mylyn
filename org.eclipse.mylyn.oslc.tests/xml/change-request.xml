@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<oslc_cm:Collection xmlns:rtc_cm="http://jazz.net/xmlns/prod/jazz/rtc/cm/1.0/"
+	xmlns:oslc_disc="http://open-services.net/xmlns/discovery/1.0/"
+	xmlns:dc="http://purl.org/dc/terms/" xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/"
+	xmlns:jp="http://jazz.net/xmlns/prod/jazz/presentation/1.0/" xmlns:jd="http://jazz.net/xmlns/prod/jazz/discovery/1.0/"
+	xmlns:oslc_cm="http://open-services.net/xmlns/cm/1.0/" xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:calm="http://jazz.net/xmlns/prod/jazz/calm/1.0/"
+	oslc_cm:totalCount="1">
+	<oslc_cm:ChangeRequest
+		rdf:resource="https://mylyn.eclipse.org:9443/jazz/resource/itemOid/com.ibm.team.workitem.WorkItem/_PL7SELcNEd67as-op4LhuA">
+		<rtc_cm:filedAgainst
+			rdf:resource="https://mylyn.eclipse.org:9443/jazz/resource/itemOid/com.ibm.team.workitem.Category/_S3KqMbcMEd67as-op4LhuA" />
+		<rtc_cm:correctedEstimate />
+		<dc:created>2009-10-12T08:58:20.496Z</dc:created>
+		<dc:creator
+			rdf:resource="https://mylyn.eclipse.org:9443/jazz/oslc/users/_KGRY4CFWEdq-WY5y7lROQw" />
+		<dc:description>test description</dc:description>
+		<rtc_cm:due />
+		<rtc_cm:estimate />
+		<rtc_cm:foundIn />
+		<dc:identifier>10</dc:identifier>
+		<rtc_cm:comments
+			oslc_cm:collref="https://mylyn.eclipse.org:9443/jazz/oslc/workitems/_PL7SELcNEd67as-op4LhuA/rtc_cm:comments" />
+		<oslc_cm:priority
+			rdf:resource="https://mylyn.eclipse.org:9443/jazz/oslc/enumerations/_RysVcLcMEd67as-op4LhuA/priority/priority.literal.l02" />
+		<rtc_cm:resolution />
+		<oslc_cm:severity
+			rdf:resource="https://mylyn.eclipse.org:9443/jazz/oslc/enumerations/_RysVcLcMEd67as-op4LhuA/severity/severity.literal.l3" />
+		<rtc_cm:state
+			rdf:resource="https://mylyn.eclipse.org:9443/jazz/oslc/workflows/_RysVcLcMEd67as-op4LhuA/states/com.ibm.team.workitem.defectWorkflow/1" />
+		<rtc_cm:subscribers
+			oslc_cm:collref="https://mylyn.eclipse.org:9443/jazz/oslc/workitems/_PL7SELcNEd67as-op4LhuA/rtc_cm:subscribers" />
+		<dc:subject />
+		<dc:modified>2009-10-12T08:58:20.588Z</dc:modified>
+		<rtc_cm:modifiedBy
+			rdf:resource="https://mylyn.eclipse.org:9443/jazz/oslc/users/_KGRY4CFWEdq-WY5y7lROQw" />
+		<rtc_cm:ownedBy
+			rdf:resource="https://mylyn.eclipse.org:9443/jazz/oslc/users/_KGRY4CFWEdq-WY5y7lROQw" />
+		<rtc_cm:projectArea
+			rdf:resource="https://mylyn.eclipse.org:9443/jazz/oslc/projectareas/_RysVcLcMEd67as-op4LhuA" />
+		<rtc_cm:resolved />
+		<rtc_cm:resolvedBy
+			rdf:resource="https://mylyn.eclipse.org:9443/jazz/oslc/users/_YNh4MOlsEdq4xpiOKg5hvA" />
+		<rtc_cm:startDate />
+		<dc:title>test bug</dc:title>
+		<rtc_cm:plannedFor
+			rdf:resource="https://mylyn.eclipse.org:9443/jazz/oslc/iterations/_R4c_MrcMEd67as-op4LhuA" />
+		<rtc_cm:timeSpent />
+		<dc:type
+			rdf:resource="https://mylyn.eclipse.org:9443/jazz/oslc/types/_RysVcLcMEd67as-op4LhuA/defect" />
+		<rtc_cm:teamArea
+			rdf:resource="https://mylyn.eclipse.org:9443/jazz/oslc/teamareas/_S0voULcMEd67as-op4LhuA" />
+		<rtc_cm:com.ibm.team.connector.ccbridge.common.act2wi.s
+			oslc_cm:collref="https://mylyn.eclipse.org:9443/jazz/oslc/workitems/_PL7SELcNEd67as-op4LhuA/rtc_cm:com.ibm.team.connector.ccbridge.common.act2wi.s" />
+		<rtc_cm:com.ibm.team.build.linktype.includedWorkItems.com.ibm.team.build.common.link.includedInBuilds
+			oslc_cm:collref="https://mylyn.eclipse.org:9443/jazz/oslc/workitems/_PL7SELcNEd67as-op4LhuA/rtc_cm:com.ibm.team.build.linktype.includedWorkItems.com.ibm.team.build.common.link.includedInBuilds" />
+		<calm:blocksTestExecutionRecord
+			oslc_cm:collref="https://mylyn.eclipse.org:9443/jazz/oslc/workitems/_PL7SELcNEd67as-op4LhuA/calm:blocksTestExecutionRecord" />
+		<rtc_cm:com.ibm.team.workitem.linktype.textualReference.textuallyReferenced
+			oslc_cm:collref="https://mylyn.eclipse.org:9443/jazz/oslc/workitems/_PL7SELcNEd67as-op4LhuA/rtc_cm:com.ibm.team.workitem.linktype.textualReference.textuallyReferenced" />
+		<calm:implementsRequirement
+			oslc_cm:collref="https://mylyn.eclipse.org:9443/jazz/oslc/workitems/_PL7SELcNEd67as-op4LhuA/calm:implementsRequirement" />
+		<calm:testedByTestCase
+			oslc_cm:collref="https://mylyn.eclipse.org:9443/jazz/oslc/workitems/_PL7SELcNEd67as-op4LhuA/calm:testedByTestCase" />
+		<rtc_cm:com.ibm.team.workitem.linktype.attachment.attachment
+			oslc_cm:collref="https://mylyn.eclipse.org:9443/jazz/oslc/workitems/_PL7SELcNEd67as-op4LhuA/rtc_cm:com.ibm.team.workitem.linktype.attachment.attachment" />
+		<rtc_cm:com.ibm.team.workitem.linktype.relatedartifact.relatedArtifact
+			oslc_cm:collref="https://mylyn.eclipse.org:9443/jazz/oslc/workitems/_PL7SELcNEd67as-op4LhuA/rtc_cm:com.ibm.team.workitem.linktype.relatedartifact.relatedArtifact" />
+		<rtc_cm:com.ibm.team.build.linktype.reportedWorkItems.com.ibm.team.build.common.link.reportedAgainstBuilds
+			oslc_cm:collref="https://mylyn.eclipse.org:9443/jazz/oslc/workitems/_PL7SELcNEd67as-op4LhuA/rtc_cm:com.ibm.team.build.linktype.reportedWorkItems.com.ibm.team.build.common.link.reportedAgainstBuilds" />
+		<rtc_cm:com.ibm.team.workitem.linktype.relatedworkitem.related
+			oslc_cm:collref="https://mylyn.eclipse.org:9443/jazz/oslc/workitems/_PL7SELcNEd67as-op4LhuA/rtc_cm:com.ibm.team.workitem.linktype.relatedworkitem.related" />
+		<rtc_cm:com.ibm.team.scm.svn.linkType.workItem.s
+			oslc_cm:collref="https://mylyn.eclipse.org:9443/jazz/oslc/workitems/_PL7SELcNEd67as-op4LhuA/rtc_cm:com.ibm.team.scm.svn.linkType.workItem.s" />
+		<oslc_cm:relatedChangeManagement
+			oslc_cm:collref="https://mylyn.eclipse.org:9443/jazz/oslc/workitems/_PL7SELcNEd67as-op4LhuA/oslc_cm:relatedChangeManagement" />
+		<rtc_cm:com.ibm.team.workitem.linktype.copiedworkitem.copies
+			oslc_cm:collref="https://mylyn.eclipse.org:9443/jazz/oslc/workitems/_PL7SELcNEd67as-op4LhuA/rtc_cm:com.ibm.team.workitem.linktype.copiedworkitem.copies" />
+		<rtc_cm:com.ibm.team.workitem.linktype.copiedworkitem.copiedFrom
+			oslc_cm:collref="https://mylyn.eclipse.org:9443/jazz/oslc/workitems/_PL7SELcNEd67as-op4LhuA/rtc_cm:com.ibm.team.workitem.linktype.copiedworkitem.copiedFrom" />
+		<rtc_cm:com.ibm.team.workitem.linktype.blocksworkitem.blocks
+			oslc_cm:collref="https://mylyn.eclipse.org:9443/jazz/oslc/workitems/_PL7SELcNEd67as-op4LhuA/rtc_cm:com.ibm.team.workitem.linktype.blocksworkitem.blocks" />
+		<rtc_cm:com.ibm.team.workitem.linktype.blocksworkitem.dependsOn
+			oslc_cm:collref="https://mylyn.eclipse.org:9443/jazz/oslc/workitems/_PL7SELcNEd67as-op4LhuA/rtc_cm:com.ibm.team.workitem.linktype.blocksworkitem.dependsOn" />
+		<rtc_cm:com.ibm.team.workitem.linktype.duplicateworkitem.duplicates
+			oslc_cm:collref="https://mylyn.eclipse.org:9443/jazz/oslc/workitems/_PL7SELcNEd67as-op4LhuA/rtc_cm:com.ibm.team.workitem.linktype.duplicateworkitem.duplicates" />
+		<rtc_cm:com.ibm.team.workitem.linktype.duplicateworkitem.duplicateOf
+			oslc_cm:collref="https://mylyn.eclipse.org:9443/jazz/oslc/workitems/_PL7SELcNEd67as-op4LhuA/rtc_cm:com.ibm.team.workitem.linktype.duplicateworkitem.duplicateOf" />
+		<rtc_cm:com.ibm.team.filesystem.workitems.change_set.com.ibm.team.scm.ChangeSet
+			oslc_cm:collref="https://mylyn.eclipse.org:9443/jazz/oslc/workitems/_PL7SELcNEd67as-op4LhuA/rtc_cm:com.ibm.team.filesystem.workitems.change_set.com.ibm.team.scm.ChangeSet" />
+		<calm:affectsExecutionResult
+			oslc_cm:collref="https://mylyn.eclipse.org:9443/jazz/oslc/workitems/_PL7SELcNEd67as-op4LhuA/calm:affectsExecutionResult" />
+		<rtc_cm:com.ibm.team.workitem.linktype.parentworkitem.parent
+			oslc_cm:collref="https://mylyn.eclipse.org:9443/jazz/oslc/workitems/_PL7SELcNEd67as-op4LhuA/rtc_cm:com.ibm.team.workitem.linktype.parentworkitem.parent" />
+		<rtc_cm:com.ibm.team.workitem.linktype.parentworkitem.children
+			oslc_cm:collref="https://mylyn.eclipse.org:9443/jazz/oslc/workitems/_PL7SELcNEd67as-op4LhuA/rtc_cm:com.ibm.team.workitem.linktype.parentworkitem.children" />
+	</oslc_cm:ChangeRequest>
+</oslc_cm:Collection>
