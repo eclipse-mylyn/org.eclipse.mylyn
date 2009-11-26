@@ -215,6 +215,20 @@
          unpack="false"/>
 
    <plugin
+         id="org.eclipse.mylyn.oslc.core.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.oslc.ui.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="org.eclipse.mylyn.oslc.core"
          download-size="0"
          install-size="0"
