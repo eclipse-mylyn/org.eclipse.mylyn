@@ -1,0 +1,131 @@
+<?xml version='1.0' encoding='utf-8' ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<title>Mylyn Reference - Creating new Tasks</title>
+		<link type="text/css" rel="stylesheet" href="book.css"/>
+	</head>
+	<body>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<th style="width: 100%" align="center" colspan="3">Creating new Tasks</th>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="Creating-new-Queries.html" title="Creating new Queries">
+						<img alt="Previous" border="0" src="images/images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right">
+					<a href="Task-Editor.html" title="Task Editor">
+						<img alt="Next" border="0" src="images/images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">Creating new Queries</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Task Editor</td>
+			</tr>
+		</table><hr/>
+		<h1 id="Creating_new_Tasks">Creating new Tasks</h1>
+		<p>
+			<img border="0" src="images/Feature-Reference-3.0-New-Task.png"/>
+		</p>
+		<p>You can create new tasks by clicking on the "New Task" button in the Task List's toolbar. This will open the "New Task" dialog and prompt you to select a repository. There are two main types of tasks, local tasks and repository tasks.</p>
+		<h2 id="Local_Tasks">Local Tasks</h2>
+		<p>Use local tasks if you do not have a shared task repository or if you would like to create a private, personal task that is local to your workspace. To create a local task, select 
+			<b>Local Task</b> and "Finish" from the New Task dialog.
+		</p>
+		<p>You can then provide the following details about the task.</p>
+		<ul>
+			<li>'''Task Description - Your task is called "New Task" by default. Replace this with a brief task description.</li>
+			<li>
+				<b>Priority</b> - Set the priority of your task. This will affect the task's icon and order in the task list. 
+			</li>
+			<li>
+				<b>Status</b> - Set your task to "complete" or "incomplete". In your task list, completed tasks have a strikethrough font and will appear lower in the list.
+			</li>
+			<li>
+				<b>URL</b> - You can associate a URL with this task. 
+				<ul>
+					<li>"Retrieve Task Description from URL" button - Set the task description to the title of the associated URL (page)</li>
+					<li>"Open with Web Browser" button - Open the URL in the integrated web browser</li>
+				</ul>
+			</li>
+			<li>
+				<b>Scheduled For</b> - Set the date when you will work on this task. Tasks scheduled for today or a date in the past will appear in blue in your task list. Tasks scheduled for future days will appear in black. If your task list is in focused mode, only tasks for the current week will be visible (unless they have unread changes).
+			</li>
+			<li>
+				<b>Due</b> - Set the date when your task must be completed. Overdue tasks and tasks due today will appear in red in your task list.
+			</li>
+			<li>
+				<b>Estimated Hours</b> - Estimate the number of hours it will take to complete this task.
+			</li>
+			<li>
+				<b>Active</b> - Displays the total time that you have worked on this task. Time is only recorded when this task is active and you are actively interacting with the system.
+			</li>
+			<li>
+				<b>Notes</b> - Record your personal notes about this task.
+			</li>
+		</ul>
+		<p>
+			<img border="0" src="images/Feature-Guide-3.0-Local-Task.png"/>
+		</p>
+		<h2 id="Repository_Tasks">Repository Tasks</h2>
+		<p>Create a new repository task when you would like to share information about the task with your team using a task repository such as Bugzilla or JIRA. To create a new repository task, click on the "New Task" button in the Task List's toolbar. You can then select the repository where you would like to create a task. If you don't see your team's task repository, you will need to configure it in the task repositories view. Once you have selected a repository, click "Next". If you are connecting to a Bugzilla repository, select a "Product" as a top-level category for your task and click "Finish".</p>
+		<p>A new task editor will appear. If you are using Bugzilla, you can enter the following information:</p>
+		<p>Required</p>
+		<ul>
+			<li>
+				<b>Description</b> - Enter a brief task description in the text box at the top (this box does not have a label).
+			</li>
+			<li>
+				<b>Component</b> - Specify a "Component" to further categorize this task within the previously selected "Product".
+			</li>
+			<li>
+				<b>Description</b> - Describe the task in detail.
+			</li>
+		</ul>
+		<p>Optional</p>
+		<ul>
+			<li>You can specify additional information about your tasks in the "Attributes" section.</li>
+			<li>
+				<b>Personal Planning</b> - You can enter information in this section that will be local to your workspace and 
+				<b>not</b> available on your team's task repository. See "Local Tasks" for more information about the personal planning fields.
+			</li>
+			<li>
+				<b>Assigned to</b> - Specify who should work on the task. Type the first several characters of the person's email address, and then press ctrl+space to select the address from a list. A task can be assigned to only one person at a time.
+			</li>
+			<li>
+				<b>Add CC</b> - Add the addresses of people who should be notified of changes to this task. You can add multiple addresses, separated by a comma, e.g. (mik.kersten@tasktop.com, steffen.pingel@tasktop.com).
+			</li>
+		</ul>
+		<p>When finished, click "Submit" to add your new task to your team's shared task repository.</p><hr/>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="Creating-new-Queries.html" title="Creating new Queries">
+						<img alt="Previous" border="0" src="images/images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center">
+					<a href="Mylyn Reference.html" title="Mylyn Reference">
+						<img alt="Mylyn Reference" border="0" src="images/images/home.gif"/>
+					</a>
+				</td>
+				<td style="width: 20%" align="right">
+					<a href="Task-Editor.html" title="Task Editor">
+						<img alt="Next" border="0" src="images/images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">Creating new Queries</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Task Editor</td>
+			</tr>
+		</table>
+	</body>
+</html>
