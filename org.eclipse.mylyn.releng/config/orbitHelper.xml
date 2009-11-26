@@ -75,6 +75,11 @@
 			<include name="org.apache.ws.commons.util*.jar"/>				
 		</fileset>
 
+		<!-- jdom -->
+		<fileset dir="${buildDirectory}/plugins" id="org.jdom">
+			<include name="org.jdom*.jar"/>				
+		</fileset>
+
 		<!-- rome -->
 		<fileset dir="${buildDirectory}/plugins" id="com.sun.syndication">
 			<include name="com.sun.syndication*.jar"/>
@@ -84,6 +89,7 @@
 		<mkdir dir="${buildDirectory}/standardUpdateSite/plugins"/>
 		<copy todir="${buildDirectory}/standardUpdateSite/plugins">
 			<fileset refid="org.apache.commons.httpclient" />
+			<fileset refid="org.jdom" />
 		</copy>
 
 		<mkdir dir="${buildDirectory}/extrasUpdateSite/plugins"/>
