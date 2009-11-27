@@ -27,7 +27,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.monitor.core.IInteractionEventListener;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.ui.AbstractUserActivityMonitor;
@@ -55,8 +54,6 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 	public static final String ID_PLUGIN = "org.eclipse.mylyn.monitor.ui"; //$NON-NLS-1$
 
 	private static MonitorUiPlugin INSTANCE;
-
-	private ShellLifecycleListener shellLifecycleListener;
 
 	private final List<AbstractUserInteractionMonitor> selectionMonitors = new ArrayList<AbstractUserInteractionMonitor>();
 
@@ -169,14 +166,6 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 				if (getWorkbench() != null && !getWorkbench().isClosing()) {
 					getWorkbench().removeWindowListener(WINDOW_LISTENER);
 
-					if (getWorkbench().getActiveWorkbenchWindow() != null
-							&& getWorkbench().getActiveWorkbenchWindow().getShell() != null
-							&& !getWorkbench().getActiveWorkbenchWindow().getShell().isDisposed()) {
-						getWorkbench().getActiveWorkbenchWindow()
-								.getShell()
-								.removeShellListener(shellLifecycleListener);
-					}
-
 					for (IWorkbenchWindow window : monitoredWindows) {
 						removeListenersFromWindow(window);
 					}
@@ -187,10 +176,6 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 			StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN, "Monitor UI stop failed", e)); //$NON-NLS-1$
 		}
 		INSTANCE = null;
-	}
-
-	public ShellLifecycleListener getShellLifecycleListener() {
-		return shellLifecycleListener;
 	}
 
 	public void addWindowPartListener(IPartListener listener) {
@@ -394,14 +379,25 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 	private void init() {
 		try {
 			getWorkbench().addWindowListener(WINDOW_LISTENER);
-			launchingWorkbenchWindow = getWorkbench().getActiveWorkbenchWindow();
 
-			for (IWorkbenchWindow window : getWorkbench().getWorkbenchWindows()) {
+			IWorkbenchWindow[] windows = getWorkbench().getWorkbenchWindows();
+			if (windows.length > 0) {
+				launchingWorkbenchWindow = windows[0];
+			}
+			for (IWorkbenchWindow window : windows) {
 				addListenersToWindow(window);
 			}
 
-			shellLifecycleListener = new ShellLifecycleListener(ContextCorePlugin.getContextManager());
-			getWorkbench().getActiveWorkbenchWindow().getShell().addShellListener(shellLifecycleListener);
+			// disabled, there is currently no need for this event
+//			String productId = InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH;
+//			if (Platform.getProduct() != null) {
+//				productId = Platform.getProduct().getId();
+//			}
+//			ContextCorePlugin.getContextManager().processActivityMetaContextEvent(
+//					new InteractionEvent(InteractionEvent.Kind.ATTENTION,
+//							InteractionContextManager.ACTIVITY_STRUCTUREKIND_LIFECYCLE, productId,
+//							InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
+//							InteractionContextManager.ACTIVITY_DELTA_STARTED, 1f));
 
 			monitors.add(new WorkbenchUserActivityMonitor());
 			new MonitorUiExtensionPointReader().initExtensions();

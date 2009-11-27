@@ -52,6 +52,13 @@ public class MonitorUi {
 		return MonitorUiPlugin.getDefault().getActivityContextManager();
 	}
 
+	/**
+	 * This call returns the first workbench window that when Monitor UI was started. It is not guaranteed that this
+	 * window still exists.
+	 * 
+	 * @deprecated
+	 */
+	@Deprecated
 	public static IWorkbenchWindow getLaunchingWorkbenchWindow() {
 		return MonitorUiPlugin.getDefault().getLaunchingWorkbenchWindow();
 	}
