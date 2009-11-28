@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Tests
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.oslc.tests
 Bundle-Version: 0.0.0.qualifier
 Require-Bundle: org.eclipse.core.runtime,
@@ -14,3 +14,5 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn.oslc.core
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.mylyn.oslc.cm.tests;x-internal:=true
+Bundle-Localization: plugin
+Bundle-Vendor: %Bundle-Provider

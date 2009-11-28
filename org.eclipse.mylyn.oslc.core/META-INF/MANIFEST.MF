@@ -14,3 +14,4 @@ Export-Package: org.eclipse.mylyn.internal.oslc.core;x-friends:="org.eclipse.myl
  org.eclipse.mylyn.internal.oslc.core.client;x-friends:="org.eclipse.mylyn.oslc.ui",
  org.eclipse.mylyn.internal.oslc.core.cm;x-friends:="org.eclipse.mylyn.oslc.ui"
 Bundle-ClassPath: .
+Bundle-Localization: plugin
