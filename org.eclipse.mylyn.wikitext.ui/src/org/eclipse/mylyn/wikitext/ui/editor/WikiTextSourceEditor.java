@@ -116,7 +116,6 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 	private AbstractWikiTextSourceEditorOutline outlinePage;
 
 	public WikiTextSourceEditor() {
-		setSourceViewerConfiguration(new MarkupSourceViewerConfiguration(getPreferenceStore()));
 	}
 
 	/**
@@ -258,6 +257,7 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 	protected void initializeEditor() {
 		super.initializeEditor();
 		setHelpContextId(CONTEXT); // ORDER DEPENDENCY
+		setSourceViewerConfiguration(new MarkupSourceViewerConfiguration(getPreferenceStore()));
 	}
 
 	@Override
@@ -268,7 +268,7 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 		contextService.activateContext(CONTEXT);
 	}
 
-	@SuppressWarnings( { "unchecked" })
+	@SuppressWarnings({ "rawtypes" })
 	@Override
 	public Object getAdapter(Class adapter) {
 		if (adapter == IContentOutlinePage.class) {
