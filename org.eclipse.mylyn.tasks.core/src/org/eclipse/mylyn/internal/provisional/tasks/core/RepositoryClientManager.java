@@ -66,6 +66,9 @@ abstract class RepositoryClientManager<T, C extends Serializable> implements IRe
 		return client;
 	}
 
+	/**
+	 * FIXME: Add TaskRepository as parameter
+	 */
 	protected abstract C createRepositoryConfiguration();
 
 	protected abstract T createClient(TaskRepository taskRepository, C data);
