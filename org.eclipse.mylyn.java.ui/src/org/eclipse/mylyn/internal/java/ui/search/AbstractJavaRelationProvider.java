@@ -251,7 +251,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 				return gathered;
 			}
 
-			@SuppressWarnings("unchecked")
+			@SuppressWarnings("rawtypes")
 			public void searchCompleted(List l) {
 				if (l == null) {
 					return;

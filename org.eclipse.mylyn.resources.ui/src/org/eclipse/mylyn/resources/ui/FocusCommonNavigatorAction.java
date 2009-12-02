@@ -258,7 +258,7 @@ public abstract class FocusCommonNavigatorAction extends AbstractAutoFocusViewAc
 		} else if (aSelectionToAppend == null || aSelectionToAppend.isEmpty()) {
 			return aBase;
 		} else {
-			List newItems = new ArrayList(aBase.toList());
+			List<Object> newItems = new ArrayList<Object>(aBase.toList());
 			newItems.addAll(aSelectionToAppend.toList());
 			return new StructuredSelection(newItems);
 		}
