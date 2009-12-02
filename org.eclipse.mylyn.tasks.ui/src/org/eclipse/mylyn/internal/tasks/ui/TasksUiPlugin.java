@@ -889,6 +889,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		store.setDefault(ITasksUiPreferenceConstants.PLANNING_ENDHOUR, 18);
 
 		store.setDefault(ITasksUiPreferenceConstants.AUTO_EXPAND_TASK_LIST, true);
+		store.setDefault(ITasksUiPreferenceConstants.TASK_LIST_TOOL_TIPS_ENABLED, true);
 	}
 
 	public static TaskActivityManager getTaskActivityManager() {

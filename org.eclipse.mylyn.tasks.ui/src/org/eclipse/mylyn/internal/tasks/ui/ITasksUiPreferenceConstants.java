@@ -79,6 +79,8 @@ public interface ITasksUiPreferenceConstants {
 	@Deprecated
 	public static final String LOCAL_SUB_TASKS_ENABLED = "org.eclipse.mylyn.tasks.ui.subtasks.local"; //$NON-NLS-1$
 
+	public static final String TASK_LIST_TOOL_TIPS_ENABLED = "org.eclipse.mylyn.tasks.ui.task.list.tool.tip"; //$NON-NLS-1$
+
 	// NOTE: legacy name, do not change
 	public static final String PREF_DATA_DIR = "org.eclipse.mylyn.data.dir"; //$NON-NLS-1$
 

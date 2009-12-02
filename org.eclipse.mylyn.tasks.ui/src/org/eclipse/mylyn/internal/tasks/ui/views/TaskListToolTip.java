@@ -419,6 +419,12 @@ public class TaskListToolTip extends GradientToolTip {
 	protected boolean shouldCreateToolTip(Event event) {
 		currentTipElement = null;
 
+		if (isTriggeredByMouse()
+				&& !TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
+						ITasksUiPreferenceConstants.TASK_LIST_TOOL_TIPS_ENABLED)) {
+			return false;
+		}
+
 		if (super.shouldCreateToolTip(event)) {
 			Widget tipWidget = getTipWidget(event);
 			if (tipWidget != null) {
@@ -651,8 +657,8 @@ public class TaskListToolTip extends GradientToolTip {
 
 	@Override
 	public void show(Point location) {
-		super.show(location);
 		triggeredByMouse = false;
+		super.show(location);
 	}
 
 }
