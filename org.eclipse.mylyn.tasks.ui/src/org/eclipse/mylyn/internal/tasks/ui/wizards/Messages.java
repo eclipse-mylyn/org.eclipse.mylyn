@@ -49,6 +49,8 @@ public class Messages extends NLS {
 
 	public static String AttachmentSourcePage_Select_attachment_source;
 
+	public static String AttachmentSourcePage_Select_File_Dialog_Title;
+
 	public static String AttachmentSourcePage_Select_the_location_of_the_attachment;
 
 	public static String AttachmentSourcePage_Workspace;

@@ -17,6 +17,7 @@ package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -119,7 +120,16 @@ public class AttachmentSourcePage extends WizardPage {
 
 	private final String S_LAST_SELECTION = "lastSelection"; //$NON-NLS-1$
 
+	private final String S_FILE_HISTORY = "fileHistory"; //$NON-NLS-1$
+
+	private final String S_LAST_FILE = "lastFile"; //$NON-NLS-1$
+
 	private final TaskAttachmentModel model;
+
+	/**
+	 * The last filename that was selected through the browse button.
+	 */
+	private String lastFilename;
 
 	public AttachmentSourcePage(TaskAttachmentModel model) {
 		super("InputAttachmentPage"); //$NON-NLS-1$
@@ -129,13 +139,28 @@ public class AttachmentSourcePage extends WizardPage {
 		// setMessage("Please select the source for the attachment");
 	}
 
-	private void initialize(IDialogSettings settings) {
+	private void restoreDialogSettings() {
+		IDialogSettings settings = getDialogSettings();
+		if (settings == null) {
+			updateWidgetEnablements();
+			return;
+		}
+
 		String selection = settings.get(S_LAST_SELECTION);
 		if (selection != null) {
 			setInputMethod(Integer.valueOf(selection).intValue());
 		} else {
 			updateWidgetEnablements();
 		}
+
+		String[] fileNames = settings.getArray(S_FILE_HISTORY);
+		if (fileNames != null) {
+			// destination
+			for (String fileName : fileNames) {
+				fileNameField.add(fileName);
+			}
+		}
+		lastFilename = settings.get(S_LAST_FILE);
 	}
 
 	/*
@@ -170,7 +195,7 @@ public class AttachmentSourcePage extends WizardPage {
 		// No error for dialog opening
 		showError = false;
 		clearErrorMessage();
-		initialize(getDialogSettings());
+		restoreDialogSettings();
 
 		Dialog.applyDialogFont(composite);
 	}
@@ -189,6 +214,23 @@ public class AttachmentSourcePage extends WizardPage {
 	private void saveDialogSettings() {
 		IDialogSettings settings = getDialogSettings();
 		settings.put(S_LAST_SELECTION, getInputMethod());
+
+		String[] fileNames = settings.getArray(S_FILE_HISTORY);
+		String newFileName = fileNameField.getText().trim();
+		if (getInputMethod() == FILE && newFileName.length() > 0) {
+			List<String> history = new ArrayList<String>(10);
+			history.add(newFileName);
+			if (fileNames != null) {
+				for (int i = 0; i < fileNames.length && history.size() < COMBO_HISTORY_LENGTH; i++) {
+					if (!newFileName.equals(fileNames[i])) {
+						history.add(fileNames[i]);
+					}
+				}
+			}
+			settings.put(S_FILE_HISTORY, history.toArray(new String[0]));
+		}
+
+		settings.put(S_LAST_FILE, lastFilename);
 	}
 
 	@Override
@@ -297,15 +339,20 @@ public class AttachmentSourcePage extends WizardPage {
 			public void widgetSelected(SelectionEvent e) {
 				clearErrorMessage();
 				showError = true;
-				/* Launch Browser */
-				FileDialog fileChooser = new FileDialog(composite.getShell(), SWT.OPEN);
-				String file = fileChooser.open();
 
-				// Check if the dialog was canceled or an error occured
+				FileDialog fileChooser = new FileDialog(composite.getShell(), SWT.OPEN);
+				fileChooser.setText(Messages.AttachmentSourcePage_Select_File_Dialog_Title);
+				if (fileNameField.getText().trim().length() > 0) {
+					lastFilename = fileNameField.getText().trim();
+				}
+				fileChooser.setFileName(lastFilename);
+				String file = fileChooser.open();
 				if (file == null) {
 					return;
 				}
-				// update UI
+
+				// remember the last selected directory 
+				lastFilename = file;
 				fileNameField.setText(file);
 				updateWidgetEnablements();
 			}
