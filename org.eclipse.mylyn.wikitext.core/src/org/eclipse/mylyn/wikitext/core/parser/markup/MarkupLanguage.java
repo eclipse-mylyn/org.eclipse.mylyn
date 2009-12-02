@@ -31,16 +31,18 @@ import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
  * A markup language, which knows its formatting rules and is able to process content based on {@link Block},
  * {@link PatternBasedElementProcessor} and {@link PatternBasedElement} concepts. All markup languages supported by
  * WikiText extend this class.
- * 
+ * <p>
  * The MarkupLanguage class provides basic functionality for determining which blocks process which markup content in a
  * particular document. In general multi-line documents are split into consecutive regions called blocks, and each line
  * in a block is processed with spanning sections called phrase modifiers, and tokens within a span are replaced with
  * their respective replacement tokens. These rules apply to most lightweight markup languages, however subclasses may
  * override this default functionality if required. For example, by default phrase modifiers are non-overlapping and
  * non-nested, however if required a subclass could permit such nesting.
- * 
+ * </p>
+ * <p>
  * Generally markup language classes are not accessed directly by client code, instead client code should configure and
  * call {@link MarkupParser}, accessing the markup language by name using the {@link ServiceLocator}.
+ * </p>
  * 
  * @author David Green
  */
@@ -178,7 +180,8 @@ public abstract class MarkupLanguage implements Cloneable {
 						if (lineOffset < line.length() && lineOffset >= 0) {
 							if (currentBlock != null) {
 								throw new IllegalStateException(
-										"if a block does not fully process a line then it must be closed"); //$NON-NLS-1$
+										String.format(
+												"if a block does not fully process a line then it must be closed, at or near line %s lineOffset %s, block %s", reader.getLineNumber(), lineOffset, currentBlock.getClass().getName())); //$NON-NLS-1$
 							}
 						} else {
 							break;
@@ -581,7 +584,6 @@ public abstract class MarkupLanguage implements Cloneable {
 	 * 
 	 * @param line
 	 *            the line content
-	 * 
 	 * @return true if the given line is considered empty by this markup language
 	 */
 	public boolean isEmptyLine(String line) {
@@ -624,7 +626,6 @@ public abstract class MarkupLanguage implements Cloneable {
 	 * true if it is in the syntax.
 	 * 
 	 * @return true if raw hyperlinks are detected by this markup language, otherwise false.
-	 * 
 	 * @since 1.1
 	 */
 	public boolean isDetectingRawHyperlinks() {
