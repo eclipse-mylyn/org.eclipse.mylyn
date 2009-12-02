@@ -42,6 +42,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.zip.GZIPInputStream;
@@ -303,7 +304,7 @@ public class CommonsHttpSender extends BasicHandler {
 		int keyIndex = cookie.indexOf("="); //$NON-NLS-1$
 		String key = (keyIndex != -1) ? cookie.substring(0, keyIndex) : cookie;
 
-		ArrayList cookies = new ArrayList();
+		List<String> cookies = new ArrayList<String>();
 		Object oldCookies = msgContext.getProperty(cookieName);
 		boolean alreadyExist = false;
 		if (oldCookies != null) {
