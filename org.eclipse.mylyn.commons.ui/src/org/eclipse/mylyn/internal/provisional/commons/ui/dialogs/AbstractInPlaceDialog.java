@@ -193,7 +193,9 @@ public abstract class AbstractInPlaceDialog extends PopupDialog {
 			setReturnCode(Window.OK);
 		}
 		notifyButtonPressed(true);
-		openControl.removeDisposeListener(disposeListener);
+		if (openControl != null && !openControl.isDisposed()) {
+			openControl.removeDisposeListener(disposeListener);
+		}
 		return super.close();
 	}
 
