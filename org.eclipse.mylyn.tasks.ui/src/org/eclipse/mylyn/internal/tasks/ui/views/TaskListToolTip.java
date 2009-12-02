@@ -102,7 +102,7 @@ public class TaskListToolTip extends GradientToolTip {
 
 	private boolean visible;
 
-	private boolean triggeredByMouse;
+	private boolean triggeredByMouse = true;
 
 	private final Control control;
 
