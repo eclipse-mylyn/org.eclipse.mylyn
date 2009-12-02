@@ -59,9 +59,8 @@ public class PlanningPerspectiveFactory implements IPerspectiveFactory {
 
 	}
 
-	@SuppressWarnings("unchecked")
 	public static void removeUninterestingActionSets(IPageLayout layout) {
-		ArrayList actionSets = ((PageLayout) layout).getActionSets();
+		ArrayList<?> actionSets = ((PageLayout) layout).getActionSets();
 		actionSets.remove("org.eclipse.ui.edit.text.actionSet.annotationNavigation"); //$NON-NLS-1$
 		actionSets.remove("org.eclipse.ui.edit.text.actionSet.convertLineDelimitersTo"); //$NON-NLS-1$
 		actionSets.remove("org.eclipse.ui.externaltools.ExternalToolsSet"); //$NON-NLS-1$

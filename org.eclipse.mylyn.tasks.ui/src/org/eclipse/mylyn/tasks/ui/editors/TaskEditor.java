@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -548,18 +549,17 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		return getContainer().getMenu();
 	}
 
-	@SuppressWarnings("unchecked")
 	IFormPage[] getPages() {
-		ArrayList formPages = new ArrayList();
+		List<IFormPage> formPages = new ArrayList<IFormPage>();
 		if (pages != null) {
 			for (int i = 0; i < pages.size(); i++) {
 				Object page = pages.get(i);
 				if (page instanceof IFormPage) {
-					formPages.add(page);
+					formPages.add((IFormPage) page);
 				}
 			}
 		}
-		return (IFormPage[]) formPages.toArray(new IFormPage[formPages.size()]);
+		return formPages.toArray(new IFormPage[formPages.size()]);
 	}
 
 	@Deprecated

@@ -45,11 +45,9 @@ import org.eclipse.ui.internal.WorkingSet;
 import org.eclipse.ui.internal.registry.WorkingSetRegistry;
 
 /**
- * Abstract baseclass for various working set dialogs.
- * 
- * COPIED FROM: AbstractWorkingSetDialog
+ * Abstract baseclass for various working set dialogs. COPIED FROM: AbstractWorkingSetDialog
  */
-@SuppressWarnings( { "unchecked", "null" })
+@SuppressWarnings({ "unchecked", "null", "rawtypes" })
 public abstract class AbstractWorkingSetDialogCOPY extends SelectionDialog implements IWorkingSetSelectionDialog {
 
 	private static final int ID_NEW = IDialogConstants.CLIENT_ID + 1;
