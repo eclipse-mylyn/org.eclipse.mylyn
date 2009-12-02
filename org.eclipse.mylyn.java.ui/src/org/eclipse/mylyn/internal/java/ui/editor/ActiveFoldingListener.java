@@ -16,8 +16,6 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
-import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMember;
@@ -27,6 +25,8 @@ import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jdt.ui.text.folding.IJavaFoldingStructureProvider;
 import org.eclipse.jdt.ui.text.folding.IJavaFoldingStructureProviderExtension;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.ContextChangeEvent;
@@ -48,14 +48,10 @@ public class ActiveFoldingListener extends AbstractContextListener {
 
 	private boolean enabled = false;
 
-	private final IPropertyChangeListener PREFERENCE_LISTENER = new IPropertyChangeListener() {
+	private final IPropertyChangeListener preferenceListener = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
 			if (event.getProperty().equals(JavaUiBridgePlugin.AUTO_FOLDING_ENABLED)) {
-				if (event.getNewValue().equals(Boolean.TRUE.toString())) {
-					enabled = true;
-				} else {
-					enabled = false;
-				}
+				enabled = Boolean.parseBoolean(event.getNewValue().toString());
 				updateFolding();
 			}
 		}
@@ -64,7 +60,7 @@ public class ActiveFoldingListener extends AbstractContextListener {
 	public ActiveFoldingListener(JavaEditor editor) {
 		this.editor = editor;
 		ContextCore.getContextManager().addListener(this);
-		JavaUiBridgePlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
+		JavaUiBridgePlugin.getDefault().getPreferenceStore().addPropertyChangeListener(preferenceListener);
 
 		enabled = JavaUiBridgePlugin.getDefault().getPreferenceStore().getBoolean(
 				JavaUiBridgePlugin.AUTO_FOLDING_ENABLED);
@@ -86,7 +82,7 @@ public class ActiveFoldingListener extends AbstractContextListener {
 
 	public void dispose() {
 		ContextCore.getContextManager().removeListener(this);
-		JavaUiBridgePlugin.getDefault().getPluginPreferences().removePropertyChangeListener(PREFERENCE_LISTENER);
+		JavaUiBridgePlugin.getDefault().getPreferenceStore().removePropertyChangeListener(preferenceListener);
 	}
 
 	public static void resetProjection(JavaEditor javaEditor) {
