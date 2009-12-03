@@ -29,9 +29,10 @@ public class CopyDetailsActionTest extends TestCase {
 			MockTask task = new MockTask("123");
 			task.setSummary("abc");
 
+			task.setTaskKey("123");
 			connector.setTaskIdPrefix("task");
 			String text = CopyTaskDetailsAction.getTextForTask(task);
-			assertEquals("task 123: abc", text.substring(0, 13));
+			assertEquals("task 123: abc", text);
 
 			connector.setTaskIdPrefix("#");
 			assertEquals("#123: abc", CopyTaskDetailsAction.getTextForTask(task));

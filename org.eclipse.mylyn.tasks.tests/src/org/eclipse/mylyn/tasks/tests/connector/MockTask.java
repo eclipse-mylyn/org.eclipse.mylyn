@@ -21,15 +21,16 @@ public class MockTask extends AbstractTask {
 	private String ownerId;
 
 	public MockTask(String taskId) {
-		super(MockRepositoryConnector.REPOSITORY_URL, taskId, taskId);
+		this(MockRepositoryConnector.REPOSITORY_URL, taskId, taskId);
 	}
 
 	public MockTask(String repositoryUrl, String taskId) {
-		super(repositoryUrl, taskId, taskId);
+		this(repositoryUrl, taskId, taskId);
 	}
 
 	public MockTask(String repositoryUrl, String taskId, String summary) {
 		super(repositoryUrl, taskId, summary);
+		setTaskKey(taskId);
 	}
 
 	@Override
@@ -61,6 +62,11 @@ public class MockTask extends AbstractTask {
 	public boolean isLocal() {
 		// ignore
 		return false;
+	}
+
+	@Override
+	public String getTaskKey() {
+		return taskKey;
 	}
 
 }
