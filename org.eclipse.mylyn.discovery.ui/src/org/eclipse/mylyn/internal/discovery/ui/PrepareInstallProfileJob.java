@@ -102,7 +102,7 @@ class PrepareInstallProfileJob implements IRunnableWithProgress {
 
 	private void doInstall() {
 		if (getPlannerResolutionOperation() != null && getPlannerResolutionOperation().getProvisioningPlan() != null) {
-			Display.getCurrent().asyncExec(new Runnable() {
+			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
 					PreselectedIUInstallWizard wizard = new PreselectedIUInstallWizard(Policy.getDefault(),
 							getProfileId(), getIUs(), getPlannerResolutionOperation(),
