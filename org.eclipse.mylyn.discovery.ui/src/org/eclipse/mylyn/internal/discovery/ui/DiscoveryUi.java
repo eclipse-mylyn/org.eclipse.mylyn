@@ -10,30 +10,27 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.discovery.ui;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.equinox.internal.provisional.p2.ui.IProvHelpContextIds;
-import org.eclipse.equinox.internal.provisional.p2.ui.QueryableMetadataRepositoryManager;
-import org.eclipse.equinox.internal.provisional.p2.ui.dialogs.PreselectedIUInstallWizard;
-import org.eclipse.equinox.internal.provisional.p2.ui.dialogs.ProvisioningWizardDialog;
-import org.eclipse.equinox.internal.provisional.p2.ui.policy.Policy;
 import org.eclipse.jface.operation.IRunnableContext;
-import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDescriptor;
 import org.eclipse.mylyn.internal.discovery.ui.util.DiscoveryUiUtil;
 import org.eclipse.mylyn.internal.discovery.ui.wizards.Messages;
 import org.eclipse.mylyn.internal.discovery.ui.wizards.PrepareInstallProfileJob;
+import org.eclipse.osgi.service.resolver.VersionRange;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
+import org.osgi.framework.Bundle;
 
 /**
  * @author David Green
  */
-@SuppressWarnings("restriction")
 public abstract class DiscoveryUi {
 
 	public static final String ID_PLUGIN = "org.eclipse.mylyn.discovery.ui"; //$NON-NLS-1$
@@ -43,25 +40,26 @@ public abstract class DiscoveryUi {
 
 	public static boolean install(List<ConnectorDescriptor> descriptors, IRunnableContext context) {
 		try {
-			final PrepareInstallProfileJob job = new PrepareInstallProfileJob(descriptors);
-			context.run(true, true, job);
-
-			if (job.getPlannerResolutionOperation() != null
-					&& job.getPlannerResolutionOperation().getProvisioningPlan() != null) {
-				Display.getCurrent().asyncExec(new Runnable() {
-					public void run() {
-						PreselectedIUInstallWizard wizard = new PreselectedIUInstallWizard(Policy.getDefault(),
-								job.getProfileId(), job.getIUs(), job.getPlannerResolutionOperation(),
-								new QueryableMetadataRepositoryManager(Policy.getDefault().getQueryContext(), false));
-						WizardDialog dialog = new ProvisioningWizardDialog(DiscoveryUiUtil.getShell(), wizard);
-						dialog.create();
-						PlatformUI.getWorkbench().getHelpSystem().setHelp(dialog.getShell(),
-								IProvHelpContextIds.INSTALL_WIZARD);
-
-						dialog.open();
-					}
-				});
+			IRunnableWithProgress runner = null;
+			Bundle bundle = Platform.getBundle("org.eclipse.equinox.p2.engine"); //$NON-NLS-1$
+			if (bundle != null && new VersionRange("[1.0.0,1.1.0)").isIncluded(bundle.getVersion())) { //$NON-NLS-1$
+				// load class for Eclipse 3.5
+				try {
+					Class<?> clazz = Class.forName("org.eclipse.mylyn.internal.discovery.ui.wizards.PrepareInstallProfileJob_e_3_5"); //$NON-NLS-1$
+					Constructor<?> c = clazz.getConstructor(List.class);
+					runner = (IRunnableWithProgress) c.newInstance(descriptors);
+				} catch (Throwable t) {
+					StatusHandler.log(new Status(
+							IStatus.ERROR,
+							DiscoveryUi.ID_PLUGIN,
+							"Errors occured while initializing provisioning framework, falling back to default implementation. This make cause discovery install to fail.", //$NON-NLS-1$
+							t));
+				}
 			}
+			if (runner == null) {
+				runner = new PrepareInstallProfileJob(descriptors);
+			}
+			context.run(true, true, runner);
 		} catch (InvocationTargetException e) {
 			IStatus status = new Status(IStatus.ERROR, DiscoveryUi.ID_PLUGIN, NLS.bind(
 					Messages.ConnectorDiscoveryWizard_installProblems, new Object[] { e.getCause().getMessage() }),

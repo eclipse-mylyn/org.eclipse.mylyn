@@ -38,16 +38,23 @@ import org.eclipse.equinox.internal.provisional.p2.metadata.query.Collector;
 import org.eclipse.equinox.internal.provisional.p2.metadata.query.MatchQuery;
 import org.eclipse.equinox.internal.provisional.p2.metadata.query.Query;
 import org.eclipse.equinox.internal.provisional.p2.metadata.repository.IMetadataRepository;
+import org.eclipse.equinox.internal.provisional.p2.ui.IProvHelpContextIds;
+import org.eclipse.equinox.internal.provisional.p2.ui.QueryableMetadataRepositoryManager;
 import org.eclipse.equinox.internal.provisional.p2.ui.actions.InstallAction;
+import org.eclipse.equinox.internal.provisional.p2.ui.dialogs.PreselectedIUInstallWizard;
+import org.eclipse.equinox.internal.provisional.p2.ui.dialogs.ProvisioningWizardDialog;
 import org.eclipse.equinox.internal.provisional.p2.ui.operations.PlannerResolutionOperation;
 import org.eclipse.equinox.internal.provisional.p2.ui.operations.ProvisioningUtil;
+import org.eclipse.equinox.internal.provisional.p2.ui.policy.Policy;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDescriptor;
 import org.eclipse.mylyn.internal.discovery.ui.DiscoveryUi;
 import org.eclipse.mylyn.internal.discovery.ui.util.DiscoveryUiUtil;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * A job that configures a p2 {@link #getInstallAction() install action} for installing one or more
@@ -85,10 +92,29 @@ public class PrepareInstallProfileJob implements IRunnableWithProgress {
 			if (monitor.isCanceled()) {
 				throw new OperationCanceledException();
 			}
+			doInstall();
 		} catch (OperationCanceledException e) {
 			throw new InterruptedException();
 		} catch (Exception e) {
 			throw new InvocationTargetException(e);
+		}
+	}
+
+	private void doInstall() {
+		if (getPlannerResolutionOperation() != null && getPlannerResolutionOperation().getProvisioningPlan() != null) {
+			Display.getCurrent().asyncExec(new Runnable() {
+				public void run() {
+					PreselectedIUInstallWizard wizard = new PreselectedIUInstallWizard(Policy.getDefault(),
+							getProfileId(), getIUs(), getPlannerResolutionOperation(),
+							new QueryableMetadataRepositoryManager(Policy.getDefault().getQueryContext(), false));
+					WizardDialog dialog = new ProvisioningWizardDialog(DiscoveryUiUtil.getShell(), wizard);
+					dialog.create();
+					PlatformUI.getWorkbench().getHelpSystem().setHelp(dialog.getShell(),
+							IProvHelpContextIds.INSTALL_WIZARD);
+
+					dialog.open();
+				}
+			});
 		}
 	}
 
