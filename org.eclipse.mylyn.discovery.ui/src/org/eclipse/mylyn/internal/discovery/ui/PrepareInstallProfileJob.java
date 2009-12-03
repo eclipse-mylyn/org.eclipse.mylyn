@@ -8,7 +8,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.internal.discovery.ui.wizards;
+package org.eclipse.mylyn.internal.discovery.ui;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
@@ -50,8 +50,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDescriptor;
-import org.eclipse.mylyn.internal.discovery.ui.DiscoveryUi;
 import org.eclipse.mylyn.internal.discovery.ui.util.DiscoveryUiUtil;
+import org.eclipse.mylyn.internal.discovery.ui.wizards.Messages;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
@@ -65,7 +65,7 @@ import org.eclipse.ui.PlatformUI;
  * @author David Green
  */
 @SuppressWarnings("restriction")
-public class PrepareInstallProfileJob implements IRunnableWithProgress {
+class PrepareInstallProfileJob implements IRunnableWithProgress {
 
 	private static final String P2_FEATURE_GROUP_SUFFIX = ".feature.group"; //$NON-NLS-1$
 

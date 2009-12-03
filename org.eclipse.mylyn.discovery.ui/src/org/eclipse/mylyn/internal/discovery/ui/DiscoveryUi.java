@@ -23,7 +23,6 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDescriptor;
 import org.eclipse.mylyn.internal.discovery.ui.util.DiscoveryUiUtil;
 import org.eclipse.mylyn.internal.discovery.ui.wizards.Messages;
-import org.eclipse.mylyn.internal.discovery.ui.wizards.PrepareInstallProfileJob;
 import org.eclipse.osgi.service.resolver.VersionRange;
 import org.eclipse.osgi.util.NLS;
 import org.osgi.framework.Bundle;
@@ -45,7 +44,7 @@ public abstract class DiscoveryUi {
 			if (bundle != null && new VersionRange("[1.0.0,1.1.0)").isIncluded(bundle.getVersion())) { //$NON-NLS-1$
 				// load class for Eclipse 3.5
 				try {
-					Class<?> clazz = Class.forName("org.eclipse.mylyn.internal.discovery.ui.wizards.PrepareInstallProfileJob_e_3_5"); //$NON-NLS-1$
+					Class<?> clazz = Class.forName("org.eclipse.mylyn.internal.discovery.ui.PrepareInstallProfileJob_e_3_5"); //$NON-NLS-1$
 					Constructor<?> c = clazz.getConstructor(List.class);
 					runner = (IRunnableWithProgress) c.newInstance(descriptors);
 				} catch (Throwable t) {
