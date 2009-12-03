@@ -195,13 +195,6 @@
 		</initializer>
 	</extension>
 	
-	<extension id="org.eclipse.mylyn.wikitext.core.validation.problem"
-		name="WikiText Markup Problem" point="org.eclipse.core.resources.markers">
-		<persistent value="false" />
-		<super type="org.eclipse.core.resources.problemmarker" />
-		<super type="org.eclipse.core.resources.textmarker" />
-	</extension>
-	
 	<extension point="org.eclipse.ui.editors.annotationTypes">
 		<type name="org.eclipse.mylyn.wikitext.ui.editor.problem.validation.error"
 			super="org.eclipse.ui.workbench.texteditor.error" />

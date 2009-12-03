@@ -54,4 +54,11 @@
     	</antTask>   	    	
     </extension>
    
+	<extension id="validation.problem"
+		name="WikiText Markup Problem" point="org.eclipse.core.resources.markers">
+		<persistent value="false" />
+		<super type="org.eclipse.core.resources.problemmarker" />
+		<super type="org.eclipse.core.resources.textmarker" />
+	</extension>
+	
 </plugin>
