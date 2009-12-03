@@ -38,7 +38,6 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TaskElementLabelProvider;
@@ -128,14 +127,14 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 			}
 
 			if (includeTaskPrefix) {
-				return getTaskPrefix(task) + text;
+				return TasksUiInternal.getTaskPrefix(task) + text;
 			} else {
 				return text;
 			}
 		}
 
 		private boolean containsPrefix(ITask task) {
-			String searchTest = getTaskPrefix(task) + " " + labelProvider.getText(task); //$NON-NLS-1$
+			String searchTest = TasksUiInternal.getTaskPrefix(task) + " " + labelProvider.getText(task); //$NON-NLS-1$
 			String[] tokens = searchTest.split("\\s"); //$NON-NLS-1$
 			for (String token : tokens) {
 				if (token.toLowerCase().startsWith(prefix)) {
@@ -314,13 +313,6 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 
 	public String getErrorMessage() {
 		return null;
-	}
-
-	private String getTaskPrefix(ITask task) {
-		AbstractRepositoryConnector connector = TasksUiPlugin.getConnector(task.getConnectorKind());
-		String prefix = connector.getTaskIdPrefix();
-		// FIXME work around for Trac "#" prefix
-		return (prefix.length() > 1) ? prefix + " " : prefix; //$NON-NLS-1$
 	}
 
 }
