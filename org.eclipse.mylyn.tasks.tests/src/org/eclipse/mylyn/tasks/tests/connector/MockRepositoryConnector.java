@@ -52,6 +52,8 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 
 	private boolean hasLocalCompletionState;
 
+	private String taskIdPrefix;
+
 	public MockRepositoryConnector() {
 		resetDefaults();
 	}
@@ -169,5 +171,14 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 //		templates.add(template);
 //		return templates;
 //	}
+
+	@Override
+	public String getTaskIdPrefix() {
+		return taskIdPrefix;
+	}
+
+	public void setTaskIdPrefix(String taskIdPrefix) {
+		this.taskIdPrefix = taskIdPrefix;
+	}
 
 }
