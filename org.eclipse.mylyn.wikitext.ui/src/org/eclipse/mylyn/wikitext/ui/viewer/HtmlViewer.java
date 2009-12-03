@@ -174,8 +174,6 @@ public class HtmlViewer extends SourceViewer {
 	protected static class ParseResult {
 		public TextPresentation textPresentation;
 
-		TextPresentation presentation;
-
 		String text;
 
 		AnnotationModel annotationModel;

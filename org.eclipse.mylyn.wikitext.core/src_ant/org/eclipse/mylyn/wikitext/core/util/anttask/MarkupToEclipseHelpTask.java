@@ -45,9 +45,6 @@ public class MarkupToEclipseHelpTask extends MarkupToHtmlTask {
 		File tocOutputFile = computeTocFile(source, name);
 		if (!tocOutputFile.exists() || overwrite || tocOutputFile.lastModified() < source.lastModified()) {
 			File htmlOutputFile = computeHtmlFile(source, name);
-			if (markupContent == null) {
-				markupContent = readFully(source);
-			}
 
 			Writer writer;
 			try {

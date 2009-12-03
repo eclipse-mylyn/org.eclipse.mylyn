@@ -21,7 +21,6 @@ import org.eclipse.mylyn.internal.wikitext.core.validation.StandaloneMarkupValid
  * Validate markup given a set of rules
  * 
  * @author David Green
- * 
  * @see StandaloneMarkupValidator
  * @since 1.0
  */
@@ -40,10 +39,7 @@ public class MarkupValidator {
 			if (length == 0 || rules.isEmpty()) {
 				return Collections.emptyList();
 			}
-			int end = offset + length;
-			if (end > markup.length()) {
-				end = markup.length();
-			}
+
 			List<ValidationProblem> problems = new ArrayList<ValidationProblem>();
 
 			for (ValidationRule rule : rules) {

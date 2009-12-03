@@ -343,7 +343,9 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 				document.addDocumentPartitioningListener(documentPartitioningListener);
 			}
 
-			outlineDirty = true;
+			synchronized (WikiTextSourceEditor.this) {
+				outlineDirty = true;
+			}
 			updateOutline();
 		}
 	}
@@ -359,8 +361,8 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 			if (outlineDirty || outlineModel == null) {
 				updateOutlineNow();
 			}
+			return outlineModel;
 		}
-		return outlineModel;
 	}
 
 	private void scheduleOutlineUpdate() {
