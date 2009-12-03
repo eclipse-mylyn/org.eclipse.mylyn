@@ -17,12 +17,14 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AddRepositoryAction;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
@@ -64,7 +66,9 @@ public class NewRepositoryWizard extends Wizard implements INewWizard {
 		if (connectorKind != null) {
 			connector = TasksUi.getRepositoryManager().getRepositoryConnector(connectorKind);
 			updateSettingsPage();
-			addPage(settingsPage);
+			if (settingsPage != null) {
+				addPage(settingsPage);
+			}
 		} else {
 			selectConnectorPage = new SelectRepositoryConnectorPage();
 			addPage(selectConnectorPage);
@@ -111,6 +115,10 @@ public class NewRepositoryWizard extends Wizard implements INewWizard {
 		if (!connector.getConnectorKind().equals(lastConnectorKind)) {
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(connector.getConnectorKind());
 			settingsPage = connectorUi.getSettingsPage(null);
+			if (settingsPage == null) {
+				TasksUiInternal.displayFrameworkError(NLS.bind(
+						"The connector implementation is incomplete: AbstractRepositoryConnectorUi.getSettingsPage() for connector ''{0}'' returned null. Please contact the vendor of the connector to resolve the problem.", connector.getConnectorKind())); //$NON-NLS-1$
+			}
 			settingsPage.setWizard(this);
 			lastConnectorKind = connector.getConnectorKind();
 		}

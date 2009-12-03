@@ -123,6 +123,9 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.services.IServiceLocator;
+import org.eclipse.ui.statushandlers.IStatusAdapterConstants;
+import org.eclipse.ui.statushandlers.StatusAdapter;
+import org.eclipse.ui.statushandlers.StatusManager;
 
 /**
  * @author Steffen Pingel
@@ -1113,6 +1116,17 @@ public class TasksUiInternal {
 			return (prefix.length() > 1) ? prefix + " " : prefix; //$NON-NLS-1$
 		}
 		return ""; //$NON-NLS-1$
+	}
+
+	public static void displayFrameworkError(String message) {
+		RuntimeException exception = new RuntimeException(message);
+		if (!CoreUtil.TEST_MODE) {
+			StatusAdapter status = new StatusAdapter(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, message,
+					exception));
+			status.setProperty(IStatusAdapterConstants.TITLE_PROPERTY, "Framework Error"); //$NON-NLS-1$
+			StatusManager.getManager().handle(status, StatusManager.SHOW | StatusManager.LOG | StatusManager.BLOCK);
+		}
+		throw exception;
 	}
 
 }
