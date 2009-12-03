@@ -21,8 +21,6 @@ import org.eclipse.mylyn.wikitext.core.parser.builder.DocBookDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.builder.RecordingDocumentBuilder;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class MediaWikiLanguageTest extends TestCase {
@@ -322,6 +320,12 @@ public class MediaWikiLanguageTest extends TestCase {
 		assertTrue(html.contains("<body><p>a <img title=\"Example\" alt=\"Example\" border=\"0\" src=\"foo.png\"/> image</p></body>"));
 	}
 
+	public void testImageWithAltText2() {
+		String html = parser.parseToHtml("a [[Image:foo.png|Alt Text|Caption]] image");
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<img alt=\"Alt Text\" title=\"Caption\" border=\"0\" src=\"foo.png\"/>"));
+	}
+
 	public void testImageWithAltTextAndOptions() {
 		String html = parser.parseToHtml("a [[Image:foo.png|100px|center|Example]] image");
 		System.out.println("HTML: \n" + html);
@@ -338,6 +342,26 @@ public class MediaWikiLanguageTest extends TestCase {
 		String html = parser.parseToHtml("a [[Image:foo.png|100px]] image");
 		System.out.println("HTML: \n" + html);
 		assertTrue(html.contains("<body><p>a <img width=\"100\" border=\"0\" src=\"foo.png\"/> image</p></body>"));
+	}
+
+	public void testImageWithLinkInCaption() {
+		String html = parser.parseToHtml("[[Image:IFF Logo.JPG|left|the logo|Official logo of the [[International Floorball Federation]], floorball's governing body.]]");
+
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<img align=\"left\" alt=\"the logo\" title=\"Official logo of the [[International Floorball Federation]], floorball's governing body.\" border=\"0\" src=\"IFF Logo.JPG\"/>"));
+	}
+
+	public void testImageWithLinkInCaptionThumbnail() {
+		String html = parser.parseToHtml("[[Image:IFF Logo.JPG|thumb|left|the logo|Official logo of the [[International Floorball Federation]], floorball's governing body.]]");
+
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<div class=\"thumb left\"><div class=\"thumbinner\"><a href=\"IFF Logo.JPG\" class=\"image\"><img class=\"thumbimage\" align=\"left\" alt=\"the logo\" border=\"0\" src=\"IFF Logo.JPG\"/></a><div class=\"thumbcaption\">Official logo of the <a href=\"/wiki/International_Floorball_Federation\" title=\"International Floorball Federation\">International Floorball Federation</a>, floorball's governing body.</div></div></div>"));
+	}
+
+	public void testImageWithTitle() {
+		String html = parser.parseToHtml("text text text text text text\n[[Image:Westminstpalace.jpg|150px|alt=A large clock tower and other buildings line a great river.|The Palace of Westminster]]");
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<img width=\"150\" alt=\"A large clock tower and other buildings line a great river.\" title=\"The Palace of Westminster\" border=\"0\" src=\"Westminstpalace.jpg\"/>"));
 	}
 
 	public void testTable() {

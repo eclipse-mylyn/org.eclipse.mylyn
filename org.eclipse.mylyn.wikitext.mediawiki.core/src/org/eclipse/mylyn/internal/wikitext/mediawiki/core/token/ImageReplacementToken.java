@@ -13,7 +13,10 @@ package org.eclipse.mylyn.internal.wikitext.mediawiki.core.token;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes;
+import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes.Align;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
@@ -22,22 +25,22 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcesso
  * match [[Image:someImage.png]]
  * 
  * @see <a href="http://en.wikipedia.org/wiki/Wikipedia:Extended_image_syntax">Extended image syntax</a>
- * 
  * @author David Green
- * 
  */
 public class ImageReplacementToken extends PatternBasedElement {
 
 	private static Pattern widthHeightPart = Pattern.compile("(\\d+)(x(\\d+))?px"); //$NON-NLS-1$
 
+	private static Pattern altPattern = Pattern.compile("\\s*alt\\s*=\\s*(.+)"); //$NON-NLS-1$
+
 	@Override
 	protected String getPattern(int groupOffset) {
-		return "(?:\\[\\[Image:([^\\]\\|]+)(?:\\|([^\\]]*))?\\]\\])"; //$NON-NLS-1$
+		return "(?:\\[\\[Image:([^\\]\\|]+)(?:\\|(([^\\[\\]]|(\\[\\[[^\\[\\]]+\\]\\]))*))?\\]\\])"; //$NON-NLS-1$
 	}
 
 	@Override
 	protected int getPatternGroupCount() {
-		return 2;
+		return 4;
 	}
 
 	@Override
@@ -51,11 +54,14 @@ public class ImageReplacementToken extends PatternBasedElement {
 			String imageUrl = group(1);
 			String optionsString = group(2);
 
+			boolean thumbnail = false;
+
 			ImageAttributes attributes = new ImageAttributes();
 			if (optionsString != null) {
 				Matcher matcher;
 				String[] options = optionsString.split("\\s*\\|\\s*"); //$NON-NLS-1$
-				for (String option : options) {
+				for (int optionIndex = 0; optionIndex < options.length; ++optionIndex) {
+					String option = options[optionIndex];
 					if ("center".equals(option)) { //$NON-NLS-1$
 						attributes.setAlign(Align.Middle);
 					} else if ("left".equals(option)) { //$NON-NLS-1$
@@ -65,7 +71,7 @@ public class ImageReplacementToken extends PatternBasedElement {
 					} else if ("none".equals(option)) { //$NON-NLS-1$
 						attributes.setAlign(null);
 					} else if ("thumb".equals(option) || "thumbnail".equals(option)) { //$NON-NLS-1$ //$NON-NLS-2$
-						// ignore
+						thumbnail = true;
 					} else if ((matcher = widthHeightPart.matcher(option)).matches()) {
 						try {
 							String sizePart = matcher.group(1);
@@ -84,11 +90,72 @@ public class ImageReplacementToken extends PatternBasedElement {
 					} else if ("frame".equals(option)) { //$NON-NLS-1$
 						attributes.setBorder(1);
 					} else {
-						attributes.setTitle(option);
+						Matcher altMatcher = altPattern.matcher(option);
+						if (altMatcher.matches()) {
+							attributes.setAlt(altMatcher.group(1));
+						} else {
+							if (optionIndex == options.length - 1) {
+								// the last one is a caption
+								attributes.setTitle(option);
+							} else {
+								// if not the last one, then it's alt text
+								attributes.setAlt(option);
+							}
+						}
 					}
 				}
 			}
-			builder.image(attributes, imageUrl);
+			if (thumbnail) {
+				// we want to generate something like this:
+//				<div class="thumb tleft">
+//				<div class="thumbinner" style="width:182px;"><a href="/wiki/File:Example.jpg"
+//				class="image"><img alt=""
+//				src="http://upload.wikimedia.org/wikipedia/mediawiki/thumb/a/a9/Example.jpg/180px-Example.jpg"
+//				width="180" height="120" class="thumbimage" /></a>
+//				<div class="thumbcaption">
+//				<div class="magnify"><a href="/wiki/File:Example.jpg" class="internal"
+//				title="Enlarge"><img src="/skins-1.5/common/images/magnify-clip.png" width="15"
+//				height="11" alt="" /></a></div>
+//				Official logo of the <a
+//				href="/w/index.php?title=International_Floorball_Federation&amp;action=edit&amp;redlink=1"
+//				class="new" title="International Floorball Federation (page does not
+//				exist)">International Floorball Federation</a>, floorball's governing
+//				body.</div>
+//				</div>
+//				</div>
+
+				String caption = attributes.getTitle();
+				attributes.setTitle(null);
+
+				Attributes outerDivAttributes = new Attributes(null, "thumb", null, null); //$NON-NLS-1$
+				if (attributes.getAlign() != null) {
+					outerDivAttributes.appendCssClass(attributes.getAlign().name().toLowerCase());
+				}
+				builder.beginBlock(BlockType.DIV, outerDivAttributes);
+
+				final Attributes thumbInnerDivAttributes = new Attributes(
+						null,
+						"thumbinner", attributes.getWidth() > 0 ? String.format("width:%spx;", attributes.getWidth() + 2) : null, null); //$NON-NLS-1$ //$NON-NLS-2$
+				builder.beginBlock(BlockType.DIV, thumbInnerDivAttributes);
+				//FIXME: image
+				LinkAttributes linkAttributes = new LinkAttributes();
+				linkAttributes.setCssClass("image"); //$NON-NLS-1$
+
+				attributes.appendCssClass("thumbimage"); //$NON-NLS-1$
+				builder.imageLink(linkAttributes, attributes, imageUrl, imageUrl);
+
+				if (caption != null) {
+					builder.beginBlock(BlockType.DIV, new Attributes(null, "thumbcaption", null, null)); //$NON-NLS-1$
+					markupLanguage.emitMarkupText(parser, state, caption);
+					builder.endBlock(); // div
+				}
+
+				builder.endBlock(); // div
+				builder.endBlock(); // div
+
+			} else {
+				builder.image(attributes, imageUrl);
+			}
 		}
 	}
 

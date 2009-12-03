@@ -16,7 +16,6 @@ package org.eclipse.mylyn.wikitext.core.parser;
  * optional.
  * 
  * @see DocumentBuilder
- * 
  * @author David Green
  * @since 1.0
  */
@@ -50,6 +49,21 @@ public class Attributes {
 		this.cssClass = cssClass;
 	}
 
+	/**
+	 * Append a css class to the {@link #getCssClass() existing value}
+	 * 
+	 * @since 1.3
+	 * @see #setCssClass(String)
+	 */
+	public void appendCssClass(String cssClass) {
+		String priorCssClasses = getCssClass();
+		if (priorCssClasses == null) {
+			setCssClass(cssClass);
+		} else {
+			setCssClass(priorCssClasses + ' ' + cssClass);
+		}
+	}
+
 	public String getId() {
 		return id;
 	}
@@ -64,6 +78,21 @@ public class Attributes {
 
 	public void setCssStyle(String cssStyle) {
 		this.cssStyle = cssStyle;
+	}
+
+	/**
+	 * Append a css style to the {@link #getCssStyle() existing value}
+	 * 
+	 * @since 1.3
+	 * @see #setCssStyle(String)
+	 */
+	public void appendCssStyle(String cssStyle) {
+		String priorCssStyle = getCssStyle();
+		if (priorCssStyle == null) {
+			setCssStyle(cssStyle);
+		} else {
+			setCssStyle(priorCssStyle + ' ' + cssStyle);
+		}
 	}
 
 	public String getLanguage() {
