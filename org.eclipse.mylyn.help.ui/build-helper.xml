@@ -46,7 +46,6 @@
         	help.doc.filenamenoextension="Mylyn Reference"
         	help.doc.url.base="${mylyn.help.doc.url.base}"
         	help.doc.pageName="Mylyn/User_Guide"
-        	help.doc.url.xml="${mylyn.help.doc.url.base}/Special:Export/Mylyn/User_Guide"
         	help.imagefolder="${imageFolder}"
         	targetfolder="userguide"
         	wiki.url.base="${mylyn.help.doc.url.base}/Mylyn"/>
@@ -59,18 +58,11 @@
 		<attribute name="help.doc.url.base"/>
 		<attribute name="wiki.url.base"/>
 		<attribute name="help.doc.pageName"/>
-		<attribute name="help.doc.url.xml"/>
 		<attribute name="help.doc.filenameNoExtension"/>
 		<attribute name="help.imageFolder"/>
 		<attribute name="targetFolder"/>
 		<sequential>
-			<get dest="tmp/help.doc.xml" src="@{help.doc.url.xml}"/>
-	    	<copy todir="tmp">
-	    		<fileset dir="images"/>
-	    	</copy>
-	    	<mediawiki-fetch-images dest="tmp" url="@{help.doc.url.base}" pageName="@{help.doc.pageName}"/>
-	    	
-	    	<xslt style="extract-markup.xsl" in="tmp/help.doc.xml" out="tmp/@{help.doc.filenameNoExtension}.mediawiki"/>
+			<get dest="tmp/@{help.doc.filenameNoExtension}.mediawiki" src="@{help.doc.url.base}/index.php?title=@{help.doc.pageName}&amp;action=raw"/>
 			<echo append="true" file="tmp/@{help.doc.filenameNoExtension}.mediawiki">
 
 = Updating This Document =
@@ -78,6 +70,12 @@
 This document is maintained in a collaborative wiki.  If you wish to update or modify this document please visit 
 @{help.doc.url.base}/@{help.doc.pageName}
 			</echo>
+	
+	    	<copy todir="tmp">
+	    		<fileset dir="images"/>
+	    	</copy>
+	    	<mediawiki-fetch-images dest="tmp" url="@{help.doc.url.base}" pageName="@{help.doc.pageName}"/>
+	    	
 			
 			<wikitext-to-eclipse-help markupLanguage="org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage" 
 				multipleOutputFiles="true"
