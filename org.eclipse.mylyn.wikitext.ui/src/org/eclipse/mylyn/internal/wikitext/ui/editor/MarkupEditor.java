@@ -231,7 +231,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 			viewer = new MarkupProjectionViewer(tabFolder, ruler, getOverviewRuler(), isOverviewRulerVisible(), styles
 					| SWT.WRAP);
 
-			sourceTab.setControl(viewer instanceof Viewer ? ((Viewer) viewer).getControl() : viewer.getTextWidget());
+			sourceTab.setControl(((Viewer) viewer).getControl());
 			tabFolder.setSelection(sourceTab);
 		}
 
@@ -1083,7 +1083,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		IFile file = getFile();
 		if (file != null) {
 			MarkupLanguage defaultMarkupLanguage = WikiText.getMarkupLanguageForFilename(file.getName());
-			String preference = markupLanguage == null ? null : markupLanguage.getName();
+			String preference = markupLanguage.getName();
 			if (defaultMarkupLanguage != null && defaultMarkupLanguage.getName().equals(preference)) {
 				preference = null;
 			}
