@@ -28,7 +28,7 @@
 		<pathelement location="../org.eclipse.mylyn.wikitext.mediawiki.core/bin_ant"/>
 	</path>
 	
-	<taskdef classpathref="tasks.classpath" resource="org/eclipse/mylyn/internal/help/ui/anttask/tasks.properties"/>
+	<taskdef classpathref="wikitext.tasks.classpath" resource="org/eclipse/mylyn/internal/wikitext/mediawiki/core/tasks/tasks.properties"/>
 	<taskdef classpathref="wikitext.tasks.classpath" resource="org/eclipse/mylyn/wikitext/core/util/anttask/tasks.properties"/>
 	
 	<target name="init">
@@ -45,7 +45,7 @@
         <eclipse-wiki-to-help
         	help.doc.filenamenoextension="Mylyn Reference"
         	help.doc.url.base="${mylyn.help.doc.url.base}"
-        	help.doc.url.html="${mylyn.help.doc.url.base}/Mylyn/User_Guide"
+        	help.doc.pageName="Mylyn/User_Guide"
         	help.doc.url.xml="${mylyn.help.doc.url.base}/Special:Export/Mylyn/User_Guide"
         	help.imagefolder="${imageFolder}"
         	targetfolder="userguide"
@@ -58,19 +58,17 @@
 	<macrodef name="eclipse-wiki-to-help">
 		<attribute name="help.doc.url.base"/>
 		<attribute name="wiki.url.base"/>
-		<attribute name="help.doc.url.html"/>
+		<attribute name="help.doc.pageName"/>
 		<attribute name="help.doc.url.xml"/>
 		<attribute name="help.doc.filenameNoExtension"/>
 		<attribute name="help.imageFolder"/>
 		<attribute name="targetFolder"/>
 		<sequential>
 			<get dest="tmp/help.doc.xml" src="@{help.doc.url.xml}"/>
-	    	<get dest="tmp/help.doc.html" src="@{help.doc.url.html}"/>
-	    	
 	    	<copy todir="tmp">
 	    		<fileset dir="images"/>
 	    	</copy>
-	    	<mediawiki-fetch-images src="tmp/help.doc.html" dest="tmp" base="@{help.doc.url.base}"/>
+	    	<mediawiki-fetch-images dest="tmp" url="@{help.doc.url.base}" pageName="@{help.doc.pageName}"/>
 	    	
 	    	<xslt style="extract-markup.xsl" in="tmp/help.doc.xml" out="tmp/@{help.doc.filenameNoExtension}.mediawiki"/>
 			<echo append="true" file="tmp/@{help.doc.filenameNoExtension}.mediawiki">
@@ -78,7 +76,7 @@
 = Updating This Document =
 
 This document is maintained in a collaborative wiki.  If you wish to update or modify this document please visit 
-@{help.doc.url.html}
+@{help.doc.url.base}/@{help.doc.pageName}
 			</echo>
 			
 			<wikitext-to-eclipse-help markupLanguage="org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage" 

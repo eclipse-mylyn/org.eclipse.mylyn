@@ -13,5 +13,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn.commons.ui;bundle-version="[3.0.0,4.0.0)";resolution:=optional,
  org.apache.ant;bundle-version="1.7.0";resolution:=optional
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Export-Package: org.eclipse.mylyn.internal.help.ui.anttask;x-internal:=true
 Bundle-Localization: plugin
