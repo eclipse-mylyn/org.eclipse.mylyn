@@ -11,6 +11,7 @@
 package org.eclipse.mylyn.internal.wikitext.ui.editor.assist;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -25,19 +26,19 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
+import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.Template;
 import org.eclipse.jface.text.templates.TemplateCompletionProcessor;
 import org.eclipse.jface.text.templates.TemplateContext;
 import org.eclipse.jface.text.templates.TemplateContextType;
 import org.eclipse.jface.text.templates.TemplateException;
 import org.eclipse.jface.text.templates.TemplateProposal;
+import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.swt.graphics.Image;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class MarkupTemplateCompletionProcessor extends TemplateCompletionProcessor {
@@ -56,10 +57,17 @@ public class MarkupTemplateCompletionProcessor extends TemplateCompletionProcess
 
 	private static final Template[] NO_TEMPLATES = new Template[0];
 
-	private final TemplateContextType contextType = new TemplateContextType(CONTEXT_ID,
-			Messages.MarkupTemplateCompletionProcessor_contextName); 
+	private final SourceTemplateContextType contextType;
 
 	private Templates templates;
+
+	public MarkupTemplateCompletionProcessor() {
+		ContextTypeRegistry contextTypeRegistry = WikiTextTemplateAccess.getInstance().getContextTypeRegistry();
+		contextType = (SourceTemplateContextType) contextTypeRegistry.getContextType(SourceTemplateContextType.ID);
+		if (contextType == null) {
+			throw new IllegalStateException();
+		}
+	}
 
 	@Override
 	protected TemplateContextType getContextType(ITextViewer viewer, IRegion region) {
@@ -74,8 +82,27 @@ public class MarkupTemplateCompletionProcessor extends TemplateCompletionProcess
 	@Override
 	protected Template[] getTemplates(String contextTypeId) {
 		if (contextType.getId().equals(contextTypeId)) {
+			Template[] computedTemplates = null;
 			if (templates != null) {
-				return templates.getTemplate().toArray(new Template[templates.getTemplate().size()]);
+				computedTemplates = templates.getTemplate().toArray(new Template[templates.getTemplate().size()]);
+			}
+			TemplateStore templateStore = WikiTextTemplateAccess.getInstance().getTemplateStore();
+			if (templateStore != null) {
+				Template[] customTemplates = templateStore.getTemplates(contextTypeId);
+				if (customTemplates != null && customTemplates.length > 0) {
+					if (computedTemplates == null) {
+						computedTemplates = customTemplates;
+					} else {
+						List<Template> allTempaltes = new ArrayList<Template>(computedTemplates.length
+								+ customTemplates.length);
+						allTempaltes.addAll(Arrays.asList(computedTemplates));
+						allTempaltes.addAll(Arrays.asList(customTemplates));
+						computedTemplates = allTempaltes.toArray(new Template[allTempaltes.size()]);
+					}
+				}
+			}
+			if (computedTemplates != null) {
+				return computedTemplates;
 			}
 		}
 		return NO_TEMPLATES;

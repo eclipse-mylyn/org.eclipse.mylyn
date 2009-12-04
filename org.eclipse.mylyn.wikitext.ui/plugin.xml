@@ -187,6 +187,12 @@
 			id="org.eclipse.mylyn.wikitext.ui.editor.preferences.EditorPreferencePage"
 			name="%page.name.0">
 		</page>
+  <page
+        category="org.eclipse.mylyn.wikitext.ui.editor.preferences.EditorPreferencePage"
+        class="org.eclipse.mylyn.internal.wikitext.ui.editor.preferences.WikiTextTemplatePreferencePage"
+        id="org.eclipse.mylyn.internal.wikitext.ui.editor.preferences.WikiTextTemplatePreferencePage"
+        name="%page.name.2">
+  </page>
 	</extension>
 	
 	<extension point="org.eclipse.core.runtime.preferences">
@@ -263,5 +269,13 @@
           class="org.eclipse.mylyn.internal.wikitext.ui.util.OutlineItemAdapterFactory">
        <adapter type="org.eclipse.ui.model.IWorkbenchAdapter"/>
     </factory>
+ </extension>
+ <extension
+       point="org.eclipse.ui.editors.templates">
+    <contextType
+          class="org.eclipse.mylyn.internal.wikitext.ui.editor.assist.SourceTemplateContextType"
+          id="org.eclipse.mylyn.wikitext.ui.editor"
+          name="%contextType.0">
+    </contextType>
  </extension>
 </plugin>
