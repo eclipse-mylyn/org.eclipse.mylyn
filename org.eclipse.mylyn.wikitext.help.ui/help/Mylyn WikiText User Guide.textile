@@ -555,6 +555,14 @@ When such a proposal is selected the variables are displayed with a surrounding 
 
 Note that while editing a template the standard undo/redo functionality is still available to you.
 
+h4. Creating Custom Templates
+
+Custom templates can be created under *Preferences -> General -> Editors -> Text Editors -> WikiText -> Templates*:
+
+!images/editor-preferences-templates.png!
+
+Templates may be large, such as a document outline, or small, such as a common phrase or token.
+
 h3. Selection and Content Assist
 
 Content assist may be invoked with selected text.  To do so, select text using the mouse or keyboard, and then press *CTRL+SPACE*.  Content assist is activated with the current selection.
@@ -581,7 +589,7 @@ Also see "Outline":#Outline.
 
 h1. Preferences
 
-WikiText editor preferences may be configured via the Eclipse preferences dialog.
+WikiText editor preferences may be configured via the Eclipse preferences dialog.  Preferences can be found under *General -> Editors -> Text Editors -> WikiText*.
 
 h2. Editor Preferences
 
