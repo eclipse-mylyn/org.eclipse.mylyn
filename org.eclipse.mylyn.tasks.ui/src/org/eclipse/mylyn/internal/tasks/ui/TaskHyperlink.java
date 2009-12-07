@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Composite;
  * @author Steffen Pingel
  * @author Frank Becker
  */
+// TODO 3.4 rename this class
 public class TaskHyperlink extends ScalingHyperlink {
 
 	private ITask task;
