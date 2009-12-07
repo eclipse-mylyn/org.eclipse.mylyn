@@ -52,7 +52,7 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 
 	private boolean hasLocalCompletionState;
 
-	private String taskIdPrefix;
+	private String taskIdPrefix = "task";
 
 	public MockRepositoryConnector() {
 		resetDefaults();
