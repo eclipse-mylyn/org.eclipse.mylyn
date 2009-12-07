@@ -928,7 +928,6 @@ public class HtmlTextPresentationParser {
 
 		public void startDocument() throws SAXException {
 			ElementState elementState = state.push(new ElementState(null, "<document>", new FontState(), getOffset())); //$NON-NLS-1$
-			elementState.fontState.size = defaultFont.getFontData()[0].getHeight();
 			elementState.fontState.foreground = defaultForeground == null ? null : defaultForeground.getRGB();
 			elementState.fontState.background = defaultBackground == null ? null : defaultBackground.getRGB();
 		}

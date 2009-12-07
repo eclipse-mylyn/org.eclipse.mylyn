@@ -212,6 +212,11 @@ public class CssStyleManager {
 	private final Font defaultMonospaceFont;
 
 	private final Map<String, RuleHandler> ruleNameToHandler = new HashMap<String, RuleHandler>();
+
+	private final int defaultFontHeight;
+
+	private final int defaultMonospaceFontHeight;
+
 	{
 		register(new ColorRuleHandler());
 		register(new BackgroundColorRuleHandler());
@@ -238,7 +243,10 @@ public class CssStyleManager {
 			throw new IllegalArgumentException();
 		}
 		this.defaultFont = defaultFont;
+		this.defaultFontHeight = defaultFont.getFontData()[0].getHeight();
 		this.defaultMonospaceFont = defaultMonospaceFont;
+		this.defaultMonospaceFontHeight = defaultMonospaceFont == null ? defaultFontHeight
+				: defaultMonospaceFont.getFontData()[0].getHeight();
 	}
 
 	/**
@@ -247,6 +255,8 @@ public class CssStyleManager {
 	public CssStyleManager() {
 		defaultFont = null;
 		defaultMonospaceFont = null;
+		defaultFontHeight = 11;
+		defaultMonospaceFontHeight = 11;
 	}
 
 	private void register(RuleHandler handler) {
@@ -358,12 +368,12 @@ public class CssStyleManager {
 	}
 
 	private FontData[] applyFontState(FontState fontState, FontData[] fontData) {
-		final int fontSize = (int) fontState.size;
 		boolean bold = fontState.isBold();
 		boolean italics = fontState.isItalic();
+		int fontHeight = computeFontHeight(fontState);
 
 		for (FontData data : fontData) {
-			data.setHeight(fontSize);
+			data.setHeight(fontHeight);
 			int style = data.getStyle();
 			if (bold) {
 				style |= SWT.BOLD;
@@ -376,6 +386,14 @@ public class CssStyleManager {
 		return fontData;
 	}
 
+	private int computeFontHeight(FontState fontState) {
+		int fontHeight = fontState.isFixedWidth() ? defaultMonospaceFontHeight : defaultFontHeight;
+		fontHeight *= fontState.sizeFactor;
+		// make sure font height is reasonable
+		fontHeight = Math.min(MAX_FONT_SIZE, Math.max(MIN_FONT_SIZE, fontHeight));
+		return fontHeight;
+	}
+
 	private FontData[] createFontData(FontState fontState, Font baseFont) {
 		FontData[] fontData = new FontData[baseFont.getFontData().length];
 		int index = -1;
@@ -386,7 +404,7 @@ public class CssStyleManager {
 	}
 
 	private String computeSymbolicName(FontState fontState, String key, Font defaultFont) {
-		String symbolicName = getClass().getSimpleName() + '-' + key + '-' + fontState.size;
+		String symbolicName = getClass().getSimpleName() + '-' + key + '-' + computeFontHeight(fontState);
 		if (fontState.isBold()) {
 			symbolicName += "-bold"; //$NON-NLS-1$
 		}
@@ -495,40 +513,32 @@ public class CssStyleManager {
 		public void process(CssRule rule, FontState fontState, FontState parentFontState) {
 			String cssFontSizeValue = rule.value;
 			if (cssFontSizeValue.endsWith("%")) { //$NON-NLS-1$
-				float defaultSize = defaultFont.getFontData()[0].getHeight();
 				try {
 					float percentage = Float.parseFloat(cssFontSizeValue.substring(0, cssFontSizeValue.length() - 1)) / 100f;
 					if (percentage > 0) {
-						fontState.size = percentage * defaultSize;
+						fontState.sizeFactor = percentage;
 					}
 				} catch (NumberFormatException e) {
 					// ignore
 				}
 			} else if ("xx-small".equals(cssFontSizeValue)) { //$NON-NLS-1$
-				float defaultSize = defaultFont.getFontData()[0].getHeight();
-				fontState.size = defaultSize - (defaultSize * 0.6f);
+				fontState.sizeFactor = 0.4f;
 			} else if ("x-small".equals(cssFontSizeValue)) { //$NON-NLS-1$
-				float defaultSize = defaultFont.getFontData()[0].getHeight();
-				fontState.size = defaultSize - (defaultSize * 0.4f);
+				fontState.sizeFactor = 0.6f;
 			} else if ("small".equals(cssFontSizeValue)) { //$NON-NLS-1$
-				float defaultSize = defaultFont.getFontData()[0].getHeight();
-				fontState.size = defaultSize - (defaultSize * 0.2f);
+				fontState.sizeFactor = 0.8f;
 			} else if ("medium".equals(cssFontSizeValue)) { //$NON-NLS-1$
-				float defaultSize = defaultFont.getFontData()[0].getHeight();
-				fontState.size = defaultSize;
+				fontState.sizeFactor = 1.0f;
 			} else if ("large".equals(cssFontSizeValue)) { //$NON-NLS-1$
-				float defaultSize = defaultFont.getFontData()[0].getHeight();
-				fontState.size = defaultSize + (defaultSize * 0.2f);
+				fontState.sizeFactor = 1.2f;
 			} else if ("x-large".equals(cssFontSizeValue)) { //$NON-NLS-1$
-				float defaultSize = defaultFont.getFontData()[0].getHeight();
-				fontState.size = defaultSize + (defaultSize * 0.4f);
+				fontState.sizeFactor = 1.4f;
 			} else if ("xx-large".equals(cssFontSizeValue)) { //$NON-NLS-1$
-				float defaultSize = defaultFont.getFontData()[0].getHeight();
-				fontState.size = defaultSize + (defaultSize * 0.6f);
+				fontState.sizeFactor = 1.6f;
 			} else if ("larger".equals(cssFontSizeValue)) { //$NON-NLS-1$
-				fontState.size = parentFontState.size * 1.2f;
+				fontState.sizeFactor = fontState.sizeFactor * 1.2f;
 			} else if ("smaller".equals(cssFontSizeValue)) { //$NON-NLS-1$
-				fontState.size = parentFontState.size - (parentFontState.size * 0.2f);
+				fontState.sizeFactor = parentFontState.sizeFactor - (parentFontState.sizeFactor * 0.2f);
 			} else {
 				try {
 					if (cssFontSizeValue.endsWith("pt") || cssFontSizeValue.endsWith("px")) { //$NON-NLS-1$ //$NON-NLS-2$
@@ -536,14 +546,13 @@ public class CssStyleManager {
 					}
 					float exactSize = Float.parseFloat(cssFontSizeValue);
 					if (exactSize > 0) {
-						fontState.size = exactSize;
+						float defaultSize = fontState.isFixedWidth() ? defaultMonospaceFontHeight : defaultFontHeight;
+						fontState.sizeFactor = exactSize / defaultSize;
 					}
 				} catch (NumberFormatException e) {
 					e.printStackTrace();
 				}
 			}
-			// prevent the font size from being unusable
-			fontState.size = Math.min(MAX_FONT_SIZE, Math.max(MIN_FONT_SIZE, fontState.size));
 		}
 	}
 
@@ -646,7 +655,6 @@ public class CssStyleManager {
 
 	public FontState createDefaultFontState() {
 		FontState fontState = new FontState();
-		fontState.size = defaultFont.getFontData()[0].getHeight();
 		return fontState;
 	}
 
@@ -656,5 +664,4 @@ public class CssStyleManager {
 			ruleHandler.process(rule, fontState, parentFontState);
 		}
 	}
-
 }

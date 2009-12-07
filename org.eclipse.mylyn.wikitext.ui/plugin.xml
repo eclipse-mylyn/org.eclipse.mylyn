@@ -117,10 +117,14 @@
 	</extension>
 	
 	<extension point="org.eclipse.ui.editors">
-		<editor class="org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor"
-			contributorClass="org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditorActionBarContributor"
-			default="true" icon="icons/editor-icon.gif"
-			id="org.eclipse.mylyn.wikitext.ui.editor.markupEditor" name="%editor.name.0">
+		<editor
+        class="org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor"
+        contributorClass="org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditorActionBarContributor"
+        default="true"
+        icon="icons/editor-icon.gif"
+        id="org.eclipse.mylyn.wikitext.ui.editor.markupEditor"
+        name="%editor.name.0"
+        symbolicFontName="org.eclipse.mylyn.wikitext.ui.presentation.textFont">
 			<contentTypeBinding contentTypeId="org.eclipse.mylyn.wikitext"/>
 		</editor>
 	</extension>
@@ -277,5 +281,36 @@
           id="org.eclipse.mylyn.wikitext.ui.editor"
           name="%contextType.0">
     </contextType>
+ </extension>
+ 
+ <extension
+           point="org.eclipse.ui.themes">
+      <themeElementCategory
+           id="org.eclipse.mylyn.wikitext.ui.presentation"
+           label="%themeElementCategory.label"/>
+    <fontDefinition
+          id="org.eclipse.mylyn.wikitext.ui.presentation.textFont"
+          label="%fontDefinition.text.label"
+          categoryId="org.eclipse.mylyn.wikitext.ui.presentation"
+          isEditable="true"
+          defaultsTo="org.eclipse.jface.textfont">
+          <description>%fontDefinition.text.description</description>
+    </fontDefinition>  
+    <fontDefinition
+          categoryId="org.eclipse.mylyn.wikitext.ui.presentation"
+          id="org.eclipse.mylyn.wikitext.ui.presentation.monospaceFont"
+          isEditable="true"
+          label="%fontDefinition.monospace.label"
+          value="Courier New-regular-11">
+       <description>
+          %fontDefinition.monospace.description
+       </description>
+       <fontValue
+       		os="linux"
+            value="Monospace-regular-11"/>
+       <fontValue
+       		os="macosx"
+            value="Courier-regular-11"/>
+    </fontDefinition>
  </extension>
 </plugin>

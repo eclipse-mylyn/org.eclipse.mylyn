@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.DefaultTextHover;
 import org.eclipse.jface.text.IDocument;
@@ -41,6 +42,7 @@ import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.reconciler.MonoReconciler;
 import org.eclipse.jface.text.rules.ITokenScanner;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.assist.AnchorCompletionProcessor;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.assist.MarkupTemplateCompletionProcessor;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.assist.MultiplexingContentAssistProcessor;
@@ -51,14 +53,17 @@ import org.eclipse.mylyn.internal.wikitext.ui.editor.reconciler.MultiReconciling
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.FastMarkupPartitioner;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.MarkupDamagerRepairer;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.MarkupTokenScanner;
+import org.eclipse.mylyn.internal.wikitext.ui.util.WikiTextUiResources;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
 import org.eclipse.mylyn.wikitext.ui.viewer.AbstractTextSourceViewerConfiguration;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.IShowInTarget;
 import org.eclipse.ui.texteditor.HippieProposalProcessor;
+import org.eclipse.ui.themes.IThemeManager;
 
 /**
  * A source viewer configuration suitable for installing on a markup editor
@@ -94,7 +99,35 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 
 	public MarkupSourceViewerConfiguration(IPreferenceStore preferenceStore) {
 		super(preferenceStore);
-		defaultFont = JFaceResources.getDefaultFont();
+		initializeDefaultFonts();
+	}
+
+	/**
+	 * Initialize default fonts. Causes this to re-read font preferences from the preference store. Calling this method
+	 * should only be necessary if font preferences have changed.
+	 * 
+	 * @since 1.3
+	 */
+	public void initializeDefaultFonts() {
+		Font defaultFont = null;
+		Font defaultMonospaceFont = null;
+		if (WikiTextUiPlugin.getDefault() != null) {
+			IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
+			FontRegistry fontRegistry = themeManager.getCurrentTheme().getFontRegistry();
+			defaultFont = fontRegistry.get(WikiTextUiResources.PREFERENCE_TEXT_FONT);
+			defaultMonospaceFont = fontRegistry.get(WikiTextUiResources.PREFERENCE_MONOSPACE_FONT);
+		}
+		if (defaultFont == null) {
+			// could be the case when running stand-alone
+			defaultFont = JFaceResources.getDefaultFont();
+		}
+		if (this.defaultFont != defaultFont || this.defaultMonospaceFont != defaultMonospaceFont) {
+			this.defaultFont = defaultFont;
+			this.defaultMonospaceFont = defaultMonospaceFont;
+			if (scanner != null) {
+				scanner.resetFonts(defaultFont, defaultMonospaceFont);
+			}
+		}
 	}
 
 	/**

@@ -20,8 +20,6 @@ import org.eclipse.mylyn.wikitext.tests.HeadRequired;
 import org.eclipse.swt.graphics.RGB;
 
 /**
- * 
- * 
  * @author David Green
  */
 @HeadRequired
@@ -60,12 +58,11 @@ public class CssStyleManagerTest extends TestCase {
 
 	public void testProcessCssStyles() {
 		FontState defaultState = new FontState();
-		defaultState.size = 12;
 		FontState state = new FontState();
 		processCssStyles(state, defaultState,
 				"font-size: 14px;color: rgb(3,3,3);font-style: italic bold;text-decoration: underline; background-color: blue;");
 
-		assertEquals(14.0f, state.size);
+		assertEquals("1.273", String.format("%1.3f", state.sizeFactor));
 		assertEquals(new RGB(0, 0, 255), state.background);
 		assertEquals(new RGB(3, 3, 3), state.foreground);
 		assertTrue(state.isBold());
@@ -75,10 +72,10 @@ public class CssStyleManagerTest extends TestCase {
 
 	public void testProcessCssStylesNoStyles() {
 		FontState defaultState = new FontState();
-		defaultState.size = 12;
+
 		FontState state = new FontState();
 
-		assertEquals(0.0f, state.size);
+		assertEquals(1.0f, state.sizeFactor);
 		assertEquals(null, state.background);
 		assertEquals(null, state.foreground);
 		assertFalse(state.isBold());
@@ -93,7 +90,7 @@ public class CssStyleManagerTest extends TestCase {
 
 		processCssStyles(state, defaultState, "");
 
-		assertEquals(0.0f, state.size);
+		assertEquals(1.0f, state.sizeFactor);
 		assertEquals(null, state.background);
 		assertEquals(null, state.foreground);
 		assertFalse(state.isBold());

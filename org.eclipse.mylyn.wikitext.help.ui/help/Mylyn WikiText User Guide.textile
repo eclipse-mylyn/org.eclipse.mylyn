@@ -608,6 +608,14 @@ The following CSS styles are recognized:
 | @text-decoration@ | none, line-through, underline |
 | @vertical-align@ | super, sub |
 
+h3. Font Preferences
+
+The WikiText editor default fonts can be configured in the Eclipse preferences dialog under *General -> Appearance -> Colors and Fonts*:
+
+!images/editor-preferences-fonts.png!
+
+The *Text Font* is the default font used by the WikiText editor for displaying normal text.  The *Monospace Font* is the default font used for displaying text that is teletype, preformatted or code.  CSS styles are applied to these default fonts based on the "Editor Preferences":#EditorPreferences.
+
 h2. Rendering Appearance
 
 CSS styles are also used to modify the appearance of rendered markup, both in the text editor preview and in the Mylyn task editor:

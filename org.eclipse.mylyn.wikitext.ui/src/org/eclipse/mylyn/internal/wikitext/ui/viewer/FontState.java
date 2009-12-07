@@ -16,8 +16,6 @@ package org.eclipse.mylyn.internal.wikitext.ui.viewer;
 import org.eclipse.swt.graphics.RGB;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class FontState {
@@ -51,9 +49,9 @@ public class FontState {
 	public int state;
 
 	/**
-	 * Font size
+	 * Font size multiplier
 	 */
-	public float size;
+	public float sizeFactor = 1.0f;
 
 	public FontState() {
 	}
@@ -62,7 +60,7 @@ public class FontState {
 		this.foreground = copy.foreground;
 		this.background = copy.background;
 		this.state = copy.state;
-		this.size = copy.size;
+		this.sizeFactor = copy.sizeFactor;
 	}
 
 	public boolean isBold() {
@@ -149,12 +147,12 @@ public class FontState {
 		this.background = background;
 	}
 
-	public float getSize() {
-		return size;
+	public float getSizeFactor() {
+		return sizeFactor;
 	}
 
-	public void setSize(float size) {
-		this.size = size;
+	public void setSizeFactor(float sizeFactor) {
+		this.sizeFactor = sizeFactor;
 	}
 
 	@Override
@@ -163,7 +161,7 @@ public class FontState {
 		int result = 1;
 		result = prime * result + ((background == null) ? 0 : background.hashCode());
 		result = prime * result + ((foreground == null) ? 0 : foreground.hashCode());
-		result = prime * result + Float.floatToIntBits(size);
+		result = prime * result + Float.floatToIntBits(sizeFactor);
 		result = prime * result + state;
 		return result;
 	}
@@ -194,7 +192,7 @@ public class FontState {
 		} else if (!foreground.equals(other.foreground)) {
 			return false;
 		}
-		if (Float.floatToIntBits(size) != Float.floatToIntBits(other.size)) {
+		if (Float.floatToIntBits(sizeFactor) != Float.floatToIntBits(other.sizeFactor)) {
 			return false;
 		}
 		if (state != other.state) {

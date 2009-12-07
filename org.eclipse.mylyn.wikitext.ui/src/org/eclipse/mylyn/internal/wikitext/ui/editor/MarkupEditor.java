@@ -98,7 +98,6 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -221,7 +220,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 
 	@Override
 	protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler ruler, int styles) {
-		initializeFonts();
+		sourceViewerConfiguration.initializeDefaultFonts();
 		tabFolder = new CTabFolder(parent, SWT.BOTTOM);
 
 		{
@@ -355,19 +354,6 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		return viewer;
 	}
 
-	private void initializeFonts() {
-		Font font = null;
-		String symbolicFontName = getFontPropertyPreferenceKey();
-
-		if (symbolicFontName != null && !JFaceResources.TEXT_FONT.equals(symbolicFontName)) {
-			font = JFaceResources.getFont(symbolicFontName);
-		}
-		if (font == null) {
-			font = JFaceResources.getTextFont();
-		}
-		sourceViewerConfiguration.setDefaultFont(font);
-	}
-
 	@Override
 	public void createPartControl(Composite parent) {
 		super.createPartControl(parent);
@@ -398,13 +384,21 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		if (!outlineDirty && isFoldingEnabled()) {
 			updateProjectionAnnotations();
 		}
+		JFaceResources.getFontRegistry().addListener(preferencesListener);
 	}
 
 	private void reloadPreferences() {
 		previewDirty = true;
 		syncProjectionModeWithPreferences();
 		((MarkupTokenScanner) sourceViewerConfiguration.getMarkupScanner()).reloadPreferences();
+		sourceViewerConfiguration.initializeDefaultFonts();
 		viewer.invalidateTextPresentation();
+	}
+
+	@Override
+	protected void handlePreferenceStoreChanged(PropertyChangeEvent event) {
+		super.handlePreferenceStoreChanged(event);
+		reloadPreferences();
 	}
 
 	private void syncProjectionModeWithPreferences() {
@@ -441,6 +435,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		}
 		if (preferencesListener != null) {
 			WikiTextUiPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(preferencesListener);
+			JFaceResources.getFontRegistry().addListener(preferencesListener);
 			preferencesListener = null;
 		}
 		super.dispose();

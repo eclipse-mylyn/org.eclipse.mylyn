@@ -18,7 +18,6 @@ import org.eclipse.swt.widgets.Display;
 /**
  * Resources for use by the WikiText UI.
  * 
- * 
  * @author David Green
  */
 public class WikiTextUiResources {
@@ -27,6 +26,10 @@ public class WikiTextUiResources {
 	//   these resources must work in a stand-alone SWT application.  See bug# 245759 
 
 	private static final String KEY_COLOR_REGISTRY = WikiTextUiResources.class.getName() + "#colorRegistry"; //$NON-NLS-1$
+
+	public static final String PREFERENCE_TEXT_FONT = "org.eclipse.mylyn.wikitext.ui.presentation.textFont"; //$NON-NLS-1$
+
+	public static final String PREFERENCE_MONOSPACE_FONT = "org.eclipse.mylyn.wikitext.ui.presentation.monospaceFont"; //$NON-NLS-1$
 
 	/**
 	 * the color of a horizontal rule
