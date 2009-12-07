@@ -49,12 +49,7 @@ public class CommitTemplateManager {
 		return processKeywords(task, template);
 	}
 
-	public String getTaskIdFromCommentOrLabel(String commentOrLabel) {
-		String id = getTaskIdFromComment(commentOrLabel);
-		return id;
-	}
-
-	private String getTaskIdFromComment(String comment) {
+	public String getTaskIdFromCommentOrLabel(String comment) {
 		try {
 			String template = FocusedTeamUiPlugin.getDefault().getPreferenceStore().getString(
 					FocusedTeamUiPlugin.COMMIT_TEMPLATE);
