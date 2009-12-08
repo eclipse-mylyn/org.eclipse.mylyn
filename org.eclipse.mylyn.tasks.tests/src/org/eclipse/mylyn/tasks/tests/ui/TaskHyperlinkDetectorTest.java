@@ -13,11 +13,8 @@ package org.eclipse.mylyn.tasks.tests.ui;
 
 import junit.framework.TestCase;
 
-import org.eclipse.jface.text.Document;
-import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
-import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskHyperlinkDetector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -43,12 +40,7 @@ public class TaskHyperlinkDetectorTest extends TestCase {
 
 	protected IHyperlink[] detect(final String text, int start, int length) {
 		AbstractTaskHyperlinkDetector detector = createHyperlinkDetector();
-		return detector.detectHyperlinks(new TextViewer() {
-			@Override
-			public IDocument getDocument() {
-				return new Document(text);
-			}
-		}, new Region(start, length), true);
+		return detector.detectHyperlinks(new MockTextViewer(text), new Region(start, length), true);
 	}
 
 	protected AbstractTaskHyperlinkDetector createHyperlinkDetector() {

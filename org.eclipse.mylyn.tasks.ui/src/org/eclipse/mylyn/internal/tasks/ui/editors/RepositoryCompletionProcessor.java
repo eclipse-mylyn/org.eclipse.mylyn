@@ -29,6 +29,7 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
@@ -42,6 +43,8 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TaskElementLabelProvider;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -55,6 +58,88 @@ import org.eclipse.ui.PlatformUI;
  */
 public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 
+	public static class TaskCompletionProposal implements ICompletionProposal {
+
+		private final LabelProvider labelProvider;
+
+		private final TaskRepository repository;
+
+		private final ITask task;
+
+		private final int replacementOffset;
+
+		private final int replacementLength;
+
+		private String replacement;
+
+		private final String defaultReplacement;
+
+		private final boolean includePrefix;
+
+		public TaskCompletionProposal(TaskRepository repository, ITask task, LabelProvider labelProvider,
+				String defaultReplacement, boolean includePrefix, int replacementOffset, int replacementLength) {
+			this.labelProvider = labelProvider;
+			this.repository = repository;
+			this.task = task;
+			this.defaultReplacement = defaultReplacement;
+			this.includePrefix = includePrefix;
+			this.replacementOffset = replacementOffset;
+			this.replacementLength = replacementLength;
+		}
+
+		public void apply(IDocument document) {
+			try {
+				document.replace(replacementOffset, replacementLength, getReplacement());
+			} catch (BadLocationException x) {
+				// ignore
+			}
+		}
+
+		public String getReplacement() {
+			if (replacement == null) {
+				// add an absolute reference to the task if the viewer does not have a repository
+				if (defaultReplacement == null || repository == null
+						|| !repository.getRepositoryUrl().equals(task.getRepositoryUrl())) {
+					replacement = CopyTaskDetailsAction.getTextForTask(task);
+				} else if (includePrefix) {
+					replacement = TasksUiInternal.getTaskPrefix(task.getConnectorKind()) + defaultReplacement;
+				} else {
+					replacement = defaultReplacement;
+				}
+			}
+			return replacement;
+		}
+
+		public String getAdditionalProposalInfo() {
+			return null;
+		}
+
+		public IContextInformation getContextInformation() {
+			return null;
+		}
+
+		public String getDisplayString() {
+			return labelProvider.getText(task);
+		}
+
+		public Image getImage() {
+			return labelProvider.getImage(task);
+		}
+
+		public Point getSelection(IDocument document) {
+			return new Point(replacementOffset + getReplacement().length(), 0);
+		}
+
+		public TaskRepository getRepository() {
+			return repository;
+		}
+
+		public ITask getTask() {
+			return task;
+		}
+
+	}
+
 	private class ProposalComputer {
 
 		public static final String LABEL_SEPARATOR = " -------------------------------------------- "; //$NON-NLS-1$
@@ -67,7 +152,7 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 
 		private final String prefix;
 
-		private final List<CompletionProposal> resultList = new ArrayList<CompletionProposal>();
+		private final List<ICompletionProposal> resultList = new ArrayList<ICompletionProposal>();
 
 		public ProposalComputer(ITextViewer viewer, int offset) {
 			this.offset = offset;
@@ -82,10 +167,8 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 				addSeparator = false;
 			}
 
-			replacement = getReplacement(task, replacement, includeTaskPrefix);
-			String displayString = labelProvider.getText(task);
-			resultList.add(new CompletionProposal(replacement, offset - prefix.length(), prefix.length(),
-					replacement.length(), labelProvider.getImage(task), displayString, null, null));
+			resultList.add(new TaskCompletionProposal(repository, task, labelProvider, replacement, includeTaskPrefix,
+					offset - prefix.length(), prefix.length()));
 
 			addedTasks.add(task);
 		}
@@ -105,7 +188,7 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 				return;
 			}
 
-			if (getNeverIncludePrefix() && !task.getRepositoryUrl().equals(taskRepository.getRepositoryUrl())) {
+			if (getNeverIncludePrefix() && !task.getRepositoryUrl().equals(repository.getRepositoryUrl())) {
 				return;
 			}
 
@@ -113,31 +196,20 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 			if (prefix.length() == 0) {
 				addProposal(task, taskKey, !getNeverIncludePrefix());
 			} else if (taskKey != null && taskKey.startsWith(prefix)) {
+				// don't include prefix if completing id since it was most likely already added
 				addProposal(task, taskKey, false);
 			} else if (containsPrefix(task)) {
 				addProposal(task, taskKey, !getNeverIncludePrefix());
 			}
 		}
 
-		private String getReplacement(ITask task, String text, boolean includeTaskPrefix) {
-			// add an absolute reference to the task if the viewer does not have a repository
-			if (taskRepository == null || text == null
-					|| !taskRepository.getRepositoryUrl().equals(task.getRepositoryUrl())) {
-				return CopyTaskDetailsAction.getTextForTask(task);
-			}
-
-			if (includeTaskPrefix) {
-				return TasksUiInternal.getTaskPrefix(task) + text;
-			} else {
-				return text;
-			}
-		}
-
 		private boolean containsPrefix(ITask task) {
-			String searchTest = TasksUiInternal.getTaskPrefix(task) + " " + labelProvider.getText(task); //$NON-NLS-1$
-			String[] tokens = searchTest.split("\\s"); //$NON-NLS-1$
+			String needle = prefix.trim();
+			String haystack = TasksUiInternal.getTaskPrefix(task.getConnectorKind())
+					+ " " + labelProvider.getText(task); //$NON-NLS-1$
+			String[] tokens = haystack.split("\\s"); //$NON-NLS-1$
 			for (String token : tokens) {
-				if (token.toLowerCase().startsWith(prefix)) {
+				if (token.toLowerCase().startsWith(needle)) {
 					return true;
 				}
 			}
@@ -162,13 +234,25 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 
 			try {
 				while (i > 0) {
-					char ch = document.getChar(i - 1);
-					if (Character.isWhitespace(ch)) {
+					char c = document.getChar(i - 1);
+					if (Character.isWhitespace(c) || c == '(' || c == ':') {
 						break;
 					}
 					i--;
 				}
-
+				if (i == offset && repository != null) {
+					// check if document contains "{prefix} "
+					String taskPrefix = TasksUiInternal.getTaskPrefix(repository.getConnectorKind());
+					if (taskPrefix.length() > 1) {
+						try {
+							if (taskPrefix.equals(document.get(offset - taskPrefix.length(), taskPrefix.length()))) {
+								return taskPrefix;
+							}
+						} catch (BadLocationException e) {
+							// ignore
+						}
+					}
+				}
 				return document.get(i, offset - i);
 			} catch (BadLocationException e) {
 				return ""; //$NON-NLS-1$
@@ -186,7 +270,7 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 
 		private boolean select(ITask task) {
 			return !(task instanceof LocalTask) //
-					&& (taskRepository == null || task.getRepositoryUrl().equals(taskRepository.getRepositoryUrl()));
+					&& (repository == null || task.getRepositoryUrl().equals(repository.getRepositoryUrl()));
 		}
 
 		public ICompletionProposal[] getResult() {
@@ -201,12 +285,12 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 
 	private final TaskElementLabelProvider labelProvider = new TaskElementLabelProvider(false);
 
-	private final TaskRepository taskRepository;
+	private final TaskRepository repository;
 
 	private boolean neverIncludePrefix;
 
 	public RepositoryCompletionProcessor(TaskRepository taskRepository) {
-		this.taskRepository = taskRepository;
+		this.repository = taskRepository;
 		this.neverIncludePrefix = false;
 	}
 
@@ -278,7 +362,7 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 		}
 
 		// add all remaining tasks for repository
-		if (taskRepository != null) {
+		if (repository != null) {
 			proposalComputer.addSeparator();
 
 			TaskList taskList = TasksUiPlugin.getTaskList();

@@ -1108,8 +1108,8 @@ public class TasksUiInternal {
 		return 0;
 	}
 
-	public static String getTaskPrefix(ITask task) {
-		AbstractRepositoryConnector connector = TasksUiPlugin.getConnector(task.getConnectorKind());
+	public static String getTaskPrefix(String connectorKind) {
+		AbstractRepositoryConnector connector = TasksUiPlugin.getConnector(connectorKind);
 		if (connector != null) {
 			String prefix = connector.getTaskIdPrefix();
 			// work around short prefixes which are not separated by space, e.g. "#" for Trac
