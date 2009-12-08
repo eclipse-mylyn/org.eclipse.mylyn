@@ -204,16 +204,27 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 		}
 
 		private boolean containsPrefix(ITask task) {
-			String needle = prefix.trim();
 			String haystack = TasksUiInternal.getTaskPrefix(task.getConnectorKind())
 					+ " " + labelProvider.getText(task); //$NON-NLS-1$
-			String[] tokens = haystack.split("\\s"); //$NON-NLS-1$
-			for (String token : tokens) {
-				if (token.toLowerCase().startsWith(needle)) {
-					return true;
+			String[] haystackTokens = haystack.split("\\s"); //$NON-NLS-1$
+			String[] needles = prefix.trim().split("\\*"); //$NON-NLS-1$
+			if (haystackTokens.length == 0 || needles.length == 0) {
+				return false;
+			}
+			// check if all needles are contained in haystack  
+			for (String needle : needles) {
+				boolean matched = false;
+				haystack: for (String haystackToken : haystackTokens) {
+					if (haystackToken.toLowerCase().startsWith(needle)) {
+						matched = true;
+						break haystack;
+					}
+				}
+				if (!matched) {
+					return false;
 				}
 			}
-			return false;
+			return true;
 		}
 
 		private CompletionProposal createSeparator() {

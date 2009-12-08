@@ -114,6 +114,54 @@ public class RepositoryCompletionProcessorTest extends TestCase {
 		assertEquals(new Point(7, 0), proposal.getSelection(doc));
 	}
 
+	public void testComputeCompletionProposalsStar() {
+		TaskTask task1 = addTask("1", "mylyn foo");
+		TaskTask task2 = addTask("2", "mylyn bar");
+
+		RepositoryCompletionProcessor processor = new RepositoryCompletionProcessor(repository);
+		MockTextViewer viewer = new MockTextViewer("my*foo");
+		ICompletionProposal[] proposals = processor.computeCompletionProposals(viewer, 6);
+		assertEquals(1, proposals.length);
+		TaskCompletionProposal proposal = (TaskCompletionProposal) proposals[0];
+		assertEquals(task1, proposal.getTask());
+
+		IDocument doc = viewer.getDocument();
+		proposal.apply(doc);
+		assertEquals("task 1", doc.get());
+		assertEquals(new Point(6, 0), proposal.getSelection(doc));
+
+		viewer = new MockTextViewer("my*bar");
+		proposals = processor.computeCompletionProposals(viewer, 6);
+		assertEquals(1, proposals.length);
+		proposal = (TaskCompletionProposal) proposals[0];
+		assertEquals(task2, proposal.getTask());
+
+		doc = viewer.getDocument();
+		proposal.apply(doc);
+		assertEquals("task 2", doc.get());
+		assertEquals(new Point(6, 0), proposal.getSelection(doc));
+
+		viewer = new MockTextViewer("bar*my");
+		proposals = processor.computeCompletionProposals(viewer, 6);
+		assertEquals(1, proposals.length);
+		proposal = (TaskCompletionProposal) proposals[0];
+		assertEquals(task2, proposal.getTask());
+
+		doc = viewer.getDocument();
+		proposal.apply(doc);
+		assertEquals("task 2", doc.get());
+		assertEquals(new Point(6, 0), proposal.getSelection(doc));
+
+		proposals = processor.computeCompletionProposals(new MockTextViewer("my*"), 3);
+		assertEquals(2, proposals.length);
+
+		proposals = processor.computeCompletionProposals(new MockTextViewer("my*none"), 7);
+		assertEquals(0, proposals.length);
+
+		proposals = processor.computeCompletionProposals(new MockTextViewer("foo*bar"), 7);
+		assertEquals(0, proposals.length);
+	}
+
 	private TaskTask addTask(String taskId, String summary) {
 		TaskTask task = TaskTestUtil.createMockTask(taskId);
 		task.setSummary(summary);
