@@ -17,9 +17,9 @@ import org.eclipse.mylyn.context.tests.support.ContextTestUtil;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.IContextUiPreferenceContstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
-import org.eclipse.mylyn.monitor.ui.MonitorUi;
 import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -52,7 +52,7 @@ public class ContextPerspectiveManagerTest extends TestCase {
 	}
 
 	public void testRestorePerspective() throws Exception {
-		PlatformUI.getWorkbench().showPerspective(ID_RESOURCE_PERSPECTIVE, MonitorUi.getLaunchingWorkbenchWindow());
+		PlatformUI.getWorkbench().showPerspective(ID_RESOURCE_PERSPECTIVE, getWorkbenchWindow());
 		assertEquals(ID_RESOURCE_PERSPECTIVE, getActivePerspective());
 		TaskTask task = TaskTestUtil.createMockTask("1");
 
@@ -61,7 +61,7 @@ public class ContextPerspectiveManagerTest extends TestCase {
 		assertEquals(ID_RESOURCE_PERSPECTIVE, getActivePerspective());
 
 		// check if previous perspective is restored on deactivation
-		PlatformUI.getWorkbench().showPerspective(ID_PLANNING_PERSPECTIVE, MonitorUi.getLaunchingWorkbenchWindow());
+		PlatformUI.getWorkbench().showPerspective(ID_PLANNING_PERSPECTIVE, getWorkbenchWindow());
 		assertEquals(ID_PLANNING_PERSPECTIVE, getActivePerspective());
 		TasksUi.getTaskActivityManager().deactivateActiveTask();
 		assertEquals(ID_RESOURCE_PERSPECTIVE, getActivePerspective());
@@ -90,8 +90,14 @@ public class ContextPerspectiveManagerTest extends TestCase {
 //		assertEquals(ID_RESOURCE_PERSPECTIVE, getActivePerspective());
 //	}
 
+	private IWorkbenchWindow getWorkbenchWindow() {
+		IWorkbenchWindow window = ContextUiPlugin.getPerspectiveManager().getWorkbenchWindow();
+		assertNotNull(window);
+		return window;
+	}
+
 	private String getActivePerspective() {
-		return MonitorUi.getLaunchingWorkbenchWindow().getActivePage().getPerspective().getId();
+		return getWorkbenchWindow().getActivePage().getPerspective().getId();
 	}
 
 }
