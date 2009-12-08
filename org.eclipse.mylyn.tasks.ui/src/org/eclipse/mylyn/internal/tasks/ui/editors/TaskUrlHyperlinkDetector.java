@@ -19,80 +19,53 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
-import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.mylyn.tasks.ui.AbstractTaskHyperlinkDetector;
 
 /**
  * Detects URLs based on a regular expression.
  * 
  * @author David Green
  */
-public class TaskUrlHyperlinkDetector extends AbstractHyperlinkDetector {
+public class TaskUrlHyperlinkDetector extends AbstractTaskHyperlinkDetector {
 
 	// based on RFC 3986
 	// even though it's valid, the platform hyperlink detector doesn't detect hyperlinks that end with '.', ',' or ')'
 	// so we do the same here
 	private static final Pattern URL_PATTERN = Pattern.compile("([a-zA-Z][a-zA-Z+.-]{0,10}://[a-zA-Z0-9%._~!$&?#'()*+,;:@/=-]*[a-zA-Z0-9%_~!$&?#'(*+;:@/=-])"); //$NON-NLS-1$
 
-	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
-		if (region == null || textViewer == null) {
-			return null;
-		}
-
-		IDocument document = textViewer.getDocument();
-
-		int offset = region.getOffset();
-		if (document == null) {
-			return null;
-		}
-
-		IRegion lineInfo;
-		String line;
-		try {
-			lineInfo = document.getLineInformationOfOffset(offset);
-			line = document.get(lineInfo.getOffset(), lineInfo.getLength());
-		} catch (BadLocationException ex) {
-			return null;
-		}
-
-		// offset of the region in the line
-		final int offsetInLine = offset - lineInfo.getOffset();
-		final int regionLength = region.getLength();
-
-		List<IHyperlink> hyperlinks = null;
-		Matcher matcher = URL_PATTERN.matcher(line);
-		while (matcher.find()) {
-			int urlOffsetInLine = matcher.start(1);
-			int endUrlOffsetInLine = matcher.end(1);
-			if ((regionLength == 0 && offsetInLine >= urlOffsetInLine && offsetInLine <= endUrlOffsetInLine)
-					|| ((regionLength > 0 && offsetInLine <= urlOffsetInLine && (offsetInLine + regionLength) > urlOffsetInLine))) {
-				// region length of 0 and offset hits within the hyperlink url
-				// OR
-				// region spans the start of the hyperlink url.
-
-				// verify that the URL is valid
+	@Override
+	protected List<IHyperlink> detectHyperlinks(ITextViewer textViewer, String content, int indexInContent,
+			int contentOffset) {
+		List<IHyperlink> links = null;
+		Matcher m = URL_PATTERN.matcher(content);
+		while (m.find()) {
+			if (isInRegion(indexInContent, m)) {
 				try {
-					String urlString = matcher.group(1);
+					String urlString = m.group(1);
 					new URL(urlString);
 
-					// URL looks okay, so add a hyperlink
-					if (hyperlinks == null) {
-						hyperlinks = new ArrayList<IHyperlink>(5);
+					if (links == null) {
+						links = new ArrayList<IHyperlink>();
 					}
-					IRegion urlRegion = new Region(lineInfo.getOffset() + urlOffsetInLine, endUrlOffsetInLine
-							- urlOffsetInLine);
-					hyperlinks.add(new TaskUrlHyperlink(urlRegion, urlString));
+					links.add(new TaskUrlHyperlink(determineRegion(contentOffset, m), urlString));
 				} catch (MalformedURLException e) {
 					// ignore
 				}
 			}
 		}
-		return hyperlinks == null ? null : hyperlinks.toArray(new IHyperlink[hyperlinks.size()]);
+		return links;
+	}
+
+	private static boolean isInRegion(int offsetInText, Matcher m) {
+		return (offsetInText == -1) || (offsetInText >= m.start() && offsetInText <= m.end());
+	}
+
+	private static IRegion determineRegion(int textOffset, Matcher m) {
+		return new Region(textOffset + m.start(), m.end() - m.start());
 	}
 
 }
