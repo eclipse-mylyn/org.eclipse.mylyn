@@ -15,7 +15,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.mylyn.monitor.ui.MonitorUi;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
 import org.eclipse.ui.IPerspectiveDescriptor;
@@ -59,7 +58,7 @@ public class ContextPerspectiveManager implements ITaskActivationListener, IPers
 
 	public void taskActivated(ITask task) {
 		try {
-			IWorkbenchWindow launchingWindow = MonitorUi.getLaunchingWorkbenchWindow();
+			IWorkbenchWindow launchingWindow = getWorkbenchWindow();
 			if (launchingWindow != null) {
 				IPerspectiveDescriptor descriptor = launchingWindow.getActivePage().getPerspective();
 				setPerspectiveIdFor(null, descriptor.getId());
@@ -77,7 +76,7 @@ public class ContextPerspectiveManager implements ITaskActivationListener, IPers
 			if (PlatformUI.isWorkbenchRunning()
 					&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
 							IContextUiPreferenceContstants.AUTO_MANAGE_PERSPECTIVES)) {
-				IWorkbenchWindow launchingWindow = MonitorUi.getLaunchingWorkbenchWindow();
+				IWorkbenchWindow launchingWindow = getWorkbenchWindow();
 				if (launchingWindow != null) {
 					IPerspectiveDescriptor descriptor = launchingWindow.getActivePage().getPerspective();
 					setPerspectiveIdFor(task, descriptor.getId());
@@ -96,7 +95,7 @@ public class ContextPerspectiveManager implements ITaskActivationListener, IPers
 				&& perspectiveId.length() > 0
 				&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
 						IContextUiPreferenceContstants.AUTO_MANAGE_PERSPECTIVES)) {
-			IWorkbenchWindow launchingWindow = MonitorUi.getLaunchingWorkbenchWindow();
+			IWorkbenchWindow launchingWindow = getWorkbenchWindow();
 			try {
 				if (launchingWindow != null) {
 					launchingWindow.getShell().setRedraw(false);
@@ -110,6 +109,17 @@ public class ContextPerspectiveManager implements ITaskActivationListener, IPers
 				}
 			}
 		}
+	}
+
+	public IWorkbenchWindow getWorkbenchWindow() {
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		if (window == null) {
+			IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
+			if (windows.length > 0) {
+				window = windows[0];
+			}
+		}
+		return window;
 	}
 
 	public void perspectivePreDeactivate(IWorkbenchPage page, IPerspectiveDescriptor perspective) {
