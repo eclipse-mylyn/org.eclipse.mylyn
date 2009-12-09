@@ -358,6 +358,10 @@ public class TaskRepositoryManager implements IRepositoryManager {
 	 * For testing.
 	 */
 	public void clearRepositories() {
+		List<TaskRepository> repositories = getAllRepositories();
+		for (TaskRepository repository : repositories) {
+			removeRepository(repository);
+		}
 		repositoryMap.clear();
 		orphanedRepositories.clear();
 	}
