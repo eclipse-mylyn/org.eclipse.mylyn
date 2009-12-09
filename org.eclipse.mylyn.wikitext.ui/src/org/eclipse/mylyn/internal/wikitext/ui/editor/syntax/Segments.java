@@ -15,19 +15,16 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class Segments<T extends Segment<?>> {
 	private List<T> list;
 
-	@SuppressWarnings("unchecked")
 	public void add(T t) {
 		if (list == null) {
 			list = new ArrayList<T>();
 		} else if (list.size() > 0) {
-			Segment previousSegment = list.get(list.size() - 1);
+			Segment<?> previousSegment = list.get(list.size() - 1);
 			final int tOffset = t.getOffset();
 			if (previousSegment.getOffset() > tOffset) {
 				throw new IllegalArgumentException();

@@ -44,8 +44,6 @@ import org.eclipse.mylyn.wikitext.core.WikiText;
 import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem;
 import org.eclipse.osgi.util.NLS;
 
-
-
 /**
  * A project builder that invokes validation on wikitext files
  * 
@@ -82,7 +80,7 @@ public class ValidationProjectBuilder extends IncrementalProjectBuilder {
 		getProject().deleteMarkers(ValidationProblem.DEFAULT_MARKER_ID, true, IResource.DEPTH_INFINITE);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	@Override
 	protected IProject[] build(int kind, Map args, IProgressMonitor monitor) throws CoreException {
 		IProject project = getProject();
@@ -210,7 +208,7 @@ public class ValidationProjectBuilder extends IncrementalProjectBuilder {
 			return;
 		}
 		final int factor = 1000;
-		monitor.beginTask(Messages.ValidationProjectBuilder_validationTask, files.size() * factor); 
+		monitor.beginTask(Messages.ValidationProjectBuilder_validationTask, files.size() * factor);
 		for (ValidationInfo file : files) {
 			if (monitor.isCanceled()) {
 				throw new OperationCanceledException();
@@ -228,8 +226,8 @@ public class ValidationProjectBuilder extends IncrementalProjectBuilder {
 	 */
 	private void validate(ValidationInfo file, IProgressMonitor monitor) throws CoreException {
 		int totalWork = 1000;
-		monitor.beginTask(NLS.bind(
-				Messages.ValidationProjectBuilder_validatingFileTask, new Object[] { file.file.getName() }), totalWork); 
+		monitor.beginTask(NLS.bind(Messages.ValidationProjectBuilder_validatingFileTask,
+				new Object[] { file.file.getName() }), totalWork);
 		ResourceMarkerMarkupValidator validator = new ResourceMarkerMarkupValidator();
 		validator.setMarkupLanguage(WikiText.getMarkupLanguage(file.languageName));
 		validator.setResource(file.file);

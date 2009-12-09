@@ -24,7 +24,7 @@ public class OutlineItemAdapterFactory implements IAdapterFactory {
 
 	private static final Class<?>[] ADAPTER_LIST = { IWorkbenchAdapter.class };
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
 		if (adapterType == IWorkbenchAdapter.class && adaptableObject instanceof OutlineItem) {
 			return OutlineItemWorkbenchAdapter.instance();

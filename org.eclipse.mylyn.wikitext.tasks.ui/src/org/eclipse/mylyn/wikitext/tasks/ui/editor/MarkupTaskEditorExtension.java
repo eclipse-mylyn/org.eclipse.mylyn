@@ -287,7 +287,7 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 			};
 		}
 
-		@SuppressWarnings("unchecked")
+		@SuppressWarnings("rawtypes")
 		@Override
 		protected Map getHyperlinkDetectorTargets(ISourceViewer sourceViewer) {
 			Map hyperlinkDetectorTargets = super.getHyperlinkDetectorTargets(sourceViewer);
@@ -328,7 +328,7 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 			markupHyperlinksFirst = false;
 		}
 
-		@SuppressWarnings("unchecked")
+		@SuppressWarnings("rawtypes")
 		@Override
 		protected Map getHyperlinkDetectorTargets(ISourceViewer sourceViewer) {
 			Map hyperlinkDetectorTargets = super.getHyperlinkDetectorTargets(sourceViewer);
@@ -360,7 +360,7 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private static void addRepositoryHyperlinkDetectorTargets(final TaskRepository taskRepository,
 			Map hyperlinkDetectorTargets) {
 		IAdaptable context = new IAdaptable() {

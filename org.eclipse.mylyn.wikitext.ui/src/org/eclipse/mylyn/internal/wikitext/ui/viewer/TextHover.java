@@ -121,7 +121,7 @@ public class TextHover extends DefaultTextHover implements ITextHoverExtension {
 		return viewer.getAnnotationModel();
 	}
 
-	@SuppressWarnings( { "unchecked", "deprecation" })
+	@SuppressWarnings({ "deprecation" })
 	@Override
 	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
 		IAnnotationModel model = getAnnotationModel(sourceViewer);
@@ -129,7 +129,7 @@ public class TextHover extends DefaultTextHover implements ITextHoverExtension {
 			return null;
 		}
 
-		Iterator e = model.getAnnotationIterator();
+		Iterator<?> e = model.getAnnotationIterator();
 		while (e.hasNext()) {
 			Annotation a = (Annotation) e.next();
 			if (isIncluded(a)) {
