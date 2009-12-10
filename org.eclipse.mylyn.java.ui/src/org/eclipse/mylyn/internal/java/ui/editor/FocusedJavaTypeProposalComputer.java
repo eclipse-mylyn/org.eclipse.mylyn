@@ -28,7 +28,7 @@ public class FocusedJavaTypeProposalComputer extends JavaTypeCompletionProposalC
 		FocusedJavaProposalProcessor.getDefault().addMonitoredComputer(this);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	@Override
 	public List computeCompletionProposals(ContentAssistInvocationContext context, IProgressMonitor monitor) {
 		if (!JavaUiUtil.isDefaultAssistActive(JavaUiUtil.ASSIST_JDT_TYPE)) {

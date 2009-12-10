@@ -218,7 +218,7 @@ public class ContextChangeSet extends ActiveChangeSet/*CVSActiveChangeSet*/imple
 		return task;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public Object getAdapter(Class adapter) {
 //		if (adapter == ResourceMapping.class) {
 //			return null;

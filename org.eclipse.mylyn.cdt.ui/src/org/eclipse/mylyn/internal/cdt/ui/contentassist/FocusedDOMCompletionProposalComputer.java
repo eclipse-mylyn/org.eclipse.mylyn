@@ -35,7 +35,7 @@ public class FocusedDOMCompletionProposalComputer extends DOMCompletionProposalC
 	public List<ICompletionProposal> computeCompletionProposals(ContentAssistInvocationContext context,
 			IProgressMonitor monitor) {
 		if (shouldReturnResults()) {
-			List proposals = super.computeCompletionProposals(context, monitor);
+			List<?> proposals = super.computeCompletionProposals(context, monitor);
 			return FocusedCProposalProcessor.getDefault().projectInterestModel(this, proposals);
 		} else {
 			return Collections.emptyList();

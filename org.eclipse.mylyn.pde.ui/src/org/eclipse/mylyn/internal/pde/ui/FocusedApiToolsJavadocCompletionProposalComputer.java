@@ -30,8 +30,8 @@ public class FocusedApiToolsJavadocCompletionProposalComputer extends APIToolsJa
 
 	private static final String ASSIST_API_TOOLS = "org.eclipse.pde.api.tools.ui.apitools_proposal_category"; //$NON-NLS-1$
 
+	@SuppressWarnings("rawtypes")
 	@Override
-	@SuppressWarnings("unchecked")
 	public List computeCompletionProposals(ContentAssistInvocationContext context, IProgressMonitor monitor) {
 		if (JavaUiUtil.getProposalCategory(ASSIST_API_TOOLS) == null
 				&& !JavaUiUtil.isDefaultAssistActive(JavaUiUtil.ASSIST_JDT_NOTYPE)) {

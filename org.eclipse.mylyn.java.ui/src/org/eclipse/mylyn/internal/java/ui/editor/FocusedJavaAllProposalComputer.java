@@ -71,7 +71,7 @@ public class FocusedJavaAllProposalComputer extends JavaCompletionProposalComput
 		FocusedJavaProposalProcessor.getDefault().addMonitoredComputer(this);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	@Override
 	public List computeCompletionProposals(ContentAssistInvocationContext context, IProgressMonitor monitor) {
 		if (shouldReturnResults()) {

@@ -18,15 +18,14 @@ import org.eclipse.team.internal.core.subscribers.DiffChangeSet;
  */
 public class CvsChangeSetResourceMappingAdapterFactory implements IAdapterFactory {
 
-	@SuppressWarnings("unchecked")
-	private static final Class[] ADAPTER_TYPES = new Class[] { ResourceMapping.class };
+	private static final Class<?>[] ADAPTER_TYPES = new Class[] { ResourceMapping.class };
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "rawtypes" })
 	public Class[] getAdapterList() {
 		return ADAPTER_TYPES;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "rawtypes" })
 	public Object getAdapter(Object object, Class adapterType) {
 		// used to bind popup menu actions in Synchronize view 
 		if (ResourceMapping.class.equals(adapterType) && object instanceof CvsContextChangeSet) {

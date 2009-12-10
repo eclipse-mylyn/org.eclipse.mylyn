@@ -29,15 +29,14 @@ import org.eclipse.team.internal.ccvs.core.resources.RemoteResource;
  */
 public class CvsLinkedTaskInfoAdapterFactory implements IAdapterFactory {
 
-	@SuppressWarnings("unchecked")
-	private static final Class[] ADAPTER_TYPES = new Class[] { AbstractTaskReference.class };
+	private static final Class<?>[] ADAPTER_TYPES = new Class[] { AbstractTaskReference.class };
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "rawtypes" })
 	public Class[] getAdapterList() {
 		return ADAPTER_TYPES;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "rawtypes" })
 	public Object getAdapter(Object object, Class adapterType) {
 		if (!AbstractTaskReference.class.equals(adapterType)) {
 			return null;

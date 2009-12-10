@@ -35,7 +35,7 @@ public class FocusedJavaNoTypeProposalComputer extends JavaNoTypeCompletionPropo
 		return super.createCollector(context);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	@Override
 	public List computeCompletionProposals(ContentAssistInvocationContext context, IProgressMonitor monitor) {
 		if (!JavaUiUtil.isDefaultAssistActive(JavaUiUtil.ASSIST_JDT_NOTYPE)) {

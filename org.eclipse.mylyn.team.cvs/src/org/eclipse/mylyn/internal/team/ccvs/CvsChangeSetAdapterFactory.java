@@ -20,7 +20,7 @@ import org.eclipse.team.internal.core.subscribers.ActiveChangeSet;
  */
 public class CvsChangeSetAdapterFactory implements IAdapterFactory {
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
 		if (adaptableObject instanceof ActiveChangeSet && adapterType == ResourceMapping.class) {
 			ActiveChangeSet cs = (ActiveChangeSet) adaptableObject;
@@ -29,7 +29,7 @@ public class CvsChangeSetAdapterFactory implements IAdapterFactory {
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public Class[] getAdapterList() {
 		return new Class[] { ResourceMapping.class };
 	}

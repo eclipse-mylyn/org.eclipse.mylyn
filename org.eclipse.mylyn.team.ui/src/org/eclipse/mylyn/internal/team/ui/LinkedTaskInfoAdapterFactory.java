@@ -33,10 +33,9 @@ import org.eclipse.team.internal.ui.synchronize.SynchronizeModelElement;
  */
 public class LinkedTaskInfoAdapterFactory implements IAdapterFactory {
 
-	@SuppressWarnings("unchecked")
-	private static final Class[] ADAPTER_TYPES = new Class[] { AbstractTaskReference.class };
+	private static final Class<?>[] ADAPTER_TYPES = new Class[] { AbstractTaskReference.class };
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public Object getAdapter(Object object, Class adapterType) {
 		if (!AbstractTaskReference.class.equals(adapterType)) {
 			return null;
@@ -51,7 +50,7 @@ public class LinkedTaskInfoAdapterFactory implements IAdapterFactory {
 		return adaptFromComment(object);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public Class[] getAdapterList() {
 		return ADAPTER_TYPES;
 	}

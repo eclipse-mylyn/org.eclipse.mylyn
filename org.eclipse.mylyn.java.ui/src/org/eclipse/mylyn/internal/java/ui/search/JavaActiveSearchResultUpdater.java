@@ -33,7 +33,7 @@ import org.eclipse.search.ui.text.Match;
  * 
  * @author Shawn Minto
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class JavaActiveSearchResultUpdater implements IElementChangedListener, IQueryListener {
 
 	private final JavaSearchResult fResult;

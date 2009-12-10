@@ -77,7 +77,7 @@ public class FocusedCProposalProcessor {
 		monitoredProposalComputers.add(proposalComputer);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public List projectInterestModel(ICompletionProposalComputer proposalComputer, List proposals) {
 		try {
 			if (!ContextCore.getContextManager().isContextActive()) {
