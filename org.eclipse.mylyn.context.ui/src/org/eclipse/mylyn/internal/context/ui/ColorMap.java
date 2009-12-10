@@ -36,6 +36,7 @@ public class ColorMap {
 
 	public static final Color RELATIONSHIP = new Color(Display.getDefault(), 32, 104, 157);
 
+	// FIXME 3.4 rename to HIGHLIGHTER_RED_INTERSECTION
 	public static final Color HIGLIGHTER_RED_INTERSECTION = new Color(Display.getDefault(), 200, 0, 0);
 
 	public static final Color HIGHLIGHTER_ORANGE_GRADIENT = new Color(Display.getDefault(), 222, 137, 71);
