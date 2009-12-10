@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
-import java.io.File;
 import java.util.Collection;
 
 import org.eclipse.mylyn.context.tests.AbstractContextTest;
@@ -26,9 +25,10 @@ import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataImportWizardPage;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * Test case for the Task Import Wizard
+ * Test case for the Task Import Wizard.
  * 
  * @author Rob Elves
+ * @author Steffen Pingel
  */
 public class TaskDataImportTest extends AbstractContextTest {
 
@@ -36,9 +36,13 @@ public class TaskDataImportTest extends AbstractContextTest {
 
 	private TaskDataImportWizardPage wizardPage = null;
 
-	private final String sourceZipPath = "testdata/taskdataimporttest/mylardata-2007-01-19.zip";
+	private final String BACKUP_v1 = "testdata/taskdataimporttest/mylardata-2007-01-19.zip";
 
-	private File sourceZipFile = null;
+	private final String BACKUP_v3 = "testdata/taskdataimporttest/mylyn-v3-data-2009-12-09-171942.zip";
+
+	private final String BACKUP_OLD_v3 = "testdata/taskdataimporttest/mylyn-v3-data-2009-12-09-old-tasklist.zip";
+
+	private TaskList taskList;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -52,9 +56,7 @@ public class TaskDataImportTest extends AbstractContextTest {
 		assertNotNull(wizardPage);
 
 		TaskTestUtil.resetTaskListAndRepositories();
-
-		sourceZipFile = TaskTestUtil.getLocalFile(sourceZipPath);
-		assertTrue(sourceZipFile.exists());
+		taskList = TasksUiPlugin.getTaskList();
 
 		ContextCorePlugin.getContextManager().getActivityMetaContext().reset();
 	}
@@ -64,8 +66,7 @@ public class TaskDataImportTest extends AbstractContextTest {
 		wizard.dispose();
 		wizardPage.dispose();
 		ContextCorePlugin.getContextManager().resetActivityMetaContext();
-		TasksUiPlugin.getRepositoryManager().clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
-		TaskTestUtil.resetTaskList();
+		TaskTestUtil.resetTaskListAndRepositories();
 		super.tearDown();
 	}
 
@@ -73,14 +74,13 @@ public class TaskDataImportTest extends AbstractContextTest {
 	 * Tests the wizard when it has been asked to import all task data from a zip file
 	 */
 	public void testImportRepositoriesZip() {
-		TaskList taskList = TasksUiPlugin.getTaskList();
 		InteractionContext historyContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
 		assertNotNull(taskList);
 		assertNotNull(historyContext);
 		assertTrue(taskList.getAllTasks().size() == 0);
 		assertTrue(historyContext.getInteractionHistory().size() == 0);
 
-		wizardPage.setSource(true, sourceZipFile.getPath());
+		wizardPage.setSource(true, TaskTestUtil.getLocalFile(BACKUP_v1).getAbsolutePath());
 		wizard.performFinish();
 
 		Collection<AbstractTask> tasks = taskList.getAllTasks();
@@ -95,7 +95,6 @@ public class TaskDataImportTest extends AbstractContextTest {
 	}
 
 	public void testImportOverwritesAllTasks() {
-		TaskList taskList = TasksUiPlugin.getTaskList();
 		InteractionContext historyContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
 		assertNotNull(taskList);
 		assertNotNull(historyContext);
@@ -107,7 +106,7 @@ public class TaskDataImportTest extends AbstractContextTest {
 		Collection<AbstractTask> tasks = taskList.getAllTasks();
 		assertEquals(1, tasks.size());
 
-		wizardPage.setSource(true, sourceZipFile.getPath());
+		wizardPage.setSource(true, TaskTestUtil.getLocalFile(BACKUP_v1).getAbsolutePath());
 		wizard.performFinish();
 
 		tasks = taskList.getAllTasks();
@@ -121,4 +120,23 @@ public class TaskDataImportTest extends AbstractContextTest {
 		assertTrue(historyContext.getInteractionHistory().size() > 0);
 		assertTrue(TasksUiPlugin.getRepositoryManager().getAllRepositories().size() > 2);
 	}
+
+	public void testImportBackupWithOldTaskList() {
+		wizardPage.setSource(true, TaskTestUtil.getLocalFile(BACKUP_OLD_v3).getAbsolutePath());
+		wizard.performFinish();
+
+		Collection<AbstractTask> tasks = taskList.getAllTasks();
+		assertEquals(1, tasks.size());
+		assertEquals("Task 3", tasks.iterator().next().getSummary());
+	}
+
+	public void testImportBackup() {
+		wizardPage.setSource(true, TaskTestUtil.getLocalFile(BACKUP_v3).getAbsolutePath());
+		wizard.performFinish();
+
+		Collection<AbstractTask> tasks = taskList.getAllTasks();
+		assertEquals(1, tasks.size());
+		assertEquals("Task 3", tasks.iterator().next().getSummary());
+	}
+
 }

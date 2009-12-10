@@ -13,7 +13,6 @@ package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import java.io.File;
 import java.io.IOException;
-import com.ibm.icu.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Locale;
@@ -43,6 +42,8 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
+
+import com.ibm.icu.text.SimpleDateFormat;
 
 /**
  * @author Rob Elves
@@ -130,24 +131,33 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 
 		private final String JOB_LABEL = Messages.TaskDataImportWizard_Importing_Data;
 
-		private File sourceZipFile = null;
-
-		private int numEntries = 0;
-
-		private boolean restoreM2Tasklist = false;
+		private final File sourceZipFile;
 
 		public FileCopyJob(File sourceZipFile) {
 			this.sourceZipFile = sourceZipFile;
 		}
 
 		public void run(final IProgressMonitor monitor) throws CoreException {
-
 			try {
+				boolean hasDefaultTaskList = false;
+				int numEntries = 0;
 
-				checkZipFile();
+				// determine properties of backup
+				ZipFile zipFile = new ZipFile(sourceZipFile, ZipFile.OPEN_READ);
+				try {
+					Enumeration<? extends ZipEntry> entries = zipFile.entries();
+					while (entries.hasMoreElements()) {
+						ZipEntry entry = entries.nextElement();
+						if (entry.getName().equals(ITasksCoreConstants.DEFAULT_TASK_LIST_FILE)) {
+							hasDefaultTaskList = true;
+						}
+						numEntries++;
+					}
+				} finally {
+					zipFile.close();
+				}
 
 				if (numEntries > 0) {
-
 					monitor.beginTask(JOB_LABEL, numEntries);
 					Job.getJobManager().beginRule(ITasksCoreConstants.ROOT_SCHEDULING_RULE, monitor);
 
@@ -157,28 +167,10 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 
 					ZipFileUtil.unzipFiles(sourceZipFile, TasksUiPlugin.getDefault().getDataDirectory(), monitor);
 
-					if (restoreM2Tasklist) {
-
-						SimpleDateFormat format = new SimpleDateFormat(ITasksCoreConstants.FILENAME_TIMESTAMP_FORMAT,
-								Locale.ENGLISH);
-						String date = format.format(new Date());
-
-						File taskListFile = new File(TasksUiPlugin.getDefault().getDataDirectory(),
-								ITasksCoreConstants.DEFAULT_TASK_LIST_FILE);
-						if (taskListFile.exists()) {
-							taskListFile.renameTo(new File(taskListFile.getParentFile(), taskListFile.getName()
-									+ PREFIX_BACKUP + date));
-						}
-
-						File taskListFileSnapshot = new File(TasksUiPlugin.getDefault().getDataDirectory(),
-								AbstractExternalizationParticipant.SNAPSHOT_PREFIX
-										+ ITasksCoreConstants.DEFAULT_TASK_LIST_FILE);
-						if (taskListFileSnapshot.exists()) {
-							taskListFileSnapshot.renameTo(new File(taskListFile.getParentFile(),
-									taskListFileSnapshot.getName() + PREFIX_BACKUP + date));
-						}
-
+					if (!hasDefaultTaskList) {
+						renameTaskList();
 					}
+
 					readTaskListData();
 				}
 			} catch (IOException e) {
@@ -190,20 +182,26 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 			}
 		}
 
-		private void checkZipFile() throws IOException {
-			Enumeration<? extends ZipEntry> entries;
-			ZipFile zipFile = new ZipFile(sourceZipFile, ZipFile.OPEN_READ);
-			try {
-				entries = zipFile.entries();
-				while (entries.hasMoreElements()) {
-					ZipEntry entry = entries.nextElement();
-					if (entry.getName().startsWith(ITasksCoreConstants.OLD_TASK_LIST_FILE)) {
-						restoreM2Tasklist = true;
-					}
-					numEntries++;
-				}
-			} finally {
-				zipFile.close();
+		/**
+		 * Rename existing task list file to avoid loading that instead of the restored old one.
+		 */
+		private void renameTaskList() {
+			SimpleDateFormat format = new SimpleDateFormat(ITasksCoreConstants.FILENAME_TIMESTAMP_FORMAT,
+					Locale.ENGLISH);
+			String date = format.format(new Date());
+
+			File taskListFile = new File(TasksUiPlugin.getDefault().getDataDirectory(),
+					ITasksCoreConstants.DEFAULT_TASK_LIST_FILE);
+			if (taskListFile.exists()) {
+				taskListFile.renameTo(new File(taskListFile.getParentFile(), taskListFile.getName() + PREFIX_BACKUP
+						+ date));
+			}
+
+			File taskListFileSnapshot = new File(TasksUiPlugin.getDefault().getDataDirectory(),
+					AbstractExternalizationParticipant.SNAPSHOT_PREFIX + ITasksCoreConstants.DEFAULT_TASK_LIST_FILE);
+			if (taskListFileSnapshot.exists()) {
+				taskListFileSnapshot.renameTo(new File(taskListFile.getParentFile(), taskListFileSnapshot.getName()
+						+ PREFIX_BACKUP + date));
 			}
 		}
 

@@ -41,9 +41,7 @@ public class TaskDataExportOperation implements IRunnableWithProgress {
 
 	private static final String EXPORT_JOB_LABEL = Messages.TaskDataExportOperation_exporting_task_data;
 
-	private static final Pattern excludeHidden = Pattern.compile("^\\."); //$NON-NLS-1$
-
-	private static final Pattern excludeBackup = Pattern.compile("backup\\z"); //$NON-NLS-1$
+	private static final Pattern excludePattern = Pattern.compile("(?:^\\.|^tasklist.xml.zip\\z|attachments\\z|backup\\z)"); //$NON-NLS-1$
 
 	private final String destinationDirectory;
 
@@ -84,8 +82,7 @@ public class TaskDataExportOperation implements IRunnableWithProgress {
 
 	protected void selectFiles(Set<File> filesToExport) {
 		Set<Pattern> exclusionPatterns = new HashSet<Pattern>();
-		exclusionPatterns.add(excludeHidden);
-		exclusionPatterns.add(excludeBackup);
+		exclusionPatterns.add(excludePattern);
 		String dataRoot = TasksUiPlugin.getDefault().getDataDirectory();
 		File dataFolder = new File(dataRoot);
 		for (File file : dataFolder.listFiles()) {
