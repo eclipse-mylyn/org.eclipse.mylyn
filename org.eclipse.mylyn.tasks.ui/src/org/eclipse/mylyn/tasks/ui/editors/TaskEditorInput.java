@@ -88,7 +88,7 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 	/**
 	 * @since 2.0
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public Object getAdapter(Class adapter) {
 		if (adapter == IEditorInput.class) {
 			return this;

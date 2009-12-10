@@ -35,11 +35,10 @@ public class OpenWithBrowserAction extends BaseSelectionListenerAction {
 		setId(ID);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void run() {
 		if (super.getStructuredSelection() != null) {
-			for (Iterator iter = super.getStructuredSelection().iterator(); iter.hasNext();) {
+			for (Iterator<?> iter = super.getStructuredSelection().iterator(); iter.hasNext();) {
 				runWithSelection(iter.next());
 			}
 		}

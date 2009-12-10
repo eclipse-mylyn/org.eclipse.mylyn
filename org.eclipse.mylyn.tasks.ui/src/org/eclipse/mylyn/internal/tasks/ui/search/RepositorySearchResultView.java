@@ -301,7 +301,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		super.dispose();
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public Object getAdapter(Class adapter) {
 		return getAdapterDelegate(adapter);
 	}

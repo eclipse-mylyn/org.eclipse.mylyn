@@ -132,17 +132,17 @@ public class RepositoryTextViewerConfiguration extends TextSourceViewerConfigura
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	protected Map getHyperlinkDetectorTargets(final ISourceViewer sourceViewer) {
 		IAdaptable context = getDefaultHyperlinkTarget();
 
-		Map targets = new HashMap();
+		Map<String, IAdaptable> targets = new HashMap<String, IAdaptable>();
 		targets.put(ID_CONTEXT_EDITOR_TEXT, context);
 		targets.put(ID_CONTEXT_EDITOR_TASK, context);
 		return targets;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	private IAdaptable getDefaultHyperlinkTarget() {
 		IAdaptable context = new IAdaptable() {
 			public Object getAdapter(Class adapter) {

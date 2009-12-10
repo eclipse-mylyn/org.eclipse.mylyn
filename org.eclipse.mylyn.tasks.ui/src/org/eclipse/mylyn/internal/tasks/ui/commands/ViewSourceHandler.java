@@ -94,7 +94,7 @@ public class ViewSourceHandler extends AbstractHandler implements IElementUpdate
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public void updateElement(UIElement element, Map parameters) {
 		element.setChecked(checked);
 	}

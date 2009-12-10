@@ -658,7 +658,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 	/**
 	 * Sort tasks by summary
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	@Override
 	protected Comparator getItemsComparator() {
 		return itemsComparator;

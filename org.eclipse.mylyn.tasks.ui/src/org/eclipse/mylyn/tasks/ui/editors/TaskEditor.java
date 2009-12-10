@@ -525,7 +525,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		return (TaskEditorActionContributor) getEditorSite().getActionBarContributor();
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	@Override
 	public Object getAdapter(Class adapter) {
 		if (contentOutlineProvider != null) {

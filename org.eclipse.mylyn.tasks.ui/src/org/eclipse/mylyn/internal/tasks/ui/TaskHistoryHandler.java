@@ -78,7 +78,7 @@ public class TaskHistoryHandler extends AbstractHandler implements IElementUpdat
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public void updateElement(UIElement element, Map parameters) {
 		if (TasksUi.getTaskActivityManager().getActiveTask() == null) {
 			element.setIcon(TasksUiImages.CONTEXT_HISTORY_PREVIOUS);

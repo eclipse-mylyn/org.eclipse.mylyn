@@ -89,7 +89,7 @@ public class XmlRpcServer {
 			return create(params);
 		}
 
-		@SuppressWarnings("unchecked")
+		@SuppressWarnings("rawtypes")
 		public Object[] get() throws Exception {
 			Hashtable values = (Hashtable) call(module + ".get", id);
 			Object[] result = new Object[values.size()];

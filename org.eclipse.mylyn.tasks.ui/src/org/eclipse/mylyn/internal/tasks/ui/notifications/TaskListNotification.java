@@ -162,7 +162,7 @@ public class TaskListNotification extends AbstractNotification {
 		return true;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public Object getAdapter(Class adapter) {
 		if (adapter == AbstractTask.class) {
 			return task;

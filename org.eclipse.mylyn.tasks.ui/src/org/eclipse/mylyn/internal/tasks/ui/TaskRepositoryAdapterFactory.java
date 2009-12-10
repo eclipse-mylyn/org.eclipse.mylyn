@@ -26,15 +26,16 @@ import org.eclipse.ui.IActionFilter;
  */
 public class TaskRepositoryAdapterFactory implements IAdapterFactory {
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	private static final Class[] ADAPTER_TYPES = new Class[] { IActionFilter.class };
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public Class[] getAdapterList() {
 		return ADAPTER_TYPES;
 	}
 
-	public Object getAdapter(final Object adaptable, @SuppressWarnings("unchecked") Class adapterType) {
+	@SuppressWarnings("rawtypes")
+	public Object getAdapter(final Object adaptable, Class adapterType) {
 		if (adaptable instanceof TaskRepository) {
 			return new IActionFilter() {
 				public boolean testAttribute(Object target, String name, String value) {

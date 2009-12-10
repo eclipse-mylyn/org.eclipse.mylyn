@@ -82,7 +82,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		repository2 = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, "repository_url2");
 
 		detector.setContext(new IAdaptable() {
-			@SuppressWarnings("unchecked")
+			@SuppressWarnings("rawtypes")
 			public Object getAdapter(Class adapter) {
 				return (adapter == TaskRepository.class) ? activeRepository : null;
 			}

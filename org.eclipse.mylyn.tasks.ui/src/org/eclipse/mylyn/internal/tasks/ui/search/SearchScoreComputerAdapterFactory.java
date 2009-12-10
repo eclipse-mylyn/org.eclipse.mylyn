@@ -39,7 +39,7 @@ public class SearchScoreComputerAdapterFactory implements IAdapterFactory {
 
 	};
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
 		if (ISearchPageScoreComputer.class.equals(adapterType)) {
 			return computer;
@@ -47,7 +47,7 @@ public class SearchScoreComputerAdapterFactory implements IAdapterFactory {
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public Class[] getAdapterList() {
 		return new Class[] { ISearchPageScoreComputer.class };
 	}

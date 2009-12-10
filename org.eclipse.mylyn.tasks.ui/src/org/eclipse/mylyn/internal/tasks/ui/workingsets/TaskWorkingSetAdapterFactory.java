@@ -27,15 +27,16 @@ public class TaskWorkingSetAdapterFactory implements IAdapterFactory {
 
 	private static final String TASK_ELEMENT_FACTORY_ID = "org.eclipse.mylyn.tasks.ui.workingSets.elementFactory"; //$NON-NLS-1$
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	private static final Class[] ADAPTER_TYPES = new Class[] { IPersistableElement.class };
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public Class[] getAdapterList() {
 		return ADAPTER_TYPES;
 	}
 
-	public Object getAdapter(final Object adaptableObject, @SuppressWarnings("unchecked") Class adapterType) {
+	@SuppressWarnings("rawtypes")
+	public Object getAdapter(final Object adaptableObject, Class adapterType) {
 		if (adapterType == IPersistableElement.class && adaptableObject instanceof AbstractTaskContainer) {
 			return new IPersistableElement() {
 				public void saveState(IMemento memento) {
