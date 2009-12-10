@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.provisional.commons.ui;
 
 import java.util.Hashtable;
+import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -52,8 +53,7 @@ public class GradientCanvas extends Canvas {
 
 	private Image gradientImage;
 
-	@SuppressWarnings("unchecked")
-	Hashtable colors = new Hashtable();
+	Map<String, Color> colors = new Hashtable<String, Color>();
 
 	private int flags;
 
@@ -330,7 +330,6 @@ public class GradientCanvas extends Canvas {
 		return (flags & BOTTOM_SEPARATOR) != 0 ? SWT.BOTTOM : SWT.TOP;
 	}
 
-	@SuppressWarnings("unchecked")
 	public void putColor(String key, Color color) {
 		if (color == null) {
 			colors.remove(key);
@@ -340,7 +339,7 @@ public class GradientCanvas extends Canvas {
 	}
 
 	public Color getColor(String key) {
-		return (Color) colors.get(key);
+		return colors.get(key);
 	}
 
 	public boolean hasColor(String key) {

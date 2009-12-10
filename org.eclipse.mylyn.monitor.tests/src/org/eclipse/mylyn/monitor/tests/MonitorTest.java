@@ -80,7 +80,7 @@ public class MonitorTest extends TestCase implements IMonitorLifecycleListener {
 		UiUsageMonitorPlugin.getDefault().stopMonitoring();
 	}
 
-	@SuppressWarnings( { "deprecation", "unchecked" })
+	@SuppressWarnings({ "deprecation", "rawtypes" })
 	public void testLogging() throws InterruptedException {
 		UiUsageMonitorPlugin.getDefault().startMonitoring();
 		logger.stopMonitoring();

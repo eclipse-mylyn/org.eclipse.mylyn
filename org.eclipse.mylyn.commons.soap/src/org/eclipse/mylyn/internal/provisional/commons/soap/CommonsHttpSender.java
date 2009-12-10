@@ -93,7 +93,7 @@ import org.eclipse.mylyn.commons.net.WebUtil;
  *         HttpState. Also we need to setCookiePolicy on HttpState to CookiePolicy.COMPATIBILITY else it is defaulting
  *         to RFC2109Spec and adding Version information to it and tomcat server not recognizing it
  */
-@SuppressWarnings({ "serial", "unchecked", "null" })
+@SuppressWarnings({ "serial", "rawtypes", "null" })
 public class CommonsHttpSender extends BasicHandler {
 
 	/** Field log */

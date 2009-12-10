@@ -68,7 +68,7 @@ public class HtmlTag {
 		baseUrl = htmltag.baseUrl;
 		tagType = htmltag.tagType;
 		isEndTag = htmltag.isEndTag;
-		attributes = (HashMap) htmltag.attributes.clone();
+		attributes = (HashMap<String, String>) htmltag.attributes.clone();
 	}
 
 	/**
