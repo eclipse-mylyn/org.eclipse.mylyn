@@ -62,6 +62,7 @@ public class AllTasksTests {
 		suite.addTestSuite(TaskTest.class);
 		suite.addTestSuite(TaskListDropAdapterTest.class);
 		suite.addTestSuite(TaskDataExportTest.class);
+		suite.addTestSuite(TaskDataImportTest.class);
 		suite.addTestSuite(ScheduledPresentationTest.class);
 		suite.addTestSuite(TaskActivityTimingTest.class);
 		suite.addTestSuite(TaskAttachmentTest.class);
@@ -99,7 +100,6 @@ public class AllTasksTests {
 		suite.addTestSuite(PlanningPartTest.class);
 		suite.addTestSuite(RepositoryCompletionProcessorTest.class);
 		// XXX long running tests, put back?
-		//suite.addTestSuite(TaskDataImportTest.class);
 		//suite.addTestSuite(QueryExportImportTest.class);
 		//suite.addTestSuite(BackgroundSaveTest.class);
 
