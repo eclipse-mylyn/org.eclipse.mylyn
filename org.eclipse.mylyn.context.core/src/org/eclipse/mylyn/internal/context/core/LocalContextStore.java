@@ -39,7 +39,10 @@ public class LocalContextStore implements IContextStore {
 
 	private File contextDirectory;
 
-	private Set<File> contextFiles = null;
+	/**
+	 * Cache of available context files.
+	 */
+	private Set<File> contextFiles;
 
 	private final InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
 
@@ -53,6 +56,7 @@ public class LocalContextStore implements IContextStore {
 
 	public synchronized void setContextDirectory(File directory) {
 		this.contextDirectory = directory;
+		this.contextFiles = null;
 		for (IContextStoreListener listener : listeners) {
 			listener.contextStoreMoved(directory);
 		}
