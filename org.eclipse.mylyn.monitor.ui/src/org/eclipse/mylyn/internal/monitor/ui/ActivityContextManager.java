@@ -19,6 +19,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
@@ -129,6 +130,7 @@ public class ActivityContextManager implements IActivityContextManager {
 	}
 
 	public void stop() {
+		checkJob.cancel();
 		for (final AbstractUserActivityMonitor monitor : activityMonitors) {
 			SafeRunner.run(new ISafeRunnable() {
 				public void handleException(Throwable e) {
@@ -140,8 +142,9 @@ public class ActivityContextManager implements IActivityContextManager {
 				}
 			});
 		}
-		PlatformUI.getWorkbench().getWorkingSetManager().removePropertyChangeListener(WORKING_SET_CHANGE_LISTENER);
-		checkJob.cancel();
+		if (Platform.isRunning()) {
+			PlatformUI.getWorkbench().getWorkingSetManager().removePropertyChangeListener(WORKING_SET_CHANGE_LISTENER);
+		}
 	}
 
 	public void addListener(IUserAttentionListener listener) {

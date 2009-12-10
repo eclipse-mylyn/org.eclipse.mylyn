@@ -158,10 +158,10 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
 		try {
+			if (activityContextManager != null) {
+				activityContextManager.stop();
+			}
 			if (Platform.isRunning()) {
-				if (activityContextManager != null) {
-					activityContextManager.stop();
-				}
 				getPreferenceStore().removePropertyChangeListener(PROPERTY_LISTENER);
 				if (getWorkbench() != null && !getWorkbench().isClosing()) {
 					getWorkbench().removeWindowListener(WINDOW_LISTENER);
@@ -170,7 +170,6 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 						removeListenersFromWindow(window);
 					}
 				}
-
 			}
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN, "Monitor UI stop failed", e)); //$NON-NLS-1$

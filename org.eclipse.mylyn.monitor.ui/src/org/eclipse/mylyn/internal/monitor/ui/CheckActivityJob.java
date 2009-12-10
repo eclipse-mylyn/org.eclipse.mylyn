@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * A job that is scheduled periodically to check for user activity.
@@ -63,7 +64,7 @@ public class CheckActivityJob extends Job {
 	}
 
 	protected boolean isEnabled() {
-		return Platform.isRunning() && !MonitorUiPlugin.getDefault().getWorkbench().isClosing();
+		return Platform.isRunning() && !PlatformUI.getWorkbench().isClosing();
 	}
 
 	/**
