@@ -15,7 +15,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.DialogPage;
@@ -245,20 +247,14 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		layout.marginHeight = 0;
 		pageWrapper.setLayout(layout);
 
-		searchPage.setContainer(taskSearchPageContainer);
 		try {
+			searchPage.setContainer(taskSearchPageContainer);
 			searchPage.createControl(pageWrapper);
 		} catch (Exception e) {
 			pageWrapper.dispose();
 			searchPage.dispose();
 
-			searchPage = new DeadSearchPage(repository);
-			searchPage.setContainer(taskSearchPageContainer);
-			searchPage.createControl(fParentComposite);
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Error occurred while constructing search page for " + repository.getRepositoryUrl() + " [" //$NON-NLS-1$ //$NON-NLS-2$
-							+ repository.getConnectorKind() + "]", e)); //$NON-NLS-1$
-			searchPage.getControl().setData(PAGE_KEY, searchPage);
+			searchPage = createErrorPage(repository, e);
 			return searchPage.getControl();
 		}
 
@@ -272,7 +268,21 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		return pageWrapper;
 	}
 
-	private void displayQueryPage(int pageIndex) {
+	private ITaskSearchPage createErrorPage(TaskRepository repository, Throwable e) {
+		ITaskSearchPage searchPage;
+		Status status = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+				"Error occurred while constructing search page for " + repository.getRepositoryUrl() + " [" //$NON-NLS-1$ //$NON-NLS-2$
+						+ repository.getConnectorKind() + "]", e);//$NON-NLS-1$
+		StatusHandler.log(status);
+
+		searchPage = new DeadSearchPage(repository, status);
+		searchPage.setContainer(taskSearchPageContainer);
+		searchPage.createControl(fParentComposite);
+		searchPage.getControl().setData(PAGE_KEY, searchPage);
+		return searchPage;
+	}
+
+	private void displayQueryPage(final int pageIndex) {
 		if (currentPageIndex == pageIndex || pageIndex < 0) {
 			return;
 		}
@@ -292,18 +302,27 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 
 		if (queryPages[pageIndex] == null) {
 			if (repository != null) {
-				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
+				final AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
 				if (connectorUi != null) {
-					ITaskSearchPage searchPage = getSearchPage(connectorUi);
-					if (searchPage != null) {
-						queryPages[pageIndex] = createPage(repository, searchPage);
-					} else {
-						AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-								repository.getConnectorKind());
-						if (connector.canCreateTaskFromKey(repository)) {
-							queryPages[pageIndex] = createPage(repository, new NoSearchPage(repository));
+					SafeRunner.run(new ISafeRunnable() {
+						public void run() throws Exception {
+							ITaskSearchPage searchPage = getSearchPage(connectorUi);
+							if (searchPage != null) {
+								queryPages[pageIndex] = createPage(repository, searchPage);
+							} else {
+								AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
+										.getRepositoryConnector(repository.getConnectorKind());
+								if (connector.canCreateTaskFromKey(repository)) {
+									queryPages[pageIndex] = createPage(repository, new NoSearchPage(repository));
+								}
+							}
 						}
-					}
+
+						public void handleException(Throwable e) {
+							ITaskSearchPage page = createErrorPage(repository, e);
+							queryPages[pageIndex] = page.getControl();
+						}
+					});
 				}
 
 			}
@@ -526,8 +545,11 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 
 	private class DeadSearchPage extends AbstractRepositoryQueryPage {
 
-		public DeadSearchPage(TaskRepository rep) {
+		private final Status status;
+
+		public DeadSearchPage(TaskRepository rep, Status status) {
 			super("Search page error", rep); //$NON-NLS-1$
+			this.status = status;
 		}
 
 		public void createControl(Composite parent) {
@@ -545,7 +567,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 
 			});
 
-			GridDataFactory.fillDefaults().applyTo(hyperlink);
+			GridDataFactory.fillDefaults().grab(true, true).applyTo(hyperlink);
 			setControl(hyperlink);
 		}
 
