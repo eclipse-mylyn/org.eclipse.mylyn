@@ -14,7 +14,6 @@ package org.eclipse.mylyn.internal.tasks.ui.util;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -24,10 +23,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
-import org.eclipse.mylyn.internal.tasks.core.UnsubmittedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
 import org.eclipse.swt.dnd.DragSourceAdapter;
@@ -55,19 +51,6 @@ public class TaskDragSourceListener extends DragSourceAdapter {
 		ISelection selection = selectionProvider.getSelection();
 		if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
 			this.currentSelection = (IStructuredSelection) selection;
-			Iterator<?> it = currentSelection.iterator();
-			while (it.hasNext()) {
-				Object item = it.next();
-				if (item instanceof AbstractTask) {
-					AbstractTask task = (AbstractTask) item;
-					for (AbstractTaskContainer container : task.getParentContainers()) {
-						if (container instanceof UnsubmittedTaskContainer) {
-							event.doit = false;
-							return;
-						}
-					}
-				}
-			}
 		} else {
 			this.currentSelection = null;
 			event.doit = false;

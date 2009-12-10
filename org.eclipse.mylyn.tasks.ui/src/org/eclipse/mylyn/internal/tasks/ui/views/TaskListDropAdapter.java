@@ -24,11 +24,13 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.UnsubmittedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.AbstractRetrieveTitleFromUrlJob;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
@@ -113,12 +115,12 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 		} else {
 			for (ITask task : tasksToMove) {
 				if (currentTarget instanceof UncategorizedTaskContainer) {
-					TasksUiInternal.getTaskList().addTask(task, (UncategorizedTaskContainer) currentTarget);
+					moveTask(task, (UncategorizedTaskContainer) currentTarget);
 				} else if (currentTarget instanceof TaskCategory) {
-					TasksUiInternal.getTaskList().addTask(task, (TaskCategory) currentTarget);
+					moveTask(task, (TaskCategory) currentTarget);
 				} else if (currentTarget instanceof UnmatchedTaskContainer) {
 					if (((UnmatchedTaskContainer) currentTarget).getRepositoryUrl().equals(task.getRepositoryUrl())) {
-						TasksUiInternal.getTaskList().addTask(task, (AbstractTaskCategory) currentTarget);
+						moveTask(task, (AbstractTaskCategory) currentTarget);
 					}
 				} else if (currentTarget instanceof ITask) {
 					ITask targetTask = (ITask) currentTarget;
@@ -133,7 +135,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 						}
 					}
 					if (targetCategory != null) {
-						TasksUiInternal.getTaskList().addTask(task, targetCategory);
+						moveTask(task, targetCategory);
 					}
 				} else if (currentTarget instanceof ScheduledTaskContainer) {
 					ScheduledTaskContainer container = (ScheduledTaskContainer) currentTarget;
@@ -144,7 +146,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 								container.getDateRange());
 					}
 				} else if (currentTarget == null) {
-					TasksUiInternal.getTaskList().addTask(task, TasksUiPlugin.getTaskList().getDefaultCategory());
+					moveTask(task, TasksUiPlugin.getTaskList().getDefaultCategory());
 				}
 			}
 		}
@@ -155,9 +157,26 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 		return true;
 	}
 
+	private void moveTask(ITask task, AbstractTaskContainer container) {
+		if (!isUnsubmittedTask(task)) {
+			TasksUiInternal.getTaskList().addTask(task, container);
+		}
+	}
+
+	private boolean isUnsubmittedTask(ITask task) {
+		if (task instanceof AbstractTask) {
+			for (AbstractTaskContainer parent : ((AbstractTask) task).getParentContainers()) {
+				if (parent instanceof UnsubmittedTaskContainer) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	private boolean areAllLocalTasks(List<ITask> tasksToMove) {
 		for (ITask task : tasksToMove) {
-			if (!(task instanceof LocalTask)) {
+			if (!(task instanceof LocalTask) || isUnsubmittedTask(task)) {
 				return false;
 			}
 		}
