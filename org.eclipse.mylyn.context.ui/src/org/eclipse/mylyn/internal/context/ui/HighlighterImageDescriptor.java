@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2000, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Tasktop Technologies - initial API and implementation
+ *     IBM Corporation - initial API and implementation
+ *     Tasktop Technologies - changes to support reuse
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.context.ui;
@@ -14,7 +15,6 @@ package org.eclipse.mylyn.internal.context.ui;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.RGB;
@@ -22,47 +22,82 @@ import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Mik Kersten
+ * @author Steffen Pingel
  */
 public class HighlighterImageDescriptor extends ImageDescriptor {
 
-	private final Image image;
+	private final ImageData imageData;
 
+	private final RGB fromColor;
+
+	private final RGB toColor;
+
+	@Deprecated
 	public HighlighterImageDescriptor(Color fromColor, Color toColor) {
-		super();
+		this(fromColor != null ? fromColor.getRGB() : null, toColor != null ? toColor.getRGB() : null);
+	}
+
+	public HighlighterImageDescriptor(RGB fromColor, RGB toColor) {
 		if (fromColor == null) {
-			fromColor = Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND);
+			fromColor = Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND).getRGB();
 		}
 		if (toColor == null) {
-			toColor = Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND);
+			toColor = Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND).getRGB();
 		}
-		ImageData band = createGradientBand(50, 20, false, new RGB(fromColor.getRed(), fromColor.getGreen(),
-				fromColor.getBlue()), new RGB(toColor.getRed(), toColor.getGreen(), toColor.getBlue()), 7, 7, 7);
-		image = new Image(Display.getCurrent(), band);
-	}
-
-	@Override
-	public void destroyResource(Object previouslyCreatedObject) {
-		image.dispose();
-		super.destroyResource(previouslyCreatedObject);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		return obj instanceof HighlighterImageDescriptor && image.equals(((HighlighterImageDescriptor) obj).image);
+		this.fromColor = fromColor;
+		this.toColor = toColor;
+		this.imageData = createGradientBand(50, 20, false, fromColor, toColor, 7, 7, 7);
 	}
 
 	@Override
 	public ImageData getImageData() {
-		return image.getImageData();
+		return imageData;
+	}
+
+	public RGB getFromColor() {
+		return fromColor;
+	}
+
+	public RGB getToColor() {
+		return toColor;
 	}
 
 	@Override
 	public int hashCode() {
-		return image.hashCode();
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((fromColor == null) ? 0 : fromColor.hashCode());
+		result = prime * result + ((toColor == null) ? 0 : toColor.hashCode());
+		return result;
 	}
 
-	public Image getImage() {
-		return image;
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		HighlighterImageDescriptor other = (HighlighterImageDescriptor) obj;
+		if (fromColor == null) {
+			if (other.fromColor != null) {
+				return false;
+			}
+		} else if (!fromColor.equals(other.fromColor)) {
+			return false;
+		}
+		if (toColor == null) {
+			if (other.toColor != null) {
+				return false;
+			}
+		} else if (!toColor.equals(other.toColor)) {
+			return false;
+		}
+		return true;
 	}
 
 	// ----------- COPIED FROM ImageData ---------------
