@@ -46,19 +46,14 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.eclipse.mylyn.tasks.core.sync.SubmitJob;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
 
 public class BugzillaRepository32Test extends AbstractBugzillaTest {
 
 	public void testBugUpdate() throws Exception {
-		init323();
-		String taskNumber = "1";
-		ITask task = generateLocalTaskAndDownload(taskNumber);
-		assertNotNull(task);
-		String tokenValue = task.getAttribute("token");
-		assertNotNull(tokenValue);
-		TaskData taskData = TasksUiPlugin.getTaskDataManager().getTaskData(task);
+		TaskData taskData = BugzillaFixture.current().createTask(PrivilegeLevel.USER, null, null);
 		assertNotNull(taskData);
-		assertEquals(tokenValue, taskData.getRoot().getAttribute("token").getValue());
+		assertNotNull(taskData.getRoot().getAttribute("token"));
 
 		//remove the token (i.e. unpatched Bugzilla 3.2.2)
 		taskData.getRoot().removeAttribute("token");
@@ -76,9 +71,8 @@ public class BugzillaRepository32Test extends AbstractBugzillaTest {
 		changed.add(attrPriority);
 		BugzillaFixture.current().submitTask(taskData, client);
 
-		task = generateLocalTaskAndDownload(taskNumber);
-		assertNotNull(task);
-		assertEquals(!p1, task.getPriority().equals("P1"));
+		taskData = BugzillaFixture.current().getTask(taskData.getTaskId(), client);
+		assertEquals(!p1, taskData.getRoot().getMappedAttribute(TaskAttribute.PRIORITY).getValue().equals("P1"));
 
 	}
 
