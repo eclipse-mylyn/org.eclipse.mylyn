@@ -15,27 +15,22 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethodBase;
-import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.PutMethod;
-import org.apache.commons.httpclient.methods.RequestEntity;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.commons.net.WebUtil;
@@ -100,14 +95,16 @@ public abstract class AbstractOslcClient {
 	 * Exposed at connector level via IOslcCoreConnector.getAvailableServices()
 	 */
 	public List<OslcServiceProvider> getAvailableServices(String url, IProgressMonitor monitor) throws CoreException {
-		final List<OslcServiceProvider> result = new ArrayList<OslcServiceProvider>();
 
-		GetRequest request = new GetRequest(url) {
+		RequestHandler<List<OslcServiceProvider>> handler = new RequestHandler<List<OslcServiceProvider>>(
+				"Requesting Available Services") { //$NON-NLS-1$
 
 			@Override
-			public void run(GetMethod method, IProgressMonitor monitor) throws CoreException {
+			public List<OslcServiceProvider> run(HttpMethodBase method, IProgressMonitor monitor) throws CoreException {
 				try {
+					final List<OslcServiceProvider> result = new ArrayList<OslcServiceProvider>();
 					parseServices(method.getResponseBodyAsStream(), result, monitor);
+					return result;
 				} catch (IOException e) {
 					throw new CoreException(new Status(IStatus.ERROR, IOslcCoreConstants.ID_PLUGIN,
 							"Network error occurred retrieving available services: " + e.getMessage(), e)); //$NON-NLS-1$
@@ -115,9 +112,7 @@ public abstract class AbstractOslcClient {
 			}
 		};
 
-		request.execute(monitor);
-
-		return result;
+		return executeMethod(createGetMethod(url), handler, monitor);
 	}
 
 	protected Document getDocumentFromMethod(HttpMethodBase method) throws CoreException {
@@ -197,22 +192,21 @@ public abstract class AbstractOslcClient {
 	 */
 	protected void downloadServiceDescriptor(final OslcServiceDescriptor config, IProgressMonitor monitor)
 			throws CoreException {
-		config.clear();
 
-		GetRequest request = new GetRequest(config.getAboutUrl()) {
+		RequestHandler<OslcServiceDescriptor> handler = new RequestHandler<OslcServiceDescriptor>(
+				"Retrieving Service Descriptor") { //$NON-NLS-1$
 
 			@Override
-			public void run(GetMethod method, IProgressMonitor monitor) throws CoreException {
-				try {
-					parseServiceDescriptor(method.getResponseBodyAsStream(), config, monitor);
-				} catch (IOException e) {
-					throw new CoreException(new Status(IStatus.ERROR, IOslcCoreConstants.ID_PLUGIN,
-							"Network error occurred while downloading service descriptor: " + e.getMessage(), e)); //$NON-NLS-1$
-				}
+			public OslcServiceDescriptor run(HttpMethodBase method, IProgressMonitor monitor) throws CoreException,
+					IOException {
+				config.clear();
+				parseServiceDescriptor(method.getResponseBodyAsStream(), config, monitor);
+				return config;
 			}
 		};
 
-		request.execute(monitor);
+		executeMethod(createGetMethod(config.getAboutUrl()), handler, monitor);
+
 	}
 
 	/**
@@ -342,25 +336,21 @@ public abstract class AbstractOslcClient {
 
 	public Collection<AbstractChangeRequest> performQuery(String queryUrl, IProgressMonitor monitor)
 			throws CoreException {
-		final Collection<AbstractChangeRequest> result = new ArrayList<AbstractChangeRequest>();
 
-		GetRequest request = new GetRequest(queryUrl) {
+		RequestHandler<Collection<AbstractChangeRequest>> handler = new RequestHandler<Collection<AbstractChangeRequest>>(
+				"Performing Query") { //$NON-NLS-1$
 
 			@Override
-			public void run(GetMethod method, IProgressMonitor monitor) throws CoreException {
-				try {
-					parseQueryResponse(method.getResponseBodyAsStream(), result, monitor);
-					// TODO: Handle pagination
-				} catch (IOException e) {
-					throw new CoreException(new Status(IStatus.ERROR, IOslcCoreConstants.ID_PLUGIN,
-							"Network error occurred retrieving available services: " + e.getMessage(), e)); //$NON-NLS-1$
-				}
+			public Collection<AbstractChangeRequest> run(HttpMethodBase method, IProgressMonitor monitor)
+					throws CoreException, IOException {
+				Collection<AbstractChangeRequest> result = new ArrayList<AbstractChangeRequest>();
+				parseQueryResponse(method.getResponseBodyAsStream(), result, monitor);
+				return result;
 			}
 		};
 
-		request.execute(monitor);
+		return executeMethod(createGetMethod(queryUrl), handler, monitor);
 
-		return result;
 	}
 
 	// TODO: Handle pagination
@@ -390,7 +380,6 @@ public abstract class AbstractOslcClient {
 			}
 
 		}
-
 	}
 
 	protected abstract AbstractChangeRequest createChangeRequest(String id, String title);
@@ -410,152 +399,59 @@ public abstract class AbstractOslcClient {
 	public abstract RepositoryResponse putTaskData(TaskData taskData, Set<TaskAttribute> oldValues,
 			IProgressMonitor monitor) throws CoreException;
 
-	protected abstract class GetRequest extends HttpRequest<GetMethod> {
-
-		public GetRequest(String resourceUrl) {
-			super(resourceUrl);
-		}
-
-		@Override
-		public GetMethod constructMethod(String requestPath) {
-			return new GetMethod(requestPath);
-		}
+	protected GetMethod createGetMethod(String requestPath) {
+		GetMethod method = new GetMethod(getRequestPath(requestPath));
+		method.setFollowRedirects(false);
+		method.setDoAuthentication(true);
+		// application/xml is returned by oslc servers by default
+		//method.setRequestHeader("Accept", "application/xml");
+		return method;
 	}
 
-	protected abstract class PutRequest extends HttpRequest<PutMethod> {
-
-		private final RequestEntity entity;
-
-		private final Map<String, String> requestHeaders = new HashMap<String, String>();
-
-		public PutRequest(String resourceUrl, RequestEntity entity) {
-			super(resourceUrl);
-			this.entity = entity;
-		}
-
-		public void setRequestHeader(String key, String value) {
-			requestHeaders.put(key, value);
-		}
-
-		@Override
-		public PutMethod constructMethod(String requestPath) {
-			PutMethod method = new PutMethod(requestPath);
-			method.setRequestEntity(entity);
-			for (String key : requestHeaders.keySet()) {
-				method.addRequestHeader(key, requestHeaders.get(key));
-			}
-			return method;
-		}
+	protected PostMethod createPostMethod(String requestPath) {
+		PostMethod method = new PostMethod(getRequestPath(requestPath));
+		method.setFollowRedirects(false);
+		method.setDoAuthentication(true);
+//		this.entity = getRequestEntity(method);
+//		if (pairs != null) {
+//			method.setRequestBody(pairs);
+//		} else if (entity != null) {
+//			method.setRequestEntity(entity);
+//		} else {
+//			StatusHandler.log(new Status(IStatus.WARNING, IOslcCoreConstants.ID_PLUGIN,
+//					"Request body or entity missing upon post.")); //$NON-NLS-1$
+//		}
+		return method;
 	}
 
-	protected abstract class PostRequest extends HttpRequest<PostMethod> {
-
-		private final NameValuePair[] pairs;
-
-		private RequestEntity entity;
-
-		public PostRequest(String resourceUrl, NameValuePair[] pairs) {
-			super(resourceUrl);
-			this.pairs = pairs;
-		}
-
-		@Override
-		public PostMethod constructMethod(String requestPath) {
-			PostMethod method = new PostMethod(requestPath);
-			this.entity = getRequestEntity(method);
-			if (pairs != null) {
-				method.setRequestBody(pairs);
-			} else if (entity != null) {
-				method.setRequestEntity(entity);
-			} else {
-				StatusHandler.log(new Status(IStatus.WARNING, IOslcCoreConstants.ID_PLUGIN,
-						"Request body or entity missing upon post.")); //$NON-NLS-1$
-			}
-			return method;
-		}
-
-		public RequestEntity getRequestEntity(PostMethod method) {
-			return null;
-		}
+	protected PutMethod createPutMethod(String requestPath) {
+		PutMethod method = new PutMethod(getRequestPath(requestPath));
+		method.setFollowRedirects(false);
+		method.setDoAuthentication(true);
+		return method;
 	}
 
-	protected void handleReturnCode(int code, HttpMethodBase method) throws CoreException {
+	protected <T> T executeMethod(HttpMethodBase method, RequestHandler<T> handler, IProgressMonitor monitor)
+			throws CoreException {
+		monitor = Policy.monitorFor(monitor);
 		try {
-			if (code == java.net.HttpURLConnection.HTTP_OK) {
-				return;// Status.OK_STATUS;
-			} else if (code == java.net.HttpURLConnection.HTTP_MOVED_TEMP
-					|| code == java.net.HttpURLConnection.HTTP_CREATED) {
-				// A new resource created...
-				return;// Status.OK_STATUS;
-			} else if (code == java.net.HttpURLConnection.HTTP_UNAUTHORIZED
-					|| code == java.net.HttpURLConnection.HTTP_FORBIDDEN) {
-				throw new CoreException(new Status(IStatus.ERROR, IOslcCoreConstants.ID_PLUGIN,
-						"Unable to log into server, ensure repository credentials are correct.")); //$NON-NLS-1$
-			} else if (code == java.net.HttpURLConnection.HTTP_PRECON_FAILED) {
-				// Mid-air collision
-				throw new CoreException(new Status(IStatus.ERROR, IOslcCoreConstants.ID_PLUGIN,
-						"Mid-air collision occurred.")); //$NON-NLS-1$
-			} else if (code == java.net.HttpURLConnection.HTTP_CONFLICT) {
-				throw new CoreException(new Status(IStatus.ERROR, IOslcCoreConstants.ID_PLUGIN, "A conflict occurred.")); //$NON-NLS-1$
-			} else {
-				throw new CoreException(new Status(IStatus.ERROR, IOslcCoreConstants.ID_PLUGIN,
-						"Unknown error occurred. Http Code: " + code + " Request: " + method.getURI() + " Response: " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-								+ method.getResponseBodyAsString()));
-			}
-		} catch (URIException e) {
-			throw new CoreException(new Status(IStatus.ERROR, IOslcCoreConstants.ID_PLUGIN, "Network Error: " //$NON-NLS-1$
-					+ e.getMessage()));
+			monitor.beginTask(handler.getRequestName(), IProgressMonitor.UNKNOWN);
+
+			HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(httpClient, location, monitor);
+			int code = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
+
+			handler.handleReturnCode(code, method);
+
+			return handler.run(method, monitor);
 		} catch (IOException e) {
-			throw new CoreException(new Status(IStatus.ERROR, IOslcCoreConstants.ID_PLUGIN, "Network Error: " //$NON-NLS-1$
-					+ e.getMessage()));
-		}
-	}
-
-	protected abstract class HttpRequest<T extends HttpMethodBase> {
-
-		private T method;
-
-		private HostConfiguration hostConfiguration;
-
-		private final String url;
-
-		public HttpRequest(String url) {
-			this.url = url;
-		}
-
-		public void execute(IProgressMonitor monitor) throws CoreException {
-			monitor = Policy.monitorFor(monitor);
-			try {
-				monitor.beginTask(getTaskName(), IProgressMonitor.UNKNOWN);
-				method = constructMethod(getRequestPath(url));
-				method.setFollowRedirects(false);
-				method.setDoAuthentication(true);
-				// application/xml is returned by oslc servers by default
-				//method.setRequestHeader("Accept", "application/xml");
-				hostConfiguration = WebUtil.createHostConfiguration(httpClient, location, monitor);
-				int code = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
-
-				handleReturnCode(code, method);
-				run(method, monitor);
-			} catch (IOException e) {
-				throw new CoreException(new Status(IStatus.WARNING, IOslcCoreConstants.ID_PLUGIN,
-						"An unexpected network error has occurred: " + e.getMessage(), e)); //$NON-NLS-1$
-			} finally {
-				if (method != null) {
-					method.releaseConnection();
-				}
-				monitor.done();
+			throw new CoreException(new Status(IStatus.WARNING, IOslcCoreConstants.ID_PLUGIN,
+					"An unexpected network error has occurred: " + e.getMessage(), e)); //$NON-NLS-1$
+		} finally {
+			if (method != null) {
+				method.releaseConnection();
 			}
-
+			monitor.done();
 		}
-
-		protected String getTaskName() {
-			return "Retrieving from server..."; //$NON-NLS-1$
-		}
-
-		public abstract void run(T method, IProgressMonitor monitor) throws CoreException, IOException;
-
-		public abstract T constructMethod(String requestPath);
 
 	}
 
@@ -566,5 +462,57 @@ public abstract class AbstractOslcClient {
 			return WebUtil.getRequestPath(location.getUrl()) + repositoryUrl;
 		}
 		return WebUtil.getRequestPath(repositoryUrl);
+	}
+
+	public abstract class RequestHandler<T> {
+
+		private final String requestName;
+
+		public RequestHandler(String requestName) {
+			this.requestName = requestName;
+		}
+
+		public abstract T run(HttpMethodBase method, IProgressMonitor monitor) throws CoreException, IOException;
+
+		public String getRequestName() {
+			return requestName;
+		}
+
+		protected void handleReturnCode(int code, HttpMethodBase method) throws CoreException {
+			try {
+				if (code == java.net.HttpURLConnection.HTTP_OK) {
+					return;// Status.OK_STATUS;
+				} else if (code == java.net.HttpURLConnection.HTTP_MOVED_TEMP
+						|| code == java.net.HttpURLConnection.HTTP_CREATED) {
+					// A new resource created...
+					return;// Status.OK_STATUS;
+				} else if (code == java.net.HttpURLConnection.HTTP_UNAUTHORIZED
+						|| code == java.net.HttpURLConnection.HTTP_FORBIDDEN) {
+					throw new CoreException(new Status(IStatus.ERROR, IOslcCoreConstants.ID_PLUGIN,
+							"Unable to log into server, ensure repository credentials are correct.")); //$NON-NLS-1$
+				} else if (code == java.net.HttpURLConnection.HTTP_PRECON_FAILED) {
+					// Mid-air collision
+					throw new CoreException(new Status(IStatus.ERROR, IOslcCoreConstants.ID_PLUGIN,
+							"Mid-air collision occurred.")); //$NON-NLS-1$
+				} else if (code == java.net.HttpURLConnection.HTTP_CONFLICT) {
+					throw new CoreException(new Status(IStatus.ERROR, IOslcCoreConstants.ID_PLUGIN,
+							"A conflict occurred.")); //$NON-NLS-1$
+				} else {
+					throw new CoreException(
+							new Status(
+									IStatus.ERROR,
+									IOslcCoreConstants.ID_PLUGIN,
+									"Unknown error occurred. Http Code: " + code + " Request: " + method.getURI() + " Response: " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+											+ method.getResponseBodyAsString()));
+				}
+			} catch (URIException e) {
+				throw new CoreException(new Status(IStatus.ERROR, IOslcCoreConstants.ID_PLUGIN, "Network Error: " //$NON-NLS-1$
+						+ e.getMessage()));
+			} catch (IOException e) {
+				throw new CoreException(new Status(IStatus.ERROR, IOslcCoreConstants.ID_PLUGIN, "Network Error: " //$NON-NLS-1$
+						+ e.getMessage()));
+			}
+		}
+
 	}
 }
