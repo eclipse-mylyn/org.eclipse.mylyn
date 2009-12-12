@@ -96,7 +96,7 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 			if (object instanceof ITask) {
 				ITask task = (ITask) object;
 				if (task.getTaskKey() != null) {
-					sb.append(TasksUiInternal.getTaskPrefix(task.getConnectorKind()));
+					//sb.append(TasksUiInternal.getTaskPrefix(task.getConnectorKind()));
 					sb.append(task.getTaskKey());
 					sb.append(": "); //$NON-NLS-1$
 				}
