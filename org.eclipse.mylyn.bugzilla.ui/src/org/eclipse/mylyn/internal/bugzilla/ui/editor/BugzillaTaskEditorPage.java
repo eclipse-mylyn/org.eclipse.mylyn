@@ -390,15 +390,23 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 								@Override
 								public void linkActivated(HyperlinkEvent event) {
 									String mes = ""; //$NON-NLS-1$
-									for (String iterable_element : bugzillaResponse.getResponseData().keySet()) {
-										mes += NLS.bind(Messages.BugzillaTaskEditorPage_Changes_Submitted_Action_Line,
-												iterable_element);
-										List<String> o = bugzillaResponse.getResponseData().get(iterable_element);
-										for (String string : o) {
+									for (String iterable_map : bugzillaResponse.getResponseData().keySet()) {
+										mes += NLS.bind(Messages.BugzillaTaskEditorPage_Changes_Submitted_Bug_Line,
+												iterable_map);
+										Map<String, List<String>> responseMap = bugzillaResponse.getResponseData().get(
+												iterable_map);
+										for (String iterable_list : responseMap.keySet()) {
 											mes += NLS.bind(
-													Messages.BugzillaTaskEditorPage_Changes_Submitted_Email_Line,
-													string);
+													Messages.BugzillaTaskEditorPage_Changes_Submitted_Action_Line,
+													iterable_list);
+											List<String> responseList = responseMap.get(iterable_list);
+											for (String string : responseList) {
+												mes += NLS.bind(
+														Messages.BugzillaTaskEditorPage_Changes_Submitted_Email_Line,
+														string);
+											}
 										}
+
 									}
 									new MessageDialog(WorkbenchUtil.getShell(),
 											Messages.BugzillaTaskEditorPage_Changes_Submitted_Titel, null, mes,

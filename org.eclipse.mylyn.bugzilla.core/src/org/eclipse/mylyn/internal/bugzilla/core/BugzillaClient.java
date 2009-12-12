@@ -1975,55 +1975,62 @@ public class BugzillaClient {
 	private void parseResultOK(BufferedReader in, BugzillaRepositoryResponse response) throws IOException,
 			CoreException {
 		HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(in, null);
-
-		boolean isDT = false;
-		String dtString = ""; //$NON-NLS-1$
-		String body = ""; //$NON-NLS-1$
-		String lastDTValue = ""; //$NON-NLS-1$
-		boolean isCode = false;
 		String codeString = ""; //$NON-NLS-1$
+		boolean inBugzillaBody = false;
+		int dlLevel = 0;
+		boolean isDT = false;
+		boolean isCODE = false;
+		String dt1 = ""; //$NON-NLS-1$
+		String dt2 = ""; //$NON-NLS-1$
 		try {
 			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
-				body += token.toString();
-				if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == Tag.DT
-						&& ((HtmlTag) (token.getValue())).isEndTag()) {
-					isDT = false;
-					if (!dtString.equals("")) { //$NON-NLS-1$
-						lastDTValue = dtString;
-					}
-					dtString = ""; //$NON-NLS-1$
-					continue;
-				}
-				if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == Tag.CODE
-						&& ((HtmlTag) (token.getValue())).isEndTag()) {
-					isCode = false;
-					if (codeString.length() > 0) {
-						codeString = codeString.replace("&#64;", "@"); //$NON-NLS-1$ //$NON-NLS-2$
-						response.addResponseData(lastDTValue, codeString);
-					}
-					dtString = ""; //$NON-NLS-1$
-					codeString = ""; //$NON-NLS-1$
-					continue;
-				}
-				if (isCode) {
-					codeString += (" " + token.getValue()); //$NON-NLS-1$
-				}
-				if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == Tag.CODE
-						&& !((HtmlTag) (token.getValue())).isEndTag()) {
-					isCode = true;
-					codeString = ""; //$NON-NLS-1$
-				}
-				if (isDT) {
-					if (dtString.length() > 0) {
-						dtString += (" " + token.getValue()); //$NON-NLS-1$
+
+				if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == Tag.DIV) {
+					String idValue = ((HtmlTag) (token.getValue())).getAttribute(KEY_ID);
+					if (idValue != null) {
+						inBugzillaBody = idValue.equals("bugzilla-body"); //$NON-NLS-1$
 					} else {
-						dtString += token.getValue();
+						inBugzillaBody = false;
 					}
 				}
-				if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == Tag.DT
-						&& !((HtmlTag) (token.getValue())).isEndTag()) {
-					isDT = true;
-					continue;
+				if (inBugzillaBody) {
+					if (token.getType() == Token.TAG) {
+						if (((HtmlTag) (token.getValue())).getTagType() == Tag.DL) {
+							if (((HtmlTag) (token.getValue())).isEndTag()) {
+								dlLevel--;
+							} else {
+								dlLevel++;
+							}
+						} else if (((HtmlTag) (token.getValue())).getTagType() == Tag.DT) {
+							isDT = !((HtmlTag) (token.getValue())).isEndTag();
+							if (isDT) {
+								if (dlLevel == 1) {
+									dt1 = " "; //$NON-NLS-1$
+								} else if (dlLevel == 2) {
+									dt2 = " "; //$NON-NLS-1$
+								}
+							}
+						} else if (((HtmlTag) (token.getValue())).getTagType() == Tag.CODE) {
+							if (isCODE) {
+								if (codeString.length() > 0) {
+									codeString = codeString.replace("&#64;", "@"); //$NON-NLS-1$ //$NON-NLS-2$
+									response.addResponseData(dt1, dt2, codeString);
+								}
+								codeString = ""; //$NON-NLS-1$
+							}
+							isCODE = !((HtmlTag) (token.getValue())).isEndTag();
+						}
+					} else {
+						if (isDT) {
+							if (dlLevel == 1) {
+								dt1 += (" " + token.getValue()); //$NON-NLS-1$
+							} else if (dlLevel == 2) {
+								dt2 += (" " + token.getValue()); //$NON-NLS-1$
+							}
+						} else if (isCODE) {
+							codeString += ("" + token.getValue()); //$NON-NLS-1$
+						}
+					}
 				}
 			}
 		} catch (ParseException e) {
@@ -2034,5 +2041,4 @@ public class BugzillaClient {
 			in.read();
 		}
 	}
-
 }
