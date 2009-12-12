@@ -247,9 +247,14 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		assertNotNull(links);
 		assertEquals(2, links.length);
 		assertTrue(links[0] instanceof TaskHyperlink);
-		assertEquals(((TaskHyperlink) links[0]).getRepository(), repository1);
 		assertTrue(links[1] instanceof TaskHyperlink);
-		assertEquals(((TaskHyperlink) links[1]).getRepository(), repository2);
+
+		// order of repository is not defined so we must test the two cases
+		if (((TaskHyperlink) links[0]).getRepository() == repository1) {
+			assertEquals(((TaskHyperlink) links[1]).getRepository(), repository2);
+		} else {
+			assertEquals(((TaskHyperlink) links[0]).getRepository(), repository2);
+		}
 	}
 
 	public void testRepositoryInViewTwoRepositoryInManager() {

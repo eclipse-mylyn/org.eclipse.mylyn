@@ -196,6 +196,9 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 			start = m.start() + m.group().indexOf(m.group(TASK_NUM_GROUP));
 		} else {
 			start = m.start();
+			if (m.group().startsWith(" ")) { //$NON-NLS-1$
+				start++;
+			}
 		}
 
 		int end = m.end();
