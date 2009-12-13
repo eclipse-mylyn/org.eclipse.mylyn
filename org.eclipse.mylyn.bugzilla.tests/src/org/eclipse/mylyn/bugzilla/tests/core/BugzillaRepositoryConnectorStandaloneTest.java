@@ -125,9 +125,9 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 		attribute.setValue("2009-09-04 12:00:::01 PDT");
 		assertFalse(connector.hasTaskChanged(repository, task, data));
 
-		// Same times, bogus format (string compare)
-		task.setAttribute(BugzillaAttribute.DELTA_TS.getKey(), "2009-09-04X12:00:::01 PDT");
-		attribute.setValue("2009-09-04 12:00:::01 PDT");
+		// Different times, bogus format (string compare)
+		task.setAttribute(BugzillaAttribute.DELTA_TS.getKey(), "2009-09X-04X12:00:::01 PDT");
+		attribute.setValue("2009-X-03 12:00:::01 PDT");
 		assertTrue(connector.hasTaskChanged(repository, task, data));
 
 	}
