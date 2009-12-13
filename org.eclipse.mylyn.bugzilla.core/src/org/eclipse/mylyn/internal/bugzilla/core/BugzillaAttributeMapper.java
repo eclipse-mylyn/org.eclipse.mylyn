@@ -95,8 +95,8 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 
 		for (String format : dateFormats) {
 			try {
-				SimpleDateFormat simleFormatter = new SimpleDateFormat(format);
-				parsedDate = simleFormatter.parse(dateString);
+				SimpleDateFormat simpleFormatter = new SimpleDateFormat(format);
+				parsedDate = simpleFormatter.parse(dateString);
 				break;
 			} catch (ParseException e) {
 			} catch (NumberFormatException e) {
