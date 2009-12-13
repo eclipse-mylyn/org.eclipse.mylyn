@@ -12,7 +12,6 @@
 package org.eclipse.mylyn.bugzilla.tests;
 
 import java.lang.reflect.Method;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -27,20 +26,14 @@ import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.sync.SubmitTaskJob;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.TaskMapping;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
-import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
-import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
@@ -147,16 +140,6 @@ public class BugzillaRepository32Test extends AbstractBugzillaTest {
 
 	}
 
-//	@Override
-//	protected RepositoryResponse submit(ITask task, TaskData taskData, Set<TaskAttribute> changedAttributes)
-//			throws CoreException {
-//
-//		RepositoryResponse response = connector.getTaskDataHandler().postTaskData(repository, taskData,
-//				changedAttributes, new NullProgressMonitor());
-//		((AbstractTask) task).setSubmitting(true);
-//		return response;
-//	}
-
 	protected void submit(ITask task, TaskDataModel model) throws Exception {
 
 		SubmitJob submitJob = TasksUiInternal.getJobFactory().createSubmitTaskJob(connector, model.getTaskRepository(),
@@ -169,12 +152,12 @@ public class BugzillaRepository32Test extends AbstractBugzillaTest {
 
 	@SuppressWarnings("null")
 	public void testFlags() throws Exception {
-		init32();
 		String taskNumber = "10";
-		ITask task = generateLocalTaskAndDownload(taskNumber);
-		assertNotNull(task);
-		TaskData taskData = TasksUiPlugin.getTaskDataManager().getTaskData(task);
+		TaskData taskData = BugzillaFixture.current().getTask(taskNumber, client);
 		assertNotNull(taskData);
+//		TaskMapper mapper = new TaskMapper(taskData);
+		ITask task = TasksUi.getRepositoryModel().createTask(repository, taskData.getTaskId());
+
 		Collection<TaskAttribute> a = taskData.getRoot().getAttributes().values();
 		TaskAttribute flagA = null;
 		TaskAttribute flagB = null;
@@ -187,16 +170,16 @@ public class BugzillaRepository32Test extends AbstractBugzillaTest {
 		for (TaskAttribute taskAttribute : a) {
 			if (taskAttribute.getId().startsWith("task.common.kind.flag")) {
 				TaskAttribute state = taskAttribute.getAttribute("state");
-				if (state.getMetaData().getLabel().equals("FLAG_A")) {
+				if (state.getMetaData().getLabel().equals("BugFlag1")) {
 					flagA = taskAttribute;
 					stateA = state;
-				} else if (state.getMetaData().getLabel().equals("FLAG_B")) {
+				} else if (state.getMetaData().getLabel().equals("BugFlag2")) {
 					flagB = taskAttribute;
 					stateB = state;
-				} else if (state.getMetaData().getLabel().equals("FLAG_C")) {
+				} else if (state.getMetaData().getLabel().equals("BugFlag3")) {
 					flagC = taskAttribute;
 					stateC = state;
-				} else if (state.getMetaData().getLabel().equals("FLAG_D")) {
+				} else if (state.getMetaData().getLabel().equals("BugFlag4")) {
 					flagD = taskAttribute;
 					stateD = state;
 				}
@@ -216,8 +199,8 @@ public class BugzillaRepository32Test extends AbstractBugzillaTest {
 		assertEquals("flagD is set(wrong precondidion)", " ", stateD.getValue());
 		assertEquals("task.common.kind.flag_type1", flagA.getId());
 		assertEquals("task.common.kind.flag_type2", flagB.getId());
-		assertEquals("task.common.kind.flag_type3", flagC.getId());
-		assertEquals("task.common.kind.flag_type4", flagD.getId());
+		assertEquals("task.common.kind.flag_type5", flagC.getId());
+		assertEquals("task.common.kind.flag_type6", flagD.getId());
 		Map<String, String> optionA = stateA.getOptions();
 		Map<String, String> optionB = stateB.getOptions();
 		Map<String, String> optionC = stateC.getOptions();
@@ -244,7 +227,7 @@ public class BugzillaRepository32Test extends AbstractBugzillaTest {
 		stateC.setValue("?");
 		stateD.setValue("?");
 		TaskAttribute requesteeD = flagD.getAttribute("requestee");
-		requesteeD.setValue("rob.elves@eclipse.org");
+		requesteeD.setValue("guest@mylyn.eclipse.org");
 		changed.add(flagA);
 		changed.add(flagB);
 		changed.add(flagC);
@@ -269,13 +252,13 @@ public class BugzillaRepository32Test extends AbstractBugzillaTest {
 		for (TaskAttribute taskAttribute : a) {
 			if (taskAttribute.getId().startsWith("task.common.kind.flag")) {
 				TaskAttribute state = taskAttribute.getAttribute("state");
-				if (state.getMetaData().getLabel().equals("FLAG_A")) {
+				if (state.getMetaData().getLabel().equals("BugFlag1")) {
 					flagA = taskAttribute;
 					stateA = state;
-				} else if (state.getMetaData().getLabel().equals("FLAG_B")) {
+				} else if (state.getMetaData().getLabel().equals("BugFlag2")) {
 					flagB = taskAttribute;
 					stateB = state;
-				} else if (state.getMetaData().getLabel().equals("FLAG_C")) {
+				} else if (state.getMetaData().getLabel().equals("BugFlag3")) {
 					if (flagC == null) {
 						flagC = taskAttribute;
 						stateC = state;
@@ -283,7 +266,7 @@ public class BugzillaRepository32Test extends AbstractBugzillaTest {
 						flagC2 = taskAttribute;
 						stateC2 = state;
 					}
-				} else if (state.getMetaData().getLabel().equals("FLAG_D")) {
+				} else if (state.getMetaData().getLabel().equals("BugFlag4")) {
 					flagD = taskAttribute;
 					stateD = state;
 				}
@@ -306,7 +289,7 @@ public class BugzillaRepository32Test extends AbstractBugzillaTest {
 		assertEquals("?", stateD.getValue());
 		requesteeD = flagD.getAttribute("requestee");
 		assertNotNull(requesteeD);
-		assertEquals("rob.elves@eclipse.org", requesteeD.getValue());
+		assertEquals("guest@mylyn.eclipse.org", requesteeD.getValue());
 		stateA.setValue(" ");
 		stateB.setValue(" ");
 		stateC.setValue(" ");
@@ -335,13 +318,13 @@ public class BugzillaRepository32Test extends AbstractBugzillaTest {
 		for (TaskAttribute taskAttribute : a) {
 			if (taskAttribute.getId().startsWith("task.common.kind.flag")) {
 				TaskAttribute state = taskAttribute.getAttribute("state");
-				if (state.getMetaData().getLabel().equals("FLAG_A")) {
+				if (state.getMetaData().getLabel().equals("BugFlag1")) {
 					flagA = taskAttribute;
 					stateA = state;
-				} else if (state.getMetaData().getLabel().equals("FLAG_B")) {
+				} else if (state.getMetaData().getLabel().equals("BugFlag2")) {
 					flagB = taskAttribute;
 					stateB = state;
-				} else if (state.getMetaData().getLabel().equals("FLAG_C")) {
+				} else if (state.getMetaData().getLabel().equals("BugFlag3")) {
 					if (flagC == null) {
 						flagC = taskAttribute;
 						stateC = state;
@@ -349,7 +332,7 @@ public class BugzillaRepository32Test extends AbstractBugzillaTest {
 						flagC2 = taskAttribute;
 						stateC2 = state;
 					}
-				} else if (state.getMetaData().getLabel().equals("FLAG_D")) {
+				} else if (state.getMetaData().getLabel().equals("BugFlag4")) {
 					flagD = taskAttribute;
 					stateD = state;
 				}
@@ -375,25 +358,23 @@ public class BugzillaRepository32Test extends AbstractBugzillaTest {
 	}
 
 	public void testCustomAttributes() throws Exception {
-		init32();
 		String taskNumber = "1";
-		ITask task = generateLocalTaskAndDownload(taskNumber);
-		assertNotNull(task);
-		TaskData taskData = TasksUiPlugin.getTaskDataManager().getTaskData(task);
+		TaskData taskData = BugzillaFixture.current().getTask(taskNumber, client);
 		assertNotNull(taskData);
 		TaskMapper mapper = new TaskMapper(taskData);
+		ITask task = TasksUi.getRepositoryModel().createTask(repository, taskData.getTaskId());
 		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
 		assertEquals(taskNumber, taskData.getTaskId());
 
-		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		assertEquals(format1.parse("2008-10-04 15:01"), mapper.getCreationDate());
+//		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+//		assertEquals(format1.parse("2009-09-16 14:11"), mapper.getCreationDate());
 
 		AuthenticationCredentials credentials = repository.getCredentials(AuthenticationType.REPOSITORY);
 		assertNotNull("credentials are null", credentials);
 		assertNotNull("Repositor User not set", credentials.getUserName());
 		assertNotNull("no password for Repository", credentials.getPassword());
 
-		TaskAttribute colorAttribute = mapper.getTaskData().getRoot().getAttribute("cf_colors");
+		TaskAttribute colorAttribute = mapper.getTaskData().getRoot().getAttribute("cf_multiselect");
 		assertNotNull("TaskAttribute Color did not exists", colorAttribute);
 		List<String> theColors = colorAttribute.getValues();
 		assertNotNull(theColors);
@@ -418,16 +399,12 @@ public class BugzillaRepository32Test extends AbstractBugzillaTest {
 			}
 		}
 		changeCollorAndSubmit(task, taskData, colorAttribute, red, green, yellow, blue);
-		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
-		TasksUiInternal.synchronizeTask(connector, task, true, null);
-		TasksUiPlugin.getTaskDataManager().setTaskRead(task, true);
-		assertNotNull(task);
-		taskData = TasksUiPlugin.getTaskDataManager().getTaskData(task);
+		taskData = BugzillaFixture.current().getTask(taskNumber, client);
 		assertNotNull(taskData);
 		mapper = new TaskMapper(taskData);
-		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
+		task = TasksUi.getRepositoryModel().createTask(repository, taskData.getTaskId());
 
-		colorAttribute = mapper.getTaskData().getRoot().getAttribute("cf_colors");
+		colorAttribute = mapper.getTaskData().getRoot().getAttribute("cf_multiselect");
 		assertNotNull("TaskAttribute Color did not exists", colorAttribute);
 		theColors = colorAttribute.getValues();
 		assertNotNull(theColors);
@@ -481,44 +458,23 @@ public class BugzillaRepository32Test extends AbstractBugzillaTest {
 	}
 
 	public void testCustomAttributesNewTask() throws Exception {
-		final TaskMapping taskMappingInit = new TaskMapping() {
-			@Override
-			public String getSummary() {
-				return "The Summary";
-			}
-
-			@Override
-			public String getDescription() {
-				return "The Description";
-			}
-
-			@Override
-			public String getProduct() {
-				return "TestProduct";
-			}
-		};
-
-		TaskRepository taskRepository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND,
-				BugzillaTestConstants.TEST_BUGZILLA_32_URL);
-		TasksUiPlugin.getRepositoryManager().addRepository(taskRepository);
-
-		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-				taskRepository.getConnectorKind());
-		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
-		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(taskRepository);
-		TaskData taskData = new TaskData(mapper, taskRepository.getConnectorKind(), taskRepository.getRepositoryUrl(),
-				"");
-		assertTrue(taskDataHandler.initializeTaskData(taskRepository, taskData, taskMappingInit, null));
+		TaskData taskData = BugzillaFixture.current().createTask(PrivilegeLevel.USER, null, null);
+		assertNotNull(taskData);
+		assertNotNull(taskData.getRoot().getAttribute("token"));
 		TaskAttribute productAttribute = taskData.getRoot().getAttribute(BugzillaAttribute.PRODUCT.getKey());
 		assertNotNull(productAttribute);
-		assertEquals("TestProduct", productAttribute.getValue());
-		TaskAttribute colorAttribute = taskData.getRoot().getAttribute("cf_colors");
-		assertNotNull(colorAttribute);
-		TaskAttribute planningAttribute = taskData.getRoot().getAttribute("cf_planning");
-		assertNotNull(planningAttribute);
-		TaskAttribute shortstoryAttribute = taskData.getRoot().getAttribute("cf_shortstory");
-		assertNull(shortstoryAttribute);
-		TaskAttribute longstoryAttribute = taskData.getRoot().getAttribute("cf_longstory");
-		assertNull(longstoryAttribute);
+		assertEquals("ManualTest" + "", productAttribute.getValue());
+		TaskAttribute cfAttribute1 = taskData.getRoot().getAttribute("cf_freetext");
+		assertNotNull(cfAttribute1);
+		TaskAttribute cfAttribute2 = taskData.getRoot().getAttribute("cf_dropdown");
+		assertNotNull(cfAttribute2);
+		TaskAttribute cfAttribute3 = taskData.getRoot().getAttribute("cf_largetextbox");
+		assertNotNull(cfAttribute3);
+		TaskAttribute cfAttribute4 = taskData.getRoot().getAttribute("cf_multiselect");
+		assertNotNull(cfAttribute4);
+		TaskAttribute cfAttribute5 = taskData.getRoot().getAttribute("cf_datetime");
+		assertNotNull(cfAttribute5);
+		TaskAttribute cfAttribute6 = taskData.getRoot().getAttribute("cf_bugid");
+		assertNotNull(cfAttribute6);
 	}
 }

@@ -39,6 +39,8 @@ public class BugzillaTestConstants {
 
 	public static final String TEST_BUGZILLA_34_URL = getServerUrl("bugs34");
 
+	public static final String TEST_BUGZILLA_HEAD_URL = getServerUrl("bugshead");
+
 	public static final String TEST_BUGZILLA_LATEST_URL = TEST_BUGZILLA_34_URL;
 
 	private static final String getServerUrl(String version) {

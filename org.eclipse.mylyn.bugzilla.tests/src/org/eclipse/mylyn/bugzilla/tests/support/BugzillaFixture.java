@@ -82,6 +82,9 @@ public class BugzillaFixture extends TestFixture {
 	public static BugzillaFixture BUGS_3_4 = new BugzillaFixture(BugzillaTestConstants.TEST_BUGZILLA_34_URL, //
 			"3.4.1", "");
 
+	public static BugzillaFixture BUGS_HEAD = new BugzillaFixture(BugzillaTestConstants.TEST_BUGZILLA_HEAD_URL, //
+			"3.5.2+", "");
+
 	public static BugzillaFixture DEFAULT = BUGS_3_4;
 
 	public static final BugzillaFixture[] ALL = new BugzillaFixture[] { BUGS_2_20, BUGS_2_22, BUGS_3_0, BUGS_3_2,
@@ -206,7 +209,7 @@ public class BugzillaFixture extends TestFixture {
 	 * @throws Exception
 	 */
 	public TaskData getTask(String id, BugzillaClient client) throws Exception {
-		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+		final AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(repository());
 		final TaskData[] newData = new TaskData[1];
 		client.getTaskData(Collections.singleton(id), new TaskDataCollector() {
@@ -215,6 +218,7 @@ public class BugzillaFixture extends TestFixture {
 				newData[0] = data;
 			}
 		}, mapper, null);
+		taskDataHandler.initializeTaskData(repository(), newData[0], null, null);
 		return newData[0];
 	}
 
