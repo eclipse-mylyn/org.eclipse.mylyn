@@ -2038,7 +2038,6 @@ public class BugzillaClient {
 					RepositoryStatus.ERROR_INTERNAL, "Unable to parse response from " + repositoryUrl.toString() + ".")); //$NON-NLS-1$ //$NON-NLS-2$
 		} finally {
 			in.close();
-			in.read();
 		}
 	}
 }
