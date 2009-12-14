@@ -759,22 +759,19 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		assertTrue(config.getComponents().size() > 0);
 	}
 
-	// FIXME: Time Tracking needs to be enabled on test servers
-	public void testTimeTracker() throws Exception {
-		timeTracker(15, true);
-	}
 
-	/**
-	 * @param enableDeadline
-	 *            bugzilla 218 doesn't support deadlines
-	 */
-	protected void timeTracker(int taskid, boolean enableDeadline) throws Exception {
-		ITask task = generateLocalTaskAndDownload("" + taskid);
+	public void testTimeTracker() throws Exception {
+		boolean enableDeadline = true;
+		TaskData data = BugzillaFixture.current().createTask(PrivilegeLevel.USER, null, null);
+		assertNotNull(data);
+		ITask task = generateLocalTaskAndDownload(data.getTaskId());
 		assertNotNull(task);
+
+		//ITask task = generateLocalTaskAndDownload("" + taskid);
+		//assertNotNull(task);
 		TaskDataModel model = createModel(task);
 		TaskData taskData = model.getTaskData();
 		assertNotNull(taskData);
-		assertEquals(taskid + "", taskData.getTaskId());
 		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
 
 		Set<ITask> tasks = new HashSet<ITask>();
