@@ -50,7 +50,11 @@ public class TaskAttachmentEditorInput extends PlatformObject implements IStorag
 	}
 
 	public String getToolTipText() {
-		return attachment.getUrl();
+		if (attachment.getUrl() != null) {
+			return attachment.getUrl();
+		} else {
+			return getName();
+		}
 	}
 
 	public IStorage getStorage() throws CoreException {
