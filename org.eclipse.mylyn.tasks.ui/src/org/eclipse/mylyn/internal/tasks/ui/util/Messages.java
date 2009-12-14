@@ -55,6 +55,8 @@ public class Messages extends NLS {
 
 	public static String SortKindEntry_Task_ID;
 
+	public static String SortKindEntry_Due_Date;
+
 	public static String SaveAttachmentsAction_directoryDoesntExist;
 
 	public static String SaveAttachmentsAction_directoryDoesntExist0;
