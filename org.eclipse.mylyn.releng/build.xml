@@ -401,12 +401,13 @@
 		<!--<delete dir="${location}" failonerror="false"/>-->
 		<p2.mirror verbose="true">
 			<repository location="${location}" name="Mirror" />
-			<iu id="dependencies.test.feature.group" />
-			<slicingoptions includeFeatures="false"/>
 			<source>
-					<repository location="file://${build.home}/update" />
-					<repository location="${swtbot.site.3.5}" />
+				<repository location="http://download.eclipse.org/tools/mylyn/update/e3.4" />
+				<repository location="http://download.eclipse.org/releases/ganymede" />
 			</source>
+			<iu id="org.eclipse.mylyn_feature.feature.group"/>
+			<iu id="org.eclipse.mylyn.context_feature.feature.group"/>
+			<slicingoptions includeFeatures="false"	followStrict="true"/>
 		</p2.mirror>
 	</target>
 	
