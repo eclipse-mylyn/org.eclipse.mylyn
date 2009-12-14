@@ -154,8 +154,8 @@
 	<target name="copy-to-archive">
 		<property name="dist.dir" value="${dist.home}/update-archive/${version}/${qualifier}" />
 		<copy todir="${dist.dir}/e3.4">
-			<!-- need to use discovery plug-ins from the 3.5 site -->
-			<fileset dir="${build.home}/3.5/standardUpdateSite"/>
+			<!-- need to use discovery plug-ins from the 3.6 site -->
+			<fileset dir="${build.home}/3.6/standardUpdateSite"/>
 		</copy>
 		<copy todir="${dist.dir}/extras">
 			<fileset dir="${build.home}/3.4/extrasUpdateSite"/>
