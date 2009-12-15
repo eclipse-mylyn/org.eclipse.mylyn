@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.cdt.mylyn"
       label="%featureName"
-      version="5.2.1.qualifier"
+      version="5.2.2.qualifier"
       provider-name="%providerName"
       plugin="org.eclipse.mylyn">
 
