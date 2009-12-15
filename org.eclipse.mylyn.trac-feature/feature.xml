@@ -12,7 +12,7 @@
 <feature
       id="org.eclipse.mylyn.trac_feature"
       label="%featureName"
-      version="3.3.1.qualifier"
+      version="3.3.2.qualifier"
       provider-name="%providerName"
       plugin="org.eclipse.mylyn">
 
@@ -53,14 +53,14 @@
          id="org.eclipse.mylyn.trac.ui"
          download-size="0"
          install-size="0"
-         version="3.3.1.qualifier"
+         version="3.3.2.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylyn.trac.core"
          download-size="0"
          install-size="0"
-         version="3.3.1.qualifier"
+         version="3.3.2.qualifier"
          unpack="false"/>
 
    <plugin
