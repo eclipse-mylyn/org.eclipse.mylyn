@@ -52,6 +52,7 @@
 		<delete failonerror="false">
 			<fileset dir="${buildDirectory}/maps" includes="**/mylyn*.map">
 				<exclude name="**/*${baseTarget}.map"/>
+				<exclude name="**/*all.map"/>
 			</fileset>
 		</delete>
 	</target>
