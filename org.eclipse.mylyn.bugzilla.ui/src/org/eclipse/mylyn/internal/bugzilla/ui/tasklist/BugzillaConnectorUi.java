@@ -54,7 +54,7 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 
 	private static final int ATTACHMENT_NUM_GROUP = 6;
 
-	private static final String regexp = "(?:(duplicate of|(\\s|^)+bug|(\\s|^)+task)( ?#? ?)(\\d+))|(?:Created an attachment\\s*\\(id=(\\d+)\\))"; //$NON-NLS-1$
+	private static final String regexp = "(?:(duplicate of|(\\W||^)+bug|(\\W|^)+task)( ?#? ?)(\\d+))|(?:Created an attachment\\s*\\(id=(\\d+)\\))"; //$NON-NLS-1$
 
 	private static final Pattern PATTERN = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
 
@@ -196,8 +196,7 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 			start = m.start() + m.group().indexOf(m.group(TASK_NUM_GROUP));
 		} else {
 			start = m.start();
-			if (m.group().startsWith(" ")) { //$NON-NLS-1$
-				start++;
+			for (int index = 0; index < m.group().length() && !Character.isLetter(m.group().charAt(index)); index++, start++) {
 			}
 		}
 

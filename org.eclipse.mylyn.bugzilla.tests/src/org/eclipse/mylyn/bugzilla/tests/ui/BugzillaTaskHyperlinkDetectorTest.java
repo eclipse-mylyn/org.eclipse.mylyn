@@ -113,6 +113,42 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		shell.dispose();
 	}
 
+	public void testBeginningWithSpecialChars() {
+		for (String format : formats) {
+			String testString = "First line\n:" + format + " is at the beginning";
+			viewer.setDocument(new Document(testString));
+			Region region = new Region(0, testString.length());
+			IHyperlink[] links = detector.detectHyperlinks(viewer, region, false);
+			assertNotNull(links);
+			assertEquals(1, links.length);
+			assertEquals(testString.indexOf(format), links[0].getHyperlinkRegion().getOffset());
+		}
+	}
+
+	public void testBeginningOfSecondLine() {
+		for (String format : formats) {
+			String testString = "First line\n" + format + " is at the beginning";
+			viewer.setDocument(new Document(testString));
+			Region region = new Region(0, testString.length());
+			IHyperlink[] links = detector.detectHyperlinks(viewer, region, false);
+			assertNotNull(links);
+			assertEquals(1, links.length);
+			assertEquals(testString.indexOf(format), links[0].getHyperlinkRegion().getOffset());
+		}
+	}
+
+	public void testBeginningOfSecondLineWithisWhitespace() {
+		for (String format : formats) {
+			String testString = "First line\n \t " + format + " is at the beginning";
+			viewer.setDocument(new Document(testString));
+			Region region = new Region(0, testString.length());
+			IHyperlink[] links = detector.detectHyperlinks(viewer, region, false);
+			assertNotNull(links);
+			assertEquals(1, links.length);
+			assertEquals(testString.indexOf(format), links[0].getHyperlinkRegion().getOffset());
+		}
+	}
+
 	public void testBeginning() {
 		for (String format : formats) {
 			String testString = format + " is at the beginning";
