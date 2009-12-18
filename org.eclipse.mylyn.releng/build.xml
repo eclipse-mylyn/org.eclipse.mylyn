@@ -41,7 +41,7 @@
 
 	<target name="pack-dist-sites" depends="init">
 		<antcall target="pack">
-			<param name="dir" value="${build.home}/3.5/standardUpdateSite"/>
+			<param name="dir" value="${build.home}/3.6/standardUpdateSite"/>
 		</antcall>
 		<antcall target="pack">
 			<param name="dir" value="${build.home}/3.4/extrasUpdateSite"/>
@@ -75,7 +75,7 @@
 
 	<target name="generate-metadata-dist-sites" depends="init">
 		<antcall target="generate-metadata">
-			<param name="dir" value="${build.home}/3.5/standardUpdateSite"/>
+			<param name="dir" value="${build.home}/3.6/standardUpdateSite"/>
 			<param name="name" value="Mylyn Weekly for Eclipse 3.4, 3.5 and 3.6"/>
 		</antcall>
 		<antcall target="generate-metadata">
