@@ -173,15 +173,6 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 		// configure the viewer
 		MarkupSourceViewerConfiguration configuration = createSourceViewerConfiguration(taskRepository, viewer);
 
-		if (JFaceResources.getFontRegistry().hasValueFor(WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_DEFAULT_FONT)) {
-			configuration.setDefaultFont(JFaceResources.getFontRegistry().get(
-					WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_DEFAULT_FONT));
-		}
-		if (JFaceResources.getFontRegistry().hasValueFor(WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_MONOSPACE_FONT)) {
-			configuration.setDefaultMonospaceFont(JFaceResources.getFontRegistry().get(
-					WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_MONOSPACE_FONT));
-		}
-
 		configuration.setMarkupLanguage(markupLanguageCopy);
 		configuration.setShowInTarget(new ShowInTargetBridge(viewer));
 		viewer.configure(configuration);
@@ -264,7 +255,8 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 		private final TaskRepository taskRepository;
 
 		public TaskMarkupSourceViewerConfiguration(IPreferenceStore preferenceStore, TaskRepository taskRepository) {
-			super(preferenceStore);
+			super(preferenceStore, WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_DEFAULT_FONT,
+					WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_MONOSPACE_FONT);
 			this.taskRepository = taskRepository;
 			// filter out the platform URL hyperlink detector since Mylyn contributes one as well.
 			addHyperlinkDetectorDescriptorFilter(new DefaultHyperlinkDetectorDescriptorFilter(

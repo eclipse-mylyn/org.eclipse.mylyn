@@ -341,11 +341,13 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 					if (viewer.getTextWidget().isDisposed()) {
 						return;
 					}
-					viewer.getTextWidget().getDisplay().asyncExec(new Runnable() {
-						public void run() {
-							reloadPreferences();
-						}
-					});
+					if (isFontPreferenceChange(event)) {
+						viewer.getTextWidget().getDisplay().asyncExec(new Runnable() {
+							public void run() {
+								reloadPreferences();
+							}
+						});
+					}
 				}
 			};
 			WikiTextUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(preferencesListener);
@@ -393,6 +395,14 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		((MarkupTokenScanner) sourceViewerConfiguration.getMarkupScanner()).reloadPreferences();
 		sourceViewerConfiguration.initializeDefaultFonts();
 		viewer.invalidateTextPresentation();
+	}
+
+	private boolean isFontPreferenceChange(PropertyChangeEvent event) {
+		if (event.getProperty().equals(sourceViewerConfiguration.getFontPreference())
+				|| event.getProperty().equals(sourceViewerConfiguration.getMonospaceFontPreference())) {
+			return true;
+		}
+		return false;
 	}
 
 	@Override

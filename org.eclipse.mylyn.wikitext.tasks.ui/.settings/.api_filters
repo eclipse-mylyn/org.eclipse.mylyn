@@ -8,6 +8,15 @@
             </message_arguments>
         </filter>
     </resource>
+    <resource path="src/org/eclipse/mylyn/wikitext/tasks/ui/editor/MarkupTaskEditorExtension.java" type="org.eclipse.mylyn.wikitext.tasks.ui.editor.MarkupTaskEditorExtension">
+        <filter id="640712815">
+            <message_arguments>
+                <message_argument value="HtmlViewer"/>
+                <message_argument value="MarkupTaskEditorExtension&lt;MarkupLanguageType&gt;"/>
+                <message_argument value="setStylesheet(Stylesheet)"/>
+            </message_arguments>
+        </filter>
+    </resource>
     <resource path="src/org/eclipse/mylyn/wikitext/tasks/ui/editor/MarkupTaskEditorExtension.java" type="org.eclipse.mylyn.wikitext.tasks.ui.editor.MarkupTaskEditorExtension$TaskMarkupViewerConfiguration">
         <filter id="643842064">
             <message_arguments>

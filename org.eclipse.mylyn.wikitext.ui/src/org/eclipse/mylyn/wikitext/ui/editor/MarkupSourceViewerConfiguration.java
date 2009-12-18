@@ -97,16 +97,41 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 
 	private IShowInTarget showInTarget;
 
-	public MarkupSourceViewerConfiguration(IPreferenceStore preferenceStore) {
+	private String fontPreference;
+
+	private String monospaceFontPreference;
+
+	/**
+	 * @since 1.3
+	 * @param preferenceStore
+	 * @param fontPreference
+	 *            the preference key of the text font
+	 * @param monospaceFontPreference
+	 *            the preference key of the monospace text font
+	 * @see #initializeDefaultFonts()
+	 */
+	public MarkupSourceViewerConfiguration(IPreferenceStore preferenceStore, String textFontPreference,
+			String monospaceFontPreference) {
 		super(preferenceStore);
+		this.fontPreference = textFontPreference;
+		this.monospaceFontPreference = monospaceFontPreference;
 		initializeDefaultFonts();
 	}
 
 	/**
+	 * Initialize with the default font preference keys
+	 */
+	public MarkupSourceViewerConfiguration(IPreferenceStore preferenceStore) {
+		this(preferenceStore, WikiTextUiResources.PREFERENCE_TEXT_FONT, WikiTextUiResources.PREFERENCE_MONOSPACE_FONT);
+	}
+
+	/**
 	 * Initialize default fonts. Causes this to re-read font preferences from the preference store. Calling this method
-	 * should only be necessary if font preferences have changed.
+	 * should only be necessary if font preferences have changed, or if the font preference keys have changed.
 	 * 
 	 * @since 1.3
+	 * @see #getFontPreference()
+	 * @see #getMonospaceFontPreference()
 	 */
 	public void initializeDefaultFonts() {
 		Font defaultFont = null;
@@ -114,8 +139,8 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 		if (WikiTextUiPlugin.getDefault() != null) {
 			IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
 			FontRegistry fontRegistry = themeManager.getCurrentTheme().getFontRegistry();
-			defaultFont = fontRegistry.get(WikiTextUiResources.PREFERENCE_TEXT_FONT);
-			defaultMonospaceFont = fontRegistry.get(WikiTextUiResources.PREFERENCE_MONOSPACE_FONT);
+			defaultFont = fontRegistry.get(fontPreference);
+			defaultMonospaceFont = fontRegistry.get(monospaceFontPreference);
 		}
 		if (defaultFont == null) {
 			// could be the case when running stand-alone
@@ -128,6 +153,46 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 				scanner.resetFonts(defaultFont, defaultMonospaceFont);
 			}
 		}
+	}
+
+	/**
+	 * the font preference key for the text font
+	 * 
+	 * @see #initializeDefaultFonts()
+	 * @since 1.3
+	 */
+	public String getFontPreference() {
+		return fontPreference;
+	}
+
+	/**
+	 * the font preference key for the text font
+	 * 
+	 * @see #initializeDefaultFonts()
+	 * @since 1.3
+	 */
+	public void setFontPreference(String textFontPreference) {
+		this.fontPreference = textFontPreference;
+	}
+
+	/**
+	 * the monospace font preference key for the text font
+	 * 
+	 * @see #initializeDefaultFonts()
+	 * @since 1.3
+	 */
+	public String getMonospaceFontPreference() {
+		return monospaceFontPreference;
+	}
+
+	/**
+	 * the monospace font preference key for the text font
+	 * 
+	 * @see #initializeDefaultFonts()
+	 * @since 1.3
+	 */
+	public void setMonospaceFontPreference(String monospaceFontPreference) {
+		this.monospaceFontPreference = monospaceFontPreference;
 	}
 
 	/**
@@ -356,7 +421,8 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 	}
 
 	/**
-	 * the default font, as used by the {@link #getMarkupScanner() scanner}.
+	 * The default font, as used by the {@link #getMarkupScanner() scanner}. Note that if a preference store is used
+	 * then {@link #setFontPreference(String)} should be used instead.
 	 */
 	public void setDefaultFont(Font defaultFont) {
 		if (defaultFont == null) {
@@ -378,7 +444,8 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 	}
 
 	/**
-	 * the default font for monospace text, as used by the {@link #getMarkupScanner() scanner}.
+	 * the default font for monospace text, as used by the {@link #getMarkupScanner() scanner}. Note that if a
+	 * preference store is used then {@link #setMonospaceFontPreference(String)} should be used instead.
 	 */
 	public void setDefaultMonospaceFont(Font defaultMonospaceFont) {
 		if (this.defaultMonospaceFont != defaultMonospaceFont) {
