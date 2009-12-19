@@ -222,7 +222,7 @@ public class BugzillaClient {
 
 	private GzipGetMethod getConnect(String serverURL, IProgressMonitor monitor) throws IOException, CoreException {
 
-		return connectInternal(serverURL, false, monitor);
+		return connectInternal(serverURL, false, monitor, null);
 
 	}
 
@@ -238,14 +238,14 @@ public class BugzillaClient {
 	 * @throws IOException
 	 * @throws CoreException
 	 */
-	protected GzipGetMethod getConnectGzip(String serverURL, IProgressMonitor monitor) throws IOException,
-			CoreException {
+	protected GzipGetMethod getConnectGzip(String serverURL, IProgressMonitor monitor, String eTagValue)
+			throws IOException, CoreException {
 
-		return connectInternal(serverURL, true, monitor);
+		return connectInternal(serverURL, true, monitor, eTagValue);
 
 	}
 
-	private GzipGetMethod connectInternal(String requestURL, boolean gzip, IProgressMonitor monitor)
+	private GzipGetMethod connectInternal(String requestURL, boolean gzip, IProgressMonitor monitor, String eTagValue)
 			throws IOException, CoreException {
 		monitor = Policy.monitorFor(monitor);
 		hostConfiguration = WebUtil.createHostConfiguration(httpClient, location, monitor);
@@ -262,6 +262,9 @@ public class BugzillaClient {
 			getMethod.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=" //$NON-NLS-1$ //$NON-NLS-2$
 					+ getCharacterEncoding());
 
+			if (eTagValue != null && eTagValue.compareTo("") != 0) { //$NON-NLS-1$
+				getMethod.setRequestHeader("If-None-Match", eTagValue); //$NON-NLS-1$
+			}
 			// Resolves bug#195113
 			httpClient.getParams().setParameter("http.protocol.single-cookie-header", true); //$NON-NLS-1$
 
@@ -287,7 +290,9 @@ public class BugzillaClient {
 			} else {
 				getMethod.getResponseBodyNoop();
 				getMethod.releaseConnection();
-				if (code == HttpURLConnection.HTTP_UNAUTHORIZED || code == HttpURLConnection.HTTP_FORBIDDEN) {
+				if (code == HttpURLConnection.HTTP_NOT_MODIFIED) {
+					throw new CoreException(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN, "Not changed")); //$NON-NLS-1$
+				} else if (code == HttpURLConnection.HTTP_UNAUTHORIZED || code == HttpURLConnection.HTTP_FORBIDDEN) {
 					// login or reauthenticate due to an expired session
 					loggedIn = false;
 					authenticate(monitor);
@@ -488,7 +493,7 @@ public class BugzillaClient {
 						pairs.toArray(new NameValuePair[pairs.size()]), monitor);
 			} catch (RedirectException r) {
 				// Handle one redirect (Bugzilla 3.4 provides a redirect upon query submission via post)
-				postMethod = getConnectGzip(r.getMessage(), monitor);
+				postMethod = getConnectGzip(r.getMessage(), monitor, null);
 			}
 
 			if (postMethod != null && postMethod.getResponseHeader("Content-Type") != null) { //$NON-NLS-1$
@@ -564,13 +569,13 @@ public class BugzillaClient {
 		return null;
 	}
 
-	public RepositoryConfiguration getRepositoryConfiguration(IProgressMonitor monitor) throws IOException,
-			CoreException {
+	public RepositoryConfiguration getRepositoryConfiguration(IProgressMonitor monitor, String eTagValue)
+			throws IOException, CoreException {
 		GzipGetMethod method = null;
 		int attempt = 0;
 		while (attempt < 2) {
 			try {
-				method = getConnectGzip(repositoryUrl + IBugzillaConstants.URL_GET_CONFIG_RDF, monitor);
+				method = getConnectGzip(repositoryUrl + IBugzillaConstants.URL_GET_CONFIG_RDF, monitor, eTagValue);
 				// provide a solution for bug 196056 by allowing a (cached) gzipped configuration to be sent
 				// modified to also accept "application/x-gzip" as results from a 302 redirect to a previously gzipped file.
 				if (method == null) {
@@ -587,6 +592,12 @@ public class BugzillaClient {
 										stream, getCharacterEncoding());
 
 								repositoryConfiguration = configFactory.getConfiguration();
+								Header eTag = method.getResponseHeader("ETag"); //$NON-NLS-1$
+								if (eTag != null) {
+									repositoryConfiguration.setETagValue(eTag.getValue());
+								} else {
+									repositoryConfiguration.setETagValue(null);
+								}
 
 								if (repositoryConfiguration != null) {
 									if (!repositoryConfiguration.getProducts().isEmpty()) {
@@ -628,7 +639,7 @@ public class BugzillaClient {
 	public void getAttachmentData(String attachmentId, OutputStream out, IProgressMonitor monitor) throws IOException,
 			CoreException {
 		String url = repositoryUrl + IBugzillaConstants.URL_GET_ATTACHMENT_DOWNLOAD + attachmentId;
-		GetMethod method = connectInternal(url, false, monitor);//getConnectGzip(url, monitor);
+		GetMethod method = connectInternal(url, false, monitor, null);//getConnectGzip(url, monitor);
 		try {
 			int status = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
 			if (status == HttpStatus.SC_OK) {
@@ -968,7 +979,7 @@ public class BugzillaClient {
 		authenticate(new SubProgressMonitor(monitor, 1));
 
 		if (repositoryConfiguration == null) {
-			getRepositoryConfiguration(new SubProgressMonitor(monitor, 1));
+			getRepositoryConfiguration(new SubProgressMonitor(monitor, 1), null);
 			connector.addRepositoryConfiguration(repositoryConfiguration);
 		}
 
@@ -1673,7 +1684,7 @@ public class BugzillaClient {
 		GzipGetMethod method = null;
 		try {
 			String url = repositoryUrl + IBugzillaConstants.SHOW_ACTIVITY + taskId;
-			method = getConnectGzip(url, monitor);
+			method = getConnectGzip(url, monitor, null);
 			if (method != null) {
 				InputStream in = getResponseStream(method, monitor);
 				try {
@@ -1708,7 +1719,7 @@ public class BugzillaClient {
 			final IProgressMonitor monitor) throws IOException, CoreException {
 
 		if (repositoryConfiguration == null) {
-			getRepositoryConfiguration(new SubProgressMonitor(monitor, 1));
+			getRepositoryConfiguration(new SubProgressMonitor(monitor, 1), null);
 			connector.addRepositoryConfiguration(repositoryConfiguration);
 		}
 

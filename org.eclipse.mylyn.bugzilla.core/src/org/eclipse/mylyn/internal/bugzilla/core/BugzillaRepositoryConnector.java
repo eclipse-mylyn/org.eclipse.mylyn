@@ -47,6 +47,7 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
@@ -713,8 +714,12 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 					// check if another thread already retrieved configuration
 					configuration = repositoryConfigurations.get(repository.getRepositoryUrl());
 					if (configuration == null || forceRefresh) {
+						String eTag = null;
+						if (configuration != null) {
+							eTag = configuration.getETagValue();
+						}
 						BugzillaClient client = clientManager.getClient(repository, monitor);
-						configuration = client.getRepositoryConfiguration(monitor);
+						configuration = client.getRepositoryConfiguration(monitor, eTag);
 						if (configuration != null) {
 							internalAddConfiguration(configuration);
 						}
@@ -725,7 +730,20 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		} catch (IOException e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, 1,
 					"Error retrieving task attributes from repository.\n\n" + e.getMessage(), e)); //$NON-NLS-1$
+		} catch (CoreException e) {
+			// TODO: handle exception
+			if (e.getMessage().equals("Not changed")) {
+				RepositoryConfiguration configuration = repositoryConfigurations.get(repository.getRepositoryUrl());
+				if (configuration == null) {
+					throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+							RepositoryStatus.ERROR_INTERNAL, "Get not changed (304) for "
+									+ repository.getRepositoryUrl().toString() + " but we have no valid configuration")); //$NON-NLS-1$
+
+				}
+				return configuration;
+			}
 		}
+		return null;
 	}
 
 	public void addRepositoryConfiguration(RepositoryConfiguration config) {
