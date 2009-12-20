@@ -48,6 +48,10 @@ public class TaskAttributeMetaData {
 		return this;
 	}
 
+	/**
+	 * @deprecated not use, see {@link #setDefaultOption(String)}
+	 */
+	@Deprecated
 	public String getDefaultOption() {
 		return taskAttribute.getMetaDatum(TaskAttribute.META_DEFAULT_OPTION);
 	}
@@ -89,6 +93,16 @@ public class TaskAttributeMetaData {
 		return this;
 	}
 
+	/**
+	 * The default option property is not used. Connectors are expected to set default values in
+	 * {@link AbstractTaskDataHandler#initializeTaskData(org.eclipse.mylyn.tasks.core.TaskRepository, TaskData, org.eclipse.mylyn.tasks.core.ITaskMapping, org.eclipse.core.runtime.IProgressMonitor)}
+	 * .
+	 * 
+	 * @deprecated Not used, set default value in
+	 *             {@link AbstractTaskDataHandler#initializeTaskData(org.eclipse.mylyn.tasks.core.TaskRepository, TaskData, org.eclipse.mylyn.tasks.core.ITaskMapping, org.eclipse.core.runtime.IProgressMonitor)}
+	 *             instead.
+	 */
+	@Deprecated
 	public TaskAttributeMetaData setDefaultOption(String defaultOption) {
 		if (defaultOption != null) {
 			taskAttribute.putMetaDatum(TaskAttribute.META_DEFAULT_OPTION, defaultOption);

@@ -104,6 +104,10 @@ public class TaskAttributeMapper {
 		return null;
 	}
 
+	/**
+	 * @deprecated Not used, see {@link TaskAttributeMetaData#setDefaultOption(String)}
+	 */
+	@Deprecated
 	public String getDefaultOption(TaskAttribute taskAttribute) {
 		return taskAttribute.getMetaData().getDefaultOption();
 	}
