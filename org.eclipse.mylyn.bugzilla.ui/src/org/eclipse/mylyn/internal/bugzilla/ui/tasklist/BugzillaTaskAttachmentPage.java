@@ -14,6 +14,8 @@ package org.eclipse.mylyn.internal.bugzilla.ui.tasklist;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaFlag;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaFlagMapper;
@@ -32,14 +34,13 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.forms.events.ExpansionAdapter;
-import org.eclipse.ui.forms.events.ExpansionEvent;
-import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
 
 /**
  * @author Frank Becker
@@ -50,18 +51,12 @@ public class BugzillaTaskAttachmentPage extends TaskAttachmentPage {
 
 	private final FormToolkit toolkit;
 
-	private ExpandableComposite flagExpandComposite = null;
-
-	private Composite scrollComposite;
-
 	public BugzillaTaskAttachmentPage(TaskAttachmentModel model) {
 		super(model);
 		toolkit = new FormToolkit(Display.getCurrent());
 	}
 
-	@Override
-	public void createControl(Composite parent) {
-		super.createControl(parent);
+	public void createFlagTab(Composite composite) {
 		BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) TasksUi.getRepositoryConnector(getModel().getTaskRepository()
 				.getConnectorKind());
 		RepositoryConfiguration configuration = connector.getRepositoryConfiguration(getModel().getTaskRepository()
@@ -72,8 +67,6 @@ public class BugzillaTaskAttachmentPage extends TaskAttachmentPage {
 					BugzillaAttribute.PRODUCT.getKey());
 			TaskAttribute componentAttribute = getModel().getAttribute().getTaskData().getRoot().getMappedAttribute(
 					BugzillaAttribute.COMPONENT.getKey());
-			Control[] children = parent.getChildren();
-			Composite pageComposite = (Composite) children[children.length - 1];
 			Composite flagComposite = null;
 			for (BugzillaFlag bugzillaFlag : flags) {
 				if (bugzillaFlag.getType().equals("bug")) { //$NON-NLS-1$
@@ -84,7 +77,7 @@ public class BugzillaTaskAttachmentPage extends TaskAttachmentPage {
 				}
 
 				if (flagComposite == null) {
-					flagComposite = createFlagSection(pageComposite);
+					flagComposite = createFlagSection(composite);
 				}
 				BugzillaFlagMapper mapper = new BugzillaFlagMapper(connector);
 				mapper.setRequestee(""); //$NON-NLS-1$
@@ -110,7 +103,9 @@ public class BugzillaTaskAttachmentPage extends TaskAttachmentPage {
 				if (bugzillaFlag.isRequestable() && bugzillaFlag.isSpecifically_requestable()) {
 					flagState.setLayoutData(new GridData(SWT.DEFAULT, SWT.DEFAULT, false, false, 1, 1));
 					final Text requesteeText = new Text(flagComposite, SWT.BORDER);
-					requesteeText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
+					GridData gd = new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1);
+					gd.widthHint = 40;
+					requesteeText.setLayoutData(gd);
 					requesteeText.setEditable(false);
 					requesteeText.addModifyListener(new ModifyListener() {
 						public void modifyText(ModifyEvent e) {
@@ -155,27 +150,59 @@ public class BugzillaTaskAttachmentPage extends TaskAttachmentPage {
 		}
 	}
 
-	private Composite createFlagSection(Composite container) {
-		flagExpandComposite = toolkit.createExpandableComposite(container, ExpandableComposite.COMPACT
-				| ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR);
-		flagExpandComposite.setFont(container.getFont());
-		flagExpandComposite.setBackground(container.getBackground());
-		flagExpandComposite.setText(Messages.BugzillaTaskAttachmentPage_flags);
-		flagExpandComposite.setLayout(new GridLayout(3, false));
+	@Override
+	protected void createAdditionalControls(Composite composite) {
+
+		TabFolder tabFolder = new TabFolder(composite, SWT.NONE);
+		GridLayout layout = new GridLayout(3, false);
 		GridData g = new GridData(GridData.FILL_HORIZONTAL);
 		g.horizontalSpan = 3;
-		flagExpandComposite.setLayoutData(g);
-		flagExpandComposite.addExpansionListener(new ExpansionAdapter() {
-			@Override
-			public void expansionStateChanged(ExpansionEvent e) {
-				getControl().getShell().pack();
-			}
-		});
+		tabFolder.setLayoutData(g);
+		tabFolder.setLayout(layout);
 
-		scrollComposite = new Composite(flagExpandComposite, SWT.NONE);
-		scrollComposite.setLayout(new GridLayout(3, false));
-		flagExpandComposite.setClient(scrollComposite);
-		return scrollComposite;
+		Composite generalTab = new Composite(tabFolder, SWT.NULL);
+		generalTab.setLayout(new GridLayout(3, false));
+		generalTab.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		Dialog.applyDialogFont(generalTab);
+		createContentControls(generalTab);
+		TabItem item = new TabItem(tabFolder, SWT.NONE);
+		item.setText("General"); //$NON-NLS-1$
+		item.setControl(generalTab);
+
+		Composite flagTab = new Composite(tabFolder, SWT.NULL);
+		flagTab.setLayout(new GridLayout(3, false));
+		flagTab.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		Dialog.applyDialogFont(flagTab);
+		createFlagTab(flagTab);
+		item = new TabItem(tabFolder, SWT.NONE);
+		item.setText("Flags"); //$NON-NLS-1$
+		item.setControl(flagTab);
+	}
+
+	private Composite createFlagSection(Composite container) {
+		ScrolledForm scrollComposite1 = new ScrolledForm(container, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER);
+		scrollComposite1.setExpandHorizontal(true);
+		scrollComposite1.setExpandVertical(true);
+		scrollComposite1.setBackground(container.getBackground());
+		scrollComposite1.setForeground(container.getForeground());
+		scrollComposite1.setFont(JFaceResources.getHeaderFont());
+		GridData g0 = new GridData(GridData.FILL_HORIZONTAL);
+		g0.heightHint = 75;
+		g0.widthHint = 100;
+		g0.verticalIndent = -5;
+		scrollComposite1.setLayoutData(g0);
+
+		toolkit.paintBordersFor(scrollComposite1);
+		scrollComposite1.getBody().setLayout(new GridLayout());
+		Composite scrolledComposite = scrollComposite1.getBody();
+		scrolledComposite.setFont(container.getFont());
+		scrolledComposite.setBackground(container.getBackground());
+		scrolledComposite.setLayout(new GridLayout(3, false));
+		GridData g1 = new GridData(GridData.FILL_HORIZONTAL);
+		g1.heightHint = 300;
+		g1.widthHint = 100;
+		scrolledComposite.setLayoutData(g1);
+		return scrolledComposite;
 	}
 
 	@Override
