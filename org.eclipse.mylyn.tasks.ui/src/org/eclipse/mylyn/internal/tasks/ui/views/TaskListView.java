@@ -584,6 +584,14 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		}
 	};
 
+	private final IPropertyChangeListener tasksUiPreferenceListener = new IPropertyChangeListener() {
+		public void propertyChange(PropertyChangeEvent event) {
+			if (ITasksUiPreferenceConstants.TASK_LIST_TOOL_TIPS_ENABLED.equals(event.getProperty())) {
+				updateTooltipEnablement();
+			}
+		}
+	};
+
 	private TaskListToolTip taskListToolTip;
 
 	private void configureGradientColors() {
@@ -670,6 +678,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 	@Override
 	public void dispose() {
 		super.dispose();
+		TasksUiPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(tasksUiPreferenceListener);
 		TasksUiInternal.getTaskList().removeChangeListener(TASKLIST_CHANGE_LISTENER);
 		TasksUiPlugin.getTaskActivityManager().removeActivityListener(TASK_ACTIVITY_LISTENER);
 		TasksUiPlugin.getTaskActivityManager().removeActivationListener(TASK_ACTIVATION_LISTENER);
@@ -856,10 +865,11 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 		filteredTree = new TaskListFilteredTree(parent, SWT.MULTI | SWT.VERTICAL | /* SWT.H_SCROLL | */SWT.V_SCROLL
 				| SWT.NO_SCROLL | SWT.FULL_SELECTION, new SubstringPatternFilter(), getViewSite().getWorkbenchWindow());
-		// Set to empty string to disable native tooltips (windows only?)
-		// bug#160897
-		// http://dev.eclipse.org/newslists/news.eclipse.platform.swt/msg29614.html
-		getViewer().getTree().setToolTipText(""); //$NON-NLS-1$
+
+		// need to do initialize tooltip early for native tooltip disablement to take effect
+		taskListToolTip = new TaskListToolTip(getViewer().getControl());
+		updateTooltipEnablement();
+
 		getSite().registerContextMenu(TasksUiInternal.ID_MENU_ACTIVE_TASK, filteredTree.getActiveTaskMenuManager(),
 				selectionProvider);
 		filteredTree.setActiveTaskSelectionProvider(selectionProvider);
@@ -987,8 +997,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 			}
 		});
 
-		taskListToolTip = new TaskListToolTip(getViewer().getControl());
-
 		// update tooltip contents
 		getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
@@ -1032,6 +1040,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		TasksUiPlugin.getTaskActivityManager().addActivityListener(TASK_ACTIVITY_LISTENER);
 		TasksUiPlugin.getTaskActivityManager().addActivationListener(TASK_ACTIVATION_LISTENER);
 		TasksUiInternal.getTaskList().addChangeListener(TASKLIST_CHANGE_LISTENER);
+
+		TasksUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(tasksUiPreferenceListener);
 
 		// Need to do this because the page, which holds the active working set is not around on creation, see bug 203179
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().addPageListener(PAGE_LISTENER);
@@ -1673,6 +1683,20 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 			return true;
 		}
 		return false;
+	}
+
+	private void updateTooltipEnablement() {
+		// Set to empty string to disable native tooltips (windows only?)
+		// bug#160897
+		// http://dev.eclipse.org/newslists/news.eclipse.platform.swt/msg29614.html
+		if (taskListToolTip != null) {
+			boolean enabled = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
+					ITasksUiPreferenceConstants.TASK_LIST_TOOL_TIPS_ENABLED);
+			taskListToolTip.setEnabled(enabled);
+			if (getViewer().getTree() != null && !getViewer().getTree().isDisposed()) {
+				getViewer().getTree().setToolTipText((enabled) ? "" : null); //$NON-NLS-1$
+			}
+		}
 	}
 
 }

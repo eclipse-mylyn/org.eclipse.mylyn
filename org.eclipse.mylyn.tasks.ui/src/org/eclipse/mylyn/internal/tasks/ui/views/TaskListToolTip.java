@@ -108,9 +108,12 @@ public class TaskListToolTip extends GradientToolTip {
 
 	private final Color titleColor;
 
+	private boolean enabled;
+
 	public TaskListToolTip(Control control) {
 		super(control);
 		this.control = control;
+		setEnabled(true);
 		setShift(new Point(1, 1));
 		titleColor = TasksUiPlugin.getDefault().getFormColors(control.getDisplay()).getColor(IFormColors.TITLE);
 	}
@@ -419,9 +422,7 @@ public class TaskListToolTip extends GradientToolTip {
 	protected boolean shouldCreateToolTip(Event event) {
 		currentTipElement = null;
 
-		if (isTriggeredByMouse()
-				&& !TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-						ITasksUiPreferenceConstants.TASK_LIST_TOOL_TIPS_ENABLED)) {
+		if (isTriggeredByMouse() && !enabled) {
 			return false;
 		}
 
@@ -659,6 +660,14 @@ public class TaskListToolTip extends GradientToolTip {
 	public void show(Point location) {
 		triggeredByMouse = false;
 		super.show(location);
+	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 
 }
