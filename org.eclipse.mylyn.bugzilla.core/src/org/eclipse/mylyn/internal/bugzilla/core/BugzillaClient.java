@@ -226,6 +226,11 @@ public class BugzillaClient {
 
 	}
 
+	protected GzipGetMethod getConnectGzip(String serverURL, IProgressMonitor monitor) throws IOException,
+			CoreException {
+		return getConnectGzip(serverURL, monitor, null);
+	}
+
 	/**
 	 * in order to provide an even better solution for bug 196056 the size of the bugzilla configuration downloaded must
 	 * be reduced. By using a cached version of the config.cgi this can reduce traffic considerably:
@@ -567,6 +572,11 @@ public class BugzillaClient {
 			}
 		}
 		return null;
+	}
+
+	public RepositoryConfiguration getRepositoryConfiguration(IProgressMonitor monitor) throws IOException,
+			CoreException {
+		return getRepositoryConfiguration(monitor, null);
 	}
 
 	public RepositoryConfiguration getRepositoryConfiguration(IProgressMonitor monitor, String eTagValue)
