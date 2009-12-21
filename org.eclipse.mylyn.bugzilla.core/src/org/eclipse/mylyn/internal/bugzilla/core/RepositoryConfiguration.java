@@ -32,9 +32,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskOperation;
  */
 public class RepositoryConfiguration implements Serializable {
 
-// old value	private static final long serialVersionUID = -1162588743524741054L;
-
-	private static final long serialVersionUID = -8613880375001813008L;
+	private static final long serialVersionUID = -1162588743524741054L;
 
 	private String repositoryUrl = "<unknown>"; //$NON-NLS-1$
 

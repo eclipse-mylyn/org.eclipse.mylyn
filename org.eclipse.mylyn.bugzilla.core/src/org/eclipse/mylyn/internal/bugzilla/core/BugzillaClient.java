@@ -574,6 +574,7 @@ public class BugzillaClient {
 		return null;
 	}
 
+	@Deprecated
 	public RepositoryConfiguration getRepositoryConfiguration(IProgressMonitor monitor) throws IOException,
 			CoreException {
 		return getRepositoryConfiguration(monitor, null);
