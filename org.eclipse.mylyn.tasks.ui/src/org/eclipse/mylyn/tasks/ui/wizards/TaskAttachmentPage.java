@@ -146,31 +146,6 @@ public class TaskAttachmentPage extends WizardPage {
 			textSupport.install(commentEditor.getViewer(), true);
 		}
 
-		createAdditionalControls(composite);
-
-		validate();
-		setErrorMessage(null);
-
-		if (descriptionText != null) {
-			descriptionText.setFocus();
-		} else {
-			commentEditor.getControl().setFocus();
-		}
-
-		Dialog.applyDialogFont(composite);
-	}
-
-	/**
-	 * @since 3.3
-	 */
-	protected void createAdditionalControls(Composite composite) {
-		createContentControls(composite);
-	}
-
-	/**
-	 * @since 3.3
-	 */
-	protected void createContentControls(Composite composite) {
 		new Label(composite, SWT.NONE).setText(Messages.TaskAttachmentPage_Content_Type);// .setBackground(parent.getBackground());
 
 		contentTypeList = new Combo(composite, SWT.BORDER | SWT.DROP_DOWN | SWT.READ_ONLY);
@@ -256,6 +231,17 @@ public class TaskAttachmentPage extends WizardPage {
 				validate();
 			}
 		});
+
+		validate();
+		setErrorMessage(null);
+
+		if (descriptionText != null) {
+			descriptionText.setFocus();
+		} else {
+			commentEditor.getControl().setFocus();
+		}
+
+		Dialog.applyDialogFont(composite);
 	}
 
 	private void validate() {
