@@ -1,15 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><!--
-    Copyright (c) 2009 Tasktop Technologies and others.
-    All rights reserved. This program and the accompanying materials
-    are made available under the terms of the Eclipse Public License v1.0
-    which accompanies this distribution, and is available at
-    http://www.eclipse.org/legal/epl-v10.html
-   
-    Contributors:
-         Tasktop Technologies - initial API and implementation
- -->
-
-<site pack200="true">
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
    <description url="http://download.eclipse.org/tools/mylyn/update/weekly/incubator">
       Mylyn Incubator Features
    </description>
@@ -26,14 +16,14 @@
       <category name="Incubator"/>
    </feature>
    <feature url="features/org.eclipse.mylyn.experimental_sdk_feature_@core@.jar" id="org.eclipse.mylyn.experimental_sdk_feature" version="@core@">
-      <category name="SDK"/>
+      <category name="SDKIncubator"/>
    </feature>
    <category-def name="Incubator" label="Mylyn Incubator">
       <description>
          Mylyn bridges that integrate with documents and programming languages. Mylyn connectors that integrate with task repositories.
       </description>
    </category-def>
-   <category-def name="SDK" label="Mylyn Plug-in Development">
+   <category-def name="SDKIncubator" label="Mylyn Plug-in Development">
       <description>
          Source code and documentation for integrators building on Mylyn.
       </description>
