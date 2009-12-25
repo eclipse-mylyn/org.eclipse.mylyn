@@ -37,7 +37,7 @@ public final class TaskHyperlink implements IHyperlink {
 	public TaskHyperlink(IRegion region, TaskRepository repository, String taskId) {
 		this.region = region;
 		this.repository = repository;
-		// remove leading blanks
+		// remove leading zeros
 		while (taskId.startsWith("0")) {
 			taskId = taskId.substring(1);
 		}
