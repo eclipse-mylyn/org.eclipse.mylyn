@@ -1746,7 +1746,12 @@ public class BugzillaClient {
 				Set<String> idsToRetrieve = new HashSet<String>();
 				Iterator<String> itr = taskIds.iterator();
 				for (int x = 0; itr.hasNext() && x < MAX_RETRIEVED_PER_QUERY; x++) {
-					idsToRetrieve.add(itr.next());
+					String taskId = itr.next();
+					// remove leading zeros
+					while (taskId.startsWith("0")) { //$NON-NLS-1$
+						taskId = taskId.substring(1);
+					}
+					idsToRetrieve.add(taskId);
 				}
 
 				NameValuePair[] formData = new NameValuePair[idsToRetrieve.size() + 2];
