@@ -182,6 +182,14 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 					throw new TracException(e);
 				}
 			} catch (XmlRpcException e) {
+				// XXX work-around for http://trac-hacks.org/ticket/5848 
+				if ("XML_RPC privileges are required to perform this operation".equals(e.getMessage())) { //$NON-NLS-1$
+					if (DEBUG_AUTH) {
+						System.err.println(location.getUrl() + ": Forbidden (" + e.code + ")"); //$NON-NLS-1$ //$NON-NLS-2$ 
+					}
+					digestScheme = null;
+					throw new TracPermissionDeniedException();
+				}
 				if (e.code == NO_SUCH_METHOD_ERROR) {
 					throw new TracNoSuchMethodException(e);
 				} else {
