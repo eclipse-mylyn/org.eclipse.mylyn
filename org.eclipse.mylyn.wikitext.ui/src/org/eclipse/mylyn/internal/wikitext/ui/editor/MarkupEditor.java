@@ -533,7 +533,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 					MarkupParser markupParser = new MarkupParser();
 
 					IFile file = getFile();
-					String title = file.getName();
+					String title = file == null ? "" : file.getName(); //$NON-NLS-1$
 					if (title.lastIndexOf('.') != -1) {
 						title = title.substring(0, title.lastIndexOf('.'));
 					}
@@ -552,7 +552,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 					};
 					builder.setTitle(title);
 
-					IPath location = file.getLocation();
+					IPath location = file == null ? null : file.getLocation();
 					if (location != null) {
 						builder.setBaseInHead(true);
 						builder.setBase(location.removeLastSegments(1).toFile().toURI());
