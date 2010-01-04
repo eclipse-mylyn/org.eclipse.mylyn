@@ -477,4 +477,15 @@ public class BugzillaRepository32Test extends AbstractBugzillaTest {
 		TaskAttribute cfAttribute6 = taskData.getRoot().getAttribute("cf_bugid");
 		assertNotNull(cfAttribute6);
 	}
+
+	public void testLeadingZeros() throws Exception {
+		String taskNumber = "0010";
+		TaskData taskData = BugzillaFixture.current().getTask(taskNumber, client);
+		assertNotNull(taskData);
+//		ITask task = TasksUi.getRepositoryModel().createTask(repository, taskData.getTaskId());
+		assertNotNull(taskData);
+		TaskAttribute idAttribute = taskData.getRoot().getAttribute(BugzillaAttribute.BUG_ID.getKey());
+		assertNotNull(idAttribute);
+		assertEquals("10", idAttribute.getValue());
+	}
 }
