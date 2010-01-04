@@ -18,6 +18,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
 
 /**
  * @author Frank Becker
@@ -33,6 +34,7 @@ public class BugzillaRepositoryConnectorConfigurationTest extends TestCase {
 
 	@Override
 	public void setUp() throws Exception {
+		BugzillaFixture.current().client(PrivilegeLevel.USER);
 		repository = BugzillaFixture.current().repository();
 		connector = BugzillaFixture.current().connector();
 	}
@@ -41,7 +43,7 @@ public class BugzillaRepositoryConnectorConfigurationTest extends TestCase {
 		RepositoryConfiguration config = connector.getRepositoryConfiguration(repository, true, null);
 		assertNotNull(config);
 		String eTag = config.getETagValue();
-		if (config.getInstallVersion().isSmallerOrEquals(BUGZILLA_3_5)) {
+		if (config.getInstallVersion().compareTo(BUGZILLA_3_5) < 0) {
 			// older Bugzilla versions do not support the eTag
 			assertNull(eTag);
 
