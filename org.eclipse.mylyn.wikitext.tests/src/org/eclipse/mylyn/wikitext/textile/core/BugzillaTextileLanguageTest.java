@@ -155,6 +155,16 @@ public class BugzillaTextileLanguageTest extends TestCase {
 		assertFalse(canStart);
 	}
 
+	public void testJavaStackTraceDetection_bug298781() {
+		// bug 298781 <clinit> not detected correctly
+		String markup = "java.io.EOFException\nat java.io.DataInputStream.readInt(Unknown Source)\nat org.eclipse.jdt.internal.core.JavaModelManager.loadNonChainingJarsCache(JavaModelManager.java:2843)\nat org.eclipse.jdt.internal.core.JavaModelManager.<init>(JavaModelManager.java:1477)\nat org.eclipse.jdt.internal.core.JavaModelManager.<clinit>(JavaModelManager.java:1012)\nat org.eclipse.jdt.core.JavaCore.start(JavaCore.java:4965)\nat org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:783)\nat java.security.AccessController.doPrivileged(Native Method)";
+		String html = parser.parseToHtml(markup);
+
+		System.out.println(html);
+
+		assertTrue(html.contains("<pre class=\"javaStackTrace\">java.io.EOFException\nat java.io.DataInputStream.readInt(Unknown Source)\nat org.eclipse.jdt.internal.core.JavaModelManager.loadNonChainingJarsCache(JavaModelManager.java:2843)\nat org.eclipse.jdt.internal.core.JavaModelManager.&lt;init>(JavaModelManager.java:1477)\nat org.eclipse.jdt.internal.core.JavaModelManager.&lt;clinit>(JavaModelManager.java:1012)\nat org.eclipse.jdt.core.JavaCore.start(JavaCore.java:4965)\nat org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:783)\nat java.security.AccessController.doPrivileged(Native Method)\n</pre>"));
+	}
+
 	public void testEclipseErrorDetailsBlock() {
 		String html = parser.parseToHtml("text\n-- Error Details --\ndetail line 1\n\nno detail");
 		System.out.println(html);
