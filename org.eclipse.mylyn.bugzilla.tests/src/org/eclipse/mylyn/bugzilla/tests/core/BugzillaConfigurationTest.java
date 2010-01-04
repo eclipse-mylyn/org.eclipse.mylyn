@@ -23,8 +23,6 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.core.SaxConfigurationContentHandler;
 import org.eclipse.mylyn.internal.bugzilla.core.XmlCleaner;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -36,55 +34,6 @@ import org.xml.sax.helpers.XMLReaderFactory;
  * @author Robert Elves
  */
 public class BugzillaConfigurationTest extends TestCase {
-
-	public void testConfigurationWithETag() throws Exception {
-		TaskRepository repository;
-		BugzillaRepositoryConnector connector;
-		BugzillaFixture activeFixture = BugzillaFixture.BUGS_3_2.activate();
-		activeFixture.client(PrivilegeLevel.USER);
-		repository = activeFixture.repository();
-		connector = activeFixture.connector();
-		RepositoryConfiguration config = connector.getRepositoryConfiguration(repository, true, null);
-		assertNotNull(config);
-		String eTag = config.getETagValue();
-		assertNull(eTag);
-		config.setETagValue("wrongETag");
-		config = connector.getRepositoryConfiguration(repository, true, null);
-		assertNotNull(config);
-		String eTagNew = config.getETagValue();
-		assertNull(eTagNew);
-		assertEquals(eTag, eTagNew);
-
-		activeFixture = BugzillaFixture.BUGS_HEAD.activate();
-		activeFixture.client(PrivilegeLevel.USER);
-		repository = activeFixture.repository();
-		connector = activeFixture.connector();
-		config = connector.getRepositoryConfiguration(repository, true, null);
-		assertNotNull(config);
-		eTag = config.getETagValue();
-		assertNotNull(eTag);
-		config.setETagValue("wrongETag");
-		config = connector.getRepositoryConfiguration(repository, true, null);
-		assertNotNull(config);
-		assertNotNull(config.getETagValue());
-		eTagNew = config.getETagValue();
-		assertNotNull(eTagNew);
-		assertEquals(eTag, eTagNew);
-
-		activeFixture = BugzillaFixture.BUGS_3_0.activate();
-		activeFixture.client(PrivilegeLevel.USER);
-		repository = activeFixture.repository();
-		connector = activeFixture.connector();
-		config = connector.getRepositoryConfiguration(repository, true, null);
-		assertNotNull(config);
-		eTag = config.getETagValue();
-		assertNull(eTag);
-		config.setETagValue("wrongETag");
-		config = connector.getRepositoryConfiguration(repository, true, null);
-		assertNotNull(config);
-		eTagNew = config.getETagValue();
-		assertNull(eTagNew);
-	}
 
 	public void testRepositoryConfigurationCachePersistance() throws Exception {
 		File file = File.createTempFile("bugzilla", null);

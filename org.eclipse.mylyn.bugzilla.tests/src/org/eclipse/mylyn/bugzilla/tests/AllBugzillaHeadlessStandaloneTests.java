@@ -16,6 +16,7 @@ import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.bugzilla.tests.core.BugzillaClientTest;
 import org.eclipse.mylyn.bugzilla.tests.core.BugzillaConfigurationTest;
+import org.eclipse.mylyn.bugzilla.tests.core.BugzillaRepositoryConnectorConfigurationTest;
 import org.eclipse.mylyn.bugzilla.tests.core.BugzillaRepositoryConnectorStandaloneTest;
 import org.eclipse.mylyn.bugzilla.tests.core.BugzillaVersionTest;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
@@ -32,10 +33,14 @@ public class AllBugzillaHeadlessStandaloneTests {
 		suite.addTestSuite(BugzillaVersionTest.class);
 		for (BugzillaFixture fixture : BugzillaFixture.ALL) {
 			fixture.createSuite(suite);
-			fixture.add(BugzillaClientTest.class);
-			// XXX: re-enable when webservice is used for retrieval of history
-//			fixture.add(fixtureSuite, BugzillaTaskHistoryTest.class); 
-			fixture.add(BugzillaRepositoryConnectorStandaloneTest.class);
+			// only run certain tests against head to avoid spurious failures 
+			if (fixture != BugzillaFixture.BUGS_HEAD) {
+				fixture.add(BugzillaClientTest.class);
+				// XXX: re-enable when webservice is used for retrieval of history
+				// fixture.add(fixtureSuite, BugzillaTaskHistoryTest.class); 
+				fixture.add(BugzillaRepositoryConnectorStandaloneTest.class);
+			}
+			fixture.add(BugzillaRepositoryConnectorConfigurationTest.class);
 			fixture.done();
 		}
 		return suite;
