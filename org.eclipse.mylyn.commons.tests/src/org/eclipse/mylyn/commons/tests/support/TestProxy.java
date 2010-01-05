@@ -80,6 +80,11 @@ public class TestProxy implements Runnable {
 			this.charset = charset;
 		}
 
+		public String getStatusLine() {
+			int i = request.indexOf("\n");
+			return (i != -1) ? request.substring(0, i) : request;
+		}
+
 		@Override
 		public String toString() {
 			StringBuilder sb = new StringBuilder();
@@ -141,6 +146,8 @@ public class TestProxy implements Runnable {
 	private boolean waitForResponse;
 
 	private boolean closeOnConnect;
+
+	private boolean debugEnabled;
 
 	public TestProxy() {
 		this(0);
@@ -249,6 +256,9 @@ public class TestProxy implements Runnable {
 			}
 
 			if (message == null) {
+				if (isDebugEnabled()) {
+					System.err.println("< " + line);
+				}
 				message = new Message(line);
 			} else {
 				message.headers.add(line);
@@ -346,9 +356,21 @@ public class TestProxy implements Runnable {
 	}
 
 	private void writeMessage(Message message, OutputStream out) throws IOException {
+		if (isDebugEnabled()) {
+			System.err.println("> " + message.getStatusLine());
+		}
+
 		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, message.getCharset()));
 		writer.write(message.toString());
 		writer.flush();
+	}
+
+	public boolean isDebugEnabled() {
+		return debugEnabled;
+	}
+
+	public void setDebugEnabled(boolean debugEnabled) {
+		this.debugEnabled = debugEnabled;
 	}
 
 }
