@@ -291,19 +291,17 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 				}
 			});
 			xmlrpc.setTransportFactory(factory);
-		}
 
-		// update configuration with latest values
-		/*
-		AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
-		config.setServerURL(getXmlRpcUrl(credentials));
-		if (credentialsValid(credentials)) {
-			Credentials creds = WebUtil.getHttpClientCredentials(credentials, WebUtil.getHost(location.getUrl()));
-			httpClient.getState().setCredentials(authScope, creds);
-		} else {
-			httpClient.getState().clearCredentials();
+			// update configuration with latest values
+			AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
+			config.setServerURL(getXmlRpcUrl(credentials));
+			if (credentialsValid(credentials)) {
+				Credentials creds = WebUtil.getHttpClientCredentials(credentials, WebUtil.getHost(location.getUrl()));
+				httpClient.getState().setCredentials(authScope, creds);
+			} else {
+				httpClient.getState().clearCredentials();
+			}
 		}
-		 */
 
 		return xmlrpc;
 	}
