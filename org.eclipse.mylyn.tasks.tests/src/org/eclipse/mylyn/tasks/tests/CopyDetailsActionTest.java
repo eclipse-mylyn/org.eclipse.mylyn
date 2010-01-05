@@ -14,7 +14,6 @@ package org.eclipse.mylyn.tasks.tests;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
-import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 
 /**
@@ -22,29 +21,42 @@ import org.eclipse.mylyn.tasks.tests.connector.MockTask;
  */
 public class CopyDetailsActionTest extends TestCase {
 
-	public void testIdLabelIncluded() {
-		MockRepositoryConnector connector = MockRepositoryConnector.getDefault();
-		String oldPrefix = connector.getTaskIdPrefix();
-		try {
-			MockTask task = new MockTask("123");
-			task.setSummary("abc");
+//	public void testIdLabelIncluded() {
+//		MockRepositoryConnector connector = MockRepositoryConnector.getDefault();
+//		String oldPrefix = connector.getTaskIdPrefix();
+//		try {
+//			MockTask task = new MockTask("123");
+//			task.setSummary("abc");
+//
+//			task.setTaskKey("123");
+//			connector.setTaskIdPrefix("task");
+//			String text = CopyTaskDetailsAction.getTextForTask(task);
+//			//assertEquals("task 123: abc", text);
+//			assertEquals("123: abc", text);
+//
+//			connector.setTaskIdPrefix("#");
+//			assertEquals("#123: abc", CopyTaskDetailsAction.getTextForTask(task));
+//
+//			connector.setTaskIdPrefix("");
+//			assertEquals("123: abc", CopyTaskDetailsAction.getTextForTask(task));
+//
+//			task.setTaskKey(null);
+//			assertEquals("abc", CopyTaskDetailsAction.getTextForTask(task));
+//		} finally {
+//			connector.setTaskIdPrefix(oldPrefix);
+//		}
+//	}
 
-			task.setTaskKey("123");
-			connector.setTaskIdPrefix("task");
-			String text = CopyTaskDetailsAction.getTextForTask(task);
-			assertEquals("task 123: abc", text);
+	public void testGetTextForTask() {
+		MockTask task = new MockTask("123");
+		task.setSummary("abc");
 
-			connector.setTaskIdPrefix("#");
-			assertEquals("#123: abc", CopyTaskDetailsAction.getTextForTask(task));
+		task.setTaskKey("123");
+		String text = CopyTaskDetailsAction.getTextForTask(task);
+		assertEquals("123: abc", text);
 
-			connector.setTaskIdPrefix("");
-			assertEquals("123: abc", CopyTaskDetailsAction.getTextForTask(task));
-
-			task.setTaskKey(null);
-			assertEquals("abc", CopyTaskDetailsAction.getTextForTask(task));
-		} finally {
-			connector.setTaskIdPrefix(oldPrefix);
-		}
+		task.setTaskKey(null);
+		assertEquals("abc", CopyTaskDetailsAction.getTextForTask(task));
 	}
 
 }
