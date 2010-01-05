@@ -294,6 +294,7 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		}
 
 		// update configuration with latest values
+		/*
 		AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
 		config.setServerURL(getXmlRpcUrl(credentials));
 		if (credentialsValid(credentials)) {
@@ -302,6 +303,7 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		} else {
 			httpClient.getState().clearCredentials();
 		}
+		 */
 
 		return xmlrpc;
 	}
