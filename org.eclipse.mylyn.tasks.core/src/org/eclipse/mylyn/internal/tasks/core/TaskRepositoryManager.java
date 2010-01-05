@@ -141,7 +141,7 @@ public class TaskRepositoryManager implements IRepositoryManager {
 	public void removeRepository(final TaskRepository repository) {
 		Set<TaskRepository> repositories = repositoryMap.get(repository.getConnectorKind());
 		if (repositories != null) {
-			repository.flushAuthenticationCredentials();
+			//repository.flushAuthenticationCredentials();
 			repositories.remove(repository);
 		}
 		repository.removeChangeListener(PROPERTY_CHANGE_LISTENER);
