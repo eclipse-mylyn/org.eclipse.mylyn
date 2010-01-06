@@ -94,21 +94,23 @@ public class TaskDataExportTest extends TestCase {
 		wizardPage = (TaskDataExportWizardPage) wizard.getPage("org.eclipse.mylyn.tasklist.exportPage");
 		assertNotNull(wizardPage);
 
+		mylynFolder = new File(TasksUiPlugin.getDefault().getDataDirectory());
+
 		// Clear context directory
 		File contextDirectory = new File(mylynFolder, "contexts");
 		CommonTestUtil.deleteFolder(contextDirectory);
 		contextDirectory.mkdir();
 
 		// Create test export destination directory
-		mylynFolder = new File(TasksUiPlugin.getDefault().getDataDirectory());
 		destinationDir = new File(mylynFolder.getParent(), "TestDir");
 		CommonTestUtil.deleteFolder(destinationDir);
 		createDirectory(destinationDir.getParentFile(), destinationDir.getName());
 
 		// Create folder/file structure
+		createFile(mylynFolder, "monitor-log.xml");
+		createFile(mylynFolder, "my-tasklist.xml.zip");
 		createFile(mylynFolder, "tasks.xml.zip");
 		createFile(mylynFolder, "tasklist.xml.zip");
-		createFile(mylynFolder, "my-tasklist.xml.zip");
 		createFile(mylynFolder, ".hidden");
 
 		createDirectory(mylynFolder, "my-attachments");
@@ -182,4 +184,5 @@ public class TaskDataExportTest extends TestCase {
 		List<String> entries = getEntries(files[0]);
 		assertEquals(Arrays.asList("repositories.xml.zip", "tasks.xml.zip"), entries);
 	}
+
 }
