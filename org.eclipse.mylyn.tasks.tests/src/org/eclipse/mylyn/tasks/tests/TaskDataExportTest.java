@@ -94,6 +94,11 @@ public class TaskDataExportTest extends TestCase {
 		wizardPage = (TaskDataExportWizardPage) wizard.getPage("org.eclipse.mylyn.tasklist.exportPage");
 		assertNotNull(wizardPage);
 
+		// Clear context directory
+		File contextDirectory = new File(mylynFolder, "contexts");
+		CommonTestUtil.deleteFolder(contextDirectory);
+		contextDirectory.mkdir();
+
 		// Create test export destination directory
 		mylynFolder = new File(TasksUiPlugin.getDefault().getDataDirectory());
 		destinationDir = new File(mylynFolder.getParent(), "TestDir");

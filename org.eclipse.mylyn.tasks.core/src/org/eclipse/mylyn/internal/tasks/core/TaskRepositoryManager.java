@@ -30,6 +30,7 @@ import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryDelta.Type;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -141,7 +142,10 @@ public class TaskRepositoryManager implements IRepositoryManager {
 	public void removeRepository(final TaskRepository repository) {
 		Set<TaskRepository> repositories = repositoryMap.get(repository.getConnectorKind());
 		if (repositories != null) {
-			//repository.flushAuthenticationCredentials();
+			if (!CoreUtil.TEST_MODE) {
+				// FIXME 3.4 this is causing Trac tests to fail for an unknown reason
+				repository.flushAuthenticationCredentials();
+			}
 			repositories.remove(repository);
 		}
 		repository.removeChangeListener(PROPERTY_CHANGE_LISTENER);

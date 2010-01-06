@@ -508,8 +508,7 @@ public class TaskListExternalizationTest extends TestCase {
 		ITask readReport = TasksUiPlugin.getTaskList().getTask(repositoryUrl, taskId);
 		assertEquals("Summary", readReport.getSummary());
 		assertEquals(repositoryUrl, readReport.getRepositoryUrl());
-		TasksUiPlugin.getRepositoryManager().removeRepository(repository,
-				TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		TasksUiPlugin.getRepositoryManager().removeRepository(repository);
 	}
 
 	public void testDueDateExternalization() throws Exception {

@@ -258,6 +258,9 @@ public class TracRepositoryConnectorTest extends TestCase {
 	}
 
 	public void testUpdateTaskFromTaskDataSummaryOnly() throws Exception {
+		// XXX avoid failing test due to stale client
+		connector.getClientManager().clearClients();
+
 		TracTicket ticket = new TracTicket(456);
 		ticket.putBuiltinValue(Key.SUMMARY, "mysummary");
 
@@ -271,6 +274,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 		assertEquals("456", task.getTaskKey());
 		assertEquals("mysummary", task.getSummary());
 		assertEquals("P3", task.getPriority());
+		// depending on the access mode createTaskDataFromTicket() creates different default attributes  
 		if (client.getAccessMode() == Version.TRAC_0_9) {
 			assertEquals(AbstractTask.DEFAULT_TASK_KIND, task.getTaskKind());
 		} else {

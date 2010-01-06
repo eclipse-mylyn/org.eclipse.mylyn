@@ -93,6 +93,7 @@ public class TaskDataExternalizerTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		externalizer = new TaskDataExternalizer(null);
+
 	}
 
 	public void testMapFromLegacy() throws Exception {

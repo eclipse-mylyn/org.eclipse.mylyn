@@ -63,8 +63,7 @@ public class NewTaskWizardRepositorySelectionTest extends TestCase {
 		assertTrue(page.getRepositories().contains(mockRepository));
 		assertEquals(mockRepository, ((IStructuredSelection) page.getViewer().getSelection()).getFirstElement());
 
-		TasksUiPlugin.getRepositoryManager().removeRepository(mockRepository,
-				TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		TasksUiPlugin.getRepositoryManager().removeRepository(mockRepository);
 		TasksUiPlugin.getTaskList().deleteTask(mockTask);
 		wizard.dispose();
 		dialog.close();
