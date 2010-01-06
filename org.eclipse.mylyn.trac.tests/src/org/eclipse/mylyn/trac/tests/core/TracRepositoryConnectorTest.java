@@ -72,6 +72,9 @@ public class TracRepositoryConnectorTest extends TestCase {
 		data = TracFixture.init010();
 		connector = (TracRepositoryConnector) TasksUi.getRepositoryConnector(TracCorePlugin.CONNECTOR_KIND);
 		repository = TracFixture.current().singleRepository();
+
+		// XXX avoid failing test due to stale client
+		connector.getClientManager().clearClients();
 	}
 
 	public void testGetRepositoryUrlFromTaskUrl() {
@@ -258,9 +261,6 @@ public class TracRepositoryConnectorTest extends TestCase {
 	}
 
 	public void testUpdateTaskFromTaskDataSummaryOnly() throws Exception {
-		// XXX avoid failing test due to stale client
-		connector.getClientManager().clearClients();
-
 		TracTicket ticket = new TracTicket(456);
 		ticket.putBuiltinValue(Key.SUMMARY, "mysummary");
 
