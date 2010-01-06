@@ -96,10 +96,14 @@ public class TaskDataExportTest extends TestCase {
 
 		mylynFolder = new File(TasksUiPlugin.getDefault().getDataDirectory());
 
-		// Clear context directory
+		// Clear context and tasks directory
 		File contextDirectory = new File(mylynFolder, "contexts");
 		CommonTestUtil.deleteFolder(contextDirectory);
 		contextDirectory.mkdir();
+
+		File tasksDirectory = new File(mylynFolder, "tasks");
+		CommonTestUtil.deleteFolderRecursively(tasksDirectory);
+		tasksDirectory.mkdir();
 
 		// Create test export destination directory
 		destinationDir = new File(mylynFolder.getParent(), "TestDir");
