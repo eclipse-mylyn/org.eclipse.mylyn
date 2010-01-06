@@ -129,6 +129,19 @@ public class CommonTestUtil {
 		}
 	}
 
+	public static void deleteFolderRecursively(File path) {
+		File[] files = path.listFiles();
+		if (files != null) {
+			for (File file : files) {
+				if (file.isDirectory()) {
+					deleteFolderRecursively(file);
+				} else {
+					file.delete();
+				}
+			}
+		}
+	}
+
 	public static File getFile(Object source, String filename) throws IOException {
 		Class<?> clazz = (source instanceof Class<?>) ? (Class<?>) source : source.getClass();
 		if (Platform.isRunning()) {
