@@ -12,14 +12,14 @@ package org.eclipse.mylyn.internal.wikitext.confluence.core.phrase;
 
 import org.eclipse.mylyn.internal.wikitext.confluence.core.util.Options;
 import org.eclipse.mylyn.internal.wikitext.confluence.core.util.Options.Handler;
+import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes.Align;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class ImagePhraseModifier extends PatternBasedElement {
@@ -87,7 +87,17 @@ public class ImagePhraseModifier extends PatternBasedElement {
 					}
 				});
 			}
-			builder.image(attributes, imageUrl);
+			if (attributes.getAlign() == Align.Center) {
+				// bug 293573: confluence centers images using div
+				Attributes divAttributes = new Attributes();
+				divAttributes.setCssStyle("text-align: center;"); //$NON-NLS-1$
+				builder.beginBlock(BlockType.DIV, divAttributes);
+				attributes.setAlign(null);
+				builder.image(attributes, imageUrl);
+				builder.endBlock();
+			} else {
+				builder.image(attributes, imageUrl);
+			}
 		}
 	}
 

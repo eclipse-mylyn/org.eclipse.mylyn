@@ -385,7 +385,17 @@ public class ConfluenceLanguageTest extends TestCase {
 	public void testImageWithAttributesAlignCenter() {
 		String html = parser.parseToHtml("an !image.png|align=center! image");
 		System.out.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><p>an <img align=\"center\" border=\"0\" src=\"image.png\"/> image</p></body>"));
+		assertTrue(html.contains("<body><p>an <div style=\"text-align: center;\"><img border=\"0\" src=\"image.png\"/></div> image</p></body>"));
+	}
+
+	public void testImageWithAttributesAlignCenterToDocbook() {
+		StringWriter out = new StringWriter();
+		DocBookDocumentBuilder builder = new DocBookDocumentBuilder(out);
+		parser.setBuilder(builder);
+		parser.parse("an !image.png|align=center! image");
+		String result = out.toString();
+		System.out.println("DocBook: \n" + result);
+		assertTrue(result.contains("<para>an <mediaobject><imageobject><imagedata fileref=\"image.png\"/></imageobject></mediaobject> image</para>"));
 	}
 
 	public void testImageWithAttributesAlt() {
