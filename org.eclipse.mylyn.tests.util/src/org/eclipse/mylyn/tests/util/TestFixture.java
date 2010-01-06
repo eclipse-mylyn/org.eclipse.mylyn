@@ -17,12 +17,14 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.IProxyProvider;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -213,6 +215,12 @@ public abstract class TestFixture {
 		configureRepository(repository);
 		manager.addRepository(repository);
 		return repository;
+	}
+
+	public void setUpFramework() {
+		IPreferenceStore store = TasksUiPlugin.getDefault().getPreferenceStore();
+		store.setDefault(ITasksUiPreferenceConstants.NOTIFICATIONS_ENABLED, false);
+		store.setDefault(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
 	}
 
 }

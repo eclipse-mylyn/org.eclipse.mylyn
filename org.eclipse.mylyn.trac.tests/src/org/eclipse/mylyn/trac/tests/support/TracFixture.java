@@ -86,7 +86,7 @@ public class TracFixture extends TestFixture {
 
 	public static TracFixture current(TracFixture fixture) {
 		if (current == null) {
-			current = fixture;
+			fixture.activate();
 		}
 		return current;
 	}
@@ -144,6 +144,7 @@ public class TracFixture extends TestFixture {
 	@Override
 	public TracFixture activate() {
 		current = this;
+		setUpFramework();
 		return this;
 	}
 

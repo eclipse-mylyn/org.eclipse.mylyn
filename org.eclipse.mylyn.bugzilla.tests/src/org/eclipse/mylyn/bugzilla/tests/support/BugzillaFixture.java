@@ -97,7 +97,7 @@ public class BugzillaFixture extends TestFixture {
 
 	public static BugzillaFixture current(BugzillaFixture fixture) {
 		if (current == null) {
-			current = fixture;
+			fixture.activate();
 		}
 		return current;
 	}
@@ -115,6 +115,7 @@ public class BugzillaFixture extends TestFixture {
 	@Override
 	public BugzillaFixture activate() {
 		current = this;
+		setUpFramework();
 		return this;
 	}
 
