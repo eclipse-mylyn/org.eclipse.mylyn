@@ -213,6 +213,12 @@ public class TWikiLanguageTest extends TestCase {
 		assertTrue(html.contains("<body><p>a <a href=\"/cgi-bin/view/Main/InternalLink\">alt text</a> to somewhere</p></body>"));
 	}
 
+	public void testLinkInternalWithText2() {
+		String html = parser.parseToHtml("a [[URL][Text]] to somewhere");
+		System.out.println(html);
+		assertTrue(html.contains("<body><p>a <a href=\"/cgi-bin/view/Main/URL\">Text</a> to somewhere</p></body>"));
+	}
+
 	public void testLinkEscaped() {
 		String html = parser.parseToHtml("a ![[http://nolink]] to somewhere");
 		System.out.println(html);
