@@ -33,6 +33,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.ui.AbstractUserActivityMonitor;
 import org.eclipse.mylyn.monitor.ui.IActivityContextManager;
 import org.eclipse.mylyn.monitor.ui.IUserAttentionListener;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkingSet;
@@ -244,8 +245,8 @@ public class ActivityContextManager implements IActivityContextManager {
 	}
 
 	private void disableFailedMonitor(AbstractUserActivityMonitor monitor, Throwable e) {
-		StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN,
-				"Activity monitor ''{0}'' was disabled due to a failure")); //$NON-NLS-1$
+		StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, NLS.bind(
+				"Activity monitor ''{0}'' was disabled due to a failure", monitor.getClass()), e)); //$NON-NLS-1$
 		activityMonitors.remove(monitor);
 	}
 
