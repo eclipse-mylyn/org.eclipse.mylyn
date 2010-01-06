@@ -219,8 +219,8 @@ public abstract class TestFixture {
 
 	public void setUpFramework() {
 		IPreferenceStore store = TasksUiPlugin.getDefault().getPreferenceStore();
-		store.setDefault(ITasksUiPreferenceConstants.NOTIFICATIONS_ENABLED, false);
-		store.setDefault(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
+		store.setValue(ITasksUiPreferenceConstants.NOTIFICATIONS_ENABLED, false);
+		store.setValue(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
 	}
 
 }
