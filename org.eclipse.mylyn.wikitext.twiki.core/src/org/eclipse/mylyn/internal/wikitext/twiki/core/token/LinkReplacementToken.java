@@ -19,17 +19,18 @@ import org.eclipse.mylyn.wikitext.twiki.core.TWikiLanguage;
 
 /**
  * Tokens that represent links, as follows: <code>[[link]]</code>
- *  
+ * 
  * @author David Green
  */
 public class LinkReplacementToken extends PatternBasedElement {
 
 	private static final Pattern replacementPattern = Pattern.compile("\\W"); //$NON-NLS-1$
+
 	private static final Pattern wordBoundaryPattern = Pattern.compile("\\W\\w"); //$NON-NLS-1$
-	
+
 	@Override
 	protected String getPattern(int groupOffset) {
-		return "(!)?(\\[\\[([^\\]]+)(?:(\\]\\[)(.*))?\\]\\])"; //$NON-NLS-1$
+		return "(!)?(\\[\\[([^\\]]+)(?:(\\]\\[)([^\\]]*))?\\]\\])"; //$NON-NLS-1$
 	}
 
 	@Override
@@ -58,7 +59,7 @@ public class LinkReplacementToken extends PatternBasedElement {
 				boolean looksLikeEmail = link.indexOf('@') != -1;
 				if (link.indexOf('/') != -1 || link.indexOf('#') != -1 || looksLikeEmail) {
 					if (looksLikeEmail) {
-						text = text.replaceFirst("\\s*mailto:",""); //$NON-NLS-1$ //$NON-NLS-2$
+						text = text.replaceFirst("\\s*mailto:", ""); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					// url link
 					builder.link(link, text);
@@ -66,9 +67,9 @@ public class LinkReplacementToken extends PatternBasedElement {
 					// wiki link
 					link = camelCaseWordBoundaries(link);
 					String target = replacementPattern.matcher(link).replaceAll(""); //$NON-NLS-1$
-					TWikiLanguage twikiLanguage = (TWikiLanguage)markupLanguage;
+					TWikiLanguage twikiLanguage = (TWikiLanguage) markupLanguage;
 					boolean exists = twikiLanguage.computeInternalLinkExists(target);
-					
+
 					String internalHref = twikiLanguage.toInternalHref(target);
 					if (!exists) {
 						builder.characters(text);
@@ -86,10 +87,10 @@ public class LinkReplacementToken extends PatternBasedElement {
 			int start = 1;
 			while (matcher.find()) {
 				int offset = matcher.start();
-				newText += text.substring(start,offset);
-				
-				newText += Character.toUpperCase(text.charAt(offset+1));
-				
+				newText += text.substring(start, offset);
+
+				newText += Character.toUpperCase(text.charAt(offset + 1));
+
 				start = offset + 2;
 			}
 			if (start < text.length()) {
@@ -98,6 +99,5 @@ public class LinkReplacementToken extends PatternBasedElement {
 			return newText;
 		}
 	}
-
 
 }
