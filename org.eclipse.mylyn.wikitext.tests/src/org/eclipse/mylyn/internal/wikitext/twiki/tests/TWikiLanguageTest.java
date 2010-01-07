@@ -213,6 +213,12 @@ public class TWikiLanguageTest extends TestCase {
 		assertTrue(html.contains("<body><p>a <a href=\"/cgi-bin/view/Main/InternalLink\">alt text</a> to somewhere</p></body>"));
 	}
 
+	public void testLinkInternalWithTextTwoInSameLine() {
+		String html = parser.parseToHtml("[[http://ant.apache.org/][Ant]]-script for the [[http://wiki.eclipse.org/index.php/PDEBuild][PDE-Build]]");
+		System.out.println(html);
+		assertTrue(html.contains("<body><p><a href=\"http://ant.apache.org/\">Ant</a>-script for the <a href=\"http://wiki.eclipse.org/index.php/PDEBuild\">PDE-Build</a></p></body>"));
+	}
+
 	public void testLinkInternalWithText2() {
 		String html = parser.parseToHtml("a [[URL][Text]] to somewhere");
 		System.out.println(html);
