@@ -20,9 +20,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
@@ -52,7 +50,6 @@ import org.eclipse.mylyn.tasks.ui.editors.LayoutHint;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorPartDescriptor;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 
@@ -389,28 +386,9 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 							IMessageProvider.INFORMATION, new HyperlinkAdapter() {
 								@Override
 								public void linkActivated(HyperlinkEvent event) {
-									String mes = ""; //$NON-NLS-1$
-									for (String iterable_map : bugzillaResponse.getResponseData().keySet()) {
-										mes += NLS.bind(Messages.BugzillaTaskEditorPage_Changes_Submitted_Bug_Line,
-												iterable_map);
-										Map<String, List<String>> responseMap = bugzillaResponse.getResponseData().get(
-												iterable_map);
-										for (String iterable_list : responseMap.keySet()) {
-											mes += NLS.bind(
-													Messages.BugzillaTaskEditorPage_Changes_Submitted_Action_Line,
-													iterable_list);
-											List<String> responseList = responseMap.get(iterable_list);
-											for (String string : responseList) {
-												mes += NLS.bind(
-														Messages.BugzillaTaskEditorPage_Changes_Submitted_Email_Line,
-														string);
-											}
-										}
-
-									}
-									new MessageDialog(WorkbenchUtil.getShell(),
-											Messages.BugzillaTaskEditorPage_Changes_Submitted_Titel, null, mes,
-											MessageDialog.INFORMATION, new String[] { IDialogConstants.OK_LABEL }, 0).open();
+									BugzillaResponseDetailDialog dialog = new BugzillaResponseDetailDialog(
+											WorkbenchUtil.getShell(), bugzillaResponse);
+									dialog.open();
 								}
 							});
 				} else {
