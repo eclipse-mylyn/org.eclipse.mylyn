@@ -212,6 +212,34 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 			return;
 		}
 
+		TaskAttribute attributeOperation = getModel().getTaskData().getRoot().getMappedAttribute(
+				TaskAttribute.OPERATION);
+		if (attributeOperation != null) {
+			if ("duplicate".equals(attributeOperation.getValue())) { //$NON-NLS-1$
+				TaskAttribute originalOperation = getModel().getTaskData().getRoot().getAttribute(
+						TaskAttribute.PREFIX_OPERATION + attributeOperation.getValue());
+				String inputAttributeId = originalOperation.getMetaData().getValue(
+						TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID);
+				if (inputAttributeId != null && !inputAttributeId.equals("")) { //$NON-NLS-1$
+					TaskAttribute inputAttribute = attributeOperation.getTaskData().getRoot().getAttribute(
+							inputAttributeId);
+					if (inputAttribute != null) {
+						String dupValue = inputAttribute.getValue();
+						if (dupValue == null || dupValue.equals("")) { //$NON-NLS-1$
+							getTaskEditor().setMessage(
+									Messages.BugzillaTaskEditorPage_Please_enter_a_bugid_for_duplicate_of_before_submitting,
+									IMessageProvider.ERROR);
+							AbstractTaskEditorPart part = getPart(ID_PART_ACTIONS);
+							if (part != null) {
+								part.setFocus();
+							}
+							return;
+						}
+					}
+				}
+			}
+		}
+
 		if (getModel().getTaskData().isNew()) {
 			TaskAttribute productAttribute = getModel().getTaskData().getRoot().getMappedAttribute(
 					TaskAttribute.PRODUCT);

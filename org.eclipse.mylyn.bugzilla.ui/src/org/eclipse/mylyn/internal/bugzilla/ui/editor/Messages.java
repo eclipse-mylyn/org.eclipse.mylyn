@@ -49,6 +49,8 @@ public class Messages extends NLS {
 
 	public static String BugzillaTaskEditorPage_Please_select_a_component_before_submitting;
 
+	public static String BugzillaTaskEditorPage_Please_enter_a_bugid_for_duplicate_of_before_submitting;
+
 	public static String BugzillaVotesEditor_Show_votes;
 
 	public static String BugzillaVotesEditor_Vote;
