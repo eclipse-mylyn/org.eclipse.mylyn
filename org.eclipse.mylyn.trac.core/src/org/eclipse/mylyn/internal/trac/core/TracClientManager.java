@@ -44,7 +44,7 @@ public class TracClientManager implements IRepositoryListener {
 
 	private final File cacheFile;
 
-	private TaskRepositoryLocationFactory taskRepositoryLocationFactory;
+	private volatile TaskRepositoryLocationFactory taskRepositoryLocationFactory;
 
 	public TracClientManager(File cacheFile, TaskRepositoryLocationFactory taskRepositoryLocationFactory) {
 		this.cacheFile = cacheFile;
@@ -80,11 +80,11 @@ public class TracClientManager implements IRepositoryListener {
 		clientDataByUrl.remove(repository.getRepositoryUrl());
 	}
 
-	public void clearClients() {
+	public synchronized void clearClients() {
 		clientByUrl.clear();
 	}
 
-	private void removeClient(TaskRepository repository) {
+	private synchronized void removeClient(TaskRepository repository) {
 		clientByUrl.remove(repository.getRepositoryUrl());
 	}
 
@@ -99,7 +99,7 @@ public class TracClientManager implements IRepositoryListener {
 		// clientDataByUrl, bug #149939
 	}
 
-	public void readCache() {
+	public synchronized void readCache() {
 		if (cacheFile == null || !cacheFile.exists()) {
 			return;
 		}
@@ -130,7 +130,7 @@ public class TracClientManager implements IRepositoryListener {
 
 	}
 
-	public void writeCache() {
+	public synchronized void writeCache() {
 		if (cacheFile == null) {
 			return;
 		}
