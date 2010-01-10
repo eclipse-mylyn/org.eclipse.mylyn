@@ -222,13 +222,17 @@ public abstract class TestFixture {
 	}
 
 	public static void initializeTasksSettings() {
-		TasksUiPlugin plugin = TasksUiPlugin.getDefault();
-		if (plugin == null) {
-			return;
+		try {
+			TasksUiPlugin plugin = TasksUiPlugin.getDefault();
+			if (plugin == null) {
+				return;
+			}
+			IPreferenceStore store = plugin.getPreferenceStore();
+			store.setValue(ITasksUiPreferenceConstants.NOTIFICATIONS_ENABLED, false);
+			store.setValue(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
+		} catch (NoClassDefFoundError e) {
+			// ignore, running in headless standalone environment
 		}
-		IPreferenceStore store = plugin.getPreferenceStore();
-		store.setValue(ITasksUiPreferenceConstants.NOTIFICATIONS_ENABLED, false);
-		store.setValue(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
 	}
 
 }
