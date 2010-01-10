@@ -109,14 +109,14 @@ public class TaskRepositoryManager implements IRepositoryManager {
 	public void addRepository(final TaskRepository repository) {
 		synchronized (this) {
 			Set<TaskRepository> repositories;
-			if (!repositoryMap.containsKey(repository.getConnectorKind())) {
+			repositories = repositoryMap.get(repository.getConnectorKind());
+			if (repositories == null) {
 				repositories = new HashSet<TaskRepository>();
 				repositoryMap.put(repository.getConnectorKind(), repositories);
-			} else {
-				repositories = repositoryMap.get(repository.getConnectorKind());
 			}
 			if (!repositories.add(repository)) {
-				throw new RuntimeException("Repository " + repository + " already present"); //$NON-NLS-1$//$NON-NLS-2$
+				// TODO 4.0 return false to indicate that remove was unsuccessful
+				return;
 			}
 			repository.addChangeListener(PROPERTY_CHANGE_LISTENER);
 		}
@@ -143,18 +143,12 @@ public class TaskRepositoryManager implements IRepositoryManager {
 	public void removeRepository(final TaskRepository repository) {
 		synchronized (this) {
 			Set<TaskRepository> repositories = repositoryMap.get(repository.getConnectorKind());
-			if (repositories != null) {
-				if (!repositories.remove(repository)) {
-					throw new RuntimeException("Repository " + repository + " not present"); //$NON-NLS-1$//$NON-NLS-2$
-				}
-				//if (!CoreUtil.TEST_MODE) {
-				// FIXME 3.4 this is causing Trac tests to fail for an unknown reason
-				repository.flushAuthenticationCredentials();
-				//}
-				repository.removeChangeListener(PROPERTY_CHANGE_LISTENER);
-			} else {
-				throw new RuntimeException("Repository " + repository + " not present"); //$NON-NLS-1$//$NON-NLS-2$				
+			if (repositories == null || !repositories.remove(repository)) {
+				// TODO 4.0 return false to indicate that remove was unsuccessful
+				return;
 			}
+			repository.flushAuthenticationCredentials();
+			repository.removeChangeListener(PROPERTY_CHANGE_LISTENER);
 		}
 		for (final IRepositoryListener listener : listeners) {
 			SafeRunner.run(new ISafeRunnable() {
