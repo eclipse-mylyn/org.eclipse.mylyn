@@ -127,7 +127,7 @@ public class TracTaskDataHandlerXmlRpcTest extends TestCase {
 		assertEquals(Collections.emptySet(), session.getStaleTasks());
 
 		// change ticket making sure it gets a new change time
-		Thread.sleep(1000);
+		Thread.sleep(1500);
 		ticket.putBuiltinValue(Key.DESCRIPTION, lastModified + "");
 		client.updateTicket(ticket, "comment", null);
 
