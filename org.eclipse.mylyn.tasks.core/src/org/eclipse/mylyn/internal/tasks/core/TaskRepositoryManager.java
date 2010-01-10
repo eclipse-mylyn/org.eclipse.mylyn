@@ -30,7 +30,6 @@ import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryDelta.Type;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -45,6 +44,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  * @author Mik Kersten
  * @author Rob Elves
  * @author Jevgeni Holodkov
+ * @author Steffen Pingel
  * @since 3.0
  */
 public class TaskRepositoryManager implements IRepositoryManager {
@@ -68,7 +68,6 @@ public class TaskRepositoryManager implements IRepositoryManager {
 	public static final String PREFIX_LOCAL = "local-"; //$NON-NLS-1$
 
 	private final PropertyChangeListener PROPERTY_CHANGE_LISTENER = new PropertyChangeListener() {
-
 		public void propertyChange(PropertyChangeEvent evt) {
 			TaskRepositoryManager.this.notifyRepositorySettingsChanged((TaskRepository) evt.getSource(),
 					new TaskRepositoryDelta(Type.PROPERTY, evt.getPropertyName()));
@@ -80,28 +79,25 @@ public class TaskRepositoryManager implements IRepositoryManager {
 	public TaskRepositoryManager() {
 	}
 
-	public Collection<AbstractRepositoryConnector> getRepositoryConnectors() {
-		return Collections.unmodifiableCollection(repositoryConnectors.values());
+	public synchronized Collection<AbstractRepositoryConnector> getRepositoryConnectors() {
+		return new ArrayList<AbstractRepositoryConnector>(repositoryConnectors.values());
 	}
 
-	public AbstractRepositoryConnector getRepositoryConnector(String connectorKind) {
+	public synchronized AbstractRepositoryConnector getRepositoryConnector(String connectorKind) {
 		return repositoryConnectors.get(connectorKind);
 	}
 
-	/**
-	 * primarily for testing
-	 */
-	public AbstractRepositoryConnector removeRepositoryConnector(String connectorKind) {
+	public synchronized AbstractRepositoryConnector removeRepositoryConnector(String connectorKind) {
 		return repositoryConnectors.remove(connectorKind);
 	}
 
-	public void addRepositoryConnector(AbstractRepositoryConnector repositoryConnector) {
+	public synchronized void addRepositoryConnector(AbstractRepositoryConnector repositoryConnector) {
 		if (!repositoryConnectors.values().contains(repositoryConnector)) {
 			repositoryConnectors.put(repositoryConnector.getConnectorKind(), repositoryConnector);
 		}
 	}
 
-	public boolean hasUserManagedRepositoryConnectors() {
+	public synchronized boolean hasUserManagedRepositoryConnectors() {
 		for (AbstractRepositoryConnector connector : repositoryConnectors.values()) {
 			if (connector.isUserManaged()) {
 				return true;
@@ -111,15 +107,18 @@ public class TaskRepositoryManager implements IRepositoryManager {
 	}
 
 	public void addRepository(final TaskRepository repository) {
-		Set<TaskRepository> repositories;
-		if (!repositoryMap.containsKey(repository.getConnectorKind())) {
-			repositories = new HashSet<TaskRepository>();
-			repositoryMap.put(repository.getConnectorKind(), repositories);
-		} else {
-			repositories = repositoryMap.get(repository.getConnectorKind());
+		synchronized (this) {
+			Set<TaskRepository> repositories;
+			if (!repositoryMap.containsKey(repository.getConnectorKind())) {
+				repositories = new HashSet<TaskRepository>();
+				repositoryMap.put(repository.getConnectorKind(), repositories);
+			} else {
+				repositories = repositoryMap.get(repository.getConnectorKind());
+			}
+			repositories.add(repository);
+			repository.addChangeListener(PROPERTY_CHANGE_LISTENER);
 		}
-		repositories.add(repository);
-		repository.addChangeListener(PROPERTY_CHANGE_LISTENER);
+
 		for (final IRepositoryListener listener : listeners) {
 			SafeRunner.run(new ISafeRunnable() {
 				public void handleException(Throwable e) {
@@ -140,15 +139,17 @@ public class TaskRepositoryManager implements IRepositoryManager {
 	}
 
 	public void removeRepository(final TaskRepository repository) {
-		Set<TaskRepository> repositories = repositoryMap.get(repository.getConnectorKind());
-		if (repositories != null) {
-			if (!CoreUtil.TEST_MODE) {
+		synchronized (this) {
+			Set<TaskRepository> repositories = repositoryMap.get(repository.getConnectorKind());
+			if (repositories != null) {
+				//if (!CoreUtil.TEST_MODE) {
 				// FIXME 3.4 this is causing Trac tests to fail for an unknown reason
 				repository.flushAuthenticationCredentials();
+				//}
+				repositories.remove(repository);
 			}
-			repositories.remove(repository);
+			repository.removeChangeListener(PROPERTY_CHANGE_LISTENER);
 		}
-		repository.removeChangeListener(PROPERTY_CHANGE_LISTENER);
 		for (final IRepositoryListener listener : listeners) {
 			SafeRunner.run(new ISafeRunnable() {
 				public void handleException(Throwable e) {
@@ -185,10 +186,12 @@ public class TaskRepositoryManager implements IRepositoryManager {
 		Assert.isNotNull(kind);
 		Assert.isNotNull(urlString);
 		urlString = stripSlashes(urlString);
-		if (repositoryMap.containsKey(kind)) {
-			for (TaskRepository repository : repositoryMap.get(kind)) {
-				if (stripSlashes(repository.getRepositoryUrl()).equals(urlString)) {
-					return repository;
+		synchronized (this) {
+			if (repositoryMap.containsKey(kind)) {
+				for (TaskRepository repository : repositoryMap.get(kind)) {
+					if (stripSlashes(repository.getRepositoryUrl()).equals(urlString)) {
+						return repository;
+					}
 				}
 			}
 		}
@@ -201,10 +204,12 @@ public class TaskRepositoryManager implements IRepositoryManager {
 	public TaskRepository getRepository(String urlString) {
 		Assert.isNotNull(urlString);
 		urlString = stripSlashes(urlString);
-		for (String kind : repositoryMap.keySet()) {
-			for (TaskRepository repository : repositoryMap.get(kind)) {
-				if (stripSlashes(repository.getRepositoryUrl()).equals(urlString)) {
-					return repository;
+		synchronized (this) {
+			for (String kind : repositoryMap.keySet()) {
+				for (TaskRepository repository : repositoryMap.get(kind)) {
+					if (stripSlashes(repository.getRepositoryUrl()).equals(urlString)) {
+						return repository;
+					}
 				}
 			}
 		}
@@ -230,27 +235,30 @@ public class TaskRepositoryManager implements IRepositoryManager {
 
 	public Set<TaskRepository> getRepositories(String kind) {
 		Assert.isNotNull(kind);
-		if (repositoryMap.containsKey(kind)) {
-			return repositoryMap.get(kind);
-		} else {
+		Set<TaskRepository> result;
+		synchronized (this) {
+			result = repositoryMap.get(kind);
+		}
+		if (result == null) {
 			return Collections.emptySet();
 		}
+		return new HashSet<TaskRepository>(result);
 	}
 
 	public List<TaskRepository> getAllRepositories() {
 		List<TaskRepository> repositories = new ArrayList<TaskRepository>();
-		for (AbstractRepositoryConnector repositoryConnector : repositoryConnectors.values()) {
-			if (repositoryMap.containsKey(repositoryConnector.getConnectorKind())) {
-				repositories.addAll(repositoryMap.get(repositoryConnector.getConnectorKind()));
+		synchronized (this) {
+			for (AbstractRepositoryConnector repositoryConnector : repositoryConnectors.values()) {
+				if (repositoryMap.containsKey(repositoryConnector.getConnectorKind())) {
+					repositories.addAll(repositoryMap.get(repositoryConnector.getConnectorKind()));
+				}
 			}
 		}
 		return repositories;
 	}
 
-	/**
-	 * TODO: implement default support, this just returns first found
-	 */
-	public TaskRepository getDefaultRepository(String kind) {
+	@Deprecated
+	public synchronized TaskRepository getDefaultRepository(String kind) {
 		// HACK: returns first repository found
 		if (repositoryMap.containsKey(kind)) {
 			for (TaskRepository repository : repositoryMap.get(kind)) {
@@ -366,8 +374,10 @@ public class TaskRepositoryManager implements IRepositoryManager {
 		for (TaskRepository repository : repositories) {
 			removeRepository(repository);
 		}
-		repositoryMap.clear();
-		orphanedRepositories.clear();
+		synchronized (this) {
+			repositoryMap.clear();
+			orphanedRepositories.clear();
+		}
 	}
 
 	public void notifyRepositorySettingsChanged(final TaskRepository repository) {
@@ -393,6 +403,7 @@ public class TaskRepositoryManager implements IRepositoryManager {
 		}
 	}
 
+	@Deprecated
 	public void insertRepositories(Set<TaskRepository> repositories, String repositoryFilePath) {
 		for (TaskRepository repository : repositories) {
 			if (getRepository(repository.getConnectorKind(), repository.getRepositoryUrl()) == null) {
