@@ -115,7 +115,9 @@ public class TaskRepositoryManager implements IRepositoryManager {
 			} else {
 				repositories = repositoryMap.get(repository.getConnectorKind());
 			}
-			repositories.add(repository);
+			if (!repositories.add(repository)) {
+				throw new RuntimeException("Repository " + repository + " already present"); //$NON-NLS-1$//$NON-NLS-2$
+			}
 			repository.addChangeListener(PROPERTY_CHANGE_LISTENER);
 		}
 
@@ -142,13 +144,17 @@ public class TaskRepositoryManager implements IRepositoryManager {
 		synchronized (this) {
 			Set<TaskRepository> repositories = repositoryMap.get(repository.getConnectorKind());
 			if (repositories != null) {
+				if (!repositories.remove(repository)) {
+					throw new RuntimeException("Repository " + repository + " not present"); //$NON-NLS-1$//$NON-NLS-2$
+				}
 				//if (!CoreUtil.TEST_MODE) {
 				// FIXME 3.4 this is causing Trac tests to fail for an unknown reason
 				repository.flushAuthenticationCredentials();
 				//}
-				repositories.remove(repository);
+				repository.removeChangeListener(PROPERTY_CHANGE_LISTENER);
+			} else {
+				throw new RuntimeException("Repository " + repository + " not present"); //$NON-NLS-1$//$NON-NLS-2$				
 			}
-			repository.removeChangeListener(PROPERTY_CHANGE_LISTENER);
 		}
 		for (final IRepositoryListener listener : listeners) {
 			SafeRunner.run(new ISafeRunnable() {
@@ -177,7 +183,7 @@ public class TaskRepositoryManager implements IRepositoryManager {
 		Assert.isNotNull(url);
 		StringBuilder sb = new StringBuilder(url.trim());
 		while (sb.length() > 0 && sb.charAt(sb.length() - 1) == '/') {
-			sb.deleteCharAt(sb.length() - 1);
+			sb.setLength(sb.length() - 1);
 		}
 		return sb.toString();
 	}
