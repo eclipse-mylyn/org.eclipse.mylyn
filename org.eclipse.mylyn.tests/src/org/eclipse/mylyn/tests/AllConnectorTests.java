@@ -15,6 +15,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.jira.tests.AllJiraTests;
+import org.eclipse.mylyn.tests.util.TestFixture;
 import org.eclipse.mylyn.trac.tests.AllTracTests;
 import org.eclipse.mylyn.xplanner.tests.AllXPlannerTests;
 
@@ -24,7 +25,8 @@ import org.eclipse.mylyn.xplanner.tests.AllXPlannerTests;
 public class AllConnectorTests {
 
 	public static Test suite() {
-		// the order of these tests might still matter, but shouldn't
+		TestFixture.initializeTasksSettings();
+
 		TestSuite suite = new TestSuite("All Connector Tests for org.eclipse.mylyn.tests");
 		// FIXME re-enable suite.addTest(AllBugzillaTests.suite());
 		suite.addTest(AllJiraTests.suite());
