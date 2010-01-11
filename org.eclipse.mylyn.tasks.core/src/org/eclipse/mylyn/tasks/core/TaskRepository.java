@@ -290,7 +290,7 @@ public final class TaskRepository extends PlatformObject {
 		}
 	}
 
-	@SuppressWarnings( { "unchecked" })
+	@SuppressWarnings({ "unchecked" })
 	private Map<String, String> getAuthInfo() {
 		synchronized (LOCK) {
 			if (Platform.isRunning()) {
@@ -340,10 +340,12 @@ public final class TaskRepository extends PlatformObject {
 		setProperty(getKeyPrefix(AuthenticationType.PROXY) + ENABLED, null);
 		setProperty(getKeyPrefix(AuthenticationType.REPOSITORY) + ENABLED, null);
 
-		synchronized (LOCK) {
-			isCachedUserName = false;
+		synchronized (this) {
 			transientProperties.clear();
+			isCachedUserName = false;
+		}
 
+		synchronized (LOCK) {
 			if (Platform.isRunning()) {
 				if (useSecureStorage()) {
 					if (Platform.isRunning()) {

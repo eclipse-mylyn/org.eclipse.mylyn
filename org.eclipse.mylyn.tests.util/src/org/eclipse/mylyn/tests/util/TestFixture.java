@@ -186,7 +186,7 @@ public abstract class TestFixture {
 		TaskRepository repository = new TaskRepository(connectorKind, repositoryUrl);
 		Credentials credentials = TestUtil.readCredentials(PrivilegeLevel.USER);
 		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials(credentials.username,
-				credentials.password), true);
+				credentials.password), false);
 		return repository;
 	}
 
@@ -211,7 +211,7 @@ public abstract class TestFixture {
 		TaskRepository repository = new TaskRepository(connectorKind, repositoryUrl);
 		Credentials credentials = TestUtil.readCredentials(PrivilegeLevel.USER);
 		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials(credentials.username,
-				credentials.password), true);
+				credentials.password), false);
 		configureRepository(repository);
 		manager.addRepository(repository);
 		return repository;
