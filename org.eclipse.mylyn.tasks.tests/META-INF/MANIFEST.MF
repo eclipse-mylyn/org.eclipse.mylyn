@@ -30,7 +30,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn.commons.tests,
  org.eclipse.ui.browser,
  org.eclipse.core.expressions,
- org.eclipse.equinox.security
+ org.eclipse.equinox.security,
+ org.eclipse.mylyn.tests.util
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: mylyn-tasklist-tests.jar
 Export-Package: org.eclipse.mylyn.tasks.tests;x-internal:=true,

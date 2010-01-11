@@ -29,7 +29,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.tests.util.TestFixture;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
@@ -66,36 +66,25 @@ public class TaskTestUtil {
 	 * list will only have default categories but no tasks.
 	 */
 	public static void resetTaskListAndRepositories() throws Exception {
-		TasksUiPlugin.getRepositoryManager().clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
-		TasksUiPlugin.getDefault().getLocalTaskRepository();
-		resetTaskList();
+		TestFixture.resetTaskListAndRepositories();
 	}
 
 	/**
 	 * Clears all tasks.
 	 */
 	public static void resetTaskList() throws Exception {
-		TasksUi.getTaskActivityManager().deactivateActiveTask();
-		TasksUiPlugin.getTaskListExternalizationParticipant().resetTaskList();
-		TasksUiPlugin.getTaskActivityManager().getTaskActivationHistory().clear();
-		TaskListView view = TaskListView.getFromActivePerspective();
-		if (view != null) {
-			view.refresh();
-		}
+		TestFixture.resetTaskList();
 	}
 
 	/**
 	 * @see #resetTaskList()
 	 */
 	public static void saveAndReadTasklist() throws Exception {
-		TasksUiPlugin.getTaskList().notifyElementsChanged(null);
-		saveNow();
-		TaskTestUtil.resetTaskList();
-		TasksUiPlugin.getDefault().initializeDataSources();
+		TestFixture.saveAndReadTasklist();
 	}
 
-	public static void saveNow() throws InterruptedException {
-		TasksUiPlugin.getExternalizationManager().saveNow();
+	public static void saveNow() throws Exception {
+		TestFixture.saveNow();
 	}
 
 	public static TaskRepository createMockRepository() {
