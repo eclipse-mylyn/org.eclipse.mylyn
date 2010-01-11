@@ -511,7 +511,8 @@
 		<delete includeemptydirs="true">
 			<fileset dir="${base.home}/eclipse">
 				<include name="plugins/org.eclipse.swtbot*junit3*/**"/>
-				<include name="plugins/org.junit4_4.3.1/**"/>
+				<include name="plugins/org.junit4_4.3.1*/**"/>
+				<include name="plugins/org.junit4_4.5.0*/**"/>
 			</fileset>			
 		</delete>
 		
