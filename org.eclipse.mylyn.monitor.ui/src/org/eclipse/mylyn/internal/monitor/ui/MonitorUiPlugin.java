@@ -25,7 +25,6 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.monitor.core.IInteractionEventListener;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
@@ -141,17 +140,13 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 		this.activityContextManager = new ActivityContextManager(new ArrayList<AbstractUserActivityMonitor>(0));
 
-		if (CoreUtil.TEST_MODE) {
-			init();
-		} else {
-			// FIXME: use UIJob
-			// delay initialization until workbench is realized
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					init();
-				}
-			});
-		}
+		// FIXME: use UIJob
+		// delay initialization until workbench is realized
+		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				init();
+			}
+		});
 	}
 
 	@Override

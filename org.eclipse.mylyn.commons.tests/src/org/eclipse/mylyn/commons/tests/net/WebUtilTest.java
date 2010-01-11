@@ -251,8 +251,10 @@ public class WebUtilTest extends TestCase {
 		GetMethod method = new GetMethod("/");
 		try {
 			int statusCode = client.executeMethod(hostConfiguration, method);
-			fail("Expected SSLHandshakeException, got status: " + statusCode);
+			fail("Expected SSLHandshakeException or connection reset, got status: " + statusCode);
 		} catch (SSLHandshakeException e) {
+		} catch (SocketException e) {
+			assertEquals("Connection reset", e.getMessage());
 		}
 
 		assertFalse(testProxy.hasRequest());
