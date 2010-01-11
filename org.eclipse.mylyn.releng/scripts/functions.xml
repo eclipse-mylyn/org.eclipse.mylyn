@@ -503,13 +503,12 @@
 		<!-- extract sdk for building -->
 		<mkdir dir="${base.home}" />
 		<install-into-base url="${base.url}" exists="eclipse"/>
-		<install-into-base url="${base.url.swtbot}" exists="eclipse/plugins/org.eclipse.test_3.2.0"/>
 		<install-into-base url="${base.url.test}" exists="eclipse/plugins/org.eclipse.test_3.2.0"/>
 		<install-into-base url="${eclipse.url.derby}" exists="eclipse/plugins/org.apache.derby.core_10.4.2" unpackDest="${base.home}/eclipse"/>
 		<replaceregexp file="${base.home}/eclipse/plugins/org.apache.derby.core_10.4.2/plugin.xml"
 			match="org.apache.derby.core" replace="org.apache.derby" byline="true"/>
 		<install-into-base url="${base.url.swtbot}" exists="eclipse/plugins/org.eclipse.swtbot.eclipse.junit4.headeless_2.0.0.${swtbot.rev}"/>
-		<delete>
+		<delete includeemptydirs="true">
 			<fileset dir="${base.home}/eclipse">
 				<include name="plugins/org.eclipse.swtbot*junit3*/**"/>
 			</fileset>			
