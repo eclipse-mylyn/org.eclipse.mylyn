@@ -266,6 +266,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 		TracTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 		ITracClient client = connector.getClientManager().getTracClient(repository);
+		assertEquals(client.getAccessMode().name(), repository.getVersion());
 		TaskData taskData = taskDataHandler.createTaskDataFromTicket(client, repository, ticket, null);
 		ITask task = TasksUi.getRepositoryModel().createTask(repository, taskData.getTaskId());
 
