@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 David Green and others.
+ * Copyright (c) 2007, 2010 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,6 +22,7 @@ import java.io.StringWriter;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.wikitext.core.WikiTextPlugin;
+import org.eclipse.mylyn.wikitext.tests.TestUtil;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 public abstract class AbstractTestAntTask extends TestCase {
@@ -83,7 +84,7 @@ public abstract class AbstractTestAntTask extends TestCase {
 
 	private void listFiles(String prefix, File dir) {
 		for (File file : dir.listFiles()) {
-			System.out.println(String.format("%s: %s", prefix + file.getName(), file.isFile() ? "File" : "Folder"));
+			TestUtil.println(String.format("%s: %s", prefix + file.getName(), file.isFile() ? "File" : "Folder"));
 			if (file.isDirectory()) {
 				listFiles(prefix + file.getName() + "/", file);
 			}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 David Green and others.
+ * Copyright (c) 2007, 2010 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -40,7 +40,7 @@ public class MarkupToDocbookTaskTest extends AbstractTestAntTask {
 		assertTrue(docbookFile.exists() && docbookFile.isFile());
 
 		String content = getContent(docbookFile);
-//		System.out.println(content);
+//		TestUtil.println(content);
 
 		assertTrue(content.contains("<book"));
 		assertTrue(content.contains("</book>"));
@@ -70,7 +70,7 @@ public class MarkupToDocbookTaskTest extends AbstractTestAntTask {
 		assertTrue(docbookFile.exists() && docbookFile.isFile());
 
 		String content = getContent(docbookFile);
-//		System.out.println(content);
+//		TestUtil.println(content);
 
 		assertTrue(content.contains("<book"));
 		assertTrue(content.contains("</book>"));

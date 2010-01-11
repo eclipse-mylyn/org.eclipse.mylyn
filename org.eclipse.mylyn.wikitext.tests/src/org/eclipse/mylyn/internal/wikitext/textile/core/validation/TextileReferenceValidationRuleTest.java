@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 David Green and others.
+ * Copyright (c) 2007, 2010 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylyn.wikitext.core.validation.MarkupValidator;
 import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem;
+import org.eclipse.mylyn.wikitext.tests.TestUtil;
 
 public class TextileReferenceValidationRuleTest extends TestCase {
 
@@ -36,7 +37,7 @@ public class TextileReferenceValidationRuleTest extends TestCase {
 	public void testNoErrors() {
 		final String markup = "h1. Title\n\n\"a link\":#Title";
 		List<ValidationProblem> problems = rule.findProblems(markup, 0, markup.length());
-		System.out.println(problems);
+		TestUtil.println(problems);
 		assertNotNull(problems);
 		assertTrue(problems.isEmpty());
 	}
@@ -44,7 +45,7 @@ public class TextileReferenceValidationRuleTest extends TestCase {
 	public void testErrors() {
 		final String markup = "h1. Title\n\nsome text \"a link\":#BADTitle more text";
 		List<ValidationProblem> problems = rule.findProblems(markup, 0, markup.length());
-		System.out.println(problems);
+		TestUtil.println(problems);
 		assertNotNull(problems);
 		assertEquals(1, problems.size());
 		assertEquals(21, problems.get(0).getOffset());
@@ -54,7 +55,7 @@ public class TextileReferenceValidationRuleTest extends TestCase {
 	public void testFootnoteReference() {
 		String markup = "some text with a footnote reference[1]\n\nfn1. a footnote";
 		List<ValidationProblem> problems = rule.findProblems(markup, 0, markup.length());
-		System.out.println(problems);
+		TestUtil.println(problems);
 		assertNotNull(problems);
 		assertEquals(0, problems.size());
 	}
@@ -62,7 +63,7 @@ public class TextileReferenceValidationRuleTest extends TestCase {
 	public void testFootnoteReferenceWithErrors() {
 		String markup = "some text with a footnote reference[1]\n\nfn2. a footnote";
 		List<ValidationProblem> problems = rule.findProblems(markup, 0, markup.length());
-		System.out.println(problems);
+		TestUtil.println(problems);
 		assertNotNull(problems);
 		assertEquals(1, problems.size());
 		assertEquals(35, problems.get(0).getOffset());

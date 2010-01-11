@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 David Green and others.
+ * Copyright (c) 2007, 2010 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ResourceBundle;
 
+import org.eclipse.mylyn.wikitext.tests.TestUtil;
+
 public class MarkupToEclipseHelpTaskTest extends MarkupToHtmlTaskTest {
 
 	@Override
@@ -32,7 +34,7 @@ public class MarkupToEclipseHelpTaskTest extends MarkupToHtmlTaskTest {
 		assertTrue(tocFile.exists());
 
 		String tocContent = getContent(tocFile);
-		System.out.println(tocContent);
+		TestUtil.println(tocContent);
 
 		assertTrue(tocContent.contains("<toc topic=\"markup.html\" label=\"markup\">"));
 		assertTrue(tocContent.contains("<topic href=\"markup.html\" label=\"First Heading\""));
@@ -47,7 +49,7 @@ public class MarkupToEclipseHelpTaskTest extends MarkupToHtmlTaskTest {
 		assertTrue(tocFile.exists());
 
 		String tocContent = getContent(tocFile);
-		System.out.println(tocContent);
+		TestUtil.println(tocContent);
 
 		assertTrue(tocContent.contains("<toc topic=\"markup.html\" label=\"markup\">"));
 		assertTrue(tocContent.contains("<topic href=\"markup.html\" label=\"First Heading\""));
@@ -62,7 +64,7 @@ public class MarkupToEclipseHelpTaskTest extends MarkupToHtmlTaskTest {
 		assertTrue(tocFile.exists());
 
 		String tocContent = getContent(tocFile);
-		System.out.println(tocContent);
+		TestUtil.println(tocContent);
 
 		assertTrue(tocContent.contains("<toc topic=\"markup.html\" label=\"Alternate Title\">"));
 		assertTrue(tocContent.contains("<topic href=\"markup.html\" label=\"First Heading\""));
@@ -81,7 +83,7 @@ public class MarkupToEclipseHelpTaskTest extends MarkupToHtmlTaskTest {
 		assertTrue(tocFile.exists());
 
 		String tocContent = getContent(tocFile);
-		System.out.println(tocContent);
+		TestUtil.println(tocContent);
 
 		assertTrue(tocContent.contains("<toc topic=\"markup.html\" label=\"markup\">"));
 		assertTrue(tocContent.contains("<topic href=\"markup.html\" label=\"First Heading\""));

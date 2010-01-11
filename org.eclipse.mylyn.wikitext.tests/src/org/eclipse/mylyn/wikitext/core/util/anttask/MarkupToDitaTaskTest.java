@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 David Green and others.
+ * Copyright (c) 2007, 2010 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ResourceBundle;
+
+import org.eclipse.mylyn.wikitext.tests.TestUtil;
 
 public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 
@@ -142,7 +144,7 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 
 		String ditamapContent = getContent(ditamapFile);
 
-		System.out.println(ditamapContent);
+		TestUtil.println(ditamapContent);
 
 		assertTrue(ditamapContent.contains("<bookmap><title>Sample Title</title><chapter href=\"topics/FirstHeading.dita\" navtitle=\"First Heading\"/><chapter href=\"topics/SecondHeading.dita\" navtitle=\"Second Heading\"/></bookmap>"));
 
@@ -154,7 +156,7 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 //				<p>some content</p>
 //			</body>
 //		</topic>
-		System.out.println(firstTopicContent);
+		TestUtil.println(firstTopicContent);
 
 		assertTrue(firstTopicContent.contains("<topic id=\"FirstHeading\"><title>First Heading</title><body><p>some content</p></body></topic>"));
 	}
@@ -177,7 +179,7 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 
 		String firstTopicContent = getContent(firstHeadingFile);
 
-		System.out.println(firstTopicContent);
+		TestUtil.println(firstTopicContent);
 
 		assertTrue(firstTopicContent.contains("<topic id=\"FirstHeading\">"));
 		assertTrue(firstTopicContent.contains("<title>First Heading</title>"));
@@ -206,7 +208,7 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 
 		String firstTopicContent = getContent(firstHeadingFile);
 
-		System.out.println(firstTopicContent);
+		TestUtil.println(firstTopicContent);
 
 		assertTrue(firstTopicContent.contains("<topic><title>Sample Title</title><topic id=\"FirstHeading\"><title>First Heading</title><body><p>some content</p></body></topic><topic id=\"SecondHeading\"><title>Second Heading</title><body><p>some more content</p></body></topic></topic>"));
 	}
@@ -251,8 +253,8 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 		String firstTopicContent = getContent(firstHeadingFile);
 		String secondTopicContent = getContent(secondHeadingFile);
 
-		System.out.println(firstTopicContent);
-		System.out.println(secondTopicContent);
+		TestUtil.println(firstTopicContent);
+		TestUtil.println(secondTopicContent);
 
 		assertTrue(firstTopicContent.contains("<xref href=\"Id2.dita#Id2\">ref to 2</xref>"));
 		assertTrue(secondTopicContent.contains("<xref href=\"Id1.dita#Id1\">ref to 1</xref>"));
@@ -277,7 +279,7 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 
 		String firstTopicContent = getContent(firstHeadingFile);
 
-		System.out.println(firstTopicContent);
+		TestUtil.println(firstTopicContent);
 
 		assertTrue(firstTopicContent.contains("<topic id=\"Id1\">"));
 		assertTrue(firstTopicContent.contains("<title>First Heading</title>"));
@@ -305,7 +307,7 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 
 		String firstTopicContent = getContent(firstHeadingFile);
 
-		System.out.println(firstTopicContent);
+		TestUtil.println(firstTopicContent);
 
 		assertTrue(firstTopicContent.contains("<topic id=\"Id1\">"));
 		assertTrue(firstTopicContent.contains("<title>First Heading</title>"));

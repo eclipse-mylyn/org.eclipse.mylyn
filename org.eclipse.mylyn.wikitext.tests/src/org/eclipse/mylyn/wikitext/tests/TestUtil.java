@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2010 David Green and others.
+ * Copyright (c) 2009, 2010 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,18 +11,17 @@
 
 package org.eclipse.mylyn.wikitext.tests;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+public class TestUtil {
 
-/**
- * a marker annotation for marking tests that should not be discovered by {@link DiscoveryTestSuite}.
- * 
- * @author David Green
- */
-@Retention(RetentionPolicy.RUNTIME)
-@Target( { ElementType.TYPE })
-public @interface NoDiscovery {
+	private static final boolean useSystemOutput = !Boolean.getBoolean("org.eclipse.mylyn.wikitext.tests.disableOutput");
 
+	public static void println(Object message) {
+		TestUtil.println((message == null ? "null" : message).toString());
+	}
+
+	public static void println(String message) {
+		if (useSystemOutput) {
+			System.out.println(message);
+		}
+	}
 }

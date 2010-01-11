@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 David Green and others.
+ * Copyright (c) 2007, 2010 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
+import org.eclipse.mylyn.wikitext.tests.TestUtil;
 
 /**
  * 
@@ -69,16 +70,16 @@ public class TextileTest extends TestCase {
 		int i = 0;
 		for (String value : values) {
 			Matcher matcher = pattern.matcher(value);
-			System.out.println("Value: \'" + value + "\'");
+			TestUtil.println("Value: \'" + value + "\'");
 			if (matcher.matches()) {
-				System.out.println("\tmatch");
-				System.out.println("\tgroups " + matcher.groupCount());
+				TestUtil.println("\tmatch");
+				TestUtil.println("\tgroups " + matcher.groupCount());
 				for (int x = 1; x <= matcher.groupCount(); ++x) {
-					System.out.println("\tgroup(" + x + "): \'" + matcher.group(x) + "\'");
+					TestUtil.println("\tgroup(" + x + "): \'" + matcher.group(x) + "\'");
 					assertEquals(verify[i][x], matcher.group(x));
 				}
 			} else {
-				System.out.println("\tno match");
+				TestUtil.println("\tno match");
 			}
 			++i;
 		}

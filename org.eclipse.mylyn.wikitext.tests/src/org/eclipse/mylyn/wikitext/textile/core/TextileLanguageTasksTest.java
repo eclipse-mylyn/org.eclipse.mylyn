@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 David Green and others.
+ * Copyright (c) 2009, 2010 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,6 +23,7 @@ import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration;
 import org.eclipse.mylyn.wikitext.tests.EclipseRuntimeRequired;
+import org.eclipse.mylyn.wikitext.tests.TestUtil;
 
 /**
  * tests for Textile that involve the tasks plug-in and dependencies on the Eclipse runtime.
@@ -63,12 +64,12 @@ public class TextileLanguageTasksTest extends TestCase {
 			long time = System.currentTimeMillis();
 			parser.parse(reader);
 			long endTime = System.currentTimeMillis();
-			System.out.println(String.format("Took %s millis", endTime - time));
+			TestUtil.println(String.format("Took %s millis", endTime - time));
 		} finally {
 			reader.close();
 		}
 //		String html = out.toString();
 
-//		System.out.println(html);
+//		TestUtil.println(html);
 	}
 }

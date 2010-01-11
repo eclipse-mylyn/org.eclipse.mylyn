@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 David Green and others.
+ * Copyright (c) 2007, 2010 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.mylyn.wikitext.confluence.core.ConfluenceLanguage;
+import org.eclipse.mylyn.wikitext.tests.TestUtil;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 /**
@@ -39,8 +40,8 @@ public class FastMarkupPartitionerTest extends AbstractDocumentTest {
 		long nanosEnd = System.nanoTime();
 		long millisEnd = System.currentTimeMillis();
 
-		System.out.println("Elapsed Time in Nanos: " + (nanosEnd - nanos));
-		System.out.println("Elapsed Time in Millis: " + (millisEnd - millis));
+		TestUtil.println("Elapsed Time in Nanos: " + (nanosEnd - nanos));
+		TestUtil.println("Elapsed Time in Millis: " + (millisEnd - millis));
 
 //		assertTrue((nanosEnd - nanos) < 800000000L); removed assert due to bug 261236
 	}

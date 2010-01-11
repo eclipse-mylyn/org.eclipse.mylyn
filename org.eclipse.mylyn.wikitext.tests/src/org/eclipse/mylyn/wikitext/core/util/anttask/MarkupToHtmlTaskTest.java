@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 David Green and others.
+ * Copyright (c) 2007, 2010 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
+
+import org.eclipse.mylyn.wikitext.tests.TestUtil;
 
 public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 
@@ -45,7 +47,7 @@ public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 		assertTrue(htmlFile.exists() && htmlFile.isFile());
 
 		String content = getContent(htmlFile);
-//		System.out.println(content);
+//		TestUtil.println(content);
 
 		assertTrue(content.contains("<html"));
 		assertTrue(content.contains("</html>"));
@@ -66,7 +68,7 @@ public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 		assertTrue(htmlFile.exists() && htmlFile.isFile());
 
 		String content = getContent(htmlFile);
-		System.out.println(content);
+		TestUtil.println(content);
 
 		// verify that alt is present on img tag.
 		assertTrue(Pattern.compile("<img.*?alt=\"\"").matcher(content).find());
@@ -84,7 +86,7 @@ public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 		assertTrue(htmlFile.exists() && htmlFile.isFile());
 
 		String content = getContent(htmlFile);
-//		System.out.println(content);
+//		TestUtil.println(content);
 
 		assertTrue(content.contains("<html"));
 		assertTrue(content.contains("</html>"));
@@ -105,7 +107,7 @@ public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 		assertTrue(htmlFile.exists() && htmlFile.isFile());
 
 		String content = getContent(htmlFile);
-//		System.out.println(content);
+//		TestUtil.println(content);
 
 		assertTrue(content.contains("<html"));
 		assertTrue(content.contains("</html>"));
@@ -119,7 +121,7 @@ public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 		assertTrue(htmlFile2.exists());
 
 		String content2 = getContent(htmlFile2);
-//		System.out.println(content2);
+//		TestUtil.println(content2);
 
 		assertTrue(content2.contains("<html"));
 		assertTrue(content2.contains("</html>"));

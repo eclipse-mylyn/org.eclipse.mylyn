@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 David Green and others.
+ * Copyright (c) 2007, 2010 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import junit.framework.TestCase;
 import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.tests.HeadRequired;
+import org.eclipse.mylyn.wikitext.tests.TestUtil;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
@@ -43,7 +44,7 @@ public class HtmlTextPresentationParserTest extends TestCase {
 	public void testAdjacentElementsSeparatedByWhitespace() throws Exception {
 		parser.parse("<html><body><p><strong>one</strong> <em>two</em></p></body></html>");
 		String text = parser.getText();
-		System.out.println("text: '" + text + "'");
+		TestUtil.println("text: '" + text + "'");
 		assertTrue(text.contains("one two"));
 	}
 
@@ -52,24 +53,24 @@ public class HtmlTextPresentationParserTest extends TestCase {
 	 */
 	public void testSignificantWhitespaceLossBug236367() throws SAXException, IOException {
 		String html = new MarkupParser(new TextileLanguage()).parseToHtml("one *two* three *four* five *six* seven");
-		System.out.println("HTML: " + html);
+		TestUtil.println("HTML: " + html);
 		parser.parse(html);
 		String text = parser.getText();
-		System.out.println("text: '" + text + "'");
+		TestUtil.println("text: '" + text + "'");
 		assertTrue(text.contains("one two three four five six seven"));
 	}
 
 	public void testOrderedListBlockHandling() throws Exception {
 		parser.parse("<html><body><ol><li> one </li><li>    two </li></ol></body></html>");
 		String text = parser.getText();
-		System.out.println("text:\n" + text);
+		TestUtil.println("text:\n" + text);
 		assertTrue(text.contains("\t1. one\n\t2. two"));
 	}
 
 	public void testOrderedListBlockHandling2() throws Exception {
 		parser.parse("<html><body><ol><li> <b>one</b> </li><li>    two </li></ol></body></html>");
 		String text = parser.getText();
-		System.out.println("text: '" + text + "'");
+		TestUtil.println("text: '" + text + "'");
 		assertTrue(text.contains("\t1. one\n\t2. two"));
 	}
 
@@ -78,63 +79,63 @@ public class HtmlTextPresentationParserTest extends TestCase {
 		parser.parse("<html><body><ul><li> one</li><li>    two<ul><li>two.one</li></ul></li></ul></body></html>");
 
 		String text = parser.getText();
-		System.out.println("text:\n" + text);
+		TestUtil.println("text:\n" + text);
 		assertTrue(text.contains("\tA  one\n\tA  two\n\t\tB  two.one"));
 	}
 
 	public void testParagraphBlockHandling() throws Exception {
 		parser.parse("<html><body><p>first para\n\nwith some newlines</p>\n\n<p>second para</p></body></html>");
 		String text = parser.getText();
-		System.out.println("text: '" + text + "'");
+		TestUtil.println("text: '" + text + "'");
 		assertTrue(text.contains("first para with some newlines\n\nsecond para"));
 	}
 
 	public void testParagraphBlockHandlingWithBR() throws Exception {
 		parser.parse("<html><body><p>first para<br/>\nwith one newline plus br</p>\n\n<p>second para</p></body></html>");
 		String text = parser.getText();
-		System.out.println("text: '" + text + "'");
+		TestUtil.println("text: '" + text + "'");
 		assertTrue(text.contains("first para\nwith one newline plus br\n\nsecond para"));
 	}
 
 	public void testParagraphBlockHandlingWithBR2() throws Exception {
 		parser.parse("<html><body><p>first para<br/>with one newline plus br</p>\n\n<p>second para</p></body></html>");
 		String text = parser.getText();
-		System.out.println("text: '" + text + "'");
+		TestUtil.println("text: '" + text + "'");
 		assertTrue(text.contains("first para\nwith one newline plus br\n\nsecond para"));
 	}
 
 	public void testDefinitionList() throws Exception {
 		parser.parse("<html><body><dl><dt>foo</dt><dd>bar baz</dd></dl></body></html>");
 		String text = parser.getText();
-		System.out.println("text:\n" + text + "'");
+		TestUtil.println("text:\n" + text + "'");
 		assertTrue(text.contains("foo\n\tbar baz"));
 	}
 
 	public void testNonParaText() throws Exception {
 		parser.parse("<html><body><p>one</p>two<p>three</p></body></html>");
 		String text = parser.getText();
-		System.out.println("text:\n" + text);
+		TestUtil.println("text:\n" + text);
 		assertTrue(text.contains("one\n\ntwo\n\nthree"));
 	}
 
 	public void testBlockQuoteParaWhitespace() throws Exception {
 		parser.parse("<html><body><p>one</p><blockquote><p>two</p></blockquote><p>three</p></body></html>");
 		String text = parser.getText();
-		System.out.println("text:\n" + text);
+		TestUtil.println("text:\n" + text);
 		assertTrue(text.contains("one\n\n\ttwo\n\nthree"));
 	}
 
 	public void testBR() throws Exception {
 		parser.parse("<html><head></head><body><p>One<br/>Two</p></body></html>");
 		String text = parser.getText();
-		System.out.println("text:\n" + text);
+		TestUtil.println("text:\n" + text);
 		assertTrue(text.contains("One\nTwo"));
 	}
 
 	public void testWhitespaceAfterTable() throws Exception {
 		parser.parse("<html><head></head><body>before<table><tr><td>in1</td></tr><tr><td>in2</td></tr></table>after</body></html>");
 		String text = parser.getText();
-		System.out.println("text:\n" + text);
+		TestUtil.println("text:\n" + text);
 		assertTrue(text.contains("in1 \t\nin2 \t\n\nafter"));
 	}
 
@@ -142,7 +143,7 @@ public class HtmlTextPresentationParserTest extends TestCase {
 		String html = "<html><body><p>Foo<br/>Bar &#8212; baz</p></body></html>";
 		parser.parse(html);
 		String text = parser.getText();
-		System.out.println("text:\n" + text);
+		TestUtil.println("text:\n" + text);
 		assertTrue(Pattern.compile("Bar\\s\\S\\sbaz", Pattern.MULTILINE).matcher(text).find());
 
 	}

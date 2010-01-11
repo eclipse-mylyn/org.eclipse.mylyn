@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 David Green and others.
+ * Copyright (c) 2007, 2010 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import java.net.URISyntaxException;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
+import org.eclipse.mylyn.wikitext.tests.TestUtil;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 /**
@@ -46,7 +47,7 @@ public class HtmlDocumentBuilderTest extends TestCase {
 		builder.setBase(new URI("http://www.foo.bar/baz"));
 		parser.parse("\"An URL\":foo/bar.html");
 		String html = out.toString();
-		System.out.println("HTML: \n" + html);
+		TestUtil.println("HTML: \n" + html);
 		assertTrue(html.contains("<a href=\"http://www.foo.bar/baz/foo/bar.html\">An URL</a>"));
 	}
 
@@ -54,7 +55,7 @@ public class HtmlDocumentBuilderTest extends TestCase {
 		builder.setBase(new URI("http://www.foo.bar/baz"));
 		parser.parse("\"An URL\":http://www.baz.ca/foo/bar.html");
 		String html = out.toString();
-		System.out.println("HTML: \n" + html);
+		TestUtil.println("HTML: \n" + html);
 		assertTrue(html.contains("<a href=\"http://www.baz.ca/foo/bar.html\">An URL</a>"));
 	}
 
@@ -62,7 +63,7 @@ public class HtmlDocumentBuilderTest extends TestCase {
 		builder.setBase(new File("/base/2/with space/").toURI());
 		parser.parse("\"An URL\":foo/bar.html");
 		String html = out.toString();
-		System.out.println("HTML: \n" + html);
+		TestUtil.println("HTML: \n" + html);
 		assertTrue(html.contains("<a href=\"file:/base/2/with%20space/foo/bar.html\">An URL</a>"));
 	}
 }

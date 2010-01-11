@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 David Green and others.
+ * Copyright (c) 2007, 2010 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package org.eclipse.mylyn.wikitext.core.parser.util;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.wikitext.tests.TestUtil;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 /**
@@ -34,7 +35,7 @@ public class TextileToEclipseTocTest extends TestCase {
 		textileToEclipseToc.setHtmlFile("Test.html");
 		String toc = textileToEclipseToc.parse("h1. title1\n\nContent para 1\n\nh1. title2\n\nMore content\n\nh2. Nested title\n\nnested content");
 
-		System.out.println("Eclipse TOC: " + toc);
+		TestUtil.println("Eclipse TOC: " + toc);
 	}
 
 }

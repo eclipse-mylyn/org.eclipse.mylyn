@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 David Green and others.
+ * Copyright (c) 2007, 2010 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import junit.framework.TestCase;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.wikitext.core.validation.MarkupValidator;
 import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem;
+import org.eclipse.mylyn.wikitext.tests.TestUtil;
 
 /**
  * 
@@ -40,21 +41,21 @@ public class BlockWhitespaceRuleTest extends TestCase {
 	public void testNoMatch() {
 		final String markup = "bc. \nfoo";
 		ValidationProblem problem = rule.findProblem(markup, 0, markup.length());
-		System.out.println(problem);
+		TestUtil.println(problem);
 		assertNull(problem);
 	}
 
 	public void testNoMatch2() {
 		final String markup = "\nabc.\nfoo";
 		ValidationProblem problem = rule.findProblem(markup, 0, markup.length());
-		System.out.println(problem);
+		TestUtil.println(problem);
 		assertNull(problem);
 	}
 
 	public void testMatch() {
 		final String markup = "bc.\nfoo";
 		ValidationProblem problem = rule.findProblem(markup, 0, markup.length());
-		System.out.println(problem);
+		TestUtil.println(problem);
 		assertNotNull(problem);
 		assertEquals(0, problem.getOffset());
 	}
@@ -62,7 +63,7 @@ public class BlockWhitespaceRuleTest extends TestCase {
 	public void testMatch2() {
 		final String markup = "\nbc.\nfoo";
 		ValidationProblem problem = rule.findProblem(markup, 0, markup.length());
-		System.out.println(problem);
+		TestUtil.println(problem);
 		assertNotNull(problem);
 		assertEquals(1, problem.getOffset());
 	}
@@ -70,7 +71,7 @@ public class BlockWhitespaceRuleTest extends TestCase {
 	public void testMatch3() {
 		final String markup = "\n\n\nbc..\nfoo";
 		ValidationProblem problem = rule.findProblem(markup, 0, markup.length());
-		System.out.println(problem);
+		TestUtil.println(problem);
 		assertNotNull(problem);
 		assertEquals(3, problem.getOffset());
 	}
@@ -79,7 +80,7 @@ public class BlockWhitespaceRuleTest extends TestCase {
 		String markup = "h1. Foo\n\nbc. bar\n\npre.\nsdf\n\nbc.\n\n";
 		List<ValidationProblem> result = validator.validate(new NullProgressMonitor(), markup);
 		assertEquals(2, result.size());
-		System.out.println(result);
+		TestUtil.println(result);
 		assertEquals(18, result.get(0).getOffset());
 		assertEquals(4, result.get(0).getLength());
 		assertEquals(28, result.get(1).getOffset());

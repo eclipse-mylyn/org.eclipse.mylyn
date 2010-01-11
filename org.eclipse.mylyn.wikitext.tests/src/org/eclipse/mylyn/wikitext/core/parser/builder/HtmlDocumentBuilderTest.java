@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 David Green and others.
+ * Copyright (c) 2007, 2010 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,6 +30,7 @@ import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder.Stylesheet;
+import org.eclipse.mylyn.wikitext.tests.TestUtil;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 /**
@@ -80,7 +81,7 @@ public class HtmlDocumentBuilderTest extends TestCase {
 		builder.setBase(new URI("http://www.foo.bar/baz"));
 		parser.parse("\"An URL\":foo/bar.html");
 		String html = out.toString();
-		System.out.println("HTML: \n" + html);
+		TestUtil.println("HTML: \n" + html);
 		assertTrue(html.contains("<a href=\"http://www.foo.bar/baz/foo/bar.html\">An URL</a>"));
 	}
 
@@ -88,7 +89,7 @@ public class HtmlDocumentBuilderTest extends TestCase {
 		builder.setBase(new URI("http://www.foo.bar/baz"));
 		parser.parse("\"An URL\":http://www.baz.ca/foo/bar.html");
 		String html = out.toString();
-		System.out.println("HTML: \n" + html);
+		TestUtil.println("HTML: \n" + html);
 		assertTrue(html.contains("<a href=\"http://www.baz.ca/foo/bar.html\">An URL</a>"));
 	}
 
@@ -96,7 +97,7 @@ public class HtmlDocumentBuilderTest extends TestCase {
 		builder.setBase(new File("/base/2/with space/").toURI());
 		parser.parse("\"An URL\":foo/bar.html");
 		String html = out.toString();
-		System.out.println("HTML: \n" + html);
+		TestUtil.println("HTML: \n" + html);
 		assertTrue(html.contains("<a href=\"file:/base/2/with%20space/foo/bar.html\">An URL</a>"));
 	}
 
@@ -114,7 +115,7 @@ public class HtmlDocumentBuilderTest extends TestCase {
 
 		String html = out.toString();
 
-		System.out.println(html);
+		TestUtil.println(html);
 
 		assertTrue(html.indexOf('\r') == -1);
 		assertTrue(html.indexOf('\n') == -1);
@@ -132,7 +133,7 @@ public class HtmlDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String html = out.toString();
-		System.out.println(html);
+		TestUtil.println(html);
 
 		assertTrue(html.contains("<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/><link type=\"text/css\" rel=\"stylesheet\" href=\"styles/test.css\"/></head>"));
 	}
@@ -143,7 +144,7 @@ public class HtmlDocumentBuilderTest extends TestCase {
 
 		fileToUrl.put(cssFile, cssResource);
 
-		System.out.println("loading css: " + cssFile);
+		TestUtil.println("loading css: " + cssFile);
 
 		builder.addCssStylesheet(new Stylesheet(cssFile));
 		builder.beginDocument();
@@ -153,7 +154,7 @@ public class HtmlDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String html = out.toString();
-		System.out.println(html);
+		TestUtil.println(html);
 
 		assertTrue(Pattern.compile(
 				"<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/><style type=\"text/css\">\\s*body\\s+\\{\\s+background-image: test-content.png;\\s+\\}\\s*</style></head>",
@@ -172,7 +173,7 @@ public class HtmlDocumentBuilderTest extends TestCase {
 
 		String html = out.toString();
 
-		System.out.println(html);
+		TestUtil.println(html);
 
 		assertTrue(html.contains("<a href=\"http://www.example.com\" target=\"_external\">test</a>"));
 	}
@@ -188,7 +189,7 @@ public class HtmlDocumentBuilderTest extends TestCase {
 
 		String html = out.toString();
 
-		System.out.println(html);
+		TestUtil.println(html);
 
 		assertTrue(html.contains("<a href=\"http://www.example.com\" target=\"_external\">test</a>"));
 	}
@@ -203,7 +204,7 @@ public class HtmlDocumentBuilderTest extends TestCase {
 
 		String html = out.toString();
 
-		System.out.println(html);
+		TestUtil.println(html);
 
 		assertTrue(html.contains("<a href=\"foo\">test</a>"));
 	}
@@ -219,7 +220,7 @@ public class HtmlDocumentBuilderTest extends TestCase {
 
 		String html = out.toString();
 
-		System.out.println(html);
+		TestUtil.println(html);
 
 		assertTrue(html.contains("<a href=\"http://www.example.com/foo.html\">test</a>"));
 	}
@@ -238,7 +239,7 @@ public class HtmlDocumentBuilderTest extends TestCase {
 
 		String html = out.toString();
 
-		System.out.println(html);
+		TestUtil.println(html);
 
 		assertTrue(html.contains("<body><div class=\"note\"><p>foo</p></div></body>"));
 		assertTrue(html.contains("<style type=\"text/css\">"));
@@ -258,7 +259,7 @@ public class HtmlDocumentBuilderTest extends TestCase {
 
 		String html = out.toString();
 
-		System.out.println(html);
+		TestUtil.println(html);
 
 		assertTrue(html.contains("<body><div class=\"note\"><p>foo</p></div></body>"));
 		assertTrue(!html.contains("<style type=\"text/css\">"));
@@ -278,7 +279,7 @@ public class HtmlDocumentBuilderTest extends TestCase {
 
 		String html = out.toString();
 
-		System.out.println(html);
+		TestUtil.println(html);
 
 		assertTrue(html.contains("<a href=\"http://www.foo.bar\" rel=\"nofollow\">Foo Bar</a>"));
 
@@ -295,7 +296,7 @@ public class HtmlDocumentBuilderTest extends TestCase {
 
 		html = out.toString();
 
-		System.out.println(html);
+		TestUtil.println(html);
 
 		assertTrue(html.contains("<a href=\"http://www.foo.bar\" rel=\"nofollow\">Foo Bar</a>"));
 
@@ -313,7 +314,7 @@ public class HtmlDocumentBuilderTest extends TestCase {
 
 		html = out.toString();
 
-		System.out.println(html);
+		TestUtil.println(html);
 
 		assertTrue(html.contains("<a href=\"http://www.foo.bar\" rel=\"foobar nofollow\">Foo Bar</a>"));
 
@@ -329,7 +330,7 @@ public class HtmlDocumentBuilderTest extends TestCase {
 
 		html = out.toString();
 
-		System.out.println(html);
+		TestUtil.println(html);
 
 		assertTrue(html.contains("<a href=\"http://www.foo.bar\">Foo Bar</a>"));
 	}
@@ -344,7 +345,7 @@ public class HtmlDocumentBuilderTest extends TestCase {
 
 		String html = out.toString();
 
-		System.out.println(html);
+		TestUtil.println(html);
 
 		assertTrue(html.contains("<link type=\"text/css\" rel=\"stylesheet\" href=\"a/test.css\" foo=\"bar\"/>"));
 	}
@@ -357,7 +358,7 @@ public class HtmlDocumentBuilderTest extends TestCase {
 
 		String html = out.toString();
 
-		System.out.println(html);
+		TestUtil.println(html);
 
 		assertTrue(html.contains("<link type=\"text/css\" rel=\"stylesheet\" href=\"a/test.css\"/>"));
 	}

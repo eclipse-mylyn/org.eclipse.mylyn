@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 David Green and others.
+ * Copyright (c) 2009, 2010 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -39,7 +39,7 @@ public class MarkupToXslfoTaskTest extends AbstractTestAntTask {
 		assertTrue(targetFile.exists() && targetFile.isFile());
 
 		String content = getContent(targetFile);
-//		System.out.println(content);
+//		TestUtil.println(content);
 
 		assertTrue(content.contains("<root xmlns=\"http://www.w3.org/1999/XSL/Format\""));
 		assertTrue(content.contains("</root>"));

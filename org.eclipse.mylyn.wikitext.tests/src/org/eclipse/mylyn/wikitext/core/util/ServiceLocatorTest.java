@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 David Green and others.
+ * Copyright (c) 2007, 2010 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@ package org.eclipse.mylyn.wikitext.core.util;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.tests.TestUtil;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 /**
@@ -48,7 +49,7 @@ public class ServiceLocatorTest extends TestCase {
 			fail("Expected exception");
 		} catch (IllegalArgumentException e) {
 			// expected, ignore
-			System.out.println(e.getMessage());
+			TestUtil.println(e.getMessage());
 		}
 	}
 

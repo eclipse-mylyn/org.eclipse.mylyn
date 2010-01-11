@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 David Green and others.
+ * Copyright (c) 2007, 2010 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,6 +22,7 @@ import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.core.util.DefaultXmlStreamWriter;
+import org.eclipse.mylyn.wikitext.tests.TestUtil;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 public class DitaTopicDocumentBuilderTest extends TestCase {
@@ -57,7 +58,7 @@ public class DitaTopicDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String dita = out.toString();
-		System.out.println("DITA: \n" + dita);
+		TestUtil.println("DITA: \n" + dita);
 
 		assertTrue(Pattern.compile(".*?<topic>\\s*<title></title>\\s*<body>\\s*<p>foo</p>\\s*<p>bar</p>\\s*</body>.*",
 				Pattern.DOTALL).matcher(dita).matches());
@@ -76,7 +77,7 @@ public class DitaTopicDocumentBuilderTest extends TestCase {
 		xmlStreamWriter.close();
 
 		String dita = out.toString();
-		System.out.println("DITA: \n" + dita);
+		TestUtil.println("DITA: \n" + dita);
 
 		assertTrue(dita.contains("<topic id=\"Title1\"><title>Title1</title><body><p>some content in a para</p></body></topic>"));
 	}
@@ -99,7 +100,7 @@ public class DitaTopicDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String dita = out.toString();
-		System.out.println("DITA: \n" + dita);
+		TestUtil.println("DITA: \n" + dita);
 
 		assertTrue(Pattern.compile("<xref href=\"#test1234\">\\s*<i>link text</i>\\s*</xref>").matcher(dita).find());
 	}
