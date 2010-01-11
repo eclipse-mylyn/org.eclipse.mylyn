@@ -28,7 +28,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
@@ -132,11 +131,7 @@ public class ExternalizationManager {
 
 	public void requestSave() {
 		if (!saveDisabled) {
-			if (!CoreUtil.TEST_MODE) {
-				saveJob.schedule(SAVE_DELAY);
-			} else {
-				saveJob.run(new NullProgressMonitor());
-			}
+			saveJob.schedule(SAVE_DELAY);
 		}
 	}
 
@@ -145,12 +140,16 @@ public class ExternalizationManager {
 			saveDisabled = true;
 
 			// run save job as early as possible
-			saveJob.wakeUp();
-			saveJob.join();
+			saveNow();
 		} catch (InterruptedException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
 					"Task List save on shutdown canceled.", e)); //$NON-NLS-1$
 		}
+	}
+
+	public void saveNow() throws InterruptedException {
+		saveJob.wakeUp();
+		saveJob.join();
 	}
 
 	/**

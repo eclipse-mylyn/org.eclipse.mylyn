@@ -86,13 +86,13 @@ public abstract class TestFixture {
 	 */
 	public static void saveAndReadTasklist() throws Exception {
 		TasksUiPlugin.getTaskList().notifyElementsChanged(null);
-		saveTaskList();
+		saveNow();
 		resetTaskList();
 		TasksUiPlugin.getDefault().initializeDataSources();
 	}
 
-	public static void saveTaskList() {
-		TasksUiPlugin.getExternalizationManager().requestSave();
+	public static void saveNow() throws Exception {
+		TasksUiPlugin.getExternalizationManager().saveNow();
 	}
 
 	protected AbstractRepositoryConnector connector;

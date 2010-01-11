@@ -222,17 +222,17 @@ public class TaskRepositoryManagerTest extends TestCase {
 		assertNotNull(manager.getRepositoryConnector(connector.getConnectorKind()));
 	}
 
-	public void testRepositoryPersistance() throws MalformedURLException {
+	public void testRepositoryPersistance() throws Exception {
 		TaskRepository repository1 = new TaskRepository("bugzilla", "http://bugzilla");
 		TaskRepository repository2 = new TaskRepository("jira", "http://jira");
 		TaskRepository repository3 = new TaskRepository("local", "http://local");
 		manager.addRepository(repository3);
 		manager.addRepository(repository1);
 		manager.addRepository(repository2);
-		TasksUiPlugin.getDefault();
+		TaskTestUtil.saveNow();
+
 		TasksUiPlugin.getExternalizationManager().load();
 		//manager.readRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
-
 		if (manager.getRepositoryConnector("bugzilla") != null) {
 			assertTrue(manager.getAllRepositories().contains(repository2));
 		}
@@ -242,7 +242,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 		assertTrue(manager.getAllRepositories().contains(repository3));
 	}
 
-	public void testRepositoryAttributePersistance() throws MalformedURLException {
+	public void testRepositoryAttributePersistance() throws Exception {
 		assertEquals("", TasksUiPlugin.getDefault().getPreferenceStore().getString(
 				TaskRepositoryManager.PREF_REPOSITORIES));
 
@@ -258,7 +258,8 @@ public class TaskRepositoryManagerTest extends TestCase {
 		repository1.setTimeZoneId(fakeTimeZone);
 		repository1.setSynchronizationTimeStamp(dateString);
 		manager.addRepository(repository1);
-		TasksUiPlugin.getDefault();
+		TaskTestUtil.saveNow();
+
 		TasksUiPlugin.getExternalizationManager().load();
 		//manager.readRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		TaskRepository temp = manager.getRepository(repository1.getConnectorKind(), repository1.getRepositoryUrl());
@@ -303,33 +304,32 @@ public class TaskRepositoryManagerTest extends TestCase {
 		// causing this test to fail.
 		AbstractRepositoryConnector connector = new MockRepositoryConnector();
 		manager.addRepositoryConnector(connector);
-
 		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND,
 				"http://mylyn.eclipse.org/");
 		repository.setProperty("owner", "euxx");
 		manager.addRepository(repository);
-		TasksUiPlugin.getDefault();
+		TaskTestUtil.saveNow();
+
 		TasksUiPlugin.getExternalizationManager().load();
 		//manager.readRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
-
 		TaskRepository temp = manager.getRepository(repository.getConnectorKind(), repository.getRepositoryUrl());
 		assertNotNull(temp);
 		assertEquals("euxx", temp.getProperty("owner"));
 	}
 
-	public void testRepositoryPersistanceSameUrl() throws MalformedURLException {
+	public void testRepositoryPersistanceSameUrl() throws Exception {
 		TaskRepository repository1 = new TaskRepository("local", "http://repository");
 		TaskRepository repository2 = new TaskRepository("web", "http://repository");
 		manager.addRepository(repository1);
 		manager.addRepository(repository2);
 		assertEquals(2, manager.getAllRepositories().size());
-
 		List<TaskRepository> repositoryList = new ArrayList<TaskRepository>();
 		repositoryList.add(repository2);
 		repositoryList.add(repository1);
-		//manager.readRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
-		TasksUiPlugin.getDefault();
+		TaskTestUtil.saveNow();
+
 		TasksUiPlugin.getExternalizationManager().load();
+		//manager.readRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		assertEquals("got: " + manager.getAllRepositories(), 2, manager.getAllRepositories().size());
 	}
 

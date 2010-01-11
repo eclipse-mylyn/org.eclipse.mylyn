@@ -652,7 +652,7 @@ public class TaskActivityTimingTest extends TestCase {
 				- mockContext.getInteractionHistory().get(0).getDate().getTime());
 	}
 
-	public void testCollapsedExternalization() {
+	public void testCollapsedExternalization() throws Exception {
 
 		Calendar startTime1 = Calendar.getInstance();
 		Calendar endTime1 = Calendar.getInstance();
@@ -690,7 +690,7 @@ public class TaskActivityTimingTest extends TestCase {
 		TasksUiPlugin.getTaskActivityManager().deactivateActiveTask();
 		assertEquals(4, ContextCorePlugin.getContextManager().getActivityMetaContext().getInteractionHistory().size());
 
-		TaskTestUtil.saveTaskList();
+		TaskTestUtil.saveNow();
 		ContextCorePlugin.getContextManager().saveActivityMetaContext();
 		ContextCorePlugin.getContextManager().getActivityMetaContext().reset();
 		assertEquals(0, ContextCorePlugin.getContextManager().getActivityMetaContext().getInteractionHistory().size());
@@ -833,7 +833,7 @@ public class TaskActivityTimingTest extends TestCase {
 		assertEquals(expectedTotalTime, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1));
 	}
 
-	public void testElapsedSameAfterRead() {
+	public void testElapsedSameAfterRead() throws Exception {
 		// test that granularity of elapsed time map is retained after
 		// being re-read from disk
 
@@ -901,7 +901,7 @@ public class TaskActivityTimingTest extends TestCase {
 
 		TasksUi.getTaskActivityManager().deactivateActiveTask();
 		assertEquals(4, ContextCorePlugin.getContextManager().getActivityMetaContext().getInteractionHistory().size());
-		TaskTestUtil.saveTaskList();
+		TaskTestUtil.saveNow();
 		ContextCorePlugin.getContextManager().saveActivityMetaContext();
 		ContextCorePlugin.getContextManager().getActivityMetaContext().reset();
 		assertEquals(0, ContextCorePlugin.getContextManager().getActivityMetaContext().getInteractionHistory().size());

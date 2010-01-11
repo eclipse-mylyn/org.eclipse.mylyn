@@ -22,7 +22,6 @@ import java.util.Set;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
-import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
@@ -72,7 +71,6 @@ public class BugzillaRepository32Test extends AbstractBugzillaTest {
 	public void testSecondSubmit() throws Exception {
 		init322();
 		String taskNumber = "1";
-		assertTrue(CoreUtil.TEST_MODE);
 		RepositoryQuery query = new RepositoryQuery("bugzilla", "blah");
 		query.setRepositoryUrl(BugzillaTestConstants.TEST_BUGZILLA_322_URL);
 		query.setUrl("?short_desc_type=allwordssubstr&short_desc=&product=TestProduct&long_desc_type=allwordssubstr&long_desc=&order=Importance&ctype=rdf");

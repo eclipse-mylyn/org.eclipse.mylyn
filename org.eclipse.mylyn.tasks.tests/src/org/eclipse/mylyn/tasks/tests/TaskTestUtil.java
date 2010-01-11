@@ -89,13 +89,13 @@ public class TaskTestUtil {
 	 */
 	public static void saveAndReadTasklist() throws Exception {
 		TasksUiPlugin.getTaskList().notifyElementsChanged(null);
-		saveTaskList();
+		saveNow();
 		TaskTestUtil.resetTaskList();
 		TasksUiPlugin.getDefault().initializeDataSources();
 	}
 
-	public static void saveTaskList() {
-		TasksUiPlugin.getExternalizationManager().requestSave();
+	public static void saveNow() throws InterruptedException {
+		TasksUiPlugin.getExternalizationManager().saveNow();
 	}
 
 	public static TaskRepository createMockRepository() {
