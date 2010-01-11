@@ -103,7 +103,7 @@ public class ManagedTestSuite extends TestSuite {
 		}
 
 		public void startTest(Test test) {
-			System.err.println("Starting " + test.toString());
+			System.err.println("Running " + test.toString());
 			task = new DumpTreadTask(test);
 			timer.schedule(task, DELAY);
 		}
