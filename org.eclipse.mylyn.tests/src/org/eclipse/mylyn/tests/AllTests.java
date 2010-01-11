@@ -14,13 +14,15 @@ package org.eclipse.mylyn.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.mylyn.commons.tests.support.ManagedTestSuite;
+
 /**
  * @author Mik Kersten
  */
 public class AllTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Tests for org.eclipse.mylyn.tests");
+		TestSuite suite = new ManagedTestSuite("Tests for org.eclipse.mylyn.tests");
 		suite.addTest(AllNonConnectorTests.suite());
 		suite.addTest(AllConnectorTests.suite());
 		return suite;
