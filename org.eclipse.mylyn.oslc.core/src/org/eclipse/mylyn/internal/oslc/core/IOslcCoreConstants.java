@@ -79,6 +79,8 @@ public interface IOslcCoreConstants {
 
 	public static final String ATTRIBUTE_HINTHEIGHT = "hintHeight"; //$NON-NLS-1$
 
+	public static final String ATTRIBUTE_ABOUT = "about"; //$NON-NLS-1$
+
 	// Http header keys
 	public static final String HEADER_ETAG = "ETag"; //$NON-NLS-1$
 

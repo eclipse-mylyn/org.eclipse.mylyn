@@ -97,8 +97,10 @@ public class ServiceDiscoveryTest extends TestCase {
 		FileInputStream inStream = new FileInputStream(file);
 		ArrayList<OslcServiceProvider> list = new ArrayList<OslcServiceProvider>();
 		client.parseServices(inStream, list, new NullProgressMonitor());
-		assertEquals(1, list.size());
+		assertEquals(2, list.size());
 		OslcServiceProvider desc = list.get(0);
+		assertEquals("http://somewhere/catalog", desc.getUrl());
+		desc = list.get(1);
 		assertEquals("http://mylyn.eclipse.org/oslc/cqrest/repo/7.0.0/db/SAMPL", desc.getUrl());
 	}
 

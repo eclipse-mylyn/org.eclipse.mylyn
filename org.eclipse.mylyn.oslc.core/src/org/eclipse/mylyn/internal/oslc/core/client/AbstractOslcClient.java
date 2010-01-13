@@ -149,13 +149,13 @@ public abstract class AbstractOslcClient {
 		Iterator<?> itr = doc.getDescendants(new ElementFilter(IOslcCoreConstants.ELEMENT_SERVICE_PROVIDER_CATALOG));
 		while (itr.hasNext()) {
 			Element element = (Element) itr.next();
-			if (element.getParent() != doc.getRootElement()) {
-				Attribute attrResource = element.getAttribute(IOslcCoreConstants.ATTRIBUTE_RESOURCE,
+			if (element != doc.getRootElement()) {
+				Attribute attrAbout = element.getAttribute(IOslcCoreConstants.ATTRIBUTE_ABOUT,
 						IOslcCoreConstants.NAMESPACE_RDF);
 				String title = element.getChild(IOslcCoreConstants.ELEMENT_TITLE, IOslcCoreConstants.NAMESPACE_DC)
 						.getText();
-				if (attrResource != null && attrResource.getValue().length() > 0) {
-					providers.add(new OslcServiceProviderCatalog(title, attrResource.getValue()));
+				if (attrAbout != null && attrAbout.getValue().length() > 0) {
+					providers.add(new OslcServiceProviderCatalog(title, attrAbout.getValue()));
 				}
 			}
 		}
@@ -230,7 +230,8 @@ public abstract class AbstractOslcClient {
 			config.setDescription(element.getText());
 		}
 
-		itr = doc.getDescendants(new ElementFilter(IOslcCoreConstants.ELEMENT_CREATIONDIALOG));
+		itr = doc.getDescendants(new ElementFilter(IOslcCoreConstants.ELEMENT_CREATIONDIALOG,
+				IOslcCoreConstants.NAMESPACE_OSLC_CM_1_0));
 		while (itr.hasNext()) {
 			boolean isDefault = false;
 			Element element = (Element) itr.next();
@@ -401,7 +402,7 @@ public abstract class AbstractOslcClient {
 
 	protected GetMethod createGetMethod(String requestPath) {
 		GetMethod method = new GetMethod(getRequestPath(requestPath));
-		method.setFollowRedirects(false);
+		method.setFollowRedirects(true);
 		method.setDoAuthentication(true);
 		// application/xml is returned by oslc servers by default
 		//method.setRequestHeader("Accept", "application/xml");
