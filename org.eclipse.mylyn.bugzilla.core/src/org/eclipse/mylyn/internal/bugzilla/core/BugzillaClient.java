@@ -1673,11 +1673,21 @@ public class BugzillaClient {
 				}
 			}
 
+			if (hasAuthenticationCredentials() && !loggedIn) {
+				// None of the usual errors occurred. Log what cookies were received to aid authentication debugging
+				StringBuilder builder = new StringBuilder("Cookies: "); //$NON-NLS-1$
+				for (Cookie cookie : httpClient.getState().getCookies()) {
+					builder.append(cookie.getName() + " = " + cookie.getValue() + "  "); //$NON-NLS-1$ //$NON-NLS-2$
+				}
+				StatusHandler.log(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN,
+						"An unknown repository error has occurred: " + body)); //$NON-NLS-1$
+				StatusHandler.log(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN, builder.toString()));
+			}
+
 			RepositoryStatus status = RepositoryStatus.createHtmlStatus(repositoryUrl.toString(), IStatus.INFO,
 					BugzillaCorePlugin.ID_PLUGIN, RepositoryStatus.ERROR_REPOSITORY,
-					"A repository error has occurred.", body); //$NON-NLS-1$
-			StatusHandler.log(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN,
-					"A repository error has occurred: " + body)); //$NON-NLS-1$
+					"An unkown repository error has occurred.", body); //$NON-NLS-1$
+
 			throw new CoreException(status);
 
 		} catch (ParseException e) {
