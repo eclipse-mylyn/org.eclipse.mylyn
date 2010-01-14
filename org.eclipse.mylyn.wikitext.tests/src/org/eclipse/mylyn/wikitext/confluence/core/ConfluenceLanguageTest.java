@@ -292,6 +292,27 @@ public class ConfluenceLanguageTest extends TestCase {
 		assertTrue(out.toString().contains("<a href=\"mailto:foo@bar.com\">test</a>"));
 	}
 
+	public void testItalicsWithHyperlink() {
+		// bug 298626: [Confluence] italic formatting with embedded links is not handled correctly
+		String html = parser.parseToHtml("_This [This is a test|http://my_url.jpg] is a test_");
+		System.out.println(html);
+		assertTrue(html.contains("<body><p><em>This <a href=\"http://my_url.jpg\">This is a test</a> is a test</em></p></body>"));
+	}
+
+	public void testItalicsWithHyperlink2() {
+		// bug 298626: [Confluence] italic formatting with embedded links is not handled correctly
+		String html = parser.parseToHtml("_This [This is a test|http://myurl.jpg] is a test_");
+		System.out.println(html);
+		assertTrue(html.contains("<body><p><em>This <a href=\"http://myurl.jpg\">This is a test</a> is a test</em></p></body>"));
+	}
+
+	public void testItalicsWithHyperlink3() {
+		// bug 298626: [Confluence] italic formatting with embedded links is not handled correctly
+		String html = parser.parseToHtml("_This [This is a test|http://my%5Furl.jpg] is a test_");
+		System.out.println(html);
+		assertTrue(html.contains("<body><p><em>This <a href=\"http://my%5Furl.jpg\">This is a test</a> is a test</em></p></body>"));
+	}
+
 	public void testNamedAnchor() {
 		String html = parser.parseToHtml("a {anchor:a23423} named anchor");
 		TestUtil.println("HTML: \n" + html);
@@ -634,6 +655,54 @@ public class ConfluenceLanguageTest extends TestCase {
 		String html = parser.parseToHtml("_italics *bol d* italics_");
 		TestUtil.println(html);
 		assertTrue(html.contains("<em>italics <strong>bol d</strong> italics</em>"));
+	}
+
+	public void testItalics() {
+		String html = parser.parseToHtml("_italics_");
+		TestUtil.println(html);
+		assertTrue(html.contains("<em>italics</em>"));
+	}
+
+	public void testItalicsNegativeMatchTrailingWhitespace() {
+		String html = parser.parseToHtml("_italics _");
+		TestUtil.println(html);
+		assertTrue(html.contains("<p>_italics _</p>"));
+	}
+
+	public void testItalicsNegativeMatchLeadingWhitespace() {
+		String html = parser.parseToHtml("_ italics_");
+		TestUtil.println(html);
+		assertTrue(html.contains("<p>_ italics_</p>"));
+	}
+
+	public void testItalicsNegativeMatchNoContent() {
+		String html = parser.parseToHtml("__");
+		TestUtil.println(html);
+		assertTrue(html.contains("<p>__</p>"));
+	}
+
+	public void testItalicsNonGreedy() {
+		String html = parser.parseToHtml("_italics_ a_");
+		TestUtil.println(html);
+		assertTrue(html.contains("<p><em>italics</em> a_</p>"));
+	}
+
+	public void testHyperlinkWithItalics() {
+		String html = parser.parseToHtml("[_This is a test_|http://my_url.jpg]");
+		TestUtil.println(html);
+		assertTrue(html.contains("<p><a href=\"http://my_url.jpg\"><em>This is a test</em></a></p>"));
+	}
+
+	public void testHyperlinkWithBold() {
+		String html = parser.parseToHtml("[*This is a test*|http://my_url.jpg]");
+		TestUtil.println(html);
+		assertTrue(html.contains("<p><a href=\"http://my_url.jpg\"><strong>This is a test</strong></a></p>"));
+	}
+
+	public void testHyperlinkWithBoldItalics() {
+		String html = parser.parseToHtml("[*_This is a test_*|http://my_url.jpg]");
+		TestUtil.println(html);
+		assertTrue(html.contains("<p><a href=\"http://my_url.jpg\"><strong><em>This is a test</em></strong></a></p>"));
 	}
 
 	public void testBoldItalics() {

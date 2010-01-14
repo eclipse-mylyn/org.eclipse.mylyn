@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 David Green and others.
+ * Copyright (c) 2007, 2010 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,11 +25,12 @@ import org.eclipse.mylyn.internal.wikitext.confluence.core.block.TableBlock;
 import org.eclipse.mylyn.internal.wikitext.confluence.core.block.TableOfContentsBlock;
 import org.eclipse.mylyn.internal.wikitext.confluence.core.block.TextBoxBlock;
 import org.eclipse.mylyn.internal.wikitext.confluence.core.phrase.ConfluenceWrappedPhraseModifier;
+import org.eclipse.mylyn.internal.wikitext.confluence.core.phrase.EmphasisPhraseModifier;
+import org.eclipse.mylyn.internal.wikitext.confluence.core.phrase.HyperlinkPhraseModifier;
 import org.eclipse.mylyn.internal.wikitext.confluence.core.phrase.ImagePhraseModifier;
 import org.eclipse.mylyn.internal.wikitext.confluence.core.phrase.SimplePhraseModifier;
 import org.eclipse.mylyn.internal.wikitext.confluence.core.phrase.SimpleWrappedPhraseModifier;
 import org.eclipse.mylyn.internal.wikitext.confluence.core.token.AnchorReplacementToken;
-import org.eclipse.mylyn.internal.wikitext.confluence.core.token.HyperlinkReplacementToken;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
@@ -109,8 +110,9 @@ public class ConfluenceLanguage extends AbstractMarkupLanguage {
 	@Override
 	protected void addStandardPhraseModifiers(PatternBasedSyntax phraseModifierSyntax) {
 		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.,\\\"'?!;:\\)\\(\\[\\]])|^)(?:", 0); //$NON-NLS-1$
+		phraseModifierSyntax.add(new HyperlinkPhraseModifier());
 		phraseModifierSyntax.add(new SimplePhraseModifier("*", SpanType.STRONG, true)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimplePhraseModifier("_", SpanType.EMPHASIS, true)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new EmphasisPhraseModifier());
 		phraseModifierSyntax.add(new SimplePhraseModifier("??", SpanType.CITATION, true)); //$NON-NLS-1$
 		phraseModifierSyntax.add(new SimplePhraseModifier("-", SpanType.DELETED, true)); //$NON-NLS-1$
 		phraseModifierSyntax.add(new SimplePhraseModifier("+", SpanType.UNDERLINED, true)); //$NON-NLS-1$
@@ -130,7 +132,6 @@ public class ConfluenceLanguage extends AbstractMarkupLanguage {
 		tokenSyntax.add(new EntityReferenceReplacementToken("(C)", "#169")); //$NON-NLS-1$ //$NON-NLS-2$
 		tokenSyntax.add(new EntityReferenceReplacementToken("(r)", "#174")); //$NON-NLS-1$ //$NON-NLS-2$
 		tokenSyntax.add(new EntityReferenceReplacementToken("(R)", "#174")); //$NON-NLS-1$ //$NON-NLS-2$
-		tokenSyntax.add(new HyperlinkReplacementToken());
 		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\w\\s)(---)(?=\\s\\w))", "#8212")); // emdash //$NON-NLS-1$ //$NON-NLS-2$
 		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\w\\s)(--)(?=\\s\\w))", "#8211")); // endash //$NON-NLS-1$ //$NON-NLS-2$
 		tokenSyntax.add(new PatternLiteralReplacementToken("(----)", "<hr/>")); // horizontal rule //$NON-NLS-1$ //$NON-NLS-2$
