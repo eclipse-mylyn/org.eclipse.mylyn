@@ -115,8 +115,7 @@ public class MarkupTokenScanner implements ITokenScanner {
 				Token defaultToken;
 				{
 					StyleRange styleRange = styleManager.createStyleRange(defaultState, 0, 1);
-					TextAttribute textAttribute = new TextAttribute(styleRange.foreground, styleRange.background,
-							styleRange.fontStyle, styleRange.font);
+					TextAttribute textAttribute = createTextAttribute(styleRange);
 					defaultToken = new Token(defaultState, textAttribute, offset, length);
 				}
 				if (partitions != null) {
@@ -220,6 +219,17 @@ public class MarkupTokenScanner implements ITokenScanner {
 			tokenIt = tokens.iterator();
 		}
 
+	}
+
+	protected TextAttribute createTextAttribute(StyleRange styleRange) {
+		int fontStyle = styleRange.fontStyle;
+		if (styleRange.strikeout) {
+			fontStyle |= TextAttribute.STRIKETHROUGH;
+		}
+		if (styleRange.underline) {
+			fontStyle |= TextAttribute.UNDERLINE;
+		}
+		return new TextAttribute(styleRange.foreground, styleRange.background, fontStyle, styleRange.font);
 	}
 
 	/**
@@ -341,8 +351,7 @@ public class MarkupTokenScanner implements ITokenScanner {
 		}
 		StyleRange styleRange = styleManager.createStyleRange(fontState, 0, 1);
 
-		TextAttribute textAttribute = new TextAttribute(styleRange.foreground, styleRange.background,
-				styleRange.fontStyle, styleRange.font);
+		TextAttribute textAttribute = createTextAttribute(styleRange);
 		return new Token(fontState, textAttribute, span.getOffset(), span.getLength());
 	}
 
@@ -362,8 +371,7 @@ public class MarkupTokenScanner implements ITokenScanner {
 		}
 		StyleRange styleRange = styleManager.createStyleRange(fontState, 0, 1);
 
-		TextAttribute textAttribute = new TextAttribute(styleRange.foreground, styleRange.background,
-				styleRange.fontStyle, styleRange.font);
+		TextAttribute textAttribute = createTextAttribute(styleRange);
 		return new Token(fontState, textAttribute, partition.getOffset(), partition.getLength());
 	}
 
