@@ -11,7 +11,7 @@ package org.eclipse.mylyn.internal.oslc.ui;
 import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "org.eclipse.mylyn.oslc.cm.internal.ui.messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.oslc.ui.messages"; //$NON-NLS-1$
 
 	public static String OslcRepositorySettingsPage_Enter_Base_Above_And_Validate;
 
