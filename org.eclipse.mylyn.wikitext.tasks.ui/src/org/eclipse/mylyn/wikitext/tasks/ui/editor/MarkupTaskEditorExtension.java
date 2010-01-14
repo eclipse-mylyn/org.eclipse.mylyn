@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 David Green and others.
+ * Copyright (c) 2007, 2010 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,6 +26,8 @@ import org.eclipse.jface.text.source.DefaultAnnotationHover;
 import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
+import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.wikitext.tasks.ui.WikiTextTasksUiPlugin;
 import org.eclipse.mylyn.internal.wikitext.tasks.ui.util.PlatformUrlHyperlink;
 import org.eclipse.mylyn.internal.wikitext.tasks.ui.util.Util;
@@ -69,7 +71,9 @@ import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
  * @author David Green
  * @since 1.0
  */
+@SuppressWarnings("restriction")
 public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage> extends AbstractTaskEditorExtension {
+
 	/**
 	 * Provide a means to disable WikiWord linking. This feature is experimental and may be removed in a future release.
 	 * To enable this feature, set the system property <tt>MarkupTaskEditorExtension.wikiWordDisabled</tt> to
@@ -395,12 +399,17 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 		}
 
 		protected void focusChanged() {
-			if (!super.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_CURRENT_LINE)) {
+			if (!getCurrentLineHighlightPreference()) {
 				return;
 			}
 			boolean newValue = getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_CURRENT_LINE);
 			firePropertyChangeEvent(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_CURRENT_LINE, !newValue,
 					newValue);
+		}
+
+		private boolean getCurrentLineHighlightPreference() {
+			return TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
+					ITasksUiPreferenceConstants.EDITOR_CURRENT_LINE_HIGHLIGHT);
 		}
 
 		@Override
@@ -409,6 +418,7 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 				if (!controlFocused) {
 					return false;
 				}
+				return getCurrentLineHighlightPreference();
 			}
 			if (AbstractDecoratedTextEditorPreferenceConstants.EDITOR_PRINT_MARGIN.equals(name)) {
 				return false;
