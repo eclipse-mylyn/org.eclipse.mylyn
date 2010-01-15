@@ -66,6 +66,20 @@ public abstract class MarkupTask extends Task {
 	}
 
 	/**
+	 * @since 1.3
+	 */
+	public MarkupLanguageConfiguration getMarkupLanguageConfiguration() {
+		return markupLanguageConfiguration;
+	}
+
+	/**
+	 * @since 1.3
+	 */
+	public void setMarkupLanguageConfiguration(MarkupLanguageConfiguration markupLanguageConfiguration) {
+		this.markupLanguageConfiguration = markupLanguageConfiguration;
+	}
+
+	/**
 	 * Create a {@link MarkupLanguage markup language parser} for the {@link #getMarkupLanguage() specified markup
 	 * language}.
 	 * 
