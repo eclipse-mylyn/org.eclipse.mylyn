@@ -389,7 +389,8 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 
 	private Object call(IProgressMonitor monitor, String method, Object... parameters) throws TracException {
 		monitor = Policy.monitorFor(monitor);
-		while (true) {
+		TracException lastException = null;
+		for (int attempt = 0; attempt < 3; attempt++) {
 			if (!probed) {
 				try {
 					probeAuthenticationScheme(monitor);
@@ -407,21 +408,27 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 				try {
 					location.requestCredentials(AuthenticationType.REPOSITORY, null, monitor);
 				} catch (UnsupportedRequestException ignored) {
-					throw e;
+					lastException = e;
 				}
 			} catch (TracPermissionDeniedException e) {
 				try {
 					location.requestCredentials(AuthenticationType.REPOSITORY, null, monitor);
 				} catch (UnsupportedRequestException ignored) {
-					throw e;
+					lastException = e;
 				}
 			} catch (TracProxyAuthenticationException e) {
 				try {
 					location.requestCredentials(AuthenticationType.PROXY, null, monitor);
 				} catch (UnsupportedRequestException ignored) {
-					throw e;
+					lastException = e;
 				}
 			}
+		}
+		if (lastException != null) {
+			throw lastException;
+		} else {
+			// this path should never be reached
+			throw new IllegalStateException();
 		}
 	}
 
