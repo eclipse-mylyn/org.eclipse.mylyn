@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2010 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -62,6 +62,8 @@ public class Messages extends NLS {
 	public static String TasksUiPreferencePage_minutes_of_inactivity;
 
 	public static String TasksUiPreferencePage_A_new_empty_Task_List_will_be_created_in_the_chosen_directory_if_one_does_not_already_exists;
+
+	public static String TasksUiPreferencePage_highlight_current_line;
 
 	public static String TasksUiPreferencePage_Rich_Editor__Recommended_;
 

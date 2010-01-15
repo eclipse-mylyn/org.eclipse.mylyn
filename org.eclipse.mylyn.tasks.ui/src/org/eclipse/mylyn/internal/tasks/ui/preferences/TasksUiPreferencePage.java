@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2010 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -62,6 +62,7 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 /**
  * @author Mik Kersten
  * @author Rob Elves
+ * @author David Green
  */
 public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
@@ -74,6 +75,8 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 	private static final int MS_MINUTES = 60 * 1000;
 
 	private Button useRichEditor;
+
+	private Button editorHighlightsCurrentLine;
 
 	private Button useWebBrowser;
 
@@ -195,6 +198,8 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		//getPreferenceStore().setValue(TasksUiPreferenceConstants.BACKUP_SCHEDULE, backupScheduleTimeText.getText());
 
 		getPreferenceStore().setValue(ITasksUiPreferenceConstants.EDITOR_TASKS_RICH, useRichEditor.getSelection());
+		getPreferenceStore().setValue(ITasksUiPreferenceConstants.EDITOR_CURRENT_LINE_HIGHLIGHT,
+				editorHighlightsCurrentLine.getSelection());
 		getPreferenceStore().setValue(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED,
 				enableBackgroundSynch.getSelection());
 		long miliseconds = 60000 * Long.parseLong(synchScheduleTime.getText());
@@ -260,6 +265,8 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		//backupFolderText.setText(TasksUiPlugin.getDefault().getBackupFolderPath());
 
 		useRichEditor.setSelection(getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.EDITOR_TASKS_RICH));
+		editorHighlightsCurrentLine.setSelection(getPreferenceStore().getBoolean(
+				ITasksUiPreferenceConstants.EDITOR_CURRENT_LINE_HIGHLIGHT));
 
 		// synchQueries.setSelection(getPreferenceStore().getBoolean(
 		// TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP));
@@ -273,7 +280,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		weekStartCombo.select(getPreferenceStore().getInt(ITasksUiPreferenceConstants.WEEK_START_DAY) - 1);
 		//hourDayStart.setSelection(getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_STARTHOUR));
 //		hourDayEnd.setSelection(getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
-		//backupNow.setEnabled(true);
+//backupNow.setEnabled(true);
 		int minutes = MonitorUiPlugin.getDefault().getPreferenceStore().getInt(ActivityContextManager.ACTIVITY_TIMEOUT)
 				/ MS_MINUTES;
 		timeoutMinutes.setSelection(minutes);
@@ -308,6 +315,8 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		//backupScheduleTimeText.setText(getPreferenceStore().getDefaultString(TasksUiPreferenceConstants.BACKUP_SCHEDULE));
 
 		useRichEditor.setSelection(getPreferenceStore().getDefaultBoolean(ITasksUiPreferenceConstants.EDITOR_TASKS_RICH));
+		editorHighlightsCurrentLine.setSelection(getPreferenceStore().getDefaultBoolean(
+				ITasksUiPreferenceConstants.EDITOR_CURRENT_LINE_HIGHLIGHT));
 
 		taskListTooltipEnabledButton.setSelection(getPreferenceStore().getDefaultBoolean(
 				ITasksUiPreferenceConstants.TASK_LIST_TOOL_TIPS_ENABLED));
@@ -383,7 +392,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 	private void createTaskEditorGroup(Composite parent) {
 		Group container = new Group(parent, SWT.SHADOW_ETCHED_IN);
-		container.setLayout(new GridLayout(3, false));
+		container.setLayout(new GridLayout(2, false));
 		container.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		container.setText(Messages.TasksUiPreferencePage_Task_Editing);
@@ -393,6 +402,11 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		useWebBrowser = new Button(container, SWT.RADIO);
 		useWebBrowser.setText(Messages.TasksUiPreferencePage_Web_Browser);
 		useWebBrowser.setSelection(!getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.EDITOR_TASKS_RICH));
+
+		editorHighlightsCurrentLine = new Button(container, SWT.CHECK);
+		editorHighlightsCurrentLine.setText(Messages.TasksUiPreferencePage_highlight_current_line);
+		editorHighlightsCurrentLine.setSelection(getPreferenceStore().getBoolean(
+				ITasksUiPreferenceConstants.EDITOR_CURRENT_LINE_HIGHLIGHT));
 	}
 
 	private void createTaskDataControl(Composite parent) {

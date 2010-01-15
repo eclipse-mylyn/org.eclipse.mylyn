@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2010 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -57,6 +57,8 @@ public interface ITasksUiPreferenceConstants {
 	public static final String PLANNING_ENDHOUR = "org.eclipse.mylyn.tasks.ui.planning.end.hour"; //$NON-NLS-1$
 
 	public static final String EDITOR_TASKS_RICH = "org.eclipse.mylyn.tasks.ui.reporting.open.editor"; //$NON-NLS-1$
+
+	public static final String EDITOR_CURRENT_LINE_HIGHLIGHT = "org.eclipse.mylyn.tasks.ui.editor.currentLineHighlight"; //$NON-NLS-1$
 
 	public static final String USE_STRIKETHROUGH_FOR_COMPLETED = "org.eclipse.mylyn.tasks.ui.strikethrough.for.completed"; //$NON-NLS-1$
 
