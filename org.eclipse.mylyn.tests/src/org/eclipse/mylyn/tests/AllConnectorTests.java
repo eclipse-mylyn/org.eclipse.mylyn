@@ -14,6 +14,7 @@ package org.eclipse.mylyn.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.mylyn.bugzilla.tests.AllBugzillaTests;
 import org.eclipse.mylyn.tests.util.TestFixture;
 import org.eclipse.mylyn.trac.tests.AllTracTests;
 import org.eclipse.mylyn.xplanner.tests.AllXPlannerTests;
@@ -27,10 +28,11 @@ public class AllConnectorTests {
 		TestFixture.initializeTasksSettings();
 
 		TestSuite suite = new TestSuite("All Connector Tests for org.eclipse.mylyn.tests");
-		// FIXME re-enable suite.addTest(AllBugzillaTests.suite());
+		suite.addTest(AllBugzillaTests.suite());
 		//suite.addTest(AllJiraTests.suite());
 		suite.addTest(AllTracTests.suite());
 		suite.addTest(AllXPlannerTests.suite());
 		return suite;
 	}
+
 }
