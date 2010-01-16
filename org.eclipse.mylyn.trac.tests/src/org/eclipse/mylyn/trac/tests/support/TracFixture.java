@@ -17,6 +17,7 @@ import org.eclipse.mylyn.commons.net.IProxyProvider;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.internal.trac.core.TracClientFactory;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
+import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -196,12 +197,20 @@ public class TracFixture extends TestFixture {
 		return version;
 	}
 
+	public TaskRepository singleRepository(TracRepositoryConnector connector) {
+		connector.getClientManager().writeCache();
+		TaskRepository repository = super.singleRepository();
+
+		// XXX avoid failing test due to stale client
+		connector.getClientManager().clearClients();
+
+		connector.getClientManager().readCache();
+		return repository;
+	}
+
 	@Override
 	public TaskRepository singleRepository() {
-		TracCorePlugin.getDefault().getConnector().getClientManager().writeCache();
-		TaskRepository repository = super.singleRepository();
-		TracCorePlugin.getDefault().getConnector().getClientManager().readCache();
-		return repository;
+		return singleRepository(TracCorePlugin.getDefault().getConnector());
 	}
 
 	@Override

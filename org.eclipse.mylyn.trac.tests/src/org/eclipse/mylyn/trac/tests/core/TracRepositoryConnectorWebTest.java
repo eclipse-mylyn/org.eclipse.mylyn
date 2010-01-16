@@ -47,7 +47,7 @@ public class TracRepositoryConnectorWebTest extends TestCase {
 		super.setUp();
 		data = TracFixture.init010();
 		connector = (TracRepositoryConnector) TasksUi.getRepositoryConnector(TracCorePlugin.CONNECTOR_KIND);
-		repository = TracFixture.current(TracFixture.TRAC_0_10_WEB).singleRepository();
+		repository = TracFixture.current(TracFixture.TRAC_0_10_WEB).singleRepository(connector);
 	}
 
 	private SynchronizationSession createSession(ITask... tasks) {

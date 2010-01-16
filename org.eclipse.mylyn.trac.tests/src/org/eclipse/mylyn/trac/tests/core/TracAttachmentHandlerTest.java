@@ -51,7 +51,7 @@ public class TracAttachmentHandlerTest extends TestCase {
 		data = TracFixture.init010();
 		connector = (TracRepositoryConnector) TasksUi.getRepositoryConnector(TracCorePlugin.CONNECTOR_KIND);
 		attachmentHandler = connector.getTaskAttachmentHandler();
-		repository = TracFixture.current().singleRepository();
+		repository = TracFixture.current().singleRepository(connector);
 	}
 
 	public void testDownloadAttachment() throws Exception {

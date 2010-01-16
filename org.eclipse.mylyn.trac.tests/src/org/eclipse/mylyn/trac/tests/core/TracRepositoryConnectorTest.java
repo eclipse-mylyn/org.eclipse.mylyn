@@ -71,10 +71,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 		super.setUp();
 		data = TracFixture.init010();
 		connector = (TracRepositoryConnector) TasksUi.getRepositoryConnector(TracCorePlugin.CONNECTOR_KIND);
-		repository = TracFixture.current().singleRepository();
-
-		// XXX avoid failing test due to stale client
-		connector.getClientManager().clearClients();
+		repository = TracFixture.current().singleRepository(connector);
 	}
 
 	public void testGetRepositoryUrlFromTaskUrl() {

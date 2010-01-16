@@ -79,7 +79,7 @@ public class TracTaskDataHandlerXmlRpcTest extends TestCase {
 		data = TracFixture.init010();
 		connector = (TracRepositoryConnector) TasksUi.getRepositoryConnector(TracCorePlugin.CONNECTOR_KIND);
 		taskDataHandler = connector.getTaskDataHandler();
-		repository = TracFixture.current().singleRepository();
+		repository = TracFixture.current().singleRepository(connector);
 		client = connector.getClientManager().getTracClient(repository);
 	}
 
