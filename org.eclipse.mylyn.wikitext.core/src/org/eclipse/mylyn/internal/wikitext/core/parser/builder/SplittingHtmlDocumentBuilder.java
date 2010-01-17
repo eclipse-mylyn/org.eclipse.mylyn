@@ -48,6 +48,8 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 
 	private boolean navigationImages;
 
+	private String navigationImagePath = "images"; //$NON-NLS-1$
+
 	public void setRootBuilder(HtmlDocumentBuilder rootBuilder) {
 		this.rootBuilder = rootBuilder;
 		out = rootBuilder;
@@ -194,7 +196,7 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 				ImageAttributes imageAttributes = new ImageAttributes();
 				imageAttributes.setAlt(Messages.getString("SplittingHtmlDocumentBuilder.Previous")); //$NON-NLS-1$
 				out.imageLink(linkAttributes, imageAttributes, previous.getSplitTarget(),
-						Messages.getString("SplittingHtmlDocumentBuilder.Previous_Image")); //$NON-NLS-1$
+						computeNavImagePath(Messages.getString("SplittingHtmlDocumentBuilder.Previous_Image"))); //$NON-NLS-1$
 			} else {
 				out.link(linkAttributes, previous.getSplitTarget(),
 						Messages.getString("SplittingHtmlDocumentBuilder.Previous")); //$NON-NLS-1$
@@ -213,7 +215,7 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 				ImageAttributes imageAttributes = new ImageAttributes();
 				imageAttributes.setAlt(rootBuilder.getTitle());
 				out.imageLink(linkAttributes, imageAttributes, rootFile.getName(),
-						Messages.getString("SplittingHtmlDocumentBuilder.Home_Image")); //$NON-NLS-1$
+						computeNavImagePath(Messages.getString("SplittingHtmlDocumentBuilder.Home_Image"))); //$NON-NLS-1$
 			} else {
 				out.link(linkAttributes, rootFile.getName(), Messages.getString("SplittingHtmlDocumentBuilder.Home")); //$NON-NLS-1$
 			}
@@ -231,7 +233,7 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 				ImageAttributes imageAttributes = new ImageAttributes();
 				imageAttributes.setAlt(Messages.getString("SplittingHtmlDocumentBuilder.Next")); //$NON-NLS-1$
 				out.imageLink(linkAttributes, imageAttributes, next.getSplitTarget(),
-						Messages.getString("SplittingHtmlDocumentBuilder.Next_Image")); //$NON-NLS-1$
+						computeNavImagePath(Messages.getString("SplittingHtmlDocumentBuilder.Next_Image"))); //$NON-NLS-1$
 			} else {
 				out.link(linkAttributes, next.getSplitTarget(), Messages.getString("SplittingHtmlDocumentBuilder.Next")); //$NON-NLS-1$
 			}
@@ -276,6 +278,24 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 
 		if (header) {
 			out.charactersUnescaped("<hr/>"); //$NON-NLS-1$
+		}
+	}
+
+	private String computeNavImagePath(String imagePath) {
+		if (navigationImagePath != null) {
+			return navigationImagePath + "/" + imagePath; //$NON-NLS-1$
+		}
+		return imagePath;
+	}
+
+	public String getNavigationImagePath() {
+		return navigationImagePath;
+	}
+
+	public void setNavigationImagePath(String navigationImagePath) {
+		this.navigationImagePath = navigationImagePath;
+		if (this.navigationImagePath != null && this.navigationImagePath.endsWith("/")) { //$NON-NLS-1$
+			this.navigationImagePath = this.navigationImagePath.substring(0, this.navigationImagePath.length() - 1);
 		}
 	}
 
