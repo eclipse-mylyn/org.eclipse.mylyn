@@ -93,6 +93,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
  */
 public class BugzillaClient {
 
+	private static final String UNKNOWN_REPOSITORY_ERROR = "An unknown repository error has occurred: "; //$NON-NLS-1$
+
 	private static final String COOKIE_BUGZILLA_LOGIN = "Bugzilla_login"; //$NON-NLS-1$
 
 	protected static final String USER_AGENT = "BugzillaConnector"; //$NON-NLS-1$
@@ -1679,14 +1681,13 @@ public class BugzillaClient {
 				for (Cookie cookie : httpClient.getState().getCookies()) {
 					builder.append(cookie.getName() + " = " + cookie.getValue() + "  "); //$NON-NLS-1$ //$NON-NLS-2$
 				}
-				StatusHandler.log(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN,
-						"An unknown repository error has occurred: " + body)); //$NON-NLS-1$
+				StatusHandler.log(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN, UNKNOWN_REPOSITORY_ERROR
+						+ body));
 				StatusHandler.log(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN, builder.toString()));
 			}
 
 			RepositoryStatus status = RepositoryStatus.createHtmlStatus(repositoryUrl.toString(), IStatus.INFO,
-					BugzillaCorePlugin.ID_PLUGIN, RepositoryStatus.ERROR_REPOSITORY,
-					"An unkown repository error has occurred.", body); //$NON-NLS-1$
+					BugzillaCorePlugin.ID_PLUGIN, RepositoryStatus.ERROR_REPOSITORY, UNKNOWN_REPOSITORY_ERROR, body);
 
 			throw new CoreException(status);
 
