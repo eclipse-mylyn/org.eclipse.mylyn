@@ -13,8 +13,8 @@ package org.eclipse.mylyn.internal.oslc.core;
 
 import java.io.Serializable;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.eclipse.mylyn.internal.oslc.core.cm.Messages;
 
@@ -23,12 +23,11 @@ import org.eclipse.mylyn.internal.oslc.core.cm.Messages;
  * Descriptor document.
  * 
  * @see http://open-services.net/bin/view/Main/CmServiceDescriptionV1
- * 
  * @author Robert Elves
  */
 public class OslcServiceDescriptor implements Serializable {
 
-	private static final long serialVersionUID = -3895335172732891174L;
+	private static final long serialVersionUID = -5981264972265788764L;
 
 	private final Set<OslcCreationDialogDescriptor> creationDialogs;
 
@@ -54,9 +53,9 @@ public class OslcServiceDescriptor implements Serializable {
 
 	public OslcServiceDescriptor(String aboutUrl) {
 		this.aboutUrl = aboutUrl;
-		this.creationDialogs = new HashSet<OslcCreationDialogDescriptor>();
-		this.serviceFactories = new HashSet<OslcServiceFactory>();
-		this.selectionDialogs = new HashSet<OslcSelectionDialogDescriptor>();
+		this.creationDialogs = new CopyOnWriteArraySet<OslcCreationDialogDescriptor>();
+		this.serviceFactories = new CopyOnWriteArraySet<OslcServiceFactory>();
+		this.selectionDialogs = new CopyOnWriteArraySet<OslcSelectionDialogDescriptor>();
 	}
 
 	public void clear() {
