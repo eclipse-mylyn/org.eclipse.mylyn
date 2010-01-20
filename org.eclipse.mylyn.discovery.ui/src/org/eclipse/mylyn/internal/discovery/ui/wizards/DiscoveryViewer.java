@@ -123,6 +123,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.progress.WorkbenchJob;
+import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.ui.themes.IThemeManager;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.Version;
@@ -227,8 +228,8 @@ public class DiscoveryViewer {
 			configureLook(providerLabel, background);
 			GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).applyTo(providerLabel);
 			if (connector.getCertification() != null) {
-				providerLabel.setText(NLS.bind(Messages.DiscoveryViewer_Certification_Label0, new String[] { connector.getProvider(),
-						connector.getLicense(), connector.getCertification().getName() }));
+				providerLabel.setText(NLS.bind(Messages.DiscoveryViewer_Certification_Label0, new String[] {
+						connector.getProvider(), connector.getLicense(), connector.getCertification().getName() }));
 				if (connector.getCertification().getUrl() != null) {
 					providerLabel.addSelectionListener(new SelectionAdapter() {
 						@Override
@@ -397,7 +398,7 @@ public class DiscoveryViewer {
 
 	private final List<ConnectorDescriptor> installableConnectors = new ArrayList<ConnectorDescriptor>();
 
-	private ConnectorDiscovery discovery;
+	private volatile ConnectorDiscovery discovery;
 
 	private Composite body;
 
@@ -1395,9 +1396,36 @@ public class DiscoveryViewer {
 		final Dictionary<Object, Object> environment = getEnvironment();
 		boolean wasCancelled = false;
 		try {
+			final IStatus[] result = new IStatus[1];
 			context.run(true, true, new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+					updateInstalledFeatures(monitor);
 
+					ConnectorDiscovery connectorDiscovery = new ConnectorDiscovery();
+
+					// look for descriptors from installed bundles
+					connectorDiscovery.getDiscoveryStrategies().add(new BundleDiscoveryStrategy());
+
+					// look for remote descriptor
+					if (directoryUrl != null) {
+						RemoteBundleDiscoveryStrategy remoteDiscoveryStrategy = new RemoteBundleDiscoveryStrategy();
+						remoteDiscoveryStrategy.setDirectoryUrl(directoryUrl);
+						connectorDiscovery.getDiscoveryStrategies().add(remoteDiscoveryStrategy);
+					}
+
+					connectorDiscovery.setEnvironment(environment);
+					connectorDiscovery.setVerifyUpdateSiteAvailability(false);
+					try {
+						result[0] = connectorDiscovery.performDiscovery(monitor);
+					} finally {
+						DiscoveryViewer.this.discovery = connectorDiscovery;
+					}
+					if (monitor.isCanceled()) {
+						throw new InterruptedException();
+					}
+				}
+
+				private void updateInstalledFeatures(IProgressMonitor monitor) throws InterruptedException {
 					if (DiscoveryViewer.this.installedFeatures == null) {
 						Set<String> installedFeatures = new HashSet<String>();
 						IBundleGroupProvider[] bundleGroupProviders = Platform.getBundleGroupProviders();
@@ -1412,33 +1440,13 @@ public class DiscoveryViewer {
 						}
 						DiscoveryViewer.this.installedFeatures = installedFeatures;
 					}
-
-					ConnectorDiscovery connectorDiscovery = new ConnectorDiscovery();
-
-					// look for descriptors from installed bundles
-					connectorDiscovery.getDiscoveryStrategies().add(new BundleDiscoveryStrategy());
-
-					// look for remove descriptor
-					if (directoryUrl != null) {
-						RemoteBundleDiscoveryStrategy remoteDiscoveryStrategy = new RemoteBundleDiscoveryStrategy();
-						remoteDiscoveryStrategy.setDirectoryUrl(directoryUrl);
-						connectorDiscovery.getDiscoveryStrategies().add(remoteDiscoveryStrategy);
-					}
-
-					connectorDiscovery.setEnvironment(environment);
-					connectorDiscovery.setVerifyUpdateSiteAvailability(false);
-					try {
-						connectorDiscovery.performDiscovery(monitor);
-					} catch (CoreException e) {
-						throw new InvocationTargetException(e);
-					} finally {
-						DiscoveryViewer.this.discovery = connectorDiscovery;
-					}
-					if (monitor.isCanceled()) {
-						throw new InterruptedException();
-					}
 				}
 			});
+
+			if (result[0] != null && !result[0].isOK()) {
+				StatusManager.getManager().handle(result[0],
+						StatusManager.SHOW | StatusManager.BLOCK | StatusManager.LOG);
+			}
 		} catch (InvocationTargetException e) {
 			IStatus status = computeStatus(e, Messages.ConnectorDiscoveryWizardMainPage_unexpectedException);
 			DiscoveryUiUtil.logAndDisplayStatus(getShell(), Messages.ConnectorDiscoveryWizardMainPage_errorTitle,

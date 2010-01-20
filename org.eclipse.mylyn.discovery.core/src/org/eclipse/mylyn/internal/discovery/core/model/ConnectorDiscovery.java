@@ -32,6 +32,7 @@ import org.eclipse.core.runtime.IBundleGroupProvider;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
@@ -86,8 +87,11 @@ public class ConnectorDiscovery {
 	/**
 	 * Initialize this by performing discovery. Discovery may take a long time as it involves network access.
 	 * PRECONDITION: must add at least one {@link #getDiscoveryStrategies() discovery strategy} prior to calling.
+	 * 
+	 * @return
 	 */
-	public void performDiscovery(IProgressMonitor monitor) throws CoreException {
+	public IStatus performDiscovery(IProgressMonitor monitor) {
+		MultiStatus status = new MultiStatus(DiscoveryCore.ID_PLUGIN, 0, Messages.ConnectorDiscovery_Failed_to_discovery_all_Error, null);
 		if (discoveryStrategies.isEmpty()) {
 			throw new IllegalStateException();
 		}
@@ -105,8 +109,13 @@ public class ConnectorDiscovery {
 				discoveryStrategy.setCategories(categories);
 				discoveryStrategy.setConnectors(connectors);
 				discoveryStrategy.setCertifications(certifications);
-				discoveryStrategy.performDiscovery(new SubProgressMonitor(monitor, discoveryTicks
-						/ discoveryStrategies.size()));
+				try {
+					discoveryStrategy.performDiscovery(new SubProgressMonitor(monitor, discoveryTicks
+							/ discoveryStrategies.size()));
+				} catch (CoreException e) {
+					status.add(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN, NLS.bind(Messages.ConnectorDiscovery_Strategy_failed_Error,
+							discoveryStrategy.getClass().getSimpleName()), e));
+				}
 			}
 
 			filterDescriptors();
@@ -118,6 +127,7 @@ public class ConnectorDiscovery {
 		} finally {
 			monitor.done();
 		}
+		return status;
 	}
 
 	/**

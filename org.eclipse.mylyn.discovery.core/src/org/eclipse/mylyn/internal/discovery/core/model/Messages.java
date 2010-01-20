@@ -57,7 +57,11 @@ class Messages extends NLS {
 
 	public static String ConnectorDiscovery_exception_disposing;
 
+	public static String ConnectorDiscovery_Failed_to_discovery_all_Error;
+
 	public static String ConnectorDiscovery_illegal_filter_syntax;
+
+	public static String ConnectorDiscovery_Strategy_failed_Error;
 
 	public static String ConnectorDiscovery_task_discovering_connectors;
 
