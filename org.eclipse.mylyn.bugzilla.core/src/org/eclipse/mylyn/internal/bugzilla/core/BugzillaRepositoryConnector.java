@@ -715,7 +715,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 					configuration = repositoryConfigurations.get(repository.getRepositoryUrl());
 					if (configuration == null || forceRefresh) {
 						String eTag = null;
-						if (configuration != null) {
+						if (configuration != null && !forceRefresh) {
 							eTag = configuration.getETagValue();
 						}
 						BugzillaClient client = clientManager.getClient(repository, monitor);
