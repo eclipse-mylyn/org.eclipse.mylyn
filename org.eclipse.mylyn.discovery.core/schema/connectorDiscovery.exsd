@@ -60,6 +60,7 @@
             <element ref="featureFilter" minOccurs="0" maxOccurs="unbounded"/>
             <element ref="icon" minOccurs="0" maxOccurs="1"/>
             <element ref="overview" minOccurs="0" maxOccurs="1"/>
+            <element ref="iu" minOccurs="0" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="kind" type="string" use="required">
             <annotation>
@@ -102,6 +103,8 @@
             <annotation>
                <documentation>
                   A description of the connector.  Plug-ins should provide a description, especially if the description is not self-evident from the @name and @organization.
+
+Only the first 162 characters of the description are displayed in the UI and line breaks are ignored.
                </documentation>
                <appinfo>
                   <meta.attribute translatable="true"/>
@@ -389,6 +392,18 @@
             A textual description.
          </documentation>
       </annotation>
+   </element>
+
+   <element name="iu">
+      <complexType>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The id of the feature that is to be installed.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
    </element>
 
    <annotation>

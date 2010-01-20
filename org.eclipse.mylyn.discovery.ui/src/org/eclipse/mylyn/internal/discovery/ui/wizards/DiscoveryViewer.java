@@ -1265,7 +1265,7 @@ public class DiscoveryViewer {
 		if (kindFiltered) {
 			return true;
 		}
-		if (installedFeatures != null && installedFeatures.contains(descriptor.getId())) {
+		if (installedFeatures != null && installedFeatures.containsAll(descriptor.getInstallableUnits())) {
 			// always filter installed features per bug 275777
 			return true;
 		}

@@ -31,12 +31,28 @@
       <connectorDescriptor
             categoryId="org.eclipse.mylyn.discovery.tests.connectorCategory1"
             description="Trac Connector"
-            id="org.eclipse.mylyn.discovery.test"
+            id="org.eclipse.mylyn.discovery.test1"
             kind="task"
             license="License"
             name="Installable Test Connector"
             provider="Eclipse Mylyn"
             siteUrl="http://localhost/discovery/">
+      </connectorDescriptor>
+      <connectorDescriptor
+            categoryId="org.eclipse.mylyn.discovery.tests.connectorCategory1"
+            description="Trac Connector"
+            id="org.eclipse.mylyn.discovery.test2"
+            kind="task"
+            license="License"
+            name="2 Installable Test Connector"
+            provider="Eclipse Mylyn"
+            siteUrl="http://localhost/discovery/">
+         <iu
+               id="org.eclipse.mylyn.discovery.test1">
+         </iu>
+         <iu
+               id="org.eclipse.mylyn.discovery.test2">
+         </iu>
       </connectorDescriptor>
       <certification
             id="org.eclipse.mylyn.discovery.tests.certification1"

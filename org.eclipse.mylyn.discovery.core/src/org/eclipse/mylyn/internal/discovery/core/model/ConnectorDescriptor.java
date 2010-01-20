@@ -42,6 +42,8 @@ public class ConnectorDescriptor {
 
 	protected java.util.List<FeatureFilter> featureFilter = new java.util.ArrayList<FeatureFilter>();
 
+	protected java.util.List<String> installableUnits = new java.util.ArrayList<String>();
+
 	protected Icon icon;
 
 	protected Overview overview;
@@ -234,4 +236,13 @@ public class ConnectorDescriptor {
 			overview.validate();
 		}
 	}
+
+	public java.util.List<String> getInstallableUnits() {
+		return installableUnits;
+	}
+
+	public void setInstallableUnits(java.util.List<String> installableUnits) {
+		this.installableUnits = installableUnits;
+	}
+
 }

@@ -71,6 +71,15 @@ public class ConnectorDiscoveryExtensionReader {
 		connectorDescriptor.setPlatformFilter(element.getAttribute("platformFilter")); //$NON-NLS-1$
 		connectorDescriptor.setGroupId(element.getAttribute("groupId")); //$NON-NLS-1$
 
+		IConfigurationElement[] children = element.getChildren("iu"); //$NON-NLS-1$
+		if (children.length > 0) {
+			for (IConfigurationElement child : children) {
+				connectorDescriptor.getInstallableUnits().add(child.getAttribute("id")); //$NON-NLS-1$
+			}
+		} else {
+			// no particular iu specified, use connector id
+			connectorDescriptor.getInstallableUnits().add(connectorDescriptor.getId());
+		}
 		for (IConfigurationElement child : element.getChildren("featureFilter")) { //$NON-NLS-1$
 			FeatureFilter featureFilterItem = readFeatureFilter(child);
 			featureFilterItem.setConnectorDescriptor(connectorDescriptor);
