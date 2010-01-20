@@ -41,7 +41,7 @@
       <connectorDescriptor
             categoryId="org.eclipse.mylyn.discovery.tests.connectorCategory1"
             description="Trac Connector"
-            id="org.eclipse.mylyn.discovery.test2"
+            id="org.eclipse.mylyn.discovery.2tests"
             kind="task"
             license="License"
             name="2 Installable Test Connector"
