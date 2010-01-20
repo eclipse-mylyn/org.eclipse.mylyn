@@ -28,6 +28,16 @@
             provider="UnitTesting"
             siteUrl="http://foo.nodomain/site">
       </connectorDescriptor>
+      <connectorDescriptor
+            categoryId="org.eclipse.mylyn.discovery.tests.connectorCategory1"
+            description="Trac Connector"
+            id="org.eclipse.mylyn.discovery.test"
+            kind="task"
+            license="License"
+            name="Installable Test Connector"
+            provider="Eclipse Mylyn"
+            siteUrl="http://localhost/discovery/">
+      </connectorDescriptor>
       <certification
             id="org.eclipse.mylyn.discovery.tests.certification1"
             name="%certification.name"

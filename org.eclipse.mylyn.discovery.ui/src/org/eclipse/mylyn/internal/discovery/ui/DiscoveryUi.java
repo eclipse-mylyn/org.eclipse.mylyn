@@ -21,10 +21,10 @@ import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDescriptor;
-import org.eclipse.mylyn.internal.discovery.ui.util.DiscoveryUiUtil;
 import org.eclipse.mylyn.internal.discovery.ui.wizards.Messages;
 import org.eclipse.osgi.service.resolver.VersionRange;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.ui.statushandlers.StatusManager;
 import org.osgi.framework.Bundle;
 
 /**
@@ -63,7 +63,7 @@ public abstract class DiscoveryUi {
 			IStatus status = new Status(IStatus.ERROR, DiscoveryUi.ID_PLUGIN, NLS.bind(
 					Messages.ConnectorDiscoveryWizard_installProblems, new Object[] { e.getCause().getMessage() }),
 					e.getCause());
-			DiscoveryUiUtil.logAndDisplayStatus(Messages.ConnectorDiscoveryWizard_cannotInstall, status);
+			StatusManager.getManager().handle(status, StatusManager.SHOW | StatusManager.BLOCK | StatusManager.LOG);
 			return false;
 		} catch (InterruptedException e) {
 			// canceled

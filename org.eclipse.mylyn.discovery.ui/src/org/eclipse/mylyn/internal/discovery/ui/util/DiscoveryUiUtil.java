@@ -30,30 +30,6 @@ public abstract class DiscoveryUiUtil {
 	private DiscoveryUiUtil() {
 	}
 
-	public static void logAndDisplayStatus(final String title, final IStatus status) {
-		logAndDisplayStatus(null, title, status);
-	}
-
-	public static void logAndDisplayStatus(Shell shell, final String title, final IStatus status) {
-		StatusHandler.log(status);
-		IWorkbench workbench = PlatformUI.getWorkbench();
-		if (workbench != null && !workbench.getDisplay().isDisposed()) {
-			if (shell == null) {
-				shell = getShell();
-			}
-			displayStatus(shell, title, status, true);
-		}
-	}
-
-	public static void displayStatus(final String title, final IStatus status) {
-		IWorkbench workbench = PlatformUI.getWorkbench();
-		if (workbench != null && !workbench.getDisplay().isDisposed()) {
-			displayStatus(getShell(), title, status, false);
-		} else {
-			StatusHandler.log(status);
-		}
-	}
-
 	/**
 	 * Utility method to get the best parenting possible for a dialog. If there is a modal shell create it so as to
 	 * avoid two modal dialogs. If not then return the shell of the active workbench window. If neither can be found
@@ -121,36 +97,5 @@ public abstract class DiscoveryUiUtil {
 			}
 		}
 		return null;
-	}
-
-	public static void displayStatus(Shell shell, final String title, final IStatus status, boolean showLinkToErrorLog) {
-		// avoid blocking ui when in test mode
-		if (CoreUtil.TEST_MODE) {
-			StatusHandler.log(status);
-			return;
-		}
-
-		String message = status.getMessage();
-		if (showLinkToErrorLog) {
-			message += Messages.DiscoveryUi_seeErrorLog;
-		}
-		switch (status.getSeverity()) {
-		case IStatus.CANCEL:
-		case IStatus.INFO:
-			createDialog(shell, title, message, MessageDialog.INFORMATION).open();
-			break;
-		case IStatus.WARNING:
-			createDialog(shell, title, message, MessageDialog.WARNING).open();
-			break;
-		case IStatus.ERROR:
-		default:
-			createDialog(shell, title, message, MessageDialog.ERROR).open();
-			break;
-		}
-
-	}
-
-	public static MessageDialog createDialog(Shell shell, String title, String message, int type) {
-		return new MessageDialog(shell, title, null, message, type, new String[] { IDialogConstants.OK_LABEL }, 0);
 	}
 }

@@ -62,7 +62,6 @@ import org.eclipse.mylyn.internal.discovery.core.util.DiscoveryCategoryComparato
 import org.eclipse.mylyn.internal.discovery.core.util.DiscoveryConnectorComparator;
 import org.eclipse.mylyn.internal.discovery.ui.DiscoveryImages;
 import org.eclipse.mylyn.internal.discovery.ui.DiscoveryUi;
-import org.eclipse.mylyn.internal.discovery.ui.util.DiscoveryUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.provisional.commons.ui.GradientCanvas;
@@ -1449,8 +1448,7 @@ public class DiscoveryViewer {
 			}
 		} catch (InvocationTargetException e) {
 			IStatus status = computeStatus(e, Messages.ConnectorDiscoveryWizardMainPage_unexpectedException);
-			DiscoveryUiUtil.logAndDisplayStatus(getShell(), Messages.ConnectorDiscoveryWizardMainPage_errorTitle,
-					status);
+			StatusManager.getManager().handle(status, StatusManager.SHOW | StatusManager.BLOCK | StatusManager.LOG);
 		} catch (InterruptedException e) {
 			// cancelled by user so nothing to do here.
 			wasCancelled = true;
@@ -1467,8 +1465,8 @@ public class DiscoveryViewer {
 					});
 				} catch (InvocationTargetException e) {
 					IStatus status = computeStatus(e, Messages.ConnectorDiscoveryWizardMainPage_unexpectedException);
-					DiscoveryUiUtil.logAndDisplayStatus(getShell(),
-							Messages.ConnectorDiscoveryWizardMainPage_errorTitle, status);
+					StatusManager.getManager().handle(status,
+							StatusManager.SHOW | StatusManager.BLOCK | StatusManager.LOG);
 				} catch (InterruptedException e) {
 					// cancelled by user so nothing to do here.
 					wasCancelled = true;
