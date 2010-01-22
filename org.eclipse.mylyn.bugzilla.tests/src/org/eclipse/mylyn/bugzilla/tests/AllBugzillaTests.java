@@ -14,7 +14,7 @@ package org.eclipse.mylyn.bugzilla.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.mylyn.bugzilla.tests.core.BugzillaRepositoryConnectorStandaloneTest;
+import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaRepositorySettingsPageTest;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaSearchPageTest;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaTaskHyperlinkDetectorTest;
@@ -28,20 +28,29 @@ public class AllBugzillaTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Tests for org.eclipse.mylyn.bugzilla.tests");
 		suite.addTest(AllBugzillaHeadlessStandaloneTests.suite());
-		suite.addTestSuite(BugzillaTaskCompletionTest.class);
-		suite.addTestSuite(BugzillaTaskDataHandlerTest.class);
-		suite.addTestSuite(TaskEditorTest.class);
-		suite.addTestSuite(BugzillaRepositoryConnectorStandaloneTest.class);
-		suite.addTestSuite(BugzillaRepositorySettingsPageTest.class);
-		suite.addTestSuite(RepositoryReportFactoryTest.class);
-		suite.addTestSuite(BugzillaTaskHyperlinkDetectorTest.class);
-		suite.addTestSuite(BugzillaSearchTest.class);
-		suite.addTestSuite(BugzillaRepositoryConnectorTest.class);
-		suite.addTestSuite(BugzillaAttachmentHandlerTest.class);
-		suite.addTestSuite(EncodingTest.class);
-		suite.addTestSuite(BugzillaSearchPageTest.class);
-		suite.addTestSuite(BugzillaRepository32Test.class);
-		suite.addTestSuite(BugzillaDateTimeTests.class);
+
+		for (BugzillaFixture fixture : BugzillaFixture.ALL) {
+			fixture.createSuite(suite);
+			// only run certain tests against head to avoid spurious failures 
+			if (fixture != BugzillaFixture.BUGS_HEAD) {
+				fixture.add(BugzillaTaskCompletionTest.class);
+				fixture.add(BugzillaTaskCompletionTest.class);
+				fixture.add(BugzillaTaskDataHandlerTest.class);
+				fixture.add(TaskEditorTest.class);
+				fixture.add(BugzillaRepositorySettingsPageTest.class);
+				fixture.add(RepositoryReportFactoryTest.class);
+				fixture.add(BugzillaTaskHyperlinkDetectorTest.class);
+				fixture.add(BugzillaSearchTest.class);
+				fixture.add(BugzillaRepositoryConnectorTest.class);
+				fixture.add(BugzillaAttachmentHandlerTest.class);
+				fixture.add(EncodingTest.class);
+				fixture.add(BugzillaSearchPageTest.class);
+				fixture.add(BugzillaRepository32Test.class);
+				fixture.add(BugzillaDateTimeTests.class);
+			}
+			fixture.done();
+		}
+
 		return suite;
 	}
 
