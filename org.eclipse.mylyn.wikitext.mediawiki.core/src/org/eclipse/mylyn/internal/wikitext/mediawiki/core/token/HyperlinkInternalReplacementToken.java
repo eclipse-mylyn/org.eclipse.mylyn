@@ -20,7 +20,6 @@ import org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage;
  * match [[internal links]]
  * 
  * @author David Green
- * 
  */
 public class HyperlinkInternalReplacementToken extends PatternBasedElement {
 
@@ -44,7 +43,7 @@ public class HyperlinkInternalReplacementToken extends PatternBasedElement {
 		public void emit() {
 			String pageName = group(1);
 			String altText = group(2);
-			String href = ((MediaWikiLanguage) getMarkupLanguage()).toInternalHref(pageName);
+			String href = ((MediaWikiLanguage) getMarkupLanguage()).toInternalHref(pageName.replace(' ', '_'));
 
 			// category references start with ':' but are not referenced that way in the text
 			if (pageName.startsWith(":")) { //$NON-NLS-1$

@@ -291,6 +291,13 @@ public class MediaWikiLanguageTest extends TestCase {
 		assertTrue(html.contains("<p>Also see the <a href=\"http://wiki.eclipse.org/Mylyn/FAQ#Installation_Troubleshooting\" title=\"Mylyn/FAQ#Installation_Troubleshooting\">Installation FAQ</a>.</p>"));
 	}
 
+	public void testHyperlinkInternalWithSpaces() {
+		markupLanaguage.setInternalLinkPattern("http://wiki.eclipse.org/{0}");
+		String html = parser.parseToHtml("Also see the [[Mylyn/User Guide]].");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<p>Also see the <a href=\"http://wiki.eclipse.org/Mylyn/User_Guide\" title=\"Mylyn/User Guide\">Mylyn/User Guide</a>.</p>"));
+	}
+
 	public void testHyperlinkExternal() {
 		String html = parser.parseToHtml("a [http://example.com] hyperlink");
 		TestUtil.println("HTML: \n" + html);

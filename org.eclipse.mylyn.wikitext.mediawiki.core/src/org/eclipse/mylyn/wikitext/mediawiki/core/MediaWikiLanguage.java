@@ -10,11 +10,9 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.mediawiki.core;
 
-import java.text.MessageFormat;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
+import org.eclipse.mylyn.internal.wikitext.mediawiki.core.AbstractMediaWikiLanguage;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.MediaWikiIdGenerationStrategy;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.block.HeadingBlock;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.block.ListBlock;
@@ -29,7 +27,6 @@ import org.eclipse.mylyn.internal.wikitext.mediawiki.core.token.ImageReplacement
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.token.LineBreakToken;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.token.TemplateReplacementToken;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
-import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 import org.eclipse.mylyn.wikitext.core.parser.markup.IdGenerationStrategy;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
@@ -48,12 +45,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternLiteralReplace
  * @author David Green
  * @since 1.0
  */
-public class MediaWikiLanguage extends AbstractMarkupLanguage {
-	private static final String CATEGORY_PREFIX = ":"; //$NON-NLS-1$
-
-	private static final Pattern STANDARD_EXTERNAL_LINK_FORMAT = Pattern.compile(".*?/([^/]+)/(\\{\\d+\\})"); //$NON-NLS-1$
-
-	private static final Pattern QUALIFIED_INTERNAL_LINK = Pattern.compile("([^/]+)/(.+)"); //$NON-NLS-1$
+public class MediaWikiLanguage extends AbstractMediaWikiLanguage {
 
 	public MediaWikiLanguage() {
 		setName("MediaWiki"); //$NON-NLS-1$
@@ -65,28 +57,11 @@ public class MediaWikiLanguage extends AbstractMarkupLanguage {
 	 * 
 	 * @param pageName
 	 *            the name of the page to target
-	 * 
 	 * @return the href to access the page
-	 * 
 	 * @see MarkupLanguage#getInternalLinkPattern()
 	 */
 	public String toInternalHref(String pageName) {
-		String pageId = pageName.replace(' ', '_');
-		// FIXME: other character encodings occur here, not just ' '
-
-		if (pageId.startsWith(CATEGORY_PREFIX) && pageId.length() > CATEGORY_PREFIX.length()) { // category
-			return pageId.substring(CATEGORY_PREFIX.length());
-		} else if (pageId.startsWith("#")) { //$NON-NLS-1$
-			// internal anchor
-			return pageId;
-		}
-		if (QUALIFIED_INTERNAL_LINK.matcher(pageId).matches()) {
-			Matcher matcher = STANDARD_EXTERNAL_LINK_FORMAT.matcher(internalLinkPattern);
-			if (matcher.matches()) {
-				return internalLinkPattern.substring(0, matcher.start(1)) + pageId;
-			}
-		}
-		return MessageFormat.format(super.internalLinkPattern, pageId);
+		return super.mapPageNameToHref(pageName);
 	}
 
 	@Override
