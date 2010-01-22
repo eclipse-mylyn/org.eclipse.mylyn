@@ -999,7 +999,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		if (prependImagePrefix == null || prependImagePrefix.length() == 0) {
 			return imageUrl;
 		}
-		if (ABSOLUTE_URL_PATTERN.matcher(imageUrl).matches()) {
+		if (ABSOLUTE_URL_PATTERN.matcher(imageUrl).matches() || imageUrl.contains("../")) { //$NON-NLS-1$
 			return imageUrl;
 		}
 		String url = prependImagePrefix;
