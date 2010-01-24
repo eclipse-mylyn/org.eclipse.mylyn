@@ -177,6 +177,26 @@ public class Messages extends NLS {
 
 	public static String BugzillaAttribute_Worked;
 
+	public static String BugzillaAttachmentMapper_Author;
+
+	public static String BugzillaAttachmentMapper_Content_Type;
+
+	public static String BugzillaAttachmentMapper_Creation_Date;
+
+	public static String BugzillaAttachmentMapper_Description;
+
+	public static String BugzillaAttachmentMapper_Filename;
+
+	public static String BugzillaAttachmentMapper_obsolete;
+
+	public static String BugzillaAttachmentMapper_patch;
+
+	public static String BugzillaAttachmentMapper_Size;
+
+	public static String BugzillaAttachmentMapper_Token;
+
+	public static String BugzillaAttachmentMapper_URL;
+
 	public static String BugzillaClient_could_not_post_form_null_returned;
 
 	public static String BugzillaClient_description_required_when_submitting_attachments;

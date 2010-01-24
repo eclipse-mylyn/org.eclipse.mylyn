@@ -58,6 +58,173 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		super.tearDown();
 	}
 
+	public void testUpdateAttachmentFlags() throws Exception {
+		TaskData taskData = BugzillaFixture.current().createTask(PrivilegeLevel.USER, "update of Attachment Flags",
+				"description for testUpdateAttachmentFlags");
+		assertNotNull(taskData);
+		int numAttached = taskData.getAttributeMapper()
+				.getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT)
+				.size();
+		assertEquals(0, numAttached);
+		assertNotNull(repository.getCredentials(AuthenticationType.REPOSITORY));
+		assertNotNull(repository.getCredentials(AuthenticationType.REPOSITORY).getUserName());
+		assertNotNull(repository.getCredentials(AuthenticationType.REPOSITORY).getPassword());
+		BugzillaClient client = connector.getClientManager().getClient(repository, new NullProgressMonitor());
+
+		TaskAttribute attrAttachment = taskData.getAttributeMapper().createTaskAttachment(taskData);
+		TaskAttachmentMapper attachmentMapper = TaskAttachmentMapper.createFrom(attrAttachment);
+		/* Test uploading a proper file */
+		String fileName = "test-attach-1.txt";
+		File attachFile = new File(fileName);
+		attachFile.createNewFile();
+		BufferedWriter write = new BufferedWriter(new FileWriter(attachFile));
+		write.write("test file from " + System.currentTimeMillis());
+		write.close();
+
+		FileTaskAttachmentSource attachment = new FileTaskAttachmentSource(attachFile);
+		attachment.setContentType("text/plain");
+		attachment.setDescription("Description");
+		attachment.setName("My Attachment 1");
+
+		try {
+			client.postAttachment(taskData.getTaskId(), attachmentMapper.getComment(), attachment, attrAttachment,
+					new NullProgressMonitor());
+		} catch (Exception e) {
+			fail("never reach this!");
+		}
+		taskData = BugzillaFixture.current().getTask(taskData.getTaskId(), client);
+		assertNotNull(taskData);
+		numAttached = taskData.getAttributeMapper().getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT).size();
+		assertEquals(1, numAttached);
+		TaskAttribute attachmentAttribute = taskData.getAttributeMapper().getAttributesByType(taskData,
+				TaskAttribute.TYPE_ATTACHMENT).get(0);
+		int flagCount = 0;
+		int flagCountUnused = 0;
+		TaskAttribute attachmentFlag1 = null;
+		TaskAttribute attachmentFlag2 = null;
+		for (TaskAttribute attribute : attachmentAttribute.getAttributes().values()) {
+			if (!attribute.getId().startsWith("task.common.kind.flag")) { //$NON-NLS-1$
+				continue;
+			}
+			flagCount++;
+			if (attribute.getId().startsWith("task.common.kind.flag_type")) { //$NON-NLS-1$
+				flagCountUnused++;
+				TaskAttribute stateAttribute = taskData.getAttributeMapper().getAssoctiatedAttribute(attribute);
+				if (stateAttribute.getMetaData().getLabel().equals("AttachmentFlag1")) {
+					attachmentFlag1 = attribute;
+				}
+				if (stateAttribute.getMetaData().getLabel().equals("AttachmentFlag2")) {
+					attachmentFlag2 = attribute;
+				}
+			}
+		}
+		assertEquals(2, flagCount);
+		assertEquals(2, flagCountUnused);
+		assertNotNull(attachmentFlag1);
+		assertNotNull(attachmentFlag2);
+		TaskAttribute stateAttribute1 = taskData.getAttributeMapper().getAssoctiatedAttribute(attachmentFlag1);
+		stateAttribute1.setValue("?");
+		TaskAttribute requestee = attachmentFlag1.getAttribute("requestee"); //$NON-NLS-1$
+		requestee.setValue("guest@mylyn.eclipse.org");
+		client.postUpdateAttachment(attachmentAttribute, "update", null);
+		taskData = BugzillaFixture.current().getTask(taskData.getTaskId(), client);
+		assertNotNull(taskData);
+		attachmentAttribute = taskData.getAttributeMapper()
+				.getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT)
+				.get(0);
+		assertNotNull(attachmentAttribute);
+		flagCount = 0;
+		flagCountUnused = 0;
+		attachmentFlag1 = null;
+		attachmentFlag2 = null;
+		TaskAttribute attachmentFlag1used = null;
+		TaskAttribute attachmentFlag2used = null;
+
+		for (TaskAttribute attribute : attachmentAttribute.getAttributes().values()) {
+			if (!attribute.getId().startsWith("task.common.kind.flag")) { //$NON-NLS-1$
+				continue;
+			}
+			flagCount++;
+			if (attribute.getId().startsWith("task.common.kind.flag_type")) { //$NON-NLS-1$
+				flagCountUnused++;
+				TaskAttribute stateAttribute = taskData.getAttributeMapper().getAssoctiatedAttribute(attribute);
+				if (stateAttribute.getMetaData().getLabel().equals("AttachmentFlag1")) {
+					attachmentFlag1 = attribute;
+				}
+				if (stateAttribute.getMetaData().getLabel().equals("AttachmentFlag2")) {
+					attachmentFlag2 = attribute;
+				}
+			} else {
+				TaskAttribute stateAttribute = taskData.getAttributeMapper().getAssoctiatedAttribute(attribute);
+				if (stateAttribute.getMetaData().getLabel().equals("AttachmentFlag1")) {
+					attachmentFlag1used = attribute;
+				}
+				if (stateAttribute.getMetaData().getLabel().equals("AttachmentFlag2")) {
+					attachmentFlag2used = attribute;
+				}
+			}
+
+		}
+		assertEquals(3, flagCount);
+		assertEquals(2, flagCountUnused);
+		assertNotNull(attachmentFlag1);
+		assertNotNull(attachmentFlag2);
+		assertNotNull(attachmentFlag1used);
+		assertNull(attachmentFlag2used);
+		TaskAttribute stateAttribute1used = taskData.getAttributeMapper().getAssoctiatedAttribute(attachmentFlag1used);
+		TaskAttribute requesteeused = attachmentFlag1used.getAttribute("requestee"); //$NON-NLS-1$
+		assertNotNull(stateAttribute1used);
+		assertNotNull(requesteeused);
+		assertEquals("?", stateAttribute1used.getValue());
+		assertEquals("guest@mylyn.eclipse.org", requesteeused.getValue());
+		stateAttribute1used.setValue(" ");
+		client.postUpdateAttachment(attachmentAttribute, "update", null);
+		taskData = BugzillaFixture.current().getTask(taskData.getTaskId(), client);
+		assertNotNull(taskData);
+		attachmentAttribute = taskData.getAttributeMapper()
+				.getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT)
+				.get(0);
+		assertNotNull(attachmentAttribute);
+		flagCount = 0;
+		flagCountUnused = 0;
+		attachmentFlag1 = null;
+		attachmentFlag2 = null;
+		attachmentFlag1used = null;
+		attachmentFlag2used = null;
+
+		for (TaskAttribute attribute : attachmentAttribute.getAttributes().values()) {
+			if (!attribute.getId().startsWith("task.common.kind.flag")) { //$NON-NLS-1$
+				continue;
+			}
+			flagCount++;
+			if (attribute.getId().startsWith("task.common.kind.flag_type")) { //$NON-NLS-1$
+				flagCountUnused++;
+				TaskAttribute stateAttribute = taskData.getAttributeMapper().getAssoctiatedAttribute(attribute);
+				if (stateAttribute.getMetaData().getLabel().equals("AttachmentFlag1")) {
+					attachmentFlag1 = attribute;
+				}
+				if (stateAttribute.getMetaData().getLabel().equals("AttachmentFlag2")) {
+					attachmentFlag2 = attribute;
+				}
+			} else {
+				TaskAttribute stateAttribute = taskData.getAttributeMapper().getAssoctiatedAttribute(attribute);
+				if (stateAttribute.getMetaData().getLabel().equals("AttachmentFlag1")) {
+					attachmentFlag1used = attribute;
+				}
+				if (stateAttribute.getMetaData().getLabel().equals("AttachmentFlag2")) {
+					attachmentFlag2used = attribute;
+				}
+			}
+
+		}
+		assertEquals(2, flagCount);
+		assertEquals(2, flagCountUnused);
+		assertNotNull(attachmentFlag1);
+		assertNotNull(attachmentFlag2);
+		assertNull(attachmentFlag1used);
+		assertNull(attachmentFlag2used);
+	}
+
 	public void testAttachToExistingReport() throws Exception {
 		TaskData taskData = BugzillaFixture.current().createTask(PrivilegeLevel.USER, null, null);
 		assertNotNull(taskData);

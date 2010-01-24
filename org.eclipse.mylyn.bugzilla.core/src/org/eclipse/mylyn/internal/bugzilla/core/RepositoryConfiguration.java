@@ -375,6 +375,8 @@ public class RepositoryConfiguration implements Serializable {
 			if (localuser) {
 				removeDomain(taskData);
 			}
+			addMissingAttachmentFlags(taskData, connector);
+			updateAttachmentOptions(taskData);
 		}
 	}
 
@@ -729,6 +731,99 @@ public class RepositoryConfiguration implements Serializable {
 
 	public String getEncoding() {
 		return encoding;
+	}
+
+	public void updateAttachmentOptions(TaskData existingReport) {
+		for (TaskAttribute attribute : new HashSet<TaskAttribute>(existingReport.getRoot().getAttributes().values())) {
+
+			if (!attribute.getId().startsWith("task.common.attachment")) { //$NON-NLS-1$
+				continue;
+			}
+
+			for (TaskAttribute attachmentAttribute : attribute.getAttributes().values()) {
+				if (!attachmentAttribute.getId().startsWith("task.common.kind.flag")) { //$NON-NLS-1$
+					continue;
+				}
+
+				TaskAttribute state = attachmentAttribute.getAttribute("state"); //$NON-NLS-1$
+				attachmentAttribute.clearOptions();
+
+				String nameValue = state.getMetaData().getLabel();
+				state.putOption("", ""); //$NON-NLS-1$ //$NON-NLS-2$
+				for (BugzillaFlag bugzillaFlag : flags) {
+					if (nameValue.equals(bugzillaFlag.getName()) && bugzillaFlag.getType().equals("attachment")) { //$NON-NLS-1$
+						if ("attachment".equals(bugzillaFlag.getType())) { //$NON-NLS-1$
+							if (bugzillaFlag.isRequestable()) {
+								state.putOption("?", "?"); //$NON-NLS-1$ //$NON-NLS-2$
+							}
+							break;
+						}
+					}
+				}
+				state.putOption("-", "-"); //$NON-NLS-1$ //$NON-NLS-2$
+				state.putOption("+", "+"); //$NON-NLS-1$ //$NON-NLS-2$
+				String flagNameValue = state.getMetaData().getLabel();
+				for (BugzillaFlag bugzillaFlag : flags) {
+					if (flagNameValue.equals(bugzillaFlag.getName()) && bugzillaFlag.getType().equals("attachment")) { //$NON-NLS-1$
+						TaskAttribute requestee = attachmentAttribute.getAttribute("requestee"); //$NON-NLS-1$
+						if (requestee == null) {
+							requestee = attachmentAttribute.createMappedAttribute("requestee"); //$NON-NLS-1$
+							requestee.getMetaData().defaults().setType(TaskAttribute.TYPE_SHORT_TEXT);
+							requestee.setValue(""); //$NON-NLS-1$
+						}
+						requestee.getMetaData().setReadOnly(!bugzillaFlag.isSpecifically_requestable());
+					}
+				}
+
+			}
+		}
+	}
+
+	private void addMissingAttachmentFlags(TaskData taskData, BugzillaRepositoryConnector connector) {
+		List<String> existingFlags = new ArrayList<String>();
+		List<BugzillaFlag> flags = getFlags();
+		for (TaskAttribute attribute : new HashSet<TaskAttribute>(taskData.getRoot().getAttributes().values())) {
+
+			if (!attribute.getId().startsWith("task.common.attachment")) { //$NON-NLS-1$
+				continue;
+			}
+			existingFlags.clear();
+			for (TaskAttribute attachmentAttribute : attribute.getAttributes().values()) {
+				if (!attachmentAttribute.getId().startsWith("task.common.kind.flag")) { //$NON-NLS-1$
+					continue;
+				}
+				TaskAttribute state = attachmentAttribute.getAttribute("state"); //$NON-NLS-1$
+				if (state != null) {
+					String nameValue = state.getMetaData().getLabel();
+					if (!existingFlags.contains(nameValue)) {
+						existingFlags.add(nameValue);
+					}
+				}
+			}
+			TaskAttribute productAttribute = taskData.getRoot().getMappedAttribute(BugzillaAttribute.PRODUCT.getKey());
+			TaskAttribute componentAttribute = taskData.getRoot().getMappedAttribute(
+					BugzillaAttribute.COMPONENT.getKey());
+			for (BugzillaFlag bugzillaFlag : flags) {
+				if (!bugzillaFlag.getType().equals("attachment")) { //$NON-NLS-1$
+					continue;
+				}
+				if (!bugzillaFlag.isUsedIn(productAttribute.getValue(), componentAttribute.getValue())) {
+					continue;
+				}
+				if (existingFlags.contains(bugzillaFlag.getName()) && !bugzillaFlag.isMultiplicable()) {
+					continue;
+				}
+				BugzillaFlagMapper mapper = new BugzillaFlagMapper(connector);
+				mapper.setRequestee(""); //$NON-NLS-1$
+				mapper.setSetter(""); //$NON-NLS-1$
+				mapper.setState(" "); //$NON-NLS-1$
+				mapper.setFlagId(bugzillaFlag.getName());
+				mapper.setNumber(0);
+				mapper.setDescription(bugzillaFlag.getDescription());
+				TaskAttribute newattribute = attribute.createAttribute("task.common.kind.flag_type" + bugzillaFlag.getFlagId()); //$NON-NLS-1$
+				mapper.applyTo(newattribute);
+			}
+		}
 	}
 
 	public void setETagValue(String eTagValue) {

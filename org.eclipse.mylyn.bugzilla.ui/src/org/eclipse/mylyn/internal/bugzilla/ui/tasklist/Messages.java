@@ -79,5 +79,10 @@ public class Messages extends NLS {
 
 	public static String BugzillaRepositorySettingsPage_Validating_server_settings;
 
-	public static String BugzillaTaskAttachmentPage_flags;
+	public static String BugzillaTaskAttachmentPage_Advanced;
+
+	public static String BugzillaAttachmentDialog_DetailTitle;
+
+	public static String BugzillaAttachmentDialog_OK_ButtonText;
+
 }

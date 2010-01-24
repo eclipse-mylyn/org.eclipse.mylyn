@@ -29,4 +29,5 @@ public class Messages extends NLS {
 
 	public static String UpdateAttachmentJob_update_attachment;
 
+	public static String BugzillaAttachmentUpdateAction_Comment;
 }

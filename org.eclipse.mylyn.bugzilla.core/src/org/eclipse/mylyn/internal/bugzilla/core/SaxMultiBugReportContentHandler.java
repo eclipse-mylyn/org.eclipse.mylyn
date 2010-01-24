@@ -18,7 +18,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
-import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
@@ -521,7 +520,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 		List<TaskAttribute> taskAttachments = repositoryTaskData.getAttributeMapper().getAttributesByType(
 				repositoryTaskData, TaskAttribute.TYPE_ATTACHMENT);
 		for (TaskAttribute attachment : taskAttachments) {
-			TaskAttachmentMapper attachmentMapper = TaskAttachmentMapper.createFrom(attachment);
+			BugzillaAttachmentMapper attachmentMapper = BugzillaAttachmentMapper.createFrom(attachment);
 			TaskCommentMapper taskComment = attachIdToComment.get(attachmentMapper.getAttachmentId());
 			if (taskComment != null) {
 				attachmentMapper.setAuthor(taskComment.getAuthor());

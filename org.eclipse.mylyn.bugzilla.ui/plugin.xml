@@ -96,13 +96,21 @@
                menubarPath="org.eclipse.mylyn.bugzilla.ui.attachments.mark/markadditions"
                tooltip="Mark attachment as not obsolete">
          </action>
-          <action
+         <action
                class="org.eclipse.mylyn.internal.bugzilla.ui.action.BugzillaObsoleteAttachmentAction"
                enablesFor="*"
                id="org.eclipse.mylyn.bugzilla.ui.contribution.attachment.obsolete"
                label="Mark obsolete"
                menubarPath="org.eclipse.mylyn.bugzilla.ui.attachments.mark/markadditions"
                tooltip="Mark attachment as obsolete">
+         </action>
+         <action
+               class="org.eclipse.mylyn.internal.bugzilla.ui.action.BugzillaAttachmentUpdateAction"
+               enablesFor="*"
+               id="org.eclipse.mylyn.bugzilla.ui.contribution.attachment.update"
+               label="Detail..."
+               menubarPath="org.eclipse.mylyn.bugzilla.ui.attachments.mark"
+               tooltip="Attachment Details">
          </action>
           <menu
                 id="org.eclipse.mylyn.bugzilla.ui.attachments.mark"

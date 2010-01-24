@@ -20,8 +20,6 @@ import org.eclipse.mylyn.tasks.ui.editors.LayoutHint.ColumnSpan;
 import org.eclipse.mylyn.tasks.ui.editors.LayoutHint.RowSpan;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -41,17 +39,20 @@ public class FlagAttributeEditor extends AbstractAttributeEditor {
 
 	private Text requesteeText;
 
-	public FlagAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
+	private final int requesteeTextHint;
+
+	public FlagAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute, int requesteeTextHint) {
 		super(manager, taskAttribute);
 		setLayoutHint(new LayoutHint(RowSpan.SINGLE, ColumnSpan.SINGLE));
 		if (taskAttribute.getAttribute("state") != null) { //$NON-NLS-1$
 			setReadOnly(taskAttribute.getAttribute("state").getMetaData().isReadOnly()); //$NON-NLS-1$
 		}
+		this.requesteeTextHint = requesteeTextHint;
 	}
 
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
-		Composite composite = toolkit.createComposite(parent);
+		final Composite composite = toolkit.createComposite(parent);
 		GridLayout layout = new GridLayout(3, false);
 		layout.marginWidth = 1;
 		composite.setLayout(layout);
@@ -60,9 +61,20 @@ public class FlagAttributeEditor extends AbstractAttributeEditor {
 			toolkit.adapt(text, false, false);
 			text.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
 			text.setText(getValueLabel());
+			text.setBackground(parent.getBackground());
+			text.setEditable(false);
 			String tooltip = getTaskAttribute().getMetaData().getLabel();
 			if (tooltip != null) {
 				text.setToolTipText(tooltip);
+			}
+			TaskAttribute requestee = getTaskAttribute().getAttribute("requestee"); //$NON-NLS-1$
+			if (!"".equals(requestee.getValue())) { //$NON-NLS-1$
+				text = new Text(composite, SWT.FLAT | SWT.READ_ONLY);
+				toolkit.adapt(text, false, false);
+				text.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
+				text.setText(requestee.getValue());
+				text.setBackground(parent.getBackground());
+				text.setEditable(false);
 			}
 		} else {
 			combo = new CCombo(composite, SWT.FLAT | SWT.READ_ONLY);
@@ -106,17 +118,8 @@ public class FlagAttributeEditor extends AbstractAttributeEditor {
 				requesteeText = toolkit.createText(composite, requestee.getValue());
 				requesteeText.setEnabled("?".equals(getValueLabel())); //$NON-NLS-1$
 				GridData requesteeData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-				requesteeData.widthHint = 78;
+				requesteeData.widthHint = requesteeTextHint;
 				requesteeText.setLayoutData(requesteeData);
-				requesteeText.addFocusListener(new FocusListener() {
-
-					public void focusGained(FocusEvent e) {
-					}
-
-					public void focusLost(FocusEvent e) {
-						setRequestee(requesteeText.getText());
-					}
-				});
 			}
 		}
 		toolkit.paintBordersFor(composite);
@@ -149,8 +152,10 @@ public class FlagAttributeEditor extends AbstractAttributeEditor {
 	public void setRequestee(String value) {
 		TaskAttribute requestee = getTaskAttribute().getAttribute("requestee"); //$NON-NLS-1$
 		if (requestee != null) {
-			getAttributeMapper().setValue(getTaskAttribute().getAttribute("requestee"), value); //$NON-NLS-1$
-			attributeChanged();
+			if (!requestee.getValue().equals(value)) {
+				getAttributeMapper().setValue(requestee, value);
+				attributeChanged();
+			}
 		}
 	}
 

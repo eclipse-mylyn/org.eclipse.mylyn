@@ -160,7 +160,7 @@ public class BugzillaTaskAttachmentPage extends TaskAttachmentPage {
 				| ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR);
 		flagExpandComposite.setFont(container.getFont());
 		flagExpandComposite.setBackground(container.getBackground());
-		flagExpandComposite.setText(Messages.BugzillaTaskAttachmentPage_flags);
+		flagExpandComposite.setText(Messages.BugzillaTaskAttachmentPage_Advanced);
 		flagExpandComposite.setLayout(new GridLayout(3, false));
 		GridData g = new GridData(GridData.FILL_HORIZONTAL);
 		g.horizontalSpan = 3;

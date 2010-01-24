@@ -889,9 +889,9 @@ public class BugzillaClient {
 		Collection<TaskAttribute> attributes = taskAttribute.getAttributes().values();
 		Iterator<TaskAttribute> itr = attributes.iterator();
 		while (itr.hasNext()) {
-			TaskAttribute a = itr.next();
-			String id = a.getId();
-			String value = a.getValue();
+			TaskAttribute attrib = itr.next();
+			String id = attrib.getId();
+			String value = attrib.getValue();
 			if (id.equals(TaskAttribute.ATTACHMENT_AUTHOR) || id.equals("date") || id.equals("size") //$NON-NLS-1$ //$NON-NLS-2$
 					|| id.equals(TaskAttribute.ATTACHMENT_URL)) {
 				continue;
@@ -910,7 +910,36 @@ public class BugzillaClient {
 			if (id.equals(TaskAttribute.ATTACHMENT_IS_PATCH)) {
 				id = "ispatch"; //$NON-NLS-1$
 			}
-			formData.add(new NameValuePair(id, value));
+			if (id.startsWith("task.common.kind.flag_type")) { //$NON-NLS-1$
+				TaskAttribute requestee = attrib.getAttribute("requestee"); //$NON-NLS-1$
+				TaskAttribute state = attrib.getAttribute("state"); //$NON-NLS-1$
+				String requesteeName = "requestee_type-" + id.substring(26); //$NON-NLS-1$
+				String requesteeValue = requestee.getValue();
+				value = state.getValue();
+				if (value.equals(" ")) { //$NON-NLS-1$
+					value = "X"; //$NON-NLS-1$
+				}
+				if (value.equals("?")) { //$NON-NLS-1$
+					formData.add(new NameValuePair(requesteeName, requesteeValue));
+				}
+				id = "flag_type-" + id.substring(26); //$NON-NLS-1$
+			} else if (id.startsWith("task.common.kind.flag")) { //$NON-NLS-1$
+				TaskAttribute requestee = attrib.getAttribute("requestee"); //$NON-NLS-1$
+				TaskAttribute state = attrib.getAttribute("state"); //$NON-NLS-1$
+				String requesteeName = "requestee-" + id.substring(21); //$NON-NLS-1$
+				String requesteeValue = requestee.getValue();
+				value = state.getValue();
+				if (value.equals(" ") | value.equals("")) { //$NON-NLS-1$//$NON-NLS-2$
+					value = "X"; //$NON-NLS-1$
+				}
+				if (value.equals("?")) { //$NON-NLS-1$
+					formData.add(new NameValuePair(requesteeName, requesteeValue));
+				}
+				id = "flag-" + id.substring(21); //$NON-NLS-1$
+			}
+			if (!value.equals("")) { //$NON-NLS-1$
+				formData.add(new NameValuePair(id, value));
+			}
 		}
 		GzipPostMethod method = null;
 		InputStream input = null;
