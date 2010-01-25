@@ -268,7 +268,7 @@ public class TextileLanguageTest extends TestCase {
 		TestUtil.println(html);
 
 		assertTrue(Pattern.compile(
-				"<body><pre>\\s+\\|_. a\\|_. table\\|_. header\\|\\s+\\|a\\|table\\|row\\|\\s+\\|a\\|table\\|row\\|\\s+</pre></body>",
+				"<body><pre>\\s*\\|_. a\\|_. table\\|_. header\\|\\s+\\|a\\|table\\|row\\|\\s+\\|a\\|table\\|row\\|\\s+</pre></body>",
 				Pattern.MULTILINE)
 				.matcher(html.toString())
 				.find());
@@ -333,7 +333,24 @@ public class TextileLanguageTest extends TestCase {
 
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(Pattern.compile(
-				"<body><pre><code>\\s+here is &lt;a href=\"#\">a working example&lt;/a>\\s+</code></pre></body>",
+				"<body><pre><code>\\s*here is &lt;a href=\"#\">a working example&lt;/a>\\s+</code></pre></body>",
+				Pattern.MULTILINE | Pattern.DOTALL).matcher(html).find());
+	}
+
+	public void testBlockCodeWithLeadingNewline() throws IOException {
+		String html = parser.parseToHtml("bc. \none\ntwo\n\nthree");
+
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(Pattern.compile("<pre><code>one\\s+two\\s+</code></pre>", Pattern.MULTILINE | Pattern.DOTALL)
+				.matcher(html)
+				.find());
+	}
+
+	public void testBlockCodeWithLeadingNewlines() throws IOException {
+		String html = parser.parseToHtml("bc.. \n\none\ntwo\np. three");
+
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(Pattern.compile("<pre><code>(\\r|\\n)+one\\s+two\\s+</code></pre>",
 				Pattern.MULTILINE | Pattern.DOTALL).matcher(html).find());
 	}
 
@@ -1086,9 +1103,9 @@ public class TextileLanguageTest extends TestCase {
 		String html = parser.parseToHtml("bc.. \none\ntwo\n\nthree\n\n\nmore\n\np. some para");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(Pattern.compile(
-				"<pre><code>" + REGEX_NEWLINE + "one" + REGEX_NEWLINE + "two" + REGEX_NEWLINE + REGEX_NEWLINE + "three"
-						+ REGEX_NEWLINE + REGEX_NEWLINE + REGEX_NEWLINE + "more" + REGEX_NEWLINE
-						+ "</code></pre><p>some para</p>", Pattern.MULTILINE | Pattern.DOTALL).matcher(html).find());
+				"<pre><code>one" + REGEX_NEWLINE + "two" + REGEX_NEWLINE + REGEX_NEWLINE + "three" + REGEX_NEWLINE
+						+ REGEX_NEWLINE + REGEX_NEWLINE + "more" + REGEX_NEWLINE + "</code></pre><p>some para</p>",
+				Pattern.MULTILINE | Pattern.DOTALL).matcher(html).find());
 	}
 
 	public void testExtendedPre() {

@@ -60,8 +60,11 @@ public class PreformattedBlock extends Block {
 		}
 		++blockLineCount;
 
-		builder.characters(offset > 0 ? line.substring(offset) : line);
-		builder.characters("\n"); //$NON-NLS-1$
+		final String lineText = offset > 0 ? line.substring(offset) : line;
+		if (blockLineCount > 1 || lineText.trim().length() > 0) {
+			builder.characters(lineText);
+			builder.characters("\n"); //$NON-NLS-1$
+		}
 
 		return -1;
 	}
