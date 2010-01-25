@@ -77,6 +77,7 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		String fileName = "test-attach-1.txt";
 		File attachFile = new File(fileName);
 		attachFile.createNewFile();
+		attachFile.deleteOnExit();
 		BufferedWriter write = new BufferedWriter(new FileWriter(attachFile));
 		write.write("test file from " + System.currentTimeMillis());
 		write.close();
@@ -272,6 +273,7 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		String fileName = "test-attach-" + System.currentTimeMillis() + ".txt";
 		File attachFile = new File(fileName);
 		attachFile.createNewFile();
+		attachFile.deleteOnExit();
 		BufferedWriter write = new BufferedWriter(new FileWriter(attachFile));
 
 		attachment = new FileTaskAttachmentSource(attachFile);
@@ -383,6 +385,7 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		String fileName = "test-attach-" + System.currentTimeMillis() + ".txt";
 		File attachFile = new File(fileName);
 		attachFile.createNewFile();
+		attachFile.deleteOnExit();
 		BufferedWriter write = new BufferedWriter(new FileWriter(attachFile));
 		/* Test uploading a proper file */
 		write.write("test file");
