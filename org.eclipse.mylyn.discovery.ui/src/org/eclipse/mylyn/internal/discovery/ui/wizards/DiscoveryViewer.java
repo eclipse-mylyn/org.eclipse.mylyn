@@ -315,8 +315,9 @@ public class DiscoveryViewer {
 		protected boolean maybeModifySelection(boolean selected) {
 			if (selected) {
 				if (connector.isInstalled()) {
-					MessageDialog.openWarning(shellProvider.getShell(), Messages.DiscoveryViewer_Install_Connector_Title, NLS.bind(
-							Messages.DiscoveryViewer_Already_installed_Error, connector.getName()));
+					MessageDialog.openWarning(shellProvider.getShell(),
+							Messages.DiscoveryViewer_Install_Connector_Title, NLS.bind(
+									Messages.DiscoveryViewer_Already_installed_Error, connector.getName()));
 					return false;
 				}
 				if (connector.getAvailable() != null && !connector.getAvailable()) {
@@ -1284,7 +1285,7 @@ public class DiscoveryViewer {
 		filters.add(filter);
 	}
 
-	public void removeFiler(ViewerFilter filter) {
+	public void removeFilter(ViewerFilter filter) {
 		filters.remove(filter);
 	}
 
