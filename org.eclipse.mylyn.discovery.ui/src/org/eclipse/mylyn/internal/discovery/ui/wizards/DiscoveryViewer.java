@@ -47,6 +47,7 @@ import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.mylyn.internal.discovery.core.model.AbstractDiscoverySource;
 import org.eclipse.mylyn.internal.discovery.core.model.BundleDiscoveryStrategy;
@@ -221,7 +222,11 @@ public class DiscoveryViewer {
 			configureLook(nameLabel, background);
 			GridDataFactory.fillDefaults().grab(true, false).align(SWT.BEGINNING, SWT.CENTER).applyTo(nameLabel);
 			nameLabel.setFont(h2Font);
-			nameLabel.setText(connector.getName());
+			if (connector.isInstalled()) {
+				nameLabel.setText(NLS.bind(Messages.DiscoveryViewer_X_installed, connector.getName()));
+			} else {
+				nameLabel.setText(connector.getName());
+			}
 
 			providerLabel = new Link(connectorContainer, SWT.RIGHT);
 			configureLook(providerLabel, background);
@@ -309,6 +314,11 @@ public class DiscoveryViewer {
 
 		protected boolean maybeModifySelection(boolean selected) {
 			if (selected) {
+				if (connector.isInstalled()) {
+					MessageDialog.openWarning(shellProvider.getShell(), Messages.DiscoveryViewer_Install_Connector_Title, NLS.bind(
+							Messages.DiscoveryViewer_Already_installed_Error, connector.getName()));
+					return false;
+				}
 				if (connector.getAvailable() != null && !connector.getAvailable()) {
 					MessageDialog.openWarning(shellProvider.getShell(),
 							Messages.ConnectorDiscoveryWizardMainPage_warningTitleConnectorUnavailable, NLS.bind(
@@ -332,7 +342,8 @@ public class DiscoveryViewer {
 		}
 
 		public void updateAvailability() {
-			boolean enabled = connector.getAvailable() == null || connector.getAvailable();
+			boolean enabled = !connector.isInstalled()
+					&& (connector.getAvailable() == null || connector.getAvailable());
 
 			checkbox.setEnabled(enabled);
 			nameLabel.setEnabled(enabled);
@@ -460,6 +471,12 @@ public class DiscoveryViewer {
 	private List<DiscoveryConnector> allConnectors;
 
 	private int minimumHeight;
+
+	private final List<ViewerFilter> filters = new ArrayList<ViewerFilter>();
+
+	private boolean showInstalledFilterEnabled;
+
+	private boolean showInstalled;
 
 	public DiscoveryViewer(IShellProvider shellProvider, IRunnableContext context) {
 		this.shellProvider = shellProvider;
@@ -715,14 +732,6 @@ public class DiscoveryViewer {
 				Composite filterContainer = new Composite(header, SWT.NULL);
 				GridDataFactory.fillDefaults().grab(true, false).applyTo(filterContainer);
 
-				int numColumns = 1; // 1 for label
-				if (isShowConnectorDescriptorKindFilter()) {
-					numColumns += ConnectorDescriptorKind.values().length;
-				}
-				if (isShowConnectorDescriptorTextFilter()) {
-					++numColumns;
-				}
-				GridLayoutFactory.fillDefaults().numColumns(numColumns).applyTo(filterContainer);
 				Label label = new Label(filterContainer, SWT.NULL);
 				label.setText(Messages.ConnectorDiscoveryWizardMainPage_filterLabel);
 
@@ -766,6 +775,21 @@ public class DiscoveryViewer {
 					}
 				}
 
+				if (isShowInstalledFilterEnabled()) {
+					final Button checkbox = new Button(filterContainer, SWT.CHECK);
+					checkbox.setSelection(false);
+					checkbox.setText(Messages.DiscoveryViewer_Show_Installed);
+					checkbox.addSelectionListener(new SelectionListener() {
+						public void widgetDefaultSelected(SelectionEvent e) {
+							widgetSelected(e);
+						}
+
+						public void widgetSelected(SelectionEvent e) {
+							setShowInstalled(checkbox.getSelection());
+						}
+					});
+				}
+
 				if (isShowConnectorDescriptorKindFilter()) { // filter
 					// buttons
 
@@ -787,6 +811,8 @@ public class DiscoveryViewer {
 					}
 				}
 
+				GridLayoutFactory.fillDefaults().numColumns(filterContainer.getChildren().length).applyTo(
+						filterContainer);
 			}
 
 		}
@@ -1254,6 +1280,14 @@ public class DiscoveryViewer {
 		return true;
 	}
 
+	public void addFilter(ViewerFilter filter) {
+		filters.add(filter);
+	}
+
+	public void removeFiler(ViewerFilter filter) {
+		filters.remove(filter);
+	}
+
 	private boolean isFiltered(ConnectorDescriptor descriptor) {
 		boolean kindFiltered = true;
 		for (ConnectorDescriptorKind kind : descriptor.getKind()) {
@@ -1265,13 +1299,17 @@ public class DiscoveryViewer {
 		if (kindFiltered) {
 			return true;
 		}
-		if (installedFeatures != null && installedFeatures.containsAll(descriptor.getInstallableUnits())) {
-			// always filter installed features per bug 275777
+		if (!showInstalled && descriptor.isInstalled()) {
 			return true;
 		}
 		if (filterPattern != null) {
 			if (!(filterMatches(descriptor.getName()) || filterMatches(descriptor.getDescription())
 					|| filterMatches(descriptor.getProvider()) || filterMatches(descriptor.getLicense()))) {
+				return true;
+			}
+		}
+		for (ViewerFilter filter : filters) {
+			if (!filter.select(null, null, descriptor)) {
 				return true;
 			}
 		}
@@ -1291,6 +1329,14 @@ public class DiscoveryViewer {
 	 */
 	public boolean isShowConnectorDescriptorTextFilter() {
 		return showConnectorDescriptorTextFilter;
+	}
+
+	public boolean isShowInstalled() {
+		return showInstalled;
+	}
+
+	public boolean isShowInstalledFilterEnabled() {
+		return showInstalledFilterEnabled;
 	}
 
 	/**
@@ -1375,6 +1421,15 @@ public class DiscoveryViewer {
 		this.showConnectorDescriptorTextFilter = showConnectorDescriptorTextFilter;
 	}
 
+	public void setShowInstalled(boolean showInstalled) {
+		this.showInstalled = showInstalled;
+		connectorDescriptorKindVisibilityUpdated();
+	}
+
+	public void setShowInstalledFilterEnabled(boolean showInstalledFilter) {
+		this.showInstalledFilterEnabled = showInstalledFilter;
+	}
+
 	public void setVerifyUpdateSiteAvailability(boolean verifyUpdateSiteAvailability) {
 		this.verifyUpdateSiteAvailability = verifyUpdateSiteAvailability;
 	}
@@ -1418,6 +1473,11 @@ public class DiscoveryViewer {
 						result[0] = connectorDiscovery.performDiscovery(monitor);
 					} finally {
 						DiscoveryViewer.this.discovery = connectorDiscovery;
+
+						for (DiscoveryConnector connector : connectorDiscovery.getConnectors()) {
+							connector.setInstalled(installedFeatures != null
+									&& installedFeatures.containsAll(connector.getInstallableUnits()));
+						}
 					}
 					if (monitor.isCanceled()) {
 						throw new InterruptedException();
@@ -1478,7 +1538,7 @@ public class DiscoveryViewer {
 			createBodyContents();
 		}
 		// help UI tests
-		body.setData("discoveryComplete", "true"); //$NON-NLS-1$//$NON-NLS-2$
+		body.setData("discoveryComplete", "true"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private void updateState() {

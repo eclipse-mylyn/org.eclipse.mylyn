@@ -50,6 +50,8 @@ public class ConnectorDescriptor {
 
 	protected String certificationId;
 
+	protected boolean installed;
+
 	public ConnectorDescriptor() {
 	}
 
@@ -243,6 +245,14 @@ public class ConnectorDescriptor {
 
 	public void setInstallableUnits(java.util.List<String> installableUnits) {
 		this.installableUnits = installableUnits;
+	}
+
+	public boolean isInstalled() {
+		return installed;
+	}
+
+	public void setInstalled(boolean installed) {
+		this.installed = installed;
 	}
 
 }

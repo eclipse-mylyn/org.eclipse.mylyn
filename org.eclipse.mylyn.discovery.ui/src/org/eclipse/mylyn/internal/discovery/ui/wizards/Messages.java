@@ -83,7 +83,15 @@ public class Messages extends NLS {
 
 	public static String ConnectorDiscoveryWizardMainPage_warningTitleConnectorUnavailable;
 
+	public static String DiscoveryViewer_Already_installed_Error;
+
 	public static String DiscoveryViewer_Certification_Label0;
+
+	public static String DiscoveryViewer_Install_Connector_Title;
+
+	public static String DiscoveryViewer_Show_Installed;
+
+	public static String DiscoveryViewer_X_installed;
 
 	public static String PrepareInstallProfileJob_notFoundDescriptorDetail;
 
