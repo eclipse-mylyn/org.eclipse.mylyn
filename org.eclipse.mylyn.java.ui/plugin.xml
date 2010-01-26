@@ -307,7 +307,6 @@
        targetID="org.eclipse.mylyn.ui.views.active.search">
  		</viewContribution>
  	
- 	<!--
 	 <viewContribution
          id="org.eclipse.mylyn.java.ui.markers.breakpoints.contribution"
          targetID="org.eclipse.debug.ui.BreakpointView">
@@ -324,7 +323,6 @@
             tooltip="%FocusBreakpointsViewAction.tooltip">
       </action>
    	</viewContribution> 
- 	-->
  	
  	<viewContribution 
 		id="org.eclipse.mylyn.ui.debug.view.contribution" 
