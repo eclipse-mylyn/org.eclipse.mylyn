@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.eclipse.core.net.proxy.IProxyChangeEvent;
 import org.eclipse.core.net.proxy.IProxyChangeListener;
@@ -370,6 +371,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	@Deprecated
 	public static String LABEL_VIEW_REPOSITORIES = Messages.TasksUiPlugin_Task_Repositories;
 
+	private final AtomicInteger initializationCount = new AtomicInteger();
+
 	private class TasksUiInitializationJob extends UIJob {
 
 		public TasksUiInitializationJob() {
@@ -426,6 +429,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 						"Could not initialize task activity", t)); //$NON-NLS-1$
 			}
 			monitor.worked(1);
+
+			initializeNotificationsAndSynchronization();
 
 			try {
 				getPreferenceStore().addPropertyChangeListener(PROPERTY_LISTENER);
@@ -1280,6 +1285,12 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	}
 
 	public void initializeNotificationsAndSynchronization() {
+		// this method is invoked by the tasks ui initialization job and the task list view
+		// only proceed if both calls have been made 
+		if (initializationCount.incrementAndGet() != 2) {
+			return;
+		}
+
 		try {
 			taskListNotificationManager.addNotificationProvider(REMINDER_NOTIFICATION_PROVIDER);
 //				taskListNotificationManager.addNotificationProvider(INCOMING_NOTIFICATION_PROVIDER);
