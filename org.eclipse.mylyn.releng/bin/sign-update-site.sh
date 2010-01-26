@@ -91,7 +91,7 @@ then
  unzip extras
  unzip incubator
 
- echo Creating archive for singing, output is logged to $DST/sign.log
+ echo Creating archive for signing, output is logged to $DST/sign.log
  /bin/rm $DST/mylyn.zip || true
  cd $TMP
  /usr/bin/find -name "org.eclipse*mylyn*.jar" | zip $DST/mylyn.zip -@ > $DST/sign.log
@@ -121,13 +121,14 @@ fi
 
 echo Unzipping signed files, output is logged to $DST/sign.log
 /usr/bin/unzip -o -d $TMP $OUT/mylyn.zip >> $DST/sign.log
-rezip e3.4
-rezip extras
-rezip incubator
 
 pack e3.4 "Mylyn for Eclipse 3.4, 3.5 and 3.6"
 pack extras "Mylyn Extras"
 pack incubator "Mylyn Incubator"
+
+rezip e3.4
+rezip extras
+rezip incubator
 
 # republish
 
