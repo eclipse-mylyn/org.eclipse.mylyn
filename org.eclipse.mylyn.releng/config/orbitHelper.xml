@@ -68,7 +68,7 @@
 		</fileset>
 		<!-- bug 297912: copy target specific version of javax.servlet -->
 		<fileset dir="${baseLocation}/plugins" id="javax.servlet">
-			<include name="javax.servlet*.jar"/>
+			<include name="javax.servlet_*.jar"/>
 		</fileset>
 
 		<!-- xml-rpc -->
@@ -90,27 +90,27 @@
 		</fileset>
 
 		<mkdir dir="${buildDirectory}/standardUpdateSite/plugins"/>
-		<copy todir="${buildDirectory}/standardUpdateSite/plugins">
+		<copy todir="${buildDirectory}/standardUpdateSite/plugins" verbose="true">
 			<fileset refid="org.apache.commons.httpclient" />
 			<fileset refid="org.jdom" />
 		</copy>
 
 		<mkdir dir="${buildDirectory}/extrasUpdateSite/plugins"/>
-		<copy todir="${buildDirectory}/extrasUpdateSite/plugins">
+		<copy todir="${buildDirectory}/extrasUpdateSite/plugins" verbose="true">
 			<fileset refid="org.apache.axis" />
 			<fileset refid="javax.servlet" />
 			<fileset refid="org.apache.xmlrpc" />
 		</copy>
 
 		<mkdir dir="${buildDirectory}/incubatorUpdateSite/plugins"/>
-		<copy todir="${buildDirectory}/incubatorUpdateSite/plugins">
+		<copy todir="${buildDirectory}/incubatorUpdateSite/plugins" verbose="true">
 			<fileset refid="org.apache.axis" />
 			<fileset refid="javax.servlet" />
 			<fileset refid="com.sun.syndication" />
 		</copy>
 
 		<mkdir dir="${buildDirectory}/allUpdateSite/plugins"/>
-		<copy todir="${buildDirectory}/allUpdateSite/plugins">
+		<copy todir="${buildDirectory}/allUpdateSite/plugins" verbose="true">
 			<fileset refid="org.apache.axis" />
 			<fileset refid="javax.servlet" />
 			<fileset refid="org.apache.commons.httpclient" />
