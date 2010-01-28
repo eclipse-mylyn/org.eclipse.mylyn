@@ -46,7 +46,6 @@ public class BugzillaTaskDataHandlerTest extends TestCase {
 		TaskData taskData = BugzillaFixture.current().createTask(PrivilegeLevel.USER, "test summary for clone",
 				"test description for clone");
 		taskData.getRoot().getMappedAttribute(TaskAttribute.PRIORITY).setValue("P5");
-		//BugzillaFixture.current().submitTask(taskData, client);
 		ITaskMapping mapping = connector.getTaskMapping(taskData);
 		DefaultTaskMapping taskSelection = new DefaultTaskMapping();
 		taskSelection.setDescription("Test description");
