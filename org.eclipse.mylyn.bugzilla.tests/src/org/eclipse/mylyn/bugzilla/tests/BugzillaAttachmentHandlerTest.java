@@ -38,7 +38,6 @@ import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
 
@@ -441,12 +440,8 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 	 * Ensure obsoletes and patches are marked as such by the parser.
 	 */
 	public void testAttachmentAttributes() throws Exception {
-		init222();
 		String taskNumber = "19";
-		ITask task = generateLocalTaskAndDownload(taskNumber);
-		assertNotNull(task);
-		TaskDataModel model = createModel(task);
-		TaskData taskData = model.getTaskData();
+		TaskData taskData = BugzillaFixture.current().getTask(taskNumber, client);
 		assertNotNull(taskData);
 
 		boolean isPatch[] = { false, true, false, false, false, false, false, true, false, false, false };
@@ -455,15 +450,15 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		int index = 0;
 		for (TaskAttribute attribute : taskData.getAttributeMapper().getAttributesByType(taskData,
 				TaskAttribute.TYPE_ATTACHMENT)) {
-			assertTrue(validateAttachmentAttributes(model, attribute, isPatch[index], isObsolete[index]));
+			assertTrue(validateAttachmentAttributes(taskData, attribute, isPatch[index], isObsolete[index]));
 			index++;
 		}
 	}
 
-	private boolean validateAttachmentAttributes(TaskDataModel model, TaskAttribute taskAttribute, boolean isPatch,
+	private boolean validateAttachmentAttributes(TaskData data, TaskAttribute taskAttribute, boolean isPatch,
 			boolean isObsolete) {
-		TaskAttachment taskAttachment = new TaskAttachment(model.getTaskRepository(), model.getTask(), taskAttribute);
-		model.getTaskData().getAttributeMapper().updateTaskAttachment(taskAttachment, taskAttribute);
+		TaskAttachment taskAttachment = new TaskAttachment(BugzillaFixture.current().repository(), null, taskAttribute);
+		data.getAttributeMapper().updateTaskAttachment(taskAttachment, taskAttribute);
 		return (taskAttachment.isPatch() == isPatch) && (taskAttachment.isDeprecated() == isObsolete);
 	}
 
