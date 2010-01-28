@@ -70,6 +70,7 @@ public class BugzillaClientTest extends TestCase {
 		assertEquals(7, config.getSeverities().size());
 		assertEquals(3, config.getProducts().size());
 		assertEquals(4, config.getOpenStatusValues().size());
+		assertEquals(3, config.getClosedStatusValues().size());
 		assertEquals(2, config.getKeywords().size());
 		assertEquals(2, config.getComponents("ManualTest").size());
 		assertEquals(4, config.getVersions("ManualTest").size());

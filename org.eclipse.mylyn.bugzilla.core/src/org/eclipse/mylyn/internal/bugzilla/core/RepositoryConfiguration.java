@@ -32,7 +32,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskOperation;
  */
 public class RepositoryConfiguration implements Serializable {
 
-	private static final long serialVersionUID = -1162588743524741054L;
+	private static final long serialVersionUID = -6003795069694450768L;
 
 	private String repositoryUrl = "<unknown>"; //$NON-NLS-1$
 
@@ -49,6 +49,8 @@ public class RepositoryConfiguration implements Serializable {
 	private final List<String> bugStatus = new ArrayList<String>();
 
 	private final List<String> openStatusValues = new ArrayList<String>();
+
+	private final List<String> closedStatusValues = new ArrayList<String>();
 
 	private final List<String> resolutionValues = new ArrayList<String>();
 
@@ -302,6 +304,14 @@ public class RepositoryConfiguration implements Serializable {
 
 	public void addOpenStatusValue(String value) {
 		openStatusValues.add(value);
+	}
+
+	public List<String> getClosedStatusValues() {
+		return closedStatusValues;
+	}
+
+	public void addClosedStatusValue(String value) {
+		closedStatusValues.add(value);
 	}
 
 	public List<String> getComponents() {

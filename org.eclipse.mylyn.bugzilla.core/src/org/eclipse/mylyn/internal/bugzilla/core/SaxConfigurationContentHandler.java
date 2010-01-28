@@ -31,7 +31,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * config.cgi?ctype=rdf
  * </pre>
  * 
- * Populates a <link>ProductConfiguration</link> data structure.
+ * Populates a <link>RepositoryConfiguration</link> data structure.
  * 
  * @author Rob Elves
  */
@@ -40,6 +40,8 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 	private static final String ELEMENT_RESOLUTION = "resolution"; //$NON-NLS-1$
 
 	private static final String ELEMENT_STATUS_OPEN = "status_open"; //$NON-NLS-1$
+
+	private static final String ELEMENT_STATUS_CLOSED = "status_closed"; //$NON-NLS-1$
 
 	private static final String ELEMENT_TARGET_MILESTONE = "target_milestone"; //$NON-NLS-1$
 
@@ -261,6 +263,8 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			parseResource(attributes);
 		} else if (localName.equals(ELEMENT_STATUS_OPEN)) {
 			state = state | IN_STATUS_OPEN;
+		} else if (localName.equals(ELEMENT_STATUS_CLOSED)) {
+			state = state | IN_STATUS_CLOSED;
 		} else if (localName.equals(ELEMENT_RESOLUTION)) {
 			state = state | IN_RESOLUTION;
 		} else if (localName.equals(ELEMENT_KEYWORD)) {
@@ -305,7 +309,7 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			} else if (state == (IN_STATUS_OPEN)) {
 				configuration.addOpenStatusValue(characters.toString());
 			} else if (state == (IN_STATUS_CLOSED)) {
-				// TODO: Add closed status values to configuration
+				configuration.addClosedStatusValue(characters.toString());
 			} else if (state == (IN_RESOLUTION)) {
 				configuration.addResolution(characters.toString());
 			} else if (state == (IN_KEYWORD)) {
@@ -404,6 +408,8 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			state = state & ~IN_TARGET_MILESTONES;
 		} else if (localName.equals(ELEMENT_STATUS_OPEN)) {
 			state = state & ~IN_STATUS_OPEN;
+		} else if (localName.equals(ELEMENT_STATUS_CLOSED)) {
+			state = state & ~IN_STATUS_CLOSED;
 		} else if (localName.equals(ELEMENT_RESOLUTION)) {
 			state = state & ~IN_RESOLUTION;
 		} else if (localName.equals(ELEMENT_KEYWORD)) {

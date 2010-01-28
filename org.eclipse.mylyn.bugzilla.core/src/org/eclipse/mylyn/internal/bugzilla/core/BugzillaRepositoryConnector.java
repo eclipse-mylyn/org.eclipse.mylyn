@@ -173,9 +173,14 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		boolean isComplete = false;
 		TaskAttribute attributeStatus = taskData.getRoot().getMappedAttribute(TaskAttribute.STATUS);
 		if (attributeStatus != null) {
-			isComplete = attributeStatus.getValue().equals(IBugzillaConstants.VALUE_STATUS_RESOLVED)
-					|| attributeStatus.getValue().equals(IBugzillaConstants.VALUE_STATUS_CLOSED)
-					|| attributeStatus.getValue().equals(IBugzillaConstants.VALUE_STATUS_VERIFIED);
+			RepositoryConfiguration configuration = getRepositoryConfiguration(repository.getRepositoryUrl());
+			if (configuration == null || configuration.getClosedStatusValues().isEmpty()) {
+				isComplete = attributeStatus.getValue().equals(IBugzillaConstants.VALUE_STATUS_RESOLVED)
+						|| attributeStatus.getValue().equals(IBugzillaConstants.VALUE_STATUS_CLOSED)
+						|| attributeStatus.getValue().equals(IBugzillaConstants.VALUE_STATUS_VERIFIED);
+			} else {
+				isComplete = configuration.getClosedStatusValues().contains(attributeStatus.getValue());
+			}
 		}
 
 		if (taskData.isPartial()) {
