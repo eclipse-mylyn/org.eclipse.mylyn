@@ -31,6 +31,7 @@ public class AllBugzillaHeadlessStandaloneTests {
 		TestSuite suite = new TestSuite("Headless Standalone Tests for org.eclipse.mylyn.bugzilla.tests");
 		suite.addTestSuite(BugzillaConfigurationTest.class);
 		suite.addTestSuite(BugzillaVersionTest.class);
+		suite.addTestSuite(BugzillaTaskCompletionTest.class);
 		for (BugzillaFixture fixture : BugzillaFixture.ALL) {
 			fixture.createSuite(suite);
 			// only run certain tests against head to avoid spurious failures 

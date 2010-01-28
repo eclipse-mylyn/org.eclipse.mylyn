@@ -16,12 +16,12 @@ import java.util.Date;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
@@ -39,10 +39,13 @@ public class BugzillaTaskCompletionTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		this.connector = (BugzillaRepositoryConnector) TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-				BugzillaCorePlugin.CONNECTOR_KIND);
-		this.repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND,
-				BugzillaTestConstants.TEST_BUGZILLA_LATEST_URL);
+		BugzillaFixture.current().client();
+		this.repository = BugzillaFixture.current().repository();
+		this.connector = BugzillaFixture.current().connector();
+//		this.connector = (BugzillaRepositoryConnector) TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+//				BugzillaCorePlugin.CONNECTOR_KIND);
+//		this.repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND,
+//				BugzillaTestConstants.TEST_BUGZILLA_LATEST_URL);
 	}
 
 	@Override
