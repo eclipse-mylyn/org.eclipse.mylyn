@@ -53,17 +53,19 @@ public class BugzillaFixture extends TestFixture {
 	public static BugzillaFixture BUGS_2_18 = new BugzillaFixture(BugzillaTestConstants.TEST_BUGZILLA_218_URL,//
 			"2.18.6", "");
 
+	/**
+	 * @deprecated not supported any more
+	 */
+	@Deprecated
 	public static BugzillaFixture BUGS_2_20 = new BugzillaFixture(BugzillaTestConstants.TEST_BUGZILLA_220_URL, //
 			"2.20.7", "");
 
+	/**
+	 * @deprecated not supported any more
+	 */
+	@Deprecated
 	public static BugzillaFixture BUGS_2_22 = new BugzillaFixture(BugzillaTestConstants.TEST_BUGZILLA_222_URL, //
 			"2.22.7", "");
-
-	public static BugzillaFixture BUGS_3_0 = new BugzillaFixture(BugzillaTestConstants.TEST_BUGZILLA_30_URL, //
-			"3.0.8", "");
-
-	public static BugzillaFixture BUGS_3_2 = new BugzillaFixture(BugzillaTestConstants.TEST_BUGZILLA_32_URL, //
-			"3.2.4", "");
 
 	/**
 	 * @deprecated use latest 3.2 -> BUGS_3_2
@@ -79,6 +81,12 @@ public class BugzillaFixture extends TestFixture {
 	public static BugzillaFixture BUGS_3_2_3 = new BugzillaFixture(BugzillaTestConstants.TEST_BUGZILLA_323_URL, //
 			"3.2.3", "");
 
+	public static BugzillaFixture BUGS_3_0 = new BugzillaFixture(BugzillaTestConstants.TEST_BUGZILLA_30_URL, //
+			"3.0.8", "");
+
+	public static BugzillaFixture BUGS_3_2 = new BugzillaFixture(BugzillaTestConstants.TEST_BUGZILLA_32_URL, //
+			"3.2.4", "");
+
 	public static BugzillaFixture BUGS_3_4 = new BugzillaFixture(BugzillaTestConstants.TEST_BUGZILLA_34_URL, //
 			"3.4.4", "");
 
@@ -87,8 +95,7 @@ public class BugzillaFixture extends TestFixture {
 
 	public static BugzillaFixture DEFAULT = BUGS_3_4;
 
-	public static final BugzillaFixture[] ALL = new BugzillaFixture[] { BUGS_2_20, BUGS_2_22, BUGS_3_0, BUGS_3_2,
-			BUGS_3_4, BUGS_HEAD };
+	public static final BugzillaFixture[] ALL = new BugzillaFixture[] { BUGS_3_0, BUGS_3_2, BUGS_3_4, BUGS_HEAD };
 
 	private final String version;
 
