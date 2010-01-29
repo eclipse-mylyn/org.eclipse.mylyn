@@ -31,6 +31,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttributeMapper;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
@@ -142,6 +143,10 @@ public class BugzillaClientTest extends TestCase {
 
 	@SuppressWarnings("null")
 	public void testFlags() throws Exception {
+		BugzillaVersion version = new BugzillaVersion(BugzillaFixture.current().getVersion());
+		if (version.isSmallerOrEquals(BugzillaVersion.BUGZILLA_3_2)) {
+			return;
+		}
 		String taskNumber = "10";
 		TaskData taskData = BugzillaFixture.current().getTask(taskNumber, client);
 		assertNotNull(taskData);
@@ -342,6 +347,12 @@ public class BugzillaClientTest extends TestCase {
 	}
 
 	public void testCustomAttributes() throws Exception {
+
+		BugzillaVersion version = new BugzillaVersion(BugzillaFixture.current().getVersion());
+		if (version.isSmallerOrEquals(BugzillaVersion.BUGZILLA_3_2)) {
+			return;
+		}
+
 		String taskNumber = "1";
 		TaskData taskData = BugzillaFixture.current().getTask(taskNumber, client);
 		assertNotNull(taskData);
