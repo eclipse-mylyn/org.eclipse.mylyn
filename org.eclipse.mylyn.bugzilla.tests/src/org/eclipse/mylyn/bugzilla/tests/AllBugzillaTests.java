@@ -19,6 +19,7 @@ import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaRepositorySettingsPageTest;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaSearchPageTest;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaTaskHyperlinkDetectorTest;
 import org.eclipse.mylyn.bugzilla.tests.ui.TaskEditorTest;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
 
 /**
  * @author Mik Kersten
@@ -37,9 +38,11 @@ public class AllBugzillaTests {
 			// only run certain tests against head to avoid spurious failures 
 			if (fixture != BugzillaFixture.BUGS_HEAD) {
 
-				//Failing
-				fixture.add(BugzillaRepositoryConnectorTest.class);
-				fixture.add(BugzillaAttachmentHandlerTest.class);
+				// Only run these tests on > 3.2 repositories
+				if (!fixture.getBugzillaVersion().isSmallerOrEquals(BugzillaVersion.BUGZILLA_3_2)) {
+					fixture.add(BugzillaRepositoryConnectorTest.class);
+					fixture.add(BugzillaAttachmentHandlerTest.class);
+				}
 				// Passing
 				fixture.add(BugzillaTaskDataHandlerTest.class);
 				fixture.add(RepositoryReportFactoryTest.class);

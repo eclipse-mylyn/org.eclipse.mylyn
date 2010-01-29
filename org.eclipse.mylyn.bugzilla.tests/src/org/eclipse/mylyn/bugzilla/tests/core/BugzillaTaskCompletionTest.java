@@ -9,13 +9,14 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.bugzilla.tests;
+package org.eclipse.mylyn.bugzilla.tests.core;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.bugzilla.tests.BugzillaTestConstants;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;

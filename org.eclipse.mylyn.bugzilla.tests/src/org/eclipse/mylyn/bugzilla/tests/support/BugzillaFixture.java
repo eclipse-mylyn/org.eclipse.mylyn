@@ -26,6 +26,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClientManager;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
@@ -99,6 +100,19 @@ public class BugzillaFixture extends TestFixture {
 
 	private final String version;
 
+	private final BugzillaVersion bugzillaVersion;
+
+	public BugzillaFixture(String url, String version, String info) {
+		super(BugzillaCorePlugin.CONNECTOR_KIND, url);
+		this.version = version;
+		this.bugzillaVersion = new BugzillaVersion(version);
+		setInfo("Bugzilla", version, info);
+	}
+
+	public BugzillaVersion getBugzillaVersion() {
+		return bugzillaVersion;
+	}
+
 	public static void cleanup010() throws Exception {
 	}
 
@@ -111,12 +125,6 @@ public class BugzillaFixture extends TestFixture {
 
 	public static BugzillaFixture current() {
 		return current(DEFAULT);
-	}
-
-	public BugzillaFixture(String url, String version, String info) {
-		super(BugzillaCorePlugin.CONNECTOR_KIND, url);
-		this.version = version;
-		setInfo("Bugzilla", version, info);
 	}
 
 	@Override

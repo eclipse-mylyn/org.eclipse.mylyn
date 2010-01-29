@@ -27,6 +27,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaOperation;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskDataHandler;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
@@ -693,55 +694,6 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		}
 	}
 
-	ITask fruitTask;
-
-	TaskData fruitTaskData;
-
-	private void setFruitValueTo(String newValue) throws Exception {
-		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
-		TaskAttribute cf_fruit = fruitTaskData.getRoot().getAttribute("cf_fruit");
-		cf_fruit.setValue(newValue);
-		assertEquals(newValue, fruitTaskData.getRoot().getAttribute("cf_fruit").getValue());
-		changed.add(cf_fruit);
-		BugzillaFixture.current().submitTask(fruitTaskData, client);
-		TasksUiInternal.synchronizeTask(connector, fruitTask, true, null);
-		fruitTaskData = TasksUiPlugin.getTaskDataManager().getTaskData(repository, fruitTask.getTaskId());
-		assertEquals(newValue, fruitTaskData.getRoot().getAttribute("cf_fruit").getValue());
-
-	}
-
-	public void testCustomFields() throws Exception {
-
-		String taskNumber = "1";
-
-		// Get the task
-		fruitTask = generateLocalTaskAndDownload(taskNumber);
-		assertNotNull(fruitTask);
-		TaskDataModel model = createModel(fruitTask);
-		fruitTaskData = model.getTaskData();
-		assertNotNull(fruitTaskData);
-
-		if (fruitTaskData.getRoot().getAttribute("cf_multiselect").getValue().equals("---")) {
-			setFruitValueTo("apple");
-			setFruitValueTo("orange");
-			setFruitValueTo("---");
-		} else if (fruitTaskData.getRoot().getAttribute("cf_multiselect").getValue().equals("apple")) {
-			setFruitValueTo("orange");
-			setFruitValueTo("apple");
-			setFruitValueTo("---");
-		} else if (fruitTaskData.getRoot().getAttribute("cf_multiselect").getValue().equals("orange")) {
-			setFruitValueTo("apple");
-			setFruitValueTo("orange");
-			setFruitValueTo("---");
-		}
-		if (fruitTask != null) {
-			fruitTask = null;
-		}
-		if (fruitTaskData != null) {
-			fruitTaskData = null;
-		}
-	}
-
 	public void testAnonymousRepositoryAccess() throws Exception {
 		assertNotNull(repository);
 		AuthenticationCredentials anonymousCreds = new AuthenticationCredentials("", "");
@@ -759,8 +711,13 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		assertTrue(config.getComponents().size() > 0);
 	}
 
-
 	public void testTimeTracker() throws Exception {
+
+		BugzillaVersion version = new BugzillaVersion(BugzillaFixture.current().getVersion());
+		if (version.isSmallerOrEquals(BugzillaVersion.BUGZILLA_3_2)) {
+			return;
+		}
+
 		boolean enableDeadline = true;
 		TaskData data = BugzillaFixture.current().createTask(PrivilegeLevel.USER, null, null);
 		assertNotNull(data);
