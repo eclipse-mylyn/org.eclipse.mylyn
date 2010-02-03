@@ -53,6 +53,12 @@ public interface ITaskRepositoryFilter {
 		}
 	};
 
+	public static ITaskRepositoryFilter CAN_CREATE_REPOSITORY = new ITaskRepositoryFilter() {
+		public boolean accept(TaskRepository repository, AbstractRepositoryConnector connector) {
+			return connector.canCreateRepository();
+		}
+	};
+
 	public abstract boolean accept(TaskRepository repository, AbstractRepositoryConnector connector);
 
 }

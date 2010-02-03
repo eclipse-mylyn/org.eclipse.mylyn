@@ -63,7 +63,8 @@ public class NewRepositoryWizard extends Wizard implements INewWizard {
 
 	@Override
 	public void addPages() {
-		if (connectorKind != null) {
+		if (connectorKind != null
+				&& TasksUi.getRepositoryManager().getRepositoryConnector(connectorKind).canCreateRepository()) {
 			connector = TasksUi.getRepositoryManager().getRepositoryConnector(connectorKind);
 			updateSettingsPage();
 			if (settingsPage != null) {

@@ -70,7 +70,7 @@ public abstract class AbstractRepositoryConnector {
 	}
 
 	/**
-	 * Whether the connector can delete the task on the Task Repository
+	 * Returns true, if the connector supports deletion of <code>task</code> which is part of <code>repository</code>.
 	 * 
 	 * @since 3.3
 	 */
@@ -79,7 +79,18 @@ public abstract class AbstractRepositoryConnector {
 	}
 
 	/**
-	 * @return the unique kind of the repository, e.g. "bugzilla"
+	 * Return true, if the connector supports creation of task repositories. The default default implementation returns
+	 * true.
+	 * 
+	 * @since 3.4
+	 */
+	public boolean canCreateRepository() {
+		return true;
+	}
+
+	/**
+	 * Returns the unique kind of the repository, e.g. "bugzilla".
+	 * 
 	 * @since 2.0
 	 */
 	public abstract String getConnectorKind();

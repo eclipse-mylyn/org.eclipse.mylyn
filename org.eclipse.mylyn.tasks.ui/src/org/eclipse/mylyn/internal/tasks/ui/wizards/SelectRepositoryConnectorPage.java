@@ -68,7 +68,7 @@ public class SelectRepositoryConnectorPage extends WizardPage {
 		public Object[] getElements(Object parent) {
 			List<AbstractRepositoryConnector> userManagedRepositories = new ArrayList<AbstractRepositoryConnector>();
 			for (AbstractRepositoryConnector connector : TasksUi.getRepositoryManager().getRepositoryConnectors()) {
-				if (connector.isUserManaged()) {
+				if (connector.isUserManaged() && connector.canCreateRepository()) {
 					userManagedRepositories.add(connector);
 				}
 			}
