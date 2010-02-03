@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Tasks Tests
 Bundle-SymbolicName: org.eclipse.mylyn.tasks.tests;singleton:=true
-Bundle-Version: 0.0.0
+Bundle-Version: 3.4.0.qualifier
 Bundle-Activator: org.eclipse.mylyn.tasks.tests.TasksTestsPlugin
 Bundle-Vendor: Eclipse Mylyn
 Require-Bundle: org.eclipse.core.runtime,
@@ -32,7 +32,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.expressions,
  org.eclipse.equinox.security,
  org.eclipse.mylyn.tests.util
-Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: mylyn-tasklist-tests.jar
 Export-Package: org.eclipse.mylyn.tasks.tests;x-internal:=true,
  org.eclipse.mylyn.tasks.tests.connector;x-internal:=true,
@@ -42,3 +41,4 @@ Export-Package: org.eclipse.mylyn.tasks.tests;x-internal:=true,
  org.eclipse.mylyn.tasks.tests.ui.editor;x-internal:=true,
  org.eclipse.mylyn.tasks.tests.util;x-internal:=true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-ActivationPolicy: lazy

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Test Utilities
 Bundle-SymbolicName: org.eclipse.mylyn.tests.util
-Bundle-Version: 0.0.0
+Bundle-Version: 3.4.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Require-Bundle: org.eclipse.core.resources,
  org.eclipse.core.runtime,

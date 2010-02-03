@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
-Bundle-SymbolicName: org.eclipse.mylyn.oslc.tests
-Bundle-Version: 0.0.0
+Bundle-SymbolicName: org.eclipse.mylyn.oslc.tests;singleton:=true
+Bundle-Version: 3.4.0.qualifier
 Require-Bundle: org.eclipse.core.runtime,
  org.junit,
  org.eclipse.mylyn.commons.core,

@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Bugzilla Connector Tests
-Bundle-SymbolicName: org.eclipse.mylyn.bugzilla.tests
-Bundle-Version: 0.0.0
+Bundle-SymbolicName: org.eclipse.mylyn.bugzilla.tests;singleton:=true
+Bundle-Version: 3.4.0.qualifier
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.junit,

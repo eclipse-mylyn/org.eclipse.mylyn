@@ -8,14 +8,6 @@
             </message_arguments>
         </filter>
     </resource>
-    <resource path="src/org/eclipse/mylyn/tasks/tests/ui/TaskHyperlinkDetectorTest.java" type="org.eclipse.mylyn.tasks.tests.ui.TaskHyperlinkDetectorTest">
-        <filter id="571519004">
-            <message_arguments>
-                <message_argument value="org.eclipse.mylyn.tasks.tests.ui.TaskHyperlinkDetectorTest.detect(String, int, int)"/>
-                <message_argument value="TextViewer"/>
-            </message_arguments>
-        </filter>
-    </resource>
     <resource path="src/org/eclipse/mylyn/tasks/tests/ui/editor/TaskUrlHyperlinkDetectorTest.java" type="org.eclipse.mylyn.tasks.tests.ui.editor.TaskUrlHyperlinkDetectorTest">
         <filter id="571519004">
             <message_arguments>
