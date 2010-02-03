@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Commons Tests
-Bundle-SymbolicName: org.eclipse.mylyn.commons.tests
-Bundle-Version: 0.0.0
+Bundle-SymbolicName: org.eclipse.mylyn.commons.tests;singleton:=true
+Bundle-Version: 3.4.0.qualifier
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.net,
