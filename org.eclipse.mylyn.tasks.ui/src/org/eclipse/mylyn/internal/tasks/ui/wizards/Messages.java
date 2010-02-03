@@ -263,6 +263,8 @@ public class Messages extends NLS {
 
 	public static String TaskAttachmentPage_Patch;
 
+	public static String TaskAttachmentPage_Replace_existing_attachment_Label;
+
 	public static String TaskAttachmentPage_Verify_the_content_type_of_the_attachment;
 
 	public static String AbstractTaskRepositoryPage_Validation_failed;

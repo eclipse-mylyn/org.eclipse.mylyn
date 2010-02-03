@@ -62,6 +62,8 @@ public class Messages extends NLS {
 
 	public static String DefaultTaskSchema_Rank_Label;
 
+	public static String DefaultTaskSchema_Replace_existing_attachment;
+
 	public static String DefaultTaskSchema_Reporter_Label;
 
 	public static String DefaultTaskSchema_Resolution_Label;

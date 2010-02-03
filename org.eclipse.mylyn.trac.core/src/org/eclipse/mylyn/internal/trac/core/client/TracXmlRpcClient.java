@@ -835,14 +835,14 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 	}
 
 	public void putAttachmentData(int ticketId, String filename, String description, InputStream in,
-			IProgressMonitor monitor) throws TracException {
+			IProgressMonitor monitor, boolean replace) throws TracException {
 		byte[] data;
 		try {
 			data = readData(in, new NullProgressMonitor());
 		} catch (IOException e) {
 			throw new TracException(e);
 		}
-		call(monitor, "ticket.putAttachment", ticketId, filename, description, data, false); //$NON-NLS-1$
+		call(monitor, "ticket.putAttachment", ticketId, filename, description, data, replace); //$NON-NLS-1$
 	}
 
 	private byte[] readData(InputStream in, IProgressMonitor monitor) throws IOException {

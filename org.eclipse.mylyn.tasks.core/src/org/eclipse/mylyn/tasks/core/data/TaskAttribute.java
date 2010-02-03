@@ -49,6 +49,11 @@ public final class TaskAttribute {
 
 	public static final String ATTACHMENT_IS_PATCH = "task.common.attachment.patch"; //$NON-NLS-1$
 
+	/**
+	 * @since 3.4
+	 */
+	public static final String ATTACHMENT_REPLACE_EXISTING = "task.common.attachment.replaceExisting"; //$NON-NLS-1$
+
 	public static final String ATTACHMENT_SIZE = "task.common.attachment.size"; //$NON-NLS-1$
 
 	public static final String ATTACHMENT_URL = "task.common.attachment.url"; //$NON-NLS-1$

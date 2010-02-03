@@ -24,6 +24,59 @@ import org.eclipse.mylyn.tasks.core.ITaskAttachment;
  */
 public class TaskAttachmentMapper {
 
+	public static TaskAttachmentMapper createFrom(TaskAttribute taskAttribute) {
+		Assert.isNotNull(taskAttribute);
+		TaskAttributeMapper mapper = taskAttribute.getTaskData().getAttributeMapper();
+		TaskAttachmentMapper attachment = new TaskAttachmentMapper();
+		attachment.setAttachmentId(mapper.getValue(taskAttribute));
+		TaskAttribute child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_AUTHOR);
+		if (child != null) {
+			attachment.setAuthor(mapper.getRepositoryPerson(child));
+		}
+		child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_CONTENT_TYPE);
+		if (child != null) {
+			attachment.setContentType(mapper.getValue(child));
+		}
+		child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_DATE);
+		if (child != null) {
+			attachment.setCreationDate(mapper.getDateValue(child));
+		}
+		child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_DESCRIPTION);
+		if (child != null) {
+			attachment.setDescription(mapper.getValue(child));
+		}
+		child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_FILENAME);
+		if (child != null) {
+			attachment.setFileName(mapper.getValue(child));
+		}
+		child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_IS_DEPRECATED);
+		if (child != null) {
+			attachment.setDeprecated(mapper.getBooleanValue(child));
+		}
+		child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_IS_PATCH);
+		if (child != null) {
+			attachment.setPatch(mapper.getBooleanValue(child));
+		}
+		child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_REPLACE_EXISTING);
+		if (child != null) {
+			attachment.setReplaceExisting(mapper.getBooleanValue(child));
+		}
+		child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_SIZE);
+		if (child != null) {
+			Long value = mapper.getLongValue(child);
+			if (value != null) {
+				attachment.setLength(value);
+			}
+		}
+		child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_URL);
+		if (child != null) {
+			attachment.setUrl(mapper.getValue(child));
+		}
+		return attachment;
+	}
+
+	private String attachmentId;
+
 	private IRepositoryPerson author;
 
 	private String comment;
@@ -42,11 +95,133 @@ public class TaskAttachmentMapper {
 
 	private Boolean patch;
 
+	private Boolean replaceExisting;
+
 	private String url;
 
-	private String attachmentId;
-
 	public TaskAttachmentMapper() {
+	}
+
+	public void applyTo(ITaskAttachment taskAttachment) {
+		Assert.isNotNull(taskAttachment);
+		if (getAuthor() != null) {
+			taskAttachment.setAuthor(getAuthor());
+		}
+		if (getContentType() != null) {
+			taskAttachment.setContentType(getContentType());
+		}
+		if (getCreationDate() != null) {
+			taskAttachment.setCreationDate(getCreationDate());
+		}
+		if (getDescription() != null) {
+			taskAttachment.setDescription(getDescription());
+		}
+		if (getFileName() != null) {
+			taskAttachment.setFileName(getFileName());
+		}
+		if (isDeprecated() != null) {
+			taskAttachment.setDeprecated(isDeprecated());
+		}
+		if (isPatch() != null) {
+			taskAttachment.setPatch(isPatch());
+		}
+		if (getLength() != null) {
+			taskAttachment.setLength(getLength());
+		}
+		if (url != null) {
+			taskAttachment.setUrl(getUrl());
+		}
+	}
+
+	public void applyTo(TaskAttribute taskAttribute) {
+		Assert.isNotNull(taskAttribute);
+		TaskData taskData = taskAttribute.getTaskData();
+		TaskAttributeMapper mapper = taskData.getAttributeMapper();
+		taskAttribute.getMetaData().defaults().setType(TaskAttribute.TYPE_ATTACHMENT);
+		if (getAttachmentId() != null) {
+			mapper.setValue(taskAttribute, getAttachmentId());
+		}
+		if (getAuthor() != null) {
+			TaskAttribute child = DefaultTaskSchema.getField(TaskAttribute.ATTACHMENT_AUTHOR).createAttribute(
+					taskAttribute);
+			mapper.setRepositoryPerson(child, getAuthor());
+		}
+		if (getContentType() != null) {
+			TaskAttribute child = DefaultTaskSchema.getField(TaskAttribute.ATTACHMENT_CONTENT_TYPE).createAttribute(
+					taskAttribute);
+			mapper.setValue(child, getContentType());
+		}
+		if (getCreationDate() != null) {
+			TaskAttribute child = DefaultTaskSchema.getField(TaskAttribute.ATTACHMENT_DATE).createAttribute(
+					taskAttribute);
+			mapper.setDateValue(child, getCreationDate());
+		}
+		if (getDescription() != null) {
+			TaskAttribute child = DefaultTaskSchema.getField(TaskAttribute.ATTACHMENT_DESCRIPTION).createAttribute(
+					taskAttribute);
+			mapper.setValue(child, getDescription());
+		}
+		if (getFileName() != null) {
+			TaskAttribute child = DefaultTaskSchema.getField(TaskAttribute.ATTACHMENT_FILENAME).createAttribute(
+					taskAttribute);
+			mapper.setValue(child, getFileName());
+		}
+		if (getReplaceExisting() != null) {
+			TaskAttribute child = DefaultTaskSchema.getField(TaskAttribute.ATTACHMENT_REPLACE_EXISTING)
+					.createAttribute(taskAttribute);
+			mapper.setBooleanValue(child, getReplaceExisting());
+		}
+		if (isDeprecated() != null) {
+			TaskAttribute child = DefaultTaskSchema.getField(TaskAttribute.ATTACHMENT_IS_DEPRECATED).createAttribute(
+					taskAttribute);
+			mapper.setBooleanValue(child, isDeprecated());
+		}
+		if (isPatch() != null) {
+			TaskAttribute child = DefaultTaskSchema.getField(TaskAttribute.ATTACHMENT_IS_PATCH).createAttribute(
+					taskAttribute);
+			mapper.setBooleanValue(child, isPatch());
+		}
+		if (getLength() != null) {
+			TaskAttribute child = DefaultTaskSchema.getField(TaskAttribute.ATTACHMENT_SIZE).createAttribute(
+					taskAttribute);
+			mapper.setLongValue(child, getLength());
+		}
+		if (getUrl() != null) {
+			TaskAttribute child = DefaultTaskSchema.getField(TaskAttribute.ATTACHMENT_URL).createAttribute(
+					taskAttribute);
+			mapper.setValue(child, getUrl());
+		}
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof TaskAttachmentMapper)) {
+			return false;
+		}
+		TaskAttachmentMapper other = (TaskAttachmentMapper) obj;
+		if ((other.attachmentId != null && this.attachmentId != null) && !other.attachmentId.equals(this.attachmentId)) {
+			return false;
+		}
+		if ((other.deprecated != null && this.deprecated != null) && !(other.deprecated == this.deprecated)) {
+			return false;
+		}
+		if ((other.patch != null && this.patch != null) && !(other.patch == this.patch)) {
+			return false;
+		}
+		if ((other.description != null && this.description != null) && !other.description.equals(this.description)) {
+			return false;
+		}
+		if ((other.contentType != null && this.contentType != null) && !other.contentType.equals(this.contentType)) {
+			return false;
+		}
+		if ((other.fileName != null && this.fileName != null) && !other.fileName.equals(this.fileName)) {
+			return false;
+		}
+		if ((other.replaceExisting != null && this.replaceExisting != null)
+				&& !other.replaceExisting.equals(this.replaceExisting)) {
+			return false;
+		}
+		return true;
 	}
 
 	public String getAttachmentId() {
@@ -79,6 +254,13 @@ public class TaskAttachmentMapper {
 
 	public Long getLength() {
 		return length;
+	}
+
+	/**
+	 * @since 3.4
+	 */
+	public Boolean getReplaceExisting() {
+		return replaceExisting;
 	}
 
 	public String getUrl() {
@@ -133,168 +315,15 @@ public class TaskAttachmentMapper {
 		this.patch = patch;
 	}
 
+	/**
+	 * @since 3.4
+	 */
+	public void setReplaceExisting(Boolean replaceExisting) {
+		this.replaceExisting = replaceExisting;
+	}
+
 	public void setUrl(String url) {
 		this.url = url;
-	}
-
-	public static TaskAttachmentMapper createFrom(TaskAttribute taskAttribute) {
-		Assert.isNotNull(taskAttribute);
-		TaskAttributeMapper mapper = taskAttribute.getTaskData().getAttributeMapper();
-		TaskAttachmentMapper attachment = new TaskAttachmentMapper();
-		attachment.setAttachmentId(mapper.getValue(taskAttribute));
-		TaskAttribute child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_AUTHOR);
-		if (child != null) {
-			attachment.setAuthor(mapper.getRepositoryPerson(child));
-		}
-		child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_CONTENT_TYPE);
-		if (child != null) {
-			attachment.setContentType(mapper.getValue(child));
-		}
-		child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_DATE);
-		if (child != null) {
-			attachment.setCreationDate(mapper.getDateValue(child));
-		}
-		child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_DESCRIPTION);
-		if (child != null) {
-			attachment.setDescription(mapper.getValue(child));
-		}
-		child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_FILENAME);
-		if (child != null) {
-			attachment.setFileName(mapper.getValue(child));
-		}
-		child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_IS_DEPRECATED);
-		if (child != null) {
-			attachment.setDeprecated(mapper.getBooleanValue(child));
-		}
-		child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_IS_PATCH);
-		if (child != null) {
-			attachment.setPatch(mapper.getBooleanValue(child));
-		}
-		child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_SIZE);
-		if (child != null) {
-			Long value = mapper.getLongValue(child);
-			if (value != null) {
-				attachment.setLength(value);
-			}
-		}
-		child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_URL);
-		if (child != null) {
-			attachment.setUrl(mapper.getValue(child));
-		}
-		return attachment;
-	}
-
-	public void applyTo(TaskAttribute taskAttribute) {
-		Assert.isNotNull(taskAttribute);
-		TaskData taskData = taskAttribute.getTaskData();
-		TaskAttributeMapper mapper = taskData.getAttributeMapper();
-		taskAttribute.getMetaData().defaults().setType(TaskAttribute.TYPE_ATTACHMENT);
-		if (getAttachmentId() != null) {
-			mapper.setValue(taskAttribute, getAttachmentId());
-		}
-		if (getAuthor() != null) {
-			TaskAttribute child = DefaultTaskSchema.getField(TaskAttribute.ATTACHMENT_AUTHOR).createAttribute(
-					taskAttribute);
-			mapper.setRepositoryPerson(child, getAuthor());
-		}
-		if (getContentType() != null) {
-			TaskAttribute child = DefaultTaskSchema.getField(TaskAttribute.ATTACHMENT_CONTENT_TYPE).createAttribute(
-					taskAttribute);
-			mapper.setValue(child, getContentType());
-		}
-		if (getCreationDate() != null) {
-			TaskAttribute child = DefaultTaskSchema.getField(TaskAttribute.ATTACHMENT_DATE).createAttribute(
-					taskAttribute);
-			mapper.setDateValue(child, getCreationDate());
-		}
-		if (getDescription() != null) {
-			TaskAttribute child = DefaultTaskSchema.getField(TaskAttribute.ATTACHMENT_DESCRIPTION).createAttribute(
-					taskAttribute);
-			mapper.setValue(child, getDescription());
-		}
-		if (getFileName() != null) {
-			TaskAttribute child = DefaultTaskSchema.getField(TaskAttribute.ATTACHMENT_FILENAME).createAttribute(
-					taskAttribute);
-			mapper.setValue(child, getFileName());
-		}
-		if (isDeprecated() != null) {
-			TaskAttribute child = DefaultTaskSchema.getField(TaskAttribute.ATTACHMENT_IS_DEPRECATED).createAttribute(
-					taskAttribute);
-			mapper.setBooleanValue(child, isDeprecated());
-		}
-		if (isPatch() != null) {
-			TaskAttribute child = DefaultTaskSchema.getField(TaskAttribute.ATTACHMENT_IS_PATCH).createAttribute(
-					taskAttribute);
-			mapper.setBooleanValue(child, isPatch());
-		}
-		if (getLength() != null) {
-			TaskAttribute child = DefaultTaskSchema.getField(TaskAttribute.ATTACHMENT_SIZE).createAttribute(
-					taskAttribute);
-			mapper.setLongValue(child, getLength());
-		}
-		if (getUrl() != null) {
-			TaskAttribute child = DefaultTaskSchema.getField(TaskAttribute.ATTACHMENT_URL).createAttribute(
-					taskAttribute);
-			mapper.setValue(child, getUrl());
-		}
-	}
-
-	public void applyTo(ITaskAttachment taskAttachment) {
-		Assert.isNotNull(taskAttachment);
-		if (getAuthor() != null) {
-			taskAttachment.setAuthor(getAuthor());
-		}
-		if (getContentType() != null) {
-			taskAttachment.setContentType(getContentType());
-		}
-		if (getCreationDate() != null) {
-			taskAttachment.setCreationDate(getCreationDate());
-		}
-		if (getDescription() != null) {
-			taskAttachment.setDescription(getDescription());
-		}
-		if (getFileName() != null) {
-			taskAttachment.setFileName(getFileName());
-		}
-		if (isDeprecated() != null) {
-			taskAttachment.setDeprecated(isDeprecated());
-		}
-		if (isPatch() != null) {
-			taskAttachment.setPatch(isPatch());
-		}
-		if (getLength() != null) {
-			taskAttachment.setLength(getLength());
-		}
-		if (url != null) {
-			taskAttachment.setUrl(getUrl());
-		}
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof TaskAttachmentMapper)) {
-			return false;
-		}
-		TaskAttachmentMapper other = (TaskAttachmentMapper) obj;
-		if ((other.attachmentId != null && this.attachmentId != null) && !other.attachmentId.equals(this.attachmentId)) {
-			return false;
-		}
-		if ((other.deprecated != null && this.deprecated != null) && !(other.deprecated == this.deprecated)) {
-			return false;
-		}
-		if ((other.patch != null && this.patch != null) && !(other.patch == this.patch)) {
-			return false;
-		}
-		if ((other.description != null && this.description != null) && !other.description.equals(this.description)) {
-			return false;
-		}
-		if ((other.contentType != null && this.contentType != null) && !other.contentType.equals(this.contentType)) {
-			return false;
-		}
-		if ((other.fileName != null && this.fileName != null) && !other.fileName.equals(this.fileName)) {
-			return false;
-		}
-		return true;
 	}
 
 }

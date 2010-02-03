@@ -147,6 +147,9 @@ public class DefaultTaskSchema {
 	public static final Field ATTACHMENT_IS_PATCH = createField(TaskAttribute.ATTACHMENT_IS_PATCH,
 			Messages.DefaultTaskSchema_Patch_Label, TaskAttribute.TYPE_BOOLEAN);
 
+	public static final Field ATTACHMENT_REPLACE_EXISTING = createField(TaskAttribute.ATTACHMENT_REPLACE_EXISTING,
+			Messages.DefaultTaskSchema_Replace_existing_attachment, TaskAttribute.TYPE_BOOLEAN);
+
 	public static final Field ATTACHMENT_SIZE = createField(TaskAttribute.ATTACHMENT_SIZE,
 			Messages.DefaultTaskSchema_Size_Label, TaskAttribute.TYPE_LONG, Flag.READ_ONLY);
 

@@ -27,6 +27,7 @@ import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.UnsubmittedTaskAttachment;
 
 /**
  * @author Steffen Pingel
@@ -70,28 +71,15 @@ public class TracAttachmentHandler extends AbstractTaskAttachmentHandler {
 					"Attachments are not supported by this repository access type")); //$NON-NLS-1$
 		}
 
-		String filename = source.getName();
-		String description = source.getDescription();
-		if (attachmentAttribute != null) {
-			TaskAttachmentMapper mapper = TaskAttachmentMapper.createFrom(attachmentAttribute);
-			if (mapper.getFileName() != null) {
-				filename = mapper.getFileName();
-			}
-			if (mapper.getDescription() != null) {
-				description = mapper.getDescription();
-			}
-		}
-		if (description == null) {
-			description = ""; //$NON-NLS-1$
-		}
-
+		UnsubmittedTaskAttachment attachment = new UnsubmittedTaskAttachment(source, attachmentAttribute);
 		monitor = Policy.monitorFor(monitor);
 		try {
 			monitor.beginTask(Messages.TracAttachmentHandler_Uploading_attachment, IProgressMonitor.UNKNOWN);
 			try {
 				ITracClient client = connector.getClientManager().getTracClient(repository);
 				int id = Integer.parseInt(task.getTaskId());
-				client.putAttachmentData(id, filename, description, source.createInputStream(monitor), monitor);
+				client.putAttachmentData(id, attachment.getFileName(), attachment.getDescription(),
+						attachment.createInputStream(monitor), monitor, attachment.getReplaceExisting());
 				if (comment != null && comment.length() > 0) {
 					TracTicket ticket = new TracTicket(id);
 					client.updateTicket(ticket, comment, monitor);

@@ -743,7 +743,7 @@ public class TracWebClient extends AbstractTracClient {
 		}
 	}
 
-	public void putAttachmentData(int id, String name, String description, InputStream in, IProgressMonitor monitor)
+	public void putAttachmentData(int id, String name, String description, InputStream in, IProgressMonitor monitor, boolean replace)
 			throws TracException {
 		throw new TracException("Unsupported operation"); //$NON-NLS-1$
 	}

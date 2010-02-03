@@ -18,6 +18,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector.TaskKind;
@@ -29,6 +30,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskComment;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskAttachmentModel;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.LegendElement;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
@@ -36,6 +38,7 @@ import org.eclipse.mylyn.tasks.ui.wizards.ITaskSearchPage;
 import org.eclipse.mylyn.tasks.ui.wizards.NewTaskWizard;
 import org.eclipse.mylyn.tasks.ui.wizards.NewWebTaskWizard;
 import org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard;
+import org.eclipse.mylyn.tasks.ui.wizards.TaskAttachmentPage;
 import org.eclipse.osgi.util.NLS;
 
 /**
@@ -130,4 +133,12 @@ public class TracConnectorUi extends AbstractRepositoryConnectorUi {
 					taskComment.getAuthor().getPersonId());
 		}
 	}
+
+	@Override
+	public IWizardPage getTaskAttachmentPage(TaskAttachmentModel model) {
+		TaskAttachmentPage page = new TaskAttachmentPage(model);
+		page.setNeedsReplaceExisting(true);
+		return page;
+	}
+
 }

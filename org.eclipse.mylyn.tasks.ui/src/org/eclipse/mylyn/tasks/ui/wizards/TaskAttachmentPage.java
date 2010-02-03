@@ -80,6 +80,10 @@ public class TaskAttachmentPage extends WizardPage {
 
 	private CommonTextSupport textSupport;
 
+	private boolean needsReplaceExisting;
+
+	private Button replaceExistingButton;
+
 	public TaskAttachmentPage(TaskAttachmentModel model) {
 		super("AttachmentDetails"); //$NON-NLS-1$
 		this.model = model;
@@ -102,6 +106,20 @@ public class TaskAttachmentPage extends WizardPage {
 		fileNameText = new Text(composite, SWT.BORDER);
 		fileNameText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 2, 1));
 
+		if (needsReplaceExisting) {
+			new Label(composite, SWT.NONE);
+			replaceExistingButton = new Button(composite, SWT.CHECK);
+			replaceExistingButton.setLayoutData(new GridData(SWT.DEFAULT, SWT.DEFAULT, false, false, 2, 1));
+			replaceExistingButton.setText(Messages.TaskAttachmentPage_Replace_existing_attachment_Label);
+			replaceExistingButton.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					taskAttachment.setReplaceExisting(replaceExistingButton.getSelection());
+					validate();
+				}
+			});
+		}
+
 		if (needsDescription) {
 			new Label(composite, SWT.NONE).setText(Messages.TaskAttachmentPage_Description);
 			descriptionText = new Text(composite, SWT.BORDER);
@@ -111,7 +129,6 @@ public class TaskAttachmentPage extends WizardPage {
 					taskAttachment.setDescription(descriptionText.getText().trim());
 					validate();
 				}
-
 			});
 		}
 
@@ -302,7 +319,21 @@ public class TaskAttachmentPage extends WizardPage {
 		this.needsDescription = supportsDescription;
 	}
 
+	/**
+	 * @deprecated Use {@link #needsDescription()} instead
+	 */
+	@Deprecated
 	public boolean supportsDescription() {
+		return needsDescription();
+	}
+
+	/**
+	 * Returns true if the page has a description field.
+	 * 
+	 * @since 3.4
+	 * @see #setDescription(String)
+	 */
+	public boolean needsDescription() {
 		return needsDescription;
 	}
 
@@ -336,6 +367,30 @@ public class TaskAttachmentPage extends WizardPage {
 		if (textSupport != null) {
 			textSupport.dispose();
 		}
+	}
+
+	/**
+	 * Set to true if the page needs a check box for replacing existing attachments. Must be called before the page is
+	 * constructed, it has no effect otherwise.
+	 * <p>
+	 * This flag is set to false by default.
+	 * </p>
+	 * 
+	 * @since 3.4
+	 * @see #needsReplaceExisting()
+	 */
+	public void setNeedsReplaceExisting(boolean needsReplaceExisting) {
+		this.needsReplaceExisting = needsReplaceExisting;
+	}
+
+	/**
+	 * Returns true, if the page has a check box to replace existing attachments.
+	 * 
+	 * @since 3.4
+	 * @see #setNeedsReplaceExisting(boolean)
+	 */
+	public boolean needsReplaceExisting() {
+		return needsReplaceExisting;
 	}
 
 }
