@@ -1277,7 +1277,12 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		return errorMessage == null && super.isPageComplete();
 	}
 
-	private boolean isMissingCredentials() {
+	/**
+	 * Returns true, if credentials are incomplete. Clients may override this method.
+	 * 
+	 * @since 3.4
+	 */
+	protected boolean isMissingCredentials() {
 		return repositoryUserNameEditor.getStringValue().trim().equals("") //$NON-NLS-1$
 				|| repositoryPasswordEditor.getStringValue().trim().equals(""); //$NON-NLS-1$
 	}
