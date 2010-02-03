@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Java Tests
-Bundle-SymbolicName: org.eclipse.mylyn.java.tests
-Bundle-Version: 0.0.0
+Bundle-SymbolicName: org.eclipse.mylyn.java.tests;singleton:=true
+Bundle-Version: 3.4.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.jdt.core,
@@ -37,7 +37,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn.pde.ui,
  org.eclipse.mylyn.commons.tests,
  org.eclipse.mylyn.context.tests
-Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: mylyn-java-tests.jar
 Export-Package: org.eclipse.mylyn.java.tests;x-internal:=true,
  org.eclipse.mylyn.java.tests.search;x-internal:=true,

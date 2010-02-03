@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Resources Tests
-Bundle-SymbolicName: org.eclipse.mylyn.resources.tests
-Bundle-Version: 0.0.0
+Bundle-SymbolicName: org.eclipse.mylyn.resources.tests;singleton:=true
+Bundle-Version: 3.4.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources,
@@ -21,7 +21,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
  org.eclipse.mylyn.context.ui,
  org.eclipse.mylyn.commons.tests
-Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: mylyn-xml-tests.jar
 Export-Package: org.eclipse.mylyn.resources.tests;x-internal:=true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

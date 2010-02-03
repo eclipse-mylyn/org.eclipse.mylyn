@@ -1,9 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Context Tests
-Bundle-SymbolicName: org.eclipse.mylyn.context.tests
-Bundle-Version: 0.0.0
-Bundle-Activator: org.eclipse.mylyn.context.tests.ContextTestsPlugin
+Bundle-SymbolicName: org.eclipse.mylyn.context.tests;singleton:=true
+Bundle-Version: 3.4.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Require-Bundle: org.eclipse.core.resources,
  org.eclipse.core.runtime,
@@ -19,7 +18,6 @@ Require-Bundle: org.eclipse.core.resources,
  org.eclipse.mylyn.context.ui,
  org.eclipse.mylyn.monitor.ui,
  org.eclipse.mylyn.monitor.core
-Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: mylyn-core-tests.jar
 Export-Package: org.eclipse.mylyn.context.tests;x-internal:=true,
  org.eclipse.mylyn.context.tests.support;x-internal:=true,

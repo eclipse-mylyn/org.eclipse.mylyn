@@ -19,7 +19,7 @@ import java.util.Properties;
 import junit.framework.AssertionFailedError;
 
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.mylyn.context.tests.ContextTestsPlugin;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -67,9 +67,9 @@ public class TestUtil {
 		try {
 			String filename = System.getProperty(KEY_CREDENTIALS_FILE);
 			if (filename == null) {
-				if (ContextTestsPlugin.getDefault() != null) {
-					URL localURL = FileLocator.toFileURL(ContextTestsPlugin.getDefault().getBundle().getEntry(
-							"credentials.properties"));
+				if (Platform.isRunning()) {
+					URL localURL = FileLocator.toFileURL(Platform.getBundle("org.eclipse.mylyn.context.tests")
+							.getEntry("credentials.properties"));
 					filename = localURL.getFile();
 				} else {
 					URL localURL = TestUtil.class.getResource("");

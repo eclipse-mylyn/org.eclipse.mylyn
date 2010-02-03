@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Tests Plug-in
-Bundle-SymbolicName: org.eclipse.mylyn.team.tests
-Bundle-Version: 0.0.0
+Bundle-Name: Mylyn Team Tests
+Bundle-SymbolicName: org.eclipse.mylyn.team.tests;singleton:=true
+Bundle-Version: 3.4.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Require-Bundle: org.junit,
  org.eclipse.mylyn.team.ui,
