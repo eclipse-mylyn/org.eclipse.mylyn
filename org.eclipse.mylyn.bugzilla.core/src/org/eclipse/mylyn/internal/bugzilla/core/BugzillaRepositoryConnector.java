@@ -731,18 +731,17 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 					}
 				}
 			}
-			return configuration;//repositoryConfigurations.get(repository.getRepositoryUrl());
+			return configuration;
 		} catch (IOException e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, 1,
 					"Error retrieving task attributes from repository.\n\n" + e.getMessage(), e)); //$NON-NLS-1$
 		} catch (CoreException e) {
-			// TODO: handle exception
-			if (e.getMessage().equals("Not changed")) {
+			if (e.getMessage().equals("Not changed")) { //$NON-NLS-1$
 				RepositoryConfiguration configuration = repositoryConfigurations.get(repository.getRepositoryUrl());
 				if (configuration == null) {
 					throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-							RepositoryStatus.ERROR_INTERNAL, "Get not changed (304) for "
-									+ repository.getRepositoryUrl().toString() + " but we have no valid configuration")); //$NON-NLS-1$
+							RepositoryStatus.ERROR_INTERNAL, "Failed to retrieve repository configuration for " //$NON-NLS-1$
+									+ repository.getRepositoryUrl().toString()));
 
 				}
 				return configuration;
