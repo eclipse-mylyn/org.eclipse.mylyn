@@ -11,11 +11,6 @@
 
 package org.eclipse.mylyn.internal.discovery.ui.util;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylyn.commons.core.CoreUtil;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;

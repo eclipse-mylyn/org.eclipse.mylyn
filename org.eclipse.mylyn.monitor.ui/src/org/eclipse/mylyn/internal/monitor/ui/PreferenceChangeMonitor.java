@@ -18,6 +18,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
 /**
  * @author Mik Kersten
  */
+@SuppressWarnings("deprecation")
 public class PreferenceChangeMonitor implements IPropertyChangeListener {
 
 	public void propertyChange(PropertyChangeEvent event) {
