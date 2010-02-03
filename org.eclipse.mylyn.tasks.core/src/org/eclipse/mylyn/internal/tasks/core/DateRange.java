@@ -122,9 +122,6 @@ public class DateRange implements Comparable<DateRange> {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
-			return false;
-		}
 //		if (getClass() != obj.getClass()) {
 //			return false;
 //		}

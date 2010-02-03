@@ -545,11 +545,8 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 
 	private class DeadSearchPage extends AbstractRepositoryQueryPage {
 
-		private final Status status;
-
 		public DeadSearchPage(TaskRepository rep, Status status) {
 			super("Search page error", rep); //$NON-NLS-1$
-			this.status = status;
 		}
 
 		public void createControl(Composite parent) {
