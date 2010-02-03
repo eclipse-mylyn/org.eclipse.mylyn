@@ -33,7 +33,6 @@ import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnsubmittedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.WeekDateRange;
-import org.eclipse.mylyn.internal.tasks.ui.ITaskHighlighter;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.Messages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -219,13 +218,6 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 	}
 
 	public Color getBackground(Object element) {
-		if (element instanceof ITask) {
-			ITask task = (ITask) element;
-			ITaskHighlighter highlighter = TasksUiPlugin.getDefault().getHighlighter();
-			if (highlighter != null) {
-				return highlighter.getHighlightColor(task);
-			}
-		}
 		return null;
 	}
 

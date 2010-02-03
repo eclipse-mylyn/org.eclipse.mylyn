@@ -156,8 +156,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private TaskListExternalizer taskListExternalizer;
 
-	private ITaskHighlighter highlighter;
-
 	private final Map<String, Image> brandingIcons = new HashMap<String, Image>();
 
 	private final Map<String, ImageDescriptor> overlayIcons = new HashMap<String, ImageDescriptor>();
@@ -961,14 +959,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	public String getBackupFolderPath() {
 		return getDataDirectory() + DEFAULT_PATH_SEPARATOR + ITasksCoreConstants.DEFAULT_BACKUP_FOLDER_NAME;
-	}
-
-	public ITaskHighlighter getHighlighter() {
-		return highlighter;
-	}
-
-	public void setHighlighter(ITaskHighlighter highlighter) {
-		this.highlighter = highlighter;
 	}
 
 	/**
