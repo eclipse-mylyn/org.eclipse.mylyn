@@ -22,7 +22,6 @@ public class AllIntegrationTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.tests.integration");
 		suite.addTestSuite(ChangeDataDirTest.class);
-		suite.addTestSuite(JavaRuntimeVersionCheckerTest.class);
 		suite.addTest(RepositoryConnectorsTest.suite());
 		return suite;
 	}
