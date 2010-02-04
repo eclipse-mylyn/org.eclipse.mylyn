@@ -28,7 +28,6 @@ Export-Package: org.eclipse.mylyn.internal.commons.ui;x-internal:=true;
    org.eclipse.mylyn.bugzilla.ui,
    org.eclipse.mylyn.commons.core,
    org.eclipse.mylyn.commons.ui,
-   org.eclipse.mylyn.compatibility,
    org.eclipse.mylyn.context.core,
    org.eclipse.mylyn.context.ui,
    org.eclipse.mylyn.help.ui,
