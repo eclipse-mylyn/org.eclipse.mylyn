@@ -231,14 +231,14 @@
 	<target name="galileo" depends="clean,build,generate-metadata,copy-to-archive">
 		<!-- promote unpacked version early for testing -->
 		<antcall target="promote">
-			<param name="todir" value="weekly"/>
+			<param name="todir" value="weekly-3.2.x"/>
 		</antcall>
 		
 		<antcall target="sign"/>
 		
 		<!-- re-promote signed and packed version -->
 		<antcall target="promote">
-			<param name="todir" value="weekly"/>
+			<param name="todir" value="weekly-3.2.x"/>
 		</antcall>
 		
 		<echo>Run 'ant promote-galileo' to update the galileo site.</echo>
