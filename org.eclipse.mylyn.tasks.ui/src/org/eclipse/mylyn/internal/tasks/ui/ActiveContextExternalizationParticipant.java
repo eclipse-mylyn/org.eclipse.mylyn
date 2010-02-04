@@ -22,7 +22,6 @@ import org.eclipse.mylyn.context.core.ContextChangeEvent;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.monitor.ui.ActivityContextManager;
 import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.externalization.AbstractExternalizationParticipant;
@@ -72,7 +71,8 @@ public class ActiveContextExternalizationParticipant extends AbstractExternaliza
 	public void registerListeners() {
 		ContextCore.getContextManager().addListener(listener);
 		TasksUi.getTaskActivityManager().addActivityListener(this);
-		((ActivityContextManager) MonitorUiPlugin.getDefault().getActivityContextManager()).addListener(this);
+		(MonitorUiPlugin.getDefault().getActivityContextManager()).addListener(this);
+		currentlyActiveContext = ContextCore.getContextManager().getActiveContext();
 	}
 
 	// currently not called since no way to remove a participant
@@ -80,7 +80,7 @@ public class ActiveContextExternalizationParticipant extends AbstractExternaliza
 		ContextCore.getContextManager().removeListener(listener);
 		TasksUi.getTaskActivityManager().removeActivityListener(this);
 		if (MonitorUiPlugin.getDefault().getActivityContextManager() != null) {
-			((ActivityContextManager) MonitorUiPlugin.getDefault().getActivityContextManager()).removeListener(this);
+			(MonitorUiPlugin.getDefault().getActivityContextManager()).removeListener(this);
 		}
 	}
 
@@ -115,8 +115,13 @@ public class ActiveContextExternalizationParticipant extends AbstractExternaliza
 
 	@Override
 	public boolean isDirty() {
+		return isDirty(false);
+	}
+
+	@Override
+	public boolean isDirty(boolean full) {
 		synchronized (this) {
-			return isDirty;
+			return isDirty || (full && shouldWriteContext());
 		}
 	}
 

@@ -147,9 +147,20 @@ public class ExternalizationManager {
 		}
 	}
 
+	/**
+	 * Performs a full save, trying until one has succeeded
+	 */
 	public void saveNow() throws InterruptedException {
+		saveJob.setFullSavePending();
 		saveJob.wakeUp();
 		saveJob.join();
+
+		// make sure that we actually have done a full save before we exit this method
+		while (saveJob.isFullSavePending()) {
+			saveJob.schedule();
+			saveJob.wakeUp();
+			saveJob.join();
+		}
 	}
 
 	/**
@@ -172,8 +183,18 @@ public class ExternalizationManager {
 
 		private volatile IExternalizationContext context;
 
+		private volatile boolean isFullSavePending = false;
+
 		public ExternalizationJob(String jobTitle) {
 			super(jobTitle);
+		}
+
+		public boolean isFullSavePending() {
+			return isFullSavePending;
+		}
+
+		public void setFullSavePending() {
+			isFullSavePending = true;
 		}
 
 		public void setContext(IExternalizationContext saveContext) {
@@ -187,9 +208,13 @@ public class ExternalizationManager {
 			case SAVE:
 				try {
 					monitor.beginTask(Messages.ExternalizationManager_Saving_, externalizationParticipants.size());
+
+					boolean fullSave = isFullSavePending;
+					isFullSavePending = false;
+
 					for (IExternalizationParticipant participant : externalizationParticipants) {
 						ISchedulingRule rule = participant.getSchedulingRule();
-						if (forceSave || participant.isDirty()) {
+						if (forceSave || participant.isDirty(fullSave)) {
 							try {
 								Job.getJobManager().beginRule(rule, monitor);
 								monitor.setTaskName(MessageFormat.format(Messages.ExternalizationManager_Saving_X,

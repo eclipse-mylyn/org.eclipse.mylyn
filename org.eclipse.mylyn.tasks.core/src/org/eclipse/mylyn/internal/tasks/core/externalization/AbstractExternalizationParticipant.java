@@ -106,4 +106,12 @@ public abstract class AbstractExternalizationParticipant implements IExternaliza
 		return null;
 	}
 
+	/**
+	 * @param full
+	 *            true when the workbench is shutting down and any time-based dirty states should be ignore
+	 */
+	public boolean isDirty(boolean full) {
+		return isDirty();
+	}
+
 }

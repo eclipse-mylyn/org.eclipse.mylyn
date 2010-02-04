@@ -22,6 +22,8 @@ public interface IExternalizationParticipant {
 
 	public abstract boolean isDirty();
 
+	public boolean isDirty(boolean full);
+
 	public abstract ISchedulingRule getSchedulingRule();
 
 	public abstract void execute(IExternalizationContext context, IProgressMonitor monitor) throws CoreException;

@@ -82,8 +82,13 @@ public class ActivityExternalizationParticipant extends AbstractExternalizationP
 
 	@Override
 	public boolean isDirty() {
+		return isDirty(false);
+	}
+
+	@Override
+	public boolean isDirty(boolean full) {
 		synchronized (this) {
-			return isDirty;
+			return isDirty || full;
 		}
 	}
 

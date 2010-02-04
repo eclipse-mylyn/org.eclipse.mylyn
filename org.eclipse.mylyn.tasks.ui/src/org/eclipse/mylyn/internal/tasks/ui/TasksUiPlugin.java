@@ -579,6 +579,9 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				public void saving(ISaveContext context) throws CoreException {
 					if (context.getKind() == ISaveContext.FULL_SAVE) {
 						externalizationManager.stop();
+						if (taskActivityManager != null) {
+							taskActivityManager.deactivateActiveTask();
+						}
 					}
 				}
 			};
