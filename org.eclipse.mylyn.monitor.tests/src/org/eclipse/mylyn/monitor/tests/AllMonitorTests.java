@@ -26,6 +26,7 @@ public class AllMonitorTests {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.monitor.ui.tests");
 		suite.addTest(AllMonitorUsageTests.suite());
 		suite.addTest(AllMonitorReportTests.suite());
+		suite.addTestSuite(CheckActivityJobTest.class);
 		suite.addTestSuite(InteractionLoggerTest.class);
 		suite.addTestSuite(StatisticsLoggingTest.class);
 		suite.addTestSuite(MonitorTest.class);
