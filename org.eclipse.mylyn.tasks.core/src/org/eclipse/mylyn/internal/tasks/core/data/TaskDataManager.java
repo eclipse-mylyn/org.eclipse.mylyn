@@ -139,7 +139,7 @@ public class TaskDataManager implements ITaskDataManager {
 				}
 				result[0] = state;
 			}
-		});
+		}, null, true);
 		if (changed[0]) {
 			taskList.notifyElementChanged(task);
 		}

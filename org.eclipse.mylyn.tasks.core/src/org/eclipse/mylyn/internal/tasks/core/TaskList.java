@@ -650,9 +650,14 @@ public class TaskList implements ITaskList, ITransferList {
 	}
 
 	public void run(ITaskListRunnable runnable, IProgressMonitor monitor) throws CoreException {
+		run(runnable, monitor, false);
+	}
+
+	public void run(ITaskListRunnable runnable, IProgressMonitor monitor, boolean ignoreInterrupts)
+			throws CoreException {
 		monitor = Policy.monitorFor(monitor);
 		try {
-			lock(monitor);
+			lock(monitor, ignoreInterrupts);
 
 			runnable.execute(monitor);
 
@@ -668,7 +673,7 @@ public class TaskList implements ITaskList, ITransferList {
 		}
 	}
 
-	private void lock(IProgressMonitor monitor) throws CoreException {
+	private void lock(IProgressMonitor monitor, boolean ignoreInterrupts) throws CoreException {
 		while (!monitor.isCanceled()) {
 			try {
 				if (lock.acquire(3000)) {
@@ -678,7 +683,11 @@ public class TaskList implements ITaskList, ITransferList {
 					return;
 				}
 			} catch (InterruptedException e) {
-				throw new OperationCanceledException();
+				if (ignoreInterrupts) {
+					Thread.currentThread().interrupt();
+				} else {
+					throw new OperationCanceledException();
+				}
 			}
 		}
 		throw new OperationCanceledException();
