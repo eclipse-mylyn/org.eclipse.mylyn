@@ -178,6 +178,12 @@ public class TextileLanguageTest extends TestCase {
 				.matches());
 	}
 
+	public void testCodeWithCurlyBrace() {
+		String html = parser.parseToHtml("for example: @{{bug|244618}}@");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<p>for example: <code>{{bug|244618}}</code></p>"));
+	}
+
 	/**
 	 * bug 276395 Incorrect quotation characters inside code
 	 */

@@ -19,17 +19,15 @@ import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.util.MatcherAdaper;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class Textile {
 
-	private static final String REGEX_TEXTILE_CLASS_ID = "(?:\\(([^#\\)]+)?(?:#([^\\)]+))?\\))"; //$NON-NLS-1$
+	private static final String REGEX_TEXTILE_CLASS_ID = "(?:\\(([^#\\)]+)?(?:#([^\\(\\)]+))?\\))"; //$NON-NLS-1$
 
-	private static final String REGEX_TEXTILE_STYLE = "(?:\\{([^\\}]+)\\})"; //$NON-NLS-1$
+	private static final String REGEX_TEXTILE_STYLE = "(?:\\{([^\\{\\}]+)\\})"; //$NON-NLS-1$
 
-	private static final String REGEX_LANGUAGE = "(?:\\[([^\\]]+)\\])"; //$NON-NLS-1$
+	private static final String REGEX_LANGUAGE = "(?:\\[([^\\[\\]]+)\\])"; //$NON-NLS-1$
 
 	public static final String REGEX_ATTRIBUTES = "(?:" + REGEX_TEXTILE_CLASS_ID + "|" + REGEX_TEXTILE_STYLE + "|" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			+ REGEX_LANGUAGE + "){0,3}"; //$NON-NLS-1$
