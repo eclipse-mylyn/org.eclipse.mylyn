@@ -236,6 +236,15 @@ public class MediaWikiLanguageTest extends TestCase {
 				html).find());
 	}
 
+	public void testPreformattedWithTag() {
+		String html = parser.parseToHtml("normal para\n<pre style=\"overflow:scroll\" class=\"TEST\">preformatted\n more pre\n</pre>normal para");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(Pattern.compile(
+				"<body><p>normal para</p><pre class=\"TEST\" style=\"overflow:scroll\">preformatted\\s+more pre\\s+</pre><p>normal para</p></body>")
+				.matcher(html)
+				.find());
+	}
+
 	public void testHtmlTags() {
 		String html = parser.parseToHtml("normal para <b id=\"foo\">test heading</b>");
 		TestUtil.println("HTML: \n" + html);
