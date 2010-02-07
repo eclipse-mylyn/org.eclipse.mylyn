@@ -60,7 +60,7 @@ public class ChangeAttachmentJob extends Job {
 	}
 
 	@Override
-	protected IStatus run(IProgressMonitor monitor) {
+	public IStatus run(IProgressMonitor monitor) {
 		final ITask task;
 		task = editor.getTaskEditorInput().getTask();
 

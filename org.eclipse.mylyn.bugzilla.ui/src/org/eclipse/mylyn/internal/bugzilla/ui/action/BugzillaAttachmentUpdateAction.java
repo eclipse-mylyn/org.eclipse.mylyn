@@ -13,19 +13,16 @@ package org.eclipse.mylyn.internal.bugzilla.ui.action;
 
 import java.util.List;
 
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylyn.internal.bugzilla.ui.dialogs.BugzillaAttachmentDialog;
 import org.eclipse.mylyn.internal.bugzilla.ui.editor.BugzillaTaskEditorPage;
 import org.eclipse.mylyn.internal.bugzilla.ui.editor.FlagAttributeEditor;
+import org.eclipse.mylyn.internal.bugzilla.ui.wizard.BugzillaAttachmentWizard;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -34,6 +31,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModelEvent;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModelListener;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AttributeEditorFactory;
@@ -128,40 +127,23 @@ public class BugzillaAttachmentUpdateAction extends BaseSelectionListenerAction 
 				};
 
 				TaskAttribute target = workingCopy.getLocalData().getRoot();
-				BugzillaAttachmentDialog dialog = new BugzillaAttachmentDialog(shell, model, factory, target, false);
-				if (dialog.open() == Window.OK) {
-					TaskAttribute attachmentAttribute = attachment.getTaskAttribute();
-					for (TaskAttribute child : target.getAttributes().values()) {
-						attachmentAttribute.deepAddCopy(child);
-					}
-					final ChangeAttachmentJob job = new ChangeAttachmentJob(attachment, taskEditor);
-					job.setUser(true);
-					job.addJobChangeListener(new JobChangeAdapter() {
+				target.setValue(target0.getValue());
 
-						@Override
-						public void done(IJobChangeEvent event) {
-							IFormPage formPage = taskEditor.getActivePageInstance();
-							if (formPage instanceof BugzillaTaskEditorPage) {
-								final BugzillaTaskEditorPage bugzillaPage = (BugzillaTaskEditorPage) formPage;
-								if (job.getError() != null) {
-									PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-										public void run() {
-											bugzillaPage.getTaskEditor().setMessage(job.getError().getMessage(),
-													IMessageProvider.ERROR);
-										}
-									});
-								} else {
-									PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-										public void run() {
-											bugzillaPage.refreshFormContent();
-										}
-									});
-								}
-							}
-						}
-					});
-					job.schedule();
-				}
+				final BugzillaAttachmentWizard attachmentWizard = new BugzillaAttachmentWizard(shell, factory, target,
+						taskEditor, attachment);
+				final NewAttachmentWizardDialog dialog = new NewAttachmentWizardDialog(shell, attachmentWizard, false);
+				model.addModelListener(new TaskDataModelListener() {
+
+					@Override
+					public void attributeChanged(TaskDataModelEvent event) {
+						attachmentWizard.setChanged(true);
+						dialog.updateButtons();
+					}
+				});
+
+				dialog.setBlockOnOpen(false);
+				dialog.create();
+				dialog.open();
 			}
 		}
 	}
