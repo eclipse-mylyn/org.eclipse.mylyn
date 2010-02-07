@@ -25,8 +25,7 @@ public class PreformattedBlock extends Block {
 	private static final Pattern PRE_OPEN_PATTERN = Pattern.compile(
 			"(<pre((?:\\s+[a-zA-Z][a-zA-Z0-9_:-]*=\"[^\"]*\")*)\\s*>).*", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 
-	private static final Pattern PRE_CLOSE_PATTERN = Pattern.compile(
-			"(</[a-zA-Z][a-zA-Z0-9_:-]*\\s*>)", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
+	private static final Pattern PRE_CLOSE_PATTERN = Pattern.compile("(</pre*\\s*>)", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 
 	private int blockLineCount = 0;
 
@@ -81,13 +80,13 @@ public class PreformattedBlock extends Block {
 				}
 				if (closeMatcher.find()) {
 					int contentEnd = closeMatcher.start(1);
+					int newContentStart = closeMatcher.end(1);
 					if (contentEnd > 0) {
 						String content = line.substring(offset, contentEnd);
 						builder.characters(content);
 						builder.characters("\n"); //$NON-NLS-1$
 					}
 					setClosed(true);
-					int newContentStart = closeMatcher.end(1);
 					if (newContentStart < line.length()) {
 						return newContentStart;
 					}

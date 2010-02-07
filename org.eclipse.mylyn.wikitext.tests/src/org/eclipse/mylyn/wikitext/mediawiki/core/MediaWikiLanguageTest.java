@@ -260,6 +260,25 @@ public class MediaWikiLanguageTest extends TestCase {
 				.find());
 	}
 
+	public void testPreformattedWithTagStartEndOnSameLine3() {
+		String html = parser.parseToHtml("normal para\n<pre>preformatted</pre>\nnormal para");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(Pattern.compile("<body><p>normal para</p><pre>preformatted\\s+</pre><p>normal para</p></body>")
+				.matcher(html)
+				.find());
+	}
+
+	public void testPreformattedWithTagStartEndOnSameLine2() {
+		String html = parser.parseToHtml("example:\n\n<pre><a href=\"show_bug.cgi\\?id\\=(.+?)\">.+?<span class=\"summary\">(.+?)</span></pre>\n\nIf");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(Pattern.compile(
+				"<body><p>example:</p><pre>"
+						+ Pattern.quote("&lt;a href=\"show_bug.cgi\\?id\\=(.+?)\">.+?&lt;span class=\"summary\">(.+?)&lt;/span>")
+						+ "\\s+</pre><p>If</p></body>")
+				.matcher(html)
+				.find());
+	}
+
 	public void testHtmlTags() {
 		String html = parser.parseToHtml("normal para <b id=\"foo\">test heading</b>");
 		TestUtil.println("HTML: \n" + html);
