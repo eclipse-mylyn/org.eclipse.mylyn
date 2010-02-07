@@ -84,13 +84,22 @@ public class MediaWikiLanguageTest extends TestCase {
 	public void testHeadings() {
 		for (int x = 1; x <= 6; ++x) {
 			String delimiter = repeat(x, "=");
-			String html = parser.parseToHtml(delimiter + "heading text" + delimiter
-					+ "\nfirst para<br/>\nfirst para line2\n\nsecond para\n\nthird para");
-			TestUtil.println(html);
-			assertTrue(Pattern.compile(
-					"<body><h" + x + " id=\"[^\"]+\">heading text</h" + x
-							+ "><p>first para<br/>\\s*first para line2</p><p>second para</p><p>third para</p></body>",
-					Pattern.MULTILINE).matcher(html).find());
+			String[] headingMarkupSamples = new String[] { delimiter + "heading text" + delimiter,
+					delimiter + "heading text" + delimiter + "  ", delimiter + "heading text" + delimiter + " \t " };
+			for (String headingMarkup : headingMarkupSamples) {
+				String html = parser.parseToHtml(headingMarkup
+						+ "\nfirst para<br/>\nfirst para line2\n\nsecond para\n\nthird para");
+				TestUtil.println(html);
+				assertTrue(Pattern.compile(
+						"<body><h"
+								+ x
+								+ " id=\"[^\"]+\">heading text</h"
+								+ x
+								+ "><p>first para<br/>\\s*first para line2</p><p>second para</p><p>third para</p></body>",
+						Pattern.MULTILINE)
+						.matcher(html)
+						.find());
+			}
 		}
 	}
 

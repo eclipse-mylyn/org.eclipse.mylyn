@@ -17,13 +17,11 @@ import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class HeadingBlock extends Block {
 
-	private static final Pattern pattern = Pattern.compile("\\s*(\\={1,6})\\s*(.+?)\\s*\\1"); //$NON-NLS-1$
+	private static final Pattern pattern = Pattern.compile("\\s*(\\={1,6})\\s*(.+?)\\s*\\1\\s*"); //$NON-NLS-1$
 
 	private int blockLineCount = 0;
 
