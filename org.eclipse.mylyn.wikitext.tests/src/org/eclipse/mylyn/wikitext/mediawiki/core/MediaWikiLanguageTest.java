@@ -11,7 +11,12 @@
 package org.eclipse.mylyn.wikitext.mediawiki.core;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.StringWriter;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
@@ -19,6 +24,8 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.DocBookDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.builder.RecordingDocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
+import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
 
 /**
@@ -241,6 +248,14 @@ public class MediaWikiLanguageTest extends TestCase {
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(Pattern.compile(
 				"<body><p>normal para</p><pre class=\"TEST\" style=\"overflow:scroll\">preformatted\\s+more pre\\s+</pre><p>normal para</p></body>")
+				.matcher(html)
+				.find());
+	}
+
+	public void testPreformattedWithTagStartEndOnSameLine() {
+		String html = parser.parseToHtml("normal para\n<pre>preformatted</pre>normal para");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(Pattern.compile("<body><p>normal para</p><pre>preformatted\\s+</pre><p>normal para</p></body>")
 				.matcher(html)
 				.find());
 	}
@@ -564,4 +579,35 @@ public class MediaWikiLanguageTest extends TestCase {
 		assertTrue(html.contains("<body><p>a normal para</p><h1 id=\"h1\">h1</h1><p>normal</p></body>"));
 	}
 
+	public void testComputeOutline() throws IOException {
+		OutlineParser outlineParser = new OutlineParser();
+		outlineParser.setMarkupLanguage(new MediaWikiLanguage());
+
+		OutlineItem outline = outlineParser.parse(readFully("sample.mediawiki"));
+
+		Set<String> topLevelLabels = new LinkedHashSet<String>();
+		Set<String> topLevelIds = new LinkedHashSet<String>();
+		List<OutlineItem> children = outline.getChildren();
+		for (OutlineItem item : children) {
+			topLevelLabels.add(item.getLabel());
+			topLevelIds.add(item.getId());
+		}
+		assertEquals(children.size(), topLevelIds.size());
+		assertEquals(children.size(), topLevelLabels.size());
+		assertTrue("Top-level labels: " + topLevelLabels, topLevelLabels.contains("Task-Focused UI"));
+	}
+
+	private String readFully(String resource) throws IOException {
+		Reader reader = new InputStreamReader(MediaWikiLanguageTest.class.getResourceAsStream(resource));
+		StringWriter writer = new StringWriter();
+		try {
+			int i;
+			while ((i = reader.read()) != -1) {
+				writer.write(i);
+			}
+		} finally {
+			reader.close();
+		}
+		return writer.toString();
+	}
 }

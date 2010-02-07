@@ -51,6 +51,28 @@ public class PreformattedBlock extends Block {
 
 	@Override
 	public int processLineContent(String line, int offset) {
+
+		int lineStart = usesTag ? 0 : 1;
+		if (blockLineCount++ == 0) {
+			Attributes attributes = new Attributes();
+			if (usesTag) {
+				Matcher matcher = PRE_OPEN_PATTERN.matcher(line);
+				if (offset > 0) {
+					matcher.region(offset, line.length());
+				}
+				if (matcher.matches()) {
+					String htmlAttributes = matcher.group(2);
+					processHtmlAttributes(attributes, htmlAttributes);
+
+					lineStart = matcher.end(1);
+					offset = lineStart;
+				} else {
+					throw new IllegalStateException();
+				}
+			}
+			builder.beginBlock(BlockType.PREFORMATTED, attributes);
+
+		}
 		if (usesTag) {
 			if (blockLineCount > 0) {
 				Matcher closeMatcher = PRE_CLOSE_PATTERN.matcher(line);
@@ -59,9 +81,8 @@ public class PreformattedBlock extends Block {
 				}
 				if (closeMatcher.find()) {
 					int contentEnd = closeMatcher.start(1);
-					String content = line;
 					if (contentEnd > 0) {
-						content = content.substring(0, contentEnd);
+						String content = line.substring(offset, contentEnd);
 						builder.characters(content);
 						builder.characters("\n"); //$NON-NLS-1$
 					}
@@ -78,26 +99,6 @@ public class PreformattedBlock extends Block {
 				setClosed(true);
 				return 0;
 			}
-		}
-		int lineStart = usesTag ? 0 : 1;
-		if (blockLineCount++ == 0) {
-			Attributes attributes = new Attributes();
-			if (usesTag) {
-				Matcher matcher = PRE_OPEN_PATTERN.matcher(line);
-				if (offset > 0) {
-					matcher.region(offset, line.length());
-				}
-				if (matcher.matches()) {
-					String htmlAttributes = matcher.group(2);
-					processHtmlAttributes(attributes, htmlAttributes);
-
-					lineStart = matcher.end(1);
-				} else {
-					throw new IllegalStateException();
-				}
-			}
-			builder.beginBlock(BlockType.PREFORMATTED, attributes);
-
 		}
 		if (line.length() >= lineStart) {
 			builder.characters(line.substring(lineStart));
