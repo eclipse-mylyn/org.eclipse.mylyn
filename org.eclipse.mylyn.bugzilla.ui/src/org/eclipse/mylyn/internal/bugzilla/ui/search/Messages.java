@@ -108,4 +108,8 @@ public class Messages extends NLS {
 	public static String BugzillaSearchPage_Updating_search_options_;
 
 	public static String BugzillaSearchPage_Version;
+
+	public static String BugzillaSearchPage_ClearFields;
+
+	public static String BugzillaSearchPage_Advanced;
 }
