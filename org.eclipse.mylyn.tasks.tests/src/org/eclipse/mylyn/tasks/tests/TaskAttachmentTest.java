@@ -16,6 +16,7 @@ import java.io.RandomAccessFile;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.tasks.core.TaskAttachment;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
@@ -109,4 +110,19 @@ public class TaskAttachmentTest extends TestCase {
 		}
 		assertEquals(expected, new String(data));
 	}
+
+	public void testDownloadAttachmentJobExceptionThrown() throws Exception {
+		File file = File.createTempFile("mylyn", null);
+		file.delete();
+
+		attachmentHandler.setException(new CoreException(Status.CANCEL_STATUS));
+
+		DownloadAttachmentJob job = new DownloadAttachmentJob(attachment, file);
+		job.schedule();
+		job.join();
+
+		assertEquals(Status.OK_STATUS, job.getResult());
+		assertFalse(file.exists());
+	}
+
 }

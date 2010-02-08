@@ -127,13 +127,18 @@ public class AttachmentUtil {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					File targetFile = ContextCorePlugin.getContextStore().getFileForContext(task.getHandleIdentifier());
 					try {
+						boolean exceptionThrown = true;
 						OutputStream out = new BufferedOutputStream(new FileOutputStream(targetFile));
 						try {
 							AttachmentUtil.downloadAttachment(attachment, out, monitor);
+							exceptionThrown = false;
 						} catch (CoreException e) {
 							throw new InvocationTargetException(e);
 						} finally {
 							out.close();
+							if (exceptionThrown) {
+								targetFile.delete();
+							}
 						}
 					} catch (OperationCanceledException e) {
 						throw new InterruptedException();

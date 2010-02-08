@@ -45,11 +45,16 @@ public class DownloadAttachmentJob extends Job {
 	protected IStatus run(IProgressMonitor monitor) {
 		try {
 			try {
+				boolean exceptionThrown = true;
 				OutputStream out = new BufferedOutputStream(new FileOutputStream(targetFile));
 				try {
 					AttachmentUtil.downloadAttachment(attachment, out, monitor);
+					exceptionThrown = false;
 				} finally {
 					out.close();
+					if (exceptionThrown) {
+						targetFile.delete();
+					}
 				}
 			} catch (IOException e) {
 				throw new CoreException(new RepositoryStatus(attachment.getTaskRepository(), IStatus.ERROR,

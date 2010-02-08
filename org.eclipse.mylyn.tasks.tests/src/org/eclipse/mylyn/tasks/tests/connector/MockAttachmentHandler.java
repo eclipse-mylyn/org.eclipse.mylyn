@@ -27,7 +27,13 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
  */
 public class MockAttachmentHandler extends AbstractTaskAttachmentHandler {
 
+	private CoreException exception;
+
 	private byte[] data;
+
+	public void setException(CoreException exception) {
+		this.exception = exception;
+	}
 
 	public void setAttachmentData(byte[] data) {
 		this.data = data;
@@ -46,6 +52,9 @@ public class MockAttachmentHandler extends AbstractTaskAttachmentHandler {
 	@Override
 	public InputStream getContent(TaskRepository repository, ITask task, TaskAttribute attachmentAttribute,
 			IProgressMonitor monitor) throws CoreException {
+		if (exception != null) {
+			throw exception;
+		}
 		return new ByteArrayInputStream(data);
 	}
 
