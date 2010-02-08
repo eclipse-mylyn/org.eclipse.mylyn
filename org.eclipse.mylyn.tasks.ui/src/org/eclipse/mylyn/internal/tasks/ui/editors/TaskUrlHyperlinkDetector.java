@@ -23,6 +23,8 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractTaskHyperlinkDetector;
 
 /**
@@ -37,6 +39,9 @@ public class TaskUrlHyperlinkDetector extends AbstractTaskHyperlinkDetector {
 	// so we do the same here
 	private static final Pattern URL_PATTERN = Pattern.compile("([a-zA-Z][a-zA-Z+.-]{0,10}://[a-zA-Z0-9%._~!$&?#'()*+,;:@/=-]*[a-zA-Z0-9%_~!$&?#'(*+;:@/=-])"); //$NON-NLS-1$
 
+	public TaskUrlHyperlinkDetector() {
+	}
+
 	@Override
 	protected List<IHyperlink> detectHyperlinks(ITextViewer textViewer, String content, int indexInContent,
 			int contentOffset) {
@@ -44,16 +49,27 @@ public class TaskUrlHyperlinkDetector extends AbstractTaskHyperlinkDetector {
 		Matcher m = URL_PATTERN.matcher(content);
 		while (m.find()) {
 			if (isInRegion(indexInContent, m)) {
-				try {
-					String urlString = m.group(1);
-					new URL(urlString);
+				String urlString = m.group(1);
+				TaskUrlHyperlink link = null;
+				if (getAdapter(TaskRepository.class) != null) {
+					try {
+						new URL(urlString);
+						link = new TaskUrlHyperlink(determineRegion(contentOffset, m), urlString);
+					} catch (MalformedURLException e) {
+						// ignore
+					}
 
+				} else {
+					if (TasksUiInternal.isTaskUrl(urlString)) {
+						link = new TaskUrlHyperlink(determineRegion(contentOffset, m), urlString);
+					}
+				}
+
+				if (link != null) {
 					if (links == null) {
 						links = new ArrayList<IHyperlink>();
 					}
-					links.add(new TaskUrlHyperlink(determineRegion(contentOffset, m), urlString));
-				} catch (MalformedURLException e) {
-					// ignore
+					links.add(link);
 				}
 			}
 		}

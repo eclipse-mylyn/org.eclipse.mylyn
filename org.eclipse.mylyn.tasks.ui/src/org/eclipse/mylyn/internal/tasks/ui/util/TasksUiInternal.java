@@ -1029,6 +1029,17 @@ public class TasksUiInternal {
 		return null;
 	}
 
+	public static boolean isTaskUrl(String taskUrl) {
+		Assert.isNotNull(taskUrl);
+		List<TaskRepository> repositories = TasksUiPlugin.getRepositoryManager().getAllRepositories();
+		for (TaskRepository repository : repositories) {
+			if (taskUrl.startsWith(repository.getUrl())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * Cleans text for use as the text of an action to ensure that it is displayed properly.
 	 * 

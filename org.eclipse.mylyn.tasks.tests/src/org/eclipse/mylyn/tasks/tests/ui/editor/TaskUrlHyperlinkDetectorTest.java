@@ -14,14 +14,20 @@ package org.eclipse.mylyn.tasks.tests.ui.editor;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskUrlHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskUrlHyperlinkDetector;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
+import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * @author Steffen Pingel
@@ -29,8 +35,21 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.TaskUrlHyperlinkDetector;
  */
 public class TaskUrlHyperlinkDetectorTest extends TestCase {
 
+	private TaskRepository repository;
+
+	@Override
+	protected void setUp() throws Exception {
+		repository = TaskTestUtil.createMockRepository();
+	}
+
 	protected IHyperlink[] detect(final String text, int start, int length) {
 		AbstractHyperlinkDetector detector = new TaskUrlHyperlinkDetector();
+		detector.setContext(new IAdaptable() {
+			@SuppressWarnings("rawtypes")
+			public Object getAdapter(Class adapter) {
+				return repository;
+			}
+		});
 		return detector.detectHyperlinks(new TextViewer() {
 			@Override
 			public IDocument getDocument() {
@@ -121,6 +140,54 @@ public class TaskUrlHyperlinkDetectorTest extends TestCase {
 		assertNotNull(hyperlinks);
 		assertEquals(1, hyperlinks.length);
 		assertEquals(new Region(0, 22), hyperlinks[0].getHyperlinkRegion());
+	}
+
+	public void testDetectionNoRepositoryRegularUrl() {
+		repository = null;
+		IHyperlink[] hyperlinks = detect("aa http://www.eclipse.org test", 4, 0);
+		assertNull(hyperlinks);
+	}
+
+	/**
+	 * Tests hyperlink detector in mode outside of task editor.
+	 */
+	public void testDetectionNoRepositoryRepositoryUrl() {
+		repository = null;
+		TaskRepository repository1 = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND,
+				"http://repo1.test/foo");
+		try {
+			TasksUi.getRepositoryManager().addRepository(repository1);
+
+			String text = "aa http://repo1.test/foo http://www.eclipse.org test";
+			IHyperlink[] hyperlinks = detect(text, 0, text.length());
+			assertNotNull(hyperlinks);
+			assertEquals(1, hyperlinks.length);
+			assertEquals(new Region(3, 21), hyperlinks[0].getHyperlinkRegion());
+		} finally {
+			TasksUiPlugin.getRepositoryManager().removeRepository(repository1);
+		}
+	}
+
+	/**
+	 * Tests hyperlink detector in mode outside of task editor with multiple task URLs.
+	 */
+	public void testDetectionNoRepositoryMultipleRepositoryUrls() {
+		repository = null;
+		TaskRepository repository1 = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND,
+				"http://repo1.test/foo");
+		TaskRepository repository2 = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND, "http://repo2.test");
+		try {
+			TasksUi.getRepositoryManager().addRepository(repository1);
+			TasksUi.getRepositoryManager().addRepository(repository2);
+
+			String text = "aa http://repo2.test http://repo1.test/foo http://repo1.test/bar http://www.eclipse.org test";
+			IHyperlink[] hyperlinks = detect(text, 0, text.length());
+			assertNotNull(hyperlinks);
+			assertEquals(2, hyperlinks.length);
+		} finally {
+			TasksUiPlugin.getRepositoryManager().removeRepository(repository1);
+			TasksUiPlugin.getRepositoryManager().removeRepository(repository2);
+		}
 	}
 
 }

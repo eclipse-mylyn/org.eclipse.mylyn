@@ -14,19 +14,35 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.URLHyperlink;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Rob Elves
  */
 public class TaskUrlHyperlink extends URLHyperlink {
 
-	public TaskUrlHyperlink(IRegion region, String urlString) {
+	private final String hyperlinkText;
+
+	public TaskUrlHyperlink(IRegion region, String urlString, String hyperlinkText) {
 		super(region, urlString);
+		this.hyperlinkText = hyperlinkText;
+	}
+
+	public TaskUrlHyperlink(IRegion region, String urlString) {
+		this(region, urlString, null);
 	}
 
 	@Override
 	public void open() {
 		TasksUiUtil.openTask(getURLString());
+	}
+
+	@Override
+	public String getHyperlinkText() {
+		if (hyperlinkText != null) {
+			return hyperlinkText;
+		}
+		return NLS.bind(Messages.TaskUrlHyperlink_Open_URL_in_Task_Editor, getURLString());
 	}
 
 }

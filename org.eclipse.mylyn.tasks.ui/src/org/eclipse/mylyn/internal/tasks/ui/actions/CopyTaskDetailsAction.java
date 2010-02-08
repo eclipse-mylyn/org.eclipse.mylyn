@@ -29,7 +29,7 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.copy"; //$NON-NLS-1$
 
 	public enum Mode {
-		KEY, URL, SUMMARY_URL
+		KEY, URL, SUMMARY, SUMMARY_URL
 	}
 
 	private Mode mode;
@@ -52,6 +52,9 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 			break;
 		case URL:
 			setText(Messages.CopyTaskDetailsAction_Url_Menu_Label);
+			break;
+		case SUMMARY:
+			setText("Summary");
 			break;
 		case SUMMARY_URL:
 			setText(Messages.CopyTaskDetailsAction_Summary_and_Url_Menu_Label);
@@ -90,6 +93,20 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 				if (element.getUrl() != null) {
 					sb.append(element.getUrl());
 				}
+			}
+			break;
+		case SUMMARY:
+			if (object instanceof ITask) {
+				ITask task = (ITask) object;
+				if (task.getTaskKey() != null) {
+					sb.append(TasksUiInternal.getTaskPrefix(task.getConnectorKind()));
+					sb.append(task.getTaskKey());
+					sb.append(": "); //$NON-NLS-1$
+				}
+				sb.append(task.getSummary());
+			} else if (object instanceof IRepositoryElement) {
+				IRepositoryElement element = (IRepositoryElement) object;
+				sb.append(element.getSummary());
 			}
 			break;
 		case SUMMARY_URL:

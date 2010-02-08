@@ -262,4 +262,6 @@ public class Messages extends NLS {
 	public static String TaskEditorExtensionSettingsContribution_Plain_Text;
 
 	public static String TaskEditorExtensionSettingsContribution_Select_the_capabilities_of_the_task_editor;
+
+	public static String TaskUrlHyperlink_Open_URL_in_Task_Editor;
 }
