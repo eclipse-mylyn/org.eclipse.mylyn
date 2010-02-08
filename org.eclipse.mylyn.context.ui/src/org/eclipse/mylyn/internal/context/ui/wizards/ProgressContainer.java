@@ -17,6 +17,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -48,8 +49,6 @@ class ProgressContainer implements IRunnableContext {
 
 	private boolean lockedUI = false;
 
-	private boolean needsProgressMonitor;
-
 	// The progress monitor
 	private final ProgressMonitorPart progressMonitorPart;
 
@@ -58,6 +57,8 @@ class ProgressContainer implements IRunnableContext {
 	private Cursor waitCursor;
 
 	public ProgressContainer(Shell shell, ProgressMonitorPart progressMonitorPart) {
+		Assert.isNotNull(shell);
+		Assert.isNotNull(progressMonitorPart);
 		this.shell = shell;
 		this.progressMonitorPart = progressMonitorPart;
 	}
@@ -192,10 +193,9 @@ class ProgressContainer implements IRunnableContext {
 	@SuppressWarnings("unchecked")
 	private void stopped(Object savedState) {
 		if (getShell() != null && !getShell().isDisposed()) {
-			if (needsProgressMonitor) {
-				progressMonitorPart.setVisible(false);
-				progressMonitorPart.removeFromCancelComponent(cancelButton);
-			}
+			progressMonitorPart.setVisible(false);
+			progressMonitorPart.removeFromCancelComponent(cancelButton);
+
 			Map<Object, Object> state = (Map<Object, Object>) savedState;
 			restoreUiState(state);
 //				cancelButton.addSelectionListener(cancelListener);
