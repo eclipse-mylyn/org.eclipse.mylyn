@@ -42,72 +42,32 @@
 	</target>
 
     <target name="all" depends="init" description="Generate Eclipse help content for the Mylyn user guide">
-        <eclipse-wiki-to-help
-        	help.doc.filenamenoextension="Mylyn Reference"
-        	help.doc.url.base="${mylyn.help.doc.url.base}"
-        	help.doc.pageName="Mylyn/User_Guide"
-        	help.imagefolder="${imageFolder}"
-        	targetfolder="userguide"
-        	wiki.url.base="${mylyn.help.doc.url.base}/Mylyn"/>
-		<replaceregexp file="userguide/Mylyn Reference-toc.xml" match="(&lt;topic.*?href=&quot;userguide/Task-Repository-Connectors.html.*?&gt;(\s*&lt;topic\s*href=&quot;.*?&quot;\s*label=&quot;.*&quot;&gt;\s*?&lt;/topic&gt;)+)(\s*)(&lt;/topic&gt;)"
-		    		replace="\1\3&lt;anchor id=&quot;additions-repository-connectors&quot;/&gt;\3\4"
-					flags="s"/>
-    </target>
-	
-	<macrodef name="eclipse-wiki-to-help">
-		<attribute name="help.doc.url.base"/>
-		<attribute name="wiki.url.base"/>
-		<attribute name="help.doc.pageName"/>
-		<attribute name="help.doc.filenameNoExtension"/>
-		<attribute name="help.imageFolder"/>
-		<attribute name="targetFolder"/>
-		<sequential>
-			<get dest="tmp/@{help.doc.filenameNoExtension}.mediawiki" src="@{help.doc.url.base}/index.php?title=@{help.doc.pageName}&amp;action=raw"/>
-			<echo append="true" file="tmp/@{help.doc.filenameNoExtension}.mediawiki">
+		
+    	<mediawiki-to-eclipse-help
+    		wikiBaseUrl="${mylyn.help.doc.url.base}"
+			validate="true"
+			failonvalidationerror="true"
+			prependImagePrefix="${imageFolder}"
+			formatoutput="true"
+			defaultAbsoluteLinkTarget="mylyn_external"
+    		dest="${basedir}"
+    		title="Mylyn"
+    		generateUnifiedToc="false">
+    		<path name="Mylyn/User_Guide" title="Mylyn User Guide" generateToc="true"/>
+    		<path name="Mylyn/FAQ" title="Mylyn FAQ" generateToc="true"/>
+			<stylesheet url="book.css"/>
+    		<pageAppendum>
 
 = Updating This Document =
 
 This document is maintained in a collaborative wiki.  If you wish to update or modify this document please visit 
-@{help.doc.url.base}/@{help.doc.pageName}
-			</echo>
-	
-	    	<copy todir="tmp">
-	    		<fileset dir="images"/>
-	    	</copy>
-	    	<mediawiki-fetch-images dest="tmp" url="@{help.doc.url.base}" pageName="@{help.doc.pageName}"/>
-	    	
-			
-			<wikitext-to-eclipse-help markupLanguage="org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage" 
-				multipleOutputFiles="true"
-				navigationImages="true"
-				helpPrefix="@{targetFolder}"
-				internallinkpattern="@{wiki.url.base}/{0}"
-				validate="true"
-				failonvalidationerror="true"
-				prependImagePrefix="${imageFolder}"
-				formatoutput="true"
-				defaultAbsoluteLinkTarget="mylyn_external">
-				<fileset dir="tmp" includes="**/*.mediawiki"/>
-				<stylesheet url="book.css"/>
-			</wikitext-to-eclipse-help>
-	    	
-	    	<mkdir dir="@{targetFolder}/${imageFolder}"/>
-			<copy todir="@{targetFolder}/${imageFolder}" overwrite="true">
-				<fileset dir="tmp">
-					<include name="*.gif"/>
-					<include name="*.png"/>
-				</fileset>
-			</copy>
-	    	<copy todir="@{targetFolder}" overwrite="true">
-				<fileset dir="tmp">
-					<include name="*.html"/>
-					<include name="*toc.xml"/>
-					<exclude name="help.doc.html"/>
-				</fileset>
-			</copy>
-	    	<antcall target="test"/>
-		</sequential>			
-	</macrodef>
+{url}</pageAppendum>
+    	</mediawiki-to-eclipse-help>
+    	<replaceregexp file="Mylyn-User-Guide-toc.xml" match="(&lt;topic.*?href=&quot;Mylyn/User_Guide/Task-Repository-Connectors.html.*?&gt;(\s*&lt;topic\s*href=&quot;.*?&quot;\s*label=&quot;.*&quot;&gt;\s*?&lt;/topic&gt;)+)(\s*)(&lt;/topic&gt;)"
+    			    		replace="\1\3&lt;anchor id=&quot;additions-repository-connectors&quot;/&gt;\3\4"
+    						flags="s"/>
+    	<antcall target="test"/>
+    </target>
 	
 
 	<target name="test" depends="init" description="verify that all of the HTML files are well-formed XML">
@@ -127,13 +87,17 @@ or inadvertently starting a line with a space character (in MediaWiki this start
 		Don't bother with DTD validation: we only care if the files are well-formed.
 		We therefore provide an empty DTD 
 		-->
+		<mkdir dir="tmp"/>
 		<echo file="tmp/__empty.dtd" message=""/>
 		<xmlvalidate lenient="true">
-			<fileset dir="userguide">
+			<fileset dir="Mylyn">
 				<include name="**/*.xml"/>
 			</fileset>
-			<fileset dir="userguide">
+			<fileset dir="Mylyn">
 				<include name="**/*.html"/>
+			</fileset>
+			<fileset dir=".">
+				<include name="*toc.xml"/>
 			</fileset>
 			<dtd publicid="-//W3C//DTD XHTML 1.0 Transitional//EN" location="${basedir}/tmp/__empty.dtd"/>
 		</xmlvalidate>

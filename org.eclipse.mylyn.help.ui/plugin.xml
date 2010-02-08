@@ -20,9 +20,11 @@
             primary="true">
       </toc>
       <toc
-            file="userguide/Mylyn Reference-toc.xml"
-            primary="false">
-      </toc>
+            file="Mylyn-User-Guide-toc.xml"
+            primary="false"/>
+      <toc
+            file="Mylyn-FAQ-toc.xml"
+            primary="false"/>
    </extension>
   
    <extension

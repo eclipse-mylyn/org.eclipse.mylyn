@@ -15,9 +15,15 @@
  <anchor id="before-reference" />
  <topic label="Feature Reference">
   	<anchor id="before-reference-content"/>
-    <link toc="userguide/Mylyn Reference-toc.xml"/>
+    <link toc="Mylyn-User-Guide-toc.xml"/>
     <anchor id="after-reference-content"/>
     <anchor id="additions-reference" />
+ </topic>
+ <topic label="Frequently Asked Questions">
+  	<anchor id="before-faq-content"/>
+    <link toc="Mylyn-FAQ-toc.xml"/>
+    <anchor id="after-faq-content"/>
+    <anchor id="additions-faq" />
  </topic>
   	<anchor id="after-reference" />
   	<anchor id="additions" />
