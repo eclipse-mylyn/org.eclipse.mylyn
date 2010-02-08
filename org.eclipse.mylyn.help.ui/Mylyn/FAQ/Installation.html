@@ -194,14 +194,14 @@ J2SE-1.3,J2SE-1.4,J2SE-1.5,JavaSE-1.6
 				<i>Mylyn</i> and you should see the available Mylyn Views. 
 			</li>
 			<li>If you still don’t see anything, then perhaps you aren’t using the JDK1.5 VM (or later).  See 
-				<a href="/wiki/Mylyn_Installation_Guide#Download_and_configure_Java" title="Mylyn_Installation_Guide#Download_and_configure_Java">configuring Java</a>.
+				<a href="http://wiki.eclipse.org/Mylyn_Installation_Guide#Download_and_configure_Java" title="Mylyn_Installation_Guide#Download_and_configure_Java" target="mylyn_external">configuring Java</a>.
 			</li>
 		</ol>
 		<p>
 			<b>What does “<code>Root exception: java.lang.UnsupportedClassVersionError: org/eclipse/mylar/tasklist/MylarTasklistPlugin (Unsupported major.minor version 49.0)</code>” mean?</b>
 		</p>
 		<p>It probably means that the virtual machine is JDK1.4 or lower. See 
-			<a href="/wiki/Mylyn_Installation_Guide#Download_and_configure_Java" title="Mylyn_Installation_Guide#Download_and_configure_Java">download and configure Java</a>.
+			<a href="http://wiki.eclipse.org/Mylyn_Installation_Guide#Download_and_configure_Java" title="Mylyn_Installation_Guide#Download_and_configure_Java" target="mylyn_external">download and configure Java</a>.
 		</p>
 		<p>
 			<b>What does “Could not create Browser page: No more handles (<code>java.lang.UnsatisfiedLinkError: …</code>)” mean?</b>
@@ -380,7 +380,7 @@ The activator org.eclipse.mylar.java.MylarJavaPlugin for bundle org.eclipse.myla
 			<a href="http://eclipse.org/mylar/dl.php" target="mylyn_external">the download site</a> has different downloads for Eclipse 3.1 and Eclipse 3.2.
 		</p>
 		<p>To fix this problem, see the 
-			<a href="/wiki/Mylyn_Uninstallation_Guide" title="Mylyn_Uninstallation_Guide">uninstallation guide</a>, then re-install from 
+			<a href="http://wiki.eclipse.org/Mylyn_Uninstallation_Guide" title="Mylyn_Uninstallation_Guide" target="mylyn_external">uninstallation guide</a>, then re-install from 
 			<a href="http://eclipse.org/mylar/dl.php" target="mylyn_external">the correct download site</a>.
 		</p>
 		<p>
@@ -582,7 +582,7 @@ The activator org.eclipse.mylar.java.MylarJavaPlugin for bundle org.eclipse.myla
 			</li>
 			<li>You also need to install a dictionary, some instructions are 
 				<a href="http://www.javalobby.org/java/forums/t17453.html" target="mylyn_external">here</a>. A word list is available 
-				<a href="/wiki/http://wordlist.sourceforge.net/_here" title="http://wordlist.sourceforge.net/ here">http://wordlist.sourceforge.net/ here</a> as well.
+				<a href="http://wiki.eclipse.org/http://wordlist.sourceforge.net/_here" title="http://wordlist.sourceforge.net/ here" target="mylyn_external">http://wordlist.sourceforge.net/ here</a> as well.
 			</li>
 		</ul>
 		<p>
@@ -597,7 +597,7 @@ The activator org.eclipse.mylar.java.MylarJavaPlugin for bundle org.eclipse.myla
 		<h3 id="What_does_the_message_.E2.80.9Ccontent_assist_proposals_no_longer_appear.E2.80.9D_mean.3F">What does the message “content assist proposals no longer appear” mean?</h3>
 		<p>This usually happens when uninstalling when using Eclipse 3.2.  Make sure that the “Java Completions” and “Java Types” proposal categories are included in the default proposals via: 
 			<i>Preferences → Java → Editor → Content Assist → Advanced → Restore Defaults</i>.  Also see: 
-			<a href="/wiki/Mylyn_FAQ#Content_assist_troubleshooting" title="Mylyn FAQ#Content assist troubleshooting">content assist troubleshooting</a>.  This 
+			<a href="http://wiki.eclipse.org/Mylyn_FAQ#Content_assist_troubleshooting" title="Mylyn FAQ#Content assist troubleshooting" target="mylyn_external">content assist troubleshooting</a>.  This 
 			<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=140416" target="mylyn_external">bug</a> has been fixed in Eclipse 3.2.1.
 		</p>
 		<h3 id="Why_do_I_get_errors_like_.E2.80.9CHTTP_Response_Code_407.E2.80.9D_or_.E2.80.9CProxy_Authentication_Error.E2.80.9D_when_accessing_repositories_through_a_proxy_server.3F">Why do I get errors like “HTTP Response Code 407” or “Proxy Authentication Error” when accessing repositories through a proxy server?</h3>
@@ -646,7 +646,7 @@ The activator org.eclipse.mylar.java.MylarJavaPlugin for bundle org.eclipse.myla
 			<i>Java Completions</i> and 
 			<i>Java Types</i> proposal categories are included in the default proposals via: 
 			<i>Preferences → Java → Editor → Content Assist → Advanced → Restore Defaults</i>.  Also see: 
-			<a href="/wiki/Mylyn_FAQ#Content_assist_troubleshooting" title="Mylyn FAQ#Content assist troubleshooting">content assist troubleshooting</a>.  This 
+			<a href="http://wiki.eclipse.org/Mylyn_FAQ#Content_assist_troubleshooting" title="Mylyn FAQ#Content assist troubleshooting" target="mylyn_external">content assist troubleshooting</a>.  This 
 			<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=140416" target="mylyn_external">bug</a> has been fixed in Eclipse 3.2.1.
 		</p>
 		<p>On 
@@ -669,7 +669,7 @@ The activator org.eclipse.mylar.java.MylarJavaPlugin for bundle org.eclipse.myla
 		<p>If you are using a very large number of plug-ins (e.g. WTP) and still get this error you may need to increase the number to 256M.  Note that on some VMs the size may need to be a power of 2 and may drop down to the default (e.g. 32M) if it is not accepted.</p>
 		<p>Eclipse 3.3.1 users: note note that due to Platform {{bug|203325}} you need to use the instructions above and cannot set the size using <code>-launcher.XXMaxPermSizeL</code>, which will be ignored.</p>
 		<p>For more information see the 
-			<a href="/wiki/FAQ_How_do_I_increase_the_permgen_size_available_to_Eclipse?" title="FAQ How do I increase the permgen size available to Eclipse?">Eclispe FAQ entry</a>.  Details of the problem are on 
+			<a href="http://wiki.eclipse.org/FAQ_How_do_I_increase_the_permgen_size_available_to_Eclipse?" title="FAQ How do I increase the permgen size available to Eclipse?" target="mylyn_external">Eclispe FAQ entry</a>.  Details of the problem are on 
 			<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=92250" target="mylyn_external">Platform bug 92250</a>.
 		</p>
 		<h2 id="What_is_Mylyn.E2.80.99s_performance_profile.3F">What is Mylyn’s performance profile?</h2>
@@ -695,7 +695,7 @@ The activator org.eclipse.mylar.java.MylarJavaPlugin for bundle org.eclipse.myla
 </pre>
 		<p>
 			<b>If you are seeing content assist timeouts</b> that indicate the Mylyn proposal computer did not complete quickly enough, note that the problem is not with Mylyn, but with the standard content assist mechanism timing out due to an intensive computation (eg, a large number of matches).  In this scenario switching or 
-			<a href="/wiki/Mylyn_FAQ#Content_assist_troubleshooting" title="Mylyn_FAQ#Content_assist_troubleshooting">disabling the Mylyn proposal computers</a> does not help improve performance, although it will get rid of those messages.
+			<a href="http://wiki.eclipse.org/Mylyn_FAQ#Content_assist_troubleshooting" title="Mylyn_FAQ#Content_assist_troubleshooting" target="mylyn_external">disabling the Mylyn proposal computers</a> does not help improve performance, although it will get rid of those messages.
 		</p><hr/>
 		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
 			<tr>
