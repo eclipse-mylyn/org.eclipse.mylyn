@@ -30,6 +30,7 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.StringFieldEditor;
+import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
@@ -1509,6 +1510,21 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 	public void setNeedsValidation(boolean needsValidation) {
 		this.needsValidation = needsValidation;
+	}
+
+	/**
+	 * Returns whether this page can be validated or not.
+	 * <p>
+	 * This information is typically used by the wizard to set the enablement of the validation UI affordance.
+	 * </p>
+	 * 
+	 * @return <code>true</code> if this page can be validated, and <code>false</code> otherwise
+	 * @see #needsValidation()
+	 * @see IWizardContainer#updateButtons()
+	 * @since 3.4
+	 */
+	public boolean canValidate() {
+		return true;
 	}
 
 	/**

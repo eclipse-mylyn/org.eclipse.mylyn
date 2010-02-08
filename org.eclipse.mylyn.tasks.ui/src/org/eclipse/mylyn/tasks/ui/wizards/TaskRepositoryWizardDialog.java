@@ -99,6 +99,7 @@ public class TaskRepositoryWizardDialog extends WizardDialog {
 			if (!validateServerButton.isVisible()) {
 				validateServerButton.setVisible(true);
 			}
+			validateServerButton.setEnabled(((AbstractRepositorySettingsPage) getCurrentPage()).canValidate());
 		} else {
 			if (validateServerButton != null && validateServerButton.isVisible()) {
 				validateServerButton.setVisible(false);

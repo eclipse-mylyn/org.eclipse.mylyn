@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClientFactory;
@@ -351,6 +352,12 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 	@Override
 	public String getConnectorKind() {
 		return BugzillaCorePlugin.CONNECTOR_KIND;
+	}
+
+	@Override
+	public boolean canValidate() {
+		// need to invoke isPageComplete() to trigger message update
+		return isPageComplete() && (getMessage() == null || getMessageType() != IMessageProvider.ERROR);
 	}
 
 }
