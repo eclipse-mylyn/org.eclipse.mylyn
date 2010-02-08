@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<component id="org.eclipse.mylyn.wikitext.mediawiki.core" version="2">
+    <resource path="src/org/eclipse/mylyn/wikitext/mediawiki/core/MediaWikiLanguage.java" type="org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage">
+        <filter id="576720909">
+            <message_arguments>
+                <message_argument value="AbstractMediaWikiLanguage"/>
+                <message_argument value="MediaWikiLanguage"/>
+            </message_arguments>
+        </filter>
+    </resource>
+</component>

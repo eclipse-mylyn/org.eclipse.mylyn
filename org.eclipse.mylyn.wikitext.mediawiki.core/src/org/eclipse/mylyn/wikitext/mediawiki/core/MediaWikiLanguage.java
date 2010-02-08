@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.AbstractMediaWikiLanguage;
+import org.eclipse.mylyn.internal.wikitext.mediawiki.core.BuiltInTemplateResolver;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.MediaWikiIdGenerationStrategy;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.block.HeadingBlock;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.block.ListBlock;
@@ -26,7 +27,6 @@ import org.eclipse.mylyn.internal.wikitext.mediawiki.core.token.HyperlinkExterna
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.token.HyperlinkInternalReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.token.ImageReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.token.LineBreakToken;
-import org.eclipse.mylyn.internal.wikitext.mediawiki.core.token.TemplateReplacementToken;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 import org.eclipse.mylyn.wikitext.core.parser.markup.IdGenerationStrategy;
@@ -57,6 +57,8 @@ public class MediaWikiLanguage extends AbstractMediaWikiLanguage {
 	public MediaWikiLanguage() {
 		setName("MediaWiki"); //$NON-NLS-1$
 		setInternalLinkPattern("/wiki/{0}"); //$NON-NLS-1$
+
+		templateProviders.add(new BuiltInTemplateResolver());
 	}
 
 	/**
@@ -143,7 +145,6 @@ public class MediaWikiLanguage extends AbstractMediaWikiLanguage {
 		tokenSyntax.add(new HyperlinkExternalReplacementToken());
 		tokenSyntax.add(new ImpliedHyperlinkReplacementToken());
 		tokenSyntax.add(new PatternLiteralReplacementToken("(?:(?<=\\w\\s)(----)(?=\\s\\w))", "<hr/>")); // horizontal rule //$NON-NLS-1$ //$NON-NLS-2$
-		tokenSyntax.add(new TemplateReplacementToken());
 		tokenSyntax.add(new org.eclipse.mylyn.internal.wikitext.mediawiki.core.token.EntityReferenceReplacementToken());
 	}
 
@@ -217,6 +218,7 @@ public class MediaWikiLanguage extends AbstractMediaWikiLanguage {
 	 * @return a comma-delimited list of names, may include '*' wildcards, or null if none are to be excluded
 	 * @since 1.3
 	 */
+	@Override
 	public String getTemplateExcludes() {
 		return templateExcludes;
 	}

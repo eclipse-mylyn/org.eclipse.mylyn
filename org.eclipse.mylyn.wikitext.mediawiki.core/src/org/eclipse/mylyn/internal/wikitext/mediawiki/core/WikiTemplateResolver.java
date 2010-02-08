@@ -22,7 +22,6 @@ import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.tools.ant.BuildException;
 import org.eclipse.mylyn.wikitext.mediawiki.core.Template;
 import org.eclipse.mylyn.wikitext.mediawiki.core.TemplateResolver;
 
@@ -68,8 +67,8 @@ public class WikiTemplateResolver extends TemplateResolver {
 						input.close();
 					}
 				} catch (final IOException e) {
-					final String message = MessageFormat.format("Cannot read from {0}: {1}", url, e.getMessage());
-					throw new BuildException(message, e);
+					final String message = MessageFormat.format("Cannot read from {0}: {1}", url, e.getMessage()); //$NON-NLS-1$
+					Logger.getLogger(WikiTemplateResolver.class.getName()).log(Level.WARNING, message, e);
 				}
 			}
 		}
@@ -95,7 +94,7 @@ public class WikiTemplateResolver extends TemplateResolver {
 			return new URL(qualifiedUrl);
 		} catch (IOException e) {
 			Logger.getLogger(WikiTemplateResolver.class.getName()).log(Level.WARNING,
-					MessageFormat.format("Cannot compute raw URL for {0}: {1}", path, e.getMessage()), e);
+					MessageFormat.format("Cannot compute raw URL for {0}: {1}", path, e.getMessage()), e); //$NON-NLS-1$
 			return null;
 		}
 	}
