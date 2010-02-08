@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.mediawiki.core;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.AbstractMediaWikiLanguage;
@@ -46,6 +47,12 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternLiteralReplace
  * @since 1.0
  */
 public class MediaWikiLanguage extends AbstractMediaWikiLanguage {
+
+	private List<Template> templates = new ArrayList<Template>();
+
+	private List<TemplateResolver> templateProviders = new ArrayList<TemplateResolver>();
+
+	private String templateExcludes;
 
 	public MediaWikiLanguage() {
 		setName("MediaWiki"); //$NON-NLS-1$
@@ -149,4 +156,68 @@ public class MediaWikiLanguage extends AbstractMediaWikiLanguage {
 		return paragraphBlock;
 	}
 
+	/**
+	 * @since 1.3
+	 */
+	@Override
+	public List<Template> getTemplates() {
+		return templates;
+	}
+
+	/**
+	 * @since 1.3
+	 */
+	public void setTemplates(List<Template> templates) {
+		if (templates == null) {
+			throw new IllegalArgumentException();
+		}
+		this.templates = templates;
+	}
+
+	/**
+	 * @since 1.3
+	 */
+	@Override
+	public List<TemplateResolver> getTemplateProviders() {
+		return templateProviders;
+	}
+
+	/**
+	 * @since 1.3
+	 */
+	public void setTemplateProviders(List<TemplateResolver> templateProviders) {
+		if (templateProviders == null) {
+			throw new IllegalArgumentException();
+		}
+		this.templateProviders = templateProviders;
+	}
+
+	@Override
+	public MarkupLanguage clone() {
+		MediaWikiLanguage copy = (MediaWikiLanguage) super.clone();
+		copy.templates = new ArrayList<Template>(templates);
+		copy.templateProviders = new ArrayList<TemplateResolver>(templateProviders);
+		return copy;
+	}
+
+	/**
+	 * Indicate template names to exclude.
+	 * 
+	 * @param templateExcludes
+	 *            a comma-delimited list of names, may include '*' wildcards
+	 * @since 1.3
+	 */
+	public void setTemplateExcludes(String templateExcludes) {
+		this.templateExcludes = templateExcludes;
+	}
+
+	/**
+	 * Indicate template names to exclude.
+	 * 
+	 * @return a comma-delimited list of names, may include '*' wildcards, or null if none are to be excluded
+	 * @since 1.3
+	 */
+	public String getTemplateExcludes() {
+		return templateExcludes;
+	}
 }

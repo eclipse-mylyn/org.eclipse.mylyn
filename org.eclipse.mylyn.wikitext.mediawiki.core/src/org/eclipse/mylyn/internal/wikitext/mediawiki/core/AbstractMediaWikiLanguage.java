@@ -12,10 +12,14 @@
 package org.eclipse.mylyn.internal.wikitext.mediawiki.core;
 
 import java.text.MessageFormat;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
+import org.eclipse.mylyn.wikitext.mediawiki.core.Template;
+import org.eclipse.mylyn.wikitext.mediawiki.core.TemplateResolver;
 
 /**
  * @author David Green
@@ -67,4 +71,22 @@ public abstract class AbstractMediaWikiLanguage extends AbstractMarkupLanguage {
 		this.pageMapping = pageMapping;
 	}
 
+	@Override
+	public void processContent(MarkupParser parser, String markupContent, boolean asDocument) {
+		markupContent = preprocessContent(markupContent);
+		super.processContent(parser, markupContent, asDocument);
+	}
+
+	/**
+	 * preprocess content, which involves template substitution.
+	 */
+	private String preprocessContent(String markupContent) {
+		return new TemplateProcessor(this).processTemplates(markupContent);
+	}
+
+	public abstract List<Template> getTemplates();
+
+	public abstract List<TemplateResolver> getTemplateProviders();
+
+	public abstract String getTemplateExcludes();
 }

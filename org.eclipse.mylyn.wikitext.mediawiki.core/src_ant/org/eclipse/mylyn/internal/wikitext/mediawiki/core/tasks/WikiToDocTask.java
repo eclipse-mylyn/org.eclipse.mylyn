@@ -43,6 +43,7 @@ import org.eclipse.mylyn.internal.wikitext.core.parser.builder.SplittingOutlineP
 import org.eclipse.mylyn.internal.wikitext.core.parser.builder.SplittingStrategy;
 import org.eclipse.mylyn.internal.wikitext.core.validation.StandaloneMarkupValidator;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.PageMapping;
+import org.eclipse.mylyn.internal.wikitext.mediawiki.core.WikiTemplateResolver;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
@@ -127,6 +128,8 @@ public class WikiToDocTask extends MarkupTask {
 
 	private boolean generateUnifiedToc = true;
 
+	private String templateExcludes;
+
 	public WikiToDocTask() {
 	}
 
@@ -149,7 +152,11 @@ public class WikiToDocTask extends MarkupTask {
 				throw new ConfigurationException(Messages.getString("WikiToDocTask_path_must_have_name")); //$NON-NLS-1$
 			}
 		}
-		MarkupLanguage markupLanguage = createMarkupLanguage();
+		MediaWikiLanguage markupLanguage = (MediaWikiLanguage) createMarkupLanguage();
+		WikiTemplateResolver templateResolver = new WikiTemplateResolver();
+		templateResolver.setWikiBaseUrl(wikiBaseUrl);
+		markupLanguage.getTemplateProviders().add(templateResolver);
+		markupLanguage.setTemplateExcludes(templateExcludes);
 
 		for (Stylesheet stylesheet : stylesheets) {
 			if (stylesheet.url == null && stylesheet.file == null) {
@@ -416,8 +423,8 @@ public class WikiToDocTask extends MarkupTask {
 		File pathDir = computeDestDir(path);
 		if (!pathDir.exists()) {
 			if (!pathDir.mkdirs()) {
-				throw new BuildException(MessageFormat.format(
-						"Cannot create dest folder: {0}", pathDir.getAbsolutePath())); //$NON-NLS-1$
+				throw new BuildException(MessageFormat.format("Cannot create dest folder: {0}",
+						pathDir.getAbsolutePath()));
 			}
 		}
 		String fileName = computeHtmlFilename(path.name);
@@ -426,8 +433,8 @@ public class WikiToDocTask extends MarkupTask {
 		try {
 			writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(htmlOutputFile)), "utf-8"); //$NON-NLS-1$
 		} catch (Exception e) {
-			throw new BuildException(MessageFormat.format(
-					"Cannot create output file {0}: {1}", htmlOutputFile, e.getMessage()), e); //$NON-NLS-1$
+			throw new BuildException(MessageFormat.format("Cannot create output file {0}: {1}", htmlOutputFile,
+					e.getMessage()), e);
 		}
 		try {
 			HtmlDocumentBuilder builder = new HtmlDocumentBuilder(writer, formatOutput);
@@ -491,7 +498,7 @@ public class WikiToDocTask extends MarkupTask {
 			try {
 				writer.close();
 			} catch (Exception e) {
-				throw new BuildException(MessageFormat.format("Cannot write output file {0}: {1}", htmlOutputFile, //$NON-NLS-1$
+				throw new BuildException(MessageFormat.format("Cannot write output file {0}: {1}", htmlOutputFile,
 						e.getMessage()), e);
 			}
 		}
@@ -945,6 +952,14 @@ public class WikiToDocTask extends MarkupTask {
 
 	public void setGenerateUnifiedToc(boolean generateUnifiedToc) {
 		this.generateUnifiedToc = generateUnifiedToc;
+	}
+
+	public String getTemplateExcludes() {
+		return templateExcludes;
+	}
+
+	public void setTemplateExcludes(String templateExcludes) {
+		this.templateExcludes = templateExcludes;
 	}
 
 }
