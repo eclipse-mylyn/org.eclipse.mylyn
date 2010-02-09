@@ -11,11 +11,15 @@
 
 package org.eclipse.mylyn.trac.tests.support;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.client.TracException;
 import org.eclipse.mylyn.internal.trac.core.model.TracAttachment;
+import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
 import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
@@ -55,6 +59,17 @@ public class TracTestCleanupUtil extends TestCase {
 		// skips the first attachment
 		for (int i = 1; i < attachments.length; i++) {
 			client.deleteAttachment(data.attachmentTicketId, attachments[i].getFilename(), null);
+		}
+	}
+
+	public void deleteOldTickets() throws TracException {
+		TracSearch query = new TracSearch();
+		List<Integer> result = new ArrayList<Integer>();
+		client.searchForTicketIds(query, result, null);
+		for (Integer id : result) {
+			if (id > 10) {
+				client.deleteTicket(id, null);
+			}
 		}
 	}
 
