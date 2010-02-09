@@ -407,7 +407,9 @@ The activator org.eclipse.mylar.java.MylarJavaPlugin for bundle org.eclipse.myla
 			<i>Install All</i>.
 		</p>
 		<h2 id="Why_can.27t_I_update_Mylyn_3.0_to_a_newer_release.3F">Why can't I update Mylyn 3.0 to a newer release?</h2>
-		<p>The update site link in the 3.0 and 3.0.1 features for Eclipse 3.3 points to the Mylyn for Eclipse 3.4 update site ({{bug|244618}}). An attempt to update will result in an error: “Mylyn Task List (Required) (3.0.1.v20080721-2100-e3x) requires plug-in "org.eclipse.ui (3.4.0.I20070918)", or later version.”</p>
+		<p>The update site link in the 3.0 and 3.0.1 features for Eclipse 3.3 points to the Mylyn for Eclipse 3.4 update site (
+			<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=244618" target="mylyn_external">bug 244618</a>). An attempt to update will result in an error: “Mylyn Task List (Required) (3.0.1.v20080721-2100-e3x) requires plug-in "org.eclipse.ui (3.4.0.I20070918)", or later version.”
+		</p>
 		<p>To resolve the error follow these steps:</p>
 		<ol>
 			<li>Open update 
@@ -667,7 +669,9 @@ The activator org.eclipse.mylar.java.MylarJavaPlugin for bundle org.eclipse.myla
 			<a href="http://wiki.eclipse.org/Equinox_p2_Admin_UI_Users_Guide" target="mylyn_external">http://wiki.eclipse.org/Equinox_p2_Admin_UI_Users_Guide</a>
 		</p>
 		<p>If you are using a very large number of plug-ins (e.g. WTP) and still get this error you may need to increase the number to 256M.  Note that on some VMs the size may need to be a power of 2 and may drop down to the default (e.g. 32M) if it is not accepted.</p>
-		<p>Eclipse 3.3.1 users: note note that due to Platform {{bug|203325}} you need to use the instructions above and cannot set the size using <code>-launcher.XXMaxPermSizeL</code>, which will be ignored.</p>
+		<p>Eclipse 3.3.1 users: note note that due to Platform 
+			<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=203325" target="mylyn_external">bug 203325</a> you need to use the instructions above and cannot set the size using <code>-launcher.XXMaxPermSizeL</code>, which will be ignored.
+		</p>
 		<p>For more information see the 
 			<a href="http://wiki.eclipse.org/FAQ_How_do_I_increase_the_permgen_size_available_to_Eclipse?" title="FAQ How do I increase the permgen size available to Eclipse?" target="mylyn_external">Eclispe FAQ entry</a>.  Details of the problem are on 
 			<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=92250" target="mylyn_external">Platform bug 92250</a>.

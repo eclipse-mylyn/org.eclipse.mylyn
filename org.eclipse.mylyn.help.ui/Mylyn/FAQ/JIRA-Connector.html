@@ -95,7 +95,9 @@
 		<h2 id="Why_are_attachments_missing_in_the_task_editor_although_they_are_displayed_in_the_web_interface.3F">Why are attachments missing in the task editor although they are displayed in the web interface?</h2>
 		<p>Attachment retrieval including retrieval of task contexts and attachment lists in the task editor requires JIRA 3.7 or above.</p>
 		<h2 id="Are_custom_fields_supported_by_the_JIRA_connector.3F">Are custom fields supported by the JIRA connector?</h2>
-		<p>Custom fields are supported with the following limitations, see {{bug|249057}} and its subtasks for additional details:</p>
+		<p>Custom fields are supported with the following limitations, see 
+			<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=249057" target="mylyn_external">bug 249057</a> and its subtasks for additional details:
+		</p>
 		<ul>
 			<li>Custom fields are not displayed in the task editor when creating new issues. This can cause issue creation to fail if custom fields are mandatory.</li>
 			<li>Custom fields that are specific to a workflow state, e.g. are only displayed when resolving an issue, are not displayed in the task editor. This can cause a workflow transition to fail if custom fields are mandatory.</li>
@@ -122,7 +124,9 @@
 			<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=174328" target="mylyn_external">bug 174328</a>). The work-around is to create a custom query in Mylyn using the form-based query designer or to share the filter in JIRA. -->
 		</p>
 		<ul>
-			<li>Mylyn only allows the usage of US-ASCII characters in the filename when uploading an attachment ({{bug|203663}})</li>
+			<li>Mylyn only allows the usage of US-ASCII characters in the filename when uploading an attachment (
+				<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=203663" target="mylyn_external">bug 203663</a>)
+			</li>
 		</ul>
 		<h2 id="How_can_I_enable_compression_for_SOAP_messages.3F">How can I enable compression for SOAP messages?</h2>
 		<p>If your repository has lots of projects and components you can speed up the download of the repository configuration by enabling compression. </p>
@@ -161,9 +165,13 @@
 		<h2 id="Why_do_I_get_errors_about_an_unexpected_redirect_when_submitting_an_issue.3F">Why do I get errors about an unexpected redirect when submitting an issue?</h2>
 		<p>Please go to the repository properties and validate the repository. If errors about circular redirects are logged in your Eclipse error log your JIRA server or proxy might be misconfigured. </p>
 		<p>In some cases unexpected redirects can be caused by a JIRA server accessed via Apache and mod_jk (using the AJP/1.3 Tomcat connector).  Some server configurations may benefit from the ‘proxyHost’, ‘proxyPort’, ‘scheme’ and ‘secure’ settings on the AJP Connector in the Tomcat server configuration.</p>
-		<p>Please see {{bug|202834}} for a more details.</p>
+		<p>Please see 
+			<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=202834" target="mylyn_external">bug 202834</a> for a more details.
+		</p>
 		<h2 id="What_does_.3Ccode.3EError_parsing_server_response:_No_project_with_key_.E2.80.98xyz.E2.80.99_found.3C.2Fcode.3E.3F">What does &lt;code>Error parsing server response: No project with key ‘xyz’ found&lt;/code>?</h2>
-		<p>This error is caused by Mylyn not having an up-to-date copy of the repository configuration for that repository. The corresponding report to automate updating of the repository configuration is {{bug|189689}}.</p>
+		<p>This error is caused by Mylyn not having an up-to-date copy of the repository configuration for that repository. The corresponding report to automate updating of the repository configuration is 
+			<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=189689" target="mylyn_external">bug 189689</a>.
+		</p>
 		<p>As a work-around right-click on the query and select 
 			<b>Repository → Update Attributes</b>. That will download and store a fresh copy of the repository configuration.
 		</p>
@@ -189,7 +197,8 @@
 		<h2 id="How_can_I_make_issue_dependencies_visible_in_the_Task_List.3F">How can I make issue dependencies visible in the Task List?</h2>
 		<p>By default only subtask relationships are displayed in the Task List. You can enable 
 			<i>Show linked tasks</i> in the Additional Settings section of the repository properties (Window → Show View → Task Repositories) to also show issue links in the Task List. After enabling the setting 
-			<i>Synchronize All Tasks</i> from the popup menu of the task repository in the Task Repositories view needs to be selected to update all tasks. More discussion is on {{bug|255680}}.
+			<i>Synchronize All Tasks</i> from the popup menu of the task repository in the Task Repositories view needs to be selected to update all tasks. More discussion is on 
+			<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=255680" target="mylyn_external">bug 255680</a>.
 		</p><hr/>
 		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
 			<tr>

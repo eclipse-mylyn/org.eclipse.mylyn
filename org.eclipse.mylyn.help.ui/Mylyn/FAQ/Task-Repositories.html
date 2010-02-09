@@ -161,7 +161,8 @@ keytool -importcert -file client.crt
 </pre>
 		<p>The built-in NTLM support of the JDK which is used by Eclipse does 
 			<b>not work</b> with Mylyn since it uses the HttpClient library to access repositories. Limitations in regard to NTLM authentication are documented in the 
-			<a href="http://wiki.apache.org/jakarta-httpclient/FrequentlyAskedNTLMQuestions" target="mylyn_external">NTLM FAQ</a> and also discussion on {{bug|201911}}.
+			<a href="http://wiki.apache.org/jakarta-httpclient/FrequentlyAskedNTLMQuestions" target="mylyn_external">NTLM FAQ</a> and also discussion on 
+			<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=201911" target="mylyn_external">bug 201911</a>.
 		</p>
 		<ul>
 			<li>If your repository uses MS NTLM authentication and only standard http authentication is being passed to the repository this can result when the local hostname cannot be resolved. Ensure your machine’s hostname is set correctly and resolves to a valid address.</li>
