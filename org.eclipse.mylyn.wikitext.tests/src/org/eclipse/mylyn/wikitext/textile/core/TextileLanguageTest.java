@@ -190,7 +190,7 @@ public class TextileLanguageTest extends TestCase {
 	public void testPhraseModifierCodeWithNestedMarkup() {
 		String html = parser.parseToHtml("a @code 'test' or \"test\" or *b* or <b>bo</b> sample@ more");
 		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><p>a <code>code 'test' or \"test\" or *b* or &lt;b>bo&lt;/b> sample</code> more</p></body>"));
+		assertTrue(html.contains("<body><p>a <code>code 'test' or \"test\" or *b* or &lt;b&gt;bo&lt;/b&gt; sample</code> more</p></body>"));
 	}
 
 	public void testRelativeUrlNoBase() {
@@ -339,7 +339,7 @@ public class TextileLanguageTest extends TestCase {
 
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(Pattern.compile(
-				"<body><pre><code>\\s*here is &lt;a href=\"#\">a working example&lt;/a>\\s+</code></pre></body>",
+				"<body><pre><code>\\s*here is &lt;a href=\"#\"&gt;a working example&lt;/a&gt;\\s+</code></pre></body>",
 				Pattern.MULTILINE | Pattern.DOTALL).matcher(html).find());
 	}
 
@@ -1259,4 +1259,10 @@ public class TextileLanguageTest extends TestCase {
 		assertEquals(3, found);
 	}
 
+	public void testMarkupContainingCDATA() {
+		// bug 302291 text containing CDATA produces invalid HTML
+		String html = parser.parseToHtml("pre. <![CDATA[123 456]]>");
+		TestUtil.println(html);
+		assertTrue(html.contains("&lt;![CDATA[123 456]]&gt;"));
+	}
 }

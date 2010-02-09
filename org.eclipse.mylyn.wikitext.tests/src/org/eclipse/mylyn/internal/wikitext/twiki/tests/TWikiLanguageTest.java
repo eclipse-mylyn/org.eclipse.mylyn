@@ -72,7 +72,7 @@ public class TWikiLanguageTest extends TestCase {
 	public void testVerbatimBlock() {
 		String html = parser.parseToHtml("a para\n\n<verbatim>\nsome *escaped* text _no twiki here_!! not even <b>html</b>\n</verbatim>\n\nnormal para");
 		TestUtil.println(html);
-		assertTrue(html.contains("<body><p>a para</p><p>\nsome *escaped* text _no twiki here_!! not even &lt;b>html&lt;/b>\n</p><p>normal para</p></body>"));
+		assertTrue(html.contains("<body><p>a para</p><p>\nsome *escaped* text _no twiki here_!! not even &lt;b&gt;html&lt;/b&gt;\n</p><p>normal para</p></body>"));
 	}
 
 	public void testLiteralBlock() {

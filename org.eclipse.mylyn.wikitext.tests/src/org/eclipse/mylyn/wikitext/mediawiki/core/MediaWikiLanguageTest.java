@@ -282,7 +282,7 @@ public class MediaWikiLanguageTest extends TestCase {
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(Pattern.compile(
 				"<body><p>example:</p><pre>"
-						+ Pattern.quote("&lt;a href=\"show_bug.cgi\\?id\\=(.+?)\">.+?&lt;span class=\"summary\">(.+?)&lt;/span>")
+						+ Pattern.quote("&lt;a href=\"show_bug.cgi\\?id\\=(.+?)\"&gt;.+?&lt;span class=\"summary\"&gt;(.+?)&lt;/span&gt;")
 						+ "\\s+</pre><p>If</p></body>")
 				.matcher(html)
 				.find());
