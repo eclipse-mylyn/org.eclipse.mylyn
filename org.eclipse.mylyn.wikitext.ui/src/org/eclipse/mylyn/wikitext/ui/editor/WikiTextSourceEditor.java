@@ -231,6 +231,9 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 	 */
 	public void setMarkupLanguage(MarkupLanguage markupLanguage) {
 		this.markupLanguage = markupLanguage;
+		if (this.markupLanguage != null) {
+			this.markupLanguage.setEnableMacros(false);
+		}
 		sourceViewerConfiguration.setMarkupLanguage(markupLanguage);
 
 		IDocumentProvider documentProvider = getDocumentProvider();

@@ -530,8 +530,6 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 				xhtml = "<?xml version=\"1.0\" ?><html xmlns=\"http://www.w3.org/1999/xhtml\"><body></body></html>"; //$NON-NLS-1$
 			} else {
 				try {
-					MarkupParser markupParser = new MarkupParser();
-
 					IFile file = getFile();
 					String title = file == null ? "" : file.getName(); //$NON-NLS-1$
 					if (title.lastIndexOf('.') != -1) {
@@ -563,18 +561,24 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 						builder.addCssStylesheet(new HtmlDocumentBuilder.Stylesheet(new StringReader(css)));
 					}
 
-					markupParser.setBuilder(builder);
-					markupParser.setMarkupLanguage(getMarkupLanguage());
-					if (markupParser.getMarkupLanguage() == null) {
+					MarkupLanguage markupLanguage = getMarkupLanguage();
+					if (markupLanguage != null) {
+						markupLanguage = markupLanguage.clone();
+						markupLanguage.setEnableMacros(true);
+						markupLanguage.setBlocksOnly(false);
+						markupLanguage.setFilterGenerativeContents(false);
+
+						MarkupParser markupParser = new MarkupParser();
+						markupParser.setBuilder(builder);
+						markupParser.setMarkupLanguage(markupLanguage);
+
+						markupParser.parse(document.get());
+					} else {
 						builder.beginDocument();
 						builder.beginBlock(BlockType.PREFORMATTED, new Attributes());
 						builder.characters(document.get());
 						builder.endBlock();
 						builder.endDocument();
-					} else {
-						markupParser.getMarkupLanguage().setBlocksOnly(false);
-						markupParser.getMarkupLanguage().setFilterGenerativeContents(false);
-						markupParser.parse(document.get());
 					}
 					xhtml = writer.toString();
 				} catch (Exception e) {
@@ -983,6 +987,9 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	}
 
 	public void setMarkupLanguage(MarkupLanguage markupLanguage, boolean persistSetting) {
+		if (markupLanguage != null) {
+			markupLanguage.setEnableMacros(false);
+		}
 		((MarkupDocumentProvider) getDocumentProvider()).setMarkupLanguage(markupLanguage);
 
 		IDocument document = getDocumentProvider().getDocument(getEditorInput());

@@ -73,7 +73,9 @@ public abstract class AbstractMediaWikiLanguage extends AbstractMarkupLanguage {
 
 	@Override
 	public void processContent(MarkupParser parser, String markupContent, boolean asDocument) {
-		markupContent = preprocessContent(markupContent);
+		if (isEnableMacros()) {
+			markupContent = preprocessContent(markupContent);
+		}
 		super.processContent(parser, markupContent, asDocument);
 	}
 

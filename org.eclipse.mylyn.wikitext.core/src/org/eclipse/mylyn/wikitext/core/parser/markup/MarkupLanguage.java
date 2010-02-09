@@ -64,6 +64,8 @@ public abstract class MarkupLanguage implements Cloneable {
 
 	protected MarkupLanguageConfiguration configuration;
 
+	private boolean enableMacros = true;
+
 	@Override
 	public MarkupLanguage clone() {
 		MarkupLanguage markupLanguage;
@@ -74,6 +76,7 @@ public abstract class MarkupLanguage implements Cloneable {
 		}
 		markupLanguage.setName(name);
 		markupLanguage.internalLinkPattern = internalLinkPattern;
+		markupLanguage.enableMacros = enableMacros;
 		markupLanguage.configuration = configuration == null ? null : configuration.clone();
 		return markupLanguage;
 	}
@@ -640,5 +643,39 @@ public abstract class MarkupLanguage implements Cloneable {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Indicate if macro processing is enabled. Generally such processing is enabled except when used in a source
+	 * editor.
+	 * <p>
+	 * Macros are defined as text substitution prior to normal processing. Such preprocessing changes the markup before
+	 * it is processed, and as such has the side-effect of changing computed offsets when parsing markup.
+	 * </p>
+	 * <p>
+	 * The default value is true.
+	 * </p>
+	 * 
+	 * @return true if macros are enabled, otherwise false
+	 * @since 1.3
+	 */
+	public boolean isEnableMacros() {
+		return enableMacros;
+	}
+
+	/**
+	 * Indicate if macro processing is enabled. Generally such processing is enabled except when used in a source
+	 * editor.
+	 * <p>
+	 * Macros are defined as text substitution prior to normal processing. Such preprocessing changes the markup before
+	 * it is processed, and as such has the side-effect of changing computed offsets when parsing markup.
+	 * </p>
+	 * 
+	 * @param enableMacros
+	 *            true if macros are enabled, otherwise false
+	 * @since 1.3
+	 */
+	public void setEnableMacros(boolean enableMacros) {
+		this.enableMacros = enableMacros;
 	}
 }
