@@ -1454,7 +1454,9 @@ public class DiscoveryViewer {
 			final IStatus[] result = new IStatus[1];
 			context.run(true, true, new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					updateInstalledFeatures(monitor);
+					if (DiscoveryViewer.this.installedFeatures == null) {
+						DiscoveryViewer.this.installedFeatures = getInstalledFeatures(monitor);
+					}
 
 					ConnectorDiscovery connectorDiscovery = new ConnectorDiscovery();
 
@@ -1475,30 +1477,10 @@ public class DiscoveryViewer {
 					} finally {
 						DiscoveryViewer.this.discovery = connectorDiscovery;
 
-						for (DiscoveryConnector connector : connectorDiscovery.getConnectors()) {
-							connector.setInstalled(installedFeatures != null
-									&& installedFeatures.containsAll(connector.getInstallableUnits()));
-						}
+						postDiscovery(connectorDiscovery);
 					}
 					if (monitor.isCanceled()) {
 						throw new InterruptedException();
-					}
-				}
-
-				private void updateInstalledFeatures(IProgressMonitor monitor) throws InterruptedException {
-					if (DiscoveryViewer.this.installedFeatures == null) {
-						Set<String> installedFeatures = new HashSet<String>();
-						IBundleGroupProvider[] bundleGroupProviders = Platform.getBundleGroupProviders();
-						for (IBundleGroupProvider provider : bundleGroupProviders) {
-							if (monitor.isCanceled()) {
-								throw new InterruptedException();
-							}
-							IBundleGroup[] bundleGroups = provider.getBundleGroups();
-							for (IBundleGroup group : bundleGroups) {
-								installedFeatures.add(group.getIdentifier());
-							}
-						}
-						DiscoveryViewer.this.installedFeatures = installedFeatures;
 					}
 				}
 			});
@@ -1545,6 +1527,28 @@ public class DiscoveryViewer {
 	private void updateState() {
 		setComplete(!installableConnectors.isEmpty());
 		selectionProvider.setSelection(new StructuredSelection(getInstallableConnectors()));
+	}
+
+	protected void postDiscovery(ConnectorDiscovery connectorDiscovery) {
+		for (DiscoveryConnector connector : connectorDiscovery.getConnectors()) {
+			connector.setInstalled(installedFeatures != null
+					&& installedFeatures.containsAll(connector.getInstallableUnits()));
+		}
+	}
+
+	protected Set<String> getInstalledFeatures(IProgressMonitor monitor) throws InterruptedException {
+		Set<String> installedFeatures = new HashSet<String>();
+		IBundleGroupProvider[] bundleGroupProviders = Platform.getBundleGroupProviders();
+		for (IBundleGroupProvider provider : bundleGroupProviders) {
+			if (monitor.isCanceled()) {
+				throw new InterruptedException();
+			}
+			IBundleGroup[] bundleGroups = provider.getBundleGroups();
+			for (IBundleGroup group : bundleGroups) {
+				installedFeatures.add(group.getIdentifier());
+			}
+		}
+		return installedFeatures;
 	}
 
 }
