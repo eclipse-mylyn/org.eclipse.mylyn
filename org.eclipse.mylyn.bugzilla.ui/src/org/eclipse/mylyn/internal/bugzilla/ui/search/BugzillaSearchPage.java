@@ -409,6 +409,19 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		basicComposite.setLayoutData(g);
 		Dialog.applyDialogFont(basicComposite);
 
+		if (!inSearchContainer()) {
+			final Label queryTitleLabel = new Label(basicComposite, SWT.NONE);
+			queryTitleLabel.setText(Messages.BugzillaSearchPage_Query_Title);
+
+			queryTitle = new Text(basicComposite, SWT.BORDER);
+			queryTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
+			if (originalQuery != null) {
+				queryTitle.setText(originalQuery.getSummary());
+			}
+			queryTitle.addModifyListener(new ModifyListenerImplementation());
+			queryTitle.setFocus();
+		}
+
 		advancedExpandComposite = toolkit.createExpandableComposite(control, ExpandableComposite.COMPACT
 				| ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR);
 		advancedExpandComposite.setFont(control.getFont());
