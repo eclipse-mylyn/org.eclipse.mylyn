@@ -96,7 +96,8 @@ public class BugzillaFixture extends TestFixture {
 
 	public static BugzillaFixture DEFAULT = BUGS_3_4;
 
-	public static final BugzillaFixture[] ALL = new BugzillaFixture[] { BUGS_3_0, BUGS_3_2, BUGS_3_4, BUGS_HEAD };
+	public static final BugzillaFixture[] ALL = new BugzillaFixture[] { BUGS_2_22, BUGS_3_0, BUGS_3_2, BUGS_3_4,
+			BUGS_HEAD };
 
 	private final String version;
 
