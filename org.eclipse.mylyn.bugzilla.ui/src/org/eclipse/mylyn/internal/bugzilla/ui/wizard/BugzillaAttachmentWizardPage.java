@@ -162,7 +162,7 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 		}
 		setControl(pageArea);
 		Dialog.applyDialogFont(pageArea);
-		bottomForm.setWeights(new int[] { 65, 35 });
+		bottomForm.setWeights(new int[] { 75, 25 });
 		scrolledComposite.setMinSize(scrolledBodyComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT, true));
 	}
 
