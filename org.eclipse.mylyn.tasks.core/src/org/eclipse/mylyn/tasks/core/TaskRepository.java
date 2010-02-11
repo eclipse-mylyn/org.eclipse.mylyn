@@ -34,6 +34,7 @@ import org.eclipse.equinox.security.storage.EncodingUtils;
 import org.eclipse.equinox.security.storage.ISecurePreferences;
 import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
 import org.eclipse.equinox.security.storage.StorageException;
+import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
@@ -246,7 +247,7 @@ public final class TaskRepository extends PlatformObject {
 
 	private void addAuthInfo(String username, String password, String userProperty, String passwordProperty) {
 		synchronized (LOCK) {
-			if (Platform.isRunning()) {
+			if (Platform.isRunning() && !CoreUtil.TEST_MODE) {
 				if (useSecureStorage()) {
 					try {
 						ISecurePreferences securePreferences = getSecurePreferences();
@@ -290,7 +291,7 @@ public final class TaskRepository extends PlatformObject {
 		}
 	}
 
-	@SuppressWarnings({ "unchecked" })
+	@SuppressWarnings( { "unchecked" })
 	private Map<String, String> getAuthInfo() {
 		synchronized (LOCK) {
 			if (Platform.isRunning()) {
@@ -391,7 +392,7 @@ public final class TaskRepository extends PlatformObject {
 	@SuppressWarnings("unchecked")
 	private String getAuthInfo(String property) {
 		synchronized (LOCK) {
-			if (Platform.isRunning()) {
+			if (Platform.isRunning() && !CoreUtil.TEST_MODE) {
 				if (useSecureStorage()) {
 					String propertyValue = null;
 					if (property.equals(getKeyPrefix(AuthenticationType.REPOSITORY) + USERNAME)) {
