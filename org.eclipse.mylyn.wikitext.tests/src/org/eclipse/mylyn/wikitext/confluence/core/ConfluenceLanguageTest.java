@@ -143,6 +143,18 @@ public class ConfluenceLanguageTest extends TestCase {
 		assertTrue(html.contains("<p>a paragraph with <tt>content foo bar baz</tt></p>"));
 	}
 
+	public void testMonospaced_NegativeTest() {
+		String html = parser.parseToHtml("a paragraph with \\{{content foo bar baz}}");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<p>a paragraph with {{content foo bar baz}}</p>"));
+	}
+
+	public void testCharacterEscapeSequence() {
+		String html = parser.parseToHtml("a \\{ b");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<p>a { b</p>"));
+	}
+
 	public void testLineBreak() {
 		String html = parser.parseToHtml("a paragraph with an arbitrary\\\\line break");
 		TestUtil.println("HTML: \n" + html);
