@@ -27,6 +27,7 @@
          <template name="^" description="%template.description.8" content="^${text}^ $"/>
          <template name="~" description="%template.description.9" content="~${text}~ $"/>
          <template name="[" description="%template.description.4" content="[${text}|${url}] $"/>
+         <template name="{{" description="%template.description.31" content="{{${text}}} $"/>
          
          <!-- block templates -->
          
