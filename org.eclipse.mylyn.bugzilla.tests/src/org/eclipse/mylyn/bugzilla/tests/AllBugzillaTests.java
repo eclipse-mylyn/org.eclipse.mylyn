@@ -43,7 +43,6 @@ public class AllBugzillaTests {
 					fixture.add(BugzillaRepositoryConnectorTest.class);
 					fixture.add(BugzillaAttachmentHandlerTest.class);
 				}
-				// Passing
 				fixture.add(BugzillaTaskDataHandlerTest.class);
 				fixture.add(RepositoryReportFactoryTest.class);
 				fixture.add(BugzillaTaskHyperlinkDetectorTest.class);

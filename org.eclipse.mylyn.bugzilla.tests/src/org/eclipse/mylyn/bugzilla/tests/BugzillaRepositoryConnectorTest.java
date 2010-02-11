@@ -554,27 +554,27 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 	public void testMidAirCollision() throws Exception {
 		TaskData data = BugzillaFixture.current().createTask(PrivilegeLevel.USER, null, null);
 		assertNotNull(data);
-		// Get the task
-		ITask task = generateLocalTaskAndDownload(data.getTaskId());
-
-		ITaskDataWorkingCopy workingCopy = TasksUiPlugin.getTaskDataManager().getWorkingCopy(task);
-		TaskData taskData = workingCopy.getLocalData();
-		assertNotNull(taskData);
+//		// Get the task
+//		ITask task = generateLocalTaskAndDownload(data.getTaskId());
+//
+//		ITaskDataWorkingCopy workingCopy = TasksUiPlugin.getTaskDataManager().getWorkingCopy(task);
+//		TaskData taskData = workingCopy.getLocalData();
+//		assertNotNull(taskData);
 
 		String newCommentText = "BugzillaRepositoryClientTest.testMidAirCollision(): test " + (new Date()).toString();
-		TaskAttribute attrNewComment = taskData.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW);
+		TaskAttribute attrNewComment = data.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW);
 		attrNewComment.setValue(newCommentText);
 		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
 		changed.add(attrNewComment);
-		TaskAttribute attrDeltaTs = taskData.getRoot().getMappedAttribute(TaskAttribute.DATE_MODIFICATION);
+		TaskAttribute attrDeltaTs = data.getRoot().getMappedAttribute(TaskAttribute.DATE_MODIFICATION);
 		attrDeltaTs.setValue("2007-01-01 00:00:00");
 		changed.add(attrDeltaTs);
 
-		workingCopy.save(changed, new NullProgressMonitor());
+		//workingCopy.save(changed, new NullProgressMonitor());
 
 		try {
 			// Submit changes
-			BugzillaFixture.current().submitTask(workingCopy.getLocalData(), client);
+			BugzillaFixture.current().submitTask(data, client);
 			fail("Mid-air collision expected");
 		} catch (CoreException e) {
 			assertTrue(e.getStatus().getMessage().indexOf("Mid-air collision occurred while submitting") != -1);
