@@ -30,6 +30,8 @@ public class TracTestConstants {
 
 	public static final String TEST_TRAC_011_URL = "http://" + SERVER + "/trac011";
 
+	public static final String TEST_TRAC_TRUNK_URL = "http://" + SERVER + "/tractrunk";
+
 	public static final String TEST_TRAC_INVALID_URL = "http://" + SERVER + "/doesnotexist";
 
 }

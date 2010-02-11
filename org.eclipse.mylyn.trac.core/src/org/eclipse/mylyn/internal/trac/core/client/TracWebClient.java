@@ -29,6 +29,7 @@ import java.util.StringTokenizer;
 
 import javax.swing.text.html.HTML.Tag;
 
+import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
@@ -39,6 +40,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
@@ -95,8 +97,11 @@ public class TracWebClient extends AbstractTracClient {
 						try {
 							authenticate(monitor);
 						} catch (TracLoginException e) {
-							// try again once
-							authenticate(monitor);
+							if (CoreUtil.TEST_MODE) {
+								authenticate(monitor);
+							} else {
+								throw e;
+							}
 						}
 					}
 				}
@@ -140,8 +145,12 @@ public class TracWebClient extends AbstractTracClient {
 				// try standard basic/digest/ntlm authentication first
 				AuthScope authScope = new AuthScope(WebUtil.getHost(repositoryUrl), WebUtil.getPort(repositoryUrl),
 						null, AuthScope.ANY_SCHEME);
-				httpClient.getState().setCredentials(authScope,
-						WebUtil.getHttpClientCredentials(credentials, WebUtil.getHost(repositoryUrl)));
+				Credentials httpCredentials = WebUtil.getHttpClientCredentials(credentials,
+						WebUtil.getHost(repositoryUrl));
+				httpClient.getState().setCredentials(authScope, httpCredentials);
+				if (CoreUtil.TEST_MODE) {
+					System.err.println(" Setting credentials: " + httpCredentials); //$NON-NLS-1$
+				}
 
 				GetMethod method = new GetMethod(WebUtil.getRequestPath(repositoryUrl + LOGIN_URL));
 				method.setFollowRedirects(false);
@@ -743,8 +752,8 @@ public class TracWebClient extends AbstractTracClient {
 		}
 	}
 
-	public void putAttachmentData(int id, String name, String description, InputStream in, IProgressMonitor monitor, boolean replace)
-			throws TracException {
+	public void putAttachmentData(int id, String name, String description, InputStream in, IProgressMonitor monitor,
+			boolean replace) throws TracException {
 		throw new TracException("Unsupported operation"); //$NON-NLS-1$
 	}
 

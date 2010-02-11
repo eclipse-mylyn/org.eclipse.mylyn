@@ -49,6 +49,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
@@ -296,8 +297,13 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 			AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
 			config.setServerURL(getXmlRpcUrl(credentials));
 			if (credentialsValid(credentials)) {
-				Credentials creds = WebUtil.getHttpClientCredentials(credentials, WebUtil.getHost(location.getUrl()));
-				httpClient.getState().setCredentials(authScope, creds);
+				Credentials httpCredentials = WebUtil.getHttpClientCredentials(credentials,
+						WebUtil.getHost(location.getUrl()));
+				httpClient.getState().setCredentials(authScope, httpCredentials);
+				if (CoreUtil.TEST_MODE) {
+					System.err.println(" Setting credentials: " + httpCredentials); //$NON-NLS-1$
+				}
+				httpClient.getState().setCredentials(authScope, httpCredentials);
 			} else {
 				httpClient.getState().clearCredentials();
 			}
