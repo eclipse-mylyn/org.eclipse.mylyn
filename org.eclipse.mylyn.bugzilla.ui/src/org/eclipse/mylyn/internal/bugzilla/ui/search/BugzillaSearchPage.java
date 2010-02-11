@@ -358,9 +358,9 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				priority.deselectAll();
 				hardware.deselectAll();
 				os.deselectAll();
-				summaryOperation.deselectAll();
-				commentOperation.deselectAll();
-				emailOperation.deselectAll();
+				summaryOperation.select(0);
+				commentOperation.select(0);
+				emailOperation.select(0);
 
 				for (Button emailButton : emailButtons) {
 					emailButton.setSelection(false);
@@ -368,7 +368,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				summaryPattern.setText(""); //$NON-NLS-1$
 				commentPattern.setText(""); //$NON-NLS-1$
 				emailPattern.setText(""); //$NON-NLS-1$
-				emailOperation2.deselectAll();
+				emailOperation2.select(0);
 				for (Button element : emailButtons2) {
 					element.setSelection(false);
 				}
