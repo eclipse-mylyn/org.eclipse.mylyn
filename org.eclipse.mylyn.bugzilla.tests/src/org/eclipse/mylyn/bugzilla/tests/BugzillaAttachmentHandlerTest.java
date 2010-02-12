@@ -342,6 +342,7 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 			fail("CoreException expected but not reached");
 		} catch (CoreException e) {
 			IStatus status = e.getStatus();
+			System.err.println("\n\n>>> " + status.getClass().getName() + " >>> " + status.getMessage() + "\n\n");
 			assertTrue(status instanceof BugzillaStatus);
 			assertEquals(IBugzillaConstants.REPOSITORY_STATUS_SUSPICIOUS_ACTION, status.getCode());
 		}

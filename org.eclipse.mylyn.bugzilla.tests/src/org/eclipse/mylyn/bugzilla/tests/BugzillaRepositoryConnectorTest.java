@@ -574,7 +574,9 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 		try {
 			// Submit changes
-			BugzillaFixture.current().submitTask(data, client);
+			RepositoryResponse response = BugzillaFixture.current().submitTask(data, client);
+			assertNotNull(response);
+			assertEquals(ResponseKind.TASK_UPDATED, response.getReposonseKind());
 			fail("Mid-air collision expected");
 		} catch (CoreException e) {
 			assertTrue(e.getStatus().getMessage().indexOf("Mid-air collision occurred while submitting") != -1);
