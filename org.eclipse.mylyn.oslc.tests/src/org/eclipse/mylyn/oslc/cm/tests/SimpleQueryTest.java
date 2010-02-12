@@ -90,7 +90,7 @@ public class SimpleQueryTest extends TestCase {
 	}
 
 	public void testParseQueryResponse() throws Exception {
-		File file = CommonTestUtil.getFile(ServiceDiscoveryTest.class, "xml/query-response.xml");
+		File file = CommonTestUtil.getFile(SimpleQueryTest.class, "xml/query-response.xml");
 		FileInputStream inStream = new FileInputStream(file);
 		ArrayList<AbstractChangeRequest> list = new ArrayList<AbstractChangeRequest>();
 		client.parseQueryResponse(inStream, list, new NullProgressMonitor());

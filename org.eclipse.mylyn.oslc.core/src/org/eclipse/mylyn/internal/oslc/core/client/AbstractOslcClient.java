@@ -19,10 +19,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.URIException;
+import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -32,6 +34,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.internal.oslc.core.IOslcCoreConstants;
@@ -71,6 +75,26 @@ public abstract class AbstractOslcClient {
 		this.location = location;
 		this.httpClient = createHttpClient();
 		this.configuration = data;
+		configureHttpCredentials(location);
+	}
+
+	protected void configureHttpCredentials(AbstractWebLocation location) {
+		AuthScope authScope = new AuthScope(WebUtil.getHost(location.getUrl()), WebUtil.getPort(location.getUrl()),
+				null, AuthScope.ANY_SCHEME);
+
+		AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
+
+		if (credentialsValid(credentials)) {
+			Credentials creds = WebUtil.getHttpClientCredentials(credentials, WebUtil.getHost(location.getUrl()));
+			httpClient.getState().setCredentials(authScope, creds);
+			this.httpClient.getParams().setAuthenticationPreemptive(true);
+		} else {
+			httpClient.getState().clearCredentials();
+		}
+	}
+
+	protected boolean credentialsValid(AuthenticationCredentials credentials) {
+		return credentials != null && credentials.getUserName().length() > 0;
 	}
 
 	protected HttpClient createHttpClient() {
@@ -404,8 +428,8 @@ public abstract class AbstractOslcClient {
 		GetMethod method = new GetMethod(getRequestPath(requestPath));
 		method.setFollowRedirects(true);
 		method.setDoAuthentication(true);
-		// application/xml is returned by oslc servers by default
-		//method.setRequestHeader("Accept", "application/xml");
+		// application/xml is returned by oslc servers by default (but some may not play nice)
+		method.setRequestHeader("Accept", "application/xml"); //$NON-NLS-1$ //$NON-NLS-2$
 		return method;
 	}
 
