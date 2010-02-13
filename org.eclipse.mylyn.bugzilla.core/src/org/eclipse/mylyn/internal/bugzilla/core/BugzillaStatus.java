@@ -98,7 +98,7 @@ public class BugzillaStatus extends Status {
 				return getException().toString();
 			}
 		}
-		return "Unknown"; //$NON-NLS-1$
+		return "Unknown code: " + getCode(); //$NON-NLS-1$
 	}
 
 	public String getRepositoryUrl() {
