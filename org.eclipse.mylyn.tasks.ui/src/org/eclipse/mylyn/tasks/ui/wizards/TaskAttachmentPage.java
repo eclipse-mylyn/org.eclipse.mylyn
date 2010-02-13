@@ -13,6 +13,7 @@
 package org.eclipse.mylyn.tasks.ui.wizards;
 
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
@@ -20,7 +21,6 @@ import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorExtensions;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.Messages;
-import org.eclipse.mylyn.internal.tasks.ui.wizards.ScrollableWizardPage;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentModel;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
@@ -52,7 +52,7 @@ import org.eclipse.ui.handlers.IHandlerService;
  * @author Steffen Pingel
  * @since 3.0
  */
-public class TaskAttachmentPage extends ScrollableWizardPage {
+public class TaskAttachmentPage extends WizardPage {
 
 	private Button attachContextButton;
 
@@ -92,10 +92,8 @@ public class TaskAttachmentPage extends ScrollableWizardPage {
 		setNeedsDescription(true);
 	}
 
-	@Override
 	public void createControl(Composite parent) {
-		super.createControl(parent);
-		Composite composite = new Composite(getScrolledBodyComposite(), SWT.NONE);
+		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 3;
 		composite.setLayout(gridLayout);
@@ -157,10 +155,7 @@ public class TaskAttachmentPage extends ScrollableWizardPage {
 			};
 		};
 		commentEditor.createControl(composite, null);
-		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
-		gd.heightHint = 120;
-		gd.widthHint = 400;
-		commentEditor.getControl().setLayoutData(gd);
+		commentEditor.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 
 		IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
 		if (handlerService != null) {
@@ -264,8 +259,6 @@ public class TaskAttachmentPage extends ScrollableWizardPage {
 		}
 
 		Dialog.applyDialogFont(composite);
-		composite.setSize(composite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-		updateSize4ScrolledComposite();
 	}
 
 	private void validate() {

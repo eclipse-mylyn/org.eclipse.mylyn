@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.bugzilla.ui.tasklist;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaFlag;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaFlagMapper;
@@ -24,10 +25,12 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.wizards.TaskAttachmentPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
@@ -52,16 +55,46 @@ public class BugzillaTaskAttachmentPage extends TaskAttachmentPage {
 
 	private ExpandableComposite flagExpandComposite = null;
 
-	private Composite scrollComposite;
+	private Composite flagScrollComposite;
+
+	private ScrolledComposite scrolledComposite;
+
+	private Composite scrolledBodyComposite;
 
 	public BugzillaTaskAttachmentPage(TaskAttachmentModel model) {
 		super(model);
 		toolkit = new FormToolkit(Display.getCurrent());
 	}
 
+	private void updateScrolledCompositeSize() {
+		scrolledComposite.setMinSize(scrolledBodyComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT, true));
+	}
+
+	private void createScrolledComposite(Composite parent) {
+		scrolledComposite = new ScrolledComposite(parent, SWT.H_SCROLL | SWT.V_SCROLL /*| SWT.BORDER*/) {
+			@Override
+			public Point computeSize(int hint, int hint2, boolean changed) {
+				return new Point(64, 64);
+			}
+		};
+		scrolledComposite.setExpandHorizontal(true);
+		scrolledComposite.setExpandVertical(true);
+		scrolledBodyComposite = new Composite(scrolledComposite, SWT.NONE);
+		scrolledBodyComposite.setLayout(new GridLayout());
+		scrolledComposite.setContent(scrolledBodyComposite);
+		setControl(scrolledComposite);
+		Dialog.applyDialogFont(scrolledBodyComposite);
+	}
+
+	private Composite getScrolledBodyComposite() {
+		return scrolledBodyComposite;
+	}
+
 	@Override
 	public void createControl(Composite parent) {
-		super.createControl(parent);
+		createScrolledComposite(parent);
+		updateScrolledCompositeSize();
+		super.createControl(getScrolledBodyComposite());
 		BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) TasksUi.getRepositoryConnector(getModel().getTaskRepository()
 				.getConnectorKind());
 		RepositoryConfiguration configuration = connector.getRepositoryConfiguration(getModel().getTaskRepository()
@@ -155,7 +188,7 @@ public class BugzillaTaskAttachmentPage extends TaskAttachmentPage {
 			Label dummy = new Label(pageComposite, SWT.NONE);
 			dummy.setText(""); //$NON-NLS-1$
 		}
-		updateSize4ScrolledComposite();
+		updateScrolledCompositeSize();
 	}
 
 	private Composite createFlagSection(Composite container) {
@@ -171,15 +204,15 @@ public class BugzillaTaskAttachmentPage extends TaskAttachmentPage {
 		flagExpandComposite.addExpansionListener(new ExpansionAdapter() {
 			@Override
 			public void expansionStateChanged(ExpansionEvent e) {
-				updateSize4ScrolledComposite();
+				updateScrolledCompositeSize();
 				getControl().getShell().pack();
 			}
 		});
 
-		scrollComposite = new Composite(flagExpandComposite, SWT.NONE);
-		scrollComposite.setLayout(new GridLayout(3, false));
-		flagExpandComposite.setClient(scrollComposite);
-		return scrollComposite;
+		flagScrollComposite = new Composite(flagExpandComposite, SWT.NONE);
+		flagScrollComposite.setLayout(new GridLayout(3, false));
+		flagExpandComposite.setClient(flagScrollComposite);
+		return flagScrollComposite;
 	}
 
 	@Override
