@@ -185,7 +185,10 @@ public enum BugzillaAttribute {
 
 	BUGS(Messages.BugzillaAttribute_used_by_search_engine_bugs, "bugs", null, false, false), //$NON-NLS-1$
 
-	QUERY_TIMESTAMP(Messages.BugzillaAttribute_Query_Timestamp, "query_timestamp", null, false, false); //$NON-NLS-1$
+	QUERY_TIMESTAMP(Messages.BugzillaAttribute_Query_Timestamp, "query_timestamp", null, false, false), //$NON-NLS-1$
+
+	// new in Bugzilla 3.6
+	ATTACHER(Messages.BugzillaAttribute_Attacher, "attacher", null, false, false); //$NON-NLS-1$
 
 	private final boolean isHidden;
 

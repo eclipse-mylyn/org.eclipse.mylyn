@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.internal.bugzilla.core;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -74,6 +76,8 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 	private boolean bugParseErrorOccurred;
 
 	private final BugzillaRepositoryConnector connector;
+
+	private final SimpleDateFormat simpleFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm"); //$NON-NLS-1$
 
 	public SaxMultiBugReportContentHandler(TaskAttributeMapper mapper, TaskDataCollector collector,
 			Map<String, TaskData> taskDataMap, List<BugzillaCustomField> customFields,
@@ -341,7 +345,14 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			attachment.setToken(null);
 			break;
 		case DATE:
-			// ignore
+			if (attachment != null) {
+				try {
+					attachment.setCreationDate(simpleFormatter.parse(parsedText));
+					break;
+				} catch (ParseException e) {
+				} catch (NumberFormatException e) {
+				}
+			}
 			break;
 		case DESC:
 			if (attachment != null) {
@@ -457,6 +468,14 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 				token = parsedText;
 			}
 			break;
+		case ATTACHER:
+			if (attachment != null) {
+				IRepositoryPerson author = repositoryTaskData.getAttributeMapper().getTaskRepository().createPerson(
+						parsedText);
+				author.setName(parsedText);
+				attachment.setAuthor(author);
+			}
+			break;
 		default:
 			TaskAttribute defaultAttribute = repositoryTaskData.getRoot().getMappedAttribute(tag.getKey());
 			if (defaultAttribute == null) {
@@ -521,10 +540,12 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 				repositoryTaskData, TaskAttribute.TYPE_ATTACHMENT);
 		for (TaskAttribute attachment : taskAttachments) {
 			BugzillaAttachmentMapper attachmentMapper = BugzillaAttachmentMapper.createFrom(attachment);
-			TaskCommentMapper taskComment = attachIdToComment.get(attachmentMapper.getAttachmentId());
-			if (taskComment != null) {
-				attachmentMapper.setAuthor(taskComment.getAuthor());
-				attachmentMapper.setCreationDate(taskComment.getCreationDate());
+			if (attachmentMapper.getAuthor() == null || attachmentMapper.getCreationDate() == null) {
+				TaskCommentMapper taskComment = attachIdToComment.get(attachmentMapper.getAttachmentId());
+				if (taskComment != null) {
+					attachmentMapper.setAuthor(taskComment.getAuthor());
+					attachmentMapper.setCreationDate(taskComment.getCreationDate());
+				}
 			}
 			attachmentMapper.setUrl(repositoryTaskData.getRepositoryUrl()
 					+ IBugzillaConstants.URL_GET_ATTACHMENT_SUFFIX + attachmentMapper.getAttachmentId());

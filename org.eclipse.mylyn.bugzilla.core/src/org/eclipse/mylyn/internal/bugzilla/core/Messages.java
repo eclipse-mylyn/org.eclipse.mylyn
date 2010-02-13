@@ -177,6 +177,8 @@ public class Messages extends NLS {
 
 	public static String BugzillaAttribute_Worked;
 
+	public static String BugzillaAttribute_Attacher;
+
 	public static String BugzillaAttachmentMapper_Author;
 
 	public static String BugzillaAttachmentMapper_Content_Type;
