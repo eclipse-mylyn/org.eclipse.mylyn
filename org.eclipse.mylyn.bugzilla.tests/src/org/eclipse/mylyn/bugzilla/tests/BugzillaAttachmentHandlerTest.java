@@ -341,6 +341,7 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 					"update", new NullProgressMonitor());
 			fail("CoreException expected but not reached");
 		} catch (CoreException e) {
+			// FAILING due to cookie issue?
 			IStatus status = e.getStatus();
 			System.err.println("\n\ntestAttachmentToken >>> " + status.getClass().getName() + " >>> "
 					+ status.getMessage() + "\n\n");
