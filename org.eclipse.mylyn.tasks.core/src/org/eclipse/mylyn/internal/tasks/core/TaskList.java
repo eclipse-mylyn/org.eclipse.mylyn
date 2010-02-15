@@ -680,13 +680,15 @@ public class TaskList implements ITaskList, ITransferList {
 					if (lock.getDepth() == 1) {
 						delta = new HashSet<TaskContainerDelta>();
 					}
+					// success
 					return;
 				}
 			} catch (InterruptedException e) {
 				if (ignoreInterrupts) {
-					Thread.currentThread().interrupt();
+					// clear interrupted status to retry lock.aquire() 
+					Thread.interrupted();
 				} else {
-					throw new OperationCanceledException();
+					break;
 				}
 			}
 		}
