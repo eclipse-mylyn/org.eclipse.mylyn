@@ -1715,15 +1715,9 @@ public class BugzillaClient {
 				StatusHandler.log(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN, builder.toString()));
 			}
 
-			// None of the usual errors occurred. Log what cookies were received to aid authentication debugging
-			StringBuilder builder = new StringBuilder("Cookies: "); //$NON-NLS-1$
-			for (Cookie cookie : httpClient.getState().getCookies()) {
-				builder.append(cookie.getName() + " = " + cookie.getValue() + "  "); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-
 			RepositoryStatus status = RepositoryStatus.createHtmlStatus(repositoryUrl.toString(), IStatus.INFO,
-					BugzillaCorePlugin.ID_PLUGIN, RepositoryStatus.ERROR_REPOSITORY, UNKNOWN_REPOSITORY_ERROR + " "
-							+ title + body + "\n\n" + builder.toString(), body);
+					BugzillaCorePlugin.ID_PLUGIN, RepositoryStatus.ERROR_REPOSITORY, UNKNOWN_REPOSITORY_ERROR + " " //$NON-NLS-1$
+							+ body, body);
 
 			throw new CoreException(status);
 
