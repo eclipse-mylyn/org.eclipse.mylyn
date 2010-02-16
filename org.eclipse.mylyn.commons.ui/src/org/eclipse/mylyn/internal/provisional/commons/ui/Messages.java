@@ -17,6 +17,10 @@ public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.provisional.commons.ui.messages"; //$NON-NLS-1$
 
 	public static String DatePickerPanel_Today;
+
+	public static String TextControl_FindToolTip;
+
+	public static String TextControl_AccessibleListenerFindButton;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

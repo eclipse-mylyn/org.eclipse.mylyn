@@ -20,13 +20,8 @@ import org.eclipse.mylyn.internal.commons.ui.Messages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -58,10 +53,6 @@ public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 
 	private boolean showProgress = false;
 
-	private Color textColor = null;
-
-	private Font textFont = null;
-
 	private String previousFilterText;
 
 	/**
@@ -77,34 +68,6 @@ public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 			// the super constructor calls doCreateRefreshJob() which assigns refreshJob
 			refreshPolicy = new AdaptiveRefreshPolicy(refreshJob);
 
-			filterText.addFocusListener(new FocusListener() {
-
-				public void focusLost(FocusEvent focusEvent) {
-					if ("".equals(filterText.getText())) { //$NON-NLS-1$
-						filterText.setText(LABEL_FIND);
-						setGrayFilterText(true);
-					}
-				}
-
-				public void focusGained(FocusEvent focusEvent) {
-					if (LABEL_FIND.equals(filterText.getText())) {
-						filterText.setText(""); //$NON-NLS-1$
-						setGrayFilterText(false);
-					}
-				}
-			});
-
-			filterText.addKeyListener(new KeyListener() {
-
-				public void keyReleased(KeyEvent e) {
-					// ignore
-				}
-
-				public void keyPressed(KeyEvent e) {
-					// could consider doing this only on the first keystroke
-					setGrayFilterText(false);
-				}
-			});
 		} catch (Exception e) {
 			CommonsUiPlugin.getDefault().getLog().log(
 					new Status(IStatus.ERROR, CommonsUiPlugin.ID_PLUGIN, "Could not get refresh job", e)); //$NON-NLS-1$
@@ -172,7 +135,14 @@ public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 					handlingEvents = true;
 					Point size = parent.getParent().getSize();
 					int width = Math.max(FILTER_WIDTH_MIN, (int) (size.x * FILTER_WIDTH_RATIO));
-					((GridData) parent.getLayoutData()).widthHint = Math.min(width, FILTER_WIDTH_MAX);
+					int offset = 1;
+					if (parent.getParent().getLayoutData() instanceof GridData) {
+						offset = ((GridLayout) parent.getParent().getLayout()).marginWidth
+								+ ((GridLayout) parent.getParent().getLayout()).marginLeft
+								+ ((GridLayout) parent.getParent().getLayout()).horizontalSpacing;
+					}
+					((GridData) parent.getLayoutData()).widthHint = Math.min(width, FILTER_WIDTH_MAX) + offset;
+					((GridData) filterText.getParent().getLayoutData()).widthHint = Math.min(width, FILTER_WIDTH_MAX);
 					parent.getParent().layout();
 				} finally {
 					handlingEvents = false;
@@ -199,21 +169,7 @@ public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 		GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).grab(true, false).applyTo(activeTaskComposite);
 
 		gridLayout.numColumns = filterComposite.getChildren().length;
-
-		textColor = filterText.getForeground();
-		textFont = filterText.getFont();
-		setGrayFilterText(true);
 		return parent;
-	}
-
-	private void setGrayFilterText(boolean gray) {
-		if (gray) {
-			filterText.setForeground(CommonColors.GRAY_MID);
-//			filterText.setFont(CommonFonts.ITALIC);
-		} else {
-			filterText.setForeground(textColor);
-			filterText.setFont(textFont);
-		}
 	}
 
 	protected abstract Composite createProgressComposite(Composite container);
@@ -241,7 +197,7 @@ public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 		previousFilterText = text;
 
 		if (refreshPolicy != null) {
-			if (LABEL_FIND.equals(text)) {
+			if (LABEL_FIND.equals(text) && !useNewLook) {
 				clearText();
 				refreshPolicy.textChanged(""); //$NON-NLS-1$
 			} else {

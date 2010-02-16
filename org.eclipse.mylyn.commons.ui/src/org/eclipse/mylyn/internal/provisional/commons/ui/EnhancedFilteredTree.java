@@ -13,7 +13,10 @@ package org.eclipse.mylyn.internal.provisional.commons.ui;
 
 import java.lang.reflect.Field;
 
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
 
@@ -26,6 +29,8 @@ import org.eclipse.ui.dialogs.PatternFilter;
 public class EnhancedFilteredTree extends FilteredTree {
 
 	protected boolean useNewLook;
+
+	private TextSearchControl searchControl;
 
 	public EnhancedFilteredTree(Composite parent, int treeStyle, PatternFilter filter, boolean useNewLook) {
 		super(parent, treeStyle, filter);
@@ -41,8 +46,16 @@ public class EnhancedFilteredTree extends FilteredTree {
 
 	@Override
 	protected void createControl(Composite parent, int treeStyle) {
-		useNewLook = setNewLook(this);
 		super.createControl(parent, treeStyle);
+
+		// set this after so that there isn't a double border created around the search
+		useNewLook = setNewLook(this);
+	}
+
+	@Override
+	protected Composite createFilterControls(Composite parent) {
+		createFilterText(parent);
+		return parent;
 	}
 
 	public static boolean setNewLook(FilteredTree tree) {
@@ -57,4 +70,22 @@ public class EnhancedFilteredTree extends FilteredTree {
 		return false;
 	}
 
+	@Override
+	protected Text doCreateFilterText(Composite parent) {
+		searchControl = new TextSearchControl(parent, true);
+
+		searchControl.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				if (e.detail == TextSearchControl.ICON_CANCEL) {
+					clearText();
+				}
+				if (e.detail == TextSearchControl.ICON_SEARCH) {
+					textChanged();
+				}
+			}
+		});
+		return searchControl.getTextControl();
+	}
 }
