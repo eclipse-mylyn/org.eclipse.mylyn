@@ -243,6 +243,7 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 		taskData.getRoot().getMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue(priority);
 		taskData.getRoot().getMappedAttribute(BugzillaAttribute.BUG_SEVERITY.getKey()).setValue(severity);
 		RepositoryResponse response = BugzillaFixture.current().submitTask(taskData, client);
+		assertFalse(response.getTaskId().equals(""));
 		TaskData taskDataNew = BugzillaFixture.current().getTask(response.getTaskId(), client);
 
 		// run query again

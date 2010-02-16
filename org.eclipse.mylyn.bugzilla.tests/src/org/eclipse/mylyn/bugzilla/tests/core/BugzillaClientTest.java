@@ -103,7 +103,8 @@ public class BugzillaClientTest extends TestCase {
 		TaskData newData = new TaskData(mapper, BugzillaFixture.current().getConnectorKind(), BugzillaFixture.current()
 				.getRepositoryUrl(), "");
 
-		connector.getTaskDataHandler().initializeTaskData(repository, newData, null, new NullProgressMonitor());
+		assertTrue(connector.getTaskDataHandler().initializeTaskData(repository, newData, null,
+				new NullProgressMonitor()));
 		newData.getRoot().getMappedAttribute(TaskAttribute.SUMMARY).setValue("testCommentQuery()");
 		newData.getRoot().getMappedAttribute(TaskAttribute.PRODUCT).setValue("TestProduct");
 		newData.getRoot().getMappedAttribute(TaskAttribute.COMPONENT).setValue("TestComponent");

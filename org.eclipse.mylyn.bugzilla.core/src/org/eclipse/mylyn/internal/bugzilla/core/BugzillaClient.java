@@ -813,7 +813,7 @@ public class BugzillaClient {
 			if (status == HttpStatus.SC_OK) {
 				InputStream input = getResponseStream(postMethod, monitor);
 				try {
-					parseHtmlError(input);
+					parsePostResponse(bugReportID, input);
 				} finally {
 					input.close();
 				}
@@ -951,7 +951,7 @@ public class BugzillaClient {
 
 			input = getResponseStream(method, monitor);
 
-			parseHtmlError(input);
+			parsePostResponse(taskAttribute.getTaskData().getTaskId(), input);
 
 //			BufferedReader in = new BufferedReader(new InputStreamReader(input, method.getRequestCharSet()));
 //			if (in.markSupported()) {
@@ -1034,7 +1034,6 @@ public class BugzillaClient {
 			formData = getPairsForExisting(taskData, new SubProgressMonitor(monitor, 1));
 		}
 
-		String result = null;
 		GzipPostMethod method = null;
 		InputStream input = null;
 		try {
@@ -1049,98 +1048,8 @@ public class BugzillaClient {
 			}
 
 			input = getResponseStream(method, monitor);
-
-			BufferedReader in = new BufferedReader(new InputStreamReader(input, method.getRequestCharSet()));
-			if (in.markSupported()) {
-				in.mark(1028);
-			}
-			HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(in, null);
-
-			boolean existingBugPosted = false;
-			boolean isTitle = false;
-			String title = ""; //$NON-NLS-1$
-
-			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
-				if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == Tag.TITLE
-						&& !((HtmlTag) (token.getValue())).isEndTag()) {
-					isTitle = true;
-					continue;
-				}
-
-				if (isTitle) {
-					// get all of the data in the title tag
-					if (token.getType() != Token.TAG) {
-						title += ((StringBuffer) token.getValue()).toString().toLowerCase(Locale.ENGLISH) + " "; //$NON-NLS-1$
-						continue;
-					} else if (token.getType() == Token.TAG && ((HtmlTag) token.getValue()).getTagType() == Tag.TITLE
-							&& ((HtmlTag) token.getValue()).isEndTag()) {
-
-						boolean found = false;
-						for (Iterator<String> iterator = bugzillaLanguageSettings.getResponseForCommand(
-								BugzillaLanguageSettings.COMMAND_PROCESSED).iterator(); iterator.hasNext() && !found;) {
-							String value = iterator.next().toLowerCase(Locale.ENGLISH);
-							found = found || title.indexOf(value) != -1;
-						}
-						if (!taskData.isNew() && found) {
-							existingBugPosted = true;
-						} else if (taskData.isNew()) {
-
-							int startIndex = -1;
-
-							if (result == null) {
-								for (Iterator<String> iterator = bugzillaLanguageSettings.getResponseForCommand(
-										BugzillaLanguageSettings.COMMAND_SUBMITTED).iterator(); iterator.hasNext();) {
-									String value = iterator.next().toLowerCase(Locale.ENGLISH);
-									int stopIndex = title.indexOf(value);
-									if (stopIndex > -1) {
-										for (iterator = bugzillaLanguageSettings.getResponseForCommand(
-												BugzillaLanguageSettings.COMMAND_BUG).iterator(); iterator.hasNext();) {
-											value = iterator.next().toLowerCase(Locale.ENGLISH);
-											startIndex = title.indexOf(value);
-											if (startIndex > -1) {
-												startIndex = startIndex + value.length();
-												result = (title.substring(startIndex, stopIndex)).trim();
-												break;
-											}
-										}
-										break;
-									}
-								}
-							}
-						}
-						break;
-					}
-				}
-			}
-			if (taskData.isNew()) {
-				response = new BugzillaRepositoryResponse(ResponseKind.TASK_CREATED, result);
-			} else {
-				response = new BugzillaRepositoryResponse(ResponseKind.TASK_UPDATED, taskData.getTaskId());
-			}
-			if ((!taskData.isNew() && existingBugPosted != true) || (taskData.isNew() && result == null)) {
-				try {
-					if (in.markSupported()) {
-						in.reset();
-					}
-					parseHtmlError(in);
-				} catch (IOException e) {
-					// ignore
-				}
-			} else {
-				try {
-					if (in.markSupported()) {
-						in.reset();
-					}
-					parseResultOK(in, response);
-				} catch (IOException e) {
-					// ignore
-				}
-			}
+			response = parsePostResponse(taskData.getTaskId(), input);
 			return response;
-		} catch (ParseException e) {
-			loggedIn = false;
-			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-					RepositoryStatus.ERROR_INTERNAL, "Unable to parse response from " + repositoryUrl.toString() + ".")); //$NON-NLS-1$//$NON-NLS-2$
 		} finally {
 			if (input != null) {
 				input.close();
@@ -1600,13 +1509,21 @@ public class BugzillaClient {
 	/**
 	 * Utility method for determining what potential error has occurred from a bugzilla html reponse page
 	 */
-	private void parseHtmlError(InputStream inputStream) throws IOException, CoreException {
+	private BugzillaRepositoryResponse parseHtmlError(InputStream inputStream) throws IOException, CoreException {
 
 		BufferedReader in = new BufferedReader(new InputStreamReader(inputStream, getCharacterEncoding()));
-		parseHtmlError(in);
+		return parseRepositoryResponse(null, in);
 	}
 
-	private void parseHtmlError(BufferedReader in) throws IOException, CoreException {
+	private BugzillaRepositoryResponse parsePostResponse(String taskId, InputStream inputStream) throws IOException,
+			CoreException {
+
+		BufferedReader in = new BufferedReader(new InputStreamReader(inputStream, getCharacterEncoding()));
+		return parseRepositoryResponse(taskId, in);
+	}
+
+	private BugzillaRepositoryResponse parseRepositoryResponse(String taskId, BufferedReader in) throws IOException,
+			CoreException {
 
 		HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(in, null);
 
@@ -1632,74 +1549,102 @@ public class BugzillaClient {
 							&& ((HtmlTag) token.getValue()).isEndTag()) {
 
 						boolean found = false;
-						for (Iterator<String> iterator = bugzillaLanguageSettings.getResponseForCommand(
-								BugzillaLanguageSettings.COMMAND_ERROR_LOGIN).iterator(); iterator.hasNext() && !found;) {
-							String value = iterator.next().toLowerCase(Locale.ENGLISH);
-							found = found || title.indexOf(value) != -1;
+
+						// Results for posting to Existing bugs
+
+						for (String string : bugzillaLanguageSettings.getResponseForCommand(BugzillaLanguageSettings.COMMAND_CHANGES_SUBMITTED)) {
+							String value = string.toLowerCase(Locale.ENGLISH);
+							found = title.indexOf(value) != -1;
+							if (found) {
+								return new BugzillaRepositoryResponse(ResponseKind.TASK_UPDATED, taskId);
+							}
 						}
-						if (found) {
-							loggedIn = false;
-							throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-									RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(), title));
+
+						for (String string : bugzillaLanguageSettings.getResponseForCommand(BugzillaLanguageSettings.COMMAND_PROCESSED)) {
+							String value = string.toLowerCase(Locale.ENGLISH);
+							found = title.indexOf(value) != -1;
+
+							if (found) {
+								return new BugzillaRepositoryResponse(ResponseKind.TASK_UPDATED, taskId);
+							}
 						}
-						found = false;
-						for (Iterator<String> iterator = bugzillaLanguageSettings.getResponseForCommand(
-								BugzillaLanguageSettings.COMMAND_ERROR_COLLISION).iterator(); iterator.hasNext()
-								&& !found;) {
-							String value = iterator.next().toLowerCase(Locale.ENGLISH);
-							found = found || title.indexOf(value) != -1;
+
+						// Results for posting NEW bugs
+
+						for (String string : bugzillaLanguageSettings.getResponseForCommand(BugzillaLanguageSettings.COMMAND_SUBMITTED)) {
+							String value = string.toLowerCase(Locale.ENGLISH);
+							found = title.indexOf(value) != -1;
+							if (found) {
+								int stopIndex = title.indexOf(value);
+								if (stopIndex > -1) {
+									for (String string2 : bugzillaLanguageSettings.getResponseForCommand(BugzillaLanguageSettings.COMMAND_BUG)) {
+										value = string2.toLowerCase(Locale.ENGLISH);
+										int startIndex = title.indexOf(value);
+										if (startIndex > -1) {
+											startIndex = startIndex + value.length();
+											String result = (title.substring(startIndex, stopIndex)).trim();
+											return new BugzillaRepositoryResponse(ResponseKind.TASK_CREATED, result);
+										}
+									}
+								}
+								StatusHandler.log(new BugzillaStatus(IStatus.INFO, BugzillaCorePlugin.ID_PLUGIN,
+										RepositoryStatus.ERROR_INTERNAL,
+										"Unable to retrieve new task id from: " + title)); //$NON-NLS-1$
+								throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+										RepositoryStatus.ERROR_INTERNAL, "Unable to retrieve new task.")); //$NON-NLS-1$
+							}
 						}
-						if (found) {
-							throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-									RepositoryStatus.REPOSITORY_COLLISION, repositoryUrl.toString()));
+
+						// Error results
+
+						for (String string : bugzillaLanguageSettings.getResponseForCommand(BugzillaLanguageSettings.COMMAND_ERROR_LOGIN)) {
+							String value = string.toLowerCase(Locale.ENGLISH);
+							found = title.indexOf(value) != -1;
+							if (found) {
+								loggedIn = false;
+								throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+										RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(), title));
+							}
 						}
-						found = false;
-						for (Iterator<String> iterator = bugzillaLanguageSettings.getResponseForCommand(
-								BugzillaLanguageSettings.COMMAND_ERROR_COMMENT_REQUIRED).iterator(); iterator.hasNext()
-								&& !found;) {
-							String value = iterator.next().toLowerCase(Locale.ENGLISH);
-							found = found || title.indexOf(value) != -1;
+
+						for (String string : bugzillaLanguageSettings.getResponseForCommand(BugzillaLanguageSettings.COMMAND_ERROR_COLLISION)) {
+							String value = string.toLowerCase(Locale.ENGLISH);
+							found = title.indexOf(value) != -1;
+							if (found) {
+								throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+										RepositoryStatus.REPOSITORY_COLLISION, repositoryUrl.toString()));
+							}
 						}
-						if (found) {
-							throw new CoreException(new BugzillaStatus(IStatus.INFO, BugzillaCorePlugin.ID_PLUGIN,
-									RepositoryStatus.REPOSITORY_COMMENT_REQUIRED));
+
+						for (String string : bugzillaLanguageSettings.getResponseForCommand(BugzillaLanguageSettings.COMMAND_ERROR_COMMENT_REQUIRED)) {
+							String value = string.toLowerCase(Locale.ENGLISH);
+							found = title.indexOf(value) != -1;
+							if (found) {
+								throw new CoreException(new BugzillaStatus(IStatus.INFO, BugzillaCorePlugin.ID_PLUGIN,
+										RepositoryStatus.REPOSITORY_COMMENT_REQUIRED));
+							}
 						}
-						found = false;
-						for (Iterator<String> iterator = bugzillaLanguageSettings.getResponseForCommand(
-								BugzillaLanguageSettings.COMMAND_SUSPICIOUS_ACTION).iterator(); iterator.hasNext()
-								&& !found;) {
-							String value = iterator.next().toLowerCase(Locale.ENGLISH);
-							found = found || title.indexOf(value) != -1;
+
+						for (String string : bugzillaLanguageSettings.getResponseForCommand(BugzillaLanguageSettings.COMMAND_SUSPICIOUS_ACTION)) {
+							String value = string.toLowerCase(Locale.ENGLISH);
+							found = title.indexOf(value) != -1;
+							if (found) {
+								throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+										IBugzillaConstants.REPOSITORY_STATUS_SUSPICIOUS_ACTION));
+							}
 						}
-						if (found) {
-							throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-									IBugzillaConstants.REPOSITORY_STATUS_SUSPICIOUS_ACTION));
+
+						for (String string : bugzillaLanguageSettings.getResponseForCommand(BugzillaLanguageSettings.COMMAND_ERROR_LOGGED_OUT)) {
+							String value = string.toLowerCase(Locale.ENGLISH);
+							found = title.indexOf(value) != -1;
+							if (found) {
+								loggedIn = false;
+								throw new CoreException(new BugzillaStatus(IStatus.INFO, BugzillaCorePlugin.ID_PLUGIN,
+										RepositoryStatus.REPOSITORY_LOGGED_OUT,
+										"You have been logged out. Please retry operation.")); //$NON-NLS-1$
+							}
 						}
-						found = false;
-						for (Iterator<String> iterator = bugzillaLanguageSettings.getResponseForCommand(
-								BugzillaLanguageSettings.COMMAND_ERROR_LOGGED_OUT).iterator(); iterator.hasNext()
-								&& !found;) {
-							String value = iterator.next().toLowerCase(Locale.ENGLISH);
-							found = found || title.indexOf(value) != -1;
-						}
-						if (found) {
-							loggedIn = false;
-							// throw new
-							// BugzillaException(IBugzillaConstants.LOGGED_OUT);
-							throw new CoreException(new BugzillaStatus(IStatus.INFO, BugzillaCorePlugin.ID_PLUGIN,
-									RepositoryStatus.REPOSITORY_LOGGED_OUT,
-									"You have been logged out. Please retry operation.")); //$NON-NLS-1$
-						}
-						found = false;
-						for (Iterator<String> iterator = bugzillaLanguageSettings.getResponseForCommand(
-								BugzillaLanguageSettings.COMMAND_CHANGES_SUBMITTED).iterator(); iterator.hasNext()
-								&& !found;) {
-							String value = iterator.next().toLowerCase(Locale.ENGLISH);
-							found = found || title.indexOf(value) != -1;
-						}
-						if (found) {
-							return;
-						}
+
 						isTitle = false;
 					}
 				}
