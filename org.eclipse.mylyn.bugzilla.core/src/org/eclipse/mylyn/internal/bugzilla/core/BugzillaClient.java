@@ -880,7 +880,6 @@ public class BugzillaClient {
 	public void postUpdateAttachment(TaskAttribute taskAttribute, String action, IProgressMonitor monitor)
 			throws IOException, CoreException {
 		List<NameValuePair> formData = new ArrayList<NameValuePair>(5);
-		boolean existingBugPosted = false;
 
 		formData.add(new NameValuePair("action", action)); //$NON-NLS-1$
 		formData.add(new NameValuePair("contenttypemethod", "manual")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -952,57 +951,59 @@ public class BugzillaClient {
 
 			input = getResponseStream(method, monitor);
 
-			BufferedReader in = new BufferedReader(new InputStreamReader(input, method.getRequestCharSet()));
-			if (in.markSupported()) {
-				in.mark(1);
-			}
-			HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(in, null);
+			parseHtmlError(input);
 
-			boolean isTitle = false;
-			String title = ""; //$NON-NLS-1$
-
-			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
-
-				if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == Tag.TITLE
-						&& !((HtmlTag) (token.getValue())).isEndTag()) {
-					isTitle = true;
-					continue;
-				}
-
-				if (isTitle) {
-					// get all of the data in the title tag
-					if (token.getType() != Token.TAG) {
-						title += ((StringBuffer) token.getValue()).toString().toLowerCase(Locale.ENGLISH) + " "; //$NON-NLS-1$
-						continue;
-					} else if (token.getType() == Token.TAG && ((HtmlTag) token.getValue()).getTagType() == Tag.TITLE
-							&& ((HtmlTag) token.getValue()).isEndTag()) {
-
-						for (Iterator<String> iterator = bugzillaLanguageSettings.getResponseForCommand(
-								BugzillaLanguageSettings.COMMAND_CHANGES_SUBMITTED).iterator(); iterator.hasNext()
-								&& !existingBugPosted;) {
-							String value = iterator.next().toLowerCase(Locale.ENGLISH);
-							existingBugPosted = existingBugPosted || title.indexOf(value) != -1;
-						}
-						break;
-					}
-				}
-			}
-
-			if (existingBugPosted != true) {
-				try {
-					if (in.markSupported()) {
-						in.reset();
-					}
-				} catch (IOException e) {
-					// ignore
-				}
-				parseHtmlError(in);
-			}
-
-		} catch (ParseException e) {
-			loggedIn = false;
-			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-					RepositoryStatus.ERROR_INTERNAL, "Unable to parse response from " + repositoryUrl.toString() + ".")); //$NON-NLS-1$ //$NON-NLS-2$
+//			BufferedReader in = new BufferedReader(new InputStreamReader(input, method.getRequestCharSet()));
+//			if (in.markSupported()) {
+//				in.mark(1);
+//			}
+//			HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(in, null);
+//
+//			boolean isTitle = false;
+//			String title = ""; //$NON-NLS-1$
+//
+//			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
+//
+//				if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == Tag.TITLE
+//						&& !((HtmlTag) (token.getValue())).isEndTag()) {
+//					isTitle = true;
+//					continue;
+//				}
+//
+//				if (isTitle) {
+//					// get all of the data in the title tag
+//					if (token.getType() != Token.TAG) {
+//						title += ((StringBuffer) token.getValue()).toString().toLowerCase(Locale.ENGLISH) + " "; //$NON-NLS-1$
+//						continue;
+//					} else if (token.getType() == Token.TAG && ((HtmlTag) token.getValue()).getTagType() == Tag.TITLE
+//							&& ((HtmlTag) token.getValue()).isEndTag()) {
+//
+//						for (Iterator<String> iterator = bugzillaLanguageSettings.getResponseForCommand(
+//								BugzillaLanguageSettings.COMMAND_CHANGES_SUBMITTED).iterator(); iterator.hasNext()
+//								&& !existingBugPosted;) {
+//							String value = iterator.next().toLowerCase(Locale.ENGLISH);
+//							existingBugPosted = existingBugPosted || title.indexOf(value) != -1;
+//						}
+//						break;
+//					}
+//				}
+//			}
+//
+//			if (existingBugPosted != true) {
+//				try {
+//					if (in.markSupported()) {
+//						in.reset();
+//					}
+//				} catch (IOException e) {
+//					// ignore
+//				}
+//				parseHtmlError(in);
+//			}
+//
+//		} catch (ParseException e) {
+//			loggedIn = false;
+//			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+//					RepositoryStatus.ERROR_INTERNAL, "Unable to parse response from " + repositoryUrl.toString() + ".")); //$NON-NLS-1$ //$NON-NLS-2$
 		} finally {
 			if (input != null) {
 				input.close();
