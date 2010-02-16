@@ -260,7 +260,7 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 					new NullProgressMonitor());
 			fail("never reach this!");
 		} catch (Exception e) {
-			assertEquals("An unknown repository error has occurred: ", e.getMessage());
+			assertEquals("An unknown repository error has occurred: file is empty", e.getMessage());
 		}
 
 		taskData = BugzillaFixture.current().getTask(taskData.getTaskId(), client);
