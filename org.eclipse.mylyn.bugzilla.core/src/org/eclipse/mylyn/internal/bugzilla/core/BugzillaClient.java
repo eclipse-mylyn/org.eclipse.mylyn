@@ -1715,9 +1715,14 @@ public class BugzillaClient {
 				StatusHandler.log(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN, builder.toString()));
 			}
 
+			String result = title.trim();
+			if (result.length() == 0) {
+				result = body;
+			}
+
 			RepositoryStatus status = RepositoryStatus.createHtmlStatus(repositoryUrl.toString(), IStatus.INFO,
-					BugzillaCorePlugin.ID_PLUGIN, RepositoryStatus.ERROR_REPOSITORY, UNKNOWN_REPOSITORY_ERROR
-							+ title.trim(), body);
+					BugzillaCorePlugin.ID_PLUGIN, RepositoryStatus.ERROR_REPOSITORY, UNKNOWN_REPOSITORY_ERROR + body,
+					body);
 
 			throw new CoreException(status);
 
