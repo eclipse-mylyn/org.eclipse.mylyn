@@ -574,7 +574,6 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 		try {
 			// Submit changes
-			Thread.sleep(10000 * 5);
 			RepositoryResponse response = BugzillaFixture.current().submitTask(data, client);
 			assertNotNull(response);
 			//assertEquals(ResponseKind.TASK_UPDATED, response.getReposonseKind());
