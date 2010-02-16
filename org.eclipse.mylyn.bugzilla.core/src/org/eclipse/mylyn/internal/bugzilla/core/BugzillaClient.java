@@ -1716,8 +1716,8 @@ public class BugzillaClient {
 			}
 
 			RepositoryStatus status = RepositoryStatus.createHtmlStatus(repositoryUrl.toString(), IStatus.INFO,
-					BugzillaCorePlugin.ID_PLUGIN, RepositoryStatus.ERROR_REPOSITORY, UNKNOWN_REPOSITORY_ERROR + " " //$NON-NLS-1$
-							+ body, body);
+					BugzillaCorePlugin.ID_PLUGIN, RepositoryStatus.ERROR_REPOSITORY, UNKNOWN_REPOSITORY_ERROR + title,
+					body);
 
 			throw new CoreException(status);
 
