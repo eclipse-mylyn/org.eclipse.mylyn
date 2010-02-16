@@ -954,7 +954,7 @@ public class BugzillaClient {
 
 			BufferedReader in = new BufferedReader(new InputStreamReader(input, method.getRequestCharSet()));
 			if (in.markSupported()) {
-				in.mark(1028);
+				in.mark(1);
 			}
 			HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(in, null);
 
@@ -1721,7 +1721,7 @@ public class BugzillaClient {
 			}
 
 			RepositoryStatus status = RepositoryStatus.createHtmlStatus(repositoryUrl.toString(), IStatus.INFO,
-					BugzillaCorePlugin.ID_PLUGIN, RepositoryStatus.ERROR_REPOSITORY, UNKNOWN_REPOSITORY_ERROR + body,
+					BugzillaCorePlugin.ID_PLUGIN, RepositoryStatus.ERROR_REPOSITORY, UNKNOWN_REPOSITORY_ERROR + result,
 					body);
 
 			throw new CoreException(status);
