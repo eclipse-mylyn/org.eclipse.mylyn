@@ -28,27 +28,37 @@ public class AllBugzillaTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Tests for org.eclipse.mylyn.bugzilla.tests");
+
+		// Standalone tests (Don't require an instance of Eclipse)
 		suite.addTest(AllBugzillaHeadlessStandaloneTests.suite());
+
+		// Tests that only need to run once (i.e. no network io so doesn't matter which repository)
 		suite.addTestSuite(TaskEditorTest.class);
 		suite.addTestSuite(BugzillaRepositorySettingsPageTest.class);
 		suite.addTestSuite(BugzillaSearchPageTest.class);
+		suite.addTestSuite(BugzillaDateTimeTests.class);
+		suite.addTestSuite(BugzillaTaskHyperlinkDetectorTest.class);
 
+		// Each of these tests gets executed against every repo in BugzillaFixture.ALL
+		// unless otherwise excluded
 		for (BugzillaFixture fixture : BugzillaFixture.ALL) {
 			fixture.createSuite(suite);
-			// only run certain tests against head to avoid spurious failures 
-			if (fixture != BugzillaFixture.BUGS_HEAD) {
+			fixture.add(RepositoryReportFactoryTest.class);
+			fixture.add(BugzillaTaskDataHandlerTest.class);
+			fixture.add(BugzillaSearchTest.class);
+			fixture.add(EncodingTest.class);
 
-				// Only run these tests on > 3.2 repositories
-				if (!fixture.getBugzillaVersion().isSmallerOrEquals(BugzillaVersion.BUGZILLA_3_2)) {
+			// Move any tests here that are resulting in spurious failures
+			// due to recent changes in Bugzilla Server head.
+			if (fixture != BugzillaFixture.BUGS_HEAD) {
+			}
+
+			// Only run these tests on > 3.2 repositories
+			if (!fixture.getBugzillaVersion().isSmallerOrEquals(BugzillaVersion.BUGZILLA_3_2)) {
+				if (fixture != BugzillaFixture.BUGS_HEAD) {
 					fixture.add(BugzillaRepositoryConnectorTest.class);
-					fixture.add(BugzillaAttachmentHandlerTest.class);
 				}
-				fixture.add(BugzillaTaskDataHandlerTest.class);
-				fixture.add(RepositoryReportFactoryTest.class);
-				fixture.add(BugzillaTaskHyperlinkDetectorTest.class);
-				fixture.add(BugzillaSearchTest.class);
-				fixture.add(EncodingTest.class);
-				fixture.add(BugzillaDateTimeTests.class);
+				fixture.add(BugzillaAttachmentHandlerTest.class);
 			}
 			fixture.done();
 		}
