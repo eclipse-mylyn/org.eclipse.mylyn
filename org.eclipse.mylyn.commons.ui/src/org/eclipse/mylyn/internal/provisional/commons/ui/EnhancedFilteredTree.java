@@ -13,8 +13,10 @@ package org.eclipse.mylyn.internal.provisional.commons.ui;
 
 import java.lang.reflect.Field;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.FilteredTree;
@@ -86,6 +88,7 @@ public class EnhancedFilteredTree extends FilteredTree {
 				}
 			}
 		});
+		searchControl.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
 		return searchControl.getTextControl();
 	}
 }
