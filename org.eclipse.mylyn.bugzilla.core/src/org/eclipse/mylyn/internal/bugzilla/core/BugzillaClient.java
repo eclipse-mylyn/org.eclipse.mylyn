@@ -1801,6 +1801,11 @@ public class BugzillaClient {
 				}
 
 				if (!parseable) {
+					if (method.getResponseHeader("Content-Type") != null) { //$NON-NLS-1$
+						Header responseTypeHeader = method.getResponseHeader("Content-Type"); //$NON-NLS-1$
+						System.err.println(">>>>> Name:" + responseTypeHeader.getName() + " Value:"
+								+ responseTypeHeader.getValue());
+					}
 					parseHtmlError(getResponseStream(method, monitor));
 					break;
 				}
