@@ -44,6 +44,36 @@ public class CommitTemplateTest extends TestCase {
 
 	}
 
+	public void testTemplateNullKeyTrailingCharacters() {
+		String template = "${task.status} - ${connector.task.prefix} ${task.key}: ${task.description}";
+
+		String taskId = "12345678";
+		TaskTask testTask = new TaskTask("no url", taskId, "summary");
+		testTask.setTaskKey(null);
+		testTask.setSummary("TestSummary");
+
+		String commitComment = FocusedTeamUiPlugin.getDefault().getCommitTemplateManager().generateComment(testTask,
+				template);
+		assertTrue(commitComment.contains(testTask.getSummary()));
+
+		assertTrue(commitComment.contains(":"));
+	}
+
+	public void testTemplateCollapseWhitespace() {
+		String template = "${task.status} - ${connector.task.prefix} ${task.key} ${task.key} : ${task.description}";
+
+		String taskId = "12345678";
+		TaskTask testTask = new TaskTask("no url", taskId, "summary");
+		testTask.setTaskKey(null);
+		testTask.setSummary("TestSummary");
+
+		String commitComment = FocusedTeamUiPlugin.getDefault().getCommitTemplateManager().generateComment(testTask,
+				template);
+		assertTrue(commitComment.contains(testTask.getSummary()));
+
+		assertFalse(commitComment.contains("  "));
+	}
+
 	public void testRepositoryTaskCommentParsing() {
 		String template = FocusedTeamUiPlugin.getDefault().getPreferenceStore().getString(
 				FocusedTeamUiPlugin.COMMIT_TEMPLATE);

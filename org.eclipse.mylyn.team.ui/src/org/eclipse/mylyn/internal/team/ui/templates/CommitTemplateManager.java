@@ -179,11 +179,13 @@ public class CommitTemplateManager {
 				value = processKeyword(task, keyword);
 			}
 
+			String trailingCharacters = segment.substring(brace + 1);
 			if (value != null) {
 				evaluated.add(value);
-				evaluated.add(segment.substring(brace + 1));
+				evaluated.add(trailingCharacters);
 			} else if (!evaluated.isEmpty()) {
 				evaluated.pop();
+				evaluated.add(trailingCharacters);
 			}
 //			else {
 //				buffer.append("${");
