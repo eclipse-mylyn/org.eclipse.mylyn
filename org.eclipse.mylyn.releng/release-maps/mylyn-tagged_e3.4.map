@@ -9,8 +9,8 @@ feature@org.eclipse.mylyn.sdk_feature=v20100217-0100-e3x,:pserver:anonymous@dev.
 feature@org.eclipse.mylyn.wikitext_feature=v20100217-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.wikitext-feature
 feature@org.eclipse.mylyn.wikitext.sdk=v20100217-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.wikitext.sdk-feature
 
-plugin@org.eclipse.mylyn.discovery.core=e_3_4_m_3_2_x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.discovery.core
-plugin@org.eclipse.mylyn.discovery.ui=e_3_4_m_3_2_x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.discovery.ui
+plugin@org.eclipse.mylyn.discovery.core=v20100217-0100-e34,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.discovery.core
+plugin@org.eclipse.mylyn.discovery.ui=v20100217-0100-e34,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.discovery.ui
 plugin@org.eclipse.mylyn.ide.ui=v20100217-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.ide.ui
 plugin@org.eclipse.mylyn.pde.ui=v20100217-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.pde.ui
 plugin@org.eclipse.mylyn.tasks.bugs=v20100217-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.tasks.bugs

@@ -6,7 +6,7 @@ feature@org.eclipse.mylyn.team_feature=v20100217-0100-e33,:pserver:anonymous@dev
 feature@org.eclipse.mylyn.ide_feature=v20100217-0100-e33,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.ide-feature
 feature@org.eclipse.mylyn.pde_feature=v20100217-0100-e33,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.pde-feature
 feature@org.eclipse.mylyn.sdk_feature=v20100217-0100-e33,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.sdk-feature
-feature@org.eclipse.mylyn.wikitext_feature=R_3_2_2_e_3_3,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.wikitext-feature
+feature@org.eclipse.mylyn.wikitext_feature=v20100217-0100-e33,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.wikitext-feature
 
 plugin@org.eclipse.mylyn.ide.ui=v20100217-0100-e33,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.ide.ui
 plugin@org.eclipse.mylyn.pde.ui=v20100217-0100-e33,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.pde.ui
