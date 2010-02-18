@@ -1,0 +1,17 @@
+plugin@org.eclipse.mylyn.wikitext.confluence.core=v20100217-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.wikitext.confluence.core
+plugin@org.eclipse.mylyn.wikitext.confluence.ui=v20100217-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.wikitext.confluence.ui
+plugin@org.eclipse.mylyn.wikitext.core=v20100217-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.wikitext.core
+plugin@org.eclipse.mylyn.wikitext.help.ui=v20100217-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.wikitext.help.ui
+plugin@org.eclipse.mylyn.wikitext.help.sdk=v20100217-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.wikitext.help.sdk
+plugin@org.eclipse.mylyn.wikitext.mediawiki.core=v20100217-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.wikitext.mediawiki.core
+plugin@org.eclipse.mylyn.wikitext.mediawiki.ui=v20100217-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.wikitext.mediawiki.ui
+plugin@org.eclipse.mylyn.wikitext.tasks.ui=v20100217-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.wikitext.tasks.ui
+plugin@org.eclipse.mylyn.wikitext.textile.core=v20100217-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.wikitext.textile.core
+plugin@org.eclipse.mylyn.wikitext.textile.ui=v20100217-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.wikitext.textile.ui
+plugin@org.eclipse.mylyn.wikitext.tracwiki.core=v20100217-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.wikitext.tracwiki.core
+plugin@org.eclipse.mylyn.wikitext.tracwiki.ui=v20100217-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.wikitext.tracwiki.ui
+plugin@org.eclipse.mylyn.wikitext.twiki.core=v20100217-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.wikitext.twiki.core
+plugin@org.eclipse.mylyn.wikitext.twiki.ui=v20100217-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.wikitext.twiki.ui
+plugin@org.eclipse.mylyn.wikitext.ui=v20100217-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.wikitext.ui
+
+plugin@org.eclipse.mylyn.wikitext.tests=v20100217-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.wikitext.tests
