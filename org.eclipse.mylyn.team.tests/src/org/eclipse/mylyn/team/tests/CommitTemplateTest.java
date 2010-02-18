@@ -57,6 +57,7 @@ public class CommitTemplateTest extends TestCase {
 		assertTrue(commitComment.contains(testTask.getSummary()));
 
 		assertTrue(commitComment.contains(":"));
+		assertEquals("Incomplete - : TestSummary", commitComment);
 	}
 
 	public void testTemplateCollapseWhitespace() {
@@ -72,6 +73,23 @@ public class CommitTemplateTest extends TestCase {
 		assertTrue(commitComment.contains(testTask.getSummary()));
 
 		assertFalse(commitComment.contains("  "));
+		assertEquals("Incomplete - : TestSummary", commitComment);
+	}
+
+	public void testTemplateWithTab() {
+		String template = "${task.status} - \t${connector.task.prefix} ${task.key} ${task.key} : ${task.description}";
+
+		String taskId = "12345678";
+		TaskTask testTask = new TaskTask("no url", taskId, "summary");
+		testTask.setTaskKey(null);
+		testTask.setSummary("TestSummary");
+
+		String commitComment = FocusedTeamUiPlugin.getDefault().getCommitTemplateManager().generateComment(testTask,
+				template);
+		assertTrue(commitComment.contains(testTask.getSummary()));
+
+		assertTrue(commitComment.contains("\t"));
+		assertEquals("Incomplete - \t : TestSummary", commitComment);
 	}
 
 	public void testRepositoryTaskCommentParsing() {
