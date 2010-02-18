@@ -102,9 +102,13 @@
 		</antcall>
 	</target>
 
+	<!--
 	<target name="report" depends="test-report,performance-report">
+	-->
+	<target name="report" depends="test-report">
 	</target>
 
+	
 	<target name="test-report" depends="init">
 		<antcall target="for-each-target">
 			<param name="call" value="report-helper"/>
