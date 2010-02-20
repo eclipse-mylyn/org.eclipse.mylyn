@@ -43,6 +43,20 @@ import org.eclipse.ui.internal.browser.WorkbenchBrowserSupport;
  */
 public class WorkbenchUtil {
 
+	// FIXME remove this again
+	private static final boolean TEST_MODE;
+
+	static {
+		String application = System.getProperty("eclipse.application", ""); //$NON-NLS-1$ //$NON-NLS-2$
+		if (application.length() > 0) {
+			TEST_MODE = application.endsWith("testapplication"); //$NON-NLS-1$
+		} else {
+			// eclipse 3.3 does not the eclipse.application property
+			String commands = System.getProperty("eclipse.commands", ""); //$NON-NLS-1$ //$NON-NLS-2$
+			TEST_MODE = commands.contains("testapplication\n"); //$NON-NLS-1$
+		}
+	}
+
 //	public static IViewPart getFromActivePerspective(String viewId) {
 //		if (PlatformUI.isWorkbenchRunning()) {
 //			IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
@@ -201,7 +215,11 @@ public class WorkbenchUtil {
 				} catch (PartInitException e) {
 					Status status = new Status(IStatus.ERROR, CommonsUiPlugin.ID_PLUGIN,
 							Messages.WorkbenchUtil_Browser_Initialization_Failed);
-					MessageDialog.openError(getShell(), Messages.WorkbenchUtil_Open_Location_Title, status.getMessage());
+					CommonsUiPlugin.getDefault().getLog().log(status);
+					if (!TEST_MODE) {
+						MessageDialog.openError(getShell(), Messages.WorkbenchUtil_Open_Location_Title,
+								status.getMessage());
+					}
 				}
 			} else {
 				IWebBrowser browser = null;
@@ -222,16 +240,27 @@ public class WorkbenchUtil {
 			Status status = new Status(IStatus.ERROR, CommonsUiPlugin.ID_PLUGIN,
 					Messages.WorkbenchUtil_Browser_Initialization_Failed, e);
 			CommonsUiPlugin.getDefault().getLog().log(status);
-			MessageDialog.openError(getShell(), Messages.WorkbenchUtil_Open_Location_Title, status.getMessage());
+			if (!TEST_MODE) {
+				MessageDialog.openError(getShell(), Messages.WorkbenchUtil_Open_Location_Title, status.getMessage());
+			}
 		} catch (MalformedURLException e) {
 			if (location != null && location.trim().equals("")) { //$NON-NLS-1$
 				Status status = new Status(IStatus.WARNING, CommonsUiPlugin.ID_PLUGIN,
 						Messages.WorkbenchUtil_No_URL_Error, e);
-				MessageDialog.openWarning(getShell(), Messages.WorkbenchUtil_Open_Location_Title, status.getMessage());
+				if (!TEST_MODE) {
+					MessageDialog.openWarning(getShell(), Messages.WorkbenchUtil_Open_Location_Title,
+							status.getMessage());
+				} else {
+					CommonsUiPlugin.getDefault().getLog().log(status);
+				}
 			} else {
 				Status status = new Status(IStatus.ERROR, CommonsUiPlugin.ID_PLUGIN, NLS.bind(
 						Messages.WorkbenchUtil_Invalid_URL_Error, location), e);
-				MessageDialog.openError(getShell(), Messages.WorkbenchUtil_Open_Location_Title, status.getMessage());
+				if (!TEST_MODE) {
+					MessageDialog.openError(getShell(), Messages.WorkbenchUtil_Open_Location_Title, status.getMessage());
+				} else {
+					CommonsUiPlugin.getDefault().getLog().log(status);
+				}
 			}
 		}
 	}
