@@ -56,7 +56,6 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
-import org.eclipse.mylyn.internal.provisional.commons.ui.DelayedRefreshJob;
 import org.eclipse.mylyn.internal.provisional.commons.ui.SubstringPatternFilter;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
@@ -178,10 +177,10 @@ import org.eclipse.ui.themes.IThemeManager;
  */
 public class TaskListView extends ViewPart implements IPropertyChangeListener, IShowInTarget {
 
-	private final class TaskListRefreshJob extends DelayedRefreshJob {
+	private final class TaskListRefreshJob extends TaskListDelayedRefreshJob {
 
-		private TaskListRefreshJob(TreeViewer treeViewer, String name) {
-			super(treeViewer, name);
+		private TaskListRefreshJob(TreeViewer treeViewer, String name, boolean focusedMode) {
+			super(treeViewer, name, focusedMode);
 		}
 
 		@Override
@@ -419,8 +418,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 	 * True if the view should indicate that interaction monitoring is paused
 	 */
 	protected boolean isPaused = false;
-
-	boolean synchronizationOverlaid = false;
 
 	private final Listener CATEGORY_GRADIENT_DRAWER = new Listener() {
 		public void handleEvent(Event event) {
@@ -890,7 +887,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 		getViewer().getTree().setHeaderVisible(false);
 		getViewer().setUseHashlookup(true);
-		refreshJob = new TaskListRefreshJob(getViewer(), "Task List Refresh"); //$NON-NLS-1$
+		refreshJob = new TaskListRefreshJob(getViewer(), "Task List Refresh", focusedMode); //$NON-NLS-1$
 
 		configureColumns(columnNames, columnWidths);
 
@@ -919,7 +916,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		getViewer().setInput(getViewSite());
 
 		final int activationImageOffset = PlatformUtil.getTreeImageOffset();
-		customDrawer = new CustomTaskListDecorationDrawer(this, activationImageOffset);
+		customDrawer = new CustomTaskListDecorationDrawer(refreshJob, activationImageOffset);
 		getViewer().getTree().addListener(SWT.EraseItem, customDrawer);
 		getViewer().getTree().addListener(SWT.PaintItem, customDrawer);
 
@@ -1373,7 +1370,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 	boolean isInRenameAction = false;
 
-	private DelayedRefreshJob refreshJob;
+	private TaskListDelayedRefreshJob refreshJob;
 
 	private boolean itemNotFoundExceptionLogged;
 
@@ -1563,6 +1560,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 			return;
 		}
 		this.focusedMode = focusedMode;
+		refreshJob.setFocusedMode(focusedMode);
 		IToolBarManager manager = getViewSite().getActionBars().getToolBarManager();
 
 		if (focusedMode && isAutoExpandMode()) {
@@ -1574,11 +1572,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		}
 		manager.update(false);
 		updateFilterEnablement();
-	}
-
-	public void setSynchronizationOverlaid(boolean synchronizationOverlaid) {
-		this.synchronizationOverlaid = synchronizationOverlaid;
-		getViewer().refresh();
 	}
 
 	public void displayPrioritiesAbove(String priority) {
