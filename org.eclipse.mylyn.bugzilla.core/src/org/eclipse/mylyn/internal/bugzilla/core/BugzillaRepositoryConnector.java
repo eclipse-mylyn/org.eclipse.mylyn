@@ -726,6 +726,11 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 						BugzillaClient client = clientManager.getClient(repository, monitor);
 						configuration = client.getRepositoryConfiguration(monitor, eTag);
 						if (configuration != null) {
+							String configVersion = configuration.getInstallVersion().toString();
+							String repositoryVersion = repository.getVersion();
+							if (!configVersion.equals(repositoryVersion)) {
+								repository.setVersion(configVersion);
+							}
 							internalAddConfiguration(configuration);
 						}
 					}
