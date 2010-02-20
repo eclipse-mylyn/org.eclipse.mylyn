@@ -32,11 +32,11 @@ import junit.framework.TestSuite;
  */
 public class ManagedTestSuite extends TestSuite {
 
-	private class DumpTreadTask extends TimerTask {
+	private class DumpThreadTask extends TimerTask {
 
 		private final Test test;
 
-		public DumpTreadTask(Test test) {
+		public DumpThreadTask(Test test) {
 			this.test = test;
 		}
 
@@ -62,9 +62,9 @@ public class ManagedTestSuite extends TestSuite {
 
 	private class Listener implements TestListener {
 
-		private DumpTreadTask task;
+		private DumpThreadTask task;
 
-		private final Timer timer = new Timer();
+		private final Timer timer = new Timer(true);
 
 		public void addError(Test test, Throwable t) {
 			System.err.println("[ERROR]");
@@ -104,7 +104,7 @@ public class ManagedTestSuite extends TestSuite {
 
 		public void startTest(Test test) {
 			System.err.println("Running " + test.toString());
-			task = new DumpTreadTask(test);
+			task = new DumpThreadTask(test);
 			timer.schedule(task, DELAY);
 		}
 
@@ -126,6 +126,22 @@ public class ManagedTestSuite extends TestSuite {
 		result.addListener(listener);
 		super.run(result);
 		listener.dumpResults(result);
+
+		// add dummy test to dump threads in case shutdown hangs
+		listener.startTest(new Test() {
+			public int countTestCases() {
+				return 1;
+			}
+
+			public void run(TestResult result) {
+				// do nothing
+			}
+
+			@Override
+			public String toString() {
+				return "ShutdownWatchdog";
+			}
+		});
 	}
 
 }
