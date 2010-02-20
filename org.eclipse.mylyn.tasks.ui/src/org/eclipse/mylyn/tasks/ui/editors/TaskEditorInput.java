@@ -13,6 +13,7 @@
 package org.eclipse.mylyn.tasks.ui.editors;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorInputFactory;
@@ -32,7 +33,7 @@ import org.eclipse.ui.IPersistableElement;
  * @author Steffen Pingel
  * @since 2.0
  */
-public class TaskEditorInput implements IEditorInput, IPersistableElement {
+public class TaskEditorInput extends PlatformObject implements IEditorInput, IPersistableElement {
 
 	private static final int MAX_LABEL_LENGTH = 60;
 
@@ -88,12 +89,13 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	@SuppressWarnings("rawtypes")
 	public Object getAdapter(Class adapter) {
 		if (adapter == IEditorInput.class) {
 			return this;
 		}
-		return null;
+		return super.getAdapter(adapter);
 	}
 
 	/**
