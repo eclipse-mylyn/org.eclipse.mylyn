@@ -18,7 +18,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColors;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
@@ -188,7 +187,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				} else if (task.isCompleted()) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_COMPLETED);
 				} else if (TasksUi.getTaskActivityManager().isActive(task)) {
-					return CommonColors.CONTEXT_ACTIVE;
+					return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_TASK_ACTIVE);
 				} else if (TasksUiPlugin.getTaskActivityManager().isOverdue(task)) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_OVERDUE);
 				} else if (TasksUiPlugin.getTaskActivityManager().isDueToday(task)) {
@@ -207,7 +206,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		} else if (object instanceof ITaskContainer) {
 			for (ITask child : ((ITaskContainer) object).getChildren()) {
 				if (child.isActive() || (child instanceof ITaskContainer && showHasActiveChild((ITaskContainer) child))) {
-					return CommonColors.CONTEXT_ACTIVE;
+					return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_TASK_ACTIVE);
 				} else if (TasksUiPlugin.getTaskActivityManager().isOverdue(child)) {
 //				} else if ((child.isPastReminder() && !child.isCompleted()) || showHasChildrenPastDue(child)) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_OVERDUE);
