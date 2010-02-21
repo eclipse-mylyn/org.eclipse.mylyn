@@ -13,6 +13,8 @@ package org.eclipse.mylyn.internal.discovery.core.model;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,7 +41,6 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.internal.discovery.core.DiscoveryCore;
 import org.eclipse.mylyn.internal.discovery.core.model.Directory.Entry;
 import org.eclipse.mylyn.internal.discovery.core.util.WebUtil;
@@ -100,10 +101,9 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 
 			Directory directory;
 
-			WebLocation webLocation = new WebLocation(directoryUrl);
 			try {
 				final Directory[] temp = new Directory[1];
-				WebUtil.readResource(webLocation, new TextContentProcessor() {
+				WebUtil.readResource(new URI(directoryUrl), new TextContentProcessor() {
 					public void process(Reader reader) throws IOException {
 						DirectoryParser parser = new DirectoryParser();
 						temp[0] = parser.parse(reader);
@@ -117,6 +117,9 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 				throw new CoreException(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN, NLS.bind(
 						Messages.RemoteBundleDiscoveryStrategy_unknown_host_discovery_directory, e.getMessage()), e));
 			} catch (IOException e) {
+				throw new CoreException(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN,
+						Messages.RemoteBundleDiscoveryStrategy_io_failure_discovery_directory, e));
+			} catch (URISyntaxException e) {
 				throw new CoreException(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN,
 						Messages.RemoteBundleDiscoveryStrategy_io_failure_discovery_directory, e));
 			}
@@ -235,12 +238,15 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 						break;
 					}
 
-					WebUtil.downloadResource(target, new WebLocation(bundleUrl), new NullProgressMonitor() {
-						@Override
-						public boolean isCanceled() {
-							return super.isCanceled() || monitor.isCanceled();
-						}
-					}/*don't use sub progress monitor here*/);
+					try {
+						WebUtil.download(new URI(bundleUrl), target, new NullProgressMonitor() {
+							@Override
+							public boolean isCanceled() {
+								return super.isCanceled() || monitor.isCanceled();
+							}
+						}/*don't use sub progress monitor here*/);
+					} catch (URISyntaxException e) {
+					}
 					file = target;
 				} catch (IOException e) {
 					StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN, NLS.bind(

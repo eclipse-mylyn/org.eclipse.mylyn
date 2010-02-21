@@ -7,7 +7,8 @@ Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.eclipse.core.runtime;bundle-version="3.3.0",
  org.eclipse.mylyn.commons.core;bundle-version="3.1.0",
- org.eclipse.mylyn.commons.net;bundle-version="3.1.0"
+ org.eclipse.mylyn.commons.net;bundle-version="3.1.0",
+ org.eclipse.equinox.p2.repository;bundle-version="1.0.1";resolution:=optional
 Export-Package: org.eclipse.mylyn.internal.discovery.core;x-friends:="org.eclipse.mylyn.discovery.ui",
  org.eclipse.mylyn.internal.discovery.core.model;x-friends:="org.eclipse.mylyn.discovery.ui",
  org.eclipse.mylyn.internal.discovery.core.util;x-friends:="org.eclipse.mylyn.discovery.ui"

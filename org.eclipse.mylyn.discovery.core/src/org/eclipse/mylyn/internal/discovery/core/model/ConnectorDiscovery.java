@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.discovery.core.model;
 
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,7 +41,6 @@ import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.internal.discovery.core.DiscoveryCore;
 import org.eclipse.mylyn.internal.discovery.core.util.WebUtil;
 import org.eclipse.osgi.service.resolver.VersionRange;
@@ -91,7 +91,8 @@ public class ConnectorDiscovery {
 	 * @return
 	 */
 	public IStatus performDiscovery(IProgressMonitor monitor) {
-		MultiStatus status = new MultiStatus(DiscoveryCore.ID_PLUGIN, 0, Messages.ConnectorDiscovery_Failed_to_discovery_all_Error, null);
+		MultiStatus status = new MultiStatus(DiscoveryCore.ID_PLUGIN, 0,
+				Messages.ConnectorDiscovery_Failed_to_discovery_all_Error, null);
 		if (discoveryStrategies.isEmpty()) {
 			throw new IllegalStateException();
 		}
@@ -113,8 +114,9 @@ public class ConnectorDiscovery {
 					discoveryStrategy.performDiscovery(new SubProgressMonitor(monitor, discoveryTicks
 							/ discoveryStrategies.size()));
 				} catch (CoreException e) {
-					status.add(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN, NLS.bind(Messages.ConnectorDiscovery_Strategy_failed_Error,
-							discoveryStrategy.getClass().getSimpleName()), e));
+					status.add(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN, NLS.bind(
+							Messages.ConnectorDiscovery_Strategy_failed_Error, discoveryStrategy.getClass()
+									.getSimpleName()), e));
 				}
 			}
 
@@ -404,9 +406,9 @@ public class ConnectorDiscovery {
 
 		public VerifyUpdateSiteJob call() throws Exception {
 			URL baseUrl = new URL(url);
-			List<WebLocation> locations = new ArrayList<WebLocation>();
+			List<URI> locations = new ArrayList<URI>();
 			for (String location : new String[] { "content.jar", "content.xml", "site.xml" }) { //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-				locations.add(new WebLocation(new URL(baseUrl, location).toExternalForm()));
+				locations.add(new URL(baseUrl, location).toURI());
 			}
 			ok = WebUtil.verifyAvailability(locations, true, new NullProgressMonitor());
 			return this;

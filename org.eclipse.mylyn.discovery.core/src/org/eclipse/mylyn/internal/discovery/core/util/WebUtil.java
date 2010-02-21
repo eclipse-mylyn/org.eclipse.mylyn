@@ -10,30 +10,24 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.discovery.core.util;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
-import java.net.UnknownHostException;
+import java.net.URI;
 import java.util.List;
 
-import org.apache.commons.httpclient.HostConfiguration;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.URI;
-import org.apache.commons.httpclient.URIException;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.methods.HeadMethod;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
-import org.eclipse.mylyn.commons.net.Policy;
-import org.eclipse.osgi.util.NLS;
 
 /**
  * A utility for accessing web resources
@@ -50,6 +44,8 @@ public class WebUtil {
 		public void process(Reader reader) throws IOException;
 	}
 
+	private static ITransportService transport;
+
 	/**
 	 * Download an HTTP-based resource
 	 * 
@@ -59,52 +55,26 @@ public class WebUtil {
 	 *            the web location of the content
 	 * @param monitor
 	 *            the monitor
+	 * @return
 	 * @throws IOException
 	 *             if a network or IO problem occurs
 	 */
-	public static void downloadResource(File target, AbstractWebLocation location, IProgressMonitor monitor)
-			throws IOException {
-		monitor = Policy.monitorFor(monitor);
-		monitor.beginTask(NLS.bind(Messages.WebUtil_task_retrievingUrl, location.getUrl()), IProgressMonitor.UNKNOWN);
+	public static IStatus download(URI uri, File target, IProgressMonitor monitor) throws IOException {
+		IStatus result;
+		OutputStream out = new BufferedOutputStream(new FileOutputStream(target));
 		try {
-			HttpClient client = new HttpClient();
-			org.eclipse.mylyn.commons.net.WebUtil.configureHttpClient(client, ""); //$NON-NLS-1$
-
-			GetMethod method = new GetMethod(location.getUrl());
-			try {
-				HostConfiguration hostConfiguration = org.eclipse.mylyn.commons.net.WebUtil.createHostConfiguration(
-						client, location, monitor);
-				int result = org.eclipse.mylyn.commons.net.WebUtil.execute(client, hostConfiguration, method, monitor);
-				if (result == HttpStatus.SC_OK) {
-					InputStream in = org.eclipse.mylyn.commons.net.WebUtil.getResponseBodyAsStream(method, monitor);
-					try {
-						in = new BufferedInputStream(in);
-						OutputStream out = new BufferedOutputStream(new FileOutputStream(target));
-						try {
-							int i;
-							while ((i = in.read()) != -1) {
-								out.write(i);
-							}
-						} catch (IOException e) {
-							// avoid partial content
-							out.close();
-							target.delete();
-							throw e;
-						} finally {
-							out.close();
-						}
-					} finally {
-						in.close();
-					}
-				} else {
-					throw new IOException(NLS.bind(Messages.WebUtil_cannotDownload, location.getUrl(), result));
-				}
-			} finally {
-				method.releaseConnection();
-			}
+			result = download(uri, out, monitor);
 		} finally {
-			monitor.done();
+			out.close();
 		}
+		if (!result.isOK()) {
+			target.delete();
+			if (result.getException() instanceof IOException) {
+				throw (IOException) result.getException();
+			}
+			throw new IOWithCauseException(result.getException());
+		}
+		return result;
 	}
 
 	/**
@@ -118,37 +88,17 @@ public class WebUtil {
 	 *            the monitor
 	 * @throws IOException
 	 *             if a network or IO problem occurs
+	 * @throws CoreException
 	 */
-	public static void readResource(AbstractWebLocation location, TextContentProcessor processor,
-			IProgressMonitor monitor) throws IOException {
-		monitor = Policy.monitorFor(monitor);
-		monitor.beginTask(NLS.bind(Messages.WebUtil_task_retrievingUrl, location.getUrl()), IProgressMonitor.UNKNOWN);
+	public static void readResource(URI uri, TextContentProcessor processor, IProgressMonitor monitor)
+			throws IOException, CoreException {
+		InputStream in = stream(uri, monitor);
 		try {
-			HttpClient client = new HttpClient();
-			org.eclipse.mylyn.commons.net.WebUtil.configureHttpClient(client, ""); //$NON-NLS-1$
-
-			GetMethod method = new GetMethod(location.getUrl());
-			try {
-				HostConfiguration hostConfiguration = org.eclipse.mylyn.commons.net.WebUtil.createHostConfiguration(
-						client, location, monitor);
-				int result = org.eclipse.mylyn.commons.net.WebUtil.execute(client, hostConfiguration, method, monitor);
-				if (result == HttpStatus.SC_OK) {
-					InputStream in = org.eclipse.mylyn.commons.net.WebUtil.getResponseBodyAsStream(method, monitor);
-					try {
-						BufferedReader reader = new BufferedReader(new InputStreamReader(in,
-								method.getResponseCharSet()));
-						processor.process(reader);
-					} finally {
-						in.close();
-					}
-				} else {
-					throw new IOException(NLS.bind(Messages.WebUtil_cannotDownload, location.getUrl(), result));
-				}
-			} finally {
-				method.releaseConnection();
-			}
+			// FIXME how can the charset be determined?
+			BufferedReader reader = new BufferedReader(new InputStreamReader(in, "UTF-8")); //$NON-NLS-1$
+			processor.process(reader);
 		} finally {
-			monitor.done();
+			in.close();
 		}
 	}
 
@@ -162,59 +112,57 @@ public class WebUtil {
 	 * @param monitor
 	 *            the monitor
 	 * @return true if the resource exists
+	 * @throws CoreException
 	 */
-	public static boolean verifyAvailability(List<? extends AbstractWebLocation> locations, boolean one,
-			IProgressMonitor monitor) {
+	public static boolean verifyAvailability(List<? extends URI> locations, boolean one, IProgressMonitor monitor)
+			throws IOException, CoreException {
 		if (locations.isEmpty() || locations.size() > 5) {
 			throw new IllegalArgumentException();
 		}
-		monitor = Policy.monitorFor(monitor);
-		monitor.beginTask(NLS.bind(Messages.WebUtil_task_verifyingUrl, locations.get(0).getUrl()),
-				IProgressMonitor.UNKNOWN);
-		try {
-			HttpClient client = new HttpClient();
-			org.eclipse.mylyn.commons.net.WebUtil.configureHttpClient(client, ""); //$NON-NLS-1$
-
-			HeadMethod method = new HeadMethod();
+		int countFound = 0;
+		for (URI location : locations) {
 			try {
-				int countFound = 0;
-				for (AbstractWebLocation location : locations) {
-					try {
-						method.setURI(new URI(location.getUrl(), true));
-					} catch (URIException e) {
-						if (!one) {
-							break;
-						}
-					}
-					HostConfiguration hostConfiguration = org.eclipse.mylyn.commons.net.WebUtil.createHostConfiguration(
-							client, location, monitor);
-					int result;
-					try {
-						result = org.eclipse.mylyn.commons.net.WebUtil.execute(client, hostConfiguration, method,
-								monitor);
-					} catch (IOException e) {
-						if (!one || e instanceof UnknownHostException) {
-							return false;
-						}
-						continue;
-					}
-					if (result == HttpStatus.SC_OK) {
-						++countFound;
-						if (one) {
-							return true;
-						}
-					} else {
-						if (!one) {
-							return false;
-						}
-					}
+				getLastModified(location, monitor);
+				if (one) {
+					return true;
 				}
-				return countFound == locations.size();
-			} finally {
-				method.releaseConnection();
+				++countFound;
+			} catch (FileNotFoundException e) {
+				if (!one) {
+					return false;
+				}
+				continue;
 			}
-		} finally {
-			monitor.done();
 		}
+		return countFound == locations.size();
 	}
+
+	public static synchronized ITransportService getTransport() {
+		if (transport == null) {
+			if (Platform.isRunning()) {
+				try {
+					transport = new P2TransportService();
+				} catch (ClassNotFoundException e) {
+					// fall back to HttpClientTransport
+				}
+			}
+			if (transport == null) {
+				transport = new HttpClientTransportService();
+			}
+		}
+		return transport;
+	}
+
+	public static IStatus download(URI uri, OutputStream out, IProgressMonitor monitor) {
+		return getTransport().download(uri, out, monitor);
+	}
+
+	public static InputStream stream(URI uri, IProgressMonitor monitor) throws IOException, CoreException {
+		return getTransport().stream(uri, monitor);
+	}
+
+	private static long getLastModified(URI location, IProgressMonitor monitor) throws CoreException, IOException {
+		return getTransport().getLastModified(location, monitor);
+	}
+
 }

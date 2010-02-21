@@ -60,7 +60,7 @@ public class ConnectorDiscoveryRemoteTest extends TestCase {
 
 		int unavailableCount = 0;
 		for (DiscoveryConnector connector : connectorDiscovery.getConnectors()) {
-			assertNotNull(connector.getAvailable());
+			assertNotNull("Failed to verify availability for " + connector.getId(), connector.getAvailable());
 			if (!connector.getAvailable()) {
 				++unavailableCount;
 			}
