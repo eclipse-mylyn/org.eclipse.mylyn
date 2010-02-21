@@ -17,6 +17,7 @@ import junit.framework.TestSuite;
 import org.eclipse.mylyn.bugzilla.tests.AllBugzillaHeadlessStandaloneTests;
 import org.eclipse.mylyn.commons.tests.net.SslProtocolSocketFactoryTest;
 import org.eclipse.mylyn.commons.tests.net.WebUtilTest;
+import org.eclipse.mylyn.commons.tests.support.ManagedTestSuite;
 import org.eclipse.mylyn.discovery.tests.AllDiscoveryTests;
 import org.eclipse.mylyn.jira.tests.AllJiraHeadlessStandaloneTests;
 import org.eclipse.mylyn.tasks.tests.TaskListTest;
@@ -32,7 +33,7 @@ import org.eclipse.mylyn.trac.tests.AllTracHeadlessStandaloneTests;
 public class AllHeadlessStandaloneTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Tests not requiring Eclipse Workbench");
+		TestSuite suite = new ManagedTestSuite("Tests not requiring Eclipse Workbench");
 
 		// commons
 		suite.addTestSuite(WebUtilTest.class);
