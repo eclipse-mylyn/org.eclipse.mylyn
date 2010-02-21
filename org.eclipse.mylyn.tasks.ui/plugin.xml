@@ -758,6 +758,16 @@
             %colors.category.gradient.end.description
          </description>
      </colorDefinition> 
+     <colorDefinition
+           categoryId="org.eclipse.mylyn.tasks.ui.presentation"
+           id="org.eclipse.mylyn.tasks.ui.colors.foreground.task.active"
+           isEditable="true"
+           label="%colors.foreground.task.active.label"
+           value="36, 22, 50">  
+         <description>
+            %colors.foreground.task.active.description
+         </description>
+     </colorDefinition>
 
 	<fontDefinition
        categoryId="org.eclipse.mylyn.tasks.ui.presentation"
