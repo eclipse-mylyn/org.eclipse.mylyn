@@ -20,8 +20,6 @@ import org.eclipse.swt.widgets.Display;
  */
 public class CommonColors {
 
-	public static final Color CONTEXT_ACTIVE = new Color(Display.getDefault(), 36, 22, 50);
-
 	public static final Color HYPERLINK_WIDGET = new Color(Display.getDefault(), 12, 81, 172);
 
 	public static final Color TEXT_QUOTED = new Color(Display.getDefault(), 38, 86, 145);
@@ -34,7 +32,6 @@ public class CommonColors {
 	 * NOTE: disposal of JFaceResources fonts handled by registry.
 	 */
 	public static void dispose() {
-		CONTEXT_ACTIVE.dispose();
 		HYPERLINK_WIDGET.dispose();
 		TEXT_QUOTED.dispose();
 		TEXT_SPELLING_ERROR.dispose();
