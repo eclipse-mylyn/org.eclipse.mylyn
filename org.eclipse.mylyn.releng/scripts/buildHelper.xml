@@ -126,7 +126,16 @@
 		</antcall>
 	</target>
 
-	<target name="report" depends="init">
+	<target name="report" depends="test-report,performance-report">
+	</target>
+
+	<target name="performance-report" depends="init">
+		<antcall target="for-each-target">
+			<param name="call" value="performance-report-helper"/>
+		</antcall>
+	</target>
+
+	<target name="test-report" depends="init">
 		<antcall target="for-each-target">
 			<param name="call" value="report-helper"/>
 		</antcall>
@@ -346,11 +355,26 @@
 	</target>
 	
 	<target name="report-helper" depends="report-helper-init,pre-report">
-		<xslt style="${basedir}/scripts/JUNIT.XSL" basedir="${results.home}" includes="org*.xml" destdir="${results.home}" />
-		
-		<antcall target="performance-report-helper"/>
-		
+		<!-- transform Eclipse unit tests with custom style sheets -->
+		<xslt style="${basedir}/scripts/junit.xsl" basedir="${results.home}" excludes="TEST-*" includes="*Tests.xml" destdir="${results.home}" />
+		<!-- annotate test output with test fixture names -->
+		<xslt force="true" style="${basedir}/scripts/test-fixture.xsl" basedir="${results.home}" includes="*Tests.xml" destdir="${build.results}/test-results" extension="-${build.target}.xml" />
+		<!-- annotate test output with base version -->
+		<antcall target="report-helper-annotate-suite"/>
 		<antcall target="post-report"/>
+	</target>
+
+	<target name="report-helper-annotate-suite" if="test.annotateReport">
+		<!-- move existing files to temp directories for processing -->
+		<delete dir="${build.results}/test-results/temp"/>
+		<mkdir dir="${build.results}/test-results/temp"/>
+		<move todir="${build.results}/test-results/temp">
+			<fileset dir="${build.results}/test-results" includes="*-${build.target}.xml"/>
+		</move>
+		<xslt style="${basedir}/scripts/test-suite.xsl" basedir="${build.results}/test-results/temp" includes="*-${build.target}.xml" destdir="${build.results}/test-results" extension=".xml">
+			<param name="append" expression="@e${build.target}"/>
+		</xslt>
+		<delete dir="${build.results}/test-results/temp"/>
 	</target>
 
 	<target name="performance-report-helper">
