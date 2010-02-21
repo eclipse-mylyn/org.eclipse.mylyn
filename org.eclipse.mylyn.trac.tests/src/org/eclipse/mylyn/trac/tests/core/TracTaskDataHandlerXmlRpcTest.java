@@ -126,10 +126,18 @@ public class TracTaskDataHandlerXmlRpcTest extends TestCase {
 		assertFalse(session.needsPerformQueries());
 		assertEquals(Collections.emptySet(), session.getStaleTasks());
 
-		// change ticket making sure it gets a new change time
-		Thread.sleep(1500);
-		ticket.putBuiltinValue(Key.DESCRIPTION, lastModified + "");
-		client.updateTicket(ticket, "comment", null);
+		// try changing ticket 3x to make sure it gets a new change time
+		for (int i = 0; i < 3; i++) {
+			ticket.putBuiltinValue(Key.DESCRIPTION, lastModified + "");
+			client.updateTicket(ticket, "comment", null);
+			TracTicket updateTicket = client.getTicket(ticket.getId(), null);
+			if (updateTicket.getLastChanged().getTime() > lastModified) {
+				break;
+			} else if (i == 2) {
+				fail("Failed to update ticket modification time for ticket: " + ticket.getId());
+			}
+			Thread.sleep(1500);
+		}
 
 		repository.setSynchronizationTimeStamp((lastModified + 1) + "");
 		session = createSession(task);
