@@ -39,6 +39,8 @@ public class CommonThemes {
 
 	public static final String FONT_EDITOR_COMMENT = "org.eclipse.mylyn.tasks.ui.fonts.task.editor.comment"; //$NON-NLS-1$
 
+	public static final String COLOR_TASK_ACTIVE = "org.eclipse.mylyn.tasks.ui.colors.foreground.task.active"; //$NON-NLS-1$
+
 	public static boolean isCommonTheme(String property) {
 		if (property == null) {
 			return false;
@@ -47,7 +49,7 @@ public class CommonThemes {
 					|| property.equals(COLOR_SCHEDULED_PAST) || property.equals(COLOR_COMPLETED_TODAY)
 					|| property.equals(COLOR_SCHEDULED_TODAY) || property.equals(COLOR_SCHEDULED_THIS_WEEK)
 					|| property.equals(COLOR_INCOMING_BACKGROUND) || property.equals(COLOR_CATEGORY_GRADIENT_START)
-					|| property.equals(COLOR_CATEGORY_GRADIENT_END);
+					|| property.equals(COLOR_CATEGORY_GRADIENT_END) || property.equals(COLOR_TASK_ACTIVE);
 		}
 	}
 
