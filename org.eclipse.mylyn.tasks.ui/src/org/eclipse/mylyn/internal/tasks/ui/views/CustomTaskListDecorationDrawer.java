@@ -16,6 +16,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.provisional.commons.ui.DelayedRefreshJob;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
@@ -43,7 +44,7 @@ import org.eclipse.swt.widgets.TreeItem;
  */
 public class CustomTaskListDecorationDrawer implements Listener {
 
-	private final TaskListDelayedRefreshJob delayedRefreshJob;
+	private final DelayedRefreshJob delayedRefreshJob;
 
 	private final int activationImageOffset;
 
@@ -64,6 +65,8 @@ public class CustomTaskListDecorationDrawer implements Listener {
 
 	private boolean synchronizationOverlaid;
 
+	private boolean focusedMode;
+
 	private final org.eclipse.jface.util.IPropertyChangeListener PROPERTY_LISTENER = new org.eclipse.jface.util.IPropertyChangeListener() {
 
 		public void propertyChange(org.eclipse.jface.util.PropertyChangeEvent event) {
@@ -81,7 +84,7 @@ public class CustomTaskListDecorationDrawer implements Listener {
 		}
 	};
 
-	CustomTaskListDecorationDrawer(TaskListDelayedRefreshJob delayedRefreshJob, int activationImageOffset) {
+	CustomTaskListDecorationDrawer(DelayedRefreshJob delayedRefreshJob, int activationImageOffset, boolean focusedMode) {
 		this.delayedRefreshJob = delayedRefreshJob;
 		this.activationImageOffset = activationImageOffset;
 		this.lastClippingArea = new Rectangle(0, 0, 0, 0);
@@ -91,6 +94,7 @@ public class CustomTaskListDecorationDrawer implements Listener {
 				ITasksUiPreferenceConstants.OVERLAYS_INCOMING_TIGHT);
 		this.useStrikethroughForCompleted = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
 				ITasksUiPreferenceConstants.USE_STRIKETHROUGH_FOR_COMPLETED);
+		this.focusedMode = focusedMode;
 		TasksUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(PROPERTY_LISTENER);
 	}
 
@@ -233,7 +237,7 @@ public class CustomTaskListDecorationDrawer implements Listener {
 
 	private boolean hideDecorationOnContainer(ITaskContainer element, TreeItem treeItem) {
 		if (element instanceof UnmatchedTaskContainer) {
-			if (!delayedRefreshJob.isFocusedMode()) {
+			if (!focusedMode) {
 				return false;
 			} else if (AbstractTaskListFilter.hasDescendantIncoming(element)) {
 				return true;
@@ -245,7 +249,7 @@ public class CustomTaskListDecorationDrawer implements Listener {
 			}
 		}
 
-		if (!delayedRefreshJob.isFocusedMode()) {
+		if (focusedMode) {
 			return false;
 		} else if (element instanceof IRepositoryQuery || element instanceof TaskCategory) {
 			return treeItem.getExpanded();
@@ -319,6 +323,14 @@ public class CustomTaskListDecorationDrawer implements Listener {
 
 	public void setSynchronizationOverlaid(boolean synchronizationOverlaid) {
 		this.synchronizationOverlaid = synchronizationOverlaid;
+	}
+
+	public boolean isFocusedMode() {
+		return focusedMode;
+	}
+
+	public void setFocusedMode(boolean focusedMode) {
+		this.focusedMode = focusedMode;
 	}
 
 }
