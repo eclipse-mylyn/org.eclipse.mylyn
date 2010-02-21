@@ -45,7 +45,7 @@ public class TestUtil {
 
 		@Override
 		public String toString() {
-			return getClass().getName() + " [username=" + username + ",password=" + password + "]";
+			return getClass().getSimpleName() + " [username=" + username + ",password=" + password + "]";
 		}
 	}
 

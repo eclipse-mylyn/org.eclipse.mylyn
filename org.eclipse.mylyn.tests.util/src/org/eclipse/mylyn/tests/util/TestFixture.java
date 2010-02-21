@@ -168,6 +168,7 @@ public abstract class TestFixture {
 
 	public AbstractWebLocation location(PrivilegeLevel level, Proxy proxy) throws Exception {
 		Credentials credentials = TestUtil.readCredentials(level);
+		System.err.println(" Read credentials: " + credentials + " (" + level + ")"); //$NON-NLS-1$
 		return location(credentials.username, credentials.password, proxy);
 	}
 
@@ -186,6 +187,7 @@ public abstract class TestFixture {
 	public TaskRepository repository() {
 		TaskRepository repository = new TaskRepository(connectorKind, repositoryUrl);
 		Credentials credentials = TestUtil.readCredentials(PrivilegeLevel.USER);
+		System.err.println(" Read credentials: " + credentials); //$NON-NLS-1$
 		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials(credentials.username,
 				credentials.password), false);
 		return repository;
@@ -211,6 +213,7 @@ public abstract class TestFixture {
 
 		TaskRepository repository = new TaskRepository(connectorKind, repositoryUrl);
 		Credentials credentials = TestUtil.readCredentials(PrivilegeLevel.USER);
+		System.err.println(" Read credentials: " + credentials); //$NON-NLS-1$
 		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials(credentials.username,
 				credentials.password), true);
 		configureRepository(repository);
