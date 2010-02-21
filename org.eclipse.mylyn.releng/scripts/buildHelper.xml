@@ -356,7 +356,7 @@
 	
 	<target name="report-helper" depends="report-helper-init,pre-report">
 		<!-- transform Eclipse unit tests with custom style sheets -->
-		<xslt style="${basedir}/scripts/junit.xsl" basedir="${results.home}" excludes="TEST-*" includes="*Tests.xml" destdir="${results.home}" />
+		<xslt style="${basedir}/scripts/JUNIT.xsl" basedir="${results.home}" excludes="TEST-*" includes="*Tests.xml" destdir="${results.home}" />
 		<!-- annotate test output with test fixture names -->
 		<xslt force="true" style="${basedir}/scripts/test-fixture.xsl" basedir="${results.home}" includes="*Tests.xml" destdir="${build.results}/test-results" extension="-${build.target}.xml" />
 		<!-- annotate test output with base version -->
