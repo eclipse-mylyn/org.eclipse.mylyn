@@ -78,6 +78,7 @@ class HtmlSourceImageFetchingStrategy extends ImageFetchingStrategy {
 					// note: we use the alt text for the name since for some files there is a case-difference between
 					//       the server URL and the text used in the image src of the markup
 					String name = alt == null ? url.substring(url.lastIndexOf('/')) : alt;
+					name = name.replace(' ', '_');
 					get.setDest(new File(dest, name));
 					get.execute();
 					++fileCount;

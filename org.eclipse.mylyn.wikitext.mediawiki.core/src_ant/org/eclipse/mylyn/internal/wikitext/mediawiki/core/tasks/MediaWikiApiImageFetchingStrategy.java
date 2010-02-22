@@ -110,6 +110,7 @@ class MediaWikiApiImageFetchingStrategy extends ImageFetchingStrategy {
 				Matcher titleMatcher = imageTitlePattern.matcher(title);
 				if (titleMatcher.matches()) {
 					String name = titleMatcher.group(1);
+					name = name.replace(' ', '_');
 					String qualifiedUrl = base;
 					if (imageUrl.startsWith("/")) { //$NON-NLS-1$
 						qualifiedUrl += imageUrl.substring(0);

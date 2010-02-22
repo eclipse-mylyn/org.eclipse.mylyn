@@ -52,6 +52,15 @@ public class ImageReplacementToken extends PatternBasedElement {
 		@Override
 		public void emit() {
 			String imageUrl = group(1);
+			if (imageUrl.indexOf('/') == -1) {
+				// images hosted on the wiki should have spaces removed from their name
+				// this may seem a little odd but there's an issue here: files can be uploaded
+				// to the wiki with a name that differs from the URL.  Page authors can use
+				// either name in the wiki markup, and there's no way to know what they've used.
+				// to be safe we always replace space with underscore, and do the same in 
+				// the image fetching strategy.
+				imageUrl = imageUrl.replace(' ', '_');
+			}
 			String optionsString = group(2);
 
 			boolean thumbnail = false;
