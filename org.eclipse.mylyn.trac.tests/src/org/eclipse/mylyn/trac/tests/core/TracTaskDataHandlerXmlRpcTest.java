@@ -126,23 +126,28 @@ public class TracTaskDataHandlerXmlRpcTest extends TestCase {
 		assertFalse(session.needsPerformQueries());
 		assertEquals(Collections.emptySet(), session.getStaleTasks());
 
+		long mostRecentlyModified = 0;
 		// try changing ticket 3x to make sure it gets a new change time
 		for (int i = 0; i < 3; i++) {
 			ticket.putBuiltinValue(Key.DESCRIPTION, lastModified + "");
 			client.updateTicket(ticket, "comment", null);
 			TracTicket updateTicket = client.getTicket(ticket.getId(), null);
-			if (updateTicket.getLastChanged().getTime() > lastModified) {
+			mostRecentlyModified = TracUtil.toTracTime(updateTicket.getLastChanged());
+			if (mostRecentlyModified > lastModified) {
 				break;
 			} else if (i == 2) {
-				fail("Failed to update ticket modification time for ticket: " + ticket.getId());
+				fail("Failed to update ticket modification time: ticket id=" + ticket.getId() + ", lastModified="
+						+ lastModified + ", mostRectentlyModified=" + mostRecentlyModified);
 			}
 			Thread.sleep(1500);
 		}
 
-		repository.setSynchronizationTimeStamp((lastModified + 1) + "");
+		//repository.setSynchronizationTimeStamp((lastModified + 1) + "");
+		repository.setSynchronizationTimeStamp(mostRecentlyModified + "");
 		session = createSession(task);
 		connector.preSynchronization(session, null);
-		assertTrue(session.needsPerformQueries());
+		assertTrue("Expected change: ticket id=" + ticket.getId() + ", lastModified=" + lastModified
+				+ ", mostRectentlyModified=" + mostRecentlyModified, session.needsPerformQueries());
 		assertEquals(Collections.singleton(task), session.getStaleTasks());
 	}
 
@@ -360,7 +365,7 @@ public class TracTaskDataHandlerXmlRpcTest extends TestCase {
 		TaskData taskData = taskDataHandler.getTaskData(repository, "1", new NullProgressMonitor());
 		List<TaskAttribute> operations = taskData.getAttributeMapper().getAttributesByType(taskData,
 				TaskAttribute.TYPE_OPERATION);
-		assertEquals((hasReassign ? 5 : 4), operations.size());
+		assertEquals("Unexpected operations: " + operations, (hasReassign ? 5 : 4), operations.size());
 
 		TaskOperation operation = taskData.getAttributeMapper().getTaskOperation(operations.get(0));
 		assertEquals(TaskAttribute.OPERATION, operation.getTaskAttribute().getId());
