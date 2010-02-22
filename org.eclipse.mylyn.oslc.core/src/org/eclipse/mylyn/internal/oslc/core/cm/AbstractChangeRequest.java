@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 Tasktop Technologies.
+ * Copyright (c) 2004, 2009 Tasktop Technologies.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Tasktop EULA
  * which accompanies this distribution, and is available at
