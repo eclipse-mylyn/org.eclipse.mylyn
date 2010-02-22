@@ -12,13 +12,19 @@
 package org.eclipse.mylyn.internal.tasks.ui.util;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -37,6 +43,7 @@ import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.AbstractTaskRepositoryLinkProvider;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
@@ -45,6 +52,73 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  * @author Rob Elves
  */
 public class TasksUiExtensionReader {
+
+	private static class ConnectorDescriptor {
+
+		IConfigurationElement element;
+
+		IConfigurationElement migratorElement;
+
+		AbstractRepositoryConnector repositoryConnector;
+
+		AbstractTaskListMigrator migrator;
+
+		private final String id;
+
+		public ConnectorDescriptor(IConfigurationElement element) {
+			this.element = element;
+			this.id = element.getAttribute(ATTR_ID);
+		}
+
+		public String getId() {
+			return id;
+		}
+
+		public String getConnectorKind() {
+			return (repositoryConnector != null) ? repositoryConnector.getConnectorKind() : null;
+		}
+
+		public IStatus createConnector() {
+			Assert.isTrue(repositoryConnector == null);
+			try {
+				Object connectorCore = element.createExecutableExtension(ATTR_CLASS);
+				if (connectorCore instanceof AbstractRepositoryConnector) {
+					repositoryConnector = (AbstractRepositoryConnector) connectorCore;
+					return Status.OK_STATUS;
+				} else {
+					return new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load connector core " //$NON-NLS-1$
+							+ connectorCore.getClass().getCanonicalName());
+				}
+			} catch (Throwable e) {
+				return new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load connector core", e); //$NON-NLS-1$
+			}
+		}
+
+		public IStatus createMigrator() {
+			Assert.isTrue(migrator == null);
+			try {
+				Object migratorObject = migratorElement.createExecutableExtension(ATTR_CLASS);
+				if (migratorObject instanceof AbstractTaskListMigrator) {
+					migrator = (AbstractTaskListMigrator) migratorObject;
+					return Status.OK_STATUS;
+				} else {
+					return new Status(
+							IStatus.ERROR,
+							TasksUiPlugin.ID_PLUGIN,
+							"Could not load task list migrator migrator: " + migratorObject.getClass().getCanonicalName() //$NON-NLS-1$
+									+ " must implement " + AbstractTaskListMigrator.class.getCanonicalName()); //$NON-NLS-1$
+				}
+			} catch (Throwable e) {
+				return new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						"Could not load task list migrator extension", e); //$NON-NLS-1$
+			}
+		}
+
+		public String getPluginId() {
+			return element.getContributor().getName();
+		}
+
+	}
 
 	public static final String EXTENSION_REPOSITORIES = "org.eclipse.mylyn.tasks.ui.repositories"; //$NON-NLS-1$
 
@@ -128,33 +202,27 @@ public class TasksUiExtensionReader {
 
 	private static boolean coreExtensionsRead = false;
 
+	/**
+	 * Plug-in ids of connector extensions that failed to load.
+	 */
+	private static Set<String> disabledContributors = new HashSet<String>();
+
 	public static void initStartupExtensions(TaskListExternalizer taskListExternalizer) {
 		if (!coreExtensionsRead) {
 			IExtensionRegistry registry = Platform.getExtensionRegistry();
 
 			// NOTE: has to be read first, consider improving
-			List<AbstractTaskListMigrator> migrators = new ArrayList<AbstractTaskListMigrator>();
-			IExtensionPoint repositoriesExtensionPoint = registry.getExtensionPoint(EXTENSION_REPOSITORIES);
-			IExtension[] repositoryExtensions = repositoriesExtensionPoint.getExtensions();
-			for (IExtension repositoryExtension : repositoryExtensions) {
-				IConfigurationElement[] elements = repositoryExtension.getConfigurationElements();
-				for (IConfigurationElement element : elements) {
-					if (element.getName().equals(ELMNT_REPOSITORY_CONNECTOR)) {
-						readRepositoryConnectorCore(element);
-					} else if (element.getName().equals(ELMNT_MIGRATOR)) {
-						readMigrator(element, migrators);
-					}
-				}
-			}
-			taskListExternalizer.initialize(migrators);
+			initConnectorCores(taskListExternalizer, registry);
 
 			IExtensionPoint templatesExtensionPoint = registry.getExtensionPoint(EXTENSION_TEMPLATES);
 			IExtension[] templateExtensions = templatesExtensionPoint.getExtensions();
 			for (IExtension templateExtension : templateExtensions) {
 				IConfigurationElement[] elements = templateExtension.getConfigurationElements();
 				for (IConfigurationElement element : elements) {
-					if (element.getName().equals(EXTENSION_TMPL_REPOSITORY)) {
-						readRepositoryTemplate(element);
+					if (!isDisabled(element)) {
+						if (element.getName().equals(EXTENSION_TMPL_REPOSITORY)) {
+							readRepositoryTemplate(element);
+						}
 					}
 				}
 			}
@@ -164,7 +232,9 @@ public class TasksUiExtensionReader {
 			for (IExtension presentation : presentations) {
 				IConfigurationElement[] elements = presentation.getConfigurationElements();
 				for (IConfigurationElement element : elements) {
-					readPresentation(element);
+					if (!isDisabled(element)) {
+						readPresentation(element);
+					}
 				}
 			}
 
@@ -174,14 +244,114 @@ public class TasksUiExtensionReader {
 			for (IExtension editor : editors) {
 				IConfigurationElement[] elements = editor.getConfigurationElements();
 				for (IConfigurationElement element : elements) {
-					if (element.getName().equals(ELMNT_TASK_EDITOR_PAGE_FACTORY)) {
-						readTaskEditorPageFactory(element);
+					if (!isDisabled(element)) {
+						if (element.getName().equals(ELMNT_TASK_EDITOR_PAGE_FACTORY)) {
+							readTaskEditorPageFactory(element);
+						}
 					}
 				}
 			}
 
 			coreExtensionsRead = true;
 		}
+	}
+
+	private static void initConnectorCores(TaskListExternalizer taskListExternalizer, IExtensionRegistry registry) {
+		List<ConnectorDescriptor> descriptors = new ArrayList<ConnectorDescriptor>();
+		MultiStatus result = new MultiStatus(TasksUiPlugin.ID_PLUGIN, 0, "Repository connectors failed to load.", null); //$NON-NLS-1$
+
+		// read core and migrator extensions to check for id conflicts
+		Map<String, List<ConnectorDescriptor>> descriptorById = new LinkedHashMap<String, List<ConnectorDescriptor>>();
+		IExtensionPoint repositoriesExtensionPoint = registry.getExtensionPoint(EXTENSION_REPOSITORIES);
+		IExtension[] repositoryExtensions = repositoriesExtensionPoint.getExtensions();
+		for (IExtension repositoryExtension : repositoryExtensions) {
+			IConfigurationElement[] elements = repositoryExtension.getConfigurationElements();
+			ConnectorDescriptor descriptor = null;
+			IConfigurationElement migratorElement = null;
+			for (IConfigurationElement element : elements) {
+				if (element.getName().equals(ELMNT_REPOSITORY_CONNECTOR)) {
+					descriptor = new ConnectorDescriptor(element);
+				} else if (element.getName().equals(ELMNT_MIGRATOR)) {
+					migratorElement = element;
+				}
+			}
+			if (descriptor != null) {
+				descriptor.migratorElement = migratorElement;
+				descriptors.add(descriptor);
+				if (descriptor.getId() != null) {
+					add(descriptorById, descriptor.getId(), descriptor);
+				}
+			}
+		}
+
+		checkForConflicts(descriptors, result, descriptorById);
+
+		// create instances to check for connector kind conflicts
+		Map<String, List<ConnectorDescriptor>> descriptorByConnectorKind = new LinkedHashMap<String, List<ConnectorDescriptor>>();
+		for (ConnectorDescriptor descriptor : descriptors) {
+			IStatus status = descriptor.createConnector();
+			if (status.isOK()) {
+				add(descriptorByConnectorKind, descriptor.getConnectorKind(), descriptor);
+			} else {
+				result.add(status);
+			}
+		}
+
+		checkForConflicts(descriptors, result, descriptorByConnectorKind);
+
+		// register connectors
+		List<AbstractTaskListMigrator> migrators = new ArrayList<AbstractTaskListMigrator>();
+		for (ConnectorDescriptor descriptor : descriptors) {
+			TasksUiPlugin.getRepositoryManager().addRepositoryConnector(descriptor.repositoryConnector);
+			if (descriptor.migratorElement != null) {
+				IStatus status = descriptor.createMigrator();
+				if (status.isOK()) {
+					migrators.add(descriptor.migrator);
+				} else {
+					result.add(status);
+				}
+			}
+		}
+
+		if (!result.isOK()) {
+			StatusHandler.log(result);
+		}
+
+		taskListExternalizer.initialize(migrators);
+	}
+
+	private static boolean isDisabled(IConfigurationElement element) {
+		return disabledContributors.contains(element.getContributor().getName());
+	}
+
+	private static void checkForConflicts(List<ConnectorDescriptor> descriptors, MultiStatus result,
+			Map<String, List<ConnectorDescriptor>> descriptorById) {
+		for (Map.Entry<String, List<ConnectorDescriptor>> entry : descriptorById.entrySet()) {
+			if (entry.getValue().size() > 1) {
+				MultiStatus status = new MultiStatus(TasksUiPlugin.ID_PLUGIN, 0, NLS.bind(
+						"Connector ''{0}'' registered by multiple extensions.", entry.getKey()), null); //$NON-NLS-1$
+				for (ConnectorDescriptor descriptor : entry.getValue()) {
+					status.add(new Status(
+							IStatus.ERROR,
+							TasksUiPlugin.ID_PLUGIN,
+							NLS.bind(
+									"All extensions contributed by ''{0}'' have been disabled.", descriptor.getPluginId()), null)); //$NON-NLS-1$
+					disabledContributors.add(descriptor.getPluginId());
+					descriptors.remove(descriptor);
+				}
+				result.add(status);
+			}
+		}
+	}
+
+	private static void add(Map<String, List<ConnectorDescriptor>> descriptorById, String id,
+			ConnectorDescriptor descriptor) {
+		List<ConnectorDescriptor> list = descriptorById.get(id);
+		if (list == null) {
+			list = new ArrayList<ConnectorDescriptor>();
+			descriptorById.put(id, list);
+		}
+		list.add(descriptor);
 	}
 
 	public static void initWorkbenchUiExtensions() {
@@ -192,8 +362,10 @@ public class TasksUiExtensionReader {
 		for (IExtension repositoryExtension : repositoryExtensions) {
 			IConfigurationElement[] elements = repositoryExtension.getConfigurationElements();
 			for (IConfigurationElement element : elements) {
-				if (element.getName().equals(ELMNT_REPOSITORY_UI)) {
-					readRepositoryConnectorUi(element);
+				if (!isDisabled(element)) {
+					if (element.getName().equals(ELMNT_REPOSITORY_UI)) {
+						readRepositoryConnectorUi(element);
+					}
 				}
 			}
 		}
@@ -203,8 +375,10 @@ public class TasksUiExtensionReader {
 		for (IExtension linkProvidersExtension : linkProvidersExtensions) {
 			IConfigurationElement[] elements = linkProvidersExtension.getConfigurationElements();
 			for (IConfigurationElement element : elements) {
-				if (element.getName().equals(ELMNT_REPOSITORY_LINK_PROVIDER)) {
-					readLinkProvider(element);
+				if (!isDisabled(element)) {
+					if (element.getName().equals(ELMNT_REPOSITORY_LINK_PROVIDER)) {
+						readLinkProvider(element);
+					}
 				}
 			}
 		}
@@ -214,8 +388,10 @@ public class TasksUiExtensionReader {
 		for (IExtension dulicateDetectorsExtension : dulicateDetectorsExtensions) {
 			IConfigurationElement[] elements = dulicateDetectorsExtension.getConfigurationElements();
 			for (IConfigurationElement element : elements) {
-				if (element.getName().equals(ELMNT_DUPLICATE_DETECTOR)) {
-					readDuplicateDetector(element);
+				if (!isDisabled(element)) {
+					if (element.getName().equals(ELMNT_DUPLICATE_DETECTOR)) {
+						readDuplicateDetector(element);
+					}
 				}
 			}
 		}
@@ -225,8 +401,10 @@ public class TasksUiExtensionReader {
 		for (IExtension extension : extensions) {
 			IConfigurationElement[] elements = extension.getConfigurationElements();
 			for (IConfigurationElement element : elements) {
-				if (element.getName().equals(DYNAMIC_POPUP_ELEMENT)) {
-					readDynamicPopupContributor(element);
+				if (!isDisabled(element)) {
+					if (element.getName().equals(DYNAMIC_POPUP_ELEMENT)) {
+						readDynamicPopupContributor(element);
+					}
 				}
 			}
 		}
@@ -315,44 +493,37 @@ public class TasksUiExtensionReader {
 		}
 	}
 
-	private static void readRepositoryConnectorCore(IConfigurationElement element) {
-		try {
-			Object connectorCore = element.createExecutableExtension(ATTR_CLASS);
-			if (connectorCore instanceof AbstractRepositoryConnector) {
-				AbstractRepositoryConnector repositoryConnector = (AbstractRepositoryConnector) connectorCore;
-				TasksUiPlugin.getRepositoryManager().addRepositoryConnector(repositoryConnector);
-			} else {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load connector core " //$NON-NLS-1$
-						+ connectorCore.getClass().getCanonicalName()));
-			}
-		} catch (Throwable e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load connector core", e)); //$NON-NLS-1$
-		}
-	}
-
 	private static void readRepositoryConnectorUi(IConfigurationElement element) {
 		try {
 			Object connectorUiObject = element.createExecutableExtension(ATTR_CLASS);
 			if (connectorUiObject instanceof AbstractRepositoryConnectorUi) {
 				AbstractRepositoryConnectorUi connectorUi = (AbstractRepositoryConnectorUi) connectorUiObject;
-				TasksUiPlugin.getDefault().addRepositoryConnectorUi(connectorUi);
+				if (TasksUiPlugin.getConnector(connectorUi.getConnectorKind()) != null) {
+					TasksUiPlugin.getDefault().addRepositoryConnectorUi(connectorUi);
 
-				String iconPath = element.getAttribute(ATTR_BRANDING_ICON);
-				if (iconPath != null) {
-					ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(element.getContributor()
-							.getName(), iconPath);
-					if (descriptor != null) {
-						TasksUiPlugin.getDefault().addBrandingIcon(connectorUi.getConnectorKind(),
-								CommonImages.getImage(descriptor));
+					String iconPath = element.getAttribute(ATTR_BRANDING_ICON);
+					if (iconPath != null) {
+						ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(
+								element.getContributor().getName(), iconPath);
+						if (descriptor != null) {
+							TasksUiPlugin.getDefault().addBrandingIcon(connectorUi.getConnectorKind(),
+									CommonImages.getImage(descriptor));
+						}
 					}
-				}
-				String overlayIconPath = element.getAttribute(ATTR_OVERLAY_ICON);
-				if (overlayIconPath != null) {
-					ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(element.getContributor()
-							.getName(), overlayIconPath);
-					if (descriptor != null) {
-						TasksUiPlugin.getDefault().addOverlayIcon(connectorUi.getConnectorKind(), descriptor);
+					String overlayIconPath = element.getAttribute(ATTR_OVERLAY_ICON);
+					if (overlayIconPath != null) {
+						ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(
+								element.getContributor().getName(), overlayIconPath);
+						if (descriptor != null) {
+							TasksUiPlugin.getDefault().addOverlayIcon(connectorUi.getConnectorKind(), descriptor);
+						}
 					}
+				} else {
+					StatusHandler.log(new Status(
+							IStatus.ERROR,
+							TasksUiPlugin.ID_PLUGIN,
+							NLS.bind(
+									"Ignoring connector ui for kind ''{0}'' without corresponding core contributed by ''{1}''.", connectorUi.getConnectorKind(), element.getContributor().getName()))); //$NON-NLS-1$
 				}
 			} else {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load connector ui " //$NON-NLS-1$
@@ -416,23 +587,6 @@ public class TasksUiExtensionReader {
 		} catch (Throwable e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 					"Could not load dynamic popup menu extension", e)); //$NON-NLS-1$
-		}
-	}
-
-	private static void readMigrator(IConfigurationElement element, List<AbstractTaskListMigrator> migrators) {
-		try {
-			Object migratorObject = element.createExecutableExtension(ATTR_CLASS);
-			if (migratorObject instanceof AbstractTaskListMigrator) {
-				AbstractTaskListMigrator migrator = (AbstractTaskListMigrator) migratorObject;
-				migrators.add(migrator);
-			} else {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Could not load task list migrator migrator: " + migratorObject.getClass().getCanonicalName() //$NON-NLS-1$
-								+ " must implement " + AbstractTaskListMigrator.class.getCanonicalName())); //$NON-NLS-1$
-			}
-		} catch (Throwable e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Could not load task list migrator extension", e)); //$NON-NLS-1$
 		}
 	}
 
