@@ -142,7 +142,7 @@ public class TracTaskDataHandlerXmlRpcTest extends TestCase {
 		}
 
 		//repository.setSynchronizationTimeStamp((lastModified + 1) + "");
-		repository.setSynchronizationTimeStamp(mostRecentlyModified + "");
+		repository.setSynchronizationTimeStamp((mostRecentlyModified - 1) + "");
 		session = createSession(task);
 		connector.preSynchronization(session, null);
 		assertTrue("Expected change: ticket id=" + ticket.getId() + ", lastModified=" + lastModified

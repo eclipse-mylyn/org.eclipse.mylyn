@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.Policy;
@@ -573,6 +574,9 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			try {
 				ITracClient client = getClientManager().getTracClient(repository);
 				Set<Integer> ids = client.getChangedTickets(since, monitor);
+				if (CoreUtil.TEST_MODE) {
+					System.err.println(" preSynchronization(): changed=" + ids); //$NON-NLS-1$ 
+				}
 				if (ids.isEmpty()) {
 					// repository is unchanged
 					session.setNeedsPerformQueries(false);
@@ -586,6 +590,9 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 					// most recent modification date
 					Integer id = ids.iterator().next();
 					Date lastChanged = client.getTicketLastChanged(id, monitor);
+					if (CoreUtil.TEST_MODE) {
+						System.err.println(" preSynchronization(): since=" + since.getTime() + ", lastChanged=" + lastChanged.getTime()); //$NON-NLS-1$ //$NON-NLS-2$
+					}
 					if (since.equals(lastChanged)) {
 						// repository didn't actually change
 						session.setNeedsPerformQueries(false);
