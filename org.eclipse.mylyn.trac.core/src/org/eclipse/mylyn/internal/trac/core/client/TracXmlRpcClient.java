@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.regex.Pattern;
 
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.Header;
@@ -91,6 +92,8 @@ import org.eclipse.osgi.util.NLS;
  * @author Xiaoyang Guan
  */
 public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiClient {
+
+	private static final Pattern RPC_METHOD_NOT_FOUND_PATTERN = Pattern.compile("RPC method \".*\" not found"); //$NON-NLS-1$
 
 	private class XmlRpcRequest {
 
@@ -160,38 +163,17 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 						parameters, monitor);
 				return xmlrpc.execute(request);
 			} catch (TracHttpException e) {
-				if (e.code == HttpStatus.SC_UNAUTHORIZED) {
-					if (DEBUG_AUTH) {
-						System.err.println(location.getUrl() + ": Unauthorized (" + e.code + ")"); //$NON-NLS-1$ //$NON-NLS-2$ 
-					}
-					digestScheme = null;
-					TracLoginException exception = new TracLoginException();
-					exception.setNtlmAuthRequested(e.getAuthScheme() instanceof NTLMScheme);
-					throw exception;
-				} else if (e.code == HttpStatus.SC_FORBIDDEN) {
-					if (DEBUG_AUTH) {
-						System.err.println(location.getUrl() + ": Forbidden (" + e.code + ")"); //$NON-NLS-1$ //$NON-NLS-2$ 
-					}
-					digestScheme = null;
-					throw new TracPermissionDeniedException();
-				} else if (e.code == HttpStatus.SC_PROXY_AUTHENTICATION_REQUIRED) {
-					if (DEBUG_AUTH) {
-						System.err.println(location.getUrl() + ": Proxy authentication required (" + e.code + ")"); //$NON-NLS-1$ //$NON-NLS-2$ 
-					}
-					throw new TracProxyAuthenticationException();
-				} else {
-					throw new TracException(e);
-				}
+				handleAuthenticationException(e.code, e.getAuthScheme());
+				// if not handled, throw generic exception
+				throw new TracException(e);
 			} catch (XmlRpcException e) {
 				// XXX work-around for http://trac-hacks.org/ticket/5848 
-				if ("XML_RPC privileges are required to perform this operation".equals(e.getMessage())) { //$NON-NLS-1$
-					if (DEBUG_AUTH) {
-						System.err.println(location.getUrl() + ": Forbidden (" + e.code + ")"); //$NON-NLS-1$ //$NON-NLS-2$ 
-					}
-					digestScheme = null;
-					throw new TracPermissionDeniedException();
-				}
-				if (e.code == NO_SUCH_METHOD_ERROR) {
+				if ("XML_RPC privileges are required to perform this operation".equals(e.getMessage()) //$NON-NLS-1$
+						|| e.code == XML_FAULT_PERMISSION_DENIED) {
+					handleAuthenticationException(HttpStatus.SC_FORBIDDEN, null);
+					// should never happen as call above should always throw an exception
+					throw new TracRemoteException(e);
+				} else if (isNoSuchMethodException(e)) {
 					throw new TracNoSuchMethodException(e);
 				} else {
 					throw new TracRemoteException(e);
@@ -201,6 +183,43 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 			} catch (Exception e) {
 				throw new TracException(e);
 			}
+		}
+
+		private boolean isNoSuchMethodException(XmlRpcException e) {
+			// the fault code is used for various errors, therefore detection is based on the message
+			// message format by XML-RPC Plugin version:
+			//  1.0.1: XML-RPC method "ticket.ge1t" not found
+			//  1.0.6: RPC method "ticket.ge1t" not found
+			//  1.10:  RPC method "ticket.ge1t" not found' while executing 'ticket.ge1t()
+			if (e.code == XML_FAULT_GENERAL_ERROR && e.getMessage() != null
+					&& RPC_METHOD_NOT_FOUND_PATTERN.matcher(e.getMessage()).find()) {
+				return true;
+			}
+			return false;
+		}
+
+		protected boolean handleAuthenticationException(int code, AuthScheme authScheme) throws TracException {
+			if (code == HttpStatus.SC_UNAUTHORIZED) {
+				if (DEBUG_AUTH) {
+					System.err.println(location.getUrl() + ": Unauthorized (" + code + ")"); //$NON-NLS-1$ //$NON-NLS-2$ 
+				}
+				digestScheme = null;
+				TracLoginException exception = new TracLoginException();
+				exception.setNtlmAuthRequested(authScheme instanceof NTLMScheme);
+				throw exception;
+			} else if (code == HttpStatus.SC_FORBIDDEN) {
+				if (DEBUG_AUTH) {
+					System.err.println(location.getUrl() + ": Forbidden (" + code + ")"); //$NON-NLS-1$ //$NON-NLS-2$ 
+				}
+				digestScheme = null;
+				throw new TracPermissionDeniedException();
+			} else if (code == HttpStatus.SC_PROXY_AUTHENTICATION_REQUIRED) {
+				if (DEBUG_AUTH) {
+					System.err.println(location.getUrl() + ": Proxy authentication required (" + code + ")"); //$NON-NLS-1$ //$NON-NLS-2$ 
+				}
+				throw new TracProxyAuthenticationException();
+			}
+			return false;
 		}
 	}
 
@@ -216,7 +235,15 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 
 	public static final int REQUIRED_MINOR = 1;
 
-	private static final int NO_SUCH_METHOD_ERROR = 1;
+	// XML-RPC Plugin <1.10
+	private static final int XML_FAULT_GENERAL_ERROR = 1;
+
+	// since XML-RPC Plugin 1.10
+	@SuppressWarnings("unused")
+	private static final int XML_FAULT_RESOURCE_NOT_FOUND = 404;
+
+	// since XML-RPC Plugin 1.10
+	private static final int XML_FAULT_PERMISSION_DENIED = 403;
 
 	private static final int LATEST_VERSION = -1;
 
@@ -458,6 +485,13 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 			if (exceptionData.containsKey("faultCode") && exceptionData.containsKey("faultString")) { //$NON-NLS-1$ //$NON-NLS-2$ 
 				throw new XmlRpcException(Integer.parseInt(exceptionData.get("faultCode").toString()), //$NON-NLS-1$
 						(String) exceptionData.get("faultString")); //$NON-NLS-1$
+			} else if (exceptionData.containsKey("title")) { //$NON-NLS-1$
+				String message = (String) exceptionData.get("title"); //$NON-NLS-1$
+				String detail = (String) exceptionData.get("_message"); //$NON-NLS-1$
+				if (detail != null) {
+					message += ": " + detail; //$NON-NLS-1$
+				}
+				throw new XmlRpcException(XML_FAULT_GENERAL_ERROR, message);
 			}
 		}
 	}

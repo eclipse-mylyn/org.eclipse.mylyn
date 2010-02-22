@@ -77,6 +77,14 @@ public class TracXmlRpcClientTest extends TestCase {
 		}
 	}
 
+	public void testSingleCallExceptions() throws Exception {
+		try {
+			((TracXmlRpcClient) client).getTicketLastChanged(Integer.MAX_VALUE, null);
+			fail("Expected TracRemoteException");
+		} catch (TracRemoteException e) {
+		}
+	}
+
 	public void testUpdateAttributes() throws Exception {
 		assertNull(client.getMilestones());
 		client.updateAttributes(new NullProgressMonitor(), true);
@@ -326,6 +334,11 @@ public class TracXmlRpcClientTest extends TestCase {
 	}
 
 	public void testGetRecentWikiChanges() throws Exception {
+		// FIXME 3.4 re-enable for trunk
+		if (TracFixture.current() == TracFixture.TRAC_TRUNK_XML_RPC) {
+			return;
+		}
+
 		TracWikiPageInfo[] changes = ((TracXmlRpcClient) client).getRecentWikiChanges(new Date(0), null);
 		TracWikiPageInfo testPage = null;
 		for (TracWikiPageInfo item : changes) {
