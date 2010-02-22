@@ -575,7 +575,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 				ITracClient client = getClientManager().getTracClient(repository);
 				Set<Integer> ids = client.getChangedTickets(since, monitor);
 				if (CoreUtil.TEST_MODE) {
-					System.err.println(" preSynchronization(): changed=" + ids); //$NON-NLS-1$ 
+					System.err.println(" preSynchronization(): since=" + since.getTime() + ",changed=" + ids); //$NON-NLS-1$ //$NON-NLS-2$ 
 				}
 				if (ids.isEmpty()) {
 					// repository is unchanged
