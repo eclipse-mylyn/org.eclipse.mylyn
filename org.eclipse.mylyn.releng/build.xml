@@ -56,7 +56,23 @@
 			<param name="call" value="generate-metadata-sites"/>
 		</antcall>
 	</target>
-	
+
+	<target name="metadata" depends="init">
+		<fail unless="dir">required parameter missing: dir</fail>
+		<antcall target="generate-metadata">
+			<param name="dir" value="${dir}/e3.4"/>
+			<param name="name" value="Mylyn for Eclipse 3.4, 3.5 and 3.6"/>
+		</antcall>
+		<antcall target="generate-metadata">
+			<param name="dir" value="${dir}/extras"/>
+			<param name="name" value="Mylyn Extras"/>
+		</antcall>
+		<antcall target="generate-metadata">
+			<param name="dir" value="${dir}/incubator"/>
+			<param name="name" value="Mylyn Incubator"/>
+		</antcall>
+	</target>
+
 	<target name="generate-metadata-sites" depends="init">
   	    <condition property="label" value="3.3" else="3.4, 3.5 and 3.6"><equals arg1="${base.target}" arg2="3.3"/></condition>
 		<antcall target="generate-metadata">
