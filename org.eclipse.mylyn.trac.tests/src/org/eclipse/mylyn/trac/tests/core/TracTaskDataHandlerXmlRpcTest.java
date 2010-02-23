@@ -92,11 +92,6 @@ public class TracTaskDataHandlerXmlRpcTest extends TestCase {
 	}
 
 	public void testMarkStaleTasks() throws Exception {
-		// FIXME 3.4 re-enable test
-		if (TracFixture.current().getVersion().compareTo("0.12") >= 0) {
-			return;
-		}
-
 		SynchronizationSession session;
 		TracTicket ticket = TracTestUtil.createTicket(client, "markStaleTasks");
 		ITask task = TracTestUtil.createTask(repository, ticket.getId() + "");
@@ -119,11 +114,11 @@ public class TracTaskDataHandlerXmlRpcTest extends TestCase {
 		repository.setSynchronizationTimeStamp(lastModified + "");
 		session = createSession(task);
 		connector.preSynchronization(session, null);
-		// TODO this was fixed so it returns false now but only if the 
-		// query returns a single task
+		// false since query that check for changed tasks only returns a single task
 		assertFalse(session.needsPerformQueries());
 		assertEquals(Collections.emptySet(), session.getStaleTasks());
 
+		// nothing has changed, should detect a change
 		repository.setSynchronizationTimeStamp((lastModified + 1) + "");
 		session = createSession(task);
 		connector.preSynchronization(session, null);
@@ -137,7 +132,8 @@ public class TracTaskDataHandlerXmlRpcTest extends TestCase {
 			client.updateTicket(ticket, "comment", null);
 			TracTicket updateTicket = client.getTicket(ticket.getId(), null);
 			mostRecentlyModified = TracUtil.toTracTime(updateTicket.getLastChanged());
-			if (mostRecentlyModified > lastModified) {
+			// needs to be at least one second ahead of repository time stamp   
+			if (mostRecentlyModified > lastModified + 1) {
 				break;
 			} else if (i == 2) {
 				fail("Failed to update ticket modification time: ticket id=" + ticket.getId() + ", lastModified="
@@ -146,8 +142,8 @@ public class TracTaskDataHandlerXmlRpcTest extends TestCase {
 			Thread.sleep(1500);
 		}
 
-		//repository.setSynchronizationTimeStamp((lastModified + 1) + "");
-		repository.setSynchronizationTimeStamp((mostRecentlyModified - 1) + "");
+		// should now detect a change
+		repository.setSynchronizationTimeStamp((lastModified + 1) + "");
 		session = createSession(task);
 		connector.preSynchronization(session, null);
 		assertTrue("Expected change: ticket id=" + ticket.getId() + ", lastModified=" + lastModified
