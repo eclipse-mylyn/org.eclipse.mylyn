@@ -779,6 +779,12 @@
             ws="win32" 
             value="Tahoma-regular-10">
          </fontValue>
+           <fontValue
+           		os="linux"
+                value="sans-serif-regular-10"/>
+           <fontValue
+           		os="macosx"
+                value="Lucida Grande-regular-11"/>
          <description>
             %fonts.task.editor.comment.description
          </description>
