@@ -1,0 +1,4 @@
+!*******  Eclipse 3.6   ******** 
+plugin@org.eclipse.mylyn.discovery.core=v20100222-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.discovery.core
+plugin@org.eclipse.mylyn.discovery.ui=v20100222-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.discovery.ui
+plugin@org.eclipse.mylyn.discovery.tests=v20100222-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.discovery.tests
