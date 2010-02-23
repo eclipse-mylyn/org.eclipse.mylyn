@@ -93,6 +93,7 @@
 			<param name="test.target" value="swtbot"/>
 			<param name="test.plugin" value="${build.test.swtbot.plugin}"/>
 			<param name="test.classname" value="${build.test.swtbot.suite}"/>
+			<param name="skip3.4" value="true"/>
 		</antcall>
 	</target>
 
@@ -511,6 +512,7 @@
 		<delete includeemptydirs="true">
 			<fileset dir="${base.home}/eclipse">
 				<include name="plugins/org.eclipse.swtbot*junit3*/**"/>
+				<include name="plugins/org.junit_3.8.2*/**"/>
 				<include name="plugins/org.junit4_4.3.1*/**"/>
 				<include name="plugins/org.junit4_4.5.0*/**"/>
 			</fileset>			
@@ -702,12 +704,26 @@
 	<target name="report-helper" depends="report-helper-init,pre-report">
 		<!-- transform Eclipse unit tests with custom style sheets -->
 		<xslt style="${basedir}/scripts/junit.xsl" basedir="${results.home}" excludes="TEST-*" includes="*Tests.xml" destdir="${results.home}" />
-		<!-- annotate test output with test suite names -->
-		<xslt style="${basedir}/scripts/test-suite.xsl" basedir="${results.home}" includes="*Tests.xml" destdir="${build.results}/test-results" extension="-${base.target}.xml" />
-		
+		<!-- annotate test output with test fixture names -->
+		<xslt force="true" style="${basedir}/scripts/test-fixture.xsl" basedir="${results.home}" includes="*Tests.xml" destdir="${build.results}/test-results" extension="-${base.target}.xml" />
+		<!-- annotate test output with base version -->
+		<antcall target="report-helper-annotate-suite"/>
 		<antcall target="post-report"/>
 	</target>
 
+	<target name="report-helper-annotate-suite" if="test.annotateReport">
+		<!-- move existing files to temp directories for processing -->
+		<delete dir="${build.results}/test-results/temp"/>
+		<mkdir dir="${build.results}/test-results/temp"/>
+		<move todir="${build.results}/test-results/temp">
+			<fileset dir="${build.results}/test-results" includes="*-${base.target}.xml"/>
+		</move>
+		<xslt style="${basedir}/scripts/test-suite.xsl" basedir="${build.results}/test-results/temp" includes="*-${base.target}.xml" destdir="${build.results}/test-results" extension=".xml">
+			<param name="append" expression="@e${base.target}"/>
+		</xslt>
+		<delete dir="${build.results}/test-results/temp"/>
+	</target>
+		
 	<target name="performance-report" depends="init">
 		<condition property="build.perf.qualifier" value="${build.baseline}" else="${qualifier}"><isset property="build.perf.baseline"/></condition>
 
