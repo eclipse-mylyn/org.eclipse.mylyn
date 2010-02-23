@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 David Green and others.
+ * Copyright (c) 2007, 2010 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,7 +14,6 @@ package org.eclipse.mylyn.internal.wikitext.ui.editor.syntax;
 import org.eclipse.osgi.util.NLS;
 
 /**
- * 
  * @author David Green
  */
 class Messages extends NLS {
@@ -23,6 +22,12 @@ class Messages extends NLS {
 	public static String FastMarkupPartitioner_0;
 
 	public static String FastMarkupPartitioner_1;
+
+	public static String MarkupHyperlinkDetector_openException;
+
+	public static String MarkupHyperlinkDetector_openFileInEditor;
+
+	public static String MarkupHyperlinkDetector_unexpectedError;
 
 	public static String MarkupTokenScanner_2;
 

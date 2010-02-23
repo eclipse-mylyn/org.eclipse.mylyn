@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 David Green and others.
+ * Copyright (c) 2007, 2010 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,6 +30,7 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
+import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.IInformationProviderExtension;
@@ -52,6 +53,7 @@ import org.eclipse.mylyn.internal.wikitext.ui.editor.reconciler.MarkupValidation
 import org.eclipse.mylyn.internal.wikitext.ui.editor.reconciler.MultiReconcilingStrategy;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.FastMarkupPartitioner;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.MarkupDamagerRepairer;
+import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.MarkupHyperlinkDetector;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.MarkupTokenScanner;
 import org.eclipse.mylyn.internal.wikitext.ui.util.WikiTextUiResources;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
@@ -101,6 +103,8 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 
 	private String monospaceFontPreference;
 
+	private MarkupHyperlinkDetector markupHyperlinkDetector;
+
 	/**
 	 * @since 1.3
 	 * @param preferenceStore
@@ -123,6 +127,19 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 	 */
 	public MarkupSourceViewerConfiguration(IPreferenceStore preferenceStore) {
 		this(preferenceStore, WikiTextUiResources.PREFERENCE_TEXT_FONT, WikiTextUiResources.PREFERENCE_MONOSPACE_FONT);
+	}
+
+	@Override
+	protected List<IHyperlinkDetector> createCustomHyperlinkDetectors(ISourceViewer sourceViewer) {
+		List<IHyperlinkDetector> detectors = new ArrayList<IHyperlinkDetector>();
+		if (markupHyperlinkDetector == null) {
+			markupHyperlinkDetector = new MarkupHyperlinkDetector();
+			markupHyperlinkDetector.setMarkupLanguage(markupLanguage);
+			markupHyperlinkDetector.setFile(file);
+		}
+		detectors.add(markupHyperlinkDetector);
+		detectors.addAll(super.createCustomHyperlinkDetectors(sourceViewer));
+		return detectors;
 	}
 
 	/**
@@ -284,6 +301,9 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 		if (markupValidationReconcilingStrategy != null) {
 			markupValidationReconcilingStrategy.setMarkupLanguage(markupLanguage);
 		}
+		if (markupHyperlinkDetector != null) {
+			markupHyperlinkDetector.setMarkupLanguage(markupLanguage);
+		}
 	}
 
 	@Override
@@ -334,6 +354,9 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 		this.file = file;
 		if (markupValidationReconcilingStrategy != null) {
 			markupValidationReconcilingStrategy.setResource(file);
+		}
+		if (markupHyperlinkDetector != null) {
+			markupHyperlinkDetector.setFile(file);
 		}
 	}
 
