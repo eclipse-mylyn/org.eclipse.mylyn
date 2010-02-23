@@ -405,17 +405,19 @@ public class MediaWikiLanguageTest extends TestCase {
 	}
 
 	public void testImageWithLinkInCaption() {
+		// example from http://en.wikipedia.org/wiki/International_Floorball_Federation
 		String html = parser.parseToHtml("[[Image:IFF Logo.JPG|left|the logo|Official logo of the [[International Floorball Federation]], floorball's governing body.]]");
 
 		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<img align=\"left\" alt=\"the logo\" title=\"Official logo of the [[International Floorball Federation]], floorball's governing body.\" border=\"0\" src=\"IFF Logo.JPG\"/>"));
+		assertTrue(html.contains("<img align=\"left\" alt=\"the logo\" title=\"Official logo of the [[International Floorball Federation]], floorball's governing body.\" border=\"0\" src=\"IFF_Logo.JPG\"/>"));
 	}
 
 	public void testImageWithLinkInCaptionThumbnail() {
+		// example from http://en.wikipedia.org/wiki/International_Floorball_Federation
 		String html = parser.parseToHtml("[[Image:IFF Logo.JPG|thumb|left|the logo|Official logo of the [[International Floorball Federation]], floorball's governing body.]]");
 
 		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<div class=\"thumb left\"><div class=\"thumbinner\"><a href=\"IFF Logo.JPG\" class=\"image\"><img class=\"thumbimage\" align=\"left\" alt=\"the logo\" border=\"0\" src=\"IFF Logo.JPG\"/></a><div class=\"thumbcaption\">Official logo of the <a href=\"/wiki/International_Floorball_Federation\" title=\"International Floorball Federation\">International Floorball Federation</a>, floorball's governing body.</div></div></div>"));
+		assertTrue(html.contains("<div class=\"thumb left\"><div class=\"thumbinner\"><a href=\"IFF_Logo.JPG\" class=\"image\"><img class=\"thumbimage\" align=\"left\" alt=\"the logo\" border=\"0\" src=\"IFF_Logo.JPG\"/></a><div class=\"thumbcaption\">Official logo of the <a href=\"/wiki/International_Floorball_Federation\" title=\"International Floorball Federation\">International Floorball Federation</a>, floorball's governing body.</div></div></div>"));
 	}
 
 	public void testImageWithTitle() {
