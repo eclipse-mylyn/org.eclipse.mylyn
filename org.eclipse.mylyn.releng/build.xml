@@ -58,17 +58,17 @@
 	</target>
 
 	<target name="metadata" depends="init">
-		<fail unless="dir">required parameter missing: dir</fail>
+		<fail unless="reldir">required parameter missing: reldir</fail>
 		<antcall target="generate-metadata">
-			<param name="dir" value="${dir}/e3.4"/>
+			<param name="dir" value="${reldir}/e3.4"/>
 			<param name="name" value="Mylyn for Eclipse 3.4, 3.5 and 3.6"/>
 		</antcall>
 		<antcall target="generate-metadata">
-			<param name="dir" value="${dir}/extras"/>
+			<param name="dir" value="${reldir}/extras"/>
 			<param name="name" value="Mylyn Extras"/>
 		</antcall>
 		<antcall target="generate-metadata">
-			<param name="dir" value="${dir}/incubator"/>
+			<param name="dir" value="${reldir}/incubator"/>
 			<param name="name" value="Mylyn Incubator"/>
 		</antcall>
 	</target>
