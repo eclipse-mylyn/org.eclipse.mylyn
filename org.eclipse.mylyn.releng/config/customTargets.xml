@@ -53,6 +53,7 @@
 			<fileset dir="${buildDirectory}/maps" includes="**/mylyn*.map">
 				<exclude name="**/*${baseTarget}.map"/>
 				<exclude name="**/*all.map"/>
+				<exclude name="**/*common.map"/>
 			</fileset>
 		</delete>
 	</target>
