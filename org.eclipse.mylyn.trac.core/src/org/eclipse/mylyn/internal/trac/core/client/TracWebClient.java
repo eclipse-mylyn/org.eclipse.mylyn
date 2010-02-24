@@ -94,15 +94,7 @@ public class TracWebClient extends AbstractTracClient {
 				if (!authenticated) {
 					AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
 					if (credentialsValid(credentials)) {
-						try {
-							authenticate(monitor);
-						} catch (TracLoginException e) {
-							if (CoreUtil.TEST_MODE) {
-								authenticate(monitor);
-							} else {
-								throw e;
-							}
-						}
+						authenticate(monitor);
 					}
 				}
 
