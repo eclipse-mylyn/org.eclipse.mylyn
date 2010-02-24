@@ -290,7 +290,7 @@ public class TasksUiExtensionReader {
 		Map<String, List<ConnectorDescriptor>> descriptorByConnectorKind = new LinkedHashMap<String, List<ConnectorDescriptor>>();
 		for (ConnectorDescriptor descriptor : descriptors) {
 			IStatus status = descriptor.createConnector();
-			if (status.isOK()) {
+			if (status.isOK() && descriptor.repositoryConnector != null) {
 				add(descriptorByConnectorKind, descriptor.getConnectorKind(), descriptor);
 			} else {
 				result.add(status);
@@ -302,13 +302,15 @@ public class TasksUiExtensionReader {
 		// register connectors
 		List<AbstractTaskListMigrator> migrators = new ArrayList<AbstractTaskListMigrator>();
 		for (ConnectorDescriptor descriptor : descriptors) {
-			TasksUiPlugin.getRepositoryManager().addRepositoryConnector(descriptor.repositoryConnector);
-			if (descriptor.migratorElement != null) {
-				IStatus status = descriptor.createMigrator();
-				if (status.isOK()) {
-					migrators.add(descriptor.migrator);
-				} else {
-					result.add(status);
+			if (descriptor.repositoryConnector != null) {
+				TasksUiPlugin.getRepositoryManager().addRepositoryConnector(descriptor.repositoryConnector);
+				if (descriptor.migratorElement != null) {
+					IStatus status = descriptor.createMigrator();
+					if (status.isOK() && descriptor.migrator != null) {
+						migrators.add(descriptor.migrator);
+					} else {
+						result.add(status);
+					}
 				}
 			}
 		}
