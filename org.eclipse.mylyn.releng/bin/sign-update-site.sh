@@ -38,7 +38,7 @@ fi
 SRC=/home/data/httpd/download.eclipse.org/tools/mylyn/update-archive/$MAJOR_VERSION/$QUALIFIER
 DST=/opt/public/download-staging.priv/tools/mylyn
 OUT=$DST/output
-TMP=$DST/tmp/$MAJOR_VERSION-$QUALIFIER
+TMP=$DST/tmp/$MAJOR_VERSION.$QUALIFIER
 JAVA_HOME=/opt/ibm/java2-ppc-50
 ECLIPSE_HOME=/shared/tools/mylyn/eclipse
 
@@ -142,3 +142,6 @@ rezip incubator
 /bin/chmod o+r -R $SRC
 /usr/bin/find $SRC -type d | xargs chmod +x
 rm -R $SRC-DELETE
+
+# clean up
+/bin/rm -R $TMP || true
