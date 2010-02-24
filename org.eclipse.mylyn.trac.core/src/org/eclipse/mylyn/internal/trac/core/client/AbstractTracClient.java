@@ -15,14 +15,12 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.HashMap;
 
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.NameValuePair;
-import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -145,10 +143,7 @@ public abstract class AbstractTracClient implements ITracClient {
 		}
 
 		if (CoreUtil.TEST_MODE) {
-			AuthScope authScope = new AuthScope(WebUtil.getHost(repositoryUrl), WebUtil.getPort(repositoryUrl), null,
-					AuthScope.ANY_SCHEME);
-			System.err.println(" Authentication failed: " + httpClient.getState().getCredentials(authScope)); //$NON-NLS-1$
-			System.err.println(" Cookies: " + Arrays.asList(cookies)); //$NON-NLS-1$
+			System.err.println(" Authentication failed: " + httpClient.getState()); //$NON-NLS-1$
 		}
 
 		throw new TracLoginException();
