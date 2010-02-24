@@ -114,7 +114,14 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 		public void propertyChange(PropertyChangeEvent event) {
 			String property = event.getProperty();
 			if (property.equals(ITasksUiPreferenceConstants.SHOW_TRIM)) {
-				setTrimVisible((Boolean) event.getNewValue());
+				Object newValue = event.getNewValue();
+				Boolean isVisible = false;
+				if (newValue instanceof Boolean) {
+					isVisible = (Boolean) newValue;
+				} else if (newValue instanceof String) {
+					isVisible = Boolean.parseBoolean((String) newValue);
+				}
+				setTrimVisible(isVisible);
 			}
 		}
 	};
