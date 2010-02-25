@@ -21,6 +21,7 @@ import org.eclipse.mylyn.tasks.tests.core.TaskRepositoryLocationTest;
 import org.eclipse.mylyn.tasks.tests.ui.ContextPerspectiveManagerTest;
 import org.eclipse.mylyn.tasks.tests.ui.RetrieveTitleFromUrlTest;
 import org.eclipse.mylyn.tasks.tests.ui.TaskAttachmentPropertyTesterTest;
+import org.eclipse.mylyn.tasks.tests.ui.TaskAttributeDiffTest;
 import org.eclipse.mylyn.tasks.tests.ui.TaskHyperlinkDetectorTest;
 import org.eclipse.mylyn.tasks.tests.ui.TaskListSynchronizationSchedulerTest;
 import org.eclipse.mylyn.tasks.tests.ui.TaskRelationHyperlinkDetectorTest;
@@ -99,6 +100,7 @@ public class AllTasksTests {
 		suite.addTestSuite(TaskListSynchronizationSchedulerTest.class);
 		suite.addTestSuite(PlanningPartTest.class);
 		suite.addTestSuite(RepositoryCompletionProcessorTest.class);
+		suite.addTestSuite(TaskAttributeDiffTest.class);
 		// XXX long running tests, put back?
 		//suite.addTestSuite(QueryExportImportTest.class);
 		//suite.addTestSuite(BackgroundSaveTest.class);
