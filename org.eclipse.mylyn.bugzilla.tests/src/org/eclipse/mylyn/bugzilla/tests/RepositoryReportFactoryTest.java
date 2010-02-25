@@ -53,6 +53,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 			repository.setCredentials(AuthenticationType.REPOSITORY,
 					new AuthenticationCredentials("invalid", "invalid"), false);
 			connector.getTaskData(repository, "1", new NullProgressMonitor());
+			fail("CoreException expected but not found");
 		} catch (CoreException e) {
 			errorMessage = e.getStatus().getMessage();
 		}
