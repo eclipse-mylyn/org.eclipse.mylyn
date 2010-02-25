@@ -340,8 +340,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		Composite buttonComposite = new Composite(control, SWT.NONE);
 		buttonComposite.setLayout(new GridLayout(2, false));
 		GridData g = new GridData(GridData.FILL_HORIZONTAL);
-		g.widthHint = 500;
-		g.heightHint = 200;
 		Button clearButton = new Button(buttonComposite, SWT.PUSH);
 		clearButton.setText(Messages.BugzillaSearchPage_ClearFields);
 		clearButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
