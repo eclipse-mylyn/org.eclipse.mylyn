@@ -8,6 +8,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     David Green - fix for bug 266693
+ *     Abner Ballardo - fix for bug 288427
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests.ui.editor;
@@ -93,6 +94,28 @@ public class TaskUrlHyperlinkDetectorTest extends TestCase {
 		assertEquals("http://foo", ((TaskUrlHyperlink) links[0]).getURLString());
 	}
 
+	public void testClosingParenthesis() {
+		IHyperlink[] links = detect("http://foo?(bar)", 0, 0);
+		assertNotNull(links);
+		assertEquals(1, links.length);
+		assertEquals("http://foo?(bar)", ((TaskUrlHyperlink) links[0]).getURLString());
+
+		links = detect("(http://foo?(bar))", 0, 18);
+		assertNotNull(links);
+		assertEquals(1, links.length);
+		assertEquals("http://foo?(bar)", ((TaskUrlHyperlink) links[0]).getURLString());
+
+		links = detect("http://foo?((((bar).", 0, 0);
+		assertNotNull(links);
+		assertEquals(1, links.length);
+		assertEquals("http://foo?((((bar)", ((TaskUrlHyperlink) links[0]).getURLString());
+
+		links = detect("http://foo?(bar))))))))", 0, 0);
+		assertNotNull(links);
+		assertEquals(1, links.length);
+		assertEquals("http://foo?(bar)", ((TaskUrlHyperlink) links[0]).getURLString());
+	}
+
 	public void testDetectionUsingExtent() {
 		IHyperlink[] hyperlinks = detect("aa http://www.eclipse.org test", 0, 30);
 		assertNotNull(hyperlinks);
@@ -116,6 +139,16 @@ public class TaskUrlHyperlinkDetectorTest extends TestCase {
 		assertEquals(new Region(3, 22), hyperlinks[0].getHyperlinkRegion());
 		assertEquals(new Region(27, 22), hyperlinks[1].getHyperlinkRegion());
 		assertEquals(new Region(51, 22), hyperlinks[2].getHyperlinkRegion());
+	}
+
+	public void testDetectionMultiplelinesClosingParenthesis() {
+		String text = "aa http://www.eclipse.org?foo((bar)\n\n)(http://www.eclipse.org)\nhttp://www.eclipse.org()";
+		IHyperlink[] hyperlinks = detect(text, 0, text.length());
+		assertNotNull(hyperlinks);
+		assertEquals(3, hyperlinks.length);
+		assertEquals(new Region(3, 32), hyperlinks[0].getHyperlinkRegion());
+		assertEquals(new Region(39, 22), hyperlinks[1].getHyperlinkRegion());
+		assertEquals(new Region(63, 24), hyperlinks[2].getHyperlinkRegion());
 	}
 
 	public void testDetectionMultiplelines() {
