@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+    Copyright (c) 2010 Tasktop Technologies and others.
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
+   
+    Contributors:
+         Tasktop Technologies - initial API and implementation
+ -->
+<plugin>
+  <extension
+     point="org.eclipse.mylyn.tasks.ui.duplicateDetectors">
+    <detector
+       class="org.eclipse.mylyn.internal.tasks.ui.search.StackTraceDuplicateDetector"
+       name="%duplicateDetectors.name">
+    </detector>
+  </extension>    
+  <extension point="org.eclipse.ui.viewActions"> 
+    <viewContribution 
+       id="org.eclipse.mylyn.tasks.ui.actions.view" 
+       targetID="org.eclipse.mylyn.tasks.ui.views.tasks">
+      <action
+		 class="org.eclipse.mylyn.internal.tasks.ui.actions.OpenTaskSearchAction"
+		 icon="icons/eview16/task-search.gif"
+		 id="org.eclipse.mylyn.tasks.ui.search.open"
+		 label="%OpenTaskSearchAction.label"
+		 menubarPath="tasks">
+      </action>
+    </viewContribution>
+  </extension>
+  <extension
+     id="org.eclipse.mylyn.tasks.ui.search.results"
+     point="org.eclipse.search.searchResultViewPages">
+    <viewPage
+       class="org.eclipse.mylyn.internal.tasks.ui.search.RepositorySearchResultView"
+       searchResultClass="org.eclipse.mylyn.internal.tasks.ui.search.RepositorySearchResult"
+       id="org.eclipse.mylyn.internal.tasks.ui.search.RepositorySearchResultView"/>
+  </extension>
+  <extension
+     id="org.eclipse.mylyn.tasks.ui.repositorySearchPage"
+     name="%repositorySearchPage.name"
+     point="org.eclipse.search.searchPages">
+    <page
+       class="org.eclipse.mylyn.internal.tasks.ui.TaskSearchPage"
+       enabled="true" 
+       icon="icons/eview16/task-search.gif"
+       id="org.eclipse.mylyn.tasks.ui.search.page"
+       label="%TaskSearchPage.label" 
+       tabPosition="999"/>
+  </extension>
+  <extension
+     point="org.eclipse.core.runtime.adapters">
+    <factory
+       adaptableType="org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer"
+       class="org.eclipse.mylyn.internal.tasks.ui.search.SearchScoreComputerAdapterFactory">
+      <adapter
+	 type="org.eclipse.search.ui.ISearchPageScoreComputer">
+      </adapter>
+    </factory>
+  </extension>
+</plugin>
