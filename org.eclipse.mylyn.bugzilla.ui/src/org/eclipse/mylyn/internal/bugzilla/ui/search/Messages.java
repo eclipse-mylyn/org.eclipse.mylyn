@@ -111,5 +111,5 @@ public class Messages extends NLS {
 
 	public static String BugzillaSearchPage_ClearFields;
 
-	public static String BugzillaSearchPage_Advanced;
+	public static String BugzillaSearchPage_More_Options;
 }

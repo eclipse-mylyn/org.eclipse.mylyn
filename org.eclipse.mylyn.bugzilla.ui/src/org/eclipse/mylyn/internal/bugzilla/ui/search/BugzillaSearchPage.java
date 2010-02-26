@@ -264,7 +264,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 	private final FormToolkit toolkit;
 
-	private ExpandableComposite advancedExpandComposite;
+	private ExpandableComposite moreOptionsExpandComposite;
 
 	private final SelectionAdapter updateActionSelectionAdapter = new SelectionAdapter() {
 		@Override
@@ -420,35 +420,35 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			queryTitle.setFocus();
 		}
 
-		advancedExpandComposite = toolkit.createExpandableComposite(control, ExpandableComposite.COMPACT
+		moreOptionsExpandComposite = toolkit.createExpandableComposite(control, ExpandableComposite.COMPACT
 				| ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR);
-		advancedExpandComposite.setFont(control.getFont());
-		advancedExpandComposite.setBackground(null);
-		advancedExpandComposite.setText(Messages.BugzillaSearchPage_Advanced);
-		advancedExpandComposite.setLayout(new GridLayout(3, false));
+		moreOptionsExpandComposite.setFont(control.getFont());
+		moreOptionsExpandComposite.setBackground(null);
+		moreOptionsExpandComposite.setText(Messages.BugzillaSearchPage_More_Options);
+		moreOptionsExpandComposite.setLayout(new GridLayout(3, false));
 		g = new GridData(GridData.FILL_HORIZONTAL);
 		g.horizontalSpan = 3;
-		advancedExpandComposite.setLayoutData(g);
-		advancedExpandComposite.addExpansionListener(new ExpansionAdapter() {
+		moreOptionsExpandComposite.setLayoutData(g);
+		moreOptionsExpandComposite.addExpansionListener(new ExpansionAdapter() {
 			@Override
 			public void expansionStateChanged(ExpansionEvent e) {
 				getControl().getShell().pack();
 			}
 		});
 
-		Composite advancedComposite = new Composite(advancedExpandComposite, SWT.NULL);
-		advancedComposite.setLayout(new GridLayout(4, false));
+		Composite moreOptionsComposite = new Composite(moreOptionsExpandComposite, SWT.NULL);
+		moreOptionsComposite.setLayout(new GridLayout(4, false));
 		g = new GridData(GridData.FILL_HORIZONTAL);
 		g.widthHint = 500;
 		g.heightHint = 200;
 
-		advancedComposite.setLayoutData(g);
-		Dialog.applyDialogFont(advancedComposite);
-		advancedExpandComposite.setClient(advancedComposite);
+		moreOptionsComposite.setLayoutData(g);
+		Dialog.applyDialogFont(moreOptionsComposite);
+		moreOptionsExpandComposite.setClient(moreOptionsComposite);
 
 		createBasicComposite(basicComposite);
-		createAdvancedComposite(advancedComposite);
-		createSearchGroup(advancedComposite);
+		createMoreOptionsComposite(moreOptionsComposite);
+		createSearchGroup(moreOptionsComposite);
 	}
 
 	private void createBasicComposite(Composite basicComposite) {
@@ -616,26 +616,26 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		status.setLayoutData(gd_status);
 		status.addSelectionListener(updateActionSelectionAdapter);
 
-		Composite priorityComposite = new Composite(topForm, SWT.NONE);
-		GridLayout priorityLayout = new GridLayout();
-		priorityLayout.marginWidth = 0;
-		priorityLayout.marginHeight = 0;
-		priorityLayout.horizontalSpacing = 0;
-		priorityComposite.setLayout(priorityLayout);
+		Composite severityComposite = new Composite(topForm, SWT.NONE);
+		GridLayout severityLayout = new GridLayout();
+		severityLayout.marginWidth = 0;
+		severityLayout.marginHeight = 0;
+		severityLayout.horizontalSpacing = 0;
+		severityComposite.setLayout(severityLayout);
 
-		Label priorityLabel = new Label(priorityComposite, SWT.LEFT);
-		priorityLabel.setText(Messages.BugzillaSearchPage_PROORITY);
-		priorityLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		Label severityLabel = new Label(severityComposite, SWT.LEFT);
+		severityLabel.setText(Messages.BugzillaSearchPage_Severity);
+		severityLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		priority = new List(priorityComposite, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
-		final GridData gd_priority = new GridData(SWT.FILL, SWT.FILL, true, true);
-		gd_priority.heightHint = HEIGHT_ATTRIBUTE_COMBO;
-		priority.setLayoutData(gd_priority);
-		priority.addSelectionListener(updateActionSelectionAdapter);
+		severity = new List(severityComposite, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
+		final GridData gd_severity = new GridData(SWT.FILL, SWT.FILL, true, true);
+		gd_severity.heightHint = HEIGHT_ATTRIBUTE_COMBO;
+		severity.setLayoutData(gd_severity);
+		severity.addSelectionListener(updateActionSelectionAdapter);
 
 	}
 
-	private void createAdvancedComposite(Composite advancedComposite) {
+	private void createMoreOptionsComposite(Composite advancedComposite) {
 
 		// Info text
 		Label labelComment = new Label(advancedComposite, SWT.LEFT);
@@ -767,22 +767,22 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		bottomLayoutData.widthHint = 400;
 		bottomForm.setLayoutData(bottomLayoutData);
 
-		Composite severityComposite = new Composite(bottomForm, SWT.NONE);
-		GridLayout severityLayout = new GridLayout();
-		severityLayout.marginWidth = 0;
-		severityLayout.marginHeight = 0;
-		severityLayout.horizontalSpacing = 0;
-		severityComposite.setLayout(severityLayout);
+		Composite priorityComposite = new Composite(bottomForm, SWT.NONE);
+		GridLayout priorityLayout = new GridLayout();
+		priorityLayout.marginWidth = 0;
+		priorityLayout.marginHeight = 0;
+		priorityLayout.horizontalSpacing = 0;
+		priorityComposite.setLayout(priorityLayout);
 
-		Label severityLabel = new Label(severityComposite, SWT.LEFT);
-		severityLabel.setText(Messages.BugzillaSearchPage_Severity);
-		severityLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		Label priorityLabel = new Label(priorityComposite, SWT.LEFT);
+		priorityLabel.setText(Messages.BugzillaSearchPage_PROORITY);
+		priorityLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		severity = new List(severityComposite, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
-		final GridData gd_severity = new GridData(SWT.FILL, SWT.FILL, true, true);
-		gd_severity.heightHint = HEIGHT_ATTRIBUTE_COMBO;
-		severity.setLayoutData(gd_severity);
-		severity.addSelectionListener(updateActionSelectionAdapter);
+		priority = new List(priorityComposite, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
+		final GridData gd_priority = new GridData(SWT.FILL, SWT.FILL, true, true);
+		gd_priority.heightHint = HEIGHT_ATTRIBUTE_COMBO;
+		priority.setLayoutData(gd_priority);
+		priority.addSelectionListener(updateActionSelectionAdapter);
 
 		Composite resolutionComposite = new Composite(bottomForm, SWT.NONE);
 		GridLayout resolutionLayout = new GridLayout();
@@ -1785,10 +1785,10 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			if ((commentPattern.getText() != null && !commentPattern.getText().equals("")) || // //$NON-NLS-1$
 					(emailPattern2.getText() != null && !emailPattern2.getText().equals("")) || // //$NON-NLS-1$
 					(keywords.getText() != null && !keywords.getText().equals("")) || // //$NON-NLS-1$
-					severity.getSelection().length > 0 || resolution.getSelection().length > 0
+					priority.getSelection().length > 0 || resolution.getSelection().length > 0
 					|| version.getSelection().length > 0 || target.getSelection().length > 0
 					|| hardware.getSelection().length > 0 || os.getSelection().length > 0) {
-				advancedExpandComposite.setExpanded(true);
+				moreOptionsExpandComposite.setExpanded(true);
 			}
 
 		} catch (IllegalArgumentException e) {
