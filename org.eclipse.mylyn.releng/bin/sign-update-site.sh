@@ -142,3 +142,6 @@ rezip incubator
 /bin/chmod o+r -R $SRC
 /usr/bin/find $SRC -type d | xargs chmod +x
 rm -R $SRC-DELETE
+
+# clean up
+/bin/rm -R $TMP || true
