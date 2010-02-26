@@ -43,7 +43,7 @@ public class Messages extends NLS {
 
 	public static String TasksUiPreferencePage_Data_directory_;
 
-	public static String TasksUiPreferencePage_Destination_folder_does_not_exist;
+	public static String TasksUiPreferencePage_Destination_folder_cannot_be_created;
 
 	public static String TasksUiPreferencePage_Display_notifications_for_overdue_tasks_and_incoming_changes;
 

@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Abner Ballardo - fix for bug 276113
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.preferences;
@@ -89,8 +90,6 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 	private Button browse = null;
 
 	private Button notificationEnabledButton = null;
-
-	private int taskDataDirectoryAction = -1;
 
 	private final FormToolkit toolkit;
 
@@ -224,7 +223,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		taskDirectory = taskDirectory.replaceAll(BACKSLASH_MULTI, FORWARDSLASH);
 
 		if (!taskDirectory.equals(TasksUiPlugin.getDefault().getDataDirectory())) {
-			if (taskDataDirectoryAction == IDialogConstants.OK_ID) {
+			if (checkForExistingTasklist(taskDirectory)) {
 				Exception exception = null;
 				try {
 					TasksUiPlugin.getDefault().setDataDirectory(taskDirectory);
@@ -243,9 +242,9 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 						taskDirectoryText.setText(originalDirectory);
 					}
 				}
-
-			} else if (taskDataDirectoryAction == IDialogConstants.CANCEL_ID) {
-				// shouldn't get here
+			} else {
+				taskDirectoryText.setFocus();
+				return false;
 			}
 		}
 
@@ -296,19 +295,9 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 	@Override
 	public void performDefaults() {
 		super.performDefaults();
-		String taskDirectory = TasksUiPlugin.getDefault().getDefaultDataDirectory();
-		if (!taskDirectory.equals(TasksUiPlugin.getDefault().getDataDirectory())) {
-			checkForExistingTasklist(taskDirectory);
-			if (taskDataDirectoryAction != IDialogConstants.CANCEL_ID) {
-				taskDirectoryText.setText(taskDirectory);
-//				backupFolderText.setText(taskDirectory + FORWARDSLASH + ITasksCoreConstants.DEFAULT_BACKUP_FOLDER_NAME);
-//				backupNow.setEnabled(false);
-			}
-		} else {
-			taskDirectoryText.setText(taskDirectory);
+		taskDirectoryText.setText(TasksUiPlugin.getDefault().getDefaultDataDirectory());
 //			backupFolderText.setText(taskDirectory + FORWARDSLASH + ITasksCoreConstants.DEFAULT_BACKUP_FOLDER_NAME);
 //			backupNow.setEnabled(true);
-		}
 
 		notificationEnabledButton.setSelection(getPreferenceStore().getDefaultBoolean(
 				ITasksUiPreferenceConstants.NOTIFICATIONS_ENABLED));
@@ -430,7 +419,6 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		taskDirectory = taskDirectory.replaceAll(BACKSLASH_MULTI, FORWARDSLASH);
 		taskDirectoryText = new Text(dataDirComposite, SWT.BORDER);
 		taskDirectoryText.setText(taskDirectory);
-		taskDirectoryText.setEditable(false);
 		taskDirectoryText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		browse = new Button(dataDirComposite, SWT.TRAIL);
@@ -451,11 +439,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 					return;
 				}
 				dir = dir.replaceAll(BACKSLASH_MULTI, FORWARDSLASH);
-				checkForExistingTasklist(dir);
-
-				if (taskDataDirectoryAction != IDialogConstants.CANCEL_ID) {
-					taskDirectoryText.setText(dir);
-				}
+				taskDirectoryText.setText(dir);
 			}
 
 		});
@@ -599,27 +583,30 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		return "" + minutes; //$NON-NLS-1$
 	}
 
-	private void checkForExistingTasklist(String dir) {
+	private boolean checkForExistingTasklist(String dir) {
 		File newDataFolder = new File(dir);
-		if (newDataFolder.exists()) {
-
-			MessageDialog dialogConfirm = new MessageDialog(
-					null,
-					Messages.TasksUiPreferencePage_Confirm_Task_List_data_directory_change,
-					null,
-					Messages.TasksUiPreferencePage_A_new_empty_Task_List_will_be_created_in_the_chosen_directory_if_one_does_not_already_exists,
-					MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL },
-					IDialogConstants.CANCEL_ID);
-			taskDataDirectoryAction = dialogConfirm.open();
-
-			for (TaskEditor taskEditor : TasksUiInternal.getActiveRepositoryTaskEditors()) {
-				TasksUiInternal.closeTaskEditorInAllPages(taskEditor.getTaskEditorInput().getTask(), true);
-			}
-
-		} else {
+		if (!newDataFolder.exists() && !newDataFolder.mkdirs()) {
 			MessageDialog.openWarning(getControl().getShell(), Messages.TasksUiPreferencePage_Change_data_directory,
-					Messages.TasksUiPreferencePage_Destination_folder_does_not_exist);
+					Messages.TasksUiPreferencePage_Destination_folder_cannot_be_created);
+			return false;
 		}
+
+		MessageDialog dialogConfirm = new MessageDialog(
+				null,
+				Messages.TasksUiPreferencePage_Confirm_Task_List_data_directory_change,
+				null,
+				Messages.TasksUiPreferencePage_A_new_empty_Task_List_will_be_created_in_the_chosen_directory_if_one_does_not_already_exists,
+				MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL },
+				IDialogConstants.CANCEL_ID);
+		int taskDataDirectoryAction = dialogConfirm.open();
+		if (taskDataDirectoryAction != IDialogConstants.OK_ID) {
+			return false;
+		}
+
+		for (TaskEditor taskEditor : TasksUiInternal.getActiveRepositoryTaskEditors()) {
+			TasksUiInternal.closeTaskEditorInAllPages(taskEditor.getTaskEditorInput().getTask(), true);
+		}
+		return true;
 	}
 
 	@Override
