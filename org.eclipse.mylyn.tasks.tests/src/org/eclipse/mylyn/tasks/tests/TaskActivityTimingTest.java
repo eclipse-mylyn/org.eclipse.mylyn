@@ -497,6 +497,7 @@ public class TaskActivityTimingTest extends TestCase {
 		{
 			Calendar startActiveTime2 = Calendar.getInstance();
 			Calendar endActiveTime2 = Calendar.getInstance();
+			endActiveTime2.setTimeInMillis(startActiveTime2.getTimeInMillis());
 			endActiveTime2.add(Calendar.SECOND, 20);
 
 			Calendar startTime2 = Calendar.getInstance();
@@ -542,6 +543,7 @@ public class TaskActivityTimingTest extends TestCase {
 
 		Calendar startTime = Calendar.getInstance();
 		Calendar endTime = Calendar.getInstance();
+		endTime.setTimeInMillis(startTime.getTimeInMillis());
 		endTime.add(Calendar.SECOND, 20);
 
 		InteractionEvent event1 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind",
