@@ -1974,20 +1974,4 @@
           </iterate>
 		</definition>       
     </extension>
-    <extension
-         point="org.eclipse.ui.preferencePages">
-      <page
-            name="%taskListPreferencePages.name"
-            class="org.eclipse.mylyn.internal.tasks.ui.preferences.TaskListUIPreferencePage"
-            id="org.eclipse.mylyn.tasklist.ui.preferences"
-            category="org.eclipse.mylyn.tasks.ui.preferences">
-         <keywordReference id="org.eclipse.mylyn.tasklist.ui.keywords"/>
-      </page> 
-   </extension>
-      <extension
-   		point="org.eclipse.ui.keywords">
-      <keyword
-           label="%taskListKeywords.label"
-           id="org.eclipse.mylyn.tasklist.ui.keywords"/>
-   </extension>
 </plugin>
