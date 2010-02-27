@@ -892,8 +892,10 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		event.setTaskRepository(repository);
 		event.setFullSynchronization(true);
 		connector.preSynchronization(event, null);
-		assertTrue(event.getStaleTasks().contains(task4));
-		assertTrue(event.getStaleTasks().contains(task5));
+		assertTrue("Expected " + task4.getTaskId() + ", got: " + event.getStaleTasks(), event.getStaleTasks().contains(
+				task4));
+		assertTrue("Expected " + task5.getTaskId() + ", got: " + event.getStaleTasks(), event.getStaleTasks().contains(
+				task5));
 
 		TasksUiInternal.synchronizeTasks(connector, tasks, true, null);
 
