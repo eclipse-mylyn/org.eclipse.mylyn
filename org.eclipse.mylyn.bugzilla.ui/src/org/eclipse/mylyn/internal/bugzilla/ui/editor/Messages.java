@@ -54,6 +54,4 @@ public class Messages extends NLS {
 	public static String BugzillaVotesEditor_Show_votes;
 
 	public static String BugzillaVotesEditor_Vote;
-
-	public static String KeywordsDialog_Select_Keywords;
 }

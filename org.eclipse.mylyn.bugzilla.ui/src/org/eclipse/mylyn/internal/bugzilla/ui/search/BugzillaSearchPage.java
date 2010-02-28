@@ -19,6 +19,10 @@ import java.net.URLEncoder;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -44,7 +48,11 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
-import org.eclipse.mylyn.internal.bugzilla.ui.editor.KeywordsDialog;
+import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
+import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.AbstractInPlaceDialog;
+import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.IInPlaceDialogListener;
+import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.InPlaceCheckBoxTreeDialog;
+import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.InPlaceDialogEvent;
 import org.eclipse.mylyn.internal.tasks.ui.util.WebBrowserDialog;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
@@ -372,7 +380,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				}
 				emailPattern2.setText(""); //$NON-NLS-1$
 				keywords.setText(""); //$NON-NLS-1$
-				keywordsOperation.deselectAll();
+				keywordsOperation.select(0);
 				daysText.setText(""); //$NON-NLS-1$
 			}
 		});
@@ -742,17 +750,45 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			}
 		});
 
-		Button keywordsSelectButton = new Button(keywordsComposite, SWT.NONE);
+		final Button keywordsSelectButton = new Button(keywordsComposite, SWT.NONE);
 		keywordsSelectButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (repositoryConfiguration != null && getShell() != null) {
-					KeywordsDialog dialog = new KeywordsDialog(getShell(), keywords.getText(), //
-							repositoryConfiguration.getKeywords());
-					if (dialog.open() == Window.OK) {
-						keywords.setText(dialog.getSelectedKeywordsString());
-					}
+
+				final java.util.List<String> values = new ArrayList<String>();
+				for (String string : keywords.getText().split(",")) { //$NON-NLS-1$
+					values.add(string.trim());
 				}
+
+				Map<String, String> validValues = new HashMap<String, String>();
+				for (String string : repositoryConfiguration.getKeywords()) {
+					validValues.put(string, string);
+				}
+				final InPlaceCheckBoxTreeDialog selectionDialog = new InPlaceCheckBoxTreeDialog(
+						WorkbenchUtil.getShell(), keywordsSelectButton, values, validValues, ""); //$NON-NLS-1$
+				selectionDialog.addEventListener(new IInPlaceDialogListener() {
+
+					public void buttonPressed(InPlaceDialogEvent event) {
+						if (event.getReturnCode() == Window.OK) {
+							Set<String> newValues = selectionDialog.getSelectedValues();
+							if (!new HashSet<String>(values).equals(newValues)) {
+								String erg = ""; //$NON-NLS-1$
+								for (String string : newValues) {
+									if (erg.equals("")) { //$NON-NLS-1$
+										erg = string;
+									} else {
+										erg += (", " + string); //$NON-NLS-1$
+									}
+								}
+								keywords.setText(erg);
+							}
+						} else if (event.getReturnCode() == AbstractInPlaceDialog.ID_CLEAR) {
+							keywords.setText(""); //$NON-NLS-1$
+						}
+					}
+				});
+				selectionDialog.open();
+
 			}
 		});
 		keywordsSelectButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
