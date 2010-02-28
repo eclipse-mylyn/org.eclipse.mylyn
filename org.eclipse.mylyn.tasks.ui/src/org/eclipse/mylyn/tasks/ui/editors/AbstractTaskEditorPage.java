@@ -205,7 +205,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 						if (job.getStatus() == null) {
 							TasksUiInternal.synchronizeRepositoryInBackground(getTaskRepository());
 							if (job.getTask().equals(getTask())) {
-								refreshFormContent();
+								refresh();
 							} else {
 								ITask oldTask = getTask();
 								ITask newTask = job.getTask();
@@ -294,13 +294,13 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 					if (!isDirty() && task.getSynchronizationState() == SynchronizationState.SYNCHRONIZED) {
 						// automatically refresh if the user has not made any changes and there is no chance of missing incomings
-						refreshFormContent();
+						AbstractTaskEditorPage.this.refresh();
 					} else {
 						getTaskEditor().setMessage(Messages.AbstractTaskEditorPage_Task_has_incoming_changes,
 								IMessageProvider.WARNING, new HyperlinkAdapter() {
 									@Override
 									public void linkActivated(HyperlinkEvent e) {
-										refreshFormContent();
+										AbstractTaskEditorPage.this.refresh();
 									}
 								});
 						setSubmitEnabled(false);
@@ -571,7 +571,6 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 		form = managedForm.getForm();
 
 		toolkit = managedForm.getToolkit();
-		toolkit.setBorderStyle(SWT.NULL);
 		registerDefaultDropListener(form);
 		CommonFormUtil.disableScrollingOnFocus(form);
 
@@ -598,7 +597,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 						IMessageProvider.INFORMATION, new HyperlinkAdapter() {
 							@Override
 							public void linkActivated(HyperlinkEvent e) {
-								refreshFormContent();
+								AbstractTaskEditorPage.this.refresh();
 							}
 						});
 			}
@@ -1295,10 +1294,21 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 	/**
 	 * Updates the editor contents in place.
+	 * 
+	 * @deprecated Use {@link #refresh()} instead
 	 */
+	@Deprecated
 	public void refreshFormContent() {
+		refresh();
+	}
+
+	/**
+	 * Updates the editor contents in place.
+	 */
+	@Override
+	public void refresh() {
 		if (getManagedForm() == null || getManagedForm().getForm().isDisposed()) {
-			// editor possibly closed as part of submit or page has not been intialized, yet
+			// editor possibly closed or page has not been initialized
 			return;
 		}
 

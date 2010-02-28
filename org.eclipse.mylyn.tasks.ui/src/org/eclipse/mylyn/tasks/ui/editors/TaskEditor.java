@@ -659,17 +659,16 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	}
 
 	/**
-	 * Refresh editor with new contents (if any)
+	 * Refresh editor pages with new contents.
 	 * 
 	 * @since 3.0
 	 */
 	public void refreshPages() {
 		for (IFormPage page : getPages()) {
-			if (page instanceof AbstractTaskEditorPage) {
-				((AbstractTaskEditorPage) page).refreshFormContent();
-			} else if (page instanceof BrowserFormPage) {
-				// XXX 3.4 replace by invocation of refreshFromContent();
-				((BrowserFormPage) page).init(getEditorSite(), getEditorInput());
+			if (page instanceof TaskFormPage) {
+				if (page.getManagedForm() != null && !page.getManagedForm().getForm().isDisposed()) {
+					((TaskFormPage) page).refresh();
+				}
 			}
 		}
 	}

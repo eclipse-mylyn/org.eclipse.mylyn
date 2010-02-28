@@ -265,9 +265,10 @@ public class TaskPlanningEditor extends TaskFormPage {
 		return false;
 	}
 
+	@Override
 	public void refresh() {
-		if (getManagedForm().getForm().isDisposed()) {
-			// editor possibly closed as part of submit
+		if (getManagedForm() == null || getManagedForm().getForm().isDisposed()) {
+			// editor possibly closed
 			return;
 		}
 

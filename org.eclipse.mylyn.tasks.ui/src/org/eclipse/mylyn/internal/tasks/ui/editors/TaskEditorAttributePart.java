@@ -226,7 +226,7 @@ public class TaskEditorAttributePart extends AbstractTaskEditorSection {
 													Messages.TaskEditorAttributePart_Updating_of_repository_configuration_failed,
 													Messages.TaskEditorAttributePart_Update_Failed, job.getStatus());
 								} else {
-									getTaskEditorPage().refreshFormContent();
+									getTaskEditorPage().refresh();
 								}
 							}
 						});
