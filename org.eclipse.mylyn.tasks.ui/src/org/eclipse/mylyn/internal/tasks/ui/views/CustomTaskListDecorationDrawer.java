@@ -16,7 +16,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
-import org.eclipse.mylyn.internal.provisional.commons.ui.DelayedRefreshJob;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
@@ -43,8 +42,6 @@ import org.eclipse.swt.widgets.TreeItem;
  * @author Frank Becker
  */
 public class CustomTaskListDecorationDrawer implements Listener {
-
-	private final DelayedRefreshJob delayedRefreshJob;
 
 	private final int activationImageOffset;
 
@@ -73,19 +70,16 @@ public class CustomTaskListDecorationDrawer implements Listener {
 			if (event.getProperty().equals(ITasksUiPreferenceConstants.USE_STRIKETHROUGH_FOR_COMPLETED)) {
 				if (event.getNewValue() instanceof Boolean) {
 					useStrikethroughForCompleted = (Boolean) event.getNewValue();
-					delayedRefreshJob.refresh();
 				}
 			} else if (event.getProperty().equals(ITasksUiPreferenceConstants.OVERLAYS_INCOMING_TIGHT)) {
 				if (event.getNewValue() instanceof Boolean) {
 					synchronizationOverlaid = (Boolean) event.getNewValue();
-					delayedRefreshJob.refresh();
 				}
 			}
 		}
 	};
 
-	CustomTaskListDecorationDrawer(DelayedRefreshJob delayedRefreshJob, int activationImageOffset, boolean focusedMode) {
-		this.delayedRefreshJob = delayedRefreshJob;
+	public CustomTaskListDecorationDrawer(int activationImageOffset, boolean focusedMode) {
 		this.activationImageOffset = activationImageOffset;
 		this.lastClippingArea = new Rectangle(0, 0, 0, 0);
 		this.tweakClipping = PlatformUtil.isPaintItemClippingRequired();
