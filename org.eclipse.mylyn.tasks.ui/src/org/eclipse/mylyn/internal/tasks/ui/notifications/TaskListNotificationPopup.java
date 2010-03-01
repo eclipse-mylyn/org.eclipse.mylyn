@@ -19,7 +19,7 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotification;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotificationPopup;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.internal.tasks.ui.TaskHyperlink;
+import org.eclipse.mylyn.internal.tasks.ui.TaskScalingHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
@@ -101,7 +101,7 @@ public class TaskListNotificationPopup extends AbstractNotificationPopup {
 					}
 				}
 
-				final TaskHyperlink itemLink = new TaskHyperlink(notificationComposite, SWT.BEGINNING | SWT.NO_FOCUS);
+				final TaskScalingHyperlink itemLink = new TaskScalingHyperlink(notificationComposite, SWT.BEGINNING | SWT.NO_FOCUS);
 				GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.TOP).applyTo(itemLink);
 
 				itemLink.setText(CommonUiUtil.toLabel(notification.getLabel()));
@@ -142,7 +142,7 @@ public class TaskListNotificationPopup extends AbstractNotificationPopup {
 				}
 			} else {
 				int numNotificationsRemain = notifications.size() - count;
-				TaskHyperlink remainingHyperlink = new TaskHyperlink(notificationComposite, SWT.NO_FOCUS);
+				TaskScalingHyperlink remainingHyperlink = new TaskScalingHyperlink(notificationComposite, SWT.NO_FOCUS);
 				remainingHyperlink.setBackground(parent.getBackground());
 
 				remainingHyperlink.setText(numNotificationsRemain + " " + NOTIFICATIONS_HIDDEN); //$NON-NLS-1$
