@@ -16,9 +16,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Stack;
 import java.util.TreeMap;
-import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import org.eclipse.mylyn.internal.wikitext.core.util.css.CssParser;
@@ -32,15 +32,11 @@ import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
 /**
  * A document builder that produces XSL-FO output. XSL-FO is suitable for conversion to other formats such as PDF.
  * 
- * 
  * @see XslfoDocumentBuilder.Configuration Configuration for configurable settings
- * 
  * @see <a href="http://www.w3.org/TR/2001/REC-xsl-20011015/">XSL-FO 1.0 specification</a>
  * @see <a href="http://en.wikipedia.org/wiki/XSL_Formatting_Objects">XSL-FO (WikiPedia)</a>
  * @see <a href="http://www.w3schools.com/xslfo/default.asp">XSL-FO Tutorial</a>
- * 
  * @author David Green
- * 
  * @since 1.1
  */
 public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
@@ -577,35 +573,40 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private void openFlow(boolean titlePage) {
 		if (hasPageFooter()) {
-			writer.writeStartElement(foNamespaceUri, "static-content"); //$NON-NLS-1$
-			writer.writeAttribute("flow-name", "footer"); //$NON-NLS-1$//$NON-NLS-2$
+			final boolean hasCopyrightText = configuration.copyright != null
+					&& configuration.copyright.trim().length() > 0;
+			final boolean hasPageNumber = configuration.pageNumbering && !titlePage;
+			if (hasCopyrightText || hasPageNumber) {
+				writer.writeStartElement(foNamespaceUri, "static-content"); //$NON-NLS-1$
+				writer.writeAttribute("flow-name", "footer"); //$NON-NLS-1$//$NON-NLS-2$
 
-			if (configuration.copyright != null && configuration.copyright.trim().length() > 0) {
-				writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
-				configureFontSize(0);
-				writer.writeAttribute("text-align", "center"); //$NON-NLS-1$//$NON-NLS-2$
+				if (hasCopyrightText) {
+					writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
+					configureFontSize(0);
+					writer.writeAttribute("text-align", "center"); //$NON-NLS-1$//$NON-NLS-2$
 
-				writer.writeCharacters(configuration.copyright);
+					writer.writeCharacters(configuration.copyright);
 
-				writer.writeEndElement(); // block
+					writer.writeEndElement(); // block
+				}
+
+				if (hasPageNumber) {
+					writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
+					configureFontSize(0);
+					writer.writeAttribute("text-align", "outside"); //$NON-NLS-1$//$NON-NLS-2$
+					//
+					//				// output the section header into the footer using retrieve-marker
+					//				writer.writeEmptyElement(foNamespaceUri, "retrieve-marker"); //$NON-NLS-1$
+					//				writer.writeAttribute("retrieve-boundary", "page-sequence"); //$NON-NLS-1$//$NON-NLS-2$
+					//				writer.writeAttribute("retrieve-position", "first-starting-within-page"); //$NON-NLS-1$//$NON-NLS-2$
+					//				writer.writeAttribute("retrieve-class-name", "section-title"); //$NON-NLS-1$//$NON-NLS-2$
+
+					writer.writeEmptyElement(foNamespaceUri, "page-number"); //$NON-NLS-1$
+
+					writer.writeEndElement(); // block
+				}
+				writer.writeEndElement(); // static-content
 			}
-
-			if (configuration.pageNumbering && !titlePage) {
-				writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
-				configureFontSize(0);
-				writer.writeAttribute("text-align", "outside"); //$NON-NLS-1$//$NON-NLS-2$
-//
-//				// output the section header into the footer using retrieve-marker
-//				writer.writeEmptyElement(foNamespaceUri, "retrieve-marker"); //$NON-NLS-1$
-//				writer.writeAttribute("retrieve-boundary", "page-sequence"); //$NON-NLS-1$//$NON-NLS-2$
-//				writer.writeAttribute("retrieve-position", "first-starting-within-page"); //$NON-NLS-1$//$NON-NLS-2$
-//				writer.writeAttribute("retrieve-class-name", "section-title"); //$NON-NLS-1$//$NON-NLS-2$
-
-				writer.writeEmptyElement(foNamespaceUri, "page-number"); //$NON-NLS-1$
-
-				writer.writeEndElement(); // block
-			}
-			writer.writeEndElement(); // static-content
 		}
 		writer.writeStartElement(foNamespaceUri, "flow"); //$NON-NLS-1$
 		writer.writeAttribute("flow-name", "xsl-region-body"); //$NON-NLS-1$ //$NON-NLS-2$
