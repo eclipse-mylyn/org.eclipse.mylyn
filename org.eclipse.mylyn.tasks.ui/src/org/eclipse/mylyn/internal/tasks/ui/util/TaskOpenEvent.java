@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.tasks.ui.util;
 
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.ui.IEditorPart;
 
 /**
  * @author Steffen Pingel
@@ -25,10 +26,20 @@ public class TaskOpenEvent {
 
 	private final String taskId;
 
-	public TaskOpenEvent(TaskRepository repository, ITask task, String taskId) {
+	private final boolean inBrowser;
+
+	private final IEditorPart editor;
+
+	public TaskOpenEvent(TaskRepository repository, ITask task, String taskId, IEditorPart editor, boolean inBrowser) {
 		this.repository = repository;
 		this.task = task;
 		this.taskId = taskId;
+		this.editor = editor;
+		this.inBrowser = inBrowser;
+	}
+
+	public boolean isInBrowser() {
+		return inBrowser;
 	}
 
 	public TaskRepository getRepository() {
@@ -41,6 +52,10 @@ public class TaskOpenEvent {
 
 	public String getTaskId() {
 		return taskId;
+	}
+
+	public IEditorPart getEditor() {
+		return editor;
 	}
 
 }

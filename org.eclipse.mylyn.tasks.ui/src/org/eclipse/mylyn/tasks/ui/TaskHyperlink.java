@@ -18,7 +18,11 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.Messages;
+import org.eclipse.mylyn.internal.tasks.ui.util.TaskOpenEvent;
+import org.eclipse.mylyn.internal.tasks.ui.util.TaskOpenListener;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 
 /**
  * Immutable. Encapsulates information for linking to tasks from text.
@@ -33,6 +37,8 @@ public final class TaskHyperlink implements IHyperlink {
 	private final TaskRepository repository;
 
 	private final String taskId;
+
+	Object selection;
 
 	public TaskHyperlink(IRegion region, TaskRepository repository, String taskId) {
 		this.region = region;
@@ -66,10 +72,46 @@ public final class TaskHyperlink implements IHyperlink {
 
 	public void open() {
 		if (repository != null) {
-			TasksUiUtil.openTask(repository, taskId);
+			TasksUiInternal.openTask(repository, taskId, new TaskOpenListener() {
+				@Override
+				public void taskOpened(TaskOpenEvent event) {
+					if (selection == null) {
+						return;
+					}
+					if (event.getEditor() instanceof TaskEditor) {
+						TaskEditor editor = (TaskEditor) event.getEditor();
+						editor.selectReveal(selection);
+					}
+				}
+			});
 		} else {
 			MessageDialog.openError(null, "Mylyn", Messages.TaskHyperlink_Could_not_determine_repository_for_report); //$NON-NLS-1$
 		}
+	}
+
+	/**
+	 * Returns the selection to select and reveal when opening the task.
+	 * 
+	 * @return an object or null if not set
+	 * @see #setSelection(Object)
+	 * @see TaskEditor#selectReveal(Object)
+	 * @since 3.4
+	 */
+	public Object getSelection() {
+		return selection;
+	}
+
+	/**
+	 * Sets the selection to select and reveal when opening the task.
+	 * 
+	 * @param selection
+	 *            the selection
+	 * @see #getSelection()
+	 * @see TaskEditor#selectReveal(Object)
+	 * @since 3.4
+	 */
+	public void setSelection(Object selection) {
+		this.selection = selection;
 	}
 
 }

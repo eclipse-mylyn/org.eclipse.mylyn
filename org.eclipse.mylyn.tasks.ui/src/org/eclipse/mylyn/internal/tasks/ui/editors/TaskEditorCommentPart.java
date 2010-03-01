@@ -468,6 +468,18 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			return editor;
 		}
 
+		public TaskAttribute getTaskAttribute() {
+			return commentAttribute;
+		}
+
+		public TaskComment getTaskComment() {
+			return taskComment;
+		}
+
+		public Control getControl() {
+			return commentComposite;
+		}
+
 	}
 
 	private class ReplyToCommentAction extends AbstractReplyToCommentAction implements IMenuCreator {
@@ -773,6 +785,37 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 				}
 			}
 		}
+	}
+
+	@Override
+	public boolean setFormInput(Object input) {
+		if (input instanceof String) {
+			String text = (String) input;
+			if (commentAttributes != null) {
+				for (TaskAttribute commentAttribute : commentAttributes) {
+					if (text.equals(commentAttribute.getId())) {
+						selectReveal(commentAttribute);
+					}
+				}
+			}
+		}
+		return super.setFormInput(input);
+	}
+
+	public CommentViewer selectReveal(TaskAttribute commentAttribute) {
+		if (commentAttribute == null) {
+			return null;
+		}
+		expandAllComments();
+		List<CommentGroupViewer> groupViewers = getCommentGroupViewers();
+		for (CommentGroupViewer groupViewer : groupViewers) {
+			for (CommentViewer viewer : groupViewer.getCommentViewers()) {
+				if (viewer.getTaskAttribute().equals(commentAttribute)) {
+					CommonFormUtil.ensureVisible(viewer.getControl());
+				}
+			}
+		}
+		return null;
 	}
 
 }

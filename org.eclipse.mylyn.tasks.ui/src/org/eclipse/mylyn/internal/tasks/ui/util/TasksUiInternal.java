@@ -74,6 +74,7 @@ import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnsubmittedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizationScheduler;
 import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizationScheduler.Synchronizer;
+import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.OpenRepositoryTaskJob;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
@@ -90,6 +91,7 @@ import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
+import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
@@ -812,14 +814,14 @@ public class TasksUiInternal {
 			task = TasksUiPlugin.getTaskList().getTaskByKey(repository.getRepositoryUrl(), taskId);
 		}
 		if (task != null) {
-			boolean result = TasksUiUtil.openTask(task);
-			if (listener != null) {
-				if (result) {
-					listener.taskOpened(new TaskOpenEvent(repository, task, taskId));
-				}
+			// task is known, open in task editor
+			TaskOpenEvent event = TasksUiInternal.openTask(task, taskId);
+			if (listener != null && event != null) {
+				listener.taskOpened(event);
 			}
-			return result;
+			return event != null;
 		} else {
+			// search for task
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
 			if (connectorUi != null) {
 				try {
@@ -832,6 +834,83 @@ public class TasksUiInternal {
 			}
 		}
 		return false;
+	}
+
+	public static TaskOpenEvent openTask(ITask task, String taskId) {
+		Assert.isNotNull(task);
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		if (window != null) {
+			TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
+					task.getRepositoryUrl());
+			boolean openWithBrowser = !TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
+					ITasksUiPreferenceConstants.EDITOR_TASKS_RICH);
+			if (openWithBrowser) {
+				TasksUiUtil.openUrl(task.getUrl());
+				return new TaskOpenEvent(taskRepository, task, taskId, null, true);
+			} else {
+				IEditorInput editorInput = new TaskEditorInput(taskRepository, task);
+				IEditorPart editor = refreshEditorContentsIfOpen(task, editorInput);
+				if (editor != null) {
+					synchronizeTask(taskRepository, task);
+					return new TaskOpenEvent(taskRepository, task, taskId, editor, false);
+				} else {
+					IWorkbenchPage page = window.getActivePage();
+					editor = TasksUiUtil.openEditor(editorInput, getTaskEditorId(task), page);
+					if (editor != null) {
+						synchronizeTask(taskRepository, task);
+						return new TaskOpenEvent(taskRepository, task, taskId, editor, false);
+					}
+				}
+			}
+		} else {
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unable to open editor for \"" //$NON-NLS-1$
+					+ task.getSummary() + "\": no active workbench window")); //$NON-NLS-1$
+		}
+		return null;
+	}
+
+	private static String getTaskEditorId(final ITask task) {
+		String taskEditorId = TaskEditor.ID_EDITOR;
+		if (task != null) {
+			ITask repositoryTask = task;
+			AbstractRepositoryConnectorUi repositoryUi = TasksUiPlugin.getConnectorUi(repositoryTask.getConnectorKind());
+			String customTaskEditorId = repositoryUi.getTaskEditorId(repositoryTask);
+			if (customTaskEditorId != null) {
+				taskEditorId = customTaskEditorId;
+			}
+		}
+		return taskEditorId;
+	}
+
+	/**
+	 * If task is already open and has incoming, must force refresh in place
+	 */
+	private static IEditorPart refreshEditorContentsIfOpen(ITask task, IEditorInput editorInput) {
+		if (task != null) {
+			if (task.getSynchronizationState() == SynchronizationState.INCOMING
+					|| task.getSynchronizationState() == SynchronizationState.CONFLICT) {
+				for (TaskEditor editor : TasksUiInternal.getActiveRepositoryTaskEditors()) {
+					if (editor.getEditorInput().equals(editorInput)) {
+						editor.refreshPages();
+						editor.getEditorSite().getPage().activate(editor);
+						return editor;
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	private static void synchronizeTask(TaskRepository taskRepository, ITask task) {
+		if (task instanceof LocalTask) {
+			return;
+		}
+
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+				task.getConnectorKind());
+		if (connector.canSynchronizeTask(taskRepository, task)) {
+			TasksUiInternal.synchronizeTaskInBackground(connector, task);
+		}
 	}
 
 	public static boolean openRepositoryTask(String connectorKind, String repositoryUrl, String id) {

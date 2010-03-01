@@ -101,11 +101,9 @@ public class OpenRepositoryTaskJob extends Job {
 				TasksUiPlugin.getTaskDataManager().putUpdatedTaskData(task, taskData, true);
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						boolean result = TasksUiUtil.openTask(task);
-						if (listener != null) {
-							if (result) {
-								listener.taskOpened(new TaskOpenEvent(repository, task, taskId));
-							}
+						TaskOpenEvent event = TasksUiInternal.openTask(task, taskId);
+						if (listener != null && event != null) {
+							listener.taskOpened(event);
 						}
 					}
 				});
