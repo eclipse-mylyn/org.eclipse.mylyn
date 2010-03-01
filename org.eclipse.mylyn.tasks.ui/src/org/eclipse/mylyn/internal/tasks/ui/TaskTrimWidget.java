@@ -70,7 +70,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 
 	private Menu menu;
 
-	private TaskHyperlink activeTaskLabel;
+	private TaskScalingHyperlink activeTaskLabel;
 
 	private final ITaskActivationListener taskActivationListener = new TaskActivationAdapter() {
 
@@ -200,7 +200,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 		Point p = gc.textExtent("WWWWWWWWWWWWWWW"); //$NON-NLS-1$
 		gc.dispose();
 
-		activeTaskLabel = new TaskHyperlink(container, SWT.RIGHT);
+		activeTaskLabel = new TaskScalingHyperlink(container, SWT.RIGHT);
 		// activeTaskLabel.setLayoutData(new GridData(p.x, SWT.DEFAULT));
 		GridData gridData = new GridData(SWT.LEFT, SWT.CENTER, false, true);
 		gridData.widthHint = p.x;

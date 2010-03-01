@@ -38,7 +38,7 @@ import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
-import org.eclipse.mylyn.internal.tasks.ui.TaskHyperlink;
+import org.eclipse.mylyn.internal.tasks.ui.TaskScalingHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskDataDiff;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotifier;
@@ -141,7 +141,7 @@ public class TaskListToolTip extends GradientToolTip {
 
 	private IRepositoryElement getTaskListElement(Object hoverObject) {
 		if (hoverObject instanceof ScalingHyperlink) {
-			TaskHyperlink hyperlink = (TaskHyperlink) hoverObject;
+			TaskScalingHyperlink hyperlink = (TaskScalingHyperlink) hoverObject;
 			return hyperlink.getTask();
 		} else if (hoverObject instanceof Widget) {
 			Object data = ((Widget) hoverObject).getData();

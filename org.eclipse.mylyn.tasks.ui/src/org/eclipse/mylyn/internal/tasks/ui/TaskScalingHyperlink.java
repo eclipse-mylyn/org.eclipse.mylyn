@@ -23,12 +23,11 @@ import org.eclipse.swt.widgets.Composite;
  * @author Steffen Pingel
  * @author Frank Becker
  */
-// TODO 3.4 rename this class
-public class TaskHyperlink extends ScalingHyperlink {
+public class TaskScalingHyperlink extends ScalingHyperlink {
 
 	private ITask task;
 
-	public TaskHyperlink(Composite parent, int style) {
+	public TaskScalingHyperlink(Composite parent, int style) {
 		super(parent, style);
 		setForeground(CommonColors.HYPERLINK_WIDGET);
 		addMouseTrackListener(MOUSE_TRACK_LISTENER);

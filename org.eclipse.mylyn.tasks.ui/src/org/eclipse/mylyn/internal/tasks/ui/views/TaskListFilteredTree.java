@@ -32,7 +32,7 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.internal.tasks.ui.TaskHistoryDropDown;
-import org.eclipse.mylyn.internal.tasks.ui.TaskHyperlink;
+import org.eclipse.mylyn.internal.tasks.ui.TaskScalingHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.TaskSearchPage;
 import org.eclipse.mylyn.internal.tasks.ui.TaskWorkingSetFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -73,9 +73,9 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 	public static final String LABEL_SEARCH = Messages.TaskListFilteredTree_Search_repository_for_key_or_summary_;
 
-	private TaskHyperlink workingSetLink;
+	private TaskScalingHyperlink workingSetLink;
 
-	private TaskHyperlink activeTaskLink;
+	private TaskScalingHyperlink activeTaskLink;
 
 	private WorkweekProgressBar taskProgressBar;
 
@@ -233,7 +233,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		searchComposite.setLayout(searchLayout);
 		searchComposite.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false, 4, 1));
 
-		final TaskHyperlink searchLink = new TaskHyperlink(searchComposite, SWT.LEFT);
+		final TaskScalingHyperlink searchLink = new TaskScalingHyperlink(searchComposite, SWT.LEFT);
 		searchLink.setText(LABEL_SEARCH);
 
 		searchLink.addHyperlinkListener(new IHyperlinkListener() {
@@ -316,7 +316,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		workingSetButton.setImage(CommonImages.getImage(CommonImages.TOOLBAR_ARROW_RIGHT));
 		workingSetButton.setToolTipText(Messages.TaskListFilteredTree_Select_Working_Set);
 
-		workingSetLink = new TaskHyperlink(container, SWT.LEFT);
+		workingSetLink = new TaskScalingHyperlink(container, SWT.LEFT);
 		workingSetLink.setText(TaskWorkingSetAction.LABEL_SETS_NONE);
 		workingSetLink.setUnderlined(false);
 
@@ -356,7 +356,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		activeTaskButton.setImage(CommonImages.getImage(CommonImages.TOOLBAR_ARROW_RIGHT));
 		activeTaskButton.setToolTipText(Messages.TaskListFilteredTree_Select_Active_Task);
 
-		activeTaskLink = new TaskHyperlink(container, SWT.LEFT);
+		activeTaskLink = new TaskScalingHyperlink(container, SWT.LEFT);
 
 		changeListener = new TaskListChangeAdapter() {
 			@Override
