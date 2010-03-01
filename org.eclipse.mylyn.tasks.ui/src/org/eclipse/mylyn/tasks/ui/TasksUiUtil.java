@@ -35,6 +35,8 @@ import org.eclipse.mylyn.internal.tasks.ui.wizards.EditRepositoryWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.MultiRepositoryAwareWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewLocalTaskWizard;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
+import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
@@ -361,6 +363,38 @@ public class TasksUiUtil {
 	 */
 	public static void openUrl(String location) {
 		WorkbenchUtil.openUrl(location, FLAG_NO_RICH_EDITOR);
+	}
+
+	/**
+	 * Opens <code>element</code> in a browser using an authenticated URL if available.
+	 * 
+	 * @since 3.4
+	 */
+	public static boolean openWithBrowser(IRepositoryElement element) {
+		IRepositoryManager repositoryManager = TasksUi.getRepositoryManager();
+		TaskRepository repository = null;
+		if (element instanceof ITask) {
+			repository = repositoryManager.getRepository(((ITask) element).getConnectorKind(),
+					((ITask) element).getRepositoryUrl());
+		} else if (element instanceof IRepositoryQuery) {
+			repository = repositoryManager.getRepository(((IRepositoryQuery) element).getConnectorKind(),
+					((IRepositoryQuery) element).getRepositoryUrl());
+		}
+		return (repository != null) ? openWithBrowser(repository, element) : null;
+	}
+
+	/**
+	 * Opens <code>element</code> in a browser using an authenticated URL if available.
+	 * 
+	 * @since 3.4
+	 */
+	public static boolean openWithBrowser(TaskRepository repository, IRepositoryElement element) {
+		String url = TasksUiInternal.getAuthenticatedUrl(repository, element);
+		if (url != null) {
+			openUrl(url);
+			return true;
+		}
+		return false;
 	}
 
 	/**

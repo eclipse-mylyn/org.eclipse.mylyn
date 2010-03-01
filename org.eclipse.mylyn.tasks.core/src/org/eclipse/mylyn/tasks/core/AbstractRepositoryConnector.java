@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.tasks.core;
 
+import java.net.URL;
 import java.util.Collection;
 import java.util.Date;
 
@@ -190,6 +191,23 @@ public abstract class AbstractRepositoryConnector {
 	 * @since 2.0
 	 */
 	public abstract String getTaskUrl(String repositoryUrl, String taskId);
+
+	/**
+	 * Returns a URL for <code>element</code> that contains authentication information such as a session ID.
+	 * <p>
+	 * Returns <code>null</code> by default. Clients may override.
+	 * 
+	 * @param repository
+	 *            the repository for <code>element</code>
+	 * @param element
+	 *            the element to return the authenticated url for
+	 * @return null, if no corresponding authenticated URL is available for <code>element</code>; the URL, otherwise
+	 * @see IRepositoryElement#getUrl()
+	 * @since 3.4
+	 */
+	public URL getAuthenticatedUrl(TaskRepository repository, IRepositoryElement element) {
+		return null;
+	}
 
 	/**
 	 * @since 3.0

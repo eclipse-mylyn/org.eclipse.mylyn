@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Steve Elsemore - fix for bug 296963
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.util;
@@ -845,7 +846,7 @@ public class TasksUiInternal {
 			boolean openWithBrowser = !TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
 					ITasksUiPreferenceConstants.EDITOR_TASKS_RICH);
 			if (openWithBrowser) {
-				TasksUiUtil.openUrl(task.getUrl());
+				TasksUiUtil.openWithBrowser(taskRepository, task);
 				return new TaskOpenEvent(taskRepository, task, taskId, null, true);
 			} else {
 				IEditorInput editorInput = new TaskEditorInput(taskRepository, task);
@@ -1217,6 +1218,21 @@ public class TasksUiInternal {
 			StatusManager.getManager().handle(status, StatusManager.SHOW | StatusManager.LOG | StatusManager.BLOCK);
 		}
 		throw exception;
+	}
+
+	public static String getAuthenticatedUrl(TaskRepository repository, IRepositoryElement element) {
+		IRepositoryManager repositoryManager = TasksUi.getRepositoryManager();
+		AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(repository.getConnectorKind());
+		URL authenticatedUrl = connector.getAuthenticatedUrl(repository, element);
+		if (authenticatedUrl != null) {
+			return authenticatedUrl.toString();
+		} else {
+			String url = element.getUrl();
+			if (TasksUiInternal.isValidUrl(url)) {
+				return url;
+			}
+		}
+		return null;
 	}
 
 }

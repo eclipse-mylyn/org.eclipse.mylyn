@@ -14,7 +14,6 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 import java.util.Iterator;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -46,18 +45,8 @@ public class OpenWithBrowserAction extends BaseSelectionListenerAction {
 
 	private void runWithSelection(Object selectedObject) {
 		String urlString = null;
-		if (selectedObject instanceof ITask) {
-			AbstractTask task = (AbstractTask) selectedObject;
-			if (TasksUiInternal.isValidUrl(task.getUrl())) {
-				urlString = task.getUrl();
-			}
-		} else if (selectedObject instanceof IRepositoryElement) {
-			IRepositoryElement query = (IRepositoryElement) selectedObject;
-			urlString = query.getUrl();
-		}
-
-		if (urlString != null) {
-			TasksUiUtil.openUrl(urlString);
+		if (selectedObject instanceof IRepositoryElement) {
+			TasksUiUtil.openWithBrowser((IRepositoryElement) selectedObject);
 		}
 	}
 

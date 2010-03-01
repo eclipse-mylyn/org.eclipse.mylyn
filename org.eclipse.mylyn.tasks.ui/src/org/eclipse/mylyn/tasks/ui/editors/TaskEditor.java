@@ -920,12 +920,12 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		toolBarManager.add(new GroupMarker("open")); //$NON-NLS-1$
 		toolBarManager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
 
-		final String taskUrl = task.getUrl();
+		final String taskUrl = TasksUiInternal.getAuthenticatedUrl(taskRepository, task);
 		if (taskUrl != null && taskUrl.length() > 0) {
 			Action openWithBrowserAction = new Action() {
 				@Override
 				public void run() {
-					TasksUiUtil.openUrl(taskUrl);
+					TasksUiUtil.openWithBrowser(taskRepository, task);
 				}
 			};
 //			ImageDescriptor overlay = TasksUiPlugin.getDefault().getOverlayIcon(taskRepository.getConnectorKind());
