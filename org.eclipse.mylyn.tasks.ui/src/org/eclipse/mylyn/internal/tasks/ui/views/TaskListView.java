@@ -614,6 +614,10 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 		memento.putString(MEMENTO_LINK_WITH_EDITOR, Boolean.toString(linkWithEditor));
 		memento.putString(MEMENTO_PRESENTATION, currentPresentation.getId());
+
+		if (filteredTree.getTextSearchControl() != null) {
+			filteredTree.getTextSearchControl().saveState(memento);
+		}
 	}
 
 	private void restoreState() {
@@ -651,6 +655,10 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 			linkValue = Boolean.parseBoolean(taskListMemento.getString(MEMENTO_LINK_WITH_EDITOR));
 		}
 		setLinkWithEditor(linkValue);
+
+		if (taskListMemento != null && filteredTree.getTextSearchControl() != null) {
+			filteredTree.getTextSearchControl().restoreState(taskListMemento);
+		}
 
 		getViewer().refresh();
 	}

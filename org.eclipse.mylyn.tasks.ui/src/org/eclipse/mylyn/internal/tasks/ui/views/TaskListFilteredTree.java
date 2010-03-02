@@ -27,13 +27,13 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractFilteredTree;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.provisional.commons.ui.SearchHistoryPopUpDialog;
 import org.eclipse.mylyn.internal.provisional.commons.ui.SelectionProviderAdapter;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.internal.tasks.ui.TaskHistoryDropDown;
 import org.eclipse.mylyn.internal.tasks.ui.TaskScalingHyperlink;
-import org.eclipse.mylyn.internal.tasks.ui.TaskSearchPage;
 import org.eclipse.mylyn.internal.tasks.ui.TaskWorkingSetFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskDialogAction;
@@ -45,7 +45,6 @@ import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.search.internal.ui.SearchDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MenuDetectEvent;
 import org.eclipse.swt.events.MenuDetectListener;
@@ -219,39 +218,6 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		PlatformUI.getWorkbench().getWorkingSetManager().addPropertyChangeListener(taskProgressBarWorkingSetListener);
 
 		return progressComposite;
-	}
-
-	@Override
-	protected Composite createSearchComposite(Composite container) {
-		Composite searchComposite = new Composite(container, SWT.NONE);
-		GridLayout searchLayout = new GridLayout(1, false);
-		searchLayout.marginWidth = 8;
-		searchLayout.marginHeight = 0;
-		searchLayout.marginBottom = 0;
-		searchLayout.horizontalSpacing = 0;
-		searchLayout.verticalSpacing = 0;
-		searchComposite.setLayout(searchLayout);
-		searchComposite.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false, 4, 1));
-
-		final TaskScalingHyperlink searchLink = new TaskScalingHyperlink(searchComposite, SWT.LEFT);
-		searchLink.setText(LABEL_SEARCH);
-
-		searchLink.addHyperlinkListener(new IHyperlinkListener() {
-
-			public void linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent e) {
-				new SearchDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), TaskSearchPage.ID).open();
-			}
-
-			public void linkEntered(org.eclipse.ui.forms.events.HyperlinkEvent e) {
-				searchLink.setUnderlined(true);
-			}
-
-			public void linkExited(org.eclipse.ui.forms.events.HyperlinkEvent e) {
-				searchLink.setUnderlined(false);
-			}
-		});
-
-		return searchComposite;
 	}
 
 	private void updateTaskProgressBar() {
@@ -466,16 +432,6 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		return activeTaskLink;
 	}
 
-	@Override
-	protected void textChanged() {
-		super.textChanged();
-		if (getFilterString() != null && !getFilterString().trim().equals("")) { //$NON-NLS-1$
-			setShowSearch(true);
-		} else {
-			setShowSearch(false);
-		}
-	}
-
 	public void indicateActiveTaskWorkingSet() {
 		if (window == null || workingSetLink == null || filterComposite == null || filterComposite.isDisposed()) {
 			return;
@@ -574,4 +530,8 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		this.actionGroup.setSelectionProvider(activeTaskSelectionProvider);
 	}
 
+	@Override
+	protected SearchHistoryPopUpDialog getHistoryPopupDialog() {
+		return new TaskListSearchHistoryPopupDialog(getShell(), SWT.TOP);
+	}
 }
