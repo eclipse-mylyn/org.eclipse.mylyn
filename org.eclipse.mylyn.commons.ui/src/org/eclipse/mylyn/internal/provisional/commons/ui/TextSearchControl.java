@@ -11,7 +11,12 @@
 
 package org.eclipse.mylyn.internal.provisional.commons.ui;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -26,12 +31,15 @@ import org.eclipse.swt.accessibility.AccessibleControlEvent;
 import org.eclipse.swt.accessibility.AccessibleEvent;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.MouseTrackListener;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
@@ -43,11 +51,20 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IMemento;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.WorkbenchMessages;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 public class TextSearchControl extends Composite {
+
+	private static final String FIND_TEXT_MEMENTO_ELEMENT = "text"; //$NON-NLS-1$
+
+	private static final String FIND_MEMENTO_ELEMENT = "historyItem"; //$NON-NLS-1$
+
+	private static final String FIND_MEMENTO_TYPE = "filteredTreeFindHistory"; //$NON-NLS-1$
+
+	private static final int MAX_HISTORY_ITEMS = 50;
 
 	/**
 	 * Image descriptor for enabled clear button.
@@ -92,10 +109,12 @@ public class TextSearchControl extends Composite {
 
 	private final Set<SelectionListener> selectionListeners = new HashSet<SelectionListener>();
 
+	private Collection<String> searchHistory = new LinkedHashSet<String>();
+
 	private static Boolean useNativeSearchField;
 
 	@SuppressWarnings("restriction")
-	public TextSearchControl(Composite parent, boolean automaticFind) {
+	public TextSearchControl(Composite parent, boolean automaticFind, SearchHistoryPopUpDialog historyDialog) {
 		super(parent, getCompositeStyle(automaticFind, parent));
 		this.automaticFind = automaticFind;
 
@@ -143,6 +162,34 @@ public class TextSearchControl extends Composite {
 			});
 			updateButtonVisibilityAndEnablement();
 		}
+
+		if (historyDialog != null) {
+			historyDialog.attach(this);
+		}
+
+		registerListeners();
+	}
+
+	private void registerListeners() {
+		addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				if (textControl != null && !textControl.isDisposed()) {
+					addToSearchHistory(textControl.getText());
+				}
+
+			}
+		});
+		textControl.addFocusListener(new FocusAdapter() {
+
+			@Override
+			public void focusLost(FocusEvent e) {
+				if (textControl != null && !textControl.isDisposed()) {
+					addToSearchHistory(textControl.getText());
+				}
+			}
+		});
 	}
 
 	private static int getCompositeStyle(boolean automaticFind, Composite parent) {
@@ -349,6 +396,56 @@ public class TextSearchControl extends Composite {
 	public void setBackground(Color color) {
 		if (useNativeSearchField != null && useNativeSearchField) {
 			super.setBackground(color);
+		}
+	}
+
+	public Collection<String> getSearchHistory() {
+		return Collections.unmodifiableCollection(searchHistory);
+	}
+
+	void addToSearchHistory(String searchString) {
+		if (searchString != null && searchString.trim().length() > 0) {
+			searchHistory.remove(searchString);
+			searchHistory.add(searchString);
+		}
+	}
+
+	public void saveState(IMemento memento) {
+		if (memento == null) {
+			return;
+		}
+
+		IMemento rootMemento = memento.createChild(FIND_MEMENTO_TYPE);
+		int i = 0;
+		for (String text : searchHistory) {
+			IMemento child = rootMemento.createChild(FIND_MEMENTO_ELEMENT);
+			child.putString(FIND_TEXT_MEMENTO_ELEMENT, text);
+			i++;
+			if (i > MAX_HISTORY_ITEMS) {
+				break;
+			}
+		}
+	}
+
+	public void restoreState(IMemento memento) {
+		if (memento == null) {
+			return;
+		}
+		List<String> history = new ArrayList<String>();
+
+		IMemento rootMemento = memento.getChild(FIND_MEMENTO_TYPE);
+		if (rootMemento != null) {
+			IMemento[] children = rootMemento.getChildren(FIND_MEMENTO_ELEMENT);
+			if (children != null && children.length > 0) {
+				for (IMemento child : children) {
+					String historyItem = child.getString(FIND_TEXT_MEMENTO_ELEMENT);
+					// add to the end of the list
+					history.add(history.size(), historyItem);
+				}
+			}
+		}
+		if (history != null) {
+			searchHistory = history;
 		}
 	}
 }

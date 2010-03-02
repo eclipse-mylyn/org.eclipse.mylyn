@@ -74,7 +74,7 @@ public class EnhancedFilteredTree extends FilteredTree {
 
 	@Override
 	protected Text doCreateFilterText(Composite parent) {
-		searchControl = new TextSearchControl(parent, true);
+		searchControl = new TextSearchControl(parent, true, getHistoryPopupDialog());
 
 		searchControl.addSelectionListener(new SelectionAdapter() {
 
@@ -90,5 +90,13 @@ public class EnhancedFilteredTree extends FilteredTree {
 		});
 		searchControl.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
 		return searchControl.getTextControl();
+	}
+
+	public TextSearchControl getTextSearchControl() {
+		return searchControl;
+	}
+
+	protected SearchHistoryPopUpDialog getHistoryPopupDialog() {
+		return new SearchHistoryPopUpDialog(getShell(), SWT.TOP);
 	}
 }
