@@ -57,15 +57,7 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 
 	private static final int ATTACHMENT_NUM_GROUP = 14;
 
-//	private static final String regexp = "(?:(duplicate of|(\\W||^)+bug|(\\W|^)+task)( ?#? ?)(\\d+)((\\s)*(comment|c)(\\s#|#|#\\s|\\s|)(\\s\\d+|\\d+))?)|(?:Created an attachment\\s*\\(id=(\\d+)\\))"; //$NON-NLS-1$
-
 	private static final String regexp = "(?:(duplicate of|(\\W||^)+bug|(\\W|^)+task)( ?#? ?)(\\d+)((\\s)*(comment|c)(\\s#|#|#\\s|\\s|)(\\s\\d+|\\d+))?)|(?:(Created (an )?attachment\\s*(\\(id=)?(\\d+)))"; //$NON-NLS-1$
-//
-//	private static final String regexp = "(?:(duplicate of|(\\W||^)+bug|(\\W|^)+task)( ?#? ?)(\\d+))|(?:(Created (an )?attachment\\s*(\\(id=)?(\\d+)))"; //$NON-NLS-1$
-//
-//
-//	private static final String regexp = "(duplicate of|bug|task)( ?#? ?)(\\d+)"; //$NON-NLS-1$
-//	private static final String regexp = "(duplicate of|bug|task)( ?#? ?)(\\d+)((\\s)*(comment|c)(\\s#|#|#\\s|\\s|)(\\s\\d+|\\d+))?"; //$NON-NLS-1$
 
 	private static final Pattern PATTERN = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
 
