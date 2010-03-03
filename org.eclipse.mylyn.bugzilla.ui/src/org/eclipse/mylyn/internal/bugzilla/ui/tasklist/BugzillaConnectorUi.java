@@ -38,6 +38,7 @@ import org.eclipse.mylyn.tasks.core.ITaskComment;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentModel;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.LegendElement;
 import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
@@ -52,9 +53,19 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 
 	private static final int TASK_NUM_GROUP = 5;
 
-	private static final int ATTACHMENT_NUM_GROUP = 6;
+	private static final int COMMENT_NUM_GROUP = 10;
 
-	private static final String regexp = "(?:(duplicate of|(\\W||^)+bug|(\\W|^)+task)( ?#? ?)(\\d+))|(?:Created an attachment\\s*\\(id=(\\d+)\\))"; //$NON-NLS-1$
+	private static final int ATTACHMENT_NUM_GROUP = 14;
+
+//	private static final String regexp = "(?:(duplicate of|(\\W||^)+bug|(\\W|^)+task)( ?#? ?)(\\d+)((\\s)*(comment|c)(\\s#|#|#\\s|\\s|)(\\s\\d+|\\d+))?)|(?:Created an attachment\\s*\\(id=(\\d+)\\))"; //$NON-NLS-1$
+
+	private static final String regexp = "(?:(duplicate of|(\\W||^)+bug|(\\W|^)+task)( ?#? ?)(\\d+)((\\s)*(comment|c)(\\s#|#|#\\s|\\s|)(\\s\\d+|\\d+))?)|(?:(Created (an )?attachment\\s*(\\(id=)?(\\d+)))"; //$NON-NLS-1$
+//
+//	private static final String regexp = "(?:(duplicate of|(\\W||^)+bug|(\\W|^)+task)( ?#? ?)(\\d+))|(?:(Created (an )?attachment\\s*(\\(id=)?(\\d+)))"; //$NON-NLS-1$
+//
+//
+//	private static final String regexp = "(duplicate of|bug|task)( ?#? ?)(\\d+)"; //$NON-NLS-1$
+//	private static final String regexp = "(duplicate of|bug|task)( ?#? ?)(\\d+)((\\s)*(comment|c)(\\s#|#|#\\s|\\s|)(\\s\\d+|\\d+))?"; //$NON-NLS-1$
 
 	private static final Pattern PATTERN = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
 
@@ -192,6 +203,8 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 
 		int start = -1;
 
+		int a = m.groupCount();
+
 		if (m.group().startsWith("duplicate")) { //$NON-NLS-1$
 			start = m.start() + m.group().indexOf(m.group(TASK_NUM_GROUP));
 		} else {
@@ -209,17 +222,25 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 		try {
 			start += regionOffset;
 			end += regionOffset;
-			IRegion sregion = new Region(start, end - start);
 
 			String bugId = m.group(TASK_NUM_GROUP);
 			if (bugId == null) {
 				String attachmentId = m.group(ATTACHMENT_NUM_GROUP);
 				if (attachmentId != null) {
+					start = start + m.group().indexOf(m.group(ATTACHMENT_NUM_GROUP));
+
+					IRegion sregion = new Region(start, end - start);
 					return new TaskAttachmentHyperlink(sregion, repository, attachmentId);
 				}
 			} else {
 				bugId.trim();
-				return new TaskHyperlink(sregion, repository, bugId);
+				IRegion sregion = new Region(start, end - start);
+				TaskHyperlink taskHyperLink = new TaskHyperlink(sregion, repository, bugId);
+				String commentId = m.group(COMMENT_NUM_GROUP);
+				if (commentId != null) {
+					taskHyperLink.setSelection(TaskAttribute.PREFIX_COMMENT + commentId);
+				}
+				return taskHyperLink;
 			}
 
 		} catch (NumberFormatException e) {
