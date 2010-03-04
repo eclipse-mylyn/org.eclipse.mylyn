@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<component id="org.eclipse.mylyn.commons.ui" version="2">
+    <resource path="META-INF/MANIFEST.MF">
+        <filter id="923795461">
+            <message_arguments>
+                <message_argument value="3.4.0.qualifier"/>
+                <message_argument value="3.3.0.v20091015-0500-e3x"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/mylyn/internal/provisional/commons/ui/dialogs/AbstractInPlaceDialog.java" type="org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.AbstractInPlaceDialog">
+        <filter id="305365105">
+            <message_arguments>
+                <message_argument value="org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.AbstractInPlaceDialog"/>
+                <message_argument value="org.eclipse.mylyn.commons.ui_3.4.0"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/mylyn/internal/provisional/commons/ui/dialogs/IInPlaceDialogListener.java" type="org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.IInPlaceDialogListener">
+        <filter id="305365105">
+            <message_arguments>
+                <message_argument value="org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.IInPlaceDialogListener"/>
+                <message_argument value="org.eclipse.mylyn.commons.ui_3.4.0"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/mylyn/internal/provisional/commons/ui/dialogs/InPlaceCheckBoxTreeDialog.java" type="org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.InPlaceCheckBoxTreeDialog">
+        <filter id="305365105">
+            <message_arguments>
+                <message_argument value="org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.InPlaceCheckBoxTreeDialog"/>
+                <message_argument value="org.eclipse.mylyn.commons.ui_3.4.0"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/mylyn/internal/provisional/commons/ui/dialogs/InPlaceDateSelectionDialog.java" type="org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.InPlaceDateSelectionDialog">
+        <filter id="305365105">
+            <message_arguments>
+                <message_argument value="org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.InPlaceDateSelectionDialog"/>
+                <message_argument value="org.eclipse.mylyn.commons.ui_3.4.0"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/mylyn/internal/provisional/commons/ui/dialogs/InPlaceDialogEvent.java" type="org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.InPlaceDialogEvent">
+        <filter id="305365105">
+            <message_arguments>
+                <message_argument value="org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.InPlaceDialogEvent"/>
+                <message_argument value="org.eclipse.mylyn.commons.ui_3.4.0"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/mylyn/internal/provisional/commons/ui/dialogs/Messages.java" type="org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.Messages">
+        <filter id="305365105">
+            <message_arguments>
+                <message_argument value="org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.Messages"/>
+                <message_argument value="org.eclipse.mylyn.commons.ui_3.4.0"/>
+            </message_arguments>
+        </filter>
+    </resource>
+</component>
