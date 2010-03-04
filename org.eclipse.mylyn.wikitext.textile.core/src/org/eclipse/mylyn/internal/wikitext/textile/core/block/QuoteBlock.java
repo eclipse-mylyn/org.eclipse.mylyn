@@ -15,8 +15,8 @@ import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.internal.wikitext.textile.core.Textile;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
-import org.eclipse.mylyn.wikitext.core.parser.QuoteAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.core.parser.QuoteAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
@@ -72,7 +72,7 @@ public class QuoteBlock extends Block {
 					builder.endBlock(); // para
 					paraOpen = false;
 				}
-				return 0;
+				return -1;
 			}
 		} else if (extended && Textile.explicitBlockBegins(line, offset)) {
 			setClosed(true);

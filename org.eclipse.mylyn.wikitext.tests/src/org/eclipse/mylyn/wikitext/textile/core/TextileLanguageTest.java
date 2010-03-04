@@ -19,8 +19,8 @@ import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.builder.RecordingDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.builder.RecordingDocumentBuilder.Event;
@@ -323,6 +323,15 @@ public class TextileLanguageTest extends TestCase {
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(Pattern.compile("<blockquote cite=\"http://www.example.com\">\\s*<p>some text</p>\\s*</blockquote>",
 				Pattern.MULTILINE | Pattern.DOTALL).matcher(html).find());
+	}
+
+	/**
+	 * bug 304765
+	 */
+	public void testBlockQuote_bug304765() {
+		String html = parser.parseToHtml("bq.. src/\n" + "  main/\n" + "    java/  (Java src folder)\n"
+				+ "      META-INF\n" + "     file.txt\n\n  \na");
+		TestUtil.println("HTML: \n" + html);
 	}
 
 	public void testBlockCode() throws IOException {
@@ -1259,4 +1268,10 @@ public class TextileLanguageTest extends TestCase {
 		assertEquals(3, found);
 	}
 
+	public void testMarkupContainingCDATA() {
+		// bug 302291 text containing CDATA produces invalid HTML
+		String html = parser.parseToHtml("pre. <![CDATA[123 456]]>");
+		TestUtil.println(html);
+		assertTrue(html.contains("&lt;![CDATA[123 456]]&gt;"));
+	}
 }
