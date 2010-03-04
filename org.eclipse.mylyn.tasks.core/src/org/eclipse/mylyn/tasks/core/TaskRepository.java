@@ -290,7 +290,7 @@ public final class TaskRepository extends PlatformObject {
 		}
 	}
 
-	@SuppressWarnings({ "unchecked" })
+	@SuppressWarnings( { "unchecked" })
 	private Map<String, String> getAuthInfo() {
 		synchronized (LOCK) {
 			if (Platform.isRunning()) {
@@ -824,6 +824,7 @@ public final class TaskRepository extends PlatformObject {
 	}
 
 	public void setProperty(String key, String newValue) {
+		Assert.isLegal(!key.matches(".*\\s.*")); //$NON-NLS-1$
 		String oldValue = this.properties.get(key);
 		if ((oldValue != null && !oldValue.equals(newValue)) || (oldValue == null && newValue != null)) {
 			this.properties.put(key, newValue);

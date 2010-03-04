@@ -73,6 +73,7 @@ public class AllTasksTests {
 		suite.addTestSuite(TaskExportImportTest.class);
 		suite.addTestSuite(PersonProposalProviderTest.class);
 		suite.addTestSuite(TaskRepositoryLocationTest.class);
+		suite.addTestSuite(TaskRepositoryTest.class);
 		suite.addTestSuite(AttachmentSizeFormatterTest.class);
 		suite.addTestSuite(TaskMapperTest.class);
 		suite.addTestSuite(TaskListUnmatchedContainerTest.class);
