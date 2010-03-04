@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.tasks.bugs.wizards;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.internal.provisional.tasks.bugs.IProduct;
+import org.eclipse.mylyn.tasks.bugs.IProduct;
 
 /**
  * @author Steffen Pingel

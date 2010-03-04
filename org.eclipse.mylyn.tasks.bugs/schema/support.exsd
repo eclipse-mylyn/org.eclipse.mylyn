@@ -13,7 +13,7 @@
    <element name="extension">
       <annotation>
          <appInfo>
-            <meta.element internal="true" />
+            <meta.element />
          </appInfo>
       </annotation>
       <complexType>
@@ -301,7 +301,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.internal.provisional.tasks.bugs.AbstractSupportHandler:"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.tasks.bugs.AbstractSupportHandler:"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -313,7 +313,7 @@
          <meta.section type="since"/>
       </appInfo>
       <documentation>
-         3.2
+         3.4
       </documentation>
    </annotation>
 

@@ -14,8 +14,8 @@ package org.eclipse.mylyn.internal.tasks.bugs;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.mylyn.internal.provisional.tasks.bugs.IProduct;
-import org.eclipse.mylyn.internal.provisional.tasks.bugs.IProvider;
+import org.eclipse.mylyn.tasks.bugs.IProduct;
+import org.eclipse.mylyn.tasks.bugs.IProvider;
 
 /**
  * @author Steffen Pingel

@@ -9,20 +9,33 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.provisional.tasks.bugs;
+package org.eclipse.mylyn.tasks.bugs;
+
+import org.eclipse.core.runtime.IStatus;
 
 /**
  * @author Steffen Pingel
- * @since 3.2
+ * @since 3.4
  * @noextend This interface is not intended to be extended by clients.
  * @noimplement This interface is not intended to be implemented by clients.
  */
-public interface IProvider {
+public interface ITaskContribution {
 
-	public abstract String getName();
+	/**
+	 * Appends <code>text</code> to the description of the task.
+	 */
+	public abstract void appendToDescription(String text);
 
-	public abstract String getDescription();
+	public abstract String getAttribute(String name);
 
-	public abstract String getId();
+	public abstract IProduct getProduct();
+
+	public abstract IStatus getStatus();
+
+	public abstract boolean isHandled();
+
+	public abstract void setAttribute(String name, String value);
+
+	public abstract void setHandled(boolean handled);
 
 }

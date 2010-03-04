@@ -9,30 +9,36 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.provisional.tasks.bugs;
+package org.eclipse.mylyn.tasks.bugs;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
+ * Base class for providing custom handling for support requests.
+ * <p>
+ * Clients may extend.
+ * 
  * @author Steffen Pingel
- * @since 3.2
+ * @since 3.4
+ * @see ISupportRequest
+ * @see ISupportResponse
  */
-public class AbstractSupportHandler {
+public abstract class AbstractSupportHandler {
 
 	/**
-	 * @since 3.2
+	 * @since 3.4
 	 */
 	public void preProcess(ISupportRequest request) {
 	}
 
 	/**
-	 * @since 3.2
+	 * @since 3.4
 	 */
 	public void process(ITaskContribution contribution, IProgressMonitor monitor) {
 	}
 
 	/**
-	 * @since 3.2
+	 * @since 3.4
 	 */
 	public void postProcess(ISupportResponse response, IProgressMonitor monitor) {
 	}

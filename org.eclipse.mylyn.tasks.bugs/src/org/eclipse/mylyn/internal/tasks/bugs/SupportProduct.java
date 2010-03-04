@@ -16,8 +16,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.eclipse.core.runtime.IBundleGroup;
-import org.eclipse.mylyn.internal.provisional.tasks.bugs.IProduct;
-import org.eclipse.mylyn.internal.provisional.tasks.bugs.IProvider;
+import org.eclipse.mylyn.tasks.bugs.IProduct;
+import org.eclipse.mylyn.tasks.bugs.IProvider;
 
 /**
  * @author Steffen Pingel

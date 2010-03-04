@@ -25,9 +25,9 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.provisional.tasks.bugs.AbstractSupportHandler;
-import org.eclipse.mylyn.internal.provisional.tasks.bugs.ISupportResponse;
-import org.eclipse.mylyn.internal.provisional.tasks.bugs.ITaskContribution;
+import org.eclipse.mylyn.tasks.bugs.AbstractSupportHandler;
+import org.eclipse.mylyn.tasks.bugs.ISupportResponse;
+import org.eclipse.mylyn.tasks.bugs.ITaskContribution;
 
 /**
  * @author Steffen Pingel

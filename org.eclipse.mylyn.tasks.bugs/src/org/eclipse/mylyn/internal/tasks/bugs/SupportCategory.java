@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.mylyn.internal.provisional.tasks.bugs.IProvider;
+import org.eclipse.mylyn.tasks.bugs.IProvider;
 
 public class SupportCategory extends AbstractSupportElement {
 

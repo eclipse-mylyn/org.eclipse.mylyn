@@ -21,8 +21,6 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylyn.internal.provisional.tasks.bugs.IProduct;
-import org.eclipse.mylyn.internal.provisional.tasks.bugs.IProvider;
 import org.eclipse.mylyn.internal.tasks.bugs.AbstractSupportElement;
 import org.eclipse.mylyn.internal.tasks.bugs.AttributeTaskMapper;
 import org.eclipse.mylyn.internal.tasks.bugs.SupportCategory;
@@ -33,6 +31,8 @@ import org.eclipse.mylyn.internal.tasks.bugs.SupportRequest;
 import org.eclipse.mylyn.internal.tasks.bugs.TaskErrorReporter;
 import org.eclipse.mylyn.internal.tasks.bugs.TasksBugsPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.tasks.bugs.IProduct;
+import org.eclipse.mylyn.tasks.bugs.IProvider;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 
 /**

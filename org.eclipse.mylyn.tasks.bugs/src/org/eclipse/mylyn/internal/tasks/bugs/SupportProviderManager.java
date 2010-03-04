@@ -31,7 +31,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.provisional.tasks.bugs.IProvider;
+import org.eclipse.mylyn.tasks.bugs.IProvider;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.branding.IBundleGroupConstants;
 import org.eclipse.ui.plugin.AbstractUIPlugin;

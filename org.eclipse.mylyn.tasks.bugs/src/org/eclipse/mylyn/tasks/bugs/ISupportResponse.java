@@ -9,22 +9,23 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.provisional.tasks.bugs;
+package org.eclipse.mylyn.tasks.bugs;
+
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 /**
  * @author Steffen Pingel
- * @since 3.2
+ * @since 3.4
  * @noextend This interface is not intended to be extended by clients.
  * @noimplement This interface is not intended to be implemented by clients.
  */
-public interface IProduct {
+public interface ISupportResponse {
 
-	public abstract String getName();
+	public IProduct getProduct();
 
-	public abstract String getDescription();
+	public IStatus getStatus();
 
-	public abstract String getId();
-
-	public abstract IProvider getProvider();
+	public TaskData getTaskData();
 
 }
