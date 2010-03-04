@@ -222,6 +222,7 @@ public class SearchHistoryPopUpDialog extends PopupDialog {
 				String text = getTextFromSelection(event.getSelection());
 				if (text != null) {
 					textSearchControl.getTextControl().setText(text);
+					textControl.setSelection(text.length());
 					textSearchControl.addToSearchHistory(text);
 				}
 				close();
@@ -348,6 +349,10 @@ public class SearchHistoryPopUpDialog extends PopupDialog {
 		textSearchControl.addModifyListener(new ModifyListener() {
 
 			public void modifyText(ModifyEvent e) {
+				if (!isOpen && textControl != null && !textControl.isDisposed() && textControl.getText().length() > 0) {
+					updateBounds();
+					open();
+				}
 				if (isOpen && historyTable != null && !historyTable.getTable().isDisposed() && patternFilter != null) {
 					patternFilter.setPattern(textControl.getText());
 					historyTable.setSelection(null);
@@ -375,21 +380,22 @@ public class SearchHistoryPopUpDialog extends PopupDialog {
 			}
 		});
 
-		textControl.addMouseListener(new MouseAdapter() {
-
-			@Override
-			public void mouseDown(MouseEvent e) {
-				updateBounds();
-				open();
-			}
-		});
-
 		textControl.addKeyListener(new KeyAdapter() {
 
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if (e.character == SWT.ESC && textControl.getText().length() == 0) {
+				if (e.character == SWT.ESC && isOpen) {
 					close();
+					e.doit = false;
+				} else if (e.stateMask == 0 && e.keyCode == SWT.ARROW_DOWN && isOpen && historyTable.getTable() != null
+						&& !historyTable.getTable().isDisposed() && historyTable.getTable().getItemCount() > 0) {
+					historyTable.getTable().select(0);
+					historyTable.getTable().setFocus();
+					e.doit = false;
+				} else if ((e.stateMask & SWT.MOD1) != 0 && e.keyCode == SWT.ARROW_DOWN && !isOpen) {
+					updateBounds();
+					open();
+					e.doit = false;
 				}
 			}
 		});

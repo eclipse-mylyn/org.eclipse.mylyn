@@ -152,7 +152,7 @@ public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 		filterText.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if (e.character == SWT.ESC) {
+				if (e.character == SWT.ESC && e.doit) {
 					setFilterText(""); //$NON-NLS-1$
 				}
 			}

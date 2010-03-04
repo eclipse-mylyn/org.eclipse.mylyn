@@ -111,6 +111,8 @@ public class TextSearchControl extends Composite {
 
 	private Collection<String> searchHistory = new LinkedHashSet<String>();
 
+	private boolean hasHistorySupport;
+
 	private static Boolean useNativeSearchField;
 
 	@SuppressWarnings("restriction")
@@ -165,9 +167,14 @@ public class TextSearchControl extends Composite {
 
 		if (historyDialog != null) {
 			historyDialog.attach(this);
+			hasHistorySupport = true;
 		}
 
 		registerListeners();
+	}
+
+	public boolean hasHistorySupport() {
+		return hasHistorySupport;
 	}
 
 	private void registerListeners() {
