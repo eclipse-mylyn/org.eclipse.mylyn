@@ -27,8 +27,10 @@ import java.net.URLEncoder;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -147,11 +149,34 @@ public class WikiToDocTask extends MarkupTask {
 		if (getInternalLinkPattern() == null) {
 			setInternalLinkPattern(computeDefaultInternalLinkPattern());
 		}
+
+		Set<String> pathNames = new HashSet<String>();
 		for (Path path : paths) {
 			if (path.name == null) {
 				throw new ConfigurationException(Messages.getString("WikiToDocTask_path_must_have_name")); //$NON-NLS-1$
 			}
+			if (path.name != null) {
+				if (!pathNames.add(path.name)) {
+					throw new ConfigurationException(MessageFormat.format(
+							Messages.getString("WikiToDocTask_path_name_must_be_unique"), path.name)); //$NON-NLS-1$
+				}
+			}
+			if (!path.includeInUnifiedToc && path.getTocParentName() != null) {
+				throw new ConfigurationException(MessageFormat.format(
+						Messages.getString("WikiToDocTask_tocParentName_not_in_unified_toc"), path.name)); //$NON-NLS-1$
+			}
 		}
+		if (generateUnifiedToc) {
+			for (Path path : paths) {
+				if (path.getTocParentName() != null) {
+					if (!pathNames.contains(path.getTocParentName())) {
+						throw new ConfigurationException(MessageFormat.format(
+								Messages.getString("WikiToDocTask_unknown_tocParentName"), path.getTocParentName())); //$NON-NLS-1$
+					}
+				}
+			}
+		}
+
 		MediaWikiLanguage markupLanguage = (MediaWikiLanguage) createMarkupLanguage();
 		WikiTemplateResolver templateResolver = new WikiTemplateResolver();
 		templateResolver.setWikiBaseUrl(wikiBaseUrl);
@@ -335,11 +360,33 @@ public class WikiToDocTask extends MarkupTask {
 		final OutlineItem rootItem = new OutlineItem(null, 0,
 				"<root>", 0, -1, title == null ? computeTitle(paths.get(0)) : title); //$NON-NLS-1$
 		final Map<OutlineItem, Path> outlineItemToPath = new HashMap<OutlineItem, Path>();
+		final Map<String, OutlineItem> nameToItem = new HashMap<String, OutlineItem>();
+
+		// create root-level items
 		for (Path path : paths) {
 			if (path.includeInUnifiedToc) {
 				SplitOutlineItem pathItem = pathNameToOutline.get(path.name);
 				outlineItemToPath.put(pathItem, path);
-				rootItem.getChildren().add(pathItem);
+
+				nameToItem.put(path.name, pathItem);
+
+				if (path.getTocParentName() == null) {
+					rootItem.getChildren().add(pathItem);
+				}
+			}
+		}
+		for (Path path : paths) {
+			if (path.includeInUnifiedToc) {
+				if (path.getTocParentName() != null) {
+					SplitOutlineItem pathItem = pathNameToOutline.get(path.name);
+
+					if (nameToItem.containsKey(path.getTocParentName())) {
+						nameToItem.get(path.getTocParentName()).getChildren().add(pathItem);
+					} else {
+						throw new ConfigurationException(MessageFormat.format(
+								Messages.getString("WikiToDocTask_unknown_tocParentName"), path.getTocParentName())); //$NON-NLS-1$
+					}
+				}
 			}
 		}
 		SplittingMarkupToEclipseToc markupToEclipseToc = new SplittingMarkupToEclipseToc() {
@@ -423,7 +470,8 @@ public class WikiToDocTask extends MarkupTask {
 		File pathDir = computeDestDir(path);
 		if (!pathDir.exists()) {
 			if (!pathDir.mkdirs()) {
-				throw new BuildException(MessageFormat.format("Cannot create dest folder: {0}",
+				throw new BuildException(MessageFormat.format(
+						Messages.getString("WikiToDocTask_cannot_create_dest_folder"), //$NON-NLS-1$
 						pathDir.getAbsolutePath()));
 			}
 		}
@@ -433,7 +481,8 @@ public class WikiToDocTask extends MarkupTask {
 		try {
 			writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(htmlOutputFile)), "utf-8"); //$NON-NLS-1$
 		} catch (Exception e) {
-			throw new BuildException(MessageFormat.format("Cannot create output file {0}: {1}", htmlOutputFile,
+			throw new BuildException(MessageFormat.format(
+					Messages.getString("WikiToDocTask_cannot_create_output_file"), htmlOutputFile, //$NON-NLS-1$
 					e.getMessage()), e);
 		}
 		try {
@@ -498,7 +547,8 @@ public class WikiToDocTask extends MarkupTask {
 			try {
 				writer.close();
 			} catch (Exception e) {
-				throw new BuildException(MessageFormat.format("Cannot write output file {0}: {1}", htmlOutputFile,
+				throw new BuildException(MessageFormat.format(
+						Messages.getString("WikiToDocTask_cannot_write_output_file"), htmlOutputFile, //$NON-NLS-1$
 						e.getMessage()), e);
 			}
 		}
@@ -587,6 +637,8 @@ public class WikiToDocTask extends MarkupTask {
 
 		private boolean includeInUnifiedToc = true;
 
+		private String tocParentName;
+
 		public String getTitle() {
 			return title;
 		}
@@ -617,6 +669,14 @@ public class WikiToDocTask extends MarkupTask {
 
 		public void setIncludeInUnifiedToc(boolean includeInUnifiedToc) {
 			this.includeInUnifiedToc = includeInUnifiedToc;
+		}
+
+		public String getTocParentName() {
+			return tocParentName;
+		}
+
+		public void setTocParentName(String tocParentName) {
+			this.tocParentName = tocParentName;
 		}
 
 	}
