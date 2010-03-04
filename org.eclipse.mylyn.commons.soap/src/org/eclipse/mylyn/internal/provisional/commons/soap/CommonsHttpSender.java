@@ -450,14 +450,14 @@ public class CommonsHttpSender extends BasicHandler {
 			throws Exception {
 
 		// optionally set a timeout for the request
-		if (msgContext.getTimeout() != 0) {
-			/* ISSUE: these are not the same, but MessageContext has only one
-			          definition of timeout */
-			// SO_TIMEOUT -- timeout for blocking reads
-			httpClient.getHttpConnectionManager().getParams().setSoTimeout(msgContext.getTimeout());
-			// timeout for initial connection
-			httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(msgContext.getTimeout());
-		}
+//		if (msgContext.getTimeout() != 0) {
+//			/* ISSUE: these are not the same, but MessageContext has only one
+//			          definition of timeout */
+//			// SO_TIMEOUT -- timeout for blocking reads
+//			httpClient.getHttpConnectionManager().getParams().setSoTimeout(msgContext.getTimeout());
+//			// timeout for initial connection
+//			httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(msgContext.getTimeout());
+//		}
 
 		// Get SOAPAction, default to ""
 		String action = msgContext.useSOAPAction() ? msgContext.getSOAPActionURI() : ""; //$NON-NLS-1$
