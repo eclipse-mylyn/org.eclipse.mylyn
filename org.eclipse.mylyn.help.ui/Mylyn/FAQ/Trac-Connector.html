@@ -30,7 +30,7 @@
 			</tr>
 		</table><hr/>
 		<h1 id="Trac_Connector">Trac Connector</h1>
-		<h2 id="What_are_the_server_requirements.3F_2">What are the server requirements?</h2>
+		<h2 id="What_are_the_server_requirements.3F">What are the server requirements?</h2>
 		<p>The Trac connector supports two different access methods: The recommended XML-RPC mode offers complete integration with Mylyn but requires additional setup and privileges which may not be available to all users. Web mode offers less functionality but will work with any public Trac repository. </p>
 		<h4 id="XML-RPC_.28recommended.29">XML-RPC (recommended)</h4>
 		<p>Requirements:</p>
@@ -46,7 +46,7 @@
 			<a href="http://trac-hacks.org/wiki/XmlRpcPlugin#Installation" target="mylyn_external">install instructions</a> for requirements and documentation.
 		</p>
 		<p>In order to access the repository through XML_RPC each user needs to have the corresponding permission which can be configured through Trac's admin tool:</p>
-		<pre>trac-admin &lt;/path/to/projenv> permission add &lt;user> XML_RPC
+		<pre>trac-admin &lt;/path/to/projenv&gt; permission add &lt;user&gt; XML_RPC
 </pre>
 		<h4 id="Web">Web</h4>
 		<p>Requirements:</p>
@@ -72,7 +72,7 @@
 		<p>Problems related to character encodings have been reported when Trac is run with Python 2.3. Upgrading to Python 2.4 may help to resolve this. Please comment on 
 			<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=188363" target="mylyn_external">bug #188363</a> if you encounter an internal server error when creating a ticket that contains non-ASCII characters.
 		</p>
-		<h2 id="Known_limitations_3">Known limitations</h2>
+		<h2 id="Known_limitations_2">Known limitations</h2>
 		<ul>
 			<li>Trac 0.10.1 
 				<ul>

@@ -59,7 +59,7 @@
 		<h2 id="External_builders">External builders</h2>
 		<p>If an external builder (e.g. Maven, pydev, or other Ant-based builders) is producing output files that are being automatically added to your context because they are not being marked "derived" as with Eclipse-based builders.  You may note that such files are always show as interesting when they are generated or updated and can not be filtered away, since Mylyn expects all files that have changed as part of the task context to have interest.</p>
 		<p>In this case you can explicitly exclude these files from being added to the task context the 
-			<i>Preferences -> Mylyn -> Resources</i> page.  For example, if the output folder of the builder is "target", you could set this the following way.  Similarly, you could add a filter for "*.pyc" to exclude all files generated with that extension.
+			<i>Preferences -&gt; Mylyn -&gt; Resources</i> page.  For example, if the output folder of the builder is "target", you could set this the following way.  Similarly, you could add a filter for "*.pyc" to exclude all files generated with that extension.
 		</p>
 		<p>Source code generators can be considered analogous since they produce intermediate files.  However, if you want to inspect the results of the source code generation after it is done you can avoid setting the exclusion.  Note that if a large number of files was generated not all generated files may be unfiltered.</p>
 		<p>

@@ -144,7 +144,7 @@
 		<pre>keytool -genkey -keyalg DSA -keysize 1024
 </pre>
 		<p>Use this command to create a new certificate signing request:</p>
-		<pre>keytool -certreq > client.csr
+		<pre>keytool -certreq &gt; client.csr
 </pre>
 		<p>Submit the client.csr file to your CA for signing. The CA’s certificate as well as your signed certificate that is returned by the CA need to be imported into the keystore:</p>
 		<pre>keytool -importcert -alias ca -file ca.crt

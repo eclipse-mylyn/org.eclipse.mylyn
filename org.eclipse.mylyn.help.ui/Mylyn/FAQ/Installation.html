@@ -40,7 +40,7 @@
 		</p>
 		<h3 id="Install_Method_1_-_Eclipse_3.4">Install Method 1 - Eclipse 3.4</h3>
 		<ol>
-			<li>Select ''Help > Software Updates...</li>
+			<li>Select ''Help &gt; Software Updates...</li>
 			<li>Select 
 				<i>Available Software</i> tab
 			</li>
@@ -68,7 +68,7 @@
 		<h3 id="Install_Method_2_-_Eclipse_3.3_and_older">Install Method 2 - Eclipse 3.3 and older</h3>
 		<ol>
 			<li>Select 
-				<i>Help->Software Updates->Find and Install</i>.
+				<i>Help-&gt;Software Updates-&gt;Find and Install</i>.
 			</li>
 			<li>Select 
 				<i>Search for new features to install</i> and select 
@@ -172,6 +172,20 @@ J2SE-1.3,J2SE-1.4,J2SE-1.5,JavaSE-1.6
 		<ul>
 			<li>Eclipse Classic: no Mylyn redistribution, install manually</li>
 		</ul>
+		<h2 id="What_happened_to_the_Mylyn_JIRA_Connector.3F">What happened to the Mylyn JIRA Connector?</h2>
+		<p>
+			<b>
+				<a href="http://tasktop.com/blog/eclipse/mylyn-jira-connector-moving" target="mylyn_external">The Mylyn JIRA Connector has moved to Atlassian</a>
+			</b>. The Atlassian JIRA connector can be installed from the update site below. It is a drop-in replacement for the Mylyn JIRA connector. If the latter is already installed it will be disabled and replaced by the Atlassian JIRA connector during the installation. It is not necessary to uninstall the Mylyn JIRA connector. 
+		</p>
+		<pre>Update Site: http://update.atlassian.com/atlassian-eclipse-plugin/
+</pre>
+		<p>See 
+			<a href="http://confluence.atlassian.com/display/IDEPLUGIN/Using+JIRA+in+the+Eclipse+Connector" target="mylyn_external">documentation for installation instructions</a>. 
+		</p>
+		<p>Bug reports and support requests should be 
+			<a href="https://studio.atlassian.com/browse/PLE" target="mylyn_external">directed to Atlassian</a>.
+		</p>
 		<h2 id="My_tasks_or_queries_disappeared.2C_what_do_I_do.3F">My tasks or queries disappeared, what do I do?</h2>
 		<p>This happens if Mylyn failed to install.  First ensure that you have a correct install by following the instructions in the next section.  After that, if you still do not see your tasks use the 
 			<i>Task List</i> view menu → 
@@ -229,7 +243,7 @@ J2SE-1.3,J2SE-1.4,J2SE-1.5,JavaSE-1.6
  "org.eclipse.mylar.tasks.ui.TasksUiPlugin" may not be fully initialized.
 </pre>
 		<h2 id="Installation_Troubleshooting_on_Eclipse_3.4_and_later">Installation Troubleshooting on Eclipse 3.4 and later</h2>
-		<p>Ensure that all required update sites are enabled under Help > Software Updates > Available Software > Manage Sites:</p>
+		<p>Ensure that all required update sites are enabled under Help &gt; Software Updates &gt; Available Software &gt; Manage Sites:</p>
 		<ul>
 			<li>
 				<a href="http://download.eclipse.org/tools/mylyn/update/e3.4" target="mylyn_external">http://download.eclipse.org/tools/mylyn/update/e3.4</a>
@@ -243,7 +257,7 @@ J2SE-1.3,J2SE-1.4,J2SE-1.5,JavaSE-1.6
 		</ul>
 		<p>Then follow these steps:</p>
 		<ol>
-			<li>Use Help > Software Update > Update to ensure that the latest version of all features is installed</li>
+			<li>Use Help &gt; Software Update &gt; Update to ensure that the latest version of all features is installed</li>
 			<li>Install again</li>
 			<li>If Install fails with a "No repository found containing..." message, remove and re-add the update site that hosts the feature for which the download is failing</li>
 			<li>Install again</li>
@@ -260,8 +274,8 @@ J2SE-1.3,J2SE-1.4,J2SE-1.5,JavaSE-1.6
 		<h3 id="Why_does_update_fail_with_.27.27Cannot_complete_the_request.27.27.3F">Why does update fail with ''Cannot complete the request''?</h3>
 		<p>If any of the installed features have unsatisfied dependencies or if features where previously installed from the extras or incubator update site P2 may fail with an error similar to the ones below. Try these steps to recover:</p>
 		<ol>
-			<li>Ensure that the Mylyn for Eclipse 3.4 and Mylyn Extras sites are enabled in Software Updates > Available Software > Manage Sites</li>
-			<li>Select Update from Software Updates > Installed Software</li>
+			<li>Ensure that the Mylyn for Eclipse 3.4 and Mylyn Extras sites are enabled in Software Updates &gt; Available Software &gt; Manage Sites</li>
+			<li>Select Update from Software Updates &gt; Installed Software</li>
 			<li>Retry the installation</li>
 		</ol>
 		<pre style="overflow:scroll">
@@ -340,7 +354,7 @@ The activator org.eclipse.mylar.java.MylarJavaPlugin for bundle org.eclipse.myla
 		<p>
 			<i>' Mylyn feature configuration problem '</i>
 		</p>
-		<p>If the above do not address the issue, the easiest thing to do is uninstall any old versions and update to the latest Mylyn.  Your tasks won’t be lost, because by default they are stored in the <code>&lt;workspace>/.metadata/.mylyn</code> folder which will be read next time Mylyn starts correctly. </p>
+		<p>If the above do not address the issue, the easiest thing to do is uninstall any old versions and update to the latest Mylyn.  Your tasks won’t be lost, because by default they are stored in the <code>&lt;workspace&gt;/.metadata/.mylyn</code> folder which will be read next time Mylyn starts correctly. </p>
 		<ul>
 			<li>First, uninstall the old version of Mylyn using 
 				<i>Help → Software Updates → Manage Configuration</i>.  
@@ -374,7 +388,7 @@ The activator org.eclipse.mylar.java.MylarJavaPlugin for bundle org.eclipse.myla
 			<i>Search for new features to install…</i> when installing can help to avoid this problem.  If that does not work see the feature configuration troubleshooting below. 
 		</p>
 		<p>
-			<b>Why am I getting messages in my <code>&lt;workspace>/.metadata/.log</code> or my Mylyn view that say things like “<code>java.lang.NoSuchMethodError: org.eclipse.ui.internal.dialogs.FilteredTree.getFilterControl()</code>” and “The activator <code>org.eclipse.mylar.java.MylarJavaPlugin</code> for bundle <code>org.eclipse.mylar.java</code> is invalid”?</b>
+			<b>Why am I getting messages in my <code>&lt;workspace&gt;/.metadata/.log</code> or my Mylyn view that say things like “<code>java.lang.NoSuchMethodError: org.eclipse.ui.internal.dialogs.FilteredTree.getFilterControl()</code>” and “The activator <code>org.eclipse.mylar.java.MylarJavaPlugin</code> for bundle <code>org.eclipse.mylar.java</code> is invalid”?</b>
 		</p>
 		<p>This probably means that your Mylyn download version didn’t match your Eclipse download version.  Note that 
 			<a href="http://eclipse.org/mylar/dl.php" target="mylyn_external">the download site</a> has different downloads for Eclipse 3.1 and Eclipse 3.2.
@@ -384,7 +398,7 @@ The activator org.eclipse.mylar.java.MylarJavaPlugin for bundle org.eclipse.myla
 			<a href="http://eclipse.org/mylar/dl.php" target="mylyn_external">the correct download site</a>.
 		</p>
 		<p>
-			<b>Why am I getting messages in my <code>&lt;workspace>/.metadata/.log</code> or my Mylyn view that say things like “<code>java.lang.NoSuchMethodError: org.eclipse.mylyn.internal.context.core.InteractionContextManager.getScalingFactors()</code>”?</b>
+			<b>Why am I getting messages in my <code>&lt;workspace&gt;/.metadata/.log</code> or my Mylyn view that say things like “<code>java.lang.NoSuchMethodError: org.eclipse.mylyn.internal.context.core.InteractionContextManager.getScalingFactors()</code>”?</b>
 		</p>
 		<p>This could mean that some of your Mylyn plugins are on different versions. Use the update manager (“''Search for new features to install…''”) to obtain the latest versions of the Mylyn features.</p>
 		<p>
@@ -394,7 +408,7 @@ The activator org.eclipse.mylar.java.MylarJavaPlugin for bundle org.eclipse.myla
 		<p>
 			<b>I’ve just updated to Mylyn 2.0 and I don’t see any tasks in my Task List</b>
 		</p>
-		<p>As part of the update to Mylyn 2.0 the old data folder has been migrated to &lt;workspace folder>/.metadata/.mylyn from the old location &lt;workspace folder>/.mylar. IF for some reason migration failed (.mylar folder still exists), simply shut down Eclipse and manually move your old &lt;workspace folder>/.mylar folder to &lt;workspace folder>/.metadata/.mylyn (note the name change to .mylyn)</p>
+		<p>As part of the update to Mylyn 2.0 the old data folder has been migrated to &lt;workspace folder&gt;/.metadata/.mylyn from the old location &lt;workspace folder&gt;/.mylar. IF for some reason migration failed (.mylar folder still exists), simply shut down Eclipse and manually move your old &lt;workspace folder&gt;/.mylar folder to &lt;workspace folder&gt;/.metadata/.mylyn (note the name change to .mylyn)</p>
 		<p>
 			<b>Error: Network connection problems encountered during search</b>
 			Eclipse couldn’t find the location you entered.  This might be because you copied something incorrectly (watch for extra characters -- even extra spaces can cause errors), or because the site went down.  You might be able to see if the site is down by copying the URL into your Web browser.
@@ -500,7 +514,7 @@ The activator org.eclipse.mylar.java.MylarJavaPlugin for bundle org.eclipse.myla
 			the application: from Konsole, using “Run Command…”, using a desktop icon etc. Please use this simple script to check the different ways:
 		</p>
 		<pre> #!/bin/bash
- env | grep GTK2_RC_FILES >/tmp/GTK2_RC_FILES.env
+ env | grep GTK2_RC_FILES &gt;/tmp/GTK2_RC_FILES.env
 </pre>
 		<p>and look at the resulting output in <tt>/tmp</tt>.</p>
 		<p>Consider filing a bug against the distribution showing this inconsistent behaviour.</p>
@@ -559,7 +573,7 @@ The activator org.eclipse.mylar.java.MylarJavaPlugin for bundle org.eclipse.myla
 		<ol>
 			<li>Open a terminal and run <code>gconf-editor</code></li>
 			<li>Go into: <code>/apps/metacity/general</code></li>
-			<li>Edit the <code>mouse_button_modifier</code> field. Setting it to nothing disables it. You can use &lt;Super> to set it to the windows key.</li>
+			<li>Edit the <code>mouse_button_modifier</code> field. Setting it to nothing disables it. You can use &lt;Super&gt; to set it to the windows key.</li>
 			<li>Exit <code>gconf-editor</code>.</li>
 		</ol>
 		<p>KDE Desktop</p>
@@ -606,7 +620,7 @@ The activator org.eclipse.mylar.java.MylarJavaPlugin for bundle org.eclipse.myla
 		<p>It is likely that you need to configure these proxy server settings.  Select 
 			<i>Window → Preferences → General → Network Connections</i>, and update the section in the “Proxy settings” section of the form.
 		</p>
-		<h3 id="I_can.E2.80.99t_use_.3Ccode.3ECtrl.2BAlt.2BShift.2BArrow_Up.3C.2Fcode.3E_for.27.27_Mark_as_Landmark.27.27.__What_do_I_do.3F">I can’t use &lt;code>Ctrl+Alt+Shift+Arrow Up&lt;/code> for'' Mark as Landmark''.  What do I do?</h3>
+		<h3 id="I_can.E2.80.99t_use_.3Ccode.3ECtrl.2BAlt.2BShift.2BArrow_Up.3C.2Fcode.3E_for.27.27_Mark_as_Landmark.27.27.__What_do_I_do.3F">I can’t use &lt;code&gt;Ctrl+Alt+Shift+Arrow Up&lt;/code&gt; for'' Mark as Landmark''.  What do I do?</h3>
 		<p>This is usually a Linux/GNOME problem, where the Gnome keyboard shortcuts are interfering with the Eclipse shortcuts.  Go to the Keyboard shortcuts (which might be something like 
 			<i>Desktop → Control Center → Keyboard Shortcuts</i> or 
 			<i>System → Preferences → Keyboard Shortcuts</i>) and disable both of these shortcuts:
@@ -655,7 +669,7 @@ The activator org.eclipse.mylar.java.MylarJavaPlugin for bundle org.eclipse.myla
 			<b>Eclipse 3.1:</b> you may need to reset the Java editor to be default for <code>.java</code> again via: 
 			<i>Preferences → General → Editors → File Associations</i>
 		</p>
-		<h2 id="Why_am_seeing_.3Ccode.3Ejava.lang.OutOfMemoryError:_PermGen_space.3C.2Fcode.3E_errors.3F">Why am seeing &lt;code>java.lang.OutOfMemoryError: PermGen space&lt;/code> errors?</h2>
+		<h2 id="Why_am_seeing_.3Ccode.3Ejava.lang.OutOfMemoryError:_PermGen_space.3C.2Fcode.3E_errors.3F">Why am seeing &lt;code&gt;java.lang.OutOfMemoryError: PermGen space&lt;/code&gt; errors?</h2>
 		<p>If your Eclipse crashes, or you see the above error after installing Mylyn or other plug-ins, you have most likely hit the infamous MaxPermSize bug.  This is not a Mylyn specific problem, but a general problem with the Sun Java VM that is often triggered on Eclipse 3.2 and later, if you have many plug-ins installed.</p>
 		<p>To fix it simply add the following to your launch arguments. This is usually to your shortcut:</p>
 		<pre>   -vmargs -XX:MaxPermSize=128m
@@ -664,7 +678,7 @@ The activator org.eclipse.mylar.java.MylarJavaPlugin for bundle org.eclipse.myla
 		<pre>   -XX:MaxPermSize=128m
 </pre>
 		<p>Note: For Eclipse 3.4 with the Equinox P2 profile-based provisioning support, this setting can also be modified in the current  P2 profile. With a default installation of the SDK, see: </p>
-		<p>@config.dir/../p2/org.eclipse.equinox.p2.engine/profileRegistry/&lt;name>.profile/&lt;timestamp>.profile</p>
+		<p>@config.dir/../p2/org.eclipse.equinox.p2.engine/profileRegistry/&lt;name&gt;.profile/&lt;timestamp&gt;.profile</p>
 		<p>For more information, see: 
 			<a href="http://wiki.eclipse.org/Equinox_p2_Admin_UI_Users_Guide" target="mylyn_external">http://wiki.eclipse.org/Equinox_p2_Admin_UI_Users_Guide</a>
 		</p>

@@ -33,8 +33,8 @@
 		<p>The task-focused interface provides several ways to improve your work flow when working with a source code repository such as CVS or Subversion. CVS support is available out-of-the-box and task-focused interface integration for Subversion is available via the Subclipse or Subversive plugins.</p>
 		<h2 id="Task-focused_Change_Sets">Task-focused Change Sets</h2>
 		<p>When working with a source code repository, you can commit or update only the resources that are in the context of a particular task. This helps you work on several tasks concurrently and avoid polluting your workspace with changes that are not relevant to the current task.</p>
-		<p>To enable this functionality, locate the "Synchronize" view. If the view is not visible, you can open it by navigating to Window -> Show View -> Other... -> Team -> Synchronize. Next, click the small black arrow next to "Show File System Resources" in the Synchronize view toolbar and select "Change Sets".</p>
-		<p>You can now synchronize resources in your workspace as usual (e.g. by right-clicking on a resource in the navigator and selecting "Team" -> "Synchronize with Repository". Your resources will now be grouped by change sets corresponding to tasks. Expanding the task shows individual resources. Changed resources that are not a part of any task context will appear under the root of the Synchronize view. If needed missing resources can be added to the task context Change Set via the Synchronize View by right+clicking the resource and selecting "Add to" and then selecting the corresponding task. Select "no set" to remove a resource from a change set.</p>
+		<p>To enable this functionality, locate the "Synchronize" view. If the view is not visible, you can open it by navigating to Window -&gt; Show View -&gt; Other... -&gt; Team -&gt; Synchronize. Next, click the small black arrow next to "Show File System Resources" in the Synchronize view toolbar and select "Change Sets".</p>
+		<p>You can now synchronize resources in your workspace as usual (e.g. by right-clicking on a resource in the navigator and selecting "Team" -&gt; "Synchronize with Repository". Your resources will now be grouped by change sets corresponding to tasks. Expanding the task shows individual resources. Changed resources that are not a part of any task context will appear under the root of the Synchronize view. If needed missing resources can be added to the task context Change Set via the Synchronize View by right+clicking the resource and selecting "Add to" and then selecting the corresponding task. Select "no set" to remove a resource from a change set.</p>
 		<p>
 			<img border="0" src="images/Feature-Reference-3.0-Change-Sets.png"/>
 		</p>
@@ -61,7 +61,7 @@
 			</li>
 		</ul>
 		<h2 id="Automatic_Commit_Messages">Automatic Commit Messages</h2>
-		<p>When using task-focused change sets as described above, commit messages are automatically be generated based on the task whose resources are being commited. By default, the commit message includes information such as the task ID, description, and URL. To change the template for these commit messages, navigate to Window -> Preferences -> Tasks -> Team.</p>
+		<p>When using task-focused change sets as described above, commit messages are automatically be generated based on the task whose resources are being commited. By default, the commit message includes information such as the task ID, description, and URL. To change the template for these commit messages, navigate to Window -&gt; Preferences -&gt; Tasks -&gt; Team.</p>
 		<h2 id="Working_with_Patches">Working with Patches</h2>
 		<p>When applying patches, the preferred scenario is to have a task context attached to the task along with the patch. Since this is not always feasible, Mylyn provides an action in the popup menu of the 
 			<i>Synchronize</i> view that supports adding changed elements to the task context. 

@@ -39,7 +39,7 @@
 		<p>Alternatively, you can use Query Pattern like 
 			({Description}.+?)({Id}\n) to see content of the retrieved page in preview table and compare it with the source of the web page for the same url loaded into the web browser.</p>
 		<p>If retrieved web page is correct, but “Preview” don’t show expected results you need to check the “Query Pattern”. A popular mistake is an unmasked ‘?’ that separates request parameters in the url). For example:</p>
-		<pre>&lt;a href="show_bug.cgi\?id\=(.+?)">.+?&lt;span class="summary">(.+?)&lt;/span>
+		<pre>&lt;a href="show_bug.cgi\?id\=(.+?)"&gt;.+?&lt;span class="summary"&gt;(.+?)&lt;/span&gt;
 </pre>
 		<p>If you don’t see the correct web page, check the following:</p>
 		<ul>
@@ -63,7 +63,7 @@
 			<i>query.html</i> does not show expected list of issues you can check 
 			<i>query.log</i> for server responses and try to identify if server require authentication, redirecting your requests somewhere or issue any other errors.
 		</p>
-		<h2 id="Known_limitations_4">Known limitations</h2>
+		<h2 id="Known_limitations_3">Known limitations</h2>
 		<ul>
 			<li>In Mylyn 1.0: if a web server responds by requesting a redirect to an absolute URL while fetching a resource, the connector falsely prepends “/” to the URL and the request will fail. The workaround is to use final url where redirect is pointing to (you can find it as describe above). See 
 				<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=167282" target="mylyn_external">bug 167282</a> for details.

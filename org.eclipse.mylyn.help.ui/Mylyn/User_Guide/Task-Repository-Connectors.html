@@ -44,13 +44,6 @@
 		<p>See 
 			<a href="../../Mylyn/FAQ/Trac-Connector.html#Trac_Connector" title="Mylyn/FAQ#Trac_Connector">Trac Connector Troubleshooting</a>.
 		</p>
-		<h2 id="JIRA_Connector">JIRA Connector</h2>
-		<p>See 
-			<a href="http://confluence.atlassian.com/display/JIRAEXT/Mylyn" target="mylyn_external">this page</a> for install instructions and additional screen shots. Note that the Mylyn JIRA connector requires at least JIRA version 3.3.3 and SOAP/RPC services have to be enabled on the server.
-		</p>
-		<p>See also 
-			<a href="../../Mylyn/FAQ/JIRA-Connector.html#JIRA_Connector" title="Mylyn/FAQ#JIRA_Connector">JIRA Connector Troubleshooting</a>.
-		</p>
 		<h2 id="Generic_Web_Templates_Connector">Generic Web Templates Connector</h2>
 		<p>The generic web repository connector is NOT part of the default Mylyn install. You can install it from the incubator update site. See 
 			<a href="http://www.eclipse.org/mylyn/downloads/" target="mylyn_external">Mylyn download page</a> for more details.
@@ -92,7 +85,7 @@
 			<li>Task URL: <code>${serverUrl}/show_bug.cgi?id=</code></li>
 			<li>New Task URL: <code>${serverUrl}/enter_bug.cgi?issue_type=DEFECT</code></li>
 			<li>Query URL: <code>${serverUrl}/buglist.cgi?component=glassfish&amp;issue_status=NEW&amp;issue_status=STARTED&amp;issue_status=REOPENED&amp;order=Issue+Number</code></li>
-			<li>Query Pattern: <code>&lt;a href="show_bug.cgi\?id\=(.+?)">.+?&lt;span class="summary">(.+?)&lt;/span></code></li>
+			<li>Query Pattern: <code>&lt;a href="show_bug.cgi\?id\=(.+?)"&gt;.+?&lt;span class="summary"&gt;(.+?)&lt;/span&gt;</code></li>
 		</ul>
 		<dl>
 			<dd>
@@ -130,7 +123,7 @@
 			</li>
 		</ul>
 		<p>
-			<b>2.</b> Create a new query for the GlassFish task repository created above (either from popup context menu in the Task List view or using a "New..." wizard from File -> New... -> Other... menu).
+			<b>2.</b> Create a new query for the GlassFish task repository created above (either from popup context menu in the Task List view or using a "New..." wizard from File -&gt; New... -&gt; Other... menu).
 		</p>
 		<ul>
 			<li>
