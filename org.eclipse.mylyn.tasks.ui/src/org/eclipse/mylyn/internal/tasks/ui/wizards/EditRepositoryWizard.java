@@ -71,8 +71,6 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 				}
 			}
 
-			repository.flushAuthenticationCredentials();
-
 			if (!repository.getConnectorKind().equals(LocalRepositoryConnector.CONNECTOR_KIND)) {
 				repository.setRepositoryUrl(newUrl);
 			}
