@@ -1280,6 +1280,8 @@ public class InteractionContextManager implements IInteractionContextManager {
 					if (!canonicalBridge.getContentType().equals(ContextCore.CONTENT_TYPE_RESOURCE)) {
 						// NOTE: resetting bridge
 						bridge = canonicalBridge;
+						parentHandle = bridge.getHandleIdentifier(resolved);
+						break;
 					}
 				}
 			}
