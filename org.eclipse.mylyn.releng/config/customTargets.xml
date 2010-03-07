@@ -95,10 +95,52 @@
 	<!-- ===================================================================== -->
 	<!-- Steps to do after setup but before starting the build proper -->
 	<!-- ===================================================================== -->
-	<target name="postSetup">
+	<target name="postSetup" if="localBuild">
 		<antcall target="getBaseComponents" />
+		<copy todir="${buildDirectory}/plugins">
+			<fileset dir="${builder}/../../../">
+				<include name="org.eclipse.mylyn*/**"/>
+				<include name="sandbox/**"/>
+				<exclude name="org.eclipse.mylyn-site/**"/>
+				<exclude name="org.eclipse.mylyn.releng/**"/>
+				<exclude name="*-feature/**"/>
+				<exclude name="sandbox/*-feature/**"/>
+				<exclude name="**/.svn/**"/>
+				<exclude name="**/bin/**"/>
+			</fileset>
+		</copy>
+		<copy todir="${buildDirectory}/features">
+			<fileset dir="${builder}/../../../">
+				<include name="org.eclipse.mylyn**-feature/**"/>
+				<include name="sandbox/org.eclipse.mylyn**-feature/**"/>
+				<exclude name="**/.svn/**"/>
+				<exclude name="**/bin/**"/>
+			</fileset>
+		</copy>
+		<map dir="${buildDirectory}/plugins" from="org.eclipse.mylyn.cdt(.*)" to="org.eclipse.cdt.mylyn\1"/>
+		<map dir="${buildDirectory}/plugins" from="^sandbox/(.*)" to="\1"/>
+		<map dir="${buildDirectory}/features" from="org.eclipse.mylyn.cdt-feature(.*)" to="org.eclipse.cdt.mylyn\1"/>
+		<map dir="${buildDirectory}/features" from="org.eclipse.mylyn.wikitext.sdk-feature(.*)" to="org.eclipse.mylyn.wikitext.sdk\1"/>
+		<map dir="${buildDirectory}/features" from="(.*)-sdk-feature(.*)" to="\1_sdk_feature\2"/>
+		<map dir="${buildDirectory}/features" from="(.*)-feature(.*)" to="\1_feature\2"/>
+		<map dir="${buildDirectory}/features" from="^sandbox/(.*)" to="\1"/>
+		
+		<unzip dest="${buildDirectory}/plugins" src="/home/stp/orbit-dependencies.zip"/>
 	</target>
+	
 
+	<macrodef name="map">
+		<attribute name="dir"/>
+		<attribute name="from"/>
+		<attribute name="to"/>
+		<sequential>			
+			<move todir="@{dir}">
+				<fileset dir="@{dir}" includes="*/**"/>
+				<regexpmapper from="@{from}" to="@{to}"/>
+			</move>
+		</sequential>
+	</macrodef>
+	
 	<!-- ===================================================================== -->
 	<!-- Steps to do before fetching the build elements -->
 	<!-- ===================================================================== -->

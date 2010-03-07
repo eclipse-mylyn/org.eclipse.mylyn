@@ -461,6 +461,7 @@
 		<property name="build.extraBuildArgs" value="-Dnoextrabuildargs=true" />
 		<available property="builder" file="${basedir}/config/${base.target}" value="${basedir}/config/${base.target}"/>
 		<property name="builder" location="${basedir}/config"/>
+		<condition property="build.localBuild" value="-DlocalBuild=true" else=""><equals arg1="${localBuild}" arg2="true"/></condition>
 
     	<exec-eclipse activity="build">
     		<arg value="-buildfile"/>
@@ -474,6 +475,7 @@
     		<arg value="-DmajorVersion=${version}"/>
     		<arg value="${build.skipFetch}"/>
     		<arg value="${build.extraBuildArgs}"/>
+    		<arg line="${build.localBuild}"/>
     	</exec-eclipse>
 		
 		<antcall target="post-build"/>
