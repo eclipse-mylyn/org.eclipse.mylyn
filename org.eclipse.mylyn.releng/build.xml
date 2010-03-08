@@ -169,6 +169,11 @@
 
 	<target name="copy-to-archive">
 		<property name="dist.dir" value="${dist.home}/update-archive/${version}/${qualifier}" />
+		
+		<antcall target="fix-permissions">
+			<param name="dir" value="${build.home}"/>
+		</antcall>
+		
 		<copy todir="${dist.dir}/e3.4">
 			<!-- need to use discovery plug-ins from the 3.6 site -->
 			<fileset dir="${build.home}/3.6/standardUpdateSite"/>

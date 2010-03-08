@@ -81,6 +81,14 @@ $JAVA_HOME/bin/java \
  -noDefaultIUs
 }
 
+fixpermissions() {
+DIR=$1
+/bin/chgrp -R mylynadmin $DIR
+/bin/chmod g+w -R $DIR
+/bin/chmod o+r -R $DIR
+/usr/bin/find $DIR -type d | xargs chmod +x
+}
+
 if [ ! -e $TMP ]
 then
 
@@ -126,6 +134,8 @@ pack e3.4 "Mylyn for Eclipse 3.4, 3.5 and 3.6"
 pack extras "Mylyn Extras"
 pack incubator "Mylyn Incubator"
 
+fixpermissions $TMP
+
 rezip e3.4
 rezip extras
 rezip incubator
@@ -137,10 +147,7 @@ rezip incubator
 /bin/cp -av $TMP $SRC
 # recover wikitext-standalone zip and other archives
 /bin/cp -v $SRC-DELETE/mylyn-wikitext-standalone-*.zip $SRC
-/bin/chgrp -R mylynadmin $SRC
-/bin/chmod g+w -R $SRC
-/bin/chmod o+r -R $SRC
-/usr/bin/find $SRC -type d | xargs chmod +x
+fixpermissions $SRC
 rm -R $SRC-DELETE
 
 # clean up
