@@ -22,6 +22,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
+import org.eclipse.mylyn.internal.trac.core.client.TracException;
 import org.eclipse.mylyn.internal.trac.core.client.TracPermissionDeniedException;
 import org.eclipse.mylyn.internal.trac.core.client.TracRemoteException;
 import org.eclipse.mylyn.internal.trac.core.client.TracXmlRpcClient;
@@ -352,6 +353,17 @@ public class TracXmlRpcClientTest extends TestCase {
 
 	public void testPutWikiPage() throws Exception {
 		// TODO testing wiki.putPage()
+	}
+
+	public void testInvalidCharacters() throws Exception {
+		TracTicket ticket = TracTestUtil.createTicket(client, "invalid characters");
+		ticket.putBuiltinValue(Key.DESCRIPTION, "Control Character: \u0002");
+		try {
+			client.updateTicket(ticket, "set invalid characters in description", null);
+			fail("Expected TracException");
+		} catch (TracException e) {
+			// expected to cause parse error
+		}
 	}
 
 }
