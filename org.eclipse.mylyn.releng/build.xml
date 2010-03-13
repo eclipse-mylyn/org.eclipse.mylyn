@@ -108,7 +108,7 @@
 		<antcall target="for-each-target">
 			<param name="call" value="publish-helper"/>
 			<param name="skip3.3" value="true"/>
-			<param name="skip3.4" value="true"/>
+			<param name="skip3.5" value="true"/>
 			<param name="skip3.6" value="true"/>
 		</antcall>
 		<antcall target="for-each-target">
