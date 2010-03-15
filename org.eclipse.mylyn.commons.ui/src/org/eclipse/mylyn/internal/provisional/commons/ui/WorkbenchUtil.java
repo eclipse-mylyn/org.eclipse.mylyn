@@ -18,6 +18,7 @@ import java.net.URL;
 import java.util.Calendar;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.internal.commons.ui.CommonsUiPlugin;
@@ -43,6 +44,11 @@ import org.eclipse.ui.internal.browser.WorkbenchBrowserSupport;
  */
 public class WorkbenchUtil {
 
+
+	// TODO e3.6 IProgressConstants2#SHOW_IN_TASKBAR_ICON_PROPERTY
+	public static final QualifiedName SHOW_IN_TASKBAR_ICON_PROPERTY = new QualifiedName(
+			"org.eclipse.ui.workbench.progress", "inTaskBarIcon"); //$NON-NLS-1$//$NON-NLS-2$
+	
 	// FIXME remove this again
 	private static final boolean TEST_MODE;
 
