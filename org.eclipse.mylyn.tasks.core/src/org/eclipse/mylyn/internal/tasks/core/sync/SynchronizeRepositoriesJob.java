@@ -17,12 +17,15 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
@@ -57,6 +60,8 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 	private Set<TaskRepository> repositories;
 
 	private final IRepositoryModel tasksModel;
+
+	private final Map<QualifiedName, Object> properties = new ConcurrentHashMap<QualifiedName, Object>();
 
 	public SynchronizeRepositoriesJob(TaskList taskList, TaskDataManager taskDataManager, IRepositoryModel tasksModel,
 			IRepositoryManager repositoryManager) {
@@ -173,11 +178,25 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 		job.setUser(isUser());
 		job.setFullSynchronization(true);
 		job.setPriority(Job.DECORATE);
+		// propagate all properties from the current job to the newly created job to make sure the job icon, showing progress on the system taskbar, etc. are maintained.
+		copyPropertiesTo(job);
 		if (isUser()) {
 			job.schedule();
 		} else {
 			job.run(new SubProgressMonitor(monitor, 80));
 		}
+	}
+
+	private void copyPropertiesTo(SynchronizeQueriesJob job) {
+		for (QualifiedName key : properties.keySet()) {
+			job.setProperty(key, properties.get(key));
+		}
+	}
+
+	@Override
+	public void setProperty(QualifiedName key, Object value) {
+		super.setProperty(key, value);
+		properties.put(key, value);
 	}
 
 	@Override

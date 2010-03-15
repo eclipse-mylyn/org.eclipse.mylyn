@@ -370,6 +370,10 @@ public class TasksUiInternal {
 		SynchronizationJob job = TasksUiPlugin.getTaskJobFactory().createSynchronizeQueriesJob(connector, repository,
 				queries);
 		job.setUser(force);
+		if (force) {
+			// show the progress in the system task bar if this is a user job (i.e. forced)
+			job.setProperty(WorkbenchUtil.SHOW_IN_TASKBAR_ICON_PROPERTY, Boolean.TRUE);
+		}
 		if (listener != null) {
 			job.addJobChangeListener(listener);
 		}
@@ -404,6 +408,10 @@ public class TasksUiInternal {
 	public static SynchronizationJob synchronizeAllRepositories(boolean force) {
 		SynchronizationJob job = TasksUiPlugin.getTaskJobFactory().createSynchronizeRepositoriesJob(null);
 		job.setUser(force);
+		if (force) {
+			// show the progress in the system task bar if this is a user job (i.e. forced)
+			job.setProperty(WorkbenchUtil.SHOW_IN_TASKBAR_ICON_PROPERTY, Boolean.TRUE);
+		}
 		job.schedule();
 		joinIfInTestMode(job);
 		return job;
@@ -431,6 +439,10 @@ public class TasksUiInternal {
 		// do not show in progress view by default
 		job.setSystem(true);
 		job.setUser(force);
+		if (force) {
+			// show the progress in the system task bar if this is a user job (i.e. forced)
+			job.setProperty(WorkbenchUtil.SHOW_IN_TASKBAR_ICON_PROPERTY, Boolean.TRUE);
+		}
 		job.setFullSynchronization(false);
 		return job;
 	}
