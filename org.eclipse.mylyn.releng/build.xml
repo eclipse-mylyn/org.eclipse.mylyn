@@ -171,7 +171,13 @@
 		<property name="dist.dir" value="${dist.home}/update-archive/${version}/${qualifier}" />
 		
 		<antcall target="fix-permissions">
-			<param name="dir" value="${build.home}"/>
+			<param name="dir" value="${build.home}/3.6/standardUpdateSite"/>
+		</antcall>
+		<antcall target="fix-permissions">
+			<param name="dir" value="${build.home}/3.4/extrasUpdateSite"/>
+		</antcall>
+		<antcall target="fix-permissions">
+			<param name="dir" value="${build.home}/3.4/incubatorUpdateSite"/>
 		</antcall>
 		
 		<copy todir="${dist.dir}/e3.4">
