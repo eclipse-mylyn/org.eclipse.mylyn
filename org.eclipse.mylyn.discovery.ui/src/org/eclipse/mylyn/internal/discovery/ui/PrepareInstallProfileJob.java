@@ -16,9 +16,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,15 +33,15 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.equinox.p2.core.ProvisionException;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
-import org.eclipse.equinox.p2.metadata.IProvidedCapability;
 import org.eclipse.equinox.p2.metadata.Version;
 import org.eclipse.equinox.p2.operations.InstallOperation;
 import org.eclipse.equinox.p2.operations.ProvisioningSession;
 import org.eclipse.equinox.p2.operations.RepositoryTracker;
 import org.eclipse.equinox.p2.query.IQuery;
 import org.eclipse.equinox.p2.query.IQueryResult;
-import org.eclipse.equinox.p2.query.MatchQuery;
+import org.eclipse.equinox.p2.query.QueryUtil;
 import org.eclipse.equinox.p2.repository.metadata.IMetadataRepository;
+import org.eclipse.equinox.p2.repository.metadata.IMetadataRepositoryManager;
 import org.eclipse.equinox.p2.ui.ProvisioningUI;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -93,7 +94,7 @@ class PrepareInstallProfileJob implements IRunnableWithProgress {
 
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
-						provisioningUI.openInstallWizard(DiscoveryUiUtil.getShell(), ius, installOperation, null);
+						provisioningUI.openInstallWizard(Arrays.asList(ius), installOperation, null);
 					}
 				});
 			} finally {
@@ -114,7 +115,7 @@ class PrepareInstallProfileJob implements IRunnableWithProgress {
 
 	private InstallOperation resolve(IProgressMonitor monitor, final IInstallableUnit[] ius, URI[] repositories)
 			throws CoreException {
-		final InstallOperation installOperation = provisioningUI.getInstallOperation(ius, repositories);
+		final InstallOperation installOperation = provisioningUI.getInstallOperation(Arrays.asList(ius), repositories);
 		IStatus operationStatus = installOperation.resolveModal(new SubProgressMonitor(monitor,
 				installableConnectors.size()));
 		if (operationStatus.getSeverity() > IStatus.WARNING) {
@@ -177,18 +178,14 @@ class PrepareInstallProfileJob implements IRunnableWithProgress {
 		// at least one selected connector could not be found in a repository
 		Set<String> foundIds = new HashSet<String>();
 		for (IInstallableUnit unit : installableUnits) {
-			String id = unit.getId();
-			if (id.endsWith(P2_FEATURE_GROUP_SUFFIX)) {
-				id = id.substring(0, id.indexOf(P2_FEATURE_GROUP_SUFFIX));
-			}
-			foundIds.add(id);
+			foundIds.add(unit.getId());
 		}
 
 		String message = ""; //$NON-NLS-1$
 		String detailedMessage = ""; //$NON-NLS-1$
 		for (ConnectorDescriptor descriptor : installableConnectors) {
 			StringBuilder unavailableIds = null;
-			for (String id : descriptor.getInstallableUnits()) {
+			for (String id : getFeatureIds(descriptor)) {
 				if (!foundIds.contains(id)) {
 					if (unavailableIds == null) {
 						unavailableIds = new StringBuilder();
@@ -267,36 +264,17 @@ class PrepareInstallProfileJob implements IRunnableWithProgress {
 		for (final IMetadataRepository repository : repositories) {
 			checkCancelled(monitor);
 			final Set<String> installableUnitIdsThisRepository = getDescriptorIds(repository);
-			IQuery<IInstallableUnit> query = new MatchQuery<IInstallableUnit>() {
-				@Override
-				public boolean isMatch(IInstallableUnit candidate) {
-					if ("true".equalsIgnoreCase(candidate.getProperty("org.eclipse.equinox.p2.type.group"))) { //$NON-NLS-1$ //$NON-NLS-2$
-						String id = candidate.getId();
-						if (isQualifyingFeature(installableUnitIdsThisRepository, id)) {
-							Collection<IProvidedCapability> providedCapabilities = candidate.getProvidedCapabilities();
-							if (providedCapabilities != null && providedCapabilities.size() > 0) {
-								for (IProvidedCapability capability : providedCapabilities) {
-									if ("org.eclipse.equinox.p2.iu".equals(capability.getNamespace())) { //$NON-NLS-1$
-										String name = capability.getName();
-										if (isQualifyingFeature(installableUnitIdsThisRepository, name)) {
-											return true;
-										}
-									}
-								}
-							}
-						}
-					}
-					return false;
-				}
-
-				private boolean isQualifyingFeature(final Set<String> installableUnitIdsThisRepository, String id) {
-					return id.endsWith(P2_FEATURE_GROUP_SUFFIX)
-							&& installableUnitIdsThisRepository.contains(id.substring(0,
-									id.indexOf(P2_FEATURE_GROUP_SUFFIX)));
-				}
-			};
+			IQuery<IInstallableUnit> query = QueryUtil.createMatchQuery( //
+			"id ~= /*.feature.group/ && " + //$NON-NLS-1$
+					"properties['org.eclipse.equinox.p2.type.group'] == true ");//$NON-NLS-1$
 			IQueryResult<IInstallableUnit> result = repository.query(query, monitor.newChild(1));
-			installableUnits.addAll(result.toSet());
+			for (Iterator<IInstallableUnit> iter = result.iterator(); iter.hasNext();) {
+				IInstallableUnit iu = iter.next();
+				String id = iu.getId();
+				if (installableUnitIdsThisRepository.contains(id)) {
+					installableUnits.add(iu);
+				}
+			}
 		}
 		return installableUnits;
 	}
@@ -323,10 +301,11 @@ class PrepareInstallProfileJob implements IRunnableWithProgress {
 		// fetch meta-data for these repositories
 		ArrayList<IMetadataRepository> repositories = new ArrayList<IMetadataRepository>();
 		monitor.setWorkRemaining(repositories.size());
+		IMetadataRepositoryManager manager = (IMetadataRepositoryManager) session.getProvisioningAgent().getService(
+				IMetadataRepositoryManager.SERVICE_NAME);
 		for (URI uri : repositoryLocations) {
 			checkCancelled(monitor);
-			IMetadataRepository repository = session.getMetadataRepositoryManager().loadRepository(uri,
-					monitor.newChild(1));
+			IMetadataRepository repository = manager.loadRepository(uri, monitor.newChild(1));
 			repositories.add(repository);
 		}
 		return repositories;
@@ -338,13 +317,24 @@ class PrepareInstallProfileJob implements IRunnableWithProgress {
 		for (ConnectorDescriptor descriptor : installableConnectors) {
 			try {
 				if (repository.getLocation().equals(new URL(descriptor.getSiteUrl()).toURI())) {
-					installableUnitIdsThisRepository.addAll(descriptor.getInstallableUnits());
+					installableUnitIdsThisRepository.addAll(getFeatureIds(descriptor));
 				}
 			} catch (MalformedURLException e) {
 				// will never happen, ignore
 			}
 		}
 		return installableUnitIdsThisRepository;
+	}
+
+	private Set<String> getFeatureIds(ConnectorDescriptor descriptor) {
+		Set<String> featureIds = new HashSet<String>();
+		for (String id : descriptor.getInstallableUnits()) {
+			if (!id.endsWith(P2_FEATURE_GROUP_SUFFIX)) {
+				id += P2_FEATURE_GROUP_SUFFIX;
+			}
+			featureIds.add(id);
+		}
+		return featureIds;
 	}
 
 }
