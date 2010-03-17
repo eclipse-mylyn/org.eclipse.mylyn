@@ -67,17 +67,17 @@ import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer;
+import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer.Token;
 import org.eclipse.mylyn.commons.net.HtmlTag;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.commons.net.WebUtil;
-import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer.Token;
 import org.eclipse.mylyn.internal.bugzilla.core.history.BugzillaTaskHistoryParser;
 import org.eclipse.mylyn.internal.bugzilla.core.history.TaskHistory;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
+import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentPartSource;
@@ -1526,7 +1526,7 @@ public class BugzillaClient {
 			CoreException {
 
 		HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(in, null);
-
+		BugzillaRepositoryResponse response;
 		boolean isTitle = false;
 		String title = ""; //$NON-NLS-1$
 		String body = ""; //$NON-NLS-1$
@@ -1556,7 +1556,9 @@ public class BugzillaClient {
 							String value = string.toLowerCase(Locale.ENGLISH);
 							found = title.indexOf(value) != -1;
 							if (found) {
-								return new BugzillaRepositoryResponse(ResponseKind.TASK_UPDATED, taskId);
+								response = new BugzillaRepositoryResponse(ResponseKind.TASK_UPDATED, taskId);
+								parseResultOK(tokenizer, response);
+								return response;
 							}
 						}
 
@@ -1565,7 +1567,9 @@ public class BugzillaClient {
 							found = title.indexOf(value) != -1;
 
 							if (found) {
-								return new BugzillaRepositoryResponse(ResponseKind.TASK_UPDATED, taskId);
+								response = new BugzillaRepositoryResponse(ResponseKind.TASK_UPDATED, taskId);
+								parseResultOK(tokenizer, response);
+								return response;
 							}
 						}
 
@@ -1583,7 +1587,9 @@ public class BugzillaClient {
 										if (startIndex > -1) {
 											startIndex = startIndex + value.length();
 											String result = (title.substring(startIndex, stopIndex)).trim();
-											return new BugzillaRepositoryResponse(ResponseKind.TASK_CREATED, result);
+											response = new BugzillaRepositoryResponse(ResponseKind.TASK_CREATED, result);
+											parseResultOK(tokenizer, response);
+											return response;
 										}
 									}
 								}
@@ -2003,9 +2009,8 @@ public class BugzillaClient {
 
 	}
 
-	private void parseResultOK(BufferedReader in, BugzillaRepositoryResponse response) throws IOException,
+	private void parseResultOK(HtmlStreamTokenizer tokenizer, BugzillaRepositoryResponse response) throws IOException,
 			CoreException {
-		HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(in, null);
 		String codeString = ""; //$NON-NLS-1$
 		boolean inBugzillaBody = false;
 		int dlLevel = 0;
@@ -2067,8 +2072,6 @@ public class BugzillaClient {
 		} catch (ParseException e) {
 			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 					RepositoryStatus.ERROR_INTERNAL, "Unable to parse response from " + repositoryUrl.toString() + ".")); //$NON-NLS-1$ //$NON-NLS-2$
-		} finally {
-			in.close();
 		}
 	}
 }
