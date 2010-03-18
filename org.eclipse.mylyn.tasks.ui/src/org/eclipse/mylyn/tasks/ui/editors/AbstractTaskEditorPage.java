@@ -9,6 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *     David Green - fixes for bug 237503
  *     Frank Becker - fixes for bug 252300
+ *	   Kevin Sawicki - fixes for bug 306029
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.ui.editors;
@@ -1211,7 +1212,10 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 			model.addModelListener(new TaskDataModelListener() {
 				@Override
 				public void attributeChanged(TaskDataModelEvent event) {
-					getManagedForm().dirtyStateChanged();
+					IManagedForm form = getManagedForm();
+					if (form != null) {
+						form.dirtyStateChanged();
+					}
 				}
 			});
 			setNeedsAddToCategory(model.getTaskData().isNew());
