@@ -424,8 +424,13 @@ public class BugzillaClient {
 				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 						RepositoryStatus.ERROR_NETWORK, "Http error: " + HttpStatus.getStatusText(code))); //$NON-NLS-1$
 			}
-
-			if (hasAuthenticationCredentials()) {
+			if (httpAuthCredentials != null && httpAuthCredentials.getUserName() != null
+					&& httpAuthCredentials.getUserName().length() > 0) {
+				// If httpAuthCredentials are used HttpURLConnection.HTTP_UNAUTHORIZED when the credentials are invalide so we 
+				// not need to test teh cookies.
+				// see bug 305267 or https://bugzilla.mozilla.org/show_bug.cgi?id=385606
+				loggedIn = true;
+			} else if (hasAuthenticationCredentials()) {
 				for (Cookie cookie : httpClient.getState().getCookies()) {
 					if (cookie.getName().equals(COOKIE_BUGZILLA_LOGIN)) {
 						loggedIn = true;
