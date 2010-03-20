@@ -22,16 +22,25 @@ public interface IOslcCoreConstants {
 
 	//Namespaces
 
-	public static final Namespace NAMESPACE_OSLC_CM_1_0 = Namespace.getNamespace("http://open-services.net/xmlns/cm/1.0/"); //$NON-NLS-1$
+	public static final Namespace NAMESPACE_OSLC_CM_1_0 = Namespace.getNamespace(
+			"oslc_cm", "http://open-services.net/xmlns/cm/1.0/"); //$NON-NLS-1$ //$NON-NLS-2$
 
-	public static final Namespace NAMESPACE_OSLC_DISCOVERY_1_0 = Namespace.getNamespace("http://open-services.net/xmlns/discovery/1.0/"); //$NON-NLS-1$
+	public static final Namespace NAMESPACE_OSLC_DISCOVERY_1_0 = Namespace.getNamespace(
+			"oslc_disc", "http://open-services.net/xmlns/discovery/1.0/"); //$NON-NLS-1$ //$NON-NLS-2$
 
-	public static final Namespace NAMESPACE_DC = Namespace.getNamespace("http://purl.org/dc/terms/"); //$NON-NLS-1$
+	public static final Namespace NAMESPACE_DC = Namespace.getNamespace("dc", "http://purl.org/dc/terms/"); //$NON-NLS-1$
 
 	public static final Namespace NAMESPACE_RDF = Namespace.getNamespace(
 			"rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	public static final Namespace NAMESPACE_ATOM = Namespace.getNamespace("atom", "http://www.w3.org/2005/Atom"); //$NON-NLS-1$ //$NON-NLS-2$
+
+	public static final Namespace NAMESPACE_RTC_CM_1_0 = Namespace.getNamespace(
+			"rtc_cm", "http://jazz.net/xmlns/prod/jazz/rtc/cm/1.0/"); //$NON-NLS-1$ //$NON-NLS-2$
+
+	// Content types
+
+	public static final String CONTENT_TYPE_CHANGE_REQUEST = "application/x-oslc-cm-change-request+xml"; //$NON-NLS-1$
 
 	// XML element ids
 	public static final String ELEMENT_SERVICE_PROVIDER_CATALOG = "ServiceProviderCatalog"; //$NON-NLS-1$

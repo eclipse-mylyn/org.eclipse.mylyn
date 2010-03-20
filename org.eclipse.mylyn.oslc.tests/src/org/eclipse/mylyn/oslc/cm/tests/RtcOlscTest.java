@@ -50,7 +50,9 @@ public class RtcOlscTest extends TestCase {
 
 	private AbstractOslcClient client;
 
-	private static final String BASE_URL = "https://172.16.166.130:9443/jazz/oslc/workitems/catalog";
+	private static final String BASE_URL = "https://192.168.0.3:9443/jazz/oslc/workitems/catalog";
+
+//	private static final String BASE_URL = "https://192.168.0.3:9443/jazz/oslc/contexts/_9Dyg4DLzEd-G-8cuiS4gvg/workitems/services.xml";
 
 	@Override
 	protected void setUp() throws Exception {
@@ -88,6 +90,24 @@ public class RtcOlscTest extends TestCase {
 			}
 		};
 	}
+
+	// Test Passing when resource urls below match up with your particular RTC instance
+	// and when BASE_URL set to service url.
+	/*public void testChangeRequestCreation() throws Exception {
+		TaskData data = new TaskData(new TaskAttributeMapper(repository), "oslc", BASE_URL, "");
+		data.getRoot().createAttribute(IOslcCoreConstants.ELEMENT_TITLE).setValue("New Title");
+		data.getRoot().createAttribute(IOslcCoreConstants.ELEMENT_TYPE).setValue(
+				"https://192.168.0.3:9443/jazz/oslc/types/_9Dyg4DLzEd-G-8cuiS4gvg/defect");
+		data.getRoot().createAttribute(IOslcCoreConstants.ELEMENT_DESCRIPTION).setValue("New Description");
+		data.getRoot().createAttribute(IOslcCoreConstants.ELEMENT_SUBJECT).setValue("New Subject");
+		data.getRoot()
+				.createAttribute("filedAgainst")
+				.setValue(
+						"https://192.168.0.3:9443/jazz/resource/itemOid/com.ibm.team.workitem.Category/_9cYnETLzEd-G-8cuiS4gvg");
+
+		RepositoryResponse response = client.postTaskData(data, null);
+		assertNotNull(response);
+	}*/
 
 	/**
 	 * Service Discovery

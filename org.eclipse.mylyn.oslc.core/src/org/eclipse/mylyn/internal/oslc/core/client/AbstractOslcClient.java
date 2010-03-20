@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.oslc.core.client;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.httpclient.Credentials;
+import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethodBase;
@@ -29,10 +31,12 @@ import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.PutMethod;
+import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
@@ -48,6 +52,7 @@ import org.eclipse.mylyn.internal.oslc.core.OslcServiceProviderCatalog;
 import org.eclipse.mylyn.internal.oslc.core.ServiceHome;
 import org.eclipse.mylyn.internal.oslc.core.cm.AbstractChangeRequest;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
+import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -57,6 +62,8 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.filter.ElementFilter;
 import org.jdom.input.SAXBuilder;
+import org.jdom.output.Format;
+import org.jdom.output.XMLOutputter;
 
 /**
  * Base class from which to implement an OSLC client
@@ -64,6 +71,8 @@ import org.jdom.input.SAXBuilder;
  * @author Robert Elves
  */
 public abstract class AbstractOslcClient {
+
+	private static final String UTF_8 = "UTF-8"; //$NON-NLS-1$
 
 	protected final AbstractWebLocation location;
 
@@ -293,8 +302,9 @@ public abstract class AbstractOslcClient {
 					.getText();
 			String url = element.getChild(IOslcCoreConstants.ELEMENT_URL, IOslcCoreConstants.NAMESPACE_OSLC_CM_1_0)
 					.getText();
-			if (element.getAttribute(IOslcCoreConstants.ATTRIBUTE_DEFAULT) != null
-					&& element.getAttribute(IOslcCoreConstants.ATTRIBUTE_DEFAULT).getValue().equals("true")) { //$NON-NLS-1$
+			Attribute attrDefault = element.getAttribute(IOslcCoreConstants.ATTRIBUTE_DEFAULT,
+					IOslcCoreConstants.NAMESPACE_OSLC_CM_1_0);
+			if (attrDefault != null && attrDefault.getValue().equals("true")) { //$NON-NLS-1$
 				isDefault = true;
 			}
 			OslcServiceFactory factory = new OslcServiceFactory(title, url);
@@ -357,6 +367,15 @@ public abstract class AbstractOslcClient {
 			}
 		}
 
+	}
+
+	protected OslcServiceDescriptor getConfiguration(IProgressMonitor monitor) throws CoreException {
+		monitor = Policy.monitorFor(monitor);
+		if (configuration.getFactories().isEmpty()) {
+			updateRepositoryConfiguration(new SubProgressMonitor(monitor, 1));
+		}
+
+		return configuration;
 	}
 
 	public Collection<AbstractChangeRequest> performQuery(String queryUrl, IProgressMonitor monitor)
@@ -424,6 +443,81 @@ public abstract class AbstractOslcClient {
 	public abstract RepositoryResponse putTaskData(TaskData taskData, Set<TaskAttribute> oldValues,
 			IProgressMonitor monitor) throws CoreException;
 
+	public RepositoryResponse postTaskData(TaskData taskData, IProgressMonitor monitor) throws CoreException {
+
+		Element root = new Element(IOslcCoreConstants.ELEMENT_CHANGEREQUEST, IOslcCoreConstants.NAMESPACE_OSLC_CM_1_0);
+		final Document doc = new Document(root);
+
+		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(IOslcCoreConstants.ELEMENT_TITLE);
+		if (attribute != null) {
+			// TODO: Store namespace on attribute
+			Element e = new Element(attribute.getId(), IOslcCoreConstants.NAMESPACE_DC);
+			e.setText(attribute.getValue());
+			root.addContent(e);
+		}
+
+		attribute = taskData.getRoot().getMappedAttribute(IOslcCoreConstants.ELEMENT_DESCRIPTION);
+		if (attribute != null) {
+			Element e = new Element(attribute.getId(), IOslcCoreConstants.NAMESPACE_DC);
+			e.setText(attribute.getValue());
+			root.addContent(e);
+		}
+
+		attribute = taskData.getRoot().getMappedAttribute(IOslcCoreConstants.ELEMENT_TYPE);
+		if (attribute != null) {
+			Element e = new Element(attribute.getId(), IOslcCoreConstants.NAMESPACE_DC);
+			e.setText(attribute.getValue());
+			root.addContent(e);
+		}
+
+		attribute = taskData.getRoot().getMappedAttribute(IOslcCoreConstants.ELEMENT_SUBJECT);
+		if (attribute != null) {
+			Element e = new Element(attribute.getId(), IOslcCoreConstants.NAMESPACE_DC);
+			e.setText(attribute.getValue());
+			root.addContent(e);
+		}
+
+		// For RTC Tests
+		attribute = taskData.getRoot().getMappedAttribute("filedAgainst"); //$NON-NLS-1$
+		if (attribute != null) {
+			Element e = new Element(attribute.getId(), IOslcCoreConstants.NAMESPACE_RTC_CM_1_0);
+			e.setText(attribute.getValue());
+			root.addContent(e);
+		}
+
+		PostMethod method = createPostMethod(getConfiguration(monitor).getDefaultFactory().getUrl());
+		method.setRequestHeader("Accept", "application/x-oslc-cm-change-request+xml"); //$NON-NLS-1$ //$NON-NLS-2$
+		method.setRequestHeader("Content-Type", "application/x-oslc-cm-change-request+xml"); //$NON-NLS-1$ //$NON-NLS-2$
+
+		XMLOutputter out = new XMLOutputter(Format.getCompactFormat());
+		try {
+			method.setRequestEntity(new StringRequestEntity(out.outputString(doc),
+					IOslcCoreConstants.CONTENT_TYPE_CHANGE_REQUEST, UTF_8));
+		} catch (UnsupportedEncodingException e1) {
+			throw new CoreException(new Status(IStatus.ERROR, IOslcCoreConstants.ID_PLUGIN,
+					"Error creating new change request: " + e1.getMessage(), e1)); //$NON-NLS-1$
+		}
+
+		RequestHandler<RepositoryResponse> handler = new RequestHandler<RepositoryResponse>("Creating") { //$NON-NLS-1$
+
+			@Override
+			public RepositoryResponse run(HttpMethodBase method, IProgressMonitor monitor) throws CoreException {
+				Header header = method.getResponseHeader("Location"); //$NON-NLS-1$
+
+				if (header != null && header.getValue() != null) {
+
+					String location = header.getValue();
+					// TODO: delegate extraction of 'task id' to protected method and add to repository response
+					return new RepositoryResponse(ResponseKind.TASK_CREATED, location);
+				}
+				return null;
+			}
+		};
+
+		return executeMethod(method, handler, monitor);
+
+	}
+
 	protected GetMethod createGetMethod(String requestPath) {
 		GetMethod method = new GetMethod(getRequestPath(requestPath));
 		method.setFollowRedirects(true);
@@ -444,7 +538,7 @@ public abstract class AbstractOslcClient {
 //			method.setRequestEntity(entity);
 //		} else {
 //			StatusHandler.log(new Status(IStatus.WARNING, IOslcCoreConstants.ID_PLUGIN,
-//					"Request body or entity missing upon post.")); //$NON-NLS-1$
+//					"Request body or entity missing upon post.")); 
 //		}
 		return method;
 	}
