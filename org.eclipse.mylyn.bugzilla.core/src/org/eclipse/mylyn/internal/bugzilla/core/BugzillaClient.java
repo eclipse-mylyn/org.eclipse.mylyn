@@ -356,11 +356,8 @@ public class BugzillaClient {
 	}
 
 	public void authenticate(IProgressMonitor monitor) throws CoreException {
-		if (loggedIn || !hasAuthenticationCredentials()) {
+		if (loggedIn) {
 			return;
-//			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-//					RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(),
-//					"Authentication credentials missing.")); //$NON-NLS-1$
 		}
 
 		monitor = Policy.monitorFor(monitor);
@@ -373,27 +370,30 @@ public class BugzillaClient {
 
 			NameValuePair[] formData = new NameValuePair[2];
 			AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
-			if (credentials == null) {
+			AuthenticationCredentials httpAuthCredentials = location.getCredentials(AuthenticationType.HTTP);
+			if (credentials == null && httpAuthCredentials == null) {
 				loggedIn = false;
 				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 						RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(),
 						"Authentication credentials from location missing.")); //$NON-NLS-1$
 			}
-			formData[0] = new NameValuePair(IBugzillaConstants.POST_INPUT_BUGZILLA_LOGIN, credentials.getUserName());
-			formData[1] = new NameValuePair(IBugzillaConstants.POST_INPUT_BUGZILLA_PASSWORD, credentials.getPassword());
-
+			if (credentials != null) {
+				formData[0] = new NameValuePair(IBugzillaConstants.POST_INPUT_BUGZILLA_LOGIN, credentials.getUserName());
+				formData[1] = new NameValuePair(IBugzillaConstants.POST_INPUT_BUGZILLA_PASSWORD,
+						credentials.getPassword());
+			}
 			postMethod = new GzipPostMethod(WebUtil.getRequestPath(repositoryUrl.toString()
 					+ IBugzillaConstants.URL_POST_LOGIN), true);
 
 			postMethod.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=" //$NON-NLS-1$ //$NON-NLS-2$
 					+ getCharacterEncoding());
 
-			postMethod.setRequestBody(formData);
+			if (credentials != null) {
+				postMethod.setRequestBody(formData);
+			}
 			postMethod.setDoAuthentication(true);
 			postMethod.setFollowRedirects(false);
 			httpClient.getState().clearCookies();
-
-			AuthenticationCredentials httpAuthCredentials = location.getCredentials(AuthenticationType.HTTP);
 
 			if (httpAuthCredentials != null && httpAuthCredentials.getUserName() != null
 					&& httpAuthCredentials.getUserName().length() > 0) {
@@ -427,7 +427,7 @@ public class BugzillaClient {
 			if (httpAuthCredentials != null && httpAuthCredentials.getUserName() != null
 					&& httpAuthCredentials.getUserName().length() > 0) {
 				// If httpAuthCredentials are used HttpURLConnection.HTTP_UNAUTHORIZED when the credentials are invalide so we 
-				// not need to test teh cookies.
+				// not need to test the cookies.
 				// see bug 305267 or https://bugzilla.mozilla.org/show_bug.cgi?id=385606
 				loggedIn = true;
 			} else if (hasAuthenticationCredentials()) {
