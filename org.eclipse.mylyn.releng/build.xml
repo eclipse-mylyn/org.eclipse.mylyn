@@ -187,7 +187,7 @@
 
 	<target name="weekly" depends="clean,build,dist">
 		<antcall target="promote">
-			<param name="todir" value="weekly"/>
+			<param name="todir" value="weekly-3.3.x"/>
 		</antcall>
 	</target>
 
@@ -207,14 +207,14 @@
 	<target name="helios" depends="clean,build,generate-metadata-all,copy-to-archive">
 		<!-- promote unpacked version early for testing -->
 		<antcall target="promote">
-			<param name="todir" value="weekly"/>
+			<param name="todir" value="weekly-3.3.x"/>
 		</antcall>
 		
 		<antcall target="sign"/>
 		
 		<!-- re-promote signed and packed version -->
 		<antcall target="promote">
-			<param name="todir" value="weekly"/>
+			<param name="todir" value="weekly-3.3.x"/>
 		</antcall>
 		
 		<echo>Run 'ant promote-helios' to update the helios site.</echo>
