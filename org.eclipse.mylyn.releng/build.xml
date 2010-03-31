@@ -175,9 +175,9 @@
 			<fileset dir="${build.home}/3.6/incubatorUpdateSite"/>
 		</copy>
 		<!-- need to use discovery plug-ins from the 3.5 site -->
-		<copy tofile="${dist.dir}/mylyn-${version}.${qualifier}-e3.4.zip" file="${build.home}/3.6/mylyn-${version}.${qualifier}-e3x-standard.zip" />
-		<copy tofile="${dist.dir}/mylyn-${version}.${qualifier}-extras.zip" file="${build.home}/3.6/mylyn-${version}.${qualifier}-e3x-extras.zip" />
-		<copy tofile="${dist.dir}/mylyn-${version}.${qualifier}-incubator.zip" file="${build.home}/3.6/mylyn-${version}.${qualifier}-e3x-incubator.zip" />
+		<copy tofile="${dist.dir}/mylyn-${version}.${qualifier}-e3.4.zip" file="${build.home}/3.6/mylyn-${version}.${qualifier}-standard.zip" />
+		<copy tofile="${dist.dir}/mylyn-${version}.${qualifier}-extras.zip" file="${build.home}/3.6/mylyn-${version}.${qualifier}-extras.zip" />
+		<copy tofile="${dist.dir}/mylyn-${version}.${qualifier}-incubator.zip" file="${build.home}/3.6/mylyn-${version}.${qualifier}-incubator.zip" />
 		<copy tofile="${dist.dir}/mylyn-wikitext-standalone-${version}.${qualifier}.zip" file="${build.home}/3.6/mylyn-wikitext-standalone-${version}.${qualifier}.zip" />
 
 		<antcall target="fix-permissions">
