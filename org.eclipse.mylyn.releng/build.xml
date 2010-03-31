@@ -344,6 +344,23 @@
 		</replace>
 	</target>
 
+	<target name="update-feature-versions">
+		<fail message="Use -DoldVersion=x.y.z to set new version." unless="oldVersion"/>
+		<fail message="Use -DnewVersion=x.y.z to set new version." unless="newVersion"/>
+
+		<echo message="New Mylyn version: ${newVersion}"></echo>
+
+		<replace dir="..">
+			<replacefilter 
+			    token="${oldVersion}.qualifier"
+				value="${newVersion}.qualifier"/>
+			<replacefilter 
+			    token="${oldVersion}.mylynQualifier"
+				value="${newVersion}.mylynQualifier"/>
+			<include name="org.eclipse.mylyn*/**/feature.xml"/>
+		</replace>
+	</target>
+
 	<target name="pre-build">
 		<delete failonerror="false">
 			<fileset dir="${build.home}/${base.target}/maps" includes="mylyn*.map">
@@ -352,9 +369,9 @@
 			</fileset>
 		</delete>
 
-		<property name="build.extraBuildArgs" value="-DmylynQualifier=${qualifier}"/>
 		<condition property="versionPostfix" value="e33" else="e3x"><equals arg1="${base.target}" arg2="3.3"/></condition>
-		<property name="build.forceContextQualifier" value="${qualifier}-${versionPostfix}" />
+		<property name="build.extraBuildArgs" value="-DmylynQualifier=${qualifier} -DfullQualifier=${qualifier}-${versionPostfix}"/>
+		<condition property="build.forceContextQualifier" value="-DforceContextQualifier=${qualifier}-${versionPostfix}"><equals arg1="${release}" arg2="true"/></condition>
 	</target>
 
 	<target name="pre-tests">	

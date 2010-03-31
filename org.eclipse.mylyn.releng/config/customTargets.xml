@@ -47,7 +47,7 @@
 	<!-- Replace values for mapsCheckoutTag as desired. -->
 	<!-- ===================================================================== -->
 	<target name="getMapFiles" depends="checkLocalMaps" unless="skipMaps">
-		<property name="mapsCheckoutTag" value="HEAD" />
+		<property name="mapsCheckoutTag" value="${mylynQualifier}" />
 		<cvs cvsRoot="${mapsRepo}" package="${mapsRoot}" dest="${buildDirectory}/maps" tag="${mapsCheckoutTag}" />
 		<delete failonerror="false">
 			<fileset dir="${buildDirectory}/maps" includes="**/mylyn*.map">
@@ -128,7 +128,7 @@
 	<!-- Steps to do before running the build.xmls for the elements being built. -->
 	<!-- ===================================================================== -->
 	<target name="preProcess">
-		<replace dir="${buildDirectory}/features" value="${majorVersion}.${forceContextQualifier}" token="${majorVersion}.qualifier">
+		<replace dir="${buildDirectory}/features" value="${majorVersion}.${fullQualifier}" token="${majorVersion}.qualifier">
 			<include name="**/feature.xml" />
 		</replace>
 		<replace dir="${buildDirectory}/features" value="${majorVersion}.${mylynQualifier}" token="${majorVersion}.mylynQualifier">
@@ -234,11 +234,7 @@
 			<param name="target" value="updateSiteExport" />
 		</antcall>
 
-		<zip destfile="${UpdateSiteLocation}/../mylyn-${org.eclipse.mylyn_feature}-${SiteName}.zip" basedir="${UpdateSiteLocation}" />
-		<!--<exec dir="${UpdateSiteLocation}" executable="scp" failonerror="true">
-			<arg value="${UpdateSiteLocation}/update-${org.eclipse.mylyn_feature}.zip"/>
-		    <arg value="username@host:/destination/folder/"/>
-		</exec>-->
+		<zip destfile="${UpdateSiteLocation}/../mylyn-${majorVersion}-${SiteName}.zip" basedir="${UpdateSiteLocation}" />
 	</target>
 
 	<!-- ===================================================================== -->
