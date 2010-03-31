@@ -31,7 +31,7 @@ feature@org.eclipse.mylyn.tests.performance_feature=v20100330-0100-e3x,:pserver:
 
 
 !******* PLUGINS **********
-plugin@org.eclipse.mylyn=v20100330-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn
+plugin@org.eclipse.mylyn=v20100330-0200-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn
 plugin@org.eclipse.mylyn.bugzilla.core=v20100222-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.bugzilla.core
 plugin@org.eclipse.mylyn.bugzilla.ide=v20100222-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.bugzilla.ide
 plugin@org.eclipse.mylyn.bugzilla.ui=v20100222-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.bugzilla.ui
