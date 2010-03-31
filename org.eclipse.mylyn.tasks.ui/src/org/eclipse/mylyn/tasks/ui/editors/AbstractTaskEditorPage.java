@@ -1319,6 +1319,11 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 		try {
 			showEditorBusy(true);
 
+			boolean hasIncoming = false;
+
+			if (getTask() != null) {
+				hasIncoming = getTask().getSynchronizationState().isIncoming();
+			}
 			if (model != null) {
 				doSave(new NullProgressMonitor());
 				refreshInput();
@@ -1352,7 +1357,9 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 					createFormContentInternal();
 
 					getTaskEditor().setMessage(null, 0);
-					getTaskEditor().setActivePage(getId());
+					if (hasIncoming) {
+						getTaskEditor().setActivePage(getId());
+					}
 
 					setSubmitEnabled(true);
 				} finally {
