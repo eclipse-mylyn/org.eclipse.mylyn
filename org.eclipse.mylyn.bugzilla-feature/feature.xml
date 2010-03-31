@@ -55,14 +55,14 @@
          id="org.eclipse.mylyn.bugzilla.core"
          download-size="0"
          install-size="0"
-         version="3.4.0.qualifier"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylyn.bugzilla.ui"
          download-size="0"
          install-size="0"
-         version="3.4.0.qualifier"
+         version="0.0.0"
          unpack="false"/>
 
 </feature>
