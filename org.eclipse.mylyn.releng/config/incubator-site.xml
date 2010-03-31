@@ -3,22 +3,22 @@
    <description url="http://download.eclipse.org/tools/mylyn/update/weekly/incubator">
       Mylyn Incubator
    </description>
-   <feature url="features/org.eclipse.mylyn.sandbox.ui_feature_@core@.jar" id="org.eclipse.mylyn.sandbox.ui_feature" version="@core@">
+   <feature url="features/org.eclipse.mylyn.sandbox.ui_feature_@org.eclipse.mylyn.sandbox.ui_feature@.jar" id="org.eclipse.mylyn.sandbox.ui_feature" version="@org.eclipse.mylyn.sandbox.ui_feature@">
       <category name="Incubator"/>
    </feature>
-   <feature url="features/org.eclipse.mylyn.monitor_feature_@core@.jar" id="org.eclipse.mylyn.monitor_feature" version="@core@">
+   <feature url="features/org.eclipse.mylyn.monitor_feature_@org.eclipse.mylyn.monitor_feature@.jar" id="org.eclipse.mylyn.monitor_feature" version="@org.eclipse.mylyn.monitor_feature@">
       <category name="Incubator"/>
    </feature>
-   <feature url="features/org.eclipse.mylyn.xplanner_feature_@core@.jar" id="org.eclipse.mylyn.xplanner_feature" version="@core@">
+   <feature url="features/org.eclipse.mylyn.xplanner_feature_@org.eclipse.mylyn.xplanner_feature@.jar" id="org.eclipse.mylyn.xplanner_feature" version="@org.eclipse.mylyn.xplanner_feature@">
       <category name="Incubator"/>
    </feature>
-   <feature url="features/org.eclipse.mylyn.web.tasks_feature_@core@.jar" id="org.eclipse.mylyn.web.tasks_feature" version="@core@">
+   <feature url="features/org.eclipse.mylyn.web.tasks_feature_@org.eclipse.mylyn.web.tasks_feature@.jar" id="org.eclipse.mylyn.web.tasks_feature" version="@org.eclipse.mylyn.web.tasks_feature@">
       <category name="Incubator"/>
    </feature>
-   <feature url="features/org.eclipse.mylyn.wikitext.sandbox_feature_@core@.jar" id="org.eclipse.mylyn.wikitext.sandbox_feature" version="@core@">
+   <feature url="features/org.eclipse.mylyn.wikitext.sandbox_@org.eclipse.mylyn.wikitext.sandbox@.jar" id="org.eclipse.mylyn.wikitext.sandbox" version="@org.eclipse.mylyn.wikitext.sandbox@">
       <category name="Incubator"/>
    </feature>
-   <feature url="features/org.eclipse.mylyn.experimental_sdk_feature_@core@.jar" id="org.eclipse.mylyn.experimental_sdk_feature" version="@core@">
+   <feature url="features/org.eclipse.mylyn.experimental_sdk_feature_@org.eclipse.mylyn.experimental_sdk_feature@.jar" id="org.eclipse.mylyn.experimental_sdk_feature" version="@org.eclipse.mylyn.experimental_sdk_feature@">
       <category name="SDKIncubator"/>
    </feature>
    <category-def name="Incubator" label="Mylyn Incubator">

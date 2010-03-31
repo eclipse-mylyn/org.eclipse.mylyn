@@ -93,6 +93,7 @@
 			<param name="test.target" value="swtbot"/>
 			<param name="test.plugin" value="${build.test.swtbot.plugin}"/>
 			<param name="test.classname" value="${build.test.swtbot.suite}"/>
+			<param name="skip3.4" value="true"/>
 		</antcall>
 	</target>
 
@@ -108,7 +109,6 @@
 	<target name="report" depends="test-report">
 	</target>
 
-	
 	<target name="test-report" depends="init">
 		<antcall target="for-each-target">
 			<param name="call" value="report-helper"/>
@@ -431,7 +431,7 @@
 		<available property="dependencies.build.exists" file="${basedir}/config/build-dependencies"/>
 	</target>
 
-	<target name="build-helper-copy-maps" unless="skipCopyMaps">
+	<target name="build-helper-copy-maps" unless="release">
 		<copy todir="${build.home}/${base.target}/maps">
 			<fileset dir="${basedir}/maps">
 				<include name="*.map"/>
@@ -456,9 +456,9 @@
           	</fileset>
     	</path> 
     	<property name="pde.build.script" refid="pde.build.script.id"/>
-		<property name="build.forceContextQualifier" value="${qualifier}" />
+		<property name="build.forceContextQualifier" value="-DforceContextQualifier=${qualifier}" />
 		<condition property="build.skipFetch" value="-DskipFetch=true" else="-DnoSkipFetch=true"><equals arg1="${skipFetch}" arg2="true"/></condition>
-		<property name="build.extraBuildArgs" value="-Dnoextrabuildargs=true" />
+		<property name="build.extraBuildArgs" value="" />
 		<available property="builder" file="${basedir}/config/${base.target}" value="${basedir}/config/${base.target}"/>
 		<property name="builder" location="${basedir}/config"/>
 		<condition property="build.localBuild" value="-DlocalBuild=true" else=""><equals arg1="${localBuild}" arg2="true"/></condition>
@@ -471,10 +471,10 @@
     		<arg value="-Dbuilder=${builder}"/>
     		<arg value="-DbuildDirectory=${build.home}/${base.target}"/>
     		<arg value="-DbuildLabel=${build.dist}"/>
-    		<arg value="-DforceContextQualifier=${build.forceContextQualifier}"/>
     		<arg value="-DmajorVersion=${version}"/>
     		<arg value="${build.skipFetch}"/>
-    		<arg value="${build.extraBuildArgs}"/>
+    		<arg line="${build.forceContextQualifier}"/>
+    		<arg line="${build.extraBuildArgs}"/>
     		<arg line="${build.localBuild}"/>
     	</exec-eclipse>
 		
@@ -517,6 +517,7 @@
 		<delete includeemptydirs="true">
 			<fileset dir="${base.home}/eclipse">
 				<include name="plugins/org.eclipse.swtbot*junit3*/**"/>
+				<include name="plugins/org.junit_3.8.2*/**"/>
 				<include name="plugins/org.junit4_4.3.1*/**"/>
 				<include name="plugins/org.junit4_4.5.0*/**"/>
 			</fileset>			

@@ -44,10 +44,10 @@
 			<param name="dir" value="${build.home}/3.6/standardUpdateSite"/>
 		</antcall>
 		<antcall target="pack">
-			<param name="dir" value="${build.home}/3.4/extrasUpdateSite"/>
+			<param name="dir" value="${build.home}/3.6/extrasUpdateSite"/>
 		</antcall>
 		<antcall target="pack">
-			<param name="dir" value="${build.home}/3.4/incubatorUpdateSite"/>
+			<param name="dir" value="${build.home}/3.6/incubatorUpdateSite"/>
 		</antcall>
 	</target>
 
@@ -174,10 +174,10 @@
 			<param name="dir" value="${build.home}/3.6/standardUpdateSite"/>
 		</antcall>
 		<antcall target="fix-permissions">
-			<param name="dir" value="${build.home}/3.4/extrasUpdateSite"/>
+			<param name="dir" value="${build.home}/3.6/extrasUpdateSite"/>
 		</antcall>
 		<antcall target="fix-permissions">
-			<param name="dir" value="${build.home}/3.4/incubatorUpdateSite"/>
+			<param name="dir" value="${build.home}/3.6/incubatorUpdateSite"/>
 		</antcall>
 		
 		<copy todir="${dist.dir}/e3.4">
@@ -185,16 +185,16 @@
 			<fileset dir="${build.home}/3.6/standardUpdateSite"/>
 		</copy>
 		<copy todir="${dist.dir}/extras">
-			<fileset dir="${build.home}/3.4/extrasUpdateSite"/>
+			<fileset dir="${build.home}/3.6/extrasUpdateSite"/>
 		</copy>
 		<copy todir="${dist.dir}/incubator">
-			<fileset dir="${build.home}/3.4/incubatorUpdateSite"/>
+			<fileset dir="${build.home}/3.6/incubatorUpdateSite"/>
 		</copy>
 		<!-- need to use discovery plug-ins from the 3.5 site -->
-		<copy tofile="${dist.dir}/mylyn-${version}.${qualifier}-e3.4.zip" file="${build.home}/3.6/mylyn-${version}.${qualifier}-e3x-standard.zip" />
-		<copy tofile="${dist.dir}/mylyn-${version}.${qualifier}-extras.zip" file="${build.home}/3.4/mylyn-${version}.${qualifier}-e3x-extras.zip" />
-		<copy tofile="${dist.dir}/mylyn-${version}.${qualifier}-incubator.zip" file="${build.home}/3.4/mylyn-${version}.${qualifier}-e3x-incubator.zip" />
-		<copy tofile="${dist.dir}/mylyn-wikitext-standalone-${version}.${qualifier}.zip" file="${build.home}/3.4/mylyn-wikitext-standalone-${version}.${qualifier}.zip" />
+		<copy tofile="${dist.dir}/mylyn-${version}.${qualifier}-e3.4.zip" file="${build.home}/3.6/mylyn-${version}.${qualifier}-standard.zip" />
+		<copy tofile="${dist.dir}/mylyn-${version}.${qualifier}-extras.zip" file="${build.home}/3.6/mylyn-${version}.${qualifier}-extras.zip" />
+		<copy tofile="${dist.dir}/mylyn-${version}.${qualifier}-incubator.zip" file="${build.home}/3.6/mylyn-${version}.${qualifier}-incubator.zip" />
+		<copy tofile="${dist.dir}/mylyn-wikitext-standalone-${version}.${qualifier}.zip" file="${build.home}/3.6/mylyn-wikitext-standalone-${version}.${qualifier}.zip" />
 
 		<antcall target="fix-permissions">
 			<param name="dir" value="${dist.dir}"/>
@@ -360,6 +360,23 @@
 		</replace>
 	</target>
 
+	<target name="update-feature-versions">
+		<fail message="Use -DoldVersion=x.y.z to set new version." unless="oldVersion"/>
+		<fail message="Use -DnewVersion=x.y.z to set new version." unless="newVersion"/>
+
+		<echo message="New Mylyn version: ${newVersion}"></echo>
+
+		<replace dir="..">
+			<replacefilter 
+			    token="${oldVersion}.qualifier"
+				value="${newVersion}.qualifier"/>
+			<replacefilter 
+			    token="${oldVersion}.mylynQualifier"
+				value="${newVersion}.mylynQualifier"/>
+			<include name="org.eclipse.mylyn*/**/feature.xml"/>
+		</replace>
+	</target>
+
 	<target name="pre-build">
 		<delete failonerror="false">
 			<fileset dir="${build.home}/${base.target}/maps" includes="mylyn*.map">
@@ -368,9 +385,9 @@
 			</fileset>
 		</delete>
 
-		<property name="build.extraBuildArgs" value="-DmylynQualifier=${qualifier}"/>
 		<condition property="versionPostfix" value="e33" else="e3x"><equals arg1="${base.target}" arg2="3.3"/></condition>
-		<property name="build.forceContextQualifier" value="${qualifier}-${versionPostfix}" />
+		<property name="build.extraBuildArgs" value="-DmylynQualifier=${qualifier} -DfullQualifier=${qualifier}-${versionPostfix}"/>
+		<condition property="build.forceContextQualifier" value="" else="-DforceContextQualifier=${qualifier}-${versionPostfix}"><equals arg1="${release}" arg2="true"/></condition>
 	</target>
 
 	<target name="pre-tests">	

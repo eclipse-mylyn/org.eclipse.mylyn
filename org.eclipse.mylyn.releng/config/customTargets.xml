@@ -47,8 +47,7 @@
 	<!-- Replace values for mapsCheckoutTag as desired. -->
 	<!-- ===================================================================== -->
 	<target name="getMapFiles" depends="checkLocalMaps" unless="skipMaps">
-		<property name="mapsCheckoutTag" value="HEAD" />
-		<cvs cvsRoot="${mapsRepo}" package="${mapsRoot}" dest="${buildDirectory}/maps" tag="${mapsCheckoutTag}" />
+		<cvs cvsRoot="${mapsRepo}" package="${mapsRoot}" dest="${buildDirectory}/maps" tag="${mylynQualifier}" />
 		<delete failonerror="false">
 			<fileset dir="${buildDirectory}/maps" includes="**/mylyn*.map">
 				<exclude name="**/*${baseTarget}.map"/>
@@ -127,7 +126,6 @@
 		
 		<unzip dest="${buildDirectory}/plugins" src="/home/stp/orbit-dependencies.zip"/>
 	</target>
-	
 
 	<macrodef name="map">
 		<attribute name="dir"/>
@@ -170,7 +168,7 @@
 	<!-- Steps to do before running the build.xmls for the elements being built. -->
 	<!-- ===================================================================== -->
 	<target name="preProcess">
-		<replace dir="${buildDirectory}/features" value="${majorVersion}.${forceContextQualifier}" token="${majorVersion}.qualifier">
+		<replace dir="${buildDirectory}/features" value="${majorVersion}.${fullQualifier}" token="${majorVersion}.qualifier">
 			<include name="**/feature.xml" />
 		</replace>
 		<replace dir="${buildDirectory}/features" value="${majorVersion}.${mylynQualifier}" token="${majorVersion}.mylynQualifier">
@@ -267,9 +265,7 @@
 		<!-- Generate the "site.xml" file in the "updateSite folder -->
 		<copy file="${builder}/${SiteXmlFile}" tofile="${UpdateSiteLocation}/site.xml">
 			<filterset>
-				<filter token="cdt" value="${org.eclipse.cdt.mylyn}" />
-				<filter token="core" value="${org.eclipse.mylyn_feature}" />
-				<filter token="wikitext" value="${org.eclipse.mylyn.wikitext_feature}" />
+				<filtersfile file="${buildDirectory}/finalFeaturesVersions.properties"/>
 			</filterset>
 		</copy>
 
@@ -278,11 +274,7 @@
 			<param name="target" value="updateSiteExport" />
 		</antcall>
 
-		<zip destfile="${UpdateSiteLocation}/../mylyn-${org.eclipse.mylyn_feature}-${SiteName}.zip" basedir="${UpdateSiteLocation}" />
-		<!--<exec dir="${UpdateSiteLocation}" executable="scp" failonerror="true">
-			<arg value="${UpdateSiteLocation}/update-${org.eclipse.mylyn_feature}.zip"/>
-		    <arg value="username@host:/destination/folder/"/>
-		</exec>-->
+		<zip destfile="${UpdateSiteLocation}/../mylyn-${majorVersion}.${mylynQualifier}-${SiteName}.zip" basedir="${UpdateSiteLocation}" />
 	</target>
 
 	<!-- ===================================================================== -->

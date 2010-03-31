@@ -13,37 +13,37 @@
    <description url="http://download.eclipse.org/tools/mylyn/update/weekly/e3.4">
       Mylyn Update for Eclipse 3.4, 3.5 and 3.6
    </description>
-   <feature url="features/org.eclipse.mylyn_feature_@core@.jar" id="org.eclipse.mylyn_feature" version="@core@">
+   <feature url="features/org.eclipse.mylyn_feature_@org.eclipse.mylyn_feature@.jar" id="org.eclipse.mylyn_feature" version="@org.eclipse.mylyn_feature@">
       <category name="Features"/>
    </feature>
-   <feature url="features/org.eclipse.mylyn.context_feature_@core@.jar" id="org.eclipse.mylyn.context_feature" version="@core@">
+   <feature url="features/org.eclipse.mylyn.context_feature_@org.eclipse.mylyn.context_feature@.jar" id="org.eclipse.mylyn.context_feature" version="@org.eclipse.mylyn.context_feature@">
       <category name="Features"/>
    </feature>
-   <feature url="features/org.eclipse.mylyn.ide_feature_@core@.jar" id="org.eclipse.mylyn.ide_feature" version="@core@">
+   <feature url="features/org.eclipse.mylyn.ide_feature_@org.eclipse.mylyn.ide_feature@.jar" id="org.eclipse.mylyn.ide_feature" version="@org.eclipse.mylyn.ide_feature@">
       <category name="Integration"/>
    </feature>
-   <feature url="features/org.eclipse.mylyn.java_feature_@core@.jar" id="org.eclipse.mylyn.java_feature" version="@core@">
+   <feature url="features/org.eclipse.mylyn.java_feature_@org.eclipse.mylyn.java_feature@.jar" id="org.eclipse.mylyn.java_feature" version="@org.eclipse.mylyn.java_feature@">
       <category name="Integration"/>
    </feature>
-   <feature url="features/org.eclipse.cdt.mylyn_@cdt@.jar" id="org.eclipse.cdt.mylyn" version="@cdt@">
+   <feature url="features/org.eclipse.cdt.mylyn_@org.eclipse.cdt.mylyn@.jar" id="org.eclipse.cdt.mylyn" version="@org.eclipse.cdt.mylyn@">
       <category name="Integration"/>
    </feature>
-   <feature url="features/org.eclipse.mylyn.team_feature_@core@.jar" id="org.eclipse.mylyn.team_feature" version="@core@">
+   <feature url="features/org.eclipse.mylyn.team_feature_@org.eclipse.mylyn.team_feature@.jar" id="org.eclipse.mylyn.team_feature" version="@org.eclipse.mylyn.team_feature@">
       <category name="Integration"/>
    </feature>
-   <feature url="features/org.eclipse.mylyn.pde_feature_@core@.jar" id="org.eclipse.mylyn.pde_feature" version="@core@">
+   <feature url="features/org.eclipse.mylyn.pde_feature_@org.eclipse.mylyn.pde_feature@.jar" id="org.eclipse.mylyn.pde_feature" version="@org.eclipse.mylyn.pde_feature@">
       <category name="Integration"/>
    </feature>
-   <feature url="features/org.eclipse.mylyn.bugzilla_feature_@core@.jar" id="org.eclipse.mylyn.bugzilla_feature" version="@core@">
+   <feature url="features/org.eclipse.mylyn.bugzilla_feature_@org.eclipse.mylyn.bugzilla_feature@.jar" id="org.eclipse.mylyn.bugzilla_feature" version="@org.eclipse.mylyn.bugzilla_feature@">
       <category name="Integration"/>
    </feature>
-   <feature url="features/org.eclipse.mylyn.wikitext_feature_@wikitext@.jar" id="org.eclipse.mylyn.wikitext_feature" version="@wikitext@">
+   <feature url="features/org.eclipse.mylyn.wikitext_feature_@org.eclipse.mylyn.wikitext_feature@.jar" id="org.eclipse.mylyn.wikitext_feature" version="@org.eclipse.mylyn.wikitext_feature@">
       <category name="Integration"/>
    </feature>
-   <feature url="features/org.eclipse.mylyn.sdk_feature_@core@.jar" id="org.eclipse.mylyn.sdk_feature" version="@core@">
+   <feature url="features/org.eclipse.mylyn.sdk_feature_@org.eclipse.mylyn.sdk_feature@.jar" id="org.eclipse.mylyn.sdk_feature" version="@org.eclipse.mylyn.sdk_feature@">
       <category name="SDK"/>
    </feature>
-   <feature url="features/org.eclipse.mylyn.wikitext.sdk_@wikitext@.jar" id="org.eclipse.mylyn.wikitext.sdk" version="@wikitext@">
+   <feature url="features/org.eclipse.mylyn.wikitext.sdk_@org.eclipse.mylyn.wikitext.sdk@.jar" id="org.eclipse.mylyn.wikitext.sdk" version="@org.eclipse.mylyn.wikitext.sdk@">
       <category name="SDK"/>
    </feature>
    <category-def name="Features" label="Mylyn Features">
