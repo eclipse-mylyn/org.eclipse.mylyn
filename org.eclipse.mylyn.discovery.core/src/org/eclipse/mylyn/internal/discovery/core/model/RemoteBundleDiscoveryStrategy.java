@@ -103,9 +103,11 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 
 			try {
 				final Directory[] temp = new Directory[1];
-				WebUtil.readResource(new URI(directoryUrl), new TextContentProcessor() {
+				final URI uri = new URI(directoryUrl);
+				WebUtil.readResource(uri, new TextContentProcessor() {
 					public void process(Reader reader) throws IOException {
 						DirectoryParser parser = new DirectoryParser();
+						parser.setBaseUri(uri);
 						temp[0] = parser.parse(reader);
 					}
 				}, new SubProgressMonitor(monitor, ticksTenPercent));

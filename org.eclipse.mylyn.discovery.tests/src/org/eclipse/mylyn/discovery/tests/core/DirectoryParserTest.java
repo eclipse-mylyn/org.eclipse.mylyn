@@ -13,6 +13,8 @@ package org.eclipse.mylyn.discovery.tests.core;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import junit.framework.TestCase;
 
@@ -115,4 +117,34 @@ public class DirectoryParserTest extends TestCase {
 		assertEquals(1, directory.getEntries().size());
 		assertEquals(false, directory.getEntries().get(0).isPermitCategories());
 	}
+
+	public void testParseBaseRelativeUrl() throws IOException, URISyntaxException {
+		parser.setBaseUri(new URI("http://base.uri/location/directory.xml"));
+		Directory directory = parser.parse(new StringReader(
+				"<directory xmlns=\"http://www.eclipse.org/mylyn/discovery/directory/\"><entry url=\"parent/baz.jar\"/><entry url=\"http://absolute/bar.jar\"/></directory>"));
+		assertNotNull(directory);
+		assertEquals(2, directory.getEntries().size());
+		assertEquals("http://base.uri/location/parent/baz.jar", directory.getEntries().get(0).getLocation());
+		assertEquals("http://absolute/bar.jar", directory.getEntries().get(1).getLocation());
+	}
+
+	public void testParseRootUrl() throws IOException, URISyntaxException {
+		parser.setBaseUri(new URI("http://base.uri/location/directory.xml"));
+		Directory directory = parser.parse(new StringReader(
+				"<directory xmlns=\"http://www.eclipse.org/mylyn/discovery/directory/\"><entry url=\"/baz.jar\"/></directory>"));
+		assertNotNull(directory);
+		assertEquals(1, directory.getEntries().size());
+		assertEquals("http://base.uri/baz.jar", directory.getEntries().get(0).getLocation());
+	}
+
+	public void testParseBaseInvalidRelativeUrl() throws IOException, URISyntaxException {
+		parser.setBaseUri(new URI("http://base.uri/location/directory.xml"));
+		Directory directory = parser.parse(new StringReader(
+				"<directory xmlns=\"http://www.eclipse.org/mylyn/discovery/directory/\"><entry url=\":/baz.jar\"/><entry url=\"http://absolute/bar.jar\"/></directory>"));
+		assertNotNull(directory);
+		assertEquals(2, directory.getEntries().size());
+		assertEquals(":/baz.jar", directory.getEntries().get(0).getLocation());
+		assertEquals("http://absolute/bar.jar", directory.getEntries().get(1).getLocation());
+	}
+
 }
