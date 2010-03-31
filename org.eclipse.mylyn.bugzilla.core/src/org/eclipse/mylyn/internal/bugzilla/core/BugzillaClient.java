@@ -661,7 +661,13 @@ public class BugzillaClient {
 		try {
 			int status = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
 			if (status == HttpStatus.SC_OK) {
-				out.write(method.getResponseBody());
+//				ignore the response 
+				InputStream instream = method.getResponseBodyAsStream();
+				byte[] buffer = new byte[4096];
+				int len;
+				while ((len = instream.read(buffer)) > 0) {
+					out.write(buffer, 0, len);
+				}
 			} else {
 				parseHtmlError(method.getResponseBodyAsStream());
 			}
@@ -1896,7 +1902,11 @@ public class BugzillaClient {
 			try {
 				code = WebUtil.execute(httpClient, hostConfiguration, headMethod, monitor);
 			} catch (IOException e) {
-				headMethod.getResponseBody();
+//				ignore the response 
+				InputStream instream = headMethod.getResponseBodyAsStream();
+				byte[] buffer = new byte[4096];
+				while (instream.read(buffer) > 0) {
+				}
 				headMethod.releaseConnection();
 				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 						RepositoryStatus.ERROR_IO, repositoryUrl.toString(), e));
@@ -1905,20 +1915,32 @@ public class BugzillaClient {
 			if (code == HttpURLConnection.HTTP_OK) {
 				return headMethod;
 			} else if (code == HttpURLConnection.HTTP_UNAUTHORIZED || code == HttpURLConnection.HTTP_FORBIDDEN) {
-				headMethod.getResponseBody();
+//				ignore the response 
+				InputStream instream = headMethod.getResponseBodyAsStream();
+				byte[] buffer = new byte[4096];
+				while (instream.read(buffer) > 0) {
+				}
 				// login or reauthenticate due to an expired session
 				headMethod.releaseConnection();
 				loggedIn = false;
 				authenticate(monitor);
 			} else if (code == HttpURLConnection.HTTP_PROXY_AUTH) {
 				loggedIn = false;
-				headMethod.getResponseBody();
+//				ignore the response 
+				InputStream instream = headMethod.getResponseBodyAsStream();
+				byte[] buffer = new byte[4096];
+				while (instream.read(buffer) > 0) {
+				}
 				headMethod.releaseConnection();
 				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 						RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(),
 						"Proxy authentication required")); //$NON-NLS-1$
 			} else {
-				headMethod.getResponseBody();
+//				ignore the response 
+				InputStream instream = headMethod.getResponseBodyAsStream();
+				byte[] buffer = new byte[4096];
+				while (instream.read(buffer) > 0) {
+				}
 				headMethod.releaseConnection();
 				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 						RepositoryStatus.ERROR_NETWORK, "Http error: " + HttpStatus.getStatusText(code))); //$NON-NLS-1$
