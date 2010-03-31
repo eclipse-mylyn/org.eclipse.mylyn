@@ -371,7 +371,7 @@
 
 		<condition property="versionPostfix" value="e33" else="e3x"><equals arg1="${base.target}" arg2="3.3"/></condition>
 		<property name="build.extraBuildArgs" value="-DmylynQualifier=${qualifier} -DfullQualifier=${qualifier}-${versionPostfix}"/>
-		<condition property="build.forceContextQualifier" value="-DforceContextQualifier=${qualifier}-${versionPostfix}"><equals arg1="${release}" arg2="true"/></condition>
+		<condition property="build.forceContextQualifier" value="" else="-DforceContextQualifier=${qualifier}-${versionPostfix}"><equals arg1="${release}" arg2="true"/></condition>
 	</target>
 
 	<target name="pre-tests">	
