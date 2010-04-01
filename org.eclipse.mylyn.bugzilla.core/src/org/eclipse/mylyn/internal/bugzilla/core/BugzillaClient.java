@@ -67,17 +67,17 @@ import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer;
-import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer.Token;
 import org.eclipse.mylyn.commons.net.HtmlTag;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.commons.net.WebUtil;
+import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer.Token;
 import org.eclipse.mylyn.internal.bugzilla.core.history.BugzillaTaskHistoryParser;
 import org.eclipse.mylyn.internal.bugzilla.core.history.TaskHistory;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
-import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentPartSource;
@@ -1818,11 +1818,6 @@ public class BugzillaClient {
 				}
 
 				if (!parseable) {
-					if (method.getResponseHeader("Content-Type") != null) { //$NON-NLS-1$
-						Header responseTypeHeader = method.getResponseHeader("Content-Type"); //$NON-NLS-1$
-						System.err.println(">>>>> Name:" + responseTypeHeader.getName() + " Value:"
-								+ responseTypeHeader.getValue());
-					}
 					parseHtmlError(getResponseStream(method, monitor));
 					break;
 				}

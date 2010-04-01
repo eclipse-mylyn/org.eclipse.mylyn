@@ -12,7 +12,6 @@
 package org.eclipse.mylyn.internal.bugzilla.core;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 import org.apache.commons.httpclient.HttpConnection;
 import org.apache.commons.httpclient.HttpException;
@@ -30,6 +29,7 @@ import org.apache.commons.httpclient.methods.PostMethod;
  * </ul>
  * 
  * @see GzipGetMethod, PostMethod
+ * 
  * @author Maarten Meijer
  */
 public class GzipPostMethod extends PostMethod {
@@ -64,9 +64,6 @@ public class GzipPostMethod extends PostMethod {
 	 */
 	public void getResponseBodyNoop() throws IOException {
 		// result is ignored
-		InputStream instream = getResponseBodyAsStream();
-		byte[] buffer = new byte[4096];
-		while (instream.read(buffer) > 0) {
-		}
+		super.getResponseBody();
 	}
 }
