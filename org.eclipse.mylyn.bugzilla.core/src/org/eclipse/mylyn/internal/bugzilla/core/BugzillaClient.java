@@ -67,17 +67,17 @@ import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer;
+import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer.Token;
 import org.eclipse.mylyn.commons.net.HtmlTag;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.commons.net.WebUtil;
-import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer.Token;
 import org.eclipse.mylyn.internal.bugzilla.core.history.BugzillaTaskHistoryParser;
 import org.eclipse.mylyn.internal.bugzilla.core.history.TaskHistory;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
+import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentPartSource;
@@ -524,7 +524,7 @@ public class BugzillaClient {
 					}
 				}
 			}
-
+			// because html is not a valid config content type it is save to get the response here
 			parseHtmlError(getResponseStream(postMethod, monitor));
 		} finally {
 			if (postMethod != null) {
@@ -661,7 +661,7 @@ public class BugzillaClient {
 		try {
 			int status = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
 			if (status == HttpStatus.SC_OK) {
-//				ignore the response 
+				//copy the response
 				InputStream instream = method.getResponseBodyAsStream();
 				byte[] buffer = new byte[4096];
 				int len;
@@ -866,26 +866,25 @@ public class BugzillaClient {
 
 		postMethod.setRequestBody(formData);
 		postMethod.setDoAuthentication(true);
-		try {
-			int status = WebUtil.execute(httpClient, hostConfiguration, postMethod, monitor);
-			if (status == HttpStatus.SC_OK) {
-				return postMethod;
-			} else if (status == HttpStatus.SC_MOVED_TEMPORARILY) {
-				String redirectLocation;
-				Header locationHeader = postMethod.getResponseHeader("location"); //$NON-NLS-1$
-				if (locationHeader != null) {
-					redirectLocation = locationHeader.getValue();
-					throw new RedirectException(redirectLocation);
-				}
-
+		int status = WebUtil.execute(httpClient, hostConfiguration, postMethod, monitor);
+		if (status == HttpStatus.SC_OK) {
+			return postMethod;
+		} else if (status == HttpStatus.SC_MOVED_TEMPORARILY) {
+			String redirectLocation;
+			Header locationHeader = postMethod.getResponseHeader("location"); //$NON-NLS-1$
+			if (locationHeader != null) {
+				redirectLocation = locationHeader.getValue();
+				postMethod.getResponseBodyNoop();
+				postMethod.releaseConnection();
+				throw new RedirectException(redirectLocation);
 			}
-			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-					RepositoryStatus.ERROR_IO, repositoryUrl.toString(), new IOException(
-							"Communication error occurred during upload. \n\n" + HttpStatus.getStatusText(status)))); //$NON-NLS-1$
-		} finally {
-			postMethod.getResponseBodyNoop();
-			postMethod.releaseConnection();
+
 		}
+		postMethod.getResponseBodyNoop();
+		postMethod.releaseConnection();
+		throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+				RepositoryStatus.ERROR_IO, repositoryUrl.toString(), new IOException(
+						"Communication error occurred during upload. \n\n" + HttpStatus.getStatusText(status)))); //$NON-NLS-1$
 	}
 
 	public void postUpdateAttachment(TaskAttribute taskAttribute, String action, IProgressMonitor monitor)
@@ -1818,6 +1817,7 @@ public class BugzillaClient {
 				}
 
 				if (!parseable) {
+					// because html is not a valid config content type it is save to get the response here
 					parseHtmlError(getResponseStream(method, monitor));
 					break;
 				}
@@ -1898,10 +1898,7 @@ public class BugzillaClient {
 				code = WebUtil.execute(httpClient, hostConfiguration, headMethod, monitor);
 			} catch (IOException e) {
 //				ignore the response 
-				InputStream instream = headMethod.getResponseBodyAsStream();
-				byte[] buffer = new byte[4096];
-				while (instream.read(buffer) > 0) {
-				}
+				consumeResponse(headMethod);
 				headMethod.releaseConnection();
 				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 						RepositoryStatus.ERROR_IO, repositoryUrl.toString(), e));
@@ -1911,10 +1908,7 @@ public class BugzillaClient {
 				return headMethod;
 			} else if (code == HttpURLConnection.HTTP_UNAUTHORIZED || code == HttpURLConnection.HTTP_FORBIDDEN) {
 //				ignore the response 
-				InputStream instream = headMethod.getResponseBodyAsStream();
-				byte[] buffer = new byte[4096];
-				while (instream.read(buffer) > 0) {
-				}
+				consumeResponse(headMethod);
 				// login or reauthenticate due to an expired session
 				headMethod.releaseConnection();
 				loggedIn = false;
@@ -1922,20 +1916,14 @@ public class BugzillaClient {
 			} else if (code == HttpURLConnection.HTTP_PROXY_AUTH) {
 				loggedIn = false;
 //				ignore the response 
-				InputStream instream = headMethod.getResponseBodyAsStream();
-				byte[] buffer = new byte[4096];
-				while (instream.read(buffer) > 0) {
-				}
+				consumeResponse(headMethod);
 				headMethod.releaseConnection();
 				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 						RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(),
 						"Proxy authentication required")); //$NON-NLS-1$
 			} else {
 //				ignore the response 
-				InputStream instream = headMethod.getResponseBodyAsStream();
-				byte[] buffer = new byte[4096];
-				while (instream.read(buffer) > 0) {
-				}
+				consumeResponse(headMethod);
 				headMethod.releaseConnection();
 				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 						RepositoryStatus.ERROR_NETWORK, "Http error: " + HttpStatus.getStatusText(code))); //$NON-NLS-1$
@@ -2094,6 +2082,18 @@ public class BugzillaClient {
 		} catch (ParseException e) {
 			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 					RepositoryStatus.ERROR_INTERNAL, "Unable to parse response from " + repositoryUrl.toString() + ".")); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+	}
+
+	private void consumeResponse(HttpMethodBase method) {
+		InputStream instream;
+		try {
+			instream = method.getResponseBodyAsStream();
+			byte[] buffer = new byte[4096];
+			while (instream.read(buffer) > 0) {
+			}
+		} catch (IOException e) {
+			// ignore
 		}
 	}
 }
