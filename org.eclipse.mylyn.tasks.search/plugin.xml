@@ -61,4 +61,11 @@
       </adapter>
     </factory>
   </extension>
+  <extension
+        point="org.eclipse.mylyn.tasks.ui.searchProvider">
+     <searchProvider
+           class="org.eclipse.mylyn.internal.tasks.ui.search.DefaultSearchProvider"
+           id="org.eclipse.mylyn.tasks.search.searchProvider">
+     </searchProvider>
+  </extension>
 </plugin>
