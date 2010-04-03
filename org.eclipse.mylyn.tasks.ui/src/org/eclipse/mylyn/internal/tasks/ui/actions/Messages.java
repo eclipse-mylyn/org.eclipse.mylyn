@@ -55,8 +55,6 @@ public class Messages extends NLS {
 
 	public static String CloneTaskAction_Clone_Task_Failed;
 
-	public static String CloneTaskAction_Clone_This_Task;
-
 	public static String CloneTaskAction_Cloned_from_;
 
 	public static String CollapseAllAction_Collapse_All;

@@ -61,8 +61,6 @@ public class Messages extends NLS {
 
 	public static String CommentGroupStrategy_Recent;
 
-	public static String DateAttributeEditor_Clear;
-
 	public static String PersonalPart_Personal_Planning;
 
 	public static String PersonAttributeEditor_Insert_My_User_Id_Tooltip;
@@ -164,8 +162,6 @@ public class Messages extends NLS {
 	public static String TaskEditorPeoplePart_People;
 
 	public static String TaskEditorPlanningPart_0_SECOUNDS;
-
-	public static String TaskEditorPlanningPart_Active;
 
 	public static String TaskEditorPlanningPart_Add_Private_Notes_Tooltip;
 

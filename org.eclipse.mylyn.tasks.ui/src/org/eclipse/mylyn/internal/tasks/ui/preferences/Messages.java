@@ -25,14 +25,6 @@ public class Messages extends NLS {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
 
-	public static String Friday;
-
-	public static String Monday;
-
-	public static String Saturday;
-
-	public static String Sunday;
-
 	public static String TasksUiPreferencePage_Advanced;
 
 	public static String TasksUiPreferencePage_Browse_;
@@ -103,9 +95,4 @@ public class Messages extends NLS {
 
 	public static String TasksUiPreferencePage_Week_Start;
 
-	public static String Thursday;
-
-	public static String Tuesday;
-
-	public static String Wednesday;
 }
