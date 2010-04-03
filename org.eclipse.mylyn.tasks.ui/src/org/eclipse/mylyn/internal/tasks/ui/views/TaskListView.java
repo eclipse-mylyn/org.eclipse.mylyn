@@ -31,6 +31,7 @@ import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.LocalSelectionTransfer;
@@ -142,6 +143,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPageListener;
 import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.ISizeProvider;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IViewSite;
@@ -1574,4 +1576,32 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
+	@Override
+	public Object getAdapter(Class adapter) {
+		if (adapter == ISizeProvider.class) {
+			return new ISizeProvider() {
+				public int getSizeFlags(boolean width) {
+					if (width) {
+						return SWT.MIN;
+					}
+					return 0;
+				}
+
+				public int computePreferredSize(boolean width, int availableParallel, int availablePerpendicular,
+						int preferredResult) {
+					if (width) {
+						if (getViewSite().getActionBars().getToolBarManager() instanceof ToolBarManager) {
+							Point size = ((ToolBarManager) getViewSite().getActionBars().getToolBarManager()).getControl()
+									.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+							// leave some room for the view menu drop-down
+							return size.x + PlatformUtil.getViewMenuWidth();
+						}
+					}
+					return preferredResult;
+				}
+			};
+		}
+		return super.getAdapter(adapter);
+	}
 }

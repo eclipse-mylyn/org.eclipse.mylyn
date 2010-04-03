@@ -110,4 +110,12 @@ public class PlatformUtil {
 	public static boolean hasNarrowToolBar() {
 		return Platform.WS_WIN32.equals(SWT.getPlatform());
 	}
+
+	/**
+	 * Returns the width of the view menu drop-down button.
+	 */
+	public static int getViewMenuWidth() {
+		return 32;
+	}
+
 }
