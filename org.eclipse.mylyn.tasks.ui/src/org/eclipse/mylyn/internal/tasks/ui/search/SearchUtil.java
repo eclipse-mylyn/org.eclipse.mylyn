@@ -24,8 +24,8 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.ui.IWorkbenchWindow;
 
 /**
- * Utility to handle search specific tasks<br/>
- * Handles the searchProvider extension point
+ * Provides static utility methods to access the implementation that is contributed by the searchProvider extension
+ * point.
  * 
  * @author Flavio Donze
  */
