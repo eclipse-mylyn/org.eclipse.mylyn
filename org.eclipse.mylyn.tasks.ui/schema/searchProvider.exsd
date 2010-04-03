@@ -49,23 +49,20 @@
 
    <element name="searchProvider">
       <complexType>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn=":org.eclipse.mylyn.ISearchProvider"/>
-               </appInfo>
-            </annotation>
-         </attribute>
-         <attribute name="id" type="string" use="required">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-               <appInfo>
-                  <meta.attribute kind="identifier"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.internal.tasks.ui.search.AbstractSearchProvider:"/>
                </appInfo>
             </annotation>
          </attribute>
