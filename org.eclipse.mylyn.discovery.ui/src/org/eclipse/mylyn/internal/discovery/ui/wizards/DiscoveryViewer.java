@@ -716,6 +716,15 @@ public class DiscoveryViewer {
 		container.addDisposeListener(new DisposeListener() {
 			public void widgetDisposed(DisposeEvent e) {
 				refreshJob.cancel();
+				if (disposables != null) {
+					for (Resource resource : disposables) {
+						resource.dispose();
+					}
+					clearDisposables();
+				}
+				if (discovery != null) {
+					discovery.dispose();
+				}
 			}
 		});
 		GridLayout layout = new GridLayout(1, false);
@@ -1036,16 +1045,6 @@ public class DiscoveryViewer {
 			}
 		}
 		selectionProvider.setSelection(StructuredSelection.EMPTY);
-	}
-
-	public void dispose() {
-		for (Resource resource : disposables) {
-			resource.dispose();
-		}
-		clearDisposables();
-		if (discovery != null) {
-			discovery.dispose();
-		}
 	}
 
 	private boolean filterMatches(String text) {
