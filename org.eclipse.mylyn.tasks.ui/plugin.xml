@@ -20,6 +20,7 @@
     <extension-point id="taskEditorExtensions" name="Task Editor Extension" schema="schema/taskEditorExtensions.exsd"/>
     <extension-point id="taskRepositoryPageContribution" name="Task Repository Page Contribution" schema="schema/taskRepositoryPageContribution.exsd"/>
     <extension-point id="taskEditorPageContribution" name="Task Editor Page Contribution" schema="schema/taskEditorPageContribution.exsd"/>
+    <extension-point id="searchProvider" name="Search Handling Provider" schema="schema/searchProvider.exsd"/>
 
     <extension
           point="org.eclipse.mylyn.context.core.bridges">
@@ -29,13 +30,6 @@
        </contextStore>
        -->
     </extension>
-    <extension
-          point="org.eclipse.mylyn.tasks.ui.duplicateDetectors">
-       <detector
-             class="org.eclipse.mylyn.internal.tasks.ui.search.StackTraceDuplicateDetector"
-             name="%duplicateDetectors.name">
-       </detector>
-    </extension> 
     
 	<extension point="org.eclipse.ui.views">
       <category name="%views.category.name" id="org.eclipse.mylyn.ui"/>
@@ -282,25 +276,7 @@
           label="%ShowTaskRepositoriesViewAction.label"
           menubarPath="tasks"
           tooltip="%ShowTaskRepositoriesViewAction.tooltip">
-         </action>
-    <action
-          class="org.eclipse.mylyn.internal.tasks.ui.actions.OpenTaskSearchAction"
-          icon="icons/eview16/task-search.gif"
-          id="org.eclipse.mylyn.tasks.ui.search.open"
-          label="%OpenTaskSearchAction.label"
-          menubarPath="tasks">
-    </action>
-           		
-  	<!--	<action
-               class="org.eclipse.mylyn.internal.tasks.ui.actions.NewTaskAction"
-               enablesFor="*"
-               icon="icons/etool16/task-new.gif"
-               id="org.eclipse.mylyn.tasks.ui.actions.new.repository.task"
-               label="%NewTaskAction.label"
-               style="push"
-               toolbarPath="new"
-               tooltip="%NewTaskAction.tooltip"> 
-  		</action>-->
+         </action>           		
          <action
                class="org.eclipse.mylyn.internal.tasks.ui.actions.ShowTasksUiLegendAction"
                icon="icons/etool16/icons-legend.gif"
@@ -852,14 +828,6 @@
                style="push"
                toolbarPath="org.eclipse.search.searchActionSet/Search"
                tooltip="%OpenTaskAction.tooltip"/>
-		<action
-               class="org.eclipse.mylyn.internal.tasks.ui.actions.SearchForRepositoryTask"
-               definitionId="org.eclipse.mylyn.tasks.ui.command.searchForTask"
-               icon="icons/etool16/open-repository-task.gif"
-               id="org.eclipse.mylyn.tasks.ui.open.task.remote"
-               label="%SearchForRepositoryTask.label"
-               style="push"
-               tooltip="%SearchForRepositoryTask.tooltip"/>
       </actionSet>
    </extension>
    
@@ -934,10 +902,6 @@
             name="%ommand.openTask.name"/>
       <command
             categoryId="org.eclipse.ui.category.navigate"
-            id="org.eclipse.mylyn.tasks.ui.command.searchForTask"
-            name="%command.searchForTask.name"/>
-      <command
-            categoryId="org.eclipse.ui.category.navigate"
             defaultHandler="org.eclipse.mylyn.internal.tasks.ui.commands.OpenRepositoryTaskHandler"
             id="org.eclipse.mylyn.tasks.ui.command.openRemoteTask"
             name="%command.openRemoteTask.name"/>
@@ -989,10 +953,6 @@
             sequence="M1+F12">
       </key>
       <key
-            commandId="org.eclipse.mylyn.tasks.ui.command.searchForTask"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="M1+M2+F12"/>
-      <key
             commandId="org.eclipse.mylyn.tasks.ui.command.openRemoteTask"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M1+M2+M3+F12"/>
@@ -1006,27 +966,6 @@
             sequence="M1+M2+F9"/>
    </extension>
    
-   <extension
-         id="org.eclipse.mylyn.tasks.ui.search.results"
-         point="org.eclipse.search.searchResultViewPages">
-      <viewPage
-            class="org.eclipse.mylyn.internal.tasks.ui.search.RepositorySearchResultView"
-            searchResultClass="org.eclipse.mylyn.internal.tasks.ui.search.RepositorySearchResult"
-            id="org.eclipse.mylyn.internal.tasks.ui.search.RepositorySearchResultView"/>
-<!--            id="org.eclipse.mylyn.bugzilla.BugzillaSearchResultPage"/>-->
-   </extension>
-    <extension
-         id="org.eclipse.mylyn.tasks.ui.repositorySearchPage"
-         name="%repositorySearchPage.name"
-         point="org.eclipse.search.searchPages">
-       <page
-            class="org.eclipse.mylyn.internal.tasks.ui.TaskSearchPage"
-            enabled="true" 
-            icon="icons/eview16/task-search.gif"
-            id="org.eclipse.mylyn.tasks.ui.search.page"
-            label="%TaskSearchPage.label" 
-            tabPosition="999"/>
-   </extension>
     <extension
           point="org.eclipse.ui.propertyPages">
        <page
@@ -1074,16 +1013,6 @@
              id="org.eclipse.mylyn.tasks.ui.defaultRepositoryLinkProvider">
        </linkProvider>
     </extension>
-    <extension
-         point="org.eclipse.core.runtime.adapters">
-      <factory
-            adaptableType="org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer"
-            class="org.eclipse.mylyn.internal.tasks.ui.search.SearchScoreComputerAdapterFactory">
-         <adapter
-               type="org.eclipse.search.ui.ISearchPageScoreComputer">
-         </adapter>
-      </factory>
-   </extension>
    
    <extension
          point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">

@@ -24,14 +24,13 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.search.SearchHitCollector;
+import org.eclipse.mylyn.internal.tasks.ui.search.SearchUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractDuplicateDetector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
-import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.layout.GridData;
@@ -121,7 +120,9 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 		}
 
 		super.createControl(parent, toolkit);
-		addDuplicateDetection(getComposite(), toolkit);
+		if (SearchUtil.supportsTaskSearch()) {
+			addDuplicateDetection(getComposite(), toolkit);
+		}
 		getEditor().enableAutoTogglePreview();
 		if (!getTaskData().isNew()) {
 			getEditor().showPreview();
@@ -179,9 +180,8 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 		try {
 			IRepositoryQuery duplicatesQuery = getDuplicateQuery(duplicateDetectorName);
 			if (duplicatesQuery != null) {
-				SearchHitCollector collector = new SearchHitCollector(TasksUiInternal.getTaskList(),
-						getTaskEditorPage().getTaskRepository(), duplicatesQuery);
-				NewSearchUI.runQueryInBackground(collector);
+				SearchUtil.runSearchQuery(TasksUiInternal.getTaskList(), getTaskEditorPage().getTaskRepository(),
+						duplicatesQuery);
 			} else {
 				TasksUiInternal.displayStatus(Messages.TaskEditorDescriptionPart_Duplicate_Detection_Failed,
 						new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,

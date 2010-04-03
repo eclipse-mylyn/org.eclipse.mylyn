@@ -27,7 +27,7 @@
 		 icon="icons/eview16/task-search.gif"
 		 id="org.eclipse.mylyn.tasks.ui.search.open"
 		 label="%OpenTaskSearchAction.label"
-		 menubarPath="tasks">
+		 menubarPath="search">
       </action>
     </viewContribution>
   </extension>
@@ -67,5 +67,20 @@
            class="org.eclipse.mylyn.internal.tasks.ui.search.DefaultSearchProvider"
            id="org.eclipse.mylyn.tasks.search.searchProvider">
      </searchProvider>
+  </extension>
+  <extension
+        point="org.eclipse.ui.commands">
+      <command
+            categoryId="org.eclipse.ui.category.navigate"
+            defaultHandler="org.eclipse.mylyn.internal.tasks.ui.search.SearchTaskHandler"
+            id="org.eclipse.mylyn.tasks.ui.command.searchForTask"
+            name="%command.searchForTask.name"/>
+  </extension>
+  <extension
+        point="org.eclipse.ui.bindings">
+      <key
+            commandId="org.eclipse.mylyn.tasks.ui.command.searchForTask"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+M2+F12"/>
   </extension>
 </plugin>

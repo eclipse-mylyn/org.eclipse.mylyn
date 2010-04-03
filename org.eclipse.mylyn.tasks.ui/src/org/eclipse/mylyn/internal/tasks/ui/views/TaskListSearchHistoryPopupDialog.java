@@ -18,8 +18,7 @@ import org.eclipse.mylyn.internal.commons.ui.NotificationPopupColors;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColors;
 import org.eclipse.mylyn.internal.provisional.commons.ui.GradientCanvas;
 import org.eclipse.mylyn.internal.provisional.commons.ui.SearchHistoryPopUpDialog;
-import org.eclipse.mylyn.internal.tasks.ui.TaskSearchPage;
-import org.eclipse.search.internal.ui.SearchDialog;
+import org.eclipse.mylyn.internal.tasks.ui.search.SearchUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
@@ -43,6 +42,10 @@ public class TaskListSearchHistoryPopupDialog extends SearchHistoryPopUpDialog {
 
 	@Override
 	protected void createAdditionalSearchRegion(Composite composite) {
+		if (!SearchUtil.supportsTaskSearch()) {
+			return;
+		}
+
 		resourceManager = new LocalResourceManager(JFaceResources.getResources());
 		colors = new NotificationPopupColors(composite.getDisplay(), resourceManager);
 
@@ -76,7 +79,7 @@ public class TaskListSearchHistoryPopupDialog extends SearchHistoryPopUpDialog {
 		advancedSearchButton.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
-				new SearchDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), TaskSearchPage.ID).open();
+				SearchUtil.openSearchDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow());
 			}
 		});
 		GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.BEGINNING).applyTo(advancedSearchButton);

@@ -87,19 +87,19 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.TaskListViewActionGroup;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskListChangeAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.util.PlatformUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.SortCriterion;
+import org.eclipse.mylyn.internal.tasks.ui.util.SortCriterion.SortKey;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDragSourceListener;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.util.TreeWalker;
-import org.eclipse.mylyn.internal.tasks.ui.util.SortCriterion.SortKey;
 import org.eclipse.mylyn.internal.tasks.ui.util.TreeWalker.TreeVisitor;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.core.TaskActivationAdapter;
 import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
-import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.ui.TaskElementLabelProvider;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -270,6 +270,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 	}
 
 	private static final String ID_SEPARATOR_FILTERS = "filters"; //$NON-NLS-1$
+
+	private static final String ID_SEPARATOR_SEARCH = "search"; //$NON-NLS-1$
 
 	private static final String ID_SEPARATOR_TASKS = "tasks"; //$NON-NLS-1$
 
@@ -1110,7 +1112,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		manager.add(filterCompleteTask);
 		manager.add(filterSubTasksAction);
 
-		manager.add(new Separator(ID_SEPARATOR_TASKS));
+		manager.add(new Separator(ID_SEPARATOR_SEARCH));
+		manager.add(new GroupMarker(ID_SEPARATOR_TASKS));
 		manager.add(synchronizeAutomatically);
 
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));

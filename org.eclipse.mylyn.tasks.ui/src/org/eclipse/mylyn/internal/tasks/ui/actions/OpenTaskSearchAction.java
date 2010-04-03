@@ -14,8 +14,7 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylyn.internal.tasks.ui.TaskSearchPage;
-import org.eclipse.search.ui.NewSearchUI;
+import org.eclipse.mylyn.internal.tasks.ui.search.SearchUtil;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -38,7 +37,7 @@ public class OpenTaskSearchAction extends Action implements IViewActionDelegate 
 	public void run() {
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window != null) {
-			NewSearchUI.openSearchDialog(window, TaskSearchPage.ID);
+			SearchUtil.openSearchDialog(window);
 		}
 	}
 

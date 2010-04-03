@@ -18,7 +18,7 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
-import org.eclipse.mylyn.internal.tasks.ui.search.SearchHitCollector;
+import org.eclipse.mylyn.internal.tasks.ui.search.SearchUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.Messages;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -26,7 +26,6 @@ import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
-import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
@@ -126,18 +125,13 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 	}
 
 	public boolean performSearch() {
-		NewSearchUI.activateSearchResultView();
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 				taskRepository.getConnectorKind());
 		if (connector != null) {
 			try {
-				SearchHitCollector collector = new SearchHitCollector(TasksUiInternal.getTaskList(), taskRepository,
-						createQuery());
-				NewSearchUI.runQueryInBackground(collector);
+				SearchUtil.runSearchQuery(TasksUiInternal.getTaskList(), taskRepository, createQuery(), true);
 			} catch (UnsupportedOperationException e) {
-				SearchHitCollector collector = new SearchHitCollector(TasksUiInternal.getTaskList(), taskRepository,
-						getQuery());
-				NewSearchUI.runQueryInBackground(collector);
+				SearchUtil.runSearchQuery(TasksUiInternal.getTaskList(), taskRepository, getQuery(), true);
 			}
 		}
 		return true;

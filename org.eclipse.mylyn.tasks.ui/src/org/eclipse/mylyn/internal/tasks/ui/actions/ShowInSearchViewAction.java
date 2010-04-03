@@ -14,13 +14,12 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 import java.util.Iterator;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylyn.internal.tasks.ui.search.SearchHitCollector;
+import org.eclipse.mylyn.internal.tasks.ui.search.SearchUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
 /**
@@ -52,16 +51,15 @@ public class ShowInSearchViewAction extends BaseSelectionListenerAction {
 			TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(query.getConnectorKind(),
 					query.getRepositoryUrl());
 			if (connector != null) {
-				SearchHitCollector collector = new SearchHitCollector(TasksUiInternal.getTaskList(), taskRepository,
-						query);
-				NewSearchUI.runQueryInBackground(collector);
+				SearchUtil.runSearchQuery(TasksUiInternal.getTaskList(), taskRepository, query);
 			}
 		}
 	}
 
 	@Override
 	protected boolean updateSelection(IStructuredSelection selection) {
-		return selection.size() == 1 && selection.getFirstElement() instanceof IRepositoryQuery;
+		return SearchUtil.supportsTaskSearch() && selection.size() == 1
+				&& selection.getFirstElement() instanceof IRepositoryQuery;
 	}
 
 }

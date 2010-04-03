@@ -51,8 +51,8 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivationHistory;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
-import org.eclipse.mylyn.internal.tasks.ui.TaskSearchPage;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.search.SearchUtil;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskDetailLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListFilteredTree;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
@@ -61,7 +61,6 @@ import org.eclipse.mylyn.internal.tasks.ui.workingsets.WorkingSetLabelComparator
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.ui.TaskElementLabelProvider;
-import org.eclipse.search.internal.ui.SearchDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -540,20 +539,21 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 		openInBrowserCheck.setText(Messages.TaskSelectionDialog_Open_with_Browser);
 		openInBrowserCheck.setSelection(openInBrowser);
 
-		ImageHyperlink openHyperlink = new ImageHyperlink(composite, SWT.NONE);
-		openHyperlink.setText(TaskListFilteredTree.LABEL_SEARCH);
-		openHyperlink.setForeground(CommonColors.HYPERLINK_WIDGET);
-		openHyperlink.setUnderlined(true);
-		openHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+		if (SearchUtil.supportsTaskSearch()) {
+			ImageHyperlink openHyperlink = new ImageHyperlink(composite, SWT.NONE);
+			openHyperlink.setText(TaskListFilteredTree.LABEL_SEARCH);
+			openHyperlink.setForeground(CommonColors.HYPERLINK_WIDGET);
+			openHyperlink.setUnderlined(true);
+			openHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 
-			@Override
-			public void linkActivated(HyperlinkEvent e) {
-				getShell().close();
-				new SearchDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), TaskSearchPage.ID).open();
-			}
+				@Override
+				public void linkActivated(HyperlinkEvent e) {
+					getShell().close();
+					SearchUtil.openSearchDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow());
+				}
 
-		});
-
+			});
+		}
 		return composite;
 	}
 
