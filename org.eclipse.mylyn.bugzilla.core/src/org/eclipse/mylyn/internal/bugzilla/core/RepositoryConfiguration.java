@@ -703,6 +703,18 @@ public class RepositoryConfiguration implements Serializable {
 				attrResolvedInput.setValue(getResolutions().get(0));
 			}
 			break;
+		case duplicate:
+			attribute = bugReport.getRoot().createAttribute(TaskAttribute.PREFIX_OPERATION + opcode.toString());
+			TaskOperation.applyTo(attribute, opcode.toString(), opcode.getLabel());
+			if (opcode.getInputId() != null) {
+				TaskAttribute attrInput = bugReport.getRoot().getAttribute(opcode.getInputId());
+				if (attrInput == null) {
+					attrInput = bugReport.getRoot().createAttribute(opcode.getInputId());
+				}
+				attrInput.getMetaData().defaults().setReadOnly(false).setType(opcode.getInputType());
+				attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, opcode.getInputId());
+			}
+			break;
 		default:
 			attribute = bugReport.getRoot().createAttribute(TaskAttribute.PREFIX_OPERATION + opcode.toString());
 			TaskOperation.applyTo(attribute, opcode.toString(), opcode.getLabel());

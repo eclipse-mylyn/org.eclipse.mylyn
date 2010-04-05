@@ -75,6 +75,8 @@ public class Messages extends NLS {
 
 	public static String BugzillaAttribute_Due;
 
+	public static String BugzillaAttribute_Duplicate_of;
+
 	public static String BugzillaAttribute_Estimated_Time;
 
 	public static String BugzillaAttribute_everconfirmed;

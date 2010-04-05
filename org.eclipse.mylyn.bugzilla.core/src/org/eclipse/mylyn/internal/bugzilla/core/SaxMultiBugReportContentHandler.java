@@ -455,6 +455,16 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 				}
 			}
 			break;
+		case DUP_ID:
+			TaskAttribute duplicateOf = repositoryTaskData.getRoot().getMappedAttribute(tag.getKey());
+			if (duplicateOf == null) {
+				BugzillaTaskDataHandler.createAttribute(repositoryTaskData, tag).setValue(parsedText);
+			} else {
+				if (duplicateOf.getValue().equals("")) { //$NON-NLS-1$
+					duplicateOf.setValue(parsedText);
+				}
+			}
+			break;
 		case UNKNOWN:
 			//ignore
 			break;

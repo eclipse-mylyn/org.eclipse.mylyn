@@ -83,6 +83,8 @@ public enum BugzillaAttribute {
 
 	DESC(Messages.BugzillaAttribute_desc, "desc", TaskAttribute.TYPE_LONG_TEXT, true, true), //$NON-NLS-1$
 
+	DUP_ID(Messages.BugzillaAttribute_Duplicate_of, "dup_id", TaskAttribute.TYPE_TASK_DEPENDENCY, false, false), //$NON-NLS-1$
+
 	EVERCONFIRMED(Messages.BugzillaAttribute_everconfirmed, "everconfirmed", TaskAttribute.TYPE_BOOLEAN, true, false), //$NON-NLS-1$
 
 	ESTIMATED_TIME(Messages.BugzillaAttribute_Estimated_Time,
