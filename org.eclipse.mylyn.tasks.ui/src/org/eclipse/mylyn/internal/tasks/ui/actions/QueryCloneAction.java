@@ -101,7 +101,9 @@ public class QueryCloneAction extends Action implements IViewActionDelegate {
 		for (RepositoryQuery query : clonedQueries) {
 			TasksUiPlugin.getTaskList().addQuery(query);
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(query.getConnectorKind());
-			TasksUiInternal.openEditQueryDialog(connectorUi, query);
+			if (!TasksUiInternal.openEditQueryDialog(connectorUi, query)) {
+				TasksUiPlugin.getTaskList().deleteQuery(query);
+			}
 		}
 	}
 }

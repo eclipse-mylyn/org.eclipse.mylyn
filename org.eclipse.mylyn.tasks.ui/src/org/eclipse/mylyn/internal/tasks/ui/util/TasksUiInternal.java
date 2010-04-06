@@ -658,14 +658,17 @@ public class TasksUiInternal {
 	}
 
 	/**
+	 * @param connectorUi - repository connector ui
+	 * @param query - repository query
+	 * @return - true if dialog was opened successfully and not canceled, false otherwise
 	 * @since 3.0
 	 */
-	public static void openEditQueryDialog(AbstractRepositoryConnectorUi connectorUi, IRepositoryQuery query) {
+	public static boolean openEditQueryDialog(AbstractRepositoryConnectorUi connectorUi, IRepositoryQuery query) {
 		try {
 			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(query.getConnectorKind(),
 					query.getRepositoryUrl());
 			if (repository == null) {
-				return;
+				return false;
 			}
 
 			IWizard wizard = connectorUi.getQueryWizard(repository, query);
@@ -677,12 +680,15 @@ public class TasksUiInternal {
 				dialog.setBlockOnOpen(true);
 				if (dialog.open() == Window.CANCEL) {
 					dialog.close();
-					return;
+					return false;
+				} else {
+					return true;
 				}
 			}
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to open query dialog", e)); //$NON-NLS-1$
 		}
+		return false;
 	}
 
 	public static ITaskList getTaskList() {
