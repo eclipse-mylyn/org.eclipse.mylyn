@@ -60,7 +60,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 	public void testSingleRetrievalFailure() throws CoreException {
 		try {
-			connector.getTaskData(repository, "9999", new NullProgressMonitor());
+			connector.getTaskData(repository, "99999", new NullProgressMonitor());
 			fail("Invalid id error should have resulted");
 		} catch (CoreException e) {
 			assertTrue(e.getStatus().getMessage().contains(IBugzillaConstants.ERROR_MSG_INVALID_BUG_ID));
@@ -74,7 +74,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		TaskData taskData2 = BugzillaFixture.current().createTask(PrivilegeLevel.USER, null, null);
 
 		ITask task1 = TasksUi.getRepositoryModel().createTask(repository, taskData1.getTaskId());
-		ITask taskX = TasksUi.getRepositoryModel().createTask(repository, "9999");
+		ITask taskX = TasksUi.getRepositoryModel().createTask(repository, "99999");
 		ITask task2 = TasksUi.getRepositoryModel().createTask(repository, taskData2.getTaskId());
 		TasksUiPlugin.getTaskList().addTask(task1);
 		TasksUiPlugin.getTaskList().addTask(taskX);
