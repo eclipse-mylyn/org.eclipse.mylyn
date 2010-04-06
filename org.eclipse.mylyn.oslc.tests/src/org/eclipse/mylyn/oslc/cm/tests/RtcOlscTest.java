@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.oslc.cm.tests;
 
-import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -52,16 +51,16 @@ public class RtcOlscTest extends TestCase {
 
 	private static final String BASE_URL = "https://192.168.0.3:9443/jazz/oslc/workitems/catalog";
 
-//	private static final String BASE_URL = "https://192.168.0.3:9443/jazz/oslc/contexts/_9Dyg4DLzEd-G-8cuiS4gvg/workitems/services.xml";
+	private static final String SERVICE_URL = "https://192.168.0.3:9443/jazz/oslc/contexts/_9Dyg4DLzEd-G-8cuiS4gvg/workitems/services.xml";
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		this.repository = new TaskRepository("rtc", BASE_URL);
+		this.repository = new TaskRepository("rtc", SERVICE_URL);
 		this.repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("ADMIN", "ADMIN"),
 				false);
 		this.location = new TaskRepositoryLocationFactory().createWebLocation(repository);
-		this.client = new AbstractOslcClient(location, new OslcServiceDescriptor(BASE_URL)) {
+		this.client = new AbstractOslcClient(location, new OslcServiceDescriptor(SERVICE_URL)) {
 
 			@Override
 			public RepositoryResponse putTaskData(TaskData taskData, Set<TaskAttribute> oldValues,
@@ -126,9 +125,7 @@ public class RtcOlscTest extends TestCase {
 	public void testSimpleQuery() throws Exception {
 		List<OslcServiceProvider> services = client.getAvailableServices(BASE_URL, null);
 		OslcServiceProvider desc = services.get(0);
-		OslcServiceDescriptor serviceDescriptor = client.getServiceDescriptor(desc, null);
-		Collection<AbstractChangeRequest> result = client.performQuery(serviceDescriptor.getSimpleQueryUrl()
-				+ "?oslc_cm.query=" + URLEncoder.encode("dc:title=\"my first work item\"", "UTF-8"), null);
+		Collection<AbstractChangeRequest> result = client.performQuery("dc:title=\"my first work item\"", null);
 		assertEquals(1, result.size());
 		AbstractChangeRequest request = result.iterator().next();
 		request.getTitle().equals("my first work item");

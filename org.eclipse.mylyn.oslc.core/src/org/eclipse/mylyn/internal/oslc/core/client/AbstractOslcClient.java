@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.oslc.core.client;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -378,8 +379,13 @@ public abstract class AbstractOslcClient {
 		return configuration;
 	}
 
-	public Collection<AbstractChangeRequest> performQuery(String queryUrl, IProgressMonitor monitor)
-			throws CoreException {
+	public Collection<AbstractChangeRequest> performQuery(String query, IProgressMonitor monitor) throws CoreException {
+		try {
+			query = URLEncoder.encode(query, "UTF-8"); //$NON-NLS-1$
+		} catch (UnsupportedEncodingException e) {
+			query = URLEncoder.encode(query);
+		}
+		final String requestUrl = getConfiguration(monitor).getSimpleQueryUrl() + "?oslc_cm.query=" + query; //$NON-NLS-1$
 
 		RequestHandler<Collection<AbstractChangeRequest>> handler = new RequestHandler<Collection<AbstractChangeRequest>>(
 				"Performing Query") { //$NON-NLS-1$
@@ -393,7 +399,7 @@ public abstract class AbstractOslcClient {
 			}
 		};
 
-		return executeMethod(createGetMethod(queryUrl), handler, monitor);
+		return executeMethod(createGetMethod(requestUrl), handler, monitor);
 
 	}
 
