@@ -27,7 +27,6 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
-import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.team.ui.AbstractActiveChangeSetProvider;
@@ -49,15 +48,9 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 
 	private final List<IContextChangeSet> activeChangeSets = new ArrayList<IContextChangeSet>();
 
-	private static final String LABEL_NO_TASK = "<No Active Task>"; //$NON-NLS-1$
-
-	private static final String HANDLE_NO_TASK = "org.eclipse.mylyn.team.ui.inactive.proxy"; //$NON-NLS-1$
-
 	private final Map<ActiveChangeSetManager, ActiveChangeSet> noTaskSetMap = new HashMap<ActiveChangeSetManager, ActiveChangeSet>();;
 
 	private final Map<ActiveChangeSetManager, ChangeSetChangeListener> listenerByManager = new HashMap<ActiveChangeSetManager, ChangeSetChangeListener>();
-
-	private final ITask noTaskActiveProxy = new LocalTask(HANDLE_NO_TASK, LABEL_NO_TASK);
 
 	/**
 	 * Used to restore change sets managed with task context when platform deletes them, bug 168129
@@ -255,23 +248,11 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 					}
 				}
 			}
-			// First look for it in the collector, then in our cache
-			ActiveChangeSet noTaskSet = collector.getSet(LABEL_NO_TASK);
-			if (noTaskSet == null) {
-				noTaskSet = noTaskSetMap.get(collector);
-			}
 
-			if (noTaskSet == null) {
-				AbstractActiveChangeSetProvider changeSetProvider = FocusedTeamUiPlugin.getDefault()
-						.getActiveChangeSetProvider(collector);
-				noTaskSet = (ActiveChangeSet) changeSetProvider.createChangeSet(noTaskActiveProxy);
-				collector.add(noTaskSet);
-				noTaskSetMap.put(collector, noTaskSet);
-			}
-			// TODO: not great to do the lookup based on a String value in case the user created this set
-			collector.makeDefault(noTaskSet);
-			noTaskSet.remove(noTaskSet.getResources());
-			collector.remove(noTaskSet);
+			AbstractActiveChangeSetProvider changeSetProvider = FocusedTeamUiPlugin.getDefault()
+					.getActiveChangeSetProvider(collector);
+
+			changeSetProvider.activateDefaultChangeSet();
 		}
 		activeChangeSets.clear();
 	}
