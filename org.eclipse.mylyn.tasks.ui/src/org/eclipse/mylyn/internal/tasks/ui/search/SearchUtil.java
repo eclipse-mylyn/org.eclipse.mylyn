@@ -74,10 +74,11 @@ public class SearchUtil {
 				IConfigurationElement providerConfiguration = configurationElements[0];
 				Object object = providerConfiguration.createExecutableExtension(ATTR_CLASS);
 				if (object instanceof AbstractSearchProvider) {
-					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-							"Specified search provider is not of type AbstractSearchProvider.")); //$NON-NLS-1$
 					provider = (AbstractSearchProvider) object;
 					return provider;
+				} else {
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+							"Specified search provider is not of type AbstractSearchProvider.")); //$NON-NLS-1$
 				}
 			} else {
 				StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
