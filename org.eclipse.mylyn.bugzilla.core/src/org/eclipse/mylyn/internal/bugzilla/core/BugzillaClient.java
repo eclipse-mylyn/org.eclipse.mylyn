@@ -1164,6 +1164,12 @@ public class BugzillaClient {
 		Iterator<TaskAttribute> itr = attributes.iterator();
 		boolean tokenFound = false;
 		boolean tokenRequired = false;
+		BugzillaVersion bugzillaVersion = null;
+		if (repositoryConfiguration != null) {
+			bugzillaVersion = repositoryConfiguration.getInstallVersion();
+		} else {
+			bugzillaVersion = BugzillaVersion.MIN_VERSION;
+		}
 		while (itr.hasNext()) {
 			TaskAttribute a = itr.next();
 
@@ -1183,12 +1189,6 @@ public class BugzillaClient {
 						|| id.equals(BugzillaAttribute.VOTES.getKey())) {
 					continue;
 				} else if (id.equals(BugzillaAttribute.NEW_COMMENT.getKey())) {
-					BugzillaVersion bugzillaVersion = null;
-					if (repositoryConfiguration != null) {
-						bugzillaVersion = repositoryConfiguration.getInstallVersion();
-					} else {
-						bugzillaVersion = BugzillaVersion.MIN_VERSION;
-					}
 					if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_2_18) == 0) {
 						a.setValue(formatTextToLineWrap(a.getValue(), true));
 					}
@@ -1206,7 +1206,11 @@ public class BugzillaClient {
 				} else if (id != null && id.compareTo("") != 0) { //$NON-NLS-1$
 					String value = a.getValue();
 					if (id.equals(BugzillaAttribute.DELTA_TS.getKey())) {
-						value = stripTimeZone(value);
+						if (bugzillaVersion.compareTo(BugzillaVersion.BUGZILLA_3_4_7) < 0
+								|| (bugzillaVersion.compareTo(BugzillaVersion.BUGZILLA_3_5) >= 0)
+								&& bugzillaVersion.compareTo(BugzillaVersion.BUGZILLA_3_6) < 0) {
+							value = stripTimeZone(value);
+						}
 					}
 					if (id.startsWith("task.common.kind.flag_type") && repositoryConfiguration != null) { //$NON-NLS-1$
 						List<BugzillaFlag> flags = repositoryConfiguration.getFlags();
@@ -1262,12 +1266,6 @@ public class BugzillaClient {
 		}
 
 		// add the operation to the bug post
-		BugzillaVersion bugzillaVersion = null;
-		if (repositoryConfiguration != null) {
-			bugzillaVersion = repositoryConfiguration.getInstallVersion();
-		} else {
-			bugzillaVersion = BugzillaVersion.MIN_VERSION;
-		}
 		if (bugzillaVersion.compareTo(BugzillaVersion.BUGZILLA_3_2) < 0) {
 
 			TaskAttribute attributeOperation = model.getRoot().getMappedAttribute(TaskAttribute.OPERATION);
