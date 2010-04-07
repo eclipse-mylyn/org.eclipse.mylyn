@@ -44,6 +44,7 @@ import org.apache.commons.httpclient.methods.HeadMethod;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
+import org.apache.xmlrpc.serializer.CharSetXmlWriterFactory;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -69,20 +70,20 @@ import org.eclipse.mylyn.internal.trac.core.model.TracRepositoryInfo;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
 import org.eclipse.mylyn.internal.trac.core.model.TracSeverity;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
+import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicketField;
+import org.eclipse.mylyn.internal.trac.core.model.TracTicketField.Type;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicketResolution;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicketStatus;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicketType;
 import org.eclipse.mylyn.internal.trac.core.model.TracVersion;
 import org.eclipse.mylyn.internal.trac.core.model.TracWikiPage;
 import org.eclipse.mylyn.internal.trac.core.model.TracWikiPageInfo;
-import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
-import org.eclipse.mylyn.internal.trac.core.model.TracTicketField.Type;
 import org.eclipse.mylyn.internal.trac.core.util.HttpMethodInterceptor;
 import org.eclipse.mylyn.internal.trac.core.util.TracHttpClientTransportFactory;
+import org.eclipse.mylyn.internal.trac.core.util.TracHttpClientTransportFactory.TracHttpException;
 import org.eclipse.mylyn.internal.trac.core.util.TracUtil;
 import org.eclipse.mylyn.internal.trac.core.util.TracXmlRpcClientRequest;
-import org.eclipse.mylyn.internal.trac.core.util.TracHttpClientTransportFactory.TracHttpException;
 import org.eclipse.osgi.util.NLS;
 
 /**
@@ -287,6 +288,8 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 
 			xmlrpc = new XmlRpcClient();
 			xmlrpc.setConfig(config);
+			// bug 307200: force factory that supports proper UTF-8 encoding
+			xmlrpc.setXmlWriterFactory(new CharSetXmlWriterFactory());
 
 			factory = new TracHttpClientTransportFactory(xmlrpc, httpClient);
 			factory.setLocation(location);
@@ -441,20 +444,23 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 				try {
 					location.requestCredentials(AuthenticationType.REPOSITORY, null, monitor);
 				} catch (UnsupportedRequestException ignored) {
-					lastException = e;
+					throw e;
 				}
+				lastException = e;
 			} catch (TracPermissionDeniedException e) {
 				try {
 					location.requestCredentials(AuthenticationType.REPOSITORY, null, monitor);
 				} catch (UnsupportedRequestException ignored) {
-					lastException = e;
+					throw e;
 				}
+				lastException = e;
 			} catch (TracProxyAuthenticationException e) {
 				try {
 					location.requestCredentials(AuthenticationType.PROXY, null, monitor);
 				} catch (UnsupportedRequestException ignored) {
-					lastException = e;
+					throw e;
 				}
+				lastException = e;
 			}
 		}
 		if (lastException != null) {
