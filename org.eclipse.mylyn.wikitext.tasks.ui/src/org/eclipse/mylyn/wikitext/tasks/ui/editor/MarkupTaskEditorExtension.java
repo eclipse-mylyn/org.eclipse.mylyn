@@ -26,8 +26,6 @@ import org.eclipse.jface.text.source.DefaultAnnotationHover;
 import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
-import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.wikitext.tasks.ui.WikiTextTasksUiPlugin;
 import org.eclipse.mylyn.internal.wikitext.tasks.ui.util.PlatformUrlHyperlink;
 import org.eclipse.mylyn.internal.wikitext.tasks.ui.util.Util;
@@ -38,6 +36,7 @@ import org.eclipse.mylyn.internal.wikitext.ui.viewer.AnnotationHyperlinkDetector
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TaskHyperlinkPresenter;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorExtension;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration;
@@ -408,8 +407,7 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 		}
 
 		private boolean getCurrentLineHighlightPreference() {
-			return TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-					ITasksUiPreferenceConstants.EDITOR_CURRENT_LINE_HIGHLIGHT);
+			return TasksUiUtil.getHighlightCurrentLine();
 		}
 
 		@Override
