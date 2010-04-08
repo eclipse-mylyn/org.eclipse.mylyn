@@ -1355,6 +1355,9 @@ public class BugzillaClient {
 						if (selOp.equals("REOPEN")) { //$NON-NLS-1$
 							selOp = "REOPENED"; //$NON-NLS-1$
 						}
+						if (selOp.equals("MARKNEW")) { //$NON-NLS-1$
+							selOp = "NEW"; //$NON-NLS-1$
+						}
 						if (selOp.equals("DUPLICATE")) { //$NON-NLS-1$
 							selOp = "RESOLVED"; //$NON-NLS-1$
 							String knob = BugzillaAttribute.RESOLUTION.getKey();

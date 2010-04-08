@@ -35,7 +35,9 @@ public enum BugzillaOperation {
 
 	verify(Messages.BugzillaOperation_Mark_as_VERIFIED),
 
-	close(Messages.BugzillaOperation_Mark_as_CLOSED);
+	close(Messages.BugzillaOperation_Mark_as_CLOSED),
+
+	markNew(Messages.BugzillaOperation_Mark_as_NEW);
 
 	private final String label;
 

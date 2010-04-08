@@ -211,6 +211,8 @@ public class Messages extends NLS {
 
 	public static String BugzillaOperation_Leave_as_X_X;
 
+	public static String BugzillaOperation_Mark_as_NEW;
+
 	public static String BugzillaOperation_Mark_as_CLOSED;
 
 	public static String BugzillaOperation_Mark_as_VERIFIED;

@@ -582,8 +582,6 @@ public class RepositoryConfiguration implements Serializable {
 			try {
 				status = BUGZILLA_REPORT_STATUS.valueOf(attributeStatus.getValue());
 			} catch (RuntimeException e) {
-//				StatusHandler.log(new Status(IStatus.INFO, BugzillaCorePlugin.PLUGIN_ID, "Unrecognized status: "
-//						+ attributeStatus.getValue(), e));
 				status = BUGZILLA_REPORT_STATUS.NEW;
 			}
 		}
@@ -592,18 +590,29 @@ public class RepositoryConfiguration implements Serializable {
 			bugzillaVersion = BugzillaVersion.MIN_VERSION;
 		}
 		switch (status) {
-		case UNCONFIRMED:
-		case REOPENED:
 		case NEW:
 			addOperation(bugReport, BugzillaOperation.none);
 			addOperation(bugReport, BugzillaOperation.accept);
 			addOperation(bugReport, BugzillaOperation.resolve);
 			addOperation(bugReport, BugzillaOperation.duplicate);
 			break;
+		case UNCONFIRMED:
+		case REOPENED:
+			addOperation(bugReport, BugzillaOperation.none);
+			addOperation(bugReport, BugzillaOperation.accept);
+			addOperation(bugReport, BugzillaOperation.resolve);
+			addOperation(bugReport, BugzillaOperation.duplicate);
+			if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_2) >= 0) {
+				addOperation(bugReport, BugzillaOperation.markNew);
+			}
+			break;
 		case ASSIGNED:
 			addOperation(bugReport, BugzillaOperation.none);
 			addOperation(bugReport, BugzillaOperation.resolve);
 			addOperation(bugReport, BugzillaOperation.duplicate);
+			if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_2) >= 0) {
+				addOperation(bugReport, BugzillaOperation.markNew);
+			}
 			break;
 		case RESOLVED:
 			addOperation(bugReport, BugzillaOperation.none);
