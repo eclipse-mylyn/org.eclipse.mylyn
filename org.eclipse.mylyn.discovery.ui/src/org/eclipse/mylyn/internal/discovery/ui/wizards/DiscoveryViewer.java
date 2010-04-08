@@ -26,8 +26,6 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IBundleGroup;
-import org.eclipse.core.runtime.IBundleGroupProvider;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -1536,18 +1534,7 @@ public class DiscoveryViewer {
 	}
 
 	protected Set<String> getInstalledFeatures(IProgressMonitor monitor) throws InterruptedException {
-		Set<String> installedFeatures = new HashSet<String>();
-		IBundleGroupProvider[] bundleGroupProviders = Platform.getBundleGroupProviders();
-		for (IBundleGroupProvider provider : bundleGroupProviders) {
-			if (monitor.isCanceled()) {
-				throw new InterruptedException();
-			}
-			IBundleGroup[] bundleGroups = provider.getBundleGroups();
-			for (IBundleGroup group : bundleGroups) {
-				installedFeatures.add(group.getIdentifier());
-			}
-		}
-		return installedFeatures;
+		return DiscoveryUi.createInstallJob().getInstalledFeatures(monitor);
 	}
 
 }

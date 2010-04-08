@@ -12,6 +12,7 @@ package org.eclipse.mylyn.internal.discovery.ui;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
@@ -37,27 +38,37 @@ public abstract class DiscoveryUi {
 	private DiscoveryUi() {
 	}
 
+	public static AbstractInstallJob createInstallJob() {
+		List<ConnectorDescriptor> emptyList = Collections.emptyList();
+		return createInstallJob(emptyList);
+	}
+
+	public static AbstractInstallJob createInstallJob(List<ConnectorDescriptor> descriptors) {
+		AbstractInstallJob runner = null;
+		Bundle bundle = Platform.getBundle("org.eclipse.equinox.p2.engine"); //$NON-NLS-1$
+		if (bundle != null && new VersionRange("[1.0.0,1.1.0)").isIncluded(bundle.getVersion())) { //$NON-NLS-1$
+			// load class for Eclipse 3.5
+			try {
+				Class<?> clazz = Class.forName("org.eclipse.mylyn.internal.discovery.ui.PrepareInstallProfileJob_e_3_5"); //$NON-NLS-1$
+				Constructor<?> c = clazz.getConstructor(List.class);
+				runner = (AbstractInstallJob) c.newInstance(descriptors);
+			} catch (Throwable t) {
+				StatusHandler.log(new Status(
+						IStatus.ERROR,
+						DiscoveryUi.ID_PLUGIN,
+						"Errors occured while initializing provisioning framework, falling back to default implementation. This make cause discovery install to fail.", //$NON-NLS-1$
+						t));
+			}
+		}
+		if (runner == null) {
+			runner = new PrepareInstallProfileJob(descriptors);
+		}
+		return runner;
+	}
+
 	public static boolean install(List<ConnectorDescriptor> descriptors, IRunnableContext context) {
 		try {
-			IRunnableWithProgress runner = null;
-			Bundle bundle = Platform.getBundle("org.eclipse.equinox.p2.engine"); //$NON-NLS-1$
-			if (bundle != null && new VersionRange("[1.0.0,1.1.0)").isIncluded(bundle.getVersion())) { //$NON-NLS-1$
-				// load class for Eclipse 3.5
-				try {
-					Class<?> clazz = Class.forName("org.eclipse.mylyn.internal.discovery.ui.PrepareInstallProfileJob_e_3_5"); //$NON-NLS-1$
-					Constructor<?> c = clazz.getConstructor(List.class);
-					runner = (IRunnableWithProgress) c.newInstance(descriptors);
-				} catch (Throwable t) {
-					StatusHandler.log(new Status(
-							IStatus.ERROR,
-							DiscoveryUi.ID_PLUGIN,
-							"Errors occured while initializing provisioning framework, falling back to default implementation. This make cause discovery install to fail.", //$NON-NLS-1$
-							t));
-				}
-			}
-			if (runner == null) {
-				runner = new PrepareInstallProfileJob(descriptors);
-			}
+			IRunnableWithProgress runner = createInstallJob(descriptors);
 			context.run(true, true, runner);
 		} catch (InvocationTargetException e) {
 			IStatus status = new Status(IStatus.ERROR, DiscoveryUi.ID_PLUGIN, NLS.bind(

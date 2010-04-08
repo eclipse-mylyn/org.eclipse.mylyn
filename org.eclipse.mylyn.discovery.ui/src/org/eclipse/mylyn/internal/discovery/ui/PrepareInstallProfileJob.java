@@ -31,7 +31,9 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.equinox.internal.p2.ui.ProvUI;
 import org.eclipse.equinox.p2.core.ProvisionException;
+import org.eclipse.equinox.p2.engine.IProfile;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.equinox.p2.metadata.Version;
 import org.eclipse.equinox.p2.operations.InstallOperation;
@@ -44,7 +46,6 @@ import org.eclipse.equinox.p2.repository.metadata.IMetadataRepository;
 import org.eclipse.equinox.p2.repository.metadata.IMetadataRepositoryManager;
 import org.eclipse.equinox.p2.ui.ProvisioningUI;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDescriptor;
 import org.eclipse.mylyn.internal.discovery.ui.util.DiscoveryUiUtil;
 import org.eclipse.mylyn.internal.discovery.ui.wizards.Messages;
@@ -60,9 +61,7 @@ import org.eclipse.swt.widgets.Display;
  * @author David Green
  * @author Steffen Pingel
  */
-class PrepareInstallProfileJob implements IRunnableWithProgress {
-
-	private static final String P2_FEATURE_GROUP_SUFFIX = ".feature.group"; //$NON-NLS-1$
+class PrepareInstallProfileJob extends AbstractInstallJob {
 
 	private final List<ConnectorDescriptor> installableConnectors;
 
@@ -71,7 +70,7 @@ class PrepareInstallProfileJob implements IRunnableWithProgress {
 	private Set<URI> repositoryLocations;
 
 	public PrepareInstallProfileJob(List<ConnectorDescriptor> installableConnectors) {
-		if (installableConnectors == null || installableConnectors.isEmpty()) {
+		if (installableConnectors == null) {
 			throw new IllegalArgumentException();
 		}
 		this.installableConnectors = new ArrayList<ConnectorDescriptor>(installableConnectors);
@@ -79,6 +78,10 @@ class PrepareInstallProfileJob implements IRunnableWithProgress {
 	}
 
 	public void run(IProgressMonitor progressMonitor) throws InvocationTargetException, InterruptedException {
+		if (installableConnectors.isEmpty()) {
+			throw new IllegalArgumentException();
+		}
+
 		try {
 			SubMonitor monitor = SubMonitor.convert(progressMonitor, Messages.InstallConnectorsJob_task_configuring,
 					100);
@@ -185,7 +188,7 @@ class PrepareInstallProfileJob implements IRunnableWithProgress {
 		String detailedMessage = ""; //$NON-NLS-1$
 		for (ConnectorDescriptor descriptor : installableConnectors) {
 			StringBuilder unavailableIds = null;
-			for (String id : getFeatureIds(descriptor)) {
+			for (String id : descriptor.getInstallableUnits()) {
 				if (!foundIds.contains(id)) {
 					if (unavailableIds == null) {
 						unavailableIds = new StringBuilder();
@@ -264,9 +267,7 @@ class PrepareInstallProfileJob implements IRunnableWithProgress {
 		for (final IMetadataRepository repository : repositories) {
 			checkCancelled(monitor);
 			final Set<String> installableUnitIdsThisRepository = getDescriptorIds(repository);
-			IQuery<IInstallableUnit> query = QueryUtil.createMatchQuery( //
-			"id ~= /*.feature.group/ && " + //$NON-NLS-1$
-					"properties['org.eclipse.equinox.p2.type.group'] == true ");//$NON-NLS-1$
+			IQuery<IInstallableUnit> query = QueryUtil.createIUGroupQuery();
 			IQueryResult<IInstallableUnit> result = repository.query(query, monitor.newChild(1));
 			for (Iterator<IInstallableUnit> iter = result.iterator(); iter.hasNext();) {
 				IInstallableUnit iu = iter.next();
@@ -317,7 +318,7 @@ class PrepareInstallProfileJob implements IRunnableWithProgress {
 		for (ConnectorDescriptor descriptor : installableConnectors) {
 			try {
 				if (repository.getLocation().equals(new URL(descriptor.getSiteUrl()).toURI())) {
-					installableUnitIdsThisRepository.addAll(getFeatureIds(descriptor));
+					installableUnitIdsThisRepository.addAll(descriptor.getInstallableUnits());
 				}
 			} catch (MalformedURLException e) {
 				// will never happen, ignore
@@ -326,15 +327,17 @@ class PrepareInstallProfileJob implements IRunnableWithProgress {
 		return installableUnitIdsThisRepository;
 	}
 
-	private Set<String> getFeatureIds(ConnectorDescriptor descriptor) {
-		Set<String> featureIds = new HashSet<String>();
-		for (String id : descriptor.getInstallableUnits()) {
-			if (!id.endsWith(P2_FEATURE_GROUP_SUFFIX)) {
-				id += P2_FEATURE_GROUP_SUFFIX;
-			}
-			featureIds.add(id);
+	@Override
+	public Set<String> getInstalledFeatures(IProgressMonitor monitor) {
+		Set<String> features = new HashSet<String>();
+		IProfile profile = ProvUI.getProfileRegistry(ProvisioningUI.getDefaultUI().getSession()).getProfile(
+				ProvisioningUI.getDefaultUI().getProfileId());
+		IQueryResult<IInstallableUnit> result = profile.available(QueryUtil.createIUGroupQuery(), monitor);
+		for (Iterator<IInstallableUnit> it = result.iterator(); it.hasNext();) {
+			IInstallableUnit unit = it.next();
+			features.add(unit.getId());
 		}
-		return featureIds;
+		return features;
 	}
 
 }
