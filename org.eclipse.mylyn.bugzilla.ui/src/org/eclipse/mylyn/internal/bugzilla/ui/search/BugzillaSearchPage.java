@@ -342,6 +342,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		setControl(control);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(control, BugzillaUiPlugin.SEARCH_PAGE_CONTEXT);
 		restoreBounds();
+		getControl().getShell().pack();
 	}
 
 	private void createButtons(Composite control) {
