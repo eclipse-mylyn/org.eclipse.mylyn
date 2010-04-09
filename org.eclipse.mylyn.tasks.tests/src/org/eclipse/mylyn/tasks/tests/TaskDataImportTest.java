@@ -96,10 +96,11 @@ public class TaskDataImportTest extends AbstractContextTest {
 		TaskDataImportWizard.performFinish(TaskTestUtil.getLocalFile(BACKUP_IMPORT_TEST), null);
 
 		assertEquals(2, TasksUiPlugin.getTaskList().getCategories().size());
-		
+
 		// Active working set should not be populated with 
 		// imported "Test" category
 		assertEquals(0, workingSet.getElements().length);
+		workingSetManager.removeWorkingSet(workingSet);
 
 	}
 
