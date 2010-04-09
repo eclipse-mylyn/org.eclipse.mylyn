@@ -12,7 +12,10 @@
 package org.eclipse.mylyn.tasks.tests;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylyn.context.tests.AbstractContextTest;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
@@ -22,7 +25,11 @@ import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataImportWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataImportWizardPage;
+import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkingSet;
+import org.eclipse.ui.IWorkingSetManager;
+import org.eclipse.ui.internal.Workbench;
 
 /**
  * Test case for the Task Import Wizard.
@@ -39,6 +46,8 @@ public class TaskDataImportTest extends AbstractContextTest {
 	private final String BACKUP_v1 = "testdata/taskdataimporttest/mylardata-2007-01-19.zip";
 
 	private final String BACKUP_v3 = "testdata/taskdataimporttest/mylyn-v3-data-2009-12-09-171942.zip";
+
+	private final String BACKUP_IMPORT_TEST = "testdata/taskdataimporttest/mylyn-v3-data-2010-02-28.zip";
 
 	private final String BACKUP_OLD_v3 = "testdata/taskdataimporttest/mylyn-v3-data-2009-12-09-old-tasklist.zip";
 
@@ -68,6 +77,30 @@ public class TaskDataImportTest extends AbstractContextTest {
 		ContextCorePlugin.getContextManager().resetActivityMetaContext();
 		TaskTestUtil.resetTaskListAndRepositories();
 		super.tearDown();
+	}
+
+	/**
+	 * Tests import of task data with working set active doesn't result in queries and categories being erroneously
+	 * added to the active working set.
+	 */
+	public void testDisableWorkingSets() throws Exception {
+		IWorkingSetManager workingSetManager = Workbench.getInstance().getWorkingSetManager();
+		IWorkingSet workingSet = workingSetManager.createWorkingSet("Task Working Set", new IAdaptable[] {});
+		workingSet.setId(TaskWorkingSetUpdater.ID_TASK_WORKING_SET);
+		assertEquals(0, workingSet.getElements().length);
+		workingSetManager.addWorkingSet(workingSet);
+		Set<IWorkingSet> workingSets = new HashSet<IWorkingSet>();
+		workingSets.add(workingSet);
+		TaskWorkingSetUpdater.applyWorkingSetsToAllWindows(workingSets);
+
+		TaskDataImportWizard.performFinish(TaskTestUtil.getLocalFile(BACKUP_IMPORT_TEST), null);
+
+		assertEquals(2, TasksUiPlugin.getTaskList().getCategories().size());
+		
+		// Active working set should not be populated with 
+		// imported "Test" category
+		assertEquals(0, workingSet.getElements().length);
+
 	}
 
 	/**

@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.internal.commons.core.ZipFileUtil;
@@ -37,11 +38,13 @@ import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.externalization.AbstractExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.progress.UIJob;
 
 import com.ibm.icu.text.SimpleDateFormat;
 
@@ -89,9 +92,6 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 
 	@Override
 	public boolean performFinish() {
-
-		TasksUi.getTaskActivityManager().deactivateTask(TasksUi.getTaskActivityManager().getActiveTask());
-
 		String sourceZip = importPage.getSourceZipFile();
 		final File sourceZipFile = new File(sourceZip);
 
@@ -105,14 +105,25 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 			return false;
 		}
 
+		if (performFinish(sourceZipFile, getContainer())) {
+			importPage.saveSettings();
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public static boolean performFinish(final File sourceZipFile, final IWizardContainer container) {
+		TasksUi.getTaskActivityManager().deactivateTask(TasksUi.getTaskActivityManager().getActiveTask());
+		TasksUiInternal.getTaskList().removeChangeListener(TaskWorkingSetUpdater.getInstance());
+
 		try {
-			if (getContainer() != null) {
-				CommonUiUtil.run(getContainer(), new FileCopyJob(sourceZipFile));
+			if (container != null) {
+				CommonUiUtil.run(container, new FileCopyJob(sourceZipFile));
 			} else {
 				CommonUiUtil.busyCursorWhile(new FileCopyJob(sourceZipFile));
 			}
 
-			importPage.saveSettings();
 		} catch (CoreException e) {
 			Status status = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
 					"Problems encountered importing task data: {0}", e.getMessage()), e); //$NON-NLS-1$
@@ -121,11 +132,20 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 			// canceled
 		}
 
+		new UIJob("") { //$NON-NLS-1$
+
+			@Override
+			public IStatus runInUIThread(IProgressMonitor monitor) {
+				TasksUiInternal.getTaskList().addChangeListener(TaskWorkingSetUpdater.getInstance());
+				return Status.OK_STATUS;
+			}
+		}.schedule();
+
 		return true;
 	}
 
 	/** Job that performs the file copying and zipping */
-	class FileCopyJob implements ICoreRunnable {
+	static class FileCopyJob implements ICoreRunnable {
 
 		private static final String PREFIX_BACKUP = ".backup-"; //$NON-NLS-1$
 
@@ -182,6 +202,22 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 			}
 		}
 
+		private void readTaskListData() {
+			if (!CoreUtil.TEST_MODE) {
+				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+					public void run() {
+						try {
+							TasksUiPlugin.getDefault().reloadDataDirectory();
+						} catch (CoreException e) {
+							TasksUiInternal.displayStatus(Messages.TaskDataImportWizard_Import_Error, e.getStatus());
+						}
+					}
+				});
+			} else {
+				TasksUiPlugin.getDefault().initializeDataSources();
+			}
+		}
+
 		/**
 		 * Rename existing task list file to avoid loading that instead of the restored old one.
 		 */
@@ -205,18 +241,6 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 			}
 		}
 
-	}
-
-	private void readTaskListData() {
-		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-			public void run() {
-				try {
-					TasksUiPlugin.getDefault().reloadDataDirectory();
-				} catch (CoreException e) {
-					TasksUiInternal.displayStatus(Messages.TaskDataImportWizard_Import_Error, e.getStatus());
-				}
-			}
-		});
 	}
 
 }

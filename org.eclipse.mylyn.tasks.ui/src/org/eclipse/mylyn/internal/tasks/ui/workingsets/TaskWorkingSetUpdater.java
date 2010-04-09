@@ -54,6 +54,8 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 
 	private final List<IWorkingSet> workingSets = new CopyOnWriteArrayList<IWorkingSet>();
 
+	private static TaskWorkingSetUpdater INSTANCE;
+
 	private static class TaskWorkingSetDelta {
 
 		private final IWorkingSet workingSet;
@@ -90,6 +92,7 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 	}
 
 	public TaskWorkingSetUpdater() {
+		INSTANCE = this;
 		TasksUiInternal.getTaskList().addChangeListener(this);
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
 	}
@@ -218,14 +221,16 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 //	}
 
 	public static IWorkingSet[] getEnabledSets() {
-		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		if (window != null) {
-			IWorkbenchPage page = window.getActivePage();
+		Set<IWorkingSet> workingSets = new HashSet<IWorkingSet>();
+		Set<IWorkbenchWindow> windows = MonitorUi.getMonitoredWindows();
+		for (IWorkbenchWindow iWorkbenchWindow : windows) {
+			IWorkbenchPage page = iWorkbenchWindow.getActivePage();
 			if (page != null) {
-				return page.getWorkingSets();
+				workingSets.addAll(Arrays.asList(page.getWorkingSets()));
 			}
 		}
-		return new IWorkingSet[0];
+
+		return workingSets.toArray(new IWorkingSet[workingSets.size()]);
 	}
 
 	/**
@@ -339,6 +344,10 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 		} else {
 			return Collections.emptySet();
 		}
+	}
+
+	public static TaskWorkingSetUpdater getInstance() {
+		return INSTANCE;
 	}
 
 }
