@@ -543,7 +543,7 @@ bc.
 To achieve this effect with Textile markup use syntax as follows:
 
 bc. 
-!{width=80%}images/foo.png!
+!{width:80%}images/foo.png!
 
 More information about image scaling in DocBook is available at  "imagedata: Scaling":http://www.docbook.org/tdg/en/html/imagedata-x.html.
 

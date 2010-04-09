@@ -16,10 +16,10 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylyn.wikitext.confluence.core.ConfluenceLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
-import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
-import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
+import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
@@ -64,6 +64,13 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		String docbook = out.toString();
 		TestUtil.println("DocBook: \n" + docbook);
 		assertTrue(docbook.contains("<mediaobject><imageobject><imagedata fileref=\"images/foo.png\"/></imageobject></mediaobject>"));
+	}
+
+	public void testImageWithScaling() {
+		parser.parse("some text !{width:80%}images/foo.png! some text");
+		String docbook = out.toString();
+		TestUtil.println("DocBook: \n" + docbook);
+		assertTrue(docbook.contains("<mediaobject><imageobject><imagedata fileref=\"images/foo.png\" scale=\"80\"/></imageobject></mediaobject>"));
 	}
 
 	public void testDefinitionList() {
