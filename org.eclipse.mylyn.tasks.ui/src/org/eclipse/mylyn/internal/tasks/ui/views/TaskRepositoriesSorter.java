@@ -13,7 +13,6 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
@@ -28,8 +27,8 @@ public class TaskRepositoriesSorter extends ViewerSorter {
 			TaskRepository t1 = (TaskRepository) e1;
 			TaskRepository t2 = (TaskRepository) e2;
 
-			String label1 = t1.getProperty(IRepositoryConstants.PROPERTY_LABEL);
-			String label2 = t2.getProperty(IRepositoryConstants.PROPERTY_LABEL);
+			String label1 = t1.getRepositoryLabel();
+			String label2 = t2.getRepositoryLabel();
 
 			if (LocalRepositoryConnector.REPOSITORY_LABEL.equals(label1)) {
 				return -1;
@@ -40,18 +39,11 @@ public class TaskRepositoriesSorter extends ViewerSorter {
 			if (!t1.getConnectorKind().equals(t2.getConnectorKind())) {
 				return (t1.getConnectorKind()).compareTo(t2.getConnectorKind());
 			} else {
-				if ((label1 == null || label1.equals("")) && label2 != null) { //$NON-NLS-1$
-					return 1;
-				} else if (label1 != null && (label2 == null || label2.equals(""))) { //$NON-NLS-1$
-					return -1;
-				} else if (label1 != null && label2 != null) {
+				if (label1 != null) {
 					return label1.compareTo(label2);
-				} else {
-					return (t1.getRepositoryUrl()).compareTo(t2.getRepositoryUrl());
 				}
 			}
-		} else {
-			return super.compare(viewer, e1, e2);
 		}
+		return super.compare(viewer, e1, e2);
 	}
 }
