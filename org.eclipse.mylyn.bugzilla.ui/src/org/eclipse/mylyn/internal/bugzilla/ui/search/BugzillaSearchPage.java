@@ -66,6 +66,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -342,7 +343,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		setControl(control);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(control, BugzillaUiPlugin.SEARCH_PAGE_CONTEXT);
 		restoreBounds();
-		getControl().getShell().pack();
 	}
 
 	private void createButtons(Composite control) {
@@ -1048,45 +1048,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	public void setVisible(boolean visible) {
 		if (visible && summaryPattern != null) {
 			if (firstTime) {
-				// Set<TaskRepository> repositories = TasksUiPlugin.getRepositoryManager().getRepositories(BugzillaCorePlugin.REPOSITORY_KIND);
-				// String[] repositoryUrls = new String[repositories.size()];
-				// int i = 0;
-				// int indexToSelect = 0;
-				// for (Iterator<TaskRepository> iter = repositories.iterator(); iter.hasNext();) {
-				// TaskRepository currRepsitory = iter.next();
-				// // if (i == 0 && repository == null) {
-				// // repository = currRepsitory;
-				// // indexToSelect = 0;
-				// // }
-				// if (repository != null && repository.equals(currRepsitory)) {
-				// indexToSelect = i;
-				// }
-				// repositoryUrls[i] = currRepsitory.getUrl();
-				// i++;
-				// }
-
-				// IDialogSettings settings = getDialogSettings();
-				// if (repositoryCombo != null) {
-				// repositoryCombo.setItems(repositoryUrls);
-				// if (repositoryUrls.length == 0) {
-				// MessageDialog.openInformation(Display.getCurrent().getActiveShell(), IBugzillaConstants.TITLE_MESSAGE_DIALOG,
-				// TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
-				// } else {
-				// String selectRepo = settings.get(STORE_REPO_ID);
-				// if (selectRepo != null && repositoryCombo.indexOf(selectRepo) > -1) {
-				// repositoryCombo.setText(selectRepo);
-				// repository = TasksUiPlugin.getRepositoryManager().getRepository(
-				// BugzillaCorePlugin.REPOSITORY_KIND, repositoryCombo.getText());
-				// if (repository == null) {
-				// repository = TasksUiPlugin.getRepositoryManager().getDefaultRepository( BugzillaCorePlugin.REPOSITORY_KIND);
-				// }
-				// } else {
-				// repositoryCombo.select(indexToSelect);
-				// }
-				// updateAttributesFromRepository(repositoryCombo.getText(), null, false);
-				// }
-				// }
-
 				firstTime = false;
 				// Set item and text here to prevent page from resizing
 				for (String searchPattern : getPreviousPatterns(previousSummaryPatterns)) {
@@ -1153,7 +1114,19 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 					restoreWidgetValues();
 				}
 			}
+			if ((commentPattern.getText() != null && !commentPattern.getText().equals("")) || // //$NON-NLS-1$
+					(emailPattern2.getText() != null && !emailPattern2.getText().equals("")) || // //$NON-NLS-1$
+					(keywords.getText() != null && !keywords.getText().equals("")) || // //$NON-NLS-1$
+					priority.getSelection().length > 0 || resolution.getSelection().length > 0
+					|| version.getSelection().length > 0 || target.getSelection().length > 0
+					|| hardware.getSelection().length > 0 || os.getSelection().length > 0) {
+				moreOptionsExpandComposite.setExpanded(true);
+			}
 			setPageComplete(isPageComplete());
+			Point oldSize = getControl().getSize();
+			Point newSize = getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+			resizeDialogIfNeeded(oldSize, newSize);
+
 			if (getWizard() == null) {
 				// TODO: wierd check
 				summaryPattern.setFocus();
@@ -2059,6 +2032,30 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			}
 		}
 		super.dispose();
+	}
+
+	private void resizeDialogIfNeeded(Point oldSize, Point newSize) {
+		if (oldSize == null || newSize == null) {
+			return;
+		}
+		Shell shell = getShell();
+		Point shellSize = shell.getSize();
+		if (mustResize(oldSize, newSize)) {
+			if (newSize.x > oldSize.x) {
+				shellSize.x += (newSize.x - oldSize.x);
+			}
+			if (newSize.y > oldSize.y) {
+				shellSize.y += (newSize.y - oldSize.y);
+			} else {
+				shellSize.y -= (oldSize.y - newSize.y);
+			}
+			shell.setSize(shellSize);
+			shell.layout(true);
+		}
+	}
+
+	private boolean mustResize(Point currentSize, Point newSize) {
+		return currentSize.x < newSize.x || currentSize.y != newSize.y;
 	}
 
 }
