@@ -106,7 +106,9 @@ class TaskListCellModifier implements ICellModifier {
 		} catch (Exception e) {
 			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, e.getMessage(), e));
 		}
-		this.taskListView.refresh();//.getViewer().refresh();
+
+		// XXX trigger a full refresh to ensure correct sorting
+		this.taskListView.refresh();
 	}
 
 	public void toggleTaskActivation(TreeItem element) {

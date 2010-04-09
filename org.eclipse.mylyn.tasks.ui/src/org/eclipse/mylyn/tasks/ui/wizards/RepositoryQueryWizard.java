@@ -71,9 +71,14 @@ public class RepositoryQueryWizard extends Wizard {
 		AbstractRepositoryQueryPage page = (AbstractRepositoryQueryPage) currentPage;
 		IRepositoryQuery query = page.getQuery();
 		if (query != null) {
+			String oldSummary = query.getSummary();
 			page.applyTo(query);
 			if (query instanceof RepositoryQuery) {
 				TasksUiPlugin.getTaskList().notifyElementChanged((RepositoryQuery) query);
+			}
+			if (oldSummary == null || !oldSummary.equals(query.getSummary())) {
+				// XXX trigger a full refresh to ensure correct sorting
+				TasksUiPlugin.getTaskList().notifyElementsChanged(null);
 			}
 		} else {
 			query = page.createQuery();
