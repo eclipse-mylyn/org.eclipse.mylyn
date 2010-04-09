@@ -430,6 +430,38 @@ public class BugzillaClient {
 				// not need to test the cookies.
 				// see bug 305267 or https://bugzilla.mozilla.org/show_bug.cgi?id=385606
 				loggedIn = true;
+				BufferedReader in = new BufferedReader(new InputStreamReader(postMethod.getResponseBodyAsStream(),
+						getCharacterEncoding()));
+				HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(in, null);
+				String body = ""; //$NON-NLS-1$
+				try {
+					for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
+						body += token.toString();
+						if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == Tag.TD
+								&& !((HtmlTag) (token.getValue())).isEndTag()) {
+							HtmlTag ta = ((HtmlTag) token.getValue());
+							String st = ta.getAttribute("id"); //$NON-NLS-1$
+							if (st != null && st.equals("error_msg")) { //$NON-NLS-1$
+								loggedIn = false;
+								String mes = ""; //$NON-NLS-1$
+								for (token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
+									if (token.getType() == Token.TAG
+											&& ((HtmlTag) (token.getValue())).getTagType() == Tag.TD
+											&& ((HtmlTag) (token.getValue())).isEndTag()) {
+										break;
+									}
+									mes += token.toString();
+								}
+								throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+										RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(), mes));
+							}
+						}
+					}
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
 			} else if (hasAuthenticationCredentials()) {
 				for (Cookie cookie : httpClient.getState().getCookies()) {
 					if (cookie.getName().equals(COOKIE_BUGZILLA_LOGIN)) {
