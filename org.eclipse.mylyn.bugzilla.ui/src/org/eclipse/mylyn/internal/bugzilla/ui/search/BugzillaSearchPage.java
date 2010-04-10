@@ -2051,6 +2051,12 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			}
 			shell.setSize(shellSize);
 			shell.layout(true);
+		} else {
+			shellSize.x++;
+			shell.setSize(shellSize);
+			shellSize.x--;
+			shell.setSize(shellSize);
+			shell.layout(true);
 		}
 	}
 
