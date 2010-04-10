@@ -40,6 +40,7 @@ import org.eclipse.jface.fieldassist.ComboContentAdapter;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.core.CoreUtil;
@@ -97,6 +98,7 @@ import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
  * @author Mik Kersten (hardening of prototype)
  * @author Frank Becker
  */
+@SuppressWarnings("restriction")
 public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements Listener {
 
 	private static final int HEIGHT_ATTRIBUTE_COMBO = 70;
@@ -431,7 +433,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 		moreOptionsExpandComposite = toolkit.createExpandableComposite(control, ExpandableComposite.COMPACT
 				| ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR);
-		moreOptionsExpandComposite.setFont(control.getFont());
+		moreOptionsExpandComposite.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DIALOG_FONT));
 		moreOptionsExpandComposite.setBackground(null);
 		moreOptionsExpandComposite.setText(Messages.BugzillaSearchPage_More_Options);
 		moreOptionsExpandComposite.setLayout(new GridLayout(3, false));
@@ -512,7 +514,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 		new Label(basicComposite, SWT.NONE);
 		Composite emailComposite = new Composite(basicComposite, SWT.NONE);
-		emailComposite.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 2, 1));
+		emailComposite.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		GridLayout emailLayout = new GridLayout();
 		emailLayout.marginWidth = 0;
 		emailLayout.marginHeight = 0;
@@ -699,7 +701,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 		new Label(advancedComposite, SWT.NONE);
 		Composite emailComposite2 = new Composite(advancedComposite, SWT.NONE);
-		emailComposite2.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 2, 1));
+		emailComposite2.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		GridLayout emailLayout2 = new GridLayout();
 		emailLayout2.marginWidth = 0;
 		emailLayout2.marginHeight = 0;
@@ -1123,10 +1125,16 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				moreOptionsExpandComposite.setExpanded(true);
 			}
 			setPageComplete(isPageComplete());
+		}
+		if (visible) {
+			getControl().getShell().layout(false, true);
 			Point oldSize = getControl().getSize();
 			Point newSize = getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+			if (!moreOptionsExpandComposite.isExpanded()) {
+				// for some reason in not expanded state the width is a little to small
+				newSize.x += 36;
+			}
 			resizeDialogIfNeeded(oldSize, newSize);
-
 			if (getWizard() == null) {
 				// TODO: wierd check
 				summaryPattern.setFocus();

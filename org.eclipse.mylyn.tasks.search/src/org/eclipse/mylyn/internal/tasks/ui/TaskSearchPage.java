@@ -166,7 +166,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		group.setLayoutData(gd);
 
 		Label label = new Label(group, SWT.NONE);
-		label.setText(Messages.TaskSearchPage_Select_Repository_);
+		label.setText(Messages.TaskSearchPage_Repository);
 
 		repositoryCombo = new Combo(group, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
 		repositoryCombo.addSelectionListener(new SelectionAdapter() {

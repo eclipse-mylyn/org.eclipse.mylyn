@@ -91,7 +91,7 @@ public class Messages extends NLS {
 
 	public static String TaskSearchPage_Repository_Search;
 
-	public static String TaskSearchPage_Select_Repository_;
+	public static String TaskSearchPage_Repository;
 
 	public static String TaskSearchPage_Task_Key_ID;
 
