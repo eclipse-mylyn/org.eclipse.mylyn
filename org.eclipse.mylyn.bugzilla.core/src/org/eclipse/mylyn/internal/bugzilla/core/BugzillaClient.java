@@ -395,6 +395,11 @@ public class BugzillaClient {
 			postMethod.setFollowRedirects(false);
 			httpClient.getState().clearCookies();
 
+			if (httpAuthCredentials != null && httpAuthCredentials.getUserName() != null
+					&& httpAuthCredentials.getUserName().length() > 0) {
+				httpClient.getParams().setAuthenticationPreemptive(true);
+			}
+
 			int code = WebUtil.execute(httpClient, hostConfiguration, postMethod, monitor);
 			if (code == HttpURLConnection.HTTP_UNAUTHORIZED || code == HttpURLConnection.HTTP_FORBIDDEN) {
 				loggedIn = false;
