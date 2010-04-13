@@ -30,7 +30,6 @@ import org.apache.commons.httpclient.methods.PostMethod;
  * </ul>
  * 
  * @see GzipGetMethod, PostMethod
- * 
  * @author Maarten Meijer
  */
 public class GzipPostMethod extends PostMethod {
@@ -67,8 +66,10 @@ public class GzipPostMethod extends PostMethod {
 		InputStream instream;
 		try {
 			instream = getResponseBodyAsStream();
-			byte[] buffer = new byte[4096];
-			while (instream.read(buffer) > 0) {
+			if (instream != null) {
+				byte[] buffer = new byte[4096];
+				while (instream.read(buffer) > 0) {
+				}
 			}
 		} catch (IOException e) {
 			// ignore

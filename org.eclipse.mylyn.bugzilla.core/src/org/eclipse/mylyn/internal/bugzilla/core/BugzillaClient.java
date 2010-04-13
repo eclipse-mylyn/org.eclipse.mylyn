@@ -695,10 +695,12 @@ public class BugzillaClient {
 			if (status == HttpStatus.SC_OK) {
 				//copy the response
 				InputStream instream = method.getResponseBodyAsStream();
-				byte[] buffer = new byte[4096];
-				int len;
-				while ((len = instream.read(buffer)) > 0) {
-					out.write(buffer, 0, len);
+				if (instream != null) {
+					byte[] buffer = new byte[4096];
+					int len;
+					while ((len = instream.read(buffer)) > 0) {
+						out.write(buffer, 0, len);
+					}
 				}
 			} else {
 				parseHtmlError(method.getResponseBodyAsStream());
@@ -2122,8 +2124,10 @@ public class BugzillaClient {
 		InputStream instream;
 		try {
 			instream = method.getResponseBodyAsStream();
-			byte[] buffer = new byte[4096];
-			while (instream.read(buffer) > 0) {
+			if (instream != null) {
+				byte[] buffer = new byte[4096];
+				while (instream.read(buffer) > 0) {
+				}
 			}
 		} catch (IOException e) {
 			// ignore
