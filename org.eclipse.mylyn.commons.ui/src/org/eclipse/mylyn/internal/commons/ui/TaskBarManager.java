@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -87,7 +88,17 @@ public class TaskBarManager {
 		protected void update(boolean force, boolean recursive) {
 			// force Menu creation
 			Menu menu = getMenu();
+			if (menu == null) {
+				Shell shell = getShell();
+				if (shell != null) {
+					menu = createContextMenu(shell);
+				}
+			}
 			super.update(force, recursive);
+			if(menu != null && menu.getItemCount() == 0){
+				// clear the menu on the TaskItem if there are no items
+				menu = null;
+			}
 			if (taskItem != null && !taskItem.isDisposed()) {
 				setMenuOnTaskItem(taskItem, menu);
 			}
@@ -103,6 +114,29 @@ public class TaskBarManager {
 			} catch (Throwable t) {
 				// ignore since class probably doesn't exist
 			}
+		}
+
+		/**
+		 * From @see org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil#getNonModalShell()
+		 * <p>
+		 * Get the active non modal shell. If there isn't one return null.
+		 * <p>
+		 * <b>Note: Applied from patch on bug 99472.</b>
+		 * 
+		 * @return Shell
+		 */
+		private static Shell getShell() {
+			IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+			if (window == null) {
+				IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
+				if (windows.length > 0) {
+					return windows[0].getShell();
+				}
+			} else {
+				return window.getShell();
+			}
+
+			return null;
 		}
 	}
 }
