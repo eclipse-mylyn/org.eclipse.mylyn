@@ -38,6 +38,7 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ColorRegistry;
+import org.eclipse.jface.resource.FontDescriptor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
@@ -1213,27 +1214,26 @@ public class DiscoveryViewer {
 		}
 	}
 
+	private FontDescriptor createFontDescriptor(int style, float heightMultiplier) {
+		Font baseFont = JFaceResources.getDialogFont();
+		FontData[] fontData = baseFont.getFontData();
+		FontData[] newFontData = new FontData[fontData.length];
+		for (int i = 0; i < newFontData.length; i++) {
+			newFontData[i] = new FontData(fontData[i].getName(), (int) (fontData[i].getHeight() * heightMultiplier),
+					fontData[i].getStyle() | style);
+		}
+		return FontDescriptor.createFrom(newFontData);
+	}
+
 	private void initializeFonts() {
 		// create a level-2 heading font
 		if (h2Font == null) {
-			Font baseFont = JFaceResources.getDialogFont();
-			FontData[] fontData = baseFont.getFontData();
-			for (FontData data : fontData) {
-				data.setStyle(data.getStyle() | SWT.BOLD);
-				data.height = data.height * 1.25f;
-			}
-			h2Font = new Font(Display.getCurrent(), fontData);
+			h2Font = new Font(Display.getCurrent(), createFontDescriptor(SWT.BOLD, 1.25f).getFontData());
 			disposables.add(h2Font);
 		}
 		// create a level-1 heading font
 		if (h1Font == null) {
-			Font baseFont = JFaceResources.getDialogFont();
-			FontData[] fontData = baseFont.getFontData();
-			for (FontData data : fontData) {
-				data.setStyle(data.getStyle() | SWT.BOLD);
-				data.height = data.height * 1.35f;
-			}
-			h1Font = new Font(Display.getCurrent(), fontData);
+			h1Font = new Font(Display.getCurrent(), createFontDescriptor(SWT.BOLD, 1.35f).getFontData());
 			disposables.add(h1Font);
 		}
 	}

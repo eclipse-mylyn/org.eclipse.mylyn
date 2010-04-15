@@ -361,8 +361,7 @@ public class SelectToolAction extends Action implements IMenuCreator {
 		gc.setBackground(ButtonFace);
 		gc.fillRectangle(0, 0, x, y);
 		String label = "A"; //$NON-NLS-1$
-		fontData.height = 11;
-		gc.setFont(new Font(display, fontData));
+		gc.setFont(new Font(display, new FontData(fontData.getName(), 11, fontData.getStyle())));
 		gc.setForeground(new Color(display, rgb));
 		Point sz = gc.textExtent(label);
 		gc.drawText(label, (x - sz.x) / 2, (y - sz.y) / 2 + 1, true);
