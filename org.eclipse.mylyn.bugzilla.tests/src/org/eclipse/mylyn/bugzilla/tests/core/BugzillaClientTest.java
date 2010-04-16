@@ -21,12 +21,15 @@ import junit.framework.TestCase;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttributeMapper;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryLocation;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -94,6 +97,56 @@ public class BugzillaClientTest extends TestCase {
 			fail("invalid proxy did not cause connection error");
 		} catch (Exception e) {
 			// ignore
+		}
+	}
+
+	public void testValidateAnonymous() throws Exception {
+		TaskRepository repository = BugzillaFixture.current().repository();
+		AuthenticationCredentials anonymousCreds = new AuthenticationCredentials("", "");
+		repository.setCredentials(AuthenticationType.REPOSITORY, anonymousCreds, false);
+		TaskRepositoryLocation location = new TaskRepositoryLocation(repository);
+
+		client = new BugzillaClient(location, repository, BugzillaFixture.current().connector());
+		client.validate(new NullProgressMonitor());
+	}
+
+	public void testValidateAnonymousPlusHTTP() throws Exception {
+		TaskRepository repository = BugzillaFixture.current().repository();
+		AuthenticationCredentials anonymousCreds = new AuthenticationCredentials("", "");
+		repository.setCredentials(AuthenticationType.REPOSITORY, anonymousCreds, false);
+		repository.setCredentials(AuthenticationType.HTTP, new AuthenticationCredentials("YYYYYYYY", "XXXXXXXX"), false);
+		TaskRepositoryLocation location = new TaskRepositoryLocation(repository);
+
+		client = new BugzillaClient(location, repository, BugzillaFixture.current().connector());
+		try {
+			client.validate(new NullProgressMonitor());
+		} catch (Exception e) {
+			assertEquals("Unable to login to " + repository.getUrl()
+					+ ".\n\n\n    The username or password you entered is not valid.\n\n"
+					+ "Please validate credentials via Task Repositories view.", e.getMessage());
+		}
+	}
+
+	public void testValidateUser() throws Exception {
+		TaskRepository repository = BugzillaFixture.current().repository();
+		TaskRepositoryLocation location = new TaskRepositoryLocation(repository);
+
+		client = new BugzillaClient(location, repository, BugzillaFixture.current().connector());
+		client.validate(new NullProgressMonitor());
+	}
+
+	public void testValidateUserPlusHTTP() throws Exception {
+		TaskRepository repository = BugzillaFixture.current().repository();
+		repository.setCredentials(AuthenticationType.HTTP, new AuthenticationCredentials("YYYYYYYY", "XXXXXXXX"), false);
+		TaskRepositoryLocation location = new TaskRepositoryLocation(repository);
+
+		client = new BugzillaClient(location, repository, BugzillaFixture.current().connector());
+		try {
+			client.validate(new NullProgressMonitor());
+		} catch (Exception e) {
+			assertEquals("Unable to login to " + repository.getUrl()
+					+ ".\n\n\n    The username or password you entered is not valid.\n\n"
+					+ "Please validate credentials via Task Repositories view.", e.getMessage());
 		}
 	}
 
