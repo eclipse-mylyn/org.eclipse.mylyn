@@ -222,6 +222,11 @@ public class BugzillaClient {
 		return (credentials != null && credentials.getUserName() != null && credentials.getUserName().length() > 0);
 	}
 
+	protected boolean hasHTTPAuthenticationCredentials() {
+		AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.HTTP);
+		return (credentials != null && credentials.getUserName() != null && credentials.getUserName().length() > 0);
+	}
+
 	private GzipGetMethod getConnect(String serverURL, IProgressMonitor monitor) throws IOException, CoreException {
 
 		return connectInternal(serverURL, false, monitor, null);
@@ -356,7 +361,7 @@ public class BugzillaClient {
 	}
 
 	public void authenticate(IProgressMonitor monitor) throws CoreException {
-		if (loggedIn) {
+		if (loggedIn || (!hasAuthenticationCredentials() && !hasHTTPAuthenticationCredentials())) {
 			return;
 		}
 
@@ -430,8 +435,8 @@ public class BugzillaClient {
 				// not need to test the cookies.
 				// see bug 305267 or https://bugzilla.mozilla.org/show_bug.cgi?id=385606
 				loggedIn = true;
-				BufferedReader in = new BufferedReader(new InputStreamReader(postMethod.getResponseBodyAsStream(),
-						getCharacterEncoding()));
+				InputStream inputStream = getResponseStream(postMethod, monitor);
+				BufferedReader in = new BufferedReader(new InputStreamReader(inputStream, getCharacterEncoding()));
 				HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(in, null);
 				String body = ""; //$NON-NLS-1$
 				try {
