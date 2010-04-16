@@ -33,8 +33,14 @@
   
     <extension
          point="org.eclipse.mylyn.resources.ui.changeMonitoring">
+         <exclude
+         	antPattern=".*"/>
 		<exclude
-         	pattern=".*"/>
+         	antPattern="**/.*"/>
+         <exclude
+         	antPattern=".*/**"/>
+         <exclude
+         	antPattern="**/.*/**"/>
    </extension>
  
    <extension

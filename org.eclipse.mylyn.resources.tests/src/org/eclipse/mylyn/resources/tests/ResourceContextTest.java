@@ -22,6 +22,7 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.tests.support.ContextTestUtil;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
+import org.eclipse.mylyn.internal.resources.ui.ResourcesUiPreferenceInitializer;
 
 /**
  * @author Mik Kersten
@@ -60,10 +61,10 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 	}
 
 	public void testFileNotAddedIfExcluded() throws CoreException {
-		Set<String> previousExcludions = ResourcesUiBridgePlugin.getDefault().getExcludedResourcePatterns();
+		Set<String> previousExcludions = ResourcesUiPreferenceInitializer.getExcludedResourcePatterns();
 		Set<String> exclude = new HashSet<String>();
 		exclude.add("boring");
-		ResourcesUiBridgePlugin.getDefault().setExcludedResourcePatterns(exclude);
+		ResourcesUiPreferenceInitializer.setExcludedResourcePatterns(exclude);
 
 		IFile file = project.getProject().getFile("boring");
 		file.create(null, true, null);
@@ -72,14 +73,14 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		IInteractionElement element = ContextCore.getContextManager().getElement(
 				structureBridge.getHandleIdentifier(file));
 		assertFalse(element.getInterest().isInteresting());
-		ResourcesUiBridgePlugin.getDefault().setExcludedResourcePatterns(previousExcludions);
+		ResourcesUiPreferenceInitializer.setExcludedResourcePatterns(previousExcludions);
 	}
 
 	public void testPatternNotAddedIfExcluded() throws CoreException {
-		Set<String> previousExcludions = ResourcesUiBridgePlugin.getDefault().getExcludedResourcePatterns();
+		Set<String> previousExcludions = ResourcesUiPreferenceInitializer.getExcludedResourcePatterns();
 		Set<String> exclude = new HashSet<String>();
 		exclude.add("b*.txt");
-		ResourcesUiBridgePlugin.getDefault().setExcludedResourcePatterns(exclude);
+		ResourcesUiPreferenceInitializer.setExcludedResourcePatterns(exclude);
 
 		IFile file = project.getProject().getFile("boring.txt");
 		file.create(null, true, null);
@@ -88,14 +89,14 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		IInteractionElement element = ContextCore.getContextManager().getElement(
 				structureBridge.getHandleIdentifier(file));
 		assertFalse(element.getInterest().isInteresting());
-		ResourcesUiBridgePlugin.getDefault().setExcludedResourcePatterns(previousExcludions);
+		ResourcesUiPreferenceInitializer.setExcludedResourcePatterns(previousExcludions);
 	}
 
 	public void testPatternNotAddedMatching() throws CoreException {
-		Set<String> previousExcludions = ResourcesUiBridgePlugin.getDefault().getExcludedResourcePatterns();
+		Set<String> previousExcludions = ResourcesUiPreferenceInitializer.getExcludedResourcePatterns();
 		Set<String> exclude = new HashSet<String>();
 		exclude.add(".*");
-		ResourcesUiBridgePlugin.getDefault().setExcludedResourcePatterns(exclude);
+		ResourcesUiPreferenceInitializer.setExcludedResourcePatterns(exclude);
 
 		String pattern = ".*";
 		String segment = "boring";
@@ -117,7 +118,7 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		element = ContextCore.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
 		assertTrue(element.getInterest().isInteresting());
 
-		ResourcesUiBridgePlugin.getDefault().setExcludedResourcePatterns(previousExcludions);
+		ResourcesUiPreferenceInitializer.setExcludedResourcePatterns(previousExcludions);
 	}
 
 	public void testFileAdded() throws CoreException {

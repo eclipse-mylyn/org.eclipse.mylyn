@@ -20,10 +20,20 @@
 
    <element name="exclude">
       <complexType>
-         <attribute name="pattern" type="string" use="required">
+         <attribute name="pattern" type="string">
             <annotation>
                <documentation>
                   Pattern can include URI syntax su
+               </documentation>
+               <appInfo>
+                  <meta.attribute deprecated="true"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="antPattern" type="string">
+            <annotation>
+               <documentation>
+                  
                </documentation>
             </annotation>
          </attribute>

@@ -33,6 +33,8 @@ public class ResourcesUiExtensionPointReader {
 
 	public final static String ATTR_PATTERN = "pattern"; //$NON-NLS-1$
 
+	public final static String ATTR_ANT_PATTERN = "antPattern"; //$NON-NLS-1$
+
 	private static Set<String> resourceExclusionPatterns = new HashSet<String>();
 
 	private static boolean extensionsRead = false;
@@ -61,9 +63,13 @@ public class ResourcesUiExtensionPointReader {
 	}
 
 	private static void readLinkProvider(IConfigurationElement element) {
+		String antPatternExclusion = element.getAttribute(ATTR_ANT_PATTERN);
+		if (antPatternExclusion != null) {
+			resourceExclusionPatterns.add(antPatternExclusion);
+		}
 		String exclude = element.getAttribute(ATTR_PATTERN);
 		if (exclude != null) {
-			resourceExclusionPatterns.add(exclude);
+			resourceExclusionPatterns.addAll(ResourceChangeMonitor.convertToAntPattern(exclude));
 		}
 	}
 

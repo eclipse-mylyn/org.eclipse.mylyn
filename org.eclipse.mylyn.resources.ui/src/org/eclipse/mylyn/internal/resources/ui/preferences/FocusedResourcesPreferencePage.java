@@ -66,7 +66,7 @@ public class FocusedResourcesPreferencePage extends PreferencePage implements IW
 		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
 		group.setText(Messages.FocusedResourcesPreferencePage_Resource_Monitoring_Exclusions);
 		GridLayout layout = new GridLayout(1, false);
-		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL));
 		group.setLayout(layout);
 
 		Composite composite = new Composite(group, SWT.NULL);
@@ -75,7 +75,7 @@ public class FocusedResourcesPreferencePage extends PreferencePage implements IW
 		layout.marginHeight = 0;
 		layout.numColumns = 2;
 		composite.setLayout(layout);
-		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL));
 
 		Label l1 = new Label(composite, SWT.NULL);
 		l1.setText(Messages.FocusedResourcesPreferencePage_Matching_file_or_directory_names_will_not_be_added_automatically_to_the_context);
@@ -86,7 +86,7 @@ public class FocusedResourcesPreferencePage extends PreferencePage implements IW
 		ignoreTable = new Table(composite, SWT.BORDER);
 		data = new GridData(GridData.FILL_BOTH);
 		// gd.widthHint = convertWidthInCharsToPixels(30);
-		data.heightHint = 60;
+//		data.heightHint = 60;
 		ignoreTable.setLayoutData(data);
 		ignoreTable.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event e) {
@@ -167,8 +167,8 @@ public class FocusedResourcesPreferencePage extends PreferencePage implements IW
 	}
 
 	private void addIgnore() {
-		InputDialog dialog = new InputDialog(getShell(), Messages.FocusedResourcesPreferencePage_Add__IGNORED_RESOURCE, Messages.FocusedResourcesPreferencePage_Enter_pattern_____any_string_,
-				null, null); // 
+		InputDialog dialog = new InputDialog(getShell(), Messages.FocusedResourcesPreferencePage_Add__IGNORED_RESOURCE,
+				Messages.FocusedResourcesPreferencePage_Enter_pattern_____any_string_, null, null); // 
 		dialog.open();
 		if (dialog.getReturnCode() != Window.OK) {
 			return;

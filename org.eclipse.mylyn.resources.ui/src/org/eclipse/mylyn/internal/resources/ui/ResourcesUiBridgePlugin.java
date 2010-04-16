@@ -13,11 +13,8 @@ package org.eclipse.mylyn.internal.resources.ui;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.StringTokenizer;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -65,12 +62,6 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 
 	private ResourceInterestUpdater interestUpdater;
 
-	private static final String PREF_STORE_DELIM = ", "; //$NON-NLS-1$
-
-	public static final String PREF_RESOURCES_IGNORED = "org.eclipse.mylyn.ide.resources.ignored.pattern"; //$NON-NLS-1$
-
-	public static final String PREF_VAL_DEFAULT_RESOURCES_IGNORED = ".*" + PREF_STORE_DELIM; //$NON-NLS-1$
-
 	public ResourcesUiBridgePlugin() {
 		super();
 		INSTANCE = this;
@@ -82,7 +73,6 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		initPreferenceDefaults();
 		interestUpdater = new ResourceInterestUpdater();
 	}
 
@@ -125,10 +115,6 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 		INSTANCE = null;
 	}
 
-	private void initPreferenceDefaults() {
-		getPreferenceStore().setDefault(PREF_RESOURCES_IGNORED, PREF_VAL_DEFAULT_RESOURCES_IGNORED);
-	}
-
 	public List<IResource> getInterestingResources(IInteractionContext context) {
 		List<IResource> interestingResources = new ArrayList<IResource>();
 		Collection<IInteractionElement> resourceElements = ContextCore.getContextManager().getActiveDocuments(context);
@@ -139,27 +125,6 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 			}
 		}
 		return interestingResources;
-	}
-
-	public void setExcludedResourcePatterns(Set<String> patterns) {
-		StringBuilder store = new StringBuilder();
-		for (String string : patterns) {
-			store.append(string);
-			store.append(PREF_STORE_DELIM);
-		}
-		getPreferenceStore().setValue(PREF_RESOURCES_IGNORED, store.toString());
-	}
-
-	public Set<String> getExcludedResourcePatterns() {
-		Set<String> ignored = new HashSet<String>();
-		String read = getPreferenceStore().getString(PREF_RESOURCES_IGNORED);
-		if (read != null) {
-			StringTokenizer st = new StringTokenizer(read, PREF_STORE_DELIM);
-			while (st.hasMoreTokens()) {
-				ignored.add(st.nextToken());
-			}
-		}
-		return ignored;
 	}
 
 	public static ResourceInterestUpdater getInterestUpdater() {

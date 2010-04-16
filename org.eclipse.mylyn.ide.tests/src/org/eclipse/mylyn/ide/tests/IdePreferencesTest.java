@@ -16,7 +16,7 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
+import org.eclipse.mylyn.internal.resources.ui.ResourcesUiPreferenceInitializer;
 
 /**
  * @author Mik Kersten
@@ -24,15 +24,15 @@ import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
 public class IdePreferencesTest extends TestCase {
 
 	public void testExclusionPatterns() {
-		ResourcesUiBridgePlugin.getDefault().setExcludedResourcePatterns(new HashSet<String>());
-		assertEquals(0, ResourcesUiBridgePlugin.getDefault().getExcludedResourcePatterns().size());
+		ResourcesUiPreferenceInitializer.setExcludedResourcePatterns(new HashSet<String>());
+		assertEquals(0, ResourcesUiPreferenceInitializer.getExcludedResourcePatterns().size());
 
 		Set<String> ignored = new HashSet<String>();
 		ignored.add("one*");
 		ignored.add(".two");
 
-		ResourcesUiBridgePlugin.getDefault().setExcludedResourcePatterns(ignored);
-		Set<String> read = ResourcesUiBridgePlugin.getDefault().getExcludedResourcePatterns();
+		ResourcesUiPreferenceInitializer.setExcludedResourcePatterns(ignored);
+		Set<String> read = ResourcesUiPreferenceInitializer.getExcludedResourcePatterns();
 		assertEquals(2, read.size());
 		assertTrue(read.contains("one*"));
 		assertTrue(read.contains(".two"));

@@ -11,9 +11,11 @@
 
 package org.eclipse.mylyn.internal.resources.ui;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -36,6 +38,10 @@ import org.eclipse.mylyn.resources.ui.ResourcesUi;
  */
 public class ResourceChangeMonitor implements IResourceChangeListener {
 
+	private static final String TRAILING_PATH_WILDCARD = "/**"; //$NON-NLS-1$
+
+	private static final String LEADING_PATH_WILDCARD = "**/"; //$NON-NLS-1$
+
 	private class ResourceDeltaVisitor implements IResourceDeltaVisitor {
 
 		private final Set<IResource> addedResources;
@@ -52,7 +58,6 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 			this.excludedPatterns = new HashSet<String>();
 			for (String pattern : excludedResourcePatterns) {
 				if (pattern != null && pattern.length() > 0) {
-					pattern = createRegexFromPattern(pattern);
 					this.excludedPatterns.add(pattern);
 				}
 			}
@@ -144,16 +149,6 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 
 	/**
 	 * Public for testing.
-	 */
-	public static String createRegexFromPattern(String pattern) {
-		// prepare the pattern to be a regex
-		pattern = pattern.replaceAll("\\.", "\\\\."); //$NON-NLS-1$ //$NON-NLS-2$
-		pattern = pattern.replaceAll("\\*", ".*"); //$NON-NLS-1$ //$NON-NLS-2$
-		return pattern;
-	}
-
-	/**
-	 * Public for testing.
 	 * 
 	 * @param resource
 	 *            can be null
@@ -162,27 +157,19 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 		if (resource != null && resource.isDerived()) {
 			return true;
 		}
-		boolean excluded = false;
-		// NOTE: n^2 time complexity, but should not be a bottleneck
+		String pathString = path.toPortableString();
+
 		for (String pattern : excludedPatterns) {
-			if (resource != null && pattern.startsWith("file:/")) { //$NON-NLS-1$
-				excluded |= isUriExcluded(resource.getLocationURI().toString(), pattern);
-			} else {
-				for (String segment : path.segments()) {
-					excluded |= segment.matches(pattern);
 
-					// minor performance improvement
-					if (excluded) {
-						break;
-					}
-				}
-			}
-
-			if (excluded) {
-				break;
+			if (resource != null
+					&& pattern.startsWith("file:/") && isUriExcluded(resource.getLocationURI().toString(), pattern)) { //$NON-NLS-1$
+				return true;
+			} else if (SelectorUtils.matchPath(pattern, pathString, false)
+					|| SelectorUtils.match(pattern, pathString, false)) {
+				return true;
 			}
 		}
-		return excluded;
+		return false;
 	}
 
 	/**
@@ -202,6 +189,18 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+	}
+
+	public static Collection<String> convertToAntPattern(String basicPattern) {
+		Set<String> patterns = new HashSet<String>();
+		patterns.add(basicPattern);
+		if (!basicPattern.contains(LEADING_PATH_WILDCARD) && !basicPattern.contains(TRAILING_PATH_WILDCARD)) {
+			// we don't want to migrate patterns that are already ant-style paterns 
+			patterns.add(LEADING_PATH_WILDCARD + basicPattern + TRAILING_PATH_WILDCARD);
+			patterns.add(LEADING_PATH_WILDCARD + basicPattern);
+			patterns.add(basicPattern + TRAILING_PATH_WILDCARD);
+		}
+		return patterns;
 	}
 
 }
