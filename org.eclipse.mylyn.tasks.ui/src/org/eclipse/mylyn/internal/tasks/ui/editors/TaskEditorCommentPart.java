@@ -612,8 +612,8 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 						manager.add(replyAction);
 					}
 				}
-				actionGroup.fillContextMenu(manager);
 				actionGroup.setContext(new ActionContext(selectionProvider.getSelection()));
+				actionGroup.fillContextMenu(manager);
 
 				if (currentViewer != null && currentViewer.getEditor() instanceof RichTextAttributeEditor) {
 					RichTextAttributeEditor editor = (RichTextAttributeEditor) currentViewer.getEditor();
