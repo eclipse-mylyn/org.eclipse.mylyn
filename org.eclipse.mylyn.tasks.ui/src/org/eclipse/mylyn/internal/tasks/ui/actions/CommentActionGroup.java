@@ -25,6 +25,8 @@ public class CommentActionGroup extends ActionGroup {
 
 	private CopyCommentDetailsAction copyDetailsAction;
 
+	private CopyCommenterNameAction copyCommenterNameAction;
+
 	private boolean initialized;
 
 	private void initialize() {
@@ -33,18 +35,21 @@ public class CommentActionGroup extends ActionGroup {
 		}
 		initialized = true;
 		copyDetailsAction = new CopyCommentDetailsAction();
+		copyCommenterNameAction = new CopyCommenterNameAction();
 	}
 
 	@Override
 	public void fillContextMenu(IMenuManager manager) {
 		updateActions();
 		manager.add(copyDetailsAction);
+		manager.add(copyCommenterNameAction);
 	}
 
 	private void updateActions() {
 		initialize();
 		IStructuredSelection selection = getStructuredSelection();
 		copyDetailsAction.selectionChanged(selection);
+		copyCommenterNameAction.selectionChanged(selection);
 	}
 
 	public IStructuredSelection getStructuredSelection() {
