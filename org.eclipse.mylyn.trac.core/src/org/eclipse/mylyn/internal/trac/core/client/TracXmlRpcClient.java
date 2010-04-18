@@ -158,7 +158,7 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 					probeAuthenticationScheme(monitor);
 				}
 				if (DEBUG_XMLRPC) {
-					System.err.println("Calling " + location.getUrl() + ": " + method + " " + TracUtil.toString(parameters)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					System.err.println("Calling " + location.getUrl() + ": " + method + " " + CoreUtil.toString(parameters)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				}
 				TracXmlRpcClientRequest request = new TracXmlRpcClientRequest(xmlrpc.getClientConfig(), method,
 						parameters, monitor);

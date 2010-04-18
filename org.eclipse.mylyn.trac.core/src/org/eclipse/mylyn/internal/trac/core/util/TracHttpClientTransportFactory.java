@@ -251,8 +251,6 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 
 	}
 
-	protected static final String USER_AGENT = "TracConnector Apache XML-RPC/3.0"; //$NON-NLS-1$
-
 	private final XmlRpcClient xmlRpcClient;
 
 	private AbstractWebLocation location;
