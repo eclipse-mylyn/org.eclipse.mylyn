@@ -56,6 +56,9 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.WorkbenchMessages;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
+/**
+ * @author Shawn Minto
+ */
 public class TextSearchControl extends Composite {
 
 	private static final String FIND_TEXT_MEMENTO_ELEMENT = "text"; //$NON-NLS-1$
