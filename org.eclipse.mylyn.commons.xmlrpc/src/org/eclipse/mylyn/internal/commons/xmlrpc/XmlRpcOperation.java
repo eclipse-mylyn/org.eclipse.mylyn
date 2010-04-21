@@ -127,6 +127,8 @@ public abstract class XmlRpcOperation<T> {
 			handleAuthenticationException(e.code, e.getAuthScheme());
 			// if not handled, re-throw exception
 			throw e;
+		} catch (XmlRpcIllegalContentTypeException e) {
+			throw e;
 		} catch (XmlRpcException e) {
 			// XXX work-around for http://trac-hacks.org/ticket/5848 
 			if ("XML_RPC privileges are required to perform this operation".equals(e.getMessage()) //$NON-NLS-1$
