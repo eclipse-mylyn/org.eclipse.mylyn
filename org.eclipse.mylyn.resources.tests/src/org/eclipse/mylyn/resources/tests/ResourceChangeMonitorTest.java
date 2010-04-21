@@ -254,7 +254,7 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/folder/"), null, patterns));
 		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/folder/.doc2/test"), null, patterns));
 
-		assertFalse(ResourceChangeMonitor.isExcluded(new Path("/folder"), null, patterns));
+		assertFalse(ResourceChangeMonitor.isExcluded(new Path("/folder2/folder"), null, patterns));
 		assertFalse(ResourceChangeMonitor.isExcluded(new Path("/.doc2/folder/test"), null, patterns));
 		assertFalse(ResourceChangeMonitor.isExcluded(new Path("/.doc2/test/folder"), null, patterns));
 
@@ -271,7 +271,7 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 		assertFalse(ResourceChangeMonitor.isExcluded(new Path("/folder1/folder/folder2/test.doc"), null, patterns));
 		assertFalse(ResourceChangeMonitor.isExcluded(new Path("/folder/.doc2/test"), null, patterns));
 		assertFalse(ResourceChangeMonitor.isExcluded(new Path("/folder/.doc2/test"), null, patterns));
-		assertFalse(ResourceChangeMonitor.isExcluded(new Path("/folder/"), null, patterns));
+		assertFalse(ResourceChangeMonitor.isExcluded(new Path("/folder/folder2"), null, patterns));
 
 	}
 
