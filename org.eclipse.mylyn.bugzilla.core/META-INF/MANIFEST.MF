@@ -8,7 +8,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn.tasks.core;bundle-version="[3.0.0,4.0.0)",
  org.eclipse.mylyn.commons.net;bundle-version="[3.0.0,4.0.0)",
  org.eclipse.mylyn.commons.core;bundle-version="[3.0.0,4.0.0)",
- org.eclipse.core.net
+ org.eclipse.core.net,
+ org.eclipse.mylyn.commons.xmlrpc;bundle-version="[3.4.0,4.0.0)",
+ org.apache.xmlrpc
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: %Bundle-Vendor
 Bundle-ClassPath: .
