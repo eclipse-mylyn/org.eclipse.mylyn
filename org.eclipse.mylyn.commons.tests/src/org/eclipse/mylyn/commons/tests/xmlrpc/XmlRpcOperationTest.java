@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.internal.commons.xmlrpc.CommonXmlRpcClient;
 import org.eclipse.mylyn.internal.commons.xmlrpc.XmlRpcOperation;
-import org.junit.Test;
 
 /**
  * @author Steffen Pingel
@@ -35,7 +34,6 @@ public class XmlRpcOperationTest extends TestCase {
 		client = new CommonXmlRpcClient(new WebLocation("http://localhost:" + port + "/xmlrpc"));
 	}
 
-	@Test
 	public void testExecute() throws Exception {
 		Integer response = (new XmlRpcOperation<Integer>(client) {
 			@Override

@@ -16,6 +16,7 @@ import java.net.URL;
 import java.util.TimeZone;
 
 import org.apache.commons.httpclient.Credentials;
+import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.auth.AuthScheme;
@@ -33,6 +34,7 @@ import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.WebUtil;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * Facilitates connections to repositories accessed through XML-RPC.
@@ -50,6 +52,8 @@ public class CommonXmlRpcClient {
 	private static final String DEFAULT_TIME_ZONE = TimeZone.getDefault().getID();
 
 	private static final String DEFAULT_USER_AGENT = "Apache XML-RPC/3.0"; //$NON-NLS-1$
+
+	private static final String DEFAULT_CONTENT_TYPE = "text/xml"; //$NON-NLS-1$
 
 	private static HttpClient createHttpClient(String userAgent) {
 		HttpClient httpClient = new HttpClient();
@@ -74,6 +78,8 @@ public class CommonXmlRpcClient {
 //	private boolean probed;
 
 	private XmlRpcClient xmlrpc;
+
+	private volatile boolean contentTypeCheckingEnabled;
 
 	public CommonXmlRpcClient(AbstractWebLocation location) {
 		this(location, createHttpClient(DEFAULT_USER_AGENT));
@@ -139,7 +145,16 @@ public class CommonXmlRpcClient {
 				}
 			}
 
-			public void processResponse(HttpMethod method) {
+			@SuppressWarnings("null")
+			public void processResponse(HttpMethod method) throws XmlRpcException {
+				if (isContentTypeCheckingEnabled()) {
+					Header contentTypeHeader = method.getResponseHeader("Content-Type"); //$NON-NLS-1$
+					if (contentTypeHeader == null || !DEFAULT_CONTENT_TYPE.equals(contentTypeHeader.getValue())) {
+						throw new XmlRpcIllegalContentTypeException(
+								NLS.bind(
+										"The server returned an unexpected content type: ''{0}''", contentTypeHeader.getValue()), contentTypeHeader.getValue()); //$NON-NLS-1$
+					}
+				}
 				AuthScheme authScheme = method.getHostAuthState().getAuthScheme();
 				if (authScheme instanceof DigestScheme) {
 					digestScheme = (DigestScheme) authScheme;
@@ -197,6 +212,14 @@ public class CommonXmlRpcClient {
 			httpClient.getState().clearCredentials();
 		}
 		return credentials;
+	}
+
+	public boolean isContentTypeCheckingEnabled() {
+		return contentTypeCheckingEnabled;
+	}
+
+	public void setContentTypeCheckingEnabled(boolean contentTypeCheckingEnabled) {
+		this.contentTypeCheckingEnabled = contentTypeCheckingEnabled;
 	}
 
 }
