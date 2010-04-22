@@ -18,8 +18,6 @@ import org.eclipse.mylyn.bugzilla.tests.BugzillaTestConstants;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.internal.bugzilla.core.service.BugzillaXmlRpcClient;
-import org.junit.Before;
-import org.junit.Test;
 
 public class BugzillaXMLRPCTest {
 	private BugzillaXmlRpcClient bugzillaClient;
@@ -28,7 +26,6 @@ public class BugzillaXMLRPCTest {
 
 //	private static String TEST_REPO = "http://.../Bugzilla36";
 
-	@Before
 	public void setUp() throws Exception {
 //		WebLocation webLocation = new WebLocation(TEST_REPO + "/xmlrpc.cgi");
 //		webLocation.setCredentials(AuthenticationType.REPOSITORY, "user", "password");
@@ -39,7 +36,6 @@ public class BugzillaXMLRPCTest {
 		bugzillaClient.setContentTypeCheckingEnabled(true);
 	}
 
-	@Test
 	@SuppressWarnings("unused")
 	public void testxmlrpc() throws Exception {
 		int uID = bugzillaClient.login();
