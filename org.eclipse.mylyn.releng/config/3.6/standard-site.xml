@@ -46,6 +46,8 @@
    <feature url="features/org.eclipse.mylyn.wikitext.sdk_@org.eclipse.mylyn.wikitext.sdk@.jar" id="org.eclipse.mylyn.wikitext.sdk" version="@org.eclipse.mylyn.wikitext.sdk@">
       <category name="SDK"/>
    </feature>
+   <feature url="features/org.eclipse.mylyn.commons_@org.eclipse.mylyn.commons@.jar" id="org.eclipse.mylyn.commons" version="@org.eclipse.mylyn.commons@">
+   </feature>
    <category-def name="Features" label="Mylyn Features">
       <description>
          The Task List and the Task-Focused Interface.
