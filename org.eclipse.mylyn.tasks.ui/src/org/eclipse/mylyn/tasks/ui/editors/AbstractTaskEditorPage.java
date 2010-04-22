@@ -88,9 +88,9 @@ import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -1165,6 +1165,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 				}
 			} else if (status.getCode() == RepositoryStatus.ERROR_REPOSITORY_LOGIN) {
 				if (TasksUiUtil.openEditRepositoryWizard(getTaskRepository()) == Window.OK) {
+					submitEnabled = true;
 					doSubmit();
 				}
 			} else {
