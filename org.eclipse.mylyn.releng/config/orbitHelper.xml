@@ -93,6 +93,9 @@
 		<copy todir="${buildDirectory}/standardUpdateSite/plugins" verbose="true">
 			<fileset refid="org.apache.commons.httpclient" />
 			<fileset refid="org.jdom" />
+			<fileset refid="org.apache.axis" />
+			<fileset refid="javax.servlet" />
+			<fileset refid="org.apache.xmlrpc" />
 		</copy>
 
 		<mkdir dir="${buildDirectory}/extrasUpdateSite/plugins"/>
