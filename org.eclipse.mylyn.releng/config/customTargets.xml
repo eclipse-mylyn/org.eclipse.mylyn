@@ -227,6 +227,7 @@
 			<param name="SiteXmlFile" value="standard-site.xml" />
 			<param name="ElementsTarget" value="standardElements" />
 			<param name="SiteName" value="standard" />
+			<param name="CategoriesXmlFile" value="../standard-categories.xml" />
 		</antcall>
 		<antcall target="generateUpdateSite">
 			<param name="UpdateSiteLocation" value="${buildDirectory}/extrasUpdateSite" />
@@ -264,6 +265,11 @@
 
 		<!-- Generate the "site.xml" file in the "updateSite folder -->
 		<copy file="${builder}/${SiteXmlFile}" tofile="${UpdateSiteLocation}/site.xml">
+			<filterset>
+				<filtersfile file="${buildDirectory}/finalFeaturesVersions.properties"/>
+			</filterset>
+		</copy>
+		<copy file="${builder}/${CategoriesXmlFile}" tofile="${UpdateSiteLocation}/categories.xml" failonerror="false">
 			<filterset>
 				<filtersfile file="${buildDirectory}/finalFeaturesVersions.properties"/>
 			</filterset>

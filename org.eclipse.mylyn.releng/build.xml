@@ -62,6 +62,7 @@
 		<antcall target="generate-metadata">
 			<param name="dir" value="${reldir}/e3.4"/>
 			<param name="name" value="Mylyn for Eclipse 3.4, 3.5 and 3.6"/>
+			<param name="categories" value="${reldir}/e3.4/categories.xml"/>
 		</antcall>
 		<antcall target="generate-metadata">
 			<param name="dir" value="${reldir}/extras"/>
@@ -78,6 +79,7 @@
 		<antcall target="generate-metadata">
 			<param name="dir" value="${build.home}/${base.target}/standardUpdateSite"/>
 			<param name="name" value="Mylyn Weekly for Eclipse ${label}"/>
+			<param name="categories" value="${build.home}/${base.target}/standardUpdateSite/categories.xml"/>
 		</antcall>
 		<antcall target="generate-metadata">
 			<param name="dir" value="${build.home}/${base.target}/extrasUpdateSite"/>
@@ -93,6 +95,7 @@
 		<antcall target="generate-metadata">
 			<param name="dir" value="${build.home}/3.6/standardUpdateSite"/>
 			<param name="name" value="Mylyn Weekly for Eclipse 3.4, 3.5 and 3.6"/>
+			<param name="categories" value="${build.home}/3.6/standardUpdateSite/categories.xml"/>
 		</antcall>
 		<antcall target="generate-metadata">
 			<param name="dir" value="${build.home}/3.4/extrasUpdateSite"/>
