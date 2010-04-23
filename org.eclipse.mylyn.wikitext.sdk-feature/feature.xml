@@ -32,9 +32,6 @@
       <update label="%updateSiteName" url="http://download.eclipse.org/tools/mylyn/update/e3.4"/>
    </url>
 
-   <requires>
-   </requires>
-
    <plugin
          id="org.eclipse.mylyn.wikitext.confluence.core"
          download-size="0"
