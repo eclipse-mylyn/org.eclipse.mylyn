@@ -14,9 +14,9 @@ package org.eclipse.mylyn.commons.tests.net;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
+import java.net.Proxy.Type;
 import java.net.Socket;
 import java.net.SocketException;
-import java.net.Proxy.Type;
 
 import javax.net.ssl.SSLHandshakeException;
 
@@ -141,7 +141,7 @@ public class WebUtilTest extends TestCase {
 			int result = WebUtil.execute(client, hostConfiguration, method, monitor);
 			assertEquals(HttpStatus.SC_OK, result);
 		} finally {
-			method.releaseConnection();
+			WebUtil.releaseConnection(method, monitor);
 		}
 	}
 
@@ -170,7 +170,7 @@ public class WebUtilTest extends TestCase {
 		} catch (OperationCanceledException expected) {
 			assertTrue(monitor.isCanceled());
 		} finally {
-			method.releaseConnection();
+			WebUtil.releaseConnection(method, monitor);
 		}
 	}
 
@@ -188,7 +188,7 @@ public class WebUtilTest extends TestCase {
 			fail("Expected InterruptedIOException");
 		} catch (OperationCanceledException expected) {
 		} finally {
-			method.releaseConnection();
+			WebUtil.releaseConnection(method, monitor);
 		}
 	}
 

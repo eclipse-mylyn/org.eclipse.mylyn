@@ -18,8 +18,8 @@ import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
-import java.net.Socket;
 import java.net.Proxy.Type;
+import java.net.Socket;
 import java.text.ParseException;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
@@ -549,7 +549,7 @@ public class WebUtil {
 					}
 				}
 			} finally {
-				method.releaseConnection();
+				WebUtil.releaseConnection(method, monitor);
 			}
 		} finally {
 			monitor.done();
@@ -774,6 +774,25 @@ public class WebUtil {
 			}
 		}
 		return Proxy.NO_PROXY;
+	}
+
+	/**
+	 * Releases the connection used by <code>method</code>. If <code>monitor</code> is cancelled the connection is
+	 * aborted to avoid blocking.
+	 * 
+	 * @since 3.4
+	 */
+	public static void releaseConnection(HttpMethodBase method, IProgressMonitor monitor) {
+		if (monitor != null && monitor.isCanceled()) {
+			// force a connection close on cancel to avoid blocking to do reading the remainder of the response 
+			method.abort();
+		} else {
+			try {
+				method.releaseConnection();
+			} catch (NullPointerException e) {
+				// ignore, see bug 255417
+			}
+		}
 	}
 
 }
