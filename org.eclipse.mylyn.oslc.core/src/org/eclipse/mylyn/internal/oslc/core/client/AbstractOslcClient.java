@@ -33,6 +33,7 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.PutMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -558,23 +559,23 @@ public abstract class AbstractOslcClient {
 
 	protected <T> T executeMethod(HttpMethodBase method, RequestHandler<T> handler, IProgressMonitor monitor)
 			throws CoreException {
+		Assert.isNotNull(method);
 		monitor = Policy.monitorFor(monitor);
 		try {
 			monitor.beginTask(handler.getRequestName(), IProgressMonitor.UNKNOWN);
 
 			HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(httpClient, location, monitor);
-			int code = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
-
-			handler.handleReturnCode(code, method);
-
-			return handler.run(method, monitor);
+			try {
+				int code = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
+				handler.handleReturnCode(code, method);
+				return handler.run(method, monitor);
+			} finally {
+				WebUtil.releaseConnection(method, monitor);
+			}
 		} catch (IOException e) {
 			throw new CoreException(new Status(IStatus.WARNING, IOslcCoreConstants.ID_PLUGIN,
 					"An unexpected network error has occurred: " + e.getMessage(), e)); //$NON-NLS-1$
 		} finally {
-			if (method != null) {
-				method.releaseConnection();
-			}
 			monitor.done();
 		}
 

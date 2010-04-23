@@ -46,11 +46,11 @@ import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer;
+import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer.Token;
 import org.eclipse.mylyn.commons.net.HtmlTag;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.commons.net.UnsupportedRequestException;
 import org.eclipse.mylyn.commons.net.WebUtil;
-import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer.Token;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.model.TracComponent;
 import org.eclipse.mylyn.internal.trac.core.model.TracMilestone;
@@ -58,16 +58,16 @@ import org.eclipse.mylyn.internal.trac.core.model.TracPriority;
 import org.eclipse.mylyn.internal.trac.core.model.TracRepositoryInfo;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter;
+import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter.CompareOperator;
 import org.eclipse.mylyn.internal.trac.core.model.TracSeverity;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
+import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicketResolution;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicketStatus;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicketType;
 import org.eclipse.mylyn.internal.trac.core.model.TracVersion;
-import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter.CompareOperator;
-import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
-import org.eclipse.mylyn.internal.trac.core.util.TracUtil;
 import org.eclipse.mylyn.internal.trac.core.util.TracHttpClientTransportFactory.TracHttpException;
+import org.eclipse.mylyn.internal.trac.core.util.TracUtil;
 
 /**
  * Represents a Trac repository that is accessed through the Trac's query script and web interface.
@@ -108,17 +108,17 @@ public class TracWebClient extends AbstractTracClient {
 				try {
 					code = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
 				} catch (IOException e) {
-					method.releaseConnection();
+					WebUtil.releaseConnection(method, monitor);
 					throw e;
 				} catch (RuntimeException e) {
-					method.releaseConnection();
+					WebUtil.releaseConnection(method, monitor);
 					throw e;
 				}
 
 				if (code == HttpURLConnection.HTTP_OK) {
 					return method;
 				} else {
-					method.releaseConnection();
+					WebUtil.releaseConnection(method, monitor);
 					if (code == HttpURLConnection.HTTP_UNAUTHORIZED || code == HttpURLConnection.HTTP_FORBIDDEN) {
 						// login or re-authenticate due to an expired session
 						authenticated = false;
@@ -158,7 +158,7 @@ public class TracWebClient extends AbstractTracClient {
 						continue;
 					}
 				} finally {
-					method.releaseConnection();
+					WebUtil.releaseConnection(method, monitor);
 				}
 
 				// the expected return code is a redirect, anything else is suspicious
@@ -311,7 +311,7 @@ public class TracWebClient extends AbstractTracClient {
 		} catch (ParseException e) {
 			throw new TracException(e);
 		} finally {
-			method.releaseConnection();
+			WebUtil.releaseConnection(method, monitor);
 		}
 	}
 
@@ -382,7 +382,7 @@ public class TracWebClient extends AbstractTracClient {
 		} catch (IOException e) {
 			throw new TracException(e);
 		} finally {
-			method.releaseConnection();
+			WebUtil.releaseConnection(method, monitor);
 		}
 	}
 
@@ -416,7 +416,7 @@ public class TracWebClient extends AbstractTracClient {
 		try {
 			return new TracRepositoryInfo();
 		} finally {
-			method.releaseConnection();
+			WebUtil.releaseConnection(method, monitor);
 		}
 	}
 
@@ -455,7 +455,7 @@ public class TracWebClient extends AbstractTracClient {
 		} catch (ParseException e) {
 			throw new TracException(e);
 		} finally {
-			method.releaseConnection();
+			WebUtil.releaseConnection(method, monitor);
 		}
 	}
 
@@ -660,7 +660,7 @@ public class TracWebClient extends AbstractTracClient {
 		} catch (ParseException e) {
 			throw new TracException(e);
 		} finally {
-			method.releaseConnection();
+			WebUtil.releaseConnection(method, monitor);
 		}
 	}
 
@@ -744,7 +744,7 @@ public class TracWebClient extends AbstractTracClient {
 			// release the connection
 			return method.getResponseBodyAsStream();
 		} catch (IOException e) {
-			method.releaseConnection();
+			WebUtil.releaseConnection(method, monitor);
 			throw new TracException(e);
 		}
 	}

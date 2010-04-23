@@ -114,7 +114,7 @@ public abstract class AbstractTracClient implements ITracClient {
 				throw new TracLoginException();
 			}
 		} finally {
-			post.releaseConnection();
+			WebUtil.releaseConnection(post, monitor);
 		}
 	}
 

@@ -684,7 +684,7 @@ public class BugzillaClient {
 			} finally {
 				attempt++;
 				if (method != null) {
-					method.releaseConnection();
+					WebUtil.releaseConnection(method, monitor);
 				}
 			}
 		}

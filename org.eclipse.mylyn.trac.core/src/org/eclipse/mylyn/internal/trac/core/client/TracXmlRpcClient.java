@@ -419,7 +419,7 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		} catch (IOException e) {
 			// ignore
 		} finally {
-			method.releaseConnection();
+			WebUtil.releaseConnection(method, monitor);
 		}
 	}
 
