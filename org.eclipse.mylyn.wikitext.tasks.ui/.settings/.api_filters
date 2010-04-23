@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <component id="org.eclipse.mylyn.wikitext.tasks.ui" version="2">
+    <resource path="src/org/eclipse/mylyn/internal/wikitext/tasks/ui/preferences/MarkupViewerPreferencePage.java" type="org.eclipse.mylyn.internal.wikitext.tasks.ui.preferences.MarkupViewerPreferencePage">
+        <filter id="640712815">
+            <message_arguments>
+                <message_argument value="HtmlViewer"/>
+                <message_argument value="MarkupViewerPreferencePage"/>
+                <message_argument value="setStylesheet(Stylesheet)"/>
+            </message_arguments>
+        </filter>
+    </resource>
     <resource path="src/org/eclipse/mylyn/internal/wikitext/tasks/ui/preferences/MarkupViewerPreferencePage.java" type="org.eclipse.mylyn.internal.wikitext.tasks.ui.preferences.MarkupViewerPreferencePage$Colors">
         <filter id="571473929">
             <message_arguments>
                 <message_argument value="ColorRegistry"/>
                 <message_argument value="Colors"/>
-            </message_arguments>
-        </filter>
-    </resource>
-    <resource path="src/org/eclipse/mylyn/wikitext/tasks/ui/editor/MarkupTaskEditorExtension.java" type="org.eclipse.mylyn.wikitext.tasks.ui.editor.MarkupTaskEditorExtension">
-        <filter id="640712815">
-            <message_arguments>
-                <message_argument value="HtmlViewer"/>
-                <message_argument value="MarkupTaskEditorExtension&lt;MarkupLanguageType&gt;"/>
-                <message_argument value="setStylesheet(Stylesheet)"/>
             </message_arguments>
         </filter>
     </resource>
