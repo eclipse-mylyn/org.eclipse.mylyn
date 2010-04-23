@@ -48,13 +48,20 @@ public class BugzillaVersion implements Comparable<BugzillaVersion>, Serializabl
 
 	private final boolean rc;
 
+	private final boolean plus;
+
 	public BugzillaVersion(String version) {
 		String[] segments;
 		if (version == null) {
 			segments = new String[0];
 			rc = false;
+			plus = false;
 		} else {
 			rc = version.contains("RC"); //$NON-NLS-1$
+			plus = version.contains("+"); //$NON-NLS-1$
+			if (plus) {
+				version = version.replace("+", ""); //$NON-NLS-1$ //$NON-NLS-2$
+			}
 			segments = rc ? version.split("(\\.|([R][C]))") : version.split("\\."); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		major = segments.length > 0 ? parse(segments[0]) : 0;
@@ -101,6 +108,14 @@ public class BugzillaVersion implements Comparable<BugzillaVersion>, Serializabl
 			return 1;
 		}
 
+		if (plus != v.plus) {
+			if (plus) {
+				return 1;
+			} else {
+				return -1;
+			}
+		}
+
 		return 0;
 	}
 
@@ -128,6 +143,9 @@ public class BugzillaVersion implements Comparable<BugzillaVersion>, Serializabl
 			sb.append(".").append(Integer.toString(micro)); //$NON-NLS-1$
 		} else if (micro < 0) {
 			sb.append("RC").append(Integer.toString(micro + 100)); //$NON-NLS-1$
+		}
+		if (plus) {
+			sb.append("+"); //$NON-NLS-1$
 		}
 		return sb.toString();
 	}

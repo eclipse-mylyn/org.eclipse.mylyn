@@ -71,4 +71,22 @@ public class BugzillaVersionTest extends TestCase {
 		assertEquals("2.18.1", BUGZILLA_2_18_1.toString());
 		assertEquals("3.0.4", BUGZILLA_3_0_4.toString());
 	}
+
+	public void testPlusVersions() throws Exception {
+		BugzillaVersion versionPlus = new BugzillaVersion("3.2+");
+		assertEquals("3.2+", versionPlus.toString());
+		BugzillaVersion versionRC1 = new BugzillaVersion("3.2RC1");
+		assertEquals("3.2RC1", versionRC1.toString());
+		BugzillaVersion versionRC2 = new BugzillaVersion("3.2RC2");
+		assertEquals("3.2RC2", versionRC2.toString());
+		BugzillaVersion versionRC1Plus = new BugzillaVersion("3.2RC1+");
+		assertEquals("3.2RC1+", versionRC1Plus.toString());
+		assertEquals(1, versionRC1Plus.compareTo(versionRC1));
+		assertEquals(0, versionRC1Plus.compareMajorMinorOnly(versionRC1));
+		assertEquals(-1, versionRC1.compareTo(versionRC1Plus));
+		assertEquals(1, versionRC2.compareTo(versionRC1Plus));
+		assertEquals(1, versionPlus.compareTo(BugzillaVersion.BUGZILLA_3_2));
+		assertEquals(0, versionPlus.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_2));
+	}
+
 }
