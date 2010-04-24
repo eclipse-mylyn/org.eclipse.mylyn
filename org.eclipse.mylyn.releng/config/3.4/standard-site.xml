@@ -40,6 +40,9 @@
    <feature url="features/org.eclipse.mylyn.wikitext_feature_@org.eclipse.mylyn.wikitext_feature@.jar" id="org.eclipse.mylyn.wikitext_feature" version="@org.eclipse.mylyn.wikitext_feature@">
       <category name="Integration"/>
    </feature>
+   <feature url="features/org.eclipse.mylyn.trac_feature_@org.eclipse.mylyn.trac_feature@.jar" id="org.eclipse.mylyn.trac_feature" version="@org.eclipse.mylyn.trac_feature@">
+      <category name="Integration"/>
+   </feature>
    <feature url="features/org.eclipse.mylyn.sdk_feature_@org.eclipse.mylyn.sdk_feature@.jar" id="org.eclipse.mylyn.sdk_feature" version="@org.eclipse.mylyn.sdk_feature@">
       <category name="SDK"/>
    </feature>
