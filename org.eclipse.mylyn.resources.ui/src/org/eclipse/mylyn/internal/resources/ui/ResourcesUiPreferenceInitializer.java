@@ -54,12 +54,14 @@ public class ResourcesUiPreferenceInitializer extends AbstractPreferenceInitiali
 
 	public static Set<String> forcedExclusionPatterns = new HashSet<String>();
 
+	public static Set<String> cachedExclusionPatterns = new HashSet<String>();
+
 	@Override
 	public void initializeDefaultPreferences() {
 		// most defaults come from extension points
 		Set<String> defaultPatterns = new HashSet<String>();
 
-		defaultPatterns.addAll(ResourceChangeMonitor.convertToAntPattern(".*")); //$NON-NLS-1$
+		defaultPatterns.addAll(ResourcePatternExclusionStrategy.convertToAntPattern(".*")); //$NON-NLS-1$
 		ResourcesUiBridgePlugin.getDefault().getPreferenceStore().setDefault(PREF_RESOURCES_IGNORED_ANT,
 				createResourceExclusionMemento(defaultPatterns));
 	}
@@ -71,9 +73,10 @@ public class ResourcesUiPreferenceInitializer extends AbstractPreferenceInitiali
 		setExcludedResourcePatterns(ResourcesUiExtensionPointReader.getDefaultResourceExclusions());
 	}
 
-	public static void setExcludedResourcePatterns(Set<String> patterns) {
-		String memento = createResourceExclusionMemento(patterns);
+	public static synchronized void setExcludedResourcePatterns(Set<String> patterns) {
+		cachedExclusionPatterns = new HashSet<String>(patterns);
 
+		String memento = createResourceExclusionMemento(patterns);
 		if (memento != null) {
 			ResourcesUiBridgePlugin.getDefault().getPreferenceStore().setValue(PREF_RESOURCES_IGNORED_ANT, memento);
 		}
@@ -100,7 +103,6 @@ public class ResourcesUiPreferenceInitializer extends AbstractPreferenceInitiali
 
 	private static Set<String> getResourceExclusionsFromMemento(String mementoString) {
 		Set<String> exclusions = new HashSet<String>();
-
 		try {
 			XMLMemento rootMemento = XMLMemento.createReadRoot(new StringReader(mementoString));
 
@@ -118,12 +120,16 @@ public class ResourcesUiPreferenceInitializer extends AbstractPreferenceInitiali
 
 	}
 
-	public static Set<String> getExcludedResourcePatterns() {
+	public static synchronized Set<String> getExcludedResourcePatterns() {
+
+		if (cachedExclusionPatterns != null) {
+			return new HashSet<String>(cachedExclusionPatterns);
+		}
 
 		Set<String> exclusions = new HashSet<String>();
 		if (ResourcesUiBridgePlugin.getDefault().getPreferenceStore().contains(PREF_RESOURCES_IGNORED_ANT)) {
 			// we are using the new ant patterns
-			return getResourceExclusionsFromMemento(ResourcesUiBridgePlugin.getDefault()
+			exclusions = getResourceExclusionsFromMemento(ResourcesUiBridgePlugin.getDefault()
 					.getPreferenceStore()
 					.getString(PREF_RESOURCES_IGNORED_ANT));
 		} else {
@@ -132,14 +138,15 @@ public class ResourcesUiPreferenceInitializer extends AbstractPreferenceInitiali
 			if (read != null) {
 				StringTokenizer st = new StringTokenizer(read, PREF_STORE_DELIM);
 				while (st.hasMoreTokens()) {
-					exclusions.addAll(ResourceChangeMonitor.convertToAntPattern(st.nextToken()));
+					exclusions.addAll(ResourcePatternExclusionStrategy.convertToAntPattern(st.nextToken()));
 				}
 			}
 
 			setExcludedResourcePatterns(exclusions);
 		}
 
-		return exclusions;
+		cachedExclusionPatterns = new HashSet<String>(exclusions);
+		return cachedExclusionPatterns;
 	}
 
 	public static Set<String> getForcedExcludedResourcePatterns() {

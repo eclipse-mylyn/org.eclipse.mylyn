@@ -33,6 +33,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.resources.ui.ResourceChangeMonitor;
+import org.eclipse.mylyn.internal.resources.ui.ResourcePatternExclusionStrategy;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiPreferenceInitializer;
 
@@ -133,117 +134,117 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 
 	public void testFileUriExclusionPattern() throws URISyntaxException {
 		URI uri = new URI("file:/C:");
-		assertTrue(ResourceChangeMonitor.isUriExcluded(uri.toString(), "file:/C:"));
+		assertTrue(ResourcePatternExclusionStrategy.isUriExcluded(uri.toString(), "file:/C:"));
 
 		uri = new URI("file:/C:/foo/bar");
-		assertTrue(ResourceChangeMonitor.isUriExcluded(uri.toString(), "file:/C:"));
+		assertTrue(ResourcePatternExclusionStrategy.isUriExcluded(uri.toString(), "file:/C:"));
 	}
 
 	public void testSnapshotExclusionPattern() {
 		// .*
 
 		Set<String> patterns = new HashSet<String>();
-		patterns.addAll(ResourceChangeMonitor.convertToAntPattern(".*"));
+		patterns.addAll(ResourcePatternExclusionStrategy.convertToAntPattern(".*"));
 
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/.foo"), null, patterns));
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/.foo/test"), null, patterns));
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/folder/.foo"), null, patterns));
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/folder/.foo/foo2"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/.foo"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/.foo/test"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder/.foo"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder/.foo/foo2"), null, patterns));
 
-		assertFalse(ResourceChangeMonitor.isExcluded(new Path("/foo.test"), null, patterns));
-		assertFalse(ResourceChangeMonitor.isExcluded(new Path("/d.foo"), null, patterns));
-		assertFalse(ResourceChangeMonitor.isExcluded(new Path("/folder/d.foo"), null, patterns));
-		assertFalse(ResourceChangeMonitor.isExcluded(new Path("/folder/d.foo/foo2"), null, patterns));
+		assertFalse(ResourcePatternExclusionStrategy.isExcluded(new Path("/foo.test"), null, patterns));
+		assertFalse(ResourcePatternExclusionStrategy.isExcluded(new Path("/d.foo"), null, patterns));
+		assertFalse(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder/d.foo"), null, patterns));
+		assertFalse(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder/d.foo/foo2"), null, patterns));
 
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/.foo2"), null, patterns));
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/.foo2/test"), null, patterns));
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/folder/.foo2/foo3"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/.foo2"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/.foo2/test"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder/.foo2/foo3"), null, patterns));
 	}
 
 	public void testFileExclusionPattern() {
 		// *.doc
 
 		Set<String> patterns = new HashSet<String>();
-		patterns.addAll(ResourceChangeMonitor.convertToAntPattern("*.doc"));
+		patterns.addAll(ResourcePatternExclusionStrategy.convertToAntPattern("*.doc"));
 
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/.doc"), null, patterns));
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/.doc/test"), null, patterns));
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/folder/.doc"), null, patterns));
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/folder/.doc/foo2"), null, patterns));
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/d.doc"), null, patterns));
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/~d.doc"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/.doc"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/.doc/test"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder/.doc"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder/.doc/foo2"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/d.doc"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/~d.doc"), null, patterns));
 
-		assertFalse(ResourceChangeMonitor.isExcluded(new Path("/folder/d.doc2"), null, patterns));
-		assertFalse(ResourceChangeMonitor.isExcluded(new Path("/folder/d.doc2/foo2"), null, patterns));
+		assertFalse(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder/d.doc2"), null, patterns));
+		assertFalse(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder/d.doc2/foo2"), null, patterns));
 
-		assertFalse(ResourceChangeMonitor.isExcluded(new Path("/document"), null, patterns));
-		assertFalse(ResourceChangeMonitor.isExcluded(new Path("/.doc2"), null, patterns));
-		assertFalse(ResourceChangeMonitor.isExcluded(new Path("/.doc2/test"), null, patterns));
-		assertFalse(ResourceChangeMonitor.isExcluded(new Path("/folder/.doc2/foo3"), null, patterns));
+		assertFalse(ResourcePatternExclusionStrategy.isExcluded(new Path("/document"), null, patterns));
+		assertFalse(ResourcePatternExclusionStrategy.isExcluded(new Path("/.doc2"), null, patterns));
+		assertFalse(ResourcePatternExclusionStrategy.isExcluded(new Path("/.doc2/test"), null, patterns));
+		assertFalse(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder/.doc2/foo3"), null, patterns));
 	}
 
 	public void testAllExclusionPattern() {
 		// *
 		Set<String> patterns = new HashSet<String>();
-		patterns.addAll(ResourceChangeMonitor.convertToAntPattern("*"));
+		patterns.addAll(ResourcePatternExclusionStrategy.convertToAntPattern("*"));
 
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/.doc"), null, patterns));
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/.doc2/test"), null, patterns));
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/folder/.doc2/test"), null, patterns));
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/.test"), null, patterns));
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/~"), null, patterns));
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/test"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/.doc"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/.doc2/test"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder/.doc2/test"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/.test"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/~"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/test"), null, patterns));
 
 	}
 
 	public void testAllFileExclusionPattern() {
 		// *.*
 		Set<String> patterns = new HashSet<String>();
-		patterns.addAll(ResourceChangeMonitor.convertToAntPattern("*.*"));
+		patterns.addAll(ResourcePatternExclusionStrategy.convertToAntPattern("*.*"));
 
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/.doc"), null, patterns));
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/.doc2/test"), null, patterns));
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/folder/.doc2/test"), null, patterns));
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/.test"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/.doc"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/.doc2/test"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder/.doc2/test"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/.test"), null, patterns));
 
-		assertFalse(ResourceChangeMonitor.isExcluded(new Path("/~"), null, patterns));
-		assertFalse(ResourceChangeMonitor.isExcluded(new Path("/test"), null, patterns));
+		assertFalse(ResourcePatternExclusionStrategy.isExcluded(new Path("/~"), null, patterns));
+		assertFalse(ResourcePatternExclusionStrategy.isExcluded(new Path("/test"), null, patterns));
 
 	}
 
 	public void testWildcardExclusionPattern() {
 		// ~*
 		Set<String> patterns = new HashSet<String>();
-		patterns.addAll(ResourceChangeMonitor.convertToAntPattern("~*"));
+		patterns.addAll(ResourcePatternExclusionStrategy.convertToAntPattern("~*"));
 
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/~"), null, patterns));
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/~.doc"), null, patterns));
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/~.doc2/test"), null, patterns));
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/~folder/.doc2/test"), null, patterns));
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/~test.doc"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/~"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/~.doc"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/~.doc2/test"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/~folder/.doc2/test"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/~test.doc"), null, patterns));
 
-		assertFalse(ResourceChangeMonitor.isExcluded(new Path("/test"), null, patterns));
-		assertFalse(ResourceChangeMonitor.isExcluded(new Path("/test~"), null, patterns));
+		assertFalse(ResourcePatternExclusionStrategy.isExcluded(new Path("/test"), null, patterns));
+		assertFalse(ResourcePatternExclusionStrategy.isExcluded(new Path("/test~"), null, patterns));
 
 	}
 
 	public void testNoWildcardExclusionPattern() {
 		// folder
 		Set<String> patterns = new HashSet<String>();
-		patterns.addAll(ResourceChangeMonitor.convertToAntPattern("folder"));
+		patterns.addAll(ResourcePatternExclusionStrategy.convertToAntPattern("folder"));
 
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/folder/"), null, patterns));
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/folder"), null, patterns));
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/folder/.doc2/test"), null, patterns));
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/.doc2/folder/test"), null, patterns));
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/.doc2/test/folder"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder/"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder/.doc2/test"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/.doc2/folder/test"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/.doc2/test/folder"), null, patterns));
 
-		assertFalse(ResourceChangeMonitor.isExcluded(new Path("/folder.test"), null, patterns));
-		assertFalse(ResourceChangeMonitor.isExcluded(new Path("/.folder"), null, patterns));
-		assertFalse(ResourceChangeMonitor.isExcluded(new Path("/folder2"), null, patterns));
-		assertFalse(ResourceChangeMonitor.isExcluded(new Path("/.doc2folder/test"), null, patterns));
-		assertFalse(ResourceChangeMonitor.isExcluded(new Path("/.doc"), null, patterns));
-		assertFalse(ResourceChangeMonitor.isExcluded(new Path("/.doc2/test"), null, patterns));
+		assertFalse(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder.test"), null, patterns));
+		assertFalse(ResourcePatternExclusionStrategy.isExcluded(new Path("/.folder"), null, patterns));
+		assertFalse(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder2"), null, patterns));
+		assertFalse(ResourcePatternExclusionStrategy.isExcluded(new Path("/.doc2folder/test"), null, patterns));
+		assertFalse(ResourcePatternExclusionStrategy.isExcluded(new Path("/.doc"), null, patterns));
+		assertFalse(ResourcePatternExclusionStrategy.isExcluded(new Path("/.doc2/test"), null, patterns));
 	}
 
 	public void testPathPrefixExclusionPattern() {
@@ -251,12 +252,12 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 		Set<String> patterns = new HashSet<String>();
 		patterns.add("/folder/**");
 
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/folder/"), null, patterns));
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/folder/.doc2/test"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder/"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder/.doc2/test"), null, patterns));
 
-		assertFalse(ResourceChangeMonitor.isExcluded(new Path("/folder2/folder"), null, patterns));
-		assertFalse(ResourceChangeMonitor.isExcluded(new Path("/.doc2/folder/test"), null, patterns));
-		assertFalse(ResourceChangeMonitor.isExcluded(new Path("/.doc2/test/folder"), null, patterns));
+		assertFalse(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder2/folder"), null, patterns));
+		assertFalse(ResourcePatternExclusionStrategy.isExcluded(new Path("/.doc2/folder/test"), null, patterns));
+		assertFalse(ResourcePatternExclusionStrategy.isExcluded(new Path("/.doc2/test/folder"), null, patterns));
 
 	}
 
@@ -265,32 +266,36 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 		Set<String> patterns = new HashSet<String>();
 		patterns.add("**/folder");
 
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/folder"), null, patterns));
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/folder1/folder"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder1/folder"), null, patterns));
 
-		assertFalse(ResourceChangeMonitor.isExcluded(new Path("/folder1/folder/folder2/test.doc"), null, patterns));
-		assertFalse(ResourceChangeMonitor.isExcluded(new Path("/folder/.doc2/test"), null, patterns));
-		assertFalse(ResourceChangeMonitor.isExcluded(new Path("/folder/.doc2/test"), null, patterns));
-		assertFalse(ResourceChangeMonitor.isExcluded(new Path("/folder/folder2"), null, patterns));
+		assertFalse(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder1/folder/folder2/test.doc"), null,
+				patterns));
+		assertFalse(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder/.doc2/test"), null, patterns));
+		assertFalse(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder/.doc2/test"), null, patterns));
+		assertFalse(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder/folder2"), null, patterns));
 
 	}
 
 	public void testComplexExclusionPattern() {
 		// **/folder/***.doc
 		Set<String> patterns = new HashSet<String>();
-		patterns.addAll(ResourceChangeMonitor.convertToAntPattern("**/folder/***.doc"));
+		patterns.addAll(ResourcePatternExclusionStrategy.convertToAntPattern("**/folder/***.doc"));
 
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/folder/test.doc"), null, patterns));
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/folder/folder2/test.doc"), null, patterns));
-		assertTrue(ResourceChangeMonitor.isExcluded(new Path("/folder1/folder/folder2/test.doc"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder/test.doc"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder/folder2/test.doc"), null, patterns));
+		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder1/folder/folder2/test.doc"), null,
+				patterns));
 
-		assertFalse(ResourceChangeMonitor.isExcluded(new Path("/folder1/folder/folder2/test.docx"), null, patterns));
-		assertFalse(ResourceChangeMonitor.isExcluded(new Path("/folder1/folder2/folder3/test.doc"), null, patterns));
+		assertFalse(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder1/folder/folder2/test.docx"), null,
+				patterns));
+		assertFalse(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder1/folder2/folder3/test.doc"), null,
+				patterns));
 	}
 
 	public void testInclusion() {
 		IPath path4 = new Path("bla/bla");
-		assertFalse(ResourceChangeMonitor.isExcluded(path4, null, new HashSet<String>()));
+		assertFalse(ResourcePatternExclusionStrategy.isExcluded(path4, null, new HashSet<String>()));
 	}
 
 	public void testCreatedFile() throws CoreException {

@@ -11,11 +11,11 @@
 
 package org.eclipse.mylyn.internal.resources.ui;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -25,7 +25,6 @@ import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
@@ -38,31 +37,25 @@ import org.eclipse.mylyn.resources.ui.ResourcesUi;
  */
 public class ResourceChangeMonitor implements IResourceChangeListener {
 
-	private static final String TRAILING_PATH_WILDCARD = "/**"; //$NON-NLS-1$
-
-	private static final String LEADING_PATH_WILDCARD = "**/"; //$NON-NLS-1$
-
 	private class ResourceDeltaVisitor implements IResourceDeltaVisitor {
 
 		private final Set<IResource> addedResources;
 
 		private final Set<IResource> changedResources;
 
-		private final Set<String> excludedPatterns;
-
 		private boolean haveTeamPrivateMember;
 
-		public ResourceDeltaVisitor() {
-			Set<String> excludedResourcePatterns = ResourcesUiPreferenceInitializer.getExcludedResourcePatterns();
-			excludedResourcePatterns.addAll(ResourcesUiPreferenceInitializer.getForcedExcludedResourcePatterns());
-			this.excludedPatterns = new HashSet<String>();
-			for (String pattern : excludedResourcePatterns) {
-				if (pattern != null && pattern.length() > 0) {
-					this.excludedPatterns.add(pattern);
-				}
-			}
+		private final List<IResourceExclusionStrategy> resourceExclusions;
+
+		public ResourceDeltaVisitor(List<IResourceExclusionStrategy> resourceExclusions) {
+			this.resourceExclusions = resourceExclusions;
 			this.addedResources = new HashSet<IResource>();
 			this.changedResources = new HashSet<IResource>();
+
+			// make sure that the exclusions are updated 
+			for (IResourceExclusionStrategy exclusion : exclusions) {
+				exclusion.update();
+			}
 		}
 
 		public boolean hasValidResult() {
@@ -70,22 +63,24 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 		}
 
 		public boolean visit(IResourceDelta delta) {
-			if (haveTeamPrivateMember) {
+
+			if (hasTeamPrivate(delta.getResource())) {
 				return false;
 			}
-			if (delta.getResource().isTeamPrivateMember()) {
-				haveTeamPrivateMember = true;
-				return false;
-			}
-			if (isExcluded(delta.getResource().getProjectRelativePath(), delta.getResource(), excludedPatterns)) {
+
+			if (isExcluded(delta.getResource())) {
 				return false;
 			}
 
 			IResourceDelta[] added = delta.getAffectedChildren(IResourceDelta.ADDED);
 			for (IResourceDelta element : added) {
 				IResource resource = element.getResource();
-				if ((resource instanceof IFile || resource instanceof IFolder)
-						&& !isExcluded(resource.getProjectRelativePath(), resource, excludedPatterns)) {
+				if ((resource instanceof IFile || resource instanceof IFolder) && !isExcluded(resource)) {
+
+					if (hasTeamPrivate(resource)) {
+						return false;
+					}
+
 					addedResources.add(resource);
 				}
 			}
@@ -94,18 +89,41 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 			for (IResourceDelta element : changed) {
 				IResource resource = element.getResource();
 				// special rule for feature.xml files: bug 249856 
-				if (resource instanceof IFile
-						&& !isExcluded(resource.getProjectRelativePath(), resource, excludedPatterns)
-						&& !"feature.xml".equals(resource.getName())) { //$NON-NLS-1$
+				if (resource instanceof IFile && !isExcluded(resource) && !"feature.xml".equals(resource.getName())) { //$NON-NLS-1$
 					if (element.getKind() == IResourceDelta.CHANGED
 							&& (element.getFlags() & IResourceDelta.CONTENT) == 0) {
 						// make sure that there was a content change and not just a markers change
 						continue;
 					}
+
+					if (hasTeamPrivate(resource)) {
+						return false;
+					}
+
 					changedResources.add(resource);
 				}
 			}
 			return true;
+		}
+
+		private boolean hasTeamPrivate(IResource resource) {
+			if (haveTeamPrivateMember) {
+				return true;
+			}
+			if (resource.isTeamPrivateMember()) {
+				haveTeamPrivateMember = true;
+				return true;
+			}
+			return false;
+		}
+
+		private boolean isExcluded(IResource resource) {
+			for (IResourceExclusionStrategy exclusion : resourceExclusions) {
+				if (exclusion.isExcluded(resource)) {
+					return true;
+				}
+			}
+			return false;
 		}
 
 		public Set<IResource> getChangedResources() {
@@ -120,8 +138,24 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 
 	private boolean enabled;
 
+	private final List<IResourceExclusionStrategy> exclusions = new ArrayList<IResourceExclusionStrategy>();
+
 	public ResourceChangeMonitor() {
 		this.enabled = true;
+		exclusions.add(new ResourcePatternExclusionStrategy());
+
+		// TODO add back
+//		exclusions.add(new ResourceModifiedDateExclusionStrategy());
+		for (IResourceExclusionStrategy exclusion : exclusions) {
+			exclusion.init();
+		}
+	}
+
+	public void dispose() {
+		for (IResourceExclusionStrategy exclusion : exclusions) {
+			exclusion.dispose();
+		}
+		exclusions.clear();
 	}
 
 	public void resourceChanged(IResourceChangeEvent event) {
@@ -133,7 +167,7 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 		}
 		IResourceDelta rootDelta = event.getDelta();
 		if (rootDelta != null) {
-			ResourceDeltaVisitor visitor = new ResourceDeltaVisitor();
+			ResourceDeltaVisitor visitor = new ResourceDeltaVisitor(exclusions);
 			try {
 				rootDelta.accept(visitor, IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS | IContainer.INCLUDE_HIDDEN);
 				if (visitor.hasValidResult()) {
@@ -147,42 +181,6 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 		}
 	}
 
-	/**
-	 * Public for testing.
-	 * 
-	 * @param resource
-	 *            can be null
-	 */
-	public static boolean isExcluded(IPath path, IResource resource, Set<String> excludedPatterns) {
-		if (resource != null && resource.isDerived()) {
-			return true;
-		}
-		String pathString = path.toPortableString();
-
-		for (String pattern : excludedPatterns) {
-
-			if (resource != null
-					&& pattern.startsWith("file:/") && isUriExcluded(resource.getLocationURI().toString(), pattern)) { //$NON-NLS-1$
-				return true;
-			} else if (SelectorUtils.matchPath(pattern, pathString, false)
-					|| SelectorUtils.match(pattern, pathString, false)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Public for testing.
-	 */
-	public static boolean isUriExcluded(String uri, String pattern) {
-		if (uri != null && uri.startsWith(pattern)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
 	public boolean isEnabled() {
 		return enabled;
 	}
@@ -190,17 +188,4 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
-
-	public static Collection<String> convertToAntPattern(String basicPattern) {
-		Set<String> patterns = new HashSet<String>();
-		patterns.add(basicPattern);
-		if (!basicPattern.contains(LEADING_PATH_WILDCARD) && !basicPattern.contains(TRAILING_PATH_WILDCARD)) {
-			// we don't want to migrate patterns that are already ant-style paterns 
-			patterns.add(LEADING_PATH_WILDCARD + basicPattern + TRAILING_PATH_WILDCARD);
-			patterns.add(LEADING_PATH_WILDCARD + basicPattern);
-			patterns.add(basicPattern + TRAILING_PATH_WILDCARD);
-		}
-		return patterns;
-	}
-
 }

@@ -98,6 +98,7 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 		}
 		if (resourceInteractionMonitor != null) {
 			MonitorUi.getSelectionMonitors().remove(resourceInteractionMonitor);
+			resourceChangeMonitor.dispose();
 		}
 		if (interestEditorTracker != null) {
 			interestEditorTracker.dispose(PlatformUI.getWorkbench());

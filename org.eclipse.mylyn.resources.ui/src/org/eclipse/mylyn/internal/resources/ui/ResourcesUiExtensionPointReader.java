@@ -69,7 +69,7 @@ public class ResourcesUiExtensionPointReader {
 		}
 		String exclude = element.getAttribute(ATTR_PATTERN);
 		if (exclude != null) {
-			resourceExclusionPatterns.addAll(ResourceChangeMonitor.convertToAntPattern(exclude));
+			resourceExclusionPatterns.addAll(ResourcePatternExclusionStrategy.convertToAntPattern(exclude));
 		}
 	}
 
