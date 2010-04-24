@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <component id="org.eclipse.mylyn.tasks.bugs" version="2">
-    <resource path="META-INF/MANIFEST.MF">
-        <filter id="923795461">
-            <message_arguments>
-                <message_argument value="3.4.0.qualifier"/>
-                <message_argument value="3.3.0.v20091015-0500-e3x"/>
-            </message_arguments>
-        </filter>
-    </resource>
     <resource path="META-INF/MANIFEST.MF" type="org.eclipse.mylyn.internal.provisional.tasks.bugs.AbstractSupportHandler">
         <filter id="305324134">
             <message_arguments>
