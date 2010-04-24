@@ -978,7 +978,7 @@
 		<fail unless="dir">required parameter missing: dir</fail>
 		<fail unless="name">required parameter missing: name</fail>
 		
-		<property name="categories" file="${dir}/site.xml"/>
+		<property name="categories" value="${dir}/site.xml"/>
 		
 		<!-- work around P2 bug that causes jars to get deleted when meta-data exists -->
 		<delete>
