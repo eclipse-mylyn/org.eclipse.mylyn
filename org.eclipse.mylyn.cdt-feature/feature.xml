@@ -24,23 +24,7 @@
 
    <requires>
       <import feature="org.eclipse.cdt.platform" version="5.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.cdt.core" version="5.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.cdt.ui" version="5.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.core.resources"/>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.ui.views"/>
-      <import plugin="org.eclipse.ui.ide"/>
-      <import plugin="org.eclipse.mylyn.monitor.core" version="3.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.mylyn.commons.core" version="3.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.mylyn.context.core" version="3.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.mylyn.context.ui" version="3.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.mylyn.commons.ui" version="3.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.mylyn.monitor.ui" version="3.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.jface.text"/>
-      <import plugin="org.eclipse.ui.editors" version="3.4.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.mylyn.tasks.ui" version="3.3.0" match="greaterOrEqual"/>
-      <import plugin="com.ibm.icu"/>
+      <import feature="org.eclipse.mylyn.context_feature" version="3.2.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
