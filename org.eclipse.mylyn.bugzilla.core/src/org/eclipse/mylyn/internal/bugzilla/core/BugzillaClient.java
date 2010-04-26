@@ -212,7 +212,7 @@ public class BugzillaClient {
 			method = getConnect(repositoryUrl + "/", monitor); //$NON-NLS-1$
 		} finally {
 			if (method != null) {
-				method.releaseConnection();
+				WebUtil.releaseConnection(method, monitor);
 			}
 		}
 	}
@@ -291,8 +291,7 @@ public class BugzillaClient {
 			try {
 				code = WebUtil.execute(httpClient, hostConfiguration, getMethod, monitor);
 			} catch (IOException e) {
-				getMethod.getResponseBodyNoop();
-				getMethod.releaseConnection();
+				WebUtil.releaseConnection(getMethod, monitor);
 				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 						RepositoryStatus.ERROR_IO, repositoryUrl.toString(), e));
 			}
@@ -300,8 +299,7 @@ public class BugzillaClient {
 			if (code == HttpURLConnection.HTTP_OK) {
 				return getMethod;
 			} else {
-				getMethod.getResponseBodyNoop();
-				getMethod.releaseConnection();
+				WebUtil.releaseConnection(getMethod, monitor);
 				if (code == HttpURLConnection.HTTP_NOT_MODIFIED) {
 					throw new CoreException(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN, "Not changed")); //$NON-NLS-1$
 				} else if (code == HttpURLConnection.HTTP_UNAUTHORIZED || code == HttpURLConnection.HTTP_FORBIDDEN) {
@@ -335,7 +333,7 @@ public class BugzillaClient {
 			httpClient.getState().clearCookies();
 		} finally {
 			if (method != null) {
-				method.releaseConnection();
+				WebUtil.releaseConnection(method, monitor);
 			}
 		}
 	}
@@ -408,24 +406,21 @@ public class BugzillaClient {
 			int code = WebUtil.execute(httpClient, hostConfiguration, postMethod, monitor);
 			if (code == HttpURLConnection.HTTP_UNAUTHORIZED || code == HttpURLConnection.HTTP_FORBIDDEN) {
 				loggedIn = false;
-				postMethod.getResponseBodyNoop();
-				postMethod.releaseConnection();
+				WebUtil.releaseConnection(postMethod, monitor);
 				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 						RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(),
 						"HTTP authentication failed.")); //$NON-NLS-1$
 
 			} else if (code == HttpURLConnection.HTTP_PROXY_AUTH) {
 				loggedIn = false;
-				postMethod.getResponseBodyNoop();
-				postMethod.releaseConnection();
+				WebUtil.releaseConnection(postMethod, monitor);
 				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 						RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(),
 						"Proxy authentication required")); //$NON-NLS-1$
 
 			} else if (code != HttpURLConnection.HTTP_OK) {
 				loggedIn = false;
-				postMethod.getResponseBodyNoop();
-				postMethod.releaseConnection();
+				WebUtil.releaseConnection(postMethod, monitor);
 				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 						RepositoryStatus.ERROR_NETWORK, "Http error: " + HttpStatus.getStatusText(code))); //$NON-NLS-1$
 			}
@@ -492,7 +487,7 @@ public class BugzillaClient {
 					RepositoryStatus.ERROR_IO, repositoryUrl.toString(), e));
 		} finally {
 			if (postMethod != null) {
-				postMethod.releaseConnection();
+				WebUtil.releaseConnection(postMethod, monitor);
 			}
 			httpClient.getParams().setAuthenticationPreemptive(false);
 		}
@@ -565,7 +560,7 @@ public class BugzillaClient {
 			parseHtmlError(getResponseStream(postMethod, monitor));
 		} finally {
 			if (postMethod != null) {
-				postMethod.releaseConnection();
+				WebUtil.releaseConnection(postMethod, monitor);
 			}
 		}
 		return false;
@@ -713,7 +708,7 @@ public class BugzillaClient {
 		} catch (IOException e) {
 			throw e;
 		} finally {
-			method.releaseConnection();
+			WebUtil.releaseConnection(method, monitor);
 		}
 	}
 
@@ -869,7 +864,7 @@ public class BugzillaClient {
 				}
 
 			} else {
-				postMethod.getResponseBodyNoop();
+				WebUtil.releaseConnection(postMethod, monitor);
 				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 						RepositoryStatus.ERROR_NETWORK, repositoryUrl.toString(), "Http error: " //$NON-NLS-1$
 								+ HttpStatus.getStatusText(status)));
@@ -879,7 +874,7 @@ public class BugzillaClient {
 			}
 		} finally {
 			if (postMethod != null) {
-				postMethod.releaseConnection();
+				WebUtil.releaseConnection(postMethod, monitor);
 			}
 		}
 	}
@@ -913,14 +908,12 @@ public class BugzillaClient {
 			Header locationHeader = postMethod.getResponseHeader("location"); //$NON-NLS-1$
 			if (locationHeader != null) {
 				redirectLocation = locationHeader.getValue();
-				postMethod.getResponseBodyNoop();
-				postMethod.releaseConnection();
+				WebUtil.releaseConnection(postMethod, monitor);
 				throw new RedirectException(redirectLocation);
 			}
 
 		}
-		postMethod.getResponseBodyNoop();
-		postMethod.releaseConnection();
+		WebUtil.releaseConnection(postMethod, monitor);
 		throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 				RepositoryStatus.ERROR_IO, repositoryUrl.toString(), new IOException(
 						"Communication error occurred during upload. \n\n" + HttpStatus.getStatusText(status)))); //$NON-NLS-1$
@@ -1058,7 +1051,7 @@ public class BugzillaClient {
 				input.close();
 			}
 			if (method != null) {
-				method.releaseConnection();
+				WebUtil.releaseConnection(method, monitor);
 			}
 		}
 	}
@@ -1104,7 +1097,7 @@ public class BugzillaClient {
 				input.close();
 			}
 			if (method != null) {
-				method.releaseConnection();
+				WebUtil.releaseConnection(method, monitor);
 			}
 		}
 
@@ -1529,7 +1522,7 @@ public class BugzillaClient {
 					//ignore
 				}
 			}
-			getMethod.releaseConnection();
+			WebUtil.releaseConnection(getMethod, monitor);
 		}
 		return htmlInfo;
 	}
@@ -1768,7 +1761,7 @@ public class BugzillaClient {
 
 		} finally {
 			if (method != null) {
-				method.releaseConnection();
+				WebUtil.releaseConnection(method, monitor);
 			}
 		}
 		return null;
@@ -1871,7 +1864,7 @@ public class BugzillaClient {
 				}
 			} finally {
 				if (method != null) {
-					method.releaseConnection();
+					WebUtil.releaseConnection(method, monitor);
 				}
 			}
 		}
@@ -1906,7 +1899,7 @@ public class BugzillaClient {
 					"Error retrieving configuration timestamp", e)); //$NON-NLS-1$
 		} finally {
 			if (method != null) {
-				method.releaseConnection();
+				WebUtil.releaseConnection(method, monitor);
 			}
 		}
 		return lastModified;
@@ -1938,8 +1931,7 @@ public class BugzillaClient {
 				code = WebUtil.execute(httpClient, hostConfiguration, headMethod, monitor);
 			} catch (IOException e) {
 //				ignore the response 
-				consumeResponse(headMethod);
-				headMethod.releaseConnection();
+				WebUtil.releaseConnection(headMethod, monitor);
 				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 						RepositoryStatus.ERROR_IO, repositoryUrl.toString(), e));
 			}
@@ -1948,23 +1940,19 @@ public class BugzillaClient {
 				return headMethod;
 			} else if (code == HttpURLConnection.HTTP_UNAUTHORIZED || code == HttpURLConnection.HTTP_FORBIDDEN) {
 //				ignore the response 
-				consumeResponse(headMethod);
-				// login or reauthenticate due to an expired session
-				headMethod.releaseConnection();
+				WebUtil.releaseConnection(headMethod, monitor);
 				loggedIn = false;
 				authenticate(monitor);
 			} else if (code == HttpURLConnection.HTTP_PROXY_AUTH) {
 				loggedIn = false;
 //				ignore the response 
-				consumeResponse(headMethod);
-				headMethod.releaseConnection();
+				WebUtil.releaseConnection(headMethod, monitor);
 				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 						RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(),
 						"Proxy authentication required")); //$NON-NLS-1$
 			} else {
 //				ignore the response 
-				consumeResponse(headMethod);
-				headMethod.releaseConnection();
+				WebUtil.releaseConnection(headMethod, monitor);
 				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 						RepositoryStatus.ERROR_NETWORK, "Http error: " + HttpStatus.getStatusText(code))); //$NON-NLS-1$
 				// throw new IOException("HttpClient connection error response
@@ -2122,20 +2110,6 @@ public class BugzillaClient {
 		} catch (ParseException e) {
 			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 					RepositoryStatus.ERROR_INTERNAL, "Unable to parse response from " + repositoryUrl.toString() + ".")); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-	}
-
-	private void consumeResponse(HttpMethodBase method) {
-		InputStream instream;
-		try {
-			instream = method.getResponseBodyAsStream();
-			if (instream != null) {
-				byte[] buffer = new byte[4096];
-				while (instream.read(buffer) > 0) {
-				}
-			}
-		} catch (IOException e) {
-			// ignore
 		}
 	}
 }

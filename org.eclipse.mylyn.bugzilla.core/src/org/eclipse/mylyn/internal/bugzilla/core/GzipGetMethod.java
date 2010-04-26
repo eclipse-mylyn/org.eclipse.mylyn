@@ -61,7 +61,10 @@ public class GzipGetMethod extends GetMethod {
 	 * to unzip it first.
 	 * 
 	 * @throws IOException
+	 * @deprecated this is handled in {@link org.apache.commons.httpclient.HttpClient} connection release
 	 */
+
+	@Deprecated
 	public void getResponseBodyNoop() throws IOException {
 		InputStream instream;
 		try {
