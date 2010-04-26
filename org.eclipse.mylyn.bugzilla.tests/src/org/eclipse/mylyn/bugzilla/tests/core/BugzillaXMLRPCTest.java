@@ -16,9 +16,11 @@ import java.util.HashMap;
 
 import junit.framework.TestCase;
 
+import org.apache.xmlrpc.XmlRpcException;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.WebLocation;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
 import org.eclipse.mylyn.internal.bugzilla.core.service.BugzillaXmlRpcClient;
 
 /**
@@ -30,15 +32,8 @@ import org.eclipse.mylyn.internal.bugzilla.core.service.BugzillaXmlRpcClient;
 public class BugzillaXMLRPCTest extends TestCase {
 	private BugzillaXmlRpcClient bugzillaClient;
 
-//	private static String TEST_REPO = "http://.../Bugzilla36noRPC";
-//	private static String TEST_REPO = "http://mylyn.eclipse.org/bugs36";
-
 	@Override
 	public void setUp() throws Exception {
-//		webLocation.setCredentials(AuthenticationType.REPOSITORY, "user", "password");
-//		webLocation.setCredentials(AuthenticationType.HTTP, "user", "password");
-//		WebLocation webLocation = new WebLocation(BugzillaTestConstants.TEST_BUGZILLA_HEAD_URL + "/xmlrpc.cgi");
-
 		WebLocation webLocation = new WebLocation(BugzillaFixture.current().getRepositoryUrl() + "/xmlrpc.cgi");
 		webLocation.setCredentials(AuthenticationType.REPOSITORY, "tests@mylyn.eclipse.org", "mylyntest");
 		bugzillaClient = new BugzillaXmlRpcClient(webLocation);
@@ -65,4 +60,27 @@ public class BugzillaXMLRPCTest extends TestCase {
 		int i = 9;
 		i++;
 	}
+
+	@SuppressWarnings("unused")
+	public void testxmlrpcInstalled() throws Exception {
+		int uID = bugzillaClient.login();
+		assertEquals(2, uID);
+		BugzillaFixture.current().getBugzillaVersion();
+		if (BugzillaFixture.current().getBugzillaVersion().compareTo(BugzillaVersion.BUGZILLA_3_6) == 0) {
+			uID = -1;
+			WebLocation webLocation = new WebLocation(BugzillaFixture.current().getRepositoryUrl()
+					+ "noxmlrpc/xmlrpc.cgi");
+			webLocation.setCredentials(AuthenticationType.REPOSITORY, "tests@mylyn.eclipse.org", "mylyntest");
+			BugzillaXmlRpcClient bugzillaClientNoXMLRPC = new BugzillaXmlRpcClient(webLocation);
+			bugzillaClientNoXMLRPC.setContentTypeCheckingEnabled(true);
+			try {
+				uID = bugzillaClientNoXMLRPC.login();
+				fail("Never reach this! We should get an XmlRpcException");
+			} catch (XmlRpcException e) {
+				assertEquals("The server returned an unexpected content type: 'text/html; charset=UTF-8'",
+						e.getMessage());
+			}
+		}
+	}
+
 }
