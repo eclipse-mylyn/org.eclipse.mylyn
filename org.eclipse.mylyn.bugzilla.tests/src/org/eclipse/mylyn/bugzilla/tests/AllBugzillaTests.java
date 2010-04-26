@@ -14,6 +14,7 @@ package org.eclipse.mylyn.bugzilla.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.mylyn.bugzilla.tests.core.BugzillaXMLRPCTest;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaRepositorySettingsPageTest;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaSearchPageTest;
@@ -60,6 +61,10 @@ public class AllBugzillaTests {
 				}
 				fixture.add(BugzillaAttachmentHandlerTest.class);
 			}
+			if (!fixture.getBugzillaVersion().isSmaller(BugzillaVersion.BUGZILLA_3_6)) {
+				fixture.add(BugzillaXMLRPCTest.class);
+			}
+
 			fixture.done();
 		}
 

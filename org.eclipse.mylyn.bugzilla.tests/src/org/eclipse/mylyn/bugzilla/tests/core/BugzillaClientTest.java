@@ -188,13 +188,13 @@ public class BugzillaClientTest extends TestCase {
 	}
 
 	public void testLeadingZeros() throws Exception {
-		String taskNumber = "0010";
+		String taskNumber = "0002";
 		TaskData taskData = BugzillaFixture.current().getTask(taskNumber, client);
 		assertNotNull(taskData);
 		assertNotNull(taskData);
 		TaskAttribute idAttribute = taskData.getRoot().getAttribute(BugzillaAttribute.BUG_ID.getKey());
 		assertNotNull(idAttribute);
-		assertEquals("10", idAttribute.getValue());
+		assertEquals("2", idAttribute.getValue());
 	}
 
 }

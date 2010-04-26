@@ -14,23 +14,32 @@ package org.eclipse.mylyn.bugzilla.tests.core;
 import java.util.Date;
 import java.util.HashMap;
 
-import org.eclipse.mylyn.bugzilla.tests.BugzillaTestConstants;
+import junit.framework.TestCase;
+
+import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.internal.bugzilla.core.service.BugzillaXmlRpcClient;
 
-public class BugzillaXMLRPCTest {
+/**
+ * Tests should be run against Bugzilla 3.6 or greater
+ * 
+ * @author Frank Becker
+ */
+
+public class BugzillaXMLRPCTest extends TestCase {
 	private BugzillaXmlRpcClient bugzillaClient;
 
 //	private static String TEST_REPO = "http://.../Bugzilla36noRPC";
+//	private static String TEST_REPO = "http://mylyn.eclipse.org/bugs36";
 
-//	private static String TEST_REPO = "http://.../Bugzilla36";
-
+	@Override
 	public void setUp() throws Exception {
-//		WebLocation webLocation = new WebLocation(TEST_REPO + "/xmlrpc.cgi");
 //		webLocation.setCredentials(AuthenticationType.REPOSITORY, "user", "password");
 //		webLocation.setCredentials(AuthenticationType.HTTP, "user", "password");
-		WebLocation webLocation = new WebLocation(BugzillaTestConstants.TEST_BUGZILLA_HEAD_URL + "/xmlrpc.cgi");
+//		WebLocation webLocation = new WebLocation(BugzillaTestConstants.TEST_BUGZILLA_HEAD_URL + "/xmlrpc.cgi");
+
+		WebLocation webLocation = new WebLocation(BugzillaFixture.current().getRepositoryUrl() + "/xmlrpc.cgi");
 		webLocation.setCredentials(AuthenticationType.REPOSITORY, "tests@mylyn.eclipse.org", "mylyntest");
 		bugzillaClient = new BugzillaXmlRpcClient(webLocation);
 		bugzillaClient.setContentTypeCheckingEnabled(true);
@@ -44,8 +53,8 @@ public class BugzillaXMLRPCTest {
 		Date x2 = bugzillaClient.getDBTime();
 		Date x3 = bugzillaClient.getWebTime();
 		Object[] xx0 = bugzillaClient.getUserInfoFromIDs(new Integer[] { 1, 2 });
-		Object[] xx1 = bugzillaClient.getUserInfoFromNames(new String[] { "Frank@Frank-Becker.de" });
-		Object[] xx2 = bugzillaClient.getUserInfoWithMatch(new String[] { "eck" });
+		Object[] xx1 = bugzillaClient.getUserInfoFromNames(new String[] { "tests@mylyn.eclipse.org" });
+		Object[] xx2 = bugzillaClient.getUserInfoWithMatch(new String[] { "est" });
 		Object[] xx3 = bugzillaClient.getAllFields();
 		Object[] xx4 = bugzillaClient.getFieldsWithNames(new String[] { "qa_contact" });
 		Object[] xx5 = bugzillaClient.getFieldsWithIDs(new Integer[] { 12, 18 });

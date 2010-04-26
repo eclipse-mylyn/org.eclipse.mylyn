@@ -89,6 +89,10 @@ public class BugzillaVersion implements Comparable<BugzillaVersion>, Serializabl
 		return compareTo(v) <= 0;
 	}
 
+	public boolean isSmaller(BugzillaVersion v) {
+		return compareTo(v) < 0;
+	}
+
 	public int compareTo(BugzillaVersion v) {
 		if (major < v.major) {
 			return -1;

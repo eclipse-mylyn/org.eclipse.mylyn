@@ -50,7 +50,7 @@ public class BugzillaCustomFieldsTest extends TestCase {
 
 	public void testCustomAttributes() throws Exception {
 
-		String taskNumber = "1";
+		String taskNumber = "2";
 		TaskData taskData = BugzillaFixture.current().getTask(taskNumber, client);
 		assertNotNull(taskData);
 		TaskMapper mapper = new TaskMapper(taskData);
