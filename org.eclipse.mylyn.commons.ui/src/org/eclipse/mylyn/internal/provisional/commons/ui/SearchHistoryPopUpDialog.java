@@ -349,6 +349,10 @@ public class SearchHistoryPopUpDialog extends PopupDialog {
 		textSearchControl.addModifyListener(new ModifyListener() {
 
 			public void modifyText(ModifyEvent e) {
+				if (!hasFocus(textControl)) {
+					// user shouldn't be modifying the text if it doesnt have focus
+					return;
+				}
 				if (!isOpen && textControl != null && !textControl.isDisposed() && textControl.getText().length() > 0) {
 					updateBounds();
 					open();
