@@ -402,6 +402,19 @@ public class TextSearchControl extends Composite {
 		return textControl;
 	}
 
+	public String getText() {
+		if (textControl != null && !textControl.isDisposed()) {
+			return textControl.getText();
+		}
+		return ""; //$NON-NLS-1$
+	}
+
+	public void setText(String text) {
+		if (textControl != null && !textControl.isDisposed()) {
+			textControl.setText(text);
+		}
+	}
+
 	@Override
 	public void setBackground(Color color) {
 		if (useNativeSearchField != null && useNativeSearchField) {
