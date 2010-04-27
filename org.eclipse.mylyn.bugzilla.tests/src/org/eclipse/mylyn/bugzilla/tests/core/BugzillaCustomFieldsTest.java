@@ -42,6 +42,8 @@ public class BugzillaCustomFieldsTest extends TestCase {
 
 	private TaskRepository repository;
 
+	private TaskData fruitTaskData;
+
 	@Override
 	protected void setUp() throws Exception {
 		repository = BugzillaFixture.current().repository();
@@ -176,36 +178,36 @@ public class BugzillaCustomFieldsTest extends TestCase {
 
 		String taskNumber = "1";
 
-		TaskData fruitTaskData = BugzillaFixture.current().getTask(taskNumber, client);
+		fruitTaskData = BugzillaFixture.current().getTask(taskNumber, client);
 		assertNotNull(fruitTaskData);
 
-		if (fruitTaskData.getRoot().getAttribute("cf_multiselect").getValue().equals("---")) {
-			setFruitValueTo(fruitTaskData, "apple");
-			setFruitValueTo(fruitTaskData, "orange");
-			setFruitValueTo(fruitTaskData, "---");
-		} else if (fruitTaskData.getRoot().getAttribute("cf_multiselect").getValue().equals("apple")) {
-			setFruitValueTo(fruitTaskData, "orange");
-			setFruitValueTo(fruitTaskData, "apple");
-			setFruitValueTo(fruitTaskData, "---");
-		} else if (fruitTaskData.getRoot().getAttribute("cf_multiselect").getValue().equals("orange")) {
-			setFruitValueTo(fruitTaskData, "apple");
-			setFruitValueTo(fruitTaskData, "orange");
-			setFruitValueTo(fruitTaskData, "---");
+		if (fruitTaskData.getRoot().getAttribute("cf_dropdown").getValue().equals("---")) {
+			setFruitValueTo("one");
+			setFruitValueTo("two");
+			setFruitValueTo("---");
+		} else if (fruitTaskData.getRoot().getAttribute("cf_dropdown").getValue().equals("one")) {
+			setFruitValueTo("two");
+			setFruitValueTo("one");
+			setFruitValueTo("---");
+		} else if (fruitTaskData.getRoot().getAttribute("cf_dropdown").getValue().equals("two")) {
+			setFruitValueTo("one");
+			setFruitValueTo("two");
+			setFruitValueTo("---");
 		}
 		if (fruitTaskData != null) {
 			fruitTaskData = null;
 		}
 	}
 
-	private void setFruitValueTo(TaskData fruitTaskData, String newValue) throws Exception {
+	private void setFruitValueTo(String newValue) throws Exception {
 		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
-		TaskAttribute cf_fruit = fruitTaskData.getRoot().getAttribute("cf_fruit");
+		TaskAttribute cf_fruit = fruitTaskData.getRoot().getAttribute("cf_dropdown");
 		cf_fruit.setValue(newValue);
-		assertEquals(newValue, fruitTaskData.getRoot().getAttribute("cf_fruit").getValue());
+		assertEquals(newValue, fruitTaskData.getRoot().getAttribute("cf_dropdown").getValue());
 		changed.add(cf_fruit);
 		BugzillaFixture.current().submitTask(fruitTaskData, client);
 		fruitTaskData = BugzillaFixture.current().getTask(fruitTaskData.getTaskId(), client);
-		assertEquals(newValue, fruitTaskData.getRoot().getAttribute("cf_fruit").getValue());
+		assertEquals(newValue, fruitTaskData.getRoot().getAttribute("cf_dropdown").getValue());
 	}
 
 }
