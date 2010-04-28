@@ -146,4 +146,17 @@ public class TemplateProcessorTest extends TestCase {
 		String markup = templateProcessor.processTemplates("one {{testBar}} two");
 		assertEquals("one  two", markup);
 	}
+
+	public void testBasicTemplateExcludedWithWildcards() {
+		Template template = new Template();
+		template.setName("Foo:test");
+		template.setTemplateMarkup("_expanded_");
+		markupLanguage.getTemplates().add(template);
+		markupLanguage.setTemplateExcludes("boo, baz, *test*");
+
+		TemplateProcessor templateProcessor = new TemplateProcessor(markupLanguage);
+
+		String markup = templateProcessor.processTemplates("one {{Foo:test}} two");
+		assertEquals("one  two", markup);
+	}
 }
