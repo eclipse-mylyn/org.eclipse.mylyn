@@ -8,6 +8,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     David Green - fix for bug 254806, bug 267135
+ *     Benjamin Muskalla - fix for bug 310798
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
@@ -25,11 +26,16 @@ import org.eclipse.mylyn.internal.tasks.core.ITaskList;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskContainerComparator;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskOperation;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
@@ -171,7 +177,20 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		toolkit.createLabel(buttonComposite, "    "); //$NON-NLS-1$
 		//}
 
-		if (!getTaskData().isNew()) {
+		createAttachContextButton(buttonComposite, toolkit);
+	}
+
+	private void createAttachContextButton(Composite buttonComposite, FormToolkit toolkit) {
+		AbstractTaskEditorPage taskEditorPage = getTaskEditorPage();
+		AbstractRepositoryConnector connector = taskEditorPage.getConnector();
+		AbstractTaskAttachmentHandler taskAttachmentHandler = connector.getTaskAttachmentHandler();
+		boolean canPostContent = false;
+		if (taskAttachmentHandler != null) {
+			TaskRepository taskRepository = taskEditorPage.getTaskRepository();
+			ITask task = taskEditorPage.getTask();
+			canPostContent = taskAttachmentHandler.canPostContent(taskRepository, task);
+		}
+		if ((!getTaskData().isNew() && canPostContent)) {
 			addAttachContextButton(buttonComposite, toolkit);
 		}
 	}
