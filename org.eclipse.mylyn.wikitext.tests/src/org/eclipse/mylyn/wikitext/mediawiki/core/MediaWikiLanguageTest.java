@@ -627,6 +627,12 @@ public class MediaWikiLanguageTest extends TestCase {
 		assertTrue("Top-level labels: " + topLevelLabels, topLevelLabels.contains("Task-Focused UI"));
 	}
 
+	public void testCloneTemplateExcludes() {
+		markupLanaguage.setTemplateExcludes("*foo");
+		MediaWikiLanguage copy = (MediaWikiLanguage) markupLanaguage.clone();
+		assertEquals(markupLanaguage.getTemplateExcludes(), copy.getTemplateExcludes());
+	}
+
 	private String readFully(String resource) throws IOException {
 		Reader reader = new InputStreamReader(MediaWikiLanguageTest.class.getResourceAsStream(resource));
 		StringWriter writer = new StringWriter();

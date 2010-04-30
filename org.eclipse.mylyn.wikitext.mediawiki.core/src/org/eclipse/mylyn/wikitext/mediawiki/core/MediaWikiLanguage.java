@@ -198,6 +198,7 @@ public class MediaWikiLanguage extends AbstractMediaWikiLanguage {
 		MediaWikiLanguage copy = (MediaWikiLanguage) super.clone();
 		copy.templates = new ArrayList<Template>(templates);
 		copy.templateProviders = new ArrayList<TemplateResolver>(templateProviders);
+		copy.templateExcludes = templateExcludes;
 		return copy;
 	}
 

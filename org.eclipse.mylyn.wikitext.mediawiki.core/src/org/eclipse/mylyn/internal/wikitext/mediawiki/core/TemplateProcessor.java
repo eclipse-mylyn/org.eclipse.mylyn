@@ -50,8 +50,8 @@ public class TemplateProcessor {
 		if (templateExcludes != null) {
 			String[] split = templateExcludes.split("\\s*,\\s*"); //$NON-NLS-1$
 			for (String exclude : split) {
-				String pattern = exclude.toLowerCase().replaceAll("([^a-zA-Z:\\*])", "\\$1").replaceAll("\\*", ".*"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-				excludePatterns.add(Pattern.compile(pattern));
+				String pattern = exclude.toLowerCase().replaceAll("([^a-zA-Z:\\*])", "\\$1").replaceAll("\\*", ".*?"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				excludePatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
 			}
 		}
 	}
