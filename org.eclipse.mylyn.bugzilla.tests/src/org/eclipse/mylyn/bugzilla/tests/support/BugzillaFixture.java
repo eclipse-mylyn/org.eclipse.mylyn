@@ -83,13 +83,13 @@ public class BugzillaFixture extends TestFixture {
 			"3.2.3", "");
 
 	public static BugzillaFixture BUGS_3_0 = new BugzillaFixture(BugzillaTestConstants.TEST_BUGZILLA_30_URL, //
-			"3.0.8", "");
+			"3.0.11", "");
 
 	public static BugzillaFixture BUGS_3_2 = new BugzillaFixture(BugzillaTestConstants.TEST_BUGZILLA_32_URL, //
-			"3.2.4", "");
+			"3.2.6", "");
 
 	public static BugzillaFixture BUGS_3_4 = new BugzillaFixture(BugzillaTestConstants.TEST_BUGZILLA_34_URL, //
-			"3.4.4", "");
+			"3.4.6", "");
 
 	public static BugzillaFixture BUGS_3_6 = new BugzillaFixture(BugzillaTestConstants.TEST_BUGZILLA_36_URL, //
 			"3.6", "");
