@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 David Green and others.
+ * Copyright (c) 2004, 2010 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,9 +28,8 @@ import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * A layout that uses the width hint or client area of a composite to recommend the width of its children, allowing
- * children to fill the width and specify their preferred height for a given width.
- * 
- * Intended for use with a composite that contains a single child that should fill available horizontal space.
+ * children to fill the width and specify their preferred height for a given width. Intended for use with a composite
+ * that contains a single child that should fill available horizontal space.
  * 
  * @author David Green
  */
@@ -54,7 +53,6 @@ class FillWidthLayout extends Layout implements ILayoutExtension {
 
 	/**
 	 * create with 0 margins
-	 * 
 	 */
 	public FillWidthLayout() {
 		this(0, 0, 0, 0);
@@ -166,8 +164,9 @@ class FillWidthLayout extends Layout implements ILayoutExtension {
 		if (lastComputedSize == null || widthHint != lastWidthHint) {
 			int resultX = 1;
 			int resultY = 1;
+			int controlWidthHint = Math.max(horizontalMargin, widthHint - horizontalMargin - 2);
 			for (Control control : children) {
-				Point sz = control.computeSize(widthHint - horizontalMargin, -1, flushCache);
+				Point sz = control.computeSize(controlWidthHint, -1, true);
 				resultX = Math.max(resultX, sz.x);
 				resultY = Math.max(resultY, sz.y);
 			}
