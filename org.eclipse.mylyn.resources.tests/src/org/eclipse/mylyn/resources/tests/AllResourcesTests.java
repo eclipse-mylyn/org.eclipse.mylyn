@@ -26,6 +26,8 @@ public class AllResourcesTests {
 
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.resources.tests");
 		suite.addTestSuite(ResourceChangeMonitorTest.class);
+		suite.addTestSuite(ResourcePatternExclusionStrategyTest.class);
+		suite.addTestSuite(ResourceModificationDateExclusionStrategyTest.class);
 		suite.addTestSuite(ResourceContextTest.class);
 		return suite;
 	}

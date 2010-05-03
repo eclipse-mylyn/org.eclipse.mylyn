@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.resources.tests;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -93,17 +94,16 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 	}
 
 	public void testPatternNotAddedMatching() throws CoreException {
+
+		// disable ResourceModifiedDateExclusionStrategy
+		ResourcesUiBridgePlugin.getDefault().getPreferenceStore().setValue(
+				ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS, false);
+
 		Set<String> previousExcludions = ResourcesUiPreferenceInitializer.getExcludedResourcePatterns();
 		Set<String> exclude = new HashSet<String>();
+		exclude.add("**/.*");
 		exclude.add(".*");
 		ResourcesUiPreferenceInitializer.setExcludedResourcePatterns(exclude);
-
-		String pattern = ".*";
-		String segment = "boring";
-
-		String s = pattern.replaceAll("\\.", "\\\\.").replaceAll("\\*", ".*");
-		assertFalse(segment.matches(s));
-		assertTrue(".boring".matches(s));
 
 		IFile file = project.getProject().getFile(".boring");
 		file.create(null, true, null);
@@ -119,16 +119,26 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		assertTrue(element.getInterest().isInteresting());
 
 		ResourcesUiPreferenceInitializer.setExcludedResourcePatterns(previousExcludions);
+		// re-enable ResourceModifiedDateExclusionStrategy
+		ResourcesUiBridgePlugin.getDefault().getPreferenceStore().setValue(
+				ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS, true);
 	}
 
 	public void testFileAdded() throws CoreException {
-		IFile file = project.getProject().getFile("new-file.txt");
+		// disable ResourceModifiedDateExclusionStrategy
+		ResourcesUiBridgePlugin.getDefault().getPreferenceStore().setValue(
+				ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS, false);
+		IFile file = project.getProject().getFile("new-file" + new Date().getTime() + ".txt");
+		assertFalse(file.exists());
 		file.create(null, true, null);
 		assertTrue(file.exists());
 
 		IInteractionElement element = ContextCore.getContextManager().getElement(
 				structureBridge.getHandleIdentifier(file));
 		assertTrue(element.getInterest().isInteresting());
+		// re-enable ResourceModifiedDateExclusionStrategy
+		ResourcesUiBridgePlugin.getDefault().getPreferenceStore().setValue(
+				ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS, true);
 	}
 
 	public void testFolderAddedOnCreation() throws CoreException {

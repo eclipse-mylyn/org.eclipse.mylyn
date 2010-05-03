@@ -54,18 +54,22 @@ public class ResourceModifiedDateExclusionStrategy extends AbstractContextListen
 		return isEnabled;
 	}
 
+	public void setEnabled(boolean isEnabled) {
+		this.isEnabled = isEnabled;
+	}
+
 	public boolean isExcluded(IResource resource) {
-		return isEnabled() && resource instanceof IFile && !wasModifiedAfter(resource, lastActivatedDate);
+		return (isEnabled() && resource instanceof IFile && !wasModifiedAfter(resource, lastActivatedDate));
 	}
 
 	public boolean wasModifiedAfter(IResource resource, Date date) {
 		if (date == null) {
-			return true;
+			return false;
 		}
 		long modificationStamp = resource.getLocalTimeStamp();
 		if (modificationStamp > 0 && modificationStamp != IResource.NULL_STAMP) {
 			Date resourceDate = new Date(modificationStamp);
-			return resourceDate.after(date);
+			return resourceDate.equals(date) || resourceDate.after(date);
 		} else {
 		}
 
@@ -88,9 +92,9 @@ public class ResourceModifiedDateExclusionStrategy extends AbstractContextListen
 		if (ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS.equals(event.getProperty())) {
 			Object newValue = event.getNewValue();
 			if (newValue instanceof Boolean) {
-				isEnabled = (Boolean) newValue;
+				setEnabled((Boolean) newValue);
 			} else if (newValue instanceof String) {
-				isEnabled = Boolean.parseBoolean((String) newValue);
+				setEnabled(Boolean.parseBoolean((String) newValue));
 			}
 		}
 	}

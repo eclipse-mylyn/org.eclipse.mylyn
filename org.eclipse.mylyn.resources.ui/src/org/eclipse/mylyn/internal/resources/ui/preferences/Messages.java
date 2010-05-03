@@ -29,6 +29,7 @@ public class Messages extends NLS {
 	public static String FocusedResourcesPreferencePage_Add__IGNORED_RESOURCE;
 	public static String FocusedResourcesPreferencePage__automatic_;
 	public static String FocusedResourcesPreferencePage_Enter_pattern_____any_string_;
+	public static String FocusedResourcesPreferencePage_ExcludeNonModifiedFiles;
 	public static String FocusedResourcesPreferencePage_Matching_file_or_directory_names_will_not_be_added_automatically_to_the_context;
 	public static String FocusedResourcesPreferencePage_Remove;
 	public static String FocusedResourcesPreferencePage_Resource_Monitoring_Exclusions;

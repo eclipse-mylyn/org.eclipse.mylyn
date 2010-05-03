@@ -46,6 +46,8 @@ public class ResourcesUiPreferenceInitializer extends AbstractPreferenceInitiali
 
 	private static final String PREF_RESOURCES_IGNORED_ANT = PREF_DEFAULT_SCOPE + ".ignored.pattern.ant"; //$NON-NLS-1$
 
+	public static final String PREF_MODIFIED_DATE_EXCLUSIONS = PREF_DEFAULT_SCOPE + ".date.modified.exclusion"; //$NON-NLS-1$
+
 	private static final String KEY_RESOURCE_EXCLUSIONS = "resourceExclusions"; //$NON-NLS-1$
 
 	private static final String KEY_EXCLUSION = "exclusion"; //$NON-NLS-1$
@@ -62,8 +64,11 @@ public class ResourcesUiPreferenceInitializer extends AbstractPreferenceInitiali
 		Set<String> defaultPatterns = new HashSet<String>();
 
 		defaultPatterns.addAll(ResourcePatternExclusionStrategy.convertToAntPattern(".*")); //$NON-NLS-1$
+
 		ResourcesUiBridgePlugin.getDefault().getPreferenceStore().setDefault(PREF_RESOURCES_IGNORED_ANT,
 				createResourceExclusionMemento(defaultPatterns));
+		ResourcesUiBridgePlugin.getDefault().getPreferenceStore().setDefault(PREF_MODIFIED_DATE_EXCLUSIONS, true);
+
 	}
 
 	/**

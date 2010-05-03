@@ -85,6 +85,9 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 				}
 			}
 
+			// XXX Determine if we want to included folders that have files that are not modified...new folders should be added?
+
+			// XXX investigate why we add removed files to the active task context
 			IResourceDelta[] changed = delta.getAffectedChildren(IResourceDelta.CHANGED | IResourceDelta.REMOVED);
 			for (IResourceDelta element : changed) {
 				IResource resource = element.getResource();
@@ -143,9 +146,8 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 	public ResourceChangeMonitor() {
 		this.enabled = true;
 		exclusions.add(new ResourcePatternExclusionStrategy());
+		exclusions.add(new ResourceModifiedDateExclusionStrategy());
 
-		// TODO add back
-//		exclusions.add(new ResourceModifiedDateExclusionStrategy());
 		for (IResourceExclusionStrategy exclusion : exclusions) {
 			exclusion.init();
 		}

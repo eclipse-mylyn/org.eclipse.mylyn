@@ -18,6 +18,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.window.Window;
+import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiPreferenceInitializer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -50,6 +51,8 @@ public class FocusedResourcesPreferencePage extends PreferencePage implements IW
 	private Button addButton;
 
 	private Button removeButton;
+
+	private Button resourceModificationButton;
 
 	public void init(IWorkbench workbench) {
 		// ignore
@@ -122,6 +125,15 @@ public class FocusedResourcesPreferencePage extends PreferencePage implements IW
 		Dialog.applyDialogFont(group);
 		setButtonLayoutData(addButton);
 		setButtonLayoutData(removeButton);
+
+		resourceModificationButton = new Button(group, SWT.CHECK);
+		resourceModificationButton.setText(Messages.FocusedResourcesPreferencePage_ExcludeNonModifiedFiles);
+
+		boolean resourceModificationsEnabled = ResourcesUiBridgePlugin.getDefault().getPreferenceStore().getBoolean(
+				ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS);
+		resourceModificationButton.setSelection(resourceModificationsEnabled);
+		resourceModificationButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
 	}
 
 	/**
@@ -131,6 +143,11 @@ public class FocusedResourcesPreferencePage extends PreferencePage implements IW
 	 */
 	@Override
 	public boolean performOk() {
+
+		ResourcesUiBridgePlugin.getDefault().getPreferenceStore().setValue(
+				ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS,
+				resourceModificationButton.getSelection());
+
 		Set<String> patterns = new HashSet<String>();
 		TableItem[] items = ignoreTable.getItems();
 		for (int i = 0; i < items.length; i++) {
@@ -145,6 +162,11 @@ public class FocusedResourcesPreferencePage extends PreferencePage implements IW
 	@Override
 	protected void performDefaults() {
 		super.performDefaults();
+
+		boolean resourceModificationsEnabled = ResourcesUiBridgePlugin.getDefault()
+				.getPreferenceStore()
+				.getDefaultBoolean(ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS);
+		resourceModificationButton.setSelection(resourceModificationsEnabled);
 		ignoreTable.removeAll();
 		ResourcesUiPreferenceInitializer.restoreDefaultExcludedResourcePatterns();
 		fillTable(ResourcesUiPreferenceInitializer.getExcludedResourcePatterns(),
