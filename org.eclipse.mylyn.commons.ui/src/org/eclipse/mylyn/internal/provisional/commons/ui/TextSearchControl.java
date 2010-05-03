@@ -42,6 +42,7 @@ import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -333,6 +334,16 @@ public class TextSearchControl extends Composite {
 			}
 		});
 		return labelButton;
+	}
+
+	@Override
+	public void addTraverseListener(TraverseListener listener) {
+		textControl.addTraverseListener(listener);
+	}
+
+	@Override
+	public void removeTraverseListener(TraverseListener listener) {
+		textControl.removeTraverseListener(listener);
 	}
 
 	public void addSelectionListener(SelectionListener listener) {
