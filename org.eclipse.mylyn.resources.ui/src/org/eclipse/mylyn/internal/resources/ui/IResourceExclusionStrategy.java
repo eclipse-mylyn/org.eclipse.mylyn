@@ -27,6 +27,12 @@ public interface IResourceExclusionStrategy {
 	 */
 	void update();
 
+	/**
+	 * If an implementation returns <code>true</code> for an IFolder, all children (files and folders) will be excluded
+	 * from the context as well
+	 * 
+	 * @return true if the resource should not be added to the active task context
+	 */
 	boolean isExcluded(IResource resource);
 
 }

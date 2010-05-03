@@ -13,7 +13,10 @@ package org.eclipse.mylyn.internal.resources.ui;
 
 import java.util.Date;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.ContextChangeEvent;
 import org.eclipse.mylyn.context.core.ContextCore;
@@ -21,32 +24,23 @@ import org.eclipse.mylyn.context.core.ContextCore;
 /**
  * @author Shawn Minto
  */
-public class ResourceModifiedDateExclusionStrategy implements IResourceExclusionStrategy {
-
-	// used so we can compare last modified dates with the last time that the context was activated
-	private final AbstractContextListener contextActivationListener = new AbstractContextListener() {
-
-		@Override
-		public void contextChanged(ContextChangeEvent event) {
-			switch (event.getEventKind()) {
-			case ACTIVATED:
-				lastActivatedDate = new Date();
-				break;
-			case DEACTIVATED:
-				lastActivatedDate = null;
-				break;
-			}
-		};
-	};
+public class ResourceModifiedDateExclusionStrategy extends AbstractContextListener implements
+		IResourceExclusionStrategy, IPropertyChangeListener {
 
 	private transient Date lastActivatedDate = null;
 
+	private boolean isEnabled = false;
+
 	public void dispose() {
-		ContextCore.getContextManager().removeListener(contextActivationListener);
+		ContextCore.getContextManager().removeListener(this);
+		ResourcesUiBridgePlugin.getDefault().getPreferenceStore().removePropertyChangeListener(this);
 	}
 
 	public void init() {
-		ContextCore.getContextManager().addListener(contextActivationListener);
+		ResourcesUiBridgePlugin.getDefault().getPreferenceStore().addPropertyChangeListener(this);
+		isEnabled = ResourcesUiBridgePlugin.getDefault().getPreferenceStore().getBoolean(
+				ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS);
+		ContextCore.getContextManager().addListener(this);
 		if (ContextCore.getContextManager().isContextActive()) {
 			lastActivatedDate = new Date();
 		}
@@ -57,18 +51,14 @@ public class ResourceModifiedDateExclusionStrategy implements IResourceExclusion
 	}
 
 	public boolean isEnabled() {
-		//XXX add a preference for this!
-		return false;
+		return isEnabled;
 	}
 
 	public boolean isExcluded(IResource resource) {
-		return isEnabled() && !wasModifiedAfter(resource, lastActivatedDate);
+		return isEnabled() && resource instanceof IFile && !wasModifiedAfter(resource, lastActivatedDate);
 	}
 
-	/**
-	 * Public for testing
-	 */
-	public static boolean wasModifiedAfter(IResource resource, Date date) {
+	public boolean wasModifiedAfter(IResource resource, Date date) {
 		if (date == null) {
 			return true;
 		}
@@ -76,9 +66,33 @@ public class ResourceModifiedDateExclusionStrategy implements IResourceExclusion
 		if (modificationStamp > 0 && modificationStamp != IResource.NULL_STAMP) {
 			Date resourceDate = new Date(modificationStamp);
 			return resourceDate.after(date);
+		} else {
 		}
 
 		return false;
+	}
+
+	@Override
+	public void contextChanged(ContextChangeEvent event) {
+		switch (event.getEventKind()) {
+		case ACTIVATED:
+			lastActivatedDate = new Date();
+			break;
+		case DEACTIVATED:
+			lastActivatedDate = null;
+			break;
+		}
+	}
+
+	public void propertyChange(PropertyChangeEvent event) {
+		if (ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS.equals(event.getProperty())) {
+			Object newValue = event.getNewValue();
+			if (newValue instanceof Boolean) {
+				isEnabled = (Boolean) newValue;
+			} else if (newValue instanceof String) {
+				isEnabled = Boolean.parseBoolean((String) newValue);
+			}
+		}
 	}
 
 }
