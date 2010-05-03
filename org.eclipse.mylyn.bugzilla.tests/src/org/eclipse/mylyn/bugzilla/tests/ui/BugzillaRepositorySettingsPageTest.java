@@ -17,7 +17,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylyn.bugzilla.tests.BugzillaTestConstants;
+import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
@@ -48,7 +48,7 @@ public class BugzillaRepositorySettingsPageTest extends TestCase {
 		super.setUp();
 		manager = TasksUiPlugin.getRepositoryManager();
 		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
-		repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, BugzillaTestConstants.TEST_BUGZILLA_222_URL);
+		repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, BugzillaFixture.TEST_BUGZILLA_222_URL);
 		Credentials credentials = TestUtil.readCredentials();
 		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials(credentials.username,
 				credentials.password), false);
@@ -152,11 +152,11 @@ public class BugzillaRepositorySettingsPageTest extends TestCase {
 		BugzillaClient client = createClient(page.getRepositoryUrl(), page.getUserName(), page.getPassword(),
 				page.getHttpAuthUserId(), page.getHttpAuthPassword(), page.getCharacterEncoding());
 		client.validate(null);
-		page.setUrl(BugzillaTestConstants.TEST_BUGZILLA_218_URL);
+		page.setUrl(BugzillaFixture.TEST_BUGZILLA_218_URL);
 		wizard.performFinish();
 		assertEquals(1, manager.getAllRepositories().size());
 		TaskRepository repositoryTest = manager.getRepository(BugzillaCorePlugin.CONNECTOR_KIND,
-				BugzillaTestConstants.TEST_BUGZILLA_218_URL);
+				BugzillaFixture.TEST_BUGZILLA_218_URL);
 		assertNotNull(repositoryTest);
 		assertEquals(tempUid, repositoryTest.getUserName());
 		assertEquals(tempPass, repositoryTest.getPassword());
@@ -175,7 +175,7 @@ public class BugzillaRepositorySettingsPageTest extends TestCase {
 		wizard.performFinish();
 		assertEquals(1, manager.getAllRepositories().size());
 		TaskRepository repositoryTest = manager.getRepository(BugzillaCorePlugin.CONNECTOR_KIND,
-				BugzillaTestConstants.TEST_BUGZILLA_222_URL);
+				BugzillaFixture.TEST_BUGZILLA_222_URL);
 		assertNotNull(repositoryTest);
 		wizard = new EditRepositoryWizard(repositoryTest);
 		dialog = new WizardDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), wizard);

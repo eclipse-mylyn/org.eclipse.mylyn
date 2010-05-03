@@ -16,7 +16,6 @@ import java.util.Date;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.bugzilla.tests.BugzillaTestConstants;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
@@ -46,7 +45,7 @@ public class BugzillaTaskCompletionTest extends TestCase {
 //		this.connector = (BugzillaRepositoryConnector) TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 //				BugzillaCorePlugin.CONNECTOR_KIND);
 //		this.repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND,
-//				BugzillaTestConstants.TEST_BUGZILLA_LATEST_URL);
+//				BugzillaFixture.TEST_BUGZILLA_LATEST_URL);
 	}
 
 	@Override
@@ -55,13 +54,13 @@ public class BugzillaTaskCompletionTest extends TestCase {
 	}
 
 	public void testCompletionDate() throws Exception {
-		TaskTask task = new TaskTask(BugzillaCorePlugin.CONNECTOR_KIND, BugzillaTestConstants.TEST_BUGZILLA_LATEST_URL,
-				"1");
+		TaskTask task = new TaskTask(BugzillaCorePlugin.CONNECTOR_KIND, BugzillaFixture.TEST_BUGZILLA_LATEST_URL, "1");
 		TaskAttributeMapper mapper = connector.getTaskDataHandler().getAttributeMapper(repository);
 		TaskData taskData = new TaskData(mapper, BugzillaCorePlugin.CONNECTOR_KIND,
-				BugzillaTestConstants.TEST_BUGZILLA_LATEST_URL, "1");
-		taskData.getRoot().createAttribute(BugzillaAttribute.BUG_STATUS.getKey()).setValue(
-				IBugzillaConstants.VALUE_STATUS_RESOLVED);
+				BugzillaFixture.TEST_BUGZILLA_LATEST_URL, "1");
+		taskData.getRoot()
+				.createAttribute(BugzillaAttribute.BUG_STATUS.getKey())
+				.setValue(IBugzillaConstants.VALUE_STATUS_RESOLVED);
 		TaskAttribute attrComment = taskData.getRoot().createAttribute("commentId");
 		attrComment.getMetaData().setType(TaskAttribute.TYPE_COMMENT);
 		TaskAttribute attrCreationDate = attrComment.createAttribute(BugzillaAttribute.BUG_WHEN.getKey());
@@ -76,11 +75,10 @@ public class BugzillaTaskCompletionTest extends TestCase {
 	}
 
 	public void testCompletionDateForStates() throws Exception {
-		TaskTask task = new TaskTask(BugzillaCorePlugin.CONNECTOR_KIND, BugzillaTestConstants.TEST_BUGZILLA_LATEST_URL,
-				"1");
+		TaskTask task = new TaskTask(BugzillaCorePlugin.CONNECTOR_KIND, BugzillaFixture.TEST_BUGZILLA_LATEST_URL, "1");
 		TaskAttributeMapper mapper = connector.getTaskDataHandler().getAttributeMapper(repository);
 		TaskData taskData = new TaskData(mapper, BugzillaCorePlugin.CONNECTOR_KIND,
-				BugzillaTestConstants.TEST_BUGZILLA_LATEST_URL, "1");
+				BugzillaFixture.TEST_BUGZILLA_LATEST_URL, "1");
 		TaskAttribute status = taskData.getRoot().createAttribute(BugzillaAttribute.BUG_STATUS.getKey());
 		status.setValue("REOPENED");
 		TaskAttribute attrComment = taskData.getRoot().createAttribute("commentId");

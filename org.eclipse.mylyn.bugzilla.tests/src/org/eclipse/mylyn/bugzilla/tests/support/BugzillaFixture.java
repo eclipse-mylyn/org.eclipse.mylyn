@@ -17,7 +17,6 @@ import java.util.Collections;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylyn.bugzilla.tests.BugzillaTestConstants;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.WebLocation;
@@ -45,56 +44,60 @@ import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
  */
 public class BugzillaFixture extends TestFixture {
 
+	public static final String SERVER = System.getProperty("mylyn.bugzilla.server", "mylyn.eclipse.org");
+
+	public static final String TEST_BUGZILLA_30_URL = getServerUrl("bugs30");
+
+	public static final String TEST_BUGZILLA_218_URL = getServerUrl("bugs218");
+
+	public static final String TEST_BUGZILLA_220_URL = getServerUrl("bugs220");
+
+	public static final String TEST_BUGZILLA_2201_URL = getServerUrl("bugs220");
+
+	public static final String TEST_BUGZILLA_222_URL = getServerUrl("bugs222");
+
+	public static final String TEST_BUGZILLA_303_URL = getServerUrl("bugs30");
+
+	public static final String TEST_BUGZILLA_32_URL = getServerUrl("bugs32");
+
+	public static final String TEST_BUGZILLA_322_URL = getServerUrl("bugs322");
+
+	public static final String TEST_BUGZILLA_323_URL = getServerUrl("bugs323");
+
+	public static final String TEST_BUGZILLA_34_URL = getServerUrl("bugs34");
+
+	public static final String TEST_BUGZILLA_36_URL = getServerUrl("bugs36");
+
+	public static final String TEST_BUGZILLA_HEAD_URL = getServerUrl("bugshead");
+
+	public static final String TEST_BUGZILLA_LATEST_URL = TEST_BUGZILLA_36_URL;
+
+	private static final String getServerUrl(String version) {
+		return "http://" + SERVER + "/" + version;
+	}
+
 	private static BugzillaFixture current;
 
 	/**
 	 * @deprecated not supported any more
 	 */
 	@Deprecated
-	public static BugzillaFixture BUGS_2_18 = new BugzillaFixture(BugzillaTestConstants.TEST_BUGZILLA_218_URL,//
-			"2.18.6", "");
-
-	/**
-	 * @deprecated not supported any more
-	 */
-	@Deprecated
-	public static BugzillaFixture BUGS_2_20 = new BugzillaFixture(BugzillaTestConstants.TEST_BUGZILLA_220_URL, //
-			"2.20.7", "");
-
-	/**
-	 * @deprecated not supported any more
-	 */
-	@Deprecated
-	public static BugzillaFixture BUGS_2_22 = new BugzillaFixture(BugzillaTestConstants.TEST_BUGZILLA_222_URL, //
+	public static BugzillaFixture BUGS_2_22 = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_222_URL, //
 			"2.22.7", "");
 
-	/**
-	 * @deprecated use latest 3.2 -> BUGS_3_2
-	 */
-	@Deprecated
-	public static BugzillaFixture BUGS_3_2_2 = new BugzillaFixture(BugzillaTestConstants.TEST_BUGZILLA_322_URL, //
-			"3.2.2", "");
-
-	/**
-	 * @deprecated use latest 3.2 -> BUGS_3_2
-	 */
-	@Deprecated
-	public static BugzillaFixture BUGS_3_2_3 = new BugzillaFixture(BugzillaTestConstants.TEST_BUGZILLA_323_URL, //
-			"3.2.3", "");
-
-	public static BugzillaFixture BUGS_3_0 = new BugzillaFixture(BugzillaTestConstants.TEST_BUGZILLA_30_URL, //
+	public static BugzillaFixture BUGS_3_0 = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_30_URL, //
 			"3.0.11", "");
 
-	public static BugzillaFixture BUGS_3_2 = new BugzillaFixture(BugzillaTestConstants.TEST_BUGZILLA_32_URL, //
+	public static BugzillaFixture BUGS_3_2 = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_32_URL, //
 			"3.2.6", "");
 
-	public static BugzillaFixture BUGS_3_4 = new BugzillaFixture(BugzillaTestConstants.TEST_BUGZILLA_34_URL, //
+	public static BugzillaFixture BUGS_3_4 = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_34_URL, //
 			"3.4.6", "");
 
-	public static BugzillaFixture BUGS_3_6 = new BugzillaFixture(BugzillaTestConstants.TEST_BUGZILLA_36_URL, //
+	public static BugzillaFixture BUGS_3_6 = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_36_URL, //
 			"3.6", "");
 
-	public static BugzillaFixture BUGS_HEAD = new BugzillaFixture(BugzillaTestConstants.TEST_BUGZILLA_HEAD_URL, //
+	public static BugzillaFixture BUGS_HEAD = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_HEAD_URL, //
 			"3.7", "");
 
 	public static BugzillaFixture DEFAULT = BUGS_3_6;
