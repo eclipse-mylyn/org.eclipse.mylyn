@@ -92,11 +92,13 @@ public class HtmlDocumentBuilderTest extends TestCase {
 	}
 
 	public void testRelativeUrlWithFileBase() throws URISyntaxException {
-		builder.setBase(new File("/base/2/with space/").toURI());
+		final File file = new File("/base/2/with space/");
+		builder.setBase(file.toURI());
 		parser.parse("\"An URL\":foo/bar.html");
 		String html = out.toString();
 		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<a href=\"file:/base/2/with%20space/foo/bar.html\">An URL</a>"));
+		assertTrue(html.contains("<a href=\"file:/base/2/with%20space/foo/bar.html\">An URL</a>")
+				|| html.contains("<a href=\"file:/C:/base/2/with%20space/foo/bar.html\">An URL</a>"));
 	}
 
 	public void testNoGratuitousWhitespace() {
