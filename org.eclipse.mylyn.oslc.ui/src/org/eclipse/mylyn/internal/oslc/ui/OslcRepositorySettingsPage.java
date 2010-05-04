@@ -41,8 +41,6 @@ import org.eclipse.swt.widgets.Text;
  */
 public abstract class OslcRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
-	private static final String OSLC_BASEURL = "oslc.baseurl"; //$NON-NLS-1$
-
 	private OslcServiceDescriptor descriptor;
 
 	protected Text baseText;
@@ -74,7 +72,7 @@ public abstract class OslcRepositorySettingsPage extends AbstractRepositorySetti
 		baseUrlLabel.setText("Base URL:"); //$NON-NLS-1$
 		baseText = new Text(parent, SWT.BORDER);
 		if (repository != null) {
-			String base = repository.getProperty(OSLC_BASEURL);
+			String base = repository.getProperty(IOslcCoreConstants.OSLC_BASEURL);
 			if (base != null) {
 				baseText.setText(base);
 			}
@@ -119,7 +117,7 @@ public abstract class OslcRepositorySettingsPage extends AbstractRepositorySetti
 
 	@Override
 	public void applyTo(TaskRepository repository) {
-		repository.setProperty(OSLC_BASEURL, baseText.getText());
+		repository.setProperty(IOslcCoreConstants.OSLC_BASEURL, baseText.getText());
 		super.applyTo(repository);
 	};
 

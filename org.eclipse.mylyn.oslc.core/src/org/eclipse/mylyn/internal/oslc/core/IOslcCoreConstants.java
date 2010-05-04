@@ -20,6 +20,10 @@ public interface IOslcCoreConstants {
 
 	public static final String ID_PLUGIN = "org.eclipse.mylyn.oslc.core"; //$NON-NLS-1$
 
+	// Task Repository property keys
+
+	public static final String OSLC_BASEURL = "oslc.baseurl"; //$NON-NLS-1$
+
 	//Namespaces
 
 	public static final Namespace NAMESPACE_OSLC_CM_1_0 = Namespace.getNamespace(
