@@ -199,7 +199,6 @@ public class TasksUiUtil {
 				dialog.create();
 				dialog.setBlockOnOpen(true);
 				if (dialog.open() == Window.CANCEL) {
-					dialog.close();
 					return Window.CANCEL;
 				}
 			}
@@ -403,8 +402,10 @@ public class TasksUiUtil {
 	 */
 	public static IViewPart openTasksViewInActivePerspective() {
 		try {
-			return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(
-					ITasksUiConstants.ID_VIEW_TASKS);
+			return PlatformUI.getWorkbench()
+					.getActiveWorkbenchWindow()
+					.getActivePage()
+					.showView(ITasksUiConstants.ID_VIEW_TASKS);
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not show Task List view", e)); //$NON-NLS-1$
 			return null;
@@ -418,7 +419,8 @@ public class TasksUiUtil {
 	 * @since 3.4
 	 */
 	public static boolean getHighlightCurrentLine() {
-		return TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				ITasksUiPreferenceConstants.EDITOR_CURRENT_LINE_HIGHLIGHT);
+		return TasksUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getBoolean(ITasksUiPreferenceConstants.EDITOR_CURRENT_LINE_HIGHLIGHT);
 	}
 }
