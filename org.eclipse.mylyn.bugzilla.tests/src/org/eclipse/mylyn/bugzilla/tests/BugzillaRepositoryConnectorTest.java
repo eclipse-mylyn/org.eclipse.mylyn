@@ -38,10 +38,10 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.RepositoryResponse;
-import org.eclipse.mylyn.tasks.core.TaskMapping;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
+import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
+import org.eclipse.mylyn.tasks.core.TaskMapping;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
@@ -344,8 +344,9 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 //	}
 //
 	public void testStdWorkflow32() throws Exception {
-//		init32();
-		doStdWorkflow("3");
+		if (BugzillaFixture.current() != BugzillaFixture.BUGS_3_6_CUSTOM) {
+			doStdWorkflow("3");
+		}
 	}
 
 	private void doStdWorkflow(String DupBugID) throws Exception {
@@ -776,8 +777,9 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 			taskData.getRoot().getAttribute(BugzillaAttribute.DEADLINE.getKey()).setValue("" + deadline);
 		}
 
-		taskData.getRoot().getAttribute(BugzillaAttribute.NEW_COMMENT.getKey()).setValue(
-				"New Estimate: " + estimatedTime + "\nNew Remaining: " + remainingTime + "\nAdd: " + addTime);
+		taskData.getRoot()
+				.getAttribute(BugzillaAttribute.NEW_COMMENT.getKey())
+				.setValue("New Estimate: " + estimatedTime + "\nNew Remaining: " + remainingTime + "\nAdd: " + addTime);
 		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
 		changed.add(taskData.getRoot().getAttribute(BugzillaAttribute.ESTIMATED_TIME.getKey()));
 		changed.add(taskData.getRoot().getAttribute(BugzillaAttribute.REMAINING_TIME.getKey()));
@@ -793,12 +795,12 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		model = createModel(task);
 		taskData = model.getTaskData();
 
-		assertEquals(estimatedTime, Float.parseFloat(taskData.getRoot().getAttribute(
-				BugzillaAttribute.ESTIMATED_TIME.getKey()).getValue()));
-		assertEquals(remainingTime, Float.parseFloat(taskData.getRoot().getAttribute(
-				BugzillaAttribute.REMAINING_TIME.getKey()).getValue()));
-		assertEquals(actualTime + addTime, Float.parseFloat(taskData.getRoot().getAttribute(
-				BugzillaAttribute.ACTUAL_TIME.getKey()).getValue()));
+		assertEquals(estimatedTime,
+				Float.parseFloat(taskData.getRoot().getAttribute(BugzillaAttribute.ESTIMATED_TIME.getKey()).getValue()));
+		assertEquals(remainingTime,
+				Float.parseFloat(taskData.getRoot().getAttribute(BugzillaAttribute.REMAINING_TIME.getKey()).getValue()));
+		assertEquals(actualTime + addTime,
+				Float.parseFloat(taskData.getRoot().getAttribute(BugzillaAttribute.ACTUAL_TIME.getKey()).getValue()));
 		if (enableDeadline) {
 			assertEquals(deadline, taskData.getRoot().getAttribute(BugzillaAttribute.DEADLINE.getKey()).getValue());
 		}
@@ -892,10 +894,10 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		event.setTaskRepository(repository);
 		event.setFullSynchronization(true);
 		connector.preSynchronization(event, null);
-		assertTrue("Expected " + task4.getTaskId() + ", got: " + event.getStaleTasks(), event.getStaleTasks().contains(
-				task4));
-		assertTrue("Expected " + task5.getTaskId() + ", got: " + event.getStaleTasks(), event.getStaleTasks().contains(
-				task5));
+		assertTrue("Expected " + task4.getTaskId() + ", got: " + event.getStaleTasks(),
+				event.getStaleTasks().contains(task4));
+		assertTrue("Expected " + task5.getTaskId() + ", got: " + event.getStaleTasks(),
+				event.getStaleTasks().contains(task5));
 
 		TasksUiInternal.synchronizeTasks(connector, tasks, true, null);
 
