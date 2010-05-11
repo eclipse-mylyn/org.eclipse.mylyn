@@ -47,6 +47,7 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
@@ -651,6 +652,22 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			public String getTaskUrl() {
 				return taskData.getRepositoryUrl();
 			}
+
+			@Override
+			public PriorityLevel getPriorityLevel() {
+				RepositoryConfiguration a = BugzillaRepositoryConnector.this.getRepositoryConfiguration(taskData.getRepositoryUrl());
+				BugzillaVersion a1 = a.getInstallVersion();
+				if (a1.compareTo(BugzillaVersion.BUGZILLA_3_6) >= 0) {
+					BugzillaPriorityLevel bugzillaPriorityLevel = BugzillaPriorityLevel.fromPriority(getPriority());
+					if (bugzillaPriorityLevel != null) {
+						return BugzillaPriorityLevel.fromPriority(getPriority()).toPriorityLevel();
+					} else {
+						PriorityLevel.getDefault();
+					}
+				}
+				// ignore
+				return super.getPriorityLevel();
+			}
 		};
 	}
 
@@ -956,6 +973,69 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, "could not set platform options", //$NON-NLS-1$
 					e));
+		}
+	}
+
+	public enum BugzillaPriorityLevel {
+		HIGHEST, HIGH, NORMAL, LOW, LOWEST, NOSELECT;
+
+		public static BugzillaPriorityLevel fromPriority(String priority) {
+			if (priority == null) {
+				return NOSELECT;
+			}
+			if (priority.equals("Highest")) { //$NON-NLS-1$
+				return HIGHEST;
+			}
+			if (priority.equals("High")) { //$NON-NLS-1$
+				return HIGH;
+			}
+			if (priority.equals("Normal")) { //$NON-NLS-1$
+				return NORMAL;
+			}
+			if (priority.equals("Low")) { //$NON-NLS-1$
+				return LOW;
+			}
+			if (priority.equals("Lowest")) { //$NON-NLS-1$
+				return LOWEST;
+			}
+			return NOSELECT;
+		}
+
+		public PriorityLevel toPriorityLevel() {
+			switch (this) {
+			case HIGHEST:
+				return PriorityLevel.P1;
+			case HIGH:
+				return PriorityLevel.P2;
+			case NORMAL:
+				return PriorityLevel.P3;
+			case LOW:
+				return PriorityLevel.P4;
+			case LOWEST:
+				return PriorityLevel.P5;
+			default:
+				return null;
+			}
+		}
+
+		@Override
+		public String toString() {
+			switch (this) {
+			case HIGHEST:
+				return "Highest"; //$NON-NLS-1$
+			case HIGH:
+				return "High"; //$NON-NLS-1$
+			case NORMAL:
+				return "Normal"; //$NON-NLS-1$
+			case LOW:
+				return "Low"; //$NON-NLS-1$
+			case LOWEST:
+				return "Lowest"; //$NON-NLS-1$
+			case NOSELECT:
+				return "---"; //$NON-NLS-1$
+			default:
+				return null;
+			}
 		}
 	}
 
