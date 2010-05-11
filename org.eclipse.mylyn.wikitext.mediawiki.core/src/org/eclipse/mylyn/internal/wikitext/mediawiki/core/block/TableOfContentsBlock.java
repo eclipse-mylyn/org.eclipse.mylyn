@@ -8,23 +8,21 @@
  * Contributors:
  *     David Green - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.internal.wikitext.textile.core.block;
+package org.eclipse.mylyn.internal.wikitext.mediawiki.core.block;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
-import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
+import org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class TableOfContentsBlock extends AbstractTableOfContentsBlock {
 
-	static final Pattern startPattern = Pattern.compile("\\s*\\{toc(?::([^\\}]+))?\\}\\s*"); //$NON-NLS-1$
+	static final Pattern startPattern = Pattern.compile("\\s*__TOC__\\s*(.*?)"); //$NON-NLS-1$
 
 	private int blockLineNumber = 0;
 
@@ -38,33 +36,16 @@ public class TableOfContentsBlock extends AbstractTableOfContentsBlock {
 		}
 
 		if (!getMarkupLanguage().isFilterGenerativeContents()) {
-			String options = matcher.group(1);
-			if (options != null) {
-				String[] optionPairs = options.split("\\s*\\|\\s*"); //$NON-NLS-1$
-				for (String optionPair : optionPairs) {
-					String[] keyValue = optionPair.split("\\s*=\\s*"); //$NON-NLS-1$
-					if (keyValue.length == 2) {
-						String key = keyValue[0].trim();
-						String value = keyValue[1].trim();
-
-						if (key.equals("style")) { //$NON-NLS-1$
-							setStyle(value);
-						} else if (key.equals("maxLevel")) { //$NON-NLS-1$
-							try {
-								maxLevel = Integer.parseInt(value);
-							} catch (NumberFormatException e) {
-							}
-						}
-					}
-				}
-			}
-
-			OutlineParser outlineParser = new OutlineParser(new TextileLanguage());
+			OutlineParser outlineParser = new OutlineParser(new MediaWikiLanguage());
 			OutlineItem rootItem = outlineParser.parse(state.getMarkupContent());
 
 			emitToc(rootItem);
 		}
-		return -1;
+		int start = matcher.start(1);
+		if (start > 0) {
+			setClosed(true);
+		}
+		return start;
 	}
 
 	@Override

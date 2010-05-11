@@ -21,6 +21,7 @@ import org.eclipse.mylyn.internal.wikitext.mediawiki.core.block.ListBlock;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.block.ParagraphBlock;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.block.PreformattedBlock;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.block.TableBlock;
+import org.eclipse.mylyn.internal.wikitext.mediawiki.core.block.TableOfContentsBlock;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.phrase.EscapePhraseModifier;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.phrase.SimplePhraseModifier;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.token.HyperlinkExternalReplacementToken;
@@ -92,6 +93,7 @@ public class MediaWikiLanguage extends AbstractMediaWikiLanguage {
 		}
 
 		blocks.add(new TableBlock());
+		blocks.add(new TableOfContentsBlock());
 
 		for (Block block : blocks) {
 			if (block instanceof ParagraphBlock) {

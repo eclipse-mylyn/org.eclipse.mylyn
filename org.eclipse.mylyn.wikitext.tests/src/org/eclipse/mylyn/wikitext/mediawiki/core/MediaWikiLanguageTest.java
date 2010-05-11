@@ -639,6 +639,28 @@ public class MediaWikiLanguageTest extends TestCase {
 		assertEquals(markupLanaguage.getTemplateExcludes(), copy.getTemplateExcludes());
 	}
 
+	public void testTableOfContents() throws IOException {
+		String html = parser.parseToHtml("= Table Of Contents =\n\n__TOC__\n\n= Top Header =\n\nsome text\n\n== Subhead ==\n\n== Subhead2 ==\n\n= Top Header 2 =\n\n== Subhead 3 ==\n\n=== Subhead 4 ===");
+
+		TestUtil.println("HTML: \n" + html);
+
+		assertTrue(html.contains("<a href=\"#Subhead2\">"));
+		assertTrue(html.contains("<h2 id=\"Subhead2\">"));
+		assertTrue(html.contains("href=\"#Subhead_4\""));
+		assertTrue(html.contains("<h3 id=\"Subhead_4\">"));
+	}
+
+	public void testTableOfContents_WithTextFollowingTOC() throws IOException {
+		String html = parser.parseToHtml("= Table Of Contents =\n\nfoo\n__TOC__ bar\n\n= Top Header =\n\nsome text\n\n== Subhead ==\n\n== Subhead2 ==\n\n= Top Header 2 =\n\n== Subhead 3 ==\n\n=== Subhead 4 ===");
+
+		TestUtil.println("HTML: \n" + html);
+
+		assertTrue(html.contains("<a href=\"#Subhead2\">"));
+		assertTrue(html.contains("<h2 id=\"Subhead2\">"));
+		assertTrue(html.contains("href=\"#Subhead_4\""));
+		assertTrue(html.contains("<h3 id=\"Subhead_4\">"));
+	}
+
 	private String readFully(String resource) throws IOException {
 		Reader reader = new InputStreamReader(MediaWikiLanguageTest.class.getResourceAsStream(resource));
 		StringWriter writer = new StringWriter();
