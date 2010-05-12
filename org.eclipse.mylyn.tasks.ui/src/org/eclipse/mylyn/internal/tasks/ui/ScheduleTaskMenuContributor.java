@@ -23,13 +23,14 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DatePicker;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DateSelectionDialog;
+import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.DateRange;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.WeekDateRange;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.swt.widgets.Shell;
 
 /**
  * @author Rob Elves
@@ -158,11 +159,18 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 				if (getScheduledForDate(singleTaskSelection) != null) {
 					theCalendar.setTime(getScheduledForDate(singleTaskSelection).getStartDate().getTime());
 				}
-				DateSelectionDialog reminderDialog = new DateSelectionDialog(PlatformUI.getWorkbench()
-						.getActiveWorkbenchWindow()
-						.getShell(), theCalendar, DatePicker.TITLE_DIALOG, false, TasksUiPlugin.getDefault()
-						.getPreferenceStore()
-						.getInt(ITasksUiPreferenceConstants.PLANNING_ENDHOUR));
+				Shell shell = null;
+				if (subMenuManager != null && subMenuManager.getMenu() != null) {
+					// we should try to use the same shell that the menu was created with
+					// so that it shows up on top of that shell correctly
+					shell = subMenuManager.getMenu().getShell();
+				}
+				if (shell == null) {
+					shell = WorkbenchUtil.getShell();
+				}
+				DateSelectionDialog reminderDialog = new DateSelectionDialog(shell, theCalendar,
+						DatePicker.TITLE_DIALOG, false, TasksUiPlugin.getDefault().getPreferenceStore().getInt(
+								ITasksUiPreferenceConstants.PLANNING_ENDHOUR));
 				int result = reminderDialog.open();
 				if (result == Window.OK) {
 					DateRange range = null;
