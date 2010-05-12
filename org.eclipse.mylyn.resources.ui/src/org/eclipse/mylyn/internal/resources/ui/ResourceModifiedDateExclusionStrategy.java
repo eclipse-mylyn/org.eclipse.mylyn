@@ -76,6 +76,13 @@ public class ResourceModifiedDateExclusionStrategy extends AbstractContextListen
 		return false;
 	}
 
+	/**
+	 * For testing purposes
+	 */
+	public Date getLastActivatedDate() {
+		return lastActivatedDate;
+	}
+
 	@Override
 	public void contextChanged(ContextChangeEvent event) {
 		switch (event.getEventKind()) {

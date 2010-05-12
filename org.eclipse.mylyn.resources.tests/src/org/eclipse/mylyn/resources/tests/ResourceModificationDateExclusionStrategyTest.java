@@ -43,8 +43,8 @@ public class ResourceModificationDateExclusionStrategyTest extends AbstractResou
 
 		exclusionStrategy = new ResourceModifiedDateExclusionStrategy();
 		// make sure that the strategy is enabled
-		exclusionStrategy.setEnabled(true);
 		exclusionStrategy.init();
+		exclusionStrategy.setEnabled(true);
 		assertTrue(exclusionStrategy.isEnabled());
 
 		// we need to have contents for teh file to be local
@@ -110,6 +110,8 @@ public class ResourceModificationDateExclusionStrategyTest extends AbstractResou
 
 	public void testIsExcludedFileContextActiveChanged() throws CoreException {
 		assertTrue(ContextCore.getContextManager().isContextActive());
+
+		assertNotNull(exclusionStrategy.getLastActivatedDate());
 
 		file.setLocalTimeStamp(new Date().getTime());
 

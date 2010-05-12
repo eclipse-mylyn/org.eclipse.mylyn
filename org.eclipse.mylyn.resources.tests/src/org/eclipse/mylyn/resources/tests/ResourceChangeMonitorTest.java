@@ -110,18 +110,22 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 		assertTrue(fileInFolder.exists());
 
 		ContextCore.getContextManager().setContextCapturePaused(false);
+		// disable ResourceModifiedDateExclusionStrategy
+		ResourcesUiBridgePlugin.getDefault().getPreferenceStore().setValue(
+				ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS, false);
+
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		ResourcesUiBridgePlugin.getInterestUpdater().setSyncExec(false);
 		super.tearDown();
+		// re-enable ResourceModifiedDateExclusionStrategy
+		ResourcesUiBridgePlugin.getDefault().getPreferenceStore().setValue(
+				ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS, true);
 	}
 
 	public void testCreatedFile() throws CoreException {
-		// disable ResourceModifiedDateExclusionStrategy
-		ResourcesUiBridgePlugin.getDefault().getPreferenceStore().setValue(
-				ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS, false);
 		MockResourceDelta delta = MockResourceDelta.createMockDelta("/" + project.getProject().getName(),
 				new String[] { "/test.txt" }, (IResourceDelta.ADDED | IResourceDelta.CONTENT), IResource.PROJECT);
 		IResourceChangeEvent event = new ResourceChangeEvent(delta, IResourceChangeEvent.POST_CHANGE, 0, delta);
@@ -131,16 +135,9 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 		IInteractionElement element = context.get(handle);
 		assertNotNull(element);
 		assertTrue(element.getInterest().isPropagated());
-		// re-enable ResourceModifiedDateExclusionStrategy
-		ResourcesUiBridgePlugin.getDefault().getPreferenceStore().setValue(
-				ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS, true);
 	}
 
 	public void testModifiedFile() throws CoreException {
-		// disable ResourceModifiedDateExclusionStrategy
-		ResourcesUiBridgePlugin.getDefault().getPreferenceStore().setValue(
-				ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS, false);
-
 		MockResourceDelta delta = MockResourceDelta.createMockDelta("/" + project.getProject().getName(),
 				new String[] { "/test.txt" }, (IResourceDelta.CHANGED | IResourceDelta.CONTENT), IResource.PROJECT);
 		IResourceChangeEvent event = new ResourceChangeEvent(delta, IResourceChangeEvent.POST_CHANGE, 0, delta);
@@ -150,9 +147,6 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 		IInteractionElement element = context.get(handle);
 		assertNotNull(element);
 		assertTrue(element.getInterest().isPredicted());
-		// re-enable ResourceModifiedDateExclusionStrategy
-		ResourcesUiBridgePlugin.getDefault().getPreferenceStore().setValue(
-				ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS, true);
 	}
 
 	public void testDerrivedFileChanged() throws CoreException {
