@@ -160,7 +160,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 					theCalendar.setTime(getScheduledForDate(singleTaskSelection).getStartDate().getTime());
 				}
 				Shell shell = null;
-				if (subMenuManager != null && subMenuManager.getMenu() != null) {
+				if (subMenuManager != null && subMenuManager.getMenu() != null && subMenuManager.getMenu().isDisposed()) {
 					// we should try to use the same shell that the menu was created with
 					// so that it shows up on top of that shell correctly
 					shell = subMenuManager.getMenu().getShell();
