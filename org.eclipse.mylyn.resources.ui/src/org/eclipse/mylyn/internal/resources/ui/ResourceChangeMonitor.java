@@ -19,6 +19,7 @@ import java.util.Set;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -64,11 +65,18 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 
 		public boolean visit(IResourceDelta delta) {
 
-			if (hasTeamPrivate(delta.getResource())) {
+			IResource deltaResource = delta.getResource();
+			if (deltaResource instanceof IProject
+					&& (delta.getKind() == IResourceDelta.REMOVED || (delta.getFlags() & IResourceDelta.OPEN) != 0)) {
+				// the project was either opened, closed or deleted, so lets ignore this so that we don't add every file to the context
 				return false;
 			}
 
-			if (isExcluded(delta.getResource())) {
+			if (hasTeamPrivate(deltaResource)) {
+				return false;
+			}
+
+			if (isExcluded(deltaResource)) {
 				return false;
 			}
 
@@ -85,9 +93,6 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 				}
 			}
 
-			// XXX Determine if we want to included folders that have files that are not modified...new folders should be added?
-
-			// XXX investigate why we add removed files to the active task context
 			IResourceDelta[] changed = delta.getAffectedChildren(IResourceDelta.CHANGED | IResourceDelta.REMOVED);
 			for (IResourceDelta element : changed) {
 				IResource resource = element.getResource();
@@ -145,7 +150,9 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 
 	public ResourceChangeMonitor() {
 		this.enabled = true;
+		// ant based pattern exclusion
 		exclusions.add(new ResourcePatternExclusionStrategy());
+		// exclude resources not modified while task active
 		exclusions.add(new ResourceModifiedDateExclusionStrategy());
 
 		for (IResourceExclusionStrategy exclusion : exclusions) {
@@ -160,6 +167,7 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 		exclusions.clear();
 	}
 
+	// TODO investigate moving computation to the background?
 	public void resourceChanged(IResourceChangeEvent event) {
 		if (!enabled || !ContextCore.getContextManager().isContextActive()) {
 			return;

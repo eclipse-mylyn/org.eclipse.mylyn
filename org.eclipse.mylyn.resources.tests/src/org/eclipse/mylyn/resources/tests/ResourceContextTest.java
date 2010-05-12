@@ -11,12 +11,15 @@
 
 package org.eclipse.mylyn.resources.tests;
 
+import java.io.ByteArrayInputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.context.core.ContextCore;
@@ -142,6 +145,61 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		IInteractionElement element = ContextCore.getContextManager().getElement(
 				structureBridge.getHandleIdentifier(folder));
 		assertTrue(element.getInterest().isInteresting());
+	}
+
+	public void testProjectClose() throws CoreException, UnsupportedEncodingException {
+		IProject project2 = project.getProject();
+		createRealFiles(project2);
+		context.reset();
+
+		assertEquals(0, context.getInteractionHistory().size());
+		project2.close(null);
+		assertEquals(0, context.getInteractionHistory().size());
+	}
+
+	public void testProjectOpen() throws CoreException, UnsupportedEncodingException {
+		IProject project2 = project.getProject();
+		createRealFiles(project2);
+		context.reset();
+
+		assertEquals(0, context.getInteractionHistory().size());
+		project2.close(null);
+		assertEquals(0, context.getInteractionHistory().size());
+		project2.open(null);
+		assertEquals(0, context.getInteractionHistory().size());
+	}
+
+	public void testProjectDelete() throws CoreException, UnsupportedEncodingException {
+		IProject project2 = project.getProject();
+		createRealFiles(project2);
+		context.reset();
+
+		assertEquals(0, context.getInteractionHistory().size());
+		ResourceTestUtil.deleteProject(project2);
+		assertEquals(0, context.getInteractionHistory().size());
+	}
+
+	@SuppressWarnings("deprecation")
+	private void createRealFiles(IProject project) throws CoreException, UnsupportedEncodingException {
+		// we need to have contents for the file to be local
+		StringBuffer fileContents = new StringBuffer("FileContents");
+		ByteArrayInputStream fileInput = new ByteArrayInputStream(fileContents.toString().getBytes("UTF-8"));
+		IFile file = project.getFile("test.txt");
+		file.create(fileInput, true, null);
+		assertTrue(file.exists());
+
+		IFolder folder = project.getFolder("testFolder");
+		folder.create(true, true, null);
+		assertTrue(folder.exists());
+
+		// we need to have contents for the file to be local
+		ByteArrayInputStream fileInFolderInput = new ByteArrayInputStream(fileContents.toString().getBytes("UTF-8"));
+		IFile fileInFolder = folder.getFile("test.txt");
+		fileInFolder.create(fileInFolderInput, true, null);
+		assertTrue(fileInFolder.exists());
+
+		assertTrue(file.isLocal(0));
+		assertTrue(fileInFolder.isLocal(0));
 	}
 
 	// XXX: Put back
