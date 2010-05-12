@@ -88,11 +88,11 @@ import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
+import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
-import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
@@ -658,8 +658,10 @@ public class TasksUiInternal {
 	}
 
 	/**
-	 * @param connectorUi - repository connector ui
-	 * @param query - repository query
+	 * @param connectorUi
+	 *            - repository connector ui
+	 * @param query
+	 *            - repository query
 	 * @return - true if dialog was opened successfully and not canceled, false otherwise
 	 * @since 3.0
 	 */
@@ -861,13 +863,14 @@ public class TasksUiInternal {
 		if (window != null) {
 			TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
 					task.getRepositoryUrl());
-			boolean openWithBrowser = !TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-					ITasksUiPreferenceConstants.EDITOR_TASKS_RICH);
+			boolean openWithBrowser = !TasksUiPlugin.getDefault()
+					.getPreferenceStore()
+					.getBoolean(ITasksUiPreferenceConstants.EDITOR_TASKS_RICH);
 			if (openWithBrowser) {
 				TasksUiUtil.openWithBrowser(taskRepository, task);
 				return new TaskOpenEvent(taskRepository, task, taskId, null, true);
 			} else {
-				IEditorInput editorInput = new TaskEditorInput(taskRepository, task);
+				IEditorInput editorInput = getTaskEditorInput(taskRepository, task);
 				IEditorPart editor = refreshEditorContentsIfOpen(task, editorInput);
 				if (editor != null) {
 					synchronizeTask(taskRepository, task);
@@ -886,6 +889,18 @@ public class TasksUiInternal {
 					+ task.getSummary() + "\": no active workbench window")); //$NON-NLS-1$
 		}
 		return null;
+	}
+
+	private static IEditorInput getTaskEditorInput(TaskRepository repository, ITask task) {
+		Assert.isNotNull(task);
+		Assert.isNotNull(repository);
+		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(task.getConnectorKind());
+		IEditorInput editorInput = connectorUi.getTaskEditorInput(repository, task);
+		if (editorInput != null) {
+			return editorInput;
+		} else {
+			return new TaskEditorInput(repository, task);
+		}
 	}
 
 	private static String getTaskEditorId(final ITask task) {
@@ -1169,15 +1184,21 @@ public class TasksUiInternal {
 						TasksUiInternal.displayStatus(title, new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 								"Command execution failed", e)); //$NON-NLS-1$
 					} catch (NotDefinedException e) {
-						TasksUiInternal.displayStatus(title, new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-								NLS.bind("The command with the id ''{0}'' is not defined.", commandId), e)); //$NON-NLS-1$
+						TasksUiInternal.displayStatus(
+								title,
+								new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
+										"The command with the id ''{0}'' is not defined.", commandId), e)); //$NON-NLS-1$
 					} catch (NotHandledException e) {
-						TasksUiInternal.displayStatus(title, new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-								NLS.bind("The command with the id ''{0}'' is not bound.", commandId), e)); //$NON-NLS-1$
+						TasksUiInternal.displayStatus(
+								title,
+								new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
+										"The command with the id ''{0}'' is not bound.", commandId), e)); //$NON-NLS-1$
 					}
 				} else {
-					TasksUiInternal.displayStatus(title, new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
-							"The command with the id ''{0}'' does not exist.", commandId))); //$NON-NLS-1$
+					TasksUiInternal.displayStatus(
+							title,
+							new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
+									"The command with the id ''{0}'' does not exist.", commandId))); //$NON-NLS-1$
 				}
 			} else {
 				TasksUiInternal.displayStatus(

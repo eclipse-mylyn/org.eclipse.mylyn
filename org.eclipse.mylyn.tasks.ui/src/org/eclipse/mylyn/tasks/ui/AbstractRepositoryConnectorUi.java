@@ -32,9 +32,11 @@ import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentModel;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskSearchPage;
 import org.eclipse.mylyn.tasks.ui.wizards.TaskAttachmentPage;
+import org.eclipse.ui.IEditorInput;
 
 /**
  * Extend to provide connector-specific UI extensions. TODO: consider refactoring into extension points
@@ -80,6 +82,22 @@ public abstract class AbstractRepositoryConnectorUi {
 	 */
 	public String getTaskEditorId(ITask repositoryTask) {
 		return TaskEditor.ID_EDITOR;
+	}
+
+	/**
+	 * Default implementation returns the standard {@link org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput}. Override
+	 * this method to return a custom task editor input. The connector author must ensure the corresponding editor is
+	 * capable of opening this editor input and will likely need to override
+	 * AbstractRepositoryConnectorUi.getTaskEditorId() as well.
+	 * 
+	 * @param repository
+	 *            - task repository for which to construct an editor
+	 * @param task
+	 *            - the task to edit
+	 * @since 3.4
+	 */
+	public IEditorInput getTaskEditorInput(TaskRepository repository, ITask task) {
+		return new TaskEditorInput(repository, task);
 	}
 
 	public abstract boolean hasSearchPage();
