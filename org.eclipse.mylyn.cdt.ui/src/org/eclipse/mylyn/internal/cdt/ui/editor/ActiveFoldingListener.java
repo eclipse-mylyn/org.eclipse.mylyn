@@ -53,6 +53,8 @@ public class ActiveFoldingListener extends AbstractContextListener {
 
 	private boolean enabled = false;
 
+	private boolean isDisposed = false;
+
 	private final IPropertyChangeListener PREFERENCE_LISTENER = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
 			if (event.getProperty().equals(CDTUIBridgePlugin.AUTO_FOLDING_ENABLED)) {
@@ -96,7 +98,11 @@ public class ActiveFoldingListener extends AbstractContextListener {
 
 			@Override
 			public IStatus runInUIThread(IProgressMonitor monitor) {
-				updateFolding();
+				// need the isDisposed since we do the folding asynchronously and the editor could have been closed
+				// between the time the job was scheduled and the time it runs
+				if (!isDisposed) {
+					updateFolding();
+				}
 				return Status.OK_STATUS;
 			}
 
@@ -105,6 +111,7 @@ public class ActiveFoldingListener extends AbstractContextListener {
 	}
 
 	public void dispose() {
+		isDisposed = true;
 		ContextCore.getContextManager().removeListener(this);
 		CDTUIBridgePlugin.getDefault().getPreferenceStore().removePropertyChangeListener(PREFERENCE_LISTENER);
 	}
@@ -154,7 +161,9 @@ public class ActiveFoldingListener extends AbstractContextListener {
 
 	private void collapseAllElements() {
 		CSourceViewer viewer = (CSourceViewer) editor.getViewer();
-		viewer.doOperation(ProjectionViewer.COLLAPSE_ALL);
+		if (viewer != null) {
+			viewer.doOperation(ProjectionViewer.COLLAPSE_ALL);
+		}
 	}
 
 	private void collapse(ICElement element) {
