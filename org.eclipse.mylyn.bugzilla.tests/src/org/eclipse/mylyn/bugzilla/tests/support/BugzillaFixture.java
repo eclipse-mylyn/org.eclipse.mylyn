@@ -68,10 +68,6 @@ public class BugzillaFixture extends TestFixture {
 
 	public static final String TEST_BUGZILLA_36_URL = getServerUrl("bugs36");
 
-	public static final String TEST_BUGZILLA_36_CUSTOM_URL = getServerUrl("bugs36customWF");
-
-	public static final String TEST_BUGZILLA_36_NO_XMLRPC = getServerUrl("bugs36noxmlrpc");
-
 	public static final String TEST_BUGZILLA_HEAD_URL = getServerUrl("bugshead");
 
 	public static final String TEST_BUGZILLA_LATEST_URL = TEST_BUGZILLA_36_URL;
@@ -101,11 +97,14 @@ public class BugzillaFixture extends TestFixture {
 	public static BugzillaFixture BUGS_3_6 = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_36_URL, //
 			"3.6", "");
 
-	public static BugzillaFixture BUGS_3_6_CUSTOM = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_36_CUSTOM_URL, //
-			"3.6", "CUSTOM-WF");
+	public static BugzillaFixture BUGS_3_6_CUSTOM_WF = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_36_URL
+			+ "-custom-wf", "3.6", "Custom Workflow");
 
-	public static BugzillaFixture BUGS_3_6_NO_XMLRPC = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_36_NO_XMLRPC, //
-			"3.6", "NO-XMLRPC");
+	public static BugzillaFixture BUGS_3_6_CUSTOM_WF_AND_STATUS = new BugzillaFixture(
+			BugzillaFixture.TEST_BUGZILLA_36_URL + "-custom-wf-and-status", "3.6", "Custom Workflow and Status");
+
+	public static BugzillaFixture BUGS_3_6_XML_RPC_DISABLED = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_36_URL
+			+ "-xml-rpc-disabled", "3.6", "XML-RPC disabled");
 
 	public static BugzillaFixture BUGS_HEAD = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_HEAD_URL, //
 			"3.7", "");
@@ -113,7 +112,10 @@ public class BugzillaFixture extends TestFixture {
 	public static BugzillaFixture DEFAULT = BUGS_3_6;
 
 	public static final BugzillaFixture[] ALL = new BugzillaFixture[] { BUGS_2_22, BUGS_3_0, BUGS_3_2, BUGS_3_4,
-			BUGS_3_6, BUGS_3_6_CUSTOM, BUGS_3_6_NO_XMLRPC, BUGS_HEAD };
+			BUGS_3_6, BUGS_HEAD };
+
+	public static final BugzillaFixture[] ONLY_3_6_SPECIFIC = new BugzillaFixture[] { BUGS_3_6,
+			BUGS_3_6_XML_RPC_DISABLED, BUGS_3_6_CUSTOM_WF, BUGS_3_6_CUSTOM_WF_AND_STATUS };
 
 	private final String version;
 

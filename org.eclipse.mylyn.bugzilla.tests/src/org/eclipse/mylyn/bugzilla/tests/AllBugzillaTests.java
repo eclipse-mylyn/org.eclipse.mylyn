@@ -63,10 +63,12 @@ public class AllBugzillaTests {
 				}
 				fixture.add(BugzillaAttachmentHandlerTest.class);
 			}
-			if (!fixture.getBugzillaVersion().isSmaller(BugzillaVersion.BUGZILLA_3_6)) {
-				fixture.add(BugzillaXMLRPCTest.class);
-			}
 
+			fixture.done();
+		}
+		for (BugzillaFixture fixture : BugzillaFixture.ONLY_3_6_SPECIFIC) {
+			fixture.createSuite(suite);
+			fixture.add(BugzillaXMLRPCTest.class);
 			fixture.done();
 		}
 

@@ -344,7 +344,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 //	}
 //
 	public void testStdWorkflow32() throws Exception {
-		if (BugzillaFixture.current() != BugzillaFixture.BUGS_3_6_CUSTOM) {
+		if (BugzillaFixture.current() != BugzillaFixture.BUGS_3_6_CUSTOM_WF) {
 			doStdWorkflow("3");
 		}
 	}

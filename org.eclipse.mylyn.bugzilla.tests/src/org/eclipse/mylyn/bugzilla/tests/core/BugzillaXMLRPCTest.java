@@ -41,7 +41,7 @@ public class BugzillaXMLRPCTest extends TestCase {
 
 	@SuppressWarnings("unused")
 	public void testxmlrpc() throws Exception {
-		if (BugzillaFixture.current() != BugzillaFixture.BUGS_3_6_NO_XMLRPC) {
+		if (BugzillaFixture.current() != BugzillaFixture.BUGS_3_6_XML_RPC_DISABLED) {
 			int uID = bugzillaClient.login();
 			String x0 = bugzillaClient.getVersion();
 			HashMap<?, ?> x1 = bugzillaClient.getTime();
@@ -64,7 +64,7 @@ public class BugzillaXMLRPCTest extends TestCase {
 	public void testxmlrpcInstalled() throws Exception {
 		int uID = -1;
 		BugzillaFixture a = BugzillaFixture.current();
-		if (BugzillaFixture.current() == BugzillaFixture.BUGS_3_6_NO_XMLRPC) {
+		if (BugzillaFixture.current() == BugzillaFixture.BUGS_3_6_XML_RPC_DISABLED) {
 			try {
 				uID = bugzillaClient.login();
 				fail("Never reach this! We should get an XmlRpcException");
