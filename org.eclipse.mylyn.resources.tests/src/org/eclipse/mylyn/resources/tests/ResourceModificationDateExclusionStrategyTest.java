@@ -47,21 +47,26 @@ public class ResourceModificationDateExclusionStrategyTest extends AbstractResou
 		exclusionStrategy.setEnabled(true);
 		assertTrue(exclusionStrategy.isEnabled());
 
+		long oldDate = new Date().getTime() - 5000;
+
 		// we need to have contents for teh file to be local
 		StringBuffer fileContents = new StringBuffer("FileContents");
 		ByteArrayInputStream fileInput = new ByteArrayInputStream(fileContents.toString().getBytes("UTF-8"));
 		file = project.getProject().getFile("test.txt");
 		file.create(fileInput, true, null);
 		assertTrue(file.exists());
+		file.setLocalTimeStamp(oldDate);
 
 		folder = project.getProject().getFolder("testFolder");
 		folder.create(true, true, null);
+		folder.setLocalTimeStamp(oldDate);
 		assertTrue(folder.exists());
 
 		// we need to have contents for the file to be local
 		ByteArrayInputStream fileInFolderInput = new ByteArrayInputStream(fileContents.toString().getBytes("UTF-8"));
 		fileInFolder = folder.getFile("test.txt");
 		fileInFolder.create(fileInFolderInput, true, null);
+		fileInFolder.setLocalTimeStamp(oldDate);
 		assertTrue(fileInFolder.exists());
 
 		assertTrue(file.isLocal(0));
@@ -118,6 +123,57 @@ public class ResourceModificationDateExclusionStrategyTest extends AbstractResou
 		assertFalse(exclusionStrategy.isExcluded(file));
 		assertFalse(exclusionStrategy.isExcluded(folder));
 		assertTrue(exclusionStrategy.isExcluded(fileInFolder));
+	}
+
+	public void testIsExcludedFileContextActiveChangedDateRounded() throws CoreException {
+		// some OS's round to the nearest second, so we need to make sure to handle this case
+		assertTrue(ContextCore.getContextManager().isContextActive());
+
+		Date lastActivatedDate = exclusionStrategy.getLastActivatedDate();
+		assertNotNull(lastActivatedDate);
+
+		long time = lastActivatedDate.getTime();
+		time -= time % 1000d;
+
+		file.setLocalTimeStamp(time);
+
+		assertFalse(exclusionStrategy.isExcluded(file));
+		assertFalse(exclusionStrategy.isExcluded(folder));
+		assertTrue(exclusionStrategy.isExcluded(fileInFolder));
+	}
+
+	public void testIsExcludedFileContextActiveReallyOld() throws CoreException {
+		// some OS's round to the nearest second, so we need to make sure to handle this case
+		assertTrue(ContextCore.getContextManager().isContextActive());
+
+		Date lastActivatedDate = exclusionStrategy.getLastActivatedDate();
+		assertNotNull(lastActivatedDate);
+
+		long time = lastActivatedDate.getTime();
+		time -= 1000 * 60 * 10;
+
+		file.setLocalTimeStamp(time);
+
+		assertFalse(exclusionStrategy.isExcluded(folder));
+		assertTrue(exclusionStrategy.isExcluded(file));
+		assertTrue(exclusionStrategy.isExcluded(fileInFolder));
+	}
+
+	public void testIsExcludedFileContextActiveReallyNew() throws CoreException {
+		// some OS's round to the nearest second, so we need to make sure to handle this case
+		assertTrue(ContextCore.getContextManager().isContextActive());
+
+		Date lastActivatedDate = exclusionStrategy.getLastActivatedDate();
+		assertNotNull(lastActivatedDate);
+
+		long time = lastActivatedDate.getTime();
+		time += 1000 * 60 * 10;
+
+		fileInFolder.setLocalTimeStamp(time);
+
+		assertFalse(exclusionStrategy.isExcluded(fileInFolder));
+		assertFalse(exclusionStrategy.isExcluded(folder));
+		assertTrue(exclusionStrategy.isExcluded(file));
 	}
 
 	public void testWasModifiedAfterNullDate() {

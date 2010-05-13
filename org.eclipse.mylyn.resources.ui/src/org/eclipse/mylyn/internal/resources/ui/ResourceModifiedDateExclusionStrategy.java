@@ -87,7 +87,12 @@ public class ResourceModifiedDateExclusionStrategy extends AbstractContextListen
 	public void contextChanged(ContextChangeEvent event) {
 		switch (event.getEventKind()) {
 		case ACTIVATED:
-			lastActivatedDate = new Date();
+			// some OS's round the file time down to the nearest second, so we need to round the 
+			// activation time down as well to ensure that modified files within the first second are 
+			// properly captured
+			long currentTime = new Date().getTime();
+			currentTime -= currentTime % 1000d;
+			lastActivatedDate = new Date(currentTime);
 			break;
 		case DEACTIVATED:
 			lastActivatedDate = null;
