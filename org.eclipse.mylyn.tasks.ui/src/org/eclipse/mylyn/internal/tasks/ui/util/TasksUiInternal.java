@@ -681,7 +681,6 @@ public class TasksUiInternal {
 				dialog.create();
 				dialog.setBlockOnOpen(true);
 				if (dialog.open() == Window.CANCEL) {
-					dialog.close();
 					return false;
 				} else {
 					return true;
