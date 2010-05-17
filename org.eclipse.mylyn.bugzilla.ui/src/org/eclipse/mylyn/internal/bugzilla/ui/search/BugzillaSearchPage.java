@@ -101,9 +101,7 @@ import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 @SuppressWarnings("restriction")
 public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements Listener {
 
-	private static final int HEIGHT_ATTRIBUTE_COMBO = 70;
-
-	// protected Combo repositoryCombo = null;
+	private static final int HEIGHT_ATTRIBUTE_COMBO = 30;
 
 	private static ArrayList<BugzillaSearchData> previousSummaryPatterns = new ArrayList<BugzillaSearchData>(20);
 
@@ -338,7 +336,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		GridLayout layout = new GridLayout(1, false);
 		layout.marginHeight = 0;
 		control.setLayout(layout);
-		control.setLayoutData(new GridData(GridData.FILL_BOTH | GridData.GRAB_HORIZONTAL));
+		control.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		createOptionsGroup(control);
 		createButtons(control);
 		Dialog.applyDialogFont(control);
@@ -410,11 +408,10 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	}
 
 	private void createOptionsGroup(Composite control) {
-		Composite basicComposite = new Composite(control, SWT.NONE);
+		final Composite basicComposite = new Composite(control, SWT.NONE);
 		basicComposite.setLayout(new GridLayout(4, false));
-		GridData g = new GridData(GridData.FILL_HORIZONTAL);
+		GridData g = new GridData(GridData.FILL, GridData.FILL, true, true);
 		g.widthHint = 500;
-		g.heightHint = 200;
 		basicComposite.setLayoutData(g);
 		Dialog.applyDialogFont(basicComposite);
 
@@ -430,36 +427,51 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			queryTitle.addModifyListener(new ModifyListenerImplementation());
 			queryTitle.setFocus();
 		}
+		createBasicComposite(basicComposite);
 
-		moreOptionsExpandComposite = toolkit.createExpandableComposite(control, ExpandableComposite.COMPACT
+		moreOptionsExpandComposite = toolkit.createExpandableComposite(basicComposite, ExpandableComposite.COMPACT
 				| ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR);
 		moreOptionsExpandComposite.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DIALOG_FONT));
 		moreOptionsExpandComposite.setBackground(null);
 		moreOptionsExpandComposite.setText(Messages.BugzillaSearchPage_More_Options);
 		moreOptionsExpandComposite.setLayout(new GridLayout(3, false));
-		g = new GridData(GridData.FILL_HORIZONTAL);
-		g.horizontalSpan = 3;
+		g = new GridData(GridData.FILL, GridData.BEGINNING, true, false);
+		g.horizontalSpan = 4;
 		moreOptionsExpandComposite.setLayoutData(g);
 		moreOptionsExpandComposite.addExpansionListener(new ExpansionAdapter() {
 			@Override
 			public void expansionStateChanged(ExpansionEvent e) {
-				getControl().getShell().pack();
+				if ((Boolean) e.data == true) {
+					Point minSize = getControl().getShell().getMinimumSize();
+					minSize.y = 660;
+					getControl().getShell().setMinimumSize(minSize);
+				} else {
+					Point minSize = getControl().getShell().getMinimumSize();
+					minSize.y = 450;
+					getControl().getShell().setMinimumSize(minSize);
+				}
+				Shell shell = getShell();
+				shell.pack();
+				Point shellSize = shell.getSize();
+				shellSize.x++;
+				shell.setSize(shellSize);
+				shellSize.x--;
+				shell.setSize(shellSize);
 			}
 		});
 
 		Composite moreOptionsComposite = new Composite(moreOptionsExpandComposite, SWT.NULL);
 		moreOptionsComposite.setLayout(new GridLayout(4, false));
-		g = new GridData(GridData.FILL_HORIZONTAL);
+		g = new GridData(GridData.FILL, GridData.FILL, true, true);
 		g.widthHint = 500;
-		g.heightHint = 200;
 
 		moreOptionsComposite.setLayoutData(g);
 		Dialog.applyDialogFont(moreOptionsComposite);
 		moreOptionsExpandComposite.setClient(moreOptionsComposite);
 
-		createBasicComposite(basicComposite);
 		createMoreOptionsComposite(moreOptionsComposite);
 		createSearchGroup(moreOptionsComposite);
+		control.getShell().setMinimumSize(new Point(570, 450));
 	}
 
 	private void createBasicComposite(Composite basicComposite) {
@@ -549,7 +561,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		sashForm.setLayout(sashFormLayout);
 		final GridData gd_sashForm = new GridData(SWT.FILL, SWT.FILL, true, true, 4, 1);
 		gd_sashForm.widthHint = 400;
-		gd_sashForm.heightHint = 100;
+		gd_sashForm.heightHint = 60;
 		sashForm.setLayoutData(gd_sashForm);
 
 		GridLayout topLayout = new GridLayout();
@@ -557,7 +569,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		SashForm topForm = new SashForm(sashForm, SWT.NONE);
 		GridData topLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1);
 		topLayoutData.widthHint = 00;
-		topLayoutData.heightHint = 100;
+		topLayoutData.heightHint = 60;
 		topForm.setLayoutData(topLayoutData);
 		topForm.setLayout(topLayout);
 
@@ -802,7 +814,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		bottomLayout.numColumns = 6;
 		bottomForm.setLayout(bottomLayout);
 		GridData bottomLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true, 4, 1);
-		bottomLayoutData.heightHint = 119;
+		bottomLayoutData.heightHint = 60;
 		bottomLayoutData.widthHint = 400;
 		bottomForm.setLayoutData(bottomLayoutData);
 
@@ -1123,6 +1135,11 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 					|| version.getSelection().length > 0 || target.getSelection().length > 0
 					|| hardware.getSelection().length > 0 || os.getSelection().length > 0) {
 				moreOptionsExpandComposite.setExpanded(true);
+				Shell shell = getShell();
+				shell.setMinimumSize(new Point(570, 660));
+				shell.layout(true);
+				shell.pack();
+				shell.layout(true);
 			}
 			setPageComplete(isPageComplete());
 		}
@@ -2060,11 +2077,11 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			shell.setSize(shellSize);
 			shell.layout(true);
 		} else {
+			shell.pack();
 			shellSize.x++;
 			shell.setSize(shellSize);
 			shellSize.x--;
 			shell.setSize(shellSize);
-			shell.layout(true);
 		}
 	}
 
