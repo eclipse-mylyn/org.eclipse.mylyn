@@ -170,7 +170,7 @@ public class LandmarkMarkerManager extends AbstractContextListener {
 				} catch (CModelException e) {
 					// ignore the Java Model errors
 				} catch (CoreException e) {
-					StatusHandler.fail(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN,
+					StatusHandler.log(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN,
 							"could not update landmark markers", e)); //$NON-NLS-1$
 				}
 			}
