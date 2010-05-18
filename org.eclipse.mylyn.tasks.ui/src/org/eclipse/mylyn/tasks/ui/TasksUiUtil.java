@@ -258,11 +258,11 @@ public class TasksUiUtil {
 	/**
 	 * Either pass in a repository and taskId, or fullUrl, or all of them
 	 * 
-	 * @deprecated Use {@link #openTask(String,String,String)} instead
+	 * @deprecated Use {@link #openTask(String,String,String,long)} instead
 	 */
 	@Deprecated
 	public static boolean openRepositoryTask(String repositoryUrl, String taskId, String fullUrl) {
-		return openTask(repositoryUrl, taskId, fullUrl);
+		return openTask(repositoryUrl, taskId, fullUrl, 0);
 	}
 
 	/**
@@ -318,8 +318,20 @@ public class TasksUiUtil {
 	 * Either pass in a repository and taskId, or fullUrl, or all of them
 	 * 
 	 * @since 3.0
+	 * @deprecated Use {@link #openTask(String,String,String,long)} instead
 	 */
+	@Deprecated
 	public static boolean openTask(String repositoryUrl, String taskId, String fullUrl) {
+		return openTask(repositoryUrl, taskId, fullUrl, 0);
+	}
+
+	/**
+	 * Either pass in a repository and taskId, or fullUrl, or all of them the timestamp is used for seleting the correct
+	 * comment
+	 * 
+	 * @since 3.4
+	 */
+	public static boolean openTask(String repositoryUrl, String taskId, String fullUrl, long timestamp) {
 		AbstractTask task = TasksUiInternal.getTask(repositoryUrl, taskId, fullUrl);
 
 		if (task != null) {
@@ -332,12 +344,14 @@ public class TasksUiUtil {
 				fullUrl);
 		if (connector != null) {
 			if (repositoryUrl != null && taskId != null) {
-				opened = TasksUiInternal.openRepositoryTask(connector.getConnectorKind(), repositoryUrl, taskId);
+				opened = TasksUiInternal.openRepositoryTask(connector.getConnectorKind(), repositoryUrl, taskId, null,
+						timestamp);
 			} else {
 				repositoryUrl = connector.getRepositoryUrlFromTaskUrl(fullUrl);
 				taskId = connector.getTaskIdFromTaskUrl(fullUrl);
 				if (repositoryUrl != null && taskId != null) {
-					opened = TasksUiInternal.openRepositoryTask(connector.getConnectorKind(), repositoryUrl, taskId);
+					opened = TasksUiInternal.openRepositoryTask(connector.getConnectorKind(), repositoryUrl, taskId,
+							null, timestamp);
 				}
 			}
 		}

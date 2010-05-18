@@ -208,7 +208,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 				if (repositoryUrl != null && taskId != null) {
 					// attempt to open task in background
 					// TODO: consider attaching a listener to OpenRepsitoryTaskJob to move task to drop target
-					TasksUiInternal.openRepositoryTask(connector.getConnectorKind(), repositoryUrl, taskId);
+					TasksUiInternal.openRepositoryTask(connector.getConnectorKind(), repositoryUrl, taskId, null, 0);
 				}
 			} else {
 				// create local task, using title of web page as a summary

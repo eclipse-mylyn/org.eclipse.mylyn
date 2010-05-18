@@ -958,6 +958,17 @@ public class TasksUiInternal {
 	 */
 	public static boolean openRepositoryTask(String connectorKind, String repositoryUrl, String id,
 			TaskOpenListener listener) {
+		return openRepositoryTask(connectorKind, repositoryUrl, id, listener, 0);
+	}
+
+	/**
+	 * Only override if task should be opened by a custom editor, default behavior is to open with a rich editor,
+	 * falling back to the web browser if not available.
+	 * 
+	 * @return true if the task was successfully opened
+	 */
+	public static boolean openRepositoryTask(String connectorKind, String repositoryUrl, String id,
+			TaskOpenListener listener, long timestamp) {
 		IRepositoryManager repositoryManager = TasksUi.getRepositoryManager();
 		AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(connectorKind);
 		String taskUrl = connector.getTaskUrl(repositoryUrl, id);
@@ -977,7 +988,8 @@ public class TasksUiInternal {
 		}
 		IWorkbenchPage page = window.getActivePage();
 
-		OpenRepositoryTaskJob job = new OpenRepositoryTaskJob(connectorKind, repositoryUrl, id, taskUrl, page);
+		OpenRepositoryTaskJob job = new OpenRepositoryTaskJob(connectorKind, repositoryUrl, id, taskUrl, timestamp,
+				page);
 		job.setListener(listener);
 		job.schedule();
 

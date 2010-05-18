@@ -55,7 +55,7 @@ public class OpenSearchResultAction extends Action {
 			for (Iterator<AbstractTask> it = selection.iterator(); it.hasNext();) {
 				AbstractTask repositoryHit = it.next();
 				TasksUiUtil.openTask(repositoryHit.getRepositoryUrl(), repositoryHit.getTaskId(),
-						repositoryHit.getUrl());
+						repositoryHit.getUrl(), 0);
 			}
 
 		}
