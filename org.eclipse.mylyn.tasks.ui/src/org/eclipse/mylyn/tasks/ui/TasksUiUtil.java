@@ -258,11 +258,11 @@ public class TasksUiUtil {
 	/**
 	 * Either pass in a repository and taskId, or fullUrl, or all of them
 	 * 
-	 * @deprecated Use {@link #openTask(String,String,String,long)} instead
+	 * @deprecated Use {@link #openTask(String,String,String)} instead
 	 */
 	@Deprecated
 	public static boolean openRepositoryTask(String repositoryUrl, String taskId, String fullUrl) {
-		return openTask(repositoryUrl, taskId, fullUrl, 0);
+		return openTask(repositoryUrl, taskId, fullUrl);
 	}
 
 	/**
@@ -318,16 +318,14 @@ public class TasksUiUtil {
 	 * Either pass in a repository and taskId, or fullUrl, or all of them
 	 * 
 	 * @since 3.0
-	 * @deprecated Use {@link #openTask(String,String,String,long)} instead
 	 */
-	@Deprecated
 	public static boolean openTask(String repositoryUrl, String taskId, String fullUrl) {
 		return openTask(repositoryUrl, taskId, fullUrl, 0);
 	}
 
 	/**
-	 * Either pass in a repository and taskId, or fullUrl, or all of them the timestamp is used for seleting the correct
-	 * comment
+	 * Either pass in a repository and taskId, or fullUrl, or all of them the time stamp is used for selecting the
+	 * correct comment
 	 * 
 	 * @since 3.4
 	 */
