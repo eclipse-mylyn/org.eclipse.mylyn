@@ -290,7 +290,7 @@ public final class TaskRepository extends PlatformObject {
 		}
 	}
 
-	@SuppressWarnings( { "unchecked" })
+	@SuppressWarnings({ "unchecked" })
 	private Map<String, String> getAuthInfo() {
 		synchronized (LOCK) {
 			if (Platform.isRunning()) {
@@ -367,7 +367,7 @@ public final class TaskRepository extends PlatformObject {
 						}
 					} catch (CoreException e) {
 						// FIXME propagate exception?
-						StatusHandler.fail(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+						StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
 								"Could not flush authorization credentials", e)); //$NON-NLS-1$
 					}
 				}
