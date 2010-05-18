@@ -35,9 +35,25 @@ public class LinkedTaskInfo extends AbstractTaskReference {
 
 	private ChangeSet changeSet = null;
 
+	private long timestamp = 0;
+
+	public LinkedTaskInfo(String repositoryUrl, String taskId, String taskFullUrl, String comment, long timestamp) {
+		this.repositoryUrl = repositoryUrl;
+		this.taskId = taskId;
+		this.taskFullUrl = taskFullUrl;
+		this.comment = comment;
+		this.timestamp = timestamp;
+	}
+
 	public LinkedTaskInfo(ITask task, ChangeSet changeSet) {
 		this.task = task;
 		this.changeSet = changeSet;
+	}
+
+	public LinkedTaskInfo(ITask task, ChangeSet changeSet, long timestamp) {
+		this.task = task;
+		this.changeSet = changeSet;
+		this.timestamp = timestamp;
 	}
 
 	public LinkedTaskInfo(String taskFullUrl) {
@@ -79,4 +95,7 @@ public class LinkedTaskInfo extends AbstractTaskReference {
 		return changeSet;
 	}
 
+	public long getTimestamp() {
+		return timestamp;
+	}
 }

@@ -17,12 +17,16 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.team.ui.LinkedTaskInfo;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.team.ui.AbstractTaskReference;
+import org.eclipse.mylyn.team.ui.IContextChangeSet;
+import org.eclipse.team.core.history.IFileRevision;
 import org.eclipse.team.core.variants.IResourceVariant;
 import org.eclipse.team.internal.ccvs.core.CVSException;
 import org.eclipse.team.internal.ccvs.core.ICVSResource;
 import org.eclipse.team.internal.ccvs.core.client.listeners.LogEntry;
+import org.eclipse.team.internal.ccvs.core.filehistory.CVSFileRevision;
 import org.eclipse.team.internal.ccvs.core.resources.CVSWorkspaceRoot;
 import org.eclipse.team.internal.ccvs.core.resources.RemoteResource;
+import org.eclipse.team.internal.core.subscribers.DiffChangeSet;
 
 /**
  * @author Eugene Kuleshov
@@ -51,11 +55,16 @@ public class CvsLinkedTaskInfoAdapterFactory implements IAdapterFactory {
 			return null;
 		}
 
+		long timestamp = 0;
+		if (object instanceof CVSFileRevision) {
+			timestamp = ((CVSFileRevision) object).getTimestamp();
+		}
+
 		IResource resource = getResourceForElement(object);
 		if (resource != null) {
 			TaskRepository repository = TasksUiPlugin.getDefault().getRepositoryForResource(resource);
 			if (repository != null) {
-				return new LinkedTaskInfo(repository.getRepositoryUrl(), null, null, comment);
+				return new LinkedTaskInfo(repository.getRepositoryUrl(), null, null, comment, timestamp);
 			}
 		}
 
@@ -63,8 +72,14 @@ public class CvsLinkedTaskInfoAdapterFactory implements IAdapterFactory {
 	}
 
 	private static String getCommentForElement(Object element) {
-		if (element instanceof LogEntry) {
+		if (element instanceof IContextChangeSet) {
+			return ((IContextChangeSet) element).getComment(false);
+		} else if (element instanceof DiffChangeSet) {
+			return ((DiffChangeSet) element).getComment();
+		} else if (element instanceof LogEntry) {
 			return ((LogEntry) element).getComment();
+		} else if (element instanceof IFileRevision) {
+			return ((IFileRevision) element).getComment();
 		}
 		return null;
 	}

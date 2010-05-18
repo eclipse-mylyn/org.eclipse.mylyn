@@ -50,9 +50,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.ObjectPluginAction;
 
 /**
- * Action used to open linked task.
- * 
- * TODO: this class has evolved into a complete mess and has to be fixed.
+ * Action used to open linked task. TODO: this class has evolved into a complete mess and has to be fixed.
  * 
  * @author Mik Kersten
  * @author Eugene Kuleshov
@@ -106,16 +104,19 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 	}
 
 	/**
-	 * Reconcile <code>ILinkedTaskInfo</code> data.
-	 * 
-	 * This is used in order to keep LinkedTaskInfo lightweight with minimal dependencies.
+	 * Reconcile <code>ILinkedTaskInfo</code> data. This is used in order to keep LinkedTaskInfo lightweight with
+	 * minimal dependencies.
 	 */
 	private static AbstractTaskReference reconcile(AbstractTaskReference info) {
 		ITask task;
+		long timestamp;
+
 		if (info instanceof LinkedTaskInfo) {
 			task = ((LinkedTaskInfo) info).getTask();
+			timestamp = ((LinkedTaskInfo) info).getTimestamp();
 		} else {
 			task = null;
+			timestamp = 0;
 		}
 
 		if (task != null) {
@@ -208,11 +209,8 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 				}
 			}
 		}
-		if (task != null) {
-			return new LinkedTaskInfo(task, null);
-		}
 
-		return new LinkedTaskInfo(repositoryUrl, taskId, taskFullUrl, comment);
+		return new LinkedTaskInfo(repositoryUrl, taskId, taskFullUrl, comment, timestamp);
 	}
 
 	public static String getUrlFromComment(String comment) {
@@ -284,10 +282,13 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 			if (info != null) {
 				info = reconcile(info);
 				final ITask task;
+				final long timestamp;
 				if (info instanceof LinkedTaskInfo) {
 					task = ((LinkedTaskInfo) info).getTask();
+					timestamp = ((LinkedTaskInfo) info).getTimestamp();
 				} else {
 					task = null;
+					timestamp = 0;
 				}
 				if (task != null) {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -305,7 +306,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 						AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
 						if (connectorUi != null) {
 							TasksUiInternal.openRepositoryTask(connectorUi.getConnectorKind(),
-									repository.getRepositoryUrl(), taskId);
+									repository.getRepositoryUrl(), taskId, null, timestamp);
 							return Status.OK_STATUS;
 						}
 					}
