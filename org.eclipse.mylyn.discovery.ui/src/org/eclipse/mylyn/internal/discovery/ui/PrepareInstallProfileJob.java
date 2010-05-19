@@ -219,8 +219,8 @@ class PrepareInstallProfileJob extends AbstractInstallJob {
 			Display.getDefault().syncExec(new Runnable() {
 				public void run() {
 					okayToProceed[0] = MessageDialog.openQuestion(DiscoveryUiUtil.getShell(),
-							Messages.InstallConnectorsJob_questionProceed, NLS.bind(
-									Messages.InstallConnectorsJob_questionProceed_long, new Object[] { finalMessage }));
+							Messages.InstallConnectorsJob_questionProceed,
+							NLS.bind(Messages.InstallConnectorsJob_questionProceed_long, new Object[] { finalMessage }));
 				}
 			});
 			if (!okayToProceed[0]) {
@@ -239,7 +239,7 @@ class PrepareInstallProfileJob extends AbstractInstallJob {
 		Map<String, Version> symbolicNameToVersion = new HashMap<String, Version>();
 		for (IInstallableUnit unit : installableUnits) {
 			Version version = symbolicNameToVersion.get(unit.getId());
-			if (version == null || version.compareTo(unit.getVersion()) == -1) {
+			if (version == null || version.compareTo(unit.getVersion()) < 0) {
 				symbolicNameToVersion.put(unit.getId(), unit.getVersion());
 			}
 		}
