@@ -56,6 +56,11 @@ public class OpenRepositoryTaskJob extends Job {
 	private final long timestamp;
 
 	public OpenRepositoryTaskJob(String repositoryKind, String repositoryUrl, String taskId, String taskUrl,
+			IWorkbenchPage page) {
+		this(repositoryKind, repositoryUrl, taskId, taskUrl, 0, page);
+	}
+
+	public OpenRepositoryTaskJob(String repositoryKind, String repositoryUrl, String taskId, String taskUrl,
 			long timestamp, IWorkbenchPage page) {
 		super(MessageFormat.format(Messages.OpenRepositoryTaskJob_Opening_repository_task_X, taskId));
 
@@ -86,9 +91,7 @@ public class OpenRepositoryTaskJob extends Job {
 		if (repository == null) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					MessageDialog.openError(
-							null,
-							Messages.OpenRepositoryTaskJob_Repository_Not_Found,
+					MessageDialog.openError(null, Messages.OpenRepositoryTaskJob_Repository_Not_Found,
 							MessageFormat.format(
 									Messages.OpenRepositoryTaskJob_Could_not_find_repository_configuration_for_X,
 									repositoryUrl)
