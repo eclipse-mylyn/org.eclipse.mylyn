@@ -258,8 +258,8 @@ public class ConnectorDiscovery {
 				connector.setCategory(category);
 			} else {
 				StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN, NLS.bind(
-						Messages.ConnectorDiscovery_bundle_references_unknown_category, new Object[] {
-								connector.getCategoryId(), connector.getId(), connector.getSource().getId() })));
+						Messages.ConnectorDiscovery_bundle_references_unknown_category,
+						new Object[] { connector.getCategoryId(), connector.getId(), connector.getSource().getId() })));
 			}
 		}
 	}
@@ -276,8 +276,9 @@ public class ConnectorDiscovery {
 					match = filter.match(environment);
 				} catch (InvalidSyntaxException e) {
 					StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN, NLS.bind(
-							Messages.ConnectorDiscovery_illegal_filter_syntax, new Object[] {
-									connector.getPlatformFilter(), connector.getId(), connector.getSource().getId() })));
+							Messages.ConnectorDiscovery_illegal_filter_syntax,
+							new Object[] { connector.getPlatformFilter(), connector.getId(),
+									connector.getSource().getId() })));
 				}
 				if (!match) {
 					connectors.remove(connector);
@@ -407,7 +408,8 @@ public class ConnectorDiscovery {
 		public VerifyUpdateSiteJob call() throws Exception {
 			URL baseUrl = new URL(url);
 			List<URI> locations = new ArrayList<URI>();
-			for (String location : new String[] { "content.jar", "content.xml", "site.xml" }) { //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+			for (String location : new String[] {
+					"content.jar", "content.xml", "compositeContent.jar", "compositeContent.xml", "site.xml" }) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 				locations.add(new URL(baseUrl, location).toURI());
 			}
 			ok = WebUtil.verifyAvailability(locations, true, new NullProgressMonitor());
