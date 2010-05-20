@@ -15,6 +15,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.commons.tests.net.SslProtocolSocketFactoryTest;
+import org.eclipse.mylyn.commons.tests.net.TimeoutInputStreamTest;
 import org.eclipse.mylyn.commons.tests.net.WebUtilTest;
 import org.eclipse.mylyn.commons.tests.ui.CommonUiUtilTest;
 
@@ -28,6 +29,7 @@ public class AllCommonsTests {
 		suite.addTestSuite(SslProtocolSocketFactoryTest.class);
 		suite.addTestSuite(WebUtilTest.class);
 		suite.addTestSuite(CommonUiUtilTest.class);
+		suite.addTestSuite(TimeoutInputStreamTest.class);
 		return suite;
 	}
 

@@ -12,11 +12,13 @@
 package org.eclipse.mylyn.commons.tests.net;
 
 import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Proxy.Type;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.net.ssl.SSLHandshakeException;
 
@@ -31,6 +33,7 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.eclipse.core.net.proxy.IProxyData;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
@@ -40,7 +43,10 @@ import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.commons.tests.support.TestProxy;
 import org.eclipse.mylyn.commons.tests.support.TestProxy.Message;
 import org.eclipse.mylyn.internal.commons.net.AuthenticatedProxy;
+import org.eclipse.mylyn.internal.commons.net.CommonsNetPlugin;
+import org.eclipse.mylyn.internal.commons.net.PollingInputStream;
 import org.eclipse.mylyn.internal.commons.net.PollingSslProtocolSocketFactory;
+import org.eclipse.mylyn.internal.commons.net.TimeoutInputStream;
 
 /**
  * @author Steffen Pingel
@@ -224,6 +230,34 @@ public class WebUtilTest extends TestCase {
 						return null;
 					}
 				}), monitor);
+	}
+
+	public void testReadTimeout() throws Exception {
+		assertEquals(0, ((ThreadPoolExecutor) CommonsNetPlugin.getExecutorService()).getActiveCount());
+
+		String url = "http://" + proxyAddress.getHostName() + ":" + proxyAddress.getPort() + "/";
+		AbstractWebLocation location = new WebLocation(url, null, null, null);
+		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, null);
+
+		testProxy.addResponse(TestProxy.TIMEOUT);
+
+		GetMethod method = new GetMethod("/");
+		method.getParams().setSoTimeout(100);
+		int statusCode = client.executeMethod(hostConfiguration, method);
+		assertEquals(200, statusCode);
+
+		PollingInputStream in = new PollingInputStream(new TimeoutInputStream(method.getResponseBodyAsStream(), 8192,
+				500L, -1), 1, new NullProgressMonitor());
+		try {
+			in.read();
+			fail("expected InterruptedIOException");
+		} catch (InterruptedIOException e) {
+			// expected
+		} finally {
+			in.close();
+		}
+		Thread.sleep(200);
+		assertEquals(0, ((ThreadPoolExecutor) CommonsNetPlugin.getExecutorService()).getActiveCount());
 	}
 
 	public void testLocationConnect() throws Exception {

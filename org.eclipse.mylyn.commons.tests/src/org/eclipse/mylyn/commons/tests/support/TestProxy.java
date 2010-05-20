@@ -110,17 +110,15 @@ public class TestProxy implements Runnable {
 
 	public static final Message OK = new Message("HTTP/1.1 200 OK");
 
+	public static final Message TIMEOUT = new Message("HTTP/1.1 200 OK");
+
 	public static final Message SERVICE_UNVAILABLE = createEmptyMessage("HTTP/1.1 503 Service Unavailable");
 
 	static {
 		NOT_FOUND.headers.add(HEADER_CONNECTION_CLOSE);
-	}
-	static {
 		OK.headers.add(HEADER_CONNECTION_CLOSE);
-	}
-
-	static {
-		OK.headers.add(HEADER_CONNECTION_CLOSE);
+		SERVICE_UNVAILABLE.headers.add(HEADER_CONNECTION_CLOSE);
+		TIMEOUT.headers.add("Content-Length: 500");
 	}
 
 	private static Message createEmptyMessage(String status) {

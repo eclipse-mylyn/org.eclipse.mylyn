@@ -22,10 +22,9 @@ import org.eclipse.mylyn.commons.net.Policy;
 
 /**
  * Wraps an input stream that blocks indefinitely to simulate timeouts on read(), skip(), and close(). The resulting
- * input stream is buffered and supports retrying operations that failed due to an InterruptedIOException.
- * 
- * Supports resuming partially completed operations after an InterruptedIOException REGARDLESS of whether the underlying
- * stream does unless the underlying stream itself generates InterruptedIOExceptions in which case it must also support
+ * input stream is buffered and supports retrying operations that failed due to an InterruptedIOException. Supports
+ * resuming partially completed operations after an InterruptedIOException REGARDLESS of whether the underlying stream
+ * does unless the underlying stream itself generates InterruptedIOExceptions in which case it must also support
  * resuming. Check the bytesTransferred field to determine how much of the operation completed; conversely, at what
  * point to resume.
  */
@@ -104,6 +103,7 @@ public class TimeoutInputStream extends FilterInputStream {
 		}
 		synchronized (this) {
 			closeRequested = true;
+			// interrupts waitUntilClose and triggers closing of stream 
 			future.cancel(true);
 			checkError();
 		}
@@ -311,7 +311,7 @@ public class TimeoutInputStream extends FilterInputStream {
 	 * Reads bytes into the buffer until EOF, closed, or error.
 	 */
 	private void readUntilDone() throws IOException {
-		for (;;) {
+		while (!closeRequested) {
 			int off, len;
 			synchronized (this) {
 				while (isBufferFull()) {
