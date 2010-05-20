@@ -471,7 +471,11 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 		createMoreOptionsComposite(moreOptionsComposite);
 		createSearchGroup(moreOptionsComposite);
-		control.getShell().setMinimumSize(new Point(570, 450));
+		if (inSearchContainer()) {
+			control.getShell().setMinimumSize(new Point(610, 450));
+		} else {
+			control.getShell().setMinimumSize(new Point(590, 450));
+		}
 	}
 
 	private void createBasicComposite(Composite basicComposite) {
@@ -1136,7 +1140,11 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 					|| hardware.getSelection().length > 0 || os.getSelection().length > 0) {
 				moreOptionsExpandComposite.setExpanded(true);
 				Shell shell = getShell();
-				shell.setMinimumSize(new Point(570, 660));
+				if (inSearchContainer()) {
+					shell.setMinimumSize(new Point(610, 660));
+				} else {
+					shell.setMinimumSize(new Point(590, 660));
+				}
 				shell.layout(true);
 				shell.pack();
 				shell.layout(true);
