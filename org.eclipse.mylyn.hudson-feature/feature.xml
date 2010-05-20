@@ -39,14 +39,14 @@
    </requires>
 
    <plugin
-         id="org.eclipse.mylyn.build.core"
+         id="org.eclipse.mylyn.builds.core"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.build.ui"
+         id="org.eclipse.mylyn.builds.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"
