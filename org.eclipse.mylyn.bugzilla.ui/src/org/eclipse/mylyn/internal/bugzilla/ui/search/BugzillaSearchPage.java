@@ -103,6 +103,9 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 	private static final int HEIGHT_ATTRIBUTE_COMBO = 30;
 
+	/** Expandable composites are indented by 6 pixels by default. */
+	private static final int INDENT = -6;
+
 	private static ArrayList<BugzillaSearchData> previousSummaryPatterns = new ArrayList<BugzillaSearchData>(20);
 
 	private static ArrayList<BugzillaSearchData> previousEmailPatterns = new ArrayList<BugzillaSearchData>(20);
@@ -347,7 +350,9 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 	private void createButtons(Composite control) {
 		Composite buttonComposite = new Composite(control, SWT.NONE);
-		buttonComposite.setLayout(new GridLayout(2, false));
+		GridLayout layout = new GridLayout(2, false);
+		layout.marginWidth = 0;
+		buttonComposite.setLayout(layout);
 		GridData g = new GridData(GridData.FILL_HORIZONTAL);
 		Button clearButton = new Button(buttonComposite, SWT.PUSH);
 		clearButton.setText(Messages.BugzillaSearchPage_ClearFields);
@@ -409,7 +414,10 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 	private void createOptionsGroup(Composite control) {
 		final Composite basicComposite = new Composite(control, SWT.NONE);
-		basicComposite.setLayout(new GridLayout(4, false));
+		GridLayout layout = new GridLayout(4, false);
+		layout.marginHeight = 0;
+		layout.marginWidth = 0;
+		basicComposite.setLayout(layout);
 		GridData g = new GridData(GridData.FILL, GridData.FILL, true, true);
 		g.widthHint = 500;
 		basicComposite.setLayoutData(g);
@@ -437,6 +445,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		moreOptionsExpandComposite.setLayout(new GridLayout(3, false));
 		g = new GridData(GridData.FILL, GridData.FILL, true, true);
 		g.horizontalSpan = 4;
+		g.horizontalIndent = INDENT;
 		moreOptionsExpandComposite.setLayoutData(g);
 		moreOptionsExpandComposite.addExpansionListener(new ExpansionAdapter() {
 			@Override
@@ -461,11 +470,11 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		});
 
 		Composite moreOptionsComposite = new Composite(moreOptionsExpandComposite, SWT.NULL);
-		moreOptionsComposite.setLayout(new GridLayout(4, false));
-		g = new GridData(GridData.FILL, GridData.FILL, true, true);
-		g.widthHint = 500;
+		GridLayout optionsLayout = new GridLayout(4, false);
+		optionsLayout.marginHeight = 0;
+		optionsLayout.marginWidth = 0;
+		moreOptionsComposite.setLayout(optionsLayout);
 
-		moreOptionsComposite.setLayoutData(g);
 		Dialog.applyDialogFont(moreOptionsComposite);
 		moreOptionsExpandComposite.setClient(moreOptionsComposite);
 
