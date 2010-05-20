@@ -11,14 +11,13 @@
 
 package org.eclipse.mylyn.internal.monitor.ui;
 
-import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
-import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
 /**
  * @author Mik Kersten
  */
-@SuppressWarnings("deprecation")
 public class PreferenceChangeMonitor implements IPropertyChangeListener {
 
 	public void propertyChange(PropertyChangeEvent event) {
