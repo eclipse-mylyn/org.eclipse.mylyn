@@ -1092,6 +1092,25 @@ public class BugzillaClient {
 			input = getResponseStream(method, monitor);
 			response = parsePostResponse(taskData.getTaskId(), input);
 			return response;
+		} catch (CoreException e) {
+			TaskAttribute qaContact = taskData.getRoot().getAttribute(BugzillaAttribute.QA_CONTACT.getKey());
+			if (qaContact != null) {
+				String qaContactValue = qaContact.getValue();
+				String message = e.getMessage();
+				if ("An unknown repository error has occurred: Bugzilla/Bug.pm line".equals(message) //$NON-NLS-1$
+						&& qaContactValue != null && !qaContactValue.equals("")) { //$NON-NLS-1$
+					if (e.getStatus() instanceof RepositoryStatus) {
+						RepositoryStatus repositoryStatus = (RepositoryStatus) e.getStatus();
+						RepositoryStatus status = RepositoryStatus.createHtmlStatus(
+								repositoryStatus.getRepositoryUrl(), IStatus.INFO, BugzillaCorePlugin.ID_PLUGIN,
+								RepositoryStatus.ERROR_REPOSITORY, "Maybe set of QAContact not supported!",
+								repositoryStatus.getHtmlMessage());
+						throw new CoreException(status);
+					}
+				}
+			}
+
+			return null;
 		} finally {
 			if (input != null) {
 				input.close();
@@ -1121,9 +1140,12 @@ public class BugzillaClient {
 				String id = a.getId();
 				if (id.equals(BugzillaAttribute.NEWCC.getKey())) {
 					TaskAttribute b = taskData.getRoot().createAttribute(BugzillaAttribute.CC.getKey());
-					b.getMetaData().defaults().setReadOnly(BugzillaAttribute.CC.isReadOnly()).setKind(
-							BugzillaAttribute.CC.getKind()).setLabel(BugzillaAttribute.CC.toString()).setType(
-							BugzillaAttribute.CC.getType());
+					b.getMetaData()
+							.defaults()
+							.setReadOnly(BugzillaAttribute.CC.isReadOnly())
+							.setKind(BugzillaAttribute.CC.getKind())
+							.setLabel(BugzillaAttribute.CC.toString())
+							.setType(BugzillaAttribute.CC.getType());
 					for (String val : a.getValues()) {
 						if (val != null) {
 							b.addValue(val);
@@ -1158,8 +1180,8 @@ public class BugzillaClient {
 			}
 
 			if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_2_18) == 0) {
-				fields.put(KEY_COMMENT, new NameValuePair(KEY_COMMENT, formatTextToLineWrap(descAttribute.getValue(),
-						true)));
+				fields.put(KEY_COMMENT,
+						new NameValuePair(KEY_COMMENT, formatTextToLineWrap(descAttribute.getValue(), true)));
 			} else {
 				fields.put(KEY_COMMENT, new NameValuePair(KEY_COMMENT, descAttribute.getValue()));
 			}
@@ -1317,8 +1339,9 @@ public class BugzillaClient {
 						fields.put(KEY_KNOB, new NameValuePair(KEY_KNOB, sel));
 					} else {
 						fields.put(KEY_KNOB, new NameValuePair(KEY_KNOB, attributeOperation.getValue()));
-						TaskAttribute inputAttribute = attributeOperation.getTaskData().getRoot().getAttribute(
-								inputAttributeId);
+						TaskAttribute inputAttribute = attributeOperation.getTaskData()
+								.getRoot()
+								.getAttribute(inputAttributeId);
 						if (inputAttribute != null) {
 							if (inputAttribute.getOptions().size() > 0) {
 								String sel = inputAttribute.getValue();
@@ -1340,8 +1363,10 @@ public class BugzillaClient {
 				}
 				if (model.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW) != null
 						&& model.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW).getValue().length() > 0) {
-					fields.put(KEY_COMMENT, new NameValuePair(KEY_COMMENT, model.getRoot().getMappedAttribute(
-							TaskAttribute.COMMENT_NEW).getValue()));
+					fields.put(KEY_COMMENT,
+							new NameValuePair(KEY_COMMENT, model.getRoot()
+									.getMappedAttribute(TaskAttribute.COMMENT_NEW)
+									.getValue()));
 				} else if (attributeOperation != null
 						&& attributeOperation.getValue().equals(BugzillaOperation.duplicate.toString())) {
 					// fix for bug#198677
@@ -1398,8 +1423,9 @@ public class BugzillaClient {
 
 						fields.put(fieldName, new NameValuePair(fieldName, selOp));
 						if (inputAttributeId != null && !inputAttributeId.equals("")) { //$NON-NLS-1$
-							TaskAttribute inputAttribute = attributeOperation.getTaskData().getRoot().getAttribute(
-									inputAttributeId);
+							TaskAttribute inputAttribute = attributeOperation.getTaskData()
+									.getRoot()
+									.getAttribute(inputAttributeId);
 							if (inputAttribute != null) {
 								if (inputAttribute.getOptions().size() > 0) {
 									String sel = inputAttribute.getValue();
@@ -1427,14 +1453,19 @@ public class BugzillaClient {
 
 			if (model.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW) != null
 					&& model.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW).getValue().length() > 0) {
-				fields.put(KEY_COMMENT, new NameValuePair(KEY_COMMENT, model.getRoot().getMappedAttribute(
-						TaskAttribute.COMMENT_NEW).getValue()));
+				fields.put(KEY_COMMENT,
+						new NameValuePair(KEY_COMMENT, model.getRoot()
+								.getMappedAttribute(TaskAttribute.COMMENT_NEW)
+								.getValue()));
 			}
 		}
 
 		if (model.getRoot().getMappedAttribute(BugzillaAttribute.SHORT_DESC.getKey()) != null) {
-			fields.put(KEY_SHORT_DESC, new NameValuePair(KEY_SHORT_DESC, model.getRoot().getMappedAttribute(
-					BugzillaAttribute.SHORT_DESC.getKey()).getValue()));
+			fields.put(
+					KEY_SHORT_DESC,
+					new NameValuePair(KEY_SHORT_DESC, model.getRoot()
+							.getMappedAttribute(BugzillaAttribute.SHORT_DESC.getKey())
+							.getValue()));
 		}
 
 		TaskAttribute attributeRemoveCC = model.getRoot().getMappedAttribute(BugzillaAttribute.REMOVECC.getKey());
@@ -1712,7 +1743,9 @@ public class BugzillaClient {
 
 			String result = title.trim();
 			if (result.length() == 0) {
-				result = body;
+				if (body.contains("Bugzilla/Bug.pm line")) {
+					result = "Bugzilla/Bug.pm line";
+				}
 			}
 
 			RepositoryStatus status = RepositoryStatus.createHtmlStatus(repositoryUrl.toString(), IStatus.INFO,
