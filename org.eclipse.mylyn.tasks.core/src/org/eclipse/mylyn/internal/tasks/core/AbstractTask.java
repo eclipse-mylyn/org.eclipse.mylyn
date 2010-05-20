@@ -82,7 +82,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 
 	private String notes = ""; //$NON-NLS-1$
 
-	private int estimatedTimeHours = 1;
+	private int estimatedTimeHours = 0;
 
 	private boolean markReadPending;
 
