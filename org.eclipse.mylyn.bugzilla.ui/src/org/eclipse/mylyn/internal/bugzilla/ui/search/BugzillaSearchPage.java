@@ -435,7 +435,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		moreOptionsExpandComposite.setBackground(null);
 		moreOptionsExpandComposite.setText(Messages.BugzillaSearchPage_More_Options);
 		moreOptionsExpandComposite.setLayout(new GridLayout(3, false));
-		g = new GridData(GridData.FILL, GridData.BEGINNING, true, false);
+		g = new GridData(GridData.FILL, GridData.FILL, true, true);
 		g.horizontalSpan = 4;
 		moreOptionsExpandComposite.setLayoutData(g);
 		moreOptionsExpandComposite.addExpansionListener(new ExpansionAdapter() {
