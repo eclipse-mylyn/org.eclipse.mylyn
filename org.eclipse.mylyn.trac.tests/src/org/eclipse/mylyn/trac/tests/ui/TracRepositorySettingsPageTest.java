@@ -13,24 +13,47 @@ package org.eclipse.mylyn.trac.tests.ui;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.ui.wizard.TracRepositorySettingsPage;
 import org.eclipse.mylyn.internal.trac.ui.wizard.TracRepositorySettingsPage.TracValidator;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.trac.tests.support.TracFixture;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Steffen Pingel
  */
 public class TracRepositorySettingsPageTest extends TestCase {
 
-	private TracRepositorySettingsPage page;
+	// make protected methods visible
+	private static class MyTracRepositorySettingsPage extends TracRepositorySettingsPage {
+
+		public MyTracRepositorySettingsPage(TaskRepository taskRepository) {
+			super(taskRepository);
+		}
+
+		@Override
+		protected void applyValidatorResult(Validator validator) {
+			// see AbstractRespositorySettingsPage.validate()
+			if (validator.getStatus() == null) {
+				validator.setStatus(Status.OK_STATUS);
+			}
+			super.applyValidatorResult(validator);
+		}
+
+	}
+
+	private MyTracRepositorySettingsPage page;
 
 	private TracValidator validator;
+
+	private WizardDialog dialog;
 
 	public TracRepositorySettingsPageTest() {
 	}
@@ -39,11 +62,27 @@ public class TracRepositorySettingsPageTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		page = new TracRepositorySettingsPage(null);
+		page = new MyTracRepositorySettingsPage(null);
 
-		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-		page.createControl(shell);
-		page.setVisible(true);
+		// stub wizard and dialog
+		Wizard wizard = new Wizard() {
+			@Override
+			public boolean performFinish() {
+				return true;
+			}
+		};
+		wizard.addPage(page);
+		dialog = new WizardDialog(null, wizard);
+		dialog.create();
+//		page.createControl(dialog.getShell());
+//		page.setVisible(true);
+	}
+
+	@Override
+	protected void tearDown() throws Exception {
+		if (dialog != null) {
+			dialog.close();
+		}
 	}
 
 	protected void initialize(TracFixture fixture) throws Exception {
@@ -64,6 +103,10 @@ public class TracRepositorySettingsPageTest extends TestCase {
 		validator.run(new NullProgressMonitor());
 		assertNull(validator.getResult());
 		assertNull(validator.getStatus());
+
+		page.applyValidatorResult(validator);
+		assertEquals(Version.XML_RPC, page.getTracVersion());
+		assertEquals("Repository is valid.", page.getMessage());
 	}
 
 	public void testValidateWeb() throws Exception {
@@ -72,6 +115,10 @@ public class TracRepositorySettingsPageTest extends TestCase {
 		validator.run(new NullProgressMonitor());
 		assertNull(validator.getResult());
 		assertNull(validator.getStatus());
+
+		page.applyValidatorResult(validator);
+		assertEquals(Version.TRAC_0_9, page.getTracVersion());
+		assertEquals("Repository is valid.", page.getMessage());
 	}
 
 	public void testValidateAutomaticUser() throws Exception {
@@ -83,6 +130,10 @@ public class TracRepositorySettingsPageTest extends TestCase {
 		validator.run(new NullProgressMonitor());
 		assertEquals(Version.XML_RPC, validator.getResult());
 		assertNull(validator.getStatus());
+
+		page.applyValidatorResult(validator);
+		assertEquals(Version.XML_RPC, page.getTracVersion());
+		assertEquals("Repository is valid.", page.getMessage());
 	}
 
 	public void testValidateAutomaticAnonymous() throws Exception {
@@ -96,6 +147,27 @@ public class TracRepositorySettingsPageTest extends TestCase {
 		validator.run(new NullProgressMonitor());
 		assertEquals(Version.TRAC_0_9, validator.getResult());
 		assertNotNull(validator.getStatus());
+
+		page.applyValidatorResult(validator);
+		assertEquals(Version.TRAC_0_9, page.getTracVersion());
+		assertEquals("Repository is valid.", page.getMessage());
 	}
 
+	public void testValidateInvalid() throws Exception {
+		initialize(TracFixture.TRAC_INVALID);
+
+		page.setTracVersion(null);
+		validator = page.new TracValidator(page.createTaskRepository(), null);
+
+		try {
+			validator.run(new NullProgressMonitor());
+			fail("Expected CoreException");
+		} catch (CoreException e) {
+			validator.setStatus(e.getStatus());
+		}
+
+		page.applyValidatorResult(validator);
+		assertNull(page.getTracVersion());
+		assertEquals(IMessageProvider.ERROR, page.getMessageType());
+	}
 }

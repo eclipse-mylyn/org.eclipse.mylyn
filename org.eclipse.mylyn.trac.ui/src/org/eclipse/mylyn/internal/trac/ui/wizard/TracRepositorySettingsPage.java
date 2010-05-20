@@ -26,10 +26,10 @@ import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.trac.core.TracClientFactory;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
+import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.client.TracException;
 import org.eclipse.mylyn.internal.trac.core.client.TracLoginException;
 import org.eclipse.mylyn.internal.trac.core.client.TracPermissionDeniedException;
-import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.model.TracRepositoryInfo;
 import org.eclipse.mylyn.internal.trac.ui.TracUiPlugin;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
@@ -155,12 +155,11 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
 	@Override
 	protected void applyValidatorResult(Validator validator) {
-		super.applyValidatorResult(validator);
-
 		if (((TracValidator) validator).getResult() != null) {
 			setTracVersion(((TracValidator) validator).getResult());
 			getContainer().updateButtons();
 		}
+		super.applyValidatorResult(validator);
 	}
 
 	// public for testing

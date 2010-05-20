@@ -38,6 +38,9 @@ public class TracFixture extends TestFixture {
 
 	public static XmlRpcServer.TestData data010;
 
+	public static TracFixture TRAC_INVALID = new TracFixture(Version.TRAC_0_9, TracTestConstants.TEST_TRAC_INVALID_URL,
+			"0.11", "Invalid URL");
+
 	public static TracFixture TRAC_0_9_WEB = new TracFixture(Version.TRAC_0_9, TracTestConstants.TEST_TRAC_096_URL,
 			"0.9", "Web");
 
