@@ -88,7 +88,7 @@ public class TaskMapperTest extends TestCase {
 		source.setDescription("sourceDescription");
 		target.setDescription("");
 		// TODO 3.4 remove (bug 247595)
-		target.getTaskData().getRoot().getAttribute(TaskAttribute.DESCRIPTION).getMetaData().setReadOnly(false);
+		//target.getTaskData().getRoot().getAttribute(TaskAttribute.DESCRIPTION).getMetaData().setReadOnly(false);
 		target.merge(source);
 		assertEquals("sourceDescription", target.getDescription());
 		assertEquals(null, target.getSummary());
@@ -96,7 +96,7 @@ public class TaskMapperTest extends TestCase {
 		source.setSummary("sourceSummary");
 		target.setSummary("");
 		// TODO 3.4 remove (bug 247595)
-		target.getTaskData().getRoot().getAttribute(TaskAttribute.SUMMARY).getMetaData().setReadOnly(false);
+		//target.getTaskData().getRoot().getAttribute(TaskAttribute.SUMMARY).getMetaData().setReadOnly(false);
 		target.merge(source);
 		assertEquals("sourceSummary", target.getSummary());
 	}
@@ -157,7 +157,7 @@ public class TaskMapperTest extends TestCase {
 		source.setDescription("sourceDescription");
 		target.setDescription("");
 		// TODO 3.4 remove (bug 247595)
-		target.getTaskData().getRoot().getAttribute(TaskAttribute.DESCRIPTION).getMetaData().setReadOnly(false);
+		//target.getTaskData().getRoot().getAttribute(TaskAttribute.DESCRIPTION).getMetaData().setReadOnly(false);
 		target.merge(source);
 		assertEquals("sourceDescription", target.getDescription());
 		assertEquals(null, target.getSummary());
