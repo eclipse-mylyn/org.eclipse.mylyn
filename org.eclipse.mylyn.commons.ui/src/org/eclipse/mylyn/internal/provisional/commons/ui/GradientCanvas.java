@@ -93,7 +93,7 @@ public class GradientCanvas extends Canvas {
 		addListener(SWT.Dispose, new Listener() {
 			public void handleEvent(Event e) {
 				if (gradientImage != null) {
-					// TODO e3.4 FormImages.getInstance().markFinished(gradientImage);
+					// XXX FormImages.getInstance().markFinished(gradientImage);
 					gradientImage.dispose();
 					gradientImage = null;
 				}
@@ -133,7 +133,7 @@ public class GradientCanvas extends Canvas {
 			// reset
 			gradientInfo = null;
 			if (gradientImage != null) {
-				// TODO e3.4 FormImages.getInstance().markFinished(gradientImage);
+				// XXX FormImages.getInstance().markFinished(gradientImage);
 				gradientImage.dispose();
 				gradientImage = null;
 				setBackgroundImage(null);
@@ -233,12 +233,12 @@ public class GradientCanvas extends Canvas {
 	private void updateGradientImage() {
 		Rectangle rect = getBounds();
 		if (gradientImage != null) {
-			// TODO e3.4 FormImages.getInstance().markFinished(gradientImage);
+			// XXX FormImages.getInstance().markFinished(gradientImage);
 			gradientImage.dispose();
 			gradientImage = null;
 		}
 		if (gradientInfo != null) {
-			// TODO e3.4 use FormImages
+			// XXX use FormImages
 //			gradientImage = FormImages.getInstance().getGradient(gradientInfo.gradientColors, gradientInfo.percents,
 //					gradientInfo.vertical ? rect.height : rect.width, gradientInfo.vertical, getColor(COLOR_BASE_BG));
 			boolean vertical = gradientInfo.vertical;
@@ -258,7 +258,7 @@ public class GradientCanvas extends Canvas {
 		setBackgroundImage(gradientImage);
 	}
 
-	// TODO e3.4 remove, use FormImages
+	// XXX remove, use FormImages
 	private void drawTextGradient(GC gc, int width, int height) {
 		final Color oldBackground = gc.getBackground();
 		if (gradientInfo.gradientColors.length == 1) {
