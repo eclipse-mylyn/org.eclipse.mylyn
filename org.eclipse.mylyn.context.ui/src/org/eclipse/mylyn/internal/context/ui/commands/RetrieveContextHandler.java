@@ -13,7 +13,6 @@ package org.eclipse.mylyn.internal.context.ui.commands;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.context.ui.wizards.ContextRetrieveWizard;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
@@ -31,10 +30,7 @@ public class RetrieveContextHandler extends AbstractTaskHandler {
 		WizardDialog dialog = new WizardDialog(WorkbenchUtil.getShell(), wizard);
 		dialog.create();
 		dialog.setBlockOnOpen(true);
-		if (dialog.open() == Window.CANCEL) {
-			dialog.close();
-			return;
-		}
+		dialog.open();
 	}
 
 }
