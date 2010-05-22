@@ -239,7 +239,9 @@ public abstract class AbstractRepositoryConnectorUi {
 	 *            the offset of <code>text</code>
 	 * @return an array of hyperlinks, or null if no hyperlinks were found
 	 * @since 2.0
+	 * @deprecated use {@link #findHyperlinks(TaskRepository, ITask, String, int, int)} instead
 	 */
+	@Deprecated
 	public IHyperlink[] findHyperlinks(TaskRepository repository, String text, int index, int textOffset) {
 		return null;
 	}
@@ -266,4 +268,25 @@ public abstract class AbstractRepositoryConnectorUi {
 		return new TaskAttachmentPage(model);
 	}
 
+	/**
+	 * Returns an array of hyperlinks that link to tasks within <code>text</code>. If <code>index</code> is != -1
+	 * clients may limit the results to hyperlinks found at <code>index</code>. It is legal for clients to always return
+	 * all results.
+	 * 
+	 * @param repository
+	 *            the task repository, never <code>null</code>
+	 * @param task
+	 *            the task, can be <code>null</code>
+	 * @param text
+	 *            the line of text
+	 * @param index
+	 *            the index within <code>text</code>, if -1 return all hyperlinks found in text
+	 * @param textOffset
+	 *            the offset of <code>text</code>
+	 * @return an array of hyperlinks, or null if no hyperlinks were found
+	 * @since 3.4
+	 */
+	public IHyperlink[] findHyperlinks(TaskRepository repository, ITask task, String text, int index, int textOffset) {
+		return findHyperlinks(repository, text, index, textOffset);
+	}
 }

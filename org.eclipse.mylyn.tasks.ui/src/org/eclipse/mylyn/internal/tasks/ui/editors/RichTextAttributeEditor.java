@@ -53,7 +53,7 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 	public RichTextAttributeEditor(TaskDataModel manager, TaskRepository taskRepository, TaskAttribute taskAttribute,
 			int style, IContextService contextService, AbstractTaskEditorExtension extension) {
 		super(manager, taskAttribute);
-		this.editor = new RichTextEditor(taskRepository, style, contextService, extension) {
+		this.editor = new RichTextEditor(taskRepository, style, contextService, extension, getModel().getTask()) {
 			@Override
 			public void valueChanged(String value) {
 				if (!ignoreNotification) {

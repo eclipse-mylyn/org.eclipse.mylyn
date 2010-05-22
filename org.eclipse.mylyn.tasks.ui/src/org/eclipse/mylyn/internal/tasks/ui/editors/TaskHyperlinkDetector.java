@@ -20,6 +20,7 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.AbstractTaskHyperlinkDetector;
@@ -47,7 +48,8 @@ public class TaskHyperlinkDetector extends AbstractTaskHyperlinkDetector {
 				}
 
 				public void run() throws Exception {
-					links[0] = connectorUi.findHyperlinks(repository, content, index, contentOffset);
+					final ITask task = (ITask) getAdapter(ITask.class);
+					links[0] = connectorUi.findHyperlinks(repository, task, content, index, contentOffset);
 				}
 
 			});

@@ -148,7 +148,7 @@ public class TaskAttachmentPage extends WizardPage {
 		}
 
 		commentEditor = new RichTextEditor(getModel().getTaskRepository(), SWT.V_SCROLL | SWT.BORDER | SWT.WRAP,
-				contextService, extension) {
+				contextService, extension, getModel().getTask()) {
 			@Override
 			protected void valueChanged(String value) {
 				apply();

@@ -17,6 +17,7 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -33,6 +34,7 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.tasks.ui.commands.ViewSourceHandler;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTextViewerConfiguration.Mode;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractRenderingEngine;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorExtension;
@@ -160,12 +162,21 @@ public class RichTextEditor {
 
 	private final ListenerList stateChangedListeners = new ListenerList(ListenerList.IDENTITY);
 
+	private final ITask task;
+
+	@Deprecated
 	public RichTextEditor(TaskRepository repository, int style) {
-		this(repository, style, null, null);
+		this(repository, style, null, null, null);
+	}
+
+	@Deprecated
+	public RichTextEditor(TaskRepository repository, int style, IContextService contextService,
+			AbstractTaskEditorExtension extension) {
+		this(repository, style, contextService, extension, null);
 	}
 
 	public RichTextEditor(TaskRepository repository, int style, IContextService contextService,
-			AbstractTaskEditorExtension extension) {
+			AbstractTaskEditorExtension extension, ITask task) {
 		this.repository = repository;
 		this.style = style;
 		this.contextService = contextService;
@@ -173,11 +184,12 @@ public class RichTextEditor {
 		this.text = ""; //$NON-NLS-1$
 		this.viewSourceAction = new ViewSourceAction();
 		setMode(Mode.DEFAULT);
+		this.task = task;
 	}
 
 	private SourceViewer configure(final SourceViewer viewer, Document document, boolean readOnly) {
 		// do this before setting the document to not require invalidating the presentation
-		installHyperlinkPresenter(viewer, repository, getMode());
+		installHyperlinkPresenter(viewer, repository, task, getMode());
 
 		updateDocument(viewer, document, readOnly);
 		if (readOnly) {
@@ -261,9 +273,11 @@ public class RichTextEditor {
 
 			if (extension != null) {
 				if (isReadOnly()) {
-					editorViewer = extension.createViewer(repository, editorComposite, style);
+					editorViewer = extension.createViewer(repository, editorComposite, style,
+							createHyperlinkDetectorContext());
 				} else {
-					editorViewer = extension.createEditor(repository, editorComposite, style);
+					editorViewer = extension.createEditor(repository, editorComposite, style,
+							createHyperlinkDetectorContext());
 					editorViewer.getTextWidget().addFocusListener(new FocusListener() {
 						public void focusGained(FocusEvent e) {
 							setContext();
@@ -301,10 +315,25 @@ public class RichTextEditor {
 		}
 	}
 
+	@SuppressWarnings( { "rawtypes" })
+	private IAdaptable createHyperlinkDetectorContext() {
+		return new IAdaptable() {
+			public Object getAdapter(Class adapter) {
+				if (adapter == TaskRepository.class) {
+					return repository;
+				}
+				if (adapter == ITask.class) {
+					return task;
+				}
+				return null;
+			}
+		};
+	}
+
 	private SourceViewer createDefaultEditor(Composite parent, int styles) {
 		SourceViewer defaultEditor = new SourceViewer(parent, null, styles | SWT.WRAP);
 
-		RepositoryTextViewerConfiguration viewerConfig = new RepositoryTextViewerConfiguration(repository,
+		RepositoryTextViewerConfiguration viewerConfig = new RepositoryTextViewerConfiguration(repository, task,
 				isSpellCheckingEnabled() && !isReadOnly());
 		viewerConfig.setMode(getMode());
 		defaultEditor.configure(viewerConfig);
@@ -427,8 +456,8 @@ public class RichTextEditor {
 	}
 
 	public static RepositoryTextViewerConfiguration installHyperlinkPresenter(ISourceViewer viewer,
-			TaskRepository repository, Mode mode) {
-		RepositoryTextViewerConfiguration configuration = new RepositoryTextViewerConfiguration(repository, false);
+			TaskRepository repository, ITask task, Mode mode) {
+		RepositoryTextViewerConfiguration configuration = new RepositoryTextViewerConfiguration(repository, task, false);
 		configuration.setMode(mode);
 
 		// do not configure viewer, this has already been done in extension

@@ -811,7 +811,10 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		for (CommentGroupViewer groupViewer : groupViewers) {
 			for (CommentViewer viewer : groupViewer.getCommentViewers()) {
 				if (viewer.getTaskAttribute().equals(commentAttribute)) {
-					CommonFormUtil.ensureVisible(viewer.getControl());
+					//CommonFormUtil.ensureVisible(viewer.getControl());
+					// EditorUtil is consistent with behavior of outline 
+					EditorUtil.reveal(getTaskEditorPage().getManagedForm().getForm(), commentAttribute.getId());
+					return viewer;
 				}
 			}
 		}

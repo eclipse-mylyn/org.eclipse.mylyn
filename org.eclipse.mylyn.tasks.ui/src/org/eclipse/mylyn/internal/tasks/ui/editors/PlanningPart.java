@@ -337,12 +337,13 @@ public class PlanningPart extends AbstractLocalEditorPart {
 				AbstractTaskEditorExtension extension = TaskEditorExtensions.getTaskEditorExtension(getRepository());
 				if (extension != null) {
 					noteEditor = new RichTextEditor(getRepository(), SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL,
-							contextService, extension);
+							contextService, extension, getTask());
 				}
 			}
 		}
 		if (noteEditor == null) {
-			noteEditor = new RichTextEditor(getRepository(), SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+			noteEditor = new RichTextEditor(getRepository(), SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL, null,
+					null, getTask());
 		}
 		noteEditor.setSpellCheckingEnabled(true);
 		noteEditor.createControl(composite, toolkit);
@@ -398,8 +399,9 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		if (noteEditor.getViewer() != null) {
 			noteEditor.getViewer().getTextWidget().addFocusListener(removePersonalNotesFocusListener);
 			if (changeColor) {
-				noteEditor.getViewer().getTextWidget().setForeground(
-						composite.getShell().getDisplay().getSystemColor(SWT.COLOR_GRAY));
+				noteEditor.getViewer()
+						.getTextWidget()
+						.setForeground(composite.getShell().getDisplay().getSystemColor(SWT.COLOR_GRAY));
 			}
 		}
 

@@ -35,6 +35,7 @@ import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColors;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TaskHyperlinkPresenter;
 import org.eclipse.swt.SWT;
@@ -65,11 +66,22 @@ public class RepositoryTextViewerConfiguration extends TextSourceViewerConfigura
 
 	private Mode mode;
 
+	private final ITask task;
+
+	/**
+	 * @deprecated use {@link #RepositoryTextViewerConfiguration(TaskRepository, ITask, boolean)} instead.
+	 */
+	@Deprecated
 	public RepositoryTextViewerConfiguration(TaskRepository taskRepository, boolean spellCheck) {
+		this(taskRepository, null, spellCheck);
+	}
+
+	public RepositoryTextViewerConfiguration(TaskRepository taskRepository, ITask task, boolean spellCheck) {
 		super(EditorsUI.getPreferenceStore());
 		this.taskRepository = taskRepository;
 		this.spellCheck = spellCheck;
 		this.mode = Mode.DEFAULT;
+		this.task = task;
 	}
 
 	public Mode getMode() {
@@ -148,6 +160,8 @@ public class RepositoryTextViewerConfiguration extends TextSourceViewerConfigura
 			public Object getAdapter(Class adapter) {
 				if (adapter == TaskRepository.class) {
 					return getTaskRepository();
+				} else if (adapter == ITask.class) {
+					return getTask();
 				}
 				return null;
 			}
@@ -206,6 +220,10 @@ public class RepositoryTextViewerConfiguration extends TextSourceViewerConfigura
 		}
 		assistant.setContentAssistProcessor(processor, IDocument.DEFAULT_CONTENT_TYPE);
 		return assistant;
+	}
+
+	public ITask getTask() {
+		return task;
 	}
 
 }
