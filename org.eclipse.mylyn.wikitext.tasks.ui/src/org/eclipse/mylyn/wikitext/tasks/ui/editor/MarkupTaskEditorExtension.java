@@ -7,6 +7,8 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Frank Becker - improvements for bug 304910
+ *     Tasktop Technologies - improvements
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.tasks.ui.editor;
 
@@ -100,8 +102,14 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 		return MarkupEditor.CONTEXT;
 	}
 
+	@Deprecated
 	@Override
 	public SourceViewer createViewer(TaskRepository taskRepository, Composite parent, int style) {
+		return createViewer(taskRepository, parent, style, null);
+	}
+
+	@Override
+	public SourceViewer createViewer(TaskRepository taskRepository, Composite parent, int style, IAdaptable context) {
 		if (markupLanguage == null) {
 			throw new IllegalStateException();
 		}
@@ -157,24 +165,45 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 
 	protected TaskMarkupViewerConfiguration createViewerConfiguration(TaskRepository taskRepository,
 			MarkupViewer markupViewer) {
-		return new TaskMarkupViewerConfiguration(markupViewer, taskRepository);
+		return createViewerConfiguration(taskRepository, markupViewer, null);
+	}
+
+	/**
+	 * @since 1.3
+	 */
+	protected TaskMarkupViewerConfiguration createViewerConfiguration(TaskRepository taskRepository,
+			MarkupViewer markupViewer, IAdaptable context) {
+		return new TaskMarkupViewerConfiguration(markupViewer, taskRepository, context);
 	}
 
 	protected TaskMarkupSourceViewerConfiguration createSourceViewerConfiguration(TaskRepository taskRepository,
 			SourceViewer viewer) {
-		IPreferenceStore preferenceStore = EditorsUI.getPreferenceStore();
-		return new TaskMarkupSourceViewerConfiguration(preferenceStore, taskRepository);
+		return createSourceViewerConfiguration(taskRepository, viewer, null);
 	}
 
-	@SuppressWarnings("unchecked")
+	/**
+	 * @since 1.3
+	 */
+	protected TaskMarkupSourceViewerConfiguration createSourceViewerConfiguration(TaskRepository taskRepository,
+			SourceViewer viewer, IAdaptable context) {
+		IPreferenceStore preferenceStore = EditorsUI.getPreferenceStore();
+		return new TaskMarkupSourceViewerConfiguration(preferenceStore, taskRepository, context);
+	}
+
+	@Deprecated
 	@Override
 	public SourceViewer createEditor(TaskRepository taskRepository, Composite parent, int style) {
+		return createEditor(taskRepository, parent, style, null);
+	}
+
+	@Override
+	public SourceViewer createEditor(TaskRepository taskRepository, Composite parent, int style, IAdaptable context) {
 		final MarkupLanguageType markupLanguageCopy = createRepositoryMarkupLanguage(taskRepository);
 		configureMarkupLanguage(taskRepository, markupLanguageCopy);
 
 		SourceViewer viewer = new MarkupSourceViewer(parent, null, style | SWT.WRAP, markupLanguageCopy);
 		// configure the viewer
-		MarkupSourceViewerConfiguration configuration = createSourceViewerConfiguration(taskRepository, viewer);
+		MarkupSourceViewerConfiguration configuration = createSourceViewerConfiguration(taskRepository, viewer, context);
 
 		configuration.setMarkupLanguage(markupLanguageCopy);
 		configuration.setShowInTarget(new ShowInTargetBridge(viewer));
@@ -257,10 +286,25 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 
 		private final TaskRepository taskRepository;
 
+		private final IAdaptable context;
+
 		public TaskMarkupSourceViewerConfiguration(IPreferenceStore preferenceStore, TaskRepository taskRepository) {
+			this(preferenceStore, taskRepository, null);
+		}
+
+		/**
+		 * @since 1.3
+		 */
+		public TaskMarkupSourceViewerConfiguration(IPreferenceStore preferenceStore, TaskRepository taskRepository,
+				IAdaptable context) {
 			super(preferenceStore, WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_DEFAULT_FONT,
 					WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_MONOSPACE_FONT);
 			this.taskRepository = taskRepository;
+			if (context == null) {
+				this.context = createDefaultHyperlinkDetectorContext(taskRepository);
+			} else {
+				this.context = context;
+			}
 			// filter out the platform URL hyperlink detector since Mylyn contributes one as well.
 			addHyperlinkDetectorDescriptorFilter(new DefaultHyperlinkDetectorDescriptorFilter(
 					"org.eclipse.ui.internal.editors.text.URLHyperlinkDetector")); //$NON-NLS-1$
@@ -286,7 +330,7 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 		@Override
 		protected Map getHyperlinkDetectorTargets(ISourceViewer sourceViewer) {
 			Map hyperlinkDetectorTargets = super.getHyperlinkDetectorTargets(sourceViewer);
-			addRepositoryHyperlinkDetectorTargets(taskRepository, hyperlinkDetectorTargets);
+			addRepositoryHyperlinkDetectorTargets(context, hyperlinkDetectorTargets);
 			return hyperlinkDetectorTargets;
 		}
 
@@ -317,9 +361,23 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 
 		private final TaskRepository taskRepository;
 
+		private final IAdaptable context;
+
 		public TaskMarkupViewerConfiguration(MarkupViewer viewer, TaskRepository taskRepository) {
+			this(viewer, taskRepository, null);
+		}
+
+		/**
+		 * @since 1.3
+		 */
+		public TaskMarkupViewerConfiguration(MarkupViewer viewer, TaskRepository taskRepository, IAdaptable context) {
 			super(viewer);
 			this.taskRepository = taskRepository;
+			if (context == null) {
+				this.context = createDefaultHyperlinkDetectorContext(taskRepository);
+			} else {
+				this.context = context;
+			}
 			markupHyperlinksFirst = false;
 		}
 
@@ -327,7 +385,7 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 		@Override
 		protected Map getHyperlinkDetectorTargets(ISourceViewer sourceViewer) {
 			Map hyperlinkDetectorTargets = super.getHyperlinkDetectorTargets(sourceViewer);
-			addRepositoryHyperlinkDetectorTargets(taskRepository, hyperlinkDetectorTargets);
+			addRepositoryHyperlinkDetectorTargets(context, hyperlinkDetectorTargets);
 			return hyperlinkDetectorTargets;
 		}
 
@@ -355,17 +413,20 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 		}
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private static void addRepositoryHyperlinkDetectorTargets(final TaskRepository taskRepository,
-			Map hyperlinkDetectorTargets) {
-		IAdaptable context = new IAdaptable() {
+	@SuppressWarnings( { "rawtypes" })
+	private static IAdaptable createDefaultHyperlinkDetectorContext(final TaskRepository repository) {
+		return new IAdaptable() {
 			public Object getAdapter(Class adapter) {
 				if (adapter == TaskRepository.class) {
-					return taskRepository;
+					return repository;
 				}
 				return null;
 			}
 		};
+	}
+
+	@SuppressWarnings( { "unchecked" })
+	private static void addRepositoryHyperlinkDetectorTargets(IAdaptable context, Map hyperlinkDetectorTargets) {
 		hyperlinkDetectorTargets.put(ID_CONTEXT_EDITOR_TEXT, context);
 		hyperlinkDetectorTargets.put(ID_CONTEXT_EDITOR_TASK, context);
 	}
