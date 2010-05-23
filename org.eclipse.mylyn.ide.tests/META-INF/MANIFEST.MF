@@ -6,11 +6,17 @@ Bundle-Version: 3.4.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.jface,
+ org.eclipse.jface.text,
  org.eclipse.ui.workbench,
+ org.eclipse.jdt.ui,
  org.junit,
  org.eclipse.mylyn.context.core,
  org.eclipse.mylyn.context.tests,
  org.eclipse.mylyn.team.ui,
- org.eclipse.mylyn.resources.ui
+ org.eclipse.mylyn.resources.ui,
+ org.eclipse.mylyn.ide.ui,
+ org.eclipse.mylyn.tasks.ui,
+ org.eclipse.mylyn.tasks.core,
+ org.eclipse.mylyn.tasks.tests
 Export-Package: org.eclipse.mylyn.ide.tests;x-internal:=true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

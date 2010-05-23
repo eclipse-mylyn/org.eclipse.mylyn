@@ -222,5 +222,37 @@
           </newWizardShortcut>
        </perspectiveExtension>
     </extension>
+    <extension
+          id="org.eclipse.mylyn.internal.ide.ui.editors.templates"
+          point="org.eclipse.ui.editors.templates">
+       <resolver
+             class="org.eclipse.mylyn.internal.ide.ui.TaskTemplateVariableResolver"
+             contextTypeId="java"
+             description="%MylynTemplateVariableResolver.activeTaskId.description"
+             name="Active Task ID"
+             type="activeTaskKey">
+       </resolver>
+       <resolver
+             class="org.eclipse.mylyn.internal.ide.ui.TaskTemplateVariableResolver"
+             contextTypeId="javadoc"
+             description="%MylynTemplateVariableResolver.activeTaskId.description"
+             name="Active Task ID"
+             type="activeTaskKey">
+       </resolver>
+       <resolver
+             class="org.eclipse.mylyn.internal.ide.ui.TaskTemplateVariableResolver"
+             contextTypeId="java"
+             description="%MylynTemplateVariableResolver.activeTaskPrefix.description"
+             name="Active Task Prefix"
+             type="activeTaskPrefix">
+       </resolver>
+       <resolver
+             class="org.eclipse.mylyn.internal.ide.ui.TaskTemplateVariableResolver"
+             contextTypeId="javadoc"
+             description="%MylynTemplateVariableResolver.activeTaskPrefix.description"
+             name="Active Task Prefix"
+             type="activeTaskPrefix">
+       </resolver>
+    </extension>
 
 </plugin>
