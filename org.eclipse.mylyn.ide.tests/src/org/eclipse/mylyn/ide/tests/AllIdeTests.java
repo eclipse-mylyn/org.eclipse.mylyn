@@ -14,8 +14,6 @@ package org.eclipse.mylyn.ide.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.mylyn.internal.ide.ui.TaskTemplateVariableResolver;
-
 /**
  * @author Mik Kersten
  */
@@ -26,7 +24,7 @@ public class AllIdeTests {
 		suite.addTestSuite(OpenCorrespondingTaskActionTest.class);
 		suite.addTestSuite(IdeStartupTest.class);
 		suite.addTestSuite(IdePreferencesTest.class);
-		suite.addTestSuite(TaskTemplateVariableResolver.class);
+		suite.addTestSuite(TaskTemplateResolverTest.class);
 		return suite;
 	}
 }
