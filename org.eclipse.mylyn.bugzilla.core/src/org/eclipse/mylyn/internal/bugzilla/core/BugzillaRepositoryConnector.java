@@ -655,9 +655,14 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 			@Override
 			public PriorityLevel getPriorityLevel() {
-				RepositoryConfiguration a = BugzillaRepositoryConnector.this.getRepositoryConfiguration(taskData.getRepositoryUrl());
-				BugzillaVersion a1 = a.getInstallVersion();
-				if (a1.compareTo(BugzillaVersion.BUGZILLA_3_6) >= 0) {
+				RepositoryConfiguration repositoryConfiguration = BugzillaRepositoryConnector.this.getRepositoryConfiguration(taskData.getRepositoryUrl());
+				BugzillaVersion bugzillaVersion;
+				if (repositoryConfiguration != null) {
+					bugzillaVersion = repositoryConfiguration.getInstallVersion();
+				} else {
+					bugzillaVersion = BugzillaVersion.MIN_VERSION;
+				}
+				if (bugzillaVersion.compareTo(BugzillaVersion.BUGZILLA_3_6) >= 0) {
 					BugzillaPriorityLevel bugzillaPriorityLevel = BugzillaPriorityLevel.fromPriority(getPriority());
 					if (bugzillaPriorityLevel != null) {
 						return BugzillaPriorityLevel.fromPriority(getPriority()).toPriorityLevel();
@@ -665,7 +670,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 						PriorityLevel.getDefault();
 					}
 				}
-				// ignore
 				return super.getPriorityLevel();
 			}
 		};
