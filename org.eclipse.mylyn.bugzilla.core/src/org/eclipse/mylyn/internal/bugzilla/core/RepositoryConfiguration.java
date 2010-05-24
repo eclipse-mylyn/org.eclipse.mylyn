@@ -567,7 +567,7 @@ public class RepositoryConfiguration implements Serializable {
 
 				if (element != BugzillaAttribute.RESOLUTION && element != BugzillaAttribute.OP_SYS
 						&& element != BugzillaAttribute.BUG_SEVERITY && element != BugzillaAttribute.PRIORITY
-						&& element != BugzillaAttribute.BUG_STATUS) {
+						&& element != BugzillaAttribute.BUG_STATUS && element != BugzillaAttribute.TARGET_MILESTONE) {
 					Collections.sort(options);
 				}
 			}
