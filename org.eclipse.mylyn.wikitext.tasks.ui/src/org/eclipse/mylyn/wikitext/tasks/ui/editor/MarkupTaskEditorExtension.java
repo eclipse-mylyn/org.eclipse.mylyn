@@ -118,7 +118,7 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 		configureMarkupLanguage(taskRepository, markupLanguageCopy);
 
 		markupViewer.setMarkupLanguage(markupLanguageCopy);
-		MarkupViewerConfiguration configuration = createViewerConfiguration(taskRepository, markupViewer);
+		MarkupViewerConfiguration configuration = createViewerConfiguration(taskRepository, markupViewer, context);
 		configuration.setDisableHyperlinkModifiers(true);
 		if (markupLanguageCopy.isDetectingRawHyperlinks()) {
 			// bug 264612 don't detect hyperlinks twice
@@ -413,7 +413,7 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 		}
 	}
 
-	@SuppressWarnings( { "rawtypes" })
+	@SuppressWarnings({ "rawtypes" })
 	private static IAdaptable createDefaultHyperlinkDetectorContext(final TaskRepository repository) {
 		return new IAdaptable() {
 			public Object getAdapter(Class adapter) {
@@ -425,7 +425,7 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 		};
 	}
 
-	@SuppressWarnings( { "unchecked" })
+	@SuppressWarnings({ "unchecked" })
 	private static void addRepositoryHyperlinkDetectorTargets(IAdaptable context, Map hyperlinkDetectorTargets) {
 		hyperlinkDetectorTargets.put(ID_CONTEXT_EDITOR_TEXT, context);
 		hyperlinkDetectorTargets.put(ID_CONTEXT_EDITOR_TASK, context);
