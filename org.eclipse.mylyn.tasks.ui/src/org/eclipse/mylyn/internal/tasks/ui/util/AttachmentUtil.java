@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -54,6 +55,8 @@ import org.eclipse.mylyn.tasks.core.sync.SubmitJob;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.ui.handlers.IHandlerService;
 
 /**
  * @author Steffen Pingel
@@ -69,6 +72,16 @@ public class AttachmentUtil {
 	private static final String CONTEXT_FILENAME = "mylyn-context.zip"; //$NON-NLS-1$
 
 	private static final String CONTEXT_CONTENT_TYPE = "application/octet-stream"; //$NON-NLS-1$
+
+	private static final String ATTACHMENT_DEFAULT_NAME = "attachment"; //$NON-NLS-1$
+
+	private static final String CTYPE_ZIP = "zip"; //$NON-NLS-1$
+
+	private static final String CTYPE_OCTET_STREAM = "octet-stream"; //$NON-NLS-1$
+
+	private static final String CTYPE_TEXT = "text"; //$NON-NLS-1$
+
+	private static final String CTYPE_HTML = "html"; //$NON-NLS-1$
 
 	public static boolean postContext(AbstractRepositoryConnector connector, TaskRepository repository, ITask task,
 			String comment, TaskAttribute attribute, IProgressMonitor monitor) throws CoreException {
@@ -286,13 +299,47 @@ public class AttachmentUtil {
 	}
 
 	public static ITaskAttachment getSelectedAttachment() {
-		List<ITaskAttachment> attachments = getSelectedAttachments();
+		List<ITaskAttachment> attachments = getSelectedAttachments(null);
 		if (attachments.isEmpty()) {
 			return null;
 		}
 		return attachments.get(0);
 	}
 
+	public static List<ITaskAttachment> getSelectedAttachments(ExecutionEvent event) {
+		if (event == null) {
+			// create bogus execution event to obtain active menu selection
+			IHandlerService service = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
+			if (service != null) {
+				event = new ExecutionEvent(null, Collections.emptyMap(), null, service.getCurrentState());
+			} else {
+				// failed
+				return Collections.emptyList();
+			}
+		}
+
+		// prefer local selection, e.g from table in Task Editor
+		ISelection selection = HandlerUtil.getActiveMenuSelection(event);
+		if (selection == null || selection.isEmpty()) {
+			selection = HandlerUtil.getCurrentSelection(event);
+		}
+		if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
+			List<?> items = ((IStructuredSelection) selection).toList();
+			List<ITaskAttachment> attachments = new ArrayList<ITaskAttachment>();
+			for (Object item : items) {
+				if (item instanceof ITaskAttachment) {
+					attachments.add((ITaskAttachment) item);
+				}
+			}
+			return attachments;
+		}
+		return Collections.emptyList();
+	}
+
+	/**
+	 * @deprecated use {@link #getSelectedAttachments(ExecutionEvent)} instead
+	 */
+	@Deprecated
 	public static List<ITaskAttachment> getSelectedAttachments() {
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window != null) {
@@ -311,5 +358,27 @@ public class AttachmentUtil {
 			}
 		}
 		return Collections.emptyList();
+	}
+
+	public static String getAttachmentFilename(ITaskAttachment attachment) {
+		String name = attachment.getFileName();
+		// if no filename is set, make one up with the proper extension so
+		// we can support opening in that filetype's default editor
+		if (name == null || "".equals(name)) { //$NON-NLS-1$
+			String ctype = attachment.getContentType();
+			if (ctype.endsWith(CTYPE_HTML)) {
+				name = ATTACHMENT_DEFAULT_NAME + ".html"; //$NON-NLS-1$
+			} else if (ctype.startsWith(CTYPE_TEXT)) {
+				name = ATTACHMENT_DEFAULT_NAME + ".txt"; //$NON-NLS-1$
+			} else if (ctype.endsWith(CTYPE_OCTET_STREAM)) {
+				name = ATTACHMENT_DEFAULT_NAME;
+			} else if (ctype.endsWith(CTYPE_ZIP)) {
+				name = ATTACHMENT_DEFAULT_NAME + "." + CTYPE_ZIP; //$NON-NLS-1$
+			} else {
+				name = ATTACHMENT_DEFAULT_NAME + "." + ctype.substring(ctype.indexOf("/") + 1); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+		}
+
+		return name;
 	}
 }

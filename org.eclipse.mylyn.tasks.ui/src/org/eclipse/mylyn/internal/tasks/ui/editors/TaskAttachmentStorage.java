@@ -34,7 +34,9 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
 /**
  * @author Jeff Pound
  * @author Steffen Pingel
+ * @deprecated use TaskAttachmentViewersManager instead
  */
+@Deprecated
 public class TaskAttachmentStorage extends PlatformObject implements IStorage {
 
 	private static final String ATTACHMENT_DEFAULT_NAME = "attachment"; //$NON-NLS-1$

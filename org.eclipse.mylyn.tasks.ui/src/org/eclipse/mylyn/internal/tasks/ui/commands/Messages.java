@@ -29,6 +29,10 @@ public class Messages extends NLS {
 
 	public static String NewLocalTaskHandler_Could_not_create_local_task;
 
+	public static String OpenTaskAttachmentHandler_failedToOpenViewer;
+
+	public static String OpenTaskAttachmentHandler_noAttachmentViewerFound;
+
 	public static String OpenTaskAttachmentInDefaultEditorHandler_Failed_to_open_editor;
 
 	public static String OpenTaskAttachmentInDefaultEditorHandler_No_default_editor_for_X_found;

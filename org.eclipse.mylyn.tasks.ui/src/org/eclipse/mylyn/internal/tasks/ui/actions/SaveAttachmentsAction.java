@@ -35,23 +35,13 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class SaveAttachmentsAction extends Action {
 
-	private static final String ATTACHMENT_DEFAULT_NAME = "attachment"; //$NON-NLS-1$
-
-	private static final String CTYPE_ZIP = "zip"; //$NON-NLS-1$
-
-	private static final String CTYPE_OCTET_STREAM = "octet-stream"; //$NON-NLS-1$
-
-	private static final String CTYPE_TEXT = "text"; //$NON-NLS-1$
-
-	private static final String CTYPE_HTML = "html"; //$NON-NLS-1$
-
 	public SaveAttachmentsAction(String text) {
 		super(text);
 	}
 
 	@Override
 	public void run() {
-		List<ITaskAttachment> attachments = AttachmentUtil.getSelectedAttachments();
+		List<ITaskAttachment> attachments = AttachmentUtil.getSelectedAttachments(null);
 		if (attachments.isEmpty()) {
 			return;
 		} else if (attachments.size() == 1) {
@@ -66,7 +56,7 @@ public class SaveAttachmentsAction extends Action {
 	 */
 	private void saveSingleAttachment(ITaskAttachment attachment) {
 		FileDialog fileChooser = new FileDialog(WorkbenchUtil.getShell(), SWT.SAVE);
-		fileChooser.setFileName(getAttachmentFilename(attachment));
+		fileChooser.setFileName(AttachmentUtil.getAttachmentFilename(attachment));
 
 		File initDirectory = getInitialDirectory();
 		if (initDirectory != null) {
@@ -123,7 +113,7 @@ public class SaveAttachmentsAction extends Action {
 		}
 
 		for (ITaskAttachment attachment : attachments) {
-			String filename = getAttachmentFilename(attachment);
+			String filename = AttachmentUtil.getAttachmentFilename(attachment);
 			File file = getTargetFile(WorkbenchUtil.getShell(), directory, filename);
 			if (file != null) {
 				DownloadAttachmentJob job = new DownloadAttachmentJob(attachment, file);
@@ -140,9 +130,11 @@ public class SaveAttachmentsAction extends Action {
 				return attachFile;
 			}
 
-			boolean overwrite = MessageDialog.openQuestion(shell, NLS.bind(
-					Messages.SaveAttachmentsAction_overwriteFile0, attachFile.getName()), NLS.bind(
-					Messages.SaveAttachmentsAction_fileExists_doYouWantToOverwrite0, attachFile.getAbsolutePath()));
+			boolean overwrite = MessageDialog.openQuestion(
+					shell,
+					NLS.bind(Messages.SaveAttachmentsAction_overwriteFile0, attachFile.getName()),
+					NLS.bind(Messages.SaveAttachmentsAction_fileExists_doYouWantToOverwrite0,
+							attachFile.getAbsolutePath()));
 			if (overwrite) {
 				return attachFile;
 			}
@@ -160,29 +152,10 @@ public class SaveAttachmentsAction extends Action {
 		}
 	}
 
-	private String getAttachmentFilename(ITaskAttachment attachment) {
-		String fname = attachment.getFileName();
-		// default name if none is found
-		if (fname.equals("")) { //$NON-NLS-1$
-			String ctype = attachment.getContentType();
-			if (ctype.endsWith(CTYPE_HTML)) {
-				fname = ATTACHMENT_DEFAULT_NAME + ".html"; //$NON-NLS-1$
-			} else if (ctype.startsWith(CTYPE_TEXT)) {
-				fname = ATTACHMENT_DEFAULT_NAME + ".txt"; //$NON-NLS-1$
-			} else if (ctype.endsWith(CTYPE_OCTET_STREAM)) {
-				fname = ATTACHMENT_DEFAULT_NAME;
-			} else if (ctype.endsWith(CTYPE_ZIP)) {
-				fname = ATTACHMENT_DEFAULT_NAME + "." + CTYPE_ZIP; //$NON-NLS-1$
-			} else {
-				fname = ATTACHMENT_DEFAULT_NAME + "." + ctype.substring(ctype.indexOf("/") + 1); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-		}
-		return fname;
-	}
-
 	private File getInitialDirectory() {
-		String dirName = TasksUiPlugin.getDefault().getPreferenceStore().getString(
-				ITasksUiPreferenceConstants.DEFAULT_ATTACHMENTS_DIRECTORY);
+		String dirName = TasksUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getString(ITasksUiPreferenceConstants.DEFAULT_ATTACHMENTS_DIRECTORY);
 
 		if (dirName == null || dirName.trim().length() == 0) {
 			return null;
@@ -199,7 +172,8 @@ public class SaveAttachmentsAction extends Action {
 	}
 
 	private void saveInitialDirectory(String directory) {
-		TasksUiPlugin.getDefault().getPreferenceStore().putValue(
-				ITasksUiPreferenceConstants.DEFAULT_ATTACHMENTS_DIRECTORY, directory);
+		TasksUiPlugin.getDefault()
+				.getPreferenceStore()
+				.putValue(ITasksUiPreferenceConstants.DEFAULT_ATTACHMENTS_DIRECTORY, directory);
 	}
 }

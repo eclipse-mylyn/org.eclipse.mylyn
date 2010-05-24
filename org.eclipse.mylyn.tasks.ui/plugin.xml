@@ -1224,18 +1224,13 @@
       </command>
       <command
             categoryId="org.eclipse.mylyn.tasks.ui.category.editor"
-            id="org.eclipse.mylyn.tasks.ui.command.attachment.openInBrowser"
-            name="%command.attachment.openInBrowser.name">
+            id="org.eclipse.mylyn.tasks.ui.command.attachment.open"
+            name="%command.attachment.open.name">
       </command>
       <category
             id="org.eclipse.mylyn.tasks.ui.category.editor"
             name="%commands.category.editor.name">
       </category>
-      <command
-            categoryId="org.eclipse.mylyn.tasks.ui.category.editor"
-            id="org.eclipse.mylyn.tasks.ui.command.attachment.openInDefaultEditor"
-            name="%command.attachment.openInDefaultEditor.name">
-      </command>
       <command
             categoryId="org.eclipse.mylyn.tasks.ui.category.editor"
             defaultHandler="org.eclipse.mylyn.internal.tasks.ui.commands.SubmitTaskHandler"
@@ -1473,12 +1468,8 @@
          </enabledWhen>
       </handler>
       <handler
-            class="org.eclipse.mylyn.internal.tasks.ui.commands.OpenTaskAttachmentInBrowserHandler"
-            commandId="org.eclipse.mylyn.tasks.ui.command.attachment.openInBrowser">
-      </handler>
-      <handler
-            class="org.eclipse.mylyn.internal.tasks.ui.commands.OpenTaskAttachmentInDefaultEditorHandler"
-            commandId="org.eclipse.mylyn.tasks.ui.command.attachment.openInDefaultEditor">
+            class="org.eclipse.mylyn.internal.tasks.ui.commands.OpenTaskAttachmentHandler"
+            commandId="org.eclipse.mylyn.tasks.ui.command.attachment.open">
       </handler>
       <handler
             class="org.eclipse.mylyn.internal.tasks.ui.commands.MarkTaskHandler$MarkTaskCompleteHandler"
@@ -1599,20 +1590,27 @@
       <menuContribution
             locationURI="popup:org.eclipse.mylyn.tasks.ui.editor.menu.attachments?after=group.open">
          <command
-               commandId="org.eclipse.mylyn.tasks.ui.command.attachment.openInBrowser"
-               label="%command.attachment.openInBrowser.label"
+               commandId="org.eclipse.mylyn.tasks.ui.command.attachment.open"
+               label="%command.attachment.open.label"
                mnemonic="O"
                style="push">
          </command>
          <menu
-               label="%command.attachment.openInDefaultEditor.menu.label"
+               label="%command.attachment.openWith.menu.label"
                mnemonic="H">
-            <command
-                  commandId="org.eclipse.mylyn.tasks.ui.command.attachment.openInDefaultEditor"
-                  label="%command.attachment.openInDefaultEditor.label"
-                  mnemonic="D"
-                  style="push">
-            </command>
+            <dynamic
+                  class="org.eclipse.mylyn.internal.tasks.ui.commands.OpenTaskAttachmentWithMenu"
+                  id="org.eclipse.mylyn.tasks.ui.command.attachment.openTaskAttachmentWithMenu">
+                  <visibleWhen
+                        checkEnabled="false">
+                     <with
+                           variable="selection">
+                        <count
+                              value="1">
+                        </count>
+                     </with>
+                  </visibleWhen>
+            </dynamic>
          </menu>
       </menuContribution>
       <menuContribution

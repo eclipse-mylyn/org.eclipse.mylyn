@@ -34,11 +34,11 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.TaskAttachment;
+import org.eclipse.mylyn.internal.tasks.ui.commands.OpenTaskAttachmentHandler;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiMenus;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskAttachmentWizard.Mode;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
-import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -51,6 +51,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -136,11 +137,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 				getTaskEditorPage().getAttributeEditorToolkit()));
 		attachmentsViewer.addOpenListener(new IOpenListener() {
 			public void open(OpenEvent event) {
-				if (!event.getSelection().isEmpty()) {
-					StructuredSelection selection = (StructuredSelection) event.getSelection();
-					ITaskAttachment attachment = (ITaskAttachment) selection.getFirstElement();
-					TasksUiUtil.openUrl(attachment.getUrl());
-				}
+				openAttachments(event);
 			}
 		});
 		attachmentsViewer.addSelectionChangedListener(getTaskEditorPage());
@@ -260,4 +257,24 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		toolBarManager.add(attachFileAction);
 	}
 
+	protected void openAttachments(OpenEvent event) {
+		List<ITaskAttachment> attachments = new ArrayList<ITaskAttachment>();
+
+		StructuredSelection selection = (StructuredSelection) event.getSelection();
+
+		List<?> items = selection.toList();
+		for (Object item : items) {
+			if (item instanceof ITaskAttachment) {
+				attachments.add((ITaskAttachment) item);
+			}
+		}
+
+		if (attachments.isEmpty()) {
+			return;
+		}
+
+		IWorkbenchPage page = getTaskEditorPage().getSite().getWorkbenchWindow().getActivePage();
+
+		OpenTaskAttachmentHandler.openAttachments(page, attachments);
+	}
 }

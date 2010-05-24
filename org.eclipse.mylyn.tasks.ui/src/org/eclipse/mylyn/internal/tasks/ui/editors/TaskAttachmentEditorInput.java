@@ -23,7 +23,9 @@ import org.eclipse.ui.IStorageEditorInput;
 /**
  * @author Jeff Pound
  * @author Steffen Pingel
+ * @deprecated use TaskAttachmentViewersManager instead
  */
+@Deprecated
 public class TaskAttachmentEditorInput extends PlatformObject implements IStorageEditorInput {
 
 	private final ITaskAttachment attachment;
