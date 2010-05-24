@@ -124,7 +124,7 @@ public class QuickContextPopupDialog extends PopupDialog implements IInformation
 	protected CommonViewer createCommonViewer(Composite parent) {
 		CommonViewer viewer = new CommonViewer(ID_VIEWER, parent, SWT.H_SCROLL | SWT.V_SCROLL);
 		viewer.setUseHashlookup(true);
-		viewer.getControl().setLayoutData(new GridData(500, 400));
+		viewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		return viewer;
 	}
 
@@ -201,6 +201,11 @@ public class QuickContextPopupDialog extends PopupDialog implements IInformation
 
 	public void dispose() {
 		close();
+	}
+
+	@Override
+	protected Point getDefaultSize() {
+		return new Point(400, 300);
 	}
 
 	public boolean isFocusControl() {
