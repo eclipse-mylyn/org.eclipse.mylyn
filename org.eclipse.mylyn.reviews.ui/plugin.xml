@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?><!--
+ Copyright (c) 2010 Research Group for Industrial Software (INSO), Vienna University of Technology
+ All rights reserved. This program and the accompanying materials
+ are made available under the terms of the Eclipse Public License v1.0
+ which accompanies this distribution, and is available at
+ http://www.eclipse.org/legal/epl-v10.html
+
+ Contributors:
+     Kilian Matt (Research Group for Industrial Software (INSO), Vienna University of Technology) - initial API and implementation
+ -->
+
+<plugin>
+   <extension
+         point="org.eclipse.mylyn.tasks.ui.editors">
+      <pageFactory
+            class="org.eclipse.mylyn.reviews.ui.editors.CreateReviewTaskEditorPageFactory"
+            id="org.eclipse.mylyn.reviews.ui.pageFactory">
+      </pageFactory>
+      <pageFactory
+            class="org.eclipse.mylyn.reviews.ui.ReviewTaskEditorPageFactory"
+            id="org.eclipse.mylyn.reviews.ui.reviewPageFactory">
+      </pageFactory>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.eclipse.mylyn.reviews.ui.editors.ReviewEditor"
+            icon="icons/reviews32.gif"
+            id="org.eclipse.mylyn.reviews.ui.editors.ReviewEditor"
+            name="Mylyn Reviews Editor">
+      </editor>
+   </extension>
+
+</plugin>
