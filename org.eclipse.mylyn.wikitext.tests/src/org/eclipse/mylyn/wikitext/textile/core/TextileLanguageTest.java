@@ -1002,6 +1002,13 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<a href=\"/stories/10146\"><strong>Click me</strong></a>"));
 	}
 
+	public void testHyperlinkWithBoldWrapper() throws IOException {
+		String html = parser.parseToHtml("Here comes a *\"Click me\":/stories/10146* to something");
+
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<strong><a href=\"/stories/10146\">Click me</a></strong>"));
+	}
+
 	public void testHyperlinkTail() throws IOException {
 		String[] tails = new String[] { ",", ".", ")", ":", ";" };
 		for (String tail : tails) {
