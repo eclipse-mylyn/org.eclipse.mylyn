@@ -181,7 +181,7 @@ public class QuickOutlineDialog extends PopupDialog implements IInformationContr
 	protected TreeViewer createCommonViewer(Composite parent) {
 		TreeViewer viewer = new TreeViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL);
 		viewer.setUseHashlookup(true);
-		viewer.getControl().setLayoutData(new GridData(500, 400));
+		viewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		viewer.setContentProvider(new TaskEditorOutlineContentProvider());
 		viewer.setLabelProvider(new QuickOutlineLabelProvider());
 		return viewer;
@@ -260,6 +260,11 @@ public class QuickOutlineDialog extends PopupDialog implements IInformationContr
 
 	public void dispose() {
 		close();
+	}
+
+	@Override
+	protected Point getDefaultSize() {
+		return new Point(400, 300);
 	}
 
 	public boolean isFocusControl() {
