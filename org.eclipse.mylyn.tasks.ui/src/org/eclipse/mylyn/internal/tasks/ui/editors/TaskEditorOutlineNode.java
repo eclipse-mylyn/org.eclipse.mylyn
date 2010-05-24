@@ -12,15 +12,27 @@
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.mylyn.internal.tasks.core.TaskList;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.ITaskComment;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.data.TaskRelation;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * A node for the tree in {@link TaskEditorOutlinePage}.
@@ -34,6 +46,12 @@ public class TaskEditorOutlineNode {
 	public static final String LABEL_DESCRIPTION = Messages.TaskEditorOutlineNode_Description;
 
 	public static final String LABEL_NEW_COMMENT = Messages.TaskEditorOutlineNode_New_Comment;
+
+	public static final String LABEL_ATTACHMENTS = Messages.TaskEditorOutlineNode_Attachments;
+
+	public static final String LABEL_ATTRIBUTES = Messages.TaskEditorOutlineNode_Attributes;
+
+	public static final String LABEL_RELATED_TASKS = Messages.TaskEditorOutlineNode_Related_Tasks;
 
 	private static TaskEditorOutlineNode createNode(TaskData taskData, String attributeId, String label) {
 		TaskAttribute taskAttribute = taskData.getRoot().getMappedAttribute(attributeId);
@@ -69,19 +87,90 @@ public class TaskEditorOutlineNode {
 				node.setTaskComment(taskComment);
 				return node;
 			}
+		} else if (TaskAttribute.TYPE_ATTACHMENT.equals(type)) {
+			ITaskAttachment taskAttachment = TasksUiPlugin.getRepositoryModel().createTaskAttachment(taskAttribute);
+			if (taskAttachment != null) {
+				taskAttribute.getTaskData().getAttributeMapper().updateTaskAttachment(taskAttachment, taskAttribute);
+				StringBuilder sb = new StringBuilder();
+				sb.append(taskAttribute.getTaskData().getAttributeMapper().getValueLabel(taskAttribute));
+				sb.append(": "); //$NON-NLS-1$
+				if (AttachmentUtil.isContext(taskAttachment)) {
+					sb.append(Messages.AttachmentTableLabelProvider_Task_Context);
+				} else if (taskAttachment.isPatch()) {
+					sb.append(Messages.AttachmentTableLabelProvider_Patch);
+				} else {
+					sb.append(taskAttachment.getFileName());
+				}
+				TaskEditorOutlineNode node = new TaskEditorOutlineNode(sb.toString(), taskAttribute);
+				node.setTaskAttachment(taskAttachment);
+				return node;
+			}
 		} else {
-			String label = taskAttribute.getTaskData().getAttributeMapper().getValueLabel(taskAttribute);
+			String label = taskAttribute.getTaskData().getAttributeMapper().getLabel(taskAttribute);
+			if (label.endsWith(":")) { //$NON-NLS-1$
+				label = label.substring(0, label.length() - 1);
+			}
 			return new TaskEditorOutlineNode(label, taskAttribute);
 		}
 		return null;
 	}
 
-	public static TaskEditorOutlineNode parse(TaskData taskData) {
+	public static TaskEditorOutlineNode parse(TaskData taskData, boolean includeAttributes) {
 		TaskEditorOutlineNode rootNode = createNode(taskData, TaskAttribute.SUMMARY, null);
 		if (rootNode == null) {
 			rootNode = new TaskEditorOutlineNode(Messages.TaskEditorOutlineNode_Task_ + taskData.getTaskId());
 		}
+		if (includeAttributes) {
+			final TaskList taskList = TasksUiPlugin.getTaskList();
+			TaskEditorOutlineNode relatedTasksNode = new TaskEditorOutlineNode(LABEL_RELATED_TASKS);
+			rootNode.addChild(relatedTasksNode);
+			AbstractRepositoryConnector connector = TasksUi.getRepositoryConnector(taskData.getConnectorKind());
+			Collection<TaskRelation> relations = connector.getTaskRelations(taskData);
+			TaskRepositoryManager manager = TasksUiPlugin.getRepositoryManager();
+			TaskRepository taskRepository = manager.getRepository(taskData.getConnectorKind(),
+					taskData.getRepositoryUrl());
+			for (TaskRelation taskRelation : relations) {
+				ITask task = taskList.getTask(taskData.getRepositoryUrl(), taskRelation.getTaskId());
+				String label;
+				if (task != null) {
+					label = NLS.bind(Messages.TaskEditorOutlineNode_TaskRelation_Label,
+							new Object[] { taskRelation.getTaskId(), task.getSummary() });
+				} else {
+					label = NLS.bind(Messages.TaskEditorOutlineNode_TaskRelation_Label,
+							new Object[] { taskRelation.getTaskId(), Messages.TaskEditorOutlineNode_unknown_Label });
+				}
+				TaskEditorOutlineNode childNode = new TaskEditorOutlineNode(label);
+
+				childNode.setTaskRelation(taskRelation);
+				childNode.setTaskRepository(taskRepository);
+				relatedTasksNode.addChild(childNode);
+			}
+
+			TaskEditorOutlineNode attributesNode = new TaskEditorOutlineNode(LABEL_ATTRIBUTES);
+			rootNode.addChild(attributesNode);
+			Map<String, TaskAttribute> attributes = taskData.getRoot().getAttributes();
+			for (TaskAttribute attribute : attributes.values()) {
+				if (TaskAttribute.KIND_DEFAULT.equals(attribute.getMetaData().getKind())) {
+					TaskEditorOutlineNode node = createNode(attribute);
+					if (node != null) {
+						attributesNode.addChild(node);
+					}
+				}
+			}
+		}
 		addNode(rootNode, taskData, TaskAttribute.DESCRIPTION, LABEL_DESCRIPTION);
+		List<TaskAttribute> attachments = taskData.getAttributeMapper().getAttributesByType(taskData,
+				TaskAttribute.TYPE_ATTACHMENT);
+		if (attachments.size() > 0) {
+			TaskEditorOutlineNode attachmentNode = new TaskEditorOutlineNode(LABEL_ATTACHMENTS);
+			rootNode.addChild(attachmentNode);
+			for (TaskAttribute attachmentAttribute : attachments) {
+				TaskEditorOutlineNode node = createNode(attachmentAttribute);
+				if (node != null) {
+					attachmentNode.addChild(node);
+				}
+			}
+		}
 		List<TaskAttribute> comments = taskData.getAttributeMapper().getAttributesByType(taskData,
 				TaskAttribute.TYPE_COMMENT);
 		if (comments.size() > 0) {
@@ -117,6 +206,12 @@ public class TaskEditorOutlineNode {
 	private final TaskAttribute taskAttribute;
 
 	private ITaskComment taskComment;
+
+	private ITaskAttachment taskAttachment;
+
+	private TaskRelation taskRelation;
+
+	private TaskRepository taskRepository;
 
 	public TaskEditorOutlineNode(String label) {
 		this(label, null);
@@ -181,6 +276,30 @@ public class TaskEditorOutlineNode {
 	@Override
 	public String toString() {
 		return getLabel();
+	}
+
+	public ITaskAttachment getTaskAttachment() {
+		return taskAttachment;
+	}
+
+	public void setTaskAttachment(ITaskAttachment taskAttachment) {
+		this.taskAttachment = taskAttachment;
+	}
+
+	public TaskRelation getTaskRelation() {
+		return taskRelation;
+	}
+
+	public void setTaskRelation(TaskRelation taskRelation) {
+		this.taskRelation = taskRelation;
+	}
+
+	public TaskRepository getTaskRepository() {
+		return taskRepository;
+	}
+
+	public void setTaskRepository(TaskRepository taskRepository) {
+		this.taskRepository = taskRepository;
 	}
 
 }

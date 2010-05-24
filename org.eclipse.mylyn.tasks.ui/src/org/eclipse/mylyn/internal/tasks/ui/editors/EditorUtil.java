@@ -153,7 +153,7 @@ public class EditorUtil {
 	 * @param control
 	 *            The StyledText to scroll to
 	 */
-	private static void focusOn(ScrolledForm form, Control control) {
+	public static void focusOn(ScrolledForm form, Control control) {
 		int pos = 0;
 		control.setEnabled(true);
 		control.setFocus();
@@ -405,8 +405,11 @@ public class EditorUtil {
 		} else {
 			roundedBorder.setLayout(GridLayoutFactory.fillDefaults().margins(0, 6).create());
 		}
-		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).hint(EditorUtil.MAXIMUM_WIDTH, SWT.DEFAULT).grab(
-				true, false).applyTo(roundedBorder);
+		GridDataFactory.fillDefaults()
+				.align(SWT.FILL, SWT.BEGINNING)
+				.hint(EditorUtil.MAXIMUM_WIDTH, SWT.DEFAULT)
+				.grab(true, false)
+				.applyTo(roundedBorder);
 		return roundedBorder;
 	}
 
@@ -432,8 +435,11 @@ public class EditorUtil {
 				textFont.dispose();
 			}
 		});
-		Color color = PlatformUI.getWorkbench().getThemeManager().getCurrentTheme().getColorRegistry().get(
-				CommonThemes.COLOR_COMPLETED);
+		Color color = PlatformUI.getWorkbench()
+				.getThemeManager()
+				.getCurrentTheme()
+				.getColorRegistry()
+				.get(CommonThemes.COLOR_COMPLETED);
 		text.setForeground(color);
 		return textFont;
 	}

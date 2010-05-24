@@ -89,6 +89,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
+import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
@@ -97,6 +98,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModelEvent;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModelListener;
+import org.eclipse.mylyn.tasks.core.data.TaskRelation;
 import org.eclipse.mylyn.tasks.core.sync.SubmitJob;
 import org.eclipse.mylyn.tasks.core.sync.SubmitJobEvent;
 import org.eclipse.mylyn.tasks.core.sync.SubmitJobListener;
@@ -123,6 +125,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.ScrollBar;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PlatformUI;
@@ -1033,39 +1036,14 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 					ISelection selection = event.getSelection();
 					if (selection instanceof StructuredSelection) {
 						Object select = ((StructuredSelection) selection).getFirstElement();
-						if (select instanceof TaskEditorOutlineNode) {
-							TaskEditorOutlineNode node = (TaskEditorOutlineNode) select;
-							TaskAttribute attribute = node.getData();
-							if (attribute != null) {
-								if (TaskAttribute.TYPE_COMMENT.equals(attribute.getMetaData().getType())) {
-									AbstractTaskEditorPart actionPart = getPart(ID_PART_COMMENTS);
-									if (actionPart != null && actionPart.getControl() instanceof ExpandableComposite) {
-										CommonFormUtil.setExpanded((ExpandableComposite) actionPart.getControl(), true);
-										if (actionPart.getControl() instanceof Section) {
-											Control client = ((Section) actionPart.getControl()).getClient();
-											if (client instanceof Composite) {
-												for (Control control : ((Composite) client).getChildren()) {
-													// toggle subsections
-													if (control instanceof Section) {
-														CommonFormUtil.setExpanded((Section) control, true);
-													}
-												}
-											}
-										}
-									}
-								}
-								EditorUtil.reveal(form, attribute.getId());
-							} else {
-								EditorUtil.reveal(form, node.getLabel());
-							}
-							getEditor().setActivePage(getId());
-						}
+						selectReveal(select);
+						getEditor().setActivePage(getId());
 					}
 				}
 			});
 		}
 		if (getModel() != null) {
-			TaskEditorOutlineNode node = TaskEditorOutlineNode.parse(getModel().getTaskData());
+			TaskEditorOutlineNode node = TaskEditorOutlineNode.parse(getModel().getTaskData(), false);
 			outlinePage.setInput(getTaskRepository(), node);
 		} else {
 			outlinePage.setInput(null, null);
@@ -1239,15 +1217,21 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 			if (part.getControl() != null) {
 				if (ID_PART_ACTIONS.equals(part.getPartId())) {
 					// do not expand horizontally
-					GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(false, false).applyTo(
-							part.getControl());
+					GridDataFactory.fillDefaults()
+							.align(SWT.FILL, SWT.FILL)
+							.grab(false, false)
+							.applyTo(part.getControl());
 				} else {
 					if (part.getExpandVertically()) {
-						GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(
-								part.getControl());
+						GridDataFactory.fillDefaults()
+								.align(SWT.FILL, SWT.FILL)
+								.grab(true, true)
+								.applyTo(part.getControl());
 					} else {
-						GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, false).applyTo(
-								part.getControl());
+						GridDataFactory.fillDefaults()
+								.align(SWT.FILL, SWT.TOP)
+								.grab(true, false)
+								.applyTo(part.getControl());
 					}
 				}
 				// for outline
@@ -1669,5 +1653,94 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 //			toolBarManager.add(submitButtonContribution);
 //		}
 //	}
+
+	@Override
+	public boolean selectReveal(Object object) {
+		if (object instanceof TaskEditorOutlineNode) {
+			TaskEditorOutlineNode node = (TaskEditorOutlineNode) object;
+			TaskAttribute attribute = node.getData();
+			if (attribute != null) {
+				if (TaskAttribute.TYPE_COMMENT.equals(attribute.getMetaData().getType())) {
+					AbstractTaskEditorPart actionPart = this.getPart(AbstractTaskEditorPage.ID_PART_COMMENTS);
+					if (actionPart != null && actionPart.getControl() instanceof ExpandableComposite) {
+						CommonFormUtil.setExpanded((ExpandableComposite) actionPart.getControl(), true);
+						if (actionPart.getControl() instanceof Section) {
+							Control client = ((Section) actionPart.getControl()).getClient();
+							if (client instanceof Composite) {
+								for (Control control : ((Composite) client).getChildren()) {
+									// toggle subsections
+									if (control instanceof Section) {
+										CommonFormUtil.setExpanded((Section) control, true);
+									}
+								}
+							}
+						}
+					}
+					EditorUtil.reveal(this.getManagedForm().getForm(), attribute.getId());
+					return true;
+				} else if (TaskAttribute.TYPE_ATTACHMENT.equals(attribute.getMetaData().getType())) {
+					AbstractTaskEditorPart actionPart = this.getPart(AbstractTaskEditorPage.ID_PART_ATTACHMENTS);
+					if (actionPart != null && actionPart.getControl() instanceof ExpandableComposite) {
+						CommonFormUtil.setExpanded((ExpandableComposite) actionPart.getControl(), true);
+						if (actionPart.getControl() instanceof Section) {
+							Control client = actionPart.getControl();
+							if (client instanceof Composite) {
+								for (Control control : ((Composite) client).getChildren()) {
+									if (control instanceof Composite) {
+										for (Control control1 : ((Composite) control).getChildren()) {
+											if (control1 instanceof org.eclipse.swt.widgets.Table) {
+												org.eclipse.swt.widgets.Table attachmentTable = ((org.eclipse.swt.widgets.Table) control1);
+												TableItem[] attachments = attachmentTable.getItems();
+												int index = 0;
+												for (TableItem attachment : attachments) {
+													Object data = attachment.getData();
+													if (data instanceof ITaskAttachment) {
+														ITaskAttachment attachmentData = ((ITaskAttachment) data);
+														if (attachmentData.getTaskAttribute() == attribute) {
+															attachmentTable.deselectAll();
+															attachmentTable.select(index);
+															IManagedForm mform = actionPart.getManagedForm();
+															ScrolledForm form = mform.getForm();
+															EditorUtil.focusOn(form, attachmentTable);
+															return true;
+														}
+													}
+													index++;
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				} else {
+					TaskEditorAttributePart actionPart = (TaskEditorAttributePart) this.getPart(AbstractTaskEditorPage.ID_PART_ATTRIBUTES);
+					Section section = actionPart.getSection();
+					boolean expanded = section.isExpanded();
+					if (!expanded && actionPart != null && actionPart.getControl() instanceof ExpandableComposite) {
+						CommonFormUtil.setExpanded((ExpandableComposite) actionPart.getControl(), true);
+						if (!expanded) {
+							CommonFormUtil.setExpanded((ExpandableComposite) actionPart.getControl(), false);
+						}
+					}
+
+					EditorUtil.reveal(this.getManagedForm().getForm(), attribute.getId());
+					return true;
+				}
+			} else {
+				TaskRelation taskRelation = node.getTaskRelation();
+				TaskRepository taskRepository = node.getTaskRepository();
+				if (taskRelation != null && taskRepository != null) {
+					String taskID = taskRelation.getTaskId();
+					TasksUiUtil.openTask(taskRepository, taskID);
+				} else {
+					EditorUtil.reveal(this.getManagedForm().getForm(), node.getLabel());
+				}
+				return true;
+			}
+		}
+		return super.selectReveal(object);
+	}
 
 }

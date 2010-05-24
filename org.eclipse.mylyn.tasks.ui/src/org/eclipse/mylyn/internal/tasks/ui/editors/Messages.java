@@ -151,13 +151,23 @@ public class Messages extends NLS {
 
 	public static String TaskEditorNewCommentPart_New_Comment;
 
+	public static String TaskEditorOutlineNode_Attachments;
+
+	public static String TaskEditorOutlineNode_Attributes;
+
 	public static String TaskEditorOutlineNode_Comments;
 
 	public static String TaskEditorOutlineNode_Description;
 
 	public static String TaskEditorOutlineNode_New_Comment;
 
+	public static String TaskEditorOutlineNode_Related_Tasks;
+
 	public static String TaskEditorOutlineNode_Task_;
+
+	public static String TaskEditorOutlineNode_TaskRelation_Label;
+
+	public static String TaskEditorOutlineNode_unknown_Label;
 
 	public static String TaskEditorPeoplePart_People;
 
