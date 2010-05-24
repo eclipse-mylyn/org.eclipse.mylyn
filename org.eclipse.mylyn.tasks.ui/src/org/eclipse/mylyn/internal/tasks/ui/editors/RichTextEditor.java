@@ -315,7 +315,7 @@ public class RichTextEditor {
 		}
 	}
 
-	@SuppressWarnings( { "rawtypes" })
+	@SuppressWarnings({ "rawtypes" })
 	private IAdaptable createHyperlinkDetectorContext() {
 		return new IAdaptable() {
 			public Object getAdapter(Class adapter) {
@@ -406,7 +406,8 @@ public class RichTextEditor {
 			if (getEditorViewer() != null) {
 				previewViewerStyle |= SWT.V_SCROLL;
 			}
-			previewViewer = extension.createViewer(repository, editorComposite, previewViewerStyle);
+			previewViewer = extension.createViewer(repository, editorComposite, previewViewerStyle,
+					createHyperlinkDetectorContext());
 			configure(previewViewer, new Document(getText()), true);
 			// adapt maximize action
 			previewViewer.getControl().setData(EditorUtil.KEY_TOGGLE_TO_MAXIMIZE_ACTION,
