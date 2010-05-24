@@ -30,7 +30,10 @@ public class Messages extends NLS {
 	public static String AddToTaskContextAction_No_resources_to_add;
 
 	public static String ApplyPatchAction_Apply_Patch;
+	public static String ApplyPatchAction_cannotApplyPatch;
+	public static String ApplyPatchAction_downloadingPatch;
 	public static String ApplyPatchAction_Error_Retrieving_Context;
+	public static String ApplyPatchAction_failedToDownloadPatch;
 
 	public static String OpenCorrespondingTaskAction_Completed;
 	public static String OpenCorrespondingTaskAction_Open_Corresponding_Task;
