@@ -8,6 +8,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     Eugene Kuleshov - improvements
+ *     Frank Becker - improvements
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.ui.tasklist;
@@ -48,18 +49,24 @@ import org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard;
 
 /**
  * @author Mik Kersten
+ * @author Robert Elves
+ * @author Frank Becker
  */
 public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 
-	private static final int TASK_NUM_GROUP = 5;
+	private static final int GET_TASK_NUM_GROUP = 8;
 
-	private static final int COMMENT_NUM_GROUP = 10;
+	private static final int GET_COMMENT_NUM_GROUP = 13;
 
-	private static final int ATTACHMENT_NUM_GROUP = 14;
+	private static final int GET_ATTACHMENT_NUM_GROUP = 3;
 
-	private static final String regexp = "(?:(duplicate of|(\\W||^)+bug|(\\W|^)+task)( ?#? ?)(\\d+)((\\s)*(comment|c)(\\s#|#|#\\s|\\s|)(\\s\\d+|\\d+))?)|(?:(Created (an )?attachment\\s*(\\(id=)?(\\d+)))"; //$NON-NLS-1$
+	private static final String regexp_bug = "(((duplicate of|((\\W||^)+(bug|task)))( ?#? ?)(\\d+))?((\\W||\\s)*(comment|c)??(\\s*#\\s*)(\\d+))?)"; //$NON-NLS-1$
 
-	private static final Pattern PATTERN = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
+	private static final String regexp_attachment = "Created (an )?attachment\\s*(\\(id=)?(\\d+)"; //$NON-NLS-1$
+
+	private static final Pattern PATTERN_BUG = Pattern.compile(regexp_bug, Pattern.CASE_INSENSITIVE);
+
+	private static final Pattern PATTERN_ATTACHMENT = Pattern.compile(regexp_attachment, Pattern.CASE_INSENSITIVE);
 
 	@Override
 	public String getAccountCreationUrl(TaskRepository taskRepository) {
@@ -122,26 +129,6 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 	}
 
 	@Override
-	public IHyperlink[] findHyperlinks(TaskRepository repository, String text, int index, int textOffset) {
-		ArrayList<IHyperlink> hyperlinksFound = null;
-
-		Matcher m = PATTERN.matcher(text);
-		while (m.find()) {
-			if (index == -1 || (index >= m.start() && index <= m.end())) {
-				IHyperlink link = extractHyperlink(repository, textOffset, m);
-				if (link != null) {
-					if (hyperlinksFound == null) {
-						hyperlinksFound = new ArrayList<IHyperlink>();
-					}
-					hyperlinksFound.add(link);
-				}
-			}
-		}
-
-		return (hyperlinksFound != null) ? hyperlinksFound.toArray(new IHyperlink[0]) : null;
-	}
-
-	@Override
 	public String getTaskKindLabel(ITask repositoryTask) {
 		return IBugzillaConstants.BUGZILLA_TASK_KIND;
 	}
@@ -191,14 +178,47 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 		return custom != null && custom.equals(Boolean.TRUE.toString());
 	}
 
-	private static IHyperlink extractHyperlink(TaskRepository repository, int regionOffset, Matcher m) {
+	@Override
+	public IWizardPage getTaskAttachmentPage(TaskAttachmentModel model) {
+		return new BugzillaTaskAttachmentPage(model);
+	}
 
-		int start = -1;
+	@Override
+	public IHyperlink[] findHyperlinks(TaskRepository repository, ITask task, String text, int index, int textOffset) {
+		ArrayList<IHyperlink> hyperlinksFound = null;
+		Matcher mb = PATTERN_BUG.matcher(text);
+		while (mb.find()) {
+			if (index == -1 || (index >= mb.start() && index <= mb.end())) {
+				IHyperlink link = extractHyperlinkBug(repository, task, textOffset, mb);
+				if (link != null) {
+					if (hyperlinksFound == null) {
+						hyperlinksFound = new ArrayList<IHyperlink>();
+					}
+					hyperlinksFound.add(link);
+				}
+			}
+		}
+		Matcher ma = PATTERN_ATTACHMENT.matcher(text);
+		while (ma.find()) {
+			if (index == -1 || (index >= ma.start() && index <= ma.end())) {
+				IHyperlink link = extractHyperlinkAttachment(repository, textOffset, ma);
+				if (link != null) {
+					if (hyperlinksFound == null) {
+						hyperlinksFound = new ArrayList<IHyperlink>();
+					}
+					hyperlinksFound.add(link);
+				}
+			}
+		}
 
-		int a = m.groupCount();
+		return (hyperlinksFound != null) ? hyperlinksFound.toArray(new IHyperlink[0]) : null;
+	}
 
+	private static IHyperlink extractHyperlinkBug(TaskRepository repository, ITask task, int regionOffset, Matcher m) {
+
+		int start = m.start();
 		if (m.group().startsWith("duplicate")) { //$NON-NLS-1$
-			start = m.start() + m.group().indexOf(m.group(TASK_NUM_GROUP));
+			start = m.start() + m.group().indexOf(m.group(GET_TASK_NUM_GROUP));
 		} else {
 			start = m.start();
 			for (int index = 0; index < m.group().length() && !Character.isLetter(m.group().charAt(index)); index++, start++) {
@@ -211,38 +231,62 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 			end = m.group().length();
 		}
 
-		try {
-			start += regionOffset;
-			end += regionOffset;
-
-			String bugId = m.group(TASK_NUM_GROUP);
-			if (bugId == null) {
-				String attachmentId = m.group(ATTACHMENT_NUM_GROUP);
-				if (attachmentId != null) {
-					start = start + m.group().indexOf(m.group(ATTACHMENT_NUM_GROUP));
-
-					IRegion sregion = new Region(start, end - start);
-					return new TaskAttachmentHyperlink(sregion, repository, attachmentId);
+		start += regionOffset;
+		end += regionOffset;
+		String bugId = m.group(GET_TASK_NUM_GROUP);
+		if (bugId == null) {
+			String commentId = m.group(GET_COMMENT_NUM_GROUP);
+			IRegion sregion = new Region(start, end - start);
+			if (commentId != null) {
+				String taskID;
+				if (task != null) {
+					taskID = task.getTaskId();
+				} else {
+					taskID = ""; //$NON-NLS-1$
 				}
-			} else {
-				bugId.trim();
-				IRegion sregion = new Region(start, end - start);
-				TaskHyperlink taskHyperLink = new TaskHyperlink(sregion, repository, bugId);
-				String commentId = m.group(COMMENT_NUM_GROUP);
+				TaskHyperlink taskHyperLink = new TaskHyperlink(sregion, repository, taskID);
 				if (commentId != null) {
 					taskHyperLink.setSelection(TaskAttribute.PREFIX_COMMENT + commentId);
 				}
 				return taskHyperLink;
-			}
 
-		} catch (NumberFormatException e) {
+			}
+		} else {
+			bugId.trim();
+			IRegion sregion = new Region(start, end - start);
+			TaskHyperlink taskHyperLink = new TaskHyperlink(sregion, repository, bugId);
+			String commentId = m.group(GET_COMMENT_NUM_GROUP);
+			if (commentId != null) {
+				taskHyperLink.setSelection(TaskAttribute.PREFIX_COMMENT + commentId);
+			}
+			return taskHyperLink;
 		}
 		return null;
 	}
 
-	@Override
-	public IWizardPage getTaskAttachmentPage(TaskAttachmentModel model) {
-		return new BugzillaTaskAttachmentPage(model);
-	}
+	private static IHyperlink extractHyperlinkAttachment(TaskRepository repository, int regionOffset, Matcher m) {
 
+		int start = -1;
+		start = m.start();
+		for (int index = 0; index < m.group().length() && !Character.isLetter(m.group().charAt(index)); index++, start++) {
+		}
+
+		int end = m.end();
+
+		if (end == -1) {
+			end = m.group().length();
+		}
+
+		start += regionOffset;
+		end += regionOffset;
+
+		String attachmentId = m.group(GET_ATTACHMENT_NUM_GROUP);
+		if (attachmentId != null) {
+			start = start + m.group().indexOf(m.group(GET_ATTACHMENT_NUM_GROUP));
+
+			IRegion sregion = new Region(start, end - start);
+			return new TaskAttachmentHyperlink(sregion, repository, attachmentId);
+		}
+		return null;
+	}
 }
