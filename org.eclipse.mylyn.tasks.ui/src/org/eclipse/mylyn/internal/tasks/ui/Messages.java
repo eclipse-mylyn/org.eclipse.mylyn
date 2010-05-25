@@ -121,11 +121,15 @@ public class Messages extends NLS {
 
 	public static String TasksReminderDialog_Reminders;
 
+	public static String TasksUiPlugin_Activate_Task;
+	
 	public static String TasksUiPlugin_Initializing_Task_List;
 
 	public static String TasksUiPlugin_Task_Repositories;
 
 	public static String TasksUiPlugin_Load_Data_Directory;
+
+	public static String TasksUiPlugin_New_Task;
 
 	public static String TaskTrimWidget__no_active_task_;
 

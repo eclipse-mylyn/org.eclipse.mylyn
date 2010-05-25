@@ -44,6 +44,8 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -52,6 +54,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.internal.commons.ui.TaskBarManager;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotification;
@@ -69,8 +72,8 @@ import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryDelta;
-import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryDelta.Type;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataStore;
 import org.eclipse.mylyn.internal.tasks.core.externalization.ExternalizationManager;
@@ -78,6 +81,8 @@ import org.eclipse.mylyn.internal.tasks.core.externalization.IExternalizationPar
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizer;
 import org.eclipse.mylyn.internal.tasks.core.notifications.ServiceMessageManager;
+import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskDialogAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.NewTaskAction;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotificationReminder;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotifier;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiExtensionReader;
@@ -86,20 +91,22 @@ import org.eclipse.mylyn.tasks.core.AbstractDuplicateDetector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskActivationAdapter;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.AbstractTaskRepositoryLinkProvider;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IStartup;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.FormColors;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -441,6 +448,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 			initializeNotificationsAndSynchronization();
 
+			addSystemTaskBarActions();
+
 			try {
 				getPreferenceStore().addPropertyChangeListener(PROPERTY_LISTENER);
 
@@ -472,16 +481,43 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		INSTANCE = this;
 	}
 
+	private void addSystemTaskBarActions() {
+		MenuManager taskBarMenuManager = TaskBarManager.getTaskBarMenuManager();
+		if (taskBarMenuManager != null) {
+			NewTaskAction newTaskAction = new NewTaskAction(Messages.TasksUiPlugin_New_Task, true);
+			taskBarMenuManager.add(newTaskAction);
+
+			Action activateTaskAction = new Action() {
+				@Override
+				public void run() {
+					ActivateTaskDialogAction activateTaskDialogAction = new ActivateTaskDialogAction();
+					IWorkbenchWindow window = getWorkbench().getActiveWorkbenchWindow();
+					if (window == null && getWorkbench().getWorkbenchWindows().length > 0) {
+						window = getWorkbench().getWorkbenchWindows()[0];
+					}
+					activateTaskDialogAction.init(window);
+					activateTaskDialogAction.run(null);
+				}
+			};
+			activateTaskAction.setImageDescriptor(TasksUiImages.CONTEXT_ACTIVE_CENTERED);
+			activateTaskAction.setText(Messages.TasksUiPlugin_Activate_Task);
+			taskBarMenuManager.add(activateTaskAction);
+			taskBarMenuManager.update(true);
+		}
+	}
+
 	private void updateSynchronizationScheduler(boolean initial) {
 		if (synchronizationScheduler == null) {
 			return;
 		}
 
-		boolean enabled = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED);
+		boolean enabled = TasksUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getBoolean(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED);
 		if (enabled) {
-			long interval = TasksUiPlugin.getDefault().getPreferenceStore().getLong(
-					ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS);
+			long interval = TasksUiPlugin.getDefault()
+					.getPreferenceStore()
+					.getLong(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS);
 			if (initial) {
 				synchronizationScheduler.setInterval(DELAY_QUERY_REFRESH_ON_STARTUP, interval);
 			} else {
@@ -852,15 +888,18 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			}
 		}
 
-		if (!MonitorUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED + ".checked")) { //$NON-NLS-1$
+		if (!MonitorUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getBoolean(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED + ".checked")) { //$NON-NLS-1$
 			if (!taskActivityMonitor.getActivationHistory().isEmpty()) {
 				// tasks have been active before so fore preference enabled
-				MonitorUiPlugin.getDefault().getPreferenceStore().setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED,
-						true);
+				MonitorUiPlugin.getDefault()
+						.getPreferenceStore()
+						.setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED, true);
 			}
-			MonitorUiPlugin.getDefault().getPreferenceStore().setValue(
-					MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED + ".checked", true); //$NON-NLS-1$
+			MonitorUiPlugin.getDefault()
+					.getPreferenceStore()
+					.setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED + ".checked", true); //$NON-NLS-1$
 			MonitorUiPlugin.getDefault().savePluginPreferences();
 		}
 
@@ -940,8 +979,9 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	}
 
 	public boolean groupSubtasks(ITaskContainer element) {
-		boolean groupSubtasks = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				ITasksUiPreferenceConstants.GROUP_SUBTASKS);
+		boolean groupSubtasks = TasksUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getBoolean(ITasksUiPreferenceConstants.GROUP_SUBTASKS);
 
 		if (element instanceof ITask) {
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(((ITask) element).getConnectorKind());

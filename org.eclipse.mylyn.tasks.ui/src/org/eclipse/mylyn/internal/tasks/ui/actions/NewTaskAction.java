@@ -66,20 +66,20 @@ public class NewTaskAction extends BaseSelectionListenerAction implements IMenuC
 
 	private Menu dropDownMenu;
 
-	private NewTaskAction(boolean alwaysShowWizard) {
-		super(LABEL_NEW_TASK);
+	public NewTaskAction(String label, boolean alwaysShowWizard) {
+		super(label);
 		if (!alwaysShowWizard) {
 			setMenuCreator(this);
 		}
-		setText(LABEL_NEW_TASK);
-		setToolTipText(LABEL_NEW_TASK);
+		setText(label);
+		setToolTipText(label);
 		setId(ID);
 		setEnabled(true);
 		setImageDescriptor(TasksUiImages.TASK_NEW);
 	}
 
 	public NewTaskAction() {
-		this(false);
+		this(LABEL_NEW_TASK, false);
 	}
 
 	@Override
@@ -144,7 +144,7 @@ public class NewTaskAction extends BaseSelectionListenerAction implements IMenuC
 	}
 
 	private void addActionsToMenu() {
-		NewTaskAction newTaskAction = new NewTaskAction(true);
+		NewTaskAction newTaskAction = new NewTaskAction(LABEL_NEW_TASK, true);
 		newTaskAction.setText(Messages.NewTaskAction_Show_Wizard_Label);
 		new ActionContributionItem(newTaskAction).fill(dropDownMenu, -1);
 		new Separator().fill(dropDownMenu, -1);
