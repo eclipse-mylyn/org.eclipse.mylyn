@@ -14,7 +14,6 @@ package org.eclipse.mylyn.internal.tasks.ui;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -24,7 +23,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.mylyn.internal.provisional.commons.ui.ICoreRunnable;
 import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
@@ -38,7 +37,7 @@ import org.eclipse.ui.PartInitException;
 /**
  * @author Peter Stibrany
  */
-class DownloadAndOpenTaskAttachmentJob implements IRunnableWithProgress {
+class DownloadAndOpenTaskAttachmentJob implements ICoreRunnable {
 	private final ITaskAttachment attachment;
 
 	private final IWorkbenchPage page;
@@ -54,11 +53,11 @@ class DownloadAndOpenTaskAttachmentJob implements IRunnableWithProgress {
 		this.editorID = editorID;
 	}
 
-	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+	public void run(IProgressMonitor monitor) throws CoreException {
 		monitor.beginTask(jobName, IProgressMonitor.UNKNOWN);
 		IStatus result = execute(new SubProgressMonitor(monitor, 100));
 		if (result != null && !result.isOK()) {
-			throw new InvocationTargetException(new CoreException(result));
+			throw new CoreException(result);
 		}
 	}
 
