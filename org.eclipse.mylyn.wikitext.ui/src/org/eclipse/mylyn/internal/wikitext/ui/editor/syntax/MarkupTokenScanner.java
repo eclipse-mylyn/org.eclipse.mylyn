@@ -161,7 +161,7 @@ public class MarkupTokenScanner implements ITokenScanner {
 
 										Token[] spanTokens = null;
 										if (!span.getChildren().isEmpty()) {
-											spanTokens = splitSpan(spanToken, span);
+											spanTokens = splitSpan(spanToken, span, defaultToken);
 										}
 										if (spanTokens != null) {
 											for (Token spanSplitToken : spanTokens) {
@@ -238,7 +238,7 @@ public class MarkupTokenScanner implements ITokenScanner {
 	 * 
 	 * @return an array of tokens that contiguously cover the region represented by the original span.
 	 */
-	private Token[] splitSpan(Token spanToken, Span span) {
+	private Token[] splitSpan(Token spanToken, Span span, Token defaultToken) {
 		List<Token> tokens = new ArrayList<Token>(span.getChildren().size() + 1);
 		int previousEnd = spanToken.offset;
 		for (Span child : span.getChildren().asList()) {
@@ -247,11 +247,16 @@ public class MarkupTokenScanner implements ITokenScanner {
 						- previousEnd));
 			}
 			Token childToken = createToken(spanToken.fontState, child);
+			if (childToken == null) {
+				StyleRange styleRange = styleManager.createStyleRange(spanToken.fontState, 0, 1);
+				TextAttribute textAttribute = createTextAttribute(styleRange);
+				childToken = new Token(spanToken.fontState, textAttribute, child.getOffset(), child.getLength());
+			}
 			if (child.getChildren().isEmpty()) {
 				tokens.add(childToken);
 			} else {
 				// recursively apply to children
-				for (Token t : splitSpan(childToken, child)) {
+				for (Token t : splitSpan(childToken, child, defaultToken)) {
 					tokens.add(t);
 				}
 			}

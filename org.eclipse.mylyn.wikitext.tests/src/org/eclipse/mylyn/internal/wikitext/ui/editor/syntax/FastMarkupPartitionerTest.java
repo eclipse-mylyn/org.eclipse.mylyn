@@ -20,8 +20,6 @@ import org.eclipse.mylyn.wikitext.tests.TestUtil;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class FastMarkupPartitionerTest extends AbstractDocumentTest {
@@ -144,6 +142,29 @@ public class FastMarkupPartitionerTest extends AbstractDocumentTest {
 				{ 29, 5 }, //
 				{ 34, 7 }, //
 				{ 41, 12 } //
+		};
+
+		ITypedRegion[] partitioning = partitioner.computePartitioning(0, document.getLength(), false);
+		assertPartitioningAsExpected(expected, partitioning);
+	}
+
+	/**
+	 * bug 314131
+	 */
+	public void testTextileLinkInBold() {
+		IDocument document = new Document();
+		FastMarkupPartitioner partitioner = new FastMarkupPartitioner();
+		partitioner.setMarkupLanguage(new TextileLanguage());
+
+		document.set("*\"text\":url*");
+		// ...........012345678901.234567.8.9012345678901.234567.
+		// .....................10...........20.........30.......
+
+		partitioner.connect(document);
+		document.setDocumentPartitioner(partitioner);
+
+		int[][] expected = new int[][] { //
+		{ 0, 12 }, //
 		};
 
 		ITypedRegion[] partitioning = partitioner.computePartitioning(0, document.getLength(), false);
