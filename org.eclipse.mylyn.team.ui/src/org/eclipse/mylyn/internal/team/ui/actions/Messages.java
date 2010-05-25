@@ -26,19 +26,30 @@ public class Messages extends NLS {
 	}
 
 	public static String AddToTaskContextAction_ACTIVATE_TASK_TO_ADD_RESOURCES;
+
 	public static String AddToTaskContextAction_Add_to_Task_Context;
+
 	public static String AddToTaskContextAction_No_resources_to_add;
 
 	public static String ApplyPatchAction_Apply_Patch;
+
 	public static String ApplyPatchAction_cannotApplyPatch;
+	
 	public static String ApplyPatchAction_downloadingPatch;
+	
 	public static String ApplyPatchAction_Error_Retrieving_Context;
+
 	public static String ApplyPatchAction_failedToDownloadPatch;
 
 	public static String OpenCorrespondingTaskAction_Completed;
+
 	public static String OpenCorrespondingTaskAction_Open_Corresponding_Task;
+
 	public static String OpenCorrespondingTaskAction_Open_Task;
+
 	public static String OpenCorrespondingTaskAction_Opening_Corresponding_Task;
+
 	public static String OpenCorrespondingTaskAction_Progress_on;
+
 	public static String OpenCorrespondingTaskAction_Unable_to_match_task;
 }
