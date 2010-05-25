@@ -72,8 +72,9 @@ import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
  * @author David Green
  * @since 1.0
  */
-@SuppressWarnings("restriction")
 public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage> extends AbstractTaskEditorExtension {
+
+	private static final String MARKUP_SOURCE_CONTEXT_ID = "org.eclipse.mylyn.wikitext.tasks.ui.markupSourceContext"; //$NON-NLS-1$
 
 	/**
 	 * Provide a means to disable WikiWord linking. This feature is experimental and may be removed in a future release.
@@ -99,7 +100,7 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 
 	@Override
 	public String getEditorContextId() {
-		return MarkupEditor.CONTEXT;
+		return MARKUP_SOURCE_CONTEXT_ID;
 	}
 
 	@Deprecated
@@ -196,6 +197,7 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 		return createEditor(taskRepository, parent, style, null);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public SourceViewer createEditor(TaskRepository taskRepository, Composite parent, int style, IAdaptable context) {
 		final MarkupLanguageType markupLanguageCopy = createRepositoryMarkupLanguage(taskRepository);
@@ -359,8 +361,6 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 
 	protected static class TaskMarkupViewerConfiguration extends MarkupViewerConfiguration {
 
-		private final TaskRepository taskRepository;
-
 		private final IAdaptable context;
 
 		public TaskMarkupViewerConfiguration(MarkupViewer viewer, TaskRepository taskRepository) {
@@ -372,7 +372,6 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 		 */
 		public TaskMarkupViewerConfiguration(MarkupViewer viewer, TaskRepository taskRepository, IAdaptable context) {
 			super(viewer);
-			this.taskRepository = taskRepository;
 			if (context == null) {
 				this.context = createDefaultHyperlinkDetectorContext(taskRepository);
 			} else {
@@ -425,7 +424,7 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 		};
 	}
 
-	@SuppressWarnings({ "unchecked" })
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static void addRepositoryHyperlinkDetectorTargets(IAdaptable context, Map hyperlinkDetectorTargets) {
 		hyperlinkDetectorTargets.put(ID_CONTEXT_EDITOR_TEXT, context);
 		hyperlinkDetectorTargets.put(ID_CONTEXT_EDITOR_TASK, context);
