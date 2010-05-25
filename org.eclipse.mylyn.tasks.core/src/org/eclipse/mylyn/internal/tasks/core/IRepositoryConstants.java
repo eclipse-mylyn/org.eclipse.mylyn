@@ -29,6 +29,8 @@ public interface IRepositoryConstants {
 
 	public static final String PROPERTY_CONNECTOR_KIND = "kind"; //$NON-NLS-1$
 
+	public static final String PROPERTY_CATEGORY = "category"; //$NON-NLS-1$
+
 	public static final String PROPERTY_URL = "url"; //$NON-NLS-1$
 
 	public static final String PROPERTY_LABEL = "label"; //$NON-NLS-1$
@@ -36,5 +38,15 @@ public interface IRepositoryConstants {
 	public static final String PROPERTY_DELIM = ":"; //$NON-NLS-1$
 
 	public static final String KIND_UNKNOWN = "<unknown>"; //$NON-NLS-1$
+
+	public static final String CATEGORY_TASKS = "org.eclipse.mylyn.category.tasks"; //$NON-NLS-1$
+
+	public static final String CATEGORY_BUGS = "org.eclipse.mylyn.category.bugs"; //$NON-NLS-1$
+
+	public static final String CATEGORY_BUILD = "org.eclipse.mylyn.category.build"; //$NON-NLS-1$
+
+	public static final String CATEGORY_REVIEW = "org.eclipse.mylyn.category.review"; //$NON-NLS-1$
+
+	public static final String CATEGORY_OTHER = "org.eclipse.mylyn.category.other"; //$NON-NLS-1$
 
 }

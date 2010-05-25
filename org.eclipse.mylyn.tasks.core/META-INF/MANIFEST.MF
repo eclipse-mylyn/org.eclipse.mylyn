@@ -14,6 +14,7 @@ Export-Package: org.eclipse.mylyn.internal.provisional.tasks.core;x-internal:=tr
  org.eclipse.mylyn.internal.tasks.core;x-friends:="org.eclipse.mylyn.tasks.ui,org.eclipse.mylyn.tasks.bugs",
  org.eclipse.mylyn.internal.tasks.core.data;x-friends:="org.eclipse.mylyn.tasks.ui,org.eclipse.mylyn.tasks.bugs",
  org.eclipse.mylyn.internal.tasks.core.externalization;x-friends:="org.eclipse.mylyn.tasks.ui,org.eclipse.mylyn.tasks.bugs",
+ org.eclipse.mylyn.internal.tasks.core.notifications;x-friends:="org.eclipse.mylyn.tasks.ui,org.eclipse.mylyn.tasks.bugs",
  org.eclipse.mylyn.internal.tasks.core.sync;x-friends:="org.eclipse.mylyn.tasks.ui,org.eclipse.mylyn.tasks.bugs",
  org.eclipse.mylyn.tasks.core,
  org.eclipse.mylyn.tasks.core.data,

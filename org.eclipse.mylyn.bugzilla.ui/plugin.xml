@@ -30,6 +30,9 @@
               
 	  <taskListMigrator 
             class="org.eclipse.mylyn.internal.bugzilla.ui.tasklist.BugzillaTaskListMigrator"/>
+   <repositoryMigrator
+         class="org.eclipse.mylyn.internal.bugzilla.ui.tasklist.BugzillaRepositoryMigrator">
+   </repositoryMigrator>
    </extension> 
     <extension 
          point="org.eclipse.mylyn.bugzilla.core.languages"> 

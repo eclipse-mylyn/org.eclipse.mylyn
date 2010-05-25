@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.tasks.core.Category;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.DisconnectRepositoryAction;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -37,7 +38,9 @@ public class TaskRepositoryLabelProvider implements ILabelProvider {
 	}
 
 	public Image getImage(Object object) {
-		if (object instanceof AbstractRepositoryConnector) {
+		if (object instanceof Category) {
+			return CommonImages.getImage(TasksUiImages.CATEGORY);
+		} else if (object instanceof AbstractRepositoryConnector) {
 			AbstractRepositoryConnector repositoryConnector = (AbstractRepositoryConnector) object;
 			Image image = TasksUiPlugin.getDefault().getBrandingIcon(repositoryConnector.getConnectorKind());
 			if (image != null) {
@@ -67,6 +70,8 @@ public class TaskRepositoryLabelProvider implements ILabelProvider {
 			return label.toString();
 		} else if (object instanceof AbstractRepositoryConnector) {
 			return ((AbstractRepositoryConnector) object).getLabel();
+		} else if (object instanceof Category) {
+			return ((Category) object).getLabel();
 		} else {
 			return null;
 		}

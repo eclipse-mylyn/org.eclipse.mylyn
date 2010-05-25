@@ -24,6 +24,7 @@
             <element ref="connectorCore"/>
             <element ref="connectorUi" minOccurs="0" maxOccurs="1"/>
             <element ref="taskListMigrator" minOccurs="0" maxOccurs="1"/>
+            <element ref="repositoryMigrator" minOccurs="0" maxOccurs="1"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -163,6 +164,26 @@
                </documentation>
                <appInfo>
                   <meta.attribute kind="resource"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="repositoryMigrator">
+      <annotation>
+         <documentation>
+            (no description available)
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.tasks.core.AbstractRepositoryMigrator:"/>
                </appInfo>
             </annotation>
          </attribute>

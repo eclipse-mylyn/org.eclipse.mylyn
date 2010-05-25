@@ -1149,6 +1149,9 @@
             class="org.eclipse.mylyn.internal.tasks.ui.LocalRepositoryConnectorUi"
             name="%LocalRepositoryConnectorUi.name"
             overlayIcon="icons/ovr16/overlay-local.gif"/>
+      <repositoryMigrator
+            class="org.eclipse.mylyn.internal.tasks.ui.LocalRepositoryMigrator">
+      </repositoryMigrator>
    </extension>
          
    <extension point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectorTargets">

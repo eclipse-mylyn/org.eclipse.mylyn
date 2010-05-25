@@ -40,7 +40,7 @@ public class GradientDrawer {
 
 	private final Listener CATEGORY_GRADIENT_DRAWER = new Listener() {
 		public void handleEvent(Event event) {
-			if (event.item.getData() instanceof ITaskContainer && !(event.item.getData() instanceof ITask)) {
+			if (shouldApplyGradient(event)) {
 				Scrollable scrollable = (Scrollable) event.widget;
 				GC gc = event.gc;
 
@@ -98,6 +98,10 @@ public class GradientDrawer {
 			}
 		}
 	};
+
+	protected boolean shouldApplyGradient(Event event) {
+		return event.item.getData() instanceof ITaskContainer && !(event.item.getData() instanceof ITask);
+	}
 
 	private final IPropertyChangeListener THEME_CHANGE_LISTENER = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
