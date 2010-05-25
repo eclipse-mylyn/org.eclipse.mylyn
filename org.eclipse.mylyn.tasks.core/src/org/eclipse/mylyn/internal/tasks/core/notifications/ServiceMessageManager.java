@@ -191,7 +191,7 @@ public class ServiceMessageManager {
 
 			try {
 				status = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
-				if (status == HttpStatus.SC_OK) {
+				if (status == HttpStatus.SC_OK && !monitor.isCanceled()) {
 					Header lastModifiedHeader = method.getResponseHeader("Last-Modified"); //$NON-NLS-1$
 					if (lastModifiedHeader != null) {
 						lastModified = lastModifiedHeader.getValue();
