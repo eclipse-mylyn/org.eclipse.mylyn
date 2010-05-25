@@ -619,9 +619,11 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			String lastMod = getPreferenceStore().getString(
 					ITasksUiPreferenceConstants.LAST_SERVICE_MESSAGE_LAST_MODIFIED);
 			String etag = getPreferenceStore().getString(ITasksUiPreferenceConstants.LAST_SERVICE_MESSAGE_ETAG);
+			String serviceMessageUrl = getPreferenceStore().getString(ITasksUiPreferenceConstants.SERVICE_MESSAGE_URL);
 
-			serviceMessageManager = new ServiceMessageManager(getPreferenceStore().getString(
-					ITasksUiPreferenceConstants.SERVICE_MESSAGE_URL), lastMod, etag);
+			Long checktime = getPreferenceStore().getLong(ITasksUiPreferenceConstants.LAST_SERVICE_MESSAGE_CHECKTIME);
+
+			serviceMessageManager = new ServiceMessageManager(serviceMessageUrl, lastMod, etag, checktime);
 
 			if (getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED)) {
 				serviceMessageManager.start();

@@ -33,7 +33,7 @@ public class ServiceMessageManagerTest extends TestCase {
 	private static final String MESSAGE_XML_URL = "http://eclipse.org/mylyn/messageTest.xml";
 
 	public void testRetrievingMessage() throws Exception {
-		ServiceMessageManager manager = new ServiceMessageManager(MESSAGE_XML_URL, "", "");
+		ServiceMessageManager manager = new ServiceMessageManager(MESSAGE_XML_URL, "", "", 0l);
 		int status = manager.updateServiceMessage(new NullProgressMonitor());
 		assertEquals(HttpStatus.SC_OK, status);
 		ServiceMessage message = manager.getServiceMessages().get(0);
@@ -48,7 +48,7 @@ public class ServiceMessageManagerTest extends TestCase {
 
 	public void testETag() throws Exception {
 
-		ServiceMessageManager manager = new ServiceMessageManager(MESSAGE_XML_URL, "", "");
+		ServiceMessageManager manager = new ServiceMessageManager(MESSAGE_XML_URL, "", "", 0l);
 		int status = manager.updateServiceMessage(new NullProgressMonitor());
 		assertEquals(HttpStatus.SC_OK, status);
 		ServiceMessage message = manager.getServiceMessages().get(0);

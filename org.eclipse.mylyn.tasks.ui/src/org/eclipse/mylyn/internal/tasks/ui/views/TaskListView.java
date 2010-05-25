@@ -64,9 +64,7 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
-import org.eclipse.mylyn.internal.tasks.core.notifications.ServiceMessageEvent;
 import org.eclipse.mylyn.internal.tasks.core.notifications.ServiceMessageManager;
-import org.eclipse.mylyn.internal.tasks.core.notifications.ServiceMessageEvent.EVENT_KIND;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.CategorizedPresentation;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
@@ -942,8 +940,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 		serviceMessageControl = new TaskListServiceMessageControl(body);
 		ServiceMessageManager manager = TasksUiPlugin.getDefault().getServiceMessageManager();
-		serviceMessageControl.handleEvent(new ServiceMessageEvent(manager, EVENT_KIND.MESSAGE_UPDATE,
-				manager.getServiceMessages()));
 		TasksUiPlugin.getDefault().getServiceMessageManager().addServiceMessageListener(serviceMessageControl);
 
 		// Need to do this because the page, which holds the active working set is not around on creation, see bug 203179

@@ -11,6 +11,7 @@ package org.eclipse.mylyn.internal.tasks.core.notifications;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -60,9 +61,12 @@ public class ServiceMessageManager {
 
 	private boolean statusLogged;
 
-	public ServiceMessageManager(String serviceMessageUrl, String lastModified, String eTag) {
+	private final long checktime;
+
+	public ServiceMessageManager(String serviceMessageUrl, String lastModified, String eTag, long checktime) {
 		this.serviceMessageUrl = serviceMessageUrl;
 		this.lastModified = lastModified;
+		this.checktime = checktime;
 		this.eTag = eTag;
 	}
 
@@ -87,7 +91,22 @@ public class ServiceMessageManager {
 				}
 			});
 		}
-		messageCheckJob.schedule(START_DELAY);
+		if (checktime == 0) {
+			messageCheckJob.schedule(START_DELAY);
+		} else {
+			long nextCheckTime = checktime + RECHECK_DELAY;
+			long now = new Date().getTime();
+			if (nextCheckTime < now) {
+				messageCheckJob.schedule(START_DELAY);
+			} else if (nextCheckTime > now) {
+				if ((nextCheckTime - now) < START_DELAY) {
+					messageCheckJob.schedule(START_DELAY);
+				} else {
+					messageCheckJob.schedule(nextCheckTime - now);
+				}
+			}
+		}
+
 	}
 
 	public void stop() {
@@ -172,7 +191,7 @@ public class ServiceMessageManager {
 
 			try {
 				status = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
-				if (status == HttpStatus.SC_OK && messageCheckJob != null) {
+				if (status == HttpStatus.SC_OK) {
 					Header lastModifiedHeader = method.getResponseHeader("Last-Modified"); //$NON-NLS-1$
 					if (lastModifiedHeader != null) {
 						lastModified = lastModifiedHeader.getValue();

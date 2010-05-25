@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.notifications;
 
+import java.util.Date;
+
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
@@ -214,7 +216,9 @@ public class TaskListServiceMessageControl implements IServiceMessageListener {
 		switch (event.getEventKind()) {
 		case MESSAGE_UPDATE:
 			IPreferenceStore preferenceStore = TasksUiPlugin.getDefault().getPreferenceStore();
+			preferenceStore.setValue(ITasksUiPreferenceConstants.LAST_SERVICE_MESSAGE_CHECKTIME, new Date().getTime());
 			String lastMessageId = preferenceStore.getString(ITasksUiPreferenceConstants.LAST_SERVICE_MESSAGE_ID);
+
 			for (final ServiceMessage message : event.getMessages()) {
 				if (!message.isValid() || message.getId().equals("-1")) { //$NON-NLS-1$
 					continue;
