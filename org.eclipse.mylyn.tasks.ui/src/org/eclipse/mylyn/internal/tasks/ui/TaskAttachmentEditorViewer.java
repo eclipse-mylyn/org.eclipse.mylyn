@@ -11,13 +11,18 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
+import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.progress.IProgressService;
 
 /**
  * @author Peter Stibrany
@@ -38,12 +43,25 @@ public class TaskAttachmentEditorViewer implements ITaskAttachmentViewer {
 		return descriptor.getLabel();
 	}
 
-	public void openAttachment(IWorkbenchPage page, ITaskAttachment attachment) throws CoreException {
+	public void openAttachment(final IWorkbenchPage page, final ITaskAttachment attachment) throws CoreException {
+
 		DownloadAndOpenTaskAttachmentJob job = new DownloadAndOpenTaskAttachmentJob(
 				MessageFormat.format(Messages.TaskAttachmentEditorViewer_openingAttachment,
 						AttachmentUtil.getAttachmentFilename(attachment)), attachment, page, descriptor.getId());
-		job.setUser(true);
-		job.schedule();
-	}
 
+		IProgressService service = page.getWorkbenchWindow().getWorkbench().getProgressService();
+		try {
+			service.run(true, true, job);
+		} catch (InvocationTargetException e) {
+			if (e.getTargetException() instanceof CoreException) {
+				StatusHandler.log(((CoreException) e.getTargetException()).getStatus());
+			} else {
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						Messages.TaskAttachmentEditorViewer_ErrorDownloadingAttachment, e));
+			}
+
+		} catch (InterruptedException e) {
+			// ignore, since it was canceled
+		}
+	}
 }

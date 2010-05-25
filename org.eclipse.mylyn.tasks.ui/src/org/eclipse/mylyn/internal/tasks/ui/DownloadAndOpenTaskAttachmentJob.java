@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.tasks.ui;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -22,7 +23,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
@@ -36,23 +38,31 @@ import org.eclipse.ui.PartInitException;
 /**
  * @author Peter Stibrany
  */
-class DownloadAndOpenTaskAttachmentJob extends Job {
+class DownloadAndOpenTaskAttachmentJob implements IRunnableWithProgress {
 	private final ITaskAttachment attachment;
 
 	private final IWorkbenchPage page;
 
 	private final String editorID;
 
-	DownloadAndOpenTaskAttachmentJob(String jobName, ITaskAttachment attachment, IWorkbenchPage page, String editorID) {
-		super(jobName);
+	private final String jobName;
 
+	DownloadAndOpenTaskAttachmentJob(String jobName, ITaskAttachment attachment, IWorkbenchPage page, String editorID) {
+		this.jobName = jobName;
 		this.attachment = attachment;
 		this.page = page;
 		this.editorID = editorID;
 	}
 
-	@Override
-	protected IStatus run(IProgressMonitor monitor) {
+	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+		monitor.beginTask(jobName, IProgressMonitor.UNKNOWN);
+		IStatus result = execute(new SubProgressMonitor(monitor, 100));
+		if (result != null && !result.isOK()) {
+			throw new InvocationTargetException(new CoreException(result));
+		}
+	}
+
+	protected IStatus execute(IProgressMonitor monitor) {
 		final String attachmentFilename = AttachmentUtil.getAttachmentFilename(attachment);
 
 		File file = null;

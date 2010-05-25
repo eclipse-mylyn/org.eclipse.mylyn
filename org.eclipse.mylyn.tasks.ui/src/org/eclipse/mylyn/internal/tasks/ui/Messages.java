@@ -70,8 +70,8 @@ public class Messages extends NLS {
 	public static String ScheduleTaskMenuContributor_Schedule_for;
 
 	public static String TaskActivationExternalizationParticipant_Task_Activation_History;
-
 	public static String TaskAttachmentEditorViewer_openingAttachment;
+	public static String TaskAttachmentEditorViewer_ErrorDownloadingAttachment;
 
 	public static String TaskAttachmentViewerBrowser_browser;
 
