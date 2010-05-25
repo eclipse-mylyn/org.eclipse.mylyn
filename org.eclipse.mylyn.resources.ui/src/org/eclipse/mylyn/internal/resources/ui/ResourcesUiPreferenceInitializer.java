@@ -132,7 +132,8 @@ public class ResourcesUiPreferenceInitializer extends AbstractPreferenceInitiali
 		}
 
 		Set<String> exclusions = new HashSet<String>();
-		if (ResourcesUiBridgePlugin.getDefault().getPreferenceStore().contains(PREF_RESOURCES_IGNORED_ANT)) {
+		if (ResourcesUiBridgePlugin.getDefault().getPreferenceStore().contains(PREF_RESOURCES_IGNORED_ANT)
+				&& !ResourcesUiBridgePlugin.getDefault().getPreferenceStore().isDefault(PREF_RESOURCES_IGNORED_ANT)) {
 			// we are using the new ant patterns
 			exclusions = getResourceExclusionsFromMemento(ResourcesUiBridgePlugin.getDefault()
 					.getPreferenceStore()
