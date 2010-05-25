@@ -77,6 +77,7 @@ import org.eclipse.mylyn.internal.tasks.core.externalization.ExternalizationMana
 import org.eclipse.mylyn.internal.tasks.core.externalization.IExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizer;
+import org.eclipse.mylyn.internal.tasks.core.notifications.ServiceMessageManager;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotificationReminder;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotifier;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiExtensionReader;
@@ -148,6 +149,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	private TaskListBackupManager taskListBackupManager;
 
 	private RepositoryTemplateManager repositoryTemplateManager;
+
+	private ServiceMessageManager serviceMessageManager;
 
 	private final Set<AbstractTaskEditorPageFactory> taskEditorPageFactories = new HashSet<AbstractTaskEditorPageFactory>();
 
@@ -342,6 +345,14 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			if (event.getProperty().equals(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED)
 					|| event.getProperty().equals(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS)) {
 				updateSynchronizationScheduler(false);
+			}
+
+			if (event.getProperty().equals(ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED)) {
+				if (getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED)) {
+					serviceMessageManager.start();
+				} else {
+					serviceMessageManager.stop();
+				}
 			}
 		}
 	};
@@ -552,7 +563,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 			// NOTE: initializing extensions in start(..) has caused race
 			// conditions previously
-			TasksUiExtensionReader.initStartupExtensions(taskListExternalizer);
+			TasksUiExtensionReader.initStartupExtensions(taskListExternalizer, repositoryManager);
 
 			// instantiate taskDataManager
 			TaskDataStore taskDataStore = new TaskDataStore(repositoryManager);
@@ -604,6 +615,17 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 			// make this available early for clients that are not initialized through tasks ui but need access 
 			taskListNotificationManager = new TaskListNotificationManager();
+
+			String lastMod = getPreferenceStore().getString(
+					ITasksUiPreferenceConstants.LAST_SERVICE_MESSAGE_LAST_MODIFIED);
+			String etag = getPreferenceStore().getString(ITasksUiPreferenceConstants.LAST_SERVICE_MESSAGE_ETAG);
+
+			serviceMessageManager = new ServiceMessageManager(getPreferenceStore().getString(
+					ITasksUiPreferenceConstants.SERVICE_MESSAGE_URL), lastMod, etag);
+
+			if (getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED)) {
+				serviceMessageManager.start();
+			}
 
 			// trigger lazy initialization
 			new TasksUiInitializationJob().schedule();
@@ -727,6 +749,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 //					ContextCorePlugin.getDefault().getPluginPreferences().removePropertyChangeListener(
 //							PREFERENCE_LISTENER);
 //				}
+				serviceMessageManager.stop();
 				taskEditorBloatManager.dispose(PlatformUI.getWorkbench());
 				INSTANCE = null;
 			}
@@ -868,6 +891,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		store.setDefault(ITasksUiPreferenceConstants.PREF_DATA_DIR, getDefaultDataDirectory());
 		store.setDefault(ITasksUiPreferenceConstants.GROUP_SUBTASKS, true);
 		store.setDefault(ITasksUiPreferenceConstants.NOTIFICATIONS_ENABLED, true);
+		store.setDefault(ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED, true);
 		store.setDefault(ITasksUiPreferenceConstants.FILTER_PRIORITY, PriorityLevel.P5.toString());
 		store.setDefault(ITasksUiPreferenceConstants.EDITOR_TASKS_RICH, true);
 		store.setDefault(ITasksUiPreferenceConstants.EDITOR_CURRENT_LINE_HIGHLIGHT, false);
@@ -894,6 +918,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 		store.setDefault(ITasksUiPreferenceConstants.AUTO_EXPAND_TASK_LIST, true);
 		store.setDefault(ITasksUiPreferenceConstants.TASK_LIST_TOOL_TIPS_ENABLED, true);
+
+		store.setDefault(ITasksUiPreferenceConstants.SERVICE_MESSAGE_URL, "http://eclipse.org/mylyn/message.xml"); //$NON-NLS-1$
 	}
 
 	public static TaskActivityManager getTaskActivityManager() {
@@ -1304,6 +1330,10 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 					"Could not initialize task list backup and synchronization", t)); //$NON-NLS-1$
 		}
+	}
+
+	public ServiceMessageManager getServiceMessageManager() {
+		return serviceMessageManager;
 	}
 
 }

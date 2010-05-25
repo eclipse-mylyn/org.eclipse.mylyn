@@ -64,6 +64,9 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
+import org.eclipse.mylyn.internal.tasks.core.notifications.ServiceMessageEvent;
+import org.eclipse.mylyn.internal.tasks.core.notifications.ServiceMessageManager;
+import org.eclipse.mylyn.internal.tasks.core.notifications.ServiceMessageEvent.EVENT_KIND;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.CategorizedPresentation;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
@@ -86,6 +89,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeAutomaticallyActio
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskListSortAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskListViewActionGroup;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskListChangeAdapter;
+import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListServiceMessageControl;
 import org.eclipse.mylyn.internal.tasks.ui.util.PlatformUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.SortCriterion;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDragSourceListener;
@@ -131,6 +135,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Text;
@@ -390,6 +395,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 	private CustomTaskListDecorationDrawer customDrawer;
 
+	private TaskListServiceMessageControl serviceMessageControl;
+
 	private final IPageListener PAGE_LISTENER = new IPageListener() {
 		public void pageActivated(IWorkbenchPage page) {
 			filteredTree.indicateActiveTaskWorkingSet();
@@ -554,6 +561,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 	@Override
 	public void dispose() {
 		super.dispose();
+		TasksUiPlugin.getDefault().getServiceMessageManager().removeServiceMessageListener(serviceMessageControl);
 		TasksUiPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(tasksUiPreferenceListener);
 		TasksUiInternal.getTaskList().removeChangeListener(TASKLIST_CHANGE_LISTENER);
 		TasksUiPlugin.getTaskActivityManager().removeActivityListener(TASK_ACTIVITY_LISTENER);
@@ -730,6 +738,15 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 	@Override
 	public void createPartControl(Composite parent) {
+		Composite body = new Composite(parent, SWT.NONE);
+		GridLayout layout = new GridLayout(1, false);
+		layout.marginHeight = 0;
+		layout.marginWidth = 0;
+		layout.horizontalSpacing = 0;
+		layout.verticalSpacing = 0;
+		layout.numColumns = 1;
+		body.setLayout(layout);
+
 		IWorkbenchSiteProgressService progress = (IWorkbenchSiteProgressService) getSite().getAdapter(
 				IWorkbenchSiteProgressService.class);
 		if (progress != null) {
@@ -743,7 +760,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		themeManager.addPropertyChangeListener(THEME_CHANGE_LISTENER);
 
-		filteredTree = new TaskListFilteredTree(parent, SWT.MULTI | SWT.VERTICAL | /* SWT.H_SCROLL | */SWT.V_SCROLL
+		filteredTree = new TaskListFilteredTree(body, SWT.MULTI | SWT.VERTICAL | /* SWT.H_SCROLL | */SWT.V_SCROLL
 				| SWT.NO_SCROLL | SWT.FULL_SELECTION, new SubstringPatternFilter(), getViewSite().getWorkbenchWindow());
 
 		// need to do initialize tooltip early for native tooltip disablement to take effect
@@ -922,6 +939,12 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		TasksUiInternal.getTaskList().addChangeListener(TASKLIST_CHANGE_LISTENER);
 
 		TasksUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(tasksUiPreferenceListener);
+
+		serviceMessageControl = new TaskListServiceMessageControl(body);
+		ServiceMessageManager manager = TasksUiPlugin.getDefault().getServiceMessageManager();
+		serviceMessageControl.handleEvent(new ServiceMessageEvent(manager, EVENT_KIND.MESSAGE_UPDATE,
+				manager.getServiceMessages()));
+		TasksUiPlugin.getDefault().getServiceMessageManager().addServiceMessageListener(serviceMessageControl);
 
 		// Need to do this because the page, which holds the active working set is not around on creation, see bug 203179
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().addPageListener(PAGE_LISTENER);

@@ -30,6 +30,7 @@ import org.eclipse.mylyn.tasks.tests.ui.editor.PlanningPartTest;
 import org.eclipse.mylyn.tasks.tests.ui.editor.RepositoryCompletionProcessorTest;
 import org.eclipse.mylyn.tasks.tests.ui.editor.TaskEditorPartDescriptorTest;
 import org.eclipse.mylyn.tasks.tests.ui.editor.TaskUrlHyperlinkDetectorTest;
+import org.eclipse.mylyn.tasks.tests.util.ServiceMessageManagerTest;
 
 /**
  * @author Mik Kersten
@@ -102,6 +103,7 @@ public class AllTasksTests {
 		suite.addTestSuite(PlanningPartTest.class);
 		suite.addTestSuite(RepositoryCompletionProcessorTest.class);
 		suite.addTestSuite(TaskAttributeDiffTest.class);
+		suite.addTestSuite(ServiceMessageManagerTest.class);
 		// XXX long running tests, put back?
 		//suite.addTestSuite(QueryExportImportTest.class);
 		//suite.addTestSuite(BackgroundSaveTest.class);

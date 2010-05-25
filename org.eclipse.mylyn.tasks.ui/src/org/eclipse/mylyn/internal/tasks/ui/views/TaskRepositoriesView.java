@@ -22,12 +22,13 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.tasks.core.Category;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryModelListener;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryAdapter;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AddRepositoryAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.DeleteTaskRepositoryAction;
@@ -50,6 +51,7 @@ import org.eclipse.ui.actions.BaseSelectionListenerAction;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
+import org.eclipse.ui.themes.IThemeManager;
 
 /**
  * @author Mik Kersten
@@ -62,7 +64,7 @@ public class TaskRepositoriesView extends ViewPart {
 	@Deprecated
 	public static final String ID = ITasksUiConstants.ID_VIEW_REPOSITORIES;
 
-	private TableViewer viewer;
+	private TreeViewer viewer;
 
 	private final Action addRepositoryAction = new AddRepositoryAction();
 
@@ -121,20 +123,13 @@ public class TaskRepositoriesView extends ViewPart {
 		}
 	};
 
-	static class ViewContentProvider implements IStructuredContentProvider {
-		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
-		}
+	private final TaskRepositoryManager manager;
 
-		public void dispose() {
-		}
-
-		public Object[] getElements(Object parent) {
-			return TasksUi.getRepositoryManager().getAllRepositories().toArray();
-		}
-	}
+	private TeamRepositoriesContentProvider contentProvider;
 
 	public TaskRepositoriesView() {
-		TasksUi.getRepositoryManager().addListener(REPOSITORY_LISTENER);
+		manager = ((TaskRepositoryManager) TasksUi.getRepositoryManager());
+		manager.addListener(REPOSITORY_LISTENER);
 		TasksUiPlugin.getDefault().addModelListener(MODEL_LISTENER);
 	}
 
@@ -172,27 +167,17 @@ public class TaskRepositoriesView extends ViewPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
-		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
-		viewer.setContentProvider(new ViewContentProvider());
+		contentProvider = new TeamRepositoriesContentProvider();
+		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
+		viewer.setContentProvider(contentProvider);
 		viewer.setUseHashlookup(true);
+		ViewerFilter[] filters = { new EmptyCategoriesFilter(contentProvider) };
+		viewer.setFilters(filters);
 		viewer.setLabelProvider(new DecoratingLabelProvider(new TaskRepositoryLabelProvider(),
 				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
 
-		viewer.setSorter(new TaskRepositoriesSorter());
+		viewer.setSorter(new TaskRepositoriesViewSorter());
 
-//				new ViewerSorter() {
-//
-//			@Override
-//			public int compare(Viewer viewer, Object e1, Object e2) {
-//				if (e1 instanceof TaskRepository && e2 instanceof TaskRepository) {
-//					TaskRepository t1 = (TaskRepository) e1;
-//					TaskRepository t2 = (TaskRepository) e2;
-//					return (t1.getKind() + t1.getUrl()).compareTo(t2.getKind() + t2.getUrl());
-//				} else {
-//					return super.compare(viewer, e1, e2);
-//				}
-//			}
-//		});
 		viewer.setInput(getViewSite());
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
@@ -208,13 +193,19 @@ public class TaskRepositoriesView extends ViewPart {
 			}
 		});
 
-		// FIXME remove listener when view is disposed
-		TasksUi.getRepositoryManager().addListener(new TaskRepositoryListener());
+		final IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
+		new GradientDrawer(themeManager, getViewer()) {
+			@Override
+			protected boolean shouldApplyGradient(org.eclipse.swt.widgets.Event event) {
+				return event.item.getData() instanceof Category;
+			}
+		};
 
 		makeActions();
 		hookContextMenu();
 		hookGlobalActions();
 		contributeToActionBars();
+		getViewer().expandAll();
 		getSite().setSelectionProvider(getViewer());
 	}
 
@@ -288,28 +279,12 @@ public class TaskRepositoriesView extends ViewPart {
 	public void refresh() {
 		if (viewer != null && !viewer.getControl().isDisposed()) {
 			viewer.refresh();
+			viewer.expandAll();
 		}
 	}
 
-	public TableViewer getViewer() {
+	public TreeViewer getViewer() {
 		return viewer;
-	}
-
-	public class TaskRepositoryListener extends TaskRepositoryAdapter {
-
-		@Override
-		public void repositorySettingsChanged(TaskRepository repository) {
-			if (PlatformUI.isWorkbenchRunning() && !PlatformUI.getWorkbench().getDisplay().isDisposed()) {
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						if (!getViewer().getControl().isDisposed()) {
-							getViewer().refresh(true);
-						}
-					}
-				});
-			}
-		}
-
 	}
 
 }

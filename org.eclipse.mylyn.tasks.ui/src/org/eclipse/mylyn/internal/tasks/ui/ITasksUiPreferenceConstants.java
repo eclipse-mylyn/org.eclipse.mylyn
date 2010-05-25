@@ -52,6 +52,8 @@ public interface ITasksUiPreferenceConstants {
 
 	public static final String NOTIFICATIONS_ENABLED = "org.eclipse.mylyn.tasks.ui.notifications.enabled"; //$NON-NLS-1$
 
+	public static final String SERVICE_MESSAGES_ENABLED = "org.eclipse.mylyn.tasks.ui.messages.enabled"; //$NON-NLS-1$
+
 	public static final String WEEK_START_DAY = "org.eclipse.mylyn.tasks.ui.planning.week.start.day"; //$NON-NLS-1$
 
 	public static final String PLANNING_ENDHOUR = "org.eclipse.mylyn.tasks.ui.planning.end.hour"; //$NON-NLS-1$
@@ -89,4 +91,12 @@ public interface ITasksUiPreferenceConstants {
 	public static final String DEFAULT_ATTACHMENTS_DIRECTORY = "org.eclipse.mylyn.tasks.ui.attachments.defaultDirectory"; //$NON-NLS-1$
 
 	public static final String PREFERRED_TASK_ATTACHMENT_VIEWER_ID = "org.eclipse.mylyn.tasks.ui.attachments.preferredViewerID"; //$NON-NLS-1$
+	
+	public static final String SERVICE_MESSAGE_URL = "org.eclipse.mylyn.tasks.ui.servicemessage.url"; //$NON-NLS-1$;
+
+	public static final String LAST_SERVICE_MESSAGE_ID = "org.eclipse.mylyn.tasks.ui.servicemessage.id"; //$NON-NLS-1$
+
+	public static final String LAST_SERVICE_MESSAGE_ETAG = "org.eclipse.mylyn.tasks.ui.servicemessage.etag"; //$NON-NLS-1$
+
+	public static final String LAST_SERVICE_MESSAGE_LAST_MODIFIED = "org.eclipse.mylyn.tasks.ui.servicemessage.lastmodified"; //$NON-NLS-1$
 }

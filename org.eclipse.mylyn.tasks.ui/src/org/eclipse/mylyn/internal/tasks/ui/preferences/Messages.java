@@ -63,6 +63,8 @@ public class Messages extends NLS {
 
 	public static String TasksUiPreferencePage_See_X_for_configuring_Task_List_colors;
 
+	public static String TasksUiPreferencePage_show_service_messages;
+
 	public static String TasksUiPreferencePage_Show_tooltip_on_hover_Label;
 
 	public static String TasksUiPreferencePage_Specify_the_folder_for_tasks;
