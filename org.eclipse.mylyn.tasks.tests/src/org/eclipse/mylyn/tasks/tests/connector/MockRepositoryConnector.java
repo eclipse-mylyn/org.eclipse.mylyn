@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.TaskMigrationEvent;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -53,6 +54,8 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 	private boolean hasLocalCompletionState;
 
 	private String taskIdPrefix = "task";
+
+	private TaskMigrationEvent taskMigrationEvent;
 
 	public MockRepositoryConnector() {
 		resetDefaults();
@@ -179,6 +182,19 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 
 	public void setTaskIdPrefix(String taskIdPrefix) {
 		this.taskIdPrefix = taskIdPrefix;
+	}
+
+	@Override
+	public void migrateTask(TaskMigrationEvent event) {
+		this.taskMigrationEvent = event;
+	}
+
+	public TaskMigrationEvent getTaskMigrationEvent() {
+		return taskMigrationEvent;
+	}
+
+	public void setTaskMigrationEvent(TaskMigrationEvent taskMigrationEvent) {
+		this.taskMigrationEvent = taskMigrationEvent;
 	}
 
 }

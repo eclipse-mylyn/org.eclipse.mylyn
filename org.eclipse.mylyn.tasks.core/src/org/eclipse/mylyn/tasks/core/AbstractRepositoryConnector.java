@@ -345,4 +345,17 @@ public abstract class AbstractRepositoryConnector {
 	 */
 	public abstract void updateTaskFromTaskData(TaskRepository taskRepository, ITask task, TaskData taskData);
 
+	/**
+	 * Invoked when a task associated with this connector is migrated. This typically happens when an unsubmitted task
+	 * is submitted to the repository. Implementers may override to implement custom migration rules.
+	 * <p>
+	 * Does nothing by default.
+	 * 
+	 * @param event
+	 *            provides additional details
+	 * @since 3.4
+	 */
+	public void migrateTask(TaskMigrationEvent event) {
+	}
+
 }
