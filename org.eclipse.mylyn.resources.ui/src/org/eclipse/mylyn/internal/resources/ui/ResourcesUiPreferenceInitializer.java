@@ -56,7 +56,7 @@ public class ResourcesUiPreferenceInitializer extends AbstractPreferenceInitiali
 
 	public static Set<String> forcedExclusionPatterns = new HashSet<String>();
 
-	public static Set<String> cachedExclusionPatterns = new HashSet<String>();
+	public static Set<String> cachedExclusionPatterns = null;
 
 	@Override
 	public void initializeDefaultPreferences() {
