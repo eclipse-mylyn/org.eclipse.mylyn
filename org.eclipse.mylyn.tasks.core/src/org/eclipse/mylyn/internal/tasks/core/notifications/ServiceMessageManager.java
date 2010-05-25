@@ -44,7 +44,7 @@ public class ServiceMessageManager {
 
 	protected static final long START_DELAY = 30 * 1000;
 
-	protected static final long RECHECK_DELAY = 2 * 60 * 60 * 1000;
+	protected static final long RECHECK_DELAY = 24 * 60 * 60 * 1000;
 
 	private String serviceMessageUrl;
 
