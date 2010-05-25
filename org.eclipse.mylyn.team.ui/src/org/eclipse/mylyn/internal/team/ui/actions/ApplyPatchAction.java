@@ -15,7 +15,6 @@ package org.eclipse.mylyn.internal.team.ui.actions;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.patch.ApplyPatchOperation;
@@ -26,24 +25,23 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
+import org.eclipse.mylyn.internal.provisional.commons.ui.ICoreRunnable;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentFileStorage;
 import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
 import org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.team.internal.ui.TeamUIPlugin;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
-import org.eclipse.ui.progress.IProgressService;
 
 /**
  * @author Mik Kersten
@@ -81,18 +79,11 @@ public class ApplyPatchAction extends BaseSelectionListenerAction implements IVi
 
 				DownloadAndApplyPatch job = new DownloadAndApplyPatch(Messages.ApplyPatchAction_downloadingPatch,
 						attachment, vp);
-				IProgressService service = vp.getSite().getWorkbenchWindow().getWorkbench().getProgressService();
-				try {
-					service.run(true, true, job);
-				} catch (InvocationTargetException e) {
-					if (e.getTargetException() instanceof CoreException) {
-						StatusHandler.log(((CoreException) e.getTargetException()).getStatus());
-					} else {
-						StatusHandler.log(new Status(IStatus.ERROR, TeamUIPlugin.PLUGIN_ID, "Error applying patch", e));
-					}
 
-				} catch (InterruptedException e) {
-					// ignore, since it was canceled
+				try {
+					CommonUiUtil.runInUi(job, null);
+				} catch (CoreException e) {
+					StatusHandler.log(e.getStatus());
 				}
 			}
 		}
@@ -102,7 +93,7 @@ public class ApplyPatchAction extends BaseSelectionListenerAction implements IVi
 		this.currentSelection = selection;
 	}
 
-	private static class DownloadAndApplyPatch implements IRunnableWithProgress {
+	private static class DownloadAndApplyPatch implements ICoreRunnable {
 		private final ITaskAttachment attachment;
 
 		private final IWorkbenchPart wbPart;
@@ -115,11 +106,11 @@ public class ApplyPatchAction extends BaseSelectionListenerAction implements IVi
 			this.wbPart = wbPart;
 		}
 
-		public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+		public void run(IProgressMonitor monitor) throws CoreException {
 			monitor.beginTask(jobName, IProgressMonitor.UNKNOWN);
 			IStatus result = execute(new SubProgressMonitor(monitor, 100));
 			if (result != null && !result.isOK()) {
-				throw new InvocationTargetException(new CoreException(result));
+				throw new CoreException(result);
 			}
 		}
 
