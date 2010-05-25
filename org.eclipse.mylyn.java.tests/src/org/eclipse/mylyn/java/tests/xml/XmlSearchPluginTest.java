@@ -36,9 +36,8 @@ import org.eclipse.mylyn.java.tests.search.WorkspaceSetupHelper;
 
 /**
  * TEST CASES TO HANDLE 1. all dos - with and without results TODO - in both the plugin.xml and the build.xml 2.
- * different type of xml file with and without reference - shouldn't have result
- * 
- * DEGREE OF SEPARATIONS 1 xml landmark files 2 projects of any landmark 3 workspace 4 workspace 5 NONE
+ * different type of xml file with and without reference - shouldn't have result DEGREE OF SEPARATIONS 1 xml landmark
+ * files 2 projects of any landmark 3 workspace 4 workspace 5 NONE
  * 
  * @author Shawn Minto
  */
@@ -146,7 +145,7 @@ public class XmlSearchPluginTest extends TestCase implements ISearchPluginTest {
 		// but it is in the wrong project and shouldn't have any references
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 		helper.searchResultsNotNull(notifier, plugin2.getFullPath().toString(), PdeStructureBridge.CONTENT_TYPE,
-				searchNode, dos, 0);
+				searchNode, dos, 0, false);
 		//
 		//
 
@@ -156,7 +155,7 @@ public class XmlSearchPluginTest extends TestCase implements ISearchPluginTest {
 		// the landmark now
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 		helper.searchResultsNotNull(notifier, plugin1.getFullPath().toString(), PdeStructureBridge.CONTENT_TYPE,
-				searchNode, dos, 3);
+				searchNode, dos, 3, false);
 		//
 		//
 	}
@@ -209,13 +208,13 @@ public class XmlSearchPluginTest extends TestCase implements ISearchPluginTest {
 		// result, but 0 size
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 		helper.searchResultsNotNull(notifier, type2.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE,
-				searchNode, dos, 0);
+				searchNode, dos, 0, false);
 
 		// add the plugin.xml from the same project to the taskscape, should
 		// have results
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 		helper.searchResultsNotNull(notifier, plugin1.getFullPath().toString(), PdeStructureBridge.CONTENT_TYPE,
-				searchNode, dos, 3);
+				searchNode, dos, 3, false);
 	}
 
 	public void testXMLSearchDOS3() throws IOException, CoreException {
@@ -235,7 +234,7 @@ public class XmlSearchPluginTest extends TestCase implements ISearchPluginTest {
 		// therefore, we still only get 3 references
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 		helper.searchResultsNotNull(notifier, tocRefs.getFullPath().toString(), ResourceStructureBridge.CONTENT_TYPE,
-				searchNode, dos, 3);
+				searchNode, dos, 3, false);
 		//
 		//
 
@@ -245,14 +244,14 @@ public class XmlSearchPluginTest extends TestCase implements ISearchPluginTest {
 		// about
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 		helper.searchResultsNotNull(notifier, tocNoRefs.getFullPath().toString(), ResourceStructureBridge.CONTENT_TYPE,
-				searchNode, dos, 3);
+				searchNode, dos, 3, false);
 		//
 		//
 
 		//
 		// we should get all results since we are searching the entire workspace
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
-		helper.searchResultsNotNull(notifier, searchNode, dos, 3);
+		helper.searchResultsNotNull(notifier, searchNode, dos, 3, false);
 		//
 		//
 
@@ -260,7 +259,7 @@ public class XmlSearchPluginTest extends TestCase implements ISearchPluginTest {
 		// we should get 0 results since there should be no references to the
 		// type we are looking at
 		searchNode = notifier.getElement(type2.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
-		helper.searchResultsNotNull(notifier, searchNode, dos, 0);
+		helper.searchResultsNotNull(notifier, searchNode, dos, 0, false);
 		//
 		//
 	}
@@ -283,7 +282,7 @@ public class XmlSearchPluginTest extends TestCase implements ISearchPluginTest {
 		// therefore, we still only get 3 references
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 		helper.searchResultsNotNull(notifier, tocRefs.getFullPath().toString(), ResourceStructureBridge.CONTENT_TYPE,
-				searchNode, dos, 3);
+				searchNode, dos, 3, false);
 		//
 		//
 
@@ -293,14 +292,14 @@ public class XmlSearchPluginTest extends TestCase implements ISearchPluginTest {
 		// about
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 		helper.searchResultsNotNull(notifier, tocNoRefs.getFullPath().toString(), ResourceStructureBridge.CONTENT_TYPE,
-				searchNode, dos, 3);
+				searchNode, dos, 3, false);
 		//
 		//
 
 		//
 		// we should get all results since we are searching the entire workspace
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
-		helper.searchResultsNotNull(notifier, searchNode, dos, 3);
+		helper.searchResultsNotNull(notifier, searchNode, dos, 3, false);
 		//
 		//
 
@@ -308,7 +307,7 @@ public class XmlSearchPluginTest extends TestCase implements ISearchPluginTest {
 		// we should get 0 results since there should be no references to the
 		// type we are looking at
 		searchNode = notifier.getElement(type2.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
-		helper.searchResultsNotNull(notifier, searchNode, dos, 0);
+		helper.searchResultsNotNull(notifier, searchNode, dos, 0, false);
 		//
 		//
 	}

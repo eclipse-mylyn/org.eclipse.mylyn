@@ -19,6 +19,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.tests.support.search.ISearchPluginTest;
 import org.eclipse.mylyn.internal.context.core.IActiveSearchListener;
@@ -41,30 +42,61 @@ public class SearchPluginTestHelper extends TestCase {
 	}
 
 	public void searchResultsNotNull(ActiveSearchNotifier notifier, String handle, String kind,
-			IInteractionElement searchNode, int dos, int expected) throws IOException, CoreException {
+			IInteractionElement searchNode, int dos, int expected, boolean includeOnlyJava) throws IOException,
+			CoreException {
 		notifier.mockRaiseInterest(handle, kind);
 
 		List<?> results = test.search(dos, searchNode);
+		int size = results.size();
+		if (includeOnlyJava) {
+			size = 0;
+			for (Object o : results) {
+				if (o instanceof IJavaElement) {
+					size++;
+				}
+			}
+		}
 		assertNotNull("Results Null", results);
-		assertEquals("Wrong number search results", expected, results.size());
+		assertEquals("Wrong number search results", expected, size);
 		notifier.clearContext();
 	}
 
 	public void searchResultsNotNullInteresting(ActiveSearchNotifier notifier, String handle, String kind,
-			IInteractionElement searchNode, int dos, int expected) throws IOException, CoreException {
+			IInteractionElement searchNode, int dos, int expected, boolean includeOnlyJava) throws IOException,
+			CoreException {
 		notifier.mockEditorSelection(handle, kind);
 
 		List<?> results = test.search(dos, searchNode);
+
+		int size = results.size();
+		if (includeOnlyJava) {
+			size = 0;
+			for (Object o : results) {
+				if (o instanceof IJavaElement) {
+					size++;
+				}
+			}
+		}
+
 		assertNotNull("Results Null", results);
-		assertEquals("Wrong number search results", expected, results.size());
+		assertEquals("Wrong number search results", expected, size);
 		notifier.clearContext();
 	}
 
 	public void searchResultsNotNull(ActiveSearchNotifier notifier, IInteractionElement searchNode, int dos,
-			int expected) throws IOException, CoreException {
+			int expected, boolean includeOnlyJava) throws IOException, CoreException {
 		List<?> results = test.search(dos, searchNode);
+		int size = results.size();
+		if (includeOnlyJava) {
+			size = 0;
+			for (Object o : results) {
+				if (o instanceof IJavaElement) {
+					size++;
+				}
+			}
+		}
 		assertNotNull("Results Null", results);
-		assertEquals("Wrong number search results", expected, results.size());
+		assertEquals("Wrong number search results", expected, size);
 		notifier.clearContext();
 	}
 
