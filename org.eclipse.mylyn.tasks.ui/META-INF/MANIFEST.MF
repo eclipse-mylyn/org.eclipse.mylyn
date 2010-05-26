@@ -32,6 +32,7 @@ Export-Package: org.eclipse.mylyn.internal.provisional.tasks.ui.wizards;x-intern
  org.eclipse.mylyn.internal.tasks.ui.commands;x-internal:=true,
  org.eclipse.mylyn.internal.tasks.ui.dialogs;x-internal:=true,
  org.eclipse.mylyn.internal.tasks.ui.editors;x-internal:=true,
+ org.eclipse.mylyn.internal.tasks.ui.editors.outline;x-internal:=true,
  org.eclipse.mylyn.internal.tasks.ui.notifications;x-internal:=true,
  org.eclipse.mylyn.internal.tasks.ui.preferences;x-internal:=true,
  org.eclipse.mylyn.internal.tasks.ui.properties;x-internal:=true,
