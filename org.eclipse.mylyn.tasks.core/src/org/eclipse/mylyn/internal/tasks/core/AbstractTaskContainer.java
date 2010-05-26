@@ -64,9 +64,8 @@ public abstract class AbstractTaskContainer extends PlatformObject implements IR
 	}
 
 	/**
-	 * Removes any cyclic dependencies in children.
-	 * 
-	 * TODO: review to make sure that this is too expensive, or move to creation.
+	 * Removes any cyclic dependencies in children. TODO: review to make sure that this is too expensive, or move to
+	 * creation.
 	 * 
 	 * @since 3.0
 	 */
@@ -75,9 +74,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements IR
 	}
 
 	/**
-	 * Maxes out at a depth of 10.
-	 * 
-	 * TODO: review policy
+	 * Maxes out at a depth of 10. TODO: review policy
 	 */
 	public boolean contains(String handle) {
 		Assert.isNotNull(handle);
@@ -178,6 +175,15 @@ public abstract class AbstractTaskContainer extends PlatformObject implements IR
 	 */
 	public boolean isUserManaged() {
 		return true;
+	}
+
+	/**
+	 * removes all children from the container
+	 * 
+	 * @since 3.4
+	 */
+	public void clear() {
+		children.clear();
 	}
 
 }
