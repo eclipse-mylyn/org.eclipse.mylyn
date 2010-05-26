@@ -1004,6 +1004,8 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		if (menuService != null && toolBarManager instanceof ContributionManager) {
 			menuService.populateContributionManager((ContributionManager) toolBarManager, "toolbar:" //$NON-NLS-1$
 					+ ID_TOOLBAR_HEADER + "." + taskRepository.getConnectorKind()); //$NON-NLS-1$
+			menuService.populateContributionManager((ContributionManager) toolBarManager, "toolbar:" //$NON-NLS-1$
+					+ ID_TOOLBAR_HEADER);
 		}
 
 		toolBarManager.update(true);
