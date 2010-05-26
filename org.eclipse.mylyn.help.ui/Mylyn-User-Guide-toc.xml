@@ -47,7 +47,6 @@
 	<topic href="Mylyn/User_Guide/Task-Repository-Connectors.html" label="Task Repository Connectors">
 		<topic href="Mylyn/User_Guide/Task-Repository-Connectors.html#Bugzilla_Connector" label="Bugzilla Connector"></topic>
 		<topic href="Mylyn/User_Guide/Task-Repository-Connectors.html#Trac_Connector" label="Trac Connector"></topic>
-		<topic href="Mylyn/User_Guide/Task-Repository-Connectors.html#JIRA_Connector" label="JIRA Connector"></topic>
 		<topic href="Mylyn/User_Guide/Task-Repository-Connectors.html#Generic_Web_Templates_Connector" label="Generic Web Templates Connector"></topic>
 		<topic href="Mylyn/User_Guide/Task-Repository-Connectors.html#XPlanner_Connector" label="XPlanner Connector"></topic>
 	<anchor id="additions-repository-connectors"/>

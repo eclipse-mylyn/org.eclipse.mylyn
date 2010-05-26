@@ -8,6 +8,7 @@
 		<topic href="Mylyn/FAQ/Installation.html#What_versions_of_Eclipse_are_supported.3F" label="What versions of Eclipse are supported?"></topic>
 		<topic href="Mylyn/FAQ/Installation.html#What_version_of_Java_is_required.3F" label="What version of Java is required?"></topic>
 		<topic href="Mylyn/FAQ/Installation.html#What_version_of_Mylyn_is_distributed_with_the_Eclipse_downloads.3F" label="What version of Mylyn is distributed with the Eclipse downloads?"></topic>
+		<topic href="Mylyn/FAQ/Installation.html#What_happened_to_the_Mylyn_JIRA_Connector.3F" label="What happened to the Mylyn JIRA Connector?"></topic>
 		<topic href="Mylyn/FAQ/Installation.html#My_tasks_or_queries_disappeared.2C_what_do_I_do.3F" label="My tasks or queries disappeared, what do I do?"></topic>
 		<topic href="Mylyn/FAQ/Installation.html#General_Installation_Troubleshooting" label="General Installation Troubleshooting"></topic>
 		<topic href="Mylyn/FAQ/Installation.html#Installation_Troubleshooting_on_Eclipse_3.4_and_later" label="Installation Troubleshooting on Eclipse 3.4 and later">
@@ -37,12 +38,12 @@
 			<topic href="Mylyn/FAQ/Installation.html#Do_I_need_the_Outline_View_when_running_Mylyn.3F" label="Do I need the Outline View when running Mylyn?"></topic>
 			<topic href="Mylyn/FAQ/Installation.html#What_does_the_message_.E2.80.9Ccontent_assist_proposals_no_longer_appear.E2.80.9D_mean.3F" label="What does the message “content assist proposals no longer appear” mean?"></topic>
 			<topic href="Mylyn/FAQ/Installation.html#Why_do_I_get_errors_like_.E2.80.9CHTTP_Response_Code_407.E2.80.9D_or_.E2.80.9CProxy_Authentication_Error.E2.80.9D_when_accessing_repositories_through_a_proxy_server.3F" label="Why do I get errors like “HTTP Response Code 407” or “Proxy Authentication Error” when accessing repositories through a proxy server?"></topic>
-			<topic href="Mylyn/FAQ/Installation.html#I_can.E2.80.99t_use_.3Ccode.3ECtrl.2BAlt.2BShift.2BArrow_Up.3C.2Fcode.3E_for.27.27_Mark_as_Landmark.27.27.__What_do_I_do.3F" label="I can’t use &lt;code>Ctrl+Alt+Shift+Arrow Up&lt;/code> for'' Mark as Landmark''.  What do I do?"></topic>
+			<topic href="Mylyn/FAQ/Installation.html#I_can.E2.80.99t_use_.3Ccode.3ECtrl.2BAlt.2BShift.2BArrow_Up.3C.2Fcode.3E_for.27.27_Mark_as_Landmark.27.27.__What_do_I_do.3F" label="I can’t use &lt;code&quot;Ctrl+Alt+Shift+Arrow Up&lt;/code&quot; for'' Mark as Landmark''.  What do I do?"></topic>
 			<topic href="Mylyn/FAQ/Installation.html#How_do_I_turn_on_spell_checking.3F" label="How do I turn on spell checking?"></topic>
 			<topic href="Mylyn/FAQ/Installation.html#Why_do_I_get_an_error_when_accessing_secured_web_sites.3F" label="Why do I get an error when accessing secured web sites?"></topic>
 		</topic>
 		<topic href="Mylyn/FAQ/Installation.html#Uninstall_troubleshooting" label="Uninstall troubleshooting"></topic>
-		<topic href="Mylyn/FAQ/Installation.html#Why_am_seeing_.3Ccode.3Ejava.lang.OutOfMemoryError:_PermGen_space.3C.2Fcode.3E_errors.3F" label="Why am seeing &lt;code>java.lang.OutOfMemoryError: PermGen space&lt;/code> errors?"></topic>
+		<topic href="Mylyn/FAQ/Installation.html#Why_am_seeing_.3Ccode.3Ejava.lang.OutOfMemoryError:_PermGen_space.3C.2Fcode.3E_errors.3F" label="Why am seeing &lt;code&quot;java.lang.OutOfMemoryError: PermGen space&lt;/code&quot; errors?"></topic>
 		<topic href="Mylyn/FAQ/Installation.html#What_is_Mylyn.E2.80.99s_performance_profile.3F" label="What is Mylyn’s performance profile?"></topic>
 	</topic>
 	<topic href="Mylyn/FAQ/Task-List.html" label="Task List">
@@ -93,32 +94,16 @@
 		<topic href="Mylyn/FAQ/Bugzilla-Connector.html#What_time_zone_is_used_in_the_task_editor.3F" label="What time zone is used in the task editor?"></topic>
 		<topic href="Mylyn/FAQ/Bugzilla-Connector.html#Known_limitations" label="Known limitations"></topic>
 	</topic>
-	<topic href="Mylyn/FAQ/JIRA-Connector.html" label="JIRA Connector">
-		<topic href="Mylyn/FAQ/JIRA-Connector.html#Why_does_the_installation_fail_with_a_long_error_message.3F" label="Why does the installation fail with a long error message?"></topic>
-		<topic href="Mylyn/FAQ/JIRA-Connector.html#What_are_the_server_requirements.3F" label="What are the server requirements?"></topic>
-		<topic href="Mylyn/FAQ/JIRA-Connector.html#Why_can.E2.80.99t_I_connect.3F" label="Why can’t I connect?"></topic>
-		<topic href="Mylyn/FAQ/JIRA-Connector.html#Why_do_I_get_a_.E2.80.9CJIRA_connector_requires_server_3.3.3_or_later.E2.80.9D_message.3F" label="Why do I get a “JIRA connector requires server 3.3.3 or later” message?"></topic>
-		<topic href="Mylyn/FAQ/JIRA-Connector.html#What_is_the_latest_version_of_the_JIRA_connector_that_supports_Eclipse_3.2_.28IBM_Rational_Application_Developer_7.29.3F" label="What is the latest version of the JIRA connector that supports Eclipse 3.2 (IBM Rational Application Developer 7)?"></topic>
-		<topic href="Mylyn/FAQ/JIRA-Connector.html#Why_are_attachments_missing_in_the_task_editor_although_they_are_displayed_in_the_web_interface.3F" label="Why are attachments missing in the task editor although they are displayed in the web interface?"></topic>
-		<topic href="Mylyn/FAQ/JIRA-Connector.html#Are_custom_fields_supported_by_the_JIRA_connector.3F" label="Are custom fields supported by the JIRA connector?"></topic>
-		<topic href="Mylyn/FAQ/JIRA-Connector.html#Known_limitations_2" label="Known limitations"></topic>
-		<topic href="Mylyn/FAQ/JIRA-Connector.html#How_can_I_enable_compression_for_SOAP_messages.3F" label="How can I enable compression for SOAP messages?"></topic>
-		<topic href="Mylyn/FAQ/JIRA-Connector.html#Reporting_issues" label="Reporting issues"></topic>
-		<topic href="Mylyn/FAQ/JIRA-Connector.html#Why_do_I_get_errors_about_an_unexpected_redirect_when_submitting_an_issue.3F" label="Why do I get errors about an unexpected redirect when submitting an issue?"></topic>
-		<topic href="Mylyn/FAQ/JIRA-Connector.html#What_does_.3Ccode.3EError_parsing_server_response:_No_project_with_key_.E2.80.98xyz.E2.80.99_found.3C.2Fcode.3E.3F" label="What does &lt;code>Error parsing server response: No project with key ‘xyz’ found&lt;/code>?"></topic>
-		<topic href="Mylyn/FAQ/JIRA-Connector.html#Why_does_the_estimated_time_displayed_in_the_task_editor_differ_from_the_web_interface.3F" label="Why does the estimated time displayed in the task editor differ from the web interface?"></topic>
-		<topic href="Mylyn/FAQ/JIRA-Connector.html#Why_am_I_getting_the_message_.E2.80.9CYou_did_not_enter_a_valid_date.E2.80.9D_when_I_try_to_submit_a_JIRA_issue.3F" label="Why am I getting the message “You did not enter a valid date” when I try to submit a JIRA issue?"></topic>
-		<topic href="Mylyn/FAQ/JIRA-Connector.html#How_can_I_make_issue_dependencies_visible_in_the_Task_List.3F" label="How can I make issue dependencies visible in the Task List?"></topic>
-	</topic>
+	<topic href="Mylyn/FAQ/JIRA-Connector.html" label="JIRA Connector"></topic>
 	<topic href="Mylyn/FAQ/Trac-Connector.html" label="Trac Connector">
-		<topic href="Mylyn/FAQ/Trac-Connector.html#What_are_the_server_requirements.3F_2" label="What are the server requirements?">
+		<topic href="Mylyn/FAQ/Trac-Connector.html#What_are_the_server_requirements.3F" label="What are the server requirements?">
 			<topic href="Mylyn/FAQ/Trac-Connector.html#XML-RPC_.28recommended.29" label="XML-RPC (recommended)"></topic>
 			<topic href="Mylyn/FAQ/Trac-Connector.html#Web" label="Web"></topic>
 		</topic>
 		<topic href="Mylyn/FAQ/Trac-Connector.html#Recommended_Trac_version" label="Recommended Trac version"></topic>
 		<topic href="Mylyn/FAQ/Trac-Connector.html#Does_Mylyn_support_Trac_0.11.3F" label="Does Mylyn support Trac 0.11?"></topic>
 		<topic href="Mylyn/FAQ/Trac-Connector.html#Why_do_I_get_an_HTTP_Error_500_Internal_server_error_when_creating_a_ticket_that_contains_non-ASCII_characters.3F" label="Why do I get an HTTP Error 500 Internal server error when creating a ticket that contains non-ASCII characters?"></topic>
-		<topic href="Mylyn/FAQ/Trac-Connector.html#Known_limitations_3" label="Known limitations"></topic>
+		<topic href="Mylyn/FAQ/Trac-Connector.html#Known_limitations_2" label="Known limitations"></topic>
 		<topic href="Mylyn/FAQ/Trac-Connector.html#Why_are_tasks_opened_in_a_web_browser_and_not_in_the_rich_editor.3F" label="Why are tasks opened in a web browser and not in the rich editor?"></topic>
 		<topic href="Mylyn/FAQ/Trac-Connector.html#Which_URLs_does_Mylyn_access_in_a_Trac_repository.3F" label="Which URLs does Mylyn access in a Trac repository?"></topic>
 		<topic href="Mylyn/FAQ/Trac-Connector.html#Problems_opening_the_web_editor_on_Linux" label="Problems opening the web editor on Linux"></topic>
@@ -127,7 +112,7 @@
 	<topic href="Mylyn/FAQ/Web-Templates-Connector.html" label="Web Templates Connector">
 		<topic href="Mylyn/FAQ/Web-Templates-Connector.html#Where_can_I_find_the_Web_Templates_connector.3F" label="Where can I find the Web Templates connector?"></topic>
 		<topic href="Mylyn/FAQ/Web-Templates-Connector.html#Why_can.E2.80.99t_I_connect_using_one_of_the_existing_templates.3F" label="Why can’t I connect using one of the existing templates?"></topic>
-		<topic href="Mylyn/FAQ/Web-Templates-Connector.html#Known_limitations_4" label="Known limitations"></topic>
+		<topic href="Mylyn/FAQ/Web-Templates-Connector.html#Known_limitations_3" label="Known limitations"></topic>
 		<topic href="Mylyn/FAQ/Web-Templates-Connector.html#Where_can_I_find_additional_templates.3F" label="Where can I find additional templates?"></topic>
 	</topic>
 	<topic href="Mylyn/FAQ/Task-Focused-UI.html" label="Task-Focused UI">
@@ -150,7 +135,7 @@
 		<topic href="Mylyn/FAQ/Java-Development.html#Why_do_interesting_elements_not_show_in_the_Project_Explorer.3F" label="Why do interesting elements not show in the Project Explorer?"></topic>
 		<topic href="Mylyn/FAQ/Java-Development.html#How_do_I_stop_declarations_from_showing_in_the_Package_Explorer.3F" label="How do I stop declarations from showing in the Package Explorer?"></topic>
 		<topic href="Mylyn/FAQ/Java-Development.html#Why_does_nothing_show_up_in_the_Active_Search_or_Active_Hierarchy.3F" label="Why does nothing show up in the Active Search or Active Hierarchy?"></topic>
-		<topic href="Mylyn/FAQ/Java-Development.html#Known_limitations_5" label="Known limitations"></topic>
+		<topic href="Mylyn/FAQ/Java-Development.html#Known_limitations_4" label="Known limitations"></topic>
 	</topic>
 	<topic href="Mylyn/FAQ/Team-Support.html" label="Team Support">
 		<topic href="Mylyn/FAQ/Team-Support.html#My_change_set_is_missing_or_doesn.E2.80.99t_contain_elements_it_should._Help.21" label="My change set is missing or doesn’t contain elements it should. Help!"></topic>
