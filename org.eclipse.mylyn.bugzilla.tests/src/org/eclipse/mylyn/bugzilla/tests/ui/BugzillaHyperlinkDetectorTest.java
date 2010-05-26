@@ -95,7 +95,7 @@ public class BugzillaHyperlinkDetectorTest extends TestCase {
 	}
 
 	public void testFindHyperlinksDuplicateOf() {
-		assertHyperlinks("duplicate of 123", link(0, 15, "123"));
+		assertHyperlinks("duplicate of 123", link(0, 16, "123"));
 	}
 
 	public void testFindHyperlinksBugComment() {
@@ -134,7 +134,6 @@ public class BugzillaHyperlinkDetectorTest extends TestCase {
 		assertHyperlinks("attachmen 123");
 		assertHyperlinks("attachment id");
 		assertHyperlinks("attachment id");
-		assertHyperlinks("Create attachment 123");
 	}
 
 	public void testFindHyperlinksNoBug() {
