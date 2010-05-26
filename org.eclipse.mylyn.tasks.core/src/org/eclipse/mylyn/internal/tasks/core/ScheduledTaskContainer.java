@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.tasks.core;
 
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,7 +23,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
  * @author Rob Elves
  * @author Mik Kersten
  */
-public class ScheduledTaskContainer extends AbstractTaskContainer implements ITaskFilter {
+public class ScheduledTaskContainer extends AbstractTaskContainer {
 
 	private final TaskActivityManager activityManager;
 
@@ -53,7 +54,74 @@ public class ScheduledTaskContainer extends AbstractTaskContainer implements ITa
 		return range.getStartDate().before(Calendar.getInstance()) && range.getEndDate().after(Calendar.getInstance());
 	}
 
-	public boolean select(ITask selectTask) {
+//	public boolean isWeekDay() {
+//		return TaskActivityUtil.getCurrentWeek().isCurrentWeekDay(range);
+//	}
+
+//	public boolean isToday() {
+//		if (range instanceof DayDateRange) {
+//			return ((DayDateRange) range).isToday();
+//		}
+//		return false;
+//	}
+
+//	public Collection<ITask> getChildren() {
+//		Set<ITask> children = new HashSet<ITask>();
+//		Calendar beginning = TaskActivityUtil.getCalendar();
+//		beginning.setTimeInMillis(0);
+//		if (isFloating() && !isFuture()) {
+//			for (ITask task : activityManager.getScheduledTasks(rangebeginning, getEndDate())) {
+//				if (task.internalIsFloatingScheduledDate()) {
+//					children.add(task);
+//				}
+//			}
+//		} else if (isPresent()) {
+//			// add all due/overdue
+//			Calendar end = TaskActivityUtil.getCalendar();
+//			end.set(5000, 12, 1);
+//			for (ITask task : activityManager.getDueTasks(beginning, getEndDate())) {
+//				if (activityManager.isOwnedByUser(task)) {
+//					children.add(task);
+//				}
+//			}
+//
+//			// add all scheduled/overscheduled
+//			for (ITask task : activityManager.getScheduledTasks(beginning, getEndDate())) {
+//				if (!task.internalIsFloatingScheduledDate() && !task.isCompleted()) {
+//					children.add(task);
+//				}
+//			}
+//
+//			// if not scheduled or due in future, and is active, place in today bin
+//			ITask activeTask = activityManager.getActiveTask();
+//			if (activeTask != null && !children.contains(activeTask)) {
+//				Set<ITask> futureScheduled = activityManager.getScheduledTasks(getStartDate(), end);
+//				for (ITask task : activityManager.getDueTasks(getStartDate(), end)) {
+//					if (activityManager.isOwnedByUser(task)) {
+//						futureScheduled.add(task);
+//					}
+//				}
+//				if (!futureScheduled.contains(activeTask)) {
+//					children.add(activeTask);
+//				}
+//			}
+//		} else if (isFuture()) {
+//			children.addAll(activityManager.getScheduledTasks(getStartDate(), getEndDate()));
+//			for (ITask task : activityManager.getDueTasks(getStartDate(), getEndDate())) {
+//				if (activityManager.isOwnedByUser(task)) {
+//					children.add(task);
+//				}
+//			}
+//		} else {
+//			children.addAll(activityManager.getActiveTasks(range.getStartDate(), range.getEndDate()));
+//		}
+//		return children;
+//	}
+
+	@Override
+	public Collection<ITask> getChildren() {
+
+		// TODO: Cache this information until the next modification to pertinent data
 
 		Set<ITask> children = new HashSet<ITask>();
 
@@ -99,8 +167,7 @@ public class ScheduledTaskContainer extends AbstractTaskContainer implements ITa
 			}
 		}
 
-		return children.contains(selectTask);
-
+		return children;
 	}
 
 	@Override

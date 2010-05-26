@@ -34,9 +34,6 @@ import org.eclipse.mylyn.internal.tasks.core.UnsubmittedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.AbstractRetrieveTitleFromUrlJob;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskScheduleContentProvider.Completed;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskScheduleContentProvider.Incoming;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskScheduleContentProvider.Outgoing;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskScheduleContentProvider.Unscheduled;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -140,17 +137,13 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 					if (targetCategory != null) {
 						moveTask(task, targetCategory);
 					}
-//				} else if (currentTarget instanceof Incoming || currentTarget instanceof Outgoing
-//						|| currentTarget instanceof Completed) {
 				} else if (currentTarget instanceof ScheduledTaskContainer) {
 					ScheduledTaskContainer container = (ScheduledTaskContainer) currentTarget;
 					if (container instanceof Unscheduled) {
 						TasksUiPlugin.getTaskActivityManager().setScheduledFor((AbstractTask) task, null);
 					} else {
-						if (!task.isCompleted()) {
-							TasksUiPlugin.getTaskActivityManager().setScheduledFor((AbstractTask) task,
-									container.getDateRange());
-						}
+						TasksUiPlugin.getTaskActivityManager().setScheduledFor((AbstractTask) task,
+								container.getDateRange());
 					}
 				} else if (currentTarget == null) {
 					moveTask(task, TasksUiPlugin.getTaskList().getDefaultCategory());
@@ -249,11 +242,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			return false;
 		} else if (LocalSelectionTransfer.getTransfer().isSupportedType(transferType)) {
 			localTransfer = true;
-			if (getCurrentTarget() instanceof Incoming || getCurrentTarget() instanceof Outgoing
-					|| getCurrentTarget() instanceof Completed) {
-				return false;
-			} else if (getCurrentTarget() instanceof UncategorizedTaskContainer
-					|| getCurrentTarget() instanceof TaskCategory
+			if (getCurrentTarget() instanceof UncategorizedTaskContainer || getCurrentTarget() instanceof TaskCategory
 					|| getCurrentTarget() instanceof UnmatchedTaskContainer
 					|| getCurrentTarget() instanceof ScheduledTaskContainer) {
 				return true;

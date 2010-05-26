@@ -104,7 +104,7 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 //		return false;
 	}
 
-	protected List<AbstractTaskContainer> applyFilter(Collection<AbstractTaskContainer> roots) {
+	protected List<AbstractTaskContainer> applyFilter(Set<AbstractTaskContainer> roots) {
 		List<AbstractTaskContainer> filteredRoots = new ArrayList<AbstractTaskContainer>();
 		for (AbstractTaskContainer element : roots) {
 			// NOTE: tasks can no longer appear as root elements
