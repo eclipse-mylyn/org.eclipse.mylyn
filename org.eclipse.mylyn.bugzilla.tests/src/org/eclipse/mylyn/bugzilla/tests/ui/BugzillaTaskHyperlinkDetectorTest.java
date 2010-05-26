@@ -66,22 +66,6 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 
 	private final String BUG_FORMAT_1_2 = "bug# 2";
 
-	private final String TASK_FORMAT_1_COMMENT_1 = "task#123c#44556677";
-
-	private final String TASK_FORMAT_2_COMMENT_1 = "task# 123c#44556677";
-
-	private final String TASK_FORMAT_3_COMMENT_1 = "task123c#44556677";
-
-	private final String TASK_FORMAT_4_COMMENT_1 = "task #123c#44556677";
-
-	private final String BUG_FORMAT_1_COMMENT_1 = "bug# 123c#44556677";
-
-	private final String BUG_FORMAT_2_COMMENT_1 = "bug # 123c#44556677";
-
-	private final String BUG_FORMAT_3_COMMENT_1 = "bug123c#44556677";
-
-	private final String BUG_FORMAT_4_COMMENT_1 = "bug #123c#44556677";
-
 	private final String TASK_FORMAT_1_COMMENT_2 = "task#123 comment #44556677";
 
 	private final String TASK_FORMAT_2_COMMENT_2 = "task# 123 comment #44556677";
@@ -193,9 +177,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		commentFormats = new String[] { COMMENT_1, COMMENT_2, COMMENT_3, COMMENT_4 };
 		bugFormats = new String[] { TASK_FORMAT_1, TASK_FORMAT_2, TASK_FORMAT_3, TASK_FORMAT_4, BUG_FORMAT_1,
 				BUG_FORMAT_2, BUG_FORMAT_3, BUG_FORMAT_4 };
-		bugCommentFormats = new String[] { TASK_FORMAT_1_COMMENT_1, TASK_FORMAT_2_COMMENT_1, TASK_FORMAT_3_COMMENT_1,
-				TASK_FORMAT_4_COMMENT_1, BUG_FORMAT_1_COMMENT_1, BUG_FORMAT_2_COMMENT_1, BUG_FORMAT_3_COMMENT_1,
-				BUG_FORMAT_4_COMMENT_1, TASK_FORMAT_1_COMMENT_2, TASK_FORMAT_2_COMMENT_2, TASK_FORMAT_3_COMMENT_2,
+		bugCommentFormats = new String[] { TASK_FORMAT_1_COMMENT_2, TASK_FORMAT_2_COMMENT_2, TASK_FORMAT_3_COMMENT_2,
 				TASK_FORMAT_4_COMMENT_2, BUG_FORMAT_1_COMMENT_2, BUG_FORMAT_2_COMMENT_2, BUG_FORMAT_3_COMMENT_2,
 				BUG_FORMAT_4_COMMENT_2, TASK_FORMAT_1_COMMENT_3, TASK_FORMAT_2_COMMENT_3, TASK_FORMAT_3_COMMENT_3,
 				TASK_FORMAT_4_COMMENT_3, BUG_FORMAT_1_COMMENT_3, BUG_FORMAT_2_COMMENT_3, BUG_FORMAT_3_COMMENT_3,
@@ -533,7 +515,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		IHyperlink[] links = detector.detectHyperlinks(viewer, region, false);
 		assertNotNull(links);
 		assertEquals(1, links.length);
-		assertEquals(testString.indexOf(DUPLICATE_NUMBER), links[0].getHyperlinkRegion().getOffset());
+		assertEquals(testString.indexOf(DUPLICATE), links[0].getHyperlinkRegion().getOffset());
 	}
 
 	public void testNoRepositoryInViewNoRepositoryInManager() {
@@ -645,7 +627,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		IHyperlink[] links = detector.detectHyperlinks(viewer, region, false);
 		assertNotNull(links);
 		assertEquals(1, links.length);
-		assertEquals(testString.indexOf(ATTACHMENT_NUMBER), links[0].getHyperlinkRegion().getOffset());
+		assertEquals(testString.indexOf(ATTACHMENT_OLD), links[0].getHyperlinkRegion().getOffset());
 	}
 
 	public void testAttachmentNew() {
@@ -655,7 +637,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		IHyperlink[] links = detector.detectHyperlinks(viewer, region, false);
 		assertNotNull(links);
 		assertEquals(1, links.length);
-		assertEquals(testString.indexOf(ATTACHMENT_NUMBER), links[0].getHyperlinkRegion().getOffset());
+		assertEquals(testString.indexOf(ATTACHMENT_NEW), links[0].getHyperlinkRegion().getOffset());
 	}
 
 	public void testCommentLotsOfWhitespace() {
@@ -664,8 +646,9 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		Region region = new Region(0, testString.length());
 		IHyperlink[] links = detector.detectHyperlinks(viewer, region, false);
 		assertNotNull(links);
-		assertEquals(1, links.length);
-		assertEquals(testString.indexOf(ATTACHMENT_NUMBER), links[0].getHyperlinkRegion().getOffset());
+		assertEquals(2, links.length);
+		assertEquals(testString.indexOf("bug 123"), links[0].getHyperlinkRegion().getOffset());
+		assertEquals(testString.indexOf("bug 245 comment 1"), links[1].getHyperlinkRegion().getOffset());
 	}
 
 }
