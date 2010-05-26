@@ -108,9 +108,13 @@ public class ApplyPatchAction extends BaseSelectionListenerAction implements IVi
 
 		public void run(IProgressMonitor monitor) throws CoreException {
 			monitor.beginTask(jobName, IProgressMonitor.UNKNOWN);
-			IStatus result = execute(new SubProgressMonitor(monitor, 100));
-			if (result != null && !result.isOK()) {
-				throw new CoreException(result);
+			try {
+				IStatus result = execute(new SubProgressMonitor(monitor, 100));
+				if (result != null && !result.isOK()) {
+					throw new CoreException(result);
+				}
+			} finally {
+				monitor.done();
 			}
 		}
 
@@ -138,12 +142,9 @@ public class ApplyPatchAction extends BaseSelectionListenerAction implements IVi
 			} catch (CoreException e) {
 				int s = IStatus.ERROR;
 				if (e.getStatus() != null && e.getStatus().getCode() == IStatus.CANCEL) {
-					s = IStatus.CANCEL;
+					throw new OperationCanceledException();
 				}
 				return new Status(s, FocusedTeamUiPlugin.ID_PLUGIN, Messages.ApplyPatchAction_failedToDownloadPatch, e);
-			} catch (OperationCanceledException e) {
-				return new Status(IStatus.CANCEL, FocusedTeamUiPlugin.ID_PLUGIN,
-						Messages.ApplyPatchAction_failedToDownloadPatch, e);
 			} finally {
 				if (fos != null) {
 					try {
