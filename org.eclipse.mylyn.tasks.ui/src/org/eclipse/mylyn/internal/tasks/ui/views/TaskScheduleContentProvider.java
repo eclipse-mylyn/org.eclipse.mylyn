@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.DateRange;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
@@ -32,6 +33,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -47,7 +49,19 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 
 	private final Calendar END_OF_TIME;
 
+	private final Calendar INCOMING_TIME;
+
+	private final Calendar OUTGOING_TIME;
+
+	private final Calendar COMPLETED_TIME;
+
 	private Job rolloverJob;
+
+	private final Incoming incoming;
+
+	private final Outgoing outgoing;
+
+	private final Completed completed;
 
 	public TaskScheduleContentProvider(TaskListView taskListView) {
 		super(taskListView);
@@ -57,15 +71,26 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 		END_OF_TIME.add(Calendar.YEAR, 5000);
 		END_OF_TIME.getTime();
 		unscheduled = new Unscheduled(taskActivityManager, new DateRange(END_OF_TIME));
+
+		INCOMING_TIME = TaskActivityUtil.getCalendar();
+		INCOMING_TIME.setTimeInMillis(END_OF_TIME.getTimeInMillis() - 1);
+		incoming = new Incoming();
+
+		OUTGOING_TIME = TaskActivityUtil.getCalendar();
+		OUTGOING_TIME.setTimeInMillis(END_OF_TIME.getTimeInMillis() - 2);
+		outgoing = new Outgoing();
+
+		COMPLETED_TIME = TaskActivityUtil.getCalendar();
+		COMPLETED_TIME.setTimeInMillis(END_OF_TIME.getTimeInMillis() + 2);
+		completed = new Completed();
+
 	}
 
 	@Override
 	public Object[] getElements(Object parent) {
 
 		if (parent != null && parent.equals(this.taskListView.getViewSite())) {
-
 			Set<AbstractTaskContainer> containers = new HashSet<AbstractTaskContainer>();
-
 			WeekDateRange week = TaskActivityUtil.getCurrentWeek();
 			WeekDateRange nextWeek = TaskActivityUtil.getNextWeek();
 
@@ -85,6 +110,8 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 			for (DateRange day : week.getRemainingDays()) {
 				containers.add(new ScheduledTaskContainer(TasksUiPlugin.getTaskActivityManager(), day));
 			}
+
+			// This Week
 			containers.add(new ScheduledTaskContainer(TasksUiPlugin.getTaskActivityManager(), week));
 
 			for (DateRange day : nextWeek.getDaysOfWeek()) {
@@ -98,7 +125,6 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 					.next(), Messages.TaskScheduleContentProvider_Two_Weeks);
 			containers.add(twoWeeksContainer);
 
-			containers.add(unscheduled);
 			Calendar startDate = TaskActivityUtil.getCalendar();
 			startDate.setTimeInMillis(twoWeeksContainer.getEnd().getTimeInMillis());
 			TaskActivityUtil.snapNextDay(startDate);
@@ -109,6 +135,18 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 			ScheduledTaskContainer futureContainer = new ScheduledTaskContainer(taskActivityManager, future,
 					Messages.TaskScheduleContentProvider_Future);
 			containers.add(futureContainer);
+
+			// Outgoing
+			containers.add(outgoing);
+
+			// Incoming
+			containers.add(incoming);
+
+			// Unscheduled
+			containers.add(unscheduled);
+
+			// Completed
+			containers.add(completed);
 
 			return applyFilter(containers).toArray();
 
@@ -184,22 +222,79 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 
 	public class Unscheduled extends ScheduledTaskContainer {
 
-		private final TaskActivityManager activityManager;
-
 		public Unscheduled(TaskActivityManager activityManager, DateRange range) {
 			super(activityManager, range, Messages.TaskScheduleContentProvider_Unscheduled);
-			this.activityManager = activityManager;
 		}
 
 		@Override
 		public Collection<ITask> getChildren() {
-			Set<ITask> all = new HashSet<ITask>();
-			for (ITask task : activityManager.getUnscheduled()) {
-				if (!task.isCompleted() || (task.isCompleted() && !task.getSynchronizationState().isSynchronized())) {
-					all.add(task);
+			Set<ITask> children = new HashSet<ITask>();
+			for (AbstractTask task : TasksUiPlugin.getTaskList().getAllTasks()) {
+				if (task.getDueDate() == null && task.getScheduledForDate() == null && !task.isCompleted()
+						&& task.getSynchronizationState().isSynchronized()) {
+					children.add(task);
 				}
 			}
-			return all;
+			return children;
+		}
+	}
+
+	public class Incoming extends ScheduledTaskContainer {
+
+		public Incoming() {
+			super(taskActivityManager, new DateRange(INCOMING_TIME), Messages.TaskScheduleContentProvider_Incoming);
+		}
+
+		@Override
+		public Collection<ITask> getChildren() {
+			Set<ITask> children = new HashSet<ITask>();
+			for (ITask task : TasksUiPlugin.getTaskList().getAllTasks()) {
+				if (task.getSynchronizationState().equals(SynchronizationState.INCOMING)
+						|| task.getSynchronizationState().equals(SynchronizationState.INCOMING_NEW)) {
+					children.add(task);
+				}
+			}
+			return children;
+		}
+
+	}
+
+	public class Outgoing extends ScheduledTaskContainer {
+
+		public Outgoing() {
+			super(taskActivityManager, new DateRange(OUTGOING_TIME), Messages.TaskScheduleContentProvider_Outgoing);
+		}
+
+		@Override
+		public Collection<ITask> getChildren() {
+			Set<ITask> children = new HashSet<ITask>();
+			for (ITask task : TasksUiPlugin.getTaskList().getAllTasks()) {
+				if (task.getSynchronizationState().equals(SynchronizationState.OUTGOING)
+						|| task.getSynchronizationState().equals(SynchronizationState.OUTGOING_NEW)
+						|| task.getSynchronizationState().equals(SynchronizationState.CONFLICT)) {
+					children.add(task);
+				}
+			}
+			return children;
+		}
+
+	}
+
+	public class Completed extends ScheduledTaskContainer {
+
+		public Completed() {
+			super(taskActivityManager, new DateRange(COMPLETED_TIME), Messages.TaskScheduleContentProvider_Completed);
+		}
+
+		@Override
+		public Collection<ITask> getChildren() {
+			Set<ITask> children = new HashSet<ITask>();
+			for (ITask task : TasksUiPlugin.getTaskList().getAllTasks()) {
+				if (task.isCompleted() && task.getSynchronizationState().equals(SynchronizationState.SYNCHRONIZED)) {
+					children.add(task);
+				}
+			}
+			return children;
 		}
 	}
 

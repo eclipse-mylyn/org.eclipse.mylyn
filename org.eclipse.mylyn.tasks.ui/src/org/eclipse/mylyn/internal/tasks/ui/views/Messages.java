@@ -101,7 +101,13 @@ public class Messages extends NLS {
 
 	public static String TaskListView_Task_List;
 
+	public static String TaskScheduleContentProvider_Completed;
+
 	public static String TaskScheduleContentProvider_Future;
+
+	public static String TaskScheduleContentProvider_Incoming;
+
+	public static String TaskScheduleContentProvider_Outgoing;
 
 	public static String TaskScheduleContentProvider_Two_Weeks;
 

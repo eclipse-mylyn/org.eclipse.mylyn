@@ -23,6 +23,9 @@ import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskScheduleContentProvider.Completed;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskScheduleContentProvider.Incoming;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskScheduleContentProvider.Outgoing;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskScheduleContentProvider.Unscheduled;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
@@ -78,6 +81,10 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		if (scheduleContainer instanceof TaskScheduleContentProvider.Unscheduled) {
 			return true;
 		}
+		if (scheduleContainer instanceof TaskScheduleContentProvider.Incoming
+				|| scheduleContainer instanceof TaskScheduleContentProvider.Outgoing) {
+			return (scheduleContainer.getChildren().size() > 0);
+		}
 		if (TaskActivityUtil.getCurrentWeek().isCurrentWeekDay(scheduleContainer.getDateRange())) {
 			if (scheduleContainer.isPresent() || scheduleContainer.isFuture()) {
 				return true;
@@ -122,30 +129,24 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 	}
 
 	private boolean shouldShowInFocusedWorkweekDateContainer(Object parent, ITask task) {
+		if (parent instanceof Unscheduled) {
+			return false;
+		}
+
+		if (parent instanceof Incoming) {
+			return true;
+		}
+
+		if (parent instanceof Outgoing) {
+			return true;
+		}
+
+		if (parent instanceof Completed) {
+			return true;
+		}
+
 		if (parent instanceof ScheduledTaskContainer) {
-
-			ScheduledTaskContainer container = (ScheduledTaskContainer) parent;
-
-			if (container instanceof Unscheduled) {
-				return false;
-			}
-
-			if (isDateRangeInteresting(container)) {
-				return true;
-			}
-
-//			if (container.isWeekDay() || container.isPresent()) {
-//				return true;
-//			}
-//
-////			if (!TasksUiPlugin.getTaskActivityManager().isWeekDay((ScheduledTaskContainer) parent)) {
-////				return false;
-////			}
-//			if (TasksUiPlugin.getTaskActivityManager().isOverdue(task)
-//					|| TasksUiPlugin.getTaskActivityManager().isPastReminder((AbstractTask) task)) {
-//				return true;
-//			}
-
+			return (isDateRangeInteresting((ScheduledTaskContainer) parent));
 		}
 
 		return false;

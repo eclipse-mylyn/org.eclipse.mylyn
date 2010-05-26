@@ -125,17 +125,44 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 
 		Set<ITask> children = new HashSet<ITask>();
 
+		Calendar cal = TaskActivityUtil.getCalendar();
+
 		// All tasks scheduled for this date range
 		for (ITask task : activityManager.getScheduledTasks(range)) {
 			if (!task.isCompleted()
 					|| (task.isCompleted() && TaskActivityUtil.getDayOf(task.getCompletionDate()).isPresent())) {
+
+				if (task.getDueDate() != null
+						&& task.getDueDate().before(
+								((AbstractTask) task).getScheduledForDate().getStartDate().getTime())) {
+					continue;
+				}
+
+				if (range instanceof WeekDateRange && ((WeekDateRange) range).isThisWeek()
+						&& task instanceof AbstractTask
+						&& ((AbstractTask) task).getScheduledForDate() instanceof WeekDateRange) {
+
+					if (task.getDueDate() != null) {
+						cal.setTime(task.getDueDate());
+						if (range.includes(cal)) {
+							continue;
+						}
+					}
+
+					children.add(task);
+				}
+
 				children.add(task);
 			}
 		}
 
-		// Add due tasks if not the This Week container
+		// Add due tasks if not the This Week container, and not scheduled for earlier date
 		if (!(range instanceof WeekDateRange && ((WeekDateRange) range).isPresent())) {
 			for (ITask task : activityManager.getDueTasks(range.getStartDate(), range.getEndDate())) {
+				DateRange scheduledDate = ((AbstractTask) task).getScheduledForDate();
+				if (scheduledDate != null && scheduledDate.before(range.getStartDate())) {
+					continue;
+				}
 				if (activityManager.isOwnedByUser(task)) {
 					children.add(task);
 				}
@@ -185,12 +212,12 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 
 	@Override
 	public String getPriority() {
-		return ""; //$NON-NLS-1$
+		return "";
 	}
 
 	@Override
 	public String getUrl() {
-		return ""; //$NON-NLS-1$
+		return "";
 	}
 
 	@Override
