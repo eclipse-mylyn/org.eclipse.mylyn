@@ -326,15 +326,19 @@ public class WikiToDocTask extends MarkupTask {
 		}
 	}
 
-	private String computeTocRelativeFile(Map<OutlineItem, Path> outlineItemToPath, OutlineItem item) {
+	private String computeTocRelativeFile(Map<OutlineItem, Path> outlineItemToPath, final OutlineItem item) {
 		Path path = outlineItemToPath.get(item);
-		while (item.getParent() != null && path == null) {
-			item = item.getParent();
-			path = outlineItemToPath.get(item);
+
+		OutlineItem pathItem = item;
+		while (path == null && pathItem.getParent() != null) {
+			pathItem = pathItem.getParent();
+			path = outlineItemToPath.get(pathItem);
 		}
+
 		return computeTocRelativeFile(item, path);
 	}
 
+	@SuppressWarnings("restriction")
 	protected String computeTocRelativeFile(OutlineItem item, Path path) {
 		String name = ((SplitOutlineItem) item).getSplitTarget();
 		File pathDestDir = computeDestDir(path);
@@ -344,8 +348,10 @@ public class WikiToDocTask extends MarkupTask {
 			prefix = prefix.substring(1);
 		}
 		String relativePath = prefix + '/' + name;
+		relativePath = relativePath.replace('\\', '/');
 		if (helpPrefix != null) {
 			String helpPath = helpPrefix;
+			helpPath = helpPath.replace('\\', '/');
 			if (!helpPath.endsWith("/")) { //$NON-NLS-1$
 				helpPath += "/"; //$NON-NLS-1$
 			}
@@ -679,6 +685,14 @@ public class WikiToDocTask extends MarkupTask {
 			this.tocParentName = tocParentName;
 		}
 
+		@Override
+		public String toString() {
+			String s = name;
+			if (tocParentName != null) {
+				s = tocParentName + '/' + s;
+			}
+			return s;
+		}
 	}
 
 	public static class Attribute {
