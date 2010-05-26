@@ -17,6 +17,7 @@ import junit.framework.TestSuite;
 import org.eclipse.mylyn.bugzilla.tests.core.BugzillaPriorityTest;
 import org.eclipse.mylyn.bugzilla.tests.core.BugzillaXMLRPCTest;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
+import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaHyperlinkDetectorTest;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaRepositorySettingsPageTest;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaSearchPageTest;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaTaskHyperlinkDetectorTest;
@@ -40,6 +41,7 @@ public class AllBugzillaTests {
 		suite.addTestSuite(BugzillaSearchPageTest.class);
 		suite.addTestSuite(BugzillaDateTimeTests.class);
 		suite.addTestSuite(BugzillaTaskHyperlinkDetectorTest.class);
+		suite.addTestSuite(BugzillaHyperlinkDetectorTest.class);
 
 		// Each of these tests gets executed against every repo in BugzillaFixture.ALL
 		// unless otherwise excluded

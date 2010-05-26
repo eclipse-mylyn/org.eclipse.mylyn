@@ -55,4 +55,57 @@ public final class TaskAttachmentHyperlink implements IHyperlink {
 		String url = repository.getUrl() + IBugzillaConstants.URL_GET_ATTACHMENT_SUFFIX + attachmentId;
 		TasksUiUtil.openUrl(url);
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((attachmentId == null) ? 0 : attachmentId.hashCode());
+		result = prime * result + ((region == null) ? 0 : region.hashCode());
+		result = prime * result + ((repository == null) ? 0 : repository.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		TaskAttachmentHyperlink other = (TaskAttachmentHyperlink) obj;
+		if (attachmentId == null) {
+			if (other.attachmentId != null) {
+				return false;
+			}
+		} else if (!attachmentId.equals(other.attachmentId)) {
+			return false;
+		}
+		if (region == null) {
+			if (other.region != null) {
+				return false;
+			}
+		} else if (!region.equals(other.region)) {
+			return false;
+		}
+		if (repository == null) {
+			if (other.repository != null) {
+				return false;
+			}
+		} else if (!repository.equals(other.repository)) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "TaskAttachmentHyperlink [attachmentId=" + attachmentId + ", region=" + region + ", repository=" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				+ repository + "]"; //$NON-NLS-1$
+	}
+
 }

@@ -38,7 +38,7 @@ public final class TaskHyperlink implements IHyperlink {
 
 	private final String taskId;
 
-	Object selection;
+	private Object selection;
 
 	public TaskHyperlink(IRegion region, TaskRepository repository, String taskId) {
 		this.region = region;
@@ -112,6 +112,66 @@ public final class TaskHyperlink implements IHyperlink {
 	 */
 	public void setSelection(Object selection) {
 		this.selection = selection;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((region == null) ? 0 : region.hashCode());
+		result = prime * result + ((repository == null) ? 0 : repository.hashCode());
+		result = prime * result + ((selection == null) ? 0 : selection.hashCode());
+		result = prime * result + ((taskId == null) ? 0 : taskId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		TaskHyperlink other = (TaskHyperlink) obj;
+		if (region == null) {
+			if (other.region != null) {
+				return false;
+			}
+		} else if (!region.equals(other.region)) {
+			return false;
+		}
+		if (repository == null) {
+			if (other.repository != null) {
+				return false;
+			}
+		} else if (!repository.equals(other.repository)) {
+			return false;
+		}
+		if (selection == null) {
+			if (other.selection != null) {
+				return false;
+			}
+		} else if (!selection.equals(other.selection)) {
+			return false;
+		}
+		if (taskId == null) {
+			if (other.taskId != null) {
+				return false;
+			}
+		} else if (!taskId.equals(other.taskId)) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "TaskHyperlink [region=" + region + ", repository=" + repository + ", selection=" + selection //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				+ ", taskId=" + taskId + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 }

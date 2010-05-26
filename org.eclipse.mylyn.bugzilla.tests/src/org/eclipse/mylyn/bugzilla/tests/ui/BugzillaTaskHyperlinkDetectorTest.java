@@ -339,7 +339,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 			assertEquals("123", taskLink.getTaskId());
 			assertEquals(testString.indexOf(format), taskLink.getHyperlinkRegion().getOffset());
 			Object comment = taskLink.getSelection();
-			assertNotNull(comment);
+			assertNotNull(format, comment);
 			assertEquals(TaskAttribute.PREFIX_COMMENT + "44556677", comment);
 		}
 		for (String format : commentFormats) {
@@ -657,4 +657,15 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		assertEquals(1, links.length);
 		assertEquals(testString.indexOf(ATTACHMENT_NUMBER), links[0].getHyperlinkRegion().getOffset());
 	}
+
+	public void testCommentLotsOfWhitespace() {
+		String testString = "bug 123     d bug 245 comment 1";
+		viewer.setDocument(new Document(testString));
+		Region region = new Region(0, testString.length());
+		IHyperlink[] links = detector.detectHyperlinks(viewer, region, false);
+		assertNotNull(links);
+		assertEquals(1, links.length);
+		assertEquals(testString.indexOf(ATTACHMENT_NUMBER), links[0].getHyperlinkRegion().getOffset());
+	}
+
 }

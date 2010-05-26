@@ -20,7 +20,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -54,19 +53,17 @@ import org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard;
  */
 public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 
-	private static final int GET_TASK_NUM_GROUP = 8;
+	private static final String BUG = "(?:duplicate of|bug|task)\\s*#?\\s*(\\d+)"; //$NON-NLS-1$
 
-	private static final int GET_COMMENT_NUM_GROUP = 13;
+	private static final String COMMENT = "comment\\s*#?\\s*(\\d+)"; //$NON-NLS-1$
 
-	private static final int GET_ATTACHMENT_NUM_GROUP = 3;
+	private static final String REGEXP_BUG = "(?:\\W||^)(" + BUG + "(?:\\s*" + COMMENT + ")?)|(" + COMMENT + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-	private static final String regexp_bug = "(((duplicate of|((\\W||^)+(bug|task)))( ?#? ?)(\\d+))?((\\W||\\s)*(comment|c)??(\\s*#\\s*)(\\d+))?)"; //$NON-NLS-1$
+	private static final String REGEXP_ATTACHMENT = "(?:Created (?:an )?)?attachment\\s*#?\\s*(?:\\(id=)?(\\d+)\\)?"; //$NON-NLS-1$
 
-	private static final String regexp_attachment = "Created (an )?attachment\\s*(\\(id=)?(\\d+)"; //$NON-NLS-1$
+	private static final Pattern PATTERN_BUG = Pattern.compile(REGEXP_BUG, Pattern.CASE_INSENSITIVE);
 
-	private static final Pattern PATTERN_BUG = Pattern.compile(regexp_bug, Pattern.CASE_INSENSITIVE);
-
-	private static final Pattern PATTERN_ATTACHMENT = Pattern.compile(regexp_attachment, Pattern.CASE_INSENSITIVE);
+	private static final Pattern PATTERN_ATTACHMENT = Pattern.compile(REGEXP_ATTACHMENT, Pattern.CASE_INSENSITIVE);
 
 	@Override
 	public String getAccountCreationUrl(TaskRepository taskRepository) {
@@ -189,7 +186,21 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 		Matcher mb = PATTERN_BUG.matcher(text);
 		while (mb.find()) {
 			if (index == -1 || (index >= mb.start() && index <= mb.end())) {
-				IHyperlink link = extractHyperlinkBug(repository, task, textOffset, mb);
+				TaskHyperlink link = null;
+				if (mb.group(1) != null) {
+					// bug comment
+					Region region = new Region(textOffset + mb.start(1), mb.end(1) - mb.start(1));
+					link = new TaskHyperlink(region, repository, mb.group(2));
+					if (mb.group(3) != null) {
+						link.setSelection(TaskAttribute.PREFIX_COMMENT + mb.group(3));
+					}
+				} else if (task != null && mb.group(4) != null) {
+					// comment
+					Region region = new Region(textOffset + mb.start(4), mb.end(4) - mb.start(4));
+					link = new TaskHyperlink(region, repository, task.getTaskId());
+					link.setSelection(TaskAttribute.PREFIX_COMMENT + mb.group(5));
+				}
+
 				if (link != null) {
 					if (hyperlinksFound == null) {
 						hyperlinksFound = new ArrayList<IHyperlink>();
@@ -201,92 +212,17 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 		Matcher ma = PATTERN_ATTACHMENT.matcher(text);
 		while (ma.find()) {
 			if (index == -1 || (index >= ma.start() && index <= ma.end())) {
-				IHyperlink link = extractHyperlinkAttachment(repository, textOffset, ma);
-				if (link != null) {
-					if (hyperlinksFound == null) {
-						hyperlinksFound = new ArrayList<IHyperlink>();
-					}
-					hyperlinksFound.add(link);
+				// attachment
+				Region region = new Region(textOffset + ma.start(), ma.end() - ma.start());
+				TaskAttachmentHyperlink link = new TaskAttachmentHyperlink(region, repository, ma.group(1));
+				if (hyperlinksFound == null) {
+					hyperlinksFound = new ArrayList<IHyperlink>();
 				}
+				hyperlinksFound.add(link);
 			}
 		}
 
 		return (hyperlinksFound != null) ? hyperlinksFound.toArray(new IHyperlink[0]) : null;
 	}
 
-	private static IHyperlink extractHyperlinkBug(TaskRepository repository, ITask task, int regionOffset, Matcher m) {
-
-		int start = m.start();
-		if (m.group().startsWith("duplicate")) { //$NON-NLS-1$
-			start = m.start() + m.group().indexOf(m.group(GET_TASK_NUM_GROUP));
-		} else {
-			start = m.start();
-			for (int index = 0; index < m.group().length() && !Character.isLetter(m.group().charAt(index)); index++, start++) {
-			}
-		}
-
-		int end = m.end();
-
-		if (end == -1) {
-			end = m.group().length();
-		}
-
-		start += regionOffset;
-		end += regionOffset;
-		String bugId = m.group(GET_TASK_NUM_GROUP);
-		if (bugId == null) {
-			String commentId = m.group(GET_COMMENT_NUM_GROUP);
-			IRegion sregion = new Region(start, end - start);
-			if (commentId != null) {
-				String taskID;
-				if (task != null) {
-					taskID = task.getTaskId();
-				} else {
-					taskID = ""; //$NON-NLS-1$
-				}
-				TaskHyperlink taskHyperLink = new TaskHyperlink(sregion, repository, taskID);
-				if (commentId != null) {
-					taskHyperLink.setSelection(TaskAttribute.PREFIX_COMMENT + commentId);
-				}
-				return taskHyperLink;
-
-			}
-		} else {
-			bugId.trim();
-			IRegion sregion = new Region(start, end - start);
-			TaskHyperlink taskHyperLink = new TaskHyperlink(sregion, repository, bugId);
-			String commentId = m.group(GET_COMMENT_NUM_GROUP);
-			if (commentId != null) {
-				taskHyperLink.setSelection(TaskAttribute.PREFIX_COMMENT + commentId);
-			}
-			return taskHyperLink;
-		}
-		return null;
-	}
-
-	private static IHyperlink extractHyperlinkAttachment(TaskRepository repository, int regionOffset, Matcher m) {
-
-		int start = -1;
-		start = m.start();
-		for (int index = 0; index < m.group().length() && !Character.isLetter(m.group().charAt(index)); index++, start++) {
-		}
-
-		int end = m.end();
-
-		if (end == -1) {
-			end = m.group().length();
-		}
-
-		start += regionOffset;
-		end += regionOffset;
-
-		String attachmentId = m.group(GET_ATTACHMENT_NUM_GROUP);
-		if (attachmentId != null) {
-			start = start + m.group().indexOf(m.group(GET_ATTACHMENT_NUM_GROUP));
-
-			IRegion sregion = new Region(start, end - start);
-			return new TaskAttachmentHyperlink(sregion, repository, attachmentId);
-		}
-		return null;
-	}
 }
