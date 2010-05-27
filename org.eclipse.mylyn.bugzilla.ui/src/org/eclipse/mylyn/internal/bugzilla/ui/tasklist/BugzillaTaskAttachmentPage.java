@@ -38,6 +38,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
@@ -67,7 +68,16 @@ public class BugzillaTaskAttachmentPage extends TaskAttachmentPage {
 	}
 
 	private void updateScrolledCompositeSize() {
-		scrolledComposite.setMinSize(scrolledBodyComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT, true));
+		Point p = scrolledBodyComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+		scrolledComposite.setMinSize(p);
+		Shell shell = getShell();
+		shell.pack();
+		Point shellSize = shell.getSize();
+		shellSize.x++;
+		shell.setSize(shellSize);
+		shellSize.x--;
+		shell.setSize(shellSize);
+		shell.pack();
 	}
 
 	private void createScrolledComposite(Composite parent) {
@@ -101,10 +111,14 @@ public class BugzillaTaskAttachmentPage extends TaskAttachmentPage {
 				.getRepositoryUrl());
 		if (configuration != null) {
 			List<BugzillaFlag> flags = configuration.getFlags();
-			TaskAttribute productAttribute = getModel().getAttribute().getTaskData().getRoot().getMappedAttribute(
-					BugzillaAttribute.PRODUCT.getKey());
-			TaskAttribute componentAttribute = getModel().getAttribute().getTaskData().getRoot().getMappedAttribute(
-					BugzillaAttribute.COMPONENT.getKey());
+			TaskAttribute productAttribute = getModel().getAttribute()
+					.getTaskData()
+					.getRoot()
+					.getMappedAttribute(BugzillaAttribute.PRODUCT.getKey());
+			TaskAttribute componentAttribute = getModel().getAttribute()
+					.getTaskData()
+					.getRoot()
+					.getMappedAttribute(BugzillaAttribute.COMPONENT.getKey());
 			Control[] children = getScrolledBodyComposite().getChildren();
 			Composite pageComposite = (Composite) children[children.length - 1];
 			Composite flagComposite = null;
@@ -185,8 +199,6 @@ public class BugzillaTaskAttachmentPage extends TaskAttachmentPage {
 					});
 				}
 			}
-			Label dummy = new Label(pageComposite, SWT.NONE);
-			dummy.setText(""); //$NON-NLS-1$
 		}
 		updateScrolledCompositeSize();
 	}
@@ -198,7 +210,7 @@ public class BugzillaTaskAttachmentPage extends TaskAttachmentPage {
 		flagExpandComposite.setBackground(container.getBackground());
 		flagExpandComposite.setText(Messages.BugzillaTaskAttachmentPage_Advanced);
 		flagExpandComposite.setLayout(new GridLayout(3, false));
-		GridData g = new GridData(GridData.FILL_HORIZONTAL);
+		GridData g = new GridData(SWT.FILL, SWT.TOP, true, false);
 		g.horizontalSpan = 3;
 		flagExpandComposite.setLayoutData(g);
 		flagExpandComposite.addExpansionListener(new ExpansionAdapter() {
