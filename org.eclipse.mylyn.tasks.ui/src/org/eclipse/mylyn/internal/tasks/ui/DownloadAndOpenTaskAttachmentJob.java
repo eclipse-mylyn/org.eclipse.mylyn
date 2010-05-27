@@ -38,6 +38,7 @@ import org.eclipse.ui.PartInitException;
  * @author Peter Stibrany
  */
 class DownloadAndOpenTaskAttachmentJob implements ICoreRunnable {
+
 	private final ITaskAttachment attachment;
 
 	private final IWorkbenchPage page;

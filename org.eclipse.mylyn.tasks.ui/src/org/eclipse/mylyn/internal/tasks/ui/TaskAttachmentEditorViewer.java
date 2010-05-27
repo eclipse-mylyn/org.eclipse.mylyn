@@ -40,10 +40,10 @@ public class TaskAttachmentEditorViewer implements ITaskAttachmentViewer {
 	}
 
 	public void openAttachment(final IWorkbenchPage page, final ITaskAttachment attachment) throws CoreException {
-
 		DownloadAndOpenTaskAttachmentJob job = new DownloadAndOpenTaskAttachmentJob(
 				MessageFormat.format(Messages.TaskAttachmentEditorViewer_openingAttachment,
 						AttachmentUtil.getAttachmentFilename(attachment)), attachment, page, descriptor.getId());
-		CommonUiUtil.runInUi(job, null);
+		CommonUiUtil.busyCursorWhile(job);
 	}
+
 }
