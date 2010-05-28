@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.mylyn.builds.ui.connectors">
+      <connector
+            core="org.eclipse.mylyn.builds.tests.mock.MockBuildConnector"
+            kind="org.eclipse.mylyn.builds.tests.mock"
+            ui="org.eclipse.mylyn.builds.tests.mock.MockBuildConnectorUi">
+      </connector>
+   </extension>
+
+</plugin>
