@@ -253,6 +253,16 @@
              name="Active Task Prefix"
              type="activeTaskPrefix">
        </resolver>
+       <template
+             autoinsert="true"
+             contextTypeId="javadoc"
+             description="active task"
+             id="org.eclipse.mylyn.ide.ui.template.activeTask"
+             name="active_task">
+          <pattern>
+             ${activeTaskPrefix}${activeTaskKey}
+          </pattern>
+       </template>
     </extension>
 
 </plugin>
