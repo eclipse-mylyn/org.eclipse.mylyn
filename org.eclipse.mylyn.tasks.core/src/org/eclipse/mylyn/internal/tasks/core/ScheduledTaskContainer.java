@@ -149,10 +149,10 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 						}
 					}
 
-					children.add(task);
+					addChild(children, task);
 				}
 
-				children.add(task);
+				addChild(children, task);
 			}
 		}
 
@@ -164,7 +164,7 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 					continue;
 				}
 				if (activityManager.isOwnedByUser(task)) {
-					children.add(task);
+					addChild(children, task);
 				}
 			}
 		}
@@ -174,14 +174,17 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 			for (ITask task : activityManager.getOverScheduledTasks()) {
 				if (task instanceof AbstractTask
 						&& !(((AbstractTask) task).getScheduledForDate() instanceof WeekDateRange)) {
-					children.add(task);
+					addChild(children, task);
 				}
 			}
-			children.addAll(activityManager.getOverDueTasks());
+			for (ITask task : activityManager.getOverDueTasks()) {
+				addChild(children, task);
+			}
+
 			// if not scheduled or due in future, and is active, place in today bin
 			ITask activeTask = activityManager.getActiveTask();
 			if (activeTask != null && !children.contains(activeTask)) {
-				children.add(activeTask);
+				addChild(children, activeTask);
 			}
 		}
 
@@ -189,12 +192,20 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 			for (ITask task : activityManager.getOverScheduledTasks()) {
 				if (task instanceof AbstractTask
 						&& ((AbstractTask) task).getScheduledForDate() instanceof WeekDateRange) {
-					children.add(task);
+					addChild(children, task);
 				}
 			}
 		}
 
 		return children;
+	}
+
+	private void addChild(Set<ITask> collection, ITask task) {
+		if (task.getSynchronizationState().isOutgoing()) {
+			return;
+		}
+
+		collection.add(task);
 	}
 
 	@Override
@@ -212,12 +223,12 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 
 	@Override
 	public String getPriority() {
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	@Override
 	public String getUrl() {
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	@Override
