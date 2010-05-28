@@ -493,8 +493,13 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		if (activateAction != null) {
 			activateAction.dispose();
 		}
-		if (menuService != null && toolBarManager instanceof ContributionManager) {
-			menuService.releaseContributions((ContributionManager) toolBarManager);
+		if (menuService != null) {
+			if (leftToolBarManager != null) {
+				menuService.releaseContributions(leftToolBarManager);
+			}
+			if (toolBarManager instanceof ContributionManager) {
+				menuService.releaseContributions((ContributionManager) toolBarManager);
+			}
 		}
 		if (textSupport != null) {
 			textSupport.dispose();
