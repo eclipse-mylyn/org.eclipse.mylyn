@@ -77,7 +77,8 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 		incoming = new Incoming();
 
 		OUTGOING_TIME = TaskActivityUtil.getCalendar();
-		OUTGOING_TIME.setTimeInMillis(END_OF_TIME.getTimeInMillis() - 2);
+		OUTGOING_TIME.setTimeInMillis(TaskActivityUtil.getCurrentWeek().getToday().getStartDate().getTimeInMillis() - 1);
+//		OUTGOING_TIME.setTimeInMillis(END_OF_TIME.getTimeInMillis() - 2);
 		outgoing = new Outgoing();
 
 		COMPLETED_TIME = TaskActivityUtil.getCalendar();
