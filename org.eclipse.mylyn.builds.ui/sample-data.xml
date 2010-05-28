@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BuildModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://eclipse.org/mylyn/models/build">
+  <servers xsi:type="BuildServer" url="http://localhost" name="Server" connectorKind="org.eclipse.mylyn.builds.tests.mock">
+    <plans xsi:type="BuildPlan" url="http://localhost/plan1" name="Plan1"/>
+    <plans xsi:type="BuildPlan" name="Plan2" info="Suspended" state="STOPPED"/>
+  </servers>
+</BuildModel>

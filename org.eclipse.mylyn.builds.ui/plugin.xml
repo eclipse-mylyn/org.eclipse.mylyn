@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="connectors" name="Build Connectors" schema="schema/connectors.exsd"/>
+
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            name="Builds"
+            icon="icons/eview16/build-view.png"
+            class="org.eclipse.mylyn.internal.builds.ui.view.BuildsView"
+            id="org.eclipse.mylyn.builds.navigator.builds">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.eclipse.ui.resourcePerspective">
+         <view
+               id="org.eclipse.mylyn.builds.navigator.builds"
+               ratio="0.5"
+               relationship="stack"
+               relative="org.eclipse.ui.navigator.ProjectExplorer">
+         </view>
+      </perspectiveExtension>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.tasks.ui.repositories">
+      <connectorCore
+            class="org.eclipse.mylyn.internal.builds.core.tasks.BuildTaskConnector"
+            id="org.eclpise.mylyn.builds"
+            name="Continuous Integration">
+      </connectorCore>
+      <connectorUi
+            brandingIcon="icons/eview16/build-view.png"
+            class="org.eclipse.mylyn.internal.builds.ui.tasks.BuildTaskConnectorUi"
+            id="org.eclpise.mylyn.builds"
+            name="Continuous Integration">
+      </connectorUi>
+   </extension>
+
+</plugin>
