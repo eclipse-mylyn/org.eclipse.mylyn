@@ -180,6 +180,12 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 		return new BugzillaTaskAttachmentPage(model);
 	}
 
+	@Deprecated
+	@Override
+	public IHyperlink[] findHyperlinks(TaskRepository repository, String text, int index, int textOffset) {
+		return findHyperlinks(repository, null, text, index, textOffset);
+	}
+
 	@Override
 	public IHyperlink[] findHyperlinks(TaskRepository repository, ITask task, String text, int index, int textOffset) {
 		ArrayList<IHyperlink> hyperlinksFound = null;
