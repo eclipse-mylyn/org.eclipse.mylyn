@@ -88,9 +88,9 @@ public class TaskRepositoryManager implements IRepositoryManager {
 		repositoryCategories.put(catTasks.getId(), catTasks);
 		Category catBugs = new Category(IRepositoryConstants.CATEGORY_BUGS, "Bugs", 100); //$NON-NLS-1$
 		repositoryCategories.put(catBugs.getId(), catBugs);
-		Category catBuild = new Category(IRepositoryConstants.CATEGORY_BUILD, "Build", 200); //$NON-NLS-1$
+		Category catBuild = new Category(IRepositoryConstants.CATEGORY_BUILD, "Builds", 200); //$NON-NLS-1$
 		repositoryCategories.put(catBuild.getId(), catBuild);
-		Category catReview = new Category(IRepositoryConstants.CATEGORY_REVIEW, "Review", 300); //$NON-NLS-1$
+		Category catReview = new Category(IRepositoryConstants.CATEGORY_REVIEW, "Reviews", 300); //$NON-NLS-1$
 		repositoryCategories.put(catReview.getId(), catReview);
 		Category catOther = new Category(IRepositoryConstants.CATEGORY_OTHER, "Other", 400); //$NON-NLS-1$
 		repositoryCategories.put(catOther.getId(), catOther);
