@@ -79,7 +79,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 
 	private boolean isDateRangeInteresting(ScheduledTaskContainer scheduleContainer) {
 		if (scheduleContainer instanceof TaskScheduleContentProvider.Unscheduled) {
-			return true;
+			return false;
 		}
 		if (scheduleContainer instanceof TaskScheduleContentProvider.Incoming
 				|| scheduleContainer instanceof TaskScheduleContentProvider.Outgoing) {
