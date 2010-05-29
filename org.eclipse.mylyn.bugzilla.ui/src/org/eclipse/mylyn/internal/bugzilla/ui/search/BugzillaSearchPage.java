@@ -417,6 +417,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		GridLayout layout = new GridLayout(4, false);
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
+		layout.marginRight = 5;
 		basicComposite.setLayout(layout);
 		GridData g = new GridData(GridData.FILL, GridData.FILL, true, true);
 		g.widthHint = 500;
@@ -437,7 +438,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		}
 		createBasicComposite(basicComposite);
 
-		moreOptionsExpandComposite = toolkit.createExpandableComposite(basicComposite, ExpandableComposite.COMPACT
+		moreOptionsExpandComposite = toolkit.createExpandableComposite(control, ExpandableComposite.COMPACT
 				| ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR);
 		moreOptionsExpandComposite.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DIALOG_FONT));
 		moreOptionsExpandComposite.setBackground(null);
