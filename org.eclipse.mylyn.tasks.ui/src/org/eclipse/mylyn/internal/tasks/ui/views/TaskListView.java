@@ -24,7 +24,10 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.GroupMarker;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IStatusLineManager;
@@ -995,6 +998,14 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		if (presentationDropDownSelectionAction != null && currentPresentation != null) {
 			presentationDropDownSelectionAction.setImageDescriptor(currentPresentation.getImageDescriptor());
 		}
+		for (IContributionItem item : getViewSite().getActionBars().getToolBarManager().getItems()) {
+			if (item instanceof ActionContributionItem) {
+				IAction action = ((ActionContributionItem) item).getAction();
+				if (action instanceof PresentationDropDownSelectionAction.PresentationSelectionAction) {
+					((PresentationDropDownSelectionAction.PresentationSelectionAction) action).update();
+				}
+			}
+		}
 	}
 
 	public AbstractTaskListPresentation getCurrentPresentation() {
@@ -1152,12 +1163,27 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 	private void fillLocalToolBar(IToolBarManager manager) {
 		manager.add(newTaskAction);
-		manager.add(presentationDropDownSelectionAction);
+		addPresentations(manager);
 		manager.add(new Separator());
 		manager.add(filterCompleteTask);
 		manager.add(collapseAll);
 		manager.add(new GroupMarker(ID_SEPARATOR_CONTEXT));
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+	}
+
+	private void addPresentations(IToolBarManager manager) {
+		for (AbstractTaskListPresentation presentation : TaskListView.getPresentations()) {
+			if (!presentation.isPrimary()) {
+				// at least one non primary presentation present
+				manager.add(presentationDropDownSelectionAction);
+				return;
+			}
+		}
+
+		// add toggle buttons for primary presentations
+		for (AbstractTaskListPresentation presentation : TaskListView.getPresentations()) {
+			manager.add(new PresentationDropDownSelectionAction.PresentationSelectionAction(this, presentation));
+		}
 	}
 
 	public List<IRepositoryElement> getSelectedTaskContainers() {

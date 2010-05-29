@@ -49,11 +49,8 @@ public class PresentationDropDownSelectionAction extends Action implements IMenu
 	private void addActionsToMenu() {
 		for (AbstractTaskListPresentation presentation : TaskListView.getPresentations()) {
 			if (presentation.isPrimary()) {
-				PresentationSelectionAction action = new PresentationSelectionAction(presentation);
+				PresentationSelectionAction action = new PresentationSelectionAction(view, presentation);
 				ActionContributionItem item = new ActionContributionItem(action);
-				action.setText(presentation.getName());
-				action.setImageDescriptor(presentation.getImageDescriptor());
-				action.setChecked(view.getCurrentPresentation().getId().equals(presentation.getId()));
 				item.fill(dropDownMenu, -1);
 			}
 		}
@@ -68,11 +65,8 @@ public class PresentationDropDownSelectionAction extends Action implements IMenu
 						separatorAdded = true;
 					}
 
-					PresentationSelectionAction action = new PresentationSelectionAction(presentation);
+					PresentationSelectionAction action = new PresentationSelectionAction(view, presentation);
 					ActionContributionItem item = new ActionContributionItem(action);
-					action.setText(presentation.getName());
-					action.setImageDescriptor(presentation.getImageDescriptor());
-					action.setChecked(view.getCurrentPresentation().getId().equals(presentation.getId()));
 					item.fill(dropDownMenu, -1);
 				}
 			}
@@ -133,19 +127,29 @@ public class PresentationDropDownSelectionAction extends Action implements IMenu
 		return dropDownMenu;
 	}
 
-	private class PresentationSelectionAction extends Action {
+	public static class PresentationSelectionAction extends Action {
 
 		private final AbstractTaskListPresentation presentation;
 
-		public PresentationSelectionAction(AbstractTaskListPresentation presentation) {
+		private final TaskListView view;
+
+		public PresentationSelectionAction(TaskListView view, AbstractTaskListPresentation presentation) {
+			this.view = view;
 			this.presentation = presentation;
 			setText(presentation.getName());
+			setImageDescriptor(presentation.getImageDescriptor());
+			update();
+		}
+
+		public void update() {
+			setChecked(view.getCurrentPresentation().getId().equals(presentation.getId()));
 		}
 
 		@Override
 		public void run() {
 			view.applyPresentation(presentation);
 		}
+
 	}
 
 }
