@@ -56,6 +56,16 @@
                </documentation>
             </annotation>
          </attribute>
+         <attribute name="label" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute translatable="true"/>
+               </appinfo>
+            </annotation>
+         </attribute>
          <attribute name="core" type="string" use="required">
             <annotation>
                <documentation>

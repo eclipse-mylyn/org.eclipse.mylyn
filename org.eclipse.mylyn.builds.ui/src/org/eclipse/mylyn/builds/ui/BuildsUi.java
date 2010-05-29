@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.builds.ui;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 import org.eclipse.core.runtime.CoreException;
@@ -28,6 +30,7 @@ import org.eclipse.mylyn.internal.builds.core.BuildPackage;
 import org.eclipse.mylyn.internal.builds.core.BuildServer;
 import org.eclipse.mylyn.internal.builds.core.tasks.IBuildLoader;
 import org.eclipse.mylyn.internal.builds.ui.BuildConnectorDelegate;
+import org.eclipse.mylyn.internal.builds.ui.BuildConnectorDescriptor;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -40,11 +43,11 @@ public class BuildsUi {
 
 	private static IBuildLoader buildLoader = new IBuildLoader() {
 		public BuildServerBehaviour loadBehaviour(BuildServer server) throws CoreException {
-			return getBuildConnector(server.getConnectorKind()).getBehaviour(server);
+			return getConnector(server.getConnectorKind()).getBehaviour(server);
 		}
 	};
 
-	private static HashMap<String, BuildConnector> connectorById;
+	private static HashMap<String, BuildConnector> connectorByKind;
 
 	public static IBuildServer createServer(TaskRepository repository) {
 		BuildServer server = BuildPackage.eINSTANCE.getBuildFactory().createBuildServer();
@@ -54,29 +57,32 @@ public class BuildsUi {
 		return server;
 	}
 
-	public synchronized static BuildConnector getBuildConnector(String connenctorKind) {
-		if (connectorById == null) {
-			initConnectorCores(Platform.getExtensionRegistry());
-		}
-		return connectorById.get(connenctorKind);
+	public synchronized static BuildConnector getConnector(String connenctorKind) {
+		return getConnectorsByKind().get(connenctorKind);
 	}
 
-	private static void initConnectorCores(IExtensionRegistry registry) {
-		connectorById = new HashMap<String, BuildConnector>();
+	private static HashMap<String, BuildConnector> getConnectorsByKind() {
+		if (connectorByKind != null) {
+			return connectorByKind;
+		}
+
+		connectorByKind = new HashMap<String, BuildConnector>();
 
 		MultiStatus result = new MultiStatus(TasksUiPlugin.ID_PLUGIN, 0, "Build connectors failed to load.", null); //$NON-NLS-1$
 
 		// read core and migrator extensions to check for id conflicts
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IExtensionPoint repositoriesExtensionPoint = registry.getExtensionPoint(BuildsUiPlugin.ID_PLUGIN
 				+ ".connectors");
 		IExtension[] repositoryExtensions = repositoriesExtensionPoint.getExtensions();
 		for (IExtension repositoryExtension : repositoryExtensions) {
 			IConfigurationElement[] elements = repositoryExtension.getConfigurationElements();
 			for (IConfigurationElement element : elements) {
-				BuildConnectorDelegate delegate = new BuildConnectorDelegate(element);
-				IStatus status = delegate.validateExtension();
+				BuildConnectorDescriptor descriptor = new BuildConnectorDescriptor(element);
+				IStatus status = descriptor.validate();
 				if (status.isOK()) {
-					connectorById.put(delegate.getConnectorKind(), delegate);
+					BuildConnectorDelegate delegate = new BuildConnectorDelegate(descriptor);
+					connectorByKind.put(delegate.getConnectorKind(), delegate);
 				} else {
 					result.add(status);
 				}
@@ -87,6 +93,11 @@ public class BuildsUi {
 			StatusManager.getManager().handle(result);
 		}
 
+		return connectorByKind;
+	}
+
+	public static Collection<BuildConnector> getConnectors() {
+		return new ArrayList<BuildConnector>(getConnectorsByKind().values());
 	}
 
 }
