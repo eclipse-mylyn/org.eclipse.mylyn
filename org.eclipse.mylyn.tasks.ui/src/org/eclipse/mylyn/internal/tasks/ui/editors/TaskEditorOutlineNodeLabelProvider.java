@@ -22,6 +22,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.WorkbenchImages;
 
 /**
@@ -82,9 +83,13 @@ public class TaskEditorOutlineNodeLabelProvider extends LabelProvider {
 				}
 			} else if (node.getParent() == null) {
 				return CommonImages.getImage(TasksUiImages.TASK);
+			} else if (TaskEditorOutlineNode.LABEL_RELATED_TASKS.equals(node.getLabel())
+					|| TaskEditorOutlineNode.LABEL_ATTRIBUTES.equals(node.getLabel())) {
+				return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER);
 			}
+			return CommonImages.getImage(TasksUiImages.TASK);
 		}
-		return super.getImage(element);
+		return null;
 	}
 
 	@Override

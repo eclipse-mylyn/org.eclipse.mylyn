@@ -183,6 +183,8 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 	private TaskEditorScheduleAction scheduleAction;
 
+	Action openWithBrowserAction;
+
 	private static boolean toolBarFailureLogged;
 
 	public TaskEditor() {
@@ -927,7 +929,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 		final String taskUrl = TasksUiInternal.getAuthenticatedUrl(taskRepository, task);
 		if (taskUrl != null && taskUrl.length() > 0) {
-			Action openWithBrowserAction = new Action() {
+			openWithBrowserAction = new Action() {
 				@Override
 				public void run() {
 					TasksUiUtil.openWithBrowser(taskRepository, task);

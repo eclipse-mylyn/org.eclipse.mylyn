@@ -133,11 +133,11 @@ public class TaskEditorOutlineNode {
 				ITask task = taskList.getTask(taskData.getRepositoryUrl(), taskRelation.getTaskId());
 				String label;
 				if (task != null) {
-					label = NLS.bind(Messages.TaskEditorOutlineNode_TaskRelation_Label,
-							new Object[] { taskRelation.getTaskId(), task.getSummary() });
+					label = NLS.bind(Messages.TaskEditorOutlineNode_TaskRelation_Label, new Object[] {
+							taskRelation.getTaskId(), task.getSummary() });
 				} else {
-					label = NLS.bind(Messages.TaskEditorOutlineNode_TaskRelation_Label,
-							new Object[] { taskRelation.getTaskId(), Messages.TaskEditorOutlineNode_unknown_Label });
+					label = NLS.bind(Messages.TaskEditorOutlineNode_TaskRelation_Label, new Object[] {
+							taskRelation.getTaskId(), Messages.TaskEditorOutlineNode_unknown_Label });
 				}
 				TaskEditorOutlineNode childNode = new TaskEditorOutlineNode(label);
 
@@ -229,6 +229,17 @@ public class TaskEditorOutlineNode {
 		}
 		node.parent = this;
 		children.add(node);
+	}
+
+	public TaskEditorOutlineNode getChild(String label) {
+		if (children != null) {
+			for (TaskEditorOutlineNode child : children) {
+				if (child.getLabel().equals(label)) {
+					return child;
+				}
+			}
+		}
+		return null;
 	}
 
 	/**

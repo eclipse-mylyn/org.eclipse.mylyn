@@ -20,6 +20,7 @@ import org.eclipse.jface.dialogs.PopupDialog;
 import org.eclipse.jface.text.IInformationControl;
 import org.eclipse.jface.text.IInformationControlExtension;
 import org.eclipse.jface.text.IInformationControlExtension2;
+import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IOpenListener;
@@ -172,6 +173,10 @@ public class QuickOutlineDialog extends PopupDialog implements IInformationContr
 				TaskEditorOutlineNode root = TaskEditorOutlineNode.parse(taskEditorPage.getModel().getTaskData(), true);
 				viewer.setInput(new TaskEditorOutlineModel(root));
 				viewer.expandAll();
+				TaskEditorOutlineNode attributesNode = root.getChild(TaskEditorOutlineNode.LABEL_ATTRIBUTES);
+				if (attributesNode != null) {
+					viewer.collapseToLevel(attributesNode, AbstractTreeViewer.ALL_LEVELS);
+				}
 			} finally {
 				viewer.getControl().setRedraw(true);
 			}

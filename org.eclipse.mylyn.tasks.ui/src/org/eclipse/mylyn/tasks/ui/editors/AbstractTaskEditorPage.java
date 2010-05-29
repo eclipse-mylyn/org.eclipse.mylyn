@@ -33,10 +33,14 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.dialogs.PopupDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.ISelection;
@@ -88,10 +92,10 @@ import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -126,6 +130,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PlatformUI;
@@ -354,6 +359,65 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 		}
 
 	};
+
+	private class AdditionalMenuAction extends Action {
+
+		public AdditionalMenuAction() {
+			setImageDescriptor(JFaceResources.getImageRegistry().getDescriptor(PopupDialog.POPUP_IMG_MENU));
+			setDisabledImageDescriptor(JFaceResources.getImageRegistry().getDescriptor(
+					PopupDialog.POPUP_IMG_MENU_DISABLED));
+
+		}
+
+		@Override
+		public void runWithEvent(Event event) {
+			ToolItem toolItem = (ToolItem) event.widget;
+			Menu menu = getMenuCreator().getMenu(toolItem.getControl());
+			Rectangle bounds = toolItem.getParent().getBounds();
+			Point topLeft = new Point(bounds.x, bounds.y + bounds.height);
+			topLeft = toolItem.getControl().getShell().toDisplay(topLeft);
+			menu.setLocation(topLeft.x, topLeft.y);
+			menu.setVisible(true);
+		}
+
+	}
+
+	private class MenuCreator implements IMenuCreator {
+
+		private MenuManager menuManager;
+
+		private Menu menu;
+
+		public MenuCreator() {
+		}
+
+		public void dispose() {
+			if (menu != null) {
+				menu.dispose();
+				menu = null;
+			}
+			if (menuManager != null) {
+				menuManager.dispose();
+				menuManager = null;
+			}
+		}
+
+		public Menu getMenu(Control parent) {
+			if (menuManager == null) {
+				menuManager = new MenuManager();
+				initialize(menuManager);
+			}
+			return menuManager.createContextMenu(parent);
+		}
+
+		public Menu getMenu(Menu parent) {
+			return null;
+		}
+
+		protected void initialize(MenuManager menuManager) {
+		}
+
+	}
 
 	private static final String ERROR_NOCONNECTIVITY = Messages.AbstractTaskEditorPage_Unable_to_submit_at_this_time;
 
@@ -962,16 +1026,26 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 				if (connectorUi != null) {
 					final String historyUrl = connectorUi.getTaskHistoryUrl(taskRepository, task);
 					if (historyUrl != null) {
-						Action historyAction = new Action() {
+						final Action historyAction = new Action() {
 							@Override
 							public void run() {
 								TasksUiUtil.openUrl(historyUrl);
 							}
 						};
 
+						historyAction.setText(Messages.AbstractTaskEditorPage_History);
 						historyAction.setImageDescriptor(TasksUiImages.TASK_REPOSITORY_HISTORY);
 						historyAction.setToolTipText(Messages.AbstractTaskEditorPage_History);
-						toolBarManager.prependToGroup("open", historyAction); //$NON-NLS-1$
+						if (getEditor().openWithBrowserAction != null) {
+							getEditor().openWithBrowserAction.setMenuCreator(new MenuCreator() {
+								@Override
+								protected void initialize(MenuManager menuManager) {
+									menuManager.add(historyAction);
+								};
+							});
+						} else {
+							toolBarManager.prependToGroup("open", historyAction); //$NON-NLS-1$
+						}
 					}
 				}
 			}
@@ -1217,21 +1291,15 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 			if (part.getControl() != null) {
 				if (ID_PART_ACTIONS.equals(part.getPartId())) {
 					// do not expand horizontally
-					GridDataFactory.fillDefaults()
-							.align(SWT.FILL, SWT.FILL)
-							.grab(false, false)
-							.applyTo(part.getControl());
+					GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(false, false).applyTo(
+							part.getControl());
 				} else {
 					if (part.getExpandVertically()) {
-						GridDataFactory.fillDefaults()
-								.align(SWT.FILL, SWT.FILL)
-								.grab(true, true)
-								.applyTo(part.getControl());
+						GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(
+								part.getControl());
 					} else {
-						GridDataFactory.fillDefaults()
-								.align(SWT.FILL, SWT.TOP)
-								.grab(true, false)
-								.applyTo(part.getControl());
+						GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, false).applyTo(
+								part.getControl());
 					}
 				}
 				// for outline
