@@ -42,6 +42,7 @@ public class TaskEditorOutlinePage extends ContentOutlinePage {
 		}
 		if (viewer != null) {
 			viewer.setInput(this.model);
+			viewer.expandAll();
 			viewer.refresh(true);
 		}
 	}
