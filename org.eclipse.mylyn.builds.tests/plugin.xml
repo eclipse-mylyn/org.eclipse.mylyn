@@ -6,6 +6,7 @@
       <connector
             core="org.eclipse.mylyn.builds.tests.mock.MockBuildConnector"
             kind="org.eclipse.mylyn.builds.tests.mock"
+            label="Mock Build Connector"
             ui="org.eclipse.mylyn.builds.tests.mock.MockBuildConnectorUi">
       </connector>
    </extension>
