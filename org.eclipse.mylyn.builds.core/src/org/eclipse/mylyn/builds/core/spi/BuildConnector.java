@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.builds.core.spi;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 
@@ -19,6 +20,28 @@ import org.eclipse.mylyn.builds.core.IBuildServer;
  */
 public abstract class BuildConnector {
 
+	private String connectorKind;
+
+	private String label;
+
 	public abstract BuildServerBehaviour getBehaviour(IBuildServer server) throws CoreException;
+
+	public final String getConnectorKind() {
+		return connectorKind;
+	}
+
+	public final String getLabel() {
+		return label;
+	}
+
+	public final void init(String connectorKind, String label) {
+		Assert.isNotNull(connectorKind);
+		Assert.isNotNull(label);
+		if (this.connectorKind != null) {
+			throw new IllegalStateException("Already initialized"); //$NON-NLS-1$
+		}
+		this.connectorKind = connectorKind;
+		this.label = label;
+	}
 
 }

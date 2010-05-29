@@ -35,6 +35,11 @@ public class BuildTaskConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
+	public boolean canQuery(TaskRepository repository) {
+		return false;
+	}
+
+	@Override
 	public boolean canCreateTaskFromKey(TaskRepository repository) {
 		return false;
 	}
