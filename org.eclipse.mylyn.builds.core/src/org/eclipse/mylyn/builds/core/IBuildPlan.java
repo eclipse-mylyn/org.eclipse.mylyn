@@ -20,6 +20,10 @@ public interface IBuildPlan extends IBuildElement {
 
 	public List<IBuildPlan> getChildren();
 
+	public int getHealth();
+
+	public BuildState getState();
+
 	public String getStatus();
 
 	public String getSummary();
@@ -31,5 +35,7 @@ public interface IBuildPlan extends IBuildElement {
 	public IBuildPlan getParent();
 
 	public String getId();
+
+	public IBuildPlanWorkingCopy createWorkingCopy();
 
 }

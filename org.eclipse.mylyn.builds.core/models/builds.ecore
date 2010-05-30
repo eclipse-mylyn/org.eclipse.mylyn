@@ -4,7 +4,7 @@
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="builds"
     nsURI="http://eclipse.org/mylyn/models/build" nsPrefix="builds">
   <eClassifiers xsi:type="ecore:EClass" name="BuildModel" eSuperTypes="#//IBuildModel"/>
-  <eClassifiers xsi:type="ecore:EClass" name="BuildPlan" eSuperTypes="#//IBuildPlan"/>
+  <eClassifiers xsi:type="ecore:EClass" name="BuildPlan" eSuperTypes="#//IBuildPlanWorkingCopy"/>
   <eClassifiers xsi:type="ecore:EClass" name="BuildServer" eSuperTypes="#//IBuildServer">
     <eStructuralFeatures xsi:type="ecore:EReference" name="server" lowerBound="1"
         eType="#//BuildServer" changeable="false" derived="true"/>
@@ -27,14 +27,18 @@
         eType="#//IBuildPlan" eOpposite="#//IBuildPlan/parent"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//IBuildPlan"
         eOpposite="#//IBuildPlan/children"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="health" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+        defaultValueLiteral="-1"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="info" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="selected" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="false"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="summary" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="state" eType="#//BuildState"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IBuildPlanWorkingCopy" instanceClassName="org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy"
+      abstract="true" interface="true" eSuperTypes="#//IBuildPlan"/>
   <eClassifiers xsi:type="ecore:EClass" name="IBuildServer" instanceClassName="org.eclipse.mylyn.builds.core.IBuildServer"
       abstract="true" interface="true" eSuperTypes="#//IBuildElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="plans" ordered="false"
@@ -45,8 +49,5 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="repositoryUrl" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="TaskRepository" instanceClassName="org.eclipse.mylyn.tasks.core.TaskRepository"/>
-  <eClassifiers xsi:type="ecore:EEnum" name="BuildState">
-    <eLiterals name="RUNNING" literal="RUNNING"/>
-    <eLiterals name="STOPPED" literal="STOPPED"/>
-  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="BuildState" instanceClassName="org.eclipse.mylyn.builds.core.BuildState"/>
 </ecore:EPackage>

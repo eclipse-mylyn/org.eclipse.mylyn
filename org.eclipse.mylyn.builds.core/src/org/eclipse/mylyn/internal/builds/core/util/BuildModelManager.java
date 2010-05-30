@@ -153,6 +153,7 @@ public class BuildModelManager {
 			server.setName(repository.getRepositoryLabel());
 			server.setRepository(repository);
 			server.setRepositoryUrl(repository.getRepositoryUrl());
+			server.setUrl(repository.getRepositoryUrl());
 		}
 		server.setLoader(buildLoader);
 		return server;

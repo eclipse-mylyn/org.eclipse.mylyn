@@ -11,27 +11,23 @@
 
 package org.eclipse.mylyn.builds.core;
 
-import java.util.List;
-
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
-
 /**
  * @author Steffen Pingel
  */
-public interface IBuildServer extends IBuildElement {
+public interface IBuildPlanWorkingCopy extends IBuildPlan {
 
-	public TaskRepository getRepository();
+	public void setStatus(String status);
 
-	public List<IBuildPlan> getPlans();
+	public void setSummary(String summary);
 
-	public List<IBuildPlan> getPlans(IOperationMonitor monitor) throws CoreException;
+	public void setHealth(int health);
 
-	public IStatus validate(IOperationMonitor monitor) throws CoreException;
+	public void setInfo(String info);
 
-	public String getRepositoryUrl();
+	public void setId(String id);
 
-	public IBuildPlanWorkingCopy createBuildPlan();
+	public void setName(String name);
+
+	public void setState(BuildState state);
 
 }

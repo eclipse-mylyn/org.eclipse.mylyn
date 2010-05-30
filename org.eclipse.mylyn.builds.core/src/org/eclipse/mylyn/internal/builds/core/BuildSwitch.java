@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildSwitch.java,v 1.1 2010/05/28 08:26:25 spingel Exp $
+ * $Id: BuildSwitch.java,v 1.2 2010/05/30 20:28:49 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildModel;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
+import org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 
 /**
@@ -98,6 +99,8 @@ public class BuildSwitch<T> {
 		case BuildPackage.BUILD_PLAN: {
 			BuildPlan buildPlan = (BuildPlan) theEObject;
 			T result = caseBuildPlan(buildPlan);
+			if (result == null)
+				result = caseIBuildPlanWorkingCopy(buildPlan);
 			if (result == null)
 				result = caseIBuildPlan(buildPlan);
 			if (result == null)
@@ -224,6 +227,21 @@ public class BuildSwitch<T> {
 	 * @generated
 	 */
 	public T caseIBuildServer(IBuildServer object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IBuild Plan Working Copy</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IBuild Plan Working Copy</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseIBuildPlanWorkingCopy(IBuildPlanWorkingCopy object) {
 		return null;
 	}
 

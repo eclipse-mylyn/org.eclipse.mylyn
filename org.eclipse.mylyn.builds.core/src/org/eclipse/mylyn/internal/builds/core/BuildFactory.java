@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildFactory.java,v 1.1 2010/05/28 08:26:25 spingel Exp $
+ * $Id: BuildFactory.java,v 1.2 2010/05/30 20:28:49 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.impl.EFactoryImpl;
 
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
+import org.eclipse.mylyn.builds.core.BuildState;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
@@ -89,10 +90,10 @@ public class BuildFactory extends EFactoryImpl {
 	@Override
 	public Object createFromString(EDataType eDataType, String initialValue) {
 		switch (eDataType.getClassifierID()) {
-		case BuildPackage.BUILD_STATE:
-			return createBuildStateFromString(eDataType, initialValue);
 		case BuildPackage.TASK_REPOSITORY:
 			return createTaskRepositoryFromString(eDataType, initialValue);
+		case BuildPackage.BUILD_STATE:
+			return createBuildStateFromString(eDataType, initialValue);
 		default:
 			throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -106,10 +107,10 @@ public class BuildFactory extends EFactoryImpl {
 	@Override
 	public String convertToString(EDataType eDataType, Object instanceValue) {
 		switch (eDataType.getClassifierID()) {
-		case BuildPackage.BUILD_STATE:
-			return convertBuildStateToString(eDataType, instanceValue);
 		case BuildPackage.TASK_REPOSITORY:
 			return convertTaskRepositoryToString(eDataType, instanceValue);
+		case BuildPackage.BUILD_STATE:
+			return convertBuildStateToString(eDataType, instanceValue);
 		default:
 			throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -151,11 +152,7 @@ public class BuildFactory extends EFactoryImpl {
 	 * @generated
 	 */
 	public BuildState createBuildStateFromString(EDataType eDataType, String initialValue) {
-		BuildState result = BuildState.get(initialValue);
-		if (result == null)
-			throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '"
-					+ eDataType.getName() + "'");
-		return result;
+		return (BuildState) super.createFromString(eDataType, initialValue);
 	}
 
 	/**
@@ -164,7 +161,7 @@ public class BuildFactory extends EFactoryImpl {
 	 * @generated
 	 */
 	public String convertBuildStateToString(EDataType eDataType, Object instanceValue) {
-		return instanceValue == null ? null : instanceValue.toString();
+		return super.convertToString(eDataType, instanceValue);
 	}
 
 	/**

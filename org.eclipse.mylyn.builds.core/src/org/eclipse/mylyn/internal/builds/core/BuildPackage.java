@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildPackage.java,v 1.2 2010/05/30 19:27:55 spingel Exp $
+ * $Id: BuildPackage.java,v 1.3 2010/05/30 20:28:49 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -15,9 +15,11 @@ import org.eclipse.emf.ecore.EReference;
 
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
+import org.eclipse.mylyn.builds.core.BuildState;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildModel;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
+import org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -219,22 +221,22 @@ public class BuildPackage extends EPackageImpl {
 	public static final int IBUILD_PLAN__PARENT = IBUILD_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
+	 * The feature id for the '<em><b>Health</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_PLAN__HEALTH = IBUILD_ELEMENT_FEATURE_COUNT + 3;
+
+	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	public static final int IBUILD_PLAN__ID = IBUILD_ELEMENT_FEATURE_COUNT + 3;
-
-	/**
-	 * The feature id for the '<em><b>Status</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IBUILD_PLAN__STATUS = IBUILD_ELEMENT_FEATURE_COUNT + 4;
+	public static final int IBUILD_PLAN__ID = IBUILD_ELEMENT_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Info</b></em>' attribute.
@@ -273,13 +275,149 @@ public class BuildPackage extends EPackageImpl {
 	public static final int IBUILD_PLAN__STATE = IBUILD_ELEMENT_FEATURE_COUNT + 8;
 
 	/**
+	 * The feature id for the '<em><b>Status</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_PLAN__STATUS = IBUILD_ELEMENT_FEATURE_COUNT + 9;
+
+	/**
 	 * The number of structural features of the '<em>IBuild Plan</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	public static final int IBUILD_PLAN_FEATURE_COUNT = IBUILD_ELEMENT_FEATURE_COUNT + 9;
+	public static final int IBUILD_PLAN_FEATURE_COUNT = IBUILD_ELEMENT_FEATURE_COUNT + 10;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy <em>IBuild Plan Working Copy</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildPlanWorkingCopy()
+	 * @generated
+	 */
+	public static final int IBUILD_PLAN_WORKING_COPY = 6;
+
+	/**
+	 * The feature id for the '<em><b>Url</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_PLAN_WORKING_COPY__URL = IBUILD_PLAN__URL;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_PLAN_WORKING_COPY__NAME = IBUILD_PLAN__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Server</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_PLAN_WORKING_COPY__SERVER = IBUILD_PLAN__SERVER;
+
+	/**
+	 * The feature id for the '<em><b>Children</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_PLAN_WORKING_COPY__CHILDREN = IBUILD_PLAN__CHILDREN;
+
+	/**
+	 * The feature id for the '<em><b>Parent</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_PLAN_WORKING_COPY__PARENT = IBUILD_PLAN__PARENT;
+
+	/**
+	 * The feature id for the '<em><b>Health</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_PLAN_WORKING_COPY__HEALTH = IBUILD_PLAN__HEALTH;
+
+	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_PLAN_WORKING_COPY__ID = IBUILD_PLAN__ID;
+
+	/**
+	 * The feature id for the '<em><b>Info</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_PLAN_WORKING_COPY__INFO = IBUILD_PLAN__INFO;
+
+	/**
+	 * The feature id for the '<em><b>Selected</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_PLAN_WORKING_COPY__SELECTED = IBUILD_PLAN__SELECTED;
+
+	/**
+	 * The feature id for the '<em><b>Summary</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_PLAN_WORKING_COPY__SUMMARY = IBUILD_PLAN__SUMMARY;
+
+	/**
+	 * The feature id for the '<em><b>State</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_PLAN_WORKING_COPY__STATE = IBUILD_PLAN__STATE;
+
+	/**
+	 * The feature id for the '<em><b>Status</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_PLAN_WORKING_COPY__STATUS = IBUILD_PLAN__STATUS;
+
+	/**
+	 * The number of structural features of the '<em>IBuild Plan Working Copy</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_PLAN_WORKING_COPY_FEATURE_COUNT = IBUILD_PLAN_FEATURE_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.BuildPlan <em>Plan</em>}' class.
@@ -298,7 +436,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int BUILD_PLAN__URL = IBUILD_PLAN__URL;
+	public static final int BUILD_PLAN__URL = IBUILD_PLAN_WORKING_COPY__URL;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -307,7 +445,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int BUILD_PLAN__NAME = IBUILD_PLAN__NAME;
+	public static final int BUILD_PLAN__NAME = IBUILD_PLAN_WORKING_COPY__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Server</b></em>' container reference.
@@ -316,7 +454,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int BUILD_PLAN__SERVER = IBUILD_PLAN__SERVER;
+	public static final int BUILD_PLAN__SERVER = IBUILD_PLAN_WORKING_COPY__SERVER;
 
 	/**
 	 * The feature id for the '<em><b>Children</b></em>' reference list.
@@ -325,7 +463,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int BUILD_PLAN__CHILDREN = IBUILD_PLAN__CHILDREN;
+	public static final int BUILD_PLAN__CHILDREN = IBUILD_PLAN_WORKING_COPY__CHILDREN;
 
 	/**
 	 * The feature id for the '<em><b>Parent</b></em>' reference.
@@ -334,7 +472,16 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int BUILD_PLAN__PARENT = IBUILD_PLAN__PARENT;
+	public static final int BUILD_PLAN__PARENT = IBUILD_PLAN_WORKING_COPY__PARENT;
+
+	/**
+	 * The feature id for the '<em><b>Health</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD_PLAN__HEALTH = IBUILD_PLAN_WORKING_COPY__HEALTH;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute.
@@ -343,16 +490,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int BUILD_PLAN__ID = IBUILD_PLAN__ID;
-
-	/**
-	 * The feature id for the '<em><b>Status</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	public static final int BUILD_PLAN__STATUS = IBUILD_PLAN__STATUS;
+	public static final int BUILD_PLAN__ID = IBUILD_PLAN_WORKING_COPY__ID;
 
 	/**
 	 * The feature id for the '<em><b>Info</b></em>' attribute.
@@ -361,7 +499,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int BUILD_PLAN__INFO = IBUILD_PLAN__INFO;
+	public static final int BUILD_PLAN__INFO = IBUILD_PLAN_WORKING_COPY__INFO;
 
 	/**
 	 * The feature id for the '<em><b>Selected</b></em>' attribute.
@@ -370,7 +508,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int BUILD_PLAN__SELECTED = IBUILD_PLAN__SELECTED;
+	public static final int BUILD_PLAN__SELECTED = IBUILD_PLAN_WORKING_COPY__SELECTED;
 
 	/**
 	 * The feature id for the '<em><b>Summary</b></em>' attribute.
@@ -379,7 +517,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int BUILD_PLAN__SUMMARY = IBUILD_PLAN__SUMMARY;
+	public static final int BUILD_PLAN__SUMMARY = IBUILD_PLAN_WORKING_COPY__SUMMARY;
 
 	/**
 	 * The feature id for the '<em><b>State</b></em>' attribute.
@@ -388,7 +526,16 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int BUILD_PLAN__STATE = IBUILD_PLAN__STATE;
+	public static final int BUILD_PLAN__STATE = IBUILD_PLAN_WORKING_COPY__STATE;
+
+	/**
+	 * The feature id for the '<em><b>Status</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD_PLAN__STATUS = IBUILD_PLAN_WORKING_COPY__STATUS;
 
 	/**
 	 * The number of structural features of the '<em>Plan</em>' class.
@@ -397,7 +544,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int BUILD_PLAN_FEATURE_COUNT = IBUILD_PLAN_FEATURE_COUNT + 0;
+	public static final int BUILD_PLAN_FEATURE_COUNT = IBUILD_PLAN_WORKING_COPY_FEATURE_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.builds.core.IBuildServer <em>IBuild Server</em>}' class.
@@ -407,7 +554,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildServer()
 	 * @generated
 	 */
-	public static final int IBUILD_SERVER = 6;
+	public static final int IBUILD_SERVER = 7;
 
 	/**
 	 * The feature id for the '<em><b>Url</b></em>' attribute.
@@ -555,14 +702,14 @@ public class BuildPackage extends EPackageImpl {
 	public static final int BUILD_SERVER_FEATURE_COUNT = IBUILD_SERVER_FEATURE_COUNT + 1;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.BuildState <em>State</em>}' enum.
+	 * The meta object id for the '<em>State</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.mylyn.internal.builds.core.BuildState
+	 * @see org.eclipse.mylyn.builds.core.BuildState
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getBuildState()
 	 * @generated
 	 */
-	public static final int BUILD_STATE = 7;
+	public static final int BUILD_STATE = 9;
 
 	/**
 	 * The meta object id for the '<em>Task Repository</em>' data type.
@@ -628,7 +775,7 @@ public class BuildPackage extends EPackageImpl {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EEnum buildStateEEnum = null;
+	private EClass iBuildPlanWorkingCopyEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -636,6 +783,13 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 */
 	private EDataType taskRepositoryEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType buildStateEDataType = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -866,6 +1020,19 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getHealth <em>Health</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Health</em>'.
+	 * @see org.eclipse.mylyn.builds.core.IBuildPlan#getHealth()
+	 * @see #getIBuildPlan()
+	 * @generated
+	 */
+	public EAttribute getIBuildPlan_Health() {
+		return (EAttribute) iBuildPlanEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getId <em>Id</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -875,7 +1042,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public EAttribute getIBuildPlan_Id() {
-		return (EAttribute) iBuildPlanEClass.getEStructuralFeatures().get(3);
+		return (EAttribute) iBuildPlanEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -901,7 +1068,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public EAttribute getIBuildPlan_Status() {
-		return (EAttribute) iBuildPlanEClass.getEStructuralFeatures().get(4);
+		return (EAttribute) iBuildPlanEClass.getEStructuralFeatures().get(9);
 	}
 
 	/**
@@ -1009,15 +1176,29 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for enum '{@link org.eclipse.mylyn.internal.builds.core.BuildState <em>State</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy <em>IBuild Plan Working Copy</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for enum '<em>State</em>'.
-	 * @see org.eclipse.mylyn.internal.builds.core.BuildState
+	 * @return the meta object for class '<em>IBuild Plan Working Copy</em>'.
+	 * @see org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy
+	 * @model instanceClass="org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy" superTypes="org.eclipse.mylyn.internal.builds.core.IBuildPlan"
 	 * @generated
 	 */
-	public EEnum getBuildState() {
-		return buildStateEEnum;
+	public EClass getIBuildPlanWorkingCopy() {
+		return iBuildPlanWorkingCopyEClass;
+	}
+
+	/**
+	 * Returns the meta object for data type '{@link org.eclipse.mylyn.builds.core.BuildState <em>State</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>State</em>'.
+	 * @see org.eclipse.mylyn.builds.core.BuildState
+	 * @model instanceClass="org.eclipse.mylyn.builds.core.BuildState"
+	 * @generated
+	 */
+	public EDataType getBuildState() {
+		return buildStateEDataType;
 	}
 
 	/**
@@ -1082,12 +1263,15 @@ public class BuildPackage extends EPackageImpl {
 		createEReference(iBuildPlanEClass, IBUILD_PLAN__SERVER);
 		createEReference(iBuildPlanEClass, IBUILD_PLAN__CHILDREN);
 		createEReference(iBuildPlanEClass, IBUILD_PLAN__PARENT);
+		createEAttribute(iBuildPlanEClass, IBUILD_PLAN__HEALTH);
 		createEAttribute(iBuildPlanEClass, IBUILD_PLAN__ID);
-		createEAttribute(iBuildPlanEClass, IBUILD_PLAN__STATUS);
 		createEAttribute(iBuildPlanEClass, IBUILD_PLAN__INFO);
 		createEAttribute(iBuildPlanEClass, IBUILD_PLAN__SELECTED);
 		createEAttribute(iBuildPlanEClass, IBUILD_PLAN__SUMMARY);
 		createEAttribute(iBuildPlanEClass, IBUILD_PLAN__STATE);
+		createEAttribute(iBuildPlanEClass, IBUILD_PLAN__STATUS);
+
+		iBuildPlanWorkingCopyEClass = createEClass(IBUILD_PLAN_WORKING_COPY);
 
 		iBuildServerEClass = createEClass(IBUILD_SERVER);
 		createEReference(iBuildServerEClass, IBUILD_SERVER__PLANS);
@@ -1095,11 +1279,9 @@ public class BuildPackage extends EPackageImpl {
 		createEAttribute(iBuildServerEClass, IBUILD_SERVER__CONNECTOR_KIND);
 		createEAttribute(iBuildServerEClass, IBUILD_SERVER__REPOSITORY_URL);
 
-		// Create enums
-		buildStateEEnum = createEEnum(BUILD_STATE);
-
 		// Create data types
 		taskRepositoryEDataType = createEDataType(TASK_REPOSITORY);
+		buildStateEDataType = createEDataType(BUILD_STATE);
 	}
 
 	/**
@@ -1132,9 +1314,10 @@ public class BuildPackage extends EPackageImpl {
 
 		// Add supertypes to classes
 		buildModelEClass.getESuperTypes().add(this.getIBuildModel());
-		buildPlanEClass.getESuperTypes().add(this.getIBuildPlan());
+		buildPlanEClass.getESuperTypes().add(this.getIBuildPlanWorkingCopy());
 		buildServerEClass.getESuperTypes().add(this.getIBuildServer());
 		iBuildPlanEClass.getESuperTypes().add(this.getIBuildElement());
+		iBuildPlanWorkingCopyEClass.getESuperTypes().add(this.getIBuildPlan());
 		iBuildServerEClass.getESuperTypes().add(this.getIBuildElement());
 
 		// Initialize classes and features; add operations and parameters
@@ -1174,9 +1357,9 @@ public class BuildPackage extends EPackageImpl {
 		initEReference(getIBuildPlan_Parent(), this.getIBuildPlan(), this.getIBuildPlan_Children(), "parent", null, 0,
 				1, IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIBuildPlan_Id(), ecorePackage.getEString(), "id", null, 1, 1, IBuildPlan.class,
+		initEAttribute(getIBuildPlan_Health(), ecorePackage.getEInt(), "health", "-1", 0, 1, IBuildPlan.class,
 				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIBuildPlan_Status(), ecorePackage.getEString(), "status", null, 0, 1, IBuildPlan.class,
+		initEAttribute(getIBuildPlan_Id(), ecorePackage.getEString(), "id", null, 1, 1, IBuildPlan.class,
 				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIBuildPlan_Info(), ecorePackage.getEString(), "info", null, 0, 1, IBuildPlan.class,
 				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1187,6 +1370,11 @@ public class BuildPackage extends EPackageImpl {
 				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIBuildPlan_State(), this.getBuildState(), "state", null, 0, 1, IBuildPlan.class,
 				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIBuildPlan_Status(), ecorePackage.getEString(), "status", null, 0, 1, IBuildPlan.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(iBuildPlanWorkingCopyEClass, IBuildPlanWorkingCopy.class, "IBuildPlanWorkingCopy", IS_ABSTRACT,
+				IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(iBuildServerEClass, IBuildServer.class, "IBuildServer", IS_ABSTRACT, IS_INTERFACE,
 				!IS_GENERATED_INSTANCE_CLASS);
@@ -1203,13 +1391,10 @@ public class BuildPackage extends EPackageImpl {
 				IBuildServer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
 				!IS_DERIVED, IS_ORDERED);
 
-		// Initialize enums and add enum literals
-		initEEnum(buildStateEEnum, BuildState.class, "BuildState");
-		addEEnumLiteral(buildStateEEnum, BuildState.RUNNING);
-		addEEnumLiteral(buildStateEEnum, BuildState.STOPPED);
-
 		// Initialize data types
 		initEDataType(taskRepositoryEDataType, TaskRepository.class, "TaskRepository", IS_SERIALIZABLE,
+				!IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(buildStateEDataType, BuildState.class, "BuildState", IS_SERIALIZABLE,
 				!IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
@@ -1346,6 +1531,14 @@ public class BuildPackage extends EPackageImpl {
 		public static final EReference IBUILD_PLAN__PARENT = eINSTANCE.getIBuildPlan_Parent();
 
 		/**
+		 * The meta object literal for the '<em><b>Health</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		public static final EAttribute IBUILD_PLAN__HEALTH = eINSTANCE.getIBuildPlan_Health();
+
+		/**
 		 * The meta object literal for the '<em><b>Id</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1436,14 +1629,24 @@ public class BuildPackage extends EPackageImpl {
 		public static final EAttribute IBUILD_SERVER__REPOSITORY_URL = eINSTANCE.getIBuildServer_RepositoryUrl();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.BuildState <em>State</em>}' enum.
+		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy <em>IBuild Plan Working Copy</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.mylyn.internal.builds.core.BuildState
+		 * @see org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy
+		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildPlanWorkingCopy()
+		 * @generated
+		 */
+		public static final EClass IBUILD_PLAN_WORKING_COPY = eINSTANCE.getIBuildPlanWorkingCopy();
+
+		/**
+		 * The meta object literal for the '<em>State</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.mylyn.builds.core.BuildState
 		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getBuildState()
 		 * @generated
 		 */
-		public static final EEnum BUILD_STATE = eINSTANCE.getBuildState();
+		public static final EDataType BUILD_STATE = eINSTANCE.getBuildState();
 
 		/**
 		 * The meta object literal for the '<em>Task Repository</em>' data type.

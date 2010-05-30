@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildServer.java,v 1.2 2010/05/30 19:27:55 spingel Exp $
+ * $Id: BuildServer.java,v 1.3 2010/05/30 20:28:49 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
+import org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.IOperationMonitor;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
@@ -336,8 +337,8 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	 * Returns the value of the '<em><b>Repository Url</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Repository Url</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Repository Url</em>' attribute isn't clear, there really should be more of a
+	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Repository Url</em>' attribute.
@@ -352,8 +353,7 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildServer#getRepositoryUrl <em>Repository Url</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Repository Url</em>' attribute.
 	 * @see #getRepositoryUrl()
 	 * @generated
@@ -601,6 +601,12 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 		copier.copyReferences();
 		newServer.setLoader(getLoader());
 		return newServer;
+	}
+
+	public IBuildPlanWorkingCopy createBuildPlan() {
+		BuildFactory factory = BuildPackage.eINSTANCE.getBuildFactory();
+		BuildPlan plan = factory.createBuildPlan();
+		return plan;
 	}
 
 } // BuildServer
