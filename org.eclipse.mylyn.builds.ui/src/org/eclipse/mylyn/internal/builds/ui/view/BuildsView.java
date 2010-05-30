@@ -11,17 +11,11 @@
 
 package org.eclipse.mylyn.internal.builds.ui.view;
 
-import java.net.URISyntaxException;
+import java.io.IOException;
 
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.jface.action.ActionContributionItem;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.jface.action.GroupMarker;
-import org.eclipse.jface.action.IContributionItem;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
@@ -29,20 +23,18 @@ import org.eclipse.jface.viewers.DecoratingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
-import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
+import org.eclipse.mylyn.internal.builds.core.BuildModel;
+import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
-import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.ViewPluginAction;
 import org.eclipse.ui.part.ViewPart;
 
 /**
@@ -50,9 +42,13 @@ import org.eclipse.ui.part.ViewPart;
  */
 public class BuildsView extends ViewPart {
 
-	private TreeViewer buildTree;
+	private TreeViewer viewer;
 
 	private BuildContentProvider contentProvider;
+
+	private BuildModel model;
+
+	private AdapterImpl modelListener;
 
 	public BuildsView() {
 		// ignore
@@ -60,58 +56,86 @@ public class BuildsView extends ViewPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
-		buildTree = new TreeViewer(parent, SWT.FULL_SELECTION);
-		Tree tree = buildTree.getTree();
-		tree.setHeaderVisible(true);
+		createViewer(parent);
+		createPopupMenu(parent);
+		fillToolbar();
 
-		TreeViewerColumn buildViewerColumn = new TreeViewerColumn(buildTree, SWT.LEFT);
-		buildViewerColumn.setLabelProvider(new DecoratingStyledCellLabelProvider(new BuildLabelProvider(),
-				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator(), null));
-		TreeColumn buildColumn = buildViewerColumn.getColumn();
-		buildColumn.setText("Builds");
-		buildColumn.setWidth(220);
+		model = BuildsUiInternal.getModel();
+		modelListener = new AdapterImpl() {
+			@Override
+			public void notifyChanged(Notification msg) {
+				Display.getDefault().asyncExec(new Runnable() {
+					public void run() {
+						if (!viewer.getControl().isDisposed()) {
+							refresh();
+						}
+					}
 
-		TreeViewerColumn summaryViewerColumn = new TreeViewerColumn(buildTree, SWT.LEFT);
-		summaryViewerColumn.setLabelProvider(new BuildSummaryLabelProvider());
-		TreeColumn summaryColumn = summaryViewerColumn.getColumn();
-		summaryColumn.setText("Summary");
-		summaryColumn.setWidth(220);
+				});
+			}
+		};
+		model.eAdapters().add(modelListener);
+		viewer.setInput(model);
+		viewer.expandAll();
+	}
 
-		TreeViewerColumn statusViewerColumn = new TreeViewerColumn(buildTree, SWT.LEFT);
-		statusViewerColumn.setLabelProvider(new BuildStatusLabelProvider());
-		TreeColumn statusColumn = statusViewerColumn.getColumn();
-		statusColumn.setText("Status");
-		statusColumn.setWidth(50);
+	private void refresh() {
+		viewer.refresh();
+		viewer.expandAll();
+	}
 
-		contentProvider = new BuildContentProvider();
-		buildTree.setContentProvider(contentProvider);
-
+	protected void createPopupMenu(Composite parent) {
 		MenuManager menuManager = new MenuManager();
 
 		GroupMarker marker = new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS);
 		menuManager.add(marker);
 		Menu contextMenu = menuManager.createContextMenu(parent);
 
-		buildTree.getTree().setMenu(contextMenu);
-		getSite().registerContextMenu(menuManager, buildTree);
+		viewer.getTree().setMenu(contextMenu);
+		getSite().registerContextMenu(menuManager, viewer);
+	}
 
-		fillToolbar();
+	protected void createViewer(Composite parent) {
+		viewer = new TreeViewer(parent, SWT.FULL_SELECTION);
+		Tree tree = viewer.getTree();
+		tree.setHeaderVisible(true);
 
-		buildTree.addDoubleClickListener(new IDoubleClickListener() {
+		TreeViewerColumn buildViewerColumn = new TreeViewerColumn(viewer, SWT.LEFT);
+		buildViewerColumn.setLabelProvider(new DecoratingStyledCellLabelProvider(new BuildLabelProvider(),
+				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator(), null));
+		TreeColumn buildColumn = buildViewerColumn.getColumn();
+		buildColumn.setText("Builds");
+		buildColumn.setWidth(220);
+
+		TreeViewerColumn summaryViewerColumn = new TreeViewerColumn(viewer, SWT.LEFT);
+		summaryViewerColumn.setLabelProvider(new BuildSummaryLabelProvider());
+		TreeColumn summaryColumn = summaryViewerColumn.getColumn();
+		summaryColumn.setText("Summary");
+		summaryColumn.setWidth(220);
+
+		TreeViewerColumn statusViewerColumn = new TreeViewerColumn(viewer, SWT.LEFT);
+		statusViewerColumn.setLabelProvider(new BuildStatusLabelProvider());
+		TreeColumn statusColumn = statusViewerColumn.getColumn();
+		statusColumn.setText("Status");
+		statusColumn.setWidth(50);
+
+		contentProvider = new BuildContentProvider();
+		contentProvider.setSelectedOnly(true);
+		viewer.setContentProvider(contentProvider);
+
+		viewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				OpenInBrowserAction action = new OpenInBrowserAction();
 				action.selectionChanged((IStructuredSelection) event.getSelection());
 				action.run();
 			}
 		});
-
-		buildTree.setInput(getInitialInput());
-		buildTree.expandAll();
 	}
 
 	@Override
 	public void dispose() {
 		super.dispose();
+		model.eAdapters().remove(modelListener);
 	}
 
 	private void fillToolbar() {
@@ -121,8 +145,13 @@ public class BuildsView extends ViewPart {
 		RefreshAction refresh = new RefreshAction() {
 			@Override
 			public void run() {
-				getViewer().setInput(getInitialInput());
-				getViewer().expandAll();
+				refresh();
+				// TODO remove
+				try {
+					BuildsUiInternal.save();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			};
 		};
 		toolBarManager.add(refresh);
@@ -130,47 +159,12 @@ public class BuildsView extends ViewPart {
 		toolBarManager.add(new Separator());
 
 		OpenInBrowserAction openInBrowserAction = new OpenInBrowserAction();
-		buildTree.addSelectionChangedListener(openInBrowserAction);
+		viewer.addSelectionChangedListener(openInBrowserAction);
 		toolBarManager.add(openInBrowserAction);
 	}
 
-	protected Object getInitialInput() {
-		//URI.createPlatformResourceURI("/Project/builds.xml", false);
-		try {
-			URI uri = URI.createURI(BuildsUiPlugin.getDefault()
-					.getBundle()
-					.getResource("sample-data.xml")
-					.toURI()
-					.toString());
-			ResourceSet resourceSet = new ResourceSetImpl();
-			Resource ecoreResource = resourceSet.getResource(uri, true);
-			return ecoreResource.getContents().get(0);
-		} catch (URISyntaxException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
 	TreeViewer getViewer() {
-		return buildTree;
-	}
-
-	@Override
-	public void init(IViewSite site) throws PartInitException {
-		super.init(site);
-		//Ensures that the RefreshBuildsAutomatically Action has the correct checked state
-		getViewSite().getActionBars().getMenuManager().addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager manager) {
-				IContributionItem[] items = manager.getItems();
-				for (IContributionItem item : items) {
-					if (item instanceof ActionContributionItem) {
-						ActionContributionItem actionItem = (ActionContributionItem) item;
-						if (actionItem.getAction() instanceof ViewPluginAction) {
-							((ViewPluginAction) actionItem.getAction()).selectionChanged(new StructuredSelection());
-						}
-					}
-				}
-			}
-		});
+		return viewer;
 	}
 
 	@Override

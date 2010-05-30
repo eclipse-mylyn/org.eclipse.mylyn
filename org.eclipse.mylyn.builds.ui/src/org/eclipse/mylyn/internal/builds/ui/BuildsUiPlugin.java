@@ -11,7 +11,14 @@
 
 package org.eclipse.mylyn.internal.builds.ui;
 
+import java.io.IOException;
+
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.ui.statushandlers.StatusManager;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -19,7 +26,7 @@ import org.osgi.framework.BundleContext;
  */
 public class BuildsUiPlugin extends AbstractUIPlugin {
 
-	public static final String ID_PLUGIN = "org.eclipse.mylyn.builds.ui";
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.builds.ui"; //$NON-NLS-1$
 
 	private static BuildsUiPlugin instance;
 
@@ -35,8 +42,20 @@ public class BuildsUiPlugin extends AbstractUIPlugin {
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
+		try {
+			BuildsUiInternal.save();
+		} catch (IOException e) {
+			StatusManager.getManager().handle(
+					new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "Unexpected error while saving builds", e));
+		}
 		super.stop(context);
 		instance = null;
+	}
+
+	protected IPath getBuildsFile() {
+		IPath stateLocation = Platform.getStateLocation(getBundle());
+		IPath cacheFile = stateLocation.append("builds.xml"); //$NON-NLS-1$
+		return cacheFile;
 	}
 
 }

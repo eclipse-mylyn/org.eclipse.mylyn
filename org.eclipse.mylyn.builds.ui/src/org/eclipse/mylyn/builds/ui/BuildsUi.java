@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -23,14 +22,12 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylyn.builds.core.IBuildServer;
+import org.eclipse.mylyn.builds.core.IBuildModel;
 import org.eclipse.mylyn.builds.core.spi.BuildConnector;
-import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
-import org.eclipse.mylyn.internal.builds.core.BuildPackage;
-import org.eclipse.mylyn.internal.builds.core.BuildServer;
-import org.eclipse.mylyn.internal.builds.core.tasks.IBuildLoader;
+import org.eclipse.mylyn.internal.builds.core.tasks.BuildTaskConnector;
 import org.eclipse.mylyn.internal.builds.ui.BuildConnectorDelegate;
 import org.eclipse.mylyn.internal.builds.ui.BuildConnectorDescriptor;
+import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -41,24 +38,14 @@ import org.eclipse.ui.statushandlers.StatusManager;
  */
 public class BuildsUi {
 
-	private static IBuildLoader buildLoader = new IBuildLoader() {
-		public BuildServerBehaviour loadBehaviour(BuildServer server) throws CoreException {
-			return getConnector(server.getConnectorKind()).getBehaviour(server);
-		}
-	};
-
 	private static HashMap<String, BuildConnector> connectorByKind;
-
-	public static IBuildServer createServer(TaskRepository repository) {
-		BuildServer server = BuildPackage.eINSTANCE.getBuildFactory().createBuildServer();
-		server.setRepository(repository);
-		server.setConnectorKind("org.eclipse.mylyn.builds.tests.mock");
-		server.setLoader(buildLoader);
-		return server;
-	}
 
 	public synchronized static BuildConnector getConnector(String connenctorKind) {
 		return getConnectorsByKind().get(connenctorKind);
+	}
+
+	public synchronized static IBuildModel getModel() {
+		return BuildsUiInternal.getModel();
 	}
 
 	private static HashMap<String, BuildConnector> getConnectorsByKind() {
@@ -98,6 +85,10 @@ public class BuildsUi {
 
 	public static Collection<BuildConnector> getConnectors() {
 		return new ArrayList<BuildConnector>(getConnectorsByKind().values());
+	}
+
+	public static BuildConnector getConnector(TaskRepository repository) {
+		return getConnector(repository.getProperty(BuildTaskConnector.TASK_REPOSITORY_KEY_BUILD_CONNECTOR_KIND));
 	}
 
 }

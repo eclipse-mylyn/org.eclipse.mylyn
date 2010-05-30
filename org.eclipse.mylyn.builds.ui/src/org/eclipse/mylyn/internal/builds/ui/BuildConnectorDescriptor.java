@@ -25,7 +25,7 @@ public class BuildConnectorDescriptor {
 
 	private IStatus status;
 
-	private BuildConnector core;
+	BuildConnector core;
 
 	final String label;
 

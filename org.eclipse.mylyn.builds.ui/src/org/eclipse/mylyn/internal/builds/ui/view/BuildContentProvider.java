@@ -11,6 +11,9 @@
 
 package org.eclipse.mylyn.internal.builds.ui.view;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.builds.core.IBuildModel;
@@ -24,37 +27,91 @@ public class BuildContentProvider implements ITreeContentProvider {
 
 	private static final Object[] EMPTY_ARRAY = new Object[0];
 
+	private Object input;
+
+	private boolean nestPlansEnabled;
+
+	private boolean selectedOnly;
+
+	public BuildContentProvider() {
+		setNestPlansEnabled(true);
+	}
+
 	public void dispose() {
 		// ignore
 	}
 
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		// ignore
+	public Object[] getChildren(Object parentElement) {
+		if (parentElement instanceof IBuildServer) {
+			return getPlans(parentElement, ((IBuildServer) parentElement).getPlans()).toArray();
+		} else if (parentElement instanceof IBuildPlan) {
+			return getPlans(parentElement, ((IBuildPlan) parentElement).getChildren()).toArray();
+		}
+		return EMPTY_ARRAY;
 	}
 
 	public Object[] getElements(Object inputElement) {
 		if (inputElement instanceof IBuildModel) {
 			return ((IBuildModel) inputElement).getServers().toArray();
+		} else if (inputElement instanceof IBuildServer) {
+			return getPlans(inputElement, ((IBuildServer) inputElement).getPlans()).toArray();
 		}
-		return EMPTY_ARRAY;
-	}
-
-	public Object[] getChildren(Object parentElement) {
-		if (parentElement instanceof IBuildServer) {
-			return ((IBuildServer) parentElement).getPlans().toArray();
-		} else if (parentElement instanceof IBuildPlan) {
-			return ((IBuildPlan) parentElement).getChildren().toArray();
+		if (inputElement instanceof List<?>) {
+			return ((List<?>) inputElement).toArray();
 		}
 		return EMPTY_ARRAY;
 	}
 
 	public Object getParent(Object element) {
-		// ignore
+		if (element instanceof IBuildServer) {
+			return input;
+		} else if (element instanceof IBuildPlan) {
+			IBuildPlan plan = (IBuildPlan) element;
+			if (plan.getParent() != null) {
+				return plan.getParent();
+			} else {
+				return plan.getServer();
+			}
+		}
 		return null;
+	}
+
+	private List<IBuildPlan> getPlans(Object parent, List<IBuildPlan> plans) {
+		List<IBuildPlan> children = new ArrayList<IBuildPlan>(plans.size());
+		for (IBuildPlan plan : plans) {
+			if (isSelectedOnly() && !plan.isSelected()) {
+				continue;
+			}
+			if (isNestPlansEnabled() && plan.getParent() != null && plan.getParent() != parent) {
+				continue;
+			}
+			children.add(plan);
+		}
+		return children;
 	}
 
 	public boolean hasChildren(Object element) {
 		return getChildren(element).length > 0;
+	}
+
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		this.input = newInput;
+	}
+
+	public final boolean isNestPlansEnabled() {
+		return nestPlansEnabled;
+	}
+
+	public final boolean isSelectedOnly() {
+		return selectedOnly;
+	}
+
+	public final void setNestPlansEnabled(boolean nestPlansEnabled) {
+		this.nestPlansEnabled = nestPlansEnabled;
+	}
+
+	public final void setSelectedOnly(boolean selectedOnly) {
+		this.selectedOnly = selectedOnly;
 	}
 
 }
