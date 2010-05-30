@@ -31,6 +31,18 @@ public class BuildImages {
 
 	public static final ImageDescriptor STATUS_FAILED = create(T_OBJ, "failed-status.gif"); //$NON-NLS-1$
 
+	public static final ImageDescriptor SERVER = create(T_OBJ, "server.gif"); //$NON-NLS-1$
+
+	public static final ImageDescriptor HEALTH_00 = create(T_OBJ, "health-00to19.gif"); //$NON-NLS-1$
+
+	public static final ImageDescriptor HEALTH_20 = create(T_OBJ, "health-20to39.gif"); //$NON-NLS-1$
+
+	public static final ImageDescriptor HEALTH_40 = create(T_OBJ, "health-40to59.gif"); //$NON-NLS-1$
+
+	public static final ImageDescriptor HEALTH_60 = create(T_OBJ, "health-60to79.gif"); //$NON-NLS-1$
+
+	public static final ImageDescriptor HEALTH_80 = create(T_OBJ, "health-80plus.gif"); //$NON-NLS-1$
+
 	public static final ImageDescriptor DECORATION_RUNNING = create(T_OVR, "run_co.gif"); //$NON-NLS-1$;
 
 	private static ImageDescriptor create(String prefix, String name) {

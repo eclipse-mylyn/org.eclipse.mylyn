@@ -164,6 +164,7 @@ public class BuildTaskSettingsPage extends AbstractRepositorySettingsPage {
 		server.setName(repository.getRepositoryLabel());
 		server.setRepository(repository);
 		server.setRepositoryUrl(repository.getRepositoryUrl());
+		server.setUrl(repository.getRepositoryUrl());
 
 //		XMLMemento memento = XMLMemento.createWriteRoot("plans");
 //		String[] array = getSelectedPlanIds().toArray(new String[0]);

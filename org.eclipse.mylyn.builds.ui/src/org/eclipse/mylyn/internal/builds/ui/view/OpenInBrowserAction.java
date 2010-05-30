@@ -42,8 +42,7 @@ public class OpenInBrowserAction extends BaseSelectionListenerAction {
 
 	@Override
 	protected boolean updateSelection(IStructuredSelection selection) {
-		setEnabled(getUris(selection).size() > 0);
-		return super.updateSelection(selection);
+		return getUris(selection).size() > 0;
 	}
 
 	public List<URI> getUris(IStructuredSelection selection) {

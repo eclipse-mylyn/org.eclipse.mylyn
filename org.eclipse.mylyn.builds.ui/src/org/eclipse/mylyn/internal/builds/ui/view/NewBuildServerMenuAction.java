@@ -24,7 +24,6 @@ import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
 
 /**
@@ -33,6 +32,8 @@ import org.eclipse.swt.widgets.Menu;
 public class NewBuildServerMenuAction extends Action implements IMenuCreator {
 
 	private Menu menu;
+
+	private MenuManager manager;
 
 	public NewBuildServerMenuAction() {
 		setMenuCreator(this);
@@ -43,36 +44,37 @@ public class NewBuildServerMenuAction extends Action implements IMenuCreator {
 	public void dispose() {
 		if (menu != null) {
 			menu.dispose();
+			menu = null;
+		}
+		if (manager != null) {
+			manager.dispose();
+			manager = null;
 		}
 	}
 
 	@Override
-	public void runWithEvent(Event event) {
+	public void run() {
 		new NewBuildServerAction().run();
 	}
 
 	public Menu getMenu(Control parent) {
-		if (menu != null) {
-			menu.dispose();
-		}
-		menu = new Menu(parent);
-		MenuManager manager = new MenuManager();
-		addActions(manager);
-		manager.fill(menu, 0);
-		manager.dispose();
+		initMenuManager();
+		menu = manager.createContextMenu(parent);
 		return menu;
 	}
 
 	public Menu getMenu(Menu parent) {
-		if (menu != null) {
-			menu.dispose();
-		}
+		initMenuManager();
 		menu = new Menu(parent);
-		MenuManager manager = new MenuManager();
-		addActions(manager);
 		manager.fill(menu, 0);
-		manager.dispose();
 		return menu;
+	}
+
+	private void initMenuManager() {
+		dispose();
+
+		manager = new MenuManager();
+		addActions(manager);
 	}
 
 	private void addActions(IMenuManager manager) { // add repository action

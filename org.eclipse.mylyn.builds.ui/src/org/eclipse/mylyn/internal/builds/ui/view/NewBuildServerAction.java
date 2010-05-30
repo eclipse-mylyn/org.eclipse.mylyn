@@ -14,10 +14,10 @@ package org.eclipse.mylyn.internal.builds.ui.view;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.builds.core.tasks.BuildTaskConnector;
+import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewRepositoryWizard;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.wizards.TaskRepositoryWizardDialog;
-import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Steffen Pingel
@@ -33,7 +33,7 @@ public class NewBuildServerAction extends Action {
 	@Override
 	public void run() {
 		NewRepositoryWizard wizard = new NewRepositoryWizard(BuildTaskConnector.CONNECTOR_KIND);
-		WizardDialog dialog = new TaskRepositoryWizardDialog(Display.getCurrent().getActiveShell(), wizard);
+		WizardDialog dialog = new TaskRepositoryWizardDialog(WorkbenchUtil.getShell(), wizard);
 		dialog.create();
 		dialog.getShell().setText("Add Build Server");
 		dialog.setBlockOnOpen(true);

@@ -77,6 +77,8 @@ public class BuildsView extends ViewPart {
 		model.eAdapters().add(modelListener);
 		viewer.setInput(model);
 		viewer.expandAll();
+
+		getSite().setSelectionProvider(viewer);
 	}
 
 	private void refresh() {

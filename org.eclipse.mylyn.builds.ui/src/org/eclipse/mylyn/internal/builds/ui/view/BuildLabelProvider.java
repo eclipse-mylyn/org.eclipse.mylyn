@@ -11,14 +11,16 @@
 
 package org.eclipse.mylyn.internal.builds.ui.view;
 
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.StyledString.Styler;
+import org.eclipse.mylyn.builds.core.BuildState;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
+import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.internal.builds.core.BuildPlan;
-import org.eclipse.mylyn.internal.builds.core.BuildState;
 import org.eclipse.mylyn.internal.builds.ui.BuildImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.swt.graphics.Image;
@@ -37,14 +39,38 @@ public class BuildLabelProvider extends LabelProvider implements IStyledLabelPro
 
 	@Override
 	public Image getImage(Object element) {
-		if (element instanceof BuildPlan) {
-			if (((BuildPlan) element).getState() == BuildState.RUNNING) {
-				return CommonImages.getImageWithOverlay(BuildImages.STATUS_PASSED, BuildImages.DECORATION_RUNNING,
-						false, false);
-			}
-		}
 		if (element instanceof IBuildPlan) {
-			return CommonImages.getImage(BuildImages.STATUS_PASSED);
+			ImageDescriptor descriptor = getImageDescriptor((IBuildPlan) element);
+			ImageDescriptor decoration = getDecoration((IBuildPlan) element);
+			if (decoration != null) {
+				return CommonImages.getImageWithOverlay(descriptor, decoration, false, false);
+			}
+			return CommonImages.getImage(descriptor);
+		}
+		if (element instanceof IBuildServer) {
+			return CommonImages.getImage(BuildImages.SERVER);
+		}
+		return null;
+	}
+
+	private ImageDescriptor getImageDescriptor(IBuildPlan element) {
+		if (element.getHealth() >= 0 && element.getHealth() < 20) {
+			return BuildImages.HEALTH_00;
+		} else if (element.getHealth() >= 20 && element.getHealth() < 40) {
+			return BuildImages.HEALTH_20;
+		} else if (element.getHealth() >= 40 && element.getHealth() < 60) {
+			return BuildImages.HEALTH_40;
+		} else if (element.getHealth() >= 60 && element.getHealth() < 80) {
+			return BuildImages.HEALTH_60;
+		} else if (element.getHealth() >= 80) {
+			return BuildImages.HEALTH_60;
+		}
+		return CommonImages.FILE_PLAIN;
+	}
+
+	private ImageDescriptor getDecoration(IBuildPlan element) {
+		if (((BuildPlan) element).getState() == BuildState.RUNNING) {
+			return BuildImages.DECORATION_RUNNING;
 		}
 		return null;
 	}
