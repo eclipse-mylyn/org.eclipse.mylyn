@@ -10,8 +10,9 @@
   </target>
 
   <target name="xjc"> 
-  	<xjc schema="https://build.eclipse.org/hudson/api/schema" destdir="src-gen" package="org.eclipse.mylyn.internal.hudson.model" />
-  	<xjc schema="https://build.eclipse.org/hudson/job/epp-mpc-nightly/api/schema" destdir="src-gen" package="org.eclipse.mylyn.internal.hudson.model" removeOldOutput="yes" />
+  	<xjc schema="https://build.eclipse.org/hudson/api/schema" destdir="src-gen" package="org.eclipse.mylyn.internal.hudson.model"/>
+  	<xjc schema="https://build.eclipse.org/hudson/people/api/schema" destdir="src-gen" package="org.eclipse.mylyn.internal.hudson.model"/>
+  	<xjc schema="https://build.eclipse.org/hudson/job/epp-mpc-nightly/api/schema" destdir="src-gen" package="org.eclipse.mylyn.internal.hudson.model"/>
   	<xjc schema="https://build.eclipse.org/hudson/job/epp-mpc-nightly/62/api/schema" destdir="src-gen" package="org.eclipse.mylyn.internal.hudson.model" />
   </target> 
 
