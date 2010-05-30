@@ -21,9 +21,15 @@ public interface IBuildPlan extends IBuildElement {
 	public List<IBuildPlan> getChildren();
 
 	public String getStatus();
-	
+
 	public String getSummary();
-	
+
 	public String getInfo();
-	
+
+	public boolean isSelected();
+
+	public IBuildPlan getParent();
+
+	public String getId();
+
 }

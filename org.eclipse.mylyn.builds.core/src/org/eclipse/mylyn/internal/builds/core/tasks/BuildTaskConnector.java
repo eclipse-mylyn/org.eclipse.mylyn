@@ -29,6 +29,8 @@ public class BuildTaskConnector extends AbstractRepositoryConnector {
 
 	public static final String CONNECTOR_KIND = "org.eclipse.mylyn.builds";
 
+	public static final String TASK_REPOSITORY_KEY_BUILD_CONNECTOR_KIND = "org.eclipse.mylyn.builds";
+
 	@Override
 	public boolean canCreateNewTask(TaskRepository repository) {
 		return false;

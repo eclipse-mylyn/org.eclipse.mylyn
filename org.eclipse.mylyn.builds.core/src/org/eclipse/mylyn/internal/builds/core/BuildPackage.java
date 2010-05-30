@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildPackage.java,v 1.1 2010/05/28 08:26:25 spingel Exp $
+ * $Id: BuildPackage.java,v 1.2 2010/05/30 19:27:55 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -60,7 +60,7 @@ public class BuildPackage extends EPackageImpl {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final String eNS_PREFIX = "";
+	public static final String eNS_PREFIX = "builds";
 
 	/**
 	 * The singleton instance of the package.
@@ -192,7 +192,7 @@ public class BuildPackage extends EPackageImpl {
 	public static final int IBUILD_PLAN__NAME = IBUILD_ELEMENT__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Server</b></em>' reference.
+	 * The feature id for the '<em><b>Server</b></em>' container reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -219,13 +219,13 @@ public class BuildPackage extends EPackageImpl {
 	public static final int IBUILD_PLAN__PARENT = IBUILD_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
-	 * The feature id for the '<em><b>Summary</b></em>' attribute.
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	public static final int IBUILD_PLAN__SUMMARY = IBUILD_ELEMENT_FEATURE_COUNT + 3;
+	public static final int IBUILD_PLAN__ID = IBUILD_ELEMENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Status</b></em>' attribute.
@@ -246,13 +246,31 @@ public class BuildPackage extends EPackageImpl {
 	public static final int IBUILD_PLAN__INFO = IBUILD_ELEMENT_FEATURE_COUNT + 5;
 
 	/**
+	 * The feature id for the '<em><b>Selected</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_PLAN__SELECTED = IBUILD_ELEMENT_FEATURE_COUNT + 6;
+
+	/**
+	 * The feature id for the '<em><b>Summary</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_PLAN__SUMMARY = IBUILD_ELEMENT_FEATURE_COUNT + 7;
+
+	/**
 	 * The feature id for the '<em><b>State</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	public static final int IBUILD_PLAN__STATE = IBUILD_ELEMENT_FEATURE_COUNT + 6;
+	public static final int IBUILD_PLAN__STATE = IBUILD_ELEMENT_FEATURE_COUNT + 8;
 
 	/**
 	 * The number of structural features of the '<em>IBuild Plan</em>' class.
@@ -261,7 +279,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int IBUILD_PLAN_FEATURE_COUNT = IBUILD_ELEMENT_FEATURE_COUNT + 7;
+	public static final int IBUILD_PLAN_FEATURE_COUNT = IBUILD_ELEMENT_FEATURE_COUNT + 9;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.BuildPlan <em>Plan</em>}' class.
@@ -292,7 +310,7 @@ public class BuildPackage extends EPackageImpl {
 	public static final int BUILD_PLAN__NAME = IBUILD_PLAN__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Server</b></em>' reference.
+	 * The feature id for the '<em><b>Server</b></em>' container reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -319,13 +337,13 @@ public class BuildPackage extends EPackageImpl {
 	public static final int BUILD_PLAN__PARENT = IBUILD_PLAN__PARENT;
 
 	/**
-	 * The feature id for the '<em><b>Summary</b></em>' attribute.
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	public static final int BUILD_PLAN__SUMMARY = IBUILD_PLAN__SUMMARY;
+	public static final int BUILD_PLAN__ID = IBUILD_PLAN__ID;
 
 	/**
 	 * The feature id for the '<em><b>Status</b></em>' attribute.
@@ -344,6 +362,24 @@ public class BuildPackage extends EPackageImpl {
 	 * @ordered
 	 */
 	public static final int BUILD_PLAN__INFO = IBUILD_PLAN__INFO;
+
+	/**
+	 * The feature id for the '<em><b>Selected</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD_PLAN__SELECTED = IBUILD_PLAN__SELECTED;
+
+	/**
+	 * The feature id for the '<em><b>Summary</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD_PLAN__SUMMARY = IBUILD_PLAN__SUMMARY;
 
 	/**
 	 * The feature id for the '<em><b>State</b></em>' attribute.
@@ -419,13 +455,22 @@ public class BuildPackage extends EPackageImpl {
 	public static final int IBUILD_SERVER__CONNECTOR_KIND = IBUILD_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
+	 * The feature id for the '<em><b>Repository Url</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_SERVER__REPOSITORY_URL = IBUILD_ELEMENT_FEATURE_COUNT + 3;
+
+	/**
 	 * The number of structural features of the '<em>IBuild Server</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	public static final int IBUILD_SERVER_FEATURE_COUNT = IBUILD_ELEMENT_FEATURE_COUNT + 3;
+	public static final int IBUILD_SERVER_FEATURE_COUNT = IBUILD_ELEMENT_FEATURE_COUNT + 4;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.BuildServer <em>Server</em>}' class.
@@ -481,6 +526,15 @@ public class BuildPackage extends EPackageImpl {
 	 * @ordered
 	 */
 	public static final int BUILD_SERVER__CONNECTOR_KIND = IBUILD_SERVER__CONNECTOR_KIND;
+
+	/**
+	 * The feature id for the '<em><b>Repository Url</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD_SERVER__REPOSITORY_URL = IBUILD_SERVER__REPOSITORY_URL;
 
 	/**
 	 * The feature id for the '<em><b>Server</b></em>' reference.
@@ -773,10 +827,10 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getServer <em>Server</em>}'.
+	 * Returns the meta object for the container reference '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getServer <em>Server</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Server</em>'.
+	 * @return the meta object for the container reference '<em>Server</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildPlan#getServer()
 	 * @see #getIBuildPlan()
 	 * @generated
@@ -812,6 +866,19 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getId <em>Id</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Id</em>'.
+	 * @see org.eclipse.mylyn.builds.core.IBuildPlan#getId()
+	 * @see #getIBuildPlan()
+	 * @generated
+	 */
+	public EAttribute getIBuildPlan_Id() {
+		return (EAttribute) iBuildPlanEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getSummary <em>Summary</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -821,7 +888,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public EAttribute getIBuildPlan_Summary() {
-		return (EAttribute) iBuildPlanEClass.getEStructuralFeatures().get(3);
+		return (EAttribute) iBuildPlanEClass.getEStructuralFeatures().get(7);
 	}
 
 	/**
@@ -860,6 +927,19 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public EAttribute getIBuildPlan_State() {
+		return (EAttribute) iBuildPlanEClass.getEStructuralFeatures().get(8);
+	}
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuildPlan#isSelected <em>Selected</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Selected</em>'.
+	 * @see org.eclipse.mylyn.builds.core.IBuildPlan#isSelected()
+	 * @see #getIBuildPlan()
+	 * @generated
+	 */
+	public EAttribute getIBuildPlan_Selected() {
 		return (EAttribute) iBuildPlanEClass.getEStructuralFeatures().get(6);
 	}
 
@@ -913,6 +993,19 @@ public class BuildPackage extends EPackageImpl {
 	 */
 	public EAttribute getIBuildServer_ConnectorKind() {
 		return (EAttribute) iBuildServerEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuildServer#getRepositoryUrl <em>Repository Url</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Repository Url</em>'.
+	 * @see org.eclipse.mylyn.builds.core.IBuildServer#getRepositoryUrl()
+	 * @see #getIBuildServer()
+	 * @generated
+	 */
+	public EAttribute getIBuildServer_RepositoryUrl() {
+		return (EAttribute) iBuildServerEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -989,15 +1082,18 @@ public class BuildPackage extends EPackageImpl {
 		createEReference(iBuildPlanEClass, IBUILD_PLAN__SERVER);
 		createEReference(iBuildPlanEClass, IBUILD_PLAN__CHILDREN);
 		createEReference(iBuildPlanEClass, IBUILD_PLAN__PARENT);
-		createEAttribute(iBuildPlanEClass, IBUILD_PLAN__SUMMARY);
+		createEAttribute(iBuildPlanEClass, IBUILD_PLAN__ID);
 		createEAttribute(iBuildPlanEClass, IBUILD_PLAN__STATUS);
 		createEAttribute(iBuildPlanEClass, IBUILD_PLAN__INFO);
+		createEAttribute(iBuildPlanEClass, IBUILD_PLAN__SELECTED);
+		createEAttribute(iBuildPlanEClass, IBUILD_PLAN__SUMMARY);
 		createEAttribute(iBuildPlanEClass, IBUILD_PLAN__STATE);
 
 		iBuildServerEClass = createEClass(IBUILD_SERVER);
 		createEReference(iBuildServerEClass, IBUILD_SERVER__PLANS);
 		createEAttribute(iBuildServerEClass, IBUILD_SERVER__REPOSITORY);
 		createEAttribute(iBuildServerEClass, IBUILD_SERVER__CONNECTOR_KIND);
+		createEAttribute(iBuildServerEClass, IBUILD_SERVER__REPOSITORY_URL);
 
 		// Create enums
 		buildStateEEnum = createEEnum(BUILD_STATE);
@@ -1069,33 +1165,41 @@ public class BuildPackage extends EPackageImpl {
 
 		initEClass(iBuildPlanEClass, IBuildPlan.class, "IBuildPlan", IS_ABSTRACT, IS_INTERFACE,
 				!IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getIBuildPlan_Server(), this.getIBuildServer(), null, "server", null, 1, 1, IBuildPlan.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
-				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIBuildPlan_Server(), this.getIBuildServer(), this.getIBuildServer_Plans(), "server", null, 1,
+				1, IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIBuildPlan_Children(), this.getIBuildPlan(), this.getIBuildPlan_Parent(), "children", null,
 				0, -1, IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIBuildPlan_Parent(), this.getIBuildPlan(), this.getIBuildPlan_Children(), "parent", null, 0,
 				1, IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIBuildPlan_Summary(), ecorePackage.getEString(), "summary", null, 0, 1, IBuildPlan.class,
+		initEAttribute(getIBuildPlan_Id(), ecorePackage.getEString(), "id", null, 1, 1, IBuildPlan.class,
 				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIBuildPlan_Status(), ecorePackage.getEString(), "status", null, 0, 1, IBuildPlan.class,
 				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIBuildPlan_Info(), ecorePackage.getEString(), "info", null, 0, 1, IBuildPlan.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIBuildPlan_Selected(), ecorePackage.getEBoolean(), "selected", "false", 1, 1,
+				IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIBuildPlan_Summary(), ecorePackage.getEString(), "summary", null, 0, 1, IBuildPlan.class,
 				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIBuildPlan_State(), this.getBuildState(), "state", null, 0, 1, IBuildPlan.class,
 				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iBuildServerEClass, IBuildServer.class, "IBuildServer", IS_ABSTRACT, IS_INTERFACE,
 				!IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getIBuildServer_Plans(), this.getIBuildPlan(), null, "plans", null, 0, -1, IBuildServer.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
-				IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
+		initEReference(getIBuildServer_Plans(), this.getIBuildPlan(), this.getIBuildPlan_Server(), "plans", null, 0,
+				-1, IBuildServer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
 		initEAttribute(getIBuildServer_Repository(), this.getTaskRepository(), "repository", null, 0, 1,
 				IBuildServer.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
 				!IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIBuildServer_ConnectorKind(), ecorePackage.getEString(), "connectorKind", null, 0, 1,
+				IBuildServer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIBuildServer_RepositoryUrl(), ecorePackage.getEString(), "repositoryUrl", null, 0, 1,
 				IBuildServer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
 				!IS_DERIVED, IS_ORDERED);
 
@@ -1218,7 +1322,7 @@ public class BuildPackage extends EPackageImpl {
 		public static final EClass IBUILD_PLAN = eINSTANCE.getIBuildPlan();
 
 		/**
-		 * The meta object literal for the '<em><b>Server</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Server</b></em>' container reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -1240,6 +1344,14 @@ public class BuildPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EReference IBUILD_PLAN__PARENT = eINSTANCE.getIBuildPlan_Parent();
+
+		/**
+		 * The meta object literal for the '<em><b>Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		public static final EAttribute IBUILD_PLAN__ID = eINSTANCE.getIBuildPlan_Id();
 
 		/**
 		 * The meta object literal for the '<em><b>Summary</b></em>' attribute feature.
@@ -1274,6 +1386,14 @@ public class BuildPackage extends EPackageImpl {
 		public static final EAttribute IBUILD_PLAN__STATE = eINSTANCE.getIBuildPlan_State();
 
 		/**
+		 * The meta object literal for the '<em><b>Selected</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		public static final EAttribute IBUILD_PLAN__SELECTED = eINSTANCE.getIBuildPlan_Selected();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.core.IBuildServer <em>IBuild Server</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1306,6 +1426,14 @@ public class BuildPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EAttribute IBUILD_SERVER__CONNECTOR_KIND = eINSTANCE.getIBuildServer_ConnectorKind();
+
+		/**
+		 * The meta object literal for the '<em><b>Repository Url</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		public static final EAttribute IBUILD_SERVER__REPOSITORY_URL = eINSTANCE.getIBuildServer_RepositoryUrl();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.BuildState <em>State</em>}' enum.

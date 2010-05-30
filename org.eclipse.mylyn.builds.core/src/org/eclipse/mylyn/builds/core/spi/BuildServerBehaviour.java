@@ -13,10 +13,11 @@ package org.eclipse.mylyn.builds.core.spi;
 
 import java.util.List;
 
-import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
+import org.eclipse.mylyn.builds.core.IOperationMonitor;
 
 /**
  * @author Steffen Pingel
@@ -29,12 +30,12 @@ public abstract class BuildServerBehaviour {
 		this.server = server;
 	}
 
-	public abstract List<IBuildPlan> getPlans(IProgressMonitor monitor);
+	public abstract List<IBuildPlan> getPlans(IOperationMonitor monitor) throws CoreException;
 
 	public final IBuildServer getServer() {
 		return server;
 	}
 
-	public abstract IStatus validate();
+	public abstract IStatus validate(IOperationMonitor monitor) throws CoreException;
 
 }

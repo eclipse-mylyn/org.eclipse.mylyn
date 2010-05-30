@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildPlan.java,v 1.1 2010/05/28 08:26:25 spingel Exp $
+ * $Id: BuildPlan.java,v 1.2 2010/05/30 19:27:55 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -20,7 +20,9 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.mylyn.builds.core.IBuildPlan;
@@ -78,16 +80,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlan {
 	protected String name = NAME_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getServer() <em>Server</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getServer()
-	 * @generated
-	 * @ordered
-	 */
-	protected IBuildServer server;
-
-	/**
 	 * The cached value of the '{@link #getChildren() <em>Children</em>}' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -108,24 +100,24 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlan {
 	protected IBuildPlan parent;
 
 	/**
-	 * The default value of the '{@link #getSummary() <em>Summary</em>}' attribute.
+	 * The default value of the '{@link #getId() <em>Id</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getSummary()
+	 * @see #getId()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String SUMMARY_EDEFAULT = null;
+	protected static final String ID_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getSummary() <em>Summary</em>}' attribute.
+	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getSummary()
+	 * @see #getId()
 	 * @generated
 	 * @ordered
 	 */
-	protected String summary = SUMMARY_EDEFAULT;
+	protected String id = ID_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getStatus() <em>Status</em>}' attribute.
@@ -166,6 +158,46 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlan {
 	 * @ordered
 	 */
 	protected String info = INFO_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isSelected() <em>Selected</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isSelected()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean SELECTED_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isSelected() <em>Selected</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isSelected()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean selected = SELECTED_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getSummary() <em>Summary</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getSummary()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String SUMMARY_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getSummary() <em>Summary</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getSummary()
+	 * @generated
+	 * @ordered
+	 */
+	protected String summary = SUMMARY_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getState() <em>State</em>}' attribute.
@@ -273,30 +305,25 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlan {
 	}
 
 	/**
-	 * Returns the value of the '<em><b>Server</b></em>' reference.
+	 * Returns the value of the '<em><b>Server</b></em>' container reference.
+	 * It is bidirectional and its opposite is '{@link org.eclipse.mylyn.builds.core.IBuildServer#getPlans <em>Plans</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Server</em>' reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Server</em>' reference.
+	 * @return the value of the '<em>Server</em>' container reference.
 	 * @see #setServer(IBuildServer)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildPlan_Server()
-	 * @model type="org.eclipse.mylyn.internal.builds.core.IBuildServer" required="true"
+	 * @see org.eclipse.mylyn.builds.core.IBuildServer#getPlans
+	 * @model type="org.eclipse.mylyn.internal.builds.core.IBuildServer" opposite="plans" required="true" transient="false"
 	 * @generated
 	 */
 	public IBuildServer getServer() {
-		if (server != null && ((EObject) server).eIsProxy()) {
-			InternalEObject oldServer = (InternalEObject) server;
-			server = (IBuildServer) eResolveProxy(oldServer);
-			if (server != oldServer) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, BuildPackage.BUILD_PLAN__SERVER,
-							oldServer, server));
-			}
-		}
-		return server;
+		if (eContainerFeatureID() != BuildPackage.BUILD_PLAN__SERVER)
+			return null;
+		return (IBuildServer) eContainer();
 	}
 
 	/**
@@ -304,23 +331,35 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlan {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public IBuildServer basicGetServer() {
-		return server;
+	public NotificationChain basicSetServer(IBuildServer newServer, NotificationChain msgs) {
+		msgs = eBasicSetContainer((InternalEObject) newServer, BuildPackage.BUILD_PLAN__SERVER, msgs);
+		return msgs;
 	}
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildPlan#getServer <em>Server</em>}' reference.
+	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildPlan#getServer <em>Server</em>}' container reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Server</em>' reference.
+	 * @param value the new value of the '<em>Server</em>' container reference.
 	 * @see #getServer()
 	 * @generated
 	 */
 	public void setServer(IBuildServer newServer) {
-		IBuildServer oldServer = server;
-		server = newServer;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__SERVER, oldServer, server));
+		if (newServer != eInternalContainer()
+				|| (eContainerFeatureID() != BuildPackage.BUILD_PLAN__SERVER && newServer != null)) {
+			if (EcoreUtil.isAncestor(this, (EObject) newServer))
+				throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
+			NotificationChain msgs = null;
+			if (eInternalContainer() != null)
+				msgs = eBasicRemoveFromContainer(msgs);
+			if (newServer != null)
+				msgs = ((InternalEObject) newServer).eInverseAdd(this, BuildPackage.IBUILD_SERVER__PLANS,
+						IBuildServer.class, msgs);
+			msgs = basicSetServer(newServer, msgs);
+			if (msgs != null)
+				msgs.dispatch();
+		} else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__SERVER, newServer, newServer));
 	}
 
 	/**
@@ -426,6 +465,39 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlan {
 				msgs.dispatch();
 		} else if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__PARENT, newParent, newParent));
+	}
+
+	/**
+	 * Returns the value of the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Id</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Id</em>' attribute.
+	 * @see #setId(String)
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildPlan_Id()
+	 * @model required="true"
+	 * @generated
+	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildPlan#getId <em>Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Id</em>' attribute.
+	 * @see #getId()
+	 * @generated
+	 */
+	public void setId(String newId) {
+		String oldId = id;
+		id = newId;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__ID, oldId, id));
 	}
 
 	/**
@@ -564,6 +636,41 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlan {
 	}
 
 	/**
+	 * Returns the value of the '<em><b>Selected</b></em>' attribute.
+	 * The default value is <code>"false"</code>.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Selected</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Selected</em>' attribute.
+	 * @see #setSelected(boolean)
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildPlan_Selected()
+	 * @model default="false" required="true"
+	 * @generated
+	 */
+	public boolean isSelected() {
+		return selected;
+	}
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildPlan#isSelected <em>Selected</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Selected</em>' attribute.
+	 * @see #isSelected()
+	 * @generated
+	 */
+	public void setSelected(boolean newSelected) {
+		boolean oldSelected = selected;
+		selected = newSelected;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__SELECTED, oldSelected,
+					selected));
+	}
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -572,6 +679,10 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlan {
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
+		case BuildPackage.BUILD_PLAN__SERVER:
+			if (eInternalContainer() != null)
+				msgs = eBasicRemoveFromContainer(msgs);
+			return basicSetServer((IBuildServer) otherEnd, msgs);
 		case BuildPackage.BUILD_PLAN__CHILDREN:
 			return ((InternalEList<InternalEObject>) (InternalEList<?>) getChildren()).basicAdd(otherEnd, msgs);
 		case BuildPackage.BUILD_PLAN__PARENT:
@@ -591,12 +702,29 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlan {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
+		case BuildPackage.BUILD_PLAN__SERVER:
+			return basicSetServer(null, msgs);
 		case BuildPackage.BUILD_PLAN__CHILDREN:
 			return ((InternalEList<?>) getChildren()).basicRemove(otherEnd, msgs);
 		case BuildPackage.BUILD_PLAN__PARENT:
 			return basicSetParent(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
+		switch (eContainerFeatureID()) {
+		case BuildPackage.BUILD_PLAN__SERVER:
+			return eInternalContainer().eInverseRemove(this, BuildPackage.IBUILD_SERVER__PLANS, IBuildServer.class,
+					msgs);
+		}
+		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -612,21 +740,23 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlan {
 		case BuildPackage.BUILD_PLAN__NAME:
 			return getName();
 		case BuildPackage.BUILD_PLAN__SERVER:
-			if (resolve)
-				return getServer();
-			return basicGetServer();
+			return getServer();
 		case BuildPackage.BUILD_PLAN__CHILDREN:
 			return getChildren();
 		case BuildPackage.BUILD_PLAN__PARENT:
 			if (resolve)
 				return getParent();
 			return basicGetParent();
-		case BuildPackage.BUILD_PLAN__SUMMARY:
-			return getSummary();
+		case BuildPackage.BUILD_PLAN__ID:
+			return getId();
 		case BuildPackage.BUILD_PLAN__STATUS:
 			return getStatus();
 		case BuildPackage.BUILD_PLAN__INFO:
 			return getInfo();
+		case BuildPackage.BUILD_PLAN__SELECTED:
+			return isSelected();
+		case BuildPackage.BUILD_PLAN__SUMMARY:
+			return getSummary();
 		case BuildPackage.BUILD_PLAN__STATE:
 			return getState();
 		}
@@ -658,14 +788,20 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlan {
 		case BuildPackage.BUILD_PLAN__PARENT:
 			setParent((IBuildPlan) newValue);
 			return;
-		case BuildPackage.BUILD_PLAN__SUMMARY:
-			setSummary((String) newValue);
+		case BuildPackage.BUILD_PLAN__ID:
+			setId((String) newValue);
 			return;
 		case BuildPackage.BUILD_PLAN__STATUS:
 			setStatus((String) newValue);
 			return;
 		case BuildPackage.BUILD_PLAN__INFO:
 			setInfo((String) newValue);
+			return;
+		case BuildPackage.BUILD_PLAN__SELECTED:
+			setSelected((Boolean) newValue);
+			return;
+		case BuildPackage.BUILD_PLAN__SUMMARY:
+			setSummary((String) newValue);
 			return;
 		case BuildPackage.BUILD_PLAN__STATE:
 			setState((BuildState) newValue);
@@ -697,14 +833,20 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlan {
 		case BuildPackage.BUILD_PLAN__PARENT:
 			setParent((IBuildPlan) null);
 			return;
-		case BuildPackage.BUILD_PLAN__SUMMARY:
-			setSummary(SUMMARY_EDEFAULT);
+		case BuildPackage.BUILD_PLAN__ID:
+			setId(ID_EDEFAULT);
 			return;
 		case BuildPackage.BUILD_PLAN__STATUS:
 			setStatus(STATUS_EDEFAULT);
 			return;
 		case BuildPackage.BUILD_PLAN__INFO:
 			setInfo(INFO_EDEFAULT);
+			return;
+		case BuildPackage.BUILD_PLAN__SELECTED:
+			setSelected(SELECTED_EDEFAULT);
+			return;
+		case BuildPackage.BUILD_PLAN__SUMMARY:
+			setSummary(SUMMARY_EDEFAULT);
 			return;
 		case BuildPackage.BUILD_PLAN__STATE:
 			setState(STATE_EDEFAULT);
@@ -726,17 +868,21 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlan {
 		case BuildPackage.BUILD_PLAN__NAME:
 			return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 		case BuildPackage.BUILD_PLAN__SERVER:
-			return server != null;
+			return getServer() != null;
 		case BuildPackage.BUILD_PLAN__CHILDREN:
 			return children != null && !children.isEmpty();
 		case BuildPackage.BUILD_PLAN__PARENT:
 			return parent != null;
-		case BuildPackage.BUILD_PLAN__SUMMARY:
-			return SUMMARY_EDEFAULT == null ? summary != null : !SUMMARY_EDEFAULT.equals(summary);
+		case BuildPackage.BUILD_PLAN__ID:
+			return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
 		case BuildPackage.BUILD_PLAN__STATUS:
 			return STATUS_EDEFAULT == null ? status != null : !STATUS_EDEFAULT.equals(status);
 		case BuildPackage.BUILD_PLAN__INFO:
 			return INFO_EDEFAULT == null ? info != null : !INFO_EDEFAULT.equals(info);
+		case BuildPackage.BUILD_PLAN__SELECTED:
+			return selected != SELECTED_EDEFAULT;
+		case BuildPackage.BUILD_PLAN__SUMMARY:
+			return SUMMARY_EDEFAULT == null ? summary != null : !SUMMARY_EDEFAULT.equals(summary);
 		case BuildPackage.BUILD_PLAN__STATE:
 			return state != STATE_EDEFAULT;
 		}
@@ -758,12 +904,16 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlan {
 		result.append(url);
 		result.append(", name: ");
 		result.append(name);
-		result.append(", summary: ");
-		result.append(summary);
+		result.append(", id: ");
+		result.append(id);
 		result.append(", status: ");
 		result.append(status);
 		result.append(", info: ");
 		result.append(info);
+		result.append(", selected: ");
+		result.append(selected);
+		result.append(", summary: ");
+		result.append(summary);
 		result.append(", state: ");
 		result.append(state);
 		result.append(')');
