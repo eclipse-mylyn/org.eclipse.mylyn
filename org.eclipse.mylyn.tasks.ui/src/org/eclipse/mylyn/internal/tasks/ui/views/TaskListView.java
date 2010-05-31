@@ -35,6 +35,7 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.LocalSelectionTransfer;
@@ -67,7 +68,7 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
-import org.eclipse.mylyn.internal.tasks.core.notifications.ServiceMessageManager;
+import org.eclipse.mylyn.internal.tasks.core.notifications.ServiceMessage;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.CategorizedPresentation;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
@@ -942,7 +943,18 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		TasksUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(tasksUiPreferenceListener);
 
 		serviceMessageControl = new TaskListServiceMessageControl(body);
-		ServiceMessageManager manager = TasksUiPlugin.getDefault().getServiceMessageManager();
+		String lastClosedId = TasksUiPlugin.getDefault().getPreferenceStore().getString(
+				ITasksUiPreferenceConstants.LAST_SERVICE_MESSAGE_ID);
+
+		if (lastClosedId.equals("")) { //$NON-NLS-1$
+			ServiceMessage message = new ServiceMessage();
+			message.setDescription("<A href=\"connect\">Connect Mylyn</A> to your task and ALM tools."); //$NON-NLS-1$
+			message.setTitle("Connect Mylyn"); //$NON-NLS-1$
+			message.setImage(Dialog.DLG_IMG_MESSAGE_INFO);
+			message.setId("0"); //$NON-NLS-1$
+			serviceMessageControl.setMessage(message);
+		}
+
 		TasksUiPlugin.getDefault().getServiceMessageManager().addServiceMessageListener(serviceMessageControl);
 
 		// Need to do this because the page, which holds the active working set is not around on creation, see bug 203179

@@ -11,10 +11,16 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.notifications;
 
+import java.util.Collections;
 import java.util.Date;
 
+import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.provisional.commons.ui.GradientCanvas;
@@ -23,11 +29,16 @@ import org.eclipse.mylyn.internal.tasks.core.notifications.ServiceMessage;
 import org.eclipse.mylyn.internal.tasks.core.notifications.ServiceMessageEvent;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.internal.tasks.ui.actions.AddRepositoryAction;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.Messages;
 import org.eclipse.osgi.service.resolver.VersionRange;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
@@ -38,16 +49,17 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.forms.FormColors;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
-import org.eclipse.ui.forms.events.IHyperlinkListener;
-import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.osgi.framework.Version;
 
 /**
@@ -56,11 +68,11 @@ import org.osgi.framework.Version;
  */
 public class TaskListServiceMessageControl implements IServiceMessageListener {
 
-	private ImageHyperlink imageHyperlink;
+	private Label imageLabel;
 
-	private Hyperlink titleHyperlink;
+	private Label titleLabel;
 
-	private Label descriptionLabel;
+	private Link descriptionLabel;
 
 	private GridData headData;
 
@@ -70,33 +82,24 @@ public class TaskListServiceMessageControl implements IServiceMessageListener {
 
 	private ImageHyperlink closeLink;
 
-	private ServiceMessage currentMessage;
+	private ImageHyperlink settingsLink;
 
-	private String messageUrl;
+	private ServiceMessage currentMessage;
 
 	public TaskListServiceMessageControl(Composite parent) {
 		this.parent = parent;
 	}
 
 	private void setTitleImage(Image image) {
-		imageHyperlink.setImage(image);
+		imageLabel.setImage(image);
 	}
 
 	private void setTitle(String title) {
-		titleHyperlink.setText(title);
+		titleLabel.setText(title);
 	}
 
 	private void setDescription(String description) {
 		descriptionLabel.setText(description);
-	}
-
-	private void addHyperlinkListener(IHyperlinkListener listener) {
-		titleHyperlink.addHyperlinkListener(listener);
-		imageHyperlink.addHyperlinkListener(listener);
-	}
-
-	protected void setMessageUrl(String url) {
-		messageUrl = url;
 	}
 
 	public Control createControl(Composite parent) {
@@ -129,27 +132,58 @@ public class TaskListServiceMessageControl implements IServiceMessageListener {
 		layout.numColumns = 3;
 		head.setLayout(layout);
 
-		imageHyperlink = new ImageHyperlink(head, SWT.NONE);
+		imageLabel = new Label(head, SWT.NONE);
 
-		titleHyperlink = new Hyperlink(head, SWT.NONE);
+		titleLabel = new Label(head, SWT.NONE);
 
-		setHeaderFontSizeAndStyle(titleHyperlink);
+		setHeaderFontSizeAndStyle(titleLabel);
 
-		addHyperlinkListener(new HyperlinkAdapter() {
+		Composite buttonsComp = new Composite(head, SWT.NONE);
+		TableWrapData data = new TableWrapData();
+		data.align = TableWrapData.RIGHT;
+		buttonsComp.setLayoutData(data);
+		GridLayout gLayout = new GridLayout(2, false);
+		gLayout.horizontalSpacing = 0;
+		gLayout.verticalSpacing = 0;
+		gLayout.marginHeight = 0;
+		gLayout.marginWidth = 0;
+		gLayout.verticalSpacing = 0;
+
+		buttonsComp.setLayout(gLayout);
+
+		settingsLink = new ImageHyperlink(buttonsComp, SWT.NONE);
+		settingsLink.setImage(CommonImages.getImage(CommonImages.NOTIFICATION_PREFERENCES));
+//		TableWrapData data = new TableWrapData();
+//		data.align = TableWrapData.RIGHT;
+//		settingsLink.setLayoutData(data);
+		settingsLink.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
-				if (messageUrl != null) {
-					TasksUiUtil.openUrl(messageUrl);
+				closeMessage();
+				PreferenceDialog pref = PreferencesUtil.createPreferenceDialogOn(
+						TaskListServiceMessageControl.this.parent.getShell(),
+						"org.eclipse.mylyn.tasks.ui.preferences", null, null); //$NON-NLS-1$
+				if (pref != null) {
+					pref.open();
 				}
+			}
 
+			@Override
+			public void linkEntered(HyperlinkEvent e) {
+				settingsLink.setImage(CommonImages.getImage(CommonImages.NOTIFICATION_PREFERENCES_HOVER));
+			}
+
+			@Override
+			public void linkExited(HyperlinkEvent e) {
+				settingsLink.setImage(CommonImages.getImage(CommonImages.NOTIFICATION_PREFERENCES));
 			}
 		});
 
-		closeLink = new ImageHyperlink(head, SWT.NONE);
+		closeLink = new ImageHyperlink(buttonsComp, SWT.NONE);
 		closeLink.setImage(CommonImages.getImage(CommonImages.NOTIFICATION_CLOSE));
-		TableWrapData data = new TableWrapData();
-		data.align = TableWrapData.RIGHT;
-		closeLink.setLayoutData(data);
+//		data = new TableWrapData();
+//		data.align = TableWrapData.RIGHT;
+//		closeLink.setLayoutData(data);
 		closeLink.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
@@ -170,11 +204,46 @@ public class TaskListServiceMessageControl implements IServiceMessageListener {
 		// spacer
 		new Label(head, SWT.NONE).setText(" "); //$NON-NLS-1$
 
-		descriptionLabel = new Label(head, SWT.WRAP);
+		descriptionLabel = new Link(head, SWT.WRAP);
+		descriptionLabel.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (e.text != null) {
+					if (e.text.toLowerCase().equals("connect")) { //$NON-NLS-1$
+						closeMessage();
+						new AddRepositoryAction().run();
+					} else if (e.text.toLowerCase().equals("discovery")) { //$NON-NLS-1$
+						closeMessage();
+						final Command discoveryWizardCommand = TasksUiInternal.getConfiguredDiscoveryWizardCommand();
+						if (discoveryWizardCommand != null && discoveryWizardCommand.isEnabled()) {
+							IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(
+									IHandlerService.class);
+							try {
+								discoveryWizardCommand.executeWithChecks(TaskListServiceMessageControl.createExecutionEvent(
+										discoveryWizardCommand, handlerService));
+							} catch (Exception e1) {
+								IStatus status = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
+										Messages.SelectRepositoryConnectorPage_discoveryProblemMessage,
+										new Object[] { e1.getMessage() }), e1);
+								TasksUiInternal.logAndDisplayStatus(
+										Messages.SelectRepositoryConnectorPage_discoveryProblemTitle, status);
+							}
+						}
+					}
+				}
+			}
+		});
+
 		data = new TableWrapData();
 		data.colspan = 2;
 		descriptionLabel.setLayoutData(data);
+
 		return head;
+	}
+
+	static ExecutionEvent createExecutionEvent(Command command, IHandlerService handlerService) {
+		return new ExecutionEvent(command, Collections.emptyMap(), null,
+				TasksUiInternal.createDiscoveryWizardEvaluationContext(handlerService));
 	}
 
 	private void closeMessage() {
@@ -259,22 +328,21 @@ public class TaskListServiceMessageControl implements IServiceMessageListener {
 		}
 	}
 
-	protected void setMessage(ServiceMessage message) {
+	public void setMessage(ServiceMessage message) {
 		if (!parent.isDisposed() && message != null && (head == null || head.isDisposed())) {
 			createControl(parent);
-			IPreferenceStore preferenceStore = TasksUiPlugin.getDefault().getPreferenceStore();
-			preferenceStore.setValue(ITasksUiPreferenceConstants.LAST_SERVICE_MESSAGE_ETAG, message.getETag());
-			preferenceStore.setValue(ITasksUiPreferenceConstants.LAST_SERVICE_MESSAGE_LAST_MODIFIED,
-					message.getLastModified());
+			if (message.getETag() != null && message.getLastModified() != null) {
+				IPreferenceStore preferenceStore = TasksUiPlugin.getDefault().getPreferenceStore();
+				preferenceStore.setValue(ITasksUiPreferenceConstants.LAST_SERVICE_MESSAGE_ETAG, message.getETag());
+				preferenceStore.setValue(ITasksUiPreferenceConstants.LAST_SERVICE_MESSAGE_LAST_MODIFIED,
+						message.getLastModified());
+			}
 
 			this.currentMessage = message;
 
 			setTitle(message.getTitle());
 			setDescription(message.getDescription());
 			setTitleImage(Dialog.getImage(message.getImage()));
-			if (message.getUrl() != null) {
-				setMessageUrl(message.getUrl());
-			}
 			parent.layout(true);
 		}
 	}
