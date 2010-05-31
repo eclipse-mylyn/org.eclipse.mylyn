@@ -95,6 +95,12 @@ public class CommonImages {
 
 	public static final ImageDescriptor NOTIFICATION_CLOSE_HOVER = create(T_EVIEW, "notification-close-active.gif"); //$NON-NLS-1$
 
+	public static final ImageDescriptor NOTIFICATION_PREFERENCES_HOVER = create(T_EVIEW,
+			"notification-preferences-active.png"); //$NON-NLS-1$
+
+	public static final ImageDescriptor NOTIFICATION_PREFERENCES = create(T_EVIEW,
+			"notification-preferences-inactive.png"); //$NON-NLS-1$
+
 	// Date and synchronization overlays
 
 	public static final ImageDescriptor OVERLAY_DATE_DUE = create(T_EVIEW, "overlay-has-due.gif"); //$NON-NLS-1$
