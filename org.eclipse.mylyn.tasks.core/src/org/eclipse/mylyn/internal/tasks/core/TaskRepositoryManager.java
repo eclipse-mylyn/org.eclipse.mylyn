@@ -131,6 +131,9 @@ public class TaskRepositoryManager implements IRepositoryManager {
 				repositories = new HashSet<TaskRepository>();
 				repositoryMap.put(repository.getConnectorKind(), repositories);
 			}
+
+			applyMigrators(repository);
+
 			if (!repositories.add(repository)) {
 				// TODO 4.0 return false to indicate that remove was unsuccessful
 				return;
