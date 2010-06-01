@@ -256,12 +256,12 @@
 		
 		<property name="dist.dir" value="${dist.home}/update-archive/${version}/${qualifier}" />
 		<property name="target.dir" value="${dist.home}/update/${todir}" />
-		<delete dir="${target.dir}.old" />
-		<move file="${target.dir}" todir="${target.dir}.old" failonerror="false"/>
+		
 		<copy todir="${target.dir}">
-			<fileset dir="${dist.dir}"/>
+			<fileset dir="${dist.dir}">
+				<include name="mylyn-*.zip"/>
+			</fileset>
 		</copy>
-
 		<!-- not supported on build.eclipse.org
 		<move todir="${target.dir}">
 			<fileset dir="${target.dir}">
@@ -270,14 +270,16 @@
 			<mapper type="regexp" from="(.*)${version}.${qualifier}(.*)" to="\1latest\2"/>
 		</move>
 		-->
-		<move tofile="${target.dir}/mylyn-latest-e3.4.zip" file="${target.dir}/mylyn-${version}.${qualifier}-e3.4.zip" />
-		<move tofile="${target.dir}/mylyn-latest-extras.zip" file="${target.dir}/mylyn-${version}.${qualifier}-extras.zip" />
-		<move tofile="${target.dir}/mylyn-latest-incubator.zip" file="${target.dir}/mylyn-${version}.${qualifier}-incubator.zip" />
-		<move tofile="${target.dir}/mylyn-wikitext-standalone-latest.zip" file="${target.dir}/mylyn-wikitext-standalone-${version}.${qualifier}.zip" />
-		
-		<antcall target="fix-permissions">
-			<param name="dir" value="${target.dir}"/>
-		</antcall>
+		<move tofile="${target.dir}/mylyn-latest-e3.4.zip" file="${target.dir}/mylyn-${version}.${qualifier}-e3.4.zip" overwrite="true"/>
+		<move tofile="${target.dir}/mylyn-latest-extras.zip" file="${target.dir}/mylyn-${version}.${qualifier}-extras.zip" overwrite="true"/>
+		<move tofile="${target.dir}/mylyn-latest-incubator.zip" file="${target.dir}/mylyn-${version}.${qualifier}-incubator.zip" overwrite="true"/>
+		<move tofile="${target.dir}/mylyn-wikitext-standalone-latest.zip" file="${target.dir}/mylyn-wikitext-standalone-${version}.${qualifier}.zip" overwrite="true"/>
+
+		<chmod perm="g+w">
+			<fileset dir="${basedir}/bin/create-composite.sh"/>
+		</chmod>
+		<exec executable="${basedir}/bin/create-composite.sh" failonerror="false" dir="${target.dir}">
+		</exec>
 	</target>
 
 	<target name="promote-main" depends="init">
@@ -290,12 +292,13 @@
 			<fileset dir="${dist.dir}">
 				<include name="mylyn-${version}.${qualifier}-e3.4.zip"/>
 			</fileset>
-			<fileset dir="${dist.dir}/e3.4"/>
 		</copy>
 		
-		<antcall target="fix-permissions">
-			<param name="dir" value="${target.dir}"/>
-		</antcall>
+		<chmod perm="g+w">
+			<fileset dir="${basedir}/bin/create-composite.sh"/>
+		</chmod>
+		<exec executable="${basedir}/bin/create-composite.sh" failonerror="false" dir="${target.dir}">
+		</exec>
 	</target>
 
 	<target name="update-wikitext-versions">
