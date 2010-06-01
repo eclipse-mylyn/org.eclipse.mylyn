@@ -640,7 +640,12 @@ public final class TaskRepository extends PlatformObject {
 	public String getUserName() {
 		// NOTE: if anonymous, user name is "" string so we won't go to keyring
 		if (!isCachedUserName) {
-			cachedUserName = getUserName(AuthenticationType.REPOSITORY);
+			if (useSecureStorage()) {
+				// do not open secure store for username to avoid prompting user for password during initialization 
+				cachedUserName = getProperty(getKeyPrefix(AuthenticationType.REPOSITORY) + USERNAME);
+			} else {
+				cachedUserName = getUserName(AuthenticationType.REPOSITORY);
+			}
 			isCachedUserName = true;
 		}
 		return cachedUserName;
