@@ -77,8 +77,8 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 		incoming = new Incoming();
 
 		OUTGOING_TIME = TaskActivityUtil.getCalendar();
-		OUTGOING_TIME.setTimeInMillis(TaskActivityUtil.getCurrentWeek().getToday().getStartDate().getTimeInMillis() - 1);
-//		OUTGOING_TIME.setTimeInMillis(END_OF_TIME.getTimeInMillis() - 2);
+		//OUTGOING_TIME.setTimeInMillis(TaskActivityUtil.getCurrentWeek().getToday().getStartDate().getTimeInMillis() - 1);
+		OUTGOING_TIME.setTimeInMillis(END_OF_TIME.getTimeInMillis() - 2);
 		outgoing = new Outgoing();
 
 		COMPLETED_TIME = TaskActivityUtil.getCalendar();
@@ -270,7 +270,8 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 		public Collection<ITask> getChildren() {
 			Set<ITask> children = new HashSet<ITask>();
 			for (ITask task : TasksUiPlugin.getTaskList().getAllTasks()) {
-				if (task.getSynchronizationState().equals(SynchronizationState.OUTGOING)
+				if (task.getDueDate() == null && ((AbstractTask) task).getScheduledForDate() == null
+						&& task.getSynchronizationState().equals(SynchronizationState.OUTGOING)
 						|| task.getSynchronizationState().equals(SynchronizationState.OUTGOING_NEW)
 						|| task.getSynchronizationState().equals(SynchronizationState.CONFLICT)) {
 					children.add(task);

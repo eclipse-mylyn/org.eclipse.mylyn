@@ -201,9 +201,9 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 	}
 
 	private void addChild(Set<ITask> collection, ITask task) {
-		if (task.getSynchronizationState().isOutgoing()) {
-			return;
-		}
+//		if (task.getSynchronizationState().isOutgoing()) {
+//			return;
+//		}
 
 		collection.add(task);
 	}
