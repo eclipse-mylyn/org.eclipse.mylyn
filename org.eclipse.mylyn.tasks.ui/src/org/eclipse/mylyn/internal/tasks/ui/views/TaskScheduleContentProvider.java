@@ -250,7 +250,8 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 		public Collection<ITask> getChildren() {
 			Set<ITask> children = new HashSet<ITask>();
 			for (ITask task : TasksUiPlugin.getTaskList().getAllTasks()) {
-				if (task.getSynchronizationState().equals(SynchronizationState.INCOMING)
+				if (task.getDueDate() == null && ((AbstractTask) task).getScheduledForDate() == null
+						&& task.getSynchronizationState().equals(SynchronizationState.INCOMING)
 						|| task.getSynchronizationState().equals(SynchronizationState.INCOMING_NEW)) {
 					children.add(task);
 				}
