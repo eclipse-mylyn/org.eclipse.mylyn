@@ -32,6 +32,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaStatus;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
+import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -265,9 +266,11 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		defaultPlatformCombo.setEnabled(!autodetectPlatformOS.getSelection());
 	}
 
+	@SuppressWarnings( { "restriction" })
 	@Override
 	public void applyTo(TaskRepository repository) {
 		super.applyTo(repository);
+		repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY, IRepositoryConstants.CATEGORY_BUGS);
 		repository.setProperty(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN,
 				String.valueOf(cleanQAContact.getSelection()));
 		repository.setProperty(IBugzillaConstants.BUGZILLA_LANGUAGE_SETTING, languageSettingCombo.getText());

@@ -23,13 +23,14 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.trac.core.TracClientFactory;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
-import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.client.TracException;
 import org.eclipse.mylyn.internal.trac.core.client.TracLoginException;
 import org.eclipse.mylyn.internal.trac.core.client.TracPermissionDeniedException;
+import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.model.TracRepositoryInfo;
 import org.eclipse.mylyn.internal.trac.ui.TracUiPlugin;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
@@ -160,6 +161,13 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 			getContainer().updateButtons();
 		}
 		super.applyValidatorResult(validator);
+	}
+
+	@SuppressWarnings("restriction")
+	@Override
+	public void applyTo(TaskRepository repository) {
+		super.applyTo(repository);
+		repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY, IRepositoryConstants.CATEGORY_BUGS);
 	}
 
 	// public for testing
