@@ -242,6 +242,8 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 
 	public class Incoming extends ScheduledTaskContainer {
 
+		Calendar temp = TaskActivityUtil.getCalendar();
+
 		public Incoming() {
 			super(taskActivityManager, new DateRange(INCOMING_TIME), Messages.TaskScheduleContentProvider_Incoming);
 		}
@@ -250,15 +252,40 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 		public Collection<ITask> getChildren() {
 			Set<ITask> children = new HashSet<ITask>();
 			for (ITask task : TasksUiPlugin.getTaskList().getAllTasks()) {
-				if (task.getDueDate() == null && ((AbstractTask) task).getScheduledForDate() == null
-						&& task.getSynchronizationState().equals(SynchronizationState.INCOMING)
+
+				if (task.getSynchronizationState().equals(SynchronizationState.INCOMING)
 						|| task.getSynchronizationState().equals(SynchronizationState.INCOMING_NEW)) {
-					children.add(task);
+
+					// if focused and scheduled/due for future (and at this point has incoming, include here)
+					// because it incomings that are scheduled for this week will appear in the date range containers
+					// but incomings scheduled for next week and later would not otherwise appear when the task list
+					// is focused.
+					if (taskListView.isFocusedMode()) {
+
+						if (((AbstractTask) task).getScheduledForDate() != null) {
+							if (TaskActivityUtil.isAfterCurrentWeek(((AbstractTask) task).getScheduledForDate()
+									.getStartDate())) {
+								children.add(task);
+								continue;
+							}
+						}
+
+						if (task.getDueDate() != null) {
+							temp.setTime(task.getDueDate());
+							if (TaskActivityUtil.isAfterCurrentWeek(temp)) {
+								children.add(task);
+								continue;
+							}
+						}
+
+					} else if (task.getDueDate() == null && ((AbstractTask) task).getScheduledForDate() == null) {
+						// Task list is not focused. Show all incoming tasks in the Incoming bin
+						children.add(task);
+					}
 				}
 			}
 			return children;
 		}
-
 	}
 
 	public class Outgoing extends ScheduledTaskContainer {
