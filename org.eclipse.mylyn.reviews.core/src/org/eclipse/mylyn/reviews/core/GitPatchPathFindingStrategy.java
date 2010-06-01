@@ -21,11 +21,11 @@ import org.eclipse.core.runtime.IPath;
 /**
  * @author Kilian Matt
  */
-public class SimplePathFindingStrategy implements ITargetPathStrategy {
+public class GitPatchPathFindingStrategy implements ITargetPathStrategy {
 
 	public ReaderCreator get(IPath path) {
 		final IFile file = org.eclipse.core.resources.ResourcesPlugin
-				.getWorkspace().getRoot().getFile(path);
+				.getWorkspace().getRoot().getFile(path.removeFirstSegments(1));
 		return new ReaderCreator() {
 			@Override
 			public Reader createReader() throws CoreException {
@@ -36,7 +36,7 @@ public class SimplePathFindingStrategy implements ITargetPathStrategy {
 
 	public boolean matches(IPath targetPath) {
 		final IFile file = org.eclipse.core.resources.ResourcesPlugin
-				.getWorkspace().getRoot().getFile(targetPath);
+				.getWorkspace().getRoot().getFile(targetPath.removeFirstSegments(1));
 
 		return file.exists();
 	}

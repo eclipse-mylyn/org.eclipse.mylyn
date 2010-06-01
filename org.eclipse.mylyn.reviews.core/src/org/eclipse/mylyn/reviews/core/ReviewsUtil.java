@@ -157,11 +157,13 @@ public class ReviewsUtil {
 		return new ArrayList<Review>();
 	}
 
-	static List<ITargetPathStrategy> strategies;
+	private static List<ITargetPathStrategy> strategies;
 	static {
 		strategies = new ArrayList<ITargetPathStrategy>();
 		strategies.add(new SimplePathFindingStrategy());
+		strategies.add(new GitPatchPathFindingStrategy());
 	}
+	
 
 	public static List<? extends ITargetPathStrategy> getPathFindingStrategies() {
 		return strategies;

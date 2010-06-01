@@ -35,6 +35,8 @@ public class CompareItem implements IStreamContentAccessor, ITypedElement {
 		this.result = result;
 		this.kind = kind;
 		this.filename = filename;
+		if(result == null || filename==null)
+			throw new NullPointerException();
 	}
 
 	public InputStream getContents() throws CoreException {

@@ -10,14 +10,19 @@
  *******************************************************************************/
 package org.eclipse.mylyn.reviews.ui;
 
+import java.io.CharArrayReader;
+import java.io.Reader;
+
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.patch.IFilePatch2;
 import org.eclipse.compare.patch.IFilePatchResult;
+import org.eclipse.compare.patch.IHunk;
 import org.eclipse.compare.patch.PatchConfiguration;
 import org.eclipse.compare.patch.ReaderCreator;
 import org.eclipse.compare.structuremergeviewer.DiffNode;
 import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.reviews.core.ITargetPathStrategy;
@@ -79,11 +84,33 @@ public class ReviewDiffModel {
 					IFilePatchResult result = patch.apply(rc, configuration,
 							monitor);
 
-					compareEditorInput = result;
+					return compareEditorInput = result;
 				}
+			}
+			if (patchAddsFile(patch)) {
+				ReaderCreator rc = new ReaderCreator() {
+
+					@Override
+					public Reader createReader() throws CoreException {
+						return new CharArrayReader(new char[0]);
+					}
+				};
+				NullProgressMonitor monitor = new NullProgressMonitor();
+				compareEditorInput = patch.apply(rc, configuration, monitor);
 			}
 		}
 		return compareEditorInput;
+	}
+
+	private boolean patchAddsFile(IFilePatch2 patch2) {
+		for (IHunk hunk : patch2.getHunks()) {
+			for (String line : hunk.getUnifiedLines()) {
+				if (!line.startsWith("+")) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 }
