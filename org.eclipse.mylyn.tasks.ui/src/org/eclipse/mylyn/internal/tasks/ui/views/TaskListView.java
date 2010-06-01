@@ -948,7 +948,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 		if (lastClosedId.equals("")) { //$NON-NLS-1$
 			ServiceMessage message = new ServiceMessage();
-			message.setDescription("<A href=\"connect\">Connect Mylyn</A> to your task and ALM tools."); //$NON-NLS-1$
+			message.setDescription("<a href=\"connect\">Connect</a> to your task and ALM tools."); //$NON-NLS-1$
 			message.setTitle("Connect Mylyn"); //$NON-NLS-1$
 			message.setImage(Dialog.DLG_IMG_MESSAGE_INFO);
 			message.setId("0"); //$NON-NLS-1$

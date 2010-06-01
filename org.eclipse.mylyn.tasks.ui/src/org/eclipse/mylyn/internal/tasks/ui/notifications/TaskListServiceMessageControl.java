@@ -140,7 +140,7 @@ public class TaskListServiceMessageControl implements IServiceMessageListener {
 
 		Composite buttonsComp = new Composite(head, SWT.NONE);
 		TableWrapData data = new TableWrapData();
-		data.align = TableWrapData.RIGHT;
+		data.align = TableWrapData.LEFT;
 		buttonsComp.setLayoutData(data);
 		GridLayout gLayout = new GridLayout(2, false);
 		gLayout.horizontalSpacing = 0;
@@ -159,7 +159,6 @@ public class TaskListServiceMessageControl implements IServiceMessageListener {
 		settingsLink.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
-				closeMessage();
 				PreferenceDialog pref = PreferencesUtil.createPreferenceDialogOn(
 						TaskListServiceMessageControl.this.parent.getShell(),
 						"org.eclipse.mylyn.tasks.ui.preferences", null, null); //$NON-NLS-1$
