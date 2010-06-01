@@ -76,6 +76,7 @@ import org.eclipse.mylyn.internal.tasks.ui.ScheduledPresentation;
 import org.eclipse.mylyn.internal.tasks.ui.TaskArchiveFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskCompletionFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskPriorityFilter;
+import org.eclipse.mylyn.internal.tasks.ui.TaskRepositoryUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TaskWorkingSetFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CollapseAllAction;
@@ -106,6 +107,7 @@ import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.core.TaskActivationAdapter;
 import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.ui.TaskElementLabelProvider;
@@ -943,10 +945,21 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		TasksUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(tasksUiPreferenceListener);
 
 		serviceMessageControl = new TaskListServiceMessageControl(body);
+
+		List<TaskRepository> repos = TasksUi.getRepositoryManager().getAllRepositories();
+		boolean showMessage = true;
+		for (TaskRepository repository : repos) {
+			if (!repository.getConnectorKind().equals("local") //$NON-NLS-1$
+					&& !TaskRepositoryUtil.isAddAutomatically(repository.getRepositoryUrl())) {
+				showMessage = false;
+				break;
+			}
+		}
+
 		String lastClosedId = TasksUiPlugin.getDefault().getPreferenceStore().getString(
 				ITasksUiPreferenceConstants.LAST_SERVICE_MESSAGE_ID);
 
-		if (lastClosedId.equals("")) { //$NON-NLS-1$
+		if (showMessage && lastClosedId.equals("")) { //$NON-NLS-1$
 			ServiceMessage message = new ServiceMessage();
 			message.setDescription("<a href=\"connect\">Connect</a> to your task and ALM tools."); //$NON-NLS-1$
 			message.setTitle("Connect Mylyn"); //$NON-NLS-1$

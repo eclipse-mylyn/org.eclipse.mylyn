@@ -56,7 +56,7 @@ public class TaskRepositoryUtil {
 	/**
 	 * Template exists and is auto add enabled
 	 */
-	private static boolean isAddAutomatically(String repositoryUrl) {
+	public static boolean isAddAutomatically(String repositoryUrl) {
 		for (AbstractRepositoryConnector connector : TasksUi.getRepositoryManager().getRepositoryConnectors()) {
 			for (RepositoryTemplate template : TasksUiPlugin.getRepositoryTemplateManager().getTemplates(
 					connector.getConnectorKind())) {
