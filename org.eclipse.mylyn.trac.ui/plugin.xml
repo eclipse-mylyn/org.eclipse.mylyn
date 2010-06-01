@@ -28,6 +28,9 @@
       <taskListMigrator
             class="org.eclipse.mylyn.internal.trac.ui.TracTaskListMigrator">
       </taskListMigrator>
+      <repositoryMigrator
+            class="org.eclipse.mylyn.internal.trac.ui.TracRepositoryMigrator">
+      </repositoryMigrator>
    </extension>
    <extension
          point="org.eclipse.mylyn.tasks.core.templates">
