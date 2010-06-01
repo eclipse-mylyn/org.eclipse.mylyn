@@ -132,8 +132,6 @@ public class TaskRepositoryManager implements IRepositoryManager {
 				repositoryMap.put(repository.getConnectorKind(), repositories);
 			}
 
-			applyMigrators(repository);
-
 			if (!repositories.add(repository)) {
 				// TODO 4.0 return false to indicate that remove was unsuccessful
 				return;
@@ -362,7 +360,7 @@ public class TaskRepositoryManager implements IRepositoryManager {
 		}
 	}
 
-	private boolean applyMigrators(final TaskRepository repository) {
+	public boolean applyMigrators(final TaskRepository repository) {
 		final boolean[] result = new boolean[1];
 		for (AbstractRepositoryMigrator migrator : migrators) {
 			if (migrator.getConnectorKind().equals(repository.getConnectorKind())) {

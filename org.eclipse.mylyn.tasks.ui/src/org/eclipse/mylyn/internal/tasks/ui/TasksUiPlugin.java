@@ -703,7 +703,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private void loadTemplateRepositories() {
 		// Add standard local task repository
-		getLocalTaskRepository();
+		TaskRepository local = getLocalTaskRepository();
+		repositoryManager.applyMigrators(local);
 
 		// Add the automatically created templates
 		for (AbstractRepositoryConnector connector : repositoryManager.getRepositoryConnectors()) {
@@ -722,6 +723,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 								taskRepository.setCredentials(AuthenticationType.REPOSITORY, null, true);
 							}
 							repositoryManager.addRepository(taskRepository);
+							repositoryManager.applyMigrators(taskRepository);
 						}
 					} catch (Throwable t) {
 						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
