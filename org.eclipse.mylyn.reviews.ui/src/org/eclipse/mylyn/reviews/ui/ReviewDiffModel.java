@@ -49,7 +49,7 @@ public class ReviewDiffModel {
 		return getFileName();
 	}
 
-	private String getFileName() {
+	public String getFileName() {
 		String string = patch.getTargetPath(configuration).lastSegment();
 		return string;
 	}
@@ -87,7 +87,7 @@ public class ReviewDiffModel {
 					return compareEditorInput = result;
 				}
 			}
-			if (patchAddsFile(patch)) {
+			if (patchAddsFile()) {
 				ReaderCreator rc = new ReaderCreator() {
 
 					@Override
@@ -102,8 +102,8 @@ public class ReviewDiffModel {
 		return compareEditorInput;
 	}
 
-	private boolean patchAddsFile(IFilePatch2 patch2) {
-		for (IHunk hunk : patch2.getHunks()) {
+	private boolean patchAddsFile() {
+		for (IHunk hunk : patch.getHunks()) {
 			for (String line : hunk.getUnifiedLines()) {
 				if (!line.startsWith("+")) {
 					return false;
@@ -111,6 +111,26 @@ public class ReviewDiffModel {
 			}
 		}
 		return true;
+	}
+
+	public boolean sourceFileExists() {
+		IPath targetPath = patch.getTargetPath(configuration);
+
+		for (ITargetPathStrategy strategy : ReviewsUtil
+				.getPathFindingStrategies()) {
+
+			if (strategy.matches(targetPath)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	public boolean canReview() {
+		return sourceFileExists() || patchAddsFile();
+	}
+
+	public boolean isNewFile() {
+		return patchAddsFile();
 	}
 
 }

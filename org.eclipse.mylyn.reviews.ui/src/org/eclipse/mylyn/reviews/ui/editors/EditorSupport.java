@@ -99,6 +99,22 @@ public class EditorSupport {
 
 			fileList = new ListViewer(fileSection);
 			fileSection.setClient(fileList.getControl());
+
+			fileList.setLabelProvider(new LabelProvider() {
+				@Override
+				public String getText(Object element) {
+					if (element instanceof ReviewDiffModel) {
+						ReviewDiffModel diffModel = ((ReviewDiffModel) element);
+
+						if (!diffModel.canReview()) {
+							return diffModel.getFileName() + " FILE MISSING";
+						} else
+							return diffModel.getFileName();
+					}
+					return super.getText(element);
+				}
+			});
+
 			fileList.setContentProvider(new IStructuredContentProvider() {
 
 				public void inputChanged(Viewer viewer, Object oldInput,
@@ -131,8 +147,11 @@ public class EditorSupport {
 					if (selection instanceof IStructuredSelection) {
 						IStructuredSelection sel = (IStructuredSelection) selection;
 						if (sel.getFirstElement() instanceof ReviewDiffModel) {
-							viewer.setInput(((ReviewDiffModel) sel
-									.getFirstElement()).getCompareInput());
+							ReviewDiffModel diffModel = ((ReviewDiffModel) sel
+									.getFirstElement());
+							if (diffModel.canReview()) {
+								viewer.setInput(diffModel.getCompareInput());
+							}
 						}
 					}
 				}
