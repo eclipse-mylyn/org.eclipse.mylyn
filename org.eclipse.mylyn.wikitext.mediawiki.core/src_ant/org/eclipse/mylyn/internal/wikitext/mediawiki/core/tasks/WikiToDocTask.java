@@ -339,14 +339,11 @@ public class WikiToDocTask extends MarkupTask {
 	}
 
 	@SuppressWarnings("restriction")
-	protected String computeTocRelativeFile(OutlineItem item, Path path) {
+	private String computeTocRelativeFile(OutlineItem item, Path path) {
 		String name = ((SplitOutlineItem) item).getSplitTarget();
 		File pathDestDir = computeDestDir(path);
 		File tocParentFile = tocFile.getParentFile();
-		String prefix = pathDestDir.getAbsolutePath().substring(tocParentFile.getAbsolutePath().length());
-		if (prefix.startsWith("/")) { //$NON-NLS-1$
-			prefix = prefix.substring(1);
-		}
+		String prefix = computePrefixPath(pathDestDir, tocParentFile);
 		String relativePath = prefix + '/' + name;
 		relativePath = relativePath.replace('\\', '/');
 		if (helpPrefix != null) {
@@ -357,7 +354,20 @@ public class WikiToDocTask extends MarkupTask {
 			}
 			relativePath = helpPath + relativePath;
 		}
+		relativePath = relativePath.replaceAll("/{2,}", "/"); //$NON-NLS-1$//$NON-NLS-2$
 		return relativePath;
+	}
+
+	private String computePrefixPath(File destDir, File tocParentFile) {
+		String prefix = destDir.getAbsolutePath().substring(tocParentFile.getAbsolutePath().length());
+		prefix = prefix.replace('\\', '/');
+		if (prefix.startsWith("/")) { //$NON-NLS-1$
+			prefix = prefix.substring(1);
+		}
+		if (prefix.endsWith("/")) { //$NON-NLS-1$
+			prefix = prefix.substring(0, prefix.length() - 1);
+		}
+		return prefix;
 	}
 
 	private void createToc(List<Path> paths, final Map<String, SplitOutlineItem> pathNameToOutline) {
