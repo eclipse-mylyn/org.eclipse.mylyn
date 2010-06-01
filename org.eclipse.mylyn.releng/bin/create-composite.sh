@@ -31,7 +31,7 @@ sed -i -e "s/TAG/$TAG/" -e "s/TYPE/$TYPE/" $FILE
 sed -i -e "s/NAME/$NAME/" -e "s/TIMESTAMP/$TIMESTAMP/" $FILE
 COUNT=0
 for i in $DIRS; do
-  echo "  <child location='$i'/>" >> $FILE
+  echo "    <child location='$i'/>" >> $FILE
   COUNT=$((COUNT+1))
 done
 sed -i -e "s/CHILD_COUNT/$COUNT/" $FILE
