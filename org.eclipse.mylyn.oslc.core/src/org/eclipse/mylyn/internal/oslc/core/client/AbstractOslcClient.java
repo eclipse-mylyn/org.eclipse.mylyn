@@ -573,7 +573,7 @@ public abstract class AbstractOslcClient {
 					"An unexpected network error has occurred: " + e.getMessage(), e)); //$NON-NLS-1$
 		} finally {
 			if (method != null) {
-				method.releaseConnection();
+				WebUtil.releaseConnection(method, monitor);
 			}
 			monitor.done();
 		}
