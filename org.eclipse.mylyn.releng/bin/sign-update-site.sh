@@ -96,7 +96,7 @@ then
 
  /bin/rm $TMP || true
  unzip e3.4
- unzip extras
+ #unzip extras
  unzip incubator
 
  echo Creating archive for signing, output is logged to $DST/sign.log
@@ -131,13 +131,13 @@ echo Unzipping signed files, output is logged to $DST/sign.log
 /usr/bin/unzip -o -d $TMP $OUT/mylyn.zip >> $DST/sign.log
 
 pack e3.4 "Mylyn for Eclipse 3.4, 3.5 and 3.6"
-pack extras "Mylyn Extras"
+#pack extras "Mylyn Extras"
 pack incubator "Mylyn Incubator"
 
 fixpermissions $TMP
 
 rezip e3.4
-rezip extras
+#rezip extras
 rezip incubator
 
 # republish

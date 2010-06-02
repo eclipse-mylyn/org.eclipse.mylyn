@@ -118,10 +118,12 @@
 			<property name="type" value="feature" />
 			<property name="id" value="org.eclipse.mylyn.experimental_sdk_feature" />
 		</ant>
+		<!--
 		<ant antfile="${genericTargets}" target="${target}">
 			<property name="type" value="feature" />
 			<property name="id" value="org.eclipse.mylyn.extras_sdk_feature" />
 		</ant>
+		-->
 	</target>
 	
 	<target name="incubatorDelegator">
@@ -154,24 +156,6 @@
 		</ant>
 	</target>
 	
-	<target name="extrasDelegator">
-		<ant antfile="${genericTargets}" target="${target}">
-			<property name="type" value="feature" />
-			<property name="id" value="org.eclipse.mylyn.jira_feature" />
-		</ant>
-		<ant antfile="${genericTargets}" target="${target}">
-			<property name="type" value="feature" />
-			<property name="id" value="org.eclipse.mylyn.trac_feature" />
-		</ant>
-		<antcall target="extrasElementDelegatorSdk" />
-	</target>
-	<target name="extrasElementDelegatorSdk" unless="skipSDK">
-		<ant antfile="${genericTargets}" target="${target}">
-			<property name="type" value="feature" />
-			<property name="id" value="org.eclipse.mylyn.extras_sdk_feature" />
-		</ant>
-	</target>
-
 	<target name="standardDelegator">
 		<ant antfile="${genericTargets}" target="${target}">
 			<property name="type" value="feature" />

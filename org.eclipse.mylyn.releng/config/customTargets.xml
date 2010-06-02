@@ -24,9 +24,6 @@
 	<target name="standardElements">
 		<antcall target="standardDelegator" />
 	</target>
-	<target name="extrasElements">
-		<antcall target="extrasDelegator" />
-	</target>
 	<target name="incubatorElements">
 		<antcall target="incubatorDelegator" />
 	</target>
@@ -228,12 +225,6 @@
 			<param name="ElementsTarget" value="standardElements" />
 			<param name="SiteName" value="standard" />
 			<param name="CategoriesXmlFile" value="../standard-categories.xml" />
-		</antcall>
-		<antcall target="generateUpdateSite">
-			<param name="UpdateSiteLocation" value="${buildDirectory}/extrasUpdateSite" />
-			<param name="SiteXmlFile" value="../extras-site.xml" />
-			<param name="ElementsTarget" value="extrasElements" />
-			<param name="SiteName" value="extras" />
 		</antcall>
 		<antcall target="generateUpdateSite">
 			<param name="UpdateSiteLocation" value="${buildDirectory}/incubatorUpdateSite" />

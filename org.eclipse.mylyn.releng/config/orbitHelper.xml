@@ -98,13 +98,6 @@
 			<fileset refid="org.apache.xmlrpc" />
 		</copy>
 
-		<mkdir dir="${buildDirectory}/extrasUpdateSite/plugins"/>
-		<copy todir="${buildDirectory}/extrasUpdateSite/plugins" verbose="true">
-			<fileset refid="org.apache.axis" />
-			<fileset refid="javax.servlet" />
-			<fileset refid="org.apache.xmlrpc" />
-		</copy>
-
 		<mkdir dir="${buildDirectory}/incubatorUpdateSite/plugins"/>
 		<copy todir="${buildDirectory}/incubatorUpdateSite/plugins" verbose="true">
 			<fileset refid="org.apache.axis" />

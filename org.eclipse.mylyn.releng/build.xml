@@ -32,9 +32,6 @@
 			<param name="dir" value="${build.home}/${base.target}/standardUpdateSite"/>
 		</antcall>
 		<antcall target="pack">
-			<param name="dir" value="${build.home}/${base.target}/extrasUpdateSite"/>
-		</antcall>
-		<antcall target="pack">
 			<param name="dir" value="${build.home}/${base.target}/incubatorUpdateSite"/>
 		</antcall>
 	</target>
@@ -42,9 +39,6 @@
 	<target name="pack-dist-sites" depends="init">
 		<antcall target="pack">
 			<param name="dir" value="${build.home}/3.6/standardUpdateSite"/>
-		</antcall>
-		<antcall target="pack">
-			<param name="dir" value="${build.home}/3.6/extrasUpdateSite"/>
 		</antcall>
 		<antcall target="pack">
 			<param name="dir" value="${build.home}/3.6/incubatorUpdateSite"/>
@@ -65,10 +59,6 @@
 			<param name="categories" value="${reldir}/e3.4/categories.xml"/>
 		</antcall>
 		<antcall target="generate-metadata">
-			<param name="dir" value="${reldir}/extras"/>
-			<param name="name" value="Mylyn Extras"/>
-		</antcall>
-		<antcall target="generate-metadata">
 			<param name="dir" value="${reldir}/incubator"/>
 			<param name="name" value="Mylyn Incubator"/>
 		</antcall>
@@ -82,10 +72,6 @@
 			<param name="categories" value="${build.home}/${base.target}/standardUpdateSite/categories.xml"/>
 		</antcall>
 		<antcall target="generate-metadata">
-			<param name="dir" value="${build.home}/${base.target}/extrasUpdateSite"/>
-			<param name="name" value="Mylyn Weekly Extras"/>
-		</antcall>
-		<antcall target="generate-metadata">
 			<param name="dir" value="${build.home}/${base.target}/incubatorUpdateSite"/>
 			<param name="name" value="Mylyn Weekly Incubator"/>
 		</antcall>
@@ -96,10 +82,6 @@
 			<param name="dir" value="${build.home}/3.6/standardUpdateSite"/>
 			<param name="name" value="Mylyn Weekly for Eclipse 3.4, 3.5 and 3.6"/>
 			<param name="categories" value="${build.home}/3.6/standardUpdateSite/categories.xml"/>
-		</antcall>
-		<antcall target="generate-metadata">
-			<param name="dir" value="${build.home}/3.4/extrasUpdateSite"/>
-			<param name="name" value="Mylyn Weekly Extras"/>
 		</antcall>
 		<antcall target="generate-metadata">
 			<param name="dir" value="${build.home}/3.4/incubatorUpdateSite"/>
@@ -177,9 +159,6 @@
 			<param name="dir" value="${build.home}/3.6/standardUpdateSite"/>
 		</antcall>
 		<antcall target="fix-permissions">
-			<param name="dir" value="${build.home}/3.6/extrasUpdateSite"/>
-		</antcall>
-		<antcall target="fix-permissions">
 			<param name="dir" value="${build.home}/3.6/incubatorUpdateSite"/>
 		</antcall>
 		
@@ -187,15 +166,11 @@
 			<!-- need to use discovery plug-ins from the 3.6 site -->
 			<fileset dir="${build.home}/3.6/standardUpdateSite"/>
 		</copy>
-		<copy todir="${dist.dir}/extras">
-			<fileset dir="${build.home}/3.6/extrasUpdateSite"/>
-		</copy>
 		<copy todir="${dist.dir}/incubator">
 			<fileset dir="${build.home}/3.6/incubatorUpdateSite"/>
 		</copy>
 		<!-- need to use discovery plug-ins from the 3.5 site -->
 		<copy tofile="${dist.dir}/mylyn-${version}.${qualifier}-e3.4.zip" file="${build.home}/3.6/mylyn-${version}.${qualifier}-standard.zip" />
-		<copy tofile="${dist.dir}/mylyn-${version}.${qualifier}-extras.zip" file="${build.home}/3.6/mylyn-${version}.${qualifier}-extras.zip" />
 		<copy tofile="${dist.dir}/mylyn-${version}.${qualifier}-incubator.zip" file="${build.home}/3.6/mylyn-${version}.${qualifier}-incubator.zip" />
 		<copy tofile="${dist.dir}/mylyn-wikitext-standalone-${version}.${qualifier}.zip" file="${build.home}/3.6/mylyn-wikitext-standalone-${version}.${qualifier}.zip" />
 
@@ -271,12 +246,13 @@
 		</move>
 		-->
 		<move tofile="${target.dir}/mylyn-latest-e3.4.zip" file="${target.dir}/mylyn-${version}.${qualifier}-e3.4.zip" overwrite="true"/>
-		<move tofile="${target.dir}/mylyn-latest-extras.zip" file="${target.dir}/mylyn-${version}.${qualifier}-extras.zip" overwrite="true"/>
 		<move tofile="${target.dir}/mylyn-latest-incubator.zip" file="${target.dir}/mylyn-${version}.${qualifier}-incubator.zip" overwrite="true"/>
 		<move tofile="${target.dir}/mylyn-wikitext-standalone-latest.zip" file="${target.dir}/mylyn-wikitext-standalone-${version}.${qualifier}.zip" overwrite="true"/>
 
 		<chmod perm="ugo+w" file="${basedir}/bin/create-composite.sh"/>
 		<exec executable="${basedir}/bin/create-composite.sh" failonerror="false" dir="${target.dir}"/>
+		<exec executable="${basedir}/bin/create-composite.sh" failonerror="false" dir="${target.dir}/e3.4"/>
+		<exec executable="${basedir}/bin/create-composite.sh" failonerror="false" dir="${target.dir}/incubator"/>
 	</target>
 
 	<target name="promote-main" depends="init">
@@ -293,6 +269,7 @@
 		
 		<chmod perm="ugo+w" file="${basedir}/bin/create-composite.sh"/>
 		<exec executable="${basedir}/bin/create-composite.sh" failonerror="false" dir="${target.dir}"/>
+		<exec executable="${basedir}/bin/create-composite.sh" failonerror="false" dir="${target.dir}/incubator"/>
 	</target>
 
 	<target name="update-wikitext-versions">
