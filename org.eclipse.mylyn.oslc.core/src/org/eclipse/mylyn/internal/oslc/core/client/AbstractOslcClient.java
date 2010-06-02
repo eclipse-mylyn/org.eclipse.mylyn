@@ -565,7 +565,7 @@ public abstract class AbstractOslcClient {
 			HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(httpClient, location, monitor);
 			int code = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
 
-			handler.handleReturnCode(code, method);
+			handleReturnCode(code, method);
 
 			return handler.run(method, monitor);
 		} catch (IOException e) {
@@ -589,6 +589,38 @@ public abstract class AbstractOslcClient {
 		return WebUtil.getRequestPath(repositoryUrl);
 	}
 
+	protected void handleReturnCode(int code, HttpMethodBase method) throws CoreException {
+		try {
+			if (code == java.net.HttpURLConnection.HTTP_OK) {
+				return;// Status.OK_STATUS;
+			} else if (code == java.net.HttpURLConnection.HTTP_MOVED_TEMP
+					|| code == java.net.HttpURLConnection.HTTP_CREATED) {
+				// A new resource created...
+				return;// Status.OK_STATUS;
+			} else if (code == java.net.HttpURLConnection.HTTP_UNAUTHORIZED
+					|| code == java.net.HttpURLConnection.HTTP_FORBIDDEN) {
+				throw new CoreException(new Status(IStatus.ERROR, IOslcCoreConstants.ID_PLUGIN,
+						"Unable to log into server, ensure repository credentials are correct.")); //$NON-NLS-1$
+			} else if (code == java.net.HttpURLConnection.HTTP_PRECON_FAILED) {
+				// Mid-air collision
+				throw new CoreException(new Status(IStatus.ERROR, IOslcCoreConstants.ID_PLUGIN,
+						"Mid-air collision occurred.")); //$NON-NLS-1$
+			} else if (code == java.net.HttpURLConnection.HTTP_CONFLICT) {
+				throw new CoreException(new Status(IStatus.ERROR, IOslcCoreConstants.ID_PLUGIN, "A conflict occurred.")); //$NON-NLS-1$
+			} else {
+				throw new CoreException(new Status(IStatus.ERROR, IOslcCoreConstants.ID_PLUGIN,
+						"Unknown error occurred. Http Code: " + code + " Request: " + method.getURI() + " Response: " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								+ method.getResponseBodyAsString()));
+			}
+		} catch (URIException e) {
+			throw new CoreException(new Status(IStatus.ERROR, IOslcCoreConstants.ID_PLUGIN, "Network Error: " //$NON-NLS-1$
+					+ e.getMessage()));
+		} catch (IOException e) {
+			throw new CoreException(new Status(IStatus.ERROR, IOslcCoreConstants.ID_PLUGIN, "Network Error: " //$NON-NLS-1$
+					+ e.getMessage()));
+		}
+	}
+
 	public abstract class RequestHandler<T> {
 
 		private final String requestName;
@@ -601,42 +633,6 @@ public abstract class AbstractOslcClient {
 
 		public String getRequestName() {
 			return requestName;
-		}
-
-		protected void handleReturnCode(int code, HttpMethodBase method) throws CoreException {
-			try {
-				if (code == java.net.HttpURLConnection.HTTP_OK) {
-					return;// Status.OK_STATUS;
-				} else if (code == java.net.HttpURLConnection.HTTP_MOVED_TEMP
-						|| code == java.net.HttpURLConnection.HTTP_CREATED) {
-					// A new resource created...
-					return;// Status.OK_STATUS;
-				} else if (code == java.net.HttpURLConnection.HTTP_UNAUTHORIZED
-						|| code == java.net.HttpURLConnection.HTTP_FORBIDDEN) {
-					throw new CoreException(new Status(IStatus.ERROR, IOslcCoreConstants.ID_PLUGIN,
-							"Unable to log into server, ensure repository credentials are correct.")); //$NON-NLS-1$
-				} else if (code == java.net.HttpURLConnection.HTTP_PRECON_FAILED) {
-					// Mid-air collision
-					throw new CoreException(new Status(IStatus.ERROR, IOslcCoreConstants.ID_PLUGIN,
-							"Mid-air collision occurred.")); //$NON-NLS-1$
-				} else if (code == java.net.HttpURLConnection.HTTP_CONFLICT) {
-					throw new CoreException(new Status(IStatus.ERROR, IOslcCoreConstants.ID_PLUGIN,
-							"A conflict occurred.")); //$NON-NLS-1$
-				} else {
-					throw new CoreException(
-							new Status(
-									IStatus.ERROR,
-									IOslcCoreConstants.ID_PLUGIN,
-									"Unknown error occurred. Http Code: " + code + " Request: " + method.getURI() + " Response: " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-											+ method.getResponseBodyAsString()));
-				}
-			} catch (URIException e) {
-				throw new CoreException(new Status(IStatus.ERROR, IOslcCoreConstants.ID_PLUGIN, "Network Error: " //$NON-NLS-1$
-						+ e.getMessage()));
-			} catch (IOException e) {
-				throw new CoreException(new Status(IStatus.ERROR, IOslcCoreConstants.ID_PLUGIN, "Network Error: " //$NON-NLS-1$
-						+ e.getMessage()));
-			}
 		}
 
 	}
