@@ -47,9 +47,9 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -744,7 +744,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 						if (configuration != null && !forceRefresh) {
 							eTag = configuration.getETagValue();
 						}
-						BugzillaClient client = clientManager.getClient(repository, monitor);
+						BugzillaClient client = getClientManager().getClient(repository, monitor);
 						configuration = client.getRepositoryConfiguration(monitor, eTag);
 						if (configuration != null) {
 							String configVersion = configuration.getInstallVersion().toString();
