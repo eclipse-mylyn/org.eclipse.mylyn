@@ -22,7 +22,6 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.provisional.commons.ui.GradientCanvas;
 import org.eclipse.mylyn.internal.tasks.core.notifications.IServiceMessageListener;
 import org.eclipse.mylyn.internal.tasks.core.notifications.ServiceMessage;
@@ -140,7 +139,7 @@ public class TaskListServiceMessageControl implements IServiceMessageListener {
 
 		Composite buttonsComp = new Composite(head, SWT.NONE);
 		TableWrapData data = new TableWrapData();
-		data.align = TableWrapData.LEFT;
+		data.align = TableWrapData.RIGHT;
 		buttonsComp.setLayoutData(data);
 		GridLayout gLayout = new GridLayout(2, false);
 		gLayout.horizontalSpacing = 0;
@@ -274,8 +273,9 @@ public class TaskListServiceMessageControl implements IServiceMessageListener {
 				textFont.dispose();
 			}
 		});
-		Color color = PlatformUI.getWorkbench().getThemeManager().getCurrentTheme().getColorRegistry().get(
-				CommonThemes.COLOR_COMPLETED);
+		Color color = TasksUiPlugin.getDefault().getFormColors(text.getDisplay()).getColor(IFormColors.TITLE);
+//		Color color = PlatformUI.getWorkbench().getThemeManager().getCurrentTheme().getColorRegistry().get(
+//				CommonThemes.COLOR_COMPLETED);
 		text.setForeground(color);
 		return textFont;
 	}
