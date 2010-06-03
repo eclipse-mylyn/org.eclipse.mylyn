@@ -28,12 +28,15 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextChangeEvent;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.context.ui.AbstractFocusViewAction;
+import org.eclipse.mylyn.context.ui.InterestFilter;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DelayedRefreshJob;
 import org.eclipse.ui.ISelectionListener;
@@ -51,6 +54,8 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 	private final CopyOnWriteArrayList<StructuredViewer> managedViewers = new CopyOnWriteArrayList<StructuredViewer>();
 
 	private final CopyOnWriteArrayList<StructuredViewer> filteredViewers = new CopyOnWriteArrayList<StructuredViewer>();
+
+	private final Map<StructuredViewer, AbstractFocusViewAction> focusActions = new HashMap<StructuredViewer, AbstractFocusViewAction>();
 
 	private final Map<StructuredViewer, BrowseFilteredListener> listenerMap = new HashMap<StructuredViewer, BrowseFilteredListener>();
 
@@ -204,6 +209,14 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 		}
 	}
 
+	public void addFilteredViewer(StructuredViewer viewer, AbstractFocusViewAction action) {
+		addFilteredViewer(viewer);
+		if (viewer != null && action != null) {
+			focusActions.put(viewer, action);
+		}
+	}
+
+	@Deprecated
 	public void addFilteredViewer(StructuredViewer viewer) {
 		if (viewer != null && !filteredViewers.contains(viewer)) {
 			filteredViewers.add(viewer);
@@ -211,6 +224,7 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 	}
 
 	public void removeFilteredViewer(StructuredViewer viewer) {
+		focusActions.remove(viewer);
 		filteredViewers.remove(viewer);
 	}
 
@@ -353,8 +367,10 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 	private void updateExpansionState(StructuredViewer viewer, Object objectToRefresh) {
 		if (viewer instanceof TreeViewer
 				&& filteredViewers.contains(viewer)
-				&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
-						IContextUiPreferenceContstants.AUTO_MANAGE_EXPANSION)) {
+				&& hasInterestFilter(viewer, true)
+				&& ContextUiPlugin.getDefault()
+						.getPreferenceStore()
+						.getBoolean(IContextUiPreferenceContstants.AUTO_MANAGE_EXPANSION)) {
 			TreeViewer treeViewer = (TreeViewer) viewer;
 
 			// HACK to fix bug 278569: [context] errors with Markers view and active Mylyn task
@@ -369,6 +385,23 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 				treeViewer.expandToLevel(objectToRefresh, AbstractTreeViewer.ALL_LEVELS);
 			}
 		}
+	}
+
+	private boolean hasInterestFilter(StructuredViewer viewer, boolean tryToReinstall) {
+		for (ViewerFilter filter : viewer.getFilters()) {
+			if (filter instanceof InterestFilter) {
+				return true;
+			}
+		}
+		if (tryToReinstall) {
+			AbstractFocusViewAction action = focusActions.get(viewer);
+			if (action != null) {
+				action.run(action);
+				viewer.refresh();
+				return hasInterestFilter(viewer, false);
+			}
+		}
+		return false;
 	}
 
 	/**

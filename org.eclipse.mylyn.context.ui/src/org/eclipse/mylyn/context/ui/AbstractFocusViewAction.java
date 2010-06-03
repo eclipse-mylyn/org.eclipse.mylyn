@@ -416,7 +416,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 				}
 
 				installInterestFilter(viewer);
-				ContextUiPlugin.getViewerManager().addFilteredViewer(viewer);
+				ContextUiPlugin.getViewerManager().addFilteredViewer(viewer, this);
 			} else {
 				if (showEmptyViewMessage && viewer instanceof TreeViewer) {
 					Tree tree = ((TreeViewer) viewer).getTree();
@@ -470,7 +470,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 		} else if (viewer.getControl().isDisposed() && manageViewer) {
 			// TODO: do this with part listener, not lazily?
 			return false;
-		} else if (previousFilters.containsKey(viewer)) {
+		} else if (previousFilters.containsKey(viewer) && hasInterestFilter(viewer)) {
 			// install has already run, this can happen if AbstractAutoFocusViewAction.init() executes
 			// initialization asynchronously
 			return false;
@@ -506,6 +506,15 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 		} finally {
 			viewer.getControl().setRedraw(true);
 			internalSuppressExpandAll = false;
+		}
+		return false;
+	}
+
+	private boolean hasInterestFilter(StructuredViewer viewer) {
+		for (ViewerFilter filter : viewer.getFilters()) {
+			if (filter == getInterestFilter()) {
+				return true;
+			}
 		}
 		return false;
 	}
