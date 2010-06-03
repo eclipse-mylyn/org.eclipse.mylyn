@@ -17,9 +17,8 @@ import java.util.Date;
 import org.eclipse.core.runtime.Assert;
 
 /**
- * Immutable. Encapsulates interaction made by the user or on behalf of the user.
- * 
- * Also see: http://wiki.eclipse.org/index.php/Mylyn_Integrator_Reference#Monitor_API
+ * Immutable. Encapsulates interaction made by the user or on behalf of the user. Also see:
+ * http://wiki.eclipse.org/index.php/Mylyn_Integrator_Reference#Monitor_API
  * 
  * @author Mik Kersten
  * @since 2.0
@@ -222,17 +221,14 @@ public class InteractionEvent {
 	 */
 	public InteractionEvent(Kind kind, String structureKind, String handle, String originId, String navigatedRelation,
 			String delta, float interestContribution) {
-		Assert.isNotNull(kind);
-		Assert.isNotNull(originId);
-		this.kind = kind;
-		this.structureKind = structureKind;
-		this.structureHandle = handle;
-		this.originId = originId;
-		this.navigation = navigatedRelation;
-		this.delta = delta;
-		this.interestContribution = interestContribution;
-		this.date = Calendar.getInstance().getTime();
-		this.endDate = this.date;
+		this(kind, structureKind, handle, originId, navigatedRelation, delta, interestContribution,
+				Calendar.getInstance().getTime());
+	}
+
+	private InteractionEvent(Kind kind, String structureKind, String handle, String originId, String navigatedRelation,
+			String delta, float interestContribution, Date startDate) {
+		this(kind, structureKind, handle, originId, navigatedRelation, delta, interestContribution, startDate,
+				startDate);
 	}
 
 	/**
@@ -245,11 +241,11 @@ public class InteractionEvent {
 		Assert.isNotNull(startDate);
 		Assert.isNotNull(endDate);
 		this.kind = kind;
-		this.structureKind = structureKind;
-		this.structureHandle = handle;
-		this.originId = originId;
-		this.navigation = navigatedRelation;
-		this.delta = delta;
+		this.structureKind = (structureKind != null) ? structureKind.intern() : null;
+		this.structureHandle = (handle != null) ? handle.intern() : null;
+		this.originId = originId.intern();
+		this.navigation = (navigatedRelation != null) ? navigatedRelation.intern() : null;
+		this.delta = (delta != null) ? delta.intern() : null;
 		this.interestContribution = interestContribution;
 		this.date = startDate;
 		this.endDate = endDate;
