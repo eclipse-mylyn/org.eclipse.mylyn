@@ -46,8 +46,8 @@ public class InteractionContextElement implements IInteractionElement {
 			throw new RuntimeException("malformed context: null handle"); //$NON-NLS-1$
 		}
 		interest = new DegreeOfInterest(context, context.getScaling(), eventCountOnCreation);
-		this.handle = elementHandle;
-		this.kind = kind;
+		this.handle = elementHandle.intern();
+		this.kind = (kind != null) ? kind.intern() : null;
 		this.context = context;
 	}
 
