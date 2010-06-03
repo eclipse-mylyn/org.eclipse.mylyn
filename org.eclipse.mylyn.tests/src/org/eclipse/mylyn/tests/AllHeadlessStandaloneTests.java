@@ -19,7 +19,6 @@ import org.eclipse.mylyn.commons.tests.net.SslProtocolSocketFactoryTest;
 import org.eclipse.mylyn.commons.tests.net.WebUtilTest;
 import org.eclipse.mylyn.commons.tests.support.ManagedTestSuite;
 import org.eclipse.mylyn.discovery.tests.AllDiscoveryTests;
-import org.eclipse.mylyn.jira.tests.AllJiraHeadlessStandaloneTests;
 import org.eclipse.mylyn.tasks.tests.TaskListTest;
 import org.eclipse.mylyn.tasks.tests.TasksUtilTest;
 import org.eclipse.mylyn.tasks.tests.core.ITasksCoreConstantsTest;
@@ -63,9 +62,6 @@ public class AllHeadlessStandaloneTests {
 
 		// trac
 		suite.addTest(AllTracHeadlessStandaloneTests.suite());
-
-		// jira
-		suite.addTest(AllJiraHeadlessStandaloneTests.suite());
 
 		return suite;
 	}
