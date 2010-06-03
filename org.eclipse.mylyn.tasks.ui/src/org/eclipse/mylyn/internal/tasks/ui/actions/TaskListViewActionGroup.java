@@ -45,6 +45,11 @@ public class TaskListViewActionGroup extends RepositoryElementActionGroup {
 		setSelectionProvider(view.getViewer());
 	}
 
+	public void dispose() {
+		view.getViewer().removeSelectionChangedListener(renameAction);
+		setSelectionProvider(null);
+	}
+
 	public void updateDrillDownActions() {
 		if (drillDownAdapter.canGoBack()) {
 			goUpAction.setEnabled(true);

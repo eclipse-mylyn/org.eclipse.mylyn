@@ -565,6 +565,11 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 	@Override
 	public void dispose() {
 		super.dispose();
+
+		if (actionGroup != null) {
+			actionGroup.dispose();
+		}
+
 		TasksUiPlugin.getDefault().getServiceMessageManager().removeServiceMessageListener(serviceMessageControl);
 		TasksUiPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(tasksUiPreferenceListener);
 		TasksUiInternal.getTaskList().removeChangeListener(TASKLIST_CHANGE_LISTENER);

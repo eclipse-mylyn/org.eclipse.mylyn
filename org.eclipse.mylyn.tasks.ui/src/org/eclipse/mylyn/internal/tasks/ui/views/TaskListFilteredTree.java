@@ -46,6 +46,8 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MenuDetectEvent;
 import org.eclipse.swt.events.MenuDetectListener;
 import org.eclipse.swt.events.MouseAdapter;
@@ -119,26 +121,26 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		hookContextMenu();
 		this.window = window;
 		indicateActiveTaskWorkingSet();
-	}
-
-	@Override
-	public void dispose() {
-		if (changeListener != null) {
-			TasksUiInternal.getTaskList().removeChangeListener(changeListener);
-		}
-		if (taskProgressBarChangeListener != null) {
-			TasksUiInternal.getTaskList().removeChangeListener(taskProgressBarChangeListener);
-		}
-		if (taskProgressBarActivityListener != null) {
-			TasksUi.getTaskActivityManager().removeActivityListener(taskProgressBarActivityListener);
-		}
-		if (taskProgressBarWorkingSetListener != null) {
-			PlatformUI.getWorkbench().getWorkingSetManager().removePropertyChangeListener(
-					taskProgressBarWorkingSetListener);
-		}
-		activeTaskMenuManager.dispose();
-		super.dispose();
-		taskListToolTip.dispose();
+		addDisposeListener(new DisposeListener() {
+			public void widgetDisposed(DisposeEvent e) {
+				if (changeListener != null) {
+					TasksUiInternal.getTaskList().removeChangeListener(changeListener);
+				}
+				if (taskProgressBarChangeListener != null) {
+					TasksUiInternal.getTaskList().removeChangeListener(taskProgressBarChangeListener);
+				}
+				if (taskProgressBarActivityListener != null) {
+					TasksUi.getTaskActivityManager().removeActivityListener(taskProgressBarActivityListener);
+				}
+				if (taskProgressBarWorkingSetListener != null) {
+					PlatformUI.getWorkbench().getWorkingSetManager().removePropertyChangeListener(
+							taskProgressBarWorkingSetListener);
+				}
+				actionGroup.setSelectionProvider(null);
+				activeTaskMenuManager.dispose();
+				taskListToolTip.dispose();
+			}
+		});
 	}
 
 	private void hookContextMenu() {

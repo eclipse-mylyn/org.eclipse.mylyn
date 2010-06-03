@@ -54,7 +54,7 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 			setText(Messages.CopyTaskDetailsAction_Url_Menu_Label);
 			break;
 		case SUMMARY:
-			setText("Summary");
+			setText(Messages.CopyTaskDetailsAction_Summary_Menu_Label);
 			break;
 		case SUMMARY_URL:
 			setText(Messages.CopyTaskDetailsAction_Summary_and_Url_Menu_Label);

@@ -147,6 +147,11 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 	public void contributeToToolBar(IToolBarManager tbm) {
 	}
 
+	@Override
+	public void dispose() {
+		actionGroup.setSelectionProvider(null);
+	}
+
 	public void forceActionsEnabled() {
 		actionSupport.forceEditActionsEnabled();
 	}

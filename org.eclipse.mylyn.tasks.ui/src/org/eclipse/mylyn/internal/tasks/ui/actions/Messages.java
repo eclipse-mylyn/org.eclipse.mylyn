@@ -77,6 +77,8 @@ public class Messages extends NLS {
 
 	public static String CopyTaskDetailsAction_Summary_and_Url_Menu_Label;
 
+	public static String CopyTaskDetailsAction_Summary_Menu_Label;
+
 	public static String CopyTaskDetailsAction_Url_Menu_Label;
 
 	public static String DeleteAction_Also_delete_from_repository_X;

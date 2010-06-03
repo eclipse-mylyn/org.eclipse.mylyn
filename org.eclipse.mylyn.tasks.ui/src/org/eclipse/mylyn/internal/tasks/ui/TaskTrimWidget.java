@@ -128,6 +128,8 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 
 	private SelectionProviderAdapter activeTaskSelectionProvider;
 
+	private RepositoryElementActionGroup actionGroup;
+
 	public TaskTrimWidget() {
 		TasksUi.getTaskActivityManager().addActivationListener(taskActivationListener);
 		TasksUiPlugin.getTaskList().addChangeListener(taskListListener);
@@ -163,6 +165,8 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 			menu.dispose();
 		}
 		menu = null;
+
+		actionGroup.setSelectionProvider(null);
 
 		TasksUi.getTaskActivityManager().removeActivationListener(taskActivationListener);
 		TasksUiPlugin.getTaskList().removeChangeListener(taskListListener);
@@ -260,7 +264,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 	private void hookContextMenu() {
 		activeTaskSelectionProvider = new SelectionProviderAdapter();
 
-		final RepositoryElementActionGroup actionGroup = new RepositoryElementActionGroup();
+		actionGroup = new RepositoryElementActionGroup();
 		actionGroup.setSelectionProvider(activeTaskSelectionProvider);
 
 		menuManager = new MenuManager("#PopupMenu"); //$NON-NLS-1$
