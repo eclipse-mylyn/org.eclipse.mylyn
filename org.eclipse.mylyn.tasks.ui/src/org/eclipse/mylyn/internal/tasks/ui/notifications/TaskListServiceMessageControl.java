@@ -234,6 +234,7 @@ public class TaskListServiceMessageControl implements IServiceMessageListener {
 
 		data = new TableWrapData();
 		data.colspan = 2;
+		data.grabHorizontal = true;
 		descriptionLabel.setLayoutData(data);
 
 		return head;
