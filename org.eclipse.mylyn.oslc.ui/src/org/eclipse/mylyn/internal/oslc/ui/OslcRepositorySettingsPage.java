@@ -174,6 +174,7 @@ public abstract class OslcRepositorySettingsPage extends AbstractRepositorySetti
 				new URL(getBaseUrl());
 
 				// TODO: if only one ServiceProviderCatalog/ServiceProvider found, use it
+
 				List<OslcServiceProvider> serviceProviders = ((IOslcConnector) connector).getAvailableServices(
 						repository, getBaseUrl(), monitor);
 				setProviders(serviceProviders);
@@ -183,6 +184,7 @@ public abstract class OslcRepositorySettingsPage extends AbstractRepositorySetti
 			} catch (CoreException e) {
 				StatusHandler.log(new Status(IStatus.ERROR, IOslcCoreConstants.ID_PLUGIN,
 						"Error occurred during service discovery", e)); //$NON-NLS-1$
+				throw e;
 			}
 
 		}
