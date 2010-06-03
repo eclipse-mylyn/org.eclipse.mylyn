@@ -126,7 +126,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 
 	@Deprecated
 	public void setLastReadTimeStamp(String lastReadTimeStamp) {
-		this.lastReadTimeStamp = lastReadTimeStamp;
+		this.lastReadTimeStamp = lastReadTimeStamp.intern();
 	}
 
 	/**
@@ -167,7 +167,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 	public void setOwner(String owner) {
 		if (!areEqual(this.owner, owner)) {
 			String oldValue = this.owner;
-			this.owner = owner;
+			this.owner = owner.intern();
 			firePropertyChange("owner", oldValue, owner); //$NON-NLS-1$
 		}
 	}
@@ -197,7 +197,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 	}
 
 	public final void setRepositoryUrl(String repositoryUrl) {
-		this.repositoryUrl = repositoryUrl;
+		this.repositoryUrl = repositoryUrl.intern();
 		super.setHandleIdentifier(RepositoryTaskHandleUtil.getHandle(repositoryUrl, taskId));
 	}
 
@@ -270,7 +270,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 	public void setPriority(String priority) {
 		if (!areEqual(this.priority, priority)) {
 			String oldValue = this.priority;
-			this.priority = priority;
+			this.priority = priority.intern();
 			firePropertyChange("priority", oldValue, priority); //$NON-NLS-1$
 		}
 	}
@@ -413,7 +413,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 	public void setTaskKind(String taskKind) {
 		if (!areEqual(this.taskKind, taskKind)) {
 			String oldValue = this.taskKind;
-			this.taskKind = taskKind;
+			this.taskKind = taskKind.intern();
 			firePropertyChange("taskKind", oldValue, taskKind); //$NON-NLS-1$
 		}
 	}

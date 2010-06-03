@@ -294,7 +294,7 @@ public final class TaskAttribute {
 		Assert.isNotNull(parentAttribute);
 		Assert.isNotNull(attributeId);
 		this.parentAttribute = parentAttribute;
-		this.attributeId = attributeId;
+		this.attributeId = attributeId.intern();
 		this.taskData = parentAttribute.getTaskData();
 		this.values = new ArrayList<String>(1);
 		parentAttribute.add(this);

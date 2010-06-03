@@ -85,10 +85,19 @@ public class TaskListExternalizer {
 
 	private final List<Node> orphanedNodes = new ArrayList<Node>();
 
+	private Document orphanedDocument;
+
 	private String readVersion = ""; //$NON-NLS-1$
 
 	public TaskListExternalizer(RepositoryModel repositoryModel, IRepositoryManager repositoryManager) {
 		this.delegatingExternalizer = new DelegatingTaskExternalizer(repositoryModel, repositoryManager);
+		try {
+			this.orphanedDocument = createDocument();
+		} catch (CoreException e) {
+			this.orphanedDocument = null;
+			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+					"Failed to create document for orphaned nodes", e));
+		}
 	}
 
 	public void initialize(List<AbstractTaskListMigrator> migrators) {
@@ -197,6 +206,13 @@ public class TaskListExternalizer {
 
 		delegatingExternalizer.reset();
 		orphanedNodes.clear();
+		try {
+			this.orphanedDocument = createDocument();
+		} catch (CoreException e) {
+			this.orphanedDocument = null;
+			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+					"Failed to create document for orphaned nodes", e));
+		}
 
 		Document doc = openTaskList(inFile);
 		Element root = doc.getDocumentElement();
@@ -221,7 +237,7 @@ public class TaskListExternalizer {
 						tasksWithSubtasks.put(task, child.getChildNodes());
 					}
 				} else {
-					orphanedNodes.add(child);
+					addOrphan(child);
 				}
 			}
 		}
@@ -242,7 +258,7 @@ public class TaskListExternalizer {
 						delegatingExternalizer.readTaskReferences(query, child.getChildNodes(), taskList);
 					}
 				} else {
-					orphanedNodes.add(child);
+					addOrphan(child);
 				}
 			}
 		}
@@ -271,14 +287,21 @@ public class TaskListExternalizer {
 //		}
 	}
 
+	private void addOrphan(Node child) {
+		// copy node to separate document to avoid retaining entire dom
+		if (orphanedDocument != null) {
+			orphanedNodes.add(orphanedDocument.importNode(child, true));
+		} else {
+			orphanedNodes.add(child);
+		}
+	}
+
 	/**
-	 * Opens the specified XML file and parses it into a DOM Document.
-	 * 
-	 * Filename - the name of the file to open Return - the Document built from the XML file Throws - XMLException if
-	 * the file cannot be parsed as XML - IOException if the file cannot be opened
+	 * Opens the specified XML file and parses it into a DOM Document. Filename - the name of the file to open Return -
+	 * the Document built from the XML file Throws - XMLException if the file cannot be parsed as XML - IOException if
+	 * the file cannot be opened
 	 * 
 	 * @throws CoreException
-	 * 
 	 */
 	private Document openTaskList(File inputFile) throws CoreException {
 		InputStream in = null;

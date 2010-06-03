@@ -24,7 +24,7 @@ public class AttributeMap {
 	private final Map<String, String> attributes;
 
 	public AttributeMap() {
-		attributes = new HashMap<String, String>();
+		attributes = new HashMap<String, String>(4);
 	}
 
 	public String getAttribute(String key) {
@@ -40,7 +40,7 @@ public class AttributeMap {
 		if (value == null) {
 			attributes.remove(key);
 		} else {
-			attributes.put(key, value);
+			attributes.put(key.intern(), value.intern());
 		}
 	}
 
