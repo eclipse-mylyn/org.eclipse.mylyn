@@ -29,6 +29,7 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotification;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotificationPopup;
+import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotifier;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -150,10 +151,22 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 			}
 			openJob.setSystem(runSystem);
 			openJob.schedule(initialStartupTime);
+
+			for (ITaskListNotificationProvider provider : notificationProviders) {
+				if (provider instanceof TaskListNotifier) {
+					((TaskListNotifier) provider).setEnabled(true);
+				}
+			}
 		}
 	}
 
 	public void stopNotification() {
+		for (ITaskListNotificationProvider provider : notificationProviders) {
+			if (provider instanceof TaskListNotifier) {
+				((TaskListNotifier) provider).setEnabled(false);
+			}
+		}
+
 		openJob.cancel();
 //		closeJob.cancel();
 //		if (popup != null) {

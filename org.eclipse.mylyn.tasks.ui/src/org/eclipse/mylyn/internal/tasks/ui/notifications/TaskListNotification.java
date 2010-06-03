@@ -15,6 +15,7 @@ import java.util.Date;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotification;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
@@ -31,14 +32,13 @@ import org.eclipse.ui.PlatformUI;
  */
 public class TaskListNotification extends AbstractNotification {
 
+	private static DecoratingLabelProvider labelProvider;
+
 	protected final ITask task;
 
 	protected Date date;
 
 	private String description;
-
-	private final DecoratingLabelProvider labelProvider = new DecoratingLabelProvider(
-			new TaskElementLabelProvider(true), PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator());
 
 	private final Object token;
 
@@ -52,6 +52,16 @@ public class TaskListNotification extends AbstractNotification {
 		this.token = token;
 	}
 
+	private LabelProvider getLabelProvider() {
+		// lazily instantiate on UI thread
+		if (labelProvider == null) {
+			labelProvider = new DecoratingLabelProvider(new TaskElementLabelProvider(true), PlatformUI.getWorkbench()
+					.getDecoratorManager()
+					.getLabelDecorator());
+		}
+		return labelProvider;
+	}
+
 	@Override
 	public String getDescription() {
 		return description;
@@ -59,7 +69,7 @@ public class TaskListNotification extends AbstractNotification {
 
 	@Override
 	public String getLabel() {
-		return labelProvider.getText(task);
+		return getLabelProvider().getText(task);
 	}
 
 	public void setDescription(String description) {
@@ -77,7 +87,7 @@ public class TaskListNotification extends AbstractNotification {
 
 	@Override
 	public Image getNotificationImage() {
-		return labelProvider.getImage(task);
+		return getLabelProvider().getImage(task);
 	}
 
 	protected ITask getTask() {

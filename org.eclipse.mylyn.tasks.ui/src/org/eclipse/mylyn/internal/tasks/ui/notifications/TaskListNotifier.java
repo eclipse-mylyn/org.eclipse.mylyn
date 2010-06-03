@@ -45,6 +45,8 @@ public class TaskListNotifier implements ITaskDataManagerListener, ITaskListNoti
 
 	private final RepositoryModel repositoryModel;
 
+	public boolean enabled;
+
 	public TaskListNotifier(RepositoryModel repositoryModel, TaskDataManager taskDataManager) {
 		this.repositoryModel = repositoryModel;
 		this.taskDataManager = taskDataManager;
@@ -84,6 +86,12 @@ public class TaskListNotifier implements ITaskDataManagerListener, ITaskListNoti
 	}
 
 	public void taskDataUpdated(TaskDataManagerEvent event) {
+		synchronized (notificationQueue) {
+			if (!enabled) {
+				// skip expensive processing
+				return;
+			}
+		}
 		if (event.getToken() != null && event.getTaskDataChanged()) {
 			AbstractRepositoryConnectorUi connectorUi = TasksUi.getRepositoryConnectorUi(event.getTaskData()
 					.getConnectorKind());
@@ -91,7 +99,9 @@ public class TaskListNotifier implements ITaskDataManagerListener, ITaskListNoti
 				TaskListNotification notification = getNotification(event.getTask(), event.getToken());
 				if (notification != null) {
 					synchronized (notificationQueue) {
-						notificationQueue.add(notification);
+						if (enabled) {
+							notificationQueue.add(notification);
+						}
 					}
 				}
 			}
@@ -111,6 +121,21 @@ public class TaskListNotifier implements ITaskDataManagerListener, ITaskListNoti
 
 	public void editsDiscarded(TaskDataManagerEvent event) {
 		// ignore		
+	}
+
+	public void setEnabled(boolean enabled) {
+		synchronized (notificationQueue) {
+			if (!enabled) {
+				notificationQueue.clear();
+			}
+			this.enabled = enabled;
+		}
+	}
+
+	public boolean isEnabled() {
+		synchronized (notificationQueue) {
+			return enabled;
+		}
 	}
 
 }
