@@ -271,10 +271,14 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 						}
 
 						if (task.getDueDate() != null) {
-							temp.setTime(task.getDueDate());
-							if (TaskActivityUtil.isAfterCurrentWeek(temp)) {
+							if (taskActivityManager.isOwnedByUser(task)) {
+								temp.setTime(task.getDueDate());
+								if (TaskActivityUtil.isAfterCurrentWeek(temp)) {
+									children.add(task);
+									continue;
+								}
+							} else {
 								children.add(task);
-								continue;
 							}
 						}
 
