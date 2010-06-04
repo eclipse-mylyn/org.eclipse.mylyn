@@ -811,7 +811,7 @@ public final class TaskRepository extends PlatformObject {
 		Assert.isLegal(!key.matches(".*\\s.*")); //$NON-NLS-1$
 		String oldValue = this.properties.get(key);
 		if ((oldValue != null && !oldValue.equals(newValue)) || (oldValue == null && newValue != null)) {
-			this.properties.put(key.intern(), newValue.intern());
+			this.properties.put(key.intern(), (newValue != null) ? newValue.intern() : null);
 			notifyChangeListeners(key, oldValue, newValue);
 		}
 	}
