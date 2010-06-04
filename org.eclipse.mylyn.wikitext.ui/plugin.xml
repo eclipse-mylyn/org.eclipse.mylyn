@@ -130,9 +130,13 @@
 	</extension>
 	
 	<extension point="org.eclipse.ui.contexts">
+		<context description="%context.description.1"
+			id="org.eclipse.mylyn.internal.wikitext.ui.editor.basicMarkupSourceContext" name="%context.name.1"
+			parentId="org.eclipse.ui.textEditorScope">
+		</context>
 		<context description="%context.description.0"
 			id="org.eclipse.mylyn.wikitext.ui.editor.markupSourceContext" name="%context.name.0"
-			parentId="org.eclipse.ui.textEditorScope">
+			parentId="org.eclipse.mylyn.internal.wikitext.ui.editor.basicMarkupSourceContext">
 		</context>
 	</extension>
 	
@@ -140,7 +144,7 @@
          <!--  win32:  M1=CTRL,    M2=SHIFT, M3=ALT, M4=-
             carbon: M1=COMMAND, M2=SHIFT, M3=ALT, M4=CTRL -->
 		<key sequence="F1"
-			contextId="org.eclipse.mylyn.wikitext.ui.editor.markupSourceContext"
+			contextId="org.eclipse.mylyn.internal.wikitext.ui.editor.basicMarkupSourceContext"
 			commandId="org.eclipse.mylyn.wikitext.ui.editor.showCheatSheetCommand"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>
@@ -227,7 +231,7 @@
           	`<with variable="activeContexts">
 	            <iterate operator="or">
 	               <equals
-	                     value="org.eclipse.mylyn.wikitext.ui.editor.markupSourceContext"/>
+	                     value="org.eclipse.mylyn.internal.wikitext.ui.editor.basicMarkupSourceContext"/>
 	            </iterate>
          	</with>
           </visibleWhen>
