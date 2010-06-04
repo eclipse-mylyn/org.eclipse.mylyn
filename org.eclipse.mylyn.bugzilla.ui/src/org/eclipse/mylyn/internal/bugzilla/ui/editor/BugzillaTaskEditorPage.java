@@ -187,8 +187,9 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 			return;
 		}
 
-		TaskAttribute componentAttribute = getModel().getTaskData().getRoot().getMappedAttribute(
-				BugzillaAttribute.COMPONENT.getKey());
+		TaskAttribute componentAttribute = getModel().getTaskData()
+				.getRoot()
+				.getMappedAttribute(BugzillaAttribute.COMPONENT.getKey());
 		if (componentAttribute != null && componentAttribute.getValue().length() == 0) {
 			getTaskEditor().setMessage(Messages.BugzillaTaskEditorPage_Please_select_a_component_before_submitting,
 					IMessageProvider.ERROR);
@@ -199,8 +200,9 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 			return;
 		}
 
-		TaskAttribute descriptionAttribute = getModel().getTaskData().getRoot().getMappedAttribute(
-				TaskAttribute.DESCRIPTION);
+		TaskAttribute descriptionAttribute = getModel().getTaskData()
+				.getRoot()
+				.getMappedAttribute(TaskAttribute.DESCRIPTION);
 		if (descriptionAttribute != null && descriptionAttribute.getValue().length() == 0
 				&& getModel().getTaskData().isNew()) {
 			getTaskEditor().setMessage(Messages.BugzillaTaskEditorPage_Please_enter_a_description_before_submitting,
@@ -212,17 +214,20 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 			return;
 		}
 
-		TaskAttribute attributeOperation = getModel().getTaskData().getRoot().getMappedAttribute(
-				TaskAttribute.OPERATION);
+		TaskAttribute attributeOperation = getModel().getTaskData()
+				.getRoot()
+				.getMappedAttribute(TaskAttribute.OPERATION);
 		if (attributeOperation != null) {
 			if ("duplicate".equals(attributeOperation.getValue())) { //$NON-NLS-1$
-				TaskAttribute originalOperation = getModel().getTaskData().getRoot().getAttribute(
-						TaskAttribute.PREFIX_OPERATION + attributeOperation.getValue());
+				TaskAttribute originalOperation = getModel().getTaskData()
+						.getRoot()
+						.getAttribute(TaskAttribute.PREFIX_OPERATION + attributeOperation.getValue());
 				String inputAttributeId = originalOperation.getMetaData().getValue(
 						TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID);
 				if (inputAttributeId != null && !inputAttributeId.equals("")) { //$NON-NLS-1$
-					TaskAttribute inputAttribute = attributeOperation.getTaskData().getRoot().getAttribute(
-							inputAttributeId);
+					TaskAttribute inputAttribute = attributeOperation.getTaskData()
+							.getRoot()
+							.getAttribute(inputAttributeId);
 					if (inputAttribute != null) {
 						String dupValue = inputAttribute.getValue();
 						if (dupValue == null || dupValue.equals("")) { //$NON-NLS-1$
@@ -241,14 +246,16 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 		}
 
 		if (getModel().getTaskData().isNew()) {
-			TaskAttribute productAttribute = getModel().getTaskData().getRoot().getMappedAttribute(
-					TaskAttribute.PRODUCT);
+			TaskAttribute productAttribute = getModel().getTaskData()
+					.getRoot()
+					.getMappedAttribute(TaskAttribute.PRODUCT);
 			if (productAttribute != null && productAttribute.getValue().length() > 0) {
 				getModel().getTaskRepository().setProperty(IBugzillaConstants.LAST_PRODUCT_SELECTION,
 						productAttribute.getValue());
 			}
-			TaskAttribute componentSelectedAttribute = getModel().getTaskData().getRoot().getMappedAttribute(
-					TaskAttribute.COMPONENT);
+			TaskAttribute componentSelectedAttribute = getModel().getTaskData()
+					.getRoot()
+					.getMappedAttribute(TaskAttribute.COMPONENT);
 			if (componentSelectedAttribute != null && componentSelectedAttribute.getValue().length() > 0) {
 				getModel().getTaskRepository().setProperty(IBugzillaConstants.LAST_COMPONENT_SELECTION,
 						componentSelectedAttribute.getValue());
@@ -259,7 +266,10 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 		// bug#263318
 		TaskAttribute attrToken = getModel().getTaskData().getRoot().getAttribute(BugzillaAttribute.TOKEN.getKey());
 		if (attrToken != null) {
-			attrToken.setValue(getModel().getTask().getAttribute(BugzillaAttribute.TOKEN.getKey()));
+			String tokenString = getModel().getTask().getAttribute(BugzillaAttribute.TOKEN.getKey());
+			if (tokenString != null) {
+				attrToken.setValue(tokenString);
+			}
 		}
 
 		getTaskEditor().setMessage("", IMessageProvider.NONE); //$NON-NLS-1$
@@ -327,8 +337,9 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 						return;
 					}
 
-					TaskAttribute attributeComponent = taskAttribute.getTaskData().getRoot().getMappedAttribute(
-							BugzillaAttribute.COMPONENT.getKey());
+					TaskAttribute attributeComponent = taskAttribute.getTaskData()
+							.getRoot()
+							.getMappedAttribute(BugzillaAttribute.COMPONENT.getKey());
 					if (attributeComponent != null) {
 						List<String> optionValues = repositoryConfiguration.getComponents(taskAttribute.getValue());
 						Collections.sort(optionValues);
@@ -344,8 +355,9 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 						refresh(attributeComponent);
 					}
 
-					TaskAttribute attributeTargetMilestone = taskAttribute.getTaskData().getRoot().getMappedAttribute(
-							BugzillaAttribute.TARGET_MILESTONE.getKey());
+					TaskAttribute attributeTargetMilestone = taskAttribute.getTaskData()
+							.getRoot()
+							.getMappedAttribute(BugzillaAttribute.TARGET_MILESTONE.getKey());
 					if (attributeTargetMilestone != null) {
 						List<String> optionValues = repositoryConfiguration.getTargetMilestones(taskAttribute.getValue());
 						Collections.sort(optionValues);
@@ -361,8 +373,9 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 						refresh(attributeTargetMilestone);
 					}
 
-					TaskAttribute attributeVersion = taskAttribute.getTaskData().getRoot().getMappedAttribute(
-							BugzillaAttribute.VERSION.getKey());
+					TaskAttribute attributeVersion = taskAttribute.getTaskData()
+							.getRoot()
+							.getMappedAttribute(BugzillaAttribute.VERSION.getKey());
 					if (attributeVersion != null) {
 						List<String> optionValues = repositoryConfiguration.getVersions(taskAttribute.getValue());
 						Collections.sort(optionValues);
@@ -378,8 +391,9 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 						refresh(attributeVersion);
 					}
 
-					TaskAttribute attributeDefaultAssignee = taskAttribute.getTaskData().getRoot().getMappedAttribute(
-							BugzillaAttribute.SET_DEFAULT_ASSIGNEE.getKey());
+					TaskAttribute attributeDefaultAssignee = taskAttribute.getTaskData()
+							.getRoot()
+							.getMappedAttribute(BugzillaAttribute.SET_DEFAULT_ASSIGNEE.getKey());
 					if (attributeDefaultAssignee != null) {
 						attributeDefaultAssignee.setValue("1"); //$NON-NLS-1$
 						refresh(attributeDefaultAssignee);
