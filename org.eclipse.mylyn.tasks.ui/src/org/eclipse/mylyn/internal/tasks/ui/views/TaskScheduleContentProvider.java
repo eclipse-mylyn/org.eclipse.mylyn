@@ -284,8 +284,11 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 
 					}
 
-					if (task.getDueDate() == null && ((AbstractTask) task).getScheduledForDate() == null) {
-						// Task list is not focused. Show all incoming tasks in the Incoming bin
+					// Task list is not focused. Show all incoming tasks in the Incoming bin
+					if (((AbstractTask) task).getScheduledForDate() == null && task.getDueDate() != null
+							&& !taskActivityManager.isOwnedByUser(task)) {
+						children.add(task);
+					} else if (task.getDueDate() == null && ((AbstractTask) task).getScheduledForDate() == null) {
 						children.add(task);
 					}
 				}
