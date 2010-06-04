@@ -54,7 +54,7 @@ public class BuildsUiPlugin extends AbstractUIPlugin {
 
 	protected IPath getBuildsFile() {
 		IPath stateLocation = Platform.getStateLocation(getBundle());
-		IPath cacheFile = stateLocation.append("builds.xml"); //$NON-NLS-1$
+		IPath cacheFile = stateLocation.append("builds.xmi"); //$NON-NLS-1$
 		return cacheFile;
 	}
 

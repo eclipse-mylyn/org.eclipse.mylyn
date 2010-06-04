@@ -38,6 +38,7 @@ import org.eclipse.mylyn.builds.core.IOperationMonitor;
 import org.eclipse.mylyn.builds.core.spi.BuildConnector;
 import org.eclipse.mylyn.builds.core.util.ProgressUtil;
 import org.eclipse.mylyn.builds.ui.BuildsUi;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.builds.core.BuildPlan;
 import org.eclipse.mylyn.internal.builds.core.BuildServer;
 import org.eclipse.mylyn.internal.builds.core.tasks.BuildTaskConnector;
@@ -183,6 +184,9 @@ public class BuildTaskSettingsPage extends AbstractRepositorySettingsPage {
 	@Override
 	protected void applyValidatorResult(Validator validator) {
 		super.applyValidatorResult(validator);
+		if (!validator.getStatus().isOK()) {
+			StatusHandler.log(validator.getStatus());
+		}
 		if (((BuildValidator) validator).getPlans() != null) {
 			Set<String> selectedIds = getSelectedPlanIds();
 			planViewer.refresh();
@@ -282,11 +286,8 @@ public class BuildTaskSettingsPage extends AbstractRepositorySettingsPage {
 
 		Composite buttonComposite = new Composite(composite, SWT.NONE);
 		GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.TOP).applyTo(buttonComposite);
-		GridLayoutFactory.fillDefaults()
-				.numColumns(1)
-				.margins(0, 0)
-				.extendedMargins(5, 0, 0, 0)
-				.applyTo(buttonComposite);
+		GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).extendedMargins(5, 0, 0, 0).applyTo(
+				buttonComposite);
 		createButtons(buttonComposite);
 
 		Dialog.applyDialogFont(composite);
