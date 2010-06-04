@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.bugzilla.tests.ui;
 
+import java.util.Arrays;
+
 import junit.framework.TestCase;
 
 import org.eclipse.jface.text.Region;
@@ -42,7 +44,8 @@ public class BugzillaHyperlinkDetectorTest extends TestCase {
 	private void assertHyperlinks(String string, IHyperlink... expected) {
 		IHyperlink[] links = connector.findHyperlinks(repository, task, string, -1, 0);
 		if (expected.length == 0) {
-			assertNull(links);
+			assertNull("Expected no hyperlinks, but got: " + ((links != null) ? Arrays.asList(links).toString() : ""),
+					links);
 			return;
 		}
 		assertNotNull("Expected hyperlinks in " + string, links);
@@ -127,6 +130,10 @@ public class BugzillaHyperlinkDetectorTest extends TestCase {
 	public void testFindHyperlinksMultiple() {
 		assertHyperlinks("bug 456#comment#12", link(0, 7, "456"), link(8, 10, "123", "12"));
 		assertHyperlinks("bug 123             bug 456", link(0, 7, "123"), link(20, 7, "456"));
+	}
+
+	public void testFindHyperlinksLinebreak() {
+		assertHyperlinks("bug\n456");
 	}
 
 	public void testFindHyperlinksNoAttachment() {

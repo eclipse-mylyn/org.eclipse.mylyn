@@ -53,13 +53,13 @@ import org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard;
  */
 public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 
-	private static final String BUG = "(?:duplicate of|bug|task)\\s*#?\\s*(\\d+)"; //$NON-NLS-1$
+	private static final String BUG = "(?:duplicate of|bug|task)[ \t]*#?[ \t]*(\\d+)"; //$NON-NLS-1$
 
-	private static final String COMMENT = "comment\\s*#?\\s*(\\d+)"; //$NON-NLS-1$
+	private static final String COMMENT = "comment[ \t]*#?[ \t]*(\\d+)"; //$NON-NLS-1$
 
-	private static final String REGEXP_BUG = "(?:\\W||^)(" + BUG + "(?:\\s*" + COMMENT + ")?)|(" + COMMENT + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	private static final String REGEXP_BUG = "(?:\\W||^)(" + BUG + "(?:[ \t]*" + COMMENT + ")?)|(" + COMMENT + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-	private static final String REGEXP_ATTACHMENT = "(?:Created (?:an )?)?attachment\\s*#?\\s*(?:\\(id=)?(\\d+)\\)?"; //$NON-NLS-1$
+	private static final String REGEXP_ATTACHMENT = "(?:Created (?:an )?)?attachment[ \t]*#?[ \t]*(?:\\(id=)?(\\d+)\\)?"; //$NON-NLS-1$
 
 	private static final Pattern PATTERN_BUG = Pattern.compile(REGEXP_BUG, Pattern.CASE_INSENSITIVE);
 
