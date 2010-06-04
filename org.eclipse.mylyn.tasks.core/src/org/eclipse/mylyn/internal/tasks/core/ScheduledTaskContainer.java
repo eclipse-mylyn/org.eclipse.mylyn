@@ -134,7 +134,8 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 
 				if (task.getDueDate() != null
 						&& task.getDueDate().before(
-								((AbstractTask) task).getScheduledForDate().getStartDate().getTime())) {
+								((AbstractTask) task).getScheduledForDate().getStartDate().getTime())
+						&& activityManager.isOwnedByUser(task)) {
 					continue;
 				}
 
