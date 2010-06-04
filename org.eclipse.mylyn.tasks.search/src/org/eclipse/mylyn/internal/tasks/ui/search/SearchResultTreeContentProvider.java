@@ -54,6 +54,9 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 			searchResult = (RepositorySearchResult) newInput;
 			clear();
 			elementsChanged(searchResult.getElements());
+		} else {
+			searchResult = null;
+			clear();
 		}
 	}
 
@@ -111,13 +114,15 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 				if (task.isCompleted()) {
 					completeIncomplete = completeState.get(Messages.SearchResultTreeContentProvider_Complete);
 					if (completeIncomplete == null) {
-						completeIncomplete = new TaskGroup("group-complete", Messages.SearchResultTreeContentProvider_Complete, GroupBy.COMPLETION.name()); //$NON-NLS-1$
+						completeIncomplete = new TaskGroup(
+								"group-complete", Messages.SearchResultTreeContentProvider_Complete, GroupBy.COMPLETION.name()); //$NON-NLS-1$
 						completeState.put(Messages.SearchResultTreeContentProvider_Complete, completeIncomplete);
 					}
 				} else {
 					completeIncomplete = completeState.get(Messages.SearchResultTreeContentProvider_Incomplete);
 					if (completeIncomplete == null) {
-						completeIncomplete = new TaskGroup("group-incomplete", Messages.SearchResultTreeContentProvider_Incomplete, GroupBy.COMPLETION.name()); //$NON-NLS-1$
+						completeIncomplete = new TaskGroup(
+								"group-incomplete", Messages.SearchResultTreeContentProvider_Incomplete, GroupBy.COMPLETION.name()); //$NON-NLS-1$
 						completeState.put(Messages.SearchResultTreeContentProvider_Incomplete, completeIncomplete);
 					}
 				}

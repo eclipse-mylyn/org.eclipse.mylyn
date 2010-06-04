@@ -18,6 +18,7 @@ import org.eclipse.jface.viewers.Viewer;
  * @author Rob Elves (moved into task.ui)
  * @see org.eclipse.jface.viewers.IContentProvider
  */
+// TODO e3.5 merge into SearchResultTreeContentProvider
 public abstract class SearchResultContentProvider implements ITreeContentProvider {
 
 	/** An empty array of objects */
@@ -33,6 +34,8 @@ public abstract class SearchResultContentProvider implements ITreeContentProvide
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		if (newInput instanceof RepositorySearchResult) {
 			initialize((RepositorySearchResult) newInput);
+		} else {
+			searchResult = null;
 		}
 	}
 
