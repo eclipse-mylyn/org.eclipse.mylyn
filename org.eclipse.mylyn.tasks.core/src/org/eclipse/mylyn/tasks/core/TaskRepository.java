@@ -841,7 +841,7 @@ public final class TaskRepository extends PlatformObject {
 	 */
 	public void setRepositoryUrl(String repositoryUrl) {
 		Assert.isNotNull(repositoryUrl);
-		properties.put(IRepositoryConstants.PROPERTY_URL, repositoryUrl);
+		properties.put(IRepositoryConstants.PROPERTY_URL, repositoryUrl.intern());
 	}
 
 	public void setVersion(String ver) {
