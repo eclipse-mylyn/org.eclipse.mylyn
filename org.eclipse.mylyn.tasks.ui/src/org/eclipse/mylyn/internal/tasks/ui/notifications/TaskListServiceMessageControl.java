@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.GradientCanvas;
 import org.eclipse.mylyn.internal.tasks.core.notifications.IServiceMessageListener;
@@ -50,7 +49,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.forms.FormColors;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
@@ -150,32 +148,30 @@ public class TaskListServiceMessageControl implements IServiceMessageListener {
 
 		buttonsComp.setLayout(gLayout);
 
-		settingsLink = new ImageHyperlink(buttonsComp, SWT.NONE);
-		settingsLink.setImage(CommonImages.getImage(CommonImages.NOTIFICATION_PREFERENCES));
-//		TableWrapData data = new TableWrapData();
-//		data.align = TableWrapData.RIGHT;
-//		settingsLink.setLayoutData(data);
-		settingsLink.addHyperlinkListener(new HyperlinkAdapter() {
-			@Override
-			public void linkActivated(HyperlinkEvent e) {
-				PreferenceDialog pref = PreferencesUtil.createPreferenceDialogOn(
-						TaskListServiceMessageControl.this.parent.getShell(),
-						"org.eclipse.mylyn.tasks.ui.preferences", null, null); //$NON-NLS-1$
-				if (pref != null) {
-					pref.open();
-				}
-			}
-
-			@Override
-			public void linkEntered(HyperlinkEvent e) {
-				settingsLink.setImage(CommonImages.getImage(CommonImages.NOTIFICATION_PREFERENCES_HOVER));
-			}
-
-			@Override
-			public void linkExited(HyperlinkEvent e) {
-				settingsLink.setImage(CommonImages.getImage(CommonImages.NOTIFICATION_PREFERENCES));
-			}
-		});
+		// Disabled for initial 3.4 release as per bug#263528
+//		settingsLink = new ImageHyperlink(buttonsComp, SWT.NONE);
+//		settingsLink.setImage(CommonImages.getImage(CommonImages.NOTIFICATION_PREFERENCES));
+//		settingsLink.addHyperlinkListener(new HyperlinkAdapter() {
+//			@Override
+//			public void linkActivated(HyperlinkEvent e) {
+//				PreferenceDialog pref = PreferencesUtil.createPreferenceDialogOn(
+//						TaskListServiceMessageControl.this.parent.getShell(),
+//						"org.eclipse.mylyn.tasks.ui.preferences", null, null); //$NON-NLS-1$
+//				if (pref != null) {
+//					pref.open();
+//				}
+//			}
+//
+//			@Override
+//			public void linkEntered(HyperlinkEvent e) {
+//				settingsLink.setImage(CommonImages.getImage(CommonImages.NOTIFICATION_PREFERENCES_HOVER));
+//			}
+//
+//			@Override
+//			public void linkExited(HyperlinkEvent e) {
+//				settingsLink.setImage(CommonImages.getImage(CommonImages.NOTIFICATION_PREFERENCES));
+//			}
+//		});
 
 		closeLink = new ImageHyperlink(buttonsComp, SWT.NONE);
 		closeLink.setImage(CommonImages.getImage(CommonImages.NOTIFICATION_CLOSE));

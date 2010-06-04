@@ -659,9 +659,10 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 			serviceMessageManager = new ServiceMessageManager(serviceMessageUrl, lastMod, etag, checktime);
 
-			if (getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED)) {
-				serviceMessageManager.start();
-			}
+			// Disabled for initial 3.4 release as per bug#263528
+//			if (getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED)) {
+//				serviceMessageManager.start();
+//			}
 
 			// trigger lazy initialization
 			new TasksUiInitializationJob().schedule();
