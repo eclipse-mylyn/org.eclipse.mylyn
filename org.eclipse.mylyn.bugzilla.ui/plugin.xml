@@ -95,29 +95,29 @@
                class="org.eclipse.mylyn.internal.bugzilla.ui.action.BugzillaNotObsoleteAttachmentAction"
                enablesFor="*"
                id="org.eclipse.mylyn.bugzilla.ui.contribution.attachment.notobsolete"
-               label="Mark not obsolete"
+               label="%Mark_not_obsolete_Action_Label"
                menubarPath="org.eclipse.mylyn.bugzilla.ui.attachments.mark/markadditions"
-               tooltip="Mark attachment as not obsolete">
+               tooltip="%Mark_not_obsolete_Action_Tooltip">
          </action>
          <action
                class="org.eclipse.mylyn.internal.bugzilla.ui.action.BugzillaObsoleteAttachmentAction"
                enablesFor="*"
                id="org.eclipse.mylyn.bugzilla.ui.contribution.attachment.obsolete"
-               label="Mark obsolete"
+               label="%Mark_obsolete_Action_Label"
                menubarPath="org.eclipse.mylyn.bugzilla.ui.attachments.mark/markadditions"
-               tooltip="Mark attachment as obsolete">
+               tooltip="%Mark_obsolete_Action_Tooltip">
          </action>
          <action
                class="org.eclipse.mylyn.internal.bugzilla.ui.action.BugzillaAttachmentUpdateAction"
                enablesFor="*"
                id="org.eclipse.mylyn.bugzilla.ui.contribution.attachment.update"
-               label="Detail..."
+               label="%Details_Action_Label"
                menubarPath="org.eclipse.mylyn.bugzilla.ui.attachments.mark"
-               tooltip="Attachment Details">
+               tooltip="%Details_Action_Tooltip">
          </action>
           <menu
                 id="org.eclipse.mylyn.bugzilla.ui.attachments.mark"
-                label="Mark as"
+                label="%Mark_as_Menu_Label"
                 path="markadditions">
           </menu>
       </objectContribution>

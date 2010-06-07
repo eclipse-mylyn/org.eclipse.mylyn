@@ -16,20 +16,16 @@ import java.lang.reflect.InvocationTargetException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylyn.internal.bugzilla.ui.action.ChangeAttachmentJob;
-import org.eclipse.mylyn.internal.bugzilla.ui.editor.BugzillaTaskEditorPage;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AttributeEditorFactory;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.forms.editor.IFormPage;
 
 public class BugzillaAttachmentWizard extends Wizard {
 
@@ -56,7 +52,7 @@ public class BugzillaAttachmentWizard extends Wizard {
 		this.taskEditor = taskEditor;
 		this.attachment = attachment;
 		setNeedsProgressMonitor(true);
-
+		setWindowTitle(Messages.BugzillaAttachmentWizard_Attachment_Details_Dialog_Title);
 	}
 
 	@Override
@@ -107,7 +103,7 @@ public class BugzillaAttachmentWizard extends Wizard {
 		}
 	}
 */
-	
+
 	private boolean runInWizard(final ChangeAttachmentJob job) {
 		try {
 			getContainer().run(true, true, new IRunnableWithProgress() {
