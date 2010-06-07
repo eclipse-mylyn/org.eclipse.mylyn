@@ -20,7 +20,7 @@ import org.eclipse.swt.graphics.Image;
 
 /**
  * Image helper class which contains all application images.
- * 
+ *
  * @author Christoph Mayerhofer
  */
 public class Images {
@@ -47,6 +47,10 @@ public class Images {
 			ICONS_PATH, "review_passed.png"); //$NON-NLS-1$
 	public static final ImageDescriptor REVIEW_RESULT_NONE = create(ICONS_PATH,
 			"review_none.png"); //$NON-NLS-1$
+	public static final ImageDescriptor OVERLAY_ADDITION = create(ICONS_PATH,
+			"addition.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor OVERLAY_OBSTRUCTED = create(ICONS_PATH,
+			"obstructed.gif"); //$NON-NLS-1$
 
 	protected static ImageDescriptor create(String prefix, String name) {
 		return ImageDescriptor.createFromURL(makeIconURL(prefix, name));
@@ -54,7 +58,7 @@ public class Images {
 
 	/**
 	 * Get the image for the specified key from the registry.
-	 * 
+	 *
 	 * @param key
 	 *            The key for the image.
 	 * @return The image, or <code>null</code> if none.
@@ -71,7 +75,7 @@ public class Images {
 
 	/**
 	 * Puts the image with the specified key to the image registry.
-	 * 
+	 *
 	 * @param key
 	 *            The key for the image.
 	 * @param desc

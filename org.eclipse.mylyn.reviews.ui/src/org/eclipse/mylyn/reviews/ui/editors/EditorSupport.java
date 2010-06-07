@@ -16,6 +16,7 @@ import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.contentmergeviewer.TextMergeViewer;
 import org.eclipse.compare.patch.IFilePatch2;
 import org.eclipse.compare.patch.PatchConfiguration;
+import org.eclipse.jface.resource.CompositeImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelection;
@@ -23,9 +24,10 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.reviews.core.model.review.Patch;
 import org.eclipse.mylyn.reviews.core.model.review.Rating;
@@ -38,13 +40,20 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
@@ -54,6 +63,29 @@ import org.eclipse.ui.forms.widgets.Section;
  * @author Kilian Matt
  */
 public class EditorSupport {
+	private final class ParentResizeHandler implements Listener {
+		private int generation;
+
+		public void handleEvent(Event event) {
+			++generation;
+
+			Display.getCurrent().timerExec(300, new Runnable() {
+				int scheduledGeneration = generation;
+
+				public void run() {
+					if (scrolledForm.isDisposed()) {
+						return;
+					}
+
+					// only reflow if this is the latest generation to prevent
+					// unnecessary reflows while the form is being resized
+					if (scheduledGeneration == generation) {
+						scrolledForm.reflow(true);
+					}
+				}
+			});
+		}
+	}
 
 	private ReviewSubmitHandler handler;
 
@@ -65,10 +97,12 @@ public class EditorSupport {
 
 	private ReviewTaskEditorInput input;
 
-	private ListViewer fileList;
+	private TableViewer fileList;
 	private TextMergeViewer viewer;
 	private Section delegateSection;
 	private Composite container;
+
+	private ScrolledForm scrolledForm;
 
 	public Control createPartControl(Composite parent) {
 		FormToolkit toolkit = new FormToolkit(parent.getDisplay());
@@ -77,17 +111,23 @@ public class EditorSupport {
 
 	public Control createPartControl(Composite parent, FormToolkit toolkit) {
 		try {
+
+//			parent.addListener(SWT.Resize, new ParentResizeHandler());
 			container = toolkit.createComposite(parent, SWT.NONE);
 			container.setLayout(new FillLayout());
 
-			ScrolledForm scrolledForm = toolkit.createScrolledForm(container);
+			scrolledForm = toolkit.createScrolledForm(container);
 			scrolledForm.setText(Messages.ReviewEditor_New_Patch_based_Review);
 			scrolledForm.setDelayedReflow(false);
 			toolkit.decorateFormHeading(scrolledForm.getForm());
 
 			Composite body = scrolledForm.getBody();
 			body.setLayoutData(getLayoutData(false));
-			body.setLayout(new GridLayout());
+			GridLayout layout = new GridLayout();
+			layout.marginHeight = 0;
+			layout.marginWidth = 0;
+			layout.verticalSpacing = 0;
+			body.setLayout(layout);
 
 			createDelegateSection(toolkit, body);
 
@@ -95,23 +135,56 @@ public class EditorSupport {
 					ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE
 							| ExpandableComposite.EXPANDED);
 			fileSection.setText(Messages.ReviewEditor_Files);
-			fileSection.setLayoutData(getLayoutData(false));
-
-			fileList = new ListViewer(fileSection);
+			GridData gd = getLayoutData(false);
+			gd.grabExcessHorizontalSpace=false;
+			gd.heightHint=50;
+			fileSection.setLayoutData(gd);
+			fileList = new TableViewer(fileSection );
+			fileSection.setLayout(createSectionClientLayout());
 			fileSection.setClient(fileList.getControl());
+			TableViewerColumn column = new TableViewerColumn(fileList, SWT.LEFT);
+			column.getColumn().setText("");
+			column.getColumn().setWidth(25);
+			column.getColumn().setResizable(false);
+			column = new TableViewerColumn(fileList, SWT.LEFT);
+			column.getColumn().setText("Filename");
+			column.getColumn().setWidth(100);
+			column.getColumn().setResizable(true);
+			fileList.setLabelProvider(new TableLabelProvider() {
+				private final int COLUMN_ICON = 0;
+				private final int COLUMN_FILE = 1;
 
-			fileList.setLabelProvider(new LabelProvider() {
 				@Override
-				public String getText(Object element) {
-					if (element instanceof ReviewDiffModel) {
-						ReviewDiffModel diffModel = ((ReviewDiffModel) element);
+				public String getColumnText(Object element, int columnIndex) {
+					if (columnIndex == COLUMN_FILE) {
+						if (element instanceof ReviewDiffModel) {
+							ReviewDiffModel diffModel = ((ReviewDiffModel) element);
 
-						if (!diffModel.canReview()) {
-							return diffModel.getFileName() + " FILE MISSING";
-						} else
 							return diffModel.getFileName();
+						}
 					}
-					return super.getText(element);
+					return null;
+				}
+
+				@Override
+				public Image getColumnImage(Object element, int columnIndex) {
+					if (columnIndex == COLUMN_ICON) {
+						ISharedImages sharedImages = PlatformUI.getWorkbench()
+								.getSharedImages();
+						if (element instanceof ReviewDiffModel) {
+							ReviewDiffModel diffModel = ((ReviewDiffModel) element);
+							if (diffModel.isNewFile()) {
+								return new NewFile().createImage();
+							}
+							if (!diffModel.canReview()) {
+								return new MissingFile().createImage();
+							}
+						}
+
+						return sharedImages
+								.getImage(ISharedImages.IMG_OBJ_FILE);
+					}
+					return null;
 				}
 			});
 
@@ -156,7 +229,14 @@ public class EditorSupport {
 					}
 				}
 			});
+
 			fileList.setInput((getEditorInput().getReview().getScope().get(0)));
+
+//			fileList.getControl().setSize(SWT.DEFAULT, 200);
+//			gd= new GridData();
+//			gd.heightHint=200;
+//			gd.widthHint=SWT.FILL;
+//			fileList.getControl().setLayoutData(gd);
 
 			Section differencesSection = toolkit.createSection(body,
 					ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE
@@ -225,7 +305,7 @@ public class EditorSupport {
 			toolkit.createLabel(reviewComposite, Messages.ReviewEditor_Comment);
 			final Text commentText = toolkit.createText(reviewComposite, "", //$NON-NLS-1$
 					SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
-			GridData gd = getLayoutData(true);// new GridData(SWT.DEFAULT, 60);
+			gd = getLayoutData(true);// new GridData(SWT.DEFAULT, 60);
 			gd.heightHint = 60;
 			gd.verticalSpan = 2;
 			commentText.setLayoutData(gd);
@@ -268,6 +348,7 @@ public class EditorSupport {
 					.setImage(TasksUiImages.REPOSITORY_SUBMIT.createImage());
 			reviewSection.setClient(reviewComposite);
 
+			scrolledForm.reflow(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 
@@ -294,7 +375,7 @@ public class EditorSupport {
 		if (getEditorInput() instanceof NewReviewTaskEditorInput) {
 			String currentUserName = ((NewReviewTaskEditorInput) getEditorInput())
 					.getModel().getTaskRepository().getUserName();
-			people.setText(currentUserName);
+			people.setText(currentUserName != null ? currentUserName : "");
 		}
 
 		delegateSection.setClient(composite);
@@ -302,7 +383,81 @@ public class EditorSupport {
 
 	private GridData getLayoutData(boolean growHorizontal) {
 		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
+		if (growHorizontal) {
+			gd.verticalAlignment = SWT.FILL;
+			gd.grabExcessVerticalSpace = true;
+		}
 		return gd;
 	}
 
+
+	public static GridLayout createSectionClientLayout() {
+		GridLayout layout = new GridLayout();
+		layout.marginHeight = 0;
+		// leave 1px for borders
+		layout.marginTop = 2;
+		// spacing if a section is expanded
+		layout.marginBottom = 8;
+		return layout;
+	}
+
+	private static final int ICON_OFFSET = 5;
+
+	private static class MissingFile extends CompositeImageDescriptor {
+		ISharedImages sharedImages = PlatformUI.getWorkbench()
+				.getSharedImages();
+
+		@Override
+		protected void drawCompositeImage(int width, int height) {
+			drawImage(getBaseImageData(), 0, 0);
+			drawImage(Images.OVERLAY_OBSTRUCTED.getImageData(),7,3);
+		}
+
+		@Override
+		protected Point getSize() {
+
+			ImageData img = getBaseImageData();
+			return new Point(img.width, img.height);
+		}
+
+		private ImageData baseImage;
+
+		private ImageData getBaseImageData() {
+			if (baseImage == null) {
+				baseImage = sharedImages.getImageDescriptor(
+						ISharedImages.IMG_OBJ_FILE).getImageData();
+			}
+			return baseImage;
+		}
+
+	}
+
+	private static class NewFile extends CompositeImageDescriptor {
+		ISharedImages sharedImages = PlatformUI.getWorkbench()
+				.getSharedImages();
+
+		@Override
+		protected void drawCompositeImage(int width, int height) {
+			drawImage(getBaseImageData(), 0, 0);
+			drawImage(Images.OVERLAY_ADDITION.getImageData(),7,5);
+		}
+
+		@Override
+		protected Point getSize() {
+
+			ImageData img = getBaseImageData();
+			return new Point(img.width, img.height);
+		}
+
+		private ImageData baseImage;
+
+		private ImageData getBaseImageData() {
+			if (baseImage == null) {
+				baseImage = sharedImages.getImageDescriptor(
+						ISharedImages.IMG_OBJ_FILE).getImageData();
+			}
+			return baseImage;
+		}
+
+	}
 }
