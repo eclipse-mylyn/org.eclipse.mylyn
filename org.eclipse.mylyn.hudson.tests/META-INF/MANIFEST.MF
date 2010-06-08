@@ -10,6 +10,13 @@ Require-Bundle: org.junit,
  org.eclipse.ui,
  org.eclipse.ui.workbench.texteditor,
  org.eclipse.mylyn.hudson.ui,
- org.eclipse.mylyn.hudson.core
+ org.eclipse.mylyn.hudson.core,
+ org.eclipse.mylyn.tests.util,
+ org.eclipse.mylyn.builds.core,
+ org.eclipse.mylyn.commons.core,
+ org.eclipse.mylyn.commons.net
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: Eclipse Mylyn
+Export-Package: org.eclipse.mylyn.hudson.tests;x-internal:=true,
+ org.eclipse.mylyn.hudson.tests.client;x-internal:=true,
+ org.eclipse.mylyn.hudson.tests.support;x-internal:=true
