@@ -129,20 +129,14 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 
 		// All tasks scheduled for this date range
 		for (ITask task : activityManager.getScheduledTasks(range)) {
-			if (!task.isCompleted()
-					|| (task.isCompleted() && TaskActivityUtil.getDayOf(task.getCompletionDate()).isPresent())) {
+			if (!task.isCompleted() || isCompletedToday(task)) {
 
-				if (task.getDueDate() != null
-						&& task.getDueDate().before(
-								((AbstractTask) task).getScheduledForDate().getStartDate().getTime())
-						&& activityManager.isOwnedByUser(task)) {
+				if (isDueBeforeScheduled(task) && activityManager.isOwnedByUser(task)) {
 					continue;
 				}
 
-				if (range instanceof WeekDateRange && ((WeekDateRange) range).isThisWeek()
-						&& task instanceof AbstractTask
-						&& ((AbstractTask) task).getScheduledForDate() instanceof WeekDateRange) {
-
+				if (isThisWeekBin() && isScheduledForAWeek(task)) {
+					// is due this week
 					if (task.getDueDate() != null) {
 						cal.setTime(task.getDueDate());
 						if (range.includes(cal)) {
@@ -159,9 +153,8 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 
 		// Add due tasks if not the This Week container, and not scheduled for earlier date
 		if (!(range instanceof WeekDateRange && ((WeekDateRange) range).isPresent())) {
-			for (ITask task : activityManager.getDueTasks(range.getStartDate(), range.getEndDate())) {
-				DateRange scheduledDate = ((AbstractTask) task).getScheduledForDate();
-				if (scheduledDate != null && scheduledDate.before(range.getStartDate())) {
+			for (ITask task : getTasksDueThisWeek()) {
+				if (isScheduledBeforeDue(task)) {
 					continue;
 				}
 				if (activityManager.isOwnedByUser(task)) {
@@ -171,10 +164,9 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 		}
 
 		// All over due/scheduled tasks are present in the Today folder
-		if ((range instanceof DayDateRange) && ((DayDateRange) range).isPresent()) {
+		if (isTodayBin()) {
 			for (ITask task : activityManager.getOverScheduledTasks()) {
-				if (task instanceof AbstractTask
-						&& !(((AbstractTask) task).getScheduledForDate() instanceof WeekDateRange)) {
+				if (isScheduledForADay(task)) {
 					addChild(children, task);
 				}
 			}
@@ -191,14 +183,48 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 
 		if (range instanceof WeekDateRange && ((WeekDateRange) range).isThisWeek()) {
 			for (ITask task : activityManager.getOverScheduledTasks()) {
-				if (task instanceof AbstractTask
-						&& ((AbstractTask) task).getScheduledForDate() instanceof WeekDateRange) {
+				if (isScheduledForAWeek(task)) {
 					addChild(children, task);
 				}
 			}
 		}
 
 		return children;
+	}
+
+	private boolean isTodayBin() {
+		return range instanceof DayDateRange && ((DayDateRange) range).isPresent();
+	}
+
+	private boolean isThisWeekBin() {
+
+		return range instanceof WeekDateRange && ((WeekDateRange) range).isThisWeek();
+	}
+
+	private Set<ITask> getTasksDueThisWeek() {
+		return activityManager.getDueTasks(range.getStartDate(), range.getEndDate());
+	}
+
+	private boolean isScheduledForAWeek(ITask task) {
+		return task instanceof AbstractTask && ((AbstractTask) task).getScheduledForDate() instanceof WeekDateRange;
+	}
+
+	private boolean isDueBeforeScheduled(ITask task) {
+		return task.getDueDate() != null
+				&& task.getDueDate().before(((AbstractTask) task).getScheduledForDate().getStartDate().getTime());
+	}
+
+	private boolean isScheduledForADay(ITask task) {
+		return task instanceof AbstractTask && !(((AbstractTask) task).getScheduledForDate() instanceof WeekDateRange);
+	}
+
+	private boolean isScheduledBeforeDue(ITask task) {
+		return ((AbstractTask) task).getScheduledForDate() != null
+				&& ((AbstractTask) task).getScheduledForDate().before(range.getStartDate());
+	}
+
+	private boolean isCompletedToday(ITask task) {
+		return (task.isCompleted() && TaskActivityUtil.getDayOf(task.getCompletionDate()).isPresent());
 	}
 
 	private void addChild(Set<ITask> collection, ITask task) {
