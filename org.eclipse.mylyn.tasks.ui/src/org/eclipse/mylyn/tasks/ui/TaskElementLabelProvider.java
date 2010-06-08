@@ -196,7 +196,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 						&& TasksUiPlugin.getTaskActivityManager().isPastReminder(task)) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_SCHEDULED_PAST);
 				} else if (TasksUiPlugin.getTaskActivityManager().isOverdueForOther(task)) {
-					return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_SCHEDULED_TODAY);
+					return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_OVERDUE_FOR_OTHERS);
 				} else if (TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task)) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_SCHEDULED_TODAY);
 				} else if (TasksUiPlugin.getTaskActivityManager().isScheduledForThisWeek(task)) {
