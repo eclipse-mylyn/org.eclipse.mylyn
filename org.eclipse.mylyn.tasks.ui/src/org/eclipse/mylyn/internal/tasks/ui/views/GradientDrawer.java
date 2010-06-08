@@ -36,6 +36,9 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.themes.IThemeManager;
 
+/**
+ * @author Mik Kersten
+ */
 public class GradientDrawer {
 
 	private final Listener CATEGORY_GRADIENT_DRAWER = new Listener() {
@@ -147,10 +150,12 @@ public class GradientDrawer {
 	}
 
 	private void configureGradientColors() {
-		categoryGradientStart = themeManager.getCurrentTheme().getColorRegistry().get(
-				CommonThemes.COLOR_CATEGORY_GRADIENT_START);
-		categoryGradientEnd = themeManager.getCurrentTheme().getColorRegistry().get(
-				CommonThemes.COLOR_CATEGORY_GRADIENT_END);
+		categoryGradientStart = themeManager.getCurrentTheme()
+				.getColorRegistry()
+				.get(CommonThemes.COLOR_CATEGORY_GRADIENT_START);
+		categoryGradientEnd = themeManager.getCurrentTheme()
+				.getColorRegistry()
+				.get(CommonThemes.COLOR_CATEGORY_GRADIENT_END);
 
 		boolean customized = true;
 		if (categoryGradientStart != null && categoryGradientStart.getRed() == 240
@@ -167,8 +172,17 @@ public class GradientDrawer {
 			if (!customized) {
 				// Set parent-based colors
 				Color parentBackground = getViewer().getTree().getParent().getBackground();
-				double GRADIENT_TOP = 1.05;// 1.02;
-				double GRADIENT_BOTTOM = .995;// 1.035;
+				double GRADIENT_TOP;// = 1.05;// 1.02;
+				double GRADIENT_BOTTOM;// = .995;// 1.035;
+
+				// Constants to darken or lighten the default gradients
+				if ("Windows 7".equals(System.getProperty("os.name"))) {
+					GRADIENT_TOP = 1.05;
+					GRADIENT_BOTTOM = 1.13;
+				} else {
+					GRADIENT_TOP = 1.05;
+					GRADIENT_BOTTOM = .995;
+				}
 
 				int red = Math.min(255, (int) (parentBackground.getRed() * GRADIENT_TOP));
 				int green = Math.min(255, (int) (parentBackground.getGreen() * GRADIENT_TOP));
