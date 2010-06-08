@@ -40,14 +40,6 @@ public class CreateReviewTaskEditorPage extends AbstractTaskEditorPage {
 			if (data != null) {
 
 				taskDescriptors.add(new TaskEditorPartDescriptor(
-						CreateReviewTaskEditorPart.ID_PART_CREATEREVIEW) {
-					@Override
-					public AbstractTaskEditorPart createPart() {
-						return new CreateReviewTaskEditorPart();
-					}
-
-				});
-				taskDescriptors.add(new TaskEditorPartDescriptor(
 						ReviewSummaryTaskEditorPart.ID_PART_REVIEWSUMMARY) {
 					@Override
 					public AbstractTaskEditorPart createPart() {

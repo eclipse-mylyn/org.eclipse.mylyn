@@ -38,7 +38,7 @@ public class Messages extends NLS {
 	public static String ReviewEditor_Submit;
 	public static String ReviewSummaryTaskEditorPart_Header_Author;
 	public static String ReviewSummaryTaskEditorPart_Header_Comment;
-	public static String ReviewSummaryTaskEditorPart_Header_Patch;
+	public static String ReviewSummaryTaskEditorPart_Header_Scope;
 	public static String ReviewSummaryTaskEditorPart_Header_Result;
 	public static String ReviewSummaryTaskEditorPart_Header_Reviewer;
 	public static String ReviewSummaryTaskEditorPart_Header_ReviewId;
