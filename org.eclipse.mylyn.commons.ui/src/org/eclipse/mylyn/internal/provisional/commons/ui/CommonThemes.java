@@ -31,7 +31,7 @@ public class CommonThemes {
 
 	public static final String COLOR_COMPLETED_TODAY = "org.eclipse.mylyn.tasks.ui.colors.foreground.today.completed"; //$NON-NLS-1$
 
-	public static final String COLOR_OVERDUE_FOR_OTHER = "org.eclipse.mylyn.tasks.ui.colors.foreground.overdue.for.other"; //$NON-NLS-1$
+	public static final String COLOR_OVERDUE_FOR_OTHERS = "org.eclipse.mylyn.tasks.ui.colors.foreground.overdue.for.other"; //$NON-NLS-1$
 
 	public static final String COLOR_CATEGORY_GRADIENT_START = "org.eclipse.mylyn.tasks.ui.colors.category.gradient.start"; //$NON-NLS-1$
 
