@@ -27,6 +27,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractFilteredTree;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.provisional.commons.ui.SearchHistoryPopUpDialog;
 import org.eclipse.mylyn.internal.provisional.commons.ui.SelectionProviderAdapter;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
@@ -133,8 +134,9 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 					TasksUi.getTaskActivityManager().removeActivityListener(taskProgressBarActivityListener);
 				}
 				if (taskProgressBarWorkingSetListener != null) {
-					PlatformUI.getWorkbench().getWorkingSetManager().removePropertyChangeListener(
-							taskProgressBarWorkingSetListener);
+					PlatformUI.getWorkbench()
+							.getWorkingSetManager()
+							.removePropertyChangeListener(taskProgressBarWorkingSetListener);
 				}
 				actionGroup.setSelectionProvider(null);
 				activeTaskMenuManager.dispose();
@@ -575,8 +577,9 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		this.actionGroup.setSelectionProvider(activeTaskSelectionProvider);
 	}
 
-//	@Override
-//	protected SearchHistoryPopUpDialog getHistoryPopupDialog() {
+	@Override
+	protected SearchHistoryPopUpDialog getHistoryPopupDialog() {
+		return null;
 //		return new TaskListSearchHistoryPopupDialog(getShell(), SWT.TOP);
-//	}
+	}
 }
