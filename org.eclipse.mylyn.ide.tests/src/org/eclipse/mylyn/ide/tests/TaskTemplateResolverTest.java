@@ -55,9 +55,9 @@ public class TaskTemplateResolverTest extends TestCase {
 		ITask task = new LocalTask("12345", "Test Task");
 		TasksUiPlugin.getTaskActivityManager().activateTask(task);
 		canHandleTemplateResolver("${activeTaskKey}", "12345");
-		canHandleTemplateResolver("${activeTaskPrefix}", "task");
-		canHandleTemplateResolver("${activeTaskPrefix} ${activeTaskKey}", "task 12345");
-		canHandleTemplateResolver("${activeTaskPrefix} #${activeTaskKey}", "task #12345");
+		canHandleTemplateResolver("${activeTaskPrefix}", "task ");
+		canHandleTemplateResolver("${activeTaskPrefix}${activeTaskKey}", "task 12345");
+		canHandleTemplateResolver("${activeTaskPrefix}#${activeTaskKey}", "task #12345");
 	}
 
 	/**
@@ -68,7 +68,8 @@ public class TaskTemplateResolverTest extends TestCase {
 		task.setTaskKey("DEMO-2");
 		TasksUiPlugin.getTaskActivityManager().activateTask(task);
 		canHandleTemplateResolver("${activeTaskKey}", "DEMO-2");
-		canHandleTemplateResolver("${activeTaskPrefix} ${activeTaskKey}", "task DEMO-2");
+		canHandleTemplateResolver("${activeTaskPrefix}${activeTaskKey}", "task DEMO-2");
+		canHandleTemplateResolver("${activeTaskPrefix} ${activeTaskKey}", "task  DEMO-2");
 	}
 
 	/**
@@ -78,7 +79,7 @@ public class TaskTemplateResolverTest extends TestCase {
 		ITask task = new MockTask("http://foo.bar", "12345");
 		TasksUiPlugin.getTaskActivityManager().activateTask(task);
 		canHandleTemplateResolver("${activeTaskKey}", "12345");
-		canHandleTemplateResolver("${activeTaskPrefix}", "task");
+		canHandleTemplateResolver("${activeTaskPrefix}", "task ");
 		// from now the task have a key ... the resolve will prefer this key
 		task.setTaskKey("foobar");
 		canHandleTemplateResolver("${activeTaskKey}", "foobar");
