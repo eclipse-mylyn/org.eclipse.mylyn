@@ -234,7 +234,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 		TasksUiPlugin.getExternalizationManager().load();
 		//manager.readRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		if (manager.getRepositoryConnector("bugzilla") != null) {
-			assertTrue(manager.getAllRepositories().contains(repository2));
+			assertTrue(manager.getAllRepositories().contains(repository1));
 		}
 		if (manager.getRepositoryConnector("jira") != null) {
 			assertTrue(manager.getAllRepositories().contains(repository2));
