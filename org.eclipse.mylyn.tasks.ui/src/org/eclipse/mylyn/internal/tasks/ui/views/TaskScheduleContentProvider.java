@@ -260,6 +260,11 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 		}
 
 		private boolean include(ITask task) {
+			// ensure that completed tasks always show somewhere
+			if (task.isCompleted()) {
+				return true;
+			}
+
 			DateRange scheduledForDate = ((AbstractTask) task).getScheduledForDate();
 
 			// in focused mode fewer container are displayed, include additional tasks
@@ -293,11 +298,7 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 					return true;
 				}
 			}
-			
-			if(task.isCompleted()){
-				// make sure that all completed tasks are included
-				return true;
-			}
+
 			return false;
 		}
 
