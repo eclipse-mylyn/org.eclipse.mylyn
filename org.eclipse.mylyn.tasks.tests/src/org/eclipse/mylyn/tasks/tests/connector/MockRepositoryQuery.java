@@ -21,13 +21,13 @@ public class MockRepositoryQuery extends RepositoryQuery {
 	public String MOCK_QUERY_URL = MockRepositoryConnector.REPOSITORY_URL + ".query";
 
 	public MockRepositoryQuery(String description) {
-		super(MockRepositoryConnector.REPOSITORY_KIND, description);
+		super(MockRepositoryConnector.CONNECTOR_KIND, description);
 		super.setUrl(MOCK_QUERY_URL);
 		super.setRepositoryUrl(MockRepositoryConnector.REPOSITORY_URL);
 	}
 
 	public MockRepositoryQuery(String description, String url) {
-		super(MockRepositoryConnector.REPOSITORY_KIND, description);
+		super(MockRepositoryConnector.CONNECTOR_KIND, description);
 		super.setUrl(url);
 	}
 

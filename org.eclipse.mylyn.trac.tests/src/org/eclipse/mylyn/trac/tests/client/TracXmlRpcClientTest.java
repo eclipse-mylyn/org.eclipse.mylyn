@@ -29,11 +29,11 @@ import org.eclipse.mylyn.internal.trac.core.client.TracXmlRpcClient;
 import org.eclipse.mylyn.internal.trac.core.model.TracAction;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
-import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicketField;
 import org.eclipse.mylyn.internal.trac.core.model.TracVersion;
 import org.eclipse.mylyn.internal.trac.core.model.TracWikiPage;
 import org.eclipse.mylyn.internal.trac.core.model.TracWikiPageInfo;
+import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylyn.trac.tests.support.TracFixture;
 import org.eclipse.mylyn.trac.tests.support.TracTestConstants;
 import org.eclipse.mylyn.trac.tests.support.TracTestUtil;
@@ -342,11 +342,6 @@ public class TracXmlRpcClientTest extends TestCase {
 	}
 
 	public void testGetRecentWikiChanges() throws Exception {
-		// FIXME 3.4 re-enable for trunk
-		if (TracFixture.current() == TracFixture.TRAC_TRUNK_XML_RPC) {
-			return;
-		}
-
 		TracWikiPageInfo[] changes = ((TracXmlRpcClient) client).getRecentWikiChanges(new Date(0), null);
 		TracWikiPageInfo testPage = null;
 		for (TracWikiPageInfo item : changes) {

@@ -88,15 +88,15 @@ public class TaskTestUtil {
 	}
 
 	public static TaskRepository createMockRepository() {
-		return new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND, MockRepositoryConnector.REPOSITORY_URL);
+		return new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND, MockRepositoryConnector.REPOSITORY_URL);
 	}
 
 	public static TaskTask createMockTask(String taskId) {
-		return new TaskTask(MockRepositoryConnector.REPOSITORY_KIND, MockRepositoryConnector.REPOSITORY_URL, taskId);
+		return new TaskTask(MockRepositoryConnector.CONNECTOR_KIND, MockRepositoryConnector.REPOSITORY_URL, taskId);
 	}
 
 	public static RepositoryQuery createMockQuery(String queryId) {
-		return new RepositoryQuery(MockRepositoryConnector.REPOSITORY_KIND, queryId);
+		return new RepositoryQuery(MockRepositoryConnector.CONNECTOR_KIND, queryId);
 	}
 
 	public static TaskListView openTasksViewInActivePerspective() throws Exception {

@@ -23,7 +23,7 @@ import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
 /**
  * @author Frank Becker
  */
-// TODO 3.4 merge into BugzillaRepositoryConnectorStandaloneTest when Bugzilla 3.6 is released 
+// TODO 3.5 merge into BugzillaRepositoryConnectorStandaloneTest when Bugzilla 3.6 is released 
 public class BugzillaRepositoryConnectorConfigurationTest extends TestCase {
 
 	private TaskRepository repository;

@@ -93,9 +93,9 @@ public class RefactorRepositoryUrlOperationTest extends TestCase {
 		taskList.addTask(task);
 		taskList.addTask(task2);
 
-		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND, "http://a");
+		TaskRepository repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND, "http://a");
 		TasksUi.getRepositoryManager().addRepository(repository);
-		TaskRepository repository2 = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND, "http://other");
+		TaskRepository repository2 = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND, "http://other");
 		TasksUi.getRepositoryManager().addRepository(repository2);
 
 		try {
@@ -177,12 +177,12 @@ public class RefactorRepositoryUrlOperationTest extends TestCase {
 	}
 
 	public void testMigrateTaskHandlesUnsubmittedTask() throws Exception {
-		ITask task = TasksUiUtil.createOutgoingNewTask(MockRepositoryConnector.REPOSITORY_KIND, "http://a");
+		ITask task = TasksUiUtil.createOutgoingNewTask(MockRepositoryConnector.CONNECTOR_KIND, "http://a");
 		String handleIdentifier = task.getHandleIdentifier();
 		taskList.addTask(task);
 		assertEquals("http://a", task.getAttribute(ITasksCoreConstants.ATTRIBUTE_OUTGOING_NEW_REPOSITORY_URL));
 
-		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND, "http://a");
+		TaskRepository repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND, "http://a");
 		TasksUi.getRepositoryManager().addRepository(repository);
 
 		try {

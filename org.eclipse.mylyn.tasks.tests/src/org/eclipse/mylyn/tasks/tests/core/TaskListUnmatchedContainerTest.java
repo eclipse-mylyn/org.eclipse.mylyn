@@ -38,7 +38,7 @@ public class TaskListUnmatchedContainerTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		taskList = new TaskList();
-		unmatchedContainer = new UnmatchedTaskContainer(MockRepositoryConnector.REPOSITORY_KIND,
+		unmatchedContainer = new UnmatchedTaskContainer(MockRepositoryConnector.CONNECTOR_KIND,
 				MockRepositoryConnector.REPOSITORY_URL);
 		taskList.addUnmatchedContainer(unmatchedContainer);
 	}

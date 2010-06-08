@@ -40,7 +40,7 @@ public class NewTaskFromSelectionActionTest extends TestCase {
 //	}
 
 	public void testComment() throws Exception {
-		TaskRepository taskRepository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND,
+		TaskRepository taskRepository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND,
 				MockRepositoryConnector.REPOSITORY_URL);
 		TaskData taskData = new TaskData(new TaskAttributeMapper(taskRepository), "kind", "http://url", "1");
 		TaskComment comment = new TaskComment(taskRepository, new MockTask("1"), taskData.getRoot().createAttribute(

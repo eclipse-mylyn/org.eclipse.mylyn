@@ -37,7 +37,7 @@ public class NewTaskWizardRepositorySelectionTest extends TestCase {
 
 	// see bug 203801
 	public void testRepositorySettingWithTaskListSelection() {
-		TaskRepository mockRepository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND,
+		TaskRepository mockRepository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND,
 				MockRepositoryConnector.REPOSITORY_URL);
 		TasksUiPlugin.getRepositoryManager().addRepository(mockRepository);
 

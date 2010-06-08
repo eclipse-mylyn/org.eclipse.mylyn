@@ -59,7 +59,7 @@ public class TaskListExternalizationTest extends TestCase {
 
 		TaskTestUtil.resetTaskListAndRepositories();
 
-		repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND, MockRepositoryConnector.REPOSITORY_URL);
+		repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND, MockRepositoryConnector.REPOSITORY_URL);
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);
 
 		taskList = TasksUiPlugin.getTaskList();
@@ -448,7 +448,7 @@ public class TaskListExternalizationTest extends TestCase {
 	}
 
 	public void testDeleteQuery() {
-		RepositoryQuery query = new RepositoryQuery(MockRepositoryConnector.REPOSITORY_KIND, "queryUrl");
+		RepositoryQuery query = new RepositoryQuery(MockRepositoryConnector.CONNECTOR_KIND, "queryUrl");
 		query.setRepositoryUrl("repositoryUrl");
 		TasksUiPlugin.getTaskList().addQuery(query);
 
@@ -460,7 +460,7 @@ public class TaskListExternalizationTest extends TestCase {
 	}
 
 	public void testDeleteQueryAfterRename() {
-		RepositoryQuery query = new RepositoryQuery(MockRepositoryConnector.REPOSITORY_KIND, "queryUrl");
+		RepositoryQuery query = new RepositoryQuery(MockRepositoryConnector.CONNECTOR_KIND, "queryUrl");
 		query.setRepositoryUrl("repositoryUrl");
 		TasksUiPlugin.getTaskList().addQuery(query);
 
@@ -472,7 +472,7 @@ public class TaskListExternalizationTest extends TestCase {
 	}
 
 	public void testCreateQueryWithSameName() {
-		RepositoryQuery query = new RepositoryQuery(MockRepositoryConnector.REPOSITORY_KIND, "queryUrl");
+		RepositoryQuery query = new RepositoryQuery(MockRepositoryConnector.CONNECTOR_KIND, "queryUrl");
 		query.setRepositoryUrl("repositoryUrl");
 		TasksUiPlugin.getTaskList().addQuery(query);
 		assertEquals(1, TasksUiPlugin.getTaskList().getQueries().size());
@@ -480,7 +480,7 @@ public class TaskListExternalizationTest extends TestCase {
 		assertEquals(query, readQuery);
 
 		try {
-			query = new RepositoryQuery(MockRepositoryConnector.REPOSITORY_KIND, "queryUrl");
+			query = new RepositoryQuery(MockRepositoryConnector.CONNECTOR_KIND, "queryUrl");
 			query.setRepositoryUrl("repositoryUrl");
 			TasksUiPlugin.getTaskList().addQuery(query);
 			fail("Expected IllegalArgumentException");
@@ -495,7 +495,7 @@ public class TaskListExternalizationTest extends TestCase {
 	public void testRepositoryUrlHandles() throws Exception {
 		String taskId = "123";
 		String repositoryUrl = "http://bugs.eclipse.org";
-		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND, repositoryUrl);
+		TaskRepository repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND, repositoryUrl);
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);
 
 		ITask bugTask = new TaskTask("bugzilla", repositoryUrl, taskId);
@@ -587,7 +587,7 @@ public class TaskListExternalizationTest extends TestCase {
 		// make some tasks
 		// save them
 		assertEquals(0, TasksUiPlugin.getTaskList().getAllTasks().size());
-		ITask task = new TaskTask(MockRepositoryConnector.REPOSITORY_KIND, "http://bugs", "1");
+		ITask task = new TaskTask(MockRepositoryConnector.CONNECTOR_KIND, "http://bugs", "1");
 		TasksUiPlugin.getTaskList().addTask(task);
 
 		// reload tasklist and check that they persist
@@ -596,7 +596,7 @@ public class TaskListExternalizationTest extends TestCase {
 
 		// removed/disable externalizers
 		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().removeRepositoryConnector(
-				MockRepositoryConnector.REPOSITORY_KIND);
+				MockRepositoryConnector.CONNECTOR_KIND);
 
 		// reload tasklist ensure task didn't load
 		TaskTestUtil.saveAndReadTasklist();
@@ -620,7 +620,7 @@ public class TaskListExternalizationTest extends TestCase {
 	public void testOrphanedQueries() throws Exception {
 		// make a query
 		assertEquals(0, TasksUiPlugin.getTaskList().getQueries().size());
-		RepositoryQuery query = new RepositoryQuery(MockRepositoryConnector.REPOSITORY_KIND, "bugzillaQuery");
+		RepositoryQuery query = new RepositoryQuery(MockRepositoryConnector.CONNECTOR_KIND, "bugzillaQuery");
 		TasksUiPlugin.getTaskList().addQuery(query);
 		TasksUiPlugin.getExternalizationManager().save(true);
 
@@ -630,7 +630,7 @@ public class TaskListExternalizationTest extends TestCase {
 
 		// removed/disable externalizers
 		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().removeRepositoryConnector(
-				MockRepositoryConnector.REPOSITORY_KIND);
+				MockRepositoryConnector.CONNECTOR_KIND);
 
 		// reload tasklist ensure query didn't load
 		TaskTestUtil.saveAndReadTasklist();

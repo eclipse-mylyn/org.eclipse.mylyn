@@ -45,7 +45,7 @@ import org.eclipse.mylyn.tasks.tests.connector.MockTask;
  */
 public class TaskRepositoryManagerTest extends TestCase {
 
-	private static final String DEFAULT_KIND = MockRepositoryConnector.REPOSITORY_KIND;
+	private static final String DEFAULT_KIND = MockRepositoryConnector.CONNECTOR_KIND;
 
 	private static final String DEFAULT_URL = "http://eclipse.org";
 
@@ -126,7 +126,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 		assertEquals("httpPassword", map.get(AUTH_HTTP_PASSWORD));
 	}
 
-	// FIXME 3.4 re-enable test
+	// FIXME 3.5 re-enable test
 //	public void testMigrationToSecureStorage() throws Exception {
 //		TaskRepository repository1 = new TaskRepository("bugzilla", "http://repository1/");
 //
@@ -171,7 +171,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 	}
 
 	public void testQueryDeletion() {
-		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND,
+		TaskRepository repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND,
 				MockRepositoryConnector.REPOSITORY_URL);
 		manager.addRepository(repository);
 
@@ -304,7 +304,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 		// causing this test to fail.
 		AbstractRepositoryConnector connector = new MockRepositoryConnector();
 		manager.addRepositoryConnector(connector);
-		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND,
+		TaskRepository repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND,
 				"http://mylyn.eclipse.org/");
 		repository.setProperty("owner", "euxx");
 		manager.addRepository(repository);
@@ -334,13 +334,13 @@ public class TaskRepositoryManagerTest extends TestCase {
 	}
 
 	public void testDeletion() {
-		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND,
+		TaskRepository repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND,
 				MockRepositoryConnector.REPOSITORY_URL);
 		manager.addRepository(repository);
 		repository.setRepositoryUrl("http://newurl");
 		manager.removeRepository(repository);
 		assertNull(manager.getRepository("http://newurl"));
-		assertNull(manager.getRepository(MockRepositoryConnector.REPOSITORY_KIND));
-		assertEquals(Collections.emptySet(), manager.getRepositories(MockRepositoryConnector.REPOSITORY_KIND));
+		assertNull(manager.getRepository(MockRepositoryConnector.CONNECTOR_KIND));
+		assertEquals(Collections.emptySet(), manager.getRepositories(MockRepositoryConnector.CONNECTOR_KIND));
 	}
 }

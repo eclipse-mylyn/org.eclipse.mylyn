@@ -1095,7 +1095,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 			updateOutlinePage();
 			return outlinePage;
 		}
-		// TODO 3.4 replace by getTextSupport() method
+		// TODO 3.5 replace by getTextSupport() method
 		if (adapter == CommonTextSupport.class) {
 			return textSupport;
 		}

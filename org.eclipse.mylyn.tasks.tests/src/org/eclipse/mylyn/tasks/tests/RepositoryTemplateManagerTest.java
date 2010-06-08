@@ -35,12 +35,12 @@ public class RepositoryTemplateManagerTest extends TestCase {
 		RepositoryTemplate template = new RepositoryTemplate("Mock", MockRepositoryConnector.REPOSITORY_URL, "", "",
 				"", "", "", "", false, true);
 		try {
-			manager.addTemplate(MockRepositoryConnector.REPOSITORY_KIND, template);
+			manager.addTemplate(MockRepositoryConnector.CONNECTOR_KIND, template);
 			assertFalse(TaskRepositoryUtil.isAddAutomaticallyDisabled(MockRepositoryConnector.REPOSITORY_URL));
 			TaskRepositoryUtil.disableAddAutomatically(MockRepositoryConnector.REPOSITORY_URL);
 			assertTrue(TaskRepositoryUtil.isAddAutomaticallyDisabled(MockRepositoryConnector.REPOSITORY_URL));
 		} finally {
-			manager.removeTemplate(MockRepositoryConnector.REPOSITORY_KIND, template);
+			manager.removeTemplate(MockRepositoryConnector.CONNECTOR_KIND, template);
 		}
 	}
 

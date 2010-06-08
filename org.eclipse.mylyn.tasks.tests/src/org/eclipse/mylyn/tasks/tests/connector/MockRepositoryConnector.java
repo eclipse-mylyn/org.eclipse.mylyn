@@ -34,13 +34,19 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
  */
 public class MockRepositoryConnector extends AbstractRepositoryConnector {
 
-	// TODO 3.4 rename to CONNECTOR_KIND
-	public static final String REPOSITORY_KIND = "mock";
+	public static final String CONNECTOR_KIND = "mock";
+
+	/**
+	 * @deprecated Use {@link #CONNECTOR_KIND} instead
+	 */
+	// TODO 3.5 remove
+	@Deprecated
+	public static final String REPOSITORY_KIND = CONNECTOR_KIND;
 
 	public static final String REPOSITORY_URL = "http://mockrepository.test";
 
 	public static MockRepositoryConnector getDefault() {
-		return (MockRepositoryConnector) TasksUi.getRepositoryConnector(REPOSITORY_KIND);
+		return (MockRepositoryConnector) TasksUi.getRepositoryConnector(CONNECTOR_KIND);
 	}
 
 	private AbstractTaskAttachmentHandler attachmentHandler;
@@ -106,7 +112,7 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public String getConnectorKind() {
-		return REPOSITORY_KIND;
+		return CONNECTOR_KIND;
 	}
 
 	@Override

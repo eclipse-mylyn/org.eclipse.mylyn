@@ -52,7 +52,7 @@ public class TaskDataStoreTest extends TestCase {
 	protected void setUp() throws Exception {
 		TaskRepositoryManager taskRepositoryManager = new TaskRepositoryManager();
 		storage = new TaskDataStore(taskRepositoryManager);
-		taskRepository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND,
+		taskRepository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND,
 				MockRepositoryConnector.REPOSITORY_URL);
 		file = File.createTempFile("mylyn", null);
 		file.deleteOnExit();
@@ -67,10 +67,10 @@ public class TaskDataStoreTest extends TestCase {
 	}
 
 	public void testPutAndGet() throws Exception {
-		TaskDataState state = new TaskDataState(MockRepositoryConnector.REPOSITORY_KIND,
+		TaskDataState state = new TaskDataState(MockRepositoryConnector.CONNECTOR_KIND,
 				MockRepositoryConnector.REPOSITORY_URL, MOCK_ID);
 
-		TaskData data = new TaskData(new TaskAttributeMapper(taskRepository), MockRepositoryConnector.REPOSITORY_KIND,
+		TaskData data = new TaskData(new TaskAttributeMapper(taskRepository), MockRepositoryConnector.CONNECTOR_KIND,
 				MockRepositoryConnector.REPOSITORY_URL, MOCK_ID);
 		TaskMapper mapper = new TaskMapper(data, true);
 		mapper.getTaskData().getRoot().createAttribute("attributeKey1").setValue("attValue!");
@@ -79,7 +79,7 @@ public class TaskDataStoreTest extends TestCase {
 		mapper.setTaskKind("task kind");
 
 		TaskData oldData = new TaskData(new TaskAttributeMapper(taskRepository),
-				MockRepositoryConnector.REPOSITORY_KIND, MockRepositoryConnector.REPOSITORY_URL, MOCK_ID);
+				MockRepositoryConnector.CONNECTOR_KIND, MockRepositoryConnector.REPOSITORY_URL, MOCK_ID);
 
 		state.setRepositoryData(data);
 		state.setLastReadData(oldData);
@@ -91,7 +91,7 @@ public class TaskDataStoreTest extends TestCase {
 		assertNotNull(retrieved);
 		TaskData newTaskData = retrieved.getRepositoryData();
 		assertNotNull(newTaskData);
-		assertEquals(MockRepositoryConnector.REPOSITORY_KIND, newTaskData.getConnectorKind());
+		assertEquals(MockRepositoryConnector.CONNECTOR_KIND, newTaskData.getConnectorKind());
 		mapper = new TaskMapper(newTaskData);
 		assertEquals("description", mapper.getDescription());
 		assertEquals("summary", mapper.getSummary());
@@ -99,9 +99,9 @@ public class TaskDataStoreTest extends TestCase {
 	}
 
 	public void testDelete() throws Exception {
-		TaskData data = new TaskData(new TaskAttributeMapper(taskRepository), MockRepositoryConnector.REPOSITORY_KIND,
+		TaskData data = new TaskData(new TaskAttributeMapper(taskRepository), MockRepositoryConnector.CONNECTOR_KIND,
 				MockRepositoryConnector.REPOSITORY_URL, MOCK_ID);
-		TaskDataState state = new TaskDataState(MockRepositoryConnector.REPOSITORY_KIND,
+		TaskDataState state = new TaskDataState(MockRepositoryConnector.CONNECTOR_KIND,
 				MockRepositoryConnector.REPOSITORY_URL, MOCK_ID);
 		state.setRepositoryData(data);
 		storage.putTaskData(file, state);
@@ -111,9 +111,9 @@ public class TaskDataStoreTest extends TestCase {
 	}
 
 	private void setupData() {
-		data = new TaskData(new TaskAttributeMapper(taskRepository), MockRepositoryConnector.REPOSITORY_KIND,
+		data = new TaskData(new TaskAttributeMapper(taskRepository), MockRepositoryConnector.CONNECTOR_KIND,
 				MockRepositoryConnector.REPOSITORY_URL, MOCK_ID);
-		state = new TaskDataState(MockRepositoryConnector.REPOSITORY_KIND, MockRepositoryConnector.REPOSITORY_URL,
+		state = new TaskDataState(MockRepositoryConnector.CONNECTOR_KIND, MockRepositoryConnector.REPOSITORY_URL,
 				MOCK_ID);
 		state.setRepositoryData(data);
 	}

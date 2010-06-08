@@ -41,7 +41,7 @@ public class TaskMapperTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		taskRepository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND,
+		taskRepository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND,
 				MockRepositoryConnector.REPOSITORY_URL);
 		mapper = new StubTaskAttributeMapper(taskRepository);
 		source = new TaskMapper(new TaskData(mapper, "kind", "http://url", "1"), true);
@@ -87,16 +87,12 @@ public class TaskMapperTest extends TestCase {
 	public void testCloneTaskCloneCommonAttributes() {
 		source.setDescription("sourceDescription");
 		target.setDescription("");
-		// TODO 3.4 remove (bug 247595)
-		//target.getTaskData().getRoot().getAttribute(TaskAttribute.DESCRIPTION).getMetaData().setReadOnly(false);
 		target.merge(source);
 		assertEquals("sourceDescription", target.getDescription());
 		assertEquals(null, target.getSummary());
 
 		source.setSummary("sourceSummary");
 		target.setSummary("");
-		// TODO 3.4 remove (bug 247595)
-		//target.getTaskData().getRoot().getAttribute(TaskAttribute.SUMMARY).getMetaData().setReadOnly(false);
 		target.merge(source);
 		assertEquals("sourceSummary", target.getSummary());
 	}
@@ -156,8 +152,6 @@ public class TaskMapperTest extends TestCase {
 
 		source.setDescription("sourceDescription");
 		target.setDescription("");
-		// TODO 3.4 remove (bug 247595)
-		//target.getTaskData().getRoot().getAttribute(TaskAttribute.DESCRIPTION).getMetaData().setReadOnly(false);
 		target.merge(source);
 		assertEquals("sourceDescription", target.getDescription());
 		assertEquals(null, target.getSummary());

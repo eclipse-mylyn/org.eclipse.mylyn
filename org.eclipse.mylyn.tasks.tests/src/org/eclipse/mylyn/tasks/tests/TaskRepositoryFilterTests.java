@@ -27,9 +27,9 @@ public class TaskRepositoryFilterTests extends TestCase {
 
 	public void testCanCreateTaskFilter() {
 		ITaskRepositoryFilter canCreateTaskFilter = ITaskRepositoryFilter.CAN_CREATE_NEW_TASK;
-		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND,
+		TaskRepository repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND,
 				MockRepositoryConnector.REPOSITORY_URL);
-		MockRepositoryConnector connector = (MockRepositoryConnector) TasksUiPlugin.getConnector(MockRepositoryConnector.REPOSITORY_KIND);
+		MockRepositoryConnector connector = (MockRepositoryConnector) TasksUiPlugin.getConnector(MockRepositoryConnector.CONNECTOR_KIND);
 		assertFalse(canCreateTaskFilter.accept(repository, connector));
 
 		connector.setCanCreateNewTask(true);
@@ -43,9 +43,9 @@ public class TaskRepositoryFilterTests extends TestCase {
 
 	public void testCanQueryTaskFilter() {
 		ITaskRepositoryFilter canQueryFilter = ITaskRepositoryFilter.CAN_QUERY;
-		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND,
+		TaskRepository repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND,
 				MockRepositoryConnector.REPOSITORY_URL);
-		MockRepositoryConnector connector = (MockRepositoryConnector) TasksUiPlugin.getConnector(MockRepositoryConnector.REPOSITORY_KIND);
+		MockRepositoryConnector connector = (MockRepositoryConnector) TasksUiPlugin.getConnector(MockRepositoryConnector.CONNECTOR_KIND);
 		assertFalse(canQueryFilter.accept(repository, connector));
 
 		repository = new TaskRepository(LocalRepositoryConnector.CONNECTOR_KIND,
@@ -65,9 +65,9 @@ public class TaskRepositoryFilterTests extends TestCase {
 
 	public void testCanCreateTaskFromKeyTaskFilter() {
 		ITaskRepositoryFilter canCreateTaskFromKeyFilter = ITaskRepositoryFilter.CAN_CREATE_TASK_FROM_KEY;
-		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND,
+		TaskRepository repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND,
 				MockRepositoryConnector.REPOSITORY_URL);
-		MockRepositoryConnector connector = (MockRepositoryConnector) TasksUiPlugin.getConnector(MockRepositoryConnector.REPOSITORY_KIND);
+		MockRepositoryConnector connector = (MockRepositoryConnector) TasksUiPlugin.getConnector(MockRepositoryConnector.CONNECTOR_KIND);
 		assertFalse(canCreateTaskFromKeyFilter.accept(repository, connector));
 
 		// need a second mock repo
