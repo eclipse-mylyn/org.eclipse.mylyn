@@ -112,7 +112,7 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 		assertTrue(resumed.getInterest().isInteresting());
 	}
 
-	// XXX 3.4 re-enable test
+	// XXX 3.5 re-enable test
 // NOTE: This is to test that the shell activation event is first in the activation history.
 //		 Currently this test fails but passes when run with CoreUtil.TEST_MODE = true
 //	public void testShellLifecycleActivityStart() {

@@ -39,7 +39,7 @@ public class AllJavaTests {
 		suite.addTestSuite(ContentOutlineRefreshTest.class);
 		suite.addTestSuite(TypeHistoryManagerTest.class);
 		suite.addTestSuite(PackageExplorerRefreshTest.class);
-		// XXX 3.4 re-enable test case?
+		// XXX 3.5 re-enable test case?
 		//suite.addTestSuite(ResultUpdaterTest.class);
 		suite.addTestSuite(ProblemsListTest.class);
 		suite.addTestSuite(InterestFilterTest.class);
