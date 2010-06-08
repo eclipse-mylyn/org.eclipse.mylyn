@@ -660,9 +660,20 @@ public class TaskActivityManager implements ITaskActivityManager {
 		return false;
 	}
 
+	/**
+	 * Tests if the task is owned by the current user and overdue.
+	 */
 	public boolean isOverdue(ITask task) {
 		return (!task.isCompleted() && task.getDueDate() != null && new Date().after(task.getDueDate()))
 				&& repositoryManager.isOwnedByUser(task);
+	}
+
+	/**
+	 * Tests whether the task is owned by another user and overdue.
+	 */
+	public boolean isOverdueForOther(ITask task) {
+		return (!task.isCompleted() && task.getDueDate() != null && new Date().after(task.getDueDate()))
+				&& !repositoryManager.isOwnedByUser(task);
 	}
 
 	public boolean isOwnedByUser(ITask task) {

@@ -195,6 +195,8 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				} else if (task.getScheduledForDate() != null
 						&& TasksUiPlugin.getTaskActivityManager().isPastReminder(task)) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_SCHEDULED_PAST);
+				} else if (TasksUiPlugin.getTaskActivityManager().isOverdueForOther(task)) {
+					return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_SCHEDULED_TODAY);
 				} else if (TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task)) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_SCHEDULED_TODAY);
 				} else if (TasksUiPlugin.getTaskActivityManager().isScheduledForThisWeek(task)) {
@@ -250,8 +252,9 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				return CommonFonts.BOLD;
 			} else if (((AbstractTask) element).isCompleted()) {
 				if (CommonFonts.HAS_STRIKETHROUGH
-						&& TasksUiPlugin.getDefault().getPluginPreferences().getBoolean(
-								ITasksUiPreferenceConstants.USE_STRIKETHROUGH_FOR_COMPLETED)) {
+						&& TasksUiPlugin.getDefault()
+								.getPluginPreferences()
+								.getBoolean(ITasksUiPreferenceConstants.USE_STRIKETHROUGH_FOR_COMPLETED)) {
 					return CommonFonts.STRIKETHROUGH;
 				} else {
 					return null;

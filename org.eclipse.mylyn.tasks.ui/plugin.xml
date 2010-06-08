@@ -658,6 +658,17 @@
 
      <colorDefinition
            categoryId="org.eclipse.mylyn.tasks.ui.presentation"
+           id="org.eclipse.mylyn.tasks.ui.colors.foreground.overdue.for.other"
+           isEditable="true"
+           label="%colors.foreground.overdue.for.other.label"
+           value="128,0,0"> 
+         <description>
+            %colors.foreground.past.scheduled.description
+         </description>
+     </colorDefinition>
+
+     <colorDefinition
+           categoryId="org.eclipse.mylyn.tasks.ui.presentation"
            id="org.eclipse.mylyn.tasks.ui.colors.foreground.past.scheduled"
            isEditable="true"
            label="%colors.foreground.past.scheduled.label"
