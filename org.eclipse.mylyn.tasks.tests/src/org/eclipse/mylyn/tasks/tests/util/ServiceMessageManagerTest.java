@@ -30,14 +30,15 @@ import org.eclipse.mylyn.internal.tasks.core.notifications.ServiceMessageXmlHand
  */
 public class ServiceMessageManagerTest extends TestCase {
 
-	private static final String MESSAGE_XML_URL = "http://eclipse.org/mylyn/messageTest.xml";
+	private static final String MESSAGE_XML_URL = "http://mylyn.eclipse.org/message.xml";
 
 	public void testRetrievingMessage() throws Exception {
 		ServiceMessageManager manager = new ServiceMessageManager(MESSAGE_XML_URL, "", "", 0l);
 		int status = manager.updateServiceMessage(new NullProgressMonitor());
 		assertEquals(HttpStatus.SC_OK, status);
-		ServiceMessage message = manager.getServiceMessages().get(0);
+		assertEquals(2, manager.getServiceMessages().size());
 
+		ServiceMessage message = manager.getServiceMessages().get(1);
 		assertEquals("1", message.getId());
 		assertEquals("140 character description here....", message.getDescription());
 		assertEquals("Mylyn 3.4 now available!", message.getTitle());

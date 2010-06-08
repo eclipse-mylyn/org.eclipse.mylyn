@@ -106,7 +106,7 @@ public class TracRepositorySettingsPageTest extends TestCase {
 
 		page.applyValidatorResult(validator);
 		assertEquals(Version.XML_RPC, page.getTracVersion());
-		assertEquals("Repository is valid.", page.getMessage());
+		assertEquals("Authentication credentials are valid.", page.getMessage());
 	}
 
 	public void testValidateWeb() throws Exception {
@@ -118,7 +118,7 @@ public class TracRepositorySettingsPageTest extends TestCase {
 
 		page.applyValidatorResult(validator);
 		assertEquals(Version.TRAC_0_9, page.getTracVersion());
-		assertEquals("Repository is valid.", page.getMessage());
+		assertEquals("Authentication credentials are valid.", page.getMessage());
 	}
 
 	public void testValidateAutomaticUser() throws Exception {
@@ -133,7 +133,7 @@ public class TracRepositorySettingsPageTest extends TestCase {
 
 		page.applyValidatorResult(validator);
 		assertEquals(Version.XML_RPC, page.getTracVersion());
-		assertEquals("Repository is valid.", page.getMessage());
+		assertEquals("Authentication credentials are valid.", page.getMessage());
 	}
 
 	public void testValidateAutomaticAnonymous() throws Exception {
@@ -150,7 +150,9 @@ public class TracRepositorySettingsPageTest extends TestCase {
 
 		page.applyValidatorResult(validator);
 		assertEquals(Version.TRAC_0_9, page.getTracVersion());
-		assertEquals("Repository is valid.", page.getMessage());
+		assertEquals(
+				"Authentication credentials are valid. Note: Insufficient permissions for XML-RPC access, falling back to web access.",
+				page.getMessage());
 	}
 
 	public void testValidateInvalid() throws Exception {
