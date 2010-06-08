@@ -27,8 +27,8 @@ import org.eclipse.mylyn.internal.bugzilla.core.service.BugzillaXmlRpcClient;
  * 
  * @author Frank Becker
  */
+public class BugzillaXmlRpcClientTest extends TestCase {
 
-public class BugzillaXMLRPCTest extends TestCase {
 	private BugzillaXmlRpcClient bugzillaClient;
 
 	@Override
@@ -40,7 +40,7 @@ public class BugzillaXMLRPCTest extends TestCase {
 	}
 
 	@SuppressWarnings("unused")
-	public void testxmlrpc() throws Exception {
+	public void testXmlRpc() throws Exception {
 		if (BugzillaFixture.current() != BugzillaFixture.BUGS_3_6_XML_RPC_DISABLED) {
 			int uID = bugzillaClient.login();
 			String x0 = bugzillaClient.getVersion();
@@ -61,7 +61,7 @@ public class BugzillaXMLRPCTest extends TestCase {
 	}
 
 	@SuppressWarnings("unused")
-	public void testxmlrpcInstalled() throws Exception {
+	public void testXmlRpcInstalled() throws Exception {
 		int uID = -1;
 		BugzillaFixture a = BugzillaFixture.current();
 		if (BugzillaFixture.current() == BugzillaFixture.BUGS_3_6_XML_RPC_DISABLED) {
