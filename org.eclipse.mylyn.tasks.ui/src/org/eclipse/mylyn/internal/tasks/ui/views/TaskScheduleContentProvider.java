@@ -240,83 +240,97 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 		}
 	}
 
-	public class Incoming extends ScheduledTaskContainer {
+	private abstract class StateTaskContainer extends ScheduledTaskContainer {
 
 		Calendar temp = TaskActivityUtil.getCalendar();
 
-		public Incoming() {
-			super(taskActivityManager, new DateRange(INCOMING_TIME), Messages.TaskScheduleContentProvider_Incoming);
+		public StateTaskContainer(DateRange range, String summary) {
+			super(taskActivityManager, range, summary);
 		}
 
 		@Override
 		public Collection<ITask> getChildren() {
 			Set<ITask> children = new HashSet<ITask>();
 			for (ITask task : TasksUiPlugin.getTaskList().getAllTasks()) {
-
-				if (task.getSynchronizationState().equals(SynchronizationState.INCOMING)
-						|| task.getSynchronizationState().equals(SynchronizationState.INCOMING_NEW)) {
-
-					// if focused and scheduled/due for future (and at this point has incoming, include here)
-					// because it incomings that are scheduled for this week will appear in the date range containers
-					// but incomings scheduled for next week and later would not otherwise appear when the task list
-					// is focused.
-					if (taskListView.isFocusedMode()) {
-
-						if (((AbstractTask) task).getScheduledForDate() != null) {
-							if (TaskActivityUtil.isAfterCurrentWeek(((AbstractTask) task).getScheduledForDate()
-									.getStartDate())) {
-								children.add(task);
-								continue;
-							}
-						}
-
-						if (task.getDueDate() != null) {
-							if (taskActivityManager.isOwnedByUser(task)) {
-								temp.setTime(task.getDueDate());
-								if (TaskActivityUtil.isAfterCurrentWeek(temp)) {
-									children.add(task);
-									continue;
-								}
-							} else {
-								children.add(task);
-							}
-						}
-
-					}
-
-					// Task list is not focused. Show all incoming tasks in the Incoming bin
-					if (((AbstractTask) task).getScheduledForDate() == null && task.getDueDate() != null
-							&& !taskActivityManager.isOwnedByUser(task)) {
-						children.add(task);
-					} else if (task.getDueDate() == null && ((AbstractTask) task).getScheduledForDate() == null) {
-						children.add(task);
-					}
-				}
-			}
-			return children;
-		}
-	}
-
-	public class Outgoing extends ScheduledTaskContainer {
-
-		public Outgoing() {
-			super(taskActivityManager, new DateRange(OUTGOING_TIME), Messages.TaskScheduleContentProvider_Outgoing);
-		}
-
-		@Override
-		public Collection<ITask> getChildren() {
-			Set<ITask> children = new HashSet<ITask>();
-			for (ITask task : TasksUiPlugin.getTaskList().getAllTasks()) {
-				if (task.getDueDate() == null && ((AbstractTask) task).getScheduledForDate() == null
-						&& task.getSynchronizationState().equals(SynchronizationState.OUTGOING)
-						|| task.getSynchronizationState().equals(SynchronizationState.OUTGOING_NEW)
-						|| task.getSynchronizationState().equals(SynchronizationState.CONFLICT)) {
+				if (select(task) && include(task)) {
 					children.add(task);
 				}
 			}
 			return children;
 		}
 
+		private boolean include(ITask task) {
+			DateRange scheduledForDate = ((AbstractTask) task).getScheduledForDate();
+
+			// in focused mode fewer container are displayed, include additional tasks
+			if (taskListView.isFocusedMode()) {
+				if (scheduledForDate != null) {
+					if (TaskActivityUtil.isAfterCurrentWeek(scheduledForDate.getStartDate())) {
+						// scheduled for next week or later
+						return true;
+					} else {
+						// scheduled for this week or earlier
+						return false;
+					}
+				} else if (task.getDueDate() != null && taskActivityManager.isOwnedByUser(task)) {
+					temp.setTime(task.getDueDate());
+					if (TaskActivityUtil.isAfterCurrentWeek(temp)) {
+						// not scheduled, due next week or later
+						return true;
+					} else {
+						// due this week or earlier
+						return false;
+					}
+				}
+			}
+
+			if (scheduledForDate == null) {
+				if (task.getDueDate() != null && !taskActivityManager.isOwnedByUser(task)) {
+					// not scheduled, due but not owned by user
+					return true;
+				} else if (task.getDueDate() == null) {
+					// not scheduled, not due
+					return true;
+				}
+			}
+			
+			if(task.isCompleted()){
+				// make sure that all completed tasks are included
+				return true;
+			}
+			return false;
+		}
+
+		protected abstract boolean select(ITask task);
+
+	}
+
+	public class Incoming extends StateTaskContainer {
+
+		public Incoming() {
+			super(new DateRange(INCOMING_TIME), Messages.TaskScheduleContentProvider_Incoming);
+		}
+
+		@Override
+		protected boolean select(ITask task) {
+			SynchronizationState state = task.getSynchronizationState();
+			return state == SynchronizationState.INCOMING || state == SynchronizationState.INCOMING_NEW;
+		}
+
+	}
+
+	public class Outgoing extends StateTaskContainer {
+
+		public Outgoing() {
+			super(new DateRange(OUTGOING_TIME), Messages.TaskScheduleContentProvider_Outgoing);
+		}
+
+		@Override
+		public boolean select(ITask task) {
+			SynchronizationState state = task.getSynchronizationState();
+			return state == SynchronizationState.OUTGOING || state == SynchronizationState.OUTGOING_NEW
+					|| state == SynchronizationState.CONFLICT;
+		}
 	}
 
 	public class Completed extends ScheduledTaskContainer {
