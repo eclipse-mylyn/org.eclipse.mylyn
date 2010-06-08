@@ -176,9 +176,9 @@ public class GradientDrawer {
 				double GRADIENT_BOTTOM;// = .995;// 1.035;
 
 				// Constants to darken or lighten the default gradients
-				if ("Windows 7".equals(System.getProperty("os.name"))) {
+				if ("Windows 7".equals(System.getProperty("os.name"))) { //$NON-NLS-1$//$NON-NLS-2$
 					GRADIENT_TOP = 1.05;
-					GRADIENT_BOTTOM = 1.13;
+					GRADIENT_BOTTOM = 1.09;
 				} else {
 					GRADIENT_TOP = 1.05;
 					GRADIENT_BOTTOM = .995;
