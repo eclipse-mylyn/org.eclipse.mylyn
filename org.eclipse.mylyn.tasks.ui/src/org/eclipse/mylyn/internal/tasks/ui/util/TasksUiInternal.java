@@ -88,11 +88,11 @@ import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
-import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
+import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
@@ -862,9 +862,8 @@ public class TasksUiInternal {
 		if (window != null) {
 			TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
 					task.getRepositoryUrl());
-			boolean openWithBrowser = !TasksUiPlugin.getDefault()
-					.getPreferenceStore()
-					.getBoolean(ITasksUiPreferenceConstants.EDITOR_TASKS_RICH);
+			boolean openWithBrowser = !TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
+					ITasksUiPreferenceConstants.EDITOR_TASKS_RICH);
 			if (openWithBrowser) {
 				TasksUiUtil.openWithBrowser(taskRepository, task);
 				return new TaskOpenEvent(taskRepository, task, taskId, null, true);
@@ -1195,21 +1194,15 @@ public class TasksUiInternal {
 						TasksUiInternal.displayStatus(title, new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 								"Command execution failed", e)); //$NON-NLS-1$
 					} catch (NotDefinedException e) {
-						TasksUiInternal.displayStatus(
-								title,
-								new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
-										"The command with the id ''{0}'' is not defined.", commandId), e)); //$NON-NLS-1$
+						TasksUiInternal.displayStatus(title, new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+								NLS.bind("The command with the id ''{0}'' is not defined.", commandId), e)); //$NON-NLS-1$
 					} catch (NotHandledException e) {
-						TasksUiInternal.displayStatus(
-								title,
-								new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
-										"The command with the id ''{0}'' is not bound.", commandId), e)); //$NON-NLS-1$
+						TasksUiInternal.displayStatus(title, new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+								NLS.bind("The command with the id ''{0}'' is not bound.", commandId), e)); //$NON-NLS-1$
 					}
 				} else {
-					TasksUiInternal.displayStatus(
-							title,
-							new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
-									"The command with the id ''{0}'' does not exist.", commandId))); //$NON-NLS-1$
+					TasksUiInternal.displayStatus(title, new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
+							"The command with the id ''{0}'' does not exist.", commandId))); //$NON-NLS-1$
 				}
 			} else {
 				TasksUiInternal.displayStatus(
@@ -1273,16 +1266,17 @@ public class TasksUiInternal {
 	public static String getAuthenticatedUrl(TaskRepository repository, IRepositoryElement element) {
 		IRepositoryManager repositoryManager = TasksUi.getRepositoryManager();
 		AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(repository.getConnectorKind());
-		URL authenticatedUrl = connector.getAuthenticatedUrl(repository, element);
-		if (authenticatedUrl != null) {
-			return authenticatedUrl.toString();
-		} else {
-			String url = element.getUrl();
-			if (TasksUiInternal.isValidUrl(url)) {
-				return url;
+		if (connector != null) {
+			URL authenticatedUrl = connector.getAuthenticatedUrl(repository, element);
+			if (authenticatedUrl != null) {
+				return authenticatedUrl.toString();
+			} else {
+				String url = element.getUrl();
+				if (TasksUiInternal.isValidUrl(url)) {
+					return url;
+				}
 			}
 		}
 		return null;
 	}
-
 }
