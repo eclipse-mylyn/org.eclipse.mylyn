@@ -70,7 +70,7 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 		END_OF_TIME = TaskActivityUtil.getCalendar();
 		END_OF_TIME.add(Calendar.YEAR, 5000);
 		END_OF_TIME.getTime();
-		unscheduled = new Unscheduled(taskActivityManager, new DateRange(END_OF_TIME));
+		unscheduled = new Unscheduled();
 
 		INCOMING_TIME = TaskActivityUtil.getCalendar();
 		INCOMING_TIME.setTimeInMillis(END_OF_TIME.getTimeInMillis() - 1);
@@ -221,23 +221,17 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 		// ignore
 	}
 
-	public class Unscheduled extends ScheduledTaskContainer {
+	public class Unscheduled extends StateTaskContainer {
 
-		public Unscheduled(TaskActivityManager activityManager, DateRange range) {
-			super(activityManager, range, Messages.TaskScheduleContentProvider_Unscheduled);
+		public Unscheduled() {
+			super(new DateRange(END_OF_TIME), Messages.TaskScheduleContentProvider_Unscheduled);
 		}
 
 		@Override
-		public Collection<ITask> getChildren() {
-			Set<ITask> children = new HashSet<ITask>();
-			for (AbstractTask task : TasksUiPlugin.getTaskList().getAllTasks()) {
-				if (task.getDueDate() == null && task.getScheduledForDate() == null && !task.isCompleted()
-						&& task.getSynchronizationState().isSynchronized()) {
-					children.add(task);
-				}
-			}
-			return children;
+		protected boolean select(ITask task) {
+			return task.getSynchronizationState() == SynchronizationState.SYNCHRONIZED && !task.isCompleted();
 		}
+
 	}
 
 	private abstract class StateTaskContainer extends ScheduledTaskContainer {
