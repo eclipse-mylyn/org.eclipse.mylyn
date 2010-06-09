@@ -129,21 +129,23 @@ public class TaskEditorOutlineNode {
 			TaskRepositoryManager manager = TasksUiPlugin.getRepositoryManager();
 			TaskRepository taskRepository = manager.getRepository(taskData.getConnectorKind(),
 					taskData.getRepositoryUrl());
-			for (TaskRelation taskRelation : relations) {
-				ITask task = taskList.getTask(taskData.getRepositoryUrl(), taskRelation.getTaskId());
-				String label;
-				if (task != null) {
-					label = NLS.bind(Messages.TaskEditorOutlineNode_TaskRelation_Label, new Object[] {
-							taskRelation.getTaskId(), task.getSummary() });
-				} else {
-					label = NLS.bind(Messages.TaskEditorOutlineNode_TaskRelation_Label, new Object[] {
-							taskRelation.getTaskId(), Messages.TaskEditorOutlineNode_unknown_Label });
-				}
-				TaskEditorOutlineNode childNode = new TaskEditorOutlineNode(label);
+			if (relations != null) {
+				for (TaskRelation taskRelation : relations) {
+					ITask task = taskList.getTask(taskData.getRepositoryUrl(), taskRelation.getTaskId());
+					String label;
+					if (task != null) {
+						label = NLS.bind(Messages.TaskEditorOutlineNode_TaskRelation_Label, new Object[] {
+								taskRelation.getTaskId(), task.getSummary() });
+					} else {
+						label = NLS.bind(Messages.TaskEditorOutlineNode_TaskRelation_Label, new Object[] {
+								taskRelation.getTaskId(), Messages.TaskEditorOutlineNode_unknown_Label });
+					}
+					TaskEditorOutlineNode childNode = new TaskEditorOutlineNode(label);
 
-				childNode.setTaskRelation(taskRelation);
-				childNode.setTaskRepository(taskRepository);
-				relatedTasksNode.addChild(childNode);
+					childNode.setTaskRelation(taskRelation);
+					childNode.setTaskRepository(taskRepository);
+					relatedTasksNode.addChild(childNode);
+				}
 			}
 
 			TaskEditorOutlineNode attributesNode = new TaskEditorOutlineNode(LABEL_ATTRIBUTES);
