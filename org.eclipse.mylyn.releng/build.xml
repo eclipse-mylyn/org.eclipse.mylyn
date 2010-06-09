@@ -211,13 +211,7 @@
 			<param name="todir" value="weekly"/>
 		</antcall>
 		
-		<echo>Run 'ant promote-helios' to update the helios site.</echo>
-		<echo>Ensure that the mylyn.build file is updated at the same time.</echo>
-		<!--
-		<antcall target="promote-main">
-			<param name="todir" value="helios"/>
-		</antcall>
-		-->
+		<echo>Ensure that the mylyn.build file is updated to the latest version.</echo>
 	</target>
 
 	<target name="promote-helios">
