@@ -30,7 +30,7 @@ public class ReviewTaskEditorPart extends AbstractTaskEditorPart {
 	public void createControl(Composite parent, FormToolkit toolkit) {
 
 		try {
-			TaskDataModel model = getModel();
+			final TaskDataModel model = getModel();
 			List<Review> reviews = ReviewsUtil.getReviewAttachmentFromTask(
 					TasksUi.getTaskDataManager(), TasksUi.getRepositoryModel(),
 					model.getTask());
@@ -42,7 +42,7 @@ public class ReviewTaskEditorPart extends AbstractTaskEditorPart {
 						.get(0)), new ReviewSubmitHandler() {
 
 					public void doSubmit(ReviewTaskEditorInput editorInput) {
-						new UpdateReviewTask(editorInput).schedule();
+						new UpdateReviewTask(model,editorInput.getReview()).schedule();
 
 					}
 				}).createPartControl(parent));
