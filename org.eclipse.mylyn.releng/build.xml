@@ -210,7 +210,9 @@
 		<antcall target="promote">
 			<param name="todir" value="weekly"/>
 		</antcall>
-		
+
+		<antcall target="promote-helios"/>
+
 		<echo>Ensure that the mylyn.build file is updated to the latest version.</echo>
 	</target>
 
@@ -253,7 +255,7 @@
 		<fail message="Required property 'todir' not set" unless="todir"/>
 
 		<property name="dist.dir" value="${dist.home}/update-archive/${version}/${qualifier}" />
-		<property name="target.dir" value="${dist.home}/update/${todir}" />
+		<property name="target.dir" value="${archive.home}/update/${todir}" />
 
 		<copy todir="${target.dir}">
 			<fileset dir="${dist.dir}">
