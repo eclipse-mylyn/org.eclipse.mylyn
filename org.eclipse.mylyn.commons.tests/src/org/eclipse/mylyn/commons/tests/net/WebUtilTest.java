@@ -15,9 +15,9 @@ import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
-import java.net.Proxy.Type;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.Proxy.Type;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.net.ssl.SSLHandshakeException;
@@ -256,7 +256,7 @@ public class WebUtilTest extends TestCase {
 		} finally {
 			in.close();
 		}
-		Thread.sleep(200);
+		Thread.sleep(500);
 		assertEquals(0, ((ThreadPoolExecutor) CommonsNetPlugin.getExecutorService()).getActiveCount());
 	}
 
