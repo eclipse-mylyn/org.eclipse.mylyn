@@ -95,20 +95,20 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.TaskListChangeAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListServiceMessageControl;
 import org.eclipse.mylyn.internal.tasks.ui.util.PlatformUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.SortCriterion;
+import org.eclipse.mylyn.internal.tasks.ui.util.SortCriterion.SortKey;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDragSourceListener;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.util.TreeWalker;
-import org.eclipse.mylyn.internal.tasks.ui.util.SortCriterion.SortKey;
 import org.eclipse.mylyn.internal.tasks.ui.util.TreeWalker.TreeVisitor;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.core.TaskActivationAdapter;
 import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.ui.TaskElementLabelProvider;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -961,8 +961,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 			}
 		}
 
-		String lastClosedId = TasksUiPlugin.getDefault().getPreferenceStore().getString(
-				ITasksUiPreferenceConstants.LAST_SERVICE_MESSAGE_ID);
+		String lastClosedId = TasksUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getString(ITasksUiPreferenceConstants.LAST_SERVICE_MESSAGE_ID);
 
 		if (showMessage && lastClosedId.equals("")) { //$NON-NLS-1$
 			ServiceMessage message = new ServiceMessage();
@@ -1193,11 +1194,13 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 	private void fillLocalToolBar(IToolBarManager manager) {
 		manager.add(newTaskAction);
+		manager.add(new Separator());
 		addPresentations(manager);
+		manager.add(new Separator());
+		manager.add(new GroupMarker(ID_SEPARATOR_CONTEXT));
 		manager.add(new Separator());
 		manager.add(filterCompleteTask);
 		manager.add(collapseAll);
-		manager.add(new GroupMarker(ID_SEPARATOR_CONTEXT));
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
@@ -1254,8 +1257,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 		getViewer().addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
-				if (TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-						ITasksUiPreferenceConstants.ACTIVATE_WHEN_OPENED)) {
+				if (TasksUiPlugin.getDefault()
+						.getPreferenceStore()
+						.getBoolean(ITasksUiPreferenceConstants.ACTIVATE_WHEN_OPENED)) {
 					AbstractTask selectedTask = getSelectedTask();
 					if (selectedTask != null && !selectedTask.isActive()) {
 						TasksUiInternal.activateTaskThroughCommand(selectedTask);
@@ -1476,8 +1480,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 	public static String getCurrentPriorityLevel() {
 		if (TasksUiPlugin.getDefault().getPreferenceStore().contains(ITasksUiPreferenceConstants.FILTER_PRIORITY)) {
-			return TasksUiPlugin.getDefault().getPreferenceStore().getString(
-					ITasksUiPreferenceConstants.FILTER_PRIORITY);
+			return TasksUiPlugin.getDefault()
+					.getPreferenceStore()
+					.getString(ITasksUiPreferenceConstants.FILTER_PRIORITY);
 		} else {
 			return PriorityLevel.P5.toString();
 		}
@@ -1510,8 +1515,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 	}
 
 	private boolean isAutoExpandMode() {
-		return TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				ITasksUiPreferenceConstants.AUTO_EXPAND_TASK_LIST);
+		return TasksUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getBoolean(ITasksUiPreferenceConstants.AUTO_EXPAND_TASK_LIST);
 	}
 
 	public void setFocusedMode(boolean focusedMode) {
@@ -1642,8 +1648,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		// bug#160897
 		// http://dev.eclipse.org/newslists/news.eclipse.platform.swt/msg29614.html
 		if (taskListToolTip != null) {
-			boolean enabled = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-					ITasksUiPreferenceConstants.TASK_LIST_TOOL_TIPS_ENABLED);
+			boolean enabled = TasksUiPlugin.getDefault()
+					.getPreferenceStore()
+					.getBoolean(ITasksUiPreferenceConstants.TASK_LIST_TOOL_TIPS_ENABLED);
 			taskListToolTip.setEnabled(enabled);
 			if (getViewer().getTree() != null && !getViewer().getTree().isDisposed()) {
 				getViewer().getTree().setToolTipText((enabled) ? "" : null); //$NON-NLS-1$
