@@ -131,7 +131,11 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				} else if (element instanceof ScheduledTaskContainer) {
 					ScheduledTaskContainer scheduledTaskContainer = (ScheduledTaskContainer) element;
 					if (scheduledTaskContainer.getDateRange() instanceof DayDateRange) {
-						compositeDescriptor.icon = CommonImages.SCHEDULE_DAY;
+						if (scheduledTaskContainer.isPresent()) {
+							compositeDescriptor.icon = CommonImages.SCHEDULE_DAY;
+						} else {
+							compositeDescriptor.icon = CommonImages.SCHEDULE;
+						}
 					} else if (scheduledTaskContainer.getDateRange() instanceof WeekDateRange) {
 						compositeDescriptor.icon = CommonImages.SCHEDULE_WEEK;
 					} else {
@@ -206,12 +210,16 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				}
 			}
 		} else if (object instanceof ITaskContainer) {
-			for (ITask child : ((ITaskContainer) object).getChildren()) {
-				if (child.isActive() || (child instanceof ITaskContainer && showHasActiveChild((ITaskContainer) child))) {
-					return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_TASK_ACTIVE);
-				} else if (TasksUiPlugin.getTaskActivityManager().isOverdue(child)) {
-//				} else if ((child.isPastReminder() && !child.isCompleted()) || showHasChildrenPastDue(child)) {
-					return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_OVERDUE);
+			if (object instanceof ScheduledTaskContainer) {
+				return null;
+			} else {
+				for (ITask child : ((ITaskContainer) object).getChildren()) {
+					if (child.isActive()
+							|| (child instanceof ITaskContainer && showHasActiveChild((ITaskContainer) child))) {
+						return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_TASK_ACTIVE);
+					} else if (TasksUiPlugin.getTaskActivityManager().isOverdue(child)) {
+						return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_OVERDUE);
+					}
 				}
 			}
 		}

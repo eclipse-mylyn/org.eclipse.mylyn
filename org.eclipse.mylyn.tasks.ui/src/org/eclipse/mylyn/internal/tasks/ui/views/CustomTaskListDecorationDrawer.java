@@ -18,6 +18,7 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
@@ -26,8 +27,8 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.PlatformUtil;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
+import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -84,10 +85,12 @@ public class CustomTaskListDecorationDrawer implements Listener {
 		this.lastClippingArea = new Rectangle(0, 0, 0, 0);
 		this.tweakClipping = PlatformUtil.isPaintItemClippingRequired();
 		this.platformSpecificSquish = PlatformUtil.getTreeItemSquish();
-		this.synchronizationOverlaid = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				ITasksUiPreferenceConstants.OVERLAYS_INCOMING_TIGHT);
-		this.useStrikethroughForCompleted = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				ITasksUiPreferenceConstants.USE_STRIKETHROUGH_FOR_COMPLETED);
+		this.synchronizationOverlaid = TasksUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getBoolean(ITasksUiPreferenceConstants.OVERLAYS_INCOMING_TIGHT);
+		this.useStrikethroughForCompleted = TasksUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getBoolean(ITasksUiPreferenceConstants.USE_STRIKETHROUGH_FOR_COMPLETED);
 		this.focusedMode = focusedMode;
 		TasksUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(PROPERTY_LISTENER);
 	}
@@ -230,7 +233,9 @@ public class CustomTaskListDecorationDrawer implements Listener {
 	}
 
 	private boolean hideDecorationOnContainer(ITaskContainer element, TreeItem treeItem) {
-		if (element instanceof UnmatchedTaskContainer) {
+		if (element instanceof ScheduledTaskContainer) {
+			return true;
+		} else if (element instanceof UnmatchedTaskContainer) {
 			if (!focusedMode) {
 				return false;
 			} else if (AbstractTaskListFilter.hasDescendantIncoming(element)) {
