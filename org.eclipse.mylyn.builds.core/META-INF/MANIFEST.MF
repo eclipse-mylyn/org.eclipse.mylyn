@@ -18,4 +18,4 @@ Export-Package: org.eclipse.mylyn.builds.core,
  org.eclipse.mylyn.builds.core.util,
  org.eclipse.mylyn.internal.builds.core;x-internal:=true,
  org.eclipse.mylyn.internal.builds.core.tasks;x-internal:=true,
- org.eclipse.mylyn.internal.builds.core.util
+ org.eclipse.mylyn.internal.builds.core.util;x-internal:=true
