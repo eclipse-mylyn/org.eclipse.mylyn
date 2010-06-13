@@ -65,6 +65,12 @@ public class TracFixture extends TestFixture {
 	public static TracFixture TRAC_0_11_XML_RPC = new TracFixture(Version.XML_RPC, TracTestConstants.TEST_TRAC_011_URL,
 			"0.11", "XML-RPC");
 
+	public static TracFixture TRAC_0_12_WEB = new TracFixture(Version.TRAC_0_9, TracTestConstants.TEST_TRAC_012_URL,
+			"0.12", "Web");
+
+	public static TracFixture TRAC_0_12_XML_RPC = new TracFixture(Version.XML_RPC, TracTestConstants.TEST_TRAC_012_URL,
+			"0.12", "XML-RPC");
+
 	public static TracFixture TRAC_TRUNK_WEB = new TracFixture(Version.TRAC_0_9, TracTestConstants.TEST_TRAC_TRUNK_URL,
 			"0.12dev-r0", "Web");
 
@@ -79,7 +85,7 @@ public class TracFixture extends TestFixture {
 	 * Standard configurations for running all test against.
 	 */
 	public static final TracFixture[] ALL = new TracFixture[] { TRAC_0_9_WEB, TRAC_0_10_WEB, TRAC_0_11_WEB,
-			TRAC_TRUNK_WEB, TRAC_0_10_XML_RPC, TRAC_0_11_XML_RPC, TRAC_TRUNK_XML_RPC, /* TRAC_0_10_XML_RPC_SSL, */};
+			TRAC_0_12_WEB, TRAC_TRUNK_WEB, TRAC_0_10_XML_RPC, TRAC_0_11_XML_RPC, TRAC_0_12_XML_RPC, TRAC_TRUNK_XML_RPC, /* TRAC_0_10_XML_RPC_SSL, */};
 
 //	public static final TracFixture[] ALL = new TracFixture[] { TRAC_TRUNK_XML_RPC };
 
