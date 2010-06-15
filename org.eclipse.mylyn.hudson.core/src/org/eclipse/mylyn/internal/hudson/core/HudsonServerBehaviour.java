@@ -11,16 +11,22 @@
 
 package org.eclipse.mylyn.internal.hudson.core;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.mylyn.builds.core.BuildState;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
+import org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.IOperationMonitor;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
 import org.eclipse.mylyn.commons.net.WebLocation;
+import org.eclipse.mylyn.internal.hudson.core.client.HudsonException;
 import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient;
+import org.eclipse.mylyn.internal.hudson.model.HudsonModelBallColor;
+import org.eclipse.mylyn.internal.hudson.model.HudsonModelJob;
 
 /**
  * @author Markus Knittig
@@ -31,17 +37,49 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 
 	public HudsonServerBehaviour(IBuildServer server) {
 		super(server);
-		client = new RestfulHudsonClient(new WebLocation(server.getRepositoryUrl()));
+		this.client = new RestfulHudsonClient(new WebLocation(server.getRepositoryUrl()));
 	}
 
 	@Override
 	public List<IBuildPlan> getPlans(IOperationMonitor monitor) throws CoreException {
-		return null;
+		try {
+			List<HudsonModelJob> jobs = client.getJobs(monitor);
+			List<IBuildPlan> plans = new ArrayList<IBuildPlan>(jobs.size());
+			for (HudsonModelJob job : jobs) {
+				IBuildPlanWorkingCopy plan = getServer().createBuildPlan();
+				plan.setId(job.getName());
+				if ("".equals(job.getDisplayName())) { //$NON-NLS-1$
+					plan.setName(job.getDisplayName());
+				} else {
+					plan.setName(job.getName());
+				}
+				plan.setSummary(job.getDescription());
+				plan.setUrl(job.getUrl());
+				if (job.getColor().equals(HudsonModelBallColor.BLUE_ANIME)
+						|| job.getColor().equals(HudsonModelBallColor.RED_ANIME)
+						|| job.getColor().equals(HudsonModelBallColor.YELLOW_ANIME)
+						|| job.getColor().equals(HudsonModelBallColor.DISABLED_ANIME)
+						|| job.getColor().equals(HudsonModelBallColor.GREY_ANIME)) {
+					plan.setState(BuildState.RUNNING);
+				} else {
+					plan.setState(BuildState.STOPPED);
+				}
+				plan.setHealth(job.getColor().ordinal());
+				plans.add(plan);
+			}
+			return plans;
+		} catch (HudsonException e) {
+			throw HudsonCorePlugin.toCoreException(e);
+		}
 	}
 
 	@Override
 	public IStatus validate(IOperationMonitor monitor) throws CoreException {
-		return client.validate(monitor);
+		try {
+			return client.validate(monitor);
+		} catch (HudsonException e) {
+			throw HudsonCorePlugin.toCoreException(e);
+		}
 	}
 
 }

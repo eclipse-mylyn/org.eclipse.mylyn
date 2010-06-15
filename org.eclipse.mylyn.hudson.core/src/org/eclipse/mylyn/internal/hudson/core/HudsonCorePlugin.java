@@ -11,6 +11,10 @@
 
 package org.eclipse.mylyn.internal.hudson.core;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.internal.hudson.core.client.HudsonException;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
@@ -51,6 +55,10 @@ public class HudsonCorePlugin implements BundleActivator {
 
 	void setConnector(HudsonConnector connector) {
 		this.connector = connector;
+	}
+
+	public static CoreException toCoreException(HudsonException e) {
+		return new CoreException(new Status(IStatus.ERROR, PLUGIN_ID, "Unexpected error: " + e.getMessage(), e));
 	}
 
 }
