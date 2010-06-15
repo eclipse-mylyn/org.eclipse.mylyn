@@ -134,9 +134,8 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 					TasksUi.getTaskActivityManager().removeActivityListener(taskProgressBarActivityListener);
 				}
 				if (taskProgressBarWorkingSetListener != null) {
-					PlatformUI.getWorkbench()
-							.getWorkingSetManager()
-							.removePropertyChangeListener(taskProgressBarWorkingSetListener);
+					PlatformUI.getWorkbench().getWorkingSetManager().removePropertyChangeListener(
+							taskProgressBarWorkingSetListener);
 				}
 				actionGroup.setSelectionProvider(null);
 				activeTaskMenuManager.dispose();
@@ -226,35 +225,39 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 	@Override
 	protected Composite createSearchComposite(Composite container) {
-		Composite searchComposite = new Composite(container, SWT.NONE);
-		GridLayout searchLayout = new GridLayout(1, false);
-		searchLayout.marginWidth = 8;
-		searchLayout.marginHeight = 0;
-		searchLayout.marginBottom = 0;
-		searchLayout.horizontalSpacing = 0;
-		searchLayout.verticalSpacing = 0;
-		searchComposite.setLayout(searchLayout);
-		searchComposite.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false, 4, 1));
+		if (SearchUtil.supportsTaskSearch()) {
+			Composite searchComposite = new Composite(container, SWT.NONE);
+			GridLayout searchLayout = new GridLayout(1, false);
+			searchLayout.marginWidth = 8;
+			searchLayout.marginHeight = 0;
+			searchLayout.marginBottom = 0;
+			searchLayout.horizontalSpacing = 0;
+			searchLayout.verticalSpacing = 0;
+			searchComposite.setLayout(searchLayout);
+			searchComposite.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false, 4, 1));
 
-		final TaskScalingHyperlink searchLink = new TaskScalingHyperlink(searchComposite, SWT.LEFT);
-		searchLink.setText(LABEL_SEARCH);
+			final TaskScalingHyperlink searchLink = new TaskScalingHyperlink(searchComposite, SWT.LEFT);
+			searchLink.setText(LABEL_SEARCH);
 
-		searchLink.addHyperlinkListener(new IHyperlinkListener() {
+			searchLink.addHyperlinkListener(new IHyperlinkListener() {
 
-			public void linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent e) {
-				SearchUtil.openSearchDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow());
-			}
+				public void linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent e) {
+					SearchUtil.openSearchDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow());
+				}
 
-			public void linkEntered(org.eclipse.ui.forms.events.HyperlinkEvent e) {
-				searchLink.setUnderlined(true);
-			}
+				public void linkEntered(org.eclipse.ui.forms.events.HyperlinkEvent e) {
+					searchLink.setUnderlined(true);
+				}
 
-			public void linkExited(org.eclipse.ui.forms.events.HyperlinkEvent e) {
-				searchLink.setUnderlined(false);
-			}
-		});
+				public void linkExited(org.eclipse.ui.forms.events.HyperlinkEvent e) {
+					searchLink.setUnderlined(false);
+				}
+			});
 
-		return searchComposite;
+			return searchComposite;
+		} else {
+			return super.createSearchComposite(container);
+		}
 	}
 
 	private void updateTaskProgressBar() {
