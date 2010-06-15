@@ -30,4 +30,6 @@ public interface IBuildPlanWorkingCopy extends IBuildPlan {
 
 	public void setState(BuildState state);
 
+	public void setUrl(String url);
+
 }
