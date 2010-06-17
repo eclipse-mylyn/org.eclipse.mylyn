@@ -96,7 +96,7 @@ public class TaskListExternalizer {
 		} catch (CoreException e) {
 			this.orphanedDocument = null;
 			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-					"Failed to create document for orphaned nodes", e));
+					"Failed to create document for orphaned nodes", e)); //$NON-NLS-1$
 		}
 	}
 
@@ -211,7 +211,7 @@ public class TaskListExternalizer {
 		} catch (CoreException e) {
 			this.orphanedDocument = null;
 			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-					"Failed to create document for orphaned nodes", e));
+					"Failed to create document for orphaned nodes", e)); //$NON-NLS-1$
 		}
 
 		Document doc = openTaskList(inFile);
