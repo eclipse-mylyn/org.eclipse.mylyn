@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Red Hat Inc. - fixes for bug 259291
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.core;
@@ -15,8 +16,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
 /**
  * @author Rob Elves
- * @since 3.0
  * @author Charley Wang
+ * @since 3.0
  */
 public class BugzillaOperation extends AbstractBugzillaOperation {
 

@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Red Hat Inc. - fixes for bug 259291
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.ui.tasklist;
@@ -60,6 +61,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Mik Kersten
  * @author Rob Elves
+ * @author Charley Wang
  */
 public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
@@ -228,8 +230,11 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		gridLayout.marginWidth = 0;
 		gridLayout.marginHeight = 0;
 		descriptorComposite.setLayout(gridLayout);
-		GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.BEGINNING).hint(200, SWT.DEFAULT).applyTo(
-				descriptorComposite);
+		GridDataFactory.fillDefaults()
+				.grab(true, false)
+				.align(SWT.FILL, SWT.BEGINNING)
+				.hint(200, SWT.DEFAULT)
+				.applyTo(descriptorComposite);
 
 		descriptorFile = new Text(descriptorComposite, SWT.BORDER);
 		GridData gd = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
@@ -335,7 +340,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		defaultPlatformCombo.setEnabled(!autodetectPlatformOS.getSelection());
 	}
 
-	@SuppressWarnings( { "restriction" })
+	@SuppressWarnings({ "restriction" })
 	@Override
 	public void applyTo(TaskRepository repository) {
 		super.applyTo(repository);

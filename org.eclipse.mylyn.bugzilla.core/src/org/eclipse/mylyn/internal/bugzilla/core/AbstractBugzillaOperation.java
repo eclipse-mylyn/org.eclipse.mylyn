@@ -15,7 +15,11 @@ import java.io.Serializable;
 
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
+/**
+ * @author Charley Wang
+ */
 public abstract class AbstractBugzillaOperation implements Serializable {
+
 	private static final long serialVersionUID = 6966730655963098650L;
 
 	public static final String DEFAULT_LABEL_PREFIX = "Set as "; //$NON-NLS-1$

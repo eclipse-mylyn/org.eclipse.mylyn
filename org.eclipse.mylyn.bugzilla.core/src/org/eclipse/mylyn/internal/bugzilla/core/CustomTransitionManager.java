@@ -23,6 +23,9 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
+/**
+ * @author Charley Wang
+ */
 public class CustomTransitionManager implements Serializable {
 	private static final long serialVersionUID = 3340305752692674487L;
 

@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Red Hat Inc. - fixes for bug 259291
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.core;
@@ -29,6 +30,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskOperation;
  * Class describing the configuration of products and components for a given Bugzilla installation.
  * 
  * @author Rob Elves
+ * @author Charley Wang
  */
 public class RepositoryConfiguration implements Serializable {
 

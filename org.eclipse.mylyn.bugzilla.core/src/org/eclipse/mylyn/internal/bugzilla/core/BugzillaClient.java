@@ -8,6 +8,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     Frank Becker - fixes for bug 165072 
+ *     Red Hat Inc. - fixes for bug 259291
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.core;
@@ -67,17 +68,17 @@ import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer;
+import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer.Token;
 import org.eclipse.mylyn.commons.net.HtmlTag;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.commons.net.WebUtil;
-import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer.Token;
 import org.eclipse.mylyn.internal.bugzilla.core.history.BugzillaTaskHistoryParser;
 import org.eclipse.mylyn.internal.bugzilla.core.history.TaskHistory;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
+import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentPartSource;
@@ -1148,9 +1149,12 @@ public class BugzillaClient {
 				String id = a.getId();
 				if (id.equals(BugzillaAttribute.NEWCC.getKey())) {
 					TaskAttribute b = taskData.getRoot().createAttribute(BugzillaAttribute.CC.getKey());
-					b.getMetaData().defaults().setReadOnly(BugzillaAttribute.CC.isReadOnly()).setKind(
-							BugzillaAttribute.CC.getKind()).setLabel(BugzillaAttribute.CC.toString()).setType(
-							BugzillaAttribute.CC.getType());
+					b.getMetaData()
+							.defaults()
+							.setReadOnly(BugzillaAttribute.CC.isReadOnly())
+							.setKind(BugzillaAttribute.CC.getKind())
+							.setLabel(BugzillaAttribute.CC.toString())
+							.setType(BugzillaAttribute.CC.getType());
 					for (String val : a.getValues()) {
 						if (val != null) {
 							b.addValue(val);
@@ -1185,8 +1189,8 @@ public class BugzillaClient {
 			}
 
 			if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_2_18) == 0) {
-				fields.put(KEY_COMMENT, new NameValuePair(KEY_COMMENT, formatTextToLineWrap(descAttribute.getValue(),
-						true)));
+				fields.put(KEY_COMMENT,
+						new NameValuePair(KEY_COMMENT, formatTextToLineWrap(descAttribute.getValue(), true)));
 			} else {
 				fields.put(KEY_COMMENT, new NameValuePair(KEY_COMMENT, descAttribute.getValue()));
 			}
@@ -1344,8 +1348,9 @@ public class BugzillaClient {
 						fields.put(KEY_KNOB, new NameValuePair(KEY_KNOB, sel));
 					} else {
 						fields.put(KEY_KNOB, new NameValuePair(KEY_KNOB, attributeOperation.getValue()));
-						TaskAttribute inputAttribute = attributeOperation.getTaskData().getRoot().getAttribute(
-								inputAttributeId);
+						TaskAttribute inputAttribute = attributeOperation.getTaskData()
+								.getRoot()
+								.getAttribute(inputAttributeId);
 						if (inputAttribute != null) {
 							if (inputAttribute.getOptions().size() > 0) {
 								String sel = inputAttribute.getValue();
@@ -1368,8 +1373,10 @@ public class BugzillaClient {
 				}
 				if (model.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW) != null
 						&& model.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW).getValue().length() > 0) {
-					fields.put(KEY_COMMENT, new NameValuePair(KEY_COMMENT, model.getRoot().getMappedAttribute(
-							TaskAttribute.COMMENT_NEW).getValue()));
+					fields.put(KEY_COMMENT,
+							new NameValuePair(KEY_COMMENT, model.getRoot()
+									.getMappedAttribute(TaskAttribute.COMMENT_NEW)
+									.getValue()));
 				} else if (attributeOperation != null
 						&& attributeOperation.getValue().equals(BugzillaOperation.duplicate.toString())) {
 					// fix for bug#198677
@@ -1430,8 +1437,9 @@ public class BugzillaClient {
 
 						fields.put(fieldName, new NameValuePair(fieldName, selOp));
 						if (inputAttributeId != null && !inputAttributeId.equals("")) { //$NON-NLS-1$
-							TaskAttribute inputAttribute = attributeOperation.getTaskData().getRoot().getAttribute(
-									inputAttributeId);
+							TaskAttribute inputAttribute = attributeOperation.getTaskData()
+									.getRoot()
+									.getAttribute(inputAttributeId);
 							if (inputAttribute != null) {
 								if (inputAttribute.getOptions().size() > 0) {
 									String sel = inputAttribute.getValue();
@@ -1459,14 +1467,19 @@ public class BugzillaClient {
 
 			if (model.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW) != null
 					&& model.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW).getValue().length() > 0) {
-				fields.put(KEY_COMMENT, new NameValuePair(KEY_COMMENT, model.getRoot().getMappedAttribute(
-						TaskAttribute.COMMENT_NEW).getValue()));
+				fields.put(KEY_COMMENT,
+						new NameValuePair(KEY_COMMENT, model.getRoot()
+								.getMappedAttribute(TaskAttribute.COMMENT_NEW)
+								.getValue()));
 			}
 		}
 
 		if (model.getRoot().getMappedAttribute(BugzillaAttribute.SHORT_DESC.getKey()) != null) {
-			fields.put(KEY_SHORT_DESC, new NameValuePair(KEY_SHORT_DESC, model.getRoot().getMappedAttribute(
-					BugzillaAttribute.SHORT_DESC.getKey()).getValue()));
+			fields.put(
+					KEY_SHORT_DESC,
+					new NameValuePair(KEY_SHORT_DESC, model.getRoot()
+							.getMappedAttribute(BugzillaAttribute.SHORT_DESC.getKey())
+							.getValue()));
 		}
 
 		TaskAttribute attributeRemoveCC = model.getRoot().getMappedAttribute(BugzillaAttribute.REMOVECC.getKey());
