@@ -427,7 +427,7 @@
 		<property name="discovery.jar" value="${dist.home}/discovery/org.eclipse.mylyn.discovery_${discovery.version}.jar"/>
 		<available property="discovery.exists" file="${discovery.jar}"/>
 		<antcall target="discovery-update"/>
-		<copy file="${discovery.jar}" tofile="${dist.home}/discovery/org.eclipse.mylyn.discovery-3.3.jar"/>
+		<move file="${discovery.jar}" tofile="${dist.home}/discovery/org.eclipse.mylyn.discovery-3.4.jar"/>
 	</target>
 	
 	<target name="discovery-update" unless="discovery.exists">
