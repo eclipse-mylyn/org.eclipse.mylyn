@@ -89,7 +89,7 @@
             license="%connectorDescriptor.license.trac"
             name="%connectorDescriptor.name.trac"
             provider="%connectorDescriptor.provider.trac"
-            siteUrl="http://download.eclipse.org/tools/mylyn/update/extras">
+            siteUrl="http://download.eclipse.org/tools/mylyn/update/e3.4">
          <icon
                image32="images/trac32.png"
                image64="images/trac64.png">
@@ -140,27 +140,5 @@
                url="http://www.foglyn.com/?connectordiscovery">
          </overview>
       </connectorDescriptor>
-
-	<!--
-      <connectorDescriptor
-            categoryId="org.eclipse.mylyn.discovery.site.categories.connectorCategoryEclipseOrg"
-            description="The JIRA connector supports JIRA 3.4 or later."
-            id="org.eclipse.mylyn.jira_feature"
-            kind="task"
-            license="EPL"
-            name="Atlassian JIRA"
-            provider="Eclipse Mylyn"
-            siteUrl="http://download.eclipse.org/tools/mylyn/update/extras">
-         <icon
-               image32="images/jira32.png">
-         </icon>
-         <overview
-               screenshot="images/jira-screenshot-320x240.png"
-               summary="With the JIRA connector, you can query your JIRA server and access your issues from Eclipse. You can then quickly view and update your issues using a rich editor. When someone modifies one of your tasks, you&apos;ll see an incoming change notification in your task list. Now there&apos;s no need to use a web browser and email client to stay on top of your JIRA issues. Tasktop also provides task time tracking as well as personal, sophisticated scheduling for your JIRA tasks so you can prioritize your work beyond that available through JIRA."
-               url="http://confluence.atlassian.com/display/JIRAEXT/Mylyn">
-         </overview>
-      </connectorDescriptor>
-     -->
-
 	</extension>
 </plugin>
