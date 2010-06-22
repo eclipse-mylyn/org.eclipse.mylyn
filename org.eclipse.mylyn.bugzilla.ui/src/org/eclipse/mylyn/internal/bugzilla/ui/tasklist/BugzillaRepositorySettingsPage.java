@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.bugzilla.ui.tasklist;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
@@ -23,6 +24,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClientFactory;
@@ -39,13 +41,20 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -73,6 +82,10 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 	protected Combo defaultPlatformCombo;
 
 	protected Combo defaultOSCombo;
+
+	protected Text descriptorFile;
+
+	private String oldDescriptorFile;
 
 	private Button cleanQAContact;
 
@@ -206,13 +219,69 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		new Label(parent, SWT.NONE).setText(Messages.BugzillaRepositorySettingsPage_Language_);
 		languageSettingCombo = new Combo(parent, SWT.DROP_DOWN);
 
+		Label descriptorLabel = new Label(parent, SWT.NONE);
+		descriptorLabel.setText(Messages.BugzillaRepositorySettingsPage_descriptor_file);
+		GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).applyTo(descriptorLabel);
+
+		Composite descriptorComposite = new Composite(parent, SWT.NONE);
+		gridLayout = new GridLayout(2, false);
+		gridLayout.marginWidth = 0;
+		gridLayout.marginHeight = 0;
+		descriptorComposite.setLayout(gridLayout);
+		GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.BEGINNING).hint(200, SWT.DEFAULT).applyTo(
+				descriptorComposite);
+
+		descriptorFile = new Text(descriptorComposite, SWT.BORDER);
+		GridData gd = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
+		gd.widthHint = 200;
+		gd.horizontalAlignment = SWT.FILL;
+		gd.verticalAlignment = SWT.CENTER;
+		descriptorFile.setLayoutData(gd);
+
+		Button browseDescriptor = new Button(descriptorComposite, SWT.PUSH);
+		browseDescriptor.setText(Messages.BugzillaRepositorySettingsPage_Browse_descriptor);
+		browseDescriptor.addSelectionListener(new SelectionListener() {
+			public void widgetSelected(SelectionEvent e) {
+				FileDialog fd = new FileDialog(new Shell());
+				fd.setText(Messages.BugzillaRepositorySettingsPage_SelectDescriptorFile);
+				String dFile = fd.open();
+				if (dFile != null && dFile.length() > 0) {
+					descriptorFile.setText(dFile);
+					isPageComplete();
+				}
+			}
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+
+			}
+		});
+		GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.TOP).applyTo(browseDescriptor);
+		descriptorFile.addModifyListener(new ModifyListener() {
+
+			public void modifyText(ModifyEvent e) {
+				if (getWizard() != null) {
+					getWizard().getContainer().updateButtons();
+				}
+			}
+		});
+
 		for (BugzillaLanguageSettings bugzillaLanguageSettings : BugzillaRepositoryConnector.getLanguageSettings()) {
 			languageSettingCombo.add(bugzillaLanguageSettings.getLanguageName());
 		}
 		if (repository != null) {
+			//Set language selection
 			String language = repository.getProperty(IBugzillaConstants.BUGZILLA_LANGUAGE_SETTING);
 			if (language != null && !language.equals("") && languageSettingCombo.indexOf(language) >= 0) { //$NON-NLS-1$
 				languageSettingCombo.select(languageSettingCombo.indexOf(language));
+			}
+
+			//Set descriptor file
+			if (descriptorFile != null) {
+				String file = repository.getProperty((IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE));
+				if (file != null) {
+					descriptorFile.setText(file);
+					oldDescriptorFile = file;
+				}
 			}
 		}
 		if (languageSettingCombo.getSelectionIndex() == -1) {
@@ -274,6 +343,14 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		repository.setProperty(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN,
 				String.valueOf(cleanQAContact.getSelection()));
 		repository.setProperty(IBugzillaConstants.BUGZILLA_LANGUAGE_SETTING, languageSettingCombo.getText());
+		if (descriptorFile != null) {
+			repository.setProperty(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE, descriptorFile.getText());
+			if (oldDescriptorFile != null && !descriptorFile.getText().equals(oldDescriptorFile)) {
+				if (repositoryConfiguration != null) {
+					repositoryConfiguration.setValidTransitions(descriptorFile.getText());
+				}
+			}
+		}
 
 		if (!autodetectPlatformOS.getSelection()) {
 			repository.setProperty(IBugzillaConstants.BUGZILLA_DEF_PLATFORM,
@@ -361,6 +438,21 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 	public boolean canValidate() {
 		// need to invoke isPageComplete() to trigger message update
 		return isPageComplete() && (getMessage() == null || getMessageType() != IMessageProvider.ERROR);
+	}
+
+	@Override
+	public boolean isPageComplete() {
+		if (descriptorFile != null) {
+			String descriptorFilePath = descriptorFile.getText();
+			if (descriptorFilePath != null && !descriptorFilePath.equals("")) { //$NON-NLS-1$
+				File testFile = new File(descriptorFilePath);
+				if (!testFile.exists()) {
+					setMessage(Messages.BugzillaRepositorySettingsPage_DescriptorFileNotExists, IMessageProvider.ERROR);
+					return false;
+				}
+			}
+		}
+		return super.isPageComplete();
 	}
 
 }

@@ -61,17 +61,27 @@ public class Messages extends NLS {
 
 	public static String BugzillaRepositorySettingsPage_available_once_repository_created;
 
+	public static String BugzillaRepositorySettingsPage_Browse_descriptor;
+
 	public static String BugzillaRepositorySettingsPage_bugzilla_repository_settings;
 
 	public static String BugzillaRepositorySettingsPage_example_do_not_include;
 
 	public static String BugzillaRepositorySettingsPage_Language_;
 
+	public static String BugzillaRepositorySettingsPage_descriptor_file;
+
+	public static String BugzillaRepositorySettingsPage_DescriptorCannotBeApplied;
+
+	public static String BugzillaRepositorySettingsPage_DescriptorFileNotExists;
+
 	public static String BugzillaRepositorySettingsPage_local_users_enabled;
 
 	public static String BugzillaRepositorySettingsPage_override_auto_detection_of_platform;
 
 	public static String BugzillaRepositorySettingsPage_Retrieving_repository_configuration;
+
+	public static String BugzillaRepositorySettingsPage_SelectDescriptorFile;
 
 	public static String BugzillaRepositorySettingsPage_Server_URL_is_invalid;
 

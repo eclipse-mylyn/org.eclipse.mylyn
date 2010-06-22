@@ -15,6 +15,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 
+import junit.framework.AssertionFailedError;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
@@ -26,6 +28,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClientManager;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
+import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
@@ -109,7 +112,7 @@ public class BugzillaFixture extends TestFixture {
 	public static BugzillaFixture BUGS_HEAD = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_HEAD_URL, //
 			"3.7", "");
 
-	public static BugzillaFixture DEFAULT = BUGS_3_6;
+	public static BugzillaFixture DEFAULT = BUGS_3_6_CUSTOM_WF_AND_STATUS;
 
 	public static final BugzillaFixture[] ALL = new BugzillaFixture[] { BUGS_2_22, BUGS_3_0, BUGS_3_2, BUGS_3_4,
 			BUGS_3_6, BUGS_HEAD };
@@ -179,6 +182,17 @@ public class BugzillaFixture extends TestFixture {
 	public BugzillaClient client(AbstractWebLocation location, String encoding) throws CoreException {
 
 		TaskRepository taskRepository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, location.getUrl());
+		String filepath = "testdata/descriptor/" + getInfo().replaceAll(" ", "_") + "Transition.txt";
+		try {
+			File file = BugzillaFixture.getFile(filepath);
+			if (file != null) {
+				taskRepository.setProperty(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE, file.getCanonicalPath());
+			}
+		} catch (AssertionFailedError a) {
+			// ignore the Exception. The BUGZILLA_DESCRIPTOR_FILE does not exist so the property is null
+		} catch (IOException e) {
+			// ignore the Exception. The BUGZILLA_DESCRIPTOR_FILE does not exist so the property is null
+		}
 
 		taskRepository.setCredentials(AuthenticationType.REPOSITORY,
 				location.getCredentials(AuthenticationType.REPOSITORY), false);

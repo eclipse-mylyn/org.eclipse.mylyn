@@ -15,6 +15,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.bugzilla.tests.core.BugzillaPriorityTest;
+import org.eclipse.mylyn.bugzilla.tests.core.BugzillaXmlRpcClientTest;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaHyperlinkDetectorTest;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaRepositorySettingsPageTest;
@@ -67,12 +68,12 @@ public class AllBugzillaTests {
 
 			fixture.done();
 		}
-		// TODO 3.5 re-enable tests
-//		for (BugzillaFixture fixture : BugzillaFixture.ONLY_3_6_SPECIFIC) {
-//			fixture.createSuite(suite);
-//			fixture.add(BugzillaXmlRpcClientTest.class);
-//			fixture.done();
-//		}
+
+		for (BugzillaFixture fixture : BugzillaFixture.ONLY_3_6_SPECIFIC) {
+			fixture.createSuite(suite);
+			fixture.add(BugzillaXmlRpcClientTest.class);
+			fixture.done();
+		}
 
 		return suite;
 	}

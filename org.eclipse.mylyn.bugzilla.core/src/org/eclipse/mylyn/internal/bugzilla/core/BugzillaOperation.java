@@ -16,54 +16,63 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 /**
  * @author Rob Elves
  * @since 3.0
+ * @author Charley Wang
  */
-public enum BugzillaOperation {
+public class BugzillaOperation extends AbstractBugzillaOperation {
 
-	none(Messages.BugzillaOperation_Leave_as_X_X),
+	private static final long serialVersionUID = 1920016855179988829L;
 
-	accept(Messages.BugzillaOperation_Accept_to_ASSIGNED),
+	public static final BugzillaOperation none = new BugzillaOperation(Messages.BugzillaOperation_Leave_as_X_X, "none"); //$NON-NLS-1$
 
-	resolve(Messages.BugzillaOperation_Resolve_as, "resolutionInput", TaskAttribute.TYPE_SINGLE_SELECT), //$NON-NLS-1$
+	public static final BugzillaOperation reassign = new BugzillaOperation(Messages.BugzillaOperation_Reassign_to,
+			"reassignInput", TaskAttribute.TYPE_PERSON, "reassign"); //$NON-NLS-1$ //$NON-NLS-2$
 
-	duplicate(Messages.BugzillaOperation_Duplicate_of, "dup_id", TaskAttribute.TYPE_TASK_DEPENDENCY), //$NON-NLS-1$
+	public static final BugzillaOperation accept = new BugzillaOperation(Messages.BugzillaOperation_Accept_to_ASSIGNED,
+			"accept"); //$NON-NLS-1$
 
-	reassign(Messages.BugzillaOperation_Reassign_to, "reassignInput", TaskAttribute.TYPE_PERSON), //$NON-NLS-1$
+	public static final BugzillaOperation resolve = new BugzillaOperation(Messages.BugzillaOperation_Resolve_as,
+			"resolutionInput", TaskAttribute.TYPE_SINGLE_SELECT, "resolve"); //$NON-NLS-1$ //$NON-NLS-2$
 
-	reassignbycomponent(Messages.BugzillaOperation_Reassign_to_default_assignee),
+	public static final BugzillaOperation duplicate = new BugzillaOperation(Messages.BugzillaOperation_Duplicate_of,
+			"dup_id", TaskAttribute.TYPE_TASK_DEPENDENCY, "duplicate"); //$NON-NLS-1$ //$NON-NLS-2$
 
-	reopen(Messages.BugzillaOperation_Reopen_bug),
+	public static final BugzillaOperation reopen = new BugzillaOperation(Messages.BugzillaOperation_Reopen_bug,
+			"reopen"); //$NON-NLS-1$
 
-	verify(Messages.BugzillaOperation_Mark_as_VERIFIED),
+	public static final BugzillaOperation verify = new BugzillaOperation(Messages.BugzillaOperation_Mark_as_VERIFIED,
+			"verify"); //$NON-NLS-1$
 
-	close(Messages.BugzillaOperation_Mark_as_CLOSED),
+	public static final BugzillaOperation close = new BugzillaOperation(Messages.BugzillaOperation_Mark_as_CLOSED,
+			"close"); //$NON-NLS-1$
 
-	markNew(Messages.BugzillaOperation_Mark_as_NEW);
+	public static final BugzillaOperation close_with_resolution = new BugzillaOperation(
+			Messages.BugzillaOperation_Mark_as_CLOSED, "resolution", TaskAttribute.TYPE_SINGLE_SELECT, "close"); //$NON-NLS-1$ //$NON-NLS-2$
 
-	private final String label;
+	public static final BugzillaOperation markNew = new BugzillaOperation(Messages.BugzillaOperation_Mark_as_NEW,
+			"markNew"); //$NON-NLS-1$
 
-	private final String inputId;
+	public static final BugzillaOperation reassignbycomponent = new BugzillaOperation(
+			Messages.BugzillaOperation_Reassign_to_default_assignee, "reassignbycomponent"); //$NON-NLS-1$
 
-	private final String inputType;
+	private final String value;
 
 	BugzillaOperation(String label) {
-		this(label, null, TaskAttribute.TYPE_SHORT_TEXT);
+		super(label);
+		this.value = label.replaceAll(DEFAULT_LABEL_PREFIX, ""); //$NON-NLS-1$
 	}
 
-	BugzillaOperation(String label, String inputId, String type) {
-		this.label = label;
-		this.inputId = inputId;
-		this.inputType = type;
+	BugzillaOperation(String label, String inputId, String type, String value) {
+		super(label, inputId, type);
+		this.value = value;
 	}
 
-	public String getLabel() {
-		return label;
+	public BugzillaOperation(String label, String value) {
+		super(label);
+		this.value = value;
 	}
 
-	public String getInputId() {
-		return inputId;
-	}
-
-	public String getInputType() {
-		return inputType;
+	@Override
+	public String toString() {
+		return this.value;
 	}
 }

@@ -655,6 +655,8 @@ public class BugzillaClient {
 								}
 
 								if (repositoryConfiguration != null) {
+									repositoryConfiguration.setValidTransitions(configParameters.get(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE));
+
 									if (!repositoryConfiguration.getProducts().isEmpty()) {
 										repositoryConfiguration.setRepositoryUrl(repositoryUrl.toString());
 										return repositoryConfiguration;
@@ -669,6 +671,7 @@ public class BugzillaClient {
 															"No products found in repository configuration. Ensure credentials are valid.")); //$NON-NLS-1$
 										}
 									}
+
 								}
 							}
 						}
@@ -1072,7 +1075,6 @@ public class BugzillaClient {
 			getRepositoryConfiguration(new SubProgressMonitor(monitor, 1), null);
 			connector.addRepositoryConfiguration(repositoryConfiguration);
 		}
-
 		if (taskData == null) {
 			return null;
 		} else if (taskData.isNew()) {
@@ -1348,7 +1350,8 @@ public class BugzillaClient {
 							if (inputAttribute.getOptions().size() > 0) {
 								String sel = inputAttribute.getValue();
 								String knob = inputAttribute.getId();
-								if (knob.equals(BugzillaOperation.resolve.getInputId())) {
+								if (knob.equals(BugzillaOperation.resolve.getInputId())
+										|| knob.equals(BugzillaOperation.close_with_resolution.getInputId())) {
 									knob = BugzillaAttribute.RESOLUTION.getKey();
 								}
 								fields.put(knob, new NameValuePair(knob, inputAttribute.getOption(sel)));
@@ -1416,7 +1419,11 @@ public class BugzillaClient {
 							selOp = "NEW"; //$NON-NLS-1$
 						}
 						if (selOp.equals("DUPLICATE")) { //$NON-NLS-1$
-							selOp = "RESOLVED"; //$NON-NLS-1$
+							if (repositoryConfiguration != null) {
+								selOp = repositoryConfiguration.getDuplicateStatus();
+							} else {
+								selOp = "RESOLVED"; //$NON-NLS-1$
+							}
 							String knob = BugzillaAttribute.RESOLUTION.getKey();
 							fields.put(knob, new NameValuePair(knob, "DUPLICATE")); //$NON-NLS-1$
 						}
@@ -1436,7 +1443,7 @@ public class BugzillaClient {
 								} else {
 									String sel = inputAttribute.getValue();
 									String knob = attributeOperation.getValue();
-									if (knob.equals("duplicate")) { //$NON-NLS-1$
+									if (knob.equals(BugzillaOperation.duplicate.toString())) {
 										knob = inputAttributeId;
 									}
 									if (knob.equals(BugzillaOperation.reassign.toString())) {
@@ -2139,4 +2146,15 @@ public class BugzillaClient {
 					RepositoryStatus.ERROR_INTERNAL, "Unable to parse response from " + repositoryUrl.toString() + ".")); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
+
+	/**
+	 * Currently only necessary for testing. Allows setting of the descriptor file property.
+	 * 
+	 * @param bugzillaDescriptorFile
+	 * @param canonicalPath
+	 */
+	public void setDescriptorFile(String canonicalPath) {
+		configParameters.put(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE, canonicalPath);
+	}
+
 }

@@ -70,6 +70,8 @@ public class RepositoryConfiguration implements Serializable {
 
 	private BugzillaVersion version = BugzillaVersion.MIN_VERSION;
 
+	private CustomTransitionManager validTransitions;
+
 	private String encoding = null;
 
 	private String eTagValue = null;
@@ -215,7 +217,6 @@ public class RepositoryConfiguration implements Serializable {
 
 	public void addSeverity(String severity) {
 		severities.add(severity);
-
 	}
 
 	public void setInstallVersion(String version) {
@@ -332,6 +333,23 @@ public class RepositoryConfiguration implements Serializable {
 
 	public void setRepositoryUrl(String repositoryUrl) {
 		this.repositoryUrl = repositoryUrl;
+	}
+
+	/**
+	 * Create a custom transition manager. If fileName is invalid, the resulting transition manager will also be
+	 * invalid.
+	 * 
+	 * @param fileName
+	 */
+	public void setValidTransitions(String fileName) {
+		//Custom transitions only possible for newer versions of Bugzilla
+		if (getInstallVersion() != null && getInstallVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_2) < 0) {
+			return;
+		}
+		if (validTransitions == null) {
+			validTransitions = new CustomTransitionManager();
+		}
+		validTransitions.parse(fileName);
 	}
 
 	/*
@@ -578,6 +596,7 @@ public class RepositoryConfiguration implements Serializable {
 	public void addValidOperations(TaskData bugReport) {
 		TaskAttribute attributeStatus = bugReport.getRoot().getMappedAttribute(TaskAttribute.STATUS);
 		BUGZILLA_REPORT_STATUS status = BUGZILLA_REPORT_STATUS.NEW;
+
 		if (attributeStatus != null) {
 			try {
 				status = BUGZILLA_REPORT_STATUS.valueOf(attributeStatus.getValue());
@@ -589,56 +608,76 @@ public class RepositoryConfiguration implements Serializable {
 		if (bugzillaVersion == null) {
 			bugzillaVersion = BugzillaVersion.MIN_VERSION;
 		}
-		switch (status) {
-		case NEW:
+
+		if (validTransitions != null && attributeStatus != null && validTransitions.isValid()) {
+			//Handle custom operations. Currently only tuned for transitions based on default status names
 			addOperation(bugReport, BugzillaOperation.none);
-			addOperation(bugReport, BugzillaOperation.accept);
-			addOperation(bugReport, BugzillaOperation.resolve);
-			addOperation(bugReport, BugzillaOperation.duplicate);
-			break;
-		case UNCONFIRMED:
-		case REOPENED:
-			addOperation(bugReport, BugzillaOperation.none);
-			addOperation(bugReport, BugzillaOperation.accept);
-			addOperation(bugReport, BugzillaOperation.resolve);
-			addOperation(bugReport, BugzillaOperation.duplicate);
-			if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_2) >= 0) {
-				addOperation(bugReport, BugzillaOperation.markNew);
+			for (AbstractBugzillaOperation b : validTransitions.getValidTransitions(attributeStatus.getValue())) {
+				//Special case: the CLOSED status needs a Resolution input. 
+				//This happens automatically if current status is RESOLVED, else we need to supply one
+				if (b.toString().equals(BugzillaOperation.close.toString())) {
+					if (attributeStatus.getValue().equals("RESOLVED") && b.getInputId() != null) {
+						//Do not add close with resolution operation if status is RESOLVED
+						continue;
+					} else if (!attributeStatus.getValue().equals("RESOLVED") && b.getInputId() == null) {
+						//Do not add normal 'close' operation if status is not currently RESOLVED
+						continue;
+					}
+				}
+				addOperation(bugReport, b);
 			}
-			break;
-		case ASSIGNED:
-			addOperation(bugReport, BugzillaOperation.none);
-			addOperation(bugReport, BugzillaOperation.resolve);
-			addOperation(bugReport, BugzillaOperation.duplicate);
-			if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_2) >= 0) {
-				addOperation(bugReport, BugzillaOperation.markNew);
-			}
-			break;
-		case RESOLVED:
-			addOperation(bugReport, BugzillaOperation.none);
-			addOperation(bugReport, BugzillaOperation.reopen);
-			addOperation(bugReport, BugzillaOperation.verify);
-			addOperation(bugReport, BugzillaOperation.close);
-			if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_0) >= 0) {
-				addOperation(bugReport, BugzillaOperation.duplicate);
+		} else {
+			switch (status) {
+			case NEW:
+				addOperation(bugReport, BugzillaOperation.none);
+				addOperation(bugReport, BugzillaOperation.accept);
 				addOperation(bugReport, BugzillaOperation.resolve);
-			}
-			break;
-		case CLOSED:
-			addOperation(bugReport, BugzillaOperation.none);
-			addOperation(bugReport, BugzillaOperation.reopen);
-			if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_0) >= 0) {
 				addOperation(bugReport, BugzillaOperation.duplicate);
+				break;
+			case UNCONFIRMED:
+			case REOPENED:
+				addOperation(bugReport, BugzillaOperation.none);
+				addOperation(bugReport, BugzillaOperation.accept);
 				addOperation(bugReport, BugzillaOperation.resolve);
-			}
-			break;
-		case VERIFIED:
-			addOperation(bugReport, BugzillaOperation.none);
-			addOperation(bugReport, BugzillaOperation.reopen);
-			addOperation(bugReport, BugzillaOperation.close);
-			if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_0) >= 0) {
 				addOperation(bugReport, BugzillaOperation.duplicate);
+				if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_2) >= 0) {
+					addOperation(bugReport, BugzillaOperation.markNew);
+				}
+				break;
+			case ASSIGNED:
+				addOperation(bugReport, BugzillaOperation.none);
 				addOperation(bugReport, BugzillaOperation.resolve);
+				addOperation(bugReport, BugzillaOperation.duplicate);
+				if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_2) >= 0) {
+					addOperation(bugReport, BugzillaOperation.markNew);
+				}
+				break;
+			case RESOLVED:
+				addOperation(bugReport, BugzillaOperation.none);
+				addOperation(bugReport, BugzillaOperation.reopen);
+				addOperation(bugReport, BugzillaOperation.verify);
+				addOperation(bugReport, BugzillaOperation.close);
+				if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_0) >= 0) {
+					addOperation(bugReport, BugzillaOperation.duplicate);
+					addOperation(bugReport, BugzillaOperation.resolve);
+				}
+				break;
+			case CLOSED:
+				addOperation(bugReport, BugzillaOperation.none);
+				addOperation(bugReport, BugzillaOperation.reopen);
+				if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_0) >= 0) {
+					addOperation(bugReport, BugzillaOperation.duplicate);
+					addOperation(bugReport, BugzillaOperation.resolve);
+				}
+				break;
+			case VERIFIED:
+				addOperation(bugReport, BugzillaOperation.none);
+				addOperation(bugReport, BugzillaOperation.reopen);
+				addOperation(bugReport, BugzillaOperation.close);
+				if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_0) >= 0) {
+					addOperation(bugReport, BugzillaOperation.duplicate);
+					addOperation(bugReport, BugzillaOperation.resolve);
+				}
 			}
 		}
 
@@ -675,64 +714,75 @@ public class RepositoryConfiguration implements Serializable {
 		}
 	}
 
-	public void addOperation(TaskData bugReport, BugzillaOperation opcode) {
+	public void addOperation(TaskData bugReport, AbstractBugzillaOperation op) {
 		TaskAttribute attribute;
 		TaskAttribute operationAttribute = bugReport.getRoot().getAttribute(TaskAttribute.OPERATION);
 		if (operationAttribute == null) {
 			operationAttribute = bugReport.getRoot().createAttribute(TaskAttribute.OPERATION);
 		}
 
-		switch (opcode) {
-		case none:
-			attribute = bugReport.getRoot().createAttribute(TaskAttribute.PREFIX_OPERATION + opcode.toString());
+		if (op.toString() == BugzillaOperation.none.toString()) {
+			attribute = bugReport.getRoot().createAttribute(TaskAttribute.PREFIX_OPERATION + op.toString());
 			String label = "Leave"; //$NON-NLS-1$
 			TaskAttribute attributeStatus = bugReport.getRoot().getMappedAttribute(TaskAttribute.STATUS);
 			TaskAttribute attributeResolution = bugReport.getRoot().getMappedAttribute(TaskAttribute.RESOLUTION);
 			if (attributeStatus != null && attributeResolution != null) {
-				label = String.format(opcode.getLabel(), attributeStatus.getValue(), attributeResolution.getValue());
+				label = String.format(op.getLabel(), attributeStatus.getValue(), attributeResolution.getValue());
 			}
 
-			TaskOperation.applyTo(attribute, opcode.toString(), label);
+			TaskOperation.applyTo(attribute, op.toString(), label);
 			// set as default
-			TaskOperation.applyTo(operationAttribute, opcode.toString(), label);
-			break;
-		case resolve:
-			attribute = bugReport.getRoot().createAttribute(TaskAttribute.PREFIX_OPERATION + opcode.toString());
-			TaskOperation.applyTo(attribute, opcode.toString(), opcode.getLabel());
-			TaskAttribute attrResolvedInput = attribute.getTaskData().getRoot().createAttribute(opcode.getInputId());
-			attrResolvedInput.getMetaData().setType(opcode.getInputType());
-			attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, opcode.getInputId());
+			TaskOperation.applyTo(operationAttribute, op.toString(), label);
+		} else if (op.toString() == BugzillaOperation.resolve.toString()) {
+			attribute = bugReport.getRoot().createAttribute(TaskAttribute.PREFIX_OPERATION + op.toString());
+			TaskOperation.applyTo(attribute, op.toString(), op.getLabel());
+			TaskAttribute attrResolvedInput = attribute.getTaskData().getRoot().createAttribute(op.getInputId());
+			attrResolvedInput.getMetaData().setType(op.getInputType());
+			attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, op.getInputId());
 			for (String resolution : getResolutions()) {
 				// DUPLICATE and MOVED have special meanings so do not show as resolution
-				if (resolution.compareTo("DUPLICATE") != 0 && resolution.compareTo("MOVED") != 0) { //$NON-NLS-1$ //$NON-NLS-2$
+				if (resolution.compareTo("DUPLICATE") != 0 && resolution.compareTo("MOVED") != 0) {
 					attrResolvedInput.putOption(resolution, resolution);
 				}
 			}
 			if (getResolutions().size() > 0) {
 				attrResolvedInput.setValue(getResolutions().get(0));
 			}
-			break;
-		case duplicate:
-			attribute = bugReport.getRoot().createAttribute(TaskAttribute.PREFIX_OPERATION + opcode.toString());
-			TaskOperation.applyTo(attribute, opcode.toString(), opcode.getLabel());
-			if (opcode.getInputId() != null) {
-				TaskAttribute attrInput = bugReport.getRoot().getAttribute(opcode.getInputId());
-				if (attrInput == null) {
-					attrInput = bugReport.getRoot().createAttribute(opcode.getInputId());
+		} else if (op.toString().equals(BugzillaOperation.close_with_resolution.toString()) && op.getInputId() != null) {
+			attribute = bugReport.getRoot().createAttribute(TaskAttribute.PREFIX_OPERATION + op.toString());
+			TaskOperation.applyTo(attribute, op.toString(), op.getLabel());
+			TaskAttribute attrResolvedInput = attribute.getTaskData().getRoot().createAttribute(op.getInputId());
+			attrResolvedInput.getMetaData().setType(op.getInputType());
+			attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, op.getInputId());
+			for (String resolution : getResolutions()) {
+				// DUPLICATE and MOVED have special meanings so do not show as resolution
+				if (resolution.compareTo("DUPLICATE") != 0 && resolution.compareTo("MOVED") != 0) {
+					attrResolvedInput.putOption(resolution, resolution);
 				}
-				attrInput.getMetaData().defaults().setReadOnly(false).setType(opcode.getInputType());
-				attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, opcode.getInputId());
 			}
-			break;
-		default:
-			attribute = bugReport.getRoot().createAttribute(TaskAttribute.PREFIX_OPERATION + opcode.toString());
-			TaskOperation.applyTo(attribute, opcode.toString(), opcode.getLabel());
-			if (opcode.getInputId() != null) {
-				TaskAttribute attrInput = bugReport.getRoot().createAttribute(opcode.getInputId());
-				attrInput.getMetaData().defaults().setReadOnly(false).setType(opcode.getInputType());
-				attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, opcode.getInputId());
+			if (getResolutions().size() > 0) {
+				attrResolvedInput.setValue(getResolutions().get(0));
 			}
-			break;
+		} else if (op.toString() == BugzillaOperation.duplicate.toString()) {
+
+			attribute = bugReport.getRoot().createAttribute(TaskAttribute.PREFIX_OPERATION + op.toString());
+			TaskOperation.applyTo(attribute, op.toString(), op.getLabel());
+			if (op.getInputId() != null) {
+				TaskAttribute attrInput = bugReport.getRoot().getAttribute(op.getInputId());
+				if (attrInput == null) {
+					attrInput = bugReport.getRoot().createAttribute(op.getInputId());
+				}
+				attrInput.getMetaData().defaults().setReadOnly(false).setType(op.getInputType());
+				attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, op.getInputId());
+			}
+		} else {
+			attribute = bugReport.getRoot().createAttribute(TaskAttribute.PREFIX_OPERATION + op.toString());
+			TaskOperation.applyTo(attribute, op.toString(), op.getLabel());
+			if (op.getInputId() != null) {
+				TaskAttribute attrInput = bugReport.getRoot().createAttribute(op.getInputId());
+				attrInput.getMetaData().defaults().setReadOnly(false).setType(op.getInputType());
+				attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, op.getInputId());
+			}
 		}
 	}
 
@@ -863,5 +913,9 @@ public class RepositoryConfiguration implements Serializable {
 
 	public String getETagValue() {
 		return eTagValue;
+	}
+
+	public String getDuplicateStatus() {
+		return validTransitions.getDuplicateStatus();
 	}
 }

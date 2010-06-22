@@ -160,7 +160,6 @@ public interface IBugzillaConstants {
 
 	static final String VALUES_TARGET = "org.eclipse.mylyn.bugzilla.values.target"; //$NON-NLS-1$
 
-
 	// Default values for keys
 
 	static final String[] DEFAULT_STATUS_VALUES = { "Unconfirmed", "New", "Assigned", "Reopened", "Resolved", //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$//$NON-NLS-5$
@@ -246,6 +245,8 @@ public interface IBugzillaConstants {
 	public static final String BUGZILLA_DEF_PLATFORM = "bugzilla.default.platform"; //$NON-NLS-1$
 
 	public static final String BUGZILLA_LANGUAGE_SETTING = "bugzilla.languageSetting"; //$NON-NLS-1$
+
+	public static final String BUGZILLA_DESCRIPTOR_FILE = "bugzilla.desciptorFile"; //$NON-NLS-1$
 
 	public static final String DEFAULT_LANG = "en (default)"; //$NON-NLS-1$
 
