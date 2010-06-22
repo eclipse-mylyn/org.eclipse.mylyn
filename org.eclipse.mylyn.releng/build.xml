@@ -197,7 +197,13 @@
 			<arg value="${qualifier}"/>
 		</exec>
 	</target>
-	
+
+	<target name="release">
+		<antcall target="promote">
+			<param name="todir" value="weekly"/>
+		</antcall>
+	</target>
+
 	<target name="helios" depends="clean,build,generate-metadata-all,copy-to-archive">
 		<!-- promote unpacked version early for testing -->
 		<antcall target="promote">
@@ -252,6 +258,23 @@
 	</target>
 
 	<target name="promote-main" depends="init">
+		<fail message="Required property 'todir' not set" unless="todir"/>
+
+		<property name="dist.dir" value="${dist.home}/update-archive/${version}/${qualifier}" />
+		<property name="target.dir" value="${archive.home}/update/${todir}" />
+
+		<copy todir="${target.dir}">
+			<fileset dir="${dist.dir}">
+				<include name="mylyn-${version}.${qualifier}-e3.4.zip"/>
+			</fileset>
+		</copy>
+		
+		<chmod perm="ugo+w" file="${basedir}/bin/create-composite.sh"/>
+		<exec executable="${basedir}/bin/create-composite.sh" failonerror="false" dir="${target.dir}"/>
+		<exec executable="${basedir}/bin/create-composite.sh" failonerror="false" dir="${target.dir}/incubator"/>
+	</target>
+
+	<target name="promote-release" depends="init">
 		<fail message="Required property 'todir' not set" unless="todir"/>
 
 		<property name="dist.dir" value="${dist.home}/update-archive/${version}/${qualifier}" />

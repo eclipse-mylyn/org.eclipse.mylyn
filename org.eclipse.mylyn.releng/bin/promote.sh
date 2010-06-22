@@ -32,7 +32,7 @@ then
     exit 1
 fi
 
-BACKUP=$ROOT/$OLD_VERSION-DELETE
+BACKUP=/home/data/httpd/archive.eclipse.org/tools/mylyn/tmp/$OLD_VERSION-DELETE
 echo "Archiving old version to $BACKUP"
 
 mkdir -p $BACKUP

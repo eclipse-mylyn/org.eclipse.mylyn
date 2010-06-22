@@ -260,7 +260,13 @@
 				<filtersfile file="${buildDirectory}/finalFeaturesVersions.properties"/>
 			</filterset>
 		</copy>
-		<copy file="${builder}/${CategoriesXmlFile}" tofile="${UpdateSiteLocation}/categories.xml" failonerror="false">
+		<copy file="${builder}/${SiteXmlFile}" tofile="${UpdateSiteLocation}/categories.xml">
+			<filterset>
+				<filtersfile file="${buildDirectory}/finalFeaturesVersions.properties"/>
+			</filterset>
+		</copy>
+		<!-- overwrite categories if needed -->
+		<copy file="${builder}/${CategoriesXmlFile}" tofile="${UpdateSiteLocation}/categories.xml" overwrite="true" failonerror="false">
 			<filterset>
 				<filtersfile file="${buildDirectory}/finalFeaturesVersions.properties"/>
 			</filterset>
