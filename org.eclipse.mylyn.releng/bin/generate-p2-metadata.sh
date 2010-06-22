@@ -37,7 +37,7 @@ $JAVA_HOME/bin/java \
  -jar $ECLIPSE_HOME/plugins/org.eclipse.equinox.launcher_*.jar \
  -application org.eclipse.equinox.p2.metadata.generator.EclipseGenerator \
  -updateSite $DIR \
- -site file:$DIR/site.xml \
+ -site file:$DIR/categories.xml \
  -metadataRepository file:$DIR \
  -metadataRepositoryName "$2 "\
  -artifactRepository file:$DIR \
