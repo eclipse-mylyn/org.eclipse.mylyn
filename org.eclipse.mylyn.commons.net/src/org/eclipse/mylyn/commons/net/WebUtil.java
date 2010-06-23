@@ -145,8 +145,20 @@ public class WebUtil {
 			}
 		}
 
-		sb.append(" "); //$NON-NLS-1$
-		sb.append(DefaultHttpParams.getDefaultParams().getParameter(HttpMethodParams.USER_AGENT).toString().split("-")[1]); //$NON-NLS-1$
+		Object parameter = DefaultHttpParams.getDefaultParams().getParameter(HttpMethodParams.USER_AGENT);
+		if (parameter != null) {
+			String userAgent = parameter.toString();
+			if (userAgent != null) {
+				// shorten default "Jakarta Commons-HttpClient/3.1"
+				if (userAgent.startsWith("Jakarta Commons-")) { //$NON-NLS-1$
+					sb.append(" "); //$NON-NLS-1$
+					sb.append(userAgent.substring(16));
+				} else {
+					sb.append(" "); //$NON-NLS-1$
+					sb.append(parameter.toString());
+				}
+			}
+		}
 
 		sb.append(" Java/"); //$NON-NLS-1$
 		sb.append(System.getProperty("java.version")); //$NON-NLS-1$
@@ -195,11 +207,13 @@ public class WebUtil {
 		client.getHttpConnectionManager().getParams().setConnectionTimeout(WebUtil.CONNNECT_TIMEOUT);
 		// FIXME fix connection leaks
 		if (TEST_MODE) {
-			client.getHttpConnectionManager().getParams().setMaxConnectionsPerHost(
-					HostConfiguration.ANY_HOST_CONFIGURATION, 2);
+			client.getHttpConnectionManager()
+					.getParams()
+					.setMaxConnectionsPerHost(HostConfiguration.ANY_HOST_CONFIGURATION, 2);
 		} else {
-			client.getHttpConnectionManager().getParams().setMaxConnectionsPerHost(
-					HostConfiguration.ANY_HOST_CONFIGURATION, 100);
+			client.getHttpConnectionManager()
+					.getParams()
+					.setMaxConnectionsPerHost(HostConfiguration.ANY_HOST_CONFIGURATION, 100);
 			client.getHttpConnectionManager().getParams().setMaxTotalConnections(1000);
 		}
 	}
