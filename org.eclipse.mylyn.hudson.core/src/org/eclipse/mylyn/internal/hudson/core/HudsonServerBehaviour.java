@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.builds.core.BuildState;
+import org.eclipse.mylyn.builds.core.BuildStatus;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy;
 import org.eclipse.mylyn.builds.core.IBuildServer;
@@ -55,16 +56,35 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 				}
 				plan.setSummary(job.getDescription());
 				plan.setUrl(job.getUrl());
-				if (job.getColor().equals(HudsonModelBallColor.BLUE_ANIME)
-						|| job.getColor().equals(HudsonModelBallColor.RED_ANIME)
-						|| job.getColor().equals(HudsonModelBallColor.YELLOW_ANIME)
-						|| job.getColor().equals(HudsonModelBallColor.DISABLED_ANIME)
-						|| job.getColor().equals(HudsonModelBallColor.GREY_ANIME)) {
+				if (job.getColor().equals(HudsonModelBallColor.BLUE)) {
+					plan.setStatus(BuildStatus.SUCCESS);
+					plan.setState(BuildState.STOPPED);
+				} else if (job.getColor().equals(HudsonModelBallColor.BLUE_ANIME)) {
+					plan.setStatus(BuildStatus.SUCCESS);
+					plan.setState(BuildState.RUNNING);
+				} else if (job.getColor().equals(HudsonModelBallColor.RED)) {
+					plan.setStatus(BuildStatus.FAILED);
+					plan.setState(BuildState.STOPPED);
+				} else if (job.getColor().equals(HudsonModelBallColor.RED_ANIME)) {
+					plan.setStatus(BuildStatus.FAILED);
+					plan.setState(BuildState.RUNNING);
+				} else if (job.getColor().equals(HudsonModelBallColor.GREY)) {
+					plan.setStatus(BuildStatus.DISABLED);
+					plan.setState(BuildState.STOPPED);
+				} else if (job.getColor().equals(HudsonModelBallColor.GREY_ANIME)) {
+					plan.setStatus(BuildStatus.DISABLED);
+					plan.setState(BuildState.RUNNING);
+				} else if (job.getColor().equals(HudsonModelBallColor.DISABLED)) {
+					plan.setStatus(BuildStatus.DISABLED);
+					plan.setState(BuildState.STOPPED);
+				} else if (job.getColor().equals(HudsonModelBallColor.DISABLED_ANIME)) {
+					plan.setStatus(BuildStatus.DISABLED);
 					plan.setState(BuildState.RUNNING);
 				} else {
-					plan.setState(BuildState.STOPPED);
+					plan.setStatus(null);
+					plan.setState(null);
 				}
-				plan.setHealth(job.getColor().ordinal());
+				plan.setHealth(job.getColor().ordinal() * 15);
 				plans.add(plan);
 			}
 			return plans;
