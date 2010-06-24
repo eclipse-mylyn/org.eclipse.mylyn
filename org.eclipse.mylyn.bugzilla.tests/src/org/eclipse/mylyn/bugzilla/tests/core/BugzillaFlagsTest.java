@@ -175,9 +175,9 @@ public class BugzillaFlagsTest extends TestCase {
 		assertNotNull(requesteeD);
 		assertEquals("guest@mylyn.eclipse.org", requesteeD.getValue());
 		stateA.setValue(" ");
-		stateB.setValue(" ");
+		stateB.setValue("");
 		stateC.setValue(" ");
-		stateD.setValue(" ");
+		stateD.setValue("");
 		changed.add(flagA);
 		changed.add(flagB);
 		changed.add(flagC);
