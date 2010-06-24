@@ -92,11 +92,15 @@ public class BuildsUiInternal {
 	private static BuildModelManager manager;
 
 	public static synchronized BuildModel getModel() {
+		return getManager().getModel();
+	}
+
+	protected static synchronized BuildModelManager getManager() {
 		if (manager == null) {
 			manager = new BuildModelManager(BuildsUiPlugin.getDefault().getBuildsFile().toFile(), buildLoader);
 			manager.setRepositoryManager(TasksUi.getRepositoryManager());
 		}
-		return manager.getModel();
+		return manager;
 	}
 
 	public static synchronized void save() throws IOException {
@@ -106,7 +110,7 @@ public class BuildsUiInternal {
 	}
 
 	public static IBuildServer createServer(TaskRepository repository) {
-		return manager.createServer(repository);
+		return getManager().createServer(repository);
 	}
 
 	public static IBuildServer getServer(TaskRepository repository) {
