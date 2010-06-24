@@ -48,5 +48,23 @@
             name="Continuous Integration">
       </connectorUi>
    </extension>
-
+    <extension point="org.eclipse.ui.preferencePages">
+		<page name="Builds"
+			class="org.eclipse.mylyn.internal.builds.ui.BuildsPreferencesPage"
+			id="org.eclipse.mylyn.builds.preferences.BuildsPage">
+	    	<keywordReference id="org.eclipse.mylyn.builds.preferences.keywords"/>
+		</page>
+    </extension>
+	<extension point="org.eclipse.ui.keywords">
+	    <keyword
+	          id="org.eclipse.mylyn.builds.preferences"
+	          label="interval polling build status">
+	    </keyword>
+	</extension>
+ <extension
+       point="org.eclipse.core.runtime.preferences">
+    <initializer
+          class="org.eclipse.mylyn.internal.builds.ui.BuildsPreferencesInitializer">
+    </initializer>
+ </extension>
 </plugin>

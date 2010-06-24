@@ -34,6 +34,8 @@ public class BuildsUiPlugin extends AbstractUIPlugin {
 		return instance;
 	}
 
+	private BuildRefresher refresher;
+
 	@Override
 	public void start(BundleContext context) throws Exception {
 		instance = this;
@@ -42,6 +44,11 @@ public class BuildsUiPlugin extends AbstractUIPlugin {
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
+		if (refresher != null) {
+			getPreferenceStore().removePropertyChangeListener(refresher);
+			refresher.stop();
+			refresher = null;
+		}
 		try {
 			BuildsUiInternal.save();
 		} catch (IOException e) {
@@ -56,6 +63,13 @@ public class BuildsUiPlugin extends AbstractUIPlugin {
 		IPath stateLocation = Platform.getStateLocation(getBundle());
 		IPath cacheFile = stateLocation.append("builds.xmi"); //$NON-NLS-1$
 		return cacheFile;
+	}
+
+	public void initializeRefresh() {
+		if (refresher == null) {
+			refresher = new BuildRefresher();
+			getPreferenceStore().addPropertyChangeListener(refresher);
+		}
 	}
 
 }

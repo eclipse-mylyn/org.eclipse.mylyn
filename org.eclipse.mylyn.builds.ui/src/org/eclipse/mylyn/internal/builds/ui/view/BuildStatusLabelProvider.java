@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.builds.ui.view;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.mylyn.builds.core.BuildStatus;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.internal.builds.ui.BuildImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
@@ -25,9 +26,10 @@ public class BuildStatusLabelProvider extends ColumnLabelProvider {
 	@Override
 	public Image getImage(Object element) {
 		if (element instanceof IBuildPlan) {
-			if (((IBuildPlan) element).getInfo() != null) {
+			BuildStatus status = ((IBuildPlan) element).getStatus();
+			if (status == BuildStatus.SUCCESS) {
 				return CommonImages.getImage(BuildImages.STATUS_PASSED);
-			} else {
+			} else if (status == BuildStatus.FAILED) {
 				return CommonImages.getImage(BuildImages.STATUS_FAILED);
 			}
 		}

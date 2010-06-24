@@ -15,7 +15,9 @@ import java.io.IOException;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
+import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
@@ -26,23 +28,27 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.mylyn.internal.builds.core.BuildModel;
+import org.eclipse.mylyn.internal.builds.core.util.BuildsConstants;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
+import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
+import org.eclipse.mylyn.internal.provisional.commons.ui.actions.CollapseAllAction;
+import org.eclipse.mylyn.internal.provisional.commons.ui.actions.ExpandAllAction;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 
 /**
  * @author Steffen Pingel
  */
 public class BuildsView extends ViewPart {
-
-	private TreeViewer viewer;
 
 	private BuildContentProvider contentProvider;
 
@@ -50,15 +56,36 @@ public class BuildsView extends ViewPart {
 
 	private AdapterImpl modelListener;
 
+	private TreeViewer viewer;
+
+	private Action expandAllAction;
+
+	private Action collapseAllAction;
+
 	public BuildsView() {
-		// ignore
+		BuildsUiPlugin.getDefault().initializeRefresh();
+	}
+
+	private void contributeToActionBars() {
+		IActionBars bars = getViewSite().getActionBars();
+		fillLocalPullDown(bars.getMenuManager());
+		fillLocalToolBar(bars.getToolBarManager());
 	}
 
 	@Override
 	public void createPartControl(Composite parent) {
 		createViewer(parent);
 		createPopupMenu(parent);
-		fillToolbar();
+
+		initActions();
+		contributeToActionBars();
+
+		IWorkbenchSiteProgressService progress = (IWorkbenchSiteProgressService) getSite().getAdapter(
+				IWorkbenchSiteProgressService.class);
+		if (progress != null) {
+			// show indicator for all running refreshes
+			progress.showBusyForFamily(BuildsConstants.JOB_FAMILY);
+		}
 
 		model = BuildsUiInternal.getModel();
 		modelListener = new AdapterImpl() {
@@ -81,9 +108,9 @@ public class BuildsView extends ViewPart {
 		getSite().setSelectionProvider(viewer);
 	}
 
-	private void refresh() {
-		viewer.refresh();
-		viewer.expandAll();
+	private void initActions() {
+		collapseAllAction = new CollapseAllAction(viewer);
+		expandAllAction = new ExpandAllAction(viewer);
 	}
 
 	protected void createPopupMenu(Composite parent) {
@@ -140,14 +167,22 @@ public class BuildsView extends ViewPart {
 		model.eAdapters().remove(modelListener);
 	}
 
-	private void fillToolbar() {
-		IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
-		toolBarManager.add(new NewBuildServerMenuAction());
+	private void fillLocalPullDown(IMenuManager manager) {
+		manager.add(collapseAllAction);
+		manager.add(expandAllAction);
+		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+		manager.add(new Separator());
+		manager.add(new OpenBuildsPreferencesAction());
+
+	}
+
+	private void fillLocalToolBar(IToolBarManager manager) {
+		manager.add(new NewBuildServerMenuAction());
 
 		RefreshAction refresh = new RefreshAction() {
 			@Override
 			public void run() {
-				refresh();
+				super.run();
 				// TODO remove
 				try {
 					BuildsUiInternal.save();
@@ -156,17 +191,22 @@ public class BuildsView extends ViewPart {
 				}
 			};
 		};
-		toolBarManager.add(refresh);
+		manager.add(refresh);
 
-		toolBarManager.add(new Separator());
+		manager.add(new Separator());
 
 		OpenInBrowserAction openInBrowserAction = new OpenInBrowserAction();
 		viewer.addSelectionChangedListener(openInBrowserAction);
-		toolBarManager.add(openInBrowserAction);
+		manager.add(openInBrowserAction);
 	}
 
 	TreeViewer getViewer() {
 		return viewer;
+	}
+
+	private void refresh() {
+		viewer.refresh();
+		viewer.expandAll();
 	}
 
 	@Override
