@@ -35,7 +35,7 @@
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="false"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="summary" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="state" eType="#//BuildState"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="#//BuildStatus"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IBuildPlanWorkingCopy" instanceClassName="org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy"
       abstract="true" interface="true" eSuperTypes="#//IBuildPlan"/>
@@ -50,4 +50,5 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="TaskRepository" instanceClassName="org.eclipse.mylyn.tasks.core.TaskRepository"/>
   <eClassifiers xsi:type="ecore:EDataType" name="BuildState" instanceClassName="org.eclipse.mylyn.builds.core.BuildState"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="BuildStatus" instanceClassName="org.eclipse.mylyn.builds.core.BuildStatus"/>
 </ecore:EPackage>

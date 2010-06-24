@@ -20,4 +20,6 @@ public interface IBuildModel {
 
 	public List<IBuildServer> getServers();
 
+	public void refresh(IOperationMonitor monitor);
+
 }

@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildFactory.java,v 1.2 2010/05/30 20:28:49 spingel Exp $
+ * $Id: BuildFactory.java,v 1.3 2010/06/24 06:07:52 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -16,6 +16,7 @@ import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 import org.eclipse.mylyn.builds.core.BuildState;
+import org.eclipse.mylyn.builds.core.BuildStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
@@ -94,6 +95,8 @@ public class BuildFactory extends EFactoryImpl {
 			return createTaskRepositoryFromString(eDataType, initialValue);
 		case BuildPackage.BUILD_STATE:
 			return createBuildStateFromString(eDataType, initialValue);
+		case BuildPackage.BUILD_STATUS:
+			return createBuildStatusFromString(eDataType, initialValue);
 		default:
 			throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -111,6 +114,8 @@ public class BuildFactory extends EFactoryImpl {
 			return convertTaskRepositoryToString(eDataType, instanceValue);
 		case BuildPackage.BUILD_STATE:
 			return convertBuildStateToString(eDataType, instanceValue);
+		case BuildPackage.BUILD_STATUS:
+			return convertBuildStatusToString(eDataType, instanceValue);
 		default:
 			throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -161,6 +166,24 @@ public class BuildFactory extends EFactoryImpl {
 	 * @generated
 	 */
 	public String convertBuildStateToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public BuildStatus createBuildStatusFromString(EDataType eDataType, String initialValue) {
+		return (BuildStatus) super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertBuildStatusToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(eDataType, instanceValue);
 	}
 

@@ -9,27 +9,13 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.builds.core;
+package org.eclipse.mylyn.internal.builds.core.util;
 
 /**
  * @author Steffen Pingel
  */
-public interface IBuildPlanWorkingCopy extends IBuildPlan {
+public class BuildsConstants {
 
-	public void setStatus(BuildStatus status);
-
-	public void setSummary(String summary);
-
-	public void setHealth(int health);
-
-	public void setInfo(String info);
-
-	public void setId(String id);
-
-	public void setName(String name);
-
-	public void setState(BuildState state);
-
-	public void setUrl(String url);
+	public static Object JOB_FAMILY = new Object();
 
 }

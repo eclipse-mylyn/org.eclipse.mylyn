@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildPackage.java,v 1.3 2010/05/30 20:28:49 spingel Exp $
+ * $Id: BuildPackage.java,v 1.4 2010/06/24 06:07:52 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -16,6 +16,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 import org.eclipse.mylyn.builds.core.BuildState;
+import org.eclipse.mylyn.builds.core.BuildStatus;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildModel;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
@@ -712,6 +713,16 @@ public class BuildPackage extends EPackageImpl {
 	public static final int BUILD_STATE = 9;
 
 	/**
+	 * The meta object id for the '<em>Status</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.mylyn.builds.core.BuildStatus
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getBuildStatus()
+	 * @generated
+	 */
+	public static final int BUILD_STATUS = 10;
+
+	/**
 	 * The meta object id for the '<em>Task Repository</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -790,6 +801,13 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 */
 	private EDataType buildStateEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType buildStatusEDataType = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -1202,6 +1220,19 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
+	 * Returns the meta object for data type '{@link org.eclipse.mylyn.builds.core.BuildStatus <em>Status</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Status</em>'.
+	 * @see org.eclipse.mylyn.builds.core.BuildStatus
+	 * @model instanceClass="org.eclipse.mylyn.builds.core.BuildStatus"
+	 * @generated
+	 */
+	public EDataType getBuildStatus() {
+		return buildStatusEDataType;
+	}
+
+	/**
 	 * Returns the meta object for data type '{@link org.eclipse.mylyn.tasks.core.TaskRepository <em>Task Repository</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1282,6 +1313,7 @@ public class BuildPackage extends EPackageImpl {
 		// Create data types
 		taskRepositoryEDataType = createEDataType(TASK_REPOSITORY);
 		buildStateEDataType = createEDataType(BUILD_STATE);
+		buildStatusEDataType = createEDataType(BUILD_STATUS);
 	}
 
 	/**
@@ -1370,7 +1402,7 @@ public class BuildPackage extends EPackageImpl {
 				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIBuildPlan_State(), this.getBuildState(), "state", null, 0, 1, IBuildPlan.class,
 				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIBuildPlan_Status(), ecorePackage.getEString(), "status", null, 0, 1, IBuildPlan.class,
+		initEAttribute(getIBuildPlan_Status(), this.getBuildStatus(), "status", null, 0, 1, IBuildPlan.class,
 				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iBuildPlanWorkingCopyEClass, IBuildPlanWorkingCopy.class, "IBuildPlanWorkingCopy", IS_ABSTRACT,
@@ -1395,6 +1427,8 @@ public class BuildPackage extends EPackageImpl {
 		initEDataType(taskRepositoryEDataType, TaskRepository.class, "TaskRepository", IS_SERIALIZABLE,
 				!IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(buildStateEDataType, BuildState.class, "BuildState", IS_SERIALIZABLE,
+				!IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(buildStatusEDataType, BuildStatus.class, "BuildStatus", IS_SERIALIZABLE,
 				!IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
@@ -1647,6 +1681,16 @@ public class BuildPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EDataType BUILD_STATE = eINSTANCE.getBuildState();
+
+		/**
+		 * The meta object literal for the '<em>Status</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.mylyn.builds.core.BuildStatus
+		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getBuildStatus()
+		 * @generated
+		 */
+		public static final EDataType BUILD_STATUS = eINSTANCE.getBuildStatus();
 
 		/**
 		 * The meta object literal for the '<em>Task Repository</em>' data type.

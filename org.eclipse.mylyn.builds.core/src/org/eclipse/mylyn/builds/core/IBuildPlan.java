@@ -24,7 +24,7 @@ public interface IBuildPlan extends IBuildElement {
 
 	public BuildState getState();
 
-	public String getStatus();
+	public BuildStatus getStatus();
 
 	public String getSummary();
 

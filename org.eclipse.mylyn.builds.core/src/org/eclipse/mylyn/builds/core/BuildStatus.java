@@ -14,22 +14,8 @@ package org.eclipse.mylyn.builds.core;
 /**
  * @author Steffen Pingel
  */
-public interface IBuildPlanWorkingCopy extends IBuildPlan {
+public enum BuildStatus {
 
-	public void setStatus(BuildStatus status);
-
-	public void setSummary(String summary);
-
-	public void setHealth(int health);
-
-	public void setInfo(String info);
-
-	public void setId(String id);
-
-	public void setName(String name);
-
-	public void setState(BuildState state);
-
-	public void setUrl(String url);
+	SUCCESS, FAILED, UNSTABLE, DISABLED;
 
 }

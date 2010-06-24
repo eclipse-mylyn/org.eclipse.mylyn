@@ -9,27 +9,34 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.builds.core;
+package org.eclipse.mylyn.internal.builds.core.operations;
+
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.mylyn.internal.builds.core.util.BuildsConstants;
 
 /**
  * @author Steffen Pingel
  */
-public interface IBuildPlanWorkingCopy extends IBuildPlan {
+public abstract class AbstractBuildOperation extends Job {
 
-	public void setStatus(BuildStatus status);
+	IStatus status;
 
-	public void setSummary(String summary);
+	public AbstractBuildOperation(String name) {
+		super(name);
+	}
 
-	public void setHealth(int health);
+	@Override
+	public boolean belongsTo(Object family) {
+		return family == BuildsConstants.JOB_FAMILY;
+	}
 
-	public void setInfo(String info);
+	public IStatus getStatus() {
+		return status;
+	}
 
-	public void setId(String id);
-
-	public void setName(String name);
-
-	public void setState(BuildState state);
-
-	public void setUrl(String url);
+	protected void setStatus(IStatus status) {
+		this.status = status;
+	}
 
 }

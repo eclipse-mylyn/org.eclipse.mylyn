@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildPlan.java,v 1.3 2010/05/30 20:28:49 spingel Exp $
+ * $Id: BuildPlan.java,v 1.4 2010/06/24 06:07:52 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.mylyn.builds.core.BuildState;
+import org.eclipse.mylyn.builds.core.BuildStatus;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy;
 import org.eclipse.mylyn.builds.core.IBuildServer;
@@ -218,7 +219,7 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String STATUS_EDEFAULT = null;
+	protected static final BuildStatus STATUS_EDEFAULT = null;
 
 	/**
 	 * The cached value of the '{@link #getStatus() <em>Status</em>}' attribute.
@@ -228,7 +229,7 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * @generated
 	 * @ordered
 	 */
-	protected String status = STATUS_EDEFAULT;
+	protected BuildStatus status = STATUS_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -572,24 +573,25 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Status</em>' attribute.
-	 * @see #setStatus(String)
+	 * @see #setStatus(BuildStatus)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildPlan_Status()
-	 * @model
+	 * @model dataType="org.eclipse.mylyn.internal.builds.core.BuildStatus"
 	 * @generated
 	 */
-	public String getStatus() {
+	public BuildStatus getStatus() {
 		return status;
 	}
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildPlan#getStatus <em>Status</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Status</em>' attribute.
 	 * @see #getStatus()
 	 * @generated
 	 */
-	public void setStatus(String newStatus) {
-		String oldStatus = status;
+	public void setStatus(BuildStatus newStatus) {
+		BuildStatus oldStatus = status;
 		status = newStatus;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__STATUS, oldStatus, status));
@@ -826,7 +828,7 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 			setState((BuildState) newValue);
 			return;
 		case BuildPackage.BUILD_PLAN__STATUS:
-			setStatus((String) newValue);
+			setStatus((BuildStatus) newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);

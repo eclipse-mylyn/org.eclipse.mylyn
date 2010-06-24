@@ -2,10 +2,11 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildServer.java,v 1.4 2010/06/15 08:06:41 spingel Exp $
+ * $Id: BuildServer.java,v 1.5 2010/06/24 06:07:52 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -635,11 +636,29 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 		});
 		if (result.get() == null) {
 			throw new CoreException(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN,
-					"Server behavior unexpectedly returned null."));
+					"Server did not provide any plans."));
 		}
+		ArrayList<IBuildPlan> oldPlans = new ArrayList<IBuildPlan>(getPlans());
 		getPlans().clear();
 		getPlans().addAll(result.get());
+		for (IBuildPlan plan : oldPlans) {
+			IBuildPlan newPlan = getPlanById(plan.getId());
+			if (newPlan != null) {
+				((BuildPlan) newPlan).setSelected(plan.isSelected());
+			}
+		}
 		return result.get();
+	}
+
+	public IBuildPlan getPlanById(String id) {
+		if (id != null) {
+			for (IBuildPlan plan : getPlans()) {
+				if (id.equals(plan.getName())) {
+					return plan;
+				}
+			}
+		}
+		return null;
 	}
 
 	public BuildServer createWorkingCopy() {
