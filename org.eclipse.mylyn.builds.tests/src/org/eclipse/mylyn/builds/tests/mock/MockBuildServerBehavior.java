@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.builds.core.BuildState;
+import org.eclipse.mylyn.builds.core.BuildStatus;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy;
 import org.eclipse.mylyn.builds.core.IBuildServer;
@@ -39,21 +40,21 @@ public class MockBuildServerBehavior extends BuildServerBehaviour {
 		failingPlan.setId("1");
 		failingPlan.setName("Failing Build Plan");
 		failingPlan.setState(BuildState.RUNNING);
-		failingPlan.setStatus("Failed");
+		failingPlan.setStatus(BuildStatus.FAILED);
 		failingPlan.setHealth(15);
 
 		IBuildPlanWorkingCopy childPlan1 = getServer().createBuildPlan();
 		childPlan1.setId("1.1");
 		childPlan1.setName("Stopped Child Build Plan");
 		childPlan1.setState(BuildState.STOPPED);
-		childPlan1.setStatus("Failed");
+		childPlan1.setStatus(BuildStatus.FAILED);
 		failingPlan.getChildren().add(childPlan1);
 
 		IBuildPlanWorkingCopy childPlan2 = getServer().createBuildPlan();
 		childPlan2.setId("1.2");
 		childPlan2.setName("Running Child Build Plan");
 		childPlan2.setState(BuildState.STOPPED);
-		childPlan2.setStatus("Unknown");
+		childPlan2.setStatus(BuildStatus.FAILED);
 		childPlan2.setHealth(55);
 		failingPlan.getChildren().add(childPlan2);
 
@@ -61,7 +62,7 @@ public class MockBuildServerBehavior extends BuildServerBehaviour {
 		succeedingPlan.setId("2");
 		succeedingPlan.setName("Succeeding Build Plan");
 		succeedingPlan.setState(BuildState.STOPPED);
-		succeedingPlan.setStatus("Success");
+		succeedingPlan.setStatus(BuildStatus.SUCCESS);
 		succeedingPlan.setInfo("12 tests passing");
 		succeedingPlan.setHealth(89);
 
