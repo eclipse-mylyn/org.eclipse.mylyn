@@ -12,8 +12,8 @@
 
 package org.eclipse.mylyn.internal.hudson.core.client;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +21,9 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.httpclient.HttpStatus;
 import org.eclipse.core.runtime.IStatus;
@@ -35,6 +37,7 @@ import org.eclipse.mylyn.internal.hudson.model.HudsonModelJob;
 import org.eclipse.osgi.util.NLS;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 
 /**
  * Represents the Hudson repository that is accessed through REST.
@@ -67,9 +70,10 @@ public class RestfulHudsonClient {
 					int statusCode = execute(method, monitor);
 					checkResponse(statusCode);
 
+					InputStream in = method.getResponseBodyAsStream(monitor);
+
+					HudsonModelHudson hudson = unmarshal(parse(in), HudsonModelHudson.class);
 					List<HudsonModelJob> buildPlans = new ArrayList<HudsonModelJob>();
-					HudsonModelHudson hudson = unmarshal(stringToElement(method.getResponseBodyAsString()),
-							HudsonModelHudson.class);
 					List<Object> jobs = hudson.getJob();
 					for (Object jobObj : jobs) {
 						HudsonModelJob job = unmarshal((Node) jobObj, HudsonModelJob.class);
@@ -83,15 +87,18 @@ public class RestfulHudsonClient {
 		}.run();
 	}
 
-	Element stringToElement(String string) throws HudsonException {
+	Element parse(InputStream in) throws HudsonException {
 		try {
-			return DocumentBuilderFactory.newInstance()
-					.newDocumentBuilder()
-					.parse(new ByteArrayInputStream(string.getBytes()))
-					.getDocumentElement();
+			return getDocumentBuilder().parse(in).getDocumentElement();
+		} catch (SAXException e) {
+			throw new HudsonException(e);
 		} catch (Exception e) {
 			throw new HudsonException(e);
 		}
+	}
+
+	private DocumentBuilder getDocumentBuilder() throws ParserConfigurationException {
+		return DocumentBuilderFactory.newInstance().newDocumentBuilder();
 	}
 
 	private <T> T unmarshal(Node node, Class<T> clazz) throws JAXBException {
