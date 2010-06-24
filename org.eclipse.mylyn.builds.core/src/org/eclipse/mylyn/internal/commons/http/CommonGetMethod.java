@@ -91,6 +91,14 @@ public class CommonGetMethod extends GetMethod implements CommonHttpMethod {
 	@Override
 	public void releaseConnection() {
 		synchronized (releaseLock) {
+			if (inputStream != null) {
+				try {
+					inputStream.close();
+				} catch (IOException e) {
+					// ignore
+				}
+				inputStream = null;
+			}
 			super.releaseConnection();
 		}
 	}
@@ -111,14 +119,6 @@ public class CommonGetMethod extends GetMethod implements CommonHttpMethod {
 	@Override
 	protected void responseBodyConsumed() {
 		// ensure worker is released to pool
-		if (inputStream != null) {
-			try {
-				inputStream.close();
-			} catch (IOException e) {
-				// ignore
-			}
-			inputStream = null;
-		}
 		super.responseBodyConsumed();
 	}
 
