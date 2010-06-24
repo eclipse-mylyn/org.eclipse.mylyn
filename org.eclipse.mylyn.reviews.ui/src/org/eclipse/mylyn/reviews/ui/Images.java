@@ -51,6 +51,8 @@ public class Images {
 			"addition.gif"); //$NON-NLS-1$
 	public static final ImageDescriptor OVERLAY_OBSTRUCTED = create(ICONS_PATH,
 			"obstructed.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor MAXIMIZE = create(ICONS_PATH,
+	"maximize.png"); //$NON-NLS-1$
 
 	protected static ImageDescriptor create(String prefix, String name) {
 		return ImageDescriptor.createFromURL(makeIconURL(prefix, name));

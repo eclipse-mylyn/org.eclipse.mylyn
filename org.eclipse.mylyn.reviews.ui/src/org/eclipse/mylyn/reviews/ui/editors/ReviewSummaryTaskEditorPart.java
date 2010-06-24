@@ -74,7 +74,6 @@ public class ReviewSummaryTaskEditorPart extends AbstractTaskEditorPart {
 		wizardButton.setImage(TasksUiImages.TASK_NEW_SUB.createImage());
 		wizardButton.addSelectionListener(new SelectionListener() {
 
-			@Override
 			public void widgetSelected(SelectionEvent e) {
 				CreateReviewWizard wizard=new CreateReviewWizard(getModel());
 				  WizardDialog dialog = new WizardDialog(parent.getShell(), wizard);
@@ -82,14 +81,9 @@ public class ReviewSummaryTaskEditorPart extends AbstractTaskEditorPart {
 				  dialog.open();
 				 }
 
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// TODO Auto-generated method stub
-
-			}
+			public void widgetDefaultSelected(SelectionEvent e) {}
 		});
 		summarySection.setClient(reviewResultsComposite);
-
 	}
 
 	private TableViewerColumn createColumn(TableViewer parent,
@@ -150,7 +144,6 @@ public class ReviewSummaryTaskEditorPart extends AbstractTaskEditorPart {
 			private static final int COLUMN_RESULT = 4;
 			private static final int COLUMN_COMMENT = 5;
 
-			@Override
 			public Image getColumnImage(Object element, int columnIndex) {
 				if (columnIndex == COLUMN_RESULT) {
 					ReviewSubTask subtask = (ReviewSubTask) element;
@@ -169,7 +162,6 @@ public class ReviewSummaryTaskEditorPart extends AbstractTaskEditorPart {
 				return null;
 			}
 
-			@Override
 			public String getColumnText(Object element, int columnIndex) {
 
 				ReviewSubTask subtask = (ReviewSubTask) element;

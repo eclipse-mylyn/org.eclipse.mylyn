@@ -2,6 +2,7 @@ package org.eclipse.mylyn.reviews.ui.wizard;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -14,18 +15,18 @@ public class ReviewAssignmentPage extends WizardPage {
 	private Button openOnFinish;
 
 	protected ReviewAssignmentPage() {
-		super("pageName");
+		super("ReviewAssignmentPage");
 		setTitle("Review Assignment");
 		setDescription("Assign the review");
 		setPageComplete(false);
 	}
 
-	@Override
 	public void createControl(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(2,false));
 		createLabel(composite, "Reviewer");
 		reviewerText = new Text(composite, SWT.BORDER);
+		reviewerText.setLayoutData(new GridData(SWT.FILL,SWT.TOP, true, false));
 
 		String userName = ((CreateReviewWizard)getWizard()).getModel().getTaskRepository().getUserName();
 		if(userName!=null) {

@@ -25,7 +25,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.mylyn.internal.provisional.tasks.core.TasksUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskMigrator;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.reviews.core.ReviewConstants;
@@ -50,8 +49,9 @@ public class CreateTask extends Job {
 	private Review review;
 	private TaskRepository taskRepository;
 	private AbstractRepositoryConnector connector;
+	private String reviewer;
 
-	public CreateTask(TaskDataModel model, Review review) {
+	public CreateTask(TaskDataModel model, Review review, String reviewer) {
 		super(Messages.CreateTask_Title);
 		this.model = model;
 		this.review = review;
@@ -60,6 +60,7 @@ public class CreateTask extends Job {
 
 		this.connector = TasksUi.getRepositoryConnector(taskRepository
 				.getConnectorKind());
+		this.reviewer = reviewer;
 	}
 
 	@Override
@@ -67,44 +68,45 @@ public class CreateTask extends Job {
 		try {
 
 			final ITask newLocalTask = TasksUiUtil.createOutgoingNewTask(
-					taskRepository.getConnectorKind(), taskRepository
-							.getRepositoryUrl());
+					taskRepository.getConnectorKind(),
+					taskRepository.getRepositoryUrl());
 
 			TaskAttributeMapper mapper = connector.getTaskDataHandler()
 					.getAttributeMapper(taskRepository);
 
-			final TaskData data = new TaskData(mapper, taskRepository
-					.getConnectorKind(), taskRepository.getRepositoryUrl(), ""); //$NON-NLS-1$
+			final TaskData data = new TaskData(mapper,
+					taskRepository.getConnectorKind(),
+					taskRepository.getRepositoryUrl(), ""); //$NON-NLS-1$
 
 			connector.getTaskDataHandler().initializeSubTaskData(
 					taskRepository, data, model.getTaskData(),
 					new NullProgressMonitor());
 
-			data.getRoot()
-					.createMappedAttribute(TaskAttribute.SUMMARY)
-					.setValue(
+			if (reviewer != null && reviewer.isEmpty()) {
+				createAttribute(data,TaskAttribute.USER_ASSIGNED,reviewer);
+			}
+
+			createAttribute(data,TaskAttribute.SUMMARY,
 							"Review of " + model.getTask().getTaskKey() + " " + model.getTask().getSummary()); //$NON-NLS-1$ //$NON-NLS-2$
 
 			// TODO - set human readable Result here
-			 data.getRoot().createMappedAttribute(TaskAttribute.DESCRIPTION).setValue("Result");
+			// data.getRoot().createMappedAttribute(TaskAttribute.DESCRIPTION)
+			// .setValue("Result");
 
-			data.getRoot().createMappedAttribute(TaskAttribute.COMPONENT)
-					.setValue(
-							model.getTaskData().getRoot().getMappedAttribute(
-									TaskAttribute.COMPONENT).getValue());
-			data.getRoot().createMappedAttribute(TaskAttribute.STATUS)
-					.setValue("NEW"); //$NON-NLS-1$
-			data.getRoot().createMappedAttribute(TaskAttribute.VERSION)
-					.setValue(
-							model.getTaskData().getRoot().getMappedAttribute(
-									TaskAttribute.VERSION).getValue());
-			data.getRoot().createMappedAttribute(TaskAttribute.PRODUCT)
-					.setValue(
-							model.getTaskData().getRoot().getMappedAttribute(
-									TaskAttribute.PRODUCT).getValue());
-
-			// TODO get correct status
-			// data.getRoot().createMappedAttribute(TaskAttribute.STATUS).setValue("FIXED");
+			createAttribute(data,TaskAttribute.COMPONENT,
+							model.getTaskData()
+									.getRoot()
+									.getMappedAttribute(TaskAttribute.COMPONENT)
+									.getValue());
+			createAttribute(data,TaskAttribute.STATUS, "NEW"); //$NON-NLS-1$
+			createAttribute(data,TaskAttribute.VERSION,
+							model.getTaskData().getRoot()
+									.getMappedAttribute(TaskAttribute.VERSION)
+									.getValue());
+			createAttribute(data,TaskAttribute.PRODUCT,
+							model.getTaskData().getRoot()
+									.getMappedAttribute(TaskAttribute.PRODUCT)
+									.getValue());
 
 			final byte[] attachmentBytes = createAttachment(model, review);
 
@@ -136,14 +138,19 @@ public class CreateTask extends Job {
 					e.printStackTrace();
 				}
 
+				return new ReviewStatus(Messages.CreateTask_Success,
+						newRepoTask);
 			}
-
-			return new Status(IStatus.OK, ReviewsUiPlugin.PLUGIN_ID,
-					Messages.CreateTask_Success);
+			return new Status(IStatus.WARNING, ReviewsUiPlugin.PLUGIN_ID, "");
 		} catch (Exception e) {
-			return new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID, e
-					.getMessage());
+			return new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
+					e.getMessage());
 		}
+	}
+	private TaskAttribute createAttribute( TaskData taskData, String mappedAttributeName, String value) {
+		TaskAttribute attribute = taskData.getRoot().createMappedAttribute(mappedAttributeName);
+		attribute.setValue(value);
+		return attribute;
 	}
 
 	private byte[] createAttachment(TaskDataModel model, Review review) {
@@ -155,7 +162,8 @@ public class CreateTask extends Job {
 
 			resource.getContents().add(review);
 			resource.getContents().add(review.getScope().get(0));
-			resource.getContents().add(review.getResult());
+			if(review.getResult()!=null)
+				resource.getContents().add(review.getResult());
 			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 			ZipOutputStream outputStream = new ZipOutputStream(
 					byteArrayOutputStream);

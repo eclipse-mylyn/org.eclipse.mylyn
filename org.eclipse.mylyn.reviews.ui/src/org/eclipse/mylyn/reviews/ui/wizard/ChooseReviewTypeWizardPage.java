@@ -9,12 +9,11 @@ import org.eclipse.swt.widgets.Composite;
 public class ChooseReviewTypeWizardPage extends WizardPage {
 
 	protected ChooseReviewTypeWizardPage() {
-		super("pagename");
+		super("ChooseReviewTypeWizardPage");
 		setTitle("Review type");
 		setDescription("Select the type of the review");
 	}
 
-	@Override
 	public void createControl(Composite parent) {
 
 		Composite composite = new Composite(parent, SWT.NONE);
@@ -22,9 +21,6 @@ public class ChooseReviewTypeWizardPage extends WizardPage {
 		Button patchBasedReview = new Button(composite, SWT.RADIO);
 		patchBasedReview.setSelection(true);
 		patchBasedReview.setText("Patch based review");
-		Button changesetBasedReview = new Button(composite, SWT.RADIO);
-		changesetBasedReview.setEnabled(false);
-		changesetBasedReview.setText("changeset based review");
 		this.setControl(composite);
 
 	}

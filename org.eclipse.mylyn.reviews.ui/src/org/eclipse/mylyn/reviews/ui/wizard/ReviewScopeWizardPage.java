@@ -3,6 +3,7 @@ package org.eclipse.mylyn.reviews.ui.wizard;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -10,6 +11,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.mylyn.reviews.core.model.review.ScopeItem;
 import org.eclipse.mylyn.reviews.ui.IPatchCreator;
 import org.eclipse.mylyn.reviews.ui.PatchCreator;
 import org.eclipse.mylyn.reviews.ui.editors.Messages;
@@ -23,50 +25,41 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
-public class ReviewScopeWizardPage extends  WizardPage {
+public class ReviewScopeWizardPage extends WizardPage {
 	private IPatchCreator selectedPatch;
 
 	protected ReviewScopeWizardPage() {
-		super("pagename");
+		super("ReviewScopeWizardPage");
 		setTitle("Review scope");
 		setDescription("Select the scope of the review");
 		setPageComplete(false);
 	}
 
-	@Override
 	public void createControl(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
-		composite.setLayout(new GridLayout(1,true));
+		composite.setLayout(new GridLayout(1, true));
 		TableViewer patchTable = new TableViewer(composite);
 		patchTable.getTable().setHeaderVisible(true);
 		patchTable.setContentProvider(ArrayContentProvider.getInstance());
-		patchTable
-				.addSelectionChangedListener(new ISelectionChangedListener() {
+		patchTable.addSelectionChangedListener(new ISelectionChangedListener() {
 
+			public void selectionChanged(SelectionChangedEvent event) {
+				IStructuredSelection selection = (IStructuredSelection) event
+						.getSelection();
+				if (selection.getFirstElement() instanceof PatchCreator) {
+					selectedPatch = (IPatchCreator) selection.getFirstElement();
+					setPageComplete(true);
 
-					public void selectionChanged(SelectionChangedEvent event) {
-						IStructuredSelection selection = (IStructuredSelection) event
-								.getSelection();
-						if (selection.getFirstElement() instanceof PatchCreator) {
-							selectedPatch = (IPatchCreator) selection
-									.getFirstElement();
-							setPageComplete(true);
+				}
+			}
+		});
 
-						}
-					}
-				});
-//		patchTable.addDoubleClickListener(new IDoubleClickListener() {
-//
-//			public void doubleClick(DoubleClickEvent event) {
-//
-//				IPatchCreator patchCreator = (IPatchCreator) ((IStructuredSelection) event
-//						.getSelection()).getFirstElement();
-//				openReviewEditorForPatch(patchCreator);
-//			}
-//		});
-		createColumn(patchTable, Messages.CreateReviewTaskEditorPart_Header_Filename);
-		createColumn(patchTable, Messages.CreateReviewTaskEditorPart_Header_Author);
-		createColumn(patchTable, Messages.CreateReviewTaskEditorPart_Header_Date);
+		createColumn(patchTable,
+				Messages.CreateReviewTaskEditorPart_Header_Filename);
+		createColumn(patchTable,
+				Messages.CreateReviewTaskEditorPart_Header_Author);
+		createColumn(patchTable,
+				Messages.CreateReviewTaskEditorPart_Header_Date);
 		patchTable.setLabelProvider(new TableLabelProvider() {
 			final int COLUMN_FILENAME = 0;
 			final int COLUMN_AUTHOR = 1;
@@ -92,17 +85,17 @@ public class ReviewScopeWizardPage extends  WizardPage {
 				return null;
 			}
 		});
-		patchTable.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		patchTable.getControl().setLayoutData(
+				new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		patchTable.setInput(parseAttachmentForPatches());
 		setControl(composite);
 	}
 
-@Override
-public void setVisible(boolean visible) {
-System.err.println("setVisible " + visible);
-	super.setVisible(visible);
-}
+	@Override
+	public void setVisible(boolean visible) {
+		super.setVisible(visible);
+	}
 
 	private TableViewerColumn createColumn(TableViewer parent,
 			String columnTitle) {
@@ -112,10 +105,11 @@ System.err.println("setVisible " + visible);
 		column.getColumn().setResizable(true);
 		return column;
 	}
+
 	private List<PatchCreator> parseAttachmentForPatches() {
 		try {
 
-			TaskDataModel model = ((CreateReviewWizard)getWizard()).getModel();
+			TaskDataModel model = ((CreateReviewWizard) getWizard()).getModel();
 			TaskData taskData = model.getTaskData();
 			List<TaskAttribute> attributesByType = taskData
 					.getAttributeMapper().getAttributesByType(taskData,
@@ -123,9 +117,9 @@ System.err.println("setVisible " + visible);
 
 			List<PatchCreator> patchFiles = new ArrayList<PatchCreator>();
 			for (TaskAttribute attribute : attributesByType) {
-				if (attribute.getMappedAttribute(
-						TaskAttribute.ATTACHMENT_IS_PATCH).getValue().equals(
-						"1")) { //$NON-NLS-1$
+				if (attribute
+						.getMappedAttribute(TaskAttribute.ATTACHMENT_IS_PATCH)
+						.getValue().equals("1")) { //$NON-NLS-1$
 
 					patchFiles.add(new PatchCreator(attribute));
 				}
@@ -137,7 +131,8 @@ System.err.println("setVisible " + visible);
 			throw new RuntimeException(ex);
 		}
 	}
-	public IPatchCreator getSelectedPatch() {
-		return selectedPatch;
+
+	public ScopeItem getScope() throws CoreException {
+		return selectedPatch.create();
 	}
 }

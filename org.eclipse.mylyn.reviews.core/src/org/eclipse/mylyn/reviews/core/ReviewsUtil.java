@@ -54,13 +54,14 @@ public class ReviewsUtil {
 					for (Review review : getReviewAttachmentFromTask(
 							taskDataManager, repositoryModel, subTask)) {
 						// TODO change to latest etc
-						resultList.add(new ReviewSubTask(getPatchFile(review
-								.getScope()), getPatchCreationDate(review
-								.getScope()),
-								getAuthorString(review.getScope()), subTask
-										.getOwner(), review.getResult()
-										.getRating(), review.getResult()
-										.getText(), subTask));
+						if(review.getResult()!=null)
+							resultList.add(new ReviewSubTask(getPatchFile(review
+									.getScope()), getPatchCreationDate(review
+									.getScope()),
+									getAuthorString(review.getScope()), subTask
+											.getOwner(), review.getResult()
+											.getRating(), review.getResult()
+											.getText(), subTask));
 					}
 				}
 			}
@@ -137,6 +138,7 @@ public class ReviewsUtil {
 			ITaskDataManager taskDataManager, IRepositoryModel repositoryModel,
 			ITask task) throws CoreException {
 
+		List<Review> reviews = new ArrayList<Review>();
 		TaskData taskData = taskDataManager.getTaskData(task);
 		if (taskData != null) {
 			List<TaskAttribute> attributesByType = taskData
@@ -146,15 +148,15 @@ public class ReviewsUtil {
 				// TODO move RepositoryModel.createTaskAttachment to interface?
 				ITaskAttachment taskAttachment = ((RepositoryModel) repositoryModel)
 						.createTaskAttachment(attribute);
-				if (taskAttachment.getFileName().equals(
+				if (taskAttachment!=null&&taskAttachment.getFileName().equals(
 						ReviewConstants.REVIEW_DATA_CONTAINER)) {
-					return parseAttachments(attribute,
-							new NullProgressMonitor());
+					reviews.addAll(parseAttachments(attribute,
+							new NullProgressMonitor()));
 				}
 			}
 
 		}
-		return new ArrayList<Review>();
+		return reviews;
 	}
 
 	private static List<ITargetPathStrategy> strategies;
@@ -163,7 +165,7 @@ public class ReviewsUtil {
 		strategies.add(new SimplePathFindingStrategy());
 		strategies.add(new GitPatchPathFindingStrategy());
 	}
-	
+
 
 	public static List<? extends ITargetPathStrategy> getPathFindingStrategies() {
 		return strategies;
