@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.discovery.ui;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.List;
@@ -20,7 +19,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDescriptor;
 import org.eclipse.mylyn.internal.discovery.ui.wizards.Messages;
 import org.eclipse.osgi.service.resolver.VersionRange;
@@ -48,20 +46,10 @@ public abstract class DiscoveryUi {
 		Bundle bundle = Platform.getBundle("org.eclipse.equinox.p2.engine"); //$NON-NLS-1$
 		if (bundle != null && new VersionRange("[1.0.0,1.1.0)").isIncluded(bundle.getVersion())) { //$NON-NLS-1$
 			// load class for Eclipse 3.5
-			try {
-				Class<?> clazz = Class.forName("org.eclipse.mylyn.internal.discovery.ui.PrepareInstallProfileJob_e_3_5"); //$NON-NLS-1$
-				Constructor<?> c = clazz.getConstructor(List.class);
-				runner = (AbstractInstallJob) c.newInstance(descriptors);
-			} catch (Throwable t) {
-				StatusHandler.log(new Status(
-						IStatus.ERROR,
-						DiscoveryUi.ID_PLUGIN,
-						"Errors occured while initializing provisioning framework, falling back to default implementation. This make cause discovery install to fail.", //$NON-NLS-1$
-						t));
-			}
+			runner = new PrepareInstallProfileJob_e_3_5(descriptors);
 		}
 		if (runner == null) {
-			runner = new PrepareInstallProfileJob(descriptors);
+			runner = new PrepareInstallProfileJob_e_3_6(descriptors);
 		}
 		return runner;
 	}

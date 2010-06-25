@@ -7,6 +7,7 @@
 		</accessrules>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="lib"/>
+	<classpathentry exported="true" kind="lib" path="lib-e3.5" sourcepath="src-e3.5"/>
+	<classpathentry exported="true" kind="lib" path="lib-e3.6" sourcepath="src-e3.6"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

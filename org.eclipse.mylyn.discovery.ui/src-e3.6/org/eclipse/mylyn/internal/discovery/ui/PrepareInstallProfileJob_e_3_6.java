@@ -61,7 +61,7 @@ import org.eclipse.swt.widgets.Display;
  * @author David Green
  * @author Steffen Pingel
  */
-class PrepareInstallProfileJob extends AbstractInstallJob {
+class PrepareInstallProfileJob_e_3_6 extends AbstractInstallJob {
 
 	private final List<ConnectorDescriptor> installableConnectors;
 
@@ -69,7 +69,7 @@ class PrepareInstallProfileJob extends AbstractInstallJob {
 
 	private Set<URI> repositoryLocations;
 
-	public PrepareInstallProfileJob(List<ConnectorDescriptor> installableConnectors) {
+	public PrepareInstallProfileJob_e_3_6(List<ConnectorDescriptor> installableConnectors) {
 		if (installableConnectors == null) {
 			throw new IllegalArgumentException();
 		}

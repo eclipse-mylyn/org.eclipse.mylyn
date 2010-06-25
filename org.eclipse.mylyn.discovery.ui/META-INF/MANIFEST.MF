@@ -25,5 +25,6 @@ Export-Package: org.eclipse.mylyn.internal.discovery.ui;x-internal:=true,
  org.eclipse.mylyn.internal.discovery.ui.util;x-internal:=true,
  org.eclipse.mylyn.internal.discovery.ui.wizards;x-internal:=true
 Import-Package: com.ibm.icu.text
-Bundle-ClassPath: lib/,
- .
+Bundle-ClassPath: .,
+ lib-e3.5/,
+ lib-e3.6/

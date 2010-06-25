@@ -27,10 +27,14 @@
 	<!--   build.result.folder - folder to contain the build results           -->
 	<!-- ===================================================================== -->
 	<target name="pre.build.jars">
-		<uptodate property="isUpToDate"
-		            srcfile="src/org/eclipse/mylyn/internal/discovery/ui/PrepareInstallProfileJob.java"
-		            targetfile="lib/org/eclipse/mylyn/internal/discovery/ui/PrepareInstallProfileJob_e_3_5.class"/>
-		<fail unless="isUpToDate"/>
+		<uptodate property="isUpToDate-e3.5"
+		            srcfile="src-e3.5/org/eclipse/mylyn/internal/discovery/ui/PrepareInstallProfileJob_e_3_5.java"
+		            targetfile="lib-e3.5/org/eclipse/mylyn/internal/discovery/ui/PrepareInstallProfileJob_e_3_5.class"/>
+		<fail unless="isUpToDate-e3.5"/>
+		<uptodate property="isUpToDate-e3.6"
+		            srcfile="src-e3.6/org/eclipse/mylyn/internal/discovery/ui/PrepareInstallProfileJob_e_3_6.java"
+		            targetfile="lib-e3.6/org/eclipse/mylyn/internal/discovery/ui/PrepareInstallProfileJob_e_3_6.class"/>
+		<fail unless="isUpToDate-e3.6"/>
 	</target>
 
 	<!-- ===================================================================== -->

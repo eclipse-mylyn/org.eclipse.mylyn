@@ -28,7 +28,7 @@ import org.osgi.framework.Version;
  * A wizard for performing discovery of connectors and selecting connectors to install. When finish is pressed, selected
  * connectors are downloaded and installed.
  * 
- * @see PrepareInstallProfileJob
+ * @see PrepareInstallProfileJob_e_3_6
  * @see ConnectorDiscoveryWizardMainPage
  * @author David Green
  */
