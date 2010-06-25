@@ -378,6 +378,7 @@
 			<fileset dir="${build.home}/${base.target}/maps" includes="mylyn*.map">
 				<exclude name="*${base.target}.map"/>
 				<exclude name="*all.map"/>
+				<exclude name="mylyn.map"/>
 			</fileset>
 		</delete>
 
