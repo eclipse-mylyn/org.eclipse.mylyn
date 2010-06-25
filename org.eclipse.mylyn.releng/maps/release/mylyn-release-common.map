@@ -13,9 +13,6 @@ feature@org.eclipse.mylyn.wikitext_feature=v20100608-0100-e3x,:pserver:anonymous
 feature@org.eclipse.mylyn.wikitext.sdk=v20100608-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.wikitext.sdk-feature
 feature@org.eclipse.cdt.mylyn=v20100608-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.cdt-feature
 
-!******* EXTRAS ***********
-!feature@org.eclipse.mylyn.extras_sdk_feature=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.extras-sdk-feature
-
 !******* INCUBATOR *******
 feature@org.eclipse.mylyn.monitor_feature=v20100608-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.monitor-feature
 feature@org.eclipse.mylyn.xplanner_feature=v20100608-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/sandbox/org.eclipse.mylyn.xplanner-feature
@@ -44,8 +41,8 @@ plugin@org.eclipse.mylyn.commons.ui=v20100608-0100-e3x,:pserver:anonymous@dev.ec
 plugin@org.eclipse.mylyn.commons.xmlrpc=v20100608-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.commons.xmlrpc
 plugin@org.eclipse.mylyn.context.core=v20100608-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.context.core
 plugin@org.eclipse.mylyn.context.ui=v20100608-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.context.ui
-!plugin@org.eclipse.mylyn.discovery.core=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.discovery.core
-!plugin@org.eclipse.mylyn.discovery.ui=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.discovery.ui
+plugin@org.eclipse.mylyn.discovery.core=v20100608-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.discovery.core
+plugin@org.eclipse.mylyn.discovery.ui=v20100608-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.discovery.ui
 plugin@org.eclipse.mylyn.help.ui=v20100608-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.help.ui
 plugin@org.eclipse.mylyn.ide.ant=v20100608-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.ide.ant
 plugin@org.eclipse.mylyn.ide.capabilities=v20100608-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.ide.capabilities
@@ -95,7 +92,7 @@ plugin@org.eclipse.mylyn.wikitext.sandbox.ui=v20100608-0100-e3x,:pserver:anonymo
 plugin@org.eclipse.mylyn.bugzilla.tests=v20100608-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.bugzilla.tests
 plugin@org.eclipse.mylyn.commons.tests=v20100608-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.commons.tests
 plugin@org.eclipse.mylyn.context.tests=v20100608-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.context.tests
-!plugin@org.eclipse.mylyn.discovery.tests=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.discovery.tests
+plugin@org.eclipse.mylyn.discovery.tests=v20100608-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.discovery.tests
 plugin@org.eclipse.mylyn.ide.tests=v20100608-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.ide.tests
 plugin@org.eclipse.mylyn.java.tests=v20100608-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.java.tests
 plugin@org.eclipse.mylyn.monitor.tests=v20100608-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.monitor.tests

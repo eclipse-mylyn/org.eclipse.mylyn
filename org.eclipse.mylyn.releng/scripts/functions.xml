@@ -958,6 +958,7 @@
 	<target name="pack">
 		<fail unless="dir">required parameter missing: dir</fail>
 		
+		<!-- site optimizer is no longer available since 3.6M6 
 		<echo message="Packing update site in ${dir}" />
 		<exec-eclipse activity="pack" application="org.eclipse.update.core.siteOptimizer">
 			<arg value="-digestBuilder"/>
@@ -972,6 +973,7 @@
     		<arg value="${dir}"/>
     		<arg value="${dir}"/>
 		</exec-eclipse>
+		-->
     </target>
 
 	<target name="generate-metadata">
