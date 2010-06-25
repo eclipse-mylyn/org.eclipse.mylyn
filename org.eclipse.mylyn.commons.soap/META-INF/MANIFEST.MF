@@ -14,6 +14,6 @@ Require-Bundle: javax.xml.rpc;bundle-version="1.1.0",
  org.eclipse.mylyn.commons.net;bundle-version="[3.1.0,4.0.0)"
 Bundle-ClassPath: .
 Export-Package: org.eclipse.mylyn.internal.commons.soap;x-internal:=true,
- org.eclipse.mylyn.internal.provisional.commons.soap;x-friends:="org.eclipse.mylyn.xplanner.core,org.eclipse.mylyn.jira.core"
+ org.eclipse.mylyn.internal.provisional.commons.soap;x-internal:=true
 Bundle-Localization: plugin
 Eclipse-RegisterBuddy: org.apache.axis
