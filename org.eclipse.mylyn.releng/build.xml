@@ -387,6 +387,12 @@
 		<condition property="build.forceContextQualifier" value="" else="-DforceContextQualifier=${qualifier}-${versionPostfix}"><equals arg1="${release}" arg2="true"/></condition>
 	</target>
 
+	<target name="post-build">
+		<!-- manually check for failure, 3.6 basebuilder ignores failed builds -->
+		<available property="dist.exists" file="${build.home}/${base.target}/${build.dist}"/>
+		<fail message="Build failed to create ${build.home}/${base.target}/${build.dist}" unless="dist.exists"/>
+	</target>
+
 	<target name="pre-tests">	
 		<delete failonerror="false" includeemptydirs="true">
 			<fileset dir="${eclipse.home}">
