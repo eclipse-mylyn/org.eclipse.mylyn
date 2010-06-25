@@ -13,6 +13,7 @@ package org.eclipse.mylyn.tasks.tests;
 
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedMap;
@@ -75,6 +76,30 @@ public class DateRangeTest extends TestCase {
 		assertEquals(2, result.size());
 	}
 
+	public void testOverScheduled() {
+		SortedMap<DateRange, Set<ITask>> scheduledTasks = Collections.synchronizedSortedMap(new TreeMap<DateRange, Set<ITask>>());
+		DateRange range1 = TaskActivityUtil.getDayOf(new Date(0));
+		Set<ITask> tasks = new HashSet<ITask>();
+		tasks.add(new LocalTask("1", "summaryForLocalTask"));
+		scheduledTasks.put(range1, tasks);
+		assertFalse(scheduledTasks.isEmpty());
+		assertNotNull(scheduledTasks.get(range1));
+
+		Calendar start = TaskActivityUtil.getCalendar();
+		start.setTimeInMillis(0);
+		Calendar end = TaskActivityUtil.getCalendar();
+		TaskActivityUtil.snapStartOfDay(end);
+
+		DateRange startRange = new DateRange(start);
+		Calendar endExclusive = TaskActivityUtil.getCalendar();
+		endExclusive.setTimeInMillis(end.getTimeInMillis() + 1);
+		DateRange endRange = new DateRange(endExclusive);
+
+		SortedMap<DateRange, Set<ITask>> result = scheduledTasks.subMap(startRange, endRange);
+
+		assertEquals(1, result.size());
+	}
+
 	public void testIsWeekRange() {
 		TimeZone defaultTimeZone = TimeZone.getDefault();
 		try {
@@ -85,8 +110,8 @@ public class DateRangeTest extends TestCase {
 			DateRange range = TaskActivityUtil.getWeekOf(time.getTime());
 			assertTrue(WeekDateRange.isWeekRange(range.getStartDate(), range.getEndDate()));
 			range.getStartDate().setTimeInMillis(range.getStartDate().getTimeInMillis() + 1);
-			assertTrue("1 ms longer than a week, expected to be within legal interval", WeekDateRange.isWeekRange(
-					range.getStartDate(), range.getEndDate()));
+			assertTrue("1 ms longer than a week, expected to be within legal interval",
+					WeekDateRange.isWeekRange(range.getStartDate(), range.getEndDate()));
 			range = TaskActivityUtil.getDayOf(time.getTime());
 			assertFalse("only a day", WeekDateRange.isWeekRange(range.getStartDate(), range.getEndDate()));
 
@@ -123,14 +148,14 @@ public class DateRangeTest extends TestCase {
 			DateRange range = TaskActivityUtil.getDayOf(time.getTime());
 			assertTrue(DayDateRange.isDayRange(range.getStartDate(), range.getEndDate()));
 			range.getStartDate().setTimeInMillis(range.getStartDate().getTimeInMillis() + 1);
-			assertTrue("1 ms longer than a day, expected to be within legal interval", DayDateRange.isDayRange(
-					range.getStartDate(), range.getEndDate()));
+			assertTrue("1 ms longer than a day, expected to be within legal interval",
+					DayDateRange.isDayRange(range.getStartDate(), range.getEndDate()));
 			range.getStartDate().setTimeInMillis(range.getStartDate().getTimeInMillis() + HOUR);
-			assertFalse("1 hour + 1 ms longer than a day", DayDateRange.isDayRange(range.getStartDate(),
-					range.getEndDate()));
+			assertFalse("1 hour + 1 ms longer than a day",
+					DayDateRange.isDayRange(range.getStartDate(), range.getEndDate()));
 			range.getStartDate().setTimeInMillis(range.getStartDate().getTimeInMillis() - 2 * HOUR - 2);
-			assertFalse("1 hour + 1 ms shorter than a day", DayDateRange.isDayRange(range.getStartDate(),
-					range.getEndDate()));
+			assertFalse("1 hour + 1 ms shorter than a day",
+					DayDateRange.isDayRange(range.getStartDate(), range.getEndDate()));
 			range = TaskActivityUtil.getDayOf(time.getTime());
 			assertTrue("a week", DayDateRange.isDayRange(range.getStartDate(), range.getEndDate()));
 
