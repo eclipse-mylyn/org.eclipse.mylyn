@@ -9,9 +9,6 @@
    <feature url="features/org.eclipse.mylyn.monitor_feature_@org.eclipse.mylyn.monitor_feature@.jar" id="org.eclipse.mylyn.monitor_feature" version="@org.eclipse.mylyn.monitor_feature@">
       <category name="Incubator"/>
    </feature>
-   <feature url="features/org.eclipse.mylyn.xplanner_feature_@org.eclipse.mylyn.xplanner_feature@.jar" id="org.eclipse.mylyn.xplanner_feature" version="@org.eclipse.mylyn.xplanner_feature@">
-      <category name="Incubator"/>
-   </feature>
    <feature url="features/org.eclipse.mylyn.web.tasks_feature_@org.eclipse.mylyn.web.tasks_feature@.jar" id="org.eclipse.mylyn.web.tasks_feature" version="@org.eclipse.mylyn.web.tasks_feature@">
       <category name="Incubator"/>
    </feature>

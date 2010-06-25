@@ -17,7 +17,6 @@ import junit.framework.TestSuite;
 import org.eclipse.mylyn.bugzilla.tests.AllBugzillaTests;
 import org.eclipse.mylyn.tests.util.TestFixture;
 import org.eclipse.mylyn.trac.tests.AllTracTests;
-import org.eclipse.mylyn.xplanner.tests.AllXPlannerTests;
 
 /**
  * @author Shawn Minto
@@ -29,9 +28,7 @@ public class AllConnectorTests {
 
 		TestSuite suite = new TestSuite("All Connector Tests for org.eclipse.mylyn.tests");
 		suite.addTest(AllBugzillaTests.suite());
-		//suite.addTest(AllJiraTests.suite());
 		suite.addTest(AllTracTests.suite());
-		suite.addTest(AllXPlannerTests.suite());
 		return suite;
 	}
 

@@ -65,10 +65,6 @@
 		</ant>
 		<ant antfile="${genericTargets}" target="${target}">
 			<property name="type" value="feature" />
-			<property name="id" value="org.eclipse.mylyn.xplanner_feature" />
-		</ant>
-		<ant antfile="${genericTargets}" target="${target}">
-			<property name="type" value="feature" />
 			<property name="id" value="org.eclipse.mylyn.monitor_feature" />
 		</ant>
 		<ant antfile="${genericTargets}" target="${target}">
@@ -138,10 +134,6 @@
 		<ant antfile="${genericTargets}" target="${target}">
 			<property name="type" value="feature" />
 			<property name="id" value="org.eclipse.mylyn.web.tasks_feature" />
-		</ant>
-		<ant antfile="${genericTargets}" target="${target}">
-			<property name="type" value="feature" />
-			<property name="id" value="org.eclipse.mylyn.xplanner_feature" />
 		</ant>
 		<antcall target="incubatorElementDelegatorSdk" />
 	</target>
@@ -248,9 +240,6 @@
 		<ant antfile="${assembleScriptName}" dir="${buildDirectory}" />
 	</target>
 	<target name="assemble.org.eclipse.mylyn.web.tasks_feature">
-		<ant antfile="${assembleScriptName}" dir="${buildDirectory}" />
-	</target>
-	<target name="assemble.org.eclipse.mylyn.xplanner_feature">
 		<ant antfile="${assembleScriptName}" dir="${buildDirectory}" />
 	</target>
 	<target name="assemble.org.eclipse.mylyn.monitor_feature">
