@@ -72,6 +72,9 @@ public class AllBugzillaTests {
 		for (BugzillaFixture fixture : BugzillaFixture.ONLY_3_6_SPECIFIC) {
 			fixture.createSuite(suite);
 			fixture.add(BugzillaXmlRpcClientTest.class);
+			if (fixture.equals(BugzillaFixture.BUGS_3_6_CUSTOM_WF_AND_STATUS)) {
+				fixture.add(BugzillaCustomRepositoryTest.class);
+			}
 			fixture.done();
 		}
 
