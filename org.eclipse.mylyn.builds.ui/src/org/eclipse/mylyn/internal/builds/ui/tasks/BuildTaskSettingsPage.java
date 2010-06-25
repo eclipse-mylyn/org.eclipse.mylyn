@@ -46,6 +46,7 @@ import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 import org.eclipse.mylyn.internal.builds.ui.view.BuildContentProvider;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryChangeListener;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryAdapter;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryChangeEvent;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryDelta;
@@ -152,6 +153,7 @@ public class BuildTaskSettingsPage extends AbstractRepositorySettingsPage {
 	public void applyTo(TaskRepository repository) {
 		super.applyTo(repository);
 		repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY, IRepositoryConstants.CATEGORY_BUILD);
+		repository.setProperty(ITasksCoreConstants.PROPERTY_USE_SECURE_STORAGE, Boolean.TRUE.toString());
 		BuildConnector buildConnector = getBuildConnector();
 		if (buildConnector != null) {
 			repository.setProperty(BuildTaskConnector.TASK_REPOSITORY_KEY_BUILD_CONNECTOR_KIND,
@@ -286,8 +288,11 @@ public class BuildTaskSettingsPage extends AbstractRepositorySettingsPage {
 
 		Composite buttonComposite = new Composite(composite, SWT.NONE);
 		GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.TOP).applyTo(buttonComposite);
-		GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).extendedMargins(5, 0, 0, 0).applyTo(
-				buttonComposite);
+		GridLayoutFactory.fillDefaults()
+				.numColumns(1)
+				.margins(0, 0)
+				.extendedMargins(5, 0, 0, 0)
+				.applyTo(buttonComposite);
 		createButtons(buttonComposite);
 
 		Dialog.applyDialogFont(composite);
