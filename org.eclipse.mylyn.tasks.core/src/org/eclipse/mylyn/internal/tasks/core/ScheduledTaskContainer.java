@@ -139,7 +139,7 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 					// is due this week
 					if (task.getDueDate() != null) {
 						cal.setTime(task.getDueDate());
-						if (range.includes(cal)) {
+						if (range.includes(cal) && activityManager.isOwnedByUser(task)) {
 							continue;
 						}
 					}
