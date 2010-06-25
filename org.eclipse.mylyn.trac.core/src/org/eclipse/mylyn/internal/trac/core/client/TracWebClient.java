@@ -40,7 +40,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
@@ -145,9 +144,9 @@ public class TracWebClient extends AbstractTracClient {
 				Credentials httpCredentials = WebUtil.getHttpClientCredentials(credentials,
 						WebUtil.getHost(repositoryUrl));
 				httpClient.getState().setCredentials(authScope, httpCredentials);
-				if (CoreUtil.TEST_MODE) {
-					System.err.println(" Setting credentials: " + httpCredentials); //$NON-NLS-1$
-				}
+//				if (CoreUtil.TEST_MODE) {
+//					System.err.println(" Setting credentials: " + httpCredentials); //$NON-NLS-1$
+//				}
 
 				GetMethod method = new GetMethod(WebUtil.getRequestPath(repositoryUrl + LOGIN_URL));
 				method.setFollowRedirects(false);

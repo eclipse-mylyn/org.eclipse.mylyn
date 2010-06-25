@@ -330,9 +330,9 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 				Credentials httpCredentials = WebUtil.getHttpClientCredentials(credentials,
 						WebUtil.getHost(location.getUrl()));
 				httpClient.getState().setCredentials(authScope, httpCredentials);
-				if (CoreUtil.TEST_MODE) {
-					System.err.println(" Setting credentials: " + httpCredentials); //$NON-NLS-1$
-				}
+//				if (CoreUtil.TEST_MODE) {
+//					System.err.println(" Setting credentials: " + httpCredentials); //$NON-NLS-1$
+//				}
 				httpClient.getState().setCredentials(authScope, httpCredentials);
 			} else {
 				httpClient.getState().clearCredentials();

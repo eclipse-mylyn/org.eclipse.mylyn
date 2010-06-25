@@ -28,14 +28,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.trac.core.client.AbstractWikiHandler;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
-import org.eclipse.mylyn.internal.trac.core.client.ITracWikiClient;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
+import org.eclipse.mylyn.internal.trac.core.client.ITracWikiClient;
 import org.eclipse.mylyn.internal.trac.core.model.TracPriority;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
@@ -43,10 +42,10 @@ import org.eclipse.mylyn.internal.trac.core.util.TracUtil;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
-import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
@@ -574,9 +573,9 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			try {
 				ITracClient client = getClientManager().getTracClient(repository);
 				Set<Integer> ids = client.getChangedTickets(since, monitor);
-				if (CoreUtil.TEST_MODE) {
-					System.err.println(" preSynchronization(): since=" + since.getTime() + ",changed=" + ids); //$NON-NLS-1$ //$NON-NLS-2$ 
-				}
+//				if (CoreUtil.TEST_MODE) {
+//					System.err.println(" preSynchronization(): since=" + since.getTime() + ",changed=" + ids); //$NON-NLS-1$ //$NON-NLS-2$ 
+//				}
 				if (ids.isEmpty()) {
 					// repository is unchanged
 					session.setNeedsPerformQueries(false);
@@ -590,9 +589,9 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 					// most recent modification date
 					Integer id = ids.iterator().next();
 					Date lastChanged = client.getTicketLastChanged(id, monitor);
-					if (CoreUtil.TEST_MODE) {
-						System.err.println(" preSynchronization(): since=" + since.getTime() + ", lastChanged=" + lastChanged.getTime()); //$NON-NLS-1$ //$NON-NLS-2$
-					}
+//					if (CoreUtil.TEST_MODE) {
+//						System.err.println(" preSynchronization(): since=" + since.getTime() + ", lastChanged=" + lastChanged.getTime()); //$NON-NLS-1$ //$NON-NLS-2$
+//					}
 					if (since.equals(lastChanged)) {
 						// repository didn't actually change
 						session.setNeedsPerformQueries(false);

@@ -187,7 +187,6 @@ public class TracFixture extends TestFixture {
 
 	public ITracClient connect(String url, Proxy proxy, PrivilegeLevel level) throws Exception {
 		Credentials credentials = TestUtil.readCredentials(level);
-		System.err.println(" Read credentials: " + credentials + " (" + level + ")"); //$NON-NLS-1$
 		return connect(url, credentials.username, credentials.password, proxy);
 	}
 
