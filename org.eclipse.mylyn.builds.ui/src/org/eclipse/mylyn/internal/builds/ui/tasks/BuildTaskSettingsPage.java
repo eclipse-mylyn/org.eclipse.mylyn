@@ -220,12 +220,41 @@ public class BuildTaskSettingsPage extends AbstractRepositorySettingsPage {
 	}
 
 	private void createButtons(Composite section) {
-		Button button = new Button(section, SWT.PUSH);
-		button.setText("&Refresh");
-		button.addSelectionListener(new SelectionAdapter() {
+		Button refreshButton = new Button(section, SWT.PUSH);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(refreshButton);
+		refreshButton.setText("&Refresh");
+		refreshButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
 				validateSettings();
+			}
+		});
+
+		Button selectAllButton = new Button(section, SWT.PUSH);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(selectAllButton);
+		selectAllButton.setText("&Select All");
+		selectAllButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent event) {
+				List<IBuildPlan> plans = getWorkingCopy().getPlans();
+				for (IBuildPlan plan : plans) {
+					((BuildPlan) plan).setSelected(true);
+				}
+				planViewer.setCheckedElements(plans.toArray());
+			}
+		});
+
+		Button deselectAllButton = new Button(section, SWT.PUSH);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(deselectAllButton);
+		deselectAllButton.setText("&Deselect All");
+		deselectAllButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent event) {
+				List<IBuildPlan> plans = getWorkingCopy().getPlans();
+				for (IBuildPlan plan : plans) {
+					((BuildPlan) plan).setSelected(false);
+				}
+				planViewer.setCheckedElements(new Object[] {});
 			}
 		});
 	}
