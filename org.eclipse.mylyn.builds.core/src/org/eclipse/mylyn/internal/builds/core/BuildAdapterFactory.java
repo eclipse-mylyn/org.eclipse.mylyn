@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildAdapterFactory.java,v 1.2 2010/05/30 20:28:49 spingel Exp $
+ * $Id: BuildAdapterFactory.java,v 1.3 2010/06/26 22:10:50 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -218,20 +218,6 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.builds.core.IBuildServer <em>IBuild Server</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.mylyn.builds.core.IBuildServer
-	 * @generated
-	 */
-	public Adapter createIBuildServerAdapter() {
-		return null;
-	}
-
-	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy <em>IBuild Plan Working Copy</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -242,6 +228,20 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createIBuildPlanWorkingCopyAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.builds.core.IBuildServer <em>IBuild Server</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.builds.core.IBuildServer
+	 * @generated
+	 */
+	public Adapter createIBuildServerAdapter() {
 		return null;
 	}
 

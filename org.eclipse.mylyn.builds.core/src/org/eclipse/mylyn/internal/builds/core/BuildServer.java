@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildServer.java,v 1.5 2010/06/24 06:07:52 spingel Exp $
+ * $Id: BuildServer.java,v 1.6 2010/06/26 22:10:50 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -37,7 +37,9 @@ import org.eclipse.mylyn.internal.builds.core.tasks.IBuildLoader;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
- * <!-- begin-user-doc --> A representation of the model object '<em><b>Server</b></em>'. <!-- end-user-doc -->
+ * <!-- begin-user-doc -->
+ * A representation of the model object '<em><b>Server</b></em>'.
+ * <!-- end-user-doc -->
  * <p>
  * The following features are supported:
  * <ul>
@@ -51,8 +53,9 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  */
 public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	/**
-	 * The default value of the '{@link #getUrl() <em>Url</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The default value of the '{@link #getUrl() <em>Url</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getUrl()
 	 * @generated
@@ -61,7 +64,9 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	protected static final String URL_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getUrl() <em>Url</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getUrl() <em>Url</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getUrl()
 	 * @generated
@@ -70,8 +75,9 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	protected String url = URL_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getName()
 	 * @generated
@@ -80,8 +86,9 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	protected static final String NAME_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getName()
 	 * @generated
@@ -90,7 +97,8 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	protected String name = NAME_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getPlans() <em>Plans</em>}' containment reference list. <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getPlans() <em>Plans</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getPlans()
@@ -100,8 +108,9 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	protected EList<IBuildPlan> plans;
 
 	/**
-	 * The default value of the '{@link #getRepository() <em>Repository</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The default value of the '{@link #getRepository() <em>Repository</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getRepository()
 	 * @generated
@@ -110,8 +119,9 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	protected static final TaskRepository REPOSITORY_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getRepository() <em>Repository</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getRepository() <em>Repository</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getRepository()
 	 * @generated
@@ -120,7 +130,8 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	protected TaskRepository repository = REPOSITORY_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getConnectorKind() <em>Connector Kind</em>}' attribute. <!-- begin-user-doc -->
+	 * The default value of the '{@link #getConnectorKind() <em>Connector Kind</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getConnectorKind()
@@ -130,7 +141,8 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	protected static final String CONNECTOR_KIND_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getConnectorKind() <em>Connector Kind</em>}' attribute. <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getConnectorKind() <em>Connector Kind</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getConnectorKind()
@@ -140,7 +152,8 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	protected String connectorKind = CONNECTOR_KIND_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getRepositoryUrl() <em>Repository Url</em>}' attribute. <!-- begin-user-doc -->
+	 * The default value of the '{@link #getRepositoryUrl() <em>Repository Url</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getRepositoryUrl()
@@ -150,7 +163,8 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	protected static final String REPOSITORY_URL_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getRepositoryUrl() <em>Repository Url</em>}' attribute. <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getRepositoryUrl() <em>Repository Url</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getRepositoryUrl()
@@ -160,8 +174,9 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	protected String repositoryUrl = REPOSITORY_URL_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getServer() <em>Server</em>}' reference. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getServer() <em>Server</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getServer()
 	 * @generated
@@ -170,7 +185,8 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	protected BuildServer server;
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -179,7 +195,8 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -189,7 +206,8 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	}
 
 	/**
-	 * Returns the value of the '<em><b>Url</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Url</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Url</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
@@ -207,7 +225,8 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildServer#getUrl <em>Url</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Url</em>' attribute.
@@ -223,7 +242,8 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	}
 
 	/**
-	 * Returns the value of the '<em><b>Name</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Name</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
@@ -241,7 +261,9 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildServer#getName <em>Name</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Name</em>' attribute.
@@ -257,9 +279,11 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	}
 
 	/**
-	 * Returns the value of the '<em><b>Plans</b></em>' containment reference list. The list contents are of type
-	 * {@link org.eclipse.mylyn.builds.core.IBuildPlan}. It is bidirectional and its opposite is '
-	 * {@link org.eclipse.mylyn.builds.core.IBuildPlan#getServer <em>Server</em>}'. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Plans</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.mylyn.builds.core.IBuildPlan}.
+	 * It is bidirectional and its opposite is '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getServer
+	 * <em>Server</em>}'.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Plans</em>' containment reference list isn't clear, there really should be more of a
 	 * description here...
@@ -282,7 +306,8 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	}
 
 	/**
-	 * Returns the value of the '<em><b>Repository</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Repository</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Repository</em>' attribute isn't clear, there really should be more of a description
 	 * here...
@@ -301,7 +326,9 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildServer#getRepository
-	 * <em>Repository</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <em>Repository</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Repository</em>' attribute.
@@ -318,7 +345,8 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	}
 
 	/**
-	 * Returns the value of the '<em><b>Connector Kind</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Connector Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Connector Kind</em>' attribute isn't clear, there really should be more of a
 	 * description here...
@@ -337,7 +365,9 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildServer#getConnectorKind
-	 * <em>Connector Kind</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <em>Connector Kind</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Connector Kind</em>' attribute.
@@ -354,7 +384,8 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	}
 
 	/**
-	 * Returns the value of the '<em><b>Repository Url</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Repository Url</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Repository Url</em>' attribute isn't clear, there really should be more of a
 	 * description here...
@@ -373,7 +404,9 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildServer#getRepositoryUrl
-	 * <em>Repository Url</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <em>Repository Url</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Repository Url</em>' attribute.
@@ -390,7 +423,8 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	}
 
 	/**
-	 * Returns the value of the '<em><b>Server</b></em>' reference. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Server</b></em>' reference.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Server</em>' reference isn't clear, there really should be more of a description
 	 * here...
@@ -417,7 +451,8 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -426,7 +461,8 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -441,7 +477,8 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -455,7 +492,8 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -484,7 +522,8 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -516,7 +555,8 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -546,7 +586,8 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -562,11 +603,11 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 		case BuildPackage.BUILD_SERVER__REPOSITORY:
 			return REPOSITORY_EDEFAULT == null ? repository != null : !REPOSITORY_EDEFAULT.equals(repository);
 		case BuildPackage.BUILD_SERVER__CONNECTOR_KIND:
-			return CONNECTOR_KIND_EDEFAULT == null ? connectorKind != null
-					: !CONNECTOR_KIND_EDEFAULT.equals(connectorKind);
+			return CONNECTOR_KIND_EDEFAULT == null ? connectorKind != null : !CONNECTOR_KIND_EDEFAULT
+					.equals(connectorKind);
 		case BuildPackage.BUILD_SERVER__REPOSITORY_URL:
-			return REPOSITORY_URL_EDEFAULT == null ? repositoryUrl != null
-					: !REPOSITORY_URL_EDEFAULT.equals(repositoryUrl);
+			return REPOSITORY_URL_EDEFAULT == null ? repositoryUrl != null : !REPOSITORY_URL_EDEFAULT
+					.equals(repositoryUrl);
 		case BuildPackage.BUILD_SERVER__SERVER:
 			return server != null;
 		}
@@ -574,7 +615,8 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */

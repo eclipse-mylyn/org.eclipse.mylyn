@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildFactory.java,v 1.3 2010/06/24 06:07:52 spingel Exp $
+ * $Id: BuildFactory.java,v 1.4 2010/06/26 22:10:50 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 import org.eclipse.mylyn.builds.core.BuildState;
 import org.eclipse.mylyn.builds.core.BuildStatus;
+
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
@@ -44,7 +45,8 @@ public class BuildFactory extends EFactoryImpl {
 	 */
 	public static BuildFactory init() {
 		try {
-			BuildFactory theBuildFactory = (BuildFactory) EPackage.Registry.INSTANCE.getEFactory("http://eclipse.org/mylyn/models/build");
+			BuildFactory theBuildFactory = (BuildFactory) EPackage.Registry.INSTANCE
+					.getEFactory("http://eclipse.org/mylyn/models/build");
 			if (theBuildFactory != null) {
 				return theBuildFactory;
 			}
@@ -156,6 +158,24 @@ public class BuildFactory extends EFactoryImpl {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public TaskRepository createTaskRepositoryFromString(EDataType eDataType, String initialValue) {
+		return (TaskRepository) super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertTaskRepositoryToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public BuildState createBuildStateFromString(EDataType eDataType, String initialValue) {
 		return (BuildState) super.createFromString(eDataType, initialValue);
 	}
@@ -184,24 +204,6 @@ public class BuildFactory extends EFactoryImpl {
 	 * @generated
 	 */
 	public String convertBuildStatusToString(EDataType eDataType, Object instanceValue) {
-		return super.convertToString(eDataType, instanceValue);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public TaskRepository createTaskRepositoryFromString(EDataType eDataType, String initialValue) {
-		return (TaskRepository) super.createFromString(eDataType, initialValue);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String convertTaskRepositoryToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(eDataType, instanceValue);
 	}
 

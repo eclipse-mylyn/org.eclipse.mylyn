@@ -2,14 +2,13 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildPackage.java,v 1.4 2010/06/24 06:07:52 spingel Exp $
+ * $Id: BuildPackage.java,v 1.5 2010/06/26 22:10:50 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
-import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 
@@ -703,6 +702,16 @@ public class BuildPackage extends EPackageImpl {
 	public static final int BUILD_SERVER_FEATURE_COUNT = IBUILD_SERVER_FEATURE_COUNT + 1;
 
 	/**
+	 * The meta object id for the '<em>Task Repository</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.mylyn.tasks.core.TaskRepository
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getTaskRepository()
+	 * @generated
+	 */
+	public static final int TASK_REPOSITORY = 8;
+
+	/**
 	 * The meta object id for the '<em>State</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -721,16 +730,6 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public static final int BUILD_STATUS = 10;
-
-	/**
-	 * The meta object id for the '<em>Task Repository</em>' data type.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.mylyn.tasks.core.TaskRepository
-	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getTaskRepository()
-	 * @generated
-	 */
-	public static final int TASK_REPOSITORY = 8;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -779,14 +778,14 @@ public class BuildPackage extends EPackageImpl {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass iBuildServerEClass = null;
+	private EClass iBuildPlanWorkingCopyEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass iBuildPlanWorkingCopyEClass = null;
+	private EClass iBuildServerEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -852,7 +851,8 @@ public class BuildPackage extends EPackageImpl {
 			return (BuildPackage) EPackage.Registry.INSTANCE.getEPackage(BuildPackage.eNS_URI);
 
 		// Obtain or create and register package
-		BuildPackage theBuildPackage = (BuildPackage) (EPackage.Registry.INSTANCE.get(eNS_URI) instanceof BuildPackage ? EPackage.Registry.INSTANCE.get(eNS_URI)
+		BuildPackage theBuildPackage = (BuildPackage) (EPackage.Registry.INSTANCE.get(eNS_URI) instanceof BuildPackage ? EPackage.Registry.INSTANCE
+				.get(eNS_URI)
 				: new BuildPackage());
 
 		isInited = true;
@@ -1064,32 +1064,6 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getSummary <em>Summary</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Summary</em>'.
-	 * @see org.eclipse.mylyn.builds.core.IBuildPlan#getSummary()
-	 * @see #getIBuildPlan()
-	 * @generated
-	 */
-	public EAttribute getIBuildPlan_Summary() {
-		return (EAttribute) iBuildPlanEClass.getEStructuralFeatures().get(7);
-	}
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getStatus <em>Status</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Status</em>'.
-	 * @see org.eclipse.mylyn.builds.core.IBuildPlan#getStatus()
-	 * @see #getIBuildPlan()
-	 * @generated
-	 */
-	public EAttribute getIBuildPlan_Status() {
-		return (EAttribute) iBuildPlanEClass.getEStructuralFeatures().get(9);
-	}
-
-	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getInfo <em>Info</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1100,6 +1074,32 @@ public class BuildPackage extends EPackageImpl {
 	 */
 	public EAttribute getIBuildPlan_Info() {
 		return (EAttribute) iBuildPlanEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuildPlan#isSelected <em>Selected</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Selected</em>'.
+	 * @see org.eclipse.mylyn.builds.core.IBuildPlan#isSelected()
+	 * @see #getIBuildPlan()
+	 * @generated
+	 */
+	public EAttribute getIBuildPlan_Selected() {
+		return (EAttribute) iBuildPlanEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getSummary <em>Summary</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Summary</em>'.
+	 * @see org.eclipse.mylyn.builds.core.IBuildPlan#getSummary()
+	 * @see #getIBuildPlan()
+	 * @generated
+	 */
+	public EAttribute getIBuildPlan_Summary() {
+		return (EAttribute) iBuildPlanEClass.getEStructuralFeatures().get(7);
 	}
 
 	/**
@@ -1116,16 +1116,29 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuildPlan#isSelected <em>Selected</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getStatus <em>Status</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Selected</em>'.
-	 * @see org.eclipse.mylyn.builds.core.IBuildPlan#isSelected()
+	 * @return the meta object for the attribute '<em>Status</em>'.
+	 * @see org.eclipse.mylyn.builds.core.IBuildPlan#getStatus()
 	 * @see #getIBuildPlan()
 	 * @generated
 	 */
-	public EAttribute getIBuildPlan_Selected() {
-		return (EAttribute) iBuildPlanEClass.getEStructuralFeatures().get(6);
+	public EAttribute getIBuildPlan_Status() {
+		return (EAttribute) iBuildPlanEClass.getEStructuralFeatures().get(9);
+	}
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy <em>IBuild Plan Working Copy</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IBuild Plan Working Copy</em>'.
+	 * @see org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy
+	 * @model instanceClass="org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy" superTypes="org.eclipse.mylyn.internal.builds.core.IBuildPlan"
+	 * @generated
+	 */
+	public EClass getIBuildPlanWorkingCopy() {
+		return iBuildPlanWorkingCopyEClass;
 	}
 
 	/**
@@ -1194,16 +1207,16 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy <em>IBuild Plan Working Copy</em>}'.
+	 * Returns the meta object for data type '{@link org.eclipse.mylyn.tasks.core.TaskRepository <em>Task Repository</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>IBuild Plan Working Copy</em>'.
-	 * @see org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy
-	 * @model instanceClass="org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy" superTypes="org.eclipse.mylyn.internal.builds.core.IBuildPlan"
+	 * @return the meta object for data type '<em>Task Repository</em>'.
+	 * @see org.eclipse.mylyn.tasks.core.TaskRepository
+	 * @model instanceClass="org.eclipse.mylyn.tasks.core.TaskRepository"
 	 * @generated
 	 */
-	public EClass getIBuildPlanWorkingCopy() {
-		return iBuildPlanWorkingCopyEClass;
+	public EDataType getTaskRepository() {
+		return taskRepositoryEDataType;
 	}
 
 	/**
@@ -1230,19 +1243,6 @@ public class BuildPackage extends EPackageImpl {
 	 */
 	public EDataType getBuildStatus() {
 		return buildStatusEDataType;
-	}
-
-	/**
-	 * Returns the meta object for data type '{@link org.eclipse.mylyn.tasks.core.TaskRepository <em>Task Repository</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for data type '<em>Task Repository</em>'.
-	 * @see org.eclipse.mylyn.tasks.core.TaskRepository
-	 * @model instanceClass="org.eclipse.mylyn.tasks.core.TaskRepository"
-	 * @generated
-	 */
-	public EDataType getTaskRepository() {
-		return taskRepositoryEDataType;
 	}
 
 	/**
@@ -1581,28 +1581,28 @@ public class BuildPackage extends EPackageImpl {
 		public static final EAttribute IBUILD_PLAN__ID = eINSTANCE.getIBuildPlan_Id();
 
 		/**
-		 * The meta object literal for the '<em><b>Summary</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		public static final EAttribute IBUILD_PLAN__SUMMARY = eINSTANCE.getIBuildPlan_Summary();
-
-		/**
-		 * The meta object literal for the '<em><b>Status</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		public static final EAttribute IBUILD_PLAN__STATUS = eINSTANCE.getIBuildPlan_Status();
-
-		/**
 		 * The meta object literal for the '<em><b>Info</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
 		public static final EAttribute IBUILD_PLAN__INFO = eINSTANCE.getIBuildPlan_Info();
+
+		/**
+		 * The meta object literal for the '<em><b>Selected</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		public static final EAttribute IBUILD_PLAN__SELECTED = eINSTANCE.getIBuildPlan_Selected();
+
+		/**
+		 * The meta object literal for the '<em><b>Summary</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		public static final EAttribute IBUILD_PLAN__SUMMARY = eINSTANCE.getIBuildPlan_Summary();
 
 		/**
 		 * The meta object literal for the '<em><b>State</b></em>' attribute feature.
@@ -1613,12 +1613,22 @@ public class BuildPackage extends EPackageImpl {
 		public static final EAttribute IBUILD_PLAN__STATE = eINSTANCE.getIBuildPlan_State();
 
 		/**
-		 * The meta object literal for the '<em><b>Selected</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Status</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		public static final EAttribute IBUILD_PLAN__SELECTED = eINSTANCE.getIBuildPlan_Selected();
+		public static final EAttribute IBUILD_PLAN__STATUS = eINSTANCE.getIBuildPlan_Status();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy <em>IBuild Plan Working Copy</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy
+		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildPlanWorkingCopy()
+		 * @generated
+		 */
+		public static final EClass IBUILD_PLAN_WORKING_COPY = eINSTANCE.getIBuildPlanWorkingCopy();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.core.IBuildServer <em>IBuild Server</em>}' class.
@@ -1663,14 +1673,14 @@ public class BuildPackage extends EPackageImpl {
 		public static final EAttribute IBUILD_SERVER__REPOSITORY_URL = eINSTANCE.getIBuildServer_RepositoryUrl();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy <em>IBuild Plan Working Copy</em>}' class.
+		 * The meta object literal for the '<em>Task Repository</em>' data type.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy
-		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildPlanWorkingCopy()
+		 * @see org.eclipse.mylyn.tasks.core.TaskRepository
+		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getTaskRepository()
 		 * @generated
 		 */
-		public static final EClass IBUILD_PLAN_WORKING_COPY = eINSTANCE.getIBuildPlanWorkingCopy();
+		public static final EDataType TASK_REPOSITORY = eINSTANCE.getTaskRepository();
 
 		/**
 		 * The meta object literal for the '<em>State</em>' data type.
@@ -1691,16 +1701,6 @@ public class BuildPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EDataType BUILD_STATUS = eINSTANCE.getBuildStatus();
-
-		/**
-		 * The meta object literal for the '<em>Task Repository</em>' data type.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.mylyn.tasks.core.TaskRepository
-		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getTaskRepository()
-		 * @generated
-		 */
-		public static final EDataType TASK_REPOSITORY = eINSTANCE.getTaskRepository();
 
 	}
 

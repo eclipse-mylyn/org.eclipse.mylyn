@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildSwitch.java,v 1.2 2010/05/30 20:28:49 spingel Exp $
+ * $Id: BuildSwitch.java,v 1.3 2010/06/26 22:10:50 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -216,21 +216,6 @@ public class BuildSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>IBuild Server</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>IBuild Server</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseIBuildServer(IBuildServer object) {
-		return null;
-	}
-
-	/**
 	 * Returns the result of interpreting the object as an instance of '<em>IBuild Plan Working Copy</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -242,6 +227,21 @@ public class BuildSwitch<T> {
 	 * @generated
 	 */
 	public T caseIBuildPlanWorkingCopy(IBuildPlanWorkingCopy object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IBuild Server</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IBuild Server</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseIBuildServer(IBuildServer object) {
 		return null;
 	}
 
