@@ -11,10 +11,16 @@
 
 package org.eclipse.mylyn.hudson.tests.support;
 
+import java.net.Proxy;
+
+import org.eclipse.mylyn.commons.net.IProxyProvider;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.internal.hudson.core.HudsonCorePlugin;
 import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient;
 import org.eclipse.mylyn.tests.util.TestFixture;
+import org.eclipse.mylyn.tests.util.TestUtil;
+import org.eclipse.mylyn.tests.util.TestUtil.Credentials;
+import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
 
 /**
  * Initializes Hudson repositories to a defined state. This is done once per test run, since cleaning and initializing
@@ -66,8 +72,30 @@ public class HudsonFixture extends TestFixture {
 		return connect(getRepositoryUrl());
 	}
 
+	public RestfulHudsonClient connect(PrivilegeLevel level) throws Exception {
+		return connect(repositoryUrl, Proxy.NO_PROXY, level);
+	}
+
 	public RestfulHudsonClient connect(String url) {
-		return new RestfulHudsonClient(new WebLocation(url));
+		return connect(url, Proxy.NO_PROXY, PrivilegeLevel.USER);
+	}
+
+	public RestfulHudsonClient connect(String url, Proxy proxy, PrivilegeLevel level) {
+		Credentials credentials = TestUtil.readCredentials(level);
+		return connect(url, credentials.username, credentials.password, proxy);
+	}
+
+	public RestfulHudsonClient connect(String url, String username, String password) {
+		return connect(url, username, password);
+	}
+
+	public RestfulHudsonClient connect(String url, String username, String password, final Proxy proxy) {
+		WebLocation location = new WebLocation(url, username, password, new IProxyProvider() {
+			public Proxy getProxyForHost(String host, String proxyType) {
+				return proxy;
+			}
+		});
+		return new RestfulHudsonClient(location);
 	}
 
 	@Override
