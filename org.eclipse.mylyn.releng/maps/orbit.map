@@ -1,9 +1,11 @@
+plugin@com.sun.syndication,0.9.0=GET,http://download.eclipse.org/tools/orbit/downloads/drops/R20100519200754/bundles/com.sun.syndication_0.9.0.v200803061811.jar
 plugin@com.sun.xml.bind,2.2.0=GET,http://download.eclipse.org/tools/orbit/downloads/drops/R20100519200754/bundles/com.sun.xml.bind_2.2.0.v201004141950.jar
 plugin@javax.activation,1.1.0=GET,http://download.eclipse.org/tools/orbit/downloads/drops/R20100519200754/bundles/javax.activation_1.1.0.v201005080500.jar
 plugin@javax.mail,1.4.0=GET,http://download.eclipse.org/tools/orbit/downloads/drops/R20100519200754/bundles/javax.mail_1.4.0.v201005080615.jar
 plugin@javax.servlet,2.4.0=GET,http://download.eclipse.org/tools/orbit/downloads/drops/R20100519200754/bundles/javax.servlet_2.4.0.v200806031604.jar
 plugin@javax.xml.rpc,1.1.0=GET,http://download.eclipse.org/tools/orbit/downloads/drops/R20100519200754/bundles/javax.xml.rpc_1.1.0.v201005080400.zip,unpack=true
 plugin@javax.xml.soap,1.2.0=GET,http://download.eclipse.org/tools/orbit/downloads/drops/R20100519200754/bundles/javax.xml.soap_1.2.0.v201005080501.zip,unpack=true
+plugin@javax.xml.stream,1.0.1=GET,http://download.eclipse.org/tools/orbit/downloads/drops/R20100519200754/bundles/javax.xml.stream_1.0.1.v201004272200.jar
 plugin@javax.wsdl,1.6.2=GET,http://download.eclipse.org/tools/orbit/downloads/drops/R20100519200754/bundles/javax.wsdl_1.6.2.v201005080631.jar
 plugin@org.apache.ant,1.7.0=GET,http://download.eclipse.org/tools/orbit/downloads/drops/R20100519200754/bundles/org.apache.ant_1.7.0.v20100518-1140.zip,unpack=true
 plugin@org.apache.axis,1.4.0=GET,http://download.eclipse.org/tools/orbit/downloads/drops/R20100519200754/bundles/org.apache.axis_1.4.0.v201005080400.zip,unpack=true

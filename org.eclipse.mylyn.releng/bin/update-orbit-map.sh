@@ -23,14 +23,16 @@ TMP=$BUILD_ROOT/orbit-all.map
 
 wget $1 -O $TMP
 
-grep "^plugin@com.sun.syndication,0.9.0" $TMP > $TMPMAP
-grep "^plugin@com.sun.xml.bind,2.2.0" $TMP > $TMPMAP
+rm -f $TMPMAP
+grep "^plugin@com.sun.syndication,0.9.0" $TMP >> $TMPMAP
+grep "^plugin@com.sun.xml.bind,2.2.0" $TMP >> $TMPMAP
 grep "^plugin@javax.activation,1.1.0" $TMP >> $TMPMAP
 grep "^plugin@javax.mail,1.4.0" $TMP >> $TMPMAP
 grep "^plugin@javax.servlet,2.4.0" $TMP >> $TMPMAP
 grep "^plugin@javax.xml.bind,2.3.0" $TMP >> $TMPMAP
 grep "^plugin@javax.xml.rpc,1.1.0" $TMP >> $TMPMAP
 grep "^plugin@javax.xml.soap,1.2.0" $TMP >> $TMPMAP
+grep "^plugin@javax.xml.stream,1.0.1" $TMP >> $TMPMAP
 grep "^plugin@javax.wsdl,1.6.2" $TMP >> $TMPMAP
 grep "^plugin@org.apache.ant,1.7.0" $TMP >> $TMPMAP
 grep "^plugin@org.apache.axis,1.4.0" $TMP >> $TMPMAP
