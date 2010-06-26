@@ -27,6 +27,10 @@ public class BuildImages {
 
 	public static final String T_OVR = "ovr16"; //$NON-NLS-1$
 
+	public static final String T_ETOOL = "etool16"; //$NON-NLS-1$
+
+	public static final String T_DTOOL = "dtool16"; //$NON-NLS-1$
+
 	public static final ImageDescriptor STATUS_PASSED = create(T_OBJ, "passed-status.png"); //$NON-NLS-1$
 
 	public static final ImageDescriptor STATUS_FAILED = create(T_OBJ, "failed-status.gif"); //$NON-NLS-1$
@@ -42,6 +46,10 @@ public class BuildImages {
 	public static final ImageDescriptor HEALTH_60 = create(T_OBJ, "health-60to79.gif"); //$NON-NLS-1$
 
 	public static final ImageDescriptor HEALTH_80 = create(T_OBJ, "health-80plus.gif"); //$NON-NLS-1$
+
+	public static final ImageDescriptor RUN = create(T_ETOOL, "run_exc.gif"); //$NON-NLS-1$
+
+	public static final ImageDescriptor RUN_DISABLED = create(T_DTOOL, "run_exc.gif"); //$NON-NLS-1$
 
 	public static final ImageDescriptor DECORATION_RUNNING = create(T_OVR, "run_co.gif"); //$NON-NLS-1$;
 
