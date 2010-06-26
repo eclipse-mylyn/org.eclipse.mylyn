@@ -14,11 +14,12 @@ feature@org.eclipse.mylyn.wikitext.sdk=HEAD,:pserver:anonymous@dev.eclipse.org:/
 feature@org.eclipse.cdt.mylyn=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.cdt-feature
 
 !******* INCUBATOR *******
+feature@org.eclipse.mylyn.experimental_sdk_feature=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/sandbox/org.eclipse.mylyn.experimental-sdk-feature
+feature@org.eclipse.mylyn.hudson=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/sandbox/org.eclipse.mylyn.hudson-feature
 feature@org.eclipse.mylyn.monitor_feature=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.monitor-feature
 feature@org.eclipse.mylyn.sandbox.ui_feature=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/sandbox/org.eclipse.mylyn.sandbox.ui-feature
 feature@org.eclipse.mylyn.sandbox.dev_feature=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/sandbox/org.eclipse.mylyn.sandbox.dev-feature
 feature@org.eclipse.mylyn.trac.wiki_feature=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/sandbox/org.eclipse.mylyn.trac.wiki-feature
-feature@org.eclipse.mylyn.experimental_sdk_feature=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/sandbox/org.eclipse.mylyn.experimental-sdk-feature
 feature@org.eclipse.mylyn.web.tasks_feature=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.web.tasks-feature
 feature@org.eclipse.mylyn.wikitext.sandbox=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/sandbox/org.eclipse.mylyn.wikitext.sandbox-feature
 
@@ -29,6 +30,8 @@ feature@org.eclipse.mylyn.tests.performance_feature=HEAD,:pserver:anonymous@dev.
 
 !******* PLUGINS **********
 plugin@org.eclipse.mylyn=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn
+plugin@org.eclipse.mylyn.builds.core=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/sandbox/org.eclipse.mylyn.builds.core
+plugin@org.eclipse.mylyn.builds.ui=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/sandbox/org.eclipse.mylyn.builds.ui
 plugin@org.eclipse.mylyn.bugzilla.core=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.bugzilla.core
 plugin@org.eclipse.mylyn.bugzilla.ide=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.bugzilla.ide
 plugin@org.eclipse.mylyn.bugzilla.ui=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.bugzilla.ui
@@ -43,6 +46,8 @@ plugin@org.eclipse.mylyn.context.ui=HEAD,:pserver:anonymous@dev.eclipse.org:/cvs
 plugin@org.eclipse.mylyn.discovery.core=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.discovery.core
 plugin@org.eclipse.mylyn.discovery.ui=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.discovery.ui
 plugin@org.eclipse.mylyn.help.ui=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.help.ui
+plugin@org.eclipse.mylyn.hudson.core=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/sandbox/org.eclipse.mylyn.hudson.core
+plugin@org.eclipse.mylyn.hudson.ui=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/sandbox/org.eclipse.mylyn.hudson.ui
 plugin@org.eclipse.mylyn.ide.ant=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.ide.ant
 plugin@org.eclipse.mylyn.ide.capabilities=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.ide.capabilities
 plugin@org.eclipse.mylyn.ide.dev=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/sandbox/org.eclipse.mylyn.ide.dev
@@ -86,6 +91,7 @@ plugin@org.eclipse.mylyn.wikitext.twiki.ui=HEAD,:pserver:anonymous@dev.eclipse.o
 plugin@org.eclipse.mylyn.wikitext.ui=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.wikitext.ui
 plugin@org.eclipse.mylyn.wikitext.sandbox.ui=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/sandbox/org.eclipse.mylyn.wikitext.sandbox.ui
 
+plugin@org.eclipse.mylyn.builds.tests=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/sandbox/org.eclipse.mylyn.builds.tests
 plugin@org.eclipse.mylyn.bugzilla.tests=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.bugzilla.tests
 plugin@org.eclipse.mylyn.commons.tests=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.commons.tests
 plugin@org.eclipse.mylyn.context.tests=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.context.tests
