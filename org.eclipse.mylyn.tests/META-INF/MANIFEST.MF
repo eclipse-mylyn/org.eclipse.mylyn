@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Tests
 Bundle-SymbolicName: org.eclipse.mylyn.tests;singleton:=true
-Bundle-Version: 3.4.0.qualifier
+Bundle-Version: 3.5.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Export-Package: org.eclipse.mylyn.tests;x-internal:=true,
  org.eclipse.mylyn.tests.integration;x-internal:=true,
