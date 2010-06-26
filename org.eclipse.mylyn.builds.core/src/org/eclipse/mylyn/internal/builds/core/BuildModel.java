@@ -2,36 +2,43 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildModel.java,v 1.2 2010/06/24 06:07:52 spingel Exp $
+ * $Id: BuildModel.java,v 1.3 2010/06/26 22:07:14 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.NotificationChain;
+
 import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
+
 import org.eclipse.emf.ecore.impl.EObjectImpl;
+
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
+
 import org.eclipse.mylyn.builds.core.IBuildModel;
 import org.eclipse.mylyn.builds.core.IBuildServer;
-import org.eclipse.mylyn.builds.core.IOperationMonitor;
 
 /**
- * <!-- begin-user-doc --> A representation of the model object '<em><b>Model</b></em>'. <!-- end-user-doc -->
- * 
+ * <!-- begin-user-doc -->
+ * A representation of the model object '<em><b>Model</b></em>'.
+ * <!-- end-user-doc -->
+ *
+ *
  * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getBuildModel()
  * @model kind="class" superTypes="org.eclipse.mylyn.internal.builds.core.IBuildModel"
  * @generated
  */
 public class BuildModel extends EObjectImpl implements EObject, IBuildModel {
 	/**
-	 * The cached value of the '{@link #getServers() <em>Servers</em>}' containment reference list. <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getServers() <em>Servers</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @see #getServers()
 	 * @generated
 	 * @ordered
@@ -39,8 +46,8 @@ public class BuildModel extends EObjectImpl implements EObject, IBuildModel {
 	protected EList<IBuildServer> servers;
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	protected BuildModel() {
@@ -48,8 +55,8 @@ public class BuildModel extends EObjectImpl implements EObject, IBuildModel {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -58,14 +65,14 @@ public class BuildModel extends EObjectImpl implements EObject, IBuildModel {
 	}
 
 	/**
-	 * Returns the value of the '<em><b>Servers</b></em>' containment reference list. The list contents are of type
-	 * {@link org.eclipse.mylyn.builds.core.IBuildServer}. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Servers</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.mylyn.builds.core.IBuildServer}.
+	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Servers</em>' containment reference list isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Servers</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Servers</em>' containment reference list.
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildModel_Servers()
 	 * @model type="org.eclipse.mylyn.internal.builds.core.IBuildServer" containment="true"
@@ -80,8 +87,8 @@ public class BuildModel extends EObjectImpl implements EObject, IBuildModel {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -94,8 +101,8 @@ public class BuildModel extends EObjectImpl implements EObject, IBuildModel {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -108,8 +115,8 @@ public class BuildModel extends EObjectImpl implements EObject, IBuildModel {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -125,8 +132,8 @@ public class BuildModel extends EObjectImpl implements EObject, IBuildModel {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -140,8 +147,8 @@ public class BuildModel extends EObjectImpl implements EObject, IBuildModel {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -151,10 +158,6 @@ public class BuildModel extends EObjectImpl implements EObject, IBuildModel {
 			return servers != null && !servers.isEmpty();
 		}
 		return super.eIsSet(featureID);
-	}
-
-	public void refresh(IOperationMonitor monitor) {
-
 	}
 
 } // BuildModel
