@@ -89,6 +89,12 @@
 			<include name="org.jdom*.jar"/>				
 		</fileset>
 
+		<!-- JAXB -->
+		<fileset dir="${buildDirectory}/plugins" id="java.xml.bind">
+			<include name="com.sun.xml.bind*.jar"/>				
+			<include name="javax.xml.bind*.jar"/>
+		</fileset>
+		
 		<mkdir dir="${buildDirectory}/standardUpdateSite/plugins"/>
 		<copy todir="${buildDirectory}/standardUpdateSite/plugins" verbose="true">
 			<fileset refid="org.apache.commons.httpclient" />
@@ -103,6 +109,7 @@
 			<fileset refid="org.apache.axis" />
 			<fileset refid="javax.servlet" />
 			<fileset refid="com.sun.syndication" />
+			<fileset refid="java.xml.bind" />
 		</copy>
 
 		<mkdir dir="${buildDirectory}/allUpdateSite/plugins"/>
@@ -112,7 +119,9 @@
 			<fileset refid="org.apache.commons.httpclient" />
 			<fileset refid="org.apache.xmlrpc" />
 			<fileset refid="com.sun.syndication" />
+			<fileset refid="java.xml.bind" />
 		</copy>
+
 	</target>
 	
 </project>
