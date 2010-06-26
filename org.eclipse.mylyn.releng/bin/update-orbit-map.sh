@@ -29,6 +29,7 @@ grep "^plugin@com.sun.xml.bind,2.2.0" $TMP >> $TMPMAP
 grep "^plugin@javax.activation,1.1.0" $TMP >> $TMPMAP
 grep "^plugin@javax.mail,1.4.0" $TMP >> $TMPMAP
 grep "^plugin@javax.servlet,2.4.0" $TMP >> $TMPMAP
+grep "^plugin@javax.xml,1.3.4" $TMP >> $TMPMAP
 grep "^plugin@javax.xml.bind,2.2.0" $TMP >> $TMPMAP
 grep "^plugin@javax.xml.rpc,1.1.0" $TMP >> $TMPMAP
 grep "^plugin@javax.xml.soap,1.2.0" $TMP >> $TMPMAP

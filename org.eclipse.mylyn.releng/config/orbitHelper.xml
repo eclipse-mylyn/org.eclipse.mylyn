@@ -92,6 +92,7 @@
 		<!-- JAXB -->
 		<fileset dir="${buildDirectory}/plugins" id="java.xml.bind">
 			<include name="com.sun.xml.bind*.jar"/>				
+			<include name="javax.xml*.jar"/>
 			<include name="javax.xml.bind*.jar"/>
 			<include name="javax.xml.stream*.jar"/>
 		</fileset>
