@@ -9,7 +9,6 @@
     Contributors:
          Tasktop Technologies - initial API and implementation
  -->
-
 <project name="build" default="all" basedir=".">
 	<property file="${build.config}" />
 	<property file="local.properties" />
@@ -21,7 +20,7 @@
 	<target name="all" depends="clean,build,standalone-tests,tests">
 	</target>
 
-	<target name="build-local" depends="clean-tests,clean-results">
+	<target name="build-local" depends="clean-build,clean-tests,clean-results">
 	  <property name="skipFetch" value="true"/>
 	  <property name="localBuild" value="true"/>
 	  <property name="build.dependencies" value="orbit-dependencies.zip"/>
