@@ -29,7 +29,6 @@ import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 import org.apache.xmlrpc.serializer.CharSetXmlWriterFactory;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
@@ -204,9 +203,9 @@ public class CommonXmlRpcClient {
 			Credentials httpCredentials = WebUtil.getHttpClientCredentials(credentials,
 					WebUtil.getHost(location.getUrl()));
 			httpClient.getState().setCredentials(authScope, httpCredentials);
-			if (CoreUtil.TEST_MODE) {
-				System.err.println(" Setting credentials: " + httpCredentials); //$NON-NLS-1$
-			}
+//			if (CoreUtil.TEST_MODE) {
+//				System.err.println(" Setting credentials: " + httpCredentials); //$NON-NLS-1$
+//			}
 			httpClient.getState().setCredentials(authScope, httpCredentials);
 		} else {
 			httpClient.getState().clearCredentials();
