@@ -93,7 +93,7 @@
 	<!-- ===================================================================== -->
 	<target name="postSetup" if="localBuild">
 		<antcall target="getBaseComponents" />
-		<copy todir="${buildDirectory}/plugins">
+		<copy todir="${buildDirectory}/plugins" overwrite="true">
 			<fileset dir="${builder}/../../../">
 				<include name="org.eclipse.mylyn*/**"/>
 				<include name="sandbox/org.eclipse.mylyn*/**"/>
@@ -105,7 +105,7 @@
 				<exclude name="**/bin/**"/>
 			</fileset>
 		</copy>
-		<copy todir="${buildDirectory}/features">
+		<copy todir="${buildDirectory}/features" overwrite="true">
 			<fileset dir="${builder}/../../../">
 				<include name="org.eclipse.mylyn**-feature/**"/>
 				<include name="sandbox/org.eclipse.mylyn**-feature/**"/>
