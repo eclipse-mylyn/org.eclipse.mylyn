@@ -51,22 +51,26 @@ public class AllBugzillaTests {
 		// unless otherwise excluded
 		if (defaultOnly) {
 			addTests(suite, BugzillaFixture.DEFAULT);
+			addTests_3_6(suite, BugzillaFixture.BUGS_3_6_CUSTOM_WF_AND_STATUS);
 		} else {
 			for (BugzillaFixture fixture : BugzillaFixture.ALL) {
 				addTests(suite, fixture);
 			}
-		}
-
-		for (BugzillaFixture fixture : BugzillaFixture.ONLY_3_6_SPECIFIC) {
-			fixture.createSuite(suite);
-			fixture.add(BugzillaXmlRpcClientTest.class);
-			if (fixture.equals(BugzillaFixture.BUGS_3_6_CUSTOM_WF_AND_STATUS)) {
-				fixture.add(BugzillaCustomRepositoryTest.class);
+			for (BugzillaFixture fixture : BugzillaFixture.ONLY_3_6_SPECIFIC) {
+				addTests_3_6(suite, fixture);
 			}
-			fixture.done();
 		}
 
 		return suite;
+	}
+
+	protected static void addTests_3_6(TestSuite suite, BugzillaFixture fixture) {
+		fixture.createSuite(suite);
+		fixture.add(BugzillaXmlRpcClientTest.class);
+		if (fixture.equals(BugzillaFixture.BUGS_3_6_CUSTOM_WF_AND_STATUS)) {
+			fixture.add(BugzillaCustomRepositoryTest.class);
+		}
+		fixture.done();
 	}
 
 	private static void addTests(TestSuite suite, BugzillaFixture fixture) {

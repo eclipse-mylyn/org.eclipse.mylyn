@@ -112,7 +112,7 @@ public class BugzillaFixture extends TestFixture {
 	public static BugzillaFixture BUGS_HEAD = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_HEAD_URL, //
 			"3.7", "");
 
-	public static BugzillaFixture DEFAULT = BUGS_3_6_CUSTOM_WF_AND_STATUS;
+	public static BugzillaFixture DEFAULT = BUGS_3_6;
 
 	public static final BugzillaFixture[] ALL = new BugzillaFixture[] { BUGS_2_22, BUGS_3_0, BUGS_3_2, BUGS_3_4,
 			BUGS_3_6, BUGS_HEAD };
