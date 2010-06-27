@@ -19,11 +19,11 @@ import org.eclipse.mylyn.commons.tests.support.ManagedTestSuite;
 /**
  * @author Steffen Pingel
  */
-public class AllHeartbeatTests {
+public class AllConnectorHeartbeatTests {
 
 	public static Test suite() {
 		TestSuite suite = new ManagedTestSuite("Heartbeat Tests for org.eclipse.mylyn.tests");
-		suite.addTest(AllNonConnectorTests.suite());
+		suite.addTest(AllConnectorTests.suite(true));
 		return suite;
 	}
 

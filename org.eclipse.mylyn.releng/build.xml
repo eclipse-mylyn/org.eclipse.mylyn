@@ -20,20 +20,29 @@
 	<target name="all" depends="clean,build,standalone-tests,tests">
 	</target>
 
-	<target name="build-local" depends="clean-build,clean-tests,clean-results">
-	  <property name="skipFetch" value="true"/>
-	  <property name="localBuild" value="true"/>
-	  <property name="build.dependencies" value="orbit-dependencies.zip"/>
+	<target name="heartbeat">
+	  	<property name="build.test.classname" value="${build.test.plugin}.AllHeartbeatTests"/>
+		<antcall target="heartbeat-helper"/>
+	</target>
 
-	  <available property="skipClean" file="${tools.home}/.provisioned"/>
-	  <available property="skipUpdate" file="${tools.home}/.provisioned"/>
+	<target name="connector-heartbeat">
+	  	<property name="build.test.classname" value="${build.test.plugin}.AllConnectorHeartbeatTests"/>
+		<antcall target="heartbeat-helper"/>
+	</target>
 
-	  <antcall target="build"/>
-	  <property name="build.test.classname" value="${build.test.plugin}.AllHeartbeatTests"/>
-	  <antcall target="eclipse-tests"/>
-	  <antcall target="report"/>
+	<target name="heartbeat-helper" depends="clean-build,clean-tests,clean-results">
+		<property name="skipFetch" value="true"/>
+		<property name="localBuild" value="true"/>
+		<property name="build.dependencies" value="orbit-dependencies.zip"/>
 
-	  <touch file="${tools.home}/.provisioned"/>
+		<available property="skipClean" file="${tools.home}/.provisioned"/>
+		<available property="skipUpdate" file="${tools.home}/.provisioned"/>
+
+		<antcall target="build"/>
+		<antcall target="eclipse-tests"/>
+		<antcall target="report"/>
+
+		<touch file="${tools.home}/.provisioned"/>
 	</target>
 
 	<target name="pack-all" depends="init">
