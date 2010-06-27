@@ -471,7 +471,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			attributeStatus.putOption(option, option);
 		}
 
-		attributeStatus.setValue(IBugzillaConstants.VALUE_STATUS_NEW);
+		attributeStatus.setValue(repositoryConfiguration.getStartStatus());
 
 		createAttribute(taskData, BugzillaAttribute.SHORT_DESC);
 

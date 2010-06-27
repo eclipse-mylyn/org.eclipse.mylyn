@@ -29,7 +29,10 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 public class CustomTransitionManager implements Serializable {
 	private static final long serialVersionUID = 3340305752692674487L;
 
-	private static final String defaultDuplicateStatus = "RESOLVED"; //$NON-NLS-1$
+	private static final String DEFAULT_DUPLICATE_STATUS = "RESOLVED"; //$NON-NLS-1$
+
+	/** Default start status -- this uses the Mylyn default from before bug #317729 */
+	public static final String DEFAULT_START_STATUS = "NEW"; //$NON-NLS-1$
 
 	/*
 	 * Create the default Bugzilla operations
@@ -53,13 +56,16 @@ public class CustomTransitionManager implements Serializable {
 
 	private String duplicateStatus;
 
+	private String startStatus;
+
 	public CustomTransitionManager() {
 		operationMapByCurrentStatus = new HashMap<String, List<AbstractBugzillaOperation>>();
 		operationMapByEndStatus = new HashMap<String, List<AbstractBugzillaOperation>>();
 		closedStatuses = new ArrayList<String>();
 		this.valid = false;
 		this.filePath = ""; //$NON-NLS-1$
-		duplicateStatus = defaultDuplicateStatus;
+		duplicateStatus = DEFAULT_DUPLICATE_STATUS;
+		startStatus = DEFAULT_START_STATUS;
 	}
 
 	/**
@@ -138,6 +144,8 @@ public class CustomTransitionManager implements Serializable {
 			duplicateStatus = value;
 		} else if (name.equals("ClosedCustomStatus")) { //$NON-NLS-1$
 			closedStatuses.add(value);
+		} else if (name.equals("StartStatus")) {//$NON-NLS-1$
+			startStatus = value;
 		}
 	}
 
@@ -277,9 +285,21 @@ public class CustomTransitionManager implements Serializable {
 	 */
 	public String getDuplicateStatus() {
 		if (duplicateStatus == null || duplicateStatus.length() == 0) {
-			duplicateStatus = defaultDuplicateStatus;
+			duplicateStatus = DEFAULT_DUPLICATE_STATUS;
 		}
 		return duplicateStatus;
+	}
+
+	/**
+	 * Returns the start status. Standard Bugzilla installations have 2 available start statuses, UNCONFIRMED and NEW.
+	 * Each user has a permissions setting that determines whether their new bugs start as UNCONFIRMED or NEW. This
+	 * permissions setting currently cannot be accessed, so this function does not try to guess and returns either the
+	 * default status (NEW) or whichever status was set by a transition file.
+	 * 
+	 * @return The valid start status. Default value is NEW.
+	 */
+	public String getStartStatus() {
+		return startStatus;
 	}
 
 }

@@ -920,4 +920,8 @@ public class RepositoryConfiguration implements Serializable {
 	public String getDuplicateStatus() {
 		return validTransitions.getDuplicateStatus();
 	}
+
+	public String getStartStatus() {
+		return (validTransitions == null) ? "NEW" : validTransitions.getStartStatus(); //$NON-NLS-1$
+	}
 }
