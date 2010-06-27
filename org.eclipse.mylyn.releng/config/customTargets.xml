@@ -96,14 +96,13 @@
 		<copy todir="${buildDirectory}/plugins">
 			<fileset dir="${builder}/../../../">
 				<include name="org.eclipse.mylyn*/**"/>
-				<include name="sandbox/**"/>
+				<include name="sandbox/org.eclipse.mylyn*/**"/>
 				<exclude name="org.eclipse.mylyn-site/**"/>
 				<exclude name="org.eclipse.mylyn.releng/**"/>
 				<exclude name="*-feature/**"/>
 				<exclude name="sandbox/*-feature/**"/>
 				<exclude name="**/.svn/**"/>
 				<exclude name="**/bin/**"/>
-				<exclude name="sandbox/*zest*/**"/>
 			</fileset>
 		</copy>
 		<copy todir="${buildDirectory}/features">
@@ -112,7 +111,6 @@
 				<include name="sandbox/org.eclipse.mylyn**-feature/**"/>
 				<exclude name="**/.svn/**"/>
 				<exclude name="**/bin/**"/>
-				<exclude name="sandbox/*zest*/**"/>
 			</fileset>
 		</copy>
 		<map dir="${buildDirectory}/plugins" from="org.eclipse.mylyn.cdt(.*)" to="org.eclipse.cdt.mylyn\1"/>
