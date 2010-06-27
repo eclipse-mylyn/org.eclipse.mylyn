@@ -613,7 +613,8 @@
 		<dirname property="functions.basedir" file="${ant.file.functions}"/>
 		<condition property="build.perf.qualifier" value="${build.baseline.prefix}_${time}" else="${qualifier}"><isset property="build.perf.baseline"/></condition>
 		<condition property="build.perf.assertAgainst" value="" else="-Declipse.perf.assertAgainst=build=${build.baseline}"><isset property="build.perf.baseline"/></condition>
-
+		<property name="build.test.classname" value="${test.classname}"/>
+		
 		<exec-eclipse timeout="${build.test.timeout}" activity="${test.target}-tests">
     		<arg value="-buildfile"/>
     		<arg value="${functions.basedir}/test.xml"/>
@@ -624,7 +625,7 @@
     		<arg value="-Dlibrary-file=${library}"/>
 			<arg value="-Dswtbot-library-file=${swtbot.library}"/>
     		<arg value="-Dplugin-name=${test.plugin}"/>
-    		<arg value="-Dclassname=${test.classname}"/>
+    		<arg value="-Dclassname=${build.test.classname}"/>
     		<arg value="-DextraVMargs= 
     	    -ea
     		-Xmx384m

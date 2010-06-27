@@ -30,6 +30,7 @@
 	  <available property="skipUpdate" file="${tools.home}/.provisioned"/>
 
 	  <antcall target="build"/>
+	  <property name="build.test.classname" value="${build.test.plugin}.AllDefaultTests"/>
 	  <antcall target="eclipse-tests"/>
 	  <antcall target="report"/>
 
