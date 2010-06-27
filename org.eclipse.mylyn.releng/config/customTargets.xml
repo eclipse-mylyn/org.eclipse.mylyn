@@ -103,6 +103,7 @@
 				<exclude name="sandbox/*-feature/**"/>
 				<exclude name="**/.svn/**"/>
 				<exclude name="**/bin/**"/>
+				<exclude name="sandbox/*zest*/**"/>
 			</fileset>
 		</copy>
 		<copy todir="${buildDirectory}/features">
@@ -111,17 +112,30 @@
 				<include name="sandbox/org.eclipse.mylyn**-feature/**"/>
 				<exclude name="**/.svn/**"/>
 				<exclude name="**/bin/**"/>
+				<exclude name="sandbox/*zest*/**"/>
 			</fileset>
 		</copy>
 		<map dir="${buildDirectory}/plugins" from="org.eclipse.mylyn.cdt(.*)" to="org.eclipse.cdt.mylyn\1"/>
 		<map dir="${buildDirectory}/plugins" from="^sandbox/(.*)" to="\1"/>
+		<map dir="${buildDirectory}/features" from="org.eclipse.mylyn.builds-feature(.*)" to="org.eclipse.mylyn.builds\1"/>
 		<map dir="${buildDirectory}/features" from="org.eclipse.mylyn.cdt-feature(.*)" to="org.eclipse.cdt.mylyn\1"/>
-		<map dir="${buildDirectory}/features" from="org.eclipse.mylyn.wikitext.sdk-feature(.*)" to="org.eclipse.mylyn.wikitext.sdk\1"/>
+		<map dir="${buildDirectory}/features" from="org.eclipse.mylyn.commons-feature(.*)" to="org.eclipse.mylyn.commons\1"/>
+		<map dir="${buildDirectory}/features" from="org.eclipse.mylyn.hudson-feature(.*)" to="org.eclipse.mylyn.hudson\1"/>
+		<map dir="${buildDirectory}/features" from="org.eclipse.mylyn.wikitext.(.*)-feature(.*)" to="org.eclipse.mylyn.wikitext.\1\2"/>
 		<map dir="${buildDirectory}/features" from="(.*)-sdk-feature(.*)" to="\1_sdk_feature\2"/>
 		<map dir="${buildDirectory}/features" from="(.*)-feature(.*)" to="\1_feature\2"/>
 		<map dir="${buildDirectory}/features" from="^sandbox/(.*)" to="\1"/>
-		
-		<unzip dest="${buildDirectory}/plugins" src="/home/stp/orbit-dependencies.zip"/>
+		<touch>
+		  <fileset dir="${buildDirectory}/plugins" includes="org.eclipse.mylyn.discovery.ui/lib*/**/*"/>
+		</touch>
+		<antcall target="extract-dependencies"/>
+	</target>
+
+	<target name="extract-dependencies" if="build.dependencies">
+	  <delete failonerror="false">
+	    <fileset dir="${buildDirectory}/plugins" includes="*.jar"/>
+	  </delete>
+	  <unzip src="${build.dependencies}" dest="${buildDirectory}"/>
 	</target>
 
 	<macrodef name="map">
@@ -171,6 +185,11 @@
 		<replace dir="${buildDirectory}/features" value="${majorVersion}.${mylynQualifier}" token="${majorVersion}.mylynQualifier">
 			<include name="**/feature.xml" />
 		</replace>
+		<available property="performance.tests.exist" file="${buildDirectory}/plugins/org.eclipse.test.performance"/>
+		<antcall target="patch-performance-tests"/>
+	</target>
+
+	<target name="patch-performance-tests" if="performance.tests.exist">
 		<patch patchfile="${builder}/../org.eclipse.test.performance.diff"
 			dir="${buildDirectory}/plugins/org.eclipse.test.performance" strip="0"/>
 	</target>
@@ -208,7 +227,7 @@
 	<!-- ===================================================================== -->
 	<!-- Steps to do after the build is done. -->
 	<!-- ===================================================================== -->
-	<target name="postBuild">
+	<target name="postBuild" unless="localBuild">
 		<antcall target="gatherLogs" />
 		<antcall target="orbit-copy-bundles-helper" />
 		<!--

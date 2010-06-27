@@ -21,6 +21,21 @@
 	<target name="all" depends="clean,build,standalone-tests,tests">
 	</target>
 
+	<target name="build-local" depends="clean-tests,clean-results">
+	  <property name="skipFetch" value="true"/>
+	  <property name="localBuild" value="true"/>
+	  <property name="build.dependencies" value="orbit-dependencies.zip"/>
+
+	  <available property="skipClean" file="${tools.home}/.provisioned"/>
+	  <available property="skipUpdate" file="${tools.home}/.provisioned"/>
+
+	  <antcall target="build"/>
+	  <antcall target="eclipse-tests"/>
+	  <antcall target="report"/>
+
+	  <touch file="${tools.home}/.provisioned"/>
+	</target>
+
 	<target name="pack-all" depends="init">
 		<antcall target="for-each-target">
 			<param name="call" value="pack-sites"/>
@@ -373,7 +388,7 @@
 		</replace>
 	</target>
 
-	<target name="pre-build">
+	<target name="pre-build" depends="pre-build-extract-dependencies">
 		<delete failonerror="false">
 			<fileset dir="${build.home}/${base.target}/maps" includes="mylyn*.map">
 				<exclude name="*${base.target}.map"/>
@@ -387,10 +402,17 @@
 		<condition property="build.forceContextQualifier" value="" else="-DforceContextQualifier=${qualifier}-${versionPostfix}"><equals arg1="${release}" arg2="true"/></condition>
 	</target>
 
+	<target name="pre-build-extract-dependencies" if="build.dependencies">
+	  <delete failonerror="false">
+	    <fileset dir="${build.home}/${base.target}/plugins" includes="*.jar"/>
+	  </delete>
+	  <unzip src="${build.dependencies}" dest="${build.home}/${base.target}"/>
+	</target>
+
 	<target name="post-build">
-		<!-- manually check for failure, 3.6 basebuilder ignores failed builds -->
-		<available property="dist.exists" file="${build.home}/${base.target}/${build.dist}"/>
-		<fail message="Build failed to create ${build.home}/${base.target}/${build.dist}" unless="dist.exists"/>
+	  <!-- manually check for failure, 3.6 basebuilder ignores failed builds -->
+	  <available property="dist.exists" file="${build.home}/${base.target}/${build.dist}"/>
+	  <fail message="Build failed to create ${build.home}/${base.target}/${build.dist}" unless="dist.exists"/>
 	</target>
 
 	<target name="pre-tests">	
