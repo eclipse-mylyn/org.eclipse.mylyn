@@ -491,7 +491,7 @@
 	</target>
 
 	<target name="clean-tests-helper">
-    	<property name="eclipse.home" value="${tools.home}/test-${base.version}/eclipse" />
+    	<property name="eclipse.home" value="${tools.home}/test-${base.target}/eclipse" />
 		<delete failonerror="false">
 			<fileset dir="${eclipse.home}/configuration" includes="*.log" />
 		</delete>
