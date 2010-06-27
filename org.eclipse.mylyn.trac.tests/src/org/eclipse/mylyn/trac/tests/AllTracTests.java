@@ -32,6 +32,10 @@ import org.eclipse.mylyn.trac.tests.ui.TracRepositorySettingsPageTest;
 public class AllTracTests {
 
 	public static Test suite() {
+		return suite(false);
+	}
+
+	public static Test suite(boolean defaultOnly) {
 		TestSuite suite = new TestSuite("Tests for org.eclipse.mylyn.trac.tests");
 		suite.addTest(AllTracHeadlessStandaloneTests.suite());
 		suite.addTestSuite(TracUtilTest.class);
@@ -40,18 +44,26 @@ public class AllTracTests {
 		suite.addTestSuite(TracRepositorySettingsPageTest.class);
 		suite.addTestSuite(TracHyperlinkUtilTest.class);
 		// network tests
-		for (TracFixture fixture : TracFixture.ALL) {
-			fixture.createSuite(suite);
-			fixture.add(TracRepositoryConnectorTest.class);
-			if (fixture.getAccessMode() == Version.XML_RPC) {
-				fixture.add(TracTaskDataHandlerXmlRpcTest.class);
-				fixture.add(TracAttachmentHandlerTest.class);
-			} else {
-				fixture.add(TracRepositoryConnectorWebTest.class);
+		if (defaultOnly) {
+			addTests(suite, TracFixture.DEFAULT);
+		} else {
+			for (TracFixture fixture : TracFixture.ALL) {
+				addTests(suite, fixture);
 			}
-			fixture.done();
 		}
 		return suite;
+	}
+
+	protected static void addTests(TestSuite suite, TracFixture fixture) {
+		fixture.createSuite(suite);
+		fixture.add(TracRepositoryConnectorTest.class);
+		if (fixture.getAccessMode() == Version.XML_RPC) {
+			fixture.add(TracTaskDataHandlerXmlRpcTest.class);
+			fixture.add(TracAttachmentHandlerTest.class);
+		} else {
+			fixture.add(TracRepositoryConnectorWebTest.class);
+		}
+		fixture.done();
 	}
 
 }
