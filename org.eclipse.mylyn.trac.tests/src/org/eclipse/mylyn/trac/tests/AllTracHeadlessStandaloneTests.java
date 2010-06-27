@@ -31,6 +31,10 @@ import org.eclipse.mylyn.trac.tests.support.TracFixture;
 public class AllTracHeadlessStandaloneTests {
 
 	public static Test suite() {
+		return suite(false);
+	}
+
+	public static Test suite(boolean defaultOnly) {
 		TestSuite suite = new TestSuite("Headless Standalone Tests for org.eclipse.mylyn.trac.tests");
 		// client tests
 		suite.addTestSuite(TracSearchTest.class);
@@ -40,22 +44,30 @@ public class AllTracHeadlessStandaloneTests {
 		suite.addTestSuite(TracClientProxyTest.class);
 		// core tests
 		suite.addTestSuite(TracClientManagerTest.class);
-		// network tests
-		for (TracFixture fixture : TracFixture.ALL) {
-			fixture.createSuite(suite);
-			fixture.add(TracClientTest.class);
-			if (fixture.getAccessMode() == Version.XML_RPC) {
-				fixture.add(TracXmlRpcClientTest.class);
+		if (defaultOnly) {
+			addTests(suite, TracFixture.DEFAULT);
+		} else {
+			// network tests
+			for (TracFixture fixture : TracFixture.ALL) {
+				addTests(suite, fixture);
 			}
-			fixture.done();
-		}
-		// validation tests
-		for (TracFixture fixture : TracFixture.MISC) {
-			fixture.createSuite(suite);
-			fixture.add(TracClientTest.class);
-			fixture.done();
+			// validation tests
+			for (TracFixture fixture : TracFixture.MISC) {
+				fixture.createSuite(suite);
+				fixture.add(TracClientTest.class);
+				fixture.done();
+			}
 		}
 		return suite;
+	}
+
+	private static void addTests(TestSuite suite, TracFixture fixture) {
+		fixture.createSuite(suite);
+		fixture.add(TracClientTest.class);
+		if (fixture.getAccessMode() == Version.XML_RPC) {
+			fixture.add(TracXmlRpcClientTest.class);
+		}
+		fixture.done();
 	}
 
 }

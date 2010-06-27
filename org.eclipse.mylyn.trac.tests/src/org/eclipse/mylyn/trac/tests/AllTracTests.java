@@ -37,7 +37,7 @@ public class AllTracTests {
 
 	public static Test suite(boolean defaultOnly) {
 		TestSuite suite = new TestSuite("Tests for org.eclipse.mylyn.trac.tests");
-		suite.addTest(AllTracHeadlessStandaloneTests.suite());
+		suite.addTest(AllTracHeadlessStandaloneTests.suite(defaultOnly));
 		suite.addTestSuite(TracUtilTest.class);
 		suite.addTestSuite(TracRepositoryQueryTest.class);
 		// XXX fails when run from continuous build: suite.addTestSuite(TracTaskEditorTest.class);

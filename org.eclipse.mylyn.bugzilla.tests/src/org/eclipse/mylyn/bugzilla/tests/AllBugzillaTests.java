@@ -37,7 +37,7 @@ public class AllBugzillaTests {
 		TestSuite suite = new TestSuite("Tests for org.eclipse.mylyn.bugzilla.tests");
 
 		// Standalone tests (Don't require an instance of Eclipse)
-		suite.addTest(AllBugzillaHeadlessStandaloneTests.suite());
+		suite.addTest(AllBugzillaHeadlessStandaloneTests.suite(defaultOnly));
 
 		// Tests that only need to run once (i.e. no network io so doesn't matter which repository)
 		suite.addTestSuite(TaskEditorTest.class);

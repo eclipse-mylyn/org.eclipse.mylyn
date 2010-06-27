@@ -77,7 +77,7 @@ public class TracFixture extends TestFixture {
 	public static TracFixture TRAC_TRUNK_XML_RPC = new TracFixture(Version.XML_RPC,
 			TracTestConstants.TEST_TRAC_TRUNK_URL, "0.12dev-r0", "XML-RPC");
 
-	public static TracFixture DEFAULT = TRAC_0_11_XML_RPC;
+	public static TracFixture DEFAULT = TRAC_0_12_XML_RPC;
 
 	//public static TracFixture DEFAULT = TRAC_0_11_WEB;
 

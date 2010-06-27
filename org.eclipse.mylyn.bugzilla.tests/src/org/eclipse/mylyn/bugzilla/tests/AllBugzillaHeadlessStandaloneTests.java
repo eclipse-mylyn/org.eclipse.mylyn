@@ -32,34 +32,47 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
 public class AllBugzillaHeadlessStandaloneTests {
 
 	public static Test suite() {
+		return suite(false);
+	}
+
+	public static Test suite(boolean defaultOnly) {
 		TestSuite suite = new TestSuite("Headless Standalone Tests for org.eclipse.mylyn.bugzilla.tests");
+		// tests that only need to run once (i.e. no network i/o so doesn't matter which repository)
 		suite.addTestSuite(BugzillaConfigurationTest.class);
 		suite.addTestSuite(BugzillaVersionTest.class);
 		suite.addTestSuite(BugzillaTaskCompletionTest.class);
-
-		for (BugzillaFixture fixture : BugzillaFixture.ALL) {
-			fixture.createSuite(suite);
-			// XXX: re-enable when webservice is used for retrieval of history
-			// fixture.add(fixtureSuite, BugzillaTaskHistoryTest.class); 
-			fixture.add(BugzillaRepositoryConnectorStandaloneTest.class);
-			fixture.add(BugzillaRepositoryConnectorConfigurationTest.class);
-
-			// Move any tests here that are resulting in spurious failures
-			// due to recent changes in Bugzilla Server head.
-			if (fixture != BugzillaFixture.BUGS_HEAD) {
-				fixture.add(BugzillaClientTest.class);
-
-				// Only run these tests on > 3.2 repositories
-				if (!fixture.getBugzillaVersion().isSmallerOrEquals(BugzillaVersion.BUGZILLA_3_2)) {
-					fixture.add(BugzillaCustomFieldsTest.class);
-					fixture.add(BugzillaFlagsTest.class);
-				}
-
-				fixture.add(BugzillaClientTest.class);
+		// tests that run against all repository versions
+		if (defaultOnly) {
+			addTests(suite, BugzillaFixture.DEFAULT);
+		} else {
+			for (BugzillaFixture fixture : BugzillaFixture.ALL) {
+				addTests(suite, fixture);
 			}
-			fixture.done();
 		}
 		return suite;
+	}
+
+	protected static void addTests(TestSuite suite, BugzillaFixture fixture) {
+		fixture.createSuite(suite);
+		// XXX: re-enable when webservice is used for retrieval of history
+		// fixture.add(fixtureSuite, BugzillaTaskHistoryTest.class); 
+		fixture.add(BugzillaRepositoryConnectorStandaloneTest.class);
+		fixture.add(BugzillaRepositoryConnectorConfigurationTest.class);
+
+		// Move any tests here that are resulting in spurious failures
+		// due to recent changes in Bugzilla Server head.
+		if (fixture != BugzillaFixture.BUGS_HEAD) {
+			fixture.add(BugzillaClientTest.class);
+
+			// Only run these tests on > 3.2 repositories
+			if (!fixture.getBugzillaVersion().isSmallerOrEquals(BugzillaVersion.BUGZILLA_3_2)) {
+				fixture.add(BugzillaCustomFieldsTest.class);
+				fixture.add(BugzillaFlagsTest.class);
+			}
+
+			fixture.add(BugzillaClientTest.class);
+		}
+		fixture.done();
 	}
 
 }
