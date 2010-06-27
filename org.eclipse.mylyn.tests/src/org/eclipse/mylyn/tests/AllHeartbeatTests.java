@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 Tasktop Technologies and others.
+ * Copyright (c) 2010 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,14 +17,14 @@ import junit.framework.TestSuite;
 import org.eclipse.mylyn.commons.tests.support.ManagedTestSuite;
 
 /**
- * @author Mik Kersten
+ * @author Steffen Pingel
  */
-public class AllDefaultTests {
+public class AllHeartbeatTests {
 
 	public static Test suite() {
 		TestSuite suite = new ManagedTestSuite("Tests for org.eclipse.mylyn.tests");
 		suite.addTest(AllNonConnectorTests.suite());
-		suite.addTest(AllConnectorTests.suite());
+		suite.addTest(AllConnectorTests.suite(true));
 		return suite;
 	}
 

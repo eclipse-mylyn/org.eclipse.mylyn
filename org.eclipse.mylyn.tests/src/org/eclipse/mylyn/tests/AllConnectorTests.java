@@ -24,11 +24,15 @@ import org.eclipse.mylyn.trac.tests.AllTracTests;
 public class AllConnectorTests {
 
 	public static Test suite() {
+		return suite(false);
+	}
+
+	public static Test suite(boolean defaultOnly) {
 		TestFixture.initializeTasksSettings();
 
 		TestSuite suite = new TestSuite("All Connector Tests for org.eclipse.mylyn.tests");
-		suite.addTest(AllBugzillaTests.suite());
-		suite.addTest(AllTracTests.suite());
+		suite.addTest(AllBugzillaTests.suite(defaultOnly));
+		suite.addTest(AllTracTests.suite(defaultOnly));
 		return suite;
 	}
 
