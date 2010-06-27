@@ -29,7 +29,7 @@
 	  <available property="skipUpdate" file="${tools.home}/.provisioned"/>
 
 	  <antcall target="build"/>
-	  <property name="build.test.classname" value="${build.test.plugin}.AllDefaultTests"/>
+	  <property name="build.test.classname" value="${build.test.plugin}.AllHeartbeatTests"/>
 	  <antcall target="eclipse-tests"/>
 	  <antcall target="report"/>
 
