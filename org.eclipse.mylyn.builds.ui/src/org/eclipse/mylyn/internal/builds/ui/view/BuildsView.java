@@ -117,6 +117,15 @@ public class BuildsView extends ViewPart {
 		MenuManager menuManager = new MenuManager();
 
 		GroupMarker marker = new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS);
+
+		OpenInBrowserAction openInBrowserAction = new OpenInBrowserAction();
+		menuManager.add(openInBrowserAction);
+		viewer.addSelectionChangedListener(openInBrowserAction);
+
+		RunBuildAction runBuildAction = new RunBuildAction();
+		menuManager.add(runBuildAction);
+		viewer.addSelectionChangedListener(runBuildAction);
+
 		menuManager.add(marker);
 		Menu contextMenu = menuManager.createContextMenu(parent);
 
@@ -130,8 +139,8 @@ public class BuildsView extends ViewPart {
 		tree.setHeaderVisible(true);
 
 		TreeViewerColumn buildViewerColumn = new TreeViewerColumn(viewer, SWT.LEFT);
-		buildViewerColumn.setLabelProvider(new DecoratingStyledCellLabelProvider(new BuildLabelProvider(),
-				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator(), null));
+		buildViewerColumn.setLabelProvider(new DecoratingStyledCellLabelProvider(new BuildLabelProvider(), PlatformUI
+				.getWorkbench().getDecoratorManager().getLabelDecorator(), null));
 		TreeColumn buildColumn = buildViewerColumn.getColumn();
 		buildColumn.setText("Builds");
 		buildColumn.setWidth(220);
@@ -198,6 +207,10 @@ public class BuildsView extends ViewPart {
 		OpenInBrowserAction openInBrowserAction = new OpenInBrowserAction();
 		viewer.addSelectionChangedListener(openInBrowserAction);
 		manager.add(openInBrowserAction);
+
+		RunBuildAction runBuildAction = new RunBuildAction();
+		viewer.addSelectionChangedListener(runBuildAction);
+		manager.add(runBuildAction);
 	}
 
 	TreeViewer getViewer() {
