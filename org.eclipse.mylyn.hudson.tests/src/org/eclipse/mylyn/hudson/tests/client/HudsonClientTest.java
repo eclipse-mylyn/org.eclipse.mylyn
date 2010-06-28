@@ -20,7 +20,11 @@ import org.eclipse.mylyn.builds.core.util.ProgressUtil;
 import org.eclipse.mylyn.hudson.tests.support.HudsonFixture;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonException;
 import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient;
+import org.eclipse.mylyn.internal.hudson.model.HudsonModelBallColor;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelJob;
+import org.eclipse.mylyn.tests.util.TestUtil;
+import org.eclipse.mylyn.tests.util.TestUtil.Credentials;
+import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
 
 /**
  * Test cases for {@link RestfulHudsonClient}.
@@ -28,6 +32,10 @@ import org.eclipse.mylyn.internal.hudson.model.HudsonModelJob;
  * @author Markus Knittig
  */
 public class HudsonClientTest extends TestCase {
+
+	private static final String PLAN_SUCCEEDING = "test-succeeding";
+
+	private static final String PLAN_FAILING = "test-failing";
 
 	RestfulHudsonClient client;
 
@@ -60,10 +68,49 @@ public class HudsonClientTest extends TestCase {
 		}
 	}
 
-	public void testGetPlans() throws Exception {
+	public void testGetJobs() throws Exception {
 		client = fixture.connect();
-		List<HudsonModelJob> plans = client.getJobs(null);
-		assertEquals(plans.get(0).getName(), "failing");
+		List<HudsonModelJob> jobs = client.getJobs(null);
+		assertContains(jobs, PLAN_FAILING);
+		assertContains(jobs, PLAN_SUCCEEDING);
+	}
+
+	private void assertContains(List<HudsonModelJob> jobs, String name) {
+		for (HudsonModelJob job : jobs) {
+			if (job.getName().equals(name)) {
+				return;
+			}
+		}
+		fail("Expected '" + name + "' in " + jobs);
+	}
+
+	public void testRunBuild() throws Exception {
+		Credentials credentials = TestUtil.readCredentials(PrivilegeLevel.USER);
+
+		client = fixture.connect(HudsonFixture.HUDSON_TEST_URL, credentials.username, credentials.password);
+
+		// failing build
+		client.runBuild(getJob(PLAN_FAILING), ProgressUtil.convert(null));
+		Thread.sleep(10000);
+		assertEquals(getJob(PLAN_FAILING).getColor(), HudsonModelBallColor.RED_ANIME);
+//		Thread.sleep(1000);
+//		assertEquals(getJob(PLAN_SUCCEEDING).getColor(), HudsonModelBallColor.RED);
+
+		// succeeding build
+		client.runBuild(getJob(PLAN_SUCCEEDING), ProgressUtil.convert(null));
+		Thread.sleep(10000);
+		assertEquals(getJob(PLAN_SUCCEEDING).getColor(), HudsonModelBallColor.BLUE_ANIME);
+//		Thread.sleep(1000);
+//		assertEquals(getJob(PLAN_SUCCEEDING).getColor(), HudsonModelBallColor.BLUE);
+	}
+
+	private HudsonModelJob getJob(String name) throws HudsonException {
+		for (HudsonModelJob job : client.getJobs(null)) {
+			if (job.getName().equals(name)) {
+				return job;
+			}
+		}
+		return null;
 	}
 
 }

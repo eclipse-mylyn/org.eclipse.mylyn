@@ -13,6 +13,7 @@ package org.eclipse.mylyn.hudson.tests.support;
 
 import java.net.Proxy;
 
+import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.IProxyProvider;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.internal.hudson.core.HudsonCorePlugin;
@@ -30,9 +31,9 @@ import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
  */
 public class HudsonFixture extends TestFixture {
 
-	private static HudsonFixture current;
+	public final static String HUDSON_TEST_URL = "http://mylyn.eclipse.org/hudson";
 
-	private final static String HUDSON_TEST_URL = "http://mylyn.eclipse.org/hudson";
+	private static HudsonFixture current;
 
 	private static final HudsonFixture DEFAULT = new HudsonFixture(HUDSON_TEST_URL, "1.339", "REST");
 
@@ -86,7 +87,7 @@ public class HudsonFixture extends TestFixture {
 	}
 
 	public RestfulHudsonClient connect(String url, String username, String password) {
-		return connect(url, username, password);
+		return connect(url, username, password, Proxy.NO_PROXY);
 	}
 
 	public RestfulHudsonClient connect(String url, String username, String password, final Proxy proxy) {
@@ -95,6 +96,9 @@ public class HudsonFixture extends TestFixture {
 				return proxy;
 			}
 		});
+		if (username != null && password != null) {
+			location.setCredentials(AuthenticationType.HTTP, username, password);
+		}
 		return new RestfulHudsonClient(location);
 	}
 
