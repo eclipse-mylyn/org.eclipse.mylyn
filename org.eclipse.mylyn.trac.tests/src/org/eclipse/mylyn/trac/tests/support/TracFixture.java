@@ -41,8 +41,8 @@ public class TracFixture extends TestFixture {
 	public static TracFixture TRAC_INVALID = new TracFixture(Version.TRAC_0_9, TracTestConstants.TEST_TRAC_INVALID_URL,
 			"0.11", "Invalid URL");
 
-	public static TracFixture TRAC_0_9_WEB = new TracFixture(Version.TRAC_0_9, TracTestConstants.TEST_TRAC_096_URL,
-			"0.9", "Web");
+//	public static TracFixture TRAC_0_9_WEB = new TracFixture(Version.TRAC_0_9, TracTestConstants.TEST_TRAC_096_URL,
+//			"0.9", "Web");
 
 	public static TracFixture TRAC_0_10_WEB = new TracFixture(Version.TRAC_0_9, TracTestConstants.TEST_TRAC_010_URL,
 			"0.10", "Web");
@@ -84,8 +84,8 @@ public class TracFixture extends TestFixture {
 	/**
 	 * Standard configurations for running all test against.
 	 */
-	public static final TracFixture[] ALL = new TracFixture[] { TRAC_0_9_WEB, TRAC_0_10_WEB, TRAC_0_11_WEB,
-			TRAC_0_12_WEB, TRAC_TRUNK_WEB, TRAC_0_10_XML_RPC, TRAC_0_11_XML_RPC, TRAC_0_12_XML_RPC, TRAC_TRUNK_XML_RPC, /* TRAC_0_10_XML_RPC_SSL, */};
+	public static final TracFixture[] ALL = new TracFixture[] { TRAC_0_10_WEB, TRAC_0_11_WEB, TRAC_0_12_WEB,
+			TRAC_TRUNK_WEB, TRAC_0_10_XML_RPC, TRAC_0_11_XML_RPC, TRAC_0_12_XML_RPC, TRAC_TRUNK_XML_RPC, /* TRAC_0_10_XML_RPC_SSL, */};
 
 //	public static final TracFixture[] ALL = new TracFixture[] { TRAC_TRUNK_XML_RPC };
 
