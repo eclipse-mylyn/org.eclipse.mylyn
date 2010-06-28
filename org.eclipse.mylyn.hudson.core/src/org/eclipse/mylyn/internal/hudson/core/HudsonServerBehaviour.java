@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.builds.core.BuildState;
 import org.eclipse.mylyn.builds.core.BuildStatus;
+import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy;
 import org.eclipse.mylyn.builds.core.IBuildServer;
@@ -97,6 +98,17 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 	public IStatus validate(IOperationMonitor monitor) throws CoreException {
 		try {
 			return client.validate(monitor);
+		} catch (HudsonException e) {
+			throw HudsonCorePlugin.toCoreException(e);
+		}
+	}
+
+	@Override
+	public IStatus runBuild(IBuildElement element, IOperationMonitor monitor) throws CoreException {
+		try {
+			HudsonModelJob job = new HudsonModelJob();
+			job.setUrl(element.getUrl());
+			return client.runBuild(job, monitor);
 		} catch (HudsonException e) {
 			throw HudsonCorePlugin.toCoreException(e);
 		}

@@ -53,6 +53,7 @@ public class RestfulHudsonClient {
 
 	public RestfulHudsonClient(AbstractWebLocation location) {
 		client = new CommonHttpClient(location);
+		client.getHttpClient().getParams().setAuthenticationPreemptive(true);
 	}
 
 	protected void checkResponse(int statusCode) throws HudsonException {
@@ -114,6 +115,25 @@ public class RestfulHudsonClient {
 			@Override
 			public Integer execute() throws IOException {
 				CommonHttpMethod method = createHeadMethod(client.getLocation().getUrl() + URL_API);
+				try {
+					return execute(method, monitor);
+				} finally {
+					method.releaseConnection(monitor);
+				}
+			}
+		}.run();
+		if (response == HttpStatus.SC_OK) {
+			return Status.OK_STATUS;
+		}
+		throw new HudsonException(NLS.bind("Unexpected return code {0}: {1}", response,
+				HttpStatus.getStatusText(response)));
+	}
+
+	public IStatus runBuild(final HudsonModelJob job, final IOperationMonitor monitor) throws HudsonException {
+		int response = new HudsonOperation<Integer>(client) {
+			@Override
+			public Integer execute() throws IOException {
+				CommonHttpMethod method = createGetMethod(job.getUrl() + "/build");
 				try {
 					return execute(method, monitor);
 				} finally {
