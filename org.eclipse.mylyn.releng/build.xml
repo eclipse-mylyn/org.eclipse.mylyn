@@ -228,6 +228,20 @@
 		</antcall>
 	</target>
 
+	<target name="maintenance" depends="clean,build,generate-metadata-all,copy-to-archive">
+		<!-- promote unpacked version early for testing -->
+		<antcall target="promote">
+			<param name="todir" value="maintenance"/>
+		</antcall>
+		
+		<antcall target="sign"/>
+		
+		<!-- re-promote signed and packed version -->
+		<antcall target="promote">
+			<param name="todir" value="maintenance"/>
+		</antcall>
+	</target>
+
 	<target name="helios" depends="clean,build,generate-metadata-all,copy-to-archive">
 		<!-- promote unpacked version early for testing -->
 		<antcall target="promote">
@@ -295,7 +309,6 @@
 		
 		<chmod perm="ugo+w" file="${basedir}/bin/create-composite.sh"/>
 		<exec executable="${basedir}/bin/create-composite.sh" failonerror="false" dir="${target.dir}"/>
-		<exec executable="${basedir}/bin/create-composite.sh" failonerror="false" dir="${target.dir}/incubator"/>
 	</target>
 
 	<target name="promote-release" depends="init">
