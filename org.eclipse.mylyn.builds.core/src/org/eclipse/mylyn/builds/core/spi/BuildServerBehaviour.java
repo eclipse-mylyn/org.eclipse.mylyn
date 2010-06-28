@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.IOperationMonitor;
@@ -37,5 +38,7 @@ public abstract class BuildServerBehaviour {
 	}
 
 	public abstract IStatus validate(IOperationMonitor monitor) throws CoreException;
+
+	public abstract IStatus runBuild(IBuildElement element, IOperationMonitor monitor) throws CoreException;
 
 }

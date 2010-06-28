@@ -2,12 +2,14 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildPlan.java,v 1.6 2010/06/26 23:00:56 spingel Exp $
+ * $Id: BuildPlan.java,v 1.7 2010/06/28 21:35:15 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
 import java.util.Collection;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
@@ -24,6 +26,7 @@ import org.eclipse.mylyn.builds.core.BuildStatus;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy;
 import org.eclipse.mylyn.builds.core.IBuildServer;
+import org.eclipse.mylyn.builds.core.IOperationMonitor;
 
 /**
  * <!-- begin-user-doc -->
@@ -1083,6 +1086,10 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 		BuildPlan newPlan = (BuildPlan) copier.copy(this);
 		copier.copyReferences();
 		return newPlan;
+	}
+
+	public IStatus run(IOperationMonitor monitor) throws CoreException {
+		return ((BuildServer) getServer()).getBehaviour().runBuild(this, monitor);
 	}
 
 } // BuildPlan

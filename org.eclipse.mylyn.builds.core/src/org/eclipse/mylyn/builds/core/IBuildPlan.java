@@ -13,6 +13,9 @@ package org.eclipse.mylyn.builds.core;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+
 /**
  * @author Steffen Pingel
  */
@@ -37,5 +40,7 @@ public interface IBuildPlan extends IBuildElement {
 	public String getId();
 
 	public IBuildPlanWorkingCopy createWorkingCopy();
+
+	IStatus run(IOperationMonitor monitor) throws CoreException;
 
 }
