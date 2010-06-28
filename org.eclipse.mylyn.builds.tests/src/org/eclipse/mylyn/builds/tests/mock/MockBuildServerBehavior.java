@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.builds.core.BuildState;
 import org.eclipse.mylyn.builds.core.BuildStatus;
+import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy;
 import org.eclipse.mylyn.builds.core.IBuildServer;
@@ -71,6 +72,11 @@ public class MockBuildServerBehavior extends BuildServerBehaviour {
 
 	@Override
 	public IStatus validate(IOperationMonitor monitor) throws CoreException {
+		return Status.OK_STATUS;
+	}
+
+	@Override
+	public IStatus runBuild(IBuildElement element, IOperationMonitor monitor) throws CoreException {
 		return Status.OK_STATUS;
 	}
 
