@@ -5,10 +5,7 @@
     nsURI="http://eclipse.org/mylyn/models/build" nsPrefix="builds">
   <eClassifiers xsi:type="ecore:EClass" name="BuildModel" eSuperTypes="#//IBuildModel"/>
   <eClassifiers xsi:type="ecore:EClass" name="BuildPlan" eSuperTypes="#//IBuildPlanWorkingCopy"/>
-  <eClassifiers xsi:type="ecore:EClass" name="BuildServer" eSuperTypes="#//IBuildServer">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="server" lowerBound="1"
-        eType="#//BuildServer" changeable="false" derived="true"/>
-  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BuildServer" eSuperTypes="#//IBuildServer"/>
   <eClassifiers xsi:type="ecore:EClass" name="IBuildModel" instanceClassName="org.eclipse.mylyn.builds.core.IBuildModel"
       abstract="true" interface="true">
     <eStructuralFeatures xsi:type="ecore:EReference" name="servers" upperBound="-1"

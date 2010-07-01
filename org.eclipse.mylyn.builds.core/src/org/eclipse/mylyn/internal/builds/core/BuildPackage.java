@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildPackage.java,v 1.5 2010/06/26 22:10:50 spingel Exp $
+ * $Id: BuildPackage.java,v 1.6 2010/07/01 02:17:13 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -684,22 +684,13 @@ public class BuildPackage extends EPackageImpl {
 	public static final int BUILD_SERVER__REPOSITORY_URL = IBUILD_SERVER__REPOSITORY_URL;
 
 	/**
-	 * The feature id for the '<em><b>Server</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	public static final int BUILD_SERVER__SERVER = IBUILD_SERVER_FEATURE_COUNT + 0;
-
-	/**
 	 * The number of structural features of the '<em>Server</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	public static final int BUILD_SERVER_FEATURE_COUNT = IBUILD_SERVER_FEATURE_COUNT + 1;
+	public static final int BUILD_SERVER_FEATURE_COUNT = IBUILD_SERVER_FEATURE_COUNT + 0;
 
 	/**
 	 * The meta object id for the '<em>Task Repository</em>' data type.
@@ -905,19 +896,6 @@ public class BuildPackage extends EPackageImpl {
 	 */
 	public EClass getBuildServer() {
 		return buildServerEClass;
-	}
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.mylyn.internal.builds.core.BuildServer#getServer <em>Server</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Server</em>'.
-	 * @see org.eclipse.mylyn.internal.builds.core.BuildServer#getServer()
-	 * @see #getBuildServer()
-	 * @generated
-	 */
-	public EReference getBuildServer_Server() {
-		return (EReference) buildServerEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -1281,7 +1259,6 @@ public class BuildPackage extends EPackageImpl {
 		buildPlanEClass = createEClass(BUILD_PLAN);
 
 		buildServerEClass = createEClass(BUILD_SERVER);
-		createEReference(buildServerEClass, BUILD_SERVER__SERVER);
 
 		iBuildModelEClass = createEClass(IBUILD_MODEL);
 		createEReference(iBuildModelEClass, IBUILD_MODEL__SERVERS);
@@ -1361,9 +1338,6 @@ public class BuildPackage extends EPackageImpl {
 
 		initEClass(buildServerEClass, BuildServer.class, "BuildServer", !IS_ABSTRACT, !IS_INTERFACE,
 				IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getBuildServer_Server(), this.getBuildServer(), null, "server", null, 1, 1, BuildServer.class,
-				!IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
-				IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 
 		initEClass(iBuildModelEClass, IBuildModel.class, "IBuildModel", IS_ABSTRACT, IS_INTERFACE,
 				!IS_GENERATED_INSTANCE_CLASS);
@@ -1477,14 +1451,6 @@ public class BuildPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EClass BUILD_SERVER = eINSTANCE.getBuildServer();
-
-		/**
-		 * The meta object literal for the '<em><b>Server</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		public static final EReference BUILD_SERVER__SERVER = eINSTANCE.getBuildServer_Server();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.core.IBuildModel <em>IBuild Model</em>}' class.

@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildPlan.java,v 1.7 2010/06/28 21:35:15 spingel Exp $
+ * $Id: BuildPlan.java,v 1.8 2010/07/01 02:17:13 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -32,7 +32,8 @@ import org.eclipse.mylyn.builds.core.IOperationMonitor;
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Plan</b></em>'.
  * <!-- end-user-doc -->
- * 
+ *
+ *
  * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getBuildPlan()
  * @model kind="class" superTypes="org.eclipse.mylyn.internal.builds.core.IBuildPlanWorkingCopy"
  * @generated
@@ -42,7 +43,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * The default value of the '{@link #getUrl() <em>Url</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getUrl()
 	 * @generated
 	 * @ordered
@@ -53,7 +53,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * The cached value of the '{@link #getUrl() <em>Url</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getUrl()
 	 * @generated
 	 * @ordered
@@ -64,7 +63,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getName()
 	 * @generated
 	 * @ordered
@@ -75,7 +73,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getName()
 	 * @generated
 	 * @ordered
@@ -86,7 +83,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * The cached value of the '{@link #getChildren() <em>Children</em>}' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getChildren()
 	 * @generated
 	 * @ordered
@@ -97,7 +93,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * The cached value of the '{@link #getParent() <em>Parent</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getParent()
 	 * @generated
 	 * @ordered
@@ -108,7 +103,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * The default value of the '{@link #getHealth() <em>Health</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getHealth()
 	 * @generated
 	 * @ordered
@@ -119,7 +113,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * The cached value of the '{@link #getHealth() <em>Health</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getHealth()
 	 * @generated
 	 * @ordered
@@ -130,7 +123,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * The default value of the '{@link #getId() <em>Id</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getId()
 	 * @generated
 	 * @ordered
@@ -141,7 +133,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getId()
 	 * @generated
 	 * @ordered
@@ -152,7 +143,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * The default value of the '{@link #getInfo() <em>Info</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getInfo()
 	 * @generated
 	 * @ordered
@@ -163,7 +153,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * The cached value of the '{@link #getInfo() <em>Info</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getInfo()
 	 * @generated
 	 * @ordered
@@ -174,7 +163,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * The default value of the '{@link #isSelected() <em>Selected</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #isSelected()
 	 * @generated
 	 * @ordered
@@ -185,7 +173,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * The cached value of the '{@link #isSelected() <em>Selected</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #isSelected()
 	 * @generated
 	 * @ordered
@@ -196,7 +183,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * The default value of the '{@link #getSummary() <em>Summary</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getSummary()
 	 * @generated
 	 * @ordered
@@ -207,7 +193,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * The cached value of the '{@link #getSummary() <em>Summary</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getSummary()
 	 * @generated
 	 * @ordered
@@ -218,7 +203,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * The default value of the '{@link #getState() <em>State</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getState()
 	 * @generated
 	 * @ordered
@@ -229,7 +213,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * The cached value of the '{@link #getState() <em>State</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getState()
 	 * @generated
 	 * @ordered
@@ -240,7 +223,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * The default value of the '{@link #getStatus() <em>Status</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getStatus()
 	 * @generated
 	 * @ordered
@@ -251,7 +233,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * The cached value of the '{@link #getStatus() <em>Status</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getStatus()
 	 * @generated
 	 * @ordered
@@ -261,7 +242,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected BuildPlan() {
@@ -271,7 +251,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -286,7 +265,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * If the meaning of the '<em>Url</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Url</em>' attribute.
 	 * @see #setUrl(String)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildElement_Url()
@@ -301,18 +279,15 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildPlan#getUrl <em>Url</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Url</em>' attribute.
+	 * @param value the new value of the '<em>Url</em>' attribute.
 	 * @see #getUrl()
 	 * @generated
 	 */
 	public void setUrl(String newUrl) {
 		String oldUrl = url;
 		url = newUrl;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__URL, oldUrl, url));
-		}
 	}
 
 	/**
@@ -322,7 +297,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * If the meaning of the '<em>Name</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Name</em>' attribute.
 	 * @see #setName(String)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildElement_Name()
@@ -337,50 +311,42 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildPlan#getName <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Name</em>' attribute.
+	 * @param value the new value of the '<em>Name</em>' attribute.
 	 * @see #getName()
 	 * @generated
 	 */
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__NAME, oldName, name));
-		}
 	}
 
 	/**
 	 * Returns the value of the '<em><b>Server</b></em>' container reference.
-	 * It is bidirectional and its opposite is '{@link org.eclipse.mylyn.builds.core.IBuildServer#getPlans
-	 * <em>Plans</em>}'.
+	 * It is bidirectional and its opposite is '{@link org.eclipse.mylyn.builds.core.IBuildServer#getPlans <em>Plans</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Server</em>' container reference isn't clear, there really should be more of a
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Server</em>' container reference.
 	 * @see #setServer(IBuildServer)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildPlan_Server()
 	 * @see org.eclipse.mylyn.builds.core.IBuildServer#getPlans
-	 * @model type="org.eclipse.mylyn.internal.builds.core.IBuildServer" opposite="plans" required="true"
-	 *        transient="false"
+	 * @model type="org.eclipse.mylyn.internal.builds.core.IBuildServer" opposite="plans" required="true" transient="false"
 	 * @generated
 	 */
 	public IBuildServer getServer() {
-		if (eContainerFeatureID() != BuildPackage.BUILD_PLAN__SERVER) {
+		if (eContainerFeatureID() != BuildPackage.BUILD_PLAN__SERVER)
 			return null;
-		}
 		return (IBuildServer) eContainer();
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public NotificationChain basicSetServer(IBuildServer newServer, NotificationChain msgs) {
@@ -389,51 +355,41 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	}
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildPlan#getServer <em>Server</em>}'
-	 * container reference.
+	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildPlan#getServer <em>Server</em>}' container reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Server</em>' container reference.
+	 * @param value the new value of the '<em>Server</em>' container reference.
 	 * @see #getServer()
 	 * @generated
 	 */
 	public void setServer(IBuildServer newServer) {
 		if (newServer != eInternalContainer()
 				|| (eContainerFeatureID() != BuildPackage.BUILD_PLAN__SERVER && newServer != null)) {
-			if (EcoreUtil.isAncestor(this, (EObject) newServer)) {
+			if (EcoreUtil.isAncestor(this, (EObject) newServer))
 				throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
-			}
 			NotificationChain msgs = null;
-			if (eInternalContainer() != null) {
+			if (eInternalContainer() != null)
 				msgs = eBasicRemoveFromContainer(msgs);
-			}
-			if (newServer != null) {
+			if (newServer != null)
 				msgs = ((InternalEObject) newServer).eInverseAdd(this, BuildPackage.IBUILD_SERVER__PLANS,
 						IBuildServer.class, msgs);
-			}
 			msgs = basicSetServer(newServer, msgs);
-			if (msgs != null) {
+			if (msgs != null)
 				msgs.dispatch();
-			}
-		} else if (eNotificationRequired()) {
+		} else if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__SERVER, newServer, newServer));
-		}
 	}
 
 	/**
 	 * Returns the value of the '<em><b>Children</b></em>' reference list.
 	 * The list contents are of type {@link org.eclipse.mylyn.builds.core.IBuildPlan}.
-	 * It is bidirectional and its opposite is '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getParent
-	 * <em>Parent</em>}'.
+	 * It is bidirectional and its opposite is '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getParent <em>Parent</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Children</em>' reference list isn't clear, there really should be more of a
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Children</em>' reference list.
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildPlan_Children()
 	 * @see org.eclipse.mylyn.builds.core.IBuildPlan#getParent
@@ -450,15 +406,13 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 
 	/**
 	 * Returns the value of the '<em><b>Parent</b></em>' reference.
-	 * It is bidirectional and its opposite is '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getChildren
-	 * <em>Children</em>}'.
+	 * It is bidirectional and its opposite is '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getChildren <em>Children</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Parent</em>' reference isn't clear, there really should be more of a description
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Parent</em>' reference.
 	 * @see #setParent(IBuildPlan)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildPlan_Parent()
@@ -471,10 +425,9 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 			InternalEObject oldParent = (InternalEObject) parent;
 			parent = (IBuildPlan) eResolveProxy(oldParent);
 			if (parent != oldParent) {
-				if (eNotificationRequired()) {
+				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, BuildPackage.BUILD_PLAN__PARENT,
 							oldParent, parent));
-				}
 			}
 		}
 		return parent;
@@ -483,7 +436,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public IBuildPlan basicGetParent() {
@@ -493,7 +445,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public NotificationChain basicSetParent(IBuildPlan newParent, NotificationChain msgs) {
@@ -502,44 +453,36 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
 					BuildPackage.BUILD_PLAN__PARENT, oldParent, newParent);
-			if (msgs == null) {
+			if (msgs == null)
 				msgs = notification;
-			} else {
+			else
 				msgs.add(notification);
-			}
 		}
 		return msgs;
 	}
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildPlan#getParent <em>Parent</em>}'
-	 * reference.
+	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildPlan#getParent <em>Parent</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Parent</em>' reference.
+	 * @param value the new value of the '<em>Parent</em>' reference.
 	 * @see #getParent()
 	 * @generated
 	 */
 	public void setParent(IBuildPlan newParent) {
 		if (newParent != parent) {
 			NotificationChain msgs = null;
-			if (parent != null) {
+			if (parent != null)
 				msgs = ((InternalEObject) parent).eInverseRemove(this, BuildPackage.IBUILD_PLAN__CHILDREN,
 						IBuildPlan.class, msgs);
-			}
-			if (newParent != null) {
+			if (newParent != null)
 				msgs = ((InternalEObject) newParent).eInverseAdd(this, BuildPackage.IBUILD_PLAN__CHILDREN,
 						IBuildPlan.class, msgs);
-			}
 			msgs = basicSetParent(newParent, msgs);
-			if (msgs != null) {
+			if (msgs != null)
 				msgs.dispatch();
-			}
-		} else if (eNotificationRequired()) {
+		} else if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__PARENT, newParent, newParent));
-		}
 	}
 
 	/**
@@ -551,7 +494,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Health</em>' attribute.
 	 * @see #setHealth(int)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildPlan_Health()
@@ -563,22 +505,18 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	}
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildPlan#getHealth <em>Health</em>}'
-	 * attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildPlan#getHealth <em>Health</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Health</em>' attribute.
+	 * @param value the new value of the '<em>Health</em>' attribute.
 	 * @see #getHealth()
 	 * @generated
 	 */
 	public void setHealth(int newHealth) {
 		int oldHealth = health;
 		health = newHealth;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__HEALTH, oldHealth, health));
-		}
 	}
 
 	/**
@@ -588,7 +526,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * If the meaning of the '<em>Id</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Id</em>' attribute.
 	 * @see #setId(String)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildPlan_Id()
@@ -603,18 +540,15 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildPlan#getId <em>Id</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Id</em>' attribute.
+	 * @param value the new value of the '<em>Id</em>' attribute.
 	 * @see #getId()
 	 * @generated
 	 */
 	public void setId(String newId) {
 		String oldId = id;
 		id = newId;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__ID, oldId, id));
-		}
 	}
 
 	/**
@@ -624,7 +558,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * If the meaning of the '<em>Info</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Info</em>' attribute.
 	 * @see #setInfo(String)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildPlan_Info()
@@ -639,18 +572,15 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildPlan#getInfo <em>Info</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Info</em>' attribute.
+	 * @param value the new value of the '<em>Info</em>' attribute.
 	 * @see #getInfo()
 	 * @generated
 	 */
 	public void setInfo(String newInfo) {
 		String oldInfo = info;
 		info = newInfo;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__INFO, oldInfo, info));
-		}
 	}
 
 	/**
@@ -662,7 +592,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Selected</em>' attribute.
 	 * @see #setSelected(boolean)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildPlan_Selected()
@@ -674,23 +603,19 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	}
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildPlan#isSelected <em>Selected</em>}'
-	 * attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildPlan#isSelected <em>Selected</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Selected</em>' attribute.
+	 * @param value the new value of the '<em>Selected</em>' attribute.
 	 * @see #isSelected()
 	 * @generated
 	 */
 	public void setSelected(boolean newSelected) {
 		boolean oldSelected = selected;
 		selected = newSelected;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__SELECTED, oldSelected,
 					selected));
-		}
 	}
 
 	/**
@@ -701,7 +626,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Summary</em>' attribute.
 	 * @see #setSummary(String)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildPlan_Summary()
@@ -713,22 +637,18 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	}
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildPlan#getSummary <em>Summary</em>}'
-	 * attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildPlan#getSummary <em>Summary</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Summary</em>' attribute.
+	 * @param value the new value of the '<em>Summary</em>' attribute.
 	 * @see #getSummary()
 	 * @generated
 	 */
 	public void setSummary(String newSummary) {
 		String oldSummary = summary;
 		summary = newSummary;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__SUMMARY, oldSummary, summary));
-		}
 	}
 
 	/**
@@ -739,7 +659,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>State</em>' attribute.
 	 * @see #setState(BuildState)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildPlan_State()
@@ -751,22 +670,18 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	}
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildPlan#getState <em>State</em>}'
-	 * attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildPlan#getState <em>State</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>State</em>' attribute.
+	 * @param value the new value of the '<em>State</em>' attribute.
 	 * @see #getState()
 	 * @generated
 	 */
 	public void setState(BuildState newState) {
 		BuildState oldState = state;
 		state = newState;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__STATE, oldState, state));
-		}
 	}
 
 	/**
@@ -777,7 +692,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Status</em>' attribute.
 	 * @see #setStatus(BuildStatus)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildPlan_Status()
@@ -789,28 +703,23 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	}
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildPlan#getStatus <em>Status</em>}'
-	 * attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildPlan#getStatus <em>Status</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Status</em>' attribute.
+	 * @param value the new value of the '<em>Status</em>' attribute.
 	 * @see #getStatus()
 	 * @generated
 	 */
 	public void setStatus(BuildStatus newStatus) {
 		BuildStatus oldStatus = status;
 		status = newStatus;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__STATUS, oldStatus, status));
-		}
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -818,17 +727,15 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 		case BuildPackage.BUILD_PLAN__SERVER:
-			if (eInternalContainer() != null) {
+			if (eInternalContainer() != null)
 				msgs = eBasicRemoveFromContainer(msgs);
-			}
 			return basicSetServer((IBuildServer) otherEnd, msgs);
 		case BuildPackage.BUILD_PLAN__CHILDREN:
 			return ((InternalEList<InternalEObject>) (InternalEList<?>) getChildren()).basicAdd(otherEnd, msgs);
 		case BuildPackage.BUILD_PLAN__PARENT:
-			if (parent != null) {
+			if (parent != null)
 				msgs = ((InternalEObject) parent).eInverseRemove(this, BuildPackage.IBUILD_PLAN__CHILDREN,
 						IBuildPlan.class, msgs);
-			}
 			return basicSetParent((IBuildPlan) otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
@@ -837,7 +744,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -856,7 +762,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -872,7 +777,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -887,9 +791,8 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 		case BuildPackage.BUILD_PLAN__CHILDREN:
 			return getChildren();
 		case BuildPackage.BUILD_PLAN__PARENT:
-			if (resolve) {
+			if (resolve)
 				return getParent();
-			}
 			return basicGetParent();
 		case BuildPackage.BUILD_PLAN__HEALTH:
 			return getHealth();
@@ -912,7 +815,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -963,7 +865,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -1012,7 +913,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -1049,14 +949,12 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy()) {
+		if (eIsProxy())
 			return super.toString();
-		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (url: ");

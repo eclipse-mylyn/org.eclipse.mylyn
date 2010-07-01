@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildServer.java,v 1.6 2010/06/26 22:10:50 spingel Exp $
+ * $Id: BuildServer.java,v 1.7 2010/07/01 02:17:13 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -40,12 +40,6 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Server</b></em>'.
  * <!-- end-user-doc -->
- * <p>
- * The following features are supported:
- * <ul>
- * <li>{@link org.eclipse.mylyn.internal.builds.core.BuildServer#getServer <em>Server</em>}</li>
- * </ul>
- * </p>
  * 
  * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getBuildServer()
  * @model kind="class" superTypes="org.eclipse.mylyn.internal.builds.core.IBuildServer"
@@ -174,24 +168,10 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	protected String repositoryUrl = REPOSITORY_URL_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getServer() <em>Server</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
-	 * @see #getServer()
-	 * @generated
-	 * @ordered
-	 */
-	protected BuildServer server;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
 	 */
 	protected BuildServer() {
-		super();
 	}
 
 	/**
@@ -423,44 +403,6 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	}
 
 	/**
-	 * Returns the value of the '<em><b>Server</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Server</em>' reference isn't clear, there really should be more of a description
-	 * here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * 
-	 * @return the value of the '<em>Server</em>' reference.
-	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getBuildServer_Server()
-	 * @model required="true" changeable="false" derived="true"
-	 * @generated
-	 */
-	public BuildServer getServer() {
-		if (server != null && server.eIsProxy()) {
-			InternalEObject oldServer = server;
-			server = (BuildServer) eResolveProxy(oldServer);
-			if (server != oldServer) {
-				if (eNotificationRequired()) {
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, BuildPackage.BUILD_SERVER__SERVER,
-							oldServer, server));
-				}
-			}
-		}
-		return server;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public BuildServer basicGetServer() {
-		return server;
-	}
-
-	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
@@ -512,11 +454,6 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 			return getConnectorKind();
 		case BuildPackage.BUILD_SERVER__REPOSITORY_URL:
 			return getRepositoryUrl();
-		case BuildPackage.BUILD_SERVER__SERVER:
-			if (resolve) {
-				return getServer();
-			}
-			return basicGetServer();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -608,8 +545,6 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 		case BuildPackage.BUILD_SERVER__REPOSITORY_URL:
 			return REPOSITORY_URL_EDEFAULT == null ? repositoryUrl != null : !REPOSITORY_URL_EDEFAULT
 					.equals(repositoryUrl);
-		case BuildPackage.BUILD_SERVER__SERVER:
-			return server != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -658,6 +593,10 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 			behaviour = getLoader().loadBehaviour(this);
 		}
 		return behaviour;
+	}
+
+	public IBuildServer getServer() {
+		return this;
 	}
 
 	public IStatus validate(IOperationMonitor monitor) throws CoreException {
