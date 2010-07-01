@@ -226,7 +226,7 @@
 		<attribute name="extravmargs" default=""/>
 		<attribute name="vmargs" default=" -Xms40m -Xmx512m -XX:MaxPermSize=128m"/>    	
 		<attribute name="failonerror" default="true"/>
-		<attribute name="timeout" default="10000000" />
+		<attribute name="timeout" default="10800000" />
 		<attribute name="output" default="NOT SET" />
 		<attribute name="consolelog" default="${consolelog}" />
 		<element name="args" optional="true" implicit="true"/>
