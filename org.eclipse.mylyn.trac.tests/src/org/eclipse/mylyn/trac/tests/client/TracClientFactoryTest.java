@@ -16,69 +16,51 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.internal.trac.core.TracClientFactory;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
+import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.client.TracException;
 import org.eclipse.mylyn.internal.trac.core.client.TracLoginException;
 import org.eclipse.mylyn.internal.trac.core.client.TracWebClient;
 import org.eclipse.mylyn.internal.trac.core.client.TracXmlRpcClient;
-import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.tests.util.TestUtil;
 import org.eclipse.mylyn.tests.util.TestUtil.Credentials;
 import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
-import org.eclipse.mylyn.trac.tests.support.TracTestConstants;
+import org.eclipse.mylyn.trac.tests.support.TracFixture;
 
 /**
  * @author Steffen Pingel
  */
 public class TracClientFactoryTest extends TestCase {
 
+	private TracFixture fixture;
+
+	@Override
+	protected void setUp() throws Exception {
+		fixture = TracFixture.current();
+	}
+
 	public void testCreateClient() throws Exception {
-		WebLocation location = new WebLocation(TracTestConstants.TEST_TRAC_010_URL, "user", "password");
-		ITracClient client = TracClientFactory.createClient(location, Version.TRAC_0_9);
-		assertTrue(client instanceof TracWebClient);
-
-		location = new WebLocation(TracTestConstants.TEST_TRAC_010_SSL_URL, "user", "password");
-		client = TracClientFactory.createClient(location, Version.TRAC_0_9);
-		assertTrue(client instanceof TracWebClient);
-
-		location = new WebLocation(TracTestConstants.TEST_TRAC_010_URL, "user", "password");
-		client = TracClientFactory.createClient(location, Version.XML_RPC);
-		assertTrue(client instanceof TracXmlRpcClient);
-
-		location = new WebLocation(TracTestConstants.TEST_TRAC_010_SSL_URL, "user", "password");
-		client = TracClientFactory.createClient(location, Version.XML_RPC);
-		assertTrue(client instanceof TracXmlRpcClient);
+		WebLocation location = new WebLocation(fixture.getRepositoryUrl(), "user", "password");
+		ITracClient client = TracClientFactory.createClient(location, fixture.getAccessMode());
+		if (fixture.getAccessMode() == Version.TRAC_0_9) {
+			assertTrue(client instanceof TracWebClient);
+		} else {
+			assertTrue(client instanceof TracXmlRpcClient);
+		}
 	}
 
 	public void testCreateClientNull() throws Exception {
 		try {
-			WebLocation location = new WebLocation(TracTestConstants.TEST_TRAC_010_URL, "user", "password");
+			WebLocation location = new WebLocation(fixture.getRepositoryUrl(), "user", "password");
 			TracClientFactory.createClient(location, null);
 			fail("Expected Exception");
 		} catch (Exception e) {
 		}
 	}
 
-	public void testProbeClient096() throws Exception {
-		probeClient(TracTestConstants.TEST_TRAC_096_URL, false);
-	}
+	public void testProbeClient() throws Exception {
+		String url = fixture.getRepositoryUrl();
+		boolean xmlrpcInstalled = (fixture.getAccessMode() == Version.XML_RPC);
 
-	public void testProbeClient010() throws Exception {
-		probeClient(TracTestConstants.TEST_TRAC_010_URL, true);
-	}
-
-	public void testProbeClient010DigestAuth() throws Exception {
-		probeClient(TracTestConstants.TEST_TRAC_010_DIGEST_AUTH_URL, true);
-	}
-
-	public void testProbeClient010FormAuth() throws Exception {
-		probeClient(TracTestConstants.TEST_TRAC_010_FORM_AUTH_URL, true);
-	}
-
-	public void testProbeClient011() throws Exception {
-		probeClient(TracTestConstants.TEST_TRAC_011_URL, true);
-	}
-
-	protected void probeClient(String url, boolean xmlrpcInstalled) throws Exception {
 		Credentials credentials = TestUtil.readCredentials(PrivilegeLevel.USER);
 		WebLocation location = new WebLocation(url, credentials.username, credentials.password);
 		Version version = TracClientFactory.probeClient(location);

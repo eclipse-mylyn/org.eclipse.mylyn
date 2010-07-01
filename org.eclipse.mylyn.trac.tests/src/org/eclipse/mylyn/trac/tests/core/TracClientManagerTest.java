@@ -34,7 +34,7 @@ public class TracClientManagerTest extends TestCase {
 
 	public void testNullCache() throws Exception {
 		TaskRepository taskRepository = new TaskRepository(TracCorePlugin.CONNECTOR_KIND,
-				TracTestConstants.TEST_TRAC_096_URL);
+				TracTestConstants.TEST_TRAC_010_URL);
 		taskRepository.setVersion(Version.TRAC_0_9.name());
 
 		TracClientManager manager = new TracClientManager(null, new TaskRepositoryLocationFactory());
@@ -47,7 +47,7 @@ public class TracClientManagerTest extends TestCase {
 
 	public void testReadCache() throws Exception {
 		TaskRepository taskRepository = new TaskRepository(TracCorePlugin.CONNECTOR_KIND,
-				TracTestConstants.TEST_TRAC_096_URL);
+				TracTestConstants.TEST_TRAC_010_URL);
 		taskRepository.setVersion(Version.TRAC_0_9.name());
 
 		File file = File.createTempFile("mylyn", null);
@@ -60,7 +60,7 @@ public class TracClientManagerTest extends TestCase {
 
 	public void testWriteCache() throws Exception {
 		TaskRepository taskRepository = new TaskRepository(TracCorePlugin.CONNECTOR_KIND,
-				TracTestConstants.TEST_TRAC_096_URL);
+				TracTestConstants.TEST_TRAC_010_URL);
 		taskRepository.setVersion(Version.TRAC_0_9.name());
 		taskRepository.setCredentials(AuthenticationType.REPOSITORY, null, false);
 
