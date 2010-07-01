@@ -69,6 +69,12 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 				} else if (job.getColor().equals(HudsonModelBallColor.RED_ANIME)) {
 					plan.setStatus(BuildStatus.FAILED);
 					plan.setState(BuildState.RUNNING);
+				} else if (job.getColor().equals(HudsonModelBallColor.YELLOW)) {
+					plan.setStatus(BuildStatus.UNSTABLE);
+					plan.setState(BuildState.STOPPED);
+				} else if (job.getColor().equals(HudsonModelBallColor.YELLOW_ANIME)) {
+					plan.setStatus(BuildStatus.UNSTABLE);
+					plan.setState(BuildState.RUNNING);
 				} else if (job.getColor().equals(HudsonModelBallColor.GREY)) {
 					plan.setStatus(BuildStatus.DISABLED);
 					plan.setState(BuildState.STOPPED);
