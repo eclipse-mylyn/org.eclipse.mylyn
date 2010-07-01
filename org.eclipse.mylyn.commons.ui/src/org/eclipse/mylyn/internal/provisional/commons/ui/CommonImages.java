@@ -119,7 +119,15 @@ public class CommonImages {
 
 	public static final ImageDescriptor OVERLAY_SYNC_CONFLICT = create(T_EVIEW, "overlay-conflict.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor OVERLAY_SYNC_WARNING = create(T_OVR, "overlay-warning.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor OVERLAY_SYNC_WARNING = create(T_OVR, "overlay-sync-warning.gif"); //$NON-NLS-1$
+
+	public static final ImageDescriptor OVERLAY_WARNING = create(T_OVR, "warning_ovr.gif"); //$NON-NLS-1$
+
+	public static final ImageDescriptor OVERLAY_SUCCESS = create(T_OVR, "success_ovr.gif"); //$NON-NLS-1$
+
+	public static final ImageDescriptor OVERLAY_ERROR = create(T_OVR, "error_ovr.gif"); //$NON-NLS-1$
+
+	public static final ImageDescriptor OVERLAY_FAILED = create(T_OVR, "failed_ovr.gif"); //$NON-NLS-1$
 
 	public static final ImageDescriptor OVERLAY_SYNC_OLD_INCOMMING = create(T_EVIEW, "overlay-synch-incoming.gif"); //$NON-NLS-1$
 
