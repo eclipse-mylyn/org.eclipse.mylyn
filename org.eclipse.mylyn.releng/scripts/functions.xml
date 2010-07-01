@@ -343,7 +343,6 @@
 	<!-- ===================================================================== -->
 
 	<target name="boot" depends="check-java">		
-		<mkdir dir="${eclipse.base}"/>
 		<mkdir dir="${build.home}"/>
 		<mkdir dir="${build.results}"/>
 		<tstamp>
@@ -1071,65 +1070,4 @@
 		</exec-eclipse>
     </target>
 
-	<target name="get-package-dependencies-helper">
-		<property name="downloadsDir" value="${eclipse.base}"/> 
-
-		<mkdir dir="${eclipse.base}/sdk-${eclipse.sdk.3.5}/delta-pack" />
-		
-		<basename property="file.delta-pack" file="${eclipse.url.delta-pack}"/>
-		<antcall target="getBundle">
-			<param name="file" value="${file.delta-pack}" />
-			<param name="url" value="${eclipse.url.delta-pack}"/>
-		</antcall>
-		<antcall target="unpackBundle">
-			<param name="file" value="${file.delta-pack}" />
-			<param name="unpackDest" value="${eclipse.base}/sdk-${eclipse.sdk.3.5}/delta-pack"/>
-			<param name="isUnpackedFile" value="${eclipse.base}/sdk-${eclipse.sdk.3.5}/delta-pack/eclipse"/>
-		</antcall>
-	</target>
-	
-	<target name="publish-product-helper" depends="get-package-dependencies-helper">
-    	<property name="timeout" value="7200000" />
-		<property name="application" value="org.eclipse.equinox.p2.publisher.ProductPublisher" />
-    	<property name="eclipse.home" value="${eclipse.base}/sdk-${eclipse.sdk.3.5}/eclipse" />
-		<property name="delta-pack.home" value="${eclipse.base}/sdk-${eclipse.sdk.3.5}/delta-pack/eclipse" />
-		<property name="vmargs" value=" -Xms40m -Xmx256m"/>    	
-    	<path id="pde.build.script.id"> 
-    		<fileset dir="${eclipse.home}/plugins">
-            	<include name="org.eclipse.pde.build_*/scripts/package.xml"/>
-          	</fileset>
-    	</path> 
-    	<property name="pde.build.script" refid="pde.build.script.id"/>
-		
-		<echo message="Publishing ${productfile} to ${dir}" />
-    	<java fork="true" dir="." timeout="${timeout}" logError="true" failonerror="true"  
-    		classname="org.eclipse.core.launcher.Main">
-	        <classpath>
-	    		<fileset dir="${eclipse.home}/plugins">
-	            	<include name="org.eclipse.equinox.launcher_*.jar"/>
-	          	</fileset>
-	        </classpath>
-		    <jvmarg line="${vmargs}"/>
-		    <arg value="-consolelog"/>
-    		<arg value="-data"/>
-    		<arg value="${build.home}/workspace"/>
-		    <arg value="-application"/>
-    		<arg value="${application}"/>
-    		<arg value="-metadataRepository"/>
-    		<arg value="file:${dir}"/>
-    		<arg value="-artifactRepository"/>
-    		<arg value="file:${dir}"/>
-    		<arg value="-productFile"/>
-    		<arg value="${productfile}"/>
-    		<arg value="-append"/>
-    		<arg value="-publishArtifacts" />
-    		<arg value="-executables"/>
-			<arg value="${delta-pack.home}/features/org.eclipse.equinox.executable_3.3.200.v20090521-1800-7M-Fm-FI3UouOe61h3BYGC"/>
-    		<arg value="-flavor"/>
-    		<arg value="tooling"/>
-    		<arg value="-configs"/>
-    		<arg value="win32.win32.x86,gtk.linux.x86,gtk.linux.x86_64,cocoa.macosx.x86,cocoa.macosx.x86_64,carbon.macosx.ppc"/>
-		</java>
-    </target>
-	
 </project>
