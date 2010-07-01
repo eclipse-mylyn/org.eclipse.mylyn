@@ -39,6 +39,10 @@ public class BuildImages {
 
 	public static final ImageDescriptor STATUS_FAILED = create(T_OBJ, "failed-status.gif"); //$NON-NLS-1$
 
+	public static final ImageDescriptor STATUS_UNSTABLE = create(T_OBJ, "unstable-status.png"); //$NON-NLS-1$
+
+	public static final ImageDescriptor STATUS_DISABLED = create(T_OBJ, "disabled-status.png"); //$NON-NLS-1$
+
 	public static final ImageDescriptor SERVER = create(T_OBJ, "server.gif"); //$NON-NLS-1$
 
 	public static final ImageDescriptor HEALTH_00 = create(T_OBJ, "health-00to19.gif"); //$NON-NLS-1$

@@ -29,8 +29,12 @@ public class BuildStatusLabelProvider extends ColumnLabelProvider {
 			BuildStatus status = ((IBuildPlan) element).getStatus();
 			if (status == BuildStatus.SUCCESS) {
 				return CommonImages.getImage(BuildImages.STATUS_PASSED);
+			} else if (status == BuildStatus.UNSTABLE) {
+				return CommonImages.getImage(BuildImages.STATUS_UNSTABLE);
 			} else if (status == BuildStatus.FAILED) {
 				return CommonImages.getImage(BuildImages.STATUS_FAILED);
+			} else if (status == BuildStatus.DISABLED) {
+				return CommonImages.getImage(BuildImages.STATUS_DISABLED);
 			}
 		}
 		return null;
