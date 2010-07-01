@@ -67,4 +67,36 @@
           class="org.eclipse.mylyn.internal.builds.ui.BuildsPreferencesInitializer">
     </initializer>
  </extension>
+ <extension
+       point="org.eclipse.ui.navigator.navigatorContent">
+    <navigatorContent
+          contentProvider="org.eclipse.mylyn.internal.builds.ui.view.BuildContentProvider"
+          icon="icons/eview16/build-view.png"
+          id="org.eclipse.mylyn.builds.ui.navigator.BuildRepositories"
+          labelProvider="org.eclipse.mylyn.internal.builds.ui.view.BuildLabelProvider"
+          name="Build Repositories">
+       <possibleChildren>
+          <instanceof
+                value="org.eclipse.mylyn.builds.core.IBuildElement">
+          </instanceof>
+       </possibleChildren>
+       <triggerPoints>
+          <instanceof
+                value="org.eclipse.mylyn.internal.commons.team.navigator.RepositoryModel">
+          </instanceof>
+       </triggerPoints>
+    </navigatorContent>
+ </extension>
+ <extension
+       point="org.eclipse.ui.navigator.viewer">
+    <viewerContentBinding
+          viewerId="org.eclipse.mylyn.commons.team.navigator.Repositories">
+       <includes>
+          <contentExtension
+                isRoot="true"
+                pattern="org.eclipse.mylyn.builds.ui.navigator.BuildRepositories">
+          </contentExtension>
+       </includes>
+    </viewerContentBinding>
+ </extension>
 </plugin>

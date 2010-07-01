@@ -19,6 +19,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.builds.core.IBuildModel;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
+import org.eclipse.mylyn.builds.ui.BuildsUi;
 
 /**
  * @author Steffen Pingel
@@ -55,6 +56,8 @@ public class BuildContentProvider implements ITreeContentProvider {
 			return ((IBuildModel) inputElement).getServers().toArray();
 		} else if (inputElement instanceof IBuildServer) {
 			return getPlans(inputElement, ((IBuildServer) inputElement).getPlans()).toArray();
+		} else if (inputElement == input) {
+			return BuildsUi.getModel().getServers().toArray();
 		}
 		if (inputElement instanceof List<?>) {
 			return ((List<?>) inputElement).toArray();
