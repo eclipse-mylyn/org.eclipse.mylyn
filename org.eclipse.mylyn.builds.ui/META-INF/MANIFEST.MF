@@ -21,5 +21,6 @@ Bundle-Activator: org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin
 Export-Package: org.eclipse.mylyn.builds.ui,
  org.eclipse.mylyn.builds.ui.spi,
  org.eclipse.mylyn.internal.builds.ui;x-internal:=true,
+ org.eclipse.mylyn.internal.builds.ui.commands,
  org.eclipse.mylyn.internal.builds.ui.tasks;x-internal:=true,
  org.eclipse.mylyn.internal.builds.ui.view;x-internal:=true

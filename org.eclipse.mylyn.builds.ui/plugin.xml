@@ -125,4 +125,9 @@
          </enabledWhen>
       </handler>
  </extension>
+ <extension
+       point="org.eclipse.ui.startup">
+    <startup
+          class="org.eclipse.mylyn.internal.builds.ui.BuildsStartup"></startup>
+ </extension>
 </plugin>

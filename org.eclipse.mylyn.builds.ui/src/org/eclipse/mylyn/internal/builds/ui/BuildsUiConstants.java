@@ -28,4 +28,6 @@ public class BuildsUiConstants {
 
 	public static final String PREF_AUTO_REFRESH_INTERVAL = "refresh.interval"; //$NON-NLS-1$
 
+	protected static final String ID_VIEW = "org.eclipse.mylyn.builds.navigator.builds";
+
 }
