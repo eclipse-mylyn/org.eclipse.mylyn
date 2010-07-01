@@ -99,4 +99,30 @@
        </includes>
     </viewerContentBinding>
  </extension>
+ <extension
+       point="org.eclipse.ui.handlers">
+      <handler
+            class="org.eclipse.mylyn.internal.builds.ui.commands.BuildElementPropertiesHandler"
+            commandId="org.eclipse.ui.file.properties">
+         <activeWhen>
+			<with variable="activePartId">
+			    <equals value="org.eclipse.mylyn.builds.navigator.builds"/>
+			</with> 
+         </activeWhen>
+         <enabledWhen>
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate>
+                  <and>
+                     <instanceof
+                           value="org.eclipse.mylyn.builds.core.IBuildElement">
+                     </instanceof>
+                  </and>
+               </iterate>
+            </and>
+         </enabledWhen>
+      </handler>
+ </extension>
 </plugin>

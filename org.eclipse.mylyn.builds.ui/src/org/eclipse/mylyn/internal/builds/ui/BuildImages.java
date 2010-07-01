@@ -31,6 +31,10 @@ public class BuildImages {
 
 	public static final String T_DTOOL = "dtool16"; //$NON-NLS-1$
 
+	public static final String T_VIEW = "eview16"; //$NON-NLS-1$
+
+	public static final ImageDescriptor VIEW_BUILDS = create(T_VIEW, "build-view.png"); //$NON-NLS-1$
+
 	public static final ImageDescriptor STATUS_PASSED = create(T_OBJ, "passed-status.png"); //$NON-NLS-1$
 
 	public static final ImageDescriptor STATUS_FAILED = create(T_OBJ, "failed-status.gif"); //$NON-NLS-1$

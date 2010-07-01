@@ -12,12 +12,18 @@
 package org.eclipse.mylyn.internal.builds.ui.view;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.util.Date;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
+import org.eclipse.emf.common.util.TreeIterator;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
@@ -27,12 +33,17 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
+import org.eclipse.mylyn.builds.core.BuildStatus;
+import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.internal.builds.core.BuildModel;
 import org.eclipse.mylyn.internal.builds.core.util.BuildsConstants;
+import org.eclipse.mylyn.internal.builds.ui.BuildImages;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.actions.CollapseAllAction;
 import org.eclipse.mylyn.internal.provisional.commons.ui.actions.ExpandAllAction;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -40,6 +51,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
@@ -62,6 +74,10 @@ public class BuildsView extends ViewPart {
 
 	private Action collapseAllAction;
 
+	private BuildElementPropertiesAction propertiesAction;
+
+	private Date lastRefresh;
+
 	public BuildsView() {
 		BuildsUiPlugin.getDefault().initializeRefresh();
 	}
@@ -75,9 +91,8 @@ public class BuildsView extends ViewPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		createViewer(parent);
-		createPopupMenu(parent);
-
 		initActions();
+		createPopupMenu(parent);
 		contributeToActionBars();
 
 		IWorkbenchSiteProgressService progress = (IWorkbenchSiteProgressService) getSite().getAdapter(
@@ -94,10 +109,12 @@ public class BuildsView extends ViewPart {
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
 						if (!viewer.getControl().isDisposed()) {
+							lastRefresh = new Date();
 							refresh();
+							// FIXME show result of last update
+							updateDecoration(Status.OK_STATUS);
 						}
 					}
-
 				});
 			}
 		};
@@ -106,17 +123,19 @@ public class BuildsView extends ViewPart {
 		viewer.expandAll();
 
 		getSite().setSelectionProvider(viewer);
+		getSite().getSelectionProvider().addSelectionChangedListener(propertiesAction);
+
+		updateDecoration(Status.OK_STATUS);
 	}
 
 	private void initActions() {
 		collapseAllAction = new CollapseAllAction(viewer);
 		expandAllAction = new ExpandAllAction(viewer);
+		propertiesAction = new BuildElementPropertiesAction();
 	}
 
 	protected void createPopupMenu(Composite parent) {
 		MenuManager menuManager = new MenuManager();
-
-		GroupMarker marker = new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS);
 
 		OpenInBrowserAction openInBrowserAction = new OpenInBrowserAction();
 		menuManager.add(openInBrowserAction);
@@ -126,9 +145,12 @@ public class BuildsView extends ViewPart {
 		menuManager.add(runBuildAction);
 		viewer.addSelectionChangedListener(runBuildAction);
 
-		menuManager.add(marker);
-		Menu contextMenu = menuManager.createContextMenu(parent);
+		menuManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 
+		menuManager.add(new Separator("properties"));
+		menuManager.add(propertiesAction);
+
+		Menu contextMenu = menuManager.createContextMenu(parent);
 		viewer.getTree().setMenu(contextMenu);
 		getSite().registerContextMenu(menuManager, viewer);
 	}
@@ -182,7 +204,6 @@ public class BuildsView extends ViewPart {
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 		manager.add(new Separator());
 		manager.add(new OpenBuildsPreferencesAction());
-
 	}
 
 	private void fillLocalToolBar(IToolBarManager manager) {
@@ -225,6 +246,80 @@ public class BuildsView extends ViewPart {
 	@Override
 	public void setFocus() {
 		getViewer().getControl().setFocus();
+	}
+
+	public void updateDecoration(IStatus status) {
+		String statusMessage = "";
+		if (status.isOK()) {
+			BuildStatus planStatus = getPlanStatus();
+			if (planStatus == BuildStatus.SUCCESS) {
+				setTitleImage(CommonImages.getImageWithOverlay(BuildImages.VIEW_BUILDS, CommonImages.OVERLAY_SUCCESS,
+						false, false));
+			} else if (planStatus == BuildStatus.UNSTABLE) {
+				setTitleImage(CommonImages.getImageWithOverlay(BuildImages.VIEW_BUILDS, CommonImages.OVERLAY_FAILED,
+						false, false));
+
+			} else if (planStatus == BuildStatus.FAILED) {
+				setTitleImage(CommonImages.getImageWithOverlay(BuildImages.VIEW_BUILDS, CommonImages.OVERLAY_ERROR,
+						false, false));
+			} else {
+				setTitleImage(CommonImages.getImage(BuildImages.VIEW_BUILDS));
+			}
+			if (lastRefresh != null) {
+				statusMessage = NLS.bind("Last update: {0}", DateFormat.getDateTimeInstance().format(lastRefresh));
+			}
+		} else {
+			setTitleImage(CommonImages.getImageWithOverlay(BuildImages.VIEW_BUILDS, CommonImages.OVERLAY_WARNING,
+					false, false));
+			statusMessage = "Last update failed";
+		}
+
+		if (statusMessage != null) {
+			final IViewSite viewSite = getViewSite();
+			if (viewSite != null) {
+				final IStatusLineManager statusLine = viewSite.getActionBars().getStatusLineManager();
+				if (statusLine != null) {
+					statusLine.setMessage(statusMessage);
+				}
+			}
+		}
+	}
+
+	protected BuildStatus getPlanStatus() {
+		BuildStatus planStatus = null;
+		boolean plansSelected = false;
+		if (contentProvider != null) {
+			for (TreeIterator<EObject> it = model.eAllContents(); it.hasNext();) {
+				Object element = it.next();
+				if (element instanceof IBuildPlan) {
+					IBuildPlan plan = (IBuildPlan) element;
+					if (plan.isSelected()) {
+						if (plan.getStatus() != null) {
+							switch (plan.getStatus()) {
+							case SUCCESS:
+								if (planStatus == null) {
+									planStatus = BuildStatus.SUCCESS;
+								}
+								break;
+							case UNSTABLE:
+								if (planStatus == null || planStatus == BuildStatus.SUCCESS) {
+									planStatus = BuildStatus.UNSTABLE;
+								}
+								break;
+							case FAILED:
+								planStatus = BuildStatus.FAILED;
+								break;
+							}
+						}
+						plansSelected = true;
+					}
+				}
+			}
+		}
+		if (plansSelected) {
+			return (planStatus != null) ? planStatus : BuildStatus.DISABLED;
+		}
+		return null;
 	}
 
 }
