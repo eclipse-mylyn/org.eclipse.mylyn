@@ -40,7 +40,6 @@ public class AllTracHeadlessStandaloneTests {
 		suite.addTestSuite(TracSearchTest.class);
 		suite.addTestSuite(TracTicketTest.class);
 		suite.addTestSuite(TracRepositoryInfoTest.class);
-		suite.addTestSuite(TracClientFactoryTest.class);
 		suite.addTestSuite(TracClientProxyTest.class);
 		// core tests
 		suite.addTestSuite(TracClientManagerTest.class);
@@ -54,6 +53,7 @@ public class AllTracHeadlessStandaloneTests {
 			// validation tests
 			for (TracFixture fixture : TracFixture.MISC) {
 				fixture.createSuite(suite);
+				fixture.add(TracClientFactoryTest.class);
 				fixture.add(TracClientTest.class);
 				fixture.done();
 			}
@@ -63,6 +63,7 @@ public class AllTracHeadlessStandaloneTests {
 
 	private static void addTests(TestSuite suite, TracFixture fixture) {
 		fixture.createSuite(suite);
+		fixture.add(TracClientFactoryTest.class);
 		fixture.add(TracClientTest.class);
 		if (fixture.getAccessMode() == Version.XML_RPC) {
 			fixture.add(TracXmlRpcClientTest.class);
