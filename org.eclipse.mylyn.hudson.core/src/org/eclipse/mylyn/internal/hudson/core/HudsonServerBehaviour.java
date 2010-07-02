@@ -18,10 +18,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.builds.core.BuildState;
 import org.eclipse.mylyn.builds.core.BuildStatus;
-import org.eclipse.mylyn.builds.core.IBuildElement;
-import org.eclipse.mylyn.builds.core.IBuildPlan;
+import org.eclipse.mylyn.builds.core.IBuildPlanData;
 import org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy;
-import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.IOperationMonitor;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
@@ -37,18 +35,17 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 
 	private final RestfulHudsonClient client;
 
-	public HudsonServerBehaviour(IBuildServer server, AbstractWebLocation location) {
-		super(server);
+	public HudsonServerBehaviour(AbstractWebLocation location) {
 		this.client = new RestfulHudsonClient(location);
 	}
 
 	@Override
-	public List<IBuildPlan> getPlans(IOperationMonitor monitor) throws CoreException {
+	public List<IBuildPlanData> getPlans(IOperationMonitor monitor) throws CoreException {
 		try {
 			List<HudsonModelJob> jobs = client.getJobs(monitor);
-			List<IBuildPlan> plans = new ArrayList<IBuildPlan>(jobs.size());
+			List<IBuildPlanData> plans = new ArrayList<IBuildPlanData>(jobs.size());
 			for (HudsonModelJob job : jobs) {
-				IBuildPlanWorkingCopy plan = getServer().createBuildPlan();
+				IBuildPlanWorkingCopy plan = createBuildPlan();
 				plan.setId(job.getName());
 				if ("".equals(job.getDisplayName())) { //$NON-NLS-1$
 					plan.setName(job.getDisplayName());
@@ -110,10 +107,10 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 	}
 
 	@Override
-	public IStatus runBuild(IBuildElement element, IOperationMonitor monitor) throws CoreException {
+	public IStatus runBuild(IBuildPlanData plan, IOperationMonitor monitor) throws CoreException {
 		try {
 			HudsonModelJob job = new HudsonModelJob();
-			job.setUrl(element.getUrl());
+			job.setUrl(plan.getUrl());
 			return client.runBuild(job, monitor);
 		} catch (HudsonException e) {
 			throw HudsonCorePlugin.toCoreException(e);
