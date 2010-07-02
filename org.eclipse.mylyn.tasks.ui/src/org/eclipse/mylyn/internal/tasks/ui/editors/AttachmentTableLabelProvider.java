@@ -8,6 +8,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     Frank Becker - indicate deprecated attachments, bug 215549
+ *     Perforce - fixes for bug 318505
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
@@ -18,7 +19,9 @@ import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
+import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.editors.AttributeEditorToolkit;
@@ -73,9 +76,25 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 				}
 				return WorkbenchImages.getImage(ISharedImages.IMG_OBJ_FILE);
 			}
-		} else {
+		} else if (columnIndex == 3) {
+			return getAuthorImage(attachment.getAuthor(), attachment.getTaskRepository());
 		}
 		return null;
+	}
+
+	/**
+	 * Get author image for a specified repository person and task repository
+	 * 
+	 * @param person
+	 * @param repository
+	 * @return author image
+	 */
+	protected Image getAuthorImage(IRepositoryPerson person, TaskRepository repository) {
+		if (repository != null && person != null && person.getPersonId().equals(repository.getUserName())) {
+			return CommonImages.getImage(CommonImages.PERSON_ME);
+		} else {
+			return CommonImages.getImage(CommonImages.PERSON);
+		}
 	}
 
 	public String getColumnText(Object element, int columnIndex) {
@@ -192,4 +211,5 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 			return null;
 		}
 	}
+
 }
