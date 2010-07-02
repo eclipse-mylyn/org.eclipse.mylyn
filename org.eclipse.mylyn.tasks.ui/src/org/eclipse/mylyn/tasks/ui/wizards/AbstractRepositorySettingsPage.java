@@ -9,6 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *     Frank Becker - improvements
  *     Helen Bershadskaya - improvements for bug 242445
+ *     Atlassian - fixes for bug 316113
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.ui.wizards;
@@ -290,8 +291,11 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			}
 		});
 
-		GridDataFactory.fillDefaults().hint(300, SWT.DEFAULT).grab(true, false).span(2, SWT.DEFAULT).applyTo(
-				serverUrlCombo);
+		GridDataFactory.fillDefaults()
+				.hint(300, SWT.DEFAULT)
+				.grab(true, false)
+				.span(2, SWT.DEFAULT)
+				.applyTo(serverUrlCombo);
 
 		repositoryLabelEditor = new StringFieldEditor("", LABEL_REPOSITORY_LABEL, StringFieldEditor.UNLIMITED, //$NON-NLS-1$
 				compositeContainer) {
@@ -318,6 +322,16 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		disconnectedButton = new Button(compositeContainer, SWT.CHECK);
 		disconnectedButton.setText(Messages.AbstractRepositorySettingsPage_Disconnected);
 		disconnectedButton.setSelection(repository != null ? repository.isOffline() : false);
+		disconnectedButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				super.widgetSelected(e);
+				isPageComplete();
+				if (getWizard() != null) {
+					getWizard().getContainer().updateButtons();
+				}
+			}
+		});
 
 		repositoryUserNameEditor = new StringFieldEditor("", LABEL_USER, StringFieldEditor.UNLIMITED, //$NON-NLS-1$
 				compositeContainer) {
@@ -385,6 +399,16 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 		savePasswordButton = new Button(compositeContainer, SWT.CHECK);
 		savePasswordButton.setText(Messages.AbstractRepositorySettingsPage_Save_Password);
+		savePasswordButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				super.widgetSelected(e);
+				isPageComplete();
+				if (getWizard() != null) {
+					getWizard().getContainer().updateButtons();
+				}
+			}
+		});
 
 		if (repository != null) {
 			try {
@@ -622,8 +646,11 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		section.setClient(httpAuthComp);
 
 		httpAuthButton = new Button(httpAuthComp, SWT.CHECK);
-		GridDataFactory.fillDefaults().indent(0, 5).align(SWT.LEFT, SWT.TOP).span(3, SWT.DEFAULT).applyTo(
-				httpAuthButton);
+		GridDataFactory.fillDefaults()
+				.indent(0, 5)
+				.align(SWT.LEFT, SWT.TOP)
+				.span(3, SWT.DEFAULT)
+				.applyTo(httpAuthButton);
 
 		httpAuthButton.setText(Messages.AbstractRepositorySettingsPage_Enable_http_authentication);
 
@@ -1285,7 +1312,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	 */
 	protected boolean isMissingCredentials() {
 		return repositoryUserNameEditor.getStringValue().trim().equals("") //$NON-NLS-1$
-				|| repositoryPasswordEditor.getStringValue().trim().equals(""); //$NON-NLS-1$
+				|| (getSavePassword() && repositoryPasswordEditor.getStringValue().trim().equals("")); //$NON-NLS-1$
 	}
 
 	/**
