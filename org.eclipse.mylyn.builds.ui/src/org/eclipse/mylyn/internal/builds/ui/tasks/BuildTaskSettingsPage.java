@@ -93,7 +93,7 @@ public class BuildTaskSettingsPage extends AbstractRepositorySettingsPage {
 			IOperationMonitor progress = ProgressUtil.convert(monitor, 2);
 			IStatus result = server.validate(progress.newChild(1));
 			if (result.isOK()) {
-				plans = server.getPlans(progress.newChild(2));
+				plans = server.refreshPlans(progress.newChild(2));
 			}
 			setStatus(result);
 		}
