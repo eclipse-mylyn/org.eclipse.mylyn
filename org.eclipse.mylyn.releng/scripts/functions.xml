@@ -624,6 +624,7 @@
 			<arg value="-Dswtbot-library-file=${swtbot.library}"/>
     		<arg value="-Dplugin-name=${test.plugin}"/>
     		<arg value="-Dclassname=${test.classname}"/>
+			<arg value="-Dtimeout=${build.test.timeout}"/>
     		<arg value="-DextraVMargs= 
     	    -ea
     		-Xmx384m
