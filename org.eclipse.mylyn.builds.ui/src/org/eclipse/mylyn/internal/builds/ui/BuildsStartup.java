@@ -42,7 +42,7 @@ public class BuildsStartup implements IStartup {
 							for (IViewReference view : activePage.getViewReferences()) {
 								if (view.getId().equals(BuildsUiConstants.ID_VIEW)) {
 									// ensure that build view decoration is accurate
-									activePage.showView(BuildsUiPlugin.ID_PLUGIN, null, IWorkbenchPage.VIEW_CREATE);
+									activePage.showView(BuildsUiConstants.ID_VIEW, null, IWorkbenchPage.VIEW_CREATE);
 								}
 							}
 						}
