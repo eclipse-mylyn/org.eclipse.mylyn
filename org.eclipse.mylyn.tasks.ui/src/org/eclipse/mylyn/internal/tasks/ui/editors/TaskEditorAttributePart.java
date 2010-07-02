@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Perforce - fixes for bug 318396
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
@@ -49,6 +50,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
  * @author Steffen Pingel
+ * @author Kevin Sawicki
  */
 public class TaskEditorAttributePart extends AbstractTaskEditorSection {
 
@@ -290,13 +292,26 @@ public class TaskEditorAttributePart extends AbstractTaskEditorSection {
 			}
 		}
 
-		Collections.sort(attributeEditors, new Comparator<AbstractAttributeEditor>() {
+		Comparator<AbstractAttributeEditor> attributeSorter = createAttributeEditorSorter();
+		if (attributeSorter != null) {
+			Collections.sort(attributeEditors, attributeSorter);
+		}
+	}
+
+	/**
+	 * Create a comparator by which attribute editors will be sorted. By default attribute editors are sorted by layout
+	 * hint priority. Subclasses may override this method to sort attribute editors in a custom way.
+	 * 
+	 * @return comparator for {@link AbstractAttributeEditor} objects
+	 */
+	protected Comparator<AbstractAttributeEditor> createAttributeEditorSorter() {
+		return new Comparator<AbstractAttributeEditor>() {
 			public int compare(AbstractAttributeEditor o1, AbstractAttributeEditor o2) {
 				int p1 = (o1.getLayoutHint() != null) ? o1.getLayoutHint().getPriority() : LayoutHint.DEFAULT_PRIORITY;
 				int p2 = (o2.getLayoutHint() != null) ? o2.getLayoutHint().getPriority() : LayoutHint.DEFAULT_PRIORITY;
 				return p1 - p2;
 			}
-		});
+		};
 	}
 
 }
