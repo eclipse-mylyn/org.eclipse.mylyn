@@ -910,6 +910,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 				link.setText(label);
 				link.setFont(JFaceResources.getBannerFont());
 				link.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+				link.setToolTipText(Messages.TaskEditor_Edit_Task_Repository_ToolTip);
 				link.addHyperlinkListener(new HyperlinkAdapter() {
 					@Override
 					public void linkActivated(HyperlinkEvent e) {
