@@ -11,24 +11,27 @@
 
 package org.eclipse.mylyn.builds.core;
 
-import java.util.List;
-
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-
 /**
- * Client API for build plans.
+ * Transfer object for build plans that are not attached to a model.
  * 
  * @author Steffen Pingel
  */
-public interface IBuildPlan extends IBuildPlanData, IBuildElement {
+public interface IBuildPlanData {
 
-	public List<IBuildPlan> getChildren();
+	public abstract int getHealth();
 
-	public IBuildPlan getParent();
+	public abstract String getId();
 
-	public boolean isSelected();
+	public abstract String getInfo();
 
-	IStatus run(IOperationMonitor monitor) throws CoreException;
+	public abstract String getName();
+
+	public abstract BuildState getState();
+
+	public abstract BuildStatus getStatus();
+
+	public abstract String getSummary();
+
+	public abstract String getUrl();
 
 }

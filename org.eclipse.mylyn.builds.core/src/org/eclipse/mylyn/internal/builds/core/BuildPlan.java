@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildPlan.java,v 1.8 2010/07/01 02:17:13 spingel Exp $
+ * $Id: BuildPlan.java,v 1.9 2010/07/02 21:23:15 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -35,10 +35,10 @@ import org.eclipse.mylyn.builds.core.IOperationMonitor;
  *
  *
  * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getBuildPlan()
- * @model kind="class" superTypes="org.eclipse.mylyn.internal.builds.core.IBuildPlanWorkingCopy"
+ * @model kind="class" superTypes="org.eclipse.mylyn.internal.builds.core.IBuildPlan org.eclipse.mylyn.internal.builds.core.IBuildPlanWorkingCopy"
  * @generated
  */
-public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorkingCopy {
+public class BuildPlan extends EObjectImpl implements EObject, IBuildPlan, IBuildPlanWorkingCopy {
 	/**
 	 * The default value of the '{@link #getUrl() <em>Url</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -262,7 +262,8 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * Returns the value of the '<em><b>Url</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Url</em>' attribute isn't clear, there really should be more of a description here...
+	 * If the meaning of the '<em>Url</em>' attribute isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Url</em>' attribute.
@@ -294,7 +295,8 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Name</em>' attribute isn't clear, there really should be more of a description here...
+	 * If the meaning of the '<em>Name</em>' attribute isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Name</em>' attribute.
@@ -327,8 +329,8 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * It is bidirectional and its opposite is '{@link org.eclipse.mylyn.builds.core.IBuildServer#getPlans <em>Plans</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Server</em>' container reference isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Server</em>' container reference isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Server</em>' container reference.
@@ -386,8 +388,8 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * It is bidirectional and its opposite is '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getParent <em>Parent</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Children</em>' reference list isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Children</em>' reference list isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Children</em>' reference list.
@@ -409,8 +411,8 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * It is bidirectional and its opposite is '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getChildren <em>Children</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Parent</em>' reference isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Parent</em>' reference isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Parent</em>' reference.
@@ -490,8 +492,8 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * The default value is <code>"-1"</code>.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Health</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Health</em>' attribute isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Health</em>' attribute.
@@ -523,7 +525,8 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * Returns the value of the '<em><b>Id</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Id</em>' attribute isn't clear, there really should be more of a description here...
+	 * If the meaning of the '<em>Id</em>' attribute isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Id</em>' attribute.
@@ -555,7 +558,8 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * Returns the value of the '<em><b>Info</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Info</em>' attribute isn't clear, there really should be more of a description here...
+	 * If the meaning of the '<em>Info</em>' attribute isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Info</em>' attribute.
@@ -588,8 +592,8 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * The default value is <code>"false"</code>.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Selected</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Selected</em>' attribute isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Selected</em>' attribute.
@@ -622,8 +626,8 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * Returns the value of the '<em><b>Summary</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Summary</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Summary</em>' attribute isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Summary</em>' attribute.
@@ -655,8 +659,8 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * Returns the value of the '<em><b>State</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>State</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>State</em>' attribute isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>State</em>' attribute.
@@ -688,8 +692,8 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlanWorking
 	 * Returns the value of the '<em><b>Status</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Status</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Status</em>' attribute isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Status</em>' attribute.

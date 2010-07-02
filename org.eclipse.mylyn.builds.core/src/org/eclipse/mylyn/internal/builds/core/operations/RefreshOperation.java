@@ -45,7 +45,7 @@ public class RefreshOperation extends AbstractBuildOperation {
 		progress.beginTask("Refreshing builds", model.getServers().size());
 		for (IBuildServer server : model.getServers()) {
 			try {
-				server.getPlans(progress.newChild(1));
+				server.refreshPlans(progress.newChild(1));
 			} catch (CoreException e) {
 				result.add(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN, NLS.bind(
 						"Refresh of server ''{0}'' failed", server.getName()), e));

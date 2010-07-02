@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildAdapterFactory.java,v 1.3 2010/06/26 22:10:50 spingel Exp $
+ * $Id: BuildAdapterFactory.java,v 1.4 2010/07/02 21:23:15 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -16,6 +16,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildModel;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
+import org.eclipse.mylyn.builds.core.IBuildPlanData;
 import org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 
@@ -102,6 +103,11 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 		@Override
 		public Adapter caseIBuildPlan(IBuildPlan object) {
 			return createIBuildPlanAdapter();
+		}
+
+		@Override
+		public Adapter caseIBuildPlanData(IBuildPlanData object) {
+			return createIBuildPlanDataAdapter();
 		}
 
 		@Override
@@ -214,6 +220,20 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createIBuildPlanAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.builds.core.IBuildPlanData <em>IBuild Plan Data</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.builds.core.IBuildPlanData
+	 * @generated
+	 */
+	public Adapter createIBuildPlanDataAdapter() {
 		return null;
 	}
 

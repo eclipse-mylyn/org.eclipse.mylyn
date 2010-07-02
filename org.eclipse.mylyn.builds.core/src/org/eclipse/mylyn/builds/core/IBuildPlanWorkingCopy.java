@@ -12,9 +12,11 @@
 package org.eclipse.mylyn.builds.core;
 
 /**
+ * Working copy for build plans.
+ * 
  * @author Steffen Pingel
  */
-public interface IBuildPlanWorkingCopy extends IBuildPlan {
+public interface IBuildPlanWorkingCopy extends IBuildPlanData {
 
 	public void setStatus(BuildStatus status);
 

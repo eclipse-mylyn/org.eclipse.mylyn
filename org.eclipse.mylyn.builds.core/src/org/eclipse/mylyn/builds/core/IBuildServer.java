@@ -26,12 +26,10 @@ public interface IBuildServer extends IBuildElement {
 
 	public List<IBuildPlan> getPlans();
 
-	public List<IBuildPlan> getPlans(IOperationMonitor monitor) throws CoreException;
+	public List<IBuildPlan> refreshPlans(IOperationMonitor monitor) throws CoreException;
 
 	public IStatus validate(IOperationMonitor monitor) throws CoreException;
 
 	public String getRepositoryUrl();
-
-	public IBuildPlanWorkingCopy createBuildPlan();
 
 }

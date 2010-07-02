@@ -15,30 +15,27 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.mylyn.builds.core.IBuildElement;
-import org.eclipse.mylyn.builds.core.IBuildPlan;
-import org.eclipse.mylyn.builds.core.IBuildServer;
+import org.eclipse.mylyn.builds.core.IBuildPlanData;
+import org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy;
 import org.eclipse.mylyn.builds.core.IOperationMonitor;
+import org.eclipse.mylyn.internal.builds.core.BuildPackage;
 
 /**
  * @author Steffen Pingel
  */
 public abstract class BuildServerBehaviour {
 
-	private final IBuildServer server;
-
-	public BuildServerBehaviour(IBuildServer server) {
-		this.server = server;
+	public BuildServerBehaviour() {
 	}
 
-	public abstract List<IBuildPlan> getPlans(IOperationMonitor monitor) throws CoreException;
-
-	public final IBuildServer getServer() {
-		return server;
-	}
+	public abstract List<IBuildPlanData> getPlans(IOperationMonitor monitor) throws CoreException;
 
 	public abstract IStatus validate(IOperationMonitor monitor) throws CoreException;
 
-	public abstract IStatus runBuild(IBuildElement element, IOperationMonitor monitor) throws CoreException;
+	public abstract IStatus runBuild(IBuildPlanData plan, IOperationMonitor monitor) throws CoreException;
+
+	protected IBuildPlanWorkingCopy createBuildPlan() {
+		return BuildPackage.eINSTANCE.getBuildFactory().createBuildPlan();
+	}
 
 }

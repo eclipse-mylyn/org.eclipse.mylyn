@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildSwitch.java,v 1.3 2010/06/26 22:10:50 spingel Exp $
+ * $Id: BuildSwitch.java,v 1.4 2010/07/02 21:23:15 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildModel;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
+import org.eclipse.mylyn.builds.core.IBuildPlanData;
 import org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 
@@ -100,11 +101,13 @@ public class BuildSwitch<T> {
 			BuildPlan buildPlan = (BuildPlan) theEObject;
 			T result = caseBuildPlan(buildPlan);
 			if (result == null)
-				result = caseIBuildPlanWorkingCopy(buildPlan);
-			if (result == null)
 				result = caseIBuildPlan(buildPlan);
 			if (result == null)
+				result = caseIBuildPlanWorkingCopy(buildPlan);
+			if (result == null)
 				result = caseIBuildElement(buildPlan);
+			if (result == null)
+				result = caseIBuildPlanData(buildPlan);
 			if (result == null)
 				result = defaultCase(theEObject);
 			return result;
@@ -212,6 +215,21 @@ public class BuildSwitch<T> {
 	 * @generated
 	 */
 	public T caseIBuildPlan(IBuildPlan object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IBuild Plan Data</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IBuild Plan Data</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseIBuildPlanData(IBuildPlanData object) {
 		return null;
 	}
 

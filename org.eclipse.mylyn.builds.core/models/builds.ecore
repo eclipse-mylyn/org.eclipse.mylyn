@@ -4,7 +4,7 @@
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="builds"
     nsURI="http://eclipse.org/mylyn/models/build" nsPrefix="builds">
   <eClassifiers xsi:type="ecore:EClass" name="BuildModel" eSuperTypes="#//IBuildModel"/>
-  <eClassifiers xsi:type="ecore:EClass" name="BuildPlan" eSuperTypes="#//IBuildPlanWorkingCopy"/>
+  <eClassifiers xsi:type="ecore:EClass" name="BuildPlan" eSuperTypes="#//IBuildPlan #//IBuildPlanWorkingCopy"/>
   <eClassifiers xsi:type="ecore:EClass" name="BuildServer" eSuperTypes="#//IBuildServer"/>
   <eClassifiers xsi:type="ecore:EClass" name="IBuildModel" instanceClassName="org.eclipse.mylyn.builds.core.IBuildModel"
       abstract="true" interface="true">
@@ -34,8 +34,10 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="state" eType="#//BuildState"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="#//BuildStatus"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IBuildPlanData" instanceClassName="org.eclipse.mylyn.builds.core.IBuildPlanData"
+      abstract="true" interface="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="IBuildPlanWorkingCopy" instanceClassName="org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy"
-      abstract="true" interface="true" eSuperTypes="#//IBuildPlan"/>
+      abstract="true" interface="true" eSuperTypes="#//IBuildPlanData"/>
   <eClassifiers xsi:type="ecore:EClass" name="IBuildServer" instanceClassName="org.eclipse.mylyn.builds.core.IBuildServer"
       abstract="true" interface="true" eSuperTypes="#//IBuildElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="plans" ordered="false"
