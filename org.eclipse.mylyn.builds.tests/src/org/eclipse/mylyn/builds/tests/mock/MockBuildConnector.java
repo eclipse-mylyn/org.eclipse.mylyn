@@ -26,7 +26,7 @@ public class MockBuildConnector extends BuildConnector {
 
 	@Override
 	public BuildServerBehaviour getBehaviour(IBuildServer server) throws CoreException {
-		return new MockBuildServerBehavior(server);
+		return new MockBuildServerBehavior();
 	}
 
 }

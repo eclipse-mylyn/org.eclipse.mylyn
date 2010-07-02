@@ -19,10 +19,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.builds.core.BuildState;
 import org.eclipse.mylyn.builds.core.BuildStatus;
-import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
+import org.eclipse.mylyn.builds.core.IBuildPlanData;
 import org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy;
-import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.IOperationMonitor;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
 
@@ -31,35 +30,34 @@ import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
  */
 public class MockBuildServerBehavior extends BuildServerBehaviour {
 
-	public MockBuildServerBehavior(IBuildServer server) {
-		super(server);
+	public MockBuildServerBehavior() {
 	}
 
 	@Override
-	public List<IBuildPlan> getPlans(IOperationMonitor monitor) {
-		IBuildPlanWorkingCopy failingPlan = getServer().createBuildPlan();
+	public List<IBuildPlanData> getPlans(IOperationMonitor monitor) {
+		IBuildPlanWorkingCopy failingPlan = createBuildPlan();
 		failingPlan.setId("1");
 		failingPlan.setName("Failing Build Plan");
 		failingPlan.setState(BuildState.RUNNING);
 		failingPlan.setStatus(BuildStatus.FAILED);
 		failingPlan.setHealth(15);
 
-		IBuildPlanWorkingCopy childPlan1 = getServer().createBuildPlan();
+		IBuildPlanWorkingCopy childPlan1 = createBuildPlan();
 		childPlan1.setId("1.1");
 		childPlan1.setName("Stopped Child Build Plan");
 		childPlan1.setState(BuildState.STOPPED);
 		childPlan1.setStatus(BuildStatus.FAILED);
-		failingPlan.getChildren().add(childPlan1);
+		//failingPlan.getChildren().add(childPlan1);
 
-		IBuildPlanWorkingCopy childPlan2 = getServer().createBuildPlan();
+		IBuildPlanWorkingCopy childPlan2 = createBuildPlan();
 		childPlan2.setId("1.2");
 		childPlan2.setName("Running Child Build Plan");
 		childPlan2.setState(BuildState.STOPPED);
 		childPlan2.setStatus(BuildStatus.FAILED);
 		childPlan2.setHealth(55);
-		failingPlan.getChildren().add(childPlan2);
+		//failingPlan.getChildren().add(childPlan2);
 
-		IBuildPlanWorkingCopy succeedingPlan = getServer().createBuildPlan();
+		IBuildPlanWorkingCopy succeedingPlan = createBuildPlan();
 		succeedingPlan.setId("2");
 		succeedingPlan.setName("Succeeding Build Plan");
 		succeedingPlan.setState(BuildState.STOPPED);
@@ -76,7 +74,7 @@ public class MockBuildServerBehavior extends BuildServerBehaviour {
 	}
 
 	@Override
-	public IStatus runBuild(IBuildElement element, IOperationMonitor monitor) throws CoreException {
+	public IStatus runBuild(IBuildPlanData plan, IOperationMonitor monitor) throws CoreException {
 		return Status.OK_STATUS;
 	}
 
