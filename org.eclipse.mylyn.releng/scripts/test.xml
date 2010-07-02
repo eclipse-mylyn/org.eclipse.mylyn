@@ -10,6 +10,8 @@
 
   <property name="library-file"
             value="${eclipse-home}/plugins/org.eclipse.test/library.xml"/>
+  <property name="timeout"
+            value="7200000"/>
 
   <!-- This target holds all initialization code that needs to be done for -->
   <!-- all tests that are to be run. Initialization for individual tests -->
@@ -29,6 +31,7 @@
       <property name="data-dir" value="${workspace}"/>
       <property name="plugin-name" value="${plugin-name}"/>
       <property name="classname" value="${classname}"/>
+      <property name="timeout" value="${timeout}"/>
     </ant>
   </target>
   
@@ -56,6 +59,7 @@
       <property name="data-dir" value="${workspace}"/>
       <property name="plugin-name" value="${plugin-name}"/>
       <property name="classname" value="${classname}"/>
+      <property name="timeout" value="${timeout}"/>
     </ant>
   </target>
 		
@@ -64,6 +68,7 @@
     <ant target="collect" antfile="${library-file}" dir="${eclipse-home}">
       <property name="includes" value="*test*.xml"/>
       <property name="output-file" value="${plugin-name}.xml"/>
+      <property name="timeout" value="${timeout}"/>
     </ant>
   </target>
 	
@@ -78,6 +83,7 @@
       <property name="plugin-name" value="${plugin-name}" />
       <property name="classname" value="${classname}" />
       <property name="vmargs" value=" -Xms128M -Xmx368M -XX:MaxPermSize=256M" />
+      <property name="timeout" value="${timeout}"/>
     </ant>
   </target>
 

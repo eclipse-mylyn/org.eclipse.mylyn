@@ -625,7 +625,8 @@
 			<arg value="-Dswtbot-library-file=${swtbot.library}"/>
     		<arg value="-Dplugin-name=${test.plugin}"/>
     		<arg value="-Dclassname=${build.test.classname}"/>
-    		<arg value="-DextraVMargs= 
+    		<arg value="-Dtimeout=${build.test.timeout}"/>
+			<arg value="-DextraVMargs= 
     	    -ea
     		-Xmx384m
     		-XX:MaxPermSize=128m
