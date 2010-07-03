@@ -5,9 +5,9 @@ Bundle-SymbolicName: org.eclipse.mylyn.commons.repository;singleton:=true
 Bundle-Version: 0.1.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Export-Package: org.eclipse.mylyn.commons.repository,
- org.eclipse.mylyn.commons.repository.auth,
- org.eclipse.mylyn.internal.commons.repository
+Export-Package: org.eclipse.mylyn.commons.repository;x-internal:=true,
+ org.eclipse.mylyn.commons.repository.auth;x-internal:=true,
+ org.eclipse.mylyn.internal.commons.repository;x-internal:=true
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.equinox.security,
  org.eclipse.mylyn.commons.core,
