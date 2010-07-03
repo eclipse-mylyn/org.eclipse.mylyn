@@ -34,6 +34,7 @@
 
    <requires>
       <import plugin="org.eclipse.mylyn.commons.net" version="3.4.0" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.commons.repositories" version="0.1.0" match="compatible"/>
       <import plugin="org.eclipse.mylyn.commons.ui" version="3.4.0" match="compatible"/>
       <import feature="org.eclipse.mylyn_feature" version="3.4.0.I20100101" match="compatible"/>
    </requires>
@@ -89,13 +90,6 @@
 
    <plugin
          id="javax.xml"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.mylyn.commons.repository"
          download-size="0"
          install-size="0"
          version="0.0.0"
