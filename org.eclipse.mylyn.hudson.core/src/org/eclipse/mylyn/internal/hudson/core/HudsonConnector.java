@@ -23,9 +23,7 @@ public class HudsonConnector extends BuildConnector {
 
 	@Override
 	public BuildServerBehaviour getBehaviour(IBuildServer server) throws CoreException {
-		// FIXME
-		//return new HudsonServerBehaviour(createLocation(server));
-		return null;
+		return new HudsonServerBehaviour(createLocation(server));		
 	}
 
 }
