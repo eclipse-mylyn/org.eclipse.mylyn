@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="newWizards" name="newWizards" schema="schema/newWizards.exsd"/>
+
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            category="org.eclipse.team.ui"
+            class="org.eclipse.mylyn.internal.commons.ui.repositories.RepositoriesView"
+            icon="icons/eview16/repositories.gif"
+            id="org.eclipse.mylyn.commons.team.navigator.Repositories"
+            name="Team Repositories">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.navigator.viewer">
+      <viewerActionBinding
+            viewerId="org.eclipse.mylyn.commons.team.navigator.Repositories">
+         <includes>
+            <actionExtension
+                  pattern="org.eclipse.mylyn.commons.team.navigator.*">
+            </actionExtension>
+         </includes>
+      </viewerActionBinding>
+      <viewerContentBinding
+            viewerId="org.eclipse.mylyn.commons.team.navigator.Repositories">
+         <includes>
+            <contentExtension
+                  pattern="org.eclipse.ui.navigator.resources.filters.*">
+            </contentExtension>
+            <contentExtension
+                  pattern="org.eclipse.ui.navigator.resources.linkHelper">
+            </contentExtension>
+            <contentExtension
+                  pattern="org.eclipse.ui.navigator.resources.workingSets">
+            </contentExtension>
+         </includes>
+      </viewerContentBinding>
+   </extension>
+   <extension
+         point="org.eclipse.ui.navigator.navigatorContent">
+      <navigatorContent
+            activeByDefault="true"
+            id="org.eclipse.mylyn.commons.team.navigator.Repositories"
+            name="Repositories">
+         <possibleChildren>
+            <instanceof
+                  value="org.eclipse.mylyn.commons.repository.RepositoryLocation">
+            </instanceof>
+         </possibleChildren>
+         <triggerPoints></triggerPoints>
+      </navigatorContent>
+   </extension>
+   <extension
+         point="org.eclipse.ui.navigator.viewer">
+      <viewerContentBinding
+            viewerId="org.eclipse.mylyn.commons.team.navigator.Repositories">
+         <includes>
+            <contentExtension
+                  isRoot="true"
+                  pattern="org.eclipse.mylyn.tasks.ui.navigator.Repositories">
+            </contentExtension>
+         </includes>
+      </viewerContentBinding>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            categoryId="org.eclipse.team.ui.category.team"
+            defaultHandler="org.eclipse.mylyn.internal.commons.ui.repositories.NewRepositoryHandler"
+            id="org.eclipse.mylyn.commons.ui.command.AddRepository"
+            name="Add Repository">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:org.eclipse.mylyn.commons.team.navigator.Repositories">
+         <command
+               commandId="org.eclipse.mylyn.commons.ui.command.AddRepository"
+               label="Add Repository..."
+               style="push">
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commandImages">
+      <image
+            commandId="org.eclipse.mylyn.commons.ui.command.AddRepository"
+            icon="icons/etool16/repository-new.gif">
+      </image>
+   </extension>
+
+</plugin>
