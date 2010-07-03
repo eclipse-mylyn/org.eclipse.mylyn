@@ -95,7 +95,7 @@ public class BugzillaFixture extends TestFixture {
 			"3.2.7", "");
 
 	public static BugzillaFixture BUGS_3_4 = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_34_URL, //
-			"3.4.7", "");
+			"3.4.6", "");
 
 	public static BugzillaFixture BUGS_3_6 = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_36_URL, //
 			"3.6.1", "");
