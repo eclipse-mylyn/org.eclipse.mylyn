@@ -20,5 +20,15 @@
             ui="org.eclipse.mylyn.internal.hudson.ui.HudsonConnectorUi">
       </connector>
    </extension>
+   <extension
+         point="org.eclipse.mylyn.commons.ui.newWizards">
+      <wizard
+            category="org.eclipse.mylyn.builds.ui.category.Builds"
+            class="org.eclipse.mylyn.hudson.ui.NewHudsonServerWizard"
+            icon="icons/obj16/hudson.png"
+            id="org.eclipse.mylyn.hudson"
+            name="Hudson">
+      </wizard>
+   </extension>
 
 </plugin>
