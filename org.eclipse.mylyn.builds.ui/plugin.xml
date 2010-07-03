@@ -82,7 +82,7 @@
        </possibleChildren>
        <triggerPoints>
           <instanceof
-                value="org.eclipse.mylyn.internal.commons.team.navigator.RepositoryModel">
+                value="org.eclipse.mylyn.internal.tasks.core.RepositoryModel">
           </instanceof>
        </triggerPoints>
     </navigatorContent>
@@ -129,5 +129,12 @@
        point="org.eclipse.ui.startup">
     <startup
           class="org.eclipse.mylyn.internal.builds.ui.BuildsStartup"></startup>
+ </extension>
+ <extension
+       point="org.eclipse.mylyn.commons.ui.newWizards">
+    <category
+          id="org.eclipse.mylyn.builds.ui.category.Builds"
+          name="Builds">
+    </category>
  </extension>
 </plugin>
