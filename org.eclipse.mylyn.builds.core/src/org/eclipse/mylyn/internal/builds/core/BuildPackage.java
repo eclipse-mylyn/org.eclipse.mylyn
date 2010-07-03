@@ -2,19 +2,18 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildPackage.java,v 1.8 2010/07/03 06:40:32 spingel Exp $
+ * $Id: BuildPackage.java,v 1.9 2010/07/03 08:08:41 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
 import java.util.Map;
+
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-
 import org.eclipse.emf.ecore.impl.EPackageImpl;
-
 import org.eclipse.mylyn.builds.core.BuildState;
 import org.eclipse.mylyn.builds.core.BuildStatus;
 import org.eclipse.mylyn.builds.core.IBuildElement;
@@ -23,8 +22,7 @@ import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildPlanData;
 import org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy;
 import org.eclipse.mylyn.builds.core.IBuildServer;
-
-import org.eclipse.mylyn.commons.repository.RepositoryLocation;
+import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
@@ -32,10 +30,10 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  * The <b>Package</b> for the model.
  * It contains accessors for the meta objects to represent
  * <ul>
- *   <li>each class,</li>
- *   <li>each feature of each class,</li>
- *   <li>each enum,</li>
- *   <li>and each data type</li>
+ * <li>each class,</li>
+ * <li>each feature of each class,</li>
+ * <li>each enum,</li>
+ * <li>and each data type</li>
  * </ul>
  * <!-- end-user-doc -->
  * @see org.eclipse.mylyn.internal.builds.core.BuildFactory
@@ -693,7 +691,7 @@ public class BuildPackage extends EPackageImpl {
 	 * The meta object id for the '<em>Repository Location</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.mylyn.commons.repository.RepositoryLocation
+	 * @see org.eclipse.mylyn.commons.repositories.RepositoryLocation
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getRepositoryLocation()
 	 * @generated
 	 */
@@ -818,15 +816,14 @@ public class BuildPackage extends EPackageImpl {
 	private EDataType buildStatusEDataType = null;
 
 	/**
-	 * Creates an instance of the model <b>Package</b>, registered with
-	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
+	 * Creates an instance of the model <b>Package</b>, registered with {@link org.eclipse.emf.ecore.EPackage.Registry
+	 * EPackage.Registry} by the package
 	 * package URI value.
-	 * <p>Note: the correct way to create the package is via the static
-	 * factory method {@link #init init()}, which also performs
-	 * initialization of the package, or returns the registered package,
-	 * if one already exists.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <p>
+	 * Note: the correct way to create the package is via the static factory method {@link #init init()}, which also
+	 * performs initialization of the package, or returns the registered package, if one already exists. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see org.eclipse.emf.ecore.EPackage.Registry
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#eNS_URI
 	 * @see #init()
@@ -1295,12 +1292,12 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for data type '{@link org.eclipse.mylyn.commons.repository.RepositoryLocation <em>Repository Location</em>}'.
+	 * Returns the meta object for data type '{@link org.eclipse.mylyn.commons.repositories.RepositoryLocation <em>Repository Location</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for data type '<em>Repository Location</em>'.
-	 * @see org.eclipse.mylyn.commons.repository.RepositoryLocation
-	 * @model instanceClass="org.eclipse.mylyn.commons.repository.RepositoryLocation" serializeable="false"
+	 * @see org.eclipse.mylyn.commons.repositories.RepositoryLocation
+	 * @model instanceClass="org.eclipse.mylyn.commons.repositories.RepositoryLocation" serializeable="false"
 	 * @generated
 	 */
 	public EDataType getRepositoryLocation() {
@@ -1551,10 +1548,10 @@ public class BuildPackage extends EPackageImpl {
 	 * <!-- begin-user-doc -->
 	 * Defines literals for the meta objects that represent
 	 * <ul>
-	 *   <li>each class,</li>
-	 *   <li>each feature of each class,</li>
-	 *   <li>each enum,</li>
-	 *   <li>and each data type</li>
+	 * <li>each class,</li>
+	 * <li>each feature of each class,</li>
+	 * <li>each enum,</li>
+	 * <li>and each data type</li>
 	 * </ul>
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1842,7 +1839,7 @@ public class BuildPackage extends EPackageImpl {
 		 * The meta object literal for the '<em>Repository Location</em>' data type.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.mylyn.commons.repository.RepositoryLocation
+		 * @see org.eclipse.mylyn.commons.repositories.RepositoryLocation
 		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getRepositoryLocation()
 		 * @generated
 		 */

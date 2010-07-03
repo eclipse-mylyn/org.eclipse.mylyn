@@ -51,8 +51,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="connectorKind" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="repositoryUrl" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EDataType" name="TaskRepository" instanceClassName="org.eclipse.mylyn.tasks.core.TaskRepository"/>  
-  <eClassifiers xsi:type="ecore:EDataType" name="RepositoryLocation" instanceClassName="org.eclipse.mylyn.commons.repository.RepositoryLocation"
+  <eClassifiers xsi:type="ecore:EDataType" name="TaskRepository" instanceClassName="org.eclipse.mylyn.tasks.core.TaskRepository"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="RepositoryLocation" instanceClassName="org.eclipse.mylyn.commons.repositories.RepositoryLocation"
       serializable="false"/>
   <eClassifiers xsi:type="ecore:EDataType" name="BuildState" instanceClassName="org.eclipse.mylyn.builds.core.BuildState"/>
   <eClassifiers xsi:type="ecore:EDataType" name="BuildStatus" instanceClassName="org.eclipse.mylyn.builds.core.BuildStatus"/>
