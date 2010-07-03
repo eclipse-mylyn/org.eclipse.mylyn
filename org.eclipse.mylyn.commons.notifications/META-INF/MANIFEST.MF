@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %Bundle-Name
+Bundle-SymbolicName: org.eclipse.mylyn.commons.notificaitons;singleton:=true
+Bundle-Version: 0.1.0.qualifier
+Bundle-Vendor: %Bundle-Vendor
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Export-Package: org.eclipse.mylyn.commons.notifications;x-internal:=true
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.equinox.security,
+ org.eclipse.mylyn.commons.core,
+ org.eclipse.mylyn.commons.net;bundle-version="3.5.0"
+Bundle-ClassPath: .
+Bundle-Localization: plugin
