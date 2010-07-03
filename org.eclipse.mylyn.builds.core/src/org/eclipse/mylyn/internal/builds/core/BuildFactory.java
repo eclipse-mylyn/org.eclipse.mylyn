@@ -2,10 +2,11 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildFactory.java,v 1.4 2010/06/26 22:10:50 spingel Exp $
+ * $Id: BuildFactory.java,v 1.5 2010/07/03 06:40:32 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
+import java.util.Map;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
@@ -80,6 +81,8 @@ public class BuildFactory extends EFactoryImpl {
 			return createBuildPlan();
 		case BuildPackage.BUILD_SERVER:
 			return createBuildServer();
+		case BuildPackage.STRING_TO_STRING_MAP:
+			return (EObject) createStringToStringMap();
 		default:
 			throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -151,6 +154,16 @@ public class BuildFactory extends EFactoryImpl {
 	public BuildServer createBuildServer() {
 		BuildServer buildServer = new BuildServer();
 		return buildServer;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Map.Entry<String, String> createStringToStringMap() {
+		StringToStringMap stringToStringMap = new StringToStringMap();
+		return stringToStringMap;
 	}
 
 	/**

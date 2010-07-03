@@ -2,12 +2,13 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildServer.java,v 1.8 2010/07/02 21:23:15 spingel Exp $
+ * $Id: BuildServer.java,v 1.9 2010/07/03 06:40:32 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -19,18 +20,22 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
+import org.eclipse.emf.ecore.util.EcoreEMap;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildPlanData;
 import org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy;
 import org.eclipse.mylyn.builds.core.IBuildServer;
+import org.eclipse.mylyn.commons.repository.RepositoryLocation;
 import org.eclipse.mylyn.builds.core.IOperationMonitor;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
 import org.eclipse.mylyn.commons.core.StatusHandler;
@@ -99,6 +104,16 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	protected EList<IBuildPlan> plans;
 
 	/**
+	 * The cached value of the '{@link #getAttributes() <em>Attributes</em>}' map.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getAttributes()
+	 * @generated
+	 * @ordered
+	 */
+	protected EMap<String, String> attributes;
+
+	/**
 	 * The default value of the '{@link #getRepository() <em>Repository</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -117,6 +132,26 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	 * @ordered
 	 */
 	protected TaskRepository repository = REPOSITORY_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getLocation() <em>Location</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getLocation()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final RepositoryLocation LOCATION_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getLocation() <em>Location</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getLocation()
+	 * @generated
+	 * @ordered
+	 */
+	protected RepositoryLocation location = LOCATION_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getConnectorKind() <em>Connector Kind</em>}' attribute.
@@ -264,11 +299,34 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	}
 
 	/**
+	 * Returns the value of the '<em><b>Attributes</b></em>' map.
+	 * The key is of type {@link java.lang.String},
+	 * and the value is of type {@link java.lang.String},
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Attributes</em>' map isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Attributes</em>' map.
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildServer_Attributes()
+	 * @model mapType="org.eclipse.mylyn.internal.builds.core.StringToStringMap<org.eclipse.emf.ecore.EString, org.eclipse.emf.ecore.EString>"
+	 * @generated
+	 */
+	public EMap<String, String> getAttributes() {
+		if (attributes == null) {
+			attributes = new EcoreEMap<String, String>(BuildPackage.Literals.STRING_TO_STRING_MAP,
+					StringToStringMap.class, this, BuildPackage.BUILD_SERVER__ATTRIBUTES);
+		}
+		return attributes;
+	}
+
+	/**
 	 * Returns the value of the '<em><b>Repository</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Repository</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Repository</em>' attribute isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Repository</em>' attribute.
@@ -295,6 +353,40 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_SERVER__REPOSITORY, oldRepository,
 					repository));
+	}
+
+	/**
+	 * Returns the value of the '<em><b>Location</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Location</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Location</em>' attribute.
+	 * @see #setLocation(RepositoryLocation)
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildServer_Location()
+	 * @model dataType="org.eclipse.mylyn.internal.builds.core.RepositoryLocation" transient="true"
+	 * @generated
+	 */
+	public RepositoryLocation getLocation() {
+		return location;
+	}
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildServer#getLocation <em>Location</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Location</em>' attribute.
+	 * @see #getLocation()
+	 * @generated
+	 */
+	public void setLocation(RepositoryLocation newLocation) {
+		RepositoryLocation oldLocation = location;
+		location = newLocation;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_SERVER__LOCATION, oldLocation,
+					location));
 	}
 
 	/**
@@ -390,6 +482,8 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 		switch (featureID) {
 		case BuildPackage.BUILD_SERVER__PLANS:
 			return ((InternalEList<?>) getPlans()).basicRemove(otherEnd, msgs);
+		case BuildPackage.BUILD_SERVER__ATTRIBUTES:
+			return ((InternalEList<?>) getAttributes()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -408,8 +502,15 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 			return getName();
 		case BuildPackage.BUILD_SERVER__PLANS:
 			return getPlans();
+		case BuildPackage.BUILD_SERVER__ATTRIBUTES:
+			if (coreType)
+				return getAttributes();
+			else
+				return getAttributes().map();
 		case BuildPackage.BUILD_SERVER__REPOSITORY:
 			return getRepository();
+		case BuildPackage.BUILD_SERVER__LOCATION:
+			return getLocation();
 		case BuildPackage.BUILD_SERVER__CONNECTOR_KIND:
 			return getConnectorKind();
 		case BuildPackage.BUILD_SERVER__REPOSITORY_URL:
@@ -437,8 +538,14 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 			getPlans().clear();
 			getPlans().addAll((Collection<? extends IBuildPlan>) newValue);
 			return;
+		case BuildPackage.BUILD_SERVER__ATTRIBUTES:
+			((EStructuralFeature.Setting) getAttributes()).set(newValue);
+			return;
 		case BuildPackage.BUILD_SERVER__REPOSITORY:
 			setRepository((TaskRepository) newValue);
+			return;
+		case BuildPackage.BUILD_SERVER__LOCATION:
+			setLocation((RepositoryLocation) newValue);
 			return;
 		case BuildPackage.BUILD_SERVER__CONNECTOR_KIND:
 			setConnectorKind((String) newValue);
@@ -467,8 +574,14 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 		case BuildPackage.BUILD_SERVER__PLANS:
 			getPlans().clear();
 			return;
+		case BuildPackage.BUILD_SERVER__ATTRIBUTES:
+			getAttributes().clear();
+			return;
 		case BuildPackage.BUILD_SERVER__REPOSITORY:
 			setRepository(REPOSITORY_EDEFAULT);
+			return;
+		case BuildPackage.BUILD_SERVER__LOCATION:
+			setLocation(LOCATION_EDEFAULT);
 			return;
 		case BuildPackage.BUILD_SERVER__CONNECTOR_KIND:
 			setConnectorKind(CONNECTOR_KIND_EDEFAULT);
@@ -494,8 +607,12 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 			return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 		case BuildPackage.BUILD_SERVER__PLANS:
 			return plans != null && !plans.isEmpty();
+		case BuildPackage.BUILD_SERVER__ATTRIBUTES:
+			return attributes != null && !attributes.isEmpty();
 		case BuildPackage.BUILD_SERVER__REPOSITORY:
 			return REPOSITORY_EDEFAULT == null ? repository != null : !REPOSITORY_EDEFAULT.equals(repository);
+		case BuildPackage.BUILD_SERVER__LOCATION:
+			return LOCATION_EDEFAULT == null ? location != null : !LOCATION_EDEFAULT.equals(location);
 		case BuildPackage.BUILD_SERVER__CONNECTOR_KIND:
 			return CONNECTOR_KIND_EDEFAULT == null ? connectorKind != null : !CONNECTOR_KIND_EDEFAULT
 					.equals(connectorKind);
@@ -523,6 +640,8 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 		result.append(name);
 		result.append(", repository: ");
 		result.append(repository);
+		result.append(", location: ");
+		result.append(location);
 		result.append(", connectorKind: ");
 		result.append(connectorKind);
 		result.append(", repositoryUrl: ");

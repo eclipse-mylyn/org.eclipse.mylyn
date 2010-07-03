@@ -42,12 +42,23 @@
       abstract="true" interface="true" eSuperTypes="#//IBuildElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="plans" ordered="false"
         upperBound="-1" eType="#//IBuildPlan" containment="true" eOpposite="#//IBuildPlan/server"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" upperBound="-1"
+        eType="#//StringToStringMap" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="repository" eType="#//TaskRepository"
+        transient="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="location" eType="#//RepositoryLocation"
         transient="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="connectorKind" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="repositoryUrl" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EDataType" name="TaskRepository" instanceClassName="org.eclipse.mylyn.tasks.core.TaskRepository"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="TaskRepository" instanceClassName="org.eclipse.mylyn.tasks.core.TaskRepository"/>  
+  <eClassifiers xsi:type="ecore:EDataType" name="RepositoryLocation" instanceClassName="org.eclipse.mylyn.commons.repository.RepositoryLocation"
+      serializable="false"/>
   <eClassifiers xsi:type="ecore:EDataType" name="BuildState" instanceClassName="org.eclipse.mylyn.builds.core.BuildState"/>
   <eClassifiers xsi:type="ecore:EDataType" name="BuildStatus" instanceClassName="org.eclipse.mylyn.builds.core.BuildStatus"/>
+  <eClassifiers xsi:type="ecore:EClass" name="StringToStringMap" instanceClassName="java.util.Map$Entry">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral=""/>
+  </eClassifiers>
 </ecore:EPackage>

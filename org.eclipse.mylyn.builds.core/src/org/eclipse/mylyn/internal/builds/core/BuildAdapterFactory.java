@@ -2,10 +2,11 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildAdapterFactory.java,v 1.4 2010/07/02 21:23:15 spingel Exp $
+ * $Id: BuildAdapterFactory.java,v 1.5 2010/07/03 06:40:32 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
+import java.util.Map;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 
@@ -118,6 +119,11 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 		@Override
 		public Adapter caseIBuildServer(IBuildServer object) {
 			return createIBuildServerAdapter();
+		}
+
+		@Override
+		public Adapter caseStringToStringMap(Map.Entry<String, String> object) {
+			return createStringToStringMapAdapter();
 		}
 
 		@Override
@@ -262,6 +268,20 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createIBuildServerAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link java.util.Map.Entry <em>String To String Map</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see java.util.Map.Entry
+	 * @generated
+	 */
+	public Adapter createStringToStringMapAdapter() {
 		return null;
 	}
 

@@ -2,10 +2,11 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildPackage.java,v 1.7 2010/07/02 21:23:15 spingel Exp $
+ * $Id: BuildPackage.java,v 1.8 2010/07/03 06:40:32 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
+import java.util.Map;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
@@ -23,6 +24,7 @@ import org.eclipse.mylyn.builds.core.IBuildPlanData;
 import org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 
+import org.eclipse.mylyn.commons.repository.RepositoryLocation;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
@@ -488,13 +490,31 @@ public class BuildPackage extends EPackageImpl {
 	public static final int IBUILD_SERVER__PLANS = IBUILD_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Attributes</b></em>' map.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_SERVER__ATTRIBUTES = IBUILD_ELEMENT_FEATURE_COUNT + 1;
+
+	/**
 	 * The feature id for the '<em><b>Repository</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	public static final int IBUILD_SERVER__REPOSITORY = IBUILD_ELEMENT_FEATURE_COUNT + 1;
+	public static final int IBUILD_SERVER__REPOSITORY = IBUILD_ELEMENT_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Location</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_SERVER__LOCATION = IBUILD_ELEMENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Connector Kind</b></em>' attribute.
@@ -503,7 +523,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int IBUILD_SERVER__CONNECTOR_KIND = IBUILD_ELEMENT_FEATURE_COUNT + 2;
+	public static final int IBUILD_SERVER__CONNECTOR_KIND = IBUILD_ELEMENT_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Repository Url</b></em>' attribute.
@@ -512,7 +532,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int IBUILD_SERVER__REPOSITORY_URL = IBUILD_ELEMENT_FEATURE_COUNT + 3;
+	public static final int IBUILD_SERVER__REPOSITORY_URL = IBUILD_ELEMENT_FEATURE_COUNT + 5;
 
 	/**
 	 * The number of structural features of the '<em>IBuild Server</em>' class.
@@ -521,7 +541,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int IBUILD_SERVER_FEATURE_COUNT = IBUILD_ELEMENT_FEATURE_COUNT + 4;
+	public static final int IBUILD_SERVER_FEATURE_COUNT = IBUILD_ELEMENT_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Url</b></em>' attribute.
@@ -551,6 +571,15 @@ public class BuildPackage extends EPackageImpl {
 	public static final int BUILD_SERVER__PLANS = IBUILD_SERVER__PLANS;
 
 	/**
+	 * The feature id for the '<em><b>Attributes</b></em>' map.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD_SERVER__ATTRIBUTES = IBUILD_SERVER__ATTRIBUTES;
+
+	/**
 	 * The feature id for the '<em><b>Repository</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -558,6 +587,15 @@ public class BuildPackage extends EPackageImpl {
 	 * @ordered
 	 */
 	public static final int BUILD_SERVER__REPOSITORY = IBUILD_SERVER__REPOSITORY;
+
+	/**
+	 * The feature id for the '<em><b>Location</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD_SERVER__LOCATION = IBUILD_SERVER__LOCATION;
 
 	/**
 	 * The feature id for the '<em><b>Connector Kind</b></em>' attribute.
@@ -605,6 +643,43 @@ public class BuildPackage extends EPackageImpl {
 	public static final int IBUILD_PLAN_WORKING_COPY_FEATURE_COUNT = IBUILD_PLAN_DATA_FEATURE_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.StringToStringMap <em>String To String Map</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.mylyn.internal.builds.core.StringToStringMap
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getStringToStringMap()
+	 * @generated
+	 */
+	public static final int STRING_TO_STRING_MAP = 9;
+
+	/**
+	 * The feature id for the '<em><b>Key</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int STRING_TO_STRING_MAP__KEY = 0;
+
+	/**
+	 * The feature id for the '<em><b>Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int STRING_TO_STRING_MAP__VALUE = 1;
+
+	/**
+	 * The number of structural features of the '<em>String To String Map</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int STRING_TO_STRING_MAP_FEATURE_COUNT = 2;
+
+	/**
 	 * The meta object id for the '<em>Task Repository</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -612,7 +687,17 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getTaskRepository()
 	 * @generated
 	 */
-	public static final int TASK_REPOSITORY = 9;
+	public static final int TASK_REPOSITORY = 10;
+
+	/**
+	 * The meta object id for the '<em>Repository Location</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.mylyn.commons.repository.RepositoryLocation
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getRepositoryLocation()
+	 * @generated
+	 */
+	public static final int REPOSITORY_LOCATION = 11;
 
 	/**
 	 * The meta object id for the '<em>State</em>' data type.
@@ -622,7 +707,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getBuildState()
 	 * @generated
 	 */
-	public static final int BUILD_STATE = 10;
+	public static final int BUILD_STATE = 12;
 
 	/**
 	 * The meta object id for the '<em>Status</em>' data type.
@@ -632,7 +717,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getBuildStatus()
 	 * @generated
 	 */
-	public static final int BUILD_STATUS = 11;
+	public static final int BUILD_STATUS = 13;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -702,7 +787,21 @@ public class BuildPackage extends EPackageImpl {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass stringToStringMapEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EDataType taskRepositoryEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType repositoryLocationEDataType = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1078,6 +1177,19 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
+	 * Returns the meta object for the map '{@link org.eclipse.mylyn.builds.core.IBuildServer#getAttributes <em>Attributes</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the map '<em>Attributes</em>'.
+	 * @see org.eclipse.mylyn.builds.core.IBuildServer#getAttributes()
+	 * @see #getIBuildServer()
+	 * @generated
+	 */
+	public EReference getIBuildServer_Attributes() {
+		return (EReference) iBuildServerEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuildServer#getRepository <em>Repository</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1087,7 +1199,20 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public EAttribute getIBuildServer_Repository() {
-		return (EAttribute) iBuildServerEClass.getEStructuralFeatures().get(1);
+		return (EAttribute) iBuildServerEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuildServer#getLocation <em>Location</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Location</em>'.
+	 * @see org.eclipse.mylyn.builds.core.IBuildServer#getLocation()
+	 * @see #getIBuildServer()
+	 * @generated
+	 */
+	public EAttribute getIBuildServer_Location() {
+		return (EAttribute) iBuildServerEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -1100,7 +1225,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public EAttribute getIBuildServer_ConnectorKind() {
-		return (EAttribute) iBuildServerEClass.getEStructuralFeatures().get(2);
+		return (EAttribute) iBuildServerEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -1113,7 +1238,47 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public EAttribute getIBuildServer_RepositoryUrl() {
-		return (EAttribute) iBuildServerEClass.getEStructuralFeatures().get(3);
+		return (EAttribute) iBuildServerEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * Returns the meta object for class '{@link java.util.Map.Entry <em>String To String Map</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>String To String Map</em>'.
+	 * @see java.util.Map.Entry
+	 * @model keyDataType="org.eclipse.emf.ecore.EString"
+	 *        valueDefault="" valueDataType="org.eclipse.emf.ecore.EString"
+	 * @generated
+	 */
+	public EClass getStringToStringMap() {
+		return stringToStringMapEClass;
+	}
+
+	/**
+	 * Returns the meta object for the attribute '{@link java.util.Map.Entry <em>Key</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Key</em>'.
+	 * @see java.util.Map.Entry
+	 * @see #getStringToStringMap()
+	 * @generated
+	 */
+	public EAttribute getStringToStringMap_Key() {
+		return (EAttribute) stringToStringMapEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * Returns the meta object for the attribute '{@link java.util.Map.Entry <em>Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Value</em>'.
+	 * @see java.util.Map.Entry
+	 * @see #getStringToStringMap()
+	 * @generated
+	 */
+	public EAttribute getStringToStringMap_Value() {
+		return (EAttribute) stringToStringMapEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -1127,6 +1292,19 @@ public class BuildPackage extends EPackageImpl {
 	 */
 	public EDataType getTaskRepository() {
 		return taskRepositoryEDataType;
+	}
+
+	/**
+	 * Returns the meta object for data type '{@link org.eclipse.mylyn.commons.repository.RepositoryLocation <em>Repository Location</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Repository Location</em>'.
+	 * @see org.eclipse.mylyn.commons.repository.RepositoryLocation
+	 * @model instanceClass="org.eclipse.mylyn.commons.repository.RepositoryLocation" serializeable="false"
+	 * @generated
+	 */
+	public EDataType getRepositoryLocation() {
+		return repositoryLocationEDataType;
 	}
 
 	/**
@@ -1217,12 +1395,19 @@ public class BuildPackage extends EPackageImpl {
 
 		iBuildServerEClass = createEClass(IBUILD_SERVER);
 		createEReference(iBuildServerEClass, IBUILD_SERVER__PLANS);
+		createEReference(iBuildServerEClass, IBUILD_SERVER__ATTRIBUTES);
 		createEAttribute(iBuildServerEClass, IBUILD_SERVER__REPOSITORY);
+		createEAttribute(iBuildServerEClass, IBUILD_SERVER__LOCATION);
 		createEAttribute(iBuildServerEClass, IBUILD_SERVER__CONNECTOR_KIND);
 		createEAttribute(iBuildServerEClass, IBUILD_SERVER__REPOSITORY_URL);
 
+		stringToStringMapEClass = createEClass(STRING_TO_STRING_MAP);
+		createEAttribute(stringToStringMapEClass, STRING_TO_STRING_MAP__KEY);
+		createEAttribute(stringToStringMapEClass, STRING_TO_STRING_MAP__VALUE);
+
 		// Create data types
 		taskRepositoryEDataType = createEDataType(TASK_REPOSITORY);
+		repositoryLocationEDataType = createEDataType(REPOSITORY_LOCATION);
 		buildStateEDataType = createEDataType(BUILD_STATE);
 		buildStatusEDataType = createEDataType(BUILD_STATUS);
 	}
@@ -1325,7 +1510,13 @@ public class BuildPackage extends EPackageImpl {
 		initEReference(getIBuildServer_Plans(), this.getIBuildPlan(), this.getIBuildPlan_Server(), "plans", null, 0,
 				-1, IBuildServer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
+		initEReference(getIBuildServer_Attributes(), this.getStringToStringMap(), null, "attributes", null, 0, -1,
+				IBuildServer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIBuildServer_Repository(), this.getTaskRepository(), "repository", null, 0, 1,
+				IBuildServer.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIBuildServer_Location(), this.getRepositoryLocation(), "location", null, 0, 1,
 				IBuildServer.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
 				!IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIBuildServer_ConnectorKind(), ecorePackage.getEString(), "connectorKind", null, 0, 1,
@@ -1335,8 +1526,17 @@ public class BuildPackage extends EPackageImpl {
 				IBuildServer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
 				!IS_DERIVED, IS_ORDERED);
 
+		initEClass(stringToStringMapEClass, Map.Entry.class, "StringToStringMap", !IS_ABSTRACT, !IS_INTERFACE,
+				!IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getStringToStringMap_Key(), ecorePackage.getEString(), "key", null, 0, 1, Map.Entry.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getStringToStringMap_Value(), ecorePackage.getEString(), "value", "", 0, 1, Map.Entry.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
 		// Initialize data types
 		initEDataType(taskRepositoryEDataType, TaskRepository.class, "TaskRepository", IS_SERIALIZABLE,
+				!IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(repositoryLocationEDataType, RepositoryLocation.class, "RepositoryLocation", !IS_SERIALIZABLE,
 				!IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(buildStateEDataType, BuildState.class, "BuildState", IS_SERIALIZABLE,
 				!IS_GENERATED_INSTANCE_CLASS);
@@ -1563,12 +1763,28 @@ public class BuildPackage extends EPackageImpl {
 		public static final EReference IBUILD_SERVER__PLANS = eINSTANCE.getIBuildServer_Plans();
 
 		/**
+		 * The meta object literal for the '<em><b>Attributes</b></em>' map feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		public static final EReference IBUILD_SERVER__ATTRIBUTES = eINSTANCE.getIBuildServer_Attributes();
+
+		/**
 		 * The meta object literal for the '<em><b>Repository</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
 		public static final EAttribute IBUILD_SERVER__REPOSITORY = eINSTANCE.getIBuildServer_Repository();
+
+		/**
+		 * The meta object literal for the '<em><b>Location</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		public static final EAttribute IBUILD_SERVER__LOCATION = eINSTANCE.getIBuildServer_Location();
 
 		/**
 		 * The meta object literal for the '<em><b>Connector Kind</b></em>' attribute feature.
@@ -1587,6 +1803,32 @@ public class BuildPackage extends EPackageImpl {
 		public static final EAttribute IBUILD_SERVER__REPOSITORY_URL = eINSTANCE.getIBuildServer_RepositoryUrl();
 
 		/**
+		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.StringToStringMap <em>String To String Map</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.mylyn.internal.builds.core.StringToStringMap
+		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getStringToStringMap()
+		 * @generated
+		 */
+		public static final EClass STRING_TO_STRING_MAP = eINSTANCE.getStringToStringMap();
+
+		/**
+		 * The meta object literal for the '<em><b>Key</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		public static final EAttribute STRING_TO_STRING_MAP__KEY = eINSTANCE.getStringToStringMap_Key();
+
+		/**
+		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		public static final EAttribute STRING_TO_STRING_MAP__VALUE = eINSTANCE.getStringToStringMap_Value();
+
+		/**
 		 * The meta object literal for the '<em>Task Repository</em>' data type.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1595,6 +1837,16 @@ public class BuildPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EDataType TASK_REPOSITORY = eINSTANCE.getTaskRepository();
+
+		/**
+		 * The meta object literal for the '<em>Repository Location</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.mylyn.commons.repository.RepositoryLocation
+		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getRepositoryLocation()
+		 * @generated
+		 */
+		public static final EDataType REPOSITORY_LOCATION = eINSTANCE.getRepositoryLocation();
 
 		/**
 		 * The meta object literal for the '<em>State</em>' data type.

@@ -2,12 +2,13 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildSwitch.java,v 1.4 2010/07/02 21:23:15 spingel Exp $
+ * $Id: BuildSwitch.java,v 1.5 2010/07/03 06:40:32 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
 import java.util.List;
 
+import java.util.Map;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 
@@ -119,6 +120,14 @@ public class BuildSwitch<T> {
 				result = caseIBuildServer(buildServer);
 			if (result == null)
 				result = caseIBuildElement(buildServer);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case BuildPackage.STRING_TO_STRING_MAP: {
+			@SuppressWarnings("unchecked")
+			Map.Entry<String, String> stringToStringMap = (Map.Entry<String, String>) theEObject;
+			T result = caseStringToStringMap(stringToStringMap);
 			if (result == null)
 				result = defaultCase(theEObject);
 			return result;
@@ -260,6 +269,21 @@ public class BuildSwitch<T> {
 	 * @generated
 	 */
 	public T caseIBuildServer(IBuildServer object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>String To String Map</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>String To String Map</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseStringToStringMap(Map.Entry<String, String> object) {
 		return null;
 	}
 
