@@ -38,6 +38,7 @@ plugin@org.eclipse.mylyn.bugzilla.ui=HEAD,:pserver:anonymous@dev.eclipse.org:/cv
 plugin@org.eclipse.cdt.mylyn.ui=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.cdt.ui
 plugin@org.eclipse.mylyn.commons.core=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.commons.core
 plugin@org.eclipse.mylyn.commons.net=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.commons.net
+plugin@org.eclipse.mylyn.commons.repository=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.commons.repository
 plugin@org.eclipse.mylyn.commons.soap=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.commons.soap
 plugin@org.eclipse.mylyn.commons.ui=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.commons.ui
 plugin@org.eclipse.mylyn.commons.xmlrpc=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.commons.xmlrpc
