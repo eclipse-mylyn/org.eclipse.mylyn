@@ -9,15 +9,15 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.commons.repository;
+package org.eclipse.mylyn.commons.repositories;
 
 import java.net.Proxy;
 
 import javax.net.ssl.X509TrustManager;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.mylyn.commons.repository.auth.AuthenticationCredentials;
-import org.eclipse.mylyn.commons.repository.auth.AuthenticationType;
+import org.eclipse.mylyn.commons.repositories.auth.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.repositories.auth.AuthenticationType;
 
 /**
  * @author Steffen Pingel

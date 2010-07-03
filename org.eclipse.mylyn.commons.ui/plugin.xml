@@ -46,7 +46,7 @@
             name="Repositories">
          <possibleChildren>
             <instanceof
-                  value="org.eclipse.mylyn.commons.repository.RepositoryLocation">
+                  value="org.eclipse.mylyn.commons.repositories.RepositoryLocation">
             </instanceof>
          </possibleChildren>
          <triggerPoints></triggerPoints>

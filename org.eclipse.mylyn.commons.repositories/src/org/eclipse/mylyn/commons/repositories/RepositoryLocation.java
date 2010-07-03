@@ -9,7 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.commons.repository;
+package org.eclipse.mylyn.commons.repositories;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -30,8 +30,8 @@ import org.eclipse.equinox.security.storage.ISecurePreferences;
 import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
 import org.eclipse.equinox.security.storage.StorageException;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.commons.repository.auth.AuthenticationType;
-import org.eclipse.mylyn.commons.repository.auth.UsernamePasswordCredentials;
+import org.eclipse.mylyn.commons.repositories.auth.AuthenticationType;
+import org.eclipse.mylyn.commons.repositories.auth.UsernamePasswordCredentials;
 
 /**
  * @author Steffen Pingel

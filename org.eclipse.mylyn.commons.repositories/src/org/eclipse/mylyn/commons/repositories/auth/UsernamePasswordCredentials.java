@@ -9,7 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.commons.repository.auth;
+package org.eclipse.mylyn.commons.repositories.auth;
 
 /**
  * Provides a user name and password.

@@ -12,7 +12,7 @@
 package org.eclipse.mylyn.commons.ui.repositories;
 
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.mylyn.commons.repository.RepositoryLocation;
+import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
