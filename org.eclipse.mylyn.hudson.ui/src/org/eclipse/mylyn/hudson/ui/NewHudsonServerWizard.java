@@ -15,7 +15,7 @@ import java.net.URI;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.builds.ui.spi.NewBuildServerWizard;
-import org.eclipse.mylyn.commons.repository.RepositoryLocation;
+import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
 import org.eclipse.mylyn.commons.ui.repositories.RepositoryWizardPage;
 import org.eclipse.ui.IWorkbench;
 
