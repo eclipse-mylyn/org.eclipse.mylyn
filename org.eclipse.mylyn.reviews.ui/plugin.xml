@@ -31,5 +31,20 @@
             name="Mylyn Reviews Editor">
       </editor>
    </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="false"
+            id="org.eclipse.mylyn.reviews.ui.objectContribution1"
+            objectClass="org.eclipse.mylyn.tasks.core.ITaskAttachment">
+         <action
+               class="org.eclipse.mylyn.reviews.ui.CreateReviewAction"
+               enablesFor="*"
+               id="org.eclipse.mylyn.reviews.ui.create_review_from_attachment"
+               label="Create Review from Attachment"
+               tooltip="Create a new review from this attachment">
+         </action>
+      </objectContribution>
+   </extension>
 
 </plugin>

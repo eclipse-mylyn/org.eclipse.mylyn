@@ -3,20 +3,19 @@ package org.eclipse.mylyn.reviews.ui.wizard;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylyn.internal.provisional.tasks.core.TasksUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.reviews.core.model.review.Review;
 import org.eclipse.mylyn.reviews.core.model.review.ReviewFactory;
+import org.eclipse.mylyn.reviews.core.model.review.ScopeItem;
 import org.eclipse.mylyn.reviews.ui.CreateTask;
 import org.eclipse.mylyn.reviews.ui.ReviewStatus;
+import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
 
 public class CreateReviewWizard extends Wizard {
 
@@ -24,18 +23,27 @@ public class CreateReviewWizard extends Wizard {
 	private ReviewAssignmentPage assignmentsPage;
 	private ReviewScopeWizardPage scopePage;
 	private ChooseReviewTypeWizardPage typePage;
+	private ScopeItem scope;
 
 	public CreateReviewWizard(TaskDataModel model) {
 		this.model = model;
-		typePage = new ChooseReviewTypeWizardPage();
-		scopePage = new ReviewScopeWizardPage();
-		assignmentsPage = new ReviewAssignmentPage();
+		
+	}
+
+	public CreateReviewWizard(TaskDataModel model, ScopeItem scope) {
+		this(model);
+		this.scope = scope;
 	}
 
 	public void addPages() {
 		super.addPages();
-		addPage(typePage);
-		addPage(scopePage);
+		if(scope==null) {
+			scopePage = new ReviewScopeWizardPage();
+			typePage = new ChooseReviewTypeWizardPage();
+			addPage(typePage);
+			addPage(scopePage);
+		}
+		assignmentsPage = new ReviewAssignmentPage();
 		addPage(assignmentsPage);
 	}
 
@@ -43,7 +51,7 @@ public class CreateReviewWizard extends Wizard {
 
 		try {
 			Review review = ReviewFactory.eINSTANCE.createReview();
-			review.getScope().add(scopePage.getScope());
+			review.getScope().add(getScope());
 
 			CreateTask createTask = new CreateTask(model, review,
 					assignmentsPage.getReviewer());
@@ -66,9 +74,8 @@ public class CreateReviewWizard extends Wizard {
 													.getTask()
 													.getConnectorKind()),
 											reviewResult.getTask());
-									// TODO 
-									TasksUiUtil.openTask(
-											reviewResult.getTask());
+									// TODO
+									TasksUiUtil.openTask(reviewResult.getTask());
 
 								}
 							});
@@ -82,6 +89,14 @@ public class CreateReviewWizard extends Wizard {
 		}
 
 		return true;
+	}
+
+	private ScopeItem getScope() throws CoreException {
+		if (scope != null) {
+			return scope;
+		} else {
+			return scopePage.getScope();
+		}
 	}
 
 	public TaskDataModel getModel() {

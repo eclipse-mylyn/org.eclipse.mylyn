@@ -2,6 +2,8 @@ package org.eclipse.mylyn.reviews.ui.wizard;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -17,7 +19,7 @@ public class ReviewAssignmentPage extends WizardPage {
 	protected ReviewAssignmentPage() {
 		super("ReviewAssignmentPage");
 		setTitle("Review Assignment");
-		setDescription("Assign the review");
+		setDescription("Select the user, who will conduct the review");
 		setPageComplete(false);
 	}
 
@@ -33,6 +35,13 @@ public class ReviewAssignmentPage extends WizardPage {
 			setPageComplete(true);
 			reviewerText.setText(userName);
 		}
+		reviewerText.addModifyListener(new ModifyListener() {
+			
+			public void modifyText(ModifyEvent e) {
+				setPageComplete(!reviewerText.getText().isEmpty());
+				
+			}
+		});
 		createLabel(composite, "");
 		openOnFinish = new Button(composite, SWT.CHECK);
 		openOnFinish.setText("Open review task on finish");
