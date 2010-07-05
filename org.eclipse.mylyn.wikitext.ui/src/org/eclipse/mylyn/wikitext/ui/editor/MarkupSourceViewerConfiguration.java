@@ -105,6 +105,8 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 
 	private MarkupHyperlinkDetector markupHyperlinkDetector;
 
+	private boolean enableHippieContentAssist = true;
+
 	/**
 	 * @since 1.3
 	 * @param preferenceStore
@@ -248,14 +250,16 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 			anchorCompletionProcessor = new AnchorCompletionProcessor();
 			anchorCompletionProcessor.setOutline(outline);
 		}
-		HippieProposalProcessor hippieProcessor = new HippieProposalProcessor();
-
 		MultiplexingContentAssistProcessor processor = new MultiplexingContentAssistProcessor();
 		if (anchorCompletionProcessor != null) {
 			processor.addDelegate(anchorCompletionProcessor);
 		}
 		processor.addDelegate(completionProcessor);
-		processor.addDelegate(hippieProcessor);
+
+		if (enableHippieContentAssist) {
+			HippieProposalProcessor hippieProcessor = new HippieProposalProcessor();
+			processor.addDelegate(hippieProcessor);
+		}
 
 		IContentAssistProcessor[] processors = createContentAssistProcessors();
 		if (processors != null) {
@@ -535,6 +539,25 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 		public IInformationControlCreator getInformationPresenterControlCreator() {
 			return controlCreator;
 		}
+	}
+
+	/**
+	 * Indicate if Hippie content assist should be enabled. The default is true.
+	 * 
+	 * @since 1.4
+	 * @see HippieProposalProcessor
+	 */
+	public boolean isEnableHippieContentAssist() {
+		return enableHippieContentAssist;
+	}
+
+	/**
+	 * Indicate if Hippie content assist should be enabled.
+	 * 
+	 * @since 1.4
+	 */
+	public void setEnableHippieContentAssist(boolean enableHippieContentAssist) {
+		this.enableHippieContentAssist = enableHippieContentAssist;
 	}
 
 }

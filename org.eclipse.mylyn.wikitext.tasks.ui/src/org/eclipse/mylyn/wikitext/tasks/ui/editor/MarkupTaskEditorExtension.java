@@ -292,6 +292,7 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 
 		public TaskMarkupSourceViewerConfiguration(IPreferenceStore preferenceStore, TaskRepository taskRepository) {
 			this(preferenceStore, taskRepository, null);
+			setEnableHippieContentAssist(false);
 		}
 
 		/**
