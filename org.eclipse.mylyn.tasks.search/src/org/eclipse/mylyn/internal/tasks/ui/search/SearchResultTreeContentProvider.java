@@ -96,37 +96,66 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 	@Override
 	public void elementsChanged(Object[] updatedElements) {
 		for (Object object : updatedElements) {
-			boolean added = elements.add(object);
-			if (added && object instanceof ITask) {
-				AbstractTask task = ((AbstractTask) object);
-				String owner = task.getOwner();
-				if (owner == null) {
-					owner = Messages.SearchResultTreeContentProvider__unknown_;
+			boolean inResult = false;
+			Object[] resultElements = searchResult.getElements();
+			for (Object resultObject : resultElements) {
+				if (resultObject.equals(object)) {
+					inResult = true;
 				}
-				Person person = owners.get(owner);
-				if (person == null) {
-					person = new Person(owner, task.getConnectorKind(), task.getRepositoryUrl());
-					owners.put(owner, person);
-				}
-				person.internalAddChild(task);
 
-				TaskGroup completeIncomplete = null;
-				if (task.isCompleted()) {
-					completeIncomplete = completeState.get(Messages.SearchResultTreeContentProvider_Complete);
-					if (completeIncomplete == null) {
-						completeIncomplete = new TaskGroup(
-								"group-complete", Messages.SearchResultTreeContentProvider_Complete, GroupBy.COMPLETION.name()); //$NON-NLS-1$
-						completeState.put(Messages.SearchResultTreeContentProvider_Complete, completeIncomplete);
+			}
+			if (inResult) {
+				boolean added = elements.add(object);
+				if (added && object instanceof ITask) {
+					AbstractTask task = ((AbstractTask) object);
+					String owner = task.getOwner();
+					if (owner == null) {
+						owner = Messages.SearchResultTreeContentProvider__unknown_;
 					}
-				} else {
-					completeIncomplete = completeState.get(Messages.SearchResultTreeContentProvider_Incomplete);
-					if (completeIncomplete == null) {
-						completeIncomplete = new TaskGroup(
-								"group-incomplete", Messages.SearchResultTreeContentProvider_Incomplete, GroupBy.COMPLETION.name()); //$NON-NLS-1$
-						completeState.put(Messages.SearchResultTreeContentProvider_Incomplete, completeIncomplete);
+					Person person = owners.get(owner);
+					if (person == null) {
+						person = new Person(owner, task.getConnectorKind(), task.getRepositoryUrl());
+						owners.put(owner, person);
 					}
+					person.internalAddChild(task);
+
+					TaskGroup completeIncomplete = null;
+					if (task.isCompleted()) {
+						completeIncomplete = completeState.get(Messages.SearchResultTreeContentProvider_Complete);
+						if (completeIncomplete == null) {
+							completeIncomplete = new TaskGroup(
+									"group-complete", Messages.SearchResultTreeContentProvider_Complete, GroupBy.COMPLETION.name()); //$NON-NLS-1$
+							completeState.put(Messages.SearchResultTreeContentProvider_Complete, completeIncomplete);
+						}
+					} else {
+						completeIncomplete = completeState.get(Messages.SearchResultTreeContentProvider_Incomplete);
+						if (completeIncomplete == null) {
+							completeIncomplete = new TaskGroup(
+									"group-incomplete", Messages.SearchResultTreeContentProvider_Incomplete, GroupBy.COMPLETION.name()); //$NON-NLS-1$
+							completeState.put(Messages.SearchResultTreeContentProvider_Incomplete, completeIncomplete);
+						}
+					}
+					completeIncomplete.internalAddChild(task);
 				}
-				completeIncomplete.internalAddChild(task);
+			} else {
+				if (object instanceof ITask) {
+					AbstractTask task = ((AbstractTask) object);
+					elements.remove(task);
+					String owner = task.getOwner();
+					if (owner == null) {
+						owner = Messages.SearchResultTreeContentProvider__unknown_;
+					}
+					Person person = owners.get(owner);
+					person.internalRemoveChild(task);
+
+					TaskGroup completeIncomplete = null;
+					if (task.isCompleted()) {
+						completeIncomplete = completeState.get(Messages.SearchResultTreeContentProvider_Complete);
+					} else {
+						completeIncomplete = completeState.get(Messages.SearchResultTreeContentProvider_Incomplete);
+					}
+					completeIncomplete.internalRemoveChild(task);
+				}
 			}
 		}
 	}
