@@ -106,6 +106,8 @@ public class TracConnectorUi extends AbstractRepositoryConnectorUi {
 			return TracImages.OVERLAY_DEFECT;
 		} else if (taskKind == TaskKind.ENHANCEMENT) {
 			return TracImages.OVERLAY_ENHANCEMENT;
+		} else if (taskKind == TaskKind.STORY) {
+			return TracImages.OVERLAY_STORY;
 		} else if (taskKind == TaskKind.TASK) {
 			return null;
 		}
@@ -126,8 +128,8 @@ public class TracConnectorUi extends AbstractRepositoryConnectorUi {
 		if (taskComment == null) {
 			return NLS.bind(Messages.TracConnectorUi_Replying_to__ticket_X_X_, task.getTaskKey(), task.getOwner());
 		} else if (includeTask) {
-			return NLS.bind(Messages.TracConnectorUi_Replying_to__comment_ticket_X_X_X_, new Object[] {
-					task.getTaskKey(), taskComment.getNumber(), taskComment.getAuthor().getPersonId() });
+			return NLS.bind(Messages.TracConnectorUi_Replying_to__comment_ticket_X_X_X_,
+					new Object[] { task.getTaskKey(), taskComment.getNumber(), taskComment.getAuthor().getPersonId() });
 		} else {
 			return NLS.bind(Messages.TracConnectorUi_Replying_to__comment_X_X_, taskComment.getNumber(),
 					taskComment.getAuthor().getPersonId());

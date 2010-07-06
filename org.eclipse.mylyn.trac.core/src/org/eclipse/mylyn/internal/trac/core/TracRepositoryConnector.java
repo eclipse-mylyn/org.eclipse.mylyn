@@ -59,7 +59,7 @@ import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	public enum TaskKind {
-		DEFECT, ENHANCEMENT, TASK;
+		DEFECT, ENHANCEMENT, TASK, STORY;
 
 		public static TaskKind fromString(String type) {
 			if (type == null) {
@@ -73,6 +73,9 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			}
 			if (type.equals("Task")) { //$NON-NLS-1$
 				return TASK;
+			}
+			if (type.equals("Story")) { //$NON-NLS-1$
+				return STORY;
 			}
 			return null;
 		}
@@ -90,6 +93,9 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			if (type.equals("task")) { //$NON-NLS-1$
 				return TASK;
 			}
+			if (type.equals("story")) { //$NON-NLS-1$
+				return STORY;
+			}
 			return null;
 		}
 
@@ -102,6 +108,8 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 				return "Enhancement"; //$NON-NLS-1$
 			case TASK:
 				return "Task"; //$NON-NLS-1$
+			case STORY:
+				return "Story"; //$NON-NLS-1$
 			default:
 				return ""; //$NON-NLS-1$
 			}

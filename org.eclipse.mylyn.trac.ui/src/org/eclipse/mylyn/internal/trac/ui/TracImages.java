@@ -31,6 +31,8 @@ public class TracImages {
 
 	public static final ImageDescriptor OVERLAY_ENHANCEMENT = create(T_VIEW, "overlay-enhancement.gif"); //$NON-NLS-1$
 
+	public static final ImageDescriptor OVERLAY_STORY = create(T_VIEW, "overlay-story.gif"); //$NON-NLS-1$
+
 	private static ImageDescriptor create(String prefix, String name) {
 		try {
 			return ImageDescriptor.createFromURL(makeIconFileURL(prefix, name));
