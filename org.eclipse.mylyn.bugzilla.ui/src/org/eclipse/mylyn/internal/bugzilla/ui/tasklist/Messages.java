@@ -41,6 +41,8 @@ public class Messages extends NLS {
 
 	public static String BugzillaCustomQueryWizardPage_Enter_the_title_and_URL_for_the_query;
 
+	public static String BugzillaCustomQueryWizardPage_No_Valid_Buglist_URL;
+
 	public static String BugzillaCustomQueryWizardPage_Please_specify_Query_URL;
 
 	public static String BugzillaCustomQueryWizardPage_Query_Title;

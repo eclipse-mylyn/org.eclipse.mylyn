@@ -12,6 +12,9 @@
 
 package org.eclipse.mylyn.internal.bugzilla.ui.tasklist;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
@@ -41,6 +44,8 @@ public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 	private static final String TITLE = Messages.BugzillaCustomQueryWizardPage_Create_query_from_URL;
 
 	private static final String DESCRIPTION = Messages.BugzillaCustomQueryWizardPage_Enter_the_title_and_URL_for_the_query;
+
+	private static final Pattern URL_PATTERN = Pattern.compile("([a-zA-Z][a-zA-Z+.-]{0,10}://[a-zA-Z0-9%._~!$&?#'()*+,;:@/=-]*/buglist.cgi?[a-zA-Z0-9%_~!$&?#'(*+;:@/=-])"); //$NON-NLS-1$
 
 	private Text queryText;
 
@@ -109,7 +114,14 @@ public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 	public boolean isPageComplete() {
 		if (super.isPageComplete()) {
 			if (queryText.getText().length() > 0) {
-				return true;
+				Matcher m = URL_PATTERN.matcher(queryText.getText());
+				if (m.find()) {
+					return true;
+				} else {
+					setErrorMessage(Messages.BugzillaCustomQueryWizardPage_No_Valid_Buglist_URL);
+
+					return false;
+				}
 			}
 			setErrorMessage(Messages.BugzillaCustomQueryWizardPage_Please_specify_Query_URL);
 		}
