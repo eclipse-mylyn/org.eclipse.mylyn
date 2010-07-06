@@ -84,7 +84,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			if (type == null) {
 				return null;
 			}
-			if (type.equals("defect")) { //$NON-NLS-1$
+			if (type.equals("defect") || type.equals("error")) { //$NON-NLS-1$ //$NON-NLS-2$
 				return DEFECT;
 			}
 			if (type.equals("enhancement")) { //$NON-NLS-1$
