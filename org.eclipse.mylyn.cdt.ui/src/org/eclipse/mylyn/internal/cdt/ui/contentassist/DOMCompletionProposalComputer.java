@@ -573,12 +573,12 @@ public class DOMCompletionProposalComputer extends ParsingBasedProposalComputer 
 		IASTNode definition = null;
 		if (binding instanceof ICInternalBinding) {
 			IASTNode[] declarations = ((ICInternalBinding) binding).getDeclarations();
-			if (declarations != null && declarations.length >= 0) {
+			if (declarations != null && declarations.length > 0) {
 				definition = declarations[0];
 			}
 		} else if (binding instanceof ICPPInternalBinding) {
 			IASTNode[] declarations = ((ICPPInternalBinding) binding).getDeclarations();
-			if (declarations != null && declarations.length >= 0) {
+			if (declarations != null && declarations.length > 0) {
 				definition = declarations[0];
 			}
 		}
@@ -609,7 +609,6 @@ public class DOMCompletionProposalComputer extends ParsingBasedProposalComputer 
 		}
 		if (cu != null) {
 			ICElement ce = cu.getElementAtOffset(offset);
-			System.out.println(ce);
 			return ce;
 		} else {
 			return null;
