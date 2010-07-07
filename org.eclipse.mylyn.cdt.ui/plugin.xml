@@ -204,6 +204,62 @@
           <partition type="__c_preprocessor"/>
        </completionProposalComputer>
     </extension>
+    
+    <!-- from CDT -->
+    <extension
+          id="InclusionProposalComputer"
+          point="org.eclipse.cdt.ui.completionProposalComputer">
+       <completionProposalComputer
+             categoryId="org.eclipse.mylyn.cdt.ui.parserProposalCategory"
+             class="org.eclipse.cdt.internal.ui.text.contentassist.InclusionProposalComputer">
+          <partition type="__c_preprocessor"/>
+       </completionProposalComputer>
+    </extension>
+    <extension
+          id="KeywordCompletionProposalComputer"
+          point="org.eclipse.cdt.ui.completionProposalComputer">
+       <completionProposalComputer
+             categoryId="org.eclipse.mylyn.cdt.ui.parserProposalCategory"
+             class="org.eclipse.cdt.internal.ui.text.contentassist.KeywordCompletionProposalComputer">
+          <partition type="__dftl_partition_content_type"/>
+          <partition type="__c_preprocessor"/>
+       </completionProposalComputer>
+    </extension>
+    <extension
+          id="HelpCompletionProposalComputer"
+          point="org.eclipse.cdt.ui.completionProposalComputer">
+       <completionProposalComputer
+             categoryId="org.eclipse.mylyn.cdt.ui.parserProposalCategory"
+             class="org.eclipse.cdt.internal.ui.text.contentassist.HelpCompletionProposalComputer">
+          <partition type="__dftl_partition_content_type"/>
+       </completionProposalComputer>
+    </extension>
+    <extension
+         id="doccomment.multiline"
+         point="org.eclipse.cdt.ui.completionProposalComputer">
+      <completionProposalComputer
+            activate="true"
+            categoryId="org.eclipse.mylyn.cdt.ui.parserProposalCategory"
+            class="org.eclipse.cdt.internal.ui.text.doctools.DocCommentMultilineProposalComputer">
+         <partition
+               type="__c_multiline_doc_comment">
+         </partition>
+      </completionProposalComputer>
+   </extension>
+   <extension
+         id="doccomment.singleline"
+         point="org.eclipse.cdt.ui.completionProposalComputer">
+      <completionProposalComputer
+            activate="true"
+            categoryId="org.eclipse.mylyn.cdt.ui.parserProposalCategory"
+            class="org.eclipse.cdt.internal.ui.text.doctools.DocCommentSinglelineProposalComputer">
+         <partition
+               type="__c_singleline_doc_comment">
+         </partition>
+      </completionProposalComputer>
+   </extension>
+   
+   
    
    <!-- Editor Folding -->
 	<extension point="org.eclipse.ui.actionSets">
