@@ -9,17 +9,16 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.commons.ui.repositories;
+package org.eclipse.mylyn.internal.commons.ui.repositories;
 
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.observable.Observables;
-import org.eclipse.core.databinding.observable.map.IObservableMap;
-import org.eclipse.core.databinding.observable.map.ObservableMap;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
+import org.eclipse.mylyn.internal.commons.ui.SectionComposite;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -34,10 +33,6 @@ public abstract class RepositoryControl extends Composite {
 
 	private DataBindingContext bindingContext;
 
-	private Button disconnectedButton;
-
-	private IObservableMap properties;
-
 	public RepositoryControl(Composite parent, int style) {
 		super(parent, style);
 		createContents();
@@ -45,13 +40,13 @@ public abstract class RepositoryControl extends Composite {
 
 	protected void bind(Button button, String property) {
 		ISWTObservableValue uiElement = SWTObservables.observeSelection(button);
-		IObservableValue modelElement = Observables.observeMapEntry(getProperties(), property);
+		IObservableValue modelElement = new RepositoryLocationValueProperty(property).observe(getWorkingCopy());
 		bindingContext.bindValue(uiElement, modelElement, null, null);
 	}
 
 	protected void bind(Text text, String property) {
 		ISWTObservableValue uiElement = SWTObservables.observeText(text, SWT.Modify);
-		IObservableValue modelElement = Observables.observeMapEntry(getProperties(), property);
+		IObservableValue modelElement = new RepositoryLocationValueProperty(property).observe(getWorkingCopy());
 		bindingContext.bindValue(uiElement, modelElement, null, null);
 	}
 
@@ -65,24 +60,67 @@ public abstract class RepositoryControl extends Composite {
 //		Layout layout = new FillLayout();
 //		this.setLayout(layout);
 
-		Label label = new Label(this, SWT.NONE);
+		createServerSection();
+		createUserSection();
+
+		SectionComposite sectionComposite = new SectionComposite(this, SWT.NONE);
+		GridDataFactory.fillDefaults().grab(true, true).span(3, 1).applyTo(sectionComposite);
+
+		createProxySection(sectionComposite);
+	}
+
+	private void createProxySection(SectionComposite parent) {
+		Composite composite = parent.createSection("Proxy Server Configuration");
+		GridLayoutFactory.swtDefaults().numColumns(3).applyTo(composite);
+
+		// ignore
+
+	}
+
+	private void createUserSection() {
+		Label label;
+
+		label = new Label(this, SWT.NONE);
+		label.setText("&User:");
+
+		Text userText = new Text(this, SWT.BORDER);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(userText);
+		bind(userText, "username");
+
+		Button anonymousButton = new Button(this, SWT.CHECK);
+		anonymousButton.setText("Anonymous");
+		bind(anonymousButton, "anonymous");
+
+		label = new Label(this, SWT.NONE);
+		label.setText("&Password:");
+
+		Text passwordText = new Text(this, SWT.BORDER | SWT.PASSWORD);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(passwordText);
+
+		Button savePasswordButton = new Button(this, SWT.CHECK);
+		savePasswordButton.setText("Save Password");
+	}
+
+	private void createServerSection() {
+		Label label;
+
+		label = new Label(this, SWT.NONE);
 		label.setText("&Server:");
 
 		Text urlText = new Text(this, SWT.BORDER);
-		GridDataFactory.fillDefaults().grab(true, false).applyTo(urlText);
+		GridDataFactory.fillDefaults().span(2, 1).grab(true, false).applyTo(urlText);
 		bind(urlText, "url");
 
-		disconnectedButton = new Button(this, SWT.CHECK);
+		label = new Label(this, SWT.NONE);
+		label.setText("&Label:");
+
+		Text labelText = new Text(this, SWT.BORDER);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(labelText);
+		bind(labelText, "label");
+
+		Button disconnectedButton = new Button(this, SWT.CHECK);
 		disconnectedButton.setText("Disconnected");
 		bind(disconnectedButton, RepositoryLocation.OFFLINE);
-	}
-
-	private IObservableMap getProperties() {
-		if (properties == null) {
-			RepositoryLocation workingCopy = getWorkingCopy();
-			properties = new ObservableMap(workingCopy.getProperties());
-		}
-		return properties;
 	}
 
 	protected abstract RepositoryLocation getWorkingCopy();

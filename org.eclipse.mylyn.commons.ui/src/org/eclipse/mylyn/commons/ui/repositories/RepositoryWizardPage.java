@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
+import org.eclipse.mylyn.internal.commons.ui.repositories.RepositoryControl;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
