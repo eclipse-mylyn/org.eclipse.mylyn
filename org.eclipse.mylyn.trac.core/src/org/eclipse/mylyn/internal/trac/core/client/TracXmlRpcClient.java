@@ -94,7 +94,11 @@ import org.eclipse.osgi.util.NLS;
  */
 public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiClient {
 
-	private static final Pattern RPC_METHOD_NOT_FOUND_PATTERN = Pattern.compile("RPC method \".*\" not found"); //$NON-NLS-1$
+	private static final Pattern ERROR_PATTERN_RPC_METHOD_NOT_FOUND = Pattern.compile("RPC method \".*\" not found"); //$NON-NLS-1$
+
+	private static final Pattern ERROR_PATTERN_MID_AIR_COLLISION = Pattern.compile("Sorry, can not save your changes.*This ticket has been modified by someone else since you started"); //$NON-NLS-1$
+
+	private static final String ERROR_XML_RPC_PRIVILEGES_REQUIRED = "XML_RPC privileges are required to perform this operation"; //$NON-NLS-1$
 
 	private class XmlRpcRequest {
 
@@ -169,13 +173,14 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 				throw new TracException(e);
 			} catch (XmlRpcException e) {
 				// XXX work-around for http://trac-hacks.org/ticket/5848 
-				if ("XML_RPC privileges are required to perform this operation".equals(e.getMessage()) //$NON-NLS-1$
-						|| e.code == XML_FAULT_PERMISSION_DENIED) {
+				if (ERROR_XML_RPC_PRIVILEGES_REQUIRED.equals(e.getMessage()) || e.code == XML_FAULT_PERMISSION_DENIED) {
 					handleAuthenticationException(HttpStatus.SC_FORBIDDEN, null);
 					// should never happen as call above should always throw an exception
 					throw new TracRemoteException(e);
 				} else if (isNoSuchMethodException(e)) {
 					throw new TracNoSuchMethodException(e);
+				} else if (isMidAirCollision(e)) {
+					throw new TracMidAirCollisionException(e);
 				} else {
 					throw new TracRemoteException(e);
 				}
@@ -186,6 +191,14 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 			}
 		}
 
+		private boolean isMidAirCollision(XmlRpcException e) {
+			if (e.code == XML_FAULT_GENERAL_ERROR && e.getMessage() != null
+					&& ERROR_PATTERN_MID_AIR_COLLISION.matcher(e.getMessage()).find()) {
+				return true;
+			}
+			return false;
+		}
+
 		private boolean isNoSuchMethodException(XmlRpcException e) {
 			// the fault code is used for various errors, therefore detection is based on the message
 			// message format by XML-RPC Plugin version:
@@ -193,7 +206,7 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 			//  1.0.6: RPC method "ticket.ge1t" not found
 			//  1.10:  RPC method "ticket.ge1t" not found' while executing 'ticket.ge1t()
 			if (e.code == XML_FAULT_GENERAL_ERROR && e.getMessage() != null
-					&& RPC_METHOD_NOT_FOUND_PATTERN.matcher(e.getMessage()).find()) {
+					&& ERROR_PATTERN_RPC_METHOD_NOT_FOUND.matcher(e.getMessage()).find()) {
 				return true;
 			}
 			return false;
@@ -955,7 +968,10 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		if (!supportsWorkFlow(monitor)) {
 			// submitted as part of status and resolution updates for Trac < 0.11
 			attributes.remove("action"); //$NON-NLS-1$
+			// avoid confusing older XML-RPC plugin versions
+			attributes.remove(Key.TOKEN.getKey());
 		}
+
 		if (supportsNotifications(monitor)) {
 			call(monitor, "ticket.update", ticket.getId(), comment, attributes, true); //$NON-NLS-1$
 		} else {

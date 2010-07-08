@@ -168,14 +168,8 @@ public class RepositoryStatus extends Status {
 	}
 
 	public static RepositoryStatus createCollisionError(String repositoryUrl, String pluginId) {
-		return new RepositoryStatus(
-				repositoryUrl,
-				IStatus.ERROR,
-				pluginId,
-				RepositoryStatus.REPOSITORY_COLLISION,
-				NLS.bind(
-						"Mid-air collision occurred while submitting to {0}.\n\nSynchronize task and re-submit changes.", //$NON-NLS-1$
-						repositoryUrl));
+		return new RepositoryStatus(repositoryUrl, IStatus.ERROR, pluginId, RepositoryStatus.REPOSITORY_COLLISION,
+				"Mid-air collision occurred. Synchronize task and re-submit changes."); //$NON-NLS-1$
 	}
 
 	public static RepositoryStatus createCommentRequiredError(String repositoryUrl, String pluginId) {

@@ -298,6 +298,8 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 			TaskAttribute attribute = createAttribute(data, client, TracAttribute.RESOLUTION);
 			// reset default value to avoid "fixed" resolution on tasks created through web 
 			attribute.setValue(""); //$NON-NLS-1$
+			// internal attributes
+			createAttribute(data, null, TracAttribute.TOKEN);
 		}
 		createAttribute(data, client, TracAttribute.COMPONENT);
 		createAttribute(data, client, TracAttribute.VERSION);
@@ -566,7 +568,7 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 			if (TracAttributeMapper.isInternalAttribute(attribute)
 					|| TracAttribute.RESOLUTION.getTracKey().equals(attribute.getId())) {
 				// ignore internal attributes, resolution is set through operations
-			} else if (!attribute.getMetaData().isReadOnly()) {
+			} else if (!attribute.getMetaData().isReadOnly() || Key.TOKEN.getKey().equals(attribute.getId())) {
 				ticket.putValue(attribute.getId(), attribute.getValue());
 			}
 		}
@@ -619,6 +621,10 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 			}
 			ticket.putValue("action", action); //$NON-NLS-1$
 		}
+
+		Date lastChanged = TracUtil.parseDate(TracRepositoryConnector.getAttributeValue(data,
+				TracAttribute.CHANGE_TIME.getTracKey()));
+		ticket.setLastChanged(lastChanged);
 
 		return ticket;
 	}

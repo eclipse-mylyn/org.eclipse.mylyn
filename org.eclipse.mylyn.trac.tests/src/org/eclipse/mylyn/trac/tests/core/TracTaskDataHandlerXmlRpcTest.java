@@ -377,8 +377,9 @@ public class TracTaskDataHandlerXmlRpcTest extends TestCase {
 		operation = taskData.getAttributeMapper().getTaskOperation(operations.get(2));
 		assertEquals("resolve", operation.getOperationId());
 		assertNotNull(operation.getLabel());
-		String associatedId = operation.getTaskAttribute().getMetaData().getValue(
-				TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID);
+		String associatedId = operation.getTaskAttribute()
+				.getMetaData()
+				.getValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID);
 		assertNotNull(associatedId);
 
 		if (hasReassign) {
@@ -407,6 +408,26 @@ public class TracTaskDataHandlerXmlRpcTest extends TestCase {
 		taskData = taskDataHandler.getTaskData(repository, ticket.getId() + "", new NullProgressMonitor());
 		attribute = taskData.getRoot().getMappedAttribute(TaskAttribute.RESOLUTION);
 		assertEquals("", attribute.getValue());
+	}
+
+	public void testPostTaskDataMidAirCollision() throws Exception {
+		TracTicket ticket = TracTestUtil.createTicket(client, "midAirCollision");
+		TaskData taskData = taskDataHandler.getTaskData(repository, ticket.getId() + "", new NullProgressMonitor());
+		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(TaskAttribute.PRIORITY);
+		attribute.setValue("blocker");
+
+		// change ticket in repository
+		ticket.putBuiltinValue(Key.PRIORITY, "trivial");
+		client.updateTicket(ticket, "changing priority", null);
+
+		// submit conflicting change 
+		try {
+			taskDataHandler.postTaskData(repository, taskData, null, new NullProgressMonitor());
+			fail("Expected CoreException due to mid-air collision");
+		} catch (CoreException e) {
+			assertEquals(RepositoryStatus.createCollisionError(repository.getRepositoryUrl(), TracCorePlugin.ID_PLUGIN)
+					.getMessage(), e.getStatus().getMessage());
+		}
 	}
 
 }

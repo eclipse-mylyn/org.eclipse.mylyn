@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.mylyn.internal.trac.core.client.InvalidTicketException;
 import org.eclipse.mylyn.internal.trac.core.client.TracException;
 import org.eclipse.mylyn.internal.trac.core.client.TracLoginException;
+import org.eclipse.mylyn.internal.trac.core.client.TracMidAirCollisionException;
 import org.eclipse.mylyn.internal.trac.core.client.TracPermissionDeniedException;
 import org.eclipse.mylyn.internal.trac.core.util.TracUtil;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
@@ -92,6 +93,8 @@ public class TracCorePlugin extends Plugin {
 		} else if (e instanceof InvalidTicketException) {
 			return new RepositoryStatus(repository.getRepositoryUrl(), IStatus.ERROR, ID_PLUGIN,
 					RepositoryStatus.ERROR_IO, Messages.TracCorePlugin_the_SERVER_RETURNED_an_UNEXPECTED_RESOPNSE, e);
+		} else if (e instanceof TracMidAirCollisionException) {
+			return RepositoryStatus.createCollisionError(repository.getUrl(), TracCorePlugin.ID_PLUGIN);
 		} else if (e instanceof TracException) {
 			String message = e.getMessage();
 			if (message == null) {
@@ -106,8 +109,8 @@ public class TracCorePlugin extends Plugin {
 			return new RepositoryStatus(IStatus.ERROR, ID_PLUGIN, RepositoryStatus.ERROR_IO,
 					Messages.TracCorePlugin_Repository_URL_is_invalid, e);
 		} else {
-			return new RepositoryStatus(IStatus.ERROR, ID_PLUGIN, RepositoryStatus.ERROR_INTERNAL, Messages.TracCorePlugin_Unexpected_error,
-					e);
+			return new RepositoryStatus(IStatus.ERROR, ID_PLUGIN, RepositoryStatus.ERROR_INTERNAL,
+					Messages.TracCorePlugin_Unexpected_error, e);
 		}
 	}
 
