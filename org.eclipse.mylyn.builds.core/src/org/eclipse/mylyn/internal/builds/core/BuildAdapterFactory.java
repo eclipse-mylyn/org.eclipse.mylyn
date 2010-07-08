@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildAdapterFactory.java,v 1.5 2010/07/03 06:40:32 spingel Exp $
+ * $Id: BuildAdapterFactory.java,v 1.6 2010/07/08 02:02:34 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -14,12 +14,18 @@ import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 
 import org.eclipse.emf.ecore.EObject;
 
+import org.eclipse.mylyn.builds.core.IArtifact;
+import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildModel;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildPlanData;
 import org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy;
 import org.eclipse.mylyn.builds.core.IBuildServer;
+import org.eclipse.mylyn.builds.core.IChange;
+import org.eclipse.mylyn.builds.core.IChangeSet;
+import org.eclipse.mylyn.builds.core.IFile;
+import org.eclipse.mylyn.builds.core.IUser;
 
 /**
  * <!-- begin-user-doc -->
@@ -119,6 +125,66 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 		@Override
 		public Adapter caseIBuildServer(IBuildServer object) {
 			return createIBuildServerAdapter();
+		}
+
+		@Override
+		public Adapter caseArtifact(Artifact object) {
+			return createArtifactAdapter();
+		}
+
+		@Override
+		public Adapter caseBuild(Build object) {
+			return createBuildAdapter();
+		}
+
+		@Override
+		public Adapter caseChangeSet(ChangeSet object) {
+			return createChangeSetAdapter();
+		}
+
+		@Override
+		public Adapter caseChange(Change object) {
+			return createChangeAdapter();
+		}
+
+		@Override
+		public Adapter caseFile(File object) {
+			return createFileAdapter();
+		}
+
+		@Override
+		public Adapter caseUser(User object) {
+			return createUserAdapter();
+		}
+
+		@Override
+		public Adapter caseIArtifact(IArtifact object) {
+			return createIArtifactAdapter();
+		}
+
+		@Override
+		public Adapter caseIBuild(IBuild object) {
+			return createIBuildAdapter();
+		}
+
+		@Override
+		public Adapter caseIChangeSet(IChangeSet object) {
+			return createIChangeSetAdapter();
+		}
+
+		@Override
+		public Adapter caseIChange(IChange object) {
+			return createIChangeAdapter();
+		}
+
+		@Override
+		public Adapter caseIFile(IFile object) {
+			return createIFileAdapter();
+		}
+
+		@Override
+		public Adapter caseIUser(IUser object) {
+			return createIUserAdapter();
 		}
 
 		@Override
@@ -268,6 +334,174 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createIBuildServerAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.internal.builds.core.Artifact <em>Artifact</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.internal.builds.core.Artifact
+	 * @generated
+	 */
+	public Adapter createArtifactAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.internal.builds.core.Build <em>Build</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.internal.builds.core.Build
+	 * @generated
+	 */
+	public Adapter createBuildAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.internal.builds.core.ChangeSet <em>Change Set</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.internal.builds.core.ChangeSet
+	 * @generated
+	 */
+	public Adapter createChangeSetAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.internal.builds.core.Change <em>Change</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.internal.builds.core.Change
+	 * @generated
+	 */
+	public Adapter createChangeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.internal.builds.core.File <em>File</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.internal.builds.core.File
+	 * @generated
+	 */
+	public Adapter createFileAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.internal.builds.core.User <em>User</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.internal.builds.core.User
+	 * @generated
+	 */
+	public Adapter createUserAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.builds.core.IArtifact <em>IArtifact</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.builds.core.IArtifact
+	 * @generated
+	 */
+	public Adapter createIArtifactAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.builds.core.IBuild <em>IBuild</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.builds.core.IBuild
+	 * @generated
+	 */
+	public Adapter createIBuildAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.builds.core.IChangeSet <em>IChange Set</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.builds.core.IChangeSet
+	 * @generated
+	 */
+	public Adapter createIChangeSetAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.builds.core.IChange <em>IChange</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.builds.core.IChange
+	 * @generated
+	 */
+	public Adapter createIChangeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.builds.core.IFile <em>IFile</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.builds.core.IFile
+	 * @generated
+	 */
+	public Adapter createIFileAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.builds.core.IUser <em>IUser</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.builds.core.IUser
+	 * @generated
+	 */
+	public Adapter createIUserAdapter() {
 		return null;
 	}
 

@@ -56,6 +56,60 @@
       serializable="false"/>
   <eClassifiers xsi:type="ecore:EDataType" name="BuildState" instanceClassName="org.eclipse.mylyn.builds.core.BuildState"/>
   <eClassifiers xsi:type="ecore:EDataType" name="BuildStatus" instanceClassName="org.eclipse.mylyn.builds.core.BuildStatus"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Artifact" eSuperTypes="#//IArtifact"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Build" eSuperTypes="#//IBuild"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ChangeSet" eSuperTypes="#//IChangeSet"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Change" eSuperTypes="#//IChange"/>
+  <eClassifiers xsi:type="ecore:EClass" name="File" eSuperTypes="#//IFile"/>
+  <eClassifiers xsi:type="ecore:EClass" name="User" eSuperTypes="#//IUser"/>
+  <eClassifiers xsi:type="ecore:EClass" name="IArtifact" instanceClassName="org.eclipse.mylyn.builds.core.IArtifact"
+      abstract="true" interface="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="displayName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="filename" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="relativePath" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IBuild" instanceClassName="org.eclipse.mylyn.builds.core.IBuild"
+      abstract="true" interface="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="buildNumber" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="timestamp" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="duration" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="displayName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="state" eType="#//BuildState"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="#//BuildStatus"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="artifacts" upperBound="-1"
+        eType="#//IArtifact"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="changeSet" eType="#//IChangeSet"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IChangeSet" instanceClassName="org.eclipse.mylyn.builds.core.IChangeSet"
+      abstract="true" interface="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="changes" upperBound="-1"
+        eType="#//IChange"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="kind" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IChange" instanceClassName="org.eclipse.mylyn.builds.core.IChange"
+      abstract="true" interface="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="author" eType="#//IUser"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="file" eType="#//IFile"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="message" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="user" eType="#//IUser"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IFile" instanceClassName="org.eclipse.mylyn.builds.core.IFile"
+      abstract="true" interface="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="relativePath" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="prevRevision" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="revision" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dead" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="editType" eType="#//EditType"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IUser" instanceClassName="org.eclipse.mylyn.builds.core.IUser"
+      abstract="true" interface="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="fullname" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="username" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="email" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="EditType" instanceClassName="org.eclipse.mylyn.builds.core.EditType"/>
   <eClassifiers xsi:type="ecore:EClass" name="StringToStringMap" instanceClassName="java.util.Map$Entry">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"

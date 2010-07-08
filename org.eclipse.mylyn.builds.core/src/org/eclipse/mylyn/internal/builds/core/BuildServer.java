@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildServer.java,v 1.10 2010/07/03 08:08:41 spingel Exp $
+ * $Id: BuildServer.java,v 1.11 2010/07/08 02:02:34 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -45,7 +45,8 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Server</b></em>'.
  * <!-- end-user-doc -->
- * 
+ *
+ *
  * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getBuildServer()
  * @model kind="class" superTypes="org.eclipse.mylyn.internal.builds.core.IBuildServer"
  * @generated
@@ -55,7 +56,6 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	 * The default value of the '{@link #getUrl() <em>Url</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getUrl()
 	 * @generated
 	 * @ordered
@@ -66,7 +66,6 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	 * The cached value of the '{@link #getUrl() <em>Url</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getUrl()
 	 * @generated
 	 * @ordered
@@ -77,7 +76,6 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getName()
 	 * @generated
 	 * @ordered
@@ -88,7 +86,6 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getName()
 	 * @generated
 	 * @ordered
@@ -99,7 +96,6 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	 * The cached value of the '{@link #getPlans() <em>Plans</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getPlans()
 	 * @generated
 	 * @ordered
@@ -110,7 +106,6 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	 * The cached value of the '{@link #getAttributes() <em>Attributes</em>}' map.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getAttributes()
 	 * @generated
 	 * @ordered
@@ -121,7 +116,6 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	 * The default value of the '{@link #getRepository() <em>Repository</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getRepository()
 	 * @generated
 	 * @ordered
@@ -132,7 +126,6 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	 * The cached value of the '{@link #getRepository() <em>Repository</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getRepository()
 	 * @generated
 	 * @ordered
@@ -143,7 +136,6 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	 * The default value of the '{@link #getLocation() <em>Location</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getLocation()
 	 * @generated
 	 * @ordered
@@ -154,7 +146,6 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	 * The cached value of the '{@link #getLocation() <em>Location</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getLocation()
 	 * @generated
 	 * @ordered
@@ -165,7 +156,6 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	 * The default value of the '{@link #getConnectorKind() <em>Connector Kind</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getConnectorKind()
 	 * @generated
 	 * @ordered
@@ -176,7 +166,6 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	 * The cached value of the '{@link #getConnectorKind() <em>Connector Kind</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getConnectorKind()
 	 * @generated
 	 * @ordered
@@ -187,7 +176,6 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	 * The default value of the '{@link #getRepositoryUrl() <em>Repository Url</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getRepositoryUrl()
 	 * @generated
 	 * @ordered
@@ -198,7 +186,6 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	 * The cached value of the '{@link #getRepositoryUrl() <em>Repository Url</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getRepositoryUrl()
 	 * @generated
 	 * @ordered
@@ -215,7 +202,6 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -230,7 +216,6 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	 * If the meaning of the '<em>Url</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Url</em>' attribute.
 	 * @see #setUrl(String)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildElement_Url()
@@ -245,18 +230,15 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildServer#getUrl <em>Url</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Url</em>' attribute.
+	 * @param value the new value of the '<em>Url</em>' attribute.
 	 * @see #getUrl()
 	 * @generated
 	 */
 	public void setUrl(String newUrl) {
 		String oldUrl = url;
 		url = newUrl;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_SERVER__URL, oldUrl, url));
-		}
 	}
 
 	/**
@@ -266,7 +248,6 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	 * If the meaning of the '<em>Name</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Name</em>' attribute.
 	 * @see #setName(String)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildElement_Name()
@@ -278,41 +259,34 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	}
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildServer#getName <em>Name</em>}'
-	 * attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildServer#getName <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Name</em>' attribute.
+	 * @param value the new value of the '<em>Name</em>' attribute.
 	 * @see #getName()
 	 * @generated
 	 */
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_SERVER__NAME, oldName, name));
-		}
 	}
 
 	/**
 	 * Returns the value of the '<em><b>Plans</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.mylyn.builds.core.IBuildPlan}.
-	 * It is bidirectional and its opposite is '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getServer
-	 * <em>Server</em>}'.
+	 * It is bidirectional and its opposite is '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getServer <em>Server</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Plans</em>' containment reference list isn't clear, there really should be more of a
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Plans</em>' containment reference list.
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildServer_Plans()
 	 * @see org.eclipse.mylyn.builds.core.IBuildPlan#getServer
-	 * @model type="org.eclipse.mylyn.internal.builds.core.IBuildPlan" opposite="server" containment="true"
-	 *        ordered="false"
+	 * @model type="org.eclipse.mylyn.internal.builds.core.IBuildPlan" opposite="server" containment="true" ordered="false"
 	 * @generated
 	 */
 	public EList<IBuildPlan> getPlans() {
@@ -332,11 +306,9 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	 * If the meaning of the '<em>Attributes</em>' map isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Attributes</em>' map.
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildServer_Attributes()
-	 * @model mapType=
-	 *        "org.eclipse.mylyn.internal.builds.core.StringToStringMap<org.eclipse.emf.ecore.EString, org.eclipse.emf.ecore.EString>"
+	 * @model mapType="org.eclipse.mylyn.internal.builds.core.StringToStringMap<org.eclipse.emf.ecore.EString, org.eclipse.emf.ecore.EString>"
 	 * @generated
 	 */
 	public EMap<String, String> getAttributes() {
@@ -355,7 +327,6 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Repository</em>' attribute.
 	 * @see #setRepository(TaskRepository)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildServer_Repository()
@@ -367,23 +338,19 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	}
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildServer#getRepository
-	 * <em>Repository</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildServer#getRepository <em>Repository</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Repository</em>' attribute.
+	 * @param value the new value of the '<em>Repository</em>' attribute.
 	 * @see #getRepository()
 	 * @generated
 	 */
 	public void setRepository(TaskRepository newRepository) {
 		TaskRepository oldRepository = repository;
 		repository = newRepository;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_SERVER__REPOSITORY, oldRepository,
 					repository));
-		}
 	}
 
 	/**
@@ -394,7 +361,6 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Location</em>' attribute.
 	 * @see #setLocation(RepositoryLocation)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildServer_Location()
@@ -406,23 +372,19 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	}
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildServer#getLocation <em>Location</em>}'
-	 * attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildServer#getLocation <em>Location</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Location</em>' attribute.
+	 * @param value the new value of the '<em>Location</em>' attribute.
 	 * @see #getLocation()
 	 * @generated
 	 */
 	public void setLocation(RepositoryLocation newLocation) {
 		RepositoryLocation oldLocation = location;
 		location = newLocation;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_SERVER__LOCATION, oldLocation,
 					location));
-		}
 	}
 
 	/**
@@ -433,7 +395,6 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Connector Kind</em>' attribute.
 	 * @see #setConnectorKind(String)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildServer_ConnectorKind()
@@ -445,23 +406,19 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	}
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildServer#getConnectorKind
-	 * <em>Connector Kind</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildServer#getConnectorKind <em>Connector Kind</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Connector Kind</em>' attribute.
+	 * @param value the new value of the '<em>Connector Kind</em>' attribute.
 	 * @see #getConnectorKind()
 	 * @generated
 	 */
 	public void setConnectorKind(String newConnectorKind) {
 		String oldConnectorKind = connectorKind;
 		connectorKind = newConnectorKind;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_SERVER__CONNECTOR_KIND,
 					oldConnectorKind, connectorKind));
-		}
 	}
 
 	/**
@@ -472,7 +429,6 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Repository Url</em>' attribute.
 	 * @see #setRepositoryUrl(String)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildServer_RepositoryUrl()
@@ -484,29 +440,24 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	}
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildServer#getRepositoryUrl
-	 * <em>Repository Url</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildServer#getRepositoryUrl <em>Repository Url</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Repository Url</em>' attribute.
+	 * @param value the new value of the '<em>Repository Url</em>' attribute.
 	 * @see #getRepositoryUrl()
 	 * @generated
 	 */
 	public void setRepositoryUrl(String newRepositoryUrl) {
 		String oldRepositoryUrl = repositoryUrl;
 		repositoryUrl = newRepositoryUrl;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_SERVER__REPOSITORY_URL,
 					oldRepositoryUrl, repositoryUrl));
-		}
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -522,7 +473,6 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -539,7 +489,6 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -552,11 +501,10 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 		case BuildPackage.BUILD_SERVER__PLANS:
 			return getPlans();
 		case BuildPackage.BUILD_SERVER__ATTRIBUTES:
-			if (coreType) {
+			if (coreType)
 				return getAttributes();
-			} else {
+			else
 				return getAttributes().map();
-			}
 		case BuildPackage.BUILD_SERVER__REPOSITORY:
 			return getRepository();
 		case BuildPackage.BUILD_SERVER__LOCATION:
@@ -572,7 +520,6 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -611,7 +558,6 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -648,7 +594,6 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -679,14 +624,12 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy()) {
+		if (eIsProxy())
 			return super.toString();
-		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (url: ");

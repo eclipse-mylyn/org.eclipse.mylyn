@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildFactory.java,v 1.5 2010/07/03 06:40:32 spingel Exp $
+ * $Id: BuildFactory.java,v 1.6 2010/07/08 02:02:34 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -19,6 +19,7 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
 import org.eclipse.mylyn.builds.core.BuildState;
 import org.eclipse.mylyn.builds.core.BuildStatus;
 
+import org.eclipse.mylyn.builds.core.EditType;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
@@ -81,6 +82,18 @@ public class BuildFactory extends EFactoryImpl {
 			return createBuildPlan();
 		case BuildPackage.BUILD_SERVER:
 			return createBuildServer();
+		case BuildPackage.ARTIFACT:
+			return createArtifact();
+		case BuildPackage.BUILD:
+			return createBuild();
+		case BuildPackage.CHANGE_SET:
+			return createChangeSet();
+		case BuildPackage.CHANGE:
+			return createChange();
+		case BuildPackage.FILE:
+			return createFile();
+		case BuildPackage.USER:
+			return createUser();
 		case BuildPackage.STRING_TO_STRING_MAP:
 			return (EObject) createStringToStringMap();
 		default:
@@ -102,6 +115,8 @@ public class BuildFactory extends EFactoryImpl {
 			return createBuildStateFromString(eDataType, initialValue);
 		case BuildPackage.BUILD_STATUS:
 			return createBuildStatusFromString(eDataType, initialValue);
+		case BuildPackage.EDIT_TYPE:
+			return createEditTypeFromString(eDataType, initialValue);
 		default:
 			throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -121,6 +136,8 @@ public class BuildFactory extends EFactoryImpl {
 			return convertBuildStateToString(eDataType, instanceValue);
 		case BuildPackage.BUILD_STATUS:
 			return convertBuildStatusToString(eDataType, instanceValue);
+		case BuildPackage.EDIT_TYPE:
+			return convertEditTypeToString(eDataType, instanceValue);
 		default:
 			throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -154,6 +171,66 @@ public class BuildFactory extends EFactoryImpl {
 	public BuildServer createBuildServer() {
 		BuildServer buildServer = new BuildServer();
 		return buildServer;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Artifact createArtifact() {
+		Artifact artifact = new Artifact();
+		return artifact;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Build createBuild() {
+		Build build = new Build();
+		return build;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ChangeSet createChangeSet() {
+		ChangeSet changeSet = new ChangeSet();
+		return changeSet;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Change createChange() {
+		Change change = new Change();
+		return change;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public File createFile() {
+		File file = new File();
+		return file;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public User createUser() {
+		User user = new User();
+		return user;
 	}
 
 	/**
@@ -217,6 +294,24 @@ public class BuildFactory extends EFactoryImpl {
 	 * @generated
 	 */
 	public String convertBuildStatusToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EditType createEditTypeFromString(EDataType eDataType, String initialValue) {
+		return (EditType) super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertEditTypeToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(eDataType, instanceValue);
 	}
 
