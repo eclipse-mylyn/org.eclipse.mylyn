@@ -11,6 +11,8 @@
 package org.eclipse.mylyn.reviews.ui.editors;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,6 +27,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.mylyn.internal.bugzilla.ui.editor.BugzillaTaskEditorPage;
 import org.eclipse.mylyn.internal.provisional.tasks.core.TasksUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.ToolBarButtonContribution;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
@@ -55,19 +58,30 @@ import org.eclipse.swt.widgets.Listener;
 /*
  * @author Kilian Matt
  */
-public class ReviewTaskEditorPage extends AbstractTaskEditorPage {
+public class ReviewTaskEditorPage extends BugzillaTaskEditorPage {
 	private static final String PAGE_ID = "org.eclipse.mylyn.reviews.ui.editors.ReviewTaskEditorPage"; //$NON-NLS-1$
 	private Review review;
 	private boolean dirty;
-	private boolean submitResult;
 
 	public ReviewTaskEditorPage(TaskEditor editor) {
-		super(editor, PAGE_ID, "ReviewTaskFormPage", "mylynreviews"); //$NON-NLS-1$ //$NON-NLS-2$
+		super(editor);
 	}
 
 	@Override
 	protected Set<TaskEditorPartDescriptor> createPartDescriptors() {
+		Set<TaskEditorPartDescriptor> originalTaskDescriptors = super
+				.createPartDescriptors();
 		Set<TaskEditorPartDescriptor> taskDescriptors = new HashSet<TaskEditorPartDescriptor>();
+		List<String> blockedPaths = Arrays.asList(
+				AbstractTaskEditorPage.PATH_ATTRIBUTES,
+				AbstractTaskEditorPage.PATH_COMMENTS,
+				AbstractTaskEditorPage.PATH_ATTACHMENTS,
+				AbstractTaskEditorPage.PATH_PLANNING);
+		for (TaskEditorPartDescriptor descriptor : originalTaskDescriptors) {
+			if (!blockedPaths.contains(descriptor.getPath())) {
+				taskDescriptors.add(descriptor);
+			}
+		}
 		try {
 			TaskData data = TasksUi.getTaskDataManager().getTaskData(getTask());
 			if (data != null) {
@@ -95,18 +109,14 @@ public class ReviewTaskEditorPage extends AbstractTaskEditorPage {
 		return taskDescriptors;
 	}
 
-	public void setSubmitResult(boolean submitResult) {
-		this.submitResult = submitResult;
-	}
-
 	@Override
-	public synchronized void doSubmit() {
-		if (isDirty()) {
-
+	public void doSubmit() {
+		super.doSubmit();
+		if (dirty) {
 			TaskRepository taskRepository = getModel().getTaskRepository();
 			AbstractRepositoryConnector connector = TasksUi
 					.getRepositoryConnector(taskRepository.getConnectorKind());
-			if (submitResult) {
+			
 				final TaskDataModel model = getModel();
 				Review review = getReview();
 				TaskAttribute attachmentAttribute = model.getTaskData()
@@ -126,19 +136,6 @@ public class ReviewTaskEditorPage extends AbstractTaskEditorPage {
 									attachment, "review result",
 									attachmentAttribute).schedule();
 				}
-			} else {
-				try {
-					getModel().save(new NullProgressMonitor());
-					SubmitJob submitJob = TasksUiInternal.getJobFactory()
-							.createSubmitTaskJob(connector, taskRepository,
-									getTask(), getModel().getTaskData(),
-									getModel().getChangedOldAttributes());
-					submitJob.schedule();
-					;
-				} catch (CoreException e) {
-					e.printStackTrace();
-				}
-			}
 			dirty = false;
 		}
 	}
@@ -172,26 +169,7 @@ public class ReviewTaskEditorPage extends AbstractTaskEditorPage {
 
 	@Override
 	public void fillToolBar(IToolBarManager toolBarManager) {
-
-		ToolBarButtonContribution submitButtonContribution = new ToolBarButtonContribution(
-				"org.eclipse.mylyn.tasks.toolbars.submit") { //$NON-NLS-1$
-			@Override
-			protected Control createButton(Composite composite) {
-				Button submitButton = new Button(composite, SWT.FLAT);
-				submitButton.setText("Submit Review");
-				submitButton.setImage(Images.SMALL_ICON.createImage());
-				submitButton.setBackground(null);
-				submitButton.addListener(SWT.Selection, new Listener() {
-					public void handleEvent(Event e) {
-						doSubmit();
-					}
-				});
-				return submitButton;
-			}
-		};
-		submitButtonContribution.marginLeft = 10;
-		toolBarManager.add(submitButtonContribution);
-
+		super.fillToolBar(toolBarManager);
 	}
 
 	public Review getReview() {

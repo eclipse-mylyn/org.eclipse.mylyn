@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.reviews.ui.editors;
 
-import java.util.Map;
-
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -24,20 +22,14 @@ import org.eclipse.mylyn.reviews.core.model.review.Rating;
 import org.eclipse.mylyn.reviews.core.model.review.Review;
 import org.eclipse.mylyn.reviews.core.model.review.ReviewFactory;
 import org.eclipse.mylyn.reviews.ui.Images;
-import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
-import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -48,7 +40,7 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 public class DelegateReviewTaskEditorPart extends AbstractTaskEditorPart {
 	public static final String ID_PART_REVIEW = "org.eclipse.mylyn.reviews.ui.editors.DelegateReviewTaskEditorPart"; //$NON-NLS-1$
-
+	
 	public DelegateReviewTaskEditorPart() {
 		setPartName("Review");
 	}
@@ -70,18 +62,7 @@ public class DelegateReviewTaskEditorPart extends AbstractTaskEditorPart {
 		GridLayout layout = new GridLayout(2, false);
 		layout.marginWidth = 5;
 		composite.setLayout(layout);
-		createAssignedTo(toolkit, composite);
 
-		final Button reassignButton = new Button(composite, SWT.RADIO);
-		reassignButton.setText("Reassign to");
-
-		AbstractAttributeEditor editor = createAttributeEditor(getModel()
-				.getTaskData().getRoot().getAttribute("assigned_to"));
-		editor.createControl(composite, toolkit);
-
-		final Button submitButton = new Button(composite, SWT.RADIO);
-		submitButton.setText("Submit");
-		submitButton.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
 		Composite resultComposite = toolkit.createComposite(composite);
 		resultComposite.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false));
 		resultComposite.setLayout(new GridLayout(2, false));
@@ -127,7 +108,6 @@ public class DelegateReviewTaskEditorPart extends AbstractTaskEditorPart {
 			ratingList.setSelection(new StructuredSelection(rating));
 			commentText.setText(review.getResult().getText());
 		}
-		// modification listener
 		commentText.addModifyListener(new ModifyListener() {
 
 			public void modifyText(ModifyEvent e) {
@@ -138,8 +118,6 @@ public class DelegateReviewTaskEditorPart extends AbstractTaskEditorPart {
 							.createReviewResult());
 				}
 				review.getResult().setText(commentText.getText());
-				submitButton.setSelection(true);
-				reassignButton.setSelection(false);
 			}
 		});
 		ratingList.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -154,52 +132,14 @@ public class DelegateReviewTaskEditorPart extends AbstractTaskEditorPart {
 							.createReviewResult());
 				}
 				review.getResult().setRating(rating);
-				submitButton.setSelection(true);
-				reassignButton.setSelection(false);
 			}
 		});
-		if(editor.getControl() instanceof Text) {
-
-			((Text)editor.getControl()).addModifyListener(new ModifyListener() {
-
-				public void modifyText(ModifyEvent e) {
-					submitButton.setSelection(false);
-					reassignButton.setSelection(true);
-				}
-			});
-		}
-		SelectionListener sl = new SelectionListener() {
-
-			public void widgetSelected(SelectionEvent e) {
-				getTaskEditorPage().setSubmitResult(e.widget == submitButton);
-			}
-
-
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-		};
-		reassignButton.addSelectionListener(sl);
-		submitButton.addSelectionListener(sl);
 
 		toolkit.paintBordersFor(composite);
 		section.setClient(composite);
 		setSection(toolkit, section);
 	}
-
-	private void createAssignedTo(FormToolkit toolkit, Composite composite) {
-		createLabel(composite, toolkit, Messages.ReviewEditor_Assigned_to);
-		String assignedTo = getModel().getTaskData().getRoot().getMappedAttribute(
-				TaskAttribute.USER_ASSIGNED).getValue();
-		createLabel(composite, toolkit, assignedTo);
-	}
-
-	private Label createLabel(Composite parent, FormToolkit toolkit,
-			String labelText) {
-		Label label = toolkit.createLabel(parent, labelText, SWT.FLAT);
-		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-		return label;
-	}
-
+	
 	@Override
 	public ReviewTaskEditorPage getTaskEditorPage() {
 		return (ReviewTaskEditorPage) super.getTaskEditorPage();

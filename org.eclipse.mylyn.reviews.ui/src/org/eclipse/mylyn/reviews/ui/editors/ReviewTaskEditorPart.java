@@ -15,11 +15,8 @@ import java.util.List;
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.contentmergeviewer.TextMergeViewer;
 import org.eclipse.compare.patch.IFilePatch2;
-import org.eclipse.compare.patch.IFilePatchResult;
 import org.eclipse.compare.patch.PatchConfiguration;
 import org.eclipse.compare.structuremergeviewer.DiffNode;
-import org.eclipse.compare.structuremergeviewer.Differencer;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.CompositeImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
@@ -30,19 +27,12 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
-import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextEditor.State;
-import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextEditor.StateChangedEvent;
-import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextEditor.StateChangedListener;
-//import org.eclipse.mylyn.internal.tasks.ui.editors.ToggleToMaximizePartAction;
 import org.eclipse.mylyn.reviews.core.model.review.Patch;
-import org.eclipse.mylyn.reviews.ui.CompareItem;
 import org.eclipse.mylyn.reviews.ui.Images;
 import org.eclipse.mylyn.reviews.ui.ReviewDiffModel;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
@@ -54,7 +44,6 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.internal.forms.widgets.FormUtil;
 
 /*
  * @author Kilian Matt
@@ -72,6 +61,7 @@ public class ReviewTaskEditorPart extends AbstractTaskEditorPart {
 	public void createControl(Composite parent, FormToolkit toolkit) {
 		Section section = createSection(parent, toolkit, true);
 		GridLayout gl = new GridLayout(1,false);
+		gl.marginBottom=8;
 		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd.horizontalSpan = 4;
 		section.setLayout(gl);
@@ -189,12 +179,13 @@ public class ReviewTaskEditorPart extends AbstractTaskEditorPart {
 		section.setClient(composite);
 
 
-		getSashComposite().setData(EditorUtil.KEY_TOGGLE_TO_MAXIMIZE_ACTION, getMaximizePartAction());
-		if (getSashComposite() instanceof Composite) {
-			for (Control control : ((Composite) getSashComposite()).getChildren()) {
-				control.setData(EditorUtil.KEY_TOGGLE_TO_MAXIMIZE_ACTION, getMaximizePartAction());
-			}
-		}
+		// Depends on 288171
+//		getSashComposite().setData(EditorUtil.KEY_TOGGLE_TO_MAXIMIZE_ACTION, getMaximizePartAction());
+//		if (getSashComposite() instanceof Composite) {
+//			for (Control control : ((Composite) getSashComposite()).getChildren()) {
+//				control.setData(EditorUtil.KEY_TOGGLE_TO_MAXIMIZE_ACTION, getMaximizePartAction());
+//			}
+//		}
 
 		setSection(toolkit, section);
 
@@ -209,7 +200,7 @@ public class ReviewTaskEditorPart extends AbstractTaskEditorPart {
 		return (ReviewTaskEditorPage)super.getTaskEditorPage();
 	}
 
-	public static GridLayout createSectionClientLayout() {
+	private GridLayout createSectionClientLayout() {
 		GridLayout layout = new GridLayout(2,false);
 		layout.marginHeight = 0;
 		// leave 1px for borders
@@ -283,7 +274,8 @@ public class ReviewTaskEditorPart extends AbstractTaskEditorPart {
 
 	@Override
 	protected void fillToolBar(ToolBarManager manager) {
-		manager.add(getMaximizePartAction());
+		// Depends on 288171
+//		manager.add(getMaximizePartAction());
 		super.fillToolBar(manager);
 	}
 

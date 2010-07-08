@@ -31,9 +31,6 @@ import org.eclipse.ui.forms.editor.IFormPage;
  */
 public class ReviewTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 
-	public ReviewTaskEditorPageFactory() {
-	}
-
 	@Override
 	public boolean canCreatePageFor(TaskEditorInput input) {
 		ITask task = input.getTask();
@@ -80,4 +77,8 @@ public class ReviewTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 		return PRIORITY_ADDITIONS;
 	}
 
+	@Override
+	public String[] getConflictingIds(TaskEditorInput input) {
+		return new String[] { "org.eclipse.mylyn.bugzilla.ui.pageFactory" };
+	}
 }
