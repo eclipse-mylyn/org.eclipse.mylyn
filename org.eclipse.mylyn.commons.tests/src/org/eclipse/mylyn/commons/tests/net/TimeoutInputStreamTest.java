@@ -88,6 +88,13 @@ public class TimeoutInputStreamTest extends TestCase {
 		} finally {
 			in.close();
 		}
+
+		// wait 30 seconds for executor to complete 
+		long startTime = System.currentTimeMillis();
+		while (System.currentTimeMillis() - startTime < 30 * 1000
+				&& ((ThreadPoolExecutor) CommonsNetPlugin.getExecutorService()).getActiveCount() > 0) {
+			Thread.sleep(500);
+		}
 		assertEquals(0, ((ThreadPoolExecutor) CommonsNetPlugin.getExecutorService()).getActiveCount());
 	}
 
