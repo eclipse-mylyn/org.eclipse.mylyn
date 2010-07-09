@@ -105,6 +105,9 @@ public class TracTestUtil {
 						expected = expectedString.substring(0, i + 1) + "\u2026";
 					}
 				}
+			} else if (key.startsWith("_")) {
+				// ignore internal values
+				continue;
 			}
 			Assert.assertEquals("Values for key '" + key + "' did not match", expected, actual);
 		}

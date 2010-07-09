@@ -412,6 +412,12 @@ public class TracTaskDataHandlerXmlRpcTest extends TestCase {
 
 	public void testPostTaskDataMidAirCollision() throws Exception {
 		TracTicket ticket = TracTestUtil.createTicket(client, "midAirCollision");
+		if (ticket.getValue(Key.TOKEN) == null) {
+			// repository does not have mid-air collision support
+			System.err.println("Skipping TracTaskDataHandler.testPostTaskDataMidAirCollision() due to lack of mid-air collision support on "
+					+ repository.getRepositoryUrl());
+			return;
+		}
 		TaskData taskData = taskDataHandler.getTaskData(repository, ticket.getId() + "", new NullProgressMonitor());
 		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(TaskAttribute.PRIORITY);
 		attribute.setValue("blocker");
