@@ -11,37 +11,22 @@
 
 package org.eclipse.mylyn.hudson.ui;
 
-import java.net.URI;
-
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylyn.builds.ui.spi.NewBuildServerWizard;
-import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
-import org.eclipse.mylyn.commons.ui.repositories.RepositoryWizardPage;
-import org.eclipse.ui.IWorkbench;
+import org.eclipse.mylyn.builds.core.IBuildServer;
+import org.eclipse.mylyn.builds.ui.BuildsUi;
+import org.eclipse.mylyn.builds.ui.spi.BuildServerWizard;
+import org.eclipse.mylyn.internal.hudson.core.HudsonCorePlugin;
 
 /**
  * @author Steffen Pingel
  */
-public class NewHudsonServerWizard extends NewBuildServerWizard {
+public class NewHudsonServerWizard extends BuildServerWizard {
+
+	public NewHudsonServerWizard(IBuildServer model) {
+		super(model);
+	}
 
 	public NewHudsonServerWizard() {
-	}
-
-	@Override
-	public void addPages() {
-		RepositoryWizardPage page = new RepositoryWizardPage("newHudsonServer");
-		page.setElement(new RepositoryLocation((URI) null));
-		addPage(page);
-	}
-
-	public void init(IWorkbench workbench, IStructuredSelection selection) {
-		// ignore
-	}
-
-	@Override
-	public boolean performFinish() {
-		// ignore
-		return false;
+		super(BuildsUi.createServer(HudsonCorePlugin.CONNECTOR_KIND));
 	}
 
 }
