@@ -30,6 +30,12 @@ import org.eclipse.mylyn.commons.repositories.auth.UsernamePasswordCredentials;
  */
 public class LocationService implements ILocationService {
 
+	private static LocationService instance = new LocationService(null, null, new PlatformProxyProvider());
+
+	public static LocationService getDefault() {
+		return instance;
+	}
+
 	private static class PlatformProxyProvider implements IProxyProvider {
 
 		public Proxy getProxyForHost(String host, String proxyType) {

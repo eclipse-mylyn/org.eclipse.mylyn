@@ -13,6 +13,8 @@ package org.eclipse.mylyn.internal.commons.ui.repositories;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import org.eclipse.core.databinding.observable.Diffs;
 import org.eclipse.core.databinding.observable.IDiff;
@@ -72,12 +74,24 @@ public class RepositoryLocationValueProperty extends SimpleValueProperty {
 
 	@Override
 	protected Object doGetValue(Object source) {
+		if ("uri".equals(key)) {
+			URI uri = ((RepositoryLocation) source).getUri();
+			return (uri != null) ? uri.toString() : uri;
+		}
 		return ((RepositoryLocation) source).getProperty(key);
 	}
 
 	@Override
 	protected void doSetValue(Object source, Object value) {
-		((RepositoryLocation) source).setProperty(key, (value != null) ? value.toString() : null);
+		if ("uri".equals(key)) {
+			try {
+				((RepositoryLocation) source).setUri(new URI((String) value));
+			} catch (URISyntaxException e) {
+				// ignore
+			}
+		} else {
+			((RepositoryLocation) source).setProperty(key, (value != null) ? value.toString() : null);
+		}
 	}
 
 	@Override

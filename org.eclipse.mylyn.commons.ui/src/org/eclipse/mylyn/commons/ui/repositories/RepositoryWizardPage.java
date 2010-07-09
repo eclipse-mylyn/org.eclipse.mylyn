@@ -11,20 +11,24 @@
 
 package org.eclipse.mylyn.commons.ui.repositories;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.DialogPage;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
-import org.eclipse.mylyn.internal.commons.ui.repositories.RepositoryControl;
-import org.eclipse.swt.SWT;
+import org.eclipse.mylyn.internal.commons.ui.repositories.IPartContainer;
+import org.eclipse.mylyn.internal.commons.ui.repositories.RepositoryLocationPart;
 import org.eclipse.swt.widgets.Composite;
 
 /**
  * @author Steffen Pingel
  */
-public class RepositoryWizardPage extends WizardPage {
+public class RepositoryWizardPage extends WizardPage implements IPartContainer, IAdaptable {
 
-	private RepositoryControl control;
+	private RepositoryLocationPart part;
 
 	private IAdaptable element;
 
@@ -37,25 +41,23 @@ public class RepositoryWizardPage extends WizardPage {
 	public void createControl(Composite parent) {
 		initializeDialogUnits(parent);
 
-		control = new RepositoryControl(parent, SWT.NONE) {
-			@Override
-			protected RepositoryLocation getWorkingCopy() {
-				return RepositoryWizardPage.this.getWorkingCopy();
-			}
-		};
+		part = doCreateRepositoryPart();
+		part.setServiceLocator(this);
+		setControl(part.createContents(parent));
+		Dialog.applyDialogFont(parent);
+	}
 
-		Dialog.applyDialogFont(control);
-		setControl(control);
+	protected RepositoryLocationPart doCreateRepositoryPart() {
+		return new RepositoryLocationPart(getWorkingCopy());
 	}
 
 	public IAdaptable getElement() {
 		return element;
 	}
 
-	RepositoryLocation getWorkingCopy() {
+	protected RepositoryLocation getWorkingCopy() {
 		if (workingCopy == null) {
-			RepositoryLocation element = (RepositoryLocation) getElement().getAdapter(RepositoryLocation.class);
-			workingCopy = new RepositoryLocation(element.getProperties());
+			workingCopy = (RepositoryLocation) getElement().getAdapter(RepositoryLocation.class);
 		}
 		return workingCopy;
 	}
@@ -68,6 +70,25 @@ public class RepositoryWizardPage extends WizardPage {
 	 */
 	public void setElement(IAdaptable element) {
 		this.element = element;
+	}
+
+	public void run(boolean fork, boolean cancelable, IRunnableWithProgress runnable) throws InvocationTargetException,
+			InterruptedException {
+		getContainer().run(fork, cancelable, runnable);
+	}
+
+	public void updateButtons() {
+		getContainer().updateButtons();
+	}
+
+	public Object getAdapter(Class adapter) {
+		if (adapter == DialogPage.class) {
+			return this;
+		}
+		if (adapter == IPartContainer.class) {
+			return this;
+		}
+		return null;
 	}
 
 }

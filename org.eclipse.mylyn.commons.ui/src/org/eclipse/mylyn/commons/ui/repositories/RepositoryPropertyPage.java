@@ -11,10 +11,12 @@
 
 package org.eclipse.mylyn.commons.ui.repositories;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.DialogPage;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
-import org.eclipse.mylyn.internal.commons.ui.repositories.RepositoryControl;
-import org.eclipse.swt.SWT;
+import org.eclipse.mylyn.internal.commons.ui.repositories.IPartContainer;
+import org.eclipse.mylyn.internal.commons.ui.repositories.RepositoryLocationPart;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.dialogs.PropertyPage;
@@ -22,9 +24,9 @@ import org.eclipse.ui.dialogs.PropertyPage;
 /**
  * @author Steffen Pingel
  */
-public class RepositoryPropertyPage extends PropertyPage {
+public class RepositoryPropertyPage extends PropertyPage implements IAdaptable {
 
-	private RepositoryControl control;
+	private RepositoryLocationPart part;
 
 	private RepositoryLocation workingCopy;
 
@@ -35,23 +37,29 @@ public class RepositoryPropertyPage extends PropertyPage {
 	protected Control createContents(Composite parent) {
 		initializeDialogUnits(parent);
 
-		control = new RepositoryControl(parent, SWT.NONE) {
-			@Override
-			protected RepositoryLocation getWorkingCopy() {
-				return RepositoryPropertyPage.this.getWorkingCopy();
-			}
-		};
-
-		Dialog.applyDialogFont(control);
-		return control;
+		part = new RepositoryLocationPart(getWorkingCopy());
+		part.setServiceLocator(this);
+		setControl(part.createContents(parent));
+		Dialog.applyDialogFont(parent);
+		return getControl();
 	}
 
 	RepositoryLocation getWorkingCopy() {
 		if (workingCopy == null) {
 			RepositoryLocation element = (RepositoryLocation) getElement().getAdapter(RepositoryLocation.class);
-			workingCopy = new RepositoryLocation(element.getProperties());
+			workingCopy = new RepositoryLocation(element);
 		}
 		return workingCopy;
+	}
+
+	public Object getAdapter(Class adapter) {
+		if (adapter == DialogPage.class) {
+			return this;
+		}
+		if (adapter == IPartContainer.class) {
+			return this;
+		}
+		return null;
 	}
 
 }

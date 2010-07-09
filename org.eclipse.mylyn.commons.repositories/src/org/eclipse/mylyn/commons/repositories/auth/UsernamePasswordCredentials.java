@@ -18,7 +18,7 @@ package org.eclipse.mylyn.commons.repositories.auth;
  * @since 2.2
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class UsernamePasswordCredentials {
+public class UsernamePasswordCredentials extends AuthenticationCredentials {
 
 	private final String userName;
 

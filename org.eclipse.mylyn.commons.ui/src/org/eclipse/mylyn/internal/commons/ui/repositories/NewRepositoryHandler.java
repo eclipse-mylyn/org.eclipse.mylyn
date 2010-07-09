@@ -20,16 +20,14 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.mylyn.internal.commons.ui.CommonsUiPlugin;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.eclipse.ui.internal.IWorkbenchHelpContextIds;
 import org.eclipse.ui.internal.LegacyResourceSupport;
-import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.util.Util;
 
 public class NewRepositoryHandler extends AbstractHandler implements IHandler {
@@ -73,7 +71,7 @@ public class NewRepositoryHandler extends AbstractHandler implements IHandler {
 
 		wizard.init(workbenchWindow.getWorkbench(), selectionToPass);
 
-		IDialogSettings workbenchSettings = WorkbenchPlugin.getDefault().getDialogSettings();
+		IDialogSettings workbenchSettings = CommonsUiPlugin.getDefault().getDialogSettings();
 		IDialogSettings wizardSettings = workbenchSettings.getSection("NewWizardAction"); //$NON-NLS-1$
 		if (wizardSettings == null) {
 			wizardSettings = workbenchSettings.addNewSection("NewWizardAction"); //$NON-NLS-1$
@@ -85,7 +83,7 @@ public class NewRepositoryHandler extends AbstractHandler implements IHandler {
 		WizardDialog dialog = new WizardDialog(parent, wizard);
 		dialog.create();
 		dialog.getShell().setSize(Math.max(SIZING_WIZARD_WIDTH, dialog.getShell().getSize().x), SIZING_WIZARD_HEIGHT);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(dialog.getShell(), IWorkbenchHelpContextIds.NEW_WIZARD);
+		//PlatformUI.getWorkbench().getHelpSystem().setHelp(dialog.getShell(), IWorkbenchHelpContextIds.NEW_WIZARD);
 		return dialog.open();
 	}
 

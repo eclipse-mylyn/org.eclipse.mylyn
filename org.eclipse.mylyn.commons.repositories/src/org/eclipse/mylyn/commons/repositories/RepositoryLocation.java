@@ -30,8 +30,10 @@ import org.eclipse.equinox.security.storage.ISecurePreferences;
 import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
 import org.eclipse.equinox.security.storage.StorageException;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.commons.repositories.auth.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.repositories.auth.AuthenticationType;
 import org.eclipse.mylyn.commons.repositories.auth.UsernamePasswordCredentials;
+import org.eclipse.mylyn.internal.commons.repositories.LocationService;
 
 /**
  * @author Steffen Pingel
@@ -105,7 +107,7 @@ public class RepositoryLocation extends PlatformObject {
 
 	private boolean isCachedUserName;
 
-	private ILocationService locationService;
+	private ILocationService service;
 
 	private final Object LOCK = new Object();
 
@@ -119,11 +121,23 @@ public class RepositoryLocation extends PlatformObject {
 
 	public RepositoryLocation(URI uri) {
 		this.uri = uri;
+		this.service = LocationService.getDefault();
+	}
+
+	public RepositoryLocation() {
+		this.service = LocationService.getDefault();
+	}
+
+	public RepositoryLocation(RepositoryLocation source) {
+		this.properties.putAll(source.properties);
+		this.workingCopy = true;
+		this.service = source.getService();
 	}
 
 	public RepositoryLocation(Map<String, String> properties) {
 		this.properties.putAll(properties);
 		this.workingCopy = true;
+		this.service = LocationService.getDefault();
 	}
 
 	public boolean isWorkingCopy() {
@@ -135,7 +149,12 @@ public class RepositoryLocation extends PlatformObject {
 	}
 
 	public void setUri(URI uri) {
-		this.uri = uri;
+		Assert.isNotNull(uri);
+		URI oldValue = this.uri;
+		if (hasChanged(oldValue, uri)) {
+			this.uri = uri;
+			notifyChangeListeners("uri", oldValue, uri);
+		}
 	}
 
 	private void addAuthInfo(String username, String password, String userProperty, String passwordProperty) {
@@ -228,7 +247,7 @@ public class RepositoryLocation extends PlatformObject {
 	 * @return null, if no credentials are set for <code>authType</code>
 	 * @since 3.0
 	 */
-	public synchronized UsernamePasswordCredentials getCredentials(AuthenticationType authType) {
+	public synchronized AuthenticationCredentials getCredentials(AuthenticationType authType) {
 		String key = getKeyPrefix(authType);
 
 		String enabled = getProperty(key + ENABLED);
@@ -324,7 +343,7 @@ public class RepositoryLocation extends PlatformObject {
 		return Boolean.parseBoolean(getProperty(OFFLINE));
 	}
 
-	private void notifyChangeListeners(String key, String old, String value) {
+	private void notifyChangeListeners(String key, Object old, Object value) {
 		PropertyChangeEvent event = new PropertyChangeEvent(this, key, old, value);
 		for (PropertyChangeListener listener : propertyChangeListeners) {
 			listener.propertyChange(event);
@@ -396,10 +415,14 @@ public class RepositoryLocation extends PlatformObject {
 	public void setProperty(String key, String newValue) {
 		Assert.isNotNull(key);
 		String oldValue = this.properties.get(key);
-		if ((oldValue != null && !oldValue.equals(newValue)) || (oldValue == null && newValue != null)) {
+		if (hasChanged(oldValue, newValue)) {
 			this.properties.put(key.intern(), (newValue != null) ? newValue.intern() : null);
 			notifyChangeListeners(key, oldValue, newValue);
 		}
+	}
+
+	private boolean hasChanged(Object oldValue, Object newValue) {
+		return oldValue != null && !oldValue.equals(newValue) || oldValue == null && newValue != null;
 	}
 
 	public void setStatus(IStatus errorStatus) {
@@ -409,6 +432,14 @@ public class RepositoryLocation extends PlatformObject {
 	@Override
 	public String toString() {
 		return getRepositoryLabel();
+	}
+
+	public ILocationService getService() {
+		return service;
+	}
+
+	public void setService(ILocationService service) {
+		this.service = service;
 	}
 
 }
