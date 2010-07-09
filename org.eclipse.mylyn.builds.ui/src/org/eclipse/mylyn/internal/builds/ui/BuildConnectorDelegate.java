@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.spi.BuildConnector;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
+import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 import org.eclipse.mylyn.tasks.ui.TaskRepositoryLocationUiFactory;
 
@@ -61,6 +62,11 @@ public class BuildConnectorDelegate extends BuildConnector {
 	@Override
 	public BuildServerBehaviour getBehaviour(IBuildServer server) throws CoreException {
 		return getCore().getBehaviour(server);
+	}
+
+	@Override
+	public BuildServerBehaviour getBehaviour(RepositoryLocation location) throws CoreException {
+		return getCore().getBehaviour(location);
 	}
 
 }

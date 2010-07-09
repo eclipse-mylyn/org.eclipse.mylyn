@@ -23,7 +23,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.builds.core.IBuildModel;
+import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.spi.BuildConnector;
+import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
 import org.eclipse.mylyn.internal.builds.core.tasks.BuildTaskConnector;
 import org.eclipse.mylyn.internal.builds.ui.BuildConnectorDelegate;
 import org.eclipse.mylyn.internal.builds.ui.BuildConnectorDescriptor;
@@ -89,6 +91,10 @@ public class BuildsUi {
 
 	public static BuildConnector getConnector(TaskRepository repository) {
 		return getConnector(repository.getProperty(BuildTaskConnector.TASK_REPOSITORY_KEY_BUILD_CONNECTOR_KIND));
+	}
+
+	public static IBuildServer createServer(String connectorKind) {
+		return BuildsUiInternal.createServer(connectorKind, new RepositoryLocation());
 	}
 
 }

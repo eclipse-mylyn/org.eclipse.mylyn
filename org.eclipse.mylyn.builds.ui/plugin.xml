@@ -124,6 +124,52 @@
             </and>
          </enabledWhen>
       </handler>
+      <handler
+            class="org.eclipse.mylyn.internal.builds.ui.commands.BuildElementPropertiesHandler"
+            commandId="org.eclipse.ui.file.properties">
+         <activeWhen>
+			<with variable="activePartId">
+			    <equals value="org.eclipse.mylyn.commons.team.navigator.Repositories"/>
+			</with> 
+         </activeWhen>
+         <enabledWhen>
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate>
+                  <and>
+                     <instanceof
+                           value="org.eclipse.mylyn.builds.core.IBuildElement">
+                     </instanceof>
+                  </and>
+               </iterate>
+            </and>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="org.eclipse.mylyn.internal.builds.ui.commands.DeleteBuildElementHandler"
+            commandId="org.eclipse.ui.edit.delete">
+         <activeWhen>
+			<with variable="activePartId">
+			    <equals value="org.eclipse.mylyn.commons.team.navigator.Repositories"/>
+			</with> 
+         </activeWhen>
+         <enabledWhen>
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate>
+                  <and>
+                     <instanceof
+                           value="org.eclipse.mylyn.builds.core.IBuildElement">
+                     </instanceof>
+                  </and>
+               </iterate>
+            </and>
+         </enabledWhen>
+      </handler>
  </extension>
  <extension
        point="org.eclipse.ui.startup">

@@ -20,6 +20,7 @@ import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.spi.BuildConnector;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
 import org.eclipse.mylyn.builds.ui.BuildsUi;
+import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
 import org.eclipse.mylyn.internal.builds.core.BuildModel;
 import org.eclipse.mylyn.internal.builds.core.BuildServer;
 import org.eclipse.mylyn.internal.builds.core.tasks.IBuildLoader;
@@ -38,18 +39,22 @@ public class BuildsUiInternal {
 			String connectorKind = server.getConnectorKind();
 			if (connectorKind == null) {
 				throw new CoreException(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, NLS.bind(
-						"Loading of connector for server ''{0}'' failed. No connector kind was specified.",
-						server.getName())));
+						"Loading of connector for server ''{0}'' failed. No connector kind was specified.", server
+								.getName())));
 			}
 			BuildConnector connector = BuildsUi.getConnector(connectorKind);
 			if (connector == null) {
 				throw new CoreException(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, NLS.bind(
-						"Loading of connector for server ''{0}'' failed. Connector kind ''{1}'' is not known.",
-						server.getName(), connectorKind)));
+						"Loading of connector for server ''{0}'' failed. Connector kind ''{1}'' is not known.", server
+								.getName(), connectorKind)));
 			}
 			BuildServerBehaviour behaviour;
 			try {
-				behaviour = connector.getBehaviour(server);
+				if (server.getLocation() != null) {
+					behaviour = connector.getBehaviour(server.getLocation());
+				} else {
+					behaviour = connector.getBehaviour(server);
+				}
 			} catch (Exception e) {
 				throw new CoreException(
 						new Status(
@@ -111,6 +116,10 @@ public class BuildsUiInternal {
 
 	public static IBuildServer createServer(TaskRepository repository) {
 		return getManager().createServer(repository);
+	}
+
+	public static IBuildServer createServer(String connectorKind, RepositoryLocation location) {
+		return getManager().createServer(connectorKind, location);
 	}
 
 	public static IBuildServer getServer(TaskRepository repository) {

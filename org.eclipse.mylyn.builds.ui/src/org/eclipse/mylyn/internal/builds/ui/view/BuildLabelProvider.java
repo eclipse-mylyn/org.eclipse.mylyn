@@ -21,6 +21,7 @@ import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.internal.builds.core.BuildPlan;
+import org.eclipse.mylyn.internal.builds.core.BuildServer;
 import org.eclipse.mylyn.internal.builds.ui.BuildImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.swt.graphics.Image;
@@ -76,8 +77,15 @@ public class BuildLabelProvider extends LabelProvider implements IStyledLabelPro
 	}
 
 	public StyledString getStyledText(Object element) {
-		StyledString styledString = new StyledString(getText(element), NO_STYLE);
-		return styledString;
+		String text = getText(element);
+		if (text != null) {
+			StyledString styledString = new StyledString(text);
+			if (element instanceof IBuildServer) {
+				styledString.append(" [" + ((BuildServer) element).getUrl() + "]", StyledString.DECORATIONS_STYLER);
+			}
+			return styledString;
+		}
+		return new StyledString();
 	}
 
 	@Override

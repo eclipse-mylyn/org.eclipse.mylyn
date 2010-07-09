@@ -46,7 +46,6 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.actions.ExpandAllAction
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
@@ -106,16 +105,11 @@ public class BuildsView extends ViewPart {
 		modelListener = new AdapterImpl() {
 			@Override
 			public void notifyChanged(Notification msg) {
-				Display.getDefault().asyncExec(new Runnable() {
-					public void run() {
-						if (!viewer.getControl().isDisposed()) {
-							lastRefresh = new Date();
-							refresh();
-							// FIXME show result of last update
-							updateDecoration(Status.OK_STATUS);
-						}
-					}
-				});
+				if (!viewer.getControl().isDisposed()) {
+					lastRefresh = new Date();
+					// FIXME show result of last update
+					updateDecoration(Status.OK_STATUS);
+				}
 			}
 		};
 		model.eAdapters().add(modelListener);
@@ -236,11 +230,6 @@ public class BuildsView extends ViewPart {
 
 	TreeViewer getViewer() {
 		return viewer;
-	}
-
-	private void refresh() {
-		viewer.refresh();
-		viewer.expandAll();
 	}
 
 	@Override
