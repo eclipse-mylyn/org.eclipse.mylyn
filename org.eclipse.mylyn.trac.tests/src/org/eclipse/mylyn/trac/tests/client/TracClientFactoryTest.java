@@ -59,12 +59,11 @@ public class TracClientFactoryTest extends TestCase {
 
 	public void testProbeClient() throws Exception {
 		String url = fixture.getRepositoryUrl();
-		boolean xmlrpcInstalled = (fixture.getAccessMode() == Version.XML_RPC);
 
 		Credentials credentials = TestUtil.readCredentials(PrivilegeLevel.USER);
 		WebLocation location = new WebLocation(url, credentials.username, credentials.password);
 		Version version = TracClientFactory.probeClient(location);
-		if (xmlrpcInstalled) {
+		if (fixture.isXmlRpcEnabled()) {
 			assertEquals(Version.XML_RPC, version);
 		} else {
 			assertEquals(Version.TRAC_0_9, version);

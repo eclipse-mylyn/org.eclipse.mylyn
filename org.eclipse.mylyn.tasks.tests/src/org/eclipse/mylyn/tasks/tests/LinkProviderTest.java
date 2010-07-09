@@ -63,16 +63,19 @@ public class LinkProviderTest extends TestCase {
 	}
 
 	public void testTimeout() {
-		System.setProperty(ITasksCoreConstants.PROPERTY_LINK_PROVIDER_TIMEOUT, "50");
+		System.setProperty(ITasksCoreConstants.PROPERTY_LINK_PROVIDER_TIMEOUT, "500");
 
-		provider.timeout = 40;
+		provider.timeout = 10;
 		TasksUiPlugin.getDefault().getRepositoryForResource(ResourcesPlugin.getWorkspace().getRoot());
 		assertEquals(1, provider.executions);
 
-		provider.timeout = 60;
+		// should cause provider to get removed
+		provider.timeout = 2000;
 		TasksUiPlugin.getDefault().getRepositoryForResource(ResourcesPlugin.getWorkspace().getRoot());
 		assertEquals(2, provider.executions);
 
+		// provider should no longer get called
+		provider.timeout = 10;
 		TasksUiPlugin.getDefault().getRepositoryForResource(ResourcesPlugin.getWorkspace().getRoot());
 		assertEquals(2, provider.executions);
 	}

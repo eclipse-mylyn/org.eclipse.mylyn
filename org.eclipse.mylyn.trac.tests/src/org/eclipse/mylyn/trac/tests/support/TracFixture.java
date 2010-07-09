@@ -75,7 +75,7 @@ public class TracFixture extends TestFixture {
 			"0.12dev-r0", "Web");
 
 	public static TracFixture TRAC_TRUNK_XML_RPC = new TracFixture(Version.XML_RPC,
-			TracTestConstants.TEST_TRAC_TRUNK_URL, "0.12dev-r0", "XML-RPC");
+			TracTestConstants.TEST_TRAC_TRUNK_URL, "0.13dev-r0", "XML-RPC");
 
 	public static TracFixture DEFAULT = TRAC_0_12_XML_RPC;
 
@@ -85,7 +85,7 @@ public class TracFixture extends TestFixture {
 	 * Standard configurations for running all test against.
 	 */
 	public static final TracFixture[] ALL = new TracFixture[] { TRAC_0_10_WEB, TRAC_0_11_WEB, TRAC_0_12_WEB,
-			TRAC_TRUNK_WEB, TRAC_0_10_XML_RPC, TRAC_0_11_XML_RPC, TRAC_0_12_XML_RPC, TRAC_TRUNK_XML_RPC, /* TRAC_0_10_XML_RPC_SSL, */};
+	/*TRAC_TRUNK_WEB, */TRAC_0_10_XML_RPC, TRAC_0_11_XML_RPC, TRAC_0_12_XML_RPC, /*TRAC_TRUNK_XML_RPC, TRAC_0_10_XML_RPC_SSL, */};
 
 //	public static final TracFixture[] ALL = new TracFixture[] { TRAC_TRUNK_XML_RPC };
 
@@ -214,6 +214,10 @@ public class TracFixture extends TestFixture {
 
 	public String getVersion() {
 		return version;
+	}
+
+	public boolean isXmlRpcEnabled() {
+		return true;
 	}
 
 	public TaskRepository singleRepository(TracRepositoryConnector connector) {
