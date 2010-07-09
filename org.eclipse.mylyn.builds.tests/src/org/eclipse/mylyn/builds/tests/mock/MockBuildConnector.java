@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.spi.BuildConnector;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
+import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
 
 /**
  * @author Steffen Pingel
@@ -26,6 +27,11 @@ public class MockBuildConnector extends BuildConnector {
 
 	@Override
 	public BuildServerBehaviour getBehaviour(IBuildServer server) throws CoreException {
+		return new MockBuildServerBehavior();
+	}
+
+	@Override
+	public BuildServerBehaviour getBehaviour(RepositoryLocation location) throws CoreException {
 		return new MockBuildServerBehavior();
 	}
 
