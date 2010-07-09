@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
+import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 
 /**
@@ -28,7 +29,10 @@ public abstract class BuildConnector {
 
 	private TaskRepositoryLocationFactory locationFactory = new TaskRepositoryLocationFactory();
 
+	@Deprecated
 	public abstract BuildServerBehaviour getBehaviour(IBuildServer server) throws CoreException;
+
+	public abstract BuildServerBehaviour getBehaviour(RepositoryLocation location) throws CoreException;
 
 	public final String getConnectorKind() {
 		return connectorKind;

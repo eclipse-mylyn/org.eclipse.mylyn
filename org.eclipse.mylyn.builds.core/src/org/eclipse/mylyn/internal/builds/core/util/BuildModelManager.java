@@ -19,6 +19,7 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -26,6 +27,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
 import org.eclipse.mylyn.internal.builds.core.BuildModel;
 import org.eclipse.mylyn.internal.builds.core.BuildPackage;
 import org.eclipse.mylyn.internal.builds.core.BuildServer;
@@ -93,6 +95,10 @@ public class BuildModelManager {
 					model = (BuildModel) root;
 					for (IBuildServer server : model.getServers()) {
 						((BuildServer) server).setLoader(buildLoader);
+						EMap<String, String> properties = ((BuildServer) server).getAttributes();
+						if (properties.size() > 0) {
+							((BuildServer) server).setLocation(new RepositoryLocation(properties.map()));
+						}
 					}
 				} else {
 					StatusHandler.log(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN, NLS.bind(
@@ -157,6 +163,14 @@ public class BuildModelManager {
 			server.setRepositoryUrl(repository.getRepositoryUrl());
 			server.setUrl(repository.getRepositoryUrl());
 		}
+		server.setLoader(buildLoader);
+		return server;
+	}
+
+	public IBuildServer createServer(String connectorKind, RepositoryLocation location) {
+		BuildServer server = BuildPackage.eINSTANCE.getBuildFactory().createBuildServer();
+		server.setConnectorKind(connectorKind);
+		server.setLocation(location);
 		server.setLoader(buildLoader);
 		return server;
 	}

@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
@@ -31,5 +32,7 @@ public interface IBuildServer extends IBuildElement {
 	public IStatus validate(IOperationMonitor monitor) throws CoreException;
 
 	public String getRepositoryUrl();
+
+	public RepositoryLocation getLocation();
 
 }
