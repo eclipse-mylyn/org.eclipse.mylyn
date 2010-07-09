@@ -23,6 +23,8 @@ import org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy;
 import org.eclipse.mylyn.builds.core.IOperationMonitor;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
+import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
+import org.eclipse.mylyn.internal.builds.core.util.RepositoryWebLocation;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonException;
 import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBallColor;
@@ -37,6 +39,10 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 
 	public HudsonServerBehaviour(AbstractWebLocation location) {
 		this.client = new RestfulHudsonClient(location);
+	}
+
+	public HudsonServerBehaviour(RepositoryLocation location) {
+		this.client = new RestfulHudsonClient(new RepositoryWebLocation(location));
 	}
 
 	@Override

@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.spi.BuildConnector;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
+import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
 
 /**
  * @author Markus Knittig
@@ -23,7 +24,12 @@ public class HudsonConnector extends BuildConnector {
 
 	@Override
 	public BuildServerBehaviour getBehaviour(IBuildServer server) throws CoreException {
-		return new HudsonServerBehaviour(createLocation(server));		
+		return new HudsonServerBehaviour(createLocation(server));
+	}
+
+	@Override
+	public BuildServerBehaviour getBehaviour(RepositoryLocation location) throws CoreException {
+		return new HudsonServerBehaviour(location);
 	}
 
 }
