@@ -131,8 +131,6 @@ public class CheckActivityJobTest extends TestCase {
 		job.run();
 		assertTrue(job.isActive());
 		assertEquals(1, callback.eventCount);
-		System.err.println(callback.activeTime);
-
 		// resume from sleep past timeout
 		callback.activeTime = 0;
 		Thread.sleep(61);
@@ -142,13 +140,13 @@ public class CheckActivityJobTest extends TestCase {
 		assertTrue(job.isActive());
 		assertEquals(0, callback.activeTime);
 		// record another tick
-		Thread.sleep(6);
+		Thread.sleep(5);
 		job.run();
 		assertTrue(job.isActive());
 		// check if time sleeping was logged
 		assertEquals(2, callback.eventCount);
-		assertTrue("expected less than 5 < activeTime < 10, got " + callback.activeTime, callback.activeTime > 5
-				&& callback.activeTime < 10);
+		assertTrue("expected less than 5 < activeTime < 20, got " + callback.activeTime, callback.activeTime > 5
+				&& callback.activeTime < 20);
 	}
 
 	private class TestableCheckActivityJob extends CheckActivityJob {
