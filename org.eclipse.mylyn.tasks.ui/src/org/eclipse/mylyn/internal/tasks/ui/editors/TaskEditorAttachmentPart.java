@@ -76,7 +76,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 
 	private boolean hasIncoming;
 
-	private MenuManager menuManager;
+	protected MenuManager menuManager;
 
 	private Composite attachmentsComposite;
 
@@ -84,7 +84,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		setPartName(Messages.TaskEditorAttachmentPart_Attachments);
 	}
 
-	private void createAttachmentTable(FormToolkit toolkit, final Composite attachmentsComposite) {
+	protected void createAttachmentTable(FormToolkit toolkit, final Composite attachmentsComposite) {
 		Table attachmentsTable = toolkit.createTable(attachmentsComposite, SWT.MULTI | SWT.FULL_SELECTION);
 		attachmentsTable.setLinesVisible(true);
 		attachmentsTable.setHeaderVisible(true);

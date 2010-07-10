@@ -85,43 +85,4 @@
             id="org.eclipse.mylyn.bugzilla.ui.pageFactory">
       </pageFactory>            
    </extension>
-  
-   <extension point = "org.eclipse.ui.popupMenus">
-      <objectContribution
-            adaptable="false"
-            id="org.eclipse.mylyn.bugzilla.ui.contribution.attachment"
-            objectClass="org.eclipse.mylyn.tasks.core.ITaskAttachment">
-         <action
-               class="org.eclipse.mylyn.internal.bugzilla.ui.action.BugzillaNotObsoleteAttachmentAction"
-               enablesFor="*"
-               id="org.eclipse.mylyn.bugzilla.ui.contribution.attachment.notobsolete"
-               label="%Mark_not_obsolete_Action_Label"
-               menubarPath="org.eclipse.mylyn.bugzilla.ui.attachments.mark/markadditions"
-               tooltip="%Mark_not_obsolete_Action_Tooltip">
-         </action>
-         <action
-               class="org.eclipse.mylyn.internal.bugzilla.ui.action.BugzillaObsoleteAttachmentAction"
-               enablesFor="*"
-               id="org.eclipse.mylyn.bugzilla.ui.contribution.attachment.obsolete"
-               label="%Mark_obsolete_Action_Label"
-               menubarPath="org.eclipse.mylyn.bugzilla.ui.attachments.mark/markadditions"
-               tooltip="%Mark_obsolete_Action_Tooltip">
-         </action>
-         <action
-               class="org.eclipse.mylyn.internal.bugzilla.ui.action.BugzillaAttachmentUpdateAction"
-               enablesFor="*"
-               id="org.eclipse.mylyn.bugzilla.ui.contribution.attachment.update"
-               label="%Details_Action_Label"
-               menubarPath="org.eclipse.mylyn.bugzilla.ui.attachments.mark"
-               tooltip="%Details_Action_Tooltip">
-         </action>
-          <menu
-                id="org.eclipse.mylyn.bugzilla.ui.attachments.mark"
-                label="%Mark_as_Menu_Label"
-                path="markadditions">
-          </menu>
-      </objectContribution>
-   </extension>
-
-   
 </plugin>
