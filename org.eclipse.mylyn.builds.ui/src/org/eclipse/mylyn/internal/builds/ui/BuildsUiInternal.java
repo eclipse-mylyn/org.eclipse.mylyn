@@ -13,9 +13,11 @@ package org.eclipse.mylyn.internal.builds.ui;
 
 import java.io.IOException;
 
+import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.spi.BuildConnector;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
@@ -28,6 +30,7 @@ import org.eclipse.mylyn.internal.builds.core.util.BuildModelManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Steffen Pingel
@@ -35,6 +38,8 @@ import org.eclipse.osgi.util.NLS;
 public class BuildsUiInternal {
 
 	private static IBuildLoader buildLoader = new IBuildLoader() {
+		private volatile Realm realm;
+
 		public BuildServerBehaviour loadBehaviour(BuildServer server) throws CoreException {
 			String connectorKind = server.getConnectorKind();
 			if (connectorKind == null) {
@@ -50,10 +55,10 @@ public class BuildsUiInternal {
 			}
 			BuildServerBehaviour behaviour;
 			try {
-				if (server.getLocation() != null) {
-					behaviour = connector.getBehaviour(server.getLocation());
-				} else {
+				if (server.getRepository() != null) {
 					behaviour = connector.getBehaviour(server);
+				} else {
+					behaviour = connector.getBehaviour(server.getLocation());
 				}
 			} catch (Exception e) {
 				throw new CoreException(
@@ -91,6 +96,17 @@ public class BuildsUiInternal {
 										server.getName(), connectorKind)));
 			}
 			return behaviour;
+		}
+
+		public Realm getRealm() {
+			if (realm == null) {
+				Display.getDefault().syncExec(new Runnable() {
+					public void run() {
+						realm = SWTObservables.getRealm(Display.getDefault());
+					}
+				});
+			}
+			return realm;
 		}
 	};
 

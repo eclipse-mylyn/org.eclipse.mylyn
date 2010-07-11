@@ -43,7 +43,7 @@ public class BuildRefresher implements IPropertyChangeListener {
 	private synchronized void reschedule() {
 		if (isEnabled()) {
 			if (refreshOperation == null) {
-				refreshOperation = new RefreshOperation(BuildsUiInternal.getModel());
+				refreshOperation = new RefreshOperation(BuildsUiInternal.getModel().getServers());
 				refreshOperation.setSystem(true);
 				refreshOperation.addJobChangeListener(new JobChangeAdapter() {
 					@Override
