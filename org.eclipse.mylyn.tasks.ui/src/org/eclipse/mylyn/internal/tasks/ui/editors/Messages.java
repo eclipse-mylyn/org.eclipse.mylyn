@@ -113,6 +113,8 @@ public class Messages extends NLS {
 
 	public static String TaskEditorAttachmentPart_Description;
 
+	public static String TaskEditorAttachmentPart_ID;
+
 	public static String TaskEditorAttachmentPart_Name;
 
 	public static String TaskEditorAttachmentPart_No_attachments;

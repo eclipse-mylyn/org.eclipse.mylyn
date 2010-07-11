@@ -112,6 +112,10 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 	// Disabled for initial 3.4 release as per bug#263528
 //	private Button taskListServiceMessageEnabledButton;
 
+	private Button attachmentShowID;
+
+	private Button attachmentColumnUseStdWidth;
+
 	public TasksUiPreferencePage() {
 		super();
 		setPreferenceStore(TasksUiPlugin.getDefault().getPreferenceStore());
@@ -140,6 +144,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		}
 
 		createLinks(advanced);
+		createAttachmentTable(advanced);
 		updateRefreshGroupEnablements();
 		applyDialogFont(container);
 		return container;
@@ -218,13 +223,16 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		getPreferenceStore().setValue(ITasksUiPreferenceConstants.WEEK_START_DAY, getWeekStartValue());
 		//getPreferenceStore().setValue(TasksUiPreferenceConstants.PLANNING_STARTHOUR, hourDayStart.getSelection());
 //		getPreferenceStore().setValue(TasksUiPreferenceConstants.PLANNING_ENDHOUR, hourDayEnd.getSelection());
-		MonitorUiPlugin.getDefault().getPreferenceStore().setValue(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED,
-				timeoutEnabledButton.getSelection());
-		MonitorUiPlugin.getDefault().getPreferenceStore().setValue(ActivityContextManager.ACTIVITY_TIMEOUT,
-				timeoutMinutes.getSelection() * (60 * 1000));
+		MonitorUiPlugin.getDefault()
+				.getPreferenceStore()
+				.setValue(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED, timeoutEnabledButton.getSelection());
+		MonitorUiPlugin.getDefault()
+				.getPreferenceStore()
+				.setValue(ActivityContextManager.ACTIVITY_TIMEOUT, timeoutMinutes.getSelection() * (60 * 1000));
 
-		MonitorUiPlugin.getDefault().getPreferenceStore().setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED,
-				activityTrackingEnabledButton.getSelection());
+		MonitorUiPlugin.getDefault()
+				.getPreferenceStore()
+				.setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED, activityTrackingEnabledButton.getSelection());
 
 		String taskDirectory = taskDirectoryText.getText();
 		taskDirectory = taskDirectory.replaceAll(BACKSLASH_MULTI, FORWARDSLASH);
@@ -254,6 +262,12 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 				return false;
 			}
 		}
+		getPreferenceStore().setValue(ITasksUiPreferenceConstants.ATTACHMENT_SHOW_ID, attachmentShowID.getSelection());
+		getPreferenceStore().setValue(ITasksUiPreferenceConstants.ATTACHMENT_COLUMN_TO_STD,
+				attachmentColumnUseStdWidth.getSelection());
+		getPreferenceStore().setValue(ITasksUiPreferenceConstants.ATTACHMENT_COLUMN_TO_STD, false);
+
+		attachmentColumnUseStdWidth.setSelection(false);
 
 		return true;
 	}
@@ -294,11 +308,16 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		int minutes = MonitorUiPlugin.getDefault().getPreferenceStore().getInt(ActivityContextManager.ACTIVITY_TIMEOUT)
 				/ MS_MINUTES;
 		timeoutMinutes.setSelection(minutes);
-		timeoutEnabledButton.setSelection(MonitorUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED));
+		timeoutEnabledButton.setSelection(MonitorUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getBoolean(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED));
 
-		activityTrackingEnabledButton.setSelection(MonitorUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED));
+		activityTrackingEnabledButton.setSelection(MonitorUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getBoolean(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED));
+		attachmentShowID.setSelection(getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.ATTACHMENT_SHOW_ID));
+		attachmentColumnUseStdWidth.setSelection(getPreferenceStore().getBoolean(
+				ITasksUiPreferenceConstants.ATTACHMENT_COLUMN_TO_STD));
 
 		return true;
 	}
@@ -337,15 +356,22 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		weekStartCombo.select(getPreferenceStore().getDefaultInt(ITasksUiPreferenceConstants.WEEK_START_DAY) - 1);
 		//	hourDayStart.setSelection(getPreferenceStore().getDefaultInt(TasksUiPreferenceConstants.PLANNING_STARTHOUR));
 //		hourDayEnd.setSelection(getPreferenceStore().getDefaultInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
-		int activityTimeoutMinutes = MonitorUiPlugin.getDefault().getPreferenceStore().getDefaultInt(
-				ActivityContextManager.ACTIVITY_TIMEOUT)
+		int activityTimeoutMinutes = MonitorUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getDefaultInt(ActivityContextManager.ACTIVITY_TIMEOUT)
 				/ MS_MINUTES;
 		timeoutMinutes.setSelection(activityTimeoutMinutes);
-		timeoutEnabledButton.setSelection(MonitorUiPlugin.getDefault().getPreferenceStore().getDefaultBoolean(
-				ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED));
+		timeoutEnabledButton.setSelection(MonitorUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getDefaultBoolean(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED));
 
-		activityTrackingEnabledButton.setSelection(MonitorUiPlugin.getDefault().getPreferenceStore().getDefaultBoolean(
-				MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED));
+		activityTrackingEnabledButton.setSelection(MonitorUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getDefaultBoolean(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED));
+		attachmentShowID.setSelection(getPreferenceStore().getDefaultBoolean(
+				ITasksUiPreferenceConstants.ATTACHMENT_SHOW_ID));
+		attachmentColumnUseStdWidth.setSelection(getPreferenceStore().getDefaultBoolean(
+				ITasksUiPreferenceConstants.ATTACHMENT_COLUMN_TO_STD));
 
 		updateRefreshGroupEnablements();
 	}
@@ -509,11 +535,13 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		group.setLayout(new GridLayout(3, false));
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		boolean activityTrackingEnabled = MonitorUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED);
+		boolean activityTrackingEnabled = MonitorUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getBoolean(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED);
 
-		boolean timeoutEnabled = MonitorUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED);
+		boolean timeoutEnabled = MonitorUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getBoolean(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED);
 
 		activityTrackingEnabledButton = new Button(group, SWT.CHECK);
 		activityTrackingEnabledButton.setText(Messages.TasksUiPreferencePage_Enable_Time_Tracking);
@@ -546,8 +574,9 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		timeoutMinutes.setIncrement(5);
 		timeoutMinutes.setMaximum(60);
 		timeoutMinutes.setMinimum(1);
-		long minutes = MonitorUiPlugin.getDefault().getPreferenceStore().getLong(
-				ActivityContextManager.ACTIVITY_TIMEOUT)
+		long minutes = MonitorUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getLong(ActivityContextManager.ACTIVITY_TIMEOUT)
 				/ MS_MINUTES;
 		timeoutMinutes.setSelection((int) minutes);
 		timeoutMinutes.addSelectionListener(new SelectionAdapter() {
@@ -639,4 +668,22 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		}
 		super.dispose();
 	}
+
+	private void createAttachmentTable(Composite parent) {
+		Group attachmentContainer = new Group(parent, SWT.SHADOW_ETCHED_IN);
+		attachmentContainer.setLayout(new GridLayout(2, false));
+		attachmentContainer.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		attachmentContainer.setText(Messages.TasksUiPreferencePage_Task_Editor_Attachment_Table);
+
+		attachmentColumnUseStdWidth = new Button(attachmentContainer, SWT.CHECK);
+		attachmentColumnUseStdWidth.setText(Messages.TasksUiPreferencePage_reset_to_standard_Column);
+		attachmentColumnUseStdWidth.setSelection(getPreferenceStore().getBoolean(
+				ITasksUiPreferenceConstants.ATTACHMENT_COLUMN_TO_STD));
+
+		attachmentShowID = new Button(attachmentContainer, SWT.CHECK);
+		attachmentShowID.setText(Messages.TasksUiPreferencePage_Show_Attachment_ID);
+		attachmentShowID.setSelection(getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.ATTACHMENT_SHOW_ID));
+
+	}
+
 }

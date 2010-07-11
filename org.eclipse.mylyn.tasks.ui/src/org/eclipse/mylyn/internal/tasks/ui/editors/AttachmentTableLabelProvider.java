@@ -56,7 +56,7 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 
 	public Image getColumnImage(Object element, int columnIndex) {
 		ITaskAttachment attachment = (ITaskAttachment) element;
-		if (columnIndex == 0) {
+		if (columnIndex == 1) {
 			if (AttachmentUtil.isContext(attachment)) {
 				return CommonImages.getImage(TasksUiImages.CONTEXT_TRANSFER);
 			} else if (attachment.isPatch()) {
@@ -76,7 +76,7 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 				}
 				return WorkbenchImages.getImage(ISharedImages.IMG_OBJ_FILE);
 			}
-		} else if (columnIndex == 3) {
+		} else if (columnIndex == 4) {
 			return getAuthorImage(attachment.getAuthor(), attachment.getTaskRepository());
 		}
 		return null;
@@ -101,6 +101,14 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 		ITaskAttachment attachment = (ITaskAttachment) element;
 		switch (columnIndex) {
 		case 0:
+			String a = attachment.getUrl();
+			int i = a.indexOf("?id="); //$NON-NLS-1$
+			if (i != -1) {
+				return a.substring(i + 4);
+			} else {
+				return ""; //$NON-NLS-1$
+			}
+		case 1:
 			if (AttachmentUtil.isContext(attachment)) {
 				return Messages.AttachmentTableLabelProvider_Task_Context;
 			} else if (attachment.isPatch()) {
@@ -108,17 +116,17 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 			} else {
 				return " " + attachment.getFileName(); //$NON-NLS-1$
 			}
-		case 1:
-			return attachment.getDescription();
 		case 2:
+			return attachment.getDescription();
+		case 3:
 			Long length = attachment.getLength();
 			if (length < 0) {
 				return "-"; //$NON-NLS-1$
 			}
 			return sizeFormatter.format(length);
-		case 3:
-			return (attachment.getAuthor() != null) ? attachment.getAuthor().toString() : ""; //$NON-NLS-1$
 		case 4:
+			return (attachment.getAuthor() != null) ? attachment.getAuthor().toString() : ""; //$NON-NLS-1$
+		case 5:
 			return (attachment.getCreationDate() != null) ? EditorUtil.formatDateTime(attachment.getCreationDate())
 					: ""; //$NON-NLS-1$
 		}
