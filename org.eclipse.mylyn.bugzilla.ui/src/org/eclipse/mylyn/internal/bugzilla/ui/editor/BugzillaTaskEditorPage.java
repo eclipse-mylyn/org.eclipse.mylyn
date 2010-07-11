@@ -95,12 +95,6 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 				break;
 			}
 		}
-		for (TaskEditorPartDescriptor taskEditorPartDescriptor : descriptors) {
-			if (taskEditorPartDescriptor.getId().equals(ID_PART_ATTACHMENTS)) {
-				descriptors.remove(taskEditorPartDescriptor);
-				break;
-			}
-		}
 
 		// Add Bugzilla Planning part
 		try {
@@ -128,14 +122,6 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 				return new BugzillaPeoplePart();
 			}
 		}.setPath(PATH_PEOPLE));
-
-		// Add the updated Bugzilla attachment part
-		descriptors.add(new TaskEditorPartDescriptor(ID_PART_ATTACHMENTS) {
-			@Override
-			public AbstractTaskEditorPart createPart() {
-				return new BugzillaAttachmentPart();
-			}
-		}.setPath(PATH_ATTACHMENTS));
 
 		return descriptors;
 	}

@@ -1138,6 +1138,11 @@
              type="org.eclipse.mylyn.tasks.core.TaskRepository">
        </adapter>
     </factory>
+     <factory
+          adaptableType="org.eclipse.mylyn.tasks.core.ITaskAttachment"
+          class="org.eclipse.mylyn.internal.tasks.ui.TaskAttachmentAdapterFactory">
+       <adapter type="org.eclipse.ui.IActionFilter"/>
+    </factory>
  </extension>
 
  <extension
