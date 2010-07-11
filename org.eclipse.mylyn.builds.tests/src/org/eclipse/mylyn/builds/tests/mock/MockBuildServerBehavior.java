@@ -74,8 +74,7 @@ public class MockBuildServerBehavior extends BuildServerBehaviour {
 	}
 
 	@Override
-	public IStatus runBuild(IBuildPlanData plan, IOperationMonitor monitor) throws CoreException {
-		return Status.OK_STATUS;
+	public void runBuild(IBuildPlanData plan, IOperationMonitor monitor) throws CoreException {
 	}
 
 }
