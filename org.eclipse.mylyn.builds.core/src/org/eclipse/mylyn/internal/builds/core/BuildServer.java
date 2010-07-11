@@ -2,22 +2,18 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildServer.java,v 1.12 2010/07/09 08:06:05 spingel Exp $
+ * $Id: BuildServer.java,v 1.13 2010/07/11 05:44:43 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.SafeRunner;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
@@ -33,13 +29,12 @@ import org.eclipse.emf.ecore.util.EcoreEMap;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
-import org.eclipse.mylyn.builds.core.IBuildPlanData;
 import org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.IOperationMonitor;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
+import org.eclipse.mylyn.internal.builds.core.operations.RefreshOperation;
 import org.eclipse.mylyn.internal.builds.core.tasks.IBuildLoader;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
@@ -757,32 +752,7 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	}
 
 	public List<IBuildPlan> refreshPlans(final IOperationMonitor monitor) throws CoreException {
-		final AtomicReference<List<IBuildPlanData>> result = new AtomicReference<List<IBuildPlanData>>();
-		SafeRunner.run(new ISafeRunnable() {
-			public void run() throws Exception {
-				result.set(getBehaviour().getPlans(monitor));
-			}
-
-			public void handleException(Throwable e) {
-				StatusHandler.log(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN,
-						"Unexpected error during invocation in server behavior", e));
-			}
-		});
-		if (result.get() == null) {
-			throw new CoreException(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN,
-					"Server did not provide any plans."));
-		}
-		ArrayList<IBuildPlan> oldPlans = new ArrayList<IBuildPlan>(getPlans());
-		getPlans().clear();
-		for (IBuildPlanData plan : result.get()) {
-			getPlans().add((IBuildPlan) plan);
-		}
-		for (IBuildPlan plan : oldPlans) {
-			IBuildPlan newPlan = getPlanById(plan.getId());
-			if (newPlan != null) {
-				((BuildPlan) newPlan).setSelected(plan.isSelected());
-			}
-		}
+		new RefreshOperation(Collections.singletonList((IBuildServer) this)).run(monitor);
 		return getPlans();
 	}
 

@@ -14,7 +14,6 @@ package org.eclipse.mylyn.builds.core;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
 
 /**
  * Client API for build plans.
@@ -29,6 +28,6 @@ public interface IBuildPlan extends IBuildPlanData, IBuildElement {
 
 	public boolean isSelected();
 
-	IStatus run(IOperationMonitor monitor) throws CoreException;
+	void run(IOperationMonitor monitor) throws CoreException;
 
 }

@@ -13,13 +13,14 @@ package org.eclipse.mylyn.internal.builds.core.operations;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
-import org.eclipse.mylyn.builds.core.util.ProgressUtil;
+import org.eclipse.mylyn.builds.core.IOperationMonitor;
+import org.eclipse.mylyn.internal.builds.core.BuildPlan;
+import org.eclipse.mylyn.internal.builds.core.BuildServer;
 import org.eclipse.mylyn.internal.builds.core.BuildsCorePlugin;
 import org.eclipse.osgi.util.NLS;
 
@@ -33,14 +34,14 @@ public class RunBuildOperation extends AbstractBuildOperation {
 	public RunBuildOperation(IBuildPlan plan) {
 		super("Running build");
 		Assert.isNotNull(plan);
-		this.plan = plan;
+		this.plan = ((BuildPlan) plan).createWorkingCopy();
 	}
 
 	@Override
-	protected IStatus run(IProgressMonitor monitor) {
+	protected IStatus doExecute(IOperationMonitor monitor) {
 		MultiStatus result = new MultiStatus(BuildsCorePlugin.ID_PLUGIN, 0, "Running of build failed", null);
 		try {
-			return plan.run(ProgressUtil.convert(monitor));
+			doRun(plan, monitor);
 		} catch (CoreException e) {
 			result.add((new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN, NLS.bind("Run of build ''{0}'' failed",
 					plan.getName(), e))));
@@ -50,4 +51,9 @@ public class RunBuildOperation extends AbstractBuildOperation {
 		setStatus(result);
 		return Status.OK_STATUS;
 	}
+
+	public void doRun(IBuildPlan plan, IOperationMonitor monitor) throws CoreException {
+		((BuildServer) plan.getServer()).getBehaviour().runBuild(plan, monitor);
+	}
+
 }

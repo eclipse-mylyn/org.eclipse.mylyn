@@ -32,7 +32,7 @@ public abstract class BuildServerBehaviour {
 
 	public abstract IStatus validate(IOperationMonitor monitor) throws CoreException;
 
-	public abstract IStatus runBuild(IBuildPlanData plan, IOperationMonitor monitor) throws CoreException;
+	public abstract void runBuild(IBuildPlanData plan, IOperationMonitor monitor) throws CoreException;
 
 	protected IBuildPlanWorkingCopy createBuildPlan() {
 		return BuildPackage.eINSTANCE.getBuildFactory().createBuildPlan();
