@@ -125,11 +125,11 @@ public class RestfulHudsonClient {
 		if (response == HttpStatus.SC_OK) {
 			return Status.OK_STATUS;
 		}
-		throw new HudsonException(NLS.bind("Unexpected return code {0}: {1}", response,
-				HttpStatus.getStatusText(response)));
+		throw new HudsonException(NLS.bind("Unexpected return code {0}: {1}", response, HttpStatus
+				.getStatusText(response)));
 	}
 
-	public IStatus runBuild(final HudsonModelJob job, final IOperationMonitor monitor) throws HudsonException {
+	public void runBuild(final HudsonModelJob job, final IOperationMonitor monitor) throws HudsonException {
 		int response = new HudsonOperation<Integer>(client) {
 			@Override
 			public Integer execute() throws IOException {
@@ -142,10 +142,10 @@ public class RestfulHudsonClient {
 			}
 		}.run();
 		if (response == HttpStatus.SC_OK) {
-			return Status.OK_STATUS;
+			return;
 		}
-		throw new HudsonException(NLS.bind("Unexpected return code {0}: {1}", response,
-				HttpStatus.getStatusText(response)));
+		throw new HudsonException(NLS.bind("Unexpected return code {0}: {1}", response, HttpStatus
+				.getStatusText(response)));
 	}
 
 }

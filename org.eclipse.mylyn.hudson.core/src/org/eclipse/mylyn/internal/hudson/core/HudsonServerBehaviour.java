@@ -113,11 +113,11 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 	}
 
 	@Override
-	public IStatus runBuild(IBuildPlanData plan, IOperationMonitor monitor) throws CoreException {
+	public void runBuild(IBuildPlanData plan, IOperationMonitor monitor) throws CoreException {
 		try {
 			HudsonModelJob job = new HudsonModelJob();
 			job.setUrl(plan.getUrl());
-			return client.runBuild(job, monitor);
+			client.runBuild(job, monitor);
 		} catch (HudsonException e) {
 			throw HudsonCorePlugin.toCoreException(e);
 		}
