@@ -183,4 +183,15 @@
           name="Builds">
     </category>
  </extension>
+ <extension
+       point="org.eclipse.ui.editors">
+    <editor
+          class="org.eclipse.mylyn.internal.builds.ui.editor.BuildEditor"
+          contributorClass="org.eclipse.mylyn.internal.builds.ui.editor.BuildEditorActionContribution"
+          default="false"
+          icon="icons/eview16/build-view.png"
+          id="org.eclipse.mylyn.builds.ui.editor.buildeditor"
+          name="BuildDetails">
+    </editor>
+ </extension>
 </plugin>
