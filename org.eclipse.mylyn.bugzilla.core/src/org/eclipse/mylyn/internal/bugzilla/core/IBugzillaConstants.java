@@ -248,6 +248,8 @@ public interface IBugzillaConstants {
 
 	public static final String BUGZILLA_DESCRIPTOR_FILE = "bugzilla.desciptorFile"; //$NON-NLS-1$
 
+	public static final String BUGZILLA_USE_XMLRPC = "bugzilla.xmlrpc.status.transition"; //$NON-NLS-1$
+
 	public static final String DEFAULT_LANG = "en (default)"; //$NON-NLS-1$
 
 	// Bugzilla Task Attribute Editor Types 

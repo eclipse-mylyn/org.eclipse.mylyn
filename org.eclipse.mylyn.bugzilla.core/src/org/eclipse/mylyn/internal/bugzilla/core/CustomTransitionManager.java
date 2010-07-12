@@ -20,7 +20,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.xmlrpc.XmlRpcException;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.mylyn.internal.bugzilla.core.service.BugzillaXmlRpcClient;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
 /**
@@ -52,11 +54,15 @@ public class CustomTransitionManager implements Serializable {
 
 	private boolean valid = false;
 
+	private boolean fromFile = false;
+
 	private String filePath;
 
 	private String duplicateStatus;
 
 	private String startStatus;
+
+	private boolean usedXml;
 
 	public CustomTransitionManager() {
 		operationMapByCurrentStatus = new HashMap<String, List<AbstractBugzillaOperation>>();
@@ -64,6 +70,8 @@ public class CustomTransitionManager implements Serializable {
 		closedStatuses = new ArrayList<String>();
 		this.valid = false;
 		this.filePath = ""; //$NON-NLS-1$
+		this.fromFile = false;
+		this.usedXml = false;
 		duplicateStatus = DEFAULT_DUPLICATE_STATUS;
 		startStatus = DEFAULT_START_STATUS;
 	}
@@ -84,6 +92,7 @@ public class CustomTransitionManager implements Serializable {
 			//Do nothing, already parsed this file
 			return false;
 		}
+		fromFile = true;
 		this.filePath = filePath;
 		setValid(true);
 
@@ -128,7 +137,7 @@ public class CustomTransitionManager implements Serializable {
 	private void parseOptions(String s) throws IOException {
 		String[] pieces = s.split("="); //$NON-NLS-1$
 		if (pieces.length != 2) {
-			throw new IOException("Invalid Bugzilla option: " + s);
+			throw new IOException(Messages.CustomTransitionManager_InvalidBugzillaOption + s);
 		}
 
 		String name = pieces[0];
@@ -152,46 +161,11 @@ public class CustomTransitionManager implements Serializable {
 	private void parseTransitions(String s) throws IOException {
 		String[] pieces = s.split(":"); //$NON-NLS-1$
 		if (pieces.length < 4) {
-			throw new IOException("Invalid Bugzilla transition: " + s);
+			throw new IOException(Messages.CustomTransitionManager_InvalidBugzillaTransition + s);
 		}
 		String status = pieces[1];
 		String[] endStatuses = pieces[3].split(","); //$NON-NLS-1$
-		ArrayList<AbstractBugzillaOperation> validOps = new ArrayList<AbstractBugzillaOperation>();
-
-		for (String s1 : endStatuses) {
-			if (status.equals(s1)) {
-				continue;
-			}
-
-			//Special case: Unconfirmed and reopened both lead to adding the reopen operation
-			if (!customNames && (status.equals("REOPENED") && s1.equals("UNCONFIRMED") || s1.equals("REOPENED") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-					&& status.equals("REOPENED"))) { //$NON-NLS-1$
-				continue;
-			}
-
-			if (customNames && operationMapByEndStatus.get(s1) == null) {
-				//Create a custom open bug_status
-				if (!closedStatuses.contains(s1)) {
-					ArrayList<AbstractBugzillaOperation> list = new ArrayList<AbstractBugzillaOperation>();
-					list.add(new BugzillaOperation(AbstractBugzillaOperation.DEFAULT_LABEL_PREFIX + s1));
-					operationMapByEndStatus.put(s1, list);
-				} else {
-					ArrayList<AbstractBugzillaOperation> list = new ArrayList<AbstractBugzillaOperation>();
-					list.add(new BugzillaOperation(AbstractBugzillaOperation.DEFAULT_LABEL_PREFIX + s1, "resolution", //$NON-NLS-1$
-							TaskAttribute.TYPE_SINGLE_SELECT, s1));
-					operationMapByEndStatus.put(s1, list);
-				}
-			}
-
-			//Encountered an end status that we have no valid transitions for.
-			if (operationMapByEndStatus.get(s1) == null) {
-				throw new IOException("Encountered status with no valid transitions: " + s1);
-			}
-
-			validOps.addAll(operationMapByEndStatus.get(s1));
-		}
-
-		operationMapByCurrentStatus.put(status, validOps);
+		parse(status, endStatuses);
 	}
 
 	private void defaultNames() {
@@ -300,6 +274,122 @@ public class CustomTransitionManager implements Serializable {
 	 */
 	public String getStartStatus() {
 		return startStatus;
+	}
+
+	private void addTransition(String start, String endStatus) {
+		if (!customNames
+				&& (start.equals("REOPENED") && (endStatus.equals("UNCONFIRMED") || endStatus.equals("REOPENED")))) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			//REOPENED should not retransition to REOPENED
+			return;
+		}
+		List<AbstractBugzillaOperation> list = operationMapByCurrentStatus.get(start);
+		if (list == null) {
+			list = new ArrayList<AbstractBugzillaOperation>();
+		}
+		list.addAll(operationMapByEndStatus.get(endStatus));
+		operationMapByCurrentStatus.put(start, list);
+	}
+
+	private void parse(String start, Object[] transitions) {
+		addNewStatus(start);
+
+		//Find valid transitions
+		for (Object o : transitions) {
+			if ((o instanceof HashMap<?, ?>)) {
+				//Used for XMLRPC
+				HashMap<?, ?> tran = (HashMap<?, ?>) o;
+				String endStatus = (String) tran.get("name"); //$NON-NLS-1$
+				addNewStatus(endStatus);
+				if (!endStatus.equals(start)) {
+					addTransition(start, endStatus);
+				}
+			} else if (o instanceof String) {
+				//Used for files
+				String endStatus = (String) o;
+				addNewStatus(endStatus);
+				if (!endStatus.equals(start)) {
+					addTransition(start, endStatus);
+				}
+			}
+		}
+	}
+
+	public void parse(BugzillaXmlRpcClient xmlClient) {
+//		if (usedXml) {
+//			//XMLRPC should not change, don't look it up again
+//			return;
+//		}
+		this.filePath = ""; //$NON-NLS-1$
+		operationMapByCurrentStatus.clear();
+		operationMapByEndStatus.clear();
+		closedStatuses.clear();
+		defaultNames();
+		setValid(false);
+		//Assume custom names, we have no way to check
+		customNames = true;
+
+		try {
+			String[] fields = new String[1];
+			fields[0] = "bug_status"; //$NON-NLS-1$
+			for (Object raw : xmlClient.getFieldsWithNames(fields)) {
+				if (raw instanceof HashMap<?, ?>) {
+					Object[] values = (Object[]) ((HashMap<?, ?>) raw).get("values"); //$NON-NLS-1$
+					if (values == null) {
+						continue;
+					}
+					for (Object status : values) {
+						if (status instanceof HashMap<?, ?>) {
+							//Get name
+							HashMap<?, ?> map = (HashMap<?, ?>) status;
+							String start = (String) map.get("name"); //$NON-NLS-1$
+							//Get is_open
+							Object is_open = map.get("is_open"); //$NON-NLS-1$
+							if (is_open.toString().equals("false")) { //$NON-NLS-1$
+								closedStatuses.add(start);
+							}
+							parse(start, (Object[]) map.get("can_change_to")); //$NON-NLS-1$
+
+						}
+					}
+				} else {
+					throw new XmlRpcException(Messages.CustomTransitionManager_UnexpectedResponse);
+				}
+			}
+			//Should check if there are conditions we can use to terminate early
+			if (operationMapByCurrentStatus.size() == 0) {
+				throw new XmlRpcException(Messages.CustomTransitionManager_UnexpectedResponse);
+			}
+
+			setValid(true);
+			usedXml = true;
+			fromFile = false;
+		} catch (XmlRpcException e) {
+			setValid(false);
+		}
+	}
+
+	/**
+	 * Creates a new status with a single operation with the same name as the status itself. Does nothing if a status of
+	 * that name already exists.
+	 * 
+	 * @param status
+	 */
+	private void addNewStatus(String status) {
+		List<AbstractBugzillaOperation> list = operationMapByEndStatus.get(status);
+		if (list == null) {
+			list = new ArrayList<AbstractBugzillaOperation>();
+		} else {
+			return;
+		}
+
+		if (!closedStatuses.contains(status)) {
+			list.add(new BugzillaOperation(AbstractBugzillaOperation.DEFAULT_LABEL_PREFIX + status));
+		} else {
+			list.add(new BugzillaOperation(AbstractBugzillaOperation.DEFAULT_LABEL_PREFIX + status, "resolution", //$NON-NLS-1$
+					TaskAttribute.TYPE_SINGLE_SELECT, status));
+		}
+
+		operationMapByEndStatus.put(status, list);
 	}
 
 }

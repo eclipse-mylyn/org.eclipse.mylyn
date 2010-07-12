@@ -99,6 +99,8 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 	private Combo languageSettingCombo;
 
+	private Button useXMLRPCstatusTransitions;
+
 	public BugzillaRepositorySettingsPage(TaskRepository taskRepository) {
 		super(TITLE, DESCRIPTION, taskRepository);
 		setNeedsAnonymousLogin(true);
@@ -220,6 +222,16 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 		new Label(parent, SWT.NONE).setText(Messages.BugzillaRepositorySettingsPage_Language_);
 		languageSettingCombo = new Combo(parent, SWT.DROP_DOWN);
+
+		Label xmlrpc = new Label(parent, SWT.NONE);
+		xmlrpc.setText(Messages.BugzillaRepositorySettingsPage_AutodetectWorkflow);
+		xmlrpc.setToolTipText(Messages.BugzillaRepositorySettingsPage_RequiresBugzilla3_6);
+		useXMLRPCstatusTransitions = new Button(parent, SWT.CHECK | SWT.LEFT);
+		useXMLRPCstatusTransitions.setText(Messages.BugzillaRepositorySettingsPage_UseXmlRpc);
+		if (repository != null) {
+			boolean shortLogin = Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_USE_XMLRPC));
+			useXMLRPCstatusTransitions.setSelection(shortLogin);
+		}
 
 		Label descriptorLabel = new Label(parent, SWT.NONE);
 		descriptorLabel.setText(Messages.BugzillaRepositorySettingsPage_descriptor_file);
@@ -348,13 +360,14 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		repository.setProperty(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN,
 				String.valueOf(cleanQAContact.getSelection()));
 		repository.setProperty(IBugzillaConstants.BUGZILLA_LANGUAGE_SETTING, languageSettingCombo.getText());
-		if (descriptorFile != null) {
+		repository.setProperty(IBugzillaConstants.BUGZILLA_USE_XMLRPC,
+				Boolean.toString(useXMLRPCstatusTransitions.getSelection()));
+		if (oldDescriptorFile == null || !descriptorFile.getText().equals(oldDescriptorFile)) {
 			repository.setProperty(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE, descriptorFile.getText());
-			if (oldDescriptorFile != null && !descriptorFile.getText().equals(oldDescriptorFile)) {
-				if (repositoryConfiguration != null) {
-					repositoryConfiguration.setValidTransitions(descriptorFile.getText());
-				}
-			}
+		}
+		if (repositoryConfiguration != null) {
+			repositoryConfiguration.setValidTransitions(descriptorFile.getText(),
+					useXMLRPCstatusTransitions.getSelection());
 		}
 
 		if (!autodetectPlatformOS.getSelection()) {

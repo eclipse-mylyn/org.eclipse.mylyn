@@ -281,4 +281,10 @@ public class Messages extends NLS {
 
 	public static String BugzillaStatus_errorRepository;
 
+	public static String CustomTransitionManager_InvalidBugzillaOption;
+
+	public static String CustomTransitionManager_InvalidBugzillaTransition;
+
+	public static String CustomTransitionManager_UnexpectedResponse;
+
 }

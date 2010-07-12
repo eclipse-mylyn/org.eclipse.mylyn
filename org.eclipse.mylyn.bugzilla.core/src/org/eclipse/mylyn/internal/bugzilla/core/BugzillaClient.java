@@ -74,6 +74,7 @@ import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.internal.bugzilla.core.history.BugzillaTaskHistoryParser;
 import org.eclipse.mylyn.internal.bugzilla.core.history.TaskHistory;
+import org.eclipse.mylyn.internal.bugzilla.core.service.BugzillaXmlRpcClient;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
@@ -177,6 +178,8 @@ public class BugzillaClient {
 	private final AbstractWebLocation location;
 
 	private final BugzillaRepositoryConnector connector;
+
+	private BugzillaXmlRpcClient xmlRpcClient;
 
 	public BugzillaClient(AbstractWebLocation location, String characterEncoding, Map<String, String> configParameters,
 			BugzillaLanguageSettings languageSettings, BugzillaRepositoryConnector connector)
@@ -656,12 +659,18 @@ public class BugzillaClient {
 								}
 
 								if (repositoryConfiguration != null) {
-									repositoryConfiguration.setValidTransitions(configParameters.get(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE));
-
+									boolean useXml = Boolean.parseBoolean(configParameters.get(IBugzillaConstants.BUGZILLA_USE_XMLRPC));
 									if (!repositoryConfiguration.getProducts().isEmpty()) {
 										repositoryConfiguration.setRepositoryUrl(repositoryUrl.toString());
+
+										repositoryConfiguration.setValidTransitions(
+												configParameters.get(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE),
+												useXml);
 										return repositoryConfiguration;
 									} else {
+										repositoryConfiguration.setValidTransitions(
+												configParameters.get(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE),
+												useXml);
 										if (attempt == 0) {
 											// empty configuration, retry authenticate
 											loggedIn = false;
