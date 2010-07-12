@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.bugzilla.tests.core;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -20,6 +21,8 @@ import org.apache.xmlrpc.XmlRpcException;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.WebLocation;
+import org.eclipse.mylyn.internal.bugzilla.core.AbstractBugzillaOperation;
+import org.eclipse.mylyn.internal.bugzilla.core.CustomTransitionManager;
 import org.eclipse.mylyn.internal.bugzilla.core.service.BugzillaXmlRpcClient;
 
 /**
@@ -78,4 +81,146 @@ public class BugzillaXmlRpcClientTest extends TestCase {
 		}
 	}
 
+	public void testTransitionManagerWithXml() throws Exception {
+		if (BugzillaFixture.current() == BugzillaFixture.BUGS_3_6) {
+			CustomTransitionManager ctm = new CustomTransitionManager();
+			ctm.parse(bugzillaClient);
+
+			String start;
+			ArrayList<String> transitions = new ArrayList<String>();
+
+			/*
+			 * Copy and paste this block to test valid transitions for different start statuses
+			 * 
+			 * We check that only valid operations are returned. There is no
+			 * way to determine (using the operation 'reopen') whether "REOPEN" or "UNCONFIRMED"
+			 * is valid.
+			 */
+			start = "NEW";
+			transitions.clear();
+			for (AbstractBugzillaOperation s : ctm.getValidTransitions(start)) {
+				String name = s.toString();
+				if (name.equals("resolve")) {
+					transitions.add(name);
+				} else if (name.equals("accept")) {
+					transitions.add(name);
+				} else if (name.equals("duplicate")) {
+					transitions.add(name);
+				} else {
+					fail("The status " + start + " is not expected to transition to " + name.toString());
+				}
+			}
+			assertEquals("Missing transitions for " + start + ", only found " + transitions, transitions.size(),
+					ctm.getValidTransitions(start).size());
+
+			start = "UNCONFIRMED";
+			transitions.clear();
+			for (AbstractBugzillaOperation s : ctm.getValidTransitions(start)) {
+				String name = s.toString();
+				if (name.equals("resolve")) {
+					transitions.add(name);
+				} else if (name.equals("accept")) {
+					transitions.add(name);
+				} else if (name.equals("duplicate")) {
+					transitions.add(name);
+				} else if (name.equals("markNew")) {
+					transitions.add(name);
+				} else {
+					fail("The status " + start + " was not expected to transition to " + name.toString());
+				}
+			}
+			assertEquals("Unrecognized transitions for " + start + ", only found " + transitions, transitions.size(),
+					ctm.getValidTransitions(start).size());
+
+			start = "ASSIGNED";
+			transitions.clear();
+			for (AbstractBugzillaOperation s : ctm.getValidTransitions(start)) {
+				String name = s.toString();
+				if (name.equals("resolve")) {
+					transitions.add(name);
+				} else if (name.equals("duplicate")) {
+					transitions.add(name);
+				} else if (name.equals("markNew")) {
+					transitions.add(name);
+				} else {
+					fail("The status " + start + " was not expected to transition to " + name.toString());
+				}
+			}
+			assertEquals("Unrecognized transitions for " + start + ", only found " + transitions, transitions.size(),
+					ctm.getValidTransitions(start).size());
+
+			start = "REOPENED";
+			transitions.clear();
+			for (AbstractBugzillaOperation s : ctm.getValidTransitions(start)) {
+				String name = s.toString();
+				if (name.equals("resolve")) {
+					transitions.add(name);
+				} else if (name.equals("accept")) {
+					transitions.add(name);
+				} else if (name.equals("duplicate")) {
+					transitions.add(name);
+				} else if (name.equals("markNew")) {
+					transitions.add(name);
+				} else {
+					fail("The status " + start + " was not expected to transition to " + name.toString());
+				}
+			}
+			assertEquals("Unrecognized transitions for " + start + ", only found " + transitions, transitions.size(),
+					ctm.getValidTransitions(start).size());
+
+			start = "RESOLVED";
+			transitions.clear();
+			for (AbstractBugzillaOperation s : ctm.getValidTransitions(start)) {
+				String name = s.toString();
+				if (name.equals("verify")) {
+					transitions.add(name);
+				} else if (name.equals("reopen")) {
+					transitions.add(name);
+				} else if (name.equals("close")) {
+					transitions.add(name);
+				} else {
+					fail("The status " + start + " was not expected to transition to " + name.toString());
+				}
+			}
+			assertEquals("Unrecognized transitions for " + start + ", only found " + transitions, transitions.size(),
+					ctm.getValidTransitions(start).size());
+
+			start = "VERIFIED";
+			transitions.clear();
+			for (AbstractBugzillaOperation s : ctm.getValidTransitions(start)) {
+				String name = s.toString();
+				if (name.equals("reopen")) {
+					transitions.add(name);
+				} else if (name.equals("resolve")) {
+					transitions.add(name);
+				} else if (name.equals("duplicate")) {
+					transitions.add(name);
+				} else if (name.equals("close")) {
+					transitions.add(name);
+				} else {
+					fail("The status " + start + " was not expected to transition to " + name.toString());
+				}
+			}
+			assertEquals("Unrecognized transitions for " + start + ", only found " + transitions, transitions.size(),
+					ctm.getValidTransitions(start).size());
+
+			start = "CLOSED";
+			transitions.clear();
+			for (AbstractBugzillaOperation s : ctm.getValidTransitions(start)) {
+				String name = s.toString();
+				if (name.equals("reopen")) {
+					transitions.add(name);
+				} else if (name.equals("resolve")) {
+					transitions.add(name);
+				} else if (name.equals("duplicate")) {
+					transitions.add(name);
+				} else {
+					fail("The status " + start + " was not expected to transition to " + name.toString());
+				}
+			}
+			assertEquals("Unrecognized transitions for " + start + ", only found " + transitions, transitions.size(),
+					ctm.getValidTransitions(start).size());
+
+		}
+	}
 }
