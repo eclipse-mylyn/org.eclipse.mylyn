@@ -268,11 +268,15 @@ public class CustomTransitionManager implements Serializable {
 	 * Returns the start status. Standard Bugzilla installations have 2 available start statuses, UNCONFIRMED and NEW.
 	 * Each user has a permissions setting that determines whether their new bugs start as UNCONFIRMED or NEW. This
 	 * permissions setting currently cannot be accessed, so this function does not try to guess and returns either the
-	 * default status (NEW) or whichever status was set by a transition file.
+	 * default status (NEW) or whichever status was set by a transition file. <br>
+	 * Fix for bug #318128, set startStatus to NEW if startStatus is somehow null at this point.
 	 * 
 	 * @return The valid start status. Default value is NEW.
 	 */
 	public String getStartStatus() {
+		if (startStatus == null || startStatus.length() == 0) {
+			startStatus = DEFAULT_START_STATUS;
+		}
 		return startStatus;
 	}
 
