@@ -43,14 +43,15 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskDataDiff;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotifier;
 import org.eclipse.mylyn.internal.tasks.ui.util.PlatformUtil;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskScheduleContentProvider.StateTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TaskElementLabelProvider;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -160,10 +161,12 @@ public class TaskListToolTip extends GradientToolTip {
 		if (element instanceof ScheduledTaskContainer) {
 			StringBuilder sb = new StringBuilder();
 			sb.append(element.getSummary());
-			Calendar start = ((ScheduledTaskContainer) element).getDateRange().getStartDate();
-			sb.append("  ["); //$NON-NLS-1$
-			sb.append(DateFormat.getDateInstance(DateFormat.LONG).format(start.getTime()));
-			sb.append("]"); //$NON-NLS-1$
+			if (!(element instanceof StateTaskContainer)) {
+				Calendar start = ((ScheduledTaskContainer) element).getDateRange().getStartDate();
+				sb.append("  ["); //$NON-NLS-1$
+				sb.append(DateFormat.getDateInstance(DateFormat.LONG).format(start.getTime()));
+				sb.append("]"); //$NON-NLS-1$
+			}
 			return sb.toString();
 		} else if (element instanceof IRepositoryQuery) {
 			IRepositoryQuery query = (IRepositoryQuery) element;
@@ -268,10 +271,11 @@ public class TaskListToolTip extends GradientToolTip {
 
 			Date dueDate = task.getDueDate();
 			if (dueDate != null) {
-				sb.append(NLS.bind(Messages.TaskListToolTip_Due, new Object[] {
-						new SimpleDateFormat("E").format(dueDate), //$NON-NLS-1$
-						DateFormat.getDateInstance(DateFormat.LONG).format(dueDate),
-						DateFormat.getTimeInstance(DateFormat.SHORT).format(dueDate) }));
+				sb.append(NLS.bind(Messages.TaskListToolTip_Due,
+						new Object[] {
+								new SimpleDateFormat("E").format(dueDate), //$NON-NLS-1$
+								DateFormat.getDateInstance(DateFormat.LONG).format(dueDate),
+								DateFormat.getTimeInstance(DateFormat.SHORT).format(dueDate) }));
 				sb.append("\n"); //$NON-NLS-1$
 			}
 
@@ -546,8 +550,9 @@ public class TaskListToolTip extends GradientToolTip {
 				if (taskListView != null) {
 
 					if (!taskListView.isFocusedMode()
-							&& TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-									ITasksUiPreferenceConstants.FILTER_COMPLETE_MODE)) {
+							&& TasksUiPlugin.getDefault()
+									.getPreferenceStore()
+									.getBoolean(ITasksUiPreferenceConstants.FILTER_COMPLETE_MODE)) {
 						Object[] children = ((TaskListContentProvider) taskListView.getViewer().getContentProvider()).getChildren(element);
 						boolean hasIncoming = false;
 						for (Object child : children) {

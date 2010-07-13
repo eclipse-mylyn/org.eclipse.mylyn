@@ -31,9 +31,9 @@ import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.WeekDateRange;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
-import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -234,7 +234,7 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 
 	}
 
-	private abstract class StateTaskContainer extends ScheduledTaskContainer {
+	public abstract class StateTaskContainer extends ScheduledTaskContainer {
 
 		Calendar temp = TaskActivityUtil.getCalendar();
 
@@ -328,21 +328,15 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 		}
 	}
 
-	public class Completed extends ScheduledTaskContainer {
+	public class Completed extends StateTaskContainer {
 
 		public Completed() {
-			super(taskActivityManager, new DateRange(COMPLETED_TIME), Messages.TaskScheduleContentProvider_Completed);
+			super(new DateRange(COMPLETED_TIME), Messages.TaskScheduleContentProvider_Completed);
 		}
 
 		@Override
-		public Collection<ITask> getChildren() {
-			Set<ITask> children = new HashSet<ITask>();
-			for (ITask task : TasksUiPlugin.getTaskList().getAllTasks()) {
-				if (task.isCompleted() && task.getSynchronizationState().equals(SynchronizationState.SYNCHRONIZED)) {
-					children.add(task);
-				}
-			}
-			return children;
+		public boolean select(ITask task) {
+			return (task.isCompleted() && task.getSynchronizationState().equals(SynchronizationState.SYNCHRONIZED));
 		}
 	}
 
