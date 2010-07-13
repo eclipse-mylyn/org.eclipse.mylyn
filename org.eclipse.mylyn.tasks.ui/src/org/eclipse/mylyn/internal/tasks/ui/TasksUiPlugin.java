@@ -72,8 +72,8 @@ import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryDelta;
-import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryDelta.Type;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryDelta.Type;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataStore;
 import org.eclipse.mylyn.internal.tasks.core.externalization.ExternalizationManager;
@@ -91,12 +91,12 @@ import org.eclipse.mylyn.tasks.core.AbstractDuplicateDetector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskActivationAdapter;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.AbstractTaskRepositoryLinkProvider;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -511,13 +511,11 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			return;
 		}
 
-		boolean enabled = TasksUiPlugin.getDefault()
-				.getPreferenceStore()
-				.getBoolean(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED);
+		boolean enabled = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
+				ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED);
 		if (enabled) {
-			long interval = TasksUiPlugin.getDefault()
-					.getPreferenceStore()
-					.getLong(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS);
+			long interval = TasksUiPlugin.getDefault().getPreferenceStore().getLong(
+					ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS);
 			if (initial) {
 				synchronizationScheduler.setInterval(DELAY_QUERY_REFRESH_ON_STARTUP, interval);
 			} else {
@@ -891,18 +889,15 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			}
 		}
 
-		if (!MonitorUiPlugin.getDefault()
-				.getPreferenceStore()
-				.getBoolean(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED + ".checked")) { //$NON-NLS-1$
+		if (!MonitorUiPlugin.getDefault().getPreferenceStore().getBoolean(
+				MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED + ".checked")) { //$NON-NLS-1$
 			if (!taskActivityMonitor.getActivationHistory().isEmpty()) {
 				// tasks have been active before so fore preference enabled
-				MonitorUiPlugin.getDefault()
-						.getPreferenceStore()
-						.setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED, true);
+				MonitorUiPlugin.getDefault().getPreferenceStore().setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED,
+						true);
 			}
-			MonitorUiPlugin.getDefault()
-					.getPreferenceStore()
-					.setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED + ".checked", true); //$NON-NLS-1$
+			MonitorUiPlugin.getDefault().getPreferenceStore().setValue(
+					MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED + ".checked", true); //$NON-NLS-1$
 			MonitorUiPlugin.getDefault().savePluginPreferences();
 		}
 
@@ -964,8 +959,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		store.setDefault(ITasksUiPreferenceConstants.TASK_LIST_TOOL_TIPS_ENABLED, true);
 
 		store.setDefault(ITasksUiPreferenceConstants.SERVICE_MESSAGE_URL, "http://eclipse.org/mylyn/message.xml"); //$NON-NLS-1$
-		store.setDefault(ITasksUiPreferenceConstants.ATTACHMENT_SHOW_ID, false);
-		store.setDefault(ITasksUiPreferenceConstants.ATTACHMENT_COLUMN_TO_STD, true);
 	}
 
 	public static TaskActivityManager getTaskActivityManager() {
@@ -984,9 +977,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	}
 
 	public boolean groupSubtasks(ITaskContainer element) {
-		boolean groupSubtasks = TasksUiPlugin.getDefault()
-				.getPreferenceStore()
-				.getBoolean(ITasksUiPreferenceConstants.GROUP_SUBTASKS);
+		boolean groupSubtasks = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
+				ITasksUiPreferenceConstants.GROUP_SUBTASKS);
 
 		if (element instanceof ITask) {
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(((ITask) element).getConnectorKind());

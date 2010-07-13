@@ -57,8 +57,6 @@ public class Messages extends NLS {
 
 	public static String TasksUiPreferencePage_highlight_current_line;
 
-	public static String TasksUiPreferencePage_reset_to_standard_Column;
-
 	public static String TasksUiPreferencePage_Rich_Editor__Recommended_;
 
 	public static String TasksUiPreferencePage_Scheduling;
@@ -66,8 +64,6 @@ public class Messages extends NLS {
 	public static String TasksUiPreferencePage_See_X_for_configuring_Task_List_colors;
 
 	public static String TasksUiPreferencePage_show_service_messages;
-
-	public static String TasksUiPreferencePage_Show_Attachment_ID;
 
 	public static String TasksUiPreferencePage_Show_tooltip_on_hover_Label;
 
@@ -88,8 +84,6 @@ public class Messages extends NLS {
 	public static String TasksUiPreferencePage_Task_Data_Directory_Error;
 
 	public static String TasksUiPreferencePage_Task_Editing;
-
-	public static String TasksUiPreferencePage_Task_Editor_Attachment_Table;
 
 	public static String TasksUiPreferencePage_Task_List_Group;
 
