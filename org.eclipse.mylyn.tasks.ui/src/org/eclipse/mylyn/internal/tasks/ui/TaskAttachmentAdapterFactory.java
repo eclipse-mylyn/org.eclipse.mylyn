@@ -31,9 +31,9 @@ public class TaskAttachmentAdapterFactory implements IAdapterFactory {
 			return new IActionFilter() {
 				public boolean testAttribute(Object target, String name, String value) {
 					TaskAttachment taskAttachment = (TaskAttachment) target;
-					if ("ConnectorKind".equals(name)) { //$NON-NLS-1$
+					if ("connectorKind".equals(name)) { //$NON-NLS-1$
 						return value.equals(taskAttachment.getConnectorKind());
-					} else if ("ContentType".equals(name)) { //$NON-NLS-1$
+					} else if ("contentType".equals(name)) { //$NON-NLS-1$
 						return value.equals(taskAttachment.getContentType());
 					} else if ("isDeprecated".equals(name)) { //$NON-NLS-1$
 						return Boolean.valueOf(value).booleanValue() == taskAttachment.isDeprecated();

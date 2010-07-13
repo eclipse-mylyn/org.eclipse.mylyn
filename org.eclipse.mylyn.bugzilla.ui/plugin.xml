@@ -99,10 +99,7 @@
                menubarPath="org.eclipse.mylyn.bugzilla.ui.attachments.mark/markadditions"
                tooltip="%Mark_not_obsolete_Action_Tooltip">
             <enablement> 
-             <and> 
-              <objectClass name="org.eclipse.mylyn.tasks.core.ITaskAttachment"/> 
-              <objectState name="ConnectorKind" value="bugzilla"/>
-             </and> 
+              <objectState name="connectorKind" value="bugzilla"/>
             </enablement> 
          </action>
          <action
@@ -113,10 +110,7 @@
                menubarPath="org.eclipse.mylyn.bugzilla.ui.attachments.mark/markadditions"
                tooltip="%Mark_obsolete_Action_Tooltip">
              <enablement> 
-             <and> 
-              <objectClass name="org.eclipse.mylyn.tasks.core.ITaskAttachment"/> 
-              <objectState name="ConnectorKind" value="bugzilla"/>
-             </and> 
+              <objectState name="connectorKind" value="bugzilla"/>
             </enablement> 
          </action>
          <action
