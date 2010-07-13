@@ -122,7 +122,7 @@
                tooltip="%Details_Action_Tooltip">
          </action>
          <visibility>
-               <objectState name="ConnectorKind" value="bugzilla"></objectState>
+               <objectState name="connectorKind" value="bugzilla"></objectState>
          </visibility>
          <menu
                 id="org.eclipse.mylyn.bugzilla.ui.attachments.mark"
