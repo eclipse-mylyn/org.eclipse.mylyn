@@ -74,10 +74,6 @@ public interface ITasksUiPreferenceConstants {
 
 	public static final String AUTO_EXPAND_TASK_LIST = "org.eclipse.mylyn.tasks.ui.auto.expand"; //$NON-NLS-1$
 
-	public static final String ATTACHMENT_SHOW_ID = "org.eclipse.mylyn.tasks.ui.attachment.showid"; //$NON-NLS-1$
-
-	public static final String ATTACHMENT_COLUMN_TO_STD = "org.eclipse.mylyn.tasks.ui.attachment.column.to.std"; //$NON-NLS-1$
-
 	/**
 	 * Local subtasks are now enabled by default.
 	 * 
