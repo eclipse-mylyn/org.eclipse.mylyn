@@ -161,6 +161,20 @@ public class ScheduledPresentationTest extends TestCase {
 		populateResults(results, true);
 		assertNotNull("Task scheduled but not visible in scheduled presentation", results.get(mockTask));
 		assertEquals("Incoming", results.get(mockTask).getSummary());
+
+		// Scheduled for NEXT WEEK AND DUE on date next week
+		mockTask.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
+		TasksUiPlugin.getTaskActivityManager().setDueDate(mockTask,
+				TaskActivityUtil.getNextWeek().getDayOfWeek(3).getStartDate().getTime());
+		TasksUiPlugin.getTaskActivityManager().setScheduledFor(mockTask, TaskActivityUtil.getNextWeek());
+		mockTask.setOwner("testuser");
+		results.put(mockTask, null);
+		results.put(task1, null);
+
+		// Should be revealed in date bin NOT Next Week day bin 
+		populateResults(results, false);
+		assertNotNull("Task scheduled but not visible in scheduled presentation", results.get(mockTask));
+		assertFalse("Next Week".equals(results.get(mockTask).getSummary()));
 	}
 
 	private void populateResults(Map<ITask, ScheduledTaskContainer> results, boolean focused) {

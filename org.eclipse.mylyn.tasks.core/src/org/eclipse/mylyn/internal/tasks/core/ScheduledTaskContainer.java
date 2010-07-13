@@ -152,7 +152,7 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 		}
 
 		// Add due tasks if not the This Week container, and not scheduled for earlier date
-		if (!(range instanceof WeekDateRange && ((WeekDateRange) range).isPresent())) {
+		if (!TaskActivityUtil.getCurrentWeek().equals(range) && !TaskActivityUtil.getNextWeek().equals(range)) {
 			for (ITask task : getTasksDueThisWeek()) {
 				if (isScheduledBeforeDue(task)) {
 					continue;
@@ -209,9 +209,9 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 		return task instanceof AbstractTask && ((AbstractTask) task).getScheduledForDate() instanceof WeekDateRange;
 	}
 
-	private boolean isDueBeforeScheduled(ITask task) {
+	public boolean isDueBeforeScheduled(ITask task) {
 		return task.getDueDate() != null
-				&& task.getDueDate().before(((AbstractTask) task).getScheduledForDate().getStartDate().getTime());
+				&& task.getDueDate().before(((AbstractTask) task).getScheduledForDate().getEndDate().getTime());
 	}
 
 	private boolean isScheduledForADay(ITask task) {
