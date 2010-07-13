@@ -31,8 +31,6 @@ import org.eclipse.mylyn.internal.tasks.ui.util.ColumnState;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
@@ -53,19 +51,14 @@ public abstract class AbstractTableViewerConfigurator implements ISelectionProvi
 
 	protected int[] orderArray;
 
-	protected AbstractTableSorter tableSorter;
-
 	public AbstractTableViewerConfigurator(File stateFile) {
 		super();
 		this.stateFile = stateFile;
-		this.tableSorter = createTableSorter();
 	}
 
 	abstract protected void setDefaultColumnInfos();
 
 	abstract protected void setupTableViewer();
-
-	abstract protected AbstractTableSorter createTableSorter();
 
 	private void readStateFile() {
 		if (stateFile.exists()) {
@@ -85,7 +78,6 @@ public abstract class AbstractTableViewerConfigurator implements ISelectionProvi
 					for (int i = 0; i < orderStringArray.length; i++) {
 						orderArray[i] = Integer.parseInt(orderStringArray[i]);
 					}
-					tableSorter.readState(memento);
 				} catch (WorkbenchException e) {
 					StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
 							"The TableViewerState cache could not be read", e)); //$NON-NLS-1$
@@ -122,7 +114,6 @@ public abstract class AbstractTableViewerConfigurator implements ISelectionProvi
 			orderString += colPos;
 		}
 		child.putString("order", orderString); //$NON-NLS-1$
-		tableSorter.saveState(memento);
 
 		try {
 			FileWriter writer = new FileWriter(stateFile);
@@ -143,42 +134,22 @@ public abstract class AbstractTableViewerConfigurator implements ISelectionProvi
 
 	public void create(FormToolkit toolkit, Composite parent, int initialColumnCount) {
 		table = createTable(parent, toolkit);
-		tableViewer = new TableViewer(table);
 		columnInfos = new ArrayList<ColumnState>(initialColumnCount);
 		readStateFile();
 		if (columnInfos.size() == 0) {
 			setDefaultColumnInfos();
 		}
 		adjustColumInfos();
-		for (int i = 0; i < columnInfos.size(); i++) {
-			final int index = i;
-			ColumnState colState = columnInfos.get(i);
-			final TableColumn column = new TableColumn(table, colState.getAlignment(), i);
+		for (int index = 0; index < columnInfos.size(); index++) {
+			ColumnState colState = columnInfos.get(index);
+			final TableColumn column = new TableColumn(table, colState.getAlignment(), index);
 			column.setText(colState.getName());
 			column.setWidth(colState.getWidths());
 			column.setMoveable(true);
-			column.addControlListener(createColumnControlListener(table, column, i));
-			column.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					tableSorter.setColumn(index);
-					int dir = table.getSortDirection();
-					if (table.getSortColumn() == column) {
-						dir = dir == SWT.UP ? SWT.DOWN : SWT.UP;
-					} else {
-						dir = SWT.DOWN;
-					}
-					table.setSortDirection(dir);
-					table.setSortColumn(column);
-					tableViewer.refresh();
-					writeStateFile();
-				}
-			});
+			column.addControlListener(createColumnControlListener(table, column, index));
 		}
 
-		table.setSortDirection(tableSorter.getDirection() == 1 ? SWT.DOWN : SWT.UP);
-		table.setSortColumn(table.getColumn(tableSorter.getPropertyIndex()));
-
+		tableViewer = new TableViewer(table);
 		table.setColumnOrder(orderArray);
 		setupTableViewer();
 	}

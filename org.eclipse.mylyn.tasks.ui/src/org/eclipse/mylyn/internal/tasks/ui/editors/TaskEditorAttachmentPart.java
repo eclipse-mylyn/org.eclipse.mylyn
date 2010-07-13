@@ -29,15 +29,14 @@ import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.TaskAttachment;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.commands.OpenTaskAttachmentHandler;
-import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.ColumnState;
-import org.eclipse.mylyn.internal.tasks.ui.views.AbstractTableSorter;
 import org.eclipse.mylyn.internal.tasks.ui.views.AbstractTableViewerConfigurator;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskAttachmentWizard.Mode;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
@@ -80,6 +79,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 	private class AttachmentTableViewer extends AbstractTableViewerConfigurator {
 		public AttachmentTableViewer(File stateFile) {
 			super(stateFile);
+			// ignore
 		}
 
 		@Override
@@ -118,7 +118,24 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 			tableViewer.setUseHashlookup(true);
 			ColumnViewerToolTipSupport.enableFor(tableViewer, ToolTip.NO_RECREATE);
 
-			tableViewer.setSorter(tableSorter);
+			tableViewer.setSorter(new ViewerSorter() {
+				@Override
+				public int compare(Viewer viewer, Object e1, Object e2) {
+					ITaskAttachment attachment1 = (ITaskAttachment) e1;
+					ITaskAttachment attachment2 = (ITaskAttachment) e2;
+					Date created1 = attachment1.getCreationDate();
+					Date created2 = attachment2.getCreationDate();
+					if (created1 != null && created2 != null) {
+						return created1.compareTo(created2);
+					} else if (created1 == null && created2 != null) {
+						return -1;
+					} else if (created1 != null && created2 == null) {
+						return 1;
+					} else {
+						return 0;
+					}
+				}
+			});
 			List<ITaskAttachment> attachmentList = new ArrayList<ITaskAttachment>(attachments.size());
 			for (TaskAttribute attribute : attachments) {
 				TaskAttachment taskAttachment = new TaskAttachment(getModel().getTaskRepository(),
@@ -141,100 +158,6 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 				tableViewer.addSelectionChangedListener(getTaskEditorPage());
 				tableViewer.setInput(attachmentList.toArray());
 			}
-		}
-
-		@Override
-		protected AbstractTableSorter createTableSorter() {
-
-			return new AbstractTableSorter() {
-
-				@Override
-				public void setDefault() {
-					propertyIndex = 5;
-					direction = SWT.UP;
-				}
-
-				@Override
-				public int compare(Viewer viewer, Object e1, Object e2) {
-					int erg = 0;
-					ITaskAttachment attachment1 = (ITaskAttachment) e1;
-					ITaskAttachment attachment2 = (ITaskAttachment) e2;
-					switch (propertyIndex) {
-					case 0:
-						String id1 = attachment1.getUrl();
-						String id2 = attachment2.getUrl();
-						int i = id1.indexOf("?id="); //$NON-NLS-1$
-						if (i != -1) {
-							id1 = id1.substring(i + 4);
-						} else {
-							id1 = ""; //$NON-NLS-1$
-						}
-						i = id2.indexOf("?id="); //$NON-NLS-1$
-						if (i != -1) {
-							id2 = id2.substring(i + 4);
-						} else {
-							id2 = ""; //$NON-NLS-1$
-						}
-
-						erg = id1.length() - id2.length();
-						if (erg == 0) {
-							erg = id1.compareTo(id2);
-						}
-						break;
-
-					case 1:
-						String type1 = attachment1.getFileName();
-						String type2 = attachment2.getFileName();
-						if (AttachmentUtil.isContext(attachment1)) {
-							type1 = Messages.AttachmentTableLabelProvider_Task_Context;
-						} else if (attachment1.isPatch()) {
-							type1 = Messages.AttachmentTableLabelProvider_Patch;
-						}
-						if (AttachmentUtil.isContext(attachment2)) {
-							type2 = Messages.AttachmentTableLabelProvider_Task_Context;
-						} else if (attachment2.isPatch()) {
-							type2 = Messages.AttachmentTableLabelProvider_Patch;
-						}
-						erg = type1.compareTo(type2);
-						break;
-					case 2:
-						String description1 = attachment1.getDescription();
-						String description2 = attachment2.getDescription();
-						erg = description1.compareTo(description2);
-						break;
-					case 3:
-						Long length1 = attachment1.getLength();
-						Long idLength2 = attachment2.getLength();
-						length1 = length1 < 0 ? 0 : length1;
-						idLength2 = idLength2 < 0 ? 0 : idLength2;
-						erg = length1.compareTo(idLength2);
-						break;
-					case 4:
-						String author1 = attachment1.getAuthor().toString();
-						String author2 = attachment2.getAuthor().toString();
-						erg = author1.compareTo(author2);
-						break;
-					case 5:
-						Date created1 = attachment1.getCreationDate();
-						Date created2 = attachment2.getCreationDate();
-						if (created1 != null && created2 != null) {
-							erg = created1.compareTo(created2);
-						} else if (created1 == null && created2 != null) {
-							erg = -1;
-						} else if (created1 != null && created2 == null) {
-							erg = 1;
-						} else {
-							erg = 0;
-						}
-						break;
-					}
-					// If descending order, flip the direction
-					if (direction == DESCENDING) {
-						erg = -erg;
-					}
-					return erg;
-				}
-			};
 		}
 	}
 
