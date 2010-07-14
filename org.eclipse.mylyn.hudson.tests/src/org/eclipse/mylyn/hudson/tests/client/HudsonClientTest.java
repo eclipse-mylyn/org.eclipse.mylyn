@@ -7,12 +7,15 @@
  *
  * Contributors:
  *     Markus Knittig - initial API and implementation
+ *     Tasktop Technologies - improvements
  *******************************************************************************/
 
 package org.eclipse.mylyn.hudson.tests.client;
 
 import java.util.List;
+import java.util.concurrent.Callable;
 
+import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.Status;
@@ -30,12 +33,17 @@ import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
  * Test cases for {@link RestfulHudsonClient}.
  * 
  * @author Markus Knittig
+ * @author Steffen Pingel
  */
 public class HudsonClientTest extends TestCase {
 
 	private static final String PLAN_SUCCEEDING = "test-succeeding";
 
 	private static final String PLAN_FAILING = "test-failing";
+
+	private static final long POLL_TIMEOUT = 30 * 1000;
+
+	private static final long POLL_INTERVAL = 2 * 1000;
 
 	RestfulHudsonClient client;
 
@@ -73,6 +81,7 @@ public class HudsonClientTest extends TestCase {
 		List<HudsonModelJob> jobs = client.getJobs(null);
 		assertContains(jobs, PLAN_FAILING);
 		assertContains(jobs, PLAN_SUCCEEDING);
+		assertHealthReport(jobs);
 	}
 
 	private void assertContains(List<HudsonModelJob> jobs, String name) {
@@ -84,6 +93,15 @@ public class HudsonClientTest extends TestCase {
 		fail("Expected '" + name + "' in " + jobs);
 	}
 
+	private void assertHealthReport(List<HudsonModelJob> jobs) {
+		for (HudsonModelJob job : jobs) {
+			if (!job.getHealthReport().isEmpty()) {
+				return;
+			}
+		}
+		fail("Expected attribute 'healthReport' in " + jobs);
+	}
+
 	public void testRunBuild() throws Exception {
 		Credentials credentials = TestUtil.readCredentials(PrivilegeLevel.USER);
 
@@ -91,17 +109,42 @@ public class HudsonClientTest extends TestCase {
 
 		// failing build
 		client.runBuild(getJob(PLAN_FAILING), ProgressUtil.convert(null));
-		Thread.sleep(10000);
-		assertEquals(getJob(PLAN_FAILING).getColor(), HudsonModelBallColor.RED_ANIME);
-//		Thread.sleep(1000);
+		poll(new Callable<Object>() {
+			public Object call() throws Exception {
+				assertEquals(getJob(PLAN_FAILING).getColor(), HudsonModelBallColor.RED_ANIME);
+				return null;
+			}
+		});
 //		assertEquals(getJob(PLAN_SUCCEEDING).getColor(), HudsonModelBallColor.RED);
 
 		// succeeding build
 		client.runBuild(getJob(PLAN_SUCCEEDING), ProgressUtil.convert(null));
-		Thread.sleep(10000);
-		assertEquals(getJob(PLAN_SUCCEEDING).getColor(), HudsonModelBallColor.BLUE_ANIME);
-//		Thread.sleep(1000);
+		poll(new Callable<Object>() {
+			public Object call() throws Exception {
+				assertEquals(getJob(PLAN_SUCCEEDING).getColor(), HudsonModelBallColor.BLUE_ANIME);
+				return null;
+			}
+		});
 //		assertEquals(getJob(PLAN_SUCCEEDING).getColor(), HudsonModelBallColor.BLUE);
+	}
+
+	private <T> T poll(Callable<T> callable) throws Exception {
+		AssertionFailedError lastException = null;
+		long startTime = System.currentTimeMillis();
+		while (System.currentTimeMillis() - startTime < POLL_TIMEOUT) {
+			try {
+				return callable.call();
+			} catch (AssertionFailedError e) {
+				lastException = e;
+			}
+			Thread.sleep(POLL_INTERVAL);
+		}
+		if (lastException != null) {
+			throw lastException;
+		}
+
+		// try one more time
+		return callable.call();
 	}
 
 	private HudsonModelJob getJob(String name) throws HudsonException {

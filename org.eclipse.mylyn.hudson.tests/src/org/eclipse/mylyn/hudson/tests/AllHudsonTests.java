@@ -15,6 +15,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.hudson.tests.client.HudsonClientTest;
+import org.eclipse.mylyn.hudson.tests.core.HudsonServerBehaviourTest;
 import org.eclipse.mylyn.hudson.tests.support.HudsonFixture;
 
 /**
@@ -24,6 +25,7 @@ public class AllHudsonTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Tests for org.eclipse.mylyn.hudson.tests");
+		suite.addTestSuite(HudsonServerBehaviourTest.class);
 		// network tests
 		for (HudsonFixture fixture : HudsonFixture.ALL) {
 			fixture.createSuite(suite);
