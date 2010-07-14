@@ -47,7 +47,6 @@ public class BuildContentProvider implements ITreeContentProvider {
 		public void notifyChanged(Notification msg) {
 //			Display.getDefault().asyncExec(new Runnable() {
 //				public void run() {
-			System.err.println(msg);
 			if (viewer != null && !viewer.getControl().isDisposed()) {
 				viewer.refresh();
 			}
