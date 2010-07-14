@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildServer.java,v 1.13 2010/07/11 05:44:43 spingel Exp $
+ * $Id: BuildServer.java,v 1.14 2010/07/14 18:59:19 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -767,11 +767,18 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 		return null;
 	}
 
+	BuildServer original;
+
+	public BuildServer getOriginal() {
+		return original;
+	}
+
 	public BuildServer createWorkingCopy() {
 		EcoreUtil.Copier copier = new EcoreUtil.Copier();
 		BuildServer newServer = (BuildServer) copier.copy(this);
 		copier.copyReferences();
 		newServer.setLoader(getLoader());
+		newServer.original = this;
 		return newServer;
 	}
 

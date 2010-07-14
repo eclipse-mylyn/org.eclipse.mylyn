@@ -45,6 +45,9 @@ public class RefreshOperation extends AbstractBuildOperation {
 		Assert.isNotNull(servers);
 		this.servers = new ArrayList<IBuildServer>(servers.size());
 		for (IBuildServer server : servers) {
+			if (server.getRepository() != null && server.getRepository().isOffline()) {
+				continue;
+			}
 			this.servers.add(((BuildServer) server).createWorkingCopy());
 		}
 	}
@@ -83,19 +86,20 @@ public class RefreshOperation extends AbstractBuildOperation {
 			throw new CoreException(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN,
 					"Server did not provide any plans."));
 		}
-		server.getLoader().getRealm().exec(new Runnable() {
+		final BuildServer original = server.getOriginal();
+		original.getLoader().getRealm().exec(new Runnable() {
 			public void run() {
-				ArrayList<IBuildPlan> oldPlans = new ArrayList<IBuildPlan>(server.getPlans());
-				server.getPlans().clear();
-				for (IBuildPlanData plan : result.get()) {
-					server.getPlans().add((IBuildPlan) plan);
-				}
-				for (IBuildPlan plan : oldPlans) {
-					IBuildPlan newPlan = server.getPlanById(plan.getId());
-					if (newPlan != null) {
-						((BuildPlan) newPlan).setSelected(plan.isSelected());
+				ArrayList<IBuildPlan> newPlans = new ArrayList<IBuildPlan>();
+				for (IBuildPlanData newPlan : result.get()) {
+					IBuildPlan oldPlan = original.getPlanById(newPlan.getId());
+					if (oldPlan != null) {
+						((BuildPlan) newPlan).setSelected(oldPlan.isSelected());
 					}
+					newPlans.add((IBuildPlan) newPlan);
 				}
+
+				original.getPlans().clear();
+				original.getPlans().addAll(newPlans);
 			}
 		});
 	}
