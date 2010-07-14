@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Atlassian - improvements for bug 319397
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.core;
@@ -356,6 +357,23 @@ public abstract class AbstractRepositoryConnector {
 	 * @since 3.4
 	 */
 	public void migrateTask(TaskMigrationEvent event) {
+	}
+
+	/**
+	 * Returns if the user using the repository is the owner of the task. Subclasses may override.
+	 * 
+	 * @param repository
+	 *            repository task is associated with
+	 * @param task
+	 *            task to determined ownership of
+	 * @return true if user using the repository is owner of the task
+	 * @since 3.5
+	 */
+	public boolean isOwnedByUser(TaskRepository repository, ITask task) {
+		if (task.getOwner() != null) {
+			return task.getOwner().equals(repository.getUserName());
+		}
+		return false;
 	}
 
 }

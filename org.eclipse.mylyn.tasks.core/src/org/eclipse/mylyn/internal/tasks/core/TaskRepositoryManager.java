@@ -8,6 +8,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     Jevgeni Holodkov - improvements
+ *     Atlassian - improvements for bug 319397
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.core;
@@ -481,12 +482,13 @@ public class TaskRepositoryManager implements IRepositoryManager {
 			return true;
 		}
 
-		ITask repositoryTask = task;
-		TaskRepository repository = getRepository(repositoryTask.getConnectorKind(), repositoryTask.getRepositoryUrl());
-		if (repository != null && repositoryTask.getOwner() != null) {
-			return repositoryTask.getOwner().equals(repository.getUserName());
+		AbstractRepositoryConnector connector = getRepositoryConnector(task.getConnectorKind());
+		if (connector != null) {
+			TaskRepository repository = getRepository(task.getConnectorKind(), task.getRepositoryUrl());
+			if (repository != null) {
+				return connector.isOwnedByUser(repository, task);
+			}
 		}
-
 		return false;
 	}
 
