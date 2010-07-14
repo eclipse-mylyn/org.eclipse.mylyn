@@ -13,7 +13,6 @@ package org.eclipse.mylyn.internal.builds.ui;
 
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.emf.common.notify.impl.NotificationImpl;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylyn.internal.builds.core.operations.RefreshOperation;
@@ -48,9 +47,6 @@ public class BuildRefresher implements IPropertyChangeListener {
 				refreshOperation.addJobChangeListener(new JobChangeAdapter() {
 					@Override
 					public void done(IJobChangeEvent event) {
-						// FIXME use model events
-						BuildsUiInternal.getModel().eNotify(new NotificationImpl(0, false, true));
-
 						reschedule();
 					}
 				});

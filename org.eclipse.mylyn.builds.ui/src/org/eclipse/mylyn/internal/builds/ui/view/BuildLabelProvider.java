@@ -55,18 +55,18 @@ public class BuildLabelProvider extends LabelProvider implements IStyledLabelPro
 	}
 
 	private ImageDescriptor getImageDescriptor(IBuildPlan element) {
-		if (element.getHealth() >= 0 && element.getHealth() < 20) {
+		if (element.getHealth() >= 0 && element.getHealth() <= 20) {
 			return BuildImages.HEALTH_00;
-		} else if (element.getHealth() >= 20 && element.getHealth() < 40) {
+		} else if (element.getHealth() > 20 && element.getHealth() <= 40) {
 			return BuildImages.HEALTH_20;
-		} else if (element.getHealth() >= 40 && element.getHealth() < 60) {
+		} else if (element.getHealth() > 40 && element.getHealth() <= 60) {
 			return BuildImages.HEALTH_40;
-		} else if (element.getHealth() >= 60 && element.getHealth() < 80) {
+		} else if (element.getHealth() > 60 && element.getHealth() <= 80) {
 			return BuildImages.HEALTH_60;
-		} else if (element.getHealth() >= 80) {
-			return BuildImages.HEALTH_60;
+		} else if (element.getHealth() > 80) {
+			return BuildImages.HEALTH_80;
 		}
-		return CommonImages.FILE_PLAIN;
+		return CommonImages.BLANK;
 	}
 
 	private ImageDescriptor getDecoration(IBuildPlan element) {
