@@ -66,7 +66,8 @@ public class RestfulHudsonClient {
 		return new HudsonOperation<List<HudsonModelJob>>(client) {
 			@Override
 			public List<HudsonModelJob> execute() throws IOException, HudsonException, JAXBException {
-				CommonHttpMethod method = createGetMethod(client.getLocation().getUrl() + URL_API);
+				CommonHttpMethod method = createGetMethod(client.getLocation().getUrl() + URL_API
+						+ "?depth=1&xpath=/hudson/job&wrapper=hudson&exclude=/hudson/job/build"); //$NON-NLS-1$
 				try {
 					int statusCode = execute(method, monitor);
 					checkResponse(statusCode);
@@ -125,8 +126,8 @@ public class RestfulHudsonClient {
 		if (response == HttpStatus.SC_OK) {
 			return Status.OK_STATUS;
 		}
-		throw new HudsonException(NLS.bind("Unexpected return code {0}: {1}", response, HttpStatus
-				.getStatusText(response)));
+		throw new HudsonException(NLS.bind("Unexpected return code {0}: {1}", response,
+				HttpStatus.getStatusText(response)));
 	}
 
 	public void runBuild(final HudsonModelJob job, final IOperationMonitor monitor) throws HudsonException {
@@ -144,8 +145,8 @@ public class RestfulHudsonClient {
 		if (response == HttpStatus.SC_OK) {
 			return;
 		}
-		throw new HudsonException(NLS.bind("Unexpected return code {0}: {1}", response, HttpStatus
-				.getStatusText(response)));
+		throw new HudsonException(NLS.bind("Unexpected return code {0}: {1}", response,
+				HttpStatus.getStatusText(response)));
 	}
 
 }

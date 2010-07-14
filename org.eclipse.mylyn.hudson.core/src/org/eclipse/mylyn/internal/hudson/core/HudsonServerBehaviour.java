@@ -28,6 +28,7 @@ import org.eclipse.mylyn.internal.builds.core.util.RepositoryWebLocation;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonException;
 import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBallColor;
+import org.eclipse.mylyn.internal.hudson.model.HudsonModelHealthReport;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelJob;
 
 /**
@@ -51,56 +52,70 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 			List<HudsonModelJob> jobs = client.getJobs(monitor);
 			List<IBuildPlanData> plans = new ArrayList<IBuildPlanData>(jobs.size());
 			for (HudsonModelJob job : jobs) {
-				IBuildPlanWorkingCopy plan = createBuildPlan();
-				plan.setId(job.getName());
-				if ("".equals(job.getDisplayName())) { //$NON-NLS-1$
-					plan.setName(job.getDisplayName());
-				} else {
-					plan.setName(job.getName());
-				}
-				plan.setSummary(job.getDescription());
-				plan.setUrl(job.getUrl());
-				if (job.getColor().equals(HudsonModelBallColor.BLUE)) {
-					plan.setStatus(BuildStatus.SUCCESS);
-					plan.setState(BuildState.STOPPED);
-				} else if (job.getColor().equals(HudsonModelBallColor.BLUE_ANIME)) {
-					plan.setStatus(BuildStatus.SUCCESS);
-					plan.setState(BuildState.RUNNING);
-				} else if (job.getColor().equals(HudsonModelBallColor.RED)) {
-					plan.setStatus(BuildStatus.FAILED);
-					plan.setState(BuildState.STOPPED);
-				} else if (job.getColor().equals(HudsonModelBallColor.RED_ANIME)) {
-					plan.setStatus(BuildStatus.FAILED);
-					plan.setState(BuildState.RUNNING);
-				} else if (job.getColor().equals(HudsonModelBallColor.YELLOW)) {
-					plan.setStatus(BuildStatus.UNSTABLE);
-					plan.setState(BuildState.STOPPED);
-				} else if (job.getColor().equals(HudsonModelBallColor.YELLOW_ANIME)) {
-					plan.setStatus(BuildStatus.UNSTABLE);
-					plan.setState(BuildState.RUNNING);
-				} else if (job.getColor().equals(HudsonModelBallColor.GREY)) {
-					plan.setStatus(BuildStatus.DISABLED);
-					plan.setState(BuildState.STOPPED);
-				} else if (job.getColor().equals(HudsonModelBallColor.GREY_ANIME)) {
-					plan.setStatus(BuildStatus.DISABLED);
-					plan.setState(BuildState.RUNNING);
-				} else if (job.getColor().equals(HudsonModelBallColor.DISABLED)) {
-					plan.setStatus(BuildStatus.DISABLED);
-					plan.setState(BuildState.STOPPED);
-				} else if (job.getColor().equals(HudsonModelBallColor.DISABLED_ANIME)) {
-					plan.setStatus(BuildStatus.DISABLED);
-					plan.setState(BuildState.RUNNING);
-				} else {
-					plan.setStatus(null);
-					plan.setState(null);
-				}
-				plan.setHealth(job.getColor().ordinal() * 15);
-				plans.add(plan);
+				plans.add(parseJob(job));
 			}
 			return plans;
 		} catch (HudsonException e) {
 			throw HudsonCorePlugin.toCoreException(e);
 		}
+	}
+
+	public IBuildPlanData parseJob(HudsonModelJob job) {
+		IBuildPlanWorkingCopy plan = createBuildPlan();
+		plan.setId(job.getName());
+		if ("".equals(job.getDisplayName())) { //$NON-NLS-1$
+			plan.setName(job.getDisplayName());
+		} else {
+			plan.setName(job.getName());
+		}
+		plan.setSummary(job.getDescription());
+		plan.setUrl(job.getUrl());
+		if (job.getColor().equals(HudsonModelBallColor.BLUE)) {
+			plan.setStatus(BuildStatus.SUCCESS);
+			plan.setState(BuildState.STOPPED);
+		} else if (job.getColor().equals(HudsonModelBallColor.BLUE_ANIME)) {
+			plan.setStatus(BuildStatus.SUCCESS);
+			plan.setState(BuildState.RUNNING);
+		} else if (job.getColor().equals(HudsonModelBallColor.RED)) {
+			plan.setStatus(BuildStatus.FAILED);
+			plan.setState(BuildState.STOPPED);
+		} else if (job.getColor().equals(HudsonModelBallColor.RED_ANIME)) {
+			plan.setStatus(BuildStatus.FAILED);
+			plan.setState(BuildState.RUNNING);
+		} else if (job.getColor().equals(HudsonModelBallColor.YELLOW)) {
+			plan.setStatus(BuildStatus.UNSTABLE);
+			plan.setState(BuildState.STOPPED);
+		} else if (job.getColor().equals(HudsonModelBallColor.YELLOW_ANIME)) {
+			plan.setStatus(BuildStatus.UNSTABLE);
+			plan.setState(BuildState.RUNNING);
+		} else if (job.getColor().equals(HudsonModelBallColor.GREY)) {
+			plan.setStatus(BuildStatus.DISABLED);
+			plan.setState(BuildState.STOPPED);
+		} else if (job.getColor().equals(HudsonModelBallColor.GREY_ANIME)) {
+			plan.setStatus(BuildStatus.DISABLED);
+			plan.setState(BuildState.RUNNING);
+		} else if (job.getColor().equals(HudsonModelBallColor.DISABLED)) {
+			plan.setStatus(BuildStatus.DISABLED);
+			plan.setState(BuildState.STOPPED);
+		} else if (job.getColor().equals(HudsonModelBallColor.DISABLED_ANIME)) {
+			plan.setStatus(BuildStatus.DISABLED);
+			plan.setState(BuildState.RUNNING);
+		} else {
+			plan.setStatus(null);
+			plan.setState(null);
+		}
+		List<HudsonModelHealthReport> report = job.getHealthReport();
+		if (report.size() > 0) {
+			plan.setHealth(report.get(0).getScore());
+			for (HudsonModelHealthReport healthReport : report) {
+				if (healthReport.getScore() < plan.getHealth()) {
+					plan.setHealth(healthReport.getScore());
+				}
+			}
+		} else {
+			plan.setHealth(-1);
+		}
+		return plan;
 	}
 
 	@Override
