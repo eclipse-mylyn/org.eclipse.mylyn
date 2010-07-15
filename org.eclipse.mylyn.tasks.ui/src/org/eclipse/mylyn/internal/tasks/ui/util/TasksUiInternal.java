@@ -8,6 +8,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     Steve Elsemore - fix for bug 296963
+ *     Atlassian - fix for bug 319699
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.util;
@@ -88,11 +89,11 @@ import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
+import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
-import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
@@ -334,11 +335,8 @@ public class TasksUiInternal {
 					taskRepository.setUpdating(false);
 				}
 				if (job.getStatus() != null) {
-					Display display = PlatformUI.getWorkbench().getDisplay();
-					if (!display.isDisposed()) {
-						TasksUiInternal.displayStatus(Messages.TasksUiInternal_Configuration_Refresh_Failed,
-								job.getStatus());
-					}
+					TasksUiInternal.asyncLogAndDisplayStatus(Messages.TasksUiInternal_Configuration_Refresh_Failed,
+							job.getStatus());
 				}
 			}
 		});
@@ -383,7 +381,7 @@ public class TasksUiInternal {
 				@Override
 				public void done(IJobChangeEvent event) {
 					if (query.getStatus() != null) {
-						TasksUiInternal.asyncDisplayStatus(Messages.TasksUiInternal_Query_Synchronization_Failed,
+						TasksUiInternal.asyncLogAndDisplayStatus(Messages.TasksUiInternal_Query_Synchronization_Failed,
 								query.getStatus());
 					}
 				}
@@ -499,7 +497,7 @@ public class TasksUiInternal {
 				@Override
 				public void done(IJobChangeEvent event) {
 					if (task instanceof AbstractTask && ((AbstractTask) task).getStatus() != null) {
-						TasksUiInternal.asyncDisplayStatus(Messages.TasksUiInternal_Task_Synchronization_Failed,
+						TasksUiInternal.asyncLogAndDisplayStatus(Messages.TasksUiInternal_Task_Synchronization_Failed,
 								((AbstractTask) task).getStatus());
 					}
 				}
@@ -571,6 +569,19 @@ public class TasksUiInternal {
 			display.asyncExec(new Runnable() {
 				public void run() {
 					displayStatus(title, status);
+				}
+			});
+		} else {
+			StatusHandler.log(status);
+		}
+	}
+
+	public static void asyncLogAndDisplayStatus(final String title, final IStatus status) {
+		Display display = PlatformUI.getWorkbench().getDisplay();
+		if (!display.isDisposed()) {
+			display.asyncExec(new Runnable() {
+				public void run() {
+					logAndDisplayStatus(title, status);
 				}
 			});
 		} else {
@@ -862,8 +873,9 @@ public class TasksUiInternal {
 		if (window != null) {
 			TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
 					task.getRepositoryUrl());
-			boolean openWithBrowser = !TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-					ITasksUiPreferenceConstants.EDITOR_TASKS_RICH);
+			boolean openWithBrowser = !TasksUiPlugin.getDefault()
+					.getPreferenceStore()
+					.getBoolean(ITasksUiPreferenceConstants.EDITOR_TASKS_RICH);
 			if (openWithBrowser) {
 				TasksUiUtil.openWithBrowser(taskRepository, task);
 				return new TaskOpenEvent(taskRepository, task, taskId, null, true);
@@ -1194,15 +1206,21 @@ public class TasksUiInternal {
 						TasksUiInternal.displayStatus(title, new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 								"Command execution failed", e)); //$NON-NLS-1$
 					} catch (NotDefinedException e) {
-						TasksUiInternal.displayStatus(title, new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-								NLS.bind("The command with the id ''{0}'' is not defined.", commandId), e)); //$NON-NLS-1$
+						TasksUiInternal.displayStatus(
+								title,
+								new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
+										"The command with the id ''{0}'' is not defined.", commandId), e)); //$NON-NLS-1$
 					} catch (NotHandledException e) {
-						TasksUiInternal.displayStatus(title, new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-								NLS.bind("The command with the id ''{0}'' is not bound.", commandId), e)); //$NON-NLS-1$
+						TasksUiInternal.displayStatus(
+								title,
+								new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
+										"The command with the id ''{0}'' is not bound.", commandId), e)); //$NON-NLS-1$
 					}
 				} else {
-					TasksUiInternal.displayStatus(title, new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
-							"The command with the id ''{0}'' does not exist.", commandId))); //$NON-NLS-1$
+					TasksUiInternal.displayStatus(
+							title,
+							new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
+									"The command with the id ''{0}'' does not exist.", commandId))); //$NON-NLS-1$
 				}
 			} else {
 				TasksUiInternal.displayStatus(
