@@ -8,6 +8,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     Frank Becker - improvements
+ *     Perforce - enhancements for bug 319469
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.search;
@@ -25,7 +26,6 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.util.LocalSelectionTransfer;
-import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
@@ -151,6 +151,8 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 
 	private SearchResultSortAction sortByDialogAction;
 
+	private RepositorySearchStyledLabelProvider styledLabelProvider;
+
 	private static final IShowInTargetList SHOW_IN_TARGET_LIST = new IShowInTargetList() {
 		public String[] getShowInTargetIds() {
 			return SHOW_IN_TARGETS;
@@ -219,9 +221,10 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		searchResultProvider = new SearchResultTreeContentProvider();
 		viewer.setContentProvider(searchResultProvider);
 
-		DecoratingLabelProvider labelProvider = new DecoratingLabelProvider(new SearchResultsLabelProvider(
-				searchResultProvider, viewer), PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator());
-		viewer.setLabelProvider(labelProvider);
+		styledLabelProvider = new RepositorySearchStyledLabelProvider(new SearchResultsLabelProvider(
+				searchResultProvider, viewer), PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator(),
+				null);
+		viewer.setLabelProvider(styledLabelProvider);
 		viewer.setSorter(searchResultSorter);
 
 		Transfer[] dragTypes = new Transfer[] { LocalSelectionTransfer.getTransfer(), FileTransfer.getInstance() };
@@ -248,7 +251,15 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		}
 
 		FilteredTree searchTree = new EnhancedFilteredTree(treeComposite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL,
-				new SubstringPatternFilter(), true);
+				new SubstringPatternFilter() {
+
+					@Override
+					public void setPattern(String patternString) {
+						styledLabelProvider.setPattern(patternString);
+						super.setPattern(patternString);
+					}
+
+				}, true);
 		return searchTree.getViewer();
 	}
 
