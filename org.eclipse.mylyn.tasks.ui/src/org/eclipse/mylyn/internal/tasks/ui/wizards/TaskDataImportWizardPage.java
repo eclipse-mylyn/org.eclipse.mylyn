@@ -12,7 +12,6 @@
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import java.io.File;
-import com.ibm.icu.text.DateFormat;
 import java.util.SortedMap;
 
 import org.eclipse.jface.dialogs.Dialog;
@@ -36,6 +35,8 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+
+import com.ibm.icu.text.DateFormat;
 
 /**
  * Wizard Page for the Task Data Import Wizard
@@ -200,6 +201,18 @@ public class TaskDataImportWizardPage extends WizardPage {
 				sourceZipText.setText(settings.get(SOURCE_ZIP_SETTING));
 			}
 		}
+	}
+
+	@Override
+	public void setVisible(boolean visible) {
+		if (visible) {
+			if (importViaZipButton.getSelection()) {
+				sourceZipText.setFocus();
+			} else {
+				importViaBackupButton.setFocus();
+			}
+		}
+		super.setVisible(visible);
 	}
 
 	/**
