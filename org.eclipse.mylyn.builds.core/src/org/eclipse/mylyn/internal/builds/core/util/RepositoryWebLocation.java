@@ -28,7 +28,7 @@ public class RepositoryWebLocation extends AbstractWebLocation {
 	private final RepositoryLocation location;
 
 	public RepositoryWebLocation(RepositoryLocation location) {
-		super(location.getUri().toString());
+		super(location.getUrl());
 		this.location = location;
 	}
 
@@ -56,7 +56,7 @@ public class RepositoryWebLocation extends AbstractWebLocation {
 
 	@Override
 	public String getUrl() {
-		return location.getUri().toString();
+		return location.getUrl();
 	}
 
 }
