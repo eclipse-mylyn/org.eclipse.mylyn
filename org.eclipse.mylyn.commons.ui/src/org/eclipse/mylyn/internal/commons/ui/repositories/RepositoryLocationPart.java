@@ -82,6 +82,8 @@ public class RepositoryLocationPart {
 
 	public RepositoryLocationPart(RepositoryLocation workingCopy) {
 		this.workingCopy = workingCopy;
+		setNeedsProxy(false);
+		setNeedsHttpAuth(false);
 	}
 
 	protected void applyValidatorResult(IStatus status) {
@@ -167,7 +169,12 @@ public class RepositoryLocationPart {
 		SectionComposite sectionComposite = new SectionComposite(composite, SWT.NONE);
 		GridDataFactory.fillDefaults().grab(true, true).span(3, 1).applyTo(sectionComposite);
 
-		createProxySection(sectionComposite);
+		if (needsHttpAuth()) {
+			createHttpAuthSection(sectionComposite);
+		}
+		if (needsProxy()) {
+			createProxySection(sectionComposite);
+		}
 		createSections(sectionComposite);
 
 		Button validateButton = new Button(composite, SWT.PUSH);
@@ -190,6 +197,14 @@ public class RepositoryLocationPart {
 
 	}
 
+	private void createHttpAuthSection(SectionComposite parent) {
+		Composite composite = parent.createSection("HTTP Authentication");
+		GridLayoutFactory.swtDefaults().numColumns(3).applyTo(composite);
+
+		// ignore
+
+	}
+
 	protected void createSections(SectionComposite sectionComposite) {
 	}
 
@@ -201,18 +216,19 @@ public class RepositoryLocationPart {
 
 		Text urlText = new Text(parent, SWT.BORDER);
 		GridDataFactory.fillDefaults().span(2, 1).grab(true, false).applyTo(urlText);
-		bind(urlText, "uri", new UpdateValueStrategy().setAfterConvertValidator(new UrlValidator()), null);
+		bind(urlText, RepositoryLocation.PROPERTY_URL,
+				new UpdateValueStrategy().setAfterConvertValidator(new UrlValidator()), null);
 
 		label = new Label(parent, SWT.NONE);
 		label.setText("&Label:");
 
 		Text labelText = new Text(parent, SWT.BORDER);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(labelText);
-		bind(labelText, "label");
+		bind(labelText, RepositoryLocation.PROPERTY_LABEL);
 
 		Button disconnectedButton = new Button(parent, SWT.CHECK);
 		disconnectedButton.setText("Disconnected");
-		bind(disconnectedButton, RepositoryLocation.OFFLINE);
+		bind(disconnectedButton, RepositoryLocation.PROPERTY_OFFLINE);
 	}
 
 	private void createUserSection(Composite parent) {
@@ -223,7 +239,7 @@ public class RepositoryLocationPart {
 
 		Text userText = new Text(parent, SWT.BORDER);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(userText);
-		bind(userText, "username");
+		bind(userText, RepositoryLocation.PROPERTY_USERNAME);
 
 		Button anonymousButton = new Button(parent, SWT.CHECK);
 		anonymousButton.setText("Anonymous");

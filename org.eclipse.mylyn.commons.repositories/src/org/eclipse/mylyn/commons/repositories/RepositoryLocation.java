@@ -13,7 +13,6 @@ package org.eclipse.mylyn.commons.repositories;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.net.URI;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -58,7 +57,9 @@ public class RepositoryLocation extends PlatformObject {
 
 	private static final String ID_PLUGIN = "org.eclipse.mylyn.commons.repository";
 
-	public static final String OFFLINE = "org.eclipse.mylyn.tasklist.repositories.offline"; //$NON-NLS-1$
+	public static final String PROPERTY_OFFLINE = "org.eclipse.mylyn.tasklist.repositories.offline"; //$NON-NLS-1$
+
+	public static final String PROPERTY_USERNAME = "org.eclipse.mylyn.repositories.username"; //$NON-NLS-1$
 
 	private static final String PASSWORD = ".password"; //$NON-NLS-1$
 
@@ -115,14 +116,7 @@ public class RepositoryLocation extends PlatformObject {
 
 	private final Set<PropertyChangeListener> propertyChangeListeners = new HashSet<PropertyChangeListener>();
 
-	private URI uri;
-
 	private boolean workingCopy;
-
-	public RepositoryLocation(URI uri) {
-		this.uri = uri;
-		this.service = LocationService.getDefault();
-	}
 
 	public RepositoryLocation() {
 		this.service = LocationService.getDefault();
@@ -144,17 +138,21 @@ public class RepositoryLocation extends PlatformObject {
 		return workingCopy;
 	}
 
-	public URI getUri() {
-		return uri;
+	public String getUrl() {
+		String url = getProperty(PROPERTY_URL);
+		if (url == null) {
+			throw new IllegalStateException("Repository URL is not set");
+		}
+		return url;
 	}
 
-	public void setUri(URI uri) {
-		Assert.isNotNull(uri);
-		URI oldValue = this.uri;
-		if (hasChanged(oldValue, uri)) {
-			this.uri = uri;
-			notifyChangeListeners("uri", oldValue, uri);
-		}
+	public void setUrl(String url) {
+		setProperty(PROPERTY_URL, url);
+//		URI oldValue = this.uri;
+//		if (hasChanged(oldValue, uri)) {
+//			this.uri = uri;
+//			notifyChangeListeners("uri", oldValue, uri);
+//		}
 	}
 
 	private void addAuthInfo(String username, String password, String userProperty, String passwordProperty) {
@@ -172,19 +170,15 @@ public class RepositoryLocation extends PlatformObject {
 			}
 		} else {
 			synchronized (LOCK) {
-				Map<String, String> headlessCreds = credentials.get(getRepositoryUrl());
+				Map<String, String> headlessCreds = credentials.get(getUrl());
 				if (headlessCreds == null) {
 					headlessCreds = new HashMap<String, String>();
-					credentials.put(getRepositoryUrl(), headlessCreds);
+					credentials.put(getUrl(), headlessCreds);
 				}
 				headlessCreds.put(userProperty, username);
 				headlessCreds.put(passwordProperty, password);
 			}
 		}
-	}
-
-	private String getRepositoryUrl() {
-		return getUri().toString();
 	}
 
 	public void addChangeListener(PropertyChangeListener listener) {
@@ -203,7 +197,7 @@ public class RepositoryLocation extends PlatformObject {
 				securePreferences.removeNode();
 				this.setProperty(AuthenticationType.REPOSITORY + USERNAME, ""); //$NON-NLS-1$
 			} else {
-				Map<String, String> headlessCreds = credentials.get(getRepositoryUrl());
+				Map<String, String> headlessCreds = credentials.get(getUrl());
 				if (headlessCreds != null) {
 					headlessCreds.clear();
 				}
@@ -229,10 +223,10 @@ public class RepositoryLocation extends PlatformObject {
 			return propertyValue;
 		} else {
 			synchronized (LOCK) {
-				Map<String, String> headlessCreds = credentials.get(getRepositoryUrl());
+				Map<String, String> headlessCreds = credentials.get(getUrl());
 				if (headlessCreds == null) {
 					headlessCreds = new HashMap<String, String>();
-					credentials.put(getRepositoryUrl(), headlessCreds);
+					credentials.put(getUrl(), headlessCreds);
 				}
 				return headlessCreds.get(property);
 			}
@@ -296,7 +290,7 @@ public class RepositoryLocation extends PlatformObject {
 		if (label != null && label.length() > 0) {
 			return label;
 		} else {
-			return getUri().toString();
+			return getUrl();
 		}
 	}
 
@@ -310,7 +304,7 @@ public class RepositoryLocation extends PlatformObject {
 
 	private ISecurePreferences getSecurePreferences() {
 		ISecurePreferences securePreferences = SecurePreferencesFactory.getDefault().node(ID_PLUGIN);
-		securePreferences = securePreferences.node(EncodingUtils.encodeSlashes(getUri().toString()));
+		securePreferences = securePreferences.node(EncodingUtils.encodeSlashes(getUrl()));
 		return securePreferences;
 	}
 
@@ -340,7 +334,7 @@ public class RepositoryLocation extends PlatformObject {
 	}
 
 	public boolean isOffline() {
-		return Boolean.parseBoolean(getProperty(OFFLINE));
+		return Boolean.parseBoolean(getProperty(PROPERTY_OFFLINE));
 	}
 
 	private void notifyChangeListeners(String key, Object old, Object value) {
@@ -409,7 +403,7 @@ public class RepositoryLocation extends PlatformObject {
 	}
 
 	public void setOffline(boolean offline) {
-		properties.put(OFFLINE, String.valueOf(offline));
+		properties.put(PROPERTY_OFFLINE, String.valueOf(offline));
 	}
 
 	public void setProperty(String key, String newValue) {

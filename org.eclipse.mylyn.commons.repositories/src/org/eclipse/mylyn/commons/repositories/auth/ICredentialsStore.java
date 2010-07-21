@@ -28,13 +28,13 @@ public interface ICredentialsStore {
 
 	public String get(String key, String def) throws StorageException;
 
-	public byte[] getByteArray(String key, byte[] def);
+	public byte[] getByteArray(String key, byte[] def) throws StorageException;
 
 	public String[] keys();
 
 	public void put(String key, String value, boolean encrypt) throws StorageException;
 
-	public void putByteArray(String key, byte[] value);
+	public void putByteArray(String key, byte[] value, boolean encrypt) throws StorageException;
 
 	public void remove(String key);
 

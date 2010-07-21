@@ -26,6 +26,7 @@ import org.eclipse.mylyn.commons.repositories.auth.AuthenticationType;
  */
 public interface ILocationService {
 
+	// FIXME replace with 3.5 proxy API
 	public abstract Proxy getProxyForHost(String host, String proxyType);
 
 	public abstract X509TrustManager getTrustManager();

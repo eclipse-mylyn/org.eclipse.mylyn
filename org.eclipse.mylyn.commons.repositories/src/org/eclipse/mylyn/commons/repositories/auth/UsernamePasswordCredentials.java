@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.commons.repositories.auth;
 
+import org.eclipse.equinox.security.storage.StorageException;
+
 /**
  * Provides a user name and password.
  * 
@@ -86,6 +88,17 @@ public class UsernamePasswordCredentials extends AuthenticationCredentials {
 			return false;
 		}
 		return true;
+	}
+
+	public static UsernamePasswordCredentials create(ICredentialsStore store, String prefix) throws StorageException {
+		String userName = store.get(prefix + ".user", "");
+		String password = store.get(prefix + ".password", "");
+		return new UsernamePasswordCredentials(userName, password);
+	}
+
+	public void save(ICredentialsStore store, String prefix) throws StorageException {
+		store.put(prefix + ".user", userName, false);
+		store.put(prefix + ".password", password, true);
 	}
 
 }
