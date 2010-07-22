@@ -221,7 +221,12 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 
 	@Override
 	public String toString() {
-		return summary;
+		String taskKey = getTaskKey();
+		if (taskKey != null) {
+			return taskKey + ": " + summary; //$NON-NLS-1$
+		} else {
+			return summary;
+		}
 	}
 
 	public void setActive(boolean active) {
