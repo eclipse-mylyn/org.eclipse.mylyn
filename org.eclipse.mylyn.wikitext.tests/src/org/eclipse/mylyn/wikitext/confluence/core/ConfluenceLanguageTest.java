@@ -11,6 +11,8 @@
 package org.eclipse.mylyn.wikitext.confluence.core;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -50,7 +52,9 @@ public class ConfluenceLanguageTest extends TestCase {
 		TestUtil.println("HTML:" + html);
 		assertTrue(Pattern.compile(
 				"<body><p>a paragraph</p><p>another paragraph<br/>\\s*with<br/>\\s*2 lines</p></body>",
-				Pattern.MULTILINE).matcher(html).find());
+				Pattern.MULTILINE)
+				.matcher(html)
+				.find());
 	}
 
 	public void testHeadings() {
@@ -60,19 +64,25 @@ public class ConfluenceLanguageTest extends TestCase {
 			TestUtil.println("HTML:" + html);
 			assertTrue(Pattern.compile(
 					"<body><h" + x + " id=\"aheading\">a heading</h" + x + "><p>with a para</p></body>",
-					Pattern.MULTILINE).matcher(html).find());
+					Pattern.MULTILINE)
+					.matcher(html)
+					.find());
 
 			html = parser.parseToHtml("h" + x + ". a heading\nwith a para");
 			TestUtil.println("HTML:" + html);
 			assertTrue(Pattern.compile(
 					"<body><h" + x + " id=\"aheading\">a heading</h" + x + "><p>with a para</p></body>",
-					Pattern.MULTILINE).matcher(html).find());
+					Pattern.MULTILINE)
+					.matcher(html)
+					.find());
 
 			html = parser.parseToHtml("  h" + x + ". a heading\n\nwith a para");
 			TestUtil.println("HTML:" + html);
 			assertTrue(Pattern.compile(
 					"<body><h" + x + " id=\"aheading\">a heading</h" + x + "><p>with a para</p></body>",
-					Pattern.MULTILINE).matcher(html).find());
+					Pattern.MULTILINE)
+					.matcher(html)
+					.find());
 		}
 	}
 
@@ -81,7 +91,9 @@ public class ConfluenceLanguageTest extends TestCase {
 		TestUtil.println("HTML:" + html);
 		assertTrue(Pattern.compile(
 				"<body><blockquote><p>a multiline<br/>\\s*block quote</p></blockquote><p>with a para</p></body>",
-				Pattern.MULTILINE).matcher(html).find());
+				Pattern.MULTILINE)
+				.matcher(html)
+				.find());
 	}
 
 	public void testBlockQuoteExtended() {
@@ -105,7 +117,9 @@ public class ConfluenceLanguageTest extends TestCase {
 		TestUtil.println("HTML:" + html);
 		assertTrue(Pattern.compile(
 				"<body><blockquote><p>a multiline<br/>\\s*block quote</p><p>with two paras</p></blockquote></body>",
-				Pattern.MULTILINE).matcher(html).find());
+				Pattern.MULTILINE)
+				.matcher(html)
+				.find());
 	}
 
 	public void testBlockQuoteExtendedLeadingSpaces() {
@@ -159,7 +173,9 @@ public class ConfluenceLanguageTest extends TestCase {
 		String html = parser.parseToHtml("a paragraph with an arbitrary\\\\line break");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(Pattern.compile("<body><p>a paragraph with an arbitrary<br/>\\s*line break</p></body>",
-				Pattern.MULTILINE).matcher(html).find());
+				Pattern.MULTILINE)
+				.matcher(html)
+				.find());
 	}
 
 	public void testEndash() {
@@ -506,7 +522,9 @@ public class ConfluenceLanguageTest extends TestCase {
 		TestUtil.println("HTML:" + html);
 		assertTrue(Pattern.compile(
 				"body><pre>a multiline\\s+preformatted\\s+with two paras\\s+</pre><p>another para</p></body>",
-				Pattern.MULTILINE).matcher(html).find());
+				Pattern.MULTILINE)
+				.matcher(html)
+				.find());
 	}
 
 	public void testPreformattedExtended2() {
@@ -769,5 +787,21 @@ public class ConfluenceLanguageTest extends TestCase {
 		String html = parser.parseToHtml("text {color:red}more text{color} text");
 		TestUtil.println(html);
 		assertTrue(html.contains("<body><p>text </p><div style=\"color: red;\"><p>more text</p></div><p> text</p></body>"));
+	}
+
+	/**
+	 * bug 318695
+	 */
+	public void testHangOnBug318695() throws IOException {
+		StringWriter out = new StringWriter();
+		Reader reader = new InputStreamReader(
+				ConfluenceLanguageTest.class.getResourceAsStream("resources/bug318695.confluence"), "utf-8");
+		try {
+			parser.setBuilder(new HtmlDocumentBuilder(out));
+			parser.parse(reader);
+		} finally {
+			reader.close();
+		}
+		// if we reach here we didn't hang.
 	}
 }

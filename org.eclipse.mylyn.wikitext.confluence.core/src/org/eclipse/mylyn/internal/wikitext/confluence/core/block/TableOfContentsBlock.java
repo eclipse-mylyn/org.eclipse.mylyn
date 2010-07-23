@@ -20,13 +20,11 @@ import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class TableOfContentsBlock extends ParameterizedBlock {
 
-	static final Pattern startPattern = Pattern.compile("\\s*\\{toc(?::([^\\}]+))?\\}\\s*"); //$NON-NLS-1$
+	static final Pattern startPattern = Pattern.compile("\\s*\\{toc(?::([^\\}]+))?\\}\\s*(.+)?"); //$NON-NLS-1$
 
 	private int blockLineNumber = 0;
 
@@ -51,7 +49,8 @@ public class TableOfContentsBlock extends ParameterizedBlock {
 			OutlineItem rootItem = outlineParser.parse(state.getMarkupContent());
 			emitToc(rootItem);
 		}
-		return -1;
+		setClosed(true);
+		return matcher.start(2);
 	}
 
 	private void emitToc(OutlineItem item) {
@@ -79,9 +78,12 @@ public class TableOfContentsBlock extends ParameterizedBlock {
 		maxLevel = Integer.MAX_VALUE;
 		blockLineNumber = 0;
 
-		if (lineOffset == 0) {
-			matcher = startPattern.matcher(line);
-			return matcher.matches();
+		matcher = startPattern.matcher(line);
+		if (lineOffset > 0) {
+			matcher.region(lineOffset, line.length());
+		}
+		if (matcher.matches()) {
+			return true;
 		} else {
 			matcher = null;
 			return false;
