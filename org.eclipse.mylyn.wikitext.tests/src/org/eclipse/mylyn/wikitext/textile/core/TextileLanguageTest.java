@@ -167,7 +167,9 @@ public class TextileLanguageTest extends TestCase {
 		String html = parser.parseToHtml("_emphasis_ some text *strong text*");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(Pattern.compile(".*?<em>emphasis</em>\\s*some text\\s*<strong>strong text</strong>.*",
-				Pattern.MULTILINE | Pattern.DOTALL).matcher(html).matches());
+				Pattern.MULTILINE | Pattern.DOTALL)
+				.matcher(html)
+				.matches());
 	}
 
 	public void testPhraseModifierCode() {
@@ -228,7 +230,9 @@ public class TextileLanguageTest extends TestCase {
 		String html = parser.parseToHtml("first para\nnew line\n\nsecond para\n\n\n\n");
 		TestUtil.println(html);
 		assertTrue(Pattern.compile("<body><p>first para<br/>\\s*new line</p><p>second para</p></body>",
-				Pattern.MULTILINE).matcher(html.toString()).find());
+				Pattern.MULTILINE)
+				.matcher(html.toString())
+				.find());
 	}
 
 	public void testParagraphWithId() throws IOException {
@@ -284,14 +288,18 @@ public class TextileLanguageTest extends TestCase {
 		String html = parser.parseToHtml("h1(#ab). heading1\n\nnew para\n\na para");
 		TestUtil.println(html);
 		assertTrue(Pattern.compile("<body><h1 id=\"ab\">heading1</h1><p>new para</p><p>a para</p></body>",
-				Pattern.MULTILINE).matcher(html.toString()).find());
+				Pattern.MULTILINE)
+				.matcher(html.toString())
+				.find());
 	}
 
 	public void testHeadingMultiline() throws IOException {
 		String html = parser.parseToHtml("h1. heading1\nsecondline\n\na para");
 		TestUtil.println(html);
 		assertTrue(Pattern.compile("<body><h1 id=\"heading1\">heading1\\s+secondline</h1><p>a para</p></body>",
-				Pattern.MULTILINE).matcher(html.toString()).find());
+				Pattern.MULTILINE)
+				.matcher(html.toString())
+				.find());
 	}
 
 	public void testHeading0NoHeading() throws IOException {
@@ -315,14 +323,18 @@ public class TextileLanguageTest extends TestCase {
 
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(Pattern.compile("<blockquote>\\s*<p>one<br/>\\s*two</p>\\s*</blockquote>",
-				Pattern.MULTILINE | Pattern.DOTALL).matcher(html).find());
+				Pattern.MULTILINE | Pattern.DOTALL)
+				.matcher(html)
+				.find());
 	}
 
 	public void testBlockQuoteWithCitation() throws IOException {
 		String html = parser.parseToHtml("bq.:http://www.example.com some text");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(Pattern.compile("<blockquote cite=\"http://www.example.com\">\\s*<p>some text</p>\\s*</blockquote>",
-				Pattern.MULTILINE | Pattern.DOTALL).matcher(html).find());
+				Pattern.MULTILINE | Pattern.DOTALL)
+				.matcher(html)
+				.find());
 	}
 
 	/**
@@ -343,13 +355,39 @@ public class TextileLanguageTest extends TestCase {
 				.find());
 	}
 
+	/**
+	 * bug 320007
+	 */
+	public void testBlockCodeWithTabs() throws IOException {
+		String html = parser.parseToHtml("bc. one\n\ttwo\n\nthree");
+
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("one\n\ttwo"));
+	}
+
+	/**
+	 * bug 320007
+	 */
+	public void testBlockCodeWithTabsFormatted() throws IOException {
+		StringWriter out = new StringWriter();
+		HtmlDocumentBuilder documentBuilder = new HtmlDocumentBuilder(out, true);
+		parser.setBuilder(documentBuilder);
+		parser.parse("bc. one\n\ttwo\n\nthree");
+		String html = out.toString();
+
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("one\n\ttwo"));
+	}
+
 	public void testBlockCodeWithEmbeddedHtmlTags() throws IOException {
 		String html = parser.parseToHtml("bc. \nhere is <a href=\"#\">a working example</a>\n\n");
 
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(Pattern.compile(
 				"<body><pre><code>\\s*here is &lt;a href=\"#\"&gt;a working example&lt;/a&gt;\\s+</code></pre></body>",
-				Pattern.MULTILINE | Pattern.DOTALL).matcher(html).find());
+				Pattern.MULTILINE | Pattern.DOTALL)
+				.matcher(html)
+				.find());
 	}
 
 	public void testBlockCodeWithLeadingNewline() throws IOException {
@@ -366,7 +404,9 @@ public class TextileLanguageTest extends TestCase {
 
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(Pattern.compile("<pre><code>(\\r|\\n)+one\\s+two\\s+</code></pre>",
-				Pattern.MULTILINE | Pattern.DOTALL).matcher(html).find());
+				Pattern.MULTILINE | Pattern.DOTALL)
+				.matcher(html)
+				.find());
 	}
 
 	public void testFootnote() throws IOException {
@@ -813,7 +853,9 @@ public class TextileLanguageTest extends TestCase {
 
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(Pattern.compile(".*?<p>some text with copyright&#169;, trademark&#8482; and registered&#174;</p>.*",
-				Pattern.MULTILINE | Pattern.DOTALL).matcher(html).matches());
+				Pattern.MULTILINE | Pattern.DOTALL)
+				.matcher(html)
+				.matches());
 	}
 
 	public void testApostrophe() throws IOException {
@@ -1116,7 +1158,9 @@ public class TextileLanguageTest extends TestCase {
 		String html = parser.parseToHtml("bq.. one\ntwo\n\nthree\np. some para");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(Pattern.compile("<blockquote><p>one<br/>\\s*two</p>\\s*<p>three</p></blockquote><p>some para</p>",
-				Pattern.MULTILINE | Pattern.DOTALL).matcher(html).find());
+				Pattern.MULTILINE | Pattern.DOTALL)
+				.matcher(html)
+				.find());
 	}
 
 	public void testExtendedBlockCode() {
@@ -1125,7 +1169,9 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(Pattern.compile(
 				"<pre><code>one" + REGEX_NEWLINE + "two" + REGEX_NEWLINE + REGEX_NEWLINE + "three" + REGEX_NEWLINE
 						+ REGEX_NEWLINE + REGEX_NEWLINE + "blah" + REGEX_NEWLINE + "</code></pre>",
-				Pattern.MULTILINE | Pattern.DOTALL).matcher(html).find());
+				Pattern.MULTILINE | Pattern.DOTALL)
+				.matcher(html)
+				.find());
 	}
 
 	public void testExtendedBlockCode2() {
@@ -1134,7 +1180,9 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(Pattern.compile(
 				"<pre><code>one" + REGEX_NEWLINE + "two" + REGEX_NEWLINE + REGEX_NEWLINE + "three" + REGEX_NEWLINE
 						+ REGEX_NEWLINE + REGEX_NEWLINE + "more" + REGEX_NEWLINE + "</code></pre><p>some para</p>",
-				Pattern.MULTILINE | Pattern.DOTALL).matcher(html).find());
+				Pattern.MULTILINE | Pattern.DOTALL)
+				.matcher(html)
+				.find());
 	}
 
 	public void testExtendedPre() {
@@ -1143,7 +1191,9 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(Pattern.compile(
 				"<pre>one" + REGEX_NEWLINE + "two" + REGEX_NEWLINE + REGEX_NEWLINE + "three" + REGEX_NEWLINE
 						+ REGEX_NEWLINE + REGEX_NEWLINE + "blah" + REGEX_NEWLINE + "</pre><p>para</p>",
-				Pattern.MULTILINE | Pattern.DOTALL).matcher(html).find());
+				Pattern.MULTILINE | Pattern.DOTALL)
+				.matcher(html)
+				.find());
 	}
 
 	public void testParagraphWithLeadingSpace() {
@@ -1160,7 +1210,9 @@ public class TextileLanguageTest extends TestCase {
 		TestUtil.println("MARKUP: \n" + markup);
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(Pattern.compile("<body>para text\\s+para line 2<p>new para</p></body>",
-				Pattern.MULTILINE | Pattern.DOTALL).matcher(html).find());
+				Pattern.MULTILINE | Pattern.DOTALL)
+				.matcher(html)
+				.find());
 	}
 
 	public void testParagraphsWithLineThatHasWhitespaceInDelimitingLine() {
