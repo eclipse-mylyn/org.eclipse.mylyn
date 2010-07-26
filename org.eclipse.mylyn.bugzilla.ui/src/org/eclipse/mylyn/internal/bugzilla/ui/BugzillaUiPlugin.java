@@ -39,6 +39,8 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 
 	public static final String EDITOR_PAGE_CONTEXT = BugzillaUiPlugin.ID_PLUGIN + ".bugzillaEditorContext"; //$NON-NLS-1$
 
+	public static final String ATTACHMENT_WIZARD_SETTINGS_SECTION = "BugzillaAttachmentWizard."; //$NON-NLS-1$
+
 	// The is's for hit markers used in the label provider and sorters
 	public static final String HIT_MARKER_ATTR_ID = "taskId"; //$NON-NLS-1$
 

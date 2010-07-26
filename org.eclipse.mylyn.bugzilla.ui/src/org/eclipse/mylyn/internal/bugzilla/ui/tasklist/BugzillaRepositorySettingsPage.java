@@ -36,6 +36,8 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaStatus;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -47,12 +49,12 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -101,6 +103,18 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 	private Button useXMLRPCstatusTransitions;
 
+	private Button useclassification;
+
+	private Button usetargetmilestone;
+
+	private Button useqacontact;
+
+	private Button usestatuswhiteboard;
+
+	private Button usebugaliases;
+
+	private Button use_see_also;
+
 	public BugzillaRepositorySettingsPage(TaskRepository taskRepository) {
 		super(TITLE, DESCRIPTION, taskRepository);
 		setNeedsAnonymousLogin(true);
@@ -117,6 +131,19 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		if (template.characterEncoding != null) {
 			setEncoding(template.characterEncoding);
 		}
+		boolean value = Boolean.parseBoolean(template.getAttribute("useclassification")); //$NON-NLS-1$
+		useclassification.setSelection(value);
+		value = Boolean.parseBoolean(template.getAttribute("usetargetmilestone")); //$NON-NLS-1$
+		usetargetmilestone.setSelection(value);
+		value = Boolean.parseBoolean(template.getAttribute("useqacontact")); //$NON-NLS-1$
+		useqacontact.setSelection(value);
+		value = Boolean.parseBoolean(template.getAttribute("usestatuswhiteboard")); //$NON-NLS-1$
+		usestatuswhiteboard.setSelection(value);
+		value = Boolean.parseBoolean(template.getAttribute("usebugaliases")); //$NON-NLS-1$
+		usebugaliases.setSelection(value);
+		value = Boolean.parseBoolean(template.getAttribute("use_see_also")); //$NON-NLS-1$
+		use_see_also.setSelection(value);
+
 		getContainer().updateButtons();
 
 	}
@@ -249,11 +276,11 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 				.applyTo(descriptorComposite);
 
 		descriptorFile = new Text(descriptorComposite, SWT.BORDER);
-		GridData gd = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
-		gd.widthHint = 200;
-		gd.horizontalAlignment = SWT.FILL;
-		gd.verticalAlignment = SWT.CENTER;
-		descriptorFile.setLayoutData(gd);
+		GridDataFactory.fillDefaults()
+				.grab(true, false)
+				.align(SWT.LEFT, SWT.CENTER)
+				.hint(200, SWT.DEFAULT)
+				.applyTo(descriptorFile);
 
 		Button browseDescriptor = new Button(descriptorComposite, SWT.PUSH);
 		browseDescriptor.setText(Messages.BugzillaRepositorySettingsPage_Browse_descriptor);
@@ -304,6 +331,69 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		if (languageSettingCombo.getSelectionIndex() == -1) {
 			if (languageSettingCombo.indexOf(IBugzillaConstants.DEFAULT_LANG) >= 0) {
 				languageSettingCombo.select(languageSettingCombo.indexOf(IBugzillaConstants.DEFAULT_LANG));
+			}
+		}
+		Group adminGroup = new Group(parent, SWT.SHADOW_ETCHED_IN);
+		adminGroup.setLayout(new GridLayout(3, false));
+		adminGroup.setText(Messages.BugzillaRepositorySettingsPage_admin_parameter);
+		GridDataFactory.fillDefaults()
+				.grab(true, false)
+				.align(SWT.BEGINNING, SWT.CENTER)
+				.span(2, 1)
+				.applyTo(adminGroup);
+
+		useclassification = new Button(adminGroup, SWT.CHECK | SWT.LEFT);
+		useclassification.setText(Messages.BugzillaRepositorySettingsPage_useclassification);
+		usetargetmilestone = new Button(adminGroup, SWT.CHECK | SWT.LEFT);
+		usetargetmilestone.setText(Messages.BugzillaRepositorySettingsPage_usetargetmilestone);
+		useqacontact = new Button(adminGroup, SWT.CHECK | SWT.LEFT);
+		useqacontact.setText(Messages.BugzillaRepositorySettingsPage_useqacontact);
+		usestatuswhiteboard = new Button(adminGroup, SWT.CHECK | SWT.LEFT);
+		usestatuswhiteboard.setText(Messages.BugzillaRepositorySettingsPage_usestatuswhiteboard);
+		usebugaliases = new Button(adminGroup, SWT.CHECK | SWT.LEFT);
+		usebugaliases.setText(Messages.BugzillaRepositorySettingsPage_usebugaliases);
+		use_see_also = new Button(adminGroup, SWT.CHECK | SWT.LEFT);
+		use_see_also.setText(Messages.BugzillaRepositorySettingsPage_use_see_also);
+		if (repository != null) {
+			RepositoryTemplate myTemplate = null;
+			if (repository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USECLASSIFICATION) == null) {
+				final RepositoryTemplateManager templateManager = TasksUiPlugin.getRepositoryTemplateManager();
+				for (RepositoryTemplate template : templateManager.getTemplates(connector.getConnectorKind())) {
+					if (repository.getRepositoryLabel().equals(template.label)) {
+						myTemplate = template;
+						break;
+					}
+				}
+
+			}
+			if (myTemplate != null) {
+				// we have an Template but no values in the Repository so we use the Template values
+				boolean value = Boolean.parseBoolean(myTemplate.getAttribute("useclassification")); //$NON-NLS-1$
+				useclassification.setSelection(value);
+				value = Boolean.parseBoolean(myTemplate.getAttribute("usetargetmilestone")); //$NON-NLS-1$
+				usetargetmilestone.setSelection(value);
+				value = Boolean.parseBoolean(myTemplate.getAttribute("useqacontact")); //$NON-NLS-1$
+				useqacontact.setSelection(value);
+				value = Boolean.parseBoolean(myTemplate.getAttribute("usestatuswhiteboard")); //$NON-NLS-1$
+				usestatuswhiteboard.setSelection(value);
+				value = Boolean.parseBoolean(myTemplate.getAttribute("usebugaliases")); //$NON-NLS-1$
+				usebugaliases.setSelection(value);
+				value = Boolean.parseBoolean(myTemplate.getAttribute("use_see_also")); //$NON-NLS-1$
+				use_see_also.setSelection(value);
+			} else {
+				// we use the repository values
+				boolean value = Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USECLASSIFICATION));
+				useclassification.setSelection(value);
+				value = Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USETARGETMILESTONE));
+				usetargetmilestone.setSelection(value);
+				value = Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USEQACONTACT));
+				useqacontact.setSelection(value);
+				value = Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USESTATUSWHITEBOARD));
+				usestatuswhiteboard.setSelection(value);
+				value = Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USEBUGALIASES));
+				usebugaliases.setSelection(value);
+				value = Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USE_SEE_ALSO));
+				use_see_also.setSelection(value);
 			}
 		}
 	}
@@ -379,6 +469,18 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 			repository.removeProperty(IBugzillaConstants.BUGZILLA_DEF_PLATFORM);
 			repository.removeProperty(IBugzillaConstants.BUGZILLA_DEF_OS);
 		}
+		repository.setProperty(IBugzillaConstants.BUGZILLA_PARAM_USECLASSIFICATION,
+				Boolean.toString(useclassification.getSelection()));
+		repository.setProperty(IBugzillaConstants.BUGZILLA_PARAM_USETARGETMILESTONE,
+				Boolean.toString(usetargetmilestone.getSelection()));
+		repository.setProperty(IBugzillaConstants.BUGZILLA_PARAM_USEQACONTACT,
+				Boolean.toString(useqacontact.getSelection()));
+		repository.setProperty(IBugzillaConstants.BUGZILLA_PARAM_USESTATUSWHITEBOARD,
+				Boolean.toString(usestatuswhiteboard.getSelection()));
+		repository.setProperty(IBugzillaConstants.BUGZILLA_PARAM_USEBUGALIASES,
+				Boolean.toString(usebugaliases.getSelection()));
+		repository.setProperty(IBugzillaConstants.BUGZILLA_PARAM_USE_SEE_ALSO,
+				Boolean.toString(use_see_also.getSelection()));
 	}
 
 	@Override

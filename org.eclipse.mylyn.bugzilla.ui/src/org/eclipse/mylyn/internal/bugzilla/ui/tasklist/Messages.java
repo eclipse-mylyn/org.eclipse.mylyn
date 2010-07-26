@@ -63,6 +63,8 @@ public class Messages extends NLS {
 
 	public static String BugzillaRepositorySettingsPage_AUTOTETECT_PLATFORM_AND_OS;
 
+	public static String BugzillaRepositorySettingsPage_admin_parameter;
+
 	public static String BugzillaRepositorySettingsPage_available_once_repository_created;
 
 	public static String BugzillaRepositorySettingsPage_Browse_descriptor;
@@ -92,6 +94,18 @@ public class Messages extends NLS {
 	public static String BugzillaRepositorySettingsPage_Server_URL_is_invalid;
 
 	public static String BugzillaRepositorySettingsPage_supports_bugzilla_X;
+
+	public static String BugzillaRepositorySettingsPage_use_see_also;
+
+	public static String BugzillaRepositorySettingsPage_usebugaliases;
+
+	public static String BugzillaRepositorySettingsPage_useclassification;
+
+	public static String BugzillaRepositorySettingsPage_useqacontact;
+
+	public static String BugzillaRepositorySettingsPage_usestatuswhiteboard;
+
+	public static String BugzillaRepositorySettingsPage_usetargetmilestone;
 
 	public static String BugzillaRepositorySettingsPage_UseXmlRpc;
 

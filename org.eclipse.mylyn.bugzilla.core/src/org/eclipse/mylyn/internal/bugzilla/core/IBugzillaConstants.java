@@ -252,6 +252,18 @@ public interface IBugzillaConstants {
 
 	public static final String DEFAULT_LANG = "en (default)"; //$NON-NLS-1$
 
+	public static final String BUGZILLA_PARAM_USECLASSIFICATION = "bugzilla.param.use.classification"; //$NON-NLS-1$
+
+	public static final String BUGZILLA_PARAM_USETARGETMILESTONE = "bugzilla.param.usetargetmilestone"; //$NON-NLS-1$
+
+	public static final String BUGZILLA_PARAM_USEQACONTACT = "bugzilla.param.useqacontact"; //$NON-NLS-1$
+
+	public static final String BUGZILLA_PARAM_USESTATUSWHITEBOARD = "bugzilla.param.usestatuswhiteboard"; //$NON-NLS-1$
+
+	public static final String BUGZILLA_PARAM_USEBUGALIASES = "bugzilla.param.usebugaliases"; //$NON-NLS-1$
+
+	public static final String BUGZILLA_PARAM_USE_SEE_ALSO = "bugzilla.param.use_see_also"; //$NON-NLS-1$
+
 	// Bugzilla Task Attribute Editor Types 
 
 	public static final String EDITOR_TYPE_KEYWORDS = "bugzilla.editor.keywords"; //$NON-NLS-1$
