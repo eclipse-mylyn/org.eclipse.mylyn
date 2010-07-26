@@ -12,9 +12,21 @@
 
 <plugin>
 	<extension point="org.eclipse.mylyn.tasks.core.templates">
-		<repository addAutomatically="true" characterEncoding="ISO-8859-1"
-			label="Eclipse.org" repositoryKind="bugzilla" urlRepository="https://bugs.eclipse.org/bugs"
-			version="3.0" />
+ 		<repository
+         addAutomatically="true"
+         anonymous="true"
+         characterEncoding="ISO-8859-1"
+         label="Eclipse.org"
+         repositoryKind="bugzilla"
+         urlRepository="https://bugs.eclipse.org/bugs"
+         version="3.4.4">
+         <attribute name="useclassification" value="true"/>
+         <attribute name="usetargetmilestone" value="true"/>
+         <attribute name="useqacontact" value="true"/>
+         <attribute name="usestatuswhiteboard" value="true"/>
+         <attribute name="usebugaliases" value="false"/>
+         <attribute name="use_see_also" value="true"/>
+        </repository>
 	</extension>
 	<extension point="org.eclipse.mylyn.tasks.bugs.support">
     <category
