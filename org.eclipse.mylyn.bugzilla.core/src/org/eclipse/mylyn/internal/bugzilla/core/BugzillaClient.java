@@ -584,18 +584,36 @@ public class BugzillaClient {
 		// and additional elements that may not appear in the incoming xml
 		// stream but need to be present for bug submission / not always dirty
 		// state handling
-		BugzillaAttribute[] reportElements = { BugzillaAttribute.SHORT_DESC, BugzillaAttribute.BUG_STATUS,
+		BugzillaAttribute[] reportElements1 = { BugzillaAttribute.SHORT_DESC, BugzillaAttribute.BUG_STATUS,
 				BugzillaAttribute.RESOLUTION, BugzillaAttribute.BUG_ID, BugzillaAttribute.REP_PLATFORM,
 				BugzillaAttribute.PRODUCT, BugzillaAttribute.OP_SYS, BugzillaAttribute.COMPONENT,
 				BugzillaAttribute.VERSION, BugzillaAttribute.PRIORITY, BugzillaAttribute.BUG_SEVERITY,
-				BugzillaAttribute.ASSIGNED_TO, BugzillaAttribute.TARGET_MILESTONE, BugzillaAttribute.REPORTER,
-				BugzillaAttribute.DEPENDSON, BugzillaAttribute.BLOCKED, BugzillaAttribute.BUG_FILE_LOC,
-				BugzillaAttribute.NEWCC, BugzillaAttribute.KEYWORDS, BugzillaAttribute.CC,
-				BugzillaAttribute.NEW_COMMENT, BugzillaAttribute.QA_CONTACT, BugzillaAttribute.STATUS_WHITEBOARD };
+				BugzillaAttribute.ASSIGNED_TO };
+		BugzillaAttribute[] reportElements2 = { BugzillaAttribute.REPORTER, BugzillaAttribute.DEPENDSON,
+				BugzillaAttribute.BLOCKED, BugzillaAttribute.BUG_FILE_LOC, BugzillaAttribute.NEWCC,
+				BugzillaAttribute.KEYWORDS, BugzillaAttribute.CC, BugzillaAttribute.NEW_COMMENT };
 
-		for (BugzillaAttribute element : reportElements) {
+		TaskRepository taskRepository = existingReport.getAttributeMapper().getTaskRepository();
+
+		for (BugzillaAttribute element : reportElements1) {
 			BugzillaTaskDataHandler.createAttribute(existingReport, element);
 		}
+		String useParam = taskRepository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USETARGETMILESTONE);
+		if (useParam != null && useParam.equals("true")) { //$NON-NLS-1$
+			BugzillaTaskDataHandler.createAttribute(existingReport, BugzillaAttribute.TARGET_MILESTONE);
+		}
+		for (BugzillaAttribute element : reportElements2) {
+			BugzillaTaskDataHandler.createAttribute(existingReport, element);
+		}
+		useParam = taskRepository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USEQACONTACT);
+		if (useParam != null && useParam.equals("true")) { //$NON-NLS-1$
+			BugzillaTaskDataHandler.createAttribute(existingReport, BugzillaAttribute.QA_CONTACT);
+		}
+		useParam = taskRepository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USESTATUSWHITEBOARD);
+		if (useParam != null && useParam.equals("true")) { //$NON-NLS-1$
+			BugzillaTaskDataHandler.createAttribute(existingReport, BugzillaAttribute.STATUS_WHITEBOARD);
+		}
+
 	}
 
 	public static String getBugUrlWithoutLogin(String repositoryUrl, String id) {

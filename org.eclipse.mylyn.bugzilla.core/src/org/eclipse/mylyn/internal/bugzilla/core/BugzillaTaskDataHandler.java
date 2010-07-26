@@ -498,15 +498,18 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			attributeComponent.setValue(component);
 		}
 
-		optionValues = repositoryConfiguration.getTargetMilestones(productAttribute.getValue());
-		if (optionValues.size() > 0) {
-			TaskAttribute attributeTargetMilestone = createAttribute(taskData, BugzillaAttribute.TARGET_MILESTONE);
-			for (String option : optionValues) {
-				attributeTargetMilestone.putOption(option, option);
+		TaskRepository taskRepository = taskData.getAttributeMapper().getTaskRepository();
+		String useParam = taskRepository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USETARGETMILESTONE);
+		if (useParam != null && useParam.equals("true")) { //$NON-NLS-1$
+			optionValues = repositoryConfiguration.getTargetMilestones(productAttribute.getValue());
+			if (optionValues.size() > 0) {
+				TaskAttribute attributeTargetMilestone = createAttribute(taskData, BugzillaAttribute.TARGET_MILESTONE);
+				for (String option : optionValues) {
+					attributeTargetMilestone.putOption(option, option);
+				}
+				attributeTargetMilestone.setValue(optionValues.get(0));
 			}
-			attributeTargetMilestone.setValue(optionValues.get(0));
 		}
-
 		TaskAttribute attributePlatform = createAttribute(taskData, BugzillaAttribute.REP_PLATFORM);
 		optionValues = repositoryConfiguration.getPlatforms();
 		for (String option : optionValues) {
@@ -550,9 +553,11 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		TaskAttribute attributeAssignedTo = createAttribute(taskData, BugzillaAttribute.ASSIGNED_TO);
 		attributeAssignedTo.setValue(""); //$NON-NLS-1$
 
-		TaskAttribute attributeQAContact = createAttribute(taskData, BugzillaAttribute.QA_CONTACT);
-		attributeQAContact.setValue(""); //$NON-NLS-1$
-
+		useParam = taskRepository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USEQACONTACT);
+		if (useParam != null && useParam.equals("true")) { //$NON-NLS-1$
+			TaskAttribute attributeQAContact = createAttribute(taskData, BugzillaAttribute.QA_CONTACT);
+			attributeQAContact.setValue(""); //$NON-NLS-1$
+		}
 		TaskAttribute attributeBugFileLoc = createAttribute(taskData, BugzillaAttribute.BUG_FILE_LOC);
 		attributeBugFileLoc.setValue("http://"); //$NON-NLS-1$
 
