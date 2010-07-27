@@ -1527,16 +1527,33 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		this.focusedMode = focusedMode;
 		customDrawer.setFocusedMode(focusedMode);
 		IToolBarManager manager = getViewSite().getActionBars().getToolBarManager();
-
-		if (focusedMode && isAutoExpandMode()) {
-			manager.remove(FilterCompletedTasksAction.ID);
-			manager.remove(CollapseAllAction.ID);
-		} else if (manager.find(CollapseAllAction.ID) == null) {
-			manager.prependToGroup(ID_SEPARATOR_CONTEXT, collapseAll);
-			manager.prependToGroup(ID_SEPARATOR_CONTEXT, filterCompleteTask);
+		ToolBarManager toolBarManager = getToolBarManager(manager);
+		try {
+			if (toolBarManager != null) {
+				toolBarManager.getControl().setRedraw(false);
+			}
+			if (focusedMode && isAutoExpandMode()) {
+				manager.remove(FilterCompletedTasksAction.ID);
+				manager.remove(CollapseAllAction.ID);
+			} else if (manager.find(CollapseAllAction.ID) == null) {
+				manager.prependToGroup(ID_SEPARATOR_CONTEXT, collapseAll);
+				manager.prependToGroup(ID_SEPARATOR_CONTEXT, filterCompleteTask);
+			}
+			updateFilterEnablement();
+			manager.update(false);
+		} finally {
+			if (toolBarManager != null) {
+				toolBarManager.getControl().setRedraw(true);
+			}
 		}
-		manager.update(false);
-		updateFilterEnablement();
+	}
+
+	private ToolBarManager getToolBarManager(IToolBarManager manager) {
+		if (manager instanceof ToolBarManager && ((ToolBarManager) manager).getControl() != null
+				&& !((ToolBarManager) manager).getControl().isDisposed()) {
+			return (ToolBarManager) manager;
+		}
+		return null;
 	}
 
 	public void displayPrioritiesAbove(String priority) {
