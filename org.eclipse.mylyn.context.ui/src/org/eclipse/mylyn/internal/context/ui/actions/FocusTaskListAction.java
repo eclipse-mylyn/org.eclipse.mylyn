@@ -103,7 +103,7 @@ public class FocusTaskListAction extends AbstractFocusViewAction implements IFil
 			TasksUiInternal.preservingSelection(taskListView.getViewer(), new Runnable() {
 				public void run() {
 					try {
-						taskListView.getViewer().getControl().setRedraw(false);
+						taskListView.getFilteredTree().setRedraw(false);
 						taskListView.setFocusedMode(true);
 						previousSorter = taskListView.getViewer().getSorter();
 						previousFilters = new HashSet<AbstractTaskListFilter>(taskListView.getFilters());
@@ -118,10 +118,9 @@ public class FocusTaskListAction extends AbstractFocusViewAction implements IFil
 
 						showProgressBar(taskListView, true);
 					} finally {
-						taskListView.getViewer().getControl().setRedraw(true);
+						taskListView.getFilteredTree().setRedraw(true);
 					}
 				}
-
 			});
 			return true;
 		} else {
