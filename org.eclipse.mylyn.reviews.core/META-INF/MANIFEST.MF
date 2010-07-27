@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mylyn Reviews Core
+Bundle-Name: Mylyn Reviews Core (Incubation)
 Bundle-SymbolicName: org.eclipse.mylyn.reviews.core;singleton:=true
 Bundle-Version: 0.0.1
 Bundle-Activator: org.eclipse.mylyn.reviews.core.Activator
