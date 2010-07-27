@@ -10,11 +10,16 @@
  */
 package org.eclipse.mylyn.reviews.core.model.review.impl;
 
+import java.util.Collection;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 
-import org.eclipse.emf.internal.cdo.CDOObjectImpl;
+import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.impl.EObjectImpl;
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
 import org.eclipse.mylyn.reviews.core.model.review.Review;
 import org.eclipse.mylyn.reviews.core.model.review.ReviewPackage;
@@ -35,7 +40,26 @@ import org.eclipse.mylyn.reviews.core.model.review.ScopeItem;
  *
  * @generated
  */
-public class ReviewImpl extends CDOObjectImpl implements Review {
+public class ReviewImpl extends EObjectImpl implements Review {
+	/**
+	 * The cached value of the '{@link #getResult() <em>Result</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getResult()
+	 * @generated
+	 * @ordered
+	 */
+	protected ReviewResult result;
+	/**
+	 * The cached value of the '{@link #getScope() <em>Scope</em>}' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getScope()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<ScopeItem> scope;
+
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -60,9 +84,16 @@ public class ReviewImpl extends CDOObjectImpl implements Review {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	protected int eStaticFeatureCount() {
-		return 0;
+	public ReviewResult getResult() {
+		if (result != null && result.eIsProxy()) {
+			InternalEObject oldResult = (InternalEObject)result;
+			result = (ReviewResult)eResolveProxy(oldResult);
+			if (result != oldResult) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewPackage.REVIEW__RESULT, oldResult, result));
+			}
+		}
+		return result;
 	}
 
 	/**
@@ -70,8 +101,8 @@ public class ReviewImpl extends CDOObjectImpl implements Review {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ReviewResult getResult() {
-		return (ReviewResult)eGet(ReviewPackage.Literals.REVIEW__RESULT, true);
+	public ReviewResult basicGetResult() {
+		return result;
 	}
 
 	/**
@@ -80,7 +111,10 @@ public class ReviewImpl extends CDOObjectImpl implements Review {
 	 * @generated
 	 */
 	public void setResult(ReviewResult newResult) {
-		eSet(ReviewPackage.Literals.REVIEW__RESULT, newResult);
+		ReviewResult oldResult = result;
+		result = newResult;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ReviewPackage.REVIEW__RESULT, oldResult, result));
 	}
 
 	/**
@@ -90,7 +124,81 @@ public class ReviewImpl extends CDOObjectImpl implements Review {
 	 */
 	@SuppressWarnings("unchecked")
 	public EList<ScopeItem> getScope() {
-		return (EList<ScopeItem>)eGet(ReviewPackage.Literals.REVIEW__SCOPE, true);
+		if (scope == null) {
+			scope = new EObjectResolvingEList<ScopeItem>(ScopeItem.class, this, ReviewPackage.REVIEW__SCOPE);
+		}
+		return scope;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
+			case ReviewPackage.REVIEW__RESULT:
+				if (resolve) return getResult();
+				return basicGetResult();
+			case ReviewPackage.REVIEW__SCOPE:
+				return getScope();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
+			case ReviewPackage.REVIEW__RESULT:
+				setResult((ReviewResult)newValue);
+				return;
+			case ReviewPackage.REVIEW__SCOPE:
+				getScope().clear();
+				getScope().addAll((Collection<? extends ScopeItem>)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void eUnset(int featureID) {
+		switch (featureID) {
+			case ReviewPackage.REVIEW__RESULT:
+				setResult((ReviewResult)null);
+				return;
+			case ReviewPackage.REVIEW__SCOPE:
+				getScope().clear();
+				return;
+		}
+		super.eUnset(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
+			case ReviewPackage.REVIEW__RESULT:
+				return result != null;
+			case ReviewPackage.REVIEW__SCOPE:
+				return scope != null && !scope.isEmpty();
+		}
+		return super.eIsSet(featureID);
 	}
 
 } //ReviewImpl

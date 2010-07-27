@@ -10,7 +10,7 @@
  */
 package org.eclipse.mylyn.reviews.core.model.review;
 
-import org.eclipse.emf.cdo.CDOObject;
+import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
@@ -26,10 +26,9 @@ import org.eclipse.emf.cdo.CDOObject;
  *
  * @see org.eclipse.mylyn.reviews.core.model.review.ReviewPackage#getScopeItem()
  * @model
- * @extends CDOObject
  * @generated
  */
-public interface ScopeItem extends CDOObject {
+public interface ScopeItem extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Author</b></em>' attribute.
 	 * <!-- begin-user-doc -->

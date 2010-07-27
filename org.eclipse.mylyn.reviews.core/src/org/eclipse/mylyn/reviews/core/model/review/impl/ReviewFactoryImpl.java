@@ -69,10 +69,10 @@ public class ReviewFactoryImpl extends EFactoryImpl implements ReviewFactory {
 	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
-			case ReviewPackage.REVIEW: return (EObject)createReview();
-			case ReviewPackage.REVIEW_RESULT: return (EObject)createReviewResult();
-			case ReviewPackage.PATCH: return (EObject)createPatch();
-			case ReviewPackage.SCOPE_ITEM: return (EObject)createScopeItem();
+			case ReviewPackage.REVIEW: return createReview();
+			case ReviewPackage.REVIEW_RESULT: return createReviewResult();
+			case ReviewPackage.PATCH: return createPatch();
+			case ReviewPackage.SCOPE_ITEM: return createScopeItem();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}

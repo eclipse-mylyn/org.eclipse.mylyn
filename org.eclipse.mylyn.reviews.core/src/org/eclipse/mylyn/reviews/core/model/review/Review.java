@@ -10,9 +10,8 @@
  */
 package org.eclipse.mylyn.reviews.core.model.review;
 
-import org.eclipse.emf.cdo.CDOObject;
-
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
@@ -29,10 +28,9 @@ import org.eclipse.emf.common.util.EList;
  *
  * @see org.eclipse.mylyn.reviews.core.model.review.ReviewPackage#getReview()
  * @model
- * @extends CDOObject
  * @generated
  */
-public interface Review extends CDOObject {
+public interface Review extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Result</b></em>' reference.
 	 * <!-- begin-user-doc -->

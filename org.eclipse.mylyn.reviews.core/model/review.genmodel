@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genmodel:GenModel xmi:version="2.0"
     xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (c) 2010 Vienna University of Technology&#xA;All rights reserved. This program and the accompanying materials&#xA;are made available under the terms of the Eclipse Public License v1.0&#xA;which accompanies this distribution, and is available at&#xA;http://www.eclipse.org/legal/epl-v10.html&#xA;&#xA;Contributors:&#xA;    Vienna University of Technology - initial API and implementation"
-    modelDirectory="/org.eclipse.mylyn.reviews.core/src" modelPluginID="org.eclipse.mylyn.reviews.core"
-    modelName="Review" rootExtendsInterface="org.eclipse.emf.cdo.CDOObject" rootExtendsClass="org.eclipse.emf.internal.cdo.CDOObjectImpl"
-    reflectiveDelegation="true" testsDirectory="/org.eclipse.mylyn.reviews.core.tests/src"
-    importerID="org.eclipse.emf.importer.cdo" featureDelegation="Reflective" complianceLevel="6.0"
-    copyrightFields="false">
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.mylyn.reviews.core/src"
+    modelPluginID="org.eclipse.mylyn.reviews.core" modelName="Review" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="5.0" copyrightFields="false">
   <foreignModel>review.ecore</foreignModel>
-  <modelPluginVariables>CDO=org.eclipse.emf.cdo</modelPluginVariables>
   <genPackages prefix="Review" basePackage="org.eclipse.mylyn.reviews.core.model"
       disposableProviderFactory="true" ecorePackage="review.ecore#/">
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="review.ecore#//Rating">
