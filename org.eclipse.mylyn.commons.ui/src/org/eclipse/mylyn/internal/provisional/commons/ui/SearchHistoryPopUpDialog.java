@@ -50,6 +50,9 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 
+/**
+ * @author Shawn Minto
+ */
 public class SearchHistoryPopUpDialog extends PopupDialog {
 
 	private static final int MAX_HISTORY_NO_FILTER = 3;
@@ -255,8 +258,10 @@ public class SearchHistoryPopUpDialog extends PopupDialog {
 			historyTable.setSorter(null);
 			historyTable.setItemCount(Math.min(historyTable.getTable().getItemCount(), MAX_HISTORY_NO_FILTER));
 		}
-		GridDataFactory.fillDefaults().grab(true, false).hint(trimBounds.width, SWT.DEFAULT).applyTo(
-				historyTable.getTable());
+		GridDataFactory.fillDefaults()
+				.grab(true, false)
+				.hint(trimBounds.width, SWT.DEFAULT)
+				.applyTo(historyTable.getTable());
 		setHistoryTableVisible(historyTable.getTable().getItemCount() > 0);
 	}
 
