@@ -138,7 +138,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 			column.setWidth(attachmentsColumnWidths[i]);
 			if (i == 4) {
 				attachmentsTable.setSortColumn(column);
-				attachmentsTable.setSortDirection(SWT.UP);
+				attachmentsTable.setSortDirection(SWT.DOWN);
 			}
 		}
 		// size column
