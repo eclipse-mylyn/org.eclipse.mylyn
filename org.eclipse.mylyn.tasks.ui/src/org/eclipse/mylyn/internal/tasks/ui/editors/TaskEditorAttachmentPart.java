@@ -13,10 +13,12 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
+import java.io.File;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -29,13 +31,15 @@ import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.provisional.commons.ui.TableSorter;
+import org.eclipse.mylyn.internal.provisional.commons.ui.TableViewerSupport;
 import org.eclipse.mylyn.internal.tasks.core.TaskAttachment;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.commands.OpenTaskAttachmentHandler;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiMenus;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskKeyComparator;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskAttachmentWizard.Mode;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -64,13 +68,45 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 
+	private class AttachmentTableSorter extends TableSorter {
+
+		TaskKeyComparator keyComparator = new TaskKeyComparator();
+
+		@Override
+		public int compare(TableViewer viewer, Object e1, Object e2, int columnIndex) {
+			ITaskAttachment attachment1 = (ITaskAttachment) e1;
+			ITaskAttachment attachment2 = (ITaskAttachment) e2;
+			switch (columnIndex) {
+			case 0:
+				return compare(attachment1.getFileName(), attachment2.getFileName());
+			case 1:
+				String description1 = attachment1.getDescription();
+				String description2 = attachment2.getDescription();
+				return compare(description1, description2);
+			case 2:
+				return compare(attachment1.getLength(), attachment2.getLength());
+			case 3:
+				return compare(attachment1.getAuthor().toString(), attachment2.getAuthor().toString());
+			case 4:
+				return compare(attachment1.getCreationDate(), attachment2.getCreationDate());
+			case 5:
+				String key1 = AttachmentTableLabelProvider.getAttachmentId(attachment1);
+				String key2 = AttachmentTableLabelProvider.getAttachmentId(attachment2);
+				return keyComparator.compare2(key1, key2);
+			}
+			return super.compare(viewer, e1, e2, columnIndex);
+		}
+
+	}
+
 	private static final String ID_POPUP_MENU = "org.eclipse.mylyn.tasks.ui.editor.menu.attachments"; //$NON-NLS-1$
 
 	private final String[] attachmentsColumns = { Messages.TaskEditorAttachmentPart_Name,
 			Messages.TaskEditorAttachmentPart_Description, /*"Type", */Messages.TaskEditorAttachmentPart_Size,
-			Messages.TaskEditorAttachmentPart_Creator, Messages.TaskEditorAttachmentPart_Created };
+			Messages.TaskEditorAttachmentPart_Creator, Messages.TaskEditorAttachmentPart_Created,
+			Messages.TaskEditorAttachmentPart_ID };
 
-	private final int[] attachmentsColumnWidths = { 130, 150, /*100,*/70, 100, 100 };
+	private final int[] attachmentsColumnWidths = { 130, 150, /*100,*/70, 100, 100, 0 };
 
 	private List<TaskAttribute> attachments;
 
@@ -89,14 +125,21 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		attachmentsTable.setLinesVisible(true);
 		attachmentsTable.setHeaderVisible(true);
 		attachmentsTable.setLayout(new GridLayout());
-		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).hint(500, SWT.DEFAULT).applyTo(
-				attachmentsTable);
+		GridDataFactory.fillDefaults()
+				.align(SWT.FILL, SWT.FILL)
+				.grab(true, false)
+				.hint(500, SWT.DEFAULT)
+				.applyTo(attachmentsTable);
 		attachmentsTable.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 
 		for (int i = 0; i < attachmentsColumns.length; i++) {
 			TableColumn column = new TableColumn(attachmentsTable, SWT.LEFT, i);
 			column.setText(attachmentsColumns[i]);
 			column.setWidth(attachmentsColumnWidths[i]);
+			if (i == 4) {
+				attachmentsTable.setSortColumn(column);
+				attachmentsTable.setSortDirection(SWT.UP);
+			}
 		}
 		// size column
 		attachmentsTable.getColumn(2).setAlignment(SWT.RIGHT);
@@ -106,24 +149,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		attachmentsViewer.setColumnProperties(attachmentsColumns);
 		ColumnViewerToolTipSupport.enableFor(attachmentsViewer, ToolTip.NO_RECREATE);
 
-		attachmentsViewer.setSorter(new ViewerSorter() {
-			@Override
-			public int compare(Viewer viewer, Object e1, Object e2) {
-				ITaskAttachment attachment1 = (ITaskAttachment) e1;
-				ITaskAttachment attachment2 = (ITaskAttachment) e2;
-				Date created1 = attachment1.getCreationDate();
-				Date created2 = attachment2.getCreationDate();
-				if (created1 != null && created2 != null) {
-					return created1.compareTo(created2);
-				} else if (created1 == null && created2 != null) {
-					return -1;
-				} else if (created1 != null && created2 == null) {
-					return 1;
-				} else {
-					return 0;
-				}
-			}
-		});
+		attachmentsViewer.setSorter(new AttachmentTableSorter());
 
 		List<ITaskAttachment> attachmentList = new ArrayList<ITaskAttachment>(attachments.size());
 		for (TaskAttribute attribute : attachments) {
@@ -153,6 +179,13 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		getTaskEditorPage().getEditorSite().registerContextMenu(ID_POPUP_MENU, menuManager, attachmentsViewer, true);
 		Menu menu = menuManager.createContextMenu(attachmentsTable);
 		attachmentsTable.setMenu(menu);
+
+		new TableViewerSupport(attachmentsViewer, getStateFile());
+	}
+
+	private File getStateFile() {
+		IPath stateLocation = Platform.getStateLocation(TasksUiPlugin.getDefault().getBundle());
+		return stateLocation.append("TaskEditorAttachmentPart.xml").toFile(); //$NON-NLS-1$
 	}
 
 	private void createButtons(Composite attachmentsComposite, FormToolkit toolkit) {

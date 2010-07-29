@@ -121,8 +121,21 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 		case 4:
 			return (attachment.getCreationDate() != null) ? EditorUtil.formatDateTime(attachment.getCreationDate())
 					: ""; //$NON-NLS-1$
+		case 5:
+			// FIXME add id to ITaskAttachment
+			return getAttachmentId(attachment);
 		}
 		return "unrecognized column"; //$NON-NLS-1$
+	}
+
+	static String getAttachmentId(ITaskAttachment attachment) {
+		String a = attachment.getUrl();
+		int i = a.indexOf("?id="); //$NON-NLS-1$
+		if (i != -1) {
+			return a.substring(i + 4);
+		} else {
+			return ""; //$NON-NLS-1$
+		}
 	}
 
 	@Override
