@@ -14,7 +14,6 @@ package org.eclipse.mylyn.bugzilla.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.mylyn.bugzilla.tests.core.BugzillaPriorityTest;
 import org.eclipse.mylyn.bugzilla.tests.core.BugzillaXmlRpcClientTest;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaHyperlinkDetectorTest;
@@ -79,7 +78,6 @@ public class AllBugzillaTests {
 		fixture.add(BugzillaTaskDataHandlerTest.class);
 		fixture.add(BugzillaSearchTest.class);
 		fixture.add(EncodingTest.class);
-		fixture.add(BugzillaPriorityTest.class);
 
 		// Move any tests here that are resulting in spurious failures
 		// due to recent changes in Bugzilla Server head.

@@ -47,9 +47,9 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -665,9 +665,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				if (bugzillaVersion.compareTo(BugzillaVersion.BUGZILLA_3_6) >= 0) {
 					BugzillaPriorityLevel bugzillaPriorityLevel = BugzillaPriorityLevel.fromPriority(getPriority());
 					if (bugzillaPriorityLevel != null) {
-						return BugzillaPriorityLevel.fromPriority(getPriority()).toPriorityLevel();
-					} else {
-						PriorityLevel.getDefault();
+						return bugzillaPriorityLevel.toPriorityLevel();
 					}
 				}
 				return super.getPriorityLevel();
@@ -981,11 +979,11 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	public enum BugzillaPriorityLevel {
-		HIGHEST, HIGH, NORMAL, LOW, LOWEST, NOSELECT;
+		HIGHEST, HIGH, NORMAL, LOW, LOWEST, NONE;
 
 		public static BugzillaPriorityLevel fromPriority(String priority) {
 			if (priority == null) {
-				return NOSELECT;
+				return null;
 			}
 			if (priority.equals("Highest")) { //$NON-NLS-1$
 				return HIGHEST;
@@ -1002,7 +1000,13 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			if (priority.equals("Lowest")) { //$NON-NLS-1$
 				return LOWEST;
 			}
-			return NOSELECT;
+			if (priority.equals("Lowest")) { //$NON-NLS-1$
+				return LOWEST;
+			}
+			if (priority.equals("---")) { //$NON-NLS-1$
+				return NONE;
+			}
+			return null;
 		}
 
 		public PriorityLevel toPriorityLevel() {
@@ -1017,6 +1021,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				return PriorityLevel.P4;
 			case LOWEST:
 				return PriorityLevel.P5;
+			case NONE:
+				return PriorityLevel.P3;
 			default:
 				return null;
 			}
@@ -1035,7 +1041,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				return "Low"; //$NON-NLS-1$
 			case LOWEST:
 				return "Lowest"; //$NON-NLS-1$
-			case NOSELECT:
+			case NONE:
 				return "---"; //$NON-NLS-1$
 			default:
 				return null;
