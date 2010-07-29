@@ -8,6 +8,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     Frank Becker - improvements for bug 231336
+ *     Julio Gesser - fixes for bug 303509
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.util;
@@ -177,29 +178,21 @@ public class TaskComparator implements Comparator<ITask> {
 	}
 
 	private int sortByRank(ITask element1, ITask element2, int sortDirection) {
-
 		if (element1.getConnectorKind() != null && element2.getConnectorKind() != null
 				&& element1.getConnectorKind().equals(element2.getConnectorKind())) {
 			// only compare rank of elements from the same connector
-
 			if (element1.getRepositoryUrl() != null && element2.getRepositoryUrl() != null
 					&& element1.getRepositoryUrl().equals(element2.getRepositoryUrl())) {
-
 				// only compare the rank of elements in the same repository
 				String rankString1 = element1.getAttribute(TaskAttribute.RANK);
 				String rankString2 = element2.getAttribute(TaskAttribute.RANK);
-				if (rankString1 != null && rankString2 != null && rankString1.length() > 0 && rankString2.length() > 0) {
-					try {
-						Double rank1 = Double.parseDouble(rankString1);
-						Double rank2 = Double.parseDouble(rankString2);
-						return sortDirection * rank1.compareTo(rank2);
-					} catch (NumberFormatException e) {
-						// ignore, means that there is no rank on one of the elements
-					}
+				try {
+					return compare(Double.parseDouble(rankString1), Double.parseDouble(rankString2), sortDirection);
+				} catch (NumberFormatException e) {
+					// ignore, means that there is no rank on one of the elements
 				}
 			}
 		}
-
 		return 0;
 	}
 

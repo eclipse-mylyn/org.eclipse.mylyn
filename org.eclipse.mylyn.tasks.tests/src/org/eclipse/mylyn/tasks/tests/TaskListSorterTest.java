@@ -9,6 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *     George Lindholm - improvements
  *     Frank Becker - improvements for bug 212967
+ *     Julio Gesser - fixes for bug 303509
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests;
@@ -48,6 +49,7 @@ import org.eclipse.ui.XMLMemento;
  * @author Mik Kersten
  * @author George Lindholm
  * @author Frank Becker
+ * @author Julio Gesser
  */
 public class TaskListSorterTest extends TestCase {
 
@@ -291,6 +293,43 @@ public class TaskListSorterTest extends TestCase {
 		assertEquals("11", tasks[4].getTaskKey());
 		assertEquals("d", tasks[4].getSummary());
 		assertEquals("5", tasks[5].getTaskKey());
+	}
+
+	public void testRankOrderSortingWithNullRank() {
+		MockTask[] tasks = new MockTask[6];
+		tasks[0] = new MockTask("local", "1", "a");
+		tasks[1] = new MockTask("local", "2", "b");
+		tasks[2] = new MockTask("local", "3", "c");
+		tasks[3] = new MockTask("local", "4", "d");
+		tasks[4] = new MockTask("local", "5", "e");
+		tasks[5] = new MockTask("local", "6", "f");
+
+		Date start = new Date();
+		tasks[5].setCreationDate(start);
+		tasks[4].setCreationDate(new Date(start.getTime() - 1));
+		tasks[3].setCreationDate(new Date(start.getTime() - 2));
+		tasks[2].setCreationDate(new Date(start.getTime() - 3));
+		tasks[1].setCreationDate(new Date(start.getTime() - 4));
+		tasks[0].setCreationDate(new Date(start.getTime() - 5));
+
+		tasks[0].setAttribute(TaskAttribute.RANK, "3");
+		tasks[1].setAttribute(TaskAttribute.RANK, null);
+		tasks[2].setAttribute(TaskAttribute.RANK, "2");
+		tasks[3].setAttribute(TaskAttribute.RANK, "1");
+		tasks[4].setAttribute(TaskAttribute.RANK, "");
+		tasks[5].setAttribute(TaskAttribute.RANK, null);
+
+		TaskListSorter sorter = new TaskListSorter();
+		sorter.getComparator().getSortCriterion(0).setKey(SortCriterion.SortKey.RANK);
+		sorter.getComparator().getSortCriterion(1).setKey(SortCriterion.SortKey.DATE_CREATED);
+		sorter.sort(new EmptyViewer(), tasks);
+
+		assertEquals("2", tasks[0].getTaskKey());
+		assertEquals("5", tasks[1].getTaskKey());
+		assertEquals("6", tasks[2].getTaskKey());
+		assertEquals("4", tasks[3].getTaskKey());
+		assertEquals("3", tasks[4].getTaskKey());
+		assertEquals("1", tasks[5].getTaskKey());
 	}
 
 	public void testModuleSummaryOrderSorting() {
