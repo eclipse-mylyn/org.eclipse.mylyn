@@ -214,4 +214,14 @@
         </context>
      </extension>
    
+	<extension point="org.eclipse.ui.bindings">
+         <!--  win32:  M1=CTRL,    M2=SHIFT, M3=ALT, M4=-
+            carbon: M1=COMMAND, M2=SHIFT, M3=ALT, M4=CTRL -->
+		<key
+            sequence="M1+M2+O"
+            contextId="org.eclipse.mylyn.wikitext.tasks.ui.markupSourceContext"
+            commandId="org.eclipse.mylyn.wikitext.ui.quickOutlineCommand"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      	</key>
+	</extension>
 </plugin>
