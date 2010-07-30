@@ -21,10 +21,10 @@
       </connector>
    </extension>
    <extension
-         point="org.eclipse.mylyn.commons.ui.newWizards">
+         point="org.eclipse.mylyn.commons.team.newWizards">
       <wizard
             category="org.eclipse.mylyn.builds.ui.category.Builds"
-            class="org.eclipse.mylyn.hudson.ui.NewHudsonServerWizard"
+            class="org.eclipse.mylyn.internal.hudson.ui.NewHudsonServerWizard"
             icon="icons/obj16/hudson.png"
             id="org.eclipse.mylyn.hudson"
             name="Hudson">
