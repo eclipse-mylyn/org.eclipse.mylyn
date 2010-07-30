@@ -14,7 +14,7 @@ package org.eclipse.mylyn.builds.ui.spi;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
-import org.eclipse.mylyn.commons.ui.repositories.RepositoryWizardPage;
+import org.eclipse.mylyn.commons.ui.team.RepositoryWizardPage;
 
 /**
  * @author Steffen Pingel

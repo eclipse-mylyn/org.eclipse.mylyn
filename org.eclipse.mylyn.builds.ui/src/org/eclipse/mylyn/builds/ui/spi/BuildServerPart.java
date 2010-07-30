@@ -15,7 +15,7 @@ import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.commons.repositories.RepositoryValidator;
 import org.eclipse.mylyn.internal.builds.ui.BuildServerValidator;
 import org.eclipse.mylyn.internal.commons.ui.SectionComposite;
-import org.eclipse.mylyn.internal.commons.ui.repositories.RepositoryLocationPart;
+import org.eclipse.mylyn.internal.commons.ui.team.RepositoryLocationPart;
 
 public class BuildServerPart extends RepositoryLocationPart {
 

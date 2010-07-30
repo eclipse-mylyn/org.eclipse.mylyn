@@ -16,11 +16,16 @@
    <extension
          point="org.eclipse.ui.views">
       <view
-            name="Builds"
-            icon="icons/eview16/build-view.png"
+            category="org.eclipse.mylyn.builds.ui.views.BuildsCategory"
             class="org.eclipse.mylyn.internal.builds.ui.view.BuildsView"
-            id="org.eclipse.mylyn.builds.navigator.builds">
+            icon="icons/eview16/build-view.png"
+            id="org.eclipse.mylyn.builds.navigator.builds"
+            name="Builds">
       </view>
+      <category
+            id="org.eclipse.mylyn.builds.ui.views.BuildsCategory"
+            name="Builds">
+      </category>
    </extension>
    <extension
          point="org.eclipse.ui.perspectiveExtensions">
@@ -57,7 +62,7 @@
     </extension>
 	<extension point="org.eclipse.ui.keywords">
 	    <keyword
-	          id="org.eclipse.mylyn.builds.preferences"
+	          id="org.eclipse.mylyn.builds.preferences.keywords"
 	          label="interval polling build status">
 	    </keyword>
 	</extension>
@@ -177,7 +182,7 @@
           class="org.eclipse.mylyn.internal.builds.ui.BuildsStartup"></startup>
  </extension>
  <extension
-       point="org.eclipse.mylyn.commons.ui.newWizards">
+       point="org.eclipse.mylyn.commons.team.newWizards">
     <category
           id="org.eclipse.mylyn.builds.ui.category.Builds"
           name="Builds">
