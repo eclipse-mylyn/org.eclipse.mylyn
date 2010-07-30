@@ -1,5 +1,5 @@
 !*******   MAIN   ******** 
-feature@org.eclipse.mylyn_feature=I20100628-0200-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn-feature
+feature@org.eclipse.mylyn_feature=I20100730-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn-feature
 feature@org.eclipse.mylyn.commons=I20100628-0200-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.commons-feature
 feature@org.eclipse.mylyn.context_feature=I20100628-0200-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.context-feature
 feature@org.eclipse.mylyn.bugzilla_feature=I20100628-0200-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.bugzilla-feature
