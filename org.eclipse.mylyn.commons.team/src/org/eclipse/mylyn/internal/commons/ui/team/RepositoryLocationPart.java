@@ -38,7 +38,6 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.RepositoryValidator;
 import org.eclipse.mylyn.internal.commons.ui.SectionComposite;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -320,7 +319,7 @@ public class RepositoryLocationPart {
 	}
 
 	/**
-	 * Validate settings provided by the {@link #getValidator(TaskRepository) validator}, typically the server settings.
+	 * Validate settings provided by the {@link #getValidator() validator}, typically the server settings.
 	 */
 	protected void validate() {
 		final RepositoryValidator validator = getValidator();
