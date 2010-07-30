@@ -9,7 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.commons.ui.repositories;
+package org.eclipse.mylyn.internal.commons.ui.team;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -20,7 +20,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylyn.internal.commons.ui.CommonsUiPlugin;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -71,7 +70,7 @@ public class NewRepositoryHandler extends AbstractHandler implements IHandler {
 
 		wizard.init(workbenchWindow.getWorkbench(), selectionToPass);
 
-		IDialogSettings workbenchSettings = CommonsUiPlugin.getDefault().getDialogSettings();
+		IDialogSettings workbenchSettings = TeamUiPlugin.getDefault().getDialogSettings();
 		IDialogSettings wizardSettings = workbenchSettings.getSection("NewWizardAction"); //$NON-NLS-1$
 		if (wizardSettings == null) {
 			wizardSettings = workbenchSettings.addNewSection("NewWizardAction"); //$NON-NLS-1$

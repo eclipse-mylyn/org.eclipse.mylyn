@@ -9,7 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.commons.ui.repositories;
+package org.eclipse.mylyn.commons.ui.team;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -19,8 +19,8 @@ import org.eclipse.jface.dialogs.DialogPage;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
-import org.eclipse.mylyn.internal.commons.ui.repositories.IPartContainer;
-import org.eclipse.mylyn.internal.commons.ui.repositories.RepositoryLocationPart;
+import org.eclipse.mylyn.internal.commons.ui.team.IPartContainer;
+import org.eclipse.mylyn.internal.commons.ui.team.RepositoryLocationPart;
 import org.eclipse.swt.widgets.Composite;
 
 /**

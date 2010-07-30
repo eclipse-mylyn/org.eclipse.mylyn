@@ -9,7 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.commons.ui.repositories;
+package org.eclipse.mylyn.internal.commons.ui.team;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
@@ -37,8 +37,8 @@ import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.RepositoryValidator;
-import org.eclipse.mylyn.internal.commons.ui.CommonsUiPlugin;
 import org.eclipse.mylyn.internal.commons.ui.SectionComposite;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -59,7 +59,7 @@ public class RepositoryLocationPart {
 
 		public IStatus validate(Object value) {
 			if (!isValidUrl(value.toString())) {
-				return new Status(IStatus.ERROR, CommonsUiPlugin.ID_PLUGIN, "Enter a valid server url.");
+				return new Status(IStatus.ERROR, TeamUiPlugin.ID_PLUGIN, "Enter a valid server url.");
 			}
 			return Status.OK_STATUS;
 		}
@@ -347,9 +347,8 @@ public class RepositoryLocationPart {
 			});
 		} catch (InvocationTargetException e) {
 			StatusManager.getManager().handle(
-					new Status(IStatus.ERROR, CommonsUiPlugin.ID_PLUGIN,
-							"Unexpected error during repository validation.", e),
-					StatusManager.SHOW | StatusManager.BLOCK | StatusManager.LOG);
+					new Status(IStatus.ERROR, TeamUiPlugin.ID_PLUGIN, "Unexpected error during repository validation.",
+							e), StatusManager.SHOW | StatusManager.BLOCK | StatusManager.LOG);
 			return;
 		} catch (InterruptedException e) {
 			// canceled

@@ -7,7 +7,7 @@
          point="org.eclipse.ui.views">
       <view
             category="org.eclipse.team.ui"
-            class="org.eclipse.mylyn.internal.commons.ui.repositories.RepositoriesView"
+            class="org.eclipse.mylyn.internal.commons.ui.team.RepositoriesView"
             icon="icons/eview16/repositories.gif"
             id="org.eclipse.mylyn.commons.team.navigator.Repositories"
             name="Team Repositories">
@@ -68,7 +68,7 @@
          point="org.eclipse.ui.commands">
       <command
             categoryId="org.eclipse.team.ui.category.team"
-            defaultHandler="org.eclipse.mylyn.internal.commons.ui.repositories.NewRepositoryHandler"
+            defaultHandler="org.eclipse.mylyn.internal.commons.ui.team.NewRepositoryHandler"
             id="org.eclipse.mylyn.commons.ui.command.AddRepository"
             name="Add Repository">
       </command>

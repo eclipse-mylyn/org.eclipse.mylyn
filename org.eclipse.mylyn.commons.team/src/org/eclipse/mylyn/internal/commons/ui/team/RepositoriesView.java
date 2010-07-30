@@ -9,17 +9,25 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.commons.ui.repositories;
+package org.eclipse.mylyn.internal.commons.ui.team;
 
-import org.eclipse.jface.operation.IRunnableContext;
+import org.eclipse.mylyn.commons.ui.team.RepositoryViewModel;
+import org.eclipse.ui.navigator.CommonNavigator;
 
 /**
  * @author Steffen Pingel
  */
-public interface IPartContainer extends IRunnableContext {
+public class RepositoriesView extends CommonNavigator {
 
-	public void setMessage(String message, int messageType);
+	private final RepositoryViewModel root;
 
-	public void updateButtons();
+	public RepositoriesView() {
+		root = new RepositoryViewModel();
+	}
+
+	@Override
+	protected Object getInitialInput() {
+		return root;
+	}
 
 }

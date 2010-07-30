@@ -9,25 +9,13 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.commons.ui.repositories;
-
-import org.eclipse.mylyn.commons.ui.repositories.RepositoryViewModel;
-import org.eclipse.ui.navigator.CommonNavigator;
+package org.eclipse.mylyn.commons.ui.team;
 
 /**
+ * The model for the Team Repositories view.
+ * 
  * @author Steffen Pingel
  */
-public class RepositoriesView extends CommonNavigator {
-
-	private final RepositoryViewModel root;
-
-	public RepositoriesView() {
-		root = new RepositoryViewModel();
-	}
-
-	@Override
-	protected Object getInitialInput() {
-		return root;
-	}
+public class RepositoryViewModel {
 
 }

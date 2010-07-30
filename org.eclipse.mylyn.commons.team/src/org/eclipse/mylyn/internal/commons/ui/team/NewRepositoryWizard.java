@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.internal.commons.ui.repositories;
+package org.eclipse.mylyn.internal.commons.ui.team;
 
 import java.util.StringTokenizer;
 

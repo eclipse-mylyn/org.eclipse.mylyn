@@ -10,9 +10,8 @@
  *     Tasktop Technologies - improvements for Mylyn
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.commons.ui.repositories;
+package org.eclipse.mylyn.internal.commons.ui.team;
 
-import org.eclipse.mylyn.internal.commons.ui.CommonsUiPlugin;
 import org.eclipse.ui.internal.wizards.AbstractExtensionWizardRegistry;
 import org.eclipse.ui.internal.wizards.NewWizardRegistry;
 
@@ -45,12 +44,12 @@ public final class NewRepositoryWizardRegistry extends AbstractExtensionWizardRe
 
 	@Override
 	protected String getExtensionPoint() {
-		return "newWizards";
+		return "newWizards"; //$NON-NLS-1$
 	}
 
 	@Override
 	protected String getPlugin() {
-		return CommonsUiPlugin.ID_PLUGIN;
+		return TeamUiPlugin.ID_PLUGIN;
 	}
 
 }
