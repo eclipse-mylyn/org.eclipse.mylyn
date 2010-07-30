@@ -1976,7 +1976,7 @@
       </navigatorContent>
     </extension>
     <extension
-          point="org.eclipse.mylyn.commons.ui.newWizards">
+          point="org.eclipse.mylyn.commons.team.newWizards">
        <category
              id="org.eclipse.mylyn.tasks.ui.category.Tasks"
              name="Tasks">
