@@ -16,11 +16,16 @@ import java.util.Set;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.window.Window;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiPreferenceInitializer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -52,27 +57,67 @@ public class FocusedResourcesPreferencePage extends PreferencePage implements IW
 
 	private Button removeButton;
 
-	private Button resourceModificationButton;
+	private Button resourceMonitoringButton;
+
+	private Group monitoringExclusionsGroup;
 
 	public void init(IWorkbench workbench) {
-		// ignore
+		setDescription(Messages.FocusedResourcesPreferencePage_Configure_file_change_monitoring_Description);
+	}
+
+	@Override
+	protected IPreferenceStore doGetPreferenceStore() {
+		return ResourcesUiBridgePlugin.getDefault().getPreferenceStore();
 	}
 
 	@Override
 	protected Control createContents(Composite parent) {
-		createExcludesTable(parent);
+		Composite composite = new Composite(parent, SWT.NONE);
+		GridLayoutFactory.fillDefaults().applyTo(composite);
 
-		return parent;
+		resourceMonitoringButton = new Button(composite, SWT.CHECK | SWT.WRAP);
+		resourceMonitoringButton.setText(Messages.FocusedResourcesPreferencePage__Enable_file_change_monitoring_Label);
+		boolean resourceModificationsEnabled = getPreferenceStore().getBoolean(
+				ResourcesUiPreferenceInitializer.PREF_RESOURCE_MONITOR_ENABLED);
+		resourceMonitoringButton.setSelection(resourceModificationsEnabled);
+		resourceMonitoringButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		resourceMonitoringButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				updateEnablement();
+			}
+		});
+
+		createExcludesTable(composite);
+
+		updateEnablement();
+
+		Dialog.applyDialogFont(composite);
+		return composite;
+	}
+
+	private void updateEnablement() {
+		boolean enabled = resourceMonitoringButton.getSelection();
+		if (enabled != monitoringExclusionsGroup.isEnabled()) {
+			CommonUiUtil.setEnabled(monitoringExclusionsGroup, enabled);
+		}
+		if (enabled) {
+			if (ignoreTable.getSelectionCount() > 0) {
+				removeButton.setEnabled(true);
+			} else {
+				removeButton.setEnabled(false);
+			}
+		}
 	}
 
 	private void createExcludesTable(Composite parent) {
-		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
-		group.setText(Messages.FocusedResourcesPreferencePage_Resource_Monitoring_Exclusions);
+		monitoringExclusionsGroup = new Group(parent, SWT.SHADOW_ETCHED_IN);
+		monitoringExclusionsGroup.setText(Messages.FocusedResourcesPreferencePage_Resource_Monitoring_Exclusions);
 		GridLayout layout = new GridLayout(1, false);
-		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL));
-		group.setLayout(layout);
+		monitoringExclusionsGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL));
+		monitoringExclusionsGroup.setLayout(layout);
 
-		Composite composite = new Composite(group, SWT.NULL);
+		Composite composite = new Composite(monitoringExclusionsGroup, SWT.NULL);
 		layout = new GridLayout();
 		layout.marginWidth = 0;
 		layout.marginHeight = 0;
@@ -93,7 +138,7 @@ public class FocusedResourcesPreferencePage extends PreferencePage implements IW
 		ignoreTable.setLayoutData(data);
 		ignoreTable.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event e) {
-				handleSelection();
+				updateEnablement();
 			}
 		});
 
@@ -122,18 +167,8 @@ public class FocusedResourcesPreferencePage extends PreferencePage implements IW
 		});
 		fillTable(ResourcesUiPreferenceInitializer.getExcludedResourcePatterns(),
 				ResourcesUiPreferenceInitializer.getForcedExcludedResourcePatterns());
-		Dialog.applyDialogFont(group);
 		setButtonLayoutData(addButton);
 		setButtonLayoutData(removeButton);
-
-		resourceModificationButton = new Button(group, SWT.CHECK);
-		resourceModificationButton.setText(Messages.FocusedResourcesPreferencePage_ExcludeNonModifiedFiles);
-
-		boolean resourceModificationsEnabled = ResourcesUiBridgePlugin.getDefault().getPreferenceStore().getBoolean(
-				ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS);
-		resourceModificationButton.setSelection(resourceModificationsEnabled);
-		resourceModificationButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
 	}
 
 	/**
@@ -143,10 +178,10 @@ public class FocusedResourcesPreferencePage extends PreferencePage implements IW
 	 */
 	@Override
 	public boolean performOk() {
-
-		ResourcesUiBridgePlugin.getDefault().getPreferenceStore().setValue(
-				ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS,
-				resourceModificationButton.getSelection());
+		ResourcesUiBridgePlugin.getDefault()
+				.getPreferenceStore()
+				.setValue(ResourcesUiPreferenceInitializer.PREF_RESOURCE_MONITOR_ENABLED,
+						resourceMonitoringButton.getSelection());
 
 		Set<String> patterns = new HashSet<String>();
 		TableItem[] items = ignoreTable.getItems();
@@ -165,8 +200,8 @@ public class FocusedResourcesPreferencePage extends PreferencePage implements IW
 
 		boolean resourceModificationsEnabled = ResourcesUiBridgePlugin.getDefault()
 				.getPreferenceStore()
-				.getDefaultBoolean(ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS);
-		resourceModificationButton.setSelection(resourceModificationsEnabled);
+				.getDefaultBoolean(ResourcesUiPreferenceInitializer.PREF_RESOURCE_MONITOR_ENABLED);
+		resourceMonitoringButton.setSelection(resourceModificationsEnabled);
 		ignoreTable.removeAll();
 		ResourcesUiPreferenceInitializer.restoreDefaultExcludedResourcePatterns();
 		fillTable(ResourcesUiPreferenceInitializer.getExcludedResourcePatterns(),
@@ -207,14 +242,6 @@ public class FocusedResourcesPreferencePage extends PreferencePage implements IW
 	private void removeIgnore() {
 		int[] selection = ignoreTable.getSelectionIndices();
 		ignoreTable.remove(selection);
-	}
-
-	private void handleSelection() {
-		if (ignoreTable.getSelectionCount() > 0) {
-			removeButton.setEnabled(true);
-		} else {
-			removeButton.setEnabled(false);
-		}
 	}
 
 }

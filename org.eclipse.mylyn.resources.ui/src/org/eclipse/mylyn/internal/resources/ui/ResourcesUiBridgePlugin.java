@@ -20,6 +20,8 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
@@ -62,6 +64,13 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 
 	private ResourceInterestUpdater interestUpdater;
 
+	private final IPropertyChangeListener propertyChangeListener = new IPropertyChangeListener() {
+		public void propertyChange(PropertyChangeEvent event) {
+			updateResourceMonitorEnablement();
+		}
+
+	};
+
 	public ResourcesUiBridgePlugin() {
 		super();
 		INSTANCE = this;
@@ -81,6 +90,9 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 	 */
 	protected void lazyStart() {
 		resourceChangeMonitor = new ResourceChangeMonitor();
+		updateResourceMonitorEnablement();
+		getPreferenceStore().addPropertyChangeListener(propertyChangeListener);
+
 		resourceInteractionMonitor = new ResourceInteractionMonitor();
 		interestEditorTracker = new EditorInteractionMonitor();
 
@@ -93,6 +105,7 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 	}
 
 	protected void lazyStop() {
+		getPreferenceStore().removePropertyChangeListener(propertyChangeListener);
 		if (resourceChangeMonitor != null) {
 			ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceChangeMonitor);
 		}
@@ -169,6 +182,11 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 	@Deprecated
 	public ResourceBundle getResourceBundle() {
 		return null;
+	}
+
+	private void updateResourceMonitorEnablement() {
+		resourceChangeMonitor.setEnabled(getPreferenceStore().getBoolean(
+				ResourcesUiPreferenceInitializer.PREF_RESOURCE_MONITOR_ENABLED));
 	}
 
 }
