@@ -140,13 +140,14 @@ public class CheckActivityJobTest extends TestCase {
 		assertTrue(job.isActive());
 		assertEquals(0, callback.activeTime);
 		// record another tick
-		Thread.sleep(5);
+		Thread.sleep(6);
 		job.run();
+		long slept = System.currentTimeMillis() - callback.lastEventTime;
 		assertTrue(job.isActive());
 		// check if time sleeping was logged
 		assertEquals(2, callback.eventCount);
-		assertTrue("expected less than 5 < activeTime < 20, got " + callback.activeTime, callback.activeTime > 5
-				&& callback.activeTime < 20);
+		assertTrue("expected less than 5 < activeTime < 40, got " + callback.activeTime + " (slept " + slept + " ms)",
+				callback.activeTime > 5 && callback.activeTime < 40);
 	}
 
 	private class TestableCheckActivityJob extends CheckActivityJob {
