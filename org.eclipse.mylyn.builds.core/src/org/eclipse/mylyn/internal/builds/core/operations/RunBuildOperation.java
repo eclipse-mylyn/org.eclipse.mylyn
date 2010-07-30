@@ -31,10 +31,13 @@ public class RunBuildOperation extends AbstractBuildOperation {
 
 	private final IBuildPlan plan;
 
+	private final BuildServer server;
+
 	public RunBuildOperation(IBuildPlan plan) {
 		super("Running build");
 		Assert.isNotNull(plan);
 		this.plan = ((BuildPlan) plan).createWorkingCopy();
+		this.server = (BuildServer) plan.getServer();
 	}
 
 	@Override
@@ -53,7 +56,7 @@ public class RunBuildOperation extends AbstractBuildOperation {
 	}
 
 	public void doRun(IBuildPlan plan, IOperationMonitor monitor) throws CoreException {
-		((BuildServer) plan.getServer()).getBehaviour().runBuild(plan, monitor);
+		server.getBehaviour().runBuild(plan, monitor);
 	}
 
 }
