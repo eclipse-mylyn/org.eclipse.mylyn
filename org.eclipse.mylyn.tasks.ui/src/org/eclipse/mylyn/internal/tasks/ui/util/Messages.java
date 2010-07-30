@@ -41,6 +41,8 @@ public class Messages extends NLS {
 
 	public static String ImportExportUtil_Tasks_and_queries_Filter0;
 
+	public static String SortCriterion_Modification_Date;
+
 	public static String SortCriterion_Type;
 
 	public static String SortKindEntry_Date_Created;

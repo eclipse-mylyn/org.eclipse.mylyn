@@ -98,6 +98,9 @@ public class TaskComparator implements Comparator<ITask> {
 			case DUE_DATE:
 				result = sortByDueDate(element1, element2, key.getDirection());
 				break;
+			case MODIFICATION_DATE:
+				result = sortByModificationDate(element1, element2, key.getDirection());
+				break;
 			default: // NONE
 				return 0;
 			}
@@ -149,12 +152,13 @@ public class TaskComparator implements Comparator<ITask> {
 	private int sortByDueDate(ITask element1, ITask element2, int sortDirection) {
 		Date date1 = element1.getDueDate();
 		Date date2 = element2.getDueDate();
-		if (date1 == null) {
-			return (date2 != null) ? sortDirection : 0;
-		} else if (date2 == null) {
-			return -sortDirection;
-		}
-		return sortDirection * date1.compareTo(date2);
+		return compare(date1, date2, sortDirection);
+	}
+
+	private int sortByModificationDate(ITask element1, ITask element2, int sortDirection) {
+		Date date1 = element1.getModificationDate();
+		Date date2 = element2.getModificationDate();
+		return compare(date1, date2, sortDirection);
 	}
 
 	private <T> int compare(Comparable<T> key1, T key2, int sortDirection) {
