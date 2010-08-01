@@ -27,9 +27,11 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.mylyn.reviews.core.ReviewData;
 import org.eclipse.mylyn.reviews.core.model.review.Patch;
 import org.eclipse.mylyn.reviews.ui.Images;
 import org.eclipse.mylyn.reviews.ui.ReviewDiffModel;
+import org.eclipse.mylyn.reviews.ui.ReviewsUiPlugin;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -160,9 +162,7 @@ public class ReviewTaskEditorPart extends AbstractTaskEditorPart {
 				}
 			}
 		});
-
-		fileList.setInput((getTaskEditorPage().getReview().getScope().get(0)));
-
+		setInput();
 		CompareConfiguration configuration = new CompareConfiguration();
 		configuration.setLeftEditable(false);
 		configuration.setRightEditable(false);
@@ -190,16 +190,17 @@ public class ReviewTaskEditorPart extends AbstractTaskEditorPart {
 		setSection(toolkit, section);
 
 	}
+	private void setInput() {
+		ReviewData rd = ReviewsUiPlugin.getDataManager().getReviewData(getModel().getTask());
+		if(rd!=null) {
+				fileList.setInput((rd.getReview().getScope().get(0)));
+		}
+	}
 
 	private DiffNode getDiffEditorNullInput() {
 		return  new DiffNode(new DiffNode(SWT.LEFT),new DiffNode(SWT.RIGHT));
 	}
 	
-	@Override
-	public ReviewTaskEditorPage getTaskEditorPage() {
-		return (ReviewTaskEditorPage)super.getTaskEditorPage();
-	}
-
 	private GridLayout createSectionClientLayout() {
 		GridLayout layout = new GridLayout(2,false);
 		layout.marginHeight = 0;

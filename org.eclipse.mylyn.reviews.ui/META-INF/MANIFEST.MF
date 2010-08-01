@@ -6,7 +6,7 @@ Bundle-Version: 0.0.1
 Bundle-Activator: org.eclipse.mylyn.reviews.ui.ReviewsUiPlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.eclipse.mylyn.tasks.ui;bundle-version="3.3.0",
+ org.eclipse.mylyn.tasks.ui;bundle-version="3.5.0",
  org.eclipse.ui.forms;bundle-version="3.4.1",
  org.eclipse.mylyn.tasks.core;bundle-version="3.3.0",
  org.eclipse.compare;bundle-version="3.5.0",

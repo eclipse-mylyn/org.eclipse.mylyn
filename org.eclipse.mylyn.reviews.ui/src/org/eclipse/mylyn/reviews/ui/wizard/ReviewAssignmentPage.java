@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Text;
 public class ReviewAssignmentPage extends WizardPage {
 
 	private Text reviewerText;
-	private Button openOnFinish;
+//	private Button openOnFinish;
 
 	protected ReviewAssignmentPage() {
 		super("ReviewAssignmentPage");
@@ -43,8 +43,8 @@ public class ReviewAssignmentPage extends WizardPage {
 			}
 		});
 		createLabel(composite, "");
-		openOnFinish = new Button(composite, SWT.CHECK);
-		openOnFinish.setText("Open review task on finish");
+//		openOnFinish = new Button(composite, SWT.CHECK);
+//		openOnFinish.setText("Open review task on finish");
 		setControl(composite);
 	}
 
@@ -57,6 +57,6 @@ public class ReviewAssignmentPage extends WizardPage {
 		return reviewerText.getText();
 	}
 	public boolean isOpenReviewOnFinish() {
-		return openOnFinish.getSelection();
+		return true; //openOnFinish.getSelection();
 	}
 }

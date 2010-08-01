@@ -18,4 +18,8 @@ public class ReviewConstants {
 	public static final String REVIEW_DATA_CONTAINER = "review-data.zip";
 
 	public static final String REVIEW_DATA_FILE = "reviews-data.xml";
+
+	public static final String ATTR_CACHED_REVIEW = "review";
+	
+	public static final String ATTR_REVIEW_FLAG = "isReview";
 }

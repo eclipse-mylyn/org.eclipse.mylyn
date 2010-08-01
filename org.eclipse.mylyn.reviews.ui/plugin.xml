@@ -17,10 +17,6 @@
             class="org.eclipse.mylyn.reviews.ui.editors.CreateReviewTaskEditorPageFactory"
             id="org.eclipse.mylyn.reviews.ui.pageFactory">
       </pageFactory>
-      <pageFactory
-            class="org.eclipse.mylyn.reviews.ui.ReviewTaskEditorPageFactory"
-            id="org.eclipse.mylyn.reviews.ui.reviewPageFactory">
-      </pageFactory>
    </extension>
    <extension
          point="org.eclipse.ui.editors">
@@ -45,6 +41,18 @@
                tooltip="Create a new review from this attachment">
          </action>
       </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.tasks.ui.taskEditorPageContribution">
+      <repositoryPart
+            class="org.eclipse.mylyn.reviews.ui.editors.ReviewTaskEditorPart"
+            id="org.eclipse.mylyn.reviews.ui.reviewPart"
+            path="attachments">
+      </repositoryPart>
+      <partAdvisor
+      		class="org.eclipse.mylyn.reviews.ui.editors.ReviewTaskEditorPartAdvisor"
+            id="org.eclipse.mylyn.reviews.ui.reviewPart">
+      </partAdvisor>
    </extension>
 
 </plugin>

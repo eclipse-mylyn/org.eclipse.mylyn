@@ -1,21 +1,27 @@
 package org.eclipse.mylyn.reviews.ui.wizard;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.reviews.core.ReviewConstants;
+import org.eclipse.mylyn.reviews.core.ReviewDataManager;
 import org.eclipse.mylyn.reviews.core.model.review.Review;
 import org.eclipse.mylyn.reviews.core.model.review.ReviewFactory;
 import org.eclipse.mylyn.reviews.core.model.review.ScopeItem;
-import org.eclipse.mylyn.reviews.ui.CreateTask;
-import org.eclipse.mylyn.reviews.ui.ReviewStatus;
-import org.eclipse.mylyn.tasks.core.ITaskAttachment;
+import org.eclipse.mylyn.reviews.ui.ReviewsUiPlugin;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskMapping;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.commands.Priority;
 
 public class CreateReviewWizard extends Wizard {
 
@@ -52,38 +58,26 @@ public class CreateReviewWizard extends Wizard {
 		try {
 			Review review = ReviewFactory.eINSTANCE.createReview();
 			review.getScope().add(getScope());
+			TaskRepository taskRepository=model.getTaskRepository();
+			ITask newTask = TasksUiUtil.createOutgoingNewTask(taskRepository.getConnectorKind(), taskRepository.getRepositoryUrl());
 
-			CreateTask createTask = new CreateTask(model, review,
-					assignmentsPage.getReviewer());
+			newTask.setAttribute(ReviewConstants.ATTR_REVIEW_FLAG, Boolean.TRUE.toString());
+			TaskMapper initializationData=new TaskMapper(model.getTaskData());
+			TaskData taskData = TasksUiInternal.createTaskData(taskRepository, initializationData, null,
+					new NullProgressMonitor());
+			AbstractRepositoryConnector connector=TasksUiPlugin.getConnector(taskRepository.getConnectorKind());
+			connector.getTaskDataHandler().initializeSubTaskData(
+					taskRepository, taskData, model.getTaskData(),
+					new NullProgressMonitor());
+			String reviewer = assignmentsPage.getReviewer();
 
-			createTask.schedule();
-			if (assignmentsPage.isOpenReviewOnFinish()) {
+			taskData.getRoot().getMappedAttribute(TaskAttribute.SUMMARY).setValue("Review of " + model.getTask().getSummary());
+			taskData.getRoot().getMappedAttribute(TaskAttribute.USER_ASSIGNED).setValue(reviewer);
 
-				createTask.addJobChangeListener(new JobChangeAdapter() {
-					@Override
-					public void done(IJobChangeEvent event) {
-						super.done(event);
-						IStatus result = event.getResult();
-						if (result instanceof ReviewStatus) {
-							final ReviewStatus reviewResult = (ReviewStatus) result;
-							Display.getDefault().asyncExec(new Runnable() {
-
-								public void run() {
-									TasksUiInternal.synchronizeTaskInBackground(
-											TasksUi.getRepositoryConnector(reviewResult
-													.getTask()
-													.getConnectorKind()),
-											reviewResult.getTask());
-									// TODO
-									TasksUiUtil.openTask(reviewResult.getTask());
-
-								}
-							});
-
-						}
-					}
-				});
-			}
+			ReviewsUiPlugin.getDataManager().storeOutgoingTask(newTask, review);
+			
+			
+			TasksUiInternal.createAndOpenNewTask(newTask, taskData);
 		} catch (CoreException e1) {
 			throw new RuntimeException(e1);
 		}
@@ -103,4 +97,10 @@ public class CreateReviewWizard extends Wizard {
 		return model;
 	}
 
+
+	private TaskAttribute createAttribute( TaskData taskData, String mappedAttributeName, String value) {
+		TaskAttribute attribute = taskData.getRoot().createMappedAttribute(mappedAttributeName);
+		attribute.setValue(value);
+		return attribute;
+	}
 }

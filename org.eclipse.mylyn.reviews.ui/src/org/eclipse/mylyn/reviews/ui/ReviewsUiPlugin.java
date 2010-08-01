@@ -10,11 +10,13 @@
  *******************************************************************************/
 package org.eclipse.mylyn.reviews.ui;
 
+import org.eclipse.mylyn.reviews.core.ReviewDataManager;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
  * The activator class controls the plug-in life cycle
+ * 
  * @author Kilian Matt
  */
 public class ReviewsUiPlugin extends AbstractUIPlugin {
@@ -24,6 +26,8 @@ public class ReviewsUiPlugin extends AbstractUIPlugin {
 
 	// The shared instance
 	private static ReviewsUiPlugin plugin;
+
+	private static ReviewDataManager reviewDataManager;
 
 	/**
 	 * The constructor
@@ -64,6 +68,13 @@ public class ReviewsUiPlugin extends AbstractUIPlugin {
 	 */
 	public static ReviewsUiPlugin getDefault() {
 		return plugin;
+	}
+
+	public static ReviewDataManager getDataManager() {
+		if (reviewDataManager == null) {
+			reviewDataManager = new ReviewDataManager();
+		}
+		return reviewDataManager;
 	}
 
 }
