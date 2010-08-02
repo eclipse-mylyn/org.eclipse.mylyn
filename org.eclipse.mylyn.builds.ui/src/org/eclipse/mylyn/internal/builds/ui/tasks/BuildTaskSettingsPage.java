@@ -24,14 +24,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
-import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ICheckStateListener;
-import org.eclipse.jface.viewers.StyledCellLabelProvider;
-import org.eclipse.jface.viewers.TreeViewerColumn;
-import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.jface.viewers.ICheckStateProvider;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.IOperationMonitor;
@@ -44,6 +42,7 @@ import org.eclipse.mylyn.internal.builds.core.BuildServer;
 import org.eclipse.mylyn.internal.builds.core.tasks.BuildTaskConnector;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 import org.eclipse.mylyn.internal.builds.ui.view.BuildContentProvider;
+import org.eclipse.mylyn.internal.provisional.commons.ui.SubstringPatternFilter;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryChangeListener;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
@@ -63,6 +62,9 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.dialogs.FilteredTree;
+import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 
 /**
@@ -156,8 +158,8 @@ public class BuildTaskSettingsPage extends AbstractRepositorySettingsPage {
 		repository.setProperty(ITasksCoreConstants.PROPERTY_USE_SECURE_STORAGE, Boolean.TRUE.toString());
 		BuildConnector buildConnector = getBuildConnector();
 		if (buildConnector != null) {
-			repository.setProperty(BuildTaskConnector.TASK_REPOSITORY_KEY_BUILD_CONNECTOR_KIND,
-					buildConnector.getConnectorKind());
+			repository.setProperty(BuildTaskConnector.TASK_REPOSITORY_KEY_BUILD_CONNECTOR_KIND, buildConnector
+					.getConnectorKind());
 		} else {
 			repository.setProperty(BuildTaskConnector.TASK_REPOSITORY_KEY_BUILD_CONNECTOR_KIND, null);
 		}
@@ -236,11 +238,13 @@ public class BuildTaskSettingsPage extends AbstractRepositorySettingsPage {
 		selectAllButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
-				List<IBuildPlan> plans = getWorkingCopy().getPlans();
-				for (IBuildPlan plan : plans) {
-					((BuildPlan) plan).setSelected(true);
+				TreeItem[] items = planViewer.getTree().getItems();
+				for (TreeItem item : items) {
+					if (item.getData() instanceof BuildPlan) {
+						((BuildPlan) item.getData()).setSelected(true);
+					}
 				}
-				planViewer.setCheckedElements(plans.toArray());
+				planViewer.refresh();
 			}
 		});
 
@@ -250,11 +254,13 @@ public class BuildTaskSettingsPage extends AbstractRepositorySettingsPage {
 		deselectAllButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
-				List<IBuildPlan> plans = getWorkingCopy().getPlans();
-				for (IBuildPlan plan : plans) {
-					((BuildPlan) plan).setSelected(false);
+				TreeItem[] items = planViewer.getTree().getItems();
+				for (TreeItem item : items) {
+					if (item.getData() instanceof BuildPlan) {
+						((BuildPlan) item.getData()).setSelected(false);
+					}
 				}
-				planViewer.setCheckedElements(new Object[] {});
+				planViewer.refresh();
 			}
 		});
 	}
@@ -276,39 +282,34 @@ public class BuildTaskSettingsPage extends AbstractRepositorySettingsPage {
 		section.setClient(composite);
 		GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 5).applyTo(composite);
 
-		Composite container = new Composite(composite, SWT.None);
-		GridDataFactory.fillDefaults().grab(true, true).applyTo(container);
-		TreeColumnLayout columnLayout = new TreeColumnLayout();
-		container.setLayout(columnLayout);
-
-		planViewer = new CheckboxTreeViewer(container, SWT.FULL_SELECTION | SWT.BORDER);
+		CheckboxFilteredTree filteredTree = new CheckboxFilteredTree(composite, SWT.FULL_SELECTION | SWT.BORDER,
+				new SubstringPatternFilter());
+		planViewer = filteredTree.getCheckboxTreeViewer();//new CheckboxTreeViewer(composite, SWT.FULL_SELECTION | SWT.BORDER);
 		planViewer.addCheckStateListener(new ICheckStateListener() {
 			public void checkStateChanged(CheckStateChangedEvent event) {
 				BuildPlan plan = (BuildPlan) event.getElement();
 				plan.setSelected(event.getChecked());
 			}
 		});
-//		planViewer.setCheckStateProvider(new ICheckStateProvider() {
-//			public boolean isChecked(Object element) {
-//				return ((IBuildPlan) element).isSelected();
-//			}
-//
-//			public boolean isGrayed(Object element) {
-//				for (IBuildPlan child : ((IBuildPlan) element).getChildren()) {
-//					if (!child.isSelected()) {
-//						return true;
-//					}
-//				}
-//				return false;
-//			}
-//		});
+		planViewer.setCheckStateProvider(new ICheckStateProvider() {
+			public boolean isChecked(Object element) {
+				return ((IBuildPlan) element).isSelected();
+			}
 
-		TreeViewerColumn planColumn = new TreeViewerColumn(planViewer, SWT.LEFT | SWT.FILL);
-		columnLayout.setColumnData(planColumn.getColumn(), new ColumnWeightData(100, true));
-		planColumn.setLabelProvider(new StyledCellLabelProvider() {
+			public boolean isGrayed(Object element) {
+				for (IBuildPlan child : ((IBuildPlan) element).getChildren()) {
+					if (!child.isSelected()) {
+						return true;
+					}
+				}
+				return false;
+			}
+		});
+
+		planViewer.setLabelProvider(new LabelProvider() {
 			@Override
-			public void update(ViewerCell cell) {
-				cell.setText(((IBuildPlan) cell.getElement()).getName());
+			public String getText(Object element) {
+				return ((IBuildPlan) element).getName();
 			}
 		});
 
@@ -317,11 +318,8 @@ public class BuildTaskSettingsPage extends AbstractRepositorySettingsPage {
 
 		Composite buttonComposite = new Composite(composite, SWT.NONE);
 		GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.TOP).applyTo(buttonComposite);
-		GridLayoutFactory.fillDefaults()
-				.numColumns(1)
-				.margins(0, 0)
-				.extendedMargins(5, 0, 0, 0)
-				.applyTo(buttonComposite);
+		GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).extendedMargins(5, 0, 0, 0).applyTo(
+				buttonComposite);
 		createButtons(buttonComposite);
 
 		Dialog.applyDialogFont(composite);
@@ -428,6 +426,28 @@ public class BuildTaskSettingsPage extends AbstractRepositorySettingsPage {
 			}
 		}
 		return false;
+	}
+
+	private class CheckboxFilteredTree extends FilteredTree {
+
+		public CheckboxFilteredTree(Composite parent, int treeStyle, PatternFilter filter) {
+			super(parent, treeStyle, filter, true);
+		}
+
+		@Override
+		public CheckboxTreeViewer getViewer() {
+			return (CheckboxTreeViewer) super.getViewer();
+		}
+
+		@Override
+		protected TreeViewer doCreateTreeViewer(Composite parent, int style) {
+			return new CheckboxTreeViewer(parent, style);
+		}
+
+		public CheckboxTreeViewer getCheckboxTreeViewer() {
+			return getViewer();
+		}
+
 	}
 
 }
