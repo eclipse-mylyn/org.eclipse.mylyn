@@ -40,12 +40,12 @@ public class BuildServerWizardPage extends RepositoryWizardPage {
 		return new BuildServerPart(getModel());
 	}
 
-	public void setModel(IBuildServer model) {
-		this.model = model;
-	}
-
 	public IBuildServer getModel() {
 		return model;
+	}
+
+	public void init(IBuildServer model) {
+		this.model = model;
 	}
 
 }

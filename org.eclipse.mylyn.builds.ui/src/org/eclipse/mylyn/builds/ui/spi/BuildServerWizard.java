@@ -11,10 +11,15 @@
 
 package org.eclipse.mylyn.builds.ui.spi;
 
+import java.util.UUID;
+
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.builds.core.IBuildServer;
+import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
+import org.eclipse.mylyn.internal.builds.core.BuildServer;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
+import org.eclipse.mylyn.internal.commons.repositories.InMemoryCredentialsStore;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
@@ -23,20 +28,31 @@ import org.eclipse.ui.IWorkbench;
  */
 public class BuildServerWizard extends Wizard implements INewWizard {
 
-	private final IBuildServer model;
+	private IBuildServer model;
 
-	public BuildServerWizard(IBuildServer model) {
-		this.model = model;
+	private final IBuildServer original;
+
+	public BuildServerWizard(IBuildServer server) {
+		this.original = server;
 	}
 
 	@Override
 	public void addPages() {
 		BuildServerWizardPage page = new BuildServerWizardPage("newBuildServer");
-		page.setModel(model);
+		page.init(getModel());
 		addPage(page);
 	}
 
 	public IBuildServer getModel() {
+		if (model == null) {
+			model = ((BuildServer) original).createWorkingCopy();
+			RepositoryLocation workingCopy = new RepositoryLocation(original.getLocation());
+			if (workingCopy.getProperty(RepositoryLocation.PROPERTY_ID) == null) {
+				workingCopy.setProperty(RepositoryLocation.PROPERTY_ID, UUID.randomUUID().toString());
+			}
+			workingCopy.setCredentialsStore(new InMemoryCredentialsStore(workingCopy.getCredentialsStore()));
+			((BuildServer) model).setLocation(workingCopy);
+		}
 		return model;
 	}
 
@@ -46,7 +62,10 @@ public class BuildServerWizard extends Wizard implements INewWizard {
 
 	@Override
 	public boolean performFinish() {
-		BuildsUiInternal.getModel().getServers().add(getModel());
+		((BuildServer) getModel()).applyToOriginal();
+		if (((BuildServer) original).eContainer() != BuildsUiInternal.getModel()) {
+			BuildsUiInternal.getModel().getServers().add(getModel());
+		}
 		return true;
 	}
 
