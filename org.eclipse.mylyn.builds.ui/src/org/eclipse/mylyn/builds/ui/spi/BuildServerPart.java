@@ -11,6 +11,15 @@
 
 package org.eclipse.mylyn.builds.ui.spi;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
@@ -21,9 +30,14 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
+import org.eclipse.mylyn.builds.core.IOperationMonitor;
+import org.eclipse.mylyn.builds.core.IOperationMonitor.OperationFlag;
+import org.eclipse.mylyn.builds.core.util.ProgressUtil;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.repositories.RepositoryValidator;
 import org.eclipse.mylyn.internal.builds.core.BuildPlan;
 import org.eclipse.mylyn.internal.builds.ui.BuildServerValidator;
+import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
 import org.eclipse.mylyn.internal.builds.ui.view.BuildContentProvider;
 import org.eclipse.mylyn.internal.commons.ui.SectionComposite;
 import org.eclipse.mylyn.internal.commons.ui.team.RepositoryLocationPart;
@@ -34,6 +48,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
@@ -63,6 +78,34 @@ public class BuildServerPart extends RepositoryLocationPart {
 
 	}
 
+	private class Validator extends BuildServerValidator {
+		private List<IBuildPlan> plans;
+
+		public Validator(IBuildServer server) {
+			super(server);
+		}
+
+		public List<IBuildPlan> getPlans() {
+			return plans;
+		}
+
+		@Override
+		public IStatus run(IProgressMonitor monitor) {
+			IOperationMonitor progress = ProgressUtil.convert(monitor, 2);
+			progress.addFlag(OperationFlag.BACKGROUND);
+			try {
+				IStatus result = getServer().validate(progress.newChild(1));
+				if (result.isOK()) {
+					plans = getServer().refreshPlans(progress.newChild(2));
+				}
+				return result;
+			} catch (CoreException e) {
+				return new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "Server validation failed", e);
+			}
+		}
+
+	}
+
 	private final IBuildServer model;
 
 	private CheckboxTreeViewer planViewer;
@@ -70,6 +113,27 @@ public class BuildServerPart extends RepositoryLocationPart {
 	public BuildServerPart(IBuildServer model) {
 		super(model.getLocation());
 		this.model = model;
+	}
+
+	@Override
+	protected void applyValidatorResult(RepositoryValidator validator) {
+		super.applyValidatorResult(validator);
+		if (!validator.getResult().isOK()) {
+			StatusHandler.log(validator.getResult());
+		}
+		if (((Validator) validator).getPlans() != null) {
+			Set<String> selectedIds = getSelectedPlanIds();
+			IBuildServer server = ((Validator) validator).getServer();
+			List<IBuildPlan> selectedPlans = new ArrayList<IBuildPlan>();
+			for (IBuildPlan plan : server.getPlans()) {
+				if (selectedIds.contains(plan.getId())) {
+					selectedPlans.add(plan);
+					((BuildPlan) plan).setSelected(true);
+				}
+			}
+			planViewer.refresh();
+			planViewer.expandAll();
+		}
 	}
 
 	@Override
@@ -122,6 +186,13 @@ public class BuildServerPart extends RepositoryLocationPart {
 	}
 
 	@Override
+	public Control createContents(Composite parent) {
+		Control control = super.createContents(parent);
+		planViewer.setInput(getModel());
+		return control;
+	}
+
+	@Override
 	protected void createSections(SectionComposite sectionComposite) {
 		ExpandableComposite section = sectionComposite.createSection("Build Plans");
 		section.setExpanded(true);
@@ -168,7 +239,6 @@ public class BuildServerPart extends RepositoryLocationPart {
 		});
 
 		planViewer.setContentProvider(new BuildContentProvider());
-		planViewer.expandAll();
 
 		Composite buttonComposite = new Composite(composite, SWT.NONE);
 		GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.TOP).applyTo(buttonComposite);
@@ -181,9 +251,18 @@ public class BuildServerPart extends RepositoryLocationPart {
 		return model;
 	}
 
+	protected Set<String> getSelectedPlanIds() {
+		Object[] checkedElements = planViewer.getCheckedElements();
+		Set<String> selectedIds = new HashSet<String>();
+		for (Object object : checkedElements) {
+			selectedIds.add(((IBuildPlan) object).getId());
+		}
+		return selectedIds;
+	}
+
 	@Override
 	protected RepositoryValidator getValidator() {
-		return new BuildServerValidator(getModel());
+		return new Validator(getModel());
 	}
 
 }

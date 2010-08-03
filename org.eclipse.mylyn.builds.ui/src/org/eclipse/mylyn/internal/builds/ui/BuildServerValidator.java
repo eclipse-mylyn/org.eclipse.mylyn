@@ -44,4 +44,8 @@ public class BuildServerValidator extends RepositoryValidator {
 		}
 	}
 
+	public IBuildServer getServer() {
+		return server;
+	}
+
 }
