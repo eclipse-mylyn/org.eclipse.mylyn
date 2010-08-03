@@ -21,6 +21,8 @@ public abstract class RepositoryValidator {
 
 	private final RepositoryLocation location;
 
+	private IStatus result;
+
 	public RepositoryValidator(RepositoryLocation location) {
 		this.location = location;
 	}
@@ -29,6 +31,14 @@ public abstract class RepositoryValidator {
 		return location;
 	}
 
+	public IStatus getResult() {
+		return result;
+	}
+
 	public abstract IStatus run(IProgressMonitor monitor);
+
+	public void setResult(IStatus result) {
+		this.result = result;
+	}
 
 }

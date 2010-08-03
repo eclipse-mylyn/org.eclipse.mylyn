@@ -186,7 +186,8 @@ public class RepositoryLocationPart {
 		setNeedsHttpAuth(false);
 	}
 
-	protected void applyValidatorResult(IStatus status) {
+	protected void applyValidatorResult(RepositoryValidator validator) {
+		IStatus status = validator.getResult();
 		String message = status.getMessage();
 		if (message == null || message.length() == 0) {
 			message = null;
@@ -467,9 +468,13 @@ public class RepositoryLocationPart {
 			// canceled
 			return;
 		}
-
+		if (result.get() == null) {
+			validator.setResult(Status.OK_STATUS);
+		} else {
+			validator.setResult(result.get());
+		}
 		getPartContainer().updateButtons();
-		applyValidatorResult(result.get());
+		applyValidatorResult(validator);
 	}
 
 }
