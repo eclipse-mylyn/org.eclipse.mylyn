@@ -37,10 +37,15 @@ import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.RepositoryValidator;
+import org.eclipse.mylyn.commons.repositories.auth.AuthenticationType;
+import org.eclipse.mylyn.commons.repositories.auth.UsernamePasswordCredentials;
 import org.eclipse.mylyn.internal.commons.ui.SectionComposite;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -61,6 +66,102 @@ public class RepositoryLocationPart {
 				return new Status(IStatus.ERROR, TeamUiPlugin.ID_PLUGIN, "Enter a valid server url.");
 			}
 			return Status.OK_STATUS;
+		}
+
+	}
+
+	private class UsernamePasswordListener implements ModifyListener, SelectionListener {
+
+		private final AuthenticationType authenticationType;
+
+		private final Button enabledButton;
+
+		private boolean enablementReversed;
+
+		private final Text passwordText;
+
+		private final Button savePasswordButton;
+
+		private final Text userText;
+
+		public UsernamePasswordListener(AuthenticationType authenticationType, Button enabledButton, Text userText,
+				Text passwordText, Button savePasswordButton) {
+			this.authenticationType = authenticationType;
+			this.enabledButton = enabledButton;
+			this.userText = userText;
+			this.passwordText = passwordText;
+			this.savePasswordButton = savePasswordButton;
+			init();
+		}
+
+		private void apply() {
+			if (isEnabled()) {
+				UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(userText.getText(),
+						passwordText.getText());
+				getWorkingCopy().setCredentials(authenticationType, credentials);
+			} else {
+				getWorkingCopy().setCredentials(authenticationType, null);
+			}
+		}
+
+		protected void init() {
+			enabledButton.addSelectionListener(this);
+			userText.addModifyListener(this);
+			passwordText.addModifyListener(this);
+			savePasswordButton.addSelectionListener(this);
+		}
+
+		protected boolean isEnabled() {
+			return enabledButton.getSelection() != isEnablementReversed();
+		}
+
+		public boolean isEnablementReversed() {
+			return enablementReversed;
+		}
+
+		public void modifyText(ModifyEvent event) {
+			apply();
+
+		}
+
+		private void restore() {
+			UsernamePasswordCredentials credentials = getWorkingCopy().getCredentials(authenticationType,
+					UsernamePasswordCredentials.class);
+			if (credentials != null) {
+				enabledButton.setSelection(!isEnablementReversed());
+				userText.setText(credentials.getUserName());
+				passwordText.setText(credentials.getUserName());
+				savePasswordButton.setSelection(true);
+			} else {
+				enabledButton.setSelection(isEnablementReversed());
+				userText.setText("");
+				passwordText.setText("");
+				savePasswordButton.setSelection(true);
+			}
+			updateWidgetEnablement();
+		}
+
+		public void setEnablementReversed(boolean enablementReversed) {
+			this.enablementReversed = enablementReversed;
+		}
+
+		private void updateWidgetEnablement() {
+			boolean enabled = isEnabled();
+			userText.setEnabled(enabled);
+			passwordText.setEnabled(enabled);
+			savePasswordButton.setEnabled(enabled);
+		}
+
+		public void widgetDefaultSelected(SelectionEvent event) {
+			apply();
+
+		}
+
+		public void widgetSelected(SelectionEvent event) {
+			apply();
+			if (event.widget == enabledButton) {
+				updateWidgetEnablement();
+			}
 		}
 
 	}
@@ -111,6 +212,14 @@ public class RepositoryLocationPart {
 			getPartContainer().setMessage(message, IMessageProvider.ERROR);
 			break;
 		}
+	}
+
+	private void bind(AuthenticationType authType, Button anonymousButton, Text userText, Text passwordText,
+			Button savePasswordButton) {
+		UsernamePasswordListener listener = new UsernamePasswordListener(authType, anonymousButton, userText,
+				passwordText, savePasswordButton);
+		listener.setEnablementReversed(true);
+		listener.restore();
 	}
 
 	protected void bind(Button button, String property) {
@@ -188,16 +297,16 @@ public class RepositoryLocationPart {
 		return composite;
 	}
 
-	private void createProxySection(SectionComposite parent) {
-		Composite composite = parent.createSection("Proxy Server Configuration");
+	private void createHttpAuthSection(SectionComposite parent) {
+		Composite composite = parent.createSection("HTTP Authentication");
 		GridLayoutFactory.swtDefaults().numColumns(3).applyTo(composite);
 
 		// ignore
 
 	}
 
-	private void createHttpAuthSection(SectionComposite parent) {
-		Composite composite = parent.createSection("HTTP Authentication");
+	private void createProxySection(SectionComposite parent) {
+		Composite composite = parent.createSection("Proxy Server Configuration");
 		GridLayoutFactory.swtDefaults().numColumns(3).applyTo(composite);
 
 		// ignore
@@ -242,7 +351,6 @@ public class RepositoryLocationPart {
 
 		Button anonymousButton = new Button(parent, SWT.CHECK);
 		anonymousButton.setText("Anonymous");
-		bind(anonymousButton, "anonymous");
 
 		label = new Label(parent, SWT.NONE);
 		label.setText("&Password:");
@@ -252,6 +360,8 @@ public class RepositoryLocationPart {
 
 		Button savePasswordButton = new Button(parent, SWT.CHECK);
 		savePasswordButton.setText("Save Password");
+
+		bind(AuthenticationType.REPOSITORY, anonymousButton, userText, passwordText, savePasswordButton);
 	}
 
 	public <T> T getContainer(Class<T> clazz) {
@@ -268,6 +378,10 @@ public class RepositoryLocationPart {
 
 	protected RepositoryValidator getValidator() {
 		return null;
+	}
+
+	protected RepositoryLocation getWorkingCopy() {
+		return workingCopy;
 	}
 
 	public boolean isValidUrl(String url) {

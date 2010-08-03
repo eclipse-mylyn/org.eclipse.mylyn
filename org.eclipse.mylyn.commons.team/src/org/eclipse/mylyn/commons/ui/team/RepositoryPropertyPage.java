@@ -11,10 +11,13 @@
 
 package org.eclipse.mylyn.commons.ui.team;
 
+import java.util.UUID;
+
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.DialogPage;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
+import org.eclipse.mylyn.internal.commons.repositories.InMemoryCredentialsStore;
 import org.eclipse.mylyn.internal.commons.ui.team.IPartContainer;
 import org.eclipse.mylyn.internal.commons.ui.team.RepositoryLocationPart;
 import org.eclipse.swt.widgets.Composite;
@@ -48,6 +51,10 @@ public class RepositoryPropertyPage extends PropertyPage implements IAdaptable {
 		if (workingCopy == null) {
 			RepositoryLocation element = (RepositoryLocation) getElement().getAdapter(RepositoryLocation.class);
 			workingCopy = new RepositoryLocation(element);
+			if (workingCopy.getId() == null) {
+				workingCopy.setProperty(RepositoryLocation.PROPERTY_ID, UUID.randomUUID().toString());
+			}
+			workingCopy.setCredentialsStore(new InMemoryCredentialsStore(workingCopy.getCredentialsStore()));
 		}
 		return workingCopy;
 	}

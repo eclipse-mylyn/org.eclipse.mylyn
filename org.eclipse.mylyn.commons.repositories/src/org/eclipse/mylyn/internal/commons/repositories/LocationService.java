@@ -23,6 +23,7 @@ import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.commons.repositories.ILocationService;
 import org.eclipse.mylyn.commons.repositories.auth.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.repositories.auth.AuthenticationType;
+import org.eclipse.mylyn.commons.repositories.auth.ICredentialsStore;
 import org.eclipse.mylyn.commons.repositories.auth.UsernamePasswordCredentials;
 
 /**
@@ -49,6 +50,8 @@ public class LocationService implements ILocationService {
 	private final Map<AuthenticationType, UsernamePasswordCredentials> credentialsByType;
 
 	private final IProxyProvider proxyProvider;
+
+	private ICredentialsStore credentialsStore;
 
 	public LocationService(String username, String password, IProxyProvider proxyProvider) {
 		this.credentialsByType = new HashMap<AuthenticationType, UsernamePasswordCredentials>();
@@ -90,6 +93,13 @@ public class LocationService implements ILocationService {
 	public <T extends AuthenticationCredentials> T requestCredentials(AuthenticationType type,
 			Class<T> credentialsKind, String message, IProgressMonitor monitor) {
 		throw new UnsupportedOperationException();
+	}
+
+	public ICredentialsStore getCredentialsStore(String id) {
+		if (credentialsStore == null) {
+			credentialsStore = new SecureCredentialsStore(id);
+		}
+		return credentialsStore;
 	}
 
 }

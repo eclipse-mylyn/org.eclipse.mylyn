@@ -33,7 +33,8 @@ public class SecureCredentialsStore implements ICredentialsStore {
 	}
 
 	public void clear() {
-		getSecurePreferences().clear();
+		//getSecurePreferences().clear();
+		getSecurePreferences().removeNode();
 	}
 
 	public void flush() throws IOException {

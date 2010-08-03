@@ -18,6 +18,7 @@ import javax.net.ssl.X509TrustManager;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.commons.repositories.auth.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.repositories.auth.AuthenticationType;
+import org.eclipse.mylyn.commons.repositories.auth.ICredentialsStore;
 
 /**
  * @author Steffen Pingel
@@ -33,5 +34,7 @@ public interface ILocationService {
 
 	public abstract <T extends AuthenticationCredentials> T requestCredentials(AuthenticationType type,
 			Class<T> credentialsKind, String message, IProgressMonitor monitor);
+
+	public ICredentialsStore getCredentialsStore(String id);
 
 }

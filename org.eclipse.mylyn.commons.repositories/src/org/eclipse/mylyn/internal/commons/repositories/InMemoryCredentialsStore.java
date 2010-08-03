@@ -24,7 +24,10 @@ public class InMemoryCredentialsStore implements ICredentialsStore {
 
 	private final ConcurrentHashMap<String, Object> store;
 
-	public InMemoryCredentialsStore() {
+	private final ICredentialsStore parent;
+
+	public InMemoryCredentialsStore(ICredentialsStore parent) {
+		this.parent = parent;
 		store = new ConcurrentHashMap<String, Object>();
 	}
 
@@ -38,11 +41,17 @@ public class InMemoryCredentialsStore implements ICredentialsStore {
 
 	public String get(String key, String def) throws StorageException {
 		String value = (String) store.get(key);
+		if (value == null && parent != null) {
+			return parent.get(key, def);
+		}
 		return (value != null) ? value : def;
 	}
 
 	public byte[] getByteArray(String key, byte[] def) throws StorageException {
 		byte[] value = (byte[]) store.get(key);
+		if (value == null && parent != null) {
+			return parent.getByteArray(key, def);
+		}
 		return (value != null) ? value : def;
 	}
 

@@ -11,6 +11,13 @@
 
 package org.eclipse.mylyn.commons.repositories.auth;
 
-public class AuthenticationCredentials {
+import org.eclipse.equinox.security.storage.StorageException;
+
+/**
+ * @author Steffen Pingel
+ */
+public abstract class AuthenticationCredentials {
+
+	public abstract void save(ICredentialsStore store, String prefix) throws StorageException;
 
 }

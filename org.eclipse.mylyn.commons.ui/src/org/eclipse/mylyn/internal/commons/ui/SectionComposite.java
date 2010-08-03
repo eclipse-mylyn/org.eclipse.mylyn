@@ -23,13 +23,16 @@ import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.SharedScrolledComposite;
 
 /**
  * @author Steffen Pingel
  */
-public class SectionComposite extends Composite {
+public class SectionComposite extends SharedScrolledComposite {
 
 	FormToolkit toolkit;
+
+	public Composite content;
 
 	public SectionComposite(Composite parent, int style) {
 		super(parent, style | SWT.V_SCROLL);
@@ -41,11 +44,20 @@ public class SectionComposite extends Composite {
 				}
 			}
 		});
-		setLayout(GridLayoutFactory.fillDefaults().create());
+		content = new Composite(this, SWT.NONE);
+		content.setLayout(GridLayoutFactory.fillDefaults().create());
+		setContent(content);
+		setExpandVertical(true);
+		setExpandHorizontal(true);
+	}
+
+	@Override
+	public Composite getContent() {
+		return content;
 	}
 
 	public ExpandableComposite createSection(String title) {
-		final ExpandableComposite section = getToolkit().createExpandableComposite(this,
+		final ExpandableComposite section = getToolkit().createExpandableComposite(getContent(),
 				ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT | ExpandableComposite.COMPACT);
 		section.clientVerticalSpacing = 0;
 		section.setBackground(getBackground());
@@ -54,15 +66,15 @@ public class SectionComposite extends Composite {
 			@Override
 			public void expansionStateChanged(ExpansionEvent e) {
 				layout(true);
-				getShell().pack();
+				reflow(true);
 			}
 		});
 		section.setText(title);
-		if (getLayout() instanceof GridLayout) {
+		if (content.getLayout() instanceof GridLayout) {
 			GridDataFactory.fillDefaults()
 					.indent(0, 5)
 					.grab(true, false)
-					.span(((GridLayout) getLayout()).numColumns, SWT.DEFAULT)
+					.span(((GridLayout) content.getLayout()).numColumns, SWT.DEFAULT)
 					.applyTo(section);
 		}
 		return section;

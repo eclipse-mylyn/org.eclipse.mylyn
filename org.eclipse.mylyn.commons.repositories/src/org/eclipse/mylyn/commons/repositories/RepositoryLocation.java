@@ -13,7 +13,6 @@ package org.eclipse.mylyn.commons.repositories;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -21,17 +20,12 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.PlatformObject;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.equinox.security.storage.EncodingUtils;
-import org.eclipse.equinox.security.storage.ISecurePreferences;
-import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
 import org.eclipse.equinox.security.storage.StorageException;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.repositories.auth.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.repositories.auth.AuthenticationType;
-import org.eclipse.mylyn.commons.repositories.auth.UsernamePasswordCredentials;
+import org.eclipse.mylyn.commons.repositories.auth.ICredentialsStore;
+import org.eclipse.mylyn.internal.commons.repositories.CredentialsFactory;
 import org.eclipse.mylyn.internal.commons.repositories.LocationService;
 
 /**
@@ -43,39 +37,27 @@ public class RepositoryLocation extends PlatformObject {
 
 	private static final String AUTH_PROXY = "org.eclipse.mylyn.tasklist.repositories.proxy"; //$NON-NLS-1$
 
-	private static final String AUTH_REALM = ""; //$NON-NLS-1$
-
 	private static final String AUTH_REPOSITORY = "org.eclipse.mylyn.tasklist.repositories"; //$NON-NLS-1$
-
-	private static final String AUTH_SCHEME = "Basic"; //$NON-NLS-1$
-
-	private static Map<String, Map<String, String>> credentials = new HashMap<String, Map<String, String>>();
-
-	public static final String DEFAULT_CHARACTER_ENCODING = "UTF-8"; //$NON-NLS-1$
 
 	private static final String ENABLED = ".enabled"; //$NON-NLS-1$
 
 	private static final String ID_PLUGIN = "org.eclipse.mylyn.commons.repository";
 
-	public static final String PROPERTY_OFFLINE = "org.eclipse.mylyn.tasklist.repositories.offline"; //$NON-NLS-1$
-
-	public static final String PROPERTY_USERNAME = "org.eclipse.mylyn.repositories.username"; //$NON-NLS-1$
-
-	private static final String PASSWORD = ".password"; //$NON-NLS-1$
-
 	public static final String PROPERTY_CATEGORY = "category"; //$NON-NLS-1$
-
-	private static final String PROPERTY_CONFIG_TIMESTAMP = "org.eclipse.mylyn.tasklist.repositories.configuration.timestamp"; //$NON-NLS-1$
-
-	public static final String PROPERTY_CONNECTOR_KIND = "kind"; //$NON-NLS-1$
 
 	public static final String PROPERTY_ENCODING = "encoding"; //$NON-NLS-1$
 
+	public static final String PROPERTY_ID = "id"; //$NON-NLS-1$
+
 	public static final String PROPERTY_LABEL = "label"; //$NON-NLS-1$
+
+	public static final String PROPERTY_OFFLINE = "org.eclipse.mylyn.tasklist.repositories.offline"; //$NON-NLS-1$
 
 	public static final String PROPERTY_TIMEZONE = "timezone"; //$NON-NLS-1$
 
 	public static final String PROPERTY_URL = "url"; //$NON-NLS-1$
+
+	public static final String PROPERTY_USERNAME = "org.eclipse.mylyn.repositories.username"; //$NON-NLS-1$
 
 	public static final String PROXY_HOSTNAME = "org.eclipse.mylyn.tasklist.repositories.proxy.hostname"; //$NON-NLS-1$
 
@@ -86,8 +68,6 @@ public class RepositoryLocation extends PlatformObject {
 	private static final String SAVE_PASSWORD = ".savePassword"; //$NON-NLS-1$
 
 	private static final String USERNAME = ".username"; //$NON-NLS-1$
-
-	private final Map<String, String> transientProperties = new HashMap<String, String>();
 
 	private static String getKeyPrefix(AuthenticationType type) {
 		switch (type) {
@@ -103,22 +83,28 @@ public class RepositoryLocation extends PlatformObject {
 
 	private String cachedUserName;
 
+	private ICredentialsStore credentialsStore;
+
 	// transient
 	private IStatus errorStatus = null;
 
 	private boolean isCachedUserName;
 
-	private ILocationService service;
-
-	private final Object LOCK = new Object();
-
 	private final Map<String, String> properties = new LinkedHashMap<String, String>();
 
 	private final Set<PropertyChangeListener> propertyChangeListeners = new HashSet<PropertyChangeListener>();
 
+	private ILocationService service;
+
 	private boolean workingCopy;
 
 	public RepositoryLocation() {
+		this.service = LocationService.getDefault();
+	}
+
+	public RepositoryLocation(Map<String, String> properties) {
+		this.properties.putAll(properties);
+		this.workingCopy = true;
 		this.service = LocationService.getDefault();
 	}
 
@@ -128,150 +114,41 @@ public class RepositoryLocation extends PlatformObject {
 		this.service = source.getService();
 	}
 
-	public RepositoryLocation(Map<String, String> properties) {
-		this.properties.putAll(properties);
-		this.workingCopy = true;
-		this.service = LocationService.getDefault();
-	}
-
-	public boolean isWorkingCopy() {
-		return workingCopy;
-	}
-
-	public String getUrl() {
-		String url = getProperty(PROPERTY_URL);
-		if (url == null) {
-			throw new IllegalStateException("Repository URL is not set");
-		}
-		return url;
-	}
-
-	public void setUrl(String url) {
-		setProperty(PROPERTY_URL, url);
-//		URI oldValue = this.uri;
-//		if (hasChanged(oldValue, uri)) {
-//			this.uri = uri;
-//			notifyChangeListeners("uri", oldValue, uri);
-//		}
-	}
-
-	private void addAuthInfo(String username, String password, String userProperty, String passwordProperty) {
-		if (Platform.isRunning()) {
-			try {
-				ISecurePreferences securePreferences = getSecurePreferences();
-				if (userProperty.equals(getKeyPrefix(AuthenticationType.REPOSITORY) + USERNAME)) {
-					this.setProperty(userProperty, username);
-				} else {
-					securePreferences.put(userProperty, username, false);
-				}
-				securePreferences.put(passwordProperty, password, true);
-			} catch (StorageException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ID_PLUGIN, "Could not store authorization credentials", e)); //$NON-NLS-1$
-			}
-		} else {
-			synchronized (LOCK) {
-				Map<String, String> headlessCreds = credentials.get(getUrl());
-				if (headlessCreds == null) {
-					headlessCreds = new HashMap<String, String>();
-					credentials.put(getUrl(), headlessCreds);
-				}
-				headlessCreds.put(userProperty, username);
-				headlessCreds.put(passwordProperty, password);
-			}
-		}
-	}
-
 	public void addChangeListener(PropertyChangeListener listener) {
 		propertyChangeListeners.add(listener);
 	}
 
-	public void flushAuthenticationCredentials() {
-		synchronized (this) {
-			transientProperties.clear();
-			isCachedUserName = false;
-		}
-
-		synchronized (LOCK) {
-			if (Platform.isRunning()) {
-				ISecurePreferences securePreferences = getSecurePreferences();
-				securePreferences.removeNode();
-				this.setProperty(AuthenticationType.REPOSITORY + USERNAME, ""); //$NON-NLS-1$
-			} else {
-				Map<String, String> headlessCreds = credentials.get(getUrl());
-				if (headlessCreds != null) {
-					headlessCreds.clear();
-				}
-			}
-		}
+	public void clearCredentials() {
+		getCredentialsStore().clear();
 	}
 
-	@SuppressWarnings("unchecked")
-	private String getAuthInfo(String property) {
-		if (Platform.isRunning()) {
-			String propertyValue = null;
-			if (property.equals(getKeyPrefix(AuthenticationType.REPOSITORY) + USERNAME)) {
-				propertyValue = this.getProperty(property);
-			} else {
-				try {
-					ISecurePreferences securePreferences = getSecurePreferences();
-					propertyValue = securePreferences.get(property, null);
-				} catch (StorageException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, ID_PLUGIN,
-							"Could not retrieve authorization credentials", e)); //$NON-NLS-1$
-				}
-			}
-			return propertyValue;
-		} else {
-			synchronized (LOCK) {
-				Map<String, String> headlessCreds = credentials.get(getUrl());
-				if (headlessCreds == null) {
-					headlessCreds = new HashMap<String, String>();
-					credentials.put(getUrl(), headlessCreds);
-				}
-				return headlessCreds.get(property);
-			}
-		}
-	}
+	public <T extends AuthenticationCredentials> T getCredentials(AuthenticationType authType, Class<T> credentialsKind) {
+		String prefix = getKeyPrefix(authType);
 
-	/**
-	 * Returns the credentials for an authentication type.
-	 * 
-	 * @param authType
-	 *            the type of authentication
-	 * @return null, if no credentials are set for <code>authType</code>
-	 * @since 3.0
-	 */
-	public synchronized AuthenticationCredentials getCredentials(AuthenticationType authType) {
-		String key = getKeyPrefix(authType);
-
-		String enabled = getProperty(key + ENABLED);
+		String enabled = getProperty(prefix + ENABLED);
 		if (enabled == null || "true".equals(enabled)) { //$NON-NLS-1$
-			String userName = getAuthInfo(key + USERNAME);
-			String password;
-
-			String savePassword = getProperty(key + SAVE_PASSWORD);
-			if (savePassword != null && "true".equals(savePassword)) { //$NON-NLS-1$
-				password = getAuthInfo(key + PASSWORD);
-			} else {
-				password = transientProperties.get(key + PASSWORD);
+			try {
+				return CredentialsFactory.create(credentialsKind, getCredentialsStore(), prefix);
+			} catch (StorageException e) {
+				// FIXME
 			}
-
-			if (userName == null) {
-				userName = ""; //$NON-NLS-1$
-			}
-			if (password == null) {
-				password = ""; //$NON-NLS-1$
-			}
-
-			if (enabled == null && userName.length() == 0) {
-				// API30: legacy support for versions prior to 2.2 that did not set the enable flag, remove for 3.0
-				return null;
-			}
-
-			return new UsernamePasswordCredentials(userName, password);
-		} else {
-			return null;
 		}
+		return null;
+	}
+
+	public ICredentialsStore getCredentialsStore() {
+		if (credentialsStore == null) {
+			return getService().getCredentialsStore(getId());
+		}
+		return credentialsStore;
+	}
+
+	public String getId() {
+		String id = getProperty(PROPERTY_ID);
+		if (id == null) {
+			throw new IllegalStateException("Repository ID is not set"); //$NON-NLS-1$
+		}
+		return id;
 	}
 
 	public Map<String, String> getProperties() {
@@ -302,10 +179,8 @@ public class RepositoryLocation extends PlatformObject {
 		return value != null && "true".equals(value); //$NON-NLS-1$
 	}
 
-	private ISecurePreferences getSecurePreferences() {
-		ISecurePreferences securePreferences = SecurePreferencesFactory.getDefault().node(ID_PLUGIN);
-		securePreferences = securePreferences.node(EncodingUtils.encodeSlashes(getUrl()));
-		return securePreferences;
+	public ILocationService getService() {
+		return service;
 	}
 
 	/**
@@ -313,6 +188,10 @@ public class RepositoryLocation extends PlatformObject {
 	 */
 	public IStatus getStatus() {
 		return errorStatus;
+	}
+
+	public String getUrl() {
+		return getProperty(PROPERTY_URL);
 	}
 
 	/**
@@ -328,6 +207,21 @@ public class RepositoryLocation extends PlatformObject {
 		return cachedUserName;
 	}
 
+	private void handlePropertyChange(String key, Object old, Object value) {
+		if (PROPERTY_ID.equals(key)) {
+			// FIXME migrate credentials
+		}
+
+		PropertyChangeEvent event = new PropertyChangeEvent(this, key, old, value);
+		for (PropertyChangeListener listener : propertyChangeListeners) {
+			listener.propertyChange(event);
+		}
+	}
+
+	private boolean hasChanged(Object oldValue, Object newValue) {
+		return oldValue != null && !oldValue.equals(newValue) || oldValue == null && newValue != null;
+	}
+
 	public boolean hasProperty(String name) {
 		String value = getProperty(name);
 		return value != null && value.trim().length() > 0;
@@ -337,11 +231,8 @@ public class RepositoryLocation extends PlatformObject {
 		return Boolean.parseBoolean(getProperty(PROPERTY_OFFLINE));
 	}
 
-	private void notifyChangeListeners(String key, Object old, Object value) {
-		PropertyChangeEvent event = new PropertyChangeEvent(this, key, old, value);
-		for (PropertyChangeListener listener : propertyChangeListeners) {
-			listener.propertyChange(event);
-		}
+	public boolean isWorkingCopy() {
+		return workingCopy;
 	}
 
 	/**
@@ -355,47 +246,23 @@ public class RepositoryLocation extends PlatformObject {
 		setProperty(key, null);
 	}
 
-	/**
-	 * Sets the credentials for <code>authType</code>.
-	 * 
-	 * @param authType
-	 *            the type of authentication
-	 * @param credentials
-	 *            the credentials, if null, the credentials for <code>authType</code> will be flushed
-	 * @param savePassword
-	 *            if true, the password will be persisted in the platform key ring; otherwise it will be stored in
-	 *            memory only
-	 */
-	public synchronized void setCredentials(AuthenticationType authType, UsernamePasswordCredentials credentials,
-			boolean savePassword) {
-		String key = getKeyPrefix(authType);
-
-		setProperty(key + SAVE_PASSWORD, String.valueOf(savePassword));
+	public <T extends AuthenticationCredentials> void setCredentials(AuthenticationType authType, T credentials) {
+		String prefix = getKeyPrefix(authType);
 
 		if (credentials == null) {
-			setProperty(key + ENABLED, String.valueOf(false));
-			transientProperties.remove(key + PASSWORD);
-			addAuthInfo("", "", key + USERNAME, key + PASSWORD); //$NON-NLS-1$ //$NON-NLS-2$
+			setProperty(prefix + ENABLED, String.valueOf(false));
 		} else {
-			setProperty(key + ENABLED, String.valueOf(true));
-			if (savePassword) {
-				addAuthInfo(credentials.getUserName(), credentials.getPassword(), key + USERNAME, key + PASSWORD);
-				transientProperties.remove(key + PASSWORD);
-			} else {
-				addAuthInfo(credentials.getUserName(), "", key + USERNAME, key + PASSWORD); //$NON-NLS-1$
-				transientProperties.put(key + PASSWORD, credentials.getPassword());
+			setProperty(prefix + ENABLED, String.valueOf(true));
+			try {
+				credentials.save(getCredentialsStore(), prefix);
+			} catch (StorageException e) {
+				// FIXME
 			}
 		}
+	}
 
-		if (authType == AuthenticationType.REPOSITORY) {
-			if (credentials == null) {
-				this.cachedUserName = null;
-				this.isCachedUserName = false;
-			} else {
-				this.cachedUserName = credentials.getUserName();
-				this.isCachedUserName = true;
-			}
-		}
+	public void setCredentialsStore(ICredentialsStore credentialsStore) {
+		this.credentialsStore = credentialsStore;
 	}
 
 	public void setLabel(String label) {
@@ -411,12 +278,12 @@ public class RepositoryLocation extends PlatformObject {
 		String oldValue = this.properties.get(key);
 		if (hasChanged(oldValue, newValue)) {
 			this.properties.put(key.intern(), (newValue != null) ? newValue.intern() : null);
-			notifyChangeListeners(key, oldValue, newValue);
+			handlePropertyChange(key, oldValue, newValue);
 		}
 	}
 
-	private boolean hasChanged(Object oldValue, Object newValue) {
-		return oldValue != null && !oldValue.equals(newValue) || oldValue == null && newValue != null;
+	public void setService(ILocationService service) {
+		this.service = service;
 	}
 
 	public void setStatus(IStatus errorStatus) {
@@ -426,14 +293,6 @@ public class RepositoryLocation extends PlatformObject {
 	@Override
 	public String toString() {
 		return getRepositoryLabel();
-	}
-
-	public ILocationService getService() {
-		return service;
-	}
-
-	public void setService(ILocationService service) {
-		this.service = service;
 	}
 
 }
