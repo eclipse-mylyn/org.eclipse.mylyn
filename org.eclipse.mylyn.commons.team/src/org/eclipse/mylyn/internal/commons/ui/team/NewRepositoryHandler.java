@@ -19,7 +19,7 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.ValidatableWizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -79,7 +79,7 @@ public class NewRepositoryHandler extends AbstractHandler implements IHandler {
 		wizard.setForcePreviousAndNextButtons(true);
 
 		Shell parent = workbenchWindow.getShell();
-		WizardDialog dialog = new WizardDialog(parent, wizard);
+		ValidatableWizardDialog dialog = new ValidatableWizardDialog(parent, wizard);
 		dialog.create();
 		dialog.getShell().setSize(Math.max(SIZING_WIZARD_WIDTH, dialog.getShell().getSize().x), SIZING_WIZARD_HEIGHT);
 		//PlatformUI.getWorkbench().getHelpSystem().setHelp(dialog.getShell(), IWorkbenchHelpContextIds.NEW_WIZARD);

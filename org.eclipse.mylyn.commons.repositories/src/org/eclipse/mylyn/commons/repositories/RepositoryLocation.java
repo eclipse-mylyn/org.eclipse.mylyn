@@ -295,4 +295,15 @@ public class RepositoryLocation extends PlatformObject {
 		return getRepositoryLabel();
 	}
 
+	public void apply(RepositoryLocation location) {
+		HashSet<String> removed = new HashSet<String>(properties.keySet());
+		removed.removeAll(location.properties.keySet());
+		for (Map.Entry<String, String> entry : location.properties.entrySet()) {
+			setProperty(entry.getKey(), entry.getValue());
+		}
+		for (String key : removed) {
+			setProperty(key, null);
+		}
+	}
+
 }

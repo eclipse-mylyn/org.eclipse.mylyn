@@ -43,7 +43,6 @@ import org.eclipse.mylyn.internal.commons.ui.SectionComposite;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
@@ -72,6 +71,8 @@ public class RepositoryLocationPart {
 
 	private class UsernamePasswordListener implements ModifyListener, SelectionListener {
 
+		private boolean updating;
+
 		private final AuthenticationType authenticationType;
 
 		private final Button enabledButton;
@@ -95,6 +96,9 @@ public class RepositoryLocationPart {
 		}
 
 		private void apply() {
+			if (updating) {
+				return;
+			}
 			if (isEnabled()) {
 				UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(userText.getText(),
 						passwordText.getText());
@@ -121,22 +125,26 @@ public class RepositoryLocationPart {
 
 		public void modifyText(ModifyEvent event) {
 			apply();
-
 		}
 
 		private void restore() {
-			UsernamePasswordCredentials credentials = getWorkingCopy().getCredentials(authenticationType,
-					UsernamePasswordCredentials.class);
-			if (credentials != null) {
-				enabledButton.setSelection(!isEnablementReversed());
-				userText.setText(credentials.getUserName());
-				passwordText.setText(credentials.getUserName());
-				savePasswordButton.setSelection(true);
-			} else {
-				enabledButton.setSelection(isEnablementReversed());
-				userText.setText("");
-				passwordText.setText("");
-				savePasswordButton.setSelection(true);
+			try {
+				updating = true;
+				UsernamePasswordCredentials credentials = getWorkingCopy().getCredentials(authenticationType,
+						UsernamePasswordCredentials.class);
+				if (credentials != null) {
+					enabledButton.setSelection(!isEnablementReversed());
+					userText.setText(credentials.getUserName());
+					passwordText.setText(credentials.getUserName());
+					savePasswordButton.setSelection(true);
+				} else {
+					enabledButton.setSelection(isEnablementReversed());
+					userText.setText("");
+					passwordText.setText("");
+					savePasswordButton.setSelection(true);
+				}
+			} finally {
+				updating = false;
 			}
 			updateWidgetEnablement();
 		}
@@ -184,6 +192,7 @@ public class RepositoryLocationPart {
 		this.workingCopy = workingCopy;
 		setNeedsProxy(false);
 		setNeedsHttpAuth(false);
+		setNeedsValidation(true);
 	}
 
 	protected void applyValidatorResult(RepositoryValidator validator) {
@@ -251,7 +260,7 @@ public class RepositoryLocationPart {
 	 * @see IWizardContainer#updateButtons()
 	 */
 	public boolean canValidate() {
-		return false;
+		return getValidator() != null;
 	}
 
 	public Control createContents(Composite parent) {
@@ -286,14 +295,14 @@ public class RepositoryLocationPart {
 		}
 		createSections(sectionComposite);
 
-		Button validateButton = new Button(composite, SWT.PUSH);
-		validateButton.setText("Validate");
-		validateButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				validate();
-			}
-		});
+//		Button validateButton = new Button(composite, SWT.PUSH);
+//		validateButton.setText("Validate");
+//		validateButton.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				validate();
+//			}
+//		});
 
 		return composite;
 	}
@@ -436,7 +445,7 @@ public class RepositoryLocationPart {
 	/**
 	 * Validate settings provided by the {@link #getValidator() validator}, typically the server settings.
 	 */
-	protected void validate() {
+	public void validate() {
 		final RepositoryValidator validator = getValidator();
 		if (validator == null) {
 			return;

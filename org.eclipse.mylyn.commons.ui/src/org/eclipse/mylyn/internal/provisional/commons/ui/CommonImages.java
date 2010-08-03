@@ -257,6 +257,8 @@ public class CommonImages {
 
 	public static final ImageDescriptor SAVE = create(T_TOOL, "save.gif"); //$NON-NLS-1$;
 
+	public static final ImageDescriptor VALIDATE = create(T_OBJ, "resource_obj.gif"); //$NON-NLS-1$
+
 	private static ImageDescriptor create(String prefix, String name) {
 		try {
 			return ImageDescriptor.createFromURL(makeIconFileURL(prefix, name));

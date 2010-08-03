@@ -21,12 +21,13 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
 import org.eclipse.mylyn.internal.commons.ui.team.IPartContainer;
 import org.eclipse.mylyn.internal.commons.ui.team.RepositoryLocationPart;
+import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.IValidatable;
 import org.eclipse.swt.widgets.Composite;
 
 /**
  * @author Steffen Pingel
  */
-public class RepositoryWizardPage extends WizardPage implements IPartContainer, IAdaptable {
+public class RepositoryWizardPage extends WizardPage implements IPartContainer, IAdaptable, IValidatable {
 
 	private RepositoryLocationPart part;
 
@@ -89,6 +90,18 @@ public class RepositoryWizardPage extends WizardPage implements IPartContainer, 
 			return this;
 		}
 		return null;
+	}
+
+	public boolean canValidate() {
+		return part.canValidate();
+	}
+
+	public boolean needsValidation() {
+		return part.needsValidation();
+	}
+
+	public void validate() {
+		part.validate();
 	}
 
 }
