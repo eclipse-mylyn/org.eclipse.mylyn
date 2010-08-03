@@ -48,7 +48,7 @@ public abstract class HttpOperation<T> {
 
 		for (int attempt = 0; attempt < 2; attempt++) {
 			// force authentication
-			if (!needsAuthentication()) {
+			if (needsAuthentication()) {
 				client.authenticate(monitor);
 			}
 

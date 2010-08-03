@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.builds.core.util;
 
+import java.util.EnumSet;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -24,12 +26,25 @@ public class ProgressUtil {
 
 	private static class NullOperationMonitor extends NullProgressMonitor implements IOperationMonitor {
 
+		private EnumSet<OperationFlag> flags;
+
+		public synchronized void addFlag(OperationFlag flag) {
+			if (flags == null) {
+				flags = EnumSet.of(flag);
+			} else {
+				flags.add(flag);
+			}
+		}
+
 		public void clearBlocked() {
 			// ignore			
 		}
 
-		public void setBlocked(IStatus reason) {
-			// ignore			
+		public synchronized boolean hasFlag(OperationFlag flag) {
+			if (flags != null) {
+				return flags.contains(flag);
+			}
+			return false;
 		}
 
 		public IOperationMonitor newChild(int totalWork) {
@@ -40,6 +55,16 @@ public class ProgressUtil {
 			return this;
 		}
 
+		public synchronized void removeFlag(OperationFlag flag) {
+			if (flags != null) {
+				flags.remove(flag);
+			}
+		}
+
+		public void setBlocked(IStatus reason) {
+			// ignore			
+		}
+
 		public IOperationMonitor setWorkRemaining(int workRemaining) {
 			return this;
 		}
@@ -48,14 +73,30 @@ public class ProgressUtil {
 
 	private static class OperationMonitor implements IOperationMonitor {
 
+		private EnumSet<OperationFlag> flags;
+
 		private final SubMonitor monitor;
 
-		protected OperationMonitor(IProgressMonitor monitor) {
+		private final IOperationMonitor root;
+
+		protected OperationMonitor(IOperationMonitor root, IProgressMonitor monitor) {
+			this.root = root;
 			this.monitor = SubMonitor.convert(monitor);
 		}
 
-		protected OperationMonitor(IProgressMonitor monitor, String taskName, int work) {
+		protected OperationMonitor(IOperationMonitor root, IProgressMonitor monitor, String taskName, int work) {
+			this.root = root;
 			this.monitor = SubMonitor.convert(monitor, taskName, work);
+		}
+
+		public synchronized void addFlag(OperationFlag flag) {
+			if (root != null) {
+				root.addFlag(flag);
+			} else if (flags == null) {
+				flags = EnumSet.of(flag);
+			} else {
+				flags.add(flag);
+			}
 		}
 
 		public void beginTask(String name, int totalWork) {
@@ -75,6 +116,15 @@ public class ProgressUtil {
 			return monitor.equals(obj);
 		}
 
+		public synchronized boolean hasFlag(OperationFlag flag) {
+			if (root != null) {
+				return root.hasFlag(flag);
+			} else if (flags != null) {
+				return flags.contains(flag);
+			}
+			return false;
+		}
+
 		@Override
 		public int hashCode() {
 			return monitor.hashCode();
@@ -89,11 +139,19 @@ public class ProgressUtil {
 		}
 
 		public IOperationMonitor newChild(int totalWork) {
-			return new OperationMonitor(monitor.newChild(totalWork));
+			return new OperationMonitor(root, monitor.newChild(totalWork));
 		}
 
 		public IOperationMonitor newChild(int totalWork, int suppressFlags) {
-			return new OperationMonitor(monitor.newChild(totalWork, suppressFlags));
+			return new OperationMonitor(root, monitor.newChild(totalWork, suppressFlags));
+		}
+
+		public synchronized void removeFlag(OperationFlag flag) {
+			if (root != null) {
+				root.removeFlag(flag);
+			} else if (flags != null) {
+				flags.remove(flag);
+			}
 		}
 
 		public void setBlocked(IStatus reason) {
@@ -143,7 +201,7 @@ public class ProgressUtil {
 		if (monitor == null) {
 			return new NullOperationMonitor();
 		}
-		return new OperationMonitor(monitor, taskName, work);
+		return new OperationMonitor(null, monitor, taskName, work);
 	}
 
 }

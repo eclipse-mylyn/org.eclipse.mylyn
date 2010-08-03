@@ -17,7 +17,6 @@ import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.auth.DigestScheme;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -54,10 +53,6 @@ public class CommonHttpClient {
 
 	private final AbstractWebLocation location;
 
-	private final AuthScope authScope;
-
-	private HostConfiguration hostConfiguration;
-
 	public CommonHttpClient(AbstractWebLocation location) {
 		this(location, createHttpClient(DEFAULT_USER_AGENT));
 	}
@@ -65,8 +60,6 @@ public class CommonHttpClient {
 	public CommonHttpClient(AbstractWebLocation location, HttpClient client) {
 		this.location = location;
 		this.httpClient = createHttpClient(DEFAULT_USER_AGENT);
-		this.authScope = new AuthScope(WebUtil.getHost(location.getUrl()), WebUtil.getPort(location.getUrl()), null,
-				AuthScope.ANY_SCHEME);
 	}
 
 	public HttpClient getHttpClient() {
@@ -83,10 +76,7 @@ public class CommonHttpClient {
 	}
 
 	public synchronized HostConfiguration getHostConfiguration(IOperationMonitor monitor) {
-		if (hostConfiguration == null) {
-			hostConfiguration = WebUtil.createHostConfiguration(httpClient, location, monitor);
-		}
-		return hostConfiguration;
+		return WebUtil.createHostConfiguration(httpClient, location, monitor);
 	}
 
 	protected void authenticate(IOperationMonitor monitor) throws IOException {
@@ -106,12 +96,15 @@ public class CommonHttpClient {
 		try {
 			location.requestCredentials(authenticationType, null, monitor);
 		} catch (UnsupportedRequestException e) {
-			IOException ioe = new IOException();
+			IOException ioe = new IOException(HttpStatus.getStatusText(code));
+			ioe.initCause(e);
+			throw ioe;
+		} catch (UnsupportedOperationException e) {
+			IOException ioe = new IOException(HttpStatus.getStatusText(code));
 			ioe.initCause(e);
 			throw ioe;
 		}
 
-		hostConfiguration = null;
 		return true;
 	}
 
