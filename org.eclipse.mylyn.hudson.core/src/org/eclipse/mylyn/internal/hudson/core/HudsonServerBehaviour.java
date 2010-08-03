@@ -25,6 +25,7 @@ import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
 import org.eclipse.mylyn.internal.builds.core.util.RepositoryWebLocation;
+import org.eclipse.mylyn.internal.hudson.core.client.HudsonConfigurationCache;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonException;
 import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBallColor;
@@ -44,6 +45,10 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 
 	public HudsonServerBehaviour(RepositoryLocation location) {
 		this.client = new RestfulHudsonClient(new RepositoryWebLocation(location));
+	}
+
+	public HudsonConfigurationCache getCache() {
+		return client.getCache();
 	}
 
 	@Override
@@ -119,20 +124,24 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 	}
 
 	@Override
-	public IStatus validate(IOperationMonitor monitor) throws CoreException {
-		try {
-			return client.validate(monitor);
-		} catch (HudsonException e) {
-			throw HudsonCorePlugin.toCoreException(e);
-		}
-	}
-
-	@Override
 	public void runBuild(IBuildPlanData plan, IOperationMonitor monitor) throws CoreException {
 		try {
 			HudsonModelJob job = new HudsonModelJob();
 			job.setUrl(plan.getUrl());
 			client.runBuild(job, monitor);
+		} catch (HudsonException e) {
+			throw HudsonCorePlugin.toCoreException(e);
+		}
+	}
+
+	public void setCache(HudsonConfigurationCache cache) {
+		client.setCache(cache);
+	}
+
+	@Override
+	public IStatus validate(IOperationMonitor monitor) throws CoreException {
+		try {
+			return client.validate(monitor);
 		} catch (HudsonException e) {
 			throw HudsonCorePlugin.toCoreException(e);
 		}

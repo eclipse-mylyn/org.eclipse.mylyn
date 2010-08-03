@@ -49,6 +49,8 @@ public class RestfulHudsonClient {
 
 	private static final String URL_API = "/api/xml"; //$NON-NLS-1$
 
+	private HudsonConfigurationCache cache;
+
 	private final CommonHttpClient client;
 
 	public RestfulHudsonClient(AbstractWebLocation location) {
@@ -60,6 +62,14 @@ public class RestfulHudsonClient {
 		if (statusCode != HttpStatus.SC_OK) {
 			throw new HudsonException(NLS.bind("Validation failed: {0}", HttpStatus.getStatusText(statusCode)));
 		}
+	}
+
+	public HudsonConfigurationCache getCache() {
+		return cache;
+	}
+
+	private DocumentBuilder getDocumentBuilder() throws ParserConfigurationException {
+		return DocumentBuilderFactory.newInstance().newDocumentBuilder();
 	}
 
 	public List<HudsonModelJob> getJobs(final IOperationMonitor monitor) throws HudsonException {
@@ -99,8 +109,27 @@ public class RestfulHudsonClient {
 		}
 	}
 
-	private DocumentBuilder getDocumentBuilder() throws ParserConfigurationException {
-		return DocumentBuilderFactory.newInstance().newDocumentBuilder();
+	public void runBuild(final HudsonModelJob job, final IOperationMonitor monitor) throws HudsonException {
+		int response = new HudsonOperation<Integer>(client) {
+			@Override
+			public Integer execute() throws IOException {
+				CommonHttpMethod method = createGetMethod(job.getUrl() + "/build");
+				try {
+					return execute(method, monitor);
+				} finally {
+					method.releaseConnection(monitor);
+				}
+			}
+		}.run();
+		if (response == HttpStatus.SC_OK) {
+			return;
+		}
+		throw new HudsonException(NLS.bind("Unexpected return code {0}: {1}", response, HttpStatus
+				.getStatusText(response)));
+	}
+
+	public void setCache(HudsonConfigurationCache cache) {
+		this.cache = cache;
 	}
 
 	private <T> T unmarshal(Node node, Class<T> clazz) throws JAXBException {
@@ -125,25 +154,6 @@ public class RestfulHudsonClient {
 		}.run();
 		if (response == HttpStatus.SC_OK) {
 			return Status.OK_STATUS;
-		}
-		throw new HudsonException(NLS.bind("Unexpected return code {0}: {1}", response, HttpStatus
-				.getStatusText(response)));
-	}
-
-	public void runBuild(final HudsonModelJob job, final IOperationMonitor monitor) throws HudsonException {
-		int response = new HudsonOperation<Integer>(client) {
-			@Override
-			public Integer execute() throws IOException {
-				CommonHttpMethod method = createGetMethod(job.getUrl() + "/build");
-				try {
-					return execute(method, monitor);
-				} finally {
-					method.releaseConnection(monitor);
-				}
-			}
-		}.run();
-		if (response == HttpStatus.SC_OK) {
-			return;
 		}
 		throw new HudsonException(NLS.bind("Unexpected return code {0}: {1}", response, HttpStatus
 				.getStatusText(response)));
