@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildServer.java,v 1.14 2010/07/14 18:59:19 spingel Exp $
+ * $Id: BuildServer.java,v 1.15 2010/08/03 00:48:37 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -20,6 +20,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -780,6 +781,25 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 		newServer.setLoader(getLoader());
 		newServer.original = this;
 		return newServer;
+	}
+
+	public void applyToOriginal() {
+		if (original == null) {
+			throw new IllegalStateException();
+		}
+		EcoreUtil.Copier copier = new EcoreUtil.Copier() {
+			@Override
+			protected EObject createCopy(EObject source) {
+				return original;
+			};
+
+			@Override
+			protected void copyContainment(EReference eReference, EObject eObject, EObject copyEObject) {
+				// do nothing
+			}
+		};
+		copier.copy(this);
+		copier.copyReferences();
 	}
 
 	public IBuildPlanWorkingCopy createBuildPlan() {
