@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildServer.java,v 1.15 2010/08/03 00:48:37 spingel Exp $
+ * $Id: BuildServer.java,v 1.16 2010/08/03 18:09:28 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -799,7 +799,6 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 			}
 		};
 		copier.copy(this);
-		copier.copyReferences();
 	}
 
 	public IBuildPlanWorkingCopy createBuildPlan() {
