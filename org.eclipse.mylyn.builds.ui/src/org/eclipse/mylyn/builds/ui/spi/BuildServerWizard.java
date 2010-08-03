@@ -63,6 +63,7 @@ public class BuildServerWizard extends Wizard implements INewWizard {
 	@Override
 	public boolean performFinish() {
 		((BuildServer) getModel()).applyToOriginal();
+		original.getLocation().apply(getModel().getLocation());
 		if (((BuildServer) original).eContainer() != BuildsUiInternal.getModel()) {
 			BuildsUiInternal.getModel().getServers().add(getModel());
 		}
