@@ -17,6 +17,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.StyledString.Styler;
 import org.eclipse.mylyn.builds.core.BuildState;
+import org.eclipse.mylyn.builds.core.BuildStatus;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
@@ -55,16 +56,15 @@ public class BuildLabelProvider extends LabelProvider implements IStyledLabelPro
 	}
 
 	private ImageDescriptor getImageDescriptor(IBuildPlan element) {
-		if (element.getHealth() >= 0 && element.getHealth() <= 20) {
-			return BuildImages.HEALTH_00;
-		} else if (element.getHealth() > 20 && element.getHealth() <= 40) {
-			return BuildImages.HEALTH_20;
-		} else if (element.getHealth() > 40 && element.getHealth() <= 60) {
-			return BuildImages.HEALTH_40;
-		} else if (element.getHealth() > 60 && element.getHealth() <= 80) {
-			return BuildImages.HEALTH_60;
-		} else if (element.getHealth() > 80) {
-			return BuildImages.HEALTH_80;
+		BuildStatus status = (element).getStatus();
+		if (status == BuildStatus.SUCCESS) {
+			return BuildImages.STATUS_PASSED;
+		} else if (status == BuildStatus.UNSTABLE) {
+			return BuildImages.STATUS_UNSTABLE;
+		} else if (status == BuildStatus.FAILED) {
+			return BuildImages.STATUS_FAILED;
+		} else if (status == BuildStatus.DISABLED) {
+			return BuildImages.STATUS_DISABLED;
 		}
 		return CommonImages.BLANK;
 	}

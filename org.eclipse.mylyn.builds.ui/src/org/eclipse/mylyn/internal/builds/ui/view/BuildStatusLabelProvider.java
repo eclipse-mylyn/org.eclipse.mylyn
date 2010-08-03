@@ -11,8 +11,8 @@
 
 package org.eclipse.mylyn.internal.builds.ui.view;
 
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.mylyn.builds.core.BuildStatus;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.internal.builds.ui.BuildImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
@@ -26,19 +26,28 @@ public class BuildStatusLabelProvider extends ColumnLabelProvider {
 	@Override
 	public Image getImage(Object element) {
 		if (element instanceof IBuildPlan) {
-			BuildStatus status = ((IBuildPlan) element).getStatus();
-			if (status == BuildStatus.SUCCESS) {
-				return CommonImages.getImage(BuildImages.STATUS_PASSED);
-			} else if (status == BuildStatus.UNSTABLE) {
-				return CommonImages.getImage(BuildImages.STATUS_UNSTABLE);
-			} else if (status == BuildStatus.FAILED) {
-				return CommonImages.getImage(BuildImages.STATUS_FAILED);
-			} else if (status == BuildStatus.DISABLED) {
-				return CommonImages.getImage(BuildImages.STATUS_DISABLED);
+			ImageDescriptor descriptor = getImageDescriptor((IBuildPlan) element);
+			if (descriptor != null) {
+				return CommonImages.getImage(descriptor);
 			}
 		}
 		return null;
 
+	}
+
+	private ImageDescriptor getImageDescriptor(IBuildPlan element) {
+		if (element.getHealth() >= 0 && element.getHealth() <= 20) {
+			return BuildImages.HEALTH_00;
+		} else if (element.getHealth() > 20 && element.getHealth() <= 40) {
+			return BuildImages.HEALTH_20;
+		} else if (element.getHealth() > 40 && element.getHealth() <= 60) {
+			return BuildImages.HEALTH_40;
+		} else if (element.getHealth() > 60 && element.getHealth() <= 80) {
+			return BuildImages.HEALTH_60;
+		} else if (element.getHealth() > 80) {
+			return BuildImages.HEALTH_80;
+		}
+		return null;
 	}
 
 	@Override
