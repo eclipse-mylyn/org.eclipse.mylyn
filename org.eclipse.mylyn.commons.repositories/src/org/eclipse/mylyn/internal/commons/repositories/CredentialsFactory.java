@@ -17,6 +17,8 @@ import org.eclipse.mylyn.commons.repositories.auth.ICredentialsStore;
 import org.eclipse.mylyn.commons.repositories.auth.UsernamePasswordCredentials;
 
 /**
+ * Simple factory that creates {@link AuthenticationCredentials} objects.
+ * 
  * @author Steffen Pingel
  */
 public class CredentialsFactory {
