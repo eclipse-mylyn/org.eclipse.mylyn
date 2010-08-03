@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildServer.java,v 1.16 2010/08/03 18:09:28 spingel Exp $
+ * $Id: BuildServer.java,v 1.17 2010/08/03 20:31:32 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -18,6 +18,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -792,6 +793,14 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 			protected EObject createCopy(EObject source) {
 				return original;
 			};
+
+			@Override
+			protected void copyAttribute(EAttribute eAttribute, EObject eObject, EObject copyEObject) {
+				if (eAttribute.getFeatureID() == BuildPackage.BUILD_SERVER__LOCATION) {
+					return;
+				}
+				super.copyAttribute(eAttribute, eObject, copyEObject);
+			}
 
 			@Override
 			protected void copyContainment(EReference eReference, EObject eObject, EObject copyEObject) {
