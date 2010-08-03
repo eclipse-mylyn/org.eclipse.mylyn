@@ -26,6 +26,7 @@ import org.eclipse.mylyn.commons.repositories.auth.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.repositories.auth.AuthenticationType;
 import org.eclipse.mylyn.commons.repositories.auth.ICredentialsStore;
 import org.eclipse.mylyn.internal.commons.repositories.CredentialsFactory;
+import org.eclipse.mylyn.internal.commons.repositories.InMemoryCredentialsStore;
 import org.eclipse.mylyn.internal.commons.repositories.LocationService;
 
 /**
@@ -296,6 +297,7 @@ public class RepositoryLocation extends PlatformObject {
 	}
 
 	public void apply(RepositoryLocation location) {
+		// merge properties
 		HashSet<String> removed = new HashSet<String>(properties.keySet());
 		removed.removeAll(location.properties.keySet());
 		for (Map.Entry<String, String> entry : location.properties.entrySet()) {
@@ -303,6 +305,14 @@ public class RepositoryLocation extends PlatformObject {
 		}
 		for (String key : removed) {
 			setProperty(key, null);
+		}
+		// merge keystore contents
+		if (location.getCredentialsStore() instanceof InMemoryCredentialsStore) {
+			try {
+				((InMemoryCredentialsStore) location.getCredentialsStore()).copyTo(getCredentialsStore());
+			} catch (StorageException e) {
+				// FIXME
+			}
 		}
 	}
 

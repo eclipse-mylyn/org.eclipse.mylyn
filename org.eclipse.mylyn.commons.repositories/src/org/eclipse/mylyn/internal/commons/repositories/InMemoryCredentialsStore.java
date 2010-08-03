@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.commons.repositories;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.equinox.security.storage.StorageException;
@@ -69,6 +70,16 @@ public class InMemoryCredentialsStore implements ICredentialsStore {
 
 	public void remove(String key) {
 		store.remove(key);
+	}
+
+	public void copyTo(ICredentialsStore target) throws StorageException {
+		for (Map.Entry<String, Object> entry : store.entrySet()) {
+			if (entry.getValue() instanceof String) {
+				target.put(entry.getKey(), (String) entry.getValue(), true);
+			} else if (entry.getValue() instanceof byte[]) {
+				target.putByteArray(entry.getKey(), (byte[]) entry.getValue(), true);
+			}
+		}
 	}
 
 }
