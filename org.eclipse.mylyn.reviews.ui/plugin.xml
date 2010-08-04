@@ -12,13 +12,6 @@
 
 <plugin>
    <extension
-         point="org.eclipse.mylyn.tasks.ui.editors">
-      <pageFactory
-            class="org.eclipse.mylyn.reviews.ui.editors.CreateReviewTaskEditorPageFactory"
-            id="org.eclipse.mylyn.reviews.ui.pageFactory">
-      </pageFactory>
-   </extension>
-   <extension
          point="org.eclipse.ui.editors">
       <editor
             class="org.eclipse.mylyn.reviews.ui.editors.ReviewEditor"
@@ -44,14 +37,13 @@
    </extension>
    <extension
          point="org.eclipse.mylyn.tasks.ui.taskEditorPageContribution">
-      <repositoryPart
-            class="org.eclipse.mylyn.reviews.ui.editors.ReviewTaskEditorPart"
-            id="org.eclipse.mylyn.reviews.ui.reviewPart"
-            path="attachments">
-      </repositoryPart>
       <partAdvisor
       		class="org.eclipse.mylyn.reviews.ui.editors.ReviewTaskEditorPartAdvisor"
             id="org.eclipse.mylyn.reviews.ui.reviewPart">
+      </partAdvisor>
+      <partAdvisor
+      		class="org.eclipse.mylyn.reviews.ui.editors.ReviewSummaryPartConfigurer"
+            id="org.eclipse.mylyn.reviews.ui.reviewSummaryPart">
       </partAdvisor>
    </extension>
 

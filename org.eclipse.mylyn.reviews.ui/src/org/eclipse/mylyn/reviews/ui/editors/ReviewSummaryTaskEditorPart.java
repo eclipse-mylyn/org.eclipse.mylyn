@@ -20,25 +20,19 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.reviews.core.ReviewSubTask;
 import org.eclipse.mylyn.reviews.core.ReviewsUtil;
 import org.eclipse.mylyn.reviews.ui.Images;
-import org.eclipse.mylyn.reviews.ui.wizard.CreateReviewWizard;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -70,19 +64,6 @@ public class ReviewSummaryTaskEditorPart extends AbstractTaskEditorPart {
 		reviewResults.getControl().setLayoutData(
 				new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		Button wizardButton = toolkit.createButton(reviewResultsComposite, "New Review", SWT.PUSH);
-		wizardButton.setImage(TasksUiImages.TASK_NEW_SUB.createImage());
-		wizardButton.addSelectionListener(new SelectionListener() {
-
-			public void widgetSelected(SelectionEvent e) {
-				CreateReviewWizard wizard=new CreateReviewWizard(getModel());
-				  WizardDialog dialog = new WizardDialog(parent.getShell(), wizard);
-				  dialog.create();
-				  dialog.open();
-				 }
-
-			public void widgetDefaultSelected(SelectionEvent e) {}
-		});
 		summarySection.setClient(reviewResultsComposite);
 	}
 

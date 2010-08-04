@@ -10,7 +10,10 @@
  *******************************************************************************/
 package org.eclipse.mylyn.reviews.ui;
 
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.reviews.core.ReviewDataManager;
+import org.eclipse.mylyn.reviews.core.ReviewDataStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -46,6 +49,14 @@ public class ReviewsUiPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+
+		 String DIRECTORY_METADATA = ".metadata"; //$NON-NLS-1$
+
+		String NAME_DATA_DIR = ".mylyn"; //$NON-NLS-1$
+String storeDir = ResourcesPlugin.getWorkspace().getRoot().getLocation().toString() + '/' + DIRECTORY_METADATA + '/'
++ NAME_DATA_DIR;
+		ReviewDataStore store = new ReviewDataStore(storeDir);
+		reviewDataManager = new ReviewDataManager(store);
 	}
 
 	/*
@@ -71,9 +82,6 @@ public class ReviewsUiPlugin extends AbstractUIPlugin {
 	}
 
 	public static ReviewDataManager getDataManager() {
-		if (reviewDataManager == null) {
-			reviewDataManager = new ReviewDataManager();
-		}
 		return reviewDataManager;
 	}
 

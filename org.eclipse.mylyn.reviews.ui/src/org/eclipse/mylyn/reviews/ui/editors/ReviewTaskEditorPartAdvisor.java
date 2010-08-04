@@ -1,14 +1,33 @@
 package org.eclipse.mylyn.reviews.ui.editors;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.reviews.core.ReviewConstants;
 import org.eclipse.mylyn.reviews.core.ReviewDataManager;
+import org.eclipse.mylyn.reviews.core.model.review.Review;
+import org.eclipse.mylyn.reviews.ui.Messages;
+import org.eclipse.mylyn.reviews.ui.ReviewCommentTaskAttachmentSource;
 import org.eclipse.mylyn.reviews.ui.ReviewsUiPlugin;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.mylyn.tasks.ui.editors.ITaskEditorPartDescriptorAdvisor;
@@ -18,7 +37,8 @@ public class ReviewTaskEditorPartAdvisor implements
 		ITaskEditorPartDescriptorAdvisor {
 
 	public boolean canCustomize(ITask task) {
-		boolean isReview = Boolean.parseBoolean(task.getAttribute(ReviewConstants.ATTR_REVIEW_FLAG));
+		boolean isReview = Boolean.parseBoolean(task
+				.getAttribute(ReviewConstants.ATTR_REVIEW_FLAG));
 		return isReview;
 	}
 
@@ -32,7 +52,7 @@ public class ReviewTaskEditorPartAdvisor implements
 		blockedPaths.add(AbstractTaskEditorPage.PATH_COMMENTS);
 		blockedPaths.add(AbstractTaskEditorPage.PATH_ATTACHMENTS);
 		blockedPaths.add(AbstractTaskEditorPage.PATH_PLANNING);
-		
+
 		return blockedPaths;
 	}
 
@@ -47,6 +67,70 @@ public class ReviewTaskEditorPartAdvisor implements
 			}
 		});
 		return parts;
+	}
+
+	public void taskMigration(ITask oldTask, ITask newTask) {
+		ReviewDataManager dataManager = ReviewsUiPlugin.getDataManager();
+		Review review = dataManager.getReviewData(oldTask).getReview();
+		dataManager.storeTask(newTask, review);
+	}
+
+	public void afterSubmit(ITask task) {
+		try {
+			Review review = ReviewsUiPlugin.getDataManager()
+					.getReviewData(task).getReview();
+
+			TaskRepository taskRepository = TasksUiPlugin
+					.getRepositoryManager().getRepository(
+							task.getRepositoryUrl());
+			TaskData taskData = TasksUiPlugin.getTaskDataManager().getTaskData(
+					task);
+			// todo get which attachments have to be submitted
+			TaskAttribute attachmentAttribute = taskData.getAttributeMapper()
+					.createTaskAttachment(taskData);
+			byte[] attachmentBytes = createAttachment(review);
+
+			ReviewCommentTaskAttachmentSource attachment = new ReviewCommentTaskAttachmentSource(
+					attachmentBytes);
+
+			AbstractRepositoryConnector connector = TasksUi
+					.getRepositoryConnector(taskRepository.getConnectorKind());
+			connector.getTaskAttachmentHandler().postContent(taskRepository,
+					task, attachment, "review result", //$NON-NLS-1$
+					attachmentAttribute, new NullProgressMonitor());
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void prepareSubmit(ITask task) {
+	}
+
+	private byte[] createAttachment(Review review) {
+		try {
+			ResourceSet resourceSet = new ResourceSetImpl();
+
+			Resource resource = resourceSet.createResource(URI
+					.createFileURI("")); //$NON-NLS-1$
+
+			resource.getContents().add(review);
+			resource.getContents().add(review.getScope().get(0));
+			if (review.getResult() != null)
+				resource.getContents().add(review.getResult());
+			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+			ZipOutputStream outputStream = new ZipOutputStream(
+					byteArrayOutputStream);
+			outputStream.putNextEntry(new ZipEntry(
+					ReviewConstants.REVIEW_DATA_FILE));
+			resource.save(outputStream, null);
+			outputStream.closeEntry();
+			outputStream.close();
+			return byteArrayOutputStream.toByteArray();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+
 	}
 
 }

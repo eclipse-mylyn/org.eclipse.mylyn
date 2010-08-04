@@ -7,6 +7,7 @@ public class ReviewData {
 	private boolean outgoing;
 	private Review review;
 	private ITask task;
+	// TODO state
 
 	public ReviewData(ITask task, Review review) {
 		this.task=task;

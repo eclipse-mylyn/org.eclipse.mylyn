@@ -89,10 +89,6 @@ public class CreateTask extends Job {
 			createAttribute(data,TaskAttribute.SUMMARY,
 							"Review of " + model.getTask().getTaskKey() + " " + model.getTask().getSummary()); //$NON-NLS-1$ //$NON-NLS-2$
 
-			// TODO - set human readable Result here
-			// data.getRoot().createMappedAttribute(TaskAttribute.DESCRIPTION)
-			// .setValue("Result");
-
 			createAttribute(data,TaskAttribute.COMPONENT,
 							model.getTaskData()
 									.getRoot()
