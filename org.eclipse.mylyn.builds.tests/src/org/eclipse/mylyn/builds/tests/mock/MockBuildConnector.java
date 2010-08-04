@@ -12,7 +12,6 @@
 package org.eclipse.mylyn.builds.tests.mock;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.spi.BuildConnector;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
@@ -23,11 +22,6 @@ import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
 public class MockBuildConnector extends BuildConnector {
 
 	public MockBuildConnector() {
-	}
-
-	@Override
-	public BuildServerBehaviour getBehaviour(IBuildServer server) throws CoreException {
-		return new MockBuildServerBehavior();
 	}
 
 	@Override

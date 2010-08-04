@@ -22,8 +22,9 @@ import org.eclipse.mylyn.builds.core.BuildStatus;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildPlanData;
 import org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy;
-import org.eclipse.mylyn.builds.core.IOperationMonitor;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
+import org.eclipse.mylyn.builds.core.spi.BuildServerConfiguration;
+import org.eclipse.mylyn.commons.core.IOperationMonitor;
 
 /**
  * @author Steffen Pingel
@@ -75,6 +76,18 @@ public class MockBuildServerBehavior extends BuildServerBehaviour {
 
 	@Override
 	public void runBuild(IBuildPlanData plan, IOperationMonitor monitor) throws CoreException {
+	}
+
+	@Override
+	public BuildServerConfiguration getConfiguration() {
+		// ignore
+		return null;
+	}
+
+	@Override
+	public BuildServerConfiguration refreshConfiguration(IOperationMonitor monitor) throws CoreException {
+		// ignore
+		return null;
 	}
 
 }
