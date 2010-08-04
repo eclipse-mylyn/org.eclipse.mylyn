@@ -125,9 +125,7 @@ public class RepositoryLocation extends PlatformObject {
 
 	public <T extends AuthenticationCredentials> T getCredentials(AuthenticationType authType, Class<T> credentialsKind) {
 		String prefix = getKeyPrefix(authType);
-
-		String enabled = getProperty(prefix + ENABLED);
-		if (enabled == null || "true".equals(enabled)) { //$NON-NLS-1$
+		if (getBooleanPropery(prefix + ENABLED)) {
 			try {
 				return CredentialsFactory.create(credentialsKind, getCredentialsStore(), prefix);
 			} catch (StorageException e) {
@@ -163,7 +161,7 @@ public class RepositoryLocation extends PlatformObject {
 	/**
 	 * @return the URL if the label property is not set
 	 */
-	public String getRepositoryLabel() {
+	public String getLabel() {
 		String label = properties.get(PROPERTY_LABEL);
 		if (label != null && label.length() > 0) {
 			return label;
@@ -176,8 +174,12 @@ public class RepositoryLocation extends PlatformObject {
 	 * @since 3.0
 	 */
 	public boolean getSavePassword(AuthenticationType authType) {
-		String value = getProperty(getKeyPrefix(authType) + SAVE_PASSWORD);
-		return value != null && "true".equals(value); //$NON-NLS-1$
+		return getBooleanPropery(getKeyPrefix(authType) + SAVE_PASSWORD);
+	}
+
+	public boolean getBooleanPropery(String key) {
+		String value = getProperty(key);
+		return value != null && Boolean.parseBoolean(value);
 	}
 
 	public ILocationService getService() {
@@ -293,7 +295,7 @@ public class RepositoryLocation extends PlatformObject {
 
 	@Override
 	public String toString() {
-		return getRepositoryLabel();
+		return getLabel();
 	}
 
 	public void apply(RepositoryLocation location) {

@@ -29,6 +29,9 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.internal.LegacyResourceSupport;
 import org.eclipse.ui.internal.util.Util;
 
+/**
+ * @author STeffen Pingel
+ */
 public class NewRepositoryHandler extends AbstractHandler implements IHandler {
 
 	/**
@@ -43,9 +46,12 @@ public class NewRepositoryHandler extends AbstractHandler implements IHandler {
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchWindow workbenchWindow = HandlerUtil.getActiveWorkbenchWindowChecked(event);
+		return openDialog(workbenchWindow, null);
+	}
 
+	public static int openDialog(IWorkbenchWindow workbenchWindow, String categoryId) {
 		NewRepositoryWizard wizard = new NewRepositoryWizard();
-		wizard.setCategoryId(null);
+		wizard.setCategoryId(categoryId);
 		wizard.setWindowTitle("New Repository");
 
 		ISelection selection = workbenchWindow.getSelectionService().getSelection();

@@ -71,7 +71,8 @@ public class ValidatableWizardDialog extends WizardDialog {
 			createHelpControl(composite);
 		}
 
-		validateServerButton = createButton(composite, VALIDATE_BUTTON_ID, Messages.ValidatableWizardDialog_Validate_Button_Label, false);
+		validateServerButton = createButton(composite, VALIDATE_BUTTON_ID,
+				Messages.ValidatableWizardDialog_Validate_Button_Label, false);
 		validateServerButton.setImage(CommonImages.getImage(CommonImages.VALIDATE));
 		validateServerButton.setVisible(false);
 		setButtonLayoutData(validateServerButton);
@@ -126,7 +127,7 @@ public class ValidatableWizardDialog extends WizardDialog {
 
 		HashMap<String, Boolean> savedEnabledState = null;
 		try {
-			savedEnabledState = saveAndSetEnabledStateMylyn();
+			savedEnabledState = saveAndSetEnabledStateInternal();
 			super.run(fork, cancelable, runnable);
 		} finally {
 			if (savedEnabledState != null) {
@@ -138,7 +139,7 @@ public class ValidatableWizardDialog extends WizardDialog {
 	/**
 	 * Modeled after super.saveAndSetEnabledState(), but that one is private, so create our own
 	 */
-	private HashMap<String, Boolean> saveAndSetEnabledStateMylyn() {
+	private HashMap<String, Boolean> saveAndSetEnabledStateInternal() {
 		HashMap<String, Boolean> savedEnabledState = null;
 		if (getShell() != null) {
 			savedEnabledState = new HashMap<String, Boolean>();

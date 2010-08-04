@@ -62,8 +62,11 @@ public class RepositoryLocationValueProperty extends SimpleValueProperty {
 
 	private final String key;
 
-	public RepositoryLocationValueProperty(String key) {
+	private final String defaultValue;
+
+	public RepositoryLocationValueProperty(String key, String defaultValue) {
 		this.key = key;
+		this.defaultValue = defaultValue;
 	}
 
 	public Object getValueType() {
@@ -76,7 +79,8 @@ public class RepositoryLocationValueProperty extends SimpleValueProperty {
 //			URI uri = ((RepositoryLocation) source).getUri();
 //			return (uri != null) ? uri.toString() : uri;
 //		}
-		return ((RepositoryLocation) source).getProperty(key);
+		String value = ((RepositoryLocation) source).getProperty(key);
+		return (value != null) ? value : defaultValue;
 	}
 
 	@Override

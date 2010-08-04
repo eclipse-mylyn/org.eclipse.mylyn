@@ -234,7 +234,7 @@ public class RepositoryLocationPart {
 
 	protected void bind(Button button, String property) {
 		ISWTObservableValue uiElement = SWTObservables.observeSelection(button);
-		IObservableValue modelElement = new RepositoryLocationValueProperty(property).observe(workingCopy);
+		IObservableValue modelElement = new RepositoryLocationValueProperty(property, Boolean.FALSE.toString()).observe(workingCopy);
 		bindingContext.bindValue(uiElement, modelElement, null, null);
 	}
 
@@ -245,7 +245,7 @@ public class RepositoryLocationPart {
 	protected void bind(Text text, String property, UpdateValueStrategy targetObservableValue,
 			UpdateValueStrategy modelObservableValue) {
 		ISWTObservableValue uiElement = SWTObservables.observeText(text, SWT.Modify);
-		IObservableValue modelElement = new RepositoryLocationValueProperty(property).observe(workingCopy);
+		IObservableValue modelElement = new RepositoryLocationValueProperty(property, null).observe(workingCopy);
 		bindingContext.bindValue(uiElement, modelElement, targetObservableValue, modelObservableValue);
 	}
 
@@ -265,13 +265,13 @@ public class RepositoryLocationPart {
 
 	public Control createContents(Composite parent) {
 		bindingContext = new DataBindingContext();
-		DialogPage page = getContainer(DialogPage.class);
-		if (page != null) {
-			DialogPageSupport.create(page, bindingContext);
+		WizardPage wizardPage = getContainer(WizardPage.class);
+		if (wizardPage != null) {
+			WizardPageSupport.create(wizardPage, bindingContext);
 		} else {
-			WizardPage wizardPage = getContainer(WizardPage.class);
-			if (wizardPage != null) {
-				WizardPageSupport.create(wizardPage, bindingContext);
+			DialogPage page = getContainer(DialogPage.class);
+			if (page != null) {
+				DialogPageSupport.create(page, bindingContext);
 			}
 		}
 		Composite composite = new Composite(parent, SWT.NONE);

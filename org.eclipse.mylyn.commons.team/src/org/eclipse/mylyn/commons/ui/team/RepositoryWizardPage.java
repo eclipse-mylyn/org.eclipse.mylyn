@@ -29,31 +29,57 @@ import org.eclipse.swt.widgets.Composite;
  */
 public class RepositoryWizardPage extends WizardPage implements IPartContainer, IAdaptable, IValidatable {
 
-	private RepositoryLocationPart part;
-
 	private IAdaptable element;
+
+	private RepositoryLocationPart part;
 
 	private RepositoryLocation workingCopy;
 
 	public RepositoryWizardPage(String pageName) {
 		super(pageName);
+		setPageComplete(false);
+	}
+
+	public boolean canValidate() {
+		return part.canValidate();
 	}
 
 	public void createControl(Composite parent) {
 		initializeDialogUnits(parent);
 
+		String message = getMessage();
+
 		part = doCreateRepositoryPart();
 		part.setServiceLocator(this);
 		setControl(part.createContents(parent));
 		Dialog.applyDialogFont(parent);
+
+		setMessage(message);
 	}
 
 	protected RepositoryLocationPart doCreateRepositoryPart() {
 		return new RepositoryLocationPart(getWorkingCopy());
 	}
 
+	public Object getAdapter(Class adapter) {
+		if (adapter == WizardPage.class) {
+			return this;
+		}
+		if (adapter == DialogPage.class) {
+			return this;
+		}
+		if (adapter == IPartContainer.class) {
+			return this;
+		}
+		return null;
+	}
+
 	public IAdaptable getElement() {
 		return element;
+	}
+
+	public RepositoryLocationPart getPart() {
+		return part;
 	}
 
 	protected RepositoryLocation getWorkingCopy() {
@@ -61,6 +87,15 @@ public class RepositoryWizardPage extends WizardPage implements IPartContainer, 
 			workingCopy = (RepositoryLocation) getElement().getAdapter(RepositoryLocation.class);
 		}
 		return workingCopy;
+	}
+
+	public boolean needsValidation() {
+		return part.needsValidation();
+	}
+
+	public void run(boolean fork, boolean cancelable, IRunnableWithProgress runnable) throws InvocationTargetException,
+			InterruptedException {
+		getContainer().run(fork, cancelable, runnable);
 	}
 
 	/**
@@ -73,31 +108,8 @@ public class RepositoryWizardPage extends WizardPage implements IPartContainer, 
 		this.element = element;
 	}
 
-	public void run(boolean fork, boolean cancelable, IRunnableWithProgress runnable) throws InvocationTargetException,
-			InterruptedException {
-		getContainer().run(fork, cancelable, runnable);
-	}
-
 	public void updateButtons() {
 		getContainer().updateButtons();
-	}
-
-	public Object getAdapter(Class adapter) {
-		if (adapter == DialogPage.class) {
-			return this;
-		}
-		if (adapter == IPartContainer.class) {
-			return this;
-		}
-		return null;
-	}
-
-	public boolean canValidate() {
-		return part.canValidate();
-	}
-
-	public boolean needsValidation() {
-		return part.needsValidation();
 	}
 
 	public void validate() {
