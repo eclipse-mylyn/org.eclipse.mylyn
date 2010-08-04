@@ -28,6 +28,9 @@
             icon="icons/obj16/hudson.png"
             id="org.eclipse.mylyn.hudson"
             name="Hudson">
+         <description>
+            Connects to continuous integration servers
+         </description>
       </wizard>
    </extension>
 

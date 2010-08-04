@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.hudson.ui;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.ui.BuildsUi;
 import org.eclipse.mylyn.builds.ui.spi.BuildServerWizard;
+import org.eclipse.mylyn.builds.ui.spi.BuildServerWizardPage;
 import org.eclipse.mylyn.internal.hudson.core.HudsonCorePlugin;
 
 /**
@@ -27,6 +28,12 @@ public class NewHudsonServerWizard extends BuildServerWizard {
 
 	public NewHudsonServerWizard() {
 		super(BuildsUi.createServer(HudsonCorePlugin.CONNECTOR_KIND));
+	}
+
+	@Override
+	protected void initPage(BuildServerWizardPage page) {
+		page.setTitle("Hudson Server Properties");
+		page.setMessage("Supports Hudson 1.367 or later.");
 	}
 
 }
