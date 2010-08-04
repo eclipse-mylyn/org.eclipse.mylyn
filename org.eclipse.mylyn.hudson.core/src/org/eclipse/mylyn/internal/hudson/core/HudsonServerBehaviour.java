@@ -13,15 +13,19 @@ package org.eclipse.mylyn.internal.hudson.core;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.builds.core.BuildState;
 import org.eclipse.mylyn.builds.core.BuildStatus;
+import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildPlanData;
 import org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy;
-import org.eclipse.mylyn.builds.core.IOperationMonitor;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
+import org.eclipse.mylyn.builds.core.spi.BuildServerConfiguration;
+import org.eclipse.mylyn.commons.core.IOperationMonitor;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
 import org.eclipse.mylyn.internal.builds.core.util.RepositoryWebLocation;
@@ -52,6 +56,29 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 	}
 
 	@Override
+	public BuildServerConfiguration getConfiguration() {
+		Map<String, String> jobNameById = client.getConfiguration().jobNameById;
+		List<IBuildPlan> plans = new ArrayList<IBuildPlan>(jobNameById.size());
+		for (Entry<String, String> entry : jobNameById.entrySet()) {
+			IBuildPlanWorkingCopy plan = createBuildPlan();
+			plan.setId(entry.getKey());
+			plan.setName(entry.getValue());
+			plans.add(plan.toBuildPlan());
+		}
+		return new BuildServerConfiguration(plans);
+	}
+
+	@Override
+	public BuildServerConfiguration refreshConfiguration(IOperationMonitor monitor) throws CoreException {
+		try {
+			client.getJobs(monitor);
+		} catch (HudsonException e) {
+			throw HudsonCorePlugin.toCoreException(e);
+		}
+		return getConfiguration();
+	}
+
+	@Override
 	public List<IBuildPlanData> getPlans(IOperationMonitor monitor) throws CoreException {
 		try {
 			List<HudsonModelJob> jobs = client.getJobs(monitor);
@@ -68,7 +95,7 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 	public IBuildPlanData parseJob(HudsonModelJob job) {
 		IBuildPlanWorkingCopy plan = createBuildPlan();
 		plan.setId(job.getName());
-		if ("".equals(job.getDisplayName())) { //$NON-NLS-1$
+		if (job.getDisplayName() != null && job.getDisplayName().length() > 0) {
 			plan.setName(job.getDisplayName());
 		} else {
 			plan.setName(job.getName());

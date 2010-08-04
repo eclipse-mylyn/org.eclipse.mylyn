@@ -17,7 +17,6 @@ import java.io.File;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.spi.BuildConnector;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
@@ -31,13 +30,6 @@ import org.osgi.framework.Bundle;
 public class HudsonConnector extends BuildConnector {
 
 	private final HudsonConfigurationCache cache = new HudsonConfigurationCache(getCacheFile());
-
-	@Override
-	public BuildServerBehaviour getBehaviour(IBuildServer server) throws CoreException {
-		HudsonServerBehaviour behaviour = new HudsonServerBehaviour(createLocation(server));
-		behaviour.setCache(cache);
-		return behaviour;
-	}
 
 	@Override
 	public BuildServerBehaviour getBehaviour(RepositoryLocation location) throws CoreException {

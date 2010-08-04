@@ -12,12 +12,16 @@
 package org.eclipse.mylyn.internal.hudson.core.client;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Steffen Pingel
  */
 public class HudsonConfiguration implements Serializable {
 
-	String[] jobNames;
+	private static final long serialVersionUID = 1L;
+
+	public Map<String, String> jobNameById = new HashMap<String, String>();
 
 }

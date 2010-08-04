@@ -15,7 +15,9 @@ package org.eclipse.mylyn.internal.hudson.core.client;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -28,7 +30,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.httpclient.HttpStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.builds.core.IOperationMonitor;
+import org.eclipse.mylyn.commons.core.IOperationMonitor;
 import org.eclipse.mylyn.commons.http.CommonHttpClient;
 import org.eclipse.mylyn.commons.http.CommonHttpMethod;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
@@ -68,6 +70,10 @@ public class RestfulHudsonClient {
 		return cache;
 	}
 
+	public HudsonConfiguration getConfiguration() {
+		return getCache().getConfiguration(client.getLocation().getUrl());
+	}
+
 	private DocumentBuilder getDocumentBuilder() throws ParserConfigurationException {
 		return DocumentBuilderFactory.newInstance().newDocumentBuilder();
 	}
@@ -84,19 +90,35 @@ public class RestfulHudsonClient {
 
 					InputStream in = method.getResponseBodyAsStream(monitor);
 
+					Map<String, String> jobNameById = new HashMap<String, String>();
+
 					HudsonModelHudson hudson = unmarshal(parse(in), HudsonModelHudson.class);
 					List<HudsonModelJob> buildPlans = new ArrayList<HudsonModelJob>();
-					List<Object> jobs = hudson.getJob();
-					for (Object jobObj : jobs) {
-						HudsonModelJob job = unmarshal((Node) jobObj, HudsonModelJob.class);
+					List<Object> jobsNodes = hudson.getJob();
+					for (Object jobNode : jobsNodes) {
+						HudsonModelJob job = unmarshal((Node) jobNode, HudsonModelJob.class);
+						if (job.getDisplayName() != null && job.getDisplayName().length() > 0) {
+							jobNameById.put(job.getName(), job.getDisplayName());
+						} else {
+							jobNameById.put(job.getName(), job.getName());
+						}
 						buildPlans.add(job);
 					}
+
+					HudsonConfiguration configuration = new HudsonConfiguration();
+					configuration.jobNameById = jobNameById;
+					setConfiguration(configuration);
+
 					return buildPlans;
 				} finally {
 					method.releaseConnection(monitor);
 				}
 			}
 		}.run();
+	}
+
+	protected void setConfiguration(HudsonConfiguration configuration) {
+		getCache().setConfiguration(client.getLocation().getUrl(), configuration);
 	}
 
 	Element parse(InputStream in) throws HudsonException {
