@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.builds.core.IBuildPlanData;
 import org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy;
-import org.eclipse.mylyn.builds.core.IOperationMonitor;
+import org.eclipse.mylyn.commons.core.IOperationMonitor;
 import org.eclipse.mylyn.internal.builds.core.BuildPackage;
 
 /**
@@ -28,14 +28,18 @@ public abstract class BuildServerBehaviour {
 	public BuildServerBehaviour() {
 	}
 
-	public abstract List<IBuildPlanData> getPlans(IOperationMonitor monitor) throws CoreException;
-
-	public abstract IStatus validate(IOperationMonitor monitor) throws CoreException;
-
-	public abstract void runBuild(IBuildPlanData plan, IOperationMonitor monitor) throws CoreException;
-
 	protected IBuildPlanWorkingCopy createBuildPlan() {
 		return BuildPackage.eINSTANCE.getBuildFactory().createBuildPlan();
 	}
+
+	public abstract BuildServerConfiguration getConfiguration();
+
+	public abstract List<IBuildPlanData> getPlans(IOperationMonitor monitor) throws CoreException;
+
+	public abstract BuildServerConfiguration refreshConfiguration(IOperationMonitor monitor) throws CoreException;
+
+	public abstract void runBuild(IBuildPlanData plan, IOperationMonitor monitor) throws CoreException;
+
+	public abstract IStatus validate(IOperationMonitor monitor) throws CoreException;
 
 }

@@ -2,31 +2,28 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildFactory.java,v 1.6 2010/07/08 02:02:34 spingel Exp $
+ * $Id: BuildFactory.java,v 1.7 2010/08/04 07:38:41 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
 import java.util.Map;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
 import org.eclipse.mylyn.builds.core.BuildState;
 import org.eclipse.mylyn.builds.core.BuildStatus;
-
 import org.eclipse.mylyn.builds.core.EditType;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
  * <!-- begin-user-doc -->
  * The <b>Factory</b> for the model.
  * It provides a create method for each non-abstract class of the model.
  * <!-- end-user-doc -->
+ * 
  * @see org.eclipse.mylyn.internal.builds.core.BuildPackage
  * @generated
  */
@@ -35,6 +32,7 @@ public class BuildFactory extends EFactoryImpl {
 	 * The singleton instance of the factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public static final BuildFactory eINSTANCE = init();
@@ -43,6 +41,7 @@ public class BuildFactory extends EFactoryImpl {
 	 * Creates the default factory implementation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public static BuildFactory init() {
@@ -62,6 +61,7 @@ public class BuildFactory extends EFactoryImpl {
 	 * Creates an instance of the factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public BuildFactory() {
@@ -71,6 +71,7 @@ public class BuildFactory extends EFactoryImpl {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -104,13 +105,12 @@ public class BuildFactory extends EFactoryImpl {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public Object createFromString(EDataType eDataType, String initialValue) {
 		switch (eDataType.getClassifierID()) {
-		case BuildPackage.TASK_REPOSITORY:
-			return createTaskRepositoryFromString(eDataType, initialValue);
 		case BuildPackage.BUILD_STATE:
 			return createBuildStateFromString(eDataType, initialValue);
 		case BuildPackage.BUILD_STATUS:
@@ -125,13 +125,12 @@ public class BuildFactory extends EFactoryImpl {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public String convertToString(EDataType eDataType, Object instanceValue) {
 		switch (eDataType.getClassifierID()) {
-		case BuildPackage.TASK_REPOSITORY:
-			return convertTaskRepositoryToString(eDataType, instanceValue);
 		case BuildPackage.BUILD_STATE:
 			return convertBuildStateToString(eDataType, instanceValue);
 		case BuildPackage.BUILD_STATUS:
@@ -146,6 +145,7 @@ public class BuildFactory extends EFactoryImpl {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public BuildModel createBuildModel() {
@@ -156,6 +156,7 @@ public class BuildFactory extends EFactoryImpl {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public BuildPlan createBuildPlan() {
@@ -166,6 +167,7 @@ public class BuildFactory extends EFactoryImpl {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public BuildServer createBuildServer() {
@@ -176,6 +178,7 @@ public class BuildFactory extends EFactoryImpl {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public Artifact createArtifact() {
@@ -186,6 +189,7 @@ public class BuildFactory extends EFactoryImpl {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public Build createBuild() {
@@ -196,6 +200,7 @@ public class BuildFactory extends EFactoryImpl {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public ChangeSet createChangeSet() {
@@ -206,6 +211,7 @@ public class BuildFactory extends EFactoryImpl {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public Change createChange() {
@@ -216,6 +222,7 @@ public class BuildFactory extends EFactoryImpl {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public File createFile() {
@@ -226,6 +233,7 @@ public class BuildFactory extends EFactoryImpl {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public User createUser() {
@@ -236,6 +244,7 @@ public class BuildFactory extends EFactoryImpl {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public Map.Entry<String, String> createStringToStringMap() {
@@ -246,24 +255,7 @@ public class BuildFactory extends EFactoryImpl {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public TaskRepository createTaskRepositoryFromString(EDataType eDataType, String initialValue) {
-		return (TaskRepository) super.createFromString(eDataType, initialValue);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String convertTaskRepositoryToString(EDataType eDataType, Object instanceValue) {
-		return super.convertToString(eDataType, instanceValue);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public BuildState createBuildStateFromString(EDataType eDataType, String initialValue) {
@@ -273,6 +265,7 @@ public class BuildFactory extends EFactoryImpl {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String convertBuildStateToString(EDataType eDataType, Object instanceValue) {
@@ -282,6 +275,7 @@ public class BuildFactory extends EFactoryImpl {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public BuildStatus createBuildStatusFromString(EDataType eDataType, String initialValue) {
@@ -291,6 +285,7 @@ public class BuildFactory extends EFactoryImpl {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String convertBuildStatusToString(EDataType eDataType, Object instanceValue) {
@@ -300,6 +295,7 @@ public class BuildFactory extends EFactoryImpl {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EditType createEditTypeFromString(EDataType eDataType, String initialValue) {
@@ -309,6 +305,7 @@ public class BuildFactory extends EFactoryImpl {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String convertEditTypeToString(EDataType eDataType, Object instanceValue) {
@@ -318,6 +315,7 @@ public class BuildFactory extends EFactoryImpl {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public BuildPackage getBuildPackage() {
@@ -327,6 +325,7 @@ public class BuildFactory extends EFactoryImpl {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @deprecated
 	 * @generated
 	 */

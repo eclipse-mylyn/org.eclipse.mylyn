@@ -38,7 +38,6 @@ public abstract class AbstractConfigurationCache<C extends Serializable> {
 	public AbstractConfigurationCache(File cacheFile) {
 		Assert.isNotNull(cacheFile);
 		this.cacheFile = cacheFile;
-		readCache();
 	}
 
 	protected abstract C createConfiguration();
@@ -50,16 +49,20 @@ public abstract class AbstractConfigurationCache<C extends Serializable> {
 	}
 
 	public C getConfiguration(String url) {
-		if (configurationByUrl == null) {
-			configurationByUrl = new HashMap<String, C>();
-			readCache();
-		}
+		initialize();
 		C configuaration = configurationByUrl.get(url);
 		if (configuaration == null) {
 			configuaration = createConfiguration();
 			configurationByUrl.put(url, configuaration);
 		}
 		return configuaration;
+	}
+
+	protected void initialize() {
+		if (configurationByUrl == null) {
+			configurationByUrl = new HashMap<String, C>();
+			readCache();
+		}
 	}
 
 	protected void readCache() {
@@ -72,7 +75,7 @@ public abstract class AbstractConfigurationCache<C extends Serializable> {
 			in = new ObjectInputStream(new FileInputStream(cacheFile));
 			int size = in.readInt();
 			for (int i = 0; i < size; i++) {
-				String url = (String) readConfiguration(in);
+				String url = (String) in.readObject();
 				C data = readConfiguration(in);
 				if (url != null && data != null) {
 					configurationByUrl.put(url, data);
@@ -94,6 +97,12 @@ public abstract class AbstractConfigurationCache<C extends Serializable> {
 	}
 
 	protected abstract C readConfiguration(ObjectInputStream in) throws IOException, ClassNotFoundException;
+
+	public void setConfiguration(String url, C configuration) {
+		initialize();
+		configurationByUrl.put(url, configuration);
+		writeCache();
+	}
 
 	protected void writeCache() {
 		ObjectOutputStream out = null;

@@ -9,26 +9,28 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.builds.core;
+package org.eclipse.mylyn.builds.core.spi;
 
-import org.eclipse.core.runtime.IStatus;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.mylyn.builds.core.IBuildPlan;
+import org.eclipse.mylyn.builds.core.IBuildServerConfiguration;
 
 /**
  * @author Steffen Pingel
- * @noimplement This interface is not intended to be implemented by clients.
- * @noextend This interface is not intended to be extended by clients.
+ * @noextend This class is not intended to be subclassed by clients.
  */
-public interface IBuildElement {
+public class BuildServerConfiguration implements IBuildServerConfiguration {
 
-	IBuildServer getServer();
+	private final List<IBuildPlan> plans;
 
-	String getUrl();
+	public BuildServerConfiguration(List<IBuildPlan> plans) {
+		this.plans = new ArrayList<IBuildPlan>(plans);
+	}
 
-	String getName();
-
-	String getLabel();
-
-	// FIXME rename
-	IStatus getOperationStatus();
+	public List<IBuildPlan> getPlans() {
+		return plans;
+	}
 
 }

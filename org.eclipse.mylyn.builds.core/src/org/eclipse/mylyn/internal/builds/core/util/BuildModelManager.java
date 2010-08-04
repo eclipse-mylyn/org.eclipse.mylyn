@@ -14,7 +14,6 @@ package org.eclipse.mylyn.internal.builds.core.util;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
@@ -32,11 +31,7 @@ import org.eclipse.mylyn.internal.builds.core.BuildModel;
 import org.eclipse.mylyn.internal.builds.core.BuildPackage;
 import org.eclipse.mylyn.internal.builds.core.BuildServer;
 import org.eclipse.mylyn.internal.builds.core.BuildsCorePlugin;
-import org.eclipse.mylyn.internal.builds.core.tasks.BuildTaskConnector;
-import org.eclipse.mylyn.internal.builds.core.tasks.IBuildLoader;
-import org.eclipse.mylyn.tasks.core.IRepositoryListener;
-import org.eclipse.mylyn.tasks.core.IRepositoryManager;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.internal.builds.core.IBuildLoader;
 import org.eclipse.osgi.util.NLS;
 
 /**
@@ -44,38 +39,9 @@ import org.eclipse.osgi.util.NLS;
  */
 public class BuildModelManager {
 
-	private class RepositoryListener implements IRepositoryListener {
-
-		public void repositoryAdded(TaskRepository repository) {
-			// ignore
-		}
-
-		public void repositoryRemoved(TaskRepository repository) {
-			for (IBuildServer server : model.getServers()) {
-				if (repository.equals(server.getRepository())) {
-					model.getServers().remove(server);
-					return;
-				}
-			}
-		}
-
-		public void repositorySettingsChanged(TaskRepository repository) {
-			// ignore			
-		}
-
-		public void repositoryUrlChanged(TaskRepository repository, String oldUrl) {
-			// ignore			
-		}
-
-	}
-
-	private IRepositoryManager repositoryManager;
-
 	private final Resource resource;
 
 	private final BuildModel model;
-
-	private final RepositoryListener repositoryListener;
 
 	private final IBuildLoader buildLoader;
 
@@ -117,7 +83,6 @@ public class BuildModelManager {
 		}
 		this.model = model;
 		this.resource = resource;
-		this.repositoryListener = new RepositoryListener();
 	}
 
 	public void save() throws IOException {
@@ -128,43 +93,6 @@ public class BuildModelManager {
 
 	public BuildModel getModel() {
 		return model;
-	}
-
-	public void setRepositoryManager(IRepositoryManager repositoryManager) {
-		if (this.repositoryManager != null) {
-			this.repositoryManager.removeListener(repositoryListener);
-		}
-		this.repositoryManager = repositoryManager;
-		repositoryManager.addListener(repositoryListener);
-
-		// hook repositories up to build model
-		List<TaskRepository> repositories = repositoryManager.getAllRepositories();
-		for (TaskRepository taskRepository : repositories) {
-			if (BuildTaskConnector.CONNECTOR_KIND.equals(taskRepository.getConnectorKind())) {
-				for (IBuildServer server : model.getServers()) {
-					if (taskRepository.getRepositoryUrl().equals(server.getRepositoryUrl())) {
-						((BuildServer) server).setRepository(taskRepository);
-					}
-				}
-			}
-		}
-	}
-
-	public IRepositoryManager getRepositoryManager() {
-		return repositoryManager;
-	}
-
-	public IBuildServer createServer(TaskRepository repository) {
-		BuildServer server = BuildPackage.eINSTANCE.getBuildFactory().createBuildServer();
-		if (repository != null) {
-			server.setConnectorKind(repository.getProperty(BuildTaskConnector.TASK_REPOSITORY_KEY_BUILD_CONNECTOR_KIND));
-			server.setName(repository.getRepositoryLabel());
-			server.setRepository(repository);
-			server.setRepositoryUrl(repository.getRepositoryUrl());
-			server.setUrl(repository.getRepositoryUrl());
-		}
-		server.setLoader(buildLoader);
-		return server;
 	}
 
 	public IBuildServer createServer(String connectorKind, RepositoryLocation location) {

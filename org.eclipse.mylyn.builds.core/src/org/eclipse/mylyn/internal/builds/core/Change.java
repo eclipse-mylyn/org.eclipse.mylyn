@@ -2,19 +2,16 @@
  * <copyright>
  * </copyright>
  *
- * $Id: Change.java,v 1.1 2010/07/08 02:02:34 spingel Exp $
+ * $Id: Change.java,v 1.2 2010/08/04 07:38:41 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import org.eclipse.mylyn.builds.core.IChange;
 import org.eclipse.mylyn.builds.core.IFile;
 import org.eclipse.mylyn.builds.core.IUser;
@@ -23,8 +20,7 @@ import org.eclipse.mylyn.builds.core.IUser;
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Change</b></em>'.
  * <!-- end-user-doc -->
- *
- *
+ * 
  * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getChange()
  * @model kind="class" superTypes="org.eclipse.mylyn.internal.builds.core.IChange"
  * @generated
@@ -34,6 +30,7 @@ public class Change extends EObjectImpl implements EObject, IChange {
 	 * The cached value of the '{@link #getAuthor() <em>Author</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getAuthor()
 	 * @generated
 	 * @ordered
@@ -44,6 +41,7 @@ public class Change extends EObjectImpl implements EObject, IChange {
 	 * The cached value of the '{@link #getFile() <em>File</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getFile()
 	 * @generated
 	 * @ordered
@@ -54,6 +52,7 @@ public class Change extends EObjectImpl implements EObject, IChange {
 	 * The default value of the '{@link #getMessage() <em>Message</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getMessage()
 	 * @generated
 	 * @ordered
@@ -64,6 +63,7 @@ public class Change extends EObjectImpl implements EObject, IChange {
 	 * The cached value of the '{@link #getMessage() <em>Message</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getMessage()
 	 * @generated
 	 * @ordered
@@ -74,6 +74,7 @@ public class Change extends EObjectImpl implements EObject, IChange {
 	 * The default value of the '{@link #getDate() <em>Date</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getDate()
 	 * @generated
 	 * @ordered
@@ -84,6 +85,7 @@ public class Change extends EObjectImpl implements EObject, IChange {
 	 * The cached value of the '{@link #getDate() <em>Date</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getDate()
 	 * @generated
 	 * @ordered
@@ -94,6 +96,7 @@ public class Change extends EObjectImpl implements EObject, IChange {
 	 * The cached value of the '{@link #getUser() <em>User</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getUser()
 	 * @generated
 	 * @ordered
@@ -103,6 +106,7 @@ public class Change extends EObjectImpl implements EObject, IChange {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected Change() {
@@ -112,6 +116,7 @@ public class Change extends EObjectImpl implements EObject, IChange {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -123,10 +128,11 @@ public class Change extends EObjectImpl implements EObject, IChange {
 	 * Returns the value of the '<em><b>Author</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Author</em>' reference isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Author</em>' reference isn't clear, there really should be more of a description
+	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Author</em>' reference.
 	 * @see #setAuthor(IUser)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIChange_Author()
@@ -149,6 +155,7 @@ public class Change extends EObjectImpl implements EObject, IChange {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IUser basicGetAuthor() {
@@ -156,10 +163,13 @@ public class Change extends EObjectImpl implements EObject, IChange {
 	}
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.Change#getAuthor <em>Author</em>}' reference.
+	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.Change#getAuthor <em>Author</em>}'
+	 * reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Author</em>' reference.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Author</em>' reference.
 	 * @see #getAuthor()
 	 * @generated
 	 */
@@ -174,10 +184,10 @@ public class Change extends EObjectImpl implements EObject, IChange {
 	 * Returns the value of the '<em><b>File</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>File</em>' reference isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>File</em>' reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>File</em>' reference.
 	 * @see #setFile(IFile)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIChange_File()
@@ -199,6 +209,7 @@ public class Change extends EObjectImpl implements EObject, IChange {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IFile basicGetFile() {
@@ -209,7 +220,9 @@ public class Change extends EObjectImpl implements EObject, IChange {
 	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.Change#getFile <em>File</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>File</em>' reference.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>File</em>' reference.
 	 * @see #getFile()
 	 * @generated
 	 */
@@ -224,10 +237,11 @@ public class Change extends EObjectImpl implements EObject, IChange {
 	 * Returns the value of the '<em><b>Message</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Message</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Message</em>' attribute isn't clear, there really should be more of a description
+	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Message</em>' attribute.
 	 * @see #setMessage(String)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIChange_Message()
@@ -239,10 +253,13 @@ public class Change extends EObjectImpl implements EObject, IChange {
 	}
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.Change#getMessage <em>Message</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.Change#getMessage <em>Message</em>}'
+	 * attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Message</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Message</em>' attribute.
 	 * @see #getMessage()
 	 * @generated
 	 */
@@ -257,10 +274,10 @@ public class Change extends EObjectImpl implements EObject, IChange {
 	 * Returns the value of the '<em><b>Date</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Date</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Date</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Date</em>' attribute.
 	 * @see #setDate(long)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIChange_Date()
@@ -275,7 +292,9 @@ public class Change extends EObjectImpl implements EObject, IChange {
 	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.Change#getDate <em>Date</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Date</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Date</em>' attribute.
 	 * @see #getDate()
 	 * @generated
 	 */
@@ -290,10 +309,10 @@ public class Change extends EObjectImpl implements EObject, IChange {
 	 * Returns the value of the '<em><b>User</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>User</em>' reference isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>User</em>' reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>User</em>' reference.
 	 * @see #setUser(IUser)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIChange_User()
@@ -315,6 +334,7 @@ public class Change extends EObjectImpl implements EObject, IChange {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IUser basicGetUser() {
@@ -325,7 +345,9 @@ public class Change extends EObjectImpl implements EObject, IChange {
 	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.Change#getUser <em>User</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>User</em>' reference.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>User</em>' reference.
 	 * @see #getUser()
 	 * @generated
 	 */
@@ -339,6 +361,7 @@ public class Change extends EObjectImpl implements EObject, IChange {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -367,6 +390,7 @@ public class Change extends EObjectImpl implements EObject, IChange {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -394,6 +418,7 @@ public class Change extends EObjectImpl implements EObject, IChange {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -421,6 +446,7 @@ public class Change extends EObjectImpl implements EObject, IChange {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -443,6 +469,7 @@ public class Change extends EObjectImpl implements EObject, IChange {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

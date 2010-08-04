@@ -2,21 +2,18 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildServer.java,v 1.17 2010/08/03 20:31:32 spingel Exp $
+ * $Id: BuildServer.java,v 1.18 2010/08/04 07:38:41 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -26,19 +23,17 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EcoreEMap;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
-import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy;
 import org.eclipse.mylyn.builds.core.IBuildServer;
-import org.eclipse.mylyn.builds.core.IOperationMonitor;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
+import org.eclipse.mylyn.builds.core.spi.BuildServerConfiguration;
+import org.eclipse.mylyn.commons.core.IOperationMonitor;
+import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
-import org.eclipse.mylyn.internal.builds.core.operations.RefreshOperation;
-import org.eclipse.mylyn.internal.builds.core.tasks.IBuildLoader;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.internal.builds.core.operations.RefreshConfigurationsOperation;
 
 /**
  * <!-- begin-user-doc -->
@@ -95,17 +90,6 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	protected String name = NAME_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getPlans() <em>Plans</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @see #getPlans()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<IBuildPlan> plans;
-
-	/**
 	 * The cached value of the '{@link #getAttributes() <em>Attributes</em>}' map.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -115,28 +99,6 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	 * @ordered
 	 */
 	protected EMap<String, String> attributes;
-
-	/**
-	 * The default value of the '{@link #getRepository() <em>Repository</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @see #getRepository()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final TaskRepository REPOSITORY_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getRepository() <em>Repository</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @see #getRepository()
-	 * @generated
-	 * @ordered
-	 */
-	protected TaskRepository repository = REPOSITORY_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getLocation() <em>Location</em>}' attribute.
@@ -296,33 +258,6 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	}
 
 	/**
-	 * Returns the value of the '<em><b>Plans</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.mylyn.builds.core.IBuildPlan}.
-	 * It is bidirectional and its opposite is '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getServer
-	 * <em>Server</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Plans</em>' containment reference list isn't clear, there really should be more of a
-	 * description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * 
-	 * @return the value of the '<em>Plans</em>' containment reference list.
-	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildServer_Plans()
-	 * @see org.eclipse.mylyn.builds.core.IBuildPlan#getServer
-	 * @model type="org.eclipse.mylyn.internal.builds.core.IBuildPlan" opposite="server" containment="true"
-	 *        ordered="false"
-	 * @generated
-	 */
-	public EList<IBuildPlan> getPlans() {
-		if (plans == null) {
-			plans = new EObjectContainmentWithInverseEList<IBuildPlan>(IBuildPlan.class, this,
-					BuildPackage.BUILD_SERVER__PLANS, BuildPackage.IBUILD_PLAN__SERVER);
-		}
-		return plans;
-	}
-
-	/**
 	 * Returns the value of the '<em><b>Attributes</b></em>' map.
 	 * The key is of type {@link java.lang.String},
 	 * and the value is of type {@link java.lang.String},
@@ -344,45 +279,6 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 					StringToStringMap.class, this, BuildPackage.BUILD_SERVER__ATTRIBUTES);
 		}
 		return attributes;
-	}
-
-	/**
-	 * Returns the value of the '<em><b>Repository</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Repository</em>' attribute isn't clear, there really should be more of a description
-	 * here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * 
-	 * @return the value of the '<em>Repository</em>' attribute.
-	 * @see #setRepository(TaskRepository)
-	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildServer_Repository()
-	 * @model dataType="org.eclipse.mylyn.internal.builds.core.TaskRepository" transient="true"
-	 * @generated
-	 */
-	public TaskRepository getRepository() {
-		return repository;
-	}
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildServer#getRepository
-	 * <em>Repository</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Repository</em>' attribute.
-	 * @see #getRepository()
-	 * @generated
-	 */
-	public void setRepository(TaskRepository newRepository) {
-		TaskRepository oldRepository = repository;
-		repository = newRepository;
-		if (eNotificationRequired()) {
-			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_SERVER__REPOSITORY, oldRepository,
-					repository));
-		}
 	}
 
 	/**
@@ -513,27 +409,9 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	 * 
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-		case BuildPackage.BUILD_SERVER__PLANS:
-			return ((InternalEList<InternalEObject>) (InternalEList<?>) getPlans()).basicAdd(otherEnd, msgs);
-		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case BuildPackage.BUILD_SERVER__PLANS:
-			return ((InternalEList<?>) getPlans()).basicRemove(otherEnd, msgs);
 		case BuildPackage.BUILD_SERVER__ATTRIBUTES:
 			return ((InternalEList<?>) getAttributes()).basicRemove(otherEnd, msgs);
 		}
@@ -553,16 +431,12 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 			return getUrl();
 		case BuildPackage.BUILD_SERVER__NAME:
 			return getName();
-		case BuildPackage.BUILD_SERVER__PLANS:
-			return getPlans();
 		case BuildPackage.BUILD_SERVER__ATTRIBUTES:
 			if (coreType) {
 				return getAttributes();
 			} else {
 				return getAttributes().map();
 			}
-		case BuildPackage.BUILD_SERVER__REPOSITORY:
-			return getRepository();
 		case BuildPackage.BUILD_SERVER__LOCATION:
 			return getLocation();
 		case BuildPackage.BUILD_SERVER__CONNECTOR_KIND:
@@ -589,15 +463,8 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 		case BuildPackage.BUILD_SERVER__NAME:
 			setName((String) newValue);
 			return;
-		case BuildPackage.BUILD_SERVER__PLANS:
-			getPlans().clear();
-			getPlans().addAll((Collection<? extends IBuildPlan>) newValue);
-			return;
 		case BuildPackage.BUILD_SERVER__ATTRIBUTES:
 			((EStructuralFeature.Setting) getAttributes()).set(newValue);
-			return;
-		case BuildPackage.BUILD_SERVER__REPOSITORY:
-			setRepository((TaskRepository) newValue);
 			return;
 		case BuildPackage.BUILD_SERVER__LOCATION:
 			setLocation((RepositoryLocation) newValue);
@@ -627,14 +494,8 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 		case BuildPackage.BUILD_SERVER__NAME:
 			setName(NAME_EDEFAULT);
 			return;
-		case BuildPackage.BUILD_SERVER__PLANS:
-			getPlans().clear();
-			return;
 		case BuildPackage.BUILD_SERVER__ATTRIBUTES:
 			getAttributes().clear();
-			return;
-		case BuildPackage.BUILD_SERVER__REPOSITORY:
-			setRepository(REPOSITORY_EDEFAULT);
 			return;
 		case BuildPackage.BUILD_SERVER__LOCATION:
 			setLocation(LOCATION_EDEFAULT);
@@ -662,12 +523,8 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 			return URL_EDEFAULT == null ? url != null : !URL_EDEFAULT.equals(url);
 		case BuildPackage.BUILD_SERVER__NAME:
 			return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-		case BuildPackage.BUILD_SERVER__PLANS:
-			return plans != null && !plans.isEmpty();
 		case BuildPackage.BUILD_SERVER__ATTRIBUTES:
 			return attributes != null && !attributes.isEmpty();
-		case BuildPackage.BUILD_SERVER__REPOSITORY:
-			return REPOSITORY_EDEFAULT == null ? repository != null : !REPOSITORY_EDEFAULT.equals(repository);
 		case BuildPackage.BUILD_SERVER__LOCATION:
 			return LOCATION_EDEFAULT == null ? location != null : !LOCATION_EDEFAULT.equals(location);
 		case BuildPackage.BUILD_SERVER__CONNECTOR_KIND:
@@ -697,8 +554,6 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 		result.append(url);
 		result.append(", name: ");
 		result.append(name);
-		result.append(", repository: ");
-		result.append(repository);
 		result.append(", location: ");
 		result.append(location);
 		result.append(", connectorKind: ");
@@ -710,19 +565,22 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	}
 
 	private final PropertyChangeListener locationChangeListener = new PropertyChangeListener() {
-		public void propertyChange(PropertyChangeEvent evt) {
-			// FIXME run on UI thread
-			if (evt.getNewValue() == null) {
-				getAttributes().remove(evt.getPropertyName());
-			}
-			if (evt.getNewValue() instanceof String) {
-				getAttributes().put(evt.getPropertyName(), (String) evt.getNewValue());
-			}
-			if ("label".equals(evt.getPropertyName())) {
-				setName((String) evt.getNewValue());
-			} else if ("uri".equals(evt.getPropertyName())) {
-				setUrl(evt.getNewValue().toString());
-			}
+		public void propertyChange(final PropertyChangeEvent event) {
+			getLoader().getRealm().asyncExec(new Runnable() {
+				public void run() {
+					if (event.getNewValue() == null) {
+						getAttributes().remove(event.getPropertyName());
+					}
+					if (event.getNewValue() instanceof String) {
+						getAttributes().put(event.getPropertyName(), (String) event.getNewValue());
+					}
+					if (RepositoryLocation.PROPERTY_LABEL.equals(event.getPropertyName())) {
+						setName((String) event.getNewValue());
+					} else if (RepositoryLocation.PROPERTY_URL.equals(event.getPropertyName())) {
+						setUrl(event.getNewValue().toString());
+					}
+				}
+			});
 		}
 	};
 
@@ -751,22 +609,6 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 
 	public IStatus validate(IOperationMonitor monitor) throws CoreException {
 		return getBehaviour().validate(monitor);
-	}
-
-	public List<IBuildPlan> refreshPlans(final IOperationMonitor monitor) throws CoreException {
-		new RefreshOperation(Collections.singletonList((IBuildServer) this)).run(monitor);
-		return getPlans();
-	}
-
-	public IBuildPlan getPlanById(String id) {
-		if (id != null) {
-			for (IBuildPlan plan : getPlans()) {
-				if (id.equals(plan.getName())) {
-					return plan;
-				}
-			}
-		}
-		return null;
 	}
 
 	BuildServer original;
@@ -814,6 +656,41 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 		BuildFactory factory = BuildPackage.eINSTANCE.getBuildFactory();
 		BuildPlan plan = factory.createBuildPlan();
 		return plan;
+	}
+
+	public BuildServerConfiguration getConfiguration() throws CoreException {
+		return getBehaviour().getConfiguration();
+	}
+
+	public BuildServerConfiguration refreshConfiguration(final IOperationMonitor monitor) throws CoreException {
+		new RefreshConfigurationsOperation(Collections.singletonList((IBuildServer) this)).run(monitor);
+		return getConfiguration();
+	}
+
+	private IStatus operationStatus;
+
+	public IStatus getOperationStatus() {
+		return operationStatus;
+	}
+
+	public void setOperationStatus(IStatus operationStatus) {
+		this.operationStatus = operationStatus;
+	}
+
+	public String getShortUrl() {
+		String url = getUrl();
+		if (url != null) {
+			return WebUtil.getHost(url);
+		}
+		return url;
+	}
+
+	public String getLabel() {
+		String name = getName();
+		if (name != null && name.length() > 0) {
+			return name;
+		}
+		return getShortUrl();
 	}
 
 } // BuildServer

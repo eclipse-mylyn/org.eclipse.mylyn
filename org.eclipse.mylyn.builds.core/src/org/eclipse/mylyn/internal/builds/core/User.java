@@ -2,26 +2,22 @@
  * <copyright>
  * </copyright>
  *
- * $Id: User.java,v 1.1 2010/07/08 02:02:34 spingel Exp $
+ * $Id: User.java,v 1.2 2010/08/04 07:38:41 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import org.eclipse.mylyn.builds.core.IUser;
 
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>User</b></em>'.
  * <!-- end-user-doc -->
- *
- *
+ * 
  * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getUser()
  * @model kind="class" superTypes="org.eclipse.mylyn.internal.builds.core.IUser"
  * @generated
@@ -31,6 +27,7 @@ public class User extends EObjectImpl implements EObject, IUser {
 	 * The default value of the '{@link #getFullname() <em>Fullname</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getFullname()
 	 * @generated
 	 * @ordered
@@ -41,6 +38,7 @@ public class User extends EObjectImpl implements EObject, IUser {
 	 * The cached value of the '{@link #getFullname() <em>Fullname</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getFullname()
 	 * @generated
 	 * @ordered
@@ -51,6 +49,7 @@ public class User extends EObjectImpl implements EObject, IUser {
 	 * The default value of the '{@link #getUsername() <em>Username</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getUsername()
 	 * @generated
 	 * @ordered
@@ -61,6 +60,7 @@ public class User extends EObjectImpl implements EObject, IUser {
 	 * The cached value of the '{@link #getUsername() <em>Username</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getUsername()
 	 * @generated
 	 * @ordered
@@ -71,6 +71,7 @@ public class User extends EObjectImpl implements EObject, IUser {
 	 * The default value of the '{@link #getEmail() <em>Email</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getEmail()
 	 * @generated
 	 * @ordered
@@ -81,6 +82,7 @@ public class User extends EObjectImpl implements EObject, IUser {
 	 * The cached value of the '{@link #getEmail() <em>Email</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getEmail()
 	 * @generated
 	 * @ordered
@@ -90,6 +92,7 @@ public class User extends EObjectImpl implements EObject, IUser {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected User() {
@@ -99,6 +102,7 @@ public class User extends EObjectImpl implements EObject, IUser {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -110,10 +114,11 @@ public class User extends EObjectImpl implements EObject, IUser {
 	 * Returns the value of the '<em><b>Fullname</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Fullname</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Fullname</em>' attribute isn't clear, there really should be more of a description
+	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Fullname</em>' attribute.
 	 * @see #setFullname(String)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIUser_Fullname()
@@ -125,10 +130,13 @@ public class User extends EObjectImpl implements EObject, IUser {
 	}
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.User#getFullname <em>Fullname</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.User#getFullname <em>Fullname</em>}'
+	 * attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Fullname</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Fullname</em>' attribute.
 	 * @see #getFullname()
 	 * @generated
 	 */
@@ -143,10 +151,11 @@ public class User extends EObjectImpl implements EObject, IUser {
 	 * Returns the value of the '<em><b>Username</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Username</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Username</em>' attribute isn't clear, there really should be more of a description
+	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Username</em>' attribute.
 	 * @see #setUsername(String)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIUser_Username()
@@ -158,10 +167,13 @@ public class User extends EObjectImpl implements EObject, IUser {
 	}
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.User#getUsername <em>Username</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.User#getUsername <em>Username</em>}'
+	 * attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Username</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Username</em>' attribute.
 	 * @see #getUsername()
 	 * @generated
 	 */
@@ -176,10 +188,11 @@ public class User extends EObjectImpl implements EObject, IUser {
 	 * Returns the value of the '<em><b>Email</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Email</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Email</em>' attribute isn't clear, there really should be more of a description
+	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Email</em>' attribute.
 	 * @see #setEmail(String)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIUser_Email()
@@ -194,7 +207,9 @@ public class User extends EObjectImpl implements EObject, IUser {
 	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.User#getEmail <em>Email</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Email</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Email</em>' attribute.
 	 * @see #getEmail()
 	 * @generated
 	 */
@@ -208,6 +223,7 @@ public class User extends EObjectImpl implements EObject, IUser {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -226,6 +242,7 @@ public class User extends EObjectImpl implements EObject, IUser {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -247,6 +264,7 @@ public class User extends EObjectImpl implements EObject, IUser {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -268,6 +286,7 @@ public class User extends EObjectImpl implements EObject, IUser {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -286,6 +305,7 @@ public class User extends EObjectImpl implements EObject, IUser {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

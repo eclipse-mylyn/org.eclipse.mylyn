@@ -2,18 +2,22 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildPlan.java,v 1.10 2010/07/11 05:44:43 spingel Exp $
+ * $Id: BuildPlan.java,v 1.11 2010/08/04 07:38:41 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
 import java.util.Collection;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
@@ -25,7 +29,7 @@ import org.eclipse.mylyn.builds.core.BuildStatus;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy;
 import org.eclipse.mylyn.builds.core.IBuildServer;
-import org.eclipse.mylyn.builds.core.IOperationMonitor;
+import org.eclipse.mylyn.commons.core.IOperationMonitor;
 import org.eclipse.mylyn.internal.builds.core.operations.RunBuildOperation;
 
 /**
@@ -82,6 +86,17 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlan, IBuil
 	 * @ordered
 	 */
 	protected String name = NAME_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getServer() <em>Server</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getServer()
+	 * @generated
+	 * @ordered
+	 */
+	protected IBuildServer server;
 
 	/**
 	 * The cached value of the '{@link #getChildren() <em>Children</em>}' reference list.
@@ -353,9 +368,7 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlan, IBuil
 	}
 
 	/**
-	 * Returns the value of the '<em><b>Server</b></em>' container reference.
-	 * It is bidirectional and its opposite is '{@link org.eclipse.mylyn.builds.core.IBuildServer#getPlans
-	 * <em>Plans</em>}'.
+	 * Returns the value of the '<em><b>Server</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Server</em>' container reference isn't clear, there really should be more of a
@@ -363,19 +376,24 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlan, IBuil
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the value of the '<em>Server</em>' container reference.
+	 * @return the value of the '<em>Server</em>' reference.
 	 * @see #setServer(IBuildServer)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildPlan_Server()
-	 * @see org.eclipse.mylyn.builds.core.IBuildServer#getPlans
-	 * @model type="org.eclipse.mylyn.internal.builds.core.IBuildServer" opposite="plans" required="true"
-	 *        transient="false"
+	 * @model type="org.eclipse.mylyn.internal.builds.core.IBuildServer" required="true"
 	 * @generated
 	 */
 	public IBuildServer getServer() {
-		if (eContainerFeatureID() != BuildPackage.BUILD_PLAN__SERVER) {
-			return null;
+		if (server != null && ((EObject) server).eIsProxy()) {
+			InternalEObject oldServer = (InternalEObject) server;
+			server = (IBuildServer) eResolveProxy(oldServer);
+			if (server != oldServer) {
+				if (eNotificationRequired()) {
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, BuildPackage.BUILD_PLAN__SERVER,
+							oldServer, server));
+				}
+			}
 		}
-		return (IBuildServer) eContainer();
+		return server;
 	}
 
 	/**
@@ -384,42 +402,26 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlan, IBuil
 	 * 
 	 * @generated
 	 */
-	public NotificationChain basicSetServer(IBuildServer newServer, NotificationChain msgs) {
-		msgs = eBasicSetContainer((InternalEObject) newServer, BuildPackage.BUILD_PLAN__SERVER, msgs);
-		return msgs;
+	public IBuildServer basicGetServer() {
+		return server;
 	}
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildPlan#getServer <em>Server</em>}'
-	 * container reference.
+	 * reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @param value
-	 *            the new value of the '<em>Server</em>' container reference.
+	 *            the new value of the '<em>Server</em>' reference.
 	 * @see #getServer()
 	 * @generated
 	 */
 	public void setServer(IBuildServer newServer) {
-		if (newServer != eInternalContainer()
-				|| (eContainerFeatureID() != BuildPackage.BUILD_PLAN__SERVER && newServer != null)) {
-			if (EcoreUtil.isAncestor(this, (EObject) newServer)) {
-				throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
-			}
-			NotificationChain msgs = null;
-			if (eInternalContainer() != null) {
-				msgs = eBasicRemoveFromContainer(msgs);
-			}
-			if (newServer != null) {
-				msgs = ((InternalEObject) newServer).eInverseAdd(this, BuildPackage.IBUILD_SERVER__PLANS,
-						IBuildServer.class, msgs);
-			}
-			msgs = basicSetServer(newServer, msgs);
-			if (msgs != null) {
-				msgs.dispatch();
-			}
-		} else if (eNotificationRequired()) {
-			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__SERVER, newServer, newServer));
+		IBuildServer oldServer = server;
+		server = newServer;
+		if (eNotificationRequired()) {
+			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__SERVER, oldServer, server));
 		}
 	}
 
@@ -818,11 +820,6 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlan, IBuil
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case BuildPackage.BUILD_PLAN__SERVER:
-			if (eInternalContainer() != null) {
-				msgs = eBasicRemoveFromContainer(msgs);
-			}
-			return basicSetServer((IBuildServer) otherEnd, msgs);
 		case BuildPackage.BUILD_PLAN__CHILDREN:
 			return ((InternalEList<InternalEObject>) (InternalEList<?>) getChildren()).basicAdd(otherEnd, msgs);
 		case BuildPackage.BUILD_PLAN__PARENT:
@@ -844,30 +841,12 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlan, IBuil
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case BuildPackage.BUILD_PLAN__SERVER:
-			return basicSetServer(null, msgs);
 		case BuildPackage.BUILD_PLAN__CHILDREN:
 			return ((InternalEList<?>) getChildren()).basicRemove(otherEnd, msgs);
 		case BuildPackage.BUILD_PLAN__PARENT:
 			return basicSetParent(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-		switch (eContainerFeatureID()) {
-		case BuildPackage.BUILD_PLAN__SERVER:
-			return eInternalContainer().eInverseRemove(this, BuildPackage.IBUILD_SERVER__PLANS, IBuildServer.class,
-					msgs);
-		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -884,7 +863,10 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlan, IBuil
 		case BuildPackage.BUILD_PLAN__NAME:
 			return getName();
 		case BuildPackage.BUILD_PLAN__SERVER:
-			return getServer();
+			if (resolve) {
+				return getServer();
+			}
+			return basicGetServer();
 		case BuildPackage.BUILD_PLAN__CHILDREN:
 			return getChildren();
 		case BuildPackage.BUILD_PLAN__PARENT:
@@ -1024,7 +1006,7 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlan, IBuil
 		case BuildPackage.BUILD_PLAN__NAME:
 			return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 		case BuildPackage.BUILD_PLAN__SERVER:
-			return getServer() != null;
+			return server != null;
 		case BuildPackage.BUILD_PLAN__CHILDREN:
 			return children != null && !children.isEmpty();
 		case BuildPackage.BUILD_PLAN__PARENT:
@@ -1091,6 +1073,45 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlan, IBuil
 
 	public void run(IOperationMonitor monitor) throws CoreException {
 		new RunBuildOperation(this).doRun(this, monitor);
+	}
+
+	public IBuildPlan toBuildPlan() {
+		return this;
+	}
+
+	private IStatus operationStatus;
+
+	public IStatus getOperationStatus() {
+		return operationStatus;
+	}
+
+	public void setOperationStatus(IStatus operationStatus) {
+		this.operationStatus = operationStatus;
+	}
+
+	public void merge(BuildPlan source) {
+		Assert.isNotNull(source);
+		EcoreUtil.Copier copier = new EcoreUtil.Copier() {
+			@Override
+			protected EObject createCopy(EObject source) {
+				return BuildPlan.this;
+			};
+
+			@Override
+			protected void copyAttribute(EAttribute eAttribute, EObject eObject, EObject copyEObject) {
+				super.copyAttribute(eAttribute, eObject, copyEObject);
+			}
+
+			@Override
+			protected void copyContainment(EReference eReference, EObject eObject, EObject copyEObject) {
+				// do nothing
+			}
+		};
+		copier.copy(source);
+	}
+
+	public String getLabel() {
+		return getName();
 	}
 
 } // BuildPlan

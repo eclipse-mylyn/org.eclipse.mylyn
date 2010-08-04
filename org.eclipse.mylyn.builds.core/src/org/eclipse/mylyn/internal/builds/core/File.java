@@ -2,18 +2,15 @@
  * <copyright>
  * </copyright>
  *
- * $Id: File.java,v 1.1 2010/07/08 02:02:34 spingel Exp $
+ * $Id: File.java,v 1.2 2010/08/04 07:38:41 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import org.eclipse.mylyn.builds.core.EditType;
 import org.eclipse.mylyn.builds.core.IFile;
 
@@ -21,8 +18,7 @@ import org.eclipse.mylyn.builds.core.IFile;
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>File</b></em>'.
  * <!-- end-user-doc -->
- *
- *
+ * 
  * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getFile()
  * @model kind="class" superTypes="org.eclipse.mylyn.internal.builds.core.IFile"
  * @generated
@@ -32,6 +28,7 @@ public class File extends EObjectImpl implements EObject, IFile {
 	 * The default value of the '{@link #getRelativePath() <em>Relative Path</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getRelativePath()
 	 * @generated
 	 * @ordered
@@ -42,6 +39,7 @@ public class File extends EObjectImpl implements EObject, IFile {
 	 * The cached value of the '{@link #getRelativePath() <em>Relative Path</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getRelativePath()
 	 * @generated
 	 * @ordered
@@ -52,6 +50,7 @@ public class File extends EObjectImpl implements EObject, IFile {
 	 * The default value of the '{@link #getPrevRevision() <em>Prev Revision</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getPrevRevision()
 	 * @generated
 	 * @ordered
@@ -62,6 +61,7 @@ public class File extends EObjectImpl implements EObject, IFile {
 	 * The cached value of the '{@link #getPrevRevision() <em>Prev Revision</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getPrevRevision()
 	 * @generated
 	 * @ordered
@@ -72,6 +72,7 @@ public class File extends EObjectImpl implements EObject, IFile {
 	 * The default value of the '{@link #getRevision() <em>Revision</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getRevision()
 	 * @generated
 	 * @ordered
@@ -82,6 +83,7 @@ public class File extends EObjectImpl implements EObject, IFile {
 	 * The cached value of the '{@link #getRevision() <em>Revision</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getRevision()
 	 * @generated
 	 * @ordered
@@ -92,6 +94,7 @@ public class File extends EObjectImpl implements EObject, IFile {
 	 * The default value of the '{@link #isDead() <em>Dead</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #isDead()
 	 * @generated
 	 * @ordered
@@ -102,6 +105,7 @@ public class File extends EObjectImpl implements EObject, IFile {
 	 * The cached value of the '{@link #isDead() <em>Dead</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #isDead()
 	 * @generated
 	 * @ordered
@@ -112,6 +116,7 @@ public class File extends EObjectImpl implements EObject, IFile {
 	 * The default value of the '{@link #getEditType() <em>Edit Type</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getEditType()
 	 * @generated
 	 * @ordered
@@ -122,6 +127,7 @@ public class File extends EObjectImpl implements EObject, IFile {
 	 * The cached value of the '{@link #getEditType() <em>Edit Type</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getEditType()
 	 * @generated
 	 * @ordered
@@ -131,6 +137,7 @@ public class File extends EObjectImpl implements EObject, IFile {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected File() {
@@ -140,6 +147,7 @@ public class File extends EObjectImpl implements EObject, IFile {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -151,10 +159,11 @@ public class File extends EObjectImpl implements EObject, IFile {
 	 * Returns the value of the '<em><b>Relative Path</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Relative Path</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Relative Path</em>' attribute isn't clear, there really should be more of a
+	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Relative Path</em>' attribute.
 	 * @see #setRelativePath(String)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIFile_RelativePath()
@@ -166,10 +175,13 @@ public class File extends EObjectImpl implements EObject, IFile {
 	}
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.File#getRelativePath <em>Relative Path</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.File#getRelativePath <em>Relative Path</em>}
+	 * ' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Relative Path</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Relative Path</em>' attribute.
 	 * @see #getRelativePath()
 	 * @generated
 	 */
@@ -185,10 +197,11 @@ public class File extends EObjectImpl implements EObject, IFile {
 	 * Returns the value of the '<em><b>Prev Revision</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Prev Revision</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Prev Revision</em>' attribute isn't clear, there really should be more of a
+	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Prev Revision</em>' attribute.
 	 * @see #setPrevRevision(String)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIFile_PrevRevision()
@@ -200,10 +213,13 @@ public class File extends EObjectImpl implements EObject, IFile {
 	}
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.File#getPrevRevision <em>Prev Revision</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.File#getPrevRevision <em>Prev Revision</em>}
+	 * ' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Prev Revision</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Prev Revision</em>' attribute.
 	 * @see #getPrevRevision()
 	 * @generated
 	 */
@@ -219,10 +235,11 @@ public class File extends EObjectImpl implements EObject, IFile {
 	 * Returns the value of the '<em><b>Revision</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Revision</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Revision</em>' attribute isn't clear, there really should be more of a description
+	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Revision</em>' attribute.
 	 * @see #setRevision(String)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIFile_Revision()
@@ -234,10 +251,13 @@ public class File extends EObjectImpl implements EObject, IFile {
 	}
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.File#getRevision <em>Revision</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.File#getRevision <em>Revision</em>}'
+	 * attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Revision</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Revision</em>' attribute.
 	 * @see #getRevision()
 	 * @generated
 	 */
@@ -252,10 +272,10 @@ public class File extends EObjectImpl implements EObject, IFile {
 	 * Returns the value of the '<em><b>Dead</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Dead</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Dead</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Dead</em>' attribute.
 	 * @see #setDead(boolean)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIFile_Dead()
@@ -270,7 +290,9 @@ public class File extends EObjectImpl implements EObject, IFile {
 	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.File#isDead <em>Dead</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Dead</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Dead</em>' attribute.
 	 * @see #isDead()
 	 * @generated
 	 */
@@ -285,10 +307,11 @@ public class File extends EObjectImpl implements EObject, IFile {
 	 * Returns the value of the '<em><b>Edit Type</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Edit Type</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Edit Type</em>' attribute isn't clear, there really should be more of a description
+	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Edit Type</em>' attribute.
 	 * @see #setEditType(EditType)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIFile_EditType()
@@ -300,10 +323,13 @@ public class File extends EObjectImpl implements EObject, IFile {
 	}
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.File#getEditType <em>Edit Type</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.File#getEditType <em>Edit Type</em>}'
+	 * attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Edit Type</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Edit Type</em>' attribute.
 	 * @see #getEditType()
 	 * @generated
 	 */
@@ -317,6 +343,7 @@ public class File extends EObjectImpl implements EObject, IFile {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -339,6 +366,7 @@ public class File extends EObjectImpl implements EObject, IFile {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -366,6 +394,7 @@ public class File extends EObjectImpl implements EObject, IFile {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -393,6 +422,7 @@ public class File extends EObjectImpl implements EObject, IFile {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -415,6 +445,7 @@ public class File extends EObjectImpl implements EObject, IFile {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

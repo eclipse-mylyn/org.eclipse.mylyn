@@ -2,25 +2,20 @@
  * <copyright>
  * </copyright>
  *
- * $Id: Build.java,v 1.1 2010/07/08 02:02:34 spingel Exp $
+ * $Id: Build.java,v 1.2 2010/08/04 07:38:41 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
-
 import org.eclipse.mylyn.builds.core.BuildState;
 import org.eclipse.mylyn.builds.core.BuildStatus;
 import org.eclipse.mylyn.builds.core.IArtifact;
@@ -31,8 +26,7 @@ import org.eclipse.mylyn.builds.core.IChangeSet;
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Build</b></em>'.
  * <!-- end-user-doc -->
- *
- *
+ * 
  * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getBuild()
  * @model kind="class" superTypes="org.eclipse.mylyn.internal.builds.core.IBuild"
  * @generated
@@ -42,6 +36,7 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	 * The default value of the '{@link #getId() <em>Id</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getId()
 	 * @generated
 	 * @ordered
@@ -52,6 +47,7 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getId()
 	 * @generated
 	 * @ordered
@@ -62,6 +58,7 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	 * The default value of the '{@link #getBuildNumber() <em>Build Number</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getBuildNumber()
 	 * @generated
 	 * @ordered
@@ -72,6 +69,7 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	 * The cached value of the '{@link #getBuildNumber() <em>Build Number</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getBuildNumber()
 	 * @generated
 	 * @ordered
@@ -82,6 +80,7 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	 * The default value of the '{@link #getTimestamp() <em>Timestamp</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getTimestamp()
 	 * @generated
 	 * @ordered
@@ -92,6 +91,7 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	 * The cached value of the '{@link #getTimestamp() <em>Timestamp</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getTimestamp()
 	 * @generated
 	 * @ordered
@@ -102,6 +102,7 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	 * The default value of the '{@link #getDuration() <em>Duration</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getDuration()
 	 * @generated
 	 * @ordered
@@ -112,6 +113,7 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	 * The cached value of the '{@link #getDuration() <em>Duration</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getDuration()
 	 * @generated
 	 * @ordered
@@ -122,6 +124,7 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	 * The default value of the '{@link #getDisplayName() <em>Display Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getDisplayName()
 	 * @generated
 	 * @ordered
@@ -132,6 +135,7 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	 * The cached value of the '{@link #getDisplayName() <em>Display Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getDisplayName()
 	 * @generated
 	 * @ordered
@@ -142,6 +146,7 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	 * The default value of the '{@link #getState() <em>State</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getState()
 	 * @generated
 	 * @ordered
@@ -152,6 +157,7 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	 * The cached value of the '{@link #getState() <em>State</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getState()
 	 * @generated
 	 * @ordered
@@ -162,6 +168,7 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	 * The default value of the '{@link #getStatus() <em>Status</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getStatus()
 	 * @generated
 	 * @ordered
@@ -172,6 +179,7 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	 * The cached value of the '{@link #getStatus() <em>Status</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getStatus()
 	 * @generated
 	 * @ordered
@@ -182,6 +190,7 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	 * The cached value of the '{@link #getArtifacts() <em>Artifacts</em>}' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getArtifacts()
 	 * @generated
 	 * @ordered
@@ -192,6 +201,7 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	 * The cached value of the '{@link #getChangeSet() <em>Change Set</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getChangeSet()
 	 * @generated
 	 * @ordered
@@ -201,6 +211,7 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected Build() {
@@ -210,6 +221,7 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -221,10 +233,10 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	 * Returns the value of the '<em><b>Id</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Id</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Id</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Id</em>' attribute.
 	 * @see #setId(String)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuild_Id()
@@ -239,7 +251,9 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.Build#getId <em>Id</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Id</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Id</em>' attribute.
 	 * @see #getId()
 	 * @generated
 	 */
@@ -254,10 +268,11 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	 * Returns the value of the '<em><b>Build Number</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Build Number</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Build Number</em>' attribute isn't clear, there really should be more of a description
+	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Build Number</em>' attribute.
 	 * @see #setBuildNumber(int)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuild_BuildNumber()
@@ -269,10 +284,13 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	}
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.Build#getBuildNumber <em>Build Number</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.Build#getBuildNumber <em>Build Number</em>}'
+	 * attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Build Number</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Build Number</em>' attribute.
 	 * @see #getBuildNumber()
 	 * @generated
 	 */
@@ -288,10 +306,11 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	 * Returns the value of the '<em><b>Timestamp</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Timestamp</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Timestamp</em>' attribute isn't clear, there really should be more of a description
+	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Timestamp</em>' attribute.
 	 * @see #setTimestamp(long)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuild_Timestamp()
@@ -303,10 +322,13 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	}
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.Build#getTimestamp <em>Timestamp</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.Build#getTimestamp <em>Timestamp</em>}'
+	 * attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Timestamp</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Timestamp</em>' attribute.
 	 * @see #getTimestamp()
 	 * @generated
 	 */
@@ -322,10 +344,11 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	 * Returns the value of the '<em><b>Duration</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Duration</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Duration</em>' attribute isn't clear, there really should be more of a description
+	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Duration</em>' attribute.
 	 * @see #setDuration(long)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuild_Duration()
@@ -337,10 +360,13 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	}
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.Build#getDuration <em>Duration</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.Build#getDuration <em>Duration</em>}'
+	 * attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Duration</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Duration</em>' attribute.
 	 * @see #getDuration()
 	 * @generated
 	 */
@@ -355,10 +381,11 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	 * Returns the value of the '<em><b>Display Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Display Name</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Display Name</em>' attribute isn't clear, there really should be more of a description
+	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Display Name</em>' attribute.
 	 * @see #setDisplayName(String)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuild_DisplayName()
@@ -370,10 +397,13 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	}
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.Build#getDisplayName <em>Display Name</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.Build#getDisplayName <em>Display Name</em>}'
+	 * attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Display Name</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Display Name</em>' attribute.
 	 * @see #getDisplayName()
 	 * @generated
 	 */
@@ -389,10 +419,11 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	 * Returns the value of the '<em><b>State</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>State</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>State</em>' attribute isn't clear, there really should be more of a description
+	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>State</em>' attribute.
 	 * @see #setState(BuildState)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuild_State()
@@ -407,7 +438,9 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.Build#getState <em>State</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>State</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>State</em>' attribute.
 	 * @see #getState()
 	 * @generated
 	 */
@@ -422,10 +455,11 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	 * Returns the value of the '<em><b>Status</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Status</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Status</em>' attribute isn't clear, there really should be more of a description
+	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Status</em>' attribute.
 	 * @see #setStatus(BuildStatus)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuild_Status()
@@ -440,7 +474,9 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.Build#getStatus <em>Status</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Status</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Status</em>' attribute.
 	 * @see #getStatus()
 	 * @generated
 	 */
@@ -456,10 +492,11 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	 * The list contents are of type {@link org.eclipse.mylyn.builds.core.IArtifact}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Artifacts</em>' reference list isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Artifacts</em>' reference list isn't clear, there really should be more of a
+	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Artifacts</em>' reference list.
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuild_Artifacts()
 	 * @model type="org.eclipse.mylyn.internal.builds.core.IArtifact"
@@ -476,10 +513,11 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	 * Returns the value of the '<em><b>Change Set</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Change Set</em>' reference isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Change Set</em>' reference isn't clear, there really should be more of a description
+	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Change Set</em>' reference.
 	 * @see #setChangeSet(IChangeSet)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuild_ChangeSet()
@@ -502,6 +540,7 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IChangeSet basicGetChangeSet() {
@@ -509,10 +548,13 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	}
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.Build#getChangeSet <em>Change Set</em>}' reference.
+	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.Build#getChangeSet <em>Change Set</em>}'
+	 * reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Change Set</em>' reference.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Change Set</em>' reference.
 	 * @see #getChangeSet()
 	 * @generated
 	 */
@@ -527,6 +569,7 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -559,6 +602,7 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -600,6 +644,7 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -639,6 +684,7 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -669,6 +715,7 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

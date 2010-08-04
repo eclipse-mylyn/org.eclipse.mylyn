@@ -21,7 +21,7 @@ import org.apache.commons.httpclient.auth.DigestScheme;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylyn.builds.core.IOperationMonitor;
+import org.eclipse.mylyn.commons.core.IOperationMonitor;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.UnsupportedRequestException;

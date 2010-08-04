@@ -14,6 +14,7 @@ package org.eclipse.mylyn.builds.core;
 /**
  * @author Steffen Pingel
  */
+// FIXME rename
 public enum BuildStatus {
 
 	SUCCESS, FAILED, UNSTABLE, DISABLED;

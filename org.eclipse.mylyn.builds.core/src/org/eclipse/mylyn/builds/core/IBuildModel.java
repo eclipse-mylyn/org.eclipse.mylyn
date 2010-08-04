@@ -15,11 +15,13 @@ import java.util.List;
 
 /**
  * @author Steffen Pingel
+ * @noimplement This interface is not intended to be implemented by clients.
+ * @noextend This interface is not intended to be extended by clients.
  */
 public interface IBuildModel {
 
 	public List<IBuildServer> getServers();
 
-	public void refresh(IOperationMonitor monitor);
+	public List<IBuildPlan> getPlans();
 
 }

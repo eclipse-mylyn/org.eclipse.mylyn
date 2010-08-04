@@ -9,13 +9,15 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.builds.core.tasks;
+package org.eclipse.mylyn.internal.builds.core;
 
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
-import org.eclipse.mylyn.internal.builds.core.BuildServer;
 
+/**
+ * @author Steffen Pingel
+ */
 public interface IBuildLoader {
 
 	public BuildServerBehaviour loadBehaviour(BuildServer server) throws CoreException;

@@ -15,6 +15,8 @@ package org.eclipse.mylyn.builds.core;
  * Transfer object for build plans that are not attached to a model.
  * 
  * @author Steffen Pingel
+ * @noimplement This interface is not intended to be implemented by clients.
+ * @noextend This interface is not intended to be extended by clients.
  */
 public interface IBuildPlanData {
 

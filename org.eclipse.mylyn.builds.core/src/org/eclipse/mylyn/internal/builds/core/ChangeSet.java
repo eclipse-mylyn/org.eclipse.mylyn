@@ -2,24 +2,19 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ChangeSet.java,v 1.1 2010/07/08 02:02:34 spingel Exp $
+ * $Id: ChangeSet.java,v 1.2 2010/08/04 07:38:41 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
-
 import org.eclipse.mylyn.builds.core.IChange;
 import org.eclipse.mylyn.builds.core.IChangeSet;
 
@@ -27,8 +22,7 @@ import org.eclipse.mylyn.builds.core.IChangeSet;
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Change Set</b></em>'.
  * <!-- end-user-doc -->
- *
- *
+ * 
  * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getChangeSet()
  * @model kind="class" superTypes="org.eclipse.mylyn.internal.builds.core.IChangeSet"
  * @generated
@@ -38,6 +32,7 @@ public class ChangeSet extends EObjectImpl implements EObject, IChangeSet {
 	 * The cached value of the '{@link #getChanges() <em>Changes</em>}' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getChanges()
 	 * @generated
 	 * @ordered
@@ -48,6 +43,7 @@ public class ChangeSet extends EObjectImpl implements EObject, IChangeSet {
 	 * The default value of the '{@link #getKind() <em>Kind</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getKind()
 	 * @generated
 	 * @ordered
@@ -58,6 +54,7 @@ public class ChangeSet extends EObjectImpl implements EObject, IChangeSet {
 	 * The cached value of the '{@link #getKind() <em>Kind</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getKind()
 	 * @generated
 	 * @ordered
@@ -67,6 +64,7 @@ public class ChangeSet extends EObjectImpl implements EObject, IChangeSet {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected ChangeSet() {
@@ -76,6 +74,7 @@ public class ChangeSet extends EObjectImpl implements EObject, IChangeSet {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -88,10 +87,11 @@ public class ChangeSet extends EObjectImpl implements EObject, IChangeSet {
 	 * The list contents are of type {@link org.eclipse.mylyn.builds.core.IChange}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Changes</em>' reference list isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Changes</em>' reference list isn't clear, there really should be more of a description
+	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Changes</em>' reference list.
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIChangeSet_Changes()
 	 * @model type="org.eclipse.mylyn.internal.builds.core.IChange"
@@ -108,10 +108,10 @@ public class ChangeSet extends EObjectImpl implements EObject, IChangeSet {
 	 * Returns the value of the '<em><b>Kind</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Kind</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Kind</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Kind</em>' attribute.
 	 * @see #setKind(String)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIChangeSet_Kind()
@@ -126,7 +126,9 @@ public class ChangeSet extends EObjectImpl implements EObject, IChangeSet {
 	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.ChangeSet#getKind <em>Kind</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Kind</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Kind</em>' attribute.
 	 * @see #getKind()
 	 * @generated
 	 */
@@ -140,6 +142,7 @@ public class ChangeSet extends EObjectImpl implements EObject, IChangeSet {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -156,6 +159,7 @@ public class ChangeSet extends EObjectImpl implements EObject, IChangeSet {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -176,6 +180,7 @@ public class ChangeSet extends EObjectImpl implements EObject, IChangeSet {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -194,6 +199,7 @@ public class ChangeSet extends EObjectImpl implements EObject, IChangeSet {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -210,6 +216,7 @@ public class ChangeSet extends EObjectImpl implements EObject, IChangeSet {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

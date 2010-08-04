@@ -2,18 +2,16 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildAdapterFactory.java,v 1.6 2010/07/08 02:02:34 spingel Exp $
+ * $Id: BuildAdapterFactory.java,v 1.7 2010/08/04 07:38:41 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
 import java.util.Map;
+
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.mylyn.builds.core.IArtifact;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildElement;
@@ -32,6 +30,7 @@ import org.eclipse.mylyn.builds.core.IUser;
  * The <b>Adapter Factory</b> for the model.
  * It provides an adapter <code>createXXX</code> method for each class of the model.
  * <!-- end-user-doc -->
+ * 
  * @see org.eclipse.mylyn.internal.builds.core.BuildPackage
  * @generated
  */
@@ -40,6 +39,7 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 	 * The cached model package.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected static BuildPackage modelPackage;
@@ -48,6 +48,7 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 	 * Creates an instance of the adapter factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public BuildAdapterFactory() {
@@ -59,8 +60,10 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 	/**
 	 * Returns whether this factory is applicable for the type of the object.
 	 * <!-- begin-user-doc -->
-	 * This implementation returns <code>true</code> if the object is either the model's package or is an instance object of the model.
+	 * This implementation returns <code>true</code> if the object is either the model's package or is an instance
+	 * object of the model.
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return whether this factory is applicable for the type of the object.
 	 * @generated
 	 */
@@ -79,6 +82,7 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 	 * The switch that delegates to the <code>createXXX</code> methods.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected BuildSwitch<Adapter> modelSwitch = new BuildSwitch<Adapter>() {
@@ -202,7 +206,9 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 	 * Creates an adapter for the <code>target</code>.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param target the object to adapt.
+	 * 
+	 * @param target
+	 *            the object to adapt.
 	 * @return the adapter for the <code>target</code>.
 	 * @generated
 	 */
@@ -212,11 +218,13 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.internal.builds.core.BuildModel <em>Model</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.internal.builds.core.BuildModel
+	 * <em>Model</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildModel
 	 * @generated
@@ -226,11 +234,13 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.internal.builds.core.BuildPlan <em>Plan</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.internal.builds.core.BuildPlan
+	 * <em>Plan</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPlan
 	 * @generated
@@ -240,11 +250,13 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.internal.builds.core.BuildServer <em>Server</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.internal.builds.core.BuildServer
+	 * <em>Server</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildServer
 	 * @generated
@@ -254,11 +266,13 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.builds.core.IBuildModel <em>IBuild Model</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.builds.core.IBuildModel
+	 * <em>IBuild Model</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.builds.core.IBuildModel
 	 * @generated
@@ -268,11 +282,13 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.builds.core.IBuildElement <em>IBuild Element</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.builds.core.IBuildElement
+	 * <em>IBuild Element</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.builds.core.IBuildElement
 	 * @generated
@@ -282,11 +298,13 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.builds.core.IBuildPlan <em>IBuild Plan</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.builds.core.IBuildPlan
+	 * <em>IBuild Plan</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.builds.core.IBuildPlan
 	 * @generated
@@ -296,11 +314,13 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.builds.core.IBuildPlanData <em>IBuild Plan Data</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.builds.core.IBuildPlanData
+	 * <em>IBuild Plan Data</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.builds.core.IBuildPlanData
 	 * @generated
@@ -310,11 +330,13 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy <em>IBuild Plan Working Copy</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy
+	 * <em>IBuild Plan Working Copy</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy
 	 * @generated
@@ -324,11 +346,13 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.builds.core.IBuildServer <em>IBuild Server</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.builds.core.IBuildServer
+	 * <em>IBuild Server</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.builds.core.IBuildServer
 	 * @generated
@@ -338,11 +362,13 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.internal.builds.core.Artifact <em>Artifact</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.internal.builds.core.Artifact
+	 * <em>Artifact</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.internal.builds.core.Artifact
 	 * @generated
@@ -352,11 +378,13 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.internal.builds.core.Build <em>Build</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.internal.builds.core.Build <em>Build</em>}
+	 * '.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.internal.builds.core.Build
 	 * @generated
@@ -366,11 +394,13 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.internal.builds.core.ChangeSet <em>Change Set</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.internal.builds.core.ChangeSet
+	 * <em>Change Set</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.internal.builds.core.ChangeSet
 	 * @generated
@@ -380,11 +410,13 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.internal.builds.core.Change <em>Change</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.internal.builds.core.Change
+	 * <em>Change</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.internal.builds.core.Change
 	 * @generated
@@ -399,6 +431,7 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.internal.builds.core.File
 	 * @generated
@@ -413,6 +446,7 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.internal.builds.core.User
 	 * @generated
@@ -422,11 +456,13 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.builds.core.IArtifact <em>IArtifact</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.builds.core.IArtifact <em>IArtifact</em>}
+	 * '.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.builds.core.IArtifact
 	 * @generated
@@ -441,6 +477,7 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.builds.core.IBuild
 	 * @generated
@@ -450,11 +487,13 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.builds.core.IChangeSet <em>IChange Set</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.builds.core.IChangeSet
+	 * <em>IChange Set</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.builds.core.IChangeSet
 	 * @generated
@@ -469,6 +508,7 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.builds.core.IChange
 	 * @generated
@@ -483,6 +523,7 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.builds.core.IFile
 	 * @generated
@@ -497,6 +538,7 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.builds.core.IUser
 	 * @generated
@@ -511,6 +553,7 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the new adapter.
 	 * @see java.util.Map.Entry
 	 * @generated
@@ -524,6 +567,7 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null.
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the new adapter.
 	 * @generated
 	 */

@@ -23,12 +23,10 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.builds.core.IBuildPlan;
-import org.eclipse.mylyn.builds.core.IBuildPlanData;
 import org.eclipse.mylyn.builds.core.IBuildServer;
-import org.eclipse.mylyn.builds.core.IOperationMonitor;
+import org.eclipse.mylyn.builds.core.spi.BuildServerConfiguration;
+import org.eclipse.mylyn.commons.core.IOperationMonitor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.builds.core.BuildPlan;
 import org.eclipse.mylyn.internal.builds.core.BuildServer;
 import org.eclipse.mylyn.internal.builds.core.BuildsCorePlugin;
 import org.eclipse.osgi.util.NLS;
@@ -36,18 +34,15 @@ import org.eclipse.osgi.util.NLS;
 /**
  * @author Steffen Pingel
  */
-public class RefreshOperation extends AbstractBuildOperation {
+public class RefreshConfigurationsOperation extends AbstractBuildOperation {
 
 	private final List<IBuildServer> servers;
 
-	public RefreshOperation(List<IBuildServer> servers) {
-		super("Refresh Builds");
+	public RefreshConfigurationsOperation(List<IBuildServer> servers) {
+		super("Refresh Configuration");
 		Assert.isNotNull(servers);
 		this.servers = new ArrayList<IBuildServer>(servers.size());
 		for (IBuildServer server : servers) {
-			if (server.getRepository() != null && server.getRepository().isOffline()) {
-				continue;
-			}
 			this.servers.add(((BuildServer) server).createWorkingCopy());
 		}
 	}
@@ -55,9 +50,14 @@ public class RefreshOperation extends AbstractBuildOperation {
 	@Override
 	protected IStatus doExecute(IOperationMonitor progress) {
 		MultiStatus result = new MultiStatus(BuildsCorePlugin.ID_PLUGIN, 0, "Refreshing of builds failed", null);
-		progress.beginTask("Refreshing builds", servers.size());
+		if (servers.size() == 1) {
+			progress.beginTask("Refreshing configuration", servers.size());
+		} else {
+			progress.beginTask("Refreshing server configurations", servers.size());
+		}
 		for (IBuildServer server : servers) {
 			try {
+				progress.subTask(NLS.bind("{0}", server.getLabel()));
 				doRefresh((BuildServer) server, progress.newChild(1));
 			} catch (CoreException e) {
 				result.add(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN, NLS.bind(
@@ -71,10 +71,10 @@ public class RefreshOperation extends AbstractBuildOperation {
 	}
 
 	public void doRefresh(final BuildServer server, final IOperationMonitor monitor) throws CoreException {
-		final AtomicReference<List<IBuildPlanData>> result = new AtomicReference<List<IBuildPlanData>>();
+		final AtomicReference<BuildServerConfiguration> result = new AtomicReference<BuildServerConfiguration>();
 		SafeRunner.run(new ISafeRunnable() {
 			public void run() throws Exception {
-				result.set(server.getBehaviour().getPlans(monitor));
+				result.set(server.getBehaviour().refreshConfiguration(monitor));
 			}
 
 			public void handleException(Throwable e) {
@@ -84,24 +84,8 @@ public class RefreshOperation extends AbstractBuildOperation {
 		});
 		if (result.get() == null) {
 			throw new CoreException(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN,
-					"Server did not provide any plans."));
+					"Server did not provide a valid configuration."));
 		}
-		final BuildServer original = server.getOriginal();
-		original.getLoader().getRealm().exec(new Runnable() {
-			public void run() {
-				ArrayList<IBuildPlan> newPlans = new ArrayList<IBuildPlan>();
-				for (IBuildPlanData newPlan : result.get()) {
-					IBuildPlan oldPlan = original.getPlanById(newPlan.getId());
-					if (oldPlan != null) {
-						((BuildPlan) newPlan).setSelected(oldPlan.isSelected());
-					}
-					newPlans.add((IBuildPlan) newPlan);
-				}
-
-				original.getPlans().clear();
-				original.getPlans().addAll(newPlans);
-			}
-		});
 	}
 
 }

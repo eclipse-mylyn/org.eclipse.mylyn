@@ -11,27 +11,15 @@
 
 package org.eclipse.mylyn.builds.core;
 
-import org.eclipse.core.runtime.IProgressMonitorWithBlocking;
+import java.util.List;
 
 /**
  * @author Steffen Pingel
+ * @noimplement This interface is not intended to be implemented by clients.
+ * @noextend This interface is not intended to be extended by clients.
  */
-public interface IOperationMonitor extends IProgressMonitorWithBlocking {
+public interface IBuildServerConfiguration {
 
-	public enum OperationFlag {
-		BACKGROUND
-	};
-
-	public abstract void addFlag(OperationFlag flag);
-
-	public abstract boolean hasFlag(OperationFlag flag);
-
-	public abstract IOperationMonitor newChild(int totalWork);
-
-	public abstract IOperationMonitor newChild(int totalWork, int suppressFlags);
-
-	public void removeFlag(OperationFlag flag);
-
-	public abstract IOperationMonitor setWorkRemaining(int workRemaining);
+	public List<IBuildPlan> getPlans();
 
 }

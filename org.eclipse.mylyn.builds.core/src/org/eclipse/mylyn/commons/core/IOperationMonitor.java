@@ -9,26 +9,31 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.builds.core;
+package org.eclipse.mylyn.commons.core;
 
-import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.IProgressMonitorWithBlocking;
 
 /**
  * @author Steffen Pingel
  * @noimplement This interface is not intended to be implemented by clients.
  * @noextend This interface is not intended to be extended by clients.
  */
-public interface IBuildElement {
+public interface IOperationMonitor extends IProgressMonitorWithBlocking {
 
-	IBuildServer getServer();
+	public enum OperationFlag {
+		BACKGROUND
+	};
 
-	String getUrl();
+	public abstract void addFlag(OperationFlag flag);
 
-	String getName();
+	public abstract boolean hasFlag(OperationFlag flag);
 
-	String getLabel();
+	public abstract IOperationMonitor newChild(int totalWork);
 
-	// FIXME rename
-	IStatus getOperationStatus();
+	public abstract IOperationMonitor newChild(int totalWork, int suppressFlags);
+
+	public void removeFlag(OperationFlag flag);
+
+	public abstract IOperationMonitor setWorkRemaining(int workRemaining);
 
 }
