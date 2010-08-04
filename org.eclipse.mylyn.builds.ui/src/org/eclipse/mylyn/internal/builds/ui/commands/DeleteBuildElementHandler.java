@@ -11,11 +11,14 @@
 
 package org.eclipse.mylyn.internal.builds.ui.commands;
 
+import java.util.List;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -30,6 +33,8 @@ public class DeleteBuildElementHandler extends AbstractHandler {
 		if (selection instanceof IStructuredSelection) {
 			Object item = ((IStructuredSelection) selection).getFirstElement();
 			if (item instanceof IBuildServer) {
+				List<IBuildPlan> plans = BuildsUiInternal.getModel().getPlans((IBuildServer) item);
+				BuildsUiInternal.getModel().getPlans().removeAll(plans);
 				BuildsUiInternal.getModel().getServers().remove(item);
 			}
 		}

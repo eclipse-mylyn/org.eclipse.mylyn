@@ -26,13 +26,11 @@ import org.eclipse.mylyn.builds.core.IBuildModel;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.spi.BuildConnector;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
-import org.eclipse.mylyn.internal.builds.core.tasks.BuildTaskConnector;
+import org.eclipse.mylyn.internal.builds.core.BuildServer;
 import org.eclipse.mylyn.internal.builds.ui.BuildConnectorDelegate;
 import org.eclipse.mylyn.internal.builds.ui.BuildConnectorDescriptor;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.ui.statushandlers.StatusManager;
 
 /**
@@ -42,8 +40,8 @@ public class BuildsUi {
 
 	private static HashMap<String, BuildConnector> connectorByKind;
 
-	public synchronized static BuildConnector getConnector(String connenctorKind) {
-		return getConnectorsByKind().get(connenctorKind);
+	public synchronized static BuildConnector getConnector(String connectorKind) {
+		return getConnectorsByKind().get(connectorKind);
 	}
 
 	public synchronized static IBuildModel getModel() {
@@ -57,7 +55,7 @@ public class BuildsUi {
 
 		connectorByKind = new HashMap<String, BuildConnector>();
 
-		MultiStatus result = new MultiStatus(TasksUiPlugin.ID_PLUGIN, 0, "Build connectors failed to load.", null); //$NON-NLS-1$
+		MultiStatus result = new MultiStatus(BuildsUiPlugin.ID_PLUGIN, 0, "Build connectors failed to load.", null); //$NON-NLS-1$
 
 		// read core and migrator extensions to check for id conflicts
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
@@ -89,12 +87,12 @@ public class BuildsUi {
 		return new ArrayList<BuildConnector>(getConnectorsByKind().values());
 	}
 
-	public static BuildConnector getConnector(TaskRepository repository) {
-		return getConnector(repository.getProperty(BuildTaskConnector.TASK_REPOSITORY_KEY_BUILD_CONNECTOR_KIND));
-	}
-
 	public static IBuildServer createServer(String connectorKind) {
 		return BuildsUiInternal.createServer(connectorKind, new RepositoryLocation());
+	}
+
+	public static BuildConnector getConnector(IBuildServer server) {
+		return getConnector(((BuildServer) server).getConnectorKind());
 	}
 
 }

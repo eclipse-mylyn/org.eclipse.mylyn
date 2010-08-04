@@ -11,7 +11,10 @@
 
 package org.eclipse.mylyn.builds.ui.spi;
 
+import java.util.List;
+
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
 import org.eclipse.mylyn.commons.ui.team.RepositoryWizardPage;
@@ -23,8 +26,11 @@ public class BuildServerWizardPage extends RepositoryWizardPage {
 
 	private IBuildServer model;
 
+	private List<IBuildPlan> selectedPlans;
+
 	public BuildServerWizardPage(String pageName) {
 		super(pageName);
+		setTitle("Build Server Properties");
 		setElement(new IAdaptable() {
 			public Object getAdapter(Class adapter) {
 				if (adapter == RepositoryLocation.class) {
@@ -37,15 +43,27 @@ public class BuildServerWizardPage extends RepositoryWizardPage {
 
 	@Override
 	protected BuildServerPart doCreateRepositoryPart() {
-		return new BuildServerPart(getModel());
+		BuildServerPart buildServerPart = new BuildServerPart(getModel());
+		buildServerPart.initSelectedPlans(selectedPlans);
+		return buildServerPart;
 	}
 
 	public IBuildServer getModel() {
 		return model;
 	}
 
-	public void init(IBuildServer model) {
+	@Override
+	public BuildServerPart getPart() {
+		return (BuildServerPart) super.getPart();
+	}
+
+	public List<IBuildPlan> getSelectedPlans() {
+		return getPart().getSelectedPlans();
+	}
+
+	public void init(IBuildServer model, List<IBuildPlan> selectedPlans) {
 		this.model = model;
+		this.selectedPlans = selectedPlans;
 	}
 
 }

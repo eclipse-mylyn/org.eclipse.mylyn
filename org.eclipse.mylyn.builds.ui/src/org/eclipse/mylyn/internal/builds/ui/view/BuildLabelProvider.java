@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.builds.ui.view;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.DecorationOverlayIcon;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StyledString;
@@ -41,16 +42,25 @@ public class BuildLabelProvider extends LabelProvider implements IStyledLabelPro
 
 	@Override
 	public Image getImage(Object element) {
+		ImageDescriptor descriptor = null;
+		ImageDescriptor bottomLeftDecoration = null;
+		ImageDescriptor bottomRightDecoration = null;
+		if (element instanceof IBuildElement) {
+			bottomLeftDecoration = getBottomLeftDecoration((IBuildElement) element);
+		}
 		if (element instanceof IBuildPlan) {
-			ImageDescriptor descriptor = getImageDescriptor((IBuildPlan) element);
-			ImageDescriptor decoration = getDecoration((IBuildPlan) element);
-			if (decoration != null) {
-				return CommonImages.getImageWithOverlay(descriptor, decoration, false, false);
-			}
-			return CommonImages.getImage(descriptor);
+			descriptor = getImageDescriptor((IBuildPlan) element);
+			bottomRightDecoration = getBottomRightDecoration((IBuildPlan) element);
 		}
 		if (element instanceof IBuildServer) {
-			return CommonImages.getImage(BuildImages.SERVER);
+			descriptor = BuildImages.SERVER;
+		}
+		if (descriptor != null) {
+			if (bottomRightDecoration != null || bottomLeftDecoration != null) {
+				descriptor = new DecorationOverlayIcon(CommonImages.getImage(descriptor), new ImageDescriptor[] { null,
+						null, bottomLeftDecoration, bottomRightDecoration });
+			}
+			return CommonImages.getImage(descriptor);
 		}
 		return null;
 	}
@@ -69,7 +79,14 @@ public class BuildLabelProvider extends LabelProvider implements IStyledLabelPro
 		return CommonImages.BLANK;
 	}
 
-	private ImageDescriptor getDecoration(IBuildPlan element) {
+	private ImageDescriptor getBottomLeftDecoration(IBuildElement element) {
+		if (element.getOperationStatus() != null) {
+			return CommonImages.OVERLAY_WARNING;
+		}
+		return null;
+	}
+
+	private ImageDescriptor getBottomRightDecoration(IBuildPlan element) {
 		if (((BuildPlan) element).getState() == BuildState.RUNNING) {
 			return BuildImages.DECORATION_RUNNING;
 		}
@@ -81,7 +98,8 @@ public class BuildLabelProvider extends LabelProvider implements IStyledLabelPro
 		if (text != null) {
 			StyledString styledString = new StyledString(text);
 			if (element instanceof IBuildServer) {
-				styledString.append(" [" + ((BuildServer) element).getUrl() + "]", StyledString.DECORATIONS_STYLER);
+				styledString.append(" [" + ((BuildServer) element).getLocation().getUrl() + "]",
+						StyledString.DECORATIONS_STYLER);
 			}
 			return styledString;
 		}
@@ -91,7 +109,7 @@ public class BuildLabelProvider extends LabelProvider implements IStyledLabelPro
 	@Override
 	public String getText(Object element) {
 		if (element instanceof IBuildElement) {
-			return ((IBuildElement) element).getName();
+			return ((IBuildElement) element).getLabel();
 		}
 		return null;
 	}

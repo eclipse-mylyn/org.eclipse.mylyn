@@ -27,32 +27,6 @@
             name="Builds">
       </category>
    </extension>
-   <extension
-         point="org.eclipse.ui.perspectiveExtensions">
-      <perspectiveExtension
-            targetID="org.eclipse.ui.resourcePerspective">
-         <view
-               id="org.eclipse.mylyn.builds.navigator.builds"
-               ratio="0.5"
-               relationship="stack"
-               relative="org.eclipse.ui.navigator.ProjectExplorer">
-         </view>
-      </perspectiveExtension>
-   </extension>
-   <extension
-         point="org.eclipse.mylyn.tasks.ui.repositories">
-      <connectorCore
-            class="org.eclipse.mylyn.internal.builds.core.tasks.BuildTaskConnector"
-            id="org.eclpise.mylyn.builds"
-            name="Continuous Integration">
-      </connectorCore>
-      <connectorUi
-            brandingIcon="icons/eview16/build-view.png"
-            class="org.eclipse.mylyn.internal.builds.ui.tasks.BuildTaskConnectorUi"
-            id="org.eclpise.mylyn.builds"
-            name="Continuous Integration">
-      </connectorUi>
-   </extension>
     <extension point="org.eclipse.ui.preferencePages">
 		<page name="Builds"
 			class="org.eclipse.mylyn.internal.builds.ui.BuildsPreferencesPage"
@@ -75,7 +49,7 @@
  <extension
        point="org.eclipse.ui.navigator.navigatorContent">
     <navigatorContent
-          contentProvider="org.eclipse.mylyn.internal.builds.ui.view.BuildContentProvider"
+          contentProvider="org.eclipse.mylyn.internal.builds.ui.navigator.BuildNavigatorContentProvider"
           icon="icons/eview16/build-view.png"
           id="org.eclipse.mylyn.builds.ui.navigator.BuildRepositories"
           labelProvider="org.eclipse.mylyn.internal.builds.ui.view.BuildLabelProvider"
@@ -87,7 +61,7 @@
        </possibleChildren>
        <triggerPoints>
           <instanceof
-                value="org.eclipse.mylyn.internal.tasks.core.RepositoryModel">
+                value="org.eclipse.mylyn.commons.ui.team.RepositoryViewModel">
           </instanceof>
        </triggerPoints>
     </navigatorContent>

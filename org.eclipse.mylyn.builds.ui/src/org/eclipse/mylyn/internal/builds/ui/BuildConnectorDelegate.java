@@ -13,12 +13,9 @@ package org.eclipse.mylyn.internal.builds.ui;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.spi.BuildConnector;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
-import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
-import org.eclipse.mylyn.tasks.ui.TaskRepositoryLocationUiFactory;
 
 /**
  * @author Steffen Pingel
@@ -31,12 +28,9 @@ public class BuildConnectorDelegate extends BuildConnector {
 
 	private final BuildConnectorDescriptor descriptor;
 
-	private static TaskRepositoryLocationFactory locationFactory = new TaskRepositoryLocationUiFactory();
-
 	public BuildConnectorDelegate(BuildConnectorDescriptor descriptor) {
 		this.descriptor = descriptor;
 		init(descriptor.connectorKind, descriptor.label);
-		setLocationFactory(locationFactory);
 	}
 
 	public synchronized BuildConnector getCore() throws CoreException {
@@ -48,7 +42,6 @@ public class BuildConnectorDelegate extends BuildConnector {
 		}
 		IStatus result = descriptor.createConnector();
 		if (result.isOK()) {
-			descriptor.core.setLocationFactory(locationFactory);
 			core = descriptor.core;
 		} else {
 			status = result;
@@ -57,11 +50,6 @@ public class BuildConnectorDelegate extends BuildConnector {
 			throw new CoreException(status);
 		}
 		return core;
-	}
-
-	@Override
-	public BuildServerBehaviour getBehaviour(IBuildServer server) throws CoreException {
-		return getCore().getBehaviour(server);
 	}
 
 	@Override

@@ -25,10 +25,8 @@ import org.eclipse.mylyn.builds.ui.BuildsUi;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
 import org.eclipse.mylyn.internal.builds.core.BuildModel;
 import org.eclipse.mylyn.internal.builds.core.BuildServer;
-import org.eclipse.mylyn.internal.builds.core.tasks.IBuildLoader;
+import org.eclipse.mylyn.internal.builds.core.IBuildLoader;
 import org.eclipse.mylyn.internal.builds.core.util.BuildModelManager;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 
@@ -39,6 +37,17 @@ public class BuildsUiInternal {
 
 	private static IBuildLoader buildLoader = new IBuildLoader() {
 		private volatile Realm realm;
+
+		public Realm getRealm() {
+			if (realm == null) {
+				Display.getDefault().syncExec(new Runnable() {
+					public void run() {
+						realm = SWTObservables.getRealm(Display.getDefault());
+					}
+				});
+			}
+			return realm;
+		}
 
 		public BuildServerBehaviour loadBehaviour(BuildServer server) throws CoreException {
 			String connectorKind = server.getConnectorKind();
@@ -55,11 +64,7 @@ public class BuildsUiInternal {
 			}
 			BuildServerBehaviour behaviour;
 			try {
-				if (server.getRepository() != null) {
-					behaviour = connector.getBehaviour(server);
-				} else {
-					behaviour = connector.getBehaviour(server.getLocation());
-				}
+				behaviour = connector.getBehaviour(server.getLocation());
 			} catch (Exception e) {
 				throw new CoreException(
 						new Status(
@@ -97,54 +102,29 @@ public class BuildsUiInternal {
 			}
 			return behaviour;
 		}
-
-		public Realm getRealm() {
-			if (realm == null) {
-				Display.getDefault().syncExec(new Runnable() {
-					public void run() {
-						realm = SWTObservables.getRealm(Display.getDefault());
-					}
-				});
-			}
-			return realm;
-		}
 	};
 
 	private static BuildModelManager manager;
 
-	public static synchronized BuildModel getModel() {
-		return getManager().getModel();
+	public static IBuildServer createServer(String connectorKind, RepositoryLocation location) {
+		return getManager().createServer(connectorKind, location);
 	}
 
 	protected static synchronized BuildModelManager getManager() {
 		if (manager == null) {
 			manager = new BuildModelManager(BuildsUiPlugin.getDefault().getBuildsFile().toFile(), buildLoader);
-			manager.setRepositoryManager(TasksUi.getRepositoryManager());
 		}
 		return manager;
+	}
+
+	public static synchronized BuildModel getModel() {
+		return getManager().getModel();
 	}
 
 	public static synchronized void save() throws IOException {
 		if (manager != null) {
 			manager.save();
 		}
-	}
-
-	public static IBuildServer createServer(TaskRepository repository) {
-		return getManager().createServer(repository);
-	}
-
-	public static IBuildServer createServer(String connectorKind, RepositoryLocation location) {
-		return getManager().createServer(connectorKind, location);
-	}
-
-	public static IBuildServer getServer(TaskRepository repository) {
-		for (IBuildServer server : BuildsUi.getModel().getServers()) {
-			if (repository.equals(server.getRepository())) {
-				return server;
-			}
-		}
-		return null;
 	}
 
 }

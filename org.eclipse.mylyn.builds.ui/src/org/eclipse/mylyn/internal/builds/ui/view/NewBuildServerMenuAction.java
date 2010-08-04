@@ -16,11 +16,10 @@ import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.mylyn.internal.builds.core.tasks.BuildTaskConnector;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.builds.core.IBuildServer;
+import org.eclipse.mylyn.builds.ui.BuildsUi;
+import org.eclipse.mylyn.builds.ui.BuildsUiUtil;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -83,8 +82,7 @@ public class NewBuildServerMenuAction extends Action implements IMenuCreator {
 
 		// open repository configuration actions
 		boolean separatorAdded = false;
-		for (final TaskRepository repository : TasksUi.getRepositoryManager().getRepositories(
-				BuildTaskConnector.CONNECTOR_KIND)) {
+		for (final IBuildServer server : BuildsUi.getModel().getServers()) {
 			if (!separatorAdded) {
 				manager.add(new Separator());
 				separatorAdded = true;
@@ -94,12 +92,12 @@ public class NewBuildServerMenuAction extends Action implements IMenuCreator {
 				public void run() {
 					Display.getDefault().asyncExec(new Runnable() {
 						public void run() {
-							TasksUiUtil.openEditRepositoryWizard(repository);
+							BuildsUiUtil.openPropertiesDialog(server);
 						}
 					});
 				}
 			};
-			openAction.setText(NLS.bind("Properties for {0}", repository.getRepositoryLabel()));
+			openAction.setText(NLS.bind("Properties for {0}", server.getLocation().getLabel()));
 			manager.add(openAction);
 		}
 	}

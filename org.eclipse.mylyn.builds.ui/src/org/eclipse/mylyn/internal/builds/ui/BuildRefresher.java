@@ -15,14 +15,14 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.mylyn.internal.builds.core.operations.RefreshOperation;
+import org.eclipse.mylyn.internal.builds.core.operations.RefreshPlansOperation;
 
 /**
  * @author Steffen Pingel
  */
 public class BuildRefresher implements IPropertyChangeListener {
 
-	private RefreshOperation refreshOperation;
+	private RefreshPlansOperation refreshOperation;
 
 	private long getInterval() {
 		return BuildsUiPlugin.getDefault().getPreferenceStore().getLong(BuildsUiConstants.PREF_AUTO_REFRESH_INTERVAL);
@@ -42,7 +42,7 @@ public class BuildRefresher implements IPropertyChangeListener {
 	private synchronized void reschedule() {
 		if (isEnabled()) {
 			if (refreshOperation == null) {
-				refreshOperation = new RefreshOperation(BuildsUiInternal.getModel().getServers());
+				refreshOperation = new RefreshPlansOperation(BuildsUiInternal.getModel());
 				refreshOperation.setSystem(true);
 				refreshOperation.addJobChangeListener(new JobChangeAdapter() {
 					@Override

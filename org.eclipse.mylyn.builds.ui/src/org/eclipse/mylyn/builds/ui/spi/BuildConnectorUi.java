@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.builds.ui.spi;
 
-
 /**
  * @author Steffen Pingel
  */

@@ -16,13 +16,9 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildServer;
-import org.eclipse.mylyn.builds.ui.spi.BuildServerWizard;
-import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
-import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.ValidatableWizardDialog;
-import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.builds.ui.BuildsUiUtil;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 /**
@@ -36,14 +32,7 @@ public class BuildElementPropertiesHandler extends AbstractHandler {
 			Object item = ((IStructuredSelection) selection).getFirstElement();
 			if (item instanceof IBuildElement) {
 				IBuildServer server = ((IBuildElement) item).getServer();
-				if (server.getLocation() != null) {
-					Wizard wizard = new BuildServerWizard(server);
-					ValidatableWizardDialog dialog = new ValidatableWizardDialog(WorkbenchUtil.getShell(), wizard);
-					dialog.create();
-					return dialog.open();
-				} else {
-					TasksUiUtil.openEditRepositoryWizard(server.getRepository());
-				}
+				return BuildsUiUtil.openPropertiesDialog(server);
 			}
 		}
 		return null;

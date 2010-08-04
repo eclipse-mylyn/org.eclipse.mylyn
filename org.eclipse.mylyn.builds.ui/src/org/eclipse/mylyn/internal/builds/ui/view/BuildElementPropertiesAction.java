@@ -14,7 +14,7 @@ package org.eclipse.mylyn.internal.builds.ui.view;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildServer;
-import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.builds.ui.BuildsUiUtil;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
 /**
@@ -37,7 +37,7 @@ public class BuildElementPropertiesAction extends BaseSelectionListenerAction {
 		Object firstElement = getStructuredSelection().getFirstElement();
 		if (firstElement instanceof IBuildElement) {
 			IBuildServer server = ((IBuildElement) firstElement).getServer();
-			TasksUiUtil.openEditRepositoryWizard(server.getRepository());
+			BuildsUiUtil.openPropertiesDialog(server);
 		}
 	}
 

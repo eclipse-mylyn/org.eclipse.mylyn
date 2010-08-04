@@ -45,13 +45,10 @@ public class BuildContentProvider implements ITreeContentProvider {
 	private final Adapter modelListener = new EContentAdapter() {
 		@Override
 		public void notifyChanged(Notification msg) {
-//			Display.getDefault().asyncExec(new Runnable() {
-//				public void run() {
+			super.notifyChanged(msg);
 			if (viewer != null && !viewer.getControl().isDisposed()) {
 				viewer.refresh();
 			}
-//				}
-//			});
 		}
 	};
 
@@ -65,7 +62,7 @@ public class BuildContentProvider implements ITreeContentProvider {
 
 	public Object[] getChildren(Object parentElement) {
 		if (parentElement instanceof IBuildServer) {
-			return getPlans(parentElement, ((IBuildServer) parentElement).getPlans()).toArray();
+			return getPlans(parentElement, model.getPlans(((IBuildServer) parentElement))).toArray();
 		} else if (parentElement instanceof IBuildPlan) {
 			return getPlans(parentElement, ((IBuildPlan) parentElement).getChildren()).toArray();
 		}
@@ -76,7 +73,7 @@ public class BuildContentProvider implements ITreeContentProvider {
 		if (inputElement instanceof IBuildModel) {
 			return ((IBuildModel) inputElement).getServers().toArray();
 		} else if (inputElement instanceof IBuildServer) {
-			return getPlans(inputElement, ((IBuildServer) inputElement).getPlans()).toArray();
+			return getPlans(inputElement, model.getPlans(((IBuildServer) inputElement))).toArray();
 		} else if (inputElement == input) {
 			return model.getServers().toArray();
 		}

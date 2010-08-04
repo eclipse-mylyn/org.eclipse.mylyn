@@ -12,10 +12,12 @@
 package org.eclipse.mylyn.builds.ui.spi;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -26,19 +28,23 @@ import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ICheckStateProvider;
+import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
-import org.eclipse.mylyn.builds.core.IOperationMonitor;
-import org.eclipse.mylyn.builds.core.IOperationMonitor.OperationFlag;
+import org.eclipse.mylyn.builds.core.IBuildServerConfiguration;
+import org.eclipse.mylyn.builds.core.spi.BuildServerConfiguration;
 import org.eclipse.mylyn.builds.core.util.ProgressUtil;
+import org.eclipse.mylyn.commons.core.IOperationMonitor;
+import org.eclipse.mylyn.commons.core.IOperationMonitor.OperationFlag;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.repositories.RepositoryValidator;
 import org.eclipse.mylyn.internal.builds.core.BuildPlan;
 import org.eclipse.mylyn.internal.builds.ui.BuildServerValidator;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
-import org.eclipse.mylyn.internal.builds.ui.view.BuildContentProvider;
 import org.eclipse.mylyn.internal.commons.ui.SectionComposite;
 import org.eclipse.mylyn.internal.commons.ui.team.RepositoryLocationPart;
 import org.eclipse.mylyn.internal.provisional.commons.ui.SubstringPatternFilter;
@@ -54,6 +60,9 @@ import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 
+/**
+ * @author Steffen Pingel
+ */
 public class BuildServerPart extends RepositoryLocationPart {
 
 	private class CheckboxFilteredTree extends FilteredTree {
@@ -79,24 +88,25 @@ public class BuildServerPart extends RepositoryLocationPart {
 	}
 
 	private class Validator extends BuildServerValidator {
-		private List<IBuildPlan> plans;
+
+		private IBuildServerConfiguration configuration;
 
 		public Validator(IBuildServer server) {
 			super(server);
 		}
 
-		public List<IBuildPlan> getPlans() {
-			return plans;
+		public IBuildServerConfiguration getConfiguration() {
+			return configuration;
 		}
 
 		@Override
 		public IStatus run(IProgressMonitor monitor) {
-			IOperationMonitor progress = ProgressUtil.convert(monitor, 2);
+			IOperationMonitor progress = ProgressUtil.convert(monitor, "Validating repository", 2);
 			progress.addFlag(OperationFlag.BACKGROUND);
 			try {
 				IStatus result = getServer().validate(progress.newChild(1));
 				if (result.isOK()) {
-					plans = getServer().refreshPlans(progress.newChild(2));
+					configuration = getServer().refreshConfiguration(progress.newChild(2));
 				}
 				return result;
 			} catch (CoreException e) {
@@ -110,9 +120,12 @@ public class BuildServerPart extends RepositoryLocationPart {
 
 	private CheckboxTreeViewer planViewer;
 
+	private List<IBuildPlan> selectedPlans;
+
 	public BuildServerPart(IBuildServer model) {
 		super(model.getLocation());
 		this.model = model;
+		this.selectedPlans = Collections.emptyList();
 	}
 
 	@Override
@@ -121,17 +134,15 @@ public class BuildServerPart extends RepositoryLocationPart {
 		if (!validator.getResult().isOK()) {
 			StatusHandler.log(validator.getResult());
 		}
-		if (((Validator) validator).getPlans() != null) {
+		IBuildServerConfiguration configuration = ((Validator) validator).getConfiguration();
+		if (configuration != null) {
 			Set<String> selectedIds = getSelectedPlanIds();
-			IBuildServer server = ((Validator) validator).getServer();
-			List<IBuildPlan> selectedPlans = new ArrayList<IBuildPlan>();
-			for (IBuildPlan plan : server.getPlans()) {
+			for (IBuildPlan plan : configuration.getPlans()) {
 				if (selectedIds.contains(plan.getId())) {
-					selectedPlans.add(plan);
-					((BuildPlan) plan).setSelected(true);
+					((BuildPlan) plan).setSelected(selectedIds.contains(plan.getId()));
 				}
 			}
-			planViewer.refresh();
+			planViewer.setInput(configuration);
 			planViewer.expandAll();
 		}
 	}
@@ -188,7 +199,19 @@ public class BuildServerPart extends RepositoryLocationPart {
 	@Override
 	public Control createContents(Composite parent) {
 		Control control = super.createContents(parent);
-		planViewer.setInput(getModel());
+		try {
+			Set<String> selectedIds = new HashSet<String>();
+			for (IBuildPlan plan : selectedPlans) {
+				selectedIds.add(plan.getId());
+			}
+			IBuildServerConfiguration configuration = getModel().getConfiguration();
+			for (IBuildPlan plan : configuration.getPlans()) {
+				((BuildPlan) plan).setSelected(selectedIds.contains(plan.getId()));
+			}
+			planViewer.setInput(configuration);
+		} catch (CoreException e) {
+			// ignore
+		}
 		return control;
 	}
 
@@ -209,6 +232,7 @@ public class BuildServerPart extends RepositoryLocationPart {
 
 		CheckboxFilteredTree filteredTree = new CheckboxFilteredTree(composite, SWT.FULL_SELECTION | SWT.BORDER,
 				new SubstringPatternFilter());
+		GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 200).applyTo(filteredTree);
 		planViewer = filteredTree.getCheckboxTreeViewer();//new CheckboxTreeViewer(composite, SWT.FULL_SELECTION | SWT.BORDER);
 		planViewer.addCheckStateListener(new ICheckStateListener() {
 			public void checkStateChanged(CheckStateChangedEvent event) {
@@ -230,15 +254,42 @@ public class BuildServerPart extends RepositoryLocationPart {
 				return false;
 			}
 		});
-
 		planViewer.setLabelProvider(new LabelProvider() {
 			@Override
 			public String getText(Object element) {
 				return ((IBuildPlan) element).getName();
 			}
 		});
+		planViewer.setContentProvider(new ITreeContentProvider() {
+			private BuildServerConfiguration configuration;
 
-		planViewer.setContentProvider(new BuildContentProvider());
+			private final Object[] EMPTY_ARRAY = new Object[0];
+
+			public void dispose() {
+				// ignore
+			}
+
+			public Object[] getChildren(Object parentElement) {
+				return EMPTY_ARRAY;
+			}
+
+			public Object[] getElements(Object inputElement) {
+				return configuration.getPlans().toArray();
+			}
+
+			public Object getParent(Object element) {
+				return null;
+			}
+
+			public boolean hasChildren(Object element) {
+				return false;
+			}
+
+			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+				configuration = (BuildServerConfiguration) newInput;
+			}
+		});
+		planViewer.setSorter(new ViewerSorter());
 
 		Composite buttonComposite = new Composite(composite, SWT.NONE);
 		GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.TOP).applyTo(buttonComposite);
@@ -260,9 +311,23 @@ public class BuildServerPart extends RepositoryLocationPart {
 		return selectedIds;
 	}
 
+	public List<IBuildPlan> getSelectedPlans() {
+		Object[] checkedElements = planViewer.getCheckedElements();
+		List<IBuildPlan> selectedPlans = new ArrayList<IBuildPlan>(checkedElements.length);
+		for (Object object : checkedElements) {
+			selectedPlans.add((IBuildPlan) object);
+		}
+		return selectedPlans;
+	}
+
 	@Override
 	protected RepositoryValidator getValidator() {
 		return new Validator(getModel());
+	}
+
+	public void initSelectedPlans(List<IBuildPlan> selectedPlans) {
+		Assert.isNotNull(selectedPlans);
+		this.selectedPlans = selectedPlans;
 	}
 
 }

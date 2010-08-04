@@ -18,7 +18,7 @@ import java.util.List;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
-import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
 /**
@@ -36,7 +36,7 @@ public class OpenInBrowserAction extends BaseSelectionListenerAction {
 	public void run() {
 		List<URI> uris = getUris(getStructuredSelection());
 		for (URI uri : uris) {
-			TasksUiUtil.openUrl(uri.toString());
+			WorkbenchUtil.openUrl(uri.toString());
 		}
 	}
 
