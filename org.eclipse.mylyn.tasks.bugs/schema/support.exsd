@@ -6,7 +6,9 @@
          <meta.schema plugin="org.eclipse.mylyn.tasks.bugs" id="support" name="Integrated Support Extensions"/>
       </appInfo>
       <documentation>
-         Allows client to provide information for integrated bug reporting.
+         The &lt;code&gt;org.eclipse.mylyn.tasks.bugs.support&lt;/code&gt; extension points allows client to provide information for integrated bug reporting. Extensions can specify properties such as URLS and components for creating entries in bug repositories and provide mappings from bundles to bug repositories. These mappings are used by the corresponding UI to support creating bug reports from error log entries for instance.
+
+&lt;p&gt;Clients need to specify a &lt;code&gt;provider&lt;/code&gt; extension to describe the entity that provides support and one or more &lt;code&gt;product&lt;/code&gt; extensions to describe supported products. Supported products are typically represented by installed features. For each product one or more &lt;code&gt;mapping&lt;/code&gt; extension can be specified to associate bundles based on their namespace with the product.
       </documentation>
    </annotation>
 
@@ -27,21 +29,21 @@
          <attribute name="point" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  A fully qualified identifier of the target extension point.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="id" type="string">
             <annotation>
                <documentation>
-                  
+                  An optional identifier of the extension instance.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="name" type="string">
             <annotation>
                <documentation>
-                  
+                  An optional name of the extension instance.
                </documentation>
                <appInfo>
                   <meta.attribute translatable="true"/>
@@ -52,6 +54,15 @@
    </element>
 
    <element name="mapping">
+      <annotation>
+         <documentation>
+            This element specifies a mapping from a bundle namespace to a product. For example, the namespace prefix &lt;code&gt;org.eclipse&lt;/code&gt; will match all org.eclipse.* bundles such as &lt;code&gt;org.eclipse.platform&lt;/code&gt; or &lt;code&gt;org.eclipse.mylyn.tasks.ui&lt;/code&gt;. 
+
+&lt;p&gt;More specific namespaces include or override properties specified in less specific ones for the same product. For example a mapping for the &lt;code&gt;org.eclipse.tasks.ui&lt;/code&gt; namespace includes all properties specified for the &lt;code&gt;org.eclipse&lt;/code&gt; namespace.
+
+&lt;p&gt;Mappings are only enabled if the nested properties are sufficient to create a bug report, e.g. a repository needs to be specified. To force enablement of a mapping the special value property with the name &lt;code&gt;org.eclipse.mylyn.tasks.bugs.mappingComplete&lt;/code&gt; and value &lt;code&gt;true&lt;/code&gt; can be specified.
+         </documentation>
+      </annotation>
       <complexType>
          <sequence>
             <element ref="repository" minOccurs="0" maxOccurs="1"/>
@@ -60,14 +71,14 @@
          <attribute name="namespace" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  The namespace prefix, e.g. &lt;code&gt;org.eclipse&lt;/code&gt;.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="productId" type="string">
             <annotation>
                <documentation>
-                  
+                  The id of the product for this mapping.
                </documentation>
                <appInfo>
                   <meta.attribute kind="identifier" basedOn="org.eclipse.mylyn.tasks.bugs.support/product/@id"/>
@@ -78,18 +89,23 @@
    </element>
 
    <element name="repository">
+      <annotation>
+         <documentation>
+            This element specifies the properties for a bug repository. The repository must exist in the workspace, e.g. through defining a repository template extension.
+         </documentation>
+      </annotation>
       <complexType>
          <attribute name="url" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  The repository URL.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="kind" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  The connector kind of the repository.
                </documentation>
             </annotation>
          </attribute>
@@ -97,18 +113,23 @@
    </element>
 
    <element name="product">
+      <annotation>
+         <documentation>
+            A supported product.
+         </documentation>
+      </annotation>
       <complexType>
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  The uniquie identifier for this product.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="providerId" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  The id of the support provider for this product.
                </documentation>
                <appInfo>
                   <meta.attribute kind="identifier" basedOn="org.eclipse.mylyn.tasks.bugs.support/provider/@id"/>
@@ -118,7 +139,7 @@
          <attribute name="name" type="string">
             <annotation>
                <documentation>
-                  
+                  The name of the product. If omitted and &lt;code&gt;featureId&lt;/code&gt; or &lt;code&gt;pluginId&lt;/code&gt; is specified the name is obtained from the referenced bundle.
                </documentation>
                <appInfo>
                   <meta.attribute translatable="true"/>
@@ -128,7 +149,7 @@
          <attribute name="description" type="string">
             <annotation>
                <documentation>
-                  
+                  A description for the product. If omitted and &lt;code&gt;featureId&lt;/code&gt; or &lt;code&gt;pluginId&lt;/code&gt; is specified the description is obtained from the referenced bundle.
                </documentation>
                <appInfo>
                   <meta.attribute translatable="true"/>
@@ -138,7 +159,7 @@
          <attribute name="icon" type="string">
             <annotation>
                <documentation>
-                  A 32x32 branding icon.
+                  A 32x32 branding icon. If omitted and &lt;code&gt;featureId&lt;/code&gt; or &lt;code&gt;pluginId&lt;/code&gt; is specified the icon is obtained from the referenced bundle.
                </documentation>
                <appInfo>
                   <meta.attribute kind="resource"/>
@@ -148,21 +169,21 @@
          <attribute name="url" type="string">
             <annotation>
                <documentation>
-                  
+                  A URL for the product.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="featureId" type="string">
             <annotation>
                <documentation>
-                  
+                  The id of a feature that specifies branding information for the product. If specified the product extension is only enabled if the corresponding feature is installed.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="pluginId" type="string">
             <annotation>
                <documentation>
-                  If specified the product is only listed if the referenced plug-in is installed.
+                  The id of a bundle that specifies branding information for the product. If specified the product extension is only enabled if the corresponding plug-in is installed.
                </documentation>
             </annotation>
          </attribute>
@@ -170,18 +191,23 @@
    </element>
 
    <element name="property">
+      <annotation>
+         <documentation>
+            This element specifies the value of an attribute for creating bug reports.
+         </documentation>
+      </annotation>
       <complexType>
          <attribute name="name" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  The name of the attribute. Supportednames are: &lt;pre&gt;component, description, priority, product, severity, summary, version&lt;/pre&gt;
                </documentation>
             </annotation>
          </attribute>
          <attribute name="value" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  The value of the attribute.
                </documentation>
             </annotation>
          </attribute>
@@ -189,18 +215,23 @@
    </element>
 
    <element name="category">
+      <annotation>
+         <documentation>
+            Categories group support providers.
+         </documentation>
+      </annotation>
       <complexType>
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  The uniquie identifier for this category.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="name" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  The name of this category.
                </documentation>
                <appInfo>
                   <meta.attribute translatable="true"/>
@@ -210,7 +241,7 @@
          <attribute name="description" type="string">
             <annotation>
                <documentation>
-                  
+                  An optional description for this category.
                </documentation>
                <appInfo>
                   <meta.attribute translatable="true"/>
@@ -220,7 +251,7 @@
          <attribute name="weight" type="string">
             <annotation>
                <documentation>
-                  
+                  An optional integer value to to rank the category. Categories with lower weights are shown first.
                </documentation>
             </annotation>
          </attribute>
@@ -228,18 +259,23 @@
    </element>
 
    <element name="provider">
+      <annotation>
+         <documentation>
+            This elements describes an entity that provides support.
+         </documentation>
+      </annotation>
       <complexType>
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  The uniquie identifier for this provider.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="categoryId" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  The category of this provider.
                </documentation>
                <appInfo>
                   <meta.attribute kind="identifier" basedOn="org.eclipse.mylyn.tasks.bugs.support/category/@id"/>
@@ -249,7 +285,7 @@
          <attribute name="name" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  The name of this category.
                </documentation>
                <appInfo>
                   <meta.attribute translatable="true"/>
@@ -259,7 +295,7 @@
          <attribute name="description" type="string">
             <annotation>
                <documentation>
-                  
+                  An optional description for this provider.
                </documentation>
                <appInfo>
                   <meta.attribute translatable="true"/>
@@ -279,7 +315,7 @@
          <attribute name="url" type="string">
             <annotation>
                <documentation>
-                  
+                  An optional URL for this provider.
                </documentation>
             </annotation>
          </attribute>
@@ -287,18 +323,23 @@
    </element>
 
    <element name="handler">
+      <annotation>
+         <documentation>
+            This element specifies a class that handles instances of &lt;code&gt;ISupportRequest&lt;/code&gt;s. The framework provides a default handler that creates bug reports based on mappings but clients may customize behavior by providing their own handler.
+         </documentation>
+      </annotation>
       <complexType>
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  The unique id of this handler.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="class" type="string">
             <annotation>
                <documentation>
-                  
+                  The implementation class for this handler.
                </documentation>
                <appInfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.mylyn.tasks.bugs.AbstractSupportHandler:"/>
@@ -322,42 +363,42 @@
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         &lt;extension point=&quot;org.eclipse.mylyn.tasks.bugs.support&quot;&gt;
-&lt;category
-  id=&quot;org.eclipse.mylyn.tasks.bugs.openSource&quot;
-  name=&quot;Open-Source&quot;
-  description=&quot;Community supported Open-Source projects&quot;/&gt;
-&lt;organization
-  id=&quot;org.eclipse&quot;
-  name=&quot;Eclipse.org&quot;
-  description=&quot;Eclipse Open-Source projects&quot;
-  icon=&quot;icons/32/eclipse.png&quot;/&gt;
-&lt;product
-  id=&quot;org.eclipse.mylyn&quot;
-  name=&quot;Mylyn&quot;
-  description=&quot;Task Management and Task-Focused Interface&quot;
-  pluginId=&quot;org.eclipse.mylyn&quot; (for branding icon, installed version) /&gt;
-&lt;productRepositoryMapping
-  namespace=&quot;org.eclipse.mylyn&quot;
-  productId=&quot;org.eclipse.mylyn&quot;
-  &lt;repository
-    kind=&quot;bugzilla&quot;
-    url=&quot;https://bugs.eclipse.org/bugs&quot;&gt;
-  &lt;/repository&gt;
-  &lt;property
-    name=&quot;product&quot;
-    value=&quot;Mylyn&quot;&gt;
-  &lt;/property&gt;
-/&gt;
-&lt;productRepositoryMapping
-  namespace=&quot;org.eclipse.mylyn.tasks&quot;
-  productId=&quot;org.eclipse.mylyn&quot;
-  &lt;property
-    name=&quot;component&quot;
-    value=&quot;Tasks&quot;&gt;
-  &lt;/property&gt;
-&lt;/product&gt;
+         &lt;pre&gt;
+&lt;extension point=&quot;org.eclipse.mylyn.tasks.bugs.support&quot;&gt;
+  &lt;!-- category for grouping providers --&gt;
+  &lt;category 
+    description=&quot;Community supported open source projects&quot;
+    id=&quot;org.eclipse.mylyn.tasks.bugs.openSource&quot; name=&quot;Open Source Community&quot;
+    weight=&quot;900&quot; /&gt;
+  &lt;!-- provider that specifies branding --&gt;
+  &lt;provider 
+    categoryId=&quot;org.eclipse.mylyn.tasks.bugs.openSource&quot;
+    description=&quot;Eclipse open source community bug tracker&quot; 
+    icon=&quot;icons/branding32/eclipse.png&quot;
+    id=&quot;org.eclipse&quot; 
+    name=&quot;Eclipse.org&quot; 
+    url=&quot;http://eclipse.org/&quot; /&gt;
+  &lt;!-- mapping for all org.eclipse.* bundles --&gt;
+  &lt;mapping namespace=&quot;org.eclipse&quot;&gt;
+    &lt;repository kind=&quot;bugzilla&quot; url=&quot;https://bugs.eclipse.org/bugs&quot;/&gt;
+  &lt;/mapping&gt;
+  &lt;!-- supported product --&gt;
+  &lt;product 
+    id=&quot;org.eclipse.mylyn&quot;
+    featureId=&quot;org.eclipse.mylyn_feature&quot; 
+    pluginId=&quot;org.eclipse.mylyn&quot; 
+    providerId=&quot;org.eclipse&quot; 
+    url=&quot;http://eclipse.org/mylyn/support/&quot; /&gt;
+  &lt;!-- specific mapping for org.eclipse.mylyn.* bundles --&gt;
+  &lt;mapping namespace=&quot;org.eclipse.mylyn&quot; productId=&quot;org.eclipse.mylyn&quot;&gt;
+    &lt;property name=&quot;product&quot; value=&quot;Mylyn&quot;/&gt;
+  &lt;/mapping&gt;
+  &lt;!-- more specific mapping for org.eclipse.mylyn.tasks.* bundles --&gt;
+  &lt;mapping namespace=&quot;org.eclipse.mylyn.tasks&quot; productId=&quot;org.eclipse.mylyn&quot;&gt;
+    &lt;property name=&quot;component&quot; value=&quot;Tasks&quot;/&gt;
+  &lt;/mapping&gt;
 &lt;/extension&gt;
+&lt;/pre&gt;
       </documentation>
    </annotation>
 
