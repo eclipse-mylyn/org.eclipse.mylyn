@@ -315,9 +315,10 @@
 		<fail message="Required property 'todir' not set" unless="todir"/>
 
 		<property name="dist.dir" value="${dist.home}/update-archive/${version}/${qualifier}" />
-		<property name="target.dir" value="${archive.home}/update/${todir}" />
+		<property name="target.dir" value="${dist.home}/update/${todir}" />
+		<property name="archive.dir" value="${archive.home}/update/${todir}" />
 
-		<copy todir="${target.dir}">
+		<copy todir="${archive.dir}">
 			<fileset dir="${dist.dir}">
 				<include name="mylyn-${version}.${qualifier}-e3.4.zip"/>
 			</fileset>
