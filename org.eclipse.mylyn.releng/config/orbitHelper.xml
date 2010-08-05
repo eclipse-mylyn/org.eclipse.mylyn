@@ -90,38 +90,39 @@
 		</fileset>
 
 		<!-- JAXB -->
-		<fileset dir="${buildDirectory}/plugins" id="java.xml.bind">
-			<include name="com.sun.xml.bind*.jar"/>				
-			<include name="javax.xml*.jar"/>
-			<include name="javax.xml.bind*.jar"/>
-			<include name="javax.xml.stream*.jar"/>
+		<fileset dir="${buildDirectory}/plugins" id="javax.xml.bind">
+			<include name="com.sun.xml.bind_*.jar"/>				
+			<include name="javax.xml_*.jar"/>
+			<include name="javax.xml.bind_*.jar"/>
+			<include name="javax.xml.stream_*.jar"/>
 		</fileset>
 		
 		<mkdir dir="${buildDirectory}/standardUpdateSite/plugins"/>
 		<copy todir="${buildDirectory}/standardUpdateSite/plugins" verbose="true">
-			<fileset refid="org.apache.commons.httpclient" />
-			<fileset refid="org.jdom" />
-			<fileset refid="org.apache.axis" />
 			<fileset refid="javax.servlet" />
+			<fileset refid="javax.xml.bind" />
+			<fileset refid="org.apache.axis" />
+			<fileset refid="org.apache.commons.httpclient" />
 			<fileset refid="org.apache.xmlrpc" />
+			<fileset refid="org.jdom" />
 		</copy>
 
 		<mkdir dir="${buildDirectory}/incubatorUpdateSite/plugins"/>
 		<copy todir="${buildDirectory}/incubatorUpdateSite/plugins" verbose="true">
+			<fileset refid="com.sun.syndication" />
 			<fileset refid="org.apache.axis" />
 			<fileset refid="javax.servlet" />
-			<fileset refid="com.sun.syndication" />
-			<fileset refid="java.xml.bind" />
+			<fileset refid="javax.xml.bind" />
 		</copy>
 
 		<mkdir dir="${buildDirectory}/allUpdateSite/plugins"/>
 		<copy todir="${buildDirectory}/allUpdateSite/plugins" verbose="true">
-			<fileset refid="org.apache.axis" />
 			<fileset refid="javax.servlet" />
+			<fileset refid="javax.xml.bind" />
+			<fileset refid="org.apache.axis" />
 			<fileset refid="org.apache.commons.httpclient" />
 			<fileset refid="org.apache.xmlrpc" />
-			<fileset refid="com.sun.syndication" />
-			<fileset refid="java.xml.bind" />
+			<fileset refid="org.jdom" />
 		</copy>
 
 	</target>

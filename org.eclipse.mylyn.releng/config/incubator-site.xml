@@ -15,6 +15,9 @@
    <feature url="features/org.eclipse.mylyn.wikitext.sandbox_@org.eclipse.mylyn.wikitext.sandbox@.jar" id="org.eclipse.mylyn.wikitext.sandbox" version="@org.eclipse.mylyn.wikitext.sandbox@">
       <category name="Incubator"/>
    </feature>
+   <feature url="features/org.eclipse.mylyn.hudson_@org.eclipse.mylyn.hudson@.jar" id="org.eclipse.mylyn.hudson" version="@org.eclipse.mylyn.hudson@">
+      <category name="Incubator"/>
+   </feature>
    <feature url="features/org.eclipse.mylyn.experimental_sdk_feature_@org.eclipse.mylyn.experimental_sdk_feature@.jar" id="org.eclipse.mylyn.experimental_sdk_feature" version="@org.eclipse.mylyn.experimental_sdk_feature@">
       <category name="SDKIncubator"/>
    </feature>

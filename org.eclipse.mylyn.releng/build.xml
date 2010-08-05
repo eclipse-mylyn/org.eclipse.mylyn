@@ -89,7 +89,7 @@
 	</target>
 
 	<target name="generate-metadata-sites" depends="init">
-  	    <condition property="label" value="3.3" else="3.4, 3.5 and 3.6"><equals arg1="${base.target}" arg2="3.3"/></condition>
+  	    <condition property="label" value="3.3" else="3.5, 3.6 and 3.7"><equals arg1="${base.target}" arg2="3.3"/></condition>
 		<antcall target="generate-metadata">
 			<param name="dir" value="${build.home}/${base.target}/standardUpdateSite"/>
 			<param name="name" value="Mylyn Weekly for Eclipse ${label}"/>
@@ -104,11 +104,11 @@
 	<target name="generate-metadata-dist-sites" depends="init">
 		<antcall target="generate-metadata">
 			<param name="dir" value="${build.home}/3.6/standardUpdateSite"/>
-			<param name="name" value="Mylyn Weekly for Eclipse 3.4, 3.5 and 3.6"/>
+			<param name="name" value="Mylyn Weekly for Eclipse 3.5, 3.6 and 3.7"/>
 			<param name="categories" value="${build.home}/3.6/standardUpdateSite/categories.xml"/>
 		</antcall>
 		<antcall target="generate-metadata">
-			<param name="dir" value="${build.home}/3.4/incubatorUpdateSite"/>
+			<param name="dir" value="${build.home}/3.6/incubatorUpdateSite"/>
 			<param name="name" value="Mylyn Weekly Incubator"/>
 		</antcall>
 	</target>
@@ -194,7 +194,7 @@
 			<fileset dir="${build.home}/3.6/incubatorUpdateSite"/>
 		</copy>
 		<!-- need to use discovery plug-ins from the 3.5 site -->
-		<copy tofile="${dist.dir}/mylyn-${version}.${qualifier}-e3.4.zip" file="${build.home}/3.6/mylyn-${version}.${qualifier}-standard.zip" />
+		<copy tofile="${dist.dir}/mylyn-${version}.${qualifier}.zip" file="${build.home}/3.6/mylyn-${version}.${qualifier}-standard.zip" />
 		<copy tofile="${dist.dir}/mylyn-${version}.${qualifier}-incubator.zip" file="${build.home}/3.6/mylyn-${version}.${qualifier}-incubator.zip" />
 		<copy tofile="${dist.dir}/mylyn-wikitext-standalone-${version}.${qualifier}.zip" file="${build.home}/3.6/mylyn-wikitext-standalone-${version}.${qualifier}.zip" />
 
@@ -285,13 +285,12 @@
 			<mapper type="regexp" from="(.*)${version}.${qualifier}(.*)" to="\1latest\2"/>
 		</move>
 		-->
-		<move tofile="${target.dir}/mylyn-latest-e3.4.zip" file="${target.dir}/mylyn-${version}.${qualifier}-e3.4.zip" overwrite="true"/>
+		<move tofile="${target.dir}/mylyn-latest.zip" file="${target.dir}/mylyn-${version}.${qualifier}-e3.4.zip" overwrite="true"/>
 		<move tofile="${target.dir}/mylyn-latest-incubator.zip" file="${target.dir}/mylyn-${version}.${qualifier}-incubator.zip" overwrite="true"/>
 		<move tofile="${target.dir}/mylyn-wikitext-standalone-latest.zip" file="${target.dir}/mylyn-wikitext-standalone-${version}.${qualifier}.zip" overwrite="true"/>
 
 		<chmod perm="ugo+w" file="${basedir}/bin/create-composite.sh"/>
 		<exec executable="${basedir}/bin/create-composite.sh" failonerror="false" dir="${target.dir}"/>
-		<exec executable="${basedir}/bin/create-composite.sh" failonerror="false" dir="${target.dir}/e3.4"/>
 		<exec executable="${basedir}/bin/create-composite.sh" failonerror="false" dir="${target.dir}/incubator"/>
 	</target>
 
