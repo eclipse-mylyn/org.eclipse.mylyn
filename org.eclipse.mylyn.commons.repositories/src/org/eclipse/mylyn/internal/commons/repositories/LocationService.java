@@ -51,8 +51,6 @@ public class LocationService implements ILocationService {
 
 	private final IProxyProvider proxyProvider;
 
-	private ICredentialsStore credentialsStore;
-
 	public LocationService(String username, String password, IProxyProvider proxyProvider) {
 		this.credentialsByType = new HashMap<AuthenticationType, UsernamePasswordCredentials>();
 		this.proxyProvider = proxyProvider;
@@ -96,10 +94,7 @@ public class LocationService implements ILocationService {
 	}
 
 	public ICredentialsStore getCredentialsStore(String id) {
-		if (credentialsStore == null) {
-			credentialsStore = new SecureCredentialsStore(id);
-		}
-		return credentialsStore;
+		return new SecureCredentialsStore(id);
 	}
 
 }

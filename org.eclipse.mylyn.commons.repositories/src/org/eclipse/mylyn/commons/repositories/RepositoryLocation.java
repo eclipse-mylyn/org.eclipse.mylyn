@@ -60,11 +60,11 @@ public class RepositoryLocation extends PlatformObject {
 
 	public static final String PROPERTY_USERNAME = "org.eclipse.mylyn.repositories.username"; //$NON-NLS-1$
 
-	public static final String PROXY_HOSTNAME = "org.eclipse.mylyn.tasklist.repositories.proxy.hostname"; //$NON-NLS-1$
+	public static final String PROPERTY_PROXY_HOST = "org.eclipse.mylyn.repositories.proxy.host"; //$NON-NLS-1$
 
-	public static final String PROXY_PORT = "org.eclipse.mylyn.tasklist.repositories.proxy.port"; //$NON-NLS-1$
+	public static final String PROPERTY_PROXY_PORT = "org.eclipse.mylyn.repositories.proxy.port"; //$NON-NLS-1$
 
-	public static final String PROXY_USEDEFAULT = "org.eclipse.mylyn.tasklist.repositories.proxy.usedefault"; //$NON-NLS-1$
+	public static final String PROPERTY_PROXY_USEDEFAULT = "org.eclipse.mylyn.repositories.proxy.usedefault"; //$NON-NLS-1$
 
 	private static final String SAVE_PASSWORD = ".savePassword"; //$NON-NLS-1$
 
@@ -126,6 +126,10 @@ public class RepositoryLocation extends PlatformObject {
 	public <T extends AuthenticationCredentials> T getCredentials(AuthenticationType authType, Class<T> credentialsKind) {
 		String prefix = getKeyPrefix(authType);
 		if (getBooleanPropery(prefix + ENABLED)) {
+			if (getId() == null) {
+				// can't determine location of credentials
+				return null;
+			}
 			try {
 				return CredentialsFactory.create(credentialsKind, getCredentialsStore(), prefix);
 			} catch (StorageException e) {
@@ -212,7 +216,7 @@ public class RepositoryLocation extends PlatformObject {
 
 	private void handlePropertyChange(String key, Object old, Object value) {
 		if (PROPERTY_ID.equals(key)) {
-			// FIXME migrate credentials
+			credentialsStore = null;
 		}
 
 		PropertyChangeEvent event = new PropertyChangeEvent(this, key, old, value);
@@ -299,6 +303,12 @@ public class RepositoryLocation extends PlatformObject {
 	}
 
 	public void apply(RepositoryLocation location) {
+		String oldId = getProperty(PROPERTY_ID);
+		ICredentialsStore oldCredentialsStore = null;
+		if (oldId != null) {
+			oldCredentialsStore = getCredentialsStore();
+		}
+
 		// merge properties
 		HashSet<String> removed = new HashSet<String>(properties.keySet());
 		removed.removeAll(location.properties.keySet());
@@ -308,14 +318,33 @@ public class RepositoryLocation extends PlatformObject {
 		for (String key : removed) {
 			setProperty(key, null);
 		}
-		// merge keystore contents
-		if (location.getCredentialsStore() instanceof InMemoryCredentialsStore) {
-			try {
-				((InMemoryCredentialsStore) location.getCredentialsStore()).copyTo(getCredentialsStore());
-			} catch (StorageException e) {
-				// FIXME
+
+		setProperty(PROPERTY_ID, getUrl());
+		String newId = getProperty(PROPERTY_ID);
+		if (newId != null) {
+			// migrate credentials if url has changed
+			ICredentialsStore newCredentialsStore = getCredentialsStore();
+			if (!newId.equals(oldId)) {
+				if (oldCredentialsStore != null) {
+					try {
+						oldCredentialsStore.copyTo(newCredentialsStore);
+						oldCredentialsStore.clear();
+					} catch (StorageException e) {
+						// FIXME
+					}
+				}
+			}
+
+			// merge credentials
+			if (location.getCredentialsStore() instanceof InMemoryCredentialsStore) {
+				try {
+					((InMemoryCredentialsStore) location.getCredentialsStore()).copyTo(newCredentialsStore);
+				} catch (StorageException e) {
+					// FIXME
+				}
 			}
 		}
+
 	}
 
 }

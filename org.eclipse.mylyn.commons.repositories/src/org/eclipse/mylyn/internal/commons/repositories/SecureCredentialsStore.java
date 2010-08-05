@@ -75,4 +75,11 @@ public class SecureCredentialsStore implements ICredentialsStore {
 		getSecurePreferences().remove(key);
 	}
 
+	public void copyTo(ICredentialsStore target) throws StorageException {
+		ISecurePreferences preferences = getSecurePreferences();
+		for (String key : preferences.keys()) {
+			target.put(key, preferences.get(key, null), preferences.isEncrypted(key));
+		}
+	}
+
 }

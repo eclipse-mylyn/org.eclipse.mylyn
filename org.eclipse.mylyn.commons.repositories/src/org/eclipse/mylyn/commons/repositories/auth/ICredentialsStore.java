@@ -38,4 +38,6 @@ public interface ICredentialsStore {
 
 	public void remove(String key);
 
+	public void copyTo(ICredentialsStore target) throws StorageException;
+
 }

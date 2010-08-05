@@ -57,9 +57,14 @@ public class SectionComposite extends SharedScrolledComposite {
 	}
 
 	public ExpandableComposite createSection(String title) {
-		final ExpandableComposite section = getToolkit().createExpandableComposite(getContent(),
-				ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT | ExpandableComposite.COMPACT);
-		section.clientVerticalSpacing = 0;
+		return createSection(title, SWT.NONE);
+	}
+
+	public ExpandableComposite createSection(String title, int expansionStyle) {
+		final ExpandableComposite section = getToolkit().createExpandableComposite(
+				getContent(),
+				ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT | ExpandableComposite.COMPACT
+						| expansionStyle);
 		section.setBackground(getBackground());
 		section.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DIALOG_FONT));
 		section.addExpansionListener(new ExpansionAdapter() {

@@ -33,6 +33,7 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
@@ -43,13 +44,17 @@ import org.eclipse.mylyn.internal.commons.ui.SectionComposite;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.dialogs.PreferencesUtil;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.statushandlers.StatusManager;
 
 /**
@@ -71,8 +76,6 @@ public class RepositoryLocationPart {
 
 	private class UsernamePasswordListener implements ModifyListener, SelectionListener {
 
-		private boolean updating;
-
 		private final AuthenticationType authenticationType;
 
 		private final Button enabledButton;
@@ -82,6 +85,8 @@ public class RepositoryLocationPart {
 		private final Text passwordText;
 
 		private final Button savePasswordButton;
+
+		private boolean updating;
 
 		private final Text userText;
 
@@ -174,7 +179,11 @@ public class RepositoryLocationPart {
 
 	}
 
+	protected static final String PREFS_PAGE_ID_NET_PROXY = "org.eclipse.ui.net.NetPreferences"; //$NON-NLS-1$
+
 	private DataBindingContext bindingContext;
+
+	private boolean needsAdditionalSections;
 
 	private boolean needsAnonymousLogin;
 
@@ -225,10 +234,10 @@ public class RepositoryLocationPart {
 	}
 
 	private void bind(AuthenticationType authType, Button anonymousButton, Text userText, Text passwordText,
-			Button savePasswordButton) {
+			Button savePasswordButton, boolean reverseEnablement) {
 		UsernamePasswordListener listener = new UsernamePasswordListener(authType, anonymousButton, userText,
 				passwordText, savePasswordButton);
-		listener.setEnablementReversed(true);
+		listener.setEnablementReversed(reverseEnablement);
 		listener.restore();
 	}
 
@@ -263,6 +272,10 @@ public class RepositoryLocationPart {
 		return getValidator() != null;
 	}
 
+	protected Control createAdditionalContents(Composite composite) {
+		return null;
+	}
+
 	public Control createContents(Composite parent) {
 		bindingContext = new DataBindingContext();
 		WizardPage wizardPage = getContainer(WizardPage.class);
@@ -284,16 +297,23 @@ public class RepositoryLocationPart {
 		createServerSection(composite);
 		createUserSection(composite);
 
-		SectionComposite sectionComposite = new SectionComposite(composite, SWT.NONE);
-		GridDataFactory.fillDefaults().grab(true, true).span(3, 1).applyTo(sectionComposite);
+		Control control = createAdditionalContents(composite);
+		if (control != null) {
+			GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(control);
+		}
 
-		if (needsHttpAuth()) {
-			createHttpAuthSection(sectionComposite);
+		if (needsHttpAuth() || needsProxy() || needsAdditionalSections()) {
+			SectionComposite sectionComposite = new SectionComposite(composite, SWT.NONE);
+			GridDataFactory.fillDefaults().grab(true, true).span(3, 1).applyTo(sectionComposite);
+
+			if (needsHttpAuth()) {
+				createHttpAuthSection(sectionComposite);
+			}
+			if (needsProxy()) {
+				createProxySection(sectionComposite);
+			}
+			createSections(sectionComposite);
 		}
-		if (needsProxy()) {
-			createProxySection(sectionComposite);
-		}
-		createSections(sectionComposite);
 
 //		Button validateButton = new Button(composite, SWT.PUSH);
 //		validateButton.setText("Validate");
@@ -308,19 +328,108 @@ public class RepositoryLocationPart {
 	}
 
 	private void createHttpAuthSection(SectionComposite parent) {
-		Composite composite = parent.createSection("HTTP Authentication");
-		GridLayoutFactory.swtDefaults().numColumns(3).applyTo(composite);
+		int style = SWT.NONE;
+		if (getWorkingCopy().getCredentials(AuthenticationType.HTTP, UsernamePasswordCredentials.class) != null) {
+			style |= ExpandableComposite.EXPANDED;
+		}
+		ExpandableComposite section = parent.createSection("HTTP Authentication", style);
+		section.clientVerticalSpacing = 5;
 
-		// ignore
+		Composite composite = new Composite(section, SWT.NONE);
+		section.setClient(composite);
+		GridLayoutFactory.fillDefaults().numColumns(3).applyTo(composite);
 
+		Label label;
+
+		Button enableButton = new Button(composite, SWT.CHECK);
+		GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(enableButton);
+		enableButton.setText("Enable HTTP Authentication");
+
+		label = new Label(composite, SWT.NONE);
+		label.setText("&User:");
+
+		Text userText = new Text(composite, SWT.BORDER);
+		GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(userText);
+
+		label = new Label(composite, SWT.NONE);
+		label.setText("&Password:");
+
+		Text passwordText = new Text(composite, SWT.BORDER | SWT.PASSWORD);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(passwordText);
+
+		Button savePasswordButton = new Button(composite, SWT.CHECK);
+		savePasswordButton.setText("Save Password");
+
+		bind(AuthenticationType.HTTP, enableButton, userText, passwordText, savePasswordButton, false);
 	}
 
-	private void createProxySection(SectionComposite parent) {
-		Composite composite = parent.createSection("Proxy Server Configuration");
-		GridLayoutFactory.swtDefaults().numColumns(3).applyTo(composite);
+	private void createProxySection(final SectionComposite parent) {
+		ExpandableComposite section = parent.createSection("Proxy Server Configuration");
 
-		// ignore
+		Composite composite = new Composite(section, SWT.NONE);
+		section.setClient(composite);
+		GridLayoutFactory.fillDefaults().numColumns(3).applyTo(composite);
 
+		Label label;
+
+		Button systemProxyButton = new Button(composite, SWT.CHECK);
+		GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(systemProxyButton);
+		systemProxyButton.setText("Use global Network Connections preferences");
+//		systemProxyButton.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				updateProxyEnablement(systemProxyButton.getSelection());
+//			}
+//		});
+		bind(systemProxyButton, RepositoryLocation.PROPERTY_PROXY_USEDEFAULT);
+
+		Link changeProxySettingsLink = new Link(composite, SWT.NONE);
+		changeProxySettingsLink.setText("<a>Change Settings</a>");
+		changeProxySettingsLink.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				PreferenceDialog dlg = PreferencesUtil.createPreferenceDialogOn(parent.getShell(),
+						PREFS_PAGE_ID_NET_PROXY, new String[] { PREFS_PAGE_ID_NET_PROXY }, null);
+				dlg.open();
+			}
+		});
+
+		label = new Label(composite, SWT.NONE);
+		label.setText("Proxy &Host:");
+
+		Text proxyHostText = new Text(composite, SWT.BORDER);
+		GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(proxyHostText);
+		bind(proxyHostText, RepositoryLocation.PROPERTY_PROXY_HOST);
+
+		label = new Label(composite, SWT.NONE);
+		label.setText("Proxy &Port:");
+
+		Text proxyPortText = new Text(composite, SWT.BORDER | SWT.PASSWORD);
+		GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(proxyPortText);
+		bind(proxyPortText, RepositoryLocation.PROPERTY_PROXY_PORT);
+
+		// authentication
+
+		Button enableButton = new Button(composite, SWT.CHECK);
+		GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(enableButton);
+		enableButton.setText("Enable Proxy Authentication");
+
+		label = new Label(composite, SWT.NONE);
+		label.setText("&User:");
+
+		Text userText = new Text(composite, SWT.BORDER);
+		GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(userText);
+
+		label = new Label(composite, SWT.NONE);
+		label.setText("&Password:");
+
+		Text passwordText = new Text(composite, SWT.BORDER | SWT.PASSWORD);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(passwordText);
+
+		Button savePasswordButton = new Button(composite, SWT.CHECK);
+		savePasswordButton.setText("Save Password");
+
+		bind(AuthenticationType.PROXY, enableButton, userText, passwordText, savePasswordButton, false);
 	}
 
 	protected void createSections(SectionComposite sectionComposite) {
@@ -371,7 +480,7 @@ public class RepositoryLocationPart {
 		Button savePasswordButton = new Button(parent, SWT.CHECK);
 		savePasswordButton.setText("Save Password");
 
-		bind(AuthenticationType.REPOSITORY, anonymousButton, userText, passwordText, savePasswordButton);
+		bind(AuthenticationType.REPOSITORY, anonymousButton, userText, passwordText, savePasswordButton, true);
 	}
 
 	public <T> T getContainer(Class<T> clazz) {
@@ -406,6 +515,10 @@ public class RepositoryLocationPart {
 		return false;
 	}
 
+	public boolean needsAdditionalSections() {
+		return needsAdditionalSections;
+	}
+
 	public boolean needsAnonymousLogin() {
 		return needsAnonymousLogin;
 	}
@@ -420,6 +533,10 @@ public class RepositoryLocationPart {
 
 	public boolean needsValidation() {
 		return needsValidation;
+	}
+
+	public void setNeedsAdditionalSections(boolean needsAdditionalSections) {
+		this.needsAdditionalSections = needsAdditionalSections;
 	}
 
 	public void setNeedsAnonymousLogin(boolean needsAnonymousLogin) {
