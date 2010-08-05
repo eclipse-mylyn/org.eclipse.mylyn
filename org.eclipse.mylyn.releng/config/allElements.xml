@@ -139,6 +139,10 @@
 			<property name="type" value="feature" />
 			<property name="id" value="org.eclipse.mylyn.web.tasks_feature" />
 		</ant>
+		<ant antfile="${genericTargets}" target="${target}">
+			<property name="type" value="feature" />
+			<property name="id" value="org.eclipse.mylyn.hudson" />
+		</ant>
 		<antcall target="incubatorElementDelegatorSdk" />
 	</target>
 	<target name="incubatorElementDelegatorSdk" unless="skipSDK">
