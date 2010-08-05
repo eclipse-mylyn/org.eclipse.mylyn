@@ -173,4 +173,21 @@
           name="BuildDetails">
     </editor>
  </extension>
+ <extension
+       point="org.eclipse.ui.menus">
+    <menuContribution
+          allPopups="false"
+          locationURI="menu:org.eclipse.mylyn.builds.navigator.builds?after=additions">
+       <command
+             commandId="org.eclipse.ui.views.showView"
+             icon="icons/eview16/repositories.gif"
+             label="Show Team Repositories View"
+             style="push">
+          <parameter
+                name="org.eclipse.ui.views.showView.viewId"
+                value="org.eclipse.mylyn.commons.team.navigator.Repositories">
+          </parameter>
+       </command>
+    </menuContribution>
+ </extension>
 </plugin>

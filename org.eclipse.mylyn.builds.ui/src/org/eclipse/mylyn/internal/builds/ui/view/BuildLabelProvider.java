@@ -76,7 +76,7 @@ public class BuildLabelProvider extends LabelProvider implements IStyledLabelPro
 		} else if (status == BuildStatus.DISABLED) {
 			return BuildImages.STATUS_DISABLED;
 		}
-		return CommonImages.BLANK;
+		return CommonImages.QUESTION;
 	}
 
 	private ImageDescriptor getBottomLeftDecoration(IBuildElement element) {

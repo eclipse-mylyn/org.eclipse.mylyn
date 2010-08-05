@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
@@ -45,19 +46,19 @@ import org.eclipse.mylyn.commons.repositories.RepositoryValidator;
 import org.eclipse.mylyn.internal.builds.core.BuildPlan;
 import org.eclipse.mylyn.internal.builds.ui.BuildServerValidator;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
-import org.eclipse.mylyn.internal.commons.ui.SectionComposite;
 import org.eclipse.mylyn.internal.commons.ui.team.RepositoryLocationPart;
 import org.eclipse.mylyn.internal.provisional.commons.ui.SubstringPatternFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
+import org.eclipse.ui.forms.events.ExpansionAdapter;
+import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 
 /**
@@ -194,6 +195,11 @@ public class BuildServerPart extends RepositoryLocationPart {
 				planViewer.refresh();
 			}
 		});
+
+		// XXX spacer to make layout consistent
+		Button dummyButton = new Button(section, SWT.CHECK);
+		dummyButton.setVisible(false);
+		dummyButton.setText("Save Password");
 	}
 
 	@Override
@@ -216,15 +222,31 @@ public class BuildServerPart extends RepositoryLocationPart {
 	}
 
 	@Override
-	protected void createSections(SectionComposite sectionComposite) {
-		ExpandableComposite section = sectionComposite.createSection("Build Plans");
-		section.setExpanded(true);
-		if (section.getLayoutData() instanceof GridData) {
-			GridData gd = ((GridData) section.getLayoutData());
-			gd.grabExcessVerticalSpace = true;
-			gd.verticalAlignment = SWT.FILL;
-			gd.minimumHeight = 150;
-		}
+	protected Control createAdditionalContents(final Composite parent) {
+//		SectionComposite sectionComposite = new SectionComposite(parent, SWT.NONE);
+//		//sectionComposite.setMinHeight(150);
+//		sectionComposite.setExpandVertical(false);
+
+		ExpandableComposite section = new ExpandableComposite(parent, SWT.NONE, ExpandableComposite.TWISTIE
+				| ExpandableComposite.CLIENT_INDENT | ExpandableComposite.COMPACT | ExpandableComposite.EXPANDED);
+		section.clientVerticalSpacing = 0;
+		section.setBackground(parent.getBackground());
+		section.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DIALOG_FONT));
+		section.addExpansionListener(new ExpansionAdapter() {
+			@Override
+			public void expansionStateChanged(ExpansionEvent e) {
+				parent.layout(true);
+			}
+		});
+		section.setText("Build Plans");
+//		ExpandableComposite section = section.createSection("Build Plans");
+//		section.setExpanded(true);
+//		if (section.getLayoutData() instanceof GridData) {
+//			GridData gd = ((GridData) section.getLayoutData());
+//			gd.grabExcessVerticalSpace = true;
+//			gd.verticalAlignment = SWT.FILL;
+//			gd.minimumHeight = 150;
+//		}
 
 		Composite composite = new Composite(section, SWT.NONE);
 		section.setClient(composite);
@@ -293,9 +315,11 @@ public class BuildServerPart extends RepositoryLocationPart {
 
 		Composite buttonComposite = new Composite(composite, SWT.NONE);
 		GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.TOP).applyTo(buttonComposite);
-		GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).extendedMargins(5, 0, 0, 0).applyTo(
+		GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).extendedMargins(0, 0, 0, 0).applyTo(
 				buttonComposite);
 		createButtons(buttonComposite);
+
+		return section;
 	}
 
 	public final IBuildServer getModel() {

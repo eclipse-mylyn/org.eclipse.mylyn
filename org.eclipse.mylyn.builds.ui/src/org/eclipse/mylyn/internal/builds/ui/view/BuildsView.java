@@ -19,8 +19,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
-import org.eclipse.emf.common.util.TreeIterator;
-import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IStatusLineManager;
@@ -35,6 +34,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.mylyn.builds.core.BuildStatus;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
+import org.eclipse.mylyn.builds.ui.BuildsUiConstants;
 import org.eclipse.mylyn.internal.builds.core.BuildModel;
 import org.eclipse.mylyn.internal.builds.core.util.BuildsConstants;
 import org.eclipse.mylyn.internal.builds.ui.BuildImages;
@@ -52,6 +52,9 @@ import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
@@ -61,21 +64,36 @@ import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
  */
 public class BuildsView extends ViewPart {
 
+	public static BuildsView openInActivePerspective() {
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		if (window != null) {
+			IWorkbenchPage page = window.getActivePage();
+			if (page != null) {
+				try {
+					return (BuildsView) page.showView(BuildsUiConstants.ID_VIEW_BUILDS);
+				} catch (PartInitException e) {
+					// ignore
+				}
+			}
+		}
+		return null;
+	}
+
+	private Action collapseAllAction;
+
 	private BuildContentProvider contentProvider;
+
+	private Action expandAllAction;
+
+	private Date lastRefresh;
 
 	private BuildModel model;
 
 	private AdapterImpl modelListener;
 
-	private TreeViewer viewer;
-
-	private Action expandAllAction;
-
-	private Action collapseAllAction;
-
 	private BuildElementPropertiesAction propertiesAction;
 
-	private Date lastRefresh;
+	private TreeViewer viewer;
 
 	public BuildsView() {
 		BuildsUiPlugin.getDefault().initializeRefresh();
@@ -102,9 +120,10 @@ public class BuildsView extends ViewPart {
 		}
 
 		model = BuildsUiInternal.getModel();
-		modelListener = new AdapterImpl() {
+		modelListener = new EContentAdapter() {
 			@Override
 			public void notifyChanged(Notification msg) {
+				super.notifyChanged(msg);
 				if (!viewer.getControl().isDisposed()) {
 					lastRefresh = new Date();
 					// FIXME show result of last update
@@ -120,12 +139,6 @@ public class BuildsView extends ViewPart {
 		getSite().getSelectionProvider().addSelectionChangedListener(propertiesAction);
 
 		updateDecoration(Status.OK_STATUS);
-	}
-
-	private void initActions() {
-		collapseAllAction = new CollapseAllAction(viewer);
-		expandAllAction = new ExpandAllAction(viewer);
-		propertiesAction = new BuildElementPropertiesAction();
 	}
 
 	protected void createPopupMenu(Composite parent) {
@@ -228,8 +241,45 @@ public class BuildsView extends ViewPart {
 		manager.add(runBuildAction);
 	}
 
+	protected BuildStatus getPlanStatus() {
+		BuildStatus planStatus = null;
+		boolean plansSelected = false;
+		if (contentProvider != null) {
+			for (IBuildPlan plan : model.getPlans()) {
+				if (plan.getStatus() != null) {
+					switch (plan.getStatus()) {
+					case SUCCESS:
+						if (planStatus == null) {
+							planStatus = BuildStatus.SUCCESS;
+						}
+						break;
+					case UNSTABLE:
+						if (planStatus == null || planStatus == BuildStatus.SUCCESS) {
+							planStatus = BuildStatus.UNSTABLE;
+						}
+						break;
+					case FAILED:
+						planStatus = BuildStatus.FAILED;
+						break;
+					}
+				}
+				plansSelected = true;
+			}
+		}
+		if (plansSelected) {
+			return (planStatus != null) ? planStatus : BuildStatus.DISABLED;
+		}
+		return null;
+	}
+
 	TreeViewer getViewer() {
 		return viewer;
+	}
+
+	private void initActions() {
+		collapseAllAction = new CollapseAllAction(viewer);
+		expandAllAction = new ExpandAllAction(viewer);
+		propertiesAction = new BuildElementPropertiesAction();
 	}
 
 	@Override
@@ -272,43 +322,6 @@ public class BuildsView extends ViewPart {
 				}
 			}
 		}
-	}
-
-	protected BuildStatus getPlanStatus() {
-		BuildStatus planStatus = null;
-		boolean plansSelected = false;
-		if (contentProvider != null) {
-			for (TreeIterator<EObject> it = model.eAllContents(); it.hasNext();) {
-				Object element = it.next();
-				if (element instanceof IBuildPlan) {
-					IBuildPlan plan = (IBuildPlan) element;
-					if (plan.isSelected()) {
-						if (plan.getStatus() != null) {
-							switch (plan.getStatus()) {
-							case SUCCESS:
-								if (planStatus == null) {
-									planStatus = BuildStatus.SUCCESS;
-								}
-								break;
-							case UNSTABLE:
-								if (planStatus == null || planStatus == BuildStatus.SUCCESS) {
-									planStatus = BuildStatus.UNSTABLE;
-								}
-								break;
-							case FAILED:
-								planStatus = BuildStatus.FAILED;
-								break;
-							}
-						}
-						plansSelected = true;
-					}
-				}
-			}
-		}
-		if (plansSelected) {
-			return (planStatus != null) ? planStatus : BuildStatus.DISABLED;
-		}
-		return null;
 	}
 
 }
