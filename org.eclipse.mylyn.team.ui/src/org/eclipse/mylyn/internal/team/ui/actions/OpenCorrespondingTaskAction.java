@@ -223,12 +223,11 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 			idStart = httpsIndex;
 		}
 		if (idStart != -1) {
-			int idEnd = comment.indexOf(' ', idStart);
-			if (idEnd == -1) {
-				return comment.substring(idStart);
-			} else if (idEnd != -1 && idStart < idEnd) {
-				return comment.substring(idStart, idEnd);
+			int idEnd;
+			for (idEnd = idStart; idEnd < comment.length() && !Character.isWhitespace(comment.charAt(idEnd)); idEnd++) {
+				;
 			}
+			return comment.substring(idStart, idEnd);
 		}
 		return null;
 	}
