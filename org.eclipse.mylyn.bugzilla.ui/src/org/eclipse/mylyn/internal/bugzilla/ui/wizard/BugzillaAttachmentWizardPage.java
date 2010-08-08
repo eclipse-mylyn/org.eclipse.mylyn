@@ -27,8 +27,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AttributeEditorFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -46,7 +46,7 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 
 	private static final String DIALOG_SETTING_RUN_IN_BACKGROUND = "run-in-background"; //$NON-NLS-1$
 
-	private static final String DIALOG_SETTINGS_SECTION_BUGZILLA_ATTACHMENTS_WIZARD = "bugzilla-attachments-wizard"; //$NON-NLS-1$
+	private static final String DIALOG_SETTING_ADVANCED_EXPANDED = "advanced-expanded"; //$NON-NLS-1$
 
 	private final AttributeEditorFactory factory;
 
@@ -66,7 +66,7 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 
 	private AbstractAttributeEditor commentEditor;
 
-	private ExpandableComposite flagExpandComposite;
+	private ExpandableComposite advancedExpandComposite;
 
 	private Button runInBackgroundButton;
 
@@ -74,15 +74,22 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 
 	private Composite scrolledBodyComposite;
 
-	public BugzillaAttachmentWizardPage(Shell parentShell, AttributeEditorFactory factory,
-			TaskAttribute attachmentAttribute, String taskID) {
+	private int currentColumn = 1;
+
+	private final int columnCount = 4;
+
+	private final String repositoryLabel;
+
+	public BugzillaAttachmentWizardPage(Shell parentShell, AttributeEditorFactory factory, String taskID,
+			TaskAttribute attachmentAttribute, String repositoryLabel) {
 		super(PAGE_NAME);
 		setTitle(Messages.BugzillaAttachmentWizardPage_Titel);
+		this.repositoryLabel = repositoryLabel;
+		this.attachmentAttribute = attachmentAttribute;
 		setDescription(MessageFormat.format(Messages.BugzillaAttachmentWizardPage_Description,
-				attachmentAttribute.getValue(), taskID));
+				attachmentAttribute.getValue(), taskID, repositoryLabel));
 		setImageDescriptor(createImageDescriptor());
 		this.factory = factory;
-		this.attachmentAttribute = attachmentAttribute;
 	}
 
 	private static ImageDescriptor createImageDescriptor() {
@@ -104,70 +111,56 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 
 	public void createControl(Composite parent) {
 		toolkit = new FormToolkit(parent.getDisplay());
-
-		Composite pageArea = new Composite(parent, SWT.NONE);
+//		Color background = new Color(Display.getDefault(), 192, 192, 192);
+//		Color background = new Color(Display.getDefault(), 232, 232, 232);
+		Color background = parent.getBackground();
+		final Composite pageArea = new Composite(parent, SWT.NONE);
 		pageArea.setBackground(parent.getBackground());
 		pageArea.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_FOREGROUND));
-		pageArea.setLayout(new GridLayout(1, false));
+		pageArea.setLayout(new GridLayout(columnCount, false));
 
-		SashForm bottomForm = new SashForm(pageArea, SWT.NONE);
-		bottomForm.setOrientation(SWT.VERTICAL);
-		GridLayout bottomLayout = new GridLayout();
-		bottomLayout.numColumns = 1;
-		bottomForm.setLayout(bottomLayout);
-		GridData bottomLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-		bottomLayoutData.heightHint = 119;
-		bottomLayoutData.widthHint = 200;
-		bottomForm.setLayoutData(bottomLayoutData);
-		int currentColumn = 1;
-		int columnCount = 4;
-
-		scrolledComposite = new ScrolledComposite(bottomForm, SWT.H_SCROLL | SWT.V_SCROLL) {
-			@Override
-			public Point computeSize(int hint, int hint2, boolean changed) {
-				return new Point(64, 64);
-			}
-		};
+		scrolledComposite = new ScrolledComposite(pageArea, SWT.H_SCROLL | SWT.V_SCROLL);
+		GridData scrolledCompositeData = new GridData(SWT.FILL, SWT.TOP, true, false, 4, 1);
+		scrolledComposite.setLayoutData(scrolledCompositeData);
 		scrolledComposite.setExpandHorizontal(true);
 		scrolledComposite.setExpandVertical(true);
+		scrolledComposite.setBackground(background);
 
 		scrolledBodyComposite = new Composite(scrolledComposite, SWT.NONE);
-		scrolledBodyComposite.setBackground(pageArea.getBackground());
+		scrolledBodyComposite.setBackground(background);
 		scrolledBodyComposite.setForeground(scrolledBodyComposite.getDisplay()
 				.getSystemColor(SWT.COLOR_LIST_FOREGROUND));
-		GridLayout layout = new GridLayout(4, false);
+		GridLayout layout = new GridLayout(columnCount, false);
 		scrolledBodyComposite.setLayout(layout);
 		scrolledComposite.setContent(scrolledBodyComposite);
+		createAttributeEditors(scrolledBodyComposite);
+		createCommentEditor(pageArea);
 
-		Composite commentArea = new Composite(bottomForm, SWT.NONE);
-		commentArea.setBackground(pageArea.getBackground());
-		commentArea.setForeground(commentArea.getDisplay().getSystemColor(SWT.COLOR_LIST_FOREGROUND));
-		layout = new GridLayout(4, false);
-		commentArea.setLayout(layout);
-
-		createAttributeEditors(currentColumn, columnCount, scrolledBodyComposite);
-		createCommentEditor(currentColumn, columnCount, commentArea);
-		createFlagSection(scrolledBodyComposite);
-		createAttributeEditor(attachmentAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_URL), currentColumn,
-				columnCount, scrolledBodyComposite);
-		GridDataFactory.fillDefaults().grab(true, false).hint(200, SWT.DEFAULT).span(4, SWT.DEFAULT).applyTo(
-				scrolledBodyComposite);
+		createAdvancedSection(pageArea);
 
 		runInBackgroundButton = new Button(pageArea, SWT.CHECK);
 		runInBackgroundButton.setText(Messages.BugzillaAttachmentWizardPage_RunInBackground);
-		IDialogSettings settings = BugzillaUiPlugin.getDefault().getDialogSettings();
-		IDialogSettings attachmentsSettings = settings.getSection(DIALOG_SETTINGS_SECTION_BUGZILLA_ATTACHMENTS_WIZARD);
-		if (attachmentsSettings != null) {
-			runInBackgroundButton.setSelection(attachmentsSettings.getBoolean(DIALOG_SETTING_RUN_IN_BACKGROUND));
-		}
 		setControl(pageArea);
 		Dialog.applyDialogFont(pageArea);
-		bottomForm.setWeights(new int[] { 75, 25 });
+		IDialogSettings settings = BugzillaUiPlugin.getDefault().getDialogSettings();
+		IDialogSettings attachmentsSettings = settings.getSection(BugzillaUiPlugin.ATTACHMENT_WIZARD_SETTINGS_SECTION
+				+ repositoryLabel);
+		boolean advancesExpanded = false;
+		if (attachmentsSettings != null) {
+			runInBackgroundButton.setSelection(attachmentsSettings.getBoolean(DIALOG_SETTING_RUN_IN_BACKGROUND));
+			try {
+				advancesExpanded = attachmentsSettings.getBoolean(DIALOG_SETTING_ADVANCED_EXPANDED);
+			} catch (Exception e) {
+				// ignore
+			}
+
+		}
+		advancedExpandComposite.setExpanded(advancesExpanded);
 		scrolledComposite.setMinSize(scrolledBodyComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT, true));
+
 	}
 
-	private void createAttributeEditor(TaskAttribute attribute, int currentColumn, int columnCount,
-			Composite attributeArea) {
+	private void createAttributeEditor(TaskAttribute attribute, Composite attributeArea) {
 		String type = attribute.getMetaData().getType();
 		if (type != null) {
 			AbstractAttributeEditor editor = factory.createEditor(type, attribute);
@@ -177,7 +170,8 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 			} else {
 				editor.setReadOnly(false);
 			}
-			if (editor.hasLabel() && !TaskAttribute.ATTACHMENT_IS_PATCH.equals(attribute.getId())) {
+			if (editor.hasLabel()
+					&& (!TaskAttribute.ATTACHMENT_IS_PATCH.equals(attribute.getId()) && !TaskAttribute.ATTACHMENT_IS_DEPRECATED.equals(attribute.getId()))) {
 				editor.createLabelControl(attributeArea, toolkit);
 				Label label = editor.getLabelControl();
 				label.setBackground(attributeArea.getBackground());
@@ -185,8 +179,10 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 
 				String labelString = editor.getLabel();
 				if (labelString != null && !labelString.equals("")) { //$NON-NLS-1$
-					GridData gd = GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).hint(LABEL_WIDTH,
-							SWT.DEFAULT).create();
+					GridData gd = GridDataFactory.fillDefaults()
+							.align(SWT.RIGHT, SWT.CENTER)
+							.hint(LABEL_WIDTH, SWT.DEFAULT)
+							.create();
 					if (currentColumn > 1) {
 						gd.horizontalIndent = COLUMN_GAP;
 						gd.widthHint = LABEL_WIDTH + COLUMN_GAP;
@@ -198,13 +194,19 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 			editor.createControl(attributeArea, toolkit);
 			GridData gd = new GridData(SWT.FILL, SWT.CENTER, false, false);
 			if (BugzillaAttribute.CTYPE.getKey().equals(attribute.getId())) {
-				gd.horizontalSpan = 2;
-				gd.widthHint = LABEL_WIDTH * 2;
-			} else if (TaskAttribute.ATTACHMENT_IS_PATCH.equals(attribute.getId())) {
 				gd.horizontalSpan = 1;
-			} else if (type.equals(TaskAttribute.TYPE_BOOLEAN) || type.equals(TaskAttribute.TYPE_SHORT_TEXT)
-					|| type.equals(TaskAttribute.TYPE_URL)) {
+				gd.widthHint = LABEL_WIDTH;
+				gd.grabExcessHorizontalSpace = true;
+			} else if (TaskAttribute.ATTACHMENT_IS_PATCH.equals(attribute.getId())
+					|| TaskAttribute.ATTACHMENT_IS_DEPRECATED.equals(attribute.getId())) {
+				gd.horizontalSpan = 1;
+			} else if (TaskAttribute.ATTACHMENT_CONTENT_TYPE.equals(attribute.getId())) {
+				gd.horizontalSpan = 2;
+			} else if (type.equals(TaskAttribute.TYPE_BOOLEAN) || type.equals(TaskAttribute.TYPE_SHORT_TEXT)) {
 				gd.horizontalSpan = 3;
+			} else if (type.equals(TaskAttribute.TYPE_URL)) {
+				gd.horizontalSpan = 1;
+				gd.grabExcessHorizontalSpace = true;
 			} else {
 				gd.horizontalSpan = 1;
 			}
@@ -216,22 +218,19 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 		}
 	}
 
-	private void createAttributeEditors(int currentColumn, int columnCount, Composite attributeArea) {
+	private void createAttributeEditors(Composite attributeArea) {
 		createAttributeEditor(attachmentAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_DESCRIPTION),
-				currentColumn, columnCount, attributeArea);
-		createAttributeEditor(attachmentAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_FILENAME), currentColumn,
-				columnCount, attributeArea);
-		createAttributeEditor(attachmentAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_SIZE), currentColumn,
-				columnCount, attributeArea);
+				attributeArea);
+		createAttributeEditor(attachmentAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_FILENAME), attributeArea);
+		createAttributeEditor(attachmentAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_SIZE), attributeArea);
 		createAttributeEditor(attachmentAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_CONTENT_TYPE),
-				currentColumn, columnCount, attributeArea);
-		createAttributeEditor(attachmentAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_IS_PATCH), currentColumn,
-				columnCount, attributeArea);
+				attributeArea);
+		createAttributeEditor(attachmentAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_IS_PATCH), attributeArea);
 		createAttributeEditor(attachmentAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_IS_DEPRECATED),
-				currentColumn, columnCount, attributeArea);
+				attributeArea);
 	}
 
-	private void createCommentEditor(int currentColumn, int columnCount, Composite attributeArea) {
+	private void createCommentEditor(Composite attributeArea) {
 		TaskAttribute commentAttribute = attachmentAttribute.getAttribute("comment"); //$NON-NLS-1$
 		if (commentAttribute == null) {
 			return;
@@ -246,8 +245,10 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 					Label label = commentEditor.getLabelControl();
 					label.setBackground(attributeArea.getBackground());
 					label.setForeground(attributeArea.getForeground());
-					GridData gd = GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.TOP).hint(LABEL_WIDTH,
-							SWT.DEFAULT).create();
+					GridData gd = GridDataFactory.fillDefaults()
+							.align(SWT.RIGHT, SWT.TOP)
+							.hint(LABEL_WIDTH, SWT.DEFAULT)
+							.create();
 					if (currentColumn > 1) {
 						gd.horizontalIndent = COLUMN_GAP;
 						gd.widthHint = LABEL_WIDTH + COLUMN_GAP;
@@ -269,7 +270,7 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 
 	}
 
-	private void createFlagSection(final Composite container) {
+	private void createAdvancedSection(final Composite container) {
 		boolean flagFound = false;
 		for (TaskAttribute attribute : attachmentAttribute.getAttributes().values()) {
 			if (!attribute.getId().startsWith("task.common.kind.flag")) { //$NON-NLS-1$
@@ -281,26 +282,36 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 		if (!flagFound) {
 			return;
 		}
-		flagExpandComposite = toolkit.createExpandableComposite(container, ExpandableComposite.COMPACT
+		advancedExpandComposite = toolkit.createExpandableComposite(container, ExpandableComposite.COMPACT
 				| ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR);
-		flagExpandComposite.setFont(container.getFont());
-		flagExpandComposite.setBackground(container.getBackground());
-		flagExpandComposite.setText(Messages.BugzillaAttachmentWizardPage_Advanced);
-		flagExpandComposite.setLayout(new GridLayout(4, false));
-		GridDataFactory.fillDefaults().indent(0, 5).grab(true, false).span(4, SWT.DEFAULT).applyTo(flagExpandComposite);
+		advancedExpandComposite.setFont(container.getFont());
+		advancedExpandComposite.setBackground(container.getBackground());
+		advancedExpandComposite.setText(Messages.BugzillaAttachmentWizardPage_Advanced);
+		advancedExpandComposite.setLayout(new GridLayout(4, false));
+		GridDataFactory.fillDefaults()
+				.indent(-6, 5)
+				.grab(true, false)
+				.span(4, SWT.DEFAULT)
+				.applyTo(advancedExpandComposite);
 
-		flagExpandComposite.addExpansionListener(new ExpansionAdapter() {
+		advancedExpandComposite.addExpansionListener(new ExpansionAdapter() {
 			@Override
 			public void expansionStateChanged(ExpansionEvent e) {
-				scrolledComposite.setMinSize(scrolledBodyComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT, true));
-				getControl().getShell().pack();
+				Shell shell = getControl().getShell();
+				Point size = shell.getSize();
+				size.x++;
+				shell.setSize(size);
+				size.x--;
+				shell.setSize(size);
 			}
 		});
-		Composite flagBodyComposite = new Composite(flagExpandComposite, SWT.NONE);
-		GridLayoutFactory.fillDefaults().margins(0, 0).numColumns(2).applyTo(flagBodyComposite);
-		flagBodyComposite.setBackground(container.getBackground());
-		createFlagEditors(2, flagBodyComposite);
-		flagExpandComposite.setClient(flagBodyComposite);
+		Composite advancedBodyComposite = new Composite(advancedExpandComposite, SWT.NONE);
+		GridLayoutFactory.fillDefaults().margins(0, 0).numColumns(2).applyTo(advancedBodyComposite);
+		advancedBodyComposite.setBackground(container.getBackground());
+		createFlagEditors(2, advancedBodyComposite);
+		createAttributeEditor(attachmentAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_URL),
+				advancedBodyComposite);
+		advancedExpandComposite.setClient(advancedBodyComposite);
 	}
 
 	private void createFlagEditors(int columnCount, Composite flagBodyComposite) {
@@ -320,8 +331,10 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 					label.setBackground(flagBodyComposite.getBackground());
 					label.setForeground(flagBodyComposite.getForeground());
 
-					GridData gd = GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).hint(
-							LABEL_WIDTH - (4 * COLUMN_GAP), SWT.DEFAULT).create();
+					GridData gd = GridDataFactory.fillDefaults()
+							.align(SWT.RIGHT, SWT.CENTER)
+							.hint(LABEL_WIDTH - (4 * COLUMN_GAP), SWT.DEFAULT)
+							.create();
 					if (currentFlagColumn > 1) {
 						gd.horizontalIndent = COLUMN_GAP;
 						gd.widthHint = LABEL_WIDTH + COLUMN_GAP;
@@ -346,11 +359,14 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 	@Override
 	public void dispose() {
 		IDialogSettings settings = BugzillaUiPlugin.getDefault().getDialogSettings();
-		IDialogSettings attachmentsSettings = settings.getSection(DIALOG_SETTINGS_SECTION_BUGZILLA_ATTACHMENTS_WIZARD);
+		IDialogSettings attachmentsSettings = settings.getSection(BugzillaUiPlugin.ATTACHMENT_WIZARD_SETTINGS_SECTION
+				+ repositoryLabel);
 		if (attachmentsSettings == null) {
-			attachmentsSettings = settings.addNewSection(DIALOG_SETTINGS_SECTION_BUGZILLA_ATTACHMENTS_WIZARD);
+			attachmentsSettings = settings.addNewSection(BugzillaUiPlugin.ATTACHMENT_WIZARD_SETTINGS_SECTION
+					+ repositoryLabel);
 		}
 		attachmentsSettings.put(DIALOG_SETTING_RUN_IN_BACKGROUND, runInBackgroundButton.getSelection());
+		attachmentsSettings.put(DIALOG_SETTING_ADVANCED_EXPANDED, advancedExpandComposite.isExpanded());
 		super.dispose();
 	}
 

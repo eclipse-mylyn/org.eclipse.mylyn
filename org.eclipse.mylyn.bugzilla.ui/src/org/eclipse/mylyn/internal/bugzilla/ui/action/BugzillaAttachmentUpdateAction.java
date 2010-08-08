@@ -14,9 +14,11 @@ package org.eclipse.mylyn.internal.bugzilla.ui.action;
 import java.util.List;
 
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylyn.internal.bugzilla.ui.editor.BugzillaTaskEditorPage;
 import org.eclipse.mylyn.internal.bugzilla.ui.editor.FlagAttributeEditor;
 import org.eclipse.mylyn.internal.bugzilla.ui.wizard.BugzillaAttachmentWizard;
@@ -108,6 +110,7 @@ public class BugzillaAttachmentUpdateAction extends BaseSelectionListenerAction 
 				ITaskDataWorkingCopy workingCopy = TasksUi.getTaskDataManager().createWorkingCopy(nTask, editTaskData);
 				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 						attachment.getTaskAttribute().getTaskData().getRepositoryUrl());
+				final String repositoryLabel = repository.getRepositoryLabel();
 				final TaskDataModel model = new TaskDataModel(repository, nTask, workingCopy);
 				AttributeEditorFactory factory = new AttributeEditorFactory(model, repository,
 						bugzillaTaskEditorPage.getEditorSite()) {
@@ -130,8 +133,22 @@ public class BugzillaAttachmentUpdateAction extends BaseSelectionListenerAction 
 				target.setValue(target0.getValue());
 
 				final BugzillaAttachmentWizard attachmentWizard = new BugzillaAttachmentWizard(shell, factory, target,
-						taskEditor, attachment);
-				final NewAttachmentWizardDialog dialog = new NewAttachmentWizardDialog(shell, attachmentWizard, false);
+						taskEditor, attachment, repository.getRepositoryLabel());
+				final NewAttachmentWizardDialog dialog = new NewAttachmentWizardDialog(shell, attachmentWizard, false) {
+
+					@Override
+					protected IDialogSettings getDialogBoundsSettings() {
+						IDialogSettings settings = BugzillaUiPlugin.getDefault().getDialogSettings();
+						IDialogSettings section = settings.getSection(BugzillaUiPlugin.ATTACHMENT_WIZARD_SETTINGS_SECTION
+								+ repositoryLabel);
+						if (section == null) {
+							section = settings.addNewSection(BugzillaUiPlugin.ATTACHMENT_WIZARD_SETTINGS_SECTION
+									+ repositoryLabel);
+						}
+						return section;
+					}
+
+				};
 				model.addModelListener(new TaskDataModelListener() {
 
 					@Override

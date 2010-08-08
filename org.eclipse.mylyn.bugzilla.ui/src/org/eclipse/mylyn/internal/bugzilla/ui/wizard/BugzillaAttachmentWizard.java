@@ -43,14 +43,17 @@ public class BugzillaAttachmentWizard extends Wizard {
 
 	private final ITaskAttachment attachment;
 
+	private final String repositoryLabel;
+
 	public BugzillaAttachmentWizard(Shell parentShell, AttributeEditorFactory factory,
-			TaskAttribute attachmentAttribute, TaskEditor taskEditor, ITaskAttachment attachment) {
+			TaskAttribute attachmentAttribute, TaskEditor taskEditor, ITaskAttachment attachment, String repositoryLabel) {
 		super();
 		this.factory = factory;
 		this.attachmentAttribute = attachmentAttribute;
 		this.parentShell = parentShell;
 		this.taskEditor = taskEditor;
 		this.attachment = attachment;
+		this.repositoryLabel = repositoryLabel;
 		setNeedsProgressMonitor(true);
 		setWindowTitle(Messages.BugzillaAttachmentWizard_Attachment_Details_Dialog_Title);
 	}
@@ -127,8 +130,8 @@ public class BugzillaAttachmentWizard extends Wizard {
 
 	@Override
 	public void addPages() {
-		attachmentWizardPage = new BugzillaAttachmentWizardPage(parentShell, factory, attachmentAttribute,
-				attachment.getTask().getTaskId());
+		attachmentWizardPage = new BugzillaAttachmentWizardPage(parentShell, factory, attachment.getTask().getTaskId(),
+				attachmentAttribute, repositoryLabel);
 		addPage(attachmentWizardPage);
 	}
 
