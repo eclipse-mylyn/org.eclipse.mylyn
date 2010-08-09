@@ -480,23 +480,70 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			break;
 		case ATTACHER:
 			if (attachment != null) {
-				IRepositoryPerson author = repositoryTaskData.getAttributeMapper().getTaskRepository().createPerson(
-						parsedText);
+				IRepositoryPerson author = repositoryTaskData.getAttributeMapper()
+						.getTaskRepository()
+						.createPerson(parsedText);
 				author.setName(parsedText);
 				attachment.setAuthor(author);
 			}
 			break;
-		default:
-			TaskAttribute defaultAttribute = repositoryTaskData.getRoot().getMappedAttribute(tag.getKey());
-			if (defaultAttribute == null) {
-				defaultAttribute = BugzillaTaskDataHandler.createAttribute(repositoryTaskData, tag);
-				defaultAttribute.setValue(parsedText);
-			} else {
-				defaultAttribute.addValue(parsedText);
+		case CLASSIFICATION:
+		case TARGET_MILESTONE:
+		case QA_CONTACT:
+		case STATUS_WHITEBOARD:
+		case ALIAS:
+		case SEE_ALSO:
+			TaskAttribute suppressAttribute = createAttrribute(parsedText, tag);
+			String propertyName = null;
+			switch (tag) {
+			case CLASSIFICATION:
+				propertyName = IBugzillaConstants.BUGZILLA_PARAM_USECLASSIFICATION;
+				break;
+			case TARGET_MILESTONE:
+				propertyName = IBugzillaConstants.BUGZILLA_PARAM_USETARGETMILESTONE;
+				break;
+			case QA_CONTACT:
+				propertyName = IBugzillaConstants.BUGZILLA_PARAM_USEQACONTACT;
+				break;
+			case STATUS_WHITEBOARD:
+				propertyName = IBugzillaConstants.BUGZILLA_PARAM_USESTATUSWHITEBOARD;
+				break;
+			case ALIAS:
+				propertyName = IBugzillaConstants.BUGZILLA_PARAM_USEBUGALIASES;
+				break;
+			case SEE_ALSO:
+				propertyName = IBugzillaConstants.BUGZILLA_PARAM_USE_SEE_ALSO;
+				break;
+			default:
+				propertyName = null;
+				break;
 			}
+			String useParam = repositoryTaskData.getAttributeMapper().getTaskRepository().getProperty(propertyName);
+			if (useParam != null && useParam.equals("true")) { //$NON-NLS-1$
+				suppressAttribute.getMetaData().setKind(TaskAttribute.KIND_DEFAULT);
+				if (BugzillaAttribute.CLASSIFICATION.equals(tag)) {
+					suppressAttribute.getMetaData().setReadOnly(true);
+				}
+			} else {
+				suppressAttribute.getMetaData().setKind(null);
+			}
+			break;
+		default:
+			createAttrribute(parsedText, tag);
 			break;
 		}
 
+	}
+
+	private TaskAttribute createAttrribute(String parsedText, BugzillaAttribute tag) {
+		TaskAttribute attribute = repositoryTaskData.getRoot().getMappedAttribute(tag.getKey());
+		if (attribute == null) {
+			attribute = BugzillaTaskDataHandler.createAttribute(repositoryTaskData, tag);
+			attribute.setValue(parsedText);
+		} else {
+			attribute.addValue(parsedText);
+		}
+		return attribute;
 	}
 
 	private void updateCustomFields(TaskData taskData) {
@@ -621,8 +668,9 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 		TaskCommentMapper taskComment = TaskCommentMapper.createFrom(attribute);
 		taskComment.setCommentId(commentNum + ""); //$NON-NLS-1$
 		taskComment.setNumber(commentNum);
-		IRepositoryPerson author = repositoryTaskData.getAttributeMapper().getTaskRepository().createPerson(
-				comment.author);
+		IRepositoryPerson author = repositoryTaskData.getAttributeMapper()
+				.getTaskRepository()
+				.createPerson(comment.author);
 		author.setName(comment.authorName);
 		taskComment.setAuthor(author);
 		TaskAttribute attrTimestamp = attribute.createAttribute(BugzillaAttribute.BUG_WHEN.getKey());

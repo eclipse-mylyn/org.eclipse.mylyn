@@ -25,6 +25,8 @@ public enum BugzillaAttribute {
 
 	ADD_COMMENT(Messages.BugzillaAttribute_Additional_Comments, "comment", TaskAttribute.TYPE_LONG_TEXT, true, false), //$NON-NLS-1$
 
+	ALIAS(Messages.BugzillaAttribute_Alias, "alias", TaskAttribute.TYPE_SHORT_TEXT, true, false), //$NON-NLS-1$
+
 	ASSIGNED_TO(Messages.BugzillaAttribute_Assigned_to, "assigned_to", TaskAttribute.TYPE_PERSON, true, true), //$NON-NLS-1$
 
 	ASSIGNED_TO_NAME(Messages.BugzillaAttribute_Assigned_to_NAME,
@@ -127,6 +129,8 @@ public enum BugzillaAttribute {
 	RESOLUTION(Messages.BugzillaAttribute_Resolution, "resolution", TaskAttribute.TYPE_SHORT_TEXT, false, true), //$NON-NLS-1$
 
 	REMAINING_TIME(Messages.BugzillaAttribute_Remaining, "remaining_time", TaskAttribute.TYPE_SHORT_TEXT, true, false), //$NON-NLS-1$
+
+	SEE_ALSO(Messages.BugzillaAttribute_See_Also, "see_also", TaskAttribute.TYPE_SHORT_TEXT, true, false), //$NON-NLS-1$
 
 	SET_DEFAULT_ASSIGNEE(Messages.BugzillaAttribute_Reassign_to_default_assignee,
 			"set_default_assignee", TaskAttribute.TYPE_BOOLEAN, true, //$NON-NLS-1$

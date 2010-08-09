@@ -613,6 +613,18 @@ public class BugzillaClient {
 		if (useParam != null && useParam.equals("true")) { //$NON-NLS-1$
 			BugzillaTaskDataHandler.createAttribute(existingReport, BugzillaAttribute.STATUS_WHITEBOARD);
 		}
+		useParam = taskRepository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USEBUGALIASES);
+		if (useParam != null && useParam.equals("true")) { //$NON-NLS-1$
+			BugzillaTaskDataHandler.createAttribute(existingReport, BugzillaAttribute.ALIAS);
+		}
+		useParam = taskRepository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USECLASSIFICATION);
+		if (useParam != null && useParam.equals("true")) { //$NON-NLS-1$
+			BugzillaTaskDataHandler.createAttribute(existingReport, BugzillaAttribute.CLASSIFICATION);
+		}
+		useParam = taskRepository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USE_SEE_ALSO);
+		if (useParam != null && useParam.equals("true")) { //$NON-NLS-1$
+			BugzillaTaskDataHandler.createAttribute(existingReport, BugzillaAttribute.SEE_ALSO);
+		}
 
 	}
 

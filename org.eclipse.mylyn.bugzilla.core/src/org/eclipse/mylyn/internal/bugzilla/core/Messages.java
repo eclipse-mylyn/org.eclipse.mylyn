@@ -33,6 +33,8 @@ public class Messages extends NLS {
 
 	public static String BugzillaAttribute_Additional_Comments;
 
+	public static String BugzillaAttribute_Alias;
+
 	public static String BugzillaAttribute_Assigned_to;
 
 	public static String BugzillaAttribute_Assigned_to_NAME;
@@ -128,6 +130,8 @@ public class Messages extends NLS {
 	public static String BugzillaAttribute_Reporter;
 
 	public static String BugzillaAttribute_Resolution;
+
+	public static String BugzillaAttribute_See_Also;
 
 	public static String BugzillaAttribute_Severity;
 

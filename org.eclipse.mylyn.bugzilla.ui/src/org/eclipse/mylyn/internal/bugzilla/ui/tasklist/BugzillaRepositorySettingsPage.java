@@ -255,10 +255,6 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		xmlrpc.setToolTipText(Messages.BugzillaRepositorySettingsPage_RequiresBugzilla3_6);
 		useXMLRPCstatusTransitions = new Button(parent, SWT.CHECK | SWT.LEFT);
 		useXMLRPCstatusTransitions.setText(Messages.BugzillaRepositorySettingsPage_UseXmlRpc);
-		if (repository != null) {
-			boolean shortLogin = Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_USE_XMLRPC));
-			useXMLRPCstatusTransitions.setSelection(shortLogin);
-		}
 
 		Label descriptorLabel = new Label(parent, SWT.NONE);
 		descriptorLabel.setText(Messages.BugzillaRepositorySettingsPage_descriptor_file);
@@ -369,31 +365,37 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 			if (myTemplate != null) {
 				// we have an Template but no values in the Repository so we use the Template values
 				boolean value = Boolean.parseBoolean(myTemplate.getAttribute("useclassification")); //$NON-NLS-1$
-				useclassification.setSelection(value);
+				useclassification.setSelection(!value);
 				value = Boolean.parseBoolean(myTemplate.getAttribute("usetargetmilestone")); //$NON-NLS-1$
-				usetargetmilestone.setSelection(value);
+				usetargetmilestone.setSelection(!value);
 				value = Boolean.parseBoolean(myTemplate.getAttribute("useqacontact")); //$NON-NLS-1$
-				useqacontact.setSelection(value);
+				useqacontact.setSelection(!value);
 				value = Boolean.parseBoolean(myTemplate.getAttribute("usestatuswhiteboard")); //$NON-NLS-1$
-				usestatuswhiteboard.setSelection(value);
+				usestatuswhiteboard.setSelection(!value);
 				value = Boolean.parseBoolean(myTemplate.getAttribute("usebugaliases")); //$NON-NLS-1$
-				usebugaliases.setSelection(value);
+				usebugaliases.setSelection(!value);
 				value = Boolean.parseBoolean(myTemplate.getAttribute("use_see_also")); //$NON-NLS-1$
-				use_see_also.setSelection(value);
+				use_see_also.setSelection(!value);
+
+				value = Boolean.parseBoolean(myTemplate.getAttribute("useXMLRPC")); //$NON-NLS-1$
+				useXMLRPCstatusTransitions.setSelection(value);
 			} else {
 				// we use the repository values
 				boolean value = Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USECLASSIFICATION));
-				useclassification.setSelection(value);
+				useclassification.setSelection(!value);
 				value = Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USETARGETMILESTONE));
-				usetargetmilestone.setSelection(value);
+				usetargetmilestone.setSelection(!value);
 				value = Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USEQACONTACT));
-				useqacontact.setSelection(value);
+				useqacontact.setSelection(!value);
 				value = Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USESTATUSWHITEBOARD));
-				usestatuswhiteboard.setSelection(value);
+				usestatuswhiteboard.setSelection(!value);
 				value = Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USEBUGALIASES));
-				usebugaliases.setSelection(value);
+				usebugaliases.setSelection(!value);
 				value = Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USE_SEE_ALSO));
-				use_see_also.setSelection(value);
+				use_see_also.setSelection(!value);
+
+				value = Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_USE_XMLRPC));
+				useXMLRPCstatusTransitions.setSelection(value);
 			}
 		}
 	}
@@ -470,17 +472,17 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 			repository.removeProperty(IBugzillaConstants.BUGZILLA_DEF_OS);
 		}
 		repository.setProperty(IBugzillaConstants.BUGZILLA_PARAM_USECLASSIFICATION,
-				Boolean.toString(useclassification.getSelection()));
+				Boolean.toString(!useclassification.getSelection()));
 		repository.setProperty(IBugzillaConstants.BUGZILLA_PARAM_USETARGETMILESTONE,
-				Boolean.toString(usetargetmilestone.getSelection()));
+				Boolean.toString(!usetargetmilestone.getSelection()));
 		repository.setProperty(IBugzillaConstants.BUGZILLA_PARAM_USEQACONTACT,
-				Boolean.toString(useqacontact.getSelection()));
+				Boolean.toString(!useqacontact.getSelection()));
 		repository.setProperty(IBugzillaConstants.BUGZILLA_PARAM_USESTATUSWHITEBOARD,
-				Boolean.toString(usestatuswhiteboard.getSelection()));
+				Boolean.toString(!usestatuswhiteboard.getSelection()));
 		repository.setProperty(IBugzillaConstants.BUGZILLA_PARAM_USEBUGALIASES,
-				Boolean.toString(usebugaliases.getSelection()));
+				Boolean.toString(!usebugaliases.getSelection()));
 		repository.setProperty(IBugzillaConstants.BUGZILLA_PARAM_USE_SEE_ALSO,
-				Boolean.toString(use_see_also.getSelection()));
+				Boolean.toString(!use_see_also.getSelection()));
 	}
 
 	@Override
