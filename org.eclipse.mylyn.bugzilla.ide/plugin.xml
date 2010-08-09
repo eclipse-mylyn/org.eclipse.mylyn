@@ -26,6 +26,7 @@
          <attribute name="usestatuswhiteboard" value="true"/>
          <attribute name="usebugaliases" value="false"/>
          <attribute name="use_see_also" value="true"/>
+         <attribute name="useXMLRPC" value="false"/>
         </repository>
 	</extension>
 	<extension point="org.eclipse.mylyn.tasks.bugs.support">
