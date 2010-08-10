@@ -136,6 +136,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 			TableColumn column = new TableColumn(attachmentsTable, SWT.LEFT, i);
 			column.setText(attachmentsColumns[i]);
 			column.setWidth(attachmentsColumnWidths[i]);
+			column.setMoveable(true);
 			if (i == 4) {
 				attachmentsTable.setSortColumn(column);
 				attachmentsTable.setSortDirection(SWT.DOWN);
