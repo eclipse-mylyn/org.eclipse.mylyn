@@ -24,6 +24,14 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IMemento;
@@ -55,12 +63,20 @@ public class TableViewerSupport {
 
 	private int defaultSortColumnIndex;
 
-	public TableViewerSupport(TableViewer viewer, File stateFile) {
+	private final Menu headerMenu;
+
+	private final Menu contextMenu;
+
+	public TableViewerSupport(TableViewer viewer, File stateFile, Menu contextMenu) {
 		Assert.isNotNull(viewer);
 		Assert.isNotNull(stateFile);
 		this.viewer = viewer;
 		this.table = viewer.getTable();
 		this.stateFile = stateFile;
+
+		Composite parent = table.getParent();
+		headerMenu = new Menu(parent);
+		this.contextMenu = contextMenu;
 
 		initialize();
 		restore();
@@ -87,6 +103,7 @@ public class TableViewerSupport {
 				}
 			});
 
+			createMenuItem(headerMenu, column);
 			defaults[i] = new TableColumnState();
 			defaults[i].width = column.getWidth();
 
@@ -97,11 +114,40 @@ public class TableViewerSupport {
 		defaultOrder = table.getColumnOrder();
 		defaultSortDirection = table.getSortDirection();
 
+		table.addListener(SWT.MenuDetect, new Listener() {
+			public void handleEvent(Event event) {
+				Display display = table.getDisplay();
+				Point pt = display.map(null, table, new Point(event.x, event.y));
+				Rectangle clientArea = table.getClientArea();
+				boolean header = clientArea.y <= pt.y && pt.y < (clientArea.y + table.getHeaderHeight());
+
+				table.setMenu(header ? headerMenu : contextMenu);
+			}
+		});
+
 		table.addDisposeListener(new DisposeListener() {
 			public void widgetDisposed(DisposeEvent event) {
 				save();
 			}
 		});
+	}
+
+	private void createMenuItem(Menu parent, final TableColumn column) {
+		final MenuItem itemName = new MenuItem(parent, SWT.CHECK);
+		itemName.setText(column.getText());
+		itemName.setSelection(column.getWidth() > 0);
+		itemName.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event event) {
+				if (itemName.getSelection()) {
+					column.setWidth(150);
+					column.setResizable(true);
+				} else {
+					column.setWidth(0);
+					column.setResizable(false);
+				}
+			}
+		});
+
 	}
 
 	public void restore() {
@@ -116,6 +162,7 @@ public class TableViewerSupport {
 					for (int i = 0; i < children.length; i++) {
 						TableColumn column = table.getColumn(i);
 						column.setWidth(children[i].getInteger("width")); //$NON-NLS-1$ 
+						headerMenu.getItem(i).setSelection(column.getWidth() > 0);
 						order[i] = children[i].getInteger("order"); //$NON-NLS-1$
 					}
 					try {
