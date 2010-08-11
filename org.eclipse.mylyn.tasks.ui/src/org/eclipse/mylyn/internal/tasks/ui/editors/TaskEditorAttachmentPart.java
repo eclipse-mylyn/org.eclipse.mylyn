@@ -181,7 +181,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		Menu menu = menuManager.createContextMenu(attachmentsTable);
 		attachmentsTable.setMenu(menu);
 
-		new TableViewerSupport(attachmentsViewer, getStateFile());
+		new TableViewerSupport(attachmentsViewer, getStateFile(), menu);
 	}
 
 	private File getStateFile() {
