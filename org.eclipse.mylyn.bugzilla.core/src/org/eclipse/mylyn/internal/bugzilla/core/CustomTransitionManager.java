@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.apache.xmlrpc.XmlRpcException;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.internal.bugzilla.core.service.BugzillaXmlRpcClient;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
@@ -318,7 +319,7 @@ public class CustomTransitionManager implements Serializable {
 		}
 	}
 
-	public void parse(BugzillaXmlRpcClient xmlClient) {
+	public void parse(IProgressMonitor monitor, BugzillaXmlRpcClient xmlClient) {
 //		if (usedXml) {
 //			//XMLRPC should not change, don't look it up again
 //			return;
@@ -335,7 +336,7 @@ public class CustomTransitionManager implements Serializable {
 		try {
 			String[] fields = new String[1];
 			fields[0] = "bug_status"; //$NON-NLS-1$
-			for (Object raw : xmlClient.getFieldsWithNames(fields)) {
+			for (Object raw : xmlClient.getFieldsWithNames(monitor, fields)) {
 				if (raw instanceof HashMap<?, ?>) {
 					Object[] values = (Object[]) ((HashMap<?, ?>) raw).get("values"); //$NON-NLS-1$
 					if (values == null) {

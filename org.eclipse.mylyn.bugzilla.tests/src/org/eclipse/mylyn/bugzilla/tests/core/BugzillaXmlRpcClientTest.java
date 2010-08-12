@@ -18,6 +18,8 @@ import java.util.HashMap;
 import junit.framework.TestCase;
 
 import org.apache.xmlrpc.XmlRpcException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.WebLocation;
@@ -45,38 +47,40 @@ public class BugzillaXmlRpcClientTest extends TestCase {
 	@SuppressWarnings("unused")
 	public void testXmlRpc() throws Exception {
 		if (BugzillaFixture.current() != BugzillaFixture.BUGS_3_6_XML_RPC_DISABLED) {
-			int uID = bugzillaClient.login();
-			String x0 = bugzillaClient.getVersion();
-			HashMap<?, ?> x1 = bugzillaClient.getTime();
-			Date x2 = bugzillaClient.getDBTime();
-			Date x3 = bugzillaClient.getWebTime();
-			Object[] xx0 = bugzillaClient.getUserInfoFromIDs(new Integer[] { 1, 2 });
-			Object[] xx1 = bugzillaClient.getUserInfoFromNames(new String[] { "tests@mylyn.eclipse.org" });
-			Object[] xx2 = bugzillaClient.getUserInfoWithMatch(new String[] { "est" });
-			Object[] xx3 = bugzillaClient.getAllFields();
-			Object[] xx4 = bugzillaClient.getFieldsWithNames(new String[] { "qa_contact" });
-			Object[] xx5 = bugzillaClient.getFieldsWithIDs(new Integer[] { 12, 18 });
-			Object[] xx6 = bugzillaClient.getSelectableProducts();
-			Object[] xx7 = bugzillaClient.getEnterableProducts();
-			Object[] xx8 = bugzillaClient.getAccessibleProducts();
-			Object[] xx9 = bugzillaClient.getProducts(new Integer[] { 1, 3 });
+			IProgressMonitor monitor = new NullProgressMonitor();
+			int uID = bugzillaClient.login(monitor);
+			String x0 = bugzillaClient.getVersion(monitor);
+			HashMap<?, ?> x1 = bugzillaClient.getTime(monitor);
+			Date x2 = bugzillaClient.getDBTime(monitor);
+			Date x3 = bugzillaClient.getWebTime(monitor);
+			Object[] xx0 = bugzillaClient.getUserInfoFromIDs(monitor, new Integer[] { 1, 2 });
+			Object[] xx1 = bugzillaClient.getUserInfoFromNames(monitor, new String[] { "tests@mylyn.eclipse.org" });
+			Object[] xx2 = bugzillaClient.getUserInfoWithMatch(monitor, new String[] { "est" });
+			Object[] xx3 = bugzillaClient.getAllFields(monitor);
+			Object[] xx4 = bugzillaClient.getFieldsWithNames(monitor, new String[] { "qa_contact" });
+			Object[] xx5 = bugzillaClient.getFieldsWithIDs(monitor, new Integer[] { 12, 18 });
+			Object[] xx6 = bugzillaClient.getSelectableProducts(monitor);
+			Object[] xx7 = bugzillaClient.getEnterableProducts(monitor);
+			Object[] xx8 = bugzillaClient.getAccessibleProducts(monitor);
+			Object[] xx9 = bugzillaClient.getProducts(monitor, new Integer[] { 1, 3 });
 		}
 	}
 
 	@SuppressWarnings("unused")
 	public void testXmlRpcInstalled() throws Exception {
 		int uID = -1;
+		IProgressMonitor monitor = new NullProgressMonitor();
 		BugzillaFixture a = BugzillaFixture.current();
 		if (BugzillaFixture.current() == BugzillaFixture.BUGS_3_6_XML_RPC_DISABLED) {
 			try {
-				uID = bugzillaClient.login();
+				uID = bugzillaClient.login(monitor);
 				fail("Never reach this! We should get an XmlRpcException");
 			} catch (XmlRpcException e) {
 				assertEquals("The server returned an unexpected content type: 'text/html; charset=UTF-8'",
 						e.getMessage());
 			}
 		} else {
-			uID = bugzillaClient.login();
+			uID = bugzillaClient.login(monitor);
 			assertEquals(2, uID);
 		}
 	}
@@ -84,7 +88,7 @@ public class BugzillaXmlRpcClientTest extends TestCase {
 	public void testTransitionManagerWithXml() throws Exception {
 		if (BugzillaFixture.current() == BugzillaFixture.BUGS_3_6) {
 			CustomTransitionManager ctm = new CustomTransitionManager();
-			ctm.parse(bugzillaClient);
+			ctm.parse(new NullProgressMonitor(), bugzillaClient);
 
 			String start;
 			ArrayList<String> transitions = new ArrayList<String>();

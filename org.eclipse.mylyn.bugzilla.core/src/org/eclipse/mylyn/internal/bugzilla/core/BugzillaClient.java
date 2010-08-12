@@ -693,12 +693,12 @@ public class BugzillaClient {
 									if (!repositoryConfiguration.getProducts().isEmpty()) {
 										repositoryConfiguration.setRepositoryUrl(repositoryUrl.toString());
 
-										repositoryConfiguration.setValidTransitions(
+										repositoryConfiguration.setValidTransitions(monitor,
 												configParameters.get(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE),
 												useXml);
 										return repositoryConfiguration;
 									} else {
-										repositoryConfiguration.setValidTransitions(
+										repositoryConfiguration.setValidTransitions(monitor,
 												configParameters.get(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE),
 												useXml);
 										if (attempt == 0) {

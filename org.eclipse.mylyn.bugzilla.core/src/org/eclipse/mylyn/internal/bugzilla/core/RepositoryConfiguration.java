@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_REPORT_STATUS;
 import org.eclipse.mylyn.internal.bugzilla.core.service.BugzillaXmlRpcClient;
@@ -345,7 +346,7 @@ public class RepositoryConfiguration implements Serializable {
 	 * 
 	 * @param fileName
 	 */
-	public void setValidTransitions(String fileName, boolean useXmlRpc) {
+	public void setValidTransitions(IProgressMonitor monitor, String fileName, boolean useXmlRpc) {
 		//Custom transitions only possible for newer versions of Bugzilla
 		if (getInstallVersion() != null && getInstallVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_2) < 0) {
 			return;
@@ -359,7 +360,7 @@ public class RepositoryConfiguration implements Serializable {
 			}
 			WebLocation webLocation = new WebLocation(getRepositoryUrl() + "/xmlrpc.cgi"); //$NON-NLS-1$
 			BugzillaXmlRpcClient xmlClient = new BugzillaXmlRpcClient(webLocation);
-			validTransitions.parse(xmlClient);
+			validTransitions.parse(monitor, xmlClient);
 		}
 	}
 

@@ -458,8 +458,22 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 			repository.setProperty(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE, descriptorFile.getText());
 		}
 		if (repositoryConfiguration != null) {
-			repositoryConfiguration.setValidTransitions(descriptorFile.getText(),
-					useXMLRPCstatusTransitions.getSelection());
+			try {
+				final String descriptorFileName = descriptorFile.getText();
+				final boolean useXMLRPCstatusTransitionsSelection = useXMLRPCstatusTransitions.getSelection();
+				getWizard().getContainer().run(true, false, new IRunnableWithProgress() {
+					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+						repositoryConfiguration.setValidTransitions(monitor, descriptorFileName,
+								useXMLRPCstatusTransitionsSelection);
+					}
+				});
+			} catch (InvocationTargetException e1) {
+				if (e1.getCause() != null) {
+					setErrorMessage(e1.getCause().getMessage());
+				}
+			} catch (InterruptedException e1) {
+				// ignore
+			}
 		}
 
 		if (!autodetectPlatformOS.getSelection()) {
