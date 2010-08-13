@@ -454,28 +454,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		repository.setProperty(IBugzillaConstants.BUGZILLA_LANGUAGE_SETTING, languageSettingCombo.getText());
 		repository.setProperty(IBugzillaConstants.BUGZILLA_USE_XMLRPC,
 				Boolean.toString(useXMLRPCstatusTransitions.getSelection()));
-		if (oldDescriptorFile == null || !descriptorFile.getText().equals(oldDescriptorFile)) {
-			repository.setProperty(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE, descriptorFile.getText());
-		}
-		if (repositoryConfiguration != null) {
-			try {
-				final String descriptorFileName = descriptorFile.getText();
-				final boolean useXMLRPCstatusTransitionsSelection = useXMLRPCstatusTransitions.getSelection();
-				getWizard().getContainer().run(true, false, new IRunnableWithProgress() {
-					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-						repositoryConfiguration.setValidTransitions(monitor, descriptorFileName,
-								useXMLRPCstatusTransitionsSelection);
-					}
-				});
-			} catch (InvocationTargetException e1) {
-				if (e1.getCause() != null) {
-					setErrorMessage(e1.getCause().getMessage());
-				}
-			} catch (InterruptedException e1) {
-				// ignore
-			}
-		}
-
+		repository.setProperty(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE, descriptorFile.getText());
 		if (!autodetectPlatformOS.getSelection()) {
 			repository.setProperty(IBugzillaConstants.BUGZILLA_DEF_PLATFORM,
 					String.valueOf(defaultPlatformCombo.getItem(defaultPlatformCombo.getSelectionIndex())));

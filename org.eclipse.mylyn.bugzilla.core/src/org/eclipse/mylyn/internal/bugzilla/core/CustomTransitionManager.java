@@ -55,15 +55,11 @@ public class CustomTransitionManager implements Serializable {
 
 	private boolean valid = false;
 
-	private boolean fromFile = false;
-
 	private String filePath;
 
 	private String duplicateStatus;
 
 	private String startStatus;
-
-	private boolean usedXml;
 
 	public CustomTransitionManager() {
 		operationMapByCurrentStatus = new HashMap<String, List<AbstractBugzillaOperation>>();
@@ -71,8 +67,6 @@ public class CustomTransitionManager implements Serializable {
 		closedStatuses = new ArrayList<String>();
 		this.valid = false;
 		this.filePath = ""; //$NON-NLS-1$
-		this.fromFile = false;
-		this.usedXml = false;
 		duplicateStatus = DEFAULT_DUPLICATE_STATUS;
 		startStatus = DEFAULT_START_STATUS;
 	}
@@ -93,7 +87,6 @@ public class CustomTransitionManager implements Serializable {
 			//Do nothing, already parsed this file
 			return false;
 		}
-		fromFile = true;
 		this.filePath = filePath;
 		setValid(true);
 
@@ -320,10 +313,6 @@ public class CustomTransitionManager implements Serializable {
 	}
 
 	public void parse(IProgressMonitor monitor, BugzillaXmlRpcClient xmlClient) {
-//		if (usedXml) {
-//			//XMLRPC should not change, don't look it up again
-//			return;
-//		}
 		this.filePath = ""; //$NON-NLS-1$
 		operationMapByCurrentStatus.clear();
 		operationMapByEndStatus.clear();
@@ -366,8 +355,6 @@ public class CustomTransitionManager implements Serializable {
 			}
 
 			setValid(true);
-			usedXml = true;
-			fromFile = false;
 		} catch (XmlRpcException e) {
 			setValid(false);
 		}

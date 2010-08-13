@@ -16,10 +16,15 @@ import java.util.HashMap;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.xmlrpc.XmlRpcException;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
+import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.commons.xmlrpc.CommonXmlRpcClient;
 
 @SuppressWarnings("restriction")
@@ -284,7 +289,7 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 		}).execute();
 	}
 
-	public Object[] getProducts(final IProgressMonitor monitor, final Integer[] ids) throws XmlRpcException {
+	public Object[] getProducts(final IProgressMonitor monitor, final Object[] ids) throws XmlRpcException {
 		return (new BugzillaXmlRpcOperation<Object[]>(this) {
 			@SuppressWarnings("serial")
 			@Override
@@ -358,4 +363,40 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 		return result;
 	}
 
+	public void updateConfiguration(IProgressMonitor monitor, RepositoryConfiguration repositoryConfiguration,
+			String fileName) throws CoreException {
+		repositoryConfiguration.setValidTransitions(monitor, fileName, this);
+		if (!repositoryConfiguration.getProducts().isEmpty()) {
+			updateProductInfo(monitor, repositoryConfiguration);
+		}
+	}
+
+	public void updateProductInfo(IProgressMonitor monitor, RepositoryConfiguration repositoryConfiguration)
+			throws CoreException {
+		try {
+			Object[] productIDs = getAccessibleProducts(monitor);
+			Object[] products = getProducts(monitor, productIDs);
+			for (Object object : products) {
+				if (object instanceof HashMap<?, ?>) {
+					String defaultMilestone = null;
+					String product = (String) ((HashMap<?, ?>) object).get("name"); //$NON-NLS-1$
+					HashMap<?, ?> values = (HashMap<?, ?>) ((HashMap<?, ?>) object).get("internals"); //$NON-NLS-1$
+					if (values == null) {
+						continue;
+					}
+					if (values instanceof HashMap<?, ?>) {
+						defaultMilestone = (String) ((HashMap<?, ?>) values).get("defaultmilestone"); //$NON-NLS-1$
+					}
+					if (product != null && !product.equals("") //$NON-NLS-1$
+							&& defaultMilestone != null && !defaultMilestone.equals("")) { //$NON-NLS-1$
+						repositoryConfiguration.setDefaultMilestone(product, defaultMilestone);
+					}
+				}
+			}
+		} catch (XmlRpcException e) {
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+					"Can not get the Default Milestons using XMLRPC")); //$NON-NLS-1$
+		}
+
+	}
 }

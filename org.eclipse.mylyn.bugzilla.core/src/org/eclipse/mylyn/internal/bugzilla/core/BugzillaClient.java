@@ -71,6 +71,7 @@ import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer;
 import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer.Token;
 import org.eclipse.mylyn.commons.net.HtmlTag;
 import org.eclipse.mylyn.commons.net.Policy;
+import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.internal.bugzilla.core.history.BugzillaTaskHistoryParser;
 import org.eclipse.mylyn.internal.bugzilla.core.history.TaskHistory;
@@ -179,7 +180,7 @@ public class BugzillaClient {
 
 	private final BugzillaRepositoryConnector connector;
 
-	private BugzillaXmlRpcClient xmlRpcClient;
+	private BugzillaXmlRpcClient xmlRpcClient = null;
 
 	public BugzillaClient(AbstractWebLocation location, String characterEncoding, Map<String, String> configParameters,
 			BugzillaLanguageSettings languageSettings, BugzillaRepositoryConnector connector)
@@ -219,6 +220,14 @@ public class BugzillaClient {
 				WebUtil.releaseConnection(method, monitor);
 			}
 		}
+		CustomTransitionManager validTransitions = new CustomTransitionManager();
+
+		String transitionsFileName = configParameters.get(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE);
+		if (!validTransitions.parse(transitionsFileName)) {
+			throw new CoreException(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN,
+					"Invalide Transition File Content")); //$NON-NLS-1$
+		}
+
 	}
 
 	protected boolean hasAuthenticationCredentials() {
@@ -689,18 +698,20 @@ public class BugzillaClient {
 								}
 
 								if (repositoryConfiguration != null) {
-									boolean useXml = Boolean.parseBoolean(configParameters.get(IBugzillaConstants.BUGZILLA_USE_XMLRPC));
+									boolean useXMLRPC = Boolean.parseBoolean(configParameters.get(IBugzillaConstants.BUGZILLA_USE_XMLRPC));
+									if (useXMLRPC && xmlRpcClient == null) {
+										WebLocation webLocation = new WebLocation(this.repositoryUrl + "/xmlrpc.cgi"); //$NON-NLS-1$
+										xmlRpcClient = new BugzillaXmlRpcClient(webLocation);
+
+									}
 									if (!repositoryConfiguration.getProducts().isEmpty()) {
 										repositoryConfiguration.setRepositoryUrl(repositoryUrl.toString());
-
-										repositoryConfiguration.setValidTransitions(monitor,
-												configParameters.get(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE),
-												useXml);
+									}
+									xmlRpcClient.updateConfiguration(monitor, repositoryConfiguration,
+											configParameters.get(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE));
+									if (!repositoryConfiguration.getProducts().isEmpty()) {
 										return repositoryConfiguration;
 									} else {
-										repositoryConfiguration.setValidTransitions(monitor,
-												configParameters.get(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE),
-												useXml);
 										if (attempt == 0) {
 											// empty configuration, retry authenticate
 											loggedIn = false;
@@ -711,7 +722,6 @@ public class BugzillaClient {
 															"No products found in repository configuration. Ensure credentials are valid.")); //$NON-NLS-1$
 										}
 									}
-
 								}
 							}
 						}

@@ -507,7 +507,14 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 				for (String option : optionValues) {
 					attributeTargetMilestone.putOption(option, option);
 				}
-				attributeTargetMilestone.setValue(optionValues.get(0));
+				if (repositoryConfiguration != null && product != null && !product.equals("")) { //$NON-NLS-1$
+					String defaultMilestone = repositoryConfiguration.getDefaultMilestones(product);
+					if (defaultMilestone != null) {
+						attributeTargetMilestone.setValue(defaultMilestone);
+					}
+				} else {
+					attributeTargetMilestone.setValue(optionValues.get(0));
+				}
 			}
 		}
 		TaskAttribute attributePlatform = createAttribute(taskData, BugzillaAttribute.REP_PLATFORM);

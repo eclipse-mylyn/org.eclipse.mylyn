@@ -22,7 +22,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_REPORT_STATUS;
 import org.eclipse.mylyn.internal.bugzilla.core.service.BugzillaXmlRpcClient;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -271,6 +270,8 @@ public class RepositoryConfiguration implements Serializable {
 
 		List<String> milestones = new ArrayList<String>();
 
+		String defaultMilestone = null;
+
 		ProductEntry(String name) {
 			this.productName = name;
 		}
@@ -301,6 +302,14 @@ public class RepositoryConfiguration implements Serializable {
 
 		void addTargetMilestone(String target) {
 			milestones.add(target);
+		}
+
+		public String getDefaultMilestone() {
+			return defaultMilestone;
+		}
+
+		public void setDefaultMilestone(String defaultMilestone) {
+			this.defaultMilestone = defaultMilestone;
 		}
 	}
 
@@ -346,7 +355,7 @@ public class RepositoryConfiguration implements Serializable {
 	 * 
 	 * @param fileName
 	 */
-	public void setValidTransitions(IProgressMonitor monitor, String fileName, boolean useXmlRpc) {
+	public void setValidTransitions(IProgressMonitor monitor, String fileName, BugzillaXmlRpcClient xmlClient) {
 		//Custom transitions only possible for newer versions of Bugzilla
 		if (getInstallVersion() != null && getInstallVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_2) < 0) {
 			return;
@@ -354,12 +363,10 @@ public class RepositoryConfiguration implements Serializable {
 		if (validTransitions == null) {
 			validTransitions = new CustomTransitionManager();
 		}
-		if (!validTransitions.parse(fileName) && useXmlRpc) {
+		if (!validTransitions.parse(fileName) && xmlClient != null) {
 			if (getRepositoryUrl().equals("<unknown>")) { //$NON-NLS-1$
 				return; //This occurs during testing
 			}
-			WebLocation webLocation = new WebLocation(getRepositoryUrl() + "/xmlrpc.cgi"); //$NON-NLS-1$
-			BugzillaXmlRpcClient xmlClient = new BugzillaXmlRpcClient(webLocation);
 			validTransitions.parse(monitor, xmlClient);
 		}
 	}
@@ -934,4 +941,23 @@ public class RepositoryConfiguration implements Serializable {
 	public String getStartStatus() {
 		return (validTransitions == null) ? "NEW" : validTransitions.getStartStatus(); //$NON-NLS-1$
 	}
+
+	public String getDefaultMilestones(String product) {
+		ProductEntry entry = products.get(product);
+		if (entry != null) {
+			return entry.getDefaultMilestone();
+		} else {
+			return null;
+		}
+	}
+
+	public void setDefaultMilestone(String product, String defaultMilestone) {
+		ProductEntry entry = products.get(product);
+		if (entry == null) {
+			entry = new ProductEntry(product);
+			products.put(product, entry);
+		}
+		entry.setDefaultMilestone(defaultMilestone);
+	}
+
 }
