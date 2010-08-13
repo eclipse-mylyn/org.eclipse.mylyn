@@ -294,7 +294,8 @@ public class ReviewTaskEditorPart extends AbstractTaskEditorPart {
 		if (review.getResult() != null) {
 			Rating rating = review.getResult().getRating();
 			ratingList.setSelection(new StructuredSelection(rating));
-			commentText.setText(review.getResult().getText());
+			String comment = review.getResult().getText();
+			commentText.setText(comment!=null?comment:"");
 		}
 		commentText.addModifyListener(new ModifyListener() {
 

@@ -7,7 +7,7 @@ public class ReviewData {
 	private boolean outgoing;
 	private Review review;
 	private ITask task;
-	// TODO state
+	private boolean dirty;
 
 	public ReviewData(ITask task, Review review) {
 		this.task=task;
@@ -34,9 +34,15 @@ public class ReviewData {
 		return review;
 	}
 
-	public Object getModificationDate() {
-		// TODO Auto-generated method stub
-		return null;
+	public void setDirty(boolean isDirty) {
+		this.dirty=isDirty;
 	}
 
+	public void setDirty() {
+		setDirty(true);
+	}
+	public boolean isDirty() {
+		return this.dirty;
+	}
+	
 }

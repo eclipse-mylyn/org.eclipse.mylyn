@@ -16,7 +16,9 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.reviews.core.ReviewConstants;
+import org.eclipse.mylyn.reviews.core.ReviewData;
 import org.eclipse.mylyn.reviews.core.ReviewDataManager;
+import org.eclipse.mylyn.reviews.core.ReviewsUtil;
 import org.eclipse.mylyn.reviews.core.model.review.Review;
 import org.eclipse.mylyn.reviews.ui.Messages;
 import org.eclipse.mylyn.reviews.ui.ReviewCommentTaskAttachmentSource;
@@ -37,8 +39,7 @@ public class ReviewTaskEditorPartAdvisor implements
 		ITaskEditorPartDescriptorAdvisor {
 
 	public boolean canCustomize(ITask task) {
-		boolean isReview = Boolean.parseBoolean(task
-				.getAttribute(ReviewConstants.ATTR_REVIEW_FLAG));
+		boolean isReview = ReviewsUtil.isMarkedAsReview(task);
 		return isReview;
 	}
 
@@ -72,32 +73,37 @@ public class ReviewTaskEditorPartAdvisor implements
 	public void taskMigration(ITask oldTask, ITask newTask) {
 		ReviewDataManager dataManager = ReviewsUiPlugin.getDataManager();
 		Review review = dataManager.getReviewData(oldTask).getReview();
-		dataManager.storeTask(newTask, review);
+		dataManager.storeOutgoingTask(newTask, review);
+		ReviewsUtil.markAsReview(newTask);
 	}
 
 	public void afterSubmit(ITask task) {
 		try {
-			Review review = ReviewsUiPlugin.getDataManager()
-					.getReviewData(task).getReview();
+			ReviewData reviewData = ReviewsUiPlugin.getDataManager()
+					.getReviewData(task);
+			Review review = reviewData.getReview();
 
-			TaskRepository taskRepository = TasksUiPlugin
-					.getRepositoryManager().getRepository(
-							task.getRepositoryUrl());
-			TaskData taskData = TasksUiPlugin.getTaskDataManager().getTaskData(
-					task);
-			// todo get which attachments have to be submitted
-			TaskAttribute attachmentAttribute = taskData.getAttributeMapper()
-					.createTaskAttachment(taskData);
-			byte[] attachmentBytes = createAttachment(review);
+			if (reviewData.isOutgoing() || reviewData.isDirty()) {
+				TaskRepository taskRepository = TasksUiPlugin
+						.getRepositoryManager().getRepository(
+								task.getRepositoryUrl());
+				TaskData taskData = TasksUiPlugin.getTaskDataManager()
+						.getTaskData(task);
+				// todo get which attachments have to be submitted
+				TaskAttribute attachmentAttribute = taskData
+						.getAttributeMapper().createTaskAttachment(taskData);
+				byte[] attachmentBytes = createAttachment(review);
 
-			ReviewCommentTaskAttachmentSource attachment = new ReviewCommentTaskAttachmentSource(
-					attachmentBytes);
+				ReviewCommentTaskAttachmentSource attachment = new ReviewCommentTaskAttachmentSource(
+						attachmentBytes);
 
-			AbstractRepositoryConnector connector = TasksUi
-					.getRepositoryConnector(taskRepository.getConnectorKind());
-			connector.getTaskAttachmentHandler().postContent(taskRepository,
-					task, attachment, "review result", //$NON-NLS-1$
-					attachmentAttribute, new NullProgressMonitor());
+				AbstractRepositoryConnector connector = TasksUi
+						.getRepositoryConnector(taskRepository
+								.getConnectorKind());
+				connector.getTaskAttachmentHandler().postContent(
+						taskRepository, task, attachment, "review result", //$NON-NLS-1$
+						attachmentAttribute, new NullProgressMonitor());
+			}
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}

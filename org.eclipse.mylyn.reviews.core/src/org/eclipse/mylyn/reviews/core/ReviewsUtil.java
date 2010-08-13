@@ -49,8 +49,9 @@ public class ReviewsUtil {
 		List<ReviewSubTask> resultList = new ArrayList<ReviewSubTask>();
 		try {
 			for (ITask subTask : taskContainer.getChildren()) {
-				if (subTask.getSummary().startsWith("Review")) { //$NON-NLS-1$
-
+				
+				if (ReviewsUtil.isMarkedAsReview(subTask)) {//.getSummary().startsWith("Review")) { //$NON-NLS-1$
+					// change to review data manager
 					for (Review review : getReviewAttachmentFromTask(
 							taskDataManager, repositoryModel, subTask)) {
 						// TODO change to latest etc
@@ -169,5 +170,15 @@ public class ReviewsUtil {
 
 	public static List<? extends ITargetPathStrategy> getPathFindingStrategies() {
 		return strategies;
+	}
+
+	public static boolean isMarkedAsReview(ITask task) {
+		boolean isReview = Boolean.parseBoolean(task
+				.getAttribute(ReviewConstants.ATTR_REVIEW_FLAG));
+		return isReview;
+	}
+
+	public static void markAsReview(ITask task) {
+		task.setAttribute(ReviewConstants.ATTR_REVIEW_FLAG, Boolean.TRUE.toString());
 	}
 }

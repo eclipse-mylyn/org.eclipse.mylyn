@@ -9,6 +9,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.reviews.core.ReviewConstants;
+import org.eclipse.mylyn.reviews.core.ReviewsUtil;
 import org.eclipse.mylyn.reviews.core.model.review.Review;
 import org.eclipse.mylyn.reviews.core.model.review.ReviewFactory;
 import org.eclipse.mylyn.reviews.core.model.review.ScopeItem;
@@ -69,7 +70,7 @@ public class CreateReviewAction extends Action implements IActionDelegate {
 			TaskRepository taskRepository=model.getTaskRepository();
 			ITask newTask = TasksUiUtil.createOutgoingNewTask(taskRepository.getConnectorKind(), taskRepository.getRepositoryUrl());
 
-			newTask.setAttribute(ReviewConstants.ATTR_REVIEW_FLAG, Boolean.TRUE.toString());
+			ReviewsUtil.markAsReview(newTask);
 			TaskMapper initializationData=new TaskMapper(model.getTaskData());
 			TaskData taskData = TasksUiInternal.createTaskData(taskRepository, initializationData, null,
 					new NullProgressMonitor());
