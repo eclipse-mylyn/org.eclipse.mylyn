@@ -508,7 +508,7 @@ public class RepositoryConfiguration implements Serializable {
 							TaskAttribute requestee = attribute.getAttribute("requestee"); //$NON-NLS-1$
 							if (requestee == null) {
 								requestee = attribute.createMappedAttribute("requestee"); //$NON-NLS-1$
-								requestee.getMetaData().defaults().setType(TaskAttribute.TYPE_SHORT_TEXT);
+								requestee.getMetaData().defaults().setType(TaskAttribute.TYPE_PERSON);
 								requestee.setValue(""); //$NON-NLS-1$
 							}
 							requestee.getMetaData().setReadOnly(!bugzillaFlag.isSpecifically_requestable());

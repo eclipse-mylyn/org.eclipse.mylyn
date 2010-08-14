@@ -118,7 +118,7 @@ public class BugzillaAttachmentUpdateAction extends BaseSelectionListenerAction 
 					public AbstractAttributeEditor createEditor(String type, final TaskAttribute taskAttribute) {
 						AbstractAttributeEditor editor;
 						if (IBugzillaConstants.EDITOR_TYPE_FLAG.equals(type)) {
-							editor = new FlagAttributeEditor(model, taskAttribute, 350);
+							editor = new FlagAttributeEditor(model, taskAttribute);
 						} else {
 							editor = super.createEditor(type, taskAttribute);
 							if (TaskAttribute.TYPE_BOOLEAN.equals(type)) {

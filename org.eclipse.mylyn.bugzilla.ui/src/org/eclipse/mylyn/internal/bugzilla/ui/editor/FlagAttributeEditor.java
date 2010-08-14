@@ -11,7 +11,16 @@ package org.eclipse.mylyn.internal.bugzilla.ui.editor;
 import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.jface.fieldassist.ContentProposalAdapter;
+import org.eclipse.jface.fieldassist.IContentProposalProvider;
+import org.eclipse.jface.fieldassist.TextContentAdapter;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.tasks.ui.PersonProposalLabelProvider;
+import org.eclipse.mylyn.internal.tasks.ui.PersonProposalProvider;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
+import org.eclipse.mylyn.internal.tasks.ui.editors.Messages;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
@@ -24,13 +33,22 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseTrackAdapter;
+import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.fieldassist.ContentAssistCommandAdapter;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
+import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 
 /**
  * @author Frank Becker
@@ -43,25 +61,27 @@ public class FlagAttributeEditor extends AbstractAttributeEditor {
 
 	private Text requesteeText;
 
-	private final int requesteeTextHint;
+	private ImageHyperlink selfLink;
 
-	public FlagAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute, int requesteeTextHint) {
+	public FlagAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
 		setLayoutHint(new LayoutHint(RowSpan.SINGLE, ColumnSpan.SINGLE));
 		if (taskAttribute.getAttribute("state") != null) { //$NON-NLS-1$
 			setReadOnly(taskAttribute.getAttribute("state").getMetaData().isReadOnly()); //$NON-NLS-1$
 		}
-		this.requesteeTextHint = requesteeTextHint;
 	}
 
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
-		final Composite composite = toolkit.createComposite(parent);
+		final Composite flagComposite = toolkit.createComposite(parent);
+
 		GridLayout layout = new GridLayout(2, false);
+		layout.marginHeight = 1;
 		layout.marginWidth = 1;
-		composite.setLayout(layout);
+		layout.horizontalSpacing = 10;
+		flagComposite.setLayout(layout);
 		if (isReadOnly()) {
-			Text text = new Text(composite, SWT.FLAT | SWT.READ_ONLY);
+			Text text = new Text(flagComposite, SWT.FLAT | SWT.READ_ONLY);
 			toolkit.adapt(text, false, false);
 			text.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
 			text.setText(getValueLabel());
@@ -73,7 +93,7 @@ public class FlagAttributeEditor extends AbstractAttributeEditor {
 			}
 			TaskAttribute requestee = getTaskAttribute().getAttribute("requestee"); //$NON-NLS-1$
 			if (!"".equals(requestee.getValue())) { //$NON-NLS-1$
-				text = new Text(composite, SWT.FLAT | SWT.READ_ONLY);
+				text = new Text(flagComposite, SWT.FLAT | SWT.READ_ONLY);
 				toolkit.adapt(text, false, false);
 				text.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
 				text.setText(requestee.getValue());
@@ -81,7 +101,7 @@ public class FlagAttributeEditor extends AbstractAttributeEditor {
 				text.setEditable(false);
 			}
 		} else {
-			combo = new CCombo(composite, SWT.FLAT | SWT.READ_ONLY);
+			combo = new CCombo(flagComposite, SWT.FLAT | SWT.READ_ONLY);
 			toolkit.adapt(combo, false, false);
 			combo.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 			String tooltip = getTaskAttribute().getMetaData().getLabel();
@@ -112,6 +132,7 @@ public class FlagAttributeEditor extends AbstractAttributeEditor {
 							setValue(values[index]);
 							if (requesteeText != null) {
 								requesteeText.setEnabled(values[index].equals("?")); //$NON-NLS-1$
+								selfLink.setEnabled(values[index].equals("?"));
 							}
 						}
 					}
@@ -119,10 +140,77 @@ public class FlagAttributeEditor extends AbstractAttributeEditor {
 			}
 			TaskAttribute requestee = getTaskAttribute().getAttribute("requestee"); //$NON-NLS-1$
 			if (requestee != null && !requestee.getMetaData().isReadOnly()) {
-				requesteeText = toolkit.createText(composite, requestee.getValue());
-				requesteeText.setEnabled("?".equals(getValueLabel())); //$NON-NLS-1$
-				GridData requesteeData = new GridData(SWT.FILL, SWT.CENTER, false, false);
-				requesteeData.widthHint = requesteeTextHint;
+				final Composite requesteeComposite = new Composite(flagComposite, SWT.NONE);
+				GridLayout requesteeLayout = new GridLayout(2, false);
+				requesteeLayout.marginHeight = 0;
+				requesteeLayout.marginWidth = 0;
+				requesteeLayout.horizontalSpacing = 0;
+				requesteeComposite.setLayout(requesteeLayout);
+				requesteeComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+				requesteeComposite.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
+
+				requesteeText = toolkit.createText(requesteeComposite, requestee.getValue());
+				boolean enabled = "?".equals(getValueLabel()); //$NON-NLS-1$
+				requesteeText.setEnabled(enabled);
+				IContentProposalProvider contentProposalProvider = new PersonProposalProvider(null,
+						requestee.getTaskData());
+				ILabelProvider labelPropsalProvider = new PersonProposalLabelProvider();
+				if (contentProposalProvider != null && labelPropsalProvider != null) {
+					ContentAssistCommandAdapter adapter = new ContentAssistCommandAdapter(requesteeText,
+							new TextContentAdapter(), contentProposalProvider,
+							ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS, new char[0], true);
+					adapter.setLabelProvider(labelPropsalProvider);
+					adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
+				}
+
+				selfLink = new ImageHyperlink(requesteeComposite, SWT.NO_FOCUS);
+				selfLink.setToolTipText(Messages.PersonAttributeEditor_Insert_My_User_Id_Tooltip);
+				selfLink.setActiveImage(CommonImages.getImage(CommonImages.PERSON_ME_SMALL));
+				selfLink.setHoverImage(CommonImages.getImage(CommonImages.PERSON_ME_SMALL));
+				selfLink.setEnabled(enabled);
+				selfLink.setBackground(requesteeText.getBackground());
+				selfLink.addHyperlinkListener(new HyperlinkAdapter() {
+					@Override
+					public void linkActivated(HyperlinkEvent e) {
+						String userName = getModel().getTaskRepository().getUserName();
+						if (userName != null && userName.length() > 0) {
+							requesteeText.setText(userName);
+							setValue(userName);
+						}
+					}
+				});
+				GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).exclude(true).applyTo(selfLink);
+				MouseTrackListener mouseListener = new MouseTrackAdapter() {
+					int version = 0;
+
+					@Override
+					public void mouseEnter(MouseEvent e) {
+						((GridData) selfLink.getLayoutData()).exclude = false;
+						requesteeComposite.layout();
+						selfLink.setImage(CommonImages.getImage(CommonImages.PERSON_ME_SMALL));
+						selfLink.redraw();
+						version++;
+					}
+
+					@Override
+					public void mouseExit(MouseEvent e) {
+						final int lastVersion = version;
+						Display.getDefault().asyncExec(new Runnable() {
+							public void run() {
+								if (version != lastVersion || selfLink.isDisposed()) {
+									return;
+								}
+								selfLink.setImage(null);
+								selfLink.redraw();
+								((GridData) selfLink.getLayoutData()).exclude = true;
+								requesteeComposite.layout();
+							}
+						});
+					}
+				};
+				requesteeText.addMouseTrackListener(mouseListener);
+				selfLink.addMouseTrackListener(mouseListener);
+				GridData requesteeData = new GridData(SWT.FILL, SWT.CENTER, true, false);
 				requesteeText.setLayoutData(requesteeData);
 				requesteeText.setFont(EditorUtil.TEXT_FONT);
 				requesteeText.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
@@ -148,8 +236,8 @@ public class FlagAttributeEditor extends AbstractAttributeEditor {
 
 			}
 		}
-		toolkit.paintBordersFor(composite);
-		setControl(composite);
+		toolkit.paintBordersFor(flagComposite);
+		setControl(flagComposite);
 	}
 
 	public String getValue() {
