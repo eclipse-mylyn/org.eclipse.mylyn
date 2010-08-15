@@ -739,18 +739,29 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 					configuration = repositoryConfigurations.get(repository.getRepositoryUrl());
 					if (configuration == null || forceRefresh) {
 						String eTag = null;
+						Date lastModifiedHeader = null;
 						if (configuration != null && !forceRefresh) {
 							eTag = configuration.getETagValue();
+							lastModifiedHeader = configuration.getLastModifiedHeader();
 						}
 						BugzillaClient client = getClientManager().getClient(repository, monitor);
 						configuration = client.getRepositoryConfiguration(monitor, eTag);
+						boolean newer = true;
 						if (configuration != null) {
-							String configVersion = configuration.getInstallVersion().toString();
-							String repositoryVersion = repository.getVersion();
-							if (!configVersion.equals(repositoryVersion)) {
-								repository.setVersion(configVersion);
+							if (lastModifiedHeader != null) {
+								Date configLastModifiedHeader = configuration.getLastModifiedHeader();
+								if (configLastModifiedHeader != null) {
+									newer = !configLastModifiedHeader.before(lastModifiedHeader);
+								}
 							}
-							internalAddConfiguration(configuration);
+							if (newer) {
+								String configVersion = configuration.getInstallVersion().toString();
+								String repositoryVersion = repository.getVersion();
+								if (!configVersion.equals(repositoryVersion)) {
+									repository.setVersion(configVersion);
+								}
+								internalAddConfiguration(configuration);
+							}
 						}
 					}
 				}

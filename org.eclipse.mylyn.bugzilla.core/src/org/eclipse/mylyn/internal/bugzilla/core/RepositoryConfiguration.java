@@ -13,8 +13,12 @@
 package org.eclipse.mylyn.internal.bugzilla.core;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -33,10 +37,13 @@ import org.eclipse.mylyn.tasks.core.data.TaskOperation;
  * 
  * @author Rob Elves
  * @author Charley Wang
+ * @author Frank Becker
  */
 public class RepositoryConfiguration implements Serializable {
 
-	private static final long serialVersionUID = -7248029094079799975L;
+	// old value	private static final long serialVersionUID = -7248029094079799975L;
+
+	private static final long serialVersionUID = -7051029281842783666L;
 
 	private String repositoryUrl = "<unknown>"; //$NON-NLS-1$
 
@@ -79,6 +86,8 @@ public class RepositoryConfiguration implements Serializable {
 	private String encoding = null;
 
 	private String eTagValue = null;
+
+	private Date lastModifiedHeader = null;
 
 	public RepositoryConfiguration() {
 	}
@@ -958,6 +967,23 @@ public class RepositoryConfiguration implements Serializable {
 			products.put(product, entry);
 		}
 		entry.setDefaultMilestone(defaultMilestone);
+	}
+
+	public Date getLastModifiedHeader() {
+		return lastModifiedHeader;
+	}
+
+	public void setLastModifiedHeader(Date lastModifiedHeader) {
+		this.lastModifiedHeader = lastModifiedHeader;
+	}
+
+	public void setLastModifiedHeader(String lastModifiedHeader) {
+		DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.US); //$NON-NLS-1$
+		try {
+			this.lastModifiedHeader = df.parse(lastModifiedHeader);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

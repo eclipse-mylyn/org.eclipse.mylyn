@@ -27,6 +27,7 @@ import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -695,6 +696,12 @@ public class BugzillaClient {
 									repositoryConfiguration.setETagValue(eTag.getValue());
 								} else {
 									repositoryConfiguration.setETagValue(null);
+								}
+								Header lastModifiedHeader = method.getResponseHeader("Last-Modified"); //$NON-NLS-1$
+								if (lastModifiedHeader != null) {
+									repositoryConfiguration.setLastModifiedHeader(lastModifiedHeader.getValue());
+								} else {
+									repositoryConfiguration.setLastModifiedHeader((Date) null);
 								}
 
 								if (repositoryConfiguration != null) {
