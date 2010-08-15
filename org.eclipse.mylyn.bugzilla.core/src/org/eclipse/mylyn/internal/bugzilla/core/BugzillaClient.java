@@ -707,8 +707,14 @@ public class BugzillaClient {
 									if (!repositoryConfiguration.getProducts().isEmpty()) {
 										repositoryConfiguration.setRepositoryUrl(repositoryUrl.toString());
 									}
-									xmlRpcClient.updateConfiguration(monitor, repositoryConfiguration,
-											configParameters.get(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE));
+									if (xmlRpcClient != null) {
+										xmlRpcClient.updateConfiguration(monitor, repositoryConfiguration,
+												configParameters.get(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE));
+									} else {
+										repositoryConfiguration.setValidTransitions(monitor,
+												configParameters.get(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE), null);
+									}
+
 									if (!repositoryConfiguration.getProducts().isEmpty()) {
 										return repositoryConfiguration;
 									} else {
