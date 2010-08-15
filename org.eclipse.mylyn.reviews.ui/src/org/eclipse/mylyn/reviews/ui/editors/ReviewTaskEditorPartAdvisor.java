@@ -20,7 +20,6 @@ import org.eclipse.mylyn.reviews.core.ReviewData;
 import org.eclipse.mylyn.reviews.core.ReviewDataManager;
 import org.eclipse.mylyn.reviews.core.ReviewsUtil;
 import org.eclipse.mylyn.reviews.core.model.review.Review;
-import org.eclipse.mylyn.reviews.ui.Messages;
 import org.eclipse.mylyn.reviews.ui.ReviewCommentTaskAttachmentSource;
 import org.eclipse.mylyn.reviews.ui.ReviewsUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -28,7 +27,6 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
@@ -103,6 +101,8 @@ public class ReviewTaskEditorPartAdvisor implements
 				connector.getTaskAttachmentHandler().postContent(
 						taskRepository, task, attachment, "review result", //$NON-NLS-1$
 						attachmentAttribute, new NullProgressMonitor());
+				
+				TasksUiInternal.synchronizeTask(connector, task, false, null);
 			}
 		} catch (CoreException e) {
 			e.printStackTrace();
