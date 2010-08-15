@@ -45,10 +45,10 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
@@ -90,8 +90,7 @@ public class ReviewTaskEditorPart extends AbstractTaskEditorPart {
 		section.setLayout(gl);
 		section.setLayoutData(gd);
 
-		composite = toolkit.createComposite(section); // , SWT.BACKGROUND);
-		composite.setLayout(createSectionClientLayout());
+		composite = toolkit.createComposite(section);
 
 		composite.setLayout(new GridLayout(1, true));
 
@@ -252,13 +251,20 @@ public class ReviewTaskEditorPart extends AbstractTaskEditorPart {
 		}
 
 		Composite resultComposite = toolkit.createComposite(composite);
+		toolkit.paintBordersFor(resultComposite);
+
+		CCombo ratingsCombo = new CCombo(resultComposite, SWT.READ_ONLY
+				| SWT.FLAT);
+		ratingsCombo.setData(FormToolkit.KEY_DRAW_BORDER,
+				FormToolkit.TREE_BORDER);
+		toolkit.adapt(ratingsCombo, false, false);
+
 		resultComposite.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true,
 				false));
 		resultComposite.setLayout(new GridLayout(2, false));
-		final ComboViewer ratingList = new ComboViewer(resultComposite,
-				SWT.READ_ONLY | SWT.BORDER | SWT.FLAT);
-		ratingList.setContentProvider(ArrayContentProvider.getInstance());
+		final ComboViewer ratingList = new ComboViewer(ratingsCombo);
 
+		ratingList.setContentProvider(ArrayContentProvider.getInstance());
 		ratingList.setLabelProvider(new LabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -295,7 +301,7 @@ public class ReviewTaskEditorPart extends AbstractTaskEditorPart {
 			Rating rating = review.getResult().getRating();
 			ratingList.setSelection(new StructuredSelection(rating));
 			String comment = review.getResult().getText();
-			commentText.setText(comment!=null?comment:"");
+			commentText.setText(comment != null ? comment : "");
 		}
 		commentText.addModifyListener(new ModifyListener() {
 
@@ -362,16 +368,6 @@ public class ReviewTaskEditorPart extends AbstractTaskEditorPart {
 
 	private DiffNode getDiffEditorNullInput() {
 		return new DiffNode(new DiffNode(SWT.LEFT), new DiffNode(SWT.RIGHT));
-	}
-
-	private GridLayout createSectionClientLayout() {
-		GridLayout layout = new GridLayout(2, false);
-		layout.marginHeight = 0;
-		// leave 1px for borders
-		layout.marginTop = 2;
-		// spacing if a section is expanded
-		layout.marginBottom = 8;
-		return layout;
 	}
 
 	private static class MissingFile extends CompositeImageDescriptor {

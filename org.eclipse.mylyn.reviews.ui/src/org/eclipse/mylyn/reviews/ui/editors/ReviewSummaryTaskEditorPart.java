@@ -34,6 +34,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
@@ -42,6 +43,7 @@ import org.eclipse.ui.forms.widgets.Section;
  * @author Kilian Matt
  */
 public class ReviewSummaryTaskEditorPart extends AbstractTaskEditorPart {
+
 	public static final String ID_PART_REVIEWSUMMARY = "org.eclipse.mylyn.reviews.ui.editors.parts.reviewsummary"; //$NON-NLS-1$
 
 	public ReviewSummaryTaskEditorPart() {
@@ -59,8 +61,11 @@ public class ReviewSummaryTaskEditorPart extends AbstractTaskEditorPart {
 		summarySection.setText(Messages.ReviewSummaryTaskEditorPart_Partname);
 		Composite reviewResultsComposite = toolkit
 				.createComposite(summarySection);
+		toolkit.paintBordersFor(reviewResultsComposite);
 		reviewResultsComposite.setLayout(new GridLayout(1, false));
-		TableViewer reviewResults = createResultsTableViewer(reviewResultsComposite);
+
+		TableViewer reviewResults = createResultsTableViewer(
+				reviewResultsComposite, toolkit);
 		reviewResults.getControl().setLayoutData(
 				new GridData(SWT.FILL, SWT.FILL, true, true));
 
@@ -77,11 +82,16 @@ public class ReviewSummaryTaskEditorPart extends AbstractTaskEditorPart {
 	}
 
 	private TableViewer createResultsTableViewer(
-			Composite reviewResultsComposite) {
-		TableViewer reviewResults = new TableViewer(reviewResultsComposite);
-		reviewResults.getTable().setHeaderVisible(true);
-		createColumn(reviewResults, Messages.ReviewSummaryTaskEditorPart_Header_ReviewId);
+			Composite reviewResultsComposite, FormToolkit toolkit) {
+		Table table = toolkit.createTable(reviewResultsComposite, SWT.SINGLE
+				| SWT.FULL_SELECTION);
+		table.setHeaderVisible(true);
+		table.setLinesVisible(true);
+		table.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 
+		TableViewer reviewResults = new TableViewer(table);
+		createColumn(reviewResults,
+				Messages.ReviewSummaryTaskEditorPart_Header_ReviewId);
 		createColumn(reviewResults,
 				Messages.ReviewSummaryTaskEditorPart_Header_Scope);
 		createColumn(reviewResults,
@@ -91,7 +101,8 @@ public class ReviewSummaryTaskEditorPart extends AbstractTaskEditorPart {
 		createColumn(reviewResults,
 				Messages.ReviewSummaryTaskEditorPart_Header_Result);
 
-		createColumn(reviewResults, Messages.ReviewSummaryTaskEditorPart_Header_Comment);
+		createColumn(reviewResults,
+				Messages.ReviewSummaryTaskEditorPart_Header_Comment);
 
 		reviewResults.setContentProvider(new IStructuredContentProvider() {
 
@@ -105,9 +116,9 @@ public class ReviewSummaryTaskEditorPart extends AbstractTaskEditorPart {
 				if (inputElement instanceof ITaskContainer) {
 					ITaskContainer taskContainer = (ITaskContainer) inputElement;
 					List<ReviewSubTask> reviewSubTasks = ReviewsUtil
-							.getReviewSubTasksFor(taskContainer, TasksUi
-									.getTaskDataManager(), TasksUi
-									.getRepositoryModel(),
+							.getReviewSubTasksFor(taskContainer,
+									TasksUi.getTaskDataManager(),
+									TasksUi.getRepositoryModel(),
 									new NullProgressMonitor());
 
 					return reviewSubTasks
@@ -163,6 +174,7 @@ public class ReviewSummaryTaskEditorPart extends AbstractTaskEditorPart {
 					return null;
 				}
 			}
+
 		});
 		reviewResults.setInput(getModel().getTask());
 		reviewResults.addDoubleClickListener(new IDoubleClickListener() {
