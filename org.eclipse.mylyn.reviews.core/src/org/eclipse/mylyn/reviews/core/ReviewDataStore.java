@@ -72,6 +72,9 @@ public class ReviewDataStore {
 		try {
 
 			File file = getFile(repositoryUrl, taskId);
+			if(!file.exists()) {
+				return reviews;
+			}
 			ZipInputStream inputStream = new ZipInputStream(
 					new FileInputStream(file));
 			inputStream.getNextEntry();
