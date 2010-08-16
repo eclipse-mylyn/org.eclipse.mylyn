@@ -81,6 +81,8 @@ public class BugzillaStatus extends Status {
 			return NLS.bind(Messages.BugzillaStatus_operationCancelled, this.errorMessage);
 		case RepositoryStatus.REPOSITORY_COLLISION:
 			return NLS.bind(Messages.BugzillaStatus_repositoryCollision, this.errorMessage);
+		case IBugzillaConstants.REPOSITORY_STATUS_SUSPICIOUS_ACTION:
+			return NLS.bind(Messages.BugzillaStatus_suspiciousAction, this.errorMessage);
 		case RepositoryStatus.REPOSITORY_COMMENT_REQUIRED:
 			if (errorMessage == null) {
 				return Messages.BugzillaStatus_repositoryCommentRequired;
