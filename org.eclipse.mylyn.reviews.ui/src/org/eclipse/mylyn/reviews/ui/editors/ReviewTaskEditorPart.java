@@ -59,6 +59,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
@@ -252,16 +253,17 @@ public class ReviewTaskEditorPart extends AbstractTaskEditorPart {
 
 		Composite resultComposite = toolkit.createComposite(composite);
 		toolkit.paintBordersFor(resultComposite);
+		resultComposite.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true,
+				false));		
+				resultComposite.setLayout(new GridLayout(2, false));
 
+		toolkit.createLabel(resultComposite, "Rating").setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		CCombo ratingsCombo = new CCombo(resultComposite, SWT.READ_ONLY
 				| SWT.FLAT);
 		ratingsCombo.setData(FormToolkit.KEY_DRAW_BORDER,
 				FormToolkit.TREE_BORDER);
 		toolkit.adapt(ratingsCombo, false, false);
 
-		resultComposite.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true,
-				false));
-		resultComposite.setLayout(new GridLayout(2, false));
 		final ComboViewer ratingList = new ComboViewer(ratingsCombo);
 
 		ratingList.setContentProvider(ArrayContentProvider.getInstance());
@@ -291,10 +293,12 @@ public class ReviewTaskEditorPart extends AbstractTaskEditorPart {
 		ratingList.setInput(Rating.VALUES);
 		ratingList.getControl().setLayoutData(
 				new GridData(SWT.LEFT, SWT.TOP, false, false));
+
+		toolkit.createLabel(resultComposite, "Review comment").setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		final Text commentText = toolkit.createText(resultComposite, "",
 				SWT.BORDER | SWT.MULTI);
 		GridData gd = new GridData(SWT.FILL, SWT.DEFAULT, true, false);
-		gd.heightHint = 30;
+		gd.heightHint = 100;
 		commentText.setLayoutData(gd);
 
 		if (review.getResult() != null) {
