@@ -27,8 +27,11 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryModel;
 import org.eclipse.mylyn.reviews.core.model.review.Patch;
+import org.eclipse.mylyn.reviews.core.model.review.Rating;
 import org.eclipse.mylyn.reviews.core.model.review.Review;
+import org.eclipse.mylyn.reviews.core.model.review.ReviewFactory;
 import org.eclipse.mylyn.reviews.core.model.review.ReviewPackage;
+import org.eclipse.mylyn.reviews.core.model.review.ReviewResult;
 import org.eclipse.mylyn.reviews.core.model.review.ScopeItem;
 import org.eclipse.mylyn.tasks.core.IRepositoryModel;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -51,7 +54,7 @@ public class ReviewsUtil {
 			for (ITask subTask : taskContainer.getChildren()) {
 				if (!ReviewsUtil.hasReviewMarker(subTask)) {
 					TaskData taskData = taskDataManager.getTaskData(subTask);
-					if(getReviewAttachments(repositoryModel, taskData).size()>0){
+					if (getReviewAttachments(repositoryModel, taskData).size() > 0) {
 						ReviewsUtil.markAsReview(subTask);
 					}
 				}
@@ -61,14 +64,20 @@ public class ReviewsUtil {
 					for (Review review : getReviewAttachmentFromTask(
 							taskDataManager, repositoryModel, subTask)) {
 						// TODO change to latest etc
-						if (review.getResult() != null)
-							resultList.add(new ReviewSubTask(
-									getPatchFile(review.getScope()),
-									getPatchCreationDate(review.getScope()),
-									getAuthorString(review.getScope()), subTask
-											.getOwner(), review.getResult()
-											.getRating(), review.getResult()
-											.getText(), subTask));
+						ReviewResult result = review.getResult();
+						if (result == null) {
+							result = ReviewFactory.eINSTANCE
+									.createReviewResult();
+							result.setRating(Rating.NONE);
+							result.setText("");
+						}
+						resultList.add(new ReviewSubTask(getPatchFile(review
+								.getScope()), getPatchCreationDate(review
+								.getScope()),
+								getAuthorString(review.getScope()), subTask
+										.getOwner(), result.getRating(), result
+										.getText(), subTask));
+
 					}
 				}
 			}
@@ -169,7 +178,7 @@ public class ReviewsUtil {
 				}
 
 			}
- 
+
 			if (lastReview != null) {
 				reviews.addAll(parseAttachments(lastReview.getTaskAttribute(),
 						new NullProgressMonitor()));
@@ -223,5 +232,5 @@ public class ReviewsUtil {
 	public static boolean hasReviewMarker(ITask task) {
 		return task.getAttribute(ReviewConstants.ATTR_REVIEW_FLAG) != null;
 	}
- 
+
 }
