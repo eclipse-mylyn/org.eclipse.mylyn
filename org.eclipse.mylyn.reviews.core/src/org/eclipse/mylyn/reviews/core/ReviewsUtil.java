@@ -148,11 +148,31 @@ public class ReviewsUtil {
 		List<Review> reviews = new ArrayList<Review>();
 		TaskData taskData = taskDataManager.getTaskData(task);
 		if (taskData != null) {
-			for (TaskAttribute attribute : getReviewAttachments(
-					repositoryModel, taskData)) {
-				reviews.addAll(parseAttachments(attribute,
-						new NullProgressMonitor()));
+			List<TaskAttribute> attributesByType = taskData
+					.getAttributeMapper().getAttributesByType(taskData,
+							TaskAttribute.TYPE_ATTACHMENT);
+			ITaskAttachment lastReview = null;
 
+			for (TaskAttribute attribute : attributesByType) {
+				// TODO move RepositoryModel.createTaskAttachment to interface?
+				ITaskAttachment taskAttachment = ((RepositoryModel) repositoryModel)
+						.createTaskAttachment(attribute);
+				if (taskAttachment != null
+						&& taskAttachment.getFileName().equals(
+								ReviewConstants.REVIEW_DATA_CONTAINER)) {
+
+					if (lastReview == null
+							|| lastReview.getCreationDate().before(
+									taskAttachment.getCreationDate())) {
+						lastReview = taskAttachment;
+					}
+				}
+
+			}
+ 
+			if (lastReview != null) {
+				reviews.addAll(parseAttachments(lastReview.getTaskAttribute(),
+						new NullProgressMonitor()));
 			}
 
 		}
@@ -203,4 +223,5 @@ public class ReviewsUtil {
 	public static boolean hasReviewMarker(ITask task) {
 		return task.getAttribute(ReviewConstants.ATTR_REVIEW_FLAG) != null;
 	}
+ 
 }
