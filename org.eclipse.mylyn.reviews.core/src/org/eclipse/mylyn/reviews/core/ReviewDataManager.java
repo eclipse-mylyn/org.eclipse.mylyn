@@ -5,11 +5,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.mylyn.reviews.core.model.review.Review;
 import org.eclipse.mylyn.tasks.core.IRepositoryModel;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
-import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 public class ReviewDataManager {
 	private Map<ITask, ReviewData> cached = new HashMap<ITask, ReviewData>();
@@ -50,9 +53,6 @@ public class ReviewDataManager {
 		try {
 			List<Review> reviews = ReviewsUtil.getReviewAttachmentFromTask(
 					taskDataManager, repositoryModel, task);
-			// for(Review review : reviews) {
-			// reviews.
-			// }
 			storeTask(task, reviews.get(reviews.size() - 1));
 
 			return getReviewData(task);
@@ -67,13 +67,21 @@ public class ReviewDataManager {
 				task.getTaskId());
 		if (reviews.size() > 0) {
 			Review review = reviews.get(0);
-			return new ReviewData(task, review);
+			storeTask(task, review);
+			return getReviewData(task);
 		}
 		return null;
 	}
 
 	public void storeTask(ITask task, Review review) {
-		ReviewData reviewData = new ReviewData(task, review);
+		final ReviewData reviewData = new ReviewData(task, review);
+		review.eAdapters().add(new AdapterImpl() {
+			public void notifyChanged(Notification notification) {
+				System.err.println("notification "+notification);
+				reviewData.setDirty(true);
+			}
+
+			});
 		cached.put(task, reviewData);
 		store.storeReviewData(task.getRepositoryUrl(), task.getTaskId(),
 				review, "review");

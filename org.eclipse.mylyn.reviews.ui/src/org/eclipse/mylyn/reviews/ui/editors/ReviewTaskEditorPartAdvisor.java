@@ -97,6 +97,7 @@ public class ReviewTaskEditorPartAdvisor implements
 			Review review = reviewData.getReview();
 
 			if (reviewData.isOutgoing() || reviewData.isDirty()) {
+				reviewData.setDirty(false);
 				TaskRepository taskRepository = TasksUiPlugin
 						.getRepositoryManager().getRepository(
 								task.getRepositoryUrl());

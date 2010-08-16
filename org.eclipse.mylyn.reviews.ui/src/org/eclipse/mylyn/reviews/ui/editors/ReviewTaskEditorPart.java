@@ -238,7 +238,7 @@ public class ReviewTaskEditorPart extends AbstractTaskEditorPart {
 	private void createResultFields(Composite composite, FormToolkit toolkit) {
 
 		final Review review;
-		ReviewData rd = ReviewsUiPlugin.getDataManager().getReviewData(
+		final ReviewData rd = ReviewsUiPlugin.getDataManager().getReviewData(
 				getModel().getTask());
 		if (rd != null) {
 			review = rd.getReview();
@@ -311,6 +311,7 @@ public class ReviewTaskEditorPart extends AbstractTaskEditorPart {
 							.createReviewResult());
 				}
 				review.getResult().setText(commentText.getText());
+				rd.setDirty();
 			}
 		});
 		ratingList.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -323,6 +324,7 @@ public class ReviewTaskEditorPart extends AbstractTaskEditorPart {
 							.createReviewResult());
 				}
 				review.getResult().setRating(rating);
+				rd.setDirty();
 			}
 		});
 
