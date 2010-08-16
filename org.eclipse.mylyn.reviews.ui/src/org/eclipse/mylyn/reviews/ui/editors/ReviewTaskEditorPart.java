@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.CompositeImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -32,6 +33,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
@@ -97,16 +99,16 @@ public class ReviewTaskEditorPart extends AbstractTaskEditorPart {
 				new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		TableViewerColumn column = new TableViewerColumn(fileList, SWT.LEFT);
-		column.getColumn().setText("");
-		column.getColumn().setWidth(25);
-		column.getColumn().setResizable(false);
-		column = new TableViewerColumn(fileList, SWT.LEFT);
 		column.getColumn().setText("Filename");
 		column.getColumn().setWidth(100);
 		column.getColumn().setResizable(true);
+
+		TableLayout tableLayout = new TableLayout();
+		tableLayout.addColumnData(new ColumnWeightData(100, true));
+		fileList.getTable().setLayout(tableLayout);
+		
 		fileList.setLabelProvider(new TableLabelProvider() {
-			private final int COLUMN_ICON = 0;
-			private final int COLUMN_FILE = 1;
+			private final int COLUMN_FILE = 0;
 
 			@Override
 			public String getColumnText(Object element, int columnIndex) {
@@ -122,7 +124,7 @@ public class ReviewTaskEditorPart extends AbstractTaskEditorPart {
 
 			@Override
 			public Image getColumnImage(Object element, int columnIndex) {
-				if (columnIndex == COLUMN_ICON) {
+				if (columnIndex == COLUMN_FILE) {
 					ISharedImages sharedImages = PlatformUI.getWorkbench()
 							.getSharedImages();
 					if (element instanceof ReviewDiffModel) {
