@@ -73,7 +73,7 @@ public class ReviewTaskEditorPart extends AbstractTaskEditorPart {
 	private Composite composite;
 
 	public ReviewTaskEditorPart() {
-		setPartName("Scope");
+		setPartName("Review");
 		setExpandVertically(true);
 	}
 
