@@ -42,6 +42,8 @@ public class OpenCorrespondingTaskActionTest extends TestCase {
 		String label = "bla bla\nhttp://foo.bar-123 bla bla";
 		String id = OpenCorrespondingTaskAction.getUrlFromComment(label);
 		assertEquals("http://foo.bar-123", id);
+		label = "bla bla\nhttp://foo.bar-1234\n- bla bla";
+		id = OpenCorrespondingTaskAction.getUrlFromComment(label);
+		assertEquals("http://foo.bar-1234", id);
 	}
-
 }
