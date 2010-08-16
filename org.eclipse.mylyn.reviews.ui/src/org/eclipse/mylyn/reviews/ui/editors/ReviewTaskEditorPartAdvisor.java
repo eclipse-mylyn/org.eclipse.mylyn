@@ -117,7 +117,9 @@ public class ReviewTaskEditorPartAdvisor implements
 						taskRepository, task, attachment, "review result", //$NON-NLS-1$
 						attachmentAttribute, new NullProgressMonitor());
 
+				TasksUiInternal.closeTaskEditorInAllPages(task, false);
 				TasksUiInternal.synchronizeTask(connector, task, false, null);
+				TasksUiInternal.openTaskInBackground(task, true);
 			}
 		} catch (CoreException e) {
 			e.printStackTrace();
