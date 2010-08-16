@@ -10,18 +10,21 @@
  *******************************************************************************/
 package org.eclipse.mylyn.reviews.ui.editors;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.eclipse.compare.CompareConfiguration;
+import org.eclipse.compare.CompareEditorInput;
 import org.eclipse.compare.CompareUI;
-import org.eclipse.compare.contentmergeviewer.TextMergeViewer;
 import org.eclipse.compare.patch.IFilePatch2;
 import org.eclipse.compare.patch.PatchConfiguration;
-import org.eclipse.compare.structuremergeviewer.DiffNode;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.CompositeImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -46,7 +49,6 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
-import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Image;
@@ -55,7 +57,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
@@ -69,11 +70,6 @@ import org.eclipse.ui.forms.widgets.Section;
 public class ReviewTaskEditorPart extends AbstractTaskEditorPart {
 	public static final String ID_PART_REVIEW = "org.eclipse.mylyn.reviews.ui.editors.ReviewTaskEditorPart"; //$NON-NLS-1$
 	private TableViewer fileList;
-	private Viewer viewer;
-	private boolean viewerInitialized;
-	private int[] weights;
-	private SashForm sashComposite;
-	private CompareConfiguration configuration;
 	private Composite composite;
 
 	public ReviewTaskEditorPart() {
@@ -95,13 +91,9 @@ public class ReviewTaskEditorPart extends AbstractTaskEditorPart {
 
 		composite.setLayout(new GridLayout(1, true));
 
-		sashComposite = new SashForm(composite, SWT.HORIZONTAL);
-		sashComposite
-				.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-
-		fileList = new TableViewer(sashComposite);
+		fileList = new TableViewer(composite);
 		fileList.getControl().setLayoutData(
-				new GridData(SWT.DEFAULT, SWT.FILL, false, true));
+				new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		TableViewerColumn column = new TableViewerColumn(fileList, SWT.LEFT);
 		column.getColumn().setText("");
@@ -173,49 +165,47 @@ public class ReviewTaskEditorPart extends AbstractTaskEditorPart {
 				return model;
 			}
 		});
+		fileList.addDoubleClickListener(new IDoubleClickListener() {
 
-		fileList.addSelectionChangedListener(new ISelectionChangedListener() {
-
-			public void selectionChanged(SelectionChangedEvent event) {
+			public void doubleClick(DoubleClickEvent event) {
 				ISelection selection = event.getSelection();
 				if (selection instanceof IStructuredSelection) {
 					IStructuredSelection sel = (IStructuredSelection) selection;
 					if (sel.getFirstElement() instanceof ReviewDiffModel) {
-						ReviewDiffModel diffModel = ((ReviewDiffModel) sel
+						final ReviewDiffModel diffModel = ((ReviewDiffModel) sel
 								.getFirstElement());
 						if (diffModel.canReview()) {
-							weights = sashComposite.getWeights();
-							Viewer newViewer = CompareUI.findContentViewer(
-									viewerInitialized ? viewer : null,
-									diffModel.getCompareInput(), sashComposite,
-									configuration);
-							if (newViewer != null && newViewer != viewer) {
-								viewer.getControl().dispose();
-								viewer = newViewer;
-								configureLayoutForDiffViewer();
-								viewer.setInput(diffModel.getCompareInput());
-							}
+							CompareConfiguration configuration = new CompareConfiguration();
+							configuration.setLeftEditable(false);
+							configuration.setRightEditable(false);
+							configuration
+									.setLeftLabel(Messages.EditorSupport_Original);
+							configuration
+									.setRightLabel(Messages.EditorSupport_Patched);
+							configuration.setProperty(
+									CompareConfiguration.IGNORE_WHITESPACE,
+									false);
+							configuration
+									.setProperty(
+											CompareConfiguration.USE_OUTLINE_VIEW,
+											true);
+							CompareUI.openCompareEditor(new CompareEditorInput(
+									configuration) {
+
+								@Override
+								protected Object prepareInput(
+										IProgressMonitor monitor)
+										throws InvocationTargetException,
+										InterruptedException {
+									return diffModel.getCompareInput();
+								}
+							}, true);
 						}
 					}
 				}
 			}
 		});
 		setInput();
-		configuration = new CompareConfiguration();
-		configuration.setLeftEditable(false);
-		configuration.setRightEditable(false);
-		configuration.setLeftLabel(Messages.EditorSupport_Original);
-		configuration.setRightLabel(Messages.EditorSupport_Patched);
-		configuration
-				.setProperty(CompareConfiguration.IGNORE_WHITESPACE, false);
-		configuration.setProperty(CompareConfiguration.USE_OUTLINE_VIEW, true);
-		// TODO
-
-		viewerInitialized = false;
-		viewer = new TextMergeViewer(sashComposite, SWT.BORDER, configuration);
-		weights = new int[] { 1, 3 };
-		configureLayoutForDiffViewer();
-		viewer.setInput(getDiffEditorNullInput());
 
 		createResultFields(composite, toolkit);
 
@@ -254,10 +244,11 @@ public class ReviewTaskEditorPart extends AbstractTaskEditorPart {
 		Composite resultComposite = toolkit.createComposite(composite);
 		toolkit.paintBordersFor(resultComposite);
 		resultComposite.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true,
-				false));		
-				resultComposite.setLayout(new GridLayout(2, false));
+				false));
+		resultComposite.setLayout(new GridLayout(2, false));
 
-		toolkit.createLabel(resultComposite, "Rating").setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+		toolkit.createLabel(resultComposite, "Rating").setForeground(
+				toolkit.getColors().getColor(IFormColors.TITLE));
 		CCombo ratingsCombo = new CCombo(resultComposite, SWT.READ_ONLY
 				| SWT.FLAT);
 		ratingsCombo.setData(FormToolkit.KEY_DRAW_BORDER,
@@ -294,7 +285,8 @@ public class ReviewTaskEditorPart extends AbstractTaskEditorPart {
 		ratingList.getControl().setLayoutData(
 				new GridData(SWT.LEFT, SWT.TOP, false, false));
 
-		toolkit.createLabel(resultComposite, "Review comment").setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+		toolkit.createLabel(resultComposite, "Review comment").setForeground(
+				toolkit.getColors().getColor(IFormColors.TITLE));
 		final Text commentText = toolkit.createText(resultComposite, "",
 				SWT.BORDER | SWT.MULTI);
 		GridData gd = new GridData(SWT.FILL, SWT.DEFAULT, true, false);
@@ -351,15 +343,6 @@ public class ReviewTaskEditorPart extends AbstractTaskEditorPart {
 		return null;
 	}
 
-	private void configureLayoutForDiffViewer() {
-		viewer.getControl().setLayoutData(
-				new GridData(SWT.FILL, SWT.FILL, true, true));
-		if (getControl() != null) {
-			((Composite) this.getControl()).layout(true);
-		}
-		sashComposite.setWeights(weights);
-	}
-
 	/**
 	 * Retrieves the review from the review data manager and fills the left
 	 * table with the files.
@@ -370,10 +353,6 @@ public class ReviewTaskEditorPart extends AbstractTaskEditorPart {
 		if (rd != null) {
 			fileList.setInput((rd.getReview().getScope().get(0)));
 		}
-	}
-
-	private DiffNode getDiffEditorNullInput() {
-		return new DiffNode(new DiffNode(SWT.LEFT), new DiffNode(SWT.RIGHT));
 	}
 
 	private static class MissingFile extends CompositeImageDescriptor {
@@ -431,10 +410,6 @@ public class ReviewTaskEditorPart extends AbstractTaskEditorPart {
 			return baseImage;
 		}
 
-	}
-
-	public Control getSashComposite() {
-		return sashComposite;
 	}
 
 	@Override
