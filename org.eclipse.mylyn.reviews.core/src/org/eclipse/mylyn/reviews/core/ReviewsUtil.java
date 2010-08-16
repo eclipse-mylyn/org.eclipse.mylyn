@@ -49,16 +49,22 @@ public class ReviewsUtil {
 		List<ReviewSubTask> resultList = new ArrayList<ReviewSubTask>();
 		try {
 			for (ITask subTask : taskContainer.getChildren()) {
-				
+				if (!ReviewsUtil.hasReviewMarker(subTask)) {
+					TaskData taskData = taskDataManager.getTaskData(subTask);
+					if(getReviewAttachments(repositoryModel, taskData).size()>0){
+						ReviewsUtil.markAsReview(subTask);
+					}
+				}
+
 				if (ReviewsUtil.isMarkedAsReview(subTask)) {//.getSummary().startsWith("Review")) { //$NON-NLS-1$
 					// change to review data manager
 					for (Review review : getReviewAttachmentFromTask(
 							taskDataManager, repositoryModel, subTask)) {
 						// TODO change to latest etc
-						if(review.getResult()!=null)
-							resultList.add(new ReviewSubTask(getPatchFile(review
-									.getScope()), getPatchCreationDate(review
-									.getScope()),
+						if (review.getResult() != null)
+							resultList.add(new ReviewSubTask(
+									getPatchFile(review.getScope()),
+									getPatchCreationDate(review.getScope()),
 									getAuthorString(review.getScope()), subTask
 											.getOwner(), review.getResult()
 											.getRating(), review.getResult()
@@ -114,8 +120,8 @@ public class ReviewsUtil {
 					TaskAttribute.ATTACHMENT_URL).getValue());
 
 			ZipInputStream stream = new ZipInputStream(url.openStream());
-			while (!stream.getNextEntry().getName().equals(
-					ReviewConstants.REVIEW_DATA_FILE)) {
+			while (!stream.getNextEntry().getName()
+					.equals(ReviewConstants.REVIEW_DATA_FILE)) {
 			}
 
 			ResourceSet resourceSet = new ResourceSetImpl();
@@ -142,22 +148,34 @@ public class ReviewsUtil {
 		List<Review> reviews = new ArrayList<Review>();
 		TaskData taskData = taskDataManager.getTaskData(task);
 		if (taskData != null) {
-			List<TaskAttribute> attributesByType = taskData
-					.getAttributeMapper().getAttributesByType(taskData,
-							TaskAttribute.TYPE_ATTACHMENT);
-			for (TaskAttribute attribute : attributesByType) {
-				// TODO move RepositoryModel.createTaskAttachment to interface?
-				ITaskAttachment taskAttachment = ((RepositoryModel) repositoryModel)
-						.createTaskAttachment(attribute);
-				if (taskAttachment!=null&&taskAttachment.getFileName().equals(
-						ReviewConstants.REVIEW_DATA_CONTAINER)) {
-					reviews.addAll(parseAttachments(attribute,
-							new NullProgressMonitor()));
-				}
+			for (TaskAttribute attribute : getReviewAttachments(
+					repositoryModel, taskData)) {
+				reviews.addAll(parseAttachments(attribute,
+						new NullProgressMonitor()));
+
 			}
 
 		}
 		return reviews;
+	}
+
+	public static List<TaskAttribute> getReviewAttachments(
+			IRepositoryModel repositoryModel, TaskData taskData) {
+
+		List<TaskAttribute> matchingAttributes = new ArrayList<TaskAttribute>();
+		List<TaskAttribute> attributesByType = taskData.getAttributeMapper()
+				.getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT);
+		for (TaskAttribute attribute : attributesByType) {
+			// TODO move RepositoryModel.createTaskAttachment to interface?
+			ITaskAttachment taskAttachment = ((RepositoryModel) repositoryModel)
+					.createTaskAttachment(attribute);
+			if (taskAttachment != null
+					&& taskAttachment.getFileName().equals(
+							ReviewConstants.REVIEW_DATA_CONTAINER)) {
+				matchingAttributes.add(attribute);
+			}
+		}
+		return matchingAttributes;
 	}
 
 	private static List<ITargetPathStrategy> strategies;
@@ -166,7 +184,6 @@ public class ReviewsUtil {
 		strategies.add(new SimplePathFindingStrategy());
 		strategies.add(new GitPatchPathFindingStrategy());
 	}
-
 
 	public static List<? extends ITargetPathStrategy> getPathFindingStrategies() {
 		return strategies;
@@ -179,6 +196,11 @@ public class ReviewsUtil {
 	}
 
 	public static void markAsReview(ITask task) {
-		task.setAttribute(ReviewConstants.ATTR_REVIEW_FLAG, Boolean.TRUE.toString());
+		task.setAttribute(ReviewConstants.ATTR_REVIEW_FLAG,
+				Boolean.TRUE.toString());
+	}
+
+	public static boolean hasReviewMarker(ITask task) {
+		return task.getAttribute(ReviewConstants.ATTR_REVIEW_FLAG) != null;
 	}
 }

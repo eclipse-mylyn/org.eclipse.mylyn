@@ -23,6 +23,7 @@ import org.eclipse.mylyn.reviews.core.model.review.Review;
 import org.eclipse.mylyn.reviews.ui.ReviewCommentTaskAttachmentSource;
 import org.eclipse.mylyn.reviews.ui.ReviewsUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.IRepositoryModel;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -37,6 +38,21 @@ public class ReviewTaskEditorPartAdvisor implements
 		ITaskEditorPartDescriptorAdvisor {
 
 	public boolean canCustomize(ITask task) {
+		if (!ReviewsUtil.hasReviewMarker(task)) {
+			try {
+				IRepositoryModel repositoryModel = TasksUi.getRepositoryModel();
+				TaskData taskData = TasksUiPlugin.getTaskDataManager()
+						.getTaskData(task);
+				if (ReviewsUtil.getReviewAttachments(repositoryModel, taskData)
+						.size() > 0) {
+					ReviewsUtil.markAsReview(task);
+				}
+			} catch (CoreException e) {
+				// FIXME
+				e.printStackTrace();
+			}
+		}
+
 		boolean isReview = ReviewsUtil.isMarkedAsReview(task);
 		return isReview;
 	}
@@ -101,7 +117,7 @@ public class ReviewTaskEditorPartAdvisor implements
 				connector.getTaskAttachmentHandler().postContent(
 						taskRepository, task, attachment, "review result", //$NON-NLS-1$
 						attachmentAttribute, new NullProgressMonitor());
-				
+
 				TasksUiInternal.synchronizeTask(connector, task, false, null);
 			}
 		} catch (CoreException e) {
