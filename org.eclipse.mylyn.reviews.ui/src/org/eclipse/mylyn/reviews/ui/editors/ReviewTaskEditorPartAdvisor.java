@@ -79,7 +79,7 @@ public class ReviewTaskEditorPartAdvisor implements
 			public AbstractTaskEditorPart createPart() {
 				return new ReviewTaskEditorPart();
 			}
-		});
+		}.setPath(AbstractTaskEditorPage.PATH_ATTRIBUTES));
 		return parts;
 	}
 

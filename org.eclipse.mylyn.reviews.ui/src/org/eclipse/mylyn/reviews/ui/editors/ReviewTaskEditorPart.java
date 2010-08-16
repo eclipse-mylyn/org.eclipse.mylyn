@@ -92,6 +92,7 @@ public class ReviewTaskEditorPart extends AbstractTaskEditorPart {
 		composite.setLayout(new GridLayout(1, true));
 
 		fileList = new TableViewer(composite);
+		
 		fileList.getControl().setLayoutData(
 				new GridData(SWT.FILL, SWT.FILL, true, true));
 
@@ -247,7 +248,7 @@ public class ReviewTaskEditorPart extends AbstractTaskEditorPart {
 				false));
 		resultComposite.setLayout(new GridLayout(2, false));
 
-		toolkit.createLabel(resultComposite, "Rating").setForeground(
+		toolkit.createLabel(resultComposite, "Rating:").setForeground(
 				toolkit.getColors().getColor(IFormColors.TITLE));
 		CCombo ratingsCombo = new CCombo(resultComposite, SWT.READ_ONLY
 				| SWT.FLAT);
@@ -285,10 +286,10 @@ public class ReviewTaskEditorPart extends AbstractTaskEditorPart {
 		ratingList.getControl().setLayoutData(
 				new GridData(SWT.LEFT, SWT.TOP, false, false));
 
-		toolkit.createLabel(resultComposite, "Review comment").setForeground(
+		toolkit.createLabel(resultComposite, "Rating comment:").setForeground(
 				toolkit.getColors().getColor(IFormColors.TITLE));
-		final Text commentText = toolkit.createText(resultComposite, "",
-				SWT.BORDER | SWT.MULTI);
+		final Text commentText = toolkit.createText(resultComposite, "", SWT.MULTI);
+		
 		GridData gd = new GridData(SWT.FILL, SWT.DEFAULT, true, false);
 		gd.heightHint = 100;
 		commentText.setLayoutData(gd);
