@@ -64,7 +64,6 @@ public class ReviewTaskEditorPartAdvisor implements
 	public Set<String> getBlockingPaths(ITask task) {
 		Set<String> blockedPaths = new HashSet<String>();
 		blockedPaths.add(AbstractTaskEditorPage.PATH_ATTRIBUTES);
-		blockedPaths.add(AbstractTaskEditorPage.PATH_COMMENTS);
 		blockedPaths.add(AbstractTaskEditorPage.PATH_ATTACHMENTS);
 		blockedPaths.add(AbstractTaskEditorPage.PATH_PLANNING);
 
