@@ -22,6 +22,7 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.reviews.core.ReviewSubTask;
 import org.eclipse.mylyn.reviews.core.ReviewsUtil;
+import org.eclipse.mylyn.reviews.core.model.review.Rating;
 import org.eclipse.mylyn.reviews.ui.Images;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
@@ -45,6 +46,7 @@ import org.eclipse.ui.forms.widgets.Section;
 public class ReviewSummaryTaskEditorPart extends AbstractTaskEditorPart {
 
 	public static final String ID_PART_REVIEWSUMMARY = "org.eclipse.mylyn.reviews.ui.editors.parts.reviewsummary"; //$NON-NLS-1$
+	private Section summarySection;
 
 	public ReviewSummaryTaskEditorPart() {
 		setPartName(Messages.ReviewSummaryTaskEditorPart_Partname);
@@ -52,13 +54,13 @@ public class ReviewSummaryTaskEditorPart extends AbstractTaskEditorPart {
 
 	@Override
 	public void createControl(final Composite parent, FormToolkit toolkit) {
-		Section summarySection = createSection(parent, toolkit,
+		summarySection = createSection(parent, toolkit,
 				ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE
 						| ExpandableComposite.EXPANDED);
 		summarySection.setLayout(new FillLayout(SWT.HORIZONTAL));
 		summarySection.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
 				true));
-		summarySection.setText(Messages.ReviewSummaryTaskEditorPart_Partname);
+		// summarySection.setText(Messages.ReviewSummaryTaskEditorPart_Partname);
 		Composite reviewResultsComposite = toolkit
 				.createComposite(summarySection);
 		toolkit.paintBordersFor(reviewResultsComposite);
@@ -120,7 +122,32 @@ public class ReviewSummaryTaskEditorPart extends AbstractTaskEditorPart {
 									TasksUi.getTaskDataManager(),
 									TasksUi.getRepositoryModel(),
 									new NullProgressMonitor());
+					int passedCount = 0;
+					int warningCount = 0;
+					int failedCount = 0;
+					int noResultCount = 0;
+					for (ReviewSubTask subtask : reviewSubTasks) {
+							switch (subtask.getResult()) {
+							case PASSED:
+								passedCount++;
+								break;
+							case WARNING:
+								warningCount++;
+								break;
+							case FAILED:
+								failedCount++;
+								break;
+							case NONE:
+								noResultCount++;
+								break;
 
+							}
+					}
+
+					summarySection.setText(String
+							.format("Review Summary (PASSED: %s / WARNING: %s / FAILED: %s / ?: %s)",
+									passedCount, warningCount, failedCount,
+									noResultCount));
 					return reviewSubTasks
 							.toArray(new ReviewSubTask[reviewSubTasks.size()]);
 				}
