@@ -224,9 +224,11 @@ public class BugzillaClient {
 		CustomTransitionManager validTransitions = new CustomTransitionManager();
 
 		String transitionsFileName = configParameters.get(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE);
-		if (!validTransitions.parse(transitionsFileName)) {
-			throw new CoreException(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN,
-					"Invalide Transition File Content")); //$NON-NLS-1$
+		if (transitionsFileName != null && !transitionsFileName.equals("")) {
+			if (!validTransitions.parse(transitionsFileName)) {
+				throw new CoreException(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN,
+						"Invalide Transition File Content")); //$NON-NLS-1$
+			}
 		}
 
 	}
@@ -711,15 +713,15 @@ public class BugzillaClient {
 										xmlRpcClient = new BugzillaXmlRpcClient(webLocation);
 
 									}
-									if (!repositoryConfiguration.getProducts().isEmpty()) {
-										repositoryConfiguration.setRepositoryUrl(repositoryUrl.toString());
-									}
 									if (xmlRpcClient != null) {
 										xmlRpcClient.updateConfiguration(monitor, repositoryConfiguration,
 												configParameters.get(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE));
 									} else {
 										repositoryConfiguration.setValidTransitions(monitor,
 												configParameters.get(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE), null);
+									}
+									if (!repositoryConfiguration.getProducts().isEmpty()) {
+										repositoryConfiguration.setRepositoryUrl(repositoryUrl.toString());
 									}
 
 									if (!repositoryConfiguration.getProducts().isEmpty()) {
