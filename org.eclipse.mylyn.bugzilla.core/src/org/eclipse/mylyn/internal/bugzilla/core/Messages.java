@@ -277,6 +277,8 @@ public class Messages extends NLS {
 
 	public static String BugzillaStatus_repositoryCollision;
 
+	public static String BugzillaStatus_suspiciousAction;
+
 	public static String BugzillaStatus_operationCancelled;
 
 	public static String BugzillaStatus_errorIo;

@@ -1788,7 +1788,8 @@ public class BugzillaClient {
 							found = title.indexOf(value) != -1;
 							if (found) {
 								throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-										IBugzillaConstants.REPOSITORY_STATUS_SUSPICIOUS_ACTION));
+										IBugzillaConstants.REPOSITORY_STATUS_SUSPICIOUS_ACTION,
+										repositoryUrl.toString()));
 							}
 						}
 
