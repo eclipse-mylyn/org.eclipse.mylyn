@@ -92,10 +92,10 @@ import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -223,6 +223,8 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 								TaskMigrator migrator = new TaskMigrator(oldTask);
 								migrator.setDelete(true);
 								migrator.setEditor(getTaskEditor());
+								migrator.setMigrateDueDate(!connector.hasRepositoryDueDate(getTaskRepository(),
+										newTask, taskData));
 								migrator.execute(newTask);
 							}
 						}
@@ -1291,15 +1293,21 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 			if (part.getControl() != null) {
 				if (ID_PART_ACTIONS.equals(part.getPartId())) {
 					// do not expand horizontally
-					GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(false, false).applyTo(
-							part.getControl());
+					GridDataFactory.fillDefaults()
+							.align(SWT.FILL, SWT.FILL)
+							.grab(false, false)
+							.applyTo(part.getControl());
 				} else {
 					if (part.getExpandVertically()) {
-						GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(
-								part.getControl());
+						GridDataFactory.fillDefaults()
+								.align(SWT.FILL, SWT.FILL)
+								.grab(true, true)
+								.applyTo(part.getControl());
 					} else {
-						GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, false).applyTo(
-								part.getControl());
+						GridDataFactory.fillDefaults()
+								.align(SWT.FILL, SWT.TOP)
+								.grab(true, false)
+								.applyTo(part.getControl());
 					}
 				}
 				// for outline

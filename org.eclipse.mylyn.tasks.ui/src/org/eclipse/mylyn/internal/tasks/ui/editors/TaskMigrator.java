@@ -53,9 +53,15 @@ public class TaskMigrator {
 
 	private TaskEditor editor;
 
+	private boolean migrateDueDate = true;
+
 	public TaskMigrator(ITask oldTask) {
 		this.oldTask = oldTask;
 		this.openEditors = true;
+	}
+
+	public void setMigrateDueDate(boolean migrateDueDate) {
+		this.migrateDueDate = migrateDueDate;
 	}
 
 	public boolean openEditors() {
@@ -180,7 +186,9 @@ public class TaskMigrator {
 			DateRange scheduledDate = ((AbstractTask) oldTask).getScheduledForDate();
 			TasksUiPlugin.getTaskActivityManager().setScheduledFor((AbstractTask) newTask, scheduledDate);
 			Date dueDate = ((AbstractTask) oldTask).getDueDate();
-			TasksUiPlugin.getTaskActivityManager().setDueDate(newTask, dueDate);
+			if (migrateDueDate) {
+				TasksUiPlugin.getTaskActivityManager().setDueDate(newTask, dueDate);
+			}
 			((AbstractTask) newTask).setEstimatedTimeHours(((AbstractTask) oldTask).getEstimatedTimeHours());
 		}
 
