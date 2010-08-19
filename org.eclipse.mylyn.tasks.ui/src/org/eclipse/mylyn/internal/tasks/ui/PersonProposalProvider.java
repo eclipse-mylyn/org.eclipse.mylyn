@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -25,8 +26,13 @@ import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
+import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
@@ -34,6 +40,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
  * @author Shawn Minto
  * @author Eugene Kuleshov
  * @author Steffen Pingel
+ * @author David Shepherd
  */
 public class PersonProposalProvider implements IContentProposalProvider {
 
@@ -67,6 +74,14 @@ public class PersonProposalProvider implements IContentProposalProvider {
 		this.connectorKind = repositoryKind;
 	}
 
+	protected String getRepositoryUrl() {
+		return repositoryUrl;
+	}
+
+	protected String getConnectorKind() {
+		return connectorKind;
+	}
+
 	public IContentProposal[] getProposals(String contents, int position) {
 		if (contents == null) {
 			throw new IllegalArgumentException();
@@ -94,11 +109,20 @@ public class PersonProposalProvider implements IContentProposalProvider {
 		IContentProposal[] result = new IContentProposal[addressSet.size()];
 		int i = 0;
 		for (final String address : addressSet) {
-			result[i++] = new PersonContentProposal(address, address.equalsIgnoreCase(currentUser), resultPrefix
-					+ address + resultPostfix, resultPrefix.length() + address.length());
+			result[i++] = createPersonProposal(address, address.equalsIgnoreCase(currentUser), resultPrefix + address
+					+ resultPostfix, resultPrefix.length() + address.length());
 		}
 		Arrays.sort(result);
 		return result;
+	}
+
+	protected PersonContentProposal createPersonProposal(String address, boolean isCurrentUser, String replacementText,
+			int cursorPosition) {
+		return new PersonContentProposal(getPrettyName(address), isCurrentUser, replacementText, cursorPosition);
+	}
+
+	protected String getPrettyName(String address) {
+		return address;
 	}
 
 	private int getIndexOfLeftSeparator(String contents, int position) {
@@ -132,7 +156,7 @@ public class PersonProposalProvider implements IContentProposalProvider {
 		});
 
 		if (currentTask != null) {
-			addAddress(currentTask.getOwner(), addressSet);
+			addAddress(addressSet, currentTask.getOwner());
 		}
 
 		if (currentTaskData != null) {
@@ -171,29 +195,58 @@ public class PersonProposalProvider implements IContentProposalProvider {
 	}
 
 	private void addAddresses(ITask task, Set<String> addressSet) {
-		// TODO: Creator, and CC should be stored on AbstractTask
-
-		addAddress(task.getOwner(), addressSet);
+		addAddress(addressSet, task.getOwner());
 	}
 
-	// TODO 3.5 re-implement
 	private void addAddresses(TaskData data, Set<String> addressSet) {
-		// addressSet.add(data.getAssignedTo());  // owner
-		//		addAddress(data.getReporter(), addressSet); // ??
-//		for (String address : data.getCc()) {
-//			addAddress(address, addressSet);
-//		}
-//		for (TaskComment comment : currentTaskData.getComments()) {
-//			addAddress(comment.getAuthor(), addressSet);
-//		}
-//		for (RepositoryAttachment attachment : currentTaskData.getAttachments()) {
-//			addAddress(attachment.getCreator(), addressSet);
-//		}
+		addPerson(data, addressSet, TaskAttribute.USER_REPORTER);
+		addPerson(data, addressSet, TaskAttribute.USER_ASSIGNED);
+		addPerson(data, addressSet, TaskAttribute.USER_CC);
+		List<TaskAttribute> comments = data.getAttributeMapper().getAttributesByType(data, TaskAttribute.TYPE_COMMENT);
+		for (TaskAttribute commentAttribute : comments) {
+			addPerson(data, addressSet, commentAttribute);
+		}
+		List<TaskAttribute> attachments = data.getAttributeMapper().getAttributesByType(data,
+				TaskAttribute.TYPE_ATTACHMENT);
+		for (TaskAttribute attachmentAttribute : attachments) {
+			addPerson(data, addressSet, attachmentAttribute);
+		}
 	}
 
-	private void addAddress(String address, Set<String> addressSet) {
+	private void addPerson(TaskData data, Set<String> addresses, String key) {
+		TaskAttribute attribute = data.getRoot().getMappedAttribute(key);
+		if (attribute != null) {
+			addPerson(data, addresses, attribute);
+		}
+	}
+
+	private void addPerson(TaskData data, Set<String> addresses, TaskAttribute attribute) {
+		TaskAttributeMetaData metaData = attribute.getMetaData();
+		if (TaskAttribute.TYPE_COMMENT.equals(metaData.getType())) {
+			TaskCommentMapper mapper = TaskCommentMapper.createFrom(attribute);
+			addPerson(addresses, mapper.getAuthor());
+		} else if (TaskAttribute.TYPE_ATTACHMENT.equals(metaData.getType())) {
+			TaskAttachmentMapper mapper = TaskAttachmentMapper.createFrom(attribute);
+			addPerson(addresses, mapper.getAuthor());
+		} else if (TaskAttribute.TYPE_PERSON.equals(metaData.getType())) {
+			addPerson(addresses, data.getAttributeMapper().getRepositoryPerson(attribute));
+		} else {
+			List<String> values = attribute.getValues();
+			for (String value : values) {
+				addAddress(addresses, value);
+			}
+		}
+	}
+
+	private void addPerson(Set<String> addresses, IRepositoryPerson repositoryPerson) {
+		if (repositoryPerson != null) {
+			addresses.add(repositoryPerson.getPersonId());
+		}
+	}
+
+	private void addAddress(Set<String> addresses, String address) {
 		if (address != null && address.trim().length() > 0) {
-			addressSet.add(address.trim());
+			addresses.add(address.trim());
 		}
 	}
 
