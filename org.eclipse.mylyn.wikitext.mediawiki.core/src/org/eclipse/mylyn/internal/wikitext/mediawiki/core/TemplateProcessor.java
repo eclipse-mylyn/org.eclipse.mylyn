@@ -27,7 +27,7 @@ public class TemplateProcessor {
 
 	private static final Pattern templateParameterPattern = Pattern.compile("\\{\\{\\{([a-zA-Z0-9]+)\\}\\}\\}"); //$NON-NLS-1$
 
-	private static final Pattern parameterSpec = Pattern.compile("\\|\\s*([^\\s\\|=]+)(?:\\s*=\\s*(([^|]*)))?"); //$NON-NLS-1$
+	private static final Pattern parameterSpec = Pattern.compile("\\|\\s*([^\\|=]+)(?:\\s*=\\s*(([^|]*)))?"); //$NON-NLS-1$
 
 	private static final Pattern includeOnlyPattern = Pattern.compile(".*?<includeonly>(.*?)</includeonly>.*", //$NON-NLS-1$
 			Pattern.DOTALL);
@@ -133,7 +133,7 @@ public class TemplateProcessor {
 
 	private List<Parameter> processParameters(String parametersText) {
 		List<Parameter> parameters = new ArrayList<TemplateProcessor.Parameter>();
-		if (parametersText != null) {
+		if (parametersText != null && parametersText.length() > 0) {
 			Matcher matcher = parameterSpec.matcher(parametersText);
 			while (matcher.find()) {
 				String nameOrValue = matcher.group(1);

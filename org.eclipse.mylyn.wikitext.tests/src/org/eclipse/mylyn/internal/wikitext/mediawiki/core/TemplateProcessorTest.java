@@ -61,6 +61,18 @@ public class TemplateProcessorTest extends TestCase {
 		assertEquals("one _expandedoneandtwoandone_ two", markup);
 	}
 
+	public void testBasicTemplatePositionalParameterWithSpaces() {
+		Template template = new Template();
+		template.setName("Note");
+		template.setTemplateMarkup("<p class='note'>{{{1}}}</p>");
+		markupLanguage.getTemplates().add(template);
+
+		TemplateProcessor templateProcessor = new TemplateProcessor(markupLanguage);
+
+		String markup = templateProcessor.processTemplates("one {{Note|comment with spaces.}} two");
+		assertEquals("one <p class='note'>comment with spaces.</p> two", markup);
+	}
+
 	public void testBasicTemplateNamedParameterMissingValue() {
 		Template template = new Template();
 		template.setName("test");
