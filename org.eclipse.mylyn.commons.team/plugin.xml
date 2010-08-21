@@ -84,6 +84,45 @@
                style="push">
          </command>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.mylyn.commons.team.navigator.Repositories?after=group.new">
+         <menu
+               id="new"
+               label="New">
+            <command
+                  commandId="org.eclipse.mylyn.commons.ui.command.AddRepository"
+                  label="Repository..."
+                  style="push">
+            </command>
+         </menu>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.mylyn.commons.team.navigator.Repositories?after=group.properties">
+         <command
+               commandId="org.eclipse.ui.file.properties"
+               label="Properties"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <count
+                     value="1">
+               </count>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.mylyn.commons.team.navigator.Repositories?after=group.goto">
+         <menu
+               label="Show In">
+            <dynamic
+                  class="org.eclipse.mylyn.internal.commons.ui.team.ShowInMenuContribution"
+                  id="org.eclipse.mylyn.commons.team.showIn">
+            </dynamic>
+         </menu>
+      </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.commandImages">
