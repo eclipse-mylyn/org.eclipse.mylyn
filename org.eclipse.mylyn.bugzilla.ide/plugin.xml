@@ -20,7 +20,7 @@
          repositoryKind="bugzilla"
          urlRepository="https://bugs.eclipse.org/bugs"
          version="3.4.4">
-         <attribute name="useclassification" value="true"/>
+         <attribute name="useclassification" value="false"/>
          <attribute name="usetargetmilestone" value="true"/>
          <attribute name="useqacontact" value="true"/>
          <attribute name="usestatuswhiteboard" value="true"/>
