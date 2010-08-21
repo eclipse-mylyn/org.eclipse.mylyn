@@ -487,46 +487,29 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 				attachment.setAuthor(author);
 			}
 			break;
-		case CLASSIFICATION:
 		case TARGET_MILESTONE:
+			BugzillaUtil.createAttributeWithKindDefaultIfUsed(parsedText, tag, repositoryTaskData,
+					IBugzillaConstants.BUGZILLA_PARAM_USETARGETMILESTONE, true);
+			break;
 		case QA_CONTACT:
+			BugzillaUtil.createAttributeWithKindDefaultIfUsed(parsedText, tag, repositoryTaskData,
+					IBugzillaConstants.BUGZILLA_PARAM_USEQACONTACT, true);
+			break;
 		case STATUS_WHITEBOARD:
+			BugzillaUtil.createAttributeWithKindDefaultIfUsed(parsedText, tag, repositoryTaskData,
+					IBugzillaConstants.BUGZILLA_PARAM_USESTATUSWHITEBOARD, true);
+			break;
+		case CLASSIFICATION:
+			BugzillaUtil.createAttributeWithKindDefaultIfUsed(parsedText, tag, repositoryTaskData,
+					IBugzillaConstants.BUGZILLA_PARAM_USECLASSIFICATION, false);
+			break;
 		case ALIAS:
+			BugzillaUtil.createAttributeWithKindDefaultIfUsed(parsedText, tag, repositoryTaskData,
+					IBugzillaConstants.BUGZILLA_PARAM_USEBUGALIASES, false);
+			break;
 		case SEE_ALSO:
-			TaskAttribute suppressAttribute = createAttrribute(parsedText, tag);
-			String propertyName = null;
-			switch (tag) {
-			case CLASSIFICATION:
-				propertyName = IBugzillaConstants.BUGZILLA_PARAM_USECLASSIFICATION;
-				break;
-			case TARGET_MILESTONE:
-				propertyName = IBugzillaConstants.BUGZILLA_PARAM_USETARGETMILESTONE;
-				break;
-			case QA_CONTACT:
-				propertyName = IBugzillaConstants.BUGZILLA_PARAM_USEQACONTACT;
-				break;
-			case STATUS_WHITEBOARD:
-				propertyName = IBugzillaConstants.BUGZILLA_PARAM_USESTATUSWHITEBOARD;
-				break;
-			case ALIAS:
-				propertyName = IBugzillaConstants.BUGZILLA_PARAM_USEBUGALIASES;
-				break;
-			case SEE_ALSO:
-				propertyName = IBugzillaConstants.BUGZILLA_PARAM_USE_SEE_ALSO;
-				break;
-			default:
-				propertyName = null;
-				break;
-			}
-			String useParam = repositoryTaskData.getAttributeMapper().getTaskRepository().getProperty(propertyName);
-			if (useParam != null && useParam.equals("true")) { //$NON-NLS-1$
-				suppressAttribute.getMetaData().setKind(TaskAttribute.KIND_DEFAULT);
-				if (BugzillaAttribute.CLASSIFICATION.equals(tag)) {
-					suppressAttribute.getMetaData().setReadOnly(true);
-				}
-			} else {
-				suppressAttribute.getMetaData().setKind(null);
-			}
+			BugzillaUtil.createAttributeWithKindDefaultIfUsed(parsedText, tag, repositoryTaskData,
+					IBugzillaConstants.BUGZILLA_PARAM_USE_SEE_ALSO, false);
 			break;
 		default:
 			createAttrribute(parsedText, tag);

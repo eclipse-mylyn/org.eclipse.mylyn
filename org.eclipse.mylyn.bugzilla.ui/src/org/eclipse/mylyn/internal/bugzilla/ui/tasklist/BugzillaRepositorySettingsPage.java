@@ -151,7 +151,6 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 	@Override
 	protected void createAdditionalControls(Composite parent) {
 		addRepositoryTemplatesToServerUrlCombo();
-
 		Label shortLoginLabel = new Label(parent, SWT.NONE);
 		shortLoginLabel.setText(LABEL_SHORT_LOGINS);
 		cleanQAContact = new Button(parent, SWT.CHECK | SWT.LEFT);
@@ -360,25 +359,32 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 						break;
 					}
 				}
+				if (myTemplate != null) {
+					// we have an Template but no values in the Repository so we use the Template values
+					boolean value = Boolean.parseBoolean(myTemplate.getAttribute("useclassification")); //$NON-NLS-1$
+					useclassification.setSelection(!value);
+					value = Boolean.parseBoolean(myTemplate.getAttribute("usetargetmilestone")); //$NON-NLS-1$
+					usetargetmilestone.setSelection(!value);
+					value = Boolean.parseBoolean(myTemplate.getAttribute("useqacontact")); //$NON-NLS-1$
+					useqacontact.setSelection(!value);
+					value = Boolean.parseBoolean(myTemplate.getAttribute("usestatuswhiteboard")); //$NON-NLS-1$
+					usestatuswhiteboard.setSelection(!value);
+					value = Boolean.parseBoolean(myTemplate.getAttribute("usebugaliases")); //$NON-NLS-1$
+					usebugaliases.setSelection(!value);
+					value = Boolean.parseBoolean(myTemplate.getAttribute("use_see_also")); //$NON-NLS-1$
+					use_see_also.setSelection(!value);
 
-			}
-			if (myTemplate != null) {
-				// we have an Template but no values in the Repository so we use the Template values
-				boolean value = Boolean.parseBoolean(myTemplate.getAttribute("useclassification")); //$NON-NLS-1$
-				useclassification.setSelection(!value);
-				value = Boolean.parseBoolean(myTemplate.getAttribute("usetargetmilestone")); //$NON-NLS-1$
-				usetargetmilestone.setSelection(!value);
-				value = Boolean.parseBoolean(myTemplate.getAttribute("useqacontact")); //$NON-NLS-1$
-				useqacontact.setSelection(!value);
-				value = Boolean.parseBoolean(myTemplate.getAttribute("usestatuswhiteboard")); //$NON-NLS-1$
-				usestatuswhiteboard.setSelection(!value);
-				value = Boolean.parseBoolean(myTemplate.getAttribute("usebugaliases")); //$NON-NLS-1$
-				usebugaliases.setSelection(!value);
-				value = Boolean.parseBoolean(myTemplate.getAttribute("use_see_also")); //$NON-NLS-1$
-				use_see_also.setSelection(!value);
-
-				value = Boolean.parseBoolean(myTemplate.getAttribute("useXMLRPC")); //$NON-NLS-1$
-				useXMLRPCstatusTransitions.setSelection(value);
+					value = Boolean.parseBoolean(myTemplate.getAttribute("useXMLRPC")); //$NON-NLS-1$
+					useXMLRPCstatusTransitions.setSelection(value);
+				} else {
+					useclassification.setSelection(true);
+					usetargetmilestone.setSelection(false);
+					useqacontact.setSelection(false);
+					usestatuswhiteboard.setSelection(false);
+					usebugaliases.setSelection(true);
+					use_see_also.setSelection(true);
+					useXMLRPCstatusTransitions.setSelection(true);
+				}
 			} else {
 				// we use the repository values
 				boolean value = Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USECLASSIFICATION));

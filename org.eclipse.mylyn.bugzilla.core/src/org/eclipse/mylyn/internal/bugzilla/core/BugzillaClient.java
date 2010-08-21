@@ -611,33 +611,21 @@ public class BugzillaClient {
 			BugzillaTaskDataHandler.createAttribute(existingReport, element);
 		}
 		String useParam = taskRepository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USETARGETMILESTONE);
-		if (useParam != null && useParam.equals("true")) { //$NON-NLS-1$
-			BugzillaTaskDataHandler.createAttribute(existingReport, BugzillaAttribute.TARGET_MILESTONE);
-		}
+		BugzillaUtil.addAttributeIfUsed(BugzillaAttribute.TARGET_MILESTONE,
+				IBugzillaConstants.BUGZILLA_PARAM_USETARGETMILESTONE, taskRepository, existingReport, true);
 		for (BugzillaAttribute element : reportElements2) {
 			BugzillaTaskDataHandler.createAttribute(existingReport, element);
 		}
-		useParam = taskRepository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USEQACONTACT);
-		if (useParam != null && useParam.equals("true")) { //$NON-NLS-1$
-			BugzillaTaskDataHandler.createAttribute(existingReport, BugzillaAttribute.QA_CONTACT);
-		}
-		useParam = taskRepository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USESTATUSWHITEBOARD);
-		if (useParam != null && useParam.equals("true")) { //$NON-NLS-1$
-			BugzillaTaskDataHandler.createAttribute(existingReport, BugzillaAttribute.STATUS_WHITEBOARD);
-		}
-		useParam = taskRepository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USEBUGALIASES);
-		if (useParam != null && useParam.equals("true")) { //$NON-NLS-1$
-			BugzillaTaskDataHandler.createAttribute(existingReport, BugzillaAttribute.ALIAS);
-		}
-		useParam = taskRepository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USECLASSIFICATION);
-		if (useParam != null && useParam.equals("true")) { //$NON-NLS-1$
-			BugzillaTaskDataHandler.createAttribute(existingReport, BugzillaAttribute.CLASSIFICATION);
-		}
-		useParam = taskRepository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USE_SEE_ALSO);
-		if (useParam != null && useParam.equals("true")) { //$NON-NLS-1$
-			BugzillaTaskDataHandler.createAttribute(existingReport, BugzillaAttribute.SEE_ALSO);
-		}
-
+		BugzillaUtil.addAttributeIfUsed(BugzillaAttribute.QA_CONTACT, IBugzillaConstants.BUGZILLA_PARAM_USEQACONTACT,
+				taskRepository, existingReport, true);
+		BugzillaUtil.addAttributeIfUsed(BugzillaAttribute.STATUS_WHITEBOARD,
+				IBugzillaConstants.BUGZILLA_PARAM_USESTATUSWHITEBOARD, taskRepository, existingReport, true);
+		BugzillaUtil.addAttributeIfUsed(BugzillaAttribute.ALIAS, IBugzillaConstants.BUGZILLA_PARAM_USEBUGALIASES,
+				taskRepository, existingReport, false);
+		BugzillaUtil.addAttributeIfUsed(BugzillaAttribute.CLASSIFICATION,
+				IBugzillaConstants.BUGZILLA_PARAM_USECLASSIFICATION, taskRepository, existingReport, false);
+		BugzillaUtil.addAttributeIfUsed(BugzillaAttribute.SEE_ALSO, IBugzillaConstants.BUGZILLA_PARAM_USE_SEE_ALSO,
+				taskRepository, existingReport, false);
 	}
 
 	public static String getBugUrlWithoutLogin(String repositoryUrl, String id) {
