@@ -56,13 +56,15 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.part.IShowInTarget;
+import org.eclipse.ui.part.ShowInContext;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 
 /**
  * @author Steffen Pingel
  */
-public class BuildsView extends ViewPart {
+public class BuildsView extends ViewPart implements IShowInTarget {
 
 	public static BuildsView openInActivePerspective() {
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
@@ -322,6 +324,14 @@ public class BuildsView extends ViewPart {
 				}
 			}
 		}
+	}
+
+	public boolean show(ShowInContext context) {
+		if (context.getSelection() != null) {
+			getViewer().setSelection(context.getSelection());
+			return true;
+		}
+		return false;
 	}
 
 }

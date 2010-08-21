@@ -22,6 +22,7 @@ import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
 import org.eclipse.mylyn.internal.builds.core.BuildPlan;
 import org.eclipse.mylyn.internal.builds.core.BuildServer;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
+import org.eclipse.mylyn.internal.builds.ui.view.BuildsView;
 import org.eclipse.mylyn.internal.commons.repositories.InMemoryCredentialsStore;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.ui.INewWizard;
@@ -101,6 +102,9 @@ public class BuildServerWizard extends Wizard implements INewWizard {
 			((BuildPlan) plan).setServer(original);
 		}
 		BuildsUiInternal.getModel().getPlans().addAll(selectedPlans);
+
+		BuildsView.openInActivePerspective();
+
 		return true;
 	}
 
