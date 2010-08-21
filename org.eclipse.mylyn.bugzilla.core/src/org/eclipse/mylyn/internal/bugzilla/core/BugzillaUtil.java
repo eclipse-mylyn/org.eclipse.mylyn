@@ -41,13 +41,6 @@ public class BugzillaUtil {
 		} else {
 			attribute.addValue(parsedText);
 		}
-//		TaskRepository repository = repositoryTaskData.getAttributeMapper().getTaskRepository();
-//		repository.removeProperty(IBugzillaConstants.BUGZILLA_PARAM_USE_SEE_ALSO);
-//		repository.removeProperty(IBugzillaConstants.BUGZILLA_PARAM_USEBUGALIASES);
-//		repository.removeProperty(IBugzillaConstants.BUGZILLA_PARAM_USEQACONTACT);
-//		repository.removeProperty(IBugzillaConstants.BUGZILLA_PARAM_USESTATUSWHITEBOARD);
-//		repository.removeProperty(IBugzillaConstants.BUGZILLA_PARAM_USETARGETMILESTONE);
-//		repository.removeProperty(IBugzillaConstants.BUGZILLA_PARAM_USECLASSIFICATION);
 		String useParam = repositoryTaskData.getAttributeMapper().getTaskRepository().getProperty(propertyName);
 		if (defaultWhenNull) {
 			if (useParam == null || (useParam != null && useParam.equals("true"))) { //$NON-NLS-1$
