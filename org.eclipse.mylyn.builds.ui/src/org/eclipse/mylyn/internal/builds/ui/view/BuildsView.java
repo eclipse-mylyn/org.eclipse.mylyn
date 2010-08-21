@@ -207,9 +207,9 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		summaryColumn.setWidth(220);
 
 		TreeViewerColumn statusViewerColumn = new TreeViewerColumn(viewer, SWT.LEFT);
-		statusViewerColumn.setLabelProvider(new BuildStatusLabelProvider());
+		statusViewerColumn.setLabelProvider(new BuildTimeLabelProvider());
 		TreeColumn statusColumn = statusViewerColumn.getColumn();
-		statusColumn.setText("Status");
+		statusColumn.setText("Last Built");
 		statusColumn.setWidth(50);
 
 		contentProvider = new BuildContentProvider();
