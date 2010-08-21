@@ -8,30 +8,32 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.mylyn.internal.builds.ui.view;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
-import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
-import org.eclipse.ui.dialogs.PreferencesUtil;
+import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
 
 /**
  * @author Steffen Pingel
  */
-public class OpenBuildsPreferencesAction extends Action {
+public class RefreshAutomaticallyAction extends Action {
 
-	public OpenBuildsPreferencesAction() {
-		setText("Preferences...");
-		setToolTipText("Build Preferences");
+	public RefreshAutomaticallyAction() {
+		setText("Refresh Automatically");
+		updateState();
+	}
+
+	protected void updateState() {
+		setChecked(BuildsUiPlugin.getDefault().getPreferenceStore().getBoolean(
+				BuildsUiInternal.PREF_AUTO_REFRESH_ENABLED));
 	}
 
 	@Override
 	public void run() {
-		PreferenceDialog dlg = PreferencesUtil.createPreferenceDialogOn(WorkbenchUtil.getShell(),
-				BuildsUiInternal.ID_PREFERENCE_PAGE_BUILDS,
-				new String[] { BuildsUiInternal.ID_PREFERENCE_PAGE_BUILDS }, null);
-		dlg.open();
+		BuildsUiPlugin.getDefault().getPreferenceStore().setValue(BuildsUiInternal.PREF_AUTO_REFRESH_ENABLED,
+				isChecked());
 	}
 
 }

@@ -177,7 +177,7 @@
        point="org.eclipse.ui.menus">
     <menuContribution
           allPopups="false"
-          locationURI="menu:org.eclipse.mylyn.builds.navigator.builds?after=additions">
+          locationURI="menu:org.eclipse.mylyn.builds.navigator.builds?after=group.navigate">
        <command
              commandId="org.eclipse.ui.views.showView"
              icon="icons/eview16/repositories.gif"

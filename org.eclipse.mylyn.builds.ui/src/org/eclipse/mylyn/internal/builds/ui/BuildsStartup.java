@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.builds.ui;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.builds.ui.BuildsUiConstants;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IViewReference;
@@ -40,9 +41,10 @@ public class BuildsStartup implements IStartup {
 						IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
 						if (activePage != null) {
 							for (IViewReference view : activePage.getViewReferences()) {
-								if (view.getId().equals(BuildsUiConstants.ID_VIEW)) {
+								if (view.getId().equals(BuildsUiConstants.ID_VIEW_BUILDS)) {
 									// ensure that build view decoration is accurate
-									activePage.showView(BuildsUiConstants.ID_VIEW, null, IWorkbenchPage.VIEW_CREATE);
+									activePage.showView(BuildsUiConstants.ID_VIEW_BUILDS, null,
+											IWorkbenchPage.VIEW_CREATE);
 								}
 							}
 						}

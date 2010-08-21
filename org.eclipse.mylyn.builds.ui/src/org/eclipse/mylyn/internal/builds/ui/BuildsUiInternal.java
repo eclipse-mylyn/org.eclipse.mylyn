@@ -104,7 +104,20 @@ public class BuildsUiInternal {
 		}
 	};
 
+	/**
+	 * Refresh every 15 minutes by default.
+	 */
+	public static final int DEFAULT_REFRESH_INTERVAL = 15 * 60 * 1000;
+
+	public static final String ID_PREFERENCE_PAGE_BUILDS = "org.eclipse.mylyn.builds.preferences.BuildsPage"; //$NON-NLS-1$
+
 	private static BuildModelManager manager;
+
+	public static final int MIN_REFRESH_INTERVAL = 1 * 60 * 1000;
+
+	public static final String PREF_AUTO_REFRESH_ENABLED = "refresh.enabled"; //$NON-NLS-1$
+
+	public static final String PREF_AUTO_REFRESH_INTERVAL = "refresh.interval"; //$NON-NLS-1$
 
 	public static IBuildServer createServer(String connectorKind, RepositoryLocation location) {
 		return getManager().createServer(connectorKind, location);

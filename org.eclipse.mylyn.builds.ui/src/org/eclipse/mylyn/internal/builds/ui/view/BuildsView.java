@@ -26,6 +26,8 @@ import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.DecoratingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -46,10 +48,12 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.actions.ExpandAllAction
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
@@ -94,6 +98,23 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 	private AdapterImpl modelListener;
 
 	private BuildElementPropertiesAction propertiesAction;
+
+	private final IPropertyChangeListener propertyChangeListener = new IPropertyChangeListener() {
+		public void propertyChange(PropertyChangeEvent event) {
+			if (org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal.PREF_AUTO_REFRESH_ENABLED.equals(event
+					.getProperty())) {
+				Display.getDefault().asyncExec(new Runnable() {
+					public void run() {
+						if (refreshAutomaticallyAction != null) {
+							refreshAutomaticallyAction.updateState();
+						}
+					}
+				});
+			}
+		}
+	};
+
+	private RefreshAutomaticallyAction refreshAutomaticallyAction;
 
 	private TreeViewer viewer;
 
@@ -205,13 +226,17 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 	public void dispose() {
 		super.dispose();
 		model.eAdapters().remove(modelListener);
+		BuildsUiPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(propertyChangeListener);
 	}
 
 	private void fillLocalPullDown(IMenuManager manager) {
 		manager.add(collapseAllAction);
 		manager.add(expandAllAction);
+		manager.add(new Separator("group.navigate")); //$NON-NLS-1$
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-		manager.add(new Separator());
+		manager.add(new Separator("group.properties")); //$NON-NLS-1$
+		manager.add(refreshAutomaticallyAction);
+		manager.add(new Separator("group.preferences")); //$NON-NLS-1$
 		manager.add(new OpenBuildsPreferencesAction());
 	}
 
@@ -278,15 +303,30 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		return viewer;
 	}
 
+	@Override
+	public void init(IViewSite site, IMemento memento) throws PartInitException {
+		super.init(site, memento);
+		BuildsUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(propertyChangeListener);
+	}
+
 	private void initActions() {
 		collapseAllAction = new CollapseAllAction(viewer);
 		expandAllAction = new ExpandAllAction(viewer);
 		propertiesAction = new BuildElementPropertiesAction();
+		refreshAutomaticallyAction = new RefreshAutomaticallyAction();
 	}
 
 	@Override
 	public void setFocus() {
 		getViewer().getControl().setFocus();
+	}
+
+	public boolean show(ShowInContext context) {
+		if (context.getSelection() != null) {
+			getViewer().setSelection(context.getSelection());
+			return true;
+		}
+		return false;
 	}
 
 	public void updateDecoration(IStatus status) {
@@ -324,14 +364,6 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 				}
 			}
 		}
-	}
-
-	public boolean show(ShowInContext context) {
-		if (context.getSelection() != null) {
-			getViewer().setSelection(context.getSelection());
-			return true;
-		}
-		return false;
 	}
 
 }

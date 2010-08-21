@@ -25,16 +25,16 @@ public class BuildRefresher implements IPropertyChangeListener {
 	private RefreshPlansOperation refreshOperation;
 
 	private long getInterval() {
-		return BuildsUiPlugin.getDefault().getPreferenceStore().getLong(BuildsUiConstants.PREF_AUTO_REFRESH_INTERVAL);
+		return BuildsUiPlugin.getDefault().getPreferenceStore().getLong(BuildsUiInternal.PREF_AUTO_REFRESH_INTERVAL);
 	}
 
 	public boolean isEnabled() {
-		return BuildsUiPlugin.getDefault().getPreferenceStore().getBoolean(BuildsUiConstants.PREF_AUTO_REFRESH_ENABLED);
+		return BuildsUiPlugin.getDefault().getPreferenceStore().getBoolean(BuildsUiInternal.PREF_AUTO_REFRESH_ENABLED);
 	}
 
 	public void propertyChange(PropertyChangeEvent event) {
-		if (event.getProperty().equals(BuildsUiConstants.PREF_AUTO_REFRESH_ENABLED)
-				|| event.getProperty().equals(BuildsUiConstants.PREF_AUTO_REFRESH_INTERVAL)) {
+		if (event.getProperty().equals(BuildsUiInternal.PREF_AUTO_REFRESH_ENABLED)
+				|| event.getProperty().equals(BuildsUiInternal.PREF_AUTO_REFRESH_INTERVAL)) {
 			reschedule();
 		}
 	}

@@ -84,34 +84,34 @@ public class BuildsPreferencesPage extends PreferencePage implements IWorkbenchP
 	}
 
 	public void reset() {
-		intervalText.setText(String.valueOf(getPreferenceStore().getLong(BuildsUiConstants.PREF_AUTO_REFRESH_INTERVAL)
+		intervalText.setText(String.valueOf(getPreferenceStore().getLong(BuildsUiInternal.PREF_AUTO_REFRESH_INTERVAL)
 				/ MILLIS_PER_MINUTE));
-		enableRefreshButton.setSelection(getPreferenceStore().getBoolean(BuildsUiConstants.PREF_AUTO_REFRESH_ENABLED));
+		enableRefreshButton.setSelection(getPreferenceStore().getBoolean(BuildsUiInternal.PREF_AUTO_REFRESH_ENABLED));
 		updateEnablement();
 	}
 
 	@Override
 	public boolean performOk() {
-		getPreferenceStore().setValue(BuildsUiConstants.PREF_AUTO_REFRESH_ENABLED, enableRefreshButton.getSelection());
-		getPreferenceStore().setValue(BuildsUiConstants.PREF_AUTO_REFRESH_INTERVAL, getRefreshInterval());
+		getPreferenceStore().setValue(BuildsUiInternal.PREF_AUTO_REFRESH_ENABLED, enableRefreshButton.getSelection());
+		getPreferenceStore().setValue(BuildsUiInternal.PREF_AUTO_REFRESH_INTERVAL, getRefreshInterval());
 		return super.performOk();
 	}
 
 	private long getRefreshInterval() {
 		try {
 			return Math.max(Integer.parseInt(intervalText.getText()) * MILLIS_PER_MINUTE,
-					BuildsUiConstants.MIN_REFRESH_INTERVAL);
+					BuildsUiInternal.MIN_REFRESH_INTERVAL);
 		} catch (NumberFormatException e) {
 			//ignore
 		}
-		return BuildsUiConstants.DEFAULT_REFRESH_INTERVAL;
+		return BuildsUiInternal.DEFAULT_REFRESH_INTERVAL;
 	}
 
 	@Override
 	protected void performDefaults() {
-		intervalText.setText(String.valueOf(getPreferenceStore().getDefaultLong(BuildsUiConstants.PREF_AUTO_REFRESH_INTERVAL)
+		intervalText.setText(String.valueOf(getPreferenceStore().getDefaultLong(BuildsUiInternal.PREF_AUTO_REFRESH_INTERVAL)
 				/ MILLIS_PER_MINUTE));
-		enableRefreshButton.setSelection(getPreferenceStore().getDefaultBoolean(BuildsUiConstants.PREF_AUTO_REFRESH_ENABLED));
+		enableRefreshButton.setSelection(getPreferenceStore().getDefaultBoolean(BuildsUiInternal.PREF_AUTO_REFRESH_ENABLED));
 		updateEnablement();
 	}
 
