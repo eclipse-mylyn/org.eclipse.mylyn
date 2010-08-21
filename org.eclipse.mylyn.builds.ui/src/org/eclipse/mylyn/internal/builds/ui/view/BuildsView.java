@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.builds.ui.view;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -91,13 +92,19 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		return null;
 	}
 
+	private BuildStatusFilter buildStatusFilter;
+
 	private Action collapseAllAction;
 
 	private BuildContentProvider contentProvider;
 
 	private Action expandAllAction;
 
+	private FilterByStatusAction filterDisabledAction;
+
 	private Date lastRefresh;
+
+	private Composite messageComposite;
 
 	private BuildModel model;
 
@@ -122,11 +129,11 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 
 	private RefreshAutomaticallyAction refreshAutomaticallyAction;
 
-	private TreeViewer viewer;
-
-	private Composite messageComposite;
-
 	private StackLayout stackLayout;
+
+	private IMemento stateMemento;
+
+	private TreeViewer viewer;
 
 	public BuildsView() {
 		BuildsUiPlugin.getDefault().initializeRefresh();
@@ -136,6 +143,28 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		IActionBars bars = getViewSite().getActionBars();
 		fillLocalPullDown(bars.getMenuManager());
 		fillLocalToolBar(bars.getToolBarManager());
+	}
+
+	private void createMessage(Composite parent) {
+		messageComposite = new Composite(parent, SWT.NONE);
+		FillLayout layout = new FillLayout();
+		layout.marginHeight = 5;
+		layout.marginWidth = 5;
+		messageComposite.setLayout(layout);
+		//GridLayoutFactory.swtDefaults().applyTo(messageComposite);
+		messageComposite.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+
+		Link link = new Link(messageComposite, SWT.WRAP);
+		link.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+		link.setText("No build servers available. Create a <a href=\"create\">build server</a>...");
+		link.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent event) {
+				if ("create".equals(event.text)) {
+					new NewBuildServerAction().run();
+				}
+			}
+		});
 	}
 
 	@Override
@@ -172,6 +201,12 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 			}
 		};
 		model.eAdapters().add(modelListener);
+
+		if (stateMemento != null) {
+			restoreState(stateMemento);
+			stateMemento = null;
+		}
+
 		viewer.setInput(model);
 		viewer.expandAll();
 
@@ -180,50 +215,6 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		propertiesAction.selectionChanged((IStructuredSelection) getSite().getSelectionProvider().getSelection());
 
 		updateContents(Status.OK_STATUS);
-	}
-
-	private void updateContents(IStatus status) {
-		boolean hasContents = false;
-		if (contentProvider != null) {
-			if (model.getPlans().size() > 0 || model.getServers().size() > 0) {
-				hasContents = true;
-			}
-		}
-		if (hasContents) {
-			setTopControl(viewer.getControl());
-		} else {
-			setTopControl(messageComposite);
-		}
-		updateDecoration(status);
-	}
-
-	private void setTopControl(Control control) {
-		if (stackLayout.topControl != control) {
-			stackLayout.topControl = control;
-			control.getParent().layout();
-		}
-	}
-
-	private void createMessage(Composite parent) {
-		messageComposite = new Composite(parent, SWT.NONE);
-		FillLayout layout = new FillLayout();
-		layout.marginHeight = 5;
-		layout.marginWidth = 5;
-		messageComposite.setLayout(layout);
-		//GridLayoutFactory.swtDefaults().applyTo(messageComposite);
-		messageComposite.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
-
-		Link link = new Link(messageComposite, SWT.WRAP);
-		link.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
-		link.setText("No build servers available. Create a <a href=\"create\">build server</a>...");
-		link.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent event) {
-				if ("create".equals(event.text)) {
-					new NewBuildServerAction().run();
-				}
-			}
-		});
 	}
 
 	protected void createPopupMenu(Composite parent) {
@@ -296,6 +287,8 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 	private void fillLocalPullDown(IMenuManager manager) {
 		manager.add(collapseAllAction);
 		manager.add(expandAllAction);
+		manager.add(new Separator("group.filter")); //$NON-NLS-1$
+		manager.add(filterDisabledAction);
 		manager.add(new Separator("group.navigate")); //$NON-NLS-1$
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 		manager.add(new Separator("group.properties")); //$NON-NLS-1$
@@ -330,6 +323,14 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		RunBuildAction runBuildAction = new RunBuildAction();
 		viewer.addSelectionChangedListener(runBuildAction);
 		manager.add(runBuildAction);
+	}
+
+	public BuildStatusFilter getBuildStatusFilter() {
+		if (buildStatusFilter == null) {
+			buildStatusFilter = new BuildStatusFilter();
+			getViewer().addFilter(buildStatusFilter);
+		}
+		return buildStatusFilter;
 	}
 
 	protected BuildStatus getPlanStatus() {
@@ -370,7 +371,11 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 	@Override
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, memento);
+
 		BuildsUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(propertyChangeListener);
+
+		// defer restore until view is created
+		this.stateMemento = memento;
 	}
 
 	private void initActions() {
@@ -378,11 +383,51 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		expandAllAction = new ExpandAllAction(viewer);
 		propertiesAction = new BuildElementPropertiesAction();
 		refreshAutomaticallyAction = new RefreshAutomaticallyAction();
+		filterDisabledAction = new FilterByStatusAction(this, BuildStatus.DISABLED);
+	}
+
+	private void restoreState(IMemento memento) {
+		IMemento child = memento.getChild("statusFilter");
+		if (child != null) {
+			boolean changed = false;
+			for (BuildStatus status : BuildStatus.values()) {
+				Boolean value = child.getBoolean(status.name());
+				if (value != null && value.booleanValue()) {
+					getBuildStatusFilter().addFiltered(status);
+					changed = true;
+				}
+			}
+			if (changed) {
+				filterDisabledAction.update();
+			}
+		}
+	}
+
+	@Override
+	public void saveState(IMemento memento) {
+		super.saveState(memento);
+
+		if (buildStatusFilter != null) {
+			Set<BuildStatus> statuses = buildStatusFilter.getFiltered();
+			if (statuses.size() > 0) {
+				IMemento child = memento.createChild("statusFilter");
+				for (BuildStatus status : statuses) {
+					child.putBoolean(status.name(), true);
+				}
+			}
+		}
 	}
 
 	@Override
 	public void setFocus() {
 		getViewer().getControl().setFocus();
+	}
+
+	private void setTopControl(Control control) {
+		if (stackLayout.topControl != control) {
+			stackLayout.topControl = control;
+			control.getParent().layout();
+		}
 	}
 
 	public boolean show(ShowInContext context) {
@@ -391,6 +436,21 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 			return true;
 		}
 		return false;
+	}
+
+	private void updateContents(IStatus status) {
+		boolean hasContents = false;
+		if (contentProvider != null) {
+			if (model.getPlans().size() > 0 || model.getServers().size() > 0) {
+				hasContents = true;
+			}
+		}
+		if (hasContents) {
+			setTopControl(viewer.getControl());
+		} else {
+			setTopControl(messageComposite);
+		}
+		updateDecoration(status);
 	}
 
 	public void updateDecoration(IStatus status) {
