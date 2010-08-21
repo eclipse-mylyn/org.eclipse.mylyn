@@ -23,6 +23,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.commons.core.StatusHandler;
@@ -87,7 +88,7 @@ public class BuildModelManager {
 
 	public void save() throws IOException {
 		Map<Object, Object> options = new HashMap<Object, Object>();
-//		options.put(XMLResource.OPTION_ENCODING, "UTF-8");
+		options.put(XMLResource.OPTION_ENCODING, "UTF-8"); //$NON-NLS-1$
 		resource.save(options);
 	}
 
