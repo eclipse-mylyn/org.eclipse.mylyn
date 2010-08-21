@@ -160,6 +160,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 
 		getSite().setSelectionProvider(viewer);
 		getSite().getSelectionProvider().addSelectionChangedListener(propertiesAction);
+		propertiesAction.selectionChanged((IStructuredSelection) getSite().getSelectionProvider().getSelection());
 
 		updateDecoration(Status.OK_STATUS);
 	}
@@ -170,14 +171,16 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		OpenInBrowserAction openInBrowserAction = new OpenInBrowserAction();
 		menuManager.add(openInBrowserAction);
 		viewer.addSelectionChangedListener(openInBrowserAction);
+		openInBrowserAction.selectionChanged((IStructuredSelection) viewer.getSelection());
 
 		RunBuildAction runBuildAction = new RunBuildAction();
 		menuManager.add(runBuildAction);
 		viewer.addSelectionChangedListener(runBuildAction);
+		runBuildAction.selectionChanged((IStructuredSelection) viewer.getSelection());
 
 		menuManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 
-		menuManager.add(new Separator("properties"));
+		menuManager.add(new Separator("group.properties"));
 		menuManager.add(propertiesAction);
 
 		Menu contextMenu = menuManager.createContextMenu(parent);
