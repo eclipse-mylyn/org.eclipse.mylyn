@@ -47,8 +47,14 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.actions.CollapseAllActi
 import org.eclipse.mylyn.internal.provisional.commons.ui.actions.ExpandAllAction;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
@@ -118,6 +124,10 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 
 	private TreeViewer viewer;
 
+	private Composite messageComposite;
+
+	private StackLayout stackLayout;
+
 	public BuildsView() {
 		BuildsUiPlugin.getDefault().initializeRefresh();
 	}
@@ -130,7 +140,14 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 
 	@Override
 	public void createPartControl(Composite parent) {
-		createViewer(parent);
+		Composite composite = new Composite(parent, SWT.NONE);
+		stackLayout = new StackLayout();
+		composite.setLayout(stackLayout);
+		composite.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+
+		createMessage(composite);
+		createViewer(composite);
+
 		initActions();
 		createPopupMenu(parent);
 		contributeToActionBars();
@@ -150,7 +167,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 				if (!viewer.getControl().isDisposed()) {
 					lastRefresh = new Date();
 					// FIXME show result of last update
-					updateDecoration(Status.OK_STATUS);
+					updateContents(Status.OK_STATUS);
 				}
 			}
 		};
@@ -162,7 +179,51 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		getSite().getSelectionProvider().addSelectionChangedListener(propertiesAction);
 		propertiesAction.selectionChanged((IStructuredSelection) getSite().getSelectionProvider().getSelection());
 
-		updateDecoration(Status.OK_STATUS);
+		updateContents(Status.OK_STATUS);
+	}
+
+	private void updateContents(IStatus status) {
+		boolean hasContents = false;
+		if (contentProvider != null) {
+			if (model.getPlans().size() > 0 || model.getServers().size() > 0) {
+				hasContents = true;
+			}
+		}
+		if (hasContents) {
+			setTopControl(viewer.getControl());
+		} else {
+			setTopControl(messageComposite);
+		}
+		updateDecoration(status);
+	}
+
+	private void setTopControl(Control control) {
+		if (stackLayout.topControl != control) {
+			stackLayout.topControl = control;
+			control.getParent().layout();
+		}
+	}
+
+	private void createMessage(Composite parent) {
+		messageComposite = new Composite(parent, SWT.NONE);
+		FillLayout layout = new FillLayout();
+		layout.marginHeight = 5;
+		layout.marginWidth = 5;
+		messageComposite.setLayout(layout);
+		//GridLayoutFactory.swtDefaults().applyTo(messageComposite);
+		messageComposite.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+
+		Link link = new Link(messageComposite, SWT.WRAP);
+		link.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+		link.setText("No build servers available. Create a <a href=\"create\">build server</a>...");
+		link.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent event) {
+				if ("create".equals(event.text)) {
+					new NewBuildServerAction().run();
+				}
+			}
+		});
 	}
 
 	protected void createPopupMenu(Composite parent) {
