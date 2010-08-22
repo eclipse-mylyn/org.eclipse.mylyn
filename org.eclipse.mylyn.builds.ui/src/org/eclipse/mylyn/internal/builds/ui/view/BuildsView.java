@@ -43,6 +43,7 @@ import org.eclipse.mylyn.internal.builds.core.util.BuildsConstants;
 import org.eclipse.mylyn.internal.builds.ui.BuildImages;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
+import org.eclipse.mylyn.internal.builds.ui.view.BuildContentProvider.Presentation;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.actions.CollapseAllAction;
 import org.eclipse.mylyn.internal.provisional.commons.ui.actions.ExpandAllAction;
@@ -134,6 +135,8 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 	private IMemento stateMemento;
 
 	private TreeViewer viewer;
+
+	private PresentationMenuAction presentationsMenuAction;
 
 	public BuildsView() {
 		BuildsUiPlugin.getDefault().initializeRefresh();
@@ -285,6 +288,8 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 	}
 
 	private void fillLocalPullDown(IMenuManager manager) {
+		manager.add(presentationsMenuAction);
+		manager.add(new Separator());
 		manager.add(collapseAllAction);
 		manager.add(expandAllAction);
 		manager.add(new Separator("group.filter")); //$NON-NLS-1$
@@ -331,6 +336,10 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 			getViewer().addFilter(buildStatusFilter);
 		}
 		return buildStatusFilter;
+	}
+
+	public BuildContentProvider getContentProvider() {
+		return contentProvider;
 	}
 
 	protected BuildStatus getPlanStatus() {
@@ -384,6 +393,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		propertiesAction = new BuildElementPropertiesAction();
 		refreshAutomaticallyAction = new RefreshAutomaticallyAction();
 		filterDisabledAction = new FilterByStatusAction(this, BuildStatus.DISABLED);
+		presentationsMenuAction = new PresentationMenuAction(this);
 	}
 
 	private void restoreState(IMemento memento) {
@@ -401,6 +411,17 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 				filterDisabledAction.update();
 			}
 		}
+		child = memento.getChild("presentation");
+		if (child != null) {
+			String id = child.getString("id");
+			if (id != null) {
+				try {
+					getContentProvider().setPresentation(Presentation.valueOf(id));
+				} catch (IllegalArgumentException e) {
+					// use default
+				}
+			}
+		}
 	}
 
 	@Override
@@ -416,6 +437,8 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 				}
 			}
 		}
+		IMemento child = memento.createChild("presentation");
+		child.putString("id", getContentProvider().getPresentation().name());
 	}
 
 	@Override

@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.builds.ui.view;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.util.EContentAdapter;
@@ -30,30 +31,46 @@ import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
  */
 public class BuildContentProvider implements ITreeContentProvider {
 
+	public enum Presentation {
+		BY_SERVER, BY_PLAN;
+
+		@Override
+		public String toString() {
+			switch (this) {
+			case BY_SERVER:
+				return "Servers";
+			case BY_PLAN:
+				return "Plans";
+			}
+			throw new IllegalStateException();
+		};
+	};
+
 	private static final Object[] EMPTY_ARRAY = new Object[0];
 
 	private Object input;
 
-	private boolean nestPlansEnabled;
-
-	private boolean selectedOnly;
-
 	private BuildModel model;
-
-	private Viewer viewer;
 
 	private final Adapter modelListener = new EContentAdapter() {
 		@Override
 		public void notifyChanged(Notification msg) {
 			super.notifyChanged(msg);
-			if (viewer != null && !viewer.getControl().isDisposed()) {
-				viewer.refresh();
-			}
+			refresh();
 		}
 	};
 
+	private boolean nestPlansEnabled;
+
+	private Presentation presentation;
+
+	private boolean selectedOnly;
+
+	private Viewer viewer;
+
 	public BuildContentProvider() {
 		setNestPlansEnabled(true);
+		setPresentation(Presentation.BY_SERVER);
 	}
 
 	public void dispose() {
@@ -70,17 +87,31 @@ public class BuildContentProvider implements ITreeContentProvider {
 	}
 
 	public Object[] getElements(Object inputElement) {
-		if (inputElement instanceof IBuildModel) {
-			return ((IBuildModel) inputElement).getServers().toArray();
-		} else if (inputElement instanceof IBuildServer) {
+		if (inputElement instanceof IBuildServer) {
 			return getPlans(inputElement, model.getPlans(((IBuildServer) inputElement))).toArray();
-		} else if (inputElement == input) {
-			return model.getServers().toArray();
-		}
-		if (inputElement instanceof List<?>) {
+		} else if (inputElement instanceof List<?>) {
 			return ((List<?>) inputElement).toArray();
+		} else {
+			IBuildModel model = getModel(inputElement);
+			if (model != null) {
+				switch (presentation) {
+				case BY_SERVER:
+					return model.getServers().toArray();
+				case BY_PLAN:
+					return model.getPlans().toArray();
+				}
+			}
 		}
 		return EMPTY_ARRAY;
+	}
+
+	private IBuildModel getModel(Object inputElement) {
+		if (inputElement instanceof IBuildModel) {
+			return ((IBuildModel) inputElement);
+		} else if (inputElement == input) {
+			return model;
+		}
+		return null;
 	}
 
 	public Object getParent(Object element) {
@@ -109,6 +140,10 @@ public class BuildContentProvider implements ITreeContentProvider {
 			children.add(plan);
 		}
 		return children;
+	}
+
+	public Presentation getPresentation() {
+		return presentation;
 	}
 
 	public boolean hasChildren(Object element) {
@@ -141,8 +176,20 @@ public class BuildContentProvider implements ITreeContentProvider {
 		this.nestPlansEnabled = nestPlansEnabled;
 	}
 
+	public void setPresentation(Presentation presentation) {
+		Assert.isNotNull(presentation);
+		this.presentation = presentation;
+		refresh();
+	}
+
 	public final void setSelectedOnly(boolean selectedOnly) {
 		this.selectedOnly = selectedOnly;
+	}
+
+	protected void refresh() {
+		if (viewer != null && !viewer.getControl().isDisposed()) {
+			viewer.refresh();
+		}
 	}
 
 }

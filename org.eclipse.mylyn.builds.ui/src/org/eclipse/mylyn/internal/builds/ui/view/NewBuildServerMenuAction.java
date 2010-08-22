@@ -110,10 +110,10 @@ public class NewBuildServerMenuAction extends Action implements IMenuCreator {
 			manager.add(openAction);
 		}
 		manager.add(new Separator());
-		manager.add(getContributionItem());
+		manager.add(createShowRepositoriesViewItem());
 	}
 
-	private IContributionItem getContributionItem() {
+	private IContributionItem createShowRepositoriesViewItem() {
 		CommandContributionItemParameter parm = new CommandContributionItemParameter(PlatformUI.getWorkbench(),
 				RepositoryUi.ID_VIEW_REPOSITORIES, IWorkbenchCommandConstants.VIEWS_SHOW_VIEW,
 				CommandContributionItem.STYLE_PUSH);
