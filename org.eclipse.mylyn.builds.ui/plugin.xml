@@ -61,7 +61,7 @@
        </possibleChildren>
        <triggerPoints>
           <instanceof
-                value="org.eclipse.mylyn.commons.ui.team.RepositoryViewModel">
+                value="org.eclipse.mylyn.commons.repositories.RepositoryCategory">
           </instanceof>
        </triggerPoints>
     </navigatorContent>
@@ -72,7 +72,6 @@
           viewerId="org.eclipse.mylyn.commons.team.navigator.Repositories">
        <includes>
           <contentExtension
-                isRoot="true"
                 pattern="org.eclipse.mylyn.builds.ui.navigator.BuildRepositories">
           </contentExtension>
        </includes>
@@ -107,12 +106,13 @@
             class="org.eclipse.mylyn.internal.builds.ui.commands.BuildElementPropertiesHandler"
             commandId="org.eclipse.ui.file.properties">
          <activeWhen>
-			<with variable="activePartId">
-			    <equals value="org.eclipse.mylyn.commons.team.navigator.Repositories"/>
-			</with> 
-         </activeWhen>
-         <enabledWhen>
             <and>
+               <with
+                     variable="activePartId">
+                  <equals
+                        value="org.eclipse.mylyn.commons.team.navigator.Repositories">
+                  </equals>
+               </with>
                <count
                      value="1">
                </count>
@@ -124,7 +124,7 @@
                   </and>
                </iterate>
             </and>
-         </enabledWhen>
+         </activeWhen>
       </handler>
       <handler
             class="org.eclipse.mylyn.internal.builds.ui.commands.DeleteBuildElementHandler"

@@ -16,6 +16,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.mylyn.commons.repositories.RepositoryCategory;
 import org.eclipse.mylyn.internal.builds.core.BuildModel;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 
@@ -25,8 +26,6 @@ import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 public class BuildNavigatorContentProvider implements ITreeContentProvider {
 
 	private static final Object[] EMPTY_ARRAY = new Object[0];
-
-	private Object input;
 
 	private BuildModel model;
 
@@ -45,18 +44,24 @@ public class BuildNavigatorContentProvider implements ITreeContentProvider {
 	}
 
 	public void dispose() {
-		// ignore
+		if (model != null) {
+			model.eAdapters().remove(modelListener);
+		}
 	}
 
 	public Object[] getChildren(Object parentElement) {
+		if (parentElement instanceof RepositoryCategory) {
+			RepositoryCategory category = (RepositoryCategory) parentElement;
+			if (RepositoryCategory.ID_CATEGORY_BUILDS.equals(category.getId())
+					|| RepositoryCategory.ID_CATEGORY_ALL.equals(category.getId())) {
+				return model.getServers().toArray();
+			}
+		}
 		return EMPTY_ARRAY;
 	}
 
 	public Object[] getElements(Object inputElement) {
-		if (inputElement == input) {
-			return model.getServers().toArray();
-		}
-		return EMPTY_ARRAY;
+		return getChildren(inputElement);
 	}
 
 	public Object getParent(Object element) {
@@ -78,7 +83,7 @@ public class BuildNavigatorContentProvider implements ITreeContentProvider {
 			model = BuildsUiInternal.getModel();
 		}
 		model.eAdapters().add(modelListener);
-		this.input = newInput;
+		//this.input = newInput;
 	}
 
 }
