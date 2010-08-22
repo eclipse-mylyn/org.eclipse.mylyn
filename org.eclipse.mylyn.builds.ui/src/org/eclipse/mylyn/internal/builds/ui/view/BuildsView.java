@@ -41,6 +41,7 @@ import org.eclipse.mylyn.builds.ui.BuildsUiConstants;
 import org.eclipse.mylyn.internal.builds.core.BuildModel;
 import org.eclipse.mylyn.internal.builds.core.util.BuildsConstants;
 import org.eclipse.mylyn.internal.builds.ui.BuildImages;
+import org.eclipse.mylyn.internal.builds.ui.BuildToolTip;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
 import org.eclipse.mylyn.internal.builds.ui.view.BuildContentProvider.Presentation;
@@ -138,6 +139,8 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 
 	private PresentationMenuAction presentationsMenuAction;
 
+	private BuildToolTip toolTip;
+
 	public BuildsView() {
 		BuildsUiPlugin.getDefault().initializeRefresh();
 	}
@@ -183,6 +186,8 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		initActions();
 		createPopupMenu(parent);
 		contributeToActionBars();
+
+		toolTip = new BuildToolTip(getViewer().getControl());
 
 		IWorkbenchSiteProgressService progress = (IWorkbenchSiteProgressService) getSite().getAdapter(
 				IWorkbenchSiteProgressService.class);

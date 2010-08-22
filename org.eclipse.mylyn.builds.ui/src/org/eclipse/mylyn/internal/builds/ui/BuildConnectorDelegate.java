@@ -40,7 +40,7 @@ public class BuildConnectorDelegate extends BuildConnector {
 		if (status != null) {
 			throw new CoreException(status);
 		}
-		IStatus result = descriptor.createConnector();
+		IStatus result = descriptor.createCore();
 		if (result.isOK()) {
 			core = descriptor.core;
 		} else {

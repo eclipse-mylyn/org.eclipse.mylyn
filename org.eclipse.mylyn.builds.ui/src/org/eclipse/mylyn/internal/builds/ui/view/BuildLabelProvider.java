@@ -53,7 +53,11 @@ public class BuildLabelProvider extends LabelProvider implements IStyledLabelPro
 			bottomRightDecoration = getBottomRightDecoration((IBuildPlan) element);
 		}
 		if (element instanceof IBuildServer) {
-			descriptor = BuildImages.SERVER;
+			if (((IBuildServer) element).getLocation().isOffline()) {
+				descriptor = BuildImages.SERVER_DISABLED;
+			} else {
+				descriptor = BuildImages.SERVER;
+			}
 		}
 		if (descriptor != null) {
 			if (bottomRightDecoration != null || bottomLeftDecoration != null) {

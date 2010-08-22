@@ -15,6 +15,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.SWT;
 
 /**
  * @author Steffen Pingel
@@ -44,6 +45,8 @@ public class BuildImages {
 	public static final ImageDescriptor STATUS_DISABLED = create(T_OBJ, "disabled-status.png"); //$NON-NLS-1$
 
 	public static final ImageDescriptor SERVER = create(T_OBJ, "server.gif"); //$NON-NLS-1$
+
+	public static final ImageDescriptor SERVER_DISABLED = ImageDescriptor.createWithFlags(SERVER, SWT.IMAGE_DISABLE);
 
 	public static final ImageDescriptor HEALTH_00 = create(T_OBJ, "weather_lightning.png"); //$NON-NLS-1$
 
