@@ -26,6 +26,7 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.GradientToolTip;
+import org.eclipse.mylyn.internal.provisional.commons.ui.PlatformUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.ScalingHyperlink;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
@@ -42,7 +43,6 @@ import org.eclipse.mylyn.internal.tasks.ui.TaskScalingHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskDataDiff;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotifier;
-import org.eclipse.mylyn.internal.tasks.ui.util.PlatformUtil;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskScheduleContentProvider.StateTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
@@ -93,7 +93,7 @@ public class TaskListToolTip extends GradientToolTip {
 
 	private final static int MAX_WIDTH = 600;
 
-	private final static int X_SHIFT = PlatformUtil.getToolTipXShift();
+	private final static int X_SHIFT = PlatformUiUtil.getToolTipXShift();
 
 	private final static int Y_SHIFT = 1;
 

@@ -16,6 +16,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.provisional.commons.ui.PlatformUiUtil;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
@@ -24,7 +25,6 @@ import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.util.PlatformUtil;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
@@ -83,8 +83,8 @@ public class CustomTaskListDecorationDrawer implements Listener {
 	public CustomTaskListDecorationDrawer(int activationImageOffset, boolean focusedMode) {
 		this.activationImageOffset = activationImageOffset;
 		this.lastClippingArea = new Rectangle(0, 0, 0, 0);
-		this.tweakClipping = PlatformUtil.isPaintItemClippingRequired();
-		this.platformSpecificSquish = PlatformUtil.getTreeItemSquish();
+		this.tweakClipping = PlatformUiUtil.isPaintItemClippingRequired();
+		this.platformSpecificSquish = PlatformUiUtil.getTreeItemSquish();
 		this.synchronizationOverlaid = TasksUiPlugin.getDefault()
 				.getPreferenceStore()
 				.getBoolean(ITasksUiPreferenceConstants.OVERLAYS_INCOMING_TIGHT);
@@ -183,7 +183,7 @@ public class CustomTaskListDecorationDrawer implements Listener {
 
 	private void drawSyncronizationImage(ITaskContainer element, Event event) {
 		Image image = null;
-		int offsetX = PlatformUtil.getIncomingImageOffset();
+		int offsetX = PlatformUiUtil.getIncomingImageOffset();
 		int offsetY = (event.height / 2) - 5;
 		if (synchronizationOverlaid) {
 			offsetX = event.x + 18 - platformSpecificSquish;

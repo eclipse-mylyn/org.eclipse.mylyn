@@ -49,6 +49,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
+import org.eclipse.mylyn.internal.provisional.commons.ui.PlatformUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.SelectionProviderAdapter;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.editor.EditorBusyIndicator;
@@ -61,7 +62,6 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.ToggleTaskActivationAction;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.Messages;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionContributor;
-import org.eclipse.mylyn.internal.tasks.ui.util.PlatformUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDragSourceListener;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -894,7 +894,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 				FormToolkit toolkit = getHeaderForm().getToolkit();
 				Composite composite = toolkit.createComposite(parent);
 				RowLayout layout = new RowLayout();
-				if (PlatformUtil.hasNarrowToolBar()) {
+				if (PlatformUiUtil.hasNarrowToolBar()) {
 					layout.marginTop = 0;
 					layout.marginBottom = 0;
 					layout.center = true;

@@ -27,6 +27,7 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DatePicker;
+import org.eclipse.mylyn.internal.provisional.commons.ui.PlatformUiUtil;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.DateRange;
 import org.eclipse.mylyn.internal.tasks.core.DayDateRange;
@@ -36,7 +37,6 @@ import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.internal.tasks.core.WeekDateRange;
 import org.eclipse.mylyn.internal.tasks.ui.ScheduleDatePicker;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.util.PlatformUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.monitor.ui.MonitorUi;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -535,7 +535,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		estimatedTimeSpinner.setMinimum(0);
 		estimatedTimeSpinner.setIncrement(1);
 		estimatedTimeSpinner.setSelection(getTask().getEstimatedTimeHours());
-		if (!PlatformUtil.spinnerHasNativeBorder()) {
+		if (!PlatformUiUtil.spinnerHasNativeBorder()) {
 			estimatedTimeSpinner.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 		}
 		estimatedTimeSpinner.addModifyListener(new ModifyListener() {

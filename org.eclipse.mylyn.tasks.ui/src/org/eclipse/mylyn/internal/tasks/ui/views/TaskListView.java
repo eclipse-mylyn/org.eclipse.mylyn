@@ -63,6 +63,7 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DelayedRefreshJob;
 import org.eclipse.mylyn.internal.provisional.commons.ui.GradientDrawer;
+import org.eclipse.mylyn.internal.provisional.commons.ui.PlatformUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.SubstringPatternFilter;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
@@ -94,7 +95,6 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.TaskListSortAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskListViewActionGroup;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskListChangeAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListServiceMessageControl;
-import org.eclipse.mylyn.internal.tasks.ui.util.PlatformUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.SortCriterion;
 import org.eclipse.mylyn.internal.tasks.ui.util.SortCriterion.SortKey;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDragSourceListener;
@@ -826,7 +826,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		drillDownAdapter = new DrillDownAdapter(getViewer());
 		getViewer().setInput(getViewSite());
 
-		final int activationImageOffset = PlatformUtil.getTreeImageOffset();
+		final int activationImageOffset = PlatformUiUtil.getTreeImageOffset();
 		customDrawer = new CustomTaskListDecorationDrawer(activationImageOffset, false);
 		getViewer().getTree().addListener(SWT.EraseItem, customDrawer);
 		getViewer().getTree().addListener(SWT.PaintItem, customDrawer);
@@ -1701,7 +1701,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 							Point size = ((ToolBarManager) getViewSite().getActionBars().getToolBarManager()).getControl()
 									.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 							// leave some room for the view menu drop-down
-							return size.x + PlatformUtil.getViewMenuWidth();
+							return size.x + PlatformUiUtil.getViewMenuWidth();
 						}
 					}
 					return preferredResult;
