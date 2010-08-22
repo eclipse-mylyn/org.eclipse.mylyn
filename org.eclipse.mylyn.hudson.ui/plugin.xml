@@ -15,6 +15,7 @@
          point="org.eclipse.mylyn.builds.ui.connectors">
       <connector
             core="org.eclipse.mylyn.internal.hudson.core.HudsonConnector"
+            icon="icons/obj16/hudson.png"
             kind="org.eclipse.mylyn.hudson"
             label="Hudson"
             ui="org.eclipse.mylyn.internal.hudson.ui.HudsonConnectorUi">
