@@ -20,6 +20,8 @@ package org.eclipse.mylyn.builds.core;
  */
 public interface IBuildPlanData {
 
+	public abstract String getDescription();
+
 	public abstract int getHealth();
 
 	public abstract String getId();

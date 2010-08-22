@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildPackage.java,v 1.11 2010/08/04 07:38:41 spingel Exp $
+ * $Id: BuildPackage.java,v 1.12 2010/08/22 07:37:03 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -396,6 +396,16 @@ public class BuildPackage extends EPackageImpl {
 	public static final int IBUILD_PLAN__STATUS = IBUILD_ELEMENT_FEATURE_COUNT + 9;
 
 	/**
+	 * The feature id for the '<em><b>Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_PLAN__DESCRIPTION = IBUILD_ELEMENT_FEATURE_COUNT + 10;
+
+	/**
 	 * The number of structural features of the '<em>IBuild Plan</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -403,7 +413,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int IBUILD_PLAN_FEATURE_COUNT = IBUILD_ELEMENT_FEATURE_COUNT + 10;
+	public static final int IBUILD_PLAN_FEATURE_COUNT = IBUILD_ELEMENT_FEATURE_COUNT + 11;
 
 	/**
 	 * The feature id for the '<em><b>Url</b></em>' attribute.
@@ -524,6 +534,16 @@ public class BuildPackage extends EPackageImpl {
 	 * @ordered
 	 */
 	public static final int BUILD_PLAN__STATUS = IBUILD_PLAN__STATUS;
+
+	/**
+	 * The feature id for the '<em><b>Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD_PLAN__DESCRIPTION = IBUILD_PLAN__DESCRIPTION;
 
 	/**
 	 * The number of structural features of the '<em>Plan</em>' class.
@@ -2136,6 +2156,21 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getDescription
+	 * <em>Description</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Description</em>'.
+	 * @see org.eclipse.mylyn.builds.core.IBuildPlan#getDescription()
+	 * @see #getIBuildPlan()
+	 * @generated
+	 */
+	public EAttribute getIBuildPlan_Description() {
+		return (EAttribute) iBuildPlanEClass.getEStructuralFeatures().get(10);
+	}
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IBuildPlanData <em>IBuild Plan Data</em>}
 	 * '.
 	 * <!-- begin-user-doc -->
@@ -2960,6 +2995,7 @@ public class BuildPackage extends EPackageImpl {
 		createEAttribute(iBuildPlanEClass, IBUILD_PLAN__SUMMARY);
 		createEAttribute(iBuildPlanEClass, IBUILD_PLAN__STATE);
 		createEAttribute(iBuildPlanEClass, IBUILD_PLAN__STATUS);
+		createEAttribute(iBuildPlanEClass, IBUILD_PLAN__DESCRIPTION);
 
 		iBuildPlanDataEClass = createEClass(IBUILD_PLAN_DATA);
 
@@ -3130,6 +3166,9 @@ public class BuildPackage extends EPackageImpl {
 				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIBuildPlan_Status(), this.getBuildStatus(), "status", null, 0, 1, IBuildPlan.class,
 				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIBuildPlan_Description(), ecorePackage.getEString(), "description", null, 0, 1,
+				IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
 
 		initEClass(iBuildPlanDataEClass, IBuildPlanData.class, "IBuildPlanData", IS_ABSTRACT, IS_INTERFACE,
 				!IS_GENERATED_INSTANCE_CLASS);
@@ -3472,6 +3511,15 @@ public class BuildPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EAttribute IBUILD_PLAN__STATUS = eINSTANCE.getIBuildPlan_Status();
+
+		/**
+		 * The meta object literal for the '<em><b>Description</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute IBUILD_PLAN__DESCRIPTION = eINSTANCE.getIBuildPlan_Description();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.core.IBuildPlanData

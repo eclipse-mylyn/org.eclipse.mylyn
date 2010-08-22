@@ -20,6 +20,8 @@ package org.eclipse.mylyn.builds.core;
  */
 public interface IBuildPlanWorkingCopy extends IBuildPlanData {
 
+	public void setDescription(String description);
+
 	public void setStatus(BuildStatus status);
 
 	public void setSummary(String summary);

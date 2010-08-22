@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildServer.java,v 1.18 2010/08/04 07:38:41 spingel Exp $
+ * $Id: BuildServer.java,v 1.19 2010/08/22 07:37:03 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -215,9 +215,8 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	public void setUrl(String newUrl) {
 		String oldUrl = url;
 		url = newUrl;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_SERVER__URL, oldUrl, url));
-		}
 	}
 
 	/**
@@ -252,9 +251,8 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_SERVER__NAME, oldName, name));
-		}
 	}
 
 	/**
@@ -358,10 +356,9 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	public void setConnectorKind(String newConnectorKind) {
 		String oldConnectorKind = connectorKind;
 		connectorKind = newConnectorKind;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_SERVER__CONNECTOR_KIND,
 					oldConnectorKind, connectorKind));
-		}
 	}
 
 	/**
@@ -397,10 +394,9 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	public void setRepositoryUrl(String newRepositoryUrl) {
 		String oldRepositoryUrl = repositoryUrl;
 		repositoryUrl = newRepositoryUrl;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_SERVER__REPOSITORY_URL,
 					oldRepositoryUrl, repositoryUrl));
-		}
 	}
 
 	/**
@@ -432,11 +428,10 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 		case BuildPackage.BUILD_SERVER__NAME:
 			return getName();
 		case BuildPackage.BUILD_SERVER__ATTRIBUTES:
-			if (coreType) {
+			if (coreType)
 				return getAttributes();
-			} else {
+			else
 				return getAttributes().map();
-			}
 		case BuildPackage.BUILD_SERVER__LOCATION:
 			return getLocation();
 		case BuildPackage.BUILD_SERVER__CONNECTOR_KIND:
@@ -545,9 +540,8 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy()) {
+		if (eIsProxy())
 			return super.toString();
-		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (url: ");

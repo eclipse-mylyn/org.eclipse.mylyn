@@ -35,6 +35,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="summary" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="state" eType="#//BuildState"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="#//BuildStatus"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IBuildPlanData" instanceClassName="org.eclipse.mylyn.builds.core.IBuildPlanData"
       abstract="true" interface="true"/>
