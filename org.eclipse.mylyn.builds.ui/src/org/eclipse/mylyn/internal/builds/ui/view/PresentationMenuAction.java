@@ -18,7 +18,6 @@ import org.eclipse.mylyn.internal.builds.ui.view.BuildContentProvider.Presentati
 import org.eclipse.swt.events.MenuAdapter;
 import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
@@ -36,18 +35,12 @@ public class PresentationMenuAction extends Action implements IMenuCreator {
 	}
 
 	private void addActions(Menu menu) { // add repository action
-
 		Presentation selectedPresentation = view.getContentProvider().getPresentation();
-		System.err.println(selectedPresentation);
 		for (final Presentation presentation : Presentation.values()) {
 			Action action = new Action() {
 				@Override
 				public void run() {
-					Display.getDefault().asyncExec(new Runnable() {
-						public void run() {
-							view.getContentProvider().setPresentation(presentation);
-						}
-					});
+					view.getContentProvider().setPresentation(presentation);
 				}
 			};
 			action.setText(presentation.toString());
