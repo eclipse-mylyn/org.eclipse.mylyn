@@ -62,6 +62,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DelayedRefreshJob;
+import org.eclipse.mylyn.internal.provisional.commons.ui.GradientDrawer;
 import org.eclipse.mylyn.internal.provisional.commons.ui.SubstringPatternFilter;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
@@ -141,6 +142,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
@@ -924,7 +926,12 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		contributeToActionBars();
 		initHandlers();
 
-		new GradientDrawer(themeManager, getViewer());
+		new GradientDrawer(themeManager, getViewer()) {
+			@Override
+			protected boolean shouldApplyGradient(Event event) {
+				return event.item.getData() instanceof ITaskContainer && !(event.item.getData() instanceof ITask);
+			}
+		};
 
 		initDragAndDrop(parent);
 		expandToActiveTasks();

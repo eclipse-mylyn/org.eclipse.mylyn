@@ -20,9 +20,9 @@ import org.eclipse.mylyn.internal.tasks.core.Category;
  */
 public class EmptyCategoriesFilter extends ViewerFilter {
 
-	private final TeamRepositoriesContentProvider provider;
+	private final TaskRepositoriesContentProvider provider;
 
-	public EmptyCategoriesFilter(TeamRepositoriesContentProvider provider) {
+	public EmptyCategoriesFilter(TaskRepositoriesContentProvider provider) {
 		this.provider = provider;
 	}
 

@@ -25,6 +25,7 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.provisional.commons.ui.GradientDrawer;
 import org.eclipse.mylyn.internal.tasks.core.Category;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryModelListener;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryAdapter;
@@ -125,7 +126,7 @@ public class TaskRepositoriesView extends ViewPart {
 
 	private final TaskRepositoryManager manager;
 
-	private TeamRepositoriesContentProvider contentProvider;
+	private TaskRepositoriesContentProvider contentProvider;
 
 	public TaskRepositoriesView() {
 		manager = ((TaskRepositoryManager) TasksUi.getRepositoryManager());
@@ -167,7 +168,7 @@ public class TaskRepositoriesView extends ViewPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
-		contentProvider = new TeamRepositoriesContentProvider();
+		contentProvider = new TaskRepositoriesContentProvider();
 		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
 		viewer.setContentProvider(contentProvider);
 		viewer.setUseHashlookup(true);

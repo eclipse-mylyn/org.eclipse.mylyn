@@ -1489,9 +1489,14 @@
             class="org.eclipse.mylyn.internal.tasks.ui.commands.OpenTaskRepositoryPropertiesHandler"
             commandId="org.eclipse.ui.file.properties">
          <activeWhen>
-			<with variable="activePartId">
-			    <equals value="org.eclipse.mylyn.tasks.ui.views.repositories"/>
-			</with> 
+         	<or>
+				<with variable="activePartId">
+				    <equals value="org.eclipse.mylyn.tasks.ui.views.repositories"/>
+				</with> 
+				<with variable="activePartId">
+				    <equals value="org.eclipse.mylyn.commons.team.navigator.Repositories"/>
+				</with>
+			</or> 
          </activeWhen>
          <enabledWhen>
             <and>
@@ -1955,10 +1960,21 @@
 		</definition>       
     </extension>
     <extension
+          point="org.eclipse.ui.navigator.viewer">
+       <viewerContentBinding
+             viewerId="org.eclipse.mylyn.commons.team.navigator.Repositories">
+          <includes>
+             <contentExtension
+                   pattern="org.eclipse.mylyn.tasks.ui.navigator.Repositories">
+             </contentExtension>
+          </includes>
+       </viewerContentBinding>
+    </extension>
+    <extension
          point="org.eclipse.ui.navigator.navigatorContent">
       <navigatorContent
             activeByDefault="true"
-            contentProvider="org.eclipse.mylyn.internal.tasks.ui.views.TeamRepositoriesContentProvider"
+            contentProvider="org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesNavigatorContentProvider"
             icon="icons/eview16/repositories.gif"
             id="org.eclipse.mylyn.tasks.ui.navigator.Repositories"
             labelProvider="org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoryLabelProvider"
@@ -1970,9 +1986,12 @@
          </possibleChildren>
          <triggerPoints>
             <instanceof
-                  value="org.eclipse.mylyn.internal.tasks.core.RepositoryModel">
+                  value="org.eclipse.mylyn.commons.repositories.RepositoryCategory">
             </instanceof>
          </triggerPoints>
+         <commonSorter
+               class="org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesSorter">
+         </commonSorter>
       </navigatorContent>
     </extension>
     <extension

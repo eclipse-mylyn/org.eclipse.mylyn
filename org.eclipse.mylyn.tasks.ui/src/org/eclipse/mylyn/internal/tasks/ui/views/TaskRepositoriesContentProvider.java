@@ -24,11 +24,11 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
 /**
  * @author Robert Elves
  */
-public class TeamRepositoriesContentProvider implements ITreeContentProvider {
+public class TaskRepositoriesContentProvider implements ITreeContentProvider {
 
 	private final TaskRepositoryManager manager;
 
-	public TeamRepositoriesContentProvider() {
+	public TaskRepositoriesContentProvider() {
 		manager = ((TaskRepositoryManager) TasksUi.getRepositoryManager());
 	}
 

@@ -40,6 +40,7 @@ import org.eclipse.jface.wizard.IWizardNode;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardSelectionPage;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.provisional.commons.ui.GradientDrawer;
 import org.eclipse.mylyn.internal.tasks.core.Category;
 import org.eclipse.mylyn.internal.tasks.core.ITaskRepositoryFilter;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
@@ -47,10 +48,9 @@ import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AddRepositoryAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.internal.tasks.ui.views.GradientDrawer;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesViewSorter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoryLabelProvider;
-import org.eclipse.mylyn.internal.tasks.ui.views.TeamRepositoriesContentProvider;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesContentProvider;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -86,7 +86,7 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 
 	private final ITaskRepositoryFilter taskRepositoryFilter;
 
-	private TeamRepositoriesContentProvider contentProvider;
+	private TaskRepositoriesContentProvider contentProvider;
 
 	class RepositoryContentProvider implements ITreeContentProvider {
 
