@@ -100,8 +100,53 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		} else {
 			plan.setName(job.getName());
 		}
-		plan.setSummary(job.getDescription());
+		plan.setDescription(job.getDescription());
 		plan.setUrl(job.getUrl());
+		updateStateAndStatus(job, plan);
+		updateHealth(job, plan);
+		return plan;
+	}
+
+	protected void updateHealth(HudsonModelJob job, IBuildPlanWorkingCopy plan) {
+		String testResult = null;
+		String buildResult = null;
+		String result = null;
+		List<HudsonModelHealthReport> report = job.getHealthReport();
+		if (report.size() > 0) {
+			plan.setHealth(report.get(0).getScore());
+			for (HudsonModelHealthReport healthReport : report) {
+				if (healthReport.getScore() < plan.getHealth()) {
+					plan.setHealth(healthReport.getScore());
+				}
+				String description = healthReport.getDescription();
+				if (description != null) {
+					if (healthReport.getDescription().startsWith("Test Result: ")) {
+						testResult = description.substring(13);
+					} else if (healthReport.getDescription().startsWith("Build stability: ")) {
+						buildResult = description.substring(17);
+					} else {
+						int i = description.indexOf(": ");
+						if (i != -1) {
+							result = description.substring(i + 2);
+						} else {
+							result = description;
+						}
+					}
+				}
+			}
+			if (testResult != null) {
+				plan.setSummary(testResult);
+			} else if (buildResult != null) {
+				plan.setSummary(buildResult);
+			} else {
+				plan.setSummary(result);
+			}
+		} else {
+			plan.setHealth(-1);
+		}
+	}
+
+	protected void updateStateAndStatus(HudsonModelJob job, IBuildPlanWorkingCopy plan) {
 		if (job.getColor().equals(HudsonModelBallColor.BLUE)) {
 			plan.setStatus(BuildStatus.SUCCESS);
 			plan.setState(BuildState.STOPPED);
@@ -136,18 +181,6 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 			plan.setStatus(null);
 			plan.setState(null);
 		}
-		List<HudsonModelHealthReport> report = job.getHealthReport();
-		if (report.size() > 0) {
-			plan.setHealth(report.get(0).getScore());
-			for (HudsonModelHealthReport healthReport : report) {
-				if (healthReport.getScore() < plan.getHealth()) {
-					plan.setHealth(healthReport.getScore());
-				}
-			}
-		} else {
-			plan.setHealth(-1);
-		}
-		return plan;
 	}
 
 	@Override

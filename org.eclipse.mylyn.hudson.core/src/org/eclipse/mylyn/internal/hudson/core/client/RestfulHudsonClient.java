@@ -93,6 +93,7 @@ public class RestfulHudsonClient {
 					Map<String, String> jobNameById = new HashMap<String, String>();
 
 					HudsonModelHudson hudson = unmarshal(parse(in), HudsonModelHudson.class);
+
 					List<HudsonModelJob> buildPlans = new ArrayList<HudsonModelJob>();
 					List<Object> jobsNodes = hudson.getJob();
 					for (Object jobNode : jobsNodes) {
