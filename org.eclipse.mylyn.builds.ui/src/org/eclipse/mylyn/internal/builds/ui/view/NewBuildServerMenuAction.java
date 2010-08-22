@@ -39,50 +39,17 @@ import org.eclipse.ui.menus.CommandContributionItemParameter;
  */
 public class NewBuildServerMenuAction extends Action implements IMenuCreator {
 
-	private Menu menu;
+	// TODO e3.6 replace by IWorkbenchCommandConstants.VIEWS_SHOW_VIEW_PARM_ID
+	private static final String VIEWS_SHOW_VIEW_PARM_ID = "org.eclipse.ui.views.showView.viewId"; //$NON-NLS-1$
 
 	private MenuManager manager;
+
+	private Menu menu;
 
 	public NewBuildServerMenuAction() {
 		setMenuCreator(this);
 		setToolTipText("New Build Server Location");
 		setImageDescriptor(TasksUiImages.REPOSITORY_NEW);
-	}
-
-	public void dispose() {
-		if (menu != null) {
-			menu.dispose();
-			menu = null;
-		}
-		if (manager != null) {
-			manager.dispose();
-			manager = null;
-		}
-	}
-
-	@Override
-	public void run() {
-		new NewBuildServerAction().run();
-	}
-
-	public Menu getMenu(Control parent) {
-		initMenuManager();
-		menu = manager.createContextMenu(parent);
-		return menu;
-	}
-
-	public Menu getMenu(Menu parent) {
-		initMenuManager();
-		menu = new Menu(parent);
-		manager.fill(menu, 0);
-		return menu;
-	}
-
-	private void initMenuManager() {
-		dispose();
-
-		manager = new MenuManager();
-		addActions(manager);
 	}
 
 	private void addActions(IMenuManager manager) { // add repository action
@@ -118,7 +85,7 @@ public class NewBuildServerMenuAction extends Action implements IMenuCreator {
 				RepositoryUi.ID_VIEW_REPOSITORIES, IWorkbenchCommandConstants.VIEWS_SHOW_VIEW,
 				CommandContributionItem.STYLE_PUSH);
 		Map<String, String> targetId = new HashMap<String, String>();
-		targetId.put(IWorkbenchCommandConstants.VIEWS_SHOW_VIEW_PARM_ID, RepositoryUi.ID_VIEW_REPOSITORIES);
+		targetId.put(VIEWS_SHOW_VIEW_PARM_ID, RepositoryUi.ID_VIEW_REPOSITORIES);
 		parm.parameters = targetId;
 		parm.label = "Show Repositories View";
 		if (parm.label.length() > 0) {
@@ -126,6 +93,42 @@ public class NewBuildServerMenuAction extends Action implements IMenuCreator {
 		}
 		//parm.icon = BuildImages.VIEW_BUILDS;
 		return new CommandContributionItem(parm);
+	}
+
+	public void dispose() {
+		if (menu != null) {
+			menu.dispose();
+			menu = null;
+		}
+		if (manager != null) {
+			manager.dispose();
+			manager = null;
+		}
+	}
+
+	public Menu getMenu(Control parent) {
+		initMenuManager();
+		menu = manager.createContextMenu(parent);
+		return menu;
+	}
+
+	public Menu getMenu(Menu parent) {
+		initMenuManager();
+		menu = new Menu(parent);
+		manager.fill(menu, 0);
+		return menu;
+	}
+
+	private void initMenuManager() {
+		dispose();
+
+		manager = new MenuManager();
+		addActions(manager);
+	}
+
+	@Override
+	public void run() {
+		new NewBuildServerAction().run();
 	}
 
 }
