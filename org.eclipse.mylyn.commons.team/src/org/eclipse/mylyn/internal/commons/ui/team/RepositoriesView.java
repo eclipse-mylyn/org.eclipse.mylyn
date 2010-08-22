@@ -11,24 +11,47 @@
 
 package org.eclipse.mylyn.internal.commons.ui.team;
 
-import org.eclipse.mylyn.commons.ui.team.RepositoryViewModel;
+import org.eclipse.mylyn.commons.repositories.RepositoryCategory;
+import org.eclipse.mylyn.internal.provisional.commons.ui.GradientDrawer;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.navigator.CommonNavigator;
+import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.ui.part.IShowInTargetList;
+import org.eclipse.ui.themes.IThemeManager;
 
 /**
  * @author Steffen Pingel
  */
 public class RepositoriesView extends CommonNavigator {
 
-	private final RepositoryViewModel root;
+	private final RepositoryCategory rootCategory;
 
 	public RepositoriesView() {
-		root = new RepositoryViewModel();
+		rootCategory = new RepositoryCategory(RepositoryCategory.ID_CATEGORY_ROOT, "Root", 0);
 	}
 
 	@Override
 	protected Object getInitialInput() {
-		return root;
+		return rootCategory;
+	}
+
+	@Override
+	public void createPartControl(Composite aParent) {
+		super.createPartControl(aParent);
+		getCommonViewer().expandAll();
+	}
+
+	@Override
+	protected CommonViewer createCommonViewer(Composite aParent) {
+		CommonViewer viewer = super.createCommonViewer(aParent);
+		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
+		new GradientDrawer(themeManager, viewer) {
+			@Override
+			protected boolean shouldApplyGradient(org.eclipse.swt.widgets.Event event) {
+				return event.item.getData() instanceof RepositoryCategory;
+			}
+		};
+		return viewer;
 	}
 
 	@Override

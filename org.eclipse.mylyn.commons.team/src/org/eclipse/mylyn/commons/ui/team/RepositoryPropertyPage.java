@@ -18,8 +18,6 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.DialogPage;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
 import org.eclipse.mylyn.internal.commons.repositories.InMemoryCredentialsStore;
-import org.eclipse.mylyn.internal.commons.ui.team.IPartContainer;
-import org.eclipse.mylyn.internal.commons.ui.team.RepositoryLocationPart;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.dialogs.PropertyPage;

@@ -19,8 +19,6 @@ import org.eclipse.jface.dialogs.DialogPage;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
-import org.eclipse.mylyn.internal.commons.ui.team.IPartContainer;
-import org.eclipse.mylyn.internal.commons.ui.team.RepositoryLocationPart;
 import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.IValidatable;
 import org.eclipse.swt.widgets.Composite;
 

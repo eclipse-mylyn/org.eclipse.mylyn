@@ -19,6 +19,7 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylyn.internal.commons.ui.team.wizards.NewRepositoryWizard;
 import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.ValidatableWizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;

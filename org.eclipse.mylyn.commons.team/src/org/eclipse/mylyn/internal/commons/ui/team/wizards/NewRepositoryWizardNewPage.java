@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.internal.commons.ui.team;
+package org.eclipse.mylyn.internal.commons.ui.team.wizards;
 
 import java.util.ArrayList;
 import java.util.Arrays;

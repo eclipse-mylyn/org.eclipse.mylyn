@@ -10,8 +10,9 @@
  *     Tasktop Technologies - improvements for Mylyn
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.commons.ui.team;
+package org.eclipse.mylyn.internal.commons.ui.team.wizards;
 
+import org.eclipse.mylyn.internal.commons.ui.team.TeamUiPlugin;
 import org.eclipse.ui.internal.wizards.AbstractExtensionWizardRegistry;
 import org.eclipse.ui.internal.wizards.NewWizardRegistry;
 

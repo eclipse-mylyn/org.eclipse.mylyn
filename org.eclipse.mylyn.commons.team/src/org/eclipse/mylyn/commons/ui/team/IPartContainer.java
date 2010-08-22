@@ -11,11 +11,17 @@
 
 package org.eclipse.mylyn.commons.ui.team;
 
+import org.eclipse.jface.operation.IRunnableContext;
+
 /**
- * The model for the Team Repositories view.
- * 
  * @author Steffen Pingel
+ * @noimplement This interface is not intended to be implemented by clients.
+ * @noextend This interface is not intended to be extended by clients.
  */
-public class RepositoryViewModel {
+public interface IPartContainer extends IRunnableContext {
+
+	public void setMessage(String message, int messageType);
+
+	public void updateButtons();
 
 }

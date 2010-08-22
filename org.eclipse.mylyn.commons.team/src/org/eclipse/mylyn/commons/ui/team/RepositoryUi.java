@@ -16,9 +16,9 @@ package org.eclipse.mylyn.commons.ui.team;
  */
 public final class RepositoryUi {
 
+	public static final String ID_VIEW_REPOSITORIES = "org.eclipse.mylyn.commons.team.navigator.Repositories"; //$NON-NLS-1$
+
 	private RepositoryUi() {
 	}
-
-	public static final String ID_VIEW_REPOSITORIES = "org.eclipse.mylyn.commons.team.navigator.Repositories"; //$NON-NLS-1$
 
 }

@@ -9,7 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.commons.ui.team;
+package org.eclipse.mylyn.commons.ui.team;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
@@ -41,6 +41,8 @@ import org.eclipse.mylyn.commons.repositories.RepositoryValidator;
 import org.eclipse.mylyn.commons.repositories.auth.AuthenticationType;
 import org.eclipse.mylyn.commons.repositories.auth.UsernamePasswordCredentials;
 import org.eclipse.mylyn.internal.commons.ui.SectionComposite;
+import org.eclipse.mylyn.internal.commons.ui.team.RepositoryLocationValueProperty;
+import org.eclipse.mylyn.internal.commons.ui.team.TeamUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
