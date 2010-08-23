@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.Policy;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCustomField.FieldType;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
@@ -597,12 +598,16 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		}
 		for (BugzillaCustomField bugzillaCustomField : customFields) {
 			if (bugzillaCustomField.isEnterBug()) {
+				List<String> options = bugzillaCustomField.getOptions();
+				FieldType fieldType = bugzillaCustomField.getFieldType();
+				if (options.size() < 1
+						&& (fieldType.equals(FieldType.DropDown) || fieldType.equals(FieldType.MultipleSelection))) {
+					continue;
+				}
 				TaskAttribute attribute = taskData.getRoot().createAttribute(bugzillaCustomField.getName());
 				if (attribute != null) {
 					attribute.getMetaData().defaults().setLabel(bugzillaCustomField.getDescription());
 					attribute.getMetaData().setKind(TaskAttribute.KIND_DEFAULT);
-
-					List<String> options = bugzillaCustomField.getOptions();
 
 					switch (bugzillaCustomField.getFieldType()) {
 					case FreeText:
