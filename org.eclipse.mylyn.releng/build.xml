@@ -284,6 +284,7 @@
 		
 		<chmod perm="ugo+w" file="${basedir}/bin/create-composite.sh"/>
 		<exec executable="${basedir}/bin/create-composite.sh" failonerror="false" dir="${target.dir}"/>
+		<exec executable="${basedir}/bin/create-composite.sh" failonerror="false" dir="${target.dir}/maintenance"/>
 	</target>
 
 	<target name="promote-release" depends="init">
