@@ -18,11 +18,16 @@ import java.util.Set;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.commons.repositories.RepositoryCategory;
+import org.eclipse.mylyn.internal.tasks.core.IRepositoryChangeListener;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryAdapter;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryChangeEvent;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryDelta;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryDelta.Type;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Robert Elves
@@ -38,7 +43,7 @@ public class TaskRepositoriesNavigatorContentProvider implements ITreeContentPro
 
 	private Listener listener;
 
-	private class Listener extends TaskRepositoryAdapter {
+	private class Listener extends TaskRepositoryAdapter implements IRepositoryChangeListener {
 		@Override
 		public void repositoryAdded(TaskRepository repository) {
 			refresh(repository);
@@ -46,7 +51,13 @@ public class TaskRepositoriesNavigatorContentProvider implements ITreeContentPro
 
 		protected void refresh(TaskRepository repository) {
 			if (viewer != null) {
-				viewer.refresh();
+				Display.getDefault().asyncExec(new Runnable() {
+					public void run() {
+						if (viewer != null && viewer.getControl() != null && !viewer.getControl().isDisposed()) {
+							viewer.refresh();
+						}
+					}
+				});
 			}
 		}
 
@@ -56,14 +67,18 @@ public class TaskRepositoriesNavigatorContentProvider implements ITreeContentPro
 		}
 
 		@Override
-		public void repositorySettingsChanged(TaskRepository repository) {
-			refresh(repository);
-		}
-
-		@Override
 		public void repositoryUrlChanged(TaskRepository repository, String oldUrl) {
 			refresh(repository);
 		}
+
+		public void repositoryChanged(TaskRepositoryChangeEvent event) {
+			Type type = event.getDelta().getType();
+			if (type == TaskRepositoryDelta.Type.ALL || type == TaskRepositoryDelta.Type.PROPERTY
+					|| type == TaskRepositoryDelta.Type.OFFLINE) {
+				refresh(event.getRepository());
+			}
+		}
+
 	}
 
 	public TaskRepositoriesNavigatorContentProvider() {
