@@ -34,6 +34,7 @@ import org.eclipse.mylyn.commons.core.IOperationMonitor;
 import org.eclipse.mylyn.commons.http.CommonHttpClient;
 import org.eclipse.mylyn.commons.http.CommonHttpMethod;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
+import org.eclipse.mylyn.internal.hudson.model.HudsonModelBuild;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelHudson;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelJob;
 import org.eclipse.osgi.util.NLS;
@@ -180,6 +181,39 @@ public class RestfulHudsonClient {
 		}
 		throw new HudsonException(NLS.bind("Unexpected return code {0}: {1}", response, HttpStatus
 				.getStatusText(response)));
+	}
+
+	public InputStream getConsole(HudsonModelBuild hudsonBuild, final IOperationMonitor monitor) throws HudsonException {
+		return new HudsonOperation<InputStream>(client) {
+			@Override
+			public InputStream execute() throws IOException, HudsonException {
+				CommonHttpMethod method = createHeadMethod(client.getLocation().getUrl() + URL_API);
+				int response = execute(method, monitor);
+				checkResponse(response);
+				return method.getResponseBodyAsStream(monitor);
+			}
+		}.run();
+	}
+
+	public HudsonModelBuild getBuild(final HudsonModelJob job, final HudsonModelBuild build,
+			final IOperationMonitor monitor) throws HudsonException {
+		return new HudsonOperation<HudsonModelBuild>(client) {
+			@Override
+			public HudsonModelBuild execute() throws IOException, HudsonException, JAXBException {
+				String base = "/job/" + job.getName() + "/" + build.getNumber();
+				CommonHttpMethod method = createGetMethod(client.getLocation().getUrl() + base + URL_API);
+				try {
+					int statusCode = execute(method, monitor);
+					checkResponse(statusCode);
+
+					InputStream in = method.getResponseBodyAsStream(monitor);
+
+					return unmarshal(parse(in), HudsonModelBuild.class);
+				} finally {
+					method.releaseConnection(monitor);
+				}
+			}
+		}.run();
 	}
 
 }
