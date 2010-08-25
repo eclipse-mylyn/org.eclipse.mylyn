@@ -34,7 +34,9 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
+import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
+import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction.Mode;
@@ -299,6 +301,10 @@ public class RepositoryElementActionGroup {
 				boolean hasCategory = false;
 				for (ITaskContainer container : ((AbstractTask) element).getParentContainers()) {
 					if (container instanceof TaskCategory) {
+						hasCategory = true;
+					}
+					if (container instanceof UncategorizedTaskContainer
+							&& !LocalRepositoryConnector.CONNECTOR_KIND.equals(((AbstractTask) element).getConnectorKind())) {
 						hasCategory = true;
 					}
 				}
