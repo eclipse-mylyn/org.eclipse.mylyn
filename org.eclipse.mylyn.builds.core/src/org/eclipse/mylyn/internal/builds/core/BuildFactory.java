@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildFactory.java,v 1.7 2010/08/04 07:38:41 spingel Exp $
+ * $Id: BuildFactory.java,v 1.8 2010/08/25 07:19:15 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -77,26 +77,26 @@ public class BuildFactory extends EFactoryImpl {
 	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
-		case BuildPackage.BUILD_MODEL:
-			return createBuildModel();
-		case BuildPackage.BUILD_PLAN:
-			return createBuildPlan();
-		case BuildPackage.BUILD_SERVER:
-			return createBuildServer();
 		case BuildPackage.ARTIFACT:
 			return createArtifact();
 		case BuildPackage.BUILD:
 			return createBuild();
-		case BuildPackage.CHANGE_SET:
-			return createChangeSet();
+		case BuildPackage.BUILD_PLAN:
+			return createBuildPlan();
+		case BuildPackage.BUILD_SERVER:
+			return createBuildServer();
+		case BuildPackage.BUILD_MODEL:
+			return createBuildModel();
 		case BuildPackage.CHANGE:
 			return createChange();
+		case BuildPackage.CHANGE_SET:
+			return createChangeSet();
 		case BuildPackage.FILE:
 			return createFile();
-		case BuildPackage.USER:
-			return createUser();
 		case BuildPackage.STRING_TO_STRING_MAP:
 			return (EObject) createStringToStringMap();
+		case BuildPackage.USER:
+			return createUser();
 		default:
 			throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}

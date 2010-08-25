@@ -27,7 +27,7 @@ import org.eclipse.osgi.util.NLS;
 /**
  * @author Markus Knittig
  */
-public class RunBuildOperation extends AbstractBuildOperation {
+public class RunBuildOperation extends BuildJob {
 
 	private final IBuildPlan plan;
 

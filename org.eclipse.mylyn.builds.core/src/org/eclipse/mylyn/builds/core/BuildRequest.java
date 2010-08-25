@@ -11,19 +11,34 @@
 
 package org.eclipse.mylyn.builds.core;
 
-import java.util.List;
+import org.eclipse.core.runtime.Assert;
 
 /**
  * @author Steffen Pingel
- * @noimplement This interface is not intended to be implemented by clients.
- * @noextend This interface is not intended to be extended by clients.
  */
-public interface IBuildModel {
+public class BuildRequest {
 
-	public List<IBuildServer> getServers();
+	private final Kind kind;
 
-	public List<IBuildPlan> getPlans();
+	private final IBuildPlan plan;
 
-	public List<IBuild> getBuilds();
+	public enum Kind {
+		ALL, LAST
+	};
+
+	public BuildRequest(Kind kind, IBuildPlan plan) {
+		Assert.isNotNull(kind);
+		Assert.isNotNull(plan);
+		this.kind = kind;
+		this.plan = plan;
+	}
+
+	public IBuildPlan getPlan() {
+		return plan;
+	}
+
+	public Kind getKind() {
+		return kind;
+	}
 
 }

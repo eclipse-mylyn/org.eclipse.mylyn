@@ -25,13 +25,13 @@ import org.eclipse.mylyn.internal.builds.core.util.BuildsConstants;
 /**
  * @author Steffen Pingel
  */
-public abstract class AbstractBuildOperation extends Job {
+public abstract class BuildJob extends Job {
 
 	IStatus status;
 
 	protected final IDelegatingProgressMonitor monitor;
 
-	public AbstractBuildOperation(String name) {
+	public BuildJob(String name) {
 		super(name);
 		this.monitor = new DelegatingProgressMonitor();
 	}
@@ -66,11 +66,8 @@ public abstract class AbstractBuildOperation extends Job {
 		}
 	}
 
-	protected abstract IStatus doExecute(IOperationMonitor convert);
+	protected abstract IStatus doExecute(IOperationMonitor progress);
 
-	/**
-	 * @since 3.3
-	 */
 	public IDelegatingProgressMonitor getMonitor() {
 		return monitor;
 	}

@@ -17,19 +17,13 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.builds.core.IBuildPlan;
-import org.eclipse.mylyn.builds.core.IBuildPlanData;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.commons.core.IOperationMonitor;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.builds.core.BuildModel;
-import org.eclipse.mylyn.internal.builds.core.BuildPlan;
 import org.eclipse.mylyn.internal.builds.core.BuildServer;
 import org.eclipse.mylyn.internal.builds.core.BuildsCorePlugin;
 import org.eclipse.osgi.util.NLS;
@@ -37,86 +31,69 @@ import org.eclipse.osgi.util.NLS;
 /**
  * @author Steffen Pingel
  */
-public class RefreshPlansOperation extends AbstractBuildOperation {
-
-	private final List<IBuildServer> servers;
+public class RefreshPlansOperation {
 
 	private final BuildModel model;
 
 	public RefreshPlansOperation(BuildModel model) {
-		super("Refresh Builds");
-		this.model = model;
 		Assert.isNotNull(model);
-		this.servers = new ArrayList<IBuildServer>(model.getServers().size());
-		for (IBuildServer server : model.getServers()) {
-			if (server.getLocation().isOffline()) {
-				continue;
-			}
-			this.servers.add(((BuildServer) server).createWorkingCopy());
-		}
+		this.model = model;
 	}
 
-	@Override
-	protected IStatus doExecute(IOperationMonitor progress) {
-		MultiStatus result = new MultiStatus(BuildsCorePlugin.ID_PLUGIN, 0, "Refreshing of builds failed", null);
-		progress.beginTask("Refreshing builds", servers.size());
-		for (IBuildServer server : servers) {
-			try {
-				doRefresh((BuildServer) server, progress.newChild(1));
-			} catch (CoreException e) {
-				result.add(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN, NLS.bind(
-						"Refresh of server ''{0}'' failed", server.getName()), e));
-			} catch (OperationCanceledException e) {
-				return Status.CANCEL_STATUS;
-			}
-		}
-		setStatus(result);
-		return Status.OK_STATUS;
+	public void execute() {
+		model.getScheduler().schedule(getJobs());
 	}
 
-	public void doRefresh(final BuildServer server, final IOperationMonitor monitor) throws CoreException {
-		final AtomicReference<List<IBuildPlanData>> result = new AtomicReference<List<IBuildPlanData>>();
-		SafeRunner.run(new ISafeRunnable() {
-			public void run() throws Exception {
-				result.set(server.getBehaviour().getPlans(monitor));
-			}
-
-			public void handleException(Throwable e) {
-				StatusHandler.log(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN,
-						"Unexpected error during invocation in server behavior", e));
-			}
-		});
-		if (result.get() == null) {
-			throw new CoreException(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN,
-					"Server did not provide any plans."));
-		}
-		final BuildServer original = server.getOriginal();
-		original.getLoader().getRealm().exec(new Runnable() {
+	public List<BuildJob> getJobs() {
+		final AtomicReference<List<BuildServer>> serversReference = new AtomicReference<List<BuildServer>>();
+		model.getLoader().getRealm().exec(new Runnable() {
 			public void run() {
-				for (IBuildPlan oldPlan : model.getPlans()) {
-					if (oldPlan.getServer() == original) {
-						BuildPlan newPlan = getPlanById(result.get(), oldPlan.getId());
-						if (newPlan != null) {
-							((BuildPlan) oldPlan).merge(newPlan);
-						} else {
-							((BuildPlan) oldPlan).setOperationStatus(new Status(IStatus.ERROR,
-									BuildsCorePlugin.ID_PLUGIN, "The plan does not exist."));
-						}
+				ArrayList<BuildServer> servers = new ArrayList<BuildServer>(model.getServers().size());
+				for (IBuildServer server : model.getServers()) {
+					if (server.getLocation().isOffline()) {
+						continue;
 					}
+					servers.add((BuildServer) server);
+					serversReference.set(servers);
 				}
 			}
 		});
+
+		List<BuildJob> jobs = new ArrayList<BuildJob>(serversReference.get().size());
+		for (final BuildServer server : serversReference.get()) {
+			BuildJob job = new BuildJob(NLS.bind("Refreshing Builds ({0})", server.getLabel())) {
+				@Override
+				protected IStatus doExecute(IOperationMonitor progress) {
+					try {
+						RefreshRequest request = new RefreshRequest(model);
+						server.getRefreshSession().refresh(request, progress.newChild(1));
+					} catch (CoreException e) {
+						setStatus(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN, NLS.bind(
+								"Refresh of server ''{0}'' failed", server.getLabel()), e));
+					} catch (OperationCanceledException e) {
+						return Status.CANCEL_STATUS;
+					}
+					return Status.OK_STATUS;
+				}
+			};
+			jobs.add(job);
+		}
+		return jobs;
 	}
 
-	public BuildPlan getPlanById(List<IBuildPlanData> plans, String id) {
-		if (id != null) {
-			for (IBuildPlanData plan : plans) {
-				if (id.equals(plan.getId())) {
-					return (BuildPlan) plan;
-				}
+	public IStatus syncExec(IOperationMonitor progress) {
+		List<BuildJob> jobs = getJobs();
+		MultiStatus result = new MultiStatus(BuildsCorePlugin.ID_PLUGIN, 0, "Refreshing of builds failed", null);
+		progress.beginTask("Refreshing builds", jobs.size());
+		for (BuildJob job : jobs) {
+			IStatus status = job.run(progress.newChild(1));
+			if (status.getSeverity() == IStatus.CANCEL) {
+				return Status.CANCEL_STATUS;
+			} else if (!status.isOK()) {
+				result.add(status);
 			}
 		}
-		return null;
+		return result;
 	}
 
 }

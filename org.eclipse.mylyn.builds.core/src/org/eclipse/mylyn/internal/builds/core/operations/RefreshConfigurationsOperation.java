@@ -34,7 +34,7 @@ import org.eclipse.osgi.util.NLS;
 /**
  * @author Steffen Pingel
  */
-public class RefreshConfigurationsOperation extends AbstractBuildOperation {
+public class RefreshConfigurationsOperation extends BuildJob {
 
 	private final List<IBuildServer> servers;
 

@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildAdapterFactory.java,v 1.7 2010/08/04 07:38:41 spingel Exp $
+ * $Id: BuildAdapterFactory.java,v 1.8 2010/08/25 07:19:15 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -20,6 +20,7 @@ import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildPlanData;
 import org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy;
 import org.eclipse.mylyn.builds.core.IBuildServer;
+import org.eclipse.mylyn.builds.core.IBuildWorkingCopy;
 import org.eclipse.mylyn.builds.core.IChange;
 import org.eclipse.mylyn.builds.core.IChangeSet;
 import org.eclipse.mylyn.builds.core.IFile;
@@ -87,21 +88,6 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 	 */
 	protected BuildSwitch<Adapter> modelSwitch = new BuildSwitch<Adapter>() {
 		@Override
-		public Adapter caseBuildModel(BuildModel object) {
-			return createBuildModelAdapter();
-		}
-
-		@Override
-		public Adapter caseBuildPlan(BuildPlan object) {
-			return createBuildPlanAdapter();
-		}
-
-		@Override
-		public Adapter caseBuildServer(BuildServer object) {
-			return createBuildServerAdapter();
-		}
-
-		@Override
 		public Adapter caseIBuildModel(IBuildModel object) {
 			return createIBuildModelAdapter();
 		}
@@ -109,6 +95,11 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 		@Override
 		public Adapter caseIBuildElement(IBuildElement object) {
 			return createIBuildElementAdapter();
+		}
+
+		@Override
+		public Adapter caseIBuildServer(IBuildServer object) {
+			return createIBuildServerAdapter();
 		}
 
 		@Override
@@ -127,38 +118,13 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 		}
 
 		@Override
-		public Adapter caseIBuildServer(IBuildServer object) {
-			return createIBuildServerAdapter();
+		public Adapter caseIBuild(IBuild object) {
+			return createIBuildAdapter();
 		}
 
 		@Override
-		public Adapter caseArtifact(Artifact object) {
-			return createArtifactAdapter();
-		}
-
-		@Override
-		public Adapter caseBuild(Build object) {
-			return createBuildAdapter();
-		}
-
-		@Override
-		public Adapter caseChangeSet(ChangeSet object) {
-			return createChangeSetAdapter();
-		}
-
-		@Override
-		public Adapter caseChange(Change object) {
-			return createChangeAdapter();
-		}
-
-		@Override
-		public Adapter caseFile(File object) {
-			return createFileAdapter();
-		}
-
-		@Override
-		public Adapter caseUser(User object) {
-			return createUserAdapter();
+		public Adapter caseIBuildWorkingCopy(IBuildWorkingCopy object) {
+			return createIBuildWorkingCopyAdapter();
 		}
 
 		@Override
@@ -167,18 +133,13 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 		}
 
 		@Override
-		public Adapter caseIBuild(IBuild object) {
-			return createIBuildAdapter();
+		public Adapter caseIChange(IChange object) {
+			return createIChangeAdapter();
 		}
 
 		@Override
 		public Adapter caseIChangeSet(IChangeSet object) {
 			return createIChangeSetAdapter();
-		}
-
-		@Override
-		public Adapter caseIChange(IChange object) {
-			return createIChangeAdapter();
 		}
 
 		@Override
@@ -192,8 +153,53 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 		}
 
 		@Override
+		public Adapter caseArtifact(Artifact object) {
+			return createArtifactAdapter();
+		}
+
+		@Override
+		public Adapter caseBuild(Build object) {
+			return createBuildAdapter();
+		}
+
+		@Override
+		public Adapter caseBuildPlan(BuildPlan object) {
+			return createBuildPlanAdapter();
+		}
+
+		@Override
+		public Adapter caseBuildServer(BuildServer object) {
+			return createBuildServerAdapter();
+		}
+
+		@Override
+		public Adapter caseBuildModel(BuildModel object) {
+			return createBuildModelAdapter();
+		}
+
+		@Override
+		public Adapter caseChange(Change object) {
+			return createChangeAdapter();
+		}
+
+		@Override
+		public Adapter caseChangeSet(ChangeSet object) {
+			return createChangeSetAdapter();
+		}
+
+		@Override
+		public Adapter caseFile(File object) {
+			return createFileAdapter();
+		}
+
+		@Override
 		public Adapter caseStringToStringMap(Map.Entry<String, String> object) {
 			return createStringToStringMapAdapter();
+		}
+
+		@Override
+		public Adapter caseUser(User object) {
+			return createUserAdapter();
 		}
 
 		@Override
@@ -310,6 +316,22 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createIBuildPlanAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.builds.core.IBuildWorkingCopy
+	 * <em>IBuild Working Copy</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.builds.core.IBuildWorkingCopy
+	 * @generated
+	 */
+	public Adapter createIBuildWorkingCopyAdapter() {
 		return null;
 	}
 

@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildServer.java,v 1.19 2010/08/22 07:37:03 spingel Exp $
+ * $Id: BuildServer.java,v 1.20 2010/08/25 07:19:15 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -34,6 +34,7 @@ import org.eclipse.mylyn.commons.core.IOperationMonitor;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
 import org.eclipse.mylyn.internal.builds.core.operations.RefreshConfigurationsOperation;
+import org.eclipse.mylyn.internal.builds.core.operations.RefreshSession;
 
 /**
  * <!-- begin-user-doc -->
@@ -558,6 +559,8 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 		return result.toString();
 	}
 
+	// --- non-generated methods ---
+
 	private final PropertyChangeListener locationChangeListener = new PropertyChangeListener() {
 		public void propertyChange(final PropertyChangeEvent event) {
 			getLoader().getRealm().asyncExec(new Runnable() {
@@ -577,6 +580,12 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 			});
 		}
 	};
+
+	BuildServer original;
+
+	private IStatus operationStatus;
+
+	private RefreshSession refreshSession;
 
 	private IBuildLoader loader;
 
@@ -604,8 +613,6 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	public IStatus validate(IOperationMonitor monitor) throws CoreException {
 		return getBehaviour().validate(monitor);
 	}
-
-	BuildServer original;
 
 	public BuildServer getOriginal() {
 		return original;
@@ -661,8 +668,6 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 		return getConfiguration();
 	}
 
-	private IStatus operationStatus;
-
 	public IStatus getOperationStatus() {
 		return operationStatus;
 	}
@@ -685,6 +690,13 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 			return name;
 		}
 		return getShortUrl();
+	}
+
+	public synchronized RefreshSession getRefreshSession() {
+		if (refreshSession == null) {
+			refreshSession = new RefreshSession(this);
+		}
+		return refreshSession;
 	}
 
 } // BuildServer

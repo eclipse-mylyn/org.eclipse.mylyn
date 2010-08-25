@@ -22,19 +22,21 @@ public interface IBuildPlanWorkingCopy extends IBuildPlanData {
 
 	public void setDescription(String description);
 
-	public void setStatus(BuildStatus status);
-
-	public void setSummary(String summary);
-
 	public void setHealth(int health);
+
+	public void setId(String id);
 
 	public void setInfo(String info);
 
-	public void setId(String id);
+	public void setLastBuild(IBuild build);
 
 	public void setName(String name);
 
 	public void setState(BuildState state);
+
+	public void setStatus(BuildStatus status);
+
+	public void setSummary(String summary);
 
 	public void setUrl(String url);
 

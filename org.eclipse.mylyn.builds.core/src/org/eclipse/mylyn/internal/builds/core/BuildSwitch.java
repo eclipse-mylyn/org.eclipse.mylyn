@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildSwitch.java,v 1.7 2010/08/04 07:38:41 spingel Exp $
+ * $Id: BuildSwitch.java,v 1.8 2010/08/25 07:19:14 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -19,6 +19,7 @@ import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildPlanData;
 import org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy;
 import org.eclipse.mylyn.builds.core.IBuildServer;
+import org.eclipse.mylyn.builds.core.IBuildWorkingCopy;
 import org.eclipse.mylyn.builds.core.IChange;
 import org.eclipse.mylyn.builds.core.IChangeSet;
 import org.eclipse.mylyn.builds.core.IFile;
@@ -103,11 +104,24 @@ public class BuildSwitch<T> {
 	 */
 	protected T doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
-		case BuildPackage.BUILD_MODEL: {
-			BuildModel buildModel = (BuildModel) theEObject;
-			T result = caseBuildModel(buildModel);
+		case BuildPackage.ARTIFACT: {
+			Artifact artifact = (Artifact) theEObject;
+			T result = caseArtifact(artifact);
 			if (result == null)
-				result = caseIBuildModel(buildModel);
+				result = caseIArtifact(artifact);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case BuildPackage.BUILD: {
+			Build build = (Build) theEObject;
+			T result = caseBuild(build);
+			if (result == null)
+				result = caseIBuildWorkingCopy(build);
+			if (result == null)
+				result = caseIBuild(build);
+			if (result == null)
+				result = caseIBuildElement(build);
 			if (result == null)
 				result = defaultCase(theEObject);
 			return result;
@@ -138,29 +152,11 @@ public class BuildSwitch<T> {
 				result = defaultCase(theEObject);
 			return result;
 		}
-		case BuildPackage.ARTIFACT: {
-			Artifact artifact = (Artifact) theEObject;
-			T result = caseArtifact(artifact);
+		case BuildPackage.BUILD_MODEL: {
+			BuildModel buildModel = (BuildModel) theEObject;
+			T result = caseBuildModel(buildModel);
 			if (result == null)
-				result = caseIArtifact(artifact);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case BuildPackage.BUILD: {
-			Build build = (Build) theEObject;
-			T result = caseBuild(build);
-			if (result == null)
-				result = caseIBuild(build);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case BuildPackage.CHANGE_SET: {
-			ChangeSet changeSet = (ChangeSet) theEObject;
-			T result = caseChangeSet(changeSet);
-			if (result == null)
-				result = caseIChangeSet(changeSet);
+				result = caseIBuildModel(buildModel);
 			if (result == null)
 				result = defaultCase(theEObject);
 			return result;
@@ -174,6 +170,15 @@ public class BuildSwitch<T> {
 				result = defaultCase(theEObject);
 			return result;
 		}
+		case BuildPackage.CHANGE_SET: {
+			ChangeSet changeSet = (ChangeSet) theEObject;
+			T result = caseChangeSet(changeSet);
+			if (result == null)
+				result = caseIChangeSet(changeSet);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
 		case BuildPackage.FILE: {
 			File file = (File) theEObject;
 			T result = caseFile(file);
@@ -183,19 +188,19 @@ public class BuildSwitch<T> {
 				result = defaultCase(theEObject);
 			return result;
 		}
+		case BuildPackage.STRING_TO_STRING_MAP: {
+			@SuppressWarnings("unchecked")
+			Map.Entry<String, String> stringToStringMap = (Map.Entry<String, String>) theEObject;
+			T result = caseStringToStringMap(stringToStringMap);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
 		case BuildPackage.USER: {
 			User user = (User) theEObject;
 			T result = caseUser(user);
 			if (result == null)
 				result = caseIUser(user);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case BuildPackage.STRING_TO_STRING_MAP: {
-			@SuppressWarnings("unchecked")
-			Map.Entry<String, String> stringToStringMap = (Map.Entry<String, String>) theEObject;
-			T result = caseStringToStringMap(stringToStringMap);
 			if (result == null)
 				result = defaultCase(theEObject);
 			return result;
@@ -304,6 +309,23 @@ public class BuildSwitch<T> {
 	 * @generated
 	 */
 	public T caseIBuildPlan(IBuildPlan object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IBuild Working Copy</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IBuild Working Copy</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseIBuildWorkingCopy(IBuildWorkingCopy object) {
 		return null;
 	}
 

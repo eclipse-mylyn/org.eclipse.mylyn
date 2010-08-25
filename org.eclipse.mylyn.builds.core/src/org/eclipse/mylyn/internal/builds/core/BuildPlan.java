@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildPlan.java,v 1.12 2010/08/22 07:37:03 spingel Exp $
+ * $Id: BuildPlan.java,v 1.13 2010/08/25 07:19:15 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -26,6 +26,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.mylyn.builds.core.BuildState;
 import org.eclipse.mylyn.builds.core.BuildStatus;
+import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy;
 import org.eclipse.mylyn.builds.core.IBuildServer;
@@ -295,6 +296,17 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlan, IBuil
 	 * @ordered
 	 */
 	protected String description = DESCRIPTION_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getLastBuild() <em>Last Build</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getLastBuild()
+	 * @generated
+	 * @ordered
+	 */
+	protected IBuild lastBuild;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -854,6 +866,63 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlan, IBuil
 	}
 
 	/**
+	 * Returns the value of the '<em><b>Last Build</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Last Build</em>' reference isn't clear, there really should be more of a description
+	 * here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Last Build</em>' reference.
+	 * @see #setLastBuild(IBuild)
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildPlan_LastBuild()
+	 * @model type="org.eclipse.mylyn.internal.builds.core.IBuild"
+	 * @generated
+	 */
+	public IBuild getLastBuild() {
+		if (lastBuild != null && ((EObject) lastBuild).eIsProxy()) {
+			InternalEObject oldLastBuild = (InternalEObject) lastBuild;
+			lastBuild = (IBuild) eResolveProxy(oldLastBuild);
+			if (lastBuild != oldLastBuild) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, BuildPackage.BUILD_PLAN__LAST_BUILD,
+							oldLastBuild, lastBuild));
+			}
+		}
+		return lastBuild;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public IBuild basicGetLastBuild() {
+		return lastBuild;
+	}
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.BuildPlan#getLastBuild <em>Last Build</em>}'
+	 * reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Last Build</em>' reference.
+	 * @see #getLastBuild()
+	 * @generated
+	 */
+	public void setLastBuild(IBuild newLastBuild) {
+		IBuild oldLastBuild = lastBuild;
+		lastBuild = newLastBuild;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__LAST_BUILD, oldLastBuild,
+					lastBuild));
+	}
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
@@ -930,6 +999,10 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlan, IBuil
 			return getStatus();
 		case BuildPackage.BUILD_PLAN__DESCRIPTION:
 			return getDescription();
+		case BuildPackage.BUILD_PLAN__LAST_BUILD:
+			if (resolve)
+				return getLastBuild();
+			return basicGetLastBuild();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -984,6 +1057,9 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlan, IBuil
 		case BuildPackage.BUILD_PLAN__DESCRIPTION:
 			setDescription((String) newValue);
 			return;
+		case BuildPackage.BUILD_PLAN__LAST_BUILD:
+			setLastBuild((IBuild) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -1036,6 +1112,9 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlan, IBuil
 		case BuildPackage.BUILD_PLAN__DESCRIPTION:
 			setDescription(DESCRIPTION_EDEFAULT);
 			return;
+		case BuildPackage.BUILD_PLAN__LAST_BUILD:
+			setLastBuild((IBuild) null);
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -1075,6 +1154,8 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlan, IBuil
 			return STATUS_EDEFAULT == null ? status != null : !STATUS_EDEFAULT.equals(status);
 		case BuildPackage.BUILD_PLAN__DESCRIPTION:
 			return DESCRIPTION_EDEFAULT == null ? description != null : !DESCRIPTION_EDEFAULT.equals(description);
+		case BuildPackage.BUILD_PLAN__LAST_BUILD:
+			return lastBuild != null;
 		}
 		return super.eIsSet(featureID);
 	}

@@ -2,12 +2,13 @@
  * <copyright>
  * </copyright>
  *
- * $Id: Build.java,v 1.2 2010/08/04 07:38:41 spingel Exp $
+ * $Id: Build.java,v 1.3 2010/08/25 07:19:15 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
 import java.util.Collection;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
@@ -16,10 +17,14 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.mylyn.builds.core.BuildState;
 import org.eclipse.mylyn.builds.core.BuildStatus;
 import org.eclipse.mylyn.builds.core.IArtifact;
 import org.eclipse.mylyn.builds.core.IBuild;
+import org.eclipse.mylyn.builds.core.IBuildPlan;
+import org.eclipse.mylyn.builds.core.IBuildServer;
+import org.eclipse.mylyn.builds.core.IBuildWorkingCopy;
 import org.eclipse.mylyn.builds.core.IChangeSet;
 
 /**
@@ -28,10 +33,56 @@ import org.eclipse.mylyn.builds.core.IChangeSet;
  * <!-- end-user-doc -->
  * 
  * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getBuild()
- * @model kind="class" superTypes="org.eclipse.mylyn.internal.builds.core.IBuild"
+ * @model kind="class"
+ *        superTypes=
+ *        "org.eclipse.mylyn.internal.builds.core.IBuild org.eclipse.mylyn.internal.builds.core.IBuildWorkingCopy"
  * @generated
  */
-public class Build extends EObjectImpl implements EObject, IBuild {
+public class Build extends EObjectImpl implements EObject, IBuild, IBuildWorkingCopy {
+	/**
+	 * The default value of the '{@link #getUrl() <em>Url</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getUrl()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String URL_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getUrl() <em>Url</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getUrl()
+	 * @generated
+	 * @ordered
+	 */
+	protected String url = URL_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getName()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String NAME_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getName()
+	 * @generated
+	 * @ordered
+	 */
+	protected String name = NAME_EDEFAULT;
+
 	/**
 	 * The default value of the '{@link #getId() <em>Id</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -209,6 +260,50 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	protected IChangeSet changeSet;
 
 	/**
+	 * The cached value of the '{@link #getPlan() <em>Plan</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getPlan()
+	 * @generated
+	 * @ordered
+	 */
+	protected IBuildPlan plan;
+
+	/**
+	 * The default value of the '{@link #getLabel() <em>Label</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getLabel()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String LABEL_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getLabel() <em>Label</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getLabel()
+	 * @generated
+	 * @ordered
+	 */
+	protected String label = LABEL_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getServer() <em>Server</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getServer()
+	 * @generated
+	 * @ordered
+	 */
+	protected IBuildServer server;
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
@@ -227,6 +322,76 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	@Override
 	protected EClass eStaticClass() {
 		return BuildPackage.Literals.BUILD;
+	}
+
+	/**
+	 * Returns the value of the '<em><b>Url</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Url</em>' attribute isn't clear, there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Url</em>' attribute.
+	 * @see #setUrl(String)
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildElement_Url()
+	 * @model
+	 * @generated
+	 */
+	public String getUrl() {
+		return url;
+	}
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.Build#getUrl <em>Url</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Url</em>' attribute.
+	 * @see #getUrl()
+	 * @generated
+	 */
+	public void setUrl(String newUrl) {
+		String oldUrl = url;
+		url = newUrl;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__URL, oldUrl, url));
+	}
+
+	/**
+	 * Returns the value of the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Name</em>' attribute isn't clear, there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Name</em>' attribute.
+	 * @see #setName(String)
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildElement_Name()
+	 * @model
+	 * @generated
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.Build#getName <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Name</em>' attribute.
+	 * @see #getName()
+	 * @generated
+	 */
+	public void setName(String newName) {
+		String oldName = name;
+		name = newName;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__NAME, oldName, name));
 	}
 
 	/**
@@ -567,6 +732,150 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	}
 
 	/**
+	 * Returns the value of the '<em><b>Plan</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Plan</em>' reference isn't clear, there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Plan</em>' reference.
+	 * @see #setPlan(IBuildPlan)
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuild_Plan()
+	 * @model type="org.eclipse.mylyn.internal.builds.core.IBuildPlan"
+	 * @generated
+	 */
+	public IBuildPlan getPlan() {
+		if (plan != null && ((EObject) plan).eIsProxy()) {
+			InternalEObject oldPlan = (InternalEObject) plan;
+			plan = (IBuildPlan) eResolveProxy(oldPlan);
+			if (plan != oldPlan) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, BuildPackage.BUILD__PLAN, oldPlan, plan));
+			}
+		}
+		return plan;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public IBuildPlan basicGetPlan() {
+		return plan;
+	}
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.Build#getPlan <em>Plan</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Plan</em>' reference.
+	 * @see #getPlan()
+	 * @generated
+	 */
+	public void setPlan(IBuildPlan newPlan) {
+		IBuildPlan oldPlan = plan;
+		plan = newPlan;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__PLAN, oldPlan, plan));
+	}
+
+	/**
+	 * Returns the value of the '<em><b>Label</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Label</em>' attribute isn't clear, there really should be more of a description
+	 * here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Label</em>' attribute.
+	 * @see #setLabel(String)
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuild_Label()
+	 * @model
+	 * @generated
+	 */
+	public String getLabel() {
+		return label;
+	}
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.Build#getLabel <em>Label</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Label</em>' attribute.
+	 * @see #getLabel()
+	 * @generated
+	 */
+	public void setLabel(String newLabel) {
+		String oldLabel = label;
+		label = newLabel;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__LABEL, oldLabel, label));
+	}
+
+	/**
+	 * Returns the value of the '<em><b>Server</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Server</em>' reference isn't clear, there really should be more of a description
+	 * here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Server</em>' reference.
+	 * @see #setServer(IBuildServer)
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuild_Server()
+	 * @model type="org.eclipse.mylyn.internal.builds.core.IBuildServer"
+	 * @generated
+	 */
+	public IBuildServer getServer() {
+		if (server != null && ((EObject) server).eIsProxy()) {
+			InternalEObject oldServer = (InternalEObject) server;
+			server = (IBuildServer) eResolveProxy(oldServer);
+			if (server != oldServer) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, BuildPackage.BUILD__SERVER, oldServer,
+							server));
+			}
+		}
+		return server;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public IBuildServer basicGetServer() {
+		return server;
+	}
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.mylyn.internal.builds.core.Build#getServer <em>Server</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Server</em>' reference.
+	 * @see #getServer()
+	 * @generated
+	 */
+	public void setServer(IBuildServer newServer) {
+		IBuildServer oldServer = server;
+		server = newServer;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__SERVER, oldServer, server));
+	}
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
@@ -575,6 +884,10 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+		case BuildPackage.BUILD__URL:
+			return getUrl();
+		case BuildPackage.BUILD__NAME:
+			return getName();
 		case BuildPackage.BUILD__ID:
 			return getId();
 		case BuildPackage.BUILD__BUILD_NUMBER:
@@ -595,6 +908,16 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 			if (resolve)
 				return getChangeSet();
 			return basicGetChangeSet();
+		case BuildPackage.BUILD__PLAN:
+			if (resolve)
+				return getPlan();
+			return basicGetPlan();
+		case BuildPackage.BUILD__LABEL:
+			return getLabel();
+		case BuildPackage.BUILD__SERVER:
+			if (resolve)
+				return getServer();
+			return basicGetServer();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -609,6 +932,12 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+		case BuildPackage.BUILD__URL:
+			setUrl((String) newValue);
+			return;
+		case BuildPackage.BUILD__NAME:
+			setName((String) newValue);
+			return;
 		case BuildPackage.BUILD__ID:
 			setId((String) newValue);
 			return;
@@ -637,6 +966,15 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 		case BuildPackage.BUILD__CHANGE_SET:
 			setChangeSet((IChangeSet) newValue);
 			return;
+		case BuildPackage.BUILD__PLAN:
+			setPlan((IBuildPlan) newValue);
+			return;
+		case BuildPackage.BUILD__LABEL:
+			setLabel((String) newValue);
+			return;
+		case BuildPackage.BUILD__SERVER:
+			setServer((IBuildServer) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -650,6 +988,12 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+		case BuildPackage.BUILD__URL:
+			setUrl(URL_EDEFAULT);
+			return;
+		case BuildPackage.BUILD__NAME:
+			setName(NAME_EDEFAULT);
+			return;
 		case BuildPackage.BUILD__ID:
 			setId(ID_EDEFAULT);
 			return;
@@ -677,6 +1021,15 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 		case BuildPackage.BUILD__CHANGE_SET:
 			setChangeSet((IChangeSet) null);
 			return;
+		case BuildPackage.BUILD__PLAN:
+			setPlan((IBuildPlan) null);
+			return;
+		case BuildPackage.BUILD__LABEL:
+			setLabel(LABEL_EDEFAULT);
+			return;
+		case BuildPackage.BUILD__SERVER:
+			setServer((IBuildServer) null);
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -690,6 +1043,10 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+		case BuildPackage.BUILD__URL:
+			return URL_EDEFAULT == null ? url != null : !URL_EDEFAULT.equals(url);
+		case BuildPackage.BUILD__NAME:
+			return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 		case BuildPackage.BUILD__ID:
 			return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
 		case BuildPackage.BUILD__BUILD_NUMBER:
@@ -708,6 +1065,12 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 			return artifacts != null && !artifacts.isEmpty();
 		case BuildPackage.BUILD__CHANGE_SET:
 			return changeSet != null;
+		case BuildPackage.BUILD__PLAN:
+			return plan != null;
+		case BuildPackage.BUILD__LABEL:
+			return LABEL_EDEFAULT == null ? label != null : !LABEL_EDEFAULT.equals(label);
+		case BuildPackage.BUILD__SERVER:
+			return server != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -724,7 +1087,11 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (id: ");
+		result.append(" (url: ");
+		result.append(url);
+		result.append(", name: ");
+		result.append(name);
+		result.append(", id: ");
 		result.append(id);
 		result.append(", buildNumber: ");
 		result.append(buildNumber);
@@ -738,8 +1105,21 @@ public class Build extends EObjectImpl implements EObject, IBuild {
 		result.append(state);
 		result.append(", status: ");
 		result.append(status);
+		result.append(", label: ");
+		result.append(label);
 		result.append(')');
 		return result.toString();
+	}
+
+	public IBuild createWorkingCopy() {
+		EcoreUtil.Copier copier = new EcoreUtil.Copier();
+		Build newBuild = (Build) copier.copy(this);
+		copier.copyReferences();
+		return newBuild;
+	}
+
+	public IStatus getOperationStatus() {
+		return null;
 	}
 
 } // Build

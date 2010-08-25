@@ -11,19 +11,29 @@
 
 package org.eclipse.mylyn.builds.core;
 
-import java.util.List;
-
 /**
  * @author Steffen Pingel
- * @noimplement This interface is not intended to be implemented by clients.
- * @noextend This interface is not intended to be extended by clients.
  */
-public interface IBuildModel {
+public interface IBuildWorkingCopy extends IBuild {
 
-	public List<IBuildServer> getServers();
+	public abstract void setBuildNumber(int newBuildNumber);
 
-	public List<IBuildPlan> getPlans();
+	public abstract void setChangeSet(IChangeSet newChangeSet);
 
-	public List<IBuild> getBuilds();
+	public abstract void setDisplayName(String newDisplayName);
+
+	public abstract void setDuration(long newDuration);
+
+	public abstract void setId(String newId);
+
+	public abstract void setLabel(String string);
+
+	public abstract void setState(BuildState newState);
+
+	public abstract void setStatus(BuildStatus newStatus);
+
+	public abstract void setTimestamp(long newTimestamp);
+
+	public abstract void setUrl(String url);
 
 }

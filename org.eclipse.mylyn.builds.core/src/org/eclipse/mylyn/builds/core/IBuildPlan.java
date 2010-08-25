@@ -27,6 +27,8 @@ public interface IBuildPlan extends IBuildPlanData, IBuildElement {
 
 	public List<IBuildPlan> getChildren();
 
+	public IBuild getLastBuild();
+
 	public IBuildPlan getParent();
 
 	public boolean isSelected();

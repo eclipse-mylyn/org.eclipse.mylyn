@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildPackage.java,v 1.12 2010/08/22 07:37:03 spingel Exp $
+ * $Id: BuildPackage.java,v 1.13 2010/08/25 07:19:15 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -25,6 +25,7 @@ import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildPlanData;
 import org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy;
 import org.eclipse.mylyn.builds.core.IBuildServer;
+import org.eclipse.mylyn.builds.core.IBuildWorkingCopy;
 import org.eclipse.mylyn.builds.core.IChange;
 import org.eclipse.mylyn.builds.core.IChangeSet;
 import org.eclipse.mylyn.builds.core.IFile;
@@ -93,7 +94,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildModel()
 	 * @generated
 	 */
-	public static final int IBUILD_MODEL = 3;
+	public static final int IBUILD_MODEL = 0;
 
 	/**
 	 * The feature id for the '<em><b>Servers</b></em>' containment reference list.
@@ -116,6 +117,16 @@ public class BuildPackage extends EPackageImpl {
 	public static final int IBUILD_MODEL__PLANS = 1;
 
 	/**
+	 * The feature id for the '<em><b>Builds</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_MODEL__BUILDS = 2;
+
+	/**
 	 * The number of structural features of the '<em>IBuild Model</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -123,7 +134,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int IBUILD_MODEL_FEATURE_COUNT = 2;
+	public static final int IBUILD_MODEL_FEATURE_COUNT = 3;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.BuildModel <em>Model</em>}' class.
@@ -134,37 +145,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getBuildModel()
 	 * @generated
 	 */
-	public static final int BUILD_MODEL = 0;
-
-	/**
-	 * The feature id for the '<em><b>Servers</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int BUILD_MODEL__SERVERS = IBUILD_MODEL__SERVERS;
-
-	/**
-	 * The feature id for the '<em><b>Plans</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int BUILD_MODEL__PLANS = IBUILD_MODEL__PLANS;
-
-	/**
-	 * The number of structural features of the '<em>Model</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int BUILD_MODEL_FEATURE_COUNT = IBUILD_MODEL_FEATURE_COUNT + 0;
+	public static final int BUILD_MODEL = 17;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.builds.core.IBuildPlanData <em>IBuild Plan Data</em>}'
@@ -176,7 +157,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildPlanData()
 	 * @generated
 	 */
-	public static final int IBUILD_PLAN_DATA = 6;
+	public static final int IBUILD_PLAN_DATA = 4;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.builds.core.IBuildElement <em>IBuild Element</em>}' class.
@@ -187,7 +168,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildElement()
 	 * @generated
 	 */
-	public static final int IBUILD_ELEMENT = 4;
+	public static final int IBUILD_ELEMENT = 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.builds.core.IBuildPlan <em>IBuild Plan</em>}' class.
@@ -198,7 +179,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildPlan()
 	 * @generated
 	 */
-	public static final int IBUILD_PLAN = 5;
+	public static final int IBUILD_PLAN = 3;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy
@@ -210,7 +191,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildPlanWorkingCopy()
 	 * @generated
 	 */
-	public static final int IBUILD_PLAN_WORKING_COPY = 7;
+	public static final int IBUILD_PLAN_WORKING_COPY = 5;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.BuildPlan <em>Plan</em>}' class.
@@ -221,7 +202,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getBuildPlan()
 	 * @generated
 	 */
-	public static final int BUILD_PLAN = 1;
+	public static final int BUILD_PLAN = 15;
 
 	/**
 	 * The feature id for the '<em><b>Url</b></em>' attribute.
@@ -262,7 +243,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildServer()
 	 * @generated
 	 */
-	public static final int IBUILD_SERVER = 8;
+	public static final int IBUILD_SERVER = 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.BuildServer <em>Server</em>}' class.
@@ -273,7 +254,77 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getBuildServer()
 	 * @generated
 	 */
-	public static final int BUILD_SERVER = 2;
+	public static final int BUILD_SERVER = 16;
+
+	/**
+	 * The feature id for the '<em><b>Url</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_SERVER__URL = IBUILD_ELEMENT__URL;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_SERVER__NAME = IBUILD_ELEMENT__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Attributes</b></em>' map.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_SERVER__ATTRIBUTES = IBUILD_ELEMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Location</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_SERVER__LOCATION = IBUILD_ELEMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Connector Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_SERVER__CONNECTOR_KIND = IBUILD_ELEMENT_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Repository Url</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_SERVER__REPOSITORY_URL = IBUILD_ELEMENT_FEATURE_COUNT + 3;
+
+	/**
+	 * The number of structural features of the '<em>IBuild Server</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_SERVER_FEATURE_COUNT = IBUILD_ELEMENT_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Url</b></em>' attribute.
@@ -406,6 +457,16 @@ public class BuildPackage extends EPackageImpl {
 	public static final int IBUILD_PLAN__DESCRIPTION = IBUILD_ELEMENT_FEATURE_COUNT + 10;
 
 	/**
+	 * The feature id for the '<em><b>Last Build</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_PLAN__LAST_BUILD = IBUILD_ELEMENT_FEATURE_COUNT + 11;
+
+	/**
 	 * The number of structural features of the '<em>IBuild Plan</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -413,7 +474,880 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int IBUILD_PLAN_FEATURE_COUNT = IBUILD_ELEMENT_FEATURE_COUNT + 11;
+	public static final int IBUILD_PLAN_FEATURE_COUNT = IBUILD_ELEMENT_FEATURE_COUNT + 12;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.builds.core.IArtifact <em>IArtifact</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.mylyn.builds.core.IArtifact
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIArtifact()
+	 * @generated
+	 */
+	public static final int IARTIFACT = 8;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.Artifact <em>Artifact</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.mylyn.internal.builds.core.Artifact
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getArtifact()
+	 * @generated
+	 */
+	public static final int ARTIFACT = 13;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.builds.core.IBuild <em>IBuild</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.mylyn.builds.core.IBuild
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuild()
+	 * @generated
+	 */
+	public static final int IBUILD = 6;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.builds.core.IBuildWorkingCopy <em>IBuild Working Copy</em>}'
+	 * class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.mylyn.builds.core.IBuildWorkingCopy
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildWorkingCopy()
+	 * @generated
+	 */
+	public static final int IBUILD_WORKING_COPY = 7;
+
+	/**
+	 * The number of structural features of the '<em>IBuild Plan Data</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_PLAN_DATA_FEATURE_COUNT = 0;
+
+	/**
+	 * The number of structural features of the '<em>IBuild Plan Working Copy</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_PLAN_WORKING_COPY_FEATURE_COUNT = IBUILD_PLAN_DATA_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Url</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD__URL = IBUILD_ELEMENT__URL;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD__NAME = IBUILD_ELEMENT__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD__ID = IBUILD_ELEMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Build Number</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD__BUILD_NUMBER = IBUILD_ELEMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Timestamp</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD__TIMESTAMP = IBUILD_ELEMENT_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Duration</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD__DURATION = IBUILD_ELEMENT_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Display Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD__DISPLAY_NAME = IBUILD_ELEMENT_FEATURE_COUNT + 4;
+
+	/**
+	 * The feature id for the '<em><b>State</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD__STATE = IBUILD_ELEMENT_FEATURE_COUNT + 5;
+
+	/**
+	 * The feature id for the '<em><b>Status</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD__STATUS = IBUILD_ELEMENT_FEATURE_COUNT + 6;
+
+	/**
+	 * The feature id for the '<em><b>Artifacts</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD__ARTIFACTS = IBUILD_ELEMENT_FEATURE_COUNT + 7;
+
+	/**
+	 * The feature id for the '<em><b>Change Set</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD__CHANGE_SET = IBUILD_ELEMENT_FEATURE_COUNT + 8;
+
+	/**
+	 * The feature id for the '<em><b>Plan</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD__PLAN = IBUILD_ELEMENT_FEATURE_COUNT + 9;
+
+	/**
+	 * The feature id for the '<em><b>Label</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD__LABEL = IBUILD_ELEMENT_FEATURE_COUNT + 10;
+
+	/**
+	 * The feature id for the '<em><b>Server</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD__SERVER = IBUILD_ELEMENT_FEATURE_COUNT + 11;
+
+	/**
+	 * The number of structural features of the '<em>IBuild</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_FEATURE_COUNT = IBUILD_ELEMENT_FEATURE_COUNT + 12;
+
+	/**
+	 * The feature id for the '<em><b>Url</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_WORKING_COPY__URL = IBUILD__URL;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_WORKING_COPY__NAME = IBUILD__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_WORKING_COPY__ID = IBUILD__ID;
+
+	/**
+	 * The feature id for the '<em><b>Build Number</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_WORKING_COPY__BUILD_NUMBER = IBUILD__BUILD_NUMBER;
+
+	/**
+	 * The feature id for the '<em><b>Timestamp</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_WORKING_COPY__TIMESTAMP = IBUILD__TIMESTAMP;
+
+	/**
+	 * The feature id for the '<em><b>Duration</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_WORKING_COPY__DURATION = IBUILD__DURATION;
+
+	/**
+	 * The feature id for the '<em><b>Display Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_WORKING_COPY__DISPLAY_NAME = IBUILD__DISPLAY_NAME;
+
+	/**
+	 * The feature id for the '<em><b>State</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_WORKING_COPY__STATE = IBUILD__STATE;
+
+	/**
+	 * The feature id for the '<em><b>Status</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_WORKING_COPY__STATUS = IBUILD__STATUS;
+
+	/**
+	 * The feature id for the '<em><b>Artifacts</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_WORKING_COPY__ARTIFACTS = IBUILD__ARTIFACTS;
+
+	/**
+	 * The feature id for the '<em><b>Change Set</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_WORKING_COPY__CHANGE_SET = IBUILD__CHANGE_SET;
+
+	/**
+	 * The feature id for the '<em><b>Plan</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_WORKING_COPY__PLAN = IBUILD__PLAN;
+
+	/**
+	 * The feature id for the '<em><b>Label</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_WORKING_COPY__LABEL = IBUILD__LABEL;
+
+	/**
+	 * The feature id for the '<em><b>Server</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_WORKING_COPY__SERVER = IBUILD__SERVER;
+
+	/**
+	 * The number of structural features of the '<em>IBuild Working Copy</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_WORKING_COPY_FEATURE_COUNT = IBUILD_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Display Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IARTIFACT__DISPLAY_NAME = 0;
+
+	/**
+	 * The feature id for the '<em><b>Filename</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IARTIFACT__FILENAME = 1;
+
+	/**
+	 * The feature id for the '<em><b>Relative Path</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IARTIFACT__RELATIVE_PATH = 2;
+
+	/**
+	 * The number of structural features of the '<em>IArtifact</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IARTIFACT_FEATURE_COUNT = 3;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.Build <em>Build</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.mylyn.internal.builds.core.Build
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getBuild()
+	 * @generated
+	 */
+	public static final int BUILD = 14;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.builds.core.IChangeSet <em>IChange Set</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.mylyn.builds.core.IChangeSet
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIChangeSet()
+	 * @generated
+	 */
+	public static final int ICHANGE_SET = 10;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.ChangeSet <em>Change Set</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.mylyn.internal.builds.core.ChangeSet
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getChangeSet()
+	 * @generated
+	 */
+	public static final int CHANGE_SET = 19;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.builds.core.IChange <em>IChange</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.mylyn.builds.core.IChange
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIChange()
+	 * @generated
+	 */
+	public static final int ICHANGE = 9;
+
+	/**
+	 * The feature id for the '<em><b>Author</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int ICHANGE__AUTHOR = 0;
+
+	/**
+	 * The feature id for the '<em><b>File</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int ICHANGE__FILE = 1;
+
+	/**
+	 * The feature id for the '<em><b>Message</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int ICHANGE__MESSAGE = 2;
+
+	/**
+	 * The feature id for the '<em><b>Date</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int ICHANGE__DATE = 3;
+
+	/**
+	 * The feature id for the '<em><b>User</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int ICHANGE__USER = 4;
+
+	/**
+	 * The number of structural features of the '<em>IChange</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int ICHANGE_FEATURE_COUNT = 5;
+
+	/**
+	 * The feature id for the '<em><b>Changes</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int ICHANGE_SET__CHANGES = 0;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int ICHANGE_SET__KIND = 1;
+
+	/**
+	 * The number of structural features of the '<em>IChange Set</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int ICHANGE_SET_FEATURE_COUNT = 2;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.Change <em>Change</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.mylyn.internal.builds.core.Change
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getChange()
+	 * @generated
+	 */
+	public static final int CHANGE = 18;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.builds.core.IFile <em>IFile</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.mylyn.builds.core.IFile
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIFile()
+	 * @generated
+	 */
+	public static final int IFILE = 11;
+
+	/**
+	 * The feature id for the '<em><b>Relative Path</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IFILE__RELATIVE_PATH = 0;
+
+	/**
+	 * The feature id for the '<em><b>Prev Revision</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IFILE__PREV_REVISION = 1;
+
+	/**
+	 * The feature id for the '<em><b>Revision</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IFILE__REVISION = 2;
+
+	/**
+	 * The feature id for the '<em><b>Dead</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IFILE__DEAD = 3;
+
+	/**
+	 * The feature id for the '<em><b>Edit Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IFILE__EDIT_TYPE = 4;
+
+	/**
+	 * The number of structural features of the '<em>IFile</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IFILE_FEATURE_COUNT = 5;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.File <em>File</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.mylyn.internal.builds.core.File
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getFile()
+	 * @generated
+	 */
+	public static final int FILE = 20;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.builds.core.IUser <em>IUser</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.mylyn.builds.core.IUser
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIUser()
+	 * @generated
+	 */
+	public static final int IUSER = 12;
+
+	/**
+	 * The feature id for the '<em><b>Fullname</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IUSER__FULLNAME = 0;
+
+	/**
+	 * The feature id for the '<em><b>Username</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IUSER__USERNAME = 1;
+
+	/**
+	 * The feature id for the '<em><b>Email</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IUSER__EMAIL = 2;
+
+	/**
+	 * The number of structural features of the '<em>IUser</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IUSER_FEATURE_COUNT = 3;
+
+	/**
+	 * The feature id for the '<em><b>Display Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int ARTIFACT__DISPLAY_NAME = IARTIFACT__DISPLAY_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Filename</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int ARTIFACT__FILENAME = IARTIFACT__FILENAME;
+
+	/**
+	 * The feature id for the '<em><b>Relative Path</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int ARTIFACT__RELATIVE_PATH = IARTIFACT__RELATIVE_PATH;
+
+	/**
+	 * The number of structural features of the '<em>Artifact</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int ARTIFACT_FEATURE_COUNT = IARTIFACT_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Url</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD__URL = IBUILD__URL;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD__NAME = IBUILD__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD__ID = IBUILD__ID;
+
+	/**
+	 * The feature id for the '<em><b>Build Number</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD__BUILD_NUMBER = IBUILD__BUILD_NUMBER;
+
+	/**
+	 * The feature id for the '<em><b>Timestamp</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD__TIMESTAMP = IBUILD__TIMESTAMP;
+
+	/**
+	 * The feature id for the '<em><b>Duration</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD__DURATION = IBUILD__DURATION;
+
+	/**
+	 * The feature id for the '<em><b>Display Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD__DISPLAY_NAME = IBUILD__DISPLAY_NAME;
+
+	/**
+	 * The feature id for the '<em><b>State</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD__STATE = IBUILD__STATE;
+
+	/**
+	 * The feature id for the '<em><b>Status</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD__STATUS = IBUILD__STATUS;
+
+	/**
+	 * The feature id for the '<em><b>Artifacts</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD__ARTIFACTS = IBUILD__ARTIFACTS;
+
+	/**
+	 * The feature id for the '<em><b>Change Set</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD__CHANGE_SET = IBUILD__CHANGE_SET;
+
+	/**
+	 * The feature id for the '<em><b>Plan</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD__PLAN = IBUILD__PLAN;
+
+	/**
+	 * The feature id for the '<em><b>Label</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD__LABEL = IBUILD__LABEL;
+
+	/**
+	 * The feature id for the '<em><b>Server</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD__SERVER = IBUILD__SERVER;
+
+	/**
+	 * The number of structural features of the '<em>Build</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD_FEATURE_COUNT = IBUILD_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Url</b></em>' attribute.
@@ -546,6 +1480,16 @@ public class BuildPackage extends EPackageImpl {
 	public static final int BUILD_PLAN__DESCRIPTION = IBUILD_PLAN__DESCRIPTION;
 
 	/**
+	 * The feature id for the '<em><b>Last Build</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD_PLAN__LAST_BUILD = IBUILD_PLAN__LAST_BUILD;
+
+	/**
 	 * The number of structural features of the '<em>Plan</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -554,76 +1498,6 @@ public class BuildPackage extends EPackageImpl {
 	 * @ordered
 	 */
 	public static final int BUILD_PLAN_FEATURE_COUNT = IBUILD_PLAN_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Url</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IBUILD_SERVER__URL = IBUILD_ELEMENT__URL;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IBUILD_SERVER__NAME = IBUILD_ELEMENT__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Attributes</b></em>' map.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IBUILD_SERVER__ATTRIBUTES = IBUILD_ELEMENT_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Location</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IBUILD_SERVER__LOCATION = IBUILD_ELEMENT_FEATURE_COUNT + 1;
-
-	/**
-	 * The feature id for the '<em><b>Connector Kind</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IBUILD_SERVER__CONNECTOR_KIND = IBUILD_ELEMENT_FEATURE_COUNT + 2;
-
-	/**
-	 * The feature id for the '<em><b>Repository Url</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IBUILD_SERVER__REPOSITORY_URL = IBUILD_ELEMENT_FEATURE_COUNT + 3;
-
-	/**
-	 * The number of structural features of the '<em>IBuild Server</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IBUILD_SERVER_FEATURE_COUNT = IBUILD_ELEMENT_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Url</b></em>' attribute.
@@ -696,512 +1570,44 @@ public class BuildPackage extends EPackageImpl {
 	public static final int BUILD_SERVER_FEATURE_COUNT = IBUILD_SERVER_FEATURE_COUNT + 0;
 
 	/**
-	 * The number of structural features of the '<em>IBuild Plan Data</em>' class.
+	 * The feature id for the '<em><b>Servers</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	public static final int IBUILD_PLAN_DATA_FEATURE_COUNT = 0;
+	public static final int BUILD_MODEL__SERVERS = IBUILD_MODEL__SERVERS;
 
 	/**
-	 * The number of structural features of the '<em>IBuild Plan Working Copy</em>' class.
+	 * The feature id for the '<em><b>Plans</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	public static final int IBUILD_PLAN_WORKING_COPY_FEATURE_COUNT = IBUILD_PLAN_DATA_FEATURE_COUNT + 0;
+	public static final int BUILD_MODEL__PLANS = IBUILD_MODEL__PLANS;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.mylyn.builds.core.IArtifact <em>IArtifact</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @see org.eclipse.mylyn.builds.core.IArtifact
-	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIArtifact()
-	 * @generated
-	 */
-	public static final int IARTIFACT = 15;
-
-	/**
-	 * The feature id for the '<em><b>Display Name</b></em>' attribute.
+	 * The feature id for the '<em><b>Builds</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	public static final int IARTIFACT__DISPLAY_NAME = 0;
+	public static final int BUILD_MODEL__BUILDS = IBUILD_MODEL__BUILDS;
 
 	/**
-	 * The feature id for the '<em><b>Filename</b></em>' attribute.
+	 * The number of structural features of the '<em>Model</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	public static final int IARTIFACT__FILENAME = 1;
-
-	/**
-	 * The feature id for the '<em><b>Relative Path</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IARTIFACT__RELATIVE_PATH = 2;
-
-	/**
-	 * The number of structural features of the '<em>IArtifact</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IARTIFACT_FEATURE_COUNT = 3;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.Artifact <em>Artifact</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @see org.eclipse.mylyn.internal.builds.core.Artifact
-	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getArtifact()
-	 * @generated
-	 */
-	public static final int ARTIFACT = 9;
-
-	/**
-	 * The feature id for the '<em><b>Display Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int ARTIFACT__DISPLAY_NAME = IARTIFACT__DISPLAY_NAME;
-
-	/**
-	 * The feature id for the '<em><b>Filename</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int ARTIFACT__FILENAME = IARTIFACT__FILENAME;
-
-	/**
-	 * The feature id for the '<em><b>Relative Path</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int ARTIFACT__RELATIVE_PATH = IARTIFACT__RELATIVE_PATH;
-
-	/**
-	 * The number of structural features of the '<em>Artifact</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int ARTIFACT_FEATURE_COUNT = IARTIFACT_FEATURE_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.mylyn.builds.core.IBuild <em>IBuild</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @see org.eclipse.mylyn.builds.core.IBuild
-	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuild()
-	 * @generated
-	 */
-	public static final int IBUILD = 16;
-
-	/**
-	 * The feature id for the '<em><b>Id</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IBUILD__ID = 0;
-
-	/**
-	 * The feature id for the '<em><b>Build Number</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IBUILD__BUILD_NUMBER = 1;
-
-	/**
-	 * The feature id for the '<em><b>Timestamp</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IBUILD__TIMESTAMP = 2;
-
-	/**
-	 * The feature id for the '<em><b>Duration</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IBUILD__DURATION = 3;
-
-	/**
-	 * The feature id for the '<em><b>Display Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IBUILD__DISPLAY_NAME = 4;
-
-	/**
-	 * The feature id for the '<em><b>State</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IBUILD__STATE = 5;
-
-	/**
-	 * The feature id for the '<em><b>Status</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IBUILD__STATUS = 6;
-
-	/**
-	 * The feature id for the '<em><b>Artifacts</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IBUILD__ARTIFACTS = 7;
-
-	/**
-	 * The feature id for the '<em><b>Change Set</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IBUILD__CHANGE_SET = 8;
-
-	/**
-	 * The number of structural features of the '<em>IBuild</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IBUILD_FEATURE_COUNT = 9;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.Build <em>Build</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @see org.eclipse.mylyn.internal.builds.core.Build
-	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getBuild()
-	 * @generated
-	 */
-	public static final int BUILD = 10;
-
-	/**
-	 * The feature id for the '<em><b>Id</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int BUILD__ID = IBUILD__ID;
-
-	/**
-	 * The feature id for the '<em><b>Build Number</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int BUILD__BUILD_NUMBER = IBUILD__BUILD_NUMBER;
-
-	/**
-	 * The feature id for the '<em><b>Timestamp</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int BUILD__TIMESTAMP = IBUILD__TIMESTAMP;
-
-	/**
-	 * The feature id for the '<em><b>Duration</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int BUILD__DURATION = IBUILD__DURATION;
-
-	/**
-	 * The feature id for the '<em><b>Display Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int BUILD__DISPLAY_NAME = IBUILD__DISPLAY_NAME;
-
-	/**
-	 * The feature id for the '<em><b>State</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int BUILD__STATE = IBUILD__STATE;
-
-	/**
-	 * The feature id for the '<em><b>Status</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int BUILD__STATUS = IBUILD__STATUS;
-
-	/**
-	 * The feature id for the '<em><b>Artifacts</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int BUILD__ARTIFACTS = IBUILD__ARTIFACTS;
-
-	/**
-	 * The feature id for the '<em><b>Change Set</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int BUILD__CHANGE_SET = IBUILD__CHANGE_SET;
-
-	/**
-	 * The number of structural features of the '<em>Build</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int BUILD_FEATURE_COUNT = IBUILD_FEATURE_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.mylyn.builds.core.IChangeSet <em>IChange Set</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @see org.eclipse.mylyn.builds.core.IChangeSet
-	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIChangeSet()
-	 * @generated
-	 */
-	public static final int ICHANGE_SET = 17;
-
-	/**
-	 * The feature id for the '<em><b>Changes</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int ICHANGE_SET__CHANGES = 0;
-
-	/**
-	 * The feature id for the '<em><b>Kind</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int ICHANGE_SET__KIND = 1;
-
-	/**
-	 * The number of structural features of the '<em>IChange Set</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int ICHANGE_SET_FEATURE_COUNT = 2;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.ChangeSet <em>Change Set</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @see org.eclipse.mylyn.internal.builds.core.ChangeSet
-	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getChangeSet()
-	 * @generated
-	 */
-	public static final int CHANGE_SET = 11;
-
-	/**
-	 * The feature id for the '<em><b>Changes</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int CHANGE_SET__CHANGES = ICHANGE_SET__CHANGES;
-
-	/**
-	 * The feature id for the '<em><b>Kind</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int CHANGE_SET__KIND = ICHANGE_SET__KIND;
-
-	/**
-	 * The number of structural features of the '<em>Change Set</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int CHANGE_SET_FEATURE_COUNT = ICHANGE_SET_FEATURE_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.mylyn.builds.core.IChange <em>IChange</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @see org.eclipse.mylyn.builds.core.IChange
-	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIChange()
-	 * @generated
-	 */
-	public static final int ICHANGE = 18;
-
-	/**
-	 * The feature id for the '<em><b>Author</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int ICHANGE__AUTHOR = 0;
-
-	/**
-	 * The feature id for the '<em><b>File</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int ICHANGE__FILE = 1;
-
-	/**
-	 * The feature id for the '<em><b>Message</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int ICHANGE__MESSAGE = 2;
-
-	/**
-	 * The feature id for the '<em><b>Date</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int ICHANGE__DATE = 3;
-
-	/**
-	 * The feature id for the '<em><b>User</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int ICHANGE__USER = 4;
-
-	/**
-	 * The number of structural features of the '<em>IChange</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int ICHANGE_FEATURE_COUNT = 5;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.Change <em>Change</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @see org.eclipse.mylyn.internal.builds.core.Change
-	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getChange()
-	 * @generated
-	 */
-	public static final int CHANGE = 12;
+	public static final int BUILD_MODEL_FEATURE_COUNT = IBUILD_MODEL_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Author</b></em>' reference.
@@ -1264,86 +1670,34 @@ public class BuildPackage extends EPackageImpl {
 	public static final int CHANGE_FEATURE_COUNT = ICHANGE_FEATURE_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.mylyn.builds.core.IFile <em>IFile</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @see org.eclipse.mylyn.builds.core.IFile
-	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIFile()
-	 * @generated
-	 */
-	public static final int IFILE = 19;
-
-	/**
-	 * The feature id for the '<em><b>Relative Path</b></em>' attribute.
+	 * The feature id for the '<em><b>Changes</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	public static final int IFILE__RELATIVE_PATH = 0;
+	public static final int CHANGE_SET__CHANGES = ICHANGE_SET__CHANGES;
 
 	/**
-	 * The feature id for the '<em><b>Prev Revision</b></em>' attribute.
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	public static final int IFILE__PREV_REVISION = 1;
+	public static final int CHANGE_SET__KIND = ICHANGE_SET__KIND;
 
 	/**
-	 * The feature id for the '<em><b>Revision</b></em>' attribute.
+	 * The number of structural features of the '<em>Change Set</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	public static final int IFILE__REVISION = 2;
-
-	/**
-	 * The feature id for the '<em><b>Dead</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IFILE__DEAD = 3;
-
-	/**
-	 * The feature id for the '<em><b>Edit Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IFILE__EDIT_TYPE = 4;
-
-	/**
-	 * The number of structural features of the '<em>IFile</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IFILE_FEATURE_COUNT = 5;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.File <em>File</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @see org.eclipse.mylyn.internal.builds.core.File
-	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getFile()
-	 * @generated
-	 */
-	public static final int FILE = 13;
+	public static final int CHANGE_SET_FEATURE_COUNT = ICHANGE_SET_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Relative Path</b></em>' attribute.
@@ -1406,57 +1760,6 @@ public class BuildPackage extends EPackageImpl {
 	public static final int FILE_FEATURE_COUNT = IFILE_FEATURE_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.mylyn.builds.core.IUser <em>IUser</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @see org.eclipse.mylyn.builds.core.IUser
-	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIUser()
-	 * @generated
-	 */
-	public static final int IUSER = 20;
-
-	/**
-	 * The feature id for the '<em><b>Fullname</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IUSER__FULLNAME = 0;
-
-	/**
-	 * The feature id for the '<em><b>Username</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IUSER__USERNAME = 1;
-
-	/**
-	 * The feature id for the '<em><b>Email</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IUSER__EMAIL = 2;
-
-	/**
-	 * The number of structural features of the '<em>IUser</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IUSER_FEATURE_COUNT = 3;
-
-	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.User <em>User</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1465,47 +1768,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getUser()
 	 * @generated
 	 */
-	public static final int USER = 14;
-
-	/**
-	 * The feature id for the '<em><b>Fullname</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int USER__FULLNAME = IUSER__FULLNAME;
-
-	/**
-	 * The feature id for the '<em><b>Username</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int USER__USERNAME = IUSER__USERNAME;
-
-	/**
-	 * The feature id for the '<em><b>Email</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int USER__EMAIL = IUSER__EMAIL;
-
-	/**
-	 * The number of structural features of the '<em>User</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int USER_FEATURE_COUNT = IUSER_FEATURE_COUNT + 0;
+	public static final int USER = 22;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.StringToStringMap
@@ -1550,6 +1813,46 @@ public class BuildPackage extends EPackageImpl {
 	public static final int STRING_TO_STRING_MAP_FEATURE_COUNT = 2;
 
 	/**
+	 * The feature id for the '<em><b>Fullname</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int USER__FULLNAME = IUSER__FULLNAME;
+
+	/**
+	 * The feature id for the '<em><b>Username</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int USER__USERNAME = IUSER__USERNAME;
+
+	/**
+	 * The feature id for the '<em><b>Email</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int USER__EMAIL = IUSER__EMAIL;
+
+	/**
+	 * The number of structural features of the '<em>User</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int USER_FEATURE_COUNT = IUSER_FEATURE_COUNT + 0;
+
+	/**
 	 * The meta object id for the '<em>Repository Location</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1558,7 +1861,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getRepositoryLocation()
 	 * @generated
 	 */
-	public static final int REPOSITORY_LOCATION = 22;
+	public static final int REPOSITORY_LOCATION = 23;
 
 	/**
 	 * The meta object id for the '<em>State</em>' data type.
@@ -1569,7 +1872,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getBuildState()
 	 * @generated
 	 */
-	public static final int BUILD_STATE = 23;
+	public static final int BUILD_STATE = 24;
 
 	/**
 	 * The meta object id for the '<em>Status</em>' data type.
@@ -1580,7 +1883,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getBuildStatus()
 	 * @generated
 	 */
-	public static final int BUILD_STATUS = 24;
+	public static final int BUILD_STATUS = 25;
 
 	/**
 	 * The meta object id for the '<em>Edit Type</em>' data type.
@@ -1591,7 +1894,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getEditType()
 	 * @generated
 	 */
-	public static final int EDIT_TYPE = 25;
+	public static final int EDIT_TYPE = 26;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1640,6 +1943,14 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 */
 	private EClass iBuildPlanEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass iBuildWorkingCopyEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1948,6 +2259,21 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
+	 * Returns the meta object for the containment reference list '
+	 * {@link org.eclipse.mylyn.builds.core.IBuildModel#getBuilds <em>Builds</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the containment reference list '<em>Builds</em>'.
+	 * @see org.eclipse.mylyn.builds.core.IBuildModel#getBuilds()
+	 * @see #getIBuildModel()
+	 * @generated
+	 */
+	public EReference getIBuildModel_Builds() {
+		return (EReference) iBuildModelEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IBuildElement <em>IBuild Element</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2168,6 +2494,37 @@ public class BuildPackage extends EPackageImpl {
 	 */
 	public EAttribute getIBuildPlan_Description() {
 		return (EAttribute) iBuildPlanEClass.getEStructuralFeatures().get(10);
+	}
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getLastBuild
+	 * <em>Last Build</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the reference '<em>Last Build</em>'.
+	 * @see org.eclipse.mylyn.builds.core.IBuildPlan#getLastBuild()
+	 * @see #getIBuildPlan()
+	 * @generated
+	 */
+	public EReference getIBuildPlan_LastBuild() {
+		return (EReference) iBuildPlanEClass.getEStructuralFeatures().get(11);
+	}
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IBuildWorkingCopy
+	 * <em>IBuild Working Copy</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>IBuild Working Copy</em>'.
+	 * @see org.eclipse.mylyn.builds.core.IBuildWorkingCopy
+	 * @model instanceClass="org.eclipse.mylyn.builds.core.IBuildWorkingCopy"
+	 *        superTypes="org.eclipse.mylyn.internal.builds.core.IBuild"
+	 * @generated
+	 */
+	public EClass getIBuildWorkingCopy() {
+		return iBuildWorkingCopyEClass;
 	}
 
 	/**
@@ -2421,6 +2778,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @return the meta object for class '<em>IBuild</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuild
 	 * @model instanceClass="org.eclipse.mylyn.builds.core.IBuild"
+	 *        superTypes="org.eclipse.mylyn.internal.builds.core.IBuildElement"
 	 * @generated
 	 */
 	public EClass getIBuild() {
@@ -2558,6 +2916,49 @@ public class BuildPackage extends EPackageImpl {
 	 */
 	public EReference getIBuild_ChangeSet() {
 		return (EReference) iBuildEClass.getEStructuralFeatures().get(8);
+	}
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.mylyn.builds.core.IBuild#getPlan <em>Plan</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the reference '<em>Plan</em>'.
+	 * @see org.eclipse.mylyn.builds.core.IBuild#getPlan()
+	 * @see #getIBuild()
+	 * @generated
+	 */
+	public EReference getIBuild_Plan() {
+		return (EReference) iBuildEClass.getEStructuralFeatures().get(9);
+	}
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuild#getLabel <em>Label</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Label</em>'.
+	 * @see org.eclipse.mylyn.builds.core.IBuild#getLabel()
+	 * @see #getIBuild()
+	 * @generated
+	 */
+	public EAttribute getIBuild_Label() {
+		return (EAttribute) iBuildEClass.getEStructuralFeatures().get(10);
+	}
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.mylyn.builds.core.IBuild#getServer <em>Server</em>}
+	 * '.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the reference '<em>Server</em>'.
+	 * @see org.eclipse.mylyn.builds.core.IBuild#getServer()
+	 * @see #getIBuild()
+	 * @generated
+	 */
+	public EReference getIBuild_Server() {
+		return (EReference) iBuildEClass.getEStructuralFeatures().get(11);
 	}
 
 	/**
@@ -2970,19 +3371,20 @@ public class BuildPackage extends EPackageImpl {
 		isCreated = true;
 
 		// Create classes and their features
-		buildModelEClass = createEClass(BUILD_MODEL);
-
-		buildPlanEClass = createEClass(BUILD_PLAN);
-
-		buildServerEClass = createEClass(BUILD_SERVER);
-
 		iBuildModelEClass = createEClass(IBUILD_MODEL);
 		createEReference(iBuildModelEClass, IBUILD_MODEL__SERVERS);
 		createEReference(iBuildModelEClass, IBUILD_MODEL__PLANS);
+		createEReference(iBuildModelEClass, IBUILD_MODEL__BUILDS);
 
 		iBuildElementEClass = createEClass(IBUILD_ELEMENT);
 		createEAttribute(iBuildElementEClass, IBUILD_ELEMENT__URL);
 		createEAttribute(iBuildElementEClass, IBUILD_ELEMENT__NAME);
+
+		iBuildServerEClass = createEClass(IBUILD_SERVER);
+		createEReference(iBuildServerEClass, IBUILD_SERVER__ATTRIBUTES);
+		createEAttribute(iBuildServerEClass, IBUILD_SERVER__LOCATION);
+		createEAttribute(iBuildServerEClass, IBUILD_SERVER__CONNECTOR_KIND);
+		createEAttribute(iBuildServerEClass, IBUILD_SERVER__REPOSITORY_URL);
 
 		iBuildPlanEClass = createEClass(IBUILD_PLAN);
 		createEReference(iBuildPlanEClass, IBUILD_PLAN__SERVER);
@@ -2996,33 +3398,11 @@ public class BuildPackage extends EPackageImpl {
 		createEAttribute(iBuildPlanEClass, IBUILD_PLAN__STATE);
 		createEAttribute(iBuildPlanEClass, IBUILD_PLAN__STATUS);
 		createEAttribute(iBuildPlanEClass, IBUILD_PLAN__DESCRIPTION);
+		createEReference(iBuildPlanEClass, IBUILD_PLAN__LAST_BUILD);
 
 		iBuildPlanDataEClass = createEClass(IBUILD_PLAN_DATA);
 
 		iBuildPlanWorkingCopyEClass = createEClass(IBUILD_PLAN_WORKING_COPY);
-
-		iBuildServerEClass = createEClass(IBUILD_SERVER);
-		createEReference(iBuildServerEClass, IBUILD_SERVER__ATTRIBUTES);
-		createEAttribute(iBuildServerEClass, IBUILD_SERVER__LOCATION);
-		createEAttribute(iBuildServerEClass, IBUILD_SERVER__CONNECTOR_KIND);
-		createEAttribute(iBuildServerEClass, IBUILD_SERVER__REPOSITORY_URL);
-
-		artifactEClass = createEClass(ARTIFACT);
-
-		buildEClass = createEClass(BUILD);
-
-		changeSetEClass = createEClass(CHANGE_SET);
-
-		changeEClass = createEClass(CHANGE);
-
-		fileEClass = createEClass(FILE);
-
-		userEClass = createEClass(USER);
-
-		iArtifactEClass = createEClass(IARTIFACT);
-		createEAttribute(iArtifactEClass, IARTIFACT__DISPLAY_NAME);
-		createEAttribute(iArtifactEClass, IARTIFACT__FILENAME);
-		createEAttribute(iArtifactEClass, IARTIFACT__RELATIVE_PATH);
 
 		iBuildEClass = createEClass(IBUILD);
 		createEAttribute(iBuildEClass, IBUILD__ID);
@@ -3034,10 +3414,16 @@ public class BuildPackage extends EPackageImpl {
 		createEAttribute(iBuildEClass, IBUILD__STATUS);
 		createEReference(iBuildEClass, IBUILD__ARTIFACTS);
 		createEReference(iBuildEClass, IBUILD__CHANGE_SET);
+		createEReference(iBuildEClass, IBUILD__PLAN);
+		createEAttribute(iBuildEClass, IBUILD__LABEL);
+		createEReference(iBuildEClass, IBUILD__SERVER);
 
-		iChangeSetEClass = createEClass(ICHANGE_SET);
-		createEReference(iChangeSetEClass, ICHANGE_SET__CHANGES);
-		createEAttribute(iChangeSetEClass, ICHANGE_SET__KIND);
+		iBuildWorkingCopyEClass = createEClass(IBUILD_WORKING_COPY);
+
+		iArtifactEClass = createEClass(IARTIFACT);
+		createEAttribute(iArtifactEClass, IARTIFACT__DISPLAY_NAME);
+		createEAttribute(iArtifactEClass, IARTIFACT__FILENAME);
+		createEAttribute(iArtifactEClass, IARTIFACT__RELATIVE_PATH);
 
 		iChangeEClass = createEClass(ICHANGE);
 		createEReference(iChangeEClass, ICHANGE__AUTHOR);
@@ -3045,6 +3431,10 @@ public class BuildPackage extends EPackageImpl {
 		createEAttribute(iChangeEClass, ICHANGE__MESSAGE);
 		createEAttribute(iChangeEClass, ICHANGE__DATE);
 		createEReference(iChangeEClass, ICHANGE__USER);
+
+		iChangeSetEClass = createEClass(ICHANGE_SET);
+		createEReference(iChangeSetEClass, ICHANGE_SET__CHANGES);
+		createEAttribute(iChangeSetEClass, ICHANGE_SET__KIND);
 
 		iFileEClass = createEClass(IFILE);
 		createEAttribute(iFileEClass, IFILE__RELATIVE_PATH);
@@ -3058,9 +3448,27 @@ public class BuildPackage extends EPackageImpl {
 		createEAttribute(iUserEClass, IUSER__USERNAME);
 		createEAttribute(iUserEClass, IUSER__EMAIL);
 
+		artifactEClass = createEClass(ARTIFACT);
+
+		buildEClass = createEClass(BUILD);
+
+		buildPlanEClass = createEClass(BUILD_PLAN);
+
+		buildServerEClass = createEClass(BUILD_SERVER);
+
+		buildModelEClass = createEClass(BUILD_MODEL);
+
+		changeEClass = createEClass(CHANGE);
+
+		changeSetEClass = createEClass(CHANGE_SET);
+
+		fileEClass = createEClass(FILE);
+
 		stringToStringMapEClass = createEClass(STRING_TO_STRING_MAP);
 		createEAttribute(stringToStringMapEClass, STRING_TO_STRING_MAP__KEY);
 		createEAttribute(stringToStringMapEClass, STRING_TO_STRING_MAP__VALUE);
+
+		userEClass = createEClass(USER);
 
 		// Create data types
 		repositoryLocationEDataType = createEDataType(REPOSITORY_LOCATION);
@@ -3100,30 +3508,24 @@ public class BuildPackage extends EPackageImpl {
 		// Set bounds for type parameters
 
 		// Add supertypes to classes
-		buildModelEClass.getESuperTypes().add(this.getIBuildModel());
+		iBuildServerEClass.getESuperTypes().add(this.getIBuildElement());
+		iBuildPlanEClass.getESuperTypes().add(this.getIBuildElement());
+		iBuildPlanWorkingCopyEClass.getESuperTypes().add(this.getIBuildPlanData());
+		iBuildEClass.getESuperTypes().add(this.getIBuildElement());
+		iBuildWorkingCopyEClass.getESuperTypes().add(this.getIBuild());
+		artifactEClass.getESuperTypes().add(this.getIArtifact());
+		buildEClass.getESuperTypes().add(this.getIBuild());
+		buildEClass.getESuperTypes().add(this.getIBuildWorkingCopy());
 		buildPlanEClass.getESuperTypes().add(this.getIBuildPlan());
 		buildPlanEClass.getESuperTypes().add(this.getIBuildPlanWorkingCopy());
 		buildServerEClass.getESuperTypes().add(this.getIBuildServer());
-		iBuildPlanEClass.getESuperTypes().add(this.getIBuildElement());
-		iBuildPlanWorkingCopyEClass.getESuperTypes().add(this.getIBuildPlanData());
-		iBuildServerEClass.getESuperTypes().add(this.getIBuildElement());
-		artifactEClass.getESuperTypes().add(this.getIArtifact());
-		buildEClass.getESuperTypes().add(this.getIBuild());
-		changeSetEClass.getESuperTypes().add(this.getIChangeSet());
+		buildModelEClass.getESuperTypes().add(this.getIBuildModel());
 		changeEClass.getESuperTypes().add(this.getIChange());
+		changeSetEClass.getESuperTypes().add(this.getIChangeSet());
 		fileEClass.getESuperTypes().add(this.getIFile());
 		userEClass.getESuperTypes().add(this.getIUser());
 
 		// Initialize classes and features; add operations and parameters
-		initEClass(buildModelEClass, BuildModel.class, "BuildModel", !IS_ABSTRACT, !IS_INTERFACE,
-				IS_GENERATED_INSTANCE_CLASS);
-
-		initEClass(buildPlanEClass, BuildPlan.class, "BuildPlan", !IS_ABSTRACT, !IS_INTERFACE,
-				IS_GENERATED_INSTANCE_CLASS);
-
-		initEClass(buildServerEClass, BuildServer.class, "BuildServer", !IS_ABSTRACT, !IS_INTERFACE,
-				IS_GENERATED_INSTANCE_CLASS);
-
 		initEClass(iBuildModelEClass, IBuildModel.class, "IBuildModel", IS_ABSTRACT, IS_INTERFACE,
 				!IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getIBuildModel_Servers(), this.getIBuildServer(), null, "servers", null, 0, -1,
@@ -3132,6 +3534,9 @@ public class BuildPackage extends EPackageImpl {
 		initEReference(getIBuildModel_Plans(), this.getIBuildPlan(), null, "plans", null, 0, -1, IBuildModel.class,
 				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
 				IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
+		initEReference(getIBuildModel_Builds(), this.getIBuild(), null, "builds", null, 0, -1, IBuildModel.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iBuildElementEClass, IBuildElement.class, "IBuildElement", IS_ABSTRACT, IS_INTERFACE,
 				!IS_GENERATED_INSTANCE_CLASS);
@@ -3139,6 +3544,21 @@ public class BuildPackage extends EPackageImpl {
 				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIBuildElement_Name(), ecorePackage.getEString(), "name", null, 0, 1, IBuildElement.class,
 				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(iBuildServerEClass, IBuildServer.class, "IBuildServer", IS_ABSTRACT, IS_INTERFACE,
+				!IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getIBuildServer_Attributes(), this.getStringToStringMap(), null, "attributes", null, 0, -1,
+				IBuildServer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIBuildServer_Location(), this.getRepositoryLocation(), "location", null, 0, 1,
+				IBuildServer.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIBuildServer_ConnectorKind(), ecorePackage.getEString(), "connectorKind", null, 0, 1,
+				IBuildServer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIBuildServer_RepositoryUrl(), ecorePackage.getEString(), "repositoryUrl", null, 0, 1,
+				IBuildServer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
 
 		initEClass(iBuildPlanEClass, IBuildPlan.class, "IBuildPlan", IS_ABSTRACT, IS_INTERFACE,
 				!IS_GENERATED_INSTANCE_CLASS);
@@ -3169,51 +3589,15 @@ public class BuildPackage extends EPackageImpl {
 		initEAttribute(getIBuildPlan_Description(), ecorePackage.getEString(), "description", null, 0, 1,
 				IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
 				!IS_DERIVED, IS_ORDERED);
+		initEReference(getIBuildPlan_LastBuild(), this.getIBuild(), null, "lastBuild", null, 0, 1, IBuildPlan.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iBuildPlanDataEClass, IBuildPlanData.class, "IBuildPlanData", IS_ABSTRACT, IS_INTERFACE,
 				!IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(iBuildPlanWorkingCopyEClass, IBuildPlanWorkingCopy.class, "IBuildPlanWorkingCopy", IS_ABSTRACT,
 				IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
-
-		initEClass(iBuildServerEClass, IBuildServer.class, "IBuildServer", IS_ABSTRACT, IS_INTERFACE,
-				!IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getIBuildServer_Attributes(), this.getStringToStringMap(), null, "attributes", null, 0, -1,
-				IBuildServer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
-				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIBuildServer_Location(), this.getRepositoryLocation(), "location", null, 0, 1,
-				IBuildServer.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
-				!IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIBuildServer_ConnectorKind(), ecorePackage.getEString(), "connectorKind", null, 0, 1,
-				IBuildServer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
-				!IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIBuildServer_RepositoryUrl(), ecorePackage.getEString(), "repositoryUrl", null, 0, 1,
-				IBuildServer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
-				!IS_DERIVED, IS_ORDERED);
-
-		initEClass(artifactEClass, Artifact.class, "Artifact", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-		initEClass(buildEClass, Build.class, "Build", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-		initEClass(changeSetEClass, ChangeSet.class, "ChangeSet", !IS_ABSTRACT, !IS_INTERFACE,
-				IS_GENERATED_INSTANCE_CLASS);
-
-		initEClass(changeEClass, Change.class, "Change", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-		initEClass(fileEClass, File.class, "File", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-		initEClass(userEClass, User.class, "User", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-		initEClass(iArtifactEClass, IArtifact.class, "IArtifact", IS_ABSTRACT, IS_INTERFACE,
-				!IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getIArtifact_DisplayName(), ecorePackage.getEString(), "displayName", null, 0, 1,
-				IArtifact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
-				!IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIArtifact_Filename(), ecorePackage.getEString(), "filename", null, 0, 1, IArtifact.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIArtifact_RelativePath(), ecorePackage.getEString(), "relativePath", null, 0, 1,
-				IArtifact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
-				!IS_DERIVED, IS_ORDERED);
 
 		initEClass(iBuildEClass, IBuild.class, "IBuild", IS_ABSTRACT, IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIBuild_Id(), ecorePackage.getEString(), "id", null, 0, 1, IBuild.class, !IS_TRANSIENT,
@@ -3236,14 +3620,28 @@ public class BuildPackage extends EPackageImpl {
 		initEReference(getIBuild_ChangeSet(), this.getIChangeSet(), null, "changeSet", null, 0, 1, IBuild.class,
 				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
 				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEClass(iChangeSetEClass, IChangeSet.class, "IChangeSet", IS_ABSTRACT, IS_INTERFACE,
-				!IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getIChangeSet_Changes(), this.getIChange(), null, "changes", null, 0, -1, IChangeSet.class,
+		initEReference(getIBuild_Plan(), this.getIBuildPlan(), null, "plan", null, 0, 1, IBuild.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
+				IS_ORDERED);
+		initEAttribute(getIBuild_Label(), ecorePackage.getEString(), "label", null, 0, 1, IBuild.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIBuild_Server(), this.getIBuildServer(), null, "server", null, 0, 1, IBuild.class,
 				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
 				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIChangeSet_Kind(), ecorePackage.getEString(), "kind", null, 0, 1, IChangeSet.class,
+
+		initEClass(iBuildWorkingCopyEClass, IBuildWorkingCopy.class, "IBuildWorkingCopy", IS_ABSTRACT, IS_INTERFACE,
+				!IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(iArtifactEClass, IArtifact.class, "IArtifact", IS_ABSTRACT, IS_INTERFACE,
+				!IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getIArtifact_DisplayName(), ecorePackage.getEString(), "displayName", null, 0, 1,
+				IArtifact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIArtifact_Filename(), ecorePackage.getEString(), "filename", null, 0, 1, IArtifact.class,
 				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIArtifact_RelativePath(), ecorePackage.getEString(), "relativePath", null, 0, 1,
+				IArtifact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
 
 		initEClass(iChangeEClass, IChange.class, "IChange", IS_ABSTRACT, IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getIChange_Author(), this.getIUser(), null, "author", null, 0, 1, IChange.class, !IS_TRANSIENT,
@@ -3259,6 +3657,14 @@ public class BuildPackage extends EPackageImpl {
 		initEReference(getIChange_User(), this.getIUser(), null, "user", null, 0, 1, IChange.class, !IS_TRANSIENT,
 				!IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
 				IS_ORDERED);
+
+		initEClass(iChangeSetEClass, IChangeSet.class, "IChangeSet", IS_ABSTRACT, IS_INTERFACE,
+				!IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getIChangeSet_Changes(), this.getIChange(), null, "changes", null, 0, -1, IChangeSet.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIChangeSet_Kind(), ecorePackage.getEString(), "kind", null, 0, 1, IChangeSet.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iFileEClass, IFile.class, "IFile", IS_ABSTRACT, IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIFile_RelativePath(), ecorePackage.getEString(), "relativePath", null, 0, 1, IFile.class,
@@ -3280,12 +3686,34 @@ public class BuildPackage extends EPackageImpl {
 		initEAttribute(getIUser_Email(), ecorePackage.getEString(), "email", null, 0, 1, IUser.class, !IS_TRANSIENT,
 				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+		initEClass(artifactEClass, Artifact.class, "Artifact", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(buildEClass, Build.class, "Build", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(buildPlanEClass, BuildPlan.class, "BuildPlan", !IS_ABSTRACT, !IS_INTERFACE,
+				IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(buildServerEClass, BuildServer.class, "BuildServer", !IS_ABSTRACT, !IS_INTERFACE,
+				IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(buildModelEClass, BuildModel.class, "BuildModel", !IS_ABSTRACT, !IS_INTERFACE,
+				IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(changeEClass, Change.class, "Change", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(changeSetEClass, ChangeSet.class, "ChangeSet", !IS_ABSTRACT, !IS_INTERFACE,
+				IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(fileEClass, File.class, "File", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
 		initEClass(stringToStringMapEClass, Map.Entry.class, "StringToStringMap", !IS_ABSTRACT, !IS_INTERFACE,
 				!IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getStringToStringMap_Key(), ecorePackage.getEString(), "key", null, 0, 1, Map.Entry.class,
 				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getStringToStringMap_Value(), ecorePackage.getEString(), "value", "", 0, 1, Map.Entry.class,
 				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(userEClass, User.class, "User", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		// Initialize data types
 		initEDataType(repositoryLocationEDataType, RepositoryLocation.class, "RepositoryLocation", !IS_SERIALIZABLE,
@@ -3379,6 +3807,15 @@ public class BuildPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EReference IBUILD_MODEL__PLANS = eINSTANCE.getIBuildModel_Plans();
+
+		/**
+		 * The meta object literal for the '<em><b>Builds</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EReference IBUILD_MODEL__BUILDS = eINSTANCE.getIBuildModel_Builds();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.core.IBuildElement <em>IBuild Element</em>}'
@@ -3520,6 +3957,27 @@ public class BuildPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EAttribute IBUILD_PLAN__DESCRIPTION = eINSTANCE.getIBuildPlan_Description();
+
+		/**
+		 * The meta object literal for the '<em><b>Last Build</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EReference IBUILD_PLAN__LAST_BUILD = eINSTANCE.getIBuildPlan_LastBuild();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.core.IBuildWorkingCopy
+		 * <em>IBuild Working Copy</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @see org.eclipse.mylyn.builds.core.IBuildWorkingCopy
+		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildWorkingCopy()
+		 * @generated
+		 */
+		public static final EClass IBUILD_WORKING_COPY = eINSTANCE.getIBuildWorkingCopy();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.core.IBuildPlanData
@@ -3791,6 +4249,33 @@ public class BuildPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EReference IBUILD__CHANGE_SET = eINSTANCE.getIBuild_ChangeSet();
+
+		/**
+		 * The meta object literal for the '<em><b>Plan</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EReference IBUILD__PLAN = eINSTANCE.getIBuild_Plan();
+
+		/**
+		 * The meta object literal for the '<em><b>Label</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute IBUILD__LABEL = eINSTANCE.getIBuild_Label();
+
+		/**
+		 * The meta object literal for the '<em><b>Server</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EReference IBUILD__SERVER = eINSTANCE.getIBuild_Server();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.core.IChangeSet <em>IChange Set</em>}'

@@ -9,21 +9,29 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.builds.core;
+package org.eclipse.mylyn.internal.builds.core.util;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.mylyn.internal.builds.core.operations.BuildJob;
+
 /**
  * @author Steffen Pingel
- * @noimplement This interface is not intended to be implemented by clients.
- * @noextend This interface is not intended to be extended by clients.
  */
-public interface IBuildModel {
+public class BuildScheduler {
 
-	public List<IBuildServer> getServers();
+	public BuildScheduler() {
+	}
 
-	public List<IBuildPlan> getPlans();
+	public void schedule(Job job) {
+		job.schedule();
+	}
 
-	public List<IBuild> getBuilds();
+	public void schedule(List<BuildJob> jobs) {
+		for (BuildJob job : jobs) {
+			schedule(job);
+		}
+	}
 
 }

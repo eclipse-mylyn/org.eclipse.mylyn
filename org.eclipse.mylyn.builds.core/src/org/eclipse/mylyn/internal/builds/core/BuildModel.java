@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildModel.java,v 1.5 2010/08/04 07:38:41 spingel Exp $
+ * $Id: BuildModel.java,v 1.6 2010/08/25 07:19:15 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -18,10 +18,12 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
+import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildModel;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.commons.core.IOperationMonitor;
+import org.eclipse.mylyn.internal.builds.core.util.BuildScheduler;
 
 /**
  * <!-- begin-user-doc -->
@@ -54,6 +56,19 @@ public class BuildModel extends EObjectImpl implements EObject, IBuildModel {
 	 * @ordered
 	 */
 	protected EList<IBuildPlan> plans;
+
+	/**
+	 * The cached value of the '{@link #getBuilds() <em>Builds</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getBuilds()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<IBuild> builds;
+
+	private BuildScheduler scheduler;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -122,6 +137,28 @@ public class BuildModel extends EObjectImpl implements EObject, IBuildModel {
 	}
 
 	/**
+	 * Returns the value of the '<em><b>Builds</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.mylyn.builds.core.IBuild}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Builds</em>' containment reference list isn't clear, there really should be more of a
+	 * description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Builds</em>' containment reference list.
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildModel_Builds()
+	 * @model type="org.eclipse.mylyn.internal.builds.core.IBuild" containment="true"
+	 * @generated
+	 */
+	public EList<IBuild> getBuilds() {
+		if (builds == null) {
+			builds = new EObjectContainmentEList<IBuild>(IBuild.class, this, BuildPackage.BUILD_MODEL__BUILDS);
+		}
+		return builds;
+	}
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
@@ -134,6 +171,8 @@ public class BuildModel extends EObjectImpl implements EObject, IBuildModel {
 			return ((InternalEList<?>) getServers()).basicRemove(otherEnd, msgs);
 		case BuildPackage.BUILD_MODEL__PLANS:
 			return ((InternalEList<?>) getPlans()).basicRemove(otherEnd, msgs);
+		case BuildPackage.BUILD_MODEL__BUILDS:
+			return ((InternalEList<?>) getBuilds()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -151,6 +190,8 @@ public class BuildModel extends EObjectImpl implements EObject, IBuildModel {
 			return getServers();
 		case BuildPackage.BUILD_MODEL__PLANS:
 			return getPlans();
+		case BuildPackage.BUILD_MODEL__BUILDS:
+			return getBuilds();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -173,6 +214,10 @@ public class BuildModel extends EObjectImpl implements EObject, IBuildModel {
 			getPlans().clear();
 			getPlans().addAll((Collection<? extends IBuildPlan>) newValue);
 			return;
+		case BuildPackage.BUILD_MODEL__BUILDS:
+			getBuilds().clear();
+			getBuilds().addAll((Collection<? extends IBuild>) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -192,6 +237,9 @@ public class BuildModel extends EObjectImpl implements EObject, IBuildModel {
 		case BuildPackage.BUILD_MODEL__PLANS:
 			getPlans().clear();
 			return;
+		case BuildPackage.BUILD_MODEL__BUILDS:
+			getBuilds().clear();
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -209,6 +257,8 @@ public class BuildModel extends EObjectImpl implements EObject, IBuildModel {
 			return servers != null && !servers.isEmpty();
 		case BuildPackage.BUILD_MODEL__PLANS:
 			return plans != null && !plans.isEmpty();
+		case BuildPackage.BUILD_MODEL__BUILDS:
+			return builds != null && !builds.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
@@ -237,6 +287,23 @@ public class BuildModel extends EObjectImpl implements EObject, IBuildModel {
 			}
 		}
 		return result;
+	}
+
+	public synchronized BuildScheduler getScheduler() {
+		if (scheduler == null) {
+			scheduler = new BuildScheduler();
+		}
+		return scheduler;
+	}
+
+	private IBuildLoader loader;
+
+	public IBuildLoader getLoader() {
+		return loader;
+	}
+
+	public void setLoader(IBuildLoader loader) {
+		this.loader = loader;
 	}
 
 } // BuildModel

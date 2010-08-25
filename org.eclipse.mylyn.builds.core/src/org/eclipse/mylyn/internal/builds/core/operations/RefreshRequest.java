@@ -9,21 +9,28 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.builds.core;
+package org.eclipse.mylyn.internal.builds.core.operations;
 
 import java.util.List;
 
+import org.eclipse.mylyn.builds.core.IBuildModel;
+import org.eclipse.mylyn.builds.core.IBuildPlan;
+
 /**
  * @author Steffen Pingel
- * @noimplement This interface is not intended to be implemented by clients.
- * @noextend This interface is not intended to be extended by clients.
  */
-public interface IBuildModel {
+public class RefreshRequest {
 
-	public List<IBuildServer> getServers();
+	private final IBuildModel model;
 
-	public List<IBuildPlan> getPlans();
+	List<IBuildPlan> stalePlans;
 
-	public List<IBuild> getBuilds();
+	public RefreshRequest(IBuildModel model) {
+		this.model = model;
+	}
+
+	public IBuildModel getModel() {
+		return model;
+	}
 
 }
