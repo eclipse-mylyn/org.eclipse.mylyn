@@ -22,6 +22,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -228,20 +229,11 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 	protected void createPopupMenu(Composite parent) {
 		MenuManager menuManager = new MenuManager();
 
-		OpenInBrowserAction openInBrowserAction = new OpenInBrowserAction();
-		menuManager.add(openInBrowserAction);
-		viewer.addSelectionChangedListener(openInBrowserAction);
-		openInBrowserAction.selectionChanged((IStructuredSelection) viewer.getSelection());
-
-		RunBuildAction runBuildAction = new RunBuildAction();
-		menuManager.add(runBuildAction);
-		viewer.addSelectionChangedListener(runBuildAction);
-		runBuildAction.selectionChanged((IStructuredSelection) viewer.getSelection());
-
+		menuManager.add(new GroupMarker("group.open"));
+		menuManager.add(new Separator("group.file"));
+		menuManager.add(new Separator("group.run"));
 		menuManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-
 		menuManager.add(new Separator("group.properties"));
-		menuManager.add(propertiesAction);
 
 		Menu contextMenu = menuManager.createContextMenu(parent);
 		viewer.getTree().setMenu(contextMenu);
@@ -278,7 +270,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
-				OpenInBrowserAction action = new OpenInBrowserAction();
+				OpenWithBrowserAction action = new OpenWithBrowserAction();
 				action.selectionChanged((IStructuredSelection) event.getSelection());
 				action.run();
 			}
@@ -326,13 +318,17 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 
 		manager.add(new Separator());
 
-		OpenInBrowserAction openInBrowserAction = new OpenInBrowserAction();
+		OpenWithBrowserAction openInBrowserAction = new OpenWithBrowserAction();
 		viewer.addSelectionChangedListener(openInBrowserAction);
 		manager.add(openInBrowserAction);
 
 		RunBuildAction runBuildAction = new RunBuildAction();
 		viewer.addSelectionChangedListener(runBuildAction);
 		manager.add(runBuildAction);
+
+		ShowBuildOutputAction openConsoleAction = new ShowBuildOutputAction();
+		viewer.addSelectionChangedListener(openConsoleAction);
+		manager.add(openConsoleAction);
 	}
 
 	public BuildStatusFilter getBuildStatusFilter() {

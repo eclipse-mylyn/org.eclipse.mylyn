@@ -62,6 +62,8 @@ public class BuildImages {
 
 	public static final ImageDescriptor RUN_DISABLED = create(T_DTOOL, "run_exc.gif"); //$NON-NLS-1$
 
+	public static final ImageDescriptor CONSOLE = create(T_ETOOL, "console.gif"); //$NON-NLS-1$
+
 	public static final ImageDescriptor DECORATION_RUNNING = create(T_OVR, "run_co.gif"); //$NON-NLS-1$;
 
 	private static ImageDescriptor create(String prefix, String name) {

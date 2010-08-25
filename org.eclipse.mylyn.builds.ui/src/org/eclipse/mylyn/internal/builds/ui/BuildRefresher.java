@@ -11,10 +11,13 @@
 
 package org.eclipse.mylyn.internal.builds.ui;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.mylyn.commons.core.IOperationMonitor;
+import org.eclipse.mylyn.internal.builds.core.operations.BuildJob;
 import org.eclipse.mylyn.internal.builds.core.operations.RefreshPlansOperation;
 
 /**
@@ -22,7 +25,20 @@ import org.eclipse.mylyn.internal.builds.core.operations.RefreshPlansOperation;
  */
 public class BuildRefresher implements IPropertyChangeListener {
 
-	private RefreshPlansOperation refreshOperation;
+	private class RefreshJob extends BuildJob {
+
+		public RefreshJob() {
+			super("Background Builds Refresh");
+		}
+
+		@Override
+		protected IStatus doExecute(IOperationMonitor progress) {
+			RefreshPlansOperation refreshOperation = new RefreshPlansOperation(BuildsUiInternal.getModel());
+			return refreshOperation.syncExec(progress);
+		}
+	};
+
+	private RefreshJob refreshJob;
 
 	private long getInterval() {
 		return BuildsUiPlugin.getDefault().getPreferenceStore().getLong(BuildsUiInternal.PREF_AUTO_REFRESH_INTERVAL);
@@ -41,27 +57,27 @@ public class BuildRefresher implements IPropertyChangeListener {
 
 	private synchronized void reschedule() {
 		if (isEnabled()) {
-			if (refreshOperation == null) {
-				refreshOperation = new RefreshPlansOperation(BuildsUiInternal.getModel());
-				refreshOperation.setSystem(true);
-				refreshOperation.addJobChangeListener(new JobChangeAdapter() {
+			if (refreshJob == null) {
+				refreshJob = new RefreshJob();
+				refreshJob.setSystem(true);
+				refreshJob.addJobChangeListener(new JobChangeAdapter() {
 					@Override
 					public void done(IJobChangeEvent event) {
 						reschedule();
 					}
 				});
 			}
-			refreshOperation.schedule(getInterval());
+			refreshJob.schedule(getInterval());
 		} else {
-			if (refreshOperation != null) {
-				refreshOperation.cancel();
+			if (refreshJob != null) {
+				refreshJob.cancel();
 			}
 		}
 	}
 
 	public synchronized void stop() {
-		if (refreshOperation != null) {
-			refreshOperation.cancel();
+		if (refreshJob != null) {
+			refreshJob.cancel();
 		}
 	}
 

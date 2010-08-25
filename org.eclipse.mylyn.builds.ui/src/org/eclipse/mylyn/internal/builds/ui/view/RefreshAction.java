@@ -29,7 +29,7 @@ public class RefreshAction extends Action {
 	@Override
 	public void run() {
 		RefreshPlansOperation operation = new RefreshPlansOperation(BuildsUiInternal.getModel());
-		operation.schedule();
+		operation.execute();
 	}
 
 }

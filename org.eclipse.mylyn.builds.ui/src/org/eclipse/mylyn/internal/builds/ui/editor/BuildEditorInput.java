@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.builds.ui.editor;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
@@ -19,6 +20,16 @@ import org.eclipse.ui.IPersistableElement;
  * @author Markus Knittig
  */
 public class BuildEditorInput implements IEditorInput {
+
+	private final IBuildPlan plan;
+
+	public BuildEditorInput(IBuildPlan plan) {
+		this.plan = plan;
+	}
+
+	public IBuildPlan getPlan() {
+		return plan;
+	}
 
 	public Object getAdapter(Class adapter) {
 		if (adapter == IEditorInput.class) {
@@ -36,7 +47,7 @@ public class BuildEditorInput implements IEditorInput {
 	}
 
 	public String getName() {
-		return "";
+		return plan.getName();
 	}
 
 	public IPersistableElement getPersistable() {

@@ -24,9 +24,9 @@ import org.eclipse.ui.actions.BaseSelectionListenerAction;
 /**
  * @author Steffen Pingel
  */
-public class OpenInBrowserAction extends BaseSelectionListenerAction {
+public class OpenWithBrowserAction extends BaseSelectionListenerAction {
 
-	public OpenInBrowserAction() {
+	public OpenWithBrowserAction() {
 		super("Open with Browser");
 		setToolTipText("Open with Browser");
 		setImageDescriptor(CommonImages.BROWSER_OPEN_TASK);

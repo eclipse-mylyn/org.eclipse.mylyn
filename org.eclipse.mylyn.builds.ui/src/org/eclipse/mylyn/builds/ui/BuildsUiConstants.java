@@ -21,4 +21,6 @@ public final class BuildsUiConstants {
 
 	public static final String ID_VIEW_BUILDS = "org.eclipse.mylyn.builds.navigator.builds"; //$NON-NLS-1$
 
+	public static final String ID_EDITOR_BUILDS = "org.eclipse.mylyn.builds.ui.editors.Build";
+
 }

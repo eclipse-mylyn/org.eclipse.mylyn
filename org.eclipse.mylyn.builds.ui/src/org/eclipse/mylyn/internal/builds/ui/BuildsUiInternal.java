@@ -126,6 +126,7 @@ public class BuildsUiInternal {
 	protected static synchronized BuildModelManager getManager() {
 		if (manager == null) {
 			manager = new BuildModelManager(BuildsUiPlugin.getDefault().getBuildsFile().toFile(), buildLoader);
+			manager.getModel().setLoader(buildLoader);
 		}
 		return manager;
 	}
