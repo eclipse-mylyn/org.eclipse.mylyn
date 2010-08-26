@@ -11,14 +11,17 @@
 
 package org.eclipse.mylyn.builds.tests.mock;
 
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.builds.core.BuildRequest;
 import org.eclipse.mylyn.builds.core.BuildState;
 import org.eclipse.mylyn.builds.core.BuildStatus;
+import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildPlanData;
 import org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy;
@@ -86,6 +89,18 @@ public class MockBuildServerBehavior extends BuildServerBehaviour {
 
 	@Override
 	public BuildServerConfiguration refreshConfiguration(IOperationMonitor monitor) throws CoreException {
+		// ignore
+		return null;
+	}
+
+	@Override
+	public List<IBuild> getBuilds(BuildRequest request, IOperationMonitor monitor) throws CoreException {
+		// ignore
+		return null;
+	}
+
+	@Override
+	public InputStream getConsole(IBuild build, IOperationMonitor monitor) throws CoreException {
 		// ignore
 		return null;
 	}
