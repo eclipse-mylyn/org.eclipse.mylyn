@@ -11,7 +11,7 @@
 
 package org.eclipse.mylyn.builds.tests.mock;
 
-import java.io.InputStream;
+import java.io.Reader;
 import java.util.Arrays;
 import java.util.List;
 
@@ -100,7 +100,7 @@ public class MockBuildServerBehavior extends BuildServerBehaviour {
 	}
 
 	@Override
-	public InputStream getConsole(IBuild build, IOperationMonitor monitor) throws CoreException {
+	public Reader getConsole(IBuild build, IOperationMonitor monitor) throws CoreException {
 		// ignore
 		return null;
 	}
