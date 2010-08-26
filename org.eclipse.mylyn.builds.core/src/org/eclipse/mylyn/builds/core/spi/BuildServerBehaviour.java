@@ -16,7 +16,6 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.mylyn.builds.core.BuildRequest;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildPlanData;
 import org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy;
@@ -46,7 +45,7 @@ public abstract class BuildServerBehaviour {
 
 	public abstract Reader getConsole(IBuild build, IOperationMonitor monitor) throws CoreException;
 
-	public abstract List<IBuildPlanData> getPlans(IOperationMonitor monitor) throws CoreException;
+	public abstract List<IBuildPlanData> getPlans(BuildPlanRequest request, IOperationMonitor monitor) throws CoreException;
 
 	public abstract BuildServerConfiguration refreshConfiguration(IOperationMonitor monitor) throws CoreException;
 

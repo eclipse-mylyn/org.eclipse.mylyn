@@ -9,9 +9,10 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.builds.core;
+package org.eclipse.mylyn.builds.core.spi;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.mylyn.builds.core.IBuildPlan;
 
 /**
  * @author Steffen Pingel

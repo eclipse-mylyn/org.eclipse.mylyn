@@ -21,12 +21,13 @@ import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.builds.core.BuildRequest;
-import org.eclipse.mylyn.builds.core.BuildRequest.Kind;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildPlanData;
 import org.eclipse.mylyn.builds.core.IBuildServer;
+import org.eclipse.mylyn.builds.core.spi.BuildPlanRequest;
+import org.eclipse.mylyn.builds.core.spi.BuildRequest;
+import org.eclipse.mylyn.builds.core.spi.BuildRequest.Kind;
 import org.eclipse.mylyn.commons.core.IOperationMonitor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.builds.core.Build;
@@ -91,7 +92,7 @@ public class RefreshSession {
 					"Server did not provide a valid build."));
 		}
 		final BuildServer original = server.getOriginal();
-		original.getLoader().getRealm().exec(new Runnable() {
+		original.getLoader().getRealm().syncExec(new Runnable() {
 			public void run() {
 				for (IBuildPlan modelPlan : request.getModel().getPlans()) {
 					if (modelPlan.getServer() == original && modelPlan.getId().equals(buildRequest.getPlan().getId())) {
@@ -110,6 +111,23 @@ public class RefreshSession {
 	}
 
 	public void refreshPlans(final RefreshRequest request, final IOperationMonitor monitor) throws CoreException {
+		final BuildServer original = server.getOriginal();
+
+		// prepare
+		final AtomicReference<List<String>> input = new AtomicReference<List<String>>();
+		original.getLoader().getRealm().syncExec(new Runnable() {
+			public void run() {
+				List<String> planIds = new ArrayList<String>();
+				for (IBuildPlan oldPlan : request.getModel().getPlans()) {
+					if (oldPlan.getServer() == original) {
+						planIds.add(oldPlan.getId());
+					}
+				}
+				input.set(planIds);
+			}
+		});
+
+		// execute
 		final AtomicReference<List<IBuildPlanData>> result = new AtomicReference<List<IBuildPlanData>>();
 		SafeRunner.run(new ISafeRunnable() {
 			public void handleException(Throwable e) {
@@ -118,15 +136,17 @@ public class RefreshSession {
 			}
 
 			public void run() throws Exception {
-				result.set(server.getBehaviour().getPlans(monitor));
+				BuildPlanRequest planRequest = new BuildPlanRequest(input.get());
+				result.set(server.getBehaviour().getPlans(planRequest, monitor));
 			}
 		});
+
+		// handle result
 		if (result.get() == null) {
 			throw new CoreException(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN,
 					"Server did not provide any plans."));
 		}
-		final BuildServer original = server.getOriginal();
-		original.getLoader().getRealm().exec(new Runnable() {
+		original.getLoader().getRealm().syncExec(new Runnable() {
 			public void run() {
 				for (IBuildPlan oldPlan : request.getModel().getPlans()) {
 					if (oldPlan.getServer() == original) {
@@ -141,16 +161,12 @@ public class RefreshSession {
 				}
 			}
 		});
-
-		// FIXME exec does not block, copy all
-		for (IBuildPlanData plan : result.get()) {
-			markStale(request, (BuildPlan) plan);
-		}
 	}
 
 	protected void update(RefreshRequest request, IBuildPlan oldPlan, BuildPlan newPlan) {
 		if (isStale(oldPlan, newPlan)) {
 			((BuildPlan) oldPlan).merge(newPlan);
+			markStale(request, newPlan);
 		}
 	}
 

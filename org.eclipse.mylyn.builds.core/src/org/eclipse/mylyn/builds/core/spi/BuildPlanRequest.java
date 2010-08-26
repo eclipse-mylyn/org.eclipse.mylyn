@@ -9,18 +9,25 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.builds.core;
+package org.eclipse.mylyn.builds.core.spi;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Steffen Pingel
  */
-public interface IBuildLoader {
+public class BuildPlanRequest {
 
-	public BuildServerBehaviour loadBehaviour(BuildServer server) throws CoreException;
+	private final List<String> planIds;
 
-	public IBuildModelRealm getRealm();
+	public BuildPlanRequest(List<String> planIds) {
+		this.planIds = Collections.unmodifiableList(new ArrayList<String>(planIds));
+	}
+
+	public List<String> getPlanIds() {
+		return planIds;
+	}
 
 }

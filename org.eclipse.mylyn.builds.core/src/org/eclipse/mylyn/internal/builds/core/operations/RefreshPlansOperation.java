@@ -46,7 +46,7 @@ public class RefreshPlansOperation {
 
 	public List<BuildJob> getJobs() {
 		final AtomicReference<List<BuildServer>> serversReference = new AtomicReference<List<BuildServer>>();
-		model.getLoader().getRealm().exec(new Runnable() {
+		model.getLoader().getRealm().syncExec(new Runnable() {
 			public void run() {
 				ArrayList<BuildServer> servers = new ArrayList<BuildServer>(model.getServers().size());
 				for (IBuildServer server : model.getServers()) {

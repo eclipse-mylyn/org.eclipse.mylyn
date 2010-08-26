@@ -11,16 +11,15 @@
 
 package org.eclipse.mylyn.internal.builds.core;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
-
 /**
  * @author Steffen Pingel
  */
-public interface IBuildLoader {
+public interface IBuildModelRealm {
 
-	public BuildServerBehaviour loadBehaviour(BuildServer server) throws CoreException;
+	public void exec(Runnable runnable);
 
-	public IBuildModelRealm getRealm();
+	public void asyncExec(Runnable runnable);
+
+	public void syncExec(Runnable runnable);
 
 }
