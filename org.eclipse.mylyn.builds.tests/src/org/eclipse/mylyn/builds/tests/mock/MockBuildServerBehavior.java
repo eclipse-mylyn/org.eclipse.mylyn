@@ -18,13 +18,14 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.builds.core.BuildRequest;
 import org.eclipse.mylyn.builds.core.BuildState;
 import org.eclipse.mylyn.builds.core.BuildStatus;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildPlanData;
 import org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy;
+import org.eclipse.mylyn.builds.core.spi.BuildPlanRequest;
+import org.eclipse.mylyn.builds.core.spi.BuildRequest;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
 import org.eclipse.mylyn.builds.core.spi.BuildServerConfiguration;
 import org.eclipse.mylyn.commons.core.IOperationMonitor;
@@ -38,7 +39,25 @@ public class MockBuildServerBehavior extends BuildServerBehaviour {
 	}
 
 	@Override
-	public List<IBuildPlanData> getPlans(IOperationMonitor monitor) {
+	public List<IBuild> getBuilds(BuildRequest request, IOperationMonitor monitor) throws CoreException {
+		// ignore
+		return null;
+	}
+
+	@Override
+	public BuildServerConfiguration getConfiguration() {
+		// ignore
+		return null;
+	}
+
+	@Override
+	public Reader getConsole(IBuild build, IOperationMonitor monitor) throws CoreException {
+		// ignore
+		return null;
+	}
+
+	@Override
+	public List<IBuildPlanData> getPlans(BuildPlanRequest request, IOperationMonitor monitor) throws CoreException {
 		IBuildPlanWorkingCopy failingPlan = createBuildPlan();
 		failingPlan.setId("1");
 		failingPlan.setName("Failing Build Plan");
@@ -73,8 +92,9 @@ public class MockBuildServerBehavior extends BuildServerBehaviour {
 	}
 
 	@Override
-	public IStatus validate(IOperationMonitor monitor) throws CoreException {
-		return Status.OK_STATUS;
+	public BuildServerConfiguration refreshConfiguration(IOperationMonitor monitor) throws CoreException {
+		// ignore
+		return null;
 	}
 
 	@Override
@@ -82,27 +102,8 @@ public class MockBuildServerBehavior extends BuildServerBehaviour {
 	}
 
 	@Override
-	public BuildServerConfiguration getConfiguration() {
-		// ignore
-		return null;
-	}
-
-	@Override
-	public BuildServerConfiguration refreshConfiguration(IOperationMonitor monitor) throws CoreException {
-		// ignore
-		return null;
-	}
-
-	@Override
-	public List<IBuild> getBuilds(BuildRequest request, IOperationMonitor monitor) throws CoreException {
-		// ignore
-		return null;
-	}
-
-	@Override
-	public Reader getConsole(IBuild build, IOperationMonitor monitor) throws CoreException {
-		// ignore
-		return null;
+	public IStatus validate(IOperationMonitor monitor) throws CoreException {
+		return Status.OK_STATUS;
 	}
 
 }
