@@ -249,7 +249,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		buildViewerColumn.setLabelProvider(new DecoratingStyledCellLabelProvider(new BuildLabelProvider(), PlatformUI
 				.getWorkbench().getDecoratorManager().getLabelDecorator(), null));
 		TreeColumn buildColumn = buildViewerColumn.getColumn();
-		buildColumn.setText("Builds");
+		buildColumn.setText("Build");
 		buildColumn.setWidth(220);
 
 		TreeViewerColumn summaryViewerColumn = new TreeViewerColumn(viewer, SWT.LEFT);

@@ -11,14 +11,20 @@
 
 package org.eclipse.mylyn.builds.ui.spi;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.mylyn.builds.core.IBuildModel;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
+import org.eclipse.mylyn.builds.ui.BuildsUiUtil;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
+import org.eclipse.mylyn.internal.builds.core.BuildModel;
 import org.eclipse.mylyn.internal.builds.core.BuildPlan;
 import org.eclipse.mylyn.internal.builds.core.BuildServer;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
@@ -92,20 +98,47 @@ public class BuildServerWizard extends Wizard implements INewWizard {
 		if (isNew()) {
 			BuildsUiInternal.getModel().getServers().add(original);
 		}
-		List<IBuildPlan> oldPlans = BuildsUiInternal.getModel().getPlans(original);
 
-		// FIXME make merge smarter
-		oldPlans = BuildsUiInternal.getModel().getPlans(original);
-		BuildsUiInternal.getModel().getPlans().removeAll(oldPlans);
-		List<IBuildPlan> selectedPlans = ((BuildServerWizardPage) getPages()[0]).getSelectedPlans();
-		for (IBuildPlan plan : selectedPlans) {
-			((BuildPlan) plan).setServer(original);
-		}
-		BuildsUiInternal.getModel().getPlans().addAll(selectedPlans);
+		updateSubscription(BuildsUiInternal.getModel());
 
 		BuildsView.openInActivePerspective();
 
 		return true;
+	}
+
+	/**
+	 * Compare the set of selected plans with existing subscriptions and updates <code>model</code> accordingly.
+	 */
+	private void updateSubscription(IBuildModel model) {
+		List<IBuildPlan> oldPlans = ((BuildModel) model).getPlans(original);
+		List<IBuildPlan> selectedPlans = ((BuildServerWizardPage) getPages()[0]).getSelectedPlans();
+
+		Set<String> oldPlanIds = BuildsUiUtil.toSetOfIds(oldPlans);
+		HashSet<String> toRemovePlanIds = new HashSet<String>(oldPlanIds);
+		Set<String> toAddPlanIds = BuildsUiUtil.toSetOfIds(selectedPlans);
+		toRemovePlanIds.removeAll(toAddPlanIds);
+		toAddPlanIds.removeAll(oldPlanIds);
+
+		if (toAddPlanIds.size() > 0) {
+			List<IBuildPlan> addPlans = new ArrayList<IBuildPlan>(toAddPlanIds.size());
+			for (IBuildPlan plan : selectedPlans) {
+				if (toAddPlanIds.contains(plan.getId())) {
+					((BuildPlan) plan).setServer(original);
+					addPlans.add(plan);
+				}
+			}
+			model.getPlans().addAll(addPlans);
+		}
+
+		if (toRemovePlanIds.size() > 0) {
+			List<IBuildPlan> removePlans = new ArrayList<IBuildPlan>(toRemovePlanIds.size());
+			for (IBuildPlan plan : oldPlans) {
+				if (toRemovePlanIds.contains(plan.getId())) {
+					removePlans.add(plan);
+				}
+			}
+			model.getPlans().removeAll(removePlans);
+		}
 	}
 
 	private boolean isNew() {

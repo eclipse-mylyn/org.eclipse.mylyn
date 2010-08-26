@@ -12,8 +12,8 @@
 package org.eclipse.mylyn.builds.ui.spi;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -39,6 +39,7 @@ import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.IBuildServerConfiguration;
 import org.eclipse.mylyn.builds.core.spi.BuildServerConfiguration;
 import org.eclipse.mylyn.builds.core.util.ProgressUtil;
+import org.eclipse.mylyn.builds.ui.BuildsUiUtil;
 import org.eclipse.mylyn.commons.core.IOperationMonitor;
 import org.eclipse.mylyn.commons.core.IOperationMonitor.OperationFlag;
 import org.eclipse.mylyn.commons.core.StatusHandler;
@@ -137,15 +138,18 @@ public class BuildServerPart extends RepositoryLocationPart {
 		}
 		IBuildServerConfiguration configuration = ((Validator) validator).getConfiguration();
 		if (configuration != null) {
-			Set<String> selectedIds = getSelectedPlanIds();
-			for (IBuildPlan plan : configuration.getPlans()) {
-				if (selectedIds.contains(plan.getId())) {
-					((BuildPlan) plan).setSelected(selectedIds.contains(plan.getId()));
-				}
-			}
-			planViewer.setInput(configuration);
-			planViewer.expandAll();
+			// update available plans
+			setInput(configuration, getSelectedPlans());
 		}
+	}
+
+	protected void setInput(IBuildServerConfiguration configuration, Collection<IBuildPlan> selectedPlans) {
+		Set<String> selectedIds = BuildsUiUtil.toSetOfIds(selectedPlans);
+		for (IBuildPlan plan : configuration.getPlans()) {
+			((BuildPlan) plan).setSelected(selectedIds.contains(plan.getId()));
+		}
+		planViewer.setInput(configuration);
+		planViewer.expandAll();
 	}
 
 	@Override
@@ -206,15 +210,8 @@ public class BuildServerPart extends RepositoryLocationPart {
 	public Control createContents(Composite parent) {
 		Control control = super.createContents(parent);
 		try {
-			Set<String> selectedIds = new HashSet<String>();
-			for (IBuildPlan plan : selectedPlans) {
-				selectedIds.add(plan.getId());
-			}
 			IBuildServerConfiguration configuration = getModel().getConfiguration();
-			for (IBuildPlan plan : configuration.getPlans()) {
-				((BuildPlan) plan).setSelected(selectedIds.contains(plan.getId()));
-			}
-			planViewer.setInput(configuration);
+			setInput(configuration, selectedPlans);
 		} catch (CoreException e) {
 			// ignore
 		}
@@ -326,22 +323,18 @@ public class BuildServerPart extends RepositoryLocationPart {
 		return model;
 	}
 
-	protected Set<String> getSelectedPlanIds() {
-		Object[] checkedElements = planViewer.getCheckedElements();
-		Set<String> selectedIds = new HashSet<String>();
-		for (Object object : checkedElements) {
-			selectedIds.add(((IBuildPlan) object).getId());
-		}
-		return selectedIds;
-	}
-
 	public List<IBuildPlan> getSelectedPlans() {
-		Object[] checkedElements = planViewer.getCheckedElements();
-		List<IBuildPlan> selectedPlans = new ArrayList<IBuildPlan>(checkedElements.length);
-		for (Object object : checkedElements) {
-			selectedPlans.add((IBuildPlan) object);
+		if (planViewer.getInput() instanceof BuildServerConfiguration) {
+			BuildServerConfiguration configuration = (BuildServerConfiguration) planViewer.getInput();
+			List<IBuildPlan> selectedPlans = new ArrayList<IBuildPlan>();
+			for (IBuildPlan plan : configuration.getPlans()) {
+				if (plan.isSelected()) {
+					selectedPlans.add(plan);
+				}
+			}
+			return selectedPlans;
 		}
-		return selectedPlans;
+		return Collections.emptyList();
 	}
 
 	@Override
