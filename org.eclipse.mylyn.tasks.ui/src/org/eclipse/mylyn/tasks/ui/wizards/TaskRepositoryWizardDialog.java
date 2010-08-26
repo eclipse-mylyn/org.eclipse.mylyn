@@ -151,8 +151,7 @@ public class TaskRepositoryWizardDialog extends WizardDialog {
 		HashMap<String, Boolean> savedEnabledState = null;
 		if (getShell() != null) {
 			savedEnabledState = new HashMap<String, Boolean>();
-			if (validateServerButton != null && getShell().getDisplay().getFocusControl() == validateServerButton
-					&& validateServerButton.getShell() == getShell()) {
+			if (validateServerButton != null && validateServerButton.getShell() == getShell()) {
 				savedEnabledState.put(VALIDATE_BUTTON_KEY, validateServerButton.getEnabled());
 				validateServerButton.setEnabled(false);
 			}
