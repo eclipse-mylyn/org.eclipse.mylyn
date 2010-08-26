@@ -20,8 +20,6 @@ import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.mylyn.builds.core.BuildRequest;
-import org.eclipse.mylyn.builds.core.BuildRequest.Kind;
 import org.eclipse.mylyn.builds.core.BuildState;
 import org.eclipse.mylyn.builds.core.BuildStatus;
 import org.eclipse.mylyn.builds.core.IBuild;
@@ -29,6 +27,9 @@ import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildPlanData;
 import org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy;
 import org.eclipse.mylyn.builds.core.IBuildWorkingCopy;
+import org.eclipse.mylyn.builds.core.spi.BuildPlanRequest;
+import org.eclipse.mylyn.builds.core.spi.BuildRequest;
+import org.eclipse.mylyn.builds.core.spi.BuildRequest.Kind;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
 import org.eclipse.mylyn.builds.core.spi.BuildServerConfiguration;
 import org.eclipse.mylyn.commons.core.IOperationMonitor;
@@ -38,6 +39,7 @@ import org.eclipse.mylyn.internal.builds.core.util.RepositoryWebLocation;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonConfigurationCache;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonException;
 import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient;
+import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient.BuildId;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBallColor;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBuild;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelHealthReport;
@@ -58,17 +60,26 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		this.client = new RestfulHudsonClient(new RepositoryWebLocation(location));
 	}
 
+	protected HudsonModelBuild createBuildParameter(IBuild build) {
+		HudsonModelBuild hudsonBuild = new HudsonModelBuild();
+		hudsonBuild.setNumber(build.getBuildNumber());
+		return hudsonBuild;
+	}
+
+	protected HudsonModelJob createJobParameter(IBuildPlanData plan) {
+		HudsonModelJob job = new HudsonModelJob();
+		job.setName(plan.getId());
+		return job;
+	}
+
 	@Override
 	public List<IBuild> getBuilds(BuildRequest request, IOperationMonitor monitor) throws CoreException {
 		if (request.getKind() != Kind.LAST) {
 			throw new UnsupportedOperationException();
 		}
 		try {
-			HudsonModelJob job = new HudsonModelJob();
-			job.setName(request.getPlan().getId());
-			HudsonModelBuild build = new HudsonModelBuild();
-			build.setNumber(request.getPlan().getLastBuild().getBuildNumber());
-			build = client.getBuild(job, build, monitor);
+			HudsonModelJob job = createJobParameter(request.getPlan());
+			HudsonModelBuild build = client.getBuild(job, BuildId.LAST.getBuild(), monitor);
 			return Collections.singletonList(parseBuild(build));
 		} catch (HudsonException e) {
 			throw HudsonCorePlugin.toCoreException(e);
@@ -95,10 +106,8 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 	@Override
 	public Reader getConsole(IBuild build, IOperationMonitor monitor) throws CoreException {
 		try {
-			HudsonModelJob job = new HudsonModelJob();
-			job.setName(build.getPlan().getId());
-			HudsonModelBuild hudsonBuild = new HudsonModelBuild();
-			hudsonBuild.setId(build.getId());
+			HudsonModelJob job = createJobParameter(build.getPlan());
+			HudsonModelBuild hudsonBuild = createBuildParameter(build);
 			return client.getConsole(job, hudsonBuild, monitor);
 		} catch (HudsonException e) {
 			throw HudsonCorePlugin.toCoreException(e);
@@ -106,9 +115,9 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 	}
 
 	@Override
-	public List<IBuildPlanData> getPlans(IOperationMonitor monitor) throws CoreException {
+	public List<IBuildPlanData> getPlans(BuildPlanRequest request, IOperationMonitor monitor) throws CoreException {
 		try {
-			List<HudsonModelJob> jobs = client.getJobs(monitor);
+			List<HudsonModelJob> jobs = client.getJobs(request.getPlanIds(), monitor);
 			List<IBuildPlanData> plans = new ArrayList<IBuildPlanData>(jobs.size());
 			for (HudsonModelJob job : jobs) {
 				plans.add(parseJob(job));
@@ -154,7 +163,7 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 	@Override
 	public BuildServerConfiguration refreshConfiguration(IOperationMonitor monitor) throws CoreException {
 		try {
-			client.getJobs(monitor);
+			client.getJobs(null, monitor);
 		} catch (HudsonException e) {
 			throw HudsonCorePlugin.toCoreException(e);
 		}
@@ -164,8 +173,7 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 	@Override
 	public void runBuild(IBuildPlanData plan, IOperationMonitor monitor) throws CoreException {
 		try {
-			HudsonModelJob job = new HudsonModelJob();
-			job.setUrl(plan.getUrl());
+			HudsonModelJob job = createJobParameter(plan);
 			client.runBuild(job, monitor);
 		} catch (HudsonException e) {
 			throw HudsonCorePlugin.toCoreException(e);

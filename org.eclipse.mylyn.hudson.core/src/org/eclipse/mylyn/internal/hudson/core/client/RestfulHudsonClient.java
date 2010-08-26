@@ -52,6 +52,29 @@ import org.xml.sax.SAXException;
  */
 public class RestfulHudsonClient {
 
+	public enum BuildId {
+		LAST(-1, "lastBuild"), LAST_FAILED(-5, "lastFailedBuild"), LAST_STABLE(-2, "lastStableBuild"), LAST_SUCCESSFUL(-3, "lastSuccessfulBuild"), LAST_UNSTABLE(
+						-4, "lastUnstableBuild");
+
+		private HudsonModelBuild build;
+
+		private final int id;
+
+		private final String url;
+
+		BuildId(int id, String url) {
+			this.id = id;
+			this.url = url;
+			this.build = new HudsonModelBuild();
+			this.build.setNumber(id);
+		}
+
+		public HudsonModelBuild getBuild() {
+			return build;
+		}
+
+	};
+
 	private static final String URL_API = "/api/xml"; //$NON-NLS-1$
 
 	private HudsonConfigurationCache cache;
@@ -75,7 +98,7 @@ public class RestfulHudsonClient {
 		return new HudsonOperation<HudsonModelBuild>(client) {
 			@Override
 			public HudsonModelBuild execute() throws IOException, HudsonException, JAXBException {
-				CommonHttpMethod method = createGetMethod(getJobUrl(job, build) + URL_API);
+				CommonHttpMethod method = createGetMethod(getBuildUrl(job, build) + URL_API);
 				try {
 					int statusCode = execute(method, monitor);
 					checkResponse(statusCode);
@@ -88,6 +111,14 @@ public class RestfulHudsonClient {
 				}
 			}
 		}.run();
+	}
+
+	protected String getBuildUrl(final HudsonModelJob job, final HudsonModelBuild build) {
+		if (build.getNumber() == -1) {
+			return getJobUrl(job) + "/lastBuild";
+		} else {
+			return getJobUrl(job) + "/" + build.getNumber();
+		}
 	}
 
 	public HudsonConfigurationCache getCache() {
@@ -103,7 +134,7 @@ public class RestfulHudsonClient {
 		return new HudsonOperation<Reader>(client) {
 			@Override
 			public Reader execute() throws IOException, HudsonException {
-				CommonHttpMethod method = createGetMethod(getJobUrl(job, hudsonBuild) + "/consoleText");
+				CommonHttpMethod method = createGetMethod(getBuildUrl(job, hudsonBuild) + "/consoleText");
 				int response = execute(method, monitor);
 				checkResponse(response);
 				String charSet = method.getResponseCharSet();
@@ -119,12 +150,13 @@ public class RestfulHudsonClient {
 		return DocumentBuilderFactory.newInstance().newDocumentBuilder();
 	}
 
-	public List<HudsonModelJob> getJobs(final IOperationMonitor monitor) throws HudsonException {
+	public List<HudsonModelJob> getJobs(final List<String> ids, final IOperationMonitor monitor) throws HudsonException {
 		return new HudsonOperation<List<HudsonModelJob>>(client) {
 			@Override
 			public List<HudsonModelJob> execute() throws IOException, HudsonException, JAXBException {
-				CommonHttpMethod method = createGetMethod(client.getLocation().getUrl() + URL_API
-						+ "?depth=1&xpath=/hudson/job&wrapper=hudson&exclude=/hudson/job/build"); //$NON-NLS-1$
+				String url = HudsonUrl.create(client.getLocation().getUrl() + URL_API).depth(1).include("/hudson/job")
+						.match("name", ids).exclude("/hudson/job/build").toUrl();
+				CommonHttpMethod method = createGetMethod(url);
 				try {
 					int statusCode = execute(method, monitor);
 					checkResponse(statusCode);
@@ -159,8 +191,8 @@ public class RestfulHudsonClient {
 		}.run();
 	}
 
-	protected String getJobUrl(final HudsonModelJob job, final HudsonModelBuild build) {
-		return client.getLocation().getUrl() + "/job/" + job.getName() + "/" + build.getNumber();
+	private String getJobUrl(HudsonModelJob job) {
+		return client.getLocation().getUrl() + "/job/" + job.getName();
 	}
 
 	Element parse(InputStream in) throws HudsonException {
@@ -177,7 +209,7 @@ public class RestfulHudsonClient {
 		int response = new HudsonOperation<Integer>(client) {
 			@Override
 			public Integer execute() throws IOException {
-				CommonHttpMethod method = createGetMethod(job.getUrl() + "/build");
+				CommonHttpMethod method = createGetMethod(getJobUrl(job) + "/build");
 				try {
 					return execute(method, monitor);
 				} finally {
