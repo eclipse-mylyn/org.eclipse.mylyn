@@ -11,12 +11,8 @@
 
 package org.eclipse.mylyn.builds.ui;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.ui.spi.BuildServerWizard;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
@@ -32,16 +28,6 @@ public class BuildsUiUtil {
 		ValidatableWizardDialog dialog = new ValidatableWizardDialog(WorkbenchUtil.getShell(), wizard);
 		dialog.create();
 		return dialog.open();
-	}
-
-	public static Set<String> toSetOfIds(Collection<IBuildPlan> plans) {
-		Set<String> ids = new HashSet<String>();
-		for (IBuildPlan plan : plans) {
-			if (plan.isSelected()) {
-				ids.add(plan.getId());
-			}
-		}
-		return ids;
 	}
 
 }

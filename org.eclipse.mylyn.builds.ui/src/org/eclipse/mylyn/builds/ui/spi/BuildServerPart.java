@@ -39,7 +39,6 @@ import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.IBuildServerConfiguration;
 import org.eclipse.mylyn.builds.core.spi.BuildServerConfiguration;
 import org.eclipse.mylyn.builds.core.util.ProgressUtil;
-import org.eclipse.mylyn.builds.ui.BuildsUiUtil;
 import org.eclipse.mylyn.commons.core.IOperationMonitor;
 import org.eclipse.mylyn.commons.core.IOperationMonitor.OperationFlag;
 import org.eclipse.mylyn.commons.core.StatusHandler;
@@ -47,6 +46,7 @@ import org.eclipse.mylyn.commons.repositories.RepositoryValidator;
 import org.eclipse.mylyn.commons.ui.team.RepositoryLocationPart;
 import org.eclipse.mylyn.internal.builds.core.BuildPlan;
 import org.eclipse.mylyn.internal.builds.ui.BuildServerValidator;
+import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
 import org.eclipse.mylyn.internal.provisional.commons.ui.SubstringPatternFilter;
 import org.eclipse.swt.SWT;
@@ -144,7 +144,7 @@ public class BuildServerPart extends RepositoryLocationPart {
 	}
 
 	protected void setInput(IBuildServerConfiguration configuration, Collection<IBuildPlan> selectedPlans) {
-		Set<String> selectedIds = BuildsUiUtil.toSetOfIds(selectedPlans);
+		Set<String> selectedIds = BuildsUiInternal.toSetOfIds(selectedPlans);
 		for (IBuildPlan plan : configuration.getPlans()) {
 			((BuildPlan) plan).setSelected(selectedIds.contains(plan.getId()));
 		}

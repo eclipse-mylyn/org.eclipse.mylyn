@@ -12,10 +12,14 @@
 package org.eclipse.mylyn.internal.builds.ui;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.spi.BuildConnector;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
@@ -169,6 +173,16 @@ public class BuildsUiInternal {
 		if (manager != null) {
 			manager.save();
 		}
+	}
+
+	public static Set<String> toSetOfIds(Collection<IBuildPlan> plans) {
+		Set<String> ids = new HashSet<String>();
+		for (IBuildPlan plan : plans) {
+			if (plan.isSelected()) {
+				ids.add(plan.getId());
+			}
+		}
+		return ids;
 	}
 
 }

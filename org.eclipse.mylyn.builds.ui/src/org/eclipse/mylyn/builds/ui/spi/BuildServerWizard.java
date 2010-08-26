@@ -22,7 +22,6 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.builds.core.IBuildModel;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
-import org.eclipse.mylyn.builds.ui.BuildsUiUtil;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
 import org.eclipse.mylyn.internal.builds.core.BuildModel;
 import org.eclipse.mylyn.internal.builds.core.BuildPlan;
@@ -113,9 +112,9 @@ public class BuildServerWizard extends Wizard implements INewWizard {
 		List<IBuildPlan> oldPlans = ((BuildModel) model).getPlans(original);
 		List<IBuildPlan> selectedPlans = ((BuildServerWizardPage) getPages()[0]).getSelectedPlans();
 
-		Set<String> oldPlanIds = BuildsUiUtil.toSetOfIds(oldPlans);
+		Set<String> oldPlanIds = BuildsUiInternal.toSetOfIds(oldPlans);
 		HashSet<String> toRemovePlanIds = new HashSet<String>(oldPlanIds);
-		Set<String> toAddPlanIds = BuildsUiUtil.toSetOfIds(selectedPlans);
+		Set<String> toAddPlanIds = BuildsUiInternal.toSetOfIds(selectedPlans);
 		toRemovePlanIds.removeAll(toAddPlanIds);
 		toAddPlanIds.removeAll(oldPlanIds);
 
