@@ -11,7 +11,7 @@
 
 package org.eclipse.mylyn.internal.hudson.core;
 
-import java.io.InputStream;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -93,11 +93,13 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 	}
 
 	@Override
-	public InputStream getConsole(IBuild build, IOperationMonitor monitor) throws CoreException {
+	public Reader getConsole(IBuild build, IOperationMonitor monitor) throws CoreException {
 		try {
+			HudsonModelJob job = new HudsonModelJob();
+			job.setName(build.getPlan().getId());
 			HudsonModelBuild hudsonBuild = new HudsonModelBuild();
 			hudsonBuild.setId(build.getId());
-			return client.getConsole(hudsonBuild, monitor);
+			return client.getConsole(job, hudsonBuild, monitor);
 		} catch (HudsonException e) {
 			throw HudsonCorePlugin.toCoreException(e);
 		}

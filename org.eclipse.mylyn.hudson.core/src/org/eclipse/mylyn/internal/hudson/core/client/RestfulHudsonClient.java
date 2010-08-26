@@ -14,6 +14,8 @@ package org.eclipse.mylyn.internal.hudson.core.client;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -63,8 +65,29 @@ public class RestfulHudsonClient {
 
 	protected void checkResponse(int statusCode) throws HudsonException {
 		if (statusCode != HttpStatus.SC_OK) {
-			throw new HudsonException(NLS.bind("Validation failed: {0}", HttpStatus.getStatusText(statusCode)));
+			throw new HudsonException(NLS.bind("Unexpected response from Hudson server: {0}", HttpStatus
+					.getStatusText(statusCode)));
 		}
+	}
+
+	public HudsonModelBuild getBuild(final HudsonModelJob job, final HudsonModelBuild build,
+			final IOperationMonitor monitor) throws HudsonException {
+		return new HudsonOperation<HudsonModelBuild>(client) {
+			@Override
+			public HudsonModelBuild execute() throws IOException, HudsonException, JAXBException {
+				CommonHttpMethod method = createGetMethod(getJobUrl(job, build) + URL_API);
+				try {
+					int statusCode = execute(method, monitor);
+					checkResponse(statusCode);
+
+					InputStream in = method.getResponseBodyAsStream(monitor);
+
+					return unmarshal(parse(in), HudsonModelBuild.class);
+				} finally {
+					method.releaseConnection(monitor);
+				}
+			}
+		}.run();
 	}
 
 	public HudsonConfigurationCache getCache() {
@@ -73,6 +96,23 @@ public class RestfulHudsonClient {
 
 	public HudsonConfiguration getConfiguration() {
 		return getCache().getConfiguration(client.getLocation().getUrl());
+	}
+
+	public Reader getConsole(final HudsonModelJob job, final HudsonModelBuild hudsonBuild,
+			final IOperationMonitor monitor) throws HudsonException {
+		return new HudsonOperation<Reader>(client) {
+			@Override
+			public Reader execute() throws IOException, HudsonException {
+				CommonHttpMethod method = createGetMethod(getJobUrl(job, hudsonBuild) + "/consoleText");
+				int response = execute(method, monitor);
+				checkResponse(response);
+				String charSet = method.getResponseCharSet();
+				if (charSet == null) {
+					charSet = "UTF-8";
+				}
+				return new InputStreamReader(method.getResponseBodyAsStream(monitor), charSet);
+			}
+		}.run();
 	}
 
 	private DocumentBuilder getDocumentBuilder() throws ParserConfigurationException {
@@ -119,8 +159,8 @@ public class RestfulHudsonClient {
 		}.run();
 	}
 
-	protected void setConfiguration(HudsonConfiguration configuration) {
-		getCache().setConfiguration(client.getLocation().getUrl(), configuration);
+	protected String getJobUrl(final HudsonModelJob job, final HudsonModelBuild build) {
+		return client.getLocation().getUrl() + "/job/" + job.getName() + "/" + build.getNumber();
 	}
 
 	Element parse(InputStream in) throws HudsonException {
@@ -156,6 +196,10 @@ public class RestfulHudsonClient {
 		this.cache = cache;
 	}
 
+	protected void setConfiguration(HudsonConfiguration configuration) {
+		getCache().setConfiguration(client.getLocation().getUrl(), configuration);
+	}
+
 	private <T> T unmarshal(Node node, Class<T> clazz) throws JAXBException {
 		JAXBContext ctx = JAXBContext.newInstance(clazz);
 		Unmarshaller unmarshaller = ctx.createUnmarshaller();
@@ -181,39 +225,6 @@ public class RestfulHudsonClient {
 		}
 		throw new HudsonException(NLS.bind("Unexpected return code {0}: {1}", response, HttpStatus
 				.getStatusText(response)));
-	}
-
-	public InputStream getConsole(HudsonModelBuild hudsonBuild, final IOperationMonitor monitor) throws HudsonException {
-		return new HudsonOperation<InputStream>(client) {
-			@Override
-			public InputStream execute() throws IOException, HudsonException {
-				CommonHttpMethod method = createHeadMethod(client.getLocation().getUrl() + URL_API);
-				int response = execute(method, monitor);
-				checkResponse(response);
-				return method.getResponseBodyAsStream(monitor);
-			}
-		}.run();
-	}
-
-	public HudsonModelBuild getBuild(final HudsonModelJob job, final HudsonModelBuild build,
-			final IOperationMonitor monitor) throws HudsonException {
-		return new HudsonOperation<HudsonModelBuild>(client) {
-			@Override
-			public HudsonModelBuild execute() throws IOException, HudsonException, JAXBException {
-				String base = "/job/" + job.getName() + "/" + build.getNumber();
-				CommonHttpMethod method = createGetMethod(client.getLocation().getUrl() + base + URL_API);
-				try {
-					int statusCode = execute(method, monitor);
-					checkResponse(statusCode);
-
-					InputStream in = method.getResponseBodyAsStream(monitor);
-
-					return unmarshal(parse(in), HudsonModelBuild.class);
-				} finally {
-					method.releaseConnection(monitor);
-				}
-			}
-		}.run();
 	}
 
 }
