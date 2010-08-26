@@ -184,6 +184,32 @@
             </and>
          </enabledWhen>
       </handler>
+      <handler
+            class="org.eclipse.mylyn.internal.builds.ui.commands.RefreshHandler"
+            commandId="org.eclipse.ui.file.refresh">
+         <activeWhen>
+            <with
+                  variable="activePartId">
+               <equals
+                     value="org.eclipse.mylyn.builds.navigator.builds">
+               </equals>
+            </with>
+         </activeWhen>
+         <enabledWhen>
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate>
+                  <and>
+                     <instanceof
+                           value="org.eclipse.mylyn.builds.core.IBuildServer">
+                     </instanceof>
+                  </and>
+               </iterate>
+            </and>
+         </enabledWhen>
+      </handler>
  </extension>
  <extension
        point="org.eclipse.ui.startup">
@@ -276,6 +302,15 @@
                 </instanceof>
              </iterate>
           </visibleWhen>
+       </command>
+    </menuContribution>
+    <menuContribution
+          allPopups="false"
+          locationURI="popup:org.eclipse.mylyn.builds.navigator.builds?after=group.refresh">
+       <command
+             commandId="org.eclipse.ui.file.refresh"
+             label="Refresh"
+             style="push">
        </command>
     </menuContribution>
     <menuContribution

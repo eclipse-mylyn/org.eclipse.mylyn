@@ -230,8 +230,10 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		MenuManager menuManager = new MenuManager();
 
 		menuManager.add(new GroupMarker("group.open"));
+		menuManager.add(new Separator("group.edit"));
 		menuManager.add(new Separator("group.file"));
 		menuManager.add(new Separator("group.run"));
+		menuManager.add(new Separator("group.refresh"));
 		menuManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 		menuManager.add(new Separator("group.properties"));
 

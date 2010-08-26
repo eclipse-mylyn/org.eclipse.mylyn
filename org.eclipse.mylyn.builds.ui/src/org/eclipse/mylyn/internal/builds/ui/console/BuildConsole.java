@@ -59,7 +59,7 @@ public class BuildConsole {
 
 	public void show() {
 		if (console == null) {
-			console = new MessageConsole(NLS.bind("Build Output for {0}", build.getLabel()), BuildImages.CONSOLE);
+			console = new MessageConsole(NLS.bind("Output for Build {0}", build.getLabel()), BuildImages.CONSOLE);
 			consoleManager.addConsoles(new IConsole[] { console });
 
 			stream = console.newMessageStream();

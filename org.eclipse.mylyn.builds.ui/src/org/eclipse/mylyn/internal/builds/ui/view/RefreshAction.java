@@ -12,7 +12,7 @@
 package org.eclipse.mylyn.internal.builds.ui.view;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylyn.internal.builds.core.operations.RefreshPlansOperation;
+import org.eclipse.mylyn.internal.builds.core.operations.RefreshOperation;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 
@@ -28,7 +28,7 @@ public class RefreshAction extends Action {
 
 	@Override
 	public void run() {
-		RefreshPlansOperation operation = new RefreshPlansOperation(BuildsUiInternal.getModel());
+		RefreshOperation operation = new RefreshOperation(BuildsUiInternal.getModel());
 		operation.execute();
 	}
 

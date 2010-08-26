@@ -18,7 +18,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylyn.commons.core.IOperationMonitor;
 import org.eclipse.mylyn.internal.builds.core.operations.BuildJob;
-import org.eclipse.mylyn.internal.builds.core.operations.RefreshPlansOperation;
+import org.eclipse.mylyn.internal.builds.core.operations.RefreshOperation;
 
 /**
  * @author Steffen Pingel
@@ -33,7 +33,7 @@ public class BuildRefresher implements IPropertyChangeListener {
 
 		@Override
 		protected IStatus doExecute(IOperationMonitor progress) {
-			RefreshPlansOperation refreshOperation = new RefreshPlansOperation(BuildsUiInternal.getModel());
+			RefreshOperation refreshOperation = new RefreshOperation(BuildsUiInternal.getModel());
 			return refreshOperation.syncExec(progress);
 		}
 	};
@@ -67,7 +67,7 @@ public class BuildRefresher implements IPropertyChangeListener {
 					}
 				});
 			}
-			refreshJob.schedule(getInterval());
+			BuildsUiInternal.getModel().getScheduler().schedule(refreshJob, getInterval());
 		} else {
 			if (refreshJob != null) {
 				refreshJob.cancel();

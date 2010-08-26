@@ -30,7 +30,11 @@ public class BuildSchedulerUi extends BuildScheduler {
 			if (event.getJob() instanceof BuildJob) {
 				IStatus status = ((BuildJob) event.getJob()).getStatus();
 				if (status != null && !status.isOK() && status.getSeverity() != IStatus.CANCEL) {
-					StatusManager.getManager().handle(status, StatusManager.SHOW | StatusManager.LOG);
+					int flags = StatusManager.LOG;
+					if (event.getJob().isUser()) {
+						flags |= StatusManager.SHOW;
+					}
+					StatusManager.getManager().handle(status, flags);
 				}
 			}
 			event.getJob().removeJobChangeListener(this);
@@ -40,9 +44,9 @@ public class BuildSchedulerUi extends BuildScheduler {
 	private final JobStatusHandler listener = new JobStatusHandler();
 
 	@Override
-	public void schedule(Job job) {
+	public void schedule(Job job, long interval) {
 		job.addJobChangeListener(listener);
-		super.schedule(job);
+		super.schedule(job, interval);
 	}
 
 }
