@@ -27,6 +27,7 @@ import org.eclipse.mylyn.internal.builds.core.BuildModel;
 import org.eclipse.mylyn.internal.builds.core.BuildServer;
 import org.eclipse.mylyn.internal.builds.core.IBuildLoader;
 import org.eclipse.mylyn.internal.builds.core.util.BuildModelManager;
+import org.eclipse.mylyn.internal.builds.ui.console.BuildConsoleManager;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 
@@ -104,6 +105,8 @@ public class BuildsUiInternal {
 		}
 	};
 
+	private static BuildConsoleManager consoleManager;
+
 	/**
 	 * Refresh every 15 minutes by default.
 	 */
@@ -123,10 +126,18 @@ public class BuildsUiInternal {
 		return getManager().createServer(connectorKind, location);
 	}
 
+	public static BuildConsoleManager getConsoleManager() {
+		if (consoleManager == null) {
+			consoleManager = new BuildConsoleManager();
+		}
+		return consoleManager;
+	}
+
 	protected static synchronized BuildModelManager getManager() {
 		if (manager == null) {
 			manager = new BuildModelManager(BuildsUiPlugin.getDefault().getBuildsFile().toFile(), buildLoader);
 			manager.getModel().setLoader(buildLoader);
+			manager.getModel().setScheduler(new BuildSchedulerUi());
 		}
 		return manager;
 	}

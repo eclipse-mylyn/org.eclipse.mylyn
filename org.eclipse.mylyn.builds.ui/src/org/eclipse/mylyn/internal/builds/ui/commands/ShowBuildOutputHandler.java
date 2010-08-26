@@ -17,6 +17,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
+import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -38,7 +39,7 @@ public class ShowBuildOutputHandler extends AbstractHandler {
 			Object item = ((IStructuredSelection) selection).getFirstElement();
 			if (item instanceof IBuildPlan) {
 				IBuildPlan plan = (IBuildPlan) item;
-				System.err.println("not implemented");
+				BuildsUiInternal.getConsoleManager().showConsole(plan);
 			}
 		}
 

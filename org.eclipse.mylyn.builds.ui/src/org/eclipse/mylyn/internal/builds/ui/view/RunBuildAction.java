@@ -15,6 +15,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.internal.builds.core.operations.RunBuildOperation;
 import org.eclipse.mylyn.internal.builds.ui.BuildImages;
+import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
 /**
@@ -40,7 +41,7 @@ public class RunBuildAction extends BaseSelectionListenerAction {
 		if (selection instanceof IBuildPlan) {
 			final IBuildPlan plan = (IBuildPlan) selection;
 			RunBuildOperation operation = new RunBuildOperation(plan);
-			operation.schedule();
+			BuildsUiInternal.getModel().getScheduler().schedule(operation);
 		}
 	}
 

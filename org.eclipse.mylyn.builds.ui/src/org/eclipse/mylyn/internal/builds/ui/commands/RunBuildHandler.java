@@ -18,6 +18,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.internal.builds.core.operations.RunBuildOperation;
+import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 /**
@@ -32,7 +33,7 @@ public class RunBuildHandler extends AbstractHandler {
 			if (item instanceof IBuildPlan) {
 				IBuildPlan plan = (IBuildPlan) item;
 				RunBuildOperation operation = new RunBuildOperation(plan);
-				operation.schedule();
+				BuildsUiInternal.getModel().getScheduler().schedule(operation);
 			}
 		}
 		return null;
