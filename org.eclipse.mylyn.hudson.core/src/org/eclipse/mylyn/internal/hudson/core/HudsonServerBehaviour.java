@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Markus Knittig - initial API and implementation
+ *     Tasktop Techonologies - improvements
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.hudson.core;
@@ -47,6 +48,7 @@ import org.eclipse.mylyn.internal.hudson.model.HudsonModelJob;
 
 /**
  * @author Markus Knittig
+ * @author Steffen Pingel
  */
 public class HudsonServerBehaviour extends BuildServerBehaviour {
 
