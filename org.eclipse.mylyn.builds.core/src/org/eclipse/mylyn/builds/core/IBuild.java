@@ -20,22 +20,24 @@ import java.util.List;
  */
 public interface IBuild extends IBuildElement {
 
-	String getId();
+	List<IArtifact> getArtifacts();
 
 	int getBuildNumber();
 
-	long getTimestamp();
+	IChangeSet getChangeSet();
+
+	String getDisplayName();
 
 	long getDuration();
 
-	String getDisplayName();
+	String getId();
+
+	IBuildPlan getPlan();
 
 	BuildState getState();
 
 	BuildStatus getStatus();
 
-	List<IArtifact> getArtifacts();
-
-	IChangeSet getChangeSet();
+	long getTimestamp();
 
 }

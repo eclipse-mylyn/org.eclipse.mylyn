@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildModel.java,v 1.6 2010/08/25 07:19:15 spingel Exp $
+ * $Id: BuildModel.java,v 1.7 2010/08/26 03:23:52 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -287,6 +287,10 @@ public class BuildModel extends EObjectImpl implements EObject, IBuildModel {
 			}
 		}
 		return result;
+	}
+
+	public synchronized void setScheduler(BuildScheduler scheduler) {
+		this.scheduler = scheduler;
 	}
 
 	public synchronized BuildScheduler getScheduler() {

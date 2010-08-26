@@ -28,6 +28,8 @@ public interface CommonHttpMethod extends HttpMethod {
 
 	public static final String CONTENT_ENCODING_GZIP = "gzip"; //$NON-NLS-1$
 
+	public abstract String getResponseCharSet();
+
 	public abstract InputStream getResponseBodyAsStream(IProgressMonitor monitor) throws IOException;
 
 	public abstract void releaseConnection(IProgressMonitor monitor);

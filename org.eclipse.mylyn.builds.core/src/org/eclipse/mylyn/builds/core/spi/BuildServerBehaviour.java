@@ -11,7 +11,7 @@
 
 package org.eclipse.mylyn.builds.core.spi;
 
-import java.io.InputStream;
+import java.io.Reader;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -44,7 +44,7 @@ public abstract class BuildServerBehaviour {
 
 	public abstract BuildServerConfiguration getConfiguration();
 
-	public abstract InputStream getConsole(IBuild build, IOperationMonitor monitor) throws CoreException;
+	public abstract Reader getConsole(IBuild build, IOperationMonitor monitor) throws CoreException;
 
 	public abstract List<IBuildPlanData> getPlans(IOperationMonitor monitor) throws CoreException;
 
