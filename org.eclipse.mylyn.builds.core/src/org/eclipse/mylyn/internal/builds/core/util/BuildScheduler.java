@@ -25,7 +25,11 @@ public class BuildScheduler {
 	}
 
 	public void schedule(Job job) {
-		job.schedule();
+		schedule(job, 0L);
+	}
+
+	public void schedule(Job job, long interval) {
+		job.schedule(interval);
 	}
 
 	public void schedule(List<BuildJob> jobs) {

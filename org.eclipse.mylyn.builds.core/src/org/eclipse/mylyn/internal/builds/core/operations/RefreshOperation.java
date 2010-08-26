@@ -31,13 +31,20 @@ import org.eclipse.osgi.util.NLS;
 /**
  * @author Steffen Pingel
  */
-public class RefreshPlansOperation {
+public class RefreshOperation {
 
 	private final BuildModel model;
 
-	public RefreshPlansOperation(BuildModel model) {
+	private final List<BuildServer> servers;
+
+	public RefreshOperation(BuildModel model, List<BuildServer> servers) {
 		Assert.isNotNull(model);
 		this.model = model;
+		this.servers = servers;
+	}
+
+	public RefreshOperation(BuildModel model) {
+		this(model, null);
 	}
 
 	public void execute() {
@@ -45,19 +52,7 @@ public class RefreshPlansOperation {
 	}
 
 	public List<BuildJob> getJobs() {
-		final AtomicReference<List<BuildServer>> serversReference = new AtomicReference<List<BuildServer>>();
-		model.getLoader().getRealm().syncExec(new Runnable() {
-			public void run() {
-				ArrayList<BuildServer> servers = new ArrayList<BuildServer>(model.getServers().size());
-				for (IBuildServer server : model.getServers()) {
-					if (server.getLocation().isOffline()) {
-						continue;
-					}
-					servers.add((BuildServer) server);
-					serversReference.set(servers);
-				}
-			}
-		});
+		final AtomicReference<List<BuildServer>> serversReference = getServers();
 
 		List<BuildJob> jobs = new ArrayList<BuildJob>(serversReference.get().size());
 		for (final BuildServer server : serversReference.get()) {
@@ -79,6 +74,27 @@ public class RefreshPlansOperation {
 			jobs.add(job);
 		}
 		return jobs;
+	}
+
+	protected AtomicReference<List<BuildServer>> getServers() {
+		final AtomicReference<List<BuildServer>> serversReference = new AtomicReference<List<BuildServer>>();
+		if (servers != null) {
+			serversReference.set(servers);
+		} else {
+			model.getLoader().getRealm().syncExec(new Runnable() {
+				public void run() {
+					ArrayList<BuildServer> servers = new ArrayList<BuildServer>(model.getServers().size());
+					for (IBuildServer server : model.getServers()) {
+						if (server.getLocation().isOffline()) {
+							continue;
+						}
+						servers.add((BuildServer) server);
+						serversReference.set(servers);
+					}
+				}
+			});
+		}
+		return serversReference;
 	}
 
 	public IStatus syncExec(IOperationMonitor progress) {

@@ -20,6 +20,7 @@ import org.eclipse.mylyn.builds.core.util.ProgressUtil;
 import org.eclipse.mylyn.commons.core.DelegatingProgressMonitor;
 import org.eclipse.mylyn.commons.core.IDelegatingProgressMonitor;
 import org.eclipse.mylyn.commons.core.IOperationMonitor;
+import org.eclipse.mylyn.commons.core.IOperationMonitor.OperationFlag;
 import org.eclipse.mylyn.internal.builds.core.util.BuildsConstants;
 
 /**
@@ -55,7 +56,11 @@ public abstract class BuildJob extends Job {
 			monitor.setCanceled(false);
 			monitor.attach(jobMonitor);
 			try {
-				return doExecute(ProgressUtil.convert(monitor));
+				IOperationMonitor progress = ProgressUtil.convert(monitor);
+				if (!isUser()) {
+					progress.addFlag(OperationFlag.BACKGROUND);
+				}
+				return doExecute(progress);
 			} catch (OperationCanceledException e) {
 				return Status.CANCEL_STATUS;
 			} finally {
