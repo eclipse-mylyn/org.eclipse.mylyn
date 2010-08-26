@@ -13,11 +13,9 @@ package org.eclipse.mylyn.internal.builds.ui;
 
 import java.io.IOException;
 
-import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.spi.BuildConnector;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
@@ -26,6 +24,7 @@ import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
 import org.eclipse.mylyn.internal.builds.core.BuildModel;
 import org.eclipse.mylyn.internal.builds.core.BuildServer;
 import org.eclipse.mylyn.internal.builds.core.IBuildLoader;
+import org.eclipse.mylyn.internal.builds.core.IBuildModelRealm;
 import org.eclipse.mylyn.internal.builds.core.util.BuildModelManager;
 import org.eclipse.mylyn.internal.builds.ui.console.BuildConsoleManager;
 import org.eclipse.osgi.util.NLS;
@@ -37,13 +36,33 @@ import org.eclipse.swt.widgets.Display;
 public class BuildsUiInternal {
 
 	private static IBuildLoader buildLoader = new IBuildLoader() {
-		private volatile Realm realm;
 
-		public Realm getRealm() {
+		private volatile IBuildModelRealm realm;
+
+		public IBuildModelRealm getRealm() {
 			if (realm == null) {
 				Display.getDefault().syncExec(new Runnable() {
 					public void run() {
-						realm = SWTObservables.getRealm(Display.getDefault());
+						realm = new IBuildModelRealm() {
+
+							Display display = Display.getDefault();
+
+							public void asyncExec(Runnable runnable) {
+								display.asyncExec(runnable);
+							}
+
+							public void exec(Runnable runnable) {
+								if (Display.getCurrent() != null) {
+									runnable.run();
+								} else {
+									display.asyncExec(runnable);
+								}
+							}
+
+							public void syncExec(Runnable runnable) {
+								display.syncExec(runnable);
+							}
+						};
 					}
 				});
 			}
