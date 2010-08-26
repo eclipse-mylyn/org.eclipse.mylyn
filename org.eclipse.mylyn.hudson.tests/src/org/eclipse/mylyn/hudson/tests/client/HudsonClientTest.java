@@ -78,7 +78,7 @@ public class HudsonClientTest extends TestCase {
 
 	public void testGetJobs() throws Exception {
 		client = fixture.connect();
-		List<HudsonModelJob> jobs = client.getJobs(null);
+		List<HudsonModelJob> jobs = client.getJobs(null, null);
 		assertContains(jobs, PLAN_FAILING);
 		assertContains(jobs, PLAN_SUCCEEDING);
 		assertHealthReport(jobs);
@@ -148,7 +148,7 @@ public class HudsonClientTest extends TestCase {
 	}
 
 	private HudsonModelJob getJob(String name) throws HudsonException {
-		for (HudsonModelJob job : client.getJobs(null)) {
+		for (HudsonModelJob job : client.getJobs(null, null)) {
 			if (job.getName().equals(name)) {
 				return job;
 			}
