@@ -45,6 +45,7 @@ grep "^plugin@org.apache.commons.logging,1.0.4" $TMP >> $TMPMAP
 grep "^plugin@org.apache.xmlrpc,3.0.0" $TMP >> $TMPMAP
 grep "^plugin@org.apache.ws.commons.util,1.0.0" $TMP >> $TMPMAP
 grep "^plugin@org.jdom,1.0.0" $TMP >> $TMPMAP
+grep "^plugin@org.json,1.0.0" $TMP >> $TMPMAP
 
 rm $TMP
 mv $TMPMAP $MAP
