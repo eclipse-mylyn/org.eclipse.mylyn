@@ -4,19 +4,19 @@ Bundle-Name: Mylyn Hudson Connector Tests
 Bundle-SymbolicName: org.eclipse.mylyn.hudson.tests;singleton:=true
 Bundle-Version: 0.1.0.qualifier
 Require-Bundle: org.junit,
+ com.sun.xml.bind;bundle-version="2.2.0";resolution:=optional,
  org.eclipse.core.runtime,
  org.eclipse.jface.text,
  org.eclipse.search,
  org.eclipse.ui,
  org.eclipse.ui.workbench.texteditor,
- org.eclipse.mylyn.hudson.ui,
- org.eclipse.mylyn.hudson.core,
- org.eclipse.mylyn.tests.util,
  org.eclipse.mylyn.builds.core,
  org.eclipse.mylyn.commons.core,
  org.eclipse.mylyn.commons.net,
- com.sun.xml.bind;bundle-version="2.2.0";resolution:=optional,
- org.eclipse.mylyn.commons.repositories
+ org.eclipse.mylyn.commons.repositories,
+ org.eclipse.mylyn.hudson.core,
+ org.eclipse.mylyn.hudson.ui,
+ org.eclipse.mylyn.tests.util
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: Eclipse Mylyn
 Export-Package: org.eclipse.mylyn.hudson.tests;x-internal:=true,
