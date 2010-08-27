@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildAdapterFactory.java,v 1.8 2010/08/25 07:19:15 spingel Exp $
+ * $Id: BuildAdapterFactory.java,v 1.9 2010/08/27 06:49:23 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -200,6 +200,81 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 		@Override
 		public Adapter caseUser(User object) {
 			return createUserAdapter();
+		}
+
+		@Override
+		public Adapter caseIParameterDefinition(IParameterDefinition object) {
+			return createIParameterDefinitionAdapter();
+		}
+
+		@Override
+		public Adapter caseIFileParameterDefinition(IFileParameterDefinition object) {
+			return createIFileParameterDefinitionAdapter();
+		}
+
+		@Override
+		public Adapter caseIBooleanParameterDefinition(IBooleanParameterDefinition object) {
+			return createIBooleanParameterDefinitionAdapter();
+		}
+
+		@Override
+		public Adapter caseIChoiceParameterDefinition(IChoiceParameterDefinition object) {
+			return createIChoiceParameterDefinitionAdapter();
+		}
+
+		@Override
+		public Adapter caseChoiceParameterDefinition(ChoiceParameterDefinition object) {
+			return createChoiceParameterDefinitionAdapter();
+		}
+
+		@Override
+		public Adapter caseBooleanParameterDefinition(BooleanParameterDefinition object) {
+			return createBooleanParameterDefinitionAdapter();
+		}
+
+		@Override
+		public Adapter caseFileParameterDefinition(FileParameterDefinition object) {
+			return createFileParameterDefinitionAdapter();
+		}
+
+		@Override
+		public Adapter caseIPlanParameterDefinition(IPlanParameterDefinition object) {
+			return createIPlanParameterDefinitionAdapter();
+		}
+
+		@Override
+		public Adapter casePlanParameterDefinition(PlanParameterDefinition object) {
+			return createPlanParameterDefinitionAdapter();
+		}
+
+		@Override
+		public Adapter caseIPasswordParameterDefinition(IPasswordParameterDefinition object) {
+			return createIPasswordParameterDefinitionAdapter();
+		}
+
+		@Override
+		public Adapter casePasswordParameterDefinition(PasswordParameterDefinition object) {
+			return createPasswordParameterDefinitionAdapter();
+		}
+
+		@Override
+		public Adapter caseIBuildParameterDefinition(IBuildParameterDefinition object) {
+			return createIBuildParameterDefinitionAdapter();
+		}
+
+		@Override
+		public Adapter caseBuildParameterDefinition(BuildParameterDefinition object) {
+			return createBuildParameterDefinitionAdapter();
+		}
+
+		@Override
+		public Adapter caseIStringParameterDefinition(IStringParameterDefinition object) {
+			return createIStringParameterDefinitionAdapter();
+		}
+
+		@Override
+		public Adapter caseStringParameterDefinition(StringParameterDefinition object) {
+			return createStringParameterDefinitionAdapter();
 		}
 
 		@Override
@@ -474,6 +549,249 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createUserAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.internal.builds.core.IParameterDefinition
+	 * <em>IParameter Definition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.internal.builds.core.IParameterDefinition
+	 * @generated
+	 */
+	public Adapter createIParameterDefinitionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '
+	 * {@link org.eclipse.mylyn.internal.builds.core.IFileParameterDefinition <em>IFile Parameter Definition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.internal.builds.core.IFileParameterDefinition
+	 * @generated
+	 */
+	public Adapter createIFileParameterDefinitionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '
+	 * {@link org.eclipse.mylyn.internal.builds.core.IBooleanParameterDefinition <em>IBoolean Parameter Definition</em>}
+	 * '.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.internal.builds.core.IBooleanParameterDefinition
+	 * @generated
+	 */
+	public Adapter createIBooleanParameterDefinitionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '
+	 * {@link org.eclipse.mylyn.internal.builds.core.IChoiceParameterDefinition <em>IChoice Parameter Definition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.internal.builds.core.IChoiceParameterDefinition
+	 * @generated
+	 */
+	public Adapter createIChoiceParameterDefinitionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '
+	 * {@link org.eclipse.mylyn.internal.builds.core.ChoiceParameterDefinition <em>Choice Parameter Definition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.internal.builds.core.ChoiceParameterDefinition
+	 * @generated
+	 */
+	public Adapter createChoiceParameterDefinitionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '
+	 * {@link org.eclipse.mylyn.internal.builds.core.BooleanParameterDefinition <em>Boolean Parameter Definition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.internal.builds.core.BooleanParameterDefinition
+	 * @generated
+	 */
+	public Adapter createBooleanParameterDefinitionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '
+	 * {@link org.eclipse.mylyn.internal.builds.core.FileParameterDefinition <em>File Parameter Definition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.internal.builds.core.FileParameterDefinition
+	 * @generated
+	 */
+	public Adapter createFileParameterDefinitionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '
+	 * {@link org.eclipse.mylyn.internal.builds.core.IPlanParameterDefinition <em>IPlan Parameter Definition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.internal.builds.core.IPlanParameterDefinition
+	 * @generated
+	 */
+	public Adapter createIPlanParameterDefinitionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '
+	 * {@link org.eclipse.mylyn.internal.builds.core.PlanParameterDefinition <em>Plan Parameter Definition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.internal.builds.core.PlanParameterDefinition
+	 * @generated
+	 */
+	public Adapter createPlanParameterDefinitionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '
+	 * {@link org.eclipse.mylyn.internal.builds.core.IPasswordParameterDefinition
+	 * <em>IPassword Parameter Definition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.internal.builds.core.IPasswordParameterDefinition
+	 * @generated
+	 */
+	public Adapter createIPasswordParameterDefinitionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '
+	 * {@link org.eclipse.mylyn.internal.builds.core.PasswordParameterDefinition <em>Password Parameter Definition</em>}
+	 * '.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.internal.builds.core.PasswordParameterDefinition
+	 * @generated
+	 */
+	public Adapter createPasswordParameterDefinitionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '
+	 * {@link org.eclipse.mylyn.internal.builds.core.IBuildParameterDefinition <em>IBuild Parameter Definition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.internal.builds.core.IBuildParameterDefinition
+	 * @generated
+	 */
+	public Adapter createIBuildParameterDefinitionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '
+	 * {@link org.eclipse.mylyn.internal.builds.core.BuildParameterDefinition <em>Parameter Definition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildParameterDefinition
+	 * @generated
+	 */
+	public Adapter createBuildParameterDefinitionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '
+	 * {@link org.eclipse.mylyn.internal.builds.core.IStringParameterDefinition <em>IString Parameter Definition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.internal.builds.core.IStringParameterDefinition
+	 * @generated
+	 */
+	public Adapter createIStringParameterDefinitionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '
+	 * {@link org.eclipse.mylyn.internal.builds.core.StringParameterDefinition <em>String Parameter Definition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.internal.builds.core.StringParameterDefinition
+	 * @generated
+	 */
+	public Adapter createStringParameterDefinitionAdapter() {
 		return null;
 	}
 

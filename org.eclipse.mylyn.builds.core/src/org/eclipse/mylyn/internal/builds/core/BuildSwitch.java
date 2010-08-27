@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildSwitch.java,v 1.8 2010/08/25 07:19:14 spingel Exp $
+ * $Id: BuildSwitch.java,v 1.9 2010/08/27 06:49:23 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -201,6 +201,153 @@ public class BuildSwitch<T> {
 			T result = caseUser(user);
 			if (result == null)
 				result = caseIUser(user);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case BuildPackage.IPARAMETER_DEFINITION: {
+			IParameterDefinition iParameterDefinition = (IParameterDefinition) theEObject;
+			T result = caseIParameterDefinition(iParameterDefinition);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case BuildPackage.IFILE_PARAMETER_DEFINITION: {
+			IFileParameterDefinition iFileParameterDefinition = (IFileParameterDefinition) theEObject;
+			T result = caseIFileParameterDefinition(iFileParameterDefinition);
+			if (result == null)
+				result = caseIParameterDefinition(iFileParameterDefinition);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case BuildPackage.IBOOLEAN_PARAMETER_DEFINITION: {
+			IBooleanParameterDefinition iBooleanParameterDefinition = (IBooleanParameterDefinition) theEObject;
+			T result = caseIBooleanParameterDefinition(iBooleanParameterDefinition);
+			if (result == null)
+				result = caseIParameterDefinition(iBooleanParameterDefinition);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case BuildPackage.ICHOICE_PARAMETER_DEFINITION: {
+			IChoiceParameterDefinition iChoiceParameterDefinition = (IChoiceParameterDefinition) theEObject;
+			T result = caseIChoiceParameterDefinition(iChoiceParameterDefinition);
+			if (result == null)
+				result = caseIParameterDefinition(iChoiceParameterDefinition);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case BuildPackage.CHOICE_PARAMETER_DEFINITION: {
+			ChoiceParameterDefinition choiceParameterDefinition = (ChoiceParameterDefinition) theEObject;
+			T result = caseChoiceParameterDefinition(choiceParameterDefinition);
+			if (result == null)
+				result = caseIChoiceParameterDefinition(choiceParameterDefinition);
+			if (result == null)
+				result = caseIParameterDefinition(choiceParameterDefinition);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case BuildPackage.BOOLEAN_PARAMETER_DEFINITION: {
+			BooleanParameterDefinition booleanParameterDefinition = (BooleanParameterDefinition) theEObject;
+			T result = caseBooleanParameterDefinition(booleanParameterDefinition);
+			if (result == null)
+				result = caseIBooleanParameterDefinition(booleanParameterDefinition);
+			if (result == null)
+				result = caseIParameterDefinition(booleanParameterDefinition);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case BuildPackage.FILE_PARAMETER_DEFINITION: {
+			FileParameterDefinition fileParameterDefinition = (FileParameterDefinition) theEObject;
+			T result = caseFileParameterDefinition(fileParameterDefinition);
+			if (result == null)
+				result = caseIFileParameterDefinition(fileParameterDefinition);
+			if (result == null)
+				result = caseIParameterDefinition(fileParameterDefinition);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case BuildPackage.IPLAN_PARAMETER_DEFINITION: {
+			IPlanParameterDefinition iPlanParameterDefinition = (IPlanParameterDefinition) theEObject;
+			T result = caseIPlanParameterDefinition(iPlanParameterDefinition);
+			if (result == null)
+				result = caseIParameterDefinition(iPlanParameterDefinition);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case BuildPackage.PLAN_PARAMETER_DEFINITION: {
+			PlanParameterDefinition planParameterDefinition = (PlanParameterDefinition) theEObject;
+			T result = casePlanParameterDefinition(planParameterDefinition);
+			if (result == null)
+				result = caseIPlanParameterDefinition(planParameterDefinition);
+			if (result == null)
+				result = caseIParameterDefinition(planParameterDefinition);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case BuildPackage.IPASSWORD_PARAMETER_DEFINITION: {
+			IPasswordParameterDefinition iPasswordParameterDefinition = (IPasswordParameterDefinition) theEObject;
+			T result = caseIPasswordParameterDefinition(iPasswordParameterDefinition);
+			if (result == null)
+				result = caseIParameterDefinition(iPasswordParameterDefinition);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case BuildPackage.PASSWORD_PARAMETER_DEFINITION: {
+			PasswordParameterDefinition passwordParameterDefinition = (PasswordParameterDefinition) theEObject;
+			T result = casePasswordParameterDefinition(passwordParameterDefinition);
+			if (result == null)
+				result = caseIPasswordParameterDefinition(passwordParameterDefinition);
+			if (result == null)
+				result = caseIParameterDefinition(passwordParameterDefinition);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case BuildPackage.IBUILD_PARAMETER_DEFINITION: {
+			IBuildParameterDefinition iBuildParameterDefinition = (IBuildParameterDefinition) theEObject;
+			T result = caseIBuildParameterDefinition(iBuildParameterDefinition);
+			if (result == null)
+				result = caseIParameterDefinition(iBuildParameterDefinition);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case BuildPackage.BUILD_PARAMETER_DEFINITION: {
+			BuildParameterDefinition buildParameterDefinition = (BuildParameterDefinition) theEObject;
+			T result = caseBuildParameterDefinition(buildParameterDefinition);
+			if (result == null)
+				result = caseIBuildParameterDefinition(buildParameterDefinition);
+			if (result == null)
+				result = caseIParameterDefinition(buildParameterDefinition);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case BuildPackage.ISTRING_PARAMETER_DEFINITION: {
+			IStringParameterDefinition iStringParameterDefinition = (IStringParameterDefinition) theEObject;
+			T result = caseIStringParameterDefinition(iStringParameterDefinition);
+			if (result == null)
+				result = caseIParameterDefinition(iStringParameterDefinition);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case BuildPackage.STRING_PARAMETER_DEFINITION: {
+			StringParameterDefinition stringParameterDefinition = (StringParameterDefinition) theEObject;
+			T result = caseStringParameterDefinition(stringParameterDefinition);
+			if (result == null)
+				result = caseIStringParameterDefinition(stringParameterDefinition);
+			if (result == null)
+				result = caseIParameterDefinition(stringParameterDefinition);
 			if (result == null)
 				result = defaultCase(theEObject);
 			return result;
@@ -479,6 +626,261 @@ public class BuildSwitch<T> {
 	 * @generated
 	 */
 	public T caseUser(User object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IParameter Definition</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IParameter Definition</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseIParameterDefinition(IParameterDefinition object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IFile Parameter Definition</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IFile Parameter Definition</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseIFileParameterDefinition(IFileParameterDefinition object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IBoolean Parameter Definition</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IBoolean Parameter Definition</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseIBooleanParameterDefinition(IBooleanParameterDefinition object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IChoice Parameter Definition</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IChoice Parameter Definition</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseIChoiceParameterDefinition(IChoiceParameterDefinition object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Choice Parameter Definition</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Choice Parameter Definition</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseChoiceParameterDefinition(ChoiceParameterDefinition object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Boolean Parameter Definition</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Boolean Parameter Definition</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseBooleanParameterDefinition(BooleanParameterDefinition object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>File Parameter Definition</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>File Parameter Definition</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseFileParameterDefinition(FileParameterDefinition object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IPlan Parameter Definition</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IPlan Parameter Definition</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseIPlanParameterDefinition(IPlanParameterDefinition object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Plan Parameter Definition</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Plan Parameter Definition</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T casePlanParameterDefinition(PlanParameterDefinition object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IPassword Parameter Definition</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IPassword Parameter Definition</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseIPasswordParameterDefinition(IPasswordParameterDefinition object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Password Parameter Definition</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Password Parameter Definition</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T casePasswordParameterDefinition(PasswordParameterDefinition object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IBuild Parameter Definition</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IBuild Parameter Definition</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseIBuildParameterDefinition(IBuildParameterDefinition object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Parameter Definition</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Parameter Definition</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseBuildParameterDefinition(BuildParameterDefinition object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IString Parameter Definition</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IString Parameter Definition</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseIStringParameterDefinition(IStringParameterDefinition object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>String Parameter Definition</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>String Parameter Definition</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseStringParameterDefinition(StringParameterDefinition object) {
 		return null;
 	}
 

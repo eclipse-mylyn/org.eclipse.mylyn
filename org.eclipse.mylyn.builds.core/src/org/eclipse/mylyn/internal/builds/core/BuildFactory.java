@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildFactory.java,v 1.8 2010/08/25 07:19:15 spingel Exp $
+ * $Id: BuildFactory.java,v 1.9 2010/08/27 06:49:23 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -97,6 +97,20 @@ public class BuildFactory extends EFactoryImpl {
 			return (EObject) createStringToStringMap();
 		case BuildPackage.USER:
 			return createUser();
+		case BuildPackage.CHOICE_PARAMETER_DEFINITION:
+			return createChoiceParameterDefinition();
+		case BuildPackage.BOOLEAN_PARAMETER_DEFINITION:
+			return createBooleanParameterDefinition();
+		case BuildPackage.FILE_PARAMETER_DEFINITION:
+			return createFileParameterDefinition();
+		case BuildPackage.PLAN_PARAMETER_DEFINITION:
+			return createPlanParameterDefinition();
+		case BuildPackage.PASSWORD_PARAMETER_DEFINITION:
+			return createPasswordParameterDefinition();
+		case BuildPackage.BUILD_PARAMETER_DEFINITION:
+			return createBuildParameterDefinition();
+		case BuildPackage.STRING_PARAMETER_DEFINITION:
+			return createStringParameterDefinition();
 		default:
 			throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -239,6 +253,83 @@ public class BuildFactory extends EFactoryImpl {
 	public User createUser() {
 		User user = new User();
 		return user;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public ChoiceParameterDefinition createChoiceParameterDefinition() {
+		ChoiceParameterDefinition choiceParameterDefinition = new ChoiceParameterDefinition();
+		return choiceParameterDefinition;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public BooleanParameterDefinition createBooleanParameterDefinition() {
+		BooleanParameterDefinition booleanParameterDefinition = new BooleanParameterDefinition();
+		return booleanParameterDefinition;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public FileParameterDefinition createFileParameterDefinition() {
+		FileParameterDefinition fileParameterDefinition = new FileParameterDefinition();
+		return fileParameterDefinition;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public PlanParameterDefinition createPlanParameterDefinition() {
+		PlanParameterDefinition planParameterDefinition = new PlanParameterDefinition();
+		return planParameterDefinition;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public PasswordParameterDefinition createPasswordParameterDefinition() {
+		PasswordParameterDefinition passwordParameterDefinition = new PasswordParameterDefinition();
+		return passwordParameterDefinition;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public BuildParameterDefinition createBuildParameterDefinition() {
+		BuildParameterDefinition buildParameterDefinition = new BuildParameterDefinition();
+		return buildParameterDefinition;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public StringParameterDefinition createStringParameterDefinition() {
+		StringParameterDefinition stringParameterDefinition = new StringParameterDefinition();
+		return stringParameterDefinition;
 	}
 
 	/**

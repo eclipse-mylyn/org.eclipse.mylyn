@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildPackage.java,v 1.13 2010/08/25 07:19:15 spingel Exp $
+ * $Id: BuildPackage.java,v 1.14 2010/08/27 06:49:23 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -467,6 +467,16 @@ public class BuildPackage extends EPackageImpl {
 	public static final int IBUILD_PLAN__LAST_BUILD = IBUILD_ELEMENT_FEATURE_COUNT + 11;
 
 	/**
+	 * The feature id for the '<em><b>Parameter Definitions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_PLAN__PARAMETER_DEFINITIONS = IBUILD_ELEMENT_FEATURE_COUNT + 12;
+
+	/**
 	 * The number of structural features of the '<em>IBuild Plan</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -474,7 +484,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int IBUILD_PLAN_FEATURE_COUNT = IBUILD_ELEMENT_FEATURE_COUNT + 12;
+	public static final int IBUILD_PLAN_FEATURE_COUNT = IBUILD_ELEMENT_FEATURE_COUNT + 13;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.builds.core.IArtifact <em>IArtifact</em>}' class.
@@ -1490,6 +1500,16 @@ public class BuildPackage extends EPackageImpl {
 	public static final int BUILD_PLAN__LAST_BUILD = IBUILD_PLAN__LAST_BUILD;
 
 	/**
+	 * The feature id for the '<em><b>Parameter Definitions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD_PLAN__PARAMETER_DEFINITIONS = IBUILD_PLAN__PARAMETER_DEFINITIONS;
+
+	/**
 	 * The number of structural features of the '<em>Plan</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1853,6 +1873,906 @@ public class BuildPackage extends EPackageImpl {
 	public static final int USER_FEATURE_COUNT = IUSER_FEATURE_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.IParameterDefinition
+	 * <em>IParameter Definition</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.mylyn.internal.builds.core.IParameterDefinition
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIParameterDefinition()
+	 * @generated
+	 */
+	public static final int IPARAMETER_DEFINITION = 23;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IPARAMETER_DEFINITION__NAME = 0;
+
+	/**
+	 * The feature id for the '<em><b>Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IPARAMETER_DEFINITION__DESCRIPTION = 1;
+
+	/**
+	 * The feature id for the '<em><b>Containing Build Plan</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IPARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = 2;
+
+	/**
+	 * The number of structural features of the '<em>IParameter Definition</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IPARAMETER_DEFINITION_FEATURE_COUNT = 3;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.IFileParameterDefinition
+	 * <em>IFile Parameter Definition</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.mylyn.internal.builds.core.IFileParameterDefinition
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIFileParameterDefinition()
+	 * @generated
+	 */
+	public static final int IFILE_PARAMETER_DEFINITION = 24;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IFILE_PARAMETER_DEFINITION__NAME = IPARAMETER_DEFINITION__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IFILE_PARAMETER_DEFINITION__DESCRIPTION = IPARAMETER_DEFINITION__DESCRIPTION;
+
+	/**
+	 * The feature id for the '<em><b>Containing Build Plan</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IFILE_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = IPARAMETER_DEFINITION__CONTAINING_BUILD_PLAN;
+
+	/**
+	 * The number of structural features of the '<em>IFile Parameter Definition</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IFILE_PARAMETER_DEFINITION_FEATURE_COUNT = IPARAMETER_DEFINITION_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.IBooleanParameterDefinition
+	 * <em>IBoolean Parameter Definition</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.mylyn.internal.builds.core.IBooleanParameterDefinition
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBooleanParameterDefinition()
+	 * @generated
+	 */
+	public static final int IBOOLEAN_PARAMETER_DEFINITION = 25;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBOOLEAN_PARAMETER_DEFINITION__NAME = IPARAMETER_DEFINITION__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBOOLEAN_PARAMETER_DEFINITION__DESCRIPTION = IPARAMETER_DEFINITION__DESCRIPTION;
+
+	/**
+	 * The feature id for the '<em><b>Containing Build Plan</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBOOLEAN_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = IPARAMETER_DEFINITION__CONTAINING_BUILD_PLAN;
+
+	/**
+	 * The feature id for the '<em><b>Default Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBOOLEAN_PARAMETER_DEFINITION__DEFAULT_VALUE = IPARAMETER_DEFINITION_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>IBoolean Parameter Definition</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBOOLEAN_PARAMETER_DEFINITION_FEATURE_COUNT = IPARAMETER_DEFINITION_FEATURE_COUNT + 1;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.IChoiceParameterDefinition
+	 * <em>IChoice Parameter Definition</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.mylyn.internal.builds.core.IChoiceParameterDefinition
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIChoiceParameterDefinition()
+	 * @generated
+	 */
+	public static final int ICHOICE_PARAMETER_DEFINITION = 26;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int ICHOICE_PARAMETER_DEFINITION__NAME = IPARAMETER_DEFINITION__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int ICHOICE_PARAMETER_DEFINITION__DESCRIPTION = IPARAMETER_DEFINITION__DESCRIPTION;
+
+	/**
+	 * The feature id for the '<em><b>Containing Build Plan</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int ICHOICE_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = IPARAMETER_DEFINITION__CONTAINING_BUILD_PLAN;
+
+	/**
+	 * The feature id for the '<em><b>Options</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int ICHOICE_PARAMETER_DEFINITION__OPTIONS = IPARAMETER_DEFINITION_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>IChoice Parameter Definition</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int ICHOICE_PARAMETER_DEFINITION_FEATURE_COUNT = IPARAMETER_DEFINITION_FEATURE_COUNT + 1;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.ChoiceParameterDefinition
+	 * <em>Choice Parameter Definition</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.mylyn.internal.builds.core.ChoiceParameterDefinition
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getChoiceParameterDefinition()
+	 * @generated
+	 */
+	public static final int CHOICE_PARAMETER_DEFINITION = 27;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int CHOICE_PARAMETER_DEFINITION__NAME = ICHOICE_PARAMETER_DEFINITION__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int CHOICE_PARAMETER_DEFINITION__DESCRIPTION = ICHOICE_PARAMETER_DEFINITION__DESCRIPTION;
+
+	/**
+	 * The feature id for the '<em><b>Containing Build Plan</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int CHOICE_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = ICHOICE_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN;
+
+	/**
+	 * The feature id for the '<em><b>Options</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int CHOICE_PARAMETER_DEFINITION__OPTIONS = ICHOICE_PARAMETER_DEFINITION__OPTIONS;
+
+	/**
+	 * The number of structural features of the '<em>Choice Parameter Definition</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int CHOICE_PARAMETER_DEFINITION_FEATURE_COUNT = ICHOICE_PARAMETER_DEFINITION_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.BooleanParameterDefinition
+	 * <em>Boolean Parameter Definition</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.mylyn.internal.builds.core.BooleanParameterDefinition
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getBooleanParameterDefinition()
+	 * @generated
+	 */
+	public static final int BOOLEAN_PARAMETER_DEFINITION = 28;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BOOLEAN_PARAMETER_DEFINITION__NAME = IBOOLEAN_PARAMETER_DEFINITION__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BOOLEAN_PARAMETER_DEFINITION__DESCRIPTION = IBOOLEAN_PARAMETER_DEFINITION__DESCRIPTION;
+
+	/**
+	 * The feature id for the '<em><b>Containing Build Plan</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BOOLEAN_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = IBOOLEAN_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN;
+
+	/**
+	 * The feature id for the '<em><b>Default Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BOOLEAN_PARAMETER_DEFINITION__DEFAULT_VALUE = IBOOLEAN_PARAMETER_DEFINITION__DEFAULT_VALUE;
+
+	/**
+	 * The number of structural features of the '<em>Boolean Parameter Definition</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BOOLEAN_PARAMETER_DEFINITION_FEATURE_COUNT = IBOOLEAN_PARAMETER_DEFINITION_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.FileParameterDefinition
+	 * <em>File Parameter Definition</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.mylyn.internal.builds.core.FileParameterDefinition
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getFileParameterDefinition()
+	 * @generated
+	 */
+	public static final int FILE_PARAMETER_DEFINITION = 29;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int FILE_PARAMETER_DEFINITION__NAME = IFILE_PARAMETER_DEFINITION__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int FILE_PARAMETER_DEFINITION__DESCRIPTION = IFILE_PARAMETER_DEFINITION__DESCRIPTION;
+
+	/**
+	 * The feature id for the '<em><b>Containing Build Plan</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int FILE_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = IFILE_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN;
+
+	/**
+	 * The number of structural features of the '<em>File Parameter Definition</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int FILE_PARAMETER_DEFINITION_FEATURE_COUNT = IFILE_PARAMETER_DEFINITION_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.IPlanParameterDefinition
+	 * <em>IPlan Parameter Definition</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.mylyn.internal.builds.core.IPlanParameterDefinition
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIPlanParameterDefinition()
+	 * @generated
+	 */
+	public static final int IPLAN_PARAMETER_DEFINITION = 30;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IPLAN_PARAMETER_DEFINITION__NAME = IPARAMETER_DEFINITION__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IPLAN_PARAMETER_DEFINITION__DESCRIPTION = IPARAMETER_DEFINITION__DESCRIPTION;
+
+	/**
+	 * The feature id for the '<em><b>Containing Build Plan</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IPLAN_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = IPARAMETER_DEFINITION__CONTAINING_BUILD_PLAN;
+
+	/**
+	 * The number of structural features of the '<em>IPlan Parameter Definition</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IPLAN_PARAMETER_DEFINITION_FEATURE_COUNT = IPARAMETER_DEFINITION_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.PlanParameterDefinition
+	 * <em>Plan Parameter Definition</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.mylyn.internal.builds.core.PlanParameterDefinition
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getPlanParameterDefinition()
+	 * @generated
+	 */
+	public static final int PLAN_PARAMETER_DEFINITION = 31;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int PLAN_PARAMETER_DEFINITION__NAME = IPLAN_PARAMETER_DEFINITION__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int PLAN_PARAMETER_DEFINITION__DESCRIPTION = IPLAN_PARAMETER_DEFINITION__DESCRIPTION;
+
+	/**
+	 * The feature id for the '<em><b>Containing Build Plan</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int PLAN_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = IPLAN_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN;
+
+	/**
+	 * The number of structural features of the '<em>Plan Parameter Definition</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int PLAN_PARAMETER_DEFINITION_FEATURE_COUNT = IPLAN_PARAMETER_DEFINITION_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.IPasswordParameterDefinition
+	 * <em>IPassword Parameter Definition</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.mylyn.internal.builds.core.IPasswordParameterDefinition
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIPasswordParameterDefinition()
+	 * @generated
+	 */
+	public static final int IPASSWORD_PARAMETER_DEFINITION = 32;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IPASSWORD_PARAMETER_DEFINITION__NAME = IPARAMETER_DEFINITION__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IPASSWORD_PARAMETER_DEFINITION__DESCRIPTION = IPARAMETER_DEFINITION__DESCRIPTION;
+
+	/**
+	 * The feature id for the '<em><b>Containing Build Plan</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IPASSWORD_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = IPARAMETER_DEFINITION__CONTAINING_BUILD_PLAN;
+
+	/**
+	 * The feature id for the '<em><b>Default Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IPASSWORD_PARAMETER_DEFINITION__DEFAULT_VALUE = IPARAMETER_DEFINITION_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>IPassword Parameter Definition</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IPASSWORD_PARAMETER_DEFINITION_FEATURE_COUNT = IPARAMETER_DEFINITION_FEATURE_COUNT + 1;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.PasswordParameterDefinition
+	 * <em>Password Parameter Definition</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.mylyn.internal.builds.core.PasswordParameterDefinition
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getPasswordParameterDefinition()
+	 * @generated
+	 */
+	public static final int PASSWORD_PARAMETER_DEFINITION = 33;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int PASSWORD_PARAMETER_DEFINITION__NAME = IPASSWORD_PARAMETER_DEFINITION__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int PASSWORD_PARAMETER_DEFINITION__DESCRIPTION = IPASSWORD_PARAMETER_DEFINITION__DESCRIPTION;
+
+	/**
+	 * The feature id for the '<em><b>Containing Build Plan</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int PASSWORD_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = IPASSWORD_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN;
+
+	/**
+	 * The feature id for the '<em><b>Default Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int PASSWORD_PARAMETER_DEFINITION__DEFAULT_VALUE = IPASSWORD_PARAMETER_DEFINITION__DEFAULT_VALUE;
+
+	/**
+	 * The number of structural features of the '<em>Password Parameter Definition</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int PASSWORD_PARAMETER_DEFINITION_FEATURE_COUNT = IPASSWORD_PARAMETER_DEFINITION_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.IBuildParameterDefinition
+	 * <em>IBuild Parameter Definition</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.mylyn.internal.builds.core.IBuildParameterDefinition
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildParameterDefinition()
+	 * @generated
+	 */
+	public static final int IBUILD_PARAMETER_DEFINITION = 34;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_PARAMETER_DEFINITION__NAME = IPARAMETER_DEFINITION__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_PARAMETER_DEFINITION__DESCRIPTION = IPARAMETER_DEFINITION__DESCRIPTION;
+
+	/**
+	 * The feature id for the '<em><b>Containing Build Plan</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = IPARAMETER_DEFINITION__CONTAINING_BUILD_PLAN;
+
+	/**
+	 * The feature id for the '<em><b>Build Plan Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_PARAMETER_DEFINITION__BUILD_PLAN_ID = IPARAMETER_DEFINITION_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Build Plan</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_PARAMETER_DEFINITION__BUILD_PLAN = IPARAMETER_DEFINITION_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>IBuild Parameter Definition</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IBUILD_PARAMETER_DEFINITION_FEATURE_COUNT = IPARAMETER_DEFINITION_FEATURE_COUNT + 2;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.BuildParameterDefinition
+	 * <em>Parameter Definition</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildParameterDefinition
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getBuildParameterDefinition()
+	 * @generated
+	 */
+	public static final int BUILD_PARAMETER_DEFINITION = 35;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD_PARAMETER_DEFINITION__NAME = IBUILD_PARAMETER_DEFINITION__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD_PARAMETER_DEFINITION__DESCRIPTION = IBUILD_PARAMETER_DEFINITION__DESCRIPTION;
+
+	/**
+	 * The feature id for the '<em><b>Containing Build Plan</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = IBUILD_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN;
+
+	/**
+	 * The feature id for the '<em><b>Build Plan Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD_PARAMETER_DEFINITION__BUILD_PLAN_ID = IBUILD_PARAMETER_DEFINITION__BUILD_PLAN_ID;
+
+	/**
+	 * The feature id for the '<em><b>Build Plan</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD_PARAMETER_DEFINITION__BUILD_PLAN = IBUILD_PARAMETER_DEFINITION__BUILD_PLAN;
+
+	/**
+	 * The number of structural features of the '<em>Parameter Definition</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD_PARAMETER_DEFINITION_FEATURE_COUNT = IBUILD_PARAMETER_DEFINITION_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.IStringParameterDefinition
+	 * <em>IString Parameter Definition</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.mylyn.internal.builds.core.IStringParameterDefinition
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIStringParameterDefinition()
+	 * @generated
+	 */
+	public static final int ISTRING_PARAMETER_DEFINITION = 36;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int ISTRING_PARAMETER_DEFINITION__NAME = IPARAMETER_DEFINITION__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int ISTRING_PARAMETER_DEFINITION__DESCRIPTION = IPARAMETER_DEFINITION__DESCRIPTION;
+
+	/**
+	 * The feature id for the '<em><b>Containing Build Plan</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int ISTRING_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = IPARAMETER_DEFINITION__CONTAINING_BUILD_PLAN;
+
+	/**
+	 * The feature id for the '<em><b>Default Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int ISTRING_PARAMETER_DEFINITION__DEFAULT_VALUE = IPARAMETER_DEFINITION_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>IString Parameter Definition</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int ISTRING_PARAMETER_DEFINITION_FEATURE_COUNT = IPARAMETER_DEFINITION_FEATURE_COUNT + 1;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.StringParameterDefinition
+	 * <em>String Parameter Definition</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.mylyn.internal.builds.core.StringParameterDefinition
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getStringParameterDefinition()
+	 * @generated
+	 */
+	public static final int STRING_PARAMETER_DEFINITION = 37;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int STRING_PARAMETER_DEFINITION__NAME = ISTRING_PARAMETER_DEFINITION__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int STRING_PARAMETER_DEFINITION__DESCRIPTION = ISTRING_PARAMETER_DEFINITION__DESCRIPTION;
+
+	/**
+	 * The feature id for the '<em><b>Containing Build Plan</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int STRING_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = ISTRING_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN;
+
+	/**
+	 * The feature id for the '<em><b>Default Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int STRING_PARAMETER_DEFINITION__DEFAULT_VALUE = ISTRING_PARAMETER_DEFINITION__DEFAULT_VALUE;
+
+	/**
+	 * The number of structural features of the '<em>String Parameter Definition</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int STRING_PARAMETER_DEFINITION_FEATURE_COUNT = ISTRING_PARAMETER_DEFINITION_FEATURE_COUNT + 0;
+
+	/**
 	 * The meta object id for the '<em>Repository Location</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1861,7 +2781,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getRepositoryLocation()
 	 * @generated
 	 */
-	public static final int REPOSITORY_LOCATION = 23;
+	public static final int REPOSITORY_LOCATION = 38;
 
 	/**
 	 * The meta object id for the '<em>State</em>' data type.
@@ -1872,7 +2792,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getBuildState()
 	 * @generated
 	 */
-	public static final int BUILD_STATE = 24;
+	public static final int BUILD_STATE = 39;
 
 	/**
 	 * The meta object id for the '<em>Status</em>' data type.
@@ -1883,7 +2803,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getBuildStatus()
 	 * @generated
 	 */
-	public static final int BUILD_STATUS = 25;
+	public static final int BUILD_STATUS = 40;
 
 	/**
 	 * The meta object id for the '<em>Edit Type</em>' data type.
@@ -1894,7 +2814,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getEditType()
 	 * @generated
 	 */
-	public static final int EDIT_TYPE = 26;
+	public static final int EDIT_TYPE = 41;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -2023,6 +2943,126 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 */
 	private EClass userEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass iParameterDefinitionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass iFileParameterDefinitionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass iBooleanParameterDefinitionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass iChoiceParameterDefinitionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass choiceParameterDefinitionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass booleanParameterDefinitionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass fileParameterDefinitionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass iPlanParameterDefinitionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass planParameterDefinitionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass iPasswordParameterDefinitionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass passwordParameterDefinitionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass iBuildParameterDefinitionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass buildParameterDefinitionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass iStringParameterDefinitionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass stringParameterDefinitionEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -2512,6 +3552,21 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
+	 * Returns the meta object for the containment reference list '
+	 * {@link org.eclipse.mylyn.builds.core.IBuildPlan#getParameterDefinitions <em>Parameter Definitions</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the containment reference list '<em>Parameter Definitions</em>'.
+	 * @see org.eclipse.mylyn.builds.core.IBuildPlan#getParameterDefinitions()
+	 * @see #getIBuildPlan()
+	 * @generated
+	 */
+	public EReference getIBuildPlan_ParameterDefinitions() {
+		return (EReference) iBuildPlanEClass.getEStructuralFeatures().get(12);
+	}
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IBuildWorkingCopy
 	 * <em>IBuild Working Copy</em>}'.
 	 * <!-- begin-user-doc -->
@@ -2709,6 +3764,355 @@ public class BuildPackage extends EPackageImpl {
 	 */
 	public EClass getUser() {
 		return userEClass;
+	}
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.mylyn.internal.builds.core.IParameterDefinition
+	 * <em>IParameter Definition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>IParameter Definition</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.IParameterDefinition
+	 * @generated
+	 */
+	public EClass getIParameterDefinition() {
+		return iParameterDefinitionEClass;
+	}
+
+	/**
+	 * Returns the meta object for the attribute '
+	 * {@link org.eclipse.mylyn.internal.builds.core.IParameterDefinition#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.IParameterDefinition#getName()
+	 * @see #getIParameterDefinition()
+	 * @generated
+	 */
+	public EAttribute getIParameterDefinition_Name() {
+		return (EAttribute) iParameterDefinitionEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * Returns the meta object for the attribute '
+	 * {@link org.eclipse.mylyn.internal.builds.core.IParameterDefinition#getDescription <em>Description</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Description</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.IParameterDefinition#getDescription()
+	 * @see #getIParameterDefinition()
+	 * @generated
+	 */
+	public EAttribute getIParameterDefinition_Description() {
+		return (EAttribute) iParameterDefinitionEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * Returns the meta object for the container reference '
+	 * {@link org.eclipse.mylyn.internal.builds.core.IParameterDefinition#getContainingBuildPlan
+	 * <em>Containing Build Plan</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the container reference '<em>Containing Build Plan</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.IParameterDefinition#getContainingBuildPlan()
+	 * @see #getIParameterDefinition()
+	 * @generated
+	 */
+	public EReference getIParameterDefinition_ContainingBuildPlan() {
+		return (EReference) iParameterDefinitionEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.mylyn.internal.builds.core.IFileParameterDefinition
+	 * <em>IFile Parameter Definition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>IFile Parameter Definition</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.IFileParameterDefinition
+	 * @generated
+	 */
+	public EClass getIFileParameterDefinition() {
+		return iFileParameterDefinitionEClass;
+	}
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.mylyn.internal.builds.core.IBooleanParameterDefinition
+	 * <em>IBoolean Parameter Definition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>IBoolean Parameter Definition</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.IBooleanParameterDefinition
+	 * @generated
+	 */
+	public EClass getIBooleanParameterDefinition() {
+		return iBooleanParameterDefinitionEClass;
+	}
+
+	/**
+	 * Returns the meta object for the attribute '
+	 * {@link org.eclipse.mylyn.internal.builds.core.IBooleanParameterDefinition#isDefaultValue <em>Default Value</em>}
+	 * '.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Default Value</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.IBooleanParameterDefinition#isDefaultValue()
+	 * @see #getIBooleanParameterDefinition()
+	 * @generated
+	 */
+	public EAttribute getIBooleanParameterDefinition_DefaultValue() {
+		return (EAttribute) iBooleanParameterDefinitionEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.mylyn.internal.builds.core.IChoiceParameterDefinition
+	 * <em>IChoice Parameter Definition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>IChoice Parameter Definition</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.IChoiceParameterDefinition
+	 * @generated
+	 */
+	public EClass getIChoiceParameterDefinition() {
+		return iChoiceParameterDefinitionEClass;
+	}
+
+	/**
+	 * Returns the meta object for the attribute list '
+	 * {@link org.eclipse.mylyn.internal.builds.core.IChoiceParameterDefinition#getOptions <em>Options</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute list '<em>Options</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.IChoiceParameterDefinition#getOptions()
+	 * @see #getIChoiceParameterDefinition()
+	 * @generated
+	 */
+	public EAttribute getIChoiceParameterDefinition_Options() {
+		return (EAttribute) iChoiceParameterDefinitionEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.mylyn.internal.builds.core.ChoiceParameterDefinition
+	 * <em>Choice Parameter Definition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>Choice Parameter Definition</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.ChoiceParameterDefinition
+	 * @generated
+	 */
+	public EClass getChoiceParameterDefinition() {
+		return choiceParameterDefinitionEClass;
+	}
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.mylyn.internal.builds.core.BooleanParameterDefinition
+	 * <em>Boolean Parameter Definition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>Boolean Parameter Definition</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.BooleanParameterDefinition
+	 * @generated
+	 */
+	public EClass getBooleanParameterDefinition() {
+		return booleanParameterDefinitionEClass;
+	}
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.mylyn.internal.builds.core.FileParameterDefinition
+	 * <em>File Parameter Definition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>File Parameter Definition</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.FileParameterDefinition
+	 * @generated
+	 */
+	public EClass getFileParameterDefinition() {
+		return fileParameterDefinitionEClass;
+	}
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.mylyn.internal.builds.core.IPlanParameterDefinition
+	 * <em>IPlan Parameter Definition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>IPlan Parameter Definition</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.IPlanParameterDefinition
+	 * @generated
+	 */
+	public EClass getIPlanParameterDefinition() {
+		return iPlanParameterDefinitionEClass;
+	}
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.mylyn.internal.builds.core.PlanParameterDefinition
+	 * <em>Plan Parameter Definition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>Plan Parameter Definition</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.PlanParameterDefinition
+	 * @generated
+	 */
+	public EClass getPlanParameterDefinition() {
+		return planParameterDefinitionEClass;
+	}
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.mylyn.internal.builds.core.IPasswordParameterDefinition
+	 * <em>IPassword Parameter Definition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>IPassword Parameter Definition</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.IPasswordParameterDefinition
+	 * @generated
+	 */
+	public EClass getIPasswordParameterDefinition() {
+		return iPasswordParameterDefinitionEClass;
+	}
+
+	/**
+	 * Returns the meta object for the attribute '
+	 * {@link org.eclipse.mylyn.internal.builds.core.IPasswordParameterDefinition#getDefaultValue
+	 * <em>Default Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Default Value</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.IPasswordParameterDefinition#getDefaultValue()
+	 * @see #getIPasswordParameterDefinition()
+	 * @generated
+	 */
+	public EAttribute getIPasswordParameterDefinition_DefaultValue() {
+		return (EAttribute) iPasswordParameterDefinitionEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.mylyn.internal.builds.core.PasswordParameterDefinition
+	 * <em>Password Parameter Definition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>Password Parameter Definition</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.PasswordParameterDefinition
+	 * @generated
+	 */
+	public EClass getPasswordParameterDefinition() {
+		return passwordParameterDefinitionEClass;
+	}
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.mylyn.internal.builds.core.IBuildParameterDefinition
+	 * <em>IBuild Parameter Definition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>IBuild Parameter Definition</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.IBuildParameterDefinition
+	 * @generated
+	 */
+	public EClass getIBuildParameterDefinition() {
+		return iBuildParameterDefinitionEClass;
+	}
+
+	/**
+	 * Returns the meta object for the attribute '
+	 * {@link org.eclipse.mylyn.internal.builds.core.IBuildParameterDefinition#getBuildPlanId <em>Build Plan Id</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Build Plan Id</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.IBuildParameterDefinition#getBuildPlanId()
+	 * @see #getIBuildParameterDefinition()
+	 * @generated
+	 */
+	public EAttribute getIBuildParameterDefinition_BuildPlanId() {
+		return (EAttribute) iBuildParameterDefinitionEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * Returns the meta object for the reference '
+	 * {@link org.eclipse.mylyn.internal.builds.core.IBuildParameterDefinition#getBuildPlan <em>Build Plan</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the reference '<em>Build Plan</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.IBuildParameterDefinition#getBuildPlan()
+	 * @see #getIBuildParameterDefinition()
+	 * @generated
+	 */
+	public EReference getIBuildParameterDefinition_BuildPlan() {
+		return (EReference) iBuildParameterDefinitionEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.mylyn.internal.builds.core.BuildParameterDefinition
+	 * <em>Parameter Definition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>Parameter Definition</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildParameterDefinition
+	 * @generated
+	 */
+	public EClass getBuildParameterDefinition() {
+		return buildParameterDefinitionEClass;
+	}
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.mylyn.internal.builds.core.IStringParameterDefinition
+	 * <em>IString Parameter Definition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>IString Parameter Definition</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.IStringParameterDefinition
+	 * @generated
+	 */
+	public EClass getIStringParameterDefinition() {
+		return iStringParameterDefinitionEClass;
+	}
+
+	/**
+	 * Returns the meta object for the attribute '
+	 * {@link org.eclipse.mylyn.internal.builds.core.IStringParameterDefinition#getDefaultValue <em>Default Value</em>}
+	 * '.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Default Value</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.IStringParameterDefinition#getDefaultValue()
+	 * @see #getIStringParameterDefinition()
+	 * @generated
+	 */
+	public EAttribute getIStringParameterDefinition_DefaultValue() {
+		return (EAttribute) iStringParameterDefinitionEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.mylyn.internal.builds.core.StringParameterDefinition
+	 * <em>String Parameter Definition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>String Parameter Definition</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.StringParameterDefinition
+	 * @generated
+	 */
+	public EClass getStringParameterDefinition() {
+		return stringParameterDefinitionEClass;
 	}
 
 	/**
@@ -3399,6 +4803,7 @@ public class BuildPackage extends EPackageImpl {
 		createEAttribute(iBuildPlanEClass, IBUILD_PLAN__STATUS);
 		createEAttribute(iBuildPlanEClass, IBUILD_PLAN__DESCRIPTION);
 		createEReference(iBuildPlanEClass, IBUILD_PLAN__LAST_BUILD);
+		createEReference(iBuildPlanEClass, IBUILD_PLAN__PARAMETER_DEFINITIONS);
 
 		iBuildPlanDataEClass = createEClass(IBUILD_PLAN_DATA);
 
@@ -3470,6 +4875,45 @@ public class BuildPackage extends EPackageImpl {
 
 		userEClass = createEClass(USER);
 
+		iParameterDefinitionEClass = createEClass(IPARAMETER_DEFINITION);
+		createEAttribute(iParameterDefinitionEClass, IPARAMETER_DEFINITION__NAME);
+		createEAttribute(iParameterDefinitionEClass, IPARAMETER_DEFINITION__DESCRIPTION);
+		createEReference(iParameterDefinitionEClass, IPARAMETER_DEFINITION__CONTAINING_BUILD_PLAN);
+
+		iFileParameterDefinitionEClass = createEClass(IFILE_PARAMETER_DEFINITION);
+
+		iBooleanParameterDefinitionEClass = createEClass(IBOOLEAN_PARAMETER_DEFINITION);
+		createEAttribute(iBooleanParameterDefinitionEClass, IBOOLEAN_PARAMETER_DEFINITION__DEFAULT_VALUE);
+
+		iChoiceParameterDefinitionEClass = createEClass(ICHOICE_PARAMETER_DEFINITION);
+		createEAttribute(iChoiceParameterDefinitionEClass, ICHOICE_PARAMETER_DEFINITION__OPTIONS);
+
+		choiceParameterDefinitionEClass = createEClass(CHOICE_PARAMETER_DEFINITION);
+
+		booleanParameterDefinitionEClass = createEClass(BOOLEAN_PARAMETER_DEFINITION);
+
+		fileParameterDefinitionEClass = createEClass(FILE_PARAMETER_DEFINITION);
+
+		iPlanParameterDefinitionEClass = createEClass(IPLAN_PARAMETER_DEFINITION);
+
+		planParameterDefinitionEClass = createEClass(PLAN_PARAMETER_DEFINITION);
+
+		iPasswordParameterDefinitionEClass = createEClass(IPASSWORD_PARAMETER_DEFINITION);
+		createEAttribute(iPasswordParameterDefinitionEClass, IPASSWORD_PARAMETER_DEFINITION__DEFAULT_VALUE);
+
+		passwordParameterDefinitionEClass = createEClass(PASSWORD_PARAMETER_DEFINITION);
+
+		iBuildParameterDefinitionEClass = createEClass(IBUILD_PARAMETER_DEFINITION);
+		createEAttribute(iBuildParameterDefinitionEClass, IBUILD_PARAMETER_DEFINITION__BUILD_PLAN_ID);
+		createEReference(iBuildParameterDefinitionEClass, IBUILD_PARAMETER_DEFINITION__BUILD_PLAN);
+
+		buildParameterDefinitionEClass = createEClass(BUILD_PARAMETER_DEFINITION);
+
+		iStringParameterDefinitionEClass = createEClass(ISTRING_PARAMETER_DEFINITION);
+		createEAttribute(iStringParameterDefinitionEClass, ISTRING_PARAMETER_DEFINITION__DEFAULT_VALUE);
+
+		stringParameterDefinitionEClass = createEClass(STRING_PARAMETER_DEFINITION);
+
 		// Create data types
 		repositoryLocationEDataType = createEDataType(REPOSITORY_LOCATION);
 		buildStateEDataType = createEDataType(BUILD_STATE);
@@ -3524,6 +4968,20 @@ public class BuildPackage extends EPackageImpl {
 		changeSetEClass.getESuperTypes().add(this.getIChangeSet());
 		fileEClass.getESuperTypes().add(this.getIFile());
 		userEClass.getESuperTypes().add(this.getIUser());
+		iFileParameterDefinitionEClass.getESuperTypes().add(this.getIParameterDefinition());
+		iBooleanParameterDefinitionEClass.getESuperTypes().add(this.getIParameterDefinition());
+		iChoiceParameterDefinitionEClass.getESuperTypes().add(this.getIParameterDefinition());
+		choiceParameterDefinitionEClass.getESuperTypes().add(this.getIChoiceParameterDefinition());
+		booleanParameterDefinitionEClass.getESuperTypes().add(this.getIBooleanParameterDefinition());
+		fileParameterDefinitionEClass.getESuperTypes().add(this.getIFileParameterDefinition());
+		iPlanParameterDefinitionEClass.getESuperTypes().add(this.getIParameterDefinition());
+		planParameterDefinitionEClass.getESuperTypes().add(this.getIPlanParameterDefinition());
+		iPasswordParameterDefinitionEClass.getESuperTypes().add(this.getIParameterDefinition());
+		passwordParameterDefinitionEClass.getESuperTypes().add(this.getIPasswordParameterDefinition());
+		iBuildParameterDefinitionEClass.getESuperTypes().add(this.getIParameterDefinition());
+		buildParameterDefinitionEClass.getESuperTypes().add(this.getIBuildParameterDefinition());
+		iStringParameterDefinitionEClass.getESuperTypes().add(this.getIParameterDefinition());
+		stringParameterDefinitionEClass.getESuperTypes().add(this.getIStringParameterDefinition());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(iBuildModelEClass, IBuildModel.class, "IBuildModel", IS_ABSTRACT, IS_INTERFACE,
@@ -3591,6 +5049,10 @@ public class BuildPackage extends EPackageImpl {
 				!IS_DERIVED, IS_ORDERED);
 		initEReference(getIBuildPlan_LastBuild(), this.getIBuild(), null, "lastBuild", null, 0, 1, IBuildPlan.class,
 				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIBuildPlan_ParameterDefinitions(), this.getIParameterDefinition(), this
+				.getIParameterDefinition_ContainingBuildPlan(), "parameterDefinitions", null, 0, -1, IBuildPlan.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
 				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iBuildPlanDataEClass, IBuildPlanData.class, "IBuildPlanData", IS_ABSTRACT, IS_INTERFACE,
@@ -3714,6 +5176,79 @@ public class BuildPackage extends EPackageImpl {
 				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(userEClass, User.class, "User", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(iParameterDefinitionEClass, IParameterDefinition.class, "IParameterDefinition", IS_ABSTRACT,
+				IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getIParameterDefinition_Name(), ecorePackage.getEString(), "name", null, 0, 1,
+				IParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIParameterDefinition_Description(), ecorePackage.getEString(), "description", null, 0, 1,
+				IParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIParameterDefinition_ContainingBuildPlan(), this.getIBuildPlan(), this
+				.getIBuildPlan_ParameterDefinitions(), "containingBuildPlan", null, 0, 1, IParameterDefinition.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(iFileParameterDefinitionEClass, IFileParameterDefinition.class, "IFileParameterDefinition",
+				IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(iBooleanParameterDefinitionEClass, IBooleanParameterDefinition.class, "IBooleanParameterDefinition",
+				IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getIBooleanParameterDefinition_DefaultValue(), ecorePackage.getEBoolean(), "defaultValue", null,
+				0, 1, IBooleanParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE,
+				!IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(iChoiceParameterDefinitionEClass, IChoiceParameterDefinition.class, "IChoiceParameterDefinition",
+				IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getIChoiceParameterDefinition_Options(), ecorePackage.getEString(), "options", null, 1, -1,
+				IChoiceParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(choiceParameterDefinitionEClass, ChoiceParameterDefinition.class, "ChoiceParameterDefinition",
+				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(booleanParameterDefinitionEClass, BooleanParameterDefinition.class, "BooleanParameterDefinition",
+				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(fileParameterDefinitionEClass, FileParameterDefinition.class, "FileParameterDefinition",
+				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(iPlanParameterDefinitionEClass, IPlanParameterDefinition.class, "IPlanParameterDefinition",
+				IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(planParameterDefinitionEClass, PlanParameterDefinition.class, "PlanParameterDefinition",
+				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(iPasswordParameterDefinitionEClass, IPasswordParameterDefinition.class,
+				"IPasswordParameterDefinition", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getIPasswordParameterDefinition_DefaultValue(), ecorePackage.getEString(), "defaultValue", null,
+				0, 1, IPasswordParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE,
+				!IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(passwordParameterDefinitionEClass, PasswordParameterDefinition.class, "PasswordParameterDefinition",
+				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(iBuildParameterDefinitionEClass, IBuildParameterDefinition.class, "IBuildParameterDefinition",
+				IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getIBuildParameterDefinition_BuildPlanId(), ecorePackage.getEString(), "buildPlanId", null, 0,
+				1, IBuildParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIBuildParameterDefinition_BuildPlan(), this.getIBuildPlan(), null, "buildPlan", null, 0, 1,
+				IBuildParameterDefinition.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE,
+				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+
+		initEClass(buildParameterDefinitionEClass, BuildParameterDefinition.class, "BuildParameterDefinition",
+				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(iStringParameterDefinitionEClass, IStringParameterDefinition.class, "IStringParameterDefinition",
+				IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getIStringParameterDefinition_DefaultValue(), ecorePackage.getEString(), "defaultValue", null,
+				0, 1, IStringParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE,
+				!IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(stringParameterDefinitionEClass, StringParameterDefinition.class, "StringParameterDefinition",
+				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		// Initialize data types
 		initEDataType(repositoryLocationEDataType, RepositoryLocation.class, "RepositoryLocation", !IS_SERIALIZABLE,
@@ -3968,6 +5503,16 @@ public class BuildPackage extends EPackageImpl {
 		public static final EReference IBUILD_PLAN__LAST_BUILD = eINSTANCE.getIBuildPlan_LastBuild();
 
 		/**
+		 * The meta object literal for the '<em><b>Parameter Definitions</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EReference IBUILD_PLAN__PARAMETER_DEFINITIONS = eINSTANCE
+				.getIBuildPlan_ParameterDefinitions();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.core.IBuildWorkingCopy
 		 * <em>IBuild Working Copy</em>}' class.
 		 * <!-- begin-user-doc -->
@@ -4119,6 +5664,275 @@ public class BuildPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EClass USER = eINSTANCE.getUser();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.IParameterDefinition
+		 * <em>IParameter Definition</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @see org.eclipse.mylyn.internal.builds.core.IParameterDefinition
+		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIParameterDefinition()
+		 * @generated
+		 */
+		public static final EClass IPARAMETER_DEFINITION = eINSTANCE.getIParameterDefinition();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute IPARAMETER_DEFINITION__NAME = eINSTANCE.getIParameterDefinition_Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Description</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute IPARAMETER_DEFINITION__DESCRIPTION = eINSTANCE
+				.getIParameterDefinition_Description();
+
+		/**
+		 * The meta object literal for the '<em><b>Containing Build Plan</b></em>' container reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EReference IPARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = eINSTANCE
+				.getIParameterDefinition_ContainingBuildPlan();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.IFileParameterDefinition
+		 * <em>IFile Parameter Definition</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @see org.eclipse.mylyn.internal.builds.core.IFileParameterDefinition
+		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIFileParameterDefinition()
+		 * @generated
+		 */
+		public static final EClass IFILE_PARAMETER_DEFINITION = eINSTANCE.getIFileParameterDefinition();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.IBooleanParameterDefinition
+		 * <em>IBoolean Parameter Definition</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @see org.eclipse.mylyn.internal.builds.core.IBooleanParameterDefinition
+		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBooleanParameterDefinition()
+		 * @generated
+		 */
+		public static final EClass IBOOLEAN_PARAMETER_DEFINITION = eINSTANCE.getIBooleanParameterDefinition();
+
+		/**
+		 * The meta object literal for the '<em><b>Default Value</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute IBOOLEAN_PARAMETER_DEFINITION__DEFAULT_VALUE = eINSTANCE
+				.getIBooleanParameterDefinition_DefaultValue();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.IChoiceParameterDefinition
+		 * <em>IChoice Parameter Definition</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @see org.eclipse.mylyn.internal.builds.core.IChoiceParameterDefinition
+		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIChoiceParameterDefinition()
+		 * @generated
+		 */
+		public static final EClass ICHOICE_PARAMETER_DEFINITION = eINSTANCE.getIChoiceParameterDefinition();
+
+		/**
+		 * The meta object literal for the '<em><b>Options</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute ICHOICE_PARAMETER_DEFINITION__OPTIONS = eINSTANCE
+				.getIChoiceParameterDefinition_Options();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.ChoiceParameterDefinition
+		 * <em>Choice Parameter Definition</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @see org.eclipse.mylyn.internal.builds.core.ChoiceParameterDefinition
+		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getChoiceParameterDefinition()
+		 * @generated
+		 */
+		public static final EClass CHOICE_PARAMETER_DEFINITION = eINSTANCE.getChoiceParameterDefinition();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.BooleanParameterDefinition
+		 * <em>Boolean Parameter Definition</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @see org.eclipse.mylyn.internal.builds.core.BooleanParameterDefinition
+		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getBooleanParameterDefinition()
+		 * @generated
+		 */
+		public static final EClass BOOLEAN_PARAMETER_DEFINITION = eINSTANCE.getBooleanParameterDefinition();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.FileParameterDefinition
+		 * <em>File Parameter Definition</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @see org.eclipse.mylyn.internal.builds.core.FileParameterDefinition
+		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getFileParameterDefinition()
+		 * @generated
+		 */
+		public static final EClass FILE_PARAMETER_DEFINITION = eINSTANCE.getFileParameterDefinition();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.IPlanParameterDefinition
+		 * <em>IPlan Parameter Definition</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @see org.eclipse.mylyn.internal.builds.core.IPlanParameterDefinition
+		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIPlanParameterDefinition()
+		 * @generated
+		 */
+		public static final EClass IPLAN_PARAMETER_DEFINITION = eINSTANCE.getIPlanParameterDefinition();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.PlanParameterDefinition
+		 * <em>Plan Parameter Definition</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @see org.eclipse.mylyn.internal.builds.core.PlanParameterDefinition
+		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getPlanParameterDefinition()
+		 * @generated
+		 */
+		public static final EClass PLAN_PARAMETER_DEFINITION = eINSTANCE.getPlanParameterDefinition();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.IPasswordParameterDefinition
+		 * <em>IPassword Parameter Definition</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @see org.eclipse.mylyn.internal.builds.core.IPasswordParameterDefinition
+		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIPasswordParameterDefinition()
+		 * @generated
+		 */
+		public static final EClass IPASSWORD_PARAMETER_DEFINITION = eINSTANCE.getIPasswordParameterDefinition();
+
+		/**
+		 * The meta object literal for the '<em><b>Default Value</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute IPASSWORD_PARAMETER_DEFINITION__DEFAULT_VALUE = eINSTANCE
+				.getIPasswordParameterDefinition_DefaultValue();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.PasswordParameterDefinition
+		 * <em>Password Parameter Definition</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @see org.eclipse.mylyn.internal.builds.core.PasswordParameterDefinition
+		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getPasswordParameterDefinition()
+		 * @generated
+		 */
+		public static final EClass PASSWORD_PARAMETER_DEFINITION = eINSTANCE.getPasswordParameterDefinition();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.IBuildParameterDefinition
+		 * <em>IBuild Parameter Definition</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @see org.eclipse.mylyn.internal.builds.core.IBuildParameterDefinition
+		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildParameterDefinition()
+		 * @generated
+		 */
+		public static final EClass IBUILD_PARAMETER_DEFINITION = eINSTANCE.getIBuildParameterDefinition();
+
+		/**
+		 * The meta object literal for the '<em><b>Build Plan Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute IBUILD_PARAMETER_DEFINITION__BUILD_PLAN_ID = eINSTANCE
+				.getIBuildParameterDefinition_BuildPlanId();
+
+		/**
+		 * The meta object literal for the '<em><b>Build Plan</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EReference IBUILD_PARAMETER_DEFINITION__BUILD_PLAN = eINSTANCE
+				.getIBuildParameterDefinition_BuildPlan();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.BuildParameterDefinition
+		 * <em>Parameter Definition</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @see org.eclipse.mylyn.internal.builds.core.BuildParameterDefinition
+		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getBuildParameterDefinition()
+		 * @generated
+		 */
+		public static final EClass BUILD_PARAMETER_DEFINITION = eINSTANCE.getBuildParameterDefinition();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.IStringParameterDefinition
+		 * <em>IString Parameter Definition</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @see org.eclipse.mylyn.internal.builds.core.IStringParameterDefinition
+		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIStringParameterDefinition()
+		 * @generated
+		 */
+		public static final EClass ISTRING_PARAMETER_DEFINITION = eINSTANCE.getIStringParameterDefinition();
+
+		/**
+		 * The meta object literal for the '<em><b>Default Value</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute ISTRING_PARAMETER_DEFINITION__DEFAULT_VALUE = eINSTANCE
+				.getIStringParameterDefinition_DefaultValue();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.StringParameterDefinition
+		 * <em>String Parameter Definition</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @see org.eclipse.mylyn.internal.builds.core.StringParameterDefinition
+		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getStringParameterDefinition()
+		 * @generated
+		 */
+		public static final EClass STRING_PARAMETER_DEFINITION = eINSTANCE.getStringParameterDefinition();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.core.IArtifact <em>IArtifact</em>}' class.

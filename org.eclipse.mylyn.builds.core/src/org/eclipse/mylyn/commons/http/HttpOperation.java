@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Eike Stepper - fixes for bug 323568
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.http;
@@ -23,6 +24,7 @@ import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.internal.commons.http.CommonGetMethod;
 import org.eclipse.mylyn.internal.commons.http.CommonHeadMethod;
+import org.eclipse.mylyn.internal.commons.http.CommonPostMethod;
 
 /**
  * @author Steffen Pingel
@@ -37,6 +39,10 @@ public abstract class HttpOperation<T> {
 
 	protected CommonHttpMethod createGetMethod(String requestPath) {
 		return new CommonGetMethod(requestPath);
+	}
+
+	protected CommonHttpMethod createPostMethod(String requestPath) {
+		return new CommonPostMethod(requestPath);
 	}
 
 	protected CommonHttpMethod createHeadMethod(String requestPath) {
