@@ -48,6 +48,8 @@ public class BuildConsole {
 
 	private final BuildModel model;
 
+	private final String CONSOLE_TYPE = "org.eclipse.mylyn.builds.ui.console.BuildConsole";
+
 	public BuildConsole(IConsoleManager consoleManager, BuildModel model, IBuild build) {
 		Assert.isNotNull(consoleManager);
 		Assert.isNotNull(model);
@@ -59,7 +61,8 @@ public class BuildConsole {
 
 	public void show() {
 		if (console == null) {
-			console = new MessageConsole(NLS.bind("Output for Build {0}", build.getLabel()), BuildImages.CONSOLE);
+			console = new MessageConsole(NLS.bind("Output for Build {0}", build.getLabel()), CONSOLE_TYPE,
+					BuildImages.CONSOLE, true);
 			consoleManager.addConsoles(new IConsole[] { console });
 
 			stream = console.newMessageStream();

@@ -340,4 +340,50 @@
        </command>
     </menuContribution>
  </extension>
+   <extension
+         point="org.eclipse.ui.console.consolePatternMatchListeners">
+      <consolePatternMatchListener
+            class="org.eclipse.jdt.internal.debug.ui.console.JavaConsoleTracker"
+            regex="\(\S*${java_extensions_regex}\S*\)"
+            qualifier="${java_extensions_regex}"
+            id="org.eclipse.builds.ui.JavaConsoleTracker">
+         <enablement>
+            <or>
+			  <test property="org.eclipse.ui.console.consoleTypeTest" value="org.eclipse.mylyn.builds.ui.console.BuildConsole"/>
+            </or>
+         </enablement>
+      </consolePatternMatchListener>
+      <consolePatternMatchListener
+            class="org.eclipse.jdt.internal.debug.ui.console.JavaNativeConsoleTracker"
+            regex="\(Native Method\)"
+            qualifier="Native Method"
+            id="org.eclipse.builds.ui.JavaNativeConsoleTracker">
+         <enablement>
+            <or>
+			  <test property="org.eclipse.ui.console.consoleTypeTest" value="org.eclipse.mylyn.builds.ui.console.BuildConsole"/>
+            </or>
+         </enablement>
+      </consolePatternMatchListener>
+            <consolePatternMatchListener
+            class="org.eclipse.jdt.internal.debug.ui.console.JavaExceptionConsoleTracker"
+            regex="\w[^\(\s]+Exception[\s|:]"
+            qualifier="Exception"
+            id="org.eclipse.builds.ui.JavaExceptionConsoleTracker">
+         <enablement>
+            <or>
+			  <test property="org.eclipse.ui.console.consoleTypeTest" value="org.eclipse.mylyn.builds.ui.console.BuildConsole"/>
+            </or>
+         </enablement>
+      </consolePatternMatchListener>
+   </extension>   
+ <extension
+       point="org.eclipse.ui.console.consolePageParticipants">
+    <consolePageParticipant
+          class="org.eclipse.mylyn.internal.builds.ui.console.BuildConsolePageParticipant"
+          id="org.eclipse.mylyn.builds.ui.console.BuildOutputPageParticipant">
+       <enablement>
+           <test property="org.eclipse.ui.console.consoleTypeTest" value="org.eclipse.mylyn.builds.ui.console.BuildConsole"/>
+       </enablement>
+    </consolePageParticipant>
+ </extension>
 </plugin>
