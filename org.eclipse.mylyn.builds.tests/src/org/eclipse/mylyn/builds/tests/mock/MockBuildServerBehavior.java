@@ -28,6 +28,7 @@ import org.eclipse.mylyn.builds.core.spi.BuildPlanRequest;
 import org.eclipse.mylyn.builds.core.spi.BuildRequest;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
 import org.eclipse.mylyn.builds.core.spi.BuildServerConfiguration;
+import org.eclipse.mylyn.builds.core.spi.RunBuildRequest;
 import org.eclipse.mylyn.commons.core.IOperationMonitor;
 
 /**
@@ -98,7 +99,7 @@ public class MockBuildServerBehavior extends BuildServerBehaviour {
 	}
 
 	@Override
-	public void runBuild(IBuildPlanData plan, IOperationMonitor monitor) throws CoreException {
+	public void runBuild(RunBuildRequest request, IOperationMonitor monitor) throws CoreException {
 	}
 
 	@Override
