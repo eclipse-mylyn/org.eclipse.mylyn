@@ -7,19 +7,28 @@
  *
  * Contributors:
  *     Markus Knittig - initial API and implementation
+ *     Tasktop Technologies - improvements
+ *     Eike Stepper - improvements for bug 323781
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.view;
 
+import java.util.Map;
+
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
+import org.eclipse.mylyn.builds.core.spi.RunBuildRequest;
+import org.eclipse.mylyn.internal.builds.core.BuildPlan;
 import org.eclipse.mylyn.internal.builds.core.operations.RunBuildOperation;
 import org.eclipse.mylyn.internal.builds.ui.BuildImages;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
+import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
 /**
  * @author Markus Knittig
+ * @author Eike Stepper
  */
 public class RunBuildAction extends BaseSelectionListenerAction {
 
@@ -40,9 +49,26 @@ public class RunBuildAction extends BaseSelectionListenerAction {
 		Object selection = getStructuredSelection().getFirstElement();
 		if (selection instanceof IBuildPlan) {
 			final IBuildPlan plan = (IBuildPlan) selection;
-			RunBuildOperation operation = new RunBuildOperation(plan);
-			BuildsUiInternal.getModel().getScheduler().schedule(operation);
+			askParametersAndRunBuild(plan);
 		}
 	}
 
+	public static void askParametersAndRunBuild(final IBuildPlan plan) {
+		BuildPlan copy = ((BuildPlan) plan).createWorkingCopy();
+
+		// query for parameters if necessary
+		Map<String, String> parameters = null;
+		if (!copy.getParameterDefinitions().isEmpty()) {
+			ParametersDialog dialog = new ParametersDialog(WorkbenchUtil.getShell(), copy);
+			if (dialog.open() != Window.OK) {
+				return;
+			}
+			parameters = dialog.getParameters();
+		}
+
+		RunBuildRequest request = new RunBuildRequest(copy);
+		request.setParameters(parameters);
+		RunBuildOperation operation = new RunBuildOperation(request);
+		BuildsUiInternal.getModel().getScheduler().schedule(operation);
+	}
 }
