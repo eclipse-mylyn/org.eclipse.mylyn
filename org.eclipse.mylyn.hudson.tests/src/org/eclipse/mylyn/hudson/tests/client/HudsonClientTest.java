@@ -12,12 +12,6 @@
 
 package org.eclipse.mylyn.hudson.tests.client;
 
-import java.util.List;
-import java.util.concurrent.Callable;
-
-import junit.framework.AssertionFailedError;
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.builds.core.util.ProgressUtil;
 import org.eclipse.mylyn.hudson.tests.support.HudsonFixture;
@@ -28,6 +22,12 @@ import org.eclipse.mylyn.internal.hudson.model.HudsonModelJob;
 import org.eclipse.mylyn.tests.util.TestUtil;
 import org.eclipse.mylyn.tests.util.TestUtil.Credentials;
 import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
+
+import java.util.List;
+import java.util.concurrent.Callable;
+
+import junit.framework.AssertionFailedError;
+import junit.framework.TestCase;
 
 /**
  * Test cases for {@link RestfulHudsonClient}.
@@ -108,7 +108,7 @@ public class HudsonClientTest extends TestCase {
 		client = fixture.connect(HudsonFixture.HUDSON_TEST_URL, credentials.username, credentials.password);
 
 		// failing build
-		client.runBuild(getJob(PLAN_FAILING), ProgressUtil.convert(null));
+		client.runBuild(getJob(PLAN_FAILING), null, ProgressUtil.convert(null));
 		poll(new Callable<Object>() {
 			public Object call() throws Exception {
 				assertEquals(getJob(PLAN_FAILING).getColor(), HudsonModelBallColor.RED_ANIME);
@@ -118,7 +118,7 @@ public class HudsonClientTest extends TestCase {
 //		assertEquals(getJob(PLAN_SUCCEEDING).getColor(), HudsonModelBallColor.RED);
 
 		// succeeding build
-		client.runBuild(getJob(PLAN_SUCCEEDING), ProgressUtil.convert(null));
+		client.runBuild(getJob(PLAN_SUCCEEDING), null, ProgressUtil.convert(null));
 		poll(new Callable<Object>() {
 			public Object call() throws Exception {
 				assertEquals(getJob(PLAN_SUCCEEDING).getColor(), HudsonModelBallColor.BLUE_ANIME);
