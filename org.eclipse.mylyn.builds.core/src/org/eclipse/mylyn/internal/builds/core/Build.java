@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: Build.java,v 1.3 2010/08/25 07:19:15 spingel Exp $
+ * $Id: Build.java,v 1.4 2010/08/27 09:00:23 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -34,8 +34,7 @@ import org.eclipse.mylyn.builds.core.IChangeSet;
  * 
  * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getBuild()
  * @model kind="class"
- *        superTypes=
- *        "org.eclipse.mylyn.internal.builds.core.IBuild org.eclipse.mylyn.internal.builds.core.IBuildWorkingCopy"
+ *        superTypes="org.eclipse.mylyn.internal.builds.core.IBuild org.eclipse.mylyn.internal.builds.core.IBuildWorkingCopy"
  * @generated
  */
 public class Build extends EObjectImpl implements EObject, IBuild, IBuildWorkingCopy {

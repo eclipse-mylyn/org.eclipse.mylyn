@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildFactory.java,v 1.9 2010/08/27 06:49:23 spingel Exp $
+ * $Id: BuildFactory.java,v 1.10 2010/08/27 09:00:23 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -111,6 +111,14 @@ public class BuildFactory extends EFactoryImpl {
 			return createBuildParameterDefinition();
 		case BuildPackage.STRING_PARAMETER_DEFINITION:
 			return createStringParameterDefinition();
+		case BuildPackage.TEST_RESULT:
+			return createTestResult();
+		case BuildPackage.TEST_ELEMENT:
+			return createTestElement();
+		case BuildPackage.TEST_SUITE:
+			return createTestSuite();
+		case BuildPackage.TEST_CASE:
+			return createTestCase();
 		default:
 			throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -125,6 +133,8 @@ public class BuildFactory extends EFactoryImpl {
 	@Override
 	public Object createFromString(EDataType eDataType, String initialValue) {
 		switch (eDataType.getClassifierID()) {
+		case BuildPackage.TEST_CASE_RESULT:
+			return createTestCaseResultFromString(eDataType, initialValue);
 		case BuildPackage.BUILD_STATE:
 			return createBuildStateFromString(eDataType, initialValue);
 		case BuildPackage.BUILD_STATUS:
@@ -145,6 +155,8 @@ public class BuildFactory extends EFactoryImpl {
 	@Override
 	public String convertToString(EDataType eDataType, Object instanceValue) {
 		switch (eDataType.getClassifierID()) {
+		case BuildPackage.TEST_CASE_RESULT:
+			return convertTestCaseResultToString(eDataType, instanceValue);
 		case BuildPackage.BUILD_STATE:
 			return convertBuildStateToString(eDataType, instanceValue);
 		case BuildPackage.BUILD_STATUS:
@@ -330,6 +342,74 @@ public class BuildFactory extends EFactoryImpl {
 	public StringParameterDefinition createStringParameterDefinition() {
 		StringParameterDefinition stringParameterDefinition = new StringParameterDefinition();
 		return stringParameterDefinition;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public TestResult createTestResult() {
+		TestResult testResult = new TestResult();
+		return testResult;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public TestElement createTestElement() {
+		TestElement testElement = new TestElement();
+		return testElement;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public TestSuite createTestSuite() {
+		TestSuite testSuite = new TestSuite();
+		return testSuite;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public TestCase createTestCase() {
+		TestCase testCase = new TestCase();
+		return testCase;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public TestCaseResult createTestCaseResultFromString(EDataType eDataType, String initialValue) {
+		TestCaseResult result = TestCaseResult.get(initialValue);
+		if (result == null)
+			throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '"
+					+ eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public String convertTestCaseResultToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
 	}
 
 	/**

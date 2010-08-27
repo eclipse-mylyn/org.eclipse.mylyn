@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildSwitch.java,v 1.9 2010/08/27 06:49:23 spingel Exp $
+ * $Id: BuildSwitch.java,v 1.10 2010/08/27 09:00:23 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -348,6 +348,38 @@ public class BuildSwitch<T> {
 				result = caseIStringParameterDefinition(stringParameterDefinition);
 			if (result == null)
 				result = caseIParameterDefinition(stringParameterDefinition);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case BuildPackage.TEST_RESULT: {
+			TestResult testResult = (TestResult) theEObject;
+			T result = caseTestResult(testResult);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case BuildPackage.TEST_ELEMENT: {
+			TestElement testElement = (TestElement) theEObject;
+			T result = caseTestElement(testElement);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case BuildPackage.TEST_SUITE: {
+			TestSuite testSuite = (TestSuite) theEObject;
+			T result = caseTestSuite(testSuite);
+			if (result == null)
+				result = caseTestElement(testSuite);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case BuildPackage.TEST_CASE: {
+			TestCase testCase = (TestCase) theEObject;
+			T result = caseTestCase(testCase);
+			if (result == null)
+				result = caseTestElement(testCase);
 			if (result == null)
 				result = defaultCase(theEObject);
 			return result;
@@ -881,6 +913,74 @@ public class BuildSwitch<T> {
 	 * @generated
 	 */
 	public T caseStringParameterDefinition(StringParameterDefinition object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Test Result</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Test Result</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseTestResult(TestResult object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Test Element</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Test Element</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseTestElement(TestElement object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Test Suite</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Test Suite</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseTestSuite(TestSuite object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Test Case</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Test Case</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseTestCase(TestCase object) {
 		return null;
 	}
 

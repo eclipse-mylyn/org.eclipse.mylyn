@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildPackage.java,v 1.14 2010/08/27 06:49:23 spingel Exp $
+ * $Id: BuildPackage.java,v 1.15 2010/08/27 09:00:23 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -11,6 +11,7 @@ import java.util.Map;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
+import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
@@ -2773,6 +2774,334 @@ public class BuildPackage extends EPackageImpl {
 	public static final int STRING_PARAMETER_DEFINITION_FEATURE_COUNT = ISTRING_PARAMETER_DEFINITION_FEATURE_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.TestResult <em>Test Result</em>}'
+	 * class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.mylyn.internal.builds.core.TestResult
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getTestResult()
+	 * @generated
+	 */
+	public static final int TEST_RESULT = 38;
+
+	/**
+	 * The feature id for the '<em><b>Build</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int TEST_RESULT__BUILD = 0;
+
+	/**
+	 * The feature id for the '<em><b>Duration</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int TEST_RESULT__DURATION = 1;
+
+	/**
+	 * The feature id for the '<em><b>Fail Count</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int TEST_RESULT__FAIL_COUNT = 2;
+
+	/**
+	 * The feature id for the '<em><b>Pass Count</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int TEST_RESULT__PASS_COUNT = 3;
+
+	/**
+	 * The feature id for the '<em><b>Suites</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int TEST_RESULT__SUITES = 4;
+
+	/**
+	 * The number of structural features of the '<em>Test Result</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int TEST_RESULT_FEATURE_COUNT = 5;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.TestElement <em>Test Element</em>}'
+	 * class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.mylyn.internal.builds.core.TestElement
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getTestElement()
+	 * @generated
+	 */
+	public static final int TEST_ELEMENT = 39;
+
+	/**
+	 * The feature id for the '<em><b>Label</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int TEST_ELEMENT__LABEL = 0;
+
+	/**
+	 * The feature id for the '<em><b>Duration</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int TEST_ELEMENT__DURATION = 1;
+
+	/**
+	 * The feature id for the '<em><b>Error Output</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int TEST_ELEMENT__ERROR_OUTPUT = 2;
+
+	/**
+	 * The feature id for the '<em><b>Output</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int TEST_ELEMENT__OUTPUT = 3;
+
+	/**
+	 * The number of structural features of the '<em>Test Element</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int TEST_ELEMENT_FEATURE_COUNT = 4;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.TestSuite <em>Test Suite</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.mylyn.internal.builds.core.TestSuite
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getTestSuite()
+	 * @generated
+	 */
+	public static final int TEST_SUITE = 40;
+
+	/**
+	 * The feature id for the '<em><b>Label</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int TEST_SUITE__LABEL = TEST_ELEMENT__LABEL;
+
+	/**
+	 * The feature id for the '<em><b>Duration</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int TEST_SUITE__DURATION = TEST_ELEMENT__DURATION;
+
+	/**
+	 * The feature id for the '<em><b>Error Output</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int TEST_SUITE__ERROR_OUTPUT = TEST_ELEMENT__ERROR_OUTPUT;
+
+	/**
+	 * The feature id for the '<em><b>Output</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int TEST_SUITE__OUTPUT = TEST_ELEMENT__OUTPUT;
+
+	/**
+	 * The feature id for the '<em><b>Cases</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int TEST_SUITE__CASES = TEST_ELEMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Result</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int TEST_SUITE__RESULT = TEST_ELEMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>Test Suite</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int TEST_SUITE_FEATURE_COUNT = TEST_ELEMENT_FEATURE_COUNT + 2;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.TestCase <em>Test Case</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.mylyn.internal.builds.core.TestCase
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getTestCase()
+	 * @generated
+	 */
+	public static final int TEST_CASE = 41;
+
+	/**
+	 * The feature id for the '<em><b>Label</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int TEST_CASE__LABEL = TEST_ELEMENT__LABEL;
+
+	/**
+	 * The feature id for the '<em><b>Duration</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int TEST_CASE__DURATION = TEST_ELEMENT__DURATION;
+
+	/**
+	 * The feature id for the '<em><b>Error Output</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int TEST_CASE__ERROR_OUTPUT = TEST_ELEMENT__ERROR_OUTPUT;
+
+	/**
+	 * The feature id for the '<em><b>Output</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int TEST_CASE__OUTPUT = TEST_ELEMENT__OUTPUT;
+
+	/**
+	 * The feature id for the '<em><b>Class Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int TEST_CASE__CLASS_NAME = TEST_ELEMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Skipped</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int TEST_CASE__SKIPPED = TEST_ELEMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Suite</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int TEST_CASE__SUITE = TEST_ELEMENT_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Status</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int TEST_CASE__STATUS = TEST_ELEMENT_FEATURE_COUNT + 3;
+
+	/**
+	 * The number of structural features of the '<em>Test Case</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int TEST_CASE_FEATURE_COUNT = TEST_ELEMENT_FEATURE_COUNT + 4;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.TestCaseResult
+	 * <em>Test Case Result</em>}' enum.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.mylyn.internal.builds.core.TestCaseResult
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getTestCaseResult()
+	 * @generated
+	 */
+	public static final int TEST_CASE_RESULT = 42;
+
+	/**
 	 * The meta object id for the '<em>Repository Location</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2781,7 +3110,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getRepositoryLocation()
 	 * @generated
 	 */
-	public static final int REPOSITORY_LOCATION = 38;
+	public static final int REPOSITORY_LOCATION = 43;
 
 	/**
 	 * The meta object id for the '<em>State</em>' data type.
@@ -2792,7 +3121,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getBuildState()
 	 * @generated
 	 */
-	public static final int BUILD_STATE = 39;
+	public static final int BUILD_STATE = 44;
 
 	/**
 	 * The meta object id for the '<em>Status</em>' data type.
@@ -2803,7 +3132,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getBuildStatus()
 	 * @generated
 	 */
-	public static final int BUILD_STATUS = 40;
+	public static final int BUILD_STATUS = 45;
 
 	/**
 	 * The meta object id for the '<em>Edit Type</em>' data type.
@@ -2814,7 +3143,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getEditType()
 	 * @generated
 	 */
-	public static final int EDIT_TYPE = 41;
+	public static final int EDIT_TYPE = 46;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -3063,6 +3392,46 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 */
 	private EClass stringParameterDefinitionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass testResultEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass testElementEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass testSuiteEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass testCaseEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EEnum testCaseResultEEnum = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -4116,6 +4485,299 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.mylyn.internal.builds.core.TestResult <em>Test Result</em>}
+	 * '.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>Test Result</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.TestResult
+	 * @generated
+	 */
+	public EClass getTestResult() {
+		return testResultEClass;
+	}
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.mylyn.internal.builds.core.TestResult#getBuild
+	 * <em>Build</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the reference '<em>Build</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.TestResult#getBuild()
+	 * @see #getTestResult()
+	 * @generated
+	 */
+	public EReference getTestResult_Build() {
+		return (EReference) testResultEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.internal.builds.core.TestResult#getDuration
+	 * <em>Duration</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Duration</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.TestResult#getDuration()
+	 * @see #getTestResult()
+	 * @generated
+	 */
+	public EAttribute getTestResult_Duration() {
+		return (EAttribute) testResultEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.internal.builds.core.TestResult#getFailCount
+	 * <em>Fail Count</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Fail Count</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.TestResult#getFailCount()
+	 * @see #getTestResult()
+	 * @generated
+	 */
+	public EAttribute getTestResult_FailCount() {
+		return (EAttribute) testResultEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.internal.builds.core.TestResult#getPassCount
+	 * <em>Pass Count</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Pass Count</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.TestResult#getPassCount()
+	 * @see #getTestResult()
+	 * @generated
+	 */
+	public EAttribute getTestResult_PassCount() {
+		return (EAttribute) testResultEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * Returns the meta object for the containment reference list '
+	 * {@link org.eclipse.mylyn.internal.builds.core.TestResult#getSuites <em>Suites</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the containment reference list '<em>Suites</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.TestResult#getSuites()
+	 * @see #getTestResult()
+	 * @generated
+	 */
+	public EReference getTestResult_Suites() {
+		return (EReference) testResultEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.mylyn.internal.builds.core.TestElement
+	 * <em>Test Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>Test Element</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.TestElement
+	 * @generated
+	 */
+	public EClass getTestElement() {
+		return testElementEClass;
+	}
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.internal.builds.core.TestElement#getLabel
+	 * <em>Label</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Label</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.TestElement#getLabel()
+	 * @see #getTestElement()
+	 * @generated
+	 */
+	public EAttribute getTestElement_Label() {
+		return (EAttribute) testElementEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.internal.builds.core.TestElement#getDuration
+	 * <em>Duration</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Duration</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.TestElement#getDuration()
+	 * @see #getTestElement()
+	 * @generated
+	 */
+	public EAttribute getTestElement_Duration() {
+		return (EAttribute) testElementEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * Returns the meta object for the attribute '
+	 * {@link org.eclipse.mylyn.internal.builds.core.TestElement#getErrorOutput <em>Error Output</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Error Output</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.TestElement#getErrorOutput()
+	 * @see #getTestElement()
+	 * @generated
+	 */
+	public EAttribute getTestElement_ErrorOutput() {
+		return (EAttribute) testElementEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.internal.builds.core.TestElement#getOutput
+	 * <em>Output</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Output</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.TestElement#getOutput()
+	 * @see #getTestElement()
+	 * @generated
+	 */
+	public EAttribute getTestElement_Output() {
+		return (EAttribute) testElementEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.mylyn.internal.builds.core.TestSuite <em>Test Suite</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>Test Suite</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.TestSuite
+	 * @generated
+	 */
+	public EClass getTestSuite() {
+		return testSuiteEClass;
+	}
+
+	/**
+	 * Returns the meta object for the containment reference list '
+	 * {@link org.eclipse.mylyn.internal.builds.core.TestSuite#getCases <em>Cases</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the containment reference list '<em>Cases</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.TestSuite#getCases()
+	 * @see #getTestSuite()
+	 * @generated
+	 */
+	public EReference getTestSuite_Cases() {
+		return (EReference) testSuiteEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * Returns the meta object for the container reference '
+	 * {@link org.eclipse.mylyn.internal.builds.core.TestSuite#getResult <em>Result</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the container reference '<em>Result</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.TestSuite#getResult()
+	 * @see #getTestSuite()
+	 * @generated
+	 */
+	public EReference getTestSuite_Result() {
+		return (EReference) testSuiteEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.mylyn.internal.builds.core.TestCase <em>Test Case</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>Test Case</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.TestCase
+	 * @generated
+	 */
+	public EClass getTestCase() {
+		return testCaseEClass;
+	}
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.internal.builds.core.TestCase#getClassName
+	 * <em>Class Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Class Name</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.TestCase#getClassName()
+	 * @see #getTestCase()
+	 * @generated
+	 */
+	public EAttribute getTestCase_ClassName() {
+		return (EAttribute) testCaseEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.internal.builds.core.TestCase#isSkipped
+	 * <em>Skipped</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Skipped</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.TestCase#isSkipped()
+	 * @see #getTestCase()
+	 * @generated
+	 */
+	public EAttribute getTestCase_Skipped() {
+		return (EAttribute) testCaseEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * Returns the meta object for the container reference '
+	 * {@link org.eclipse.mylyn.internal.builds.core.TestCase#getSuite <em>Suite</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the container reference '<em>Suite</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.TestCase#getSuite()
+	 * @see #getTestCase()
+	 * @generated
+	 */
+	public EReference getTestCase_Suite() {
+		return (EReference) testCaseEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.internal.builds.core.TestCase#getStatus
+	 * <em>Status</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Status</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.TestCase#getStatus()
+	 * @see #getTestCase()
+	 * @generated
+	 */
+	public EAttribute getTestCase_Status() {
+		return (EAttribute) testCaseEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * Returns the meta object for enum '{@link org.eclipse.mylyn.internal.builds.core.TestCaseResult
+	 * <em>Test Case Result</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for enum '<em>Test Case Result</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.TestCaseResult
+	 * @generated
+	 */
+	public EEnum getTestCaseResult() {
+		return testCaseResultEEnum;
+	}
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IArtifact <em>IArtifact</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4914,6 +5576,32 @@ public class BuildPackage extends EPackageImpl {
 
 		stringParameterDefinitionEClass = createEClass(STRING_PARAMETER_DEFINITION);
 
+		testResultEClass = createEClass(TEST_RESULT);
+		createEReference(testResultEClass, TEST_RESULT__BUILD);
+		createEAttribute(testResultEClass, TEST_RESULT__DURATION);
+		createEAttribute(testResultEClass, TEST_RESULT__FAIL_COUNT);
+		createEAttribute(testResultEClass, TEST_RESULT__PASS_COUNT);
+		createEReference(testResultEClass, TEST_RESULT__SUITES);
+
+		testElementEClass = createEClass(TEST_ELEMENT);
+		createEAttribute(testElementEClass, TEST_ELEMENT__LABEL);
+		createEAttribute(testElementEClass, TEST_ELEMENT__DURATION);
+		createEAttribute(testElementEClass, TEST_ELEMENT__ERROR_OUTPUT);
+		createEAttribute(testElementEClass, TEST_ELEMENT__OUTPUT);
+
+		testSuiteEClass = createEClass(TEST_SUITE);
+		createEReference(testSuiteEClass, TEST_SUITE__CASES);
+		createEReference(testSuiteEClass, TEST_SUITE__RESULT);
+
+		testCaseEClass = createEClass(TEST_CASE);
+		createEAttribute(testCaseEClass, TEST_CASE__CLASS_NAME);
+		createEAttribute(testCaseEClass, TEST_CASE__SKIPPED);
+		createEReference(testCaseEClass, TEST_CASE__SUITE);
+		createEAttribute(testCaseEClass, TEST_CASE__STATUS);
+
+		// Create enums
+		testCaseResultEEnum = createEEnum(TEST_CASE_RESULT);
+
 		// Create data types
 		repositoryLocationEDataType = createEDataType(REPOSITORY_LOCATION);
 		buildStateEDataType = createEDataType(BUILD_STATE);
@@ -4982,6 +5670,8 @@ public class BuildPackage extends EPackageImpl {
 		buildParameterDefinitionEClass.getESuperTypes().add(this.getIBuildParameterDefinition());
 		iStringParameterDefinitionEClass.getESuperTypes().add(this.getIParameterDefinition());
 		stringParameterDefinitionEClass.getESuperTypes().add(this.getIStringParameterDefinition());
+		testSuiteEClass.getESuperTypes().add(this.getTestElement());
+		testCaseEClass.getESuperTypes().add(this.getTestElement());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(iBuildModelEClass, IBuildModel.class, "IBuildModel", IS_ABSTRACT, IS_INTERFACE,
@@ -5249,6 +5939,61 @@ public class BuildPackage extends EPackageImpl {
 
 		initEClass(stringParameterDefinitionEClass, StringParameterDefinition.class, "StringParameterDefinition",
 				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(testResultEClass, TestResult.class, "TestResult", !IS_ABSTRACT, !IS_INTERFACE,
+				IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getTestResult_Build(), this.getIBuild(), null, "build", null, 0, 1, TestResult.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTestResult_Duration(), ecorePackage.getEDouble(), "duration", null, 0, 1, TestResult.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTestResult_FailCount(), ecorePackage.getEInt(), "failCount", null, 0, 1, TestResult.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTestResult_PassCount(), ecorePackage.getEInt(), "passCount", null, 0, 1, TestResult.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTestResult_Suites(), this.getTestSuite(), this.getTestSuite_Result(), "suites", null, 0, -1,
+				TestResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(testElementEClass, TestElement.class, "TestElement", !IS_ABSTRACT, !IS_INTERFACE,
+				IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getTestElement_Label(), ecorePackage.getEString(), "label", null, 0, 1, TestElement.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTestElement_Duration(), ecorePackage.getEDouble(), "duration", null, 0, 1, TestElement.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTestElement_ErrorOutput(), ecorePackage.getEString(), "errorOutput", null, 0, 1,
+				TestElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTestElement_Output(), ecorePackage.getEString(), "output", null, 0, 1, TestElement.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(testSuiteEClass, TestSuite.class, "TestSuite", !IS_ABSTRACT, !IS_INTERFACE,
+				IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getTestSuite_Cases(), this.getTestCase(), this.getTestCase_Suite(), "cases", null, 0, -1,
+				TestSuite.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTestSuite_Result(), this.getTestResult(), this.getTestResult_Suites(), "result", null, 0, 1,
+				TestSuite.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(testCaseEClass, TestCase.class, "TestCase", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getTestCase_ClassName(), ecorePackage.getEString(), "className", null, 0, 1, TestCase.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTestCase_Skipped(), ecorePackage.getEBoolean(), "skipped", null, 0, 1, TestCase.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTestCase_Suite(), this.getTestSuite(), this.getTestSuite_Cases(), "suite", null, 0, 1,
+				TestCase.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTestCase_Status(), this.getTestCaseResult(), "status", null, 0, 1, TestCase.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		// Initialize enums and add enum literals
+		initEEnum(testCaseResultEEnum, TestCaseResult.class, "TestCaseResult");
+		addEEnumLiteral(testCaseResultEEnum, TestCaseResult.PASSED);
+		addEEnumLiteral(testCaseResultEEnum, TestCaseResult.SKIPPED);
+		addEEnumLiteral(testCaseResultEEnum, TestCaseResult.FAILED);
+		addEEnumLiteral(testCaseResultEEnum, TestCaseResult.FIXED);
+		addEEnumLiteral(testCaseResultEEnum, TestCaseResult.REGRESSION);
 
 		// Initialize data types
 		initEDataType(repositoryLocationEDataType, RepositoryLocation.class, "RepositoryLocation", !IS_SERIALIZABLE,
@@ -5933,6 +6678,201 @@ public class BuildPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EClass STRING_PARAMETER_DEFINITION = eINSTANCE.getStringParameterDefinition();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.TestResult
+		 * <em>Test Result</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @see org.eclipse.mylyn.internal.builds.core.TestResult
+		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getTestResult()
+		 * @generated
+		 */
+		public static final EClass TEST_RESULT = eINSTANCE.getTestResult();
+
+		/**
+		 * The meta object literal for the '<em><b>Build</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EReference TEST_RESULT__BUILD = eINSTANCE.getTestResult_Build();
+
+		/**
+		 * The meta object literal for the '<em><b>Duration</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute TEST_RESULT__DURATION = eINSTANCE.getTestResult_Duration();
+
+		/**
+		 * The meta object literal for the '<em><b>Fail Count</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute TEST_RESULT__FAIL_COUNT = eINSTANCE.getTestResult_FailCount();
+
+		/**
+		 * The meta object literal for the '<em><b>Pass Count</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute TEST_RESULT__PASS_COUNT = eINSTANCE.getTestResult_PassCount();
+
+		/**
+		 * The meta object literal for the '<em><b>Suites</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EReference TEST_RESULT__SUITES = eINSTANCE.getTestResult_Suites();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.TestElement
+		 * <em>Test Element</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @see org.eclipse.mylyn.internal.builds.core.TestElement
+		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getTestElement()
+		 * @generated
+		 */
+		public static final EClass TEST_ELEMENT = eINSTANCE.getTestElement();
+
+		/**
+		 * The meta object literal for the '<em><b>Label</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute TEST_ELEMENT__LABEL = eINSTANCE.getTestElement_Label();
+
+		/**
+		 * The meta object literal for the '<em><b>Duration</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute TEST_ELEMENT__DURATION = eINSTANCE.getTestElement_Duration();
+
+		/**
+		 * The meta object literal for the '<em><b>Error Output</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute TEST_ELEMENT__ERROR_OUTPUT = eINSTANCE.getTestElement_ErrorOutput();
+
+		/**
+		 * The meta object literal for the '<em><b>Output</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute TEST_ELEMENT__OUTPUT = eINSTANCE.getTestElement_Output();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.TestSuite <em>Test Suite</em>}
+		 * ' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @see org.eclipse.mylyn.internal.builds.core.TestSuite
+		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getTestSuite()
+		 * @generated
+		 */
+		public static final EClass TEST_SUITE = eINSTANCE.getTestSuite();
+
+		/**
+		 * The meta object literal for the '<em><b>Cases</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EReference TEST_SUITE__CASES = eINSTANCE.getTestSuite_Cases();
+
+		/**
+		 * The meta object literal for the '<em><b>Result</b></em>' container reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EReference TEST_SUITE__RESULT = eINSTANCE.getTestSuite_Result();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.TestCase <em>Test Case</em>}'
+		 * class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @see org.eclipse.mylyn.internal.builds.core.TestCase
+		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getTestCase()
+		 * @generated
+		 */
+		public static final EClass TEST_CASE = eINSTANCE.getTestCase();
+
+		/**
+		 * The meta object literal for the '<em><b>Class Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute TEST_CASE__CLASS_NAME = eINSTANCE.getTestCase_ClassName();
+
+		/**
+		 * The meta object literal for the '<em><b>Skipped</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute TEST_CASE__SKIPPED = eINSTANCE.getTestCase_Skipped();
+
+		/**
+		 * The meta object literal for the '<em><b>Suite</b></em>' container reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EReference TEST_CASE__SUITE = eINSTANCE.getTestCase_Suite();
+
+		/**
+		 * The meta object literal for the '<em><b>Status</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute TEST_CASE__STATUS = eINSTANCE.getTestCase_Status();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.TestCaseResult
+		 * <em>Test Case Result</em>}' enum.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @see org.eclipse.mylyn.internal.builds.core.TestCaseResult
+		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getTestCaseResult()
+		 * @generated
+		 */
+		public static final EEnum TEST_CASE_RESULT = eINSTANCE.getTestCaseResult();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.core.IArtifact <em>IArtifact</em>}' class.

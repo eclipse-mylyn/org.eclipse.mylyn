@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildAdapterFactory.java,v 1.9 2010/08/27 06:49:23 spingel Exp $
+ * $Id: BuildAdapterFactory.java,v 1.10 2010/08/27 09:00:23 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -275,6 +275,26 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 		@Override
 		public Adapter caseStringParameterDefinition(StringParameterDefinition object) {
 			return createStringParameterDefinitionAdapter();
+		}
+
+		@Override
+		public Adapter caseTestResult(TestResult object) {
+			return createTestResultAdapter();
+		}
+
+		@Override
+		public Adapter caseTestElement(TestElement object) {
+			return createTestElementAdapter();
+		}
+
+		@Override
+		public Adapter caseTestSuite(TestSuite object) {
+			return createTestSuiteAdapter();
+		}
+
+		@Override
+		public Adapter caseTestCase(TestCase object) {
+			return createTestCaseAdapter();
 		}
 
 		@Override
@@ -792,6 +812,70 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createStringParameterDefinitionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.internal.builds.core.TestResult
+	 * <em>Test Result</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.internal.builds.core.TestResult
+	 * @generated
+	 */
+	public Adapter createTestResultAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.internal.builds.core.TestElement
+	 * <em>Test Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.internal.builds.core.TestElement
+	 * @generated
+	 */
+	public Adapter createTestElementAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.internal.builds.core.TestSuite
+	 * <em>Test Suite</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.internal.builds.core.TestSuite
+	 * @generated
+	 */
+	public Adapter createTestSuiteAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.internal.builds.core.TestCase
+	 * <em>Test Case</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.internal.builds.core.TestCase
+	 * @generated
+	 */
+	public Adapter createTestCaseAdapter() {
 		return null;
 	}
 

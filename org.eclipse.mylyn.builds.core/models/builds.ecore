@@ -164,4 +164,38 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="defaultValue" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="StringParameterDefinition" eSuperTypes="#//IStringParameterDefinition"/>
+  <eClassifiers xsi:type="ecore:EClass" name="TestResult">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="build" eType="#//IBuild"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="duration" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="failCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="passCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="suites" upperBound="-1"
+        eType="#//TestSuite" containment="true" eOpposite="#//TestSuite/result"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="TestCaseResult">
+    <eLiterals name="PASSED" literal=""/>
+    <eLiterals name="SKIPPED"/>
+    <eLiterals name="FAILED"/>
+    <eLiterals name="FIXED"/>
+    <eLiterals name="REGRESSION"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TestElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="label" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="duration" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="errorOutput" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="output" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TestSuite" eSuperTypes="#//TestElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cases" upperBound="-1"
+        eType="#//TestCase" containment="true" eOpposite="#//TestCase/suite"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="result" eType="#//TestResult"
+        eOpposite="#//TestResult/suites"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TestCase" eSuperTypes="#//TestElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="className" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="skipped" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="suite" eType="#//TestSuite"
+        eOpposite="#//TestSuite/cases"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="#//TestCaseResult"/>
+  </eClassifiers>
 </ecore:EPackage>
