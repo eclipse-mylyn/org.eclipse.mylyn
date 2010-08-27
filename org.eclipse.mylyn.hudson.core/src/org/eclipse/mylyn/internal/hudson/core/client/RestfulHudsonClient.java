@@ -8,18 +8,23 @@
  * Contributors:
  *     Markus Knittig - initial API and implementation
  *     Tasktop Technologies - improvements
+ *     Eike Stepper - improvements for bug 323759
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.hudson.core.client;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -30,16 +35,21 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.NameValuePair;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.IOperationMonitor;
 import org.eclipse.mylyn.commons.http.CommonHttpClient;
 import org.eclipse.mylyn.commons.http.CommonHttpMethod;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
+import org.eclipse.mylyn.internal.commons.http.CommonPostMethod;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBuild;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelHudson;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelJob;
 import org.eclipse.osgi.util.NLS;
+import org.json.JSONException;
+import org.json.JSONWriter;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
@@ -49,6 +59,7 @@ import org.xml.sax.SAXException;
  * 
  * @author Markus Knittig
  * @author Steffen Pingel
+ * @author Eike Stepper
  */
 public class RestfulHudsonClient {
 
@@ -86,8 +97,13 @@ public class RestfulHudsonClient {
 		client.getHttpClient().getParams().setAuthenticationPreemptive(true);
 	}
 
-	protected void checkResponse(int statusCode) throws HudsonException {
-		if (statusCode != HttpStatus.SC_OK) {
+	protected void checkResponse(CommonHttpMethod method) throws HudsonException {
+		checkResponse(method, HttpStatus.SC_OK);
+	}
+
+	protected void checkResponse(CommonHttpMethod method, int expected) throws HudsonException {
+		int statusCode = method.getStatusCode();
+		if (statusCode != expected) {
 			throw new HudsonException(NLS.bind("Unexpected response from Hudson server: {0}", HttpStatus
 					.getStatusText(statusCode)));
 		}
@@ -100,11 +116,9 @@ public class RestfulHudsonClient {
 			public HudsonModelBuild execute() throws IOException, HudsonException, JAXBException {
 				CommonHttpMethod method = createGetMethod(getBuildUrl(job, build) + URL_API);
 				try {
-					int statusCode = execute(method, monitor);
-					checkResponse(statusCode);
-
+					execute(method, monitor);
+					checkResponse(method);
 					InputStream in = method.getResponseBodyAsStream(monitor);
-
 					return unmarshal(parse(in), HudsonModelBuild.class);
 				} finally {
 					method.releaseConnection(monitor);
@@ -135,8 +149,8 @@ public class RestfulHudsonClient {
 			@Override
 			public Reader execute() throws IOException, HudsonException {
 				CommonHttpMethod method = createGetMethod(getBuildUrl(job, hudsonBuild) + "/consoleText");
-				int response = execute(method, monitor);
-				checkResponse(response);
+				execute(method, monitor);
+				checkResponse(method);
 				String charSet = method.getResponseCharSet();
 				if (charSet == null) {
 					charSet = "UTF-8";
@@ -158,8 +172,8 @@ public class RestfulHudsonClient {
 						.match("name", ids).exclude("/hudson/job/build").toUrl();
 				CommonHttpMethod method = createGetMethod(url);
 				try {
-					int statusCode = execute(method, monitor);
-					checkResponse(statusCode);
+					execute(method, monitor);
+					checkResponse(method);
 					InputStream in = method.getResponseBodyAsStream(monitor);
 
 					Map<String, String> jobNameById = new HashMap<String, String>();
@@ -169,7 +183,8 @@ public class RestfulHudsonClient {
 					List<HudsonModelJob> buildPlans = new ArrayList<HudsonModelJob>();
 					List<Object> jobsNodes = hudson.getJob();
 					for (Object jobNode : jobsNodes) {
-						HudsonModelJob job = unmarshal((Node) jobNode, HudsonModelJob.class);
+						Node node = (Node) jobNode;
+						HudsonModelJob job = unmarshal(node, HudsonModelJob.class);
 						if (job.getDisplayName() != null && job.getDisplayName().length() > 0) {
 							jobNameById.put(job.getName(), job.getDisplayName());
 						} else {
@@ -204,23 +219,76 @@ public class RestfulHudsonClient {
 		}
 	}
 
-	public void runBuild(final HudsonModelJob job, final IOperationMonitor monitor) throws HudsonException {
-		int response = new HudsonOperation<Integer>(client) {
+	public Document getJobConfig(final HudsonModelJob job, final IOperationMonitor monitor) throws HudsonException {
+		return new HudsonOperation<Document>(client) {
 			@Override
-			public Integer execute() throws IOException {
-				CommonHttpMethod method = createGetMethod(getJobUrl(job) + "/build");
+			public Document execute() throws IOException, HudsonException, JAXBException {
+				CommonHttpMethod method = createGetMethod(getJobUrl(job) + "/config.xml");
 				try {
-					return execute(method, monitor);
+					execute(method, monitor);
+					checkResponse(method);
+
+					InputStream in = method.getResponseBodyAsStream(monitor);
+					DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+					return builder.parse(in); // TODO Enhance progress monitoring
+				} catch (ParserConfigurationException e) {
+					throw new HudsonException(e);
+				} catch (SAXException e) {
+					throw new HudsonException(e);
 				} finally {
 					method.releaseConnection(monitor);
 				}
 			}
 		}.run();
-		if (response == HttpStatus.SC_OK) {
-			return;
-		}
-		throw new HudsonException(NLS.bind("Unexpected return code {0}: {1}", response, HttpStatus
-				.getStatusText(response)));
+	}
+
+	public void runBuild(final HudsonModelJob job, final Map<String, String> parameters, final IOperationMonitor monitor)
+			throws HudsonException {
+		new HudsonOperation<Object>(client) {
+			@Override
+			public Object execute() throws IOException, HudsonException {
+				CommonPostMethod method = (CommonPostMethod) createPostMethod(getJobUrl(job) + "/build");
+				method.setFollowRedirects(false);
+				method.setDoAuthentication(true);
+				if (parameters != null) {
+					ByteArrayOutputStream out = new ByteArrayOutputStream();
+					Writer writer = new OutputStreamWriter(out);
+					try {
+						JSONWriter json = new JSONWriter(writer);
+						json.object().key("parameter").array();
+						for (Entry<String, String> entry : parameters.entrySet()) {
+							method.addParameter(new NameValuePair("name", entry.getKey()));
+							json.object().key("name").value(entry.getKey());
+							String value = entry.getValue();
+							if (value != null) {
+								method.addParameter(new NameValuePair("value", value));
+								json.key("value");
+								if (entry.getKey().equals("Boolean")) {
+									json.value(Boolean.parseBoolean(entry.getValue()));
+								} else {
+									json.value(entry.getValue());
+								}
+							}
+							json.endObject();
+						}
+						json.endArray().endObject();
+						writer.flush();
+						method.addParameter(new NameValuePair("json", out.toString()));
+						method.addParameter(new NameValuePair("Submit", "Build"));
+					} catch (JSONException e) {
+						throw new IOException("Error constructing request: " + e);
+					}
+				}
+
+				try {
+					execute(method, monitor);
+					checkResponse(method, 302);
+					return null;
+				} finally {
+					method.releaseConnection(monitor);
+				}
+			}
+		}.run();
 	}
 
 	public void setCache(HudsonConfigurationCache cache) {

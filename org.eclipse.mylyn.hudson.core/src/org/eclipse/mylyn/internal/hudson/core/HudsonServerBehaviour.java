@@ -7,11 +7,13 @@
  *
  * Contributors:
  *     Markus Knittig - initial API and implementation
- *     Tasktop Techonologies - improvements
+ *     Tasktop Technologies - improvements
+ *     Eike Stepper - improvements for bug 323759
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.hudson.core;
 
+import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,8 +21,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.builds.core.BuildState;
 import org.eclipse.mylyn.builds.core.BuildStatus;
 import org.eclipse.mylyn.builds.core.IBuild;
@@ -33,9 +38,18 @@ import org.eclipse.mylyn.builds.core.spi.BuildRequest;
 import org.eclipse.mylyn.builds.core.spi.BuildRequest.Kind;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
 import org.eclipse.mylyn.builds.core.spi.BuildServerConfiguration;
+import org.eclipse.mylyn.builds.core.spi.RunBuildRequest;
 import org.eclipse.mylyn.commons.core.IOperationMonitor;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
+import org.eclipse.mylyn.internal.builds.core.BooleanParameterDefinition;
+import org.eclipse.mylyn.internal.builds.core.BuildFactory;
+import org.eclipse.mylyn.internal.builds.core.BuildParameterDefinition;
+import org.eclipse.mylyn.internal.builds.core.ChoiceParameterDefinition;
+import org.eclipse.mylyn.internal.builds.core.FileParameterDefinition;
+import org.eclipse.mylyn.internal.builds.core.IParameterDefinition;
+import org.eclipse.mylyn.internal.builds.core.PasswordParameterDefinition;
+import org.eclipse.mylyn.internal.builds.core.StringParameterDefinition;
 import org.eclipse.mylyn.internal.builds.core.util.RepositoryWebLocation;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonConfigurationCache;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonException;
@@ -45,10 +59,16 @@ import org.eclipse.mylyn.internal.hudson.model.HudsonModelBallColor;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBuild;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelHealthReport;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelJob;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  * @author Markus Knittig
  * @author Steffen Pingel
+ * @author Eike Stepper
  */
 public class HudsonServerBehaviour extends BuildServerBehaviour {
 
@@ -88,6 +108,16 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		}
 	}
 
+	private IBuild parseBuild(HudsonModelBuild hudsonBuild) {
+		IBuildWorkingCopy build = createBuild();
+		build.setId(hudsonBuild.getId());
+		build.setBuildNumber(hudsonBuild.getNumber());
+		build.setLabel(hudsonBuild.getNumber() + "");
+		build.setDuration(hudsonBuild.getDuration());
+		build.setTimestamp(hudsonBuild.getTimestamp());
+		return build;
+	}
+
 	public HudsonConfigurationCache getCache() {
 		return client.getCache();
 	}
@@ -122,22 +152,120 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 			List<HudsonModelJob> jobs = client.getJobs(request.getPlanIds(), monitor);
 			List<IBuildPlanData> plans = new ArrayList<IBuildPlanData>(jobs.size());
 			for (HudsonModelJob job : jobs) {
-				plans.add(parseJob(job));
+				org.eclipse.mylyn.internal.builds.core.BuildPlan plan = (org.eclipse.mylyn.internal.builds.core.BuildPlan) parseJob(job); // TODO Bad cast ;-(
+				plans.add(plan);
+
+				// TODO Do this in parallel for multiple jobs
+				try {
+					Document document = client.getJobConfig(job, monitor);
+					parseParameters(document, plan.getParameterDefinitions());
+				} catch (HudsonException e) {
+					// ignore, might not have permission to read config
+				}
 			}
 			return plans;
 		} catch (HudsonException e) {
-			throw HudsonCorePlugin.toCoreException(e);
+			throw HudsonCorePlugin.toCoreException(e); // TODO Why must e be a HUDSONexception?
+		} catch (Exception e) {
+			throw new CoreException(new Status(IStatus.ERROR, HudsonCorePlugin.PLUGIN_ID, "Unexpected error: "
+					+ e.getMessage(), e));
 		}
 	}
 
-	private IBuild parseBuild(HudsonModelBuild hudsonBuild) {
-		IBuildWorkingCopy build = createBuild();
-		build.setId(hudsonBuild.getId());
-		build.setBuildNumber(hudsonBuild.getNumber());
-		build.setLabel(hudsonBuild.getNumber() + "");
-		build.setDuration(hudsonBuild.getDuration());
-		build.setTimestamp(hudsonBuild.getTimestamp());
-		return build;
+	private void parseParameters(Document document, List<IParameterDefinition> definitions)
+			throws ParserConfigurationException, SAXException, IOException, HudsonException {
+
+		NodeList containers = document.getElementsByTagName("parameterDefinitions"); //$NON-NLS-1$
+		for (int i = 0; i < containers.getLength(); i++) {
+			Element container = (Element) containers.item(i);
+			NodeList elements = container.getChildNodes();
+			for (int j = 0; j < elements.getLength(); j++) {
+				Node node = elements.item(j);
+				if (node instanceof Element) {
+					Element element = (Element) elements.item(j);
+					IParameterDefinition definition = parseParameter(element);
+					definitions.add(definition);
+				}
+			}
+		}
+	}
+
+	private IParameterDefinition parseParameter(Element element) throws HudsonException {
+		String tagName = element.getTagName();
+		if ("hudson.model.ChoiceParameterDefinition".equals(tagName)) { //$NON-NLS-1$
+			ChoiceParameterDefinition definition = BuildFactory.eINSTANCE.createChoiceParameterDefinition();
+			definition.setName(getElementContent(element, "name", true));
+			definition.setDescription(getElementContent(element, "description", false));
+			NodeList options = element.getElementsByTagName("string"); //$NON-NLS-1$
+			for (int i = 0; i < options.getLength(); i++) {
+				Element option = (Element) options.item(i);
+				definition.getOptions().add(option.getTextContent());
+			}
+
+			return definition;
+		}
+
+		if ("hudson.model.BooleanParameterDefinition".equals(tagName)) { //$NON-NLS-1$
+			BooleanParameterDefinition definition = BuildFactory.eINSTANCE.createBooleanParameterDefinition();
+			definition.setName(getElementContent(element, "name", true));
+			definition.setDescription(getElementContent(element, "description", false));
+			String defaultValue = getElementContent(element, "defaultValue", false);
+			if (defaultValue != null) {
+				definition.setDefaultValue(Boolean.parseBoolean(defaultValue));
+			}
+
+			return definition;
+		}
+
+		if ("hudson.model.StringParameterDefinition".equals(tagName)) { //$NON-NLS-1$
+			StringParameterDefinition definition = BuildFactory.eINSTANCE.createStringParameterDefinition();
+			definition.setName(getElementContent(element, "name", true));
+			definition.setDescription(getElementContent(element, "description", false));
+			definition.setDefaultValue(getElementContent(element, "defaultValue", false));
+
+			return definition;
+		}
+
+		if ("hudson.model.PasswordParameterDefinition".equals(tagName)) { //$NON-NLS-1$
+			PasswordParameterDefinition definition = BuildFactory.eINSTANCE.createPasswordParameterDefinition();
+			definition.setName(getElementContent(element, "name", true));
+			definition.setDescription(getElementContent(element, "description", false));
+			definition.setDefaultValue(getElementContent(element, "defaultValue", false));
+
+			return definition;
+		}
+
+		if ("hudson.model.RunParameterDefinition".equals(tagName)) { //$NON-NLS-1$
+			BuildParameterDefinition definition = BuildFactory.eINSTANCE.createBuildParameterDefinition();
+			definition.setName(getElementContent(element, "name", true));
+			definition.setDescription(getElementContent(element, "description", false));
+			definition.setBuildPlanId(getElementContent(element, "projectName", false));
+
+			return definition;
+		}
+
+		if ("hudson.model.FileParameterDefinition".equals(tagName)) { //$NON-NLS-1$
+			FileParameterDefinition definition = BuildFactory.eINSTANCE.createFileParameterDefinition();
+			definition.setName(getElementContent(element, "name", true));
+			definition.setDescription(getElementContent(element, "description", false));
+
+			return definition;
+		}
+
+		throw new HudsonException("Unexpected parameter type: " + tagName);
+	}
+
+	private String getElementContent(Element element, String name, boolean required) throws HudsonException {
+		NodeList elements = element.getElementsByTagName(name);
+		if (required && elements.getLength() == 0) {
+			throw new HudsonException("No " + name + " element"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+
+		if (elements.getLength() > 1) {
+			throw new HudsonException("More than one " + name + " element"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+
+		return ((Element) elements.item(0)).getTextContent();
 	}
 
 	public IBuildPlanData parseJob(HudsonModelJob job) {
@@ -173,10 +301,10 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 	}
 
 	@Override
-	public void runBuild(IBuildPlanData plan, IOperationMonitor monitor) throws CoreException {
+	public void runBuild(RunBuildRequest request, IOperationMonitor monitor) throws CoreException {
 		try {
-			HudsonModelJob job = createJobParameter(plan);
-			client.runBuild(job, monitor);
+			HudsonModelJob job = createJobParameter(request.getPlan());
+			client.runBuild(job, request.getParameters(), monitor);
 		} catch (HudsonException e) {
 			throw HudsonCorePlugin.toCoreException(e);
 		}

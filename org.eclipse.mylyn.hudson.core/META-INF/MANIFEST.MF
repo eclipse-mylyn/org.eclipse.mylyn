@@ -19,3 +19,4 @@ Export-Package: org.eclipse.mylyn.internal.hudson.core;x-internal:=true,
  org.eclipse.mylyn.internal.hudson.core.client;x-internal:=true,
  org.eclipse.mylyn.internal.hudson.model;x-internal:=true
 Bundle-Activator: org.eclipse.mylyn.internal.hudson.core.HudsonCorePlugin
+Import-Package: org.json
