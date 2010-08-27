@@ -53,8 +53,8 @@ import org.xml.sax.SAXException;
 public class RestfulHudsonClient {
 
 	public enum BuildId {
-		LAST(-1, "lastBuild"), LAST_FAILED(-5, "lastFailedBuild"), LAST_STABLE(-2, "lastStableBuild"), LAST_SUCCESSFUL(-3, "lastSuccessfulBuild"), LAST_UNSTABLE(
-						-4, "lastUnstableBuild");
+		LAST(-1, "lastBuild"), LAST_FAILED(-5, "lastFailedBuild"), LAST_STABLE(-2, "lastStableBuild"), LAST_SUCCESSFUL(
+				-3, "lastSuccessfulBuild"), LAST_UNSTABLE(-4, "lastUnstableBuild");
 
 		private HudsonModelBuild build;
 
@@ -160,7 +160,6 @@ public class RestfulHudsonClient {
 				try {
 					int statusCode = execute(method, monitor);
 					checkResponse(statusCode);
-
 					InputStream in = method.getResponseBodyAsStream(monitor);
 
 					Map<String, String> jobNameById = new HashMap<String, String>();
