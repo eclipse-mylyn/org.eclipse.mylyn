@@ -19,6 +19,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
@@ -78,7 +79,7 @@ public class AbstractOperation implements IOperation {
 		job.setUser(!hasFlag(OperationFlag.BACKGROUND));
 	}
 
-	protected void fireDone() {
+	protected void fireDone(final MultiStatus result) {
 		for (final OperationChangeListener listener : listeners.toArray(new OperationChangeListener[0])) {
 			SafeRunner.run(new ISafeRunnable() {
 				public void handleException(Throwable e) {
@@ -88,6 +89,7 @@ public class AbstractOperation implements IOperation {
 
 				public void run() throws Exception {
 					OperationChangeEvent event = new OperationChangeEvent(AbstractOperation.this);
+					event.setStatus(result);
 					listener.done(event);
 				}
 			});

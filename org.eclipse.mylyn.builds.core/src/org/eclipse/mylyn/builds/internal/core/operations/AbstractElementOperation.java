@@ -13,11 +13,14 @@ package org.eclipse.mylyn.builds.internal.core.operations;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.internal.core.BuildsCorePlugin;
 import org.eclipse.mylyn.commons.core.IOperationMonitor;
@@ -49,7 +52,34 @@ public abstract class AbstractElementOperation<T extends IBuildElement> extends 
 	protected abstract List<T> doSyncInitInput();
 
 	public void execute() {
-		getService().getScheduler().schedule(init());
+		List<BuildJob> jobs = init();
+		final MultiStatus result = new MultiStatus(BuildsCorePlugin.ID_PLUGIN, 0, "Operation result", null);
+		final CountDownLatch latch = new CountDownLatch(jobs.size());
+		for (final BuildJob job : jobs) {
+			job.addJobChangeListener(new JobChangeAdapter() {
+				@Override
+				public void done(IJobChangeEvent event) {
+					if (event.getJob() instanceof BuildJob) {
+						BuildJob job = (BuildJob) event.getJob();
+						IStatus status = job.getStatus();
+						if (status != null && !status.isOK() && status.getSeverity() != IStatus.CANCEL) {
+							result.add(status);
+						}
+					}
+
+					boolean fireDone;
+					synchronized (latch) {
+						latch.countDown();
+						fireDone = (latch.getCount() == 0);
+					}
+					job.removeJobChangeListener(this);
+					if (fireDone) {
+						fireDone(result);
+					}
+				}
+			});
+		}
+		getService().getScheduler().schedule(jobs);
 	}
 
 	public List<BuildJob> init() {
