@@ -26,6 +26,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.mylyn.builds.core.BuildState;
 import org.eclipse.mylyn.builds.core.BuildStatus;
 import org.eclipse.mylyn.builds.core.IBuild;
@@ -47,7 +48,7 @@ import org.eclipse.mylyn.internal.builds.core.BuildFactory;
 import org.eclipse.mylyn.internal.builds.core.BuildParameterDefinition;
 import org.eclipse.mylyn.internal.builds.core.ChoiceParameterDefinition;
 import org.eclipse.mylyn.internal.builds.core.FileParameterDefinition;
-import org.eclipse.mylyn.internal.builds.core.IParameterDefinition;
+import org.eclipse.mylyn.internal.builds.core.ParameterDefinition;
 import org.eclipse.mylyn.internal.builds.core.PasswordParameterDefinition;
 import org.eclipse.mylyn.internal.builds.core.StringParameterDefinition;
 import org.eclipse.mylyn.internal.builds.core.util.RepositoryWebLocation;
@@ -172,7 +173,7 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		}
 	}
 
-	private void parseParameters(Document document, List<IParameterDefinition> definitions)
+	private void parseParameters(Document document, EList<ParameterDefinition> definitions)
 			throws ParserConfigurationException, SAXException, IOException, HudsonException {
 
 		NodeList containers = document.getElementsByTagName("parameterDefinitions"); //$NON-NLS-1$
@@ -183,14 +184,14 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 				Node node = elements.item(j);
 				if (node instanceof Element) {
 					Element element = (Element) elements.item(j);
-					IParameterDefinition definition = parseParameter(element);
+					ParameterDefinition definition = parseParameter(element);
 					definitions.add(definition);
 				}
 			}
 		}
 	}
 
-	private IParameterDefinition parseParameter(Element element) throws HudsonException {
+	private ParameterDefinition parseParameter(Element element) throws HudsonException {
 		String tagName = element.getTagName();
 		if ("hudson.model.ChoiceParameterDefinition".equals(tagName)) { //$NON-NLS-1$
 			ChoiceParameterDefinition definition = BuildFactory.eINSTANCE.createChoiceParameterDefinition();
