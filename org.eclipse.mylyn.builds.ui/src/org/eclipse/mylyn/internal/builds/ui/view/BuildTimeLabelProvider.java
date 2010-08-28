@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.builds.ui.view;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
+import org.eclipse.mylyn.commons.core.DateUtil;
 
 /**
  * @author Steffen Pingel
@@ -22,7 +23,13 @@ public class BuildTimeLabelProvider extends ColumnLabelProvider {
 	@Override
 	public String getText(Object element) {
 		if (element instanceof IBuildPlan) {
-			return ((IBuildPlan) element).getInfo();
+			IBuildPlan plan = (IBuildPlan) element;
+			if (plan.getLastBuild() != null) {
+				long timestamp = plan.getLastBuild().getTimestamp();
+				if (timestamp != 0) {
+					return DateUtil.getRelative(timestamp);
+				}
+			}
 		}
 		return ""; //$NON-NLS-1$
 	}

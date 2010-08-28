@@ -12,18 +12,22 @@
 package org.eclipse.mylyn.internal.builds.ui;
 
 import java.io.IOException;
+import java.util.Date;
 
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.ui.BuildsUi;
 import org.eclipse.mylyn.builds.ui.spi.BuildConnectorUi;
+import org.eclipse.mylyn.commons.core.DateUtil;
 import org.eclipse.mylyn.commons.core.HtmlUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.RichToolTip;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
@@ -70,6 +74,12 @@ public class BuildToolTip extends RichToolTip {
 		BuildConnectorUi connectorUi = BuildsUi.getConnectorUi(data.getServer());
 		addIconAndLabel(parent, CommonImages.getImage(connectorUi.getImageDescriptor()), data.getLabel(), true);
 
+		Date refreshDate = data.getRefreshDate();
+		if (refreshDate != null) {
+			String refreshString = DateUtil.getRelative(refreshDate.getTime());
+			addIconAndLabel(parent, null, NLS.bind("Refreshed {0}", refreshString), false);
+		}
+
 		if (data instanceof IBuildPlan) {
 			IBuildPlan plan = (IBuildPlan) data;
 			if (plan.getDescription() != null && plan.getDescription().length() > 0) {
@@ -78,6 +88,9 @@ public class BuildToolTip extends RichToolTip {
 				} catch (IOException e) {
 					// ignore
 				}
+			}
+			if (plan.getLastBuild() != null) {
+				addBuild(parent, plan.getLastBuild());
 			}
 		}
 
@@ -89,6 +102,18 @@ public class BuildToolTip extends RichToolTip {
 		}
 
 		return parent;
+	}
+
+	private void addBuild(Composite parent, IBuild build) {
+		addIconAndLabel(parent, null, NLS.bind("{0} [{1}]", build.getLabel(), build.getServer().getLabel()));
+		String text = "";
+		String time = DateUtil.getRelative(build.getTimestamp());
+		if (time.length() > 0) {
+			text = NLS.bind("Built {0}, ", time);
+		}
+		addIconAndLabel(parent, null, text
+				+ NLS.bind("took {0}", DateUtil.getFormattedDurationShort(build.getDuration())));
+
 	}
 
 	protected void addIconAndLabel(Composite parent, Image image, String text) {
