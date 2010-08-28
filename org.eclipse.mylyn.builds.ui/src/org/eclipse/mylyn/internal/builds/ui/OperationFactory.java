@@ -15,8 +15,10 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.mylyn.builds.core.IBuildElement;
+import org.eclipse.mylyn.builds.core.spi.RunBuildRequest;
 import org.eclipse.mylyn.builds.internal.core.operations.IOperationService;
 import org.eclipse.mylyn.builds.internal.core.operations.RefreshOperation;
+import org.eclipse.mylyn.builds.internal.core.operations.RunBuildOperation;
 
 /**
  * @author Steffen Pingel
@@ -39,6 +41,10 @@ public class OperationFactory {
 
 	public RefreshOperation getRefreshOperation(List<IBuildElement> elements) {
 		return new RefreshOperation(service, BuildsUiInternal.getModel(), elements);
+	}
+
+	public RunBuildOperation getRunBuildOperation(RunBuildRequest request) {
+		return new RunBuildOperation(service, request);
 	}
 
 }

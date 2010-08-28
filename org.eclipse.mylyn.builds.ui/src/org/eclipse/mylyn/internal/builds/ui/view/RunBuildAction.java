@@ -20,10 +20,13 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.spi.RunBuildRequest;
 import org.eclipse.mylyn.builds.internal.core.BuildPlan;
+import org.eclipse.mylyn.builds.internal.core.operations.OperationChangeEvent;
+import org.eclipse.mylyn.builds.internal.core.operations.OperationChangeListener;
 import org.eclipse.mylyn.builds.internal.core.operations.RunBuildOperation;
 import org.eclipse.mylyn.internal.builds.ui.BuildImages;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
 /**
@@ -68,7 +71,20 @@ public class RunBuildAction extends BaseSelectionListenerAction {
 
 		RunBuildRequest request = new RunBuildRequest(copy);
 		request.setParameters(parameters);
-		RunBuildOperation operation = new RunBuildOperation(BuildsUiInternal.getOperationService(), request);
+		RunBuildOperation operation = BuildsUiInternal.getFactory().getRunBuildOperation(request);
+		operation.addOperationChangeListener(new OperationChangeListener() {
+			@Override
+			public void done(OperationChangeEvent event) {
+				if (event.getStatus().isOK()) {
+					Display.getDefault().asyncExec(new Runnable() {
+						public void run() {
+							BuildsUiInternal.getFactory().getRefreshOperation(plan).execute();
+						}
+					});
+				}
+			}
+		});
 		operation.execute();
 	}
+
 }
