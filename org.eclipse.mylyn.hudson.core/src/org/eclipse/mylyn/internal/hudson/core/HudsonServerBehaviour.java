@@ -28,29 +28,27 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.builds.core.BuildState;
 import org.eclipse.mylyn.builds.core.BuildStatus;
+import org.eclipse.mylyn.builds.core.IBooleanParameterDefinition;
 import org.eclipse.mylyn.builds.core.IBuild;
+import org.eclipse.mylyn.builds.core.IBuildFactory;
+import org.eclipse.mylyn.builds.core.IBuildParameterDefinition;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
-import org.eclipse.mylyn.builds.core.IBuildPlanData;
-import org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy;
-import org.eclipse.mylyn.builds.core.IBuildWorkingCopy;
+import org.eclipse.mylyn.builds.core.IChoiceParameterDefinition;
+import org.eclipse.mylyn.builds.core.IFileParameterDefinition;
+import org.eclipse.mylyn.builds.core.IParameterDefinition;
+import org.eclipse.mylyn.builds.core.IPasswordParameterDefinition;
+import org.eclipse.mylyn.builds.core.IStringParameterDefinition;
 import org.eclipse.mylyn.builds.core.spi.BuildPlanRequest;
 import org.eclipse.mylyn.builds.core.spi.BuildRequest;
 import org.eclipse.mylyn.builds.core.spi.BuildRequest.Kind;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
 import org.eclipse.mylyn.builds.core.spi.BuildServerConfiguration;
 import org.eclipse.mylyn.builds.core.spi.RunBuildRequest;
+import org.eclipse.mylyn.builds.internal.core.BuildFactory;
+import org.eclipse.mylyn.builds.internal.core.util.RepositoryWebLocation;
 import org.eclipse.mylyn.commons.core.IOperationMonitor;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
-import org.eclipse.mylyn.internal.builds.core.BooleanParameterDefinition;
-import org.eclipse.mylyn.internal.builds.core.BuildFactory;
-import org.eclipse.mylyn.internal.builds.core.BuildParameterDefinition;
-import org.eclipse.mylyn.internal.builds.core.ChoiceParameterDefinition;
-import org.eclipse.mylyn.internal.builds.core.FileParameterDefinition;
-import org.eclipse.mylyn.internal.builds.core.ParameterDefinition;
-import org.eclipse.mylyn.internal.builds.core.PasswordParameterDefinition;
-import org.eclipse.mylyn.internal.builds.core.StringParameterDefinition;
-import org.eclipse.mylyn.internal.builds.core.util.RepositoryWebLocation;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonConfigurationCache;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonException;
 import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient;
@@ -88,7 +86,7 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		return hudsonBuild;
 	}
 
-	protected HudsonModelJob createJobParameter(IBuildPlanData plan) {
+	protected HudsonModelJob createJobParameter(IBuildPlan plan) {
 		HudsonModelJob job = new HudsonModelJob();
 		job.setName(plan.getId());
 		return job;
@@ -109,7 +107,7 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 	}
 
 	private IBuild parseBuild(HudsonModelBuild hudsonBuild) {
-		IBuildWorkingCopy build = createBuild();
+		IBuild build = createBuild();
 		build.setId(hudsonBuild.getId());
 		build.setBuildNumber(hudsonBuild.getNumber());
 		build.setLabel(hudsonBuild.getNumber() + "");
@@ -127,10 +125,10 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		Map<String, String> jobNameById = client.getConfiguration().jobNameById;
 		List<IBuildPlan> plans = new ArrayList<IBuildPlan>(jobNameById.size());
 		for (Entry<String, String> entry : jobNameById.entrySet()) {
-			IBuildPlanWorkingCopy plan = createBuildPlan();
+			IBuildPlan plan = createBuildPlan();
 			plan.setId(entry.getKey());
 			plan.setName(entry.getValue());
-			plans.add(plan.toBuildPlan());
+			plans.add(plan);
 		}
 		return new BuildServerConfiguration(plans);
 	}
@@ -147,12 +145,12 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 	}
 
 	@Override
-	public List<IBuildPlanData> getPlans(BuildPlanRequest request, IOperationMonitor monitor) throws CoreException {
+	public List<IBuildPlan> getPlans(BuildPlanRequest request, IOperationMonitor monitor) throws CoreException {
 		try {
 			List<HudsonModelJob> jobs = client.getJobs(request.getPlanIds(), monitor);
-			List<IBuildPlanData> plans = new ArrayList<IBuildPlanData>(jobs.size());
+			List<IBuildPlan> plans = new ArrayList<IBuildPlan>(jobs.size());
 			for (HudsonModelJob job : jobs) {
-				org.eclipse.mylyn.internal.builds.core.BuildPlan plan = (org.eclipse.mylyn.internal.builds.core.BuildPlan) parseJob(job); // TODO Bad cast ;-(
+				org.eclipse.mylyn.builds.internal.core.BuildPlan plan = (org.eclipse.mylyn.builds.internal.core.BuildPlan) parseJob(job); // TODO Bad cast ;-(
 				plans.add(plan);
 
 				// TODO Do this in parallel for multiple jobs
@@ -172,7 +170,7 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		}
 	}
 
-	private void parseParameters(Document document, List<ParameterDefinition> definitions)
+	private void parseParameters(Document document, List<IParameterDefinition> definitions)
 			throws ParserConfigurationException, SAXException, IOException, HudsonException {
 
 		NodeList containers = document.getElementsByTagName("parameterDefinitions"); //$NON-NLS-1$
@@ -183,17 +181,17 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 				Node node = elements.item(j);
 				if (node instanceof Element) {
 					Element element = (Element) elements.item(j);
-					ParameterDefinition definition = parseParameter(element);
+					IParameterDefinition definition = parseParameter(element);
 					definitions.add(definition);
 				}
 			}
 		}
 	}
 
-	private ParameterDefinition parseParameter(Element element) throws HudsonException {
+	private IParameterDefinition parseParameter(Element element) throws HudsonException {
 		String tagName = element.getTagName();
 		if ("hudson.model.ChoiceParameterDefinition".equals(tagName)) { //$NON-NLS-1$
-			ChoiceParameterDefinition definition = BuildFactory.eINSTANCE.createChoiceParameterDefinition();
+			IChoiceParameterDefinition definition = BuildFactory.eINSTANCE.createChoiceParameterDefinition();
 			definition.setName(getElementContent(element, "name", true));
 			definition.setDescription(getElementContent(element, "description", false));
 			NodeList options = element.getElementsByTagName("string"); //$NON-NLS-1$
@@ -206,7 +204,7 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		}
 
 		if ("hudson.model.BooleanParameterDefinition".equals(tagName)) { //$NON-NLS-1$
-			BooleanParameterDefinition definition = BuildFactory.eINSTANCE.createBooleanParameterDefinition();
+			IBooleanParameterDefinition definition = IBuildFactory.INSTANCE.createBooleanParameterDefinition();
 			definition.setName(getElementContent(element, "name", true));
 			definition.setDescription(getElementContent(element, "description", false));
 			String defaultValue = getElementContent(element, "defaultValue", false);
@@ -218,7 +216,7 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		}
 
 		if ("hudson.model.StringParameterDefinition".equals(tagName)) { //$NON-NLS-1$
-			StringParameterDefinition definition = BuildFactory.eINSTANCE.createStringParameterDefinition();
+			IStringParameterDefinition definition = IBuildFactory.INSTANCE.createStringParameterDefinition();
 			definition.setName(getElementContent(element, "name", true));
 			definition.setDescription(getElementContent(element, "description", false));
 			definition.setDefaultValue(getElementContent(element, "defaultValue", false));
@@ -227,7 +225,7 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		}
 
 		if ("hudson.model.PasswordParameterDefinition".equals(tagName)) { //$NON-NLS-1$
-			PasswordParameterDefinition definition = BuildFactory.eINSTANCE.createPasswordParameterDefinition();
+			IPasswordParameterDefinition definition = IBuildFactory.INSTANCE.createPasswordParameterDefinition();
 			definition.setName(getElementContent(element, "name", true));
 			definition.setDescription(getElementContent(element, "description", false));
 			definition.setDefaultValue(getElementContent(element, "defaultValue", false));
@@ -236,7 +234,7 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		}
 
 		if ("hudson.model.RunParameterDefinition".equals(tagName)) { //$NON-NLS-1$
-			BuildParameterDefinition definition = BuildFactory.eINSTANCE.createBuildParameterDefinition();
+			IBuildParameterDefinition definition = IBuildFactory.INSTANCE.createBuildParameterDefinition();
 			definition.setName(getElementContent(element, "name", true));
 			definition.setDescription(getElementContent(element, "description", false));
 			definition.setBuildPlanId(getElementContent(element, "projectName", false));
@@ -245,7 +243,7 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		}
 
 		if ("hudson.model.FileParameterDefinition".equals(tagName)) { //$NON-NLS-1$
-			FileParameterDefinition definition = BuildFactory.eINSTANCE.createFileParameterDefinition();
+			IFileParameterDefinition definition = IBuildFactory.INSTANCE.createFileParameterDefinition();
 			definition.setName(getElementContent(element, "name", true));
 			definition.setDescription(getElementContent(element, "description", false));
 
@@ -268,8 +266,8 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		return ((Element) elements.item(0)).getTextContent();
 	}
 
-	public IBuildPlanData parseJob(HudsonModelJob job) {
-		IBuildPlanWorkingCopy plan = createBuildPlan();
+	public IBuildPlan parseJob(HudsonModelJob job) {
+		IBuildPlan plan = createBuildPlan();
 		plan.setId(job.getName());
 		if (job.getDisplayName() != null && job.getDisplayName().length() > 0) {
 			plan.setName(job.getDisplayName());
@@ -281,7 +279,7 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		updateStateAndStatus(job, plan);
 		updateHealth(job, plan);
 		if (job.getLastBuild() != null) {
-			IBuildWorkingCopy build = createBuild();
+			IBuild build = createBuild();
 			build.setId(job.getLastBuild().getNumber() + "");
 			build.setBuildNumber(job.getLastBuild().getNumber());
 			build.setUrl(job.getLastBuild().getUrl());
@@ -314,7 +312,7 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		client.setCache(cache);
 	}
 
-	protected void updateHealth(HudsonModelJob job, IBuildPlanWorkingCopy plan) {
+	protected void updateHealth(HudsonModelJob job, IBuildPlan plan) {
 		String testResult = null;
 		String buildResult = null;
 		String result = null;
@@ -353,7 +351,7 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		}
 	}
 
-	protected void updateStateAndStatus(HudsonModelJob job, IBuildPlanWorkingCopy plan) {
+	protected void updateStateAndStatus(HudsonModelJob job, IBuildPlan plan) {
 		if (job.getColor().equals(HudsonModelBallColor.BLUE)) {
 			plan.setStatus(BuildStatus.SUCCESS);
 			plan.setState(BuildState.STOPPED);
