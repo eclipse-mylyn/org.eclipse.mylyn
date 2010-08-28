@@ -44,6 +44,7 @@
         eType="#//IOperation" transient="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="elementStatus" eType="#//IStatus"
         transient="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="refreshDate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BuildPlan" eSuperTypes="#//BuildElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="server" lowerBound="1"

@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildPackage.java,v 1.3 2010/08/28 09:21:40 spingel Exp $
+ * $Id: BuildPackage.java,v 1.4 2010/08/28 20:59:54 spingel Exp $
  */
 package org.eclipse.mylyn.builds.internal.core;
 
@@ -344,6 +344,16 @@ public class BuildPackage extends EPackageImpl {
 	public static final int BUILD_ELEMENT__ELEMENT_STATUS = 3;
 
 	/**
+	 * The feature id for the '<em><b>Refresh Date</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD_ELEMENT__REFRESH_DATE = 4;
+
+	/**
 	 * The number of structural features of the '<em>Element</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -351,7 +361,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int BUILD_ELEMENT_FEATURE_COUNT = 4;
+	public static final int BUILD_ELEMENT_FEATURE_COUNT = 5;
 
 	/**
 	 * The feature id for the '<em><b>Url</b></em>' attribute.
@@ -392,6 +402,16 @@ public class BuildPackage extends EPackageImpl {
 	 * @ordered
 	 */
 	public static final int BUILD__ELEMENT_STATUS = BUILD_ELEMENT__ELEMENT_STATUS;
+
+	/**
+	 * The feature id for the '<em><b>Refresh Date</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD__REFRESH_DATE = BUILD_ELEMENT__REFRESH_DATE;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute.
@@ -562,6 +582,16 @@ public class BuildPackage extends EPackageImpl {
 	 * @ordered
 	 */
 	public static final int BUILD_PLAN__ELEMENT_STATUS = BUILD_ELEMENT__ELEMENT_STATUS;
+
+	/**
+	 * The feature id for the '<em><b>Refresh Date</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD_PLAN__REFRESH_DATE = BUILD_ELEMENT__REFRESH_DATE;
 
 	/**
 	 * The feature id for the '<em><b>Server</b></em>' reference.
@@ -782,6 +812,16 @@ public class BuildPackage extends EPackageImpl {
 	 * @ordered
 	 */
 	public static final int BUILD_SERVER__ELEMENT_STATUS = BUILD_ELEMENT__ELEMENT_STATUS;
+
+	/**
+	 * The feature id for the '<em><b>Refresh Date</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD_SERVER__REFRESH_DATE = BUILD_ELEMENT__REFRESH_DATE;
 
 	/**
 	 * The feature id for the '<em><b>Attributes</b></em>' map.
@@ -2265,6 +2305,21 @@ public class BuildPackage extends EPackageImpl {
 	 */
 	public EAttribute getBuildElement_ElementStatus() {
 		return (EAttribute) buildElementEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuildElement#getRefreshDate
+	 * <em>Refresh Date</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Refresh Date</em>'.
+	 * @see org.eclipse.mylyn.builds.core.IBuildElement#getRefreshDate()
+	 * @see #getBuildElement()
+	 * @generated
+	 */
+	public EAttribute getBuildElement_RefreshDate() {
+		return (EAttribute) buildElementEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -3864,6 +3919,7 @@ public class BuildPackage extends EPackageImpl {
 		createEAttribute(buildElementEClass, BUILD_ELEMENT__NAME);
 		createEAttribute(buildElementEClass, BUILD_ELEMENT__OPERATIONS);
 		createEAttribute(buildElementEClass, BUILD_ELEMENT__ELEMENT_STATUS);
+		createEAttribute(buildElementEClass, BUILD_ELEMENT__REFRESH_DATE);
 
 		buildPlanEClass = createEClass(BUILD_PLAN);
 		createEReference(buildPlanEClass, BUILD_PLAN__SERVER);
@@ -4118,6 +4174,10 @@ public class BuildPackage extends EPackageImpl {
 				getBuildElement_ElementStatus(),
 				this.getIStatus(),
 				"elementStatus", null, 0, 1, IBuildElement.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getBuildElement_RefreshDate(),
+				ecorePackage.getEDate(),
+				"refreshDate", null, 0, 1, IBuildElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		addEOperation(buildElementEClass, ecorePackage.getEString(), "getLabel", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 
@@ -4522,6 +4582,15 @@ public class BuildPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EAttribute BUILD_ELEMENT__ELEMENT_STATUS = eINSTANCE.getBuildElement_ElementStatus();
+
+		/**
+		 * The meta object literal for the '<em><b>Refresh Date</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute BUILD_ELEMENT__REFRESH_DATE = eINSTANCE.getBuildElement_RefreshDate();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.Artifact <em>Artifact</em>}'

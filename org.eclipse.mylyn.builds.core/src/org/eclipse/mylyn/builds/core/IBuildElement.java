@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.builds.core;
 
+import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
@@ -26,6 +27,7 @@ import org.eclipse.core.runtime.IStatus;
  * <li>{@link org.eclipse.mylyn.builds.core.IBuildElement#getName <em>Name</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.core.IBuildElement#getOperations <em>Operations</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.core.IBuildElement#getElementStatus <em>Element Status</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IBuildElement#getRefreshDate <em>Refresh Date</em>}</li>
  * </ul>
  * </p>
  * 
@@ -126,6 +128,34 @@ public interface IBuildElement {
 	 * @generated
 	 */
 	void setElementStatus(IStatus value);
+
+	/**
+	 * Returns the value of the '<em><b>Refresh Date</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Refresh Date</em>' attribute isn't clear, there really should be more of a description
+	 * here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Refresh Date</em>' attribute.
+	 * @see #setRefreshDate(Date)
+	 * @generated
+	 */
+	Date getRefreshDate();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildElement#getRefreshDate <em>Refresh Date</em>}'
+	 * attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Refresh Date</em>' attribute.
+	 * @see #getRefreshDate()
+	 * @generated
+	 */
+	void setRefreshDate(Date value);
 
 	/**
 	 * <!-- begin-user-doc -->

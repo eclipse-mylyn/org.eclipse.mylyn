@@ -316,9 +316,8 @@ public class Build extends BuildElement implements IBuild {
 	public void setId(String newId) {
 		String oldId = id;
 		id = newId;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__ID, oldId, id));
-		}
 	}
 
 	/**
@@ -344,10 +343,9 @@ public class Build extends BuildElement implements IBuild {
 	public void setBuildNumber(int newBuildNumber) {
 		int oldBuildNumber = buildNumber;
 		buildNumber = newBuildNumber;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__BUILD_NUMBER, oldBuildNumber,
 					buildNumber));
-		}
 	}
 
 	/**
@@ -373,10 +371,9 @@ public class Build extends BuildElement implements IBuild {
 	public void setTimestamp(long newTimestamp) {
 		long oldTimestamp = timestamp;
 		timestamp = newTimestamp;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__TIMESTAMP, oldTimestamp,
 					timestamp));
-		}
 	}
 
 	/**
@@ -402,9 +399,8 @@ public class Build extends BuildElement implements IBuild {
 	public void setDuration(long newDuration) {
 		long oldDuration = duration;
 		duration = newDuration;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__DURATION, oldDuration, duration));
-		}
 	}
 
 	/**
@@ -430,10 +426,9 @@ public class Build extends BuildElement implements IBuild {
 	public void setDisplayName(String newDisplayName) {
 		String oldDisplayName = displayName;
 		displayName = newDisplayName;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__DISPLAY_NAME, oldDisplayName,
 					displayName));
-		}
 	}
 
 	/**
@@ -459,9 +454,8 @@ public class Build extends BuildElement implements IBuild {
 	public void setState(BuildState newState) {
 		BuildState oldState = state;
 		state = newState;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__STATE, oldState, state));
-		}
 	}
 
 	/**
@@ -487,9 +481,8 @@ public class Build extends BuildElement implements IBuild {
 	public void setStatus(BuildStatus newStatus) {
 		BuildStatus oldStatus = status;
 		status = newStatus;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__STATUS, oldStatus, status));
-		}
 	}
 
 	/**
@@ -524,10 +517,9 @@ public class Build extends BuildElement implements IBuild {
 			InternalEObject oldChangeSet = (InternalEObject) changeSet;
 			changeSet = (IChangeSet) eResolveProxy(oldChangeSet);
 			if (changeSet != oldChangeSet) {
-				if (eNotificationRequired()) {
+				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, BuildPackage.BUILD__CHANGE_SET,
 							oldChangeSet, changeSet));
-				}
 			}
 		}
 		return changeSet;
@@ -552,10 +544,9 @@ public class Build extends BuildElement implements IBuild {
 	public void setChangeSet(IChangeSet newChangeSet) {
 		IChangeSet oldChangeSet = changeSet;
 		changeSet = newChangeSet;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__CHANGE_SET, oldChangeSet,
 					changeSet));
-		}
 	}
 
 	/**
@@ -572,9 +563,8 @@ public class Build extends BuildElement implements IBuild {
 			InternalEObject oldPlan = (InternalEObject) plan;
 			plan = (IBuildPlan) eResolveProxy(oldPlan);
 			if (plan != oldPlan) {
-				if (eNotificationRequired()) {
+				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, BuildPackage.BUILD__PLAN, oldPlan, plan));
-				}
 			}
 		}
 		return plan;
@@ -599,9 +589,8 @@ public class Build extends BuildElement implements IBuild {
 	public void setPlan(IBuildPlan newPlan) {
 		IBuildPlan oldPlan = plan;
 		plan = newPlan;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__PLAN, oldPlan, plan));
-		}
 	}
 
 	/**
@@ -628,9 +617,8 @@ public class Build extends BuildElement implements IBuild {
 	public void setLabel(String newLabel) {
 		String oldLabel = label;
 		label = newLabel;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__LABEL, oldLabel, label));
-		}
 	}
 
 	/**
@@ -649,10 +637,9 @@ public class Build extends BuildElement implements IBuild {
 			InternalEObject oldServer = (InternalEObject) server;
 			server = (IBuildServer) eResolveProxy(oldServer);
 			if (server != oldServer) {
-				if (eNotificationRequired()) {
+				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, BuildPackage.BUILD__SERVER, oldServer,
 							server));
-				}
 			}
 		}
 		return server;
@@ -677,9 +664,8 @@ public class Build extends BuildElement implements IBuild {
 	public void setServer(IBuildServer newServer) {
 		IBuildServer oldServer = server;
 		server = newServer;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__SERVER, oldServer, server));
-		}
 	}
 
 	/**
@@ -708,21 +694,18 @@ public class Build extends BuildElement implements IBuild {
 		case BuildPackage.BUILD__ARTIFACTS:
 			return getArtifacts();
 		case BuildPackage.BUILD__CHANGE_SET:
-			if (resolve) {
+			if (resolve)
 				return getChangeSet();
-			}
 			return basicGetChangeSet();
 		case BuildPackage.BUILD__PLAN:
-			if (resolve) {
+			if (resolve)
 				return getPlan();
-			}
 			return basicGetPlan();
 		case BuildPackage.BUILD__LABEL:
 			return getLabel();
 		case BuildPackage.BUILD__SERVER:
-			if (resolve) {
+			if (resolve)
 				return getServer();
-			}
 			return basicGetServer();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -873,9 +856,8 @@ public class Build extends BuildElement implements IBuild {
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy()) {
+		if (eIsProxy())
 			return super.toString();
-		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (id: "); //$NON-NLS-1$

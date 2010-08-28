@@ -11,6 +11,7 @@
 package org.eclipse.mylyn.builds.internal.core;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
@@ -36,6 +37,7 @@ import org.eclipse.mylyn.builds.core.IOperation;
  * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildElement#getName <em>Name</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildElement#getOperations <em>Operations</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildElement#getElementStatus <em>Element Status</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildElement#getRefreshDate <em>Refresh Date</em>}</li>
  * </ul>
  * </p>
  * 
@@ -120,6 +122,28 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	protected IStatus elementStatus = ELEMENT_STATUS_EDEFAULT;
 
 	/**
+	 * The default value of the '{@link #getRefreshDate() <em>Refresh Date</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getRefreshDate()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final Date REFRESH_DATE_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getRefreshDate() <em>Refresh Date</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getRefreshDate()
+	 * @generated
+	 * @ordered
+	 */
+	protected Date refreshDate = REFRESH_DATE_EDEFAULT;
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
@@ -159,9 +183,8 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	public void setUrl(String newUrl) {
 		String oldUrl = url;
 		url = newUrl;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_ELEMENT__URL, oldUrl, url));
-		}
 	}
 
 	/**
@@ -183,9 +206,8 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_ELEMENT__NAME, oldName, name));
-		}
 	}
 
 	/**
@@ -221,10 +243,33 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	public void setElementStatus(IStatus newElementStatus) {
 		IStatus oldElementStatus = elementStatus;
 		elementStatus = newElementStatus;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_ELEMENT__ELEMENT_STATUS,
 					oldElementStatus, elementStatus));
-		}
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public Date getRefreshDate() {
+		return refreshDate;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setRefreshDate(Date newRefreshDate) {
+		Date oldRefreshDate = refreshDate;
+		refreshDate = newRefreshDate;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_ELEMENT__REFRESH_DATE,
+					oldRefreshDate, refreshDate));
 	}
 
 	/**
@@ -268,6 +313,8 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 			return getOperations();
 		case BuildPackage.BUILD_ELEMENT__ELEMENT_STATUS:
 			return getElementStatus();
+		case BuildPackage.BUILD_ELEMENT__REFRESH_DATE:
+			return getRefreshDate();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -295,6 +342,9 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 		case BuildPackage.BUILD_ELEMENT__ELEMENT_STATUS:
 			setElementStatus((IStatus) newValue);
 			return;
+		case BuildPackage.BUILD_ELEMENT__REFRESH_DATE:
+			setRefreshDate((Date) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -320,6 +370,9 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 		case BuildPackage.BUILD_ELEMENT__ELEMENT_STATUS:
 			setElementStatus(ELEMENT_STATUS_EDEFAULT);
 			return;
+		case BuildPackage.BUILD_ELEMENT__REFRESH_DATE:
+			setRefreshDate(REFRESH_DATE_EDEFAULT);
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -342,6 +395,8 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 		case BuildPackage.BUILD_ELEMENT__ELEMENT_STATUS:
 			return ELEMENT_STATUS_EDEFAULT == null ? elementStatus != null : !ELEMENT_STATUS_EDEFAULT
 					.equals(elementStatus);
+		case BuildPackage.BUILD_ELEMENT__REFRESH_DATE:
+			return REFRESH_DATE_EDEFAULT == null ? refreshDate != null : !REFRESH_DATE_EDEFAULT.equals(refreshDate);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -354,9 +409,8 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy()) {
+		if (eIsProxy())
 			return super.toString();
-		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (url: "); //$NON-NLS-1$
@@ -367,6 +421,8 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 		result.append(operations);
 		result.append(", elementStatus: "); //$NON-NLS-1$
 		result.append(elementStatus);
+		result.append(", refreshDate: "); //$NON-NLS-1$
+		result.append(refreshDate);
 		result.append(')');
 		return result.toString();
 	}

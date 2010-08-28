@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildServer.java,v 1.2 2010/08/28 09:21:12 spingel Exp $
+ * $Id: BuildServer.java,v 1.3 2010/08/28 20:59:54 spingel Exp $
  */
 package org.eclipse.mylyn.builds.internal.core;
 
@@ -228,10 +228,9 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	public void setConnectorKind(String newConnectorKind) {
 		String oldConnectorKind = connectorKind;
 		connectorKind = newConnectorKind;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_SERVER__CONNECTOR_KIND,
 					oldConnectorKind, connectorKind));
-		}
 	}
 
 	/**
@@ -257,10 +256,9 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	public void setRepositoryUrl(String newRepositoryUrl) {
 		String oldRepositoryUrl = repositoryUrl;
 		repositoryUrl = newRepositoryUrl;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_SERVER__REPOSITORY_URL,
 					oldRepositoryUrl, repositoryUrl));
-		}
 	}
 
 	/**
@@ -289,11 +287,10 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 		case BuildPackage.BUILD_SERVER__ATTRIBUTES:
-			if (coreType) {
+			if (coreType)
 				return ((EMap.InternalMapView<String, String>) getAttributes()).eMap();
-			} else {
+			else
 				return getAttributes();
-			}
 		case BuildPackage.BUILD_SERVER__LOCATION:
 			return getLocation();
 		case BuildPackage.BUILD_SERVER__CONNECTOR_KIND:
@@ -387,9 +384,8 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy()) {
+		if (eIsProxy())
 			return super.toString();
-		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (location: "); //$NON-NLS-1$
