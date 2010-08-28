@@ -26,7 +26,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.mylyn.builds.core.BuildState;
 import org.eclipse.mylyn.builds.core.BuildStatus;
 import org.eclipse.mylyn.builds.core.IBuild;
@@ -173,7 +172,7 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		}
 	}
 
-	private void parseParameters(Document document, EList<ParameterDefinition> definitions)
+	private void parseParameters(Document document, List<ParameterDefinition> definitions)
 			throws ParserConfigurationException, SAXException, IOException, HudsonException {
 
 		NodeList containers = document.getElementsByTagName("parameterDefinitions"); //$NON-NLS-1$
