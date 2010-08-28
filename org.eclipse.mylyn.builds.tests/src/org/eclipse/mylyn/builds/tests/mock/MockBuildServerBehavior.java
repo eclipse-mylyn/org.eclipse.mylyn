@@ -25,7 +25,7 @@ import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.spi.BuildPlanRequest;
-import org.eclipse.mylyn.builds.core.spi.BuildRequest;
+import org.eclipse.mylyn.builds.core.spi.GetBuildsRequest;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
 import org.eclipse.mylyn.builds.core.spi.BuildServerConfiguration;
 import org.eclipse.mylyn.builds.core.spi.RunBuildRequest;
@@ -40,7 +40,7 @@ public class MockBuildServerBehavior extends BuildServerBehaviour {
 	}
 
 	@Override
-	public List<IBuild> getBuilds(BuildRequest request, IOperationMonitor monitor) throws CoreException {
+	public List<IBuild> getBuilds(GetBuildsRequest request, IOperationMonitor monitor) throws CoreException {
 		// ignore
 		return null;
 	}
