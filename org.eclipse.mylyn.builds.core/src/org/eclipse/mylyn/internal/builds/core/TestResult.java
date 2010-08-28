@@ -2,12 +2,13 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TestResult.java,v 1.2 2010/08/28 03:38:02 spingel Exp $
+ * $Id: TestResult.java,v 1.3 2010/08/28 04:25:24 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
 import java.util.Collection;
 
+import java.util.List;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
@@ -45,7 +46,7 @@ import org.eclipse.mylyn.builds.core.IBuildPlan;
  * @model kind="class"
  * @generated
  */
-public class TestResult extends EObjectImpl implements EObject {
+public class TestResult extends EObjectImpl {
 	/**
 	 * The cached value of the '{@link #getBuild() <em>Build</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -343,7 +344,7 @@ public class TestResult extends EObjectImpl implements EObject {
 	 * @model opposite="result" containment="true"
 	 * @generated
 	 */
-	public EList<TestSuite> getSuites() {
+	public List<TestSuite> getSuites() {
 		if (suites == null) {
 			suites = new EObjectContainmentWithInverseEList<TestSuite>(TestSuite.class, this,
 					BuildPackage.TEST_RESULT__SUITES, BuildPackage.TEST_SUITE__RESULT);

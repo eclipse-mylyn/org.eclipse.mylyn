@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: User.java,v 1.3 2010/08/28 03:38:02 spingel Exp $
+ * $Id: User.java,v 1.4 2010/08/28 04:25:24 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -22,7 +22,7 @@ import org.eclipse.mylyn.builds.core.IUser;
  * @model kind="class" superTypes="org.eclipse.mylyn.internal.builds.core.IUser"
  * @generated
  */
-public class User extends EObjectImpl implements EObject, IUser {
+public class User extends EObjectImpl implements IUser {
 	/**
 	 * The default value of the '{@link #getFullname() <em>Fullname</em>}' attribute.
 	 * <!-- begin-user-doc -->

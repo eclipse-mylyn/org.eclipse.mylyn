@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TestCase.java,v 1.2 2010/08/28 03:38:02 spingel Exp $
+ * $Id: TestCase.java,v 1.3 2010/08/28 04:25:25 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -10,6 +10,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -246,7 +247,7 @@ public class TestCase extends TestElement {
 	public void setSuite(TestSuite newSuite) {
 		if (newSuite != eInternalContainer()
 				|| (eContainerFeatureID() != BuildPackage.TEST_CASE__SUITE && newSuite != null)) {
-			if (EcoreUtil.isAncestor(this, newSuite))
+			if (EcoreUtil.isAncestor(this, (EObject) newSuite))
 				throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
 			NotificationChain msgs = null;
 			if (eInternalContainer() != null)

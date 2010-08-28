@@ -2,12 +2,13 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildPlan.java,v 1.16 2010/08/28 03:38:02 spingel Exp $
+ * $Id: BuildPlan.java,v 1.17 2010/08/28 04:25:25 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
 import java.util.Collection;
 
+import java.util.List;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -45,7 +46,7 @@ import org.eclipse.mylyn.internal.builds.core.operations.RunBuildOperation;
  *        "org.eclipse.mylyn.internal.builds.core.IBuildPlan org.eclipse.mylyn.internal.builds.core.IBuildPlanWorkingCopy"
  * @generated
  */
-public class BuildPlan extends EObjectImpl implements EObject, IBuildPlan, IBuildPlanWorkingCopy {
+public class BuildPlan extends EObjectImpl implements IBuildPlan, IBuildPlanWorkingCopy {
 	/**
 	 * The default value of the '{@link #getUrl() <em>Url</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -487,7 +488,7 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlan, IBuil
 	 * @model type="org.eclipse.mylyn.internal.builds.core.IBuildPlan" opposite="parent"
 	 * @generated
 	 */
-	public EList<IBuildPlan> getChildren() {
+	public List<IBuildPlan> getChildren() {
 		if (children == null) {
 			children = new EObjectWithInverseResolvingEList<IBuildPlan>(IBuildPlan.class, this,
 					BuildPackage.BUILD_PLAN__CHILDREN, BuildPackage.IBUILD_PLAN__PARENT);
@@ -955,7 +956,7 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlan, IBuil
 	 * @model opposite="containingBuildPlan" containment="true"
 	 * @generated
 	 */
-	public EList<ParameterDefinition> getParameterDefinitions() {
+	public List<ParameterDefinition> getParameterDefinitions() {
 		if (parameterDefinitions == null) {
 			parameterDefinitions = new EObjectContainmentWithInverseEList<ParameterDefinition>(
 					ParameterDefinition.class, this, BuildPackage.BUILD_PLAN__PARAMETER_DEFINITIONS,

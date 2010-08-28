@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildModel.java,v 1.7 2010/08/26 03:23:52 spingel Exp $
+ * $Id: BuildModel.java,v 1.8 2010/08/28 04:25:25 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -34,7 +34,7 @@ import org.eclipse.mylyn.internal.builds.core.util.BuildScheduler;
  * @model kind="class" superTypes="org.eclipse.mylyn.internal.builds.core.IBuildModel"
  * @generated
  */
-public class BuildModel extends EObjectImpl implements EObject, IBuildModel {
+public class BuildModel extends EObjectImpl implements IBuildModel {
 	/**
 	 * The cached value of the '{@link #getServers() <em>Servers</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -106,7 +106,7 @@ public class BuildModel extends EObjectImpl implements EObject, IBuildModel {
 	 * @model type="org.eclipse.mylyn.internal.builds.core.IBuildServer" containment="true"
 	 * @generated
 	 */
-	public EList<IBuildServer> getServers() {
+	public List<IBuildServer> getServers() {
 		if (servers == null) {
 			servers = new EObjectContainmentEList<IBuildServer>(IBuildServer.class, this,
 					BuildPackage.BUILD_MODEL__SERVERS);
@@ -129,7 +129,7 @@ public class BuildModel extends EObjectImpl implements EObject, IBuildModel {
 	 * @model type="org.eclipse.mylyn.internal.builds.core.IBuildPlan" containment="true" ordered="false"
 	 * @generated
 	 */
-	public EList<IBuildPlan> getPlans() {
+	public List<IBuildPlan> getPlans() {
 		if (plans == null) {
 			plans = new EObjectContainmentEList<IBuildPlan>(IBuildPlan.class, this, BuildPackage.BUILD_MODEL__PLANS);
 		}
@@ -151,7 +151,7 @@ public class BuildModel extends EObjectImpl implements EObject, IBuildModel {
 	 * @model type="org.eclipse.mylyn.internal.builds.core.IBuild" containment="true"
 	 * @generated
 	 */
-	public EList<IBuild> getBuilds() {
+	public List<IBuild> getBuilds() {
 		if (builds == null) {
 			builds = new EObjectContainmentEList<IBuild>(IBuild.class, this, BuildPackage.BUILD_MODEL__BUILDS);
 		}

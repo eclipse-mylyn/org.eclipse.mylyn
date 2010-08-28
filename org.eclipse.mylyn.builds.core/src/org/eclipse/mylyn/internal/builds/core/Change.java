@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: Change.java,v 1.3 2010/08/28 03:38:02 spingel Exp $
+ * $Id: Change.java,v 1.4 2010/08/28 04:25:25 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -25,7 +25,7 @@ import org.eclipse.mylyn.builds.core.IUser;
  * @model kind="class" superTypes="org.eclipse.mylyn.internal.builds.core.IChange"
  * @generated
  */
-public class Change extends EObjectImpl implements EObject, IChange {
+public class Change extends EObjectImpl implements IChange {
 	/**
 	 * The cached value of the '{@link #getAuthor() <em>Author</em>}' reference.
 	 * <!-- begin-user-doc -->

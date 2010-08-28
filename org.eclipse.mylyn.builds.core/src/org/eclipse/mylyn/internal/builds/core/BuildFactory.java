@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildFactory.java,v 1.11 2010/08/28 03:38:02 spingel Exp $
+ * $Id: BuildFactory.java,v 1.12 2010/08/28 04:25:25 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -78,47 +78,47 @@ public class BuildFactory extends EFactoryImpl {
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 		case BuildPackage.ARTIFACT:
-			return createArtifact();
+			return (EObject) createArtifact();
 		case BuildPackage.BUILD:
-			return createBuild();
+			return (EObject) createBuild();
 		case BuildPackage.BUILD_PLAN:
-			return createBuildPlan();
+			return (EObject) createBuildPlan();
 		case BuildPackage.BUILD_SERVER:
-			return createBuildServer();
+			return (EObject) createBuildServer();
 		case BuildPackage.BUILD_MODEL:
-			return createBuildModel();
+			return (EObject) createBuildModel();
 		case BuildPackage.CHANGE:
-			return createChange();
+			return (EObject) createChange();
 		case BuildPackage.CHANGE_SET:
-			return createChangeSet();
+			return (EObject) createChangeSet();
 		case BuildPackage.FILE:
-			return createFile();
+			return (EObject) createFile();
 		case BuildPackage.STRING_TO_STRING_MAP:
 			return (EObject) createStringToStringMap();
 		case BuildPackage.USER:
-			return createUser();
+			return (EObject) createUser();
 		case BuildPackage.CHOICE_PARAMETER_DEFINITION:
-			return createChoiceParameterDefinition();
+			return (EObject) createChoiceParameterDefinition();
 		case BuildPackage.BOOLEAN_PARAMETER_DEFINITION:
-			return createBooleanParameterDefinition();
+			return (EObject) createBooleanParameterDefinition();
 		case BuildPackage.FILE_PARAMETER_DEFINITION:
-			return createFileParameterDefinition();
+			return (EObject) createFileParameterDefinition();
 		case BuildPackage.PLAN_PARAMETER_DEFINITION:
-			return createPlanParameterDefinition();
+			return (EObject) createPlanParameterDefinition();
 		case BuildPackage.PASSWORD_PARAMETER_DEFINITION:
-			return createPasswordParameterDefinition();
+			return (EObject) createPasswordParameterDefinition();
 		case BuildPackage.BUILD_PARAMETER_DEFINITION:
-			return createBuildParameterDefinition();
+			return (EObject) createBuildParameterDefinition();
 		case BuildPackage.STRING_PARAMETER_DEFINITION:
-			return createStringParameterDefinition();
+			return (EObject) createStringParameterDefinition();
 		case BuildPackage.TEST_RESULT:
-			return createTestResult();
+			return (EObject) createTestResult();
 		case BuildPackage.TEST_ELEMENT:
-			return createTestElement();
+			return (EObject) createTestElement();
 		case BuildPackage.TEST_SUITE:
-			return createTestSuite();
+			return (EObject) createTestSuite();
 		case BuildPackage.TEST_CASE:
-			return createTestCase();
+			return (EObject) createTestCase();
 		default:
 			throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}

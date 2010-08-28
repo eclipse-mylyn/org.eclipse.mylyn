@@ -26,7 +26,7 @@ import org.eclipse.mylyn.builds.core.IArtifact;
  * @model kind="class" superTypes="org.eclipse.mylyn.internal.builds.core.IArtifact"
  * @generated
  */
-public class Artifact extends EObjectImpl implements EObject, IArtifact {
+public class Artifact extends EObjectImpl implements IArtifact {
 	/**
 	 * The default value of the '{@link #getDisplayName() <em>Display Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -147,10 +147,9 @@ public class Artifact extends EObjectImpl implements EObject, IArtifact {
 	public void setDisplayName(String newDisplayName) {
 		String oldDisplayName = displayName;
 		displayName = newDisplayName;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.ARTIFACT__DISPLAY_NAME, oldDisplayName,
 					displayName));
-		}
 	}
 
 	/**
@@ -186,10 +185,9 @@ public class Artifact extends EObjectImpl implements EObject, IArtifact {
 	public void setFilename(String newFilename) {
 		String oldFilename = filename;
 		filename = newFilename;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.ARTIFACT__FILENAME, oldFilename,
 					filename));
-		}
 	}
 
 	/**
@@ -225,10 +223,9 @@ public class Artifact extends EObjectImpl implements EObject, IArtifact {
 	public void setRelativePath(String newRelativePath) {
 		String oldRelativePath = relativePath;
 		relativePath = newRelativePath;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.ARTIFACT__RELATIVE_PATH,
 					oldRelativePath, relativePath));
-		}
 	}
 
 	/**
@@ -321,9 +318,8 @@ public class Artifact extends EObjectImpl implements EObject, IArtifact {
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy()) {
+		if (eIsProxy())
 			return super.toString();
-		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (displayName: "); //$NON-NLS-1$

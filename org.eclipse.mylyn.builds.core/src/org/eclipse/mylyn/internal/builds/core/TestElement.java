@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TestElement.java,v 1.2 2010/08/28 03:38:02 spingel Exp $
+ * $Id: TestElement.java,v 1.3 2010/08/28 04:25:25 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -32,7 +32,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  * @model kind="class"
  * @generated
  */
-public class TestElement extends EObjectImpl implements EObject {
+public class TestElement extends EObjectImpl {
 	/**
 	 * The default value of the '{@link #getLabel() <em>Label</em>}' attribute.
 	 * <!-- begin-user-doc -->

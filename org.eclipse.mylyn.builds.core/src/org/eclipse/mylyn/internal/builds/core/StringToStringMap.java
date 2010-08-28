@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: StringToStringMap.java,v 1.3 2010/08/28 03:38:02 spingel Exp $
+ * $Id: StringToStringMap.java,v 1.4 2010/08/28 04:25:24 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -31,7 +31,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  *        valueDefault="" valueDataType="org.eclipse.emf.ecore.EString"
  * @generated
  */
-public class StringToStringMap extends EObjectImpl implements BasicEMap.Entry<String, String>, EObject {
+public class StringToStringMap extends EObjectImpl implements BasicEMap.Entry<String, String> {
 	/**
 	 * The default value of the '{@link #getTypedKey() <em>Key</em>}' attribute.
 	 * <!-- begin-user-doc -->

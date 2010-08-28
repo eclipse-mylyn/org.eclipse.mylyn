@@ -28,7 +28,7 @@ import org.eclipse.mylyn.builds.core.IBuildPlan;
  * @model kind="class" abstract="true"
  * @generated
  */
-public abstract class ParameterDefinition extends EObjectImpl implements EObject {
+public abstract class ParameterDefinition extends EObjectImpl {
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->

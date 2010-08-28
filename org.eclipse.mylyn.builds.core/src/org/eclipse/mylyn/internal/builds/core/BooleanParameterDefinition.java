@@ -106,10 +106,9 @@ public class BooleanParameterDefinition extends ParameterDefinition {
 	public void setDefaultValue(boolean newDefaultValue) {
 		boolean oldDefaultValue = defaultValue;
 		defaultValue = newDefaultValue;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET,
 					BuildPackage.BOOLEAN_PARAMETER_DEFINITION__DEFAULT_VALUE, oldDefaultValue, defaultValue));
-		}
 	}
 
 	/**
@@ -182,9 +181,8 @@ public class BooleanParameterDefinition extends ParameterDefinition {
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy()) {
+		if (eIsProxy())
 			return super.toString();
-		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (defaultValue: "); //$NON-NLS-1$

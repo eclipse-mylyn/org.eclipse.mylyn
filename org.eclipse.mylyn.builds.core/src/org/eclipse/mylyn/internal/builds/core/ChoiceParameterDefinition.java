@@ -2,12 +2,13 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ChoiceParameterDefinition.java,v 1.2 2010/08/28 03:38:02 spingel Exp $
+ * $Id: ChoiceParameterDefinition.java,v 1.3 2010/08/28 04:25:25 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
 import java.util.Collection;
 
+import java.util.List;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
@@ -88,7 +89,7 @@ public class ChoiceParameterDefinition extends ParameterDefinition {
 	 * @model required="true"
 	 * @generated
 	 */
-	public EList<String> getOptions() {
+	public List<String> getOptions() {
 		if (options == null) {
 			options = new EDataTypeUniqueEList<String>(String.class, this,
 					BuildPackage.CHOICE_PARAMETER_DEFINITION__OPTIONS);

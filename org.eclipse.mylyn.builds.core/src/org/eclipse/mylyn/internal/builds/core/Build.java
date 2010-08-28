@@ -12,6 +12,7 @@ package org.eclipse.mylyn.internal.builds.core;
 
 import java.util.Collection;
 
+import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;
@@ -38,11 +39,10 @@ import org.eclipse.mylyn.builds.core.IChangeSet;
  * 
  * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getBuild()
  * @model kind="class"
- *        superTypes=
- *        "org.eclipse.mylyn.internal.builds.core.IBuild org.eclipse.mylyn.internal.builds.core.IBuildWorkingCopy"
+ *        superTypes="org.eclipse.mylyn.internal.builds.core.IBuild org.eclipse.mylyn.internal.builds.core.IBuildWorkingCopy"
  * @generated
  */
-public class Build extends EObjectImpl implements EObject, IBuild, IBuildWorkingCopy {
+public class Build extends EObjectImpl implements IBuild, IBuildWorkingCopy {
 	/**
 	 * The default value of the '{@link #getUrl() <em>Url</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -359,9 +359,8 @@ public class Build extends EObjectImpl implements EObject, IBuild, IBuildWorking
 	public void setUrl(String newUrl) {
 		String oldUrl = url;
 		url = newUrl;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__URL, oldUrl, url));
-		}
 	}
 
 	/**
@@ -395,9 +394,8 @@ public class Build extends EObjectImpl implements EObject, IBuild, IBuildWorking
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__NAME, oldName, name));
-		}
 	}
 
 	/**
@@ -431,9 +429,8 @@ public class Build extends EObjectImpl implements EObject, IBuild, IBuildWorking
 	public void setId(String newId) {
 		String oldId = id;
 		id = newId;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__ID, oldId, id));
-		}
 	}
 
 	/**
@@ -469,10 +466,9 @@ public class Build extends EObjectImpl implements EObject, IBuild, IBuildWorking
 	public void setBuildNumber(int newBuildNumber) {
 		int oldBuildNumber = buildNumber;
 		buildNumber = newBuildNumber;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__BUILD_NUMBER, oldBuildNumber,
 					buildNumber));
-		}
 	}
 
 	/**
@@ -508,10 +504,9 @@ public class Build extends EObjectImpl implements EObject, IBuild, IBuildWorking
 	public void setTimestamp(long newTimestamp) {
 		long oldTimestamp = timestamp;
 		timestamp = newTimestamp;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__TIMESTAMP, oldTimestamp,
 					timestamp));
-		}
 	}
 
 	/**
@@ -547,9 +542,8 @@ public class Build extends EObjectImpl implements EObject, IBuild, IBuildWorking
 	public void setDuration(long newDuration) {
 		long oldDuration = duration;
 		duration = newDuration;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__DURATION, oldDuration, duration));
-		}
 	}
 
 	/**
@@ -585,10 +579,9 @@ public class Build extends EObjectImpl implements EObject, IBuild, IBuildWorking
 	public void setDisplayName(String newDisplayName) {
 		String oldDisplayName = displayName;
 		displayName = newDisplayName;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__DISPLAY_NAME, oldDisplayName,
 					displayName));
-		}
 	}
 
 	/**
@@ -623,9 +616,8 @@ public class Build extends EObjectImpl implements EObject, IBuild, IBuildWorking
 	public void setState(BuildState newState) {
 		BuildState oldState = state;
 		state = newState;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__STATE, oldState, state));
-		}
 	}
 
 	/**
@@ -660,9 +652,8 @@ public class Build extends EObjectImpl implements EObject, IBuild, IBuildWorking
 	public void setStatus(BuildStatus newStatus) {
 		BuildStatus oldStatus = status;
 		status = newStatus;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__STATUS, oldStatus, status));
-		}
 	}
 
 	/**
@@ -680,7 +671,7 @@ public class Build extends EObjectImpl implements EObject, IBuild, IBuildWorking
 	 * @model type="org.eclipse.mylyn.internal.builds.core.IArtifact"
 	 * @generated
 	 */
-	public EList<IArtifact> getArtifacts() {
+	public List<IArtifact> getArtifacts() {
 		if (artifacts == null) {
 			artifacts = new EObjectResolvingEList<IArtifact>(IArtifact.class, this, BuildPackage.BUILD__ARTIFACTS);
 		}
@@ -707,10 +698,9 @@ public class Build extends EObjectImpl implements EObject, IBuild, IBuildWorking
 			InternalEObject oldChangeSet = (InternalEObject) changeSet;
 			changeSet = (IChangeSet) eResolveProxy(oldChangeSet);
 			if (changeSet != oldChangeSet) {
-				if (eNotificationRequired()) {
+				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, BuildPackage.BUILD__CHANGE_SET,
 							oldChangeSet, changeSet));
-				}
 			}
 		}
 		return changeSet;
@@ -740,10 +730,9 @@ public class Build extends EObjectImpl implements EObject, IBuild, IBuildWorking
 	public void setChangeSet(IChangeSet newChangeSet) {
 		IChangeSet oldChangeSet = changeSet;
 		changeSet = newChangeSet;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__CHANGE_SET, oldChangeSet,
 					changeSet));
-		}
 	}
 
 	/**
@@ -765,9 +754,8 @@ public class Build extends EObjectImpl implements EObject, IBuild, IBuildWorking
 			InternalEObject oldPlan = (InternalEObject) plan;
 			plan = (IBuildPlan) eResolveProxy(oldPlan);
 			if (plan != oldPlan) {
-				if (eNotificationRequired()) {
+				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, BuildPackage.BUILD__PLAN, oldPlan, plan));
-				}
 			}
 		}
 		return plan;
@@ -796,9 +784,8 @@ public class Build extends EObjectImpl implements EObject, IBuild, IBuildWorking
 	public void setPlan(IBuildPlan newPlan) {
 		IBuildPlan oldPlan = plan;
 		plan = newPlan;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__PLAN, oldPlan, plan));
-		}
 	}
 
 	/**
@@ -833,9 +820,8 @@ public class Build extends EObjectImpl implements EObject, IBuild, IBuildWorking
 	public void setLabel(String newLabel) {
 		String oldLabel = label;
 		label = newLabel;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__LABEL, oldLabel, label));
-		}
 	}
 
 	/**
@@ -858,10 +844,9 @@ public class Build extends EObjectImpl implements EObject, IBuild, IBuildWorking
 			InternalEObject oldServer = (InternalEObject) server;
 			server = (IBuildServer) eResolveProxy(oldServer);
 			if (server != oldServer) {
-				if (eNotificationRequired()) {
+				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, BuildPackage.BUILD__SERVER, oldServer,
 							server));
-				}
 			}
 		}
 		return server;
@@ -890,9 +875,8 @@ public class Build extends EObjectImpl implements EObject, IBuild, IBuildWorking
 	public void setServer(IBuildServer newServer) {
 		IBuildServer oldServer = server;
 		server = newServer;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__SERVER, oldServer, server));
-		}
 	}
 
 	/**
@@ -925,21 +909,18 @@ public class Build extends EObjectImpl implements EObject, IBuild, IBuildWorking
 		case BuildPackage.BUILD__ARTIFACTS:
 			return getArtifacts();
 		case BuildPackage.BUILD__CHANGE_SET:
-			if (resolve) {
+			if (resolve)
 				return getChangeSet();
-			}
 			return basicGetChangeSet();
 		case BuildPackage.BUILD__PLAN:
-			if (resolve) {
+			if (resolve)
 				return getPlan();
-			}
 			return basicGetPlan();
 		case BuildPackage.BUILD__LABEL:
 			return getLabel();
 		case BuildPackage.BUILD__SERVER:
-			if (resolve) {
+			if (resolve)
 				return getServer();
-			}
 			return basicGetServer();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -1106,9 +1087,8 @@ public class Build extends EObjectImpl implements EObject, IBuild, IBuildWorking
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy()) {
+		if (eIsProxy())
 			return super.toString();
-		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (url: "); //$NON-NLS-1$

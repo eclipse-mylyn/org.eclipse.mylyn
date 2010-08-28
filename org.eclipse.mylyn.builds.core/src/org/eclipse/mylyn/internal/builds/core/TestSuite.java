@@ -2,18 +2,20 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TestSuite.java,v 1.2 2010/08/28 03:38:02 spingel Exp $
+ * $Id: TestSuite.java,v 1.3 2010/08/28 04:25:24 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
 import java.util.Collection;
 
+import java.util.List;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -89,7 +91,7 @@ public class TestSuite extends TestElement {
 	 * @model opposite="suite" containment="true"
 	 * @generated
 	 */
-	public EList<TestCase> getCases() {
+	public List<TestCase> getCases() {
 		if (cases == null) {
 			cases = new EObjectContainmentWithInverseEList<TestCase>(TestCase.class, this,
 					BuildPackage.TEST_SUITE__CASES, BuildPackage.TEST_CASE__SUITE);
@@ -146,7 +148,7 @@ public class TestSuite extends TestElement {
 	public void setResult(TestResult newResult) {
 		if (newResult != eInternalContainer()
 				|| (eContainerFeatureID() != BuildPackage.TEST_SUITE__RESULT && newResult != null)) {
-			if (EcoreUtil.isAncestor(this, newResult))
+			if (EcoreUtil.isAncestor(this, (EObject) newResult))
 				throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
 			NotificationChain msgs = null;
 			if (eInternalContainer() != null)

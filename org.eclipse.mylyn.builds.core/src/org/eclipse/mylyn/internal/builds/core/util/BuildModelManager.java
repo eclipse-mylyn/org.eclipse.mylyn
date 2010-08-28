@@ -18,7 +18,6 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -62,9 +61,9 @@ public class BuildModelManager {
 					model = (BuildModel) root;
 					for (IBuildServer server : model.getServers()) {
 						((BuildServer) server).setLoader(buildLoader);
-						EMap<String, String> properties = ((BuildServer) server).getAttributes();
+						Map<String, String> properties = ((BuildServer) server).getAttributes();
 						if (properties.size() > 0) {
-							((BuildServer) server).setLocation(new RepositoryLocation(properties.map()));
+							((BuildServer) server).setLocation(new RepositoryLocation(properties));
 						}
 					}
 				} else {

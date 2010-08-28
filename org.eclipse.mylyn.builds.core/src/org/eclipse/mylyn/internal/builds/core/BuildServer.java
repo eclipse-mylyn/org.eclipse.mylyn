@@ -2,10 +2,11 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildServer.java,v 1.21 2010/08/28 03:38:02 spingel Exp $
+ * $Id: BuildServer.java,v 1.22 2010/08/28 04:25:25 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
+import java.util.Map;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collections;
@@ -45,7 +46,7 @@ import org.eclipse.mylyn.internal.builds.core.operations.RefreshSession;
  * @model kind="class" superTypes="org.eclipse.mylyn.internal.builds.core.IBuildServer"
  * @generated
  */
-public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
+public class BuildServer extends EObjectImpl implements IBuildServer {
 	/**
 	 * The default value of the '{@link #getUrl() <em>Url</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -272,12 +273,12 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	 *        "org.eclipse.mylyn.internal.builds.core.StringToStringMap<org.eclipse.emf.ecore.EString, org.eclipse.emf.ecore.EString>"
 	 * @generated
 	 */
-	public EMap<String, String> getAttributes() {
+	public Map<String, String> getAttributes() {
 		if (attributes == null) {
 			attributes = new EcoreEMap<String, String>(BuildPackage.Literals.STRING_TO_STRING_MAP,
 					StringToStringMap.class, this, BuildPackage.BUILD_SERVER__ATTRIBUTES);
 		}
-		return attributes;
+		return attributes.map();
 	}
 
 	/**
@@ -410,7 +411,8 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 		case BuildPackage.BUILD_SERVER__ATTRIBUTES:
-			return ((InternalEList<?>) getAttributes()).basicRemove(otherEnd, msgs);
+			return ((InternalEList<?>) ((EMap.InternalMapView<String, String>) getAttributes()).eMap()).basicRemove(
+					otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -430,9 +432,9 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 			return getName();
 		case BuildPackage.BUILD_SERVER__ATTRIBUTES:
 			if (coreType)
-				return getAttributes();
+				return ((EMap.InternalMapView<String, String>) getAttributes()).eMap();
 			else
-				return getAttributes().map();
+				return getAttributes();
 		case BuildPackage.BUILD_SERVER__LOCATION:
 			return getLocation();
 		case BuildPackage.BUILD_SERVER__CONNECTOR_KIND:
@@ -460,7 +462,8 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 			setName((String) newValue);
 			return;
 		case BuildPackage.BUILD_SERVER__ATTRIBUTES:
-			((EStructuralFeature.Setting) getAttributes()).set(newValue);
+			((EStructuralFeature.Setting) ((EMap.InternalMapView<String, String>) getAttributes()).eMap())
+					.set(newValue);
 			return;
 		case BuildPackage.BUILD_SERVER__LOCATION:
 			setLocation((RepositoryLocation) newValue);

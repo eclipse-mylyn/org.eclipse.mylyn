@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: File.java,v 1.3 2010/08/28 03:38:02 spingel Exp $
+ * $Id: File.java,v 1.4 2010/08/28 04:25:24 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -23,7 +23,7 @@ import org.eclipse.mylyn.builds.core.IFile;
  * @model kind="class" superTypes="org.eclipse.mylyn.internal.builds.core.IFile"
  * @generated
  */
-public class File extends EObjectImpl implements EObject, IFile {
+public class File extends EObjectImpl implements IFile {
 	/**
 	 * The default value of the '{@link #getRelativePath() <em>Relative Path</em>}' attribute.
 	 * <!-- begin-user-doc -->
