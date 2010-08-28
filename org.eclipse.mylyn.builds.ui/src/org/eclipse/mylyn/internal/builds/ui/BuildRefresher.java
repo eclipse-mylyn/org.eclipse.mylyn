@@ -34,10 +34,9 @@ public class BuildRefresher implements IPropertyChangeListener {
 
 		@Override
 		protected IStatus doExecute(IOperationMonitor progress) {
-			RefreshOperation refreshOperation = new RefreshOperation(BuildsUiInternal.getOperationService(),
-					BuildsUiInternal.getModel());
+			RefreshOperation refreshOperation = BuildsUiInternal.getFactory().getRefreshOperation();
 			refreshOperation.addFlag(OperationFlag.BACKGROUND);
-			return refreshOperation.syncExec(progress);
+			return refreshOperation.doExecute(progress);
 		}
 	};
 
@@ -54,11 +53,11 @@ public class BuildRefresher implements IPropertyChangeListener {
 	public void propertyChange(PropertyChangeEvent event) {
 		if (event.getProperty().equals(BuildsUiInternal.PREF_AUTO_REFRESH_ENABLED)
 				|| event.getProperty().equals(BuildsUiInternal.PREF_AUTO_REFRESH_INTERVAL)) {
-			reschedule();
+			reschedule(0L);
 		}
 	}
 
-	private synchronized void reschedule() {
+	private synchronized void reschedule(long delay) {
 		if (isEnabled()) {
 			if (refreshJob == null) {
 				refreshJob = new RefreshJob();
@@ -66,11 +65,11 @@ public class BuildRefresher implements IPropertyChangeListener {
 				refreshJob.addJobChangeListener(new JobChangeAdapter() {
 					@Override
 					public void done(IJobChangeEvent event) {
-						reschedule();
+						reschedule(getInterval());
 					}
 				});
 			}
-			BuildsUiInternal.getModel().getScheduler().schedule(refreshJob, getInterval());
+			BuildsUiInternal.getModel().getScheduler().schedule(refreshJob, delay);
 		} else {
 			if (refreshJob != null) {
 				refreshJob.cancel();
