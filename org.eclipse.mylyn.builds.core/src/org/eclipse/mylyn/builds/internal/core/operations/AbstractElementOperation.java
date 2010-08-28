@@ -64,7 +64,7 @@ public abstract class AbstractElementOperation<T extends IBuildElement> extends 
 		return jobs;
 	}
 
-	public IStatus syncExec(IOperationMonitor progress) {
+	public IStatus doExecute(IOperationMonitor progress) {
 		List<BuildJob> jobs = init();
 		MultiStatus result = new MultiStatus(BuildsCorePlugin.ID_PLUGIN, 0, "Operation failed", null);
 		progress.beginTask("", jobs.size()); //$NON-NLS-1$
@@ -72,9 +72,13 @@ public abstract class AbstractElementOperation<T extends IBuildElement> extends 
 			for (BuildJob job : jobs) {
 				IStatus status = job.run(progress.newChild(1));
 				handleResult(job);
-				IBuildElement element = (IBuildElement) job.getAdapter(IBuildElement.class);
+				final IBuildElement element = (IBuildElement) job.getAdapter(IBuildElement.class);
 				if (element != null) {
-					unregister(element);
+					getService().getRealm().asyncExec(new Runnable() {
+						public void run() {
+							unregister(element);
+						}
+					});
 				}
 				if (status.getSeverity() == IStatus.CANCEL) {
 					return Status.CANCEL_STATUS;
@@ -83,7 +87,11 @@ public abstract class AbstractElementOperation<T extends IBuildElement> extends 
 				}
 			}
 		} finally {
-			unregisterAll();
+			getService().getRealm().asyncExec(new Runnable() {
+				public void run() {
+					unregisterAll();
+				}
+			});
 		}
 		return result;
 	}
