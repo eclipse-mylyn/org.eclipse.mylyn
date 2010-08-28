@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: File.java,v 1.2 2010/08/04 07:38:41 spingel Exp $
+ * $Id: File.java,v 1.3 2010/08/28 03:38:02 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -454,15 +454,15 @@ public class File extends EObjectImpl implements EObject, IFile {
 			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (relativePath: ");
+		result.append(" (relativePath: "); //$NON-NLS-1$
 		result.append(relativePath);
-		result.append(", prevRevision: ");
+		result.append(", prevRevision: "); //$NON-NLS-1$
 		result.append(prevRevision);
-		result.append(", revision: ");
+		result.append(", revision: "); //$NON-NLS-1$
 		result.append(revision);
-		result.append(", dead: ");
+		result.append(", dead: "); //$NON-NLS-1$
 		result.append(dead);
-		result.append(", editType: ");
+		result.append(", editType: "); //$NON-NLS-1$
 		result.append(editType);
 		result.append(')');
 		return result.toString();

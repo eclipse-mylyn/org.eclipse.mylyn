@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TestResult.java,v 1.1 2010/08/27 09:00:23 spingel Exp $
+ * $Id: TestResult.java,v 1.2 2010/08/28 03:38:02 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -66,7 +66,7 @@ public class TestResult extends EObjectImpl implements EObject {
 	 * @generated
 	 * @ordered
 	 */
-	protected static final double DURATION_EDEFAULT = 0.0;
+	protected static final long DURATION_EDEFAULT = 0L;
 
 	/**
 	 * The cached value of the '{@link #getDuration() <em>Duration</em>}' attribute.
@@ -77,7 +77,7 @@ public class TestResult extends EObjectImpl implements EObject {
 	 * @generated
 	 * @ordered
 	 */
-	protected double duration = DURATION_EDEFAULT;
+	protected long duration = DURATION_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getFailCount() <em>Fail Count</em>}' attribute.
@@ -221,12 +221,12 @@ public class TestResult extends EObjectImpl implements EObject {
 	 * <!-- end-user-doc -->
 	 * 
 	 * @return the value of the '<em>Duration</em>' attribute.
-	 * @see #setDuration(double)
+	 * @see #setDuration(long)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getTestResult_Duration()
 	 * @model
 	 * @generated
 	 */
-	public double getDuration() {
+	public long getDuration() {
 		return duration;
 	}
 
@@ -241,8 +241,8 @@ public class TestResult extends EObjectImpl implements EObject {
 	 * @see #getDuration()
 	 * @generated
 	 */
-	public void setDuration(double newDuration) {
-		double oldDuration = duration;
+	public void setDuration(long newDuration) {
+		long oldDuration = duration;
 		duration = newDuration;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.TEST_RESULT__DURATION, oldDuration,
@@ -421,7 +421,7 @@ public class TestResult extends EObjectImpl implements EObject {
 			setBuild((IBuild) newValue);
 			return;
 		case BuildPackage.TEST_RESULT__DURATION:
-			setDuration((Double) newValue);
+			setDuration((Long) newValue);
 			return;
 		case BuildPackage.TEST_RESULT__FAIL_COUNT:
 			setFailCount((Integer) newValue);
@@ -500,11 +500,11 @@ public class TestResult extends EObjectImpl implements EObject {
 			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (duration: ");
+		result.append(" (duration: "); //$NON-NLS-1$
 		result.append(duration);
-		result.append(", failCount: ");
+		result.append(", failCount: "); //$NON-NLS-1$
 		result.append(failCount);
-		result.append(", passCount: ");
+		result.append(", passCount: "); //$NON-NLS-1$
 		result.append(passCount);
 		result.append(')');
 		return result.toString();

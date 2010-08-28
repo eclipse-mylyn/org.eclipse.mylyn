@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ChangeSet.java,v 1.2 2010/08/04 07:38:41 spingel Exp $
+ * $Id: ChangeSet.java,v 1.3 2010/08/28 03:38:02 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -225,7 +225,7 @@ public class ChangeSet extends EObjectImpl implements EObject, IChangeSet {
 			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (kind: ");
+		result.append(" (kind: "); //$NON-NLS-1$
 		result.append(kind);
 		result.append(')');
 		return result.toString();

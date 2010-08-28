@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TestElement.java,v 1.1 2010/08/27 09:00:23 spingel Exp $
+ * $Id: TestElement.java,v 1.2 2010/08/28 03:38:02 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -64,7 +64,7 @@ public class TestElement extends EObjectImpl implements EObject {
 	 * @generated
 	 * @ordered
 	 */
-	protected static final double DURATION_EDEFAULT = 0.0;
+	protected static final long DURATION_EDEFAULT = 0L;
 
 	/**
 	 * The cached value of the '{@link #getDuration() <em>Duration</em>}' attribute.
@@ -75,7 +75,7 @@ public class TestElement extends EObjectImpl implements EObject {
 	 * @generated
 	 * @ordered
 	 */
-	protected double duration = DURATION_EDEFAULT;
+	protected long duration = DURATION_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getErrorOutput() <em>Error Output</em>}' attribute.
@@ -189,12 +189,12 @@ public class TestElement extends EObjectImpl implements EObject {
 	 * <!-- end-user-doc -->
 	 * 
 	 * @return the value of the '<em>Duration</em>' attribute.
-	 * @see #setDuration(double)
+	 * @see #setDuration(long)
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getTestElement_Duration()
 	 * @model
 	 * @generated
 	 */
-	public double getDuration() {
+	public long getDuration() {
 		return duration;
 	}
 
@@ -209,8 +209,8 @@ public class TestElement extends EObjectImpl implements EObject {
 	 * @see #getDuration()
 	 * @generated
 	 */
-	public void setDuration(double newDuration) {
-		double oldDuration = duration;
+	public void setDuration(long newDuration) {
+		long oldDuration = duration;
 		duration = newDuration;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.TEST_ELEMENT__DURATION, oldDuration,
@@ -326,7 +326,7 @@ public class TestElement extends EObjectImpl implements EObject {
 			setLabel((String) newValue);
 			return;
 		case BuildPackage.TEST_ELEMENT__DURATION:
-			setDuration((Double) newValue);
+			setDuration((Long) newValue);
 			return;
 		case BuildPackage.TEST_ELEMENT__ERROR_OUTPUT:
 			setErrorOutput((String) newValue);
@@ -396,13 +396,13 @@ public class TestElement extends EObjectImpl implements EObject {
 			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (label: ");
+		result.append(" (label: "); //$NON-NLS-1$
 		result.append(label);
-		result.append(", duration: ");
+		result.append(", duration: "); //$NON-NLS-1$
 		result.append(duration);
-		result.append(", errorOutput: ");
+		result.append(", errorOutput: "); //$NON-NLS-1$
 		result.append(errorOutput);
-		result.append(", output: ");
+		result.append(", output: "); //$NON-NLS-1$
 		result.append(output);
 		result.append(')');
 		return result.toString();

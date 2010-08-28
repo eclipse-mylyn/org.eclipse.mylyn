@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildPackage.java,v 1.15 2010/08/27 09:00:23 spingel Exp $
+ * $Id: BuildPackage.java,v 1.16 2010/08/28 03:38:02 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -1874,16 +1874,16 @@ public class BuildPackage extends EPackageImpl {
 	public static final int USER_FEATURE_COUNT = IUSER_FEATURE_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.IParameterDefinition
-	 * <em>IParameter Definition</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.ParameterDefinition
+	 * <em>Parameter Definition</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
-	 * @see org.eclipse.mylyn.internal.builds.core.IParameterDefinition
-	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIParameterDefinition()
+	 * @see org.eclipse.mylyn.internal.builds.core.ParameterDefinition
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getParameterDefinition()
 	 * @generated
 	 */
-	public static final int IPARAMETER_DEFINITION = 23;
+	public static final int PARAMETER_DEFINITION = 23;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1893,7 +1893,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int IPARAMETER_DEFINITION__NAME = 0;
+	public static final int PARAMETER_DEFINITION__NAME = 0;
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute.
@@ -1903,7 +1903,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int IPARAMETER_DEFINITION__DESCRIPTION = 1;
+	public static final int PARAMETER_DEFINITION__DESCRIPTION = 1;
 
 	/**
 	 * The feature id for the '<em><b>Containing Build Plan</b></em>' container reference.
@@ -1913,193 +1913,17 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int IPARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = 2;
+	public static final int PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = 2;
 
 	/**
-	 * The number of structural features of the '<em>IParameter Definition</em>' class.
+	 * The number of structural features of the '<em>Parameter Definition</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	public static final int IPARAMETER_DEFINITION_FEATURE_COUNT = 3;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.IFileParameterDefinition
-	 * <em>IFile Parameter Definition</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @see org.eclipse.mylyn.internal.builds.core.IFileParameterDefinition
-	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIFileParameterDefinition()
-	 * @generated
-	 */
-	public static final int IFILE_PARAMETER_DEFINITION = 24;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IFILE_PARAMETER_DEFINITION__NAME = IPARAMETER_DEFINITION__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Description</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IFILE_PARAMETER_DEFINITION__DESCRIPTION = IPARAMETER_DEFINITION__DESCRIPTION;
-
-	/**
-	 * The feature id for the '<em><b>Containing Build Plan</b></em>' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IFILE_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = IPARAMETER_DEFINITION__CONTAINING_BUILD_PLAN;
-
-	/**
-	 * The number of structural features of the '<em>IFile Parameter Definition</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IFILE_PARAMETER_DEFINITION_FEATURE_COUNT = IPARAMETER_DEFINITION_FEATURE_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.IBooleanParameterDefinition
-	 * <em>IBoolean Parameter Definition</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @see org.eclipse.mylyn.internal.builds.core.IBooleanParameterDefinition
-	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBooleanParameterDefinition()
-	 * @generated
-	 */
-	public static final int IBOOLEAN_PARAMETER_DEFINITION = 25;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IBOOLEAN_PARAMETER_DEFINITION__NAME = IPARAMETER_DEFINITION__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Description</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IBOOLEAN_PARAMETER_DEFINITION__DESCRIPTION = IPARAMETER_DEFINITION__DESCRIPTION;
-
-	/**
-	 * The feature id for the '<em><b>Containing Build Plan</b></em>' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IBOOLEAN_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = IPARAMETER_DEFINITION__CONTAINING_BUILD_PLAN;
-
-	/**
-	 * The feature id for the '<em><b>Default Value</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IBOOLEAN_PARAMETER_DEFINITION__DEFAULT_VALUE = IPARAMETER_DEFINITION_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>IBoolean Parameter Definition</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IBOOLEAN_PARAMETER_DEFINITION_FEATURE_COUNT = IPARAMETER_DEFINITION_FEATURE_COUNT + 1;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.IChoiceParameterDefinition
-	 * <em>IChoice Parameter Definition</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @see org.eclipse.mylyn.internal.builds.core.IChoiceParameterDefinition
-	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIChoiceParameterDefinition()
-	 * @generated
-	 */
-	public static final int ICHOICE_PARAMETER_DEFINITION = 26;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int ICHOICE_PARAMETER_DEFINITION__NAME = IPARAMETER_DEFINITION__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Description</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int ICHOICE_PARAMETER_DEFINITION__DESCRIPTION = IPARAMETER_DEFINITION__DESCRIPTION;
-
-	/**
-	 * The feature id for the '<em><b>Containing Build Plan</b></em>' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int ICHOICE_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = IPARAMETER_DEFINITION__CONTAINING_BUILD_PLAN;
-
-	/**
-	 * The feature id for the '<em><b>Options</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int ICHOICE_PARAMETER_DEFINITION__OPTIONS = IPARAMETER_DEFINITION_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>IChoice Parameter Definition</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int ICHOICE_PARAMETER_DEFINITION_FEATURE_COUNT = IPARAMETER_DEFINITION_FEATURE_COUNT + 1;
+	public static final int PARAMETER_DEFINITION_FEATURE_COUNT = 3;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.ChoiceParameterDefinition
@@ -2111,7 +1935,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getChoiceParameterDefinition()
 	 * @generated
 	 */
-	public static final int CHOICE_PARAMETER_DEFINITION = 27;
+	public static final int CHOICE_PARAMETER_DEFINITION = 24;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2121,7 +1945,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int CHOICE_PARAMETER_DEFINITION__NAME = ICHOICE_PARAMETER_DEFINITION__NAME;
+	public static final int CHOICE_PARAMETER_DEFINITION__NAME = PARAMETER_DEFINITION__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute.
@@ -2131,7 +1955,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int CHOICE_PARAMETER_DEFINITION__DESCRIPTION = ICHOICE_PARAMETER_DEFINITION__DESCRIPTION;
+	public static final int CHOICE_PARAMETER_DEFINITION__DESCRIPTION = PARAMETER_DEFINITION__DESCRIPTION;
 
 	/**
 	 * The feature id for the '<em><b>Containing Build Plan</b></em>' container reference.
@@ -2141,7 +1965,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int CHOICE_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = ICHOICE_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN;
+	public static final int CHOICE_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN;
 
 	/**
 	 * The feature id for the '<em><b>Options</b></em>' attribute list.
@@ -2151,7 +1975,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int CHOICE_PARAMETER_DEFINITION__OPTIONS = ICHOICE_PARAMETER_DEFINITION__OPTIONS;
+	public static final int CHOICE_PARAMETER_DEFINITION__OPTIONS = PARAMETER_DEFINITION_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>Choice Parameter Definition</em>' class.
@@ -2161,7 +1985,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int CHOICE_PARAMETER_DEFINITION_FEATURE_COUNT = ICHOICE_PARAMETER_DEFINITION_FEATURE_COUNT + 0;
+	public static final int CHOICE_PARAMETER_DEFINITION_FEATURE_COUNT = PARAMETER_DEFINITION_FEATURE_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.BooleanParameterDefinition
@@ -2173,7 +1997,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getBooleanParameterDefinition()
 	 * @generated
 	 */
-	public static final int BOOLEAN_PARAMETER_DEFINITION = 28;
+	public static final int BOOLEAN_PARAMETER_DEFINITION = 25;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2183,7 +2007,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int BOOLEAN_PARAMETER_DEFINITION__NAME = IBOOLEAN_PARAMETER_DEFINITION__NAME;
+	public static final int BOOLEAN_PARAMETER_DEFINITION__NAME = PARAMETER_DEFINITION__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute.
@@ -2193,7 +2017,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int BOOLEAN_PARAMETER_DEFINITION__DESCRIPTION = IBOOLEAN_PARAMETER_DEFINITION__DESCRIPTION;
+	public static final int BOOLEAN_PARAMETER_DEFINITION__DESCRIPTION = PARAMETER_DEFINITION__DESCRIPTION;
 
 	/**
 	 * The feature id for the '<em><b>Containing Build Plan</b></em>' container reference.
@@ -2203,7 +2027,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int BOOLEAN_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = IBOOLEAN_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN;
+	public static final int BOOLEAN_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN;
 
 	/**
 	 * The feature id for the '<em><b>Default Value</b></em>' attribute.
@@ -2213,7 +2037,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int BOOLEAN_PARAMETER_DEFINITION__DEFAULT_VALUE = IBOOLEAN_PARAMETER_DEFINITION__DEFAULT_VALUE;
+	public static final int BOOLEAN_PARAMETER_DEFINITION__DEFAULT_VALUE = PARAMETER_DEFINITION_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>Boolean Parameter Definition</em>' class.
@@ -2223,7 +2047,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int BOOLEAN_PARAMETER_DEFINITION_FEATURE_COUNT = IBOOLEAN_PARAMETER_DEFINITION_FEATURE_COUNT + 0;
+	public static final int BOOLEAN_PARAMETER_DEFINITION_FEATURE_COUNT = PARAMETER_DEFINITION_FEATURE_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.FileParameterDefinition
@@ -2235,7 +2059,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getFileParameterDefinition()
 	 * @generated
 	 */
-	public static final int FILE_PARAMETER_DEFINITION = 29;
+	public static final int FILE_PARAMETER_DEFINITION = 26;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2245,7 +2069,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int FILE_PARAMETER_DEFINITION__NAME = IFILE_PARAMETER_DEFINITION__NAME;
+	public static final int FILE_PARAMETER_DEFINITION__NAME = PARAMETER_DEFINITION__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute.
@@ -2255,7 +2079,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int FILE_PARAMETER_DEFINITION__DESCRIPTION = IFILE_PARAMETER_DEFINITION__DESCRIPTION;
+	public static final int FILE_PARAMETER_DEFINITION__DESCRIPTION = PARAMETER_DEFINITION__DESCRIPTION;
 
 	/**
 	 * The feature id for the '<em><b>Containing Build Plan</b></em>' container reference.
@@ -2265,7 +2089,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int FILE_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = IFILE_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN;
+	public static final int FILE_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN;
 
 	/**
 	 * The number of structural features of the '<em>File Parameter Definition</em>' class.
@@ -2275,59 +2099,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int FILE_PARAMETER_DEFINITION_FEATURE_COUNT = IFILE_PARAMETER_DEFINITION_FEATURE_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.IPlanParameterDefinition
-	 * <em>IPlan Parameter Definition</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @see org.eclipse.mylyn.internal.builds.core.IPlanParameterDefinition
-	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIPlanParameterDefinition()
-	 * @generated
-	 */
-	public static final int IPLAN_PARAMETER_DEFINITION = 30;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IPLAN_PARAMETER_DEFINITION__NAME = IPARAMETER_DEFINITION__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Description</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IPLAN_PARAMETER_DEFINITION__DESCRIPTION = IPARAMETER_DEFINITION__DESCRIPTION;
-
-	/**
-	 * The feature id for the '<em><b>Containing Build Plan</b></em>' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IPLAN_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = IPARAMETER_DEFINITION__CONTAINING_BUILD_PLAN;
-
-	/**
-	 * The number of structural features of the '<em>IPlan Parameter Definition</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IPLAN_PARAMETER_DEFINITION_FEATURE_COUNT = IPARAMETER_DEFINITION_FEATURE_COUNT + 0;
+	public static final int FILE_PARAMETER_DEFINITION_FEATURE_COUNT = PARAMETER_DEFINITION_FEATURE_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.PlanParameterDefinition
@@ -2339,7 +2111,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getPlanParameterDefinition()
 	 * @generated
 	 */
-	public static final int PLAN_PARAMETER_DEFINITION = 31;
+	public static final int PLAN_PARAMETER_DEFINITION = 27;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2349,7 +2121,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int PLAN_PARAMETER_DEFINITION__NAME = IPLAN_PARAMETER_DEFINITION__NAME;
+	public static final int PLAN_PARAMETER_DEFINITION__NAME = PARAMETER_DEFINITION__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute.
@@ -2359,7 +2131,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int PLAN_PARAMETER_DEFINITION__DESCRIPTION = IPLAN_PARAMETER_DEFINITION__DESCRIPTION;
+	public static final int PLAN_PARAMETER_DEFINITION__DESCRIPTION = PARAMETER_DEFINITION__DESCRIPTION;
 
 	/**
 	 * The feature id for the '<em><b>Containing Build Plan</b></em>' container reference.
@@ -2369,7 +2141,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int PLAN_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = IPLAN_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN;
+	public static final int PLAN_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN;
 
 	/**
 	 * The number of structural features of the '<em>Plan Parameter Definition</em>' class.
@@ -2379,69 +2151,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int PLAN_PARAMETER_DEFINITION_FEATURE_COUNT = IPLAN_PARAMETER_DEFINITION_FEATURE_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.IPasswordParameterDefinition
-	 * <em>IPassword Parameter Definition</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @see org.eclipse.mylyn.internal.builds.core.IPasswordParameterDefinition
-	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIPasswordParameterDefinition()
-	 * @generated
-	 */
-	public static final int IPASSWORD_PARAMETER_DEFINITION = 32;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IPASSWORD_PARAMETER_DEFINITION__NAME = IPARAMETER_DEFINITION__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Description</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IPASSWORD_PARAMETER_DEFINITION__DESCRIPTION = IPARAMETER_DEFINITION__DESCRIPTION;
-
-	/**
-	 * The feature id for the '<em><b>Containing Build Plan</b></em>' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IPASSWORD_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = IPARAMETER_DEFINITION__CONTAINING_BUILD_PLAN;
-
-	/**
-	 * The feature id for the '<em><b>Default Value</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IPASSWORD_PARAMETER_DEFINITION__DEFAULT_VALUE = IPARAMETER_DEFINITION_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>IPassword Parameter Definition</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IPASSWORD_PARAMETER_DEFINITION_FEATURE_COUNT = IPARAMETER_DEFINITION_FEATURE_COUNT + 1;
+	public static final int PLAN_PARAMETER_DEFINITION_FEATURE_COUNT = PARAMETER_DEFINITION_FEATURE_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.PasswordParameterDefinition
@@ -2453,7 +2163,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getPasswordParameterDefinition()
 	 * @generated
 	 */
-	public static final int PASSWORD_PARAMETER_DEFINITION = 33;
+	public static final int PASSWORD_PARAMETER_DEFINITION = 28;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2463,7 +2173,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int PASSWORD_PARAMETER_DEFINITION__NAME = IPASSWORD_PARAMETER_DEFINITION__NAME;
+	public static final int PASSWORD_PARAMETER_DEFINITION__NAME = PARAMETER_DEFINITION__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute.
@@ -2473,7 +2183,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int PASSWORD_PARAMETER_DEFINITION__DESCRIPTION = IPASSWORD_PARAMETER_DEFINITION__DESCRIPTION;
+	public static final int PASSWORD_PARAMETER_DEFINITION__DESCRIPTION = PARAMETER_DEFINITION__DESCRIPTION;
 
 	/**
 	 * The feature id for the '<em><b>Containing Build Plan</b></em>' container reference.
@@ -2483,7 +2193,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int PASSWORD_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = IPASSWORD_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN;
+	public static final int PASSWORD_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN;
 
 	/**
 	 * The feature id for the '<em><b>Default Value</b></em>' attribute.
@@ -2493,7 +2203,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int PASSWORD_PARAMETER_DEFINITION__DEFAULT_VALUE = IPASSWORD_PARAMETER_DEFINITION__DEFAULT_VALUE;
+	public static final int PASSWORD_PARAMETER_DEFINITION__DEFAULT_VALUE = PARAMETER_DEFINITION_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>Password Parameter Definition</em>' class.
@@ -2503,79 +2213,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int PASSWORD_PARAMETER_DEFINITION_FEATURE_COUNT = IPASSWORD_PARAMETER_DEFINITION_FEATURE_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.IBuildParameterDefinition
-	 * <em>IBuild Parameter Definition</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @see org.eclipse.mylyn.internal.builds.core.IBuildParameterDefinition
-	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildParameterDefinition()
-	 * @generated
-	 */
-	public static final int IBUILD_PARAMETER_DEFINITION = 34;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IBUILD_PARAMETER_DEFINITION__NAME = IPARAMETER_DEFINITION__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Description</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IBUILD_PARAMETER_DEFINITION__DESCRIPTION = IPARAMETER_DEFINITION__DESCRIPTION;
-
-	/**
-	 * The feature id for the '<em><b>Containing Build Plan</b></em>' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IBUILD_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = IPARAMETER_DEFINITION__CONTAINING_BUILD_PLAN;
-
-	/**
-	 * The feature id for the '<em><b>Build Plan Id</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IBUILD_PARAMETER_DEFINITION__BUILD_PLAN_ID = IPARAMETER_DEFINITION_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Build Plan</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IBUILD_PARAMETER_DEFINITION__BUILD_PLAN = IPARAMETER_DEFINITION_FEATURE_COUNT + 1;
-
-	/**
-	 * The number of structural features of the '<em>IBuild Parameter Definition</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int IBUILD_PARAMETER_DEFINITION_FEATURE_COUNT = IPARAMETER_DEFINITION_FEATURE_COUNT + 2;
+	public static final int PASSWORD_PARAMETER_DEFINITION_FEATURE_COUNT = PARAMETER_DEFINITION_FEATURE_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.BuildParameterDefinition
@@ -2587,7 +2225,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getBuildParameterDefinition()
 	 * @generated
 	 */
-	public static final int BUILD_PARAMETER_DEFINITION = 35;
+	public static final int BUILD_PARAMETER_DEFINITION = 29;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2597,7 +2235,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int BUILD_PARAMETER_DEFINITION__NAME = IBUILD_PARAMETER_DEFINITION__NAME;
+	public static final int BUILD_PARAMETER_DEFINITION__NAME = PARAMETER_DEFINITION__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute.
@@ -2607,7 +2245,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int BUILD_PARAMETER_DEFINITION__DESCRIPTION = IBUILD_PARAMETER_DEFINITION__DESCRIPTION;
+	public static final int BUILD_PARAMETER_DEFINITION__DESCRIPTION = PARAMETER_DEFINITION__DESCRIPTION;
 
 	/**
 	 * The feature id for the '<em><b>Containing Build Plan</b></em>' container reference.
@@ -2617,7 +2255,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int BUILD_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = IBUILD_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN;
+	public static final int BUILD_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN;
 
 	/**
 	 * The feature id for the '<em><b>Build Plan Id</b></em>' attribute.
@@ -2627,7 +2265,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int BUILD_PARAMETER_DEFINITION__BUILD_PLAN_ID = IBUILD_PARAMETER_DEFINITION__BUILD_PLAN_ID;
+	public static final int BUILD_PARAMETER_DEFINITION__BUILD_PLAN_ID = PARAMETER_DEFINITION_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Build Plan</b></em>' reference.
@@ -2637,7 +2275,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int BUILD_PARAMETER_DEFINITION__BUILD_PLAN = IBUILD_PARAMETER_DEFINITION__BUILD_PLAN;
+	public static final int BUILD_PARAMETER_DEFINITION__BUILD_PLAN = PARAMETER_DEFINITION_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Parameter Definition</em>' class.
@@ -2647,69 +2285,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int BUILD_PARAMETER_DEFINITION_FEATURE_COUNT = IBUILD_PARAMETER_DEFINITION_FEATURE_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.IStringParameterDefinition
-	 * <em>IString Parameter Definition</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @see org.eclipse.mylyn.internal.builds.core.IStringParameterDefinition
-	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIStringParameterDefinition()
-	 * @generated
-	 */
-	public static final int ISTRING_PARAMETER_DEFINITION = 36;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int ISTRING_PARAMETER_DEFINITION__NAME = IPARAMETER_DEFINITION__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Description</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int ISTRING_PARAMETER_DEFINITION__DESCRIPTION = IPARAMETER_DEFINITION__DESCRIPTION;
-
-	/**
-	 * The feature id for the '<em><b>Containing Build Plan</b></em>' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int ISTRING_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = IPARAMETER_DEFINITION__CONTAINING_BUILD_PLAN;
-
-	/**
-	 * The feature id for the '<em><b>Default Value</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int ISTRING_PARAMETER_DEFINITION__DEFAULT_VALUE = IPARAMETER_DEFINITION_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>IString Parameter Definition</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int ISTRING_PARAMETER_DEFINITION_FEATURE_COUNT = IPARAMETER_DEFINITION_FEATURE_COUNT + 1;
+	public static final int BUILD_PARAMETER_DEFINITION_FEATURE_COUNT = PARAMETER_DEFINITION_FEATURE_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.StringParameterDefinition
@@ -2721,7 +2297,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getStringParameterDefinition()
 	 * @generated
 	 */
-	public static final int STRING_PARAMETER_DEFINITION = 37;
+	public static final int STRING_PARAMETER_DEFINITION = 30;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2731,7 +2307,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int STRING_PARAMETER_DEFINITION__NAME = ISTRING_PARAMETER_DEFINITION__NAME;
+	public static final int STRING_PARAMETER_DEFINITION__NAME = PARAMETER_DEFINITION__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute.
@@ -2741,7 +2317,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int STRING_PARAMETER_DEFINITION__DESCRIPTION = ISTRING_PARAMETER_DEFINITION__DESCRIPTION;
+	public static final int STRING_PARAMETER_DEFINITION__DESCRIPTION = PARAMETER_DEFINITION__DESCRIPTION;
 
 	/**
 	 * The feature id for the '<em><b>Containing Build Plan</b></em>' container reference.
@@ -2751,7 +2327,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int STRING_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = ISTRING_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN;
+	public static final int STRING_PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN;
 
 	/**
 	 * The feature id for the '<em><b>Default Value</b></em>' attribute.
@@ -2761,7 +2337,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int STRING_PARAMETER_DEFINITION__DEFAULT_VALUE = ISTRING_PARAMETER_DEFINITION__DEFAULT_VALUE;
+	public static final int STRING_PARAMETER_DEFINITION__DEFAULT_VALUE = PARAMETER_DEFINITION_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>String Parameter Definition</em>' class.
@@ -2771,7 +2347,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int STRING_PARAMETER_DEFINITION_FEATURE_COUNT = ISTRING_PARAMETER_DEFINITION_FEATURE_COUNT + 0;
+	public static final int STRING_PARAMETER_DEFINITION_FEATURE_COUNT = PARAMETER_DEFINITION_FEATURE_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.internal.builds.core.TestResult <em>Test Result</em>}'
@@ -2783,7 +2359,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getTestResult()
 	 * @generated
 	 */
-	public static final int TEST_RESULT = 38;
+	public static final int TEST_RESULT = 31;
 
 	/**
 	 * The feature id for the '<em><b>Build</b></em>' reference.
@@ -2855,7 +2431,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getTestElement()
 	 * @generated
 	 */
-	public static final int TEST_ELEMENT = 39;
+	public static final int TEST_ELEMENT = 32;
 
 	/**
 	 * The feature id for the '<em><b>Label</b></em>' attribute.
@@ -2916,7 +2492,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getTestSuite()
 	 * @generated
 	 */
-	public static final int TEST_SUITE = 40;
+	public static final int TEST_SUITE = 33;
 
 	/**
 	 * The feature id for the '<em><b>Label</b></em>' attribute.
@@ -2997,7 +2573,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getTestCase()
 	 * @generated
 	 */
-	public static final int TEST_CASE = 41;
+	public static final int TEST_CASE = 34;
 
 	/**
 	 * The feature id for the '<em><b>Label</b></em>' attribute.
@@ -3099,7 +2675,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getTestCaseResult()
 	 * @generated
 	 */
-	public static final int TEST_CASE_RESULT = 42;
+	public static final int TEST_CASE_RESULT = 35;
 
 	/**
 	 * The meta object id for the '<em>Repository Location</em>' data type.
@@ -3110,7 +2686,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getRepositoryLocation()
 	 * @generated
 	 */
-	public static final int REPOSITORY_LOCATION = 43;
+	public static final int REPOSITORY_LOCATION = 36;
 
 	/**
 	 * The meta object id for the '<em>State</em>' data type.
@@ -3121,7 +2697,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getBuildState()
 	 * @generated
 	 */
-	public static final int BUILD_STATE = 44;
+	public static final int BUILD_STATE = 37;
 
 	/**
 	 * The meta object id for the '<em>Status</em>' data type.
@@ -3132,7 +2708,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getBuildStatus()
 	 * @generated
 	 */
-	public static final int BUILD_STATUS = 45;
+	public static final int BUILD_STATUS = 38;
 
 	/**
 	 * The meta object id for the '<em>Edit Type</em>' data type.
@@ -3143,7 +2719,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getEditType()
 	 * @generated
 	 */
-	public static final int EDIT_TYPE = 46;
+	public static final int EDIT_TYPE = 39;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -3279,31 +2855,7 @@ public class BuildPackage extends EPackageImpl {
 	 * 
 	 * @generated
 	 */
-	private EClass iParameterDefinitionEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	private EClass iFileParameterDefinitionEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	private EClass iBooleanParameterDefinitionEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	private EClass iChoiceParameterDefinitionEClass = null;
+	private EClass parameterDefinitionEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -3335,23 +2887,7 @@ public class BuildPackage extends EPackageImpl {
 	 * 
 	 * @generated
 	 */
-	private EClass iPlanParameterDefinitionEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
 	private EClass planParameterDefinitionEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	private EClass iPasswordParameterDefinitionEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -3367,23 +2903,7 @@ public class BuildPackage extends EPackageImpl {
 	 * 
 	 * @generated
 	 */
-	private EClass iBuildParameterDefinitionEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
 	private EClass buildParameterDefinitionEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	private EClass iStringParameterDefinitionEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -4136,136 +3656,63 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.mylyn.internal.builds.core.IParameterDefinition
-	 * <em>IParameter Definition</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.mylyn.internal.builds.core.ParameterDefinition
+	 * <em>Parameter Definition</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the meta object for class '<em>IParameter Definition</em>'.
-	 * @see org.eclipse.mylyn.internal.builds.core.IParameterDefinition
+	 * @return the meta object for class '<em>Parameter Definition</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.ParameterDefinition
 	 * @generated
 	 */
-	public EClass getIParameterDefinition() {
-		return iParameterDefinitionEClass;
+	public EClass getParameterDefinition() {
+		return parameterDefinitionEClass;
 	}
 
 	/**
 	 * Returns the meta object for the attribute '
-	 * {@link org.eclipse.mylyn.internal.builds.core.IParameterDefinition#getName <em>Name</em>}'.
+	 * {@link org.eclipse.mylyn.internal.builds.core.ParameterDefinition#getName <em>Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see org.eclipse.mylyn.internal.builds.core.IParameterDefinition#getName()
-	 * @see #getIParameterDefinition()
+	 * @see org.eclipse.mylyn.internal.builds.core.ParameterDefinition#getName()
+	 * @see #getParameterDefinition()
 	 * @generated
 	 */
-	public EAttribute getIParameterDefinition_Name() {
-		return (EAttribute) iParameterDefinitionEClass.getEStructuralFeatures().get(0);
+	public EAttribute getParameterDefinition_Name() {
+		return (EAttribute) parameterDefinitionEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
 	 * Returns the meta object for the attribute '
-	 * {@link org.eclipse.mylyn.internal.builds.core.IParameterDefinition#getDescription <em>Description</em>}'.
+	 * {@link org.eclipse.mylyn.internal.builds.core.ParameterDefinition#getDescription <em>Description</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @return the meta object for the attribute '<em>Description</em>'.
-	 * @see org.eclipse.mylyn.internal.builds.core.IParameterDefinition#getDescription()
-	 * @see #getIParameterDefinition()
+	 * @see org.eclipse.mylyn.internal.builds.core.ParameterDefinition#getDescription()
+	 * @see #getParameterDefinition()
 	 * @generated
 	 */
-	public EAttribute getIParameterDefinition_Description() {
-		return (EAttribute) iParameterDefinitionEClass.getEStructuralFeatures().get(1);
+	public EAttribute getParameterDefinition_Description() {
+		return (EAttribute) parameterDefinitionEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
 	 * Returns the meta object for the container reference '
-	 * {@link org.eclipse.mylyn.internal.builds.core.IParameterDefinition#getContainingBuildPlan
+	 * {@link org.eclipse.mylyn.internal.builds.core.ParameterDefinition#getContainingBuildPlan
 	 * <em>Containing Build Plan</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @return the meta object for the container reference '<em>Containing Build Plan</em>'.
-	 * @see org.eclipse.mylyn.internal.builds.core.IParameterDefinition#getContainingBuildPlan()
-	 * @see #getIParameterDefinition()
+	 * @see org.eclipse.mylyn.internal.builds.core.ParameterDefinition#getContainingBuildPlan()
+	 * @see #getParameterDefinition()
 	 * @generated
 	 */
-	public EReference getIParameterDefinition_ContainingBuildPlan() {
-		return (EReference) iParameterDefinitionEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.mylyn.internal.builds.core.IFileParameterDefinition
-	 * <em>IFile Parameter Definition</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @return the meta object for class '<em>IFile Parameter Definition</em>'.
-	 * @see org.eclipse.mylyn.internal.builds.core.IFileParameterDefinition
-	 * @generated
-	 */
-	public EClass getIFileParameterDefinition() {
-		return iFileParameterDefinitionEClass;
-	}
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.mylyn.internal.builds.core.IBooleanParameterDefinition
-	 * <em>IBoolean Parameter Definition</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @return the meta object for class '<em>IBoolean Parameter Definition</em>'.
-	 * @see org.eclipse.mylyn.internal.builds.core.IBooleanParameterDefinition
-	 * @generated
-	 */
-	public EClass getIBooleanParameterDefinition() {
-		return iBooleanParameterDefinitionEClass;
-	}
-
-	/**
-	 * Returns the meta object for the attribute '
-	 * {@link org.eclipse.mylyn.internal.builds.core.IBooleanParameterDefinition#isDefaultValue <em>Default Value</em>}
-	 * '.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @return the meta object for the attribute '<em>Default Value</em>'.
-	 * @see org.eclipse.mylyn.internal.builds.core.IBooleanParameterDefinition#isDefaultValue()
-	 * @see #getIBooleanParameterDefinition()
-	 * @generated
-	 */
-	public EAttribute getIBooleanParameterDefinition_DefaultValue() {
-		return (EAttribute) iBooleanParameterDefinitionEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.mylyn.internal.builds.core.IChoiceParameterDefinition
-	 * <em>IChoice Parameter Definition</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @return the meta object for class '<em>IChoice Parameter Definition</em>'.
-	 * @see org.eclipse.mylyn.internal.builds.core.IChoiceParameterDefinition
-	 * @generated
-	 */
-	public EClass getIChoiceParameterDefinition() {
-		return iChoiceParameterDefinitionEClass;
-	}
-
-	/**
-	 * Returns the meta object for the attribute list '
-	 * {@link org.eclipse.mylyn.internal.builds.core.IChoiceParameterDefinition#getOptions <em>Options</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @return the meta object for the attribute list '<em>Options</em>'.
-	 * @see org.eclipse.mylyn.internal.builds.core.IChoiceParameterDefinition#getOptions()
-	 * @see #getIChoiceParameterDefinition()
-	 * @generated
-	 */
-	public EAttribute getIChoiceParameterDefinition_Options() {
-		return (EAttribute) iChoiceParameterDefinitionEClass.getEStructuralFeatures().get(0);
+	public EReference getParameterDefinition_ContainingBuildPlan() {
+		return (EReference) parameterDefinitionEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -4283,6 +3730,21 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
+	 * Returns the meta object for the attribute list '
+	 * {@link org.eclipse.mylyn.internal.builds.core.ChoiceParameterDefinition#getOptions <em>Options</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute list '<em>Options</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.ChoiceParameterDefinition#getOptions()
+	 * @see #getChoiceParameterDefinition()
+	 * @generated
+	 */
+	public EAttribute getChoiceParameterDefinition_Options() {
+		return (EAttribute) choiceParameterDefinitionEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.internal.builds.core.BooleanParameterDefinition
 	 * <em>Boolean Parameter Definition</em>}'.
 	 * <!-- begin-user-doc -->
@@ -4294,6 +3756,21 @@ public class BuildPackage extends EPackageImpl {
 	 */
 	public EClass getBooleanParameterDefinition() {
 		return booleanParameterDefinitionEClass;
+	}
+
+	/**
+	 * Returns the meta object for the attribute '
+	 * {@link org.eclipse.mylyn.internal.builds.core.BooleanParameterDefinition#isDefaultValue <em>Default Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Default Value</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.BooleanParameterDefinition#isDefaultValue()
+	 * @see #getBooleanParameterDefinition()
+	 * @generated
+	 */
+	public EAttribute getBooleanParameterDefinition_DefaultValue() {
+		return (EAttribute) booleanParameterDefinitionEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -4311,20 +3788,6 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.mylyn.internal.builds.core.IPlanParameterDefinition
-	 * <em>IPlan Parameter Definition</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @return the meta object for class '<em>IPlan Parameter Definition</em>'.
-	 * @see org.eclipse.mylyn.internal.builds.core.IPlanParameterDefinition
-	 * @generated
-	 */
-	public EClass getIPlanParameterDefinition() {
-		return iPlanParameterDefinitionEClass;
-	}
-
-	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.internal.builds.core.PlanParameterDefinition
 	 * <em>Plan Parameter Definition</em>}'.
 	 * <!-- begin-user-doc -->
@@ -4336,36 +3799,6 @@ public class BuildPackage extends EPackageImpl {
 	 */
 	public EClass getPlanParameterDefinition() {
 		return planParameterDefinitionEClass;
-	}
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.mylyn.internal.builds.core.IPasswordParameterDefinition
-	 * <em>IPassword Parameter Definition</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @return the meta object for class '<em>IPassword Parameter Definition</em>'.
-	 * @see org.eclipse.mylyn.internal.builds.core.IPasswordParameterDefinition
-	 * @generated
-	 */
-	public EClass getIPasswordParameterDefinition() {
-		return iPasswordParameterDefinitionEClass;
-	}
-
-	/**
-	 * Returns the meta object for the attribute '
-	 * {@link org.eclipse.mylyn.internal.builds.core.IPasswordParameterDefinition#getDefaultValue
-	 * <em>Default Value</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @return the meta object for the attribute '<em>Default Value</em>'.
-	 * @see org.eclipse.mylyn.internal.builds.core.IPasswordParameterDefinition#getDefaultValue()
-	 * @see #getIPasswordParameterDefinition()
-	 * @generated
-	 */
-	public EAttribute getIPasswordParameterDefinition_DefaultValue() {
-		return (EAttribute) iPasswordParameterDefinitionEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -4383,47 +3816,19 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.mylyn.internal.builds.core.IBuildParameterDefinition
-	 * <em>IBuild Parameter Definition</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @return the meta object for class '<em>IBuild Parameter Definition</em>'.
-	 * @see org.eclipse.mylyn.internal.builds.core.IBuildParameterDefinition
-	 * @generated
-	 */
-	public EClass getIBuildParameterDefinition() {
-		return iBuildParameterDefinitionEClass;
-	}
-
-	/**
 	 * Returns the meta object for the attribute '
-	 * {@link org.eclipse.mylyn.internal.builds.core.IBuildParameterDefinition#getBuildPlanId <em>Build Plan Id</em>}'.
+	 * {@link org.eclipse.mylyn.internal.builds.core.PasswordParameterDefinition#getDefaultValue <em>Default Value</em>}
+	 * '.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the meta object for the attribute '<em>Build Plan Id</em>'.
-	 * @see org.eclipse.mylyn.internal.builds.core.IBuildParameterDefinition#getBuildPlanId()
-	 * @see #getIBuildParameterDefinition()
+	 * @return the meta object for the attribute '<em>Default Value</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.PasswordParameterDefinition#getDefaultValue()
+	 * @see #getPasswordParameterDefinition()
 	 * @generated
 	 */
-	public EAttribute getIBuildParameterDefinition_BuildPlanId() {
-		return (EAttribute) iBuildParameterDefinitionEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * Returns the meta object for the reference '
-	 * {@link org.eclipse.mylyn.internal.builds.core.IBuildParameterDefinition#getBuildPlan <em>Build Plan</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @return the meta object for the reference '<em>Build Plan</em>'.
-	 * @see org.eclipse.mylyn.internal.builds.core.IBuildParameterDefinition#getBuildPlan()
-	 * @see #getIBuildParameterDefinition()
-	 * @generated
-	 */
-	public EReference getIBuildParameterDefinition_BuildPlan() {
-		return (EReference) iBuildParameterDefinitionEClass.getEStructuralFeatures().get(1);
+	public EAttribute getPasswordParameterDefinition_DefaultValue() {
+		return (EAttribute) passwordParameterDefinitionEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -4441,33 +3846,33 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.mylyn.internal.builds.core.IStringParameterDefinition
-	 * <em>IString Parameter Definition</em>}'.
+	 * Returns the meta object for the attribute '
+	 * {@link org.eclipse.mylyn.internal.builds.core.BuildParameterDefinition#getBuildPlanId <em>Build Plan Id</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the meta object for class '<em>IString Parameter Definition</em>'.
-	 * @see org.eclipse.mylyn.internal.builds.core.IStringParameterDefinition
+	 * @return the meta object for the attribute '<em>Build Plan Id</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildParameterDefinition#getBuildPlanId()
+	 * @see #getBuildParameterDefinition()
 	 * @generated
 	 */
-	public EClass getIStringParameterDefinition() {
-		return iStringParameterDefinitionEClass;
+	public EAttribute getBuildParameterDefinition_BuildPlanId() {
+		return (EAttribute) buildParameterDefinitionEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
-	 * Returns the meta object for the attribute '
-	 * {@link org.eclipse.mylyn.internal.builds.core.IStringParameterDefinition#getDefaultValue <em>Default Value</em>}
-	 * '.
+	 * Returns the meta object for the reference '
+	 * {@link org.eclipse.mylyn.internal.builds.core.BuildParameterDefinition#getBuildPlan <em>Build Plan</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the meta object for the attribute '<em>Default Value</em>'.
-	 * @see org.eclipse.mylyn.internal.builds.core.IStringParameterDefinition#getDefaultValue()
-	 * @see #getIStringParameterDefinition()
+	 * @return the meta object for the reference '<em>Build Plan</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.BuildParameterDefinition#getBuildPlan()
+	 * @see #getBuildParameterDefinition()
 	 * @generated
 	 */
-	public EAttribute getIStringParameterDefinition_DefaultValue() {
-		return (EAttribute) iStringParameterDefinitionEClass.getEStructuralFeatures().get(0);
+	public EReference getBuildParameterDefinition_BuildPlan() {
+		return (EReference) buildParameterDefinitionEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -4482,6 +3887,21 @@ public class BuildPackage extends EPackageImpl {
 	 */
 	public EClass getStringParameterDefinition() {
 		return stringParameterDefinitionEClass;
+	}
+
+	/**
+	 * Returns the meta object for the attribute '
+	 * {@link org.eclipse.mylyn.internal.builds.core.StringParameterDefinition#getDefaultValue <em>Default Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Default Value</em>'.
+	 * @see org.eclipse.mylyn.internal.builds.core.StringParameterDefinition#getDefaultValue()
+	 * @see #getStringParameterDefinition()
+	 * @generated
+	 */
+	public EAttribute getStringParameterDefinition_DefaultValue() {
+		return (EAttribute) stringParameterDefinitionEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -5537,44 +4957,30 @@ public class BuildPackage extends EPackageImpl {
 
 		userEClass = createEClass(USER);
 
-		iParameterDefinitionEClass = createEClass(IPARAMETER_DEFINITION);
-		createEAttribute(iParameterDefinitionEClass, IPARAMETER_DEFINITION__NAME);
-		createEAttribute(iParameterDefinitionEClass, IPARAMETER_DEFINITION__DESCRIPTION);
-		createEReference(iParameterDefinitionEClass, IPARAMETER_DEFINITION__CONTAINING_BUILD_PLAN);
-
-		iFileParameterDefinitionEClass = createEClass(IFILE_PARAMETER_DEFINITION);
-
-		iBooleanParameterDefinitionEClass = createEClass(IBOOLEAN_PARAMETER_DEFINITION);
-		createEAttribute(iBooleanParameterDefinitionEClass, IBOOLEAN_PARAMETER_DEFINITION__DEFAULT_VALUE);
-
-		iChoiceParameterDefinitionEClass = createEClass(ICHOICE_PARAMETER_DEFINITION);
-		createEAttribute(iChoiceParameterDefinitionEClass, ICHOICE_PARAMETER_DEFINITION__OPTIONS);
+		parameterDefinitionEClass = createEClass(PARAMETER_DEFINITION);
+		createEAttribute(parameterDefinitionEClass, PARAMETER_DEFINITION__NAME);
+		createEAttribute(parameterDefinitionEClass, PARAMETER_DEFINITION__DESCRIPTION);
+		createEReference(parameterDefinitionEClass, PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN);
 
 		choiceParameterDefinitionEClass = createEClass(CHOICE_PARAMETER_DEFINITION);
+		createEAttribute(choiceParameterDefinitionEClass, CHOICE_PARAMETER_DEFINITION__OPTIONS);
 
 		booleanParameterDefinitionEClass = createEClass(BOOLEAN_PARAMETER_DEFINITION);
+		createEAttribute(booleanParameterDefinitionEClass, BOOLEAN_PARAMETER_DEFINITION__DEFAULT_VALUE);
 
 		fileParameterDefinitionEClass = createEClass(FILE_PARAMETER_DEFINITION);
 
-		iPlanParameterDefinitionEClass = createEClass(IPLAN_PARAMETER_DEFINITION);
-
 		planParameterDefinitionEClass = createEClass(PLAN_PARAMETER_DEFINITION);
 
-		iPasswordParameterDefinitionEClass = createEClass(IPASSWORD_PARAMETER_DEFINITION);
-		createEAttribute(iPasswordParameterDefinitionEClass, IPASSWORD_PARAMETER_DEFINITION__DEFAULT_VALUE);
-
 		passwordParameterDefinitionEClass = createEClass(PASSWORD_PARAMETER_DEFINITION);
-
-		iBuildParameterDefinitionEClass = createEClass(IBUILD_PARAMETER_DEFINITION);
-		createEAttribute(iBuildParameterDefinitionEClass, IBUILD_PARAMETER_DEFINITION__BUILD_PLAN_ID);
-		createEReference(iBuildParameterDefinitionEClass, IBUILD_PARAMETER_DEFINITION__BUILD_PLAN);
+		createEAttribute(passwordParameterDefinitionEClass, PASSWORD_PARAMETER_DEFINITION__DEFAULT_VALUE);
 
 		buildParameterDefinitionEClass = createEClass(BUILD_PARAMETER_DEFINITION);
-
-		iStringParameterDefinitionEClass = createEClass(ISTRING_PARAMETER_DEFINITION);
-		createEAttribute(iStringParameterDefinitionEClass, ISTRING_PARAMETER_DEFINITION__DEFAULT_VALUE);
+		createEAttribute(buildParameterDefinitionEClass, BUILD_PARAMETER_DEFINITION__BUILD_PLAN_ID);
+		createEReference(buildParameterDefinitionEClass, BUILD_PARAMETER_DEFINITION__BUILD_PLAN);
 
 		stringParameterDefinitionEClass = createEClass(STRING_PARAMETER_DEFINITION);
+		createEAttribute(stringParameterDefinitionEClass, STRING_PARAMETER_DEFINITION__DEFAULT_VALUE);
 
 		testResultEClass = createEClass(TEST_RESULT);
 		createEReference(testResultEClass, TEST_RESULT__BUILD);
@@ -5656,339 +5062,450 @@ public class BuildPackage extends EPackageImpl {
 		changeSetEClass.getESuperTypes().add(this.getIChangeSet());
 		fileEClass.getESuperTypes().add(this.getIFile());
 		userEClass.getESuperTypes().add(this.getIUser());
-		iFileParameterDefinitionEClass.getESuperTypes().add(this.getIParameterDefinition());
-		iBooleanParameterDefinitionEClass.getESuperTypes().add(this.getIParameterDefinition());
-		iChoiceParameterDefinitionEClass.getESuperTypes().add(this.getIParameterDefinition());
-		choiceParameterDefinitionEClass.getESuperTypes().add(this.getIChoiceParameterDefinition());
-		booleanParameterDefinitionEClass.getESuperTypes().add(this.getIBooleanParameterDefinition());
-		fileParameterDefinitionEClass.getESuperTypes().add(this.getIFileParameterDefinition());
-		iPlanParameterDefinitionEClass.getESuperTypes().add(this.getIParameterDefinition());
-		planParameterDefinitionEClass.getESuperTypes().add(this.getIPlanParameterDefinition());
-		iPasswordParameterDefinitionEClass.getESuperTypes().add(this.getIParameterDefinition());
-		passwordParameterDefinitionEClass.getESuperTypes().add(this.getIPasswordParameterDefinition());
-		iBuildParameterDefinitionEClass.getESuperTypes().add(this.getIParameterDefinition());
-		buildParameterDefinitionEClass.getESuperTypes().add(this.getIBuildParameterDefinition());
-		iStringParameterDefinitionEClass.getESuperTypes().add(this.getIParameterDefinition());
-		stringParameterDefinitionEClass.getESuperTypes().add(this.getIStringParameterDefinition());
+		choiceParameterDefinitionEClass.getESuperTypes().add(this.getParameterDefinition());
+		booleanParameterDefinitionEClass.getESuperTypes().add(this.getParameterDefinition());
+		fileParameterDefinitionEClass.getESuperTypes().add(this.getParameterDefinition());
+		planParameterDefinitionEClass.getESuperTypes().add(this.getParameterDefinition());
+		passwordParameterDefinitionEClass.getESuperTypes().add(this.getParameterDefinition());
+		buildParameterDefinitionEClass.getESuperTypes().add(this.getParameterDefinition());
+		stringParameterDefinitionEClass.getESuperTypes().add(this.getParameterDefinition());
 		testSuiteEClass.getESuperTypes().add(this.getTestElement());
 		testCaseEClass.getESuperTypes().add(this.getTestElement());
 
 		// Initialize classes and features; add operations and parameters
-		initEClass(iBuildModelEClass, IBuildModel.class, "IBuildModel", IS_ABSTRACT, IS_INTERFACE,
-				!IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getIBuildModel_Servers(), this.getIBuildServer(), null, "servers", null, 0, -1,
-				IBuildModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
-				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getIBuildModel_Plans(), this.getIBuildPlan(), null, "plans", null, 0, -1, IBuildModel.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
-				IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
-		initEReference(getIBuildModel_Builds(), this.getIBuild(), null, "builds", null, 0, -1, IBuildModel.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
-				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(iBuildModelEClass, IBuildModel.class,
+				"IBuildModel", IS_ABSTRACT, IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(
+				getIBuildModel_Servers(),
+				this.getIBuildServer(),
+				null,
+				"servers", null, 0, -1, IBuildModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getIBuildModel_Plans(),
+				this.getIBuildPlan(),
+				null,
+				"plans", null, 0, -1, IBuildModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getIBuildModel_Builds(),
+				this.getIBuild(),
+				null,
+				"builds", null, 0, -1, IBuildModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(iBuildElementEClass, IBuildElement.class, "IBuildElement", IS_ABSTRACT, IS_INTERFACE,
-				!IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getIBuildElement_Url(), ecorePackage.getEString(), "url", null, 0, 1, IBuildElement.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIBuildElement_Name(), ecorePackage.getEString(), "name", null, 0, 1, IBuildElement.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(iBuildElementEClass, IBuildElement.class,
+				"IBuildElement", IS_ABSTRACT, IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(
+				getIBuildElement_Url(),
+				ecorePackage.getEString(),
+				"url", null, 0, 1, IBuildElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getIBuildElement_Name(),
+				ecorePackage.getEString(),
+				"name", null, 0, 1, IBuildElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(iBuildServerEClass, IBuildServer.class, "IBuildServer", IS_ABSTRACT, IS_INTERFACE,
-				!IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getIBuildServer_Attributes(), this.getStringToStringMap(), null, "attributes", null, 0, -1,
-				IBuildServer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
-				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIBuildServer_Location(), this.getRepositoryLocation(), "location", null, 0, 1,
-				IBuildServer.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
-				!IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIBuildServer_ConnectorKind(), ecorePackage.getEString(), "connectorKind", null, 0, 1,
-				IBuildServer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
-				!IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIBuildServer_RepositoryUrl(), ecorePackage.getEString(), "repositoryUrl", null, 0, 1,
-				IBuildServer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
-				!IS_DERIVED, IS_ORDERED);
+		initEClass(iBuildServerEClass, IBuildServer.class,
+				"IBuildServer", IS_ABSTRACT, IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(
+				getIBuildServer_Attributes(),
+				this.getStringToStringMap(),
+				null,
+				"attributes", null, 0, -1, IBuildServer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getIBuildServer_Location(),
+				this.getRepositoryLocation(),
+				"location", null, 0, 1, IBuildServer.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getIBuildServer_ConnectorKind(),
+				ecorePackage.getEString(),
+				"connectorKind", null, 0, 1, IBuildServer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getIBuildServer_RepositoryUrl(),
+				ecorePackage.getEString(),
+				"repositoryUrl", null, 0, 1, IBuildServer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(iBuildPlanEClass, IBuildPlan.class, "IBuildPlan", IS_ABSTRACT, IS_INTERFACE,
-				!IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getIBuildPlan_Server(), this.getIBuildServer(), null, "server", null, 1, 1, IBuildPlan.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
-				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getIBuildPlan_Children(), this.getIBuildPlan(), this.getIBuildPlan_Parent(), "children", null,
-				0, -1, IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
-				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getIBuildPlan_Parent(), this.getIBuildPlan(), this.getIBuildPlan_Children(), "parent", null, 0,
-				1, IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
-				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIBuildPlan_Health(), ecorePackage.getEInt(), "health", "-1", 0, 1, IBuildPlan.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIBuildPlan_Id(), ecorePackage.getEString(), "id", null, 1, 1, IBuildPlan.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIBuildPlan_Info(), ecorePackage.getEString(), "info", null, 0, 1, IBuildPlan.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIBuildPlan_Selected(), ecorePackage.getEBoolean(), "selected", "false", 1, 1,
-				IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
-				!IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIBuildPlan_Summary(), ecorePackage.getEString(), "summary", null, 0, 1, IBuildPlan.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIBuildPlan_State(), this.getBuildState(), "state", null, 0, 1, IBuildPlan.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIBuildPlan_Status(), this.getBuildStatus(), "status", null, 0, 1, IBuildPlan.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIBuildPlan_Description(), ecorePackage.getEString(), "description", null, 0, 1,
-				IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
-				!IS_DERIVED, IS_ORDERED);
-		initEReference(getIBuildPlan_LastBuild(), this.getIBuild(), null, "lastBuild", null, 0, 1, IBuildPlan.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
-				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getIBuildPlan_ParameterDefinitions(), this.getIParameterDefinition(), this
-				.getIParameterDefinition_ContainingBuildPlan(), "parameterDefinitions", null, 0, -1, IBuildPlan.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
-				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(iBuildPlanEClass, IBuildPlan.class,
+				"IBuildPlan", IS_ABSTRACT, IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(
+				getIBuildPlan_Server(),
+				this.getIBuildServer(),
+				null,
+				"server", null, 1, 1, IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getIBuildPlan_Children(),
+				this.getIBuildPlan(),
+				this.getIBuildPlan_Parent(),
+				"children", null, 0, -1, IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getIBuildPlan_Parent(),
+				this.getIBuildPlan(),
+				this.getIBuildPlan_Children(),
+				"parent", null, 0, 1, IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getIBuildPlan_Health(),
+				ecorePackage.getEInt(),
+				"health", "-1", 0, 1, IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+		initEAttribute(
+				getIBuildPlan_Id(),
+				ecorePackage.getEString(),
+				"id", null, 1, 1, IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getIBuildPlan_Info(),
+				ecorePackage.getEString(),
+				"info", null, 0, 1, IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getIBuildPlan_Selected(),
+				ecorePackage.getEBoolean(),
+				"selected", "false", 1, 1, IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+		initEAttribute(
+				getIBuildPlan_Summary(),
+				ecorePackage.getEString(),
+				"summary", null, 0, 1, IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getIBuildPlan_State(),
+				this.getBuildState(),
+				"state", null, 0, 1, IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getIBuildPlan_Status(),
+				this.getBuildStatus(),
+				"status", null, 0, 1, IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getIBuildPlan_Description(),
+				ecorePackage.getEString(),
+				"description", null, 0, 1, IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getIBuildPlan_LastBuild(),
+				this.getIBuild(),
+				null,
+				"lastBuild", null, 0, 1, IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getIBuildPlan_ParameterDefinitions(),
+				this.getParameterDefinition(),
+				this.getParameterDefinition_ContainingBuildPlan(),
+				"parameterDefinitions", null, 0, -1, IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(iBuildPlanDataEClass, IBuildPlanData.class, "IBuildPlanData", IS_ABSTRACT, IS_INTERFACE,
-				!IS_GENERATED_INSTANCE_CLASS);
+		initEClass(iBuildPlanDataEClass, IBuildPlanData.class,
+				"IBuildPlanData", IS_ABSTRACT, IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(iBuildPlanWorkingCopyEClass, IBuildPlanWorkingCopy.class, "IBuildPlanWorkingCopy", IS_ABSTRACT,
-				IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
+		initEClass(iBuildPlanWorkingCopyEClass, IBuildPlanWorkingCopy.class,
+				"IBuildPlanWorkingCopy", IS_ABSTRACT, IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(iBuildEClass, IBuild.class, "IBuild", IS_ABSTRACT, IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getIBuild_Id(), ecorePackage.getEString(), "id", null, 0, 1, IBuild.class, !IS_TRANSIENT,
-				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIBuild_BuildNumber(), ecorePackage.getEInt(), "buildNumber", null, 0, 1, IBuild.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIBuild_Timestamp(), ecorePackage.getELong(), "timestamp", null, 0, 1, IBuild.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIBuild_Duration(), ecorePackage.getELong(), "duration", null, 0, 1, IBuild.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIBuild_DisplayName(), ecorePackage.getEString(), "displayName", null, 0, 1, IBuild.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIBuild_State(), this.getBuildState(), "state", null, 0, 1, IBuild.class, !IS_TRANSIENT,
-				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIBuild_Status(), this.getBuildStatus(), "status", null, 0, 1, IBuild.class, !IS_TRANSIENT,
-				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getIBuild_Artifacts(), this.getIArtifact(), null, "artifacts", null, 0, -1, IBuild.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
-				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getIBuild_ChangeSet(), this.getIChangeSet(), null, "changeSet", null, 0, 1, IBuild.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
-				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getIBuild_Plan(), this.getIBuildPlan(), null, "plan", null, 0, 1, IBuild.class, !IS_TRANSIENT,
-				!IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
-				IS_ORDERED);
-		initEAttribute(getIBuild_Label(), ecorePackage.getEString(), "label", null, 0, 1, IBuild.class, !IS_TRANSIENT,
-				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getIBuild_Server(), this.getIBuildServer(), null, "server", null, 0, 1, IBuild.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
-				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(iBuildEClass, IBuild.class, "IBuild", IS_ABSTRACT, IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(
+				getIBuild_Id(),
+				ecorePackage.getEString(),
+				"id", null, 0, 1, IBuild.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getIBuild_BuildNumber(),
+				ecorePackage.getEInt(),
+				"buildNumber", null, 0, 1, IBuild.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getIBuild_Timestamp(),
+				ecorePackage.getELong(),
+				"timestamp", null, 0, 1, IBuild.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getIBuild_Duration(),
+				ecorePackage.getELong(),
+				"duration", null, 0, 1, IBuild.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getIBuild_DisplayName(),
+				ecorePackage.getEString(),
+				"displayName", null, 0, 1, IBuild.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getIBuild_State(),
+				this.getBuildState(),
+				"state", null, 0, 1, IBuild.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getIBuild_Status(),
+				this.getBuildStatus(),
+				"status", null, 0, 1, IBuild.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getIBuild_Artifacts(),
+				this.getIArtifact(),
+				null,
+				"artifacts", null, 0, -1, IBuild.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getIBuild_ChangeSet(),
+				this.getIChangeSet(),
+				null,
+				"changeSet", null, 0, 1, IBuild.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getIBuild_Plan(),
+				this.getIBuildPlan(),
+				null,
+				"plan", null, 0, 1, IBuild.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getIBuild_Label(),
+				ecorePackage.getEString(),
+				"label", null, 0, 1, IBuild.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getIBuild_Server(),
+				this.getIBuildServer(),
+				null,
+				"server", null, 0, 1, IBuild.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(iBuildWorkingCopyEClass, IBuildWorkingCopy.class, "IBuildWorkingCopy", IS_ABSTRACT, IS_INTERFACE,
-				!IS_GENERATED_INSTANCE_CLASS);
+		initEClass(iBuildWorkingCopyEClass, IBuildWorkingCopy.class,
+				"IBuildWorkingCopy", IS_ABSTRACT, IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(iArtifactEClass, IArtifact.class, "IArtifact", IS_ABSTRACT, IS_INTERFACE,
-				!IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getIArtifact_DisplayName(), ecorePackage.getEString(), "displayName", null, 0, 1,
-				IArtifact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
-				!IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIArtifact_Filename(), ecorePackage.getEString(), "filename", null, 0, 1, IArtifact.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIArtifact_RelativePath(), ecorePackage.getEString(), "relativePath", null, 0, 1,
-				IArtifact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
-				!IS_DERIVED, IS_ORDERED);
+		initEClass(iArtifactEClass, IArtifact.class,
+				"IArtifact", IS_ABSTRACT, IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(
+				getIArtifact_DisplayName(),
+				ecorePackage.getEString(),
+				"displayName", null, 0, 1, IArtifact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getIArtifact_Filename(),
+				ecorePackage.getEString(),
+				"filename", null, 0, 1, IArtifact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getIArtifact_RelativePath(),
+				ecorePackage.getEString(),
+				"relativePath", null, 0, 1, IArtifact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(iChangeEClass, IChange.class, "IChange", IS_ABSTRACT, IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getIChange_Author(), this.getIUser(), null, "author", null, 0, 1, IChange.class, !IS_TRANSIENT,
-				!IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
-				IS_ORDERED);
-		initEReference(getIChange_File(), this.getIFile(), null, "file", null, 0, 1, IChange.class, !IS_TRANSIENT,
-				!IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
-				IS_ORDERED);
-		initEAttribute(getIChange_Message(), ecorePackage.getEString(), "message", null, 0, 1, IChange.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIChange_Date(), ecorePackage.getELong(), "date", null, 0, 1, IChange.class, !IS_TRANSIENT,
-				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getIChange_User(), this.getIUser(), null, "user", null, 0, 1, IChange.class, !IS_TRANSIENT,
-				!IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
-				IS_ORDERED);
+		initEClass(iChangeEClass, IChange.class, "IChange", IS_ABSTRACT, IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(
+				getIChange_Author(),
+				this.getIUser(),
+				null,
+				"author", null, 0, 1, IChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getIChange_File(),
+				this.getIFile(),
+				null,
+				"file", null, 0, 1, IChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getIChange_Message(),
+				ecorePackage.getEString(),
+				"message", null, 0, 1, IChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getIChange_Date(),
+				ecorePackage.getELong(),
+				"date", null, 0, 1, IChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getIChange_User(),
+				this.getIUser(),
+				null,
+				"user", null, 0, 1, IChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(iChangeSetEClass, IChangeSet.class, "IChangeSet", IS_ABSTRACT, IS_INTERFACE,
-				!IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getIChangeSet_Changes(), this.getIChange(), null, "changes", null, 0, -1, IChangeSet.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
-				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIChangeSet_Kind(), ecorePackage.getEString(), "kind", null, 0, 1, IChangeSet.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(iChangeSetEClass, IChangeSet.class,
+				"IChangeSet", IS_ABSTRACT, IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(
+				getIChangeSet_Changes(),
+				this.getIChange(),
+				null,
+				"changes", null, 0, -1, IChangeSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getIChangeSet_Kind(),
+				ecorePackage.getEString(),
+				"kind", null, 0, 1, IChangeSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(iFileEClass, IFile.class, "IFile", IS_ABSTRACT, IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getIFile_RelativePath(), ecorePackage.getEString(), "relativePath", null, 0, 1, IFile.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIFile_PrevRevision(), ecorePackage.getEString(), "prevRevision", null, 0, 1, IFile.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIFile_Revision(), ecorePackage.getEString(), "revision", null, 0, 1, IFile.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIFile_Dead(), ecorePackage.getEBoolean(), "dead", null, 0, 1, IFile.class, !IS_TRANSIENT,
-				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIFile_EditType(), this.getEditType(), "editType", null, 0, 1, IFile.class, !IS_TRANSIENT,
-				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(iFileEClass, IFile.class, "IFile", IS_ABSTRACT, IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(
+				getIFile_RelativePath(),
+				ecorePackage.getEString(),
+				"relativePath", null, 0, 1, IFile.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getIFile_PrevRevision(),
+				ecorePackage.getEString(),
+				"prevRevision", null, 0, 1, IFile.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getIFile_Revision(),
+				ecorePackage.getEString(),
+				"revision", null, 0, 1, IFile.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getIFile_Dead(),
+				ecorePackage.getEBoolean(),
+				"dead", null, 0, 1, IFile.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getIFile_EditType(),
+				this.getEditType(),
+				"editType", null, 0, 1, IFile.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(iUserEClass, IUser.class, "IUser", IS_ABSTRACT, IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getIUser_Fullname(), ecorePackage.getEString(), "fullname", null, 0, 1, IUser.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIUser_Username(), ecorePackage.getEString(), "username", null, 0, 1, IUser.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIUser_Email(), ecorePackage.getEString(), "email", null, 0, 1, IUser.class, !IS_TRANSIENT,
-				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(iUserEClass, IUser.class, "IUser", IS_ABSTRACT, IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(
+				getIUser_Fullname(),
+				ecorePackage.getEString(),
+				"fullname", null, 0, 1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getIUser_Username(),
+				ecorePackage.getEString(),
+				"username", null, 0, 1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getIUser_Email(),
+				ecorePackage.getEString(),
+				"email", null, 0, 1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(artifactEClass, Artifact.class, "Artifact", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(artifactEClass, Artifact.class, "Artifact", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(buildEClass, Build.class, "Build", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(buildEClass, Build.class, "Build", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(buildPlanEClass, BuildPlan.class, "BuildPlan", !IS_ABSTRACT, !IS_INTERFACE,
-				IS_GENERATED_INSTANCE_CLASS);
+		initEClass(buildPlanEClass, BuildPlan.class,
+				"BuildPlan", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(buildServerEClass, BuildServer.class, "BuildServer", !IS_ABSTRACT, !IS_INTERFACE,
-				IS_GENERATED_INSTANCE_CLASS);
+		initEClass(buildServerEClass, BuildServer.class,
+				"BuildServer", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(buildModelEClass, BuildModel.class, "BuildModel", !IS_ABSTRACT, !IS_INTERFACE,
-				IS_GENERATED_INSTANCE_CLASS);
+		initEClass(buildModelEClass, BuildModel.class,
+				"BuildModel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(changeEClass, Change.class, "Change", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(changeEClass, Change.class, "Change", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(changeSetEClass, ChangeSet.class, "ChangeSet", !IS_ABSTRACT, !IS_INTERFACE,
-				IS_GENERATED_INSTANCE_CLASS);
+		initEClass(changeSetEClass, ChangeSet.class,
+				"ChangeSet", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(fileEClass, File.class, "File", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(fileEClass, File.class, "File", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(stringToStringMapEClass, Map.Entry.class, "StringToStringMap", !IS_ABSTRACT, !IS_INTERFACE,
-				!IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getStringToStringMap_Key(), ecorePackage.getEString(), "key", null, 0, 1, Map.Entry.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getStringToStringMap_Value(), ecorePackage.getEString(), "value", "", 0, 1, Map.Entry.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(stringToStringMapEClass, Map.Entry.class,
+				"StringToStringMap", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(
+				getStringToStringMap_Key(),
+				ecorePackage.getEString(),
+				"key", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getStringToStringMap_Value(),
+				ecorePackage.getEString(),
+				"value", "", 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
 
-		initEClass(userEClass, User.class, "User", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(userEClass, User.class, "User", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(iParameterDefinitionEClass, IParameterDefinition.class, "IParameterDefinition", IS_ABSTRACT,
-				IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getIParameterDefinition_Name(), ecorePackage.getEString(), "name", null, 0, 1,
-				IParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
-				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIParameterDefinition_Description(), ecorePackage.getEString(), "description", null, 0, 1,
-				IParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
-				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getIParameterDefinition_ContainingBuildPlan(), this.getIBuildPlan(), this
-				.getIBuildPlan_ParameterDefinitions(), "containingBuildPlan", null, 0, 1, IParameterDefinition.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
-				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(parameterDefinitionEClass, ParameterDefinition.class,
+				"ParameterDefinition", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(
+				getParameterDefinition_Name(),
+				ecorePackage.getEString(),
+				"name", null, 0, 1, ParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getParameterDefinition_Description(),
+				ecorePackage.getEString(),
+				"description", null, 0, 1, ParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getParameterDefinition_ContainingBuildPlan(),
+				this.getIBuildPlan(),
+				this.getIBuildPlan_ParameterDefinitions(),
+				"containingBuildPlan", null, 0, 1, ParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(iFileParameterDefinitionEClass, IFileParameterDefinition.class, "IFileParameterDefinition",
-				IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(choiceParameterDefinitionEClass, ChoiceParameterDefinition.class,
+				"ChoiceParameterDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(
+				getChoiceParameterDefinition_Options(),
+				ecorePackage.getEString(),
+				"options", null, 1, -1, ChoiceParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(iBooleanParameterDefinitionEClass, IBooleanParameterDefinition.class, "IBooleanParameterDefinition",
-				IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getIBooleanParameterDefinition_DefaultValue(), ecorePackage.getEBoolean(), "defaultValue", null,
-				0, 1, IBooleanParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE,
-				!IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(booleanParameterDefinitionEClass, BooleanParameterDefinition.class,
+				"BooleanParameterDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(
+				getBooleanParameterDefinition_DefaultValue(),
+				ecorePackage.getEBoolean(),
+				"defaultValue", null, 0, 1, BooleanParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(iChoiceParameterDefinitionEClass, IChoiceParameterDefinition.class, "IChoiceParameterDefinition",
-				IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getIChoiceParameterDefinition_Options(), ecorePackage.getEString(), "options", null, 1, -1,
-				IChoiceParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
-				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(fileParameterDefinitionEClass, FileParameterDefinition.class,
+				"FileParameterDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(choiceParameterDefinitionEClass, ChoiceParameterDefinition.class, "ChoiceParameterDefinition",
-				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(planParameterDefinitionEClass, PlanParameterDefinition.class,
+				"PlanParameterDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(booleanParameterDefinitionEClass, BooleanParameterDefinition.class, "BooleanParameterDefinition",
-				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(passwordParameterDefinitionEClass, PasswordParameterDefinition.class,
+				"PasswordParameterDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(
+				getPasswordParameterDefinition_DefaultValue(),
+				ecorePackage.getEString(),
+				"defaultValue", null, 0, 1, PasswordParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(fileParameterDefinitionEClass, FileParameterDefinition.class, "FileParameterDefinition",
-				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(buildParameterDefinitionEClass, BuildParameterDefinition.class,
+				"BuildParameterDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(
+				getBuildParameterDefinition_BuildPlanId(),
+				ecorePackage.getEString(),
+				"buildPlanId", null, 0, 1, BuildParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getBuildParameterDefinition_BuildPlan(),
+				this.getIBuildPlan(),
+				null,
+				"buildPlan", null, 0, 1, BuildParameterDefinition.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(iPlanParameterDefinitionEClass, IPlanParameterDefinition.class, "IPlanParameterDefinition",
-				IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(stringParameterDefinitionEClass, StringParameterDefinition.class,
+				"StringParameterDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(
+				getStringParameterDefinition_DefaultValue(),
+				ecorePackage.getEString(),
+				"defaultValue", null, 0, 1, StringParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(planParameterDefinitionEClass, PlanParameterDefinition.class, "PlanParameterDefinition",
-				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(testResultEClass, TestResult.class,
+				"TestResult", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(
+				getTestResult_Build(),
+				this.getIBuild(),
+				null,
+				"build", null, 0, 1, TestResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getTestResult_Duration(),
+				ecorePackage.getELong(),
+				"duration", null, 0, 1, TestResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getTestResult_FailCount(),
+				ecorePackage.getEInt(),
+				"failCount", null, 0, 1, TestResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getTestResult_PassCount(),
+				ecorePackage.getEInt(),
+				"passCount", null, 0, 1, TestResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getTestResult_Suites(),
+				this.getTestSuite(),
+				this.getTestSuite_Result(),
+				"suites", null, 0, -1, TestResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(iPasswordParameterDefinitionEClass, IPasswordParameterDefinition.class,
-				"IPasswordParameterDefinition", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getIPasswordParameterDefinition_DefaultValue(), ecorePackage.getEString(), "defaultValue", null,
-				0, 1, IPasswordParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE,
-				!IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(testElementEClass, TestElement.class,
+				"TestElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(
+				getTestElement_Label(),
+				ecorePackage.getEString(),
+				"label", null, 0, 1, TestElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getTestElement_Duration(),
+				ecorePackage.getELong(),
+				"duration", null, 0, 1, TestElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getTestElement_ErrorOutput(),
+				ecorePackage.getEString(),
+				"errorOutput", null, 0, 1, TestElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getTestElement_Output(),
+				ecorePackage.getEString(),
+				"output", null, 0, 1, TestElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(passwordParameterDefinitionEClass, PasswordParameterDefinition.class, "PasswordParameterDefinition",
-				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(testSuiteEClass, TestSuite.class,
+				"TestSuite", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(
+				getTestSuite_Cases(),
+				this.getTestCase(),
+				this.getTestCase_Suite(),
+				"cases", null, 0, -1, TestSuite.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getTestSuite_Result(),
+				this.getTestResult(),
+				this.getTestResult_Suites(),
+				"result", null, 0, 1, TestSuite.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(iBuildParameterDefinitionEClass, IBuildParameterDefinition.class, "IBuildParameterDefinition",
-				IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getIBuildParameterDefinition_BuildPlanId(), ecorePackage.getEString(), "buildPlanId", null, 0,
-				1, IBuildParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
-				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getIBuildParameterDefinition_BuildPlan(), this.getIBuildPlan(), null, "buildPlan", null, 0, 1,
-				IBuildParameterDefinition.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE,
-				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
-
-		initEClass(buildParameterDefinitionEClass, BuildParameterDefinition.class, "BuildParameterDefinition",
-				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-		initEClass(iStringParameterDefinitionEClass, IStringParameterDefinition.class, "IStringParameterDefinition",
-				IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getIStringParameterDefinition_DefaultValue(), ecorePackage.getEString(), "defaultValue", null,
-				0, 1, IStringParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE,
-				!IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEClass(stringParameterDefinitionEClass, StringParameterDefinition.class, "StringParameterDefinition",
-				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-		initEClass(testResultEClass, TestResult.class, "TestResult", !IS_ABSTRACT, !IS_INTERFACE,
-				IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getTestResult_Build(), this.getIBuild(), null, "build", null, 0, 1, TestResult.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
-				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getTestResult_Duration(), ecorePackage.getEDouble(), "duration", null, 0, 1, TestResult.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getTestResult_FailCount(), ecorePackage.getEInt(), "failCount", null, 0, 1, TestResult.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getTestResult_PassCount(), ecorePackage.getEInt(), "passCount", null, 0, 1, TestResult.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getTestResult_Suites(), this.getTestSuite(), this.getTestSuite_Result(), "suites", null, 0, -1,
-				TestResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
-				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEClass(testElementEClass, TestElement.class, "TestElement", !IS_ABSTRACT, !IS_INTERFACE,
-				IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getTestElement_Label(), ecorePackage.getEString(), "label", null, 0, 1, TestElement.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getTestElement_Duration(), ecorePackage.getEDouble(), "duration", null, 0, 1, TestElement.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getTestElement_ErrorOutput(), ecorePackage.getEString(), "errorOutput", null, 0, 1,
-				TestElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
-				!IS_DERIVED, IS_ORDERED);
-		initEAttribute(getTestElement_Output(), ecorePackage.getEString(), "output", null, 0, 1, TestElement.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEClass(testSuiteEClass, TestSuite.class, "TestSuite", !IS_ABSTRACT, !IS_INTERFACE,
-				IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getTestSuite_Cases(), this.getTestCase(), this.getTestCase_Suite(), "cases", null, 0, -1,
-				TestSuite.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
-				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getTestSuite_Result(), this.getTestResult(), this.getTestResult_Suites(), "result", null, 0, 1,
-				TestSuite.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES,
-				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEClass(testCaseEClass, TestCase.class, "TestCase", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getTestCase_ClassName(), ecorePackage.getEString(), "className", null, 0, 1, TestCase.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getTestCase_Skipped(), ecorePackage.getEBoolean(), "skipped", null, 0, 1, TestCase.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getTestCase_Suite(), this.getTestSuite(), this.getTestSuite_Cases(), "suite", null, 0, 1,
-				TestCase.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES,
-				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getTestCase_Status(), this.getTestCaseResult(), "status", null, 0, 1, TestCase.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(testCaseEClass, TestCase.class, "TestCase", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(
+				getTestCase_ClassName(),
+				ecorePackage.getEString(),
+				"className", null, 0, 1, TestCase.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getTestCase_Skipped(),
+				ecorePackage.getEBoolean(),
+				"skipped", null, 0, 1, TestCase.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getTestCase_Suite(),
+				this.getTestSuite(),
+				this.getTestSuite_Cases(),
+				"suite", null, 0, 1, TestCase.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getTestCase_Status(),
+				this.getTestCaseResult(),
+				"status", null, 0, 1, TestCase.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		// Initialize enums and add enum literals
-		initEEnum(testCaseResultEEnum, TestCaseResult.class, "TestCaseResult");
+		initEEnum(testCaseResultEEnum, TestCaseResult.class, "TestCaseResult"); //$NON-NLS-1$
 		addEEnumLiteral(testCaseResultEEnum, TestCaseResult.PASSED);
 		addEEnumLiteral(testCaseResultEEnum, TestCaseResult.SKIPPED);
 		addEEnumLiteral(testCaseResultEEnum, TestCaseResult.FAILED);
@@ -5996,13 +5513,13 @@ public class BuildPackage extends EPackageImpl {
 		addEEnumLiteral(testCaseResultEEnum, TestCaseResult.REGRESSION);
 
 		// Initialize data types
-		initEDataType(repositoryLocationEDataType, RepositoryLocation.class, "RepositoryLocation", !IS_SERIALIZABLE,
-				!IS_GENERATED_INSTANCE_CLASS);
-		initEDataType(buildStateEDataType, BuildState.class, "BuildState", IS_SERIALIZABLE,
-				!IS_GENERATED_INSTANCE_CLASS);
-		initEDataType(buildStatusEDataType, BuildStatus.class, "BuildStatus", IS_SERIALIZABLE,
-				!IS_GENERATED_INSTANCE_CLASS);
-		initEDataType(editTypeEDataType, EditType.class, "EditType", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(repositoryLocationEDataType, RepositoryLocation.class,
+				"RepositoryLocation", !IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEDataType(buildStateEDataType, BuildState.class,
+				"BuildState", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEDataType(buildStatusEDataType, BuildStatus.class,
+				"BuildStatus", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEDataType(editTypeEDataType, EditType.class, "EditType", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
 		// Create resource
 		createResource(eNS_URI);
@@ -6411,16 +5928,16 @@ public class BuildPackage extends EPackageImpl {
 		public static final EClass USER = eINSTANCE.getUser();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.IParameterDefinition
-		 * <em>IParameter Definition</em>}' class.
+		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.ParameterDefinition
+		 * <em>Parameter Definition</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * 
-		 * @see org.eclipse.mylyn.internal.builds.core.IParameterDefinition
-		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIParameterDefinition()
+		 * @see org.eclipse.mylyn.internal.builds.core.ParameterDefinition
+		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getParameterDefinition()
 		 * @generated
 		 */
-		public static final EClass IPARAMETER_DEFINITION = eINSTANCE.getIParameterDefinition();
+		public static final EClass PARAMETER_DEFINITION = eINSTANCE.getParameterDefinition();
 
 		/**
 		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
@@ -6429,7 +5946,7 @@ public class BuildPackage extends EPackageImpl {
 		 * 
 		 * @generated
 		 */
-		public static final EAttribute IPARAMETER_DEFINITION__NAME = eINSTANCE.getIParameterDefinition_Name();
+		public static final EAttribute PARAMETER_DEFINITION__NAME = eINSTANCE.getParameterDefinition_Name();
 
 		/**
 		 * The meta object literal for the '<em><b>Description</b></em>' attribute feature.
@@ -6438,8 +5955,8 @@ public class BuildPackage extends EPackageImpl {
 		 * 
 		 * @generated
 		 */
-		public static final EAttribute IPARAMETER_DEFINITION__DESCRIPTION = eINSTANCE
-				.getIParameterDefinition_Description();
+		public static final EAttribute PARAMETER_DEFINITION__DESCRIPTION = eINSTANCE
+				.getParameterDefinition_Description();
 
 		/**
 		 * The meta object literal for the '<em><b>Containing Build Plan</b></em>' container reference feature.
@@ -6448,64 +5965,8 @@ public class BuildPackage extends EPackageImpl {
 		 * 
 		 * @generated
 		 */
-		public static final EReference IPARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = eINSTANCE
-				.getIParameterDefinition_ContainingBuildPlan();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.IFileParameterDefinition
-		 * <em>IFile Parameter Definition</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * 
-		 * @see org.eclipse.mylyn.internal.builds.core.IFileParameterDefinition
-		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIFileParameterDefinition()
-		 * @generated
-		 */
-		public static final EClass IFILE_PARAMETER_DEFINITION = eINSTANCE.getIFileParameterDefinition();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.IBooleanParameterDefinition
-		 * <em>IBoolean Parameter Definition</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * 
-		 * @see org.eclipse.mylyn.internal.builds.core.IBooleanParameterDefinition
-		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBooleanParameterDefinition()
-		 * @generated
-		 */
-		public static final EClass IBOOLEAN_PARAMETER_DEFINITION = eINSTANCE.getIBooleanParameterDefinition();
-
-		/**
-		 * The meta object literal for the '<em><b>Default Value</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * 
-		 * @generated
-		 */
-		public static final EAttribute IBOOLEAN_PARAMETER_DEFINITION__DEFAULT_VALUE = eINSTANCE
-				.getIBooleanParameterDefinition_DefaultValue();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.IChoiceParameterDefinition
-		 * <em>IChoice Parameter Definition</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * 
-		 * @see org.eclipse.mylyn.internal.builds.core.IChoiceParameterDefinition
-		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIChoiceParameterDefinition()
-		 * @generated
-		 */
-		public static final EClass ICHOICE_PARAMETER_DEFINITION = eINSTANCE.getIChoiceParameterDefinition();
-
-		/**
-		 * The meta object literal for the '<em><b>Options</b></em>' attribute list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * 
-		 * @generated
-		 */
-		public static final EAttribute ICHOICE_PARAMETER_DEFINITION__OPTIONS = eINSTANCE
-				.getIChoiceParameterDefinition_Options();
+		public static final EReference PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = eINSTANCE
+				.getParameterDefinition_ContainingBuildPlan();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.ChoiceParameterDefinition
@@ -6520,6 +5981,16 @@ public class BuildPackage extends EPackageImpl {
 		public static final EClass CHOICE_PARAMETER_DEFINITION = eINSTANCE.getChoiceParameterDefinition();
 
 		/**
+		 * The meta object literal for the '<em><b>Options</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute CHOICE_PARAMETER_DEFINITION__OPTIONS = eINSTANCE
+				.getChoiceParameterDefinition_Options();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.BooleanParameterDefinition
 		 * <em>Boolean Parameter Definition</em>}' class.
 		 * <!-- begin-user-doc -->
@@ -6530,6 +6001,16 @@ public class BuildPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EClass BOOLEAN_PARAMETER_DEFINITION = eINSTANCE.getBooleanParameterDefinition();
+
+		/**
+		 * The meta object literal for the '<em><b>Default Value</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute BOOLEAN_PARAMETER_DEFINITION__DEFAULT_VALUE = eINSTANCE
+				.getBooleanParameterDefinition_DefaultValue();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.FileParameterDefinition
@@ -6544,18 +6025,6 @@ public class BuildPackage extends EPackageImpl {
 		public static final EClass FILE_PARAMETER_DEFINITION = eINSTANCE.getFileParameterDefinition();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.IPlanParameterDefinition
-		 * <em>IPlan Parameter Definition</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * 
-		 * @see org.eclipse.mylyn.internal.builds.core.IPlanParameterDefinition
-		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIPlanParameterDefinition()
-		 * @generated
-		 */
-		public static final EClass IPLAN_PARAMETER_DEFINITION = eINSTANCE.getIPlanParameterDefinition();
-
-		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.PlanParameterDefinition
 		 * <em>Plan Parameter Definition</em>}' class.
 		 * <!-- begin-user-doc -->
@@ -6566,28 +6035,6 @@ public class BuildPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EClass PLAN_PARAMETER_DEFINITION = eINSTANCE.getPlanParameterDefinition();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.IPasswordParameterDefinition
-		 * <em>IPassword Parameter Definition</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * 
-		 * @see org.eclipse.mylyn.internal.builds.core.IPasswordParameterDefinition
-		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIPasswordParameterDefinition()
-		 * @generated
-		 */
-		public static final EClass IPASSWORD_PARAMETER_DEFINITION = eINSTANCE.getIPasswordParameterDefinition();
-
-		/**
-		 * The meta object literal for the '<em><b>Default Value</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * 
-		 * @generated
-		 */
-		public static final EAttribute IPASSWORD_PARAMETER_DEFINITION__DEFAULT_VALUE = eINSTANCE
-				.getIPasswordParameterDefinition_DefaultValue();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.PasswordParameterDefinition
@@ -6602,36 +6049,14 @@ public class BuildPackage extends EPackageImpl {
 		public static final EClass PASSWORD_PARAMETER_DEFINITION = eINSTANCE.getPasswordParameterDefinition();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.IBuildParameterDefinition
-		 * <em>IBuild Parameter Definition</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * 
-		 * @see org.eclipse.mylyn.internal.builds.core.IBuildParameterDefinition
-		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildParameterDefinition()
-		 * @generated
-		 */
-		public static final EClass IBUILD_PARAMETER_DEFINITION = eINSTANCE.getIBuildParameterDefinition();
-
-		/**
-		 * The meta object literal for the '<em><b>Build Plan Id</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Default Value</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * 
 		 * @generated
 		 */
-		public static final EAttribute IBUILD_PARAMETER_DEFINITION__BUILD_PLAN_ID = eINSTANCE
-				.getIBuildParameterDefinition_BuildPlanId();
-
-		/**
-		 * The meta object literal for the '<em><b>Build Plan</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * 
-		 * @generated
-		 */
-		public static final EReference IBUILD_PARAMETER_DEFINITION__BUILD_PLAN = eINSTANCE
-				.getIBuildParameterDefinition_BuildPlan();
+		public static final EAttribute PASSWORD_PARAMETER_DEFINITION__DEFAULT_VALUE = eINSTANCE
+				.getPasswordParameterDefinition_DefaultValue();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.BuildParameterDefinition
@@ -6646,26 +6071,24 @@ public class BuildPackage extends EPackageImpl {
 		public static final EClass BUILD_PARAMETER_DEFINITION = eINSTANCE.getBuildParameterDefinition();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.IStringParameterDefinition
-		 * <em>IString Parameter Definition</em>}' class.
+		 * The meta object literal for the '<em><b>Build Plan Id</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * 
-		 * @see org.eclipse.mylyn.internal.builds.core.IStringParameterDefinition
-		 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIStringParameterDefinition()
 		 * @generated
 		 */
-		public static final EClass ISTRING_PARAMETER_DEFINITION = eINSTANCE.getIStringParameterDefinition();
+		public static final EAttribute BUILD_PARAMETER_DEFINITION__BUILD_PLAN_ID = eINSTANCE
+				.getBuildParameterDefinition_BuildPlanId();
 
 		/**
-		 * The meta object literal for the '<em><b>Default Value</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Build Plan</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * 
 		 * @generated
 		 */
-		public static final EAttribute ISTRING_PARAMETER_DEFINITION__DEFAULT_VALUE = eINSTANCE
-				.getIStringParameterDefinition_DefaultValue();
+		public static final EReference BUILD_PARAMETER_DEFINITION__BUILD_PLAN = eINSTANCE
+				.getBuildParameterDefinition_BuildPlan();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.StringParameterDefinition
@@ -6678,6 +6101,16 @@ public class BuildPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EClass STRING_PARAMETER_DEFINITION = eINSTANCE.getStringParameterDefinition();
+
+		/**
+		 * The meta object literal for the '<em><b>Default Value</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute STRING_PARAMETER_DEFINITION__DEFAULT_VALUE = eINSTANCE
+				.getStringParameterDefinition_DefaultValue();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.internal.builds.core.TestResult

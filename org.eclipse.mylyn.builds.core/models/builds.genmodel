@@ -1,35 +1,163 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genmodel:GenModel xmi:version="2.0"
     xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.mylyn.builds.core/src"
-    editDirectory="/org.eclipse.mylyn.builds.edit/src" editorDirectory="/org.eclipse.mylyn.builds.editor/src"
-    modelPluginID="org.eclipse.mylyn.builds.core" modelName="Builds" modelPluginClass=""
-    suppressInterfaces="true" codeFormatting="true" testsDirectory="/org.eclipse.mylyn.builds.edit.tests/src"
-    importerID="org.eclipse.emf.importer.ecore" complianceLevel="5.0" copyrightFields="false"
-    editPluginID="org.eclipse.mylyn.builds.edit" editorPluginID="org.eclipse.mylyn.builds.editor"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (c) 2010 Tasktop Technologies and others.&#xA;All rights reserved. This program and the accompanying materials&#xA;are made available under the terms of the Eclipse Public License v1.0&#xA;which accompanies this distribution, and is available at&#xA;http://www.eclipse.org/legal/epl-v10.html&#xA;&#xA;Contributors:&#xA;    Tasktop Technologies - initial API and implementation"
+    modelDirectory="/org.eclipse.mylyn.builds.core/src" editDirectory="/org.eclipse.mylyn.builds.edit/src"
+    editorDirectory="/org.eclipse.mylyn.builds.editor/src" modelPluginID="org.eclipse.mylyn.builds.core"
+    modelName="Builds" modelPluginClass="" nonNLSMarkers="true" suppressInterfaces="true"
+    codeFormatting="true" testsDirectory="/org.eclipse.mylyn.builds.edit.tests/src"
+    importerID="org.eclipse.emf.importer.ecore" bundleManifest="false" complianceLevel="5.0"
+    copyrightFields="false" editPluginID="org.eclipse.mylyn.builds.edit" editorPluginID="org.eclipse.mylyn.builds.editor"
     testsPluginID="org.eclipse.mylyn.builds.edit.tests" interfaceNamePattern="I{0}"
     classNamePattern="{0}">
   <foreignModel>builds.ecore</foreignModel>
   <genPackages prefix="Build" basePackage="org.eclipse.mylyn.internal" disposableProviderFactory="true"
       interfacePackageSuffix="core" metaDataPackageSuffix="core" classPackageSuffix="internal.core"
       utilityPackageSuffix="core" contentTypeIdentifier="" fileExtensions="xml" ecorePackage="builds.ecore#/">
-    <genDataTypes ecoreDataType="builds.ecore#//TaskRepository"/>
-    <genClasses ecoreClass="builds.ecore#//Build">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//Build/id"/>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="builds.ecore#//TestCaseResult">
+      <genEnumLiterals ecoreEnumLiteral="builds.ecore#//TestCaseResult/PASSED"/>
+      <genEnumLiterals ecoreEnumLiteral="builds.ecore#//TestCaseResult/SKIPPED"/>
+      <genEnumLiterals ecoreEnumLiteral="builds.ecore#//TestCaseResult/FAILED"/>
+      <genEnumLiterals ecoreEnumLiteral="builds.ecore#//TestCaseResult/FIXED"/>
+      <genEnumLiterals ecoreEnumLiteral="builds.ecore#//TestCaseResult/REGRESSION"/>
+    </genEnums>
+    <genDataTypes ecoreDataType="builds.ecore#//RepositoryLocation"/>
+    <genDataTypes ecoreDataType="builds.ecore#//BuildState"/>
+    <genDataTypes ecoreDataType="builds.ecore#//BuildStatus"/>
+    <genDataTypes ecoreDataType="builds.ecore#//EditType"/>
+    <genClasses image="false" ecoreClass="builds.ecore#//IBuildModel">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference builds.ecore#//IBuildModel/servers"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference builds.ecore#//IBuildModel/plans"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference builds.ecore#//IBuildModel/builds"/>
     </genClasses>
-    <genClasses ecoreClass="builds.ecore#//BuildModel">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference builds.ecore#//BuildModel/servers"/>
+    <genClasses image="false" ecoreClass="builds.ecore#//IBuildElement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//IBuildElement/url"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//IBuildElement/name"/>
     </genClasses>
-    <genClasses ecoreClass="builds.ecore#//BuildPlan">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference builds.ecore#//BuildPlan/builds"/>
+    <genClasses image="false" ecoreClass="builds.ecore#//IBuildServer">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference builds.ecore#//IBuildServer/attributes"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//IBuildServer/location"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//IBuildServer/connectorKind"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//IBuildServer/repositoryUrl"/>
     </genClasses>
-    <genClasses ecoreClass="builds.ecore#//BuildServer">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference builds.ecore#//BuildServer/plans"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//BuildServer/repository"/>
+    <genClasses image="false" ecoreClass="builds.ecore#//IBuildPlan">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference builds.ecore#//IBuildPlan/server"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference builds.ecore#//IBuildPlan/children"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference builds.ecore#//IBuildPlan/parent"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//IBuildPlan/health"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//IBuildPlan/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//IBuildPlan/info"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//IBuildPlan/selected"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//IBuildPlan/summary"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//IBuildPlan/state"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//IBuildPlan/status"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//IBuildPlan/description"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference builds.ecore#//IBuildPlan/lastBuild"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference builds.ecore#//IBuildPlan/parameterDefinitions"/>
     </genClasses>
-    <genClasses image="false" ecoreClass="builds.ecore#//IBuild"/>
-    <genClasses image="false" ecoreClass="builds.ecore#//IBuildModel"/>
-    <genClasses image="false" ecoreClass="builds.ecore#//IBuildPlan"/>
-    <genClasses image="false" ecoreClass="builds.ecore#//IBuildServer"/>
+    <genClasses image="false" ecoreClass="builds.ecore#//IBuildPlanData"/>
+    <genClasses image="false" ecoreClass="builds.ecore#//IBuildPlanWorkingCopy"/>
+    <genClasses image="false" ecoreClass="builds.ecore#//IBuild">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//IBuild/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//IBuild/buildNumber"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//IBuild/timestamp"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//IBuild/duration"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//IBuild/displayName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//IBuild/state"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//IBuild/status"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference builds.ecore#//IBuild/artifacts"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference builds.ecore#//IBuild/changeSet"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference builds.ecore#//IBuild/plan"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//IBuild/label"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference builds.ecore#//IBuild/server"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="builds.ecore#//IBuildWorkingCopy"/>
+    <genClasses image="false" ecoreClass="builds.ecore#//IArtifact">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//IArtifact/displayName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//IArtifact/filename"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//IArtifact/relativePath"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="builds.ecore#//IChange">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference builds.ecore#//IChange/author"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference builds.ecore#//IChange/file"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//IChange/message"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//IChange/date"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference builds.ecore#//IChange/user"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="builds.ecore#//IChangeSet">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference builds.ecore#//IChangeSet/changes"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//IChangeSet/kind"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="builds.ecore#//IFile">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//IFile/relativePath"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//IFile/prevRevision"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//IFile/revision"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//IFile/dead"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//IFile/editType"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="builds.ecore#//IUser">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//IUser/fullname"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//IUser/username"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//IUser/email"/>
+    </genClasses>
+    <genClasses ecoreClass="builds.ecore#//Artifact"/>
+    <genClasses ecoreClass="builds.ecore#//Build"/>
+    <genClasses ecoreClass="builds.ecore#//BuildPlan"/>
+    <genClasses ecoreClass="builds.ecore#//BuildServer"/>
+    <genClasses ecoreClass="builds.ecore#//BuildModel"/>
+    <genClasses ecoreClass="builds.ecore#//Change"/>
+    <genClasses ecoreClass="builds.ecore#//ChangeSet"/>
+    <genClasses ecoreClass="builds.ecore#//File"/>
+    <genClasses ecoreClass="builds.ecore#//StringToStringMap">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//StringToStringMap/key"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//StringToStringMap/value"/>
+    </genClasses>
+    <genClasses ecoreClass="builds.ecore#//User"/>
+    <genClasses image="false" ecoreClass="builds.ecore#//ParameterDefinition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//ParameterDefinition/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//ParameterDefinition/description"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference builds.ecore#//ParameterDefinition/containingBuildPlan"/>
+    </genClasses>
+    <genClasses ecoreClass="builds.ecore#//ChoiceParameterDefinition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//ChoiceParameterDefinition/options"/>
+    </genClasses>
+    <genClasses ecoreClass="builds.ecore#//BooleanParameterDefinition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//BooleanParameterDefinition/defaultValue"/>
+    </genClasses>
+    <genClasses ecoreClass="builds.ecore#//FileParameterDefinition"/>
+    <genClasses ecoreClass="builds.ecore#//PlanParameterDefinition"/>
+    <genClasses ecoreClass="builds.ecore#//PasswordParameterDefinition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//PasswordParameterDefinition/defaultValue"/>
+    </genClasses>
+    <genClasses ecoreClass="builds.ecore#//BuildParameterDefinition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//BuildParameterDefinition/buildPlanId"/>
+      <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference builds.ecore#//BuildParameterDefinition/buildPlan"/>
+    </genClasses>
+    <genClasses ecoreClass="builds.ecore#//StringParameterDefinition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//StringParameterDefinition/defaultValue"/>
+    </genClasses>
+    <genClasses ecoreClass="builds.ecore#//TestResult">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference builds.ecore#//TestResult/build"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//TestResult/duration"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//TestResult/failCount"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//TestResult/passCount"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference builds.ecore#//TestResult/suites"/>
+    </genClasses>
+    <genClasses ecoreClass="builds.ecore#//TestElement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//TestElement/label"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//TestElement/duration"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//TestElement/errorOutput"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//TestElement/output"/>
+    </genClasses>
+    <genClasses ecoreClass="builds.ecore#//TestSuite">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference builds.ecore#//TestSuite/cases"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference builds.ecore#//TestSuite/result"/>
+    </genClasses>
+    <genClasses ecoreClass="builds.ecore#//TestCase">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//TestCase/className"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//TestCase/skipped"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference builds.ecore#//TestCase/suite"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute builds.ecore#//TestCase/status"/>
+    </genClasses>
   </genPackages>
 </genmodel:GenModel>

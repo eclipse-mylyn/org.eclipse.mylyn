@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TestCase.java,v 1.1 2010/08/27 09:00:23 spingel Exp $
+ * $Id: TestCase.java,v 1.2 2010/08/28 03:38:02 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -247,7 +247,7 @@ public class TestCase extends TestElement {
 		if (newSuite != eInternalContainer()
 				|| (eContainerFeatureID() != BuildPackage.TEST_CASE__SUITE && newSuite != null)) {
 			if (EcoreUtil.isAncestor(this, newSuite))
-				throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
+				throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
 			NotificationChain msgs = null;
 			if (eInternalContainer() != null)
 				msgs = eBasicRemoveFromContainer(msgs);
@@ -452,11 +452,11 @@ public class TestCase extends TestElement {
 			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (className: ");
+		result.append(" (className: "); //$NON-NLS-1$
 		result.append(className);
-		result.append(", skipped: ");
+		result.append(", skipped: "); //$NON-NLS-1$
 		result.append(skipped);
-		result.append(", status: ");
+		result.append(", status: "); //$NON-NLS-1$
 		result.append(status);
 		result.append(')');
 		return result.toString();

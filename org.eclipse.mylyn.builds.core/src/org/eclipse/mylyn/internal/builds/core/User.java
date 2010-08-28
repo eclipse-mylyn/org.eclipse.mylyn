@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: User.java,v 1.2 2010/08/04 07:38:41 spingel Exp $
+ * $Id: User.java,v 1.3 2010/08/28 03:38:02 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -314,11 +314,11 @@ public class User extends EObjectImpl implements EObject, IUser {
 			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (fullname: ");
+		result.append(" (fullname: "); //$NON-NLS-1$
 		result.append(fullname);
-		result.append(", username: ");
+		result.append(", username: "); //$NON-NLS-1$
 		result.append(username);
-		result.append(", email: ");
+		result.append(", email: "); //$NON-NLS-1$
 		result.append(email);
 		result.append(')');
 		return result.toString();

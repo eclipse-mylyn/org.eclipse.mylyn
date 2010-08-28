@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: StringToStringMap.java,v 1.2 2010/08/04 07:38:41 spingel Exp $
+ * $Id: StringToStringMap.java,v 1.3 2010/08/28 03:38:02 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -254,9 +254,9 @@ public class StringToStringMap extends EObjectImpl implements BasicEMap.Entry<St
 			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (key: ");
+		result.append(" (key: "); //$NON-NLS-1$
 		result.append(key);
-		result.append(", value: ");
+		result.append(", value: "); //$NON-NLS-1$
 		result.append(value);
 		result.append(')');
 		return result.toString();

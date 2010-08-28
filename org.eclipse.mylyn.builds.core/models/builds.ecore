@@ -46,7 +46,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="lastBuild" eType="#//IBuild"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parameterDefinitions" upperBound="-1"
-        eType="#//IParameterDefinition" containment="true" eOpposite="#//IParameterDefinition/containingBuildPlan"/>
+        eType="#//ParameterDefinition" containment="true" eOpposite="#//ParameterDefinition/containingBuildPlan"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IBuildPlanData" instanceClassName="org.eclipse.mylyn.builds.core.IBuildPlanData"
       abstract="true" interface="true"/>
@@ -123,50 +123,35 @@
         defaultValueLiteral=""/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="User" eSuperTypes="#//IUser"/>
-  <eClassifiers xsi:type="ecore:EClass" name="IParameterDefinition" abstract="true"
-      interface="true">
+  <eClassifiers xsi:type="ecore:EClass" name="ParameterDefinition" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="containingBuildPlan" eType="#//IBuildPlan"
         eOpposite="#//IBuildPlan/parameterDefinitions"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="IFileParameterDefinition" abstract="true"
-      interface="true" eSuperTypes="#//IParameterDefinition"/>
-  <eClassifiers xsi:type="ecore:EClass" name="IBooleanParameterDefinition" abstract="true"
-      interface="true" eSuperTypes="#//IParameterDefinition">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="defaultValue" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="IChoiceParameterDefinition" abstract="true"
-      interface="true" eSuperTypes="#//IParameterDefinition">
+  <eClassifiers xsi:type="ecore:EClass" name="ChoiceParameterDefinition" eSuperTypes="#//ParameterDefinition">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="options" lowerBound="1"
         upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ChoiceParameterDefinition" eSuperTypes="#//IChoiceParameterDefinition"/>
-  <eClassifiers xsi:type="ecore:EClass" name="BooleanParameterDefinition" eSuperTypes="#//IBooleanParameterDefinition"/>
-  <eClassifiers xsi:type="ecore:EClass" name="FileParameterDefinition" eSuperTypes="#//IFileParameterDefinition"/>
-  <eClassifiers xsi:type="ecore:EClass" name="IPlanParameterDefinition" abstract="true"
-      interface="true" eSuperTypes="#//IParameterDefinition"/>
-  <eClassifiers xsi:type="ecore:EClass" name="PlanParameterDefinition" eSuperTypes="#//IPlanParameterDefinition"/>
-  <eClassifiers xsi:type="ecore:EClass" name="IPasswordParameterDefinition" abstract="true"
-      interface="true" eSuperTypes="#//IParameterDefinition">
+  <eClassifiers xsi:type="ecore:EClass" name="BooleanParameterDefinition" eSuperTypes="#//ParameterDefinition">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="defaultValue" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FileParameterDefinition" eSuperTypes="#//ParameterDefinition"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PlanParameterDefinition" eSuperTypes="#//ParameterDefinition"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PasswordParameterDefinition" eSuperTypes="#//ParameterDefinition">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="defaultValue" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="PasswordParameterDefinition" eSuperTypes="#//IPasswordParameterDefinition"/>
-  <eClassifiers xsi:type="ecore:EClass" name="IBuildParameterDefinition" abstract="true"
-      interface="true" eSuperTypes="#//IParameterDefinition">
+  <eClassifiers xsi:type="ecore:EClass" name="BuildParameterDefinition" eSuperTypes="#//ParameterDefinition">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="buildPlanId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="buildPlan" eType="#//IBuildPlan"
         changeable="false" volatile="true" transient="true" derived="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="BuildParameterDefinition" eSuperTypes="#//IBuildParameterDefinition"/>
-  <eClassifiers xsi:type="ecore:EClass" name="IStringParameterDefinition" abstract="true"
-      interface="true" eSuperTypes="#//IParameterDefinition">
+  <eClassifiers xsi:type="ecore:EClass" name="StringParameterDefinition" eSuperTypes="#//ParameterDefinition">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="defaultValue" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="StringParameterDefinition" eSuperTypes="#//IStringParameterDefinition"/>
   <eClassifiers xsi:type="ecore:EClass" name="TestResult">
     <eStructuralFeatures xsi:type="ecore:EReference" name="build" eType="#//IBuild"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="duration" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="duration" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="failCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="passCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="suites" upperBound="-1"
@@ -181,7 +166,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TestElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="label" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="duration" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="duration" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="errorOutput" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="output" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>

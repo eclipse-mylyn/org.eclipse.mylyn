@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildServer.java,v 1.20 2010/08/25 07:19:15 spingel Exp $
+ * $Id: BuildServer.java,v 1.21 2010/08/28 03:38:02 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -545,15 +545,15 @@ public class BuildServer extends EObjectImpl implements EObject, IBuildServer {
 			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (url: ");
+		result.append(" (url: "); //$NON-NLS-1$
 		result.append(url);
-		result.append(", name: ");
+		result.append(", name: "); //$NON-NLS-1$
 		result.append(name);
-		result.append(", location: ");
+		result.append(", location: "); //$NON-NLS-1$
 		result.append(location);
-		result.append(", connectorKind: ");
+		result.append(", connectorKind: "); //$NON-NLS-1$
 		result.append(connectorKind);
-		result.append(", repositoryUrl: ");
+		result.append(", repositoryUrl: "); //$NON-NLS-1$
 		result.append(repositoryUrl);
 		result.append(')');
 		return result.toString();

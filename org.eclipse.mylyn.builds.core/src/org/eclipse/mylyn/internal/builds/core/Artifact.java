@@ -1,9 +1,13 @@
-/**
- * <copyright>
- * </copyright>
+/*******************************************************************************
+ * Copyright (c) 2010 Tasktop Technologies and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * $Id: Artifact.java,v 1.2 2010/08/04 07:38:41 spingel Exp $
- */
+ * Contributors:
+ *     Tasktop Technologies - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.mylyn.internal.builds.core;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -143,9 +147,10 @@ public class Artifact extends EObjectImpl implements EObject, IArtifact {
 	public void setDisplayName(String newDisplayName) {
 		String oldDisplayName = displayName;
 		displayName = newDisplayName;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.ARTIFACT__DISPLAY_NAME, oldDisplayName,
 					displayName));
+		}
 	}
 
 	/**
@@ -181,9 +186,10 @@ public class Artifact extends EObjectImpl implements EObject, IArtifact {
 	public void setFilename(String newFilename) {
 		String oldFilename = filename;
 		filename = newFilename;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.ARTIFACT__FILENAME, oldFilename,
 					filename));
+		}
 	}
 
 	/**
@@ -219,9 +225,10 @@ public class Artifact extends EObjectImpl implements EObject, IArtifact {
 	public void setRelativePath(String newRelativePath) {
 		String oldRelativePath = relativePath;
 		relativePath = newRelativePath;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.ARTIFACT__RELATIVE_PATH,
 					oldRelativePath, relativePath));
+		}
 	}
 
 	/**
@@ -314,15 +321,16 @@ public class Artifact extends EObjectImpl implements EObject, IArtifact {
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
+		if (eIsProxy()) {
 			return super.toString();
+		}
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (displayName: ");
+		result.append(" (displayName: "); //$NON-NLS-1$
 		result.append(displayName);
-		result.append(", filename: ");
+		result.append(", filename: "); //$NON-NLS-1$
 		result.append(filename);
-		result.append(", relativePath: ");
+		result.append(", relativePath: "); //$NON-NLS-1$
 		result.append(relativePath);
 		result.append(')');
 		return result.toString();

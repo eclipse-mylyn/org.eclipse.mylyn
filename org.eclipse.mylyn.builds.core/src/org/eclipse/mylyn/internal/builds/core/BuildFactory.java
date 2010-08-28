@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildFactory.java,v 1.10 2010/08/27 09:00:23 spingel Exp $
+ * $Id: BuildFactory.java,v 1.11 2010/08/28 03:38:02 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -47,7 +47,7 @@ public class BuildFactory extends EFactoryImpl {
 	public static BuildFactory init() {
 		try {
 			BuildFactory theBuildFactory = (BuildFactory) EPackage.Registry.INSTANCE
-					.getEFactory("http://eclipse.org/mylyn/models/build");
+					.getEFactory("http://eclipse.org/mylyn/models/build"); //$NON-NLS-1$ 
 			if (theBuildFactory != null) {
 				return theBuildFactory;
 			}
@@ -120,7 +120,7 @@ public class BuildFactory extends EFactoryImpl {
 		case BuildPackage.TEST_CASE:
 			return createTestCase();
 		default:
-			throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
+			throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -142,7 +142,7 @@ public class BuildFactory extends EFactoryImpl {
 		case BuildPackage.EDIT_TYPE:
 			return createEditTypeFromString(eDataType, initialValue);
 		default:
-			throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
+			throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -164,7 +164,7 @@ public class BuildFactory extends EFactoryImpl {
 		case BuildPackage.EDIT_TYPE:
 			return convertEditTypeToString(eDataType, instanceValue);
 		default:
-			throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
+			throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -397,8 +397,8 @@ public class BuildFactory extends EFactoryImpl {
 	public TestCaseResult createTestCaseResultFromString(EDataType eDataType, String initialValue) {
 		TestCaseResult result = TestCaseResult.get(initialValue);
 		if (result == null)
-			throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '"
-					+ eDataType.getName() + "'");
+			throw new IllegalArgumentException(
+					"The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		return result;
 	}
 

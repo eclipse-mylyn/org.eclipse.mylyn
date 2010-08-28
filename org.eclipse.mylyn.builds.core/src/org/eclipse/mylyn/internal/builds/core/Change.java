@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: Change.java,v 1.2 2010/08/04 07:38:41 spingel Exp $
+ * $Id: Change.java,v 1.3 2010/08/28 03:38:02 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -478,9 +478,9 @@ public class Change extends EObjectImpl implements EObject, IChange {
 			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (message: ");
+		result.append(" (message: "); //$NON-NLS-1$
 		result.append(message);
-		result.append(", date: ");
+		result.append(", date: "); //$NON-NLS-1$
 		result.append(date);
 		result.append(')');
 		return result.toString();

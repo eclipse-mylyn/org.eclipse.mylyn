@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildPlan.java,v 1.15 2010/08/27 09:00:23 spingel Exp $
+ * $Id: BuildPlan.java,v 1.16 2010/08/28 03:38:02 spingel Exp $
  */
 package org.eclipse.mylyn.internal.builds.core;
 
@@ -320,7 +320,7 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlan, IBuil
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<IParameterDefinition> parameterDefinitions;
+	protected EList<ParameterDefinition> parameterDefinitions;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -938,9 +938,9 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlan, IBuil
 
 	/**
 	 * Returns the value of the '<em><b>Parameter Definitions</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.mylyn.internal.builds.core.IParameterDefinition}.
+	 * The list contents are of type {@link org.eclipse.mylyn.internal.builds.core.ParameterDefinition}.
 	 * It is bidirectional and its opposite is '
-	 * {@link org.eclipse.mylyn.internal.builds.core.IParameterDefinition#getContainingBuildPlan
+	 * {@link org.eclipse.mylyn.internal.builds.core.ParameterDefinition#getContainingBuildPlan
 	 * <em>Containing Build Plan</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -951,15 +951,15 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlan, IBuil
 	 * 
 	 * @return the value of the '<em>Parameter Definitions</em>' containment reference list.
 	 * @see org.eclipse.mylyn.internal.builds.core.BuildPackage#getIBuildPlan_ParameterDefinitions()
-	 * @see org.eclipse.mylyn.internal.builds.core.IParameterDefinition#getContainingBuildPlan
+	 * @see org.eclipse.mylyn.internal.builds.core.ParameterDefinition#getContainingBuildPlan
 	 * @model opposite="containingBuildPlan" containment="true"
 	 * @generated
 	 */
-	public EList<IParameterDefinition> getParameterDefinitions() {
+	public EList<ParameterDefinition> getParameterDefinitions() {
 		if (parameterDefinitions == null) {
-			parameterDefinitions = new EObjectContainmentWithInverseEList<IParameterDefinition>(
-					IParameterDefinition.class, this, BuildPackage.BUILD_PLAN__PARAMETER_DEFINITIONS,
-					BuildPackage.IPARAMETER_DEFINITION__CONTAINING_BUILD_PLAN);
+			parameterDefinitions = new EObjectContainmentWithInverseEList<ParameterDefinition>(
+					ParameterDefinition.class, this, BuildPackage.BUILD_PLAN__PARAMETER_DEFINITIONS,
+					BuildPackage.PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN);
 		}
 		return parameterDefinitions;
 	}
@@ -1111,7 +1111,7 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlan, IBuil
 			return;
 		case BuildPackage.BUILD_PLAN__PARAMETER_DEFINITIONS:
 			getParameterDefinitions().clear();
-			getParameterDefinitions().addAll((Collection<? extends IParameterDefinition>) newValue);
+			getParameterDefinitions().addAll((Collection<? extends ParameterDefinition>) newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -1230,25 +1230,25 @@ public class BuildPlan extends EObjectImpl implements EObject, IBuildPlan, IBuil
 			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (url: ");
+		result.append(" (url: "); //$NON-NLS-1$
 		result.append(url);
-		result.append(", name: ");
+		result.append(", name: "); //$NON-NLS-1$
 		result.append(name);
-		result.append(", health: ");
+		result.append(", health: "); //$NON-NLS-1$
 		result.append(health);
-		result.append(", id: ");
+		result.append(", id: "); //$NON-NLS-1$
 		result.append(id);
-		result.append(", info: ");
+		result.append(", info: "); //$NON-NLS-1$
 		result.append(info);
-		result.append(", selected: ");
+		result.append(", selected: "); //$NON-NLS-1$
 		result.append(selected);
-		result.append(", summary: ");
+		result.append(", summary: "); //$NON-NLS-1$
 		result.append(summary);
-		result.append(", state: ");
+		result.append(", state: "); //$NON-NLS-1$
 		result.append(state);
-		result.append(", status: ");
+		result.append(", status: "); //$NON-NLS-1$
 		result.append(status);
-		result.append(", description: ");
+		result.append(", description: "); //$NON-NLS-1$
 		result.append(description);
 		result.append(')');
 		return result.toString();
