@@ -163,7 +163,7 @@ public class DateUtil {
 		MONTH(MILLIS_MONTH, "{0} month", "{0} month"), //
 		WEEK(MILLIS_WEEK, "{0} week", "{0} weeks"), // 
 		DAY(MILLIS_DAY, "{0} day", "{0} days"), //
-		HOUR(MILLIS_HOUR, "{0} hour", "{0} hours"), //
+		HOUR(MILLIS_HOUR, "{0} hr", "{0} hrs"), //
 		MINUTE(MILLIS_MINUTE, "{0} min", "{0} mins"), //
 		SECOND(MILLIS_SECOND, "{0} sec", "{0} secs");
 
@@ -237,6 +237,7 @@ public class DateUtil {
 	public static String getRelativeDuration(long diff) {
 		PeriodString string = null;
 		for (Period period : Period.values()) {
+			boolean wasSet = (string != null);
 			if (diff >= period.duration) {
 				if (string == null) {
 					string = new PeriodString(period, diff);
@@ -246,6 +247,10 @@ public class DateUtil {
 					break;
 				}
 				diff -= (diff / period.duration) * period.duration;
+			}
+			// only return more than one segment if the second segment follows the first one directly 
+			if (wasSet) {
+				break;
 			}
 		}
 		return (string != null) ? string.toString() : ""; //$NON-NLS-1$
