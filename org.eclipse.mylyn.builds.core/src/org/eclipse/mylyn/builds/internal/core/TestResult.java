@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TestResult.java,v 1.1 2010/08/28 06:14:17 spingel Exp $
+ * $Id: TestResult.java,v 1.2 2010/08/28 09:21:40 spingel Exp $
  */
 package org.eclipse.mylyn.builds.internal.core;
 
@@ -30,14 +30,14 @@ import org.eclipse.mylyn.builds.core.ITestSuite;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.TestResult#getBuild <em>Build</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.TestResult#getDuration <em>Duration</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.TestResult#getFailCount <em>Fail Count</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.TestResult#getPassCount <em>Pass Count</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.TestResult#getSuites <em>Suites</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.TestResult#getBuild <em>Build</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.TestResult#getDuration <em>Duration</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.TestResult#getFailCount <em>Fail Count</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.TestResult#getPassCount <em>Pass Count</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.TestResult#getSuites <em>Suites</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class TestResult extends EObjectImpl implements ITestResult {
@@ -45,6 +45,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	 * The cached value of the '{@link #getBuild() <em>Build</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getBuild()
 	 * @generated
 	 * @ordered
@@ -55,6 +56,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	 * The default value of the '{@link #getDuration() <em>Duration</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getDuration()
 	 * @generated
 	 * @ordered
@@ -65,6 +67,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	 * The cached value of the '{@link #getDuration() <em>Duration</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getDuration()
 	 * @generated
 	 * @ordered
@@ -75,6 +78,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	 * The default value of the '{@link #getFailCount() <em>Fail Count</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getFailCount()
 	 * @generated
 	 * @ordered
@@ -85,6 +89,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	 * The cached value of the '{@link #getFailCount() <em>Fail Count</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getFailCount()
 	 * @generated
 	 * @ordered
@@ -95,6 +100,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	 * The default value of the '{@link #getPassCount() <em>Pass Count</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getPassCount()
 	 * @generated
 	 * @ordered
@@ -105,6 +111,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	 * The cached value of the '{@link #getPassCount() <em>Pass Count</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getPassCount()
 	 * @generated
 	 * @ordered
@@ -115,6 +122,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	 * The cached value of the '{@link #getSuites() <em>Suites</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getSuites()
 	 * @generated
 	 * @ordered
@@ -124,6 +132,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected TestResult() {
@@ -133,6 +142,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -147,6 +157,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IBuild getBuild() {
@@ -165,6 +176,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IBuild basicGetBuild() {
@@ -174,6 +186,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setBuild(IBuild newBuild) {
@@ -190,6 +203,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public long getDuration() {
@@ -199,6 +213,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setDuration(long newDuration) {
@@ -216,6 +231,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public int getFailCount() {
@@ -225,6 +241,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setFailCount(int newFailCount) {
@@ -242,6 +259,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public int getPassCount() {
@@ -251,6 +269,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setPassCount(int newPassCount) {
@@ -268,6 +287,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public List<ITestSuite> getSuites() {
@@ -281,6 +301,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -296,6 +317,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -310,6 +332,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -334,6 +357,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -363,6 +387,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -390,6 +415,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -412,6 +438,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

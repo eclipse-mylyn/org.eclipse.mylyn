@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildFactory.java,v 1.2 2010/08/28 09:21:12 spingel Exp $
+ * $Id: BuildFactory.java,v 1.3 2010/08/28 09:21:40 spingel Exp $
  */
 package org.eclipse.mylyn.builds.internal.core;
 
@@ -45,6 +45,7 @@ import org.eclipse.mylyn.builds.core.IUser;
  * The <b>Factory</b> for the model.
  * It provides a create method for each non-abstract class of the model.
  * <!-- end-user-doc -->
+ * 
  * @generated
  */
 public class BuildFactory extends EFactoryImpl implements IBuildFactory {
@@ -52,6 +53,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	 * The singleton instance of the factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public static final BuildFactory eINSTANCE = init();
@@ -60,6 +62,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	 * Creates the default factory implementation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public static BuildFactory init() {
@@ -79,6 +82,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	 * Creates an instance of the factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public BuildFactory() {
@@ -88,6 +92,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -143,6 +148,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -168,6 +174,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -193,6 +200,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IBuildModel createBuildModel() {
@@ -203,6 +211,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IBuildPlan createBuildPlan() {
@@ -213,6 +222,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IBuildServer createBuildServer() {
@@ -223,6 +233,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IArtifact createArtifact() {
@@ -233,6 +244,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IBuild createBuild() {
@@ -243,6 +255,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IChangeSet createChangeSet() {
@@ -253,6 +266,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IChangeArtifact createChangeArtifact() {
@@ -263,6 +277,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IChange createChange() {
@@ -273,6 +288,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IUser createUser() {
@@ -283,6 +299,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IChoiceParameterDefinition createChoiceParameterDefinition() {
@@ -293,6 +310,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IBooleanParameterDefinition createBooleanParameterDefinition() {
@@ -303,6 +321,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IFileParameterDefinition createFileParameterDefinition() {
@@ -313,6 +332,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IPlanParameterDefinition createPlanParameterDefinition() {
@@ -323,6 +343,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IPasswordParameterDefinition createPasswordParameterDefinition() {
@@ -333,6 +354,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IBuildParameterDefinition createBuildParameterDefinition() {
@@ -343,6 +365,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IStringParameterDefinition createStringParameterDefinition() {
@@ -353,6 +376,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public ITestResult createTestResult() {
@@ -363,6 +387,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public ITestElement createTestElement() {
@@ -373,6 +398,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public ITestSuite createTestSuite() {
@@ -383,6 +409,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public ITestCase createTestCase() {
@@ -393,6 +420,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public TestCaseResult createTestCaseResultFromString(EDataType eDataType, String initialValue) {
@@ -406,6 +434,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String convertTestCaseResultToString(EDataType eDataType, Object instanceValue) {
@@ -415,6 +444,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public Map.Entry<String, String> createStringToStringMap() {
@@ -425,6 +455,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public BuildState createBuildStateFromString(EDataType eDataType, String initialValue) {
@@ -434,6 +465,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String convertBuildStateToString(EDataType eDataType, Object instanceValue) {
@@ -443,6 +475,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public BuildStatus createBuildStatusFromString(EDataType eDataType, String initialValue) {
@@ -452,6 +485,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String convertBuildStatusToString(EDataType eDataType, Object instanceValue) {
@@ -461,6 +495,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EditType createEditTypeFromString(EDataType eDataType, String initialValue) {
@@ -470,6 +505,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String convertEditTypeToString(EDataType eDataType, Object instanceValue) {
@@ -479,6 +515,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IStatus createIStatusFromString(EDataType eDataType, String initialValue) {
@@ -488,6 +525,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String convertIStatusToString(EDataType eDataType, Object instanceValue) {
@@ -497,6 +535,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IOperation createIOperationFromString(EDataType eDataType, String initialValue) {
@@ -506,6 +545,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String convertIOperationToString(EDataType eDataType, Object instanceValue) {
@@ -515,6 +555,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public BuildPackage getBuildPackage() {
@@ -524,6 +565,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @deprecated
 	 * @generated
 	 */

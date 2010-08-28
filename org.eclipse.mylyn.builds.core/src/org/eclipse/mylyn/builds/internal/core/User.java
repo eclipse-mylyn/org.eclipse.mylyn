@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: User.java,v 1.1 2010/08/28 06:14:17 spingel Exp $
+ * $Id: User.java,v 1.2 2010/08/28 09:21:40 spingel Exp $
  */
 package org.eclipse.mylyn.builds.internal.core;
 
@@ -19,12 +19,12 @@ import org.eclipse.mylyn.builds.core.IUser;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.User#getFullname <em>Fullname</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.User#getUsername <em>Username</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.User#getEmail <em>Email</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.User#getFullname <em>Fullname</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.User#getUsername <em>Username</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.User#getEmail <em>Email</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class User extends EObjectImpl implements IUser {
@@ -32,6 +32,7 @@ public class User extends EObjectImpl implements IUser {
 	 * The default value of the '{@link #getFullname() <em>Fullname</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getFullname()
 	 * @generated
 	 * @ordered
@@ -42,6 +43,7 @@ public class User extends EObjectImpl implements IUser {
 	 * The cached value of the '{@link #getFullname() <em>Fullname</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getFullname()
 	 * @generated
 	 * @ordered
@@ -52,6 +54,7 @@ public class User extends EObjectImpl implements IUser {
 	 * The default value of the '{@link #getUsername() <em>Username</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getUsername()
 	 * @generated
 	 * @ordered
@@ -62,6 +65,7 @@ public class User extends EObjectImpl implements IUser {
 	 * The cached value of the '{@link #getUsername() <em>Username</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getUsername()
 	 * @generated
 	 * @ordered
@@ -72,6 +76,7 @@ public class User extends EObjectImpl implements IUser {
 	 * The default value of the '{@link #getEmail() <em>Email</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getEmail()
 	 * @generated
 	 * @ordered
@@ -82,6 +87,7 @@ public class User extends EObjectImpl implements IUser {
 	 * The cached value of the '{@link #getEmail() <em>Email</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getEmail()
 	 * @generated
 	 * @ordered
@@ -91,6 +97,7 @@ public class User extends EObjectImpl implements IUser {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected User() {
@@ -100,6 +107,7 @@ public class User extends EObjectImpl implements IUser {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -114,6 +122,7 @@ public class User extends EObjectImpl implements IUser {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getFullname() {
@@ -123,6 +132,7 @@ public class User extends EObjectImpl implements IUser {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setFullname(String newFullname) {
@@ -139,6 +149,7 @@ public class User extends EObjectImpl implements IUser {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getUsername() {
@@ -148,6 +159,7 @@ public class User extends EObjectImpl implements IUser {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setUsername(String newUsername) {
@@ -164,6 +176,7 @@ public class User extends EObjectImpl implements IUser {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getEmail() {
@@ -173,6 +186,7 @@ public class User extends EObjectImpl implements IUser {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setEmail(String newEmail) {
@@ -185,6 +199,7 @@ public class User extends EObjectImpl implements IUser {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -203,6 +218,7 @@ public class User extends EObjectImpl implements IUser {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -224,6 +240,7 @@ public class User extends EObjectImpl implements IUser {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -245,6 +262,7 @@ public class User extends EObjectImpl implements IUser {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -263,6 +281,7 @@ public class User extends EObjectImpl implements IUser {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

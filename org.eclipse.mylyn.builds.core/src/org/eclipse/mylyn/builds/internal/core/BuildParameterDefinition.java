@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildParameterDefinition.java,v 1.1 2010/08/28 06:14:17 spingel Exp $
+ * $Id: BuildParameterDefinition.java,v 1.2 2010/08/28 09:21:40 spingel Exp $
  */
 package org.eclipse.mylyn.builds.internal.core;
 
@@ -25,11 +25,11 @@ import org.eclipse.mylyn.builds.core.IBuildServer;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.BuildParameterDefinition#getBuildPlanId <em>Build Plan Id</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.BuildParameterDefinition#getBuildPlan <em>Build Plan</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildParameterDefinition#getBuildPlanId <em>Build Plan Id</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildParameterDefinition#getBuildPlan <em>Build Plan</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class BuildParameterDefinition extends ParameterDefinition implements IBuildParameterDefinition {
@@ -37,6 +37,7 @@ public class BuildParameterDefinition extends ParameterDefinition implements IBu
 	 * The default value of the '{@link #getBuildPlanId() <em>Build Plan Id</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getBuildPlanId()
 	 * @generated
 	 * @ordered
@@ -47,6 +48,7 @@ public class BuildParameterDefinition extends ParameterDefinition implements IBu
 	 * The cached value of the '{@link #getBuildPlanId() <em>Build Plan Id</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getBuildPlanId()
 	 * @generated
 	 * @ordered
@@ -56,6 +58,7 @@ public class BuildParameterDefinition extends ParameterDefinition implements IBu
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected BuildParameterDefinition() {
@@ -65,6 +68,7 @@ public class BuildParameterDefinition extends ParameterDefinition implements IBu
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -79,6 +83,7 @@ public class BuildParameterDefinition extends ParameterDefinition implements IBu
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getBuildPlanId() {
@@ -88,6 +93,7 @@ public class BuildParameterDefinition extends ParameterDefinition implements IBu
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setBuildPlanId(String newBuildPlanId) {
@@ -105,6 +111,7 @@ public class BuildParameterDefinition extends ParameterDefinition implements IBu
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IBuildPlan getBuildPlan() {
@@ -147,6 +154,7 @@ public class BuildParameterDefinition extends ParameterDefinition implements IBu
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -165,6 +173,7 @@ public class BuildParameterDefinition extends ParameterDefinition implements IBu
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -180,6 +189,7 @@ public class BuildParameterDefinition extends ParameterDefinition implements IBu
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -195,6 +205,7 @@ public class BuildParameterDefinition extends ParameterDefinition implements IBu
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -211,6 +222,7 @@ public class BuildParameterDefinition extends ParameterDefinition implements IBu
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

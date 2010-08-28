@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: Change.java,v 1.1 2010/08/28 06:14:17 spingel Exp $
+ * $Id: Change.java,v 1.2 2010/08/28 09:21:40 spingel Exp $
  */
 package org.eclipse.mylyn.builds.internal.core;
 
@@ -28,14 +28,14 @@ import org.eclipse.mylyn.builds.core.IUser;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.Change#getArtifacts <em>Artifacts</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.Change#getAuthor <em>Author</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.Change#getMessage <em>Message</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.Change#getDate <em>Date</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.Change#getRevision <em>Revision</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.Change#getArtifacts <em>Artifacts</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.Change#getAuthor <em>Author</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.Change#getMessage <em>Message</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.Change#getDate <em>Date</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.Change#getRevision <em>Revision</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class Change extends EObjectImpl implements IChange {
@@ -43,6 +43,7 @@ public class Change extends EObjectImpl implements IChange {
 	 * The cached value of the '{@link #getArtifacts() <em>Artifacts</em>}' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getArtifacts()
 	 * @generated
 	 * @ordered
@@ -53,6 +54,7 @@ public class Change extends EObjectImpl implements IChange {
 	 * The cached value of the '{@link #getAuthor() <em>Author</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getAuthor()
 	 * @generated
 	 * @ordered
@@ -63,6 +65,7 @@ public class Change extends EObjectImpl implements IChange {
 	 * The default value of the '{@link #getMessage() <em>Message</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getMessage()
 	 * @generated
 	 * @ordered
@@ -73,6 +76,7 @@ public class Change extends EObjectImpl implements IChange {
 	 * The cached value of the '{@link #getMessage() <em>Message</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getMessage()
 	 * @generated
 	 * @ordered
@@ -83,6 +87,7 @@ public class Change extends EObjectImpl implements IChange {
 	 * The default value of the '{@link #getDate() <em>Date</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getDate()
 	 * @generated
 	 * @ordered
@@ -93,6 +98,7 @@ public class Change extends EObjectImpl implements IChange {
 	 * The cached value of the '{@link #getDate() <em>Date</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getDate()
 	 * @generated
 	 * @ordered
@@ -103,6 +109,7 @@ public class Change extends EObjectImpl implements IChange {
 	 * The default value of the '{@link #getRevision() <em>Revision</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getRevision()
 	 * @generated
 	 * @ordered
@@ -113,6 +120,7 @@ public class Change extends EObjectImpl implements IChange {
 	 * The cached value of the '{@link #getRevision() <em>Revision</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getRevision()
 	 * @generated
 	 * @ordered
@@ -122,6 +130,7 @@ public class Change extends EObjectImpl implements IChange {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected Change() {
@@ -131,6 +140,7 @@ public class Change extends EObjectImpl implements IChange {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -141,6 +151,7 @@ public class Change extends EObjectImpl implements IChange {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public List<IChangeArtifact> getArtifacts() {
@@ -158,6 +169,7 @@ public class Change extends EObjectImpl implements IChange {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IUser getAuthor() {
@@ -176,6 +188,7 @@ public class Change extends EObjectImpl implements IChange {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IUser basicGetAuthor() {
@@ -185,6 +198,7 @@ public class Change extends EObjectImpl implements IChange {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setAuthor(IUser newAuthor) {
@@ -201,6 +215,7 @@ public class Change extends EObjectImpl implements IChange {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getMessage() {
@@ -210,6 +225,7 @@ public class Change extends EObjectImpl implements IChange {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setMessage(String newMessage) {
@@ -225,6 +241,7 @@ public class Change extends EObjectImpl implements IChange {
 	 * If the meaning of the '<em>Date</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public long getDate() {
@@ -234,6 +251,7 @@ public class Change extends EObjectImpl implements IChange {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setDate(long newDate) {
@@ -246,6 +264,7 @@ public class Change extends EObjectImpl implements IChange {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getRevision() {
@@ -255,6 +274,7 @@ public class Change extends EObjectImpl implements IChange {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setRevision(String newRevision) {
@@ -267,6 +287,7 @@ public class Change extends EObjectImpl implements IChange {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -291,6 +312,7 @@ public class Change extends EObjectImpl implements IChange {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -320,6 +342,7 @@ public class Change extends EObjectImpl implements IChange {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -347,6 +370,7 @@ public class Change extends EObjectImpl implements IChange {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -369,6 +393,7 @@ public class Change extends EObjectImpl implements IChange {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

@@ -22,10 +22,10 @@ import org.eclipse.mylyn.builds.core.IBooleanParameterDefinition;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.BooleanParameterDefinition#isDefaultValue <em>Default Value</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.BooleanParameterDefinition#isDefaultValue <em>Default Value</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class BooleanParameterDefinition extends ParameterDefinition implements IBooleanParameterDefinition {
@@ -33,6 +33,7 @@ public class BooleanParameterDefinition extends ParameterDefinition implements I
 	 * The default value of the '{@link #isDefaultValue() <em>Default Value</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #isDefaultValue()
 	 * @generated
 	 * @ordered
@@ -43,6 +44,7 @@ public class BooleanParameterDefinition extends ParameterDefinition implements I
 	 * The cached value of the '{@link #isDefaultValue() <em>Default Value</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #isDefaultValue()
 	 * @generated
 	 * @ordered
@@ -52,6 +54,7 @@ public class BooleanParameterDefinition extends ParameterDefinition implements I
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected BooleanParameterDefinition() {
@@ -61,6 +64,7 @@ public class BooleanParameterDefinition extends ParameterDefinition implements I
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -75,6 +79,7 @@ public class BooleanParameterDefinition extends ParameterDefinition implements I
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public boolean isDefaultValue() {
@@ -84,6 +89,7 @@ public class BooleanParameterDefinition extends ParameterDefinition implements I
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setDefaultValue(boolean newDefaultValue) {
@@ -97,6 +103,7 @@ public class BooleanParameterDefinition extends ParameterDefinition implements I
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -111,6 +118,7 @@ public class BooleanParameterDefinition extends ParameterDefinition implements I
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -126,6 +134,7 @@ public class BooleanParameterDefinition extends ParameterDefinition implements I
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -141,6 +150,7 @@ public class BooleanParameterDefinition extends ParameterDefinition implements I
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -155,6 +165,7 @@ public class BooleanParameterDefinition extends ParameterDefinition implements I
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

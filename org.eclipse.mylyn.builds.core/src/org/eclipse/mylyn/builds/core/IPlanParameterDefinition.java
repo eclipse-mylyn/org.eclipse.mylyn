@@ -14,8 +14,7 @@ package org.eclipse.mylyn.builds.core;
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Plan Parameter Definition</b></em>'.
  * <!-- end-user-doc -->
- *
- *
+ * 
  * @generated
  */
 public interface IPlanParameterDefinition extends IParameterDefinition {

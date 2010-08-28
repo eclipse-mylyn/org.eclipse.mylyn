@@ -14,16 +14,15 @@ package org.eclipse.mylyn.builds.core;
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>User</b></em>'.
  * <!-- end-user-doc -->
- *
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.builds.core.IUser#getFullname <em>Fullname</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.core.IUser#getUsername <em>Username</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.core.IUser#getEmail <em>Email</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IUser#getFullname <em>Fullname</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IUser#getUsername <em>Username</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IUser#getEmail <em>Email</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public interface IUser {
@@ -35,6 +34,7 @@ public interface IUser {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Fullname</em>' attribute.
 	 * @see #setFullname(String)
 	 * @generated
@@ -45,7 +45,9 @@ public interface IUser {
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IUser#getFullname <em>Fullname</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Fullname</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Fullname</em>' attribute.
 	 * @see #getFullname()
 	 * @generated
 	 */
@@ -59,6 +61,7 @@ public interface IUser {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Username</em>' attribute.
 	 * @see #setUsername(String)
 	 * @generated
@@ -69,7 +72,9 @@ public interface IUser {
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IUser#getUsername <em>Username</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Username</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Username</em>' attribute.
 	 * @see #getUsername()
 	 * @generated
 	 */
@@ -83,6 +88,7 @@ public interface IUser {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Email</em>' attribute.
 	 * @see #setEmail(String)
 	 * @generated
@@ -93,7 +99,9 @@ public interface IUser {
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IUser#getEmail <em>Email</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Email</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Email</em>' attribute.
 	 * @see #getEmail()
 	 * @generated
 	 */

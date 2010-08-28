@@ -16,18 +16,17 @@ import java.util.List;
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Test Result</b></em>'.
  * <!-- end-user-doc -->
- *
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.builds.core.ITestResult#getBuild <em>Build</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.core.ITestResult#getDuration <em>Duration</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.core.ITestResult#getFailCount <em>Fail Count</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.core.ITestResult#getPassCount <em>Pass Count</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.core.ITestResult#getSuites <em>Suites</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.ITestResult#getBuild <em>Build</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.ITestResult#getDuration <em>Duration</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.ITestResult#getFailCount <em>Fail Count</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.ITestResult#getPassCount <em>Pass Count</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.ITestResult#getSuites <em>Suites</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public interface ITestResult {
@@ -39,6 +38,7 @@ public interface ITestResult {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Build</em>' reference.
 	 * @see #setBuild(IBuild)
 	 * @generated
@@ -49,7 +49,9 @@ public interface ITestResult {
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestResult#getBuild <em>Build</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Build</em>' reference.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Build</em>' reference.
 	 * @see #getBuild()
 	 * @generated
 	 */
@@ -63,6 +65,7 @@ public interface ITestResult {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Duration</em>' attribute.
 	 * @see #setDuration(long)
 	 * @generated
@@ -70,10 +73,13 @@ public interface ITestResult {
 	long getDuration();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestResult#getDuration <em>Duration</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestResult#getDuration <em>Duration</em>}'
+	 * attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Duration</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Duration</em>' attribute.
 	 * @see #getDuration()
 	 * @generated
 	 */
@@ -87,6 +93,7 @@ public interface ITestResult {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Fail Count</em>' attribute.
 	 * @see #setFailCount(int)
 	 * @generated
@@ -94,10 +101,13 @@ public interface ITestResult {
 	int getFailCount();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestResult#getFailCount <em>Fail Count</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestResult#getFailCount <em>Fail Count</em>}'
+	 * attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Fail Count</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Fail Count</em>' attribute.
 	 * @see #getFailCount()
 	 * @generated
 	 */
@@ -111,6 +121,7 @@ public interface ITestResult {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Pass Count</em>' attribute.
 	 * @see #setPassCount(int)
 	 * @generated
@@ -118,10 +129,13 @@ public interface ITestResult {
 	int getPassCount();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestResult#getPassCount <em>Pass Count</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestResult#getPassCount <em>Pass Count</em>}'
+	 * attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Pass Count</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Pass Count</em>' attribute.
 	 * @see #getPassCount()
 	 * @generated
 	 */
@@ -130,13 +144,15 @@ public interface ITestResult {
 	/**
 	 * Returns the value of the '<em><b>Suites</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.mylyn.builds.core.ITestSuite}.
-	 * It is bidirectional and its opposite is '{@link org.eclipse.mylyn.builds.core.ITestSuite#getResult <em>Result</em>}'.
+	 * It is bidirectional and its opposite is '{@link org.eclipse.mylyn.builds.core.ITestSuite#getResult
+	 * <em>Result</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Suites</em>' containment reference list isn't clear, there really should be more of a
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Suites</em>' containment reference list.
 	 * @see org.eclipse.mylyn.builds.core.ITestSuite#getResult
 	 * @generated

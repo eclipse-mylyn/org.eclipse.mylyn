@@ -16,18 +16,17 @@ import java.util.List;
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Change</b></em>'.
  * <!-- end-user-doc -->
- *
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.builds.core.IChange#getArtifacts <em>Artifacts</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.core.IChange#getAuthor <em>Author</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.core.IChange#getMessage <em>Message</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.core.IChange#getDate <em>Date</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.core.IChange#getRevision <em>Revision</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IChange#getArtifacts <em>Artifacts</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IChange#getAuthor <em>Author</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IChange#getMessage <em>Message</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IChange#getDate <em>Date</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IChange#getRevision <em>Revision</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public interface IChange {
@@ -40,6 +39,7 @@ public interface IChange {
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Artifacts</em>' reference list.
 	 * @generated
 	 */
@@ -53,6 +53,7 @@ public interface IChange {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Author</em>' reference.
 	 * @see #setAuthor(IUser)
 	 * @generated
@@ -63,7 +64,9 @@ public interface IChange {
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IChange#getAuthor <em>Author</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Author</em>' reference.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Author</em>' reference.
 	 * @see #getAuthor()
 	 * @generated
 	 */
@@ -77,6 +80,7 @@ public interface IChange {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Message</em>' attribute.
 	 * @see #setMessage(String)
 	 * @generated
@@ -87,7 +91,9 @@ public interface IChange {
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IChange#getMessage <em>Message</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Message</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Message</em>' attribute.
 	 * @see #getMessage()
 	 * @generated
 	 */
@@ -100,6 +106,7 @@ public interface IChange {
 	 * If the meaning of the '<em>Date</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Date</em>' attribute.
 	 * @see #setDate(long)
 	 * @generated
@@ -110,7 +117,9 @@ public interface IChange {
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IChange#getDate <em>Date</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Date</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Date</em>' attribute.
 	 * @see #getDate()
 	 * @generated
 	 */
@@ -124,6 +133,7 @@ public interface IChange {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Revision</em>' attribute.
 	 * @see #setRevision(String)
 	 * @generated
@@ -134,7 +144,9 @@ public interface IChange {
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IChange#getRevision <em>Revision</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Revision</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Revision</em>' attribute.
 	 * @see #getRevision()
 	 * @generated
 	 */

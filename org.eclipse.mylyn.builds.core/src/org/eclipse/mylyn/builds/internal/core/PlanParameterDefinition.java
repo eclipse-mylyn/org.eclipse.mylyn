@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: PlanParameterDefinition.java,v 1.1 2010/08/28 06:14:17 spingel Exp $
+ * $Id: PlanParameterDefinition.java,v 1.2 2010/08/28 09:21:40 spingel Exp $
  */
 package org.eclipse.mylyn.builds.internal.core;
 
@@ -15,13 +15,14 @@ import org.eclipse.mylyn.builds.core.IPlanParameterDefinition;
  * <!-- end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class PlanParameterDefinition extends ParameterDefinition implements IPlanParameterDefinition {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected PlanParameterDefinition() {
@@ -31,6 +32,7 @@ public class PlanParameterDefinition extends ParameterDefinition implements IPla
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

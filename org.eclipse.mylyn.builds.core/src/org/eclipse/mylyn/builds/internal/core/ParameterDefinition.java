@@ -18,12 +18,13 @@ import org.eclipse.mylyn.builds.core.IParameterDefinition;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.ParameterDefinition#getName <em>Name</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.ParameterDefinition#getDescription <em>Description</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.ParameterDefinition#getContainingBuildPlan <em>Containing Build Plan</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.ParameterDefinition#getName <em>Name</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.ParameterDefinition#getDescription <em>Description</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.ParameterDefinition#getContainingBuildPlan <em>Containing Build
+ * Plan</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public abstract class ParameterDefinition extends EObjectImpl implements IParameterDefinition {
@@ -31,6 +32,7 @@ public abstract class ParameterDefinition extends EObjectImpl implements IParame
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getName()
 	 * @generated
 	 * @ordered
@@ -41,6 +43,7 @@ public abstract class ParameterDefinition extends EObjectImpl implements IParame
 	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getName()
 	 * @generated
 	 * @ordered
@@ -51,6 +54,7 @@ public abstract class ParameterDefinition extends EObjectImpl implements IParame
 	 * The default value of the '{@link #getDescription() <em>Description</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getDescription()
 	 * @generated
 	 * @ordered
@@ -61,6 +65,7 @@ public abstract class ParameterDefinition extends EObjectImpl implements IParame
 	 * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getDescription()
 	 * @generated
 	 * @ordered
@@ -70,6 +75,7 @@ public abstract class ParameterDefinition extends EObjectImpl implements IParame
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected ParameterDefinition() {
@@ -79,6 +85,7 @@ public abstract class ParameterDefinition extends EObjectImpl implements IParame
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -92,6 +99,7 @@ public abstract class ParameterDefinition extends EObjectImpl implements IParame
 	 * If the meaning of the '<em>Name</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getName() {
@@ -101,6 +109,7 @@ public abstract class ParameterDefinition extends EObjectImpl implements IParame
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setName(String newName) {
@@ -118,6 +127,7 @@ public abstract class ParameterDefinition extends EObjectImpl implements IParame
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getDescription() {
@@ -127,6 +137,7 @@ public abstract class ParameterDefinition extends EObjectImpl implements IParame
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setDescription(String newDescription) {
@@ -144,6 +155,7 @@ public abstract class ParameterDefinition extends EObjectImpl implements IParame
 	 * more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IBuildPlan getContainingBuildPlan() {
@@ -155,6 +167,7 @@ public abstract class ParameterDefinition extends EObjectImpl implements IParame
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public NotificationChain basicSetContainingBuildPlan(IBuildPlan newContainingBuildPlan, NotificationChain msgs) {
@@ -166,6 +179,7 @@ public abstract class ParameterDefinition extends EObjectImpl implements IParame
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setContainingBuildPlan(IBuildPlan newContainingBuildPlan) {
@@ -191,6 +205,7 @@ public abstract class ParameterDefinition extends EObjectImpl implements IParame
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -207,6 +222,7 @@ public abstract class ParameterDefinition extends EObjectImpl implements IParame
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -221,6 +237,7 @@ public abstract class ParameterDefinition extends EObjectImpl implements IParame
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -236,6 +253,7 @@ public abstract class ParameterDefinition extends EObjectImpl implements IParame
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -254,6 +272,7 @@ public abstract class ParameterDefinition extends EObjectImpl implements IParame
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -275,6 +294,7 @@ public abstract class ParameterDefinition extends EObjectImpl implements IParame
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -296,6 +316,7 @@ public abstract class ParameterDefinition extends EObjectImpl implements IParame
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -314,6 +335,7 @@ public abstract class ParameterDefinition extends EObjectImpl implements IParame
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

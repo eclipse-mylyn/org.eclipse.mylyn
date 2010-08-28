@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildModel.java,v 1.1 2010/08/28 06:14:17 spingel Exp $
+ * $Id: BuildModel.java,v 1.2 2010/08/28 09:21:40 spingel Exp $
  */
 package org.eclipse.mylyn.builds.internal.core;
 
@@ -31,12 +31,12 @@ import org.eclipse.mylyn.commons.core.IOperationMonitor;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.BuildModel#getServers <em>Servers</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.BuildModel#getPlans <em>Plans</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.BuildModel#getBuilds <em>Builds</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildModel#getServers <em>Servers</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildModel#getPlans <em>Plans</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildModel#getBuilds <em>Builds</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class BuildModel extends EObjectImpl implements IBuildModel {
@@ -44,6 +44,7 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	 * The cached value of the '{@link #getServers() <em>Servers</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getServers()
 	 * @generated
 	 * @ordered
@@ -54,6 +55,7 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	 * The cached value of the '{@link #getPlans() <em>Plans</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getPlans()
 	 * @generated
 	 * @ordered
@@ -64,6 +66,7 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	 * The cached value of the '{@link #getBuilds() <em>Builds</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getBuilds()
 	 * @generated
 	 * @ordered
@@ -75,6 +78,7 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected BuildModel() {
@@ -84,6 +88,7 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -98,6 +103,7 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public List<IBuildServer> getServers() {
@@ -115,6 +121,7 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public List<IBuildPlan> getPlans() {
@@ -131,6 +138,7 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public List<IBuild> getBuilds() {
@@ -143,6 +151,7 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -161,6 +170,7 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -179,6 +189,7 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -204,6 +215,7 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -225,6 +237,7 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

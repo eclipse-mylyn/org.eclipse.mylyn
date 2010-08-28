@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TestCase.java,v 1.1 2010/08/28 06:14:17 spingel Exp $
+ * $Id: TestCase.java,v 1.2 2010/08/28 09:21:40 spingel Exp $
  */
 package org.eclipse.mylyn.builds.internal.core;
 
@@ -24,13 +24,13 @@ import org.eclipse.mylyn.builds.core.TestCaseResult;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.TestCase#getClassName <em>Class Name</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.TestCase#isSkipped <em>Skipped</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.TestCase#getSuite <em>Suite</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.TestCase#getStatus <em>Status</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.TestCase#getClassName <em>Class Name</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.TestCase#isSkipped <em>Skipped</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.TestCase#getSuite <em>Suite</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.TestCase#getStatus <em>Status</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class TestCase extends TestElement implements ITestCase {
@@ -38,6 +38,7 @@ public class TestCase extends TestElement implements ITestCase {
 	 * The default value of the '{@link #getClassName() <em>Class Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getClassName()
 	 * @generated
 	 * @ordered
@@ -48,6 +49,7 @@ public class TestCase extends TestElement implements ITestCase {
 	 * The cached value of the '{@link #getClassName() <em>Class Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getClassName()
 	 * @generated
 	 * @ordered
@@ -58,6 +60,7 @@ public class TestCase extends TestElement implements ITestCase {
 	 * The default value of the '{@link #isSkipped() <em>Skipped</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #isSkipped()
 	 * @generated
 	 * @ordered
@@ -68,6 +71,7 @@ public class TestCase extends TestElement implements ITestCase {
 	 * The cached value of the '{@link #isSkipped() <em>Skipped</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #isSkipped()
 	 * @generated
 	 * @ordered
@@ -78,6 +82,7 @@ public class TestCase extends TestElement implements ITestCase {
 	 * The default value of the '{@link #getStatus() <em>Status</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getStatus()
 	 * @generated
 	 * @ordered
@@ -88,6 +93,7 @@ public class TestCase extends TestElement implements ITestCase {
 	 * The cached value of the '{@link #getStatus() <em>Status</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getStatus()
 	 * @generated
 	 * @ordered
@@ -97,6 +103,7 @@ public class TestCase extends TestElement implements ITestCase {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected TestCase() {
@@ -106,6 +113,7 @@ public class TestCase extends TestElement implements ITestCase {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -120,6 +128,7 @@ public class TestCase extends TestElement implements ITestCase {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getClassName() {
@@ -129,6 +138,7 @@ public class TestCase extends TestElement implements ITestCase {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setClassName(String newClassName) {
@@ -146,6 +156,7 @@ public class TestCase extends TestElement implements ITestCase {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public boolean isSkipped() {
@@ -155,6 +166,7 @@ public class TestCase extends TestElement implements ITestCase {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setSkipped(boolean newSkipped) {
@@ -171,6 +183,7 @@ public class TestCase extends TestElement implements ITestCase {
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public ITestSuite getSuite() {
@@ -182,6 +195,7 @@ public class TestCase extends TestElement implements ITestCase {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public NotificationChain basicSetSuite(ITestSuite newSuite, NotificationChain msgs) {
@@ -192,6 +206,7 @@ public class TestCase extends TestElement implements ITestCase {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setSuite(ITestSuite newSuite) {
@@ -219,6 +234,7 @@ public class TestCase extends TestElement implements ITestCase {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public TestCaseResult getStatus() {
@@ -228,6 +244,7 @@ public class TestCase extends TestElement implements ITestCase {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setStatus(TestCaseResult newStatus) {
@@ -240,6 +257,7 @@ public class TestCase extends TestElement implements ITestCase {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -256,6 +274,7 @@ public class TestCase extends TestElement implements ITestCase {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -270,6 +289,7 @@ public class TestCase extends TestElement implements ITestCase {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -284,6 +304,7 @@ public class TestCase extends TestElement implements ITestCase {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -304,6 +325,7 @@ public class TestCase extends TestElement implements ITestCase {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -328,6 +350,7 @@ public class TestCase extends TestElement implements ITestCase {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -352,6 +375,7 @@ public class TestCase extends TestElement implements ITestCase {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -372,6 +396,7 @@ public class TestCase extends TestElement implements ITestCase {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

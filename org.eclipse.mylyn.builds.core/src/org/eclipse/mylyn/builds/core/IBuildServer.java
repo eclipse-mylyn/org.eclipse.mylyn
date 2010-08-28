@@ -19,17 +19,16 @@ import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Server</b></em>'.
  * <!-- end-user-doc -->
- *
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.builds.core.IBuildServer#getAttributes <em>Attributes</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.core.IBuildServer#getLocation <em>Location</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.core.IBuildServer#getConnectorKind <em>Connector Kind</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.core.IBuildServer#getRepositoryUrl <em>Repository Url</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IBuildServer#getAttributes <em>Attributes</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IBuildServer#getLocation <em>Location</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IBuildServer#getConnectorKind <em>Connector Kind</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IBuildServer#getRepositoryUrl <em>Repository Url</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public interface IBuildServer extends IBuildElement {
@@ -42,6 +41,7 @@ public interface IBuildServer extends IBuildElement {
 	 * If the meaning of the '<em>Attributes</em>' map isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Attributes</em>' map.
 	 * @generated
 	 */
@@ -55,6 +55,7 @@ public interface IBuildServer extends IBuildElement {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Location</em>' attribute.
 	 * @see #setLocation(RepositoryLocation)
 	 * @generated
@@ -62,10 +63,13 @@ public interface IBuildServer extends IBuildElement {
 	RepositoryLocation getLocation();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildServer#getLocation <em>Location</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildServer#getLocation <em>Location</em>}'
+	 * attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Location</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Location</em>' attribute.
 	 * @see #getLocation()
 	 * @generated
 	 */
@@ -79,6 +83,7 @@ public interface IBuildServer extends IBuildElement {
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Connector Kind</em>' attribute.
 	 * @see #setConnectorKind(String)
 	 * @generated
@@ -86,10 +91,13 @@ public interface IBuildServer extends IBuildElement {
 	String getConnectorKind();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildServer#getConnectorKind <em>Connector Kind</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildServer#getConnectorKind
+	 * <em>Connector Kind</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Connector Kind</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Connector Kind</em>' attribute.
 	 * @see #getConnectorKind()
 	 * @generated
 	 */
@@ -103,6 +111,7 @@ public interface IBuildServer extends IBuildElement {
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Repository Url</em>' attribute.
 	 * @see #setRepositoryUrl(String)
 	 * @generated
@@ -110,10 +119,13 @@ public interface IBuildServer extends IBuildElement {
 	String getRepositoryUrl();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildServer#getRepositoryUrl <em>Repository Url</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildServer#getRepositoryUrl
+	 * <em>Repository Url</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Repository Url</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Repository Url</em>' attribute.
 	 * @see #getRepositoryUrl()
 	 * @generated
 	 */

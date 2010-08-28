@@ -19,17 +19,16 @@ import org.eclipse.core.runtime.IStatus;
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Element</b></em>'.
  * <!-- end-user-doc -->
- *
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.builds.core.IBuildElement#getUrl <em>Url</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.core.IBuildElement#getName <em>Name</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.core.IBuildElement#getOperations <em>Operations</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.core.IBuildElement#getElementStatus <em>Element Status</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IBuildElement#getUrl <em>Url</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IBuildElement#getName <em>Name</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IBuildElement#getOperations <em>Operations</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IBuildElement#getElementStatus <em>Element Status</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public interface IBuildElement {
@@ -40,6 +39,7 @@ public interface IBuildElement {
 	 * If the meaning of the '<em>Url</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Url</em>' attribute.
 	 * @see #setUrl(String)
 	 * @generated
@@ -50,7 +50,9 @@ public interface IBuildElement {
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildElement#getUrl <em>Url</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Url</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Url</em>' attribute.
 	 * @see #getUrl()
 	 * @generated
 	 */
@@ -63,6 +65,7 @@ public interface IBuildElement {
 	 * If the meaning of the '<em>Name</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Name</em>' attribute.
 	 * @see #setName(String)
 	 * @generated
@@ -73,7 +76,9 @@ public interface IBuildElement {
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildElement#getName <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Name</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Name</em>' attribute.
 	 * @see #getName()
 	 * @generated
 	 */
@@ -88,6 +93,7 @@ public interface IBuildElement {
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Operations</em>' attribute list.
 	 * @generated
 	 */
@@ -101,6 +107,7 @@ public interface IBuildElement {
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Element Status</em>' attribute.
 	 * @see #setElementStatus(IStatus)
 	 * @generated
@@ -108,10 +115,13 @@ public interface IBuildElement {
 	IStatus getElementStatus();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildElement#getElementStatus <em>Element Status</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildElement#getElementStatus
+	 * <em>Element Status</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Element Status</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Element Status</em>' attribute.
 	 * @see #getElementStatus()
 	 * @generated
 	 */
@@ -120,6 +130,7 @@ public interface IBuildElement {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	String getLabel();
@@ -127,6 +138,7 @@ public interface IBuildElement {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	IBuildServer getServer();

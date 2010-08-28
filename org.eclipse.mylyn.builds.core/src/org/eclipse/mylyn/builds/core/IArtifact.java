@@ -15,16 +15,15 @@ package org.eclipse.mylyn.builds.core;
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Artifact</b></em>'.
  * <!-- end-user-doc -->
- *
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.builds.core.IArtifact#getDisplayName <em>Display Name</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.core.IArtifact#getFilename <em>Filename</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.core.IArtifact#getRelativePath <em>Relative Path</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IArtifact#getDisplayName <em>Display Name</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IArtifact#getFilename <em>Filename</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IArtifact#getRelativePath <em>Relative Path</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public interface IArtifact {
@@ -36,6 +35,7 @@ public interface IArtifact {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Display Name</em>' attribute.
 	 * @see #setDisplayName(String)
 	 * @generated
@@ -43,10 +43,13 @@ public interface IArtifact {
 	String getDisplayName();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IArtifact#getDisplayName <em>Display Name</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IArtifact#getDisplayName <em>Display Name</em>}'
+	 * attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Display Name</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Display Name</em>' attribute.
 	 * @see #getDisplayName()
 	 * @generated
 	 */
@@ -60,6 +63,7 @@ public interface IArtifact {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Filename</em>' attribute.
 	 * @see #setFilename(String)
 	 * @generated
@@ -70,7 +74,9 @@ public interface IArtifact {
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IArtifact#getFilename <em>Filename</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Filename</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Filename</em>' attribute.
 	 * @see #getFilename()
 	 * @generated
 	 */
@@ -84,6 +90,7 @@ public interface IArtifact {
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Relative Path</em>' attribute.
 	 * @see #setRelativePath(String)
 	 * @generated
@@ -91,10 +98,13 @@ public interface IArtifact {
 	String getRelativePath();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IArtifact#getRelativePath <em>Relative Path</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IArtifact#getRelativePath <em>Relative Path</em>}'
+	 * attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Relative Path</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Relative Path</em>' attribute.
 	 * @see #getRelativePath()
 	 * @generated
 	 */

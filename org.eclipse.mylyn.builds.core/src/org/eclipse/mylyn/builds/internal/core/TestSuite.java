@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TestSuite.java,v 1.1 2010/08/28 06:14:17 spingel Exp $
+ * $Id: TestSuite.java,v 1.2 2010/08/28 09:21:40 spingel Exp $
  */
 package org.eclipse.mylyn.builds.internal.core;
 
@@ -30,11 +30,11 @@ import org.eclipse.mylyn.builds.core.ITestSuite;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.TestSuite#getCases <em>Cases</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.TestSuite#getResult <em>Result</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.TestSuite#getCases <em>Cases</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.TestSuite#getResult <em>Result</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class TestSuite extends TestElement implements ITestSuite {
@@ -42,6 +42,7 @@ public class TestSuite extends TestElement implements ITestSuite {
 	 * The cached value of the '{@link #getCases() <em>Cases</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getCases()
 	 * @generated
 	 * @ordered
@@ -51,6 +52,7 @@ public class TestSuite extends TestElement implements ITestSuite {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected TestSuite() {
@@ -60,6 +62,7 @@ public class TestSuite extends TestElement implements ITestSuite {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -74,6 +77,7 @@ public class TestSuite extends TestElement implements ITestSuite {
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public List<ITestCase> getCases() {
@@ -91,6 +95,7 @@ public class TestSuite extends TestElement implements ITestSuite {
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public ITestResult getResult() {
@@ -102,6 +107,7 @@ public class TestSuite extends TestElement implements ITestSuite {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public NotificationChain basicSetResult(ITestResult newResult, NotificationChain msgs) {
@@ -112,6 +118,7 @@ public class TestSuite extends TestElement implements ITestSuite {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setResult(ITestResult newResult) {
@@ -135,6 +142,7 @@ public class TestSuite extends TestElement implements ITestSuite {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -154,6 +162,7 @@ public class TestSuite extends TestElement implements ITestSuite {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -170,6 +179,7 @@ public class TestSuite extends TestElement implements ITestSuite {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -184,6 +194,7 @@ public class TestSuite extends TestElement implements ITestSuite {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -200,6 +211,7 @@ public class TestSuite extends TestElement implements ITestSuite {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -220,6 +232,7 @@ public class TestSuite extends TestElement implements ITestSuite {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -238,6 +251,7 @@ public class TestSuite extends TestElement implements ITestSuite {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

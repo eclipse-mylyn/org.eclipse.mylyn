@@ -14,17 +14,16 @@ package org.eclipse.mylyn.builds.core;
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Test Element</b></em>'.
  * <!-- end-user-doc -->
- *
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.builds.core.ITestElement#getLabel <em>Label</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.core.ITestElement#getDuration <em>Duration</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.core.ITestElement#getErrorOutput <em>Error Output</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.core.ITestElement#getOutput <em>Output</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.ITestElement#getLabel <em>Label</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.ITestElement#getDuration <em>Duration</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.ITestElement#getErrorOutput <em>Error Output</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.ITestElement#getOutput <em>Output</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public interface ITestElement {
@@ -36,6 +35,7 @@ public interface ITestElement {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Label</em>' attribute.
 	 * @see #setLabel(String)
 	 * @generated
@@ -46,7 +46,9 @@ public interface ITestElement {
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestElement#getLabel <em>Label</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Label</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Label</em>' attribute.
 	 * @see #getLabel()
 	 * @generated
 	 */
@@ -60,6 +62,7 @@ public interface ITestElement {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Duration</em>' attribute.
 	 * @see #setDuration(long)
 	 * @generated
@@ -67,10 +70,13 @@ public interface ITestElement {
 	long getDuration();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestElement#getDuration <em>Duration</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestElement#getDuration <em>Duration</em>}'
+	 * attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Duration</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Duration</em>' attribute.
 	 * @see #getDuration()
 	 * @generated
 	 */
@@ -84,6 +90,7 @@ public interface ITestElement {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Error Output</em>' attribute.
 	 * @see #setErrorOutput(String)
 	 * @generated
@@ -91,10 +98,13 @@ public interface ITestElement {
 	String getErrorOutput();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestElement#getErrorOutput <em>Error Output</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestElement#getErrorOutput <em>Error Output</em>}'
+	 * attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Error Output</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Error Output</em>' attribute.
 	 * @see #getErrorOutput()
 	 * @generated
 	 */
@@ -108,6 +118,7 @@ public interface ITestElement {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Output</em>' attribute.
 	 * @see #setOutput(String)
 	 * @generated
@@ -118,7 +129,9 @@ public interface ITestElement {
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestElement#getOutput <em>Output</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Output</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Output</em>' attribute.
 	 * @see #getOutput()
 	 * @generated
 	 */

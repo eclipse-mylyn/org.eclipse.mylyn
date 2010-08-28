@@ -16,15 +16,14 @@ import java.util.List;
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Change Set</b></em>'.
  * <!-- end-user-doc -->
- *
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.builds.core.IChangeSet#getChanges <em>Changes</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.core.IChangeSet#getKind <em>Kind</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IChangeSet#getChanges <em>Changes</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IChangeSet#getKind <em>Kind</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public interface IChangeSet {
@@ -37,6 +36,7 @@ public interface IChangeSet {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Changes</em>' reference list.
 	 * @generated
 	 */
@@ -49,6 +49,7 @@ public interface IChangeSet {
 	 * If the meaning of the '<em>Kind</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Kind</em>' attribute.
 	 * @see #setKind(String)
 	 * @generated
@@ -59,7 +60,9 @@ public interface IChangeSet {
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IChangeSet#getKind <em>Kind</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Kind</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Kind</em>' attribute.
 	 * @see #getKind()
 	 * @generated
 	 */

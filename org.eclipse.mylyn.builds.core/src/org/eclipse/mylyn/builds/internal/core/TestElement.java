@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TestElement.java,v 1.1 2010/08/28 06:14:17 spingel Exp $
+ * $Id: TestElement.java,v 1.2 2010/08/28 09:21:40 spingel Exp $
  */
 package org.eclipse.mylyn.builds.internal.core;
 
@@ -19,13 +19,13 @@ import org.eclipse.mylyn.builds.core.ITestElement;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.TestElement#getLabel <em>Label</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.TestElement#getDuration <em>Duration</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.TestElement#getErrorOutput <em>Error Output</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.TestElement#getOutput <em>Output</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.TestElement#getLabel <em>Label</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.TestElement#getDuration <em>Duration</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.TestElement#getErrorOutput <em>Error Output</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.TestElement#getOutput <em>Output</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class TestElement extends EObjectImpl implements ITestElement {
@@ -33,6 +33,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	 * The default value of the '{@link #getLabel() <em>Label</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getLabel()
 	 * @generated
 	 * @ordered
@@ -43,6 +44,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	 * The cached value of the '{@link #getLabel() <em>Label</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getLabel()
 	 * @generated
 	 * @ordered
@@ -53,6 +55,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	 * The default value of the '{@link #getDuration() <em>Duration</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getDuration()
 	 * @generated
 	 * @ordered
@@ -63,6 +66,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	 * The cached value of the '{@link #getDuration() <em>Duration</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getDuration()
 	 * @generated
 	 * @ordered
@@ -73,6 +77,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	 * The default value of the '{@link #getErrorOutput() <em>Error Output</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getErrorOutput()
 	 * @generated
 	 * @ordered
@@ -83,6 +88,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	 * The cached value of the '{@link #getErrorOutput() <em>Error Output</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getErrorOutput()
 	 * @generated
 	 * @ordered
@@ -93,6 +99,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	 * The default value of the '{@link #getOutput() <em>Output</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getOutput()
 	 * @generated
 	 * @ordered
@@ -103,6 +110,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	 * The cached value of the '{@link #getOutput() <em>Output</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getOutput()
 	 * @generated
 	 * @ordered
@@ -112,6 +120,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected TestElement() {
@@ -121,6 +130,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -135,6 +145,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getLabel() {
@@ -144,6 +155,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setLabel(String newLabel) {
@@ -160,6 +172,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public long getDuration() {
@@ -169,6 +182,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setDuration(long newDuration) {
@@ -186,6 +200,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getErrorOutput() {
@@ -195,6 +210,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setErrorOutput(String newErrorOutput) {
@@ -212,6 +228,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getOutput() {
@@ -221,6 +238,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setOutput(String newOutput) {
@@ -233,6 +251,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -253,6 +272,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -277,6 +297,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -301,6 +322,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -321,6 +343,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

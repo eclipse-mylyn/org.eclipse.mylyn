@@ -14,17 +14,16 @@ package org.eclipse.mylyn.builds.core;
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Test Case</b></em>'.
  * <!-- end-user-doc -->
- *
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.builds.core.ITestCase#getClassName <em>Class Name</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.core.ITestCase#isSkipped <em>Skipped</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.core.ITestCase#getSuite <em>Suite</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.core.ITestCase#getStatus <em>Status</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.ITestCase#getClassName <em>Class Name</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.ITestCase#isSkipped <em>Skipped</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.ITestCase#getSuite <em>Suite</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.ITestCase#getStatus <em>Status</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public interface ITestCase extends ITestElement {
@@ -36,6 +35,7 @@ public interface ITestCase extends ITestElement {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Class Name</em>' attribute.
 	 * @see #setClassName(String)
 	 * @generated
@@ -43,10 +43,13 @@ public interface ITestCase extends ITestElement {
 	String getClassName();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestCase#getClassName <em>Class Name</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestCase#getClassName <em>Class Name</em>}'
+	 * attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Class Name</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Class Name</em>' attribute.
 	 * @see #getClassName()
 	 * @generated
 	 */
@@ -60,6 +63,7 @@ public interface ITestCase extends ITestElement {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Skipped</em>' attribute.
 	 * @see #setSkipped(boolean)
 	 * @generated
@@ -70,7 +74,9 @@ public interface ITestCase extends ITestElement {
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestCase#isSkipped <em>Skipped</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Skipped</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Skipped</em>' attribute.
 	 * @see #isSkipped()
 	 * @generated
 	 */
@@ -78,13 +84,15 @@ public interface ITestCase extends ITestElement {
 
 	/**
 	 * Returns the value of the '<em><b>Suite</b></em>' container reference.
-	 * It is bidirectional and its opposite is '{@link org.eclipse.mylyn.builds.core.ITestSuite#getCases <em>Cases</em>}'.
+	 * It is bidirectional and its opposite is '{@link org.eclipse.mylyn.builds.core.ITestSuite#getCases <em>Cases</em>}
+	 * '.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Suite</em>' container reference isn't clear, there really should be more of a
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Suite</em>' container reference.
 	 * @see #setSuite(ITestSuite)
 	 * @see org.eclipse.mylyn.builds.core.ITestSuite#getCases
@@ -93,10 +101,13 @@ public interface ITestCase extends ITestElement {
 	ITestSuite getSuite();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestCase#getSuite <em>Suite</em>}' container reference.
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestCase#getSuite <em>Suite</em>}' container
+	 * reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Suite</em>' container reference.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Suite</em>' container reference.
 	 * @see #getSuite()
 	 * @generated
 	 */
@@ -111,6 +122,7 @@ public interface ITestCase extends ITestElement {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Status</em>' attribute.
 	 * @see org.eclipse.mylyn.builds.core.TestCaseResult
 	 * @see #setStatus(TestCaseResult)
@@ -122,7 +134,9 @@ public interface ITestCase extends ITestElement {
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestCase#getStatus <em>Status</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Status</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Status</em>' attribute.
 	 * @see org.eclipse.mylyn.builds.core.TestCaseResult
 	 * @see #getStatus()
 	 * @generated

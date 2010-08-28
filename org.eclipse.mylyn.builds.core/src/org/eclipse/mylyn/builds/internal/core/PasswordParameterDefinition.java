@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: PasswordParameterDefinition.java,v 1.1 2010/08/28 06:14:17 spingel Exp $
+ * $Id: PasswordParameterDefinition.java,v 1.2 2010/08/28 09:21:40 spingel Exp $
  */
 package org.eclipse.mylyn.builds.internal.core;
 
@@ -18,10 +18,11 @@ import org.eclipse.mylyn.builds.core.IPasswordParameterDefinition;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.PasswordParameterDefinition#getDefaultValue <em>Default Value</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.PasswordParameterDefinition#getDefaultValue <em>Default Value</em>}
+ * </li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class PasswordParameterDefinition extends ParameterDefinition implements IPasswordParameterDefinition {
@@ -29,6 +30,7 @@ public class PasswordParameterDefinition extends ParameterDefinition implements 
 	 * The default value of the '{@link #getDefaultValue() <em>Default Value</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getDefaultValue()
 	 * @generated
 	 * @ordered
@@ -39,6 +41,7 @@ public class PasswordParameterDefinition extends ParameterDefinition implements 
 	 * The cached value of the '{@link #getDefaultValue() <em>Default Value</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getDefaultValue()
 	 * @generated
 	 * @ordered
@@ -48,6 +51,7 @@ public class PasswordParameterDefinition extends ParameterDefinition implements 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected PasswordParameterDefinition() {
@@ -57,6 +61,7 @@ public class PasswordParameterDefinition extends ParameterDefinition implements 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -71,6 +76,7 @@ public class PasswordParameterDefinition extends ParameterDefinition implements 
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getDefaultValue() {
@@ -80,6 +86,7 @@ public class PasswordParameterDefinition extends ParameterDefinition implements 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setDefaultValue(String newDefaultValue) {
@@ -93,6 +100,7 @@ public class PasswordParameterDefinition extends ParameterDefinition implements 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -107,6 +115,7 @@ public class PasswordParameterDefinition extends ParameterDefinition implements 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -122,6 +131,7 @@ public class PasswordParameterDefinition extends ParameterDefinition implements 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -137,6 +147,7 @@ public class PasswordParameterDefinition extends ParameterDefinition implements 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -151,6 +162,7 @@ public class PasswordParameterDefinition extends ParameterDefinition implements 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

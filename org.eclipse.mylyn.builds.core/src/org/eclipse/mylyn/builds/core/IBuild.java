@@ -17,25 +17,24 @@ import java.util.List;
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Build</b></em>'.
  * <!-- end-user-doc -->
- *
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.builds.core.IBuild#getId <em>Id</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.core.IBuild#getBuildNumber <em>Build Number</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.core.IBuild#getTimestamp <em>Timestamp</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.core.IBuild#getDuration <em>Duration</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.core.IBuild#getDisplayName <em>Display Name</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.core.IBuild#getState <em>State</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.core.IBuild#getStatus <em>Status</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.core.IBuild#getArtifacts <em>Artifacts</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.core.IBuild#getChangeSet <em>Change Set</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.core.IBuild#getPlan <em>Plan</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.core.IBuild#getLabel <em>Label</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.core.IBuild#getServer <em>Server</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IBuild#getId <em>Id</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IBuild#getBuildNumber <em>Build Number</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IBuild#getTimestamp <em>Timestamp</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IBuild#getDuration <em>Duration</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IBuild#getDisplayName <em>Display Name</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IBuild#getState <em>State</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IBuild#getStatus <em>Status</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IBuild#getArtifacts <em>Artifacts</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IBuild#getChangeSet <em>Change Set</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IBuild#getPlan <em>Plan</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IBuild#getLabel <em>Label</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IBuild#getServer <em>Server</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public interface IBuild extends IBuildElement {
@@ -46,6 +45,7 @@ public interface IBuild extends IBuildElement {
 	 * If the meaning of the '<em>Id</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Id</em>' attribute.
 	 * @see #setId(String)
 	 * @generated
@@ -56,7 +56,9 @@ public interface IBuild extends IBuildElement {
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuild#getId <em>Id</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Id</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Id</em>' attribute.
 	 * @see #getId()
 	 * @generated
 	 */
@@ -70,6 +72,7 @@ public interface IBuild extends IBuildElement {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Build Number</em>' attribute.
 	 * @see #setBuildNumber(int)
 	 * @generated
@@ -77,10 +80,13 @@ public interface IBuild extends IBuildElement {
 	int getBuildNumber();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuild#getBuildNumber <em>Build Number</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuild#getBuildNumber <em>Build Number</em>}'
+	 * attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Build Number</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Build Number</em>' attribute.
 	 * @see #getBuildNumber()
 	 * @generated
 	 */
@@ -94,6 +100,7 @@ public interface IBuild extends IBuildElement {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Timestamp</em>' attribute.
 	 * @see #setTimestamp(long)
 	 * @generated
@@ -104,7 +111,9 @@ public interface IBuild extends IBuildElement {
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuild#getTimestamp <em>Timestamp</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Timestamp</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Timestamp</em>' attribute.
 	 * @see #getTimestamp()
 	 * @generated
 	 */
@@ -118,6 +127,7 @@ public interface IBuild extends IBuildElement {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Duration</em>' attribute.
 	 * @see #setDuration(long)
 	 * @generated
@@ -128,7 +138,9 @@ public interface IBuild extends IBuildElement {
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuild#getDuration <em>Duration</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Duration</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Duration</em>' attribute.
 	 * @see #getDuration()
 	 * @generated
 	 */
@@ -142,6 +154,7 @@ public interface IBuild extends IBuildElement {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Display Name</em>' attribute.
 	 * @see #setDisplayName(String)
 	 * @generated
@@ -149,10 +162,13 @@ public interface IBuild extends IBuildElement {
 	String getDisplayName();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuild#getDisplayName <em>Display Name</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuild#getDisplayName <em>Display Name</em>}'
+	 * attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Display Name</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Display Name</em>' attribute.
 	 * @see #getDisplayName()
 	 * @generated
 	 */
@@ -166,6 +182,7 @@ public interface IBuild extends IBuildElement {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>State</em>' attribute.
 	 * @see #setState(BuildState)
 	 * @generated
@@ -176,7 +193,9 @@ public interface IBuild extends IBuildElement {
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuild#getState <em>State</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>State</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>State</em>' attribute.
 	 * @see #getState()
 	 * @generated
 	 */
@@ -190,6 +209,7 @@ public interface IBuild extends IBuildElement {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Status</em>' attribute.
 	 * @see #setStatus(BuildStatus)
 	 * @generated
@@ -200,7 +220,9 @@ public interface IBuild extends IBuildElement {
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuild#getStatus <em>Status</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Status</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Status</em>' attribute.
 	 * @see #getStatus()
 	 * @generated
 	 */
@@ -215,6 +237,7 @@ public interface IBuild extends IBuildElement {
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Artifacts</em>' reference list.
 	 * @generated
 	 */
@@ -228,6 +251,7 @@ public interface IBuild extends IBuildElement {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Change Set</em>' reference.
 	 * @see #setChangeSet(IChangeSet)
 	 * @generated
@@ -238,7 +262,9 @@ public interface IBuild extends IBuildElement {
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuild#getChangeSet <em>Change Set</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Change Set</em>' reference.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Change Set</em>' reference.
 	 * @see #getChangeSet()
 	 * @generated
 	 */
@@ -251,6 +277,7 @@ public interface IBuild extends IBuildElement {
 	 * If the meaning of the '<em>Plan</em>' reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Plan</em>' reference.
 	 * @see #setPlan(IBuildPlan)
 	 * @generated
@@ -261,7 +288,9 @@ public interface IBuild extends IBuildElement {
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuild#getPlan <em>Plan</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Plan</em>' reference.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Plan</em>' reference.
 	 * @see #getPlan()
 	 * @generated
 	 */
@@ -275,6 +304,7 @@ public interface IBuild extends IBuildElement {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Label</em>' attribute.
 	 * @see #setLabel(String)
 	 * @generated
@@ -285,7 +315,9 @@ public interface IBuild extends IBuildElement {
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuild#getLabel <em>Label</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Label</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Label</em>' attribute.
 	 * @see #getLabel()
 	 * @generated
 	 */
@@ -299,6 +331,7 @@ public interface IBuild extends IBuildElement {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Server</em>' reference.
 	 * @see #setServer(IBuildServer)
 	 * @generated
@@ -309,7 +342,9 @@ public interface IBuild extends IBuildElement {
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuild#getServer <em>Server</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Server</em>' reference.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Server</em>' reference.
 	 * @see #getServer()
 	 * @generated
 	 */

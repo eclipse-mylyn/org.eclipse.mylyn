@@ -14,14 +14,13 @@ package org.eclipse.mylyn.builds.core;
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Boolean Parameter Definition</b></em>'.
  * <!-- end-user-doc -->
- *
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.builds.core.IBooleanParameterDefinition#isDefaultValue <em>Default Value</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IBooleanParameterDefinition#isDefaultValue <em>Default Value</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public interface IBooleanParameterDefinition extends IParameterDefinition {
@@ -33,6 +32,7 @@ public interface IBooleanParameterDefinition extends IParameterDefinition {
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Default Value</em>' attribute.
 	 * @see #setDefaultValue(boolean)
 	 * @generated
@@ -40,10 +40,13 @@ public interface IBooleanParameterDefinition extends IParameterDefinition {
 	boolean isDefaultValue();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBooleanParameterDefinition#isDefaultValue <em>Default Value</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBooleanParameterDefinition#isDefaultValue
+	 * <em>Default Value</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Default Value</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Default Value</em>' attribute.
 	 * @see #isDefaultValue()
 	 * @generated
 	 */

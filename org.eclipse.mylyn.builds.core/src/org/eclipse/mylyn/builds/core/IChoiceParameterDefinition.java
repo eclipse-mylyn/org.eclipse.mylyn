@@ -16,14 +16,13 @@ import java.util.List;
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Choice Parameter Definition</b></em>'.
  * <!-- end-user-doc -->
- *
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.builds.core.IChoiceParameterDefinition#getOptions <em>Options</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IChoiceParameterDefinition#getOptions <em>Options</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public interface IChoiceParameterDefinition extends IParameterDefinition {
@@ -36,6 +35,7 @@ public interface IChoiceParameterDefinition extends IParameterDefinition {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Options</em>' attribute list.
 	 * @generated
 	 */

@@ -17,16 +17,15 @@ import java.util.List;
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Model</b></em>'.
  * <!-- end-user-doc -->
- *
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.builds.core.IBuildModel#getServers <em>Servers</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.core.IBuildModel#getPlans <em>Plans</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.core.IBuildModel#getBuilds <em>Builds</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IBuildModel#getServers <em>Servers</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IBuildModel#getPlans <em>Plans</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IBuildModel#getBuilds <em>Builds</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public interface IBuildModel {
@@ -39,6 +38,7 @@ public interface IBuildModel {
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Servers</em>' containment reference list.
 	 * @generated
 	 */
@@ -53,6 +53,7 @@ public interface IBuildModel {
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Plans</em>' containment reference list.
 	 * @generated
 	 */
@@ -67,6 +68,7 @@ public interface IBuildModel {
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Builds</em>' containment reference list.
 	 * @generated
 	 */

@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: StringParameterDefinition.java,v 1.1 2010/08/28 06:14:17 spingel Exp $
+ * $Id: StringParameterDefinition.java,v 1.2 2010/08/28 09:21:40 spingel Exp $
  */
 package org.eclipse.mylyn.builds.internal.core;
 
@@ -18,10 +18,10 @@ import org.eclipse.mylyn.builds.core.IStringParameterDefinition;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.StringParameterDefinition#getDefaultValue <em>Default Value</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.StringParameterDefinition#getDefaultValue <em>Default Value</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class StringParameterDefinition extends ParameterDefinition implements IStringParameterDefinition {
@@ -29,6 +29,7 @@ public class StringParameterDefinition extends ParameterDefinition implements IS
 	 * The default value of the '{@link #getDefaultValue() <em>Default Value</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getDefaultValue()
 	 * @generated
 	 * @ordered
@@ -39,6 +40,7 @@ public class StringParameterDefinition extends ParameterDefinition implements IS
 	 * The cached value of the '{@link #getDefaultValue() <em>Default Value</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getDefaultValue()
 	 * @generated
 	 * @ordered
@@ -48,6 +50,7 @@ public class StringParameterDefinition extends ParameterDefinition implements IS
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected StringParameterDefinition() {
@@ -57,6 +60,7 @@ public class StringParameterDefinition extends ParameterDefinition implements IS
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -71,6 +75,7 @@ public class StringParameterDefinition extends ParameterDefinition implements IS
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getDefaultValue() {
@@ -80,6 +85,7 @@ public class StringParameterDefinition extends ParameterDefinition implements IS
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setDefaultValue(String newDefaultValue) {
@@ -93,6 +99,7 @@ public class StringParameterDefinition extends ParameterDefinition implements IS
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -107,6 +114,7 @@ public class StringParameterDefinition extends ParameterDefinition implements IS
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -122,6 +130,7 @@ public class StringParameterDefinition extends ParameterDefinition implements IS
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -137,6 +146,7 @@ public class StringParameterDefinition extends ParameterDefinition implements IS
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -151,6 +161,7 @@ public class StringParameterDefinition extends ParameterDefinition implements IS
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

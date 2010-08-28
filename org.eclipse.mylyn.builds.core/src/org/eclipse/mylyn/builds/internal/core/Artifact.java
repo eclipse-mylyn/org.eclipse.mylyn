@@ -23,12 +23,12 @@ import org.eclipse.mylyn.builds.core.IArtifact;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.Artifact#getDisplayName <em>Display Name</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.Artifact#getFilename <em>Filename</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.Artifact#getRelativePath <em>Relative Path</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.Artifact#getDisplayName <em>Display Name</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.Artifact#getFilename <em>Filename</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.Artifact#getRelativePath <em>Relative Path</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class Artifact extends EObjectImpl implements IArtifact {
@@ -36,6 +36,7 @@ public class Artifact extends EObjectImpl implements IArtifact {
 	 * The default value of the '{@link #getDisplayName() <em>Display Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getDisplayName()
 	 * @generated
 	 * @ordered
@@ -46,6 +47,7 @@ public class Artifact extends EObjectImpl implements IArtifact {
 	 * The cached value of the '{@link #getDisplayName() <em>Display Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getDisplayName()
 	 * @generated
 	 * @ordered
@@ -56,6 +58,7 @@ public class Artifact extends EObjectImpl implements IArtifact {
 	 * The default value of the '{@link #getFilename() <em>Filename</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getFilename()
 	 * @generated
 	 * @ordered
@@ -66,6 +69,7 @@ public class Artifact extends EObjectImpl implements IArtifact {
 	 * The cached value of the '{@link #getFilename() <em>Filename</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getFilename()
 	 * @generated
 	 * @ordered
@@ -76,6 +80,7 @@ public class Artifact extends EObjectImpl implements IArtifact {
 	 * The default value of the '{@link #getRelativePath() <em>Relative Path</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getRelativePath()
 	 * @generated
 	 * @ordered
@@ -86,6 +91,7 @@ public class Artifact extends EObjectImpl implements IArtifact {
 	 * The cached value of the '{@link #getRelativePath() <em>Relative Path</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getRelativePath()
 	 * @generated
 	 * @ordered
@@ -95,6 +101,7 @@ public class Artifact extends EObjectImpl implements IArtifact {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected Artifact() {
@@ -104,6 +111,7 @@ public class Artifact extends EObjectImpl implements IArtifact {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -118,6 +126,7 @@ public class Artifact extends EObjectImpl implements IArtifact {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getDisplayName() {
@@ -127,6 +136,7 @@ public class Artifact extends EObjectImpl implements IArtifact {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setDisplayName(String newDisplayName) {
@@ -144,6 +154,7 @@ public class Artifact extends EObjectImpl implements IArtifact {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getFilename() {
@@ -153,6 +164,7 @@ public class Artifact extends EObjectImpl implements IArtifact {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setFilename(String newFilename) {
@@ -170,6 +182,7 @@ public class Artifact extends EObjectImpl implements IArtifact {
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getRelativePath() {
@@ -179,6 +192,7 @@ public class Artifact extends EObjectImpl implements IArtifact {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setRelativePath(String newRelativePath) {
@@ -192,6 +206,7 @@ public class Artifact extends EObjectImpl implements IArtifact {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -210,6 +225,7 @@ public class Artifact extends EObjectImpl implements IArtifact {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -231,6 +247,7 @@ public class Artifact extends EObjectImpl implements IArtifact {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -252,6 +269,7 @@ public class Artifact extends EObjectImpl implements IArtifact {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -270,6 +288,7 @@ public class Artifact extends EObjectImpl implements IArtifact {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
