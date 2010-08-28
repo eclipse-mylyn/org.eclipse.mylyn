@@ -68,7 +68,7 @@ public class RunBuildAction extends BaseSelectionListenerAction {
 
 		RunBuildRequest request = new RunBuildRequest(copy);
 		request.setParameters(parameters);
-		RunBuildOperation operation = new RunBuildOperation(request);
-		BuildsUiInternal.getModel().getScheduler().schedule(operation);
+		RunBuildOperation operation = new RunBuildOperation(BuildsUiInternal.getOperationService(), request);
+		operation.execute();
 	}
 }

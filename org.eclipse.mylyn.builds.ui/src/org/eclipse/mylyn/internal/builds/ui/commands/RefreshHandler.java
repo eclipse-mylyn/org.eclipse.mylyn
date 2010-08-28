@@ -11,14 +11,12 @@
 
 package org.eclipse.mylyn.internal.builds.ui.commands;
 
-import java.util.Collections;
-
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylyn.builds.internal.core.BuildServer;
+import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.internal.core.operations.RefreshOperation;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -32,10 +30,9 @@ public class RefreshHandler extends AbstractHandler {
 		ISelection selection = HandlerUtil.getCurrentSelection(event);
 		if (selection instanceof IStructuredSelection) {
 			Object item = ((IStructuredSelection) selection).getFirstElement();
-			if (item instanceof BuildServer) {
-				BuildServer server = (BuildServer) item;
-				RefreshOperation op = new RefreshOperation(BuildsUiInternal.getModel(), Collections
-						.singletonList(server));
+			if (item instanceof IBuildServer) {
+				IBuildServer server = (IBuildServer) item;
+				RefreshOperation op = BuildsUiInternal.getFactory().getRefreshOperation(server);
 				op.execute();
 			}
 		}

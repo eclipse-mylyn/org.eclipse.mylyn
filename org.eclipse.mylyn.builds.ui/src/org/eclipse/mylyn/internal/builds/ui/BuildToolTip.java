@@ -81,7 +81,18 @@ public class BuildToolTip extends RichToolTip {
 			}
 		}
 
+		if (data instanceof IBuildElement) {
+			if (data.getElementStatus() != null) {
+				addIconAndLabel(parent, CommonImages.getImage(CommonImages.WARNING), data.getElementStatus()
+						.getMessage());
+			}
+		}
+
 		return parent;
+	}
+
+	protected void addIconAndLabel(Composite parent, Image image, String text) {
+		addIconAndLabel(parent, image, text, false);
 	}
 
 	protected void addIconAndLabel(Composite parent, Image image, String text, boolean bold) {

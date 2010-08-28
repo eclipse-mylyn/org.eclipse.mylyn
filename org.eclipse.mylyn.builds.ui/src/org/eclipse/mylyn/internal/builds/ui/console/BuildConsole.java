@@ -16,8 +16,6 @@ import java.io.IOException;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.internal.core.BuildModel;
 import org.eclipse.mylyn.builds.internal.core.operations.GetBuildOutputOperation;
@@ -25,6 +23,7 @@ import org.eclipse.mylyn.builds.internal.core.operations.GetBuildOutputOperation
 import org.eclipse.mylyn.builds.internal.core.operations.GetBuildOutputOperation.BuildOutputReader;
 import org.eclipse.mylyn.commons.core.IOperationMonitor;
 import org.eclipse.mylyn.internal.builds.ui.BuildImages;
+import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.IConsoleManager;
@@ -75,23 +74,24 @@ public class BuildConsole {
 
 	private void doGetOutput() {
 		if (operation == null) {
-			operation = new GetBuildOutputOperation(build, new BuildOutputReader() {
-				@Override
-				public void handle(BuildOutputEvent event, IOperationMonitor monitor) throws IOException, CoreException {
-					BufferedReader reader = event.getInput();
-					String line;
-					while ((line = reader.readLine()) != null) {
-						stream.println(line);
-					}
-				}
-			});
-			operation.addJobChangeListener(new JobChangeAdapter() {
-				@Override
-				public void done(IJobChangeEvent event) {
-					operation = null;
-				}
-			});
-			model.getScheduler().schedule(operation);
+			operation = new GetBuildOutputOperation(BuildsUiInternal.getOperationService(), build,
+					new BuildOutputReader() {
+						@Override
+						public void handle(BuildOutputEvent event, IOperationMonitor monitor) throws IOException,
+								CoreException {
+							BufferedReader reader = event.getInput();
+							String line;
+							while ((line = reader.readLine()) != null) {
+								stream.println(line);
+							}
+						}
+
+						@Override
+						public void done() {
+							operation = null;
+						}
+					});
+			operation.execute();
 		}
 	}
 

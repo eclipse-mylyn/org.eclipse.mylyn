@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.builds.ui.view;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
+import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.StyledString.Styler;
@@ -25,20 +26,31 @@ import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.internal.core.BuildPlan;
 import org.eclipse.mylyn.builds.internal.core.BuildServer;
 import org.eclipse.mylyn.internal.builds.ui.BuildImages;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.TextStyle;
 
 /**
  * @author Steffen Pingel
  */
-public class BuildLabelProvider extends LabelProvider implements IStyledLabelProvider {
+public class BuildLabelProvider extends LabelProvider implements IStyledLabelProvider, IFontProvider {
 
 	final Styler NO_STYLE = new Styler() {
 		@Override
 		public void applyStyles(TextStyle textStyle) {
 		}
 	};
+
+	public Font getFont(Object element) {
+		if (element instanceof IBuildElement) {
+			if (((IBuildElement) element).getOperations().size() > 0) {
+				return CommonFonts.ITALIC;
+			}
+		}
+		return null;
+	}
 
 	@Override
 	public Image getImage(Object element) {
@@ -84,7 +96,7 @@ public class BuildLabelProvider extends LabelProvider implements IStyledLabelPro
 	}
 
 	private ImageDescriptor getBottomLeftDecoration(IBuildElement element) {
-		if (element.getOperationStatus() != null) {
+		if (element.getElementStatus() != null) {
 			return CommonImages.OVERLAY_WARNING;
 		}
 		return null;

@@ -27,6 +27,7 @@ import org.eclipse.mylyn.builds.internal.core.BuildModel;
 import org.eclipse.mylyn.builds.internal.core.BuildServer;
 import org.eclipse.mylyn.builds.internal.core.IBuildLoader;
 import org.eclipse.mylyn.builds.internal.core.IBuildModelRealm;
+import org.eclipse.mylyn.builds.internal.core.operations.IOperationService;
 import org.eclipse.mylyn.builds.internal.core.util.BuildModelManager;
 import org.eclipse.mylyn.builds.ui.BuildsUi;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
@@ -139,6 +140,10 @@ public class BuildsUiInternal {
 
 	private static BuildModelManager manager;
 
+	private static OperationServiceUi operationService;
+
+	private static OperationFactory operationFactory;
+
 	public static final int MIN_REFRESH_INTERVAL = 1 * 60 * 1000;
 
 	public static final String PREF_AUTO_REFRESH_ENABLED = "refresh.enabled"; //$NON-NLS-1$
@@ -160,9 +165,16 @@ public class BuildsUiInternal {
 		if (manager == null) {
 			manager = new BuildModelManager(BuildsUiPlugin.getDefault().getBuildsFile().toFile(), buildLoader);
 			manager.getModel().setLoader(buildLoader);
-			manager.getModel().setScheduler(new BuildSchedulerUi());
+			manager.getModel().setScheduler(getOperationService().getScheduler());
 		}
 		return manager;
+	}
+
+	public static synchronized IOperationService getOperationService() {
+		if (operationService == null) {
+			operationService = new OperationServiceUi();
+		}
+		return operationService;
 	}
 
 	public static synchronized BuildModel getModel() {
@@ -183,6 +195,13 @@ public class BuildsUiInternal {
 			}
 		}
 		return ids;
+	}
+
+	public static OperationFactory getFactory() {
+		if (operationFactory == null) {
+			operationFactory = new OperationFactory(getOperationService());
+		}
+		return operationFactory;
 	}
 
 }

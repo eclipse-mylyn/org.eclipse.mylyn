@@ -28,7 +28,7 @@ public class RefreshAction extends Action {
 
 	@Override
 	public void run() {
-		RefreshOperation operation = new RefreshOperation(BuildsUiInternal.getModel());
+		RefreshOperation operation = BuildsUiInternal.getFactory().getRefreshOperation();
 		operation.execute();
 	}
 
