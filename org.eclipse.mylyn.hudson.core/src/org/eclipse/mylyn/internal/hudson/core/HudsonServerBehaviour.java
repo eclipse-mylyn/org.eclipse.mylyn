@@ -39,8 +39,8 @@ import org.eclipse.mylyn.builds.core.IParameterDefinition;
 import org.eclipse.mylyn.builds.core.IPasswordParameterDefinition;
 import org.eclipse.mylyn.builds.core.IStringParameterDefinition;
 import org.eclipse.mylyn.builds.core.spi.BuildPlanRequest;
-import org.eclipse.mylyn.builds.core.spi.BuildRequest;
-import org.eclipse.mylyn.builds.core.spi.BuildRequest.Kind;
+import org.eclipse.mylyn.builds.core.spi.GetBuildsRequest;
+import org.eclipse.mylyn.builds.core.spi.GetBuildsRequest.Kind;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
 import org.eclipse.mylyn.builds.core.spi.BuildServerConfiguration;
 import org.eclipse.mylyn.builds.core.spi.RunBuildRequest;
@@ -93,7 +93,7 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 	}
 
 	@Override
-	public List<IBuild> getBuilds(BuildRequest request, IOperationMonitor monitor) throws CoreException {
+	public List<IBuild> getBuilds(GetBuildsRequest request, IOperationMonitor monitor) throws CoreException {
 		if (request.getKind() != Kind.LAST) {
 			throw new UnsupportedOperationException();
 		}
