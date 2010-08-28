@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.builds.ui;
 
-
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.ui.spi.BuildServerWizard;

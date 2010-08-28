@@ -23,7 +23,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.builds.core.IBuildModel;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
-import org.eclipse.mylyn.internal.builds.core.BuildModel;
+import org.eclipse.mylyn.builds.internal.core.BuildModel;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 
 /**

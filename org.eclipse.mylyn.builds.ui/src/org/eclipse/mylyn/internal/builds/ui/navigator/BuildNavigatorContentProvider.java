@@ -16,8 +16,8 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.mylyn.builds.internal.core.BuildModel;
 import org.eclipse.mylyn.commons.repositories.RepositoryCategory;
-import org.eclipse.mylyn.internal.builds.core.BuildModel;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 
 /**

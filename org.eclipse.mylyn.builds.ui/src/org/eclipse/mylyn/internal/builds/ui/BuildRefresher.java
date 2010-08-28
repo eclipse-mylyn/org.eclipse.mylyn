@@ -16,9 +16,9 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.mylyn.builds.internal.core.operations.BuildJob;
+import org.eclipse.mylyn.builds.internal.core.operations.RefreshOperation;
 import org.eclipse.mylyn.commons.core.IOperationMonitor;
-import org.eclipse.mylyn.internal.builds.core.operations.BuildJob;
-import org.eclipse.mylyn.internal.builds.core.operations.RefreshOperation;
 
 /**
  * @author Steffen Pingel

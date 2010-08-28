@@ -18,8 +18,8 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylyn.internal.builds.core.BuildServer;
-import org.eclipse.mylyn.internal.builds.core.operations.RefreshOperation;
+import org.eclipse.mylyn.builds.internal.core.BuildServer;
+import org.eclipse.mylyn.builds.internal.core.operations.RefreshOperation;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 import org.eclipse.ui.handlers.HandlerUtil;
 

@@ -39,12 +39,13 @@ import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.IBuildServerConfiguration;
 import org.eclipse.mylyn.builds.core.spi.BuildServerConfiguration;
 import org.eclipse.mylyn.builds.core.util.ProgressUtil;
+import org.eclipse.mylyn.builds.internal.core.BuildPlan;
+import org.eclipse.mylyn.builds.internal.core.BuildServer;
 import org.eclipse.mylyn.commons.core.IOperationMonitor;
 import org.eclipse.mylyn.commons.core.IOperationMonitor.OperationFlag;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.repositories.RepositoryValidator;
 import org.eclipse.mylyn.commons.ui.team.RepositoryLocationPart;
-import org.eclipse.mylyn.internal.builds.core.BuildPlan;
 import org.eclipse.mylyn.internal.builds.ui.BuildServerValidator;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
@@ -106,9 +107,9 @@ public class BuildServerPart extends RepositoryLocationPart {
 			IOperationMonitor progress = ProgressUtil.convert(monitor, "Validating repository", 2);
 			progress.addFlag(OperationFlag.BACKGROUND);
 			try {
-				IStatus result = getServer().validate(progress.newChild(1));
+				IStatus result = ((BuildServer) getServer()).validate(progress.newChild(1));
 				if (result.isOK()) {
-					configuration = getServer().refreshConfiguration(progress.newChild(2));
+					configuration = ((BuildServer) getServer()).refreshConfiguration(progress.newChild(2));
 				}
 				return result;
 			} catch (CoreException e) {

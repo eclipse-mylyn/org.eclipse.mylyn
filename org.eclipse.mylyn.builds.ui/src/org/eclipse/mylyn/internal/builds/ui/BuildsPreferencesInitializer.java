@@ -27,7 +27,8 @@ public class BuildsPreferencesInitializer extends AbstractPreferenceInitializer 
 	public void initializeDefaultPreferences() {
 		IPreferenceStore preferencesStore = BuildsUiPlugin.getDefault().getPreferenceStore();
 		preferencesStore.setDefault(BuildsUiInternal.PREF_AUTO_REFRESH_ENABLED, false);
-		preferencesStore.setDefault(BuildsUiInternal.PREF_AUTO_REFRESH_INTERVAL, BuildsUiInternal.DEFAULT_REFRESH_INTERVAL);
+		preferencesStore.setDefault(BuildsUiInternal.PREF_AUTO_REFRESH_INTERVAL,
+				BuildsUiInternal.DEFAULT_REFRESH_INTERVAL);
 	}
 
 }

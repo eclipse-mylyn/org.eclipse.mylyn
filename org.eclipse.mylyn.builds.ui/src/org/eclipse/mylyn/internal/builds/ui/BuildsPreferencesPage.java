@@ -109,9 +109,11 @@ public class BuildsPreferencesPage extends PreferencePage implements IWorkbenchP
 
 	@Override
 	protected void performDefaults() {
-		intervalText.setText(String.valueOf(getPreferenceStore().getDefaultLong(BuildsUiInternal.PREF_AUTO_REFRESH_INTERVAL)
+		intervalText.setText(String.valueOf(getPreferenceStore().getDefaultLong(
+				BuildsUiInternal.PREF_AUTO_REFRESH_INTERVAL)
 				/ MILLIS_PER_MINUTE));
-		enableRefreshButton.setSelection(getPreferenceStore().getDefaultBoolean(BuildsUiInternal.PREF_AUTO_REFRESH_ENABLED));
+		enableRefreshButton.setSelection(getPreferenceStore().getDefaultBoolean(
+				BuildsUiInternal.PREF_AUTO_REFRESH_ENABLED));
 		updateEnablement();
 	}
 

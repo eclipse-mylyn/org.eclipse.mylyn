@@ -15,8 +15,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.mylyn.internal.builds.core.operations.BuildJob;
-import org.eclipse.mylyn.internal.builds.core.util.BuildScheduler;
+import org.eclipse.mylyn.builds.internal.core.operations.BuildJob;
+import org.eclipse.mylyn.builds.internal.core.util.BuildScheduler;
 import org.eclipse.ui.statushandlers.StatusManager;
 
 /**
