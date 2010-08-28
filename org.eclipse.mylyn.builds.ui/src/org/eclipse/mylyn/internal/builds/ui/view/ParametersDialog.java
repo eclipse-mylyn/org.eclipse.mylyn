@@ -19,7 +19,7 @@ import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.mylyn.internal.builds.core.BooleanParameterDefinition;
 import org.eclipse.mylyn.internal.builds.core.BuildPlan;
 import org.eclipse.mylyn.internal.builds.core.ChoiceParameterDefinition;
-import org.eclipse.mylyn.internal.builds.core.IParameterDefinition;
+import org.eclipse.mylyn.internal.builds.core.ParameterDefinition;
 import org.eclipse.mylyn.internal.builds.core.PasswordParameterDefinition;
 import org.eclipse.mylyn.internal.builds.core.StringParameterDefinition;
 import org.eclipse.osgi.util.NLS;
@@ -73,7 +73,7 @@ public class ParametersDialog extends TitleAreaDialog {
 		pane.setLayoutData(new GridData(GridData.FILL_BOTH));
 		pane.setLayout(new GridLayout(2, false));
 
-		for (final IParameterDefinition definition : plan.getParameterDefinitions()) {
+		for (final ParameterDefinition definition : plan.getParameterDefinitions()) {
 			String name = definition.getName();
 
 			Label label = new Label(pane, SWT.NONE);
@@ -100,7 +100,7 @@ public class ParametersDialog extends TitleAreaDialog {
 		return composite;
 	}
 
-	private Control addParameter(Composite pane, IParameterDefinition definition) {
+	private Control addParameter(Composite pane, ParameterDefinition definition) {
 		if (definition instanceof ChoiceParameterDefinition) {
 			ChoiceParameterDefinition def = (ChoiceParameterDefinition) definition;
 			Combo control = new Combo(pane, SWT.SINGLE | SWT.BORDER);
@@ -140,7 +140,7 @@ public class ParametersDialog extends TitleAreaDialog {
 	@Override
 	protected void okPressed() {
 		parameters = new HashMap<String, String>();
-		for (final IParameterDefinition definition : plan.getParameterDefinitions()) {
+		for (final ParameterDefinition definition : plan.getParameterDefinitions()) {
 			String name = definition.getName();
 			Control control = controls.get(name);
 			String parameter = getParameter(control);
