@@ -22,8 +22,8 @@ import org.eclipse.mylyn.builds.core.BuildState;
 import org.eclipse.mylyn.builds.core.BuildStatus;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
-import org.eclipse.mylyn.builds.core.IBuildPlanData;
-import org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy;
+import org.eclipse.mylyn.builds.core.IBuildPlan;
+import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.spi.BuildPlanRequest;
 import org.eclipse.mylyn.builds.core.spi.BuildRequest;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
@@ -58,22 +58,22 @@ public class MockBuildServerBehavior extends BuildServerBehaviour {
 	}
 
 	@Override
-	public List<IBuildPlanData> getPlans(BuildPlanRequest request, IOperationMonitor monitor) throws CoreException {
-		IBuildPlanWorkingCopy failingPlan = createBuildPlan();
+	public List<IBuildPlan> getPlans(BuildPlanRequest request, IOperationMonitor monitor) throws CoreException {
+		IBuildPlan failingPlan = createBuildPlan();
 		failingPlan.setId("1");
 		failingPlan.setName("Failing Build Plan");
 		failingPlan.setState(BuildState.RUNNING);
 		failingPlan.setStatus(BuildStatus.FAILED);
 		failingPlan.setHealth(15);
 
-		IBuildPlanWorkingCopy childPlan1 = createBuildPlan();
+		IBuildPlan childPlan1 = createBuildPlan();
 		childPlan1.setId("1.1");
 		childPlan1.setName("Stopped Child Build Plan");
 		childPlan1.setState(BuildState.STOPPED);
 		childPlan1.setStatus(BuildStatus.FAILED);
 		//failingPlan.getChildren().add(childPlan1);
 
-		IBuildPlanWorkingCopy childPlan2 = createBuildPlan();
+		IBuildPlan childPlan2 = createBuildPlan();
 		childPlan2.setId("1.2");
 		childPlan2.setName("Running Child Build Plan");
 		childPlan2.setState(BuildState.STOPPED);
@@ -81,7 +81,7 @@ public class MockBuildServerBehavior extends BuildServerBehaviour {
 		childPlan2.setHealth(55);
 		//failingPlan.getChildren().add(childPlan2);
 
-		IBuildPlanWorkingCopy succeedingPlan = createBuildPlan();
+		IBuildPlan succeedingPlan = createBuildPlan();
 		succeedingPlan.setId("2");
 		succeedingPlan.setName("Succeeding Build Plan");
 		succeedingPlan.setState(BuildState.STOPPED);
