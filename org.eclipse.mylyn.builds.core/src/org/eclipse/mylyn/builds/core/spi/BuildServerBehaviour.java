@@ -18,11 +18,11 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.builds.core.IBuild;
-import org.eclipse.mylyn.builds.core.IBuildPlanData;
-import org.eclipse.mylyn.builds.core.IBuildPlanWorkingCopy;
-import org.eclipse.mylyn.builds.core.IBuildWorkingCopy;
+import org.eclipse.mylyn.builds.core.IBuildPlan;
+import org.eclipse.mylyn.builds.core.IBuildPlan;
+import org.eclipse.mylyn.builds.core.IBuild;
+import org.eclipse.mylyn.builds.internal.core.BuildFactory;
 import org.eclipse.mylyn.commons.core.IOperationMonitor;
-import org.eclipse.mylyn.internal.builds.core.BuildFactory;
 
 /**
  * @author Steffen Pingel
@@ -32,11 +32,11 @@ public abstract class BuildServerBehaviour {
 	public BuildServerBehaviour() {
 	}
 
-	protected IBuildPlanWorkingCopy createBuildPlan() {
+	protected IBuildPlan createBuildPlan() {
 		return BuildFactory.eINSTANCE.createBuildPlan();
 	}
 
-	protected IBuildWorkingCopy createBuild() {
+	protected IBuild createBuild() {
 		return BuildFactory.eINSTANCE.createBuild();
 	}
 
@@ -46,8 +46,7 @@ public abstract class BuildServerBehaviour {
 
 	public abstract Reader getConsole(IBuild build, IOperationMonitor monitor) throws CoreException;
 
-	public abstract List<IBuildPlanData> getPlans(BuildPlanRequest request, IOperationMonitor monitor)
-			throws CoreException;
+	public abstract List<IBuildPlan> getPlans(BuildPlanRequest request, IOperationMonitor monitor) throws CoreException;
 
 	public abstract BuildServerConfiguration refreshConfiguration(IOperationMonitor monitor) throws CoreException;
 

@@ -14,16 +14,62 @@ package org.eclipse.mylyn.builds.core;
 import java.util.List;
 
 /**
- * @author Steffen Pingel
- * @noimplement This interface is not intended to be implemented by clients.
- * @noextend This interface is not intended to be extended by clients.
+ * <!-- begin-user-doc -->
+ * A representation of the model object '<em><b>Model</b></em>'.
+ * <!-- end-user-doc -->
+ *
+ * <p>
+ * The following features are supported:
+ * <ul>
+ *   <li>{@link org.eclipse.mylyn.builds.core.IBuildModel#getServers <em>Servers</em>}</li>
+ *   <li>{@link org.eclipse.mylyn.builds.core.IBuildModel#getPlans <em>Plans</em>}</li>
+ *   <li>{@link org.eclipse.mylyn.builds.core.IBuildModel#getBuilds <em>Builds</em>}</li>
+ * </ul>
+ * </p>
+ *
+ * @generated
  */
 public interface IBuildModel {
+	/**
+	 * Returns the value of the '<em><b>Servers</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.mylyn.builds.core.IBuildServer}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Servers</em>' containment reference list isn't clear, there really should be more of a
+	 * description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Servers</em>' containment reference list.
+	 * @generated
+	 */
+	List<IBuildServer> getServers();
 
-	public List<IBuildServer> getServers();
+	/**
+	 * Returns the value of the '<em><b>Plans</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.mylyn.builds.core.IBuildPlan}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Plans</em>' containment reference list isn't clear, there really should be more of a
+	 * description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Plans</em>' containment reference list.
+	 * @generated
+	 */
+	List<IBuildPlan> getPlans();
 
-	public List<IBuildPlan> getPlans();
+	/**
+	 * Returns the value of the '<em><b>Builds</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.mylyn.builds.core.IBuild}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Builds</em>' containment reference list isn't clear, there really should be more of a
+	 * description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Builds</em>' containment reference list.
+	 * @generated
+	 */
+	List<IBuild> getBuilds();
 
-	public List<IBuild> getBuilds();
-
-}
+} // IBuildModel

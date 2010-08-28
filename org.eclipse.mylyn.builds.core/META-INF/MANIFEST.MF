@@ -18,9 +18,9 @@ Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.mylyn.builds.core,
  org.eclipse.mylyn.builds.core.spi,
  org.eclipse.mylyn.builds.core.util,
+ org.eclipse.mylyn.builds.internal.core;x-friends:="org.eclipse.mylyn.builds.ui",
+ org.eclipse.mylyn.builds.internal.core.operations;x-friends:="org.eclipse.mylyn.builds.ui",
+ org.eclipse.mylyn.builds.internal.core.util;x-friends:="org.eclipse.mylyn.builds.ui",
  org.eclipse.mylyn.commons.core,
  org.eclipse.mylyn.commons.http;uses:="org.eclipse.mylyn.commons.net",
- org.eclipse.mylyn.internal.builds.core;x-friends:="org.eclipse.mylyn.builds.ui",
- org.eclipse.mylyn.internal.builds.core.operations;x-friends:="org.eclipse.mylyn.builds.ui",
- org.eclipse.mylyn.internal.builds.core.util;x-friends:="org.eclipse.mylyn.builds.ui",
  org.eclipse.mylyn.internal.commons.http;x-friends:="org.eclipse.mylyn.builds.ui"

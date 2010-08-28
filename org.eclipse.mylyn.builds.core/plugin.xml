@@ -14,7 +14,7 @@
    <extension
          point="org.eclipse.emf.ecore.generated_package">
       <package
-            class="org.eclipse.mylyn.internal.builds.core.BuildPackage"
+            class="org.eclipse.mylyn.builds.internal.core.BuildPackage"
             uri="http://eclipse.org/mylyn/models/build">
       </package>
    </extension>
