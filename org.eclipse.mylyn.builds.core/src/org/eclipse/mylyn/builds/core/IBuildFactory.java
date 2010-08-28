@@ -10,6 +10,8 @@
  */
 package org.eclipse.mylyn.builds.core;
 
+import org.eclipse.core.runtime.IStatus;
+
 /**
  * <!-- begin-user-doc -->
  * The <b>Factory</b> for the model.

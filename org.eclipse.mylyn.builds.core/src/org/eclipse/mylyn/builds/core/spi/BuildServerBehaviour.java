@@ -40,7 +40,7 @@ public abstract class BuildServerBehaviour {
 		return BuildFactory.eINSTANCE.createBuild();
 	}
 
-	public abstract List<IBuild> getBuilds(BuildRequest request, IOperationMonitor monitor) throws CoreException;
+	public abstract List<IBuild> getBuilds(GetBuildsRequest request, IOperationMonitor monitor) throws CoreException;
 
 	public abstract BuildServerConfiguration getConfiguration();
 

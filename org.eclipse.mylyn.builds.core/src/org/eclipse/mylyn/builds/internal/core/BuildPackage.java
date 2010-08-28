@@ -2,12 +2,13 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildPackage.java,v 1.1 2010/08/28 06:14:17 spingel Exp $
+ * $Id: BuildPackage.java,v 1.2 2010/08/28 09:21:12 spingel Exp $
  */
 package org.eclipse.mylyn.builds.internal.core;
 
 import java.util.Map;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
@@ -33,6 +34,7 @@ import org.eclipse.mylyn.builds.core.IChangeArtifact;
 import org.eclipse.mylyn.builds.core.IChangeSet;
 import org.eclipse.mylyn.builds.core.IChoiceParameterDefinition;
 import org.eclipse.mylyn.builds.core.IFileParameterDefinition;
+import org.eclipse.mylyn.builds.core.IOperation;
 import org.eclipse.mylyn.builds.core.IParameterDefinition;
 import org.eclipse.mylyn.builds.core.IPasswordParameterDefinition;
 import org.eclipse.mylyn.builds.core.IPlanParameterDefinition;
@@ -220,6 +222,26 @@ public class BuildPackage extends EPackageImpl {
 	public static final int STRING_TO_STRING_MAP_FEATURE_COUNT = 2;
 
 	/**
+	 * The meta object id for the '<em>IOperation</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.mylyn.builds.core.IOperation
+	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getIOperation()
+	 * @generated
+	 */
+	public static final int IOPERATION = 28;
+
+	/**
+	 * The meta object id for the '<em>IStatus</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.core.runtime.IStatus
+	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getIStatus()
+	 * @generated
+	 */
+	public static final int ISTATUS = 27;
+
+	/**
 	 * The feature id for the '<em><b>Display Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -274,13 +296,31 @@ public class BuildPackage extends EPackageImpl {
 	public static final int BUILD_ELEMENT__NAME = 1;
 
 	/**
+	 * The feature id for the '<em><b>Operations</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD_ELEMENT__OPERATIONS = 2;
+
+	/**
+	 * The feature id for the '<em><b>Element Status</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD_ELEMENT__ELEMENT_STATUS = 3;
+
+	/**
 	 * The number of structural features of the '<em>Element</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	public static final int BUILD_ELEMENT_FEATURE_COUNT = 2;
+	public static final int BUILD_ELEMENT_FEATURE_COUNT = 4;
 
 	/**
 	 * The feature id for the '<em><b>Url</b></em>' attribute.
@@ -299,6 +339,24 @@ public class BuildPackage extends EPackageImpl {
 	 * @ordered
 	 */
 	public static final int BUILD__NAME = BUILD_ELEMENT__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Operations</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD__OPERATIONS = BUILD_ELEMENT__OPERATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Element Status</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD__ELEMENT_STATUS = BUILD_ELEMENT__ELEMENT_STATUS;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute.
@@ -434,6 +492,24 @@ public class BuildPackage extends EPackageImpl {
 	 * @ordered
 	 */
 	public static final int BUILD_PLAN__NAME = BUILD_ELEMENT__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Operations</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD_PLAN__OPERATIONS = BUILD_ELEMENT__OPERATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Element Status</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD_PLAN__ELEMENT_STATUS = BUILD_ELEMENT__ELEMENT_STATUS;
 
 	/**
 	 * The feature id for the '<em><b>Server</b></em>' reference.
@@ -614,6 +690,24 @@ public class BuildPackage extends EPackageImpl {
 	 * @ordered
 	 */
 	public static final int BUILD_SERVER__NAME = BUILD_ELEMENT__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Operations</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD_SERVER__OPERATIONS = BUILD_ELEMENT__OPERATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Element Status</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD_SERVER__ELEMENT_STATUS = BUILD_ELEMENT__ELEMENT_STATUS;
 
 	/**
 	 * The feature id for the '<em><b>Attributes</b></em>' map.
@@ -1573,7 +1667,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getRepositoryLocation()
 	 * @generated
 	 */
-	public static final int REPOSITORY_LOCATION = 24;
+	public static final int REPOSITORY_LOCATION = 29;
 
 	/**
 	 * The meta object id for the '<em>State</em>' data type.
@@ -1583,7 +1677,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getBuildState()
 	 * @generated
 	 */
-	public static final int BUILD_STATE = 25;
+	public static final int BUILD_STATE = 24;
 
 	/**
 	 * The meta object id for the '<em>Status</em>' data type.
@@ -1593,7 +1687,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getBuildStatus()
 	 * @generated
 	 */
-	public static final int BUILD_STATUS = 26;
+	public static final int BUILD_STATUS = 25;
 
 	/**
 	 * The meta object id for the '<em>Edit Type</em>' data type.
@@ -1603,7 +1697,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getEditType()
 	 * @generated
 	 */
-	public static final int EDIT_TYPE = 27;
+	public static final int EDIT_TYPE = 26;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1802,6 +1896,20 @@ public class BuildPackage extends EPackageImpl {
 	private EDataType editTypeEDataType = null;
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType iStatusEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType iOperationEDataType = null;
+
+	/**
 	 * Creates an instance of the model <b>Package</b>, registered with {@link org.eclipse.emf.ecore.EPackage.Registry
 	 * EPackage.Registry} by the package
 	 * package URI value.
@@ -1899,6 +2007,32 @@ public class BuildPackage extends EPackageImpl {
 	 */
 	public EAttribute getBuildElement_Name() {
 		return (EAttribute) buildElementEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * Returns the meta object for the attribute list '{@link org.eclipse.mylyn.builds.core.IBuildElement#getOperations <em>Operations</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute list '<em>Operations</em>'.
+	 * @see org.eclipse.mylyn.builds.core.IBuildElement#getOperations()
+	 * @see #getBuildElement()
+	 * @generated
+	 */
+	public EAttribute getBuildElement_Operations() {
+		return (EAttribute) buildElementEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuildElement#getElementStatus <em>Element Status</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Element Status</em>'.
+	 * @see org.eclipse.mylyn.builds.core.IBuildElement#getElementStatus()
+	 * @see #getBuildElement()
+	 * @generated
+	 */
+	public EAttribute getBuildElement_ElementStatus() {
+		return (EAttribute) buildElementEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -3179,6 +3313,30 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
+	 * Returns the meta object for data type '{@link org.eclipse.mylyn.builds.core.IOperation <em>IOperation</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>IOperation</em>'.
+	 * @see org.eclipse.mylyn.builds.core.IOperation
+	 * @generated
+	 */
+	public EDataType getIOperation() {
+		return iOperationEDataType;
+	}
+
+	/**
+	 * Returns the meta object for data type '{@link org.eclipse.core.runtime.IStatus <em>IStatus</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>IStatus</em>'.
+	 * @see org.eclipse.core.runtime.IStatus
+	 * @generated
+	 */
+	public EDataType getIStatus() {
+		return iStatusEDataType;
+	}
+
+	/**
 	 * Returns the meta object for data type '{@link org.eclipse.mylyn.commons.repositories.RepositoryLocation <em>Repository Location</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3283,6 +3441,8 @@ public class BuildPackage extends EPackageImpl {
 		buildElementEClass = createEClass(BUILD_ELEMENT);
 		createEAttribute(buildElementEClass, BUILD_ELEMENT__URL);
 		createEAttribute(buildElementEClass, BUILD_ELEMENT__NAME);
+		createEAttribute(buildElementEClass, BUILD_ELEMENT__OPERATIONS);
+		createEAttribute(buildElementEClass, BUILD_ELEMENT__ELEMENT_STATUS);
 
 		buildPlanEClass = createEClass(BUILD_PLAN);
 		createEReference(buildPlanEClass, BUILD_PLAN__SERVER);
@@ -3386,10 +3546,12 @@ public class BuildPackage extends EPackageImpl {
 		testCaseResultEEnum = createEEnum(TEST_CASE_RESULT);
 
 		// Create data types
-		repositoryLocationEDataType = createEDataType(REPOSITORY_LOCATION);
 		buildStateEDataType = createEDataType(BUILD_STATE);
 		buildStatusEDataType = createEDataType(BUILD_STATUS);
 		editTypeEDataType = createEDataType(EDIT_TYPE);
+		iStatusEDataType = createEDataType(ISTATUS);
+		iOperationEDataType = createEDataType(IOPERATION);
+		repositoryLocationEDataType = createEDataType(REPOSITORY_LOCATION);
 	}
 
 	/**
@@ -3525,6 +3687,14 @@ public class BuildPackage extends EPackageImpl {
 				getBuildElement_Name(),
 				ecorePackage.getEString(),
 				"name", null, 0, 1, IBuildElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getBuildElement_Operations(),
+				this.getIOperation(),
+				"operations", null, 0, -1, IBuildElement.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getBuildElement_ElementStatus(),
+				this.getIStatus(),
+				"elementStatus", null, 0, 1, IBuildElement.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		addEOperation(buildElementEClass, ecorePackage.getEString(), "getLabel", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 
@@ -3853,13 +4023,16 @@ public class BuildPackage extends EPackageImpl {
 		addEEnumLiteral(testCaseResultEEnum, TestCaseResult.REGRESSION);
 
 		// Initialize data types
-		initEDataType(repositoryLocationEDataType, RepositoryLocation.class,
-				"RepositoryLocation", !IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEDataType(buildStateEDataType, BuildState.class,
 				"BuildState", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEDataType(buildStatusEDataType, BuildStatus.class,
 				"BuildStatus", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEDataType(editTypeEDataType, EditType.class, "EditType", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEDataType(iStatusEDataType, IStatus.class, "IStatus", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEDataType(iOperationEDataType, IOperation.class,
+				"IOperation", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEDataType(repositoryLocationEDataType, RepositoryLocation.class,
+				"RepositoryLocation", !IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
 		// Create resource
 		createResource(eNS_URI);
@@ -3903,6 +4076,22 @@ public class BuildPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EAttribute BUILD_ELEMENT__NAME = eINSTANCE.getBuildElement_Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Operations</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		public static final EAttribute BUILD_ELEMENT__OPERATIONS = eINSTANCE.getBuildElement_Operations();
+
+		/**
+		 * The meta object literal for the '<em><b>Element Status</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		public static final EAttribute BUILD_ELEMENT__ELEMENT_STATUS = eINSTANCE.getBuildElement_ElementStatus();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.Artifact <em>Artifact</em>}' class.
@@ -4394,6 +4583,26 @@ public class BuildPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EAttribute STRING_TO_STRING_MAP__VALUE = eINSTANCE.getStringToStringMap_Value();
+
+		/**
+		 * The meta object literal for the '<em>IOperation</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.mylyn.builds.core.IOperation
+		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getIOperation()
+		 * @generated
+		 */
+		public static final EDataType IOPERATION = eINSTANCE.getIOperation();
+
+		/**
+		 * The meta object literal for the '<em>IStatus</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.core.runtime.IStatus
+		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getIStatus()
+		 * @generated
+		 */
+		public static final EDataType ISTATUS = eINSTANCE.getIStatus();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.User <em>User</em>}' class.

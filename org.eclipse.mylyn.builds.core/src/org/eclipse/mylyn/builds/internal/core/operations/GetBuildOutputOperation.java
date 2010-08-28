@@ -14,6 +14,8 @@ package org.eclipse.mylyn.builds.internal.core.operations;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Collections;
+import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -30,7 +32,7 @@ import org.eclipse.osgi.util.NLS;
 /**
  * @author Steffen Pingel
  */
-public class GetBuildOutputOperation extends BuildJob {
+public class GetBuildOutputOperation extends AbstractElementOperation<IBuild> {
 
 	public static class BuildOutputEvent {
 
@@ -47,6 +49,8 @@ public class GetBuildOutputOperation extends BuildJob {
 		public abstract void handle(BuildOutputEvent event, IOperationMonitor monitor) throws IOException,
 				CoreException;
 
+		public abstract void done();
+
 	}
 
 	private final IBuild build;
@@ -55,26 +59,13 @@ public class GetBuildOutputOperation extends BuildJob {
 
 	private final BuildOutputReader reader;
 
-	public GetBuildOutputOperation(IBuild build, BuildOutputReader reader) {
-		super("Retrieving build output");
+	public GetBuildOutputOperation(IOperationService service, IBuild build, BuildOutputReader reader) {
+		super(service);
 		Assert.isNotNull(build);
 		Assert.isNotNull(reader);
+		this.build = build;
 		this.reader = reader;
-		this.build = ((Build) build).createWorkingCopy();
 		this.server = (BuildServer) build.getServer();
-	}
-
-	@Override
-	protected IStatus doExecute(IOperationMonitor monitor) {
-		try {
-			doGetOutput(build, monitor);
-		} catch (CoreException e) {
-			setStatus(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN, NLS.bind(
-					"Unexpected error while retrieving output for build ''{0}''.", build.getName()), e));
-		} catch (OperationCanceledException e) {
-			return Status.CANCEL_STATUS;
-		}
-		return Status.OK_STATUS;
 	}
 
 	public void doGetOutput(IBuild build, IOperationMonitor monitor) throws CoreException {
@@ -90,7 +81,32 @@ public class GetBuildOutputOperation extends BuildJob {
 		} catch (IOException e) {
 			throw new CoreException(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN,
 					"Failed to retrieve build output", e));
+		} finally {
+			reader.done();
 		}
+	}
+
+	@Override
+	protected BuildJob doCreateJob(final IBuild build) {
+		return new BuildJob(NLS.bind("Retrieving Output for Build {0}", build.getLabel())) {
+			@Override
+			protected IStatus doExecute(IOperationMonitor monitor) {
+				try {
+					doGetOutput(build, monitor);
+				} catch (CoreException e) {
+					setStatus(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN, NLS.bind(
+							"Unexpected error while retrieving output for build ''{0}''.", build.getName()), e));
+				} catch (OperationCanceledException e) {
+					return Status.CANCEL_STATUS;
+				}
+				return Status.OK_STATUS;
+			}
+		};
+	}
+
+	@Override
+	protected List<IBuild> doSyncInitInput() {
+		return Collections.singletonList((IBuild) ((Build) build).createWorkingCopy());
 	}
 
 }

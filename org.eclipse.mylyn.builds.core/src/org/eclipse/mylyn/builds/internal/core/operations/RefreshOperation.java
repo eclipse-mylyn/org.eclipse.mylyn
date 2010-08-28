@@ -13,14 +13,13 @@ package org.eclipse.mylyn.builds.internal.core.operations;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.internal.core.BuildModel;
 import org.eclipse.mylyn.builds.internal.core.BuildServer;
@@ -31,85 +30,98 @@ import org.eclipse.osgi.util.NLS;
 /**
  * @author Steffen Pingel
  */
-public class RefreshOperation {
+public class RefreshOperation extends AbstractElementOperation<IBuildServer> {
+
+	private final class RefreshJob extends BuildJob {
+
+		private final IBuildServer server;
+
+		private RefreshJob(IBuildServer server) {
+			super(NLS.bind("Refreshing Builds ({0})", server.getLabel()));
+			this.server = server;
+		}
+
+		@Override
+		protected IStatus doExecute(IOperationMonitor progress) {
+			try {
+				RefreshRequest request = new RefreshRequest(model);
+				((BuildServer) server).getRefreshSession().refresh(request, progress.newChild(1));
+			} catch (CoreException e) {
+				setStatus(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN, NLS.bind(
+						"Refresh of server ''{0}'' failed", server.getLabel()), e));
+			} catch (OperationCanceledException e) {
+				return Status.CANCEL_STATUS;
+			}
+			return Status.OK_STATUS;
+		}
+
+		@Override
+		public IBuildServer getElement() {
+			return server;
+		}
+
+	}
 
 	private final BuildModel model;
 
-	private final List<BuildServer> servers;
+	private final List<IBuildServer> servers;
 
-	public RefreshOperation(BuildModel model, List<BuildServer> servers) {
+	public RefreshOperation(IOperationService service, BuildModel model) {
+		this(service, model, null);
+	}
+
+	public RefreshOperation(IOperationService service, BuildModel model, List<IBuildElement> elements) {
+		super(service);
 		Assert.isNotNull(model);
 		this.model = model;
-		this.servers = servers;
-	}
-
-	public RefreshOperation(BuildModel model) {
-		this(model, null);
-	}
-
-	public void execute() {
-		model.getScheduler().schedule(getJobs());
-	}
-
-	public List<BuildJob> getJobs() {
-		final AtomicReference<List<BuildServer>> serversReference = getServers();
-
-		List<BuildJob> jobs = new ArrayList<BuildJob>(serversReference.get().size());
-		for (final BuildServer server : serversReference.get()) {
-			BuildJob job = new BuildJob(NLS.bind("Refreshing Builds ({0})", server.getLabel())) {
-				@Override
-				protected IStatus doExecute(IOperationMonitor progress) {
-					try {
-						RefreshRequest request = new RefreshRequest(model);
-						server.getRefreshSession().refresh(request, progress.newChild(1));
-					} catch (CoreException e) {
-						setStatus(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN, NLS.bind(
-								"Refresh of server ''{0}'' failed", server.getLabel()), e));
-					} catch (OperationCanceledException e) {
-						return Status.CANCEL_STATUS;
-					}
-					return Status.OK_STATUS;
-				}
-			};
-			jobs.add(job);
-		}
-		return jobs;
-	}
-
-	protected AtomicReference<List<BuildServer>> getServers() {
-		final AtomicReference<List<BuildServer>> serversReference = new AtomicReference<List<BuildServer>>();
-		if (servers != null) {
-			serversReference.set(servers);
+		if (elements != null) {
+			this.servers = new ArrayList<IBuildServer>();
+			for (IBuildElement element : elements) {
+				this.servers.add(element.getServer());
+			}
 		} else {
-			model.getLoader().getRealm().syncExec(new Runnable() {
+			this.servers = null;
+		}
+	}
+
+	@Override
+	protected BuildJob doCreateJob(IBuildServer server) {
+		return new RefreshJob(server);
+	}
+
+	@Override
+	protected List<IBuildServer> doInitInput() {
+		if (servers != null) {
+			register(servers);
+			return servers;
+		} else {
+			return super.doInitInput();
+		}
+	}
+
+	@Override
+	protected List<IBuildServer> doSyncInitInput() {
+		List<IBuildServer> servers = new ArrayList<IBuildServer>(model.getServers().size());
+		for (IBuildServer server : model.getServers()) {
+			if (server.getLocation().isOffline()) {
+				continue;
+			}
+			servers.add(server);
+		}
+		return servers;
+	}
+
+	@Override
+	protected void handleResult(final BuildJob job) {
+		super.handleResult(job);
+		final IStatus status = job.getStatus();
+		if (status != Status.CANCEL_STATUS) {
+			getService().getRealm().syncExec(new Runnable() {
 				public void run() {
-					ArrayList<BuildServer> servers = new ArrayList<BuildServer>(model.getServers().size());
-					for (IBuildServer server : model.getServers()) {
-						if (server.getLocation().isOffline()) {
-							continue;
-						}
-						servers.add((BuildServer) server);
-						serversReference.set(servers);
-					}
+					job.getElement().setElementStatus(status);
 				}
 			});
 		}
-		return serversReference;
-	}
-
-	public IStatus syncExec(IOperationMonitor progress) {
-		List<BuildJob> jobs = getJobs();
-		MultiStatus result = new MultiStatus(BuildsCorePlugin.ID_PLUGIN, 0, "Refreshing of builds failed", null);
-		progress.beginTask("Refreshing builds", jobs.size());
-		for (BuildJob job : jobs) {
-			IStatus status = job.run(progress.newChild(1));
-			if (status.getSeverity() == IStatus.CANCEL) {
-				return Status.CANCEL_STATUS;
-			} else if (!status.isOK()) {
-				result.add(status);
-			}
-		}
-		return result;
 	}
 
 }

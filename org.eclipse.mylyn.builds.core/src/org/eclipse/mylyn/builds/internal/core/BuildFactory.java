@@ -2,12 +2,13 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildFactory.java,v 1.1 2010/08/28 06:14:17 spingel Exp $
+ * $Id: BuildFactory.java,v 1.2 2010/08/28 09:21:12 spingel Exp $
  */
 package org.eclipse.mylyn.builds.internal.core;
 
 import java.util.Map;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
@@ -155,6 +156,10 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 			return createBuildStatusFromString(eDataType, initialValue);
 		case BuildPackage.EDIT_TYPE:
 			return createEditTypeFromString(eDataType, initialValue);
+		case BuildPackage.ISTATUS:
+			return createIStatusFromString(eDataType, initialValue);
+		case BuildPackage.IOPERATION:
+			return createIOperationFromString(eDataType, initialValue);
 		default:
 			throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -176,6 +181,10 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 			return convertBuildStatusToString(eDataType, instanceValue);
 		case BuildPackage.EDIT_TYPE:
 			return convertEditTypeToString(eDataType, instanceValue);
+		case BuildPackage.ISTATUS:
+			return convertIStatusToString(eDataType, instanceValue);
+		case BuildPackage.IOPERATION:
+			return convertIOperationToString(eDataType, instanceValue);
 		default:
 			throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -464,6 +473,42 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	 * @generated
 	 */
 	public String convertEditTypeToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public IStatus createIStatusFromString(EDataType eDataType, String initialValue) {
+		return (IStatus) super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertIStatusToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public IOperation createIOperationFromString(EDataType eDataType, String initialValue) {
+		return (IOperation) super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertIOperationToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(eDataType, instanceValue);
 	}
 

@@ -34,11 +34,11 @@ import org.eclipse.osgi.util.NLS;
 /**
  * @author Steffen Pingel
  */
-public class RefreshConfigurationsOperation extends BuildJob {
+public class RefreshConfigurationOperation extends BuildJob {
 
 	private final List<IBuildServer> servers;
 
-	public RefreshConfigurationsOperation(List<IBuildServer> servers) {
+	public RefreshConfigurationOperation(List<IBuildServer> servers) {
 		super("Refresh Configuration");
 		Assert.isNotNull(servers);
 		this.servers = new ArrayList<IBuildServer>(servers.size());

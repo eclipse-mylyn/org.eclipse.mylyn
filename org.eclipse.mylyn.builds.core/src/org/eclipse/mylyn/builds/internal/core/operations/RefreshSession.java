@@ -26,8 +26,8 @@ import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.spi.BuildPlanRequest;
-import org.eclipse.mylyn.builds.core.spi.BuildRequest;
-import org.eclipse.mylyn.builds.core.spi.BuildRequest.Kind;
+import org.eclipse.mylyn.builds.core.spi.GetBuildsRequest;
+import org.eclipse.mylyn.builds.core.spi.GetBuildsRequest.Kind;
 import org.eclipse.mylyn.builds.internal.core.Build;
 import org.eclipse.mylyn.builds.internal.core.BuildPlan;
 import org.eclipse.mylyn.builds.internal.core.BuildServer;
@@ -69,12 +69,12 @@ public class RefreshSession {
 		request.stalePlans = Collections.synchronizedList(new ArrayList<IBuildPlan>());
 		refreshPlans(request, monitor);
 		for (IBuildPlan plan : request.stalePlans) {
-			BuildRequest buildRequest = new BuildRequest(Kind.LAST, plan);
+			GetBuildsRequest buildRequest = new GetBuildsRequest(Kind.LAST, plan);
 			refreshBuilds(request, buildRequest, monitor);
 		}
 	}
 
-	public void refreshBuilds(final RefreshRequest request, final BuildRequest buildRequest,
+	public void refreshBuilds(final RefreshRequest request, final GetBuildsRequest buildRequest,
 			final IOperationMonitor monitor) throws CoreException {
 		final AtomicReference<List<IBuild>> result = new AtomicReference<List<IBuild>>();
 		SafeRunner.run(new ISafeRunnable() {

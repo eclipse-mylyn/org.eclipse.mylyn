@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildPlan.java,v 1.1 2010/08/28 06:14:17 spingel Exp $
+ * $Id: BuildPlan.java,v 1.2 2010/08/28 09:21:12 spingel Exp $
  */
 package org.eclipse.mylyn.builds.internal.core;
 
@@ -10,7 +10,6 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -31,9 +30,6 @@ import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.IParameterDefinition;
-import org.eclipse.mylyn.builds.core.spi.RunBuildRequest;
-import org.eclipse.mylyn.builds.internal.core.operations.RunBuildOperation;
-import org.eclipse.mylyn.commons.core.IOperationMonitor;
 
 /**
  * <!-- begin-user-doc -->
@@ -42,22 +38,22 @@ import org.eclipse.mylyn.commons.core.IOperationMonitor;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.BuildPlan#getServer <em>Server</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.BuildPlan#getChildren <em>Children</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.BuildPlan#getParent <em>Parent</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.BuildPlan#getHealth <em>Health</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.BuildPlan#getId <em>Id</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.BuildPlan#getInfo <em>Info</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.BuildPlan#isSelected <em>Selected</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.BuildPlan#getSummary <em>Summary</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.BuildPlan#getState <em>State</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.BuildPlan#getStatus <em>Status</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.BuildPlan#getDescription <em>Description</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.BuildPlan#getLastBuild <em>Last Build</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.BuildPlan#getParameterDefinitions <em>Parameter Definitions</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildPlan#getServer <em>Server</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildPlan#getChildren <em>Children</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildPlan#getParent <em>Parent</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildPlan#getHealth <em>Health</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildPlan#getId <em>Id</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildPlan#getInfo <em>Info</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildPlan#isSelected <em>Selected</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildPlan#getSummary <em>Summary</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildPlan#getState <em>State</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildPlan#getStatus <em>Status</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildPlan#getDescription <em>Description</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildPlan#getLastBuild <em>Last Build</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildPlan#getParameterDefinitions <em>Parameter Definitions</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class BuildPlan extends BuildElement implements IBuildPlan {
@@ -65,6 +61,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * The cached value of the '{@link #getServer() <em>Server</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getServer()
 	 * @generated
 	 * @ordered
@@ -75,6 +72,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * The cached value of the '{@link #getChildren() <em>Children</em>}' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getChildren()
 	 * @generated
 	 * @ordered
@@ -85,6 +83,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * The cached value of the '{@link #getParent() <em>Parent</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getParent()
 	 * @generated
 	 * @ordered
@@ -95,6 +94,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * The default value of the '{@link #getHealth() <em>Health</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getHealth()
 	 * @generated
 	 * @ordered
@@ -105,6 +105,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * The cached value of the '{@link #getHealth() <em>Health</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getHealth()
 	 * @generated
 	 * @ordered
@@ -115,6 +116,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * The default value of the '{@link #getId() <em>Id</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getId()
 	 * @generated
 	 * @ordered
@@ -125,6 +127,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getId()
 	 * @generated
 	 * @ordered
@@ -135,6 +138,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * The default value of the '{@link #getInfo() <em>Info</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getInfo()
 	 * @generated
 	 * @ordered
@@ -145,6 +149,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * The cached value of the '{@link #getInfo() <em>Info</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getInfo()
 	 * @generated
 	 * @ordered
@@ -155,6 +160,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * The default value of the '{@link #isSelected() <em>Selected</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #isSelected()
 	 * @generated
 	 * @ordered
@@ -165,6 +171,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * The cached value of the '{@link #isSelected() <em>Selected</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #isSelected()
 	 * @generated
 	 * @ordered
@@ -175,6 +182,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * The default value of the '{@link #getSummary() <em>Summary</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getSummary()
 	 * @generated
 	 * @ordered
@@ -185,6 +193,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * The cached value of the '{@link #getSummary() <em>Summary</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getSummary()
 	 * @generated
 	 * @ordered
@@ -195,6 +204,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * The default value of the '{@link #getState() <em>State</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getState()
 	 * @generated
 	 * @ordered
@@ -205,6 +215,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * The cached value of the '{@link #getState() <em>State</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getState()
 	 * @generated
 	 * @ordered
@@ -215,6 +226,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * The default value of the '{@link #getStatus() <em>Status</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getStatus()
 	 * @generated
 	 * @ordered
@@ -225,6 +237,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * The cached value of the '{@link #getStatus() <em>Status</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getStatus()
 	 * @generated
 	 * @ordered
@@ -235,6 +248,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * The default value of the '{@link #getDescription() <em>Description</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getDescription()
 	 * @generated
 	 * @ordered
@@ -245,6 +259,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getDescription()
 	 * @generated
 	 * @ordered
@@ -255,6 +270,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * The cached value of the '{@link #getLastBuild() <em>Last Build</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getLastBuild()
 	 * @generated
 	 * @ordered
@@ -262,9 +278,11 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	protected IBuild lastBuild;
 
 	/**
-	 * The cached value of the '{@link #getParameterDefinitions() <em>Parameter Definitions</em>}' containment reference list.
+	 * The cached value of the '{@link #getParameterDefinitions() <em>Parameter Definitions</em>}' containment reference
+	 * list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getParameterDefinitions()
 	 * @generated
 	 * @ordered
@@ -274,6 +292,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected BuildPlan() {
@@ -283,6 +302,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -297,16 +317,19 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public IBuildServer getServer() {
 		if (server != null && ((EObject) server).eIsProxy()) {
 			InternalEObject oldServer = (InternalEObject) server;
 			server = (IBuildServer) eResolveProxy(oldServer);
 			if (server != oldServer) {
-				if (eNotificationRequired())
+				if (eNotificationRequired()) {
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, BuildPackage.BUILD_PLAN__SERVER,
 							oldServer, server));
+				}
 			}
 		}
 		return server;
@@ -315,6 +338,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IBuildServer basicGetServer() {
@@ -324,13 +348,15 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setServer(IBuildServer newServer) {
 		IBuildServer oldServer = server;
 		server = newServer;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__SERVER, oldServer, server));
+		}
 	}
 
 	/**
@@ -340,6 +366,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public List<IBuildPlan> getChildren() {
@@ -357,6 +384,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IBuildPlan getParent() {
@@ -364,9 +392,10 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 			InternalEObject oldParent = (InternalEObject) parent;
 			parent = (IBuildPlan) eResolveProxy(oldParent);
 			if (parent != oldParent) {
-				if (eNotificationRequired())
+				if (eNotificationRequired()) {
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, BuildPackage.BUILD_PLAN__PARENT,
 							oldParent, parent));
+				}
 			}
 		}
 		return parent;
@@ -375,6 +404,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IBuildPlan basicGetParent() {
@@ -384,6 +414,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public NotificationChain basicSetParent(IBuildPlan newParent, NotificationChain msgs) {
@@ -392,10 +423,11 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
 					BuildPackage.BUILD_PLAN__PARENT, oldParent, newParent);
-			if (msgs == null)
+			if (msgs == null) {
 				msgs = notification;
-			else
+			} else {
 				msgs.add(notification);
+			}
 		}
 		return msgs;
 	}
@@ -403,22 +435,27 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setParent(IBuildPlan newParent) {
 		if (newParent != parent) {
 			NotificationChain msgs = null;
-			if (parent != null)
+			if (parent != null) {
 				msgs = ((InternalEObject) parent).eInverseRemove(this, BuildPackage.BUILD_PLAN__CHILDREN,
 						IBuildPlan.class, msgs);
-			if (newParent != null)
+			}
+			if (newParent != null) {
 				msgs = ((InternalEObject) newParent).eInverseAdd(this, BuildPackage.BUILD_PLAN__CHILDREN,
 						IBuildPlan.class, msgs);
+			}
 			msgs = basicSetParent(newParent, msgs);
-			if (msgs != null)
+			if (msgs != null) {
 				msgs.dispatch();
-		} else if (eNotificationRequired())
+			}
+		} else if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__PARENT, newParent, newParent));
+		}
 	}
 
 	/**
@@ -428,6 +465,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public int getHealth() {
@@ -437,13 +475,15 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setHealth(int newHealth) {
 		int oldHealth = health;
 		health = newHealth;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__HEALTH, oldHealth, health));
+		}
 	}
 
 	/**
@@ -452,6 +492,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * If the meaning of the '<em>Id</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getId() {
@@ -461,13 +502,15 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setId(String newId) {
 		String oldId = id;
 		id = newId;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__ID, oldId, id));
+		}
 	}
 
 	/**
@@ -476,6 +519,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * If the meaning of the '<em>Info</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getInfo() {
@@ -485,13 +529,15 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setInfo(String newInfo) {
 		String oldInfo = info;
 		info = newInfo;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__INFO, oldInfo, info));
+		}
 	}
 
 	/**
@@ -501,6 +547,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public boolean isSelected() {
@@ -510,14 +557,16 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setSelected(boolean newSelected) {
 		boolean oldSelected = selected;
 		selected = newSelected;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__SELECTED, oldSelected,
 					selected));
+		}
 	}
 
 	/**
@@ -527,6 +576,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getSummary() {
@@ -536,13 +586,15 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setSummary(String newSummary) {
 		String oldSummary = summary;
 		summary = newSummary;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__SUMMARY, oldSummary, summary));
+		}
 	}
 
 	/**
@@ -552,6 +604,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public BuildState getState() {
@@ -561,13 +614,15 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setState(BuildState newState) {
 		BuildState oldState = state;
 		state = newState;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__STATE, oldState, state));
+		}
 	}
 
 	/**
@@ -577,6 +632,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public BuildStatus getStatus() {
@@ -586,13 +642,15 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setStatus(BuildStatus newStatus) {
 		BuildStatus oldStatus = status;
 		status = newStatus;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__STATUS, oldStatus, status));
+		}
 	}
 
 	/**
@@ -602,6 +660,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getDescription() {
@@ -611,14 +670,16 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setDescription(String newDescription) {
 		String oldDescription = description;
 		description = newDescription;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__DESCRIPTION, oldDescription,
 					description));
+		}
 	}
 
 	/**
@@ -628,6 +689,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IBuild getLastBuild() {
@@ -635,9 +697,10 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 			InternalEObject oldLastBuild = (InternalEObject) lastBuild;
 			lastBuild = (IBuild) eResolveProxy(oldLastBuild);
 			if (lastBuild != oldLastBuild) {
-				if (eNotificationRequired())
+				if (eNotificationRequired()) {
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, BuildPackage.BUILD_PLAN__LAST_BUILD,
 							oldLastBuild, lastBuild));
+				}
 			}
 		}
 		return lastBuild;
@@ -646,6 +709,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IBuild basicGetLastBuild() {
@@ -655,14 +719,16 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setLastBuild(IBuild newLastBuild) {
 		IBuild oldLastBuild = lastBuild;
 		lastBuild = newLastBuild;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__LAST_BUILD, oldLastBuild,
 					lastBuild));
+		}
 	}
 
 	/**
@@ -672,6 +738,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public List<IParameterDefinition> getParameterDefinitions() {
@@ -686,6 +753,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -695,9 +763,10 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 		case BuildPackage.BUILD_PLAN__CHILDREN:
 			return ((InternalEList<InternalEObject>) (InternalEList<?>) getChildren()).basicAdd(otherEnd, msgs);
 		case BuildPackage.BUILD_PLAN__PARENT:
-			if (parent != null)
+			if (parent != null) {
 				msgs = ((InternalEObject) parent).eInverseRemove(this, BuildPackage.BUILD_PLAN__CHILDREN,
 						IBuildPlan.class, msgs);
+			}
 			return basicSetParent((IBuildPlan) otherEnd, msgs);
 		case BuildPackage.BUILD_PLAN__PARAMETER_DEFINITIONS:
 			return ((InternalEList<InternalEObject>) (InternalEList<?>) getParameterDefinitions()).basicAdd(otherEnd,
@@ -709,6 +778,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -727,20 +797,23 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 		case BuildPackage.BUILD_PLAN__SERVER:
-			if (resolve)
+			if (resolve) {
 				return getServer();
+			}
 			return basicGetServer();
 		case BuildPackage.BUILD_PLAN__CHILDREN:
 			return getChildren();
 		case BuildPackage.BUILD_PLAN__PARENT:
-			if (resolve)
+			if (resolve) {
 				return getParent();
+			}
 			return basicGetParent();
 		case BuildPackage.BUILD_PLAN__HEALTH:
 			return getHealth();
@@ -759,8 +832,9 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 		case BuildPackage.BUILD_PLAN__DESCRIPTION:
 			return getDescription();
 		case BuildPackage.BUILD_PLAN__LAST_BUILD:
-			if (resolve)
+			if (resolve) {
 				return getLastBuild();
+			}
 			return basicGetLastBuild();
 		case BuildPackage.BUILD_PLAN__PARAMETER_DEFINITIONS:
 			return getParameterDefinitions();
@@ -771,6 +845,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -825,6 +900,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -876,6 +952,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -914,12 +991,14 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
+		if (eIsProxy()) {
 			return super.toString();
+		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (health: "); //$NON-NLS-1$
@@ -940,17 +1019,6 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 		result.append(description);
 		result.append(')');
 		return result.toString();
-	}
-
-	public BuildPlan createWorkingCopy() {
-		EcoreUtil.Copier copier = new EcoreUtil.Copier();
-		BuildPlan newPlan = (BuildPlan) copier.copy(this);
-		copier.copyReferences();
-		return newPlan;
-	}
-
-	public void run(IOperationMonitor monitor) throws CoreException {
-		new RunBuildOperation(new RunBuildRequest(this)).doRun(monitor);
 	}
 
 	public IBuildPlan toBuildPlan() {
@@ -992,8 +1060,14 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 		getParameterDefinitions().addAll(EcoreUtil.copyAll(source.getParameterDefinitions()));
 	}
 
+	@Override
 	public String getLabel() {
 		return getName();
+	}
+
+	@Override
+	public BuildPlan createWorkingCopy() {
+		return (BuildPlan) super.createWorkingCopy();
 	}
 
 } // BuildPlan

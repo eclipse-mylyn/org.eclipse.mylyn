@@ -13,7 +13,6 @@ package org.eclipse.mylyn.builds.internal.core;
 import java.util.Collection;
 import java.util.List;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
@@ -21,7 +20,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.mylyn.builds.core.BuildState;
 import org.eclipse.mylyn.builds.core.BuildStatus;
 import org.eclipse.mylyn.builds.core.IArtifact;
@@ -37,21 +35,21 @@ import org.eclipse.mylyn.builds.core.IChangeSet;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getId <em>Id</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getBuildNumber <em>Build Number</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getTimestamp <em>Timestamp</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getDuration <em>Duration</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getDisplayName <em>Display Name</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getState <em>State</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getStatus <em>Status</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getArtifacts <em>Artifacts</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getChangeSet <em>Change Set</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getPlan <em>Plan</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getLabel <em>Label</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getServer <em>Server</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getId <em>Id</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getBuildNumber <em>Build Number</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getTimestamp <em>Timestamp</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getDuration <em>Duration</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getDisplayName <em>Display Name</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getState <em>State</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getStatus <em>Status</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getArtifacts <em>Artifacts</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getChangeSet <em>Change Set</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getPlan <em>Plan</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getLabel <em>Label</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getServer <em>Server</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class Build extends BuildElement implements IBuild {
@@ -59,6 +57,7 @@ public class Build extends BuildElement implements IBuild {
 	 * The default value of the '{@link #getId() <em>Id</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getId()
 	 * @generated
 	 * @ordered
@@ -69,6 +68,7 @@ public class Build extends BuildElement implements IBuild {
 	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getId()
 	 * @generated
 	 * @ordered
@@ -79,6 +79,7 @@ public class Build extends BuildElement implements IBuild {
 	 * The default value of the '{@link #getBuildNumber() <em>Build Number</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getBuildNumber()
 	 * @generated
 	 * @ordered
@@ -89,6 +90,7 @@ public class Build extends BuildElement implements IBuild {
 	 * The cached value of the '{@link #getBuildNumber() <em>Build Number</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getBuildNumber()
 	 * @generated
 	 * @ordered
@@ -99,6 +101,7 @@ public class Build extends BuildElement implements IBuild {
 	 * The default value of the '{@link #getTimestamp() <em>Timestamp</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getTimestamp()
 	 * @generated
 	 * @ordered
@@ -109,6 +112,7 @@ public class Build extends BuildElement implements IBuild {
 	 * The cached value of the '{@link #getTimestamp() <em>Timestamp</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getTimestamp()
 	 * @generated
 	 * @ordered
@@ -119,6 +123,7 @@ public class Build extends BuildElement implements IBuild {
 	 * The default value of the '{@link #getDuration() <em>Duration</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getDuration()
 	 * @generated
 	 * @ordered
@@ -129,6 +134,7 @@ public class Build extends BuildElement implements IBuild {
 	 * The cached value of the '{@link #getDuration() <em>Duration</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getDuration()
 	 * @generated
 	 * @ordered
@@ -139,6 +145,7 @@ public class Build extends BuildElement implements IBuild {
 	 * The default value of the '{@link #getDisplayName() <em>Display Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getDisplayName()
 	 * @generated
 	 * @ordered
@@ -149,6 +156,7 @@ public class Build extends BuildElement implements IBuild {
 	 * The cached value of the '{@link #getDisplayName() <em>Display Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getDisplayName()
 	 * @generated
 	 * @ordered
@@ -159,6 +167,7 @@ public class Build extends BuildElement implements IBuild {
 	 * The default value of the '{@link #getState() <em>State</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getState()
 	 * @generated
 	 * @ordered
@@ -169,6 +178,7 @@ public class Build extends BuildElement implements IBuild {
 	 * The cached value of the '{@link #getState() <em>State</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getState()
 	 * @generated
 	 * @ordered
@@ -179,6 +189,7 @@ public class Build extends BuildElement implements IBuild {
 	 * The default value of the '{@link #getStatus() <em>Status</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getStatus()
 	 * @generated
 	 * @ordered
@@ -189,6 +200,7 @@ public class Build extends BuildElement implements IBuild {
 	 * The cached value of the '{@link #getStatus() <em>Status</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getStatus()
 	 * @generated
 	 * @ordered
@@ -199,6 +211,7 @@ public class Build extends BuildElement implements IBuild {
 	 * The cached value of the '{@link #getArtifacts() <em>Artifacts</em>}' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getArtifacts()
 	 * @generated
 	 * @ordered
@@ -209,6 +222,7 @@ public class Build extends BuildElement implements IBuild {
 	 * The cached value of the '{@link #getChangeSet() <em>Change Set</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getChangeSet()
 	 * @generated
 	 * @ordered
@@ -219,6 +233,7 @@ public class Build extends BuildElement implements IBuild {
 	 * The cached value of the '{@link #getPlan() <em>Plan</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getPlan()
 	 * @generated
 	 * @ordered
@@ -229,6 +244,7 @@ public class Build extends BuildElement implements IBuild {
 	 * The default value of the '{@link #getLabel() <em>Label</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getLabel()
 	 * @generated
 	 * @ordered
@@ -239,6 +255,7 @@ public class Build extends BuildElement implements IBuild {
 	 * The cached value of the '{@link #getLabel() <em>Label</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getLabel()
 	 * @generated
 	 * @ordered
@@ -249,6 +266,7 @@ public class Build extends BuildElement implements IBuild {
 	 * The cached value of the '{@link #getServer() <em>Server</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getServer()
 	 * @generated
 	 * @ordered
@@ -258,6 +276,7 @@ public class Build extends BuildElement implements IBuild {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected Build() {
@@ -267,6 +286,7 @@ public class Build extends BuildElement implements IBuild {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -280,6 +300,7 @@ public class Build extends BuildElement implements IBuild {
 	 * If the meaning of the '<em>Id</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getId() {
@@ -289,13 +310,15 @@ public class Build extends BuildElement implements IBuild {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setId(String newId) {
 		String oldId = id;
 		id = newId;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__ID, oldId, id));
+		}
 	}
 
 	/**
@@ -305,6 +328,7 @@ public class Build extends BuildElement implements IBuild {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public int getBuildNumber() {
@@ -314,14 +338,16 @@ public class Build extends BuildElement implements IBuild {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setBuildNumber(int newBuildNumber) {
 		int oldBuildNumber = buildNumber;
 		buildNumber = newBuildNumber;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__BUILD_NUMBER, oldBuildNumber,
 					buildNumber));
+		}
 	}
 
 	/**
@@ -331,6 +357,7 @@ public class Build extends BuildElement implements IBuild {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public long getTimestamp() {
@@ -340,14 +367,16 @@ public class Build extends BuildElement implements IBuild {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setTimestamp(long newTimestamp) {
 		long oldTimestamp = timestamp;
 		timestamp = newTimestamp;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__TIMESTAMP, oldTimestamp,
 					timestamp));
+		}
 	}
 
 	/**
@@ -357,6 +386,7 @@ public class Build extends BuildElement implements IBuild {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public long getDuration() {
@@ -366,13 +396,15 @@ public class Build extends BuildElement implements IBuild {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setDuration(long newDuration) {
 		long oldDuration = duration;
 		duration = newDuration;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__DURATION, oldDuration, duration));
+		}
 	}
 
 	/**
@@ -382,6 +414,7 @@ public class Build extends BuildElement implements IBuild {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getDisplayName() {
@@ -391,14 +424,16 @@ public class Build extends BuildElement implements IBuild {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setDisplayName(String newDisplayName) {
 		String oldDisplayName = displayName;
 		displayName = newDisplayName;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__DISPLAY_NAME, oldDisplayName,
 					displayName));
+		}
 	}
 
 	/**
@@ -408,6 +443,7 @@ public class Build extends BuildElement implements IBuild {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public BuildState getState() {
@@ -417,13 +453,15 @@ public class Build extends BuildElement implements IBuild {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setState(BuildState newState) {
 		BuildState oldState = state;
 		state = newState;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__STATE, oldState, state));
+		}
 	}
 
 	/**
@@ -433,6 +471,7 @@ public class Build extends BuildElement implements IBuild {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public BuildStatus getStatus() {
@@ -442,13 +481,15 @@ public class Build extends BuildElement implements IBuild {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setStatus(BuildStatus newStatus) {
 		BuildStatus oldStatus = status;
 		status = newStatus;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__STATUS, oldStatus, status));
+		}
 	}
 
 	/**
@@ -458,6 +499,7 @@ public class Build extends BuildElement implements IBuild {
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public List<IArtifact> getArtifacts() {
@@ -474,6 +516,7 @@ public class Build extends BuildElement implements IBuild {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IChangeSet getChangeSet() {
@@ -481,9 +524,10 @@ public class Build extends BuildElement implements IBuild {
 			InternalEObject oldChangeSet = (InternalEObject) changeSet;
 			changeSet = (IChangeSet) eResolveProxy(oldChangeSet);
 			if (changeSet != oldChangeSet) {
-				if (eNotificationRequired())
+				if (eNotificationRequired()) {
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, BuildPackage.BUILD__CHANGE_SET,
 							oldChangeSet, changeSet));
+				}
 			}
 		}
 		return changeSet;
@@ -492,6 +536,7 @@ public class Build extends BuildElement implements IBuild {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IChangeSet basicGetChangeSet() {
@@ -501,14 +546,16 @@ public class Build extends BuildElement implements IBuild {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setChangeSet(IChangeSet newChangeSet) {
 		IChangeSet oldChangeSet = changeSet;
 		changeSet = newChangeSet;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__CHANGE_SET, oldChangeSet,
 					changeSet));
+		}
 	}
 
 	/**
@@ -517,6 +564,7 @@ public class Build extends BuildElement implements IBuild {
 	 * If the meaning of the '<em>Plan</em>' reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IBuildPlan getPlan() {
@@ -524,8 +572,9 @@ public class Build extends BuildElement implements IBuild {
 			InternalEObject oldPlan = (InternalEObject) plan;
 			plan = (IBuildPlan) eResolveProxy(oldPlan);
 			if (plan != oldPlan) {
-				if (eNotificationRequired())
+				if (eNotificationRequired()) {
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, BuildPackage.BUILD__PLAN, oldPlan, plan));
+				}
 			}
 		}
 		return plan;
@@ -534,6 +583,7 @@ public class Build extends BuildElement implements IBuild {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IBuildPlan basicGetPlan() {
@@ -543,13 +593,15 @@ public class Build extends BuildElement implements IBuild {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setPlan(IBuildPlan newPlan) {
 		IBuildPlan oldPlan = plan;
 		plan = newPlan;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__PLAN, oldPlan, plan));
+		}
 	}
 
 	/**
@@ -559,8 +611,10 @@ public class Build extends BuildElement implements IBuild {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public String getLabel() {
 		return label;
 	}
@@ -568,13 +622,15 @@ public class Build extends BuildElement implements IBuild {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setLabel(String newLabel) {
 		String oldLabel = label;
 		label = newLabel;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__LABEL, oldLabel, label));
+		}
 	}
 
 	/**
@@ -584,16 +640,19 @@ public class Build extends BuildElement implements IBuild {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public IBuildServer getServer() {
 		if (server != null && ((EObject) server).eIsProxy()) {
 			InternalEObject oldServer = (InternalEObject) server;
 			server = (IBuildServer) eResolveProxy(oldServer);
 			if (server != oldServer) {
-				if (eNotificationRequired())
+				if (eNotificationRequired()) {
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, BuildPackage.BUILD__SERVER, oldServer,
 							server));
+				}
 			}
 		}
 		return server;
@@ -602,6 +661,7 @@ public class Build extends BuildElement implements IBuild {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IBuildServer basicGetServer() {
@@ -611,18 +671,21 @@ public class Build extends BuildElement implements IBuild {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setServer(IBuildServer newServer) {
 		IBuildServer oldServer = server;
 		server = newServer;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__SERVER, oldServer, server));
+		}
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -645,18 +708,21 @@ public class Build extends BuildElement implements IBuild {
 		case BuildPackage.BUILD__ARTIFACTS:
 			return getArtifacts();
 		case BuildPackage.BUILD__CHANGE_SET:
-			if (resolve)
+			if (resolve) {
 				return getChangeSet();
+			}
 			return basicGetChangeSet();
 		case BuildPackage.BUILD__PLAN:
-			if (resolve)
+			if (resolve) {
 				return getPlan();
+			}
 			return basicGetPlan();
 		case BuildPackage.BUILD__LABEL:
 			return getLabel();
 		case BuildPackage.BUILD__SERVER:
-			if (resolve)
+			if (resolve) {
 				return getServer();
+			}
 			return basicGetServer();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -665,6 +731,7 @@ public class Build extends BuildElement implements IBuild {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -715,6 +782,7 @@ public class Build extends BuildElement implements IBuild {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -763,6 +831,7 @@ public class Build extends BuildElement implements IBuild {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -799,12 +868,14 @@ public class Build extends BuildElement implements IBuild {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
+		if (eIsProxy()) {
 			return super.toString();
+		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (id: "); //$NON-NLS-1$
@@ -827,15 +898,9 @@ public class Build extends BuildElement implements IBuild {
 		return result.toString();
 	}
 
-	public IBuild createWorkingCopy() {
-		EcoreUtil.Copier copier = new EcoreUtil.Copier();
-		Build newBuild = (Build) copier.copy(this);
-		copier.copyReferences();
-		return newBuild;
-	}
-
-	public IStatus getOperationStatus() {
-		return null;
+	@Override
+	public Build createWorkingCopy() {
+		return (Build) super.createWorkingCopy();
 	}
 
 } // Build

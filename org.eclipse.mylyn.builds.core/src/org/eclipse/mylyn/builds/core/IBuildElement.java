@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.builds.core;
 
+import java.util.List;
+
 import org.eclipse.core.runtime.IStatus;
 
 /**
@@ -23,6 +25,8 @@ import org.eclipse.core.runtime.IStatus;
  * <ul>
  *   <li>{@link org.eclipse.mylyn.builds.core.IBuildElement#getUrl <em>Url</em>}</li>
  *   <li>{@link org.eclipse.mylyn.builds.core.IBuildElement#getName <em>Name</em>}</li>
+ *   <li>{@link org.eclipse.mylyn.builds.core.IBuildElement#getOperations <em>Operations</em>}</li>
+ *   <li>{@link org.eclipse.mylyn.builds.core.IBuildElement#getElementStatus <em>Element Status</em>}</li>
  * </ul>
  * </p>
  *
@@ -76,6 +80,44 @@ public interface IBuildElement {
 	void setName(String value);
 
 	/**
+	 * Returns the value of the '<em><b>Operations</b></em>' attribute list.
+	 * The list contents are of type {@link org.eclipse.mylyn.builds.core.IOperation}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Operations</em>' reference list isn't clear, there really should be more of a
+	 * description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Operations</em>' attribute list.
+	 * @generated
+	 */
+	List<IOperation> getOperations();
+
+	/**
+	 * Returns the value of the '<em><b>Element Status</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Element Status</em>' reference isn't clear, there really should be more of a
+	 * description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Element Status</em>' attribute.
+	 * @see #setElementStatus(IStatus)
+	 * @generated
+	 */
+	IStatus getElementStatus();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildElement#getElementStatus <em>Element Status</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Element Status</em>' attribute.
+	 * @see #getElementStatus()
+	 * @generated
+	 */
+	void setElementStatus(IStatus value);
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -88,7 +130,5 @@ public interface IBuildElement {
 	 * @generated
 	 */
 	IBuildServer getServer();
-
-	IStatus getOperationStatus();
 
 } // IBuildElement

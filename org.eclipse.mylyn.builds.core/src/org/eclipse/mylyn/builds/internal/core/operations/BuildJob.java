@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.util.ProgressUtil;
 import org.eclipse.mylyn.builds.internal.core.util.BuildsConstants;
 import org.eclipse.mylyn.commons.core.DelegatingProgressMonitor;
@@ -35,6 +36,21 @@ public abstract class BuildJob extends Job {
 	public BuildJob(String name) {
 		super(name);
 		this.monitor = new DelegatingProgressMonitor();
+	}
+
+	public IBuildElement getElement() {
+		return null;
+	}
+
+	@Override
+	public Object getAdapter(Class adapter) {
+		if (adapter == IBuildElement.class) {
+			IBuildElement element = getElement();
+			if (element != null) {
+				return element;
+			}
+		}
+		return super.getAdapter(adapter);
 	}
 
 	@Override

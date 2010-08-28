@@ -2,13 +2,14 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildSwitch.java,v 1.1 2010/08/28 06:14:17 spingel Exp $
+ * $Id: BuildSwitch.java,v 1.2 2010/08/28 09:21:12 spingel Exp $
  */
 package org.eclipse.mylyn.builds.internal.core;
 
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.mylyn.builds.core.*;

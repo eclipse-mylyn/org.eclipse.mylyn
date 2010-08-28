@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildServer.java,v 1.1 2010/08/28 06:14:17 spingel Exp $
+ * $Id: BuildServer.java,v 1.2 2010/08/28 09:21:12 spingel Exp $
  */
 package org.eclipse.mylyn.builds.internal.core;
 
@@ -31,7 +31,7 @@ import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
 import org.eclipse.mylyn.builds.core.spi.BuildServerConfiguration;
-import org.eclipse.mylyn.builds.internal.core.operations.RefreshConfigurationsOperation;
+import org.eclipse.mylyn.builds.internal.core.operations.RefreshConfigurationOperation;
 import org.eclipse.mylyn.builds.internal.core.operations.RefreshSession;
 import org.eclipse.mylyn.commons.core.IOperationMonitor;
 import org.eclipse.mylyn.commons.net.WebUtil;
@@ -44,13 +44,13 @@ import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.BuildServer#getAttributes <em>Attributes</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.BuildServer#getLocation <em>Location</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.BuildServer#getConnectorKind <em>Connector Kind</em>}</li>
- *   <li>{@link org.eclipse.mylyn.builds.internal.core.BuildServer#getRepositoryUrl <em>Repository Url</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildServer#getAttributes <em>Attributes</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildServer#getLocation <em>Location</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildServer#getConnectorKind <em>Connector Kind</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildServer#getRepositoryUrl <em>Repository Url</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class BuildServer extends BuildElement implements IBuildServer {
@@ -58,6 +58,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	 * The cached value of the '{@link #getAttributes() <em>Attributes</em>}' map.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getAttributes()
 	 * @generated
 	 * @ordered
@@ -68,6 +69,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	 * The default value of the '{@link #getLocation() <em>Location</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getLocation()
 	 * @generated
 	 * @ordered
@@ -78,6 +80,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	 * The cached value of the '{@link #getLocation() <em>Location</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getLocation()
 	 * @generated
 	 * @ordered
@@ -88,6 +91,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	 * The default value of the '{@link #getConnectorKind() <em>Connector Kind</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getConnectorKind()
 	 * @generated
 	 * @ordered
@@ -98,6 +102,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	 * The cached value of the '{@link #getConnectorKind() <em>Connector Kind</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getConnectorKind()
 	 * @generated
 	 * @ordered
@@ -108,6 +113,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	 * The default value of the '{@link #getRepositoryUrl() <em>Repository Url</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getRepositoryUrl()
 	 * @generated
 	 * @ordered
@@ -118,6 +124,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	 * The cached value of the '{@link #getRepositoryUrl() <em>Repository Url</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getRepositoryUrl()
 	 * @generated
 	 * @ordered
@@ -134,6 +141,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -147,6 +155,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	 * If the meaning of the '<em>Attributes</em>' map isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public Map<String, String> getAttributes() {
@@ -164,6 +173,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public RepositoryLocation getLocation() {
@@ -202,6 +212,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getConnectorKind() {
@@ -211,14 +222,16 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setConnectorKind(String newConnectorKind) {
 		String oldConnectorKind = connectorKind;
 		connectorKind = newConnectorKind;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_SERVER__CONNECTOR_KIND,
 					oldConnectorKind, connectorKind));
+		}
 	}
 
 	/**
@@ -228,6 +241,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getRepositoryUrl() {
@@ -237,19 +251,22 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setRepositoryUrl(String newRepositoryUrl) {
 		String oldRepositoryUrl = repositoryUrl;
 		repositoryUrl = newRepositoryUrl;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_SERVER__REPOSITORY_URL,
 					oldRepositoryUrl, repositoryUrl));
+		}
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -265,16 +282,18 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 		case BuildPackage.BUILD_SERVER__ATTRIBUTES:
-			if (coreType)
+			if (coreType) {
 				return ((EMap.InternalMapView<String, String>) getAttributes()).eMap();
-			else
+			} else {
 				return getAttributes();
+			}
 		case BuildPackage.BUILD_SERVER__LOCATION:
 			return getLocation();
 		case BuildPackage.BUILD_SERVER__CONNECTOR_KIND:
@@ -288,6 +307,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -314,6 +334,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -338,6 +359,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -360,12 +382,14 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
+		if (eIsProxy()) {
 			return super.toString();
+		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (location: "); //$NON-NLS-1$
@@ -400,10 +424,6 @@ public class BuildServer extends BuildElement implements IBuildServer {
 		}
 	};
 
-	BuildServer original;
-
-	private IStatus operationStatus;
-
 	private RefreshSession refreshSession;
 
 	private IBuildLoader loader;
@@ -434,16 +454,15 @@ public class BuildServer extends BuildElement implements IBuildServer {
 		return getBehaviour().validate(monitor);
 	}
 
+	@Override
 	public BuildServer getOriginal() {
-		return original;
+		return (BuildServer) super.getOriginal();
 	}
 
+	@Override
 	public BuildServer createWorkingCopy() {
-		EcoreUtil.Copier copier = new EcoreUtil.Copier();
-		BuildServer newServer = (BuildServer) copier.copy(this);
-		copier.copyReferences();
+		BuildServer newServer = (BuildServer) super.createWorkingCopy();
 		newServer.setLoader(getLoader());
-		newServer.original = this;
 		return newServer;
 	}
 
@@ -483,16 +502,8 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	}
 
 	public BuildServerConfiguration refreshConfiguration(final IOperationMonitor monitor) throws CoreException {
-		new RefreshConfigurationsOperation(Collections.singletonList((IBuildServer) this)).run(monitor);
+		new RefreshConfigurationOperation(Collections.singletonList((IBuildServer) this)).run(monitor);
 		return getConfiguration();
-	}
-
-	public IStatus getOperationStatus() {
-		return operationStatus;
-	}
-
-	public void setOperationStatus(IStatus operationStatus) {
-		this.operationStatus = operationStatus;
 	}
 
 	public String getShortUrl() {

@@ -9,37 +9,21 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.builds.core.spi;
+package org.eclipse.mylyn.builds.internal.core.operations;
 
-import org.eclipse.core.runtime.Assert;
-import org.eclipse.mylyn.builds.core.IBuildPlan;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.mylyn.builds.internal.core.IBuildModelRealm;
+import org.eclipse.mylyn.builds.internal.core.util.BuildScheduler;
 
 /**
  * @author Steffen Pingel
  */
-public class BuildRequest {
+public interface IOperationService {
 
-	private final Kind kind;
+	public abstract BuildScheduler getScheduler();
 
-	private final IBuildPlan plan;
+	public abstract void handleResult(AbstractOperation operation, IStatus result);
 
-	public enum Kind {
-		ALL, LAST
-	};
-
-	public BuildRequest(Kind kind, IBuildPlan plan) {
-		Assert.isNotNull(kind);
-		Assert.isNotNull(plan);
-		this.kind = kind;
-		this.plan = plan;
-	}
-
-	public IBuildPlan getPlan() {
-		return plan;
-	}
-
-	public Kind getKind() {
-		return kind;
-	}
+	public abstract IBuildModelRealm getRealm();
 
 }

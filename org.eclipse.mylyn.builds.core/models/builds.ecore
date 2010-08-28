@@ -3,11 +3,13 @@
     xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="builds"
     nsURI="http://eclipse.org/mylyn/models/build" nsPrefix="builds">
-  <eClassifiers xsi:type="ecore:EDataType" name="RepositoryLocation" instanceClassName="org.eclipse.mylyn.commons.repositories.RepositoryLocation"
-      serializable="false"/>
   <eClassifiers xsi:type="ecore:EDataType" name="BuildState" instanceClassName="org.eclipse.mylyn.builds.core.BuildState"/>
   <eClassifiers xsi:type="ecore:EDataType" name="BuildStatus" instanceClassName="org.eclipse.mylyn.builds.core.BuildStatus"/>
   <eClassifiers xsi:type="ecore:EDataType" name="EditType" instanceClassName="org.eclipse.mylyn.builds.core.EditType"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="IStatus" instanceClassName="org.eclipse.core.runtime.IStatus"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="IOperation" instanceClassName="org.eclipse.mylyn.builds.core.IOperation"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="RepositoryLocation" instanceClassName="org.eclipse.mylyn.commons.repositories.RepositoryLocation"
+      serializable="false"/>
   <eClassifiers xsi:type="ecore:EClass" name="StringToStringMap" instanceClassName="java.util.Map$Entry">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
@@ -38,6 +40,10 @@
     <eOperations name="getServer" eType="#//BuildServer"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="url" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="operations" upperBound="-1"
+        eType="#//IOperation" transient="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="elementStatus" eType="#//IStatus"
+        transient="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BuildPlan" eSuperTypes="#//BuildElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="server" lowerBound="1"
