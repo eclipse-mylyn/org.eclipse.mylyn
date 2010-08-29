@@ -2,5 +2,28 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension-point id="notifications" name="Noification Provider" schema="schema/notifications.exsd"/>
+   <extension
+         point="org.eclipse.mylyn.commons.notifications.notifications">
+      <sink
+            class="org.eclipse.mylyn.internal.commons.ui.notifications.popup.PopupNotificationSink"
+            id="org.eclipse.mylyn.commons.notifications.sink.Popup"
+            label="Popup">
+      </sink>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.eclipse.mylyn.internal.commons.ui.notifications.NotificationsPreferencesInitializer">
+      </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.eclipse.ui.preferencePages.Workbench"
+            class="org.eclipse.mylyn.internal.commons.ui.notifications.NotificationsPreferencesPage"
+            id="org.eclipse.mylyn.commons.notifications.preferencePages.Notifications"
+            name="Notifications">
+      </page>
+   </extension>
 
 </plugin>

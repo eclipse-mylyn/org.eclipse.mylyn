@@ -9,8 +9,9 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.commons.notifications;
+package org.eclipse.mylyn.commons.ui.notifications;
 
+import java.util.List;
 
 /**
  * @author Steffen Pingel
@@ -18,5 +19,7 @@ package org.eclipse.mylyn.commons.notifications;
  * @noimplement This interface is not intended to be implemented by clients.
  */
 public interface INotificationService {
+
+	public void notify(List<AbstractNotification> notifications);
 
 }
