@@ -32,7 +32,7 @@ public class NotificationService implements INotificationService {
 	public NotificationService() {
 	}
 
-	public void notify(List<AbstractNotification> notifications) {
+	public void notify(List<? extends AbstractNotification> notifications) {
 		if (!NotificationsPlugin.getDefault()
 				.getPreferenceStore()
 				.getBoolean(NotificationsPlugin.PREF_NOTICATIONS_ENABLED)) {

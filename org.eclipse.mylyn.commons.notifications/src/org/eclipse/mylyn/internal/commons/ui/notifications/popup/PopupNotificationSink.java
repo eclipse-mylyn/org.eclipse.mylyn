@@ -39,7 +39,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class PopupNotificationSink extends NotificationSink {
 
-	private static final long DELAY_OPEN = 5 * 1000;
+	private static final long DELAY_OPEN = 1 * 1000;
 
 	private static final boolean runSystem = true;
 
@@ -90,8 +90,6 @@ public class PopupNotificationSink extends NotificationSink {
 			} finally {
 				if (popup != null) {
 					schedule(popup.getDelayClose() / 2);
-				} else {
-					schedule(DELAY_OPEN);
 				}
 			}
 

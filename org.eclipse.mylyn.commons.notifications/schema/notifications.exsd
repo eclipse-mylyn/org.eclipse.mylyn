@@ -91,6 +91,13 @@
                </appinfo>
             </annotation>
          </attribute>
+         <attribute name="selected" type="boolean">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 

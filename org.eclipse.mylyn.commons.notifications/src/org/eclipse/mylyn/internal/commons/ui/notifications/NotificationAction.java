@@ -11,41 +11,24 @@
 
 package org.eclipse.mylyn.internal.commons.ui.notifications;
 
-import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.Assert;
 
 /**
  * @author Steffen Pingel
  */
-public class NotificationEvent extends NotificationElement {
-
-	private NotificationCategory category;
+public class NotificationAction {
 
 	private boolean selected;
 
-	public NotificationEvent(IConfigurationElement element) {
-		super(element);
-		String selectedValue = element.getAttribute("selected");
-		setSelected(selectedValue == null || Boolean.parseBoolean(selectedValue));
+	private final NotificationSinkDescriptor sinkDescriptor;
+
+	public NotificationAction(NotificationSinkDescriptor sinkDescriptor) {
+		Assert.isNotNull(sinkDescriptor);
+		this.sinkDescriptor = sinkDescriptor;
 	}
 
-	public NotificationCategory getCategory() {
-		return category;
-	}
-
-	public String getCategoryId() {
-		return element.getAttribute("categoryId");
-	}
-
-	public String getDescription() {
-		IConfigurationElement[] children = element.getChildren("description");
-		if (children.length > 0) {
-			return children[0].getValue();
-		}
-		return "";
-	}
-
-	public void setCategory(NotificationCategory category) {
-		this.category = category;
+	public NotificationSinkDescriptor getSinkDescriptor() {
+		return sinkDescriptor;
 	}
 
 	public boolean isSelected() {
@@ -54,6 +37,11 @@ public class NotificationEvent extends NotificationElement {
 
 	public void setSelected(boolean selected) {
 		this.selected = selected;
+	}
+
+	@Override
+	public String toString() {
+		return sinkDescriptor.getLabel();
 	}
 
 }

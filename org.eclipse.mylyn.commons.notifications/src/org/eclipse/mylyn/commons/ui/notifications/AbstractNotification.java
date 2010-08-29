@@ -11,8 +11,7 @@
 
 package org.eclipse.mylyn.commons.ui.notifications;
 
-import java.util.Date;
-
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.swt.graphics.Image;
 
@@ -21,6 +20,17 @@ import org.eclipse.swt.graphics.Image;
  * @author Mik Kersten
  */
 public abstract class AbstractNotification implements Comparable<AbstractNotification>, IAdaptable {
+
+	private final String eventId;
+
+	public AbstractNotification(String eventId) {
+		Assert.isNotNull(eventId);
+		this.eventId = eventId;
+	}
+
+	public String getEventId() {
+		return eventId;
+	}
 
 	public abstract void open();
 
@@ -31,10 +41,6 @@ public abstract class AbstractNotification implements Comparable<AbstractNotific
 	public abstract Image getNotificationImage();
 
 	public abstract Image getNotificationKindImage();
-
-	public abstract Date getDate();
-
-	public abstract void setDate(Date date);
 
 	public Object getToken() {
 		return null;

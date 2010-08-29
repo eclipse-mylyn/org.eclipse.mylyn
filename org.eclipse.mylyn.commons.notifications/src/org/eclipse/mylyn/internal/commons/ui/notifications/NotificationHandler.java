@@ -9,17 +9,30 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.commons.ui.notifications;
+package org.eclipse.mylyn.internal.commons.ui.notifications;
 
 import java.util.List;
 
 /**
  * @author Steffen Pingel
- * @noextend This interface is not intended to be extended by clients.
- * @noimplement This interface is not intended to be implemented by clients.
  */
-public interface INotificationService {
+public class NotificationHandler {
 
-	public void notify(List<? extends AbstractNotification> notifications);
+	private final List<NotificationAction> actions;
+
+	private final NotificationEvent event;
+
+	public NotificationHandler(NotificationEvent event, List<NotificationAction> actions) {
+		this.event = event;
+		this.actions = actions;
+	}
+
+	public List<NotificationAction> getActions() {
+		return actions;
+	}
+
+	public NotificationEvent getEvent() {
+		return event;
+	}
 
 }

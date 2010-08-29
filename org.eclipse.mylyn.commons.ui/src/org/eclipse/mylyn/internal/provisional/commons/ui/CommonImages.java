@@ -159,6 +159,8 @@ public class CommonImages {
 
 	public static final ImageDescriptor COMPLETE = create(T_OBJ, "complete.gif"); //$NON-NLS-1$
 
+	public static final ImageDescriptor CHECKED = create(T_OBJ, "checked.gif"); //$NON-NLS-1$
+
 	public static final ImageDescriptor REMOVE = create(T_ELCL, "remove.gif"); //$NON-NLS-1$
 
 	public static final ImageDescriptor DELETE = create(T_ELCL, "delete.gif"); //$NON-NLS-1$
