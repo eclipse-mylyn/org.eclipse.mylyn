@@ -37,22 +37,29 @@
     <extension 
          point="org.eclipse.mylyn.bugzilla.core.languages"> 
       <!-- <language 
-            name="en"> 
-            <languageAttribute command="error_login" 				response="Login"/> 
-            <languageAttribute command="error_login" 				response="log in"/> 
-            <languageAttribute command="error_login" 				response="check e-mail"/> 
-            <languageAttribute command="error_login" 				response="Invalid Username Or Password"/> 
-            <languageAttribute command="error_collision" 			response="Mid-air collision!"/> 
-            <languageAttribute command="error_comment_required" 	response="Comment Required"/> 
-            <languageAttribute command="error_logged_out" 			response="logged out"/> 
-            <languageAttribute command="bad_login" 					response="Login"/> 
-            <languageAttribute command="bad_login" 					response="log in"/> 
-            <languageAttribute command="bad_login" 					response="check e-mail"/> 
-            <languageAttribute command="bad_login" 					response="Invalid Username Or Password"/> 
-            <languageAttribute command="bad_login" 					response="error"/> 
-            <languageAttribute command="processed" 					response="processed"/> 
-            <languageAttribute command="changes_submitted" 			response="Changes submitted"/> 
-            <languageAttribute command="changes_submitted" 			response="added to Bug"/>
+            name="en">  
+ 		<languageAttribute command="error_login" 				response="Login"/>
+		<languageAttribute command="error_login" 				response="log in"/>
+		<languageAttribute command="error_login" 				response="check e-mail"/>
+		<languageAttribute command="error_login" 				response="Invalid Username Or Password"/>
+		<languageAttribute command="error_login" 				response="account locked"/>
+		<languageAttribute command="error_collision" 			response="Mid-air collision!"/>
+		<languageAttribute command="error_comment_required"		response="Comment Required"/>
+		<languageAttribute command="error_logged_out" 			response="logged out"/>
+		<languageAttribute command="bad_login" 					response="Login"/>
+		<languageAttribute command="bad_login" 					response="log in"/>
+		<languageAttribute command="bad_login" 					response="check e-mail"/>
+		<languageAttribute command="bad_login" 					response="Invalid Username Or Password"/>
+		<languageAttribute command="bad_login" 					response="account locked"/>
+		<languageAttribute command="bad_login" 					response="error"/>
+		<languageAttribute command="processed" 					response="processed"/>
+		<languageAttribute command="changes_submitted" 			response="Changes submitted"/>
+		<languageAttribute command="changes_submitted" 			response="added to Bug"/>
+		<languageAttribute command="bug" 						response="Bug"/>
+		<languageAttribute command="bug" 						response="Issue"/>
+		<languageAttribute command="submitted" 					response="Submitted"/>
+		<languageAttribute command="submitted" 					response="posted"/>
+		<languageAttribute command="suspicious_action" 			response="Suspicious action"/>
       </language> 
       -->
       <language 
@@ -60,6 +67,7 @@
             <languageAttribute command="error_login" 				response="Anmeldename erforderlich"/> 
             <languageAttribute command="error_login" 				response="check e-mail"/> 
             <languageAttribute command="error_login" 				response="Ungültiger Benutzername oder ungültiges Passwort"/> 
+            <languageAttribute command="error_login" 				response="Benutzerkonto gesperrt"/>
             <languageAttribute command="error_collision" 			response="Kollision!"/> 
             <languageAttribute command="error_comment_required" 	response="Kommentar erforderlich"/> 
             <languageAttribute command="error_logged_out" 			response="Abgemeldet"/> 
@@ -67,6 +75,7 @@
             <languageAttribute command="bad_login" 					response="check e-mail"/> 
             <languageAttribute command="bad_login" 					response="Ungültiger Benutzername oder ungültiges Passwort"/> 
             <languageAttribute command="bad_login" 					response="error"/> 
+            <languageAttribute command="bad_login" 					response="Benutzerkonto gesperrt"/>
             <languageAttribute command="processed" 					response="processed"/> 
             <languageAttribute command="changes_submitted" 			response="Changes submitted"/> 
             <languageAttribute command="changes_submitted" 			response="added to Bug"/>
