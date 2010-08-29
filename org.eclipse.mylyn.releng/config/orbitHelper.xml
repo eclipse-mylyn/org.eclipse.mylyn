@@ -98,7 +98,7 @@
 		</fileset>
 
 		<!-- JSON -->
-		<fileset dir="${buildDirectory}/plugins" id="javax.xml.bind">
+		<fileset dir="${buildDirectory}/plugins" id="org.json">
 			<include name="org.json_*.jar"/>				
 		</fileset>
 
