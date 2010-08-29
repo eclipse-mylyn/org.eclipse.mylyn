@@ -239,6 +239,7 @@
     <menuContribution
           allPopups="false"
           locationURI="popup:org.eclipse.mylyn.builds.navigator.builds?after=group.open">
+       <!--
        <command
              commandId="org.eclipse.mylyn.builds.ui.commands.OpenBuild"
              label="Open"
@@ -254,6 +255,7 @@
              </iterate>
           </visibleWhen>
        </command>
+       -->
        <command
              commandId="org.eclipse.mylyn.builds.ui.commands.OpenBuildWithBrowser"
              label="Open with Browser"
@@ -390,13 +392,29 @@
        point="org.eclipse.mylyn.commons.notifications.notifications">
     <event
           categoryId="org.eclipse.mylyn.builds.ui.category.Builds"
-          id="org.eclipse.mylyn.builds.ui.events.BuildCompleted"
-          label="Build Completed">
+          id="org.eclipse.mylyn.builds.ui.events.PlanStatusChanged"
+          label="Plan Status Changed">
+       <description>
+          This event is triggered when the status of a build plan changes, e.g. when a successful build plan changes its status to failed.
+       </description>
     </event>
     <event
           categoryId="org.eclipse.mylyn.builds.ui.category.Builds"
           id="org.eclipse.mylyn.builds.ui.event.BuildStarted"
-          label="Build Started">
+          label="Build Started"
+          selected="false">
+       <description>
+          This event is triggered when a build starts on the server.
+       </description>
+    </event>
+    <event
+          categoryId="org.eclipse.mylyn.builds.ui.category.Builds"
+          id="org.eclipse.mylyn.builds.ui.event.BuildCompleted"
+          label="Build Completed"
+          selected="false">
+       <description>
+          This event is triggered when a build completes on the server.
+       </description>
     </event>
     <category
           icon="icons/eview16/build-view.png"

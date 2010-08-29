@@ -16,10 +16,7 @@ import java.util.Collections;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.util.EContentAdapter;
-import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.internal.core.BuildModel;
-import org.eclipse.mylyn.builds.internal.core.BuildPackage;
-import org.eclipse.mylyn.commons.ui.notifications.AbstractNotification;
 import org.eclipse.mylyn.commons.ui.notifications.Notifications;
 
 /**
@@ -40,9 +37,8 @@ public class BuildNotifier {
 	}
 
 	protected void handle(Notification msg) {
-		if (msg.getNotifier() instanceof IBuildPlan
-				&& msg.getFeatureID(IBuildPlan.class) == BuildPackage.BUILD_PLAN__LAST_BUILD) {
-			AbstractNotification notification = new BuildNotification(msg);
+		BuildNotification notification = BuildNotification.createNotification(msg);
+		if (notification != null) {
 			Notifications.getService().notify(Collections.singletonList(notification));
 		}
 	}
