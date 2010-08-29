@@ -406,7 +406,9 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 					monitor);
 
 			if (repositoryConfiguration == null) {
-				return false;
+				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+						RepositoryStatus.ERROR_REPOSITORY_LOGIN, repository.getRepositoryUrl(),
+						"Retrieving repository configuration failed.")); //$NON-NLS-1$
 			}
 
 			if (taskData.isNew()) {
