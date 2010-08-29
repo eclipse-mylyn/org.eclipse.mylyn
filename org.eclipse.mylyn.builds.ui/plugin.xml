@@ -386,4 +386,22 @@
        </enablement>
     </consolePageParticipant>
  </extension>
+ <extension
+       point="org.eclipse.mylyn.commons.notifications.notifications">
+    <event
+          categoryId="org.eclipse.mylyn.builds.ui.category.Builds"
+          id="org.eclipse.mylyn.builds.ui.events.BuildCompleted"
+          label="Build Completed">
+    </event>
+    <event
+          categoryId="org.eclipse.mylyn.builds.ui.category.Builds"
+          id="org.eclipse.mylyn.builds.ui.event.BuildStarted"
+          label="Build Started">
+    </event>
+    <category
+          icon="icons/eview16/build-view.png"
+          id="org.eclipse.mylyn.builds.ui.category.Builds"
+          label="Builds">
+    </category>
+ </extension>
 </plugin>

@@ -61,13 +61,11 @@ public class BuildsUi {
 
 		MultiStatus result = new MultiStatus(BuildsUiPlugin.ID_PLUGIN, 0, "Build connectors failed to load.", null); //$NON-NLS-1$
 
-		// read core and migrator extensions to check for id conflicts
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IExtensionPoint repositoriesExtensionPoint = registry.getExtensionPoint(BuildsUiPlugin.ID_PLUGIN
-				+ ".connectors");
-		IExtension[] repositoryExtensions = repositoriesExtensionPoint.getExtensions();
-		for (IExtension repositoryExtension : repositoryExtensions) {
-			IConfigurationElement[] elements = repositoryExtension.getConfigurationElements();
+		IExtensionPoint connectorsExtensionPoint = registry.getExtensionPoint(BuildsUiPlugin.ID_PLUGIN + ".connectors");
+		IExtension[] extensions = connectorsExtensionPoint.getExtensions();
+		for (IExtension extension : extensions) {
+			IConfigurationElement[] elements = extension.getConfigurationElements();
 			for (IConfigurationElement element : elements) {
 				BuildConnectorDescriptor descriptor = new BuildConnectorDescriptor(element);
 				IStatus status = descriptor.validate();

@@ -36,6 +36,8 @@ public class BuildsUiPlugin extends AbstractUIPlugin {
 
 	private BuildRefresher refresher;
 
+	private BuildNotifier notifier;
+
 	@Override
 	public void start(BundleContext context) throws Exception {
 		instance = this;
@@ -66,10 +68,16 @@ public class BuildsUiPlugin extends AbstractUIPlugin {
 	}
 
 	public void initializeRefresh() {
+		if (notifier == null) {
+			notifier = new BuildNotifier();
+			notifier.register(BuildsUiInternal.getModel());
+		}
+
 		if (refresher == null) {
 			refresher = new BuildRefresher();
 			getPreferenceStore().addPropertyChangeListener(refresher);
 		}
+
 	}
 
 }
