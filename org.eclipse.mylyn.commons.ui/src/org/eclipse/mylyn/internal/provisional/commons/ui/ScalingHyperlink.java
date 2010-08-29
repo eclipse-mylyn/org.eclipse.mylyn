@@ -56,6 +56,10 @@ public class ScalingHyperlink extends ImageHyperlink {
 		super.dispose();
 	}
 
+	public void registerMouseTrackListener() {
+		addMouseTrackListener(MOUSE_TRACK_LISTENER);
+	}
+
 	public boolean isStrikeThrough() {
 		return strikeThrough;
 	}

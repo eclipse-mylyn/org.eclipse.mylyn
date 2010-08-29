@@ -18,6 +18,7 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.commons.ui.notifications.AbstractNotification;
 import org.eclipse.mylyn.internal.commons.ui.CommonsUiPlugin;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotificationPopup;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColors;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.ScalingHyperlink;
 import org.eclipse.osgi.util.NLS;
@@ -85,7 +86,8 @@ public class NotificationPopup extends AbstractNotificationPopup {
 				final ScalingHyperlink itemLink = new ScalingHyperlink(notificationComposite, SWT.BEGINNING
 						| SWT.NO_FOCUS);
 				GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.TOP).applyTo(itemLink);
-
+				itemLink.setForeground(CommonColors.HYPERLINK_WIDGET);
+				itemLink.registerMouseTrackListener();
 				itemLink.setText(CommonUiUtil.toLabel(notification.getLabel()));
 				itemLink.setImage(notification.getNotificationImage());
 				itemLink.setBackground(parent.getBackground());
@@ -124,12 +126,14 @@ public class NotificationPopup extends AbstractNotificationPopup {
 				}
 			} else {
 				int numNotificationsRemain = notifications.size() - count;
-				ScalingHyperlink remainingHyperlink = new ScalingHyperlink(notificationComposite, SWT.NO_FOCUS);
-				remainingHyperlink.setBackground(parent.getBackground());
+				ScalingHyperlink remainingLink = new ScalingHyperlink(notificationComposite, SWT.NO_FOCUS);
+				remainingLink.setForeground(CommonColors.HYPERLINK_WIDGET);
+				remainingLink.registerMouseTrackListener();
+				remainingLink.setBackground(parent.getBackground());
 
-				remainingHyperlink.setText(NLS.bind("{0} more", numNotificationsRemain)); //$NON-NLS-1$
-				GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(remainingHyperlink);
-				remainingHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+				remainingLink.setText(NLS.bind("{0} more", numNotificationsRemain)); //$NON-NLS-1$
+				GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(remainingLink);
+				remainingLink.addHyperlinkListener(new HyperlinkAdapter() {
 					@Override
 					public void linkActivated(HyperlinkEvent e) {
 						// FIXME
