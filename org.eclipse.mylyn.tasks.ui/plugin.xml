@@ -2014,4 +2014,22 @@
              id="org.eclipse.mylyn.tasks.ui.wizard.NewTaskRepository">
        </primaryWizard>
     </extension>
+    <extension
+          point="org.eclipse.mylyn.commons.notifications.notifications">
+       <category
+             icon="icons/eview16/task-list.gif"
+             id="org.eclipse.mylyn.tasks.ui.category.Tasks"
+             label="Tasks">
+       </category>
+       <event
+             categoryId="org.eclipse.mylyn.tasks.ui.category.Tasks"
+             id="org.eclipse.mylyn.tasks.ui.event.TaskDue"
+             label="Task Due">
+       </event>
+       <event
+             categoryId="org.eclipse.mylyn.tasks.ui.category.Tasks"
+             id="org.eclipse.mylyn.tasks.ui.event.TaskChanged"
+             label="Task Changed">
+       </event>
+    </extension>
 </plugin>
