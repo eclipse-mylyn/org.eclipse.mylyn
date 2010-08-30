@@ -41,20 +41,23 @@ public class BugzillaUtil {
 		} else {
 			attribute.addValue(parsedText);
 		}
-		String useParam = repositoryTaskData.getAttributeMapper().getTaskRepository().getProperty(propertyName);
-		if (defaultWhenNull) {
-			if (useParam == null || (useParam != null && useParam.equals("true"))) { //$NON-NLS-1$
-				attribute.getMetaData().setKind(TaskAttribute.KIND_DEFAULT);
-			} else {
-				attribute.getMetaData().setKind(null);
-			}
+		if (BugzillaAttribute.QA_CONTACT.equals(tag)) {
+			attribute.getMetaData().setKind(null);
 		} else {
-			if (useParam != null && useParam.equals("true")) { //$NON-NLS-1$
-				attribute.getMetaData().setKind(TaskAttribute.KIND_DEFAULT);
+			String useParam = repositoryTaskData.getAttributeMapper().getTaskRepository().getProperty(propertyName);
+			if (defaultWhenNull) {
+				if (useParam == null || (useParam != null && useParam.equals("true"))) { //$NON-NLS-1$
+					attribute.getMetaData().setKind(TaskAttribute.KIND_DEFAULT);
+				} else {
+					attribute.getMetaData().setKind(null);
+				}
 			} else {
-				attribute.getMetaData().setKind(null);
+				if (useParam != null && useParam.equals("true")) { //$NON-NLS-1$
+					attribute.getMetaData().setKind(TaskAttribute.KIND_DEFAULT);
+				} else {
+					attribute.getMetaData().setKind(null);
+				}
 			}
 		}
-
 	}
 }

@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.bugzilla.ui.editor;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskDataHandler;
+import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
@@ -40,13 +41,17 @@ public class BugzillaPeoplePart extends AbstractTaskEditorPart {
 		AbstractAttributeEditor editor = createAttributeEditor(attribute);
 		if (editor != null) {
 			editor.createLabelControl(composite, toolkit);
-			GridDataFactory.defaultsFor(editor.getLabelControl()).indent(COLUMN_MARGIN, 0).applyTo(
-					editor.getLabelControl());
+			GridDataFactory.defaultsFor(editor.getLabelControl())
+					.indent(COLUMN_MARGIN, 0)
+					.applyTo(editor.getLabelControl());
 			editor.createControl(composite, toolkit);
 			getTaskEditorPage().getAttributeEditorToolkit().adapt(editor);
 			if (attribute.getId().equals(BugzillaAttribute.CC.getKey())) {
-				GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).hint(130, 95).applyTo(
-						editor.getControl());
+				GridDataFactory.fillDefaults()
+						.grab(true, true)
+						.align(SWT.FILL, SWT.FILL)
+						.hint(130, 95)
+						.applyTo(editor.getControl());
 			} else {
 				GridDataFactory.fillDefaults()
 						.grab(true, false)
@@ -71,10 +76,15 @@ public class BugzillaPeoplePart extends AbstractTaskEditorPart {
 			addAttribute(peopleComposite, toolkit, assignee);
 		}
 		addAttribute(peopleComposite, toolkit, getTaskData().getRoot().getMappedAttribute(TaskAttribute.USER_REPORTER));
-		addAttribute(peopleComposite, toolkit, getTaskData().getRoot().getMappedAttribute(
-				BugzillaAttribute.QA_CONTACT.getKey()));
-		addAttribute(peopleComposite, toolkit, getTaskData().getRoot().getMappedAttribute(
-				BugzillaAttribute.NEWCC.getKey()));
+		String useParam = getTaskData().getAttributeMapper()
+				.getTaskRepository()
+				.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USEQACONTACT);
+		if (useParam == null || (useParam != null && useParam.equals("true"))) { //$NON-NLS-1$
+			addAttribute(peopleComposite, toolkit,
+					getTaskData().getRoot().getMappedAttribute(BugzillaAttribute.QA_CONTACT.getKey()));
+		}
+		addAttribute(peopleComposite, toolkit,
+				getTaskData().getRoot().getMappedAttribute(BugzillaAttribute.NEWCC.getKey()));
 		addSelfToCC(peopleComposite);
 		TaskAttribute cc = getTaskData().getRoot().getMappedAttribute(BugzillaAttribute.CC.getKey());
 		if (cc != null) {
