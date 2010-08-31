@@ -377,6 +377,20 @@
             </or>
          </enablement>
       </consolePatternMatchListener>
+            <consolePatternMatchListener
+                  class="org.eclipse.mylyn.internal.builds.ui.console.UrlPatternMatchListener"
+                  id="org.eclipse.builds.ui.HyperlinkConsoleTracker"
+                  qualifier="://"
+                  regex="([a-zA-Z][a-zA-Z+.-]{0,10}://[a-zA-Z0-9%._~!$&amp;?#&apos;()*+,;:@/=-]*[a-zA-Z0-9%_~!$&amp;?#&apos;(*+;:@/=-])">
+               <enablement>
+                  <or>
+                     <test
+                           property="org.eclipse.ui.console.consoleTypeTest"
+                           value="org.eclipse.mylyn.builds.ui.console.BuildConsole">
+                     </test>
+                  </or>
+               </enablement>
+            </consolePatternMatchListener>
    </extension>   
  <extension
        point="org.eclipse.ui.console.consolePageParticipants">
