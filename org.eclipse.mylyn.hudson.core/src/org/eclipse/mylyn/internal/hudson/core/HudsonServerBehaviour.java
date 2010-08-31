@@ -50,12 +50,14 @@ import org.eclipse.mylyn.commons.core.IOperationMonitor;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonConfigurationCache;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonException;
+import org.eclipse.mylyn.internal.hudson.core.client.HudsonServerInfo;
 import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient;
 import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient.BuildId;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBallColor;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBuild;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelHealthReport;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelJob;
+import org.eclipse.osgi.util.NLS;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -380,10 +382,13 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 	@Override
 	public IStatus validate(IOperationMonitor monitor) throws CoreException {
 		try {
-			return client.validate(monitor);
+			HudsonServerInfo info = client.validate(monitor);
+			HudsonStatus status = new HudsonStatus(IStatus.OK, HudsonCorePlugin.ID_PLUGIN, NLS.bind(
+					"Validation succesful: Hudson version {0} found", info.getVersion()));
+			status.setInfo(info);
+			return status;
 		} catch (HudsonException e) {
 			throw HudsonCorePlugin.toCoreException(e);
 		}
 	}
-
 }

@@ -23,7 +23,7 @@ import org.osgi.framework.BundleContext;
  */
 public class HudsonCorePlugin implements BundleActivator {
 
-	public static final String PLUGIN_ID = "org.eclipse.mylyn.hudson.core"; //$NON-NLS-1$
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.hudson.core"; //$NON-NLS-1$
 
 	public static final String CONNECTOR_KIND = "org.eclipse.mylyn.hudson"; //$NON-NLS-1$
 
@@ -58,7 +58,7 @@ public class HudsonCorePlugin implements BundleActivator {
 	}
 
 	public static CoreException toCoreException(HudsonException e) {
-		return new CoreException(new Status(IStatus.ERROR, PLUGIN_ID, "Unexpected error: " + e.getMessage(), e));
+		return new CoreException(new Status(IStatus.ERROR, ID_PLUGIN, "Unexpected error: " + e.getMessage(), e));
 	}
 
 }

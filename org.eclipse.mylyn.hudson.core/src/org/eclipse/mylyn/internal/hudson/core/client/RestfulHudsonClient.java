@@ -37,11 +37,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.NameValuePair;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.builds.core.spi.AbstractConfigurationCache;
 import org.eclipse.mylyn.commons.core.IOperationMonitor;
 import org.eclipse.mylyn.commons.http.CommonHttpClient;
@@ -325,23 +324,26 @@ public class RestfulHudsonClient {
 		return hudsonElement.getValue();
 	}
 
-	public IStatus validate(final IOperationMonitor monitor) throws HudsonException {
-		int response = new HudsonOperation<Integer>(client) {
+	public HudsonServerInfo validate(final IOperationMonitor monitor) throws HudsonException {
+		return new HudsonOperation<HudsonServerInfo>(client) {
 			@Override
-			public Integer execute() throws IOException {
-				CommonHttpMethod method = createHeadMethod(client.getLocation().getUrl() + URL_API);
+			public HudsonServerInfo execute() throws IOException, HudsonException {
+				CommonHttpMethod method = createHeadMethod(client.getLocation().getUrl());
 				try {
-					return execute(method, monitor);
+					execute(method, monitor);
+					checkResponse(method);
+					Header header = method.getResponseHeader("X-Hudson"); //$NON-NLS-1$
+					if (header == null) {
+						throw new HudsonException(NLS.bind("{0} does not appear to be a Hudson instance", client
+								.getLocation().getUrl()));
+					}
+					HudsonServerInfo info = new HudsonServerInfo(header.getValue());
+					return info;
 				} finally {
 					method.releaseConnection(monitor);
 				}
 			}
 		}.run();
-		if (response == HttpStatus.SC_OK) {
-			return Status.OK_STATUS;
-		}
-		throw new HudsonException(NLS.bind("Unexpected return code {0}: {1}", response, HttpStatus
-				.getStatusText(response)));
 	}
 
 }

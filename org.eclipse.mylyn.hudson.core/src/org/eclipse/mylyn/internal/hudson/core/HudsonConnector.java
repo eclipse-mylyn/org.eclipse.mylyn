@@ -39,7 +39,7 @@ public class HudsonConnector extends BuildConnector {
 
 	protected File getCacheFile() {
 		if (Platform.isRunning()) {
-			Bundle bundle = Platform.getBundle(HudsonCorePlugin.PLUGIN_ID);
+			Bundle bundle = Platform.getBundle(HudsonCorePlugin.ID_PLUGIN);
 			if (bundle != null) {
 				IPath stateLocation = Platform.getStateLocation(bundle);
 				IPath cacheFile = stateLocation.append("configuration.obj"); //$NON-NLS-1$
