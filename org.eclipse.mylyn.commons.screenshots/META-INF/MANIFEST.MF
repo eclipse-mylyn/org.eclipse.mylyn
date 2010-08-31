@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %Bundle-Name
+Bundle-SymbolicName: org.eclipse.mylyn.commons.screenshots;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.jface;bundle-version="3.3.0"
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Export-Package: org.eclipse.mylyn.commons.ui.screenshots,
+ org.eclipse.mylyn.internal.commons.ui.screenshots;x-internal:=true
+Bundle-Vendor: %Bundle-Vendor
+Bundle-Localization: plugin
