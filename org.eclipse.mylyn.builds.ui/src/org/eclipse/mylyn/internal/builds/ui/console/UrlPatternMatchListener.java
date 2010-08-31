@@ -37,9 +37,9 @@ public class UrlPatternMatchListener implements IPatternMatchListenerDelegate {
 		try {
 			int offset = event.getOffset();
 			int length = event.getLength();
-			String url = console.getDocument().get(offset, length - 1);
+			String url = console.getDocument().get(offset, length);
 			IHyperlink link = new UrlHyperLink(url);
-			console.addHyperlink(link, offset, length - 1);
+			console.addHyperlink(link, offset, length);
 		} catch (BadLocationException e) {
 		}
 	}

@@ -348,7 +348,7 @@
             class="org.eclipse.jdt.internal.debug.ui.console.JavaConsoleTracker"
             regex="\(\S*${java_extensions_regex}\S*\)"
             qualifier="${java_extensions_regex}"
-            id="org.eclipse.builds.ui.JavaConsoleTracker">
+            id="org.eclipse.builds.ui.console.JavaConsoleTracker">
          <enablement>
             <or>
 			  <test property="org.eclipse.ui.console.consoleTypeTest" value="org.eclipse.mylyn.builds.ui.console.BuildConsole"/>
@@ -359,7 +359,7 @@
             class="org.eclipse.jdt.internal.debug.ui.console.JavaNativeConsoleTracker"
             regex="\(Native Method\)"
             qualifier="Native Method"
-            id="org.eclipse.builds.ui.JavaNativeConsoleTracker">
+            id="org.eclipse.builds.ui.console.JavaNativeConsoleTracker">
          <enablement>
             <or>
 			  <test property="org.eclipse.ui.console.consoleTypeTest" value="org.eclipse.mylyn.builds.ui.console.BuildConsole"/>
@@ -370,7 +370,7 @@
             class="org.eclipse.jdt.internal.debug.ui.console.JavaExceptionConsoleTracker"
             regex="\w[^\(\s]+Exception[\s|:]"
             qualifier="Exception"
-            id="org.eclipse.builds.ui.JavaExceptionConsoleTracker">
+            id="org.eclipse.builds.ui.console.JavaExceptionConsoleTracker">
          <enablement>
             <or>
 			  <test property="org.eclipse.ui.console.consoleTypeTest" value="org.eclipse.mylyn.builds.ui.console.BuildConsole"/>
@@ -379,7 +379,7 @@
       </consolePatternMatchListener>
             <consolePatternMatchListener
                   class="org.eclipse.mylyn.internal.builds.ui.console.UrlPatternMatchListener"
-                  id="org.eclipse.builds.ui.HyperlinkConsoleTracker"
+                  id="org.eclipse.builds.ui.console.UrlConsoleTracker"
                   qualifier="://"
                   regex="([a-zA-Z][a-zA-Z+.-]{0,10}://[a-zA-Z0-9%._~!$&amp;?#&apos;()*+,;:@/=-]*[a-zA-Z0-9%_~!$&amp;?#&apos;(*+;:@/=-])">
                <enablement>
