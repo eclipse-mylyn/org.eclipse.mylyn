@@ -26,6 +26,10 @@ public class HudsonConfigurationCache extends AbstractConfigurationCache<HudsonC
 		super(cacheFile);
 	}
 
+	public HudsonConfigurationCache() {
+		super();
+	}
+
 	@Override
 	protected HudsonConfiguration createConfiguration() {
 		return new HudsonConfiguration();

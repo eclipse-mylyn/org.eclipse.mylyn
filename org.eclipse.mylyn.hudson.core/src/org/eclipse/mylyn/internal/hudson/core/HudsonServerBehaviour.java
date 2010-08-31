@@ -9,6 +9,7 @@
  *     Markus Knittig - initial API and implementation
  *     Tasktop Technologies - improvements
  *     Eike Stepper - improvements for bug 323759
+ *     Benjamin Muskalla - 324039: [build] tests fail with NPE
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.hudson.core;
@@ -39,15 +40,14 @@ import org.eclipse.mylyn.builds.core.IParameterDefinition;
 import org.eclipse.mylyn.builds.core.IPasswordParameterDefinition;
 import org.eclipse.mylyn.builds.core.IStringParameterDefinition;
 import org.eclipse.mylyn.builds.core.spi.BuildPlanRequest;
-import org.eclipse.mylyn.builds.core.spi.GetBuildsRequest;
-import org.eclipse.mylyn.builds.core.spi.GetBuildsRequest.Kind;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
 import org.eclipse.mylyn.builds.core.spi.BuildServerConfiguration;
+import org.eclipse.mylyn.builds.core.spi.GetBuildsRequest;
+import org.eclipse.mylyn.builds.core.spi.GetBuildsRequest.Kind;
 import org.eclipse.mylyn.builds.core.spi.RunBuildRequest;
 import org.eclipse.mylyn.builds.internal.core.BuildFactory;
 import org.eclipse.mylyn.builds.internal.core.util.RepositoryWebLocation;
 import org.eclipse.mylyn.commons.core.IOperationMonitor;
-import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonConfigurationCache;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonException;
@@ -72,12 +72,8 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 
 	private final RestfulHudsonClient client;
 
-	public HudsonServerBehaviour(AbstractWebLocation location) {
-		this.client = new RestfulHudsonClient(location);
-	}
-
-	public HudsonServerBehaviour(RepositoryLocation location) {
-		this.client = new RestfulHudsonClient(new RepositoryWebLocation(location));
+	public HudsonServerBehaviour(RepositoryLocation location, HudsonConfigurationCache cache) {
+		this.client = new RestfulHudsonClient(new RepositoryWebLocation(location), cache);
 	}
 
 	protected HudsonModelBuild createBuildParameter(IBuild build) {
@@ -114,10 +110,6 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		build.setDuration(hudsonBuild.getDuration());
 		build.setTimestamp(hudsonBuild.getTimestamp());
 		return build;
-	}
-
-	public HudsonConfigurationCache getCache() {
-		return client.getCache();
 	}
 
 	@Override
@@ -306,10 +298,6 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		} catch (HudsonException e) {
 			throw HudsonCorePlugin.toCoreException(e);
 		}
-	}
-
-	public void setCache(HudsonConfigurationCache cache) {
-		client.setCache(cache);
 	}
 
 	protected void updateHealth(HudsonModelJob job, IBuildPlan plan) {

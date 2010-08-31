@@ -39,9 +39,10 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.NameValuePair;
-import org.apache.commons.httpclient.URIException;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.builds.core.spi.AbstractConfigurationCache;
 import org.eclipse.mylyn.commons.core.IOperationMonitor;
 import org.eclipse.mylyn.commons.http.CommonHttpClient;
 import org.eclipse.mylyn.commons.http.CommonHttpMethod;
@@ -50,6 +51,7 @@ import org.eclipse.mylyn.internal.commons.http.CommonPostMethod;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBuild;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelHudson;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelJob;
+import org.eclipse.mylyn.internal.hudson.model.HudsonModelRun;
 import org.eclipse.osgi.util.NLS;
 import org.json.JSONException;
 import org.json.JSONWriter;
@@ -92,13 +94,14 @@ public class RestfulHudsonClient {
 
 	private static final String URL_API = "/api/xml"; //$NON-NLS-1$
 
-	private HudsonConfigurationCache cache;
+	private AbstractConfigurationCache<HudsonConfiguration> cache;
 
 	private final CommonHttpClient client;
 
-	public RestfulHudsonClient(AbstractWebLocation location) {
+	public RestfulHudsonClient(AbstractWebLocation location, HudsonConfigurationCache cache) {
 		client = new CommonHttpClient(location);
 		client.getHttpClient().getParams().setAuthenticationPreemptive(true);
+		setCache(cache);
 	}
 
 	protected void checkResponse(CommonHttpMethod method) throws HudsonException {
@@ -113,7 +116,7 @@ public class RestfulHudsonClient {
 		}
 	}
 
-	public HudsonModelBuild getBuild(final HudsonModelJob job, final HudsonModelBuild build,
+	public HudsonModelBuild getBuild(final HudsonModelJob job, final HudsonModelRun build,
 			final IOperationMonitor monitor) throws HudsonException {
 		return new HudsonOperation<HudsonModelBuild>(client) {
 			@Override
@@ -131,7 +134,7 @@ public class RestfulHudsonClient {
 		}.run();
 	}
 
-	protected String getBuildUrl(final HudsonModelJob job, final HudsonModelBuild build) throws HudsonException {
+	protected String getBuildUrl(final HudsonModelJob job, final HudsonModelRun build) throws HudsonException {
 		if (build.getNumber() == -1) {
 			return getJobUrl(job) + "/lastBuild";
 		} else {
@@ -139,7 +142,7 @@ public class RestfulHudsonClient {
 		}
 	}
 
-	public HudsonConfigurationCache getCache() {
+	public AbstractConfigurationCache<HudsonConfiguration> getCache() {
 		return cache;
 	}
 
@@ -301,7 +304,8 @@ public class RestfulHudsonClient {
 		}.run();
 	}
 
-	public void setCache(HudsonConfigurationCache cache) {
+	public void setCache(AbstractConfigurationCache<HudsonConfiguration> cache) {
+		Assert.isNotNull(cache);
 		this.cache = cache;
 	}
 

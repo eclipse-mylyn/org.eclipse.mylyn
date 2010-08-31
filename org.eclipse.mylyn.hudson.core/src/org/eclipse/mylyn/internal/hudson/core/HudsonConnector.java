@@ -33,8 +33,7 @@ public class HudsonConnector extends BuildConnector {
 
 	@Override
 	public BuildServerBehaviour getBehaviour(RepositoryLocation location) throws CoreException {
-		HudsonServerBehaviour behaviour = new HudsonServerBehaviour(location);
-		behaviour.setCache(cache);
+		HudsonServerBehaviour behaviour = new HudsonServerBehaviour(location, cache);
 		return behaviour;
 	}
 
