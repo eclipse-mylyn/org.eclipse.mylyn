@@ -50,6 +50,7 @@ import org.eclipse.mylyn.internal.builds.ui.BuildServerValidator;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
 import org.eclipse.mylyn.internal.provisional.commons.ui.SubstringPatternFilter;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -113,7 +114,8 @@ public class BuildServerPart extends RepositoryLocationPart {
 				}
 				return result;
 			} catch (CoreException e) {
-				return new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "Server validation failed", e);
+				return new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, NLS.bind("Server validation failed: {0}", e
+						.getMessage()), e);
 			}
 		}
 
