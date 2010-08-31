@@ -30,6 +30,8 @@ import org.eclipse.mylyn.commons.core.IOperationMonitor;
  */
 public abstract class AbstractElementOperation<T extends IBuildElement> extends AbstractOperation {
 
+	private List<BuildJob> jobs;
+
 	public AbstractElementOperation(IOperationService service) {
 		super(service);
 	}
@@ -52,7 +54,7 @@ public abstract class AbstractElementOperation<T extends IBuildElement> extends 
 	protected abstract List<T> doSyncInitInput();
 
 	public void execute() {
-		List<BuildJob> jobs = init();
+		jobs = init();
 		final MultiStatus result = new MultiStatus(BuildsCorePlugin.ID_PLUGIN, 0, "Operation result", null);
 		final CountDownLatch latch = new CountDownLatch(jobs.size());
 		for (final BuildJob job : jobs) {
@@ -124,6 +126,14 @@ public abstract class AbstractElementOperation<T extends IBuildElement> extends 
 			});
 		}
 		return result;
+	}
+
+	public void cancel() {
+		if (jobs != null) {
+			for (BuildJob job : jobs) {
+				job.cancel();
+			}
+		}
 	}
 
 }
