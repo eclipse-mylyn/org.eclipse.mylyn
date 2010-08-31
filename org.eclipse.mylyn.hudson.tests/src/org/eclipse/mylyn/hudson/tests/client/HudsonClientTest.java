@@ -24,6 +24,7 @@ import org.eclipse.mylyn.builds.core.util.ProgressUtil;
 import org.eclipse.mylyn.hudson.tests.support.HudsonFixture;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonException;
 import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient;
+import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient.BuildId;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBallColor;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBuild;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelJob;
@@ -45,9 +46,11 @@ public class HudsonClientTest extends TestCase {
 
 	private static final String PLAN_WHITESPACE = "test-white space";
 
+	private static final String PLAN_DISABLED = "test-disabled";
+
 	private static final long POLL_TIMEOUT = 60 * 1000;
 
-	private static final long POLL_INTERVAL = 5 * 1000;
+	private static final long POLL_INTERVAL = 3 * 1000;
 
 	RestfulHudsonClient client;
 
@@ -72,7 +75,7 @@ public class HudsonClientTest extends TestCase {
 		}
 
 		// non Hudson url
-		client = fixture.connect("http://mylyn.eclipse.org/");
+		client = fixture.connect("http://eclipse.org/mylyn");
 		try {
 			client.validate(ProgressUtil.convert(null));
 			fail("Expected HudsonException");
@@ -100,6 +103,20 @@ public class HudsonClientTest extends TestCase {
 
 		HudsonModelBuild build = client.getBuild(job, job.getLastBuild(), null);
 		assertNotNull(build);
+	}
+
+	public void testJobDisabled() throws Exception {
+		client = fixture.connect();
+		List<String> jobIds = new ArrayList<String>();
+		jobIds.add(PLAN_DISABLED);
+
+		List<HudsonModelJob> jobs = client.getJobs(jobIds, null);
+		assertEquals(1, jobs.size());
+		HudsonModelJob job = jobs.get(0);
+		assertEquals(HudsonModelBallColor.DISABLED, job.getColor());
+
+		HudsonModelBuild build = client.getBuild(job, BuildId.LAST.getBuild(), null);
+		assertNull("Expected null, since " + PLAN_DISABLED + " was never built", build);
 	}
 
 	private void assertContains(List<HudsonModelJob> jobs, String name) {
