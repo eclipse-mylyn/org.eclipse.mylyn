@@ -114,7 +114,7 @@ public class ScreenshotViewer {
 
 	private SelectToolAction drawColorToolbar;
 
-	private boolean imageDirty;
+	private boolean dirty;
 
 	/**
 	 * Original screenshot image; used for backup purposes
@@ -224,7 +224,7 @@ public class ScreenshotViewer {
 	}
 
 	private void createControl(Composite parent, int style) {
-		vf = new ViewForm(parent, SWT.NONE);
+		vf = new ViewForm(parent, style);
 		vf.horizontalSpacing = 0;
 		vf.verticalSpacing = 0;
 		vf.setLayoutData(GridDataFactory.fillDefaults().create());
@@ -390,7 +390,7 @@ public class ScreenshotViewer {
 				clearAction.setEnabled(false);
 				workImageGC.drawImage(originalImage, 0, 0);
 				canvas.redraw();
-				setImageDirty(true);
+				setDirty(true);
 
 				historyMouseEvent = new ArrayList<int[]>();
 				historyDrawTool = new ArrayList<int[]>();
@@ -1084,7 +1084,7 @@ public class ScreenshotViewer {
 					currentAction = EditorAction.CROPPING;
 
 					canvas.redraw();
-					setImageDirty(true);
+					setDirty(true);
 				} else if (currentAction == EditorAction.MARKING) {
 					if (startPoint != null) {
 						int drawTool = getSelectDrawToolbar();
@@ -1104,7 +1104,7 @@ public class ScreenshotViewer {
 					}
 
 					startPoint = null;
-					setImageDirty(true);
+					setDirty(true);
 				}
 			}
 
@@ -1332,7 +1332,7 @@ public class ScreenshotViewer {
 	private void clearSelection() {
 		currentSelection = null;
 		startPoint = null;
-		setImageDirty(true);
+		setDirty(true);
 	}
 
 	/**
@@ -1712,7 +1712,8 @@ public class ScreenshotViewer {
 	 *         responsible for disposing the returned image</strong>
 	 */
 	public Image createImage() {
-		Image screenshot = new Image(getShell().getDisplay(), currentSelection != null ? currentSelection
+		// use default display to support invocation from non UI thread
+		Image screenshot = new Image(Display.getDefault(), currentSelection != null ? currentSelection
 				: workImage.getBounds());
 
 		GC gc = new GC(screenshot);
@@ -1723,17 +1724,18 @@ public class ScreenshotViewer {
 			gc.drawImage(workImage, 0, 0);
 		}
 		gc.dispose();
-		this.imageDirty = false;
+
+		setDirty(false);
 
 		return screenshot;
 	}
 
-	public void setImageDirty(boolean pageDirty) {
-		this.imageDirty = pageDirty;
+	public void setDirty(boolean dirty) {
+		this.dirty = dirty;
 	}
 
-	public boolean isImageDirty() {
-		return imageDirty;
+	public boolean isDirty() {
+		return dirty;
 	}
 
 }

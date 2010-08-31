@@ -11,13 +11,18 @@ Require-Bundle: org.eclipse.core.runtime,
  org.junit,
  org.eclipse.mylyn.commons.core,
  org.eclipse.mylyn.commons.net,
+ org.eclipse.mylyn.commons.notifications,
  org.eclipse.mylyn.commons.ui,
+ org.eclipse.mylyn.commons.screenshots,
+ org.eclipse.mylyn.commons.team,
  org.eclipse.mylyn.commons.xmlrpc,
  org.apache.xmlrpc
-Export-Package: org.eclipse.mylyn.commons.tests;x-internal:=true,
+Export-Package: org.eclipse.mylyn.commons.core;x-internal:=true,
+ org.eclipse.mylyn.commons.tests;x-internal:=true,
  org.eclipse.mylyn.commons.tests.manual;x-internal:=true,
  org.eclipse.mylyn.commons.tests.net;x-internal:=true,
  org.eclipse.mylyn.commons.tests.support;x-internal:=true,
  org.eclipse.mylyn.commons.tests.ui;x-internal:=true,
- org.eclipse.mylyn.commons.tests.xmlrpc;x-internal:=true
+ org.eclipse.mylyn.commons.tests.xmlrpc;x-internal:=true,
+ org.eclipse.mylyn.commons.ui.screenshots;x-internal:=true
 Bundle-Vendor: Eclipse Mylyn

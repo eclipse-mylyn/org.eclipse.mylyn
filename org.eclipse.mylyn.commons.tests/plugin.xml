@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="org.eclipse.mylyn.commons.ui.screenshots.ScreenshotView"
+            id="org.eclipse.mylyn.commons.tests.view.Screenshot"
+            name="Screenshot"
+            restorable="true">
+      </view>
+   </extension>
+
+</plugin>
