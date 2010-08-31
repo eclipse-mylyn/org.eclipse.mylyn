@@ -57,12 +57,15 @@ public class HudsonFixture extends TestFixture {
 		return current;
 	}
 
+	private String version;
+
 	public HudsonFixture() {
 		super(HudsonCorePlugin.CONNECTOR_KIND, HUDSON_TEST_URL);
 	}
 
 	public HudsonFixture(String url, String version, String info) {
 		super(HudsonCorePlugin.CONNECTOR_KIND, url);
+		this.version = version;
 		setInfo("Hudson", version, info);
 	}
 
@@ -109,8 +112,12 @@ public class HudsonFixture extends TestFixture {
 	}
 
 	@Override
-	protected TestFixture getDefault() {
+	protected HudsonFixture getDefault() {
 		return DEFAULT;
+	}
+
+	public String getVersion() {
+		return version;
 	}
 
 }

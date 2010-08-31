@@ -19,10 +19,10 @@ import java.util.concurrent.Callable;
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.builds.core.util.ProgressUtil;
 import org.eclipse.mylyn.hudson.tests.support.HudsonFixture;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonException;
+import org.eclipse.mylyn.internal.hudson.core.client.HudsonServerInfo;
 import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient;
 import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient.BuildId;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBallColor;
@@ -64,7 +64,8 @@ public class HudsonClientTest extends TestCase {
 	public void testValidate() throws Exception {
 		// standard connect
 		client = fixture.connect();
-		assertEquals(Status.OK_STATUS, client.validate(ProgressUtil.convert(null)));
+		HudsonServerInfo info = client.validate(null);
+		assertEquals(HudsonFixture.current().getVersion(), info.getVersion());
 
 		// invalid url
 		client = fixture.connect("http://non.existant/repository");
