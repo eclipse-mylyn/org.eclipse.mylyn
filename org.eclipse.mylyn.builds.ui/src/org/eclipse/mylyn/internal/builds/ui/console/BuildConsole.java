@@ -16,6 +16,7 @@ import java.io.IOException;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.internal.core.BuildModel;
 import org.eclipse.mylyn.builds.internal.core.operations.GetBuildOutputOperation;
@@ -92,6 +93,9 @@ public class BuildConsole {
 							BufferedReader reader = event.getInput();
 							String line;
 							while ((line = reader.readLine()) != null) {
+								if (stream.isClosed()) {
+									throw new OperationCanceledException();
+								}
 								stream.println(line);
 							}
 						}
