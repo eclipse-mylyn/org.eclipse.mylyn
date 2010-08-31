@@ -9,6 +9,7 @@
  *     Markus Knittig - initial API and implementation
  *     Tasktop Technologies - improvements
  *     Eike Stepper - improvements for bug 323759
+ *     Benjamin Muskalla - 323920: [build] config retrival fails for jobs with whitespaces
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.hudson.core.client;
@@ -20,6 +21,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +39,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.httpclient.URIException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.IOperationMonitor;
@@ -127,7 +131,7 @@ public class RestfulHudsonClient {
 		}.run();
 	}
 
-	protected String getBuildUrl(final HudsonModelJob job, final HudsonModelBuild build) {
+	protected String getBuildUrl(final HudsonModelJob job, final HudsonModelBuild build) throws HudsonException {
 		if (build.getNumber() == -1) {
 			return getJobUrl(job) + "/lastBuild";
 		} else {
@@ -205,8 +209,14 @@ public class RestfulHudsonClient {
 		}.run();
 	}
 
-	private String getJobUrl(HudsonModelJob job) {
-		return client.getLocation().getUrl() + "/job/" + job.getName();
+	private String getJobUrl(HudsonModelJob job) throws HudsonException {
+		String encodedJobname = "";
+		try {
+			encodedJobname = new URI(null, job.getName(), null).toASCIIString();
+		} catch (URISyntaxException e) {
+			throw new HudsonException(e);
+		}
+		return client.getLocation().getUrl() + "/job/" + encodedJobname;
 	}
 
 	Element parse(InputStream in) throws HudsonException {
