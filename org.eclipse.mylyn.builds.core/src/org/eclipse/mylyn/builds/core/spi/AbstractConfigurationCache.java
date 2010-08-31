@@ -20,7 +20,6 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.builds.internal.core.BuildsCorePlugin;
@@ -35,9 +34,18 @@ public abstract class AbstractConfigurationCache<C extends Serializable> {
 
 	private Map<String, C> configurationByUrl;
 
+	/**
+	 * Constructs a cache that is persisted in <code>cacheFile</code>.
+	 */
 	public AbstractConfigurationCache(File cacheFile) {
-		Assert.isNotNull(cacheFile);
 		this.cacheFile = cacheFile;
+	}
+
+	/**
+	 * Constructs an in memory cache.
+	 */
+	public AbstractConfigurationCache() {
+		this(null);
 	}
 
 	protected abstract C createConfiguration();
@@ -105,6 +113,10 @@ public abstract class AbstractConfigurationCache<C extends Serializable> {
 	}
 
 	protected void writeCache() {
+		if (cacheFile == null) {
+			return;
+		}
+
 		ObjectOutputStream out = null;
 		try {
 			out = new ObjectOutputStream(new FileOutputStream(cacheFile));
