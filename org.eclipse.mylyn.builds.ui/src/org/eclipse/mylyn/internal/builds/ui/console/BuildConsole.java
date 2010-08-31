@@ -47,7 +47,9 @@ public class BuildConsole {
 
 	private final BuildModel model;
 
-	private final String CONSOLE_TYPE = "org.eclipse.mylyn.builds.ui.console.BuildConsole";
+	final static String CONSOLE_TYPE = "org.eclipse.mylyn.builds.ui.console.BuildConsole";
+
+	final static String ATTRIBUTE_BUILD = "org.eclipse.mylyn.builds.ui.console.build";
 
 	public BuildConsole(IConsoleManager consoleManager, BuildModel model, IBuild build) {
 		Assert.isNotNull(consoleManager);
@@ -58,11 +60,12 @@ public class BuildConsole {
 		this.build = build;
 	}
 
-	public void show() {
+	public MessageConsole show() {
 		if (console == null) {
 			console = new MessageConsole(NLS.bind("Output for Build {0}", build.getLabel()), CONSOLE_TYPE,
 					BuildImages.CONSOLE, true);
 			consoleManager.addConsoles(new IConsole[] { console });
+			console.setAttribute(ATTRIBUTE_BUILD, build);
 
 			stream = console.newMessageStream();
 		}
@@ -70,6 +73,13 @@ public class BuildConsole {
 		doGetOutput();
 
 		consoleManager.showConsoleView(console);
+		return console;
+	}
+
+	public void close() {
+		if (operation != null) {
+			operation.cancel();
+		}
 	}
 
 	private void doGetOutput() {
