@@ -25,11 +25,11 @@ import org.eclipse.mylyn.hudson.tests.support.HudsonFixture;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonException;
 import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBallColor;
+import org.eclipse.mylyn.internal.hudson.model.HudsonModelBuild;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelJob;
 import org.eclipse.mylyn.tests.util.TestUtil;
 import org.eclipse.mylyn.tests.util.TestUtil.Credentials;
 import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
-import org.w3c.dom.Document;
 
 /**
  * Test cases for {@link RestfulHudsonClient}.
@@ -45,9 +45,9 @@ public class HudsonClientTest extends TestCase {
 
 	private static final String PLAN_WHITESPACE = "test-white space";
 
-	private static final long POLL_TIMEOUT = 30 * 1000;
+	private static final long POLL_TIMEOUT = 60 * 1000;
 
-	private static final long POLL_INTERVAL = 2 * 1000;
+	private static final long POLL_INTERVAL = 5 * 1000;
 
 	RestfulHudsonClient client;
 
@@ -92,12 +92,14 @@ public class HudsonClientTest extends TestCase {
 		client = fixture.connect();
 		List<String> jobIds = new ArrayList<String>();
 		jobIds.add(PLAN_WHITESPACE);
+
 		List<HudsonModelJob> jobs = client.getJobs(jobIds, null);
 		assertEquals(1, jobs.size());
 		HudsonModelJob job = jobs.get(0);
-		job.getColor().equals(HudsonModelBallColor.BLUE);
-		Document jobConfig = client.getJobConfig(job, null);
-		assertNotNull(jobConfig);
+		assertEquals(HudsonModelBallColor.BLUE, job.getColor());
+
+		HudsonModelBuild build = client.getBuild(job, job.getLastBuild(), null);
+		assertNotNull(build);
 	}
 
 	private void assertContains(List<HudsonModelJob> jobs, String name) {

@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Markus Knittig - initial API and implementation
+ *     Benjamin Muskalla - bug 324039: [build] tests fail with NPE
  *******************************************************************************/
 
 package org.eclipse.mylyn.hudson.tests.support;
@@ -17,6 +18,7 @@ import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.IProxyProvider;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.internal.hudson.core.HudsonCorePlugin;
+import org.eclipse.mylyn.internal.hudson.core.client.HudsonConfigurationCache;
 import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient;
 import org.eclipse.mylyn.tests.util.TestFixture;
 import org.eclipse.mylyn.tests.util.TestUtil;
@@ -31,7 +33,9 @@ import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
  */
 public class HudsonFixture extends TestFixture {
 
-	public final static String HUDSON_TEST_URL = "http://mylyn.eclipse.org/hudson";
+	public static final String SERVER = System.getProperty("mylyn.hudson.server", "mylyn.eclipse.org/hudson");
+
+	public final static String HUDSON_TEST_URL = "http://" + SERVER;
 
 	private static HudsonFixture current;
 
@@ -69,7 +73,7 @@ public class HudsonFixture extends TestFixture {
 		return this;
 	}
 
-	public RestfulHudsonClient connect() {
+	public RestfulHudsonClient connect() throws Exception {
 		return connect(getRepositoryUrl());
 	}
 
@@ -77,20 +81,21 @@ public class HudsonFixture extends TestFixture {
 		return connect(repositoryUrl, Proxy.NO_PROXY, level);
 	}
 
-	public RestfulHudsonClient connect(String url) {
+	public RestfulHudsonClient connect(String url) throws Exception {
 		return connect(url, Proxy.NO_PROXY, PrivilegeLevel.USER);
 	}
 
-	public RestfulHudsonClient connect(String url, Proxy proxy, PrivilegeLevel level) {
+	public RestfulHudsonClient connect(String url, Proxy proxy, PrivilegeLevel level) throws Exception {
 		Credentials credentials = TestUtil.readCredentials(level);
 		return connect(url, credentials.username, credentials.password, proxy);
 	}
 
-	public RestfulHudsonClient connect(String url, String username, String password) {
+	public RestfulHudsonClient connect(String url, String username, String password) throws Exception {
 		return connect(url, username, password, Proxy.NO_PROXY);
 	}
 
-	public RestfulHudsonClient connect(String url, String username, String password, final Proxy proxy) {
+	public RestfulHudsonClient connect(String url, String username, String password, final Proxy proxy)
+			throws Exception {
 		WebLocation location = new WebLocation(url, username, password, new IProxyProvider() {
 			public Proxy getProxyForHost(String host, String proxyType) {
 				return proxy;
@@ -99,7 +104,8 @@ public class HudsonFixture extends TestFixture {
 		if (username != null && password != null) {
 			location.setCredentials(AuthenticationType.HTTP, username, password);
 		}
-		return new RestfulHudsonClient(location);
+		RestfulHudsonClient hudsonClient = new RestfulHudsonClient(location, new HudsonConfigurationCache());
+		return hudsonClient;
 	}
 
 	@Override

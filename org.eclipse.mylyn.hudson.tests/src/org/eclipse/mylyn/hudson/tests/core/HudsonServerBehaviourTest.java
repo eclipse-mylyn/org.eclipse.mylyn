@@ -13,8 +13,9 @@ package org.eclipse.mylyn.hudson.tests.core;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.commons.net.WebLocation;
+import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
 import org.eclipse.mylyn.internal.hudson.core.HudsonServerBehaviour;
+import org.eclipse.mylyn.internal.hudson.core.client.HudsonConfigurationCache;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBallColor;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelHealthReport;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelJob;
@@ -25,14 +26,16 @@ import org.eclipse.mylyn.internal.hudson.model.HudsonModelJob;
 public class HudsonServerBehaviourTest extends TestCase {
 
 	public void testParseJobHealthNoReport() throws Exception {
-		HudsonServerBehaviour behaviour = new HudsonServerBehaviour(new WebLocation(""));
+		HudsonServerBehaviour behaviour = new HudsonServerBehaviour(new RepositoryLocation(),
+				new HudsonConfigurationCache());
 		HudsonModelJob job = new HudsonModelJob();
 		job.setColor(HudsonModelBallColor.YELLOW);
 		assertEquals(-1, behaviour.parseJob(job).getHealth());
 	}
 
 	public void testParseJobHealth() throws Exception {
-		HudsonServerBehaviour behaviour = new HudsonServerBehaviour(new WebLocation(""));
+		HudsonServerBehaviour behaviour = new HudsonServerBehaviour(new RepositoryLocation(),
+				new HudsonConfigurationCache());
 		HudsonModelJob job = new HudsonModelJob();
 		job.setColor(HudsonModelBallColor.YELLOW);
 		HudsonModelHealthReport healthReport = new HudsonModelHealthReport();
@@ -40,5 +43,4 @@ public class HudsonServerBehaviourTest extends TestCase {
 		job.getHealthReport().add(healthReport);
 		assertEquals(80, behaviour.parseJob(job).getHealth());
 	}
-
 }
