@@ -12,6 +12,13 @@
 
 package org.eclipse.mylyn.hudson.tests.client;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
+
+import junit.framework.AssertionFailedError;
+import junit.framework.TestCase;
+
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.builds.core.util.ProgressUtil;
 import org.eclipse.mylyn.hudson.tests.support.HudsonFixture;
@@ -22,12 +29,7 @@ import org.eclipse.mylyn.internal.hudson.model.HudsonModelJob;
 import org.eclipse.mylyn.tests.util.TestUtil;
 import org.eclipse.mylyn.tests.util.TestUtil.Credentials;
 import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
-
-import java.util.List;
-import java.util.concurrent.Callable;
-
-import junit.framework.AssertionFailedError;
-import junit.framework.TestCase;
+import org.w3c.dom.Document;
 
 /**
  * Test cases for {@link RestfulHudsonClient}.
@@ -40,6 +42,8 @@ public class HudsonClientTest extends TestCase {
 	private static final String PLAN_SUCCEEDING = "test-succeeding";
 
 	private static final String PLAN_FAILING = "test-failing";
+
+	private static final String PLAN_WHITESPACE = "test-white space";
 
 	private static final long POLL_TIMEOUT = 30 * 1000;
 
@@ -82,6 +86,18 @@ public class HudsonClientTest extends TestCase {
 		assertContains(jobs, PLAN_FAILING);
 		assertContains(jobs, PLAN_SUCCEEDING);
 		assertHealthReport(jobs);
+	}
+
+	public void testJobsWithWhitespaces() throws Exception {
+		client = fixture.connect();
+		List<String> jobIds = new ArrayList<String>();
+		jobIds.add(PLAN_WHITESPACE);
+		List<HudsonModelJob> jobs = client.getJobs(jobIds, null);
+		assertEquals(1, jobs.size());
+		HudsonModelJob job = jobs.get(0);
+		job.getColor().equals(HudsonModelBallColor.BLUE);
+		Document jobConfig = client.getJobConfig(job, null);
+		assertNotNull(jobConfig);
 	}
 
 	private void assertContains(List<HudsonModelJob> jobs, String name) {
