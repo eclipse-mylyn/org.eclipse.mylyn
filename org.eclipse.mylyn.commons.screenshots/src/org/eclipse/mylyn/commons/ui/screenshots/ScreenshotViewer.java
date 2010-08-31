@@ -796,6 +796,9 @@ public class ScreenshotViewer {
 		return -1;
 	}
 
+	/**
+	 * Returns true, if the viewer has captured an image.
+	 */
 	public boolean isComplete() {
 		return workImage != null;
 	}
@@ -821,7 +824,9 @@ public class ScreenshotViewer {
 	}
 
 	/**
-	 * Sub-classes may override.
+	 * Invoked when the state of the viewer changes, e.g. when the screen is captured. Sub-classes may override.
+	 * 
+	 * @see #isComplete()
 	 */
 	protected void stateChanged() {
 		// do nothing	
@@ -1706,7 +1711,7 @@ public class ScreenshotViewer {
 	private static final int SQUARE_SIZE = 3;
 
 	/**
-	 * Creates the final screenshot
+	 * Creates the final screenshot.
 	 * 
 	 * @return The final screenshot, with all markings, and cropped according to user settings; <strong>The caller is
 	 *         responsible for disposing the returned image</strong>
@@ -1730,10 +1735,22 @@ public class ScreenshotViewer {
 		return screenshot;
 	}
 
+	/**
+	 * Sets the dirty flag to indicate if the image was modified since {@link #createImage()} was invoked last.
+	 * 
+	 * @param dirty
+	 *            the dirty flag
+	 * @see #isDirty()
+	 */
 	public void setDirty(boolean dirty) {
 		this.dirty = dirty;
 	}
 
+	/**
+	 * Returns true, if the image was modified since {@link #createImage()} was invoked last.
+	 * 
+	 * @see #setDirty(boolean)
+	 */
 	public boolean isDirty() {
 		return dirty;
 	}
