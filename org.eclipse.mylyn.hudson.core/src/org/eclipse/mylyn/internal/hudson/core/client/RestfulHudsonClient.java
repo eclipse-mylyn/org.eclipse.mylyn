@@ -111,8 +111,8 @@ public class RestfulHudsonClient {
 	protected void checkResponse(CommonHttpMethod method, int expected) throws HudsonException {
 		int statusCode = method.getStatusCode();
 		if (statusCode != expected) {
-			throw new HudsonException(NLS.bind("Unexpected response from Hudson server: {0}", HttpStatus
-					.getStatusText(statusCode)));
+			throw new HudsonException(NLS.bind("Unexpected response from Hudson server for ''{0}'': {1}", method
+					.getPath(), HttpStatus.getStatusText(statusCode)));
 		}
 	}
 
@@ -124,6 +124,10 @@ public class RestfulHudsonClient {
 				CommonHttpMethod method = createGetMethod(getBuildUrl(job, build) + URL_API);
 				try {
 					execute(method, monitor);
+					if (method.getStatusCode() == HttpStatus.SC_NOT_FOUND) {
+						// indicates that job was never built or invalid build was requested
+						return null;
+					}
 					checkResponse(method);
 					InputStream in = method.getResponseBodyAsStream(monitor);
 					return unmarshal(parse(in), HudsonModelBuild.class);

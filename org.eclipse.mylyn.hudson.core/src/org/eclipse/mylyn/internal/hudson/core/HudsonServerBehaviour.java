@@ -26,7 +26,6 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.builds.core.BuildState;
 import org.eclipse.mylyn.builds.core.BuildStatus;
 import org.eclipse.mylyn.builds.core.IBooleanParameterDefinition;
@@ -96,7 +95,7 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		try {
 			HudsonModelJob job = createJobParameter(request.getPlan());
 			HudsonModelBuild build = client.getBuild(job, BuildId.LAST.getBuild(), monitor);
-			return Collections.singletonList(parseBuild(build));
+			return (build != null) ? Collections.singletonList(parseBuild(build)) : null;
 		} catch (HudsonException e) {
 			throw HudsonCorePlugin.toCoreException(e);
 		}
@@ -142,29 +141,31 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 			List<HudsonModelJob> jobs = client.getJobs(request.getPlanIds(), monitor);
 			List<IBuildPlan> plans = new ArrayList<IBuildPlan>(jobs.size());
 			for (HudsonModelJob job : jobs) {
-				org.eclipse.mylyn.builds.internal.core.BuildPlan plan = (org.eclipse.mylyn.builds.internal.core.BuildPlan) parseJob(job); // TODO Bad cast ;-(
+				IBuildPlan plan = parseJob(job);
 				plans.add(plan);
 
-				// TODO Do this in parallel for multiple jobs
+				// TODO fetch information from job 
 				try {
 					Document document = client.getJobConfig(job, monitor);
 					parseParameters(document, plan.getParameterDefinitions());
 				} catch (HudsonException e) {
 					// ignore, might not have permission to read config
+				} catch (ParserConfigurationException e) {
+					// ignore
+				} catch (SAXException e) {
+					// ignore
+				} catch (IOException e) {
+					// ignore
 				}
 			}
 			return plans;
 		} catch (HudsonException e) {
-			throw HudsonCorePlugin.toCoreException(e); // TODO Why must e be a HUDSONexception?
-		} catch (Exception e) {
-			throw new CoreException(new Status(IStatus.ERROR, HudsonCorePlugin.PLUGIN_ID, "Unexpected error: "
-					+ e.getMessage(), e));
+			throw HudsonCorePlugin.toCoreException(e);
 		}
 	}
 
 	private void parseParameters(Document document, List<IParameterDefinition> definitions)
 			throws ParserConfigurationException, SAXException, IOException, HudsonException {
-
 		NodeList containers = document.getElementsByTagName("parameterDefinitions"); //$NON-NLS-1$
 		for (int i = 0; i < containers.getLength(); i++) {
 			Element container = (Element) containers.item(i);
