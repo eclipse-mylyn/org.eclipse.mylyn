@@ -42,7 +42,7 @@ import org.xml.sax.XMLReader;
 
 class MediaWikiApiImageFetchingStrategy extends ImageFetchingStrategy {
 
-	private final Pattern imageTitlePattern = Pattern.compile("Image:(.+)"); //$NON-NLS-1$
+	private final Pattern imageTitlePattern = Pattern.compile("(?:Image|File):(.+)"); //$NON-NLS-1$
 
 	private URL url;
 
@@ -112,10 +112,14 @@ class MediaWikiApiImageFetchingStrategy extends ImageFetchingStrategy {
 					String name = titleMatcher.group(1);
 					name = name.replace(' ', '_');
 					String qualifiedUrl = base;
-					if (imageUrl.startsWith("/")) { //$NON-NLS-1$
-						qualifiedUrl += imageUrl.substring(0);
+					if (imageUrl.matches("https?://.*")) { //$NON-NLS-1$
+						qualifiedUrl = imageUrl;
 					} else {
-						qualifiedUrl += imageUrl;
+						if (imageUrl.startsWith("/")) { //$NON-NLS-1$
+							qualifiedUrl += imageUrl.substring(0);
+						} else {
+							qualifiedUrl += imageUrl;
+						}
 					}
 
 					log("Fetching " + qualifiedUrl, Project.MSG_INFO); //$NON-NLS-1$
