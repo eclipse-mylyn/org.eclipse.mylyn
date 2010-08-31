@@ -86,10 +86,12 @@ public class RefreshSession {
 				result.set(server.getBehaviour().getBuilds(buildRequest, monitor));
 			}
 		});
+
 		if (result.get() == null) {
-			throw new CoreException(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN,
-					"Server did not provide a valid build."));
+			// indicates that plan was never built
+			return;
 		}
+
 		// merge builds into model
 		final BuildServer original = server.getOriginal();
 		original.getLoader().getRealm().syncExec(new Runnable() {
