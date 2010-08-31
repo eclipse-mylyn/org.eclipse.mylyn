@@ -24,6 +24,10 @@ import org.eclipse.mylyn.hudson.tests.support.HudsonFixture;
 public class AllHudsonTests {
 
 	public static Test suite() {
+		return suite(false);
+	}
+
+	public static Test suite(boolean defaultOnly) {
 		TestSuite suite = new TestSuite("Tests for org.eclipse.mylyn.hudson.tests");
 		suite.addTestSuite(HudsonServerBehaviourTest.class);
 		// network tests
