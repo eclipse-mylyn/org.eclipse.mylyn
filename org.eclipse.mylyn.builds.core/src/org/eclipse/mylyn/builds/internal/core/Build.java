@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -27,6 +28,7 @@ import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.IChangeSet;
+import org.eclipse.mylyn.builds.core.ITestResult;
 
 /**
  * <!-- begin-user-doc -->
@@ -47,6 +49,7 @@ import org.eclipse.mylyn.builds.core.IChangeSet;
  * <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getPlan <em>Plan</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getLabel <em>Label</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getServer <em>Server</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getTestResult <em>Test Result</em>}</li>
  * </ul>
  * </p>
  * 
@@ -272,6 +275,17 @@ public class Build extends BuildElement implements IBuild {
 	 * @ordered
 	 */
 	protected IBuildServer server;
+
+	/**
+	 * The cached value of the '{@link #getTestResult() <em>Test Result</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getTestResult()
+	 * @generated
+	 * @ordered
+	 */
+	protected ITestResult testResult;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -674,6 +688,74 @@ public class Build extends BuildElement implements IBuild {
 	 * 
 	 * @generated
 	 */
+	public ITestResult getTestResult() {
+		return testResult;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public NotificationChain basicSetTestResult(ITestResult newTestResult, NotificationChain msgs) {
+		ITestResult oldTestResult = testResult;
+		testResult = newTestResult;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
+					BuildPackage.BUILD__TEST_RESULT, oldTestResult, newTestResult);
+			if (msgs == null)
+				msgs = notification;
+			else
+				msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setTestResult(ITestResult newTestResult) {
+		if (newTestResult != testResult) {
+			NotificationChain msgs = null;
+			if (testResult != null)
+				msgs = ((InternalEObject) testResult).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
+						- BuildPackage.BUILD__TEST_RESULT, null, msgs);
+			if (newTestResult != null)
+				msgs = ((InternalEObject) newTestResult).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
+						- BuildPackage.BUILD__TEST_RESULT, null, msgs);
+			msgs = basicSetTestResult(newTestResult, msgs);
+			if (msgs != null)
+				msgs.dispatch();
+		} else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__TEST_RESULT, newTestResult,
+					newTestResult));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+		case BuildPackage.BUILD__TEST_RESULT:
+			return basicSetTestResult(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -707,6 +789,8 @@ public class Build extends BuildElement implements IBuild {
 			if (resolve)
 				return getServer();
 			return basicGetServer();
+		case BuildPackage.BUILD__TEST_RESULT:
+			return getTestResult();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -758,6 +842,9 @@ public class Build extends BuildElement implements IBuild {
 		case BuildPackage.BUILD__SERVER:
 			setServer((IBuildServer) newValue);
 			return;
+		case BuildPackage.BUILD__TEST_RESULT:
+			setTestResult((ITestResult) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -807,6 +894,9 @@ public class Build extends BuildElement implements IBuild {
 		case BuildPackage.BUILD__SERVER:
 			setServer((IBuildServer) null);
 			return;
+		case BuildPackage.BUILD__TEST_RESULT:
+			setTestResult((ITestResult) null);
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -844,6 +934,8 @@ public class Build extends BuildElement implements IBuild {
 			return LABEL_EDEFAULT == null ? label != null : !LABEL_EDEFAULT.equals(label);
 		case BuildPackage.BUILD__SERVER:
 			return server != null;
+		case BuildPackage.BUILD__TEST_RESULT:
+			return testResult != null;
 		}
 		return super.eIsSet(featureID);
 	}

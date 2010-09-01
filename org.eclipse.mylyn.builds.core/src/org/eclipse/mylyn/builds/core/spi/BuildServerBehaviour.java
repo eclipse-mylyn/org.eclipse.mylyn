@@ -19,8 +19,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
-import org.eclipse.mylyn.builds.core.IBuildPlan;
-import org.eclipse.mylyn.builds.core.IBuild;
+import org.eclipse.mylyn.builds.core.ITestCase;
+import org.eclipse.mylyn.builds.core.ITestResult;
+import org.eclipse.mylyn.builds.core.ITestSuite;
 import org.eclipse.mylyn.builds.internal.core.BuildFactory;
 import org.eclipse.mylyn.commons.core.IOperationMonitor;
 
@@ -38,6 +39,18 @@ public abstract class BuildServerBehaviour {
 
 	protected IBuild createBuild() {
 		return BuildFactory.eINSTANCE.createBuild();
+	}
+
+	protected ITestResult createTestResult() {
+		return BuildFactory.eINSTANCE.createTestResult();
+	}
+
+	protected ITestSuite createTestSuite() {
+		return BuildFactory.eINSTANCE.createTestSuite();
+	}
+
+	protected ITestCase createTestCase() {
+		return BuildFactory.eINSTANCE.createTestCase();
 	}
 
 	public abstract List<IBuild> getBuilds(GetBuildsRequest request, IOperationMonitor monitor) throws CoreException;

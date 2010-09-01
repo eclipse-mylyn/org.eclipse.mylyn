@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildPackage.java,v 1.4 2010/08/28 20:59:54 spingel Exp $
+ * $Id: BuildPackage.java,v 1.5 2010/09/01 03:54:33 spingel Exp $
  */
 package org.eclipse.mylyn.builds.internal.core;
 
@@ -534,6 +534,16 @@ public class BuildPackage extends EPackageImpl {
 	public static final int BUILD__SERVER = BUILD_ELEMENT_FEATURE_COUNT + 11;
 
 	/**
+	 * The feature id for the '<em><b>Test Result</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD__TEST_RESULT = BUILD_ELEMENT_FEATURE_COUNT + 12;
+
+	/**
 	 * The number of structural features of the '<em>Build</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -541,7 +551,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int BUILD_FEATURE_COUNT = BUILD_ELEMENT_FEATURE_COUNT + 12;
+	public static final int BUILD_FEATURE_COUNT = BUILD_ELEMENT_FEATURE_COUNT + 13;
 
 	/**
 	 * The feature id for the '<em><b>Url</b></em>' attribute.
@@ -2908,6 +2918,21 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.mylyn.builds.core.IBuild#getTestResult
+	 * <em>Test Result</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the containment reference '<em>Test Result</em>'.
+	 * @see org.eclipse.mylyn.builds.core.IBuild#getTestResult()
+	 * @see #getBuild()
+	 * @generated
+	 */
+	public EReference getBuild_TestResult() {
+		return (EReference) buildEClass.getEStructuralFeatures().get(12);
+	}
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IChangeSet <em>Change Set</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3913,6 +3938,7 @@ public class BuildPackage extends EPackageImpl {
 		createEReference(buildEClass, BUILD__PLAN);
 		createEAttribute(buildEClass, BUILD__LABEL);
 		createEReference(buildEClass, BUILD__SERVER);
+		createEReference(buildEClass, BUILD__TEST_RESULT);
 
 		buildElementEClass = createEClass(BUILD_ELEMENT);
 		createEAttribute(buildElementEClass, BUILD_ELEMENT__URL);
@@ -4155,6 +4181,11 @@ public class BuildPackage extends EPackageImpl {
 				this.getBuildServer(),
 				null,
 				"server", null, 0, 1, IBuild.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getBuild_TestResult(),
+				this.getTestResult(),
+				null,
+				"testResult", null, 0, 1, IBuild.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(buildElementEClass, IBuildElement.class,
 				"BuildElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
@@ -4749,6 +4780,15 @@ public class BuildPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EReference BUILD__SERVER = eINSTANCE.getBuild_Server();
+
+		/**
+		 * The meta object literal for the '<em><b>Test Result</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EReference BUILD__TEST_RESULT = eINSTANCE.getBuild_TestResult();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.BuildPlan <em>Plan</em>}'
