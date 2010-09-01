@@ -8,6 +8,7 @@
  * Contributors:
  *     Markus Knittig - initial API and implementation
  *     Tasktop Technologies - improvements
+ *     Benjamin Muskalla - enhancements for bug 324222
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.editor;
@@ -15,19 +16,24 @@ package org.eclipse.mylyn.internal.builds.ui.editor;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.ui.BuildsUi;
 import org.eclipse.mylyn.builds.ui.spi.BuildConnectorUi;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
+import org.eclipse.mylyn.internal.tasks.ui.editors.Messages;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.SharedHeaderFormEditor;
+import org.eclipse.ui.forms.widgets.Form;
 
 /**
  * @author Markus Knittig
@@ -102,6 +108,25 @@ public class BuildEditor extends SharedHeaderFormEditor {
 		}
 		setTitleToolTip(input.getToolTipText());
 		setPartName(input.getName());
+
+		updateToolBar();
+	}
+
+	private void updateToolBar() {
+		final Form form = getHeaderForm().getForm().getForm();
+		IToolBarManager toolBarManager = form.getToolBarManager();
+
+		Action openWithBrowserAction = new Action() {
+			@Override
+			public void run() {
+				WorkbenchUtil.openUrl(plan.getUrl());
+			}
+		};
+		openWithBrowserAction.setImageDescriptor(CommonImages.WEB);
+		openWithBrowserAction.setToolTipText(Messages.AbstractTaskEditorPage_Open_with_Web_Browser);
+		toolBarManager.add(openWithBrowserAction);
+
+		toolBarManager.update(true);
 	}
 
 }
