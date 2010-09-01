@@ -16,18 +16,19 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 public class BugzillaUtil {
+
+	private static boolean getParamValue(TaskRepository taskRepository, String propertyName, boolean trueIfUndefined) {
+		boolean result;
+		String useParam = taskRepository.getProperty(propertyName);
+		result = trueIfUndefined ? (useParam == null || (useParam != null && useParam.equals("true"))) //$NON-NLS-1$
+				: (useParam != null && useParam.equals("true")); //$NON-NLS-1$
+		return result;
+	}
+
 	public static void addAttributeIfUsed(BugzillaAttribute constant, String propertyName,
 			TaskRepository taskRepository, TaskData existingReport, boolean createWhenNull) {
-		String useParam = taskRepository.getProperty(propertyName);
-		if (createWhenNull) {
-			if (useParam == null || (useParam != null && useParam.equals("true"))) { //$NON-NLS-1$
-				BugzillaTaskDataHandler.createAttribute(existingReport, constant);
-			}
-		} else {
-			if (useParam != null && useParam.equals("true")) { //$NON-NLS-1$
-				BugzillaTaskDataHandler.createAttribute(existingReport, constant);
-			}
-
+		if (getParamValue(taskRepository, propertyName, createWhenNull)) {
+			BugzillaTaskDataHandler.createAttribute(existingReport, constant);
 		}
 	}
 
@@ -44,19 +45,11 @@ public class BugzillaUtil {
 		if (BugzillaAttribute.QA_CONTACT.equals(tag)) {
 			attribute.getMetaData().setKind(null);
 		} else {
-			String useParam = repositoryTaskData.getAttributeMapper().getTaskRepository().getProperty(propertyName);
-			if (defaultWhenNull) {
-				if (useParam == null || (useParam != null && useParam.equals("true"))) { //$NON-NLS-1$
-					attribute.getMetaData().setKind(TaskAttribute.KIND_DEFAULT);
-				} else {
-					attribute.getMetaData().setKind(null);
-				}
+			if (getParamValue(repositoryTaskData.getAttributeMapper().getTaskRepository(), propertyName,
+					defaultWhenNull)) {
+				attribute.getMetaData().setKind(TaskAttribute.KIND_DEFAULT);
 			} else {
-				if (useParam != null && useParam.equals("true")) { //$NON-NLS-1$
-					attribute.getMetaData().setKind(TaskAttribute.KIND_DEFAULT);
-				} else {
-					attribute.getMetaData().setKind(null);
-				}
+				attribute.getMetaData().setKind(null);
 			}
 		}
 	}
