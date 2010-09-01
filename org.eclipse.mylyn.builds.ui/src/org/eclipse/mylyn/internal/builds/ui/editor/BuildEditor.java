@@ -39,9 +39,9 @@ public class BuildEditor extends SharedHeaderFormEditor {
 
 	@Override
 	protected void addPages() {
-		BuildEditorPage buildEditorPage = new BuildEditorPage(this, "Details");
+		BuildDetailsPage buildDetailsPage = new BuildDetailsPage(this, "Details");
 		try {
-			addPage(buildEditorPage);
+			addPage(buildDetailsPage);
 		} catch (PartInitException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "Could not create Build editor.", e));
 		}

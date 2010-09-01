@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
@@ -53,11 +54,34 @@ public class BuildContentProvider implements ITreeContentProvider {
 	private BuildModel model;
 
 	private final Adapter modelListener = new EContentAdapter() {
+
 		@Override
 		public void notifyChanged(Notification msg) {
 			super.notifyChanged(msg);
-			refresh();
+			if (msg.getOldValue() != msg.getNewValue()) {
+				refresh();
+			}
 		}
+
+		@Override
+		protected void addAdapter(Notifier notifier) {
+			if (observing(notifier)) {
+				super.addAdapter(notifier);
+			}
+		}
+
+		protected boolean observing(Notifier notifier) {
+			return notifier instanceof IBuildServer || notifier instanceof IBuildPlan
+					|| notifier instanceof IBuildModel;
+		}
+
+		@Override
+		protected void removeAdapter(Notifier notifier) {
+			if (observing(notifier)) {
+				notifier.eAdapters().remove(this);
+			}
+		}
+
 	};
 
 	private boolean nestPlansEnabled;
