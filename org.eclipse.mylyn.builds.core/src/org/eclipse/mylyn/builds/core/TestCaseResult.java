@@ -14,8 +14,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.emf.common.util.Enumerator;
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the literals of the enumeration '<em><b>Test Case Result</b></em>',
@@ -35,7 +33,7 @@ public enum TestCaseResult implements InternalTestCaseResult {
 	 * @generated
 	 * @ordered
 	 */
-	PASSED(1, "PASSED", ""), //$NON-NLS-1$ //$NON-NLS-2$
+	PASSED(1, "PASSED", "PASSED"), //$NON-NLS-1$ //$NON-NLS-2$
 
 	/**
 	 * The '<em><b>SKIPPED</b></em>' literal object.

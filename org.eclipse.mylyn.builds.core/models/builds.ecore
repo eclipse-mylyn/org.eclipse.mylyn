@@ -146,7 +146,7 @@
         eType="#//TestSuite" containment="true" eOpposite="#//TestSuite/result"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="TestCaseResult">
-    <eLiterals name="PASSED" value="1" literal=""/>
+    <eLiterals name="PASSED" value="1" literal="PASSED"/>
     <eLiterals name="SKIPPED" value="2"/>
     <eLiterals name="FAILED" value="3"/>
     <eLiterals name="FIXED" value="4"/>
