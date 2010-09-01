@@ -11,12 +11,15 @@
 
 package org.eclipse.mylyn.internal.builds.ui.view;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Set;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
@@ -46,7 +49,10 @@ import org.eclipse.mylyn.internal.builds.ui.BuildToolTip;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
 import org.eclipse.mylyn.internal.builds.ui.view.BuildContentProvider.Presentation;
+import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractColumnViewerSupport;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.provisional.commons.ui.TreeSorter;
+import org.eclipse.mylyn.internal.provisional.commons.ui.TreeViewerSupport;
 import org.eclipse.mylyn.internal.provisional.commons.ui.actions.CollapseAllAction;
 import org.eclipse.mylyn.internal.provisional.commons.ui.actions.ExpandAllAction;
 import org.eclipse.osgi.util.NLS;
@@ -79,6 +85,10 @@ import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
  * @author Steffen Pingel
  */
 public class BuildsView extends ViewPart implements IShowInTarget {
+
+	private class BuildTreeSorter extends TreeSorter {
+
+	}
 
 	public static BuildsView openInActivePerspective() {
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
@@ -217,6 +227,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		}
 
 		viewer.setInput(model);
+		viewer.setSorter(new BuildTreeSorter());
 		viewer.expandAll();
 
 		getSite().setSelectionProvider(viewer);
@@ -224,6 +235,13 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		propertiesAction.selectionChanged((IStructuredSelection) getSite().getSelectionProvider().getSelection());
 
 		updateContents(Status.OK_STATUS);
+
+		new TreeViewerSupport(viewer, getStateFile());
+	}
+
+	private File getStateFile() {
+		IPath stateLocation = Platform.getStateLocation(BuildsUiPlugin.getDefault().getBundle());
+		return stateLocation.append("BuildView.xml").toFile(); //$NON-NLS-1$
 	}
 
 	protected void createPopupMenu(Composite parent) {
@@ -253,6 +271,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		TreeColumn buildColumn = buildViewerColumn.getColumn();
 		buildColumn.setText("Build");
 		buildColumn.setWidth(220);
+		buildColumn.setData(AbstractColumnViewerSupport.KEY_COLUMN_CAN_HIDE, false);
 
 		TreeViewerColumn summaryViewerColumn = new TreeViewerColumn(viewer, SWT.LEFT);
 		summaryViewerColumn.setLabelProvider(new BuildSummaryLabelProvider());
