@@ -11,38 +11,36 @@
 
 package org.eclipse.mylyn.internal.provisional.commons.ui;
 
-import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Item;
-import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TreeColumn;
 
 /**
- * @author Steffen Pingel
+ * @author Shawn Minto
  */
-public abstract class TableSorter extends AbstractColumnViewerSorter<TableViewer> {
-
+public abstract class TreeSorter extends AbstractColumnViewerSorter<TreeViewer> {
 	@Override
 	int getColumnIndex(Viewer viewer, Item column) {
-		if (viewer instanceof TableViewer && column instanceof TableColumn) {
-			((TableViewer) viewer).getTable().indexOf((TableColumn) column);
+		if (viewer instanceof TreeViewer && column instanceof TreeColumn) {
+			((TreeViewer) viewer).getTree().indexOf((TreeColumn) column);
 		}
 		return 0;
 	}
 
 	@Override
 	Item getSortColumn(Viewer viewer) {
-		if (viewer instanceof TableViewer) {
-			return ((TableViewer) viewer).getTable().getSortColumn();
+		if (viewer instanceof TreeViewer) {
+			return ((TreeViewer) viewer).getTree().getSortColumn();
 		}
 		return null;
 	}
 
 	@Override
 	int getSortDirection(Viewer viewer) {
-		if (viewer instanceof TableViewer) {
-			return ((TableViewer) viewer).getTable().getSortDirection();
+		if (viewer instanceof TreeViewer) {
+			return ((TreeViewer) viewer).getTree().getSortDirection();
 		}
 		return 0;
 	}
-
 }
