@@ -44,13 +44,13 @@ public class TemplateProcessor {
 		this.mediaWikiLanguage = abstractMediaWikiLanguage;
 
 		for (Template template : mediaWikiLanguage.getTemplates()) {
-			templateByName.put(template.getName().toLowerCase(), normalize(template));
+			templateByName.put(template.getName(), normalize(template));
 		}
 		String templateExcludes = abstractMediaWikiLanguage.getTemplateExcludes();
 		if (templateExcludes != null) {
 			String[] split = templateExcludes.split("\\s*,\\s*"); //$NON-NLS-1$
 			for (String exclude : split) {
-				String pattern = exclude.toLowerCase().replaceAll("([^a-zA-Z:\\*])", "\\$1").replaceAll("\\*", ".*?"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				String pattern = exclude.replaceAll("([^a-zA-Z:\\*])", "\\$1").replaceAll("\\*", ".*?"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 				excludePatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
 			}
 		}
@@ -152,7 +152,6 @@ public class TemplateProcessor {
 	}
 
 	private Template resolveTemplate(String templateName) {
-		templateName = templateName.toLowerCase();
 		if (!excludePatterns.isEmpty()) {
 			for (Pattern p : excludePatterns) {
 				if (p.matcher(templateName).matches()) {
@@ -174,7 +173,7 @@ public class TemplateProcessor {
 				template.setName(templateName);
 				template.setTemplateMarkup(""); //$NON-NLS-1$
 			}
-			templateByName.put(template.getName().toLowerCase(), template);
+			templateByName.put(template.getName(), template);
 		}
 		return template;
 	}

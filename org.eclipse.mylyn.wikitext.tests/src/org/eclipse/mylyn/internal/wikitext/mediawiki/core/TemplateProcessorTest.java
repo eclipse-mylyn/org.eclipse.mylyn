@@ -11,10 +11,14 @@
 
 package org.eclipse.mylyn.internal.wikitext.mediawiki.core;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage;
 import org.eclipse.mylyn.wikitext.mediawiki.core.Template;
+import org.eclipse.mylyn.wikitext.mediawiki.core.TemplateResolver;
 
 public class TemplateProcessorTest extends TestCase {
 
@@ -170,5 +174,35 @@ public class TemplateProcessorTest extends TestCase {
 
 		String markup = templateProcessor.processTemplates("one {{Foo:test}} two");
 		assertEquals("one  two", markup);
+	}
+
+	public void testCaseSensitivity() {
+		// bug 323224
+		final Set<String> templateNames = new HashSet<String>();
+		markupLanguage.getTemplateProviders().add(new TemplateResolver() {
+
+			@Override
+			public Template resolveTemplate(String templateName) {
+				templateNames.add(templateName);
+				Template template = new Template();
+				template.setName(templateName);
+				template.setTemplateMarkup("test");
+				return template;
+			}
+		});
+		String[] names = new String[] { "One", "one", "OneTwo", "onetwo", "oneTwo" };
+		for (String name : names) {
+			templateNames.clear();
+
+			TemplateProcessor templateProcessor = new TemplateProcessor(markupLanguage);
+			templateProcessor.processTemplates("content {{" + name + "}} more");
+
+			assertContains(templateNames, name);
+			assertEquals(1, templateNames.size());
+		}
+	}
+
+	private void assertContains(Set<String> strings, String string) {
+		assertTrue(String.format("Expected %s but got %s", string, strings), strings.contains(string));
 	}
 }

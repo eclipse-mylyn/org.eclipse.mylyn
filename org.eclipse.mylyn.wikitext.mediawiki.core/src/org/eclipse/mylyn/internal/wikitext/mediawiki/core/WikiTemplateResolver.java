@@ -59,7 +59,7 @@ public class WikiTemplateResolver extends TemplateResolver {
 					try {
 						String content = readFully(input);
 						Template template = new Template();
-						String basicName = templateName.toLowerCase().startsWith("template:") ? templateName.substring(templateName.lastIndexOf(':')) : templateName; //$NON-NLS-1$
+						String basicName = templateName.toLowerCase().startsWith("template:") ? templateName.substring(templateName.lastIndexOf(':') + 1) : templateName; //$NON-NLS-1$
 						template.setName(basicName);
 						template.setTemplateMarkup(content);
 						return template;
