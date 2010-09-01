@@ -51,6 +51,7 @@ import org.eclipse.mylyn.internal.hudson.model.HudsonModelBuild;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelHudson;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelJob;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelRun;
+import org.eclipse.mylyn.internal.hudson.model.HudsonTasksJunitTestResult;
 import org.eclipse.osgi.util.NLS;
 import org.json.JSONException;
 import org.json.JSONWriter;
@@ -110,6 +111,10 @@ public class RestfulHudsonClient {
 	protected void checkResponse(CommonHttpMethod method, int expected) throws HudsonException {
 		int statusCode = method.getStatusCode();
 		if (statusCode != expected) {
+			if (statusCode == HttpStatus.SC_NOT_FOUND) {
+				throw new HudsonResourceNotFoundException(NLS.bind("Requested resource ''{0}'' does not exist", method
+						.getPath()));
+			}
 			throw new HudsonException(NLS.bind("Unexpected response from Hudson server for ''{0}'': {1}", method
 					.getPath(), HttpStatus.getStatusText(statusCode)));
 		}
@@ -123,13 +128,28 @@ public class RestfulHudsonClient {
 				CommonHttpMethod method = createGetMethod(getBuildUrl(job, build) + URL_API);
 				try {
 					execute(method, monitor);
-					if (method.getStatusCode() == HttpStatus.SC_NOT_FOUND) {
-						// indicates that job was never built or invalid build was requested
-						return null;
-					}
 					checkResponse(method);
 					InputStream in = method.getResponseBodyAsStream(monitor);
-					return unmarshal(parse(in), HudsonModelBuild.class);
+					HudsonModelBuild hudsonBuild = unmarshal(parse(in), HudsonModelBuild.class);
+					return hudsonBuild;
+				} finally {
+					method.releaseConnection(monitor);
+				}
+			}
+		}.run();
+	}
+
+	public HudsonTasksJunitTestResult getTestReport(final HudsonModelJob job, final HudsonModelRun build,
+			final IOperationMonitor monitor) throws HudsonException {
+		return new HudsonOperation<HudsonTasksJunitTestResult>(client) {
+			@Override
+			public HudsonTasksJunitTestResult execute() throws IOException, HudsonException, JAXBException {
+				CommonHttpMethod method = createGetMethod(getBuildUrl(job, build) + "/testReport" + URL_API);
+				try {
+					execute(method, monitor);
+					checkResponse(method);
+					InputStream in = method.getResponseBodyAsStream(monitor);
+					return unmarshal(parse(in), HudsonTasksJunitTestResult.class);
 				} finally {
 					method.releaseConnection(monitor);
 				}

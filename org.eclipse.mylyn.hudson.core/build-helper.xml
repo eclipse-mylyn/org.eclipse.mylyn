@@ -24,6 +24,7 @@
   	<xjc schema="https://build.eclipse.org/hudson/people/api/schema" destdir="src-gen" package="org.eclipse.mylyn.internal.hudson.model"/>
   	<xjc schema="https://build.eclipse.org/hudson/job/epp-mpc-nightly/api/schema" destdir="src-gen" package="org.eclipse.mylyn.internal.hudson.model"/>
   	<xjc schema="https://build.eclipse.org/hudson/job/epp-mpc-nightly/62/api/schema" destdir="src-gen" package="org.eclipse.mylyn.internal.hudson.model" />
+  	<xjc schema="https://build.eclipse.org/hudson/job/emf-cdo-integration/574/testReport/api/schema" destdir="src-gen" package="org.eclipse.mylyn.internal.hudson.model" /> 
   </target> 
 
   <target name="clean-source">

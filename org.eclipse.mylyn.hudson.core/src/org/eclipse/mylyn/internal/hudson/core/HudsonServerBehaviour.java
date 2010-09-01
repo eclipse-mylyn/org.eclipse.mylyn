@@ -38,6 +38,10 @@ import org.eclipse.mylyn.builds.core.IFileParameterDefinition;
 import org.eclipse.mylyn.builds.core.IParameterDefinition;
 import org.eclipse.mylyn.builds.core.IPasswordParameterDefinition;
 import org.eclipse.mylyn.builds.core.IStringParameterDefinition;
+import org.eclipse.mylyn.builds.core.ITestCase;
+import org.eclipse.mylyn.builds.core.ITestResult;
+import org.eclipse.mylyn.builds.core.ITestSuite;
+import org.eclipse.mylyn.builds.core.TestCaseResult;
 import org.eclipse.mylyn.builds.core.spi.BuildPlanRequest;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
 import org.eclipse.mylyn.builds.core.spi.BuildServerConfiguration;
@@ -50,6 +54,7 @@ import org.eclipse.mylyn.commons.core.IOperationMonitor;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonConfigurationCache;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonException;
+import org.eclipse.mylyn.internal.hudson.core.client.HudsonResourceNotFoundException;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonServerInfo;
 import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient;
 import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient.BuildId;
@@ -57,6 +62,9 @@ import org.eclipse.mylyn.internal.hudson.model.HudsonModelBallColor;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBuild;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelHealthReport;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelJob;
+import org.eclipse.mylyn.internal.hudson.model.HudsonTasksJunitCaseResult;
+import org.eclipse.mylyn.internal.hudson.model.HudsonTasksJunitSuiteResult;
+import org.eclipse.mylyn.internal.hudson.model.HudsonTasksJunitTestResult;
 import org.eclipse.osgi.util.NLS;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -96,10 +104,72 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		}
 		try {
 			HudsonModelJob job = createJobParameter(request.getPlan());
-			HudsonModelBuild build = client.getBuild(job, BuildId.LAST.getBuild(), monitor);
-			return (build != null) ? Collections.singletonList(parseBuild(build)) : null;
+			HudsonModelBuild hudsonBuild = client.getBuild(job, BuildId.LAST.getBuild(), monitor);
+			IBuild build = parseBuild(hudsonBuild);
+			try {
+				HudsonTasksJunitTestResult hudsonTestReport = client.getTestReport(job, hudsonBuild, monitor);
+				build.setTestResult(parse(hudsonTestReport));
+			} catch (HudsonResourceNotFoundException e) {
+				// ignore
+			}
+			return Collections.singletonList(build);
+		} catch (HudsonResourceNotFoundException e) {
+			return null;
 		} catch (HudsonException e) {
 			throw HudsonCorePlugin.toCoreException(e);
+		}
+	}
+
+	private ITestResult parse(HudsonTasksJunitTestResult hudsonTestReport) {
+		ITestResult testResult = createTestResult();
+		testResult.setFailCount(hudsonTestReport.getFailCount());
+		testResult.setPassCount(hudsonTestReport.getPassCount());
+		testResult.setDuration(parseDuration((Node) hudsonTestReport.getDuration()));
+		for (HudsonTasksJunitSuiteResult hudsonSuite : hudsonTestReport.getSuite()) {
+			ITestSuite testSuite = createTestSuite();
+			testSuite.setLabel(hudsonSuite.getName());
+			testSuite.setDuration(parseDuration((Node) hudsonSuite.getDuration()));
+			testSuite.setOutput(hudsonSuite.getStdout());
+			testSuite.setErrorOutput(hudsonSuite.getStderr());
+			for (HudsonTasksJunitCaseResult hudsonCase : hudsonSuite.getCase()) {
+				ITestCase testCase = createTestCase();
+				testCase.setLabel(hudsonCase.getName());
+				testCase.setClassName(hudsonCase.getClassName());
+				testCase.setDuration(parseDuration((Node) hudsonCase.getDuration()));
+				testCase.setSkipped(hudsonCase.isSkipped());
+				testCase.setOutput(hudsonCase.getStdout());
+				testCase.setErrorOutput(hudsonCase.getStderr());
+				switch (hudsonCase.getStatus()) {
+				case PASSED:
+					testCase.setStatus(TestCaseResult.PASSED);
+					break;
+				case SKIPPED:
+					testCase.setStatus(TestCaseResult.SKIPPED);
+					break;
+				case FAILED:
+					testCase.setStatus(TestCaseResult.FAILED);
+					break;
+				case FIXED:
+					testCase.setStatus(TestCaseResult.FIXED);
+					break;
+				case REGRESSION:
+					testCase.setStatus(TestCaseResult.REGRESSION);
+					break;
+
+				}
+				testCase.setSuite(testSuite);
+			}
+			testSuite.setResult(testResult);
+		}
+		return testResult;
+	}
+
+	private long parseDuration(Node node) {
+		String text = node.getTextContent();
+		try {
+			return (long) (Double.parseDouble(text) * 1000);
+		} catch (NumberFormatException e) {
+			return -1L;
 		}
 	}
 
