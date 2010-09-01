@@ -108,7 +108,7 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 			IBuild build = parseBuild(hudsonBuild);
 			try {
 				HudsonTasksJunitTestResult hudsonTestReport = client.getTestReport(job, hudsonBuild, monitor);
-				build.setTestResult(parse(hudsonTestReport));
+				build.setTestResult(parseTestResult(hudsonTestReport));
 			} catch (HudsonResourceNotFoundException e) {
 				// ignore
 			}
@@ -120,7 +120,7 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		}
 	}
 
-	private ITestResult parse(HudsonTasksJunitTestResult hudsonTestReport) {
+	private ITestResult parseTestResult(HudsonTasksJunitTestResult hudsonTestReport) {
 		ITestResult testResult = createTestResult();
 		testResult.setFailCount(hudsonTestReport.getFailCount());
 		testResult.setPassCount(hudsonTestReport.getPassCount());
@@ -176,11 +176,22 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 	private IBuild parseBuild(HudsonModelBuild hudsonBuild) {
 		IBuild build = createBuild();
 		build.setId(hudsonBuild.getId());
+		build.setName(hudsonBuild.getFullDisplayName());
 		build.setBuildNumber(hudsonBuild.getNumber());
 		build.setLabel(hudsonBuild.getNumber() + "");
 		build.setDuration(hudsonBuild.getDuration());
 		build.setTimestamp(hudsonBuild.getTimestamp());
+		build.setStatus(parseResult((Node) hudsonBuild.getResult()));
 		return build;
+	}
+
+	private BuildStatus parseResult(Node node) {
+		String text = node.getTextContent();
+		try {
+			return BuildStatus.valueOf(text);
+		} catch (IllegalArgumentException e) {
+			return null;
+		}
 	}
 
 	@Override
