@@ -18,6 +18,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
@@ -53,10 +54,12 @@ public class BuildsUiInternal {
 							Display display = Display.getDefault();
 
 							public void asyncExec(Runnable runnable) {
+								checkDisplay();
 								display.asyncExec(runnable);
 							}
 
 							public void exec(Runnable runnable) {
+								checkDisplay();
 								if (Display.getCurrent() != null) {
 									runnable.run();
 								} else {
@@ -65,7 +68,14 @@ public class BuildsUiInternal {
 							}
 
 							public void syncExec(Runnable runnable) {
+								checkDisplay();
 								display.syncExec(runnable);
+							}
+
+							protected void checkDisplay() {
+								if (display.isDisposed()) {
+									throw new OperationCanceledException();
+								}
 							}
 						};
 					}

@@ -26,6 +26,8 @@ import org.eclipse.mylyn.commons.core.IOperationMonitor.OperationFlag;
  */
 public class BuildRefresher implements IPropertyChangeListener {
 
+	private static final long STARTUP_DELAY = 5 * 1000;
+
 	private class RefreshJob extends BuildJob {
 
 		public RefreshJob() {
@@ -39,6 +41,9 @@ public class BuildRefresher implements IPropertyChangeListener {
 			return refreshOperation.doExecute(progress);
 		}
 	};
+
+	public BuildRefresher() {
+	}
 
 	private RefreshJob refreshJob;
 
@@ -55,6 +60,10 @@ public class BuildRefresher implements IPropertyChangeListener {
 				|| event.getProperty().equals(BuildsUiInternal.PREF_AUTO_REFRESH_INTERVAL)) {
 			reschedule(0L);
 		}
+	}
+
+	public void start() {
+		reschedule(STARTUP_DELAY);
 	}
 
 	private synchronized void reschedule(long delay) {

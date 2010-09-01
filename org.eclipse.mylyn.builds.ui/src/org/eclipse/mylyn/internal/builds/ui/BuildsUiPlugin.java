@@ -76,6 +76,7 @@ public class BuildsUiPlugin extends AbstractUIPlugin {
 		if (refresher == null) {
 			refresher = new BuildRefresher();
 			getPreferenceStore().addPropertyChangeListener(refresher);
+			refresher.start();
 		}
 
 	}
