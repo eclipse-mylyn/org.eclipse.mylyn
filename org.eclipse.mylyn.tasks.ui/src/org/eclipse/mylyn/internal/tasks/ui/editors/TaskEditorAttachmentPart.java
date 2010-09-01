@@ -125,11 +125,8 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		attachmentsTable.setLinesVisible(true);
 		attachmentsTable.setHeaderVisible(true);
 		attachmentsTable.setLayout(new GridLayout());
-		GridDataFactory.fillDefaults()
-				.align(SWT.FILL, SWT.FILL)
-				.grab(true, false)
-				.hint(500, SWT.DEFAULT)
-				.applyTo(attachmentsTable);
+		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).hint(500, SWT.DEFAULT).applyTo(
+				attachmentsTable);
 		attachmentsTable.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 
 		for (int i = 0; i < attachmentsColumns.length; i++) {
@@ -181,7 +178,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		Menu menu = menuManager.createContextMenu(attachmentsTable);
 		attachmentsTable.setMenu(menu);
 
-		new TableViewerSupport(attachmentsViewer, getStateFile(), menu);
+		new TableViewerSupport(attachmentsViewer, getStateFile());
 	}
 
 	private File getStateFile() {
