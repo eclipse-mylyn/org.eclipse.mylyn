@@ -106,12 +106,12 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 			HudsonModelJob job = createJobParameter(request.getPlan());
 			HudsonModelBuild hudsonBuild = client.getBuild(job, BuildId.LAST.getBuild(), monitor);
 			IBuild build = parseBuild(hudsonBuild);
-			try {
-				HudsonTasksJunitTestResult hudsonTestReport = client.getTestReport(job, hudsonBuild, monitor);
-				build.setTestResult(parseTestResult(hudsonTestReport));
-			} catch (HudsonResourceNotFoundException e) {
-				// ignore
-			}
+//			try {
+//				HudsonTasksJunitTestResult hudsonTestReport = client.getTestReport(job, hudsonBuild, monitor);
+//				build.setTestResult(parseTestResult(hudsonTestReport));
+//			} catch (HudsonResourceNotFoundException e) {
+//				// ignore
+//			}
 			return Collections.singletonList(build);
 		} catch (HudsonResourceNotFoundException e) {
 			return null;
