@@ -51,7 +51,6 @@ public class SummaryPart extends AbstractBuildEditorPart {
 		label = createLabel(composite, toolkit, "Status: ");
 		GridDataFactory.defaultsFor(label).indent(0, 0).applyTo(label);
 		text = createTextReadOnly(composite, toolkit, "");
-		System.err.println(getInput(IBuild.class).getStatus());
 		bind(text, IBuild.class, BuildPackage.Literals.BUILD__STATUS);
 
 		return composite;
