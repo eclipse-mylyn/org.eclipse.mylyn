@@ -11,7 +11,7 @@ feature@org.eclipse.mylyn.sdk_feature=I20100823-0100-e3x,:pserver:anonymous@dev.
 feature@org.eclipse.mylyn.trac_feature=I20100823-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.trac-feature
 feature@org.eclipse.mylyn.wikitext_feature=I20100823-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.wikitext-feature
 feature@org.eclipse.mylyn.wikitext.sdk=I20100823-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.wikitext.sdk-feature
-feature@org.eclipse.cdt.mylyn=v20100804-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.cdt-feature
+feature@org.eclipse.cdt.mylyn=I20100902-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.cdt-feature
 
 !******* INCUBATOR *******
 feature@org.eclipse.mylyn.monitor_feature=I20100823-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.monitor-feature
