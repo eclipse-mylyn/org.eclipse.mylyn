@@ -132,14 +132,18 @@ public abstract class AbstractColumnViewerSupport {
 					@Override
 					public void widgetSelected(SelectionEvent e) {
 						int direction = getSortDirection();
-						if (getSortColumn() == column) {
-							direction = direction == SWT.UP ? SWT.DOWN : SWT.UP;
+						if (getSortColumn() == column && direction != SWT.NONE) {
+							direction = (direction == SWT.DOWN) ? SWT.UP : SWT.NONE;
 						} else {
 							direction = SWT.DOWN;
 						}
 
 						setSortDirection(direction);
-						setSortColumn(column);
+						if (direction == SWT.NONE) {
+							setSortColumn(null);
+						} else {
+							setSortColumn(column);
+						}
 						viewer.refresh();
 					}
 				});

@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Item;
  * @author Steffen Pingel
  */
 public abstract class AbstractColumnViewerSorter<V extends ColumnViewer> extends ViewerSorter {
+
 	protected <T> int compare(Comparable<T> key1, T key2) {
 		if (key1 == null) {
 			return (key2 != null) ? 1 : 0;
@@ -92,4 +93,5 @@ public abstract class AbstractColumnViewerSorter<V extends ColumnViewer> extends
 		// use the comparator to compare the strings
 		return getComparator().compare(name1, name2);
 	}
+
 }

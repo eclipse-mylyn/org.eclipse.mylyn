@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.TreeColumn;
  * @author Shawn Minto
  */
 public abstract class TreeSorter extends AbstractColumnViewerSorter<TreeViewer> {
+
 	@Override
 	int getColumnIndex(Viewer viewer, Item column) {
 		if (viewer instanceof TreeViewer && column instanceof TreeColumn) {
@@ -37,10 +38,11 @@ public abstract class TreeSorter extends AbstractColumnViewerSorter<TreeViewer> 
 	}
 
 	@Override
-	int getSortDirection(Viewer viewer) {
+	protected int getSortDirection(Viewer viewer) {
 		if (viewer instanceof TreeViewer) {
 			return ((TreeViewer) viewer).getTree().getSortDirection();
 		}
 		return 0;
 	}
+
 }
