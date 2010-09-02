@@ -57,6 +57,8 @@ import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.PartBase;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.httpclient.params.HttpMethodParams;
+import org.apache.commons.httpclient.util.DateParseException;
+import org.apache.commons.httpclient.util.DateUtil;
 import org.eclipse.core.net.proxy.IProxyData;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -689,7 +691,11 @@ public class BugzillaClient {
 								}
 								Header lastModifiedHeader = method.getResponseHeader("Last-Modified"); //$NON-NLS-1$
 								if (lastModifiedHeader != null) {
-									repositoryConfiguration.setLastModifiedHeader(lastModifiedHeader.getValue());
+									try {
+										repositoryConfiguration.setLastModifiedHeader(DateUtil.parseDate(lastModifiedHeader.getValue()));
+									} catch (DateParseException e) {
+										repositoryConfiguration.setLastModifiedHeader((Date) null);
+									}
 								} else {
 									repositoryConfiguration.setLastModifiedHeader((Date) null);
 								}

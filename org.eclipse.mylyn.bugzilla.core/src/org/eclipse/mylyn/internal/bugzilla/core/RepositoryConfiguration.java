@@ -13,9 +13,6 @@
 package org.eclipse.mylyn.internal.bugzilla.core;
 
 import java.io.Serializable;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -976,14 +973,4 @@ public class RepositoryConfiguration implements Serializable {
 	public void setLastModifiedHeader(Date lastModifiedHeader) {
 		this.lastModifiedHeader = lastModifiedHeader;
 	}
-
-	public void setLastModifiedHeader(String lastModifiedHeader) {
-		DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.US); //$NON-NLS-1$
-		try {
-			this.lastModifiedHeader = df.parse(lastModifiedHeader);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-	}
-
 }
