@@ -12,6 +12,8 @@
 
 package org.eclipse.mylyn.internal.provisional.commons.ui;
 
+import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.mylyn.internal.commons.ui.CommonsUiPlugin;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
@@ -48,6 +50,8 @@ public abstract class RichToolTip extends GradientToolTip {
 
 	private boolean triggeredByMouse = true;
 
+	private ColumnViewer viewer;
+
 	private boolean visible;
 
 	public RichToolTip(Control control) {
@@ -64,7 +68,7 @@ public abstract class RichToolTip extends GradientToolTip {
 	}
 
 	protected Object computeData(Widget hoverWidget) {
-		return (hoverWidget).getData();
+		return hoverWidget.getData();
 	}
 
 	private boolean contains(int x, int y) {
@@ -105,6 +109,9 @@ public abstract class RichToolTip extends GradientToolTip {
 		if (widget != null) {
 			Rectangle bounds = getBounds(widget);
 			if (bounds != null) {
+				if (data instanceof ViewerCell) {
+					bounds = ((ViewerCell) data).getBounds();
+				}
 				return control.toDisplay(bounds.x + X_SHIFT, bounds.y + bounds.height + Y_SHIFT);
 			}
 		}
@@ -134,6 +141,10 @@ public abstract class RichToolTip extends GradientToolTip {
 		return CommonsUiPlugin.getDefault().getFormColors(control.getDisplay()).getColor(IFormColors.TITLE);
 	}
 
+	public ColumnViewer getViewer() {
+		return viewer;
+	}
+
 	public boolean isEnabled() {
 		return enabled;
 	}
@@ -150,6 +161,10 @@ public abstract class RichToolTip extends GradientToolTip {
 		this.enabled = enabled;
 	}
 
+	public void setViewer(ColumnViewer viewer) {
+		this.viewer = viewer;
+	}
+
 	@Override
 	protected boolean shouldCreateToolTip(Event event) {
 		data = null;
@@ -161,11 +176,15 @@ public abstract class RichToolTip extends GradientToolTip {
 		if (super.shouldCreateToolTip(event)) {
 			Widget tipWidget = getTipWidget(event);
 			if (tipWidget != null) {
-				Rectangle bounds = getBounds(tipWidget);
-				if (tipWidget instanceof ScalingHyperlink) {
-					data = computeData(tipWidget);
-				} else if (bounds != null && contains(bounds.x, bounds.y)) {
-					data = computeData(tipWidget);
+				if (viewer != null) {
+					data = viewer.getCell(new Point(event.x, event.y));
+				} else {
+					Rectangle bounds = getBounds(tipWidget);
+					if (tipWidget instanceof ScalingHyperlink) {
+						data = computeData(tipWidget);
+					} else if (bounds != null && contains(bounds.x, bounds.y)) {
+						data = computeData(tipWidget);
+					}
 				}
 			}
 		}
