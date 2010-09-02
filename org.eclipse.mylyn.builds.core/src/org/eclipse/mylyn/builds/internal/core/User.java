@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: User.java,v 1.2 2010/08/28 09:21:40 spingel Exp $
+ * $Id: User.java,v 1.3 2010/09/02 06:23:14 spingel Exp $
  */
 package org.eclipse.mylyn.builds.internal.core;
 
@@ -19,58 +19,35 @@ import org.eclipse.mylyn.builds.core.IUser;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.mylyn.builds.internal.core.User#getFullname <em>Fullname</em>}</li>
- * <li>{@link org.eclipse.mylyn.builds.internal.core.User#getUsername <em>Username</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.User#getId <em>Id</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.internal.core.User#getEmail <em>Email</em>}</li>
  * </ul>
  * </p>
  * 
  * @generated
  */
-public class User extends EObjectImpl implements IUser {
+public class User extends BuildElement implements IUser {
 	/**
-	 * The default value of the '{@link #getFullname() <em>Fullname</em>}' attribute.
+	 * The default value of the '{@link #getId() <em>Id</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
-	 * @see #getFullname()
+	 * @see #getId()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String FULLNAME_EDEFAULT = null;
+	protected static final String ID_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getFullname() <em>Fullname</em>}' attribute.
+	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
-	 * @see #getFullname()
+	 * @see #getId()
 	 * @generated
 	 * @ordered
 	 */
-	protected String fullname = FULLNAME_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #getUsername() <em>Username</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @see #getUsername()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String USERNAME_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getUsername() <em>Username</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @see #getUsername()
-	 * @generated
-	 * @ordered
-	 */
-	protected String username = USERNAME_EDEFAULT;
+	protected String id = ID_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getEmail() <em>Email</em>}' attribute.
@@ -117,16 +94,12 @@ public class User extends EObjectImpl implements IUser {
 
 	/**
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Fullname</em>' attribute isn't clear, there really should be more of a description
-	 * here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	public String getFullname() {
-		return fullname;
+	public String getId() {
+		return id;
 	}
 
 	/**
@@ -135,38 +108,11 @@ public class User extends EObjectImpl implements IUser {
 	 * 
 	 * @generated
 	 */
-	public void setFullname(String newFullname) {
-		String oldFullname = fullname;
-		fullname = newFullname;
+	public void setId(String newId) {
+		String oldId = id;
+		id = newId;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.USER__FULLNAME, oldFullname, fullname));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Username</em>' attribute isn't clear, there really should be more of a description
-	 * here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public String getUsername() {
-		return username;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public void setUsername(String newUsername) {
-		String oldUsername = username;
-		username = newUsername;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.USER__USERNAME, oldUsername, username));
+			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.USER__ID, oldId, id));
 	}
 
 	/**
@@ -205,10 +151,8 @@ public class User extends EObjectImpl implements IUser {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case BuildPackage.USER__FULLNAME:
-			return getFullname();
-		case BuildPackage.USER__USERNAME:
-			return getUsername();
+		case BuildPackage.USER__ID:
+			return getId();
 		case BuildPackage.USER__EMAIL:
 			return getEmail();
 		}
@@ -224,11 +168,8 @@ public class User extends EObjectImpl implements IUser {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case BuildPackage.USER__FULLNAME:
-			setFullname((String) newValue);
-			return;
-		case BuildPackage.USER__USERNAME:
-			setUsername((String) newValue);
+		case BuildPackage.USER__ID:
+			setId((String) newValue);
 			return;
 		case BuildPackage.USER__EMAIL:
 			setEmail((String) newValue);
@@ -246,11 +187,8 @@ public class User extends EObjectImpl implements IUser {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case BuildPackage.USER__FULLNAME:
-			setFullname(FULLNAME_EDEFAULT);
-			return;
-		case BuildPackage.USER__USERNAME:
-			setUsername(USERNAME_EDEFAULT);
+		case BuildPackage.USER__ID:
+			setId(ID_EDEFAULT);
 			return;
 		case BuildPackage.USER__EMAIL:
 			setEmail(EMAIL_EDEFAULT);
@@ -268,10 +206,8 @@ public class User extends EObjectImpl implements IUser {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case BuildPackage.USER__FULLNAME:
-			return FULLNAME_EDEFAULT == null ? fullname != null : !FULLNAME_EDEFAULT.equals(fullname);
-		case BuildPackage.USER__USERNAME:
-			return USERNAME_EDEFAULT == null ? username != null : !USERNAME_EDEFAULT.equals(username);
+		case BuildPackage.USER__ID:
+			return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
 		case BuildPackage.USER__EMAIL:
 			return EMAIL_EDEFAULT == null ? email != null : !EMAIL_EDEFAULT.equals(email);
 		}
@@ -290,10 +226,8 @@ public class User extends EObjectImpl implements IUser {
 			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (fullname: "); //$NON-NLS-1$
-		result.append(fullname);
-		result.append(", username: "); //$NON-NLS-1$
-		result.append(username);
+		result.append(" (id: "); //$NON-NLS-1$
+		result.append(id);
 		result.append(", email: "); //$NON-NLS-1$
 		result.append(email);
 		result.append(')');

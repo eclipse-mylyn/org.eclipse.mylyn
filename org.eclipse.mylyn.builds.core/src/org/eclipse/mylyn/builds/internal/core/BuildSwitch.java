@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildSwitch.java,v 1.3 2010/08/28 09:21:40 spingel Exp $
+ * $Id: BuildSwitch.java,v 1.4 2010/09/02 06:23:14 spingel Exp $
  */
 package org.eclipse.mylyn.builds.internal.core;
 
@@ -127,6 +127,8 @@ public class BuildSwitch<T> {
 			IArtifact artifact = (IArtifact) theEObject;
 			T result = caseArtifact(artifact);
 			if (result == null)
+				result = caseBuildElement(artifact);
+			if (result == null)
 				result = defaultCase(theEObject);
 			return result;
 		}
@@ -151,6 +153,13 @@ public class BuildSwitch<T> {
 			T result = caseBuildPlan(buildPlan);
 			if (result == null)
 				result = caseBuildElement(buildPlan);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case BuildPackage.HEALTH_REPORT: {
+			IHealthReport healthReport = (IHealthReport) theEObject;
+			T result = caseHealthReport(healthReport);
 			if (result == null)
 				result = defaultCase(theEObject);
 			return result;
@@ -195,6 +204,8 @@ public class BuildSwitch<T> {
 		case BuildPackage.USER: {
 			IUser user = (IUser) theEObject;
 			T result = caseUser(user);
+			if (result == null)
+				result = caseBuildElement(user);
 			if (result == null)
 				result = defaultCase(theEObject);
 			return result;
@@ -371,6 +382,23 @@ public class BuildSwitch<T> {
 	 * @generated
 	 */
 	public T caseBuildPlan(IBuildPlan object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Health Report</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Health Report</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseHealthReport(IHealthReport object) {
 		return null;
 	}
 

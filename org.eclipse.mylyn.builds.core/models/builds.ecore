@@ -15,9 +15,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         defaultValueLiteral=""/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Artifact">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="displayName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="filename" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Artifact" eSuperTypes="#//BuildElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="relativePath" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Build" eSuperTypes="#//BuildElement">
@@ -29,13 +27,16 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="state" eType="#//BuildState"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="#//BuildStatus"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="artifacts" upperBound="-1"
-        eType="#//Artifact"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="changeSet" eType="#//ChangeSet"/>
+        eType="#//Artifact" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="changeSet" eType="#//ChangeSet"
+        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="plan" eType="#//BuildPlan"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="label" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="server" eType="#//BuildServer"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="testResult" eType="#//TestResult"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="culprits" upperBound="-1"
+        eType="#//User" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BuildElement" abstract="true">
     <eOperations name="getLabel" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -68,6 +69,12 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="lastBuild" eType="#//Build"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parameterDefinitions" upperBound="-1"
         eType="#//ParameterDefinition" containment="true" eOpposite="#//ParameterDefinition/containingBuildPlan"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="healthReports" upperBound="-1"
+        eType="#//HealthReport" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="HealthReport">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="health" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BuildModel">
     <eStructuralFeatures xsi:type="ecore:EReference" name="servers" upperBound="-1"
@@ -87,15 +94,16 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Change">
     <eStructuralFeatures xsi:type="ecore:EReference" name="artifacts" upperBound="-1"
-        eType="#//ChangeArtifact"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="author" eType="#//User"/>
+        eType="#//ChangeArtifact" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="author" eType="#//User"
+        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="message" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="revision" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ChangeSet">
     <eStructuralFeatures xsi:type="ecore:EReference" name="changes" upperBound="-1"
-        eType="#//Change"/>
+        eType="#//Change" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="kind" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ChangeArtifact">
@@ -106,9 +114,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="dead" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="editType" eType="#//EditType"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="User">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="fullname" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="username" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  <eClassifiers xsi:type="ecore:EClass" name="User" eSuperTypes="#//BuildElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="email" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ParameterDefinition" abstract="true">

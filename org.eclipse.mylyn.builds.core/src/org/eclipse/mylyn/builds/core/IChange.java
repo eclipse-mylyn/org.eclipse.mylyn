@@ -31,7 +31,7 @@ import java.util.List;
  */
 public interface IChange {
 	/**
-	 * Returns the value of the '<em><b>Artifacts</b></em>' reference list.
+	 * Returns the value of the '<em><b>Artifacts</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.mylyn.builds.core.IChangeArtifact}.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -40,13 +40,13 @@ public interface IChange {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the value of the '<em>Artifacts</em>' reference list.
+	 * @return the value of the '<em>Artifacts</em>' containment reference list.
 	 * @generated
 	 */
 	List<IChangeArtifact> getArtifacts();
 
 	/**
-	 * Returns the value of the '<em><b>Author</b></em>' reference.
+	 * Returns the value of the '<em><b>Author</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Author</em>' reference isn't clear, there really should be more of a description
@@ -54,19 +54,20 @@ public interface IChange {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the value of the '<em>Author</em>' reference.
+	 * @return the value of the '<em>Author</em>' containment reference.
 	 * @see #setAuthor(IUser)
 	 * @generated
 	 */
 	IUser getAuthor();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IChange#getAuthor <em>Author</em>}' reference.
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IChange#getAuthor <em>Author</em>}' containment
+	 * reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @param value
-	 *            the new value of the '<em>Author</em>' reference.
+	 *            the new value of the '<em>Author</em>' containment reference.
 	 * @see #getAuthor()
 	 * @generated
 	 */

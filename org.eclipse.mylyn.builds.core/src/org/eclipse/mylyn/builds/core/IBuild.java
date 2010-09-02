@@ -33,6 +33,7 @@ import java.util.List;
  * <li>{@link org.eclipse.mylyn.builds.core.IBuild#getLabel <em>Label</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.core.IBuild#getServer <em>Server</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.core.IBuild#getTestResult <em>Test Result</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IBuild#getCulprits <em>Culprits</em>}</li>
  * </ul>
  * </p>
  * 
@@ -230,7 +231,7 @@ public interface IBuild extends IBuildElement {
 	void setStatus(BuildStatus value);
 
 	/**
-	 * Returns the value of the '<em><b>Artifacts</b></em>' reference list.
+	 * Returns the value of the '<em><b>Artifacts</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.mylyn.builds.core.IArtifact}.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -239,13 +240,13 @@ public interface IBuild extends IBuildElement {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the value of the '<em>Artifacts</em>' reference list.
+	 * @return the value of the '<em>Artifacts</em>' containment reference list.
 	 * @generated
 	 */
 	List<IArtifact> getArtifacts();
 
 	/**
-	 * Returns the value of the '<em><b>Change Set</b></em>' reference.
+	 * Returns the value of the '<em><b>Change Set</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Change Set</em>' reference isn't clear, there really should be more of a description
@@ -253,19 +254,20 @@ public interface IBuild extends IBuildElement {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the value of the '<em>Change Set</em>' reference.
+	 * @return the value of the '<em>Change Set</em>' containment reference.
 	 * @see #setChangeSet(IChangeSet)
 	 * @generated
 	 */
 	IChangeSet getChangeSet();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuild#getChangeSet <em>Change Set</em>}' reference.
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuild#getChangeSet <em>Change Set</em>}' containment
+	 * reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @param value
-	 *            the new value of the '<em>Change Set</em>' reference.
+	 *            the new value of the '<em>Change Set</em>' containment reference.
 	 * @see #getChangeSet()
 	 * @generated
 	 */
@@ -378,5 +380,20 @@ public interface IBuild extends IBuildElement {
 	 * @generated
 	 */
 	void setTestResult(ITestResult value);
+
+	/**
+	 * Returns the value of the '<em><b>Culprits</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.mylyn.builds.core.IUser}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Culprits</em>' containment reference isn't clear, there really should be more of a
+	 * description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Culprits</em>' containment reference list.
+	 * @generated
+	 */
+	List<IUser> getCulprits();
 
 } // IBuild

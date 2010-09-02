@@ -28,7 +28,7 @@ import java.util.List;
  */
 public interface IChangeSet {
 	/**
-	 * Returns the value of the '<em><b>Changes</b></em>' reference list.
+	 * Returns the value of the '<em><b>Changes</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.mylyn.builds.core.IChange}.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -37,7 +37,7 @@ public interface IChangeSet {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the value of the '<em>Changes</em>' reference list.
+	 * @return the value of the '<em>Changes</em>' containment reference list.
 	 * @generated
 	 */
 	List<IChange> getChanges();

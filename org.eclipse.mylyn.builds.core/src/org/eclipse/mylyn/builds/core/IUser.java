@@ -17,68 +17,39 @@ package org.eclipse.mylyn.builds.core;
  * <p>
  * The following features are supported:
  * <ul>
- * <li>{@link org.eclipse.mylyn.builds.core.IUser#getFullname <em>Fullname</em>}</li>
- * <li>{@link org.eclipse.mylyn.builds.core.IUser#getUsername <em>Username</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IUser#getId <em>Id</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.core.IUser#getEmail <em>Email</em>}</li>
  * </ul>
  * </p>
  * 
  * @generated
  */
-public interface IUser {
+public interface IUser extends IBuildElement {
 	/**
-	 * Returns the value of the '<em><b>Fullname</b></em>' attribute.
+	 * Returns the value of the '<em><b>Id</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Fullname</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Id</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the value of the '<em>Fullname</em>' attribute.
-	 * @see #setFullname(String)
+	 * @return the value of the '<em>Id</em>' attribute.
+	 * @see #setId(String)
 	 * @generated
 	 */
-	String getFullname();
+	String getId();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IUser#getFullname <em>Fullname</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IUser#getId <em>Id</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @param value
-	 *            the new value of the '<em>Fullname</em>' attribute.
-	 * @see #getFullname()
+	 *            the new value of the '<em>Id</em>' attribute.
+	 * @see #getId()
 	 * @generated
 	 */
-	void setFullname(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Username</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Username</em>' attribute isn't clear, there really should be more of a description
-	 * here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * 
-	 * @return the value of the '<em>Username</em>' attribute.
-	 * @see #setUsername(String)
-	 * @generated
-	 */
-	String getUsername();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IUser#getUsername <em>Username</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Username</em>' attribute.
-	 * @see #getUsername()
-	 * @generated
-	 */
-	void setUsername(String value);
+	void setId(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Email</b></em>' attribute.

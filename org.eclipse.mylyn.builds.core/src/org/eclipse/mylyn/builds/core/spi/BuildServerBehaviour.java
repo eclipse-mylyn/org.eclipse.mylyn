@@ -17,11 +17,17 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.mylyn.builds.core.IArtifact;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
+import org.eclipse.mylyn.builds.core.IChange;
+import org.eclipse.mylyn.builds.core.IChangeArtifact;
+import org.eclipse.mylyn.builds.core.IChangeSet;
+import org.eclipse.mylyn.builds.core.IHealthReport;
 import org.eclipse.mylyn.builds.core.ITestCase;
 import org.eclipse.mylyn.builds.core.ITestResult;
 import org.eclipse.mylyn.builds.core.ITestSuite;
+import org.eclipse.mylyn.builds.core.IUser;
 import org.eclipse.mylyn.builds.internal.core.BuildFactory;
 import org.eclipse.mylyn.commons.core.IOperationMonitor;
 
@@ -33,12 +39,36 @@ public abstract class BuildServerBehaviour {
 	public BuildServerBehaviour() {
 	}
 
-	protected IBuildPlan createBuildPlan() {
-		return BuildFactory.eINSTANCE.createBuildPlan();
+	protected IArtifact createArtifact() {
+		return BuildFactory.eINSTANCE.createArtifact();
 	}
 
 	protected IBuild createBuild() {
 		return BuildFactory.eINSTANCE.createBuild();
+	}
+
+	protected IBuildPlan createBuildPlan() {
+		return BuildFactory.eINSTANCE.createBuildPlan();
+	}
+
+	protected IChange createChange() {
+		return BuildFactory.eINSTANCE.createChange();
+	}
+
+	protected IChangeArtifact createChangeArtifact() {
+		return BuildFactory.eINSTANCE.createChangeArtifact();
+	}
+
+	protected IChangeSet createChangeSet() {
+		return BuildFactory.eINSTANCE.createChangeSet();
+	}
+
+	protected IHealthReport createHealthReport() {
+		return BuildFactory.eINSTANCE.createHealthReport();
+	}
+
+	protected ITestCase createTestCase() {
+		return BuildFactory.eINSTANCE.createTestCase();
 	}
 
 	protected ITestResult createTestResult() {
@@ -49,8 +79,8 @@ public abstract class BuildServerBehaviour {
 		return BuildFactory.eINSTANCE.createTestSuite();
 	}
 
-	protected ITestCase createTestCase() {
-		return BuildFactory.eINSTANCE.createTestCase();
+	protected IUser createUser() {
+		return BuildFactory.eINSTANCE.createUser();
 	}
 
 	public abstract List<IBuild> getBuilds(GetBuildsRequest request, IOperationMonitor monitor) throws CoreException;

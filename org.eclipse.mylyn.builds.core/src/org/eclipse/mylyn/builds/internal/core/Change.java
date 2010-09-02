@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: Change.java,v 1.2 2010/08/28 09:21:40 spingel Exp $
+ * $Id: Change.java,v 1.3 2010/09/02 06:23:14 spingel Exp $
  */
 package org.eclipse.mylyn.builds.internal.core;
 
@@ -10,12 +10,15 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.mylyn.builds.core.IChange;
 import org.eclipse.mylyn.builds.core.IChangeArtifact;
@@ -40,7 +43,7 @@ import org.eclipse.mylyn.builds.core.IUser;
  */
 public class Change extends EObjectImpl implements IChange {
 	/**
-	 * The cached value of the '{@link #getArtifacts() <em>Artifacts</em>}' reference list.
+	 * The cached value of the '{@link #getArtifacts() <em>Artifacts</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
@@ -51,7 +54,7 @@ public class Change extends EObjectImpl implements IChange {
 	protected EList<IChangeArtifact> artifacts;
 
 	/**
-	 * The cached value of the '{@link #getAuthor() <em>Author</em>}' reference.
+	 * The cached value of the '{@link #getAuthor() <em>Author</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
@@ -156,7 +159,7 @@ public class Change extends EObjectImpl implements IChange {
 	 */
 	public List<IChangeArtifact> getArtifacts() {
 		if (artifacts == null) {
-			artifacts = new EObjectResolvingEList<IChangeArtifact>(IChangeArtifact.class, this,
+			artifacts = new EObjectContainmentEList<IChangeArtifact>(IChangeArtifact.class, this,
 					BuildPackage.CHANGE__ARTIFACTS);
 		}
 		return artifacts;
@@ -173,15 +176,6 @@ public class Change extends EObjectImpl implements IChange {
 	 * @generated
 	 */
 	public IUser getAuthor() {
-		if (author != null && ((EObject) author).eIsProxy()) {
-			InternalEObject oldAuthor = (InternalEObject) author;
-			author = (IUser) eResolveProxy(oldAuthor);
-			if (author != oldAuthor) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, BuildPackage.CHANGE__AUTHOR, oldAuthor,
-							author));
-			}
-		}
 		return author;
 	}
 
@@ -191,8 +185,18 @@ public class Change extends EObjectImpl implements IChange {
 	 * 
 	 * @generated
 	 */
-	public IUser basicGetAuthor() {
-		return author;
+	public NotificationChain basicSetAuthor(IUser newAuthor, NotificationChain msgs) {
+		IUser oldAuthor = author;
+		author = newAuthor;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, BuildPackage.CHANGE__AUTHOR,
+					oldAuthor, newAuthor);
+			if (msgs == null)
+				msgs = notification;
+			else
+				msgs.add(notification);
+		}
+		return msgs;
 	}
 
 	/**
@@ -202,10 +206,19 @@ public class Change extends EObjectImpl implements IChange {
 	 * @generated
 	 */
 	public void setAuthor(IUser newAuthor) {
-		IUser oldAuthor = author;
-		author = newAuthor;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.CHANGE__AUTHOR, oldAuthor, author));
+		if (newAuthor != author) {
+			NotificationChain msgs = null;
+			if (author != null)
+				msgs = ((InternalEObject) author).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
+						- BuildPackage.CHANGE__AUTHOR, null, msgs);
+			if (newAuthor != null)
+				msgs = ((InternalEObject) newAuthor).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
+						- BuildPackage.CHANGE__AUTHOR, null, msgs);
+			msgs = basicSetAuthor(newAuthor, msgs);
+			if (msgs != null)
+				msgs.dispatch();
+		} else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.CHANGE__AUTHOR, newAuthor, newAuthor));
 	}
 
 	/**
@@ -291,14 +304,29 @@ public class Change extends EObjectImpl implements IChange {
 	 * @generated
 	 */
 	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+		case BuildPackage.CHANGE__ARTIFACTS:
+			return ((InternalEList<?>) getArtifacts()).basicRemove(otherEnd, msgs);
+		case BuildPackage.CHANGE__AUTHOR:
+			return basicSetAuthor(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 		case BuildPackage.CHANGE__ARTIFACTS:
 			return getArtifacts();
 		case BuildPackage.CHANGE__AUTHOR:
-			if (resolve)
-				return getAuthor();
-			return basicGetAuthor();
+			return getAuthor();
 		case BuildPackage.CHANGE__MESSAGE:
 			return getMessage();
 		case BuildPackage.CHANGE__DATE:

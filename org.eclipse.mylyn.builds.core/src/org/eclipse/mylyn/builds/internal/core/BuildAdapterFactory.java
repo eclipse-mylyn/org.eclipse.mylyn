@@ -128,6 +128,11 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 		}
 
 		@Override
+		public Adapter caseHealthReport(IHealthReport object) {
+			return createHealthReportAdapter();
+		}
+
+		@Override
 		public Adapter caseBuildModel(IBuildModel object) {
 			return createBuildModelAdapter();
 		}
@@ -281,6 +286,22 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createBuildPlanAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.builds.core.IHealthReport
+	 * <em>Health Report</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.builds.core.IHealthReport
+	 * @generated
+	 */
+	public Adapter createHealthReportAdapter() {
 		return null;
 	}
 

@@ -32,6 +32,7 @@ import java.util.List;
  * <li>{@link org.eclipse.mylyn.builds.core.IBuildPlan#getDescription <em>Description</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.core.IBuildPlan#getLastBuild <em>Last Build</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.core.IBuildPlan#getParameterDefinitions <em>Parameter Definitions</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IBuildPlan#getHealthReports <em>Health Reports</em>}</li>
  * </ul>
  * </p>
  * 
@@ -376,5 +377,20 @@ public interface IBuildPlan extends IBuildElement {
 	 * @generated
 	 */
 	List<IParameterDefinition> getParameterDefinitions();
+
+	/**
+	 * Returns the value of the '<em><b>Health Reports</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.mylyn.builds.core.IHealthReport}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Health Reports</em>' reference list isn't clear, there really should be more of a
+	 * description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Health Reports</em>' containment reference list.
+	 * @generated
+	 */
+	List<IHealthReport> getHealthReports();
 
 } // IBuildPlan

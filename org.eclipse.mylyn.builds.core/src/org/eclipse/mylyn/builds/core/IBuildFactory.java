@@ -61,6 +61,16 @@ public interface IBuildFactory {
 	IBuildPlan createBuildPlan();
 
 	/**
+	 * Returns a new object of class '<em>Health Report</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return a new object of class '<em>Health Report</em>'.
+	 * @generated
+	 */
+	IHealthReport createHealthReport();
+
+	/**
 	 * Returns a new object of class '<em>Server</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

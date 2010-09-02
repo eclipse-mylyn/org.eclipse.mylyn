@@ -20,7 +20,9 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
+import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.mylyn.builds.core.BuildState;
 import org.eclipse.mylyn.builds.core.BuildStatus;
 import org.eclipse.mylyn.builds.core.IArtifact;
@@ -29,6 +31,7 @@ import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.IChangeSet;
 import org.eclipse.mylyn.builds.core.ITestResult;
+import org.eclipse.mylyn.builds.core.IUser;
 
 /**
  * <!-- begin-user-doc -->
@@ -50,6 +53,7 @@ import org.eclipse.mylyn.builds.core.ITestResult;
  * <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getLabel <em>Label</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getServer <em>Server</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getTestResult <em>Test Result</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getCulprits <em>Culprits</em>}</li>
  * </ul>
  * </p>
  * 
@@ -211,7 +215,7 @@ public class Build extends BuildElement implements IBuild {
 	protected BuildStatus status = STATUS_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getArtifacts() <em>Artifacts</em>}' reference list.
+	 * The cached value of the '{@link #getArtifacts() <em>Artifacts</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
@@ -222,7 +226,7 @@ public class Build extends BuildElement implements IBuild {
 	protected EList<IArtifact> artifacts;
 
 	/**
-	 * The cached value of the '{@link #getChangeSet() <em>Change Set</em>}' reference.
+	 * The cached value of the '{@link #getChangeSet() <em>Change Set</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
@@ -286,6 +290,17 @@ public class Build extends BuildElement implements IBuild {
 	 * @ordered
 	 */
 	protected ITestResult testResult;
+
+	/**
+	 * The cached value of the '{@link #getCulprits() <em>Culprits</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getCulprits()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<IUser> culprits;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -511,7 +526,7 @@ public class Build extends BuildElement implements IBuild {
 	 */
 	public List<IArtifact> getArtifacts() {
 		if (artifacts == null) {
-			artifacts = new EObjectResolvingEList<IArtifact>(IArtifact.class, this, BuildPackage.BUILD__ARTIFACTS);
+			artifacts = new EObjectContainmentEList<IArtifact>(IArtifact.class, this, BuildPackage.BUILD__ARTIFACTS);
 		}
 		return artifacts;
 	}
@@ -527,15 +542,6 @@ public class Build extends BuildElement implements IBuild {
 	 * @generated
 	 */
 	public IChangeSet getChangeSet() {
-		if (changeSet != null && ((EObject) changeSet).eIsProxy()) {
-			InternalEObject oldChangeSet = (InternalEObject) changeSet;
-			changeSet = (IChangeSet) eResolveProxy(oldChangeSet);
-			if (changeSet != oldChangeSet) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, BuildPackage.BUILD__CHANGE_SET,
-							oldChangeSet, changeSet));
-			}
-		}
 		return changeSet;
 	}
 
@@ -545,8 +551,18 @@ public class Build extends BuildElement implements IBuild {
 	 * 
 	 * @generated
 	 */
-	public IChangeSet basicGetChangeSet() {
-		return changeSet;
+	public NotificationChain basicSetChangeSet(IChangeSet newChangeSet, NotificationChain msgs) {
+		IChangeSet oldChangeSet = changeSet;
+		changeSet = newChangeSet;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
+					BuildPackage.BUILD__CHANGE_SET, oldChangeSet, newChangeSet);
+			if (msgs == null)
+				msgs = notification;
+			else
+				msgs.add(notification);
+		}
+		return msgs;
 	}
 
 	/**
@@ -556,11 +572,20 @@ public class Build extends BuildElement implements IBuild {
 	 * @generated
 	 */
 	public void setChangeSet(IChangeSet newChangeSet) {
-		IChangeSet oldChangeSet = changeSet;
-		changeSet = newChangeSet;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__CHANGE_SET, oldChangeSet,
-					changeSet));
+		if (newChangeSet != changeSet) {
+			NotificationChain msgs = null;
+			if (changeSet != null)
+				msgs = ((InternalEObject) changeSet).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
+						- BuildPackage.BUILD__CHANGE_SET, null, msgs);
+			if (newChangeSet != null)
+				msgs = ((InternalEObject) newChangeSet).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
+						- BuildPackage.BUILD__CHANGE_SET, null, msgs);
+			msgs = basicSetChangeSet(newChangeSet, msgs);
+			if (msgs != null)
+				msgs.dispatch();
+		} else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__CHANGE_SET, newChangeSet,
+					newChangeSet));
 	}
 
 	/**
@@ -741,11 +766,30 @@ public class Build extends BuildElement implements IBuild {
 	 * 
 	 * @generated
 	 */
+	public List<IUser> getCulprits() {
+		if (culprits == null) {
+			culprits = new EObjectContainmentEList<IUser>(IUser.class, this, BuildPackage.BUILD__CULPRITS);
+		}
+		return culprits;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
+		case BuildPackage.BUILD__ARTIFACTS:
+			return ((InternalEList<?>) getArtifacts()).basicRemove(otherEnd, msgs);
+		case BuildPackage.BUILD__CHANGE_SET:
+			return basicSetChangeSet(null, msgs);
 		case BuildPackage.BUILD__TEST_RESULT:
 			return basicSetTestResult(null, msgs);
+		case BuildPackage.BUILD__CULPRITS:
+			return ((InternalEList<?>) getCulprits()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -776,9 +820,7 @@ public class Build extends BuildElement implements IBuild {
 		case BuildPackage.BUILD__ARTIFACTS:
 			return getArtifacts();
 		case BuildPackage.BUILD__CHANGE_SET:
-			if (resolve)
-				return getChangeSet();
-			return basicGetChangeSet();
+			return getChangeSet();
 		case BuildPackage.BUILD__PLAN:
 			if (resolve)
 				return getPlan();
@@ -791,6 +833,8 @@ public class Build extends BuildElement implements IBuild {
 			return basicGetServer();
 		case BuildPackage.BUILD__TEST_RESULT:
 			return getTestResult();
+		case BuildPackage.BUILD__CULPRITS:
+			return getCulprits();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -845,6 +889,10 @@ public class Build extends BuildElement implements IBuild {
 		case BuildPackage.BUILD__TEST_RESULT:
 			setTestResult((ITestResult) newValue);
 			return;
+		case BuildPackage.BUILD__CULPRITS:
+			getCulprits().clear();
+			getCulprits().addAll((Collection<? extends IUser>) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -897,6 +945,9 @@ public class Build extends BuildElement implements IBuild {
 		case BuildPackage.BUILD__TEST_RESULT:
 			setTestResult((ITestResult) null);
 			return;
+		case BuildPackage.BUILD__CULPRITS:
+			getCulprits().clear();
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -936,6 +987,8 @@ public class Build extends BuildElement implements IBuild {
 			return server != null;
 		case BuildPackage.BUILD__TEST_RESULT:
 			return testResult != null;
+		case BuildPackage.BUILD__CULPRITS:
+			return culprits != null && !culprits.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

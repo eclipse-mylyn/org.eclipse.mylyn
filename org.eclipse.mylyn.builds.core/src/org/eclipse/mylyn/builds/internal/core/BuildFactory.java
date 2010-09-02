@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildFactory.java,v 1.3 2010/08/28 09:21:40 spingel Exp $
+ * $Id: BuildFactory.java,v 1.4 2010/09/02 06:23:14 spingel Exp $
  */
 package org.eclipse.mylyn.builds.internal.core;
 
@@ -106,6 +106,8 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 			return (EObject) createBuild();
 		case BuildPackage.BUILD_PLAN:
 			return (EObject) createBuildPlan();
+		case BuildPackage.HEALTH_REPORT:
+			return (EObject) createHealthReport();
 		case BuildPackage.BUILD_MODEL:
 			return (EObject) createBuildModel();
 		case BuildPackage.BUILD_SERVER:
@@ -217,6 +219,17 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	public IBuildPlan createBuildPlan() {
 		BuildPlan buildPlan = new BuildPlan();
 		return buildPlan;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public IHealthReport createHealthReport() {
+		HealthReport healthReport = new HealthReport();
+		return healthReport;
 	}
 
 	/**
