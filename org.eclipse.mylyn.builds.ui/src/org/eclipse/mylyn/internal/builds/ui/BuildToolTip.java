@@ -12,13 +12,14 @@
 package org.eclipse.mylyn.internal.builds.ui;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.util.Date;
 
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
-import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.ui.BuildsUi;
 import org.eclipse.mylyn.builds.ui.spi.BuildConnectorUi;
 import org.eclipse.mylyn.commons.core.DateUtil;
@@ -36,7 +37,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Widget;
 
 /**
  * @author Steffen Pingel
@@ -51,23 +51,25 @@ public class BuildToolTip extends RichToolTip {
 		super(control);
 	}
 
-	@Override
-	protected Object computeData(Widget hoverWidget) {
-		Object data = super.computeData(hoverWidget);
-		if (data instanceof IBuildPlan || data instanceof IBuildServer) {
-			return data;
-		}
-		return null;
-	}
+//	@Override
+//	protected Object computeData(Widget hoverWidget) {
+//		Object data = super.computeData(hoverWidget);
+//		if (data instanceof IBuildPlan || data instanceof IBuildServer) {
+//			return data;
+//		}
+//		return null;
+//	}
 
 	@Override
-	public IBuildElement getData() {
-		return (IBuildElement) super.getData();
+	public ViewerCell getData() {
+		Object data = super.getData();
+		return (ViewerCell) data;
 	}
 
 	@Override
 	protected Composite createToolTipArea(Event event, Composite parent) {
-		IBuildElement data = getData();
+		ViewerCell cell = getData();
+		IBuildElement data = (IBuildElement) cell.getItem().getData();
 
 		parent.setLayout(new GridLayout(2, false));
 
@@ -82,15 +84,23 @@ public class BuildToolTip extends RichToolTip {
 
 		if (data instanceof IBuildPlan) {
 			IBuildPlan plan = (IBuildPlan) data;
-			if (plan.getDescription() != null && plan.getDescription().length() > 0) {
-				try {
-					addIconAndLabel(parent, null, HtmlUtil.toText(plan.getDescription()), false);
-				} catch (IOException e) {
-					// ignore
+			if (cell.getColumnIndex() == 0) {
+				if (plan.getDescription() != null && plan.getDescription().length() > 0) {
+					try {
+						addIconAndLabel(parent, null, HtmlUtil.toText(plan.getDescription()), false);
+					} catch (IOException e) {
+						// ignore
+					}
 				}
-			}
-			if (plan.getLastBuild() != null) {
-				addBuild(parent, plan.getLastBuild());
+			} else if (cell.getColumnIndex() == 1) {
+				if (plan.getLastBuild() != null) {
+					addBuild(parent, plan.getLastBuild());
+				}
+			} else if (cell.getColumnIndex() == 2) {
+				if (plan.getLastBuild() != null && plan.getLastBuild().getTimestamp() > 0) {
+					String text = DateFormat.getDateTimeInstance().format(new Date(plan.getLastBuild().getTimestamp()));
+					addIconAndLabel(parent, CommonImages.getImage(CommonImages.SCHEDULE), text);
+				}
 			}
 		}
 
@@ -105,11 +115,11 @@ public class BuildToolTip extends RichToolTip {
 	}
 
 	private void addBuild(Composite parent, IBuild build) {
-		addIconAndLabel(parent, null, NLS.bind("{0} [{1}]", build.getLabel(), build.getServer().getLabel()));
+		addIconAndLabel(parent, null, NLS.bind("Build {0} [{1}]", build.getLabel(), build.getServer().getLabel()));
 		String text = "";
 		String time = DateUtil.getRelative(build.getTimestamp());
 		if (time.length() > 0) {
-			text = NLS.bind("Built {0}, ", time);
+			text = NLS.bind("Last built {0}, ", time);
 		}
 		addIconAndLabel(parent, null, text
 				+ NLS.bind("took {0}", DateUtil.getFormattedDurationShort(build.getDuration())));

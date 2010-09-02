@@ -103,7 +103,6 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 			if (e1 instanceof IBuildPlan && e2 instanceof IBuildPlan) {
 				IBuildPlan p1 = (IBuildPlan) e1;
 				IBuildPlan p2 = (IBuildPlan) e2;
-				System.err.println(columnIndex);
 				switch (columnIndex) {
 				case -1: // default
 					return compare(p1.getLabel(), p2.getLabel());
@@ -237,6 +236,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		contributeToActionBars();
 
 		toolTip = new BuildToolTip(getViewer().getControl());
+		toolTip.setViewer(viewer);
 
 		IWorkbenchSiteProgressService progress = (IWorkbenchSiteProgressService) getSite().getAdapter(
 				IWorkbenchSiteProgressService.class);
