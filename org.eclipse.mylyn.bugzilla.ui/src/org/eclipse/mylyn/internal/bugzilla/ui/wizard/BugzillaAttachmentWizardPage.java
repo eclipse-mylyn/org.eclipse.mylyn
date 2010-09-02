@@ -27,9 +27,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AttributeEditorFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -70,10 +67,6 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 
 	private Button runInBackgroundButton;
 
-	private ScrolledComposite scrolledComposite;
-
-	private Composite scrolledBodyComposite;
-
 	private int currentColumn = 1;
 
 	private final int columnCount = 4;
@@ -111,35 +104,23 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 
 	public void createControl(Composite parent) {
 		toolkit = new FormToolkit(parent.getDisplay());
-//		Color background = new Color(Display.getDefault(), 192, 192, 192);
-//		Color background = new Color(Display.getDefault(), 232, 232, 232);
-		Color background = parent.getBackground();
 		final Composite pageArea = new Composite(parent, SWT.NONE);
 		pageArea.setBackground(parent.getBackground());
 		pageArea.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_FOREGROUND));
 		pageArea.setLayout(new GridLayout(columnCount, false));
 
-		scrolledComposite = new ScrolledComposite(pageArea, SWT.H_SCROLL | SWT.V_SCROLL);
-		GridData scrolledCompositeData = new GridData(SWT.FILL, SWT.TOP, true, false, 4, 1);
-		scrolledComposite.setLayoutData(scrolledCompositeData);
-		scrolledComposite.setExpandHorizontal(true);
-		scrolledComposite.setExpandVertical(true);
-		scrolledComposite.setBackground(background);
-
-		scrolledBodyComposite = new Composite(scrolledComposite, SWT.NONE);
-		scrolledBodyComposite.setBackground(background);
-		scrolledBodyComposite.setForeground(scrolledBodyComposite.getDisplay()
-				.getSystemColor(SWT.COLOR_LIST_FOREGROUND));
-		GridLayout layout = new GridLayout(columnCount, false);
-		scrolledBodyComposite.setLayout(layout);
-		scrolledComposite.setContent(scrolledBodyComposite);
-		createAttributeEditors(scrolledBodyComposite);
-		createCommentEditor(pageArea);
-
+		createAttributeEditors(pageArea);
 		createAdvancedSection(pageArea);
 
+		createCommentEditor(pageArea);
+
+		// border for comment area
+		toolkit.paintBordersFor(pageArea);
+
 		runInBackgroundButton = new Button(pageArea, SWT.CHECK);
+		GridDataFactory.fillDefaults().indent(0, 10).span(4, 1).applyTo(runInBackgroundButton);
 		runInBackgroundButton.setText(Messages.BugzillaAttachmentWizardPage_RunInBackground);
+
 		setControl(pageArea);
 		Dialog.applyDialogFont(pageArea);
 		IDialogSettings settings = BugzillaUiPlugin.getDefault().getDialogSettings();
@@ -156,7 +137,7 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 
 		}
 		advancedExpandComposite.setExpanded(advancesExpanded);
-		scrolledComposite.setMinSize(scrolledBodyComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT, true));
+		//scrolledComposite.setMinSize(scrolledBodyComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT, true));
 
 	}
 
@@ -192,6 +173,10 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 				}
 			}
 			editor.createControl(attributeArea, toolkit);
+
+			// avoid borders for read-only fields
+			editor.getControl().setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
+
 			GridData gd = new GridData(SWT.FILL, SWT.CENTER, false, false);
 			if (BugzillaAttribute.CTYPE.getKey().equals(attribute.getId())) {
 				gd.horizontalSpan = 1;
@@ -205,7 +190,7 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 			} else if (type.equals(TaskAttribute.TYPE_BOOLEAN) || type.equals(TaskAttribute.TYPE_SHORT_TEXT)) {
 				gd.horizontalSpan = 3;
 			} else if (type.equals(TaskAttribute.TYPE_URL)) {
-				gd.horizontalSpan = 1;
+				gd.horizontalSpan = 3;
 				gd.grabExcessHorizontalSpace = true;
 			} else {
 				gd.horizontalSpan = 1;
@@ -228,6 +213,7 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 		createAttributeEditor(attachmentAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_IS_PATCH), attributeArea);
 		createAttributeEditor(attachmentAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_IS_DEPRECATED),
 				attributeArea);
+		createAttributeEditor(attachmentAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_URL), attributeArea);
 	}
 
 	private void createCommentEditor(Composite attributeArea) {
@@ -241,19 +227,15 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 			String labelString = commentEditor.getLabel();
 			if (commentEditor.hasLabel()) {
 				commentEditor.createLabelControl(attributeArea, toolkit);
-				if (!labelString.equals("")) { //$NON-NLS-1$
+				if (commentEditor.getLabelControl() != null) {
 					Label label = commentEditor.getLabelControl();
 					label.setBackground(attributeArea.getBackground());
 					label.setForeground(attributeArea.getForeground());
-					GridData gd = GridDataFactory.fillDefaults()
+					GridDataFactory.fillDefaults()
+							.indent(0, 10)
 							.align(SWT.RIGHT, SWT.TOP)
 							.hint(LABEL_WIDTH, SWT.DEFAULT)
-							.create();
-					if (currentColumn > 1) {
-						gd.horizontalIndent = COLUMN_GAP;
-						gd.widthHint = LABEL_WIDTH + COLUMN_GAP;
-					}
-					label.setLayoutData(gd);
+							.applyTo(label);
 				}
 			}
 			commentEditor.createControl(attributeArea, toolkit);
@@ -261,13 +243,11 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 			GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 			gd.heightHint = MULTI_ROW_HEIGHT;
 			gd.widthHint = MULTI_COLUMN_WIDTH;
-			gd.horizontalSpan = 3;
+			gd.horizontalSpan = (commentEditor.getLabelControl() != null) ? 3 : 4;
+			gd.verticalIndent = 10;
 			commentEditor.getControl().setLayoutData(gd);
 			commentEditor.getControl().setForeground(attributeArea.getForeground());
-
-			toolkit.paintBordersFor(attributeArea);
 		}
-
 	}
 
 	private void createAdvancedSection(final Composite container) {
@@ -289,7 +269,7 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 		advancedExpandComposite.setText(Messages.BugzillaAttachmentWizardPage_Advanced);
 		advancedExpandComposite.setLayout(new GridLayout(4, false));
 		GridDataFactory.fillDefaults()
-				.indent(-6, 5)
+				.indent(-6, 0)
 				.grab(true, false)
 				.span(4, SWT.DEFAULT)
 				.applyTo(advancedExpandComposite);
@@ -297,20 +277,13 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 		advancedExpandComposite.addExpansionListener(new ExpansionAdapter() {
 			@Override
 			public void expansionStateChanged(ExpansionEvent e) {
-				Shell shell = getControl().getShell();
-				Point size = shell.getSize();
-				size.x++;
-				shell.setSize(size);
-				size.x--;
-				shell.setSize(size);
+				container.layout();
 			}
 		});
 		Composite advancedBodyComposite = new Composite(advancedExpandComposite, SWT.NONE);
 		GridLayoutFactory.fillDefaults().margins(0, 0).numColumns(2).applyTo(advancedBodyComposite);
 		advancedBodyComposite.setBackground(container.getBackground());
 		createFlagEditors(2, advancedBodyComposite);
-		createAttributeEditor(attachmentAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_URL),
-				advancedBodyComposite);
 		advancedExpandComposite.setClient(advancedBodyComposite);
 	}
 
