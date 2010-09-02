@@ -28,19 +28,24 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.builds.core.BuildState;
 import org.eclipse.mylyn.builds.core.BuildStatus;
+import org.eclipse.mylyn.builds.core.IArtifact;
 import org.eclipse.mylyn.builds.core.IBooleanParameterDefinition;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildFactory;
 import org.eclipse.mylyn.builds.core.IBuildParameterDefinition;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
+import org.eclipse.mylyn.builds.core.IChange;
+import org.eclipse.mylyn.builds.core.IChangeSet;
 import org.eclipse.mylyn.builds.core.IChoiceParameterDefinition;
 import org.eclipse.mylyn.builds.core.IFileParameterDefinition;
+import org.eclipse.mylyn.builds.core.IHealthReport;
 import org.eclipse.mylyn.builds.core.IParameterDefinition;
 import org.eclipse.mylyn.builds.core.IPasswordParameterDefinition;
 import org.eclipse.mylyn.builds.core.IStringParameterDefinition;
 import org.eclipse.mylyn.builds.core.ITestCase;
 import org.eclipse.mylyn.builds.core.ITestResult;
 import org.eclipse.mylyn.builds.core.ITestSuite;
+import org.eclipse.mylyn.builds.core.IUser;
 import org.eclipse.mylyn.builds.core.TestCaseResult;
 import org.eclipse.mylyn.builds.core.spi.BuildPlanRequest;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
@@ -62,6 +67,9 @@ import org.eclipse.mylyn.internal.hudson.model.HudsonModelBallColor;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBuild;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelHealthReport;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelJob;
+import org.eclipse.mylyn.internal.hudson.model.HudsonModelRunArtifact;
+import org.eclipse.mylyn.internal.hudson.model.HudsonModelUser;
+import org.eclipse.mylyn.internal.hudson.model.HudsonScmChangeLogSet;
 import org.eclipse.mylyn.internal.hudson.model.HudsonTasksJunitCaseResult;
 import org.eclipse.mylyn.internal.hudson.model.HudsonTasksJunitSuiteResult;
 import org.eclipse.mylyn.internal.hudson.model.HudsonTasksJunitTestResult;
@@ -120,80 +128,6 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		}
 	}
 
-	private ITestResult parseTestResult(HudsonTasksJunitTestResult hudsonTestReport) {
-		ITestResult testResult = createTestResult();
-		testResult.setFailCount(hudsonTestReport.getFailCount());
-		testResult.setPassCount(hudsonTestReport.getPassCount());
-		testResult.setDuration(parseDuration((Node) hudsonTestReport.getDuration()));
-		for (HudsonTasksJunitSuiteResult hudsonSuite : hudsonTestReport.getSuite()) {
-			ITestSuite testSuite = createTestSuite();
-			testSuite.setLabel(hudsonSuite.getName());
-			testSuite.setDuration(parseDuration((Node) hudsonSuite.getDuration()));
-			testSuite.setOutput(hudsonSuite.getStdout());
-			testSuite.setErrorOutput(hudsonSuite.getStderr());
-			for (HudsonTasksJunitCaseResult hudsonCase : hudsonSuite.getCase()) {
-				ITestCase testCase = createTestCase();
-				testCase.setLabel(hudsonCase.getName());
-				testCase.setClassName(hudsonCase.getClassName());
-				testCase.setDuration(parseDuration((Node) hudsonCase.getDuration()));
-				testCase.setSkipped(hudsonCase.isSkipped());
-				testCase.setOutput(hudsonCase.getStdout());
-				testCase.setErrorOutput(hudsonCase.getStderr());
-				switch (hudsonCase.getStatus()) {
-				case PASSED:
-					testCase.setStatus(TestCaseResult.PASSED);
-					break;
-				case SKIPPED:
-					testCase.setStatus(TestCaseResult.SKIPPED);
-					break;
-				case FAILED:
-					testCase.setStatus(TestCaseResult.FAILED);
-					break;
-				case FIXED:
-					testCase.setStatus(TestCaseResult.FIXED);
-					break;
-				case REGRESSION:
-					testCase.setStatus(TestCaseResult.REGRESSION);
-					break;
-
-				}
-				testCase.setSuite(testSuite);
-			}
-			testSuite.setResult(testResult);
-		}
-		return testResult;
-	}
-
-	private long parseDuration(Node node) {
-		String text = node.getTextContent();
-		try {
-			return (long) (Double.parseDouble(text) * 1000);
-		} catch (NumberFormatException e) {
-			return -1L;
-		}
-	}
-
-	private IBuild parseBuild(HudsonModelBuild hudsonBuild) {
-		IBuild build = createBuild();
-		build.setId(hudsonBuild.getId());
-		build.setName(hudsonBuild.getFullDisplayName());
-		build.setBuildNumber(hudsonBuild.getNumber());
-		build.setLabel(hudsonBuild.getNumber() + "");
-		build.setDuration(hudsonBuild.getDuration());
-		build.setTimestamp(hudsonBuild.getTimestamp());
-		build.setStatus(parseResult((Node) hudsonBuild.getResult()));
-		return build;
-	}
-
-	private BuildStatus parseResult(Node node) {
-		String text = node.getTextContent();
-		try {
-			return BuildStatus.valueOf(text);
-		} catch (IllegalArgumentException e) {
-			return null;
-		}
-	}
-
 	@Override
 	public BuildServerConfiguration getConfiguration() {
 		Map<String, String> jobNameById = client.getConfiguration().jobNameById;
@@ -216,6 +150,19 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		} catch (HudsonException e) {
 			throw HudsonCorePlugin.toCoreException(e);
 		}
+	}
+
+	private String getElementContent(Element element, String name, boolean required) throws HudsonException {
+		NodeList elements = element.getElementsByTagName(name);
+		if (required && elements.getLength() == 0) {
+			throw new HudsonException("No " + name + " element"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+
+		if (elements.getLength() > 1) {
+			throw new HudsonException("More than one " + name + " element"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+
+		return ((Element) elements.item(0)).getTextContent();
 	}
 
 	@Override
@@ -247,21 +194,116 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		}
 	}
 
-	private void parseParameters(Document document, List<IParameterDefinition> definitions)
-			throws ParserConfigurationException, SAXException, IOException, HudsonException {
-		NodeList containers = document.getElementsByTagName("parameterDefinitions"); //$NON-NLS-1$
-		for (int i = 0; i < containers.getLength(); i++) {
-			Element container = (Element) containers.item(i);
-			NodeList elements = container.getChildNodes();
-			for (int j = 0; j < elements.getLength(); j++) {
-				Node node = elements.item(j);
-				if (node instanceof Element) {
-					Element element = (Element) elements.item(j);
-					IParameterDefinition definition = parseParameter(element);
-					definitions.add(definition);
+	private IBuild parseBuild(HudsonModelBuild hudsonBuild) {
+		IBuild build = createBuild();
+		build.setId(hudsonBuild.getId());
+		build.setName(hudsonBuild.getFullDisplayName());
+		build.setBuildNumber(hudsonBuild.getNumber());
+		build.setLabel(hudsonBuild.getNumber() + ""); //$NON-NLS-1$
+		build.setDuration(hudsonBuild.getDuration());
+		build.setTimestamp(hudsonBuild.getTimestamp());
+		build.setStatus(parseResult((Node) hudsonBuild.getResult()));
+		for (HudsonModelUser hudsonUser : hudsonBuild.getCulprit()) {
+			build.getCulprits().add(parseUser(hudsonUser));
+		}
+//		for (HudsonModelRunArtifact hudsonArtifact : hudsonBuild.getArtifact()) {
+//			build.getArtifacts().add(parseArtifact(hudsonArtifact));
+//		}
+//		build.setChangeSet(parseChangeSet(hudsonBuild.getChangeSet()));
+		return build;
+	}
+
+	private IChangeSet parseChangeSet(HudsonScmChangeLogSet hudsonChangeSet) {
+		IChangeSet changeSet = createChangeSet();
+		changeSet.setKind(hudsonChangeSet.getKind());
+		for (Object item : changeSet.getChanges()) {
+			Node node = (Node) item;
+			NodeList children = node.getChildNodes();
+			for (int i = 0; i < children.getLength(); i++) {
+				Element child = (Element) children.item(i);
+				String tagName = child.getTagName();
+				if ("item".equals(tagName)) { //$NON-NLS-1$
+					changeSet.getChanges().add(parseChange(child));
 				}
 			}
 		}
+		return changeSet;
+	}
+
+	private IChange parseChange(Element node) {
+		// author [C, G]
+		// comment [G]
+		// date [C:2010-09-02, G:2010-08-26 17:43:17 -0700, S:2010-07-28T09:11:55.720801Z]
+		// file*: dead, editType, fullName, name, prerevision?, revision [C]
+		// id [G] (SHA1)
+		// msg [C, G, S]
+		// path*: editType, file [G]
+		// revision [S]
+		// time [C:05:15]
+		// user [C, S]
+		IChange change = createChange();
+		NodeList children = node.getChildNodes();
+		for (int i = 0; i < children.getLength(); i++) {
+			Element child = (Element) children.item(i);
+			String tagName = child.getTagName();
+			if ("msg".equals(tagName)) { //$NON-NLS-1$
+				change.setMessage(child.getTextContent());
+			}
+		}
+		return null;
+	}
+
+	private IArtifact parseArtifact(HudsonModelRunArtifact hudsonArtifact) {
+		IArtifact artifact = createArtifact();
+		artifact.setName(hudsonArtifact.getFileName());
+		artifact.setRelativePath(hudsonArtifact.getRelativePath());
+		return artifact;
+	}
+
+	private IUser parseUser(HudsonModelUser hudsonUser) {
+		IUser user = createUser();
+		user.setId(hudsonUser.getId());
+		user.setName(hudsonUser.getFullName());
+		user.setUrl(hudsonUser.getAbsoluteUrl());
+		return user;
+	}
+
+	private long parseDuration(Node node) {
+		String text = node.getTextContent();
+		try {
+			return (long) (Double.parseDouble(text) * 1000);
+		} catch (NumberFormatException e) {
+			return -1L;
+		}
+	}
+
+	private IHealthReport parseHealthReport(HudsonModelHealthReport hudsonHealthReport) {
+		IHealthReport healthReport = createHealthReport();
+		healthReport.setHealth(hudsonHealthReport.getScore());
+		healthReport.setDescription(hudsonHealthReport.getDescription());
+		return healthReport;
+	}
+
+	public IBuildPlan parseJob(HudsonModelJob job) {
+		IBuildPlan plan = createBuildPlan();
+		plan.setId(job.getName());
+		if (job.getDisplayName() != null && job.getDisplayName().length() > 0) {
+			plan.setName(job.getDisplayName());
+		} else {
+			plan.setName(job.getName());
+		}
+		plan.setDescription(job.getDescription());
+		plan.setUrl(job.getUrl());
+		updateStateAndStatus(job, plan);
+		updateHealth(job, plan);
+		if (job.getLastBuild() != null) {
+			IBuild build = createBuild();
+			build.setId(job.getLastBuild().getNumber() + "");
+			build.setBuildNumber(job.getLastBuild().getNumber());
+			build.setUrl(job.getLastBuild().getUrl());
+			plan.setLastBuild(build);
+		}
+		return plan;
 	}
 
 	private IParameterDefinition parseParameter(Element element) throws HudsonException {
@@ -329,39 +371,74 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		throw new HudsonException("Unexpected parameter type: " + tagName);
 	}
 
-	private String getElementContent(Element element, String name, boolean required) throws HudsonException {
-		NodeList elements = element.getElementsByTagName(name);
-		if (required && elements.getLength() == 0) {
-			throw new HudsonException("No " + name + " element"); //$NON-NLS-1$ //$NON-NLS-2$
+	private void parseParameters(Document document, List<IParameterDefinition> definitions)
+			throws ParserConfigurationException, SAXException, IOException, HudsonException {
+		NodeList containers = document.getElementsByTagName("parameterDefinitions"); //$NON-NLS-1$
+		for (int i = 0; i < containers.getLength(); i++) {
+			Element container = (Element) containers.item(i);
+			NodeList elements = container.getChildNodes();
+			for (int j = 0; j < elements.getLength(); j++) {
+				Node node = elements.item(j);
+				if (node instanceof Element) {
+					Element element = (Element) elements.item(j);
+					IParameterDefinition definition = parseParameter(element);
+					definitions.add(definition);
+				}
+			}
 		}
-
-		if (elements.getLength() > 1) {
-			throw new HudsonException("More than one " + name + " element"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-
-		return ((Element) elements.item(0)).getTextContent();
 	}
 
-	public IBuildPlan parseJob(HudsonModelJob job) {
-		IBuildPlan plan = createBuildPlan();
-		plan.setId(job.getName());
-		if (job.getDisplayName() != null && job.getDisplayName().length() > 0) {
-			plan.setName(job.getDisplayName());
-		} else {
-			plan.setName(job.getName());
+	private BuildStatus parseResult(Node node) {
+		String text = node.getTextContent();
+		try {
+			return BuildStatus.valueOf(text);
+		} catch (IllegalArgumentException e) {
+			return null;
 		}
-		plan.setDescription(job.getDescription());
-		plan.setUrl(job.getUrl());
-		updateStateAndStatus(job, plan);
-		updateHealth(job, plan);
-		if (job.getLastBuild() != null) {
-			IBuild build = createBuild();
-			build.setId(job.getLastBuild().getNumber() + "");
-			build.setBuildNumber(job.getLastBuild().getNumber());
-			build.setUrl(job.getLastBuild().getUrl());
-			plan.setLastBuild(build);
+	}
+
+	private ITestResult parseTestResult(HudsonTasksJunitTestResult hudsonTestReport) {
+		ITestResult testResult = createTestResult();
+		testResult.setFailCount(hudsonTestReport.getFailCount());
+		testResult.setPassCount(hudsonTestReport.getPassCount());
+		testResult.setDuration(parseDuration((Node) hudsonTestReport.getDuration()));
+		for (HudsonTasksJunitSuiteResult hudsonSuite : hudsonTestReport.getSuite()) {
+			ITestSuite testSuite = createTestSuite();
+			testSuite.setLabel(hudsonSuite.getName());
+			testSuite.setDuration(parseDuration((Node) hudsonSuite.getDuration()));
+			testSuite.setOutput(hudsonSuite.getStdout());
+			testSuite.setErrorOutput(hudsonSuite.getStderr());
+			for (HudsonTasksJunitCaseResult hudsonCase : hudsonSuite.getCase()) {
+				ITestCase testCase = createTestCase();
+				testCase.setLabel(hudsonCase.getName());
+				testCase.setClassName(hudsonCase.getClassName());
+				testCase.setDuration(parseDuration((Node) hudsonCase.getDuration()));
+				testCase.setSkipped(hudsonCase.isSkipped());
+				testCase.setOutput(hudsonCase.getStdout());
+				testCase.setErrorOutput(hudsonCase.getStderr());
+				switch (hudsonCase.getStatus()) {
+				case PASSED:
+					testCase.setStatus(TestCaseResult.PASSED);
+					break;
+				case SKIPPED:
+					testCase.setStatus(TestCaseResult.SKIPPED);
+					break;
+				case FAILED:
+					testCase.setStatus(TestCaseResult.FAILED);
+					break;
+				case FIXED:
+					testCase.setStatus(TestCaseResult.FIXED);
+					break;
+				case REGRESSION:
+					testCase.setStatus(TestCaseResult.REGRESSION);
+					break;
+
+				}
+				testCase.setSuite(testSuite);
+			}
+			testSuite.setResult(testResult);
 		}
-		return plan;
+		return testResult;
 	}
 
 	@Override
@@ -388,18 +465,21 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		String testResult = null;
 		String buildResult = null;
 		String result = null;
-		List<HudsonModelHealthReport> report = job.getHealthReport();
-		if (report.size() > 0) {
-			plan.setHealth(report.get(0).getScore());
-			for (HudsonModelHealthReport healthReport : report) {
-				if (healthReport.getScore() < plan.getHealth()) {
-					plan.setHealth(healthReport.getScore());
+		List<HudsonModelHealthReport> husonHealthReports = job.getHealthReport();
+		if (husonHealthReports.size() > 0) {
+			plan.setHealth(husonHealthReports.get(0).getScore());
+			for (HudsonModelHealthReport hudsonHealthReport : husonHealthReports) {
+				plan.getHealthReports().add(parseHealthReport(hudsonHealthReport));
+
+				// compute summary
+				if (hudsonHealthReport.getScore() < plan.getHealth()) {
+					plan.setHealth(hudsonHealthReport.getScore());
 				}
-				String description = healthReport.getDescription();
+				String description = hudsonHealthReport.getDescription();
 				if (description != null) {
-					if (healthReport.getDescription().startsWith("Test Result: ")) {
+					if (hudsonHealthReport.getDescription().startsWith("Test Result: ")) {
 						testResult = description.substring(13);
-					} else if (healthReport.getDescription().startsWith("Build stability: ")) {
+					} else if (hudsonHealthReport.getDescription().startsWith("Build stability: ")) {
 						buildResult = description.substring(17);
 					} else {
 						int i = description.indexOf(": ");
