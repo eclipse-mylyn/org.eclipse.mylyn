@@ -40,7 +40,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.mylyn.builds.core.BuildStatus;
+import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
+import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.internal.core.BuildModel;
 import org.eclipse.mylyn.builds.internal.core.util.BuildsConstants;
 import org.eclipse.mylyn.builds.ui.BuildsUiConstants;
@@ -87,6 +89,33 @@ import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 public class BuildsView extends ViewPart implements IShowInTarget {
 
 	private class BuildTreeSorter extends TreeSorter {
+
+		@Override
+		public int compare(TreeViewer viewer, Object e1, Object e2, int columnIndex) {
+			if (e1 instanceof IBuildServer && e2 instanceof IBuildServer) {
+				// keep server sort order stable for now
+				int res = getComparator().compare(((IBuildElement) e1).getLabel(), ((IBuildElement) e2).getLabel());
+				if (getSortDirection(viewer) == SWT.UP) {
+					return -res;
+				}
+				return res;
+			}
+			if (e1 instanceof IBuildPlan && e2 instanceof IBuildPlan) {
+				IBuildPlan p1 = (IBuildPlan) e1;
+				IBuildPlan p2 = (IBuildPlan) e2;
+				switch (columnIndex) {
+				case 0: // build
+					return compare(p1.getStatus(), p2.getStatus());
+				case 1: // summary
+					return p1.getHealth() - p2.getHealth();
+				case 2: // last build
+					Long t1 = (p1.getLastBuild() != null) ? p1.getLastBuild().getTimestamp() : null;
+					Long t2 = (p2.getLastBuild() != null) ? p2.getLastBuild().getTimestamp() : null;
+					return compare(t1, t2);
+				}
+			}
+			return super.compare(viewer, e1, e2, columnIndex);
+		}
 
 	}
 
@@ -279,9 +308,9 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		summaryColumn.setText("Summary");
 		summaryColumn.setWidth(220);
 
-		TreeViewerColumn statusViewerColumn = new TreeViewerColumn(viewer, SWT.RIGHT);
-		statusViewerColumn.setLabelProvider(new BuildTimeLabelProvider());
-		TreeColumn statusColumn = statusViewerColumn.getColumn();
+		TreeViewerColumn lastBuiltViewerColumn = new TreeViewerColumn(viewer, SWT.RIGHT);
+		lastBuiltViewerColumn.setLabelProvider(new BuildTimeLabelProvider());
+		TreeColumn statusColumn = lastBuiltViewerColumn.getColumn();
 		statusColumn.setText("Last Built");
 		statusColumn.setWidth(50);
 
