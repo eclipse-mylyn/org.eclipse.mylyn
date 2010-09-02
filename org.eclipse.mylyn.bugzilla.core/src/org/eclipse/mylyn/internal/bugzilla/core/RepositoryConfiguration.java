@@ -456,7 +456,7 @@ public class RepositoryConfiguration implements Serializable {
 		List<String> existingFlags = new ArrayList<String>();
 		List<BugzillaFlag> flags = getFlags();
 		for (TaskAttribute attribute : new HashSet<TaskAttribute>(taskData.getRoot().getAttributes().values())) {
-			if (attribute.getId().startsWith("task.common.kind.flag")) { //$NON-NLS-1$
+			if (attribute.getId().startsWith(BugzillaAttribute.KIND_FLAG)) {
 				TaskAttribute state = attribute.getAttribute("state"); //$NON-NLS-1$
 				if (state != null) {
 					String nameValue = state.getMetaData().getLabel();
@@ -497,7 +497,7 @@ public class RepositoryConfiguration implements Serializable {
 			mapper.setNumber(0);
 			mapper.setDescription(bugzillaFlag.getDescription());
 			TaskAttribute attribute = taskData.getRoot().createAttribute(
-					"task.common.kind.flag_type" + bugzillaFlag.getFlagId()); //$NON-NLS-1$
+					BugzillaAttribute.KIND_FLAG_TYPE + bugzillaFlag.getFlagId());
 			mapper.applyTo(attribute);
 		}
 		setFlagsRequestee(taskData);
@@ -505,7 +505,7 @@ public class RepositoryConfiguration implements Serializable {
 
 	private void setFlagsRequestee(TaskData taskData) {
 		for (TaskAttribute attribute : new HashSet<TaskAttribute>(taskData.getRoot().getAttributes().values())) {
-			if (attribute.getId().startsWith("task.common.kind.flag")) { //$NON-NLS-1$
+			if (attribute.getId().startsWith(BugzillaAttribute.KIND_FLAG)) {
 				TaskAttribute state = attribute.getAttribute("state"); //$NON-NLS-1$
 				if (state != null) {
 					String nameValue = state.getMetaData().getLabel();
@@ -541,7 +541,7 @@ public class RepositoryConfiguration implements Serializable {
 				continue;
 			}
 
-			if (attribute.getId().startsWith("task.common.kind.flag")) { //$NON-NLS-1$
+			if (attribute.getId().startsWith(BugzillaAttribute.KIND_FLAG)) {
 				attribute = attribute.getAttribute("state"); //$NON-NLS-1$
 			}
 
@@ -564,7 +564,7 @@ public class RepositoryConfiguration implements Serializable {
 				}
 			}
 
-		} else if (attribute.getId().startsWith("task.common.kind.flag")) { //$NON-NLS-1$
+		} else if (attribute.getId().startsWith(BugzillaAttribute.KIND_FLAG)) {
 
 			TaskAttribute state = attribute.getAttribute("state"); //$NON-NLS-1$
 			if (state != null) {
@@ -847,7 +847,7 @@ public class RepositoryConfiguration implements Serializable {
 			}
 
 			for (TaskAttribute attachmentAttribute : attribute.getAttributes().values()) {
-				if (!attachmentAttribute.getId().startsWith("task.common.kind.flag")) { //$NON-NLS-1$
+				if (!attachmentAttribute.getId().startsWith(BugzillaAttribute.KIND_FLAG)) {
 					continue;
 				}
 
@@ -895,7 +895,7 @@ public class RepositoryConfiguration implements Serializable {
 			}
 			existingFlags.clear();
 			for (TaskAttribute attachmentAttribute : attribute.getAttributes().values()) {
-				if (!attachmentAttribute.getId().startsWith("task.common.kind.flag")) { //$NON-NLS-1$
+				if (!attachmentAttribute.getId().startsWith(BugzillaAttribute.KIND_FLAG)) {
 					continue;
 				}
 				TaskAttribute state = attachmentAttribute.getAttribute("state"); //$NON-NLS-1$
@@ -926,7 +926,8 @@ public class RepositoryConfiguration implements Serializable {
 				mapper.setFlagId(bugzillaFlag.getName());
 				mapper.setNumber(0);
 				mapper.setDescription(bugzillaFlag.getDescription());
-				TaskAttribute newattribute = attribute.createAttribute("task.common.kind.flag_type" + bugzillaFlag.getFlagId()); //$NON-NLS-1$
+				TaskAttribute newattribute = attribute.createAttribute(BugzillaAttribute.KIND_FLAG_TYPE
+						+ bugzillaFlag.getFlagId());
 				mapper.applyTo(newattribute);
 			}
 		}

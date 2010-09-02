@@ -196,6 +196,10 @@ public enum BugzillaAttribute {
 	// new in Bugzilla 3.6
 	ATTACHER(Messages.BugzillaAttribute_Attacher, "attacher", null, false, false); //$NON-NLS-1$
 
+	public static final String KIND_FLAG = "task.common.kind.flag"; //$NON-NLS-1$
+
+	public static final String KIND_FLAG_TYPE = "task.common.kind.flag_type"; //$NON-NLS-1$
+
 	private final boolean isHidden;
 
 	private final boolean isReadOnly;

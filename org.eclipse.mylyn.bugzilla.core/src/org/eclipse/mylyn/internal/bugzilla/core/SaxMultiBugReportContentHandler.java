@@ -202,9 +202,10 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 							mapper.setNumber(Integer.valueOf(id));
 							TaskAttribute attribute;
 							if (attachmentAttribute != null) {
-								attribute = attachmentAttribute.createAttribute("task.common.kind.flag" + id); //$NON-NLS-1$
+								attribute = attachmentAttribute.createAttribute("BugzillaAttribute.KIND_FLAG" + id); //$NON-NLS-1$
 							} else {
-								attribute = repositoryTaskData.getRoot().createAttribute("task.common.kind.flag" + id); //$NON-NLS-1$
+								attribute = repositoryTaskData.getRoot().createAttribute(
+										"BugzillaAttribute.KIND_FLAG" + id); //$NON-NLS-1$
 							}
 							mapper.applyTo(attribute);
 						} catch (NumberFormatException e) {

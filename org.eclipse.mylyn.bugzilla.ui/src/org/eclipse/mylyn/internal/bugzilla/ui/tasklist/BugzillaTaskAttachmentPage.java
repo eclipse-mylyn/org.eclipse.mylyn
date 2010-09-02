@@ -140,7 +140,7 @@ public class BugzillaTaskAttachmentPage extends TaskAttachmentPage {
 				mapper.setFlagId(bugzillaFlag.getName());
 				mapper.setNumber(0);
 				final TaskAttribute attribute = getModel().getAttribute().createAttribute(
-						"task.common.kind.flag_type" + bugzillaFlag.getFlagId()); //$NON-NLS-1$
+						BugzillaAttribute.KIND_FLAG_TYPE + bugzillaFlag.getFlagId());
 				mapper.applyTo(attribute);
 
 				Label flagLiteral = new Label(flagComposite, SWT.NONE);

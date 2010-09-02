@@ -875,7 +875,7 @@ public class BugzillaClient {
 				Iterator<TaskAttribute> itr = attributes.iterator();
 				while (itr.hasNext()) {
 					TaskAttribute a = itr.next();
-					if (a.getId().startsWith("task.common.kind.flag_type") && repositoryConfiguration != null) { //$NON-NLS-1$
+					if (a.getId().startsWith(BugzillaAttribute.KIND_FLAG_TYPE) && repositoryConfiguration != null) {
 						List<BugzillaFlag> flags = repositoryConfiguration.getFlags();
 						TaskAttribute requestee = a.getAttribute("requestee"); //$NON-NLS-1$
 						a = a.getAttribute("state"); //$NON-NLS-1$
@@ -902,7 +902,7 @@ public class BugzillaClient {
 							}
 						}
 						parts.add(new StringPart(id, value != null ? value : "")); //$NON-NLS-1$
-					} else if (a.getId().startsWith("task.common.kind.flag")) { //$NON-NLS-1$
+					} else if (a.getId().startsWith(BugzillaAttribute.KIND_FLAG)) {
 						TaskAttribute flagnumber = a.getAttribute("number"); //$NON-NLS-1$
 						TaskAttribute requestee = a.getAttribute("requestee"); //$NON-NLS-1$
 						a = a.getAttribute("state"); //$NON-NLS-1$
@@ -1018,7 +1018,7 @@ public class BugzillaClient {
 			if (id.equals(TaskAttribute.ATTACHMENT_IS_PATCH)) {
 				id = "ispatch"; //$NON-NLS-1$
 			}
-			if (id.startsWith("task.common.kind.flag_type")) { //$NON-NLS-1$
+			if (id.startsWith(BugzillaAttribute.KIND_FLAG_TYPE)) {
 				TaskAttribute requestee = attrib.getAttribute("requestee"); //$NON-NLS-1$
 				TaskAttribute state = attrib.getAttribute("state"); //$NON-NLS-1$
 				String requesteeName = "requestee_type-" + id.substring(26); //$NON-NLS-1$
@@ -1031,7 +1031,7 @@ public class BugzillaClient {
 					formData.add(new NameValuePair(requesteeName, requesteeValue));
 				}
 				id = "flag_type-" + id.substring(26); //$NON-NLS-1$
-			} else if (id.startsWith("task.common.kind.flag")) { //$NON-NLS-1$
+			} else if (id.startsWith(BugzillaAttribute.KIND_FLAG)) {
 				TaskAttribute requestee = attrib.getAttribute("requestee"); //$NON-NLS-1$
 				TaskAttribute state = attrib.getAttribute("state"); //$NON-NLS-1$
 				String requesteeName = "requestee-" + id.substring(21); //$NON-NLS-1$
@@ -1333,7 +1333,7 @@ public class BugzillaClient {
 							value = stripTimeZone(value);
 						}
 					}
-					if (id.startsWith("task.common.kind.flag_type") && repositoryConfiguration != null) { //$NON-NLS-1$
+					if (id.startsWith(BugzillaAttribute.KIND_FLAG_TYPE) && repositoryConfiguration != null) {
 						List<BugzillaFlag> flags = repositoryConfiguration.getFlags();
 						TaskAttribute requestee = a.getAttribute("requestee"); //$NON-NLS-1$
 						a = a.getAttribute("state"); //$NON-NLS-1$
@@ -1358,7 +1358,7 @@ public class BugzillaClient {
 										+ flagTypeNumber, requestee.getValue() != null ? requestee.getValue() : "")); //$NON-NLS-1$
 							}
 						}
-					} else if (id.startsWith("task.common.kind.flag")) { //$NON-NLS-1$
+					} else if (id.startsWith(BugzillaAttribute.KIND_FLAG)) {
 						TaskAttribute flagnumber = a.getAttribute("number"); //$NON-NLS-1$
 						TaskAttribute requestee = a.getAttribute("requestee"); //$NON-NLS-1$
 						a = a.getAttribute("state"); //$NON-NLS-1$

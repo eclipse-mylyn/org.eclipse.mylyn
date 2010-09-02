@@ -19,6 +19,7 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -54,7 +55,7 @@ public class BugzillaFlagsTest extends TestCase {
 		TaskAttribute stateC = null;
 		TaskAttribute stateD = null;
 		for (TaskAttribute taskAttribute : a) {
-			if (taskAttribute.getId().startsWith("task.common.kind.flag")) {
+			if (taskAttribute.getId().startsWith(BugzillaAttribute.KIND_FLAG)) {
 				TaskAttribute state = taskAttribute.getAttribute("state");
 				if (state.getMetaData().getLabel().equals("BugFlag1")) {
 					flagA = taskAttribute;
@@ -83,10 +84,10 @@ public class BugzillaFlagsTest extends TestCase {
 		assertEquals("flagB is set(wrong precondidion)", " ", stateB.getValue());
 		assertEquals("flagC is set(wrong precondidion)", " ", stateC.getValue());
 		assertEquals("flagD is set(wrong precondidion)", " ", stateD.getValue());
-		assertEquals("task.common.kind.flag_type1", flagA.getId());
-		assertEquals("task.common.kind.flag_type2", flagB.getId());
-		assertEquals("task.common.kind.flag_type5", flagC.getId());
-		assertEquals("task.common.kind.flag_type6", flagD.getId());
+		assertEquals(BugzillaAttribute.KIND_FLAG_TYPE + "1", flagA.getId());
+		assertEquals(BugzillaAttribute.KIND_FLAG_TYPE + "2", flagB.getId());
+		assertEquals(BugzillaAttribute.KIND_FLAG_TYPE + "5", flagC.getId());
+		assertEquals(BugzillaAttribute.KIND_FLAG_TYPE + "6", flagD.getId());
 		Map<String, String> optionA = stateA.getOptions();
 		Map<String, String> optionB = stateB.getOptions();
 		Map<String, String> optionC = stateC.getOptions();
@@ -134,7 +135,7 @@ public class BugzillaFlagsTest extends TestCase {
 		TaskAttribute stateC2 = null;
 		stateD = null;
 		for (TaskAttribute taskAttribute : a) {
-			if (taskAttribute.getId().startsWith("task.common.kind.flag")) {
+			if (taskAttribute.getId().startsWith(BugzillaAttribute.KIND_FLAG)) {
 				TaskAttribute state = taskAttribute.getAttribute("state");
 				if (state.getMetaData().getLabel().equals("BugFlag1")) {
 					flagA = taskAttribute;
@@ -198,7 +199,7 @@ public class BugzillaFlagsTest extends TestCase {
 		stateC2 = null;
 		stateD = null;
 		for (TaskAttribute taskAttribute : a) {
-			if (taskAttribute.getId().startsWith("task.common.kind.flag")) {
+			if (taskAttribute.getId().startsWith(BugzillaAttribute.KIND_FLAG)) {
 				TaskAttribute state = taskAttribute.getAttribute("state");
 				if (state.getMetaData().getLabel().equals("BugFlag1")) {
 					flagA = taskAttribute;

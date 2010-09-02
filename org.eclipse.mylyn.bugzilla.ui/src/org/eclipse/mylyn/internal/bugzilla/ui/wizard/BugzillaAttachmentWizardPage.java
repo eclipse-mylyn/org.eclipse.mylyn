@@ -261,7 +261,7 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 	private void createAdvancedSection(final Composite container) {
 		boolean flagFound = false;
 		for (TaskAttribute attribute : attachmentAttribute.getAttributes().values()) {
-			if (!attribute.getId().startsWith("task.common.kind.flag")) { //$NON-NLS-1$
+			if (!attribute.getId().startsWith(BugzillaAttribute.KIND_FLAG)) {
 				continue;
 			}
 			flagFound = true;
@@ -299,7 +299,7 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 		int currentFlagColumn = 1;
 
 		for (TaskAttribute attribute : attachmentAttribute.getAttributes().values()) {
-			if (!attribute.getId().startsWith("task.common.kind.flag")) { //$NON-NLS-1$
+			if (!attribute.getId().startsWith(BugzillaAttribute.KIND_FLAG)) {
 				continue;
 			}
 			String type = attribute.getMetaData().getType();

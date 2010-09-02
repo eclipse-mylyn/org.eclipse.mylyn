@@ -57,6 +57,7 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		super.tearDown();
 	}
 
+	@SuppressWarnings("null")
 	public void testUpdateAttachmentFlags() throws Exception {
 		TaskData taskData = BugzillaFixture.current().createTask(PrivilegeLevel.USER, "update of Attachment Flags",
 				"description for testUpdateAttachmentFlags");
@@ -96,18 +97,19 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		assertNotNull(taskData);
 		numAttached = taskData.getAttributeMapper().getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT).size();
 		assertEquals(1, numAttached);
-		TaskAttribute attachmentAttribute = taskData.getAttributeMapper().getAttributesByType(taskData,
-				TaskAttribute.TYPE_ATTACHMENT).get(0);
+		TaskAttribute attachmentAttribute = taskData.getAttributeMapper()
+				.getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT)
+				.get(0);
 		int flagCount = 0;
 		int flagCountUnused = 0;
 		TaskAttribute attachmentFlag1 = null;
 		TaskAttribute attachmentFlag2 = null;
 		for (TaskAttribute attribute : attachmentAttribute.getAttributes().values()) {
-			if (!attribute.getId().startsWith("task.common.kind.flag")) { //$NON-NLS-1$
+			if (!attribute.getId().startsWith(BugzillaAttribute.KIND_FLAG)) {
 				continue;
 			}
 			flagCount++;
-			if (attribute.getId().startsWith("task.common.kind.flag_type")) { //$NON-NLS-1$
+			if (attribute.getId().startsWith(BugzillaAttribute.KIND_FLAG_TYPE)) {
 				flagCountUnused++;
 				TaskAttribute stateAttribute = taskData.getAttributeMapper().getAssoctiatedAttribute(attribute);
 				if (stateAttribute.getMetaData().getLabel().equals("AttachmentFlag1")) {
@@ -141,11 +143,11 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		TaskAttribute attachmentFlag2used = null;
 
 		for (TaskAttribute attribute : attachmentAttribute.getAttributes().values()) {
-			if (!attribute.getId().startsWith("task.common.kind.flag")) { //$NON-NLS-1$
+			if (!attribute.getId().startsWith(BugzillaAttribute.KIND_FLAG)) {
 				continue;
 			}
 			flagCount++;
-			if (attribute.getId().startsWith("task.common.kind.flag_type")) { //$NON-NLS-1$
+			if (attribute.getId().startsWith(BugzillaAttribute.KIND_FLAG_TYPE)) {
 				flagCountUnused++;
 				TaskAttribute stateAttribute = taskData.getAttributeMapper().getAssoctiatedAttribute(attribute);
 				if (stateAttribute.getMetaData().getLabel().equals("AttachmentFlag1")) {
@@ -193,11 +195,11 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		attachmentFlag2used = null;
 
 		for (TaskAttribute attribute : attachmentAttribute.getAttributes().values()) {
-			if (!attribute.getId().startsWith("task.common.kind.flag")) { //$NON-NLS-1$
+			if (!attribute.getId().startsWith(BugzillaAttribute.KIND_FLAG)) {
 				continue;
 			}
 			flagCount++;
-			if (attribute.getId().startsWith("task.common.kind.flag_type")) { //$NON-NLS-1$
+			if (attribute.getId().startsWith(BugzillaAttribute.KIND_FLAG_TYPE)) {
 				flagCountUnused++;
 				TaskAttribute stateAttribute = taskData.getAttributeMapper().getAssoctiatedAttribute(attribute);
 				if (stateAttribute.getMetaData().getLabel().equals("AttachmentFlag1")) {
@@ -265,8 +267,8 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 
 		taskData = BugzillaFixture.current().getTask(taskData.getTaskId(), client);
 		assertNotNull(taskData);
-		assertEquals(numAttached, taskData.getAttributeMapper().getAttributesByType(taskData,
-				TaskAttribute.TYPE_ATTACHMENT).size());
+		assertEquals(numAttached,
+				taskData.getAttributeMapper().getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT).size());
 
 		/* Test attempt to upload an empty file */
 		String fileName = "test-attach-" + System.currentTimeMillis() + ".txt";
@@ -290,8 +292,8 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 
 		taskData = BugzillaFixture.current().getTask(taskData.getTaskId(), client);
 		assertNotNull(taskData);
-		assertEquals(numAttached, taskData.getAttributeMapper().getAttributesByType(taskData,
-				TaskAttribute.TYPE_ATTACHMENT).size());
+		assertEquals(numAttached,
+				taskData.getAttributeMapper().getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT).size());
 
 		/* Test uploading a proper file */
 		write.write("test file");
@@ -305,8 +307,8 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 
 		taskData = BugzillaFixture.current().getTask(taskData.getTaskId(), client);
 		assertNotNull(taskData);
-		assertEquals(numAttached + 1, taskData.getAttributeMapper().getAttributesByType(taskData,
-				TaskAttribute.TYPE_ATTACHMENT).size());
+		assertEquals(numAttached + 1,
+				taskData.getAttributeMapper().getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT).size());
 		// use assertion to track clean-up
 		assertTrue(attachFile.delete());
 	}
@@ -320,8 +322,9 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		taskData = BugzillaFixture.current().getTask(taskData.getTaskId(), client);
 		assertNotNull(taskData);
 
-		TaskAttribute attachment = taskData.getAttributeMapper().getAttributesByType(taskData,
-				TaskAttribute.TYPE_ATTACHMENT).get(0);
+		TaskAttribute attachment = taskData.getAttributeMapper()
+				.getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT)
+				.get(0);
 		assertNotNull(attachment);
 		TaskAttribute obsolete = attachment.getMappedAttribute(TaskAttribute.ATTACHMENT_IS_DEPRECATED);
 		assertNotNull(obsolete);
@@ -411,8 +414,9 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 
 		taskData = BugzillaFixture.current().getTask(taskData.getTaskId(), client);
 		assertNotNull(taskData);
-		TaskAttribute attachment = taskData.getAttributeMapper().getAttributesByType(taskData,
-				TaskAttribute.TYPE_ATTACHMENT).get(0);
+		TaskAttribute attachment = taskData.getAttributeMapper()
+				.getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT)
+				.get(0);
 		assertNotNull(attachment);
 		TaskAttribute obsolete = attachment.getMappedAttribute(TaskAttribute.ATTACHMENT_IS_DEPRECATED);
 		assertNotNull(obsolete);
