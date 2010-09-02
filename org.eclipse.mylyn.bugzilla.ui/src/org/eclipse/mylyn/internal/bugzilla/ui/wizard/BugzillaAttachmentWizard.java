@@ -27,6 +27,9 @@ import org.eclipse.mylyn.tasks.ui.editors.AttributeEditorFactory;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.swt.widgets.Shell;
 
+/**
+ * @author Frank Becker
+ */
 public class BugzillaAttachmentWizard extends Wizard {
 
 	private final AttributeEditorFactory factory;

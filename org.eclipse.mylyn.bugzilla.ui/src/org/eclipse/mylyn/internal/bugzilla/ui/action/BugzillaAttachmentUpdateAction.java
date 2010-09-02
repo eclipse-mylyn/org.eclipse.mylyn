@@ -54,6 +54,7 @@ import org.eclipse.ui.forms.editor.IFormPage;
  * @author Frank Becker
  */
 @SuppressWarnings("restriction")
+// XXX 3.5 rename to BuzillaAttachmentDetailsAction
 public class BugzillaAttachmentUpdateAction extends BaseSelectionListenerAction implements IViewActionDelegate {
 
 	private ISelection currentSelection;
