@@ -41,6 +41,7 @@ import org.eclipse.mylyn.builds.core.spi.BuildServerConfiguration;
 import org.eclipse.mylyn.builds.core.util.ProgressUtil;
 import org.eclipse.mylyn.builds.internal.core.BuildPlan;
 import org.eclipse.mylyn.builds.internal.core.BuildServer;
+import org.eclipse.mylyn.builds.internal.core.operations.RefreshConfigurationOperation;
 import org.eclipse.mylyn.commons.core.IOperationMonitor;
 import org.eclipse.mylyn.commons.core.IOperationMonitor.OperationFlag;
 import org.eclipse.mylyn.commons.core.StatusHandler;
@@ -105,12 +106,17 @@ public class BuildServerPart extends RepositoryLocationPart {
 
 		@Override
 		public IStatus run(IProgressMonitor monitor) {
-			IOperationMonitor progress = ProgressUtil.convert(monitor, "Validating repository", 2);
+			IOperationMonitor progress = ProgressUtil.convert(monitor, "Validating repository", 3);
 			progress.addFlag(OperationFlag.BACKGROUND);
 			try {
-				IStatus result = ((BuildServer) getServer()).validate(progress.newChild(1));
+				IBuildServer server = getServer();
+				IStatus result = ((BuildServer) server).validate(progress.newChild(1));
 				if (result.isOK()) {
-					configuration = ((BuildServer) getServer()).refreshConfiguration(progress.newChild(2));
+					RefreshConfigurationOperation op = new RefreshConfigurationOperation(Collections
+							.singletonList(server));
+					op.doRefresh((BuildServer) server, progress.newChild(2));
+					result = op.getStatus();
+					configuration = server.getConfiguration();
 				}
 				return result;
 			} catch (CoreException e) {

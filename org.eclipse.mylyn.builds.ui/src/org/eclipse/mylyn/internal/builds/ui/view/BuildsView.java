@@ -103,7 +103,10 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 			if (e1 instanceof IBuildPlan && e2 instanceof IBuildPlan) {
 				IBuildPlan p1 = (IBuildPlan) e1;
 				IBuildPlan p2 = (IBuildPlan) e2;
+				System.err.println(columnIndex);
 				switch (columnIndex) {
+				case -1: // default
+					return compare(p1.getLabel(), p2.getLabel());
 				case 0: // build
 					return compare(p1.getStatus(), p2.getStatus());
 				case 1: // summary
@@ -111,10 +114,16 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 				case 2: // last build
 					Long t1 = (p1.getLastBuild() != null) ? p1.getLastBuild().getTimestamp() : null;
 					Long t2 = (p2.getLastBuild() != null) ? p2.getLastBuild().getTimestamp() : null;
+					System.err.println(t1);
 					return compare(t1, t2);
 				}
 			}
 			return super.compare(viewer, e1, e2, columnIndex);
+		}
+
+		@Override
+		protected int compareDefault(TreeViewer viewer, Object e1, Object e2) {
+			return compare(viewer, e1, e2, -1);
 		}
 
 	}
