@@ -21,6 +21,7 @@ import org.eclipse.cdt.core.model.IMethod;
 import org.eclipse.cdt.core.model.IParent;
 import org.eclipse.cdt.core.model.ISourceReference;
 import org.eclipse.cdt.core.model.ITranslationUnit;
+import org.eclipse.cdt.ui.CElementGrouping;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -174,7 +175,7 @@ public class CDTStructureBridge extends AbstractContextStructureBridge {
 		}
 
 		boolean accepts = (object instanceof ICElement && !(object instanceof IBinary))
-				|| object instanceof IWorkingSet;
+				|| object instanceof IWorkingSet || object instanceof CElementGrouping;
 
 		return accepts;
 	}
@@ -190,6 +191,22 @@ public class CDTStructureBridge extends AbstractContextStructureBridge {
 							getHandleIdentifier(adaptable));
 					if (element.getInterest().isInteresting()) {
 						return false;
+					}
+				}
+			} catch (Exception e) {
+				return false;
+			}
+		} else if (object instanceof CElementGrouping) {
+			try {
+				CElementGrouping grouping = (CElementGrouping) object;
+				Object[] elements = grouping.getChildren(grouping);
+				if (elements != null) {
+					for (Object adaptable : elements) {
+						IInteractionElement element = ContextCore.getContextManager().getElement(
+								getHandleIdentifier(adaptable));
+						if (element.getInterest().isInteresting()) {
+							return false;
+						}
 					}
 				}
 			} catch (Exception e) {
