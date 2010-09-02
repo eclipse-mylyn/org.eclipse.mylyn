@@ -44,44 +44,45 @@ import org.eclipse.ui.XMLMemento;
 
 /**
  * @author Shawn Minto
+ * @author Steffen Pingel
  */
-public abstract class AbstractColumnViewerSupport {
+public abstract class AbstractColumnViewerSupport<T extends Item> {
 
-	private class ColumnState {
+	private static class ColumnState {
 		// this represents the width of the column or the weight if it was weight data
 		int width;
 	}
-
-	public static final String KEY_SUPPORTS_SORTING = "org.eclipse.mylyn.column.viewer.support.sorting"; //$NON-NLS-1$
 
 	public static final String KEY_COLUMN_CAN_HIDE = "org.eclipse.mylyn.column.viewer.support.column.can.hide"; //$NON-NLS-1$
 
 	// from AbstractColumnLayout
 	private static final String KEY_LAYOUT_DATA = Policy.JFACE + ".LAYOUT_DATA"; //$NON-NLS-1$
 
+	public static final String KEY_SUPPORTS_SORTING = "org.eclipse.mylyn.column.viewer.support.sorting"; //$NON-NLS-1$
+
+	private Menu contextMenu;
+
+	private final Control control;
+
 	private int[] defaultOrder;
 
 	private ColumnState[] defaults;
+
+	private int defaultSortColumnIndex;
+
+	private int defaultSortDirection;
+
+	private final boolean[] defaultVisibilities;
+
+	private final Menu headerMenu;
 
 	private ColumnState[] lastStates;
 
 	private final File stateFile;
 
-	private final Control control;
-
-	private final ColumnViewer viewer;
-
-	private int defaultSortDirection;
-
-	private int defaultSortColumnIndex;
-
-	private final Menu headerMenu;
-
-	private Menu contextMenu;
-
 	private boolean supportsSorting;
 
-	private final boolean[] defaultVisibilities;
+	private final ColumnViewer viewer;
 
 	public AbstractColumnViewerSupport(ColumnViewer viewer, File stateFile) {
 		this(viewer, stateFile, new boolean[0]);
@@ -107,25 +108,109 @@ public abstract class AbstractColumnViewerSupport {
 		headerMenu = new Menu(parent);
 	}
 
-	void initializeViewerSupport() {
-		initialize();
-		restore();
+	abstract void addColumnSelectionListener(T column, SelectionListener selectionListener);
 
-		Item[] columns = getColumns();
-		lastStates = new ColumnState[columns.length];
-		for (int i = 0; i < columns.length; i++) {
-			final Item column = columns[i];
-			lastStates[i] = new ColumnState();
-			lastStates[i].width = getWidth(column);
+	private MenuItem createMenuItem(Menu parent, final T column, final int i) {
+		final MenuItem itemName = new MenuItem(parent, SWT.CHECK);
+		itemName.setText(column.getText());
+		itemName.setSelection(getWidth(column) > 0);
+		itemName.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event event) {
+				int lastWidth = getWidth(column);
+				if (lastWidth != 0) {
+					lastStates[i].width = lastWidth;
+				}
+				if (lastStates[i].width == 0) {
+					// if the user shrunk it to 0, use the default
+					lastStates[i].width = defaults[i].width;
+				}
+				if (lastStates[i].width == 0) {
+					// if the default and the last width was 0, then set to 150 pixels
+					lastStates[i].width = 150;
+				}
+				if (itemName.getSelection()) {
+					setWidth(column, lastStates[i].width);
+				} else {
+					setWidth(column, 0);
+				}
+			}
+		});
+		return itemName;
+	}
+
+	private void createRestoreDefaults(Menu parent) {
+
+		new MenuItem(parent, SWT.SEPARATOR);
+
+		final MenuItem restoreDefaults = new MenuItem(parent, SWT.PUSH);
+		restoreDefaults.setText(Messages.AbstractColumnViewerSupport_Restore_defaults);
+		restoreDefaults.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event event) {
+				restoreDefaults();
+			}
+		});
+	}
+
+	abstract Rectangle getClientArea();
+
+	abstract T getColumn(int index);
+
+	abstract int getColumnIndexOf(T column);
+
+	abstract AbstractColumnLayout getColumnLayout();
+
+	private ColumnLayoutData getColumnLayoutData(Item column) {
+		Object data = column.getData(KEY_LAYOUT_DATA);
+		if (data instanceof ColumnLayoutData) {
+			return (ColumnLayoutData) data;
+		} else {
+			return null;
+		}
+	}
+
+	abstract int[] getColumnOrder();
+
+	abstract T[] getColumns();
+
+	abstract int getColumnWidth(T column);
+
+	abstract int getHeaderHeight();
+
+	abstract T getSortColumn();
+
+	abstract int getSortDirection();
+
+	private int getWidth(T column) {
+		ColumnLayoutData data = getColumnLayoutData(column);
+		AbstractColumnLayout columnLayout = getColumnLayout();
+		if (data != null && columnLayout != null) {
+			if (data instanceof ColumnWeightData) {
+				return ((ColumnWeightData) data).weight;
+			} else if (data instanceof ColumnPixelData) {
+				// turn this into a weighted width
+				int width = ((ColumnPixelData) data).width;
+				int totalWidth = control.getSize().x;
+				if (totalWidth == 0) {
+					return width;
+				} else {
+					return (width * 100) / totalWidth;
+				}
+			} else {
+				// we dont know
+				return getColumnWidth(column);
+			}
+		} else {
+			// if has column data, use that (pixel or weight)
+			return getColumnWidth(column);
 		}
 	}
 
 	private void initialize() {
-		Item[] columns = getColumns();
+		T[] columns = getColumns();
 		defaults = new ColumnState[columns.length];
 		defaultSortColumnIndex = -1;
 		for (int i = 0; i < columns.length; i++) {
-			final Item column = columns[i];
+			final T column = columns[i];
 
 			if (supportsSorting) {
 				addColumnSelectionListener(column, new SelectionAdapter() {
@@ -190,96 +275,17 @@ public abstract class AbstractColumnViewerSupport {
 		});
 	}
 
-	private void createRestoreDefaults(Menu parent) {
+	void initializeViewerSupport() {
+		initialize();
+		restore();
 
-		new MenuItem(parent, SWT.SEPARATOR);
-
-		final MenuItem restoreDefaults = new MenuItem(parent, SWT.PUSH);
-		restoreDefaults.setText(Messages.AbstractColumnViewerSupport_Restore_defaults);
-		restoreDefaults.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event event) {
-				restoreDefaults();
-			}
-		});
-	}
-
-	private ColumnLayoutData getColumnLayoutData(Item column) {
-		Object data = column.getData(KEY_LAYOUT_DATA);
-		if (data instanceof ColumnLayoutData) {
-			return (ColumnLayoutData) data;
-		} else {
-			return null;
+		T[] columns = getColumns();
+		lastStates = new ColumnState[columns.length];
+		for (int i = 0; i < columns.length; i++) {
+			final T column = columns[i];
+			lastStates[i] = new ColumnState();
+			lastStates[i].width = getWidth(column);
 		}
-	}
-
-	private int getWidth(Item column) {
-		ColumnLayoutData data = getColumnLayoutData(column);
-		AbstractColumnLayout columnLayout = getColumnLayout();
-		if (data != null && columnLayout != null) {
-			if (data instanceof ColumnWeightData) {
-				return ((ColumnWeightData) data).weight;
-			} else if (data instanceof ColumnPixelData) {
-				// turn this into a weighted width
-				int width = ((ColumnPixelData) data).width;
-				int totalWidth = control.getSize().x;
-				if (totalWidth == 0) {
-					return width;
-				} else {
-					return (width * 100) / totalWidth;
-				}
-			} else {
-				// we dont know
-				return getColumnWidth(column);
-			}
-		} else {
-			// if has column data, use that (pixel or weight)
-			return getColumnWidth(column);
-		}
-	}
-
-	private void setWidth(Item column, int width) {
-		// if has column data, set that (pixel or weight)
-		ColumnLayoutData data = getColumnLayoutData(column);
-		AbstractColumnLayout columnLayout = getColumnLayout();
-		if (data != null && columnLayout != null) {
-			if (width == 0) {
-				columnLayout.setColumnData(column, new ColumnPixelData(width, data.resizable));
-			} else {
-				columnLayout.setColumnData(column, new ColumnWeightData(width, data.resizable));
-			}
-			control.getParent().layout();
-		} else {
-			setColumnWidth(column, width);
-		}
-		setColumnResizable(column, width > 0);
-	}
-
-	private MenuItem createMenuItem(Menu parent, final Item column, final int i) {
-		final MenuItem itemName = new MenuItem(parent, SWT.CHECK);
-		itemName.setText(column.getText());
-		itemName.setSelection(getWidth(column) > 0);
-		itemName.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event event) {
-				int lastWidth = getWidth(column);
-				if (lastWidth != 0) {
-					lastStates[i].width = lastWidth;
-				}
-				if (lastStates[i].width == 0) {
-					// if the user shrunk it to 0, use the default
-					lastStates[i].width = defaults[i].width;
-				}
-				if (lastStates[i].width == 0) {
-					// if the default and the last width was 0, then set to 150 pixels
-					lastStates[i].width = 150;
-				}
-				if (itemName.getSelection()) {
-					setWidth(column, lastStates[i].width);
-				} else {
-					setWidth(column, 0);
-				}
-			}
-		});
-		return itemName;
 	}
 
 	private void restore() {
@@ -292,7 +298,7 @@ public abstract class AbstractColumnViewerSupport {
 					IMemento[] children = memento.getChildren("Column"); //$NON-NLS-1$
 					int[] order = new int[children.length];
 					for (int i = 0; i < children.length; i++) {
-						Item column = getColumn(i);
+						T column = getColumn(i);
 						setWidth(column, children[i].getInteger("width")); //$NON-NLS-1$ 
 						headerMenu.getItem(i).setSelection(getWidth(column) > 0);
 						order[i] = children[i].getInteger("order"); //$NON-NLS-1$
@@ -306,7 +312,7 @@ public abstract class AbstractColumnViewerSupport {
 					IMemento child = memento.getChild("Sort"); //$NON-NLS-1$
 					if (child != null) {
 						int columnIndex = child.getInteger("column"); //$NON-NLS-1$
-						Item column = getColumn(columnIndex);
+						T column = getColumn(columnIndex);
 						setSortColumn(column);
 						setSortDirection(child.getInteger("direction")); //$NON-NLS-1$
 					}
@@ -321,9 +327,9 @@ public abstract class AbstractColumnViewerSupport {
 
 			viewer.refresh();
 		} else {
-			Item[] columns = getColumns();
+			T[] columns = getColumns();
 			for (int i = 0; i < columns.length; i++) {
-				Item column = columns[i];
+				T column = columns[i];
 				if (i < defaultVisibilities.length && !defaultVisibilities[i]) {
 					setWidth(column, 0);
 					headerMenu.getItem(i).setSelection(false);
@@ -334,7 +340,7 @@ public abstract class AbstractColumnViewerSupport {
 
 	private void restoreDefaults() {
 		for (int index = 0; index < defaults.length; index++) {
-			Item column = getColumn(index);
+			T column = getColumn(index);
 			if (index < defaultVisibilities.length && !defaultVisibilities[index]) {
 				setWidth(column, 0);
 			} else {
@@ -357,15 +363,15 @@ public abstract class AbstractColumnViewerSupport {
 		XMLMemento memento = XMLMemento.createWriteRoot("Viewer"); //$NON-NLS-1$
 
 		int[] order = getColumnOrder();
-		Item[] columns = getColumns();
+		T[] columns = getColumns();
 		for (int i = 0; i < columns.length; i++) {
-			Item column = columns[i];
+			T column = columns[i];
 			IMemento child = memento.createChild("Column"); //$NON-NLS-1$
 			child.putInteger("width", getWidth(column)); //$NON-NLS-1$
 			child.putInteger("order", order[i]); //$NON-NLS-1$
 		}
 
-		Item sortColumn = getSortColumn();
+		T sortColumn = getSortColumn();
 		if (sortColumn != null) {
 			IMemento child = memento.createChild("Sort"); //$NON-NLS-1$
 			child.putInteger("column", getColumnIndexOf(sortColumn)); //$NON-NLS-1$
@@ -384,35 +390,31 @@ public abstract class AbstractColumnViewerSupport {
 		}
 	}
 
-	abstract AbstractColumnLayout getColumnLayout();
+	abstract void setColumnOrder(int[] order);
 
-	abstract Item[] getColumns();
+	abstract void setColumnResizable(T column, boolean resizable);
 
-	abstract void addColumnSelectionListener(Item column, SelectionListener selectionListener);
+	abstract void setColumnWidth(T column, int width);
 
-	abstract void setSortColumn(Item column);
-
-	abstract Item getSortColumn();
+	abstract void setSortColumn(T column);
 
 	abstract void setSortDirection(int direction);
 
-	abstract int getSortDirection();
+	private void setWidth(T column, int width) {
+		// if has column data, set that (pixel or weight)
+		ColumnLayoutData data = getColumnLayoutData(column);
+		AbstractColumnLayout columnLayout = getColumnLayout();
+		if (data != null && columnLayout != null) {
+			if (width == 0) {
+				columnLayout.setColumnData(column, new ColumnPixelData(width, data.resizable));
+			} else {
+				columnLayout.setColumnData(column, new ColumnWeightData(width, data.resizable));
+			}
+			control.getParent().layout();
+		} else {
+			setColumnWidth(column, width);
+		}
+		setColumnResizable(column, width > 0);
+	}
 
-	abstract int getColumnWidth(Item column);
-
-	abstract void setColumnWidth(Item column, int width);
-
-	abstract void setColumnResizable(Item column, boolean resizable);
-
-	abstract int[] getColumnOrder();
-
-	abstract void setColumnOrder(int[] order);
-
-	abstract Item getColumn(int index);
-
-	abstract Rectangle getClientArea();
-
-	abstract int getHeaderHeight();
-
-	abstract int getColumnIndexOf(Item column);
 }

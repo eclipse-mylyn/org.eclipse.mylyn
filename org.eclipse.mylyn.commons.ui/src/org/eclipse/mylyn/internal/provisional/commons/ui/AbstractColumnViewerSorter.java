@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Item;
  * @author Shawn Minto
  * @author Steffen Pingel
  */
-public abstract class AbstractColumnViewerSorter<V extends ColumnViewer> extends ViewerSorter {
+public abstract class AbstractColumnViewerSorter<V extends ColumnViewer, I extends Item> extends ViewerSorter {
 
 	protected <T> int compare(Comparable<T> key1, T key2) {
 		if (key1 == null) {
@@ -36,24 +36,30 @@ public abstract class AbstractColumnViewerSorter<V extends ColumnViewer> extends
 		return key1.compareTo(key2);
 	}
 
-	abstract Item getSortColumn(Viewer viewer);
+	abstract I getSortColumn(V viewer);
 
-	abstract int getSortDirection(Viewer viewer);
+	abstract int getSortDirection(V viewer);
 
-	abstract int getColumnIndex(Viewer viewer, Item column);
+	abstract int getColumnIndex(V viewer, I column);
 
 	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
 		Assert.isLegal(viewer instanceof ColumnViewer);
-		Item column = getSortColumn(viewer);
+		@SuppressWarnings("unchecked")
+		V columnViewer = (V) viewer;
+		I column = getSortColumn(columnViewer);
 		if (column != null) {
-			int index = getColumnIndex(viewer, column);
-			int result = compare((V) viewer, e1, e2, index);
-			if (getSortDirection(viewer) == SWT.UP) {
+			int index = getColumnIndex(columnViewer, column);
+			int result = compare(columnViewer, e1, e2, index);
+			if (getSortDirection(columnViewer) == SWT.UP) {
 				return -result;
 			}
 			return result;
 		}
+		return compareDefault(columnViewer, e1, e2);
+	}
+
+	protected int compareDefault(V viewer, Object e1, Object e2) {
 		return super.compare(viewer, e1, e2);
 	}
 

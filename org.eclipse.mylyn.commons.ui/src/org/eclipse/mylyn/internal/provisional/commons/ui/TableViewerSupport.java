@@ -18,15 +18,16 @@ import org.eclipse.jface.layout.AbstractColumnLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
 /**
  * @author Frank Becker
  * @author Steffen Pingel
+ * @author Shawn Minto
  */
-public class TableViewerSupport extends AbstractColumnViewerSupport {
+public class TableViewerSupport extends AbstractColumnViewerSupport<TableColumn> {
+
 	private final Table table;
 
 	public TableViewerSupport(TableViewer viewer, File stateFile) {
@@ -42,8 +43,23 @@ public class TableViewerSupport extends AbstractColumnViewerSupport {
 	}
 
 	@Override
-	Item[] getColumns() {
-		return table.getColumns();
+	void addColumnSelectionListener(TableColumn column, SelectionListener selectionListener) {
+		column.addSelectionListener(selectionListener);
+	}
+
+	@Override
+	Rectangle getClientArea() {
+		return table.getClientArea();
+	}
+
+	@Override
+	TableColumn getColumn(int index) {
+		return table.getColumn(index);
+	}
+
+	@Override
+	int getColumnIndexOf(TableColumn column) {
+		return table.indexOf(column);
 	}
 
 	@Override
@@ -58,8 +74,18 @@ public class TableViewerSupport extends AbstractColumnViewerSupport {
 	}
 
 	@Override
-	Rectangle getClientArea() {
-		return table.getClientArea();
+	int[] getColumnOrder() {
+		return table.getColumnOrder();
+	}
+
+	@Override
+	TableColumn[] getColumns() {
+		return table.getColumns();
+	}
+
+	@Override
+	int getColumnWidth(TableColumn column) {
+		return column.getWidth();
 	}
 
 	@Override
@@ -68,13 +94,8 @@ public class TableViewerSupport extends AbstractColumnViewerSupport {
 	}
 
 	@Override
-	int[] getColumnOrder() {
-		return table.getColumnOrder();
-	}
-
-	@Override
-	void setColumnOrder(int[] order) {
-		table.setColumnOrder(order);
+	TableColumn getSortColumn() {
+		return table.getSortColumn();
 	}
 
 	@Override
@@ -83,62 +104,28 @@ public class TableViewerSupport extends AbstractColumnViewerSupport {
 	}
 
 	@Override
+	void setColumnOrder(int[] order) {
+		table.setColumnOrder(order);
+	}
+
+	@Override
+	void setColumnResizable(TableColumn column, boolean resizable) {
+		column.setResizable(resizable);
+	}
+
+	@Override
+	void setColumnWidth(TableColumn column, int width) {
+		column.setWidth(width);
+	}
+
+	@Override
+	void setSortColumn(TableColumn column) {
+		table.setSortColumn(column);
+	}
+
+	@Override
 	void setSortDirection(int direction) {
 		table.setSortDirection(direction);
-	}
-
-	@Override
-	Item getSortColumn() {
-		return table.getSortColumn();
-	}
-
-	@Override
-	void setSortColumn(Item column) {
-		if (column instanceof TableColumn) {
-			table.setSortColumn(((TableColumn) column));
-		}
-	}
-
-	@Override
-	void addColumnSelectionListener(Item column, SelectionListener selectionListener) {
-		if (column instanceof TableColumn) {
-			((TableColumn) column).addSelectionListener(selectionListener);
-		}
-	}
-
-	@Override
-	int getColumnWidth(Item column) {
-		if (column instanceof TableColumn) {
-			return ((TableColumn) column).getWidth();
-		}
-		return 0;
-	}
-
-	@Override
-	void setColumnResizable(Item column, boolean resizable) {
-		if (column instanceof TableColumn) {
-			((TableColumn) column).setResizable(resizable);
-		}
-	}
-
-	@Override
-	void setColumnWidth(Item column, int width) {
-		if (column instanceof TableColumn) {
-			((TableColumn) column).setWidth(width);
-		}
-	}
-
-	@Override
-	Item getColumn(int index) {
-		return table.getColumn(index);
-	}
-
-	@Override
-	int getColumnIndexOf(Item column) {
-		if (column instanceof TableColumn) {
-			return table.indexOf(((TableColumn) column));
-		}
-		return 0;
 	}
 
 }

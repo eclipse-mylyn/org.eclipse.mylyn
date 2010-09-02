@@ -12,37 +12,26 @@
 package org.eclipse.mylyn.internal.provisional.commons.ui;
 
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.TableColumn;
 
 /**
  * @author Steffen Pingel
  */
-public abstract class TableSorter extends AbstractColumnViewerSorter<TableViewer> {
+public abstract class TableSorter extends AbstractColumnViewerSorter<TableViewer, TableColumn> {
 
 	@Override
-	int getColumnIndex(Viewer viewer, Item column) {
-		if (viewer instanceof TableViewer && column instanceof TableColumn) {
-			((TableViewer) viewer).getTable().indexOf((TableColumn) column);
-		}
-		return 0;
+	int getColumnIndex(TableViewer viewer, TableColumn column) {
+		return viewer.getTable().indexOf(column);
 	}
 
 	@Override
-	Item getSortColumn(Viewer viewer) {
-		if (viewer instanceof TableViewer) {
-			return ((TableViewer) viewer).getTable().getSortColumn();
-		}
-		return null;
+	TableColumn getSortColumn(TableViewer viewer) {
+		return viewer.getTable().getSortColumn();
 	}
 
 	@Override
-	int getSortDirection(Viewer viewer) {
-		if (viewer instanceof TableViewer) {
-			return ((TableViewer) viewer).getTable().getSortDirection();
-		}
-		return 0;
+	int getSortDirection(TableViewer viewer) {
+		return viewer.getTable().getSortDirection();
 	}
 
 }

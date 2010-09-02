@@ -12,37 +12,27 @@
 package org.eclipse.mylyn.internal.provisional.commons.ui;
 
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.TreeColumn;
 
 /**
  * @author Shawn Minto
+ * @author Steffen Pingel
  */
-public abstract class TreeSorter extends AbstractColumnViewerSorter<TreeViewer> {
+public abstract class TreeSorter extends AbstractColumnViewerSorter<TreeViewer, TreeColumn> {
 
 	@Override
-	int getColumnIndex(Viewer viewer, Item column) {
-		if (viewer instanceof TreeViewer && column instanceof TreeColumn) {
-			((TreeViewer) viewer).getTree().indexOf((TreeColumn) column);
-		}
-		return 0;
+	int getColumnIndex(TreeViewer viewer, TreeColumn column) {
+		return viewer.getTree().indexOf(column);
 	}
 
 	@Override
-	Item getSortColumn(Viewer viewer) {
-		if (viewer instanceof TreeViewer) {
-			return ((TreeViewer) viewer).getTree().getSortColumn();
-		}
-		return null;
+	TreeColumn getSortColumn(TreeViewer viewer) {
+		return viewer.getTree().getSortColumn();
 	}
 
 	@Override
-	protected int getSortDirection(Viewer viewer) {
-		if (viewer instanceof TreeViewer) {
-			return ((TreeViewer) viewer).getTree().getSortDirection();
-		}
-		return 0;
+	protected int getSortDirection(TreeViewer viewer) {
+		return viewer.getTree().getSortDirection();
 	}
 
 }
