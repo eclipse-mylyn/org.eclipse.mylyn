@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2010 Tasktop Technologies and others.
+ * Copyright (c) 2010 Frank Becker and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Tasktop Technologies - initial API and implementation
+ *     Frank Becker - initial API and implementation
+ *     Tasktop Technologies - improvements
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.ui.wizard;
@@ -38,7 +39,12 @@ import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
+/**
+ * @author Frank Becker
+ * @author Steffen Pingel
+ */
 public class BugzillaAttachmentWizardPage extends WizardPage {
+
 	private static final String PAGE_NAME = "AttachmentDetailPage"; //$NON-NLS-1$
 
 	private static final String DIALOG_SETTING_RUN_IN_BACKGROUND = "run-in-background"; //$NON-NLS-1$
@@ -72,6 +78,8 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 	private final int columnCount = 4;
 
 	private final String repositoryLabel;
+
+	private boolean advancesExpanded;
 
 	public BugzillaAttachmentWizardPage(Shell parentShell, AttributeEditorFactory factory, String taskID,
 			TaskAttribute attachmentAttribute, String repositoryLabel) {
@@ -126,7 +134,7 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 		IDialogSettings settings = BugzillaUiPlugin.getDefault().getDialogSettings();
 		IDialogSettings attachmentsSettings = settings.getSection(BugzillaUiPlugin.ATTACHMENT_WIZARD_SETTINGS_SECTION
 				+ repositoryLabel);
-		boolean advancesExpanded = false;
+		advancesExpanded = false;
 		if (attachmentsSettings != null) {
 			runInBackgroundButton.setSelection(attachmentsSettings.getBoolean(DIALOG_SETTING_RUN_IN_BACKGROUND));
 			try {
@@ -136,9 +144,9 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 			}
 
 		}
-		advancedExpandComposite.setExpanded(advancesExpanded);
-		//scrolledComposite.setMinSize(scrolledBodyComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT, true));
-
+		if (advancedExpandComposite != null) {
+			advancedExpandComposite.setExpanded(advancesExpanded);
+		}
 	}
 
 	private void createAttributeEditor(TaskAttribute attribute, Composite attributeArea) {
@@ -339,7 +347,11 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 					+ repositoryLabel);
 		}
 		attachmentsSettings.put(DIALOG_SETTING_RUN_IN_BACKGROUND, runInBackgroundButton.getSelection());
-		attachmentsSettings.put(DIALOG_SETTING_ADVANCED_EXPANDED, advancedExpandComposite.isExpanded());
+		if (advancedExpandComposite != null) {
+			attachmentsSettings.put(DIALOG_SETTING_ADVANCED_EXPANDED, advancedExpandComposite.isExpanded());
+		} else {
+			attachmentsSettings.put(DIALOG_SETTING_ADVANCED_EXPANDED, advancesExpanded);
+		}
 		super.dispose();
 	}
 
