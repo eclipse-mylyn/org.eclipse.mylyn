@@ -11,6 +11,9 @@
 
 package org.eclipse.mylyn.internal.context.ui.actions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -77,29 +80,32 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 
 		if (selection instanceof StructuredSelection) {
 			StructuredSelection structuredSelection = (StructuredSelection) selection;
+			List<IInteractionElement> nodes = new ArrayList<IInteractionElement>();
 			for (Object object : structuredSelection.toList()) {
 				IInteractionElement node = convertSelectionToInteractionElement(object);
-				if (node != null) {
-					if (!increment) {
-						try {
-							// NOTE: need to set the selection null so the
-							// automatic reselection does not induce interest
-							PlatformUI.getWorkbench()
-									.getActiveWorkbenchWindow()
-									.getActivePage()
-									.getActivePart()
-									.getSite()
-									.getSelectionProvider()
-									.setSelection(null);
-						} catch (Exception e) {
-							// ignore
-						}
+				nodes.add(node);
+			}
+
+			if (nodes != null && nodes.size() > 0) {
+				if (!increment) {
+					try {
+						// NOTE: need to set the selection null so the
+						// automatic reselection does not induce interest
+						PlatformUI.getWorkbench()
+								.getActiveWorkbenchWindow()
+								.getActivePage()
+								.getActivePart()
+								.getSite()
+								.getSelectionProvider()
+								.setSelection(null);
+					} catch (Exception e) {
+						// ignore
 					}
-					boolean manipulated = ContextCorePlugin.getContextManager().manipulateInterestForElement(node,
-							increment, false, preserveUninteresting, SOURCE_ID, getContext(), true);
-					if (!manipulated) {
-						AbstractInterestManipulationAction.displayInterestManipulationFailure();
-					}
+				}
+				boolean manipulated = ContextCorePlugin.getContextManager().manipulateInterestForElements(nodes,
+						increment, false, preserveUninteresting, SOURCE_ID, getContext(), true);
+				if (!manipulated) {
+					AbstractInterestManipulationAction.displayInterestManipulationFailure();
 				}
 			}
 		} else {

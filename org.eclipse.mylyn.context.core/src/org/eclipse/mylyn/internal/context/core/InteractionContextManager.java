@@ -39,12 +39,12 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextChangeEvent;
+import org.eclipse.mylyn.context.core.ContextChangeEvent.ContextChangeKind;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
-import org.eclipse.mylyn.context.core.ContextChangeEvent.ContextChangeKind;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.core.InteractionEvent.Kind;
 
@@ -804,8 +804,9 @@ public class InteractionContextManager implements IInteractionContextManager {
 
 				if (activityMetaContext == null) {
 					resetActivityMetaContext();
-				} else if (!ContextCorePlugin.getDefault().getPluginPreferences().getBoolean(
-						PREFERENCE_ATTENTION_MIGRATED)) {
+				} else if (!ContextCorePlugin.getDefault()
+						.getPluginPreferences()
+						.getBoolean(PREFERENCE_ATTENTION_MIGRATED)) {
 					activityMetaContext = migrateLegacyActivity(activityMetaContext);
 					saveActivityMetaContext();
 					ContextCorePlugin.getDefault().getPluginPreferences().setValue(PREFERENCE_ATTENTION_MIGRATED, true);
@@ -914,6 +915,29 @@ public class InteractionContextManager implements IInteractionContextManager {
 			boolean preserveUninteresting, String sourceId, IInteractionContext context) {
 		return manipulateInterestForElement(element, increment, forceLandmark, preserveUninteresting, sourceId,
 				context, false);
+	}
+
+	/**
+	 * @return true if interest was manipulated successfully
+	 */
+	public boolean manipulateInterestForElements(List<IInteractionElement> elements, boolean increment,
+			boolean forceLandmark, boolean preserveUninteresting, String sourceId, IInteractionContext context,
+			boolean isExplicitManipulation) {
+		Set<IInteractionElement> changedElements = new HashSet<IInteractionElement>();
+		boolean manipulated = false;
+		for (IInteractionElement element : elements) {
+			manipulated |= manipulateInterestForElementHelper(element, increment, forceLandmark, preserveUninteresting,
+					sourceId, context, changedElements, null, isExplicitManipulation);
+		}
+		if (manipulated) {
+			if (preserveUninteresting || increment) {
+				notifyInterestDelta(new ArrayList<IInteractionElement>(changedElements));
+			} else {
+				notifyElementsDeleted(context, new ArrayList<IInteractionElement>(changedElements),
+						isExplicitManipulation);
+			}
+		}
+		return manipulated;
 	}
 
 	/**
@@ -1491,4 +1515,5 @@ public class InteractionContextManager implements IInteractionContextManager {
 			}
 		}
 	}
+
 }
