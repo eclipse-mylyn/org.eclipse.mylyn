@@ -36,15 +36,20 @@ public class BuildSummaryLabelProvider extends ColumnLabelProvider {
 	}
 
 	private ImageDescriptor getImageDescriptor(IBuildPlan element) {
-		if (element.getHealth() >= 0 && element.getHealth() <= 20) {
+		int health = element.getHealth();
+		return getHealthImageDescriptor(health);
+	}
+
+	public static ImageDescriptor getHealthImageDescriptor(int health) {
+		if (health >= 0 && health <= 20) {
 			return BuildImages.HEALTH_00;
-		} else if (element.getHealth() > 20 && element.getHealth() <= 40) {
+		} else if (health > 20 && health <= 40) {
 			return BuildImages.HEALTH_20;
-		} else if (element.getHealth() > 40 && element.getHealth() <= 60) {
+		} else if (health > 40 && health <= 60) {
 			return BuildImages.HEALTH_40;
-		} else if (element.getHealth() > 60 && element.getHealth() <= 80) {
+		} else if (health > 60 && health <= 80) {
 			return BuildImages.HEALTH_60;
-		} else if (element.getHealth() > 80) {
+		} else if (health > 80) {
 			return BuildImages.HEALTH_80;
 		}
 		return null;

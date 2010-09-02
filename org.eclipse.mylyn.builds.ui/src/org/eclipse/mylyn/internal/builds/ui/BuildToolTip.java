@@ -16,14 +16,17 @@ import java.text.DateFormat;
 import java.util.Date;
 
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
+import org.eclipse.mylyn.builds.core.IHealthReport;
 import org.eclipse.mylyn.builds.ui.BuildsUi;
 import org.eclipse.mylyn.builds.ui.spi.BuildConnectorUi;
 import org.eclipse.mylyn.commons.core.DateUtil;
 import org.eclipse.mylyn.commons.core.HtmlUtil;
+import org.eclipse.mylyn.internal.builds.ui.view.BuildSummaryLabelProvider;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
@@ -115,15 +118,29 @@ public class BuildToolTip extends RichToolTip {
 	}
 
 	private void addBuild(Composite parent, IBuild build) {
-		addIconAndLabel(parent, null, NLS.bind("Build {0} [{1}]", build.getLabel(), build.getServer().getLabel()));
+		addLabel(parent, NLS.bind("Build {0} [{1}]", build.getLabel(), build.getServer().getLabel()));
 		String text = "";
 		String time = DateUtil.getRelative(build.getTimestamp());
 		if (time.length() > 0) {
 			text = NLS.bind("Last built {0}, ", time);
 		}
-		addIconAndLabel(parent, null, text
-				+ NLS.bind("took {0}", DateUtil.getFormattedDurationShort(build.getDuration())));
+		addLabel(parent, text + NLS.bind("took {0}", DateUtil.getFormattedDurationShort(build.getDuration())));
+		addPlan(parent, build.getPlan());
+	}
 
+	private void addPlan(Composite parent, IBuildPlan plan) {
+		for (IHealthReport healthReport : plan.getHealthReports()) {
+			addIconAndLabel(parent, BuildSummaryLabelProvider.getHealthImageDescriptor(healthReport.getHealth()),
+					healthReport.getDescription());
+		}
+	}
+
+	protected void addLabel(Composite parent, String text) {
+		addIconAndLabel(parent, (Image) null, text, false);
+	}
+
+	protected void addIconAndLabel(Composite parent, ImageDescriptor descriptor, String text) {
+		addIconAndLabel(parent, CommonImages.getImage(descriptor), text, false);
 	}
 
 	protected void addIconAndLabel(Composite parent, Image image, String text) {
