@@ -338,7 +338,8 @@ public class DOMCompletionProposalComputer extends ParsingBasedProposalComputer 
 				for (ICPPConstructor constructor : constructors) {
 					handleFunction(constructor, context, baseRelevance, proposals);
 				}
-			} catch (DOMException e) {
+			} catch (Exception e) {
+				handle(e);
 			}
 		} else {
 			int relevance = 0;
@@ -354,7 +355,8 @@ public class DOMCompletionProposalComputer extends ParsingBasedProposalComputer 
 					relevance = RelevanceConstants.UNION_TYPE_RELEVANCE;
 					break;
 				}
-			} catch (DOMException exc) {
+			} catch (Exception e) {
+				handle(e);
 			}
 			if (astContext instanceof IASTName && !(astContext instanceof ICPPASTQualifiedName)) {
 				IASTName name = (IASTName) astContext;
@@ -365,6 +367,12 @@ public class DOMCompletionProposalComputer extends ParsingBasedProposalComputer 
 			}
 			proposals.add(createProposal(classType.getName(), classType.getName(), getImage(classType), baseRelevance
 					+ RelevanceConstants.CLASS_TYPE_RELEVANCE, context, getCElement(classType), classType.getName()));
+		}
+	}
+
+	private void handle(Exception e) {
+		if (e instanceof RuntimeException) {
+			throw (RuntimeException) e;
 		}
 	}
 
@@ -704,7 +712,8 @@ public class DOMCompletionProposalComputer extends ParsingBasedProposalComputer 
 					return getImage(delegates[0]);
 				}
 			}
-		} catch (DOMException e) {
+		} catch (Exception e) {
+			handle(e);
 		}
 
 		return imageDescriptor != null ? CommonImages.getImage(imageDescriptor) : null;
