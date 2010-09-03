@@ -113,7 +113,6 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 				case 2: // last build
 					Long t1 = (p1.getLastBuild() != null) ? p1.getLastBuild().getTimestamp() : null;
 					Long t2 = (p2.getLastBuild() != null) ? p2.getLastBuild().getTimestamp() : null;
-					System.err.println(t1);
 					return compare(t1, t2);
 				}
 			}
