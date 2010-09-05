@@ -21,6 +21,7 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
@@ -28,6 +29,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AttributeEditorFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -272,7 +274,7 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 		}
 		advancedExpandComposite = toolkit.createExpandableComposite(container, ExpandableComposite.COMPACT
 				| ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR);
-		advancedExpandComposite.setFont(container.getFont());
+		advancedExpandComposite.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DIALOG_FONT));
 		advancedExpandComposite.setBackground(container.getBackground());
 		advancedExpandComposite.setText(Messages.BugzillaAttachmentWizardPage_Advanced);
 		advancedExpandComposite.setLayout(new GridLayout(4, false));
@@ -286,6 +288,7 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 			@Override
 			public void expansionStateChanged(ExpansionEvent e) {
 				container.layout();
+				container.redraw();
 			}
 		});
 		Composite advancedBodyComposite = new Composite(advancedExpandComposite, SWT.NONE);
