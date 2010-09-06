@@ -445,6 +445,9 @@ public class TaskRepositoryManager implements IRepositoryManager {
 		}
 	}
 
+	/*
+	 * only used for testing
+	 */
 	public void notifyRepositorySettingsChanged(final TaskRepository repository) {
 		notifyRepositorySettingsChanged(repository, new TaskRepositoryDelta(Type.ALL));
 	}

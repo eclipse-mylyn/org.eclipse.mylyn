@@ -782,9 +782,10 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 				}
 				return configuration;
+			} else {
+				throw e;
 			}
 		}
-		return null;
 	}
 
 	public void addRepositoryConfiguration(RepositoryConfiguration config) {

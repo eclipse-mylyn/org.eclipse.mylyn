@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.xmlrpc.XmlRpcException;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_REPORT_STATUS;
 import org.eclipse.mylyn.internal.bugzilla.core.service.BugzillaXmlRpcClient;
@@ -360,20 +362,26 @@ public class RepositoryConfiguration implements Serializable {
 	 * invalid.
 	 * 
 	 * @param fileName
+	 * @throws CoreException
 	 */
-	public void setValidTransitions(IProgressMonitor monitor, String fileName, BugzillaXmlRpcClient xmlClient) {
+	public void setValidTransitions(IProgressMonitor monitor, String fileName, BugzillaXmlRpcClient xmlClient)
+			throws CoreException {
 		//Custom transitions only possible for newer versions of Bugzilla
 		if (getInstallVersion() != null && getInstallVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_2) < 0) {
 			return;
 		}
-		if (validTransitions == null) {
-			validTransitions = new CustomTransitionManager();
-		}
-		if (!validTransitions.parse(fileName) && xmlClient != null) {
-			if (getRepositoryUrl().equals("<unknown>")) { //$NON-NLS-1$
-				return; //This occurs during testing
+		try {
+			if (validTransitions == null) {
+				validTransitions = new CustomTransitionManager();
 			}
-			validTransitions.parse(monitor, xmlClient);
+			if (xmlClient == null) {
+				validTransitions.parse(fileName);
+			} else {
+				validTransitions.parse(monitor, xmlClient);
+			}
+		} catch (CoreException e) {
+			validTransitions = null;
+			throw e;
 		}
 	}
 

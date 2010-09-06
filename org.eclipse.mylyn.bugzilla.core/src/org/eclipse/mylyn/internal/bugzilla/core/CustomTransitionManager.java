@@ -23,6 +23,8 @@ import java.util.List;
 import org.apache.xmlrpc.XmlRpcException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.bugzilla.core.service.BugzillaXmlRpcClient;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
@@ -79,7 +81,7 @@ public class CustomTransitionManager implements Serializable {
 	 * @return true if anything was changed, false otherwise.
 	 * @throws CoreException
 	 */
-	public boolean parse(String filePath) {
+	public boolean parse(String filePath) throws CoreException {
 		if (filePath == null || filePath.length() < 1) {
 			setValid(false);
 			return false;
@@ -119,10 +121,10 @@ public class CustomTransitionManager implements Serializable {
 				}
 			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (IOException e) {
 			setValid(false);
-			return valid;
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, 1,
+					"Error parsing transition description file.\n\n" + e.getMessage(), e)); //$NON-NLS-1$
 		}
 
 		return valid;
@@ -312,7 +314,7 @@ public class CustomTransitionManager implements Serializable {
 		}
 	}
 
-	public void parse(IProgressMonitor monitor, BugzillaXmlRpcClient xmlClient) {
+	public void parse(IProgressMonitor monitor, BugzillaXmlRpcClient xmlClient) throws CoreException {
 		this.filePath = ""; //$NON-NLS-1$
 		operationMapByCurrentStatus.clear();
 		operationMapByEndStatus.clear();
@@ -357,6 +359,8 @@ public class CustomTransitionManager implements Serializable {
 			setValid(true);
 		} catch (XmlRpcException e) {
 			setValid(false);
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, 1,
+					"Error parsing xmlrpc response.\n\n" + e.getMessage(), e)); //$NON-NLS-1$
 		}
 	}
 
