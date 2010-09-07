@@ -192,8 +192,6 @@ public interface IBugzillaConstants {
 
 	public static final String TITLE_MESSAGE_DIALOG = Messages.IBugzillaConstants_Mylyn_Bugzilla_Connector;
 
-	public static final String TITLE_NEW_BUG = Messages.IBugzillaConstants_New_Bugzilla_Report;
-
 	public static final String MESSAGE_LOGIN_FAILURE = Messages.IBugzillaConstants_Bugzilla_login_information_or_repository_version_incorrect;
 
 	public static final String INVALID_2201_ATTRIBUTE_IGNORED = "EclipsebugsBugzilla2.20.1"; //$NON-NLS-1$
