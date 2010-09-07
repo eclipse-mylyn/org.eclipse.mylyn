@@ -70,9 +70,7 @@ public class BugzillaImages {
 		}
 
 		StringBuffer buffer = new StringBuffer(prefix);
-		if (prefix != "") { //$NON-NLS-1$
-			buffer.append('/');
-		}
+		buffer.append('/');
 		buffer.append(name);
 		return new URL(baseURL, buffer.toString());
 	}
