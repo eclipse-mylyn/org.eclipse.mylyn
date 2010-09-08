@@ -23,7 +23,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
-import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuManager;
@@ -245,10 +244,9 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		}
 
 		model = BuildsUiInternal.getModel();
-		modelListener = new EContentAdapter() {
+		modelListener = new BuildModelContentAdapter() {
 			@Override
-			public void notifyChanged(Notification msg) {
-				super.notifyChanged(msg);
+			public void doNotifyChanged(Notification msg) {
 				if (!viewer.getControl().isDisposed()) {
 					lastRefresh = new Date();
 					// FIXME show result of last update

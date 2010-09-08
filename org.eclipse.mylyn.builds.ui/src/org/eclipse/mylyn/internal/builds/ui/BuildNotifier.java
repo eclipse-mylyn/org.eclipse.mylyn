@@ -15,19 +15,18 @@ import java.util.Collections;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.mylyn.builds.internal.core.BuildModel;
 import org.eclipse.mylyn.commons.ui.notifications.Notifications;
+import org.eclipse.mylyn.internal.builds.ui.view.BuildModelContentAdapter;
 
 /**
  * @author Steffen Pingel
  */
 public class BuildNotifier {
 
-	private final Adapter modelListener = new EContentAdapter() {
+	private final Adapter modelListener = new BuildModelContentAdapter() {
 		@Override
-		public void notifyChanged(Notification msg) {
-			super.notifyChanged(msg);
+		public void doNotifyChanged(Notification msg) {
 			handle(msg);
 		}
 	};
