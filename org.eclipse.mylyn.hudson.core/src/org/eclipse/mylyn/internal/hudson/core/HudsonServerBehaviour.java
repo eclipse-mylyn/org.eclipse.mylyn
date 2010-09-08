@@ -220,6 +220,9 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		changeSet.setKind(hudsonChangeSet.getKind());
 		for (Object item : changeSet.getChanges()) {
 			Node node = (Node) item;
+			// none (git), cvs, hg (Mercurial), svn
+			changeSet.getKind();
+			// changeSet.getRevisions() [S]
 			NodeList children = node.getChildNodes();
 			for (int i = 0; i < children.getLength(); i++) {
 				Element child = (Element) children.item(i);
@@ -233,13 +236,17 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 	}
 
 	private IChange parseChange(Element node) {
-		// author [C, G]
+		// author [C, G, M]
 		// comment [G]
-		// date [C:2010-09-02, G:2010-08-26 17:43:17 -0700, S:2010-07-28T09:11:55.720801Z]
+		// date [C:2010-09-02, G:2010-08-26 17:43:17 -0700, M:1283761613.0-7200, S:2010-07-28T09:11:55.720801Z]
 		// file*: dead, editType, fullName, name, prerevision?, revision [C]
 		// id [G] (SHA1)
-		// msg [C, G, S]
+		// merge [M] (Boolean)
+		// modifiedPath* [M]
+		// msg [C, G, M, S]
+		// node [M] (SHA1?)
 		// path*: editType, file [G]
+		// rev [M]
 		// revision [S]
 		// time [C:05:15]
 		// user [C, S]
