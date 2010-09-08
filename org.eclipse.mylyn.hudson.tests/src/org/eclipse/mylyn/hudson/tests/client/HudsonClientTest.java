@@ -22,6 +22,7 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.builds.core.util.ProgressUtil;
 import org.eclipse.mylyn.hudson.tests.support.HudsonFixture;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonException;
+import org.eclipse.mylyn.internal.hudson.core.client.HudsonResourceNotFoundException;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonServerInfo;
 import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient;
 import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient.BuildId;
@@ -116,8 +117,12 @@ public class HudsonClientTest extends TestCase {
 		HudsonModelJob job = jobs.get(0);
 		assertEquals(HudsonModelBallColor.DISABLED, job.getColor());
 
-		HudsonModelBuild build = client.getBuild(job, BuildId.LAST.getBuild(), null);
-		assertNull("Expected null, since " + PLAN_DISABLED + " was never built", build);
+		try {
+			HudsonModelBuild build = client.getBuild(job, BuildId.LAST.getBuild(), null);
+			fail("Expected HudsonResourceNotFoundException, since " + PLAN_DISABLED + " was never built, got: " + build);
+		} catch (HudsonResourceNotFoundException e) {
+			// expected
+		}
 	}
 
 	private void assertContains(List<HudsonModelJob> jobs, String name) {

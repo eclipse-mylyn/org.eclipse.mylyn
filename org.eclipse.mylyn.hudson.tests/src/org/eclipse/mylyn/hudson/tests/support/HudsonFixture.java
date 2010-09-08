@@ -39,7 +39,7 @@ public class HudsonFixture extends TestFixture {
 
 	private static HudsonFixture current;
 
-	private static final HudsonFixture DEFAULT = new HudsonFixture(HUDSON_TEST_URL, "1.339", "REST");
+	private static final HudsonFixture DEFAULT = new HudsonFixture(HUDSON_TEST_URL, "1.367", "REST");
 
 	/**
 	 * Standard configurations for running all test against.
