@@ -149,7 +149,7 @@ public class RestfulHudsonClient {
 				// need to scope retrieved data due to http://issues.hudson-ci.org/browse/HUDSON-7399
 				String url = HudsonUrl
 						.create(getBuildUrl(job, build) + "/testReport" + URL_API)
-						.tree("duration,failCount,passCount,skipCount,suites[cases[className,duration,name,skipped,status],duration,name,stderr,stdout]")
+						.tree("duration,failCount,passCount,skipCount,suites[cases[className,duration,errorDetails,errorStackTrace,failedSince,name,skipped,status],duration,name,stderr,stdout]")
 						.toUrl();
 				CommonHttpMethod method = createGetMethod(url);
 				try {
