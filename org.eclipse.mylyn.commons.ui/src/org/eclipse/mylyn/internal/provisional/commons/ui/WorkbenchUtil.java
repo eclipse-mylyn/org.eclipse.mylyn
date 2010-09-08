@@ -27,7 +27,9 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IPluginContribution;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -44,11 +46,10 @@ import org.eclipse.ui.internal.browser.WorkbenchBrowserSupport;
  */
 public class WorkbenchUtil {
 
-
 	// TODO e3.6 IProgressConstants2#SHOW_IN_TASKBAR_ICON_PROPERTY
 	public static final QualifiedName SHOW_IN_TASKBAR_ICON_PROPERTY = new QualifiedName(
 			"org.eclipse.ui.workbench.progress", "inTaskBarIcon"); //$NON-NLS-1$//$NON-NLS-2$
-	
+
 	// FIXME remove this again
 	private static final boolean TEST_MODE;
 
@@ -73,15 +74,20 @@ public class WorkbenchUtil {
 //		return null;
 //	}
 
-//	public static IViewPart openInActivePerspective(String viewId) throws PartInitException {
-//		if (PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
-//			IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-//			if (activePage != null) {
-//				return activePage.showView(viewId);
-//			}
-//		}
-//		return null;
-//	}
+	public static IViewPart showViewInActiveWindow(String viewId) {
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		if (window != null) {
+			IWorkbenchPage page = window.getActivePage();
+			if (page != null) {
+				try {
+					return page.showView(viewId);
+				} catch (PartInitException e) {
+					// ignore
+				}
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * Return the modal shell that is currently open. If there isn't one then return null.
