@@ -12,9 +12,9 @@
 package org.eclipse.mylyn.builds.internal.core.util;
 
 import org.eclipse.mylyn.builds.core.ITestCase;
+import org.eclipse.mylyn.builds.core.ITestResult;
 import org.eclipse.mylyn.builds.core.ITestSuite;
 import org.eclipse.mylyn.builds.core.TestCaseResult;
-import org.eclipse.mylyn.builds.internal.core.TestResult;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
@@ -50,9 +50,9 @@ public class JUnitResultGenerator {
 
 	private static final String TIME = "time"; //$NON-NLS-1$
 
-	private final TestResult result;
+	private final ITestResult result;
 
-	public JUnitResultGenerator(TestResult result) {
+	public JUnitResultGenerator(ITestResult result) {
 		this.result = result;
 	}
 
