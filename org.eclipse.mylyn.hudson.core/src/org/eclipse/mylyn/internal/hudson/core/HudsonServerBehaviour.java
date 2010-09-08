@@ -114,12 +114,14 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 			HudsonModelJob job = createJobParameter(request.getPlan());
 			HudsonModelBuild hudsonBuild = client.getBuild(job, BuildId.LAST.getBuild(), monitor);
 			IBuild build = parseBuild(hudsonBuild);
-//			try {
-//				HudsonTasksJunitTestResult hudsonTestReport = client.getTestReport(job, hudsonBuild, monitor);
-//				build.setTestResult(parseTestResult(hudsonTestReport));
-//			} catch (HudsonResourceNotFoundException e) {
-//				// ignore
-//			}
+			try {
+				HudsonTasksJunitTestResult hudsonTestReport = client.getTestReport(job, hudsonBuild, monitor);
+				ITestResult testResult = parseTestResult(hudsonTestReport);
+				testResult.setBuild(build); // FIXME remove, should not be necessary
+				build.setTestResult(testResult);
+			} catch (HudsonResourceNotFoundException e) {
+				// ignore
+			}
 			return Collections.singletonList(build);
 		} catch (HudsonResourceNotFoundException e) {
 			return null;
@@ -414,8 +416,11 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 				testCase.setClassName(hudsonCase.getClassName());
 				testCase.setDuration(parseDuration((Node) hudsonCase.getDuration()));
 				testCase.setSkipped(hudsonCase.isSkipped());
-				testCase.setOutput(hudsonCase.getStdout());
-				testCase.setErrorOutput(hudsonCase.getStderr());
+				// XXX seems redundant with testResult output
+				//testCase.setOutput(hudsonCase.getStdout());
+				//testCase.setErrorOutput(hudsonCase.getStderr());
+				testCase.setMessage(hudsonCase.getErrorDetails());
+				testCase.setStackTrace(hudsonCase.getErrorStackTrace());
 				switch (hudsonCase.getStatus()) {
 				case PASSED:
 					testCase.setStatus(TestCaseResult.PASSED);
