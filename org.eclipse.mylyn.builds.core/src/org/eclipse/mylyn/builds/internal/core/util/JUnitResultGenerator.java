@@ -26,6 +26,8 @@ public class JUnitResultGenerator {
 
 	private static final String CLASS_NAME = "classname"; //$NON-NLS-1$
 
+	private static final String ERROR = "error"; //$NON-NLS-1$
+
 	private static final String ERRORS = "errors"; //$NON-NLS-1$
 
 	private static final String FAILURE = "failure"; //$NON-NLS-1$
@@ -33,6 +35,8 @@ public class JUnitResultGenerator {
 	private static final String FAILURES = "failures"; //$NON-NLS-1$
 
 	private static final String IGNORED = "ignored"; //$NON-NLS-1$
+
+	private static final String MESSAGE = "message"; //$NON-NLS-1$
 
 	private static final String NAME = "name"; //$NON-NLS-1$
 
@@ -62,43 +66,51 @@ public class JUnitResultGenerator {
 		handler.startDocument();
 
 		attributes.clear();
-		attributes.addAttribute("", NAME, NAME, "", result.getBuild().getLabel()); //$NON-NLS-1$//$NON-NLS-2$
-		attributes.addAttribute("", PROJECT, PROJECT, "", result.getBuild().getLabel());//$NON-NLS-1$//$NON-NLS-2$
-		attributes.addAttribute("", TESTS, TESTS, "", Integer.toString(result.getFailCount() + result.getPassCount()));//$NON-NLS-1$//$NON-NLS-2$
-		attributes.addAttribute("", STARTED, STARTED, "", Integer.toString(result.getFailCount() //$NON-NLS-1$//$NON-NLS-2$
+		attributes.addAttribute(null, null, NAME, null, result.getBuild().getLabel());
+		attributes.addAttribute(null, null, PROJECT, null, result.getBuild().getLabel());
+		attributes.addAttribute(null, null, TESTS, null, Integer
+				.toString(result.getFailCount() + result.getPassCount()));
+		attributes.addAttribute(null, null, STARTED, null, Integer.toString(result.getFailCount()
 				+ result.getPassCount()));
-		attributes.addAttribute("", FAILURES, FAILURES, "", Integer.toString(result.getFailCount()));//$NON-NLS-1$//$NON-NLS-2$
-		attributes.addAttribute("", ERRORS, ERRORS, "", Integer.toString(result.getErrorCount()));//$NON-NLS-1$//$NON-NLS-2$ 
-		attributes.addAttribute("", IGNORED, IGNORED, "", Integer.toString(result.getIgnoredCount()));//$NON-NLS-1$//$NON-NLS-2$ 
-		handler.startElement("", TESTRUN, TESTRUN, attributes); //$NON-NLS-1$
+		attributes.addAttribute(null, null, FAILURES, null, Integer.toString(result.getFailCount()));
+		attributes.addAttribute(null, null, ERRORS, null, Integer.toString(result.getErrorCount()));
+		attributes.addAttribute(null, null, IGNORED, null, Integer.toString(result.getIgnoredCount()));
+		handler.startElement(null, null, TESTRUN, attributes);
 
 		for (ITestSuite testsuite : result.getSuites()) {
 			attributes.clear();
-			attributes.addAttribute("", NAME, NAME, "", testsuite.getLabel()); //$NON-NLS-1$ //$NON-NLS-2$
-			attributes.addAttribute("", TIME, TIME, "", Long.toString(testsuite.getDuration())); //$NON-NLS-1$//$NON-NLS-2$
-			handler.startElement("", TESTSUITE, TESTSUITE, attributes); //$NON-NLS-1$
+			attributes.addAttribute(null, null, NAME, null, testsuite.getLabel());
+			attributes.addAttribute(null, null, TIME, null, Long.toString(testsuite.getDuration()));
+			handler.startElement(null, null, TESTSUITE, attributes);
 
 			for (ITestCase test : testsuite.getCases()) {
 				attributes.clear();
-				attributes.addAttribute("", NAME, NAME, "", test.getLabel()); //$NON-NLS-1$ //$NON-NLS-2$
-				attributes.addAttribute("", CLASS_NAME, CLASS_NAME, "", test.getClassName()); //$NON-NLS-1$ //$NON-NLS-2$
-				attributes.addAttribute("", TIME, TIME, "", Long.toString(test.getDuration())); //$NON-NLS-1$//$NON-NLS-2$
-				handler.startElement("", TESTCASE, TESTCASE, attributes); //$NON-NLS-1$
+				attributes.addAttribute(null, null, NAME, null, test.getLabel());
+				attributes.addAttribute(null, null, CLASS_NAME, null, test.getClassName());
+				attributes.addAttribute(null, null, TIME, null, Long.toString(test.getDuration()));
+				handler.startElement(null, null, TESTCASE, attributes);
 
-				if (test.getStatus() == TestCaseResult.FAILED) {
-					handler.startElement("", FAILURE, FAILURE, new AttributesImpl()); //$NON-NLS-1$
-					char[] charArray = test.getErrorOutput().toCharArray();
+				if (test.getStatus() == TestCaseResult.FAILED || test.getStatus() == TestCaseResult.REGRESSION) {
+					attributes.clear();
+					//attributes.addAttribute(null, TYPE, TYPE, null, test.getFailureType());
+					attributes.addAttribute(null, null, MESSAGE, null, test.getMessage());
+
+					String element = (test.getMessage() != null) ? FAILURE : ERROR;
+					handler.startElement(null, null, element, attributes);
+
+					char[] charArray = test.getStackTrace().toCharArray();
 					handler.characters(charArray, 0, charArray.length);
-					handler.endElement("", FAILURE, FAILURE); //$NON-NLS-1$
+
+					handler.endElement(null, null, element);
 				}
 
-				handler.endElement("", TESTCASE, TESTCASE); //$NON-NLS-1$
+				handler.endElement(null, null, TESTCASE);
 			}
 
-			handler.endElement("", TESTSUITE, TESTSUITE); //$NON-NLS-1$
+			handler.endElement(null, null, TESTSUITE);
 		}
 
-		handler.endElement("", TESTRUN, TESTRUN); //$NON-NLS-1$
+		handler.endElement(null, null, TESTRUN);
 
 		handler.endDocument();
 	}

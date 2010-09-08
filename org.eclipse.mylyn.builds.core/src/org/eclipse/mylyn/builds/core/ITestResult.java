@@ -33,7 +33,9 @@ import java.util.List;
  */
 public interface ITestResult {
 	/**
-	 * Returns the value of the '<em><b>Build</b></em>' reference.
+	 * Returns the value of the '<em><b>Build</b></em>' container reference.
+	 * It is bidirectional and its opposite is '{@link org.eclipse.mylyn.builds.core.IBuild#getTestResult
+	 * <em>Test Result</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Build</em>' reference isn't clear, there really should be more of a description
@@ -41,19 +43,21 @@ public interface ITestResult {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the value of the '<em>Build</em>' reference.
+	 * @return the value of the '<em>Build</em>' container reference.
 	 * @see #setBuild(IBuild)
+	 * @see org.eclipse.mylyn.builds.core.IBuild#getTestResult
 	 * @generated
 	 */
 	IBuild getBuild();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestResult#getBuild <em>Build</em>}' reference.
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestResult#getBuild <em>Build</em>}' container
+	 * reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @param value
-	 *            the new value of the '<em>Build</em>' reference.
+	 *            the new value of the '<em>Build</em>' container reference.
 	 * @see #getBuild()
 	 * @generated
 	 */

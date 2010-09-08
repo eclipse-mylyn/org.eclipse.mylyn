@@ -355,6 +355,8 @@ public interface IBuild extends IBuildElement {
 
 	/**
 	 * Returns the value of the '<em><b>Test Result</b></em>' containment reference.
+	 * It is bidirectional and its opposite is '{@link org.eclipse.mylyn.builds.core.ITestResult#getBuild
+	 * <em>Build</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Test Result</em>' reference isn't clear, there really should be more of a description
@@ -364,6 +366,7 @@ public interface IBuild extends IBuildElement {
 	 * 
 	 * @return the value of the '<em>Test Result</em>' containment reference.
 	 * @see #setTestResult(ITestResult)
+	 * @see org.eclipse.mylyn.builds.core.ITestResult#getBuild
 	 * @generated
 	 */
 	ITestResult getTestResult();

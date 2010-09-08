@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TestResult.java,v 1.3 2010/09/08 00:31:12 spingel Exp $
+ * $Id: TestResult.java,v 1.4 2010/09/08 03:27:17 spingel Exp $
  */
 package org.eclipse.mylyn.builds.internal.core;
 
@@ -18,6 +18,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.ITestResult;
@@ -43,17 +44,6 @@ import org.eclipse.mylyn.builds.core.ITestSuite;
  * @generated
  */
 public class TestResult extends EObjectImpl implements ITestResult {
-	/**
-	 * The cached value of the '{@link #getBuild() <em>Build</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @see #getBuild()
-	 * @generated
-	 * @ordered
-	 */
-	protected IBuild build;
-
 	/**
 	 * The default value of the '{@link #getDuration() <em>Duration</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -207,16 +197,9 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	 * @generated
 	 */
 	public IBuild getBuild() {
-		if (build != null && ((EObject) build).eIsProxy()) {
-			InternalEObject oldBuild = (InternalEObject) build;
-			build = (IBuild) eResolveProxy(oldBuild);
-			if (build != oldBuild) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, BuildPackage.TEST_RESULT__BUILD,
-							oldBuild, build));
-			}
-		}
-		return build;
+		if (eContainerFeatureID() != BuildPackage.TEST_RESULT__BUILD)
+			return null;
+		return (IBuild) eContainer();
 	}
 
 	/**
@@ -225,8 +208,9 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	 * 
 	 * @generated
 	 */
-	public IBuild basicGetBuild() {
-		return build;
+	public NotificationChain basicSetBuild(IBuild newBuild, NotificationChain msgs) {
+		msgs = eBasicSetContainer((InternalEObject) newBuild, BuildPackage.TEST_RESULT__BUILD, msgs);
+		return msgs;
 	}
 
 	/**
@@ -236,10 +220,21 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	 * @generated
 	 */
 	public void setBuild(IBuild newBuild) {
-		IBuild oldBuild = build;
-		build = newBuild;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.TEST_RESULT__BUILD, oldBuild, build));
+		if (newBuild != eInternalContainer()
+				|| (eContainerFeatureID() != BuildPackage.TEST_RESULT__BUILD && newBuild != null)) {
+			if (EcoreUtil.isAncestor(this, (EObject) newBuild))
+				throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+			NotificationChain msgs = null;
+			if (eInternalContainer() != null)
+				msgs = eBasicRemoveFromContainer(msgs);
+			if (newBuild != null)
+				msgs = ((InternalEObject) newBuild).eInverseAdd(this, BuildPackage.BUILD__TEST_RESULT, IBuild.class,
+						msgs);
+			msgs = basicSetBuild(newBuild, msgs);
+			if (msgs != null)
+				msgs.dispatch();
+		} else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.TEST_RESULT__BUILD, newBuild, newBuild));
 	}
 
 	/**
@@ -402,6 +397,10 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
+		case BuildPackage.TEST_RESULT__BUILD:
+			if (eInternalContainer() != null)
+				msgs = eBasicRemoveFromContainer(msgs);
+			return basicSetBuild((IBuild) otherEnd, msgs);
 		case BuildPackage.TEST_RESULT__SUITES:
 			return ((InternalEList<InternalEObject>) (InternalEList<?>) getSuites()).basicAdd(otherEnd, msgs);
 		}
@@ -417,6 +416,8 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
+		case BuildPackage.TEST_RESULT__BUILD:
+			return basicSetBuild(null, msgs);
 		case BuildPackage.TEST_RESULT__SUITES:
 			return ((InternalEList<?>) getSuites()).basicRemove(otherEnd, msgs);
 		}
@@ -430,12 +431,25 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	 * @generated
 	 */
 	@Override
+	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
+		switch (eContainerFeatureID()) {
+		case BuildPackage.TEST_RESULT__BUILD:
+			return eInternalContainer().eInverseRemove(this, BuildPackage.BUILD__TEST_RESULT, IBuild.class, msgs);
+		}
+		return super.eBasicRemoveFromContainerFeature(msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 		case BuildPackage.TEST_RESULT__BUILD:
-			if (resolve)
-				return getBuild();
-			return basicGetBuild();
+			return getBuild();
 		case BuildPackage.TEST_RESULT__DURATION:
 			return getDuration();
 		case BuildPackage.TEST_RESULT__FAIL_COUNT:
@@ -532,7 +546,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 		case BuildPackage.TEST_RESULT__BUILD:
-			return build != null;
+			return getBuild() != null;
 		case BuildPackage.TEST_RESULT__DURATION:
 			return duration != DURATION_EDEFAULT;
 		case BuildPackage.TEST_RESULT__FAIL_COUNT:

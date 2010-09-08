@@ -747,11 +747,11 @@ public class Build extends BuildElement implements IBuild {
 		if (newTestResult != testResult) {
 			NotificationChain msgs = null;
 			if (testResult != null)
-				msgs = ((InternalEObject) testResult).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
-						- BuildPackage.BUILD__TEST_RESULT, null, msgs);
+				msgs = ((InternalEObject) testResult).eInverseRemove(this, BuildPackage.TEST_RESULT__BUILD,
+						ITestResult.class, msgs);
 			if (newTestResult != null)
-				msgs = ((InternalEObject) newTestResult).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
-						- BuildPackage.BUILD__TEST_RESULT, null, msgs);
+				msgs = ((InternalEObject) newTestResult).eInverseAdd(this, BuildPackage.TEST_RESULT__BUILD,
+						ITestResult.class, msgs);
 			msgs = basicSetTestResult(newTestResult, msgs);
 			if (msgs != null)
 				msgs.dispatch();
@@ -771,6 +771,24 @@ public class Build extends BuildElement implements IBuild {
 			culprits = new EObjectContainmentEList<IUser>(IUser.class, this, BuildPackage.BUILD__CULPRITS);
 		}
 		return culprits;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+		case BuildPackage.BUILD__TEST_RESULT:
+			if (testResult != null)
+				msgs = ((InternalEObject) testResult).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
+						- BuildPackage.BUILD__TEST_RESULT, null, msgs);
+			return basicSetTestResult((ITestResult) otherEnd, msgs);
+		}
+		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**

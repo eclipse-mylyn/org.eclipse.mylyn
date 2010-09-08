@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TestCase.java,v 1.2 2010/08/28 09:21:40 spingel Exp $
+ * $Id: TestCase.java,v 1.3 2010/09/08 03:27:17 spingel Exp $
  */
 package org.eclipse.mylyn.builds.internal.core;
 
@@ -28,6 +28,8 @@ import org.eclipse.mylyn.builds.core.TestCaseResult;
  * <li>{@link org.eclipse.mylyn.builds.internal.core.TestCase#isSkipped <em>Skipped</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.internal.core.TestCase#getSuite <em>Suite</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.internal.core.TestCase#getStatus <em>Status</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.TestCase#getMessage <em>Message</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.TestCase#getStackTrace <em>Stack Trace</em>}</li>
  * </ul>
  * </p>
  * 
@@ -99,6 +101,50 @@ public class TestCase extends TestElement implements ITestCase {
 	 * @ordered
 	 */
 	protected TestCaseResult status = STATUS_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getMessage() <em>Message</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getMessage()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String MESSAGE_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getMessage() <em>Message</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getMessage()
+	 * @generated
+	 * @ordered
+	 */
+	protected String message = MESSAGE_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getStackTrace() <em>Stack Trace</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getStackTrace()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String STACK_TRACE_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getStackTrace() <em>Stack Trace</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getStackTrace()
+	 * @generated
+	 * @ordered
+	 */
+	protected String stackTrace = STACK_TRACE_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -260,6 +306,53 @@ public class TestCase extends TestElement implements ITestCase {
 	 * 
 	 * @generated
 	 */
+	public String getMessage() {
+		return message;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setMessage(String newMessage) {
+		String oldMessage = message;
+		message = newMessage;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.TEST_CASE__MESSAGE, oldMessage, message));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public String getStackTrace() {
+		return stackTrace;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setStackTrace(String newStackTrace) {
+		String oldStackTrace = stackTrace;
+		stackTrace = newStackTrace;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.TEST_CASE__STACK_TRACE, oldStackTrace,
+					stackTrace));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -318,6 +411,10 @@ public class TestCase extends TestElement implements ITestCase {
 			return getSuite();
 		case BuildPackage.TEST_CASE__STATUS:
 			return getStatus();
+		case BuildPackage.TEST_CASE__MESSAGE:
+			return getMessage();
+		case BuildPackage.TEST_CASE__STACK_TRACE:
+			return getStackTrace();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -342,6 +439,12 @@ public class TestCase extends TestElement implements ITestCase {
 			return;
 		case BuildPackage.TEST_CASE__STATUS:
 			setStatus((TestCaseResult) newValue);
+			return;
+		case BuildPackage.TEST_CASE__MESSAGE:
+			setMessage((String) newValue);
+			return;
+		case BuildPackage.TEST_CASE__STACK_TRACE:
+			setStackTrace((String) newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -368,6 +471,12 @@ public class TestCase extends TestElement implements ITestCase {
 		case BuildPackage.TEST_CASE__STATUS:
 			setStatus(STATUS_EDEFAULT);
 			return;
+		case BuildPackage.TEST_CASE__MESSAGE:
+			setMessage(MESSAGE_EDEFAULT);
+			return;
+		case BuildPackage.TEST_CASE__STACK_TRACE:
+			setStackTrace(STACK_TRACE_EDEFAULT);
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -389,6 +498,10 @@ public class TestCase extends TestElement implements ITestCase {
 			return getSuite() != null;
 		case BuildPackage.TEST_CASE__STATUS:
 			return status != STATUS_EDEFAULT;
+		case BuildPackage.TEST_CASE__MESSAGE:
+			return MESSAGE_EDEFAULT == null ? message != null : !MESSAGE_EDEFAULT.equals(message);
+		case BuildPackage.TEST_CASE__STACK_TRACE:
+			return STACK_TRACE_EDEFAULT == null ? stackTrace != null : !STACK_TRACE_EDEFAULT.equals(stackTrace);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -411,6 +524,10 @@ public class TestCase extends TestElement implements ITestCase {
 		result.append(skipped);
 		result.append(", status: "); //$NON-NLS-1$
 		result.append(status);
+		result.append(", message: "); //$NON-NLS-1$
+		result.append(message);
+		result.append(", stackTrace: "); //$NON-NLS-1$
+		result.append(stackTrace);
 		result.append(')');
 		return result.toString();
 	}

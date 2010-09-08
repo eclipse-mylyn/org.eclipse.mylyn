@@ -34,7 +34,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="label" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="server" eType="#//BuildServer"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="testResult" eType="#//TestResult"
-        containment="true"/>
+        containment="true" eOpposite="#//TestResult/build"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="culprits" upperBound="-1"
         eType="#//User" containment="true"/>
   </eClassifiers>
@@ -145,7 +145,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="defaultValue" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TestResult">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="build" eType="#//Build"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="build" eType="#//Build"
+        eOpposite="#//Build/testResult"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="duration" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="failCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="passCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
@@ -179,5 +180,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="suite" eType="#//TestSuite"
         eOpposite="#//TestSuite/cases"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="#//TestCaseResult"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="message" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="stackTrace" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
 </ecore:EPackage>

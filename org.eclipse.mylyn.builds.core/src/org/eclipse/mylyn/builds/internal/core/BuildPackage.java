@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildPackage.java,v 1.7 2010/09/08 00:31:12 spingel Exp $
+ * $Id: BuildPackage.java,v 1.8 2010/09/08 03:27:17 spingel Exp $
  */
 package org.eclipse.mylyn.builds.internal.core;
 
@@ -1716,7 +1716,7 @@ public class BuildPackage extends EPackageImpl {
 	public static final int TEST_RESULT = 20;
 
 	/**
-	 * The feature id for the '<em><b>Build</b></em>' reference.
+	 * The feature id for the '<em><b>Build</b></em>' container reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
@@ -2030,6 +2030,26 @@ public class BuildPackage extends EPackageImpl {
 	public static final int TEST_CASE__STATUS = TEST_ELEMENT_FEATURE_COUNT + 3;
 
 	/**
+	 * The feature id for the '<em><b>Message</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int TEST_CASE__MESSAGE = TEST_ELEMENT_FEATURE_COUNT + 4;
+
+	/**
+	 * The feature id for the '<em><b>Stack Trace</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int TEST_CASE__STACK_TRACE = TEST_ELEMENT_FEATURE_COUNT + 5;
+
+	/**
 	 * The number of structural features of the '<em>Test Case</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2037,7 +2057,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int TEST_CASE_FEATURE_COUNT = TEST_ELEMENT_FEATURE_COUNT + 4;
+	public static final int TEST_CASE_FEATURE_COUNT = TEST_ELEMENT_FEATURE_COUNT + 6;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.builds.core.TestCaseResult <em>Test Case Result</em>}' enum.
@@ -3673,12 +3693,12 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.mylyn.builds.core.ITestResult#getBuild
+	 * Returns the meta object for the container reference '{@link org.eclipse.mylyn.builds.core.ITestResult#getBuild
 	 * <em>Build</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the meta object for the reference '<em>Build</em>'.
+	 * @return the meta object for the container reference '<em>Build</em>'.
 	 * @see org.eclipse.mylyn.builds.core.ITestResult#getBuild()
 	 * @see #getTestResult()
 	 * @generated
@@ -3964,6 +3984,36 @@ public class BuildPackage extends EPackageImpl {
 	 */
 	public EAttribute getTestCase_Status() {
 		return (EAttribute) testCaseEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.ITestCase#getMessage
+	 * <em>Message</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Message</em>'.
+	 * @see org.eclipse.mylyn.builds.core.ITestCase#getMessage()
+	 * @see #getTestCase()
+	 * @generated
+	 */
+	public EAttribute getTestCase_Message() {
+		return (EAttribute) testCaseEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.ITestCase#getStackTrace
+	 * <em>Stack Trace</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Stack Trace</em>'.
+	 * @see org.eclipse.mylyn.builds.core.ITestCase#getStackTrace()
+	 * @see #getTestCase()
+	 * @generated
+	 */
+	public EAttribute getTestCase_StackTrace() {
+		return (EAttribute) testCaseEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -4267,6 +4317,8 @@ public class BuildPackage extends EPackageImpl {
 		createEAttribute(testCaseEClass, TEST_CASE__SKIPPED);
 		createEReference(testCaseEClass, TEST_CASE__SUITE);
 		createEAttribute(testCaseEClass, TEST_CASE__STATUS);
+		createEAttribute(testCaseEClass, TEST_CASE__MESSAGE);
+		createEAttribute(testCaseEClass, TEST_CASE__STACK_TRACE);
 
 		// Create enums
 		testCaseResultEEnum = createEEnum(TEST_CASE_RESULT);
@@ -4401,7 +4453,7 @@ public class BuildPackage extends EPackageImpl {
 		initEReference(
 				getBuild_TestResult(),
 				this.getTestResult(),
-				null,
+				this.getTestResult_Build(),
 				"testResult", null, 0, 1, IBuild.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(
 				getBuild_Culprits(),
@@ -4690,8 +4742,8 @@ public class BuildPackage extends EPackageImpl {
 		initEReference(
 				getTestResult_Build(),
 				this.getBuild(),
-				null,
-				"build", null, 0, 1, ITestResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+				this.getBuild_TestResult(),
+				"build", null, 0, 1, ITestResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(
 				getTestResult_Duration(),
 				ecorePackage.getELong(),
@@ -4769,6 +4821,14 @@ public class BuildPackage extends EPackageImpl {
 				getTestCase_Status(),
 				this.getTestCaseResult(),
 				"status", null, 0, 1, ITestCase.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getTestCase_Message(),
+				ecorePackage.getEString(),
+				"message", null, 0, 1, ITestCase.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getTestCase_StackTrace(),
+				ecorePackage.getEString(),
+				"stackTrace", null, 0, 1, ITestCase.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		// Initialize enums and add enum literals
 		initEEnum(testCaseResultEEnum, TestCaseResult.class, "TestCaseResult"); //$NON-NLS-1$
@@ -5711,7 +5771,7 @@ public class BuildPackage extends EPackageImpl {
 		public static final EClass TEST_RESULT = eINSTANCE.getTestResult();
 
 		/**
-		 * The meta object literal for the '<em><b>Build</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Build</b></em>' container reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * 
@@ -5898,6 +5958,24 @@ public class BuildPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EAttribute TEST_CASE__STATUS = eINSTANCE.getTestCase_Status();
+
+		/**
+		 * The meta object literal for the '<em><b>Message</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute TEST_CASE__MESSAGE = eINSTANCE.getTestCase_Message();
+
+		/**
+		 * The meta object literal for the '<em><b>Stack Trace</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute TEST_CASE__STACK_TRACE = eINSTANCE.getTestCase_StackTrace();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.core.TestCaseResult
