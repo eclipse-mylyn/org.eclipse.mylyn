@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.hudson.core.client;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,7 +31,7 @@ public class HudsonUrl {
 
 	int depth = 1;
 
-	String exclude;
+	List<String> exclude;
 
 	String include;
 
@@ -47,7 +48,10 @@ public class HudsonUrl {
 	}
 
 	public HudsonUrl exclude(String exclude) {
-		this.exclude = exclude;
+		if (this.exclude == null) {
+			this.exclude = new ArrayList<String>();
+		}
+		this.exclude.add(exclude);
 		return this;
 	}
 
@@ -74,8 +78,10 @@ public class HudsonUrl {
 			}
 		}
 		if (exclude != null) {
-			sb.append("&exclude=");
-			sb.append(exclude);
+			for (String value : exclude) {
+				sb.append("&exclude=");
+				sb.append(value);
+			}
 		}
 		return sb.toString();
 	}
