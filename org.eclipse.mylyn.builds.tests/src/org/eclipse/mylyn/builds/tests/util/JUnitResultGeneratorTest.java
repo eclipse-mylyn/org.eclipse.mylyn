@@ -64,7 +64,7 @@ public class JUnitResultGeneratorTest extends TestCase {
 		generator.write(handler);
 
 		assertEquals(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\"?><testrun name=\"Build1\" project=\"Build1\" tests=\"6\" started=\"6\" failures=\"2\" errors=\"1\" ignored=\"3\"><testsuite name=\"Suite1\" time=\"222\"><testcase name=\"TestCase1\" classname=\"TestClass1\" time=\"333\"/></testsuite></testrun>",
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?><testrun name=\"Build1\" project=\"Build1\" tests=\"6\" started=\"6\" failures=\"2\" errors=\"1\" ignored=\"3\"><testsuite name=\"Suite1\" time=\"0.222\"><testcase name=\"TestCase1\" classname=\"TestClass1\" time=\"0.333\"/></testsuite></testrun>",
 				out.toString());
 	}
 
