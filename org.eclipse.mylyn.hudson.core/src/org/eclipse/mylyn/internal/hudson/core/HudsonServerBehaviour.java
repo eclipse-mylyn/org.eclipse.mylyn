@@ -271,12 +271,15 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 	}
 
 	private long parseDuration(Node node) {
-		String text = node.getTextContent();
-		try {
-			return (long) (Double.parseDouble(text) * 1000);
-		} catch (NumberFormatException e) {
-			return -1L;
+		if (node != null) {
+			String text = node.getTextContent();
+			try {
+				return (long) (Double.parseDouble(text) * 1000);
+			} catch (NumberFormatException e) {
+				// fall through
+			}
 		}
+		return -1L;
 	}
 
 	private IHealthReport parseHealthReport(HudsonModelHealthReport hudsonHealthReport) {
@@ -391,15 +394,15 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 	}
 
 	private BuildStatus parseResult(Node node) {
-		if (node == null) {
-			return null;
+		if (node != null) {
+			String text = node.getTextContent();
+			try {
+				return BuildStatus.valueOf(text);
+			} catch (IllegalArgumentException e) {
+				// fall through
+			}
 		}
-		String text = node.getTextContent();
-		try {
-			return BuildStatus.valueOf(text);
-		} catch (IllegalArgumentException e) {
-			return null;
-		}
+		return null;
 	}
 
 	private ITestResult parseTestResult(HudsonTasksJunitTestResult hudsonTestReport) {
