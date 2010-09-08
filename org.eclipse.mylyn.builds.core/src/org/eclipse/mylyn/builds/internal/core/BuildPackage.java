@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildPackage.java,v 1.6 2010/09/02 06:23:14 spingel Exp $
+ * $Id: BuildPackage.java,v 1.7 2010/09/08 00:31:12 spingel Exp $
  */
 package org.eclipse.mylyn.builds.internal.core;
 
@@ -1756,6 +1756,26 @@ public class BuildPackage extends EPackageImpl {
 	public static final int TEST_RESULT__PASS_COUNT = 3;
 
 	/**
+	 * The feature id for the '<em><b>Ignored Count</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int TEST_RESULT__IGNORED_COUNT = 4;
+
+	/**
+	 * The feature id for the '<em><b>Error Count</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int TEST_RESULT__ERROR_COUNT = 5;
+
+	/**
 	 * The feature id for the '<em><b>Suites</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1763,7 +1783,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int TEST_RESULT__SUITES = 4;
+	public static final int TEST_RESULT__SUITES = 6;
 
 	/**
 	 * The number of structural features of the '<em>Test Result</em>' class.
@@ -1773,7 +1793,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int TEST_RESULT_FEATURE_COUNT = 5;
+	public static final int TEST_RESULT_FEATURE_COUNT = 7;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.TestElement <em>Test Element</em>}'
@@ -3713,6 +3733,36 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.ITestResult#getIgnoredCount
+	 * <em>Ignored Count</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Ignored Count</em>'.
+	 * @see org.eclipse.mylyn.builds.core.ITestResult#getIgnoredCount()
+	 * @see #getTestResult()
+	 * @generated
+	 */
+	public EAttribute getTestResult_IgnoredCount() {
+		return (EAttribute) testResultEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.ITestResult#getErrorCount
+	 * <em>Error Count</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Error Count</em>'.
+	 * @see org.eclipse.mylyn.builds.core.ITestResult#getErrorCount()
+	 * @see #getTestResult()
+	 * @generated
+	 */
+	public EAttribute getTestResult_ErrorCount() {
+		return (EAttribute) testResultEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
 	 * Returns the meta object for the containment reference list '
 	 * {@link org.eclipse.mylyn.builds.core.ITestResult#getSuites <em>Suites</em>}'.
 	 * <!-- begin-user-doc -->
@@ -3724,7 +3774,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public EReference getTestResult_Suites() {
-		return (EReference) testResultEClass.getEStructuralFeatures().get(4);
+		return (EReference) testResultEClass.getEStructuralFeatures().get(6);
 	}
 
 	/**
@@ -4198,6 +4248,8 @@ public class BuildPackage extends EPackageImpl {
 		createEAttribute(testResultEClass, TEST_RESULT__DURATION);
 		createEAttribute(testResultEClass, TEST_RESULT__FAIL_COUNT);
 		createEAttribute(testResultEClass, TEST_RESULT__PASS_COUNT);
+		createEAttribute(testResultEClass, TEST_RESULT__IGNORED_COUNT);
+		createEAttribute(testResultEClass, TEST_RESULT__ERROR_COUNT);
 		createEReference(testResultEClass, TEST_RESULT__SUITES);
 
 		testElementEClass = createEClass(TEST_ELEMENT);
@@ -4652,6 +4704,14 @@ public class BuildPackage extends EPackageImpl {
 				getTestResult_PassCount(),
 				ecorePackage.getEInt(),
 				"passCount", null, 0, 1, ITestResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getTestResult_IgnoredCount(),
+				ecorePackage.getEInt(),
+				"ignoredCount", null, 0, 1, ITestResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getTestResult_ErrorCount(),
+				ecorePackage.getEInt(),
+				"errorCount", null, 0, 1, ITestResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(
 				getTestResult_Suites(),
 				this.getTestSuite(),
@@ -5685,6 +5745,24 @@ public class BuildPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EAttribute TEST_RESULT__PASS_COUNT = eINSTANCE.getTestResult_PassCount();
+
+		/**
+		 * The meta object literal for the '<em><b>Ignored Count</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute TEST_RESULT__IGNORED_COUNT = eINSTANCE.getTestResult_IgnoredCount();
+
+		/**
+		 * The meta object literal for the '<em><b>Error Count</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute TEST_RESULT__ERROR_COUNT = eINSTANCE.getTestResult_ErrorCount();
 
 		/**
 		 * The meta object literal for the '<em><b>Suites</b></em>' containment reference list feature.

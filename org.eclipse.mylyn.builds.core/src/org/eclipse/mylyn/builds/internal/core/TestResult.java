@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TestResult.java,v 1.2 2010/08/28 09:21:40 spingel Exp $
+ * $Id: TestResult.java,v 1.3 2010/09/08 00:31:12 spingel Exp $
  */
 package org.eclipse.mylyn.builds.internal.core;
 
@@ -34,6 +34,8 @@ import org.eclipse.mylyn.builds.core.ITestSuite;
  * <li>{@link org.eclipse.mylyn.builds.internal.core.TestResult#getDuration <em>Duration</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.internal.core.TestResult#getFailCount <em>Fail Count</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.internal.core.TestResult#getPassCount <em>Pass Count</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.TestResult#getIgnoredCount <em>Ignored Count</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.TestResult#getErrorCount <em>Error Count</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.internal.core.TestResult#getSuites <em>Suites</em>}</li>
  * </ul>
  * </p>
@@ -117,6 +119,50 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	 * @ordered
 	 */
 	protected int passCount = PASS_COUNT_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getIgnoredCount() <em>Ignored Count</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getIgnoredCount()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final int IGNORED_COUNT_EDEFAULT = 0;
+
+	/**
+	 * The cached value of the '{@link #getIgnoredCount() <em>Ignored Count</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getIgnoredCount()
+	 * @generated
+	 * @ordered
+	 */
+	protected int ignoredCount = IGNORED_COUNT_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getErrorCount() <em>Error Count</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getErrorCount()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final int ERROR_COUNT_EDEFAULT = 0;
+
+	/**
+	 * The cached value of the '{@link #getErrorCount() <em>Error Count</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getErrorCount()
+	 * @generated
+	 * @ordered
+	 */
+	protected int errorCount = ERROR_COUNT_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getSuites() <em>Suites</em>}' containment reference list.
@@ -282,6 +328,54 @@ public class TestResult extends EObjectImpl implements ITestResult {
 
 	/**
 	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public int getIgnoredCount() {
+		return ignoredCount;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setIgnoredCount(int newIgnoredCount) {
+		int oldIgnoredCount = ignoredCount;
+		ignoredCount = newIgnoredCount;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.TEST_RESULT__IGNORED_COUNT,
+					oldIgnoredCount, ignoredCount));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public int getErrorCount() {
+		return errorCount;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setErrorCount(int newErrorCount) {
+		int oldErrorCount = errorCount;
+		errorCount = newErrorCount;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.TEST_RESULT__ERROR_COUNT, oldErrorCount,
+					errorCount));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Suites</em>' containment reference list isn't clear, there really should be more of a
 	 * description here...
@@ -348,6 +442,10 @@ public class TestResult extends EObjectImpl implements ITestResult {
 			return getFailCount();
 		case BuildPackage.TEST_RESULT__PASS_COUNT:
 			return getPassCount();
+		case BuildPackage.TEST_RESULT__IGNORED_COUNT:
+			return getIgnoredCount();
+		case BuildPackage.TEST_RESULT__ERROR_COUNT:
+			return getErrorCount();
 		case BuildPackage.TEST_RESULT__SUITES:
 			return getSuites();
 		}
@@ -375,6 +473,12 @@ public class TestResult extends EObjectImpl implements ITestResult {
 			return;
 		case BuildPackage.TEST_RESULT__PASS_COUNT:
 			setPassCount((Integer) newValue);
+			return;
+		case BuildPackage.TEST_RESULT__IGNORED_COUNT:
+			setIgnoredCount((Integer) newValue);
+			return;
+		case BuildPackage.TEST_RESULT__ERROR_COUNT:
+			setErrorCount((Integer) newValue);
 			return;
 		case BuildPackage.TEST_RESULT__SUITES:
 			getSuites().clear();
@@ -405,6 +509,12 @@ public class TestResult extends EObjectImpl implements ITestResult {
 		case BuildPackage.TEST_RESULT__PASS_COUNT:
 			setPassCount(PASS_COUNT_EDEFAULT);
 			return;
+		case BuildPackage.TEST_RESULT__IGNORED_COUNT:
+			setIgnoredCount(IGNORED_COUNT_EDEFAULT);
+			return;
+		case BuildPackage.TEST_RESULT__ERROR_COUNT:
+			setErrorCount(ERROR_COUNT_EDEFAULT);
+			return;
 		case BuildPackage.TEST_RESULT__SUITES:
 			getSuites().clear();
 			return;
@@ -429,6 +539,10 @@ public class TestResult extends EObjectImpl implements ITestResult {
 			return failCount != FAIL_COUNT_EDEFAULT;
 		case BuildPackage.TEST_RESULT__PASS_COUNT:
 			return passCount != PASS_COUNT_EDEFAULT;
+		case BuildPackage.TEST_RESULT__IGNORED_COUNT:
+			return ignoredCount != IGNORED_COUNT_EDEFAULT;
+		case BuildPackage.TEST_RESULT__ERROR_COUNT:
+			return errorCount != ERROR_COUNT_EDEFAULT;
 		case BuildPackage.TEST_RESULT__SUITES:
 			return suites != null && !suites.isEmpty();
 		}
@@ -453,6 +567,10 @@ public class TestResult extends EObjectImpl implements ITestResult {
 		result.append(failCount);
 		result.append(", passCount: "); //$NON-NLS-1$
 		result.append(passCount);
+		result.append(", ignoredCount: "); //$NON-NLS-1$
+		result.append(ignoredCount);
+		result.append(", errorCount: "); //$NON-NLS-1$
+		result.append(errorCount);
 		result.append(')');
 		return result.toString();
 	}

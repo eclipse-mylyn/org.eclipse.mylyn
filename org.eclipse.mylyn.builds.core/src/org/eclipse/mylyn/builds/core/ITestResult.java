@@ -23,6 +23,8 @@ import java.util.List;
  * <li>{@link org.eclipse.mylyn.builds.core.ITestResult#getDuration <em>Duration</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.core.ITestResult#getFailCount <em>Fail Count</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.core.ITestResult#getPassCount <em>Pass Count</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.ITestResult#getIgnoredCount <em>Ignored Count</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.ITestResult#getErrorCount <em>Error Count</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.core.ITestResult#getSuites <em>Suites</em>}</li>
  * </ul>
  * </p>
@@ -140,6 +142,62 @@ public interface ITestResult {
 	 * @generated
 	 */
 	void setPassCount(int value);
+
+	/**
+	 * Returns the value of the '<em><b>Ignored Count</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Ignored Count</em>' attribute isn't clear, there really should be more of a
+	 * description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Ignored Count</em>' attribute.
+	 * @see #setIgnoredCount(int)
+	 * @generated
+	 */
+	int getIgnoredCount();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestResult#getIgnoredCount <em>Ignored Count</em>}'
+	 * attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Ignored Count</em>' attribute.
+	 * @see #getIgnoredCount()
+	 * @generated
+	 */
+	void setIgnoredCount(int value);
+
+	/**
+	 * Returns the value of the '<em><b>Error Count</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Error Count</em>' attribute isn't clear, there really should be more of a description
+	 * here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Error Count</em>' attribute.
+	 * @see #setErrorCount(int)
+	 * @generated
+	 */
+	int getErrorCount();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestResult#getErrorCount <em>Error Count</em>}'
+	 * attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Error Count</em>' attribute.
+	 * @see #getErrorCount()
+	 * @generated
+	 */
+	void setErrorCount(int value);
 
 	/**
 	 * Returns the value of the '<em><b>Suites</b></em>' containment reference list.

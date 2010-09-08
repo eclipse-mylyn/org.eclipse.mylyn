@@ -149,6 +149,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="duration" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="failCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="passCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ignoredCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="errorCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="suites" upperBound="-1"
         eType="#//TestSuite" containment="true" eOpposite="#//TestSuite/result"/>
   </eClassifiers>
