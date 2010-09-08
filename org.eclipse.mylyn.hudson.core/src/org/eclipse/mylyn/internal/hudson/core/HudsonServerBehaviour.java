@@ -391,6 +391,9 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 	}
 
 	private BuildStatus parseResult(Node node) {
+		if (node == null) {
+			return null;
+		}
 		String text = node.getTextContent();
 		try {
 			return BuildStatus.valueOf(text);
