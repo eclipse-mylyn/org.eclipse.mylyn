@@ -16,6 +16,7 @@ import java.util.Set;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
@@ -132,10 +133,7 @@ public class FocusedResourcesPreferencePage extends PreferencePage implements IW
 		l1.setLayoutData(data);
 
 		ignoreTable = new Table(composite, SWT.BORDER);
-		data = new GridData(GridData.FILL_BOTH);
-		// gd.widthHint = convertWidthInCharsToPixels(30);
-//		data.heightHint = 60;
-		ignoreTable.setLayoutData(data);
+		GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 200).applyTo(ignoreTable);
 		ignoreTable.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event e) {
 				updateEnablement();

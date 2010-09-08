@@ -38,6 +38,10 @@ import org.eclipse.mylyn.resources.ui.ResourcesUi;
  */
 public class ResourceChangeMonitor implements IResourceChangeListener {
 
+	private static final int MAX_FILE_DELTA_SIZE = 10;
+
+	private static final int MAX_NEW_FOLDER_DELTA_SIZE = 3;
+
 	private class ResourceDeltaVisitor implements IResourceDeltaVisitor {
 
 		private final Set<IResource> addedResources;
@@ -47,6 +51,10 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 		private boolean haveTeamPrivateMember;
 
 		private final List<IResourceExclusionStrategy> resourceExclusions;
+
+		private int numNonExcludedFiles = 0;
+
+		private int numAddedFolders = 0;
 
 		public ResourceDeltaVisitor(List<IResourceExclusionStrategy> resourceExclusions) {
 			this.resourceExclusions = resourceExclusions;
@@ -89,6 +97,12 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 						return false;
 					}
 
+					if (resource instanceof IFile) {
+						numNonExcludedFiles++;
+					} else if (resource instanceof IFolder) {
+						numAddedFolders++;
+					}
+
 					addedResources.add(resource);
 				}
 			}
@@ -107,7 +121,9 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 					if (hasTeamPrivate(resource)) {
 						return false;
 					}
-
+					if (resource instanceof IFile) {
+						numNonExcludedFiles++;
+					}
 					changedResources.add(resource);
 				}
 			}
@@ -140,6 +156,14 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 
 		public Set<IResource> getAddedResources() {
 			return addedResources;
+		}
+
+		public int getNumChangedAndAddedFiles() {
+			return numNonExcludedFiles;
+		}
+
+		public int getNumAddedFolders() {
+			return numAddedFolders;
 		}
 
 	};
@@ -181,8 +205,13 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 			try {
 				rootDelta.accept(visitor, IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS | IContainer.INCLUDE_HIDDEN);
 				if (visitor.hasValidResult()) {
-					ResourcesUi.addResourceToContext(visitor.getChangedResources(), InteractionEvent.Kind.PREDICTION);
-					ResourcesUi.addResourceToContext(visitor.getAddedResources(), InteractionEvent.Kind.PROPAGATION);
+					// discard large changes as to not pollute the task context
+					if (visitor.getNumChangedAndAddedFiles() <= MAX_FILE_DELTA_SIZE
+							&& visitor.getNumAddedFolders() <= MAX_NEW_FOLDER_DELTA_SIZE) {
+						ResourcesUi.addResourceToContext(visitor.getChangedResources(),
+								InteractionEvent.Kind.PREDICTION);
+						ResourcesUi.addResourceToContext(visitor.getAddedResources(), InteractionEvent.Kind.PROPAGATION);
+					}
 				}
 			} catch (CoreException e) {
 				StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.ID_PLUGIN,

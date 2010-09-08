@@ -11,7 +11,9 @@
 
 package org.eclipse.mylyn.resources.tests;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.internal.events.ResourceChangeEvent;
@@ -135,6 +137,110 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 		IInteractionElement element = context.get(handle);
 		assertNotNull(element);
 		assertTrue(element.getInterest().isPropagated());
+	}
+
+	public void testLargeFileChangeNotAddedToContext() throws CoreException {
+
+		List<String> filePaths = new ArrayList<String>();
+		filePaths.add("/" + file.getProjectRelativePath().toPortableString());
+		for (int i = 0; i < 10; i++) {
+			IFile newFile = project.getProject().getFile("test" + i + ".txt");
+			newFile.create(null, true, null);
+			assertTrue(newFile.exists());
+			filePaths.add("/" + newFile.getProjectRelativePath().toPortableString());
+		}
+
+		MockResourceDelta delta = MockResourceDelta.createMockDelta("/" + project.getProject().getName(),
+				filePaths.toArray(new String[filePaths.size()]), (IResourceDelta.CHANGED | IResourceDelta.CONTENT),
+				IResource.PROJECT);
+		IResourceChangeEvent event = new ResourceChangeEvent(delta, IResourceChangeEvent.POST_CHANGE, 0, delta);
+		changeMonitor.resourceChanged(event);
+		String handle = ContextCore.getStructureBridge(file).getHandleIdentifier(file);
+		assertNotNull(handle);
+		IInteractionElement element = context.get(handle);
+		assertNull(element);
+	}
+
+	public void testLargeFileAddedNotAddedToContext() throws CoreException {
+
+		List<String> filePaths = new ArrayList<String>();
+		filePaths.add("/" + file.getProjectRelativePath().toPortableString());
+		for (int i = 0; i < 10; i++) {
+			IFile newFile = project.getProject().getFile("test" + i + ".txt");
+			newFile.create(null, true, null);
+			assertTrue(newFile.exists());
+			filePaths.add("/" + newFile.getProjectRelativePath().toPortableString());
+		}
+
+		MockResourceDelta delta = MockResourceDelta.createMockDelta("/" + project.getProject().getName(),
+				filePaths.toArray(new String[filePaths.size()]), (IResourceDelta.ADDED | IResourceDelta.CONTENT),
+				IResource.PROJECT);
+		IResourceChangeEvent event = new ResourceChangeEvent(delta, IResourceChangeEvent.POST_CHANGE, 0, delta);
+		changeMonitor.resourceChanged(event);
+		String handle = ContextCore.getStructureBridge(file).getHandleIdentifier(file);
+		assertNotNull(handle);
+		IInteractionElement element = context.get(handle);
+		assertNull(element);
+	}
+
+	public void testLargeFolderAddedNotAddedToContext() throws CoreException {
+
+		List<String> folderPaths = new ArrayList<String>();
+		folderPaths.add("/" + folder.getProjectRelativePath().toPortableString());
+		for (int i = 0; i < 3; i++) {
+			IFolder newFolder = project.getProject().getFolder("testFolder" + i);
+			newFolder.create(true, true, null);
+			assertTrue(newFolder.exists());
+			folderPaths.add("/" + newFolder.getProjectRelativePath().toPortableString());
+		}
+
+		MockResourceDelta delta = MockResourceDelta.createMockDelta("/" + project.getProject().getName(),
+				folderPaths.toArray(new String[folderPaths.size()]), (IResourceDelta.ADDED | IResourceDelta.CONTENT),
+				IResource.PROJECT);
+		IResourceChangeEvent event = new ResourceChangeEvent(delta, IResourceChangeEvent.POST_CHANGE, 0, delta);
+		changeMonitor.resourceChanged(event);
+		String handle = ContextCore.getStructureBridge(folder).getHandleIdentifier(folder);
+		assertNotNull(handle);
+		IInteractionElement element = context.get(handle);
+		assertNull(element);
+	}
+
+	public void testLargeFolderChangeNotAddedToContext() throws CoreException {
+
+		List<String> folderPaths = new ArrayList<String>();
+		folderPaths.add("/" + folder.getProjectRelativePath().toPortableString());
+		for (int i = 0; i < 3; i++) {
+			IFolder newFolder = project.getProject().getFolder("testFolder" + i);
+			newFolder.create(true, true, null);
+			assertTrue(newFolder.exists());
+			folderPaths.add("/" + newFolder.getProjectRelativePath().toPortableString());
+		}
+
+		MockResourceDelta delta = MockResourceDelta.createMockDelta("/" + project.getProject().getName(),
+				folderPaths.toArray(new String[folderPaths.size()]), (IResourceDelta.CHANGED | IResourceDelta.CONTENT),
+				IResource.PROJECT);
+		IResourceChangeEvent event = new ResourceChangeEvent(delta, IResourceChangeEvent.POST_CHANGE, 0, delta);
+		changeMonitor.resourceChanged(event);
+		String handle = ContextCore.getStructureBridge(folder).getHandleIdentifier(folder);
+		assertNotNull(handle);
+		IInteractionElement element = context.get(handle);
+		assertNull(element);
+	}
+
+	public void testFolderAdded() throws CoreException {
+
+		List<String> folderPaths = new ArrayList<String>();
+		folderPaths.add("/" + folder.getProjectRelativePath().toPortableString());
+
+		MockResourceDelta delta = MockResourceDelta.createMockDelta("/" + project.getProject().getName(),
+				folderPaths.toArray(new String[folderPaths.size()]), (IResourceDelta.ADDED | IResourceDelta.CONTENT),
+				IResource.PROJECT);
+		IResourceChangeEvent event = new ResourceChangeEvent(delta, IResourceChangeEvent.POST_CHANGE, 0, delta);
+		changeMonitor.resourceChanged(event);
+		String handle = ContextCore.getStructureBridge(folder).getHandleIdentifier(folder);
+		assertNotNull(handle);
+		IInteractionElement element = context.get(handle);
+		assertNull(element);
 	}
 
 	public void testModifiedFile() throws CoreException {

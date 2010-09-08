@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
@@ -24,15 +23,10 @@ import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.team.ui.ContextChangeSet;
 import org.eclipse.mylyn.internal.team.ui.LinkedTaskInfo;
-import org.eclipse.mylyn.monitor.core.InteractionEvent;
-import org.eclipse.mylyn.resources.ui.ResourcesUi;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.team.ui.AbstractTaskReference;
 import org.eclipse.mylyn.team.ui.IContextChangeSet;
-import org.eclipse.team.core.TeamException;
 import org.eclipse.team.core.diff.IDiff;
-import org.eclipse.team.core.diff.provider.ThreeWayDiff;
-import org.eclipse.team.core.mapping.provider.ResourceDiff;
 import org.eclipse.team.internal.ccvs.core.mapping.CVSActiveChangeSet;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
 import org.osgi.service.prefs.Preferences;
@@ -50,16 +44,11 @@ public class CvsContextChangeSet extends CVSActiveChangeSet implements IAdaptabl
 
 	public static final String SOURCE_ID = "org.eclipse.mylyn.java.context.changeset.add"; //$NON-NLS-1$
 
-	private boolean suppressInterestContribution = false;
-
 	private final ITask task;
-
-	private final ActiveChangeSetManager manager;
 
 	public CvsContextChangeSet(ITask task, ActiveChangeSetManager manager) {
 		super(manager, task.getSummary());
 		this.task = task;
-		this.manager = manager;
 		updateLabel();
 	}
 
@@ -118,26 +107,6 @@ public class CvsContextChangeSet extends CVSActiveChangeSet implements IAdaptabl
 	@Override
 	public void add(IDiff diff) {
 		super.add(diff);
-		IResource resource = getResourceFromDiff(diff);
-		if (!suppressInterestContribution && resource != null) {
-			Set<IResource> resources = new HashSet<IResource>();
-			resources.add(resource);
-			if (ResourcesUiBridgePlugin.getDefault() != null && manager.isDefault(this)) {
-				// only add to the context if it is the active change set (bug 289240)
-				ResourcesUi.addResourceToContext(resources, InteractionEvent.Kind.SELECTION);
-			}
-		}
-	}
-
-	private IResource getResourceFromDiff(IDiff diff) {
-		if (diff instanceof ResourceDiff) {
-			return ((ResourceDiff) diff).getResource();
-		} else if (diff instanceof ThreeWayDiff) {
-			ThreeWayDiff threeWayDiff = (ThreeWayDiff) diff;
-			return ResourcesPlugin.getWorkspace().getRoot().findMember(threeWayDiff.getPath());
-		} else {
-			return null;
-		}
 	}
 
 	@Override
@@ -151,15 +120,8 @@ public class CvsContextChangeSet extends CVSActiveChangeSet implements IAdaptabl
 	}
 
 	public void restoreResources(IResource[] newResources) throws CoreException {
-		suppressInterestContribution = true;
-		try {
-			super.add(newResources);
-			setComment(getComment(false));
-		} catch (TeamException e) {
-			throw e;
-		} finally {
-			suppressInterestContribution = false;
-		}
+		super.add(newResources);
+		setComment(getComment(false));
 	}
 
 	@Override
