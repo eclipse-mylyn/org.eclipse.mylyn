@@ -247,6 +247,7 @@
        point="org.eclipse.ui.menus">
     <menuContribution
           locationURI="popup:org.eclipse.mylyn.builds.navigator.builds?after=group.open">
+       <!--
        <command
              commandId="org.eclipse.mylyn.builds.ui.commands.OpenBuild"
              label="Open"
@@ -262,6 +263,7 @@
              </iterate>
           </visibleWhen>
        </command>
+       -->
        <command
              commandId="org.eclipse.mylyn.builds.ui.commands.OpenBuildWithBrowser"
              label="Open with Browser"
