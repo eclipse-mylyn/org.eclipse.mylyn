@@ -152,7 +152,7 @@ public class HudsonClientTest extends TestCase {
 		client.runBuild(getJob(PLAN_FAILING), null, ProgressUtil.convert(null));
 		poll(new Callable<Object>() {
 			public Object call() throws Exception {
-				assertEquals(getJob(PLAN_FAILING).getColor(), HudsonModelBallColor.RED_ANIME);
+				assertEquals(HudsonModelBallColor.RED_ANIME, getJob(PLAN_FAILING).getColor());
 				return null;
 			}
 		});
@@ -162,7 +162,7 @@ public class HudsonClientTest extends TestCase {
 		client.runBuild(getJob(PLAN_SUCCEEDING), null, ProgressUtil.convert(null));
 		poll(new Callable<Object>() {
 			public Object call() throws Exception {
-				assertEquals(getJob(PLAN_SUCCEEDING).getColor(), HudsonModelBallColor.BLUE_ANIME);
+				assertEquals(HudsonModelBallColor.BLUE_ANIME, getJob(PLAN_SUCCEEDING).getColor());
 				return null;
 			}
 		});
