@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
@@ -572,15 +573,54 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 		}
 	}
 
+	public void testRemoveProjectFromContextRemovesOnlyInteresting() throws JavaModelException {
+
+		StubContextElementedDeletedListener listener = new StubContextElementedDeletedListener();
+		try {
+			manager.addListener(listener);
+			type1.createMethod("void m1() { }", null, true, null);
+			type1.createMethod("void m2() { }", null, true, null);
+			type1.createMethod("void m4() { }", null, true, null);
+			type1.createMethod("void m5() { }", null, true, null);
+			IJavaProject project = type1.getJavaProject();
+			IInteractionElement node = ContextCore.getContextManager().getElement(project.getHandleIdentifier());
+			assertFalse(node.getInterest().isInteresting());
+
+			InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.MANIPULATION,
+					new JavaStructureBridge().getContentType(), project.getHandleIdentifier(), "source");
+			IInteractionElement element = ContextCorePlugin.getContextManager().processInteractionEvent(event, true);
+
+			// test implicit deletion
+			ContextCorePlugin.getContextManager().processInteractionEvent(event, true);
+			assertEquals(0, listener.explicitDeletionEventCount);
+			assertEquals(0, listener.elementCount);
+
+			// test explicit deletion
+			manager.manipulateInterestForElements(Collections.singletonList(element), false, false, false, "test",
+					ContextCorePlugin.getContextManager().getActiveContext(), true);
+			assertEquals(1, listener.explicitDeletionEventCount);
+
+			// should have 2 element changes.  1 for resources and 1 for java
+			assertEquals(2, listener.elementCount);
+
+		} finally {
+			// clean up
+			manager.removeListener(listener);
+		}
+	}
+
 	private class StubContextElementedDeletedListener extends AbstractContextListener {
 
 		private int explicitDeletionEventCount;
 
 		private int implicitDeletionEventCount;
 
+		private int elementCount;
+
 		void reset() {
 			implicitDeletionEventCount = 0;
 			explicitDeletionEventCount = 0;
+			elementCount = 0;
 		}
 
 		@Override
@@ -594,6 +634,7 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 				} else {
 					implicitDeletionEventCount++;
 				}
+				elementCount += event.getElements().size();
 				break;
 			}
 		}

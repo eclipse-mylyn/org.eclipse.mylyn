@@ -39,12 +39,12 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextChangeEvent;
-import org.eclipse.mylyn.context.core.ContextChangeEvent.ContextChangeKind;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
+import org.eclipse.mylyn.context.core.ContextChangeEvent.ContextChangeKind;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.core.InteractionEvent.Kind;
 
@@ -804,9 +804,8 @@ public class InteractionContextManager implements IInteractionContextManager {
 
 				if (activityMetaContext == null) {
 					resetActivityMetaContext();
-				} else if (!ContextCorePlugin.getDefault()
-						.getPluginPreferences()
-						.getBoolean(PREFERENCE_ATTENTION_MIGRATED)) {
+				} else if (!ContextCorePlugin.getDefault().getPluginPreferences().getBoolean(
+						PREFERENCE_ATTENTION_MIGRATED)) {
 					activityMetaContext = migrateLegacyActivity(activityMetaContext);
 					saveActivityMetaContext();
 					ContextCorePlugin.getDefault().getPluginPreferences().setValue(PREFERENCE_ATTENTION_MIGRATED, true);
@@ -1010,8 +1009,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 				// reduce interest of children
 				for (String childHandle : bridge.getChildHandles(element.getHandleIdentifier())) {
 					IInteractionElement childElement = context.get(childHandle);
-					if (childElement != null /*&& childElement.getInterest().isInteresting()*/
-							&& !childElement.equals(element)) {
+					if (childElement != null && isAPartOfContext(childElement) && !childElement.equals(element)) {
 						manipulateInterestForElementHelper(childElement, increment, forceLandmark,
 								preserveUninteresting, sourceId, context, changedElements, forcedBridge,
 								isExplicitManipulation);
@@ -1040,6 +1038,14 @@ public class InteractionContextManager implements IInteractionContextManager {
 		} else { //if (changeValue < context.getScaling().getInteresting()) {
 			changedElements.add(element);
 			delete(element, context);
+		}
+		return true;
+	}
+
+	private boolean isAPartOfContext(IInteractionElement childElement) {
+		if (childElement instanceof CompositeContextElement) {
+			CompositeContextElement element = (CompositeContextElement) childElement;
+			return element.getNodes() != null && element.getNodes().size() > 0;
 		}
 		return true;
 	}
