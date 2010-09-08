@@ -144,11 +144,13 @@ public class RestfulHudsonClient {
 		return new HudsonOperation<HudsonTasksJunitTestResult>(client) {
 			@Override
 			public HudsonTasksJunitTestResult execute() throws IOException, HudsonException, JAXBException {
+				//				String url = HudsonUrl.create(getBuildUrl(job, build) + "/testReport" + URL_API).exclude(
+				//						"/testResult/suite/case/stdout").exclude("/testResult/suite/case/stderr").toUrl();
 				// need to scope retrieved data due to http://issues.hudson-ci.org/browse/HUDSON-7399
-				String url = getBuildUrl(job, build)
-						+ "/testReport"
-						+ URL_API
-						+ "?tree=duration,failCount,passCount,skipCount,suites[cases[className,duration,name,skipped,status],duration,name,stderr,stdout]";
+				String url = HudsonUrl
+						.create(getBuildUrl(job, build) + "/testReport" + URL_API)
+						.tree("duration,failCount,passCount,skipCount,suites[cases[className,duration,name,skipped,status],duration,name,stderr,stdout]")
+						.toUrl();
 				CommonHttpMethod method = createGetMethod(url);
 				try {
 					execute(method, monitor);

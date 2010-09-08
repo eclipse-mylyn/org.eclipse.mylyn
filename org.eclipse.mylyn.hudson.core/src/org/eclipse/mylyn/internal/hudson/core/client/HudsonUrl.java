@@ -21,6 +21,8 @@ import java.util.List;
  */
 public class HudsonUrl {
 
+	private static final String ENCODING = "UTF-8";
+
 	public static HudsonUrl create(String base) {
 		HudsonUrl url = new HudsonUrl();
 		url.base = base;
@@ -38,6 +40,8 @@ public class HudsonUrl {
 	String key;
 
 	List<String> values;
+
+	String tree;
 
 	private HudsonUrl() {
 	}
@@ -66,6 +70,11 @@ public class HudsonUrl {
 		return this;
 	}
 
+	public HudsonUrl tree(String tree) {
+		this.tree = tree;
+		return this;
+	}
+
 	public String toUrl() throws UnsupportedEncodingException {
 		// wrap everything in "hudson" element to handle case of multiple matches
 		StringBuilder sb = new StringBuilder(base + "?wrapper=hudson&depth=");
@@ -82,6 +91,10 @@ public class HudsonUrl {
 				sb.append("&exclude=");
 				sb.append(value);
 			}
+		}
+		if (tree != null) {
+			sb.append("&tree=");
+			sb.append(URLEncoder.encode(tree, "UTF-8"));
 		}
 		return sb.toString();
 	}
@@ -103,6 +116,6 @@ public class HudsonUrl {
 			sb.append("'");
 		}
 		sb.append("]");
-		return URLEncoder.encode(sb.toString(), "UTF-8");
+		return URLEncoder.encode(sb.toString(), ENCODING);
 	}
 }
