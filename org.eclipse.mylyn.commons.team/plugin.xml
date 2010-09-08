@@ -66,8 +66,7 @@
             activeByDefault="true"
             class="org.eclipse.mylyn.internal.commons.ui.team.EmptyRepositoryCategoriesFilter"
             id="org.eclipse.mylyn.commons.team.navigator.filter.EmptyCategories"
-            name="Empty Categories"
-            visibleInUI="true">
+            name="Empty Categories">
       </commonFilter>
    </extension>
    <extension
@@ -89,7 +88,6 @@
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
-            allPopups="false"
             locationURI="toolbar:org.eclipse.mylyn.commons.team.navigator.Repositories">
          <command
                commandId="org.eclipse.mylyn.commons.ui.command.AddRepository"
@@ -98,7 +96,6 @@
          </command>
       </menuContribution>
       <menuContribution
-            allPopups="false"
             locationURI="popup:org.eclipse.mylyn.commons.team.navigator.Repositories?after=group.new">
          <menu
                id="new"
@@ -111,7 +108,6 @@
          </menu>
       </menuContribution>
       <menuContribution
-            allPopups="false"
             locationURI="popup:org.eclipse.mylyn.commons.team.navigator.Repositories?after=group.properties">
          <command
                commandId="org.eclipse.ui.file.properties"
@@ -126,7 +122,6 @@
          </command>
       </menuContribution>
       <menuContribution
-            allPopups="false"
             locationURI="popup:org.eclipse.mylyn.commons.team.navigator.Repositories?after=group.goto">
          <menu
                label="Show In">
@@ -151,7 +146,6 @@
          </menu>
       </menuContribution>
       <menuContribution
-            allPopups="false"
             locationURI="popup:org.eclipse.mylyn.commons.team.navigator.Repositories?after=group.edit">
          <command
                commandId="org.eclipse.ui.edit.delete"
