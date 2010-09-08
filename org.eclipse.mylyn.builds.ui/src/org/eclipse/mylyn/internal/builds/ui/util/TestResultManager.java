@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.builds.ui.util;
 
+import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.core.runtime.Assert;
@@ -27,7 +28,7 @@ import org.eclipse.jdt.core.search.SearchEngine;
 import org.eclipse.jdt.core.search.SearchPattern;
 import org.eclipse.jdt.core.search.TypeNameMatch;
 import org.eclipse.jdt.core.search.TypeNameMatchRequestor;
-import org.eclipse.jdt.internal.junit.JUnitCorePlugin;
+import org.eclipse.jdt.internal.junit.model.JUnitModel;
 import org.eclipse.jdt.internal.junit.model.TestRunHandler;
 import org.eclipse.jdt.internal.junit.model.TestRunSession;
 import org.eclipse.jdt.internal.junit.ui.TestRunnerViewPart;
@@ -55,11 +56,17 @@ public class TestResultManager {
 
 	private static class Session extends TestRunSession {
 
-		private Session() {
-			super("Build ", null);
+		private Session(IBuild build) {
+			super(NLS.bind("Test Results for Build {0}", build.getLabel()), null);
 		}
 
-		@Override
+		// Eclipse 3.5 and earlier
+		public boolean rerunTest(String testId, String className, String testName, String launchMode)
+				throws CoreException {
+			return rerunTest(testId, className, testName, launchMode, false);
+		}
+
+		// Eclipse 3.6 and later
 		public boolean rerunTest(String testId, final String className, final String testName, String launchMode,
 				boolean buildBeforeLaunch) throws CoreException {
 			final AtomicReference<IJavaElement> result = new AtomicReference<IJavaElement>();
@@ -126,11 +133,11 @@ public class TestResultManager {
 			return;
 		}
 
+		final TestRunSession testRunSession = new Session(build);
 		try {
 			CommonUiUtil.busyCursorWhile(new ICoreRunnable() {
 				public void run(IProgressMonitor monitor) throws CoreException {
 					JUnitResultGenerator generator = new JUnitResultGenerator(build.getTestResult());
-					TestRunSession testRunSession = new Session();
 					TestRunHandler handler = new TestRunHandler(testRunSession);
 					try {
 						generator.write(handler);
@@ -138,17 +145,21 @@ public class TestResultManager {
 						throw new CoreException(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
 								"Unexpected parsing error while preparing test results", e));
 					}
-					JUnitCorePlugin.getModel().addTestRunSession(testRunSession);
-					WorkbenchUtil.showViewInActiveWindow(TestRunnerViewPart.NAME);
 				}
 			});
 		} catch (OperationCanceledException e) {
-			// ignore
+			return;
 		} catch (CoreException e) {
 			StatusManager.getManager().handle(
-					new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "Unexpected error while showing test results",
-							e), StatusManager.SHOW | StatusManager.LOG);
+					new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
+							"Unexpected error while processing test results", e),
+					StatusManager.SHOW | StatusManager.LOG);
+			return;
 		}
+
+		// show results in view
+		WorkbenchUtil.showViewInActiveWindow(TestRunnerViewPart.NAME);
+		getJUnitModel().addTestRunSession(testRunSession);
 	}
 
 	public static void showInJUnitView(final IBuildPlan plan) {
@@ -170,6 +181,32 @@ public class TestResultManager {
 			});
 			operation.execute();
 		}
+	}
+
+	private static JUnitModel junitModel;
+
+	static JUnitModel getJUnitModel() {
+		if (junitModel == null) {
+			Exception cause = null;
+			try {
+				// Eclipse 3.6 or later
+				Class<?> clazz;
+				try {
+					clazz = Class.forName("org.eclipse.jdt.internal.junit.JUnitCorePlugin");
+				} catch (ClassNotFoundException e) {
+					// Eclipse 3.5 and earlier
+					clazz = Class.forName("org.eclipse.jdt.internal.junit.ui.JUnitPlugin");
+				}
+
+				Method method = clazz.getDeclaredMethod("getModel");
+				junitModel = (JUnitModel) method.invoke(null);
+			} catch (Exception e) {
+				NoClassDefFoundError error = new NoClassDefFoundError("Unable to locate container for JUnitModel");
+				error.initCause(cause);
+				throw error;
+			}
+		}
+		return junitModel;
 	}
 
 }
