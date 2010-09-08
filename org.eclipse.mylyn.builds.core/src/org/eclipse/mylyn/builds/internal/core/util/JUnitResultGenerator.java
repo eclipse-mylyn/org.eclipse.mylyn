@@ -80,14 +80,14 @@ public class JUnitResultGenerator {
 		for (ITestSuite testsuite : result.getSuites()) {
 			attributes.clear();
 			attributes.addAttribute(null, null, NAME, null, testsuite.getLabel());
-			attributes.addAttribute(null, null, TIME, null, Long.toString(testsuite.getDuration()));
+			attributes.addAttribute(null, null, TIME, null, Double.toString(testsuite.getDuration() / 1000.0d));
 			handler.startElement(null, null, TESTSUITE, attributes);
 
 			for (ITestCase test : testsuite.getCases()) {
 				attributes.clear();
 				attributes.addAttribute(null, null, NAME, null, test.getLabel());
 				attributes.addAttribute(null, null, CLASS_NAME, null, test.getClassName());
-				attributes.addAttribute(null, null, TIME, null, Long.toString(test.getDuration()));
+				attributes.addAttribute(null, null, TIME, null, Double.toString(test.getDuration() / 1000.0d));
 				handler.startElement(null, null, TESTCASE, attributes);
 
 				if (test.getStatus() == TestCaseResult.FAILED || test.getStatus() == TestCaseResult.REGRESSION) {
@@ -98,8 +98,10 @@ public class JUnitResultGenerator {
 					String element = (test.getMessage() != null) ? FAILURE : ERROR;
 					handler.startElement(null, null, element, attributes);
 
-					char[] charArray = test.getStackTrace().toCharArray();
-					handler.characters(charArray, 0, charArray.length);
+					if (test.getStackTrace() != null) {
+						char[] charArray = test.getStackTrace().toCharArray();
+						handler.characters(charArray, 0, charArray.length);
+					}
 
 					handler.endElement(null, null, element);
 				}
