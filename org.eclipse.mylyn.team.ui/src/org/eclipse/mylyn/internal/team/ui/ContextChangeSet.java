@@ -30,14 +30,11 @@ import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.team.ui.properties.TeamPropertiesLinkProvider;
-import org.eclipse.mylyn.monitor.core.InteractionEvent;
-import org.eclipse.mylyn.resources.ui.ResourcesUi;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.team.ui.AbstractTaskReference;
 import org.eclipse.mylyn.team.ui.IContextChangeSet;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.team.core.TeamException;
 import org.eclipse.team.core.diff.IDiff;
 import org.eclipse.team.core.diff.provider.ThreeWayDiff;
 import org.eclipse.team.core.mapping.provider.ResourceDiff;
@@ -55,8 +52,6 @@ public class ContextChangeSet extends ActiveChangeSet/*CVSActiveChangeSet*/imple
 	private static final String CTX_TITLE = "title"; //$NON-NLS-1$
 
 	public static final String SOURCE_ID = "org.eclipse.mylyn.java.context.changeset.add"; //$NON-NLS-1$
-
-	private boolean suppressInterestContribution = false;
 
 	private final ITask task;
 
@@ -121,14 +116,6 @@ public class ContextChangeSet extends ActiveChangeSet/*CVSActiveChangeSet*/imple
 	@Override
 	public void add(IDiff diff) {
 		super.add(diff);
-		IResource resource = getResourceFromDiff(diff);
-		if (!suppressInterestContribution && resource != null) {
-			Set<IResource> resources = new HashSet<IResource>();
-			resources.add(resource);
-			if (ResourcesUiBridgePlugin.getDefault() != null) {
-				ResourcesUi.addResourceToContext(resources, InteractionEvent.Kind.SELECTION);
-			}
-		}
 	}
 
 	private IResource getResourceFromDiff(IDiff diff) {
@@ -153,15 +140,8 @@ public class ContextChangeSet extends ActiveChangeSet/*CVSActiveChangeSet*/imple
 	}
 
 	public void restoreResources(IResource[] newResources) throws CoreException {
-		suppressInterestContribution = true;
-		try {
-			super.add(newResources);
-			setComment(getComment(false));
-		} catch (TeamException e) {
-			throw e;
-		} finally {
-			suppressInterestContribution = false;
-		}
+		super.add(newResources);
+		setComment(getComment(false));
 	}
 
 	@Override
