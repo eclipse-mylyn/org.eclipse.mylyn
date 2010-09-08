@@ -14,17 +14,17 @@ package org.eclipse.mylyn.internal.builds.ui.view;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.internal.builds.ui.BuildImages;
-import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
+import org.eclipse.mylyn.internal.builds.ui.util.TestResultManager;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
 /**
  * @author Steffen Pingel
  */
-public class ShowBuildOutputAction extends BaseSelectionListenerAction {
+public class ShowTestResultsAction extends BaseSelectionListenerAction {
 
-	protected ShowBuildOutputAction() {
-		super("Show Output");
-		setToolTipText("Show Build Output in Console");
+	protected ShowTestResultsAction() {
+		super("Show Test Results");
+		setToolTipText("Show Test Results in JUnit View");
 		setImageDescriptor(BuildImages.CONSOLE);
 	}
 
@@ -38,7 +38,7 @@ public class ShowBuildOutputAction extends BaseSelectionListenerAction {
 		Object selection = getStructuredSelection().getFirstElement();
 		if (selection instanceof IBuildPlan) {
 			final IBuildPlan plan = (IBuildPlan) selection;
-			BuildsUiInternal.getConsoleManager().showConsole(plan);
+			TestResultManager.showInJUnitView(plan.getLastBuild());
 		}
 	}
 

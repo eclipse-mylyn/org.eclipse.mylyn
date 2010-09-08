@@ -31,22 +31,6 @@ import org.eclipse.ui.console.MessageConsole;
  */
 public class BuildConsoleManager {
 
-	private static boolean consoleAvailable = false;
-
-	static {
-		try {
-			if (ConsolePlugin.getDefault() != null) {
-				consoleAvailable = true;
-			}
-		} catch (Throwable e) {
-			// ignore
-		}
-	}
-
-	public static boolean isConsoleAvailable() {
-		return consoleAvailable;
-	}
-
 	private final Map<IBuild, BuildConsole> consoleByBuild;
 
 	private final IConsoleManager consoleManager;
