@@ -16,6 +16,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.mylyn.builds.core.BuildStatus;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.ITestCase;
@@ -52,7 +53,12 @@ public class NewTaskFromBuildHandler extends AbstractHandler {
 
 			@Override
 			public String getSummary() {
-				return NLS.bind("Build {0}: {1}", build.getLabel(), build.getStatus().toString());
+				BuildStatus status = build.getStatus();
+				if (status != null) {
+					return NLS.bind("Build {0}: {1}", build.getLabel(), status.toString());
+				} else {
+					return NLS.bind("Build {0}", build.getLabel());
+				}
 			}
 
 			@Override
