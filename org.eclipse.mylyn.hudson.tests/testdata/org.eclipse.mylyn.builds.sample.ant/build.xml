@@ -1,0 +1,23 @@
+<project default="all">
+
+	<target name="all" depends="compile,test" />
+
+	<target name="compile">
+		<mkdir dir="bin"/>
+		<javac srcdir="src" destdir="bin" classpath="junit.jar" debug="on" source="1.5" />
+	</target>
+
+	<target name="test">
+		<junit printsummary="yes" haltonfailure="no">
+			<classpath>
+				<pathelement path="bin" />
+				<pathelement location="junit.jar" />
+			</classpath>
+
+			<formatter type="xml" />
+
+			<test name="org.eclipse.mylyn.builds.sample.ant.AllTests" />
+		</junit>
+	</target>
+
+</project>
