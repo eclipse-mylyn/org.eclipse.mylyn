@@ -18,9 +18,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
@@ -31,9 +29,10 @@ import org.eclipse.mylyn.builds.core.spi.GetBuildsRequest.Kind;
 import org.eclipse.mylyn.builds.internal.core.BuildPlan;
 import org.eclipse.mylyn.builds.internal.core.BuildServer;
 import org.eclipse.mylyn.builds.internal.core.BuildsCorePlugin;
+import org.eclipse.mylyn.builds.internal.core.util.BuildRunnableWithResult;
+import org.eclipse.mylyn.builds.internal.core.util.BuildRunner;
 import org.eclipse.mylyn.commons.core.IOperationMonitor;
 import org.eclipse.mylyn.commons.core.IOperationMonitor.OperationFlag;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 
 /**
  * @author Steffen Pingel
@@ -82,19 +81,14 @@ public class RefreshSession {
 
 	public void refreshBuilds(final RefreshRequest request, final GetBuildsRequest buildRequest,
 			final IOperationMonitor monitor) throws CoreException {
-		final AtomicReference<List<IBuild>> result = new AtomicReference<List<IBuild>>();
-		SafeRunner.run(new ISafeRunnable() {
-			public void handleException(Throwable e) {
-				StatusHandler.log(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN,
-						"Unexpected error during invocation in server behavior", e));
-			}
-
-			public void run() throws Exception {
-				result.set(server.getBehaviour().getBuilds(buildRequest, monitor));
+		final List<IBuild> result = BuildRunner.run(new BuildRunnableWithResult<List<IBuild>>() {
+			@Override
+			public List<IBuild> run() throws CoreException {
+				return server.getBehaviour().getBuilds(buildRequest, monitor);
 			}
 		});
 
-		if (result.get() == null) {
+		if (result == null) {
 			// indicates that plan was never built
 			return;
 		}
@@ -109,7 +103,7 @@ public class RefreshSession {
 						if (modelPlan.getLastBuild() != null) {
 							request.getModel().getBuilds().remove(modelPlan.getLastBuild());
 						}
-						IBuild build = result.get().get(0);
+						IBuild build = result.get(0);
 						modelPlan.setLastBuild(build);
 						build.setPlan(modelPlan);
 						build.setServer(original);
@@ -139,21 +133,16 @@ public class RefreshSession {
 		});
 
 		// execute
-		final AtomicReference<List<IBuildPlan>> result = new AtomicReference<List<IBuildPlan>>();
-		SafeRunner.run(new ISafeRunnable() {
-			public void handleException(Throwable e) {
-				StatusHandler.log(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN,
-						"Unexpected error during invocation in server behavior", e));
-			}
-
-			public void run() throws Exception {
+		final List<IBuildPlan> result = BuildRunner.run(new BuildRunnableWithResult<List<IBuildPlan>>() {
+			@Override
+			public List<IBuildPlan> run() throws CoreException {
 				BuildPlanRequest planRequest = new BuildPlanRequest(input.get());
-				result.set(server.getBehaviour().getPlans(planRequest, monitor));
+				return server.getBehaviour().getPlans(planRequest, monitor);
 			}
 		});
 
 		// handle result
-		if (result.get() == null) {
+		if (result == null) {
 			throw new CoreException(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN,
 					"Server did not provide any plans."));
 		}
@@ -163,7 +152,7 @@ public class RefreshSession {
 				original.setRefreshDate(refreshDate);
 				for (IBuildPlan oldPlan : request.getModel().getPlans()) {
 					if (oldPlan.getServer() == original) {
-						BuildPlan newPlan = getPlanById(result.get(), oldPlan.getId());
+						BuildPlan newPlan = getPlanById(result, oldPlan.getId());
 						if (newPlan != null) {
 							newPlan.setRefreshDate(refreshDate);
 							update(request, oldPlan, newPlan, monitor);

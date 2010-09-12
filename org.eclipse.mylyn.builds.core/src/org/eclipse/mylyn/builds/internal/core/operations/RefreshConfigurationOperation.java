@@ -13,22 +13,20 @@ package org.eclipse.mylyn.builds.internal.core.operations;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.spi.BuildServerConfiguration;
 import org.eclipse.mylyn.builds.internal.core.BuildServer;
 import org.eclipse.mylyn.builds.internal.core.BuildsCorePlugin;
+import org.eclipse.mylyn.builds.internal.core.util.BuildRunnableWithResult;
+import org.eclipse.mylyn.builds.internal.core.util.BuildRunner;
 import org.eclipse.mylyn.commons.core.IOperationMonitor;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.osgi.util.NLS;
 
 /**
@@ -71,18 +69,13 @@ public class RefreshConfigurationOperation extends BuildJob {
 	}
 
 	public void doRefresh(final BuildServer server, final IOperationMonitor monitor) throws CoreException {
-		final AtomicReference<BuildServerConfiguration> result = new AtomicReference<BuildServerConfiguration>();
-		SafeRunner.run(new ISafeRunnable() {
-			public void run() throws Exception {
-				result.set(server.getBehaviour().refreshConfiguration(monitor));
-			}
-
-			public void handleException(Throwable e) {
-				StatusHandler.log(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN,
-						"Unexpected error during invocation in server behavior", e));
+		Object result = BuildRunner.run(new BuildRunnableWithResult<BuildServerConfiguration>() {
+			@Override
+			public BuildServerConfiguration run() throws CoreException {
+				return server.getBehaviour().refreshConfiguration(monitor);
 			}
 		});
-		if (result.get() == null) {
+		if (result == null) {
 			throw new CoreException(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN,
 					"Server did not provide a valid configuration."));
 		}

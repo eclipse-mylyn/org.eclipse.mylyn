@@ -120,6 +120,7 @@ public class AbstractOperation implements IOperation {
 		}
 		for (IBuildElement element : elements) {
 			element.getOperations().add(this);
+			registeredElements.add(element);
 		}
 	}
 
