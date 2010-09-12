@@ -27,7 +27,11 @@ public class BuildTimeLabelProvider extends ColumnLabelProvider {
 			if (plan.getLastBuild() != null) {
 				long timestamp = plan.getLastBuild().getTimestamp();
 				if (timestamp != 0) {
-					return DateUtil.getRelative(timestamp);
+					if (System.currentTimeMillis() - timestamp < 60 * 1000) {
+						return "< 1 min ago";
+					} else {
+						return DateUtil.getRelative(timestamp);
+					}
 				}
 			}
 		}
