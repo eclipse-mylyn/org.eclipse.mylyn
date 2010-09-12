@@ -139,11 +139,11 @@ public class ProgressUtil {
 		}
 
 		public IOperationMonitor newChild(int totalWork) {
-			return new OperationMonitor(root, monitor.newChild(totalWork));
+			return new OperationMonitor((root == null) ? this : root, monitor.newChild(totalWork));
 		}
 
 		public IOperationMonitor newChild(int totalWork, int suppressFlags) {
-			return new OperationMonitor(root, monitor.newChild(totalWork, suppressFlags));
+			return new OperationMonitor((root == null) ? this : root, monitor.newChild(totalWork, suppressFlags));
 		}
 
 		public synchronized void removeFlag(OperationFlag flag) {

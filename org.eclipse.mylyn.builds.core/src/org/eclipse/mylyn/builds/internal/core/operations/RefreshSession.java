@@ -32,6 +32,7 @@ import org.eclipse.mylyn.builds.internal.core.BuildPlan;
 import org.eclipse.mylyn.builds.internal.core.BuildServer;
 import org.eclipse.mylyn.builds.internal.core.BuildsCorePlugin;
 import org.eclipse.mylyn.commons.core.IOperationMonitor;
+import org.eclipse.mylyn.commons.core.IOperationMonitor.OperationFlag;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 
 /**
@@ -56,7 +57,13 @@ public class RefreshSession {
 		return null;
 	}
 
-	private boolean isStale(IBuildPlan oldPlan, BuildPlan newPlan) {
+	private boolean isStale(IBuildPlan oldPlan, BuildPlan newPlan, IOperationMonitor monitor) {
+		if (monitor.hasFlag(OperationFlag.BACKGROUND)) {
+			if (oldPlan.getLastBuild() != null && newPlan.getLastBuild() != null) {
+				// only refresh if there is a new build
+				return oldPlan.getLastBuild().getBuildNumber() != newPlan.getLastBuild().getBuildNumber();
+			}
+		}
 		return true;
 	}
 
@@ -159,7 +166,7 @@ public class RefreshSession {
 						BuildPlan newPlan = getPlanById(result.get(), oldPlan.getId());
 						if (newPlan != null) {
 							newPlan.setRefreshDate(refreshDate);
-							update(request, oldPlan, newPlan);
+							update(request, oldPlan, newPlan, monitor);
 						} else {
 							((BuildPlan) oldPlan).setOperationStatus(new Status(IStatus.ERROR,
 									BuildsCorePlugin.ID_PLUGIN, "The plan does not exist."));
@@ -170,8 +177,8 @@ public class RefreshSession {
 		});
 	}
 
-	protected void update(RefreshRequest request, IBuildPlan oldPlan, BuildPlan newPlan) {
-		if (isStale(oldPlan, newPlan)) {
+	protected void update(RefreshRequest request, IBuildPlan oldPlan, BuildPlan newPlan, IOperationMonitor monitor) {
+		if (isStale(oldPlan, newPlan, monitor)) {
 			((BuildPlan) oldPlan).merge(newPlan);
 			markStale(request, newPlan);
 		}
