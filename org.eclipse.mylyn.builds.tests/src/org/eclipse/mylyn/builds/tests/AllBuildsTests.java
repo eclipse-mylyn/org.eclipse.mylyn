@@ -14,6 +14,7 @@ package org.eclipse.mylyn.builds.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.mylyn.builds.tests.core.BuildModelManagerTest;
 import org.eclipse.mylyn.builds.tests.util.JUnitResultGeneratorTest;
 
 /**
@@ -27,6 +28,7 @@ public class AllBuildsTests {
 
 	public static Test suite(boolean defaultOnly) {
 		TestSuite suite = new TestSuite("Tests for org.eclipse.mylyn.builds.tests");
+		suite.addTestSuite(BuildModelManagerTest.class);
 		suite.addTestSuite(JUnitResultGeneratorTest.class);
 		return suite;
 	}
