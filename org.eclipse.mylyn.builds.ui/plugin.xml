@@ -79,32 +79,34 @@
  </extension>
  <extension
        point="org.eclipse.ui.commands">
+    <category
+          id="org.eclipse.mylyn.builds.ui.category.Commands"
+          name="Builds">
+    </category>
     <command
-          defaultHandler="org.eclipse.mylyn.internal.builds.ui.commands.OpenBuildHandler"
-          id="org.eclipse.mylyn.builds.ui.commands.OpenBuild"
-          name="Open Build">
+          categoryId="org.eclipse.mylyn.builds.ui.category.Commands"
+          defaultHandler="org.eclipse.mylyn.internal.builds.ui.commands.OpenHandler"
+          id="org.eclipse.mylyn.builds.ui.commands.OpenBuildElement"
+          name="Open Build Element">
+       <commandParameter
+             id="element"
+             name="Element"
+             optional="true">
+       </commandParameter>
     </command>
     <command
-          defaultHandler="org.eclipse.mylyn.internal.builds.ui.commands.OpenBuildWithBrowserHandler"
-          id="org.eclipse.mylyn.builds.ui.commands.OpenBuildWithBrowser"
+          categoryId="org.eclipse.mylyn.builds.ui.category.Commands"
+          defaultHandler="org.eclipse.mylyn.internal.builds.ui.commands.OpenWithBrowserHandler"
+          id="org.eclipse.mylyn.builds.ui.commands.OpenBuildElementWithBrowser"
           name="Open Build with Browser">
+       <commandParameter
+             id="element"
+             name="Element"
+             optional="true">
+       </commandParameter>
     </command>
     <command
-          defaultHandler="org.eclipse.mylyn.internal.builds.ui.commands.ShowBuildOutputHandler"
-          id="org.eclipse.mylyn.builds.ui.command.ShowBuildOutput"
-          name="Show Build Output">
-    </command>
-    <command
-          defaultHandler="org.eclipse.mylyn.internal.builds.ui.commands.ShowTestResultsHandler"
-          id="org.eclipse.mylyn.builds.ui.command.ShowTestResults"
-          name="Show Test Results">
-    </command>
-    <command
-          defaultHandler="org.eclipse.mylyn.internal.builds.ui.commands.RunBuildHandler"
-          id="org.eclipse.mylyn.builds.ui.command.RunBuild"
-          name="Run Build">
-    </command>
-    <command
+          categoryId="org.eclipse.mylyn.builds.ui.category.Commands"
           defaultHandler="org.eclipse.mylyn.internal.builds.ui.commands.CopyDetailsHandler"
           id="org.eclipse.mylyn.builds.ui.commands.CopyDetails"
           name="Copy Details">
@@ -114,6 +116,34 @@
              optional="true"
              values="org.eclipse.mylyn.internal.builds.ui.commands.CopyDetailsParameterValues">
        </commandParameter>
+       <commandParameter
+             id="element"
+             name="Element"
+             optional="true">
+       </commandParameter>
+    </command>
+    <command
+          categoryId="org.eclipse.mylyn.builds.ui.category.Commands"
+          defaultHandler="org.eclipse.mylyn.internal.builds.ui.commands.RunBuildHandler"
+          id="org.eclipse.mylyn.builds.ui.command.RunBuild"
+          name="Run Build">
+    </command>
+    <command
+          categoryId="org.eclipse.mylyn.builds.ui.category.Commands"
+          defaultHandler="org.eclipse.mylyn.internal.builds.ui.commands.ShowBuildOutputHandler"
+          id="org.eclipse.mylyn.builds.ui.command.ShowBuildOutput"
+          name="Show Build Output">
+    </command>
+    <command
+          categoryId="org.eclipse.mylyn.builds.ui.category.Commands"
+          id="org.eclipse.mylyn.builds.ui.command.ShowTestResults"
+          name="Show Test Results">
+    </command>
+    <command
+          categoryId="org.eclipse.mylyn.builds.ui.category.Commands"
+          defaultHandler="org.eclipse.mylyn.internal.builds.ui.commands.NewTaskFromBuildHandler"
+          id="org.eclipse.mylyn.builds.ui.command.NewTaskFromBuild"
+          name="New Task From Build">
     </command>
  </extension>
  <extension
@@ -131,6 +161,28 @@
           disabledIcon="icons/dtool16/run_exc.gif"
           icon="icons/etool16/run_exc.gif">
     </image>
+    <image
+          commandId="org.eclipse.mylyn.builds.ui.command.NewTaskFromBuild"
+          icon="icons/etool16/task-new.gif">
+    </image>
+ </extension>
+ <extension
+       point="org.eclipse.ui.handlers">
+    <handler
+          class="org.eclipse.mylyn.internal.builds.ui.commands.ShowTestResultsHandler"
+          commandId="org.eclipse.mylyn.builds.ui.command.ShowTestResults">
+       <enabledWhen>
+          <iterate
+                operator="and">
+             <adapt
+                   type="org.eclipse.mylyn.builds.core.IBuild">
+                <test
+                      property="org.eclipse.mylyn.builds.ui.test.build.hasTests">
+                </test>
+             </adapt>
+          </iterate>
+       </enabledWhen>
+    </handler>
  </extension>
  <extension
        point="org.eclipse.ui.handlers">
@@ -260,7 +312,7 @@
           locationURI="popup:org.eclipse.mylyn.builds.navigator.builds?after=group.open">
        <!--
        <command
-             commandId="org.eclipse.mylyn.builds.ui.commands.OpenBuild"
+             commandId="org.eclipse.mylyn.builds.ui.commands.OpenBuildElement"
              label="Open"
              style="push">
           <visibleWhen
@@ -276,7 +328,7 @@
        </command>
        -->
        <command
-             commandId="org.eclipse.mylyn.builds.ui.commands.OpenBuildWithBrowser"
+             commandId="org.eclipse.mylyn.builds.ui.commands.OpenBuildElementWithBrowser"
              label="Open with Browser"
              style="push">
           <visibleWhen
@@ -286,6 +338,40 @@
              </iterate>
           </visibleWhen>
        </command>
+       <menu
+             id="org.eclipse.mylyn.builds.ui.menus.LastBuild"
+             label="Last Build">
+          <separator
+                name="group.open"
+                visible="true">
+          </separator>
+          <separator
+                name="group.edit"
+                visible="true">
+          </separator>
+          <separator
+                name="group.file"
+                visible="true">
+          </separator>
+          <separator
+                name="group.refresh"
+                visible="true">
+          </separator>
+          <separator
+                name="group.properties"
+                visible="true">
+          </separator>
+          <visibleWhen
+                checkEnabled="false">
+             <iterate
+                   ifEmpty="false"
+                   operator="and">
+                <adapt
+                      type="org.eclipse.mylyn.builds.core.IBuild">
+                </adapt>
+             </iterate>
+          </visibleWhen>
+       </menu>
     </menuContribution>
     <menuContribution
           locationURI="popup:org.eclipse.mylyn.builds.navigator.builds?after=group.edit">
@@ -316,39 +402,6 @@
              </iterate>
           </visibleWhen>
        </menu>
-    </menuContribution>
-    <menuContribution
-          locationURI="popup:org.eclipse.mylyn.builds.navigator.builds?after=group.file">
-       <command
-             commandId="org.eclipse.mylyn.builds.ui.command.ShowBuildOutput"
-             label="Show Output"
-             style="push">
-          <visibleWhen
-                checkEnabled="false">
-             <iterate
-                   ifEmpty="false"
-                   operator="and">
-                <instanceof
-                      value="org.eclipse.mylyn.builds.core.IBuildPlan">
-                </instanceof>
-             </iterate>
-          </visibleWhen>
-       </command>
-       <command
-             commandId="org.eclipse.mylyn.builds.ui.command.ShowTestResults"
-             label="Show Test Results"
-             style="push">
-          <visibleWhen
-                checkEnabled="false">
-             <iterate
-                   ifEmpty="false"
-                   operator="and">
-                <instanceof
-                      value="org.eclipse.mylyn.builds.core.IBuildPlan">
-                </instanceof>
-             </iterate>
-          </visibleWhen>
-       </command>
     </menuContribution>
     <menuContribution
           locationURI="popup:org.eclipse.mylyn.builds.navigator.builds?after=group.run">
@@ -382,6 +435,96 @@
              commandId="org.eclipse.ui.file.properties"
              label="Properties"
              style="push">
+       </command>
+    </menuContribution>
+ </extension>
+ <extension
+       point="org.eclipse.ui.menus">
+    <menuContribution
+          locationURI="popup:org.eclipse.mylyn.builds.ui.menus.LastBuild?after=group.open">
+       <!--
+       <command
+             commandId="org.eclipse.mylyn.builds.ui.commands.OpenBuildElement"
+             label="Open Build with Browser"
+             style="push">
+          <parameter
+                name="element"
+                value="lastBuild">
+          </parameter>
+       </command>
+       -->
+       <command
+             commandId="org.eclipse.mylyn.builds.ui.commands.OpenBuildElementWithBrowser"
+             label="Open Build with Browser"
+             style="push">
+          <parameter
+                name="element"
+                value="lastBuild">
+          </parameter>
+       </command>
+    </menuContribution>
+    <menuContribution
+          locationURI="popup:org.eclipse.mylyn.builds.ui.menus.LastBuild?after=group.edit">
+       <menu
+             label="Copy Details">
+          <command
+                commandId="org.eclipse.mylyn.builds.ui.commands.CopyDetails"
+                label="&amp;ID"
+                style="push">
+             <parameter
+                   name="kind"
+                   value="KEY">
+             </parameter>
+             <parameter
+                   name="element"
+                   value="lastBuild">
+             </parameter>
+          </command>
+          <command
+                commandId="org.eclipse.mylyn.builds.ui.commands.CopyDetails"
+                label="&amp;URL"
+                style="push">
+             <parameter
+                   name="kind"
+                   value="URL">
+             </parameter>
+             <parameter
+                   name="element"
+                   value="lastBuild">
+             </parameter>
+          </command>
+       </menu>
+       <command
+             commandId="org.eclipse.mylyn.builds.ui.command.NewTaskFromBuild"
+             label="New Task From Build..."
+             style="push">
+       </command>
+    </menuContribution>
+    <menuContribution
+          locationURI="popup:org.eclipse.mylyn.builds.ui.menus.LastBuild?after=group.file">
+       <command
+             commandId="org.eclipse.mylyn.builds.ui.command.ShowBuildOutput"
+             label="Show Output"
+             style="push">
+          <visibleWhen
+                checkEnabled="false">
+             <test
+                   args="console"
+                   property="org.eclipse.mylyn.builds.ui.test.element.available">
+             </test>
+          </visibleWhen>
+       </command>
+       <command
+             commandId="org.eclipse.mylyn.builds.ui.command.ShowTestResults"
+             label="Show Test Results"
+             style="push">
+          <visibleWhen
+                checkEnabled="false">
+             <test
+                   args="junit"
+                   property="org.eclipse.mylyn.builds.ui.test.element.available">
+             </test>
+          </visibleWhen>
        </command>
     </menuContribution>
  </extension>
@@ -476,5 +619,46 @@
           id="org.eclipse.mylyn.builds.ui.category.Builds"
           label="Builds">
     </category>
+ </extension>
+ <extension
+       point="org.eclipse.core.expressions.propertyTesters">
+    <propertyTester
+          class="org.eclipse.mylyn.internal.builds.ui.BuildElementPropertyTester"
+          id="org.eclipse.mylyn.builds.ui.propertyTester.BuildElement"
+          namespace="org.eclipse.mylyn.builds.ui.test.element"
+          properties="available"
+          type="java.lang.Object">
+    </propertyTester>
+    <propertyTester
+          class="org.eclipse.mylyn.internal.builds.ui.BuildPlanPropertyTester"
+          id="org.eclipse.mylyn.builds.ui.propertyTester.BuildPlan"
+          namespace="org.eclipse.mylyn.builds.ui.test.plan"
+          properties="hasBuild"
+          type="org.eclipse.mylyn.builds.core.IBuildPlan">
+    </propertyTester>
+    <propertyTester
+          class="org.eclipse.mylyn.internal.builds.ui.BuildPropertyTester"
+          id="org.eclipse.mylyn.builds.ui.propertyTester.Build"
+          namespace="org.eclipse.mylyn.builds.ui.test.build"
+          properties="hasConsole,hasTests"
+          type="org.eclipse.mylyn.builds.core.IBuild">
+    </propertyTester>
+ </extension>
+ <extension
+       point="org.eclipse.core.runtime.adapters">
+    <factory
+          adaptableType="org.eclipse.mylyn.builds.core.IBuildPlan"
+          class="org.eclipse.mylyn.internal.builds.ui.BuildsAdapterFactory">
+       <adapter
+             type="org.eclipse.mylyn.builds.core.IBuild">
+       </adapter>
+    </factory>
+    <factory
+          adaptableType="org.eclipse.mylyn.builds.core.IBuildElement"
+          class="org.eclipse.mylyn.internal.builds.ui.BuildsAdapterFactory">
+       <adapter
+             type="org.eclipse.mylyn.builds.core.IBuildServer">
+       </adapter>
+    </factory>
  </extension>
 </plugin>

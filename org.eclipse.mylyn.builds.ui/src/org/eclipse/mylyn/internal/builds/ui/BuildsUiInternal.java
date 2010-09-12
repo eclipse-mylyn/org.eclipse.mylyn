@@ -12,14 +12,21 @@
 package org.eclipse.mylyn.internal.builds.ui;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.spi.BuildConnector;
@@ -35,6 +42,7 @@ import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
 import org.eclipse.mylyn.internal.builds.ui.console.BuildConsoleManager;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.handlers.HandlerUtil;
 
 /**
  * @author Steffen Pingel
@@ -212,6 +220,31 @@ public class BuildsUiInternal {
 			operationFactory = new OperationFactory(getOperationService());
 		}
 		return operationFactory;
+	}
+
+	public static List<IBuildElement> getElements(ExecutionEvent event) {
+		String selector = event.getParameter("element");
+
+		ISelection selection = HandlerUtil.getCurrentSelection(event);
+		if (selection instanceof IStructuredSelection) {
+			List items = ((IStructuredSelection) selection).toList();
+			List<IBuildElement> result = new ArrayList<IBuildElement>(items.size());
+			for (Object item : items) {
+				if (item instanceof IBuildElement) {
+					IBuildElement element = (IBuildElement) item;
+					if ("lastBuild".equals(selector)) {
+						if (element instanceof IBuildPlan) {
+							element = ((IBuildPlan) element).getLastBuild();
+						} else {
+							element = null;
+						}
+					}
+					result.add(element);
+				}
+			}
+			return result;
+		}
+		return Collections.emptyList();
 	}
 
 }

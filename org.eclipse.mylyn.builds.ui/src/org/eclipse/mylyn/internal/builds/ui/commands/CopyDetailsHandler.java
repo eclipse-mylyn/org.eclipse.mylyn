@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.internal.builds.ui.commands;
 
+import java.util.List;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -18,6 +20,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildElement;
+import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 import org.eclipse.mylyn.internal.provisional.commons.ui.ClipboardCopier;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.osgi.util.NLS;
@@ -47,8 +50,8 @@ public class CopyDetailsHandler extends AbstractHandler {
 
 	}
 
-	public static void copyDetails(IStructuredSelection selection, final Mode mode) {
-		ClipboardCopier.getDefault().copy(selection, new ClipboardCopier.TextProvider() {
+	public static void copyDetails(List<IBuildElement> elements, final Mode mode) {
+		ClipboardCopier.getDefault().copy(elements, new ClipboardCopier.TextProvider() {
 			public String getTextForElement(Object element) {
 				return getTextFor(element, mode);
 			}
@@ -124,7 +127,7 @@ public class CopyDetailsHandler extends AbstractHandler {
 					throw new ExecutionException(NLS.bind("Invalid kind ''{0}'' specified", kind));
 				}
 			}
-			copyDetails((IStructuredSelection) selection, mode);
+			copyDetails(BuildsUiInternal.getElements(event), mode);
 		}
 		return null;
 	}
