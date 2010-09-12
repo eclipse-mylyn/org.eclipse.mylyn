@@ -47,11 +47,13 @@ import org.eclipse.mylyn.commons.http.CommonHttpClient;
 import org.eclipse.mylyn.commons.http.CommonHttpMethod;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.internal.commons.http.CommonPostMethod;
+import org.eclipse.mylyn.internal.hudson.model.HudsonMavenReportersSurefireAggregatedReport;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBuild;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelHudson;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelJob;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelRun;
 import org.eclipse.mylyn.internal.hudson.model.HudsonTasksJunitTestResult;
+import org.eclipse.mylyn.internal.hudson.model.HudsonTasksTestAggregatedTestResultActionChildReport;
 import org.eclipse.osgi.util.NLS;
 import org.json.JSONException;
 import org.json.JSONWriter;
@@ -139,24 +141,36 @@ public class RestfulHudsonClient {
 		}.run();
 	}
 
-	public HudsonTasksJunitTestResult getTestReport(final HudsonModelJob job, final HudsonModelRun build,
+	public HudsonTestReport getTestReport(final HudsonModelJob job, final HudsonModelRun build,
 			final IOperationMonitor monitor) throws HudsonException {
-		return new HudsonOperation<HudsonTasksJunitTestResult>(client) {
+		return new HudsonOperation<HudsonTestReport>(client) {
 			@Override
-			public HudsonTasksJunitTestResult execute() throws IOException, HudsonException, JAXBException {
+			public HudsonTestReport execute() throws IOException, HudsonException, JAXBException {
 				//				String url = HudsonUrl.create(getBuildUrl(job, build) + "/testReport" + URL_API).exclude(
 				//						"/testResult/suite/case/stdout").exclude("/testResult/suite/case/stderr").toUrl();
 				// need to scope retrieved data due to http://issues.hudson-ci.org/browse/HUDSON-7399
-				String url = HudsonUrl
-						.create(getBuildUrl(job, build) + "/testReport" + URL_API)
-						.tree("duration,failCount,passCount,skipCount,suites[cases[className,duration,errorDetails,errorStackTrace,failedSince,name,skipped,status],duration,name,stderr,stdout]")
-						.toUrl();
+				String resultTree = "duration,failCount,passCount,skipCount,suites[cases[className,duration,errorDetails,errorStackTrace,failedSince,name,skipped,status],duration,name,stderr,stdout]";
+				String aggregatedTree = "failCount,skipCount,totalCount,childReports[child[number,url],result["
+						+ resultTree + "]]";
+				String url = HudsonUrl.create(getBuildUrl(job, build) + "/testReport" + URL_API).tree(
+						resultTree + "," + aggregatedTree).toUrl();
 				CommonHttpMethod method = createGetMethod(url);
 				try {
 					execute(method, monitor);
 					checkResponse(method);
 					InputStream in = method.getResponseBodyAsStream(monitor);
-					return unmarshal(parse(in), HudsonTasksJunitTestResult.class);
+					Element element = parse(in);
+					if ("surefireAggregatedReport".equals(element.getNodeName())) {
+						HudsonMavenReportersSurefireAggregatedReport report = unmarshal(element,
+								HudsonMavenReportersSurefireAggregatedReport.class);
+						// unmarshal nested test results
+						for (HudsonTasksTestAggregatedTestResultActionChildReport child : report.getChildReport()) {
+							child.setResult(RestfulHudsonClient.unmarshal((Node) child.getResult(),
+									HudsonTasksJunitTestResult.class));
+						}
+						return new HudsonTestReport(report);
+					}
+					return new HudsonTestReport(unmarshal(element, HudsonTasksJunitTestResult.class));
 				} finally {
 					method.releaseConnection(monitor);
 				}
@@ -343,7 +357,7 @@ public class RestfulHudsonClient {
 		getCache().setConfiguration(client.getLocation().getUrl(), configuration);
 	}
 
-	private <T> T unmarshal(Node node, Class<T> clazz) throws JAXBException {
+	public static <T> T unmarshal(Node node, Class<T> clazz) throws JAXBException {
 		JAXBContext ctx = JAXBContext.newInstance(clazz);
 		Unmarshaller unmarshaller = ctx.createUnmarshaller();
 

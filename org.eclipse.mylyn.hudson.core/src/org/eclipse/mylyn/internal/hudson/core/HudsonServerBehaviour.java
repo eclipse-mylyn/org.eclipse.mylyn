@@ -61,6 +61,7 @@ import org.eclipse.mylyn.internal.hudson.core.client.HudsonConfigurationCache;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonException;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonResourceNotFoundException;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonServerInfo;
+import org.eclipse.mylyn.internal.hudson.core.client.HudsonTestReport;
 import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient;
 import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient.BuildId;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBallColor;
@@ -73,6 +74,8 @@ import org.eclipse.mylyn.internal.hudson.model.HudsonScmChangeLogSet;
 import org.eclipse.mylyn.internal.hudson.model.HudsonTasksJunitCaseResult;
 import org.eclipse.mylyn.internal.hudson.model.HudsonTasksJunitSuiteResult;
 import org.eclipse.mylyn.internal.hudson.model.HudsonTasksJunitTestResult;
+import org.eclipse.mylyn.internal.hudson.model.HudsonTasksTestAggregatedTestResultAction;
+import org.eclipse.mylyn.internal.hudson.model.HudsonTasksTestAggregatedTestResultActionChildReport;
 import org.eclipse.osgi.util.NLS;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -115,8 +118,13 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 			HudsonModelBuild hudsonBuild = client.getBuild(job, BuildId.LAST.getBuild(), monitor);
 			IBuild build = parseBuild(hudsonBuild);
 			try {
-				HudsonTasksJunitTestResult hudsonTestReport = client.getTestReport(job, hudsonBuild, monitor);
-				ITestResult testResult = parseTestResult(hudsonTestReport);
+				HudsonTestReport hudsonTestReport = client.getTestReport(job, hudsonBuild, monitor);
+				ITestResult testResult;
+				if (hudsonTestReport.getJunitResult() != null) {
+					testResult = parseTestResult(hudsonTestReport.getJunitResult());
+				} else {
+					testResult = parseTestResult(hudsonTestReport.getAggregatedResult());
+				}
 				testResult.setBuild(build); // FIXME remove, should not be necessary
 				build.setTestResult(testResult);
 			} catch (HudsonResourceNotFoundException e) {
@@ -196,6 +204,13 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		}
 	}
 
+	private IArtifact parseArtifact(HudsonModelRunArtifact hudsonArtifact) {
+		IArtifact artifact = createArtifact();
+		artifact.setName(hudsonArtifact.getFileName());
+		artifact.setRelativePath(hudsonArtifact.getRelativePath());
+		return artifact;
+	}
+
 	private IBuild parseBuild(HudsonModelBuild hudsonBuild) {
 		IBuild build = createBuild();
 		build.setId(hudsonBuild.getId());
@@ -214,26 +229,6 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 //		}
 //		build.setChangeSet(parseChangeSet(hudsonBuild.getChangeSet()));
 		return build;
-	}
-
-	private IChangeSet parseChangeSet(HudsonScmChangeLogSet hudsonChangeSet) {
-		IChangeSet changeSet = createChangeSet();
-		changeSet.setKind(hudsonChangeSet.getKind());
-		for (Object item : changeSet.getChanges()) {
-			Node node = (Node) item;
-			// none (git), cvs, hg (Mercurial), svn
-			changeSet.getKind();
-			// changeSet.getRevisions() [S]
-			NodeList children = node.getChildNodes();
-			for (int i = 0; i < children.getLength(); i++) {
-				Element child = (Element) children.item(i);
-				String tagName = child.getTagName();
-				if ("item".equals(tagName)) { //$NON-NLS-1$
-					changeSet.getChanges().add(parseChange(child));
-				}
-			}
-		}
-		return changeSet;
 	}
 
 	private IChange parseChange(Element node) {
@@ -263,19 +258,24 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		return null;
 	}
 
-	private IArtifact parseArtifact(HudsonModelRunArtifact hudsonArtifact) {
-		IArtifact artifact = createArtifact();
-		artifact.setName(hudsonArtifact.getFileName());
-		artifact.setRelativePath(hudsonArtifact.getRelativePath());
-		return artifact;
-	}
-
-	private IUser parseUser(HudsonModelUser hudsonUser) {
-		IUser user = createUser();
-		user.setId(hudsonUser.getId());
-		user.setName(hudsonUser.getFullName());
-		user.setUrl(hudsonUser.getAbsoluteUrl());
-		return user;
+	private IChangeSet parseChangeSet(HudsonScmChangeLogSet hudsonChangeSet) {
+		IChangeSet changeSet = createChangeSet();
+		changeSet.setKind(hudsonChangeSet.getKind());
+		for (Object item : changeSet.getChanges()) {
+			Node node = (Node) item;
+			// none (git), cvs, hg (Mercurial), svn
+			changeSet.getKind();
+			// changeSet.getRevisions() [S]
+			NodeList children = node.getChildNodes();
+			for (int i = 0; i < children.getLength(); i++) {
+				Element child = (Element) children.item(i);
+				String tagName = child.getTagName();
+				if ("item".equals(tagName)) { //$NON-NLS-1$
+					changeSet.getChanges().add(parseChange(child));
+				}
+			}
+		}
+		return changeSet;
 	}
 
 	private long parseDuration(Node node) {
@@ -458,6 +458,26 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 			testSuite.setResult(testResult);
 		}
 		return testResult;
+	}
+
+	private ITestResult parseTestResult(HudsonTasksTestAggregatedTestResultAction hudsonTestReport) {
+		ITestResult testResult = createTestResult();
+		testResult.setFailCount(hudsonTestReport.getFailCount());
+		testResult.setPassCount(hudsonTestReport.getTotalCount() - hudsonTestReport.getFailCount()
+				- hudsonTestReport.getSkipCount());
+		for (HudsonTasksTestAggregatedTestResultActionChildReport child : hudsonTestReport.getChildReport()) {
+			ITestResult childResult = parseTestResult((HudsonTasksJunitTestResult) child.getResult());
+			testResult.getSuites().addAll(childResult.getSuites());
+		}
+		return testResult;
+	}
+
+	private IUser parseUser(HudsonModelUser hudsonUser) {
+		IUser user = createUser();
+		user.setId(hudsonUser.getId());
+		user.setName(hudsonUser.getFullName());
+		user.setUrl(hudsonUser.getAbsoluteUrl());
+		return user;
 	}
 
 	@Override
