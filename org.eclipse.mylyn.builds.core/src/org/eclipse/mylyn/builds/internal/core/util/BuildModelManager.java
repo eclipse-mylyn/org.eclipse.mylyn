@@ -13,7 +13,9 @@ package org.eclipse.mylyn.builds.internal.core.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
@@ -24,6 +26,8 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
+import org.eclipse.mylyn.builds.core.IBuild;
+import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.internal.core.BuildModel;
 import org.eclipse.mylyn.builds.internal.core.BuildPackage;
@@ -86,6 +90,27 @@ public class BuildModelManager {
 	}
 
 	public void save() throws IOException {
+		// ensure that model is a consistent state
+		List<IBuildServer> servers = model.getServers();
+
+		List<IBuild> builds = new ArrayList<IBuild>();
+
+		List<IBuildPlan> danglingPlans = new ArrayList<IBuildPlan>();
+		List<IBuildPlan> plans = model.getPlans();
+		for (IBuildPlan plan : plans) {
+			if (!servers.contains(plan.getServer())) {
+				danglingPlans.add(plan);
+			} else {
+				if (plan.getLastBuild() != null) {
+					builds.add(plan.getLastBuild());
+				}
+			}
+		}
+		plans.removeAll(danglingPlans);
+
+		model.getBuilds().clear();
+		model.getBuilds().addAll(builds);
+
 		Map<Object, Object> options = new HashMap<Object, Object>();
 		options.put(XMLResource.OPTION_ENCODING, "UTF-8"); //$NON-NLS-1$
 		resource.save(options);
