@@ -204,6 +204,7 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		build.setLabel(hudsonBuild.getNumber() + ""); //$NON-NLS-1$
 		build.setDuration(hudsonBuild.getDuration());
 		build.setTimestamp(hudsonBuild.getTimestamp());
+		build.setUrl(hudsonBuild.getUrl());
 		build.setStatus(parseResult((Node) hudsonBuild.getResult()));
 		for (HudsonModelUser hudsonUser : hudsonBuild.getCulprit()) {
 			build.getCulprits().add(parseUser(hudsonUser));
