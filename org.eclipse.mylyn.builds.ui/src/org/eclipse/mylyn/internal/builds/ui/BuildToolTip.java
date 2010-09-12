@@ -11,8 +11,6 @@
 
 package org.eclipse.mylyn.internal.builds.ui;
 
-import java.io.IOException;
-import java.text.DateFormat;
 import java.util.Date;
 
 import org.eclipse.jface.layout.GridDataFactory;
@@ -25,7 +23,6 @@ import org.eclipse.mylyn.builds.core.IHealthReport;
 import org.eclipse.mylyn.builds.ui.BuildsUi;
 import org.eclipse.mylyn.builds.ui.spi.BuildConnectorUi;
 import org.eclipse.mylyn.commons.core.DateUtil;
-import org.eclipse.mylyn.commons.core.HtmlUtil;
 import org.eclipse.mylyn.internal.builds.ui.view.BuildSummaryLabelProvider;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
@@ -87,24 +84,10 @@ public class BuildToolTip extends RichToolTip {
 
 		if (data instanceof IBuildPlan) {
 			IBuildPlan plan = (IBuildPlan) data;
-			if (cell.getColumnIndex() == 0) {
-				if (plan.getDescription() != null && plan.getDescription().length() > 0) {
-					try {
-						addIconAndLabel(parent, null, HtmlUtil.toText(plan.getDescription()), false);
-					} catch (IOException e) {
-						// ignore
-					}
-				}
-			} else if (cell.getColumnIndex() == 1) {
-				if (plan.getLastBuild() != null) {
-					addBuild(parent, plan.getLastBuild());
-				}
-			} else if (cell.getColumnIndex() == 2) {
-				if (plan.getLastBuild() != null && plan.getLastBuild().getTimestamp() > 0) {
-					String text = DateFormat.getDateTimeInstance().format(new Date(plan.getLastBuild().getTimestamp()));
-					addIconAndLabel(parent, CommonImages.getImage(CommonImages.SCHEDULE), text);
-				}
+			if (plan.getLastBuild() != null) {
+				addBuild(parent, plan.getLastBuild());
 			}
+			addPlan(parent, plan);
 		}
 
 		if (data instanceof IBuildElement) {
@@ -118,14 +101,13 @@ public class BuildToolTip extends RichToolTip {
 	}
 
 	private void addBuild(Composite parent, IBuild build) {
-		addLabel(parent, NLS.bind("Build {0} [{1}]", build.getLabel(), build.getServer().getLabel()));
 		String text = "";
 		String time = DateUtil.getRelative(build.getTimestamp());
 		if (time.length() > 0) {
 			text = NLS.bind("Last built {0}, ", time);
 		}
 		addLabel(parent, text + NLS.bind("took {0}", DateUtil.getFormattedDurationShort(build.getDuration())));
-		addPlan(parent, build.getPlan());
+		addLabel(parent, NLS.bind("Build {0} [{1}]", build.getLabel(), build.getServer().getLabel()));
 	}
 
 	private void addPlan(Composite parent, IBuildPlan plan) {
