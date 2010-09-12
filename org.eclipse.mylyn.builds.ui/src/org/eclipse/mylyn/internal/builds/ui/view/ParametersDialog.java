@@ -18,8 +18,10 @@ import java.util.Map;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.mylyn.builds.core.IParameterDefinition;
 import org.eclipse.mylyn.builds.internal.core.BooleanParameterDefinition;
+import org.eclipse.mylyn.builds.internal.core.BuildParameterDefinition;
 import org.eclipse.mylyn.builds.internal.core.BuildPlan;
 import org.eclipse.mylyn.builds.internal.core.ChoiceParameterDefinition;
+import org.eclipse.mylyn.builds.internal.core.FileParameterDefinition;
 import org.eclipse.mylyn.builds.internal.core.PasswordParameterDefinition;
 import org.eclipse.mylyn.builds.internal.core.StringParameterDefinition;
 import org.eclipse.osgi.util.NLS;
@@ -110,27 +112,30 @@ public class ParametersDialog extends TitleAreaDialog {
 
 			control.select(0);
 			return control;
-		}
-
-		if (definition instanceof BooleanParameterDefinition) {
+		} else if (definition instanceof BooleanParameterDefinition) {
 			BooleanParameterDefinition def = (BooleanParameterDefinition) definition;
 			Button control = new Button(pane, SWT.CHECK | SWT.BORDER);
 			control.setSelection(def.isDefaultValue());
 			return control;
-		}
-
-		if (definition instanceof StringParameterDefinition) {
+		} else if (definition instanceof StringParameterDefinition) {
 			StringParameterDefinition def = (StringParameterDefinition) definition;
 			Text control = new Text(pane, SWT.BORDER);
 			control.setText(def.getDefaultValue());
 			return control;
-		}
-
-		if (definition instanceof PasswordParameterDefinition) {
+		} else if (definition instanceof PasswordParameterDefinition) {
 			PasswordParameterDefinition def = (PasswordParameterDefinition) definition;
 			Text control = new Text(pane, SWT.BORDER);
 			control.setEchoChar('*');
 			control.setText(def.getDefaultValue());
+			return control;
+		} else if (definition instanceof BuildParameterDefinition) {
+			BuildParameterDefinition def = (BuildParameterDefinition) definition;
+			Text control = new Text(pane, SWT.BORDER);
+			control.setText(def.getBuildPlanId());
+			return control;
+		} else if (definition instanceof FileParameterDefinition) {
+			FileParameterDefinition def = (FileParameterDefinition) definition;
+			Text control = new Text(pane, SWT.BORDER);
 			return control;
 		}
 
