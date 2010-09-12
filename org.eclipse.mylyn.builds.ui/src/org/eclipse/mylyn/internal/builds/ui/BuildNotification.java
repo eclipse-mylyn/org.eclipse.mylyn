@@ -16,6 +16,7 @@ import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.internal.core.BuildPackage;
 import org.eclipse.mylyn.commons.ui.notifications.AbstractNotification;
+import org.eclipse.mylyn.internal.builds.ui.view.BuildLabelProvider;
 import org.eclipse.mylyn.internal.builds.ui.view.BuildsView;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.osgi.util.NLS;
@@ -71,7 +72,9 @@ public class BuildNotification extends AbstractNotification {
 
 	@Override
 	public Image getNotificationImage() {
-		// ignore
+		if (element instanceof IBuildPlan) {
+			return CommonImages.getImage(BuildLabelProvider.getImageDescriptor((IBuildPlan) element));
+		}
 		return null;
 	}
 

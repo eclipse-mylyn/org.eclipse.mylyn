@@ -81,7 +81,7 @@ public class BuildLabelProvider extends LabelProvider implements IStyledLabelPro
 		return null;
 	}
 
-	private ImageDescriptor getImageDescriptor(IBuildPlan element) {
+	public static ImageDescriptor getImageDescriptor(IBuildPlan element) {
 		BuildStatus status = (element).getStatus();
 		if (status == BuildStatus.SUCCESS) {
 			return BuildImages.STATUS_PASSED;
