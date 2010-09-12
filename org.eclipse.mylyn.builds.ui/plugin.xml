@@ -309,6 +309,12 @@
                    value="URL">
              </parameter>
           </command>
+          <visibleWhen
+                checkEnabled="false">
+             <iterate
+                   ifEmpty="false">
+             </iterate>
+          </visibleWhen>
        </menu>
     </menuContribution>
     <menuContribution
