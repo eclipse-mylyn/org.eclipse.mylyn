@@ -300,8 +300,8 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		tree.setHeaderVisible(true);
 
 		TreeViewerColumn buildViewerColumn = new TreeViewerColumn(viewer, SWT.LEFT);
-		buildViewerColumn.setLabelProvider(new DecoratingStyledCellLabelProvider(new BuildLabelProvider(), PlatformUI
-				.getWorkbench().getDecoratorManager().getLabelDecorator(), null));
+		buildViewerColumn.setLabelProvider(new DecoratingStyledCellLabelProvider(new BuildLabelProvider(true),
+				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator(), null));
 		TreeColumn buildColumn = buildViewerColumn.getColumn();
 		buildColumn.setText("Build");
 		buildColumn.setWidth(220);

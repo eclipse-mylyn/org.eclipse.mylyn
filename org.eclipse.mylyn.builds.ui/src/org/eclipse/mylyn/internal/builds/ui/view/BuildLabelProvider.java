@@ -43,7 +43,21 @@ public class BuildLabelProvider extends LabelProvider implements IStyledLabelPro
 		}
 	};
 
+	private final boolean decorateOperations;
+
+	public BuildLabelProvider(boolean decorateOperations) {
+		this.decorateOperations = decorateOperations;
+	}
+
+	public BuildLabelProvider() {
+		this(false);
+	}
+
 	public Font getFont(Object element) {
+		if (!decorateOperations) {
+			return null;
+		}
+
 		if (element instanceof IBuildElement) {
 			if (((IBuildElement) element).getOperations().size() > 0) {
 				return CommonFonts.ITALIC;
