@@ -517,10 +517,14 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 				String description = hudsonHealthReport.getDescription();
 				if (description != null) {
 					if (hudsonHealthReport.getDescription().startsWith("Test Result: ")) {
-						testResult = description.substring(13);
+						if (testResult == null) {
+							testResult = description.substring(13);
+						}
 					} else if (hudsonHealthReport.getDescription().startsWith("Build stability: ")) {
-						buildResult = description.substring(17);
-					} else {
+						if (buildResult == null) {
+							buildResult = description.substring(17);
+						}
+					} else if (result == null) {
 						int i = description.indexOf(": ");
 						if (i != -1) {
 							result = description.substring(i + 2);
