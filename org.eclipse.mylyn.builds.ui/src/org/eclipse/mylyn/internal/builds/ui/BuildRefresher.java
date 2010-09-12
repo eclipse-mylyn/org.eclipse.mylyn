@@ -32,6 +32,7 @@ public class BuildRefresher implements IPropertyChangeListener {
 
 		public RefreshJob() {
 			super("Background Builds Refresh");
+			setUser(false);
 		}
 
 		@Override
