@@ -12,7 +12,6 @@
 package org.eclipse.mylyn.internal.builds.ui.view;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Set;
@@ -358,18 +357,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 	private void fillLocalToolBar(IToolBarManager manager) {
 		manager.add(new NewBuildServerMenuAction());
 
-		RefreshAction refresh = new RefreshAction() {
-			@Override
-			public void run() {
-				super.run();
-				// TODO remove
-				try {
-					BuildsUiInternal.save();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			};
-		};
+		RefreshAction refresh = new RefreshAction();
 		manager.add(refresh);
 
 		manager.add(new Separator());
