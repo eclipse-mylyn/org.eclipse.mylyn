@@ -31,6 +31,8 @@
 	</target>
 
 	<target name="heartbeat-helper" depends="clean-build,clean-tests,clean-results">
+		<delete file="${build.timestamp}"/>
+
 		<property name="skipFetch" value="true"/>
 		<property name="localBuild" value="true"/>
 		<property name="build.dependencies" value="orbit-dependencies.zip"/>
