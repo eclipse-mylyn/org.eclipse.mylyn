@@ -51,8 +51,9 @@ public class MediaWikiLanguageTest extends TestCase {
 		String html = parser.parseToHtml("first para<br/>\nfirst para line2\n\nsecond para\n\nthird para");
 		TestUtil.println(html);
 		assertTrue(Pattern.compile(
-				"<body><p>first para<br/>\\s*first para line2</p><p>second para</p><p>third para</p></body>").matcher(
-				html).find());
+				"<body><p>first para<br/>\\s*first para line2</p><p>second para</p><p>third para</p></body>")
+				.matcher(html)
+				.find());
 	}
 
 	public void testNowiki() {
@@ -248,8 +249,9 @@ public class MediaWikiLanguageTest extends TestCase {
 		String html = parser.parseToHtml("normal para\n preformatted\n more pre\nnormal para");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(Pattern.compile(
-				"<body><p>normal para</p><pre>preformatted\\s+more pre\\s+</pre><p>normal para</p></body>").matcher(
-				html).find());
+				"<body><p>normal para</p><pre>preformatted\\s+more pre\\s+</pre><p>normal para</p></body>")
+				.matcher(html)
+				.find());
 	}
 
 	public void testPreformattedWithTag() {
@@ -298,6 +300,13 @@ public class MediaWikiLanguageTest extends TestCase {
 		String html = parser.parseToHtml("normal para <!-- test comment --> normal *foo*");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(html.contains("<body><p>normal para <!-- test comment --> normal *foo*</p></body>"));
+	}
+
+	public void testHtmlCodeWithNestedFormatting() {
+		// bug 325023
+		String html = parser.parseToHtml("<code>NonItalic=''Italic''</code>");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<p><code>NonItalic=<i>Italic</i></code></p>"));
 	}
 
 	public void testLinkInternalPageReference() {
@@ -430,6 +439,12 @@ public class MediaWikiLanguageTest extends TestCase {
 		String html = parser.parseToHtml("text text text text text text\n[[Image:Westminstpalace.jpg|150px|alt=A large clock tower and other buildings line a great river.|The Palace of Westminster]]");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(html.contains("<img width=\"150\" alt=\"A large clock tower and other buildings line a great river.\" title=\"The Palace of Westminster\" border=\"0\" src=\"Westminstpalace.jpg\"/>"));
+	}
+
+	public void testImageSimple() {
+		String html = parser.parseToHtml("[[Image:ImportFedoraGit.png]]");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<img border=\"0\" src=\"ImportFedoraGit.png\"/>"));
 	}
 
 	public void testTable() {
@@ -605,7 +620,9 @@ public class MediaWikiLanguageTest extends TestCase {
 		String html = parser.parseToHtml(markup);
 		TestUtil.println(html);
 		assertTrue(Pattern.compile("<body><p>a normal para</p><pre>preformatted\\s+p\\s+</pre><p>normal</p></body>",
-				Pattern.MULTILINE).matcher(html).find());
+				Pattern.MULTILINE)
+				.matcher(html)
+				.find());
 	}
 
 	public void testParagraphBreaksOnHeading() {
