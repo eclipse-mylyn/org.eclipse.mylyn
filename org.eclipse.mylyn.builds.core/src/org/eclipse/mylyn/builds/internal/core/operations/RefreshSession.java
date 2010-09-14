@@ -167,8 +167,8 @@ public class RefreshSession {
 	}
 
 	protected void update(RefreshRequest request, IBuildPlan oldPlan, BuildPlan newPlan, IOperationMonitor monitor) {
+		((BuildPlan) oldPlan).merge(newPlan);
 		if (isStale(oldPlan, newPlan, monitor)) {
-			((BuildPlan) oldPlan).merge(newPlan);
 			markStale(request, newPlan);
 		}
 	}
