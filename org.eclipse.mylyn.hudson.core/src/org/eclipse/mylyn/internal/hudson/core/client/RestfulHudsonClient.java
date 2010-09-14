@@ -62,6 +62,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
+import com.sun.xml.bind.v2.runtime.JAXBContextImpl.JAXBContextBuilder;
+
 /**
  * Represents the Hudson repository that is accessed through REST.
  * 
@@ -358,7 +360,9 @@ public class RestfulHudsonClient {
 	}
 
 	public static <T> T unmarshal(Node node, Class<T> clazz) throws JAXBException {
-		JAXBContext ctx = JAXBContext.newInstance(clazz);
+		// fails on Java 5, see bug 325176
+		// JAXBContext ctx = JAXBContext.newInstance(clazz);
+		JAXBContext ctx = new JAXBContextBuilder().setClasses(new Class<?>[] { clazz }).build();
 		Unmarshaller unmarshaller = ctx.createUnmarshaller();
 
 		JAXBElement<T> hudsonElement = unmarshaller.unmarshal(node, clazz);

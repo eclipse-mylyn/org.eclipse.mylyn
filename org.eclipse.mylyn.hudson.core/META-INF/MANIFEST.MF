@@ -5,8 +5,6 @@ Bundle-SymbolicName: org.eclipse.mylyn.hudson.core;singleton:=true
 Bundle-Version: 0.1.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.core.runtime;bundle-version="3.5.0",
- javax.xml.bind;bundle-version="2.2.0",
- javax.xml.stream;bundle-version="1.0.1",
  org.eclipse.emf.ecore,
  org.eclipse.mylyn.builds.core,
  org.eclipse.mylyn.commons.core;bundle-version="[3.4.0,4.0.0)",
@@ -19,4 +17,8 @@ Export-Package: org.eclipse.mylyn.internal.hudson.core;x-internal:=true,
  org.eclipse.mylyn.internal.hudson.core.client;x-internal:=true,
  org.eclipse.mylyn.internal.hudson.model;x-internal:=true
 Bundle-Activator: org.eclipse.mylyn.internal.hudson.core.HudsonCorePlugin
-Import-Package: org.json
+Import-Package: com.sun.xml.bind.v2.runtime;version="2.2.0",
+ javax.xml.bind,
+ javax.xml.bind.annotation,
+ javax.xml.stream;version="1.0.1",
+ org.json
