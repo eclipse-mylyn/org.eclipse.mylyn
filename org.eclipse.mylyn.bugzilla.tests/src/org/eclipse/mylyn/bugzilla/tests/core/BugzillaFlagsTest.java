@@ -11,13 +11,14 @@
 
 package org.eclipse.mylyn.bugzilla.tests.core;
 
-import java.util.Collection;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
@@ -34,6 +35,26 @@ public class BugzillaFlagsTest extends TestCase {
 
 	private BugzillaClient client;
 
+	private TaskAttribute flagA;
+
+	private TaskAttribute flagB;
+
+	private TaskAttribute flagC;
+
+	private TaskAttribute flagC2;
+
+	private TaskAttribute flagD;
+
+	private TaskAttribute stateA;
+
+	private TaskAttribute stateB;
+
+	private TaskAttribute stateC;
+
+	private TaskAttribute stateC2;
+
+	private TaskAttribute stateD;
+
 	@Override
 	protected void setUp() throws Exception {
 		client = BugzillaFixture.current().client();
@@ -45,45 +66,23 @@ public class BugzillaFlagsTest extends TestCase {
 		TaskData taskData = BugzillaFixture.current().getTask(taskNumber, client);
 		assertNotNull(taskData);
 
-		Collection<TaskAttribute> a = taskData.getRoot().getAttributes().values();
-		TaskAttribute flagA = null;
-		TaskAttribute flagB = null;
-		TaskAttribute flagC = null;
-		TaskAttribute flagD = null;
-		TaskAttribute stateA = null;
-		TaskAttribute stateB = null;
-		TaskAttribute stateC = null;
-		TaskAttribute stateD = null;
-		for (TaskAttribute taskAttribute : a) {
-			if (taskAttribute.getId().startsWith(BugzillaAttribute.KIND_FLAG)) {
-				TaskAttribute state = taskAttribute.getAttribute("state");
-				if (state.getMetaData().getLabel().equals("BugFlag1")) {
-					flagA = taskAttribute;
-					stateA = state;
-				} else if (state.getMetaData().getLabel().equals("BugFlag2")) {
-					flagB = taskAttribute;
-					stateB = state;
-				} else if (state.getMetaData().getLabel().equals("BugFlag3")) {
-					flagC = taskAttribute;
-					stateC = state;
-				} else if (state.getMetaData().getLabel().equals("BugFlag4")) {
-					flagD = taskAttribute;
-					stateD = state;
-				}
+		if (flagTests(taskData, true)) {
+			changeFromSpace(taskData);
+			taskData = BugzillaFixture.current().getTask(taskNumber, client);
+			if (flagTests(taskData, false)) {
+				changeToSpace(taskData);
 			}
+		} else {
+			changeToSpace(taskData);
+			taskData = BugzillaFixture.current().getTask(taskNumber, client);
+			if (flagTests(taskData, true)) {
+				changeFromSpace(taskData);
+			}
+
 		}
-		assertNotNull(flagA);
-		assertNotNull(flagB);
-		assertNotNull(flagC);
-		assertNotNull(flagD);
-		assertNotNull(stateA);
-		assertNotNull(stateB);
-		assertNotNull(stateC);
-		assertNotNull(stateD);
-		assertEquals("flagA is set(wrong precondidion)", " ", stateA.getValue());
-		assertEquals("flagB is set(wrong precondidion)", " ", stateB.getValue());
-		assertEquals("flagC is set(wrong precondidion)", " ", stateC.getValue());
-		assertEquals("flagD is set(wrong precondidion)", " ", stateD.getValue());
+	}
+
+	private void changeFromSpace(TaskData taskData) throws IOException, CoreException {
 		assertEquals(BugzillaAttribute.KIND_FLAG_TYPE + "1", flagA.getId());
 		assertEquals(BugzillaAttribute.KIND_FLAG_TYPE + "2", flagB.getId());
 		assertEquals(BugzillaAttribute.KIND_FLAG_TYPE + "5", flagC.getId());
@@ -121,73 +120,43 @@ public class BugzillaFlagsTest extends TestCase {
 		changed.add(flagD);
 
 		BugzillaFixture.current().submitTask(taskData, client);
-		taskData = BugzillaFixture.current().getTask(taskNumber, client);
-		assertNotNull(taskData);
-		a = taskData.getRoot().getAttributes().values();
-		flagA = null;
-		flagB = null;
-		flagC = null;
-		TaskAttribute flagC2 = null;
-		flagD = null;
-		stateA = null;
-		stateB = null;
-		stateC = null;
-		TaskAttribute stateC2 = null;
-		stateD = null;
-		for (TaskAttribute taskAttribute : a) {
-			if (taskAttribute.getId().startsWith(BugzillaAttribute.KIND_FLAG)) {
-				TaskAttribute state = taskAttribute.getAttribute("state");
-				if (state.getMetaData().getLabel().equals("BugFlag1")) {
-					flagA = taskAttribute;
-					stateA = state;
-				} else if (state.getMetaData().getLabel().equals("BugFlag2")) {
-					flagB = taskAttribute;
-					stateB = state;
-				} else if (state.getMetaData().getLabel().equals("BugFlag3")) {
-					if (flagC == null) {
-						flagC = taskAttribute;
-						stateC = state;
-					} else {
-						flagC2 = taskAttribute;
-						stateC2 = state;
-					}
-				} else if (state.getMetaData().getLabel().equals("BugFlag4")) {
-					flagD = taskAttribute;
-					stateD = state;
-				}
-			}
-		}
-		assertNotNull(flagA);
-		assertNotNull(flagB);
-		assertNotNull(flagC);
-		assertNotNull(flagC2);
-		assertNotNull(flagD);
-		assertNotNull(stateA);
-		assertNotNull(stateB);
-		assertNotNull(stateC);
-		assertNotNull(stateC2);
-		assertNotNull(stateD);
-		assertEquals("+", stateA.getValue());
-		assertEquals("?", stateB.getValue());
-		assertEquals("?", stateC.getValue());
-		assertEquals(" ", stateC2.getValue());
-		assertEquals("?", stateD.getValue());
-		requesteeD = flagD.getAttribute("requestee");
-		assertNotNull(requesteeD);
-		assertEquals("guest@mylyn.eclipse.org", requesteeD.getValue());
+	}
+
+	private void changeToSpace(TaskData taskData) throws IOException, CoreException {
+		Map<String, String> optionA = stateA.getOptions();
+		Map<String, String> optionB = stateB.getOptions();
+		Map<String, String> optionC = stateC.getOptions();
+		Map<String, String> optionD = stateD.getOptions();
+		assertEquals(true, optionA.containsKey(""));
+		assertEquals(false, optionA.containsKey("?"));
+		assertEquals(true, optionA.containsKey("+"));
+		assertEquals(true, optionA.containsKey("-"));
+		assertEquals(true, optionB.containsKey(""));
+		assertEquals(true, optionB.containsKey("?"));
+		assertEquals(true, optionB.containsKey("+"));
+		assertEquals(true, optionB.containsKey("-"));
+		assertEquals(true, optionC.containsKey(""));
+		assertEquals(true, optionC.containsKey("?"));
+		assertEquals(true, optionC.containsKey("+"));
+		assertEquals(true, optionC.containsKey("-"));
+		assertEquals(true, optionD.containsKey(""));
+		assertEquals(true, optionD.containsKey("?"));
+		assertEquals(true, optionD.containsKey("+"));
+		assertEquals(true, optionD.containsKey("-"));
+		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
 		stateA.setValue(" ");
-		stateB.setValue("");
+		stateB.setValue(" ");
 		stateC.setValue(" ");
-		stateD.setValue("");
+		stateD.setValue(" ");
 		changed.add(flagA);
 		changed.add(flagB);
 		changed.add(flagC);
 		changed.add(flagD);
 
 		BugzillaFixture.current().submitTask(taskData, client);
-		taskData = BugzillaFixture.current().getTask(taskNumber, client);
-		assertNotNull(taskData);
-		a = taskData.getRoot().getAttributes().values();
+	}
+
+	private boolean flagTests(TaskData taskData, boolean testSpace) {
 		flagA = null;
 		flagB = null;
 		flagC = null;
@@ -198,7 +167,8 @@ public class BugzillaFlagsTest extends TestCase {
 		stateC = null;
 		stateC2 = null;
 		stateD = null;
-		for (TaskAttribute taskAttribute : a) {
+
+		for (TaskAttribute taskAttribute : taskData.getRoot().getAttributes().values()) {
 			if (taskAttribute.getId().startsWith(BugzillaAttribute.KIND_FLAG)) {
 				TaskAttribute state = taskAttribute.getAttribute("state");
 				if (state.getMetaData().getLabel().equals("BugFlag1")) {
@@ -224,20 +194,20 @@ public class BugzillaFlagsTest extends TestCase {
 		assertNotNull(flagA);
 		assertNotNull(flagB);
 		assertNotNull(flagC);
-		assertNull(flagC2);
 		assertNotNull(flagD);
 		assertNotNull(stateA);
 		assertNotNull(stateB);
 		assertNotNull(stateC);
-		assertNull(stateC2);
 		assertNotNull(stateD);
-		assertEquals(" ", stateA.getValue());
-		assertEquals(" ", stateB.getValue());
-		assertEquals(" ", stateC.getValue());
-		assertEquals(" ", stateD.getValue());
-		requesteeD = flagD.getAttribute("requestee");
-		assertNotNull(requesteeD);
-		assertEquals("", requesteeD.getValue());
-	}
+		TaskAttribute requesteeD = flagD.getAttribute("requestee");
 
+		if (testSpace) {
+			return flagC2 == null && stateC2 == null && " ".equals(stateA.getValue()) && " ".equals(stateB.getValue())
+					&& " ".equals(stateC.getValue()) && " ".equals(stateD.getValue());
+		} else {
+			return flagC2 != null && stateC2 != null && "+".equals(stateA.getValue()) && "?".equals(stateB.getValue())
+					&& "?".equals(stateC.getValue()) && " ".equals(stateC2.getValue()) && "?".equals(stateD.getValue())
+					&& "guest@mylyn.eclipse.org".equals(requesteeD.getValue());
+		}
+	}
 }
