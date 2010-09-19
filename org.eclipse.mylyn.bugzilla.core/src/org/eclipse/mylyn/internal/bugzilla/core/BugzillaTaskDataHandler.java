@@ -514,6 +514,8 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 					String defaultMilestone = repositoryConfiguration.getDefaultMilestones(product);
 					if (defaultMilestone != null) {
 						attributeTargetMilestone.setValue(defaultMilestone);
+					} else {
+						attributeTargetMilestone.setValue(optionValues.get(0));
 					}
 				} else {
 					attributeTargetMilestone.setValue(optionValues.get(0));
