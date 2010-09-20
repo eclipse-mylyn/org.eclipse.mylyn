@@ -1,0 +1,23 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Ckeditor Integration Bundle (Incubation)
+Bundle-SymbolicName: org.eclipse.mylyn.htmltext
+Bundle-Version: 0.0.1.qualifier
+Bundle-Activator: org.eclipse.mylyn.htmltext.HtmlTextActivator
+Bundle-Vendor: Tom Seidel
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-ActivationPolicy: lazy
+Export-Package: org.eclipse.mylyn.htmltext,
+ org.eclipse.mylyn.htmltext.commands,
+ org.eclipse.mylyn.htmltext.commands.basicstyle,
+ org.eclipse.mylyn.htmltext.commands.dialog,
+ org.eclipse.mylyn.htmltext.commands.formatting,
+ org.eclipse.mylyn.htmltext.commands.indent,
+ org.eclipse.mylyn.htmltext.commands.justify,
+ org.eclipse.mylyn.htmltext.commands.list,
+ org.eclipse.mylyn.htmltext.events,
+ org.eclipse.mylyn.htmltext.listener,
+ org.eclipse.mylyn.htmltext.model
+Bundle-ClassPath: htmltext.jar
