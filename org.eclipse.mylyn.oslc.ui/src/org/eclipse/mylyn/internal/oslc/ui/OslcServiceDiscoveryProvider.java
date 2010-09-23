@@ -149,7 +149,12 @@ public class OslcServiceDiscoveryProvider implements ITreeContentProvider {
 		}
 
 		public String getLabel(Object o) {
-			return element.toString();
+			if (element instanceof OslcServiceProvider) {
+				return ((OslcServiceProvider) element).getName();
+			} else if (element instanceof OslcServiceDescriptor) {
+				return ((OslcServiceDescriptor) element).getDescription();
+			}
+			return ""; //$NON-NLS-1$
 		}
 
 		public Object getParent(Object o) {
