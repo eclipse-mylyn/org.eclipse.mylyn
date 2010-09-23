@@ -102,24 +102,26 @@ public class OslcServiceDiscoveryProvider implements ITreeContentProvider {
 
 		public void fetchDeferredChildren(Object object, IElementCollector collector, IProgressMonitor monitor) {
 			try {
-				monitor.beginTask("Loading...", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
-				ServiceProviderCatalogWrapper wrapper = (ServiceProviderCatalogWrapper) object;
-				Object parentElement = wrapper.getServiceObject();
-				if (parentElement instanceof OslcServiceProviderCatalog) {
-					OslcServiceProviderCatalog remoteFolder = (OslcServiceProviderCatalog) parentElement;
-					List<OslcServiceProvider> providers = connector.getAvailableServices(repository,
-							remoteFolder.getUrl(), monitor);
-					for (OslcServiceProvider oslcServiceProvider : providers) {
-						collector.add(new ServiceProviderCatalogWrapper(oslcServiceProvider), monitor);
-					}
-				} else if (parentElement instanceof OslcServiceProvider) {
-					selectedPovider = (OslcServiceProvider) parentElement;
-					OslcServiceDescriptor serviceDescriptor = connector.getServiceDescriptor(repository,
-							selectedPovider, monitor);
-					collector.add(new ServiceProviderCatalogWrapper(serviceDescriptor), monitor);
+				if (!monitor.isCanceled()) {
+					monitor.beginTask("Loading...", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+					ServiceProviderCatalogWrapper wrapper = (ServiceProviderCatalogWrapper) object;
+					Object parentElement = wrapper.getServiceObject();
+					if (parentElement instanceof OslcServiceProviderCatalog) {
+						OslcServiceProviderCatalog remoteFolder = (OslcServiceProviderCatalog) parentElement;
+						List<OslcServiceProvider> providers = connector.getAvailableServices(repository,
+								remoteFolder.getUrl(), monitor);
+						for (OslcServiceProvider oslcServiceProvider : providers) {
+							collector.add(new ServiceProviderCatalogWrapper(oslcServiceProvider), monitor);
+						}
+					} else if (parentElement instanceof OslcServiceProvider) {
+						selectedPovider = (OslcServiceProvider) parentElement;
+						OslcServiceDescriptor serviceDescriptor = connector.getServiceDescriptor(repository,
+								selectedPovider, monitor);
+						collector.add(new ServiceProviderCatalogWrapper(serviceDescriptor), monitor);
 //					for (OslcCreationDialogDescriptor oslcRecordType : serviceDescriptor.getCreationDialogs()) {
 //						collector.add(new ServiceProviderCatalogWrapper(oslcRecordType), monitor);
 //					}
+					}
 				}
 			} catch (CoreException e) {
 				StatusHandler.log(new Status(IStatus.ERROR, IOslcCoreConstants.ID_PLUGIN,
@@ -147,7 +149,7 @@ public class OslcServiceDiscoveryProvider implements ITreeContentProvider {
 		}
 
 		public String getLabel(Object o) {
-			return null;
+			return element.toString();
 		}
 
 		public Object getParent(Object o) {
