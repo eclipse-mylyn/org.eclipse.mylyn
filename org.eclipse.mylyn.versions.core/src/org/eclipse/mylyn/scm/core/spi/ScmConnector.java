@@ -25,26 +25,26 @@ import org.eclipse.team.core.history.IFileRevision;
 
 public abstract class ScmConnector {
 
-	public abstract RepositoryProvider getProvider();
+	/**
+	 * Lookup a remote or local resource.
+	 */
+	public abstract Artifact getArtifact(ArtifactInfo resource, IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * Lookup a local resource.
 	 */
 	public abstract Artifact getArtifact(IResource resource, IProgressMonitor monitor) throws CoreException;
 
-	/**
-	 * Lookup a remote or local resource.
-	 */
-	public abstract Artifact getArtifact(ArtifactInfo resource, IProgressMonitor monitor) throws CoreException;
-
-	public abstract ScmRepository getRepository(IResource resource, IProgressMonitor monitor) throws CoreException;
-
-	public abstract List<ScmRepository> getRepositories(IProgressMonitor monitor) throws CoreException;
+	public abstract ChangeSet getChangeset(ScmRepository repository, IFileRevision revision, IProgressMonitor monitor)
+			throws CoreException;
 
 	public abstract List<ChangeSet> getChangeSets(ScmRepository repository, IProgressMonitor monitor)
 			throws CoreException;
 
-	public abstract ChangeSet getChangeset(ScmRepository repository, IFileRevision revision, IProgressMonitor monitor)
-			throws CoreException;
+	public abstract RepositoryProvider getProvider();
+
+	public abstract List<ScmRepository> getRepositories(IProgressMonitor monitor) throws CoreException;
+
+	public abstract ScmRepository getRepository(IResource resource, IProgressMonitor monitor) throws CoreException;
 
 }
