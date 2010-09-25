@@ -69,21 +69,21 @@ public class DateUtil {
 		long totalHours = totalMinutes / 60;
 
 		StringBuffer sb = new StringBuffer(8);
-		sb.append(totalHours);
 		if (totalHours < 10) {
 			sb.append("0"); //$NON-NLS-1$
 		}
+		sb.append(totalHours);
 		sb.append(":"); //$NON-NLS-1$
-		sb.append(remainderMinutes);
 		if (remainderMinutes < 10) {
 			sb.append("0"); //$NON-NLS-1$
 		}
+		sb.append(remainderMinutes);
 		if (includeSeconds) {
 			sb.append(":"); //$NON-NLS-1$
-			sb.append(remainderSeconds);
 			if (remainderSeconds < 10) {
 				sb.append("0"); //$NON-NLS-1$
 			}
+			sb.append(remainderSeconds);
 		}
 		return sb.toString();
 	}
