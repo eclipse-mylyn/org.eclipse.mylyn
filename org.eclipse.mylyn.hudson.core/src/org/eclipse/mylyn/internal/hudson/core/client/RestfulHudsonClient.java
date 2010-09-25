@@ -51,6 +51,7 @@ import org.eclipse.mylyn.internal.hudson.model.HudsonMavenReportersSurefireAggre
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBuild;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelHudson;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelJob;
+import org.eclipse.mylyn.internal.hudson.model.HudsonModelProject;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelRun;
 import org.eclipse.mylyn.internal.hudson.model.HudsonTasksJunitTestResult;
 import org.eclipse.mylyn.internal.hudson.model.HudsonTasksTestAggregatedTestResultActionChildReport;
@@ -124,6 +125,31 @@ public class RestfulHudsonClient {
 		}
 	}
 
+	public List<HudsonModelRun> getBuilds(final HudsonModelJob job, final IOperationMonitor monitor)
+			throws HudsonException {
+		return new HudsonOperation<List<HudsonModelRun>>(client) {
+			@Override
+			public List<HudsonModelRun> execute() throws IOException, HudsonException, JAXBException {
+				String url = HudsonUrl
+						.create(getJobUrl(job))
+						.depth(1)
+						.tree("builds[number,url,result,duration,timestamp,actions[causes[shortDescription],failCount,totalCount,skipCount]]")
+						.toUrl();
+				CommonHttpMethod method = createGetMethod(url);
+				try {
+					execute(method, monitor);
+					checkResponse(method);
+					InputStream in = method.getResponseBodyAsStream(monitor);
+
+					HudsonModelProject project = unmarshal(parse(in), HudsonModelProject.class);
+					return project.getBuild();
+				} finally {
+					method.releaseConnection(monitor);
+				}
+			}
+		}.run();
+	}
+
 	public HudsonModelBuild getBuild(final HudsonModelJob job, final HudsonModelRun build,
 			final IOperationMonitor monitor) throws HudsonException {
 		return new HudsonOperation<HudsonModelBuild>(client) {
@@ -154,7 +180,7 @@ public class RestfulHudsonClient {
 				String resultTree = "duration,failCount,passCount,skipCount,suites[cases[className,duration,errorDetails,errorStackTrace,failedSince,name,skipped,status],duration,name,stderr,stdout]";
 				String aggregatedTree = "failCount,skipCount,totalCount,childReports[child[number,url],result["
 						+ resultTree + "]]";
-				String url = HudsonUrl.create(getBuildUrl(job, build) + "/testReport" + URL_API).tree(
+				String url = HudsonUrl.create(getBuildUrl(job, build) + "/testReport").tree(
 						resultTree + "," + aggregatedTree).toUrl();
 				CommonHttpMethod method = createGetMethod(url);
 				try {
@@ -221,8 +247,8 @@ public class RestfulHudsonClient {
 		return new HudsonOperation<List<HudsonModelJob>>(client) {
 			@Override
 			public List<HudsonModelJob> execute() throws IOException, HudsonException, JAXBException {
-				String url = HudsonUrl.create(client.getLocation().getUrl() + URL_API).depth(1).include("/hudson/job")
-						.match("name", ids).exclude("/hudson/job/build").toUrl();
+				String url = HudsonUrl.create(client.getLocation().getUrl()).depth(1).include("/hudson/job").match(
+						"name", ids).exclude("/hudson/job/build").toUrl();
 				CommonHttpMethod method = createGetMethod(url);
 				try {
 					execute(method, monitor);

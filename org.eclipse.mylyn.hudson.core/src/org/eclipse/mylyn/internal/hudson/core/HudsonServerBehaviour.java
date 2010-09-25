@@ -56,6 +56,7 @@ import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
 import org.eclipse.mylyn.builds.core.spi.BuildServerConfiguration;
 import org.eclipse.mylyn.builds.core.spi.GetBuildsRequest;
 import org.eclipse.mylyn.builds.core.spi.GetBuildsRequest.Kind;
+import org.eclipse.mylyn.builds.core.spi.GetBuildsRequest.Scope;
 import org.eclipse.mylyn.builds.core.spi.RunBuildRequest;
 import org.eclipse.mylyn.builds.internal.core.BuildFactory;
 import org.eclipse.mylyn.builds.internal.core.util.RepositoryWebLocation;
@@ -68,10 +69,12 @@ import org.eclipse.mylyn.internal.hudson.core.client.HudsonServerInfo;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonTestReport;
 import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient;
 import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient.BuildId;
+import org.eclipse.mylyn.internal.hudson.model.HudsonModelAbstractBuild;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBallColor;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBuild;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelHealthReport;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelJob;
+import org.eclipse.mylyn.internal.hudson.model.HudsonModelRun;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelRunArtifact;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelUser;
 import org.eclipse.mylyn.internal.hudson.model.HudsonScmChangeLogSet;
@@ -114,32 +117,53 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 
 	@Override
 	public List<IBuild> getBuilds(GetBuildsRequest request, IOperationMonitor monitor) throws CoreException {
-		if (request.getKind() != Kind.LAST) {
-			throw new UnsupportedOperationException();
-		}
 		try {
-			HudsonModelJob job = createJobParameter(request.getPlan());
-			HudsonModelBuild hudsonBuild = client.getBuild(job, BuildId.LAST.getBuild(), monitor);
-			IBuild build = parseBuild(hudsonBuild);
-			try {
-				HudsonTestReport hudsonTestReport = client.getTestReport(job, hudsonBuild, monitor);
-				ITestResult testResult;
-				if (hudsonTestReport.getJunitResult() != null) {
-					testResult = parseTestResult(hudsonTestReport.getJunitResult());
+			if (request.getKind() == Kind.LAST || request.getKind() == Kind.SELECTED) {
+				HudsonModelJob job = createJobParameter(request.getPlan());
+				// FIXME this is way too complicated and brittle
+				HudsonModelBuild requestBuild;
+				if (request.getKind() == Kind.LAST) {
+					requestBuild = BuildId.LAST.getBuild();
 				} else {
-					testResult = parseTestResult(hudsonTestReport.getAggregatedResult());
+					requestBuild = new HudsonModelBuild();
+					requestBuild.setNumber(Integer.parseInt(request.getIds().iterator().next()));
 				}
-				testResult.setBuild(build); // FIXME remove, should not be necessary
-				build.setTestResult(testResult);
-			} catch (HudsonResourceNotFoundException e) {
-				// ignore
+				HudsonModelBuild hudsonBuild = client.getBuild(job, requestBuild, monitor);
+				IBuild build = parseBuild(hudsonBuild);
+				try {
+					HudsonTestReport hudsonTestReport = client.getTestReport(job, hudsonBuild, monitor);
+					ITestResult testResult;
+					if (hudsonTestReport.getJunitResult() != null) {
+						testResult = parseTestResult(hudsonTestReport.getJunitResult());
+					} else {
+						testResult = parseTestResult(hudsonTestReport.getAggregatedResult());
+					}
+					testResult.setBuild(build); // FIXME remove, should not be necessary
+					build.setTestResult(testResult);
+				} catch (HudsonResourceNotFoundException e) {
+					// ignore
+				}
+				return Collections.singletonList(build);
 			}
-			return Collections.singletonList(build);
+
+			if (request.getKind() == Kind.ALL && request.getScope() == Scope.HISTORY) {
+				HudsonModelJob job = createJobParameter(request.getPlan());
+				List<HudsonModelRun> hudsonBuilds = client.getBuilds(job, monitor);
+				ArrayList<IBuild> builds = new ArrayList<IBuild>(hudsonBuilds.size());
+				for (HudsonModelRun hudsonBuild : hudsonBuilds) {
+					builds.add(parseBuild(hudsonBuild));
+				}
+				return builds;
+			}
 		} catch (HudsonResourceNotFoundException e) {
 			return null;
 		} catch (HudsonException e) {
 			throw HudsonCorePlugin.toCoreException(e);
 		}
+
+		// unsupported kind
+		throw new UnsupportedOperationException("Unsupported request kind and scope combination: kind="
+				+ request.getKind() + ",scope=" + request.getScope());
 	}
 
 	@Override
@@ -215,7 +239,7 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		return artifact;
 	}
 
-	private IBuild parseBuild(HudsonModelBuild hudsonBuild) {
+	private IBuild parseBuild(HudsonModelRun hudsonBuild) {
 		IBuild build = createBuild();
 		build.setId(hudsonBuild.getId());
 		build.setName(hudsonBuild.getFullDisplayName());
@@ -224,15 +248,78 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		build.setDuration(hudsonBuild.getDuration());
 		build.setTimestamp(hudsonBuild.getTimestamp());
 		build.setUrl(hudsonBuild.getUrl());
+		build.setState(hudsonBuild.isBuilding() ? BuildState.RUNNING : BuildState.STOPPED);
 		build.setStatus(parseResult((Node) hudsonBuild.getResult()));
-		for (HudsonModelUser hudsonUser : hudsonBuild.getCulprit()) {
-			build.getCulprits().add(parseUser(hudsonUser));
+		build.setSummary(parseActions(hudsonBuild.getAction()));
+		if (hudsonBuild instanceof HudsonModelAbstractBuild) {
+			for (HudsonModelUser hudsonUser : ((HudsonModelAbstractBuild) hudsonBuild).getCulprit()) {
+				build.getCulprits().add(parseUser(hudsonUser));
+			}
 		}
 		for (HudsonModelRunArtifact hudsonArtifact : hudsonBuild.getArtifact()) {
 			build.getArtifacts().add(parseArtifact(hudsonArtifact));
 		}
-		build.setChangeSet(parseChangeSet(hudsonBuild.getChangeSet()));
+		if (hudsonBuild instanceof HudsonModelAbstractBuild) {
+			build.setChangeSet(parseChangeSet(((HudsonModelAbstractBuild) hudsonBuild).getChangeSet()));
+		}
 		return build;
+	}
+
+	private String parseActions(List<Object> actions) {
+		int failCount = 0;
+		int skipCount = 0;
+		int totalCount = 0;
+		StringBuffer sb = new StringBuffer();
+		for (Object action : actions) {
+			Node node = (Node) action;
+			NodeList children = node.getChildNodes();
+			for (int i = 0; i < children.getLength(); i++) {
+				Element child = (Element) children.item(i);
+				String tagName = child.getTagName();
+				try {
+					if ("cause".equals(tagName)) { //$NON-NLS-1$
+						append(sb, parseCause(child));
+					} else if ("failCount".equals(tagName)) { //$NON-NLS-1$
+						failCount = Integer.parseInt(child.getTextContent());
+					} else if ("skipCount".equals(tagName)) { //$NON-NLS-1$
+						failCount = Integer.parseInt(child.getTextContent());
+					} else if ("totalCount".equals(tagName)) { //$NON-NLS-1$
+						totalCount = Integer.parseInt(child.getTextContent());
+					}
+				} catch (NumberFormatException e) {
+					// ignore
+				}
+			}
+		}
+		if (failCount != 0 || totalCount != 0 || skipCount != 0) {
+			append(sb, NLS
+					.bind("{0} tests: {1} failed, {2} skipped", new Object[] { totalCount, failCount, skipCount }));
+		}
+		if (sb.length() > 0) {
+			return sb.toString();
+		}
+		return null;
+	}
+
+	private void append(StringBuffer sb, String text) {
+		if (text != null) {
+			if (sb.length() > 0) {
+				sb.append(", ");
+			}
+			sb.append(text);
+		}
+	}
+
+	private String parseCause(Node node) {
+		NodeList children = node.getChildNodes();
+		for (int i = 0; i < children.getLength(); i++) {
+			Element child = (Element) children.item(i);
+			String tagName = child.getTagName();
+			if ("shortDescription".equals(tagName)) { //$NON-NLS-1$
+				return child.getTextContent();
+			}
+		}
+		return null;
 	}
 
 	private IChange parseChange(Node node) {
@@ -503,6 +590,9 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 	private BuildStatus parseResult(Node node) {
 		if (node != null) {
 			String text = node.getTextContent();
+			if ("FAILURE".equals(text)) { //$NON-NLS-1$
+				return BuildStatus.FAILED;
+			}
 			try {
 				return BuildStatus.valueOf(text);
 			} catch (IllegalArgumentException e) {
