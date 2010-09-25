@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.builds.ui.view;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.internal.builds.ui.BuildImages;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
@@ -30,15 +31,16 @@ public class ShowBuildOutputAction extends BaseSelectionListenerAction {
 
 	@Override
 	protected boolean updateSelection(IStructuredSelection selection) {
-		return (selection.getFirstElement() instanceof IBuildPlan);
+		return (selection.getFirstElement() instanceof IBuildPlan || selection.getFirstElement() instanceof IBuild);
 	}
 
 	@Override
 	public void run() {
 		Object selection = getStructuredSelection().getFirstElement();
 		if (selection instanceof IBuildPlan) {
-			final IBuildPlan plan = (IBuildPlan) selection;
-			BuildsUiInternal.getConsoleManager().showConsole(plan);
+			BuildsUiInternal.getConsoleManager().showConsole((IBuildPlan) selection);
+		} else if (selection instanceof IBuild) {
+			BuildsUiInternal.getConsoleManager().showConsole((IBuild) selection);
 		}
 	}
 

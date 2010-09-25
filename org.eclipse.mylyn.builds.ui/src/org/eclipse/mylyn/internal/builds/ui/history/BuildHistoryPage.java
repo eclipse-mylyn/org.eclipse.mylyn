@@ -143,6 +143,7 @@ public class BuildHistoryPage extends HistoryPage {
 								if (builds != null) {
 									for (IBuild build : builds) {
 										build.setPlan(plan);
+										build.setServer(plan.getServer());
 									}
 									viewer.setInput(builds);
 								}
@@ -242,6 +243,7 @@ public class BuildHistoryPage extends HistoryPage {
 									if (viewer.getControl() != null && !viewer.getControl().isDisposed()) {
 										IBuild build2 = operation.getBuilds().get(0);
 										build2.setPlan(plan);
+										build2.setServer(plan.getServer());
 										BuildEditorInput input = new BuildEditorInput(build2);
 										try {
 											getSite().getPage().openEditor(input, BuildsUiConstants.ID_EDITOR_BUILDS);
