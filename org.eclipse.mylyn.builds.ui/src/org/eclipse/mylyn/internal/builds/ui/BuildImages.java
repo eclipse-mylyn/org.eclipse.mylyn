@@ -58,6 +58,8 @@ public class BuildImages {
 
 	public static final ImageDescriptor HEALTH_80 = create(T_OBJ, "weather_sun.png"); //$NON-NLS-1$
 
+	public static final ImageDescriptor CHANGE_SET = create(T_OBJ, "changeset.gif"); //$NON-NLS-1$
+
 	public static final ImageDescriptor RUN = create(T_ETOOL, "run_exc.gif"); //$NON-NLS-1$
 
 	public static final ImageDescriptor RUN_DISABLED = create(T_DTOOL, "run_exc.gif"); //$NON-NLS-1$

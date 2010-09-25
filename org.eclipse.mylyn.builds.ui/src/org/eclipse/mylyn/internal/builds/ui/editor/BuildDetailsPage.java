@@ -74,6 +74,7 @@ public class BuildDetailsPage extends BuildEditorPage {
 		parts.add(new HeaderPart());
 		parts.add(new SummaryPart());
 		parts.add(new TestResultPart());
+		parts.add(new ChangesPart());
 	}
 
 	@Override

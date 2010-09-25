@@ -442,17 +442,15 @@
        point="org.eclipse.ui.menus">
     <menuContribution
           locationURI="popup:org.eclipse.mylyn.builds.ui.menus.LastBuild?after=group.open">
-       <!--
        <command
              commandId="org.eclipse.mylyn.builds.ui.commands.OpenBuildElement"
-             label="Open Build with Browser"
+             label="Open Build"
              style="push">
           <parameter
                 name="element"
                 value="lastBuild">
           </parameter>
        </command>
-       -->
        <command
              commandId="org.eclipse.mylyn.builds.ui.commands.OpenBuildElementWithBrowser"
              label="Open Build with Browser"

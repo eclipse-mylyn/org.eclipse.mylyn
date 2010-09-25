@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.builds.ui.editor;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
@@ -23,8 +24,20 @@ public class BuildEditorInput implements IEditorInput {
 
 	private final IBuildPlan plan;
 
+	private final IBuild build;
+
 	public BuildEditorInput(IBuildPlan plan) {
 		this.plan = plan;
+		this.build = null;
+	}
+
+	public BuildEditorInput(IBuild build) {
+		this.plan = build.getPlan();
+		this.build = build;
+	}
+
+	public IBuild getBuild() {
+		return build;
 	}
 
 	public IBuildPlan getPlan() {

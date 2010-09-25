@@ -38,4 +38,5 @@ Export-Package: org.eclipse.mylyn.builds.ui,
  org.eclipse.mylyn.internal.builds.ui.console;x-internal:=true,
  org.eclipse.mylyn.internal.builds.ui.editor;x-internal:=true,
  org.eclipse.mylyn.internal.builds.ui.navigator;x-internal:=true,
+ org.eclipse.mylyn.internal.builds.ui.util;x-internal:=true,
  org.eclipse.mylyn.internal.builds.ui.view;x-internal:=true

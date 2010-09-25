@@ -18,6 +18,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.ui.BuildsUiConstants;
@@ -45,10 +46,15 @@ public class OpenHandler extends AbstractHandler {
 		List<IBuildElement> elements = BuildsUiInternal.getElements(event);
 		if (elements.size() > 0) {
 			Object item = elements.get(0);
+			BuildEditorInput input = null;
+			if (item instanceof IBuild) {
+				input = new BuildEditorInput((IBuild) item);
+			}
 			if (item instanceof IBuildPlan) {
-				IBuildPlan plan = (IBuildPlan) item;
+				input = new BuildEditorInput((IBuildPlan) item);
+			}
+			if (input != null) {
 				try {
-					BuildEditorInput input = new BuildEditorInput(plan);
 					page.openEditor(input, BuildsUiConstants.ID_EDITOR_BUILDS);
 				} catch (PartInitException e) {
 					StatusHandler.log(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,

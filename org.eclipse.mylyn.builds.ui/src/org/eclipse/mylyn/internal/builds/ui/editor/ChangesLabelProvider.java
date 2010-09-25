@@ -1,0 +1,83 @@
+/*******************************************************************************
+ * Copyright (c) 2010 Tasktop Technologies and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Tasktop Technologies - initial API and implementation
+ *******************************************************************************/
+
+package org.eclipse.mylyn.internal.builds.ui.editor;
+
+import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.jface.viewers.StyledString.Styler;
+import org.eclipse.mylyn.builds.core.IChange;
+import org.eclipse.mylyn.builds.core.IChangeArtifact;
+import org.eclipse.mylyn.builds.core.IUser;
+import org.eclipse.mylyn.internal.builds.ui.BuildImages;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.TextStyle;
+
+/**
+ * @author Steffen Pingel
+ */
+public class ChangesLabelProvider extends LabelProvider implements IStyledLabelProvider {
+
+	final Styler NO_STYLE = new Styler() {
+		@Override
+		public void applyStyles(TextStyle textStyle) {
+		}
+	};
+
+	public ChangesLabelProvider() {
+	}
+
+	@Override
+	public Image getImage(Object element) {
+		if (element instanceof IChange) {
+			return CommonImages.getImage(BuildImages.CHANGE_SET);
+		} else if (element instanceof IChangeArtifact) {
+			return CommonImages.getImage(CommonImages.FILE_PLAIN);
+		}
+		return null;
+	}
+
+	public StyledString getStyledText(Object element) {
+		String text = getText(element);
+		if (text != null) {
+			StyledString styledString = new StyledString(text);
+			if (element instanceof IChange) {
+				IUser author = ((IChange) element).getAuthor();
+				if (author != null && author.getId() != null) {
+					styledString.append("  " + author.getId(), StyledString.DECORATIONS_STYLER);
+				}
+			} else if (element instanceof IChangeArtifact) {
+				IChangeArtifact artifact = (IChangeArtifact) element;
+				StringBuilder sb = new StringBuilder();
+				if (artifact.getRevision() != null) {
+					sb.append("  " + artifact.getRevision());
+				}
+				styledString.append(sb.toString(), StyledString.DECORATIONS_STYLER);
+			}
+			return styledString;
+		}
+		return new StyledString();
+	}
+
+	@Override
+	public String getText(Object element) {
+		if (element instanceof IChange) {
+			return ((IChange) element).getMessage();
+		}
+		if (element instanceof IChangeArtifact) {
+			return ((IChangeArtifact) element).getFile();
+		}
+		return null;
+	}
+
+}
