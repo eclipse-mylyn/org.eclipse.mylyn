@@ -34,6 +34,7 @@ import java.util.List;
  * <li>{@link org.eclipse.mylyn.builds.core.IBuild#getServer <em>Server</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.core.IBuild#getTestResult <em>Test Result</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.core.IBuild#getCulprits <em>Culprits</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IBuild#getSummary <em>Summary</em>}</li>
  * </ul>
  * </p>
  * 
@@ -398,5 +399,32 @@ public interface IBuild extends IBuildElement {
 	 * @generated
 	 */
 	List<IUser> getCulprits();
+
+	/**
+	 * Returns the value of the '<em><b>Summary</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Summary</em>' attribute isn't clear, there really should be more of a description
+	 * here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Summary</em>' attribute.
+	 * @see #setSummary(String)
+	 * @generated
+	 */
+	String getSummary();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuild#getSummary <em>Summary</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Summary</em>' attribute.
+	 * @see #getSummary()
+	 * @generated
+	 */
+	void setSummary(String value);
 
 } // IBuild

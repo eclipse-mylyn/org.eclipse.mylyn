@@ -81,6 +81,10 @@ public abstract class AbstractElementOperation<T extends IBuildElement> extends 
 				}
 			});
 		}
+		schedule(jobs);
+	}
+
+	protected void schedule(List<BuildJob> jobs) {
 		getService().getScheduler().schedule(jobs);
 	}
 

@@ -14,9 +14,10 @@ package org.eclipse.mylyn.builds.core;
 /**
  * @author Steffen Pingel
  */
-// FIXME rename
+// FIXME rename class to something less confusing
 public enum BuildStatus {
 
+	// FIXME rename FAILED to FAILURE
 	FAILED, UNSTABLE, SUCCESS, DISABLED;
 
 }

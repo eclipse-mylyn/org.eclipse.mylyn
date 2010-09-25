@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildPackage.java,v 1.8 2010/09/08 03:27:17 spingel Exp $
+ * $Id: BuildPackage.java,v 1.9 2010/09/25 08:54:52 spingel Exp $
  */
 package org.eclipse.mylyn.builds.internal.core;
 
@@ -585,6 +585,16 @@ public class BuildPackage extends EPackageImpl {
 	public static final int BUILD__CULPRITS = BUILD_ELEMENT_FEATURE_COUNT + 13;
 
 	/**
+	 * The feature id for the '<em><b>Summary</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD__SUMMARY = BUILD_ELEMENT_FEATURE_COUNT + 14;
+
+	/**
 	 * The number of structural features of the '<em>Build</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -592,7 +602,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int BUILD_FEATURE_COUNT = BUILD_ELEMENT_FEATURE_COUNT + 14;
+	public static final int BUILD_FEATURE_COUNT = BUILD_ELEMENT_FEATURE_COUNT + 15;
 
 	/**
 	 * The feature id for the '<em><b>Url</b></em>' attribute.
@@ -3157,6 +3167,21 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuild#getSummary
+	 * <em>Summary</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Summary</em>'.
+	 * @see org.eclipse.mylyn.builds.core.IBuild#getSummary()
+	 * @see #getBuild()
+	 * @generated
+	 */
+	public EAttribute getBuild_Summary() {
+		return (EAttribute) buildEClass.getEStructuralFeatures().get(14);
+	}
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IChangeSet <em>Change Set</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4206,6 +4231,7 @@ public class BuildPackage extends EPackageImpl {
 		createEReference(buildEClass, BUILD__SERVER);
 		createEReference(buildEClass, BUILD__TEST_RESULT);
 		createEReference(buildEClass, BUILD__CULPRITS);
+		createEAttribute(buildEClass, BUILD__SUMMARY);
 
 		buildElementEClass = createEClass(BUILD_ELEMENT);
 		createEAttribute(buildElementEClass, BUILD_ELEMENT__URL);
@@ -4460,6 +4486,10 @@ public class BuildPackage extends EPackageImpl {
 				this.getUser(),
 				null,
 				"culprits", null, 0, -1, IBuild.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getBuild_Summary(),
+				ecorePackage.getEString(),
+				"summary", null, 0, 1, IBuild.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(buildElementEClass, IBuildElement.class,
 				"BuildElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
@@ -5082,6 +5112,15 @@ public class BuildPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EReference BUILD__CULPRITS = eINSTANCE.getBuild_Culprits();
+
+		/**
+		 * The meta object literal for the '<em><b>Summary</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute BUILD__SUMMARY = eINSTANCE.getBuild_Summary();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.BuildPlan <em>Plan</em>}'

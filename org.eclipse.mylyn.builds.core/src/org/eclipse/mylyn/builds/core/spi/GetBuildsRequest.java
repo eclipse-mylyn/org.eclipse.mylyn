@@ -11,6 +11,11 @@
 
 package org.eclipse.mylyn.builds.core.spi;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 
@@ -19,27 +24,55 @@ import org.eclipse.mylyn.builds.core.IBuildPlan;
  */
 public class GetBuildsRequest {
 
+	public enum Kind {
+		ALL, LAST, SELECTED;
+	}
+
+	public enum Scope {
+		FULL, HISTORY;
+	}
+
+	private Set<String> ids;
+
 	private final Kind kind;
 
 	private final IBuildPlan plan;
 
-	public enum Kind {
-		ALL, LAST
-	};
+	private final Scope scope;
 
-	public GetBuildsRequest(Kind kind, IBuildPlan plan) {
+	public GetBuildsRequest(IBuildPlan plan, Collection<String> ids, Scope scope) {
+		this(plan, Kind.SELECTED, Scope.FULL);
+		Assert.isNotNull(ids);
+		this.ids = Collections.unmodifiableSet(new HashSet<String>(ids));
+	}
+
+	public GetBuildsRequest(IBuildPlan plan, Kind kind) {
+		this(plan, kind, Scope.FULL);
+	}
+
+	public GetBuildsRequest(IBuildPlan plan, Kind kind, Scope scope) {
 		Assert.isNotNull(kind);
 		Assert.isNotNull(plan);
+		Assert.isNotNull(scope);
 		this.kind = kind;
 		this.plan = plan;
+		this.scope = scope;
+	}
+
+	public Set<String> getIds() {
+		return ids;
+	}
+
+	public Kind getKind() {
+		return kind;
 	}
 
 	public IBuildPlan getPlan() {
 		return plan;
 	}
 
-	public Kind getKind() {
-		return kind;
+	public Scope getScope() {
+		return scope;
 	}
 
 }

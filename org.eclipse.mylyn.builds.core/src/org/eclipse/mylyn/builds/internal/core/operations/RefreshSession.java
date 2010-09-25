@@ -74,7 +74,7 @@ public class RefreshSession {
 		request.stalePlans = Collections.synchronizedList(new ArrayList<IBuildPlan>());
 		refreshPlans(request, monitor);
 		for (IBuildPlan plan : request.stalePlans) {
-			GetBuildsRequest buildRequest = new GetBuildsRequest(Kind.LAST, plan);
+			GetBuildsRequest buildRequest = new GetBuildsRequest(plan, Kind.LAST);
 			refreshBuilds(request, buildRequest, monitor);
 		}
 	}

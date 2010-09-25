@@ -54,6 +54,7 @@ import org.eclipse.mylyn.builds.core.IUser;
  * <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getServer <em>Server</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getTestResult <em>Test Result</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getCulprits <em>Culprits</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getSummary <em>Summary</em>}</li>
  * </ul>
  * </p>
  * 
@@ -301,6 +302,28 @@ public class Build extends BuildElement implements IBuild {
 	 * @ordered
 	 */
 	protected EList<IUser> culprits;
+
+	/**
+	 * The default value of the '{@link #getSummary() <em>Summary</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getSummary()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String SUMMARY_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getSummary() <em>Summary</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getSummary()
+	 * @generated
+	 * @ordered
+	 */
+	protected String summary = SUMMARY_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -779,6 +802,29 @@ public class Build extends BuildElement implements IBuild {
 	 * 
 	 * @generated
 	 */
+	public String getSummary() {
+		return summary;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setSummary(String newSummary) {
+		String oldSummary = summary;
+		summary = newSummary;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__SUMMARY, oldSummary, summary));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -853,6 +899,8 @@ public class Build extends BuildElement implements IBuild {
 			return getTestResult();
 		case BuildPackage.BUILD__CULPRITS:
 			return getCulprits();
+		case BuildPackage.BUILD__SUMMARY:
+			return getSummary();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -911,6 +959,9 @@ public class Build extends BuildElement implements IBuild {
 			getCulprits().clear();
 			getCulprits().addAll((Collection<? extends IUser>) newValue);
 			return;
+		case BuildPackage.BUILD__SUMMARY:
+			setSummary((String) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -966,6 +1017,9 @@ public class Build extends BuildElement implements IBuild {
 		case BuildPackage.BUILD__CULPRITS:
 			getCulprits().clear();
 			return;
+		case BuildPackage.BUILD__SUMMARY:
+			setSummary(SUMMARY_EDEFAULT);
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -1007,6 +1061,8 @@ public class Build extends BuildElement implements IBuild {
 			return testResult != null;
 		case BuildPackage.BUILD__CULPRITS:
 			return culprits != null && !culprits.isEmpty();
+		case BuildPackage.BUILD__SUMMARY:
+			return SUMMARY_EDEFAULT == null ? summary != null : !SUMMARY_EDEFAULT.equals(summary);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -1039,6 +1095,8 @@ public class Build extends BuildElement implements IBuild {
 		result.append(status);
 		result.append(", label: "); //$NON-NLS-1$
 		result.append(label);
+		result.append(", summary: "); //$NON-NLS-1$
+		result.append(summary);
 		result.append(')');
 		return result.toString();
 	}
