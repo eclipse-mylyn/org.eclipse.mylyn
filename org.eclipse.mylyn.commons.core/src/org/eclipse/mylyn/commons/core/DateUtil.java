@@ -51,28 +51,46 @@ public class DateUtil {
 				+ "-" + calendar.get(Calendar.SECOND); //$NON-NLS-1$
 	}
 
-	/** Returns the time in the format: HHH:MM */
-	public static String getFormattedDurationShort(long duration) {
+	/**
+	 * Returns the time in the format: HHH:MM. If <code>includeSeconds</code> is true, the returned format is:
+	 * HHH:MM:SS.
+	 * 
+	 * @since 3.5
+	 */
+	public static String getFormattedDurationShort(long duration, boolean includeSeconds) {
 		if (duration <= 0) {
 			return "00:00"; //$NON-NLS-1$
 		}
 
-		long totalMinutes = duration / 1000 / 60;
+		long totalSeconds = duration / 1000;
+		long remainderSeconds = totalSeconds % 60;
+		long totalMinutes = totalSeconds / 60;
 		long remainderMinutes = totalMinutes % 60;
 		long totalHours = totalMinutes / 60;
 
-		String hourString = "" + totalHours; //$NON-NLS-1$
-		String minuteString = "" + remainderMinutes; //$NON-NLS-1$
-
+		StringBuffer sb = new StringBuffer(8);
+		sb.append(totalHours);
 		if (totalHours < 10) {
-			hourString = "0" + hourString; //$NON-NLS-1$
+			sb.append("0"); //$NON-NLS-1$
 		}
-
+		sb.append(":"); //$NON-NLS-1$
+		sb.append(remainderMinutes);
 		if (remainderMinutes < 10) {
-			minuteString = "0" + remainderMinutes; //$NON-NLS-1$
+			sb.append("0"); //$NON-NLS-1$
 		}
+		if (includeSeconds) {
+			sb.append(":"); //$NON-NLS-1$
+			sb.append(remainderSeconds);
+			if (remainderSeconds < 10) {
+				sb.append("0"); //$NON-NLS-1$
+			}
+		}
+		return sb.toString();
+	}
 
-		return hourString + ":" + minuteString; //$NON-NLS-1$
+	/** Returns the time in the format: HHH:MM */
+	public static String getFormattedDurationShort(long duration) {
+		return getFormattedDurationShort(duration, false);
 	}
 
 	/**
