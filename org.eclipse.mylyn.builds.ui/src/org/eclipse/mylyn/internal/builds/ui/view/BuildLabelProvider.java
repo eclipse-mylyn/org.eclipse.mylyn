@@ -109,7 +109,7 @@ public class BuildLabelProvider extends LabelProvider implements IStyledLabelPro
 			return BuildImages.STATUS_UNSTABLE;
 		} else if (status == BuildStatus.FAILED) {
 			return BuildImages.STATUS_FAILED;
-		} else if (status == BuildStatus.DISABLED) {
+		} else if (status == BuildStatus.DISABLED || status == BuildStatus.ABORTED) {
 			return BuildImages.STATUS_DISABLED;
 		}
 		return CommonImages.QUESTION;
