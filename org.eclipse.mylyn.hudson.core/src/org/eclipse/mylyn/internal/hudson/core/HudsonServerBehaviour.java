@@ -16,6 +16,8 @@ package org.eclipse.mylyn.internal.hudson.core;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -28,6 +30,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.builds.core.BuildState;
 import org.eclipse.mylyn.builds.core.BuildStatus;
+import org.eclipse.mylyn.builds.core.EditType;
 import org.eclipse.mylyn.builds.core.IArtifact;
 import org.eclipse.mylyn.builds.core.IBooleanParameterDefinition;
 import org.eclipse.mylyn.builds.core.IBuild;
@@ -35,6 +38,7 @@ import org.eclipse.mylyn.builds.core.IBuildFactory;
 import org.eclipse.mylyn.builds.core.IBuildParameterDefinition;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IChange;
+import org.eclipse.mylyn.builds.core.IChangeArtifact;
 import org.eclipse.mylyn.builds.core.IChangeSet;
 import org.eclipse.mylyn.builds.core.IChoiceParameterDefinition;
 import org.eclipse.mylyn.builds.core.IFileParameterDefinition;
@@ -224,14 +228,15 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		for (HudsonModelUser hudsonUser : hudsonBuild.getCulprit()) {
 			build.getCulprits().add(parseUser(hudsonUser));
 		}
-//		for (HudsonModelRunArtifact hudsonArtifact : hudsonBuild.getArtifact()) {
-//			build.getArtifacts().add(parseArtifact(hudsonArtifact));
-//		}
-//		build.setChangeSet(parseChangeSet(hudsonBuild.getChangeSet()));
+		for (HudsonModelRunArtifact hudsonArtifact : hudsonBuild.getArtifact()) {
+			build.getArtifacts().add(parseArtifact(hudsonArtifact));
+		}
+		build.setChangeSet(parseChangeSet(hudsonBuild.getChangeSet()));
 		return build;
 	}
 
-	private IChange parseChange(Element node) {
+	private IChange parseChange(Node node) {
+		// addedPath* [M]
 		// author [C, G, M]
 		// comment [G]
 		// date [C:2010-09-02, G:2010-08-26 17:43:17 -0700, M:1283761613.0-7200, S:2010-07-28T09:11:55.720801Z]
@@ -241,7 +246,7 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		// modifiedPath* [M]
 		// msg [C, G, M, S]
 		// node [M] (SHA1?)
-		// path*: editType, file [G]
+		// path*: editType, file [G, S]
 		// rev [M]
 		// revision [S]
 		// time [C:05:15]
@@ -251,29 +256,123 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		for (int i = 0; i < children.getLength(); i++) {
 			Element child = (Element) children.item(i);
 			String tagName = child.getTagName();
-			if ("msg".equals(tagName)) { //$NON-NLS-1$
+			if ("addedPath".equals(tagName)) { //$NON-NLS-1$
+				IChangeArtifact artifact = createChangeArtifact();
+				artifact.setFile(child.getTextContent());
+				artifact.setEditType(EditType.ADD);
+				change.getArtifacts().add(artifact);
+			} else if ("author".equals(tagName)) { //$NON-NLS-1$
+				change.setAuthor(parseUser(child));
+			} else if ("date".equals(tagName)) {
+				change.setDate(parseDate(child));
+			} else if ("file".equals(tagName)) {
+				change.getArtifacts().add(parseArtifact(child));
+			} else if ("id".equals(tagName)) {
+				change.setRevision(child.getTextContent());
+			} else if ("modifiedPath".equals(tagName)) { //$NON-NLS-1$
+				IChangeArtifact artifact = createChangeArtifact();
+				artifact.setFile(child.getTextContent());
+				artifact.setEditType(EditType.EDIT);
+				change.getArtifacts().add(artifact);
+			} else if ("msg".equals(tagName)) { //$NON-NLS-1$
 				change.setMessage(child.getTextContent());
+			} else if ("node".equals(tagName)) { //$NON-NLS-1$
+				change.setRevision(child.getTextContent());
+			} else if ("rev".equals(tagName)) {
+				change.setRevision(child.getTextContent());
+			} else if ("path".equals(tagName)) {
+				change.getArtifacts().add(parseArtifact(child));
+			} else if ("revision".equals(tagName)) {
+				change.setRevision(child.getTextContent());
+			} else if ("user".equals(tagName) && change.getAuthor() == null) {
+				IUser user = createUser();
+				user.setId(child.getTextContent());
+				change.setAuthor(user);
+			}
+		}
+		return change;
+	}
+
+	private IUser parseUser(Node node) {
+		if (node != null) {
+			IUser user = createUser();
+			NodeList children = node.getChildNodes();
+			for (int i = 0; i < children.getLength(); i++) {
+				Element child = (Element) children.item(i);
+				String tagName = child.getTagName();
+				if ("absoluteUrl".equals(tagName)) { //$NON-NLS-1$
+					user.setUrl(child.getTextContent());
+				} else if ("fullName".equals(tagName)) { //$NON-NLS-1$
+					user.setName(child.getTextContent());
+					user.setId(child.getTextContent());
+				}
+			}
+			return user;
+		}
+		return null;
+	}
+
+	private IChangeArtifact parseArtifact(Node node) {
+		IChangeArtifact artifact = createChangeArtifact();
+		NodeList children = node.getChildNodes();
+		for (int i = 0; i < children.getLength(); i++) {
+			Element child = (Element) children.item(i);
+			String tagName = child.getTagName();
+			if ("editType".equals(tagName)) { //$NON-NLS-1$
+				artifact.setEditType(parseEditType(child));
+			} else if ("file".equals(tagName)) { //$NON-NLS-1$
+				artifact.setFile(child.getTextContent());
+			} else if ("fullName".equals(tagName)) { //$NON-NLS-1$
+				artifact.setFile(child.getTextContent());
+			} else if ("revision".equals(tagName)) { //$NON-NLS-1$
+				artifact.setRevision(child.getTextContent());
+			}
+		}
+		return artifact;
+	}
+
+	private EditType parseEditType(Element node) {
+		if (node != null) {
+			String text = node.getTextContent();
+			if ("add".equals(text)) {
+				return EditType.ADD;
+			} else if ("edit".equals(text)) {
+				return EditType.EDIT;
+			}
+			if ("delete".equals(text)) {
+				return EditType.DELETE;
 			}
 		}
 		return null;
 	}
 
-	private IChangeSet parseChangeSet(HudsonScmChangeLogSet hudsonChangeSet) {
-		IChangeSet changeSet = createChangeSet();
-		changeSet.setKind(hudsonChangeSet.getKind());
-		for (Object item : changeSet.getChanges()) {
-			Node node = (Node) item;
-			// none (git), cvs, hg (Mercurial), svn
-			changeSet.getKind();
-			// changeSet.getRevisions() [S]
-			NodeList children = node.getChildNodes();
-			for (int i = 0; i < children.getLength(); i++) {
-				Element child = (Element) children.item(i);
-				String tagName = child.getTagName();
-				if ("item".equals(tagName)) { //$NON-NLS-1$
-					changeSet.getChanges().add(parseChange(child));
+	private long parseDate(Element node) {
+		if (node != null) {
+			String[] patterns = { // 
+			"yyyy-MM-dd", // cvs
+					"yyyy-MM-dd HH:mm:ss Z", // git		
+					//"1283761613.0-7200" // mercurial
+					"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'" // svn
+			};
+			String text = node.getTextContent();
+			for (String pattern : patterns) {
+				try {
+					return new SimpleDateFormat(pattern).parse(text).getTime();
+				} catch (ParseException e) {
+					// fall through
 				}
 			}
+		}
+		return 0L;
+	}
+
+	private IChangeSet parseChangeSet(HudsonScmChangeLogSet hudsonChangeSet) {
+		IChangeSet changeSet = createChangeSet();
+		// none (git), cvs, hg, svn
+		changeSet.setKind(hudsonChangeSet.getKind());
+		// changeSet.getRevisions() [S]
+		for (Object item : hudsonChangeSet.getItem()) {
+			changeSet.getChanges().add(parseChange((Node) item));
 		}
 		return changeSet;
 	}
