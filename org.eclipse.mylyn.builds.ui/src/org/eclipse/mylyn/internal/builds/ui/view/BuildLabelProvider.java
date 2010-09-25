@@ -24,7 +24,6 @@ import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
-import org.eclipse.mylyn.builds.internal.core.BuildPlan;
 import org.eclipse.mylyn.builds.internal.core.BuildServer;
 import org.eclipse.mylyn.internal.builds.ui.BuildImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
@@ -87,9 +86,10 @@ public class BuildLabelProvider extends LabelProvider implements IStyledLabelPro
 			}
 		} else if (element instanceof IBuildPlan) {
 			descriptor = getImageDescriptor(((IBuildPlan) element).getStatus());
-			bottomRightDecoration = getBottomRightDecoration((IBuildPlan) element);
+			bottomRightDecoration = getBottomRightDecoration(((IBuildPlan) element).getState());
 		} else if (element instanceof IBuild) {
-			return CommonImages.getImage(BuildLabelProvider.getImageDescriptor(((IBuild) element).getStatus()));
+			descriptor = BuildLabelProvider.getImageDescriptor(((IBuild) element).getStatus());
+			bottomRightDecoration = getBottomRightDecoration(((IBuild) element).getState());
 		}
 
 		if (descriptor != null) {
@@ -122,8 +122,8 @@ public class BuildLabelProvider extends LabelProvider implements IStyledLabelPro
 		return null;
 	}
 
-	private ImageDescriptor getBottomRightDecoration(IBuildPlan element) {
-		if (((BuildPlan) element).getState() == BuildState.RUNNING) {
+	private ImageDescriptor getBottomRightDecoration(BuildState state) {
+		if (state == BuildState.RUNNING) {
 			return BuildImages.DECORATION_RUNNING;
 		}
 		return null;
