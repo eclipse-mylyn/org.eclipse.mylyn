@@ -133,7 +133,7 @@ public class RestfulHudsonClient {
 				String url = HudsonUrl
 						.create(getJobUrl(job))
 						.depth(1)
-						.tree("builds[number,url,result,duration,timestamp,actions[causes[shortDescription],failCount,totalCount,skipCount]]")
+						.tree("builds[number,url,building,result,duration,timestamp,actions[causes[shortDescription],failCount,totalCount,skipCount]]")
 						.toUrl();
 				CommonHttpMethod method = createGetMethod(url);
 				try {
