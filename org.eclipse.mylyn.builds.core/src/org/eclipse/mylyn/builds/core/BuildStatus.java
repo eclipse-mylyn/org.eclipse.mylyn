@@ -18,6 +18,6 @@ package org.eclipse.mylyn.builds.core;
 public enum BuildStatus {
 
 	// FIXME rename FAILED to FAILURE
-	FAILED, UNSTABLE, SUCCESS, DISABLED;
+	FAILED, UNSTABLE, SUCCESS, DISABLED, ABORTED;
 
 }
