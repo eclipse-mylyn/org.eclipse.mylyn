@@ -420,6 +420,25 @@
              </iterate>
           </visibleWhen>
        </command>
+       <command
+             commandId="org.eclipse.ui.navigate.showIn"
+             label="History"
+             style="push">
+          <parameter
+                name="org.eclipse.ui.navigate.showIn.targetId"
+                value="org.eclipse.team.ui.GenericHistoryView">
+          </parameter>
+          <visibleWhen
+                checkEnabled="false">
+             <iterate
+                   ifEmpty="false"
+                   operator="and">
+                <instanceof
+                      value="org.eclipse.mylyn.builds.core.IBuildPlan">
+                </instanceof>
+             </iterate>
+          </visibleWhen>
+       </command>
     </menuContribution>
     <menuContribution
           locationURI="popup:org.eclipse.mylyn.builds.navigator.builds?after=group.refresh">
@@ -645,10 +664,27 @@
  <extension
        point="org.eclipse.core.runtime.adapters">
     <factory
+          adaptableType="org.eclipse.mylyn.internal.builds.ui.editor.BuildEditorInput"
+          class="org.eclipse.mylyn.internal.builds.ui.BuildsAdapterFactory">
+       <adapter
+             type="org.eclipse.team.ui.history.IHistoryPageSource">
+       </adapter>
+    </factory>
+    <factory
+          adaptableType="org.eclipse.mylyn.builds.core.IBuild"
+          class="org.eclipse.mylyn.internal.builds.ui.BuildsAdapterFactory">
+       <adapter
+             type="org.eclipse.team.ui.history.IHistoryPageSource">
+       </adapter>
+    </factory>
+    <factory
           adaptableType="org.eclipse.mylyn.builds.core.IBuildPlan"
           class="org.eclipse.mylyn.internal.builds.ui.BuildsAdapterFactory">
        <adapter
              type="org.eclipse.mylyn.builds.core.IBuild">
+       </adapter>
+       <adapter
+             type="org.eclipse.team.ui.history.IHistoryPageSource">
        </adapter>
     </factory>
     <factory

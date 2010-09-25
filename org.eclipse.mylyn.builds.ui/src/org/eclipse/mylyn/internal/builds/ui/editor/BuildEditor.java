@@ -98,11 +98,11 @@ public class BuildEditor extends SharedHeaderFormEditor {
 	}
 
 	private void updateHeader() {
-		IEditorInput input = getEditorInput();
+		BuildEditorInput input = getEditorInput();
 		BuildConnectorUi connectorUi = BuildsUi.getConnectorUi(plan.getServer());
 		getHeaderForm().getForm().setImage(CommonImages.getImage(connectorUi.getImageDescriptor()));
-		if (plan.getLastBuild() != null) {
-			getHeaderForm().getForm().setText(NLS.bind("Build {0}", plan.getLastBuild().getLabel()));
+		if (input.getBuild() != null) {
+			getHeaderForm().getForm().setText(NLS.bind("Build {0}", input.getBuild().getLabel()));
 		} else {
 			getHeaderForm().getForm().setText("Build");
 		}

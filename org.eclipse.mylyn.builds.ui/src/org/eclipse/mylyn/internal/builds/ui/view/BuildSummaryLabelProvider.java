@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.builds.ui.view;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.internal.builds.ui.BuildImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
@@ -32,7 +33,6 @@ public class BuildSummaryLabelProvider extends ColumnLabelProvider {
 			}
 		}
 		return null;
-
 	}
 
 	private ImageDescriptor getImageDescriptor(IBuildPlan element) {
@@ -59,6 +59,9 @@ public class BuildSummaryLabelProvider extends ColumnLabelProvider {
 	public String getText(Object element) {
 		if (element instanceof IBuildPlan) {
 			return ((IBuildPlan) element).getSummary();
+		}
+		if (element instanceof IBuild) {
+			return ((IBuild) element).getSummary();
 		}
 		return null;
 	}

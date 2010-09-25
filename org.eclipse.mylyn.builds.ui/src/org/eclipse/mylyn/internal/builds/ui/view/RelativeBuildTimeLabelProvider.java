@@ -11,20 +11,15 @@
 
 package org.eclipse.mylyn.internal.builds.ui.view;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
+import org.eclipse.mylyn.commons.core.DateUtil;
 
 /**
  * @author Steffen Pingel
  */
-public class BuildTimeLabelProvider extends ColumnLabelProvider {
-
-	DateFormat dateFormat = SimpleDateFormat.getDateTimeInstance();
+public class RelativeBuildTimeLabelProvider extends ColumnLabelProvider {
 
 	@Override
 	public String getText(Object element) {
@@ -43,7 +38,11 @@ public class BuildTimeLabelProvider extends ColumnLabelProvider {
 	protected String getText(IBuild build) {
 		long timestamp = build.getTimestamp();
 		if (timestamp != 0) {
-			return dateFormat.format(new Date(timestamp));
+			if (System.currentTimeMillis() - timestamp < 60 * 1000) {
+				return "< 1 min ago";
+			} else {
+				return DateUtil.getRelative(timestamp);
+			}
 		}
 		return null;
 	}

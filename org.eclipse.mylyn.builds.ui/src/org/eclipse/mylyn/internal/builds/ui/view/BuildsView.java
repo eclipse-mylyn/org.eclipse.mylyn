@@ -76,7 +76,9 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.part.IShowInSource;
 import org.eclipse.ui.part.IShowInTarget;
+import org.eclipse.ui.part.IShowInTargetList;
 import org.eclipse.ui.part.ShowInContext;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
@@ -314,10 +316,10 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		summaryColumn.setWidth(220);
 
 		TreeViewerColumn lastBuiltViewerColumn = new TreeViewerColumn(viewer, SWT.RIGHT);
-		lastBuiltViewerColumn.setLabelProvider(new BuildTimeLabelProvider());
-		TreeColumn statusColumn = lastBuiltViewerColumn.getColumn();
-		statusColumn.setText("Last Built");
-		statusColumn.setWidth(50);
+		lastBuiltViewerColumn.setLabelProvider(new RelativeBuildTimeLabelProvider());
+		TreeColumn lastBuiltColumn = lastBuiltViewerColumn.getColumn();
+		lastBuiltColumn.setText("Last Built");
+		lastBuiltColumn.setWidth(50);
 
 		contentProvider = new BuildContentProvider();
 		contentProvider.setSelectedOnly(true);
@@ -556,6 +558,25 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 				}
 			}
 		}
+	}
+
+	@Override
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
+		if (adapter == IShowInTargetList.class) {
+			return new IShowInTargetList() {
+				public String[] getShowInTargetIds() {
+					return new String[] { "org.eclipse.team.ui.GenericHistoryView" }; //$NON-NLS-1$
+				}
+
+			};
+		} else if (adapter == IShowInSource.class) {
+			return new IShowInSource() {
+				public ShowInContext getShowInContext() {
+					return new ShowInContext(getViewer().getInput(), getViewer().getSelection());
+				}
+			};
+		}
+		return super.getAdapter(adapter);
 	}
 
 }

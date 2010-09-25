@@ -20,6 +20,7 @@ import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.StyledString.Styler;
 import org.eclipse.mylyn.builds.core.BuildState;
 import org.eclipse.mylyn.builds.core.BuildStatus;
+import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
@@ -71,20 +72,26 @@ public class BuildLabelProvider extends LabelProvider implements IStyledLabelPro
 		ImageDescriptor descriptor = null;
 		ImageDescriptor bottomLeftDecoration = null;
 		ImageDescriptor bottomRightDecoration = null;
+
+		// bottom left decoration
 		if (element instanceof IBuildElement) {
 			bottomLeftDecoration = getBottomLeftDecoration((IBuildElement) element);
 		}
-		if (element instanceof IBuildPlan) {
-			descriptor = getImageDescriptor((IBuildPlan) element);
-			bottomRightDecoration = getBottomRightDecoration((IBuildPlan) element);
-		}
+
+		// main image
 		if (element instanceof IBuildServer) {
 			if (((IBuildServer) element).getLocation().isOffline()) {
 				descriptor = BuildImages.SERVER_DISABLED;
 			} else {
 				descriptor = BuildImages.SERVER;
 			}
+		} else if (element instanceof IBuildPlan) {
+			descriptor = getImageDescriptor(((IBuildPlan) element).getStatus());
+			bottomRightDecoration = getBottomRightDecoration((IBuildPlan) element);
+		} else if (element instanceof IBuild) {
+			return CommonImages.getImage(BuildLabelProvider.getImageDescriptor(((IBuild) element).getStatus()));
 		}
+
 		if (descriptor != null) {
 			if (bottomRightDecoration != null || bottomLeftDecoration != null) {
 				descriptor = new DecorationOverlayIcon(CommonImages.getImage(descriptor), new ImageDescriptor[] { null,
@@ -95,8 +102,7 @@ public class BuildLabelProvider extends LabelProvider implements IStyledLabelPro
 		return null;
 	}
 
-	public static ImageDescriptor getImageDescriptor(IBuildPlan element) {
-		BuildStatus status = (element).getStatus();
+	public static ImageDescriptor getImageDescriptor(BuildStatus status) {
 		if (status == BuildStatus.SUCCESS) {
 			return BuildImages.STATUS_PASSED;
 		} else if (status == BuildStatus.UNSTABLE) {

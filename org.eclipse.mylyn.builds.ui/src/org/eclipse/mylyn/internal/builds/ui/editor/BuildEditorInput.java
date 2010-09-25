@@ -7,10 +7,12 @@
  *
  * Contributors:
  *     Markus Knittig - initial API and implementation
+ *     Tasktop Technologies - improvements
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.editor;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
@@ -19,6 +21,7 @@ import org.eclipse.ui.IPersistableElement;
 
 /**
  * @author Markus Knittig
+ * @author Steffen Pingel
  */
 public class BuildEditorInput implements IEditorInput {
 
@@ -27,11 +30,14 @@ public class BuildEditorInput implements IEditorInput {
 	private final IBuild build;
 
 	public BuildEditorInput(IBuildPlan plan) {
+		Assert.isNotNull(plan);
 		this.plan = plan;
 		this.build = null;
 	}
 
 	public BuildEditorInput(IBuild build) {
+		Assert.isNotNull(build);
+		Assert.isNotNull(build.getPlan());
 		this.plan = build.getPlan();
 		this.build = build;
 	}

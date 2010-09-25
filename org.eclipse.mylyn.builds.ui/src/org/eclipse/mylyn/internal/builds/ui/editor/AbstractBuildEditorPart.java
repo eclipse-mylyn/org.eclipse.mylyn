@@ -162,7 +162,7 @@ public abstract class AbstractBuildEditorPart extends AbstractFormPart {
 	}
 
 	private IBuild getBuild() {
-		return getPlan().getLastBuild();
+		return getPage().getEditorInput().getBuild();
 	}
 
 	public Control getControl() {

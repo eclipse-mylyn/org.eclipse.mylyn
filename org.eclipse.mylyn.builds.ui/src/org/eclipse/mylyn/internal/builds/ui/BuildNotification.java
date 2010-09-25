@@ -73,7 +73,7 @@ public class BuildNotification extends AbstractNotification {
 	@Override
 	public Image getNotificationImage() {
 		if (element instanceof IBuildPlan) {
-			return CommonImages.getImage(BuildLabelProvider.getImageDescriptor((IBuildPlan) element));
+			return CommonImages.getImage(BuildLabelProvider.getImageDescriptor(((IBuildPlan) element).getStatus()));
 		}
 		return null;
 	}

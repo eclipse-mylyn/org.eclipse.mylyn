@@ -16,27 +16,33 @@ import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
+import org.eclipse.mylyn.internal.builds.ui.history.BuildHistoryPageSource;
+import org.eclipse.team.ui.history.IHistoryPageSource;
 
 /**
  * @author Steffen Pingel
  */
 public class BuildsAdapterFactory implements IAdapterFactory {
 
-	private static final Class<?>[] ADAPTER_LIST = new Class[] { IBuild.class, IBuildServer.class };
+	private static final Class<?>[] ADAPTER_LIST = new Class[] { IBuild.class, IBuildServer.class,
+			IHistoryPageSource.class };
 
 	@SuppressWarnings("rawtypes")
 	public Class[] getAdapterList() {
 		return ADAPTER_LIST;
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Object getAdapter(final Object adaptable, Class adapterType) {
-		if (adapterType == IBuild.class) {
+		if (adapterType.isAssignableFrom(IHistoryPageSource.class)) {
+			return BuildHistoryPageSource.getInstance();
+		}
+		if (adapterType.isAssignableFrom(IBuild.class)) {
 			if (adaptable instanceof IBuildPlan) {
 				return ((IBuildPlan) adaptable).getLastBuild();
 			}
 		}
-		if (adapterType == IBuildServer.class) {
+		if (adapterType.isAssignableFrom(IBuildServer.class)) {
 			if (adaptable instanceof IBuildElement) {
 				return ((IBuildElement) adaptable).getServer();
 			}

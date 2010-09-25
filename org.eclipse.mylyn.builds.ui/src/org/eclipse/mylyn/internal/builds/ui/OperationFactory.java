@@ -15,7 +15,9 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.mylyn.builds.core.IBuildElement;
+import org.eclipse.mylyn.builds.core.spi.GetBuildsRequest;
 import org.eclipse.mylyn.builds.core.spi.RunBuildRequest;
+import org.eclipse.mylyn.builds.internal.core.operations.GetBuildsOperation;
 import org.eclipse.mylyn.builds.internal.core.operations.IOperationService;
 import org.eclipse.mylyn.builds.internal.core.operations.RefreshOperation;
 import org.eclipse.mylyn.builds.internal.core.operations.RunBuildOperation;
@@ -45,6 +47,14 @@ public class OperationFactory {
 
 	public RunBuildOperation getRunBuildOperation(RunBuildRequest request) {
 		return new RunBuildOperation(service, request);
+	}
+
+	public GetBuildsOperation getGetBuildsOperation(GetBuildsRequest request) {
+		return new GetBuildsOperation(service, request);
+	}
+
+	public IOperationService getService() {
+		return service;
 	}
 
 }
