@@ -140,10 +140,12 @@ public class BuildHistoryPage extends HistoryPage {
 						public void run() {
 							if (viewer.getControl() != null && !viewer.getControl().isDisposed()) {
 								List<IBuild> builds = operation.getBuilds();
-								for (IBuild build : builds) {
-									build.setPlan(plan);
+								if (builds != null) {
+									for (IBuild build : builds) {
+										build.setPlan(plan);
+									}
+									viewer.setInput(builds);
 								}
-								viewer.setInput(builds);
 							}
 						}
 					});
