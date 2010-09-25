@@ -130,13 +130,6 @@ public class ChangesPart extends AbstractBuildEditorPart {
 	}
 
 	@Override
-	public void dispose() {
-		if (menuManager != null) {
-			getPage().getEditorSite().registerContextMenu(ID_POPUP_MENU, menuManager, viewer, true);
-		}
-	}
-
-	@Override
 	protected boolean shouldExpandOnCreate() {
 		return true;
 	}
