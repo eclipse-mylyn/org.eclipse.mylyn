@@ -22,7 +22,7 @@ import org.eclipse.ui.actions.BaseSelectionListenerAction;
  */
 public class ShowBuildOutputAction extends BaseSelectionListenerAction {
 
-	protected ShowBuildOutputAction() {
+	public ShowBuildOutputAction() {
 		super("Show Output");
 		setToolTipText("Show Build Output in Console");
 		setImageDescriptor(BuildImages.CONSOLE);

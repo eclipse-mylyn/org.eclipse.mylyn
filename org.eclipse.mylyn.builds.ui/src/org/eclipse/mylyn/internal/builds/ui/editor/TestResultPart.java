@@ -12,9 +12,12 @@
 package org.eclipse.mylyn.internal.builds.ui.editor;
 
 import org.eclipse.emf.databinding.FeaturePath;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.internal.core.BuildPackage.Literals;
+import org.eclipse.mylyn.internal.builds.ui.view.ShowTestResultsAction;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -27,8 +30,10 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  */
 public class TestResultPart extends AbstractBuildEditorPart {
 
+	private ShowTestResultsAction showTestResultsAction;
+
 	public TestResultPart() {
-		setPartName("Test Result");
+		setPartName("Test Results");
 	}
 
 	@Override
@@ -37,7 +42,7 @@ public class TestResultPart extends AbstractBuildEditorPart {
 		composite.setLayout(new GridLayout(2, false));
 
 		if (getInput(IBuild.class).getTestResult() == null) {
-			createLabel(composite, toolkit, "No test result generated.");
+			createLabel(composite, toolkit, "No test results generated.");
 		} else {
 			Label label = createLabel(composite, toolkit, "Failed:");
 			GridDataFactory.defaultsFor(label).indent(0, 0).applyTo(label);
@@ -53,6 +58,15 @@ public class TestResultPart extends AbstractBuildEditorPart {
 		}
 
 		return composite;
+	}
+
+	@Override
+	protected void fillToolBar(ToolBarManager toolBarManager) {
+		super.fillToolBar(toolBarManager);
+
+		showTestResultsAction = new ShowTestResultsAction();
+		showTestResultsAction.selectionChanged(new StructuredSelection(getInput(IBuild.class)));
+		toolBarManager.add(showTestResultsAction);
 	}
 
 	@Override
