@@ -282,7 +282,7 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 					} else if ("failCount".equals(tagName)) { //$NON-NLS-1$
 						failCount = Integer.parseInt(child.getTextContent());
 					} else if ("skipCount".equals(tagName)) { //$NON-NLS-1$
-						failCount = Integer.parseInt(child.getTextContent());
+						skipCount = Integer.parseInt(child.getTextContent());
 					} else if ("totalCount".equals(tagName)) { //$NON-NLS-1$
 						totalCount = Integer.parseInt(child.getTextContent());
 					}
