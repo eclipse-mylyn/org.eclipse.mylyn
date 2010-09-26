@@ -51,6 +51,26 @@ public interface IBuildFactory {
 	IBuild createBuild();
 
 	/**
+	 * Returns a new object of class '<em>Cause</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return a new object of class '<em>Cause</em>'.
+	 * @generated
+	 */
+	IBuildCause createBuildCause();
+
+	/**
+	 * Returns a new object of class '<em>Reference</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return a new object of class '<em>Reference</em>'.
+	 * @generated
+	 */
+	IBuildReference createBuildReference();
+
+	/**
 	 * Returns a new object of class '<em>Plan</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

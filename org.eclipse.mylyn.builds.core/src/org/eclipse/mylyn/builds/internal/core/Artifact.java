@@ -13,8 +13,8 @@ package org.eclipse.mylyn.builds.internal.core;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.mylyn.builds.core.IArtifact;
+import org.eclipse.mylyn.builds.core.IBuildServer;
 
 /**
  * <!-- begin-user-doc -->
@@ -179,6 +179,16 @@ public class Artifact extends BuildElement implements IArtifact {
 		result.append(relativePath);
 		result.append(')');
 		return result.toString();
+	}
+
+	@Override
+	public String getLabel() {
+		return getName();
+	}
+
+	@Override
+	public IBuildServer getServer() {
+		return null;
 	}
 
 } // Artifact

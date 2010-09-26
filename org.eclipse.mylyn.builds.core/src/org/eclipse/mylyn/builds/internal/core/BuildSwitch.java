@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildSwitch.java,v 1.4 2010/09/02 06:23:14 spingel Exp $
+ * $Id: BuildSwitch.java,v 1.5 2010/09/26 03:34:34 spingel Exp $
  */
 package org.eclipse.mylyn.builds.internal.core;
 
@@ -137,6 +137,20 @@ public class BuildSwitch<T> {
 			T result = caseBuild(build);
 			if (result == null)
 				result = caseBuildElement(build);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case BuildPackage.BUILD_CAUSE: {
+			IBuildCause buildCause = (IBuildCause) theEObject;
+			T result = caseBuildCause(buildCause);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case BuildPackage.BUILD_REFERENCE: {
+			IBuildReference buildReference = (IBuildReference) theEObject;
+			T result = caseBuildReference(buildReference);
 			if (result == null)
 				result = defaultCase(theEObject);
 			return result;
@@ -365,6 +379,40 @@ public class BuildSwitch<T> {
 	 * @generated
 	 */
 	public T caseBuild(IBuild object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Cause</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Cause</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseBuildCause(IBuildCause object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Reference</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Reference</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseBuildReference(IBuildReference object) {
 		return null;
 	}
 

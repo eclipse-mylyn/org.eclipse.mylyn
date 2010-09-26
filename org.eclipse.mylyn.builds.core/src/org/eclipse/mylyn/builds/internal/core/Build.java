@@ -27,6 +27,7 @@ import org.eclipse.mylyn.builds.core.BuildState;
 import org.eclipse.mylyn.builds.core.BuildStatus;
 import org.eclipse.mylyn.builds.core.IArtifact;
 import org.eclipse.mylyn.builds.core.IBuild;
+import org.eclipse.mylyn.builds.core.IBuildCause;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.IChangeSet;
@@ -55,6 +56,7 @@ import org.eclipse.mylyn.builds.core.IUser;
  * <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getTestResult <em>Test Result</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getCulprits <em>Culprits</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getSummary <em>Summary</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getCause <em>Cause</em>}</li>
  * </ul>
  * </p>
  * 
@@ -324,6 +326,17 @@ public class Build extends BuildElement implements IBuild {
 	 * @ordered
 	 */
 	protected String summary = SUMMARY_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getCause() <em>Cause</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getCause()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<IBuildCause> cause;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -825,6 +838,19 @@ public class Build extends BuildElement implements IBuild {
 	 * 
 	 * @generated
 	 */
+	public List<IBuildCause> getCause() {
+		if (cause == null) {
+			cause = new EObjectContainmentEList<IBuildCause>(IBuildCause.class, this, BuildPackage.BUILD__CAUSE);
+		}
+		return cause;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -854,6 +880,8 @@ public class Build extends BuildElement implements IBuild {
 			return basicSetTestResult(null, msgs);
 		case BuildPackage.BUILD__CULPRITS:
 			return ((InternalEList<?>) getCulprits()).basicRemove(otherEnd, msgs);
+		case BuildPackage.BUILD__CAUSE:
+			return ((InternalEList<?>) getCause()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -901,6 +929,8 @@ public class Build extends BuildElement implements IBuild {
 			return getCulprits();
 		case BuildPackage.BUILD__SUMMARY:
 			return getSummary();
+		case BuildPackage.BUILD__CAUSE:
+			return getCause();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -962,6 +992,10 @@ public class Build extends BuildElement implements IBuild {
 		case BuildPackage.BUILD__SUMMARY:
 			setSummary((String) newValue);
 			return;
+		case BuildPackage.BUILD__CAUSE:
+			getCause().clear();
+			getCause().addAll((Collection<? extends IBuildCause>) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -1020,6 +1054,9 @@ public class Build extends BuildElement implements IBuild {
 		case BuildPackage.BUILD__SUMMARY:
 			setSummary(SUMMARY_EDEFAULT);
 			return;
+		case BuildPackage.BUILD__CAUSE:
+			getCause().clear();
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -1063,6 +1100,8 @@ public class Build extends BuildElement implements IBuild {
 			return culprits != null && !culprits.isEmpty();
 		case BuildPackage.BUILD__SUMMARY:
 			return SUMMARY_EDEFAULT == null ? summary != null : !SUMMARY_EDEFAULT.equals(summary);
+		case BuildPackage.BUILD__CAUSE:
+			return cause != null && !cause.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

@@ -2,14 +2,14 @@
  * <copyright>
  * </copyright>
  *
- * $Id: User.java,v 1.3 2010/09/02 06:23:14 spingel Exp $
+ * $Id: User.java,v 1.4 2010/09/26 03:34:34 spingel Exp $
  */
 package org.eclipse.mylyn.builds.internal.core;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
+import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.IUser;
 
 /**
@@ -232,6 +232,16 @@ public class User extends BuildElement implements IUser {
 		result.append(email);
 		result.append(')');
 		return result.toString();
+	}
+
+	@Override
+	public String getLabel() {
+		return getId();
+	}
+
+	@Override
+	public IBuildServer getServer() {
+		return null;
 	}
 
 } // User

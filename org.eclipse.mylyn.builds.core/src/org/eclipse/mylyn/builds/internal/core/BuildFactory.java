@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildFactory.java,v 1.4 2010/09/02 06:23:14 spingel Exp $
+ * $Id: BuildFactory.java,v 1.5 2010/09/26 03:34:34 spingel Exp $
  */
 package org.eclipse.mylyn.builds.internal.core;
 
@@ -104,6 +104,10 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 			return (EObject) createArtifact();
 		case BuildPackage.BUILD:
 			return (EObject) createBuild();
+		case BuildPackage.BUILD_CAUSE:
+			return (EObject) createBuildCause();
+		case BuildPackage.BUILD_REFERENCE:
+			return (EObject) createBuildReference();
 		case BuildPackage.BUILD_PLAN:
 			return (EObject) createBuildPlan();
 		case BuildPackage.HEALTH_REPORT:
@@ -263,6 +267,28 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	public IBuild createBuild() {
 		Build build = new Build();
 		return build;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public IBuildCause createBuildCause() {
+		BuildCause buildCause = new BuildCause();
+		return buildCause;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public IBuildReference createBuildReference() {
+		BuildReference buildReference = new BuildReference();
+		return buildReference;
 	}
 
 	/**

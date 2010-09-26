@@ -19,7 +19,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.builds.core.IArtifact;
 import org.eclipse.mylyn.builds.core.IBuild;
+import org.eclipse.mylyn.builds.core.IBuildCause;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
+import org.eclipse.mylyn.builds.core.IBuildReference;
 import org.eclipse.mylyn.builds.core.IChange;
 import org.eclipse.mylyn.builds.core.IChangeArtifact;
 import org.eclipse.mylyn.builds.core.IChangeSet;
@@ -47,8 +49,16 @@ public abstract class BuildServerBehaviour {
 		return BuildFactory.eINSTANCE.createBuild();
 	}
 
+	protected IBuildCause createBuildCause() {
+		return BuildFactory.eINSTANCE.createBuildCause();
+	}
+
 	protected IBuildPlan createBuildPlan() {
 		return BuildFactory.eINSTANCE.createBuildPlan();
+	}
+
+	protected IBuildReference createBuildReference() {
+		return BuildFactory.eINSTANCE.createBuildReference();
 	}
 
 	protected IChange createChange() {

@@ -118,6 +118,16 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 		}
 
 		@Override
+		public Adapter caseBuildCause(IBuildCause object) {
+			return createBuildCauseAdapter();
+		}
+
+		@Override
+		public Adapter caseBuildReference(IBuildReference object) {
+			return createBuildReferenceAdapter();
+		}
+
+		@Override
 		public Adapter caseBuildElement(IBuildElement object) {
 			return createBuildElementAdapter();
 		}
@@ -348,6 +358,37 @@ public class BuildAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createBuildAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.builds.core.IBuildCause <em>Cause</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.builds.core.IBuildCause
+	 * @generated
+	 */
+	public Adapter createBuildCauseAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.builds.core.IBuildReference
+	 * <em>Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.builds.core.IBuildReference
+	 * @generated
+	 */
+	public Adapter createBuildReferenceAdapter() {
 		return null;
 	}
 

@@ -35,6 +35,7 @@ import java.util.List;
  * <li>{@link org.eclipse.mylyn.builds.core.IBuild#getTestResult <em>Test Result</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.core.IBuild#getCulprits <em>Culprits</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.core.IBuild#getSummary <em>Summary</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IBuild#getCause <em>Cause</em>}</li>
  * </ul>
  * </p>
  * 
@@ -426,5 +427,20 @@ public interface IBuild extends IBuildElement {
 	 * @generated
 	 */
 	void setSummary(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Cause</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.mylyn.builds.core.IBuildCause}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Cause</em>' containment reference list isn't clear, there really should be more of a
+	 * description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Cause</em>' containment reference list.
+	 * @generated
+	 */
+	List<IBuildCause> getCause();
 
 } // IBuild
