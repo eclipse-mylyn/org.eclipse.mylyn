@@ -20,9 +20,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -34,9 +36,11 @@ import org.eclipse.mylyn.builds.core.EditType;
 import org.eclipse.mylyn.builds.core.IArtifact;
 import org.eclipse.mylyn.builds.core.IBooleanParameterDefinition;
 import org.eclipse.mylyn.builds.core.IBuild;
+import org.eclipse.mylyn.builds.core.IBuildCause;
 import org.eclipse.mylyn.builds.core.IBuildFactory;
 import org.eclipse.mylyn.builds.core.IBuildParameterDefinition;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
+import org.eclipse.mylyn.builds.core.IBuildReference;
 import org.eclipse.mylyn.builds.core.IChange;
 import org.eclipse.mylyn.builds.core.IChangeArtifact;
 import org.eclipse.mylyn.builds.core.IChangeSet;
@@ -250,7 +254,7 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		build.setUrl(hudsonBuild.getUrl());
 		build.setState(hudsonBuild.isBuilding() ? BuildState.RUNNING : BuildState.STOPPED);
 		build.setStatus(parseResult((Node) hudsonBuild.getResult()));
-		build.setSummary(parseActions(hudsonBuild.getAction()));
+		build.setSummary(parseActions(build.getCause(), hudsonBuild.getAction()));
 		if (hudsonBuild instanceof HudsonModelAbstractBuild) {
 			for (HudsonModelUser hudsonUser : ((HudsonModelAbstractBuild) hudsonBuild).getCulprit()) {
 				build.getCulprits().add(parseUser(hudsonUser));
@@ -265,11 +269,11 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		return build;
 	}
 
-	private String parseActions(List<Object> actions) {
+	private String parseActions(List<IBuildCause> causes, List<Object> actions) {
 		int failCount = 0;
 		int skipCount = 0;
 		int totalCount = 0;
-		StringBuffer sb = new StringBuffer();
+		Set<String> causeDescriptions = new LinkedHashSet<String>();
 		for (Object action : actions) {
 			Node node = (Node) action;
 			NodeList children = node.getChildNodes();
@@ -278,7 +282,11 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 				String tagName = child.getTagName();
 				try {
 					if ("cause".equals(tagName)) { //$NON-NLS-1$
-						append(sb, parseCause(child));
+						IBuildCause cause = parseCause(child);
+						causes.add(cause);
+						if (cause.getDescription() != null) {
+							causeDescriptions.add(cause.getDescription());
+						}
 					} else if ("failCount".equals(tagName)) { //$NON-NLS-1$
 						failCount = Integer.parseInt(child.getTextContent());
 					} else if ("skipCount".equals(tagName)) { //$NON-NLS-1$
@@ -291,6 +299,10 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 				}
 			}
 		}
+		StringBuilder sb = new StringBuilder();
+		for (String string : causeDescriptions) {
+			append(sb, string);
+		}
 		if (failCount != 0 || totalCount != 0 || skipCount != 0) {
 			append(sb, NLS
 					.bind("{0} tests: {1} failed, {2} skipped", new Object[] { totalCount, failCount, skipCount }));
@@ -301,7 +313,7 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		return null;
 	}
 
-	private void append(StringBuffer sb, String text) {
+	private void append(StringBuilder sb, String text) {
 		if (text != null) {
 			if (sb.length() > 0) {
 				sb.append(", ");
@@ -310,16 +322,37 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		}
 	}
 
-	private String parseCause(Node node) {
+	private IBuildCause parseCause(Node node) {
+		IBuildCause cause = createBuildCause();
+		String userName = null;
+		String upstreamBuild = null;
+		String upstreamProject = null;
 		NodeList children = node.getChildNodes();
 		for (int i = 0; i < children.getLength(); i++) {
 			Element child = (Element) children.item(i);
 			String tagName = child.getTagName();
 			if ("shortDescription".equals(tagName)) { //$NON-NLS-1$
-				return child.getTextContent();
+				cause.setDescription(child.getTextContent());
+			} else if ("userName".equals(tagName)) { //$NON-NLS-1$
+				userName = child.getTextContent();
+			} else if ("upstreamProject".equals(tagName)) { //$NON-NLS-1$
+				upstreamProject = child.getTextContent();
+			} else if ("upstreamBuild".equals(tagName)) { //$NON-NLS-1$
+				upstreamBuild = child.getTextContent();
 			}
 		}
-		return null;
+		if (userName != null) {
+			IUser user = createUser();
+			user.setId(userName);
+			cause.setUser(user);
+		}
+		if (upstreamProject != null && upstreamBuild != null) {
+			IBuildReference reference = createBuildReference();
+			reference.setPlan(upstreamProject);
+			reference.setBuild(upstreamBuild);
+			cause.setBuild(reference);
+		}
+		return cause;
 	}
 
 	private IChange parseChange(Node node) {
@@ -502,6 +535,7 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 			build.setUrl(job.getLastBuild().getUrl());
 			plan.setLastBuild(build);
 		}
+		// TODO parse up/down stream projects from HudsonModelAbstractProject
 		return plan;
 	}
 
