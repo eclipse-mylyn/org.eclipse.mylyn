@@ -7,7 +7,7 @@
       <sink
             class="org.eclipse.mylyn.internal.commons.ui.notifications.popup.PopupNotificationSink"
             id="org.eclipse.mylyn.commons.notifications.sink.Popup"
-            label="Popup">
+            label="Desktop Popup">
       </sink>
    </extension>
    <extension

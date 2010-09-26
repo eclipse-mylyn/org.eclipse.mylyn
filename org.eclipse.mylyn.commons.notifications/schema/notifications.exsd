@@ -3,7 +3,7 @@
 <schema targetNamespace="org.eclipse.mylyn.commons.notificaitons" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appinfo>
-         <meta.schema plugin="org.eclipse.mylyn.commons.notificaitons" id="notifications" name="Noifications"/>
+         <meta.schema plugin="org.eclipse.mylyn.commons.notificaitons" id="notifications" name="Notifications"/>
       </appinfo>
       <documentation>
          [Enter description of this extension point.]
