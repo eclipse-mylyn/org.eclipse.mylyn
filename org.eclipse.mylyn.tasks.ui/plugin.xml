@@ -2014,6 +2014,7 @@
              id="org.eclipse.mylyn.tasks.ui.wizard.NewTaskRepository">
        </primaryWizard>
     </extension>
+    <!--
     <extension
           point="org.eclipse.mylyn.commons.notifications.notifications">
        <category
@@ -2032,4 +2033,5 @@
              label="Task Changed">
        </event>
     </extension>
+    -->
 </plugin>
