@@ -205,13 +205,11 @@ public class RepositoryLocation extends PlatformObject {
 	 * The username is cached since it needs to be retrieved frequently (e.g. for Task List decoration).
 	 */
 	public String getUserName() {
-		// NOTE: if anonymous, user name is "" string so we won't go to keyring
-		if (!isCachedUserName) {
-			// do not open secure store for username to avoid prompting user for password during initialization 
-			cachedUserName = getProperty(getKeyPrefix(AuthenticationType.REPOSITORY) + USERNAME);
-			isCachedUserName = true;
-		}
-		return cachedUserName;
+		return getProperty(PROPERTY_USERNAME);
+	}
+
+	public void setUserName(String userName) {
+		setProperty(PROPERTY_USERNAME, userName);
 	}
 
 	private void handlePropertyChange(String key, Object old, Object value) {
@@ -257,6 +255,9 @@ public class RepositoryLocation extends PlatformObject {
 		String prefix = getKeyPrefix(authType);
 
 		if (credentials == null) {
+			if (authType == AuthenticationType.REPOSITORY) {
+				cachedUserName = null;
+			}
 			setProperty(prefix + ENABLED, String.valueOf(false));
 		} else {
 			setProperty(prefix + ENABLED, String.valueOf(true));
@@ -319,7 +320,6 @@ public class RepositoryLocation extends PlatformObject {
 			setProperty(key, null);
 		}
 
-		setProperty(PROPERTY_ID, getUrl());
 		String newId = getProperty(PROPERTY_ID);
 		if (newId != null) {
 			// migrate credentials if url has changed
@@ -345,6 +345,14 @@ public class RepositoryLocation extends PlatformObject {
 			}
 		}
 
+	}
+
+	public void setIdPreservingCredentialsStore(String id) {
+		ICredentialsStore store = getCredentialsStore();
+		setProperty(RepositoryLocation.PROPERTY_ID, id);
+		if (this.credentialsStore == null) {
+			setCredentialsStore(store);
+		}
 	}
 
 }
