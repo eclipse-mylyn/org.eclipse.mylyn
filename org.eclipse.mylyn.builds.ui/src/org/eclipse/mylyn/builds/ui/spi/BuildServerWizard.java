@@ -93,6 +93,7 @@ public class BuildServerWizard extends Wizard implements INewWizard {
 	@Override
 	public boolean performFinish() {
 		((BuildServer) getModel()).applyToOriginal();
+		getModel().getLocation().setIdPreservingCredentialsStore(getModel().getLocation().getUrl());
 		original.getLocation().apply(getModel().getLocation());
 		if (isNew()) {
 			BuildsUiInternal.getModel().getServers().add(original);
