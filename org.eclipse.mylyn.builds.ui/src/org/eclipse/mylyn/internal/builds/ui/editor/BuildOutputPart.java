@@ -14,13 +14,14 @@ package org.eclipse.mylyn.internal.builds.ui.editor;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.builds.core.IBuild;
-import org.eclipse.mylyn.internal.builds.ui.view.ShowBuildOutputAction;
+import org.eclipse.mylyn.internal.builds.ui.actions.ShowBuildOutputAction;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 
@@ -34,7 +35,9 @@ public class BuildOutputPart extends AbstractBuildEditorPart {
 	private ShowBuildOutputAction buildOutputAction;
 
 	public BuildOutputPart() {
+		super(ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED);
 		setPartName("Output");
+		this.span = 2;
 	}
 
 	@Override
@@ -67,11 +70,6 @@ public class BuildOutputPart extends AbstractBuildEditorPart {
 		super.fillToolBar(toolBarManager);
 
 		toolBarManager.add(buildOutputAction);
-	}
-
-	@Override
-	protected boolean shouldExpandOnCreate() {
-		return true;
 	}
 
 }

@@ -9,7 +9,7 @@
  *     Markus Knittig - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.builds.ui.view;
+package org.eclipse.mylyn.internal.builds.ui.actions;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.builds.core.IBuild;
@@ -31,7 +31,16 @@ public class ShowTestResultsAction extends BaseSelectionListenerAction {
 
 	@Override
 	protected boolean updateSelection(IStructuredSelection selection) {
-		return (selection.getFirstElement() instanceof IBuildPlan || selection.getFirstElement() instanceof IBuild);
+		if (selection.getFirstElement() instanceof IBuildPlan) {
+			return isEnabled(((IBuildPlan) selection.getFirstElement()).getLastBuild());
+		} else if (selection.getFirstElement() instanceof IBuild) {
+			return isEnabled((IBuild) selection.getFirstElement());
+		}
+		return false;
+	}
+
+	private boolean isEnabled(IBuild build) {
+		return build != null && build.getTestResult() != null;
 	}
 
 	@Override

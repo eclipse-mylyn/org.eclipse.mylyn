@@ -61,7 +61,7 @@ public class BuildDetailsPage extends BuildEditorPage {
 			getManagedForm().addPart(part);
 			Control control = part.createControl(body, toolkit);
 			part.setControl(control);
-			int span = (part instanceof HeaderPart) ? 2 : 1;
+			int span = part.getSpan();
 			GridDataFactory.fillDefaults().grab(true, false).span(span, 1).applyTo(part.getControl());
 		}
 	}
@@ -74,8 +74,8 @@ public class BuildDetailsPage extends BuildEditorPage {
 		parts.add(new HeaderPart());
 		parts.add(new SummaryPart());
 		parts.add(new TestResultPart());
-		parts.add(new ChangesPart());
 		parts.add(new ArtifactsPart());
+		parts.add(new ChangesPart());
 		parts.add(new BuildOutputPart());
 	}
 

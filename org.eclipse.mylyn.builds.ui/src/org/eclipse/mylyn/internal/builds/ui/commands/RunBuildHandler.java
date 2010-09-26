@@ -17,7 +17,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
-import org.eclipse.mylyn.internal.builds.ui.view.RunBuildAction;
+import org.eclipse.mylyn.internal.builds.ui.actions.RunBuildAction;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 /**

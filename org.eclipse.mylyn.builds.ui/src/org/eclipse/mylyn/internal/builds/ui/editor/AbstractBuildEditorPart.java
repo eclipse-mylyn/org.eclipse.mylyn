@@ -28,6 +28,7 @@ import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -56,7 +57,20 @@ public abstract class AbstractBuildEditorPart extends AbstractFormPart {
 
 	private Section section;
 
+	private final int sectionStyle;
+
+	int span = 1;
+
 	public AbstractBuildEditorPart() {
+		this(ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE);
+	}
+
+	public AbstractBuildEditorPart(int sectionStyle) {
+		this.sectionStyle = sectionStyle;
+	}
+
+	protected Binding bind(Text text, Class<? extends IBuildElement> clazz, EStructuralFeature feature) {
+		return bind(text, clazz, FeaturePath.fromList(feature));
 	}
 
 	protected Binding bind(Text text, Class<? extends IBuildElement> clazz, FeaturePath path) {
@@ -78,16 +92,11 @@ public abstract class AbstractBuildEditorPart extends AbstractFormPart {
 		return getPage().getDataBindingContext().bindValue(uiObservable, modelObservable, null, modelToTargetStrategy);
 	}
 
-	protected Binding bind(Text text, Class<? extends IBuildElement> clazz, EStructuralFeature feature) {
-		return bind(text, clazz, FeaturePath.fromList(feature));
-	}
-
 	protected abstract Control createContent(Composite parent, FormToolkit toolkit);
 
 	public Control createControl(Composite parent, final FormToolkit toolkit) {
-		boolean expand = shouldExpandOnCreate();
-		section = createSection(parent, toolkit, expand);
-		if (expand) {
+		section = createSection(parent, toolkit);
+		if ((section.getExpansionStyle() & ExpandableComposite.EXPANDED) != 0) {
 			Control content = createContent(section, toolkit);
 			section.setClient(content);
 		} else {
@@ -136,12 +145,8 @@ public abstract class AbstractBuildEditorPart extends AbstractFormPart {
 		return label;
 	}
 
-	protected Section createSection(Composite parent, FormToolkit toolkit, boolean expandedState) {
-		int style = ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE;
-		if (expandedState) {
-			style |= ExpandableComposite.EXPANDED;
-		}
-		return createSection(parent, toolkit, style);
+	protected Section createSection(Composite parent, FormToolkit toolkit) {
+		return createSection(parent, toolkit, sectionStyle);
 	}
 
 	protected Section createSection(Composite parent, FormToolkit toolkit, int style) {
@@ -151,7 +156,11 @@ public abstract class AbstractBuildEditorPart extends AbstractFormPart {
 	}
 
 	protected Text createTextReadOnly(Composite parent, FormToolkit toolkit, String value) {
-		Text text = new Text(parent, SWT.FLAT | SWT.READ_ONLY);
+		return createTextReadOnly(parent, toolkit, value, SWT.NONE);
+	}
+
+	protected Text createTextReadOnly(Composite parent, FormToolkit toolkit, String value, int style) {
+		Text text = new Text(parent, SWT.FLAT | SWT.READ_ONLY | style);
 		text.setFont(EditorUtil.TEXT_FONT);
 		text.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
 		text.setText(value);
@@ -205,6 +214,10 @@ public abstract class AbstractBuildEditorPart extends AbstractFormPart {
 		return section;
 	}
 
+	public int getSpan() {
+		return span;
+	}
+
 	public void initialize(BuildEditorPage page) {
 		this.page = page;
 	}
@@ -245,13 +258,22 @@ public abstract class AbstractBuildEditorPart extends AbstractFormPart {
 				createInfoOverlay(toolbarComposite, section, toolkit);
 
 				toolBarManager.createControl(toolbarComposite);
+
+				// the toolbar adds spacing, offset to make it consistent with other sections
 				section.clientVerticalSpacing = 0;
 				section.descriptionVerticalSpacing = 0;
+				if (section.getClient() instanceof Composite
+						&& ((Composite) section.getClient()).getLayout() instanceof GridLayout) {
+					GridLayout layout = (GridLayout) ((Composite) section.getClient()).getLayout();
+					layout.marginHeight = 0;
+					layout.marginTop = 0;
+					layout.marginBottom = 5;
+				}
+
 				section.setTextClient(toolbarComposite);
 			}
 		}
 		setControl(section);
 	}
 
-	protected abstract boolean shouldExpandOnCreate();
 }

@@ -17,12 +17,19 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.ui.BuildsUi;
+import org.eclipse.mylyn.builds.ui.BuildsUiConstants;
 import org.eclipse.mylyn.builds.ui.spi.BuildConnectorUi;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
+import org.eclipse.mylyn.internal.builds.ui.actions.NewTaskFromBuildAction;
+import org.eclipse.mylyn.internal.builds.ui.actions.RunBuildAction;
+import org.eclipse.mylyn.internal.builds.ui.view.BuildLabelProvider;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
@@ -99,11 +106,13 @@ public class BuildEditor extends SharedHeaderFormEditor {
 
 	private void updateHeader() {
 		BuildEditorInput input = getEditorInput();
-		BuildConnectorUi connectorUi = BuildsUi.getConnectorUi(plan.getServer());
-		getHeaderForm().getForm().setImage(CommonImages.getImage(connectorUi.getImageDescriptor()));
 		if (input.getBuild() != null) {
+			getHeaderForm().getForm().setImage(
+					CommonImages.getImage(BuildLabelProvider.getImageDescriptor(input.getBuild().getStatus())));
 			getHeaderForm().getForm().setText(NLS.bind("Build {0}", input.getBuild().getLabel()));
 		} else {
+			BuildConnectorUi connectorUi = BuildsUi.getConnectorUi(plan.getServer());
+			getHeaderForm().getForm().setImage(CommonImages.getImage(connectorUi.getImageDescriptor()));
 			getHeaderForm().getForm().setText("Build");
 		}
 		setTitleToolTip(input.getToolTipText());
@@ -115,6 +124,20 @@ public class BuildEditor extends SharedHeaderFormEditor {
 	private void updateToolBar() {
 		final Form form = getHeaderForm().getForm().getForm();
 		IToolBarManager toolBarManager = form.getToolBarManager();
+
+		toolBarManager.add(new GroupMarker(BuildsUiConstants.GROUP_FILE));
+
+		RunBuildAction runBuildAction = new RunBuildAction();
+		runBuildAction.selectionChanged(new StructuredSelection(getEditorInput().getPlan()));
+		toolBarManager.add(runBuildAction);
+
+		toolBarManager.add(new Separator(BuildsUiConstants.GROUP_EDIT));
+
+		NewTaskFromBuildAction newTaskFromBuildAction = new NewTaskFromBuildAction();
+		newTaskFromBuildAction.selectionChanged(new StructuredSelection(getEditorInput().getBuild()));
+		toolBarManager.add(newTaskFromBuildAction);
+
+		toolBarManager.add(new Separator(BuildsUiConstants.GROUP_OPEN));
 
 		Action openWithBrowserAction = new Action() {
 			@Override

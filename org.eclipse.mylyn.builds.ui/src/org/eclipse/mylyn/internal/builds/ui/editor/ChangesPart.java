@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
@@ -94,7 +95,9 @@ public class ChangesPart extends AbstractBuildEditorPart {
 	private static final String ID_POPUP_MENU = "org.eclipse.mylyn.builds.ui.editor.menu.changes"; //$NON-NLS-1$
 
 	public ChangesPart() {
+		super(ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED);
 		setPartName("Changes");
+		this.span = 2;
 	}
 
 	@Override
@@ -106,8 +109,8 @@ public class ChangesPart extends AbstractBuildEditorPart {
 		if (changeSet == null || changeSet.getChanges().isEmpty()) {
 			createLabel(composite, toolkit, "No changes.");
 		} else {
-			viewer = new TreeViewer(toolkit.createTree(composite, SWT.NONE));
-			GridDataFactory.fillDefaults().hint(SWT.DEFAULT, 100).grab(true, true).applyTo(viewer.getControl());
+			viewer = new TreeViewer(toolkit.createTree(composite, SWT.H_SCROLL));
+			GridDataFactory.fillDefaults().hint(500, 100).grab(true, false).applyTo(viewer.getControl());
 			viewer.setContentProvider(new ChangesContentProvider());
 			viewer.setLabelProvider(new DecoratingStyledCellLabelProvider(new ChangesLabelProvider(), PlatformUI
 					.getWorkbench().getDecoratorManager().getLabelDecorator(), null));
@@ -127,11 +130,6 @@ public class ChangesPart extends AbstractBuildEditorPart {
 
 		toolkit.paintBordersFor(composite);
 		return composite;
-	}
-
-	@Override
-	protected boolean shouldExpandOnCreate() {
-		return true;
 	}
 
 }

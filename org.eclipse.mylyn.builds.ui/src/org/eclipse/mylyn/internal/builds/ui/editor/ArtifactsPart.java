@@ -34,6 +34,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
@@ -123,6 +124,7 @@ public class ArtifactsPart extends AbstractBuildEditorPart {
 	private TreeViewer viewer;
 
 	public ArtifactsPart() {
+		super(ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED);
 		setPartName("Artifacts");
 	}
 
@@ -136,7 +138,7 @@ public class ArtifactsPart extends AbstractBuildEditorPart {
 			createLabel(composite, toolkit, "No artifacts.");
 		} else {
 			viewer = new TreeViewer(toolkit.createTree(composite, SWT.NONE));
-			GridDataFactory.fillDefaults().hint(SWT.DEFAULT, 100).grab(true, true).applyTo(viewer.getControl());
+			GridDataFactory.fillDefaults().hint(300, 100).grab(true, false).applyTo(viewer.getControl());
 			viewer.setContentProvider(new ArtifactsContentProvider());
 			viewer.setLabelProvider(new DecoratingStyledCellLabelProvider(new ArtifactsLabelProvider(), PlatformUI
 					.getWorkbench().getDecoratorManager().getLabelDecorator(), null));
@@ -173,11 +175,6 @@ public class ArtifactsPart extends AbstractBuildEditorPart {
 		ArtifactFolder root = new ArtifactFolder("Root");
 		root.artifacts.addAll(getInput(IBuild.class).getArtifacts());
 		return root;
-	}
-
-	@Override
-	protected boolean shouldExpandOnCreate() {
-		return true;
 	}
 
 }

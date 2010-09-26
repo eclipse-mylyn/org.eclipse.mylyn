@@ -32,9 +32,9 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.DecoratingStyledCellLabelProvider;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.mylyn.builds.core.BuildStatus;
@@ -48,6 +48,9 @@ import org.eclipse.mylyn.internal.builds.ui.BuildImages;
 import org.eclipse.mylyn.internal.builds.ui.BuildToolTip;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
+import org.eclipse.mylyn.internal.builds.ui.actions.RunBuildAction;
+import org.eclipse.mylyn.internal.builds.ui.actions.ShowBuildOutputAction;
+import org.eclipse.mylyn.internal.builds.ui.actions.ShowTestResultsAction;
 import org.eclipse.mylyn.internal.builds.ui.view.BuildContentProvider.Presentation;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractColumnViewerSupport;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
@@ -289,7 +292,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		menuManager.add(new Separator("group.run"));
 		menuManager.add(new Separator("group.refresh"));
 		menuManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-		menuManager.add(new Separator("group.properties"));
+		menuManager.add(new Separator(BuildsUiConstants.GROUP_PROPERTIES));
 
 		Menu contextMenu = menuManager.createContextMenu(parent);
 		viewer.getTree().setMenu(contextMenu);
@@ -325,8 +328,8 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		contentProvider.setSelectedOnly(true);
 		viewer.setContentProvider(contentProvider);
 
-		viewer.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
+		viewer.addOpenListener(new IOpenListener() {
+			public void open(OpenEvent event) {
 				OpenWithBrowserAction action = new OpenWithBrowserAction();
 				action.selectionChanged((IStructuredSelection) event.getSelection());
 				action.run();
@@ -346,23 +349,25 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		manager.add(new Separator());
 		manager.add(collapseAllAction);
 		manager.add(expandAllAction);
-		manager.add(new Separator("group.filter")); //$NON-NLS-1$
+		manager.add(new Separator(BuildsUiConstants.GROUP_FILTER));
 		manager.add(filterDisabledAction);
-		manager.add(new Separator("group.navigate")); //$NON-NLS-1$
+		manager.add(new Separator(BuildsUiConstants.GROUP_NAVIGATE));
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-		manager.add(new Separator("group.properties")); //$NON-NLS-1$
+		manager.add(new Separator(BuildsUiConstants.GROUP_PROPERTIES));
 		manager.add(refreshAutomaticallyAction);
-		manager.add(new Separator("group.preferences")); //$NON-NLS-1$
+		manager.add(new Separator(BuildsUiConstants.GROUP_PREFERENCES));
 		manager.add(new OpenBuildsPreferencesAction());
 	}
 
 	private void fillLocalToolBar(IToolBarManager manager) {
 		manager.add(new NewBuildServerMenuAction());
 
+		manager.add(new Separator(BuildsUiConstants.GROUP_REFRESH));
+
 		RefreshAction refresh = new RefreshAction();
 		manager.add(refresh);
 
-		manager.add(new Separator());
+		manager.add(new Separator(BuildsUiConstants.GROUP_OPEN));
 
 		OpenWithBrowserAction openInBrowserAction = new OpenWithBrowserAction();
 		viewer.addSelectionChangedListener(openInBrowserAction);
@@ -372,9 +377,15 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		viewer.addSelectionChangedListener(runBuildAction);
 		manager.add(runBuildAction);
 
+		manager.add(new Separator(BuildsUiConstants.GROUP_FILE));
+
 		ShowBuildOutputAction openConsoleAction = new ShowBuildOutputAction();
 		viewer.addSelectionChangedListener(openConsoleAction);
 		manager.add(openConsoleAction);
+
+		ShowTestResultsAction showTestResultsAction = new ShowTestResultsAction();
+		viewer.addSelectionChangedListener(showTestResultsAction);
+		manager.add(showTestResultsAction);
 	}
 
 	public BuildStatusFilter getBuildStatusFilter() {

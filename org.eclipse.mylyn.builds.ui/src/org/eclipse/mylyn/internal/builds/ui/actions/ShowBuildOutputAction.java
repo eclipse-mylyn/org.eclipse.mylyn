@@ -9,7 +9,7 @@
  *     Markus Knittig - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.builds.ui.view;
+package org.eclipse.mylyn.internal.builds.ui.actions;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.builds.core.IBuild;

@@ -30,6 +30,10 @@ public class HeaderPart extends AbstractBuildEditorPart {
 
 	private DataBindingContext dbc;
 
+	public HeaderPart() {
+		this.span = 2;
+	}
+
 	@Override
 	protected Control createContent(Composite parent, FormToolkit toolkit) {
 		Composite composite = toolkit.createComposite(parent);
@@ -45,6 +49,11 @@ public class HeaderPart extends AbstractBuildEditorPart {
 		text = createTextReadOnly(composite, toolkit, "");
 		bind(text, IBuild.class, BuildPackage.Literals.BUILD__BUILD_NUMBER);
 
+		label = createLabel(composite, toolkit, "Status: ");
+		GridDataFactory.defaultsFor(label).indent(12, 0).applyTo(label);
+		text = createTextReadOnly(composite, toolkit, "");
+		bind(text, IBuild.class, BuildPackage.Literals.BUILD__STATUS);
+
 		((GridLayout) composite.getLayout()).numColumns = composite.getChildren().length;
 		toolkit.paintBordersFor(composite);
 
@@ -54,11 +63,6 @@ public class HeaderPart extends AbstractBuildEditorPart {
 	@Override
 	public Control createControl(Composite parent, FormToolkit toolkit) {
 		return createContent(parent, toolkit);
-	}
-
-	@Override
-	protected boolean shouldExpandOnCreate() {
-		return false;
 	}
 
 }

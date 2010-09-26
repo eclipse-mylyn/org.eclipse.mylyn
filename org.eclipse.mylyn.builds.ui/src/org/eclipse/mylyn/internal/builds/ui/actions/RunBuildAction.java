@@ -11,7 +11,7 @@
  *     Eike Stepper - improvements for bug 323781
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.builds.ui.view;
+package org.eclipse.mylyn.internal.builds.ui.actions;
 
 import java.util.Map;
 
@@ -25,6 +25,7 @@ import org.eclipse.mylyn.builds.internal.core.operations.OperationChangeListener
 import org.eclipse.mylyn.builds.internal.core.operations.RunBuildOperation;
 import org.eclipse.mylyn.internal.builds.ui.BuildImages;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
+import org.eclipse.mylyn.internal.builds.ui.view.ParametersDialog;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
@@ -35,7 +36,7 @@ import org.eclipse.ui.actions.BaseSelectionListenerAction;
  */
 public class RunBuildAction extends BaseSelectionListenerAction {
 
-	protected RunBuildAction() {
+	public RunBuildAction() {
 		super("Run Build");
 		setToolTipText("Run Build");
 		setImageDescriptor(BuildImages.RUN);
