@@ -445,8 +445,7 @@ public class RepositoryLocationPart {
 
 		Text urlText = new Text(parent, SWT.BORDER);
 		GridDataFactory.fillDefaults().span(2, 1).grab(true, false).applyTo(urlText);
-		bind(urlText, RepositoryLocation.PROPERTY_URL,
-				new UpdateValueStrategy().setAfterConvertValidator(new UrlValidator()), null);
+		bind(urlText, RepositoryLocation.PROPERTY_URL, getUrlUpdateValueStrategy(), null);
 
 		label = new Label(parent, SWT.NONE);
 		label.setText("&Label:");
@@ -458,6 +457,10 @@ public class RepositoryLocationPart {
 		Button disconnectedButton = new Button(parent, SWT.CHECK);
 		disconnectedButton.setText("Disconnected");
 		bind(disconnectedButton, RepositoryLocation.PROPERTY_OFFLINE);
+	}
+
+	protected UpdateValueStrategy getUrlUpdateValueStrategy() {
+		return new UpdateValueStrategy().setAfterConvertValidator(new UrlValidator());
 	}
 
 	private void createUserSection(Composite parent) {
