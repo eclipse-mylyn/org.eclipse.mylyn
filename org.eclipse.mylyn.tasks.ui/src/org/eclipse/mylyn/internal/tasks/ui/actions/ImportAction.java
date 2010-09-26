@@ -43,6 +43,20 @@ import org.eclipse.ui.IViewPart;
  */
 public class ImportAction implements IViewActionDelegate {
 
+	public static class ImportStatus extends MultiStatus {
+
+		private TransferList taskList;
+
+		public ImportStatus(String pluginId, int code, String message, Throwable exception) {
+			super(pluginId, code, message, exception);
+		}
+
+		public TransferList getTaskList() {
+			return taskList;
+		}
+
+	}
+
 	public void init(IViewPart view) {
 		// ignore
 	}
@@ -62,19 +76,21 @@ public class ImportAction implements IViewActionDelegate {
 				IStatus result = importElements(file);
 				if (!result.isOK()) {
 					StatusHandler.log(result);
-					TasksUiInternal.displayStatus(Messages.ImportAction_Dialog_Title, new MultiStatus(ITasksCoreConstants.ID_PLUGIN, 0,
-							new IStatus[] { result },
+					TasksUiInternal.displayStatus(Messages.ImportAction_Dialog_Title, new MultiStatus(
+							ITasksCoreConstants.ID_PLUGIN, 0, new IStatus[] { result },
 							Messages.ImportAction_Problems_encountered, null));
 				}
 			}
 		}
 	}
 
-	private IStatus importElements(File file) {
-		MultiStatus result = new MultiStatus(ITasksCoreConstants.ID_PLUGIN, 0,
-				"Problems encounted during importing", null); //$NON-NLS-1$
-
+	public static ImportStatus importElements(File file) {
 		TransferList list = new TransferList();
+
+		ImportStatus result = new ImportStatus(ITasksCoreConstants.ID_PLUGIN, 0,
+				"Problems encounted during importing", null); //$NON-NLS-1$
+		result.taskList = list;
+
 		TaskListExternalizer externalizer = TasksUiPlugin.getDefault().createTaskListExternalizer();
 		try {
 			externalizer.readTaskList(list, file);
@@ -123,7 +139,7 @@ public class ImportAction implements IViewActionDelegate {
 		return result;
 	}
 
-	private boolean validateRepository(String connectorKind, String repositoryUrl) {
+	private static boolean validateRepository(String connectorKind, String repositoryUrl) {
 		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(connectorKind, repositoryUrl);
 		if (repository == null) {
 			if (TasksUi.getRepositoryConnector(connectorKind) == null) {
