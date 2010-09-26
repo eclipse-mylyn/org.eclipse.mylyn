@@ -97,6 +97,24 @@ public class NewTaskFromBuildAction extends BaseSelectionListenerAction {
 									|| testCase.getStatus() == TestCaseResult.REGRESSION) {
 								sb.append(" ");
 								sb.append(testCase.getClassName());
+								if (testCase.getLabel() != null) {
+									sb.append(".");
+									sb.append(testCase.getLabel());
+
+									// emulate stack trace format to hyperlink tests in task editor
+									sb.append("(");
+									String className = testCase.getClassName();
+									int i = className.lastIndexOf(".");
+									if (i != -1) {
+										className = className.substring(i + 1);
+									}
+									i = className.lastIndexOf("$");
+									if (i != -1) {
+										className = className.substring(0, i);
+									}
+									sb.append(className);
+									sb.append(".java:0)");
+								}
 								sb.append("\n");
 							}
 						}
