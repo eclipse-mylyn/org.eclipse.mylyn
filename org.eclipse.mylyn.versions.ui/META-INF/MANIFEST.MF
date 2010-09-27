@@ -6,8 +6,14 @@ Bundle-Version: 0.1.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.team.ui,
- org.eclipse.mylyn.scm.core
+ org.eclipse.mylyn.scm.core,
+ org.eclipse.compare,
+ org.eclipse.mylyn.team.ui,
+ org.eclipse.team.core,
+ org.eclipse.core.resources,
+ org.eclipse.ui.workbench,
+ org.eclipse.jface
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Localization: plugin
-Export-Package: org.eclipse.mylyn.scm.ui
+Export-Package: org.eclipse.mylyn.scm.ui;x-internal:=true
