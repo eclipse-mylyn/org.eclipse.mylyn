@@ -29,7 +29,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AttributeEditorFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -203,7 +202,7 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 				gd.horizontalSpan = 3;
 				gd.grabExcessHorizontalSpace = true;
 			} else {
-				gd.horizontalSpan = 1;
+				gd.horizontalSpan = 3;
 			}
 			editor.getControl().setLayoutData(gd);
 			editor.getControl().setBackground(attributeArea.getBackground());
