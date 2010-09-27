@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.scm.core;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.team.core.history.IFileRevision;
 
 public abstract class Artifact {
@@ -23,7 +24,7 @@ public abstract class Artifact {
 		return changeType;
 	}
 
-	public abstract IFileRevision getFileRevision();
+	public abstract IFileRevision getFileRevision(String id, IProgressMonitor monitor);
 
 	public String getPath() {
 		return path;

@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.scm.core;
 
+
 public class ArtifactInfo {
 
 	private String path;
