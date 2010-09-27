@@ -25,6 +25,7 @@ import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.DateRange;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
@@ -124,18 +125,27 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 					}
 				} else if (currentTarget instanceof ITask) {
 					ITask targetTask = (ITask) currentTarget;
-					AbstractTaskCategory targetCategory = null;
-					// TODO: TaskCategory only used what about AbstractTaskCategory descendants?
-					ITaskContainer container = TaskCategory.getParentTaskCategory(targetTask);
-					if (container instanceof TaskCategory || container instanceof UncategorizedTaskContainer) {
-						targetCategory = (AbstractTaskCategory) container;
-					} else if (container instanceof UnmatchedTaskContainer) {
-						if (((UnmatchedTaskContainer) container).getRepositoryUrl().equals(task.getRepositoryUrl())) {
-							targetCategory = (AbstractTaskCategory) container;
+					TaskListView view = TaskListView.getFromActivePerspective();
+					if ((getCurrentLocation() == LOCATION_BEFORE || getCurrentLocation() == LOCATION_AFTER)
+							&& view != null && view.isScheduledPresentation()) {
+						if (targetTask instanceof AbstractTask) {
+							DateRange targetDate = ((AbstractTask) targetTask).getScheduledForDate();
+							TasksUiPlugin.getTaskActivityManager().setScheduledFor((AbstractTask) task, targetDate);
 						}
-					}
-					if (targetCategory != null) {
-						moveTask(task, targetCategory);
+					} else {
+						AbstractTaskCategory targetCategory = null;
+						// TODO: TaskCategory only used what about AbstractTaskCategory descendants?
+						ITaskContainer container = TaskCategory.getParentTaskCategory(targetTask);
+						if (container instanceof TaskCategory || container instanceof UncategorizedTaskContainer) {
+							targetCategory = (AbstractTaskCategory) container;
+						} else if (container instanceof UnmatchedTaskContainer) {
+							if (((UnmatchedTaskContainer) container).getRepositoryUrl().equals(task.getRepositoryUrl())) {
+								targetCategory = (AbstractTaskCategory) container;
+							}
+						}
+						if (targetCategory != null) {
+							moveTask(task, targetCategory);
+						}
 					}
 				} else if (currentTarget instanceof ScheduledTaskContainer) {
 					ScheduledTaskContainer container = (ScheduledTaskContainer) currentTarget;
