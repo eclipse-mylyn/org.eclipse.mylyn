@@ -444,6 +444,8 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 				artifact.setFile(child.getTextContent());
 			} else if ("fullName".equals(tagName)) { //$NON-NLS-1$
 				artifact.setFile(child.getTextContent());
+			} else if ("prevrevision".equals(tagName)) { //$NON-NLS-1$
+				artifact.setPrevRevision(child.getTextContent());
 			} else if ("revision".equals(tagName)) { //$NON-NLS-1$
 				artifact.setRevision(child.getTextContent());
 			}
