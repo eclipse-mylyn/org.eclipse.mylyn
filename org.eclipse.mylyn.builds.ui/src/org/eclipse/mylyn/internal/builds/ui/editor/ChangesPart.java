@@ -15,14 +15,20 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.DecoratingStyledCellLabelProvider;
+import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IChange;
 import org.eclipse.mylyn.builds.core.IChangeSet;
+import org.eclipse.mylyn.builds.internal.core.Change;
+import org.eclipse.mylyn.builds.internal.core.ChangeArtifact;
+import org.eclipse.mylyn.internal.team.ui.actions.TaskFinder;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -121,6 +127,19 @@ public class ChangesPart extends AbstractBuildEditorPart {
 				}
 			});
 
+			viewer.addOpenListener(new IOpenListener() {
+				public void open(OpenEvent event) {
+					Object selection = ((IStructuredSelection) event.getSelection()).getFirstElement();
+					if (selection instanceof Change) {
+						ChangesPart.this.open((Change) selection);
+					}
+					if (selection instanceof ChangeArtifact) {
+						ChangesPart.this.open((ChangeArtifact) selection);
+					}
+				}
+
+			});
+
 			menuManager = new MenuManager();
 			menuManager.setRemoveAllWhenShown(true);
 			getPage().getEditorSite().registerContextMenu(ID_POPUP_MENU, menuManager, viewer, true);
@@ -130,6 +149,18 @@ public class ChangesPart extends AbstractBuildEditorPart {
 
 		toolkit.paintBordersFor(composite);
 		return composite;
+	}
+
+	private void open(ChangeArtifact selection) {
+		// ignore
+
+	}
+
+	private void open(Change selection) {
+		TaskReference reference = new TaskReference();
+		reference.setText(selection.getMessage());
+		TaskFinder finder = new TaskFinder(reference);
+		finder.open();
 	}
 
 }
