@@ -21,7 +21,6 @@ public class AllIdeTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.ide.tests");
-		suite.addTestSuite(OpenCorrespondingTaskActionTest.class);
 		suite.addTestSuite(IdeStartupTest.class);
 		suite.addTestSuite(IdePreferencesTest.class);
 		suite.addTestSuite(TaskTemplateResolverTest.class);

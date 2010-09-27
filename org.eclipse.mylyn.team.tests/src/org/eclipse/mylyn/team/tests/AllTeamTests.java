@@ -26,6 +26,7 @@ public class AllTeamTests {
 		suite.addTestSuite(ChangeSetManagerTest.class);
 		suite.addTestSuite(CommitTemplateTest.class);
 		suite.addTestSuite(TeamPropertiesLinkProviderTest.class);
+		suite.addTestSuite(TaskFinderTest.class);
 		//$JUnit-END$
 		return suite;
 	}

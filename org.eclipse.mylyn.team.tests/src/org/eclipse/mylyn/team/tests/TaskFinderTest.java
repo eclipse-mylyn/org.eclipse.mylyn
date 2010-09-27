@@ -9,41 +9,29 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.ide.tests;
+package org.eclipse.mylyn.team.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.internal.team.ui.actions.OpenCorrespondingTaskAction;
+import org.eclipse.mylyn.internal.team.ui.actions.TaskFinder;
 
 /**
  * @author Mik Kersten
  */
-public class OpenCorrespondingTaskActionTest extends TestCase {
-
-	@Override
-	protected void setUp() throws Exception {
-		// ignore
-		super.setUp();
-	}
-
-	@Override
-	protected void tearDown() throws Exception {
-		// ignore
-		super.tearDown();
-	}
+public class TaskFinderTest extends TestCase {
 
 	public void test07LegacyMatching() {
 		String label = "Progress on: 123: foo \nhttps://bugs.eclipse.org";
-		String id = OpenCorrespondingTaskAction.getTaskIdFromLegacy07Label(label);
+		String id = TaskFinder.getTaskIdFromLegacy07Label(label);
 		assertEquals("123", id);
 	}
 
 	public void testUrlMatching() {
 		String label = "bla bla\nhttp://foo.bar-123 bla bla";
-		String id = OpenCorrespondingTaskAction.getUrlFromComment(label);
+		String id = TaskFinder.getUrlFromComment(label);
 		assertEquals("http://foo.bar-123", id);
 		label = "bla bla\nhttp://foo.bar-1234\n- bla bla";
-		id = OpenCorrespondingTaskAction.getUrlFromComment(label);
+		id = TaskFinder.getUrlFromComment(label);
 		assertEquals("http://foo.bar-1234", id);
 	}
 }
