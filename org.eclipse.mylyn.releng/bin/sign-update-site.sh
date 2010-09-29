@@ -105,7 +105,7 @@ then
  # extract site
 
  /bin/rm $TMP || true
- unzip e3.4
+ unzip standard
  #unzip extras
  unzip incubator
 
