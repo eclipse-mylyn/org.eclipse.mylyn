@@ -45,13 +45,23 @@ ECLIPSE_HOME=/shared/tools/mylyn/eclipse
 unzip() {
  /bin/rm -R $TMP/$1 || true
  /bin/mkdir -p $TMP/$1
- /usr/bin/unzip -d $TMP/$1 $SRC/mylyn-$MAJOR_VERSION.$QUALIFIER-$1.zip
+ if [ "$1" == "standard" ]
+ then
+  /usr/bin/unzip -d $TMP/$1 $SRC/mylyn-$MAJOR_VERSION.$QUALIFIER.zip
+ else
+  /usr/bin/unzip -d $TMP/$1 $SRC/mylyn-$MAJOR_VERSION.$QUALIFIER-$1.zip
+ fi
 }
 
 rezip() {
  cd $TMP/$1
  echo Rezipping archive for $1, output is logged to $DST/sign.log
- /usr/bin/zip $TMP/mylyn-$MAJOR_VERSION.$QUALIFIER-$1.zip -r . >> $DST/sign.log
+ if [ "$1" == "standard" ]
+ then
+  /usr/bin/zip $TMP/mylyn-$MAJOR_VERSION.$QUALIFIER.zip -r . >> $DST/sign.log
+ else
+  /usr/bin/zip $TMP/mylyn-$MAJOR_VERSION.$QUALIFIER-$1.zip -r . >> $DST/sign.log
+ fi 
 }
 
 pack() {
@@ -130,13 +140,13 @@ fi
 echo Unzipping signed files, output is logged to $DST/sign.log
 /usr/bin/unzip -o -d $TMP $OUT/mylyn.zip >> $DST/sign.log
 
-pack e3.4 "Mylyn for Eclipse 3.4, 3.5 and 3.6"
+pack standard "Mylyn for Eclipse 3.5, 3.6 and 3.7"
 #pack extras "Mylyn Extras"
 pack incubator "Mylyn Incubator"
 
 fixpermissions $TMP
 
-rezip e3.4
+rezip standard
 #rezip extras
 rezip incubator
 
