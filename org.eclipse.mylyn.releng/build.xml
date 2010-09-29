@@ -244,7 +244,7 @@
 		</antcall>
 	</target>
 
-	<target name="helios" depends="clean,build,generate-metadata-all,copy-to-archive">
+	<target name="indigo" depends="clean,build,generate-metadata-all,copy-to-archive">
 		<!-- promote unpacked version early for testing -->
 		<antcall target="promote">
 			<param name="todir" value="weekly"/>
@@ -257,14 +257,14 @@
 			<param name="todir" value="weekly"/>
 		</antcall>
 
-		<antcall target="promote-helios"/>
+		<antcall target="promote-indigo"/>
 
 		<echo>Ensure that the mylyn.build file is updated to the latest version.</echo>
 	</target>
 
-	<target name="promote-helios">
+	<target name="promote-indigo">
 		<antcall target="promote-main">
-			<param name="todir" value="helios"/>
+			<param name="todir" value="indigo"/>
 		</antcall>
 	</target>
 
