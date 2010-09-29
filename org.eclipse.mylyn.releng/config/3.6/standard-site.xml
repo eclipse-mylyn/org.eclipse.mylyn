@@ -11,7 +11,7 @@
 
 <site pack200="true">
    <description url="http://download.eclipse.org/tools/mylyn/update/weekly/e3.4">
-      Mylyn Update for Eclipse 3.4, 3.5 and 3.6
+      Mylyn Update for Eclipse 3.5, 3.6 and 3.7
    </description>
    <feature url="features/org.eclipse.mylyn_feature_@org.eclipse.mylyn_feature@.jar" id="org.eclipse.mylyn_feature" version="@org.eclipse.mylyn_feature@">
       <category name="Features"/>
