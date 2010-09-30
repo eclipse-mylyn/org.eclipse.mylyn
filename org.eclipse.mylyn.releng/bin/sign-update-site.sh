@@ -154,6 +154,7 @@ rezip incubator
 
 /bin/mv $SRC $SRC-DELETE
 # other zip files are overridden here with signed versions
+mv $TMP/standard $TMP/e3.4
 /bin/cp -av $TMP $SRC
 # recover wikitext-standalone zip and other archives
 /bin/cp -v $SRC-DELETE/mylyn-wikitext-standalone-*.zip $SRC
