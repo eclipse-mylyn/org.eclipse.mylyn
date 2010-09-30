@@ -56,7 +56,7 @@ public class ConnectorDiscoveryTest extends TestCase {
 			}
 		});
 		// test to ensure that all non-matching platform filters are not discovered
-		Dictionary<Object, Object> environment = new Properties();
+		Properties environment = new Properties();
 		environment.put("osgi.os", "win32");
 		environment.put("osgi.ws", "windows");
 		connectorDiscovery.setEnvironment(environment);

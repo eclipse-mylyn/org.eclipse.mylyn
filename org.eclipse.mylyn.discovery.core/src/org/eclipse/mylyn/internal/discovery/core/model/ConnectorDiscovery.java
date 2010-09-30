@@ -267,13 +267,14 @@ public class ConnectorDiscovery {
 	/**
 	 * eliminate any connectors whose {@link ConnectorDescriptor#getPlatformFilter() platform filters} don't match
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void filterDescriptors() {
 		for (DiscoveryConnector connector : new ArrayList<DiscoveryConnector>(connectors)) {
 			if (connector.getPlatformFilter() != null && connector.getPlatformFilter().trim().length() > 0) {
 				boolean match = false;
 				try {
 					Filter filter = FrameworkUtil.createFilter(connector.getPlatformFilter());
-					match = filter.match(environment);
+					match = filter.match((Dictionary) environment);
 				} catch (InvalidSyntaxException e) {
 					StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN, NLS.bind(
 							Messages.ConnectorDiscovery_illegal_filter_syntax,
