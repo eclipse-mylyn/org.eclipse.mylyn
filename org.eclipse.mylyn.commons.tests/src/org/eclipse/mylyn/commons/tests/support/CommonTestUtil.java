@@ -20,6 +20,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Writer;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.charset.Charset;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -148,8 +150,10 @@ public class CommonTestUtil {
 			ClassLoader classLoader = clazz.getClassLoader();
 			if (classLoader instanceof DefaultClassLoader) {
 				// TODO e3.5 replace with: URL url = ((BundleClassLoader) classLoader).getBundle().getEntry(filename);
-				URL url = ((DefaultClassLoader) classLoader).getClasspathManager().getBaseData().getBundle().getEntry(
-						filename);
+				URL url = ((DefaultClassLoader) classLoader).getClasspathManager()
+						.getBaseData()
+						.getBundle()
+						.getEntry(filename);
 				if (url != null) {
 					URL localURL = FileLocator.toFileURL(url);
 					return new File(localURL.getFile());
@@ -157,7 +161,7 @@ public class CommonTestUtil {
 			}
 		} else {
 			URL localURL = clazz.getResource("");
-			String path = localURL.getFile();
+			String path = URLDecoder.decode(localURL.getFile(), Charset.defaultCharset().name());
 			int i = path.indexOf("!");
 			if (i != -1) {
 				int j = path.lastIndexOf(File.separatorChar, i);
@@ -176,11 +180,11 @@ public class CommonTestUtil {
 				// remove all package segments from name
 				String directory = clazz.getName().replaceAll("[^.]", "");
 				directory = directory.replaceAll(".", "../");
-				if (localURL.getFile().contains("/bin/")) {
+				if (path.contains("/bin/")) {
 					// account for bin/ when running from Eclipse workspace
 					directory += "../";
 				}
-				filename = localURL.getFile() + (directory + filename).replaceAll("/", File.separator);
+				filename = path + (directory + filename).replaceAll("/", File.separator);
 				return new File(filename).getCanonicalFile();
 			}
 		}
