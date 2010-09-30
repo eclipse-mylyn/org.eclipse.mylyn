@@ -5,6 +5,7 @@ Bundle-SymbolicName: org.eclipse.mylyn.commons.team; singleton:=true
 Bundle-Version: 0.1.0.qualifier
 Bundle-Activator: org.eclipse.mylyn.internal.commons.ui.team.TeamUiPlugin
 Bundle-Vendor: %Bundle-Vendor
+Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.forms,
