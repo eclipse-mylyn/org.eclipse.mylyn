@@ -12,6 +12,7 @@
  -->
 <plugin>
    <extension-point id="connectors" name="Build Connectors" schema="schema/connectors.exsd"/>
+   <extension-point id="startup" name="Build Framework UI Startup" schema="schema/startup.exsd"/>
 
    <extension
          point="org.eclipse.ui.views">

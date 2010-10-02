@@ -7,22 +7,34 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Itema AS - Added support for build service messages
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui;
 
 import java.io.IOException;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtension;
+import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.builds.ui.BuildsUiStartup;
+import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.statushandlers.StatusManager;
 import org.osgi.framework.BundleContext;
 
 /**
  * @author Steffen Pingel
+ * @author Torkild U. Resheim
  */
 public class BuildsUiPlugin extends AbstractUIPlugin {
 
@@ -37,6 +49,8 @@ public class BuildsUiPlugin extends AbstractUIPlugin {
 	private BuildRefresher refresher;
 
 	private BuildNotifier notifier;
+
+	private boolean startupExtensionsInitialized;
 
 	@Override
 	public void start(BundleContext context) throws Exception {
@@ -77,6 +91,59 @@ public class BuildsUiPlugin extends AbstractUIPlugin {
 			refresher = new BuildRefresher();
 			getPreferenceStore().addPropertyChangeListener(refresher);
 			refresher.start();
+		}
+
+		if (!startupExtensionsInitialized) {
+			// start automatic discovery services etc.
+			UiStartupExtensionPointReader.runStartupExtensions();
+			startupExtensionsInitialized = true;
+		}
+	}
+
+	static class UiStartupExtensionPointReader {
+
+		private static final String EXTENSION_ID_STARTUP = "org.eclipse.mylyn.builds.ui.startup"; //$NON-NLS-1$
+
+		private static final String ELEMENT_STARTUP = "startup"; //$NON-NLS-1$
+
+		private static final String ELEMENT_CLASS = "class"; //$NON-NLS-1$
+
+		public static void runStartupExtensions() {
+			IExtensionRegistry registry = Platform.getExtensionRegistry();
+			IExtensionPoint extensionPoint = registry.getExtensionPoint(EXTENSION_ID_STARTUP);
+			IExtension[] extensions = extensionPoint.getExtensions();
+			for (IExtension extension : extensions) {
+				IConfigurationElement[] elements = extension.getConfigurationElements();
+				for (IConfigurationElement element : elements) {
+					if (element.getName().compareTo(ELEMENT_STARTUP) == 0) {
+						runStartupExtension(element);
+					}
+				}
+			}
+		}
+
+		private static void runStartupExtension(IConfigurationElement configurationElement) {
+			try {
+				Object object = configurationElement.createExecutableExtension(ELEMENT_CLASS);
+				if (!(object instanceof BuildsUiStartup)) {
+					StatusHandler.log(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, NLS.bind(
+							"Startup extension failed: {0} does notimplement {1}", //$NON-NLS-1$
+							object.getClass().getCanonicalName(), BuildsUiStartup.class.getCanonicalName())));
+					return;
+				}
+				final BuildsUiStartup startup = (BuildsUiStartup) object;
+				SafeRunner.run(new ISafeRunnable() {
+					public void run() throws Exception {
+						startup.lazyStartup();
+					}
+
+					public void handleException(Throwable exception) {
+						// ignore, handled by SafeRunner						
+					}
+				});
+			} catch (CoreException e) {
+				StatusHandler.log(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "Startup extension failed", e)); //$NON-NLS-1$
+			}
 		}
 
 	}
