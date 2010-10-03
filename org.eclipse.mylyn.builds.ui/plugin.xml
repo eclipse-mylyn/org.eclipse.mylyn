@@ -311,6 +311,25 @@
        point="org.eclipse.ui.menus">
     <menuContribution
           locationURI="popup:org.eclipse.mylyn.builds.navigator.builds?after=group.open">
+       <command
+             commandId="org.eclipse.mylyn.builds.ui.commands.OpenBuildElement"
+             label="Open Last Build"
+             style="push">
+          <parameter
+                name="element"
+                value="lastBuild">
+          </parameter>
+          <visibleWhen
+                checkEnabled="false">
+             <iterate
+                   ifEmpty="false"
+                   operator="and">
+                <adapt
+                      type="org.eclipse.mylyn.builds.core.IBuild">
+                </adapt>
+             </iterate>
+          </visibleWhen>
+       </command>
        <!--
        <command
              commandId="org.eclipse.mylyn.builds.ui.commands.OpenBuildElement"
@@ -328,17 +347,6 @@
           </visibleWhen>
        </command>
        -->
-       <command
-             commandId="org.eclipse.mylyn.builds.ui.commands.OpenBuildElementWithBrowser"
-             label="Open with Browser"
-             style="push">
-          <visibleWhen
-                checkEnabled="false">
-             <iterate
-                   ifEmpty="false">
-             </iterate>
-          </visibleWhen>
-       </command>
        <menu
              id="org.eclipse.mylyn.builds.ui.menus.LastBuild"
              label="Last Build">
@@ -373,29 +381,61 @@
              </iterate>
           </visibleWhen>
        </menu>
-    </menuContribution>
-    <menuContribution
-          locationURI="popup:org.eclipse.mylyn.builds.navigator.builds?after=group.edit">
        <menu
-             label="Copy Details">
+             id="org.eclipse.mylyn.builds.ui.menus.Plan"
+             label="Plan">
+          <separator
+                name="group.open"
+                visible="true">
+          </separator>
           <command
-                commandId="org.eclipse.mylyn.builds.ui.commands.CopyDetails"
-                label="&amp;ID"
+                commandId="org.eclipse.mylyn.builds.ui.commands.OpenBuildElementWithBrowser"
+                label="Open with Browser"
                 style="push">
-             <parameter
-                   name="kind"
-                   value="KEY">
-             </parameter>
           </command>
-          <command
-                commandId="org.eclipse.mylyn.builds.ui.commands.CopyDetails"
-                label="&amp;URL"
-                style="push">
-             <parameter
-                   name="kind"
-                   value="URL">
-             </parameter>
-          </command>
+          <separator
+                name="group.edit"
+                visible="true">
+          </separator>
+          <menu
+                label="Copy Details">
+             <command
+                   commandId="org.eclipse.mylyn.builds.ui.commands.CopyDetails"
+                   label="&amp;ID"
+                   style="push">
+                <parameter
+                      name="kind"
+                      value="KEY">
+                </parameter>
+             </command>
+             <command
+                   commandId="org.eclipse.mylyn.builds.ui.commands.CopyDetails"
+                   label="&amp;URL"
+                   style="push">
+                <parameter
+                      name="kind"
+                      value="URL">
+                </parameter>
+             </command>
+             <visibleWhen
+                   checkEnabled="false">
+                <iterate
+                      ifEmpty="false">
+                </iterate>
+             </visibleWhen>
+          </menu>
+          <separator
+                name="group.file"
+                visible="true">
+          </separator>
+          <separator
+                name="group.refresh"
+                visible="true">
+          </separator>
+          <separator
+                name="group.properties"
+                visible="true">
+          </separator>
           <visibleWhen
                 checkEnabled="false">
              <iterate
@@ -403,6 +443,9 @@
              </iterate>
           </visibleWhen>
        </menu>
+    </menuContribution>
+    <menuContribution
+          locationURI="popup:org.eclipse.mylyn.builds.navigator.builds?after=group.edit">
     </menuContribution>
     <menuContribution
           locationURI="popup:org.eclipse.mylyn.builds.navigator.builds?after=group.run">
@@ -462,18 +505,20 @@
        point="org.eclipse.ui.menus">
     <menuContribution
           locationURI="popup:org.eclipse.mylyn.builds.ui.menus.LastBuild?after=group.open">
+       <!--
        <command
              commandId="org.eclipse.mylyn.builds.ui.commands.OpenBuildElement"
-             label="Open Build"
+             label="Open"
              style="push">
           <parameter
                 name="element"
                 value="lastBuild">
           </parameter>
        </command>
+       -->
        <command
              commandId="org.eclipse.mylyn.builds.ui.commands.OpenBuildElementWithBrowser"
-             label="Open Build with Browser"
+             label="Open with Browser"
              style="push">
           <parameter
                 name="element"

@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.builds.ui.view;
 
 import java.io.File;
 import java.text.DateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
 
@@ -51,6 +52,7 @@ import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
 import org.eclipse.mylyn.internal.builds.ui.actions.RunBuildAction;
 import org.eclipse.mylyn.internal.builds.ui.actions.ShowBuildOutputAction;
 import org.eclipse.mylyn.internal.builds.ui.actions.ShowTestResultsAction;
+import org.eclipse.mylyn.internal.builds.ui.commands.OpenHandler;
 import org.eclipse.mylyn.internal.builds.ui.view.BuildContentProvider.Presentation;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractColumnViewerSupport;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
@@ -330,9 +332,11 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 
 		viewer.addOpenListener(new IOpenListener() {
 			public void open(OpenEvent event) {
-				OpenWithBrowserAction action = new OpenWithBrowserAction();
-				action.selectionChanged((IStructuredSelection) event.getSelection());
-				action.run();
+				Object element = ((IStructuredSelection) event.getSelection()).getFirstElement();
+				if (element instanceof IBuildPlan && ((IBuildPlan) element).getLastBuild() != null) {
+					OpenHandler.openBuildElements(getSite().getPage(), Collections.singletonList(((IBuildPlan) element)
+							.getLastBuild()));
+				}
 			}
 		});
 	}
@@ -572,7 +576,8 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 	}
 
 	@Override
-	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
+	public Object getAdapter(@SuppressWarnings("rawtypes")
+	Class adapter) {
 		if (adapter == IShowInTargetList.class) {
 			return new IShowInTargetList() {
 				public String[] getShowInTargetIds() {

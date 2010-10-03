@@ -44,6 +44,12 @@ public class OpenHandler extends AbstractHandler {
 		}
 
 		List<IBuildElement> elements = BuildsUiInternal.getElements(event);
+		openBuildElements(page, elements);
+
+		return null;
+	}
+
+	public static void openBuildElements(IWorkbenchPage page, List<?> elements) {
 		if (elements.size() > 0) {
 			Object item = elements.get(0);
 			BuildEditorInput input = null;
@@ -62,8 +68,6 @@ public class OpenHandler extends AbstractHandler {
 				}
 			}
 		}
-
-		return null;
 	}
 
 }
