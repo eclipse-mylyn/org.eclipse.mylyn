@@ -16,6 +16,7 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.internal.core.BuildPackage;
+import org.eclipse.mylyn.commons.core.DateUtil;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -53,6 +54,12 @@ public class HeaderPart extends AbstractBuildEditorPart {
 		GridDataFactory.defaultsFor(label).indent(12, 0).applyTo(label);
 		text = createTextReadOnly(composite, toolkit, "");
 		bind(text, IBuild.class, BuildPackage.Literals.BUILD__STATUS);
+
+		label = createLabel(composite, toolkit, "Duration: ");
+		GridDataFactory.defaultsFor(label).indent(12, 0).applyTo(label);
+		text = createTextReadOnly(composite, toolkit, "");
+		IBuild build = getInput(IBuild.class);
+		text.setText(DateUtil.getFormattedDurationShort(build.getDuration(), true));
 
 		((GridLayout) composite.getLayout()).numColumns = composite.getChildren().length;
 		toolkit.paintBordersFor(composite);

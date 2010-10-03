@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Markus Knittig - initial API and implementation
+ *     Tasktop Techonologies - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.actions;

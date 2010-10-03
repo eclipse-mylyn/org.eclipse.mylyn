@@ -15,32 +15,27 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.internal.builds.ui.BuildImages;
-import org.eclipse.mylyn.internal.builds.ui.util.TestResultManager;
+import org.eclipse.team.ui.TeamUI;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
 /**
  * @author Steffen Pingel
  */
-public class ShowTestResultsAction extends BaseSelectionListenerAction {
+public class ShowHistoryAction extends BaseSelectionListenerAction {
 
-	public ShowTestResultsAction() {
-		super("Show Test Results");
-		setToolTipText("Show Test Results in JUnit View");
-		setImageDescriptor(BuildImages.JUNIT);
+	public ShowHistoryAction() {
+		super("Show History");
+		setToolTipText("Show Plan in History View");
+		setImageDescriptor(BuildImages.VIEW_HISTORY);
 	}
 
 	@Override
 	protected boolean updateSelection(IStructuredSelection selection) {
-		if (selection.getFirstElement() instanceof IBuildPlan) {
-			return isEnabled(((IBuildPlan) selection.getFirstElement()).getLastBuild());
-		} else if (selection.getFirstElement() instanceof IBuild) {
-			return isEnabled((IBuild) selection.getFirstElement());
+		if (selection.getFirstElement() instanceof IBuildPlan || selection.getFirstElement() instanceof IBuild) {
+			return true;
 		}
 		return false;
-	}
-
-	private boolean isEnabled(IBuild build) {
-		return build != null && build.getTestResult() != null;
 	}
 
 	@Override
@@ -48,10 +43,10 @@ public class ShowTestResultsAction extends BaseSelectionListenerAction {
 		Object selection = getStructuredSelection().getFirstElement();
 		if (selection instanceof IBuildPlan) {
 			IBuildPlan plan = (IBuildPlan) selection;
-			TestResultManager.showInJUnitView(plan.getLastBuild());
+			TeamUI.showHistoryFor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), selection, null);
 		} else if (selection instanceof IBuild) {
 			IBuild build = (IBuild) selection;
-			TestResultManager.showInJUnitView(build);
+			TeamUI.showHistoryFor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), selection, null);
 		}
 	}
 

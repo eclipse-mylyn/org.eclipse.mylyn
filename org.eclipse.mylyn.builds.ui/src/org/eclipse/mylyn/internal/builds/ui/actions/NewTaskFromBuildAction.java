@@ -35,6 +35,7 @@ public class NewTaskFromBuildAction extends BaseSelectionListenerAction {
 
 	public NewTaskFromBuildAction() {
 		super("New Task from Build...");
+		setToolTipText("New Task from Build");
 		setImageDescriptor(TasksUiImages.TASK_NEW);
 	}
 

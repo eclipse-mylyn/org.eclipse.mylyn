@@ -164,6 +164,7 @@ public abstract class AbstractBuildEditorPart extends AbstractFormPart {
 		text.setFont(EditorUtil.TEXT_FONT);
 		text.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
 		text.setText(value);
+		toolkit.adapt(text, false, false);
 		return text;
 	}
 

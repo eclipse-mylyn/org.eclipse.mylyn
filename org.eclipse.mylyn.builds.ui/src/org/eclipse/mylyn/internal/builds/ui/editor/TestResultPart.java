@@ -12,23 +12,18 @@
 package org.eclipse.mylyn.internal.builds.ui.editor;
 
 import org.eclipse.emf.databinding.FeaturePath;
-import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.internal.core.BuildPackage.Literals;
 import org.eclipse.mylyn.internal.builds.ui.actions.ShowTestResultsAction;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.forms.events.HyperlinkAdapter;
-import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.Hyperlink;
 
 /**
  * @author Steffen Pingel
@@ -69,26 +64,16 @@ public class TestResultPart extends AbstractBuildEditorPart {
 			text = createTextReadOnly(composite, toolkit, "");
 			bind(text, IBuild.class, FeaturePath
 					.fromList(Literals.BUILD__TEST_RESULT, Literals.TEST_RESULT__PASS_COUNT));
-
-			Hyperlink hyperlink = toolkit.createHyperlink(composite, "Show Tests in JUnit View", SWT.NONE);
-			GridDataFactory.fillDefaults().span(2, 1).indent(0, 10).applyTo(hyperlink);
-			hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
-				@Override
-				public void linkActivated(HyperlinkEvent event) {
-					showTestResultsAction.run();
-				}
-			});
-			hyperlink.setEnabled(showTestResultsAction.isEnabled());
 		}
 
 		return composite;
 	}
 
-	@Override
-	protected void fillToolBar(ToolBarManager toolBarManager) {
-		super.fillToolBar(toolBarManager);
-
-		toolBarManager.add(showTestResultsAction);
-	}
+//	@Override
+//	protected void fillToolBar(ToolBarManager toolBarManager) {
+//		super.fillToolBar(toolBarManager);
+//
+//		toolBarManager.add(showTestResultsAction);
+//	}
 
 }

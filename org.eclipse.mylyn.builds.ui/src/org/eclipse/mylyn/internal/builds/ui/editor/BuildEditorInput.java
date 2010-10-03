@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
@@ -66,7 +67,11 @@ public class BuildEditorInput implements IEditorInput {
 	}
 
 	public String getName() {
-		return plan.getName();
+		if (build != null) {
+			return NLS.bind("{0}#{1}", plan.getLabel(), build.getLabel());
+		} else {
+			return plan.getLabel();
+		}
 	}
 
 	public IPersistableElement getPersistable() {

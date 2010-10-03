@@ -29,6 +29,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
 import org.eclipse.mylyn.internal.builds.ui.actions.NewTaskFromBuildAction;
 import org.eclipse.mylyn.internal.builds.ui.actions.RunBuildAction;
+import org.eclipse.mylyn.internal.builds.ui.actions.ShowHistoryAction;
 import org.eclipse.mylyn.internal.builds.ui.view.BuildLabelProvider;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
@@ -130,6 +131,10 @@ public class BuildEditor extends SharedHeaderFormEditor {
 		RunBuildAction runBuildAction = new RunBuildAction();
 		runBuildAction.selectionChanged(new StructuredSelection(getEditorInput().getPlan()));
 		toolBarManager.add(runBuildAction);
+
+		ShowHistoryAction historyAction = new ShowHistoryAction();
+		historyAction.selectionChanged(new StructuredSelection(getEditorInput().getPlan()));
+		toolBarManager.add(historyAction);
 
 		toolBarManager.add(new Separator(BuildsUiConstants.GROUP_EDIT));
 

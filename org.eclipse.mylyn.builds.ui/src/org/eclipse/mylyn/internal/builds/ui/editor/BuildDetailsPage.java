@@ -15,8 +15,6 @@ package org.eclipse.mylyn.internal.builds.ui.editor;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IEditorInput;
@@ -25,6 +23,8 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.TableWrapData;
+import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
 /**
  * @author Markus Knittig
@@ -52,8 +52,10 @@ public class BuildDetailsPage extends BuildEditorPage {
 		toolkit = managedForm.getToolkit();
 
 		Composite body = form.getBody();
-		GridLayout layout = new GridLayout(2, true);
-		layout.verticalSpacing = 0;
+		TableWrapLayout layout = new TableWrapLayout();
+		layout.numColumns = 2;
+//		GridLayout layout = new GridLayout(2, true);
+//		layout.verticalSpacing = 0;
 		body.setLayout(layout);
 
 		for (AbstractBuildEditorPart part : parts) {
@@ -62,7 +64,12 @@ public class BuildDetailsPage extends BuildEditorPage {
 			Control control = part.createControl(body, toolkit);
 			part.setControl(control);
 			int span = part.getSpan();
-			GridDataFactory.fillDefaults().grab(true, false).span(span, 1).applyTo(part.getControl());
+			TableWrapData data = new TableWrapData();
+			data.colspan = span;
+			data.align = TableWrapData.FILL;
+			data.grabHorizontal = true;
+			part.getControl().setLayoutData(data);
+			//GridDataFactory.fillDefaults().grab(true, false).span(span, 1).applyTo(part.getControl());
 		}
 	}
 
@@ -73,10 +80,11 @@ public class BuildDetailsPage extends BuildEditorPage {
 		parts = new ArrayList<AbstractBuildEditorPart>();
 		parts.add(new HeaderPart());
 		parts.add(new SummaryPart());
+		parts.add(new ActionPart());
 		parts.add(new TestResultPart());
 		parts.add(new ArtifactsPart());
 		parts.add(new ChangesPart());
-		parts.add(new BuildOutputPart());
+		//parts.add(new BuildOutputPart());
 	}
 
 	@Override
