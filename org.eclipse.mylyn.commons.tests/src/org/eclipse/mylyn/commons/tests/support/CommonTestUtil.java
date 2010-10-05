@@ -23,6 +23,7 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.util.Enumeration;
+import java.util.regex.Matcher;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -184,7 +185,7 @@ public class CommonTestUtil {
 					// account for bin/ when running from Eclipse workspace
 					directory += "../";
 				}
-				filename = path + (directory + filename).replaceAll("/", File.separator);
+				filename = path + (directory + filename).replaceAll("/", Matcher.quoteReplacement(File.separator));
 				return new File(filename).getCanonicalFile();
 			}
 		}
