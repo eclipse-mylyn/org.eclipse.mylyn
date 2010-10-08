@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Itema AS - bug 325079 added support for build service messages
  *******************************************************************************/
 
 package org.eclipse.mylyn.builds.ui.spi;
@@ -37,12 +38,13 @@ import org.eclipse.ui.internal.WorkbenchImages;
 
 /**
  * @author Steffen Pingel
+ * @author Torkild U. Resheim
  */
 public class BuildServerWizard extends Wizard implements INewWizard {
 
 	private IBuildServer model;
 
-	private final IBuildServer original;
+	private IBuildServer original;
 
 	public BuildServerWizard(IBuildServer server) {
 		this.original = server;
@@ -57,9 +59,21 @@ public class BuildServerWizard extends Wizard implements INewWizard {
 		}
 	}
 
+	/**
+	 * We use this method when the wizard instance has been created by means of the extension point mechanism and need
+	 * to set initial build server data.
+	 * 
+	 * @param server
+	 *            the build server
+	 */
+	public void setBuildServer(IBuildServer server) {
+		original = server;
+		setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPOSITORY_SETTINGS);
+	}
+
 	@Override
 	public void addPages() {
-		BuildServerWizardPage page = new BuildServerWizardPage("newBuildServer");
+		BuildServerWizardPage page = new BuildServerWizardPage("newBuildServer"); //$NON-NLS-1$
 		page.init(getModel(), getSelectedPlans());
 		initPage(page);
 		addPage(page);

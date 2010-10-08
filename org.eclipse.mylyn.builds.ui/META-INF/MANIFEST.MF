@@ -36,9 +36,12 @@ Bundle-Activator: org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin
 Export-Package: org.eclipse.mylyn.builds.ui,
  org.eclipse.mylyn.builds.ui.spi,
  org.eclipse.mylyn.internal.builds.ui;x-internal:=true,
+ org.eclipse.mylyn.internal.builds.ui.actions;x-internal:=true,
  org.eclipse.mylyn.internal.builds.ui.commands;x-internal:=true,
  org.eclipse.mylyn.internal.builds.ui.console;x-internal:=true,
  org.eclipse.mylyn.internal.builds.ui.editor;x-internal:=true,
+ org.eclipse.mylyn.internal.builds.ui.history;x-internal:=true,
  org.eclipse.mylyn.internal.builds.ui.navigator;x-internal:=true,
+ org.eclipse.mylyn.internal.builds.ui.notifications;x-internal:=true,
  org.eclipse.mylyn.internal.builds.ui.util;x-internal:=true,
  org.eclipse.mylyn.internal.builds.ui.view;x-internal:=true

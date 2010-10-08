@@ -677,11 +677,24 @@
           This event is triggered when the status of a build plan changes, e.g. when a successful build plan changes its status to failed.
        </description>
     </event>
+    <event
+          categoryId="org.eclipse.mylyn.builds.ui.category.Builds"
+          id="org.eclipse.mylyn.builds.ui.events.BuildServiceChanged"
+          label="Build Service Changed">
+       <description>
+          This event is triggered when the status of a build service is changed. For instance a new server is discovered or is no longer available.
+       </description>
+    </event>
     <category
           icon="icons/eview16/build-view.png"
           id="org.eclipse.mylyn.builds.ui.category.Builds"
           label="Builds">
     </category>
+    <sink
+          class="org.eclipse.mylyn.internal.builds.ui.view.NotificationSinkProxy"
+          id="org.eclipse.mylyn.builds.ui.sink.View"
+          label="Builds View">
+    </sink>
  </extension>
  <extension
        point="org.eclipse.core.expressions.propertyTesters">

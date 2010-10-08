@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.builds.ui;
 
+import java.util.Collections;
 import java.util.HashMap;
 
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -26,9 +27,11 @@ import org.eclipse.mylyn.builds.core.spi.BuildConnector;
 import org.eclipse.mylyn.builds.internal.core.BuildServer;
 import org.eclipse.mylyn.builds.ui.spi.BuildConnectorUi;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
+import org.eclipse.mylyn.commons.ui.notifications.Notifications;
 import org.eclipse.mylyn.internal.builds.ui.BuildConnectorDescriptor;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
+import org.eclipse.mylyn.internal.builds.ui.notifications.BuildsServiceNotification;
 import org.eclipse.ui.statushandlers.StatusManager;
 
 /**
@@ -94,6 +97,11 @@ public class BuildsUi {
 
 	public static BuildConnectorUi getConnectorUi(IBuildServer server) {
 		return getConnectorUi(((BuildServer) server).getConnectorKind());
+	}
+
+	public static void serverDiscovered(String title, String description) {
+		BuildsServiceNotification notification = new BuildsServiceNotification(title, description);
+		Notifications.getService().notify(Collections.singletonList(notification));
 	}
 
 }

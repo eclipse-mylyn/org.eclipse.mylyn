@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Itema AS - bug 325079 added support for build service messages
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.view;
@@ -53,6 +54,7 @@ import org.eclipse.mylyn.internal.builds.ui.actions.RunBuildAction;
 import org.eclipse.mylyn.internal.builds.ui.actions.ShowBuildOutputAction;
 import org.eclipse.mylyn.internal.builds.ui.actions.ShowTestResultsAction;
 import org.eclipse.mylyn.internal.builds.ui.commands.OpenHandler;
+import org.eclipse.mylyn.internal.builds.ui.notifications.BuildsServiceMessageControl;
 import org.eclipse.mylyn.internal.builds.ui.view.BuildContentProvider.Presentation;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractColumnViewerSupport;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
@@ -66,6 +68,8 @@ import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -90,6 +94,7 @@ import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 
 /**
  * @author Steffen Pingel
+ * @author Torkild U. Resheim
  */
 public class BuildsView extends ViewPart implements IShowInTarget {
 
@@ -193,6 +198,8 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 
 	private BuildToolTip toolTip;
 
+	private BuildsServiceMessageControl serviceMessageControl;
+
 	public BuildsView() {
 		BuildsUiPlugin.getDefault().initializeRefresh();
 	}
@@ -227,7 +234,17 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 
 	@Override
 	public void createPartControl(Composite parent) {
-		Composite composite = new Composite(parent, SWT.NONE);
+		Composite body = new Composite(parent, SWT.NONE);
+		GridLayout layout = new GridLayout(1, false);
+		layout.marginHeight = 0;
+		layout.marginWidth = 0;
+		layout.horizontalSpacing = 0;
+		layout.verticalSpacing = 0;
+		layout.numColumns = 1;
+		body.setLayout(layout);
+
+		Composite composite = new Composite(body, SWT.NONE);
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		stackLayout = new StackLayout();
 		composite.setLayout(stackLayout);
 		composite.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
@@ -236,7 +253,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		createViewer(composite);
 
 		initActions();
-		createPopupMenu(parent);
+		createPopupMenu(body);
 		contributeToActionBars();
 
 		toolTip = new BuildToolTip(getViewer().getControl());
@@ -255,7 +272,6 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 			public void doNotifyChanged(Notification msg) {
 				if (!viewer.getControl().isDisposed()) {
 					lastRefresh = new Date();
-					// FIXME show result of last update
 					updateContents(Status.OK_STATUS);
 				}
 			}
@@ -266,6 +282,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 			restoreState(stateMemento);
 			stateMemento = null;
 		}
+		serviceMessageControl = new BuildsServiceMessageControl(body);
 
 		viewer.setInput(model);
 		viewer.setSorter(new BuildTreeSorter());
@@ -278,6 +295,8 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		updateContents(Status.OK_STATUS);
 
 		new TreeViewerSupport(viewer, getStateFile());
+		// Make sure we get notifications
+		NotificationSinkProxy.setControl(serviceMessageControl);
 	}
 
 	private File getStateFile() {
@@ -594,5 +613,4 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		}
 		return super.getAdapter(adapter);
 	}
-
 }
