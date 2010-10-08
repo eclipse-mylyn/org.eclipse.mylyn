@@ -34,5 +34,11 @@
          </description>
       </wizard>
    </extension>
+   <extension
+         point="org.eclipse.mylyn.builds.ui.startup">
+      <startup
+            class="org.eclipse.mylyn.internal.hudson.ui.HudsonDiscovery">
+      </startup>
+   </extension>
 
 </plugin>

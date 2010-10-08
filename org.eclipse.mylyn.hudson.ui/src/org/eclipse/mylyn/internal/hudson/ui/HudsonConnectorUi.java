@@ -18,4 +18,6 @@ import org.eclipse.mylyn.builds.ui.spi.BuildConnectorUi;
  */
 public class HudsonConnectorUi extends BuildConnectorUi {
 
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.hudson.ui"; //$NON-NLS-1$
+
 }
