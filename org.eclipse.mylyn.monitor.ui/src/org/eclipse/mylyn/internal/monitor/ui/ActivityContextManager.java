@@ -19,7 +19,6 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
@@ -126,7 +125,9 @@ public class ActivityContextManager implements IActivityContextManager {
 			});
 		}
 		updateWorkingSetSelection();
-		PlatformUI.getWorkbench().getWorkingSetManager().addPropertyChangeListener(WORKING_SET_CHANGE_LISTENER);
+		if (PlatformUI.isWorkbenchRunning()) {
+			PlatformUI.getWorkbench().getWorkingSetManager().addPropertyChangeListener(WORKING_SET_CHANGE_LISTENER);
+		}
 		checkJob.reschedule();
 	}
 
@@ -143,7 +144,9 @@ public class ActivityContextManager implements IActivityContextManager {
 				}
 			});
 		}
-		if (Platform.isRunning()) {
+		// if the platform is shutting down the workbench manager has already been disposed 
+		// and removing the listener would trigger loading of working sets again
+		if (PlatformUI.isWorkbenchRunning()) {
 			PlatformUI.getWorkbench().getWorkingSetManager().removePropertyChangeListener(WORKING_SET_CHANGE_LISTENER);
 		}
 	}
