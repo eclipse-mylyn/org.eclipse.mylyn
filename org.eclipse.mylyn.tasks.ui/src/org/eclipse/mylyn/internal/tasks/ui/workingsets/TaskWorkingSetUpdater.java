@@ -8,6 +8,7 @@
  * Contributors:
  *     Eugene Kuleshov - initial API and implementation
  *     Tasktop Technologies - initial API and implementation
+ *     Yatta Solutions - fix for bug 327262 
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.workingsets;
@@ -17,6 +18,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -47,6 +49,7 @@ import org.eclipse.ui.PlatformUI;
  * @author Eugene Kuleshov
  * @author Mik Kersten
  * @author Steffen Pingel
+ * @author Carsten Reckord
  */
 public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChangeListener, IResourceChangeListener {
 
@@ -109,25 +112,37 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 	}
 
 	private void checkElementExistence(IWorkingSet workingSet) {
-		ArrayList<IAdaptable> list = new ArrayList<IAdaptable>();
-		for (IAdaptable adaptable : workingSet.getElements()) {
+		ArrayList<IAdaptable> list = new ArrayList<IAdaptable>(Arrays.asList(workingSet.getElements()));
+		boolean changed = false;
+		for (Iterator<IAdaptable> iter = list.iterator(); iter.hasNext();) {
+			IAdaptable adaptable = iter.next();
+			boolean remove = false;
 			if (adaptable instanceof AbstractTaskContainer) {
 				String handle = ((AbstractTaskContainer) adaptable).getHandleIdentifier();
+				remove = true;
 				for (IRepositoryElement element : TasksUiPlugin.getTaskList().getRootElements()) {
 					if (element != null && element.getHandleIdentifier().equals(handle)) {
 						list.add(adaptable);
+						remove = false;
+						break;
 					}
 				}
 			} else if (adaptable instanceof IProject) {
 				IProject project = ResourcesPlugin.getWorkspace()
 						.getRoot()
 						.getProject(((IProject) adaptable).getName());
-				if (project != null && project.exists()) {
-					list.add(project);
+				if (project == null || !project.exists()) {
+					remove = true;
 				}
 			}
+			if (remove) {
+				iter.remove();
+				changed = true;
+			}
 		}
-		workingSet.setElements(list.toArray(new IAdaptable[list.size()]));
+		if (changed) {
+			workingSet.setElements(list.toArray(new IAdaptable[list.size()]));
+		}
 	}
 
 	public boolean contains(IWorkingSet workingSet) {
