@@ -38,7 +38,9 @@
       <import plugin="org.eclipse.mylyn.commons.ui" version="3.4.0" match="compatible"/>
       <import feature="org.eclipse.mylyn_feature" version="3.4.0.I20100101" match="compatible"/>
       <import feature="org.eclipse.mylyn_feature" version="3.4.0.I20100101" match="compatible"/>
+	  <!-- only available with ECF 3.3 (Helios) or later
       <import feature="org.eclipse.ecf.discovery.jmdns.feature" version="1.0.0" match="greaterOrEqual"/>
+      -->
    </requires>
 
    <plugin
