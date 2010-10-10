@@ -165,7 +165,7 @@ public class ArtifactsPart extends AbstractBuildEditorPart {
 		viewer.getControl().setMenu(menu);
 
 		ArtifactFolder root = getRootFolder();
-		if (!root.hasChildren()) {
+		if (root.hasChildren()) {
 			viewer.setInput(root);
 		} else {
 			viewer.setInput("No artifacts.");
