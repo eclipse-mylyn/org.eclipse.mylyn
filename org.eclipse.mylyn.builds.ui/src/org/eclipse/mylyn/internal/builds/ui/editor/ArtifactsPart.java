@@ -93,6 +93,9 @@ public class ArtifactsPart extends AbstractBuildEditorPart {
 			if (inputElement == input) {
 				return input.getChildren();
 			}
+			if (inputElement instanceof String) {
+				return new Object[] { inputElement };
+			}
 			return NO_ELEMENTS;
 		}
 
@@ -133,38 +136,39 @@ public class ArtifactsPart extends AbstractBuildEditorPart {
 		Composite composite = toolkit.createComposite(parent);
 		composite.setLayout(new GridLayout(1, false));
 
-		ArtifactFolder root = getRootFolder();
-		if (!root.hasChildren()) {
-			createLabel(composite, toolkit, "No artifacts.");
-		} else {
-			viewer = new TreeViewer(toolkit.createTree(composite, SWT.NONE));
-			GridDataFactory.fillDefaults().hint(300, 100).grab(true, false).applyTo(viewer.getControl());
-			viewer.setContentProvider(new ArtifactsContentProvider());
-			viewer.setLabelProvider(new DecoratingStyledCellLabelProvider(new ArtifactsLabelProvider(), PlatformUI
-					.getWorkbench().getDecoratorManager().getLabelDecorator(), null));
-			viewer.setInput(root);
-			viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-				public void selectionChanged(SelectionChangedEvent event) {
-					getPage().getSite().getSelectionProvider().setSelection(event.getSelection());
-				}
-			});
-			viewer.addOpenListener(new IOpenListener() {
-				public void open(OpenEvent event) {
-					Object item = ((IStructuredSelection) event.getSelection()).getFirstElement();
-					if (item instanceof IArtifact) {
-						IArtifact artifact = (IArtifact) item;
-						if (artifact.getUrl() != null) {
-							WorkbenchUtil.openUrl(artifact.getUrl());
-						}
+		viewer = new TreeViewer(toolkit.createTree(composite, SWT.NONE));
+		GridDataFactory.fillDefaults().hint(300, 100).grab(true, true).applyTo(viewer.getControl());
+		viewer.setContentProvider(new ArtifactsContentProvider());
+		viewer.setLabelProvider(new DecoratingStyledCellLabelProvider(new ArtifactsLabelProvider(), PlatformUI
+				.getWorkbench().getDecoratorManager().getLabelDecorator(), null));
+		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				getPage().getSite().getSelectionProvider().setSelection(event.getSelection());
+			}
+		});
+		viewer.addOpenListener(new IOpenListener() {
+			public void open(OpenEvent event) {
+				Object item = ((IStructuredSelection) event.getSelection()).getFirstElement();
+				if (item instanceof IArtifact) {
+					IArtifact artifact = (IArtifact) item;
+					if (artifact.getUrl() != null) {
+						WorkbenchUtil.openUrl(artifact.getUrl());
 					}
 				}
-			});
+			}
+		});
 
-			menuManager = new MenuManager();
-			menuManager.setRemoveAllWhenShown(true);
-			getPage().getEditorSite().registerContextMenu(ID_POPUP_MENU, menuManager, viewer, true);
-			Menu menu = menuManager.createContextMenu(viewer.getControl());
-			viewer.getControl().setMenu(menu);
+		menuManager = new MenuManager();
+		menuManager.setRemoveAllWhenShown(true);
+		getPage().getEditorSite().registerContextMenu(ID_POPUP_MENU, menuManager, viewer, true);
+		Menu menu = menuManager.createContextMenu(viewer.getControl());
+		viewer.getControl().setMenu(menu);
+
+		ArtifactFolder root = getRootFolder();
+		if (!root.hasChildren()) {
+			viewer.setInput(root);
+		} else {
+			viewer.setInput("No artifacts.");
 		}
 
 		toolkit.paintBordersFor(composite);

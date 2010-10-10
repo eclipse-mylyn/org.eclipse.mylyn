@@ -31,6 +31,9 @@ public class ShowTestResultsAction extends BaseSelectionListenerAction {
 
 	@Override
 	protected boolean updateSelection(IStructuredSelection selection) {
+		if (!TestResultManager.isJUnitAvailable()) {
+			return false;
+		}
 		if (selection.getFirstElement() instanceof IBuildPlan) {
 			return isEnabled(((IBuildPlan) selection.getFirstElement()).getLastBuild());
 		} else if (selection.getFirstElement() instanceof IBuild) {

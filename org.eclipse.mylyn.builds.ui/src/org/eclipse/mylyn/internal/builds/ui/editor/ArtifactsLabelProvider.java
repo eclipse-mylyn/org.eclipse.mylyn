@@ -54,7 +54,7 @@ public class ArtifactsLabelProvider extends LabelProvider implements IStyledLabe
 		if (element instanceof ArtifactFolder) {
 			return ((ArtifactFolder) element).getName();
 		}
-		return null;
+		return super.getText(element);
 	}
 
 	public StyledString getStyledText(Object element) {

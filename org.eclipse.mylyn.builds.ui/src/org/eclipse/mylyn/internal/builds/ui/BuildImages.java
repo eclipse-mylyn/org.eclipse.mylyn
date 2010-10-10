@@ -46,6 +46,26 @@ public class BuildImages {
 
 	public static final ImageDescriptor STATUS_DISABLED = create(T_OBJ, "disabled-status.png"); //$NON-NLS-1$
 
+	public static final ImageDescriptor TEST = create(T_OBJ, "test.gif"); //$NON-NLS-1$
+
+	public static final ImageDescriptor TEST_PASSED = create(T_OBJ, "testok.gif"); //$NON-NLS-1$
+
+	public static final ImageDescriptor TEST_FAILED = create(T_OBJ, "testfail.gif"); //$NON-NLS-1$
+
+	public static final ImageDescriptor TEST_ERROR = create(T_OBJ, "testerr.gif"); //$NON-NLS-1$
+
+	public static final ImageDescriptor TEST_IGNORED = create(T_OBJ, "testignored.gif"); //$NON-NLS-1$
+
+	public static final ImageDescriptor TEST_SUITE = create(T_OBJ, "tsuite.gif"); //$NON-NLS-1$
+
+	public static final ImageDescriptor TEST_SUITE_PASSED = create(T_OBJ, "tsuiteok.gif"); //$NON-NLS-1$
+
+	public static final ImageDescriptor TEST_SUITE_FAILED = create(T_OBJ, "tsuitefail.gif"); //$NON-NLS-1$
+
+	public static final ImageDescriptor TEST_SUITE_ERROR = create(T_OBJ, "tsuiteerror.gif"); //$NON-NLS-1$
+
+	public static final ImageDescriptor TEST_SUITE_IGNORED = create(T_OBJ, "tsuiteignored.gif"); //$NON-NLS-1$
+
 	public static final ImageDescriptor SERVER = create(T_OBJ, "server.gif"); //$NON-NLS-1$
 
 	public static final ImageDescriptor SERVER_DISABLED = ImageDescriptor.createWithFlags(SERVER, SWT.IMAGE_DISABLE);

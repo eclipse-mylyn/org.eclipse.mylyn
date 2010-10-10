@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;
@@ -32,10 +33,11 @@ import org.eclipse.jdt.internal.junit.model.JUnitModel;
 import org.eclipse.jdt.internal.junit.model.TestRunHandler;
 import org.eclipse.jdt.internal.junit.model.TestRunSession;
 import org.eclipse.jdt.internal.junit.ui.TestRunnerViewPart;
-import org.eclipse.jdt.junit.launcher.JUnitLaunchShortcut;
-import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
+import org.eclipse.mylyn.builds.core.ITestCase;
+import org.eclipse.mylyn.builds.core.ITestSuite;
 import org.eclipse.mylyn.builds.internal.core.operations.OperationChangeEvent;
 import org.eclipse.mylyn.builds.internal.core.operations.OperationChangeListener;
 import org.eclipse.mylyn.builds.internal.core.operations.RefreshOperation;
@@ -45,7 +47,6 @@ import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.ICoreRunnable;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.statushandlers.StatusManager;
 import org.xml.sax.SAXException;
 
@@ -54,136 +55,64 @@ import org.xml.sax.SAXException;
  */
 public class TestResultManager {
 
-	private static class Session extends TestRunSession {
-
-		private Session(IBuild build) {
-			super(NLS.bind("Test Results for Build {0}", build.getLabel()), null);
-		}
-
-		// Eclipse 3.5 and earlier
-		public boolean rerunTest(String testId, String className, String testName, String launchMode)
-				throws CoreException {
-			return rerunTest(testId, className, testName, launchMode, false);
-		}
-
-		// Eclipse 3.6 and later
-		public boolean rerunTest(String testId, final String className, final String testName, String launchMode,
-				boolean buildBeforeLaunch) throws CoreException {
-			final AtomicReference<IJavaElement> result = new AtomicReference<IJavaElement>();
-			CommonUiUtil.busyCursorWhile(new ICoreRunnable() {
-				public void run(IProgressMonitor monitor) throws CoreException {
-					IType type = findType(className, monitor);
-					if (type == null) {
-						return;
-					}
-					if (testName != null) {
-						IMethod method = type.getMethod(testName, new String[0]);
-						if (method != null && method.exists()) {
-							result.set(method);
-						} else {
-							result.set(type);
+	/**
+	 * Encapsulates JUnit dependencies to avoid ClassNotFoundException when JUnit is not available.
+	 */
+	private static class Runner {
+		static void showInJUnitViewInternal(final IBuild build) {
+			final TestRunSession testRunSession = new TestResultSession(build);
+			try {
+				CommonUiUtil.busyCursorWhile(new ICoreRunnable() {
+					public void run(IProgressMonitor monitor) throws CoreException {
+						JUnitResultGenerator generator = new JUnitResultGenerator(build.getTestResult());
+						TestRunHandler handler = new TestRunHandler(testRunSession);
+						try {
+							generator.write(handler);
+						} catch (SAXException e) {
+							throw new CoreException(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
+									"Unexpected parsing error while preparing test results", e));
 						}
 					}
-				}
-			});
-			if (result.get() == null) {
-				String typeName = className;
-				if (testName != null) {
-					typeName += "." + testName + "()"; //$NON-NLS-1$ //$NON-NLS-2$
-				}
-				throw new CoreException(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, NLS.bind(
-						"Launch failed: Test ''{0}'' not found in workspace.", typeName)));
+				});
+			} catch (OperationCanceledException e) {
+				return;
+			} catch (CoreException e) {
+				StatusManager.getManager().handle(
+						new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
+								"Unexpected error while processing test results", e),
+						StatusManager.SHOW | StatusManager.LOG);
+				return;
 			}
-			JUnitLaunchShortcut shortcut = new JUnitLaunchShortcut();
-			shortcut.launch(new StructuredSelection(result.get()), launchMode);
-			return true;
-		}
 
-		/**
-		 * @see {@link org.eclipse.jdt.internal.junit.ui.OpenTestAction}
-		 */
-		private IType findType(String className, IProgressMonitor monitor) throws CoreException {
-			final IType[] result = { null };
-			TypeNameMatchRequestor nameMatchRequestor = new TypeNameMatchRequestor() {
-				@Override
-				public void acceptTypeNameMatch(TypeNameMatch match) {
-					result[0] = match.getType();
-				}
-			};
-			int lastDot = className.lastIndexOf('.');
-			char[] packageName = lastDot >= 0 ? className.substring(0, lastDot).toCharArray() : null;
-			char[] typeName = (lastDot >= 0 ? className.substring(lastDot + 1) : className).toCharArray();
-			SearchEngine engine = new SearchEngine();
-			engine.searchAllTypeNames(packageName, SearchPattern.R_EXACT_MATCH | SearchPattern.R_CASE_SENSITIVE,
-					typeName, SearchPattern.R_EXACT_MATCH | SearchPattern.R_CASE_SENSITIVE, IJavaSearchConstants.TYPE,
-					SearchEngine.createWorkspaceScope(), nameMatchRequestor,
-					IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, monitor);
-			return result[0];
-		}
-
-	}
-
-	public static void showInJUnitView(final IBuild build) {
-		Assert.isNotNull(build);
-
-		if (build.getTestResult() == null) {
-			StatusManager.getManager().handle(
-					new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "The build did not produce test results."),
-					StatusManager.SHOW | StatusManager.BLOCK);
-			return;
-		}
-
-		final TestRunSession testRunSession = new Session(build);
-		try {
-			CommonUiUtil.busyCursorWhile(new ICoreRunnable() {
-				public void run(IProgressMonitor monitor) throws CoreException {
-					JUnitResultGenerator generator = new JUnitResultGenerator(build.getTestResult());
-					TestRunHandler handler = new TestRunHandler(testRunSession);
-					try {
-						generator.write(handler);
-					} catch (SAXException e) {
-						throw new CoreException(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
-								"Unexpected parsing error while preparing test results", e));
-					}
-				}
-			});
-		} catch (OperationCanceledException e) {
-			return;
-		} catch (CoreException e) {
-			StatusManager.getManager().handle(
-					new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
-							"Unexpected error while processing test results", e),
-					StatusManager.SHOW | StatusManager.LOG);
-			return;
-		}
-
-		// show results in view
-		WorkbenchUtil.showViewInActiveWindow(TestRunnerViewPart.NAME);
-		getJUnitModel().addTestRunSession(testRunSession);
-	}
-
-	public static void showInJUnitView(final IBuildPlan plan) {
-		if (plan.getLastBuild() != null) {
-			showInJUnitView(plan.getLastBuild());
-		} else {
-			RefreshOperation operation = BuildsUiInternal.getFactory().getRefreshOperation(plan);
-			operation.addOperationChangeListener(new OperationChangeListener() {
-				@Override
-				public void done(OperationChangeEvent event) {
-					event.getOperation().getService().getRealm().asyncExec(new Runnable() {
-						public void run() {
-							if (plan.getLastBuild() != null) {
-								showInJUnitView(plan.getLastBuild());
-							}
-						}
-					});
-				}
-			});
-			operation.execute();
+			// show results in view
+			WorkbenchUtil.showViewInActiveWindow(TestRunnerViewPart.NAME);
+			getJUnitModel().addTestRunSession(testRunSession);
 		}
 	}
 
 	private static JUnitModel junitModel;
+
+	/**
+	 * @see {@link org.eclipse.jdt.internal.junit.ui.OpenTestAction}
+	 */
+	static IType findType(String className, IProgressMonitor monitor) throws CoreException {
+		final IType[] result = { null };
+		TypeNameMatchRequestor nameMatchRequestor = new TypeNameMatchRequestor() {
+			@Override
+			public void acceptTypeNameMatch(TypeNameMatch match) {
+				result[0] = match.getType();
+			}
+		};
+		int lastDot = className.lastIndexOf('.');
+		char[] packageName = lastDot >= 0 ? className.substring(0, lastDot).toCharArray() : null;
+		char[] typeName = (lastDot >= 0 ? className.substring(lastDot + 1) : className).toCharArray();
+		SearchEngine engine = new SearchEngine();
+		engine.searchAllTypeNames(packageName, SearchPattern.R_EXACT_MATCH | SearchPattern.R_CASE_SENSITIVE, typeName,
+				SearchPattern.R_EXACT_MATCH | SearchPattern.R_CASE_SENSITIVE, IJavaSearchConstants.TYPE, SearchEngine
+						.createWorkspaceScope(), nameMatchRequestor, IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH,
+				monitor);
+		return result[0];
+	}
 
 	static JUnitModel getJUnitModel() {
 		if (junitModel == null) {
@@ -207,6 +136,95 @@ public class TestResultManager {
 			}
 		}
 		return junitModel;
+	}
+
+	public static boolean isJUnitAvailable() {
+		return Platform.getBundle("org.eclipse.jdt.junit.core") != null; //$NON-NLS-1$
+	}
+
+	public static void openInEditor(ITestCase testCase) {
+		openInEditor(testCase.getClassName(), testCase.getLabel());
+	}
+
+	public static void openInEditor(ITestSuite suite) {
+		openInEditor(suite.getLabel(), null);
+	}
+
+	public static void openInEditor(final String className, final String testName) {
+		final AtomicReference<IJavaElement> result = new AtomicReference<IJavaElement>();
+		try {
+			CommonUiUtil.busyCursorWhile(new ICoreRunnable() {
+				public void run(IProgressMonitor monitor) throws CoreException {
+					IType type = findType(className, monitor);
+					if (type == null) {
+						return;
+					}
+					result.set(type);
+					if (testName != null) {
+						IMethod method = type.getMethod(testName, new String[0]);
+						if (method != null && method.exists()) {
+							result.set(method);
+						}
+					}
+				}
+			});
+			if (result.get() == null) {
+				StatusManager.getManager().handle(
+						new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "Failed to locate test in workspace."),
+						StatusManager.SHOW | StatusManager.BLOCK);
+				return;
+			}
+			JavaUI.openInEditor(result.get(), true, true);
+		} catch (OperationCanceledException e) {
+			return;
+		} catch (Exception e) {
+			StatusManager.getManager().handle(
+					new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "Failed to locate test in workspace.", e),
+					StatusManager.SHOW | StatusManager.BLOCK | StatusManager.LOG);
+			return;
+		}
+	}
+
+	public static void showInJUnitView(final IBuild build) {
+		Assert.isNotNull(build);
+
+		if (!isJUnitAvailable()) {
+			StatusManager.getManager().handle(
+					new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "JUnit is not installed."),
+					StatusManager.SHOW | StatusManager.BLOCK);
+			return;
+		}
+
+		if (build.getTestResult() == null) {
+			StatusManager.getManager().handle(
+					new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "The build did not produce test results."),
+					StatusManager.SHOW | StatusManager.BLOCK);
+			return;
+		}
+
+		// invoke separate method to avoid ClassNotFoundException when JUnit is not available
+		Runner.showInJUnitViewInternal(build);
+	}
+
+	public static void showInJUnitView(final IBuildPlan plan) {
+		if (plan.getLastBuild() != null) {
+			showInJUnitView(plan.getLastBuild());
+		} else {
+			RefreshOperation operation = BuildsUiInternal.getFactory().getRefreshOperation(plan);
+			operation.addOperationChangeListener(new OperationChangeListener() {
+				@Override
+				public void done(OperationChangeEvent event) {
+					event.getOperation().getService().getRealm().asyncExec(new Runnable() {
+						public void run() {
+							if (plan.getLastBuild() != null) {
+								showInJUnitView(plan.getLastBuild());
+							}
+						}
+					});
+				}
+			});
+			operation.execute();
+		}
 	}
 
 }

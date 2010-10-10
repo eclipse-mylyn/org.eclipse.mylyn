@@ -67,6 +67,7 @@ public class BuildDetailsPage extends BuildEditorPage {
 			TableWrapData data = new TableWrapData();
 			data.colspan = span;
 			data.align = TableWrapData.FILL;
+			data.valign = TableWrapData.FILL;
 			data.grabHorizontal = true;
 			part.getControl().setLayoutData(data);
 			//GridDataFactory.fillDefaults().grab(true, false).span(span, 1).applyTo(part.getControl());
