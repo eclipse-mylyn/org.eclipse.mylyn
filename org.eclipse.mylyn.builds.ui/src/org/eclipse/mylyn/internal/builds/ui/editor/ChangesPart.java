@@ -64,6 +64,8 @@ public class ChangesPart extends AbstractBuildEditorPart {
 		public Object[] getElements(Object inputElement) {
 			if (inputElement == input) {
 				return input.getChanges().toArray();
+			} else if (inputElement instanceof String) {
+				return new Object[] { inputElement };
 			}
 			return NO_ELEMENTS;
 		}
@@ -112,39 +114,45 @@ public class ChangesPart extends AbstractBuildEditorPart {
 		composite.setLayout(new GridLayout(1, false));
 
 		IChangeSet changeSet = getInput(IBuild.class).getChangeSet();
+
+//		if (changeSet == null || changeSet.getChanges().isEmpty()) {
+//			createLabel(composite, toolkit, "No changes.");
+//		}
+
+		viewer = new TreeViewer(toolkit.createTree(composite, SWT.H_SCROLL));
+		GridDataFactory.fillDefaults().hint(500, 100).grab(true, false).applyTo(viewer.getControl());
+		viewer.setContentProvider(new ChangesContentProvider());
+		viewer.setLabelProvider(new DecoratingStyledCellLabelProvider(new ChangesLabelProvider(), PlatformUI
+				.getWorkbench().getDecoratorManager().getLabelDecorator(), null));
+		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				getPage().getSite().getSelectionProvider().setSelection(event.getSelection());
+			}
+		});
+
+		viewer.addOpenListener(new IOpenListener() {
+			public void open(OpenEvent event) {
+				Object selection = ((IStructuredSelection) event.getSelection()).getFirstElement();
+				if (selection instanceof Change) {
+					ChangesPart.this.open((Change) selection);
+				}
+				if (selection instanceof ChangeArtifact) {
+					ChangesPart.this.open((ChangeArtifact) selection);
+				}
+			}
+
+		});
+
+		menuManager = new MenuManager();
+		menuManager.setRemoveAllWhenShown(true);
+		getPage().getEditorSite().registerContextMenu(ID_POPUP_MENU, menuManager, viewer, true);
+		Menu menu = menuManager.createContextMenu(viewer.getControl());
+		viewer.getControl().setMenu(menu);
+
 		if (changeSet == null || changeSet.getChanges().isEmpty()) {
-			createLabel(composite, toolkit, "No changes.");
+			viewer.setInput("No changes.");
 		} else {
-			viewer = new TreeViewer(toolkit.createTree(composite, SWT.H_SCROLL));
-			GridDataFactory.fillDefaults().hint(500, 100).grab(true, false).applyTo(viewer.getControl());
-			viewer.setContentProvider(new ChangesContentProvider());
-			viewer.setLabelProvider(new DecoratingStyledCellLabelProvider(new ChangesLabelProvider(), PlatformUI
-					.getWorkbench().getDecoratorManager().getLabelDecorator(), null));
 			viewer.setInput(changeSet);
-			viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-				public void selectionChanged(SelectionChangedEvent event) {
-					getPage().getSite().getSelectionProvider().setSelection(event.getSelection());
-				}
-			});
-
-			viewer.addOpenListener(new IOpenListener() {
-				public void open(OpenEvent event) {
-					Object selection = ((IStructuredSelection) event.getSelection()).getFirstElement();
-					if (selection instanceof Change) {
-						ChangesPart.this.open((Change) selection);
-					}
-					if (selection instanceof ChangeArtifact) {
-						ChangesPart.this.open((ChangeArtifact) selection);
-					}
-				}
-
-			});
-
-			menuManager = new MenuManager();
-			menuManager.setRemoveAllWhenShown(true);
-			getPage().getEditorSite().registerContextMenu(ID_POPUP_MENU, menuManager, viewer, true);
-			Menu menu = menuManager.createContextMenu(viewer.getControl());
-			viewer.getControl().setMenu(menu);
 		}
 
 		toolkit.paintBordersFor(composite);

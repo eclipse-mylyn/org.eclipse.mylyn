@@ -77,7 +77,7 @@ public class ChangesLabelProvider extends LabelProvider implements IStyledLabelP
 		if (element instanceof IChangeArtifact) {
 			return ((IChangeArtifact) element).getFile();
 		}
-		return null;
+		return super.getText(element);
 	}
 
 }
