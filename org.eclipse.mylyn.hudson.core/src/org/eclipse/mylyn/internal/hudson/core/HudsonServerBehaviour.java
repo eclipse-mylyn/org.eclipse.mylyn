@@ -103,8 +103,15 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 
 	private final RestfulHudsonClient client;
 
+	private final RepositoryLocation location;
+
 	public HudsonServerBehaviour(RepositoryLocation location, HudsonConfigurationCache cache) {
+		this.location = location;
 		this.client = new RestfulHudsonClient(new RepositoryWebLocation(location), cache);
+	}
+
+	public RepositoryLocation getLocation() {
+		return location;
 	}
 
 	protected HudsonModelBuild createBuildParameter(IBuild build) {
@@ -133,7 +140,7 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 					requestBuild.setNumber(Integer.parseInt(request.getIds().iterator().next()));
 				}
 				HudsonModelBuild hudsonBuild = client.getBuild(job, requestBuild, monitor);
-				IBuild build = parseBuild(hudsonBuild);
+				IBuild build = parseBuild(job, hudsonBuild);
 				try {
 					HudsonTestReport hudsonTestReport = client.getTestReport(job, hudsonBuild, monitor);
 					ITestResult testResult;
@@ -155,7 +162,7 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 				List<HudsonModelRun> hudsonBuilds = client.getBuilds(job, monitor);
 				ArrayList<IBuild> builds = new ArrayList<IBuild>(hudsonBuilds.size());
 				for (HudsonModelRun hudsonBuild : hudsonBuilds) {
-					builds.add(parseBuild(hudsonBuild));
+					builds.add(parseBuild(job, hudsonBuild));
 				}
 				return builds;
 			}
@@ -243,7 +250,7 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		return artifact;
 	}
 
-	private IBuild parseBuild(HudsonModelRun hudsonBuild) {
+	private IBuild parseBuild(HudsonModelJob hudsonJob, HudsonModelRun hudsonBuild) {
 		IBuild build = createBuild();
 		build.setId(hudsonBuild.getId());
 		build.setName(hudsonBuild.getFullDisplayName());
@@ -261,7 +268,13 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 			}
 		}
 		for (HudsonModelRunArtifact hudsonArtifact : hudsonBuild.getArtifact()) {
-			build.getArtifacts().add(parseArtifact(hudsonArtifact));
+			IArtifact artifact = parseArtifact(hudsonArtifact);
+			try {
+				artifact.setUrl(client.getArtifactUrl(hudsonJob, hudsonBuild, hudsonArtifact));
+			} catch (HudsonException e) {
+				// ignore
+			}
+			build.getArtifacts().add(artifact);
 		}
 		if (hudsonBuild instanceof HudsonModelAbstractBuild) {
 			build.setChangeSet(parseChangeSet(((HudsonModelAbstractBuild) hudsonBuild).getChangeSet()));

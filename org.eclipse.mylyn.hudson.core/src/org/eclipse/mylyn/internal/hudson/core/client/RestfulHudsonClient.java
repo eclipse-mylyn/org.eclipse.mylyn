@@ -53,6 +53,7 @@ import org.eclipse.mylyn.internal.hudson.model.HudsonModelHudson;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelJob;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelProject;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelRun;
+import org.eclipse.mylyn.internal.hudson.model.HudsonModelRunArtifact;
 import org.eclipse.mylyn.internal.hudson.model.HudsonTasksJunitTestResult;
 import org.eclipse.mylyn.internal.hudson.model.HudsonTasksTestAggregatedTestResultActionChildReport;
 import org.eclipse.osgi.util.NLS;
@@ -214,6 +215,11 @@ public class RestfulHudsonClient {
 		}
 	}
 
+	public String getArtifactUrl(final HudsonModelJob job, final HudsonModelRun build, HudsonModelRunArtifact artifact)
+			throws HudsonException {
+		return getBuildUrl(job, build) + "/artifact/" + artifact.getRelativePath();
+	}
+
 	public AbstractConfigurationCache<HudsonConfiguration> getCache() {
 		return cache;
 	}
@@ -284,7 +290,7 @@ public class RestfulHudsonClient {
 		}.run();
 	}
 
-	private String getJobUrl(HudsonModelJob job) throws HudsonException {
+	String getJobUrl(HudsonModelJob job) throws HudsonException {
 		String encodedJobname = "";
 		try {
 			encodedJobname = new URI(null, job.getName(), null).toASCIIString();
