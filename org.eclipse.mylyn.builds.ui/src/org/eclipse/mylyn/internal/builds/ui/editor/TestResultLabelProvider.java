@@ -111,7 +111,7 @@ public class TestResultLabelProvider extends LabelProvider implements IStyledLab
 		if (element instanceof ITestCase) {
 			return ((ITestCase) element).getLabel();
 		}
-		return null;
+		return super.getText(element);
 	}
 
 	public StyledString getStyledText(Object element) {
