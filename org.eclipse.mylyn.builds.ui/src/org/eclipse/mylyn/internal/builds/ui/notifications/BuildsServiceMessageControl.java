@@ -87,10 +87,11 @@ public class BuildsServiceMessageControl extends ServiceMessageControl {
 		if (!messages.isEmpty()) {
 			currentMessage = messages.size() - 1;
 			AbstractNotification message = messages.get(currentMessage);
-			ensureControl();
-			setTitle(message.getLabel());
-			setDescription(message.getDescription());
-			setTitleImage(message.getNotificationKindImage());
+			if (ensureControl()) {
+				setTitle(message.getLabel());
+				setDescription(message.getDescription());
+				setTitleImage(message.getNotificationKindImage());
+			}
 		}
 	}
 
@@ -176,7 +177,9 @@ public class BuildsServiceMessageControl extends ServiceMessageControl {
 
 	public void notify(NotificationSinkEvent event) {
 		for (final AbstractNotification message : event.getNotifications()) {
-			messages.add(message);
+			if (message instanceof BuildsServiceNotification) {
+				messages.add(message);
+			}
 		}
 		// Show the top message in the stack.
 		if (!messages.isEmpty()) {
