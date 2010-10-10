@@ -11,15 +11,14 @@
 
 package org.eclipse.mylyn.internal.builds.ui.commands;
 
+import java.util.List;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylyn.builds.core.IBuildServer;
+import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.internal.core.operations.RefreshOperation;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
-import org.eclipse.ui.handlers.HandlerUtil;
 
 /**
  * @author Steffen Pingel
@@ -27,14 +26,15 @@ import org.eclipse.ui.handlers.HandlerUtil;
 public class RefreshHandler extends AbstractHandler {
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		ISelection selection = HandlerUtil.getCurrentSelection(event);
-		if (selection instanceof IStructuredSelection) {
-			Object item = ((IStructuredSelection) selection).getFirstElement();
-			if (item instanceof IBuildServer) {
-				IBuildServer server = (IBuildServer) item;
-				RefreshOperation op = BuildsUiInternal.getFactory().getRefreshOperation(server);
-				op.execute();
-			}
+		List<IBuildElement> elements = BuildsUiInternal.getElements(event);
+		if (elements.isEmpty()) {
+			// refresh entire model
+			RefreshOperation op = BuildsUiInternal.getFactory().getRefreshOperation();
+			op.execute();
+		} else {
+			// refresh selected elements
+			RefreshOperation op = BuildsUiInternal.getFactory().getRefreshOperation(elements);
+			op.execute();
 		}
 		return null;
 	}

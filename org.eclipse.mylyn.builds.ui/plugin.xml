@@ -270,15 +270,17 @@
          </activeWhen>
          <enabledWhen>
             <and>
-               <count
-                     value="1">
-               </count>
-               <iterate>
-                  <and>
+               <iterate
+                     ifEmpty="true"
+                     operator="and">
+                  <or>
                      <instanceof
                            value="org.eclipse.mylyn.builds.core.IBuildServer">
                      </instanceof>
-                  </and>
+                     <instanceof
+                           value="org.eclipse.mylyn.builds.core.IBuildPlan">
+                     </instanceof>
+                  </or>
                </iterate>
             </and>
          </enabledWhen>

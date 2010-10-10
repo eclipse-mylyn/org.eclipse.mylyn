@@ -77,7 +77,11 @@ public class BuildsUiInternal {
 
 							public void syncExec(Runnable runnable) {
 								checkDisplay();
-								display.syncExec(runnable);
+								if (Display.getCurrent() != null) {
+									runnable.run();
+								} else {
+									display.syncExec(runnable);
+								}
 							}
 
 							protected void checkDisplay() {
