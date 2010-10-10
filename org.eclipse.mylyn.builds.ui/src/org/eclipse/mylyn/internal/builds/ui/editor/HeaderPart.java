@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.builds.ui.editor;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.mylyn.builds.core.BuildState;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.internal.core.BuildPackage;
@@ -53,18 +54,26 @@ public class HeaderPart extends AbstractBuildEditorPart {
 		label = createLabel(composite, toolkit, "Status: ");
 		GridDataFactory.defaultsFor(label).indent(12, 0).applyTo(label);
 		text = createTextReadOnly(composite, toolkit, "");
-		bind(text, IBuild.class, BuildPackage.Literals.BUILD__STATUS);
+		//bind(text, IBuild.class, BuildPackage.Literals.BUILD__STATUS);
+		IBuild build = getInput(IBuild.class);
+		text.setText(getStatusLabel(build));
 
 		label = createLabel(composite, toolkit, "Duration: ");
 		GridDataFactory.defaultsFor(label).indent(12, 0).applyTo(label);
 		text = createTextReadOnly(composite, toolkit, "");
-		IBuild build = getInput(IBuild.class);
 		text.setText(DateUtil.getFormattedDurationShort(build.getDuration(), true));
 
 		((GridLayout) composite.getLayout()).numColumns = composite.getChildren().length;
 		toolkit.paintBordersFor(composite);
 
 		return composite;
+	}
+
+	private String getStatusLabel(IBuild build) {
+		if (build.getStatus() != null) {
+			return build.getStatus().toString();
+		}
+		return (build.getState() == BuildState.RUNNING) ? "Running" : "Unknown";
 	}
 
 	@Override
