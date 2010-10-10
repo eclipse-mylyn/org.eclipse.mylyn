@@ -276,10 +276,12 @@ public abstract class ServiceMessageControl {
 	/**
 	 * Creates the control unless the parent has been disposed.
 	 */
-	protected void ensureControl() {
+	protected boolean ensureControl() {
 		if (!parent.isDisposed() && (head == null || head.isDisposed())) {
 			createControl(parent);
+			return true;
 		}
+		return false;
 	}
 
 }
